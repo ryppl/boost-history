@@ -3,77 +3,56 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include "my_producer_consumer.hpp"
 #include <boost/dataflow/support/proxy_port.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-namespace df = boost::dataflow;
-
-struct incomplete;
-struct empty {};
-
-struct my_mechanism;
-
-struct my_producer_traits
-    : public df::port_traits<
-        my_mechanism,
-        df::ports::producer,
-        df::concepts::producer>
-{};
-
-struct my_producer : public df::port<my_producer_traits>
-{};
 
 struct my_proxy_producer
 {
 public:
     my_producer p;
+        
+    struct get_my_producer
+    {
+        template<typename T>
+        typename boost::dataflow::utility::copy_cv<my_producer, T>::type &
+        operator()(T &t)
+        {
+            return t.p;
+        }
+    };
     
-    template<typename Mechanism, typename PortCategory>
-    struct dataflow;
-};
-
-template<>
-struct my_proxy_producer::dataflow<my_mechanism, df::ports::producer>
-{
     typedef df::default_proxy_port<
         my_mechanism,
         df::ports::producer,
-        my_producer> proxy_port_traits;
-
-    template<typename T>
-    static typename boost::dataflow::utility::copy_cv<my_producer, T>::type &
-    get_proxied_port(T &t)
-    {
-        return t.p;
-    };
+        my_producer,
+        get_my_producer
+        > proxy_port_traits;
 };
 
 struct my_proxy_proxy_producer
 {
 public:
     my_proxy_producer proxy;
-    
-    template<typename Mechanism, typename PortCategory>
-    struct dataflow;
-};
 
-template<>
-struct my_proxy_proxy_producer::dataflow<my_mechanism, df::ports::producer>
-{
+    struct get_my_proxy_producer
+    {
+        template<typename T>
+        typename boost::dataflow::utility::copy_cv<my_proxy_producer, T>::type &
+        operator()(T &t)
+        {
+            return t.proxy;
+        }
+    };
+    
     typedef df::default_proxy_port<
         my_mechanism,
         df::ports::producer,
-        my_proxy_producer> proxy_port_traits;
-
-    template<typename T>
-    static typename boost::dataflow::utility::copy_cv<my_proxy_producer, T>::type &
-    get_proxied_port(T &t)
-    {
-        return t.proxy;
-    };
+        my_proxy_producer,
+        get_my_proxy_producer> proxy_port_traits;
 };
-
 
 int test_main(int, char* [])
 {
@@ -81,7 +60,9 @@ int test_main(int, char* [])
             df::default_proxy_port<
                 my_mechanism,
                 df::ports::producer,
-                my_producer>
+                my_producer,
+                my_proxy_producer::get_my_producer
+                >
         >::value ));
     
     BOOST_CHECK(( df::is_proxy_port<my_mechanism, df::ports::producer, my_proxy_producer>::value ));

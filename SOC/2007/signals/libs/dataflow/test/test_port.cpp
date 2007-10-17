@@ -3,36 +3,10 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/support/port.hpp>
+#include "my_producer_consumer.hpp"
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-namespace df = boost::dataflow;
-
-struct incomplete;
-struct empty {};
-
-struct my_mechanism;
-
-struct my_producer_traits
-    : public df::port_traits<
-        my_mechanism,
-        df::ports::producer,
-        df::concepts::producer>
-{};
-
-struct my_consumer_traits
-    : public df::port_traits<
-        my_mechanism,
-        df::ports::consumer,
-        df::concepts::consumer>
-{};
-
-struct my_producer : public df::port<my_producer_traits>
-{};
-
-struct my_consumer : public df::port<my_consumer_traits>
-{};
 
 int test_main(int, char* [])
 {
