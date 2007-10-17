@@ -50,20 +50,22 @@ namespace cgi {
     typedef basic_protocol_service<protocol_type>       protocol_service_type;
     typedef boost::asio::ip::tcp                        native_protocol_type;
     typedef acceptor_service_type::native_type          native_type;
-    typedef boost::asio::socket_acceptor_service<
-              native_protocol_type>                     acceptor_service_type;
+    typedef implementation_type::acceptor_service_type  acceptor_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
 
     struct implementation_type
     {
-      typedef Protocol                             protocol_type;
-      typedef scgi::request                        request_type;
-      acceptor_service_type::implementation_type   acceptor_;
-      boost::mutex                                 mutex_;
-      std::queue<boost::shared_ptr<request_type> > waiting_requests_;
-      protocol_service_type*                       service_;
+      typedef Protocol                              protocol_type;
+      typedef scgi::request                         request_type;
+      typedef boost::asio::socket_acceptor_service<
+                native_protocol_type>               acceptor_service_type;
+
+      acceptor_service_type::implementation_type    acceptor_;
+      boost::mutex                                  mutex_;
+      std::queue<boost::shared_ptr<request_type> >  waiting_requests_;
+      protocol_service_type*                        service_;
     };
 
     explicit scgi_request_acceptor_service(cgi::io_service& ios)

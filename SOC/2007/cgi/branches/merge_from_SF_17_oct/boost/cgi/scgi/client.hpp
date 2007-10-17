@@ -1,4 +1,4 @@
-//                 -- fcgi/client.hpp --
+//                 -- scgi/client.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,8 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_FCGI_SPECIFICATION_HPP_INCLUDED__
-#define CGI_FCGI_SPECIFICATION_HPP_INCLUDED__
+#ifndef CGI_SCGI_CLIENT_HPP_INCLUDED__
+#define CGI_SCGI_CLIENT_HPP_INCLUDED__
 
 #include "boost/cgi/map.hpp"
 #include "boost/cgi/io_service.hpp"
@@ -27,10 +27,18 @@ namespace cgi {
     struct connection_type : Connection
     { typedef boost::shared_ptr<connection_type> pointer; }
 
+    /// Construct
     basic_client(io_service_type& ios)
       : io_service_(ios)
       , connection_(new connection_type::pointer(ios))
     {
+    }
+
+    /// Destroy
+    /** Closing the connection as early as possible is good for efficiency */
+    ~basic_client()
+    {
+      connection_->close();
     }
 
     io_service_type& io_service() { return io_service_; }
@@ -93,7 +101,7 @@ namespace cgi {
     connection_ptr   connection_;
   };
 
- } // namespace fcgi
+ } // namespace scgi
 }// namespace cgi
 
-#endif // CGI_FCGI_SPECIFICATION_HPP_INCLUDED__
+#endif // CGI_SCGI_CLIENT_HPP_INCLUDED__
