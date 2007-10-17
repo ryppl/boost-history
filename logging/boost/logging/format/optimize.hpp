@@ -286,7 +286,7 @@ namespace optimize {
         */
         void restart() {
             // ******** whatever msg is in vector that has an id, it to be placed in coll.
-            // FIXME
+            // FIXME also, need to work on the use_cache<> class from format_and_write
             m_full_msg_computed = false;
         }
 

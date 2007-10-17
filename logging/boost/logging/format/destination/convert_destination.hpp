@@ -47,6 +47,10 @@ namespace convert {
 
     inline const char_type * do_convert(const char_type * c, const into<const char_type*> &) { return c; }
     inline const char_type * do_convert(const std::basic_string<char_type> & s, const into<const char_type* > &) { return s.c_str(); }
+
+    inline const std::basic_string<char_type> & do_convert(const std::basic_string<char_type> & s, const into< std::basic_string<char_type> > &) {
+        return s;
+    }
 }
 
 struct do_convert_destination {
