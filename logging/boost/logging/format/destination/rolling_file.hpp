@@ -26,18 +26,137 @@
 #include <boost/logging/format/destination/convert_destination.hpp>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 namespace boost { namespace logging { namespace destination {
 
 namespace detail {
-    struct rolling_file_info {
-        rolling_file_info (const std::string& name_prefix, file_settings settings) : out(name, open_flags(settings) ), settings(settings) {}
-        std::basic_ofstream<char_type> out;
-        file_settings settings;
-    }
+    template<class self_type, class type> struct flag_with_self_type {
+        flag(self_type * self, const type& val = type() ) : m_val(val), m_self(self) {}
+        flag(const flag & other) : m_val(other.m_val) {}
+
+        const type & operator()() const { return m_val; }
+        self_type & operator()(const type & val) {
+            m_val = val; return *m_self;
+        }
+
+        // FIXME operator=
+    private:
+        type m_val;
+        self_type * m_self;
+    };
+
+    template<class self_type> struct flag {
+        template<class val_type> struct t : flag_with_type<self_type,val_type> {
+            flag(self_type * self, const val_type& val = val_type() ) : flag_with_type(self,val) {}
+        };
+    };
 }
 
-template<class convert_dest = do_convert_destination > struct rolling_file : non_const_context<detail::file_info> {
+/** 
+    Settings you can pass to the rolling file
+*/
+struct rolling_file_settings {
+    typedef detail::flag<rolling_file_settings> flag;
+
+    rolling_file_settings() 
+        : max_size_bytes(this, 1024 * 1024)
+        , file_count(this, 10)
+        , initial_erase(this, false)
+        , start_where_size_not_exceeded(this, true) 
+    {}
+
+    /// maximum size in bytes, by default 1Mb
+    flag::t<int> max_size_bytes;
+    /// how many files has a rolling file, by default, 10
+    flag::t<int> file_count;
+    /// if true, it initially erases all files from the rolling file (by default, false)
+    flag::t<bool> initial_erase;
+    /// if true, it starts with the first file that hasn't exceeded the max size;
+    /// otherwise, it starts with the first file (default = true)
+    flag::t<bool> start_where_size_not_exceeded;
+};
+
+namespace detail {
+    template<class convert_dest > 
+    struct rolling_file_info {
+        rolling_file_info (const std::string& name_prefix, rolling_file_settings flags ) : m_flags(flags), m_cur_idx(0) {
+            namespace fs = boost::filesystem;
+            
+            if ( m_flags.initial_erase()) {
+                for ( int idx = 0; idx < m_flags.file_count(); ++idx)
+                    if ( fs::exists( file_name(idx) )
+                        fs::remove( file_name(idx) );
+            }
+
+            // see what file to start from
+            if ( m_flags.start_where_size_not_exceeded() ) {
+                for ( m_cur_idx = 0; m_cur_idx < m_flags.file_count(); ++m_cur_idx )
+                    if ( fs::exists( file_name(m_cur_idx) ) {
+                        if ( fs::file_size( file_name(m_cur_idx) < m_flags.max_size_bytes() )
+                            // file hasn't reached max size
+                            break;
+                    }
+                    else
+                        // file not found, we'll create it now
+                        break;
+
+            }
+
+            recreate_file();
+        }
+
+        std::string file_name(int idx) {
+            std::ostringstream out; 
+            out << m_name_prefix << "." << (idx+1);
+            return out.str();
+        }
+
+        void recreate_file() {
+            m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
+                std::ios_base::out | std::ios_base::app);
+        }
+
+        template<class msg_type> void write( const msg_type& msg) {
+            (convert_dest(msg, (*m_out) );
+            if ( m_out->ftellg() > m_flags.max_size_bytes()) {
+                m_cur_idx = (m_cur_idx + 1) % m_flags.file_count();
+                recreate_file();
+            }            
+        }
+
+        boost::shared_ptr< std::basic_ofstream<char_type> > m_out;
+        std::string m_name_prefix;
+        rolling_file_settings m_flags;
+        // the index of the current file
+        int m_cur_idx;
+    };
+}
+
+/** 
+    @brief Writes to multiple files: name_prefix.1, name_prefix.2, ... name_prefix.N, and then restarts from 1.
+
+    We first write to name_prefix.1.
+
+    The log has a max_size. When max_size is reached, we start writing to name_prefix.2. When max_size is reached, we start writing to name_prefix.3.
+    And so on, until we reach name_prefix.N (N = file_count). When that gets fool, we start over, with name_prefix.1.
+*/
+template<class convert_dest = do_convert_destination > struct rolling_file : non_const_context<detail::file_info<convert_dest> > {
+
+    /** 
+        Constructs a rolling file
+
+        @param name_prefix the name to be used as prefix for the files
+        
+        @param flags [optional] extra settings to pass to the rolling file. See rolling_file_settings.
+    */
+    rolling_file(const std::string & name_prefix, rolling_file_settings flags = rolling_file_settings() ) : non_const_context(name_prefix, flags) {}
+
+    template<class msg_type> void operator()( const msg_type & msg) {
+        non_const_context::context().write(msg);
+    }
 };
 
 

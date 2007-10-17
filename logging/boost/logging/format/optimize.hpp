@@ -31,7 +31,7 @@ namespace boost { namespace logging {
 namespace optimize {
 
     /** 
-        It optimizes the formatting for prepending and/or appending strings to the original message
+        @brief Optimizes the formatting for prepending and/or appending strings to the original message
 
         It keeps all the modified message in one string. Useful if some formatter needs to access the whole
         string at once.
@@ -89,6 +89,9 @@ namespace optimize {
         }
 
 
+        /** 
+            @brief pre-pends a string (inserts it at the beginning)
+        */
         void prepend_string(const string_type & str) {
             if ( m_reserve_prepend < (int)str.size()) {
                 int new_reserve_prepend = (int)str.size() + m_grow_size ;
@@ -104,6 +107,9 @@ namespace optimize {
             m_full_msg_computed = false;
         }
 
+        /** 
+            @brief appends a string (inserts it at the end)
+        */
         void append_string(const string_type & str) {
             if ( m_reserve_append < (int)str.size()) {
                 int new_reserve_append = (int)str.size() + m_grow_size ;
@@ -180,11 +186,119 @@ namespace optimize {
     };
 
     /** 
-        This gives you 2 extra streams :
-        prepend(), and append()
+        @brief This holds 3 strings - one for prepend, one for modification, and one for appending
+
+        When you prepend or append, you can also specify an extra argument - an identifier.
+        This identifier uniquely identifies the prepended or appended message.
     */
-    template<class char_type> struct extra_streams {
-        // FIXME
+    template<class string_type_ = boost::logging::hold_string_type, class ptr_type = void* > struct cache_string_several_str {
+    private:
+        typedef string_type_ string_type;
+        typedef boost::shared_ptr<string_type> string_ptr;
+
+        struct cached_msg {
+            cached_msg() : prepended(true), id( ptr_type() ) {}
+            cached_msg(const string_type & str, bool prepended) : msg(new string_type(str)), prepended(prepended) {}
+
+            // when within the collection - it can never be null
+            // when within the array - if null, use it from the collection
+            string_ptr msg;
+            // if true, prepended; if false, appended
+            bool prepended;
+            // who wrote the message?
+            ptr_type id;
+        };
+
+    public:
+
+        /** 
+            constructs an object
+
+            @param reserve_ [optional, default = 512] When creating the full msg, how much should we reserve?
+        */
+        cache_string_several_str(int reserve_ = 512) : m_full_msg_computed(false) {
+            m_full_msg.reserve(reserve_);
+        }
+
+        /** 
+            sets the string with a swap (that is, you pass a non-const refererence, and we do a swap)
+        */
+        void set_string_swap(string_type & msg) {
+            std::swap(msg, m_msg);
+            m_full_msg_computed = false;
+        }
+
+        /** 
+            @brief sets the string
+        */
+        void set_string(const string_type & msg) {
+            m_msg = msg;
+            m_full_msg_computed = false;
+        }
+
+        /** 
+            @brief pre-pends a string (inserts it at the beginning)
+        */
+        void prepend_string(const string_type & str, ptr_type id = ptr_type() ) {
+            m_full_msg_computed = false;
+        }
+
+        /** 
+            @brief pre-pends a string (inserts it at the beginning). The message was already cached
+        */
+        void prepend_string(ptr_type id ) {
+            m_full_msg_computed = false;
+        }
+
+        /** 
+            @brief appends a string (inserts it at the end)
+        */
+         void append_string(const string_type & str, ptr_type id = ptr_type() ) {
+            m_full_msg_computed = false;
+        }
+
+        /** 
+            @brief appends a string (inserts it at the end). The message was already cached
+        */
+        void append_string(ptr_type id ) {
+            m_full_msg_computed = false;
+        }
+
+        /** 
+            @brief computes (if necessary) and returns the full string
+        */
+        const string_type & full_string() const {
+            if ( !m_full_msg_computed) {
+                m_full_msg_computed = true;
+                // FIXME
+            }
+            return m_full_msg;
+        }
+
+        /** 
+            @brief computes (if necessary) and returns the full string
+        */
+        operator const string_type&() const { return full_string(); }
+
+
+        /** 
+            @brief This restarts writing the messages. Whatever is cached can be used again
+        */
+        void restart() {
+            // ******** whatever msg is in vector that has an id, it to be placed in coll.
+            // FIXME
+            m_full_msg_computed = false;
+        }
+
+    private:
+        string_type m_msg;
+        mutable bool m_full_msg_computed;
+        mutable string_type m_full_msg;
+
+        typedef std::map<ptr_type, cached_msg> coll;
+        typedef std::vector<cached_msg> array;
+        coll m_cached;
+        array m_cur_msg;
     };
 
 }}}

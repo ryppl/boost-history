@@ -34,13 +34,9 @@ namespace boost { namespace logging { namespace destination {
 struct file_settings {
     file_settings() : m_flush_each_time(true), m_initial_overwrite(false), m_do_append(true) {}
 
-    file_settings & flush_each_time() { m_flush_each_time = true; return *this; }
-    file_settings & initial_overwrite() { m_initial_overwrite = true; return *this; }
-    file_settings & no_append() { m_do_append = false; return *this; }
-
-    file_settings & no_flush_each_time() { m_flush_each_time = false; return *this; }
-    file_settings & no_initial_overwrite() { m_initial_overwrite = false; return *this; }
-    file_settings & append() { m_do_append = true; return *this; }
+    file_settings & flush_each_time(bool flush = true) { m_flush_each_time = flush; return *this; }
+    file_settings & initial_overwrite(bool overwrite = true) { m_initial_overwrite = overwrite; return *this; }
+    file_settings & do_append(bool append) { m_do_append = append; return *this; }
 
     file_settings & extra_open_flags(std::ios_base::open_mode extra_flags) { m_extra_flags = extra_flags; return *this; }
 
