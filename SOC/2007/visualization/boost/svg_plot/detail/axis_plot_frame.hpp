@@ -5,7 +5,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 
-// ----------------------------------------------------------------- 
+// -----------------------------------------------------------------
 
 #ifndef _BOOST_SVG_AXIS_PLOT_FRAME_HPP
 #define _BOOST_SVG_AXIS_PLOT_FRAME_HPP
@@ -50,7 +50,7 @@ protected:
                              path_element& grid_path)
     {
         double x1(0.), y1(0.), y2(derived().image.get_y_size());
-        
+
         // draw the grid if needed
         if(derived().use_x_minor_grid)
         {
@@ -143,7 +143,7 @@ protected:
         if(x1 < derived().plot_x2 && x1 > derived().plot_x1)
         {
             double x_tick_length = derived().x_major_length / 2.;
-            
+
             if(derived().use_x_external_style)
             {
                 y1 = derived().plot_y2;
@@ -155,7 +155,7 @@ protected:
                 y1 = derived().x_axis + x_tick_length;
                 y2 = derived().x_axis - x_tick_length;
             }
-            
+
             tick_path.M(x1, y1).L(x1, y2);
 
             if(derived().use_x_major_labels)
@@ -173,7 +173,7 @@ protected:
                     y1 += (2 + derived().x_major_length/2);
                 }
 
-                derived().image.get_g_element(PLOT_PLOT_LABELS).text(x1, 
+                derived().image.get_g_element(PLOT_PLOT_LABELS).text(x1,
                     y1, fmt.str());
             }
         }
@@ -188,10 +188,10 @@ protected:
 
         derived().x_axis = y1;
 
-        path_element& minor_tick_path = 
+        path_element& minor_tick_path =
             derived().image.get_g_element(PLOT_X_MINOR_TICKS).path();
 
-        path_element& major_tick_path = 
+        path_element& major_tick_path =
             derived().image.get_g_element(PLOT_X_MAJOR_TICKS).path();
 
         path_element& minor_grid_path =
@@ -202,7 +202,7 @@ protected:
 
         if(derived().show_x_axis_lines)
         {
-        derived().image.get_g_element(PLOT_X_AXIS).line(derived().plot_x1, derived().x_axis, 
+        derived().image.get_g_element(PLOT_X_AXIS).line(derived().plot_x1, derived().x_axis,
             derived().plot_x2, derived().x_axis);
         }
 
@@ -213,8 +213,8 @@ protected:
         // draw the ticks on the positive side
         for(double i = 0; i < derived().x_max; i += derived().x_major)
         {
-            for(double j = i + x_minor_jump; 
-                       j < i + derived().x_major; 
+            for(double j = i + x_minor_jump;
+                       j < i + derived().x_major;
                        j += x_minor_jump)
             {
                 _draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
@@ -330,7 +330,7 @@ protected:
         // Figure out how wide the legend should be
         if(x_size < 200)
         {
-           legend_width = x_size; 
+           legend_width = x_size;
         }
 
         unsigned int legend_x_start(derived().plot_x2 + 5);
@@ -354,9 +354,9 @@ protected:
 
         g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
 
-        g_ptr->push_back(new rect_element(legend_x_start, 
+        g_ptr->push_back(new rect_element(legend_x_start,
 			                 legend_y_start,
-                             legend_width, 
+                             legend_width,
 				             legend_height));
 
         _draw_legend_header(legend_x_start, legend_y_start, legend_width);
@@ -372,24 +372,24 @@ protected:
             g_inner_ptr->style().fill_color(derived().series[i].point_style.fill_color)
                                          .stroke_color(derived().series[i].point_style.stroke_color);
 
-            _draw_plot_point(legend_x_start + 25, 
+            _draw_plot_point(legend_x_start + 25,
                              legend_y_start + derived().legend_title_size + 20 + i*25,
                              *g_inner_ptr,
                              derived().series[i].point_style);
-            
+
             g_inner_ptr = &(derived().image.get_g_element(PLOT_LEGEND_TEXT));
 
             g_inner_ptr->push_back(new text_element(legend_x_start + 40,
                             legend_y_start + derived().legend_title_size + 25 + i*25,
-                            derived().series[i].title, derived().legend_title_size, 
+                            derived().series[i].title, derived().legend_title_size,
                             left_align));
         }
     }
 
     void _draw_title()
     {
-        text_element title(derived().image.get_x_size()/2., 
-                           derived().title_info.font_size(), 
+        text_element title(derived().image.get_x_size()/2.,
+                           derived().title_info.font_size(),
                            derived().title_info.text());
 
         title.alignment(center_align);
@@ -399,7 +399,7 @@ protected:
 
     void _draw_x_label()
     {
-        text_element to_use((derived().plot_x2 + derived().plot_x1) / 2., 
+        text_element to_use((derived().plot_x2 + derived().plot_x1) / 2.,
             derived().image.get_y_size() - 8, derived().x_label_info.text());
 
         to_use.font_size(12);
@@ -438,7 +438,7 @@ protected:
         }
     }
 
-    void _draw_plot_point(double _x, double _y, 
+    void _draw_plot_point(double _x, double _y,
                           g_element& g_ptr, const plot_point_style& _sty)
     {
         int size = _sty.size;
@@ -500,7 +500,7 @@ public:
     Derived& plot_window_on(bool _cmd)
     {
         derived().use_plot_window = _cmd;
-        
+
         if(_cmd)
         {
             derived().image.get_g_element(detail::PLOT_PLOT_BACKGROUND)
@@ -558,7 +558,7 @@ public:
         derived().show_x_axis_lines = _is;
         return derived();
     }
-    
+
     Derived& y_axis_on(bool _is)
     {
         derived().show_y_axis_lines = _is;
@@ -681,6 +681,12 @@ public:
         return derived();
     }
 
+		Derived& y_label(const std::string& _str)
+		{ // Added PAB 17 Oct 07
+				derived().y_label_info.text(_str);
+				return derived();
+		}
+
     Derived& x_major_interval(double _inter)
     {
         derived().x_major = _inter;
@@ -776,7 +782,7 @@ public:
         return derived().use_x_major_labels;
     }
 
-    // color information    
+    // color information
     svg_color get_title_color()
     {
         return derived().image.get_g_element(PLOT_TITLE).style().stroke_color();
@@ -805,7 +811,7 @@ public:
     svg_color get_plot_background_color()
     {
         return derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().fill_color();
-    }   
+    }
 
     svg_color get_x_axis_color()
     {
@@ -871,7 +877,7 @@ public:
     unsigned int get_x_num_minor_ticks()
     {
         return derived().x_num_minor;
-    }  
+    }
 
     unsigned int get_x_major_tick_width()
     {
