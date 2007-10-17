@@ -5,7 +5,7 @@ project boost.spirit.docs
     ../bin.v2
   ;
 
-import boostbook ;
+#import boostbook ;
 import quickbook ;
 
 # generate the Boost.Book XML

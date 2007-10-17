@@ -1,0 +1,65 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/  Portions of this document tree:
+/   Copyright © 2001-2003 Hartmut Kaiser
+/   Copyright © 2001-2002 Daniel C. Nuffer
+/   Copyright © 2002 Chris Uzdavinis
+/   Copyright © 2002 Jeff Westfahl
+/   Copyright © 2002 Juan Carlos Arevalo-Baeza
+/   Copyright © 2003 Martin Wille
+/   Copyright © 2003 Ross Smith
+/   Copyright © 2003 Jonathan de Halleux
+/  Conversion from HTML:
+/   Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[/ links done]
+
+[section Preface]
+
+[:['["Examples of designs that meet most of the criteria for "goodness" (easy to understand, flexible, efficient) are a recursive-descent parser, which is traditional procedural code. Another example is the STL, which is a generic library of containers and algorithms depending crucially on both traditional procedural code and on parametric polymorphism."]]
+-- Bjarne Stroustrup]
+
+[h4 History]
+
+A decade and a half ago, I wrote my first calculator in Pascal. It is one of my most unforgettable coding experiences. I was amazed how a mutually recursive set of functions can model a grammar specification. In time, the skills I acquired from that academic experience became very practical. Periodically I was tasked to do some parsing. For instance, whenever I need to perform any form of I/O, even in binary, I try to approach the task somewhat formally by writing a grammar using Pascal-like syntax diagrams and then write a corresponding recursive-descent parser. This worked very well.
+
+The arrival of the Internet and the World Wide Web magnified this thousand-fold. At one point I had to write an HTML parser for a Web browser project. I got a recursive-descent HTML parser working based on the W3C formal specifications easily. I was certainly glad that HTML had a formal grammar specification. Because of the influence of the Internet, I then had to do more parsing. RFC specifications were everywhere. SGML, HTML, XML, even email addresses and those seemingly trivial URLs were all formally specified using small EBNF-style grammar specifications. This made me wish for a tool similar to big-time parser generators such as YACC and [@http://www.antlr.org/ ANTLR], where a parser is built automatically from a grammar specification. Yet, I want it to be extremely small; small enough to fit in my pocket, yet scalable.
+
+It must be able to practically parse simple grammars such as email addresses to moderately complex grammars such as XML and perhaps some small to medium-sized scripting languages. Scalability is a prime goal. You should be able to use it for small tasks such as parsing command lines without incurring a heavy payload, as you do when you are using YACC or PCCTS. Even now that it has evolved and matured to become a multi-module library, true to its original intent, Spirit can still be used for extreme micro-parsing tasks. You only pay for features that you need. The power of Spirit comes from its modularity and extensibility. Instead of giving you a sledgehammer, it gives you the right ingredients to create a sledgehammer easily. For instance, it does not really have a lexer, but you have all the raw ingredients to write one, if you need one.
+
+The result was Spirit. Spirit was a personal project that was conceived when I was doing R&D in Japan. Inspired by the GoF's composite and interpreter patterns, I realized that I can model a recursive-descent parser with hierarchical-object composition of primitives (terminals) and composites (productions). The original version was implemented with run-time polymorphic classes. A parser is generated at run time by feeding in production rule strings such as "`prod ::= {‘A’ | ‘B’} ‘C’;`". A compile function compiled the parser, dynamically creating a hierarchy of objects and linking semantic actions on the fly. A very early text can be found here.
+
+The version that we have now is a complete rewrite of the original Spirit parser using expression templates and static polymorphism, inspired by the works of Todd Veldhuizen ([@http://www.extreme.indiana.edu/%7Etveldhui/papers/Expression-Templates/exprtmpl.html "Expression Templates"], C++ Report, June 1995). Initially, the [*static-Spirit] version was meant only to replace the core of the original [*dynamic-Spirit]. Dynamic-spirit needed a parser to implement itself anyway. The original employed a hand-coded recursive-descent parser to parse the input grammar specification strings.
+
+After its initial "open-source" debut in May 2001, static-Spirit became a success. At around November 2001, the Spirit website had an activity percentile of 98%, making it the number one parser tool at Source Forge at the time. Not bad for such a niche project such as a parser library. The "static" portion of Spirit was forgotten and static-Spirit simply became Spirit. The framework soon evolved to acquire more dynamic features.
+
+[h4 How to use this manual]
+
+The Spirit framework is organized in logical modules starting from the core. This documentation provides a user's guide and reference for each module in the framework. A simple and clear code example is worth a hundred lines of documentation; therefore, the user's guide is presented with abundant examples annotated and explained in step-wise manner. The user's guide is based on examples -lots of them.
+
+As much as possible, forward information (i.e. citing a specific piece of information that has not yet been discussed) is avoided in the user's manual portion of each module. In many cases, though, it is unavoidable that advanced but related topics are interspersed with the normal flow of discussion. To alleviate this problem, topics categorized as "advanced" may be skipped at first reading.
+
+Some icons are used to mark certain topics indicative of their relevance. These icons precede some text to indicate:
+
+[table Icons
+  [[Note] 	[Information provided is moderately important and should be noted by the reader.]]
+  [[Alert] 	[Information provided is of utmost importance.]]
+  [[Detail] [Information provided is auxiliary but will give the reader a deeper insight into a specific topic. May be skipped.]]
+  [[Tip] 	  [A potentially useful and helpful piece of information.]]
+]
+
+[h4 Support]
+
+Please direct all questions to Spirit's mailing list. You can subscribe to the mailing list [@https://lists.sourceforge.net/lists/listinfo/spirit-general here]. The mailing list has a searchable archive. A search link to this archive is provided in [@http://spirit.sf.net Spirit's home page]. You may also read and post messages to the mailing list through an [@http://news.gmane.org/thread.php?group=gmane.comp.parsers.spirit.general NNTP news portal] (thanks to [@www.gmane.org]). The news group mirrors the mailing list. Here are two links to the archives: via [@http://dir.gmane.org/gmane.comp.parsers.spirit.general gmane], via [@http://sourceforge.net/mailarchive/forum.php?forum_id=1595gmane.org geocrawler].
+
+[*To my dear daughter Phoenix]
+  	
+Joel de Guzman
+September 2002
+
+[endsect] [/preface]
+

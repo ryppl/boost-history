@@ -1,3 +1,20 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/  Portions of this document tree:
+/   Copyright © 2001-2003 Hartmut Kaiser
+/   Copyright © 2001-2002 Daniel C. Nuffer
+/   Copyright © 2002 Chris Uzdavinis
+/   Copyright © 2002 Jeff Westfahl
+/   Copyright © 2002 Juan Carlos Arevalo-Baeza
+/   Copyright © 2003 Martin Wille
+/   Copyright © 2003 Ross Smith
+/   Copyright © 2003 Jonathan de Halleux
+/  Conversion from HTML:
+/   Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
 
 [def __boost_ref__ [@http://www.boost.org/doc/html/ref.html boost::ref]]
 

@@ -1,0 +1,194 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/  Portions of this document tree:
+/   Copyright © 2001-2003 Hartmut Kaiser
+/   Copyright © 2001-2002 Daniel C. Nuffer
+/   Copyright © 2002 Chris Uzdavinis
+/   Copyright © 2002 Jeff Westfahl
+/   Copyright © 2002 Juan Carlos Arevalo-Baeza
+/   Copyright © 2003 Martin Wille
+/   Copyright © 2003 Ross Smith
+/   Copyright © 2003 Jonathan de Halleux
+/  Conversion from HTML:
+/   Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:change_log Spirit Change Log]
+
+[h3 1.8.6]
+
+* Fixed a integer overflow bug preventing to fail parsing on certain large integers. This bug was reported and fixed by Michael Andersen Nexø
+
+[h3 1.8.5]
+
+* For performance reasons, leaf_node_d/token_node_d have been changed to implicit lexems that create leaf nodes in one shot. The old token_node_d is still available and called reduced_node_d, now.
+* It's now possible to phoenix::bind (version 1) symbols::add.
+
+[h3 1.8.4]
+
+* Fixed no_actions bug where no_action is applied recursively.
+* Fixed the regex_p parser for Boost >= V1.33.0
+* Implemented a workaround for namespace issues VC++ has with Spirit's file_iterators
+* Fixed bug in tree match policies that prevented using gen_pt/ast_node_d, reported by Jascha Wetzel.
+* Made position_iterator usable with wchar_t based strings.
+
+[h3 1.8.3]
+
+* Config correction for Sun C++ by Steve Clamage (see this link).
+* Fixed multi_pass_iterator for 64 platforms, where sizeof(int) != sizeof(ptr_type).Fixed bug that prevents the use of closures with grammars with multiple entry points, reported by David Pierre
+* Fixed bug that prevented embedding of grammars with multiple entry points, reported by David Pierre
+* Added '\0' to the set of valid escaped characters for escape_ch_p.
+* Fixed a switch_p bug when used with a phoenix::actor as the conditional expression.
+* __LINE__ macro now gets expanded in BOOST_SPIRIT_ASSERT_EXCEPTION
+* Fixed a bug in the intersection parser reported by Yusaku Sugai
+* The symbol parser uses the null character internally. Checks were added so that:
+      o tst.add asserts if string contains the null character
+      o tst.find doesn't match null characters in the input
+* Fixed match_attr_traits.ipp to allow non-POD to pass through. The previous version taking in the ellipsis "..." does not allow PODs to pass through.
+* Allow evaluation to int as condition to if_p parser.
+* Applied performance improvement changes to the PT/AST code as suggested by Stefan Slapeta.
+* Fixed several problems with AST tree node directives (inner_node_d[], discard_first_node[], discard_last_node[] and infix_node_d[]).
+
+[h3 1.8.2]
+
+Maintenance release (almost the same as 1.8.1 plus a few fixes here and there)
+
+* Added specializations to str_p and ch_p to allow str_p('c') and ch_p("c") thus fixing some non-bugs
+* Fixed bug where a match<T> is a variant.
+* added Jamfile/Jamrules from CVS to spirit-1.8.1/
+* added boost-build.jam from boost to spirit-1.8.1/
+* disabled template multi-threading in libs/spirit/test/Jamfile
+* added a boost-header-include rule (from spirit-header-include) pointing to miniboost in libs/spirit/test/Jamfile
+* Fixed if_p inconsistency
+
+[h3 1.6.2]
+
+The Spirit 1.6.2 release is a bug-fix release only, no new features were introduced.
+
+* wchar_t friendly implementation of graph_p
+* Modified escape_char_parser::parse() to use a static parser instead of a rule. This will make it more friendly to use in trees. It should also be a little more efficient.
+* Moved to Boost Software license 1.0.
+* workaround for Error 322 name lookup in base class specialization finds type
+* fixed limit_d bug
+* [numerics] Workaround for aC++
+* Fixed a bug in the switch_p parser.
+* Fixed a EOI problem in multi_pass
+* added Jamfile/Jamrules from CVS to spirit-1.6.1/
+* added boost-build.jam from boost to spirit-1.6.1/
+* disabled template multi-threading in libs/spirit/test/Jamfile
+* added a boost-header-include rule (from spirit-header-include) pointing to miniboost in libs/spirit/test/Jamfile
+
+[h3 1.8.1 (Released with Boost 1.32.0)]
+
+The Spirit 1.8.1 release is a bug-fix release only, no new features were introduced.
+
+* Spirit now requires at least Boost 1.32.0 to compile correctly
+* Removed the support for the older iterator adaptor library and
+* Moved to use the new MPL library
+* Spirit was moved to use the Boost Software License 1.0.
+* Fixed several parsers to support post-skips more correctly.
+* Fixed a no_node_d[] bug.
+* Fixed a bug in shortest_d[].
+* Fixed a bug in limit_d[].
+* Fixed parser traversal meta code.
+* Fixed several bugs in switch_p.
+* Fixed AST generating problems, in particular with the loops related parsers.
+* Fixed several bugs in the multi_pass iterator.
+      o Fixed a problem, when the used base iterator returned a value_type and not a reference from its dereferencing operator.
+      o Fixed iterator_traits problem
+      o Fixed an EOI problem
+      o Fixed a bug, when used with std::cin
+* Found a bug in grammar.ipp when BOOST_SPIRIT_SINGLE_GRAMMAR_INSTANCE is defined
+* Rewritten safe_bool to use CRTP - now works also on MWCW, fixed several bugs with the implementation.
+* Fixed and extended the debug diagnostics printed by the parse tree code.
+
+[h3 1.8.0 (Released with Boost 1.31.0; Includes unreleased 1.7.1)]
+
+* Fixed a wchar_t problem in the regex_p parser.
+* removed code and workarounds for old compilers (VC6/7 and Borland)
+* Changed license to the new boost license.
+* Modified escape_char_parser::parse() to use a static parser instead of a rule. This will make it more friendly to use in trees. It should also be a little more efficient.
+
+[h3 1.7.1 (Unreleased; becomes 1.8.0)]
+
+* Added a full suite of predefined actors.
+* Moved rule_alias and stored_rule from core/non-terminal to dynamic.
+  Made as_parser a public API in meta/as_parser.hpp
+* Separated Core.Meta into its own module
+* Refactored Utility module
+  Moved some files into Utility.Parsers
+
+    * utilities
+          o parsers
+                + chset, regex, escape_char
+                  confix, list, distinct
+                  functor_parser
+    * support
+          o scoped_lock
+            flush_multi_pass
+            grammar_def
+    * actors
+          o assign
+
+* Stored rules
+* Added the switch_p and select_p dynamic parsers.
+* Multiple scanner support for rules.
+* The Rule's Scanner, Context and Tag template parameters can be specified in any order now. If a template parameter is missing, it will assume the defaults. See test/rule_tests.cpp.
+* Introduced the possibility to specify more than one start rule from a grammar.
+* Added an implementation of the file_iterator iterator based on the new Boost iterator_adaptors (submitted originally by Thomas Witt).
+
+[The transition to the new iterator_adaptors should be complete now.]
+
+* Added an implementation of the fixed_size_queue iterator based on the new Boost iterator_adaptors.
+* wchar_t friendly implementation of graph_p
+* made the copy-constructor and assignment-operator of parser_error_base public to clear VC7.1 C4673 warning. Added copy-constructor and assignment operator to parser_error for clarity of intent.
+
+[h3 1.7.0]
+
+* assign(string) semantic action now works in VC6
+* parsers need not be default constructible
+* simplified aggregation of binary and unary parsers (more compiler friendly)
+* epsilon workarounds for VC++
+* match's attribute now uses boost.optional
+* subrules can now have closures
+* project wide 64 bit compatibility
+* dynamic_parser_tag, reissue of rule.set_id(id);
+* numerous primitives improvements and workarounds for problematic compilers
+* proper complement (~) of single char parser primitives and chsets
+* intuitive handling of lexeme_d
+* wide_phrase_scanner_t typedef
+* dynamic parser improvements (better support for more compilers)
+* complete rewrite of the file_iterator (using boost.iterator_adapters). Supports memory maps wherever available
+* multi_pass updates (compatibility with more compilers (e.g VC7) and more)
+* position_iterator improvements
+* better phoenix support for more compilers
+* phoenix new_(...) construct
+* new lazy_p parser
+* utility.distinct parser (undocumented)
+* chset operators improvements
+* confix_p streamlining and improvements
+* numerous Boost integration improvements
+
+[h3 Bug fixes (1.7.0 and 1.6.0)]
+
+* Fixed. Using MSVC++6 (SP5), calling the assign action with a string value on parsers using the file_iterator will not work.
+* Fixed: using assign semantic action in a grammar with a multi_pass iterator adaptor applied to an std::istream_iterator resulted in a failure to compile under msvc 7.0.
+* Fixed: There is a bug in the "range_run<CharT>::set (range<CharT> const& r)" function in the "boost\spirit\utility\impl\chset\range_run.ipp".
+* Fixed: handling of trailing whitespace bug (ast_parse/pt_parse related)
+* Fixed: comment_p and end of data bug
+* Fixed: Most trailing space bug:
+* Fixed:
+  chset<>::operator~(range<>) bug
+  operator&(chset<>, range<>) bug
+  operator&(range<>, chset<>) bug
+* Fixed: impl::detach_clear bug
+* Fixed: mismatch closure return type bug
+* Fixed: access_node_d[] and access_match_d[] iterator bugs
+* Fixed a bug regarding threadsafety of Phoenix/Spirit closures.
+* Added missing include files to miniboost
+
+[endsect] [/ change_log]
+
