@@ -281,6 +281,6 @@ svg_color constant_to_rgb(svg_color_constant _c)
 }
 
 } // svg
-} / /boost
+} // boost
 
 #endif // BOOST_SVG_SVG_COLOR_HPP
