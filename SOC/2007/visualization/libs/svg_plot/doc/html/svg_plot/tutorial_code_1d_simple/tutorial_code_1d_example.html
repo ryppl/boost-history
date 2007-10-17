@@ -2,9 +2,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>
-      Simple Example</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+      Simple 1D Example</title>
+<link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
 <link rel="start" href="../../index.html" title="SVG_Plot">
 <link rel="up" href="../tutorial_code_1d_simple.html" title=" Tutorial: 1D">
 <link rel="prev" href="../tutorial_code_1d_simple.html" title=" Tutorial: 1D">
@@ -12,76 +12,78 @@
       1D Full Layout Example">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%">
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
-<td align="center"><a href="../../../../index.htm">Home</a></td>
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
+<td align="center"><a href="../../../../../../../../../../trunk/index.htm">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="../../../../people/people.htm">People</a></td>
-<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
-<td align="center"><a href="../../../../more/index.htm">More</a></td>
-</table>
+<td align="center"><a href="../../../../../../../../../../trunk/people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../../../../../../trunk/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
+</tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="full_1d_layout.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="full_1d_layout.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example"></a><a href="tutorial_code_1d_example.html" title="
-      Simple Example">
-      Simple Example</a>
+      Simple 1D Example">
+      Simple 1D Example</a>
 </h3></div></div></div>
 <pre class="programlisting">
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_1d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
-
-<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-	<span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">dan_times</span><span class="special">;</span>
-	<span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">elaine_times</span><span class="special">;</span>
+  <span class="comment">// STL containers for the data to plot.
+</span>  <span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">dan_times</span><span class="special">;</span>
+  <span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">elaine_times</span><span class="special">;</span>
+  <span class="comment">// Fill the two containers with some data:
+</span>  <span class="identifier">dan_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3.1</span><span class="special">);</span>
+  <span class="identifier">dan_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">4.2</span><span class="special">);</span>
+  <span class="identifier">elaine_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2.1</span><span class="special">);</span>
+  <span class="identifier">elaine_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">7.8</span><span class="special">);</span>
 
-	<span class="identifier">dan_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3.1</span><span class="special">);</span>
-	<span class="identifier">dan_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">4.2</span><span class="special">);</span>
-	<span class="identifier">elaine_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2.1</span><span class="special">);</span>
-	<span class="identifier">elaine_times</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">7.8</span><span class="special">);</span>
-
-	<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
-
-	<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
-	       <span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
-	       <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
-
-	<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">dan_times</span><span class="special">,</span> <span class="string">"Dan"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
-	<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">elaine_times</span><span class="special">,</span> <span class="string">"Elaine"</span><span class="special">,</span> <span class="identifier">orange</span><span class="special">);</span>
-
-	<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple.svg"</span><span class="special">);</span>
-	<span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span> <span class="comment">// Construct a plot.
+</span>
+  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span> <span class="comment">// Set title and legend.
+</span>         <span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+         <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
+         
+  <span class="comment">// Add the containers of data to the plot.
+</span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">dan_times</span><span class="special">,</span> <span class="string">"Dan"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
+  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">elaine_times</span><span class="special">,</span> <span class="string">"Elaine"</span><span class="special">,</span> <span class="identifier">orange</span><span class="special">);</span>
+  
+  <span class="comment">// And finally write the plot to a file.
+</span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple.svg"</span><span class="special">);</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
         <span class="inlinemediaobject"><img src="../../images/1d_simple.png" alt="1d_simple"></span>
       </p>
-<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax"></a><h4>
-<a name="id331426"></a>
+<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax"></a><h5>
+<a name="id679420"></a>
         <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax">A
         Note On Syntax</a>
-      </h4>
+      </h5>
 <p>
         The syntax "<code class="computeroutput"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Hello"</span><span class="special">).</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)...</span></code>"
-        may appear unfamiliar. However, it works on the same principle that the assignment
-        operator, addition operator, and output operator in the following code works:
+        may appear unfamiliar. However, it works on the same 'chaining' principle
+        that the assignment operator, addition operator, and output operator in the
+        following code works:
       </p>
 <pre class="programlisting">
 <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
 
-<span class="comment">//prints 12
-</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span> <span class="special">+</span> <span class="identifier">b</span> <span class="special">+</span> <span class="identifier">c</span> <span class="special">+</span> <span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-</pre>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span> <span class="special">+</span> <span class="identifier">b</span> <span class="special">+</span> <span class="identifier">c</span> <span class="special">+</span> <span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>  <span class="comment">// prints 12
+</span></pre>
 <p>
-        Within all of the plot classes, "chaining" works the same way.
-        The equivalent code for the example is as follows:
+        Within all of the plot classes, 'chaining' works the same way. Equivalent
+        code for the example is as follows:
       </p>
 <pre class="programlisting">
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">);</span>
@@ -89,22 +91,29 @@
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
 <p>
-        In the long run, I think you will find that my choice helps organize the
-        code a little better!
+        Chaining allows you to group related settings together, and avoids relying
+        on the order of arguments in ordinary function calls that would clearly become
+        impracticable with dozens of arguments required to set all the myriad of
+        plot options.
       </p>
-<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.basic_example_breakdown"></a><h4>
-<a name="id331758"></a>
-        <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.basic_example_breakdown">Basic
-        Example Breakdown</a>
-      </h4>
 <p>
-        Let's examine what this does.
+        In the long run, I think you will find that chaining helps organize your
+        code to read more clearly!
+      </p>
+<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown"></a><h5>
+<a name="id679813"></a>
+        <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown">Simple
+        1D Example Breakdown</a>
+      </h5>
+<p>
+        Let's examine what this does in detail.
       </p>
 <pre class="programlisting">
 <span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
 </pre>
 <p>
-        This initializes a new 1D plot. This also sets many of the default values.
+        This constructor initializes a new 1D plot, called my_plot, and also sets
+        all the many default values.
       </p>
 <pre class="programlisting">
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
@@ -112,8 +121,8 @@
        <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
 <p>
-        All of the setter methods are fairly self-explanatory. To walk through it
-        once,
+        All of the setter methods (or member functions) are fairly self-explanatory.
+        To walk through it once,
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -122,7 +131,7 @@
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> means
-          that the legend will show up.
+          that the legend will display.
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">)</span></code> means that the axis displayed will be
@@ -133,11 +142,13 @@
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race times"</span><span class="special">);</span>
 </pre>
 <p>
-        This draws <code class="computeroutput"><span class="identifier">my_data</span></code> to <code class="computeroutput"><span class="identifier">my_plot</span></code>. As many containers as you want
-        can be drawn to <code class="computeroutput"><span class="identifier">my_plot</span></code>.
-        The name of the series is "Race times", and that text will show
-        up in the legend. These are the two required parameters for this function
-        call. There are optional parameters, as seen in the section <a href="../svg_1d_plot_interface.html" target="_top">svg_plot/svg_1d_plot_interface.html</a>
+        This draws <code class="computeroutput"><span class="identifier">my_data</span></code> onto
+        <code class="computeroutput"><span class="identifier">my_plot</span></code>. As many containers
+        as you want can be drawn to <code class="computeroutput"><span class="identifier">my_plot</span></code>.
+        The name of this data series is "Race times", and this text will
+        show up in the legend (if my_plot.legend_on() == true). These are the two
+        required parameters for this plot function call. There are also optional
+        parameters, as seen in the section <a href="../../.%5Chtml%5Csvg_plot%5Cinterface%5Csvg_1d_plot_interface.html" target="_top">svg_1d_plot_interface.html</a>
       </p>
 <p>
         
@@ -146,9 +157,8 @@
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple.svg"</span><span class="special">);</span>
 </pre>
 <p>
-      </p>
-<p>
-        This writes our plot to the file "simple.svg".
+        This writes our plot to the file "simple.svg". SVG files can be
+        viewed with most browsers, or embedded into documents.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -157,7 +167,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="full_1d_layout.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="full_1d_layout.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
