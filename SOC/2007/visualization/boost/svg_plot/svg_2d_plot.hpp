@@ -115,6 +115,7 @@ private:
 
     text_element title_info;
     text_element x_label_info;
+    text_element y_label_info;
 
     // border information for the plot window. Initially will be set to the width
     // and height of the graph
@@ -154,9 +155,6 @@ private:
     // where we will be storing the data points for transformation
     std::vector<svg_2d_plot_series> series;
 
-    // strings having to do with labels
-    std::string  y_label;
-
     std::string plot_window_clip;
 
     // axis information
@@ -169,7 +167,6 @@ private:
 
     bool use_y_label;
     bool use_y_major_labels;
-
     
     void _draw_y_minor_ticks(double j, path_element& tick_path,
                              path_element& grid_path)
@@ -268,7 +265,7 @@ private:
             
             tick_path.M(x1, y1).L(x2, y1);
 
-            if(use_y_major_labels && i != 0)
+            if(use_y_major_labels)
             {
                 std::stringstream fmt;
                 fmt<<i;
@@ -283,8 +280,18 @@ private:
                     x1 += (2 + y_major_length/2);
                 }
 
-                image.get_g_element(detail::PLOT_PLOT_LABELS).text(x1, 
-                    y1, fmt.str());
+                if(!use_y_external_style && i != 0)
+                {
+                    image.get_g_element(detail::PLOT_PLOT_LABELS).text(x1, 
+                        y1, fmt.str());
+                }
+
+                if(use_y_external_style)
+                {
+                    image.get_g_element(detail::PLOT_PLOT_LABELS).text(x1 + 12, 
+                        y1, fmt.str(), 12, center_align, -90);
+
+                }
             }
         }
     }
@@ -354,17 +361,12 @@ private:
 
     void _draw_y_label()
     {
-    /*    text_element to_use((plot_x2 + plot_x1) / 2., image.get_y_size() - 8, x_label);
+        image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_color(black);
 
-        to_use.font_size(12);
-        to_use.alignment(center_align);
-
-        image.get_g_element(PLOT_X_LABEL).stroke_color(white);
-        image.get_g_element(PLOT_X_LABEL).fill_color(white);
-
-
-        image.get_g_element(PLOT_X_LABEL).push_back(new text_element(to_use));
-    */
+        image.get_g_element(detail::PLOT_Y_LABEL).push_back(new 
+            text_element(12, (plot_y2 + plot_y1)/2., 
+            y_label_info.text(),
+            12, center_align, -90));
     }
 
     
@@ -615,6 +617,8 @@ private:
                                      plot_x2 - plot_x1 - 2, plot_y2 - plot_y1 - 2),
                         plot_window_clip);
 
+        image.get_g_element(detail::PLOT_PLOT_POINTS).clip_id(plot_window_clip);
+
         if(use_axis)
         {
             _draw_y_axis();
@@ -629,6 +633,11 @@ private:
         if(use_x_label)
         {
             _draw_x_label();
+        }
+
+        if(use_y_label)
+        {
+            _draw_y_label();
         }
 
         // Draw lines between non-limit points
@@ -683,6 +692,7 @@ public:
 
 svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
                       x_label_info(0, 0, "X Axis", 12),
+                      y_label_info(0, 0, "Y Axis", 12),
                       x_min(-10), x_max(10), 
                       y_min(-10), y_max(10), 
                       x_major(3), x_num_minor(2), 
@@ -868,7 +878,7 @@ svg_2d_plot& y_num_minor_ticks(unsigned int _num)
 
 svg_2d_plot& y_name(const std::string& _str)
 {
-    y_label = _str;
+    y_label_info.text(_str);
     return *this;
 }
 
@@ -883,6 +893,12 @@ svg_2d_plot& y_minor_tick_width(unsigned int _width)
 {
     image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_width(_width);
 
+    return *this;
+}
+
+svg_2d_plot& y_label_on(bool _cmd)
+{
+    use_y_label = _cmd;
     return *this;
 }
 

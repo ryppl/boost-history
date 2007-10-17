@@ -1,12 +1,9 @@
-#include "svg_1d_plot.hpp"
+#include "svg_2d_plot.hpp"
 #include "svg_boxplot.hpp"
-
-#include <vector>
+#include <map>
 #include <cmath>
-#include <iostream>
 
 using std::multimap;
-using std::vector;
 
 double h(double x)
 {
@@ -24,26 +21,28 @@ using std::cin;
 int main()
 {
     using namespace boost::svg;
-    std::vector<double> data1, data2;
+    std::multimap<double, double> data1;
 
     svg_boxplot my_plot;
-    svg_1d_plot my_1d_plot;
+    svg_2d_plot my_2d_plot;
 
-    my_1d_plot.load_stylesheet("D:\\style.css");
-
-    my_1d_plot.background_border_color(black)
-           .title("Boxplots of Common Functions");
+    my_2d_plot.background_border_color(black)
+           .title("Y axis label experiment")
+           .y_major_labels_on(true)
+           .y_label_on(true)
+           .x_label_on(true)
+           .x_major_labels_on(true)
+           .plot_window_on(true)
+           .y_external_style_on(true);
     
     for(double i=.1; i < 10; i+=.1)
     {
-        data1.push_back(h(i));
-        data2.push_back(f(i));
+        data1.insert(std::pair<double, double>(i, h(i)));
     }
 
-    my_1d_plot.plot(data1, "[50 / x]");
-    my_1d_plot.plot(data2, "[40 + 25 * sin(50x)]");
+    my_2d_plot.plot(data1, "[50 / x]");
 
-    my_1d_plot.write("D:\\1d_test.svg");
+    my_2d_plot.write("D:\\axislabel_test.svg");
 
     return 0;
 }
