@@ -1,76 +1,76 @@
-// svg_style.hpp 
+// svg_color.hpp
 // Copyright (C) Jacob Voytko 2007
 //
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 
-// ----------------------------------------------------------------- 
+// -----------------------------------------------------------------
 
-#ifndef _BOOST_SVG_SVG_COLOR_HPP
-#define _BOOST_SVG_SVG_COLOR_HPP
+#ifndef BOOST_SVG_SVG_COLOR_HPP
+#define BOOST_SVG_SVG_COLOR_HPP
 
 #include <ostream>
 
-
-
-namespace boost {
-namespace svg {
+namespace boost
+{
+namespace svg
+{
 
 // -----------------------------------------------------------------
 // Deals with colors that have special names. The reason that the
-// underscoring does not match the normal Boost format
-// is that these are the names that are specifically allowed by the
-// SVG standard
+// underscore separator convention does not match the normal Boost format
+// is that these names that are specified by the SVG standard.
+// http://www.w3.org/TR/SVG/types.html#ColorKeywords
 // -----------------------------------------------------------------
 enum svg_color_constant
 {
-    aliceblue, antiquewhite, aqua, aquamarine, azure, beige, 
-    bisque, black, blanchedalmond, blue, blueviolet, brown, 
-    burlywood, cadetblue, chartreuse, chocolate, coral, 
-    cornflowerblue, cornsilk, crimson, cyan, darkblue, darkcyan, 
-    darkgoldenrod, darkgray, darkgreen, darkgrey, darkkhaki, 
-    darkmagenta, darkolivegreen, darkorange, darkorchid, darkred, 
-    darksalmon, darkseagreen, darkslateblue, darkslategray, 
-    darkslategrey, darkturquoise, darkviolet, deeppink, 
-    deepskyblue, dimgray, dimgrey, dodgerblue, firebrick, 
-    floralwhite, forestgreen, fuchsia, gainsboro, ghostwhite, gold, 
-    goldenrod, gray, grey, green, greenyellow, honeydew, hotpink, 
-    indianred, indigo, ivory, khaki, lavender, lavenderblush, 
-    lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, 
-    lightgoldenrodyellow, lightgray, lightgreen, lightgrey, 
-    lightpink, lightsalmon, lightseagreen, lightskyblue, 
-    lightslategray, lightslategrey, lightsteelblue, lightyellow, 
-    lime, limegreen, linen, magenta, maroon, mediumaquamarine, 
-    mediumblue, mediumorchid, mediumpurple, mediumseagreen, 
-    mediumslateblue, mediumspringgreen, mediumturquoise, 
-    mediumvioletred, midnightblue, mintcream, mistyrose, moccasin, 
-    navajowhite, navy, oldlace, olive, olivedrab, orange, 
-    orangered, orchid, palegoldenrod, palegreen, paleturquoise, 
-    palevioletred, papayawhip, peachpuff, peru, pink, plum, 
-    powderblue, purple, red, rosybrown, royalblue, saddlebrown, 
-    salmon, sandybrown, seagreen, seashell, sienna, silver, 
-    skyblue, slateblue, slategray, slategrey, snow, springgreen, 
-    steelblue, tan, teal, thistle, tomato, turquoise, violet, 
+    aliceblue, antiquewhite, aqua, aquamarine, azure, beige,
+    bisque, black, blanchedalmond, blue, blueviolet, brown,
+    burlywood, cadetblue, chartreuse, chocolate, coral,
+    cornflowerblue, cornsilk, crimson, cyan, darkblue, darkcyan,
+    darkgoldenrod, darkgray, darkgreen, darkgrey, darkkhaki,
+    darkmagenta, darkolivegreen, darkorange, darkorchid, darkred,
+    darksalmon, darkseagreen, darkslateblue, darkslategray,
+    darkslategrey, darkturquoise, darkviolet, deeppink,
+    deepskyblue, dimgray, dimgrey, dodgerblue, firebrick,
+    floralwhite, forestgreen, fuchsia, gainsboro, ghostwhite, gold,
+    goldenrod, gray, grey, green, greenyellow, honeydew, hotpink,
+    indianred, indigo, ivory, khaki, lavender, lavenderblush,
+    lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan,
+    lightgoldenrodyellow, lightgray, lightgreen, lightgrey,
+    lightpink, lightsalmon, lightseagreen, lightskyblue,
+    lightslategray, lightslategrey, lightsteelblue, lightyellow,
+    lime, limegreen, linen, magenta, maroon, mediumaquamarine,
+    mediumblue, mediumorchid, mediumpurple, mediumseagreen,
+    mediumslateblue, mediumspringgreen, mediumturquoise,
+    mediumvioletred, midnightblue, mintcream, mistyrose, moccasin,
+    navajowhite, navy, oldlace, olive, olivedrab, orange,
+    orangered, orchid, palegoldenrod, palegreen, paleturquoise,
+    palevioletred, papayawhip, peachpuff, peru, pink, plum,
+    powderblue, purple, red, rosybrown, royalblue, saddlebrown,
+    salmon, sandybrown, seagreen, seashell, sienna, silver,
+    skyblue, slateblue, slategray, slategrey, snow, springgreen,
+    steelblue, tan, teal, thistle, tomato, turquoise, violet,
     wheat, white, whitesmoke, yellow, yellowgreen, blank
 };
 
-void constant_to_rgb(svg_color_constant _c, unsigned char &r, 
+void constant_to_rgb(svg_color_constant _c, unsigned char &r,
                      unsigned char &g, unsigned char &b);
 
 // -----------------------------------------------------------------
-// svg_color is the struct that contains information about sRGB
+// svg_color is the struct that contains information about RGB
 // colors.
 //
-// For the constructor: the svg standard specifies that numbers
+// For the constructor: the SVG standard specifies that numbers
 // outside the normal rgb range are to be accepted, but are rounded
-// to acceptable values.
+// to acceptable values [0, 255].
 // -----------------------------------------------------------------
 struct svg_color
 {
     unsigned char r, g, b;
     bool blank;
 
-    svg_color(int _r, int _g, int _b): blank(false)
+    svg_color(int _r, int _g, int _b) : blank(false)
     {
         _r = ( _r < 0 ) ? 0 : _r;
         _g = ( _g < 0 ) ? 0 : _g;
@@ -81,11 +81,11 @@ struct svg_color
         b = (unsigned char)(( _b > 255 ) ? 255 : _b);
     }
 
-    svg_color(bool _is):blank(_is)
+    svg_color(bool _is) : blank(_is)
     {
     }
 
-    svg_color(svg_color_constant _col):blank(false)
+    svg_color(svg_color_constant _col) : blank(false)
     {
         constant_to_rgb(_col, r, g, b);
     }
@@ -100,7 +100,7 @@ struct svg_color
 
         else
         {
-            rhs <<"none";
+            rhs <<"blank";
         }
     }
 
@@ -108,8 +108,7 @@ struct svg_color
     {
         return r == rhs.r && g == rhs.g && b == rhs.b;
     }
-};
-
+}; // struct svg_color
 
 svg_color color_array[] =
 {
@@ -261,9 +260,9 @@ svg_color color_array[] =
     svg_color(255, 255, 0  ), // yellow
     svg_color(154, 205, 50 ), // yellowgreen
     svg_color(false)          // blank
-};
+}; // svg_color color_array[]
 
-void constant_to_rgb(svg_color_constant _c, unsigned char &r, 
+void constant_to_rgb(svg_color_constant _c, unsigned char &r,
                      unsigned char &g, unsigned char &b)
 {
     svg_color temp(color_array[_c]);
@@ -281,8 +280,7 @@ svg_color constant_to_rgb(svg_color_constant _c)
     return color_array[_c];
 }
 
-}//svg
-}//boost
+} // svg
+} / /boost
 
-
-#endif
+#endif // BOOST_SVG_SVG_COLOR_HPP
