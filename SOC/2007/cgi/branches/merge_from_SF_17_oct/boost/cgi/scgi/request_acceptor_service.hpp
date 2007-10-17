@@ -8,17 +8,16 @@
 ////////////////////////////////////////////////////////////////
 #ifndef CGI_REQUEST_SERVICE_HPP_INCLUDED
 #define CGI_REQUEST_SERVICE_HPP_INCLUDED
-
-#include "../detail/push_options.hpp"
+#include "boost/cgi/detail/push_options.hpp"
 
 #include <boost/utility/enable_if.hpp>
 
 //#include "is_async.hpp"
-#include "../io_service.hpp"
-#include "../detail/throw_error.hpp"
-#include "../detail/protocol_traits.hpp"
-#include "../basic_protocol_service_fwd.hpp"
-#include "../detail/service_base.hpp"
+#include "boost/cgi/io_service.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/detail/service_base.hpp"
 //#include "service_selector.hpp"
 
 namespace cgi {
@@ -38,10 +37,10 @@ namespace cgi {
   public:
     //typedef typename service_impl_type::impl_type     impl_type;
 
-    typedef scgi_request_acceptor_impl        implementation_type;
-    typedef typename implementation_type::protocol_type
-                                              protocol_type;
-    typedef basic_protocol_service<Protocol>  protocol_service_type;
+    typedef scgi_acceptor_service_impl                  service_impl_type;
+    typedef service_impl_type::implementation_type      implementation_type;
+    typedef implementation_type::protocol_type          protocol_type;
+    typedef basic_protocol_service<protocol_type>       protocol_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
@@ -63,31 +62,44 @@ namespace cgi {
    
     void construct(implementation_type& impl)
     {
+      service_impl_.construct(impl);
     }
 
     void destroy(implementation_type& impl)
     {
+      service_impl_.destroy(impl);
     }
 
     void shutdown_service()
     {
+      service_impl_.shutdown_service();
     }
 
+    bool is_open()
+    {
+      return service_impl_.is_open();
+    }
+
+    template<typename CommonGatewayRequest>
     boost::system::error_code& accept(implementation_type& impl
+                                     , CommonGatewayRequest& request
                                      , boost::system::error_code& ec)
     {
-      
+      return service_impl_.accept(impl, request, ec);
     }
 
     template<typename Handler>
     void async_accept(implementation_type& impl, Handler handler)
     {
-      
+      service_impl_.async_accept(impl, handler);
     }
+  private:
+    service_impl_type service_impl_;
   };
 
 } // namespace cgi
 
-#include "../detail/pop_options.hpp"
+#include "boost/cgi/detail/pop_options.hpp"
 
-#endif // CGI_REQUEST_SERVICE_HPP_INCLUDED
+
+endif // CGI_REQUEST_SERVICE_HPP_INCLUDED

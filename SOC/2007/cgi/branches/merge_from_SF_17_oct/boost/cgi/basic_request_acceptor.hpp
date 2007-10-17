@@ -13,10 +13,11 @@
 #include <boost/system/error_code.hpp>
 
 #include <boost/asio/basic_io_object.hpp>
-#include "detail/throw_error.hpp"
+#include "boost/detail/throw_error.hpp"
 
 namespace cgi {
 
+  /// The interface class for any *cgi::acceptor.
   template<typename RequestAcceptorService>
   class basic_request_acceptor
     : private boost::noncopyable
@@ -26,14 +27,40 @@ namespace cgi {
     //  typedef impl_type;
     typedef RequestAcceptorService         service_type;
     typedef service_type::protocol_type    protocol_type;
+    typedef int                            port_number_type;
 
     explicit basic_request_acceptor(basic_protocol_service<protocol_type>& s)
       : boost::asio::basic_io_object<RequestAcceptorService>(s.io_service())
     {
     }
 
+    explicit basic_request_acceptor(basic_protocol_service<protocol_type>& s
+                                   , port_number_type port_num)
+      : boost::asio::basic_io_object<RequestAcceptorService>(s.io_service())
+    {
+    }
+
     ~basic_request_acceptor()
     {
+    }
+
+    bool is_open()
+    {
+      return this->service.is_open(this->implementation);
+    }
+
+    template<typename Protocol>
+    void open(Protocol& protocol)
+    {
+      boost::system::error_code ec;
+      this->service.open(this->implementation, protocol, ec);
+      detail::throw_error(ec);
+    }
+
+    template<typename Protocol>
+    boost::system::error_code& open(Protocol& protocol, boost::system::error_code& ec)
+    {
+      return this->service.open(this->implementation, protocol, ec);
     }
 
     template<typename CommonGatewayRequest>
