@@ -9,12 +9,12 @@
 #ifndef CGI_CGI_SERVICE_HPP_INCLUDED__
 #define CGI_CGI_SERVICE_HPP_INCLUDED__
 
-#include "../tags.hpp"
-#include "../connections/stdio.hpp"
-#include "../connections/async_stdio.hpp"
-#include "../gateway_impl/acgi_gateway_impl.hpp"
-#include "../gateway_service/acgi_gateway_service.hpp"
-#include "../basic_protocol_service.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/connections/stdio.hpp"
+#include "boost/cgi/connections/async_stdio.hpp"
+#include "boost/cgi/gateway_impl/acgi_gateway_impl.hpp"
+#include "boost/cgi/gateway_service/acgi_gateway_service.hpp"
+#include "boost/cgi/basic_protocol_service.hpp"
 
 namespace cgi {
 

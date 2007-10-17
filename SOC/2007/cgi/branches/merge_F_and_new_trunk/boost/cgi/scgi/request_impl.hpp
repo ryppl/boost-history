@@ -11,14 +11,15 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "../map.hpp"
-#include "../role_type.hpp"
-#include "../status_type.hpp"
-#include "../http/status_code.hpp"
-#include "../connections/tcp_socket.hpp"
+#include "boost/cgi/map.hpp"
+#include "boost/cgi/role_type.hpp"
+#include "boost/cgi/status_type.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/connections/tcp_socket.hpp"
 
 namespace cgi {
 
+  /// The implementation_type for scgi_request_service
   class scgi_request_impl
   {
   public:
@@ -30,6 +31,7 @@ namespace cgi {
       : stdin_parsed_(false)
       , http_status_(http::ok)
       , request_status_(unloaded)
+      , request_finished_(false)
     {
     }
 
@@ -57,7 +59,7 @@ namespace cgi {
     map_type cookie_vars_;
 
     std::string null_str_;
-
+    bool request_finished_;
   };
 
 } // namespace cgi

@@ -25,7 +25,7 @@ A complete discussion about the benefits of CGI programming in C++ is beyond the
 
 * C++ has a very large and professional user base, providing a wealth of expertise and experience.
 
-* Billions of lines of C++ code can be reused to reduce development/testing times.
+* Millions of lines of C++ code can be reused to reduce development/testing times.
 
 * In places where RAD (rapid application development) is of the utmost importance, scripting languages can still be used, for instance by using [link __boost_python__ Boost.Python] - though it could be argued that C++ and RAD are not mutually exclusive.
 

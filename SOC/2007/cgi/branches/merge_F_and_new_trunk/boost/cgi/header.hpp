@@ -20,6 +20,9 @@ namespace cgi {
     {
     }
 
+    /// Templated constructor to allow user-defined types to be converted
+    template<typename T> header(T& t);
+
     header(const std::string& name, const std::string& val)
       : content(name + ": " + val + "\r\n")
     {
@@ -37,6 +40,12 @@ namespace cgi {
   header location(const std::string& url)
   {
     return header("Location", url);
+  }
+
+  inline template<>
+  header::header(cookie& ck)
+    : content(ck.to_string())
+  {
   }
 
 } // namespace cgi

@@ -9,8 +9,8 @@
 #ifndef CGI_SCGI_REQUEST_HPP_INCLUDED__
 #define CGI_SCGI_REQUEST_HPP_INCLUDED__
 
-#include "../tags.hpp"
-#include "../basic_request.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/basic_request.hpp"
 
 namespace cgi {
 
@@ -18,6 +18,10 @@ namespace cgi {
 
   typedef basic_request<scgi_request_service> scgi_request;
 
+ namespace scgi {
+   // typedef for typical usage (SCGI)
+   typedef basic_request<scgi_request_service> request;
+ } // namespace scgi
 } // namespace cgi
 
 #endif // CGI_SCGI_REQUEST_HPP_INCLUDED__

@@ -11,17 +11,18 @@
 
 #include <boost/system/error_code.hpp>
 
-#include "request_impl.hpp"
-#include "../map.hpp"
-#include "../tags.hpp"
-#include "../role_type.hpp"
-#include "../io_service.hpp"
-#include "../detail/throw_error.hpp"
-#include "../detail/service_base.hpp"
-#include "../detail/extract_params.hpp"
+#include "boost/cgi/scgi/request_impl.hpp"
+#include "boost/cgi/map.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/role_type.hpp"
+#include "boost/cgi/io_service.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/detail/extract_params.hpp"
 
 namespace cgi {
 
+  /// The IoObjectService class for a SCGI basic_request<>s
   class scgi_request_service
     : public detail::service_base<scgi_request_service>
   {

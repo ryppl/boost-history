@@ -46,7 +46,7 @@ namespace cgi {
     }
     void construct(implementation_type& impl)
     {
-      impl.connection() = async_stdio_connection::create(io_service());
+      impl.connection() = async_stdio_connection::create(this->io_service());
     }
 
     void destroy(implementation_type& impl)
