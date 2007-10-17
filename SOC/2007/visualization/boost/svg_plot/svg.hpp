@@ -5,7 +5,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 
-// ----------------------------------------------------------------- 
+// -----------------------------------------------------------------
 
 #ifndef _BOOST_SVG_SVG_HPP
 #define _BOOST_SVG_SVG_HPP
@@ -16,7 +16,7 @@
 #include <exception>
 #include <vector>
 
-#include "stylesheet.hpp"
+#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
 #include "detail/svg_tag.hpp"
 #include "svg_style.hpp"
 
@@ -28,7 +28,7 @@ class svg
 protected:
     unsigned int x_size;
     unsigned int y_size;
-    
+
     g_element document;
 
 	std::vector<clip_path_element> clip_paths;
@@ -47,7 +47,7 @@ private:
         {
             clip_paths[ (unsigned int)i ].write(s_out);
         }
-        
+
 		//Write all visual elements
         for(size_t i=0; i<document.size(); ++i)
         {
@@ -84,7 +84,7 @@ public:
     svg& write(const std::string& _file)
     {
         std::ofstream f_out(_file.c_str());
-        
+
         if(f_out.fail())
         {
             throw std::runtime_error("Unable to open file "+_file);
@@ -101,7 +101,7 @@ public:
         _write_header(_s_out);
 
         //begin svg tag
-        _s_out<<"<svg width=\""<<x_size<<"\" height =\"" 
+        _s_out<<"<svg width=\""<<x_size<<"\" height =\""
                         <<y_size<<"\" version=\"1.1\""
                         <<" xmlns=\"http://www.w3.org/2000/svg\">"<<std::endl;
 
@@ -146,11 +146,11 @@ public:
     // -----------------------------------------------------------------
     // Writes the information about text to the document
     // -----------------------------------------------------------------
-    svg& text(double x, double y, const std::string& text, 
-        int text_size = 12, text_style align = center_align, 
+    svg& text(double x, double y, const std::string& text,
+        int text_size = 12, text_style align = center_align,
         int rotation = 0)
     {
-        document.push_back(new text_element(x, y, text, text_size, align, 
+        document.push_back(new text_element(x, y, text, text_size, align,
                                             rotation));
 
         return *this;
@@ -162,7 +162,7 @@ public:
 
         return *this;
     }
-    
+
     path_element& path()
     {
         document.push_back(new path_element());
