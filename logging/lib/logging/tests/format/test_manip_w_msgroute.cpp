@@ -105,6 +105,8 @@ struct write_to_dbg : destination_base {
     void operator()(param msg) const {
 #ifdef BOOST_WINDOWS
         ::OutputDebugStringA( msg.c_str() );
+#else
+        msg; // so that there's no warning
 #endif
     }
 };

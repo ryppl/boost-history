@@ -30,11 +30,11 @@ namespace boost { namespace logging {
 
     By default we have these levels:
 
-        info (smallest level),
-        warning ,
-        debug ,
-        error ,
-        fatal (highest level)
+        - debug (smallest level),
+        - info,
+        - warning ,
+        - error ,
+        - fatal (highest level)
 
     Depending on which level is enabled for your application, some messages will reach the log: those 
     messages having at least that level. For instance, if info level is enabled, all 

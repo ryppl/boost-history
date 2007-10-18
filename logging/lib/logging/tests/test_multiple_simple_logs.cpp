@@ -45,6 +45,8 @@ struct write_to_dbg {
     void operator()(const std::string & msg) const {
 #ifdef BOOST_WINDOWS
         ::OutputDebugStringA( (msg + "\n").c_str() );
+#else
+        msg; // so that there's no warning
 #endif
     }
 };

@@ -52,6 +52,9 @@ template<class convert_dest = do_convert_destination > struct dbg_window {
 #else
     ::OutputDebugWindowW( convert_dest::do_convert(msg, into<const wchar_t*>() ) );    
 #endif
+#else
+        // non windows
+        msg; // so that there's no warning
 #endif
     }
 };

@@ -114,7 +114,7 @@ namespace locker {
 
         typedef tls_resource_with_cache<type> self_type;
 
-        tls_resource_with_cache(const type& val , int cache_millis  ) : m_val(val) {}
+        tls_resource_with_cache(const type& val , int /* cache_millis  */ ) : m_val(val) {}
 
 
     public:

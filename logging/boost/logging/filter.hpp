@@ -265,7 +265,7 @@ private:
 
         /** 
         */
-        template<class p1, class p2> logger(const init_both_t&, p1 a1, p2 a2) : process_base(a1), filter(a2) {}
+        template<class p1, class p2> logger(const init_both_t&, p1 a1, p2 a2) : filter(a2), process_base(a1) {}
 
 
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger, process_base)
