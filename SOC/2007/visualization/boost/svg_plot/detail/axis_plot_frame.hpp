@@ -1,4 +1,4 @@
-// svg_1d_plot.hpp
+// axis_plot_frame.hpp
 
 // Copyright (C) Jacob Voytko 2007
 //
@@ -7,8 +7,16 @@
 
 // -----------------------------------------------------------------
 
-#ifndef _BOOST_SVG_AXIS_PLOT_FRAME_HPP
-#define _BOOST_SVG_AXIS_PLOT_FRAME_HPP
+// TODO   PAB
+// I am not clear yet which items need BOTH fill and stroke?
+// If both are set, which is returned?
+// I think it would be better to rename all get_XXX() to just XXX()
+// And to place the setter and getters together,
+// so one can see that boht are present, and that they match.
+// I've corrected one test failure in x_label_color.
+
+#ifndef BOOST_SVG_AXIS_PLOT_FRAME_HPP
+#define BOOST_SVG_AXIS_PLOT_FRAME_HPP
 
 #include <string>
 #include "../svg_style.hpp"
@@ -16,9 +24,12 @@
 #include "svg_tag.hpp"
 #include "numeric_limits_handling.hpp"
 
-namespace boost{
-namespace svg{
-namespace detail{
+namespace boost
+{
+namespace svg
+{
+namespace detail
+{
 
 template <class Derived>
 class axis_plot_frame
@@ -51,7 +62,7 @@ protected:
     {
         double x1(0.), y1(0.), y2(derived().image.get_y_size());
 
-        // draw the grid if needed
+        // Draw the grid if needed.
         if(derived().use_x_minor_grid)
         {
             _transform_x(x1 = j);
@@ -97,7 +108,7 @@ protected:
 
         _transform_x(x1);
 
-        //make sure that we are drawing inside of the allowed window
+        // Make sure that we are drawing inside of the allowed window.
         if(x1 < derived().plot_x2 && x1 > derived().plot_x1)
         {
             tick_path.M(x1, y1).L(x1, y2);
@@ -134,12 +145,12 @@ protected:
 
         }
 
-        //draw major tick
+        // Draw major tick.
         x1=i;
 
         _transform_x(x1);
 
-        //make sure that we are drawing inside of the allowed window
+        // Make sure that we are drawing inside of the allowed window.
         if(x1 < derived().plot_x2 && x1 > derived().plot_x1)
         {
             double x_tick_length = derived().x_major_length / 2.;
@@ -206,7 +217,7 @@ protected:
             derived().plot_x2, derived().x_axis);
         }
 
-        // x_minor_jump is the interval between minor ticks
+        // x_minor_jump is the interval between minor ticks.
         double x_minor_jump = derived().x_major/
                               ((double)(derived().x_num_minor + 1.) );
 
@@ -565,7 +576,7 @@ public:
         return derived();
     }
     // -----------------------------------------------------------------
-    // Color settings: Customization of colors found in the plot
+    // Color settings: Customization of colors found in the plot.
     //
     // title_color()
     // background_color()
@@ -616,12 +627,8 @@ public:
 
     Derived& x_axis_color(const svg_color& _col)
     {
-        derived().image.get_g_element(PLOT_X_AXIS).style()
-                .fill_color(_col);
-
-        derived().image.get_g_element(PLOT_X_AXIS).style()
-                .stroke_color(_col);
-
+        derived().image.get_g_element(PLOT_X_AXIS).style().fill_color(_col);
+        derived().image.get_g_element(PLOT_X_AXIS).style().stroke_color(_col);
         return derived();
     }
 
@@ -632,7 +639,8 @@ public:
     }
 
     Derived& x_label_color(const svg_color& _col)
-    {
+    { // add fill as well PAB
+        derived().image.get_g_element(PLOT_X_LABEL).style().fill_color(_col);
         derived().image.get_g_element(PLOT_X_LABEL).style().stroke_color(_col);
         return derived();
     }
@@ -656,7 +664,7 @@ public:
     }
 
     // -----------------------------------------------------------------
-    // Axis information: Settings for customization of axis information
+    // Axis information: Settings for customization of axis information.
     //
     // x_axis_width()
     // x_major_tick()
@@ -742,6 +750,8 @@ public:
         return derived();
     }
 
+    // Get member functions:
+
     unsigned int get_image_x_size()
     {
         return derived().image.get_x_size();
@@ -757,9 +767,14 @@ public:
         return derived().title;
     }
 
+    unsigned int get_title_font_size()
+    { // added pab
+        return static_cast<unsigned int>(derived().title_font_size);
+    }
+
     unsigned int get_legend_title_font_size()
-    {
-        return derived().legend_title_font_size;
+    { // added static_cast
+        return static_cast<unsigned int>(derived().legend_title_font_size);
     }
 
     bool get_legend()
@@ -782,9 +797,9 @@ public:
         return derived().use_x_major_labels;
     }
 
-    // color information
+    // Color information.
     svg_color get_title_color()
-    {
+    { // Function title_color sets both fill and stroke.
         return derived().image.get_g_element(PLOT_TITLE).style().stroke_color();
     }
 
@@ -819,7 +834,7 @@ public:
     }
 
     svg_color get_x_label_color()
-    {
+    { 
         return derived().image.get_g_element(PLOT_X_LABEL).style().fill_color();
     }
 
@@ -843,7 +858,7 @@ public:
         return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_color();
     }
 
-    // axis information
+    // X-axis information.
     double get_x_min()
     {
         return derived().x_min;
