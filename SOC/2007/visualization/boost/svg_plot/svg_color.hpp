@@ -1,15 +1,18 @@
 // svg_color.hpp
-// Copyright (C) Jacob Voytko 2007
-//
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
 
-// -----------------------------------------------------------------
+// Copyright Jacob Voytko 2007
+// Copyright Paul A. Bristow 2007
+//
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_SVG_SVG_COLOR_HPP
 #define BOOST_SVG_SVG_COLOR_HPP
 
 #include <ostream>
+// using std::ostream
 
 namespace boost
 {
@@ -51,38 +54,47 @@ enum svg_color_constant
     salmon, sandybrown, seagreen, seashell, sienna, silver,
     skyblue, slateblue, slategray, slategrey, snow, springgreen,
     steelblue, tan, teal, thistle, tomato, turquoise, violet,
+    // Forward declarations.
     wheat, white, whitesmoke, yellow, yellowgreen, blank
 };
 
+// Forward declarations:
+struct svg_color;
 void constant_to_rgb(svg_color_constant _c, unsigned char &r,
                      unsigned char &g, unsigned char &b);
+std::ostream& operator<< (std::ostream&, const svg_color&);
 
 // -----------------------------------------------------------------
-// svg_color is the struct that contains information about RGB
-// colors.
+// svg_color is the struct that contains information about RGB colors.
 //
-// For the constructor: the SVG standard specifies that numbers
+// For the constructor, the SVG standard specifies that numbers
 // outside the normal rgb range are to be accepted, but are rounded
 // to acceptable values [0, 255].
 // -----------------------------------------------------------------
+
 struct svg_color
 {
+    friend std::ostream& operator<< (std::ostream& os, const svg_color& rhs);
+
     unsigned char r, g, b;
-    bool blank;
+    bool blank; // true means "Not to be displayed" 'pseudo-color'.
+    // TODO seems to display as black? - Need a check if is_blank == true?
 
     svg_color(int _r, int _g, int _b) : blank(false)
-    {
+    {  // Constrain rgb to [0 .. 255]
         _r = ( _r < 0 ) ? 0 : _r;
         _g = ( _g < 0 ) ? 0 : _g;
         _b = ( _b < 0 ) ? 0 : _b;
-
         r = (unsigned char)(( _r > 255 ) ? 255 : _r);
         g = (unsigned char)(( _g > 255 ) ? 255 : _g);
         b = (unsigned char)(( _b > 255 ) ? 255 : _b);
     }
 
     svg_color(bool _is) : blank(_is)
-    {
+    { 
+      r = 0; // Safer to assign *some* value to rgb? zero, or 255?
+      g = 0; // rather than leaving random?
+      b = 0;
     }
 
     svg_color(svg_color_constant _col) : blank(false)
@@ -97,18 +109,53 @@ struct svg_color
             rhs << "rgb(" << (unsigned int)r << "," << (unsigned int) g << ","
                 << (unsigned int)b << ")" ;
         }
-
         else
         {
-            rhs <<"blank";
+            rhs << "blank";
         }
-    }
+         // Usage:   my_color.write(cout); cout << endl; outputs: rgb(127,255,212)
+    } //     void write(std::ostream& rhs)
 
-    bool operator==(const svg_color& rhs)
+    bool operator== (const svg_color& rhs)
     {
-        return r == rhs.r && g == rhs.g && b == rhs.b;
+      if ((blank) || (rhs.blank == true))
+      { // Make blank a sort of NaN, that never compares true?
+        // not even if both rhs and lhs are blank.
+        return false;
+      }
+      return (r == rhs.r) && (g == rhs.g) && (b == rhs.b);
     }
 }; // struct svg_color
+
+bool operator== (const svg_color& lhs, const svg_color& rhs)
+{
+  if ((rhs.blank == true) || (rhs.blank == true))
+  { // Make blank a sort of NaN, that never compares true?
+    // not even if both rhs and lhs are blank.
+    return false;
+  }
+  return (lhs.r == rhs.r) && (lhs.g == rhs.g) && (lhs.b == rhs.b);
+}
+
+std::ostream& operator<< (std::ostream& os, const svg_color& color)
+{
+    if(!color.blank)
+    {
+        os << "RGB("
+           << (unsigned int)color.r << ","
+           << (unsigned int) color.g << ","
+           << (unsigned int)color.b << ")" ;
+    }
+    else
+    {
+        os << "blank";
+    }
+    // Usage:   svg_color my_color(127, 255, 212); cout << "my_color " << my_color << endl;
+    // Outputs: my_color RGB(127,255,212)
+    // cout << "magenta " << svg_color(magenta) << endl;
+    // but caution cout << magenta << endl; outputs 85 because magenta is an enum!
+    return os;
+} // std::ostream& operator<< 
 
 svg_color color_array[] =
 {
@@ -259,19 +306,24 @@ svg_color color_array[] =
     svg_color(245, 245, 245), // whitesmoke
     svg_color(255, 255, 0  ), // yellow
     svg_color(154, 205, 50 ), // yellowgreen
-    svg_color(false)          // blank
+    svg_color(false)          // blank - "Not to be displayed" pseudo-color.
 }; // svg_color color_array[]
 
-void constant_to_rgb(svg_color_constant _c, unsigned char &r,
-                     unsigned char &g, unsigned char &b)
-{
-    svg_color temp(color_array[_c]);
-
-    if(!temp.blank)
+void constant_to_rgb(svg_color_constant _c,
+  unsigned char &r, unsigned char &g, unsigned char &b)
+{ // Convert a named SVG standard color to rgb.
+    svg_color color(color_array[_c]);
+    if(!color.blank)
     {
-        r = temp.r;
-        g = temp.g;
-        b = temp.b;
+        r = color.r;
+        g = color.g;
+        b = color.b;
+    }
+    else
+    { // Unwise to leave r, g, & b unchanged?
+      r = 255; // Set all to white?
+      g = 255;
+      b = 255;
     }
 }
 
