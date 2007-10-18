@@ -171,7 +171,7 @@ private:
     {
         double y1(0.), x1(0.), x2(image.get_y_size());
 
-        // draw the grid if needed
+        // Draw the grid if needed.
         if(use_y_minor_grid)
         {
             _transform_y(y1 = j);
@@ -215,7 +215,7 @@ private:
         {
             tick_path.M(x1, y1).L(x2, y1);
         }
-    }
+    } // void _draw_y_minor_ticks
 
     void _draw_y_major_ticks(double i, path_element& tick_path, path_element& grid_path)
     {
@@ -239,12 +239,12 @@ private:
             grid_path.M(x1, y1).L(x2, y1);
         }
 
-        //draw major tick
-        y1=i;
+        // Draw major tick.
+        y1 = i;
 
         _transform_y(y1);
 
-        // Make sure that we are drawing inside of the allowed window.
+        // Make sure that we are drawing inside the allowed window.
         if(y1 < plot_y2 && y1 > plot_y1)
         {
             double y_tick_length = y_major_length / 2.;
@@ -290,9 +290,9 @@ private:
                         y1, fmt.str(), 12, center_align, -90);
 
                 }
-            }
+            } // if(use_y_major_labels)
         }
-    }
+    } // _draw_y_major_ticks
 
     void _draw_y_axis()
     {
@@ -349,10 +349,10 @@ private:
 
             _draw_y_major_ticks(i, major_tick_path, major_grid_path);
         }
-    }
+    } // _draw_y_axis
 
     void _draw_axis()
-    {
+    { // TODO should this be draw axes (plural)
         _draw_y_axis();
         _draw_x_axis();
     }
@@ -365,8 +365,7 @@ private:
             text_element(12, (plot_y2 + plot_y1)/2.,
             y_label_info.text(),
             12, center_align, -90));
-    }
-
+    } // _draw_y_label
 
     void _calculate_transform()
     {
@@ -403,7 +402,7 @@ private:
 
         if(use_plot_window)
         {
-            // give the plot window a natural bit of padding
+            // Give the plot window a natural bit of padding.
             plot_x1+=5;
             plot_x2-=5;
             plot_y1+=5;
@@ -435,7 +434,7 @@ private:
                     new rect_element(plot_x1, plot_y1,
                             (plot_x2-plot_x1), plot_y2-plot_y1));
         }
-    }
+    } // _calculate_plot_window
 
     void _transform_pair(std::pair<double, double>& pt)
     {
@@ -455,7 +454,7 @@ private:
         std::pair<double, double> n_minus_2, n_minus_1, n;
         std::pair<double, double> fwd_vtr, back_vtr;
 
-        if(series.line_style.area_fill == blank)
+        if(series.line_style.area_fill  ==  blank)
         {
                 path._fill = false;
         }
@@ -507,7 +506,7 @@ private:
             _draw_straight_lines(series);
         }
 
-    }
+    } // _draw_bezier_lines
 
     void _draw_straight_lines(const svg_2d_plot_series& series)
     {
@@ -527,8 +526,8 @@ private:
             prev_x = (*j).first;
             prev_y = 0.;
 
-            // If we have to fill the area under the plot, we first have to
-            // move from the X-axis to the first point.
+            // If we have to fill the area under the plot, 
+            // we first have to move from the X-axis to the first point.
 
             _transform_point(prev_x, prev_y);
 
@@ -561,7 +560,7 @@ private:
 
                 path.L(temp_x, temp_y);
 
-                if(series.line_style.area_fill == blank)
+                if(series.line_style.area_fill  ==  blank)
                 {
                     path.M(temp_x, temp_y);
                 }
@@ -576,7 +575,7 @@ private:
                 path.L(temp_x, temp_y).z();
             }
         }
-    }
+    } // _draw_straight_lines
 
     void _draw_plot_lines()
     {
@@ -586,13 +585,12 @@ private:
             {
                 _draw_bezier_lines(series[i]);
             }
-
             else
             {
                 _draw_straight_lines(series[i]);
             }
         }
-    }
+    } // _draw_plot_lines
 
     void _update_image()
     {
@@ -608,8 +606,8 @@ private:
         _calculate_transform();
 
         // Define the clip path for the plot window.
-        // We don't want to allow overlap of the plot window lines, thus the
-        // minor adjustments.
+        // We don't want to allow overlap of the plot window lines, 
+        // thus the minor adjustments.
 
         image.clip_path(rect_element(plot_x1 + 1, plot_y1 + 1,
                                      plot_x2 - plot_x1 - 2, plot_y2 - plot_y1 - 2),
@@ -688,7 +686,8 @@ private:
 
 public:
 
-svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
+svg_2d_plot() :  // Construct with all the default plot options.
+                      title_info(0, 0, "Plot of data", 30),
                       x_label_info(0, 0, "X Axis", 12),
                       y_label_info(0, 0, "Y Axis", 12),
                       x_min(-10), x_max(10),
@@ -709,8 +708,8 @@ svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
                       use_y_major_grid(false), use_y_minor_grid(false)
 
 {
-    image_size(500, 350);
-
+    image_size(500, 350); // Default image size.
+ 
     // Build the document tree.. add children of the root node.
     for(int i=0; i<detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
@@ -756,7 +755,7 @@ svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
 
     image.get_g_element(detail::PLOT_X_MAJOR_TICKS).style().stroke_width(2);
     image.get_g_element(detail::PLOT_X_MINOR_TICKS).style().stroke_width(1);
-}
+} // svg_2d_plot()
 
 
 svg_2d_plot& write(const std::string& _str)

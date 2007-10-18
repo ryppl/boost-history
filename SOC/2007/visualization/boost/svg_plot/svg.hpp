@@ -7,8 +7,8 @@
 
 // -----------------------------------------------------------------
 
-#ifndef _BOOST_SVG_SVG_HPP
-#define _BOOST_SVG_SVG_HPP
+#ifndef BOOST_SVG_SVG_HPP
+#define BOOST_SVG_SVG_HPP
 
 #include <string>
 #include <ostream>
@@ -20,8 +20,10 @@
 #include "detail/svg_tag.hpp"
 #include "svg_style.hpp"
 
-namespace boost {
-namespace svg {
+namespace boost
+{
+namespace svg
+{
 
 class svg
 {
@@ -31,24 +33,24 @@ protected:
 
     g_element document;
 
-	std::vector<clip_path_element> clip_paths;
+	  std::vector<clip_path_element> clip_paths;
 
     std::string css;
 
 private:
 
     // -----------------------------------------------------------------
-    // Internal function to write all of the data to the svg document
+    // Internal function to write all of the data to the svg document.
     // -----------------------------------------------------------------
     void _write_document(std::ostream& s_out)
     {
-        //Write clip paths
+        // Write clip paths.
 		for(size_t i=0; i<clip_paths.size(); ++i)
         {
             clip_paths[ (unsigned int)i ].write(s_out);
         }
 
-		//Write all visual elements
+		// Write all visual elements.
         for(size_t i=0; i<document.size(); ++i)
         {
             document[ (unsigned int)i ].write(s_out);
@@ -56,7 +58,7 @@ private:
     }
 
     // -----------------------------------------------------------------
-    // This prints the svg 1.1 header into the document
+    // This prints the svg 1.1 header into the document.
     // -----------------------------------------------------------------
     void _write_header(std::ostream& s_out)
     {
@@ -73,8 +75,8 @@ private:
 
 public:
 
-    svg():x_size(400), y_size(400)
-    {
+    svg() : x_size(400), y_size(400)
+    { // Default constructor.
     }
 
     svg(const svg& rhs):x_size(rhs.x_size), y_size(rhs.y_size)
@@ -97,10 +99,9 @@ public:
 
     svg& write(std::ostream& _s_out)
     {
-
         _write_header(_s_out);
 
-        //begin svg tag
+        // Begin svg tag.
         _s_out<<"<svg width=\""<<x_size<<"\" height =\""
                         <<y_size<<"\" version=\"1.1\""
                         <<" xmlns=\"http://www.w3.org/2000/svg\">"<<std::endl;
@@ -116,8 +117,8 @@ public:
     }
 
     // -----------------------------------------------------------------
-    // Writes the information about the size of the file to the document
-    // TODO: allow other unit identifiers
+    // Writes the information about the size of the file to the document.
+    // TODO: allow other unit identifiers.
     // -----------------------------------------------------------------
     svg& image_size(unsigned int x, unsigned int y)
     {
@@ -126,6 +127,9 @@ public:
 
         return *this;
     }
+    // -----------------------------------------------------------------
+    // Writes the information about lcircle to the document.
+    // -----------------------------------------------------------------
 
     svg& circle(double x, double y, unsigned int radius = 5)
     {
@@ -134,7 +138,7 @@ public:
     }
 
     // -----------------------------------------------------------------
-    // Writes the information about lines to the document
+    // Writes the information about a line to the document.
     // -----------------------------------------------------------------
     svg& line(double x1, double y1, double x2, double y2)
     {
@@ -144,7 +148,7 @@ public:
     }
 
     // -----------------------------------------------------------------
-    // Writes the information about text to the document
+    // Writes the information about text to the document.
     // -----------------------------------------------------------------
     svg& text(double x, double y, const std::string& text,
         int text_size = 12, text_style align = center_align,
@@ -223,9 +227,9 @@ public:
 
         return *this;
     }
-}; // end class svg
+}; // class svg
 
-}
-}
+} // namespace svg
+} // namespace boost
 
-#endif
+#endif // BOOST_SVG_SVG_HPP
