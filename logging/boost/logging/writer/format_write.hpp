@@ -22,6 +22,7 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace logging {
 
@@ -126,38 +127,96 @@ struct format_write {
 
     format_write() : m_router(m_formatters, m_destinations) {}
 
+
+private:
+
+    // non-generic
+    template<class formatter> void add_formatter_impl(formatter fmt, const boost::false_type& ) {
+        formatter_ptr p = m_formatters.append(fmt);
+        m_router.append_formatter(p);
+    }
+
+    // non-generic
+    template<class formatter> void del_formatter_impl(formatter fmt, const boost::false_type& ) {
+        formatter_ptr p = m_formatters.get_ptr(fmt);
+        m_router.del_formatter(p);
+        m_formatters.del(fmt);
+    }
+
+    // non-generic
+    template<class destination> void add_destination_impl(destination dest, const boost::false_type& ) {
+        destination_ptr p = m_destinations.append(dest);
+        m_router.append_destination(p);
+    }
+
+    // non-generic
+    template<class destination> void del_destination_impl(destination dest, const boost::false_type& ) {
+        destination_ptr p = m_destinations.get_ptr(dest);
+        m_router.del_destination(p);
+        m_destinations.del(dest);
+    }
+
+
+
+
+
+    // generic manipulator
+    template<class formatter> void add_formatter_impl(formatter fmt, const boost::true_type& ) {
+        typedef boost::logging::manipulator::detail::generic_holder<formatter,formatter_base> holder;
+        add_formatter_impl( holder(fmt), boost::false_type() );
+    }
+
+    // generic manipulator
+    template<class formatter> void del_formatter_impl(formatter fmt, const boost::true_type& ) {
+        typedef boost::logging::manipulator::detail::generic_holder<formatter,formatter_base> holder;
+        del_formatter_impl( holder(fmt) boost::false_type() );
+    }
+
+    // generic manipulator
+    template<class destination> void add_destination_impl(destination dest, const boost::true_type& ) {
+        typedef boost::logging::manipulator::detail::generic_holder<destination,destination_basee> holder;
+        add_destination_impl( holder(dest) boost::false_type() );
+    }
+
+    // generic manipulator
+    template<class destination> void del_destination_impl(destination dest, const boost::true_type& ) {
+        typedef boost::logging::manipulator::detail::generic_holder<destination,destination_basee> holder;
+        del_destination_impl( holder(dest) boost::false_type() );
+    }
+
+
+
+public:
     /** 
         adds a formatter
     */
     template<class formatter> void add_formatter(formatter fmt) {
-        formatter_ptr p = m_formatters.append(fmt);
-        m_router.append_formatter(p);
+        typedef boost::logging::manipulator::is_generic is_generic;
+        add_formatter_impl<formatter>( fmt, boost::is_base_of<is_generic,formatter>() );
     }
 
     /** 
         deletes a formatter
     */
     template<class formatter> void del_formatter(formatter fmt) {
-        formatter_ptr p = m_formatters.get_ptr(fmt);
-        m_router.del_formatter(p);
-        m_formatters.del(fmt);
+        typedef boost::logging::manipulator::is_generic is_generic;
+        del_formatter_impl<formatter>( fmt, boost::is_base_of<is_generic,formatter>() );
     }
 
     /** 
         adds a destination
     */
     template<class destination> void add_destination(destination dest) {
-        destination_ptr p = m_destinations.append(dest);
-        m_router.append_destination(p);
+        typedef boost::logging::manipulator::is_generic is_generic;
+        add_destination_impl<destination>( dest, boost::is_base_of<is_generic,destination>() );
     }
 
     /** 
         deletes a destination
     */
     template<class destination> void del_destination(destination dest) {
-        destination_ptr p = m_destinations.get_ptr(dest);
-        m_router.del_destination(p);
-        m_destinations.del(dest);
+        typedef boost::logging::manipulator::is_generic is_generic;
+        del_destination_impl<destination>( dest, boost::is_base_of<is_generic,destination>() );
     }
 
     /** 

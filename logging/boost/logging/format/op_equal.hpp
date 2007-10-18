@@ -88,8 +88,11 @@ namespace op_equal {
     protected:
         same_type() {}
         same_type(const same_type&) {}
+        virtual ~same_type() {}
     public:
-        inline bool operator ==(const same_type& other) const { return typeid(*this) == typeid(other); }
+        inline bool operator ==(const same_type& other) const { 
+            return typeid(*this) == typeid(other); 
+        }
     };
 
 

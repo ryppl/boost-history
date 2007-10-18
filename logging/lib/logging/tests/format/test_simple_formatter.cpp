@@ -127,8 +127,8 @@ void test_simple_format_and_write_simple_formatter() {
     g_l->writer().del_destination( write_to_cout() );
 
     // will not be written to cout
-    L_ << "must be prefixed by time , no enter " << i++;
-    L_ << "must be prefixed by time , no enter " << i++;
+    L_ << "must be prefixed by time , no enter " << i++ << ";";
+    L_ << "must be prefixed by time , no enter " << i++ << ";";
 }
 
 #ifdef SINGLE_TEST

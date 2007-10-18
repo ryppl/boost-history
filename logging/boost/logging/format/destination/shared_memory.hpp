@@ -46,10 +46,13 @@ namespace detail {
     };
 }
 
-template<class convert_dest = do_convert_destination > struct shared_memory {
+/** 
+    @brief Logs the information in shared memory
+*/
+template<class convert_dest = do_convert_destination > struct shared_memory : non_const_context<detail::shared_memory_context> {
 
     enum { just_in_case = 8192 };
-    basic_shared_memory_appender(const std::string & name, std::size_t mem_size = 2 * 1024 * 1024 * sizeof(char_type) ) : m_info(new info) {
+    basic_shared_memory_appender(const std::string & name, std::size_t mem_size = 2 * 1024 * 1024 * sizeof(char_type) ) {
         non_const_context_base::context().mem_size = mem_size;
         
         // this segment might have been previously created...

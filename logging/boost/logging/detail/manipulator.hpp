@@ -135,11 +135,13 @@ Formatters and/or destinations are Manipulators.
     
 All formatter or destination class need to directly or indirectly derive from this.
 
-All formatters need to derive from a common %base class.
+@section manipulator_base_class Manipulator base classes
+
+<b>All formatters need to derive from a common %base class.
 When dealing with formatters, the first thing you must do is to specify that common base class.
 All formatter classes will derive from it, directly or indirectly.
 
-Same goes for destinations.
+Same goes for destinations.</b>
 
 Note that the formatter base class and the destination base class don't need to be the same.
 
@@ -269,7 +271,61 @@ private:
 
 
 
+/** 
+@brief Represents a generic manipulator (formatter or destination)
 
+A generic manipulator is one that does not derive from any formatter_base or destination_base class (@ref manipulator_base_class).
+
+Libraries, such as this one, can provide generic manipulators, and they can't rely on
+any @ref manipulator_base_class "base class" - since it's you, the user, who can choose which is the base class.
+
+A generic manipulator has no way of knowing the type of the @em msg you pass on operator().
+Thus, usually generic manipulators have a templated operator=, and do the best to convert what's in, to what they need.
+
+Example:
+@code
+template<class convert_dest = do_convert_destination > struct cout {
+    template<class msg_type> void operator()(const msg_type & msg) const {
+        convert_dest::write(msg, std::cout);
+    }
+};
+@endcode
+
+As long as exists a conversion function from your @c msg_type to what the manipulator needs, it all works.
+Thus, no matter what your %formatter @ref manipulator_base_class "base class" or %destination @ref manipulator_base_class "base class"
+is, the code will still work. You can add your %formatter/ %destination classes, and the generic %formatter/ %destination classes
+
+@code
+typedef ... formatter_base;
+logger< format_write<...> > g_l;
+
+struct my_cool_formatter : formatter_base { ... };
+
+// adding formatter class from the Logging lib
+g_l.add_formatter( formatter::thread_id() );
+
+// adding formatter class defined by you
+g_l.add_formatter( my_cool_formatter() );
+@endcode
+
+@sa boost::logging::destination::convert, boost::logging::formatter::convert
+*/
+struct is_generic {};
+
+namespace detail {
+
+    // holds the generic manipulator, and forwards to it
+    template<class generic_type, class manipulator_base> struct generic_holder : manipulator_base {
+        typedef typename manipulator_base::param param;
+
+        generic_type m_val;
+        generic_holder(const generic_type & val) : m_val(val) {}
+
+        virtual void operator()(param val) const {
+            m_val.operator()(val);
+        }
+    };
+}
 
 
 
@@ -298,6 +354,11 @@ namespace formatter {
     using boost::logging::manipulator::base;
     using boost::logging::manipulator::base_no_operator_call;
     using boost::logging::manipulator::non_const_context;
+
+    /** 
+        @sa boost::logging::manipulator::is_generic
+    */
+    typedef boost::logging::manipulator::is_generic is_generic;
 }
 
 /**  
@@ -315,6 +376,11 @@ namespace destination {
     using boost::logging::manipulator::base;
     using boost::logging::manipulator::base_no_operator_call;
     using boost::logging::manipulator::non_const_context;
+
+    /** 
+        @sa boost::logging::manipulator::is_generic
+    */
+    typedef boost::logging::manipulator::is_generic is_generic;
 }
 
 }}
