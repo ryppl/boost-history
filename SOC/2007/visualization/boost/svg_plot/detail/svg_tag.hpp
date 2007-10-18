@@ -5,10 +5,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 
-// ----------------------------------------------------------------- 
+// -----------------------------------------------------------------
 
-#ifndef _SVG_TAG_HPP
-#define _SVG_TAG_HPP
+#ifndef BOOST_SVG_TAG_HPP
+#define BOOST_SVG_TAG_HPP
 
 #if defined (BOOST_MSVC)
 #  pragma warning(push)
@@ -30,17 +30,14 @@
 namespace boost {
 namespace svg {
 
-
 // -----------------------------------------------------------------
-// This file defines all classes that can occur in the SVG parse
-// tree
+// This file defines all classes that can occur in the SVG parse tree.
 // -----------------------------------------------------------------
-
 
 // -----------------------------------------------------------------
 // The base class for all leaf elements
 // -----------------------------------------------------------------
-    
+
 class svg_element
 {
 protected:
@@ -77,10 +74,10 @@ public:
 
    void clip_id(const std::string& _id) { clip_name = _id; }
    std::string clip_id() { return clip_name; }
-};
+}; // class svg_element
 
 // -----------------------------------------------------------------
-// Represents a single block of text
+// Represents a single block of text.
 // -----------------------------------------------------------------
 class rect_element: public svg_element
 {
@@ -92,7 +89,7 @@ public:
     rect_element(double _x, double _y, double _w, double _h)
                 :x(_x), y(_y), width(_w), height(_h)
     {
-        
+
     }
 
     void write(std::ostream& rhs)
@@ -105,10 +102,10 @@ public:
                     <<" height=\""<<height<<"\"/>"
                     ;
     }
-};
+}; // class rect_element
 
 // -----------------------------------------------------------------
-// Represents a single point
+// Represents a single circle.
 // -----------------------------------------------------------------
 class circle_element: public svg_element
 {
@@ -116,10 +113,9 @@ private:
     double x, y, radius;
 
 public:
-    circle_element(double _x, double _y, double _radius = 5):x(_x), y(_y), 
+    circle_element(double _x, double _y, double _radius = 5):x(_x), y(_y),
                                                           radius(_radius)
     {
-        
     }
 
     void write(std::ostream& rhs)
@@ -131,7 +127,7 @@ public:
            <<y<<"\" r=\""
            <<radius<<"\"/>";
     }
-};
+}; // class circle_element
 
 // -----------------------------------------------------------------
 // Represents a line
@@ -146,7 +142,6 @@ public:
                                  double _y2):x1(_x1), y1(_y1),
                                  x2(_x2), y2(_y2)
     {
-        
     }
 
     void write(std::ostream& rhs)
@@ -154,7 +149,7 @@ public:
         rhs<<"<line x1=\""<<x1<<"\" y1=\""<<y1<<"\" x2=\""<<x2<<"\" y2=\""
             <<y2<<"\"/>";
     }
-};
+}; // class line_element
 
 // -----------------------------------------------------------------
 // Represents a single block of text
@@ -201,12 +196,12 @@ public:
         y_coord = _y;
     }
 
-    text_element(double _x, double _y, std::string _text, int _size = 12, 
+    text_element(double _x, double _y, std::string _text, int _size = 12,
                  text_style _align = center_align, int _rotation = 0)
                  :x_coord(_x), y_coord(_y), txt(_text), size(_size), align(_align)
                  , rotation(_rotation)
     {
-        
+
     }
 
     void write(std::ostream& rhs)
@@ -234,7 +229,7 @@ public:
 
         rhs << "<text x=\"" << x_coord << "\""
             <<" y=\"" << y_coord << "\" ";
-        
+
         if(output != "")
         {
             rhs << "text-anchor=\"" << output << "\" ";
@@ -271,7 +266,7 @@ public:
     {
         return txt;
     }
-};
+}; // class text_element
 
 class clip_path_element: public svg_element
 {
@@ -294,30 +289,28 @@ public:
 
         rhs<<std::endl<<"</clipPath>";
     }
-};
-
+}; // class clip_path_element
 
 struct path_point
 {
     bool relative;
-    
+
     virtual void write(std::ostream& rhs) = 0;
 
     virtual ~path_point()
     {
-
     }
 
     path_point(bool _rel): relative(_rel)
     {
-
     }
-};
+}; // struct path_point
+
 
 struct m_path: public path_point
 {
     double x, y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
@@ -335,9 +328,9 @@ struct m_path: public path_point
 
     m_path(double _x, double _y, bool _rel = false):
             x(_x), y(_y), path_point(_rel)
-    {   
+    {
     }
-};
+}; // struct m_path
 
 struct z_path: public path_point
 {
@@ -347,12 +340,12 @@ struct z_path: public path_point
     }
 
     z_path():path_point(false){}
-};
+}; // struct z_path
 
 struct l_path: public path_point
 {
     double x, y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
@@ -365,69 +358,69 @@ struct l_path: public path_point
             o_str<<"L";
         }
 
-        o_str<<x<<" "<<y<<" ";
+        o_str << x << " " << y << " ";
     }
 
     l_path(double _x, double _y, bool _rel = false):
             x(_x), y(_y), path_point(_rel)
-    {   
+    {
     }
-};
+}; // struct l_path
 
 struct h_path: public path_point
 {
     double x;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
         {
-            o_str<<"h";
+            o_str << "h";
         }
 
         else
         {
-            o_str<<"H";
+            o_str << "H";
         }
 
-        o_str<<x<<" ";
+        o_str << x << " ";
     }
 
     h_path(double _x, bool _rel = false):
             x(_x), path_point(_rel)
     {
     }
-};
+}; // struct h_path
 
 struct v_path: public path_point
 {
     double y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
         {
-            o_str<<"v";
+            o_str << "v";
         }
 
         else
         {
-            o_str<<"V";
+            o_str << "V";
         }
 
-        o_str<<y<<" ";
+        o_str << y << " ";
     }
 
     v_path(double _y, bool _rel = false):
             y(_y), path_point(_rel)
-    {       
+    {
     }
-};
+}; // struct v_path
 
 struct c_path: public path_point
 {
     double x1, y1, x2, y2, x, y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
@@ -445,18 +438,17 @@ struct c_path: public path_point
              <<x<<" "<<y<<" ";
     }
 
-    c_path(double _x1, double _y1, double _x2, double _y2, 
+    c_path(double _x1, double _y1, double _x2, double _y2,
            double _x, double _y, bool _rel = false):
            x1(_x1), y1(_y1), x2(_x2), y2(_y2), x(_x), y(_y), path_point(_rel)
     {
-        
     }
-};
+}; // struct c_path
 
 struct q_path: public path_point
 {
     double x1, y1, x, y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
@@ -477,63 +469,60 @@ struct q_path: public path_point
            double _x, double _y, bool _rel = false):
            x1(_x1), y1(_y1), x(_x), y(_y), path_point(_rel)
     {
-        
     }
-};
+}; //struct q_path
 
 struct s_path: public path_point
 {
     double x1, y1, x, y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
         {
-            o_str<<"s";
+            o_str << "s";
         }
 
         else
         {
-            o_str<<"S";
+            o_str << "S";
         }
 
-        o_str<<x1<<" "<<y1<<" "
-             <<x<<" "<<y<<" ";
+        o_str << x1 << " " << y1 << " "
+             << x << " " << y << " ";
     }
 
     s_path(double _x1, double _y1,
            double _x, double _y, bool _rel = false):
            x1(_x1), y1(_y1), x(_x), y(_y), path_point(_rel)
     {
-        
     }
-};
+}; // struct s_path
 
 struct t_path: public path_point
 {
     double x, y;
-    
+
     void write(std::ostream& o_str)
     {
         if(relative)
         {
-            o_str<<"t";
+            o_str << "t";
         }
 
         else
         {
-            o_str<<"T";
+            o_str << "T";
         }
 
-        o_str<<x<<" "<<y<<" ";
+        o_str << x << " " << y << " ";
     }
 
     t_path(double _x, double _y, bool _rel = false):
            x(_x), y(_y), path_point(_rel)
     {
-        
     }
-};
+}; // struct t_path
 
 class path_element: public svg_element
 {
@@ -620,7 +609,7 @@ public:
         path.push_back(new q_path(x1, y1, x, y, true));
         return *this;
     }
-    
+
     path_element& Q(double x1, double y1, double x, double y)
     {
         path.push_back(new q_path(x1, y1, x, y, false));
@@ -632,7 +621,7 @@ public:
         path.push_back(new s_path(x1, y1, x, y, true));
         return *this;
     }
-    
+
     path_element& S(double x1, double y1, double x, double y)
     {
         path.push_back(new s_path(x1, y1, x, y, false));
@@ -654,7 +643,7 @@ public:
     void write(std::ostream& o_str)
     {
         o_str<<"<path d=\"";
-           
+
         for(ptr_vector<path_point>::iterator i = path.begin();
             i!=path.end();
             ++i)
@@ -662,7 +651,7 @@ public:
             (*i).write(o_str);
         }
         o_str<<"\" ";
-        
+
         write_attributes(o_str);
         style_info.write(o_str);
 
@@ -673,25 +662,24 @@ public:
 
         o_str<<"/>";
     }
-};
+}; // class path_element
 
 
 // -----------------------------------------------------------------
-// The node element of our document tree
+// The node element of our document tree.
 // -----------------------------------------------------------------
 class g_element: public svg_element
 {
-private: 
+private:
     ptr_vector<svg_element> children;
     std::string clip_name;
 
     bool clip_on;
-    
+
 public:
 
-    g_element():clip_on(false)
+    g_element() : clip_on(false)
     {
-
     }
 
     svg_element& operator[](unsigned int i)
@@ -712,14 +700,13 @@ public:
         write_attributes(rhs);
 
         rhs<< " >" << std::endl;
-        
+
         for(unsigned int i=0; i<children.size(); ++i)
         {
             children[i].write(rhs);
         }
 
         rhs << "</g>" << std::endl;
-
     }
 
     g_element& g_tag(int i)
@@ -727,11 +714,11 @@ public:
         return *(static_cast<g_element*>(&children[i]));
     }
 
-    //returns a reference to the node created
+    // Returns a reference to the node created.
     g_element& add_g_element()
     {
         children.push_back(new g_element);
-        
+
         return *(static_cast<g_element*>(&children[children.size()-1]));
     }
 
@@ -751,11 +738,11 @@ public:
         return *this;
     }
 
-    g_element& text(double x, double y, const std::string& text, 
+    g_element& text(double x, double y, const std::string& text,
         int text_size = 12,
         text_style align = center_align, int rotation = 0)
     {
-        children.push_back(new text_element(x, y, text, text_size, 
+        children.push_back(new text_element(x, y, text, text_size,
                                            align, rotation));
         return *this;
     }
@@ -784,9 +771,9 @@ public:
         children.push_back(new path_element());
         return *(static_cast<path_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
-};
+}; // class g_element
 
-}
-}
+} // namespace svg
+} // namespace boost
 
-#endif
+#endif // BOOST_SVG_TAG_HPP
