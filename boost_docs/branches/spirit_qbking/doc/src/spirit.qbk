@@ -11,19 +11,29 @@
 /   Copyright © 2003 Jonathan de Halleux
 /  Conversion from HTML:
 /   Copyright © 2007 Darren Garvey
- /
- / Distributed under the Boost Software License, Version 1.0. (See accompanying
- / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
- /]
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
 	
-[article Spirit Documentation
+[article Spirit's User Guide
     [quickbook 1.5]
     [version 0.01]
     [id boost.spirit]
     [dirname html]
     [copyright 1997-2002, 2007 Joel De Guzman, Darren Garvey]
     [purpose Boost.Spirit Documentation]
-    [authors [De Guzman, Joel], [Garvey, Darren]]
+    [authors [De Guzman, Joel],
+             [Kaiser, Hartmut],
+             [Nuffer, Daniel C.],
+             [Uzdavinis, Chris],
+             [Westfahl, Jeff],
+             [Arevalo-Baeza, Juan Carlos],
+             [Wille, Martin],
+             [Smith, Ross],
+             [de Halleux, Jonathan],
+             [Garvey, Darren]
+    ]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -38,107 +48,181 @@
 [def __boost_ref__ [@http://www.boost.org/libs/ref boost::ref]]
 [def __phoenix_var__ [@http://www.boost.org/libs/spirit/phoenix/doc/variables.html phoenix::var]]
 
-[section TOC]
+[/section TOC]
 
-[table Table of Contents
- [[Preface]]
- [[Introduction]]
- [[Quick Start]]
- [[Basic Concepts]]
-]
+[/table Table of Contents]
+
+Preface
+[include preface.qbk]
+
+Introduction
+[include introduction.qbk]
+
+Quick Start
+
+Basic Concepts
+[include basic_concepts.qbk]
 
 Organization
+[include organisation.qbk]
+
 What's New
-Core
+[include ../change_log.qbk]
+
+[section:core [*Core]]
+
 Primitives
 Operators
 Numerics
 The Rule
 Epsilon
 Directives
+
 The Scanner and Parsing
+[include scanner.qbk]
+
 The Grammar
 Subrules
 Semantic Actions
 In-depth: The Parser
 In-depth: The Scanner
 In-depth: The Parser Context
-Actors
+
+[endsect][/ core]
+
+[section:actors [*Actors]]
+
 Predefined Actions
-Attribute
+[/ NOT DONE YET include predefined_actors.qbk]
+
+[endsect][/ actors]
+
+[section:attribute [*Attribute]]
+
 Parametric Parsers
-Functional
-Phoenix
-Closures
-Dynamic
-Dynamic Parsers
-Storable Rules
-The Lazy Parser
-The Select Parser
-The Switch Parser
-Utility
-Escape Character Parsers
-Loop Parsers
-Character Set Parser
-Confix and Comment Parsers
-List Parsers
-Functor Parser
-Refactoring Parsers
-Regular Expression Parser
-Scoped Lock
-Distinct Parser
-Symbols
-The Symbol Table
-Trees
-Parse Trees and ASTs
-Iterator
-Multi Pass
-File Iterator
-Position Iterator
-Debugging
-Error Handling
-Quick Reference
-Includes
-Portability
-Style Guide
-Techniques
-FAQ
-Rationale
-Acknowledgments
-References
-
-[include character_sets.qbk]
-
-[include confix.qbk]
-[include debugging.qbk]
-[include distinct.qbk]
-[include dynamic_parsers.qbk]
-[include error_handling.qbk]
-[include escape_char_parser.qbk]
-[include file_iterator.qbk]
-[include functor_parser.qbk]
-[include includes.qbk]
-[include lazy_parser.qbk]
-[include list_parsers.qbk]
-[include loops.qbk]
-[include multi_pass.qbk]
-[include organisation.qbk]
-[include portability.qbk]
-[include position_iterator.qbk]
-[include rationale.qbk]
-[include refactoring.qbk]
-[include regular_expression_parser.qbk]
-[include scoped_lock.qbk]
-[include stored_rule.qbk]
-[include style.qbk]
-[include switch_parser.qbk]
-[include symbols.qbk]
-[include trees.qbk]
 [include parametric_parsers.qbk]
+
+Functional
 [include functional.qbk]
+
+[*NOT DONE YET] Phoenix
+
+Closures
 [include closures.qbk]
 
+[endsect][/ actors]
+
+[section [*Dynamic]]
+
+Dynamic Parsers
+[include dynamic_parser.qbk]
+
+Storable Rules
+[include storable_rules.qbk]
+
+The Lazy Parser
+[include the_lazy_parser.qbk]
+
+The Select Parser
+[include select_parser.qbk]
+
+The Switch Parser
+[include switch_parser.qbk]
+
+[endsect][/ dynamic]
+
+[section [*Utility]]
+
+Escape Character Parsers
+[include escape_char_parser.qbk]
+
+Loop Parsers
+[include loops.qbk]
+
+Character Set Parser
+[include character_sets.qbk]
+
+Confix and Comment Parsers
+[include confix.qbk]
+
+List Parsers
+[include list_parsers.qbk]
+
+Functor Parser
+[include functor_parser.qbk]
+
+Refactoring Parsers
+[include refactoring.qbk]
+
+Regular Expression Parser
+[include regular_expression_parser.qbk]
+
+Scoped Lock
+[include scoped_lock.qbk]
+
+Distinct Parser
+[include distinct.qbk]
+
+[endsect][/ utility]
+
+[section [*Symbols]]
+
+The Symbol Table
+[include symbols.qbk]
+
+[endsect][/ symbols]
+
+[section [*Trees]]
+
+Parse Trees and ASTs
+[include trees.qbk]
+
+[endsect][/ trees]
+
+[section [*Iterator]]
+
+Multi Pass
+[include multi_pass.qbk]
+
+File Iterator
+[include file_iterator.qbk]
+
+Position Iterator
+[include position_iterator.qbk]
+
+[endsect][/ iterator]
+
+Debugging
+[include debugging.qbk]
+
+Error Handling
+[include error_handling.qbk]
+
+Quick Reference
+
+Includes
+[include includes.qbk]
+
+Portability
+[include portability.qbk]
+
+Style Guide
+[include style.qbk]
+
+Techniques
+
+FAQ
+
+Rationale
+[include rationale.qbk]
+
+Acknowledgments
+[include acknowledgements.qbk]
+
+References
+
 [endsect][/ from a missing one somewhere]
 [endsect][/ from a missing one somewhere]
 
-[endsect][/ toc]
+[/endsect][/ toc]
+

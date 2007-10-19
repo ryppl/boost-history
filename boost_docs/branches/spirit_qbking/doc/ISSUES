@@ -1,6 +1,10 @@
 Note:
  The abstract looking sentences after the asterix' are strings to search for. This page is also less helpful than it could be.
 
+
+How do you use the [copyright *] part of the document-header to assign copyright to multiple people each with different years? It's not massively important, but worth getting right.
+
+
 trees.html
 
  * 'See the example file xml_grammar.hpp (in libs/spirit/example/...'
@@ -98,3 +102,26 @@ closures.qbk
  * Could do with an HTML source-mode (lookat: won't templates make source-mode markup not enough?)
 
  * Caption for the image (theme/closure1.png) displaced.
+
+basic_concepts.qbk
+
+  * The first paragraph, titled 'The Parser', could do with a 'All will become clear, honest,' or something similar because it's a bit of a headful if you don't know what each term means`.
+
+  * '(lhs), `ch+p(',') ;`'
+    Should the colon really be there?`
+
+  * Link for LEX?
+
+scanner.qbk
+
+ * Check placing of '[$../theme/lens.gif]' in headings works ok. If it does, there are more places these could go (ie. places they are in the current html docs.
+`
+ * Check the wording at the top of section 'direct_parsing'
+
+ * 'example in the numerics chapter'
+   Fix internal link
+
+ * '__directive.html__' and '__scanner__' x2
+   Internal link
+
+ * In fact, plenty of internal linkage issues.
