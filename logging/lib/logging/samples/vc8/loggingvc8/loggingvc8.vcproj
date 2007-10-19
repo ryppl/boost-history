@@ -423,6 +423,13 @@
 			<File
 				RelativePath="..\..\..\tests\format\test_simple_formatter.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -710,6 +717,14 @@
 			>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\acknowledgments.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\common_usage.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\customize_manipulator.hpp"
 				>
 			</File>
 			<File

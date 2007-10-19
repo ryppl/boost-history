@@ -369,7 +369,7 @@ L_ << "testing " << i << i+1 << i+2;
                 is_fmt, is_dest, is_clear
             };
             struct item {
-                item() : m_type(is_clear) {}
+                item() : m_type(is_clear), m_fmt(0), m_dest(0) {}
                 item& fmt(formatter_ptr f) { m_fmt = f; m_type = is_fmt; return *this; }
                 item &dest(destination_ptr d) { m_dest = d; m_type = is_dest; return *this; }
                 formatter_ptr m_fmt;

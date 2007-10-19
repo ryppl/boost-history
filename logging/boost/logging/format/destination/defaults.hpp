@@ -33,7 +33,7 @@ namespace boost { namespace logging { namespace destination {
 /** 
     @brief Writes the string to console
 */
-template<class convert_dest = do_convert_destination > struct cout {
+template<class convert_dest = do_convert_destination > struct cout : is_generic, same_type {
     template<class msg_type> void operator()(const msg_type & msg) const {
 #ifndef UNICODE
         convert_dest::write(msg, std::cout);

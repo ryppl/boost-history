@@ -23,8 +23,13 @@ namespace boost { namespace logging {
     - @ref gather "The gather namespace"
     - @ref writer "The writer namespace"
 - @ref manipulator "Formatters and/or destinations (manipulators namespace)"
-    - @ref manipulator_base
-    - @ref share_data
+    - @ref manipulator_common 
+    - @ref manipulator_base_class 
+    - @ref manipulator_generic 
+    - @ref manipulator_create 
+    - @ref manipulator_share_data 
+    - @ref formatter "Formatters"
+    - @ref destination "Destinations"
 
 - @ref thread_safety 
 

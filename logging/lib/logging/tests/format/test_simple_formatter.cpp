@@ -51,10 +51,10 @@ typedef optimize::cache_string_one_str<> cache_string;
 //////////////////////////////////////////////////////////////////////
 // Formatters
 
-typedef formatter::base<cache_string&, op_equal::same_type > format_base;
+typedef formatter::base<cache_string&> format_base;
 
 // formatter: prepend the message's index
-struct write_idx : format_base, formatter::non_const_context<int> {
+struct write_idx : formatter::class_<write_idx, format_base, op_equal_no_context>,  formatter::non_const_context<int> {
     write_idx() : non_const_context_base((int)0) {}
     void operator()(param str) const {
         std::stringstream idx;
@@ -63,7 +63,7 @@ struct write_idx : format_base, formatter::non_const_context<int> {
     }
 };
 
-struct write_time : format_base {
+struct write_time : formatter::class_<write_time, format_base, op_equal_no_context> {
     void operator()(cache_string & str) const {
         char t[10];
         time_t now = time(0);
@@ -73,7 +73,7 @@ struct write_time : format_base {
     }
 };
 
-struct append_enter : format_base {
+struct append_enter : formatter::class_<append_enter, format_base, op_equal_no_context> {
     void operator()(cache_string & str) const {
         str.append_string("\n");
     }
@@ -82,15 +82,15 @@ struct append_enter : format_base {
 //////////////////////////////////////////////////////////////////////
 // Destinations
 
-typedef destination::base<const std::string &, op_equal::same_type> destination_base;
+typedef destination::base<const std::string &> destination_base;
 
-struct write_to_cout : destination_base {
+struct write_to_cout : destination::class_<write_to_cout, destination_base, op_equal_no_context> {
     void operator()(param msg) const {
         std::cout << msg ;
     }
 };
 
-struct write_to_file : destination_base, destination::non_const_context<std::ofstream> {
+struct write_to_file : destination::class_<write_to_file, destination_base, op_equal_no_context>, destination::non_const_context<std::ofstream> {
     write_to_file(const char* filename) : non_const_context_base(filename) {}
     void operator()(param msg) const {
         context() << msg ;
@@ -118,7 +118,7 @@ void test_simple_format_and_write_simple_formatter() {
     g_l->writer().add_destination( write_to_file("out.txt") );
 
     int i = 1;
-    L_ << "must be prefixed by index and time , enter is appended as well " << i++;
+    L_ << "this is so cool" << i++;
     L_ << "must be prefixed by index and time , enter is appended as well " << i++;
     L_ << "must be prefixed by index and time , enter is appended as well " << i++;
 

@@ -50,8 +50,8 @@ This will output something similar to:
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct write_idx : formatter::non_const_context<int> {
-    write_idx() : non_const_context_base((int)0) {}
+template<class convert = do_convert_format::prepend> struct idx : formatter::non_const_context<int> {
+    idx() : non_const_context_base((int)0) {}
     template<class msg_type> void operator()(msg_type & str) const {
         std::basic_ostringstream<char_type> idx;
         idx << _T("[") << ++context() << _T("] ");

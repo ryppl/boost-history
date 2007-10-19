@@ -30,7 +30,7 @@ The Boost Log Library has these features:
 - Efficient filtering of log messages - that is, if a log is turned off, the message is not processed at all
 - Thread-safe - the library allows you several degrees of thread-safety, as you'll see
 - Allows for formatters and destinations 
-    - formatters format the message (like, prepending extra information - an index, the time, thread is, etc)
+    - formatters format the message (like, prepending extra information - an index, the time, thread id, etc)
     - destinations specify where the message is to be written
     - Formatters and Destinations are orthogonal to the rest of the library - if you want you can use them, otherwise
       you can define your own writing mechanism

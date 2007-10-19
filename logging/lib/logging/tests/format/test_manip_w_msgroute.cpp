@@ -42,7 +42,7 @@ using namespace boost::logging;
 
     to cout:        [idx] [time] message [enter]
     to dbg_window:  [time] message [enter]
-    to file:        [idx] message [enter]
+    to file:        message [enter]
 
     So our route is:
 
@@ -52,7 +52,6 @@ using namespace boost::logging;
     prepend [idx]
     to cout
     clear format
-    prepend [idx]
     append [enter]
     to file
 */
@@ -62,7 +61,7 @@ typedef optimize::cache_string_one_str<> cache_string;
 //////////////////////////////////////////////////////////////////////
 // Formatters
 
-typedef formatter::base<cache_string&, op_equal::same_type > format_base;
+typedef formatter::base<cache_string&> format_base;
 
 // formatter: prepend the message's index
 struct write_idx : format_base, formatter::non_const_context<int> {
@@ -93,7 +92,7 @@ struct append_enter : format_base {
 //////////////////////////////////////////////////////////////////////
 // Destinations
 
-typedef destination::base<const std::string &, op_equal::same_type> destination_base;
+typedef destination::base<const std::string &> destination_base;
 
 struct write_to_cout : destination_base {
     void operator()(param msg) const {
@@ -158,14 +157,13 @@ void test_manipulator_with_msg_route() {
         .fmt( write_idx() )
         .dest( write_to_cout() )
         .clear()
-        .fmt( write_idx() )
         .fmt( append_enter() )
-        .fmt( write_to_file())
+        .dest( write_to_file())
         ;
-//    DOES NOT work
 
     int i = 1;
-    L_ << "must be prefixed by index and time , enter is appended as well " << i++;
+    L_ << "good to use " << i++ << " version";
+    L_ << "Boost Logging lib v" << i++;
 }
 
 #ifdef SINGLE_TEST

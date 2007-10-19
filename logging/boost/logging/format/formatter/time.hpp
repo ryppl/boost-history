@@ -42,12 +42,12 @@ $hh - hour, 2 digits
 $mm - minute, 2 digits
 $ss - second, 2 digits
 
-Example: write_time("Today is $dd/$MM/$yyyy");
+Example: time("Today is $dd/$MM/$yyyy");
 
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct write_time {
+template<class convert = do_convert_format::prepend> struct time {
 private:
     typedef std::basic_string<c_type> string_type;
 
@@ -67,9 +67,9 @@ private:
 public:
 
     /** 
-        constructs a write_time object
+        constructs a time object
     */
-    write_time(const string_type & format) : m_day(-1), m_month(-1), m_yy(-1), m_yyyy(-1), m_hour(-1), m_min(-1), m_sec(-1) {
+    time(const string_type & format) : m_day(-1), m_month(-1), m_yy(-1), m_yyyy(-1), m_hour(-1), m_min(-1), m_sec(-1) {
         // format too big
         assert( format.size() < 64);
 
@@ -123,7 +123,7 @@ public:
     template<class msg_type> void operator()(msg_type & msg) {
         char_type buffer[64];
 
-        time_t t = time(0); 
+        time_t t = ::time(0); 
         tm details = *localtime( &t);
 
         int vals[8];
@@ -175,7 +175,7 @@ template<class convert = do_convert_format::prepend> struct write_time_strf {
 
     template<class msg_type> void operator()(msg_type & msg) {
         char_type buffer[64];
-        time_t t = time (0); 
+        time_t t = ::time (0); 
         tm t_details = m_localtime ? *localtime( &m_t) : *gmtime( &m_t);
     #ifdef UNICODE
         if (0 != wcsftime (buffer, sizeof (buffer), m_format.c_str (), &t_details))
