@@ -21,6 +21,12 @@
 # pragma once
 #endif
 
+#if defined(_MSC_VER) 
+#pragma warning ( disable : 4355)
+#endif 
+
+
+
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format/destination/convert_destination.hpp>
@@ -32,60 +38,70 @@ namespace boost { namespace logging { namespace destination {
     @brief settings for when constructing a file class
 */
 struct file_settings {
-    file_settings() : m_flush_each_time(true), m_initial_overwrite(false), m_do_append(true) {}
+    typedef detail::flag<file_settings> flag;
 
-    file_settings & flush_each_time(bool flush = true) { m_flush_each_time = flush; return *this; }
-    file_settings & initial_overwrite(bool overwrite = true) { m_initial_overwrite = overwrite; return *this; }
-    file_settings & do_append(bool append) { m_do_append = append; return *this; }
+    file_settings() 
+        : flush_each_time(this, true)
+        , initial_overwrite(this, false)
+        , do_append(this, true)
+        , extra_flags(this, 0) {}
 
-    file_settings & extra_open_flags(std::ios_base::open_mode extra_flags) { m_extra_flags = extra_flags; return *this; }
 
     /// if true (default), flushes after each write
-    bool m_flush_each_time;
+    flag::t<bool> flush_each_time;
     // if true it initially overwrites the file; default = false
-    bool m_initial_overwrite;
+    flag::t<bool> initial_overwrite;
     // if true (default), opens the file for appending
-    bool m_do_append;
+    flag::t<bool> do_append;
 
     /// just in case you have some extra flags to pass, when opening the file
-    std::ios_base::open_mode m_extra_flags;
+    flag::t<std::ios_base::open_mode> extra_flags;
 };
 
 namespace detail {
     std::ios_base::open_mode open_flags(file_settings fs) {
-        std::ios_base::open_mode flags = std::ios_base::out | fs.m_extra_flags ;
-        if ( m_do_append)
+        std::ios_base::open_mode flags = std::ios_base::out | fs.extra_flags() ;
+        if ( fs.do_append() )
             flags |= std::ios_base::app;
-        if ( !m_initial_overwrite)
+        if ( !fs.initial_overwrite() )
             flags |= std::ios_base::in;
 
         return flags;
     }
 
     struct file_info {
-        file_info(const char_type * name, file_settings settings) : out(name, open_flags(settings) ), settings(settings) {}
+        file_info(const std::string& name, file_settings settings) : name(name), out(name.c_str(), open_flags(settings) ), settings(settings) {}
+
+        std::string name;
         std::basic_ofstream<char_type> out;
         file_settings settings;
-    }
+    };
 }
 
 /** 
     @brief Writes the string to a file
 */
-template<class convert_dest = do_convert_destination > struct file : non_const_context<detail::file_info> {
+template<class convert_dest = do_convert_destination > struct file_t : is_generic, non_const_context<detail::file_info> {
     /** 
         @brief constructs the file destination
 
         @param file_name name of the file
         @param set [optional] file settings - see file_settings class
     */
-    file(const std::string & file_name, file_settings set = file_settings() ) : non_const_context_base(file_name) {}
+    file_t(const std::string & file_name, file_settings set = file_settings() ) : non_const_context_base(file_name,set) {}
     template<class msg_type> void operator()(const msg_type & msg) const {
-        convert_dest::write(msg, non_const_context_base::context() );
+        convert_dest::write(msg, non_const_context_base::context().out );
+    }
+
+    bool operator==(const file_t & other) const {
+        return non_const_context_base::context().name == other.context().name;
     }
 };
 
-
+/** 
+@brief file_t with default values. See file_t
+*/
+typedef file_t<> file;
 
 
 

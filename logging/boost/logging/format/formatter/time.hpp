@@ -47,12 +47,11 @@ Example: time("Today is $dd/$MM/$yyyy");
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct time {
+template<class convert = do_convert_format::prepend> struct time_t : is_generic {
 private:
-    typedef std::basic_string<c_type> string_type;
 
     struct index_info {
-        typedef string_type::size_type uint;
+        typedef hold_string_type::size_type uint;
         
         index_info(uint src_idx, int *format_idx, int size = 2) : src_idx(src_idx), format_idx(format_idx), size(size) {}
         uint src_idx;
@@ -69,37 +68,37 @@ public:
     /** 
         constructs a time object
     */
-    time(const string_type & format) : m_day(-1), m_month(-1), m_yy(-1), m_yyyy(-1), m_hour(-1), m_min(-1), m_sec(-1) {
+    time_t(const hold_string_type & format) : m_day(-1), m_month(-1), m_yy(-1), m_yyyy(-1), m_hour(-1), m_min(-1), m_sec(-1) {
         // format too big
         assert( format.size() < 64);
 
-        typedef string_type::size_type uint;
-        uint day_idx    = format.find(_T("$dd"));
-        uint month_idx  = format.find(_T("$MM"));
-        uint yy_idx     = format.find(_T("$yy"));
-        uint yyyy_idx   = format.find(_T("$yyyy"));
-        uint hour_idx   = format.find(_T("$hh"));
-        uint min_idx    = format.find(_T("$mm"));
-        uint sec_idx    = format.find(_T("$ss"));
+        typedef hold_string_type::size_type uint;
+        uint day_idx    = format.find(BOOST_LOGGING_STR("$dd"));
+        uint month_idx  = format.find(BOOST_LOGGING_STR("$MM"));
+        uint yy_idx     = format.find(BOOST_LOGGING_STR("$yy"));
+        uint yyyy_idx   = format.find(BOOST_LOGGING_STR("$yyyy"));
+        uint hour_idx   = format.find(BOOST_LOGGING_STR("$hh"));
+        uint min_idx    = format.find(BOOST_LOGGING_STR("$mm"));
+        uint sec_idx    = format.find(BOOST_LOGGING_STR("$ss"));
 
         typedef std::vector<index_info> array;
         array indexes;
-        if ( day_idx != logging_types::string::npos)
+        if ( day_idx != hold_string_type::npos)
             indexes.push_back( index_info(day_idx, &m_day) );
-        if ( month_idx != logging_types::string::npos)
+        if ( month_idx != hold_string_type::npos)
             indexes.push_back( index_info(month_idx, &m_month) );
 
-        if ( yy_idx != logging_types::string::npos || yyyy_idx != logging_types::string::npos)
-            if ( yyyy_idx  != logging_types::string::npos)
+        if ( yy_idx != hold_string_type::npos || yyyy_idx != hold_string_type::npos)
+            if ( yyyy_idx  != hold_string_type::npos)
                 indexes.push_back( index_info(yyyy_idx, &m_yyyy, 4) );
             else
                 indexes.push_back( index_info(yy_idx, &m_yy) );
 
-        if ( hour_idx != logging_types::string::npos)
+        if ( hour_idx != hold_string_type::npos)
             indexes.push_back( index_info(hour_idx, &m_hour ) );
-        if ( min_idx != logging_types::string::npos)
+        if ( min_idx != hold_string_type::npos)
             indexes.push_back( index_info(min_idx, &m_min) );
-        if ( sec_idx != logging_types::string::npos)
+        if ( sec_idx != hold_string_type::npos)
             indexes.push_back( index_info(sec_idx, &m_sec) );
         std::sort( indexes.begin(), indexes.end(), index_info::by_index);
         
@@ -109,7 +108,7 @@ public:
         for ( array::iterator begin = indexes.begin(), end = indexes.end(); begin != end; ++begin) {
             m_format += format.substr( prev_idx, begin->src_idx - prev_idx);
             *begin->format_idx = idx;
-            m_format += (begin->size == 4) ? _T("%04d") : _T("%02d");
+            m_format += (begin->size == 4) ? BOOST_LOGGING_STR("%04d") : BOOST_LOGGING_STR("%02d");
             prev_idx = begin->src_idx + begin->size + 1;
             ++idx;
         }
@@ -120,10 +119,10 @@ public:
 
 
 
-    template<class msg_type> void operator()(msg_type & msg) {
+    template<class msg_type> void operator()(msg_type & msg) const {
         char_type buffer[64];
 
-        time_t t = ::time(0); 
+        ::time_t t = ::time(0); 
         tm details = *localtime( &t);
 
         int vals[8];
@@ -145,6 +144,9 @@ public:
         convert::write(buffer, msg);
     }
 
+    bool operator==(const time_t & other) const {
+        return m_format == other.m_format;
+    }
 
 private:
     // the indexes of each escape sequence within the format string
@@ -161,21 +163,21 @@ private:
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct write_time_strf {
+template<class convert = do_convert_format::prepend> struct time_strf_t : is_generic {
 
     /** 
-        constructs a write_time_strf object
+        constructs a time_strf object
 
         @param format the time format , strftime-like
         @param localtime if true, use localtime, otherwise global time
     */
-    write_time_strf(const logging_types::string & format, bool localtime)
+    time_strf_t(const hold_string_type & format, bool localtime)
         : m_format (format), m_localtime (localtime)
     {}
 
-    template<class msg_type> void operator()(msg_type & msg) {
+    template<class msg_type> void operator()(msg_type & msg) const {
         char_type buffer[64];
-        time_t t = ::time (0); 
+        ::time_t t = ::time (0); 
         tm t_details = m_localtime ? *localtime( &m_t) : *gmtime( &m_t);
     #ifdef UNICODE
         if (0 != wcsftime (buffer, sizeof (buffer), m_format.c_str (), &t_details))
@@ -185,11 +187,19 @@ template<class convert = do_convert_format::prepend> struct write_time_strf {
             convert::write(buffer, msg);
     }
 
-    logging_types::string m_format;
+    bool operator==(const time_strf_t & other) const {
+        return m_format == other.m_format;
+    }
+
+private:
+    hold_string_type m_format;
     bool m_localtime;
 
 };
 
+
+typedef time_t<> time;
+typedef time_strf_t<> time_strf;
 
 }}}
 

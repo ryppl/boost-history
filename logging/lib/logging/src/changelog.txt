@@ -1,3 +1,7 @@
+v0.8, 20 oct 2007
+- added use_format_write class
+- removed the filter from the logger class (need to update documentation)
+- added Common scenario
 
 
 v0.7.3, 19 oct 2007

@@ -30,7 +30,7 @@
 // minimize inclusion of STL headers in our headers!!!
 #include <string>
 
-
+#define BOOST_LOGGING_STR(x)      ansi_unicode_char_holder ( x, L ## x)
 
 
 /* 
@@ -46,6 +46,7 @@ namespace boost { namespace logging {
     typedef types<override>::hold_string_type hold_string_type;
     typedef types<override>::filter_type filter_type;
     typedef types<override>::mutex mutex;
+    typedef types<override>::level_holder_type level_holder_type;
 
     namespace writer {}
 
@@ -55,6 +56,38 @@ namespace boost { namespace logging {
         just in case you're doing a typo - "write" instead of "writer"
     */
     namespace write = writer;
+
+
+
+
+
+
+namespace detail {
+    template<class self_type, class type> struct flag_with_self_type {
+        flag_with_self_type(self_type * self, const type& val = type() ) : m_val(val), m_self(self) {}
+        flag_with_self_type(const flag_with_self_type & other) : m_val(other.m_val) {}
+
+        const type & operator()() const { return m_val; }
+        self_type & operator()(const type & val) {
+            m_val = val; return *m_self;
+        }
+
+        void operator=(const self_type & other) {
+            m_val = other.m_val;
+        }
+
+    private:
+        type m_val;
+        self_type * m_self;
+    };
+
+    template<class self_type> struct flag {
+        template<class val_type> struct t : flag_with_self_type<self_type,val_type> {
+            t(self_type * self, const val_type& val = val_type() ) : flag_with_self_type(self,val) {}
+        };
+    };
+}
+
 }}
 
 

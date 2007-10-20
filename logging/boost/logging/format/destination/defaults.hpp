@@ -33,7 +33,8 @@ namespace boost { namespace logging { namespace destination {
 /** 
     @brief Writes the string to console
 */
-template<class convert_dest = do_convert_destination > struct cout : is_generic, same_type {
+template<class convert_dest = do_convert_destination > struct cout_t : is_generic, boost::logging::op_equal::always_equal {
+
     template<class msg_type> void operator()(const msg_type & msg) const {
 #ifndef UNICODE
         convert_dest::write(msg, std::cout);
@@ -44,13 +45,17 @@ template<class convert_dest = do_convert_destination > struct cout : is_generic,
 };
 
 
-template<class convert_dest = do_convert_destination > struct dbg_window {
+/** 
+    @brief Writes the string to console
+*/
+template<class convert_dest = do_convert_destination > struct dbg_window_t : is_generic, boost::logging::op_equal::always_equal {
+
     template<class msg_type> void operator()(const msg_type & msg) const {
 #ifdef BOOST_WINDOWS
 #ifndef UNICODE
-    ::OutputDebugWindowA( convert_dest::do_convert(msg, into<const char*>() ) );
+    ::OutputDebugStringA( convert_dest::do_convert(msg, into<const char*>() ) );
 #else
-    ::OutputDebugWindowW( convert_dest::do_convert(msg, into<const wchar_t*>() ) );    
+    ::OutputDebugStringW( convert_dest::do_convert(msg, into<const wchar_t*>() ) );    
 #endif
 #else
         // non windows
@@ -59,10 +64,16 @@ template<class convert_dest = do_convert_destination > struct dbg_window {
     }
 };
 
+/** 
+    @brief cout_t with default values. See cout_t
+*/
+typedef cout_t<> cout;
 
+/** 
+    @brief dbg_window_t with default values. See dbg_window_t
+*/
+typedef dbg_window_t<> dbg_window;
 
-
-sharing memory
 
 }}}
 

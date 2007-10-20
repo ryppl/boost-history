@@ -180,35 +180,35 @@ private:
 
 } // namespace filter
 
-    namespace detail {
-        template<class type> struct process_msg_holder {
-            process_msg_holder() {}
-
-            BOOST_LOGGING_FORWARD_CONSTRUCTOR(process_msg_holder, m_processor)
-     
-            type const & process_msg() const    { return m_processor; }
-            type & process_msg()                { return m_processor; }
-        private:
-            type m_processor;
-        };
-    }
 
     /** 
-        @brief Helper, used to initialize both filter and process_msg_holder, from a logger.
-
-        Example: 
-
-        @code
-        logger<...> l(init_both, param_to_initialize_process, param_to_initialize_filter);
-        @endcode
+        @brief Base class for all loggers
     */
-    struct init_both_t {};
-    namespace { init_both_t init_both; }
+    template<class process_msg_type_ > struct logger_base {
+        typedef process_msg_type_ process_msg_type;
+
+        logger_base() {}
+
+        BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger_base, m_processor)
+
+        /** 
+            The only way to get to the message processor. Allow writing  <tt>logger->some_method(x);</tt>
+        */
+        const process_msg_type* operator->() const  { return &m_processor; }
+        process_msg_type* operator->()              { return &m_processor; }
+
+        // in the future, this little class counts, since it'll expose a small virtual interface
+        // to allow BOOST_DECLARE_LOG/BOOST_DEFINE_LOG
+        //
+        // it also counts since it's the same interface as log_keeper
+    private:
+        process_msg_type m_processor;
+    };
 
     /** 
     @brief The logger class. Every log from your application is an instance of this.
 
-    The logger has a filter, and a message processor, which will process the message if the log is enabled
+    The logger has a message processor, which will process the message if <i>you decide</i> the log is enabled
     (@ref workflow "see workflow")
 
     The logger derives from the filter, so you can manipulate it as a %filter (enable/disable it, if the %filter allows it)
@@ -249,37 +249,30 @@ private:
     // usage
     L_ << "cool " << "message";
     @endcode
-    
+
+
+
+
+
+    @note
+    You might think that the logical place for the filter would be in the logger (that is, the logger should own the filter). Well, this is how
+    the interface was at the beginning. However, in practice, it often happens that the same filter be shared be different loggers.
+    So it's best to just have the filter and logger concepts completely separated.
+
+    FIXME explain how filters work!
+
+
     \n\n
 
     @param process_msg_type The message processor. It can be any class that will process the message.
                             How the class does the actual processing is up to you - also, based on that you'll @ref macros "define your macro(s)". 
                             For non-trivial cases, it should be the process_msg class.    
 
-    @param filter [optional] The filter that says if the log is enabled or not. If not specified, the @ref override_defaults "default is used".
     */
-    template<class process_msg_type , class filter = filter_type> struct logger : filter, detail::process_msg_holder<process_msg_type> {
-        typedef detail::process_msg_holder<process_msg_type> process_base;
-
+    template<class process_msg_type_ > struct logger : logger_base<process_msg_type_> {
+        typedef logger_base<process_msg_type_> logger_base_type;
         logger() {}
-
-        /** 
-        */
-        template<class p1, class p2> logger(const init_both_t&, p1 a1, p2 a2) : filter(a2), process_base(a1) {}
-
-
-        BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger, process_base)
-
-        operator bool() const           { return filter::is_enabled(); }
-        bool operator!() const          { return !filter::is_enabled(); }
-
-        /** 
-            Syntactic sugar. Allow writing  <tt>logger->some_method(x);</tt>, which is equivalent to
-            <tt>logger.process_msg().some_method(x);</tt>
-        */
-        const process_msg_type* operator->() const  { return &process_base::process_msg(); }
-        process_msg_type* operator->()              { return &process_base::process_msg(); }
-
+        BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger, logger_base_type)
     };
 
 

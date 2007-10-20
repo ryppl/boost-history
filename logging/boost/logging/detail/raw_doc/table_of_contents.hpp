@@ -3,9 +3,11 @@ namespace boost { namespace logging {
 /** 
 @mainpage Boost Logging Library v2 - Table of contents
 
+
 - @ref main_intro
     - @ref main_motivation
-    - @ref main_examples
+    - @ref main_example1
+    - @ref main_example2 
 - @ref workflow
     - @ref workflow_introduction 
     - @ref workflow_filter 

@@ -51,9 +51,9 @@ namespace level {
     enum {
         disable_all = (type)-1,
         enable_all = 0,
-        info = 1000,
-        warning = 2000,
-        debug = 3000,
+        debug = 1000,
+        info = 2000,
+        warning = 3000,
         error = 4000,
         fatal = 5000
     };
@@ -137,6 +137,7 @@ namespace level {
         }
     };
 
+    typedef boost::logging::level_holder_type holder;
 } // namespace level
 
 /** 

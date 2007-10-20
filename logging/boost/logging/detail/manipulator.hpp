@@ -21,15 +21,14 @@
 # pragma once
 #endif
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+// 'class1' : inherits 'class2::member' via dominance
+#pragma warning ( disable : 4250)
+#endif
+
 #include <boost/logging/detail/fwd.hpp>
 
 namespace boost { namespace logging {
-
-
-typedef enum implement_op_equal {
-    op_equal_no_context,
-    op_equal_has_context
-};
 
 
 /** 
@@ -125,6 +124,8 @@ g_l->writer().add_destination( destination::file("out.txt") );
 In the above case, if you were to write:
 
 @code
+#define L_ ... // defining the logger
+
 int i = 1;
 L_ << "this is so cool" << i++;
 @endcode
@@ -262,19 +263,33 @@ template<
 
     typedef typename boost::remove_const<param>::type non_const_param;
     // used as msg_type in format_and_write classes
-    typedef typename boost::remove_reference<non_const_param> raw_param;
+    typedef typename boost::remove_reference<non_const_param>::type raw_param;
 
     virtual ~base() {}
     virtual void operator()(param val) const = 0;
 };
 
 
+
+
+/** 
+    @brief When you implement your manipulator class, how is operator== to be implemented?
+*/
+struct implement_op_equal {
+    typedef enum type {
+        /// manipulator has no context - that is, any two values of this type are considered equal (operator== will automatically return true)
+        no_context,
+        /// manipulator has context - that is, you <b>have to</b> implement operator== in your manipulator class
+        has_context
+    };
+};
+
 namespace detail {
-    template<implement_op_equal> struct op_equal_base {
+    template<implement_op_equal::type> struct op_equal_base {
         bool operator==(const op_equal_base& ) const { return true; }
     };
 
-    template<> struct op_equal_base<op_equal_has_context> {};
+    template<> struct op_equal_base<implement_op_equal::has_context> {};
 }
 
 /**
@@ -282,7 +297,7 @@ namespace detail {
 
     x
 */
-template<class type, class base_type, implement_op_equal op_e> struct class_ 
+template<class type, class base_type, implement_op_equal::type op_e> struct class_ 
     : base_type, 
       detail::op_equal_base<op_e>, 
       boost::logging::op_equal::same_type_op_equal<type> {
@@ -379,11 +394,19 @@ struct is_generic {};
 namespace detail {
 
     // holds the generic manipulator, and forwards to it
-    template<class generic_type, class manipulator_base> struct generic_holder : manipulator_base {
+    template<class generic_type, class manipulator_base> struct generic_holder 
+            : class_< 
+                    generic_holder<generic_type,manipulator_base>, 
+                    manipulator_base, 
+                    implement_op_equal::has_context> {
         typedef typename manipulator_base::param param;
 
         generic_type m_val;
         generic_holder(const generic_type & val) : m_val(val) {}
+
+        bool operator==(const generic_holder& other) const {
+            return m_val == other.m_val;
+        }
 
         virtual void operator()(param val) const {
             m_val.operator()(val);
@@ -428,6 +451,10 @@ namespace formatter {
     */
     typedef boost::logging::manipulator::is_generic is_generic;
 
+    /** 
+        @sa boost::logging::manipulator::implement_op_equal
+    */
+    typedef boost::logging::manipulator::implement_op_equal implement_op_equal;
 }
 
 /**  
@@ -454,6 +481,11 @@ namespace destination {
         @sa boost::logging::manipulator::is_generic
     */
     typedef boost::logging::manipulator::is_generic is_generic;
+
+    /** 
+        @sa boost::logging::manipulator::implement_op_equal
+    */
+    typedef boost::logging::manipulator::implement_op_equal implement_op_equal;
 }
 
 }}

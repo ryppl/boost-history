@@ -3,27 +3,30 @@ namespace boost { namespace logging {
 /** 
 @page common_usage Scenario 1: Common Usage
 
-define the class_ - with @param
+Scenario 1 should be the most common:
+- You have multiple levels (in this example: debug < info < error)
+- You want to format the message before it's written 
+  (in this example: prefix it by index, by time, and append an enter to it)
+- You have <b>one log</b>, which writes to several log destinations
+  (in this example: the console, the output window, and a file
 
-- with levels
-- write to different thingies
-- etc
+In our example, the output will be written to the console, debug window, and "out.txt" file.
+It will look similar to this one:
 
-Explain about samples!
+@code
+12:59.27 [1] this is so cool 1
+12:59.27 [2] hello, world
+12:59.27 [3] good to be back ;) 2
+@endcode
+
+To take a look at the code for example, see:
+
+@htmlonly
+<a href="http://svn.boost.org/svn/boost/sandbox/logging/lib/logging/samples/scenarios/mul_levels_one_logger.cpp">Scenario 1 Code</a>
+@endhtmlonly
 
 
 
-have 3 scenarios
-- several levels, same log
-- several levels, different logs
-- with custom router FIXME (that is, use cache_string_several_str())
-- one logger; several levels - use a sink (that is, see how we find "is_enabled")
-  - we can simply use the level.is_enabled(xxx) question, and then write to the log
-- no levels
-- etc
-- fastest , no <<
-- fastest , using <<
-- using your own formatters and destinations integrated
 
 */
 

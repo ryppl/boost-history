@@ -21,6 +21,8 @@
 # pragma once
 #endif
 
+
+
 /* 
     make sure we don't need any of our headers included from here!
     we're included from fwd.hpp!
@@ -42,6 +44,18 @@ namespace boost { namespace logging {
         const type & operator()() const   { return *this; }
     private:
         type val;
+    };
+
+
+
+
+    struct ansi_unicode_char_holder {
+        const char * str;
+        const wchar_t * wstr;
+        ansi_unicode_char_holder(const char * str, const wchar_t * wstr) : str(str), wstr(wstr) {}
+
+        operator const char*() const { return str; }
+        operator const wchar_t*() const { return wstr; }
     };
 
 }}

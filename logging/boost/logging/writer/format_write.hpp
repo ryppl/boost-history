@@ -117,7 +117,7 @@ Also, iterating over formatters/destinations would be slower, if we were to keep
 template<
         class formatter_base, 
         class destination_base, 
-        class apply_format_and_write = boost::logging::format_and_write::simple<typename destination_base::raw_param>,
+        class apply_format_and_write = boost::logging::format_and_write::simple<typename formatter_base::raw_param>,
         class router_type = msg_route::simple<formatter_base, destination_base> ,
         class formatter_array = array::shared_ptr_holder<formatter_base> , 
         class destination_array = array::shared_ptr_holder<destination_base> >
@@ -169,19 +169,19 @@ private:
     // generic manipulator
     template<class formatter> void del_formatter_impl(formatter fmt, const boost::true_type& ) {
         typedef boost::logging::manipulator::detail::generic_holder<formatter,formatter_base> holder;
-        del_formatter_impl( holder(fmt) boost::false_type() );
+        del_formatter_impl( holder(fmt), boost::false_type() );
     }
 
     // generic manipulator
     template<class destination> void add_destination_impl(destination dest, const boost::true_type& ) {
-        typedef boost::logging::manipulator::detail::generic_holder<destination,destination_basee> holder;
-        add_destination_impl( holder(dest) boost::false_type() );
+        typedef boost::logging::manipulator::detail::generic_holder<destination,destination_base> holder;
+        add_destination_impl( holder(dest), boost::false_type() );
     }
 
     // generic manipulator
     template<class destination> void del_destination_impl(destination dest, const boost::true_type& ) {
-        typedef boost::logging::manipulator::detail::generic_holder<destination,destination_basee> holder;
-        del_destination_impl( holder(dest) boost::false_type() );
+        typedef boost::logging::manipulator::detail::generic_holder<destination,destination_base> holder;
+        del_destination_impl( holder(dest), boost::false_type() );
     }
 
 
@@ -246,6 +246,8 @@ private:
 
 
 }}
+
+#include <boost/logging/detail/use_format_write.hpp>
 
 #endif
 

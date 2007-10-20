@@ -74,15 +74,27 @@ Example:
         struct no_ts;
     }
 
+    namespace level {
+        struct holder_no_ts ;
+        struct holder_ts ;
+        struct holder_tls_with_cache ;
+    }
+
 
 
     struct default_types {
+#ifdef UNICODE
+        typedef wchar_t char_type;
+#else
         typedef char char_type;
+#endif
         // this is the type we use to hold a string, internally
-        typedef std::string hold_string_type;
+        typedef std::basic_string<char_type> hold_string_type;
 
         // default filter type
         typedef filter::no_ts filter_type;
+
+        typedef level::holder_no_ts level_holder_type;
 
         struct lock_resource {
             template<class lock_type> struct finder {
@@ -91,7 +103,6 @@ Example:
         };
 
         typedef boost::logging::threading::mutex mutex;
-
     };
 
     // FIXME we need defaults for different scenarios!

@@ -1,4 +1,4 @@
-// Template.hpp
+// convert_destination.hpp
 
 // Boost Logging library
 //
@@ -14,8 +14,8 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-#ifndef JT28092007_TEMPLATE_HPP_DEFINED
-#define JT28092007_TEMPLATE_HPP_DEFINED
+#ifndef JT28092007_convert_destination_HPP_DEFINED
+#define JT28092007_convert_destination_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -37,11 +37,11 @@ It has 2 function overloads:
 FIXME
 */
 namespace convert {
-    template<class obj, class char_traits, class char_type> void write(const obj & m, std::basic_iostream<char_type, char_traits> & out) {
+    template<class obj, class char_traits, class char_type> void write(const obj & m, std::basic_ostream<char_type, char_traits> & out) {
         out << m;
     }
 
-    template<class char_traits, class char_type> void write(const char_type* m, std::basic_iostream<char_type, char_traits> & out) {
+    template<class char_traits, class char_type> void write(const char_type* m, std::basic_ostream<char_type, char_traits> & out) {
         out << m;
     }
 
@@ -54,12 +54,12 @@ namespace convert {
 }
 
 struct do_convert_destination {
-    template<class msg, class dest> void write(const msg & m, dest & d) {
-        convert::write(msg, dest);
+    template<class msg, class dest> static void write(const msg & m, dest & d) {
+        convert::write(m, d);
     }
 
-    template<class msg, class dest> dest do_convert(const msg & m, const into<dest> &) {
-        convert::do_convert(msg, into<dest>() );
+    template<class msg, class dest> static dest do_convert(const msg & m, const into<dest> &) {
+        return convert::do_convert(m, into<dest>() );
     }
 
 };

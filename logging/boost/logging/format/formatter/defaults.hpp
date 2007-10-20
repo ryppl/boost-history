@@ -50,11 +50,11 @@ This will output something similar to:
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct idx : formatter::non_const_context<int> {
-    idx() : non_const_context_base((int)0) {}
+template<class convert = do_convert_format::prepend> struct idx_t : is_generic, formatter::non_const_context<int>, boost::logging::op_equal::always_equal  {
+    idx_t() : non_const_context_base((int)0) {}
     template<class msg_type> void operator()(msg_type & str) const {
         std::basic_ostringstream<char_type> idx;
-        idx << _T("[") << ++context() << _T("] ");
+        idx << BOOST_LOGGING_STR("[") << ++context() << BOOST_LOGGING_STR("] ");
 
         convert::write( idx.str(), str );
     }
@@ -67,9 +67,9 @@ template<class convert = do_convert_format::prepend> struct idx : formatter::non
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct append_enter {
+template<class convert = do_convert_format::prepend> struct append_enter_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
-        convert::write( _T("\n"), str );
+        convert::write( (const char_type*)BOOST_LOGGING_STR("\n"), str );
     }
 };
 
@@ -80,7 +80,7 @@ template<class convert = do_convert_format::prepend> struct append_enter {
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::append> struct append_enter_if_needed {
+template<class convert = do_convert_format::append> struct append_enter_if_needed_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
         bool is_needed = true;
         if ( !str.empty())
@@ -88,10 +88,13 @@ template<class convert = do_convert_format::append> struct append_enter_if_neede
                 is_needed = false;
 
         if ( is_needed)
-            convert::write( _T("\n"), str );
+            convert::write( BOOST_LOGGING_STR("\n"), str );
     }
 };
 
+typedef idx_t<> idx;
+typedef append_enter_t<> append_enter;
+typedef append_enter_if_needed_t<> append_enter_if_needed;
 
 }}}
 

@@ -11,7 +11,8 @@ namespace boost { namespace logging {
 - @ref workflow_2b 
 
 
-
+@attention
+The filter is not kept in the logger anymore. They are different concepts. Need to update these pages
 
 @section workflow_introduction Introduction
 

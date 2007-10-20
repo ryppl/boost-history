@@ -26,84 +26,14 @@
 namespace boost { namespace logging { 
 
 /** 
-    @brief Different ways to implement operator==
+    @brief Implements operator== for manipulators
 
-    You need this when:
-    - your logger uses Formatters and Destinations, and
-    - you've added formatters and/or destinations to your logger
-    - at a later time, you want to erase a certain formatter and/or destination from your logger
-
-    If so, we need a way to identify the formatter/destination to be erased.
 */
 namespace op_equal {
 
 
 
-    /** 
-        @brief A unique ID is given to each default-constructed object. If object A is copy-constructed from B, or copy-assigned from B, it will "inherit" its ID.
-
-        A lot of times this is usually enough. Since formatters/destinations either have const context data,
-        or a shared context (@ref boost::logging::manipulator::non_const_context "non_const_context class"), this is enough.
-    */
-    struct unique_id {
-    protected:
-        unique_id() : m_id( next_id() ) {}
-
-    public:
-        bool are_unique_ids_equal(const unique_id & other) const { return m_id == other.m_id; }
-    private:
-        static int next_id() {
-            static threading::mutex cs;
-            static int id = 0;
-            threading::scoped_lock lk(cs);
-            return ++id;
-        }
-
-        int m_id;
-    };
-    inline bool operator==(const unique_id& a, const unique_id & b) { return a.are_unique_ids_equal(b); }
-    namespace detail { namespace {
-        struct make_sure_unique_id_next_id_is_initialized {
-            struct use_unique_id : unique_id {};
-
-            make_sure_unique_id_next_id_is_initialized() {
-                // trick the compiler to make sure the statics in next_id() are initialized before main()!
-                use_unique_id a, b;
-                if ( a == b)
-                    std::vector<int> v;
-            }
-        };
-    }}
-
-
-
-    /** 
-        @brief Implements operator==, which compares two objects. If they have the same type, it will return true
-
-        For trivial @ref manipulator "manipulators", that don't have any context, this is usually enough.
-
-        If your @ref manipulator "manipulators" have context, you should either use non_const_context class, or same_type_op_equal class.
-    */
-    struct same_type {
-    protected:
-        same_type() {}
-        same_type(const same_type&) {}
-        virtual ~same_type() {}
-    public:
-        inline bool operator ==(const same_type& other) const { 
-            return typeid(*this) == typeid(other); 
-        }
-    };
-
-
-
-
-
     struct same_type_op_equal_top {
-        /*
-            if you get a compile time error here, your formatter or destination needs to derive 
-            from same_type_op_equal<your_type>, and implement operator== as a member function , in your class
-        */
         virtual bool equals(const same_type_op_equal_top &) const = 0;
     protected:
         same_type_op_equal_top() {}
@@ -118,6 +48,9 @@ namespace op_equal {
     */
     struct same_type_op_equal_base : virtual same_type_op_equal_top {};
 
+    struct always_equal {
+        bool operator==(const always_equal& ) const { return true; }
+    };
 
     /** 
         @brief Implements operator==, which compares two objects. If they have the same type, it will compare them using the type's member operator==.

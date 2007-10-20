@@ -50,7 +50,12 @@ namespace convert {
     Example : write_time
     */
     namespace prepend {
-        void write(const string_type & src, string & dest) {
+        void write(const char_type * src, string_type & dest ) {
+            const char * end = src;
+            for ( ; *end; ++end);
+            dest.insert( dest.begin(), src, end);
+        }
+        void write(const string_type & src, string_type & dest) {
             dest.insert( dest.begin(), src.begin(), src.end() );
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
@@ -61,7 +66,10 @@ namespace convert {
     /** 
     */
     namespace append {
-        void write(const string_type & src, string & dest) {
+        void write(const char_type * src, string_type & dest ) {
+            dest += src;
+        }
+        void write(const string_type & src, string_type & dest) {
             dest += src;
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
@@ -72,7 +80,10 @@ namespace convert {
     /** 
     */
     namespace modify {
-        void write(const string_type & src, string & dest) {
+        void write(const char_type * src, string_type & dest ) {
+            dest = src;
+        }
+        void write(const string_type & src, string_type & dest) {
             dest = src;
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
@@ -84,20 +95,22 @@ namespace convert {
 
 
 struct do_convert_format {
+    typedef std::basic_string<char_type> string_type;
+
     struct prepend {
-        template<class string> void write(const string_type & src, string & dest) {
+        template<class string> static void write(const string_type & src, string & dest) {
             convert::prepend::write(src, dest);
         }
     };
 
     struct append {
-        template<class string> void write(const string_type & src, string & dest) {
+        template<class string> static void write(const string_type & src, string & dest) {
             convert::append::write(src, dest);
         }
     };
 
     struct modify {
-        template<class string> void write(const string_type & src, string & dest) {
+        template<class string> static void write(const string_type & src, string & dest) {
             convert::modify::write(src, dest);
         }
     };

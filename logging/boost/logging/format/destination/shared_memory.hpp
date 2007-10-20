@@ -49,10 +49,10 @@ namespace detail {
 /** 
     @brief Logs the information in shared memory
 */
-template<class convert_dest = do_convert_destination > struct shared_memory : non_const_context<detail::shared_memory_context> {
+template<class convert_dest = do_convert_destination > struct shared_memory_t : non_const_context<detail::shared_memory_context> {
 
     enum { just_in_case = 8192 };
-    basic_shared_memory_appender(const std::string & name, std::size_t mem_size = 2 * 1024 * 1024 * sizeof(char_type) ) {
+    shared_memory_t(const std::string & name, std::size_t mem_size = 2 * 1024 * 1024 * sizeof(char_type) ) : m_name(name), m_mem_size(mem_size) {
         non_const_context_base::context().mem_size = mem_size;
         
         // this segment might have been previously created...
@@ -83,7 +83,7 @@ template<class convert_dest = do_convert_destination > struct shared_memory : no
         }
     }
     
-    template<class msg_type> void operator () (const msg_type& msg_arg) {
+    template<class msg_type> void operator () (const msg_type& msg_arg) const {
         const string_type & msg = do_convert::do_convert(msg_arg, into<string_type>() );
 
         bool can_fit = *(non_const_context_base::context().occupied_size) + msg.size() < non_const_context_base::context().mem_size;
@@ -112,10 +112,20 @@ template<class convert_dest = do_convert_destination > struct shared_memory : no
         }
     }
 
+    bool operator==(const shared_memory_t& other) const {
+        return m_name == other.m_name && m_mem_size == other.m_mem_size;
+    }
+
+private:
+    std::string m_name;
+    std::size_t m_mem_size;
 
 };
 
-
+/** 
+    @brief shared_memory_t with default values. See shared_memory_t.
+*/
+typedef shared_memory_t<> shared_memory;
 
 }}}
 

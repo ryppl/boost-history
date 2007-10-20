@@ -170,7 +170,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -425,12 +425,21 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="scenarios"
+				>
+				<File
+					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="main"
@@ -619,6 +628,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\format_all.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\detail\manipulator.hpp"
 					>
 				</File>
@@ -628,6 +641,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\boost\logging\format\optimize.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\use_format_write.hpp"
 					>
 				</File>
 				<Filter
@@ -737,6 +754,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\namespace_concepts.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\old_examples.hpp"
 				>
 			</File>
 			<File

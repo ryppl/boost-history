@@ -21,6 +21,10 @@
 # pragma once
 #endif
 
+#if defined(_MSC_VER) 
+#pragma warning ( disable : 4355)
+#endif 
+
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format/destination/convert_destination.hpp>
@@ -32,34 +36,12 @@
 
 namespace boost { namespace logging { namespace destination {
 
-namespace detail {
-    template<class self_type, class type> struct flag_with_self_type {
-        flag(self_type * self, const type& val = type() ) : m_val(val), m_self(self) {}
-        flag(const flag & other) : m_val(other.m_val) {}
-
-        const type & operator()() const { return m_val; }
-        self_type & operator()(const type & val) {
-            m_val = val; return *m_self;
-        }
-
-        // FIXME operator=
-    private:
-        type m_val;
-        self_type * m_self;
-    };
-
-    template<class self_type> struct flag {
-        template<class val_type> struct t : flag_with_type<self_type,val_type> {
-            flag(self_type * self, const val_type& val = val_type() ) : flag_with_type(self,val) {}
-        };
-    };
-}
 
 /** 
-    Settings you can pass to the rolling file
+    @brief Settings you can pass to the rolling file
 */
 struct rolling_file_settings {
-    typedef detail::flag<rolling_file_settings> flag;
+    typedef boost::logging::detail::flag<rolling_file_settings> flag;
 
     rolling_file_settings() 
         : max_size_bytes(this, 1024 * 1024)
@@ -87,15 +69,15 @@ namespace detail {
             
             if ( m_flags.initial_erase()) {
                 for ( int idx = 0; idx < m_flags.file_count(); ++idx)
-                    if ( fs::exists( file_name(idx) )
+                    if ( fs::exists( file_name(idx) ))
                         fs::remove( file_name(idx) );
             }
 
             // see what file to start from
             if ( m_flags.start_where_size_not_exceeded() ) {
                 for ( m_cur_idx = 0; m_cur_idx < m_flags.file_count(); ++m_cur_idx )
-                    if ( fs::exists( file_name(m_cur_idx) ) {
-                        if ( fs::file_size( file_name(m_cur_idx) < m_flags.max_size_bytes() )
+                    if ( fs::exists( file_name(m_cur_idx) )) {
+                        if ( fs::file_size( file_name(m_cur_idx))  < m_flags.max_size_bytes() )
                             // file hasn't reached max size
                             break;
                     }
@@ -116,11 +98,11 @@ namespace detail {
 
         void recreate_file() {
             m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
-                std::ios_base::out | std::ios_base::app);
+                std::ios_base::out | std::ios_base::app));
         }
 
         template<class msg_type> void write( const msg_type& msg) {
-            (convert_dest(msg, (*m_out) );
+            convert_dest::write(msg, (*m_out) );
             if ( m_out->ftellg() > m_flags.max_size_bytes()) {
                 m_cur_idx = (m_cur_idx + 1) % m_flags.file_count();
                 recreate_file();
@@ -143,7 +125,7 @@ namespace detail {
     The log has a max_size. When max_size is reached, we start writing to name_prefix.2. When max_size is reached, we start writing to name_prefix.3.
     And so on, until we reach name_prefix.N (N = file_count). When that gets fool, we start over, with name_prefix.1.
 */
-template<class convert_dest = do_convert_destination > struct rolling_file : non_const_context<detail::file_info<convert_dest> > {
+template<class convert_dest = do_convert_destination > struct rolling_file_t : is_generic, non_const_context<detail::rolling_file_info<convert_dest> > {
 
     /** 
         Constructs a rolling file
@@ -152,13 +134,21 @@ template<class convert_dest = do_convert_destination > struct rolling_file : non
         
         @param flags [optional] extra settings to pass to the rolling file. See rolling_file_settings.
     */
-    rolling_file(const std::string & name_prefix, rolling_file_settings flags = rolling_file_settings() ) : non_const_context(name_prefix, flags) {}
+    rolling_file_t(const std::string & name_prefix, rolling_file_settings flags = rolling_file_settings() ) : non_const_context_base(name_prefix, flags) {}
 
-    template<class msg_type> void operator()( const msg_type & msg) {
+    template<class msg_type> void operator()( const msg_type & msg) const {
         non_const_context::context().write(msg);
+    }
+
+    bool operator==(const rolling_file_t & other) const {
+        return non_const_context_base::context().m_name_prefix == other.context().m_name_prefix;
     }
 };
 
+/** 
+@brief rolling_file_t with default values. See rolling_file_t
+*/
+typedef rolling_file_t<> rolling_file;
 
 
 

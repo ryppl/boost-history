@@ -31,10 +31,10 @@ namespace boost { namespace logging { namespace formatter {
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct thread_id {
-    template<class msg_type> void operator()(msg_type & msg) {
+template<class convert = do_convert_format::prepend> struct thread_id_t : is_generic, boost::logging::op_equal::always_equal {
+    template<class msg_type> void operator()(msg_type & msg) const {
         std::basic_ostringstream<char_type> out;
-        out << _T("[T")
+        out << BOOST_LOGGING_STR("[T")
     #if defined (BOOST_HAS_WINTHREADS)
             << ::GetCurrentThreadId()
     #elif defined (BOOST_HAS_PTHREADS)
@@ -42,10 +42,14 @@ template<class convert = do_convert_format::prepend> struct thread_id {
     #elif defined (BOOST_HAS_MPTASKS)
             << MPCurrentTaskID()
     #endif
-            << _T("] ");
+            << BOOST_LOGGING_STR("] ");
 
         convert::write( out.str(), msg );
     }
+};
+
+
+typedef thread_id_t<> thread_id;
 
 }}}
 

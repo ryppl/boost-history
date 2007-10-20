@@ -536,9 +536,6 @@ L_ << "testing " << i << i+1 << i+2;
     } // namespace msg_route
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // format_write class
-    //
 
 
 
@@ -546,6 +543,13 @@ L_ << "testing " << i << i+1 << i+2;
 
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/writer/format_write.hpp>
+
+#include <boost/logging/format/formatter/defaults.hpp>
+#include <boost/logging/format/destination/defaults.hpp>
+#include <boost/logging/process_msg/ostream_like.hpp>
+
+
+
 
 #endif
 

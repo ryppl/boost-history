@@ -1,4 +1,4 @@
-// logging.hpp
+// format_all.hpp
 
 // Boost Logging library
 //
@@ -14,23 +14,23 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-#ifndef JT28092007_logging_HPP_DEFINED
-#define JT28092007_logging_HPP_DEFINED
+#ifndef JT28092007_format_all_HPP_DEFINED
+#define JT28092007_format_all_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
-#include <boost/logging/filter.hpp>
-#include <boost/logging/process_msg.hpp>
-#include <boost/logging/sink.hpp>
-#include <boost/logging/macros.hpp>
-#include <boost/logging/level.hpp>
+#include <boost/logging/format.hpp>
+#include <boost/logging/format/formatter/thread_id.hpp>
+#include <boost/logging/format/formatter/time.hpp>
+#include <boost/logging/format/destination/file.hpp>
+#include <boost/logging/format/destination/rolling_file.hpp>
 
-namespace boost { namespace logging {
+// not tested yet
+//#include <boost/logging/format/destination/shared_memory.hpp>
 
-}}
 
 #endif
 
