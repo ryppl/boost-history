@@ -169,15 +169,15 @@ to <code>bool</code>.</p>
 <p>
 Implementations of functions described in this clause are permitted to call 
 operating system or other low-level applications program interfaces (API&#39;s). Some functions 
-described in this clause are specified to throw exceptions of type <tt>system_error</tt>
+described in this clause are specified to throw exceptions of type <code>system_error</code>
 ([syserr.syserr]). Such exceptions shall be thrown when one of these operating 
 system or other low-level API calls result in an error.</p>
 
 <p>
-The <tt>error_category</tt> ([syserr.errcat.overview]) 
-of the <tt>error_code</tt> reported by such an exception&#39;s <tt>code()</tt> 
+The <code>error_category</code> ([syserr.errcat.overview]) 
+of the <code>error_code</code> reported by such an exception&#39;s <code>code()</code> 
 member function is implementation-defined.  [<i>Note:</i> The category is 
-typically <tt>system_category</tt> ([syserr.errcat.overview]) since these error 
+typically <code>system_category</code> ([syserr.errcat.overview]) since these error 
 codes usually originate from the underlying operating system application program 
 interface (API). <i>-- end note</i>]
 </p>
@@ -267,12 +267,12 @@ public:
 </pre></blockquote>
 
 <p>
-Class <tt>thread</tt> and class <tt>thread::id</tt> shall be standard-layout 
+Class <code>thread</code> and class <code>thread::id</code> shall be standard-layout 
 classes (chapter 9 [class]).  
 </p>
 
-<h5><tt>thread</tt> types</h5>
-<h6>Class <tt>thread::id</tt></h6>
+<h5><code>thread</code> types</h5>
+<h6>Class <code>thread::id</code></h6>
 <pre>    class thread::id
     {
     public:
@@ -291,12 +291,12 @@ classes (chapter 9 [class]).
     operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
 
 </pre>
-<p> Objects of type <tt>thread::id</tt> represent the identity of threads. Each 
+<p> Objects of type <code>thread::id</code> represent the identity of threads. Each 
 joinable thread has a unique identity. All non-joinable threads share the same 
 identity, and this identify is different from that of any joinable thread.</p>
 
 <p>
-[<i>Note:</i> Relational operators allows <tt>thread::id</tt> objects to be used as keys in associative containers.<i> --end note</i>]
+[<i>Note:</i> Relational operators allows <code>thread::id</code> objects to be used as keys in associative containers.<i> --end note</i>]
 </p>
 
 <blockquote><pre>id();
@@ -304,7 +304,7 @@ identity, and this identify is different from that of any joinable thread.</p>
 
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of type <tt>id</tt>.
+<i>Effects:</i> Constructs an object of type <code>id</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -320,8 +320,8 @@ identity, and this identify is different from that of any joinable thread.</p>
 <blockquote>
 <p>
 <i>Returns:</i> If
-<tt><i>x</i></tt> and <tt><i>y</i></tt> represent the same identity,
-returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
+<code><i>x</i></code> and <code><i>y</i></code> represent the same identity,
+returns <code>true</code>.  Otherwise returns <code>false</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -334,7 +334,7 @@ returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
 
 <blockquote>
 <p>
-<i>Returns:</i> <tt>!(<i>x</i> == <i>y</i>)</tt>
+<i>Returns:</i> <code>!(<i>x</i> == <i>y</i>)</code>
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -349,7 +349,7 @@ returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
 
 <blockquote>
 <p>
-<i>Returns:</i> a value such that <tt>operator&lt;</tt> is a total ordering as described in [alg.sorting].
+<i>Returns:</i> a value such that <code>operator&lt;</code> is a total ordering as described in [alg.sorting].
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -362,7 +362,7 @@ returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
 </pre>
 <blockquote>
 <p>
-<i>Returns:</i> <tt>!(y &lt; x)</tt> </p>
+<i>Returns:</i> <code>!(y &lt; x)</code> </p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
@@ -374,7 +374,7 @@ returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
 </pre>
 <blockquote>
 <p>
-<i>Returns:</i> <tt>y &lt; x</tt> </p>
+<i>Returns:</i> <code>y &lt; x</code> </p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
@@ -386,7 +386,7 @@ returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
 </pre>
 <blockquote>
 <p>
-<i>Returns:</i> <tt>!(x &lt; y)</tt> </p>
+<i>Returns:</i> <code>!(x &lt; y)</code> </p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
@@ -400,22 +400,22 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread
 
 <blockquote>
 <p>
-<i>Effects:</i> Inserts an unspecified text representation of the <tt>thread::id</tt> into
-the stream <tt>out</tt>.
+<i>Effects:</i> Inserts an unspecified text representation of the <code>thread::id</code> into
+the stream <code>out</code>.
 </p>
 <p>
-<i>Returns:</i> <tt>out</tt>.
+<i>Returns:</i> <code>out</code>.
 </p>
 </blockquote>
 </blockquote>
 
-<h5><tt>thread</tt> constructors</h5>
+<h5><code>thread</code> constructors</h5>
 <blockquote>
 <pre>thread();
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs a <tt>thread</tt> object that does not represent an 
+<i>Effects:</i> Constructs a <code>thread</code> object that does not represent an 
 actual thread.
 </p>
 <p>
@@ -425,8 +425,8 @@ actual thread.
 &amp;&amp; joinable() == false
 </pre>
 <p>
-[<i>Note:</i> This is also the state of a <tt>thread</tt>
-object after <tt>detach</tt> or <tt>join</tt> is successfully called. <i>-- end note</i>]</p>
+[<i>Note:</i> This is also the state of a <code>thread</code>
+object after <code>detach</code> or <code>join</code> is successfully called. <i>-- end note</i>]</p>
 </blockquote>
 <p>
 <i>Throws:</i> Nothing.
@@ -439,18 +439,18 @@ object after <tt>detach</tt> or <tt>join</tt> is successfully called. <i>-- end 
 
 <blockquote>
 <p>
-<i>Requires:</i>  <tt>F</tt> is a callable type [func.def].  If <tt>f</tt> is an lvalue, <tt>F</tt> 
-is <tt>CopyConstructible</tt>.
-If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.
+<i>Requires:</i>  <code>F</code> is a callable type [func.def].  If <code>f</code> is an lvalue, <code>F</code> 
+is <code>CopyConstructible</code>.
+If <code>f</code> is an rvalue, <code>F</code> is <code>MoveConstructible</code>.
 <b>[Crowl: Is this enforced by code?]</b>
 </p>
 <p>
-<i>Effects:</i> Constructs an object of type <tt>thread</tt> and executes <tt><i>INVOKE</i>(f, t1, t2, ..., tN)</tt> 
-in a new thread, where <tt>t1, t2, 
-..., tN</tt> are the values in <tt>args...</tt>.
-Any return value from <tt>f</tt> is ignored.
-If <tt>f</tt> terminates with an uncaught
-exception, <tt>std::terminate()</tt> shall be called.
+<i>Effects:</i> Constructs an object of type <code>thread</code> and executes <code><i>INVOKE</i>(f, t1, t2, ..., tN)</code> 
+in a new thread, where <code>t1, t2, 
+..., tN</code> are the values in <code>args...</code>.
+Any return value from <code>f</code> is ignored.
+If <code>f</code> terminates with an uncaught
+exception, <code>std::terminate()</code> shall be called.
 </p>
 <p>
 <i>Postconditions:</i>
@@ -461,7 +461,7 @@ exception, <tt>std::terminate()</tt> shall be called.
 <p><code>*this</code> represents the newly started thread.</p>
 </blockquote>
 <p>
-<i>Throws:</i> <tt>system_error</tt> if unable to  start the new thread.
+<i>Throws:</i> <code>system_error</code> if unable to  start the new thread.
 </p>
 </blockquote>
 </blockquote>
@@ -471,13 +471,13 @@ exception, <tt>std::terminate()</tt> shall be called.
 
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of type <tt>thread</tt> from <tt><i>x</i></tt>.  
+<i>Effects:</i> Constructs an object of type <code>thread</code> from <code><i>x</i></code>.  
 </p>
 <p>
-<i>Postconditions:</i>  <tt><i>x</i>.joinable()</tt> is <tt>false</tt>. 
-<tt><i>x</i>.get_id() == thread().get_id()</tt>. <tt>joinable()</tt>
-returns the value of <tt><i>x</i>.joinable()</tt> prior to the start of construction.
-<tt>get_id()</tt> returns the value of <tt><i>x</i>.get_id()</tt> prior to the 
+<i>Postconditions:</i>  <code><i>x</i>.joinable()</code> is <code>false</code>. 
+<code><i>x</i>.get_id() == thread().get_id()</code>. <code>joinable()</code>
+returns the value of <code><i>x</i>.joinable()</code> prior to the start of construction.
+<code>get_id()</code> returns the value of <code><i>x</i>.get_id()</code> prior to the 
 start of construction.
 </p>
 <p>
@@ -486,13 +486,13 @@ start of construction.
 </blockquote>
 </blockquote>
 
-<h5><tt>thread</tt> destructor</h5>
+<h5><code>thread</code> destructor</h5>
 <blockquote><pre>~thread();
 </pre>
 
 <blockquote>
 <p>
-<i>Effects:</i> If <tt>joinable()</tt> then <tt>detach()</tt>,
+<i>Effects:</i> If <code>joinable()</code> then <code>detach()</code>,
 otherwise no effects.
 </p>
 <p>
@@ -501,22 +501,22 @@ otherwise no effects.
 </blockquote>
 </blockquote>
 
-<h5><tt>thread</tt> assignment</h5>
+<h5><code>thread</code> assignment</h5>
 <blockquote><pre>thread&amp; operator=(thread&amp;&amp; <i>x</i>);
 </pre>
 
 <blockquote>
 <p>
-<i>Effects:</i> If <tt>this</tt> currently represents a <tt>joinable</tt> thread object, calls
-<tt>detach()</tt>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
-and sets <tt><i>x</i></tt> to a default constructed state.
+<i>Effects:</i> If <code>this</code> currently represents a <code>joinable</code> thread object, calls
+<code>detach()</code>.  Then assigns the state of <code><i>x</i></code> to <code>*this</code>
+and sets <code><i>x</i></code> to a default constructed state.
 </p>
 <p>
-<i>Postconditions:</i>  <tt><i>x</i>.joinable()</tt> is <tt>false</tt>. 
-<tt><i>x</i>.get_id() == thread().get_id()</tt>. <tt>joinable()</tt> returns the 
-value of <tt><i>x</i>.joinable()</tt> prior to the
+<i>Postconditions:</i>  <code><i>x</i>.joinable()</code> is <code>false</code>. 
+<code><i>x</i>.get_id() == thread().get_id()</code>. <code>joinable()</code> returns the 
+value of <code><i>x</i>.joinable()</code> prior to the
 assignment.
-<tt>get_id()</tt> returns the value of <tt><i>x</i>.get_id()</tt> prior to the
+<code>get_id()</code> returns the value of <code><i>x</i>.get_id()</code> prior to the
 assignment.
 </p>
 <p>
@@ -525,13 +525,13 @@ assignment.
 </blockquote>
 </blockquote>
 
-<h5><tt>thread</tt> members</h5>
+<h5><code>thread</code> members</h5>
 <blockquote><pre>void swap(thread&amp;&amp; <i>x</i>);
 </pre>
 
 <blockquote>
 <p>
-<i>Effects:</i> Swaps the state of <tt>*this</tt> and <tt><i>x</i></tt>.
+<i>Effects:</i> Swaps the state of <code>*this</code> and <code><i>x</i></code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -544,7 +544,7 @@ assignment.
 
 <blockquote>
 <p>
-<i>Returns:</i> <tt>get_id() != id()</tt>.
+<i>Returns:</i> <code>get_id() != id()</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -557,7 +557,7 @@ assignment.
 
 <blockquote>
 <p>
-<i>Preconditions:</i> <tt>joinable()</tt> is <tt>true</tt>.
+<i>Preconditions:</i> <code>joinable()</code> is <code>true</code>.
 </p>
 <p>
 <i>Effects:</i> The current thread blocks until the thread 
@@ -567,9 +567,9 @@ on a memory location that the joiner does an acquire on.
 I.e. there is a happens before relationship.]</b>
 </p>
 <p>
-<i>Postconditions:</i> After a normal return of <tt>join()</tt>,
-<tt>joinable()</tt> is <tt>false</tt>. If <tt>join()</tt> throws an exception, the thread represented by
-<tt>*this</tt> remains <tt>joinable</tt>.
+<i>Postconditions:</i> After a normal return of <code>join()</code>,
+<code>joinable()</code> is <code>false</code>. If <code>join()</code> throws an exception, the thread represented by
+<code>*this</code> remains <code>joinable</code>.
 </p>
 
 <p>
@@ -584,17 +584,17 @@ possible error conditions are implementation defined.&nbsp;
 
 <blockquote>
 <p>
-<i>Preconditions:</i> <tt>joinable()</tt> is <tt>true</tt>.
+<i>Preconditions:</i> <code>joinable()</code> is <code>true</code>.
 </p>
 <p>
 <i>Effects:</i> The thread represented by
-<tt>*this</tt> continues execution.  When the thread represented by
-<tt>*this</tt> ends execution it shall release any owned resources.
+<code>*this</code> continues execution.  When the thread represented by
+<code>*this</code> ends execution it shall release any owned resources.
 <b>[Crowl: The programmer shall or the implementation shall?
 Which resources?]</b>
 </p>
 <p>
-<i>Postconditions:</i> <tt>joinable()</tt> is <tt>false</tt>. <tt>*this</tt> 
+<i>Postconditions:</i> <code>joinable()</code> is <code>false</code>. <code>*this</code> 
 does not represent a thread.
 </p>
 <p>
@@ -609,16 +609,16 @@ does not represent a thread.
 <blockquote>
 <p>
 <i>Returns:</i>
-<tt>this_thread::get_id()f</tt>or the thread 
+<code>this_thread::get_id()f</code>or the thread 
 represented by
-<tt>*this.</tt></p>
+<code>*this.</code></p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
 </blockquote>
 </blockquote>
 
-<h5><tt>thread</tt> static members</h5>
+<h5><code>thread</code> static members</h5>
 <blockquote><pre>unsigned hardware_concurrency();
 </pre>
 
@@ -635,7 +635,7 @@ return value of 1 is recommended, but not required.
 </blockquote>
 </blockquote>
 
-<h5><tt>thread</tt> specialized algorithms</h5>
+<h5><code>thread</code> specialized algorithms</h5>
 <blockquote>
 <pre>void swap(thread&amp;  x, thread&amp;  y);
 void swap(thread&amp;&amp; x, thread&amp;  y);
@@ -643,14 +643,14 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> <tt>x.swap(y)</tt>.
+<i>Effects:</i> <code>x.swap(y)</code>.
 </p>
 </blockquote>
 </blockquote>
 
 
 
-<h4>Namespace <tt>this_thread</tt></h4>
+<h4>Namespace <code>this_thread</code></h4>
 
 <blockquote><pre>namespace this_thread
 {
@@ -668,9 +668,9 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 
 <blockquote>
 <p>
-<i>Returns:</i> If the current thread is joinable, returns an object of type <tt>thread::id</tt> that uniquely identifies the current thread 
-and does not compare equal to a default constructed <tt>thread::id</tt>, else returns 
-a default constructed <tt>thread::id</tt></p>
+<i>Returns:</i> If the current thread is joinable, returns an object of type <code>thread::id</code> that uniquely identifies the current thread 
+and does not compare equal to a default constructed <code>thread::id</code>, else returns 
+a default constructed <code>thread::id</code></p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
@@ -695,7 +695,7 @@ a default constructed <tt>thread::id</tt></p>
 
 <blockquote>
 <p>
-<i>Requires:</i> <tt>Duration</tt> shall be explicitly convertible to <tt>nanoseconds</tt>.
+<i>Requires:</i> <code>Duration</code> shall be explicitly convertible to <code>nanoseconds</code>.
 </p>
 <p>
 <i>Effects:</i>  The current thread blocks for at least the amount of time specified.
@@ -833,18 +833,18 @@ template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&
 <p>
 Mutex objects provide synchronization operations to avoid data races. A
 mutex object supports mutual exclusion between threads by
-limiting its ownership to a single thread.  A thread  obtains ownership of a mutex object by calling <tt>lock()</tt>
-and relinquishes ownership by calling <tt>unlock()</tt>.  The 
-thread that calls <tt>lock()</tt> for a mutex object shall
-call <tt>unlock()</tt>.  Mutexes may be either recursive or
+limiting its ownership to a single thread.  A thread  obtains ownership of a mutex object by calling <code>lock()</code>
+and relinquishes ownership by calling <code>unlock()</code>.  The 
+thread that calls <code>lock()</code> for a mutex object shall
+call <code>unlock()</code>.  Mutexes may be either recursive or
 non-recursive.  The syntax is the same for both recursive and
 non-recursive mutexes, but the semantics differ for the member functions
 as described below.
 </p>
 
 <p>
-A mutex type shall be <tt>DefaultConstructible</tt> and <tt>Destructible</tt>.  If initialization
-of a mutex type fails, an exception of type <tt>system_error</tt> shall be thrown.  
+A mutex type shall be <code>DefaultConstructible</code> and <code>Destructible</code>.  If initialization
+of a mutex type fails, an exception of type <code>system_error</code> shall be thrown.  
 A mutex type is neither copyable
 nor movable.  A mutex type shall have the following member functions:
 </p>
@@ -895,10 +895,10 @@ And such a guarantee would preclude potentially interesting
 
 </p>
 <p>
-<i>Returns:</i> <tt>true</tt> if ownership was obtained, otherwise <tt>false</tt>.
+<i>Returns:</i> <code>true</code> if ownership was obtained, otherwise <code>false</code>.
 </p>
 <p>
-<i>Thread safety:</i>  This is an acquire operation if <tt>try_lock</tt> returns <tt>true</tt>.
+<i>Thread safety:</i>  This is an acquire operation if <code>try_lock</code> returns <code>true</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -915,8 +915,8 @@ And such a guarantee would preclude potentially interesting
 </p>
 <p>
 <i>Effects:</i> For a non-recursive mutex ownership is released.  For a recursive mutex
-<tt>unlock()</tt> must be called the same number of times which the mutex was locked
-(via either <tt>lock()</tt> or <tt>try_lock()</tt> or by any other locking function) before ownership is released.
+<code>unlock()</code> must be called the same number of times which the mutex was locked
+(via either <code>lock()</code> or <code>try_lock()</code> or by any other locking function) before ownership is released.
 </p>
 <p>
 <i>Thread safety:</i>  This is a release operation.
@@ -952,7 +952,7 @@ public:
 </pre></blockquote>
 
 <p>
-The class <tt>mutex</tt> provides a non-recursive mutex type which satisfies all of the Mutex requirements.
+The class <code>mutex</code> provides a non-recursive mutex type which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -981,7 +981,7 @@ public:
 </pre></blockquote>
 
 <p>
-The class <tt>recursive_mutex</tt> provides a recursive mutex type which satisfies all of the Mutex requirements.
+The class <code>recursive_mutex</code> provides a recursive mutex type which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -1005,9 +1005,9 @@ the mutex. .
 <i>Effects:</i>
 The function attempts to obtain ownership of the mutex
 within the specified time.
-If the indicated time is less than or equal to <tt>0</tt>,
+If the indicated time is less than or equal to <code>0</code>,
 the function still attempts to obtain ownership without
-blocking (as if by calling <tt>try_lock()</tt>).
+blocking (as if by calling <code>try_lock()</code>).
 If the function returns within the specified time duration,
 it shall have obtained ownership.
 [<i>Note:</i>
@@ -1018,7 +1018,7 @@ but implementations are expected to make a strong effort to do so.
 &mdash; <i>end note</i>]
 </p>
 <p>
-<i>Returns:</i> <tt>true</tt> if ownership was obtained, otherwise <tt>false</tt>.
+<i>Returns:</i> <code>true</code> if ownership was obtained, otherwise <code>false</code>.
 </p>
 <p>
 <i>Thread safety:</i>  This is a synchronization operation.
@@ -1057,7 +1057,7 @@ public:
 </pre></blockquote>
 
 <p>
-The class <tt>timed_mutex</tt> provides a non-recursive mutex type that satisfies all of the Timed Mutex requirements.
+The class <code>timed_mutex</code> provides a non-recursive mutex type that satisfies all of the Timed Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -1088,7 +1088,7 @@ public:
 </pre></blockquote>
 
 <p>
-The class <tt>recursive_timed_mutex</tt> provides a recursive mutex type that satisfies all of the Timed Mutex requirements.
+The class <code>recursive_timed_mutex</code> provides a recursive mutex type that satisfies all of the Timed Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -1116,7 +1116,7 @@ extern const adopt_lock_t   adopt_lock;
 </pre></blockquote>
 
 <p>
-An exception class <tt>lock_error</tt> derives from <tt>exception</tt> and is used to indicate
+An exception class <code>lock_error</code> derives from <code>exception</code> and is used to indicate
 improper usage of locks such as locking a mutex that the lock already owns, or unlocking a mutex
 that the lock does not own.
 </p>
@@ -1151,10 +1151,10 @@ public:
 </pre></blockquote>
 
 <p>
-<tt>lock_guard</tt> is used to control the ownership of a mutex within a single scope.
-An invariant of the <tt>lock_guard</tt> object is that it maintains the ownership of the
-mutex throughout the <tt>lock_guard</tt>'s lifetime.  Mutex ownership can not be deferred
-or transferred away from the <tt>lock_guard</tt>.
+<code>lock_guard</code> is used to control the ownership of a mutex within a single scope.
+An invariant of the <code>lock_guard</code> object is that it maintains the ownership of the
+mutex throughout the <code>lock_guard</code>'s lifetime.  Mutex ownership can not be deferred
+or transferred away from the <code>lock_guard</code>.
 </p>
 
 <blockquote>
@@ -1162,12 +1162,12 @@ or transferred away from the <tt>lock_guard</tt>.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread
-does not own the mutex.  The lifetime of <tt><i>m</i></tt> includes the lifetime
+<i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex,  the current thread
+does not own the mutex.  The lifetime of <code><i>m</i></code> includes the lifetime
 of the <code>lock_guard</code> object.
 </p>
 <p>
-<i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and calls <tt><i>m</i>.lock()</tt>.
+<i>Effects:</i> Stores a reference to <code><i>m</i></code> and calls <code><i>m</i>.lock()</code>.
 <b>[Crowl: An acquire specification is not necessary because of m.lock().]</b>
 </p>
 </blockquote>
@@ -1178,12 +1178,12 @@ of the <code>lock_guard</code> object.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> The current thread has ownership of the mutex <tt><i>m</i></tt>.
-The lifetime of <tt><i>m</i></tt> includes the lifetime of the <code>
+<i>Precondition:</i> The current thread has ownership of the mutex <code><i>m</i></code>.
+The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
 lock_guard</code> object.
 </p>
 <p>
-<i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and performs no other operation on it.
+<i>Effects:</i> Stores a reference to <code><i>m</i></code> and performs no other operation on it.
 </p>
 </blockquote>
 </blockquote>
@@ -1193,7 +1193,7 @@ lock_guard</code> object.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> <tt><i>m</i>.unlock()</tt>.
+<i>Effects:</i> <code><i>m</i>.unlock()</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1249,10 +1249,10 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_
 </pre></blockquote>
 
 <p>
-<tt>unique_lock</tt> is used to control the ownership of a mutex within one or more scopes.
-Mutex ownership can be deferred or transferred away from the <tt>unique_lock</tt>. 
+<code>unique_lock</code> is used to control the ownership of a mutex within one or more scopes.
+Mutex ownership can be deferred or transferred away from the <code>unique_lock</code>. 
 An object of type
-<tt>unique_lock</tt> is not copyable but is movable.
+<code>unique_lock</code> is not copyable but is movable.
 </p>
 
 <blockquote>
@@ -1260,7 +1260,7 @@ An object of type
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of type <tt>unique_lock</tt>.
+<i>Effects:</i> Constructs an object of type <code>unique_lock</code>.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1276,12 +1276,12 @@ owns_lock() == false
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread
-does not own the mutex.  The lifetime of <tt><i>m</i></tt> includes the lifetime
-of the <tt>unique_lock</tt> object.
+<i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex,  the current thread
+does not own the mutex.  The lifetime of <code><i>m</i></code> includes the lifetime
+of the <code>unique_lock</code> object.
 </p>
 <p>
-<i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and calls <tt><i>m</i>.lock()</tt>.
+<i>Effects:</i> Stores a reference to <code><i>m</i></code> and calls <code><i>m</i>.lock()</code>.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1297,13 +1297,13 @@ owns_lock() == true
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread
+<i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex,  the current thread
 does not own the mutex. 
-The lifetime of <tt><i>m</i></tt> includes the lifetime of the <tt>
-unique_lock</tt> object.
+The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
+unique_lock</code> object.
 </p>
 <p>
-<i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and performs no other operation on it.
+<i>Effects:</i> Stores a reference to <code><i>m</i></code> and performs no other operation on it.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1319,13 +1319,13 @@ owns_lock() == false
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex, then the current thread
+<i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex, then the current thread
 does not own the mutex. 
-The lifetime of <tt><i>m</i></tt> includes the lifetime of the <tt>
-unique_lock</tt> object.
+The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
+unique_lock</code> object.
 </p>
 <p>
-<i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and calls <tt><i>m</i>.try_lock()</tt>.
+<i>Effects:</i> Stores a reference to <code><i>m</i></code> and calls <code><i>m</i>.try_lock()</code>.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1341,12 +1341,12 @@ owns_lock() == <i>The result of the call to</i> <i>m</i>.try_lock()
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> The current thread has ownership of the mutex <tt><i>m</i></tt>. 
-The lifetime of <tt><i>m</i></tt> includes the lifetime of the <tt>
-unique_lock</tt> object.
+<i>Precondition:</i> The current thread has ownership of the mutex <code><i>m</i></code>. 
+The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
+unique_lock</code> object.
 </p>
 <p>
-<i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and performs no other operation on it.
+<i>Effects:</i> Stores a reference to <code><i>m</i></code> and performs no other operation on it.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1362,7 +1362,7 @@ owns_lock() == true
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> If <tt>owns_lock()</tt> calls <tt>unlock()</tt> on the referenced mutex.
+<i>Effects:</i> If <code>owns_lock()</code> calls <code>unlock()</code> on the referenced mutex.
 Otherwise there are no effects.
 </p>
 <p>
@@ -1376,7 +1376,7 @@ Otherwise there are no effects.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Transfers mutex ownership (if any) from <tt>u</tt> to <tt>this</tt>.
+<i>Effects:</i> Transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1397,8 +1397,8 @@ u.owns_lock() == false
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  If <tt>owns_lock()</tt> calls <tt>unlock()</tt>, and then
-transfers mutex ownership (if any) from <tt>u</tt> to <tt>this</tt>.
+<i>Effects:</i>  If <code>owns_lock()</code> calls <code>unlock()</code>, and then
+transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
 </p>
 <p>
 <i>Postcondition:</i>
@@ -1413,9 +1413,9 @@ u.owns_lock() == false
 </p>
 <p>
 <i>Note:</i> With a recursive mutex it is possible that both
-<tt>this</tt> and <tt>u</tt> own the same mutex before the assignment.
-In this case, <tt>this</tt> will own the mutex after the assignment (and
-<tt>u</tt> will not), but the mutex's lock count will be decremented by
+<code>this</code> and <code>u</code> own the same mutex before the assignment.
+In this case, <code>this</code> will own the mutex after the assignment (and
+<code>u</code> will not), but the mutex's lock count will be decremented by
 one.
 </p>
 </blockquote>
@@ -1426,13 +1426,13 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  Calls <tt>lock()</tt> on the referenced mutex.
+<i>Effects:</i>  Calls <code>lock()</code> on the referenced mutex.
 </p>
 <p>
-<i>Postcondition:</i> <tt>owns_lock() == true</tt>.
+<i>Postcondition:</i> <code>owns_lock() == true</code>.
 </p>
 <p>
-<i>Throws:</i> <tt>lock_error</tt>, if on entry <tt>owns_lock()</tt> is <tt>true</tt>.</p>
+<i>Throws:</i> <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code>.</p>
 </blockquote>
 </blockquote>
 
@@ -1441,16 +1441,16 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  Calls <tt>try_lock()</tt> on the referenced mutex.
+<i>Effects:</i>  Calls <code>try_lock()</code> on the referenced mutex.
 </p>
 <p>
-<i>Returns:</i>  The result of the call to <tt>try_lock()</tt> on the referenced mutex.
+<i>Returns:</i>  The result of the call to <code>try_lock()</code> on the referenced mutex.
 </p>
 <p>
-<i>Postcondition:</i> <tt>owns_lock() == </tt>The result of the call to <tt>try_lock()</tt> on the referenced mutex.
+<i>Postcondition:</i> <code>owns_lock() == </code>The result of the call to <code>try_lock()</code> on the referenced mutex.
 </p>
 <p>
-<i>Throws:</i> <tt>lock_error</tt>, if on entry <tt>owns_lock()</tt> is <tt>true</tt>.<tt> </tt>
+<i>Throws:</i> <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code>.<code> </code>
 </p>
 </blockquote>
 </blockquote>
@@ -1461,18 +1461,18 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  Calls <tt>timed_lock(rel_t)</tt> on the referenced mutex. 
+<i>Effects:</i>  Calls <code>timed_lock(rel_t)</code> on the referenced mutex. 
 		 If the resolution of Duration is greater <b>[Crowl: less]</b> than the native 
                  resolution the time is rounded up to the nearest native resolution.
 </p>
 <p>
-<i>Returns:</i>  The result of the call to <tt>timed_lock(rel_t)</tt> on the referenced mutex.
+<i>Returns:</i>  The result of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
 </p>
 <p>
-<i>Postcondition:</i> <tt>owns_lock() == </tt>The result of the call to <tt>timed_lock(rel_t)</tt> on the referenced mutex.
+<i>Postcondition:</i> <code>owns_lock() == </code>The result of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
 </p>
 <p>
-<i>Throws:</i> <tt>lock_error</tt>, if on entry <tt>owns_lock()</tt> is <tt>true</tt>.</p>
+<i>Throws:</i> <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code>.</p>
 </blockquote>
 </blockquote>
 
@@ -1481,13 +1481,13 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  Calls <tt>unlock()</tt> on the referenced mutex.
+<i>Effects:</i>  Calls <code>unlock()</code> on the referenced mutex.
 </p>
 <p>
-<i>Postcondition:</i> <tt>owns_lock() == false</tt>.
+<i>Postcondition:</i> <code>owns_lock() == false</code>.
 </p>
 <p>
-<i>Throws:</i> <tt>lock_error</tt>, if on entry <tt>owns_lock()</tt> is <tt>false</tt>.
+<i>Throws:</i> <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>false</code>.
 </p>
 </blockquote>
 </blockquote>
@@ -1497,7 +1497,7 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Returns:</i>  <tt>true</tt> if <tt>this</tt> owns a lock on a referenced mutex, else <tt>false</tt>.
+<i>Returns:</i>  <code>true</code> if <code>this</code> owns a lock on a referenced mutex, else <code>false</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1510,7 +1510,7 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Returns:</i>  Non-null if <tt>owns_lock()</tt> would return <tt>true</tt>, else returns null.
+<i>Returns:</i>  Non-null if <code>owns_lock()</code> would return <code>true</code>, else returns null.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1536,7 +1536,7 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  Swaps state with <tt>u</tt>.
+<i>Effects:</i>  Swaps state with <code>u</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1570,7 +1570,7 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  <tt>x.swap(y)</tt>.
+<i>Effects:</i>  <code>x.swap(y)</code>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1586,17 +1586,17 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_
 <blockquote>
 <p>
 <i>Requires:</i>  Each template parameter type must supply the following member functions with semantics
-corresponding to the Mutex concept, except that <tt>try_lock</tt> is allowed to throw an
-exception. <i>[Note:</i> The <tt>unique_lock</tt> class template meets these requirements 
+corresponding to the Mutex concept, except that <code>try_lock</code> is allowed to throw an
+exception. <i>[Note:</i> The <code>unique_lock</code> class template meets these requirements 
 when suitable instantiated. <i>--end note]</i></p>
 <blockquote><pre>bool try_lock();
 void unlock();
 </pre></blockquote>
 <p>
-<i>Effects:</i> The functions attempts to lock all arguments without blocking by calling <tt>try_lock()</tt>
+<i>Effects:</i> The functions attempts to lock all arguments without blocking by calling <code>try_lock()</code>
 on each of them.  If any argument can not be locked, then all arguments which have already been locked will
 be unlocked.  On return, either all arguments will be locked, or none of them will be locked.  If an
-exception is thrown by a call to <tt>try_lock()</tt>, there are no effects.
+exception is thrown by a call to <code>try_lock()</code>, there are no effects.
 </p>
 <p>
 <i>Returns:</i> If all arguments were successfully locked, returns <code>-1</code>.  Otherwise returns a 0-based index 
@@ -1612,8 +1612,8 @@ which argument failed to lock.
 <blockquote>
 <p>
 <i>Requires:</i>  Each template parameter type must supply the following member functions with semantics
-corresponding to the Mutex concept, except that <tt>try_lock</tt> is allowed to 
-throw an exception <i>[Note:</i> The <tt>unique_lock</tt> class template meets these requirements 
+corresponding to the Mutex concept, except that <code>try_lock</code> is allowed to 
+throw an exception <i>[Note:</i> The <code>unique_lock</code> class template meets these requirements 
 when suitable instantiated. <i>--end note]</i></p>
 <blockquote><pre>void lock();
 bool try_lock();
@@ -1621,7 +1621,7 @@ void unlock();
 </pre></blockquote>
 <p>
 <i>Effects:</i> All arguments are locked with an algorithm that avoids deadlock.
-If an exception is thrown by a call to <tt>lock()</tt> or <tt>try_lock()</tt>, there are no effects.
+If an exception is thrown by a call to <code>lock()</code> or <code>try_lock()</code>, there are no effects.
 </p>
 </blockquote>
 </blockquote>
@@ -1641,7 +1641,7 @@ class condition_variable_any;
 <h4>Class condition_variable</h4>
 
 <p>
-An object of class <tt>condition_variable</tt> is a synchronization primitive 
+An object of class <code>condition_variable</code> is a synchronization primitive 
 used to cause a thread to wait until notified by some other 
 thread that some condition is met, or a UTC[(?)] time is reached.
 </p>
@@ -1679,7 +1679,7 @@ public:
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of class <tt>condition_variable</tt>.
+<i>Effects:</i> Constructs an object of class <code>condition_variable</code>.
 </p>
 </blockquote>
 </blockquote>
@@ -1709,7 +1709,7 @@ unblocks at least one those threads.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -1727,7 +1727,7 @@ races or deadlocks.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -1739,19 +1739,19 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> <tt>lock</tt> is locked by the current thread.  No
-other thread is waiting on this <tt>condition_variable</tt> object unless <tt>lock</tt>
-refers to the same underlying <tt>mutex</tt> object.
+<i>Precondition:</i> <code>lock</code> is locked by the current thread.  No
+other thread is waiting on this <code>condition_variable</code> object unless <code>lock</code>
+refers to the same underlying <code>mutex</code> object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
-<tt>lock</tt>. If the <tt>wait</tt> throws an exception, <tt>lock</tt> will be 
+<code>lock</code>. If the <code>wait</code> throws an exception, <code>lock</code> will be 
 locked as the exception propagates. The current thread may
 unblock and return even in the absence of a notification.
 <b>[Crowl: Needs to say acquire operation.]</b>
 </p>
 <p>
-<i>Postcondition:</i> <tt>lock</tt> is locked by the current 
+<i>Postcondition:</i> <code>lock</code> is locked by the current 
 thread.</p>
 <p>
 <i>Throws:</i> <span style="font-style: italic; background-color: #FFFF00">??? 
@@ -1759,7 +1759,7 @@ See issue 26</span></p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -1772,10 +1772,10 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> While <tt>pred()</tt> returns <tt>false</tt> calls <tt>wait(lock)</tt>.
+<i>Effects:</i> While <code>pred()</code> returns <code>false</code> calls <code>wait(lock)</code>.
 </p>
 <p>
-<i>[Note:</i> Does not block if <tt>pred()</tt> is initially <tt>true</tt>. <i>
+<i>[Note:</i> Does not block if <code>pred()</code> is initially <code>true</code>. <i>
 --end note</i>]</p>
 </blockquote>
 </blockquote>
@@ -1786,30 +1786,30 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread.  No
-other thread is waiting on this <tt>condition_variable</tt> object unless <tt>lock</tt>
-refers to, the same underlying <tt>mutex</tt> object.
+<i>Precondition:</i>  The <code>lock</code> is locked by the current thread.  No
+other thread is waiting on this <code>condition_variable</code> object unless <code>lock</code>
+refers to, the same underlying <code>mutex</code> object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
-<tt>lock</tt>. If the <tt>timed_wait</tt> should throw an exception for
-any reason, <tt>lock</tt> will be locked as the exception propagates
-out.  If the absolute time specified by <tt>abs_time</tt> passes (that
-is, system time equals or exceeds <tt>abs_time</tt>) before the
-<tt>condition_variable</tt> is notified, or if the absolute time specified by
-<tt>abs_time</tt> has already been passed at the time of the call, then
-<tt>false</tt> is returned. This thread shall unblock when
+<code>lock</code>. If the <code>timed_wait</code> should throw an exception for
+any reason, <code>lock</code> will be locked as the exception propagates
+out.  If the absolute time specified by <code>abs_time</code> passes (that
+is, system time equals or exceeds <code>abs_time</code>) before the
+<code>condition_variable</code> is notified, or if the absolute time specified by
+<code>abs_time</code> has already been passed at the time of the call, then
+<code>false</code> is returned. This thread shall unblock when
 another thread  issues a notification to this blocked thread. The current
 thread may unblock and return even in the absence of a
 notification.
 </p>
 <p>
-<i>Postcondition:</i> <tt>lock</tt> is locked by the current 
+<i>Postcondition:</i> <code>lock</code> is locked by the current 
 thread.</p>
 <p>
-<i>Returns:</i> <tt>true</tt> if the call to <tt>timed_wait</tt> is notified prior
+<i>Returns:</i> <code>true</code> if the call to <code>timed_wait</code> is notified prior
 to the indicated timeout,
-otherwise returns <tt>false</tt>.
+otherwise returns <code>false</code>.
 </p>
 <p>
 <i>Throws:</i> <span style="font-style: italic; background-color: #FFFF00">??? 
@@ -1817,7 +1817,7 @@ See issue 26</span></p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable</code>
 object from different threads shall not result in data
 races or deadlocks.
 <b>[Crowl: Needs to say acquire operation.
@@ -1842,32 +1842,32 @@ Too much about other operations here.]</b>
 return true;
 </pre></blockquote>
 <p>
-<i>Returns:</i> <tt>pred()</tt>.
+<i>Returns:</i> <code>pred()</code>.
 </p>
 <p>
-<i>Note:</i> There is no blocking if <tt>pred()</tt> is initially <tt>true</tt>, even
+<i>Note:</i> There is no blocking if <code>pred()</code> is initially <code>true</code>, even
 if the timeout has already expired.  The return value indicates whether the predicate
-evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
+evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 </p>
 </blockquote>
 </blockquote>
 
 
 <p>
-<tt>condition_variable</tt> shall be a standard-layout class (chapter 9 [class]).
+<code>condition_variable</code> shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h4>Class condition_variable_any</h4>
 
 <p>
-An object of class <tt>condition_variable_any</tt> is a synchronization primitive 
+An object of class <code>condition_variable_any</code> is a synchronization primitive 
 used to cause a thread to wait until notified by some other 
 thread that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
 <p>
-The <tt>Lock</tt> type must support member functions <tt>lock</tt>
-and <tt>unlock</tt> with the semantics of the mutex concept.  All of the standard mutex types
+The <code>Lock</code> type must support member functions <code>lock</code>
+and <code>unlock</code> with the semantics of the mutex concept.  All of the standard mutex types
 meet this requirement.
 </p>
 
@@ -1905,7 +1905,7 @@ public:
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of class <tt>condition_variable_any</tt>.
+<i>Effects:</i> Constructs an object of class <code>condition_variable_any</code>.
 </p>
 </blockquote>
 </blockquote>
@@ -1933,7 +1933,7 @@ unblocks at least one those threads.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable_any</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -1950,7 +1950,7 @@ races or deadlocks.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable_any</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -1962,21 +1962,21 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> <tt>lock</tt> is locked by the current thread.  If
-<tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread is waiting on this <tt>condition_variable_any</tt> object unless <tt>lock</tt>
+<i>Precondition:</i> <code>lock</code> is locked by the current thread.  If
+<code>Lock</code> supports recursive locking, the lock count is one.  No
+other thread is waiting on this <code>condition_variable_any</code> object unless <code>lock</code>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
-<tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
-reason, <tt>lock</tt> will be locked as the exception propagates. 
+<code>lock</code>. If the <code>wait</code> should throw an exception for any
+reason, <code>lock</code> will be locked as the exception propagates. 
 This thread shall unblock when another thread issues a
 notification to this blocked thread. The current thread may
 unblock and return even in the absence of a notification.
 </p>
 <p>
-<i>Postcondition:</i> <tt>lock</tt> is locked by the current 
+<i>Postcondition:</i> <code>lock</code> is locked by the current 
 thread.</p>
 <p>
 <i>Throws:</i> <code>system_error</code> when an error condition occurs. The 
@@ -1985,7 +1985,7 @@ possible error conditions are implementation defined.&nbsp;&nbsp;
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable_any</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -1998,10 +1998,10 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> While <tt>pred()</tt> returns <tt>false</tt>, calls <tt>wait(lock)</tt>.
+<i>Effects:</i> While <code>pred()</code> returns <code>false</code>, calls <code>wait(lock)</code>.
 </p>
 <p>
-<i>Note:</i> There is no blocking if <tt>pred()</tt> is initially <tt>true</tt>.
+<i>Note:</i> There is no blocking if <code>pred()</code> is initially <code>true</code>.
 </p>
 </blockquote>
 </blockquote>
@@ -2012,31 +2012,31 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread.  If
-<tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread is waiting on this <tt>condition_variable_any</tt> object unless <tt>lock</tt>
+<i>Precondition:</i>  The <code>lock</code> is locked by the current thread.  If
+<code>Lock</code> supports recursive locking, the lock count is one.  No
+other thread is waiting on this <code>condition_variable_any</code> object unless <code>lock</code>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
-<tt>lock</tt>. If the <tt>timed_wait</tt> should throw an exception for
-any reason, <tt>lock</tt> will be locked as the exception propagates
-out.  If the absolute time specified by <tt>abs_time</tt> passes (that
-is, system time equals or exceeds <tt>abs_time</tt>) before the
-<tt>condition_variable_any</tt> is notified, or if the absolute time specified by
-<tt>abs_time</tt> has already been passed at the time of the call, then
-<tt>false</tt> is returned. This thread shall unblock when
+<code>lock</code>. If the <code>timed_wait</code> should throw an exception for
+any reason, <code>lock</code> will be locked as the exception propagates
+out.  If the absolute time specified by <code>abs_time</code> passes (that
+is, system time equals or exceeds <code>abs_time</code>) before the
+<code>condition_variable_any</code> is notified, or if the absolute time specified by
+<code>abs_time</code> has already been passed at the time of the call, then
+<code>false</code> is returned. This thread shall unblock when
 another thread issues a notification to this blocked thread. The current
 thread may unblock and return even in the absence of a
 notification.
 </p>
 <p>
-<i>Postcondition:</i> <tt>lock</tt> is locked by the current 
+<i>Postcondition:</i> <code>lock</code> is locked by the current 
 thread.</p>
 <p>
-<i>Returns:</i> <tt>true</tt> if the call to <tt>timed_wait</tt> is notified prior
+<i>Returns:</i> <code>true</code> if the call to <code>timed_wait</code> is notified prior
 to the indicated timeout,
-otherwise returns <tt>false</tt>.
+otherwise returns <code>false</code>.
 </p>
 <p>
 <i>Throws:</i> <code>system_error</code> when an error condition occurs. The 
@@ -2045,7 +2045,7 @@ possible error conditions are implementation defined.&nbsp;&nbsp;
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <code>condition_variable_any</code>
 object from different threads shall not result in data
 races or deadlocks.
 </p>
@@ -2068,12 +2068,12 @@ races or deadlocks.
 return true;
 </pre></blockquote>
 <p>
-<i>Returns:</i> <tt>pred()</tt>.
+<i>Returns:</i> <code>pred()</code>.
 </p>
 <p>
-<i>Note:</i> There is no blocking if <tt>pred()</tt> is initially <tt>true</tt>, even
+<i>Note:</i> There is no blocking if <code>pred()</code> is initially <code>true</code>, even
 if the timeout has already expired.  The return value indicates whether the predicate
-evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
+evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 </p>
 </blockquote>
 </blockquote>
@@ -2125,12 +2125,12 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 
 
 <p>
-        The class <tt>system_time</tt> provides a time point that represents the current
+        The class <code>system_time</code> provides a time point that represents the current
         Coordinated Universal Time, known as UTC, time.
-        <tt>system_time</tt> shall provide an epoch time of 1970-01-01 00:00:00.000000000
+        <code>system_time</code> shall provide an epoch time of 1970-01-01 00:00:00.000000000
         and a maximum time value of at least epoch time + 292 years.
 </p><p>
-        class <tt>system_time</tt> shall be EqualityComparable, LessThanComparable, 
+        class <code>system_time</code> shall be EqualityComparable, LessThanComparable, 
         CopyConstructable, DefaultConstructable, and Assignable.
 </p>
 
@@ -2313,7 +2313,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3></div></div></div>
 
 <p>
-        The function <tt>get_system_time</tt> provides access to the system clock at a
+        The function <code>get_system_time</code> provides access to the system clock at a
         resolution up to nanoseconds. The actual resolution may vary from platform to platform. 
 </p>
 
@@ -2519,7 +2519,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3></div></div></div>
 
 <p>
-Objects of class <tt>nanoseconds</tt> can be used to represent a count of nanoseconds.
+Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
 </p>
 
 <blockquote><pre>class nanoseconds 
@@ -2573,7 +2573,7 @@ Objects of class <tt>nanoseconds</tt> can be used to represent a count of nanose
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3></div></div></div>
 
 <p>
-Objects of class <tt>microseconds</tt> can be used to represent a count of microseconds.
+Objects of class <code>microseconds</code> can be used to represent a count of microseconds.
 </p>
 
 <blockquote><pre>class microseconds 
@@ -2638,7 +2638,7 @@ Objects of class <tt>microseconds</tt> can be used to represent a count of micro
 
 
 <p>
-Objects of class <tt>milliseconds</tt> can be used to represent a count of milliseconds.
+Objects of class <code>milliseconds</code> can be used to represent a count of milliseconds.
 </p>
 
 <blockquote><pre>class milliseconds
@@ -2704,7 +2704,7 @@ Objects of class <tt>milliseconds</tt> can be used to represent a count of milli
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3></div></div></div>
 
 <p>
-Objects of class <tt>seconds</tt> can be used to represent a count of seconds.
+Objects of class <code>seconds</code> can be used to represent a count of seconds.
 </p>
 
 <blockquote><pre>class  seconds 
@@ -2778,7 +2778,7 @@ Objects of class <tt>seconds</tt> can be used to represent a count of seconds.
 
 
 <p>
-Objects of class <tt>minutes</tt> can be used to represent a count of minutes.
+Objects of class <code>minutes</code> can be used to represent a count of minutes.
 </p>
 
 <blockquote><pre>class  minutes 
@@ -2854,7 +2854,7 @@ Objects of class <tt>minutes</tt> can be used to represent a count of minutes.
       </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3></div></div></div>
 
 <p>
-Objects of class <tt>hours</tt> can be used to represent a count of hours.
+Objects of class <code>hours</code> can be used to represent a count of hours.
 </p>
 
 <blockquote><pre>class  hours 
