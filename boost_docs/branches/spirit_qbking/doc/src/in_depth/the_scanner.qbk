@@ -1,0 +1,239 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/  Portions of this document tree:
+/   Copyright © 2001-2003 Hartmut Kaiser
+/   Copyright © 2001-2002 Daniel C. Nuffer
+/   Copyright © 2002 Chris Uzdavinis
+/   Copyright © 2002 Jeff Westfahl
+/   Copyright © 2002 Juan Carlos Arevalo-Baeza
+/   Copyright © 2003 Martin Wille
+/   Copyright © 2003 Ross Smith
+/   Copyright © 2003 Jonathan de Halleux
+/  Conversion from HTML:
+/   Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:in_depth_scanner In-depth: The Scanner]
+
+[h3 Basic Scanner API]
+
+[table class `scanner`
+ [[`value_t`]                     [`typedef`: The value type of the scanner's iterator]                    ]
+ [[`ref_t`]                       [`typedef`: The reference type of the scanner's iterator]                ]
+ [[`bool at_end() const`]         [Returns `true` if the input is exhausted]                               ]
+ [[`value_t operator*() const`]   [Dereference/get a `value_t` from the input]                             ]
+ [[`scanner const& operator++()`] [move the scanner forward]                                               ]
+ [[`IteratorT& first`]            [The iterator pointing to the current input position. Held by reference.]]
+ [[`IteratorT const last`]        [The iterator pointing to the end of the input. Held by value.]          ]
+]
+
+The basic behavior of the scanner is handled by policies. The actual execution of the scanner's public member functions listed in the table above is implemented by the scanner policies.
+
+Three sets of policies govern the behavior of the scanner. These policies make it possible to extend Spirit non-intrusively. The scanner policies allow the core-functionality to be extended without requiring any potentially destabilizing changes to the code. A library writer might provide her own policies that override the ones that are already in place to fine tune the parsing process to fit her own needs. Layers above the core might also want to take advantage of this policy based machanism. Abstract syntax tree generation, debuggers and lexers come to mind.
+
+There are three sets of policies that govern:
+
+* Iteration and filtering
+* Recognition and matching
+* Handling semantic actions
+
+[h3 `iteration_policy`]
+
+Here are the default policies that govern iteration and filtering:
+
+``
+    struct iteration_policy
+    {
+        template <typename ScannerT>
+        void
+        advance(ScannerT const& scan) const
+        { ++scan.first; }
+
+        template <typename ScannerT>
+        bool at_end(ScannerT const& scan) const
+        { return scan.first == scan.last; }
+
+        template <typename T>
+        T filter(T ch) const
+        { return ch; }
+
+        template <typename ScannerT>
+        typename ScannerT::ref_t
+        get(ScannerT const& scan) const
+        { return *scan.first; }
+    };
+``
+
+[table Iteration and filtering policies
+ [[`advance`] [Move the iterator forward]             ]
+ [[`at_end`]  [Return true if the input is exhausted] ]
+ [[`filter`]  [Filter a character read from the input]]
+ [[`get`]     [Read a character from the input]       ]
+]
+
+The following code snippet demonstrates a simple policy that converts all characters to lower case:
+
+``
+    struct inhibit_case_iteration_policy : public iteration_policy
+    {
+        template <typename CharT>
+        CharT filter(CharT ch) const
+        { 
+            return std::tolower(ch); 
+        }
+    };
+``
+
+[h3 `match_policy`]
+
+Here are the default policies that govern recognition and matching:
+
+``
+    struct match_policy
+    {
+        template <typename T>
+        struct result 
+        { 
+            typedef match<T> type; 
+        };
+
+        const match<nil_t>
+        no_match() const
+        { 
+            return match<nil_t>(); 
+        }
+
+        const match<nil_t>
+        empty_match() const
+        { 
+            return match<nil_t>(0, nil_t()); 
+        }
+
+        template <typename AttrT, typename IteratorT>
+        match<AttrT>
+        create_match(
+            std::size_t         length,
+            AttrT const&        val,
+            IteratorT const&    /*first*/,
+            IteratorT const&    /*last*/) const
+        { 
+            return match<AttrT>(length, val); 
+        }
+
+        template <typename MatchT, typename IteratorT>
+        void
+        group_match(
+            MatchT&             /*m*/,
+            parser_id const&    /*id*/,
+            IteratorT const&    /*first*/,
+            IteratorT const&    /*last*/) const {}
+
+        template <typename Match1T, typename Match2T>
+        void
+        concat_match(Match1T& l, Match2T const& r) const
+        { 
+            l.concat(r); 
+        }`
+    };
+``
+
+[table Recognition and matching
+ [
+  [`result`]
+  [A metafunction that returns a match type given an attribute type (see [link __In-depth: The Parser__]).]
+ ]
+ [
+  [`no_match`]
+  [Create a failed match.]
+ ]
+ [
+  [`empty_match`]
+  [Create an empty match. An empty match is a successful epsilon match (matching length == 0)]
+ ]
+ [
+  [`create_match`]
+  [Create a match given the matching length, an attribute and the iterator pair pointing to the matching portion of the input.]
+ ]
+ [
+  [`group_match`]
+  [For non terminals such as rules, this is called after a successful match has been made to allow post processing.]
+ ]
+ [
+  [`concat_match`]
+  [Concatenate two match objects.]
+ ]
+]
+
+[h3 `action_policy`]
+
+The action policy has only one function for handling semantic actions:
+
+``
+    struct action_policy
+    {
+        template <typename ActorT, typename AttrT, typename IteratorT>
+        void
+        do_action(
+            ActorT const&       actor,
+            AttrT const&        val,
+            IteratorT const&    first,
+            IteratorT const&    last) const;
+    };
+``
+
+The default action policy forwards to:
+
+``
+    actor(first, last);
+``
+
+If the attribute `val` is of type `nil_t`. Otherwise:
+
+``
+    actor(val);
+``
+
+[h3 `scanner_policies mixer`]
+
+The class `scanner_policies` combines the three scanner policy classes above into one:
+
+``
+    template <
+        typename IterationPolicyT   = iteration_policy,
+        typename MatchPolicyT       = match_policy,
+        typename ActionPolicyT      = action_policy>
+    struct scanner_policies;
+``
+
+This mixer class inherits from all the three policies. This `scanner_policies` class is then used to parameterize the scanner:
+
+``
+    template <
+        typename IteratorT = char const*,
+        typename PoliciesT = scanner_policies<> >
+    class scanner;
+``
+
+The scanner in turn inherits from the `PoliciesT`.
+
+[h3 Rebinding Policies]
+
+The scanner can be made to rebind to a different set of policies anytime. It has a member function `change_policies(new_policies)`. Given a new set of policies, this member function creates a new scanner with the new set of policies. The result type of the ['rebound] scanner can be can be obtained by calling the metafunction:
+
+``
+    rebind_scanner_policies<ScannerT, PoliciesT>::type
+``
+
+[h3 Rebinding Iterators]
+
+The scanner can also be made to rebind to a different iterator type anytime. It has a member function `change_iterator(first, last)`. Given a new pair of iterator of type different from the ones held by the scanner, this member function creates a new scanner with the new pair of iterators. The result type of the ['rebound] scanner can be can be obtained by calling the metafunction:
+
+``
+    rebind_scanner_iterator<ScannerT, IteratorT>::type
+``
+
+[endsect][/ in_depth_scanner]
+

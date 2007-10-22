@@ -125,3 +125,16 @@ scanner.qbk
    Internal link
 
  * In fact, plenty of internal linkage issues.
+
+techniques.qbk
+
+  * Link to 'scanner business'
+
+  * Link to 'No.1 FAQ'?
+
+  * 'such as that proposed by David Abrahams in c|c++m'
+    This should be more explicit, since it's proposed (and accepted, I think) for C++0x.
+
+  * Internal links in section rule_with_multiple_scanner (lots)
+
+  * Int links in general.
