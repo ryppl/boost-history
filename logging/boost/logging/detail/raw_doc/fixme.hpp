@@ -2,21 +2,13 @@
 
 
 
-FIXME change the workflow & logger's definition - it doesn't need a filter, but it can have one!
+FIXME change the workflow & logger's definition - it doesn't need a filter
 
 
 
 
-scenarios:
-remaining scenarios
-- one logger; several levels - use a sink (that is, see how we find "is_enabled")
-  - we can simply use the level.is_enabled(xxx) question, and then write to the log
-- no levels
-- fastest , no <<
-- fastest , using <<
-- using your own formatters and destinations integrated
 
---> doxygen_web -> copy from doxygen, once all is done, and examples finally work
+--> post code on the net
 
 ------> FIXME after showing scenarios, show customizing?
 

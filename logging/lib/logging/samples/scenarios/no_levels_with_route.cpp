@@ -1,6 +1,6 @@
-// test_mul_levels_one_logger.hpp
+// no_levels_with_route.cpp
 //
-// A test of the Logging library with multiple levels and one logging class writing to multiple destinations.
+// A test of the Logging library with no levels and one logging class writing to multiple destinations, using a custom route.
 
 // Boost Logging library
 //
@@ -96,7 +96,7 @@ BOOST_DEFINE_LOG(g_l, log_type)
 // Step 6: define the macros through which you'll log
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter.is_enabled() )
 
-void test_mul_levels_one_logger() {
+void no_levels_with_route_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted...
     g_l->writer().add_formatter( formatter::idx() );
@@ -149,7 +149,7 @@ void test_mul_levels_one_logger() {
 #ifdef SINGLE_TEST
 
 int main() {
-    test_mul_levels_one_logger();
+    no_levels_with_route_example();
 }
 
 #endif

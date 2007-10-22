@@ -1,4 +1,10 @@
 
+
+v0.8.3, 22 oct 2007
+- now have 8 scenarios
+- updated documentation
+
+
 v0.8.2, 22 oct 2007
 - added one more common scenario (with_route)
 
