@@ -1,0 +1,365 @@
+[/ THIS PAGE SHOULD HAVE AN INDEX]
+
+[/ Where the examples from this section are.
+[def __example_base__ ../../example/techniques/]
+[def __no_rule1__          [@__example_base__/no_rule/no_rule1.cpp no_rule1.cpp]          ]
+[def __no_rule2__          [@__example_base__/no_rule/no_rule2.cpp no_rule2.cpp]          ]
+[def __no_rule3__          [@__example_base__/no_rule/no_rule3.cpp no_rule3.cpp]          ]
+[def __multiple_scanners__ [@__example_base__/multiple_scanners.cpp multiple_scanners.cpp]]
+
+[section Techniques]
+
+[section Templatized Functors]
+
+For the sake of genericity, it is often better to make the functor's member `operator()` a template. That way, we do not have to concern ourselves with the type of the argument to expect as long as the behavior is appropriate. For instance, rather than hard-coding `char const*` as the argument of a generic semantic action, it is better to make it a template member function. That way, it can accept any type of iterator:
+
+``
+    struct my_functor
+    {
+        template <typename IteratorT>
+        void operator()(IteratorT first, IteratorT last) const;
+    };
+``
+
+Take note that this is only possible with functors. It is not possible to pass in template functions as semantic actions unless you cast it to the correct function signature; in which case, you ['monomorphize] the function. This clearly shows that functors are superior to plain functions.
+
+[endsect][/ templatized_functors]
+
+[section Rule With Multiple Scanners]
+
+As of v1.8.0, rules can use one or more scanner types. There are cases, for instance, where we need a rule that can work on the phrase and character levels. Rule/scanner mismatch has been a source of confusion and is the no. 1 __FAQ__. To address this issue, we now have [link __multiple scanner support__].
+
+Here is an example of a grammar with a rule `r` that can be called with 3 types of scanners (phrase-level, lexeme, and lower-case). See the [link __rule__], [link __grammar__], [link __lexeme_scanner__ `lexeme_scanner`] and [link __as_lower_scanner__ `as_lower_scanner`] for more information.
+
+Here's the grammar (see __multiple_scanners__):
+
+``
+    struct my_grammar : grammar<my_grammar>
+    {
+        template <typename ScannerT>
+        struct definition
+        {
+            definition(my_grammar const& self)
+            {
+                r = lower_p;
+                rr = +(lexeme_d[r] >> as_lower_d[r] >> r);
+            }
+
+            typedef scanner_list<
+                ScannerT
+              , typename lexeme_scanner<ScannerT>::type
+              , typename as_lower_scanner<ScannerT>::type
+            > scanners;
+
+            rule<scanners> r;
+            rule<ScannerT> rr;
+            rule<ScannerT> const& start() const { return rr; }
+        };
+    };
+``
+
+By default support for multiple scanners is disabled. The macro `BOOST_SPIRIT_RULE_SCANNERTYPE_LIMIT` must be defined to the maximum number of scanners allowed in a `scanner_list`. The value must be greater than `1` to enable multiple scanners. Given the example above, to define a limit of three scanners for the list, the following line must be inserted into the source file before the inclusion of Spirit headers:
+
+``
+    #define BOOST_SPIRIT_RULE_SCANNERTYPE_LIMIT 3
+``
+
+[endsect][/ rule_with_multiple_scanners]
+
+[section:no_rules Look Ma' No Rules]
+
+You use grammars and you use lots of 'em? Want a fly-weight, no-cholesterol, super-optimized grammar? Read on...
+
+I have a love-hate relationship with rules. I guess you know the reasons why. A lot of problems stem from the limitation of rules. Dynamic polymorphism and static polymorphism in C++ do not mix well. There is no notion of virtual template functions in C++; at least not just yet. Thus, [*the rule is tied to a specific scanner type]. This results in problems such as the [link __scanner business__], our no. 1 FAQ. Apart from that, the virtual functions in rules slow down parsing, kill all meta-information, and kills inlining, hence bloating the generated code, especially for very tiny rules such as:
+
+``
+    r = ch_p('x') >> uint_p;
+``
+
+The rule's limitation is the main reason why the grammar is designed the way it is now, with a nested template definition class. The rule's limitation is also the reason why subrules exists. But do we really need rules? Of course! Before C++ adopts some sort of auto-type deduction, such as that [/c++0x]proposed by David Abrahams in clc++m:
+
+``
+    auto r = ...definition ...
+``
+
+we are tied to the rule as RHS placeholders. However.... in some occasions we can get by without rules! For instance, rather than writing:
+
+``
+    rule<> x = ch_p('x');
+``
+
+It's better to write:
+
+``
+    chlit<> x = ch_p('x');
+``
+
+That's trivial. But what if the rule is rather complicated? Ok, let's proceed stepwise... I'll investigate a simple `skip_parser` based on the C grammar from Hartmut Kaiser. Basically, the grammar is written as (see __no_rule1__):
+
+``
+    struct skip_grammar : grammar<skip_grammar>
+    {
+        template <typename ScannerT>
+        struct definition
+        {
+            definition(skip_grammar const& /*self*/)
+            {
+                skip
+                    =   space_p
+                    |   "//" >> *(anychar_p - '\n') >> '\n'
+                    |   "/*" >> *(anychar_p - "*/") >> "*/"
+                    ;
+            }
+
+            rule<ScannerT> skip;
+
+            rule<ScannerT> const&
+            start() const { return skip; }
+        };
+    };
+``
+
+Ok, so far so good. Can we do better? Well... since there are no recursive rules there (in fact there's only one rule), you can expand the type of rule's RHS as the rule type (see __no_rule2__):
+
+``
+    struct skip_grammar : grammar<skip_grammar>
+    {
+        template <typename ScannerT>
+        struct definition
+        {
+            definition(skip_grammar const& /*self*/)
+            : skip
+                (       space_p
+                    |   "//" >> *(anychar_p - '\n') >> '\n'
+                    |   "/*" >> *(anychar_p - "*/") >> "*/"
+                )
+            {
+            }
+
+            typedef
+               alternative<alternative<space_parser, sequence<sequence<
+               strlit<const char*>, kleene_star<difference<anychar_parser,
+               chlit<char> > > >, chlit<char> > >, sequence<sequence<
+               strlit<const char*>, kleene_star<difference<anychar_parser,
+               strlit<const char*> > > >, strlit<const char*> > >
+            skip_t;
+            skip_t skip;
+
+            skip_t const&
+            start() const { return skip; }
+        };
+     };
+``
+
+Ughhh! How did I do that? How was I able to get at the complex `typedef`? Am I insane? Well, not really... there's a trick! What you do is define the `typedef skip_t` first as `int`:
+
+``
+    typedef int skip_t;
+``
+
+Try to compile. Then, the compiler will generate an obnoxious error message such as:
+
+``
+    "cannot convert boost::spirit::alternative<... blah blah...to int".
+``
+
+[*THERE YOU GO!] You got it's type! I just copy and paste the correct type (removing explicit qualifications, if preferred).
+
+Can we still go further? Yes. Remember that the grammar was designed for rules. The nested template definition class is needed to get around the rule's limitations. Without rules, I propose a new class called `sub_grammar`, the grammar's low-fat counterpart:
+
+``
+    namespace boost { namespace spirit
+    {
+        template <typename DerivedT>
+        struct sub_grammar : parser<DerivedT>
+        {
+            typedef sub_grammar self_t;
+            typedef DerivedT const& embed_t;
+
+            template <typename ScannerT>
+            struct result
+            {
+                typedef typename parser_result<
+                    typename DerivedT::start_t, ScannerT>::type
+                type;
+            };
+
+            DerivedT const& derived() const
+            { return *static_cast<DerivedT const*>(this); }
+
+            template <typename ScannerT>
+            typename parser_result<self_t, ScannerT>::type
+            parse(ScannerT const& scan) const
+            {
+                return derived().start.parse(scan);
+            }
+        };
+    }}
+``
+With the `sub_grammar` class, we can define our skipper grammar this way (see __no_rule3__):
+
+``
+    struct skip_grammar : sub_grammar<skip_grammar>
+    {
+        typedef
+           alternative<alternative<space_parser, sequence<sequence<
+           strlit<const char*>, kleene_star<difference<anychar_parser,
+           chlit<char> > > >, chlit<char> > >, sequence<sequence<
+           strlit<const char*>, kleene_star<difference<anychar_parser,
+           strlit<const char*> > > >, strlit<const char*> > >
+        start_t;
+
+        skip_grammar()
+        : start
+            (
+                space_p
+            |   "//" >> *(anychar_p - '\n') >> '\n'
+            |   "/*" >> *(anychar_p - "*/") >> "*/"
+            )
+        {}
+
+        start_t start;
+    };
+``
+
+But what for, you ask? You can simply use the `start_t` type above as-is. It's already a parser! We can just type:
+
+``
+    skipper_t skipper =
+        space_p
+        |   "//" >> *(anychar_p - '\n') >> '\n'     
+        |   "/*" >> *(anychar_p - "*/") >> "*/"
+        ;
+``
+
+and use `skipper` just as we would any parser? Well, a subtle difference is that `skipper`, used this way will be embedded by value when you compose more complex parsers using it. That is, if we use `skipper` inside another production, the whole thing will be stored in the composite. Heavy!
+
+The proposed `sub_grammar` OTOH will be held by reference. Note:
+
+``
+    typedef DerivedT const& embed_t;
+``
+
+The proposed `sub_grammar` does not have the inherent limitations of rules, is very lighweight, and should be blazingly fast (can be fully inlined and does not use `virtual` functions). Perhaps this class will be part of a future spirit release.
+
+[note
+[*The no-rules result]
+
+So, how much did we save? On MSVCV7.1, the original code: __no_rule1__ compiles to [*28k]. Eliding rules, __no_rule2__, we got [*24k]. Not bad, we shaved off [*4k] amounting to a ['14% reduction]. But you'll be in for a surprise. The last version, using the sub-grammar: __no_rule3__, compiles to [*5.5k]! That's a whopping ['80% reduction].
+]
+
+[table
+ [[__no_rule1__] [[*28k]]  [standard rule and grammar]             ]
+ [[__no_rule2__] [[*24k]]  [standard grammar, no rule]             ]
+ [[__no_rule3__] [[*5.5k]] [`sub_grammar`, no `rule`, no `grammar`]]
+]
+
+[endsect][/ no_rules]
+
+[section `typeof`]
+
+Some compilers already support the `typeof` keyword. Examples are g++ and Metrowerks CodeWarrior. Someday, `typeof` will become commonplace. It is worth noting that we can use `typeof` to define non-recursive rules without using the `rule` class. To give an example, we'll use the skipper example above; this time using `typeof`. First, to avoid redundancy, we'll introduce a macro `RULE`:
+
+``
+    #define RULE(name, definition) typeof(definition) name = definition
+``
+
+Then, simply:
+
+``
+    RULE(
+        skipper,
+        (       space_p
+            |   "//" >> *(anychar_p - '\n') >> '\n'
+            |   "/*" >> *(anychar_p - "*/") >> "*/"
+        )
+    );
+``
+
+(see [@__example_base__/typeof.cpp typeof.cpp])
+
+That's it! Now you can use `skipper` just as you would any parser. Be reminded, however, that `skipper` above will be embedded by value when you compose more complex parsers using it (see `sub_grammar` rationale above). You can use the `sub_grammar` class to avoid this problem.
+
+[endsect][/ typeof]
+
+[section Nabialek trick]
+
+This technique, I'll call the [*"Nabialek trick"] (from the name of its inventor, Sam Nabialek), can improve the rule dispatch from linear non-deterministic to deterministic. The trick applies to grammars where a keyword (`operator`, etc), precedes a production. There are lots of grammars similar to this:
+
+``
+    r =
+            keyword1 >> production1
+        |   keyword2 >> production2
+        |   keyword3 >> production3
+        |   keyword4 >> production4
+        |   keyword5 >> production5
+        /*** etc ***/
+        ;
+``
+
+The cascaded alternatives are tried one at a time through trial and error until something matches. The Nabialek trick takes advantage of the [link __symbols__ symbol table]'s search properties to optimize the dispatching of the alternatives. For an example, see [@__example_base__/nabialek.cpp nabialek.cpp]. The grammar works as follows. There are two rules (`one` and `two`). When `"one"` is recognized, rule `one` is invoked. When `"two"` is recognized, rule `two` is invoked. Here's the grammar:
+
+``
+    one = name;
+    two = name >> ',' >> name;
+    
+    continuations.add
+        ("one", &one)
+        ("two", &two)
+    ;
+    
+    line = continuations[set_rest<rule_t>(rest)] >> rest;
+``
+
+where `continuations` is a [link __symbols__ symbol table] with pointer to `rule_t` slots. `one`, `two`, `name`, `line` and `rest` are rules:
+
+``
+    rule_t name;
+    rule_t line;
+    rule_t rest;
+    rule_t one;
+    rule_t two;
+    
+    symbols<rule_t*> continuations;
+``
+
+`set_rest`, the semantic action attached to `continuations` is:
+
+``
+    template <typename Rule>
+    struct set_rest
+    {
+        set_rest(Rule& the_rule)
+        : the_rule(the_rule) {}
+
+        void operator()(Rule* newRule) const
+        { m_theRule = *newRule; }
+
+        Rule& the_rule;
+    };
+``
+
+Notice how the `rest` rule gets set dynamically when the `set_rule` action is called. The dynamic grammar parses inputs such as:
+
+``
+"one only"
+"one again"
+"two first, second"
+``
+
+The cool part is that the `rest` rule is set (by the `set_rest` action) depending on what the symbol table got. If it got a `"one"` then `rest = one`. If it got `"two"`, then `rest = two`. Very nifty! This technique should be very fast, especially when there are lots of keywords. It would be nice to add special facilities to make this easy to use. I imagine:
+
+``
+    r = keywords >> rest;
+``
+
+where `keywords` is a special parser (based on the symbol table) that automatically sets its RHS (`rest`) depending on the acquired symbol. This, I think, is mighty cool! Someday perhaps...
+
+[note
+Also, see the [link __switch_parser__ switch parser] for another deterministic parsing trick for character/token prefixes. 
+]
+
+[endsect][/ nabialek_trick]
+
+[endsect][/ techniques]
+
