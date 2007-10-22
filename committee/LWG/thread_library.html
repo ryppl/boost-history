@@ -1,10 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
 <html lang="en"><head>
 
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 16</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"><title>Thread Working Draft 16</title>
 	
-	<style>
+	<style type="text/css">
 	p {text-align:justify}
 	li {text-align:justify}
 	blockquote.note
@@ -41,9 +41,9 @@
     }
 	</style></head><body>
 
-<address align="right">
-Document number: NXXXX=07-XXXX<br/>
-<br/>
+<address style="text-align: right">
+Document number: NXXXX=07-XXXX<br>
+<br>
 <a href="mailto:hinnant@twcny.rr.com">Howard E. Hinnant</a>, 
 <a href="mailto:Lawrence@Crowl.org">Lawrence Crowl</a>,
 <a href="mailto:jeff@crystalclearsoftware.com">Jeff Garland</a>,  
@@ -55,11 +55,11 @@ Document number: NXXXX=07-XXXX<br/>
 <a href="mailto:nick@usenix.org">Nick Stoughton</a>,
 <a href="mailto:bdawes@acm.org">Beman Dawes</a>,
 <a href="mailto:anthony@justsoftwaresolutions.co.uk">Anthony Williams</a>
-<br/>
+<br>
 2007-10-11
 </address>
-<hr/>
-<h1 align="center">Multi-threading Library for Standard C++</h1>
+<hr>
+<h1 style="text-align:center">Multi-threading Library for Standard C++</h1>
 
 <h2>Contents</h2>
 
@@ -90,7 +90,7 @@ at the Kona meeting.
 
 <h1><a name="ProposedWording">Proposed wording</a></h1>
 
-<hr/>
+<hr>
 
 <h3>20.5 Function objects [function.objects]</h3>
 
@@ -112,10 +112,10 @@ at the Kona meeting.
 
 <h3>20.5.15 Class template <code>hash</code> [unord.hash]</h3>
 
-<i>Modify paragraph 1 as follows:</i>
+<p><i>Modify paragraph 1 as follows:</i>
 
 <blockquote>
-The unordered associative containers defined in clause 23.4 use
+<p>The unordered associative containers defined in clause 23.4 use
 specializations
 of <code>hash</code> as the default hash function. This class template
 is only
@@ -125,14 +125,14 @@ types
 <code>std::u16string</code>, <code>std::u32string</code>,
 <del class="diff modified">and</del>
 <code>std::wstring</code><ins class="diff modified">, and
-<code>std::thread::id</code></ins>.
+<code>std::thread::id</code></ins>.</p>
 </blockquote>
 
-<hr/>
+<hr>
 
 <h2>Chapter 30&nbsp;&nbsp; Multi-threading library</h2>
 
-<hr/>
+<hr>
 
 <p>
 The following subclauses describe components to create and manage threads ([<i>Reference 
@@ -1628,7 +1628,7 @@ If an exception is thrown by a call to <tt>lock()</tt> or <tt>try_lock()</tt>, t
 
 <h3><a name="ConditionVariablesWording">Condition variables</a></h3>
 
-<b>&lt;condition_variable&gt; synopsis</b>
+<p><b>&lt;condition_variable&gt; synopsis</b></p>
 
 <blockquote><pre>namespace std {
 
@@ -1705,7 +1705,7 @@ public:
 <i>Effects:</i> If any threads are blocked waiting for <code>*this</code>, 
 unblocks at least one those threads.
 <b>[Crowl: Is any lock released?]</b></p>
-<b>[Crowl: Needs to say release operation.]</b>
+<p><b>[Crowl: Needs to say release operation.]</b>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
@@ -2078,13 +2078,13 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
-<hr/>
+<hr>
 
 
 <h2><a name="DateTime"></a>Chapter ?&nbsp;&nbsp; Date Time Library</h2>
 
-<hr/>
- This clause describes components for determining and manipulating temporal values.
+<hr>
+<p> This clause describes components for determining and manipulating temporal values.
  A <i>time point</i> represents a dimensionless instant 
  in the time continuum. A <i>time duration</i> represents a length of time 
  unattached to any time point. Time points and time durations have a 
@@ -2119,7 +2119,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
   system_time get_system_time();
 
 } //std
-</class></pre></blockquote>
+</pre></blockquote>
 
 </div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3></div></div></div>
 
@@ -2272,7 +2272,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
         time represented by rhs.</span>
       </p><p>
         <i>Remarks:</i> If rhs is greater the result will be a negative nanosecond.
-        count.</em></span>
+        count.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
@@ -2323,14 +2323,13 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 
 
 <blockquote class="note">
-<p>
-</p><i><h3 class="title">Comment (not for inclusion in WP)</h3><p>
-    Typical personal computer platforms currently achieve microsecond level
+<h3 class="title">Comment (not for inclusion in WP)</h3><p>
+    <i>Typical personal computer platforms currently achieve microsecond level
     resolution from calls to the clock. The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a> has a class that portably implements the proposed
     interface, but it uses different C-level interfaces depending on the operating
     system.</i>
         </p></blockquote>
-
+</div>
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3></div></div></div>
 
@@ -2936,7 +2935,7 @@ Objects of class <tt>hours</tt> can be used to represent a count of hours.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-
+</div>
 
 <h2><a name="References">References</a></h2>
 <ul>
@@ -3000,4 +2999,4 @@ contributed the date time portions of the proposal based on the Boost.DateTime
 Library and his TR2 proposals.
 </p>
 
-</div></body></html>
+</body></html>
