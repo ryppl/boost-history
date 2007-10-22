@@ -4,16 +4,16 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "Boost Logging Library v2   "
+PROJECT_NAME           = "Boost Logging Library v2     "
 PROJECT_NUMBER         = 
 OUTPUT_DIRECTORY       = ../../../../lib/logging/doc
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
-ABBREVIATE_BRIEF       = "The $name class   " \
-                         "The $name widget   " \
-                         "The $name file   " \
+ABBREVIATE_BRIEF       = "The $name class     " \
+                         "The $name widget     " \
+                         "The $name file     " \
                          is \
                          provides \
                          specifies \
@@ -80,12 +80,13 @@ WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = NO
-WARN_FORMAT            = "$file:$line: $text   "
+WARN_FORMAT            = "$file:$line: $text     "
 WARN_LOGFILE           = 
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../..
+INPUT                  = ../.. \
+                         ../../../../lib/logging/samples/scenarios
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
@@ -119,7 +120,7 @@ EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 
-EXAMPLE_PATH           = 
+EXAMPLE_PATH           = ../../../../lib/logging/samples/scenarios
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = 

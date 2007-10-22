@@ -436,8 +436,20 @@
 				Name="scenarios"
 				>
 				<File
+					RelativePath="..\..\scenarios\mul_levels_mul_logers.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
 					>
+					<FileConfiguration
+						Name="Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
@@ -737,7 +749,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\common_usage.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\common_usage_steps_fd.hpp"
 				>
 			</File>
 			<File
@@ -776,6 +788,18 @@
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\workflow.hpp"
 				>
 			</File>
+			<Filter
+				Name="scenarios"
+				>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\scenarios.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\scenarios_code.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

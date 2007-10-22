@@ -1,3 +1,10 @@
+
+
+v0.8.1, 22 oct 2007
+- added one more common scenario
+- finally figured out how I can add examples using doxygen :)
+
+
 v0.8, 20 oct 2007
 - added use_format_write class
 - removed the filter from the logger class (need to update documentation)

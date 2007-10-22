@@ -95,19 +95,20 @@ namespace detail {
 #ifdef BOOST_LOGGING_COMPILE_FAST
 
 // FIXME need to reimplement them when using compile_fast
-#define BOOST_DECLARE_LOG(name,type) type& name ## _boost_log_impl_(); extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > g_l; 
+#define BOOST_DECLARE_LOG(name,type) type& name ## _boost_log_impl_(); extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
 #define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
     { static type i; return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > g_l; 
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
 
 #else
 
-#define BOOST_DECLARE_LOG(name,type) type& name ## _boost_log_impl_(); extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > g_l; 
+// FIXME need to reimplement them when using compile_fast
+#define BOOST_DECLARE_LOG(name,type) type& name ## _boost_log_impl_(); extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
 #define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
     { static type i; return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > g_l; 
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
 
 #endif
 

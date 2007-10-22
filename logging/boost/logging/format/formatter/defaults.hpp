@@ -67,7 +67,7 @@ template<class convert = do_convert_format::prepend> struct idx_t : is_generic, 
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct append_enter_t : is_generic, boost::logging::op_equal::always_equal {
+template<class convert = do_convert_format::append> struct append_enter_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
         convert::write( (const char_type*)BOOST_LOGGING_STR("\n"), str );
     }

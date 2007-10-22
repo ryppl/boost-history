@@ -98,19 +98,19 @@ struct do_convert_format {
     typedef std::basic_string<char_type> string_type;
 
     struct prepend {
-        template<class string> static void write(const string_type & src, string & dest) {
+        template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::prepend::write(src, dest);
         }
     };
 
     struct append {
-        template<class string> static void write(const string_type & src, string & dest) {
+        template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::append::write(src, dest);
         }
     };
 
     struct modify {
-        template<class string> static void write(const string_type & src, string & dest) {
+        template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::modify::write(src, dest);
         }
     };

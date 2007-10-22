@@ -4,8 +4,7 @@ namespace boost { namespace logging {
 @page main_intro Boost Logging Library v2 : Introduction
 
 - @ref main_motivation
-- @ref main_example1
-- @ref main_example2 
+- @ref main_common_usage
 
 @section main_motivation Motivation
 
@@ -37,20 +36,19 @@ The Boost Log Library has these features:
       you can define your own writing mechanism
 - Easy manipulation of the logs (turning on/off, setting formatters, destinations, etc)
 
-@section main_example1 Example 1 (Common Scenario)
 
-First example is the common scenario:
-- You have multiple levels 
-- You want to format the message before it's written 
-- You have <b>one log</b>, which writes to several log destinations
+\n\n
+@section main_common_usage Common Usage
 
-@ref common_usage "Take a look"
+To get you started, here's the <b>most common usage</b>:
+\n
 
-@section main_example2 Example 2
+@copydoc mul_levels_one_logger 
 
-More examples coming soon!
+@ref scenarios_code_1 "Click to see the code"
+\n\n\n
 
-
+To see more examples, check out @ref common_scenarios.
 
 */
 

@@ -6,8 +6,10 @@ namespace boost { namespace logging {
 
 - @ref main_intro
     - @ref main_motivation
-    - @ref main_example1
-    - @ref main_example2 
+- @ref common_scenarios
+    - @ref common_scenarios_1
+    - @ref common_scenarios_2
+
 - @ref workflow
     - @ref workflow_introduction 
     - @ref workflow_filter 

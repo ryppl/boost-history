@@ -1,4 +1,7 @@
 /*
+
+
+
 FIXME change the workflow & logger's definition - it doesn't need a filter, but it can have one!
 
 
@@ -6,19 +9,17 @@ FIXME change the workflow & logger's definition - it doesn't need a filter, but 
 
 scenarios:
 have 3 scenarios
-- several levels, same log
-- several levels, different logs
 - with custom router FIXME (that is, use cache_string_several_str())
 - one logger; several levels - use a sink (that is, see how we find "is_enabled")
   - we can simply use the level.is_enabled(xxx) question, and then write to the log
 - no levels
-- etc
 - fastest , no <<
 - fastest , using <<
 - using your own formatters and destinations integrated
 
+--> doxygen_web -> copy from doxygen, once all is done, and examples finally work
 
-FIXME after showing scenarios, show customizing?
+------> FIXME after showing scenarios, show customizing?
 
 
 
