@@ -179,6 +179,8 @@ private:
     @sa ostream_like
 
     returns a cache string
+
+    @bug right now prepend_size and append_size are ignored; because we can also return a cache_string_several_str<>
 */
 template<
         class cache_string = boost::logging::optimize::cache_string_one_str<hold_string_type> , 
@@ -190,7 +192,7 @@ template<
     return_cache_str(const return_cache_str& other) : m_out(other.m_out.str()) {}
 
     stream_type & out() { return m_out; }
-    cache_string msg() { return cache_string( m_out.str(), prepend_size, append_size ); }
+    cache_string msg() { return cache_string( m_out.str() ); }
 private:
     stream_type m_out;
 };

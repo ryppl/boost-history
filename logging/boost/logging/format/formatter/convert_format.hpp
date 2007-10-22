@@ -61,6 +61,9 @@ namespace convert {
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
             dest.prepend_string(src);
         }
+        template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_several_str<string> & dest) {
+            dest.prepend_string(src);
+        }
     }
 
     /** 
@@ -73,6 +76,9 @@ namespace convert {
             dest += src;
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
+            dest.append_string(src);
+        }
+        template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_several_str<string> & dest) {
             dest.append_string(src);
         }
     }
@@ -89,6 +95,12 @@ namespace convert {
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
             dest.set_string(src);
         }
+        template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_several_str<string> & dest) {
+            dest.set_string(src);
+        }
+        template<class string> void write(string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
+            dest.set_string_swap(src);
+        }
     }
 }
 
@@ -101,16 +113,25 @@ struct do_convert_format {
         template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::prepend::write(src, dest);
         }
+        template<class src_type, class string> static void write(src_type & src, string & dest) {
+            convert::prepend::write(src, dest);
+        }
     };
 
     struct append {
         template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::append::write(src, dest);
         }
+        template<class src_type, class string> static void write(src_type & src, string & dest) {
+            convert::append::write(src, dest);
+        }
     };
 
     struct modify {
         template<class src_type, class string> static void write(const src_type & src, string & dest) {
+            convert::modify::write(src, dest);
+        }
+        template<class src_type, class string> static void write(src_type & src, string & dest) {
             convert::modify::write(src, dest);
         }
     };

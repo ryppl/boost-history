@@ -64,7 +64,7 @@ namespace optimize {
         @param grow_size - in case we add a string and there's no room for it, with how much should we grow? We'll
                            grow this much in addition to the added string - in the needed direction
          */
-        cache_string_one_str(const string_type & msg, int reserve_prepend, int reserve_append, int grow_size = 10) 
+        cache_string_one_str(const string_type & msg, int reserve_prepend = 10, int reserve_append = 10, int grow_size = 10) 
                 : m_reserve_prepend(reserve_prepend), m_reserve_append(reserve_append), m_grow_size(grow_size), m_full_msg_computed(false) {
             set_string(msg);
         }
@@ -188,11 +188,18 @@ namespace optimize {
         mutable string_type m_full_msg;
     };
 
+
+
+
+
     /** 
         @brief This holds 3 strings - one for prepend, one for modification, and one for appending
 
         When you prepend or append, you can also specify an extra argument - an identifier.
         This identifier uniquely identifies the prepended or appended message.
+
+        Afterwards, you can prepend/append only by specifying an identifier - which will identify a previously
+        appended or prepended message
     */
     template<class string_type_ = boost::logging::hold_string_type, class ptr_type = void* > struct cache_string_several_str {
     private:
@@ -200,8 +207,8 @@ namespace optimize {
         typedef boost::shared_ptr<string_type> string_ptr;
 
         struct cached_msg {
-            cached_msg() : prepended(true), id( ptr_type() ) {}
-            cached_msg(const string_type & str, bool prepended) : msg(new string_type(str)), prepended(prepended) {}
+            cached_msg() : prepended(true), id( ptr_type() ), is_new(true) {}
+            cached_msg(const string_type & str, bool prepended) : msg(new string_type(str)), prepended(prepended), id( ptr_type() ), is_new(true) {}
 
             // when within the collection - it can never be null
             // when within the array - if null, use it from the collection
@@ -210,6 +217,8 @@ namespace optimize {
             bool prepended;
             // who wrote the message?
             ptr_type id;
+            // easily identify a message if it's new or it's been written before
+            bool is_new;
         };
 
     public:
@@ -220,6 +229,15 @@ namespace optimize {
             @param reserve_ [optional, default = 512] When creating the full msg, how much should we reserve?
         */
         cache_string_several_str(int reserve_ = 512) : m_full_msg_computed(false) {
+            m_full_msg.reserve(reserve_);
+        }
+
+        /** 
+            constructs an object
+
+            @param reserve_ [optional, default = 512] When creating the full msg, how much should we reserve?
+        */
+        cache_string_several_str(const string_type& msg, int reserve_ = 512) : m_msg(msg), m_full_msg_computed(false) {
             m_full_msg.reserve(reserve_);
         }
 
@@ -242,28 +260,36 @@ namespace optimize {
         /** 
             @brief pre-pends a string (inserts it at the beginning)
         */
-        void prepend_string(const string_type & str, ptr_type id = ptr_type() ) {
-            m_full_msg_computed = false;
-        }
-
-        /** 
-            @brief pre-pends a string (inserts it at the beginning). The message was already cached
-        */
-        void prepend_string(ptr_type id ) {
+        void prepend_string(const string_type & str ) {
+            m_cur_msg.push_back( cached_msg(str, true) );
             m_full_msg_computed = false;
         }
 
         /** 
             @brief appends a string (inserts it at the end)
         */
-         void append_string(const string_type & str, ptr_type id = ptr_type() ) {
+         void append_string(const string_type & str ) {
+            m_cur_msg.push_back( cached_msg(str, false) );
             m_full_msg_computed = false;
         }
 
         /** 
-            @brief appends a string (inserts it at the end). The message was already cached
+            Specifies the id of the last message
         */
-        void append_string(ptr_type id ) {
+        void set_last_id(ptr_type id) {
+            m_cur_msg.back().id = id;
+        }
+
+        /** 
+            @brief Reuses a pre-pended or appended string. The message was already cached
+        */
+        void reuse(ptr_type id ) {
+            // make sure you first call restart() before reusing a formatter.
+            // In your code - this means calling set_route(). .... .clear(), and the writing to destinations
+            BOOST_ASSERT( m_cached.find(id) != m_cached.end() );
+
+            m_cur_msg.push_back( m_cached[id] );
+            m_cur_msg.back().is_new = false;
             m_full_msg_computed = false;
         }
 
@@ -273,7 +299,17 @@ namespace optimize {
         const string_type & full_string() const {
             if ( !m_full_msg_computed) {
                 m_full_msg_computed = true;
-                // FIXME
+
+                m_full_msg.erase();
+                for ( array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
+                    if ( b->prepended)
+                        m_full_msg += *(b->msg);
+
+                m_full_msg += m_msg;
+
+                for ( array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
+                    if ( !b->prepended)
+                        m_full_msg += *(b->msg);
             }
             return m_full_msg;
         }
@@ -288,9 +324,12 @@ namespace optimize {
             @brief This restarts writing the messages. Whatever is cached can be used again
         */
         void restart() {
-            // ******** whatever msg is in vector that has an id, it to be placed in coll.
-            // FIXME also, need to work on the use_cache<> class from format_and_write
             m_full_msg_computed = false;
+
+            for ( array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
+                if ( b->is_new)
+                    m_cached[ b->id ] = *b;
+            m_cur_msg.clear();
         }
 
     private:

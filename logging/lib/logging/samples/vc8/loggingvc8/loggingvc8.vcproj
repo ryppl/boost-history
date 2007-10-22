@@ -438,6 +438,14 @@
 				<File
 					RelativePath="..\..\scenarios\mul_levels_mul_logers.cpp"
 					>
+					<FileConfiguration
+						Name="Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
@@ -445,6 +453,17 @@
 					<FileConfiguration
 						Name="Test|Win32"
 						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\scenarios\no_levels_with_route.cpp"
+					>
+					<FileConfiguration
+						Name="Test|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"

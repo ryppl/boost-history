@@ -11,6 +11,7 @@ There are quite a few thanks I owe:
 - Caleb Epstein - for porting parts of my code to any non-Windows OS, and implementing several formatters and destinations
 - Stefan Slapeta and Bill Wade and a lot of others for giving me early feedback.
 - Pavel Vozelinek - for very thourough reviews and lots of comments
+- Pavel Savara - for feedback about docs, thread-safety and gcc
 
 */
 

@@ -5,17 +5,27 @@ namespace boost { namespace logging {
 
 - @ref scenarios_code_1 
 - @ref scenarios_code_2
+- @ref scenarios_code_3
 
 
-
-@section scenarios_code_1 Common usage: Multiple levels, One logging class, Multiple destinations.
+\n\n\n
+@section scenarios_code_1 Scenario 1, Common usage: Multiple levels, One logging class, Multiple destinations.
 
 @include mul_levels_one_logger.cpp
 \n\n\n
 
+
+
 @section scenarios_code_2 Scenario 2: Multiple levels, Multiple logging classes, Multiple destinations
 
 @include mul_levels_mul_logers.cpp
+\n\n\n
+
+
+
+@section scenarios_code_3 Scenario 3: No levels, One Logger, Multiple destinations, Custom route
+
+@include no_levels_with_route.cpp
 \n\n\n
 
 

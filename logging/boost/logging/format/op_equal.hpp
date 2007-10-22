@@ -62,7 +62,7 @@ namespace op_equal {
         virtual bool equals(const same_type_op_equal_top & other) const {
             if ( typeid(*this) != typeid(other))
                 return false;
-            const type & real_other = reinterpret_cast<const type&>(other);
+            const type & real_other = dynamic_cast<const type&>(other);
 
             // this forces 'type' to implement operator==
             return ((const type&)*this).operator ==( real_other);

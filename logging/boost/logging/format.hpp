@@ -25,10 +25,13 @@
 #include <boost/logging/format/op_equal.hpp>
 #include <boost/logging/format/array.hpp>
 #include <vector>
+#include <set>
 #include <boost/shared_ptr.hpp>
 
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_const.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/logging/detail/manipulator.hpp>
 
 namespace boost { namespace logging {
 
@@ -51,27 +54,34 @@ namespace boost { namespace logging {
     /** 
         @brief This uses a cache, when calling formatters/destinations - for writing a given message
 
-        If a message was formatted before, it caches this info.
-
-        FIXME this is not implemented yet
+        When a formatter is called, it caches its info. If it's called again, reuses that.
     */
     template<class formatter_base, class destination_base, class msg_type> 
     struct use_cache {
         use_cache( msg_type & msg) : m_msg(msg) {}
 
-#if 0
-        void format(const formatter_ptr & fmt) {
-            // FIXME 
+        typedef typename formatter_base::ptr_type formatter_ptr;
+        typedef typename destination_base::ptr_type destination_ptr;
+        typedef std::set<formatter_ptr> format_set;
+
+        void format(formatter_ptr const &fmt) {
+            if ( m_formats.find( fmt) == m_formats.end()) {
+                m_formats.insert( fmt);
+                (*fmt)(m_msg);
+                m_msg.set_last_id( fmt);
+            }
+            else
+                m_msg.reuse( fmt);
         }
-        void write(const destination_ptr & dest) {
-            // FIXME 
+        void write(destination_ptr const & dest) {
+            (*dest)(m_msg);
         }
         void clear_format() {
-            // FIXME 
+            m_msg.restart();
         }
-#endif
     private:
         msg_type &m_msg;
+        format_set m_formats;
     };
 
 
@@ -383,11 +393,11 @@ L_ << "testing " << i << i+1 << i+2;
         public:
 
             template<class formatter> route & fmt(formatter f) {
-                m_items.push_back( item().fmt( m_self.formats().get_ptr(f) )) ;
+                fmt_impl(f, boost::is_base_of<boost::logging::manipulator::is_generic,formatter>() );
                 return *this;
             }
             template<class destination> route & dest(destination d) {
-                m_items.push_back( item().dest( m_self.destinations().get_ptr(d) ));
+                dest_impl(d, boost::is_base_of<boost::logging::manipulator::is_generic,destination>() );
                 return *this;
             }
             route & clear() {
@@ -395,6 +405,26 @@ L_ << "testing " << i << i+1 << i+2;
                 return *this;
             }
 
+        private:
+            // not generic
+            template<class formatter> void fmt_impl(formatter f, const boost::false_type& ) {
+                m_items.push_back( item().fmt( m_self.formats().get_ptr(f) )) ;
+            }
+            // not generic
+            template<class destination> void dest_impl(destination d, const boost::false_type&) {
+                m_items.push_back( item().dest( m_self.destinations().get_ptr(d) ));
+            }
+
+            // generic
+            template<class formatter> void fmt_impl(formatter f, const boost::true_type& ) {
+                typedef boost::logging::manipulator::detail::generic_holder<formatter,formatter_base> holder;
+                fmt_impl( holder(f) , boost::false_type() );
+            }
+            // generic
+            template<class destination> void dest_impl(destination d, const boost::true_type&) {
+                typedef boost::logging::manipulator::detail::generic_holder<destination,destination_base> holder;
+                dest_impl( holder(d) , boost::false_type() );
+            }
         protected:
             self_type & m_self;
             array m_items;

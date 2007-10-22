@@ -90,7 +90,7 @@ typedef optimize::cache_string_one_str<> cache_string;
 typedef formatter::base< cache_string& > formatter_base;
 typedef destination::base< const std::string & > destination_base;
 
-// Step 2 : define your logging class(es)
+// Step 2 : Define your logging class(es)
 typedef logger< use_format_write<formatter_base,destination_base> > log_type;
 
 // Step 3 : If you use levels, Set up a log level holder

@@ -44,6 +44,19 @@ namespace boost { namespace logging {
         struct find_gather< boost::logging::optimize::cache_string_several_str<string_type> > { 
             typedef gather::ostream_like::return_cache_str< boost::logging::optimize::cache_string_several_str<string_type> > type;
         };
+
+        template<class string, class formatter_base, class destination_base> struct find_format_write_params {
+            typedef typename boost::logging::format_and_write::simple<string> apply_format_and_write ;
+            typedef typename msg_route::simple<formatter_base, destination_base> router_type;
+        };
+
+        template<class string_type, class formatter_base, class destination_base> 
+            struct find_format_write_params< typename boost::logging::optimize::cache_string_several_str<string_type>, formatter_base, destination_base>
+        {
+            typedef typename boost::logging::optimize::cache_string_several_str<string_type> cache_string;
+            typedef typename boost::logging::format_and_write::use_cache<formatter_base, destination_base, cache_string> apply_format_and_write ;
+            typedef typename msg_route::with_route<formatter_base, destination_base> router_type;
+        };
     }
 
 /** 
@@ -71,13 +84,23 @@ FIXME need to have more template params
 template<class format_base, class destination_base> struct use_format_write {
     typedef typename format_base::raw_param format_param;
     typedef typename detail::find_gather<format_param>::type gather_type;
+
+    typedef typename detail::find_format_write_params<format_param, format_base, destination_base>::apply_format_and_write apply_format_and_write;
+    typedef typename detail::find_format_write_params<format_param, format_base, destination_base>::router_type router_type;
 };
 
 template<class format_base, class destination_base> struct logger< use_format_write<format_base, destination_base> > 
     : logger_base< 
         process_msg< 
             typename use_format_write<format_base, destination_base>::gather_type,
-            writer::format_write<format_base,destination_base> > >
+            writer::format_write<
+                format_base,
+                destination_base,
+                typename use_format_write<format_base, destination_base>::apply_format_and_write,
+                typename use_format_write<format_base, destination_base>::router_type
+            > 
+        > 
+      >
 {
     typedef typename logger_base< 
         process_msg< 

@@ -1,4 +1,7 @@
 
+v0.8.2, 22 oct 2007
+- added one more common scenario (with_route)
+
 
 v0.8.1, 22 oct 2007
 - added one more common scenario

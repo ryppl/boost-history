@@ -8,8 +8,7 @@ FIXME change the workflow & logger's definition - it doesn't need a filter, but 
 
 
 scenarios:
-have 3 scenarios
-- with custom router FIXME (that is, use cache_string_several_str())
+remaining scenarios
 - one logger; several levels - use a sink (that is, see how we find "is_enabled")
   - we can simply use the level.is_enabled(xxx) question, and then write to the log
 - no levels

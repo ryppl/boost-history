@@ -120,6 +120,9 @@ namespace detail {
 
 #define BOOST_LOG_USE_LOG_IF_LEVEL(l, holder, the_level) BOOST_LOG_USE_LOG(l, read_msg().gather().out(), holder.is_enabled(::boost::logging::level:: the_level) )
 
+#define BOOST_LOG_USE_LOG_IF_FILTER(l, the_filter) BOOST_LOG_USE_LOG(l, read_msg().gather().out(), the_filter)
+
+
 
 
 
