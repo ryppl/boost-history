@@ -121,14 +121,14 @@ at the Kona meeting.
 <blockquote>
  <p><b>Header <code>functional</code> synopsis</b></p>
 
-<pre>
+<pre><code>
  namespace std {
    ...
    <i>// Hash function specializations</i>
    ...
    <ins class="diff modified">struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
  }
-</pre>
+</code></pre>
 </blockquote>
 
 <h3>20.5.15 Class template <code>hash</code> [unord.hash]</h3>
@@ -217,7 +217,7 @@ these members is inherently non-portable. <i>--end note</i>]</p>
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 class thread;
@@ -248,7 +248,7 @@ template&lt;class Callable, class ...Args&gt;
 void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <h4>Class thread</h4>
@@ -261,7 +261,7 @@ completion of a thread, and to perform other operations to manage and query the 
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class thread
 {
 public:
@@ -289,7 +289,7 @@ public:
     // <i>static members:</i>
     static unsigned hardware_concurrency();
 };
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -299,7 +299,7 @@ classes (chapter 9 [class]).
 
 <h5><code>thread</code> types</h5>
 <h6>Class <code>thread::id</code></h6>
-<pre>
+<pre><code>
     class thread::id
     {
     public:
@@ -317,7 +317,7 @@ classes (chapter 9 [class]).
     basic_ostream&lt;charT, traits&gt;&amp;
     operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
 
-</pre>
+</code></pre>
 <p> Objects of type <code>thread::id</code> represent the identity of threads. Each 
 joinable thread has a unique identity. All non-joinable threads share the same 
 identity, and this identify is different from that of any joinable thread.</p>
@@ -327,9 +327,9 @@ identity, and this identify is different from that of any joinable thread.</p>
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 id();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -344,9 +344,9 @@ id();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -361,9 +361,9 @@ returns <code>true</code>.  Otherwise returns <code>false</code>.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -377,9 +377,9 @@ bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
 
 
 <blockquote>
-<pre>
+<pre><code>
 bool operator&lt;(const thread::id&amp; x, const thread::id&amp; y);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -392,9 +392,9 @@ bool operator&lt;(const thread::id&amp; x, const thread::id&amp; y);
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool operator&lt;=(const thread::id&amp; x, const thread::id&amp; y);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i> <code>!(y &lt; x)</code> </p>
@@ -405,9 +405,9 @@ bool operator&lt;=(const thread::id&amp; x, const thread::id&amp; y);
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool operator&gt;(const thread::id&amp; x, const thread::id&amp; y);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i> <code>y &lt; x</code> </p>
@@ -418,9 +418,9 @@ bool operator&gt;(const thread::id&amp; x, const thread::id&amp; y);
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool operator&gt;=(const thread::id&amp; x, const thread::id&amp; y);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i> <code>!(x &lt; y)</code> </p>
@@ -431,11 +431,11 @@ bool operator&gt;=(const thread::id&amp; x, const thread::id&amp; y);
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template&lt;class charT, class traits&gt;
 basic_ostream&lt;charT, traits&gt;&amp;
 operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -450,9 +450,9 @@ the stream <code>out</code>.
 
 <h5><code>thread</code> constructors</h5>
 <blockquote>
-<pre>
+<pre><code>
 thread();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Constructs a <code>thread</code> object that does not represent an 
@@ -462,10 +462,10 @@ actual thread.
 <i>Postconditions:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 get_id() == thread::id()
 &amp;&amp; joinable() == false
-</pre>
+</code></pre>
 <p>
 [<i>Note:</i> This is also the state of a <code>thread</code>
 object after <code>detach</code> or <code>join</code> is successfully called. <i>-- end note</i>]</p>
@@ -477,9 +477,9 @@ object after <code>detach</code> or <code>join</code> is successfully called. <i
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -500,10 +500,10 @@ exception, <code>std::terminate()</code> shall be called.
 <i>Postconditions:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 get_id() != thread::id()
 &amp;&amp; joinable() == true
-</pre>
+</code></pre>
 <p><code>*this</code> represents the newly started thread.</p>
 </blockquote>
 <p>
@@ -513,9 +513,9 @@ get_id() != thread::id()
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 thread(thread&amp;&amp; <i>x</i>);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -536,9 +536,9 @@ start of construction.
 
 <h5><code>thread</code> destructor</h5>
 <blockquote>
-<pre>
+<pre><code>
 ~thread();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -553,9 +553,9 @@ otherwise no effects.
 
 <h5><code>thread</code> assignment</h5>
 <blockquote>
-<pre>
+<pre><code>
 thread&amp; operator=(thread&amp;&amp; <i>x</i>);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -579,9 +579,9 @@ assignment.
 
 <h5><code>thread</code> members</h5>
 <blockquote>
-<pre>
+<pre><code>
 void swap(thread&amp;&amp; <i>x</i>);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -594,9 +594,9 @@ void swap(thread&amp;&amp; <i>x</i>);
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool joinable() const;
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -609,9 +609,9 @@ bool joinable() const;
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void join();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -638,9 +638,9 @@ possible error conditions are implementation defined.&nbsp;
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void detach();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -664,9 +664,9 @@ does not represent a thread.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 id get_id() const;
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -682,9 +682,9 @@ represented by
 
 <h5><code>thread</code> static members</h5>
 <blockquote>
-<pre>
+<pre><code>
 unsigned hardware_concurrency();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -701,11 +701,11 @@ return value of 1 is recommended, but not required.
 
 <h5><code>thread</code> specialized algorithms</h5>
 <blockquote>
-<pre>
+<pre><code>
 void swap(thread&amp;  x, thread&amp;  y);
 void swap(thread&amp;&amp; x, thread&amp;  y);
 void swap(thread&amp;  x, thread&amp;&amp; y);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> <code>x.swap(y)</code>.
@@ -718,7 +718,7 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 <h4>Namespace <code>this_thread</code></h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace this_thread
 {
     thread::id get_id();
@@ -728,13 +728,13 @@ namespace this_thread
         void sleep(const Duration&amp; rel_t);
 
 }  // this_thread
-</pre>
+</code></pre>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 thread::id this_thread::get_id();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -748,9 +748,9 @@ a default constructed <code>thread::id</code></p>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void yield();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -762,10 +762,10 @@ void yield();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Duration&gt;
     void sleep(const Duration&amp; rel_t);
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -788,9 +788,9 @@ template &lt;class Duration&gt;
 <code>call_once</code> to initialize data without causing a data race or 
 deadlock.</p>
 
-<pre>
+<pre><code>
 constexpr once_flag();
-</pre>
+</code></pre>
 
 <blockquote>
 <p>
@@ -808,10 +808,10 @@ argument that no function has been called.</p>
 
 <blockquote>
 
-<pre>
+<pre><code>
 template&lt;class Callable, class Args...&gt;
 void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
-</pre>
+</code></pre>
 
 <blockquote>
 
@@ -844,7 +844,7 @@ the return of <code>call_once</code>.]</b>
 
 <p>[<i>Examples:</i></p>
 <blockquote>
-<pre>
+<pre><code>
 std::once_flag flag;
 
 void init();
@@ -864,7 +864,7 @@ void g()
     static std::once_flag flag2;
     std::call_once(flag2,initializer());
 }
-</pre>
+</code></pre>
 </blockquote>
 
 <p><i>-- end example]</i></p>
@@ -878,7 +878,7 @@ void g()
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 struct mutex;
@@ -907,7 +907,7 @@ template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, 
 template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <h3>Mutex concepts</h3>
@@ -932,9 +932,9 @@ nor movable.  A mutex type shall have the following member functions:
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 void lock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> For non-recursive mutexes the current thread shall not own the mutex.
@@ -954,9 +954,9 @@ possible error conditions are implementation defined.</p>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool try_lock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> For non-recursive mutexes the current thread shall not own the mutex.
@@ -991,9 +991,9 @@ And such a guarantee would preclude potentially interesting
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void unlock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> The current thread shall own the mutex.
@@ -1015,7 +1015,7 @@ void unlock();
 <h4>Class mutex</h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 struct mutex
@@ -1036,7 +1036,7 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1047,7 +1047,7 @@ It shall be a standard-layout class (chapter 9 [class]).
 <h4>Class recursive_mutex</h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 struct recursive_mutex
@@ -1068,7 +1068,7 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1083,10 +1083,10 @@ To meet the requirements of the Timed Mutex concept, types are required to meet 
 and to provide the member function <code>timed_lock</code>.</p>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Duration&gt;
     bool timed_lock(const Duration&amp; rel_time);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> For non-recursive mutexes the current thread shall not own 
@@ -1125,7 +1125,7 @@ but implementations are expected to make a strong effort to do so.
 <h4>Class timed_mutex</h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 struct timed_mutex
@@ -1148,7 +1148,7 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1159,7 +1159,7 @@ It shall be a standard-layout class (chapter 9 [class]).
 <h4>Class recursive_timed_mutex</h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 struct recursive_timed_mutex
@@ -1182,7 +1182,7 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1205,7 +1205,7 @@ constructor.
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 struct defer_lock_t  {};
 struct try_to_lock_t {};
 struct adopt_lock_t  {};
@@ -1213,7 +1213,7 @@ struct adopt_lock_t  {};
 extern const defer_lock_t   defer_lock;
 extern const try_to_lock_t  try_to_lock;
 extern const adopt_lock_t   adopt_lock;
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1223,20 +1223,20 @@ that the lock does not own.
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class lock_error
     : public std::exception
 {
 public:
     virtual const char* what() const throw();
 };
-</pre>
+</code></pre>
 </blockquote>
 
 <h4>Class lock_guard</h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 template &lt;class Mutex&gt;
@@ -1254,7 +1254,7 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1265,9 +1265,9 @@ or transferred away from the <code>lock_guard</code>.
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 explicit lock_guard(mutex_type&amp; m);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex,  the current thread
@@ -1282,9 +1282,9 @@ of the <code>lock_guard</code> object.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 lock_guard(mutex_type&amp; m, adopt_lock_t);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> The current thread has ownership of the mutex <code><i>m</i></code>.
@@ -1298,9 +1298,9 @@ lock_guard</code> object.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 ~lock_guard();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> <code><i>m</i>.unlock()</code>.
@@ -1314,7 +1314,7 @@ lock_guard</code> object.
 <h4>Class unique_lock</h4>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 template &lt;class Mutex&gt;
@@ -1358,7 +1358,7 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; x, uni
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_lock&lt;Mutex&gt;&amp;&amp; y);
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <p>
@@ -1369,9 +1369,9 @@ An object of type
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 unique_lock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Constructs an object of type <code>unique_lock</code>.
@@ -1380,18 +1380,18 @@ unique_lock();
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == 0
 owns_lock() == false
-</pre>
+</code></pre>
 </blockquote>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 explicit unique_lock(mutex_type&amp; m);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex,  the current thread
@@ -1405,18 +1405,18 @@ of the <code>unique_lock</code> object.
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == &amp;m
 owns_lock() == true
-</pre>
+</code></pre>
 </blockquote>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 unique_lock(mutex_type&amp; m, defer_lock_t);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex,  the current thread
@@ -1431,18 +1431,18 @@ unique_lock</code> object.
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == &amp;m
 owns_lock() == false
-</pre>
+</code></pre>
 </blockquote>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 unique_lock(mutex_type&amp; m, try_to_lock_t);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> If <code>mutex_type</code> is not a recursive mutex, then the current thread
@@ -1457,18 +1457,18 @@ unique_lock</code> object.
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == &amp;m
 owns_lock() == <i>The result of the call to</i> <i>m</i>.try_lock()
-</pre>
+</code></pre>
 </blockquote>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 unique_lock(mutex_type&amp; m, adopt_lock_t);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> The current thread has ownership of the mutex <code><i>m</i></code>. 
@@ -1482,18 +1482,18 @@ unique_lock</code> object.
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == &amp;m
 owns_lock() == true
-</pre>
+</code></pre>
 </blockquote>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 ~unique_lock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> If <code>owns_lock()</code> calls <code>unlock()</code> on the referenced mutex.
@@ -1506,9 +1506,9 @@ Otherwise there are no effects.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 unique_lock(unique_lock&amp;&amp; u);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
@@ -1517,12 +1517,12 @@ unique_lock(unique_lock&amp;&amp; u);
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == <i>The value of</i> u.mutex() <i>prior to the construction</i>.
 owns_lock() == <i>The value of</i> u.owns_lock() <i>prior to the construction</i>.
 u.mutex() == 0
 u.owns_lock() == false
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Throws:</i> Nothing.
@@ -1531,9 +1531,9 @@ u.owns_lock() == false
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 unique_lock&amp; operator=(unique_lock&amp;&amp; u);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  If <code>owns_lock()</code> calls <code>unlock()</code>, and then
@@ -1543,12 +1543,12 @@ transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == <i>The value of</i> u.mutex() <i>prior to the construction</i>.
 owns_lock() == <i>The value of</i> u.owns_lock() <i>prior to the construction</i>.
 u.mutex() == 0
 u.owns_lock() == false
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Throws:</i> Nothing.
@@ -1564,9 +1564,9 @@ one.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void lock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  Calls <code>lock()</code> on the referenced mutex.
@@ -1580,9 +1580,9 @@ void lock();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool try_lock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  Calls <code>try_lock()</code> on the referenced mutex.
@@ -1600,10 +1600,10 @@ bool try_lock();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Duration&gt;
    bool timed_lock(const Duration&amp; rel_t);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  Calls <code>timed_lock(rel_t)</code> on the referenced mutex. 
@@ -1622,9 +1622,9 @@ template &lt;class Duration&gt;
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void unlock();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  Calls <code>unlock()</code> on the referenced mutex.
@@ -1639,9 +1639,9 @@ void unlock();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 bool owns_lock() const;
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i>  <code>true</code> if <code>this</code> owns a lock on a referenced mutex, else <code>false</code>.
@@ -1653,9 +1653,9 @@ bool owns_lock() const;
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 operator <var>unspecified-bool-type</var> () const;
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i>  Non-null if <code>owns_lock()</code> would return <code>true</code>, else returns null.
@@ -1667,9 +1667,9 @@ operator <var>unspecified-bool-type</var> () const;
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 mutex_type* mutex() const;
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i>  A pointer to the referenced mutex, or null if there is no referenced mutex.
@@ -1681,9 +1681,9 @@ mutex_type* mutex() const;
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void swap(unique_lock&amp;&amp; u);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  Swaps state with <code>u</code>.
@@ -1695,9 +1695,9 @@ void swap(unique_lock&amp;&amp; u);
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 mutex_type* release();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Returns:</i>  A pointer to the referenced mutex, or null if there is no referenced mutex.
@@ -1706,10 +1706,10 @@ mutex_type* release();
 <i>Postcondition:</i>
 </p>
 <blockquote>
-<pre>
+<pre><code>
 mutex() == 0
 owns_lock() == false
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Throws:</i> Nothing.
@@ -1718,11 +1718,11 @@ owns_lock() == false
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_lock&lt;Mutex&gt;&amp;  y);
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; x, unique_lock&lt;Mutex&gt;&amp;  y);
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_lock&lt;Mutex&gt;&amp;&amp; y);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i>  <code>x.swap(y)</code>.
@@ -1736,9 +1736,9 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_
 <h3>Generic Locking Algorithms</h3>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Requires:</i>  Each template parameter type must supply the following member functions with semantics
@@ -1746,10 +1746,10 @@ corresponding to the Mutex concept, except that <code>try_lock</code> is allowed
 exception. <i>[Note:</i> The <code>unique_lock</code> class template meets these requirements 
 when suitable instantiated. <i>--end note]</i></p>
 <blockquote>
-<pre>
+<pre><code>
 bool try_lock();
 void unlock();
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Effects:</i> The functions attempts to lock all arguments without blocking by calling <code>try_lock()</code>
@@ -1766,9 +1766,9 @@ which argument failed to lock.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Requires:</i>  Each template parameter type must supply the following member functions with semantics
@@ -1776,11 +1776,11 @@ corresponding to the Mutex concept, except that <code>try_lock</code> is allowed
 throw an exception <i>[Note:</i> The <code>unique_lock</code> class template meets these requirements 
 when suitable instantiated. <i>--end note]</i></p>
 <blockquote>
-<pre>
+<pre><code>
 void lock();
 bool try_lock();
 void unlock();
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Effects:</i> All arguments are locked with an algorithm that avoids deadlock.
@@ -1794,14 +1794,14 @@ If an exception is thrown by a call to <code>lock()</code> or <code>try_lock()</
 <p><b>&lt;condition_variable&gt; synopsis</b></p>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 class condition_variable;
 class condition_variable_any;
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <h4>Class condition_variable</h4>
@@ -1813,7 +1813,7 @@ thread that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 class condition_variable
@@ -1840,13 +1840,13 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 condition_variable();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Constructs an object of class <code>condition_variable</code>.
@@ -1855,9 +1855,9 @@ condition_variable();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 ~condition_variable();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Destroys the object.
@@ -1869,9 +1869,9 @@ condition_variable();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void notify_one();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> If any threads are blocked waiting for <code>*this</code>, 
@@ -1889,9 +1889,9 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void notify_all();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Unblock all threads that are blocked waiting for <code>*this</code>.
@@ -1908,9 +1908,9 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void wait(unique_lock&lt;mutex&gt;&amp; lock);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> <code>lock</code> is locked by the current thread.  No
@@ -1941,10 +1941,10 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Predicate&gt;
     void wait(unique_lock&lt;mutex&gt;&amp; lock, Predicate pred);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> While <code>pred()</code> returns <code>false</code> calls <code>wait(lock)</code>.
@@ -1957,9 +1957,9 @@ template &lt;class Predicate&gt;
 
 
 <blockquote>
-<pre>
+<pre><code>
 bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i>  The <code>lock</code> is locked by the current thread.  No
@@ -2003,23 +2003,23 @@ Too much about other operations here.]</b>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Predicate&gt;
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> As if:
 </p>
 <blockquote>
-<pre>
+<pre><code>
 while (!pred())
 {
     if (!timed_wait(lock, abs_time))
         return pred();
 }
 return true;
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Returns:</i> <code>pred()</code>.
@@ -2052,7 +2052,7 @@ meet this requirement.
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std {
 
 class condition_variable_any
@@ -2080,13 +2080,13 @@ public:
 };
 
 }  // std
-</pre>
+</code></pre>
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 condition_variable_any();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Constructs an object of class <code>condition_variable_any</code>.
@@ -2095,9 +2095,9 @@ condition_variable_any();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 ~condition_variable_any();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Destroys the object.
@@ -2109,9 +2109,9 @@ condition_variable_any();
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void notify_one();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> If any threads are blocked waiting for <code>*this</code>, 
@@ -2127,9 +2127,9 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void notify_all();
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> Unblock all threads  of execution that are blocked waiting for <code>*this</code>.
@@ -2145,9 +2145,9 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 void wait(Lock&amp; lock);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i> <code>lock</code> is locked by the current thread.  If
@@ -2181,10 +2181,10 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class Predicate&gt;
     void wait(lock_type&amp; lock, Predicate pred);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> While <code>pred()</code> returns <code>false</code>, calls <code>wait(lock)</code>.
@@ -2197,9 +2197,9 @@ template &lt;class Predicate&gt;
 
 
 <blockquote>
-<pre>
+<pre><code>
 bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Precondition:</i>  The <code>lock</code> is locked by the current thread.  If
@@ -2243,23 +2243,23 @@ races or deadlocks.
 </blockquote>
 
 <blockquote>
-<pre>
+<pre><code>
 template &lt;class _Predicate&gt;
     bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
-</pre>
+</code></pre>
 <blockquote>
 <p>
 <i>Effects:</i> As if:
 </p>
 <blockquote>
-<pre>
+<pre><code>
 while (!pred())
 {
     if (!timed_wait(lock, abs_time))
         return pred();
 }
 return true;
-</pre>
+</code></pre>
 </blockquote>
 <p>
 <i>Returns:</i> <code>pred()</code>.
@@ -2295,7 +2295,7 @@ evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 <h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>Header &lt;date_time&gt; Synopsis</h3>
 
 <blockquote>
-<pre>
+<pre><code>
 namespace std 
 {
 
@@ -2314,7 +2314,7 @@ namespace std
   system_time get_system_time();
 
 } //std
-</pre>
+</code></pre>
 </blockquote>
 
 <h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3>
@@ -2332,7 +2332,7 @@ namespace std
 
 
 <blockquote>
-<pre>
+<pre><code>
 class system_time 
 {
  public:
@@ -2374,7 +2374,7 @@ class system_time
   system_time&amp; operator-=(const Duration&amp; td) 
 
 };
-</pre>
+</code></pre>
 </blockquote>
 
 <blockquote class="note">
@@ -2386,18 +2386,18 @@ class system_time
 </p>
 </blockquote>
 
-<pre>
+<pre><code>
 <span class="identifier">system_time</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Constructs a system_time
         object representing the epoch time point 1970-01-01 00:00:00.000000000
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">system_time</span><span class="special">(</span><span class="identifier">time_t</span> <span class="identifier">secs</span><span class="special">,</span> <span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Construct<span class="underline">s</span> a utc
         time object representing the time point that is secs + 1,000,000,000*ns after the epoch.
@@ -2408,34 +2408,34 @@ class system_time
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="identifier">time_t</span> <span class="identifier">seconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> The count of seconds since 1970-01-01 00:00:00.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">nanoseconds</span> <span class="identifier">nanoseconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> The count of <span class="underline">nano</span>seconds
         since 1970-01-01 00:00:00.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 1000000000
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 0
       </p><p>
@@ -2443,17 +2443,17 @@ class system_time
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> true.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if 
         the <span class="underline">time
@@ -2461,54 +2461,54 @@ class system_time
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if the <span class="underline">time represented by *this is not equal to the time represented
         by rhs</span>
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if time <span class="underline">represented by
         *this is greater than the time represented by rhs</span>.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if time <span class="underline">represented
         by *this is greater or equal than the time represented by rhs</span>.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if time <span class="underline">represented by *this
         is less than the time represented by rhs</span>.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if time <span class="underline">represented by *this
         is less or equal than the time represented by rhs</span>.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">nanoseconds</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i>  <span class="underline">
         The difference in nanoseconds between the time represented by *this and the
@@ -2519,20 +2519,20 @@ class system_time
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span> <span class="keyword">operator</span><span class="special">+(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> The duration converted to nanosecond resolution
         and added to the time <span class="underline">represented by *this</span>.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Convert the duration to nanosecond resolution add to nanoseconds
         to the time represented by *this.
@@ -2541,20 +2541,20 @@ class system_time
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> The duration converted to nanosecond resolution
         and subtracted from the time <span class="underline">represented by *this</span>.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> 
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Convert the duration to nanosecond resolution subtract and
         from the time represented by *this.
@@ -2574,9 +2574,9 @@ class system_time
 
 
 <blockquote>
-<pre>
+<pre><code>
   system_time get_system_time();
-</pre>
+</code></pre>
 </blockquote>
 
 
@@ -2607,7 +2607,7 @@ class system_time
 
 
 <blockquote>
-<pre>
+<pre><code>
 class Duration { 
 
     //comparison operators
@@ -2654,78 +2654,78 @@ class Duration {
     tick_type get_count() const 
 
 }
-</pre>
+</code></pre>
 </blockquote>
 <p>
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if rhs duration is greater.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if rhs is not the same time.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if the rhs duration is larger.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if greater or equal than the rhs duration.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if less than the rhs duration.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> True if less or equal to the rhs duration.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="comment">//sign inversion
 </span><span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">-()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> Negated value of the duration.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="comment">//arithmetic operations
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">-</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> A duration value equal to this-rhs_duration.
       </p><p>
@@ -2735,10 +2735,10 @@ class Duration {
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Modifies to value equal to this-rhs_duration. 
       </p><p>
@@ -2750,10 +2750,10 @@ class Duration {
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> Duration equal to this+rhs_duration.
       </p><p>
@@ -2763,10 +2763,10 @@ class Duration {
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Modifies to value equal to this+rhs_duration. 
       </p><p>
@@ -2778,18 +2778,18 @@ class Duration {
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">/</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">divisor</span><span class="special">)</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> Duration with value equal to this/divisor according to
         integer arithmetic rules.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">/=(</span><span class="keyword">int</span> <span class="identifier">divisor</span><span class="special">)</span> 
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Change value of this by this/divisor according to integer
         arithmetic rules.
@@ -2798,17 +2798,17 @@ class Duration {
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> Duration with value equal to this*rhs 
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">*=(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">)</span> 
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Modifies to value equal to this*rhs. 
       </p><p>
@@ -2816,9 +2816,9 @@ class Duration {
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">tick_type</span> <span class="identifier">get_count</span><span class="special">()</span> <span class="keyword">const</span> 
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> The count at the resolution of the time duration
         type.
@@ -2833,7 +2833,7 @@ Objects of class <code>nanoseconds</code> can be used to represent a count of na
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class nanoseconds 
 {
  public:
@@ -2851,46 +2851,46 @@ class nanoseconds
    //+ common functions
 
 };
-</pre>
+</code></pre>
 </blockquote>
 
-<pre>
+<pre><code>
 <span class="identifier">nanoseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Constructs an object with a count of nanoseconds - default
         is zero.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">nanoseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nanoseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Copy construction.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 1000000000
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 0
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> true
       </p><p>
@@ -2904,7 +2904,7 @@ Objects of class <code>microseconds</code> can be used to represent a count of m
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class microseconds 
 {
  public:
@@ -2926,55 +2926,55 @@ class microseconds
 
 };
 
-</pre>
+</code></pre>
 </blockquote>
 
-<pre>
+<pre><code>
 <span class="identifier">microseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Constructs an object with a count of microseconds - default
         is zero.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">microseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">microseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Copy construction.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="comment">//conversions
 </span><span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> microsecond count converted to nanoseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 1000000
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 0
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> true
       </p><p>
@@ -2989,7 +2989,7 @@ Objects of class <code>milliseconds</code> can be used to represent a count of m
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class milliseconds
 {
  public:
@@ -3009,62 +3009,62 @@ class milliseconds
 
    //+ common functions
 };
-</pre>
+</code></pre>
 </blockquote>
 
-<pre>
+<pre><code>
 <span class="identifier">milliseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Constructs an object with a count of milliseconds - default
         is zero.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">milliseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">milliseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Copy construction.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> millisecond count converted to nanoseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> millisecond count converted to microseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 1000
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 0
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> true
       </p><p>
@@ -3078,7 +3078,7 @@ Objects of class <code>seconds</code> can be used to represent a count of second
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class  seconds 
 { 
  public:
@@ -3100,70 +3100,70 @@ class  seconds
    //+ common functions
 
 };
-</pre>
+</code></pre>
 </blockquote>
 
-<pre>
+<pre><code>
 <span class="identifier">seconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of seconds - default is
         zero.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">seconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">seconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Copy construction.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> second count converted to nanoseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> second count converted to microseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> second count converted to milliseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 1
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 1
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> false
       </p><p>
@@ -3178,7 +3178,7 @@ Objects of class <code>minutes</code> can be used to represent a count of minute
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class  minutes 
 {
  public:
@@ -3201,77 +3201,77 @@ class  minutes
    //+ common functions
 
 };
-</pre>
+</code></pre>
 </blockquote>
-<pre>
+<pre><code>
 <span class="identifier">minutes</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of minutes - default is
         zero.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">minutes</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">minutes</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Copy construction.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> minute count converted to nanoseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> minute count converted to microseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> minute count converted to milliseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> minute count converted to seconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 0
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 60
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> false
       </p><p>
@@ -3284,7 +3284,7 @@ Objects of class <code>hours</code> can be used to represent a count of hours.
 </p>
 
 <blockquote>
-<pre>
+<pre><code>
 class  hours 
 {
  public:
@@ -3308,86 +3308,86 @@ class  hours
    //+ common functions
 
 };
-</pre>
+</code></pre>
 </blockquote>
 
 
-<pre>
+<pre><code>
 <span class="identifier">hours</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of hours - default is zero.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="identifier">hours</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">hours</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-</pre>
+</code></pre>
 <p>
         <i>Effects:</i> Copy construction.
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> hour count converted to nanoseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> hour count converted to microseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> hour count converted to milliseconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> hour count converted to seconds
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">operator</span> <span class="identifier">minutes</span><span class="special">()</span> <span class="keyword">const</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns: </i> hour count converted to seconds.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 0
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> 3600
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-<pre>
+<pre><code>
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
-</pre>
+</code></pre>
 <p>
         <i>Returns:</i> false
       </p><p>
