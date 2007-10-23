@@ -118,8 +118,10 @@ If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;
   <li>generic locking algorithms, lock: what does &quot;an algorithm that avoids 
   deadlocks&quot; mean? What, exactly, is required?<br>
 &nbsp;</li>
-  <li>condition_variable::wait: &quot;... unless lock refers to the same underlying 
+  <li>&#10004; <a name="issue24">condition_variable</a>::wait: &quot;... unless lock refers to the same underlying 
   mutex object.&quot; Same as what?<br>
+  <br>
+  <i>Anthony supplied more precise wording.</i><br>
 &nbsp;</li>
   <li>&#10004; condition_variable::wait, effects: &quot;If the wait should throw an 
   exception...&quot; probably should be &quot;If the wait throws an exception...&quot;. &quot;for 
@@ -158,7 +160,24 @@ If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;
   requirements&quot; to resolve issue 13. In general, the current standard has no 
   concept of &quot;concept&quot;. All concepts in the document need to be changed into 
   requirements. i.e. &quot;Mutex concepts&quot; -&gt; &quot;Mutex requirements&quot;.&nbsp; (Added by 
-  Beman.)</li>
+  Beman.)<br>
+&nbsp;</li>
+  <li>Anthony's wording [for <a href="#issue24">issue 24</a>] nails the problem 
+  for condition_variable, but we have the same problem with 
+  condition_variable_any, and this looks more problematic. I was hoping that 
+  condition_variable_any::wait would require only lock() and unlock() on the 
+  Lock, and not mutex(). A motivating use case is a user-defined:<br>
+  <br>
+  template &lt;Mutex1, Mutex2&gt; class Lock2;<br>
+  <br>
+  What should Lock2::mutex() return? condition_variable_any::wait shouldn't 
+  care. Furthermore Lock2(mut1, mut2) ought to be &quot;co-waitable&quot; with Lock2(mut2, 
+  mut1). This is potentially two different types of lock, potentially returning 
+  different values for mutex() (if it has a mutex() member at all).<br>
+  <br>
+  The definition of &quot;mutex&quot; under condition_variable_any is (and should be) 
+  quite fuzzy! Perhaps this precondition should simply be removed from 
+  condition_variable_any::wait? (Added by Howard.)</li>
 </ol>
 
 </body>
