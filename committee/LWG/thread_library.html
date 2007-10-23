@@ -1,10 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html lang="en"><head>
+<html lang="en">
+<head>
 
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"><title>Thread Working Draft 16</title>
-	
-	<style type="text/css">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Thread Working Draft 16</title>
+
+<style type="text/css">
 	p {text-align:justify}
 	li {text-align:justify}
 	blockquote.note
@@ -39,7 +41,10 @@
         color: green;
         display: inline;
     }
-	</style></head><body>
+</style>
+</head>
+
+<body>
 
 <address style="text-align: right">
 Document number: NXXXX=07-XXXX<br>
@@ -189,8 +194,7 @@ members allow implementations to provide access to implementation details. Their
 names are specified to facilitate portable compile-time detection. Actual use of 
 these members is inherently non-portable. <i>--end note</i>]</p>
 
-<h3>
-<a name="ThreadsWording">Threads</a></h3>
+<h3><a name="ThreadsWording">Threads</a></h3>
 
 <p>
 <b>&lt;thread&gt; synopsis</b>
@@ -791,8 +795,7 @@ void g()
 </blockquote>
 </blockquote>
 
-<h3>
-<a name="MutexsLocksWording">Mutexs and locks</a></h3>
+<h3><a name="MutexsLocksWording">Mutexs and locks</a></h3>
 
 <p>
 <b>&lt;mutex&gt; synopsis</b>
@@ -2098,8 +2101,7 @@ evaluates to <code>true</code>, regardless of whether the timeout was triggered.
  RhsDuration</span></p>
 
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>
-Header &lt;date_time&gt; Synopsis</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>Header &lt;date_time&gt; Synopsis</h3>
 
 <blockquote><pre>namespace std 
 {
@@ -2121,7 +2123,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 } //std
 </pre></blockquote>
 
-</div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3>
 
 
 <p>
@@ -2180,7 +2182,8 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 
 <blockquote class="note">
 <p>
-<h3 class="title">Note</h3><p>
+<h3 class="title">Note</h3>
+<p>
           292 years represents the number of nanoseconds that can be represented 
          in a signed 64 bit integer.
 </p></blockquote>
@@ -2307,10 +2310,10 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
         <i>Returns:</i> Modified value of this.
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div>
+      </p>
 
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3>
 
 <p>
         The function <code>get_system_time</code> provides access to the system clock at a
@@ -2323,15 +2326,15 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 
 
 <blockquote class="note">
-<h3 class="title">Comment (not for inclusion in WP)</h3><p>
+<h3 class="title">Comment (not for inclusion in WP)</h3>
+<p>
     <i>Typical personal computer platforms currently achieve microsecond level
     resolution from calls to the clock. The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a> has a class that portably implements the proposed
     interface, but it uses different C-level interfaces depending on the operating
     system.</i>
         </p></blockquote>
-</div>
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
 
 <p>
         The following functions are common functions to all durations types. These
@@ -2514,9 +2517,9 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
         type.
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div>
+      </p>
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3>
 
 <p>
 Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
@@ -2568,9 +2571,9 @@ Objects of class <code>nanoseconds</code> can be used to represent a count of na
         <i>Returns:</i> true
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div>
+      </p>
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3>
 
 <p>
 Objects of class <code>microseconds</code> can be used to represent a count of microseconds.
@@ -2632,9 +2635,9 @@ Objects of class <code>microseconds</code> can be used to represent a count of m
         <i>Returns:</i> true
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div>
+      </p>
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_milliseconds"></a>class milliseconds</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_milliseconds"></a>class milliseconds</h3>
 
 
 <p>
@@ -2699,9 +2702,9 @@ Objects of class <code>milliseconds</code> can be used to represent a count of m
         <i>Returns:</i> true
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div>
+      </p>
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3>
 
 <p>
 Objects of class <code>seconds</code> can be used to represent a count of seconds.
@@ -2772,9 +2775,9 @@ Objects of class <code>seconds</code> can be used to represent a count of second
         <i>Returns:</i> false
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div>
+      </p>
 
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_minutes"></a>class minutes</h3></div></div></div>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_minutes"></a>class minutes</h3>
 
 
 <p>
@@ -2851,7 +2854,8 @@ Objects of class <code>minutes</code> can be used to represent a count of minute
         <i>Returns:</i> false
       </p><p>
         <i>Throws:</i> Nothing.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3></div></div></div>
+      </p>
+<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3>
 
 <p>
 Objects of class <code>hours</code> can be used to represent a count of hours.
@@ -2935,7 +2939,6 @@ Objects of class <code>hours</code> can be used to represent a count of hours.
       </p><p>
         <i>Throws:</i> Nothing.
       </p>
-</div>
 
 <h2><a name="References">References</a></h2>
 <ul>
@@ -2999,4 +3002,5 @@ contributed the date time portions of the proposal based on the Boost.DateTime
 Library and his TR2 proposals.
 </p>
 
-</body></html>
+</body>
+</html>
