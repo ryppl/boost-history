@@ -2133,10 +2133,19 @@ void wait(unique_lock&lt;mutex&gt;&amp; lock);
 
 <blockquote>
 <p>
-<i>Precondition:</i> <code>lock</code> is locked by the current thread.  No
-other thread is waiting on this <code>condition_variable</code> object unless <code>lock</code>
-refers to the same underlying <code>mutex</code> object.
-</p>
+<i>Precondition:</i> <code>lock</code> is locked by the current thread, and 
+either:</p>
+
+<blockquote>
+<p>
+-- No other thread is waiting on this <code>condition_variable</code> object, or<br>
+-- The execution of the <code>mutex</code> member function on the <code>lock</code> 
+objects supplied in the calls to <code>wait</code> or <code>timed_wait</code> in 
+all the threads currently waiting on this <code>condition_variable</code> object 
+would return the same value as <code>lock-&gt;mutex()</code> for this call to <code>
+wait</code>.</p>
+
+</blockquote>
 
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
