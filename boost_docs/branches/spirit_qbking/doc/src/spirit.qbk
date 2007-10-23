@@ -115,13 +115,13 @@ Closures
 [section [*Dynamic]]
 
 Dynamic Parsers
-[include dynamic_parser.qbk]
+[include dynamic_parsers.qbk]
 
 Storable Rules
-[include storable_rules.qbk]
+[include stored_rule.qbk]
 
 The Lazy Parser
-[include the_lazy_parser.qbk]
+[include lazy_parser.qbk]
 
 The Select Parser
 [include select_parser.qbk]
