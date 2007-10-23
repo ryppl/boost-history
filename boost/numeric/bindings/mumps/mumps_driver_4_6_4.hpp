@@ -163,6 +163,11 @@ namespace boost { namespace numeric { namespace bindings { namespace mumps {
       rows = const_cast<int*>( boost::numeric::bindings::traits::spmatrix_index2_storage( m ) ) ;
     }
   
+    // Pointer Cast
+    float* cast_2_mumps( float* p ) { return p ; }
+    double* cast_2_mumps( double* p ) { return p ; }
+    mumps_double_complex* cast_2_mumps( std::complex<double>* p ) { return reinterpret_cast<mumps_double_complex*>( p ) ; }
+    mumps_complex* cast_2_mumps( std::complex<float>* p ) { return reinterpret_cast<mumps_complex*>( p ) ; }
   } // namespace detail
   
 
@@ -221,8 +226,8 @@ namespace boost { namespace numeric { namespace bindings { namespace mumps {
   //
   template <typename M>
   void matrix_value_data( mumps<M>& data, M& m ) {
-    data.a = boost::numeric::bindings::traits::spmatrix_value_storage( m ) ;
-    data.a_loc = boost::numeric::bindings::traits::spmatrix_value_storage( m ) ;
+    data.a = detail::cast_2_mumps( boost::numeric::bindings::traits::spmatrix_value_storage( m ) ) ;
+    data.a_loc = detail::cast_2_mumps( boost::numeric::bindings::traits::spmatrix_value_storage( m ) ) ;
   } // matrix_value_data()
 
 
@@ -232,7 +237,7 @@ namespace boost { namespace numeric { namespace bindings { namespace mumps {
   //
   template <typename M, typename X>
   void rhs_sol_value_data( mumps<M>& data, X& x ) {
-    data.rhs = boost::numeric::bindings::traits::matrix_storage( x ) ;
+    data.rhs = detail::cast_2_mumps( boost::numeric::bindings::traits::matrix_storage( x ) ) ;
     data.nrhs = boost::numeric::bindings::traits::matrix_size2( x ) ;
     data.lrhs = boost::numeric::bindings::traits::leading_dimension( x ) ;
   } // matrix_rhs_sol_value_data()
