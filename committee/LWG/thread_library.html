@@ -207,19 +207,25 @@ system or other low-level API calls result in an error.
 <p>
 The <code>error_category</code> ([syserr.errcat.overview]) 
 of the <code>error_code</code> reported by such an exception&#39;s <code>code()</code> 
-member function is implementation-defined.  [<i>Note:</i> The category is 
+member function is implementation-defined.
+[<i>Note:</i>
+The category is 
 typically <code>system_category</code> ([syserr.errcat.overview]) since these error 
 codes usually originate from the underlying operating system application program 
-interface (API). <i>-- end note</i>]
+interface (API).
+&mdash;<i>end note</i>]
 </p>
 
 <p>
 Several classes described in this clause have members <code>
 native_handle_type</code> and <code>native_handle</code>. The presence of these 
-members and their semantics is implementation defined. [<i>Note:</i> These 
+members and their semantics is implementation defined.
+[<i>Note:</i>
+These 
 members allow implementations to provide access to implementation details. Their 
 names are specified to facilitate portable compile-time detection. Actual use of 
-these members is inherently non-portable. <i>--end note</i>]
+these members is inherently non-portable.
+&mdash;<i>end note</i>]
 </p>
 
 <h3><a name="ThreadsWording">Threads</a></h3>
@@ -340,7 +346,9 @@ identity, and this identify is different from that of any joinable thread.
 </p>
 
 <p>
-[<i>Note:</i> Relational operators allows <code>thread::id</code> objects to be used as keys in associative containers.<i> --end note</i>]
+[<i>Note:</i>
+Relational operators allows <code>thread::id</code> objects to be used as keys in associative containers.
+&mdash;<i>end note</i>]
 </p>
 
 <blockquote>
@@ -504,8 +512,10 @@ get_id() == thread::id()
 </code></pre>
 
 <p>
-[<i>Note:</i> This is also the state of a <code>thread</code>
-object after <code>detach</code> or <code>join</code> is successfully called. <i>-- end note</i>]
+[<i>Note:</i>
+This is also the state of a <code>thread</code>
+object after <code>detach</code> or <code>join</code> is successfully called.
+&mdash;<i>end note</i>]
 </p>
 </blockquote>
 
@@ -753,8 +763,11 @@ unsigned hardware_concurrency();
 <blockquote>
 <p>
 <i>Returns:</i> The number of threads that can reasonably be expected to
-execute concurrently. <i>[Note:</i> This value should only be considered to be a hint.
-<i>--end note]</i> If this value is not computable or well defined a
+execute concurrently.
+[<i>Note:</i>
+This value should only be considered to be a hint.
+&mdash;<i>end note</i>]
+If this value is not computable or well defined a
 return value of 1 is recommended, but not required.
 </p>
 
@@ -925,7 +938,7 @@ the return of <code>call_once</code>.]</b>
 </p>
 
 <p>
-[<i>Examples:</i>
+[<i>Example:</i>
 </p>
 
 <blockquote>
@@ -953,7 +966,7 @@ void g()
 </blockquote>
 
 <p>
-<i>-- end example]</i>
+&mdash;<i>end example</i>]
 </p>
 </blockquote>
 </blockquote>
@@ -1061,7 +1074,8 @@ If ownership can be obtained without blocking,
 then an attempt is made to obtain ownership.
 If ownership is not obtained,
 there is no effect and <code>try_lock()</code> immediately returns.
-[<i>Note:</i> It is expected that <code>try_lock()</code> almost
+[<i>Note:</i>
+It is expected that <code>try_lock()</code> almost
 always obtains ownership if the lock is available,
 but it is not guaranteed that it always does so.
 Since a failed <code>try_lock()</code> is not an acquire operation [1.10],
@@ -1069,7 +1083,7 @@ the resulting memory visibility rules are weak enough
 that they would render such a guarantee essentially useless.
 And such a guarantee would preclude potentially interesting
 <code>try_lock()</code> implementations based on <code>compare_swap</code>.
-&mdash; <i>end note</i>]
+&mdash;<i>end note</i>]
 </p>
 
 <p>
@@ -1210,7 +1224,7 @@ As with <code>try_lock()</code>,
 there is no guarantee that ownership will be obtained
 if the lock is available,
 but implementations are expected to make a strong effort to do so.
-&mdash; <i>end note</i>]
+&mdash;<i>end note</i>]
 </p>
 
 <p>
@@ -1301,9 +1315,11 @@ It shall be a standard-layout class (chapter 9 [class]).
 <p>
 Locks are objects that hold a reference to a mutex and unlock the mutex during the lock's destruction
 (such as when leaving block scope).  The locks do not manage the lifetime of the mutex they
-reference, but only the ownership status of that mutex.  <i>[Note: </i>Locks are intended to ease the burden
-of unlocking the mutex under both normal and exceptional circumstances.<i> --end 
-note]</i>
+reference, but only the ownership status of that mutex.
+[<i>Note:</i>
+Locks are intended to ease the burden
+of unlocking the mutex under both normal and exceptional circumstances.
+&mdash;<i>end note</i>]
 </p>
 
 <p>
@@ -1697,11 +1713,13 @@ u.owns_lock() == false
 </p>
 
 <p>
-<i>Note:</i> With a recursive mutex it is possible that both
+[<i>Note:</i>
+With a recursive mutex it is possible that both
 <code>this</code> and <code>u</code> own the same mutex before the assignment.
 In this case, <code>this</code> will own the mutex after the assignment (and
 <code>u</code> will not), but the mutex's lock count will be decremented by
 one.
+&mdash;<i>end note</i>]
 </p>
 </blockquote>
 </blockquote>
@@ -1917,8 +1935,11 @@ template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, 
 <p>
 <i>Requires:</i>  Each template parameter type must supply the following member functions with semantics
 corresponding to the Mutex concept, except that <code>try_lock</code> is allowed to throw an
-exception. <i>[Note:</i> The <code>unique_lock</code> class template meets these requirements 
-when suitable instantiated. <i>--end note]</i>
+exception.
+[<i>Note:</i>
+The <code>unique_lock</code> class template meets these requirements 
+when suitable instantiated.
+&mdash;<i>end note</i>]
 </p>
 
 <blockquote>
@@ -1952,8 +1973,11 @@ template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&
 <p>
 <i>Requires:</i>  Each template parameter type must supply the following member functions with semantics
 corresponding to the Mutex concept, except that <code>try_lock</code> is allowed to 
-throw an exception <i>[Note:</i> The <code>unique_lock</code> class template meets these requirements 
-when suitable instantiated. <i>--end note]</i>
+throw an exception
+[<i>Note:</i>
+The <code>unique_lock</code> class template meets these requirements 
+when suitable instantiated.
+&mdash;<i>end note</i>]
 </p>
 
 <blockquote>
@@ -2154,8 +2178,9 @@ template &lt;class Predicate&gt;
 </p>
 
 <p>
-<i>[Note:</i> Does not block if <code>pred()</code> is initially <code>true</code>. <i>
---end note</i>]
+[<i>Note:</i>
+Does not block if <code>pred()</code> is initially <code>true</code>.
+&mdash;<i>end note</i>]
 </p>
 </blockquote>
 </blockquote>
@@ -2241,9 +2266,11 @@ return true;
 </p>
 
 <p>
-<i>Note:</i> There is no blocking if <code>pred()</code> is initially <code>true</code>, even
+[<i>Note:</i>
+There is no blocking if <code>pred()</code> is initially <code>true</code>, even
 if the timeout has already expired.  The return value indicates whether the predicate
 evaluates to <code>true</code>, regardless of whether the timeout was triggered.
+&mdash;<i>end note</i>]
 </p>
 </blockquote>
 </blockquote>
@@ -2421,7 +2448,9 @@ template &lt;class Predicate&gt;
 </p>
 
 <p>
-<i>Note:</i> There is no blocking if <code>pred()</code> is initially <code>true</code>.
+[<i>Note:</i>
+There is no blocking if <code>pred()</code> is initially <code>true</code>.
+&mdash;<i>end note</i>]
 </p>
 </blockquote>
 </blockquote>
@@ -2506,9 +2535,11 @@ return true;
 </p>
 
 <p>
-<i>Note:</i> There is no blocking if <code>pred()</code> is initially <code>true</code>, even
+[<i>Note:</i>
+There is no blocking if <code>pred()</code> is initially <code>true</code>, even
 if the timeout has already expired.  The return value indicates whether the predicate
 evaluates to <code>true</code>, regardless of whether the timeout was triggered.
+&mdash;<i>end note</i>]
 </p>
 </blockquote>
 </blockquote>
@@ -2620,14 +2651,11 @@ class system_time
 </code></pre>
 </blockquote>
 
-<blockquote class="note">
-<p>
-<h3 class="title">Note</h3>
-<p>
+[<i>Note:</i>
           292 years represents the number of nanoseconds that can be represented 
          in a signed 64 bit integer.
+&mdash;<i>end note</i>]
 </p>
-</blockquote>
 
 <pre><code>
 <span class="identifier">system_time</span><span class="special">();</span>
@@ -2902,15 +2930,14 @@ class system_time
 </blockquote>
 
 
-<blockquote class="note">
-<h3 class="title">Comment (not for inclusion in WP)</h3>
 <p>
+[<i>Comment (not for inclusion in WP):</i>
     <i>Typical personal computer platforms currently achieve microsecond level
     resolution from calls to the clock. The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a> has a class that portably implements the proposed
     interface, but it uses different C-level interfaces depending on the operating
     system.</i>
+&mdash;<i>end comment</i>]
 </p>
-</blockquote>
 
 <h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
 
