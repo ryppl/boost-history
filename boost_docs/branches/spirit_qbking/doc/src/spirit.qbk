@@ -73,7 +73,10 @@ What's New
 
 Primitives
 Operators
+
 Numerics
+[include numerics.qbk]
+
 The Rule
 Epsilon
 Directives
@@ -85,7 +88,10 @@ The Grammar
 Subrules
 Semantic Actions
 In-depth: The Parser
+
 In-depth: The Scanner
+[include in_depth/the_scanner.qbk]
+
 In-depth: The Parser Context
 
 [endsect][/ core]

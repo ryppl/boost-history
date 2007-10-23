@@ -100,11 +100,11 @@ __Boost__ takes the FP paradigm further. There are libraries in boost that focus
   ]
   [
     [[@http://www.boost.org/libs/lambda lambda]]
-    [Define small unnamed function objects at the actual call site, and more, from Jaakko Järvi and Gary Powell.]
+    [Define small unnamed function objects at the actual call site, and more, from Jaakko Jarvi and Gary Powell.]
   ]
   [
     [[@http://www.boost.org/libs/ref ref]]
-    [A uility library for passing references to generic functions, from Jaako Järvi, Peter Dimov, Doug Gregor, and Dave Abrahams.]
+    [A uility library for passing references to generic functions, from Jaako Jarvi, Peter Dimov, Doug Gregor, and Dave Abrahams.]
   ]
 ]
 

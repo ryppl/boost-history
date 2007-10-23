@@ -49,6 +49,7 @@ This class is the simplest among the members of the numerics package. The `uint_
   [`MinDigits`]
   [The minimum number of digits allowable.]
  ]
+ [
   [`MaxDigits`]
   [The maximum number of digits allowable. If this is -1, then the maximum limit becomes unbounded.]
  ]

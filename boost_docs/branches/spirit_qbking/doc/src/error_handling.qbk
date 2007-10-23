@@ -74,7 +74,7 @@ Before declaring the grammar, we declare some assertion objects. `assertion` is 
 The example above an `enum` to hold the information regarding the error, we are free to use other types such as integers and strings. For example, `assertion<string>` accepts a string as its info. It is advisable to use light-weight objects though, after all, error descriptors are usually static. Enums are convenient for error handlers to detect and easily catch since C++ treats enums as unique types.
 
 [tip
-The `assertive_parser`
+[*The `assertive_parser`]
 
 Actually, the expression `expect_end(str_p("end"))` creates an `assertive_parser` object. An `assertive_parser` is a parser that throws an exception in response to a parsing failure. The `assertive_parser` throws a `parser_error` exception rather than returning an unsuccessful match to signal that the parser failed to match the input. During parsing, parsers are given an iterator of type `IteratorT`. This is combined with the error descriptor type `ErrorDescrT` of the assertion (in this case `enum Errors`). Both are used to create a `parser_error<Errors, IteratorT>` which is then thrown to signal the exception.
 ]
@@ -113,7 +113,7 @@ where p is an expression that evaluates to a parser. Somewhere inside `p`, a par
 Where scan points to the scanner state prior to parsing and error is the error that arose. The handler is allowed to move the scanner position as it sees fit, possibly in an attempt to perform error correction. The handler must then return an `error_status<T>` object.
 
 [tip
-The `fallback_parser`
+[*The `fallback_parser`]
 
 The expression `my_guard(expr, error_handler)` creates a `fallback_parser` object. The `fallback_parser` handles `parser_error` exceptions of a specific type. Since `my_guard` is declared as `guard<Errors>`, the `fallback_parser` catches `Errors` specific parser errors: `parser_error<Errors, IteratorT>`. The class sets up a `try` block. When an exception is caught, the catch block then calls the `error_handler`.
 

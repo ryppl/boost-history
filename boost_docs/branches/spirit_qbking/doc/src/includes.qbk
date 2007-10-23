@@ -98,7 +98,7 @@ The `debug` module should not be directly included. See [link __Debugging__] for
     #include <boost/spirit/error_handling/exceptions.hpp>
 ``
 
-[h4 ìterator]
+[h4 iterator]
 
 ``
     #include <boost/spirit/iterator/file_iterator.hpp>
