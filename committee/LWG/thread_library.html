@@ -127,12 +127,12 @@ at the Kona meeting.
 </p>
 
 <pre><code>
- namespace std {
-   ...
-   <i>// Hash function specializations</i>
-   ...
-   <ins>struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
- }
+namespace std {
+    ...
+    <i>// Hash function specializations</i>
+    ...
+    <ins>struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
+}
 </code></pre>
 </blockquote>
 
@@ -320,25 +320,27 @@ classes (chapter 9 [class]).
 
 <h6>Class <code>thread::id</code></h6>
 
+<blockquote>
 <pre><code>
-    class thread::id
-    {
-    public:
-        id();
-    };
+class thread::id
+{
+public:
+    id();
+};
 
-    bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-    bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-    bool operator&lt;(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-    bool operator&lt;=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-    bool operator&gt;(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
-    bool operator&gt;=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+bool operator&lt;(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+bool operator&lt;=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+bool operator&gt;(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+bool operator&gt;=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
 
-    template&lt;class charT, class traits&gt;
-    basic_ostream&lt;charT, traits&gt;&amp;
-    operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
+template&lt;class charT, class traits&gt;
+basic_ostream&lt;charT, traits&gt;&amp;
+operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
 
 </code></pre>
+</blockquote>
 
 <p>
 Objects of type <code>thread::id</code> represent the identity of threads. Each 
@@ -800,13 +802,13 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 
 <blockquote>
 <pre><code>
-namespace this_thread
-{
-    thread::id get_id();
+namespace this_thread {
+
+thread::id get_id();
     
-    void yield();
-    template &lt;class Duration&gt;
-        void sleep(const Duration&amp; rel_t);
+void yield();
+template &lt;class Duration&gt;
+    void sleep(const Duration&amp; rel_t);
 
 }  // this_thread
 </code></pre>
@@ -2616,22 +2618,21 @@ Define Duration, RhsDuration.
 
 <blockquote>
 <pre><code>
-namespace std 
-{
+namespace std {
 
-  //duration types
-  class    hours;
-  class    minutes;
-  class    seconds;
-  class    milliseconds;
-  class    microseconds;
-  class    nanoseconds;
+//duration types
+class hours;
+class minutes;
+class seconds;
+class milliseconds;
+class microseconds;
+class nanoseconds;
 
-  //timepoint   
-  class system_time;
+//timepoint   
+class system_time;
 
-  //functions
-  system_time get_system_time();
+//functions
+system_time get_system_time();
 
 } //std
 </code></pre>
@@ -2655,43 +2656,43 @@ namespace std
 <pre><code>
 class system_time 
 {
- public:
+public:
 
-  system_time();
-  system_time(time_t, nanoseconds ns);
-  ~system_time();
+    system_time();
+    system_time(time_t, nanoseconds ns);
+    ~system_time();
 
-  time_t seconds_since_epoch() const;
-  nanoseconds nanoseconds_since_epoch() const;
+    time_t seconds_since_epoch() const;
+    nanoseconds nanoseconds_since_epoch() const;
 
-  //traits 
-  typedef 'implementation defined' tick_type;
-  static tick_type ticks_per_second();
-  static tick_type seconds_per_tick();
-  static bool is_subsecond();
+    //traits 
+    typedef 'implementation defined' tick_type;
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
 
-  //comparison functions
-  bool operator==(const system_time&amp; rhs) const;
-  bool operator!=(const system_time&amp; rhs) const;
-  bool operator&gt;(const system_time&amp; rhs) const;
-  bool operator&gt;=(const system_time&amp; rhs) const;
-  bool operator&lt;(const system_time&amp; rhs) const;
-  bool operator&lt;=(const system_time&amp; rhs) const;
+    //comparison functions
+    bool operator==(const system_time&amp; rhs) const;
+    bool operator!=(const system_time&amp; rhs) const;
+    bool operator&gt;(const system_time&amp; rhs) const;
+    bool operator&gt;=(const system_time&amp; rhs) const;
+    bool operator&lt;(const system_time&amp; rhs) const;
+    bool operator&lt;=(const system_time&amp; rhs) const;
 
-  //arithmetic functions
-  nanoseconds operator-(const system_time&amp; rhs) const
+    //arithmetic functions
+    nanoseconds operator-(const system_time&amp; rhs) const
 
-  template&lt;typename Duration&gt;
-  system_time operator+(const Duration&amp; td) const;
+    template&lt;typename Duration&gt;
+    system_time operator+(const Duration&amp; td) const;
 
-  template&lt;typename Duration&gt;
-  system_time&amp; operator+=(const Duration&amp; td);
+    template&lt;typename Duration&gt;
+    system_time&amp; operator+=(const Duration&amp; td);
 
-  template&lt;typename Duration&gt;
-  system_time operator-(const Duration&amp; td) const;
+    template&lt;typename Duration&gt;
+    system_time operator-(const Duration&amp; td) const;
 
-  template&lt;typename Duration&gt;
-  system_time&amp; operator-=(const Duration&amp; td) 
+    template&lt;typename Duration&gt;
+    system_time&amp; operator-=(const Duration&amp; td) 
 
 };
 </code></pre>
@@ -3464,19 +3465,19 @@ Objects of class <code>nanoseconds</code> can be used to represent a count of na
 <pre><code>
 class nanoseconds 
 {
- public:
+public:
 
-   nanoseconds(long long=0);
-   nanoseconds(const nanoseconds& rhs);
-   ~nanoseconds();
+    nanoseconds(long long=0);
+    nanoseconds(const nanoseconds& rhs);
+    ~nanoseconds();
 
-   //traits information
-   static tick_type ticks_per_second();
-   static tick_type seconds_per_tick();
-   static bool is_subsecond();
-   typedef <b><i>implementation-defined</i></b> tick_type;
+    //traits information
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <b><i>implementation-defined</i></b> tick_type;
 
-   //+ common functions
+    //+ common functions
 
 };
 </code></pre>
@@ -3573,22 +3574,22 @@ Objects of class <code>microseconds</code> can be used to represent a count of m
 <pre><code>
 class microseconds 
 {
- public:
+public:
 
-   microseconds(long long=0);
-   microseconds(const microseconds&amp; rhs);
-   ~microseconds();
+    microseconds(long long=0);
+    microseconds(const microseconds&amp; rhs);
+    ~microseconds();
 
-   //conversions
-   operator nanoseconds() const
+    //conversions
+    operator nanoseconds() const
 
-   //traits information
-   static tick_type ticks_per_second();
-   static tick_type seconds_per_tick();
-   static bool is_subsecond();
-   typedef <b><i>implementation-defined</i></b> tick_type;
+    //traits information
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <b><i>implementation-defined</i></b> tick_type;
 
-   //+ common functions
+    //+ common functions
 
 };
 
@@ -3703,22 +3704,22 @@ Objects of class <code>milliseconds</code> can be used to represent a count of m
 <pre><code>
 class milliseconds
 {
- public:
-   milliseconds(long long=0);
-   milliseconds(const milliseconds&amp; rhs);
-   ~milliseconds();
+public:
+    milliseconds(long long=0);
+    milliseconds(const milliseconds&amp; rhs);
+    ~milliseconds();
 
-   //conversions
-   operator nanoseconds() const;
-   operator microseconds() const;
+    //conversions
+    operator nanoseconds() const;
+    operator microseconds() const;
 
-   //traits information
-   static tick_type ticks_per_second();
-   static tick_type seconds_per_tick();
-   static bool is_subsecond();
-   typedef <b><i>implementation-defined</i></b> tick_type;
+    //traits information
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <b><i>implementation-defined</i></b> tick_type;
 
-   //+ common functions
+    //+ common functions
 };
 </code></pre>
 </blockquote>
@@ -3846,23 +3847,23 @@ Objects of class <code>seconds</code> can be used to represent a count of second
 <pre><code>
 class  seconds 
 { 
- public:
-   seconds(long long s=0);
-   seconds(const seconds&amp; rhs);
-   ~seconds();
+public:
+    seconds(long long s=0);
+    seconds(const seconds&amp; rhs);
+    ~seconds();
 
-   //conversions
-   operator nanoseconds() const
-   operator microseconds() const
-   operator milliseconds() const
+    //conversions
+    operator nanoseconds() const
+    operator microseconds() const
+    operator milliseconds() const
 
-   //traits information
-   static tick_type ticks_per_second();
-   static tick_type seconds_per_tick();
-   static bool is_subsecond();
-   typedef <b><i>implementation-defined</i></b> tick_type;
+    //traits information
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <b><i>implementation-defined</i></b> tick_type;
 
-   //+ common functions
+    //+ common functions
 
 };
 </code></pre>
@@ -4007,24 +4008,24 @@ Objects of class <code>minutes</code> can be used to represent a count of minute
 <pre><code>
 class  minutes 
 {
- public:
-   minutes(long long s=0);
-   minutes(const minutes&amp; rhs);
-   ~minutes();
+public:
+    minutes(long long s=0);
+    minutes(const minutes&amp; rhs);
+    ~minutes();
 
-   //conversions
-   operator nanoseconds() const
-   operator microseconds() const
-   operator milliseconds() const
-   operator seconds() const
+    //conversions
+    operator nanoseconds() const
+    operator microseconds() const
+    operator milliseconds() const
+    operator seconds() const
 
-   //traits information
-   static tick_type ticks_per_second();
-   static tick_type seconds_per_tick();
-   static bool is_subsecond();
-   typedef <b><i>implementation-defined</i></b> tick_type;
+    //traits information
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <b><i>implementation-defined</i></b> tick_type;
 
-   //+ common functions
+    //+ common functions
 
 };
 </code></pre>
@@ -4185,25 +4186,25 @@ Objects of class <code>hours</code> can be used to represent a count of hours.
 <pre><code>
 class  hours 
 {
- public:
-   hours(long long s=0);
-   hours(const hours&amp; rhs);
-   ~hours();
+public:
+    hours(long long s=0);
+    hours(const hours&amp; rhs);
+    ~hours();
 
-   //conversions
-   operator nanoseconds() const
-   operator microseconds() const
-   operator milliseconds() const
-   operator seconds() const
-   operator minutes() const
+    //conversions
+    operator nanoseconds() const
+    operator microseconds() const
+    operator milliseconds() const
+    operator seconds() const
+    operator minutes() const
 
-   //traits information
-   static tick_type ticks_per_second();
-   static tick_type seconds_per_tick();
-   static bool is_subsecond();
-   typedef <b><i>implementation-defined</i></b> tick_type;
+    //traits information
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <b><i>implementation-defined</i></b> tick_type;
 
-   //+ common functions
+    //+ common functions
 
 };
 </code></pre>
