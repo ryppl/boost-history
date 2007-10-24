@@ -352,7 +352,6 @@ Relational operators allows <code>thread::id</code> objects to be used as keys i
 &mdash;<i>end note</i>]
 </p>
 
-<blockquote>
 <pre><code>
 id();
 </code></pre>
@@ -373,9 +372,7 @@ Nothing.
 Represents the non-joinable identity.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
 </code></pre>
@@ -393,9 +390,7 @@ returns <code>true</code>.  Otherwise returns <code>false</code>.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
 </code></pre>
@@ -411,9 +406,7 @@ bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool operator&lt;(const thread::id&amp; x, const thread::id&amp; y);
 </code></pre>
@@ -429,9 +422,7 @@ a value such that <code>operator&lt;</code> is a total ordering as described in 
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool operator&lt;=(const thread::id&amp; x, const thread::id&amp; y);
 </code></pre>
@@ -447,9 +438,7 @@ bool operator&lt;=(const thread::id&amp; x, const thread::id&amp; y);
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool operator&gt;(const thread::id&amp; x, const thread::id&amp; y);
 </code></pre>
@@ -465,9 +454,7 @@ bool operator&gt;(const thread::id&amp; x, const thread::id&amp; y);
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool operator&gt;=(const thread::id&amp; x, const thread::id&amp; y);
 </code></pre>
@@ -483,9 +470,7 @@ bool operator&gt;=(const thread::id&amp; x, const thread::id&amp; y);
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template&lt;class charT, class traits&gt;
 basic_ostream&lt;charT, traits&gt;&amp;
@@ -504,11 +489,9 @@ the stream <code>out</code>.
 <code>out</code>.
 </dd>
 </dl>
-</blockquote>
 
 <h5><code>thread</code> constructors</h5>
 
-<blockquote>
 <pre><code>
 thread();
 </code></pre>
@@ -540,9 +523,7 @@ object after <code>detach</code> or <code>join</code> is successfully called.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
 </code></pre>
@@ -583,9 +564,7 @@ get_id() != thread::id()
 <code>system_error</code> if unable to  start the new thread.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 thread(thread&amp;&amp; <i>x</i>);
 </code></pre>
@@ -610,11 +589,9 @@ start of construction.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h5><code>thread</code> destructor</h5>
 
-<blockquote>
 <pre><code>
 ~thread();
 </code></pre>
@@ -631,11 +608,9 @@ otherwise no effects.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h5><code>thread</code> assignment</h5>
 
-<blockquote>
 <pre><code>
 thread&amp; operator=(thread&amp;&amp; <i>x</i>);
 </code></pre>
@@ -663,11 +638,9 @@ assignment.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h5><code>thread</code> members</h5>
 
-<blockquote>
 <pre><code>
 void swap(thread&amp;&amp; <i>x</i>);
 </code></pre>
@@ -683,9 +656,7 @@ Swaps the state of <code>*this</code> and <code><i>x</i></code>.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool joinable() const;
 </code></pre>
@@ -701,9 +672,7 @@ bool joinable() const;
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void join();
 </code></pre>
@@ -736,9 +705,7 @@ After a normal return of <code>join()</code>,
 possible error conditions are implementation defined.&nbsp;
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void detach();
 </code></pre>
@@ -769,9 +736,7 @@ does not represent a thread.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 id get_id() const;
 </code></pre>
@@ -789,11 +754,9 @@ represented by
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h5><code>thread</code> static members</h5>
 
-<blockquote>
 <pre><code>
 unsigned hardware_concurrency();
 </code></pre>
@@ -815,11 +778,9 @@ return value of 1 is recommended, but not required.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h5><code>thread</code> specialized algorithms</h5>
 
-<blockquote>
 <pre><code>
 void swap(thread&amp;  x, thread&amp;  y);
 void swap(thread&amp;&amp; x, thread&amp;  y);
@@ -832,7 +793,6 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 <code>x.swap(y)</code>.
 </dd>
 </dl>
-</blockquote>
 
 
 
@@ -852,7 +812,6 @@ namespace this_thread
 </code></pre>
 </blockquote>
 
-<blockquote>
 <pre><code>
 thread::id this_thread::get_id();
 </code></pre>
@@ -870,9 +829,7 @@ a default constructed <code>thread::id</code>
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void yield();
 </code></pre>
@@ -888,9 +845,7 @@ Offers the operating system the opportunity to schedule another thread.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class Duration&gt;
     void sleep(const Duration&amp; rel_t);
@@ -912,11 +867,9 @@ The current thread blocks for at least the amount of time specified.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h4><code>struct once_flag</code></h4>
 
-<blockquote>
 <p>
 Objects of class <code>once_flag</code> are opaque data structures that allow
 <code>call_once</code> to initialize data without causing a data race or 
@@ -941,12 +894,10 @@ of <code>call_once</code> with this <code>once_flag</code> as its initial
 argument that no function has been called.
 </dd>
 </dl>
-</blockquote>
 
 
 <h4><code>non-member function call_once</code></h4>
 
-<blockquote>
 <pre><code>
 template&lt;class Callable, class Args...&gt;
 void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
@@ -1025,7 +976,6 @@ void g()
 </p>
 </dd>
 </dl>
-</blockquote>
 
 <h3><a name="MutexsLocksWording">Mutexs and locks</a></h3>
 
@@ -1087,7 +1037,6 @@ A mutex type is neither copyable
 nor movable.  A mutex type shall have the following member functions:
 </p>
 
-<blockquote>
 <pre><code>
 void lock();
 </code></pre>
@@ -1116,9 +1065,7 @@ possible error conditions are implementation defined.
 This is an acquire operation.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool try_lock();
 </code></pre>
@@ -1162,9 +1109,7 @@ This is an acquire operation if <code>try_lock</code> returns <code>true</code>.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void unlock();
 </code></pre>
@@ -1192,7 +1137,6 @@ This is a release operation.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h4>Class mutex</h4>
 
@@ -1265,7 +1209,6 @@ To meet the requirements of the Timed Mutex concept, types are required to meet 
 and to provide the member function <code>timed_lock</code>.
 </p>
 
-<blockquote>
 <pre><code>
 template &lt;class Duration&gt;
     bool timed_lock(const Duration&amp; rel_time);
@@ -1312,7 +1255,6 @@ This is a synchronization operation.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h4>Class timed_mutex</h4>
 
@@ -1459,7 +1401,6 @@ mutex throughout the <code>lock_guard</code>'s lifetime.  Mutex ownership can no
 or transferred away from the <code>lock_guard</code>.
 </p>
 
-<blockquote>
 <pre><code>
 explicit lock_guard(mutex_type&amp; m);
 </code></pre>
@@ -1478,9 +1419,7 @@ Stores a reference to <code><i>m</i></code> and calls <code><i>m</i>.lock()</cod
 <b>[Crowl: An acquire specification is not necessary because of m.lock().]</b>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 lock_guard(mutex_type&amp; m, adopt_lock_t);
 </code></pre>
@@ -1498,9 +1437,7 @@ lock_guard</code> object.
 Stores a reference to <code><i>m</i></code> and performs no other operation on it.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 ~lock_guard();
 </code></pre>
@@ -1516,7 +1453,6 @@ Stores a reference to <code><i>m</i></code> and performs no other operation on i
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h4>Class unique_lock</h4>
 
@@ -1575,7 +1511,6 @@ An object of type
 <code>unique_lock</code> is not copyable but is movable.
 </p>
 
-<blockquote>
 <pre><code>
 unique_lock();
 </code></pre>
@@ -1595,9 +1530,7 @@ owns_lock() == false
 </code></pre>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 explicit unique_lock(mutex_type&amp; m);
 </code></pre>
@@ -1623,9 +1556,7 @@ owns_lock() == true
 </code></pre>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 unique_lock(mutex_type&amp; m, defer_lock_t);
 </code></pre>
@@ -1652,9 +1583,7 @@ owns_lock() == false
 </code></pre>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 unique_lock(mutex_type&amp; m, try_to_lock_t);
 </code></pre>
@@ -1681,9 +1610,7 @@ owns_lock() == <i>The result of the call to</i> <i>m</i>.try_lock()
 </code></pre>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 unique_lock(mutex_type&amp; m, adopt_lock_t);
 </code></pre>
@@ -1709,9 +1636,7 @@ owns_lock() == true
 </code></pre>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 ~unique_lock();
 </code></pre>
@@ -1728,9 +1653,7 @@ Otherwise there are no effects.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 unique_lock(unique_lock&amp;&amp; u);
 </code></pre>
@@ -1756,9 +1679,7 @@ u.owns_lock() == false
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 unique_lock&amp; operator=(unique_lock&amp;&amp; u);
 </code></pre>
@@ -1797,9 +1718,7 @@ one.
 </p>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void lock();
 </code></pre>
@@ -1820,9 +1739,7 @@ Calls <code>lock()</code> on the referenced mutex.
 <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code>.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool try_lock();
 </code></pre>
@@ -1848,9 +1765,7 @@ The result of the call to <code>try_lock()</code> on the referenced mutex.
 <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code>.<code> </code>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class Duration&gt;
    bool timed_lock(const Duration&amp; rel_t);
@@ -1879,9 +1794,7 @@ The result of the call to <code>timed_lock(rel_t)</code> on the referenced mutex
 <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code>.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void unlock();
 </code></pre>
@@ -1902,9 +1815,7 @@ Calls <code>unlock()</code> on the referenced mutex.
 <code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>false</code>.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool owns_lock() const;
 </code></pre>
@@ -1920,9 +1831,7 @@ bool owns_lock() const;
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 operator <var>unspecified-bool-type</var> () const;
 </code></pre>
@@ -1938,9 +1847,7 @@ Non-null if <code>owns_lock()</code> would return <code>true</code>, else return
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 mutex_type* mutex() const;
 </code></pre>
@@ -1956,9 +1863,7 @@ A pointer to the referenced mutex, or null if there is no referenced mutex.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void swap(unique_lock&amp;&amp; u);
 </code></pre>
@@ -1974,9 +1879,7 @@ Swaps state with <code>u</code>.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 mutex_type* release();
 </code></pre>
@@ -2000,9 +1903,7 @@ owns_lock() == false
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_lock&lt;Mutex&gt;&amp;  y);
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; x, unique_lock&lt;Mutex&gt;&amp;  y);
@@ -2020,11 +1921,9 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  x, unique_
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
 <h3>Generic Locking Algorithms</h3>
 
-<blockquote>
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
 </code></pre>
@@ -2065,9 +1964,7 @@ value indicating
 which argument failed to lock.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
 </code></pre>
@@ -2100,7 +1997,6 @@ All arguments are locked with an algorithm that avoids deadlock.
 If an exception is thrown by a call to <code>lock()</code> or <code>try_lock()</code>, there are no effects.
 </dd>
 </dl>
-</blockquote>
 
 <h3><a name="ConditionVariablesWording">Condition variables</a></h3>
 
@@ -2158,7 +2054,6 @@ public:
 </code></pre>
 </blockquote>
 
-<blockquote>
 <pre><code>
 condition_variable();
 </code></pre>
@@ -2169,9 +2064,7 @@ condition_variable();
 Constructs an object of class <code>condition_variable</code>.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 ~condition_variable();
 </code></pre>
@@ -2187,9 +2080,7 @@ Destroys the object.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void notify_one();
 </code></pre>
@@ -2217,9 +2108,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void notify_all();
 </code></pre>
@@ -2240,9 +2129,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void wait(unique_lock&lt;mutex&gt;&amp; lock);
 </code></pre>
@@ -2300,9 +2187,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class Predicate&gt;
     void wait(unique_lock&lt;mutex&gt;&amp; lock, Predicate pred);
@@ -2322,9 +2207,7 @@ Does not block if <code>pred()</code> is initially <code>true</code>.
 </p>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time);
 </code></pre>
@@ -2384,9 +2267,7 @@ races or deadlocks.
 Too much about other operations here.]</b>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class Predicate&gt;
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
@@ -2426,7 +2307,6 @@ evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 </p>
 </dd>
 </dl>
-</blockquote>
 
 <p>
 <code>condition_variable</code> shall be a standard-layout class (chapter 9 [class]).
@@ -2478,7 +2358,6 @@ public:
 </code></pre>
 </blockquote>
 
-<blockquote>
 <pre><code>
 condition_variable_any();
 </code></pre>
@@ -2489,9 +2368,7 @@ condition_variable_any();
 Constructs an object of class <code>condition_variable_any</code>.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 ~condition_variable_any();
 </code></pre>
@@ -2507,9 +2384,7 @@ Destroys the object.
 Nothing.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void notify_one();
 </code></pre>
@@ -2530,9 +2405,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void notify_all();
 </code></pre>
@@ -2552,9 +2425,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 void wait(Lock&amp; lock);
 </code></pre>
@@ -2599,9 +2470,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class Predicate&gt;
     void wait(lock_type&amp; lock, Predicate pred);
@@ -2621,9 +2490,7 @@ There is no blocking if <code>pred()</code> is initially <code>true</code>.
 </p>
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
 </code></pre>
@@ -2680,9 +2547,7 @@ object from different threads shall not result in data
 races or deadlocks.
 </dd>
 </dl>
-</blockquote>
 
-<blockquote>
 <pre><code>
 template &lt;class _Predicate&gt;
     bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
@@ -2722,7 +2587,6 @@ evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 </p>
 </dd>
 </dl>
-</blockquote>
 
 <hr>
 
@@ -3396,15 +3260,14 @@ Duration operator- (const RhsDuration&amp; d) const
 <dl>
 <dt>Returns:</dt>
 <dd>
-<p>
 A duration value equal to this-rhs_duration.
-</p>
+</dd>
 
-<p>
-        <em>Remarks: This will fail to compiler if the 
+<dt>Remarks:</dt>
+<dd>
+This will fail to compile if the 
         RhsDuration is
-        of higher resolution.</em>
-</p>
+        of higher resolution.
 </dd>
 
 <dt>Throws:</dt>
