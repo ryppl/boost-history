@@ -34,41 +34,44 @@ finally displaying it on the screen).
 
 [BoostSignals] and [VTK] are examples of different /mechanisms/ - particular
 environments each offering their own, independent way of doing dataflow.
-In the Dataflow library, everything is keyed through a mechanism typename
+In the Dataflow library, everything is keyed through a mechanism type
 tag, allowing different mechanisms to be specified independently, and
 allowing a single component to support muliple mechanisms.
 
-[heading Components]
+[heading Ports]
 
-We will call the fundamental processing elements of a dataflow program
-/components/.  A component can have a number of connectable interfaces
-(inputs\/outputs), which have two categories:
-
-* /producers/, which produce data; and
-* /consumers/, which consume data.
+The fundamental point of data production or consumption is called a /port/.
+Two complementary ports that produce / consume the same type of data (using
+the same type of mechanism) can typically be connected/disconnected, or data
+can be extracted from one port to another.
 
 Depending on the data-transport mechanism used, a producer could be anything
 that produces / provides data:  a POD variable, an object of a class type, or
 a function that returns a value.  Similarly, a consumer could be anything
 that consumes data - a function that takes an argument, a functor, etc.
 
-Producers and consumers are captured more formally by the [ProducerConcept]
-and [ConsumerConcept] concepts.  There is no concept directly corresponding to
-a component, because a component is a more abstract notion - i.e., a component
-is whatever makes sense for the application design.  Typically, though, a
-component is embedded in a class, and the different [ProducerConcept]s
-and [ConsumerConcept]s are accessible either through the class
-directly, or through its member functions and variables.
+Ports are captured more formally by the [PortConcept] concept.
+
+[heading Components]
+
+A /component/ is the fundamental data processing element of a dataflow
+network.  It can have multiple ports, for example a video filter component
+might have one consumer port (consuming video to be processed) and one
+producer port (producing filtered video).
+
+Typically, a component is embedded in a class, and the different [PortConcept]s
+are accessible either through the class directly, or through its member
+functions and variables.
 
 [heading Proxies]
 
-It is often the case that a component delegates its [ProducerConcept] or
-[ConsumerConcept] functionality to some other element.  For example, a
+It is often the case that a component delegates its [PortConcept]
+functionality to some other element.  For example, a
 class that is a [DataflowSignals] component might delegate its
-[ProducerConcept] functionality to a member boost::signal.  It can
-do so by declaring itself a [ProxyProducerConcept] for the boost::signal.
+[ProducerPortConcept] functionality to a member boost::signal.  It can
+do so by declaring itself a [ProxyProducerPortConcept] for the boost::signal.
 
-[heading Connections]
+[heading Port Operations]
 
 To establish a flow of data in a dataflow program, we typically /connect/
 producers and consumers using some type of /connection/. In C++, this is usually
@@ -77,8 +80,10 @@ by a producer to dissiminate data to multiple consumers which have been
 connected to the signal. Or, a consumer class might have a pointer to a variable
 which it collects data from.
 
-Connectability is captured more formally by the [ConnectableConcept] concept.
-
+Operations between two ports such as /connect/, /connect_only/, /disconnect/,
+and /extract/ are captured by the [BinaryOperable] concept.  Operations
+on a single port such as /disconnect_all/ are covered by the [UnaryOperable]
+concept.
 
 [/
 [heading Push and pull]
@@ -130,99 +135,27 @@ the invoked consumer to invoke the producer.]
 
 [endsect][/mechanism]
 
-[section PortCategory]
+[include port_concepts.qbk]
 
-A [PortCategoryConcept] designates a type of port in the Dataflow library.
-The library currently defines two [PortCategoryConcept]s:
+[section:binaryoperable BinaryOperable (Connectable, OnlyConnectable, Disconnectable, Extractable) ]
 
- * `boost::dataflow::ports::producer`, and
- * `boost::dataflow::ports::consumer`
+A [ProducerPortConcept] `P` and [ConsumerPortConcept] `C` are /BinaryOperable/
+for a binary operation `O`, and mechanism `M`, if the implementation of
+the binary operation `O` has been specialized for `M`, `P`, and `C`.
 
-[heading Notation]
-The following expressions are used in this document:
+In this case,
 
-[variablelist
-    [[PT] [A [PortCategoryConcept] type.]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Description]]
-    [
-        [Opposite PortCategory]
-        [`PT::complement`]
-        [[PortCategoryConcept] type]
-        [
-            The complementing [PortCategory] of `PT`, meaning that connections
-            can be made between [PortConcept]s of [PortCategoryConcept] `PT` and
-            [PortConcept]s of [PortCategoryConcept] `PT::complement`.
-        ]
-    ]
-]
-
-
-[endsect][/porttype]
-
-[include producer_concepts.qbk]
-
-[include consumer_concepts.qbk]
-
-[section Invocable]
-
-A type `T` is /invocable/ if it can be invoked to consume its inputs and/or
-produce its outputs.
+* If `O` is operations::connect, `P` and `C` are [ConnectableConcept]
+* If `O` is operations::connect_only, `P` and `C` are [OnlyConnectableConcept]
+* If `O` is operations::disconnect, `P` and `C` are [DisconnectableConcept]
+* If `O` is operations::extract, `P` and `C` are [ExtractableConcept]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[C] [An [InvocableConcept] type.]]
-    [[c] [An object of type `P`.]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Description]]
-    [
-        [Invocation]
-        [`invoke(c)`
-         [footnote `namespace boost::dataflow`,
-         `namespace boost::signals`, `namespace boost::phoenix`]]
-        [Any type]
-        [
-            *Semantics:* The component consumes data from connected producers,
-            and makes produced data available to connected consumers.
-            [footnote: This does not imply that it invokes any connected
-            producers or consumers.].
-        ]
-    ]
-    [
-        [Invocable]
-        [`is_invocable<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [mpl::true_ or boost::true_type]
-        [
-            *Semantics:* A trait encapsulating adherence to the
-            [InvocableConcept] concept.
-        ]
-    ]
-]
-
-[endsect][/invocable]
-
-[section Connectable]
-
-A [ProducerConcept] `P` and [ConsumerConcept] `C` are /connectable/ if they
-can be connected via the `connect` function.  Typically, this means that
-they use the same underlying data transport mechanism, and produce / consume
-the same data type.
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[P] [A [ProducerConcept] type.]]
-    [[C] [A [ConsumerConcept] type.
+    [[P] [A [ProducerPortConcept] type.]]
+    [[C] [A [ConsumerPortConcept] type.
      [footnote `P` and `C` are [ConnectableConcept]]
     [[p] [An object of type P.]]
     [[c] [An object of type C.]]
@@ -233,73 +166,108 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Connect]
-        [`connect(p,c)`]
+        [`binary_operation<operations::connect, M>(p,c)`]
         [Any type]
         [
-            *Semantics:* Creates a permanent connection between the producer
-            and consumer.
-            [footnote: This does not (yet) specify what happens to other
-            existing connections out of `p` of into `c`.  They may or may
-            not get modified of erased.].
+            Creates a lasting connection between the `p` and `c`.
         ]
     ]
-[/    [
-        [Compatible]
-        [`mpl::has_key<consumed_types_of<C>::type, produced_type_of<P>::type>`]
-        [`mpl::true_`]
+    [
+        [OnlyConnect]
+        [`binary_operation<operations::connect_only, M>(p,c)`]
+        [Any type]
         [
-            *Semantics:* In order for two components to be connectable,
-            the produced type must be an element of the consumed types.
+            Discards any lasting connections stored by `p` or `c`,
+            and creates a lasting connection between `p` and `c`.
+            Note that `p` or `c` could still be connected to other ports,
+            as long as these connections are not stored in `p` or `c`.
         ]
-    ] ]
+    ]
+    [
+        [Disconnect]
+        [`binary_operation<operations::disconnect, M>(p,c)`]
+        [Any type]
+        [
+            Discards any existing connection between `p` and `c`.
+        ]
+    ]
+    [
+        [Extract]
+        [`binary_operation<operations::extract, M>(p,c)`]
+        [Any type]
+        [
+            Perfoms a one time transfer of data from `p` to `c`.
+        ]
+    ]
 ]
 
-[endsect][/connectable]
+[endsect][/binaryoperable]
 
-[section OnlyConnectable]
+[section:unaryoperable UnnaryOperable (AllDisconnectable) ]
 
-A [ProducerConcept] `P` and [ConsumerConcept] `C` are /connectable/ if they
-can be connected via the `connect` function.  Typically, this means that
-they use the same underlying data transport mechanism, and produce / consume
-the same data type.
+A [PortConcept] `P` is /UnnaryOperable/
+for a unary operation `O`, and mechanism `M`, if the implementation of
+the unnary operation `O` has been specialized for `M` and `P`
+
+In this case,
+
+* If `O` is operations::disconnect_all, `P` is [AllDisconnectable]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A [ProducerConcept] type.]]
-    [[C] [A [ConsumerConcept] type.
-     [footnote `P` and `C` are [ConnectableConcept]]
+    [[P] [A [PortConcept] type.]]
     [[p] [An object of type P.]]
-    [[c] [An object of type C.]]
 ]
 
 [heading Requirements]
 [table
     [[Name] [Expression] [Result Type] [Description]]
     [
-        [Connect]
-        [`connect(p,c)`]
+        [Disconnect All]
+        [`unnary_operation<operations::disconnect_all, M>(p)`]
         [Any type]
         [
-            *Semantics:* Creates a permanent connection between the producer
-            and consumer.
-            [footnote: This does not (yet) specify what happens to other
-            existing connections out of `p` of into `c`.  They may or may
-            not get modified of erased.].
+            Destroys any connections stored by `p`.  
         ]
     ]
-[/    [
-        [Compatible]
-        [`mpl::has_key<consumed_types_of<C>::type, produced_type_of<P>::type>`]
-        [`mpl::true_`]
-        [
-            *Semantics:* In order for two components to be connectable,
-            the produced type must be an element of the consumed types.
-        ]
-    ] ]
 ]
 
-[endsect][/onlyconnectable]
+[endsect][/unaryoperable]
+
+[section:componentoperable ComponentOperable (Invocable) ]
+
+A [ComponentConcept] `P` is /ComponentOperable/
+for a component operation `O`, and mechanism `M`, if the implementation of
+the component operation `O` has been specialized for `M` and `P`
+
+In this case,
+
+* If `O` is operations::invoke, `P` is [Invocable]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A [ComponentConcept] type.]]
+    [[c] [An object of type P.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Invoke]
+        [`component_operation<operations::invoke, M>(p)`]
+        [Any type]
+        [
+            Invokes `c` - this typically causes a component to consume its
+            input data and produce its output data as appropriate.  
+        ]
+    ]
+]
+
+[endsect][/unaryoperable]
 
 [endsect][/concepts]

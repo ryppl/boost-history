@@ -11,17 +11,16 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 //[ test_multi_type_classes
 
-class SignalIntFloatCollector
+class SignalIntFloatCollector : public boost::dataflow::port<
+    boost::dataflow::signals::keyed_consumer>
 {
     optional<int> last_int;
     optional<float> last_float;
 public:
     typedef void result_type;
-    typedef boost::dataflow::signal_consumer consumer_category;
     
     void operator()(int x)
     {

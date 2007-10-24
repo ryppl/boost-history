@@ -9,16 +9,12 @@
 #include <boost/dataflow/support/port.hpp>
 #include <boost/dataflow/support/proxy_port.hpp>
 #include <boost/dataflow/support/binary_operation.hpp>
+#include <boost/dataflow/support/keyed_port.hpp>
+#include <boost/dataflow/support/unary_operation.hpp>
+#include <boost/dataflow/support/component.hpp>
+#include <boost/dataflow/support/component_operation.hpp>
 
-//#include <boost/dataflow/support/producer.hpp>
-//#include <boost/dataflow/support/proxy_producer.hpp>
-//#include <boost/dataflow/support/consumer.hpp>
-//#include <boost/dataflow/support/proxy_consumer.hpp>
+
 //#include <boost/dataflow/support/filter.hpp>
-//#include <boost/dataflow/support/invocable.hpp>
-//#include <boost/dataflow/support/connectable.hpp>
-//#include <boost/dataflow/support/only_connectable.hpp>
-//#include <boost/dataflow/support/disconnect_all_ins.hpp>
-//#include <boost/dataflow/support/disconnect_all_outs.hpp>
 
 #endif // BOOST_DATAFLOW_SUPPORT_HPP

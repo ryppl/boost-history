@@ -194,9 +194,8 @@ Boost.Signals as a mechanism to transfer data between processing components.
 
 For examples of how the [DataflowSignals] layer can be used, see:
 
-
-* The example on developing distributed
-  [link dataflow.introduction.examples.new_layer example] application
+* The example on developing a 
+  [link dataflow.introduction.examples.distributed distributed dataflow application].
 * The [DataflowSignals] documentation.
 
 [/[heading When to use]
@@ -366,7 +365,7 @@ We will now use this tag in reference to the [VTK] dataflow mechanism.
     Setting up a Producer and Consumer] 
 [endsect][/mechanism]
 
-[section:producerconsumer Setting up a Producer and Consumer]
+[section:producerconsumer Setting up a ProducerPort and ConsumerPort]
 
 Now that we have the mechanism, let's cover the basic data pipeline,
 which is implemented using the
@@ -374,14 +373,14 @@ which is implemented using the
 are accessible via `GetOuptutPort` member functions, which return a proxy
 object ([vtkAlgorithmOutput] `*`) for an actual output port.
 
-In Dataflow concepts, [vtkAlgorithmOutput] can be made a [ProducerConcept]
+In Dataflow concepts, [vtkAlgorithmOutput] can be made a [ProducerPortConcept]
 - it corresponds to a single data output point. We support it as such by
-creating a [ProducerCategoryConcept], and associating [vtkAlgorithmOutput]
+creating a [PortTraitsConcept], and associating [vtkAlgorithmOutput]
 with the producer category:
 
 [vtk_algorithm_output_producer]
 
-Now that we have a [ProducerConcept], we need a [ConsumerConcept].
+Now that we have a [ProducerPortConcept], we need a [ConsumerPortConcept].
 [vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
 and `SetInputConnection` member functions.  The code below provides support
 for [vtkAlgorithm] accepting connections on its default input port:
@@ -397,26 +396,29 @@ for [vtkAlgorithm] accepting connections on its default input port:
 
 [section:connectable Making things Connectable]
 
-With the pair of [ProducerConcept] and [ConsumerConcept] registered, we
+With the pair of [ProducerPortConcept] and [ConsumerPortConcept] registered, we
 can make them [ConnectableConcept] and/or [OnlyConnectableConcept].
 All we need to do is specialize the implementation for the appropriate
 categories:
 
 [vtk_connect_impl_algorithm]
 
-To make connections, the Dataflow library has a `connect`
-function in its namespace, but it
-has to be called with a mechanism template parameter.  To make connecting
-easier, we'll add a forwarding
-connect function in the global namespace (where vtk classes live) specific
-to the vtk mechanism:
+Connections are done through the `boost::dataflow::binary_operation` function
+with either `operation::connect` or `operation::connect_only` operation tag,
+and the specified mechanism. To make connecting
+easier, we'll add forwarding connect and connect_only
+functions in the global namespace (where vtk classes live) specific
+to the vtk mechanism using the template include files for this purpose:
 
 [vtk_specialize_connect]
 
 [heading What we can do with what we have so far]
 
 ```
+    // connect *cone to *coneMapper
     connect(*cone->GetOutputPort(), *coneMapper);
+    // make *cone the only thing connected to *coneMapper
+    connect_only(*cone->GetOutputPort(), *coneMapper);
 ```
 
 [heading Next]
@@ -429,23 +431,23 @@ to the vtk mechanism:
 
 In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
 inherit [vtkAlgorithm].  
-With the [vtkAlgorithmOutput] [ProducerConcept] and
-[vtkAlgorithm] [ConsumerConcept] we've set up,
+With the [vtkAlgorithmOutput] [ProducerPortConcept] and
+[vtkAlgorithm] [ConsumerPortConcept] we've set up,
 we can do things like `connect(cone->GetOutputPort(), *coneMapper);`.
 However, we would like to do `connect(*cone, *coneMapper)`.
 
 To do that,
-we need to make [vtkAlgorithm] a [ProducerConcept]. Since [vtkAlgorithm]
+we need to make [vtkAlgorithm] a [ProducerPortConcept]. Since [vtkAlgorithm]
 forms its output connections using [vtkAlgorithmOutput] objects
 returned through the `GetOutputPort` member functions, and we've already
-configured [vtkAlgorithmOutput] as a [ProducerConcept], we can make use
+configured [vtkAlgorithmOutput] as a [ProducerPortConcept], we can make use
 of the [ProxyProducerConcept] concept provided by the dataflow library.
-In effect, we will make [vtkAlgorithm] delegate it's [ProducerConcept]
+In effect, we will make [vtkAlgorithm] delegate it's [ProducerPortConcept]
 functionality to [vtkAlgorithmOutput]:
 
 [vtk_algorithm_proxy_producer]
 
-Now, [vtkAlgorithm] is a [ProducerConcept].
+Now, [vtkAlgorithm] is a [ProducerPortConcept].
 
 [heading What we can do with what we have so far]
 
@@ -463,7 +465,7 @@ Now, [vtkAlgorithm] is a [ProducerConcept].
 
 In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
 data for a [vtkRenderer].  In this case, we can provide Dataflow support
-for a [vtkActor] as both a [ProducerConcept] and a [ConsumerConcept] in one
+for a [vtkActor] as both a [ProducerPortConcept] and a [ConsumerPortConcept] in one
 fell swoop:
 
 [vtk_actor_filter]
@@ -484,8 +486,8 @@ the same as connecting a [vtkMapper] to another [vtkAlgorithm].
 
 To accomodate such situations, the Dataflow library provides
 [ProducerMapConcept]s, which are similar to [ProxyProducer]s but
-the [ProducerConcept] they delegate to is keyed on the category of
-[ConsumerConcept] they are being connected to.
+the [ProducerPortConcept] they delegate to is keyed on the category of
+[ConsumerPortConcept] they are being connected to.
 
 [vtk_mapper_producer]
 

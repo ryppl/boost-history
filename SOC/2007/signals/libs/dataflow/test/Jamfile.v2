@@ -3,8 +3,6 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-#build-project signals ;
-
 import testing ;
 
 project dataflow/test
@@ -14,9 +12,11 @@ project dataflow/test
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-#run test_result_of_defined.cpp ;
 run test_port.cpp ;
 run test_proxy_port.cpp ;
 run test_unary_op.cpp ;
 run test_binary_op.cpp ;
 run test_keyed_port.cpp ;
+run test_component.cpp ;
+
+build-project signals ;

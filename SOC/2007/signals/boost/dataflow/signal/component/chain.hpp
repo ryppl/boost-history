@@ -55,7 +55,7 @@ public:
         }
         typename T::signal_type &get_proxied_producer() const
         {
-            return boost::dataflow::get_proxied_producer<boost::dataflow::signals_mechanism>(components[size-1]);
+            return boost::dataflow::get_port<dataflow::signals::mechanism, dataflow::ports::producer>(components[size-1]);
         }
     private:
         void initialize(size_t copies, T *component=NULL)

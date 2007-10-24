@@ -138,7 +138,7 @@ namespace boost { namespace fusion
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1400)
         inline typename boost::result_of<Function(const arg_vector_t &)>::type
-        operator()() 
+        operator()()
         {
             arg_vector_t arg;
             return Function::operator()(arg);

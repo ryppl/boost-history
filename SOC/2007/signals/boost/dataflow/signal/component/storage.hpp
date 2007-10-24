@@ -9,7 +9,7 @@
 #include <boost/dataflow/signal/component/conditional_modifier.hpp>
 #include <boost/dataflow/signal/component/detail/storable.hpp>
 #include <boost/dataflow/signal/connection/slot_selector.hpp>
-#include <boost/dataflow/connection/consumer_map.hpp>
+#include <boost/dataflow/connection/port_map.hpp>
 
 #include <boost/fusion/sequence/container/vector.hpp>
 #include <boost/fusion/sequence/view/transform_view.hpp>
@@ -26,10 +26,9 @@ namespace boost { namespace signals {
 >
 class storage;
 
-namespace tag
-{
-    struct storage_invocable;
-}
+struct storage_component_traits
+    : public dataflow::component_traits<dataflow::signals::mechanism>
+{};
 
 namespace detail
 {
@@ -97,13 +96,13 @@ public:
     typedef typename storage_modifier<Signature>::storable_types storable_types;
     typedef typename storage_modifier<Signature>::storable_vector storable_vector;
     
-    typedef tag::storage_invocable invocable_category;
-
+    typedef storage_component_traits component_traits;
+    
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
         */
     template<typename Seq>
-        storage(const Seq &seq) : base_type(seq) {}
+    storage(const Seq &seq) : base_type(seq) {}
     /**	Initializes the stored parameter values using its default constructor.
         */    
     storage() {}
@@ -149,14 +148,14 @@ public:
     }
 
     typedef boost::fusion::map<
-        boost::fusion::pair<boost::dataflow::signal_producer<void()>, slot_selector<void (), storage> >,
+        boost::fusion::pair<boost::dataflow::signals::producer<void()>, slot_selector<void (), storage> >,
         boost::fusion::pair<
-            boost::dataflow::signal_producer<void(const boost::fusion::vector<> &)>,
+            boost::dataflow::signals::producer<void(const boost::fusion::vector<> &)>,
             slot_selector<void (const boost::fusion::vector<> &), storage>
         >
     > send_map;
 
-    boost::dataflow::consumer_map<send_map>
+    boost::dataflow::port_map<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, send_map>
     send_slot()
     {
         return send_map
@@ -201,16 +200,12 @@ namespace boost { namespace dataflow {
 namespace extension {
     
     template<>
-    struct invoke_impl<boost::signals::tag::storage_invocable>
+    struct component_operation_impl<operations::invoke, boost::signals::storage_component_traits>
     {
         template<typename Invocable>
         struct apply
         {
             static void call(Invocable &invocable)
-            {
-                invocable.send();
-            }
-            static void call(const Invocable &invocable)
             {
                 invocable.send();
             }

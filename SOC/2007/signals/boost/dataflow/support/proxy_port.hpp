@@ -41,21 +41,12 @@ template<typename Mechanism, typename PortCategory, typename T, typename GetProx
 struct default_proxy_port : public proxy_port_traits<Mechanism, PortCategory>
 {};
 
-template<typename Mechanism, typename PortCategory, typename T>
+template<typename Mechanism, typename PortCategory, typename T, typename GetProxiedObject>
 struct mutable_proxy_port : public proxy_port_traits<Mechanism, PortCategory>
 {};
 
 template<typename Mechanism, typename PortCategory, typename T, typename Enable=void>
 struct proxy_port_traits_of;
-
-template<typename Mechanism, typename PortCategory, typename T>
-struct proxy_port_traits_of<Mechanism, PortCategory, T,
-    typename detail::enable_if_defined<
-        typename T::template dataflow<Mechanism, PortCategory>::proxy_port_traits
-    >::type >
-{
-    typedef typename T::template dataflow<Mechanism, PortCategory>::proxy_port_traits type;
-};
 
 /// Specialization allowing intrusive specification of the PortTraits.
 template<typename Mechanism, typename PortCategory, typename T>
@@ -121,13 +112,13 @@ namespace extension
             
             static type call(ProxyPort &t)
             {
-                return  get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
+                return get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
             }
         };
     };
     
-    template<typename Mechanism, typename PortCategory, typename ProxiedPort>
-    struct get_port_impl<mutable_proxy_port<Mechanism, PortCategory, ProxiedPort> >
+    template<typename Mechanism, typename PortCategory, typename ProxiedPort, typename GetProxiedObject>
+    struct get_port_impl<mutable_proxy_port<Mechanism, PortCategory, ProxiedPort, GetProxiedObject> >
     {
         template<typename ProxyPort>
         struct apply
@@ -141,9 +132,7 @@ namespace extension
             
             static type call(const ProxyPort &t)
             {
-                return get_port<Mechanism, PortCategory>(
-                    ProxyPort::template dataflow<Mechanism, PortCategory>
-                        ::get_proxied_port(t));
+                return get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
             }
         };
     };
@@ -168,7 +157,7 @@ struct get_port_result_type<
 };
 
 template<typename Mechanism, typename PortCategory, typename T>
-struct port_traits_of<Mechanism, T,
+struct port_traits_of<Mechanism, PortCategory, T,
     typename boost::enable_if<is_proxy_port<Mechanism, PortCategory, T> >::type>
 {
     typedef
@@ -186,16 +175,20 @@ struct port_traits_of<Mechanism, T,
 } } // namespace boost::dataflow
 
 #define DATAFLOW_PROXY_PORT_CATEGORY(ProxyPort,ProxyPortCategory) \
+namespace boost { namespace dataflow { \
 template<> \
 struct proxy_port_traits_of< \
-    typename ProxyPortCategory::mechanism, \
-    typename ProxyPortCategory::category, \
+    ProxyPortCategory::mechanism, \
+    ProxyPortCategory::category, \
     ProxyPort> \
 { \
     typedef ProxyPortCategory type; \
-};
+    BOOST_MPL_ASSERT(( is_proxy_port_traits<type> )); \
+}; \
+}}
 
 #define DATAFLOW_PROXY_PORT_CATEGORY_ENABLE_IF(P,Cond,ProxyPortCategory) \
+namespace boost { namespace dataflow { \
 template<typename P> \
 struct proxy_port_traits_of< \
     typename ProxyPortCategory::mechanism, \
@@ -204,6 +197,8 @@ struct proxy_port_traits_of< \
     typename boost::enable_if< Cond >::type> \
 { \
     typedef ProxyPortCategory type; \
-};
+    BOOST_MPL_ASSERT(( is_proxy_port_traits<type> )); \
+}; \
+}}
 
 #endif // BOOST_DATAFLOW_SUPPORT_PROXY_PORT_HPP

@@ -18,10 +18,7 @@ int test_main(int, char* [])
         signals::storage<void (), signals::unfused> banger;
         signals::storage<void (float), signals::unfused> floater(2.5f);
         signals::storage<void (float), signals::unfused> collector(0.0f);
-        
-        signals::slot_selector<void(), signals::storage<void (float), signals::unfused> >
-        ::dataflow<dataflow::signals_mechanism>::get_proxied_producer(fusion::front(floater.send_slot()).second);
-        
+                
         // create the network (banger to floater.send, floater to collector)
         banger >>= floater.send_slot() >>= collector;
 
@@ -31,7 +28,7 @@ int test_main(int, char* [])
         BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);
 
         floater(1.5f); // change the value in floater
-        boost::dataflow::invoke(floater); // we can also signal floater directly
+        invoke(floater); // we can also signal floater directly
         BOOST_CHECK_EQUAL(collector.at<0>(), 1.5f);
     //]
     }
@@ -52,7 +49,7 @@ int test_main(int, char* [])
         
         // change the value in floater
         floater(1.5f);
-        floater.send(); // we can also signal floater directly
+        invoke(floater); // we can also signal floater directly
         BOOST_CHECK_EQUAL(collector.at<0>(), 1.5f);
         //]
     }

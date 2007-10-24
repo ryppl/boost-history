@@ -27,25 +27,21 @@ class filter_base
 #endif
 {
 public:
-    template<typename Mechanism, typename Enable=void>
-    struct dataflow;
-    
-    template<typename Mechanism>
-    struct dataflow<
-        Mechanism,
-        typename enable_if<
-            is_same<Mechanism, boost::dataflow::signals_mechanism>
-        >::type>
+    struct get_proxied_object
     {
-        typedef boost::dataflow::signal_consumer consumer_category;
-        typedef boost::dataflow::mutable_proxy_producer<Signal> proxy_producer_category;
-        
         template<typename T>
-        static typename boost::dataflow::get_proxied_producer_result_type<boost::dataflow::signals_mechanism, Signal>
-         ::type get_proxied_producer(T &t)
-        {   return t.get_proxied_producer();  }
-
+        Signal &operator()(T &t)
+        {
+            return t.get_proxied_producer();
+        }
     };
+    typedef boost::dataflow::signals::keyed_consumer port_traits;
+    typedef boost::dataflow::mutable_proxy_port<
+        boost::dataflow::signals::mechanism,
+        boost::dataflow::ports::producer,
+        Signal,
+        get_proxied_object
+        > proxy_port_traits;
 };
 
 } }

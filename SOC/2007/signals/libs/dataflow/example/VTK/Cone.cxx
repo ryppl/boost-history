@@ -88,10 +88,9 @@ int main()
   //
   vtkRenderWindow *renWin = vtkRenderWindow::New();
 //  renWin->AddRenderer( ren1 );
-  connect (ren1, renWin);
   renWin->SetSize( 300, 300 );
   
-  *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
+  *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= renWin;
 
   //
   // Now we loop over 360 degreeees and render the cone each time.

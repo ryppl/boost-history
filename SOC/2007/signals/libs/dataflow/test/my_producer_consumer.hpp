@@ -20,14 +20,14 @@ struct my_producer_traits
     : public df::port_traits<
         my_mechanism,
         df::ports::producer,
-        df::concepts::producer>
+        df::concepts::port>
 {};
 
 struct my_consumer_traits
     : public df::port_traits<
         my_mechanism,
         df::ports::consumer,
-        df::concepts::consumer>
+        df::concepts::port>
 {};
 
 struct my_producer : public df::port<my_producer_traits>

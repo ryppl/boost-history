@@ -7,6 +7,7 @@
 #define BOOST_DATAFLOW_SUPPORT_PORT_HPP
 
 #include <boost/dataflow/detail/enable_if_defined.hpp>
+#include <boost/dataflow/utility/underlying_type.hpp>
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/at.hpp>
@@ -52,8 +53,7 @@ struct is_port_category<
 namespace concepts
 {
     /// Tag
-    struct producer;
-    struct consumer;
+    struct port;
 }
 
 /// Convenience class for PortTraits types.
@@ -178,9 +178,9 @@ struct get_port_result_type<
                 typename port_traits_of<
                     Mechanism,
                     PortCategory,
-                    typename remove_cv<T>::type
+                    typename utility::underlying_type<T>::type
                 >::type
-            >::template apply<T>::type type;
+            >::template apply<typename remove_reference<T>::type>::type type;
 };
 
 template<typename Mechanism, typename PortCategory, typename T>
@@ -191,7 +191,7 @@ typename disable_if<
 get_port(T &p)
 {
     return extension::get_port_impl<
-            typename port_traits_of<Mechanism, PortCategory, T>::type
+            typename port_traits_of<Mechanism, PortCategory, typename boost::remove_cv<T>::type >::type
             >::template apply<T>::call(p);
 }
 
@@ -199,6 +199,7 @@ get_port(T &p)
 
 /// Macro simplifying non-intrusive specification of a type's PortTraits.
 #define DATAFLOW_PORT_CATEGORY(Type,PortTraits) \
+namespace boost { namespace dataflow { \
 template<> \
 struct port_traits_of< \
     PortTraits::mechanism, \
@@ -207,11 +208,13 @@ struct port_traits_of< \
 { \
     typedef PortTraits type; \
     BOOST_MPL_ASSERT(( is_port_traits<type> )); \
-};
+}; \
+}}
 
 /// Macro simplifying non-intrusive specification of multiple types'
 /// PortTraits, using a boost::enable_if condition.
 #define DATAFLOW_PORT_CATEGORY_ENABLE_IF(Type,Cond,PortTraits) \
+namespace boost { namespace dataflow { \
 template<typename Type> \
 struct port_traits_of< \
     typename PortTraits::mechanism, \
@@ -221,6 +224,7 @@ struct port_traits_of< \
 { \
     typedef PortTraits type; \
     BOOST_MPL_ASSERT(( is_port_traits<type> )); \
-};
+}; \
+}}
 
 #endif // BOOST_DATAFLOW_SUPPORT_PORT_HPP

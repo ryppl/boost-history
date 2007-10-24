@@ -16,25 +16,49 @@ namespace boost { namespace signals {
     except it is evaluated right to left.  This makes it semantics more suitable for
     connecting a chain of components.
     */
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, Input & >::type
-    operator >>= (Input &input, Output &output)
-    { connect(input, output); return input;}
-    
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, Input & >::type
-    operator >>= (Input &input, const Output &output)
-    { connect(input, output); return input;}
-    
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, const Input & >::type
-    operator >>= (const Input &input, Output &output)
-    { connect(input, output); return input;}
-    
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, const Input & >::type
-    operator >>= (const Input &input, const Output &output)
-    { connect(input, output); return input;}
+template<typename Input, typename Output>
+typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
+    >,
+    Input &
+>::type
+operator >>= (Input &input, Output &output)
+{ connect(input, output); return input;}
+
+template<typename Input, typename Output>
+typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
+    >,
+    Input &
+>::type
+operator >>= (Input &input, const Output &output)
+{ connect(input, output); return input;}
+
+template<typename Input, typename Output>
+typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
+    >,
+    const Input &
+>::type
+operator >>= (const Input &input, Output &output)
+{ connect(input, output); return input;}
+
+template<typename Input, typename Output>
+typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
+    >,
+    const Input &
+>::type
+operator >>= (const Input &input, const Output &output)
+{ connect(input, output); return input;}
     
     /// Connects two components (typically as a part of branching from a single component).
     /** This operator is identical to signals::operator>>=, (it connects the
@@ -42,25 +66,27 @@ namespace boost { namespace signals {
     except it is evaluated left to right.  This makes its semantics more suitable for
     branching connections.
     */
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, Input & >::type
-    operator | (Input &input, Output &output)
-    { connect(input, output); return input;}
-    
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, Input & >::type
-    operator | (Input &input, const Output &output)
-    { connect(input, output); return input;}
-    
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, const Input & >::type
-    operator | (const Input &input, Output &output)
-    { connect(input, output); return input;}
-    
-    template<typename Input, typename Output>
-    typename boost::enable_if<dataflow::is_producer<boost::dataflow::signals_mechanism, Input>, const Input & >::type
-    operator | (const Input &input, const Output &output)
-    { connect(input, output); return input;}
+template<typename Input, typename Output>
+typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
+    >,
+    Input &
+>::type
+operator | (Input &input, Output &output)
+{ connect(input, output); return input;}
+
+template<typename Input, typename Output>
+typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
+    >,
+    Input &
+>::type
+operator | (Input &input, const Output &output)
+{ connect(input, output); return input;}
     
 } } // namespace boost::dataflow
 

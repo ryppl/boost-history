@@ -3,7 +3,7 @@
 [section producer_group]
 
 [heading Model of]
-* [ProducerConcept]
+* [ProducerPortConcept]
 
 [heading Description]
 
@@ -24,7 +24,7 @@ in the [DataflowPhoenix] documentation.
 [section consumer_group]
 
 [heading Model of]
-* [ProducerConcept]
+* [ProducerPortConcept]
 
 [heading Description]
 
@@ -45,8 +45,8 @@ in the [DataflowPhoenix] documentation.
 [section consumer_map]
 
 A [consumer_map] groups together multiple consumers, keyed by type they consume.
-When a [ProducerConcept] is connected to a [consumer_map], the consumer
-whose key matches the [ProducerConcept]'s produced type will be chosen for
+When a [ProducerPortConcept] is connected to a [consumer_map], the consumer
+whose key matches the [ProducerPortConcept]'s produced type will be chosen for
 the connection.
 [consumer_map] is a wrapper for [BoostFusion] maps which allows them to be
 used in this fashion.
@@ -55,7 +55,7 @@ used in this fashion.
 A [consumer_map] is used as the return type of [^[storage].send_slot()],
 which and includes the [slot_selector] for both the fused and unfused
 versions of the `send()` function.  The appropriate slot is selected when
-a connection is made, based on the [ProducerConcept]'s outgoing signal
+a connection is made, based on the [ProducerPortConcept]'s outgoing signal
 signature.
 
 [endsect][/consumer_map]

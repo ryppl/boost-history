@@ -53,7 +53,7 @@ there would be a connection from a data-producing component's pin
 to a data transport component, and again a connection from the data transport
 component to to the pin of the data-consuming component.
 The processing components would be [InvocableConcept], while each data transport
-component would be both a [ProducerConcept] and a [ConsumerConcept].
+component would be both a [ProducerPortConcept] and a [ConsumerPortConcept].
 
 There are, of course, a lot of other issues to solve, and a lot of ways in
 which the Dataflow generic support layer might need to grow to accomodate

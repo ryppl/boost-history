@@ -14,17 +14,30 @@
 
 [template concepts[] [link dataflow.concepts concepts]]
 [template MechanismConcept[] [link dataflow.concepts.mechanism [^Mechanism]]]
-[template PortCategoryConcept[] [link dataflow.concepts.porttype [^PortCategory]]]
-[template FilterConcept[] [link dataflow.concepts.filter [^Filter]]]
-[template ProducerCategoryConcept[] [link dataflow.concepts.producercategory [^ProducerCategory]]]
-[template ProducerConcept[] [link dataflow.concepts.producer [^Producer]]]
-[template ProducerMapConcept[] [link dataflow.concepts.producermapconcept [^ProducerMap]]]
-[template ProxyProducerConcept[] [link dataflow.concepts.proxyproducer [^ProxyProducer]]]
-[template ConsumerConcept[] [link dataflow.concepts.consumer [^Consumer]]]
-[template ConsumerMapConcept[] [link dataflow.concepts.consumermapconcept [^ConsumerMap]]]
-[template InvocableConcept[] [link dataflow.concepts.invocable [^Invocable]]]
-[template ConnectableConcept[] [link dataflow.concepts.connectable [^Connectable]]]
-[template OnlyConnectableConcept[] [link dataflow.concepts.onlyconnectable [^OnlyConnectable]]]
+[template PortCategoryConcept[] [link dataflow.concepts.portcategory [^PortCategory]]]
+[template PortTraitsConcept[] [link dataflow.concepts.porttraits [^PortTraits]]]
+[template PortConcept[] [link dataflow.concepts.port [^Port]]]
+[template ProducerPortConcept[] [link dataflow.concepts.port [^ProducerPort]]]
+[template ConsumerPortConcept[] [link dataflow.concepts.port [^ConsumerPort]]]
+[template KeyedPortConcept[] [link dataflow.concepts.keyedport [^KeyedPort]]]
+[template ProxyPortTraitsConcept[] [link dataflow.concepts.proxyporttraits [^ProxyPortTraits]]]
+[template ProxyPortConcept[] [link dataflow.concepts.proxyport [^ProxyPort]]]
+
+[template ComponentTraitsConcept[] [link dataflow.concepts.componenttraits [^ComponentTraits]]]
+[template ComponentConcept[] [link dataflow.concepts.component [^Component]]]
+
+[template BinaryOperableConcept[] [link dataflow.concepts.binaryoperable [^BinaryOperable]]]
+[template ConnectableConcept[] [link dataflow.concepts.binaryoperable [^Connectable]]]
+[template OnlyConnectableConcept[] [link dataflow.concepts.binaryoperable [^OnlyConnectable]]]
+[template DisconnectableConcept[] [link dataflow.concepts.binaryoperable [^Disconnectable]]]
+[template ExtractableConcept[] [link dataflow.concepts.binaryoperable [^Extractable]]]
+
+[template UnaryOperableConcept[] [link dataflow.concepts.unaryoperable [^UnaryOperable]]]
+[template AllDisconnectableConcept[] [link dataflow.concepts.unaryoperable [^AllDisconnectable]]]
+
+[template ComponentOperableConcept[] [link dataflow.concepts.componentoperable [^ComponentOperable]]]
+[template InvocableConcept[] [link dataflow.concepts.componentoperable [^Invocable]]]
+
 [template SignalProducerConcept[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
 [template SignalConsumerConcept[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
 [template PhoenixProducerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
@@ -120,11 +133,11 @@ as well as some status updates can be found on the
 [@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
 
 * If you would like some more information about why one would want to connect
-  objects into a signal-based network, read about
+  objects into a dataflow network, read about
   [link dataflow.introduction.dataflow Dataflow programming in C++].
 * If you'd like to try out the library
-    * keep in mind that the interface is highly unstable at this point
-    * see the [signals_quickstart] section of [DataflowSignals].
+    * keep in mind that the interface is subject to change
+    * Read [how_to_use how to use this library and the documentation].
 
 [include introduction.qbk]
 
@@ -239,4 +252,4 @@ accompanying file LICENSE_1_0.txt or copy at
 
 [endsect]
 
-[xinclude dataflow_doxygen.xml]
+[/[xinclude dataflow_doxygen.xml]]

@@ -10,9 +10,9 @@
 //[ test_connect
 
 struct receiver
+    : public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>    
 {
     typedef void result_type;
-    typedef boost::dataflow::signal_consumer consumer_category;
     
     receiver() : stored(0) {}
     
@@ -30,7 +30,7 @@ int test_main(int, char* [])
     boost::signal<void(int)> p;
     receiver r;
     
-    boost::dataflow::connect(p, r);
+    boost::dataflow::binary_operation<boost::dataflow::operations::connect, boost::dataflow::signals::mechanism>(p, r);
     
     p(3);
     

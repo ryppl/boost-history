@@ -11,7 +11,6 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 //[ test_multi_args_class1
 
@@ -27,12 +26,12 @@ public:
 //[ test_multi_args_class2
 
 class SignalMultiCollector
+    : public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>
 {
 	optional<float> last, last1, last2;
 	int cnt;
 public:
     typedef void result_type;
-    typedef boost::dataflow::signal_consumer consumer_category;
     
     SignalMultiCollector() : cnt(0) {}
 	void operator()()

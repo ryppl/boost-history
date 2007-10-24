@@ -56,7 +56,7 @@ namespace detail {
 template<typename Signature>
 class socket_sender : public boost::fusion::unfused_inherited<
     detail::socket_sender_impl<Signature>, typename boost::function_types::parameter_types<Signature>::type >,
-    public boost::dataflow::consumer<boost::dataflow::signals_mechanism, boost::dataflow::signal_consumer>
+    public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>
 {
     typedef boost::fusion::unfused_inherited<
         detail::socket_sender_impl<Signature>,

@@ -12,21 +12,21 @@
 
 namespace df = boost::dataflow;
 
-bool connected = false;
+int connected = 0;
 bool connected_other = false;
 
 struct my_other_producer_traits
     : public df::port_traits<
         my_mechanism,
         df::ports::producer,
-        df::concepts::producer>
+        df::concepts::port>
 {};
 
 struct my_other_consumer_traits
     : public df::port_traits<
         my_mechanism,
         df::ports::consumer,
-        df::concepts::consumer>
+        df::concepts::port>
 {};
 
 struct my_other_producer : public df::port<my_other_producer_traits>
@@ -45,7 +45,7 @@ struct binary_operation_impl<operations::connect, my_producer_traits, my_consume
     {
         static void call(Producer &, Consumer &)
         {
-            connected = true;
+            connected++;
         }
     };
 };
@@ -86,6 +86,30 @@ int test_main(int, char* [])
     
     df::binary_operation<df::operations::connect, my_mechanism>(producer_map, consumer);
     df::binary_operation<df::operations::connect, my_mechanism>(producer_map, other_consumer);
+    
+    BOOST_CHECK_EQUAL(connected, 1);
+    BOOST_CHECK(connected_other);
+    
+    typedef
+        boost::fusion::map<
+            boost::fusion::pair<my_consumer_traits, my_consumer &>,
+            boost::fusion::pair<my_other_consumer_traits, my_other_consumer &>
+        > proxy_map_type;
+    
+    typedef 
+    df::port_map<
+        my_mechanism,
+        df::ports::producer,
+        proxy_map_type
+    > proxy_type;
+    proxy_type proxy_map(proxy_map_type(consumer, other_consumer));
+    
+    BOOST_CHECK(( df::is_proxy_port<my_mechanism, df::ports::consumer, proxy_type>::value ));
+    BOOST_CHECK(( df::is_port<my_mechanism, df::ports::consumer, proxy_type>::value ));
+    
+    df::binary_operation<df::operations::connect, my_mechanism>(producer, proxy_map);
+
+    BOOST_CHECK_EQUAL(connected, 2);
 
     return 0;
 } // int test_main(int, char* [])

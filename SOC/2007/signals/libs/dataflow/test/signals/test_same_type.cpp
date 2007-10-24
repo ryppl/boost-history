@@ -10,7 +10,6 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 //[ test_same_type_classes
 
@@ -21,11 +20,11 @@ public:
 }; // end class Signal2VoidCounter
 
 class Signal2VoidInputs
+    : public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>
 {
 	int result;
 public:
     typedef void result_type;
-    typedef dataflow::signal_consumer consumer_category;
     
 	Signal2VoidInputs() : result(0) {};
 	void operator()()
