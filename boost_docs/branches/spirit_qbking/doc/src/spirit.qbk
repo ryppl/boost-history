@@ -17,11 +17,11 @@
 /]
 	
 [article Spirit's User Guide
-    [quickbook 1.5]
-    [version 0.01]
+    [quickbook 1.4]
+    [version 2]
     [id boost.spirit]
     [dirname html]
-    [copyright 1997-2002, 2007 Joel De Guzman, Darren Garvey]
+    [copyright 1997-2007 Joel De Guzman]
     [purpose Boost.Spirit Documentation]
     [authors [De Guzman, Joel],
              [Kaiser, Hartmut],
@@ -72,6 +72,8 @@ What's New
 [section:core [*Core]]
 
 Primitives
+[include primitives.qbk]
+
 Operators
 
 Numerics
@@ -216,6 +218,7 @@ Style Guide
 [include style.qbk]
 
 Techniques
+[include techniques.qbk]
 
 FAQ
 

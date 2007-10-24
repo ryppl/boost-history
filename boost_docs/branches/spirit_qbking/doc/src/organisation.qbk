@@ -21,7 +21,7 @@
 The framework is highly modular and is organized in layers:
 
 [pre
-              iterator                         actor
+             iterator                         actor
 
                               debug
 

@@ -144,12 +144,6 @@ The free parse functions make it easy for us. By using them, we need not bother 
 
 If we wish to work on the character level, the procedure is quite simple:
 
-[important
-[*The scanner position on an unsucessful match]
-
-On a successful match, the input is advanced accordingly. But what happens on an unsuccessful match? Be warned. It might be intuitive to think that the scanner position is reset to its initial position prior to parsing. No, the position is not reset. On an unsuccessful match, the position of the scanner is undefined! Usually, it is positioned at the farthest point where the error was found somewhere down the recursive descent. If this behavior is not desired, you may need to position the scanner yourself. The [link __example in the numerics chapter__] illustrates how the scanner position can be saved and later restored.
-]
-
 ``
     scanner<IteratorT> scan(first, last);
 
@@ -165,6 +159,11 @@ On a successful match, the input is advanced accordingly. But what happens on an
 ``
 
 Where `p` is the parser we want to use, and `first/`last` are the iterator pairs referring to the input. We just create a scanner given the iterators. The scanner type we will use here uses the default `scanner_policies<>`.
+
+[important [*The scanner position on an unsucessful match]
+
+On a successful match, the input is advanced accordingly. But what happens on an unsuccessful match? Be warned. It might be intuitive to think that the scanner position is reset to its initial position prior to parsing. No, the position is not reset. On an unsuccessful match, the position of the scanner is undefined! Usually, it is positioned at the farthest point where the error was found somewhere down the recursive descent. If this behavior is not desired, you may need to position the scanner yourself. The [link __example in the numerics chapter__] illustrates how the scanner position can be saved and later restored.
+]
 
 The situation is a bit more complex when we wish to work on the [*phrase level]:
 
