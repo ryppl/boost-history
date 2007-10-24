@@ -91,6 +91,8 @@ template<class convert_dest = do_convert_destination > struct file_t : is_generi
     file_t(const std::string & file_name, file_settings set = file_settings() ) : non_const_context_base(file_name,set) {}
     template<class msg_type> void operator()(const msg_type & msg) const {
         convert_dest::write(msg, non_const_context_base::context().out );
+        if ( non_const_context_base::context().settings.flush_each_time() )
+            non_const_context_base::context().out.flush();
     }
 
     bool operator==(const file_t & other) const {
