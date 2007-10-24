@@ -130,7 +130,7 @@ at the Kona meeting.
    ...
    <i>// Hash function specializations</i>
    ...
-   <ins class="diff modified">struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
+   <ins>struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
  }
 </code></pre>
 </blockquote>
@@ -150,8 +150,8 @@ required to be instantiable for integer types (3.9.1), floating point
 types
 (3.9.1), pointer types (8.3.1), and <code>std::string</code>,
 <code>std::u16string</code>, <code>std::u32string</code>,
-<del class="diff modified">and</del>
-<code>std::wstring</code><ins class="diff modified">, and
+<del>and</del>
+<code>std::wstring</code><ins>, and
 <code>std::thread::id</code></ins>.
 </p>
 </blockquote>
@@ -2161,8 +2161,11 @@ thread.
 </p>
 
 <p>
-<i>Throws:</i> <span style="font-style: italic; background-color: #FFFF00">??? 
-See issue 26</span>
+<i>Throws:</i>
+???
+[<i>Comment:</i>
+See issue 26.
+&mdash;<i>end comment</i>]
 </p>
 
 <p>
@@ -2232,8 +2235,11 @@ otherwise returns <code>false</code>.
 </p>
 
 <p>
-<i>Throws:</i> <span style="font-style: italic; background-color: #FFFF00">??? 
-See issue 26</span>
+<i>Throws:</i>
+???
+[<i>Comment:</i>
+See issue 26.
+&mdash;<i>end comment</i>]
 </p>
 
 <p>
@@ -2570,8 +2576,10 @@ This clause describes components for determining and manipulating temporal value
 
 <p>
 Throughout this clause, the names of template parameters are used to express 
- type requirements. <span style="background-color: #FFFF00">Define Duration, 
- RhsDuration</span>
+ type requirements.
+[<i>Comment:</i>
+Define Duration, RhsDuration.
+&mdash;<i>end comment</i>]
 </p>
 
 
@@ -2667,7 +2675,7 @@ class system_time
 </p>
 
 <pre><code>
-<span class="identifier">system_time</span><span class="special">();</span>
+system_time();
 </code></pre>
 
 <p>
@@ -2680,11 +2688,11 @@ class system_time
 </p>
 
 <pre><code>
-<span class="identifier">system_time</span><span class="special">(</span><span class="identifier">time_t</span> <span class="identifier">secs</span><span class="special">,</span> <span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">);</span>
+system_time(time_t secs, nanoseconds ns);
 </code></pre>
 
 <p>
-        <i>Effects:</i> Construct<span class="underline">s</span> a utc
+        <i>Effects:</i> Construct<u>s</u> a utc
         time object representing the time point that is secs + 1,000,000,000*ns after the epoch.
 </p>
 
@@ -2698,7 +2706,7 @@ class system_time
 </p>
 
 <pre><code>
-<span class="identifier">time_t</span> <span class="identifier">seconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+time_t seconds_since_epoch() const;
 </code></pre>
 
 <p>
@@ -2710,11 +2718,11 @@ class system_time
 </p>
 
 <pre><code>
-<span class="identifier">nanoseconds</span> <span class="identifier">nanoseconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+nanoseconds nanoseconds_since_epoch() const;
 </code></pre>
 
 <p>
-        <i>Returns:</i> The count of <span class="underline">nano</span>seconds
+        <i>Returns:</i> The count of <u>nano</u>seconds
         since 1970-01-01 00:00:00.
 </p>
 
@@ -2723,7 +2731,7 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -2735,7 +2743,7 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -2751,7 +2759,7 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
@@ -2763,13 +2771,13 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+bool operator==(const system_time&amp; rhs) const;
 </code></pre>
 
 <p>
         <i>Returns:</i> True if 
-        the <span class="underline">time
-        represented by *this is equal to the time represented by rhs</span>.
+        the <u>time
+        represented by *this is equal to the time represented by rhs</u>.
 </p>
 
 <p>
@@ -2777,12 +2785,12 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+bool operator!=(const system_time&amp; rhs) const;
 </code></pre>
 
 <p>
-        <i>Returns:</i> True if the <span class="underline">time represented by *this is not equal to the time represented
-        by rhs</span>
+        <i>Returns:</i> True if the <u>time represented by *this is not equal to the time represented
+        by rhs</u>
 </p>
 
 <p>
@@ -2790,12 +2798,12 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+bool operator&gt;(const system_time&amp; rhs) const;
 </code></pre>
 
 <p>
-        <i>Returns:</i> True if time <span class="underline">represented by
-        *this is greater than the time represented by rhs</span>.
+        <i>Returns:</i> True if time <u>represented by
+        *this is greater than the time represented by rhs</u>.
 </p>
 
 <p>
@@ -2803,12 +2811,12 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+bool operator&gt;=(const system_time&amp; rhs) const;
 </code></pre>
 
 <p>
-        <i>Returns:</i> True if time <span class="underline">represented
-        by *this is greater or equal than the time represented by rhs</span>.
+        <i>Returns:</i> True if time <u>represented
+        by *this is greater or equal than the time represented by rhs</u>.
 </p>
 
 <p>
@@ -2816,12 +2824,12 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+bool operator&lt;(const system_time&amp; rhs) const;
 </code></pre>
 
 <p>
-        <i>Returns:</i> True if time <span class="underline">represented by *this
-        is less than the time represented by rhs</span>.
+        <i>Returns:</i> True if time <u>represented by *this
+        is less than the time represented by rhs</u>.
 </p>
 
 <p>
@@ -2829,12 +2837,12 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+bool operator&lt;=(const system_time&amp; rhs) const;
 </code></pre>
 
 <p>
-        <i>Returns:</i> True if time <span class="underline">represented by *this
-        is less or equal than the time represented by rhs</span>.
+        <i>Returns:</i> True if time <u>represented by *this
+        is less or equal than the time represented by rhs</u>.
 </p>
 
 <p>
@@ -2842,13 +2850,13 @@ class system_time
 </p>
 
 <pre><code>
-<span class="identifier">nanoseconds</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span>
+nanoseconds operator-(const system_time&amp; rhs) const
 </code></pre>
 
 <p>
-        <i>Returns:</i>  <span class="underline">
+        <i>Returns:</i>  <u>
         The difference in nanoseconds between the time represented by *this and the
-        time represented by rhs.</span>
+        time represented by rhs.</u>
 </p>
 
 <p>
@@ -2861,13 +2869,13 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-<span class="identifier">system_time</span> <span class="keyword">operator</span><span class="special">+(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename Duration&gt;
+system_time operator+(const Duration&amp; td) const;
 </code></pre>
 
 <p>
         <i>Returns:</i> The duration converted to nanosecond resolution
-        and added to the time <span class="underline">represented by *this</span>.
+        and added to the time <u>represented by *this</u>.
 </p>
 
 <p>
@@ -2875,8 +2883,8 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-<span class="identifier">system_time</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">);</span>
+template&lt;typename Duration&gt;
+system_time&amp; operator+=(const Duration&amp; td);
 </code></pre>
 
 <p>
@@ -2893,13 +2901,13 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-<span class="identifier">system_time</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename Duration&gt;
+system_time operator-(const Duration&amp; td) const;
 </code></pre>
 
 <p>
         <i>Returns:</i> The duration converted to nanosecond resolution
-        and subtracted from the time <span class="underline">represented by *this</span>.
+        and subtracted from the time <u>represented by *this</u>.
 </p>
 
 <p>
@@ -2907,8 +2915,8 @@ class system_time
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-<span class="identifier">system_time</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="keyword">const</span> <span class="identifier">Duration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> 
+template&lt;typename Duration&gt;
+system_time&amp; operator-=(const Duration&amp; td) 
 </code></pre>
 
 <p>
@@ -3018,8 +3026,8 @@ class Duration {
 </blockquote>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename RhsDuration&gt;
+bool operator==(const RhsDuration&amp; rhs) const;
 </code></pre>
 
 <p>
@@ -3031,8 +3039,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename RhsDuration&gt;
+bool operator!=(const RhsDuration&amp; rhs) const;
 </code></pre>
 
 <p>
@@ -3044,8 +3052,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename RhsDuration&gt;
+bool operator&gt;(const RhsDuration&amp; rhs) const;
 </code></pre>
 
 <p>
@@ -3057,8 +3065,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename RhsDuration&gt;
+bool operator&gt;=(const RhsDuration&amp; rhs) const;
 </code></pre>
 
 <p>
@@ -3070,8 +3078,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename RhsDuration&gt;
+bool operator&lt;(const RhsDuration&amp; rhs) const;
 </code></pre>
 
 <p>
@@ -3083,8 +3091,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+template&lt;typename RhsDuration&gt;
+bool operator&lt;=(const RhsDuration&amp; rhs) const;
 </code></pre>
 
 <p>
@@ -3096,8 +3104,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="comment">//sign inversion
-</span><span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">-()</span> <span class="keyword">const</span>
+<i class="comment">//sign inversion</i>
+Duration operator-() const
 </code></pre>
 
 <p>
@@ -3109,9 +3117,9 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="comment">//arithmetic operations
-</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">-</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="keyword">const</span>
+<i class="comment">//arithmetic operations</i>
+template&lt;typename RhsDuration&gt;
+Duration operator- (const RhsDuration&amp; d) const
 </code></pre>
 
 <p>
@@ -3119,9 +3127,9 @@ class Duration {
 </p>
 
 <p>
-        <span class="emphasis"><em>Remarks: This will fail to compiler if the 
+        <em>Remarks: This will fail to compiler if the 
         RhsDuration is
-        of higher resolution.</em></span>
+        of higher resolution.</em>
 </p>
 
 <p>
@@ -3129,8 +3137,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+template&lt;typename RhsDuration&gt;
+Duration operator-=(const RhsDuration&amp; d)
 </code></pre>
 
 <p>
@@ -3142,9 +3150,9 @@ class Duration {
 </p>
 
 <p>
-        <span class="emphasis"><em>Remarks: This will fail to compiler if the 
+        <em>Remarks: This will fail to compiler if the 
         RhsDuration is
-        of higher resolution.</em></span>
+        of higher resolution.</em>
 </p>
 
 <p>
@@ -3152,8 +3160,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="keyword">const</span>
+template&lt;typename RhsDuration&gt;
+Duration operator+ (const RhsDuration&amp; d) const
 </code></pre>
 
 <p>
@@ -3161,9 +3169,9 @@ class Duration {
 </p>
 
 <p>
-        <span class="emphasis"><em>Remarks: This will fail to compiler if the 
+        <em>Remarks: This will fail to compiler if the 
         RhsDuration is
-        of higher resolution.</em></span>
+        of higher resolution.</em>
 </p>
 
 <p>
@@ -3171,8 +3179,8 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsDuration</span><span class="special">&gt;</span>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">const</span> <span class="identifier">RhsDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+template&lt;typename RhsDuration&gt;
+Duration operator+=(const RhsDuration&amp; d)
 </code></pre>
 
 <p>
@@ -3184,9 +3192,9 @@ class Duration {
 </p>
 
 <p>
-        <span class="emphasis"><em>Remarks: This will fail to compiler if the 
+        <em>Remarks: This will fail to compiler if the 
         RhsDuration is
-        of higher resolution.</em></span>
+        of higher resolution.</em>
 </p>
 
 <p>
@@ -3194,7 +3202,7 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">/</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">divisor</span><span class="special">)</span> <span class="keyword">const</span>
+Duration operator/ (int divisor) const
 </code></pre>
 
 <p>
@@ -3207,7 +3215,7 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">/=(</span><span class="keyword">int</span> <span class="identifier">divisor</span><span class="special">)</span> 
+Duration operator/=(int divisor) 
 </code></pre>
 
 <p>
@@ -3224,7 +3232,7 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span>
+Duration operator* (int rhs) const
 </code></pre>
 
 <p>
@@ -3236,7 +3244,7 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="identifier">Duration</span> <span class="keyword">operator</span><span class="special">*=(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">)</span> 
+Duration operator*=(int rhs) 
 </code></pre>
 
 <p>
@@ -3252,7 +3260,7 @@ class Duration {
 </p>
 
 <pre><code>
-<span class="identifier">tick_type</span> <span class="identifier">get_count</span><span class="special">()</span> <span class="keyword">const</span> 
+tick_type get_count() const 
 </code></pre>
 
 <p>
@@ -3293,7 +3301,7 @@ class nanoseconds
 </blockquote>
 
 <pre><code>
-<span class="identifier">nanoseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+nanoseconds(long long=0);
 </code></pre>
 
 <p>
@@ -3306,7 +3314,7 @@ class nanoseconds
 </p>
 
 <pre><code>
-<span class="identifier">nanoseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nanoseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+nanoseconds(const nanoseconds&amp; rhs);
 </code></pre>
 
 <p>
@@ -3318,7 +3326,7 @@ class nanoseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -3330,7 +3338,7 @@ class nanoseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -3342,7 +3350,7 @@ class nanoseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
@@ -3386,7 +3394,7 @@ class microseconds
 </blockquote>
 
 <pre><code>
-<span class="identifier">microseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+microseconds(long long=0);
 </code></pre>
 
 <p>
@@ -3399,7 +3407,7 @@ class microseconds
 </p>
 
 <pre><code>
-<span class="identifier">microseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">microseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+microseconds(const microseconds&amp; rhs);
 </code></pre>
 
 <p>
@@ -3411,8 +3419,8 @@ class microseconds
 </p>
 
 <pre><code>
-<span class="comment">//conversions
-</span><span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
+<i class="comment">//conversions</i>
+operator nanoseconds() const
 </code></pre>
 
 <p>
@@ -3424,7 +3432,7 @@ class microseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -3436,7 +3444,7 @@ class microseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -3448,7 +3456,7 @@ class microseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
@@ -3490,7 +3498,7 @@ class milliseconds
 </blockquote>
 
 <pre><code>
-<span class="identifier">milliseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+milliseconds(long long=0);
 </code></pre>
 
 <p>
@@ -3503,7 +3511,7 @@ class milliseconds
 </p>
 
 <pre><code>
-<span class="identifier">milliseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">milliseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+milliseconds(const milliseconds&amp; rhs);
 </code></pre>
 
 <p>
@@ -3515,7 +3523,7 @@ class milliseconds
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator nanoseconds() const
 </code></pre>
 
 <p>
@@ -3527,7 +3535,7 @@ class milliseconds
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator microseconds() const
 </code></pre>
 
 <p>
@@ -3539,7 +3547,7 @@ class milliseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -3551,7 +3559,7 @@ class milliseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -3563,7 +3571,7 @@ class milliseconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
@@ -3607,11 +3615,11 @@ class  seconds
 </blockquote>
 
 <pre><code>
-<span class="identifier">seconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+seconds(long long=0);
 </code></pre>
 
 <p>
-        <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of seconds - default is
+        <i>Effects:</i> Construct<u>s</u> a<u>n object with a</u> count of seconds - default is
         zero.
 </p>
 
@@ -3620,7 +3628,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="identifier">seconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">seconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+seconds(const seconds&amp; rhs);
 </code></pre>
 
 <p>
@@ -3632,7 +3640,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator nanoseconds() const
 </code></pre>
 
 <p>
@@ -3644,7 +3652,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator microseconds() const
 </code></pre>
 
 <p>
@@ -3656,7 +3664,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator milliseconds() const
 </code></pre>
 
 <p>
@@ -3668,7 +3676,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -3680,7 +3688,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -3692,7 +3700,7 @@ class  seconds
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
@@ -3737,11 +3745,11 @@ class  minutes
 </blockquote>
 
 <pre><code>
-<span class="identifier">minutes</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+minutes(long long=0);
 </code></pre>
 
 <p>
-        <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of minutes - default is
+        <i>Effects:</i> Construct<u>s</u> a<u>n object with a</u> count of minutes - default is
         zero.
 </p>
 
@@ -3750,7 +3758,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="identifier">minutes</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">minutes</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+minutes(const minutes&amp; rhs);
 </code></pre>
 
 <p>
@@ -3765,7 +3773,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator nanoseconds() const
 </code></pre>
 
 <p>
@@ -3777,7 +3785,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator microseconds() const
 </code></pre>
 
 <p>
@@ -3789,7 +3797,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator milliseconds() const
 </code></pre>
 
 <p>
@@ -3801,7 +3809,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator seconds() const
 </code></pre>
 
 <p>
@@ -3813,7 +3821,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -3825,7 +3833,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -3837,7 +3845,7 @@ class  minutes
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
@@ -3883,11 +3891,11 @@ class  hours
 </blockquote>
 
 <pre><code>
-<span class="identifier">hours</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+hours(long long=0);
 </code></pre>
 
 <p>
-        <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of hours - default is zero.
+        <i>Effects:</i> Construct<u>s</u> a<u>n object with a</u> count of hours - default is zero.
 </p>
 
 <p>
@@ -3895,7 +3903,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="identifier">hours</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">hours</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+hours(const hours&amp; rhs);
 </code></pre>
 
 <p>
@@ -3910,7 +3918,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator nanoseconds() const
 </code></pre>
 
 <p>
@@ -3922,7 +3930,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator microseconds() const
 </code></pre>
 
 <p>
@@ -3934,7 +3942,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator milliseconds() const
 </code></pre>
 
 <p>
@@ -3946,7 +3954,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
+operator seconds() const
 </code></pre>
 
 <p>
@@ -3958,7 +3966,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">operator</span> <span class="identifier">minutes</span><span class="special">()</span> <span class="keyword">const</span>
+operator minutes() const
 </code></pre>
 
 <p>
@@ -3970,7 +3978,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
+static tick_type ticks_per_second();
 </code></pre>
 
 <p>
@@ -3982,7 +3990,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
+static tick_type seconds_per_tick();
 </code></pre>
 
 <p>
@@ -3994,7 +4002,7 @@ class  hours
 </p>
 
 <pre><code>
-<span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
+static bool is_subsecond();
 </code></pre>
 
 <p>
