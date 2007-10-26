@@ -1,185 +1,189 @@
-[section ProducerCategory]
+[section PortCategory]
 
-A ['[ProducerCategoryConcept]] specifies the traits of a [ProducerConcept].
+A [PortCategoryConcept] designates a category of port in the Dataflow library.
+The library currently defines two [PortCategoryConcept]s:
+
+* `boost::dataflow::ports::producer`, and
+* `boost::dataflow::ports::consumer`.
+
+For a higher-level overview of the concepts, see the [concepts] introduction.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[PC] [A [PortCategoryConcept] type.]]
+]
+
+[heading Requirements]
+
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Opposite PortCategory]
+        [`PC::complement`]
+        [[PortCategoryConcept] type]
+        [
+            The complementing [PortCategoryConcept] of `PC`, meaning that it
+            is possible to make connections between [PortConcept]s of
+            [PortCategoryConcept] `PC` and [PortConcept]s of
+            [PortCategoryConcept] `PC::complement`.
+        ]
+    ]
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support/port.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[endsect][/portcategory]
+
+[section PortTraits]
+
+A ['[PortTraitsConcept]] specifies the traits of a [PortConcept].
 
 [heading Notation]
 [variablelist
-    [[PC] [A ProducerCategory type.]]
-    [[P] [A [ProducerConcept] type of producer category `PC`.]]
+    [[PC] [A PortTraits type.]]
+    [[P] [A [PortConcept] type with port traits `PC`.]]
 ]
 
 [heading Requirements]
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Connections Stored]
-        [`PC::connections_stored`]
-        [connections::none, connections::one, connections::many]
-        [The number of outgoing connections that `P` can store.]
+        [Mechanism]
+        [`PC::mechanism`]
+        [any type]
+        [[MechanismConcept] type tag.]
     ]
     [
-        [Producer Concept]
-        [`PC::producer_concept`]
-        [concepts::producer, concepts::single_type_producer,
-            concepts::keyed_producer]
+        [Port Category]
+        [`PC::port_category`]
+        [[PortCategoryConcept] type]
+        [The category of the port]
+    ]
+    [
+        [Port Concept]
+        [`PC::port_concept`]
+        [`concepts::port`, `concepts::keyed_port`]
         [The most refined producer concept that `P` satisfies.]
     ]
 ]
 
+[heading Header]
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support/port.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
 [heading Notes]
-All these traits are in regards to the mechanism for which the `P` has
-producer category `PC`.
 
 [heading Examples]
 
+The following code defines a port traits type for vtk_algorithm_output,
+and associates it with this type. It is a part of
+the [vtk_example example showing how to provide a VTK support layer].
 
-[endsect][/producercategory]
+[vtk_algorithm_output_producer]
+
+[endsect][/porttraits]
 
 
-[section Producer]
+[section:port Port (ProducerPort, ConsumerPort)]
 
-A type `P` is a ['[ProducerConcept]] for a mechanism `M` if it specifies
-a producer category for that mechanism.
-To be useful, a [ProducerConcept] should likely be
-[ConnectableConcept] to at least one [ConsumerConcept].  Also, at least
-one component of a connected network should be [InvocableConcept].
+A type `P` is a ['[PortConcept]] for a mechanism `M` and port category `PC`
+if it specifies a [PortTraitsConcept] for that mechanism and port category.
+
+In that case,
+
+* If `PC` is `ports::producer`, then `P` is a [ProducerPortConcept]
+* If `PC` If `ports::consumer`, then `P` is a [ConsumerPortConcept]
 
 [heading Refinements]
-* [SingleTypeProducer]
-* [PhoenixProducerConcept]
+
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A Producer type.]]
-    [[M] [A Mechanism type.]]
+    [[P] [A Port type.]]
+    [[M] [A [MechanismConcept] type.]]
+    [[PC] [A [PortCategoryConcept] type.]]
 ]
 
 [heading Requirements]
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Producer Category]
-        [`producer_category_of<M, P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
+        [Port Traits]
+        [`port_traits_of<M, PC, P>::type`]
+        [Any [PortTraitsConcept] type]
         [
-            The category of the producer, used for tag forwarding.
+            The [PortTraitsConcept] of the port.
         ]
     ]
     [
-        [Producer Trait]
-        [`is_producer<M, P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [mpl::true_ or boost::true_type]
+        [IsPort Trait]
+        [`is_port<M, PC, P>::type`]
+        [Boolean metafunction that evaluates to true]
         [
-            A trait encapsulating adherence to the Producer
+            A trait encapsulating adherence to the Port
             concept.
         ]
     ]
 ]
 
-[heading Notes]
+[heading Header]
+The types, templates, and functions shown here are declared in the following
+files:
 
-To specify that a type `P` is a [ProducerConcept] for a mechanism `M`,
-it suffices to provide a specification for `producer_category_of`.
-If the type is a class type which you can modify, you can achieve this by
-providing a `T::dataflow<M>::producer_category` typedef specifying the
-category.  The Dataflow library provides a convenience class
-`producer` which you can inherit for this purpose.
-
-[heading Examples]
-
-[endsect][/producer]
-
-[section SingleTypeProducer]
-
-A type `P` is a ['[ProducerConcept]] if it defines a producer category, 
-a produced type, and specifies whether it is invocable.
-To be useful, a [ProducerConcept] should likely be
-[ConnectableConcept] to at least one [ConsumerConcept].  Also, at least
-one component of a connected network should be [InvocableConcept].
-
-[heading Refinements]
-* [SingleTypeProducer]
-* [PhoenixProducerConcept]
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[P] [A Producer type.]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Semantics]]
-    [
-        [Producer Category]
-        [`producer_category_of<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            The category of the producer, used for tag forwarding.
-        ]
-    ]
-    [
-        [Produced Type]
-        [`produced_type_of<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            The type of data produced by the producer.
-            [footnote This might
-            mean different things for different producer categories - for
-            example, a SignalProducer uses function types, whereas
-            a PhoenixProducer uses object types.].
-        ]
-    ]
-    [
-        [Producer Trait]
-        [`is_producer<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [mpl::true_ or boost::true_type]
-        [
-            *Semantics:* A trait encapsulating adherence to the Producer
-            concept.
-        ]
-    ]
-    [
-        [Invocable]
-        [`is_invocable<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Boolean metafunction]
-        [
-            *Semantics:* A producer must specify if it is [InvocableConcept].
-        ]
-    ]
-]
+```
+    #include <boost/dataflow/support/port.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
 
 [heading Notes]
 
-To define a new [ProducerConcept] class type, it is sufficient to define
-member typedefs `producer_category` and `produced_type`.
+To specify that a type `P` is a [PortConcept],
+it suffices to provide a specialization of `port_traits_of`.
+This can either be done explicitly, or intrusively by providing
+a `P::port_traits` member type specifying the
+[PortTraitsConcept].  `P::port_traits` can either be a [PortTraitsConcept]
+type, or an MPL sequence of [PortTraitsConcept] types.
+
+The Dataflow library provides a convenience class
+`port` which you can inherit instead of declaring the member type.
 
 [heading Examples]
 
-[endsect][/singletypeproducer]
+[endsect][/port]
 
-[section ProxyProducer]
+[section ProxyPortTraits]
+[endsect][/proxyporttraits]
 
-A type `PP` is a ['[ProxyProducerConcept]] if specifies the proxied producer
+[section ProxyPort]
+
+A type `PP` is a ['[ProxyPortConcept]] if specifies the proxied producer
 type, and if objects of the proxied type can be retreived from objects of
-[ProxyProducerConcept] type.  If the proxied producer type is a valid
-[ProducerConcept], then 'PP' satisfies the [ProducerConcept] requirements
+[ProxyPortConcept] type.  If the proxied producer type is a valid
+[PortConcept], then 'PP' satisfies the [PortConcept] requirements
 in the same way.
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[PP] [A ProxyProducer type.]]
+    [[PP] [A ProxyPort type.]]
     [[pp] [An object of type `PP`]]
 ]
 
@@ -187,7 +191,7 @@ The following expressions are used in this document:
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Proxy Producer Category]
+        [Proxy Port Category]
         [`proxy_producer_category_of<PP>::type`
          [footnote `namespace boost::dataflow`]]
         [Any type]
@@ -196,7 +200,7 @@ The following expressions are used in this document:
         ]
     ]
     [
-        [Proxied Producer Type]
+        [Proxied Port Type]
         [`proxied_producer_of<PP>::type`
          [footnote `namespace boost::dataflow`]]
         [Any type]
@@ -205,7 +209,7 @@ The following expressions are used in this document:
         ]
     ]
     [
-        [Proxied Producer]
+        [Proxied Port]
         [`get_proxied_producer(pp)`
          [footnote `namespace boost::dataflow`]]
         []
@@ -215,15 +219,24 @@ The following expressions are used in this document:
     ]
 ]
 
+[heading Header]
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support/proxy_port.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
 [heading Notes]
 
-To define a new [ProxyProducerConcept] class type, it is sufficient to define
+To define a new [ProxyPortConcept] class type, it is sufficient to define
 member typedefs `proxy_producer_category` and `proxy_producer_for`,
 and member function `get_proxied_producer`.
 
 [heading Examples]
 
-[endsect][/proxyproducer]
+[endsect][/proxyport]
 
-[section ProducerMap]
-[endsect][/proxyproducer]
+[section PortMap]
+[endsect][/port_map]

@@ -8,6 +8,7 @@
 #include <boost/dataflow/signal/component/socket_receiver.hpp>
 #include <boost/dataflow/signal/component/socket_sender.hpp>
 #include <boost/dataflow/signal/component/function.hpp>
+#include <boost/dataflow/signal/component/condition.hpp>
 #include <boost/dataflow/signal/connection.hpp>
 
 #include <boost/thread/thread.hpp>
@@ -19,10 +20,6 @@
 //[ test_socket
 
 using namespace boost;
-namespace boost { namespace signals {
-    using boost::dataflow::operators::operator|;
-    using boost::dataflow::operators::operator>>=;
-} }
 
 mutex mutex_;
 condition cond;
@@ -53,11 +50,13 @@ void asio_server()
 
 	// cause the generator to send it's stored value
 	generator.send();
+    // send a second value;
+    add2(2.0f);
 }
 
 int test_main(int, char* [])
 {
-	// start the server in a separate thread
+	// start the server in a separate thread, and wait until it is listening
 	boost::mutex::scoped_lock lock(mutex_);
 	boost::thread t(asio_server);
 	cond.wait(lock);
@@ -70,14 +69,26 @@ int test_main(int, char* [])
 	// instatiate the components
     signals::socket_receiver<void (float), signals::fused> receiver(socket);
 	signals::storage<void (float), signals::fused> collector(0.0f);
+	signals::condition<void (float), signals::fused> receive_condition(cond, mutex_);
 
 	// set up the network
 	receiver >>= collector;
 
-	// this receiver is synchronous - we have to tell it to receive a signal
-	receiver();
-
+    // test synchronous receiving first - tell the receiver to receive a signal
+    receiver();
 	BOOST_CHECK_EQUAL(collector.at<0>(), 3.0f);
+    receiver >>= receive_condition;
+
+    // now test asynchronous receiving - start the async reading
+    receiver.async_read();
+    boost::thread receive_thread(boost::bind(&asio::io_service::run, boost::ref(io_service)));
+    
+    cond.wait(lock);
+
+	BOOST_CHECK_EQUAL(collector.at<0>(), 4.0f);
+        
+    io_service.stop();
+    receive_thread.join();
 
 	t.join();
 

@@ -19,16 +19,12 @@ using namespace boost;
 // This will be our data processor.  The signature void(double) designates
 // the output signal (we will be sending out an double).  The signals
 // we can receive depend on how we overload operator().
-// For now, we must also specify a result_type (or result) - this requirement
-// will go away.
 class processor : public signals::filter<void (double)>
 {
 public:
     // Initialize the Gaussian noise generator.
     processor() : generator(mt, dist) {}
     
-    typedef void result_type;
-
     // Receive void(double) signals, add some Gaussian noise, and send
     // out the modified value.
     void operator()(double x)
@@ -41,15 +37,12 @@ private:
     boost::variate_generator<mt19937&, boost::normal_distribution<> > generator;
 };
 
-// This will be our data output.  We just need to make a function object.
-// For now, we must also give it the appropriate consumer category, and define
-// a result_type (or result) so that Dataflow.Signals knows it is a
-// function object - these requirements will go away.
+// This will be our data output.  We just need to make a function object,
+// and specify that it is a signals::keyed_consumer.
 class output
 {
 public:
-    typedef dataflow::signal_consumer consumer_category;
-    typedef void result_type;
+    typedef dataflow::signals::keyed_consumer port_traits;
     
     void operator()(double x)
     {

@@ -45,9 +45,9 @@ Two complementary ports that produce / consume the same type of data (using
 the same type of mechanism) can typically be connected/disconnected, or data
 can be extracted from one port to another.
 
-Depending on the data-transport mechanism used, a producer could be anything
+Depending on the data-transport mechanism used, a producer port could be anything
 that produces / provides data:  a POD variable, an object of a class type, or
-a function that returns a value.  Similarly, a consumer could be anything
+a function that returns a value.  Similarly, a consumer port could be anything
 that consumes data - a function that takes an argument, a functor, etc.
 
 Ports are captured more formally by the [PortConcept] concept.
@@ -111,14 +111,14 @@ In this case, the connection is called a /bidirectional connection/.]
 
 [heading Invocation]
 
-Another important thing to note is that there is a separation between providing
+[/Another important thing to note is that there is a separation between providing
 the data to a component, and invoking the component.  In some cases, the two
 happen simoultaneously (when the data is passed and returned via a function
 call), while in others invoking the computational element can happen
 separately from providing the data (at least from a modeling perspective).
 An example of the latter is a consumer which uses data stored in
 a particular location. We can place the data in that location much before
-invoking the consumer.
+invoking the consumer.]
 
 We will call /invoking/ a component (producer or consumer) the action of
 causing it to consume data from connected producers, and producing data
@@ -126,12 +126,22 @@ for connected consumers.
 
 Invocation is captured more formally by the [InvocableConcept] concept.
 
-[/An invocation is /forwarding/
-if it causes the invoked producer to also invoke the consumer, or if it causes
-the invoked consumer to invoke the producer.]
 
 
 [section Mechanism]
+
+[note The Mechanism concept currently has no requirements.]
+
+A Mechanism type is used to specify the mechanism when specializing or invoking
+Dataflow templates.  Each mechanism therefore has a corresponding
+type tag.
+
+[heading Examples]
+
+The following code declares the [VTK] mechanism tag - it is a part of
+the [vtk_example example showing how to provide a VTK support layer].
+
+[vtk_mechanism]
 
 [endsect][/mechanism]
 
@@ -236,6 +246,92 @@ The following expressions are used in this document:
 
 [endsect][/unaryoperable]
 
+[section ComponentTraits]
+
+A ['[ComponenTraitsConcept]] specifies the traits of a [ComponentConcept].
+
+[heading Notation]
+[variablelist
+    [[CT] [A ComponentTraits type.]]
+    [[C] [A [ComponentConcept] type of traits `CT`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Mechanism]
+        [`PC::mechanism`]
+        [any type]
+        [[MechanismConcept] type tag.]
+    ]
+]
+
+[heading Header]
+
+```
+    #include <boost/dataflow/support/component.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Notes]
+
+[heading Examples]
+
+[endsect][/componenttraits]
+
+
+[section Component]
+
+A type `C` is a ['[ComponentConcept]] for a mechanism `M`
+if it specifies a [ComponentTraitsConcept] for that mechanism.
+
+[heading Refinements]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A Component type.]]
+    [[M] [A [MechanismConcept] type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Component Traits]
+        [`component_traits_of<M, C>::type`]
+        [Any [ComponentTraitsConcept] type]
+        [
+            The [ComponentTraitsConcept] of the port.
+        ]
+    ]
+    [
+        [IsComponent Trait]
+        [`is_component<M, C>::type`]
+        [Boolean metafunction that evaluates to true]
+        [
+            A trait encapsulating adherence to the Component
+            concept.
+        ]
+    ]
+]
+
+[heading Header]
+
+```
+    #include <boost/dataflow/support/component.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Notes]
+
+[heading Examples]
+
+[endsect][/component]
+
+
 [section:componentoperable ComponentOperable (Invocable) ]
 
 A [ComponentConcept] `P` is /ComponentOperable/
@@ -268,6 +364,6 @@ The following expressions are used in this document:
     ]
 ]
 
-[endsect][/unaryoperable]
+[endsect][/componentoperable]
 
 [endsect][/concepts]

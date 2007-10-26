@@ -43,6 +43,7 @@
 [template PhoenixProducerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
 [template PhoenixConsumerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
+[template vtk_example[text] [link dataflow.introduction.examples.new_layer [text]]]
 [template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
 [template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
 [template DataflowPhoenix[] [link dataflow.phoenix Dataflow.Phoenix]]
@@ -111,6 +112,8 @@
 
 [import ../example/fibonacci.cpp]
 [import ../example/simple_example.cpp]
+[import ../example/simple_distributed_example.cpp]
+[import ../example/signals/intro_example.cpp]
 
 [import ../example/VTK/support.hpp]
 
@@ -143,7 +146,7 @@ as well as some status updates can be found on the
 
 [include concepts.qbk]
 
-[include components.qbk]
+[/[include components.qbk]]
 
 [include signals.qbk]
 

@@ -174,7 +174,7 @@ struct port_traits_of<Mechanism, PortCategory, T,
 
 } } // namespace boost::dataflow
 
-#define DATAFLOW_PROXY_PORT_CATEGORY(ProxyPort,ProxyPortCategory) \
+#define DATAFLOW_PROXY_PORT_TRAITS(ProxyPort,ProxyPortCategory) \
 namespace boost { namespace dataflow { \
 template<> \
 struct proxy_port_traits_of< \
@@ -187,7 +187,7 @@ struct proxy_port_traits_of< \
 }; \
 }}
 
-#define DATAFLOW_PROXY_PORT_CATEGORY_ENABLE_IF(P,Cond,ProxyPortCategory) \
+#define DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(P,Cond,ProxyPortCategory) \
 namespace boost { namespace dataflow { \
 template<typename P> \
 struct proxy_port_traits_of< \

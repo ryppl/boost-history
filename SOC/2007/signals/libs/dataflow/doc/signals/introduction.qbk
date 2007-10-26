@@ -101,10 +101,7 @@ Using a few [storage] objects, it is easy to
 create a simple network using
 [funcref boost::dataflow::operator>>=() operator>>=]:
 	
-[table storage class use example
-    [[fused][unfused]]
-    [[[test_storage_fused]][[test_storage_unfused]]]
-]
+[test_storage_unfused]
 
 [heading Creating your own signal receiver (slot)]
 
@@ -117,30 +114,16 @@ of a function that returns void and takes no arguments.
 A class that can receive signals of such a signature would be
 defined as follows:
 
-    class SignalVoidCounter
-    {
-        int cnt;
-    public:
-        // For now, we must also declare the consumer category and result type.
-        // This requirement will go away.
-        typedef dataflow::signal_consumer consumer_category;
-        typedef void result_type;
-        
-        SignalVoidCounter() : cnt(0) {}
-        void operator()()
-        {
-            cnt++; // whenever a void() signal is received, increase the counter
-        }
-        int GetCount()
-        {
-            return cnt;
-        }
-    }; // end class SignalVoidCounter
+[signal_void_counter]
 
 The above class does something really simple - it receives signals of
 signature `void()`, and counts how many it has received. While this
 functionality is actually covered by the library component [counter],
 it's a good introductory example.
+
+You can now introduce this component into a signal network:
+
+[signal_void_counter_main]
 
 If you read the section about [link dataflow.introduction.fusion Boost.Fusion],
 you will find out that the [DataflowSignals] library works with both
@@ -148,35 +131,8 @@ you will find out that the [DataflowSignals] library works with both
 fused signals, all you would need to do is add or substitute the following
 `operator()`:
 
-    void operator()(const fusion::vector<> &)
-    {
-        cnt++; // whenever a void() signal is received, increase the counter
-    }
-
-You can now introduce this component into a signal network:
-
-[table storage class use example
-    [[fused][unfused]]
-    [[``
-        SignalVoidCounter counter;
-        signals::storage<void(), signals::unfused> storage;
-        
-        storage >>= counter;
-        for (int i=0; i<33; i++)
-            invoke(storage);
-        
-        assert(counter.GetCount());
-    ``][``
-        SignalVoidCounter counter;
-        signals::storage<void(), signals::fused> storage;
-        
-        storage >>= counter;
-        for (int i=0; i<33; i++)
-            invoke(storage);
-        
-        assert(counter.GetCount());
-    ``]]
-]
+[fused_signal_void_counter]
+[fused_signal_void_counter_main]
 
 To proceed, you may want to look at
 

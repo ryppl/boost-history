@@ -48,11 +48,11 @@ struct my_non_intrusive_proxy_producer_traits
     : public df::proxy_port_traits<my_mechanism, df::ports::producer>
 {};
 
-DATAFLOW_PROXY_PORT_CATEGORY(
+DATAFLOW_PROXY_PORT_TRAITS(
     my_non_intrusive_proxy_producer,
     my_non_intrusive_proxy_producer_traits)
 
-DATAFLOW_PROXY_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_same<T BOOST_PP_COMMA() my_non_intrusive_proxy_producer2>,
     my_non_intrusive_proxy_producer_traits)

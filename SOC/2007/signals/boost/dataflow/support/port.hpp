@@ -198,7 +198,7 @@ get_port(T &p)
 } } // namespace boost::dataflow
 
 /// Macro simplifying non-intrusive specification of a type's PortTraits.
-#define DATAFLOW_PORT_CATEGORY(Type,PortTraits) \
+#define DATAFLOW_PORT_TRAITS(Type,PortTraits) \
 namespace boost { namespace dataflow { \
 template<> \
 struct port_traits_of< \
@@ -213,7 +213,7 @@ struct port_traits_of< \
 
 /// Macro simplifying non-intrusive specification of multiple types'
 /// PortTraits, using a boost::enable_if condition.
-#define DATAFLOW_PORT_CATEGORY_ENABLE_IF(Type,Cond,PortTraits) \
+#define DATAFLOW_PORT_TRAITS_ENABLE_IF(Type,Cond,PortTraits) \
 namespace boost { namespace dataflow { \
 template<typename Type> \
 struct port_traits_of< \

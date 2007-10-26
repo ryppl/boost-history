@@ -4,6 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 build-project VTK ;
+build-project signals ;
 
 project dataflow/example
     : requirements
@@ -12,9 +13,12 @@ project dataflow/example
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-exe example : example.cpp ;
 # exe timing_example : timing_example.cpp ;
 #exe edit_distance : edit_distance.cpp ;
 #exe fibonacci : fibonacci.cpp ;
-#exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static ;
+exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static ;
+exe simple_distributed_example : simple_distributed_example.cpp
+    /boost/serialization//boost_serialization/<link>static
+    /boost/thread//boost_thread/<link>static
+    /boost/system//boost_system/<link>static ;
 

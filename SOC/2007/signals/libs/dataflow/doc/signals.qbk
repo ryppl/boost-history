@@ -2,7 +2,7 @@
 
 [include signals/introduction.qbk]
 
-[include signals/concepts.qbk]
+[/[include signals/concepts.qbk]]
 
 [include signals/connections.qbk]
 

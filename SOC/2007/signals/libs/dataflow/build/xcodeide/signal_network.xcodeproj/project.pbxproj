@@ -88,7 +88,7 @@
 		083FD3C10C62A75B00EF3F6B /* concepts.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = concepts.qbk; sourceTree = "<group>"; };
 		083FD3C60C62A7F600EF3F6B /* phoenix.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = phoenix.qbk; sourceTree = "<group>"; };
 		084482560CA0B37200B88137 /* operators.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = operators.hpp; sourceTree = "<group>"; };
-		08668C4E0C19A16300ACB19A /* example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = example.cpp; sourceTree = "<group>"; };
+		08668C4E0C19A16300ACB19A /* simple_distributed_example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = simple_distributed_example.cpp; sourceTree = "<group>"; };
 		08668C4F0C19A16300ACB19A /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08B9D4190CC3D0790050F10B /* test_binary_op.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_binary_op.cpp; sourceTree = "<group>"; };
 		08B9D41E0CC3D0A80050F10B /* my_producer_consumer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_producer_consumer.hpp; sourceTree = "<group>"; };
@@ -194,6 +194,9 @@
 		08F71D500CA3547C0010099E /* test_storage.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_storage.cpp; sourceTree = "<group>"; };
 		08F9459A0C46A86E00E224E4 /* components.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = components.hpp; sourceTree = "<group>"; };
 		08F9462E0C46C2F000E224E4 /* fibonacci.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fibonacci.cpp; sourceTree = "<group>"; };
+		08F98B400CD0190A009D642B /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
+		08F98B470CD01963009D642B /* intro_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = intro_example.cpp; sourceTree = "<group>"; };
+		08F995660CCFC68F001184CE /* condition.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = condition.hpp; sourceTree = "<group>"; };
 		08FA6A050C41E11800434913 /* rationale.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rationale.qbk; sourceTree = "<group>"; };
 		08FB7BEF0C6157D000BD4EC2 /* introduction.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = introduction.qbk; sourceTree = "<group>"; };
 		08FB7BFE0C61597000BD4EC2 /* signals.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = signals.qbk; sourceTree = "<group>"; };
@@ -248,8 +251,9 @@
 		08668C4D0C19A16300ACB19A /* example */ = {
 			isa = PBXGroup;
 			children = (
+				08F98B3F0CD018E7009D642B /* signals */,
 				0800AC2F0C8CA99700994538 /* VTK */,
-				08668C4E0C19A16300ACB19A /* example.cpp */,
+				08668C4E0C19A16300ACB19A /* simple_distributed_example.cpp */,
 				08668C4F0C19A16300ACB19A /* Jamfile.v2 */,
 				08EFED440C1CD55100097C80 /* timing_example.cpp */,
 				08FC26060C46049400F59CDD /* edit_distance.cpp */,
@@ -311,6 +315,7 @@
 				08EF9B350C5D506A00D4D206 /* socket_sender.hpp */,
 				08EF9B360C5D506A00D4D206 /* storage.hpp */,
 				08EF9B370C5D506A00D4D206 /* timed_generator.hpp */,
+				08F995660CCFC68F001184CE /* condition.hpp */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -482,6 +487,15 @@
 				08F71D4E0CA3547C0010099E /* test_same_type.cpp */,
 				08F71D4F0CA3547C0010099E /* test_socket.cpp */,
 				08F71D500CA3547C0010099E /* test_storage.cpp */,
+			);
+			path = signals;
+			sourceTree = "<group>";
+		};
+		08F98B3F0CD018E7009D642B /* signals */ = {
+			isa = PBXGroup;
+			children = (
+				08F98B400CD0190A009D642B /* Jamfile.v2 */,
+				08F98B470CD01963009D642B /* intro_example.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";

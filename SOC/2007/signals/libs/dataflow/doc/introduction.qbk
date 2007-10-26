@@ -554,10 +554,19 @@ The following is a modification of the example from the
 [link dataflow.introduction.dataflow motivation section] to a dataflow
 network that straddles a network socket:
 
-[*insert example....]
+[simple_distributed_example]
 
+A sample run produces:
 
-
+[pre
+0.213436
+-0.49558
+1.57538
+-1.0592
+1.83927
+1.88577
+...
+]
 
 [endsect][/distributed]
 
@@ -565,13 +574,15 @@ network that straddles a network socket:
 
 [section:linking How to link]
 
-The generic Dataflow support layer is header-only, and relies only on a few
+The generic Dataflow support layer is header-only, and relies only on other
 Boost header-only libraries (MPL, enable_if, and small parts of fusion).
 
 The [DataflowSignals] layer is dependent on the [BoostSignals] library,
 which must be built and linked.  A few of the components ([socket_sender]
 and [socket_receiver]) are also dependent on [BoostAsio], which depends on
-the System library which must also be built and linked.
+the System library which must also be built and linked.  A few other components
+([mutex] and [condition]) are dependent on [BoostThreads], which has to be
+linked as well.
 
 [endsect][/linking]
 

@@ -46,7 +46,7 @@ struct vtk_algorithm_output_producer
 // PortTraits, and also verifies that the PortTraits requirements are satisfied.
 // The port_traits_of template is used by the Dataflow library to associate
 // a Port with its PortTraits.
-DATAFLOW_PORT_CATEGORY(vtkAlgorithmOutput, vtk::vtk_algorithm_output_producer)
+DATAFLOW_PORT_TRAITS(vtkAlgorithmOutput, vtk::vtk_algorithm_output_producer)
 //]
 
 
@@ -60,7 +60,7 @@ struct vtk_algorithm_consumer
 
 // Since vtkAlgorithm is typically inherited, we will specialize the
 // port_traits_of template for all its descendants.
-DATAFLOW_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkAlgorithm BOOST_PP_COMMA() T>,
     vtk::vtk_algorithm_consumer)
@@ -109,7 +109,7 @@ struct vtk_algorithm_proxy_producer
 
 } } } // namespace boost::dataflow::vtk
 
-DATAFLOW_PROXY_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
     T,
     mpl::and_<
         boost::is_base_of<vtkAlgorithm BOOST_PP_COMMA() T> BOOST_PP_COMMA()
@@ -152,12 +152,12 @@ struct vtk_actor_consumer
 
 } } } // namespace boost::dataflow::vtk
 
-DATAFLOW_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkActor BOOST_PP_COMMA() T>,
     vtk::vtk_actor_producer)
 
-DATAFLOW_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkActor BOOST_PP_COMMA() T>,
     vtk::vtk_actor_consumer)
@@ -192,7 +192,7 @@ struct vtk_mapper_proxy_producer
     
 } } } // namespace boost::dataflow::vtk
 
-DATAFLOW_PROXY_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkMapper BOOST_PP_COMMA() T>,
     vtk::vtk_mapper_proxy_producer)
@@ -267,17 +267,17 @@ struct vtk_rendererwindow_consumer
 
 } } } // namespace boost::dataflow::vtk
 
-DATAFLOW_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkRenderer BOOST_PP_COMMA() T>,
     vtk::vtk_renderer_producer)
 
-DATAFLOW_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkRenderer BOOST_PP_COMMA() T>,
     vtk::vtk_renderer_consumer)
 
-DATAFLOW_PORT_CATEGORY_ENABLE_IF(
+DATAFLOW_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkRenderWindow BOOST_PP_COMMA() T>,
     vtk::vtk_rendererwindow_consumer)

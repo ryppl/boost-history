@@ -29,11 +29,8 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/container/vector/vector.hpp>
 #include <boost/fusion/sequence/conversion/as_vector.hpp>
-#include <boost/fusion/algorithm/transformation/pop_back.hpp>
 
 #include <boost/fusion/functional/adapter/limits.hpp>
-//#include <boost/fusion/functional/adapter/detail/has_type.hpp>
-//#include <boost/fusion/functional/adapter/detail/nullary_call_base.hpp>
 
 #include <boost/mpl/size.hpp>
 #include <boost/utility/result_of.hpp>
@@ -59,13 +56,13 @@ namespace boost { namespace fusion
 
 #define OPERATOR_ARGS BOOST_PP_ITERATION()
 
-        template <class Function, class Sequence>
-        class unfused_inherited<Function, Sequence,
-            typename boost::enable_if<
-                boost::mpl::equal_to<
-                    boost::fusion::result_of::size<Sequence>,
-                    boost::mpl::int_<OPERATOR_ARGS> >
-            >::type >
+    template <class Function, class Sequence>
+    class unfused_inherited<Function, Sequence,
+        typename boost::enable_if<
+            boost::mpl::equal_to<
+                boost::fusion::result_of::size<Sequence>,
+                boost::mpl::int_<OPERATOR_ARGS> >
+        >::type >
     : public Function
     {
     protected:
@@ -97,12 +94,9 @@ namespace boost { namespace fusion
             unfused_inherited(const T1 &t1, const T2 &t2)
             : Function(t1, t2)
         { }
-
-/*        template<typename F, typename Enable=void>
-        struct result;*/
         
         template<typename F>
-        struct result//<F>
+        struct result
             : public Function::template result<F> {};
         
         template<typename F>
@@ -111,11 +105,14 @@ namespace boost { namespace fusion
             typedef typename boost::result_of<Function(const arg_vector_t &)>::type type;
         };
 
-#if OPERATOR_ARGS>0
         inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()(BOOST_PP_ENUM(OPERATOR_ARGS,M,arg_vector_t)) const
         {
-            arg_vector_t arg(BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a));
+            arg_vector_t arg
+#if OPERATOR_ARGS>0
+            (BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a))
+#endif
+                ;
             return Function::operator()(arg);
         }
 
@@ -123,29 +120,14 @@ namespace boost { namespace fusion
         inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()(BOOST_PP_ENUM(OPERATOR_ARGS,M,arg_vector_t)) 
         {
-            arg_vector_t arg(BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a));
+            arg_vector_t arg
+#if OPERATOR_ARGS>0
+            (BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a))
+#endif
+                ;
             return Function::operator()(arg);
         }
 #endif
-
-#else // OPERATOR_ARGS==0
-        inline typename boost::result_of<Function(const arg_vector_t &)>::type
-        operator()() const
-        {
-            arg_vector_t arg;
-            return Function::operator()(arg);
-        }
-
-#if !BOOST_WORKAROUND(BOOST_MSVC, < 1400)
-        inline typename boost::result_of<Function(const arg_vector_t &)>::type
-        operator()()
-        {
-            arg_vector_t arg;
-            return Function::operator()(arg);
-        }
-#endif
-
-#endif // OPERATOR_ARGS>0
 
 #undef M
 #undef MT

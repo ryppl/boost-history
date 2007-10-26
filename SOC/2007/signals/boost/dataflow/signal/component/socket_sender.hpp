@@ -39,6 +39,8 @@ namespace detail {
         {
             boost::archive::binary_oarchive archive (stream);
             archive & vec_par;
+            uint32_t packet_size=stream.str().size();
+            boost::asio::write(socket, asio::buffer(&packet_size, 4)); 
             boost::asio::write(socket, asio::buffer(stream.str()),
                 boost::asio::transfer_all());
             stream.str(empty_string);

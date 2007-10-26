@@ -1,61 +1,57 @@
-// selector.hpp
-
 // Copyright Stjepan Rajko 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SIGNAL_NETWORK_SELECTOR_HPP
-#define SIGNAL_NETWORK_SELECTOR_HPP
+#ifndef SIGNAL_NETWORK_MULTIPLEXER_HPP
+#define SIGNAL_NETWORK_MULTIPLEXER_HPP
 
-#include <boost/dataflow/signal/filter.hpp>
-#include <boost/dataflow/signal/detail/defines.hpp>
+#include <boost/dataflow/signal/component/conditional.hpp>
 
-SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
-/** \brief Allows selection of signals from multiple inputs.
-\param Signature Signature of the signal sent and received.
-\warning Since I can't get Doxygen to unravel the preprocessed definition of this
-class, the documentation was generated through a non-functioning class Doxygen could read.
+namespace boost { namespace signals {
 
-This can be used to determine which signal out of a group of signals
-will continue through the selector (the others will not be forwarded).
-
-\par Example:
-\dontinclude example.cpp
-\skip selector_test
-\until end void selector_test
-*/
-
-/*
-template<typename Signature>
-class selector : public fused_filter<Signature>
+namespace detail
 {
-	selector() : selected(0) {}
-
-    ///	Selects the indicated input (if source is 0, no input will be selected).
-	void select(int source) {selected = source;}
-	
-    template <class Seq>
-    struct result
+    template<typename T>
+    struct multiplex
     {
-        typedef typename boost::function_traits<Signature>::result_type type;
+        T operator ()(T t) const
+        {
+            return t;
+        }
     };
-    /// If N is selected, the signal received at this slot will be forwared.
-    typename boost::function_traits<Signature>::result_type 
-    operator()(const VecPar &vec_par)
-    {
-    	if (selected == n)
-             return static_cast<typename boost::function_traits<Signature>::result_type>
-                 (fused_out(vec_par));
-    }
-    /// Returns the slot selector for inputN.
-    template<int N>
-    slot_selector_t<selector<Signature>, Signature> slot()
-	{return slot_selector<Signature>(*this, &selector_impl<_inputs, Signature, _arity>::input##n);}
-private:
-	volatile int selected;
-};
-*/
-SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE
+}
 
-#endif // SIGNAL_NETWORK_SELECTOR_HPP
+/** \brief Forwards a single signal to multiple slots, and can
+also be disabled to stop the flow of signals.
+    junction is a conditional with Condition identity and Member volatile bool
+*/
+template<typename Signature,
+    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
+    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
+    typename Group = int,
+    typename GroupCompare = std::less<Group>
+>
+class multiplexer : public conditional<int, detail::<bool>, Signature, OutSignal, Combiner, Group, GroupCompare>
+{
+protected:
+    typedef conditional<volatile bool, detail::identity<bool>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+public:
+    
+    /** Initializes the junction to be enabled.
+    */
+    junction(bool enabled=true)
+    {
+        enable();
+    }
+    /** Enables the junction (signals will be forwarded).
+    */
+    void enable() {base_type::member = true;}
+    /**	Disables the junction (signals will not be forwarded).
+    */
+    void disable() {base_type::member = false;}
+};
+
+} } // namespace boost::signals
+
+#endif
