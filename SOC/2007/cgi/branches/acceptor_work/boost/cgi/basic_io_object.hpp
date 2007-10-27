@@ -21,16 +21,17 @@ namespace cgi {
   public:
     typedef Service                        service_type;
 
-    cgi::io_service& io_service()
+    ::cgi::io_service&
+      io_service()
     {
       return service.io_service();
     }
 
   private:
-    typedef typename Service::impl_type    impl_type;
+    typedef typename Service::implementation_type    impl_type;
 
   protected:
-    explicit basic_io_object(boost::asio::io_service& ios)
+    explicit basic_io_object(::cgi::io_service& ios)
       : service(boost::asio::use_service<Service>(ios))
     {
       service.construct(impl);

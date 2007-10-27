@@ -77,7 +77,7 @@ namespace cgi {
   public:
     /// Default constructor
     request_ostream(http::status_code sc = http::ok)
-      : buffer_(new cgi::streambuf())
+      : buffer_(new ::cgi::streambuf())
       , ostream_(buffer_.get())
       , http_status_(sc)
       , headers_sent_(false)
@@ -89,7 +89,7 @@ namespace cgi {
      * Takes the buffer and uses it internally, does nothing with it on
      * destruction.
      */
-    request_ostream(cgi::streambuf* buf, http::status_code sc = http::ok)
+    request_ostream(::cgi::streambuf* buf, http::status_code sc = http::ok)
       : /*request_(NULL)
           , */ostream_(buf)
       , http_status_(sc)
@@ -180,8 +180,8 @@ namespace cgi {
      * If there is no error, the buffer is cleared.
      */
     template<typename CommonGatewayRequest>
-    boost::system::error_code& flush(CommonGatewayRequest& req
-                                    , boost::system::error_code& ec)
+    boost::system::error_code&
+      flush(CommonGatewayRequest& req, boost::system::error_code& ec)
     {
       if (!headers_sent_)
       {
@@ -287,8 +287,8 @@ namespace cgi {
      * Note: The data in the stream isn't cleared after this call.
      */
     template<typename CommonGatewayRequest>
-    boost::system::error_code& send(CommonGatewayRequest& req
-                                   , boost::system::error_code& ec)
+    boost::system::error_code&
+      send(CommonGatewayRequest& req, boost::system::error_code& ec)
     {
       if (!headers_sent_)
       {
@@ -317,9 +317,10 @@ namespace cgi {
     }
 
     /// Get the buffer associated with the stream
-    cgi::streambuf* rdbuf()
+    ::cgi::streambuf*
+      rdbuf()
     {
-      return static_cast<cgi::streambuf*>(ostream_.rdbuf());
+      return static_cast<::cgi::streambuf*>(ostream_.rdbuf());
     }
 
     void set_status(const http::status_code& num)
@@ -334,7 +335,7 @@ namespace cgi {
 
   protected:
     std::vector<boost::asio::const_buffer> headers_;
-    boost::shared_ptr<cgi::streambuf> buffer_;
+    boost::shared_ptr<::cgi::streambuf> buffer_;
     std::ostream ostream_;
     http::status_code http_status_;
     bool headers_sent_;

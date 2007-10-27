@@ -17,6 +17,7 @@
 namespace cgi {
 
   /// A class representing the SCGI protocol
+  /*
   class scgi
   {
   public:
@@ -27,6 +28,7 @@ namespace cgi {
 
     typedef boost::asio::ip::tcp         native_protocol;
   };
+  */
 
 } // namespace cgi
 

@@ -13,8 +13,10 @@
 
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
+#include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/system/error_code.hpp>
 
 //#include "is_async.hpp"
 #include "boost/cgi/io_service.hpp"
@@ -23,62 +25,73 @@
 #include "boost/cgi/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 //#include "service_selector.hpp"
+#include "boost/cgi/scgi/request.hpp"
 
 namespace cgi {
+ namespace scgi {
+  
+   /// The service_impl class for SCGI basic_request_acceptor<>s
+   /**
+    * Note: this is near enough to being generic. It will hopefully translate
+    *       directly to the fcgi_acceptor_service_impl. In other words you would
+    *       then have one acceptor_service_impl<>, so you'd use
+    *       acceptor_service_impl<scgi> acceptor_service_impl_; // and
+    *       acceptor_service_impl<fcgi> acceptor_service_impl_; // etc...
+    *
+    * Note: If the protocol is an asynchronous protocol, which means it requires
+    * access to a boost::asio::io_service instance, then this class becomes a
+    * model of the Service concept (**LINK**) and must only use the constructor
+    * which takes a ProtocolService (**LINK**). If the protocol isn't async then
+    * the class can be used without a ProtocolService.
+    */
+   template<typename Protocol = ::cgi::scgi_>
+   class acceptor_service_impl
+     : public detail::service_base<request_service<Protocol> >
+   {
+   public:
 
-  /// The service_impl class for SCGI basic_request_acceptor<>s
-  /**
-   * Note: this is near enough to being generic. It will hopefully translate
-   *       directly to the fcgi_acceptor_service_impl. In other words you would
-   *       then have one acceptor_service_impl<>, so you'd use
-   *       acceptor_service_impl<scgi> acceptor_service_impl_; // and
-   *       acceptor_service_impl<fcgi> acceptor_service_impl_; // etc...
-   *
-   * Note: If the protocol is an asynchronous protocol, which means it requires
-   * access to a boost::asio::io_service instance, then this class becomes a
-   * model of the Service concept (**LINK**) and must only use the constructor
-   * which takes a ProtocolService (**LINK**). If the protocol isn't async then
-   * the class can be used without a ProtocolService.
-   */
-  template<typename Protocol>
-  class scgi_acceptor_service_impl
-    : public detail::service_base<request_service<Protocol> >
-  {
-  public:
-    //typedef scgi_request_acceptor_impl                  implementation_type;
-    typedef typename implementation_type::protocol_type protocol_type;
-    typedef basic_protocol_service<protocol_type>       protocol_service_type;
-    typedef boost::asio::ip::tcp                        native_protocol_type;
-    typedef acceptor_service_type::native_type          native_type;
-    typedef implementation_type::acceptor_service_type  acceptor_service_type;
+     /// The unique service identifier
+     //static boost::asio::io_service::id id;
+ 
+     struct implementation_type
+     {
+       typedef Protocol                              protocol_type;
+       typedef basic_protocol_service<protocol_type> protocol_service_type;
+       typedef boost::asio::ip::tcp                  native_protocol_type;
+       typedef scgi::request                         request_type;
+       typedef boost::asio::socket_acceptor_service<
+                 native_protocol_type>               acceptor_service_type;
+ 
+       acceptor_service_type::implementation_type    acceptor_;
+       boost::mutex                                  mutex_;
+       std::queue<boost::shared_ptr<request_type> >  waiting_requests_;
+       protocol_service_type*                        service_;
+     }; 
 
-    /// The unique service identifier
-    //static boost::asio::io_service::id id;
-
-    struct implementation_type
-    {
-      typedef Protocol                              protocol_type;
-      typedef scgi::request                         request_type;
-      typedef boost::asio::socket_acceptor_service<
-                native_protocol_type>               acceptor_service_type;
-
-      acceptor_service_type::implementation_type    acceptor_;
-      boost::mutex                                  mutex_;
-      std::queue<boost::shared_ptr<request_type> >  waiting_requests_;
-      protocol_service_type*                        service_;
-    };
-
-    explicit scgi_request_acceptor_service(cgi::io_service& ios)
-      : detail::service_base<request_service<Protocol> >(ios)
-      , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios)
-    {
-    }
-
-    void set_protocol_service(implementation_type& impl
-                             , protocol_service_type& ps)
-    {
-      impl.protocol_service_ = &ps;
-    }
+     //typedef scgi_request_acceptor_impl                  implementation_type;
+     typedef acceptor_service_impl<Protocol>                       type;
+     typedef typename type::implementation_type::protocol_type
+                                                         protocol_type;
+     typedef typename type::implementation_type::protocol_service_type
+                                                         protocol_service_type;
+     typedef typename type::implementation_type::acceptor_service_type
+                                                         acceptor_service_type;
+     typedef typename type::implementation_type::native_protocol_type
+                                                         native_protocol_type;
+     typedef typename acceptor_service_type::native_type native_type;
+     //typedef typename acceptor_service_type::native_type native_type;
+ 
+     explicit acceptor_service_impl(::cgi::io_service& ios)
+       : detail::service_base<request_service<Protocol> >(ios)
+       , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios))
+     {
+     }
+ 
+     void set_protocol_service(implementation_type& impl
+                              , protocol_service_type& ps)
+     {
+       impl.protocol_service_ = &ps;
+     }
 
     protocol_service_type& 
       get_protocol_service(implementation_type& impl)
@@ -180,6 +193,7 @@ namespace cgi {
     acceptor_service_type& acceptor_service_;
   };
 
+ } // namespace scgi
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"

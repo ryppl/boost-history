@@ -1,0 +1,19 @@
+
+project cgi.examples.server1
+  : build-dir
+    ../../../../bin.v2
+  ;
+
+exe server1
+  :
+    basic-1.cpp
+  :
+    <include>$(BOOST_ROOT)
+    <include>../../../../
+    <library>../../util/system//boost_system
+    <define>BOOST_ALL_NO_LIB=1
+    <define>_CRT_SECURE_NO_WARNINGS
+    <define>_SCL_SECURE_NO_WARNINGS
+  ;
+
+

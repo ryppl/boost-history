@@ -13,20 +13,20 @@
 #include <boost/system/error_code.hpp>
 
 #include <boost/asio/basic_io_object.hpp>
-#include "boost/detail/throw_error.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
 
 namespace cgi {
 
   /// The interface class for any *cgi::acceptor.
   template<typename RequestAcceptorService>
   class basic_request_acceptor
-    : private boost::noncopyable
-    , public boost::asio::basic_io_object<RequestAcceptorService>
+    : public boost::asio::basic_io_object<RequestAcceptorService>
+    //, private boost::noncopyable
   {
   public:
     //  typedef impl_type;
     typedef RequestAcceptorService         service_type;
-    typedef service_type::protocol_type    protocol_type;
+    typedef typename service_type::protocol_type    protocol_type;
     typedef int                            port_number_type;
 
     explicit basic_request_acceptor(basic_protocol_service<protocol_type>& ps)

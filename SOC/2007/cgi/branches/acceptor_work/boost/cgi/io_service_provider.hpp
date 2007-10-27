@@ -53,7 +53,8 @@ namespace cgi {
     {
     }
 
-    cgi::io_service& get_io_service()
+    ::cgi::io_service&
+      get_io_service()
     {
       return io_service_;
     }
@@ -73,7 +74,7 @@ namespace cgi {
       io_service_.reset();
     }
   private:
-    cgi::io_service io_service_;
+    ::cgi::io_service io_service_;
   };
 
 

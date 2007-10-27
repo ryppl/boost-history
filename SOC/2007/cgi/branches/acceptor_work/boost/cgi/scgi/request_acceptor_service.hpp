@@ -19,6 +19,7 @@
 #include "boost/cgi/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 //#include "service_selector.hpp"
+#include "boost/cgi/scgi/acceptor_service_impl.hpp"
 
 namespace cgi {
 
@@ -30,22 +31,22 @@ namespace cgi {
    * which takes a ProtocolService (**LINK**). If the protocol isn't async then
    * the class can be used without a ProtocolService.
    */
-  template<typename Protocol>
+  template<typename Protocol = scgi_>
   class scgi_request_acceptor_service
     : public detail::service_base<request_service<Protocol> >
   {
   public:
     //typedef typename service_impl_type::impl_type     impl_type;
 
-    typedef scgi_acceptor_service_impl                  service_impl_type;
+    typedef scgi::acceptor_service_impl<>               service_impl_type;
     typedef service_impl_type::implementation_type      implementation_type;
-    typedef implementation_type::protocol_type          protocol_type;
+    typedef typename implementation_type::protocol_type          protocol_type;
     typedef basic_protocol_service<protocol_type>       protocol_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
 
-    scgi_request_acceptor_service(cgi::io_service& ios)
+    scgi_request_acceptor_service(::cgi::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
     {
     }
@@ -76,9 +77,9 @@ namespace cgi {
     }
 
     template<typename CommonGatewayRequest>
-    boost::system::error_code& accept(implementation_type& impl
-                                     , CommonGatewayRequest& request
-                                     , boost::system::error_code& ec)
+    boost::system::error_code&
+      accept(implementation_type& impl, CommonGatewayRequest& request
+            , boost::system::error_code& ec)
     {
       return service_impl_.accept(impl, request, ec);
     }

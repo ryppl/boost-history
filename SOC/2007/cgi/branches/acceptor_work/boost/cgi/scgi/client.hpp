@@ -17,20 +17,25 @@ namespace cgi {
  namespace scgi {
 
   /// A client that uses a TCP socket that owned by it.
-  template<>
+  template<typename Connection>
   class basic_client<tcp_connection>
   {
   public:
     typedef ::cgi::io_service                 io_service_type;
     typedef cgi::map                          map_type;
-    typedef Protocol                          protocol_type;
+    //typedef Protocol                          protocol_type;
     struct connection_type : Connection
     { typedef boost::shared_ptr<connection_type> pointer; }
 
     /// Construct
+    basic_client()
+    {
+    }
+
+    /// Construct
     basic_client(io_service_type& ios)
-      : io_service_(ios)
-      , connection_(new connection_type::pointer(ios))
+      //: io_service_(ios)
+      //, connection_(new connection_type::pointer(ios))
     {
     }
 
@@ -38,10 +43,11 @@ namespace cgi {
     /** Closing the connection as early as possible is good for efficiency */
     ~basic_client()
     {
-      connection_->close();
+      if (connection_)
+        connection_->close();
     }
 
-    io_service_type& io_service() { return io_service_; }
+    //io_service_type& io_service() { return io_service_; }
 
     /// Associate a connection with this client
     /**

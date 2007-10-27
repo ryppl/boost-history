@@ -10,8 +10,8 @@
 #define CGI_CGI_HPP_INCLUDED__
 
 // Include all cgi-related headers only.
-#include "boost/cgi/request.hpp"
-#include "boost/cgi/service.hpp"
+#include "boost/cgi/cgi/request.hpp"
+#include "boost/cgi/cgi/service.hpp"
 
 // Include headers common to all protocols
 #include "boost/cgi/detail/common_headers.hpp"

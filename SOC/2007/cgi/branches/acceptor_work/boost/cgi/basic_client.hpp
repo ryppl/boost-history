@@ -37,31 +37,35 @@ namespace cgi {
    *    clients aware of how busy the connection is and size its output packets
    *    accordingly... But I'm not doing that.
    */
-  template<typename Connection>
+  template<typename Connection, typename Protocol>
   class basic_client
   {
   public:
-    typedef cgi::map                          map_type;
-    typedef Protocol                          protocol_type;
+    //typedef cgi::map                          map_type;
     typedef Connection                        connection_type;
+    typedef Protocol                          protocol_type;
     typedef typename connection_type::pointer connection_ptr;
 
-    basic_client(cgi::io_service& ios)
-      : io_service_(ios)
+    basic_client()
     {
     }
 
-    io_service& io_service() { return io_service_; }
+    basic_client(io_service& ios)
+      //: io_service_(ios)
+    {
+    }
+
+    //io_service& io_service() { return io_service_; }
 
     /// Associate a connection with this client
     /**
      * Note: the connection must have been created using the new operator
      */
-    bool set_connection(connection_type* conn)
+    bool set_connection(typename connection_type::pointer& conn)
     {
       // make sure there isn't already a connection associated with the client
       if (!connection_) return false;
-      connection_.reset(conn);
+      connection_  = conn;
       return true;
     }
 
@@ -98,7 +102,7 @@ namespace cgi {
       connection_->async_read_some(buf, handler);
     }
   private:
-    io_service&                           io_service_;
+    //io_service&                           io_service_;
     connection_ptr                        connection_;
   };
 

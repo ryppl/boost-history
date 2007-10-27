@@ -85,8 +85,8 @@ namespace cgi {
 
     //void construct
 
-    boost::system::error_code& load(impl_type& impl, bool parse_stdin
-                                   , boost::system::error_code& ec)
+    boost::system::error_code& 
+      load(impl_type& impl, bool parse_stdin, boost::system::error_code& ec)
     {
       return service_impl_.load(impl, parse_stdin, ec);
     }
@@ -104,13 +104,13 @@ namespace cgi {
     }
 
     boost::system::error_code&
-    set_header(impl_type& impl, const std::string& name
-              , const std::string& value, boost::system::error_code& ec)
+      set_header(impl_type& impl, const std::string& name
+                , const std::string& value, boost::system::error_code& ec)
     {
       return service_impl_.set_header(impl, name, value, ec);
     }
       
-
+/*
     template<typename ConstBufferSequence>
     std::size_t write_some(impl_type& impl, const ConstBufferSequence& buf
                           , boost::system::error_code& ec)
@@ -124,23 +124,32 @@ namespace cgi {
     {
       return service_impl_.read_some(impl, buf, ec);
     }
-
-    std::string meta_get(impl_type& impl, const std::string& name
-                        , boost::system::error_code& ec)
+*/
+    std::string
+      GET(impl_type& impl, const std::string& name
+         , boost::system::error_code& ec)
     {
       return service_impl_.meta_get(impl, name, ec);
     }
 
-    std::string meta_post(impl_type& impl, const std::string& name
-                         , boost::system::error_code& ec)
+    std::string
+      POST(impl_type& impl, const std::string& name
+          , boost::system::error_code& ec)
     {
       return service_impl_.meta_post(impl, name, ec);
     }
 
-    std::string cookie(impl_type& impl, const std::string& name
-                      , boost::system::error_code& ec)
+    std::string
+      cookie(impl_type& impl, const std::string& name
+             , boost::system::error_code& ec)
     {
       return service_impl_.cookie(impl, name, ec);
+    }
+
+    std::string
+      header(impl_type& impl, const std::string& name
+            , boost::system::error_code& ec)
+    {
     }
 
   private:

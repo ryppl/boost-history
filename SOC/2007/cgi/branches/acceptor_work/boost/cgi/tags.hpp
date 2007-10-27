@@ -10,6 +10,10 @@
 #define CGI_TAGS_HPP_INCLUDED__
 
 namespace cgi {
+
+  /// SCGI (note, this must be removed)
+   struct scgi_{};
+ 
  namespace tags {
 
    // the null tag type

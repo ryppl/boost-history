@@ -11,29 +11,65 @@
 
 #include <boost/system/error_code.hpp>
 
-#include "boost/cgi/scgi/request_impl.hpp"
+//#include "boost/cgi/scgi/request_impl.hpp"
 #include "boost/cgi/map.hpp"
 #include "boost/cgi/tags.hpp"
+#include "boost/cgi/read.hpp"
 #include "boost/cgi/role_type.hpp"
 #include "boost/cgi/io_service.hpp"
+#include "boost/cgi/basic_client.hpp"
+#include "boost/cgi/connections/tcp_socket.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
 
 namespace cgi {
+ namespace scgi {
 
   /// The IoObjectService class for a SCGI basic_request<>s
   class scgi_request_service
     : public detail::service_base<scgi_request_service>
   {
   public:
-    typedef tags::scgi          protocol_type;
-    typedef scgi_request_impl   implementation_type;
-    typedef cgi::map            map_type;
+    /// The actual implementation date for an SCGI request.
+    struct implementation_type
+    {
+      typedef ::cgi::map                        map_type;
+      typedef tcp_connection                    connection_type;
+      typedef ::cgi::scgi_                      protocol_type;
+      typedef basic_client<connection_type, protocol_type>     client_type;
 
-    scgi_request_service(cgi::io_service& ios)
+      implementation_type()
+        : client_()
+        , stdin_parsed_(false)
+        , http_status_(http::no_content)
+        , request_status_(unloaded)
+        , all_done_(false)
+      {
+      }
+
+      client_type client_;
+
+      bool stdin_parsed_;
+      http::status_code http_status_;
+      status_type request_status_;
+
+      map_type env_vars_;
+      map_type get_vars_;
+      map_type post_vars_;
+      map_type cookie_vars_;
+
+      std::string null_str_;
+      bool all_done_;
+    };
+
+    typedef scgi_request_service                      type;
+    typedef type::implementation_type::protocol_type  protocol_type;
+    typedef type::implementation_type::map_type       map_type;
+
+    scgi_request_service(::cgi::io_service& ios)
       : detail::service_base<scgi_request_service>(ios)
-      , io_service_(ios)
+      //, io_service_(ios)
     {
     }
 
@@ -43,19 +79,29 @@ namespace cgi {
 
     void construct(implementation_type& impl)
     {
-      impl.connection()
-        = implementation_type::connection_type::create(this->io_service());
+      impl.client_.set_connection(
+        implementation_type::connection_type::create(this->io_service())
+      );
     }
 
     void destroy(implementation_type& impl)
     {
+      //if (!impl.all_done_)
+      //  detail::abort_impl(impl); // this function isn't implemented yet!
       //impl.set_state(aborted);
     }
 
     boost::system::error_code& load(implementation_type& impl, bool parse_stdin
                                    , boost::system::error_code& ec)
     {
-      const std::string& request_method = meta_env(impl, "REQUEST_METHOD", ec);
+      //int header_len( get_length_of_header(impl, ec) );
+      BOOST_ASSERT(!ec);
+
+      std::vector<char> buf;
+      // read the header content
+      //::cgi::read(impl.client_, buffer(buf, header_len), ec);
+/*
+      const std::string& request_method = env(impl, "REQUEST_METHOD", ec);
       if (request_method == "GET")
         if (parse_get_vars(impl, ec))
 	      return ec;
@@ -65,7 +111,7 @@ namespace cgi {
 	      return ec;
 
       parse_cookie_vars(impl, ec);
-      return ec;
+  */    return ec;
     }
 
     template<typename MutableBufferSequence>
@@ -87,13 +133,13 @@ namespace cgi {
 
     //template<typename VarType> map_type& var(implementation_type&) const;
 
-	std::string meta_get(implementation_type& impl, const std::string& name
-                        , boost::system::error_code& ec)
+	std::string GET(implementation_type& impl, const std::string& name
+                 , boost::system::error_code& ec)
     {
       return var(impl.get_vars_, name, ec);
     }
 
-    map_type& meta_get(implementation_type& impl)
+    map_type& GET(implementation_type& impl)
     {
       return impl.get_vars_;
     }
@@ -110,9 +156,9 @@ namespace cgi {
      -----------------------------------------------
 
      */
-    std::string meta_post(implementation_type& impl, const std::string& name
-                         , boost::system::error_code& ec
-                         , bool greedy = true)
+    std::string POST(implementation_type& impl, const std::string& name
+                    , boost::system::error_code& ec
+                    , bool greedy = true)
     {
       const std::string& val = var(impl.post_vars_, name, ec);
       if (val.empty() && greedy && !ec)
@@ -123,7 +169,7 @@ namespace cgi {
       return val;
     }
 
-    map_type& meta_post(implementation_type& impl)
+    map_type& POST(implementation_type& impl)
     {
       return impl.post_vars_;
     }
@@ -136,15 +182,15 @@ namespace cgi {
       return var(impl.cookie_vars_, name, ec);
     }
 
-    map_type& meta_cookie(implementation_type& impl)
+    map_type& cookie(implementation_type& impl)
     {
       return impl.cookie_vars_;
     }
 
 
     /// Find the environment meta-variable matching name
-    std::string meta_env(implementation_type& impl, const std::string& name
-                        , boost::system::error_code& ec)
+    std::string env(implementation_type& impl, const std::string& name
+                   , boost::system::error_code& ec)
     {
       return var(impl.env_vars_, name, ec);
     }
@@ -157,7 +203,7 @@ namespace cgi {
 
   protected:
     /// Extract the var value from 
-    std::string var(map_type& meta_data, const std::string& name
+    std::string var(map_type& _data, const std::string& _name
                    , boost::system::error_code& ec)
     {
       /* Alt:
@@ -169,8 +215,8 @@ namespace cgi {
       return std::string();
       **/
 
-      if( meta_data.find(name) != meta_data.end() )
-        return meta_data[name];
+      if( _data.find(_name) != _data.end() )
+        return _data[_name];
       return "";
     }
 
@@ -178,7 +224,7 @@ namespace cgi {
     boost::system::error_code&
     parse_get_vars(implementation_type& impl, boost::system::error_code& ec)
     {
-      detail::extract_params(meta_env(impl, "QUERY_STRING", ec)
+      detail::extract_params(env(impl, "QUERY_STRING", ec)
                     , impl.get_vars_
                     , boost::char_separator<char>
                         ("", "=&", boost::keep_empty_tokens)
@@ -235,9 +281,10 @@ namespace cgi {
     }
 
   private:
-    cgi::io_service& io_service_;
+    //cgi::io_service& io_service_;
   };
 
+ } // namespace scgi
 } // namespace cgi
 
 #endif // CGI_SCGI_REQUEST_SERVICE_HPP_INCLUDED__

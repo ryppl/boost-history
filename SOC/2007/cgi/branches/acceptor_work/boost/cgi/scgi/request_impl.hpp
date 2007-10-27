@@ -17,15 +17,27 @@
 #include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/connections/tcp_socket.hpp"
 
-namespace cgi {
+/**************
+ *
+ * THIS FILE IS OBSOLETE.
+ *
+ * SEE request_service.hpp:cgi::scgi::scgi_request_service::implementation_type
+ * INSTEAD.
+ *
+**************/
 
+namespace cgi {
+ namespace scgi {
+
+  
   /// The implementation_type for scgi_request_service
   class scgi_request_impl
   {
   public:
-    typedef cgi::map                  map_type;
-    typedef tcp_connection            connection_type;
-    typedef connection_type::pointer  connection_ptr;
+    typedef cgi::map                             map_type;
+    typedef tcp_connection                       connection_type;
+    typedef connection_type::pointer             connection_ptr;
+    typedef ::cgi::basic_client<connection_type> client_type;
 
     scgi_request_impl()
       : stdin_parsed_(false)
@@ -62,6 +74,7 @@ namespace cgi {
     bool request_finished_;
   };
 
+ } // namespace scgi
 } // namespace cgi
 
 #endif // CGI_SCGI_REQUEST_IMPL_HPP_INCLUDED__

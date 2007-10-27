@@ -2,6 +2,6 @@
 
 lib boost_system
   :
-  : <toolset>msvc:<file>C:/Boost/lib/boost_system-mt.dll
+  : <toolset>msvc:<file>C:/Boost/lib/boost_system-vc-mt-1_35.dll
     <toolset>gcc:<file>/usr/local/lib/libboost_system.a
   ;

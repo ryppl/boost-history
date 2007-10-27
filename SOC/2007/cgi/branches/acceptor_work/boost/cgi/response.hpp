@@ -26,16 +26,16 @@ namespace cgi {
 
 
   class response
-    : public cgi::request_ostream
+    : public request_ostream
   {
   public:
     response(http::status_code sc = http::ok)
-      : cgi::request_ostream(sc)
+      : request_ostream(sc)
     {
     }
 
-    response(cgi::streambuf* buf, http::status_code sc = http::ok)
-      : cgi::request_ostream(buf, sc)
+    response(::cgi::streambuf* buf, http::status_code sc = http::ok)
+      : request_ostream(buf, sc)
     {
     }
 
@@ -77,13 +77,13 @@ namespace cgi {
     return resp<< hdr.content;
   }
 
-  template<>
-  response& operator<<(response& resp, const cookie& ck)
+  template<typename T>
+  response& operator<<(response& resp, const basic_cookie<T>& ck)
   {
     // Note: the 'set-cookie' isn't part of the cookie object since
     // the cookie can also be set after the headers have been sent.
     // See http://tinyurl.com/33znkj
-    return resp<< "Set-cookie: " << ck << "\r\n";
+    return resp<< "Set-cookie: " << ck.to_string() << "\r\n";
   }
 
 } // namespace cgi
