@@ -29,7 +29,7 @@ namespace detail
 */
 template<typename Signature,
 typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-typename T=volatile int,
+typename T=int,
 typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
 typename Group = int,
 typename GroupCompare = std::less<Group> >
@@ -51,7 +51,7 @@ public:
 
     /** \return The internal signal counter.
     */
-    typename boost::remove_volatile<T>::type count() const
+    T count() const
     {   return base_type::member; }
 };
 

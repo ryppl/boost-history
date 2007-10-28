@@ -13,7 +13,7 @@ class SignalVoidCounter
 {
     int cnt;
 public:
-    typedef dataflow::signals::keyed_consumer port_traits;
+    typedef dataflow::signals::call_consumer port_traits;
     
     SignalVoidCounter() : cnt(0) {}
     void operator()()
@@ -32,7 +32,7 @@ class FusedSignalVoidCounter
 {
     int cnt;
 public:
-    typedef dataflow::signals::keyed_consumer port_traits;
+    typedef dataflow::signals::call_consumer port_traits;
     
     FusedSignalVoidCounter() : cnt(0) {}
     void operator()(const fusion::vector<> &)

@@ -1,5 +1,23 @@
 [section:components Components]
 
+The [DataflowSignals] layer provides a number of components which are useful
+in a variety of circumstances.  The following table summarizes the components
+and their use.
+
+[table
+    [[Component][Use]]
+    [[[filter]][Base class for your own components]]
+    [[[junction]][This will be renamed to gate, it controls whether signals pass through it]]
+    [[[multiplexer]][Allows selection of which of the input ports is forwarded]] 
+    [[[counter]][Counts the number of signals passing through]]
+    [[[mutex]][Provides mutexing on incoming signals for multithreaded environments]]
+    [[[condition]][Signals a threading condition whenever a signal is received]]
+    [[[function]][Allows any Boost.Function object to be applied to a passing signal]]
+    [[[chain]][Chains a number of components together into a new component]]
+    [[[socket_sender] and [socket_receiver]][Allow a signal dataflow network to
+        straddle a network socket]]
+]
+
 [section:generic Generic]
 
 [section:filter filter]
@@ -19,13 +37,13 @@ which inherits [filter]:
 
 [test_filter_classes]
 
-The type of the output signal (in the above example, `unfused_out_signal`)
+The type of the output signal (in the above example, `signals::unfused`)
 is specified as the second template parameter.
 There are three options:
 
-* `unfused_out_signal` provides an unfused output signal named `out`.
-* `fused_out_signal` provides a fused output signal named `fused_out`.
-* `combined_out_signal` provides an unfused output signal named `out`,
+* `signals::unfused` provides an unfused output signal named `out`.
+* `signals::fused` provides a fused output signal named `fused_out`.
+* `signals::combined` provides an unfused output signal named `out`,
   and a fused adapter for the signal named `fused_out`.
   This is useful for components which wish to use fusion internally but output
   an unfused signal.
@@ -33,10 +51,7 @@ There are three options:
 A component developed on top of the [filter] class can then be used in the
 appropriate network.  Here is an example which uses the class defined above:
 
-[table filter-based class use example
-    [[fused][unfused]]
-    [[[test_filter_fused]][[test_filter_unfused]]]
-]
+[test_filter_fused]
 
 [endsect][/filter]
 
@@ -175,6 +190,28 @@ them all to the same set of output signals.
 ]
 [endsect][/junction]
 
+[section multiplexer]
+[*See also]: [classref boost::signals::multiplexer multiplexer class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [multiplexer] class can be used to bring in multiple signals, and forward
+them all to the same set of output signals.
+
+[test_multiplexer_unfused]
+
+[endsect][/multiplexer]
+
+[endsect][/flow]
+
+[section:threading Threading]
+
 [section:mutex mutex]
 [*See also]: [classref boost::signals::mutex mutex class reference.]
 
@@ -195,7 +232,26 @@ The [mutex] class locks an internal mutex when it receives a signal, and then fo
 ]
 [endsect][/mutex]
 
-[endsect][/flow]
+[section:condition condition]
+[*See also]: [classref boost::signals::mutex mutex class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [condition] class signals a threading condition when receiving a signal.
+
+[table mutex class use example
+    [[fused][unfused]]
+    [[[test_mutex_fused]][[test_mutex_unfused]]]
+]
+[endsect][/condition]
+
+[endsect][/threading]
 
 [section:adapters Adapters]
 [section:function function]
@@ -292,3 +348,4 @@ Example:
 [endsect][/network]
 
 [endsect][/components]
+

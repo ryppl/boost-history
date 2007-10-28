@@ -10,7 +10,7 @@
 //[ test_connect
 
 struct receiver
-    : public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>    
+    : public boost::dataflow::port<boost::dataflow::signals::call_consumer>    
 {
     typedef void result_type;
     

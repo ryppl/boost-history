@@ -20,7 +20,7 @@ public:
 }; // end class Signal2VoidCounter
 
 class Signal2VoidInputs
-    : public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>
+    : public boost::dataflow::port<boost::dataflow::signals::call_consumer>
 {
 	int result;
 public:

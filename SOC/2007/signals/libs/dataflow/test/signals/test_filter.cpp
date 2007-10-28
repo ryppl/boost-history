@@ -12,37 +12,18 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 //[ test_filter_classes
 
 class DoublerClass : public signals::filter<void (float), signals::unfused>
 {
 public:
-    template<typename FArgs>
-    struct result;
-
-    template<typename F>
-    struct result<F(float)>
-    {
-        typedef void type;
-    };
-    
     void operator()(float x) {out(2*x);}
 };
 
 class FusedDoublerClass : public signals::filter<void (float), signals::fused>
 {
 public:
-    template<typename FArgs>
-    struct result;
-
-    template<typename F>
-    struct result<F(const fusion::vector<float> &)>
-    {
-        typedef void type;
-    };
-
     void operator()(const fusion::vector<float> &x)
     {
         // this could be more general but I'm having problems with the general approach...

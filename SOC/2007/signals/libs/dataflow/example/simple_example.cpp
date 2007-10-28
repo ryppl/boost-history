@@ -38,11 +38,11 @@ private:
 };
 
 // This will be our data output.  We just need to make a function object,
-// and specify that it is a signals::keyed_consumer.
+// and specify that it is a signals::call_consumer.
 class output
 {
 public:
-    typedef dataflow::signals::keyed_consumer port_traits;
+    typedef dataflow::signals::call_consumer port_traits;
     
     void operator()(double x)
     {

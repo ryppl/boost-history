@@ -35,7 +35,7 @@ public:
             return t.get_proxied_producer();
         }
     };
-    typedef boost::dataflow::signals::keyed_consumer port_traits;
+    typedef boost::dataflow::signals::call_consumer port_traits;
     typedef boost::dataflow::mutable_proxy_port<
         boost::dataflow::signals::mechanism,
         boost::dataflow::ports::producer,

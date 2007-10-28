@@ -8,29 +8,8 @@
 
 #include <boost/dataflow/support.hpp>
 #include <boost/dataflow/signal/connection/detail/bind_object.hpp>
-#include <boost/dataflow/signal/connection/detail/result_of_defined.hpp>
-#include <boost/dataflow/signal/connection/detail/replace_return_type.hpp>
-#include <boost/dataflow/detail/enable_if_defined.hpp>
 #include <boost/signal.hpp>
 
-#include <boost/mpl/aux_/has_type.hpp>
-#include <boost/utility/result_of.hpp>
-
-namespace boost { namespace signals {
-
-namespace detail
-{
-    template<typename T>
-    struct get_signature;
-    
-    template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-    struct get_signature<boost::signal<Signature, Combiner, Group, GroupCompare> >
-    {
-        typedef Signature type;
-    };
-}
-
-} } // namespace boost::signals 
 
 namespace boost { namespace dataflow {
 
@@ -45,7 +24,7 @@ struct producer
     typedef T produced_signature_type;
 };
 
-struct keyed_consumer
+struct call_consumer
     : public port_traits<mechanism, ports::consumer, concepts::keyed_port>
 {};
 
@@ -73,7 +52,7 @@ struct port_traits_of<signals::mechanism, ports::consumer, boost::function<Signa
 namespace extension
 {
     template<typename Signature>
-    struct get_keyed_port_impl<signals::keyed_consumer, signals::producer<Signature> >
+    struct get_keyed_port_impl<signals::call_consumer, signals::producer<Signature> >
     {
         template<typename ConsumerPort, typename ProducerPort>
         struct apply
@@ -87,7 +66,7 @@ namespace extension
             };
         };
     };
-
+    
     template<typename T>
     struct binary_operation_impl<operations::connect, signals::producer<T>, signals::consumer<T> >
     {
@@ -105,30 +84,12 @@ namespace extension
 } } // namespace boost::dataflow
 
 namespace boost { namespace signals {
-    
-template<typename Producer, typename Consumer>
-inline void connect(Producer &producer, Consumer &consumer)
-{
-    boost::dataflow::binary_operation<boost::dataflow::operations::connect, boost::dataflow::signals::mechanism>(producer, consumer);
-}
 
-template<typename Producer, typename Consumer>
-inline void connect(Producer &producer, const Consumer &consumer)
-{
-    boost::dataflow::binary_operation<boost::dataflow::operations::connect, boost::dataflow::signals::mechanism>(producer, consumer);
-}
-
-template<typename Producer, typename Consumer>
-inline void connect(const Producer &producer, Consumer &consumer)
-{
-    boost::dataflow::binary_operation<boost::dataflow::operations::connect, boost::dataflow::signals::mechanism>(producer, consumer);
-}
-
-template<typename Producer, typename Consumer>
-inline void connect(const Producer &producer, const Consumer &consumer)
-{
-    boost::dataflow::binary_operation<boost::dataflow::operations::connect, boost::dataflow::signals::mechanism>(producer, consumer);
-}
+#define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::signals::mechanism
+#define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
+#include <boost/dataflow/templates/binary_operation.hpp>
+#undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+#undef DATAFLOW_TEMPLATE_MECHANISM
 
 template<typename Component>
 inline void invoke(Component &component)

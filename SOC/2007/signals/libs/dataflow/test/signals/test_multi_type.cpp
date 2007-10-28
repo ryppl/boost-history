@@ -15,7 +15,7 @@ using namespace boost;
 //[ test_multi_type_classes
 
 class SignalIntFloatCollector : public boost::dataflow::port<
-    boost::dataflow::signals::keyed_consumer>
+    boost::dataflow::signals::call_consumer>
 {
     optional<int> last_int;
     optional<float> last_float;

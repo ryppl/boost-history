@@ -111,7 +111,7 @@
 		08EF9B300C5D506A00D4D206 /* junction.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = junction.hpp; sourceTree = "<group>"; };
 		08EF9B310C5D506A00D4D206 /* modifier.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = modifier.hpp; sourceTree = "<group>"; };
 		08EF9B320C5D506A00D4D206 /* mutex.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = mutex.hpp; sourceTree = "<group>"; };
-		08EF9B330C5D506A00D4D206 /* selector.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = selector.hpp; sourceTree = "<group>"; };
+		08EF9B330C5D506A00D4D206 /* multiplexer.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = multiplexer.hpp; sourceTree = "<group>"; };
 		08EF9B340C5D506A00D4D206 /* socket_receiver.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = socket_receiver.hpp; sourceTree = "<group>"; };
 		08EF9B350C5D506A00D4D206 /* socket_sender.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = socket_sender.hpp; sourceTree = "<group>"; };
 		08EF9B360C5D506A00D4D206 /* storage.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = storage.hpp; sourceTree = "<group>"; };
@@ -200,6 +200,9 @@
 		08FA6A050C41E11800434913 /* rationale.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rationale.qbk; sourceTree = "<group>"; };
 		08FB7BEF0C6157D000BD4EC2 /* introduction.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = introduction.qbk; sourceTree = "<group>"; };
 		08FB7BFE0C61597000BD4EC2 /* signals.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = signals.qbk; sourceTree = "<group>"; };
+		08FBDA240CD26F8700CC3891 /* unfused_inherited_templated.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = unfused_inherited_templated.hpp; sourceTree = "<group>"; };
+		08FBDA3A0CD272ED00CC3891 /* test_multiplexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_multiplexer.cpp; sourceTree = "<group>"; };
+		08FBDA3B0CD2748100CC3891 /* conditional_templated.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; name = conditional_templated.hpp; path = component/conditional_templated.hpp; sourceTree = "<group>"; };
 		08FC25DB0C45D0F700F59CDD /* producer.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = producer.hpp; sourceTree = "<group>"; };
 		08FC25DF0C45D18700F59CDD /* consumer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = consumer.hpp; sourceTree = "<group>"; };
 		08FC25FC0C45E77B00F59CDD /* producer_accumulator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = producer_accumulator.hpp; sourceTree = "<group>"; };
@@ -284,6 +287,7 @@
 		08EF9B200C5D506A00D4D206 /* signal */ = {
 			isa = PBXGroup;
 			children = (
+				08FBDA3B0CD2748100CC3891 /* conditional_templated.hpp */,
 				08EF9B520C5D537F00D4D206 /* support.hpp */,
 				08EF9B210C5D506A00D4D206 /* component */,
 				08EF9B390C5D506A00D4D206 /* connection */,
@@ -310,7 +314,7 @@
 				08EF9B300C5D506A00D4D206 /* junction.hpp */,
 				08EF9B310C5D506A00D4D206 /* modifier.hpp */,
 				08EF9B320C5D506A00D4D206 /* mutex.hpp */,
-				08EF9B330C5D506A00D4D206 /* selector.hpp */,
+				08EF9B330C5D506A00D4D206 /* multiplexer.hpp */,
 				08EF9B340C5D506A00D4D206 /* socket_receiver.hpp */,
 				08EF9B350C5D506A00D4D206 /* socket_sender.hpp */,
 				08EF9B360C5D506A00D4D206 /* storage.hpp */,
@@ -323,6 +327,7 @@
 		08EF9B270C5D506A00D4D206 /* detail */ = {
 			isa = PBXGroup;
 			children = (
+				08FBDA240CD26F8700CC3891 /* unfused_inherited_templated.hpp */,
 				08EF9B280C5D506A00D4D206 /* generic_template.hpp */,
 				08EF9B290C5D506A00D4D206 /* serialize_fusion_vector.hpp */,
 				08EF9B2A0C5D506A00D4D206 /* storable.hpp */,
@@ -487,6 +492,7 @@
 				08F71D4E0CA3547C0010099E /* test_same_type.cpp */,
 				08F71D4F0CA3547C0010099E /* test_socket.cpp */,
 				08F71D500CA3547C0010099E /* test_storage.cpp */,
+				08FBDA3A0CD272ED00CC3891 /* test_multiplexer.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";

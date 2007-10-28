@@ -11,7 +11,6 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 int test_main(int, char* [])
 {
@@ -20,7 +19,7 @@ int test_main(int, char* [])
         signals::timed_generator<void (), signals::unfused> banger1;
         signals::timed_generator<void (), signals::unfused> banger2;
         signals::mutex<void (), signals::unfused> lock;
-        signals::counter<void (), signals::unfused> counter;
+        signals::counter<void (), signals::unfused, volatile int> counter;
         
         banger1 >>= lock >>= counter;
         banger2 >>= lock;
@@ -28,8 +27,8 @@ int test_main(int, char* [])
         banger2.enable(0.5, 5);
         
         while (counter.count() < 10) {}
-        
-        BOOST_CHECK_EQUAL(counter.count(), 10);
+        int x = counter.count();
+        BOOST_CHECK_EQUAL(x, 10);
         banger1.join();
         banger2.join();
         //]
@@ -39,7 +38,7 @@ int test_main(int, char* [])
         signals::timed_generator<void (), signals::fused> banger1;
         signals::timed_generator<void (), signals::fused> banger2;
         signals::mutex<void (), signals::fused> lock;
-        signals::counter<void (), signals::fused> counter;
+        signals::counter<void (), signals::fused, volatile int> counter;
 
         banger1 >>= lock >>= counter;
         banger2 >>= lock;
@@ -47,8 +46,8 @@ int test_main(int, char* [])
         banger2.enable(0.5, 5);
 
         while (counter.count() < 10) {}
-
-        BOOST_CHECK_EQUAL(counter.count(), 10);
+        int x = counter.count();
+        BOOST_CHECK_EQUAL(x, 10);
         banger1.join();
         banger2.join();
         //]

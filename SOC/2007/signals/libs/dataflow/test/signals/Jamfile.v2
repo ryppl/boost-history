@@ -21,6 +21,7 @@ run test_filter.cpp ;
 run test_storage.cpp ;
 run test_counter.cpp ;
 run test_junction.cpp ;
+run test_multiplexer.cpp ;
 run test_function.cpp ;
 run test_chain.cpp ;
 run test_mutex.cpp

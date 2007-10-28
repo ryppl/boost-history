@@ -6,7 +6,14 @@
 #ifdef SIGNAL_NETWORK_GENERIC_CLASS
 
 #include <boost/dataflow/signal/component/filter.hpp>
+
+#ifndef SIGNAL_NETWORK_GENERIC_USE_TEMPLATED
 #include <boost/dataflow/signal/component/detail/unfused_inherited.hpp>
+#define SIGNAL_NETWORK_GENERIC_UNFUSED_BASE unfused_inherited
+#else
+#include <boost/dataflow/signal/component/detail/unfused_inherited_templated.hpp>
+#define SIGNAL_NETWORK_GENERIC_UNFUSED_BASE unfused_inherited_templated
+#endif
 
 #include <boost/mpl/vector.hpp>
 #include <boost/fusion/sequence/adapted/mpl.hpp>
@@ -70,21 +77,24 @@ typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
 typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
 typename Group = int,
 typename GroupCompare = std::less<Group> >
-class SIGNAL_NETWORK_GENERIC_CLASS : public boost::fusion::unfused_inherited<detail::SIGNAL_NETWORK_GENERIC_CLASS_IMPL<
-SIGNAL_NETWORK_GENERIC_TYPENAME,
+class SIGNAL_NETWORK_GENERIC_CLASS
+    : public boost::fusion::SIGNAL_NETWORK_GENERIC_UNFUSED_BASE
+        <detail::SIGNAL_NETWORK_GENERIC_CLASS_IMPL<
+            SIGNAL_NETWORK_GENERIC_TYPENAME,
 #ifdef SIGNAL_NETWORK_GENERIC_TYPENAME2
-SIGNAL_NETWORK_GENERIC_TYPENAME2,
+            SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif
-Signature, OutSignal, Combiner, Group, GroupCompare>,
-typename boost::function_types::parameter_types<Signature>::type >
+            Signature, OutSignal, Combiner, Group, GroupCompare>,
+        typename boost::function_types::parameter_types<Signature>::type >
 {
-    typedef boost::fusion::unfused_inherited<detail::SIGNAL_NETWORK_GENERIC_CLASS_IMPL<
-    SIGNAL_NETWORK_GENERIC_TYPENAME,
+    typedef boost::fusion::SIGNAL_NETWORK_GENERIC_UNFUSED_BASE
+        <detail::SIGNAL_NETWORK_GENERIC_CLASS_IMPL<
+            SIGNAL_NETWORK_GENERIC_TYPENAME,
 #ifdef SIGNAL_NETWORK_GENERIC_TYPENAME2
-    SIGNAL_NETWORK_GENERIC_TYPENAME2,
+            SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif
-    Signature, OutSignal, Combiner, Group, GroupCompare>,
-    typename boost::function_types::parameter_types<Signature>::type > base_type;
+            Signature, OutSignal, Combiner, Group, GroupCompare>,
+        typename boost::function_types::parameter_types<Signature>::type > base_type;
 public:
     SIGNAL_NETWORK_GENERIC_CLASS() {}
     template<typename T1>
@@ -96,11 +106,13 @@ public:
 } } // namespace boost::signals
 
 #undef SIGNAL_NETWORK_GENERIC_CLASS
+#undef SIGNAL_NETWORK_GENERIC_USE_TEMPLATED
 #undef SIGNAL_NETWORK_GENERIC_FILE
 #undef SIGNAL_NETWORK_GENERIC_TYPENAME
 #undef SIGNAL_NETWORK_GENERIC_TYPENAME2
 #undef SIGNAL_NETWORK_GENERIC_MEMBERNAME
 #undef SIGNAL_NETWORK_GENERIC_STANDARD_RESULT
+#undef SIGNAL_NETWORK_GENERIC_UNFUSED_BASE
 
 
 #endif

@@ -26,7 +26,7 @@ public:
 //[ test_multi_args_class2
 
 class SignalMultiCollector
-    : public boost::dataflow::port<boost::dataflow::signals::keyed_consumer>
+    : public boost::dataflow::port<boost::dataflow::signals::call_consumer>
 {
 	optional<float> last, last1, last2;
 	int cnt;
