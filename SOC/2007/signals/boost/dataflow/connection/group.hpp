@@ -9,11 +9,11 @@
 #include <boost/dataflow/support.hpp>
 
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
-#include <boost/fusion/sequence/container/vector.hpp>
+#include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/sequence/generation/vector_tie.hpp>
-#include <boost/fusion/sequence/view/zip_view.hpp>
+#include <boost/fusion/view/zip_view.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/mpl/not.hpp>

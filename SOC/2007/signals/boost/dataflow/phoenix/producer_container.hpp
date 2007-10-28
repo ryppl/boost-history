@@ -12,8 +12,8 @@
 #include <boost/iterator/zip_iterator.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/fusion/sequence/adapted/boost_tuple.hpp>
-#include <boost/fusion/sequence/view/joint_view.hpp>
+#include <boost/fusion/adapted/boost_tuple.hpp>
+#include <boost/fusion/view/joint_view.hpp>
 
 namespace boost { namespace phoenix {
     

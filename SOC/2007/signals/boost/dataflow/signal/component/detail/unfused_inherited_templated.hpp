@@ -7,7 +7,7 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_INHERITED_HPP_INCLUDED)
+#if !defined(BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_INHERITED_TEMPLATED_HPP_INCLUDED)
 #if !defined(BOOST_PP_IS_ITERATING)
 
 #include <boost/preprocessor/cat.hpp>
@@ -27,8 +27,8 @@
 #include <boost/fusion/support/detail/access.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/sequence/container/vector/vector.hpp>
-#include <boost/fusion/sequence/conversion/as_vector.hpp>
+#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/include/as_vector.hpp>
 
 #include <boost/fusion/functional/adapter/limits.hpp>
 
@@ -38,15 +38,15 @@
 namespace boost { namespace fusion
 {
 
-    template <class Function, class Sequence, typename Enable=void> class unfused_inherited;
+    template <class Function, class Sequence, typename Enable=void> class unfused_inherited_templated;
 
     //----- ---- --- -- - -  -   -
 
-    #define  BOOST_PP_ITERATION_PARAMS_1 (3, (0,BOOST_FUSION_UNFUSED_TYPED_MAX_ARITY, <boost/dataflow/signal/component/detail/unfused_inherited.hpp>))
+    #define  BOOST_PP_ITERATION_PARAMS_1 (3, (0,BOOST_FUSION_UNFUSED_TYPED_MAX_ARITY, <boost/dataflow/signal/component/detail/unfused_inherited_templated.hpp>))
     #include BOOST_PP_ITERATE() 
 }}
 
-#define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_INHERITED_HPP_INCLUDED
+#define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_INHERITED_TEMPLATED_HPP_INCLUDED
 #else // defined(BOOST_PP_IS_ITERATING)
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -57,7 +57,7 @@ namespace boost { namespace fusion
 #define OPERATOR_ARGS BOOST_PP_ITERATION()
 
     template <class Function, class Sequence>
-    class unfused_inherited<Function, Sequence,
+    class unfused_inherited_templated<Function, Sequence,
         typename boost::enable_if<
             boost::mpl::equal_to<
                 boost::fusion::result_of::size<Sequence>,
@@ -77,21 +77,21 @@ namespace boost { namespace fusion
 #define MT(z,i,s) \
         typename result_of::value_at_c<s,i>::type
 
-        unfused_inherited()
+        unfused_inherited_templated()
         { }
 
         template<typename T1>
-        unfused_inherited(const T1 &t1)
+        unfused_inherited_templated(const T1 &t1)
             : Function(t1)
         { }
         
         template<typename T1>
-            unfused_inherited(T1 &t1)
+            unfused_inherited_templated(T1 &t1)
             : Function(t1)
         { }
 
         template<typename T1, typename T2>
-            unfused_inherited(const T1 &t1, const T2 &t2)
+            unfused_inherited_templated(const T1 &t1, const T2 &t2)
             : Function(t1, t2)
         { }
         
@@ -105,6 +105,7 @@ namespace boost { namespace fusion
             typedef typename boost::result_of<Function(const arg_vector_t &)>::type type;
         };
 
+        template<int N>
         inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()(BOOST_PP_ENUM(OPERATOR_ARGS,M,arg_vector_t)) const
         {
@@ -113,10 +114,11 @@ namespace boost { namespace fusion
             (BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a))
 #endif
                 ;
-            return Function::operator()(arg);
+            return Function::template operator()<N>(arg);
         }
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1400)
+        template<int N>
         inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()(BOOST_PP_ENUM(OPERATOR_ARGS,M,arg_vector_t)) 
         {
@@ -125,7 +127,7 @@ namespace boost { namespace fusion
             (BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a))
 #endif
                 ;
-            return Function::operator()(arg);
+            return Function::template operator()<N>(arg);
         }
 #endif
 

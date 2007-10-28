@@ -256,12 +256,10 @@
 			children = (
 				08F98B3F0CD018E7009D642B /* signals */,
 				0800AC2F0C8CA99700994538 /* VTK */,
-				08668C4E0C19A16300ACB19A /* simple_distributed_example.cpp */,
 				08668C4F0C19A16300ACB19A /* Jamfile.v2 */,
 				08EFED440C1CD55100097C80 /* timing_example.cpp */,
 				08FC26060C46049400F59CDD /* edit_distance.cpp */,
 				08F9462E0C46C2F000E224E4 /* fibonacci.cpp */,
-				08C3EEA20C625AE30074AB9E /* simple_example.cpp */,
 			);
 			name = example;
 			path = ../../example;
@@ -500,6 +498,8 @@
 		08F98B3F0CD018E7009D642B /* signals */ = {
 			isa = PBXGroup;
 			children = (
+				08C3EEA20C625AE30074AB9E /* simple_example.cpp */,
+				08668C4E0C19A16300ACB19A /* simple_distributed_example.cpp */,
 				08F98B400CD0190A009D642B /* Jamfile.v2 */,
 				08F98B470CD01963009D642B /* intro_example.cpp */,
 			);

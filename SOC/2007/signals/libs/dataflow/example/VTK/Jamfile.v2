@@ -24,6 +24,7 @@ lib Xt : : <name>Xt <search>/usr/X11R6/lib ;
 project dataflow/test/VTK
     : requirements
       <include>../../../..
+      <include>$(BOOST_ROOT)
       <include>/usr/local/include/vtk-5.0/
       <define>BOOST_ALL_NO_LIB=1
       <toolset>darwin:<linkflags>"-framework CoreServices"

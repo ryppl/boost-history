@@ -11,8 +11,8 @@
 #include <boost/dataflow/signal/component/filter_base.hpp>
 
 #include <boost/fusion/functional/adapter/fused.hpp>
-#include <boost/fusion/sequence/conversion/as_vector.hpp>
-#include <boost/fusion/sequence/adapted/mpl.hpp>
+#include <boost/fusion/include/as_vector.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
 
 #ifndef SIGNAL_NETWORK_DEFAULT_OUT
 #define SIGNAL_NETWORK_DEFAULT_OUT unfused

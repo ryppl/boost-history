@@ -11,7 +11,7 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/fusion/functional/adapter/fused.hpp>
-#include <boost/fusion/sequence/adapted/mpl.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
 #include <boost/function_types/parameter_types.hpp>
 
 namespace boost { namespace signals {

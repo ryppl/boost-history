@@ -5,10 +5,15 @@
 
 project dataflow/example/signals
     : requirements
-      <include>../../..
+      <include>../../../..
       <library>/boost/signals//boost_signals/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
 
 exe intro_example : intro_example.cpp ;
+exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static/<thrd-api>pthread ;
+exe simple_distributed_example : simple_distributed_example.cpp
+    /boost/serialization//boost_serialization/<link>static
+    /boost/thread//boost_thread/<link>static/<thrd-api>pthread
+    /boost/system//boost_system/<link>static ;
 

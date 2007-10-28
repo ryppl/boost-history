@@ -16,7 +16,7 @@
 #endif
 
 #include <boost/mpl/vector.hpp>
-#include <boost/fusion/sequence/adapted/mpl.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 
 #define SIGNAL_NETWORK_GENERIC_CLASS_IMPL BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl)

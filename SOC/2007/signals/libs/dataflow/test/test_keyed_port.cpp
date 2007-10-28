@@ -7,7 +7,7 @@
 #include <boost/dataflow/support/keyed_port.hpp>
 #include <boost/dataflow/connection/port_map.hpp>
 
-#include <boost/fusion/sequence/container/map.hpp>
+#include <boost/fusion/container/map.hpp>
 #include <boost/test/included/test_exec_monitor.hpp>
 
 namespace df = boost::dataflow;

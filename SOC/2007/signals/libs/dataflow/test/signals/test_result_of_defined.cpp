@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/dataflow/signal/connection/detail/result_of_defined.hpp>
-#include <boost/fusion/sequence/container/map.hpp>
+#include <boost/fusion/container/map.hpp>
 #include <boost/dataflow/signal/component/junction.hpp>
 #include <boost/dataflow/signal/component/storage.hpp>
 

@@ -17,7 +17,7 @@
 #include <boost/assert.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/fusion/sequence/container/map.hpp>
+#include <boost/fusion/container/map.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 //[ vtk_mechanism

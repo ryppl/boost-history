@@ -11,9 +11,9 @@
 #include <boost/dataflow/signal/connection/slot_selector.hpp>
 #include <boost/dataflow/connection/port_map.hpp>
 
-#include <boost/fusion/sequence/container/vector.hpp>
-#include <boost/fusion/sequence/view/transform_view.hpp>
-#include <boost/fusion/sequence/container/map.hpp>
+#include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/view/transform_view.hpp>
+#include <boost/fusion/container/map.hpp>
 #include <boost/dataflow/detail/make_ref.hpp>
 
 namespace boost { namespace signals {
