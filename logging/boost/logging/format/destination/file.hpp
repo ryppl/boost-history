@@ -59,7 +59,7 @@ struct file_settings {
 };
 
 namespace detail {
-    std::ios_base::open_mode open_flags(file_settings fs) {
+    inline std::ios_base::open_mode open_flags(file_settings fs) {
         std::ios_base::open_mode flags = std::ios_base::out | fs.extra_flags() ;
         if ( fs.do_append() )
             flags |= std::ios_base::app;

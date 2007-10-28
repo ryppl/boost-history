@@ -197,10 +197,6 @@ private:
         const process_msg_type* operator->() const  { return &m_processor; }
         process_msg_type* operator->()              { return &m_processor; }
 
-        // in the future, this little class counts, since it'll expose a small virtual interface
-        // to allow BOOST_DECLARE_LOG/BOOST_DEFINE_LOG
-        //
-        // it also counts since it's the same interface as log_keeper
     private:
         process_msg_type m_processor;
     };

@@ -60,20 +60,20 @@ second error 5
 using namespace boost::logging;
 
 
-// Step 1 : Define your logging class(es)
+// Step 1 : Specify your logging class(es)
 typedef logger< process_msg<gather::ostream_like::return_str<>, destination::cout> > app_log_type;
 typedef logger< process_msg<gather::ostream_like::return_str<>, destination::file> > err_log_type;
 
 // Step 2 : Set up a filter
-filter::no_ts g_log_filter ; 
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 
 // Step 3: declare which loggers you'll use
 app_log_type g_log_app;
 err_log_type g_log_err("err.txt");
 
 // Step 4: define the macros through which you'll log
-#define LAPP_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_app, g_log_filter.is_enabled() ) 
-#define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err, g_log_filter.is_enabled() ) 
+#define LAPP_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_app, g_log_filter->is_enabled() ) 
+#define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err, g_log_filter->is_enabled() ) 
 
 void fastest_use_ostr_like_example() {
     // Step 5: use it...
@@ -85,12 +85,12 @@ void fastest_use_ostr_like_example() {
     std::string hello = "hello", world = "world";
     LAPP_ << hello << ", " << world << "\n";
 
-    g_log_filter.set_enabled(false);
+    g_log_filter->set_enabled(false);
     LAPP_ << "this will not be written to the log";
     LAPP_ << "this won't be written to the log";
     LERR_ << "this error is not logged " << i++;
 
-    g_log_filter.set_enabled(true);
+    g_log_filter->set_enabled(true);
     LAPP_ << "good to be back ;) " << i++ << "\n";
     LERR_ << "second error " << i++ << "\n";
 

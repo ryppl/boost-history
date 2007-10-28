@@ -32,21 +32,9 @@ namespace boost { namespace logging {
     template<class type> struct type_as_arg {};
 
 
-    /* 
-        it makes sure this value gets created before it's used
-
-        FIXME most likely I don't need this????
-    */
-    template<class type> struct ensure_created_before_used {
-        // FIXME I need to figure out how to do this - probably by just holding char[sizeof(T) * 2] or so - align it and that's it and have an extra bool
-        ensure_created_before_used(const type & val = type() ) : val(val) {}
-        type & operator()()         { return *this; }
-        const type & operator()() const   { return *this; }
-    private:
-        type val;
-    };
-
-
+    struct default_ {};
+    template<class param, class default_type> struct use_default                    { typedef param type; };
+    template<class default_type> struct use_default<default_, default_type>         { typedef default_type type; };
 
 
     struct ansi_unicode_char_holder {

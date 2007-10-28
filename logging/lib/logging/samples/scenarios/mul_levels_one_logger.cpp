@@ -47,31 +47,25 @@ It will look similar to this one:
 
 
 #define BOOST_LOGGING_COMPILE_FAST_OFF
-#include <boost/logging/logging.hpp>
 #include <boost/logging/format.hpp>
 
 using namespace boost::logging;
+// Step 3 : Specify your logging class(es)
+typedef logger< use_format_write< > > log_type;
 
-// Step 1: specify your formatter & destination base classes 
-typedef formatter::base< std::string& > formatter_base;
-typedef destination::base< const std::string & > destination_base;
+// Step 4: declare which filters and loggers you'll use (usually in a header file)
+BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
+BOOST_DECLARE_LOG(g_l, log_type) 
 
-// Step 2 : define your logging class(es)
-typedef logger< use_format_write<formatter_base,destination_base> > log_type;
-
-// Step 3 : If you use levels, Set up a log level holder
-level::holder g_log_level; // holds the application log level
-
-// Step 4: declare which loggers you'll use
-BOOST_DECLARE_LOG(g_l, log_type) // normally this goes into a header file ;)
-
-// Step 5: define which loggers you'll use
-BOOST_DEFINE_LOG(g_l, log_type)
-
-// Step 6: define the macros through which you'll log
+// Step 5: define the macros through which you'll log
 #define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, debug )
 #define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, error )
 #define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, info )
+
+// Step 6: Define the filters and loggers you'll use (usually in a source file)
+BOOST_DEFINE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
+BOOST_DEFINE_LOG(g_l, log_type)
+
 
 void test_mul_levels_one_logger() {
     // Step 7: add formatters and destinations
@@ -93,12 +87,12 @@ void test_mul_levels_one_logger() {
     std::string hello = "hello", world = "world";
     LAPP_ << hello << ", " << world;
 
-    g_log_level.set_enabled(level::error);
+    g_log_level->set_enabled(level::error);
     LDBG_ << "this will not be written anywhere";
     LAPP_ << "this won't be written anywhere either";
     LERR_ << "second error " << i++;
 
-    g_log_level.set_enabled(level::info);
+    g_log_level->set_enabled(level::info);
     LAPP_ << "good to be back ;) " << i++;
     LERR_ << "third error " << i++;
 

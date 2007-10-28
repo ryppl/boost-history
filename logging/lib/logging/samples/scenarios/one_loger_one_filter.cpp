@@ -50,32 +50,30 @@ It will be:
 
 
 #define BOOST_LOGGING_COMPILE_FAST_OFF
-#include <boost/logging/logging.hpp>
+#include <boost/logging/format_fwd.hpp>
+
+// Step 1: Optimize : use a cache string, to make formatting the message faster
+BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
+
 #include <boost/logging/format.hpp>
 
 using namespace boost::logging;
 
-// Optimize : use a cache string, to make formatting the message faster
-typedef optimize::cache_string_one_str<> cache_string;
+// Step 3 : Specify your logging class(es)
+typedef logger< use_format_write< > > log_type;
 
-// Step 1: specify your formatter & destination base classes 
-typedef formatter::base< cache_string& > formatter_base;
-typedef destination::base< const std::string & > destination_base;
 
-// Step 2 : Define your logging class(es)
-typedef logger< use_format_write<formatter_base,destination_base> > log_type;
+// Step 4: declare which filters and loggers you'll use (usually in a header file)
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+BOOST_DECLARE_LOG(g_l, log_type) 
 
-// Step 3 : Set up a filter
-filter::no_ts g_log_filter ; 
+// Step 5: define the macros through which you'll log
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
 
-// Step 4: declare which loggers you'll use
-BOOST_DECLARE_LOG(g_l, log_type) // normally these go into a header file ;)
-
-// Step 5: define which loggers you'll use
+// Step 6: Define the filters and loggers you'll use (usually in a source file)
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type)
 
-// Step 6: define the macros through which you'll log
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter.is_enabled() ) 
 
 void one_logger_one_filter_example() {
     // Step 7: add formatters and destinations
@@ -95,11 +93,11 @@ void one_logger_one_filter_example() {
     std::string hello = "hello", world = "world";
     L_ << hello << ", " << world;
 
-    g_log_filter.set_enabled(false);
+    g_log_filter->set_enabled(false);
     L_ << "this will not be written to the log";
     L_ << "this won't be written to the log";
 
-    g_log_filter.set_enabled(true);
+    g_log_filter->set_enabled(true);
     L_ << "good to be back ;) " << i++;
 
     // Step 9 : Enjoy!

@@ -27,6 +27,7 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/logging/detail/format_msg_type.hpp>
 
 namespace boost { namespace logging {
 
@@ -232,33 +233,23 @@ struct my_file : destination::class_<my_file,destination_base,op_equal_has_conte
 */
 namespace manipulator {
 
-    namespace detail {
-        struct default_type {};
-        template<class type_> struct ptr_finder { 
-            template<class other_type> struct find { typedef other_type type ; };            
-        };
-        template<> struct ptr_finder<default_type> {
-            template<class other_type> struct find { typedef other_type* type ; };
-        };
-    }
 
 
 
 /** 
-    @brief What to use as base class, for your formatter and destination classes
+    @brief What to use as base class, for your manipulator classes
 
     When using formatters and destinations, formatters must share a %base class,
     and destinations must share a %base class - see manipulator namespace.
 */
 template<
         class arg_type, 
-        class ptr_type_ = detail::default_type > 
+        class ptr_type_ = default_ > 
     struct base : boost::logging::op_equal::same_type_op_equal_base {
 
     typedef base<arg_type, ptr_type_> self_type;
-    typedef typename detail::ptr_finder<ptr_type_> type_finder;
-    typedef typename type_finder::template find<self_type>::type ptr_type;
 
+    typedef typename use_default<ptr_type_, self_type*>::type ptr_type;
     typedef arg_type param;
 
     typedef typename boost::remove_const<param>::type non_const_param;
@@ -293,11 +284,9 @@ namespace detail {
 }
 
 /**
-    @brief Use this when implementing your own formatter or destination class
-
-    x
+    @brief Use this when implementing your own formatter or destination class. Don't use this directly. Use formatter::class_ or destination::class_
 */
-template<class type, class base_type, implement_op_equal::type op_e> struct class_ 
+template<class type, implement_op_equal::type op_e, class base_type> struct class_ 
     : base_type, 
       detail::op_equal_base<op_e>, 
       boost::logging::op_equal::same_type_op_equal<type> {
@@ -397,8 +386,8 @@ namespace detail {
     template<class generic_type, class manipulator_base> struct generic_holder 
             : class_< 
                     generic_holder<generic_type,manipulator_base>, 
-                    manipulator_base, 
-                    implement_op_equal::has_context> {
+                    implement_op_equal::has_context,
+                    manipulator_base > {
         typedef typename manipulator_base::param param;
 
         generic_type m_val;
@@ -438,23 +427,43 @@ FIXME
 @sa manipulator::base, manipulator::base_no_opearator_call, manipulator::non_const_context
 */
 namespace formatter {
-    using boost::logging::manipulator::base;
-    using boost::logging::manipulator::non_const_context;
 
     /** 
-        @sa boost::logging::manipulator::class_
+    @brief What to use as base class, for your formatter classes
+
+    When using formatters and destinations, formatters must share a %base class,
+    and destinations must share a %base class - see manipulator namespace.
     */
-    using boost::logging::manipulator::class_;
+    template<
+        class arg_type = typename msg_type<override>::type, 
+        class ptr_type_ = default_ > 
+    struct base : boost::logging::manipulator::base<arg_type, ptr_type_> {
+    };
+
+    /** 
+        @sa boost::logging::manipulator::implement_op_equal
+    */
+    typedef boost::logging::manipulator::implement_op_equal implement_op_equal;
+
+    /**
+        @brief Use this when implementing your own formatter class
+
+        @param type Your own class name
+        @param op_e How will you @ref boost::logging::manipulator::implement_op_equal "implement operator=="
+
+        @param base_type (optional) The formatter base class. Unless you've specified your own formatter class, you'll be happy with the default
+    */
+    template<class type, implement_op_equal::type op_e, class base_type = base<> > struct class_ 
+        : boost::logging::manipulator::class_<type, op_e, base_type> {};
+
+
+    using boost::logging::manipulator::non_const_context;
 
     /** 
         @sa boost::logging::manipulator::is_generic
     */
     typedef boost::logging::manipulator::is_generic is_generic;
 
-    /** 
-        @sa boost::logging::manipulator::implement_op_equal
-    */
-    typedef boost::logging::manipulator::implement_op_equal implement_op_equal;
 }
 
 /**  
@@ -469,23 +478,41 @@ FIXME
 
 */
 namespace destination {
-    using boost::logging::manipulator::base;
+    /** 
+    @brief What to use as base class, for your destination classes
+
+    When using formatters and destinations, formatters must share a %base class,
+    and destinations must share a %base class - see manipulator namespace.
+    */
+    template<
+        class arg_type = typename msg_type<override>::type, 
+        class ptr_type_ = default_ > 
+    struct base : boost::logging::manipulator::base<arg_type, ptr_type_> {
+    };
+
     using boost::logging::manipulator::non_const_context;
 
     /** 
-        @sa boost::logging::manipulator::class_
+        @sa boost::logging::manipulator::implement_op_equal
     */
-    using boost::logging::manipulator::class_;
+    typedef boost::logging::manipulator::implement_op_equal implement_op_equal;
+
+    /**
+        @brief Use this when implementing your own destination class
+
+        @param type Your own class name
+        @param op_e How will you @ref boost::logging::manipulator::implement_op_equal "implement operator=="
+
+        @param base_type (optional) The destination base class. Unless you've specified your own destination class, you'll be happy with the default
+    */
+    template<class type, implement_op_equal::type op_e, class base_type = base<> > struct class_ 
+        : boost::logging::manipulator::class_<type, op_e, base_type> {};
 
     /** 
         @sa boost::logging::manipulator::is_generic
     */
     typedef boost::logging::manipulator::is_generic is_generic;
 
-    /** 
-        @sa boost::logging::manipulator::implement_op_equal
-    */
-    typedef boost::logging::manipulator::implement_op_equal implement_op_equal;
 }
 
 }}

@@ -28,7 +28,22 @@
 #include <boost/logging/macros.hpp>
 #include <boost/logging/level.hpp>
 
+// just in case we might think of using formatters
+#include <boost/logging/detail/format_msg_type.hpp>
+
 namespace boost { namespace logging {
+
+/** 
+@file boost/logging/logging.hpp
+
+Include this file when you're using the logging lib, but don't necessarily want to use @ref manipulator "formatters and destinations".
+If you want to use @ref manipulator "formatters and destinations", then you can include this one instead:
+
+@code
+#include <boost/logging/format_fwd.hpp>
+@endcode
+
+*/
 
 }}
 

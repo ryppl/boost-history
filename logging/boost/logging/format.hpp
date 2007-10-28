@@ -32,8 +32,18 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/logging/detail/manipulator.hpp>
+#include <boost/logging/format_fwd.hpp>
 
 namespace boost { namespace logging {
+
+/** 
+@file boost/logging/format.hpp
+
+Include this file when you're using @ref manipulator "formatters and destinations",
+and you want to define the logger classes, in a source file
+(using BOOST_DEFINE_LOG)
+
+*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Format and write

@@ -11,6 +11,11 @@ namespace boost { namespace logging {
 - @ref common_scenarios_6
 - @ref common_scenarios_7
 - @ref common_scenarios_8
+- @ref scenario_multiple_files
+    - @ref scenario_multiple_files_program 
+    - @ref scenario_multiple_files_log_h 
+    - @ref scenario_multiple_files_log_cpp 
+    - @ref scenario_multiple_files_main 
 
 @copydoc common_usage_steps_fd 
 

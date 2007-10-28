@@ -50,12 +50,12 @@ namespace convert {
     Example : write_time
     */
     namespace prepend {
-        void write(const char_type * src, string_type & dest ) {
+        inline void write(const char_type * src, string_type & dest ) {
             const char_type * end = src;
             for ( ; *end; ++end);
             dest.insert( dest.begin(), src, end);
         }
-        void write(const string_type & src, string_type & dest) {
+        inline void write(const string_type & src, string_type & dest) {
             dest.insert( dest.begin(), src.begin(), src.end() );
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
@@ -69,10 +69,10 @@ namespace convert {
     /** 
     */
     namespace append {
-        void write(const char_type * src, string_type & dest ) {
+        inline void write(const char_type * src, string_type & dest ) {
             dest += src;
         }
-        void write(const string_type & src, string_type & dest) {
+        inline void write(const string_type & src, string_type & dest) {
             dest += src;
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
@@ -86,10 +86,10 @@ namespace convert {
     /** 
     */
     namespace modify {
-        void write(const char_type * src, string_type & dest ) {
+        inline void write(const char_type * src, string_type & dest ) {
             dest = src;
         }
-        void write(const string_type & src, string_type & dest) {
+        inline void write(const string_type & src, string_type & dest) {
             dest = src;
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {

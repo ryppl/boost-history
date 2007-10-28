@@ -24,6 +24,7 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/format/optimize.hpp>
 #include <boost/logging/process_msg/ostream_like.hpp>
+#include <boost/logging/detail/manipulator.hpp>
 
 namespace boost { namespace logging {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,10 +79,22 @@ typedef logger< process_msg<
 
 FIXME need to have more template params
 
-@param format_base your formatter base class
+@param format_base_type your formatter base class
 @param destination_base your destination base class
+@param thread_safety
+@param gather
 */
-template<class format_base, class destination_base> struct use_format_write {
+template<
+            class format_base_type = default_, 
+            class destination_base_type = default_ ,
+            class thread_safety = default_ ,
+            class gather = default_
+    >
+        struct use_format_write {
+
+    typedef typename use_default<format_base_type, boost::logging::formatter::base<> > ::type format_base;
+    typedef typename use_default<destination_base_type, boost::logging::destination::base<> > ::type destination_base;
+
     typedef typename format_base::raw_param format_param;
     typedef typename detail::find_gather<format_param>::type gather_type;
 
@@ -89,23 +102,31 @@ template<class format_base, class destination_base> struct use_format_write {
     typedef typename detail::find_format_write_params<format_param, format_base, destination_base>::router_type router_type;
 };
 
-template<class format_base, class destination_base> struct logger< use_format_write<format_base, destination_base> > 
+template<class format_base, class destination_base, class thread_safety, class gather> struct logger< use_format_write<format_base, destination_base, thread_safety, gather> > 
     : logger_base< 
         process_msg< 
-            typename use_format_write<format_base, destination_base>::gather_type,
+            typename use_format_write<format_base, destination_base, thread_safety, gather>::gather_type,
             writer::format_write<
-                format_base,
-                destination_base,
-                typename use_format_write<format_base, destination_base>::apply_format_and_write,
-                typename use_format_write<format_base, destination_base>::router_type
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::format_base,
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::destination_base,
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::apply_format_and_write,
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::router_type
             > 
         > 
       >
 {
-    typedef typename logger_base< 
+    typedef logger_base< 
         process_msg< 
-            typename use_format_write<format_base, destination_base>::gather_type,
-            writer::format_write<format_base,destination_base> > > logger_base_type;
+            typename use_format_write<format_base, destination_base, thread_safety, gather>::gather_type,
+            writer::format_write<
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::format_base,
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::destination_base,
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::apply_format_and_write,
+                typename use_format_write<format_base, destination_base, thread_safety, gather>::router_type
+            > 
+        > 
+      >
+     logger_base_type;
 
     logger() {}
     BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger, logger_base_type)

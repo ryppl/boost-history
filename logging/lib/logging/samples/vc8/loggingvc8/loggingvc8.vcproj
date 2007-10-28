@@ -558,13 +558,6 @@
 				<File
 					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
 					>
-					<FileConfiguration
-						Name="Test|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\scenarios\mul_loggers_one_filter.cpp"
@@ -792,6 +785,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\boost\logging\format_all.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\format_fwd.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\format_msg_type.hpp"
 					>
 				</File>
 				<File

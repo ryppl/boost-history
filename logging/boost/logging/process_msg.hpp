@@ -104,8 +104,6 @@ namespace boost { namespace logging {
     template<class gather_msg, class write_msg> struct process_msg {
         typedef process_msg<gather_msg, write_msg> self;
 
-        // FIXME we should have a way to specify a template gather_msg - for example useful for cache_string
-
         process_msg() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(process_msg,m_writer)
 
@@ -128,14 +126,29 @@ namespace boost { namespace logging {
         write_msg m_writer;
     };
 
-    template<class arg_type = const char*> struct write_call_func {
-        typedef void (*func)(arg_type) ;
-        write_call_func(func f) : m_f(f) {}
-        void operator()(arg_type a) { f(a); }
-    private:
-        func m_f;
-    };
+    namespace detail {
+        template<class param> struct do_write_base {
+            virtual void operator()(param arg) = 0;
+        };
 
+        template<class gather_msg, class write_msg> struct do_write : do_write_base<typename gather_msg::param> {
+            typedef typename gather_msg::param param;
+
+            BOOST_LOGGING_FORWARD_CONSTRUCTOR(do_write,m_writer)
+            
+            virtual void operator()(param arg) {
+                m_writer(arg);
+            }
+            write_msg m_writer;
+        };
+
+        template<class gather_msg> struct call_write {
+            typedef typename gather_msg::param param;
+            typedef typename do_write_base<param> writer_type;
+            writer_type * m_writer;
+            call_write(writer_type * writer) : m_writer(writer) {}
+        };
+    }
 
 }}
 

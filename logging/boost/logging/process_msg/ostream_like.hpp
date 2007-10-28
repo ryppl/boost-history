@@ -118,6 +118,9 @@ namespace ostream_like {
     In our case, 1. and 2. are the same
 */
 template<class stream_type = std::basic_ostringstream<char_type> > struct return_raw_stream {
+    // what does the gather_msg class return?
+    typedef stream_type& param;
+
     return_raw_stream() {}
     return_raw_stream(const return_raw_stream& other) : m_out( other.m_out.str() ) {}
 
@@ -162,6 +165,9 @@ private:
 
 */
 template<class stream_type = std::basic_ostringstream<char_type> > struct return_str {
+    // what does the gather_msg class return?
+    typedef std::basic_string<char_type> & param;
+
     return_str() {}
     return_str(const return_str& other) : m_out(other.m_out.str()) {}
 
@@ -187,6 +193,9 @@ template<
         int prepend_size = 10, 
         int append_size = 10, 
         class stream_type = std::basic_ostringstream<char_type> > struct return_cache_str {
+
+    // what does the gather_msg class return?
+    typedef cache_string & param;
     
     return_cache_str() {}
     return_cache_str(const return_cache_str& other) : m_out(other.m_out.str()) {}

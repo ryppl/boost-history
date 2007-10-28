@@ -76,36 +76,34 @@ The out.txt file will look like this:
 
 
 #define BOOST_LOGGING_COMPILE_FAST_OFF
-#include <boost/logging/logging.hpp>
+#include <boost/logging/format_fwd.hpp>
+
+// Step 1: Optimize : use a cache string, to make formatting the message faster
+BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
+
 #include <boost/logging/format.hpp>
+
+// Step 3 : Specify your logging class(es)
+typedef boost::logging::logger< boost::logging::use_format_write< > > log_type;
+
+
+// Step 4: declare which filters and loggers you'll use (usually in a header file)
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts )
+BOOST_DECLARE_LOG(g_l, log_type) 
+
+// Step 5: define the macros through which you'll log
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+
+// Step 6: Define the filters and loggers you'll use (usually in a source file)
+BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
+
 
 using namespace boost::logging;
 
-// Optimize : use a cache string, to make formatting the message faster
-typedef optimize::cache_string_one_str<> cache_string;
-
-// Step 1: specify your formatter & destination base classes 
-typedef formatter::base< cache_string& > formatter_base;
-typedef destination::base< const std::string & > destination_base;
-
-// Step 2 : Define your logging class(es)
-typedef logger< use_format_write<formatter_base,destination_base> > log_type;
-
-// Step 3 : Set up a filter
-filter::no_ts g_log_filter ; 
-
-// Step 4: declare which loggers you'll use
-BOOST_DECLARE_LOG(g_l, log_type) // normally these go into a header file ;)
-
-// Step 5: define which loggers you'll use
-BOOST_DEFINE_LOG(g_l, log_type)
-
-// Step 6: define the macros through which you'll log
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter.is_enabled() ) 
-
 // Example of custom formatter:
 // dump the no. of seconds since start of program
-struct secs_since_start : formatter::class_<secs_since_start, formatter_base, formatter::implement_op_equal::no_context> {
+struct secs_since_start : formatter::class_<secs_since_start, formatter::implement_op_equal::no_context> {
     ::time_t m_start;
     secs_since_start() : m_start( ::time(0) ) {}
     void operator()(param str) const {
@@ -119,7 +117,7 @@ struct secs_since_start : formatter::class_<secs_since_start, formatter_base, fo
 // Example of custom destination:
 // Dump each message as XML
 struct as_xml : 
-        destination::class_<as_xml, destination_base, formatter::implement_op_equal::has_context>, 
+        destination::class_<as_xml, formatter::implement_op_equal::has_context>, 
         formatter::non_const_context<std::ofstream> {
 
     std::string m_name;
@@ -152,11 +150,11 @@ void custom_fmt_dest_example() {
     std::string hello = "hello", world = "world";
     L_ << hello << ", " << world;
 
-    g_log_filter.set_enabled(false);
+    g_log_filter->set_enabled(false);
     L_ << "this will not be written to the log";
     L_ << "this won't be written to the log";
 
-    g_log_filter.set_enabled(true);
+    g_log_filter->set_enabled(true);
     L_ << "good to be back ;) " << i++;
 
     // Step 9 : Enjoy!
