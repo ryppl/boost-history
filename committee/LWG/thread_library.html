@@ -1441,8 +1441,8 @@ class lock_guard
 public:
     typedef Mutex mutex_type;
 
-    explicit lock_guard(mutex_type&amp; m);
-    lock_guard(mutex_type&amp; m, adopt_lock_t);
+    explicit lock_guard(mutex_type&amp; <var>m</var>);
+    lock_guard(mutex_type&amp; <var>m</var>, adopt_lock_t);
     ~lock_guard();
 
     lock_guard(lock_guard const&amp;) = delete;
@@ -1464,7 +1464,7 @@ or transferred away from the <code>lock_guard</code>.
 </p>
 
 <pre><code>
-explicit lock_guard(mutex_type&amp; m);
+explicit lock_guard(mutex_type&amp; <var>m</var>);
 </code></pre>
 
 <dl>
@@ -1472,33 +1472,33 @@ explicit lock_guard(mutex_type&amp; m);
 <dd>
 If <code>mutex_type</code> is not a recursive mutex,  the current thread
 does not own the mutex.
-The lifetime of <code><i>m</i></code> includes the lifetime
+The lifetime of <code><var>m</var></code> includes the lifetime
 of the <code>lock_guard</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><i>m</i></code>
-and calls <code><i>m</i>.lock()</code>.
+Stores a reference to <code><var>m</var></code>
+and calls <code><var>m</var>.lock()</code>.
 <b>[Crowl: An acquire specification is not necessary because of m.lock().]</b>
 </dd>
 </dl>
 
 <pre><code>
-lock_guard(mutex_type&amp; m, adopt_lock_t);
+lock_guard(mutex_type&amp; <var>m</var>, adopt_lock_t);
 </code></pre>
 
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The current thread has ownership of the mutex <code><i>m</i></code>.
-The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
-lock_guard</code> object.
+The current thread has ownership of the mutex <code><var>m</var></code>.
+The lifetime of <code><var>m</var></code> includes the lifetime of the
+<code>lock_guard</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><i>m</i></code>
+Stores a reference to <code><var>m</var></code>
 and performs no other operation on it.
 </dd>
 </dl>
@@ -1510,7 +1510,7 @@ and performs no other operation on it.
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code><i>m</i>.unlock()</code>.
+<code><var>m</var>.unlock()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -1532,10 +1532,10 @@ public:
     typedef Mutex mutex_type;
 
     unique_lock();
-    explicit unique_lock(mutex_type&amp; m);
-    unique_lock(mutex_type&amp; m, defer_lock_t);
-    unique_lock(mutex_type&amp; m, try_to_lock_t);
-    unique_lock(mutex_type&amp; m, adopt_lock_t);
+    explicit unique_lock(mutex_type&amp; <var>m</var>);
+    unique_lock(mutex_type&amp; <var>m</var>, defer_lock_t);
+    unique_lock(mutex_type&amp; <var>m</var>, try_to_lock_t);
+    unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
     ~unique_lock();
 
     unique_lock(unique_lock const&amp;) = delete;
@@ -1599,7 +1599,7 @@ owns_lock() == false
 </dl>
 
 <pre><code>
-explicit unique_lock(mutex_type&amp; m);
+explicit unique_lock(mutex_type&amp; <var>m</var>);
 </code></pre>
 
 <dl>
@@ -1607,27 +1607,27 @@ explicit unique_lock(mutex_type&amp; m);
 <dd>
 If <code>mutex_type</code> is not a recursive mutex,  the current thread
 does not own the mutex.
-The lifetime of <code><i>m</i></code> includes the lifetime
+The lifetime of <code><var>m</var></code> includes the lifetime
 of the <code>unique_lock</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><i>m</i></code>
-and calls <code><i>m</i>.lock()</code>.
+Stores a reference to <code><var>m</var></code>
+and calls <code><var>m</var>.lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
 <pre><code>
-mutex() == &amp;m
+mutex() == &amp;<var>m</var>
 owns_lock() == true
 </code></pre>
 </dd>
 </dl>
 
 <pre><code>
-unique_lock(mutex_type&amp; m, defer_lock_t);
+unique_lock(mutex_type&amp; <var>m</var>, defer_lock_t);
 </code></pre>
 
 <dl>
@@ -1635,27 +1635,27 @@ unique_lock(mutex_type&amp; m, defer_lock_t);
 <dd>
 If <code>mutex_type</code> is not a recursive mutex,  the current thread
 does not own the mutex.
-The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
+The lifetime of <code><var>m</var></code> includes the lifetime of the <code>
 unique_lock</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><i>m</i></code>
+Stores a reference to <code><var>m</var></code>
 and performs no other operation on it.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
 <pre><code>
-mutex() == &amp;m
+mutex() == &amp;<var>m</var>
 owns_lock() == false
 </code></pre>
 </dd>
 </dl>
 
 <pre><code>
-unique_lock(mutex_type&amp; m, try_to_lock_t);
+unique_lock(mutex_type&amp; <var>m</var>, try_to_lock_t);
 </code></pre>
 
 <dl>
@@ -1663,47 +1663,47 @@ unique_lock(mutex_type&amp; m, try_to_lock_t);
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, then the current thread
 does not own the mutex.
-The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
+The lifetime of <code><var>m</var></code> includes the lifetime of the <code>
 unique_lock</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><i>m</i></code>
-and calls <code><i>m</i>.try_lock()</code>.
+Stores a reference to <code><var>m</var></code>
+and calls <code><var>m</var>.try_lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
 <pre><code>
-mutex() == &amp;m
-owns_lock() == <i>The result of the call to</i> <i>m</i>.try_lock()
+mutex() == &amp;<var>m</var>
+owns_lock() == <i>The result of the call to</i> <var>m</var>.try_lock()
 </code></pre>
 </dd>
 </dl>
 
 <pre><code>
-unique_lock(mutex_type&amp; m, adopt_lock_t);
+unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
 </code></pre>
 
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The current thread has ownership of the mutex <code><i>m</i></code>.
-The lifetime of <code><i>m</i></code> includes the lifetime of the <code>
+The current thread has ownership of the mutex <code><var>m<var></code>.
+The lifetime of <code><var>m<var></code> includes the lifetime of the <code>
 unique_lock</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><i>m</i></code>
+Stores a reference to <code><var>m<var></code>
 and performs no other operation on it.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
 <pre><code>
-mutex() == &amp;m
+mutex() == &amp;<var>m</var>
 owns_lock() == true
 </code></pre>
 </dd>
