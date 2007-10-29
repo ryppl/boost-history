@@ -43,42 +43,58 @@ Document number: NXXXX=07-XXXX<br>
 2007-10-11
 </address>
 
-<hr>
-
 <h1>Multi-threading Library for Standard C++</h1>
 
 <h2>Contents</h2>
 
-<ul>
-<li>
-<a href="#Introduction">Introduction</a>
-</li>
-<li>
-<a href="#ProposedWording">Proposed Wording</a>
-<ul>
-<li>
-<a href="#ThreadsWording">Threads Proposed Wording</a>
-</li>
-<li>
-<a href="#MutexsLocksWording">Mutexes and Locks Proposed Wording</a>
-</li>
-<li>
-<a href="#ConditionVariablesWording">Condition Variables Proposed Wording</a>
-</li>
-<li>
-<a href="#DateTime">Date Time Proposed Wording</a>
-</li>
-</ul>
-</li>
-<li>
-<a href="#References">References</a>
-</li>
-<li>
-<a href="#Acknowledgments">Acknowledgments</a>
-</li>
-</ul>
+<p>
+<br><a href="#Introduction">Introduction</a>
+<br><a href="#utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#function.objects">20.5 Function objects [function.objects]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#unord.hash">20.5.15 Class template <code>hash</code> [unord.hash]</a>
+<br><a href="#thread">Chapter 30&nbsp;&nbsp; Multi-threading library [thread]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads">30.1 Threads [thread.threads]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.class">30.1.1 Class thread [thread.threads.class]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.types">30.1.1.1 <code>thread</code> types [thread.threads.types]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.id">30.1.1.1.1 Class <code>thread::id</code> [thread.threads.id]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.constr">30.1.1.2 <code>thread</code> constructors [thread.threads.constr]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.destr">30.1.1.3 <code>thread</code> destructor [thread.threads.destr]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.assign">30.1.1.4 <code>thread</code> assignment [thread.threads.assign]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.member">30.1.1.5 <code>thread</code> members [thread.threads.member]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.static">30.1.1.6 <code>thread</code> static members [thread.threads.static]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.this">30.1.2 Namespace <code>this_thread</code> [thread.threads.this]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.onceflag">30.1.3 <code>struct once_flag</code> [thread.threads.onceflag]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.1.4 <code>non-member function call_once</code> [thread.threads.callonce]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex">30.2 Mutexs and locks [thread.mutex]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.concept">30.2.1 Mutex concepts [thread.mutex.concept]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.recursive">30.2.1.2 Class recursive_mutex [thread.mutex.recursive]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.concept">30.2.2 Timed Mutex concept [thread.timed.concept]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.class">30.2.2.1 Class timed_mutex [thread.timed.class]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.recursive">30.2.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.concept">30.2.3 Locks [thread.lock.concept]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.guard">30.2.3.1 Class lock_guard [thread.lock.guard]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.unique">30.2.3.2 Class unique_lock [thread.lock.unique]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.algorithm">30.2.3 Generic Locking Algorithms [thread.lock.algorithm]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condition">30.3 Condition variables [thread.condition]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.3.1 Class condition_variable [thread.condvar]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.3.2 Class condition_variable_any [thread.condvarany]</a>
+<br><a href="#time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.1 Class system_time [time.system]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.getsystem">31.2 Function get_system_time [time.getsystem]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.duration">31.3 Common Duration Functions [time.duration]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nanoseconds">31.4 Class nanoseconds [time.nanoseconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.microseconds">31.5 Class microseconds [time.microseconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.milliseconds">31.6 Class milliseconds [time.milliseconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.seconds">31.7 Class seconds [time.seconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.minutes">31.8 Class minutes [time.minutes]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.hours">31.9 Class hours [time.hours]</a>
+<br><a href="#References">References</a>
+<br><a href="#Acknowledgments">Acknowledgments</a>
+</p>
 
-<h2><a name="Introduction"></a>Introduction</h2>
+<h2><a name="Introduction">Introduction</a></h2>
 
 <p>
 This is a revision of
@@ -91,11 +107,9 @@ requested by the combined LWG/Concurrency working groups
 at the Kona meeting.
 </p>
 
-<h1><a name="ProposedWording">Proposed wording</a></h1>
+<h2><a name="utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a></h2>
 
-<hr>
-
-<h3>20.5 Function objects [function.objects]</h3>
+<h3><a name="function.objects">20.5 Function objects [function.objects]</a></h3>
 
 <p>
 <i>Modify paragraph 2 as follows:</i>
@@ -116,7 +130,7 @@ namespace std {
 </code></pre>
 </blockquote>
 
-<h3>20.5.15 Class template <code>hash</code> [unord.hash]</h3>
+<h3><a name="unord.hash">20.5.15 Class template <code>hash</code> [unord.hash]</a></h3>
 
 <p>
 <i>Modify paragraph 1 as follows:</i>
@@ -138,11 +152,7 @@ types
 </p>
 </blockquote>
 
-<hr>
-
-<h2>Chapter 30&nbsp;&nbsp; Multi-threading library</h2>
-
-<hr>
+<h2><a name="thread">Chapter 30&nbsp;&nbsp; Multi-threading library [thread]</a></h2>
 
 <p>
 The following subclauses describe components to create and manage threads
@@ -224,7 +234,7 @@ these members is inherently non-portable.
 &mdash;<i>end note</i>]
 </p>
 
-<h3><a name="ThreadsWording">Threads</a></h3>
+<h3><a name="thread.threads">30.1 Threads [thread.threads]</a></h3>
 
 <p>
 <b>&lt;thread&gt; synopsis</b>
@@ -265,7 +275,7 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </code></pre>
 </blockquote>
 
-<h4>Class thread</h4>
+<h4><a name="thread.threads.class">30.1.1 Class thread [thread.threads.class]</a></h4>
 
 <p>
 An object of class <code>thread</code> represents and manages a thread.
@@ -313,9 +323,9 @@ shall be standard-layout
 classes (chapter 9 [class]).
 </p>
 
-<h5><code>thread</code> types</h5>
+<h5><a name="thread.threads.types">30.1.1.1 <code>thread</code> types [thread.threads.types]</a></h5>
 
-<h6>Class <code>thread::id</code></h6>
+<h6><a name="thread.threads.id">30.1.1.1.1 Class <code>thread::id</code> [thread.threads.id]</a></h6>
 
 <blockquote>
 <pre><code>
@@ -494,7 +504,7 @@ the stream <code>out</code>.
 </dd>
 </dl>
 
-<h5><code>thread</code> constructors</h5>
+<h5><a name="thread.threads.constr">30.1.1.2 <code>thread</code> constructors [thread.threads.constr]</a></h5>
 
 <pre><code>
 thread();
@@ -599,7 +609,7 @@ Nothing.
 </dd>
 </dl>
 
-<h5><code>thread</code> destructor</h5>
+<h5><a name="thread.threads.destr">30.1.1.3 <code>thread</code> destructor [thread.threads.destr]</a></h5>
 
 <pre><code>
 ~thread();
@@ -618,7 +628,7 @@ Nothing.
 </dd>
 </dl>
 
-<h5><code>thread</code> assignment</h5>
+<h5><a name="thread.threads.assign">30.1.1.4 <code>thread</code> assignment [thread.threads.assign]</a></h5>
 
 <pre><code>
 thread&amp; operator=(thread&amp;&amp; <i>x</i>);
@@ -651,7 +661,7 @@ Nothing.
 </dd>
 </dl>
 
-<h5><code>thread</code> members</h5>
+<h5><a name="thread.threads.member">30.1.1.5 <code>thread</code> members [thread.threads.member]</a></h5>
 
 <pre><code>
 void swap(thread&amp;&amp; <i>x</i>);
@@ -771,7 +781,7 @@ Nothing.
 </dd>
 </dl>
 
-<h5><code>thread</code> static members</h5>
+<h5><a name="thread.threads.static">30.1.1.6 <code>thread</code> static members [thread.threads.static]</a></h5>
 
 <pre><code>
 unsigned hardware_concurrency();
@@ -795,7 +805,7 @@ Nothing.
 </dd>
 </dl>
 
-<h5><code>thread</code> specialized algorithms</h5>
+<h5><a name="thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a></h5>
 
 <pre><code>
 void swap(thread&amp;  x, thread&amp;  y);
@@ -812,7 +822,7 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 
 
 
-<h4>Namespace <code>this_thread</code></h4>
+<h4><a name="thread.threads.this">30.1.2 Namespace <code>this_thread</code> [thread.threads.this]</a></h4>
 
 <blockquote>
 <pre><code>
@@ -888,7 +898,7 @@ Nothing.
 </dd>
 </dl>
 
-<h4><code>struct once_flag</code></h4>
+<h4><a name="thread.threads.onceflag">30.1.3 <code>struct once_flag</code> [thread.threads.onceflag]</a></h4>
 
 <p>
 Objects of class <code>once_flag</code> are opaque data structures that allow
@@ -916,7 +926,7 @@ argument that no function has been called.
 </dl>
 
 
-<h4><code>non-member function call_once</code></h4>
+<h4><a name="thread.threads.callonce">30.1.4 <code>non-member function call_once</code> [thread.threads.callonce]</a></h4>
 
 <pre><code>
 template&lt;class Callable, class Args...&gt;
@@ -1003,7 +1013,7 @@ void g()
 </dd>
 </dl>
 
-<h3><a name="MutexsLocksWording">Mutexs and locks</a></h3>
+<h3><a name="thread.mutex">30.2 Mutexs and locks [thread.mutex]</a></h3>
 
 <p>
 <b>&lt;mutex&gt; synopsis</b>
@@ -1042,7 +1052,7 @@ template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&
 </code></pre>
 </blockquote>
 
-<h3>Mutex concepts</h3>
+<h4><a name="thread.mutex.concept">30.2.1 Mutex concepts [thread.mutex.concept]</a></h4>
 
 <p>
 Mutex objects provide synchronization operations to avoid data races.
@@ -1177,7 +1187,7 @@ Nothing.
 </dd>
 </dl>
 
-<h4>Class mutex</h4>
+<h5><a name="thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1210,7 +1220,7 @@ which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4>Class recursive_mutex</h4>
+<h5><a name="thread.mutex.recursive">30.2.1.2 Class recursive_mutex [thread.mutex.recursive]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1243,7 +1253,7 @@ which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h3>Timed Mutex concept</h3>
+<h4><a name="thread.timed.concept">30.2.2 Timed Mutex concept [thread.timed.concept]</a></h4>
 
 <p>
 To meet the requirements of the Timed Mutex concept,
@@ -1298,7 +1308,7 @@ Nothing.
 </dd>
 </dl>
 
-<h4>Class timed_mutex</h4>
+<h5><a name="thread.timed.class">30.2.2.1 Class timed_mutex [thread.timed.class]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1333,7 +1343,7 @@ that satisfies all of the Timed Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4>Class recursive_timed_mutex</h4>
+<h5><a name="thread.timed.recursive">30.2.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1368,7 +1378,7 @@ that satisfies all of the Timed Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h3>Locks</h3>
+<h4><a name="thread.lock.concept">30.2.3 Locks [thread.lock.concept]</a></h4>
 
 <p>
 Locks are objects that hold a reference to a mutex
@@ -1419,7 +1429,7 @@ public:
 </code></pre>
 </blockquote>
 
-<h4>Class lock_guard</h4>
+<h5><a name="thread.lock.guard">30.2.3.1 Class lock_guard [thread.lock.guard]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1509,7 +1519,7 @@ Nothing.
 </dd>
 </dl>
 
-<h4>Class unique_lock</h4>
+<h5><a name="thread.lock.unique">30.2.3.2 Class unique_lock [thread.lock.unique]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1995,7 +2005,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3>Generic Locking Algorithms</h3>
+<h4><a name="thread.lock.algorithm">30.2.3 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
 
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
@@ -2083,7 +2093,7 @@ there are no effects.
 </dd>
 </dl>
 
-<h3><a name="ConditionVariablesWording">Condition variables</a></h3>
+<h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
 
 <p>
 <b>&lt;condition_variable&gt; synopsis</b>
@@ -2100,7 +2110,7 @@ class condition_variable_any;
 </code></pre>
 </blockquote>
 
-<h4>Class condition_variable</h4>
+<h4><a name="thread.condvar">30.3.1 Class condition_variable [thread.condvar]</a></h4>
 
 <p>
 An object of class <code>condition_variable</code>
@@ -2418,7 +2428,7 @@ regardless of whether the timeout was triggered.
 shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4>Class condition_variable_any</h4>
+<h4><a name="thread.condvarany">30.3.2 Class condition_variable_any [thread.condvarany]</a></h4>
 
 <p>
 An object of class <code>condition_variable_any</code>
@@ -2720,11 +2730,7 @@ regardless of whether the timeout was triggered.
 </dd>
 </dl>
 
-<hr>
-
-<h2><a name="DateTime"></a>Chapter ?&nbsp;&nbsp; Date Time Library</h2>
-
-<hr>
+<h2><a name="time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a></h2>
 
 <p>
 This clause
@@ -2749,7 +2755,9 @@ Define Duration, RhsDuration.
 </p>
 
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>Header &lt;date_time&gt; Synopsis</h3>
+<p>
+<b>Header &lt;date_time&gt; Synopsis</b>
+</p>
 
 <blockquote>
 <pre><code>
@@ -2773,7 +2781,7 @@ system_time get_system_time();
 </code></pre>
 </blockquote>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3>
+<h3><a name="time.system">31.1 Class system_time [time.system]</a></h3>
 
 <p>
 The class <code>system_time</code> provides a time point
@@ -3179,7 +3187,7 @@ Nothing.
 </dl>
 
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3>
+<h3><a name="time.getsystem">31.2 Function get_system_time [time.getsystem]</a></h3>
 
 <p>
 The function <code>get_system_time</code>
@@ -3206,7 +3214,7 @@ system.</i>
 &mdash;<i>end comment</i>]
 </p>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
+<h3><a name="time.duration">31.3 Common Duration Functions [time.duration]</a></h3>
 
 <p>
 The following functions are common functions to all durations types.
@@ -3599,7 +3607,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3>
+<h3><a name="time.nanoseconds">31.4 Class nanoseconds [time.nanoseconds]</a></h3>
 
 <p>
 Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
@@ -3708,7 +3716,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3>
+<h3><a name="time.microseconds">31.5 Class microseconds [time.microseconds]</a></h3>
 
 <p>
 Objects of class <code>microseconds</code>
@@ -3839,7 +3847,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_milliseconds"></a>class milliseconds</h3>
+<h3><a name="time.milliseconds">31.6 Class milliseconds [time.milliseconds]</a></h3>
 
 <p>
 Objects of class <code>milliseconds</code>
@@ -3983,7 +3991,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3>
+<h3><a name="time.seconds">31.7 Class seconds [time.seconds]</a></h3>
 
 <p>
 Objects of class <code>seconds</code>
@@ -4145,7 +4153,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_minutes"></a>class minutes</h3>
+<h3><a name="time.minutes">31.8 Class minutes [time.minutes]</a></h3>
 
 <p>
 Objects of class <code>minutes</code>
@@ -4324,7 +4332,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3>
+<h3><a name="time.hours">31.9 Class hours [time.hours]</a></h3>
 
 <p>
 Objects of class <code>hours</code>
@@ -4578,7 +4586,7 @@ Nothing.
 </ul>
 
 
-<h2><a name="Acknowledgments"></a>Acknowledgments</h2>
+<h2><a name="Acknowledgments">Acknowledgments</a></h2>
 
 <p>
 The overall design of this threading library is based on William Kempf's
