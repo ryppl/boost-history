@@ -3,7 +3,7 @@
 <head>
 
 
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="content-type" content="text/html; charset=US-ASCII">
 <title>Thread Working Draft 16</title>
 
 <style type="text/css">
@@ -148,7 +148,7 @@ types
 The following subclauses describe components to create and manage threads
 ([<i>Reference
 to the new section from N2429 to be inserted between 1.9 and 1.10, titled
-&quot;Multi-threaded executions and data races&quot;</i>]),
+"Multi-threaded executions and data races"</i>]),
 perform mutual exclusion and locking, and communicate
 between threads.
 </p>
@@ -185,7 +185,7 @@ to <code>bool</code>.
 
 <p>
 Implementations of functions described in this clause are permitted to call
-operating system or other low-level applications program interfaces (API&#39;s).
+operating system or other low-level applications program interfaces (API's).
 Some functions
 described in this clause
 are specified to throw exceptions of type <code>system_error</code>
@@ -197,7 +197,7 @@ system or other low-level API calls result in an error.
 <p>
 The <code>error_category</code> ([syserr.errcat.overview])
 of the <code>error_code</code>
-reported by such an exception&#39;s <code>code()</code>
+reported by such an exception's <code>code()</code>
 member function is implementation-defined.
 [<i>Note:</i>
 The category is
@@ -952,7 +952,7 @@ and none shall proceed until the call to <code>func</code> has completed.
 the return of <code>call_once</code>.]</b>
 If the invocation of <code>func</code> results in an exception being thrown,
 the exception is propagated to the caller and the effects are as-if this
-invocation of&nbsp;<code>call_once</code> did not occur.
+invocation of <code>call_once</code> did not occur.
 </dd>
 
 <dt>Throws:</dt>
@@ -2575,7 +2575,7 @@ thread.
 <dd>
 <code>system_error</code> when an error condition occurs.
 The
-possible error conditions are implementation defined.&nbsp;&nbsp;
+possible error conditions are implementation defined.
 </dd>
 
 <dt>Thread safety:</dt>
@@ -2663,7 +2663,7 @@ otherwise returns <code>false</code>.
 <dd>
 <code>system_error</code> when an error condition occurs.
 The
-possible error conditions are implementation defined.&nbsp;&nbsp;
+possible error conditions are implementation defined.
 </dd>
 
 <dt>Thread safety:</dt>
@@ -3612,7 +3612,7 @@ class nanoseconds
 public:
 
     nanoseconds(long long=0);
-    nanoseconds(const nanoseconds& rhs);
+    nanoseconds(const nanoseconds&amp; rhs);
     ~nanoseconds();
 
     //traits information
