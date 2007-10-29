@@ -34,6 +34,16 @@
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format_fwd.hpp>
 
+// redefine some of the macros
+#undef JT28092007_macros_HPP_DEFINED
+
+// when including this, we're using the logs
+#ifndef BOOST_LOG_USE_LOGS
+#define BOOST_LOG_USE_LOGS
+#endif
+
+#include <boost/logging/macros.hpp>
+
 namespace boost { namespace logging {
 
 /** 

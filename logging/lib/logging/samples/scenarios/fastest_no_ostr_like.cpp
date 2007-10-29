@@ -52,7 +52,7 @@ second error
 
 
 
-#define BOOST_LOGGING_COMPILE_FAST_OFF
+#define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/logging.hpp>
 #include <boost/logging/format.hpp>
 

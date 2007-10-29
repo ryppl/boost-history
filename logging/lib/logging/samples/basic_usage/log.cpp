@@ -1,6 +1,8 @@
-// so that we have access to the log_type typedef
+
+// to let the library know we're definining the logs
 #define BOOST_LOG_DEFINE_LOGS
 #include "log.h"
+#include <boost/logging/format.hpp>
 
 // Step 6: Define the filters and loggers you'll use
 BOOST_DEFINE_LOG(g_l, log_type)

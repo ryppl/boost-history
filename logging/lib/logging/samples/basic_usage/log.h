@@ -1,17 +1,16 @@
 #ifndef LOG_H_header
 #define LOG_H_header
 
+/*      VERY IMPORTANT:
+        If using Visual Studio, don't use #pragma once!             */
+
 #include <boost/logging/format_fwd.hpp>
 
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> ) 
 
-#if defined(BOOST_LOG_DEFINE_LOGS)
-#include <boost/logging/format.hpp>
-
 // Step 3 : Specify your logging class(es)
 typedef boost::logging::logger< boost::logging::use_format_write< > > log_type;
-#endif
 
 // Step 4: declare which filters and loggers you'll use
 BOOST_DECLARE_LOG_FILTER(g_l_filter, level::holder)

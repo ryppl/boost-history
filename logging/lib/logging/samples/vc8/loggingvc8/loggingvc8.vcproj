@@ -504,6 +504,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\..\..\tests\testfast.cpp"
+				>
+			</File>
 			<Filter
 				Name="scenarios"
 				>
@@ -558,6 +562,14 @@
 				<File
 					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
 					>
+					<FileConfiguration
+						Name="Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\scenarios\mul_loggers_one_filter.cpp"
@@ -721,6 +733,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\log_keeper.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\logging.hpp"
 				>
 			</File>
@@ -777,6 +793,10 @@
 				>
 				<File
 					RelativePath="..\..\..\..\..\boost\logging\format\array.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\find_gather.hpp"
 					>
 				</File>
 				<File

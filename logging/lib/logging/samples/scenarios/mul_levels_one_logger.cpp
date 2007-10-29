@@ -46,7 +46,7 @@ It will look similar to this one:
 
 
 
-#define BOOST_LOGGING_COMPILE_FAST_OFF
+#define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format.hpp>
 
 using namespace boost::logging;

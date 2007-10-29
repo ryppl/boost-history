@@ -201,6 +201,21 @@ private:
         process_msg_type m_processor;
     };
 
+
+    // specialized for pointers
+    template<class process_msg_type_ > struct logger_base<process_msg_type_* > {
+        typedef process_msg_type_ process_msg_type;
+
+        logger_base(process_msg_type *p) : m_processor(p) {}
+
+        const process_msg_type* operator->() const  { return m_processor; }
+        process_msg_type* operator->()              { return m_processor; }
+
+    private:
+        process_msg_type *m_processor;
+    };
+
+
     /** 
     @brief The logger class. Every log from your application is an instance of this.
 

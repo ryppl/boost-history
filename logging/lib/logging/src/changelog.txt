@@ -1,6 +1,12 @@
 
+v0.9.1, 30 oct 2007
+- implemented BOOST_DEFINE_LOG/BOOST_DECLARE_LOG for when not compiling fast
+- BEFORE a breaking change that will happen :
+  - logger as is now will dissapear
+  - the new logger class will be the old process_msg class
+  
 
-v0.9, 28 oct 2007
+v0.9.0, 28 oct 2007
 - use_format_write has 4 params now, I've added 2 new params: thread_safety and gather 
   - if you want to leave something unchanged, use "default_" as argument
 - added more complex example: Line Counter application

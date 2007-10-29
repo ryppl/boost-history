@@ -1,4 +1,4 @@
-// Template.hpp
+// use_format_write.hpp
 
 // Boost Logging library
 //
@@ -14,8 +14,8 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-#ifndef JT28092007_TEMPLATE_HPP_DEFINED
-#define JT28092007_TEMPLATE_HPP_DEFINED
+#ifndef JT28092007_use_format_write_HPP_DEFINED
+#define JT28092007_use_format_write_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -25,26 +25,15 @@
 #include <boost/logging/format/optimize.hpp>
 #include <boost/logging/process_msg/ostream_like.hpp>
 #include <boost/logging/detail/manipulator.hpp>
+#include <boost/logging/detail/find_gather.hpp>
 
 namespace boost { namespace logging {
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // specialize logger for format_write class
     //
 
-
     namespace detail {
-        template<class param> struct find_gather {};
-        template<> struct find_gather< std::basic_string<char_type> > { typedef gather::ostream_like::return_str<> type ; };
-
-        template< class string_type> 
-        struct find_gather< boost::logging::optimize::cache_string_one_str<string_type> > { 
-            typedef gather::ostream_like::return_cache_str< boost::logging::optimize::cache_string_one_str<string_type> > type;
-        };
-
-        template< class string_type> 
-        struct find_gather< boost::logging::optimize::cache_string_several_str<string_type> > { 
-            typedef gather::ostream_like::return_cache_str< boost::logging::optimize::cache_string_several_str<string_type> > type;
-        };
 
         template<class string, class formatter_base, class destination_base> struct find_format_write_params {
             typedef typename boost::logging::format_and_write::simple<string> apply_format_and_write ;
@@ -85,10 +74,10 @@ FIXME need to have more template params
 @param gather
 */
 template<
-            class format_base_type = default_, 
-            class destination_base_type = default_ ,
-            class thread_safety = default_ ,
-            class gather = default_
+            class format_base_type , 
+            class destination_base_type ,
+            class thread_safety ,
+            class gather 
     >
         struct use_format_write {
 

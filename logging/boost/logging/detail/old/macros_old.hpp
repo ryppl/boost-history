@@ -31,32 +31,6 @@
 
 namespace boost { namespace logging {
 
-/** 
-    @page macros Macros - how, what for?
-
-    When dealing with logs, you will most likely want to use macros: simply to write less.
-    To be efficient, you usually want to write to a log only if it's enabled.
-
-    Either you always write: <tt> if ( g_log) g_log .... </tt>, or, you create macros:
-    
-    @code
-    #define L_ if ( g_log) g_log .... 
-    @endcode
-
-    FIXME to be continued :) explain about the fact that you can create your own macros, depending on what *you* want
-
-    Explain why the if ; else strategy: so that if withing if (x) LOG_ ... ; else blabla - still ok
-        #define L_ if ( g_single_log) ; else g_single_log->read_msg().gather().msg()
-
-    don't want compile fast? then log.h will look easier; but - are you sure you don't want to turn compile fast off?
-
-    Macros 
-    - BOOST_LOG_COMPILE_FAST_ON
-    - BOOST_LOG_COMPILE_FAST_OFF
-    - BOOST_LOG_COMPILE_FAST
-
-*/
-
 #ifdef BOOST_LOG_COMPILE_FAST_ON
 #define BOOST_LOG_COMPILE_FAST
 #elif defined(BOOST_LOG_COMPILE_FAST_OFF)
@@ -78,25 +52,88 @@ namespace boost { namespace logging {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Defining filter Macros 
 
+/*
+    when compile fast is "off", we always need BOOST_LOG_MANIPULATE_LOGS, to get access to the logger class typedefs;
+*/
+#if !defined(BOOST_LOG_COMPILE_FAST) 
+#if !defined(BOOST_LOG_MANIPULATE_LOGS)
+
+#define BOOST_LOG_MANIPULATE_LOGS
+
+#endif
+#endif
+
+
+
+
+
+
+
 #ifdef BOOST_LOG_COMPILE_FAST
 // ****** Fast compile ******
 
-#define BOOST_DECLARE_LOG(name,type) \
-    type& name ## _boost_log_impl_(); \
-    ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_(); \
-    extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// use log
 
-#define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
-    { static type i; return i; } \
+#define BOOST_USE_LOG_FIND_GATHER(name,log_type,base_type) \
+    namespace boost_log_define_ { \
+    extern ::boost::logging::detail::log_keeper< base_type, name ## _boost_log_impl_, ::boost::logging::detail::call_write_logger_finder< log_type, gather_msg > ::type > name ; \
+    } \
+    using boost_log_define_:: name ;
+
+
+#define BOOST_USE_LOG(name,type) BOOST_USE_LOG_FIND_GATHER(name, type, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type )
+
+#define BOOST_DECLARE_LOG_KEEPER(name,log_type) \
+    namespace boost_log_declare_ { \
+    extern ::boost::logging::detail::log_keeper< log_type, name ## _boost_log_impl_ > name; \
+    } \
+    using boost_log_declare_ :: name ;
+
+
+
+
+#if !defined(BOOST_LOG_MANIPULATE_LOGS)
+// user is declaring logs
+#define BOOST_DECLARE_LOG_WITH_LOG_TYPE(name,log_type) \
+    log_type& name ## _boost_log_impl_(); \
+    BOOST_DECLARE_LOG_KEEPER(name,log_type)
+
+#else
+// user is defining logs
+#define BOOST_DECLARE_LOG_WITH_LOG_TYPE(name,log_type) \
+    log_type& name ## _boost_log_impl_(); \
+    BOOST_USE_LOG(name,log_type)
+
+#endif
+
+
+#define BOOST_DECLARE_LOG_FIND_GATHER(name) \
+    BOOST_DECLARE_LOG_WITH_LOG_TYPE(name, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type )
+
+#define BOOST_DECLARE_LOG(name,type) BOOST_DECLARE_LOG_FIND_GATHER(name)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// define log
+#define BOOST_DEFINE_LOG_FIND_GATHER(name, log_type, base_type, gather_msg)  base_type & name ## _boost_log_impl_() \
+{ typedef ::boost::logging::detail::call_write_logger_finder< log_type, gather_msg > ::type logger_type; \
+  static logger_type i; return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; \
-    ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
-    { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
-    typedef type::process_msg_type process_msg_type; \
-    typedef process_msg_type::write_type write_msg; \
-    static ::boost::logging::detail::process_msg_with_ptr< gather_msg, write_msg > p( name ## _boost_log_impl_() ); \
-    static ::boost::logging::detail::fast_compile_with_default_gather<>::log_type i ( &p ); \
-    return i; }
+    namespace boost_log_declare_ { \
+    ::boost::logging::detail::log_keeper< base_type, name ## _boost_log_impl_ > name ; \
+    } \
+    namespace boost_log_define_ { \
+    ::boost::logging::detail::log_keeper< base_type, name ## _boost_log_impl_, ::boost::logging::detail::call_write_logger_finder< log_type, gather_msg > ::type > name ; \
+    } \
+    using boost_log_define_ :: name ; 
+
+#define BOOST_DEFINE_LOG(name,type) \
+    BOOST_DEFINE_LOG_FIND_GATHER(name, type, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg )
+
+
+
+
+
 
 
 #else
@@ -129,20 +166,8 @@ namespace boost { namespace logging {
     boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
 
 
-/** 
-@note
-    It is assumed that @c type is a filter class from the @c boost::logging namespace.
-    In case you're creating your own filter class, make sure to have it in the boost::logging namespace. \n
-    Or, you can use the BOOST_DECLARE_LOG_FILTER_NO_NAMESPACE_PREFIX macro instead
-*/
 #define BOOST_DECLARE_LOG_FILTER(name,type) BOOST_DECLARE_LOG_FILTER_NO_NAMESPACE_PREFIX(name, ::boost::logging:: type)
 
-/** 
-@note
-    It is assumed that @c type is a filter class from the @c boost::logging namespace.
-    In case you're creating your own filter class, make sure to have it in the boost::logging namespace. \n
-    Or, you can use the BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX macro instead.
-*/
 #define BOOST_DEFINE_LOG_FILTER(name,type) BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX(name, ::boost::logging:: type)
 
 
@@ -155,8 +180,7 @@ namespace boost { namespace logging {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Log Macros
 
-// FIXME always need to specify the function to call
-// when compiling fast, I'll use l ## _boost_log_impl() !!!
+
 
 #define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) if ( !(is_log_enabled) ) ; else l -> do_func
 
@@ -173,27 +197,11 @@ namespace boost { namespace logging {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Format and Destination Macros
 
-/**
-
-@note
-    When using BOOST_LOG_FORMAT_MSG or BOOST_LOG_DESTINATION_MSG, you must not be within any namespace scope.
-
-    This is because when using this macro, as @c msg_class, you can specify any of your class, or
-    something residing in @c boost::logging namespace.
-*/
 #define BOOST_LOG_FORMAT_MSG(msg_class) \
     namespace boost { namespace logging { \
     template<> struct formatter::msg_type<override> { typedef msg_class & type; }; \
     }}
 
-/**
-
-@note
-    When using BOOST_LOG_FORMAT_MSG or BOOST_LOG_DESTINATION_MSG, you must not be within any namespace scope.
-
-    This is because when using this macro, as @c msg_class, you can specify any of your class, or
-    something residing in @c boost::logging namespace.
-*/
 #define BOOST_LOG_DESTINATION_MSG(msg_class) \
     namespace boost { namespace logging { \
     template<> struct destination::msg_type<override> { typedef const msg_class & type; }; \

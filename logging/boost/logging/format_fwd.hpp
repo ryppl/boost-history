@@ -64,6 +64,14 @@ void init_logs();
 @endcode
 */
 
+template<
+            class format_base_type = default_, 
+            class destination_base_type = default_ ,
+            class thread_safety = default_ ,
+            class gather = default_
+    > struct use_format_write ;
+
+
 }}
 
 #endif

@@ -50,6 +50,7 @@ namespace boost { namespace logging {
     namespace detail {
         template<class type> type& as_non_const(const type & t) { return const_cast<type&>(t); }
     }
+    
 
     /** 
     @brief Processes a message (see @ref workflow_processing "workflow")
@@ -103,6 +104,7 @@ namespace boost { namespace logging {
     */
     template<class gather_msg, class write_msg> struct process_msg {
         typedef process_msg<gather_msg, write_msg> self;
+        typedef write_msg write_type;
 
         process_msg() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(process_msg,m_writer)
@@ -126,29 +128,52 @@ namespace boost { namespace logging {
         write_msg m_writer;
     };
 
+    // FIXME specialize for write_msg* pointer!
+
+
     namespace detail {
-        template<class param> struct do_write_base {
-            virtual void operator()(param arg) = 0;
-        };
 
-        template<class gather_msg, class write_msg> struct do_write : do_write_base<typename gather_msg::param> {
+        /** 
+            @brief clone of process_msg, for holding the write_msg as pointer 
+
+            Does offer same things as process_msg, but no access to the @c writer()
+        */
+        template<class gather_msg> struct process_msg_with_ptr_base {
+            typedef process_msg_with_ptr_base<gather_msg> self;
             typedef typename gather_msg::param param;
 
-            BOOST_LOGGING_FORWARD_CONSTRUCTOR(do_write,m_writer)
-            
-            virtual void operator()(param arg) {
-                m_writer(arg);
+            // FIXME watch for copy-construction!
+            /** 
+                reads all data about a log message (gathers all the data about it)
+                FIXME
+            */
+            gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
+
+            // called after all data has been gathered
+            void on_do_write(gather_msg & gather) const {
+                on_do_write_impl( as_non_const(gather.msg()) );
             }
-            write_msg m_writer;
+
+            virtual void on_do_write_impl(param) const = 0;
         };
 
-        template<class gather_msg> struct call_write {
+        template<class gather_msg, class write_msg> struct process_msg_with_ptr : process_msg_with_ptr_base<gather_msg> {
             typedef typename gather_msg::param param;
-            typedef typename do_write_base<param> writer_type;
-            writer_type * m_writer;
-            call_write(writer_type * writer) : m_writer(writer) {}
+
+            template<class logger> process_msg_with_ptr(logger & l) {
+                m_writer = &l->writer();
+            }
+
+            void on_do_write_impl(param a) const {
+                (*m_writer)( a) ;
+            }
+
+        private:
+            write_msg *m_writer;
         };
     }
+
+
 
 }}
 

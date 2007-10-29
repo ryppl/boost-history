@@ -186,12 +186,10 @@ private:
 
     returns a cache string
 
-    @bug right now prepend_size and append_size are ignored; because we can also return a cache_string_several_str<>
+    @bug right now prepend_size and append_size are ignored; because we can also return a cache_string_several_str<>. When fixing, watch the find_gather class!
 */
 template<
         class cache_string = boost::logging::optimize::cache_string_one_str<hold_string_type> , 
-        int prepend_size = 10, 
-        int append_size = 10, 
         class stream_type = std::basic_ostringstream<char_type> > struct return_cache_str {
 
     // what does the gather_msg class return?

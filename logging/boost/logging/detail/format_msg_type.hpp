@@ -22,6 +22,8 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/logging/detail/find_gather.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 
 namespace boost { namespace logging {
@@ -44,6 +46,32 @@ namespace destination {
         typedef const hold_string_type& type;
     };
 }
+
+
+/* 
+    for when compiling fast, and:
+    - I know the gather type OR
+    - use a default gather
+*/
+namespace detail {
+    template<class gather_msg> struct call_write;
+
+    template<class gather_type> struct fast_compile_with_gather {
+        typedef gather_type gather_msg;
+        typedef typename process_msg_with_ptr_base< gather_msg >  process_type;
+        typedef typename logger< process_type* > log_type;
+    };
+
+    template<class T = override> struct fast_compile_with_default_gather {
+        typedef typename boost::logging::formatter::msg_type<T>::type msg_type_ref;
+        typedef typename boost::remove_reference<msg_type_ref>::type msg_type;
+
+        typedef typename find_gather< msg_type >::type gather_msg;
+        typedef typename fast_compile_with_gather< gather_msg >::log_type log_type;
+    };
+
+}
+
 
 }}
 

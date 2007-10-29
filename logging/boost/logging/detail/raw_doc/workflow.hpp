@@ -13,6 +13,7 @@ namespace boost { namespace logging {
 
 @attention
 The filter is not kept in the logger anymore. They are different concepts. Need to update these pages
+Every time, the logger should contains a process_msg<> class. This is the core class.
 
 @section workflow_introduction Introduction
 
@@ -81,7 +82,7 @@ struct write_to_cout {
 };
 
 using namespace boost::logging;
-logger<write_to_cout, filter::no_ts> g_single_log;
+logger<write_to_cout> g_single_log;
 
 #define L_(x) if ( g_single_log) g_single_log.process_msg()(x)
 
