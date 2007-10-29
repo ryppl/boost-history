@@ -123,9 +123,9 @@ at the Kona meeting.
 <pre><code>
 namespace std {
     ...
-    <i>// Hash function specializations</i>
+    // <em>Hash function specializations</em>
     ...
-    <ins>struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
+    <ins>struct hash&lt;std::thread::id&gt;; // <b>should not be in this header file ?</b></ins>
 }
 </code></pre>
 </blockquote>
@@ -290,11 +290,11 @@ and to perform other operations to manage and query the state of the thread.
 class thread
 {
 public:
-    // <i>types:</i>
+    // <em>types:</em>
     class id;
-    typedef <i>implementation-defined</i> native_handle_type; <i>// See [frontmatter]</i>
+    typedef <i>implementation-defined</i> native_handle_type; // <em>See [frontmatter]</em>
 
-    // <i>construct/copy/destroy:</i>
+    // <em>construct/copy/destroy:</em>
     thread();
     template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
     ~thread();
@@ -303,15 +303,15 @@ public:
     thread&amp; operator=(const thread&amp;) = delete;
     thread&amp; operator=(thread&amp;&amp;);
 
-    // <i>members:</i>
+    // <em>members:</em>
     void swap(thread&amp;&amp;);
     bool joinable() const;
     void join();
     void detach();
     id get_id() const;
-    native_handle_type native_handle(); <i>// See [frontmatter]</i>
+    native_handle_type native_handle(); // <em>See [frontmatter]</em>
 
-    // <i>static members:</i>
+    // <em>static members:</em>
     static unsigned hardware_concurrency();
 };
 </code></pre>
@@ -1206,7 +1206,7 @@ public:
     bool try_lock();
     void unlock();
 
-    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    typedef <i>implemenation-defined</i> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
@@ -1239,7 +1239,7 @@ public:
     bool try_lock();
     void unlock();
 
-    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    typedef <i>implemenation-defined</i> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
@@ -1329,7 +1329,7 @@ public:
         bool timed_lock(const Duration&amp; rel_time);
     void unlock();
 
-    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    typedef <i>implemenation-defined</i> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
@@ -1364,7 +1364,7 @@ public:
         bool timed_lock(const Duration&amp; rel_time);
     void unlock();
 
-    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    typedef <i>implemenation-defined</i> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
@@ -2142,7 +2142,7 @@ public:
     template &lt;class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
 
-    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    typedef <i>implemenation-defined</i> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
@@ -2468,7 +2468,7 @@ public:
     template &lt;class Lock, class Predicate&gt;
         bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
 
-    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    typedef <i>implemenation-defined</i> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
@@ -3388,7 +3388,7 @@ Nothing.
 </dl>
 
 <pre><code>
-<i>//sign inversion</i>
+// <em>sign inversion</em>
 Duration operator-() const
 </code></pre>
 
@@ -3405,7 +3405,7 @@ Nothing.
 </dl>
 
 <pre><code>
-<i>//arithmetic operations</i>
+// <em>arithmetic operations</em>
 template&lt;typename RhsDuration&gt;
 Duration operator- (const RhsDuration&amp; d) const
 </code></pre>
@@ -3783,7 +3783,7 @@ Nothing.
 </dl>
 
 <pre><code>
-<i>//conversions</i>
+// <em>conversions</em>
 operator nanoseconds() const
 </code></pre>
 
