@@ -7,47 +7,25 @@
 <title>Thread Working Draft 16</title>
 
 <style type="text/css">
-	p {text-align:justify}
-	li {text-align:justify}
-	dt {font-style: italic;}
-	blockquote.note
-	{
-		background-color:#E0E0E0;
-		padding-left: 15px;
-		padding-right: 15px;
-		padding-top: 1px;
-		padding-bottom: 1px;
-	}
-	ins {background-color:#FFFFA0}
-	del {background-color:#FFFFA0}
-        .comment        { color: #800000; }
-    span.underline
-    {
-//        text-decoration: underline;
-    }
-
-    span.strikethrough
-    {
-        text-decoration: line-through;
-    }
-    span.remove
-    {
-        text-decoration: line-through;
-        color: red;
-        display: inline;
-    }
-    span.insert
-    {
-	background-color:#FFFFA0;
-        color: green;
-        display: inline;
-    }
+	h1	{ text-align: center; }
+	p	{ text-align: justify; }
+	address	{ text-align: right; }
+	li	{ text-align: justify; }
+	dt	{ font-style: italic; }
+	ins	{ background-color:#FFFFA0; }
+	del	{ background-color:#FFFFA0; }
+	table	{ border-collapse: collapse;
+		  margin-left: auto; margin-right: auto; }
+	th	{ padding: 3px 10px 3px 10px;
+		  border: 1px solid; }
+	td	{ padding: 3px 10px 3px 10px;
+		  border: 1px solid; }
 </style>
 </head>
 
 <body>
 
-<address style="text-align: right">
+<address>
 Document number: NXXXX=07-XXXX<br>
 <br>
 <a href="mailto:hinnant@twcny.rr.com">Howard E. Hinnant</a>, 
@@ -67,7 +45,7 @@ Document number: NXXXX=07-XXXX<br>
 
 <hr>
 
-<h1 style="text-align:center">Multi-threading Library for Standard C++</h1>
+<h1>Multi-threading Library for Standard C++</h1>
 
 <h2>Contents</h2>
 
@@ -170,10 +148,10 @@ to the new section from N2429 to be inserted between 1.9 and 1.10, titled
 between threads.
 </p>
 
-<table style="border-collapse: collapse;" border="1" bordercolor="#111111" cellpadding="5" cellspacing="0" width="100%">
+<table width="100%">
   <tbody><tr>
-    <td align="center" width="50%"><b>Subclause</b></td>
-    <td align="center" width="50%"><b>Header(s)</b></td>
+    <th width="50%">Subclause</th>
+    <th width="50%">Header(s)</th>
   </tr>
   <tr>
     <td width="50%"><a href="#ThreadsWording">Threads</a></td>
@@ -2614,7 +2592,7 @@ Define Duration, RhsDuration.
 </p>
 
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>Header &lt;date_time&gt; Synopsis</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>Header &lt;date_time&gt; Synopsis</h3>
 
 <blockquote>
 <pre><code>
@@ -2638,7 +2616,7 @@ system_time get_system_time();
 </code></pre>
 </blockquote>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3>
 
 <p>
         The class <code>system_time</code> provides a time point that represents the current
@@ -3041,7 +3019,7 @@ Nothing.
 </dl>
 
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3>
 
 <p>
         The function <code>get_system_time</code> provides access to the system clock at a
@@ -3064,7 +3042,7 @@ Nothing.
 &mdash;<i>end comment</i>]
 </p>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
 
 <p>
         The following functions are common functions to all durations types. These
@@ -3236,7 +3214,7 @@ Nothing.
 </dl>
 
 <pre><code>
-<i class="comment">//sign inversion</i>
+<i>//sign inversion</i>
 Duration operator-() const
 </code></pre>
 
@@ -3253,7 +3231,7 @@ Nothing.
 </dl>
 
 <pre><code>
-<i class="comment">//arithmetic operations</i>
+<i>//arithmetic operations</i>
 template&lt;typename RhsDuration&gt;
 Duration operator- (const RhsDuration&amp; d) const
 </code></pre>
@@ -3455,7 +3433,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3>
 
 <p>
 Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
@@ -3564,7 +3542,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3>
 
 <p>
 Objects of class <code>microseconds</code> can be used to represent a count of microseconds.
@@ -3630,7 +3608,7 @@ Nothing.
 </dl>
 
 <pre><code>
-<i class="comment">//conversions</i>
+<i>//conversions</i>
 operator nanoseconds() const
 </code></pre>
 
@@ -3694,7 +3672,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_milliseconds"></a>class milliseconds</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_milliseconds"></a>class milliseconds</h3>
 
 <p>
 Objects of class <code>milliseconds</code> can be used to represent a count of milliseconds.
@@ -3837,7 +3815,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3>
 
 <p>
 Objects of class <code>seconds</code> can be used to represent a count of seconds.
@@ -3998,7 +3976,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_minutes"></a>class minutes</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_minutes"></a>class minutes</h3>
 
 <p>
 Objects of class <code>minutes</code> can be used to represent a count of minutes.
@@ -4176,7 +4154,7 @@ Nothing.
 </dd>
 </dl>
 
-<h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3>
+<h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3>
 
 <p>
 Objects of class <code>hours</code> can be used to represent a count of hours.
