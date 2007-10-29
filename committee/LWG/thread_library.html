@@ -927,32 +927,32 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 <dt>Requires:</dt>
 <dd>
 If <code>func</code> is an lvalue, Callable
-    is
-    <code>CopyConstructible</code>.
+is
+<code>CopyConstructible</code>.
 If <code>func</code> is an rvalue, Callable is
-    <code>MoveConstructible</code>.
+<code>MoveConstructible</code>.
 Copying or moving (as appropriate) shall have no side effects,
 and the effect of calling the
-    copy shall be equivalent to calling the original.
+copy shall be equivalent to calling the original.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
 The argument <code>func</code> (or a copy thereof) is called exactly once
-    for the <code>once_flag</code> object specified by <code>flag</code>,
+for the <code>once_flag</code> object specified by <code>flag</code>,
 as-if by invoking
-    <code>func(args)</code>,<code> </code>even if <code>call_once</code> is
-    called multiple times for the same <code>once_flag</code> object.
+<code>func(args)</code>,<code> </code>even if <code>call_once</code> is
+called multiple times for the same <code>once_flag</code> object.
 If multiple
-    calls to <code>call_once</code> with the same <code>once_flag</code> object
-    occur in separate threads, only one
-    thread shall call <code>func</code>,
+calls to <code>call_once</code> with the same <code>once_flag</code> object
+occur in separate threads, only one
+thread shall call <code>func</code>,
 and none shall proceed until the call to <code>func</code> has completed.
 <b>[Crowl: I.e. the return of <code>func</code> happens before
 the return of <code>call_once</code>.]</b>
-    If the invocation of <code>func</code> results in an exception being thrown,
-    the exception is propagated to the caller and the effects are as-if this
-    invocation of&nbsp;<code>call_once</code> did not occur.
+If the invocation of <code>func</code> results in an exception being thrown,
+the exception is propagated to the caller and the effects are as-if this
+invocation of&nbsp;<code>call_once</code> did not occur.
 </dd>
 
 <dt>Throws:</dt>
@@ -964,8 +964,8 @@ the return of <code>call_once</code>.]</b>
 <dd>
 <p>
 Access to the same <code>once_flag</code> object by
-    calls to <code>call_once</code> from different threads shall
-    not result in a data race or deadlock.
+calls to <code>call_once</code> from different threads shall
+not result in a data race or deadlock.
 <b>[Crowl: The implementation shall not introduce these.]</b>
 </p>
 
@@ -2729,20 +2729,20 @@ regardless of whether the timeout was triggered.
 <p>
 This clause
 describes components for determining and manipulating temporal values.
- A <i>time point</i> represents a dimensionless instant
- in the time continuum.
+A <i>time point</i> represents a dimensionless instant
+in the time continuum.
 A <i>time duration</i> represents a length of time
- unattached to any time point.
+unattached to any time point.
 Time points and time durations have a
- <i>resolution</i> which is their smallest representable time duration.
+<i>resolution</i> which is their smallest representable time duration.
 Time points
- have an <i>epoch</i> or start of a given time scale.
+have an <i>epoch</i> or start of a given time scale.
 For time_t the epoch is
- 1970-01-01 00:00:00.
+1970-01-01 00:00:00.
 
 <p>
 Throughout this clause, the names of template parameters are used to express
- type requirements.
+type requirements.
 [<i>Comment:</i>
 Define Duration, RhsDuration.
 &mdash;<i>end comment</i>]
@@ -2776,17 +2776,17 @@ system_time get_system_time();
 <h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3>
 
 <p>
-        The class <code>system_time</code> provides a time point
+The class <code>system_time</code> provides a time point
 that represents the current
-        Coordinated Universal Time, known as UTC, time.
-        <code>system_time</code>
+Coordinated Universal Time, known as UTC, time.
+<code>system_time</code>
 shall provide an epoch time of 1970-01-01 00:00:00.000000000
-        and a maximum time value of at least epoch time + 292 years.
+and a maximum time value of at least epoch time + 292 years.
 </p>
 
 <p>
 class <code>system_time</code> shall be EqualityComparable, LessThanComparable,
-        CopyConstructable, DefaultConstructable, and Assignable.
+CopyConstructable, DefaultConstructable, and Assignable.
 </p>
 
 <blockquote>
@@ -2850,7 +2850,7 @@ system_time();
 <dt>Effects:</dt>
 <dd>
 Constructs a system_time
-        object representing the epoch time point 1970-01-01 00:00:00.000000000
+object representing the epoch time point 1970-01-01 00:00:00.000000000
 </dd>
 
 <dt>Throws:</dt>
@@ -2874,7 +2874,7 @@ that is secs + 1,000,000,000*ns after the epoch.
 <dt>Remarks:</dt>
 <dd>
 If the total nanoseconds &gt; 1 second the seconds are
-        incremented appropriately.
+incremented appropriately.
 </dd>
 
 <dt>Throws:</dt>
@@ -2907,7 +2907,7 @@ nanoseconds nanoseconds_since_epoch() const;
 <dt>Returns:</dt>
 <dd>
 The count of <u>nano</u>seconds
-        since 1970-01-01 00:00:00.
+since 1970-01-01 00:00:00.
 </dd>
 
 <dt>Throws:</dt>
@@ -2977,8 +2977,8 @@ bool operator==(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if
-        the <u>time
-        represented by *this is equal to the time represented by rhs</u>.
+the <u>time
+represented by *this is equal to the time represented by rhs</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2995,7 +2995,7 @@ bool operator!=(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if the <u>time represented by *this is not equal to the time represented
-        by rhs</u>
+by rhs</u>
 </dd>
 
 <dt>Throws:</dt>
@@ -3012,7 +3012,7 @@ bool operator&gt;(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if time <u>represented by
-        *this is greater than the time represented by rhs</u>.
+*this is greater than the time represented by rhs</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3029,7 +3029,7 @@ bool operator&gt;=(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if time <u>represented
-        by *this is greater or equal than the time represented by rhs</u>.
+by *this is greater or equal than the time represented by rhs</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3046,7 +3046,7 @@ bool operator&lt;(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if time <u>represented by *this
-        is less than the time represented by rhs</u>.
+is less than the time represented by rhs</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3063,7 +3063,7 @@ bool operator&lt;=(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if time <u>represented by *this
-        is less or equal than the time represented by rhs</u>.
+is less or equal than the time represented by rhs</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3081,13 +3081,13 @@ nanoseconds operator-(const system_time&amp; rhs) const
 <dd>
 <u>
 The difference in nanoseconds between the time represented by *this and the
-        time represented by rhs.</u>
+time represented by rhs.</u>
 </dd>
 
 <dt>Remarks:</dt>
 <dd>
 If rhs is greater the result will be a negative nanosecond.
-        count.
+count.
 </dd>
 
 <dt>Throws:</dt>
@@ -3105,7 +3105,7 @@ system_time operator+(const Duration&amp; td) const;
 <dt>Returns:</dt>
 <dd>
 The duration converted to nanosecond resolution
-        and added to the time <u>represented by *this</u>.
+and added to the time <u>represented by *this</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3123,7 +3123,7 @@ system_time&amp; operator+=(const Duration&amp; td);
 <dt>Effects:</dt>
 <dd>
 Convert the duration to nanosecond resolution add to nanoseconds
-        to the time represented by *this.
+to the time represented by *this.
 </dd>
 
 <dt>Returns:</dt>
@@ -3146,7 +3146,7 @@ system_time operator-(const Duration&amp; td) const;
 <dt>Returns:</dt>
 <dd>
 The duration converted to nanosecond resolution
-        and subtracted from the time <u>represented by *this</u>.
+and subtracted from the time <u>represented by *this</u>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3164,7 +3164,7 @@ system_time&amp; operator-=(const Duration&amp; td)
 <dt>Effects:</dt>
 <dd>
 Convert the duration to nanosecond resolution subtract and
-        from the time represented by *this.
+from the time represented by *this.
 </dd>
 
 <dt>Returns:</dt>
@@ -3182,38 +3182,38 @@ Nothing.
 <h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.template_class_hiresolution_clock"></a>function get_system_time</h3>
 
 <p>
-        The function <code>get_system_time</code>
+The function <code>get_system_time</code>
 provides access to the system clock at a
-        resolution up to nanoseconds.
+resolution up to nanoseconds.
 The actual resolution may vary from platform to platform.
 </p>
 
 <blockquote>
 <pre><code>
-  system_time get_system_time();
+system_time get_system_time();
 </code></pre>
 </blockquote>
 
 
 <p>
 [<i>Comment (not for inclusion in WP):</i>
-    <i>Typical personal computer platforms currently achieve microsecond level
-    resolution from calls to the clock.
+<i>Typical personal computer platforms currently achieve microsecond level
+resolution from calls to the clock.
 The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a>
 has a class that portably implements the proposed interface,
 but it uses different C-level interfaces depending on the operating
-    system.</i>
+system.</i>
 &mdash;<i>end comment</i>]
 </p>
 
 <h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
 
 <p>
-        The following functions are common functions to all durations types.
+The following functions are common functions to all durations types.
 These
-        functions provide the basis
+functions provide the basis
 for durations to be EqualityComparable, LessThanComparable
-        as well arithmetic operations.
+as well arithmetic operations.
 </p>
 
 <p>
@@ -3221,9 +3221,9 @@ In the following text duration_type refers to the containing duration type.
 </p>
 
 <p>
-        All duration types are EqualityComparable, LessThanComparable,
-        CopyConstructable, DefaultConstructable, and Assignable for duration
-        objects of the same type.
+All duration types are EqualityComparable, LessThanComparable,
+CopyConstructable, DefaultConstructable, and Assignable for duration
+objects of the same type.
 </p>
 
 <blockquote>
@@ -3411,8 +3411,8 @@ A duration value equal to this-rhs_duration.
 <dt>Remarks:</dt>
 <dd>
 This will fail to compile if the
-        RhsDuration is
-        of higher resolution.
+RhsDuration is
+of higher resolution.
 </dd>
 
 <dt>Throws:</dt>
@@ -3439,9 +3439,9 @@ this
 </p>
 
 <p>
-        <em>Remarks: This will fail to compiler if the
-        RhsDuration is
-        of higher resolution.</em>
+<em>Remarks: This will fail to compiler if the
+RhsDuration is
+of higher resolution.</em>
 </p>
 </dd>
 
@@ -3464,9 +3464,9 @@ Duration equal to this+rhs_duration.
 </p>
 
 <p>
-        <em>Remarks: This will fail to compiler if the
-        RhsDuration is
-        of higher resolution.</em>
+<em>Remarks: This will fail to compiler if the
+RhsDuration is
+of higher resolution.</em>
 </p>
 </dd>
 
@@ -3494,9 +3494,9 @@ this
 </p>
 
 <p>
-        <em>Remarks: This will fail to compiler if the
-        RhsDuration is
-        of higher resolution.</em>
+<em>Remarks: This will fail to compiler if the
+RhsDuration is
+of higher resolution.</em>
 </p>
 </dd>
 
@@ -3514,7 +3514,7 @@ Duration operator/ (int divisor) const
 <dt>Returns:</dt>
 <dd>
 Duration with value equal to this/divisor according to
-        integer arithmetic rules.
+integer arithmetic rules.
 </dd>
 
 <dt>Throws:</dt>
@@ -3531,7 +3531,7 @@ Duration operator/=(int divisor)
 <dt>Effects:</dt>
 <dd>
 Change value of this by this/divisor according to integer
-        arithmetic rules.
+arithmetic rules.
 </dd>
 
 <dt>Returns:</dt>
@@ -3590,7 +3590,7 @@ tick_type get_count() const
 <dt>Returns:</dt>
 <dd>
 The count at the resolution of the time duration
-        type.
+type.
 </dd>
 
 <dt>Throws:</dt>
@@ -3635,7 +3635,7 @@ nanoseconds(long long=0);
 <dt>Effects:</dt>
 <dd>
 Constructs an object with a count of nanoseconds - default
-        is zero.
+is zero.
 </dd>
 
 <dt>Throws:</dt>
@@ -3749,7 +3749,7 @@ microseconds(long long=0);
 <dt>Effects:</dt>
 <dd>
 Constructs an object with a count of microseconds - default
-        is zero.
+is zero.
 </dd>
 
 <dt>Throws:</dt>
@@ -3878,7 +3878,7 @@ milliseconds(long long=0);
 <dt>Effects:</dt>
 <dd>
 Constructs an object with a count of milliseconds - default
-        is zero.
+is zero.
 </dd>
 
 <dt>Throws:</dt>
@@ -4024,7 +4024,7 @@ seconds(long long=0);
 <dt>Effects:</dt>
 <dd>
 Construct<u>s</u> a<u>n object with a</u> count of seconds - default is
-        zero.
+zero.
 </dd>
 
 <dt>Throws:</dt>
@@ -4187,7 +4187,7 @@ minutes(long long=0);
 <dt>Effects:</dt>
 <dd>
 Construct<u>s</u> a<u>n object with a</u> count of minutes - default is
-        zero.
+zero.
 </dd>
 
 <dt>Throws:</dt>
