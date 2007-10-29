@@ -123,7 +123,8 @@ namespace std {
 <p>
 The unordered associative containers defined in clause 23.4 use
 specializations
-of <code>hash</code> as the default hash function. This class template
+of <code>hash</code> as the default hash function.
+This class template
 is only
 required to be instantiable for integer types (3.9.1), floating point
 types
@@ -169,17 +170,21 @@ between threads.
 
 <p>
 Throughout this clause, the names of template parameters are used to express
-type requirements. The requirements for Duration parameters are specified in [<i>reference
-to date-time library clause]</i>. If a parameter is Predicate, <code>operator()</code>
+type requirements.
+The requirements for Duration parameters are specified in [<i>reference
+to date-time library clause]</i>.
+If a parameter is Predicate, <code>operator()</code>
 applied to the actual template argument shall return a value that is convertible
 to <code>bool</code>.
 </p>
 
 <p>
 Implementations of functions described in this clause are permitted to call
-operating system or other low-level applications program interfaces (API&#39;s). Some functions
+operating system or other low-level applications program interfaces (API&#39;s).
+Some functions
 described in this clause are specified to throw exceptions of type <code>system_error</code>
-([syserr.syserr]). Such exceptions shall be thrown when one of these operating
+([syserr.syserr]).
+Such exceptions shall be thrown when one of these operating
 system or other low-level API calls result in an error.
 </p>
 
@@ -197,12 +202,15 @@ interface (API).
 
 <p>
 Several classes described in this clause have members <code>
-native_handle_type</code> and <code>native_handle</code>. The presence of these
+native_handle_type</code> and <code>native_handle</code>.
+The presence of these
 members and their semantics is implementation defined.
 [<i>Note:</i>
 These
-members allow implementations to provide access to implementation details. Their
-names are specified to facilitate portable compile-time detection. Actual use of
+members allow implementations to provide access to implementation details.
+Their
+names are specified to facilitate portable compile-time detection.
+Actual use of
 these members is inherently non-portable.
 &mdash;<i>end note</i>]
 </p>
@@ -321,8 +329,10 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread
 </blockquote>
 
 <p>
-Objects of type <code>thread::id</code> represent the identity of threads. Each
-joinable thread has a unique identity. All non-joinable threads share the same
+Objects of type <code>thread::id</code> represent the identity of threads.
+Each
+joinable thread has a unique identity.
+All non-joinable threads share the same
 identity, and this identify is different from that of any joinable thread.
 </p>
 
@@ -362,7 +372,8 @@ bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
 <dd>
 If
 <code><i>x</i></code> and <code><i>y</i></code> represent the same identity,
-returns <code>true</code>.  Otherwise returns <code>false</code>.
+returns <code>true</code>.
+Otherwise returns <code>false</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -511,7 +522,8 @@ template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... a
 <dl>
 <dt>Requires:</dt>
 <dd>
-<code>F</code> is a callable type [func.def].  If <code>f</code> is an lvalue, <code>F</code>
+<code>F</code> is a callable type [func.def].
+If <code>f</code> is an lvalue, <code>F</code>
 is <code>CopyConstructible</code>.
 If <code>f</code> is an rvalue, <code>F</code> is <code>MoveConstructible</code>.
 <b>[Crowl: Is this enforced by code?]</b>
@@ -558,7 +570,7 @@ Constructs an object of type <code>thread</code> from <code><i>x</i></code>.
 <dt>Postcondition:</dt>
 <dd>
 <code><i>x</i>.joinable()</code> is <code>false</code>.
-<code><i>x</i>.get_id() == thread().get_id()</code>. <code>joinable()</code>
+<code><i>x</i>.get_id() == thread().get_id().joinable()</code>
 returns the value of <code><i>x</i>.joinable()</code> prior to the start of construction.
 <code>get_id()</code> returns the value of <code><i>x</i>.get_id()</code> prior to the
 start of construction.
@@ -599,14 +611,15 @@ thread&amp; operator=(thread&amp;&amp; <i>x</i>);
 <dt>Effects:</dt>
 <dd>
 If <code>this</code> currently represents a <code>joinable</code> thread object, calls
-<code>detach()</code>.  Then assigns the state of <code><i>x</i></code> to <code>*this</code>
+<code>detach()</code>.
+Then assigns the state of <code><i>x</i></code> to <code>*this</code>
 and sets <code><i>x</i></code> to a default constructed state.
 </dd>
 
 <dt>Postcondition:</dt>
 <dd>
 <code><i>x</i>.joinable()</code> is <code>false</code>.
-<code><i>x</i>.get_id() == thread().get_id()</code>. <code>joinable()</code> returns the
+<code><i>x</i>.get_id() == thread().get_id().joinable()</code> returns the
 value of <code><i>x</i>.joinable()</code> prior to the
 assignment.
 <code>get_id()</code> returns the value of <code><i>x</i>.get_id()</code> prior to the
@@ -675,14 +688,16 @@ I.e. there is a happens before relationship.]</b>
 <dt>Postcondition:</dt>
 <dd>
 After a normal return of <code>join()</code>,
-<code>joinable()</code> is <code>false</code>. If <code>join()</code> throws an exception, the thread represented by
+<code>joinable()</code> is <code>false</code>.
+If <code>join()</code> throws an exception, the thread represented by
 <code>*this</code> remains <code>joinable</code>.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs. The
-possible error conditions are implementation defined.&nbsp;
+<code>system_error</code> when an error condition occurs.
+The
+possible error conditions are implementation defined.
 </dd>
 </dl>
 
@@ -699,7 +714,8 @@ void detach();
 <dt>Effects:</dt>
 <dd>
 The thread represented by
-<code>*this</code> continues execution.  When the thread represented by
+<code>*this</code> continues execution.
+When the thread represented by
 <code>*this</code> ends execution it shall release any owned resources.
 <b>[Crowl: The programmer shall or the implementation shall?
 Which resources?]</b>
@@ -707,7 +723,8 @@ Which resources?]</b>
 
 <dt>Postcondition:</dt>
 <dd>
-<code>joinable()</code> is <code>false</code>. <code>*this</code>
+<code>joinable()</code> is <code>false</code>.
+<code>*this</code>
 does not represent a thread.
 </dd>
 
@@ -888,8 +905,10 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 <dd>
 If <code>func</code> is an lvalue, Callable
     is
-    <code>CopyConstructible</code>. If <code>func</code> is an rvalue, Callable is
-    <code>MoveConstructible</code>. Copying or moving (as appropriate) shall have no side effects, and the effect of calling the
+    <code>CopyConstructible</code>.
+If <code>func</code> is an rvalue, Callable is
+    <code>MoveConstructible</code>.
+Copying or moving (as appropriate) shall have no side effects, and the effect of calling the
     copy shall be equivalent to calling the original.
 </dd>
 
@@ -898,7 +917,8 @@ If <code>func</code> is an lvalue, Callable
 The argument <code>func</code> (or a copy thereof) is called exactly once
     for the <code>once_flag</code> object specified by <code>flag</code>, as-if by invoking
     <code>func(args)</code>,<code> </code>even if <code>call_once</code> is
-    called multiple times for the same <code>once_flag</code> object. If multiple
+    called multiple times for the same <code>once_flag</code> object.
+If multiple
     calls to <code>call_once</code> with the same <code>once_flag</code> object
     occur in separate threads, only one
     thread shall call <code>func</code>, and none shall proceed until the call to <code>func</code> has completed.
@@ -999,22 +1019,29 @@ template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&
 <h3>Mutex concepts</h3>
 
 <p>
-Mutex objects provide synchronization operations to avoid data races. A
+Mutex objects provide synchronization operations to avoid data races.
+A
 mutex object supports mutual exclusion between threads by
-limiting its ownership to a single thread.  A thread  obtains ownership of a mutex object by calling <code>lock()</code>
-and relinquishes ownership by calling <code>unlock()</code>.  The
+limiting its ownership to a single thread.
+A thread  obtains ownership of a mutex object by calling <code>lock()</code>
+and relinquishes ownership by calling <code>unlock()</code>.
+The
 thread that calls <code>lock()</code> for a mutex object shall
-call <code>unlock()</code>.  Mutexes may be either recursive or
-non-recursive.  The syntax is the same for both recursive and
+call <code>unlock()</code>.
+Mutexes may be either recursive or
+non-recursive.
+The syntax is the same for both recursive and
 non-recursive mutexes, but the semantics differ for the member functions
 as described below.
 </p>
 
 <p>
-A mutex type shall be <code>DefaultConstructible</code> and <code>Destructible</code>.  If initialization
+A mutex type shall be <code>DefaultConstructible</code> and <code>Destructible</code>.
+If initialization
 of a mutex type fails, an exception of type <code>system_error</code> shall be thrown.
 A mutex type is neither copyable
-nor movable.  A mutex type shall have the following member functions:
+nor movable.
+A mutex type shall have the following member functions:
 </p>
 
 <pre><code>
@@ -1036,7 +1063,8 @@ Upon successful completion, the current thread owns the mutex.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs. The
+<code>system_error</code> when an error condition occurs.
+The
 possible error conditions are implementation defined.
 </dd>
 
@@ -1102,7 +1130,8 @@ The current thread shall own the mutex.
 
 <dt>Effects:</dt>
 <dd>
-For a non-recursive mutex ownership is released.  For a recursive mutex
+For a non-recursive mutex ownership is released.
+For a recursive mutex
 <code>unlock()</code> must be called the same number of times which the mutex was locked
 (via either <code>lock()</code> or <code>try_lock()</code> or by any other locking function) before ownership is released.
 </dd>
@@ -1198,7 +1227,7 @@ template &lt;class Duration&gt;
 <dt>Precondition:</dt>
 <dd>
 For non-recursive mutexes the current thread shall not own
-the mutex. .
+the mutex.
 <b>[Crowl: Roundup here instead of under various locks.]</b>
 </dd>
 
@@ -1308,7 +1337,8 @@ It shall be a standard-layout class (chapter 9 [class]).
 
 <p>
 Locks are objects that hold a reference to a mutex and unlock the mutex during the lock's destruction
-(such as when leaving block scope).  The locks do not manage the lifetime of the mutex they
+(such as when leaving block scope).
+The locks do not manage the lifetime of the mutex they
 reference, but only the ownership status of that mutex.
 [<i>Note:</i>
 Locks are intended to ease the burden
@@ -1377,7 +1407,8 @@ public:
 <p>
 <code>lock_guard</code> is used to control the ownership of a mutex within a single scope.
 An invariant of the <code>lock_guard</code> object is that it maintains the ownership of the
-mutex throughout the <code>lock_guard</code>'s lifetime.  Mutex ownership can not be deferred
+mutex throughout the <code>lock_guard</code>'s lifetime.
+Mutex ownership can not be deferred
 or transferred away from the <code>lock_guard</code>.
 </p>
 
@@ -1389,7 +1420,8 @@ explicit lock_guard(mutex_type&amp; m);
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex,  the current thread
-does not own the mutex.  The lifetime of <code><i>m</i></code> includes the lifetime
+does not own the mutex.
+The lifetime of <code><i>m</i></code> includes the lifetime
 of the <code>lock_guard</code> object.
 </dd>
 
@@ -1519,7 +1551,8 @@ explicit unique_lock(mutex_type&amp; m);
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex,  the current thread
-does not own the mutex.  The lifetime of <code><i>m</i></code> includes the lifetime
+does not own the mutex.
+The lifetime of <code><i>m</i></code> includes the lifetime
 of the <code>unique_lock</code> object.
 </dd>
 
@@ -1932,14 +1965,18 @@ void unlock();
 <dt>Effects:</dt>
 <dd>
 The functions attempts to lock all arguments without blocking by calling <code>try_lock()</code>
-on each of them.  If any argument can not be locked, then all arguments which have already been locked will
-be unlocked.  On return, either all arguments will be locked, or none of them will be locked.  If an
+on each of them.
+If any argument can not be locked, then all arguments which have already been locked will
+be unlocked.
+On return, either all arguments will be locked, or none of them will be locked.
+If an
 exception is thrown by a call to <code>try_lock()</code>, there are no effects.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-If all arguments were successfully locked, returns <code>-1</code>.  Otherwise returns a 0-based index
+If all arguments were successfully locked, returns <code>-1</code>.
+Otherwise returns a 0-based index
 value indicating
 which argument failed to lock.
 </dd>
@@ -2138,8 +2175,10 @@ wait</code>.
 <dt>Effects:</dt>
 <dd>
 Atomically blocks and releases the lock on
-<code>lock</code>. If the <code>wait</code> throws an exception, <code>lock</code> will be
-locked as the exception propagates. The current thread may
+<code>lock</code>.
+If the <code>wait</code> throws an exception, <code>lock</code> will be
+locked as the exception propagates.
+The current thread may
 unblock and return even in the absence of a notification.
 <b>[Crowl: Needs to say acquire operation.]</b>
 </dd>
@@ -2195,7 +2234,8 @@ bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_t
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The <code>lock</code> is locked by the current thread.  No
+The <code>lock</code> is locked by the current thread.
+No
 other thread is waiting on this <code>condition_variable</code> object unless <code>lock</code>
 refers to, the same underlying <code>mutex</code> object.
 </dd>
@@ -2203,14 +2243,18 @@ refers to, the same underlying <code>mutex</code> object.
 <dt>Effects:</dt>
 <dd>
 Atomically blocks and releases the lock on
-<code>lock</code>. If the <code>timed_wait</code> should throw an exception for
+<code>lock</code>.
+If the <code>timed_wait</code> should throw an exception for
 any reason, <code>lock</code> will be locked as the exception propagates
-out.  If the absolute time specified by <code>abs_time</code> passes (that
+out.
+If the absolute time specified by <code>abs_time</code> passes (that
 is, system time equals or exceeds <code>abs_time</code>) before the
 <code>condition_variable</code> is notified, or if the absolute time specified by
 <code>abs_time</code> has already been passed at the time of the call, then
-<code>false</code> is returned. This thread shall unblock when
-another thread  issues a notification to this blocked thread. The current
+<code>false</code> is returned.
+This thread shall unblock when
+another thread  issues a notification to this blocked thread.
+The current
 thread may unblock and return even in the absence of a
 notification.
 </dd>
@@ -2281,7 +2325,8 @@ return true;
 <p>
 [<i>Note:</i>
 There is no blocking if <code>pred()</code> is initially <code>true</code>, even
-if the timeout has already expired.  The return value indicates whether the predicate
+if the timeout has already expired.
+The return value indicates whether the predicate
 evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
 </p>
@@ -2302,7 +2347,8 @@ thread that some condition is met, or a UTC[(?)] time is reached.
 
 <p>
 The <code>Lock</code> type must support member functions <code>lock</code>
-and <code>unlock</code> with the semantics of the mutex concept.  All of the standard mutex types
+and <code>unlock</code> with the semantics of the mutex concept.
+All of the standard mutex types
 meet this requirement.
 </p>
 
@@ -2413,8 +2459,10 @@ void wait(Lock&amp; lock);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-<code>lock</code> is locked by the current thread.  If
-<code>Lock</code> supports recursive locking, the lock count is one.  No
+<code>lock</code> is locked by the current thread.
+If
+<code>Lock</code> supports recursive locking, the lock count is one.
+No
 other thread is waiting on this <code>condition_variable_any</code> object unless <code>lock</code>
 is, or refers to, the same underlying mutex object.
 </dd>
@@ -2422,10 +2470,12 @@ is, or refers to, the same underlying mutex object.
 <dt>Effects:</dt>
 <dd>
 Atomically blocks and releases the lock on
-<code>lock</code>. If the <code>wait</code> should throw an exception for any
+<code>lock</code>.
+If the <code>wait</code> should throw an exception for any
 reason, <code>lock</code> will be locked as the exception propagates.
 This thread shall unblock when another thread issues a
-notification to this blocked thread. The current thread may
+notification to this blocked thread.
+The current thread may
 unblock and return even in the absence of a notification.
 </dd>
 
@@ -2437,7 +2487,8 @@ thread.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs. The
+<code>system_error</code> when an error condition occurs.
+The
 possible error conditions are implementation defined.&nbsp;&nbsp;
 </dd>
 
@@ -2478,8 +2529,10 @@ bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The <code>lock</code> is locked by the current thread.  If
-<code>Lock</code> supports recursive locking, the lock count is one.  No
+The <code>lock</code> is locked by the current thread.
+If
+<code>Lock</code> supports recursive locking, the lock count is one.
+No
 other thread is waiting on this <code>condition_variable_any</code> object unless <code>lock</code>
 is, or refers to, the same underlying mutex object.
 </dd>
@@ -2487,14 +2540,18 @@ is, or refers to, the same underlying mutex object.
 <dt>Effects:</dt>
 <dd>
 Atomically blocks and releases the lock on
-<code>lock</code>. If the <code>timed_wait</code> should throw an exception for
+<code>lock</code>.
+If the <code>timed_wait</code> should throw an exception for
 any reason, <code>lock</code> will be locked as the exception propagates
-out.  If the absolute time specified by <code>abs_time</code> passes (that
+out.
+If the absolute time specified by <code>abs_time</code> passes (that
 is, system time equals or exceeds <code>abs_time</code>) before the
 <code>condition_variable_any</code> is notified, or if the absolute time specified by
 <code>abs_time</code> has already been passed at the time of the call, then
-<code>false</code> is returned. This thread shall unblock when
-another thread issues a notification to this blocked thread. The current
+<code>false</code> is returned.
+This thread shall unblock when
+another thread issues a notification to this blocked thread.
+The current
 thread may unblock and return even in the absence of a
 notification.
 </dd>
@@ -2514,7 +2571,8 @@ otherwise returns <code>false</code>.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs. The
+<code>system_error</code> when an error condition occurs.
+The
 possible error conditions are implementation defined.&nbsp;&nbsp;
 </dd>
 
@@ -2561,7 +2619,8 @@ return true;
 <p>
 [<i>Note:</i>
 There is no blocking if <code>pred()</code> is initially <code>true</code>, even
-if the timeout has already expired.  The return value indicates whether the predicate
+if the timeout has already expired.
+The return value indicates whether the predicate
 evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
 </p>
@@ -2577,10 +2636,14 @@ evaluates to <code>true</code>, regardless of whether the timeout was triggered.
 <p>
 This clause describes components for determining and manipulating temporal values.
  A <i>time point</i> represents a dimensionless instant
- in the time continuum. A <i>time duration</i> represents a length of time
- unattached to any time point. Time points and time durations have a
- <i>resolution</i> which is their smallest representable time duration.  Time points
- have an <i>epoch</i> or start of a given time scale. For time_t the epoch is
+ in the time continuum.
+A <i>time duration</i> represents a length of time
+ unattached to any time point.
+Time points and time durations have a
+ <i>resolution</i> which is their smallest representable time duration.
+Time points
+ have an <i>epoch</i> or start of a given time scale.
+For time_t the epoch is
  1970-01-01 00:00:00.
 
 <p>
@@ -3023,7 +3086,8 @@ Nothing.
 
 <p>
         The function <code>get_system_time</code> provides access to the system clock at a
-        resolution up to nanoseconds. The actual resolution may vary from platform to platform.
+        resolution up to nanoseconds.
+The actual resolution may vary from platform to platform.
 </p>
 
 <blockquote>
@@ -3036,7 +3100,8 @@ Nothing.
 <p>
 [<i>Comment (not for inclusion in WP):</i>
     <i>Typical personal computer platforms currently achieve microsecond level
-    resolution from calls to the clock. The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a> has a class that portably implements the proposed
+    resolution from calls to the clock.
+The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a> has a class that portably implements the proposed
     interface, but it uses different C-level interfaces depending on the operating
     system.</i>
 &mdash;<i>end comment</i>]
@@ -3045,7 +3110,8 @@ Nothing.
 <h3><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.common_duration_functions"></a>Common Duration Functions</h3>
 
 <p>
-        The following functions are common functions to all durations types. These
+        The following functions are common functions to all durations types.
+These
         functions provide the basis for durations to be EqualityComparable, LessThanComparable
         as well arithmetic operations.
 </p>
@@ -4412,12 +4478,16 @@ Nothing.
 <p>
 The overall design of this threading library is based on William Kempf's
 Boost.Thread Library, as refined by literally hundreds of other Boost users and
-contributors. Dinkumware and Metrowerks (now Freescale) implementations of
+contributors.
+Dinkumware and Metrowerks (now Freescale) implementations of
 Boost.Thread, developed respectively by Pete Becker and Howard Hinnant, created
-further existing practice. Proposals by Pete Becker, Peter Dimov, Ion Gazta&ntilde;aga,
-and Anthony Williams were also influential. Peter, Ion, and Anthony also
+further existing practice.
+Proposals by Pete Becker, Peter Dimov, Ion Gazta&ntilde;aga,
+and Anthony Williams were also influential.
+Peter, Ion, and Anthony also
 contributed numerous critiques, suggestions, and comments on the current
-proposal, as did other members of an ad hoc threads working group. Jeff Garland
+proposal, as did other members of an ad hoc threads working group.
+Jeff Garland
 contributed the date time portions of the proposal based on the Boost.DateTime
 Library and his TR2 proposals.
 </p>
