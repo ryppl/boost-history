@@ -1,4 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
 
@@ -163,22 +164,22 @@ perform mutual exclusion and locking, and communicate
 between threads.
 </p>
 
-<table width="100%">
+<table>
   <tbody><tr>
-    <th width="50%">Subclause</th>
-    <th width="50%">Header(s)</th>
+    <th>Subclause</th>
+    <th>Header(s)</th>
   </tr>
   <tr>
-    <td width="50%"><a href="#thread.threads">Threads</a></td>
-    <td width="50%"><code>&lt;thread&gt;</code></td>
+    <td><a href="#thread.threads">Threads</a></td>
+    <td><code>&lt;thread&gt;</code></td>
   </tr>
   <tr>
-    <td width="50%"><a href="#thread.mutex">Mutexs and locks</a></td>
-    <td width="50%"><code>&lt;mutex&gt;</code></td>
+    <td><a href="#thread.mutex">Mutexs and locks</a></td>
+    <td><code>&lt;mutex&gt;</code></td>
   </tr>
   <tr>
-    <td width="50%"><a href="#thread.condition">Condition variables</a></td>
-    <td width="50%"><code>&lt;cond_var&gt;</code></td>
+    <td><a href="#thread.condition">Condition variables</a></td>
+    <td><code>&lt;cond_var&gt;</code></td>
   </tr>
 </tbody></table>
 
@@ -1685,14 +1686,14 @@ unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The current thread has ownership of the mutex <code><var>m<var></code>.
-The lifetime of <code><var>m<var></code> includes the lifetime of the <code>
+The current thread has ownership of the mutex <code><var>m</var></code>.
+The lifetime of <code><var>m</var></code> includes the lifetime of the <code>
 unique_lock</code> object.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Stores a reference to <code><var>m<var></code>
+Stores a reference to <code><var>m</var></code>
 and performs no other operation on it.
 </dd>
 
