@@ -4,7 +4,7 @@ namespace boost { namespace logging {
 @page common_usage_steps_fd Common steps when using Formatters and destinations
 
 The usual steps when using the Boost Logging Lib are:
-- Step 1: (optional) Specify your format and/or message class. By default, it's @c std::(w)string.
+- Step 1: (optional) Specify your format and/or message class. By default, it's <tt>std::(w)string</tt>.
   You'll use this when you want an @ref "optimize string class".
 - Step 2: (optional) Specify your @ref boost::logging::manipulator "formatter & destination base classes"
 - Step 3: Specify your logger class(es)

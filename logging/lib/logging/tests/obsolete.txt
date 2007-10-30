@@ -1,2 +1,0 @@
-Note: the tests here are obsolete.
-Please disregard them
