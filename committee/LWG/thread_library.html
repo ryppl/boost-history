@@ -379,7 +379,7 @@ Constructs an object of type <code>id</code>.
 Nothing.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 Represents the non-joinable identity.
 </dd>
@@ -519,17 +519,14 @@ actual thread.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-get_id() == thread::id()
-&amp;&amp; joinable() == false
-</code></pre>
-
-<p>
+<code>get_id() == thread::id()</code>
+<br>
+<code>joinable() == false</code>
+<br>
 [<i>Note:</i>
 This is also the state of a <code>thread</code>
 object after <code>detach</code> or <code>join</code> is successfully called.
 &mdash;<i>end note</i>]
-</p>
 </dd>
 
 <dt>Throws:</dt>
@@ -566,14 +563,11 @@ exception, <code>std::terminate()</code> shall be called.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-get_id() != thread::id()
-&amp;&amp; joinable() == true
-</code></pre>
-
-<p>
+<code>get_id() != thread::id()</code>
+<br>
+<code>joinable() == true</code>
+<br>
 <code>*this</code> represents the newly started thread.
-</p>
 </dd>
 
 <dt>Throws:</dt>
@@ -592,12 +586,14 @@ thread(thread&amp;&amp; <var>x</var>);
 Constructs an object of type <code>thread</code> from <code><var>x</var></code>.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code><var>x</var>.joinable()</code> is <code>false</code>.
+<code><var>x</var>.joinable() == false</code>
+<br>
 <code><var>x</var>.get_id() == thread().get_id().joinable()</code>
 returns the value of <code><var>x</var>.joinable()</code>
 prior to the start of construction.
+<br>
 <code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
 prior to the
 start of construction.
@@ -644,12 +640,14 @@ Then assigns the state of <code><var>x</var></code> to <code>*this</code>
 and sets <code><var>x</var></code> to a default constructed state.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code><var>x</var>.joinable()</code> is <code>false</code>.
+<code><var>x</var>.joinable() == false</code>
+<br>
 <code><var>x</var>.get_id() == thread().get_id().joinable()</code> returns the
 value of <code><var>x</var>.joinable()</code> prior to the
 assignment.
+<br>
 <code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
 prior to the
 assignment.
@@ -714,10 +712,11 @@ on a memory location that the joiner does an acquire on.
 I.e. there is a happens before relationship.]</b>
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 After a normal return of <code>join()</code>,
 <code>joinable()</code> is <code>false</code>.
+<br>
 If <code>join()</code> throws an exception, the thread represented by
 <code>*this</code> remains <code>joinable</code>.
 </dd>
@@ -750,9 +749,10 @@ When the thread represented by
 Which resources?]</b>
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code>joinable()</code> is <code>false</code>.
+<code>joinable() == false</code>
+<br>
 <code>*this</code>
 does not represent a thread.
 </dd>
@@ -917,7 +917,7 @@ Constructs a object of type
 <code>once_flag</code>.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 Internal state is set to indicate to an invocation
 of <code>call_once</code> with this <code>once_flag</code> as its initial
@@ -1590,11 +1590,9 @@ Constructs an object of type <code>unique_lock</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-
-<pre><code>
-mutex() == 0
-owns_lock() == false
-</code></pre>
+<code>mutex() == 0</code>
+<br>
+<code>owns_lock() == false</code>
 </dd>
 </dl>
 
@@ -1619,10 +1617,9 @@ and calls <code><var>m</var>.lock()</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == &amp;<var>m</var>
-owns_lock() == true
-</code></pre>
+<code>mutex() == &amp;<var>m</var></code>
+<br>
+<code>owns_lock() == true</code>
 </dd>
 </dl>
 
@@ -1647,10 +1644,9 @@ and performs no other operation on it.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == &amp;<var>m</var>
-owns_lock() == false
-</code></pre>
+<code>mutex() == &amp;<var>m</var></code>
+<br>
+<code>owns_lock() == false</code>
 </dd>
 </dl>
 
@@ -1675,10 +1671,10 @@ and calls <code><var>m</var>.try_lock()</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == &amp;<var>m</var>
-owns_lock() == <i>The result of the call to</i> <var>m</var>.try_lock()
-</code></pre>
+<code>mutex() == &amp;<var>m</var></code>
+<br>
+<code>owns_lock() ==</code>
+the result of the call to <code><var>m</var>.try_lock()</code>
 </dd>
 </dl>
 
@@ -1702,10 +1698,9 @@ and performs no other operation on it.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == &amp;<var>m</var>
-owns_lock() == true
-</code></pre>
+<code>mutex() == &amp;<var>m</var></code>
+<br>
+<code>owns_lock() == true</code>
 </dd>
 </dl>
 
@@ -1739,12 +1734,15 @@ Transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == <i>The value of</i> u.mutex() <i>prior to the construction</i>.
-owns_lock() == <i>The value of</i> u.owns_lock() <i>prior to the construction</i>.
-u.mutex() == 0
-u.owns_lock() == false
-</code></pre>
+<code>u.mutex() == 0</code>
+<br>
+<code>u.owns_lock() == false</code>
+<br>
+<code>mutex() ==</code>
+the value of <code>u.mutex()</code> prior to the construction.
+<br>
+<code>owns_lock() ==</code>
+the value of <code>u.owns_lock()</code> prior to the construction.
 </dd>
 
 <dt>Throws:</dt>
@@ -1766,12 +1764,15 @@ transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == <i>The value of</i> u.mutex() <i>prior to the construction</i>.
-owns_lock() == <i>The value of</i> u.owns_lock() <i>prior to the construction</i>.
-u.mutex() == 0
-u.owns_lock() == false
-</code></pre>
+<code>u.mutex() == 0</code>
+<br>
+<code>u.owns_lock() == false</code>
+<br>
+<code>mutex() ==</code>
+the value of <code>u.mutex()</code> prior to the construction.
+<br>
+<code>owns_lock() ==</code>
+the value of <code>u.owns_lock()</code> prior to the construction.
 </dd>
 
 <dt>Throws:</dt>
@@ -1802,9 +1803,9 @@ void lock();
 Calls <code>lock()</code> on the referenced mutex.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == true</code>.
+<code>owns_lock() == true</code>
 </dd>
 
 <dt>Throws:</dt>
@@ -1829,9 +1830,10 @@ Calls <code>try_lock()</code> on the referenced mutex.
 The result of the call to <code>try_lock()</code> on the referenced mutex.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == </code>The result
+<code>owns_lock() ==</code>
+the result
 of the call to <code>try_lock()</code> on the referenced mutex.
 </dd>
 
@@ -1862,9 +1864,10 @@ The result of the call to <code>timed_lock(rel_t)</code>
 on the referenced mutex.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == </code>The result
+<code>owns_lock() == </code>
+the result
 of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
 </dd>
 
@@ -1885,9 +1888,9 @@ void unlock();
 Calls <code>unlock()</code> on the referenced mutex.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == false</code>.
+<code>owns_lock() == false</code>
 </dd>
 
 <dt>Throws:</dt>
@@ -1975,10 +1978,9 @@ A pointer to the referenced mutex, or null if there is no referenced mutex.
 
 <dt>Postconditions:</dt>
 <dd>
-<pre><code>
-mutex() == 0
-owns_lock() == false
-</code></pre>
+<code>mutex() == 0</code>
+<br>
+<code>owns_lock() == false</code>
 </dd>
 
 <dt>Throws:</dt>
@@ -2266,7 +2268,7 @@ unblock and return even in the absence of a notification.
 <b>[Crowl: Needs to say acquire operation.]</b>
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 <code>lock</code> is locked by the current
 thread.
@@ -2346,7 +2348,7 @@ thread may unblock and return even in the absence of a
 notification.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 <code>lock</code> is locked by the current
 thread.
@@ -2575,7 +2577,7 @@ The current thread may
 unblock and return even in the absence of a notification.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 <code>lock</code> is locked by the current
 thread.
@@ -2656,7 +2658,7 @@ thread may unblock and return even in the absence of a
 notification.
 </dd>
 
-<dt>Postcondition:</dt>
+<dt>Postconditions:</dt>
 <dd>
 <code>lock</code> is locked by the current
 thread.
