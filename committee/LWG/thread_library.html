@@ -2770,7 +2770,7 @@ Define Duration, RhsDuration.
 <pre><code>
 namespace std {
 
-//duration types
+// <em>duration types</em>
 class hours;
 class minutes;
 class seconds;
@@ -2778,13 +2778,13 @@ class milliseconds;
 class microseconds;
 class nanoseconds;
 
-//timepoint
+// <em>timepoint</em>
 class system_time;
 
-//functions
+// <em>functions</em>
 system_time get_system_time();
 
-} //std
+}  // std
 </code></pre>
 </blockquote>
 
@@ -2817,13 +2817,13 @@ public:
     time_t seconds_since_epoch() const;
     nanoseconds nanoseconds_since_epoch() const;
 
-    //traits
+    // <em>traits</em>
     typedef 'implementation defined' tick_type;
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
 
-    //comparison functions
+    // <em>comparison functions</em>
     bool operator==(const system_time&amp; rhs) const;
     bool operator!=(const system_time&amp; rhs) const;
     bool operator&gt;(const system_time&amp; rhs) const;
@@ -2831,7 +2831,7 @@ public:
     bool operator&lt;(const system_time&amp; rhs) const;
     bool operator&lt;=(const system_time&amp; rhs) const;
 
-    //arithmetic functions
+    // <em>arithmetic functions</em>
     nanoseconds operator-(const system_time&amp; rhs) const
 
     template&lt;typename Duration&gt;
@@ -3247,7 +3247,7 @@ objects of the same type.
 <pre><code>
 class Duration {
 
-    //comparison operators
+    // <em>comparison operators</em>
     template&lt;typename RhsDuration&gt;
     bool operator&lt;  (const RhsDuration&amp;) const;
 
@@ -3267,10 +3267,10 @@ class Duration {
     bool operator!= (const RhsDuration&amp;) const;
 
 
-    //sign inversion
+    // <em>sign inversion</em>
     Duration operator-() const
 
-    //arithmetic operations
+    // <em>arithmetic operations</em>
     template&lt;typename RhsDuration&gt;
     Duration operator- (const RhsDuration&amp; d) const
 
@@ -3632,13 +3632,13 @@ public:
     nanoseconds(const nanoseconds&amp; rhs);
     ~nanoseconds();
 
-    //traits information
+    // <em>traits information</em>
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
 
-    //+ common functions
+    // <em>+ common functions</em>
 
 };
 </code></pre>
@@ -3742,16 +3742,16 @@ public:
     microseconds(const microseconds&amp; rhs);
     ~microseconds();
 
-    //conversions
+    // <em>conversions</em>
     operator nanoseconds() const
 
-    //traits information
+    // <em>traits information</em>
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
 
-    //+ common functions
+    // <em>+ common functions</em>
 
 };
 
@@ -3872,17 +3872,17 @@ public:
     milliseconds(const milliseconds&amp; rhs);
     ~milliseconds();
 
-    //conversions
+    // <em>conversions</em>
     operator nanoseconds() const;
     operator microseconds() const;
 
-    //traits information
+    // <em>traits information</em>
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
 
-    //+ common functions
+    // <em>+ common functions</em>
 };
 </code></pre>
 </blockquote>
@@ -4016,18 +4016,18 @@ public:
     seconds(const seconds&amp; rhs);
     ~seconds();
 
-    //conversions
+    // <em>conversions</em>
     operator nanoseconds() const
     operator microseconds() const
     operator milliseconds() const
 
-    //traits information
+    // <em>traits information</em>
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
 
-    //+ common functions
+    // <em>+ common functions</em>
 
 };
 </code></pre>
@@ -4178,19 +4178,19 @@ public:
     minutes(const minutes&amp; rhs);
     ~minutes();
 
-    //conversions
+    // <em>conversions</em>
     operator nanoseconds() const
     operator microseconds() const
     operator milliseconds() const
     operator seconds() const
 
-    //traits information
+    // <em>traits information</em>
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
 
-    //+ common functions
+    // <em>+ common functions</em>
 
 };
 </code></pre>
@@ -4357,20 +4357,20 @@ public:
     hours(const hours&amp; rhs);
     ~hours();
 
-    //conversions
+    // <em>conversions</em>
     operator nanoseconds() const
     operator microseconds() const
     operator milliseconds() const
     operator seconds() const
     operator minutes() const
 
-    //traits information
+    // <em>traits information</em>
     static tick_type ticks_per_second();
     static tick_type seconds_per_tick();
     static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
 
-    //+ common functions
+    // <em>+ common functions</em>
 
 };
 </code></pre>
