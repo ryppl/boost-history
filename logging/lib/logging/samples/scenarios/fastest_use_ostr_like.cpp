@@ -61,15 +61,15 @@ using namespace boost::logging;
 
 
 // Step 1 : Specify your logging class(es)
-typedef logger< process_msg<gather::ostream_like::return_str<>, destination::cout> > app_log_type;
-typedef logger< process_msg<gather::ostream_like::return_str<>, destination::file> > err_log_type;
+typedef logger< default_, destination::cout> app_log_type;
+typedef logger< default_, destination::file> err_log_type;
 
 // Step 2 : Set up a filter
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 
 // Step 3: declare which loggers you'll use
-app_log_type g_log_app;
-err_log_type g_log_err("err.txt");
+BOOST_DECLARE_LOG(g_log_app, app_log_type );
+BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 
 // Step 4: define the macros through which you'll log
 #define LAPP_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_app, g_log_filter->is_enabled() ) 

@@ -58,17 +58,26 @@ second error
 
 using namespace boost::logging;
 
+struct no_gather {
+    const char * m_msg;
+    no_gather() : m_msg(0) {}
+    const char * msg() const { return m_msg; }
+    void out(const char* msg) { m_msg = msg; }
+    void out(const std::string& msg) { m_msg = msg.c_str(); }
+};
 
 // Step 1 : Specify your logging class(es)
-typedef logger< destination::cout > app_log_type;
-typedef logger< destination::file > err_log_type;
+typedef logger< no_gather, destination::cout > app_log_type;
+typedef logger< no_gather, destination::file > err_log_type;
 
 // Step 2 : Set up a filter
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 
 // Step 3: declare which loggers you'll use
-app_log_type g_log_app;
-err_log_type g_log_err("err.txt");
+BOOST_DECLARE_LOG(g_log_app, app_log_type)
+BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
+
+// FIXME most likely I can use BOOST_LOG_USE_IF_FILTER
 
 // Step 4: define the macros through which you'll log
 #define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app, g_log_filter->is_enabled() ) 

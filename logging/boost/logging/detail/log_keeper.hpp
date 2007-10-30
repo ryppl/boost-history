@@ -39,11 +39,13 @@ namespace detail {
 
         g_l->writer().add_formatter( formatter::idx() );
     */
-    template<class type, type& (*func)() > struct log_keeper {
-        typedef typename type::process_msg_type process_msg_type ;
+    template<class type, type& (*func)(), class base_type = type, base_type& (*base_func)() = func > struct log_keeper {
 
-        const process_msg_type* operator->() const  { return func().operator->(); }
-        process_msg_type* operator->()              { return func().operator->(); }
+        const type* operator->() const  { return &func(); }
+        type* operator->()              { return &func(); }
+
+        const base_type* base() const  { return &base_func(); }
+        base_type* base()              { return &base_func(); }
     };
 
     struct fake_using_log {

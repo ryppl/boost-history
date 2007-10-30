@@ -507,6 +507,22 @@
 			<File
 				RelativePath="..\..\..\tests\testfast.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="TestAll|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="scenarios"
@@ -550,14 +566,6 @@
 				<File
 					RelativePath="..\..\scenarios\mul_levels_mul_logers.cpp"
 					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
@@ -737,6 +745,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\logger.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\logging.hpp"
 				>
 			</File>
@@ -749,11 +761,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\process_msg.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\boost\logging\sink.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\sink.hpp"
 				>
 			</File>
 			<File
@@ -897,7 +905,7 @@
 			Name="internal docs"
 			>
 			<File
-				RelativePath="..\..\..\src\changelog.txt"
+				RelativePath="..\..\..\..\..\boost\logging\changelog.hpp"
 				>
 			</File>
 			<File

@@ -36,6 +36,7 @@ namespace boost { namespace logging {
     template<class param, class default_type> struct use_default                    { typedef param type; };
     template<class default_type> struct use_default<default_, default_type>         { typedef default_type type; };
 
+    struct void_ {};
 
     struct ansi_unicode_char_holder {
         const char * str;

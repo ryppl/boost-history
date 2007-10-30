@@ -1,3 +1,10 @@
+/** 
+@page page_changelog Changelog
+
+v0.9.2, 30 oct 2007
+- Breaking chage: 
+  - @c process_msg class has been removed. Now @c logger takes its place
+  - Instead of logger<use_format_write<>>, use logger_format_write<>
 
 v0.9.1, 30 oct 2007
 - implemented BOOST_DEFINE_LOG/BOOST_DECLARE_LOG for when not compiling fast
@@ -66,3 +73,5 @@ v0.6, 13 oct 2007
 
 v0.7, 15 oct 2007
 - compiles with gcc 3.4.2
+
+*/

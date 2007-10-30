@@ -17,11 +17,9 @@
 #ifndef JT28092007_macros_HPP_DEFINED
 #define JT28092007_macros_HPP_DEFINED
 
-/* 
-    VERY IMPORTANT: 
-    Not using #pragma once
-    We might need to re-include this file, when defining the logs
-*/
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
 
 #include <boost/logging/detail/fwd.hpp>
 #include <time.h>
@@ -84,34 +82,43 @@ namespace boost { namespace logging {
 #define BOOST_DECLARE_LOG(name,type) \
     type& name ## _boost_log_impl_(); \
     ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_(); \
-    extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
+    extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
 
 #define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
     { static type i; return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; \
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; \
     ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
     { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
-    typedef type::process_msg_type process_msg_type; \
-    typedef process_msg_type::write_type write_msg; \
-    static ::boost::logging::detail::process_msg_with_ptr< gather_msg, write_msg > p( name ## _boost_log_impl_() ); \
-    static ::boost::logging::detail::fast_compile_with_default_gather<>::log_type i ( &p ); \
-    return i; }
+    typedef type::write_type write_msg; \
+    static ::boost::logging::implement_default_logger< gather_msg, write_msg* > p( &(name ## _boost_log_impl_().writer()) ); \
+    return p; }
+
+#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type& name ## _boost_log_impl_() \
+    { static type i ( args ); return i; } \
+    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; \
+    ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
+    { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
+    typedef type::write_type write_msg; \
+    static ::boost::logging::implement_default_logger< gather_msg, write_msg* > p( &(name ## _boost_log_impl_().writer()) ); \
+    return p; }
+
 
 
 #else
 // don't compile fast
-
 #define BOOST_DECLARE_LOG(name,type) type& name ## _boost_log_impl_(); extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
 #define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
     { static type i; return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
     boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
 
-/** 
-    Advanced
-*/
-#define BOOST_DECLARE_LOG_WITH_GATHER(name,type,gather_type) BOOST_DECLARE_LOG(name,type)
+#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type& name ## _boost_log_impl_() \
+    { static type i ( args); return i; } \
+    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
+
 
 #endif
 
@@ -155,16 +162,14 @@ namespace boost { namespace logging {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Log Macros
 
-// FIXME always need to specify the function to call
-// when compiling fast, I'll use l ## _boost_log_impl() !!!
 
-#define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) if ( !(is_log_enabled) ) ; else l -> do_func
+#define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) if ( !(is_log_enabled) ) ; else l .base()-> do_func
 
 #define BOOST_LOG_USE_LOG_IF_LEVEL(l, holder, the_level) BOOST_LOG_USE_LOG(l, read_msg().gather().out(), holder->is_enabled(::boost::logging::level:: the_level) )
 
 #define BOOST_LOG_USE_LOG_IF_FILTER(l, the_filter) BOOST_LOG_USE_LOG(l, read_msg().gather().out(), the_filter)
 
-#define BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(l, is_log_enabled) if ( !(is_log_enabled) ) ; else l ->operator() 
+#define BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(l, is_log_enabled) if ( !(is_log_enabled) ) ; else l .base() ->read_msg().gather().out 
 
 
 

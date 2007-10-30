@@ -84,7 +84,7 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 #include <boost/logging/format.hpp>
 
 // Step 3 : Specify your logging class(es)
-typedef boost::logging::logger< boost::logging::use_format_write< > > log_type;
+typedef boost::logging::logger_format_write< > log_type;
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)

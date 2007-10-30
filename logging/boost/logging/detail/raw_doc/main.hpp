@@ -5,6 +5,7 @@ namespace boost { namespace logging {
 
 - @ref main_motivation
 - @ref main_common_usage
+- @ref main_changelog
 
 @section main_motivation Motivation
 
@@ -49,6 +50,12 @@ To get you started, here's the <b>most common usage</b>:
 \n\n\n
 
 To see more examples, check out @ref common_scenarios.
+
+
+\n\n\n
+@section main_changelog Changelog
+
+@copydoc page_changelog 
 
 */
 

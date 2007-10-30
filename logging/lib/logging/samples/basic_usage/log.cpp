@@ -1,6 +1,4 @@
 
-// to let the library know we're definining the logs
-#define BOOST_LOG_DEFINE_LOGS
 #include "log.h"
 #include <boost/logging/format.hpp>
 

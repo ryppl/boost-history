@@ -60,7 +60,7 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
-typedef logger< use_format_write< > > log_type;
+typedef logger_format_write< > log_type;
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)

@@ -28,6 +28,8 @@
 
 namespace boost { namespace logging {
 
+template<class gather_msg , class write_msg > struct logger ;
+
 namespace formatter {
     /** 
     @brief what is the default type of your string, in formatter_base ? See BOOST_LOG_FORMAT_MSG
@@ -54,20 +56,13 @@ namespace destination {
     - use a default gather
 */
 namespace detail {
-    template<class gather_msg> struct call_write;
-
-    template<class gather_type> struct fast_compile_with_gather {
-        typedef gather_type gather_msg;
-        typedef typename process_msg_with_ptr_base< gather_msg >  process_type;
-        typedef typename logger< process_type* > log_type;
-    };
 
     template<class T = override> struct fast_compile_with_default_gather {
         typedef typename boost::logging::formatter::msg_type<T>::type msg_type_ref;
         typedef typename boost::remove_reference<msg_type_ref>::type msg_type;
 
         typedef typename find_gather< msg_type >::type gather_msg;
-        typedef typename fast_compile_with_gather< gather_msg >::log_type log_type;
+        typedef typename logger< gather_msg, default_ > log_type;
     };
 
 }

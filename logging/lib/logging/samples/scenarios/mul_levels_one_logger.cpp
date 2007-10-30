@@ -51,10 +51,10 @@ It will look similar to this one:
 
 using namespace boost::logging;
 // Step 3 : Specify your logging class(es)
-typedef logger< use_format_write< > > log_type;
+typedef logger_format_write< > log_type;
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
-BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
+BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) 
 BOOST_DECLARE_LOG(g_l, log_type) 
 
 // Step 5: define the macros through which you'll log
@@ -98,7 +98,6 @@ void test_mul_levels_one_logger() {
 
     // Step 9 : Enjoy!
 }
-
 
 
 #ifdef SINGLE_TEST

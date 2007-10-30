@@ -13,6 +13,9 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
+/*  FIXME this whole file will most likely dissapear
+
+*/
 
 #ifndef JT28092007_sink_HPP_DEFINED
 #define JT28092007_sink_HPP_DEFINED

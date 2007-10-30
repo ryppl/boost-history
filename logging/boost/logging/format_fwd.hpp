@@ -24,6 +24,7 @@
 
 #include <boost/logging/logging.hpp>
 #include <boost/logging/format/optimize.hpp>
+#include <boost/logging/process_msg/ostream_like.hpp>
 
 namespace boost { namespace logging {
 
@@ -48,7 +49,7 @@ BOOST_LOG_FORMAT_MSG( boost::logging::optimize::cache_string_one_str<> )
 #if defined(BOOST_LOG_DEFINE_LOGS)
 #include <boost/logging/format.hpp>
 
-typedef logger< use_format_write< > > log_type;
+typedef logger_format_write< > log_type;
 #endif
 
 BOOST_DECLARE_LOG(g_l, log_type)
@@ -69,7 +70,7 @@ template<
             class destination_base_type = default_ ,
             class thread_safety = default_ ,
             class gather = default_
-    > struct use_format_write ;
+    > struct logger_format_write;
 
 
 }}

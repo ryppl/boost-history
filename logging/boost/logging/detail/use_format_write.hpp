@@ -79,7 +79,7 @@ template<
             class thread_safety ,
             class gather 
     >
-        struct use_format_write {
+struct use_format_write {
 
     typedef typename use_default<format_base_type, boost::logging::formatter::base<> > ::type format_base;
     typedef typename use_default<destination_base_type, boost::logging::destination::base<> > ::type destination_base;
@@ -91,9 +91,10 @@ template<
     typedef typename detail::find_format_write_params<format_param, format_base, destination_base>::router_type router_type;
 };
 
-template<class format_base, class destination_base, class thread_safety, class gather> struct logger< use_format_write<format_base, destination_base, thread_safety, gather> > 
-    : logger_base< 
-        process_msg< 
+
+template<class format_base, class destination_base, class thread_safety, class gather> 
+struct logger_format_write
+    : logger< 
             typename use_format_write<format_base, destination_base, thread_safety, gather>::gather_type,
             writer::format_write<
                 typename use_format_write<format_base, destination_base, thread_safety, gather>::format_base,
@@ -101,11 +102,9 @@ template<class format_base, class destination_base, class thread_safety, class g
                 typename use_format_write<format_base, destination_base, thread_safety, gather>::apply_format_and_write,
                 typename use_format_write<format_base, destination_base, thread_safety, gather>::router_type
             > 
-        > 
-      >
+    >
 {
-    typedef logger_base< 
-        process_msg< 
+    typedef logger< 
             typename use_format_write<format_base, destination_base, thread_safety, gather>::gather_type,
             writer::format_write<
                 typename use_format_write<format_base, destination_base, thread_safety, gather>::format_base,
@@ -113,12 +112,11 @@ template<class format_base, class destination_base, class thread_safety, class g
                 typename use_format_write<format_base, destination_base, thread_safety, gather>::apply_format_and_write,
                 typename use_format_write<format_base, destination_base, thread_safety, gather>::router_type
             > 
-        > 
-      >
+    >
      logger_base_type;
 
-    logger() {}
-    BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger, logger_base_type)
+    logger_format_write() {}
+    BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger_format_write, logger_base_type)
 };
 
 }}

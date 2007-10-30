@@ -23,8 +23,7 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/filter.hpp>
-#include <boost/logging/process_msg.hpp>
-#include <boost/logging/sink.hpp>
+#include <boost/logging/detail/logger.hpp>
 #include <boost/logging/macros.hpp>
 #include <boost/logging/level.hpp>
 
