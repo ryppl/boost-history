@@ -1,6 +1,9 @@
 /** 
 @page page_changelog Changelog
 
+v0.9.6, 30 oct 2007
+- removed garbage from stdafx.h files - so that it can be compiled under Linux
+
 v0.9.5, 30 oct 2007
 - compiles with gcc 4.1 and 4.3 
   (note: I just solved some errors that were pointed out by Jens Seidel, not sure if this fixed everything)
