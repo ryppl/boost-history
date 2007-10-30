@@ -148,3 +148,9 @@ numerics.qbk
  * Link to primitives
 
  * Int. links
+
+epsilon.qbk
+
+ * Int. links (note hard-to-see ones)
+
+ * Changed c -> p in final code snippet, to fit with commentary.

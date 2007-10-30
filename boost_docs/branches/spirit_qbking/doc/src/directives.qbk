@@ -1,0 +1,150 @@
+
+[section Directives]
+
+Parser directives have the form: [*directive\[expression\]]
+
+A directive modifies the behavior of its enclosed expression, essentially ['decorating] it. The framework pre-defines a few directives. Clients of the framework are free to define their own directives as needed. Information on how this is done will be provided later. For now, we shall deal only with predefined directives.
+
+[h3 `lexeme_d`]
+
+Turns off white space skipping. At the phrase level, the parser ignores white spaces, possibly including comments. Use `lexeme_d` in situations where we want to work at the character level instead of the phrase level. Parsers can be made to work at the character level by enclosing the pertinent parts inside the lexeme_d directive. For example, let us complete the example presented in the [link __Introduction__]. There, we skipped the definition of the `integer` rule. Here's how it is actually defined:
+
+``
+    integer = lexeme_d[ !(ch_p('+') | '-') >> +digit ];
+``
+
+The `lexeme_d` directive instructs the parser to work on the character level. Without it, the `integer` rule would have allowed erroneous embedded white spaces in inputs such as "`1 2 345`" which will be parsed as "`12345`".
+
+[h3 `as_lower_d`]
+
+There are times when we want to inhibit case sensitivity. The `as_lower_d` directive converts all characters from the input to lower-case.
+
+[important [*`as_lower_d` behavior]
+
+It is important to note that only the input is converted to lower case. Parsers enclosed inside the `as_lower_d` expecting upper case characters will fail to parse. Example: `as_lower_d['X']` will never succeed because it expects an upper case `'X'` that the `as_lower_d` directive will never supply.
+]
+
+For example, in Pascal, keywords and identifiers are case insensitive. Pascal ignores the case of letters in identifiers and keywords. Identifiers Id, ID and id are indistinguishable in Pascal. Without the `as_lower_d` directive, it would be awkward to define a rule that recognizes this. Here's a possibility:
+
+``
+    r = str_p("id") | "Id" | "iD" | "ID";
+``
+
+Now, try doing that with the case insensitive Pascal keyword "`BEGIN`". The `as_lower_d` directive makes this simple:
+
+``
+    r = as_lower_d["begin"];
+``
+
+[note [*Primitive arguments]
+
+The astute reader will notice that we did not explicitly wrap "begin" inside an `str_p`. Whenever appropriate, directives should be able to allow primitive types such as `char`, `int`, `wchar_t`, `char const*`, `wchar_t const*` and so on. Examples:
+
+``
+as_lower_d["hello"] // same as as_lower_d[str_p("hello")]
+as_lower_d['x'] // same as as_lower_d[ch_p('x')]
+``
+]
+
+[h3 `no_actions_d`]
+
+There are cases where you want [link __semantic actions__] not to be triggered. By enclosing a parser in the `no_actions_d` directive, all semantic actions directly or indirectly attached to the parser will not fire.
+
+``
+    no_actions_d[expression]
+``
+
+[h3 Tweaking the Scanner Type]
+
+[$../theme/note.gif] How does `lexeme_d`, `as_lower_d` and `no_actions_d` work? These directives do their magic by tweaking the scanner policies. Well, you don't need to know what that means for now. Scanner policies are discussed [link __in_depth_the_scanner__ __later__]. However, it is important to note that when the scanner policy is tweaked, the result is a different scanner. Why is this important to note? The [link __rule__] is tied to a particular scanner (one or more scanners, to be precise). If you wrap a rule inside a `lexeme_d`, `as_lower_d` or `no_actions_d`, the compiler will complain about scanner mismatch unless you associate the required scanner with the rule.
+
+`lexeme_scanner`, `as_lower_scanner` and `no_actions_scanner` are your friends if the need to wrap a rule inside these directives arise. Learn bout these beasts in the next chapter on [link __The Scanner and Parsing__].
+
+[h3 `longest_d`]
+
+Alternatives in the Spirit parser compiler are short-circuited (see [link __Operators__]). Sometimes, this is not what is desired. The `longest_d` directive instructs the parser not to short-circuit alternatives enclosed inside this directive, but instead makes the parser try all possible alternatives and choose the one matching the longest portion of the input stream.
+
+Consider the parsing of integers and real numbers:
+
+``
+    number = real | integer;
+``
+
+A number can be a real or an integer. This grammar is ambiguous. An input "`1234`" should potentially match both `real` and `integer`. Recall though that alternatives are short-circuited . Thus, for inputs such as above, the `real` alternative always wins. However, if we swap the alternatives:
+
+``
+    number = integer | real;
+``
+
+we still have a problem. Now, an input "`123.456`" will be partially matched by integer until the decimal point. This is not what we want. The solution here is either to fix the ambiguity by factoring out the common prefixes of `real` and `integer` or, if that is not possible nor desired, use the `longest_d` directive:
+
+``
+    number = longest_d[ integer | real ];
+``
+
+[h3 `shortest_d`]
+
+Opposite of the `longest_d` directive.
+
+[note [*Multiple alternatives]
+
+The `longest_d` and `shortest_d` directives can accept two or more alternatives. Examples:
+
+``
+longest[ a | b | c ];
+shortest[ a | b | c | d ];
+``
+]
+
+[h3 `limit_d`]
+
+Ensures that the result of a parser is constrained to a given min..max range (inclusive). If not, then the parser fails and returns a no-match.
+
+[*Usage:]
+
+``
+    limit_d(min, max)[expression]
+``
+
+This directive is particularly useful in conjunction with parsers that parse specific scalar ranges (for example, [link __numeric parsers__]). Here's a practical example. Although the numeric parsers can be configured to accept only a limited number of digits (say, 0..2), there is no way to limit the result to a range (say -1.0..1.0). This design is deliberate. Doing so would have undermined Spirit's design rule that ["['the client should not pay for features that she does not use]]. We would have stored the min, max values in the numeric parser itself, used or unused. Well, we could get by by using static constants configured by a non-type template parameter, but that is not acceptable because that way, we can only accommodate integers. What about real numbers or user defined numbers such as big-ints?
+
+
+[*Example], parse time of the form [*HH:MM:SS]:
+
+``
+    uint_parser<int, 10, 2, 2> uint2_p;
+
+    r = lexeme_d
+        [
+                limit_d(0u, 23u)[uint2_p] >> ':'    //  Hours 00..23
+            >>  limit_d(0u, 59u)[uint2_p] >> ':'    //  Minutes 00..59
+            >>  limit_d(0u, 59u)[uint2_p]           //  Seconds 00..59
+        ];
+``
+
+[h3 `min_limit_d`]
+
+Sometimes, it is useful to unconstrain just the maximum limit. This will allow for an interval that's unbounded in one direction. The directive `min_limit_d` ensures that the result of a parser is not less than minimun. If not, then the parser fails and returns a no-match.
+
+[*Usage:]
+
+``
+    min_limit_d(min)[expression]
+``
+
+[*Example], ensure that a date is not less than 1900
+
+``
+    min_limit_d(1900u)[uint_p]
+``
+
+[h3 `max_limit_d`]
+
+Opposite of `min_limit_d`. Take note that `limit_d[p]` is equivalent to:
+
+``
+    min_limit_d(min)[max_limit_d(max)[p]]
+``
+
+[endsect][/ directives]
+

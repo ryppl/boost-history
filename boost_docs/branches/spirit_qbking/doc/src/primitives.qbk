@@ -1,0 +1,180 @@
+
+[section Primitives]
+
+The framework predefines some parser primitives. These are the most basic building blocks that the client uses to build more complex parsers. These primitive parsers are template classes, making them very flexible.
+
+These primitive parsers can be instantiated directly or through a templatized helper function. Generally, the helper function is far simpler to deal with as it involves less typing.
+
+We have seen the character literal parser before through the generator function `ch_p` which is not really a parser but, rather, a parser generator. Class `chlit<CharT>` is the actual template class behind the character literal parser. To instantiate a `chlit` object, you must explicitly provide the character type, `CharT`, as a template parameter which determines the type of the character. This type typically corresponds to the input type, usually `char` or `wchar_t`. The following expression creates a temporary parser object which will recognize the single letter `'X'`.
+
+``
+    chlit<char>('X');
+``
+
+Using `chlit`'s generator function `ch_p` simplifies the usage of the `chlit<>` class (this is true of most Spirit parser classes since most have corresponding generator functions). It is convenient to call the function because the compiler will deduce the template type through argument deduction for us. The example above could be expressed less verbosely using the `ch_p` helper function.
+
+``
+    ch_p('X')  // equivalent to chlit<char>('X') object
+``
+
+[info [*Parser generators]
+
+Whenever you see an invocation of the parser generator function, it is equivalent to the parser itself. Therefore, we often call `ch_p` a character parser, even if, technically speaking, it is a function that generates a character parser.
+]
+
+The following grammar snippet shows these forms in action:
+
+``
+    // a rule can "store" a parser object.  They're covered
+    // later, but for now just consider a rule as an opaque type
+    rule<> r1, r2, r3;
+
+    chlit<char> x('X');     // declare a parser named x
+
+    r1 = chlit<char>('X');  //  explicit declaration
+    r2 = x;                 //  using x
+    r3 = ch_p('X')          //  using the generator
+``
+
+[h3 `chlit` and `ch_p`]
+
+Matches a single character literal. `chlit` has a single template type parameter which defaults to `char` (i.e. `chlit<>` is equivalent to `chlit<char>`). This type parameter is the character type that `chlit` will recognize when parsing. The function generator version deduces the template type parameters from the actual function arguments. The `chlit` class constructor accepts a single parameter: the character it will match the input against. Examples:
+
+``
+    r1 = chlit<>('X');
+    r2 = chlit<wchar_t>(L'X');
+    r3 = ch_p('X');
+``
+
+Going back to our original example:
+
+``
+    group = '(' >> expr >> ')';
+    expr1 = integer | group;
+    expr2 = expr1 >> *(('*' >> expr1) | ('/' >> expr1));
+    expr  = expr2 >> *(('+' >> expr2) | ('-' >> expr2));
+``
+
+the character literals `'('`, `')'`, `'+'`, `'-'`, `'*'` and `'/'` in the grammar declaration are `chlit` objects that are implicitly created behind the scenes.
+
+[info [*char operands]
+
+The reason this works is from two special templatized overloads of `operator>>` that takes a `(char, ParserT)`, or `(ParserT, char)`. These functions convert the character into a `chlit` object.
+]
+
+One may prefer to declare these explicitly as:
+
+``
+    chlit<> plus('+');
+    chlit<> minus('-');
+    chlit<> times('*');
+    chlit<> divide('/');
+    chlit<> oppar('(');
+    chlit<> clpar(')');
+``
+
+[h3 `range` and `range_p`]
+
+A `range` of characters is created from a low/high character pair. Such a parser matches a single character that is in the `range`, including both endpoints. Like `chlit`, `range` has a single template type parameter which defaults to `char`. The range class constructor accepts two parameters: the character range (['from] and ['to], inclusive) it will match the input against. The function generator version is `range_p`. Examples:
+
+``
+    range<>('A','Z')    // matches 'A'..'Z'
+    range_p('a','z')    // matches 'a'..'z'
+``
+
+Note, the first character must be "before" the second, according to the underlying character encoding characters. The `range`, like `chlit` is a single character parser.
+
+[important [*Character mapping]
+
+Character mapping to is inherently platform dependent. It is not guaranteed in the standard for example that `'A' < 'Z'`, however, in many occasions, we are well aware of the character set we are using such as ASCII, ISO-8859-1 or Unicode. Take care though when porting to another platform.
+]
+
+
+[h3 `strlit` and `str_p`]
+
+This parser matches a string literal. `strlit` has a single template type parameter: an iterator type. Internally, `strlit` holds a begin/end iterator pair pointing to a string or a container of characters. The `strlit` attempts to match the current input stream with this string. The template type parameter defaults to `char const*`. `strlit` has two constructors. The first accepts a null-terminated character pointer. This constructor may be used to build `strlit`s from quoted string literals. The second constructor takes in a first/last iterator pair. The function generator version is `str_p`. Examples:
+
+``
+    strlit<>("Hello World")
+    str_p("Hello World")
+
+    std::string msg("Hello World");
+    strlit<std::string::const_iterator>(msg.begin(), msg.end());
+``
+
+[note [*Character and phrase level parsing]
+
+Typical parsers regard the processing of characters (symbols that form words or lexemes) and phrases (words that form sentences) as separate domains. Entities such as reserved words, operators, literal strings, numerical constants, etc., which constitute the terminals of a grammar are usually extracted first in a separate lexical analysis stage.
+
+At this point, as evident in the examples we have so far, it is important to note that, contrary to standard practice, the Spirit framework handles parsing tasks at both the character level as well as the phrase level. One may consider that a lexical analyzer is seamlessly integrated in the Spirit framework.
+
+Although the Spirit parser library does not need a separate lexical analyzer, there is no reason why we cannot have one. One can always have as many parser layers as needed. In theory, one may create a preprocessor, a lexical analyzer and a parser proper, all using the same framework.
+]
+
+[h3 `chseq` and `chseq_p`]
+
+Matches a character sequence. `chseq` has the same template type parameters and constructor parameters as `strlit`. The function generator version is `chseq_p`. Examples:
+
+``
+    chseq<>("ABCDEFG")
+    chseq_p("ABCDEFG")
+``
+
+`strlit` is an implicit lexeme. That is, it works solely on the character level. `chseq`, `strlit`'s twin, on the other hand, can work on both the character and phrase levels. What this simply means is that it can ignore white spaces in between the string characters. For example:
+
+``
+    chseq<>("ABCDEFG")
+``
+
+can parse:
+
+``
+    ABCDEFG
+    A B C D E F G
+    AB CD EFG
+``
+
+[h3 More character parsers]
+
+The framework also predefines the full repertoire of single character parsers:
+
+[table Single character parsers
+ [[`anychar_p`] [Matches any single character (including the null terminator: `'\0'`)]]
+ [[`alnum_p`]   [Matches alpha-numeric characters.]]
+ [[`alpha_p`]   [Matches alphabetic characters.]]
+ [[`blank_p`]   [Matches spaces or tabs.]]
+ [[`cntrl_p`]   [Matches control characters.]]
+ [[`digit_p`]   [Matches numeric digits.]]
+ [[`graph_p`]   [Matches non-space printing characters.]]
+ [[`lower_p`]   [Matches lower case letters.]]
+ [[`print_p`]   [Matches printable characters.]]
+ [[`punct_p`]   [Matches punctuation symbols.]]
+ [[`space_p`]   [Matches spaces, tabs, returns, and newlines.]]
+ [[`upper_p`]   [Matches upper case letters.]]
+ [[`xdigit_p`]  [Matches hexadecimal digits.]]
+]
+
+[h3 negation `~`]
+
+Single character parsers such as the `chlit`, `range`, `anychar_p`, `alnum_p` etc. can be negated. For example:
+
+``
+    ~ch_p('x')
+``
+
+matches any character except `'x'`. Double negation of a character parser cancels out the negation. `~~alpha_p` is equivalent to `alpha_p`.
+
+[h3 `eol_p`]
+
+Matches the end of line (CR/LF and combinations thereof).
+
+[h3 `nothing_p`]
+
+Never matches anything and always fails.
+
+[h3 `end_p`]
+
+Matches the end of input (returns a sucessful match with zero length when the input is exhausted).
+
+[endsect][/ primitives]
+
