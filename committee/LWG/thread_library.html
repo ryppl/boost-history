@@ -1541,8 +1541,8 @@ public:
     unique_lock(unique_lock const&amp;) = delete;
     unique_lock&amp; operator=(unique_lock const&amp;) = delete;
 
-    unique_lock(unique_lock&amp;&amp; u);
-    unique_lock&amp; operator=(unique_lock&amp;&amp; u);
+    unique_lock(unique_lock&amp;&amp; <var>u</var>);
+    unique_lock&amp; operator=(unique_lock&amp;&amp; <var>u</var>);
 
     void lock();
     bool try_lock();
@@ -1557,7 +1557,7 @@ public:
     operator <var>unspecified-bool-type</var> () const;
     mutex_type* mutex() const;
 
-    void swap(unique_lock&amp;&amp; u);
+    void swap(unique_lock&amp;&amp; <var>u</var>);
     mutex_type* release();
 };
 
@@ -1723,26 +1723,27 @@ Nothing.
 </dl>
 
 <pre><code>
-unique_lock(unique_lock&amp;&amp; u);
+unique_lock(unique_lock&amp;&amp; <var>u</var>);
 </code></pre>
 
 <dl>
 <dt>Effects:</dt>
 <dd>
-Transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
+Transfers mutex ownership (if any)
+from <code><var>u</var></code> to <code>this</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>u.mutex() == 0</code>
+<code><var>u</var>.mutex() == 0</code>
 <br>
-<code>u.owns_lock() == false</code>
+<code><var>u</var>.owns_lock() == false</code>
 <br>
 <code>mutex() ==</code>
-the value of <code>u.mutex()</code> prior to the construction.
+the value of <code><var>u</var>.mutex()</code> prior to the construction.
 <br>
 <code>owns_lock() ==</code>
-the value of <code>u.owns_lock()</code> prior to the construction.
+the value of <code><var>u</var>.owns_lock()</code> prior to the construction.
 </dd>
 
 <dt>Throws:</dt>
@@ -1752,27 +1753,28 @@ Nothing.
 </dl>
 
 <pre><code>
-unique_lock&amp; operator=(unique_lock&amp;&amp; u);
+unique_lock&amp; operator=(unique_lock&amp;&amp; <var>u</var>);
 </code></pre>
 
 <dl>
 <dt>Effects:</dt>
 <dd>
 If <code>owns_lock()</code> calls <code>unlock()</code>, and then
-transfers mutex ownership (if any) from <code>u</code> to <code>this</code>.
+transfers mutex ownership (if any)
+from <code><var>u</var></code> to <code>this</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>u.mutex() == 0</code>
+<code><var>u</var>.mutex() == 0</code>
 <br>
-<code>u.owns_lock() == false</code>
+<code><var>u</var>.owns_lock() == false</code>
 <br>
 <code>mutex() ==</code>
-the value of <code>u.mutex()</code> prior to the construction.
+the value of <code><var>u</var>.mutex()</code> prior to the construction.
 <br>
 <code>owns_lock() ==</code>
-the value of <code>u.owns_lock()</code> prior to the construction.
+the value of <code><var>u</var>.owns_lock()</code> prior to the construction.
 </dd>
 
 <dt>Throws:</dt>
@@ -1784,9 +1786,11 @@ Nothing.
 <p>
 [<i>Note:</i>
 With a recursive mutex it is possible that both
-<code>this</code> and <code>u</code> own the same mutex before the assignment.
+<code>this</code> and <code><var>u</var></code>
+own the same mutex before the assignment.
 In this case, <code>this</code> will own the mutex after the assignment (and
-<code>u</code> will not), but the mutex's lock count will be decremented by
+<code><var>u</var></code> will not),
+but the mutex's lock count will be decremented by
 one.
 &mdash;<i>end note</i>]
 </p>
@@ -1951,13 +1955,13 @@ Nothing.
 </dl>
 
 <pre><code>
-void swap(unique_lock&amp;&amp; u);
+void swap(unique_lock&amp;&amp; <var>u</var>);
 </code></pre>
 
 <dl>
 <dt>Effects:</dt>
 <dd>
-Swaps state with <code>u</code>.
+Swaps state with <code><var>u</var></code>.
 </dd>
 
 <dt>Throws:</dt>
