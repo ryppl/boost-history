@@ -29,6 +29,12 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/format_msg_type.hpp>
 
+#include <boost/logging/format/op_equal.hpp>
+#include <boost/logging/detail/forward_constructor.hpp> // BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW
+#include <boost/shared_ptr.hpp>
+#include <boost/type_traits/remove_const.hpp>
+
+
 namespace boost { namespace logging {
 
 

@@ -37,7 +37,7 @@
 
 #else
     // no threads
-    #include <boost/log/ts/ts_none.hpp>
+    #include <boost/logging/ts/ts_none.hpp>
 #endif
 
 

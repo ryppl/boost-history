@@ -23,6 +23,7 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/format/formatter/convert_format.hpp>
+#include <boost/logging/detail/manipulator.hpp> // is_generic
 #include <stdio.h>
 #include <time.h>
 

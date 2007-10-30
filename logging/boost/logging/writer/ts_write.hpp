@@ -70,8 +70,8 @@ Depending on your scenario, you could prefer on_dedicated_thread class.
 
 @sa on_dedicated_thread
 */
-    template<class base_type> struct ts_write : base_type, non_const_context<detail::ts_write_context> {
-        typedef non_const_context<detail::ts_write_context> non_const_context_base;
+    template<class base_type> struct ts_write : base_type, ::boost::logging::manipulator::non_const_context<detail::ts_write_context> {
+        typedef ::boost::logging::manipulator::non_const_context<detail::ts_write_context> non_const_context_base;
 
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(ts_write,base_type)
 

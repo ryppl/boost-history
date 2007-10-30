@@ -27,6 +27,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
+#include <boost/logging/detail/manipulator.hpp> // boost::logging::manipulator
 
 namespace boost { namespace logging { namespace writer {
 

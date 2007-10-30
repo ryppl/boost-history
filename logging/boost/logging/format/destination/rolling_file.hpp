@@ -103,7 +103,7 @@ namespace detail {
 
         template<class msg_type> void write( const msg_type& msg) {
             convert_dest::write(msg, (*m_out) );
-            if ( m_out->tellg() > m_flags.max_size_bytes()) {
+            if ( m_out->tellp() > m_flags.max_size_bytes()) {
                 m_cur_idx = (m_cur_idx + 1) % m_flags.file_count();
                 recreate_file();
             }            
@@ -138,7 +138,7 @@ template<class convert_dest = do_convert_destination > struct rolling_file_t : i
     rolling_file_t(const std::string & name_prefix, rolling_file_settings flags = rolling_file_settings() ) : non_const_context_base(name_prefix, flags) {}
 
     template<class msg_type> void operator()( const msg_type & msg) const {
-        non_const_context::context().write(msg);
+        non_const_context_base::context().write(msg);
     }
 
     bool operator==(const rolling_file_t & other) const {

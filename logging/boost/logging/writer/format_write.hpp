@@ -118,7 +118,7 @@ Also, iterating over formatters/destinations would be slower, if we were to keep
 template<
         class formatter_base, 
         class destination_base, 
-        class apply_format_and_write = boost::logging::format_and_write::simple<typename formatter_base::raw_param>,
+        class apply_format_and_write = ::boost::logging::format_and_write::simple<typename formatter_base::raw_param>,
         class router_type = msg_route::simple<formatter_base, destination_base> ,
         class formatter_array = array::shared_ptr_holder<formatter_base> , 
         class destination_array = array::shared_ptr_holder<destination_base> >
