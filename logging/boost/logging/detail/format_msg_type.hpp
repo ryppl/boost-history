@@ -62,7 +62,7 @@ namespace detail {
         typedef typename boost::remove_reference<msg_type_ref>::type msg_type;
 
         typedef typename find_gather< msg_type >::type gather_msg;
-        typedef typename logger< gather_msg, default_ > log_type;
+        typedef logger< gather_msg, default_ > log_type;
     };
 
 }

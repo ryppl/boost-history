@@ -44,7 +44,7 @@ struct file_settings {
         : flush_each_time(this, true)
         , initial_overwrite(this, false)
         , do_append(this, true)
-        , extra_flags(this, 0) {}
+        , extra_flags(this, std::ios_base::out) {}
 
 
     /// if true (default), flushes after each write
@@ -55,12 +55,12 @@ struct file_settings {
     flag::t<bool> do_append;
 
     /// just in case you have some extra flags to pass, when opening the file
-    flag::t<std::ios_base::open_mode> extra_flags;
+    flag::t<std::ios_base::openmode> extra_flags;
 };
 
 namespace detail {
-    inline std::ios_base::open_mode open_flags(file_settings fs) {
-        std::ios_base::open_mode flags = std::ios_base::out | fs.extra_flags() ;
+    inline std::ios_base::openmode open_flags(file_settings fs) {
+        std::ios_base::openmode flags = std::ios_base::out | fs.extra_flags() ;
         if ( fs.do_append() )
             flags |= std::ios_base::app;
         if ( !fs.initial_overwrite() )

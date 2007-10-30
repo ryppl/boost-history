@@ -105,7 +105,7 @@ public:
         // create the format string, that we can actually pass to sprintf 
         uint prev_idx = 0;
         int idx = 0;
-        for ( array::iterator begin = indexes.begin(), end = indexes.end(); begin != end; ++begin) {
+        for ( typename array::iterator begin = indexes.begin(), end = indexes.end(); begin != end; ++begin) {
             m_format += format.substr( prev_idx, begin->src_idx - prev_idx);
             *begin->format_idx = idx;
             m_format += (begin->size == 4) ? BOOST_LOGGING_STR("%04d") : BOOST_LOGGING_STR("%02d");
@@ -178,7 +178,7 @@ template<class convert = do_convert_format::prepend> struct time_strf_t : is_gen
     template<class msg_type> void operator()(msg_type & msg) const {
         char_type buffer[64];
         ::time_t t = ::time (0); 
-        tm t_details = m_localtime ? *localtime( &m_t) : *gmtime( &m_t);
+        ::tm t_details = m_localtime ? *localtime( &t) : *gmtime( &t);
     #ifdef UNICODE
         if (0 != wcsftime (buffer, sizeof (buffer), m_format.c_str (), &t_details))
     #else

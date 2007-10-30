@@ -1,6 +1,9 @@
 /** 
 @page page_changelog Changelog
 
+v0.9.4, 30 oct 2007
+- compiles with gcc 3.4.2
+
 v0.9.3, 30 oct 2007
 - updated documentation 
     - updated workflow/most of the pages in the table of contents

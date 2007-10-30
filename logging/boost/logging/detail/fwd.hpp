@@ -30,7 +30,7 @@
 // minimize inclusion of STL headers in our headers!!!
 #include <string>
 
-#define BOOST_LOGGING_STR(x)      ansi_unicode_char_holder ( x, L ## x)
+#define BOOST_LOGGING_STR(x)      (const char_type*)ansi_unicode_char_holder ( x, L ## x)
 
 
 /* 
@@ -83,7 +83,8 @@ namespace detail {
 
     template<class self_type> struct flag {
         template<class val_type> struct t : flag_with_self_type<self_type,val_type> {
-            t(self_type * self, const val_type& val = val_type() ) : flag_with_self_type(self,val) {}
+            typedef flag_with_self_type<self_type,val_type> flag_base_type;
+            t(self_type * self, const val_type& val = val_type() ) : flag_base_type(self,val) {}
         };
     };
 }

@@ -301,13 +301,13 @@ namespace optimize {
                 m_full_msg_computed = true;
 
                 m_full_msg.erase();
-                for ( array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
+                for ( typename array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
                     if ( b->prepended)
                         m_full_msg += *(b->msg);
 
                 m_full_msg += m_msg;
 
-                for ( array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
+                for ( typename array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
                     if ( !b->prepended)
                         m_full_msg += *(b->msg);
             }
@@ -326,7 +326,7 @@ namespace optimize {
         void restart() {
             m_full_msg_computed = false;
 
-            for ( array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
+            for ( typename array::const_iterator b = m_cur_msg.begin(), e = m_cur_msg.end(); b != e; ++b)
                 if ( b->is_new)
                     m_cached[ b->id ] = *b;
             m_cur_msg.clear();

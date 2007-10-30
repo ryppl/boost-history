@@ -193,9 +193,9 @@ namespace boost { namespace logging {
     something residing in @c boost::logging namespace.
 */
 #define BOOST_LOG_FORMAT_MSG(msg_class) \
-    namespace boost { namespace logging { \
-    template<> struct formatter::msg_type<override> { typedef msg_class & type; }; \
-    }}
+    namespace boost { namespace logging { namespace formatter { \
+    template<> struct msg_type<override> { typedef msg_class & type; }; \
+    }}}
 
 /**
 
@@ -206,9 +206,9 @@ namespace boost { namespace logging {
     something residing in @c boost::logging namespace.
 */
 #define BOOST_LOG_DESTINATION_MSG(msg_class) \
-    namespace boost { namespace logging { \
-    template<> struct destination::msg_type<override> { typedef const msg_class & type; }; \
-    }}
+    namespace boost { namespace logging { namespace destination { \
+    template<> struct msg_type<override> { typedef const msg_class & type; }; \
+    }}}
 
 
 

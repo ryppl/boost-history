@@ -22,6 +22,7 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <vector>
+#include <typeinfo>
 
 namespace boost { namespace logging { 
 
