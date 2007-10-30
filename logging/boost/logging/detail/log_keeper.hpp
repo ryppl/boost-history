@@ -22,6 +22,7 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/cstdint.hpp>
 
 namespace boost { namespace logging {
 
@@ -50,10 +51,15 @@ namespace detail {
 
     struct fake_using_log {
         template<class type> fake_using_log( type & log) {
-            long long ignore = reinterpret_cast<long long>(&log);
+#ifndef BOOST_NO_INT64_T
+        typedef boost::int64_t long_type ;
+#else
+        typedef long long_type ;
+#endif
+            long_type ignore = reinterpret_cast<long_type>(&log);
             // we need to force the compiler to force creation of the log
             if ( time(0) < 0)
-                if ( time(0) < ignore) {
+                if ( time(0) < (time_t)ignore) {
                     printf("LOGGING LIB internal error - should NEVER happen. Please report this to the author of the lib");
                     exit(0);
                 }

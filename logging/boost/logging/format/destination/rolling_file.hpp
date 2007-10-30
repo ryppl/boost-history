@@ -103,7 +103,7 @@ namespace detail {
 
         template<class msg_type> void write( const msg_type& msg) {
             convert_dest::write(msg, (*m_out) );
-            if ( m_out->ftellg() > m_flags.max_size_bytes()) {
+            if ( m_out->tellg() > m_flags.max_size_bytes()) {
                 m_cur_idx = (m_cur_idx + 1) % m_flags.file_count();
                 recreate_file();
             }            
@@ -126,6 +126,7 @@ namespace detail {
     And so on, until we reach name_prefix.N (N = file_count). When that gets fool, we start over, with name_prefix.1.
 */
 template<class convert_dest = do_convert_destination > struct rolling_file_t : is_generic, non_const_context<detail::rolling_file_info<convert_dest> > {
+    typedef non_const_context<detail::rolling_file_info<convert_dest> > non_const_context_base;
 
     /** 
         Constructs a rolling file

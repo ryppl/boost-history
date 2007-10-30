@@ -38,6 +38,7 @@ namespace op_equal {
         virtual bool equals(const same_type_op_equal_top &) const = 0;
     protected:
         same_type_op_equal_top() {}
+        virtual ~same_type_op_equal_top() {}
         same_type_op_equal_top(const same_type_op_equal_top&) {}
     };
     inline bool operator ==(const same_type_op_equal_top& a, const same_type_op_equal_top&b) { return a.equals(b); }

@@ -51,6 +51,8 @@ This will output something similar to:
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
 template<class convert = do_convert_format::prepend> struct idx_t : is_generic, formatter::non_const_context<int>, boost::logging::op_equal::always_equal  {
+    typedef formatter::non_const_context<int> non_const_context_base;
+
     idx_t() : non_const_context_base((int)0) {}
     template<class msg_type> void operator()(msg_type & str) const {
         std::basic_ostringstream<char_type> idx;

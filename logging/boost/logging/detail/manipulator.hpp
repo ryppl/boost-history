@@ -305,7 +305,7 @@ template<
     @brief When you implement your manipulator class, how is operator== to be implemented?
 */
 struct implement_op_equal {
-    typedef enum type {
+    enum type {
         /// manipulator has no context - that is, any two values of this type are considered equal (operator== will automatically return true)
         no_context,
         /// manipulator has context - that is, you <b>have to</b> implement operator== in your manipulator class

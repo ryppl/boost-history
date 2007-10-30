@@ -21,6 +21,8 @@
 # pragma once
 #endif
 
+#if 0
+
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/shmem/shmem_named_shared_object.hpp>
 
@@ -128,6 +130,8 @@ private:
 typedef shared_memory_t<> shared_memory;
 
 }}}
+
+#endif
 
 #endif
 

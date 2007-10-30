@@ -88,11 +88,12 @@ public:
         if ( month_idx != hold_string_type::npos)
             indexes.push_back( index_info(month_idx, &m_month) );
 
-        if ( yy_idx != hold_string_type::npos || yyyy_idx != hold_string_type::npos)
+        if ( yy_idx != hold_string_type::npos || yyyy_idx != hold_string_type::npos) {
             if ( yyyy_idx  != hold_string_type::npos)
                 indexes.push_back( index_info(yyyy_idx, &m_yyyy, 4) );
             else
                 indexes.push_back( index_info(yy_idx, &m_yy) );
+        }
 
         if ( hour_idx != hold_string_type::npos)
             indexes.push_back( index_info(hour_idx, &m_hour ) );

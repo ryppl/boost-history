@@ -52,7 +52,7 @@ namespace convert {
     namespace prepend {
         inline void write(const char_type * src, string_type & dest ) {
             const char_type * end = src;
-            for ( ; *end; ++end);
+            for ( ; *end; ++end) {}
             dest.insert( dest.begin(), src, end);
         }
         inline void write(const string_type & src, string_type & dest) {

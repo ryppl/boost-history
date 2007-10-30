@@ -29,7 +29,7 @@ namespace boost { namespace logging {
 namespace threading {
 
     typedef boost::mutex mutex_boost;
-    typedef typename mutex::scoped_lock scoped_lock_boost;
+    typedef mutex::scoped_lock scoped_lock_boost;
 }
 
 }}

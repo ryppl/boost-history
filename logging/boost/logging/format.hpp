@@ -385,7 +385,7 @@ L_ << "testing " << i << i+1 << i+2;
         */
         class route {
             friend class with_route;
-            typedef enum type {
+            enum type {
                 is_fmt, is_dest, is_clear
             };
             struct item {

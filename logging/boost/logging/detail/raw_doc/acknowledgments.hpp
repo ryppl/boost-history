@@ -12,6 +12,7 @@ There are quite a few thanks I owe:
 - Stefan Slapeta and Bill Wade and a lot of others for giving me early feedback.
 - Pavel Vozelinek - for very thourough reviews and lots of comments
 - Pavel Savara - for feedback about docs, thread-safety and gcc
+- Jens Seidel - for helping me with issues with gcc (different versions), and extra feedback
 
 */
 

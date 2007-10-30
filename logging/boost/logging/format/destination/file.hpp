@@ -82,6 +82,8 @@ namespace detail {
     @brief Writes the string to a file
 */
 template<class convert_dest = do_convert_destination > struct file_t : is_generic, non_const_context<detail::file_info> {
+    typedef non_const_context<detail::file_info> non_const_context_base;
+
     /** 
         @brief constructs the file destination
 
