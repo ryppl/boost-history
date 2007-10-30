@@ -5,8 +5,10 @@
 FIXME change the workflow & logger's definition - it doesn't need a filter
 all gather classes - they need to typedef the param they take, so that I can create a virtual function.
 no more process_msg class -> remove from docs!
+gathering the message - gather class must hold "param" type!
+gather namespace - rewrite docs
 
-
+tell about logger_format_write <> -  in format_write<> as well
 
 
 ------> FIXME after showing scenarios, show customizing?

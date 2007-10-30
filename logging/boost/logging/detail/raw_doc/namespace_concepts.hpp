@@ -9,7 +9,7 @@ namespace boost { namespace logging {
 
 This library uses a few concepts. 
 
-Take filter, for instance. It's a very simple concept - it only requires the <tt>bool is_enabled() const;</tt> function to be present.
+Take filter, for instance. It's a very simple concept - it tells you if "it's enabled".
 
 Each concept can be implemented in several ways. To make it easier for you, <b>each concept is a namespace</b>.
 In the given namespace, you'll find possible implementations of that concept. Of course, to those implementations, you can add your own ;)
@@ -23,7 +23,7 @@ In the given namespace, you'll find possible implementations of that concept. Of
 
 \n\n
 @section namespace_process Processing the message 
-(for more info, see process_msg class)
+(for more info, see logger class)
 - gather - gathering the message
 - writer - %writer objects; they do the actual write of the message 
 - gather::ostream_like - (related to gathering the message) allows gathering the message using the cool operator<< (@ref workflow_2a)

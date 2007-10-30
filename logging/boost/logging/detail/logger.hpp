@@ -61,7 +61,7 @@ namespace boost { namespace logging {
     - @ref workflow_2a "Gathering the message" 
     - @ref workflow_2b "Processing the message"
 
-    The process_msg class has 2 template parameters:
+    The logger class has 2 template parameters:
 
 
     @param gather_msg A new gather instance is created each time a message is written. 
@@ -82,24 +82,26 @@ namespace boost { namespace logging {
 
 
     \n\n    
-    The logger forwards all message processing to the @c %process_msg class. The @c %process_msg class forwards
+    The logger forwards 
     the gathering of the message to the @c gather_msg class. Once all message is gathered, it's passed on to the writer.
     This is usually done through a @ref macros "macro".
 
     @code
-    logger< process_msg<...> ... > g_log;
+    typedef logger< ... > log_type;
+    BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+    BOOST_DECLARE_LOG(g_l, log_type) 
 
-    #define L_ if ( !g_log) ; else g_log->read_msg().gather().some_function_in_the_gather_class
+    #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
 
     // usage
-    L_ << "cool " << "message";
+    L_ << "this is so cool " << i++;
 
     @endcode
 
 
 
     \n\n        
-    To understand more on the workflow that involves process_msg:
+    To understand more on the workflow that involves %logging:
     - check out the gather namespace
     - check out the writer namespace
     

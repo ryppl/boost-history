@@ -38,6 +38,7 @@ namespace boost { namespace logging {
 
 - @ref manipulator_common 
 - @ref manipulator_base_class 
+- @ref manipulator_default_base_class
 - @ref manipulator_generic 
 - @ref manipulator_create 
 - @ref manipulator_share_data 
@@ -63,17 +64,19 @@ processes the message:
 
 
 
+
+
 \n\n\n
 @section manipulator_base_class Specifying the base class
 
-As said @ref manipulator_common "above", formatters and destinations need a %base class.
-You do this through a typedef - one for the formatters, and one for the destinations:
+You can use a typedef - one for the formatters, and one for the destinations:
 
 @code
 // ptr_type - optional ; usualy  you don't need to worry about this
-typedef formatter::base<arg_type [,ptr_type]> formatter_base;
-typedef destination::base<arg_type [,ptr_type]> destination_base;
+typedef formatter::base<  arg_type [,ptr_type] > formatter_base;
+typedef destination::base< arg_type [,ptr_type] > destination_base;
 @endcode
+
 
 The @c arg_type is the argument you receive in your <tt>operator()</tt>, to process the message. It can be as simple as this:
 
@@ -100,13 +103,54 @@ typedef destination::base<const std::string &> destination_base;
 
 
 
+
+\n\n\n
+@section manipulator_default_base_class Default base classes
+
+As shown above, you can do your own typedefs. But there's an easier way, to specify the default base classes:
+use the default formatter %base class and the default destination %base class.
+
+They are: <tt>formatter::base<> </tt> and <tt>destination::base<> </tt>.
+
+The default formatter %base class is computed based on your usage of the @c BOOST_LOG_FORMAT_MSG macro:
+- if you haven't used it, it's <tt>std::(w)string & </tt>
+- if you've used it, it's the type you specified there; see below
+
+@code
+BOOST_LOG_FORMAT_MSG( optimize::cache_string_several_str<> )
+@endcode
+
+In the above case
+@code
+formatter::base<> = formatter::base< optimize::cache_string_several_str<>& >
+@endcode
+
+
+
+The default destination %base class is computed based on your usage of the @c BOOST_LOG_DESTINATION_MSG macro:
+- if you haven't used it, it's <tt>const std::(w)string & </tt>
+- if you've used it, it's the type you specified there; see below
+
+@code
+BOOST_LOG_DESTINATION_MSG( my_cool_string )
+@endcode
+
+In the above case
+@code
+destination::base<> = destination::base< const my_cool_string & >
+@endcode
+
+
+
+
+
 \n\n\n
 @section manipulator_generic Using manipulators that come with the library
 
 Now, you will define your @ref logger "logger(s)", to use the @ref boost::logging::writer::format_write "format_write" class:
 
 @code
-logger< ... format_write<formatter_base,destination_base> > g_l;
+BOOST_DECLARE_LOG(g_l, logger< ... format_write<formatter_base,destination_base> > );
 @endcode
 
 After this, you'll add formatter and/or destination classes to your logger(s):
@@ -158,19 +202,16 @@ Or, you can create your own formatter and/or destination class. See below:
 @section manipulator_create Creating your own formatter and/or destination class(es)
 
 To create your formatter class, you need to derive from @ref class_ "formatter::class_". You will need to implement
-<tt>operator()(arg_type)</tt> <br> (@c arg_type is the argument you passed in your @ref manipulator_base_class "formatter_base" typedef)
+<tt>operator()(arg_type)</tt> <br> (@c arg_type is the argument from your @ref manipulator_base_class "formatter base class")
 
 @code
-typedef formatter::base< std::string&> formatter_base;
-...
-
 // milliseconds since start of the program
-struct ms_since_start : formatter::class_<ms_since_start, formatter_base, op_equal_no_context> {
+struct ms_since_start : formatter::class_<ms_since_start, formatter::implement_op_equal::no_context> {
     time_t m_start;
     ms_since_start : m_start( time(0) ) {}
 
     // param = std::string& 
-    // (in other words, it's the parameter you used when you defined formatter_base)
+    // (in other words, it's the arg_type from your formatter base class)
     void operator()(param msg) const {
         std::ostringstream out;
         time_t now = time(0);
@@ -181,20 +222,17 @@ struct ms_since_start : formatter::class_<ms_since_start, formatter_base, op_equ
 @endcode
 
 To create your destination class, you need to derive from @ref class_ "destination::class_". You will need to implement
-<tt>operator()(arg_type)</tt> <br> (@c arg_type is the argument you passed in your @ref manipulator_base_class "destination_base" typedef)
+<tt>operator()(arg_type)</tt> <br> (@c arg_type is the argument from your @ref manipulator_base_class "destination base class")
 
 @code
-typedef destination::base< const std::string&> destination_base;
-...
-
-struct to_hwnd : destination::class_<to_hwnd, destination_base, op_equal_has_context> {
+struct to_hwnd : destination::class_<to_hwnd, destination::implement_op_equal::has_context> {
     HWND h;
     to_hwnd(HWND h) : h(h) {}
 
     bool operator==(const to_hwnd& other) { return h == other.h; }
 
     // param = const std::string& 
-    // (in other words, it's the parameter you used when you defined destination_base)
+    // (in other words, it's the arg_type from your destination base class)
     void operator()(param msg) const {
         ::SetWindowText(h, msg.c_str());
     }

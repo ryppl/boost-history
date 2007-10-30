@@ -11,94 +11,83 @@ namespace boost { namespace logging {
 - @ref workflow_2b 
 
 
-@attention
-The filter is not kept in the logger anymore. They are different concepts. Need to update these pages
-Every time, the logger should contains a process_msg<> class. This is the core class.
 
 @section workflow_introduction Introduction
 
+
 What happens when a message is written to the log?
+- the message is filtered : is the filter enabled?
+    - if so (in other words, the log is turned on), process the message:
+        - gather the message
+        - write the message to the destination(s)
+    - if not (in other words, the log is turned off)
+        - completely ignore the message
 
-First, you have a logger you write to. @b Every logger contains 2 things:
-- a filter, which indicates if the log is turned on or off
-- a processor, which will process the message, in case the log is turned on.
+The part that says "Completely ignore the message" means that <em>if the log is not enabled, no processing takes place</em>.
 
-Whenever you create a logger, you specify the filter and the processor as template parameters:
-
-@code
-// filter is optional - there is a default 
-logger< the_processor, the_filter> g_l;
-@endcode
-
-Example:
+For instance, say you have:
 
 @code
-using namespace boost::logging;
-logger<write_to_cout, filter::no_ts> g_log;
+LDBG_ << "user count = " << some_func_taking_a_lot_of_cpu_time();
 @endcode
 
+If @c LDBG_ is disabled, everything after "LDBG_" is ignored. Thus, @c some_func_taking_a_lot_of_cpu_time() will not be called.
+
+First of all, we have 2 concepts:
+- logger : a "logical" log - something you write to; it kwnows its destination(s), that is, where to write to
+- filter : this provides a way to say if a logger is enabled or not. Whatever that "way to say a logger is enabled or not" means,
+  is up to the designer of the filter class.
+
+Note that the logger is a templated class, and the filter is a @ref namespace_concepts "namespace". I've provided
+several implementations of the filter concept - you can use them, or define your own.
 
 
 @section workflow_filter Step 1: Filtering the message
 
-First time the message is filtered. The filter class only needs to provide the @c is_enabled function.
-Then, the logger provides 2 helpers:
-- operator bool()
-- operator !
-
-Thus, in your code, you can easily find out if a logger is enabled or not:
+As said above, the filter just provides a way to say if a logger is enabled or not. The %logger and the %filter are completely
+separated concepts. No %logger owns a %filter, or the other way around. You can have a %filter per %logger, but most likely
+you'll have one %filter, and several loggers:
 
 @code
-logger<write_to_cout, filter::no_ts> g_log;
+// Example 1 : 1 filter, 1 logger
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+BOOST_DECLARE_LOG(g_l, log_type) 
 
-// code
-if ( g_log) do_something(g_log);
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
 
-// or
-if ( !g_log) ; else do_something...
+
+// Example 2 : 1 filter (containing a level), several loggers
+BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) 
+BOOST_DECLARE_LOG(g_log_err, log_type) 
+BOOST_DECLARE_LOG(g_log_app, log_type)
+BOOST_DECLARE_LOG(g_log_dbg, log_type)
+
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, debug ) 
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err, g_log_level, error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app, g_log_level, info ) 
 @endcode
 
-Usually, you won't write code like above - instead, you'll hide all the above with @ref macros "macros".
+Every time, before anything gets written to the log, the filter is asked if "it's enabled". If so, the processing of the message takes place
+(gathering the message and then writing it). Otherwise, the log message is completely ignored.
 
-Anyway, the end result is that logging is efficient - processing the message happens <b>only if</b> the filter is enabled.
-Otherwise, processing is @em completely ignored.
+What "it's enabled" is depends on the filter class you use:
+- if it's a simple class (filter::no_ts, filter::ts, filter::use_tls_with_cache), it's simply the @c is_enabled function (Example 1, above)
+- if it's a more complex class, it's up to you
+  - for instance, the level::holder_no_ts exposes an <tt>is_enabled(level)</tt>, so you can ask if a certain level is enabled (Example 2, above)
+    Thus, logging takes place only if that certain level is enabled (@c debug for LDBG_, @c info for LAPP_, @c error for LERR_)
 
 
 
+
+\n\n
 @section workflow_processing Step 2: Processing the message
 
-Once we've established that the logger is enabled, we'll @em process the message.
-Processing means whatever your application thinks logging means.
-
-This can be as simple as dumping the message to cout or whatever.
-
-Example:
-
-@code
-struct write_to_cout {
-    void operator()(const std::string & msg) const {
-        std::cout << msg << std::endl ;
-    }
-};
-
-using namespace boost::logging;
-logger<write_to_cout> g_single_log;
-
-#define L_(x) if ( g_single_log) g_single_log.process_msg()(x)
-
-// usage
-L_("reading word " + word);
-@endcode
-
-As you can see, processing the message means having a functor which implements operator(). You can be happy with something similar to the above. Or...
-
-If you think about it, you can actually divide this step, into 2 smaller steps:
+Once we've established that the logger is enabled, we'll @em process the message. This is divided into 2 smaller steps:
 - gathering the message
 - writing the message
 
 
 
-\n\n
 @section workflow_2a Step 2A: Gathering the message
 
 The meaning of "gathering the message" depends on your application. The message can:
@@ -122,66 +111,72 @@ L_(err,"chart")("Cannot load chart")(chart_path);
 
 How you gather your message, depends on how you <tt>\#define L_ ...</tt>.
 
-In other words, gathering the message means getting all the message in "one piece", so that it can be written. 
-
+In other words, gathering the message means getting all the message in "one piece", so that it can be written. \n
+See the 
+- the gather namespace - classes for gathering
+- the gather::ostream_like - classes for gathering, using the cool "<<" operator
+- @ref macros_gathering "Macros for gathering" section.
 
 
 
 \n\n
 @section workflow_2b Step 2B: Writing the message
 
-Now that you have the message, you're ready to write it. Again, writing is done by calling operator() on the writer object.
+Now that you have the message, you're ready to write it. Writing is done by calling @c operator() on the writer object.
 
 What you choose as the writer object is completely up to you. It can be as simple as this:
 
 @code
 // dump message to cout
-
 struct write_to_cout {
     void operator()(const std::string & msg) const {
         std::cout << msg << std::endl ;
     }
 };
 
-typedef process_msg< gather::ostream_like::return_str<>, write_to_cout> processor;
-logger<processor, filter::no_ts> g_single_log;
+typedef logger< gather::ostream_like::return_str<>, write_to_cout> log_type;
+BOOST_DECLARE_LOG(g_single_log, log_type)
+BOOST_DECLARE_LOG_FILTER(g_filter, filter::no_ts)
 
-#define L_ if ( !g_single_log) ; else g_single_log->read_msg().gather().out()
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_single_log, g_filter->is_enabled() ) 
 
 // usage
-L_ << idx << " : reading word " << word;
+int i = 100;
+L_ << "this is " << i << " times cooler then the average log";
 @endcode
 
 You can define your own types of writers. The %writer classes that come with this library are in <tt>namespace writer</tt>.
 
-At this time, I've defined the concept of writer::format_write - writing using Formatters and Destinations.
+At this time, I've defined the concept of writer::format_write - writing using @ref manipulator "Formatters and Destinations".
 Simply put, this means formatting the message, and then writing it to destination(s).
 
 For each log, you decide how messages are formatted and to what destinations they are written. Example:
 
 @code
-typedef process_msg< gather::ostream_like::return_cache_str<> , 
-    format_write< format_base, destination_base, format_and_write::simple<cache_string> > > process;
-logger<process, filter::no_ts> g_l;
+typedef logger_format_write< > log_type;
 
-#define L_ if ( !g_l) ; else g_l->read_msg().gather().out()
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+BOOST_DECLARE_LOG(g_l, log_type) 
 
-// add formatters : [idx] [time] message [enter]
-g_l->writer().add_formatter( write_idx() );
-g_l->writer().add_formatter( write_time() );
-g_l->writer().add_formatter( append_enter() );
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
 
-// write to cout and file
-g_l->writer().add_destination( write_to_cout() );
-g_l->writer().add_destination( write_to_file("out.txt") );
-
+// add formatters : [idx] [time] message <enter>
+g_l->writer().add_formatter( formatter::idx() );
+g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+g_l->writer().add_formatter( formatter::append_enter() );
+// add destinations : console, output debug window, and a file called "out.txt"
+g_l->writer().add_destination( destination::cout() );
+g_l->writer().add_destination( destination::dbg_window() );
+g_l->writer().add_destination( destination::file("out.txt") );
 
 // usage
 int i = 1;
-L_ << "testing " << i++;
+L_ << "this is so cool " << i++;
+L_ << "this is so cool again " << i++;
 
-// the above message will be formatted like this : "[1] 22:30 testing 1\n", 
-// and will be dumped to cout and "out.txt" file.
+// possible output:
+// [1] 12:32:10 this is so cool 1
+// [2] 12:32:10 this is so cool again 2
 @endcode
 
 

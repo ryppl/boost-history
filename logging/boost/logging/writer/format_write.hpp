@@ -55,26 +55,27 @@ specifies how formatters and destinations are called. By default, all formatters
 and then all destinations are called, in the order they were added. You can easily access the router() instance.
 
 @code
-typedef process_msg< gather::ostream_like::return_cache_str<> , format_write<...> > process;
-logger<process, filter::no_ts> g_l;
-#define L_ if ( !g_l) ; else g_l->read_msg().gather().out()
+typedef logger< gather::ostream_like::return_cache_str<> , format_write< ... > > log_type;
+BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
 
 // add formatters : [idx] [time] message [enter]
-g_l->writer().add_formatter( write_idx() );
-g_l->writer().add_formatter( write_time() );
-g_l->writer().add_formatter( append_enter() );
+g_l->writer().add_formatter( formatter::idx() );
+g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+g_l->writer().add_formatter( formatter::append_enter() );
 
 // write to cout and file
-g_l->writer().add_destination( write_to_cout() );
-g_l->writer().add_destination( write_to_file("out.txt") );
+g_l->writer().add_destination( destination::cout() );
+g_l->writer().add_destination( destination::file("out.txt") );
 
 // usage
 int i = 1;
 L_ << "testing " << i << i+1 << i+2;
 @endcode
 
-In the above case, @c write_idx() is called, then @c write_time(), then @c append_enter(). Now, the destinations are called:
-@c write_to_cout(), and then @c write_to_file().
+In the above case, @c formatter::idx() is called, then @c formatter::time(), then @c formatter::append_enter(). Now, the destinations are called:
+@c destinatino::cout(), and then @c destination::file().
 
 Most of the time this is ok, and this is what the @ref msg_route::simple "default router" does. However, there are other routers
 in the msg_route namespace. For instance, take a look at msg_route::with_route class.

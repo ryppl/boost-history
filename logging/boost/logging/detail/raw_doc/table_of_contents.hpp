@@ -34,13 +34,13 @@ namespace boost { namespace logging {
     - @ref namespace_manipulator
     - @ref namespace_write
 - @ref logger "The logger class"
-- @ref filter "The filters (namespace)"
-- @ref process_msg "The process message class"
     - @ref gather "The gather namespace"
     - @ref writer "The writer namespace"
+- @ref filter "The filters (namespace)"
 - @ref manipulator "Formatters and/or destinations (manipulators namespace)"
     - @ref manipulator_common 
     - @ref manipulator_base_class 
+    - @ref manipulator_default_base_class
     - @ref manipulator_generic 
     - @ref manipulator_create 
     - @ref manipulator_share_data 

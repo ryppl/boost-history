@@ -1,6 +1,11 @@
 /** 
 @page page_changelog Changelog
 
+v0.9.3, 30 oct 2007
+- updated documentation 
+    - updated workflow/most of the pages in the table of contents
+    - removed most of references to @c process_msg class
+
 v0.9.2, 30 oct 2007
 - Breaking chage: 
   - @c process_msg class has been removed. Now @c logger takes its place

@@ -32,6 +32,8 @@ namespace boost { namespace logging {
 /** 
     @page macros Macros - how, what for?
 
+    The need for macros - creating the object before main.
+
     When dealing with logs, you will most likely want to use macros: simply to write less.
     To be efficient, you usually want to write to a log only if it's enabled.
 
@@ -47,6 +49,10 @@ namespace boost { namespace logging {
         #define L_ if ( g_single_log) ; else g_single_log->read_msg().gather().msg()
 
     don't want compile fast? then log.h will look easier; but - are you sure you don't want to turn compile fast off?
+
+    @section macros_gathering
+
+    FIXME
 
     Macros 
     - BOOST_LOG_COMPILE_FAST_ON
@@ -178,7 +184,7 @@ namespace boost { namespace logging {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Format and Destination Macros
 
-/**
+/** @section BOOST_LOG_FORMAT_MSG BOOST_LOG_FORMAT_MSG
 
 @note
     When using BOOST_LOG_FORMAT_MSG or BOOST_LOG_DESTINATION_MSG, you must not be within any namespace scope.
