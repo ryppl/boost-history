@@ -65,7 +65,7 @@ namespace detail {
         if ( fs.do_append() )
             flags |= std::ios_base::app;
         // note: on Linux, it opens it RW , and if the file does not exist, nothing happens
-#ifndef BOOST_WINDOWS
+#ifdef BOOST_WINDOWS
         if ( !fs.initial_overwrite() )
             flags |= std::ios_base::in;
 #endif
