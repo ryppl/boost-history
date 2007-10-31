@@ -1,6 +1,9 @@
 /** 
 @page page_changelog Changelog
 
+v0.9.10, 31 oct 2007
+- destination::file - on linux don't add ios_base::in when not original overwrite. Many thanks to Martin Baeker!
+
 v0.9.9, 31 oct 2007
 - fixed fastest*.cpp scenarios so that they compile. Many thanks to Martin Baeker!
 

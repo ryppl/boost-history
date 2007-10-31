@@ -913,7 +913,6 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -925,6 +924,7 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

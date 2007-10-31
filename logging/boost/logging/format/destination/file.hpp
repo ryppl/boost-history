@@ -31,6 +31,7 @@
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format/destination/convert_destination.hpp>
 #include <fstream>
+#include <boost/config.hpp>
 
 namespace boost { namespace logging { namespace destination {
 
@@ -63,9 +64,11 @@ namespace detail {
         std::ios_base::openmode flags = std::ios_base::out | fs.extra_flags() ;
         if ( fs.do_append() )
             flags |= std::ios_base::app;
+        // note: on Linux, it opens it RW , and if the file does not exist, nothing happens
+#ifndef BOOST_WINDOWS
         if ( !fs.initial_overwrite() )
             flags |= std::ios_base::in;
-
+#endif
         return flags;
     }
 
