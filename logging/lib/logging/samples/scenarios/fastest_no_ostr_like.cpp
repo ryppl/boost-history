@@ -74,7 +74,7 @@ typedef logger< no_gather, destination::file > err_log_type;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 
 // Step 3: declare which loggers you'll use
-BOOST_DECLARE_LOG(g_log_app, app_log_type)
+BOOST_DEFINE_LOG(g_log_app, app_log_type)
 BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 
 // FIXME most likely I can use BOOST_LOG_USE_IF_FILTER
