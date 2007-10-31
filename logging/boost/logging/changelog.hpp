@@ -1,6 +1,9 @@
 /** 
 @page page_changelog Changelog
 
+v0.9.11, 31 oct 2007
+- no more stdafx.* files
+
 v0.9.10, 31 oct 2007
 - destination::file - on linux don't add ios_base::in when not original overwrite. Many thanks to Martin Baeker!
 

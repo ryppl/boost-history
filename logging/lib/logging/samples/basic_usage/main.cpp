@@ -60,8 +60,6 @@ You can check out the whole example: <tt>libs/logging/samples/basic_usage</tt>.
 
 */
 
-#include "stdafx.h"
-
 // Wherever you use logs, include this ;)
 #include "log.h"
 

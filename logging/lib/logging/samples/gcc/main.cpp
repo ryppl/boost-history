@@ -5,7 +5,7 @@
 using namespace std;
 void custom_fmt_dest_example() ;
 
-int main(int argc, char *argv[])
+int main()
 {
         custom_fmt_dest_example();
 

@@ -24,7 +24,7 @@
 #include <boost/logging/ts/ts_resource.hpp>
 
 #include <string>
-
+#include <boost/config.hpp>
 
 namespace boost { namespace logging {
 
@@ -64,6 +64,15 @@ Example:
 
 */
 
+// define this if you want your char type to be 'wchar_t'
+#undef BOOST_LOG_USE_WCHAR_T
+
+#ifdef BOOST_WINDOWS
+#if defined( UNICODE) || defined(_UNICODE)
+#define BOOST_LOG_USE_WCHAR_T
+#endif
+#endif
+
 
 
     struct override {};
@@ -83,7 +92,7 @@ Example:
 
 
     struct default_types {
-#ifdef UNICODE
+#ifdef BOOST_LOG_USE_WCHAR_T
         typedef wchar_t char_type;
 #else
         typedef char char_type;

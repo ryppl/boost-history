@@ -36,7 +36,7 @@ namespace boost { namespace logging { namespace destination {
 template<class convert_dest = do_convert_destination > struct cout_t : is_generic, boost::logging::op_equal::always_equal {
 
     template<class msg_type> void operator()(const msg_type & msg) const {
-#ifndef UNICODE
+#ifndef BOOST_LOG_USE_WCHAR_T
         convert_dest::write(msg, std::cout);
 #else
         convert_dest::write(msg, std::wcout);
@@ -46,20 +46,22 @@ template<class convert_dest = do_convert_destination > struct cout_t : is_generi
 
 
 /** 
-    @brief Writes the string to console
+    @brief Writes the string to output debug window
+
+    For non-Windows systems, this is the console.
 */
 template<class convert_dest = do_convert_destination > struct dbg_window_t : is_generic, boost::logging::op_equal::always_equal {
 
     template<class msg_type> void operator()(const msg_type & msg) const {
 #ifdef BOOST_WINDOWS
-#ifndef UNICODE
+#ifndef BOOST_LOG_USE_WCHAR_T
     ::OutputDebugStringA( convert_dest::do_convert(msg, into<const char*>() ) );
 #else
     ::OutputDebugStringW( convert_dest::do_convert(msg, into<const wchar_t*>() ) );    
 #endif
 #else
-        // non windows
-        msg; // so that there's no warning
+        // non windows - dump to console
+        std::cout << msg; 
 #endif
     }
 };

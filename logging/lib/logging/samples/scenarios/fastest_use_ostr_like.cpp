@@ -68,7 +68,7 @@ typedef logger< default_, destination::file> err_log_type;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 
 // Step 3: declare which loggers you'll use
-BOOST_DEFINE_LOG(g_log_app, app_log_type );
+BOOST_DEFINE_LOG(g_log_app, app_log_type )
 BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 
 // Step 4: define the macros through which you'll log

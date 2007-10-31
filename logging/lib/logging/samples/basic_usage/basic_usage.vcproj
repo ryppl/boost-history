@@ -274,10 +274,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\util.cpp"
 				>
 			</File>
@@ -305,10 +301,6 @@
 			</File>
 			<File
 				RelativePath=".\parse_file.h"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
