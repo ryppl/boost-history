@@ -13,6 +13,9 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
+#ifndef JT28092007_format_write_detail_HPP_DEFINED
+#error do not include this directly. Include logging/format/format_write.hpp instead
+#endif
 
 #ifndef JT28092007_use_format_write_HPP_DEFINED
 #define JT28092007_use_format_write_HPP_DEFINED

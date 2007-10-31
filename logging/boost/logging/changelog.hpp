@@ -1,6 +1,10 @@
 /** 
 @page page_changelog Changelog
 
+v0.9.8, 31 oct 2007
+- added small things to make it compile with gcc 4.1 and 4.3
+  (note: I just solved some errors that were pointed out by Jens Seidel, not sure if this fixed everything)
+
 v0.9.7, 30 oct 2007
 - added small things to make it compile with gcc 4.1 and 4.3
   (note: I just solved some errors that were pointed out by Jens Seidel, not sure if this fixed everything)

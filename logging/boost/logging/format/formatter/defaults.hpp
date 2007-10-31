@@ -26,6 +26,7 @@
 #include <boost/logging/format/formatter/time.hpp>
 #include <stdio.h>
 #include <time.h>
+#include <sstream>
 
 namespace boost { namespace logging { namespace formatter {
 

@@ -13,6 +13,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
+// this is fixed!
 #ifndef JT28092007_format_HPP_DEFINED
 #define JT28092007_format_HPP_DEFINED
 
@@ -582,7 +583,7 @@ L_ << "testing " << i << i+1 << i+2;
 }}
 
 #include <boost/logging/detail/manipulator.hpp>
-#include <boost/logging/writer/format_write.hpp>
+#include <boost/logging/detail/format_write_detail.hpp>
 
 #include <boost/logging/format/formatter/defaults.hpp>
 #include <boost/logging/format/destination/defaults.hpp>

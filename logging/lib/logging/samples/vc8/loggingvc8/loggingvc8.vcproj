@@ -325,7 +325,7 @@
 			Name="tests"
 			>
 			<File
-				RelativePath="..\..\..\tests\format\test_format_write_ts.cpp"
+				RelativePath="..\..\..\tests\do_not_use\format\test_format_write_ts.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -345,7 +345,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\format\test_manip_being_func.cpp"
+				RelativePath="..\..\..\tests\do_not_use\format\test_manip_being_func.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -365,7 +365,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\format\test_manip_w_msgroute.cpp"
+				RelativePath="..\..\..\tests\do_not_use\format\test_manip_w_msgroute.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -385,7 +385,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\test_mul_lev_difflogs.cpp"
+				RelativePath="..\..\..\tests\do_not_use\test_mul_lev_difflogs.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -405,7 +405,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\test_mul_lev_samelog.cpp"
+				RelativePath="..\..\..\tests\do_not_use\test_mul_lev_samelog.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -425,7 +425,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\test_multiple_simple_logs.cpp"
+				RelativePath="..\..\..\tests\do_not_use\test_multiple_simple_logs.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -445,7 +445,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\test_ostream_like.cpp"
+				RelativePath="..\..\..\tests\do_not_use\test_ostream_like.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -465,7 +465,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\test_simple_dump_to_cout.cpp"
+				RelativePath="..\..\..\tests\do_not_use\test_simple_dump_to_cout.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -485,7 +485,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\format\test_simple_formatter.cpp"
+				RelativePath="..\..\..\tests\do_not_use\format\test_simple_formatter.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -505,11 +505,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\testfast.cpp"
+				RelativePath="..\..\..\tests\do_not_use\testfast.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -524,98 +523,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<Filter
-				Name="scenarios"
-				>
-				<File
-					RelativePath="..\..\scenarios\custom_fmt_dest.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\fastest_no_ostr_like.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\fastest_use_ostr_like.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\mul_levels_mul_logers.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\mul_loggers_one_filter.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\no_levels_with_route.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\scenarios\one_loger_one_filter.cpp"
-					>
-					<FileConfiguration
-						Name="Test|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="main"
@@ -824,6 +731,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\format_write_detail.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\detail\manipulator.hpp"
 					>
 				</File>
@@ -980,6 +891,106 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="scenarios"
+			>
+			<File
+				RelativePath="..\..\scenarios\custom_fmt_dest.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\fastest_no_ostr_like.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\fastest_use_ostr_like.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\mul_levels_mul_logers.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\mul_loggers_one_filter.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\no_levels_with_route.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\scenarios\one_loger_one_filter.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

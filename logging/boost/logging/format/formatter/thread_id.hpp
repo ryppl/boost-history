@@ -22,6 +22,9 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/logging/formatter/convert_format.hpp>
+#include <boost/logging/detail/manipulator.hpp> // is_generic
+#include <sstream>
 
 namespace boost { namespace logging { namespace formatter {
 

@@ -5,7 +5,8 @@
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
-#include <boost/logging/format.hpp>
+//#include <boost/logging/format.hpp>
+#include <boost/logging/writer/format_write.hpp>
 
 using namespace boost::logging;
 
