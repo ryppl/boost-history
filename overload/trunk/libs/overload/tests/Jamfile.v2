@@ -1,0 +1,16 @@
+# Copyright 2007 (c) Dean Michael Berris, Marco Ceccheti
+# Released under the Boost Software License Version 1.0
+# See http://boost.org/LICENSE_1_0.txt for full license text.
+
+import modules ;
+
+local BOOST_DIR = [ modules.peek : BOOST_ROOT ] ;
+
+project overload/tests
+    : requirements
+    <include>../../../
+    <include>$(BOOST_DIR)
+    ;
+
+unit-test initial_test : test.cpp ;
+
