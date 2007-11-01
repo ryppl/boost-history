@@ -5,7 +5,7 @@ namespace boost { namespace logging {
 
 - @ref main_motivation
 - @ref main_common_usage
-- @ref main_changelog
+- @ref page_changelog 
 
 @section main_motivation Motivation
 
@@ -55,7 +55,7 @@ To see more examples, check out @ref common_scenarios.
 \n\n\n
 @section main_changelog Changelog
 
-@copydoc page_changelog 
+@ref page_changelog "See the changelog".
 
 */
 
