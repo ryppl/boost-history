@@ -777,7 +777,7 @@
 			Name="internal docs"
 			>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\changelog.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\changelog.hpp"
 				>
 			</File>
 			<File
@@ -857,7 +857,7 @@
 			Name="scenarios"
 			>
 			<File
-				RelativePath="..\..\scenarios\custom_fmt_dest.cpp"
+				RelativePath="..\..\..\samples\scenarios\custom_fmt_dest.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -869,11 +869,18 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\fastest_no_ostr_like.cpp"
+				RelativePath="..\..\..\samples\scenarios\fastest_no_ostr_like.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\fastest_use_ostr_like.cpp"
+				RelativePath="..\..\..\samples\scenarios\fastest_use_ostr_like.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -885,7 +892,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\mul_levels_mul_logers.cpp"
+				RelativePath="..\..\..\samples\scenarios\mul_levels_mul_logers.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -897,7 +904,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\mul_levels_one_logger.cpp"
+				RelativePath="..\..\..\samples\scenarios\mul_levels_one_logger.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -909,7 +916,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\mul_loggers_one_filter.cpp"
+				RelativePath="..\..\..\samples\scenarios\mul_loggers_one_filter.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -921,7 +928,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\no_levels_with_route.cpp"
+				RelativePath="..\..\..\samples\scenarios\no_levels_with_route.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -933,7 +940,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\scenarios\one_loger_one_filter.cpp"
+				RelativePath="..\..\..\samples\scenarios\one_loger_one_filter.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
