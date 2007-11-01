@@ -1,0 +1,213 @@
+[article Boost.Overload
+	[quickbook 1.4]
+    [version 0.3.0]
+    [authors [Ceccheti, Marco], [Berris, Dean Michael]]
+	[copyright 2007 Marco Ceccheti, Dean Michael Berris]
+	[purpose Multi Signature Overloaded Function Set]
+	[license
+		Distributed under the Boost Software License, Version 1.0.
+		(See accompanying file LICENSE_1_0.txt or copy at
+		[@http://www.boost.org/LICENSE_1_0.txt])
+	]
+    [last-revision $Date: 2007/01/11 14:07:16 $]
+]
+
+[/ Boost Overload Document Version 0.3.0 ]
+
+[section:intro Introduction]
+
+There are cases where you might want to have a function object which
+accepts different function overloads mapped to different implementations.
+There are also some cases where you have the same function object be
+able to accept different signatures so that it may be used in different 
+contexts using different signatures. As of the moment, Boost.Function is 
+monomorphic -- which means it can only hold one reference to a function 
+conforming to just one signature.
+
+Boost.Overload is a multi-signature overloaded Boost.Function wrapper, 
+which wraps multiple Boost.Function objects of different signatures as a 
+single multi-signature overloaded function wrapper.
+
+[endsect]
+
+[section:overview Overview]
+
+Boost.Function already supports wrapping function objects, member
+function pointers, and function pointers in general. By itself,
+Boost.Function is already powerful and already useful enough in situations
+where you want to be able to pass around generic function objects.
+The only limitation of Boost.Function is that you can only wrap one
+function with one instance of the wrapper, and only functions or function
+objects that all have the same signatures. This becomes a problem in
+many settings where an overloaded function set is required.
+
+Boost.Overload allows this functionality of supporting multiple signatures 
+by wrapping multiple Boost.Function objects in a single object that 
+overloads the function operator to support the various overloads defined. 
+This allows us to map many functions to a single overload instance, 
+provided that these functions have a signature that the overload instance 
+supports. To illustrate the usage of the Boost.Overload library, the 
+following code snippet is provided:
+
+    #include <boost/overload.hpp>
+
+    int foo(int a) { return a + 1; };
+    long bar(int a, int b) { return a + b; };
+
+    int main(int argc, char * argv[]) {
+        boost::overload<int(int), long(int, int)> functions;
+        functions.set(&foo);
+        functions.set(&bar);
+        
+        assert(functions(1) == 2);
+        assert(functions(2, 3) == 5L);
+        return 0;
+    }
+
+In the above example we have two functions 'foo' and 'bar', both having 
+different signatures and return types. This illustrates the powerful 
+features which Boost.Overload allows us to exploit: compile-time function 
+argument deduction and registration, and static function dispatch using 
+function overload type deduction. For a quick start you can read the 
+[link tutorial1 tutorial].
+
+[endsect]
+
+[section:design Design]
+
+The library is succinctly implemented in one header file requiring only 
+that Boost.Function be available. This library also requires the Boost.PP 
+(Preprocessor Programming) library if in case you don't want to get the 
+preprocessed header file. The library is configured by default to handle 
+overloads with 10 unique signatures and can be configured to support more 
+by changing the BOOST_OVERLOAD_LIMIT macro when building the application that 
+uses Boost.Overload. There are a few concepts documented below which defines 
+the terms and details of the implementation.
+
+[blurb `BOOST_OVERLOAD_LIMIT` by default is set to 10. This means the 
+Boost.Overload template by default can handle 10 unique signatures to provide 
+as function overloads.]
+
+[endsect]
+
+[section:concepts Concepts]
+
+[section:poly_objs Polymorphic Function Objects]
+
+Polymorphic Function Objects are objects which have dynamic implementations 
+or overloads to the function operator. Typical Polymorphic Function Objects 
+usually imply run-time polymorphism, when a reference to a base type 
+instance is registered to the Overload Set -- and the actual implementation 
+depends on the type of the object being referred to by the given reference.
+
+A Function Object is polymorphic if:
+
+ * The base type used to refer to the Function Object is virtual.
+
+ * The type of the Function Object referred to is derived from the base type.
+
+ * The implementation or actual behavior of the Function Object is 
+ determined during run-time.
+ 
+The Overload Set treats a Polymorphic Function Object as a normal function 
+object, and the reference to the base type is used to determine at 
+run-time which actual implementation is invoked when the Overload Set is 
+invoked.
+
+[endsect]
+
+[section:multi_func_obj Multi-Signature Overloaded Function Object]
+
+Multi-Signature Overloaded Function Objects are objects which have two 
+or more overloads of the function operator.
+
+A Function Object is a Multi-Signature Overloaded Function Object if
+the Function Object has at least two overloads to the function operator.
+
+The Overload Set treats a Multi-Signature Overloaded Function in a 
+special manner, in which it tries to match each unique function operator 
+overload defined in the Multi-Signature Overloaded Function Object to the 
+supported signature types. This allows multiple overloads of the function 
+operator defined in the Multi-Signature Overloaded Function Object to be 
+mapped to supported signatures in the Overload Set. 
+
+[endsect]
+
+[section:overload_set Overload Set]
+
+An Overload Set is a Multi-Signature Overloaded Function Object which 
+wraps different Boost.Function wrappers and exposes multiple overloads to 
+the function operator. This allows the Overload Set to expose multiple 
+function operator overloads used in turn to perform static dispatch to 
+the appropriate supported Boost.Function wrapper. An Overload Set is a 
+parametric type (a template) which takes N signature type arguments 
+-- where N is defined as the BOOST_OVERLOAD_LIMIT, configurable at 
+compile time and defaults to 10 -- to define both the signatures of 
+the supported function operator overloads as well as the supported 
+function object signatures it can encapsulate.
+
+An Overload Set allows the following operations: (assumes overload is 
+an instance of Boost.Overload)
+
+ * overload.set(F) -- Maps a function object/pointer F to the appropriate 
+ supported signature. F's signature is deduced at compile time, and the 
+ static dispatch mechanism allows F to be matched to the appropriately typed 
+ Boost.Function wrapper. In the case of F being a Multi-Signature Overloaded 
+ Function Object, all the function operator overloads provided by F will be 
+ mapped to the appropriately typed Boost.Function wrappers contained by the 
+ Overload Set.
+
+ * overload.set<S>(F) -- Maps a function object/pointer F to the 
+ Boost.Function object which supports the signature S.
+ 
+ * overload.set<N>(F) -- Maps a function object/pointer F to the N'th 
+ signature supported by the Overload Set.
+
+ * overload.get<S>() -- Returns the actual Boost.Function object which 
+ supports the signature S from those supported and encapsulated by the 
+ Overload Set.
+
+ * overload.empty<S>() -- Returns whether the actual Boost.Function 
+ object which supports the signature S is not mapped to an existing function.
+ 
+The Overload Set is default constructable, copyable, and swappable. 
+
+[endsect]
+
+[endsect]
+
+[section:implementation Implementation]
+
+TODO: Fill this up!
+
+[endsect]
+
+[section:api_guide API Guide]
+
+TODO: Fill this up! (Use doxygen?)
+
+[endsect]
+
+[section:references References]
+
+TODO: Fill this up!
+
+[endsect]
+
+[section:acknowledgements Acknowledgements]
+
+Thanks go to Joel De Guzman for posting an implementation of a
+minimal overload implementation to the Boost C++ Developer Mailing
+List, and to Douglas Gregor for Boost.Function -- without which all
+this would not have been possible.
+
+[endsect]
+
+[section:credits Credits]
+
+Prepared by Dean Michael Berris mikhailberis@gmail.com
+Released under the Boost Software License version 1.0 (http://boost.org/LICENSE_1_0.txt)
+Initial Date Written: October 09, 2007
+
+[endsect]
+

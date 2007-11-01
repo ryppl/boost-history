@@ -1,0 +1,20 @@
+project overload/docs ;
+
+import boostbook : boostbook ;
+
+using quickbook ;
+
+xml overload : overload.qbk ;
+
+boostbook standalone
+    :
+        overload
+    :
+        <xsl:param>boost.image.src=images/dispatcher.png
+        <xsl:param>boost.image.alt="Boost.Overload"
+        <xsl:param>generate.section.toc.level=3
+        <xsl:param>chunk.section.depth=2
+        <xsl:param>chunk.first.sections=1
+        <xsl:param>nav.layout=none
+    ;
+
