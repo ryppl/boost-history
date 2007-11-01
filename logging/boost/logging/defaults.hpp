@@ -20,8 +20,8 @@
 # pragma once
 #endif
 
-#include <boost/logging/ts/ts.hpp>
-#include <boost/logging/ts/ts_resource.hpp>
+#include <boost/logging/detail/ts/ts.hpp>
+#include <boost/logging/detail/ts/ts_resource.hpp>
 
 #include <string>
 #include <boost/config.hpp>

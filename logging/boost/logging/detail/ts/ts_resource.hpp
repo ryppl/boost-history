@@ -21,7 +21,7 @@
 # pragma once
 #endif
 
-#include <boost/logging/ts/ts.hpp>
+#include <boost/logging/detail/ts/ts.hpp>
 
 namespace boost { namespace logging { 
     

@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-v0.9.12.2, 1 nov 2007
+v0.9.12.3, 1 nov 2007
+- move ts/* files to detail directory
+- doc - standalone page with changelog
 - moved changelog.hpp to detail/raw_doc dir
 
 v0.9.11, 31 oct 2007
