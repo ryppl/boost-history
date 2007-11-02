@@ -640,27 +640,27 @@
 				Name="ts"
 				>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\ts\ts.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\ts\ts_boost.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts_boost.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\ts\ts_none.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts_none.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\ts\ts_posix.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts_posix.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\ts\ts_resource.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts_resource.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\ts\ts_win32.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts_win32.hpp"
 					>
 				</File>
 			</Filter>
@@ -769,6 +769,30 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\boost\logging\writer\ts_write.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="tss"
+				>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss_ensure_proper_delete.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss_impl.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss_impl_pthread.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss_impl_win32.hpp"
 					>
 				</File>
 			</Filter>

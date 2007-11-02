@@ -23,6 +23,7 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/forward_constructor.hpp>
+#include <boost/logging/detail/tss/tss.hpp>
 
 namespace boost { 
 
@@ -68,7 +69,7 @@ namespace logging {
     The filters defined by the library are:
     - filter::no_ts
     - filter::ts
-    - filter::use_tls_with_cache
+    - filter::use_tss_with_cache
     - filter::always_enabled
     - filter::always_disabled
     - filter::debug_enabled
@@ -153,6 +154,11 @@ private:
     mutable threading::mutex m_cs;
 };
 
+
+
+
+#ifndef BOOST_LOG_NO_TSS
+
 /** 
     Uses TLS (Thread Local Storage) to find out if a filter is enabled or not. It caches the current "is_enabled" on each thread.
     Then, at a given period, it retrieves the real "is_enabled".
@@ -162,10 +168,10 @@ private:
     Another implementation can be done, which could be faster - where you retrieve the "is_enabled" each X calls on a given thread
     (like, every 20 calls on a given thread)
 */
-struct use_tls_with_cache {
-    typedef locker::tls_resource_with_cache<bool> data;
+struct use_tss_with_cache {
+    typedef locker::tss_resource_with_cache<bool> data;
 
-    use_tls_with_cache(int cache_millis) : m_enabled(true, cache_millis) {}
+    use_tss_with_cache(int cache_millis) : m_enabled(true, cache_millis) {}
     bool is_enabled() const { 
         data::read enabled(m_enabled);
         return enabled.use(); 
@@ -177,6 +183,9 @@ struct use_tls_with_cache {
 private:
     data m_enabled;
 };
+
+#endif // #ifndef BOOST_LOG_NO_TSS
+
 
 } // namespace filter
 

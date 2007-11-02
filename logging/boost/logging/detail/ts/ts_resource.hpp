@@ -22,6 +22,8 @@
 #endif
 
 #include <boost/logging/detail/ts/ts.hpp>
+#include <boost/logging/detail/tss/tss.hpp>
+#include <time.h>
 
 namespace boost { namespace logging { 
     
@@ -103,21 +105,36 @@ namespace locker {
         type m_val;
     };
 
+
+
+
+#ifndef BOOST_LOG_NO_TSS
+
     /** 
         Locks a resource, and uses TLS. This holds the value, and each thread caches it.
         Once at a given period (like, every 5 seconds), when used, the latest object is copied.
 
         @sa locker
+        @sa default_cache_millis how many secs to cache the data. By default, 5
     */
-    template<class type> struct tls_resource_with_cache {
+    template<class type, int default_cache_secs = 5> struct tss_resource_with_cache {
         // FIXME - implement using TLS!!!
+//        I NEED TO CREATE TESTS FOR tss_value / tss_resource_with_cache
 
-        typedef tls_resource_with_cache<type> self_type;
+        typedef tss_resource_with_cache<type, default_cache_secs> self_type;
 
-        tls_resource_with_cache(const type& val , int /* cache_millis  */ ) : m_val(val) {}
-
+    private:
+        struct value_and_time {
+            value_and_time(const type & val = type() ) : val(val) {
+                time_ = time(0);
+            }
+            type val;
+            time_t time_;
+        };
 
     public:
+        tss_resource_with_cache(const type& val , int cache_secs = default_cache_secs ) : m_val(val), m_cache_secs(cache_secs) {}
+
         struct read;
         struct write;
         friend struct read;
@@ -148,9 +165,12 @@ namespace locker {
 
 
     private:
+        int m_cache_secs;
+        tss_value<value_and_time> m_cache;
         type m_val;
     };
 
+#endif
 
 }}}
 

@@ -64,7 +64,10 @@ struct rolling_file_settings {
 namespace detail {
     template<class convert_dest > 
     struct rolling_file_info {
-        rolling_file_info (const std::string& name_prefix, rolling_file_settings flags ) : m_flags(flags), m_cur_idx(0) {
+        
+        rolling_file_info (const std::string& name_prefix, rolling_file_settings flags ) 
+                // many thanks to Martin Bauer
+                : m_name_prefix(name_prefix), m_flags(flags), m_cur_idx(0) {
             namespace fs = boost::filesystem;
             
             if ( m_flags.initial_erase()) {

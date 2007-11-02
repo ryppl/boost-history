@@ -75,7 +75,7 @@ The out.txt file will look like this:
 
 
 
-#define BOOST_LOG_COMPILE_FAST_OFF
+#define BOOST_LOG_COMPILE_FAST_ON
 #include <boost/logging/format_fwd.hpp>
 
 // Step 1: Optimize : use a cache string, to make formatting the message faster

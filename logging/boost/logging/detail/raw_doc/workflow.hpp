@@ -71,7 +71,7 @@ Every time, before anything gets written to the log, the filter is asked if "it'
 (gathering the message and then writing it). Otherwise, the log message is completely ignored.
 
 What "it's enabled" is depends on the filter class you use:
-- if it's a simple class (filter::no_ts, filter::ts, filter::use_tls_with_cache), it's simply the @c is_enabled function (Example 1, above)
+- if it's a simple class (filter::no_ts, filter::ts, filter::use_tss_with_cache), it's simply the @c is_enabled function (Example 1, above)
 - if it's a more complex class, it's up to you
   - for instance, the level::holder_no_ts exposes an <tt>is_enabled(level)</tt>, so you can ask if a certain level is enabled (Example 2, above)
     Thus, logging takes place only if that certain level is enabled (@c debug for LDBG_, @c info for LAPP_, @c error for LERR_)

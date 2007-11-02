@@ -59,6 +59,11 @@ namespace boost { namespace logging {
     - BOOST_LOG_COMPILE_FAST_OFF
     - BOOST_LOG_COMPILE_FAST
 
+BOOST_LOG_TSS_USE_INTERNAL
+BOOST_LOG_TSS_USE_BOOST
+BOOST_LOG_TSS_USE_CUSTOM
+BOOST_LOG_NO_TSS
+
 */
 
 #ifdef BOOST_LOG_COMPILE_FAST_ON
@@ -73,8 +78,11 @@ namespace boost { namespace logging {
 
 
 
+#if !defined(BOOST_LOG_TSS_USE_INTERNAL) && !defined(BOOST_LOG_TSS_USE_BOOST) && !defined(BOOST_LOG_TSS_USE_CUSTOM) && !defined(BOOST_LOG_NO_TSS)
+// use has not specified what TSS strategy to use
+#define BOOST_LOG_TSS_USE_INTERNAL
 
-
+#endif
 
 
 
@@ -92,23 +100,23 @@ namespace boost { namespace logging {
 
 #define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
     { static type i; return i; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; \
     ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
     { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
     typedef type::write_type write_msg; \
     static ::boost::logging::implement_default_logger< gather_msg, write_msg* > p( &(name ## _boost_log_impl_().writer()) ); \
-    return p; }
+    return p; } \
+    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
 
 #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type& name ## _boost_log_impl_() \
     { static type i ( args ); return i; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; \
     ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
     { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
     typedef type::write_type write_msg; \
     static ::boost::logging::implement_default_logger< gather_msg, write_msg* > p( &(name ## _boost_log_impl_().writer()) ); \
-    return p; }
+    return p; } \
+    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
+    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
 
 
 

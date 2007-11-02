@@ -21,7 +21,6 @@
 #endif
 
 #include <boost/logging/detail/ts/ts.hpp>
-#include <boost/logging/detail/ts/ts_resource.hpp>
 
 #include <string>
 #include <boost/config.hpp>
@@ -86,9 +85,13 @@ Example:
     namespace level {
         struct holder_no_ts ;
         struct holder_ts ;
-        struct holder_tls_with_cache ;
+        struct holder_tss_with_cache ;
     }
 
+    namespace locker {
+        template<class type, class mutex > struct ts_resource ;
+        template<class , int> struct tss_resource_with_cache ;
+    }
 
 
     struct default_types {
@@ -107,7 +110,11 @@ Example:
 
         struct lock_resource {
             template<class lock_type> struct finder {
-                typedef typename locker::ts_resource<lock_type> type;
+//#ifndef BOOST_LOG_NO_TSS
+  //              typedef typename locker::tss_resource_with_cache<lock_type, 5> type;
+//#else
+                typedef typename locker::ts_resource<lock_type, boost::logging::threading::mutex > type;
+//#endif
             };
         };
 

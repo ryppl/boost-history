@@ -1,6 +1,10 @@
 /** 
 @page page_changelog Changelog
 
+v0.10.1, 2 nov 2007
+- added TSS - however, not tested (TSS is off, for now)
+- compiles on VS2005, gcc 3.4.2 , gcc 4.1 and gcc 4.3
+
 v0.9.12.3, 1 nov 2007
 - move ts/* files to detail directory
 - doc - standalone page with changelog

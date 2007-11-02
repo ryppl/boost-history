@@ -22,6 +22,7 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/logging/detail/tss/tss.hpp>
 
 namespace boost { namespace logging {
 
@@ -105,15 +106,31 @@ namespace level {
     };
 
     /** 
+        @brief Filter - holds the level - and tells you at compile time if a filter is enabled or not.
+
+        Fix (compile time) holder
+    */
+    template<int fix_level = debug> struct holder_compile_time {
+        static bool is_enabled(type level) { 
+            return fix_level >= level;
+        }
+    };
+
+
+
+
+#ifndef BOOST_LOG_NO_TSS
+
+    /** 
         @brief Filter - holds the level, in a thread-safe way, using TLS.
 
         Uses TLS (Thread Local Storage) to find out if a level is enabled or not. It caches the current "is_enabled" on each thread.
         Then, at a given period, it retrieves the real "level".
     */
-    struct holder_tls_with_cache {
-        typedef locker::tls_resource_with_cache<type> data;
+    struct holder_tss_with_cache {
+        typedef locker::tss_resource_with_cache<type> data;
 
-        holder_tls_with_cache(int cache_millis, type default_level = enable_all) : m_level(default_level, cache_millis) {}
+        holder_tss_with_cache(int cache_millis, type default_level = enable_all) : m_level(default_level, cache_millis) {}
         bool is_enabled(type test_level) const { 
             data::read cur_level(m_level);
             return test_level >= cur_level.use(); 
@@ -126,16 +143,9 @@ namespace level {
         data m_level;
     };
 
-    /** 
-        @brief Filter - holds the level - and tells you at compile time if a filter is enabled or not.
+#endif
 
-        Fix (compile time) holder
-    */
-    template<int fix_level = debug> struct holder_compile_time {
-        static bool is_enabled(type level) { 
-            return fix_level >= level;
-        }
-    };
+
 
     typedef boost::logging::level_holder_type holder;
 } // namespace level
@@ -171,7 +181,7 @@ LERR_ << "error at: " << idx << ", while reading " << word;
 
 @endcode
 
-    @sa level::holder_no_ts, level::holder_ts, level::holder_tls_with_cache
+    @sa level::holder_no_ts, level::holder_ts, level::holder_tss_with_cache
 */
 template<class holder_type, int level> struct filter_level {
     filter_level(holder_type * level_holder) : m_level_holder(*level_holder) {}
