@@ -25,6 +25,7 @@
 #include <boost/logging/filter.hpp>
 #include <boost/logging/detail/logger.hpp>
 #include <boost/logging/macros.hpp>
+#include <boost/logging/detail/tss/tss.hpp>
 #include <boost/logging/level.hpp>
 
 // just in case we might think of using formatters

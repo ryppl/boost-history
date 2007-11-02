@@ -171,7 +171,7 @@ private:
 struct use_tss_with_cache {
     typedef locker::tss_resource_with_cache<bool> data;
 
-    use_tss_with_cache(int cache_millis) : m_enabled(true, cache_millis) {}
+    use_tss_with_cache(int cache_secs) : m_enabled(true, cache_secs) {}
     bool is_enabled() const { 
         data::read enabled(m_enabled);
         return enabled.use(); 

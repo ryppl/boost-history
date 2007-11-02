@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-v0.10.1, 2 nov 2007
+v0.10.2, 2 nov 2007
+- added TSS tests - they do run; however, they don't work successfully (they cause memory corruption)
 - added TSS - however, not tested (TSS is off, for now)
 - compiles on VS2005, gcc 3.4.2 , gcc 4.1 and gcc 4.3
 

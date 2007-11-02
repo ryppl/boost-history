@@ -21,10 +21,6 @@
 # pragma once
 #endif
 
-// not tested yet
-#define BOOST_LOG_NO_TSS
-
-
 
 #if !defined(BOOST_LOG_NO_TSS)
 
@@ -49,6 +45,7 @@
 
 namespace boost { namespace logging {
 
+
 template<class type, template<typename> class thread_specific_ptr_type BOOST_LOG_TSS_DEFAULT_CLASS > struct tss_value {
     tss_value(const type & default_ = type() ) : m_default( default_) {}
 
@@ -60,7 +57,7 @@ template<class type, template<typename> class thread_specific_ptr_type BOOST_LOG
 #else
             result = new type(m_default);
 #endif
-            m_value.set( result );
+            m_value.reset( result );
         }
         return result;
     }
@@ -68,7 +65,7 @@ template<class type, template<typename> class thread_specific_ptr_type BOOST_LOG
     type* operator->() const { return get(); }
     type& operator*() const { return *get(); }
 private:
-    thread_specific_ptr_type<type> m_value;
+    mutable thread_specific_ptr_type<type> m_value;
     // the default value - to assign each time a new value is created
     type m_default;
 };
