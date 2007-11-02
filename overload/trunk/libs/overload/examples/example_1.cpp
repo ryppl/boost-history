@@ -6,7 +6,7 @@
 
 #include <boost/detail/lightweight_test.hpp>
 
-#include "../../../boost/overload/overload.hpp"
+#include <boost/overload.hpp>
 
 
 using boost::overload;
