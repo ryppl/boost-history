@@ -46,20 +46,28 @@ namespace detail {
 
 typedef std::vector<void*> tss_slots;
 
+DWORD& tss_data_native_key () ;
+void init_tss_data();
+unsigned long slot_idx() ;
+tss_slots* get_slots();
+
+
 inline DWORD& tss_data_native_key () {
     static DWORD key = TLS_OUT_OF_INDEXES;
     return key;
 }
 
 // note: this should be called ONLY ONCE
-inline void init_tss_data()
-{
+inline void init_tss_data() {
     //Allocate tls slot
 
     // if you get an assertion here, this function was called twice - should never happen!
     BOOST_ASSERT( tss_data_native_key() == TLS_OUT_OF_INDEXES);
     // now, allocate it
     tss_data_native_key() = TlsAlloc();
+
+    // make sure the static gets created
+    object_deleter();
 }
 
 inline unsigned long slot_idx() {
@@ -77,8 +85,6 @@ inline unsigned long slot_idx() {
     ++idx;
     return idx;
 }
-
-
 
 inline tss_slots* get_slots()
 {

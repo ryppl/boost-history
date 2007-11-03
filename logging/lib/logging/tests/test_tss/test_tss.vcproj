@@ -172,7 +172,19 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\count.h"
+			>
+		</File>
+		<File
 			RelativePath=".\test_tss.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\test_tss_objects.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\test_tss_on_end_delete.cpp"
 			>
 		</File>
 	</Files>

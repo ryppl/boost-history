@@ -55,6 +55,9 @@ extern "C" inline void cleanup_slots(void* p) {}
 inline void init_tss_data()
 {
     pthread_key_create(&tss_data_native_key(), &cleanup_slots);
+
+    // make sure the static gets created
+    object_deleter();
 }
 
 
