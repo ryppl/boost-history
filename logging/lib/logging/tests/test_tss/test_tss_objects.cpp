@@ -95,17 +95,23 @@ void do_sleep(int ms) {
     thread::sleep( next);
 }
 
+using namespace logging;
+tss_value<read_file> file;
+tss_value<string_no_spaces> str;
+
 void process_file() {
     managed_object m(*g_running_thread_count);
     int thread_idx = g_running_thread_count->count();
     std::cout << "started thread " << thread_idx << std::endl;
 
-    using namespace logging;
-    tss_value<read_file> file;
-    tss_value<string_no_spaces> str;
+    read_file local_file;
     while ( true) {
 
         std::string word = file->read_word();
+        std::string local_word = local_file.read_word();
+        // it should behave just like a "local" variable
+        if ( word != local_word)
+            BOOST_ASSERT( false);
         str->add_word(word);
         if ( word.empty() )
             break;
