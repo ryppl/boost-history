@@ -47,15 +47,16 @@ namespace boost { namespace logging {
 
 
 template<class type, template<typename> class thread_specific_ptr_type BOOST_LOG_TSS_DEFAULT_CLASS > struct tss_value {
-    tss_value(const type & default_ = type() ) : m_default( default_) {}
+    tss_value(const type & default_ ) : m_default( default_), m_use_default(true) {}
+    tss_value() : m_use_default(false) {}
 
     type * get() const {
         type * result = m_value.get();
         if ( !result) {
 #if defined(BOOST_LOG_TSS_USE_INTERNAL)
-            result = detail::new_object_ensure_delete<type>(m_default);
+            result = m_use_default ? detail::new_object_ensure_delete<type>(m_default) : detail::new_object_ensure_delete<type>();
 #else
-            result = new type(m_default);
+            result = m_use_default ? (new type(m_default)) : (new type);
 #endif
             m_value.reset( result );
         }
@@ -68,6 +69,8 @@ private:
     mutable thread_specific_ptr_type<type> m_value;
     // the default value - to assign each time a new value is created
     type m_default;
+    // if true, use default, otherwise not
+    bool m_use_default;
 };
 
 }}

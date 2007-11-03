@@ -1,3 +1,15 @@
+// Boost Logging library
+//
+// Author: John Torjo, www.torjo.com
+//
+// Copyright (C) 2007 John Torjo (see www.torjo.com for email)
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.torjo.com/log2/ for more details
 
 // so that we can catch the end of deleting all objects
 #define BOOST_LOG_TEST_TSS
@@ -52,7 +64,7 @@ struct read_file : private managed_object {
 
     std::string read_word() {
         ++m_word_idx;
-        if ( m_word_idx < g_thread_count) {
+        if ( m_word_idx <= g_thread_count) {
             std::string word;
             (*m_in) >> word;
             return word;
@@ -108,7 +120,8 @@ void process_file() {
     read_file local_file;
     while ( true) {
 
-        std::string word = file->read_word();
+        read_file * file_ptr = &*file;
+        std::string word = file_ptr->read_word();
         std::string local_word = local_file.read_word();
         // it should behave just like a "local" variable
         if ( word != local_word)

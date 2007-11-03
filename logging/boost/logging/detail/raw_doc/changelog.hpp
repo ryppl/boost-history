@@ -1,9 +1,10 @@
 /** 
 @page page_changelog Changelog
 
-v0.10.5, 3 nov 2007
+v0.10.6, 3 nov 2007
 - added TSS tests 
-  - test test_tss FAILS - to check!
+  - test test_tss SUCCESSFUL on win32
+  - test test_simple_tss SUCCESSFUL on win32
   - test test_ts_resource_with_cache - not tested
 - added TSS - however, not tested (TSS is off, for now)
 - compiles on VS2005, gcc 3.4.2 , gcc 4.1 and gcc 4.3
