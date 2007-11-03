@@ -87,10 +87,11 @@ private:
 void do_sleep(int ms) {
     xtime next;
     xtime_get( &next, TIME_UTC);
-    next.nsec += ms * 1000;
+    next.nsec += (ms % 1000) * 1000000;
 
     int nano_per_sec = 1000000000;
     next.sec += next.nsec / nano_per_sec;
+    next.sec += ms / 1000;
     next.nsec %= nano_per_sec;
     thread::sleep( next);
 }
