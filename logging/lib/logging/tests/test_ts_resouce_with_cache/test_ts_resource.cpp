@@ -85,7 +85,8 @@ void update_cur_val() {
     int last_val = 0;
     if ( !cur.empty() )
         last_val = cur.back();
-    if ( change_idx % INCREASE_VECTOR_SIZE_PERIOD ) {
+
+    if ( change_idx % INCREASE_VECTOR_SIZE_PERIOD == 0 ) {
         cur.resize( cur.size() + 1);
         std::cout << "****** new vector size " << cur.size() + 1;
     }
@@ -182,10 +183,12 @@ void test_thread() {
 
 
 // how many threads that update the resource?
-int g_update_thread_count = 10;
+int g_update_thread_count = 1; //10;
 
 // how many threads that test the resource?
-int g_test_thread_count = 10;
+int g_test_thread_count = 1; // 10;
+
+int g_run_period_secs = 1000; //100;
 
 int main()
 {
@@ -197,6 +200,7 @@ int main()
     for ( int i = 0; i < g_test_thread_count; ++i)
         thread t(&test_thread);
 
+    do_sleep(g_run_period_secs * 1000);
 	return 0;
 }
 

@@ -75,11 +75,10 @@ namespace locker {
 
         struct write {
             self_type & self ;
-            write(self_type & self) : self(self) {
-                self.m_cs.Lock();
+            typename mutex::scoped_lock locker;
+            write(self_type & self) : self(self), locker(self.m_cs) {
             }
             ~write() {
-                self.m_cs.Unlock();
             }
 
             type & use() { return self.m_val ; }
@@ -117,10 +116,7 @@ namespace locker {
         @sa locker
         @sa default_cache_millis how many secs to cache the data. By default, 5
     */
-    template<class type, int default_cache_secs = 5> struct tss_resource_with_cache {
-        // FIXME - implement using TLS!!!
-//        I NEED TO CREATE TESTS FOR tss_value / tss_resource_with_cache
-
+    template<class type, int default_cache_secs = 5, class mutex = boost::logging::threading::mutex > struct tss_resource_with_cache {
         typedef tss_resource_with_cache<type, default_cache_secs> self_type;
 
     private:
@@ -141,24 +137,33 @@ namespace locker {
         friend struct write;
 
         struct write {
-            self_type & self ;
-            write(self_type & self) : self(self) {
+            type & val;
+            typename mutex::scoped_lock locker;
+            write(self_type & self) : val(self.m_val), locker(self.m_cs) {
             }
             ~write() {
             }
 
-            type & use() { return self.m_val ; }
+            type & use() { return val ; }
             type* operator->() { return &use(); }
         };
 
         struct read {
-            const self_type & self ;
-            read(const self_type & self) : self(self) {
+            const type & val ;
+            read(const self_type & self) : val(self.m_cache->val) {
+                ::time_t now = time(0);
+                value_and_time & cached = *self.m_cache;
+                if ( cached.time_ + self.m_cache_secs < now) {
+                    // cache has expired
+                    typename mutex::scoped_lock lk(self.m_cs);
+                    cached.val = self.m_val;
+                    cached.time_ = now;
+                }
             }
             ~read() {
             }
 
-            const type & use() { return self.m_val ; }
+            const type & use() { return val ; }
             const type* operator->() { return &use(); }
         };
 
@@ -166,8 +171,9 @@ namespace locker {
 
     private:
         int m_cache_secs;
-        tss_value<value_and_time> m_cache;
+        mutable tss_value<value_and_time> m_cache;
         type m_val;
+        mutable mutex m_cs;
     };
 
 #endif

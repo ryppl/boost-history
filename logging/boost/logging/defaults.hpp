@@ -90,7 +90,7 @@ Example:
 
     namespace locker {
         template<class type, class mutex > struct ts_resource ;
-        template<class , int> struct tss_resource_with_cache ;
+        template<class , int, class> struct tss_resource_with_cache ;
     }
 
 
@@ -110,8 +110,9 @@ Example:
 
         struct lock_resource {
             template<class lock_type> struct finder {
-//#ifndef BOOST_LOG_NO_TSS
-  //              typedef typename locker::tss_resource_with_cache<lock_type, 5> type;
+//#if !defined( BOOST_LOG_NO_TSS) && defined(BOOST_WINDOWS)
+                // on Windows, I've tested the threading
+//                typedef typename locker::tss_resource_with_cache<lock_type, 5, boost::logging::threading::mutex > type;
 //#else
                 typedef typename locker::ts_resource<lock_type, boost::logging::threading::mutex > type;
 //#endif
