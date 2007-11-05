@@ -1,18 +1,33 @@
 [article Boost.Overload
 	[quickbook 1.4]
     [version 0.3.0]
-    [authors [Ceccheti, Marco], [Berris, Dean Michael]]
-	[copyright 2007 Marco Ceccheti, Dean Michael Berris]
+    [authors [Cecchetti, Marco], [Berris, Dean Michael]]
+	[copyright 2007 Marco Cecchetti, Dean Michael Berris]
 	[purpose Multi Signature Overloaded Function Set]
 	[license
 		Distributed under the Boost Software License, Version 1.0.
 		(See accompanying file LICENSE_1_0.txt or copy at
 		[@http://www.boost.org/LICENSE_1_0.txt])
 	]
-    [last-revision $Date: 2007/01/11 14:07:16 $]
+    [last-revision $Date: 2007/11/05 15:00 $]
 ]
 
 [/ Boost Overload Document Version 0.3.0 ]
+
+
+[def __empty_line__     \n\n ]
+
+[def __overload__       [link overload overload]]
+[def __set__            [link set set]]
+[def __set_sig__        [link set_sig set<signature> ]]
+[def __empty_sig__      [link empty_sig empty<signature_type> ]]
+[def __empty_all__      [link empty_all empty_all ]]
+[def __get_sig__        [link get_sig get<signature_type> ]]
+[def __clear_sig__      [link clear_sig clear<signature_type> ]]
+[def __clear_all__      [link clear_all clear_all ]]
+[def __swap_func__      [link swap_func swap_function ]]
+
+[warning At present Boost.Overload *IS NOT* a Boost Library ]
 
 [section:intro Introduction]
 
@@ -68,10 +83,13 @@ In the above example we have two functions 'foo' and 'bar', both having
 different signatures and return types. This illustrates the powerful 
 features which Boost.Overload allows us to exploit: compile-time function 
 argument deduction and registration, and static function dispatch using 
-function overload type deduction. For a quick start you can read the 
-[link tutorial1 tutorial].
+function overload type deduction.
 
 [endsect]
+
+
+[include tutorial.qbk]
+
 
 [section:design Design]
 
@@ -84,7 +102,7 @@ by changing the BOOST_OVERLOAD_LIMIT macro when building the application that
 uses Boost.Overload. There are a few concepts documented below which defines 
 the terms and details of the implementation.
 
-[blurb `BOOST_OVERLOAD_LIMIT` by default is set to 10. This means the 
+[note `BOOST_OVERLOAD_LIMIT` by default is set to 10. This means the 
 Boost.Overload template by default can handle 10 unique signatures to provide 
 as function overloads.]
 
@@ -102,13 +120,15 @@ depends on the type of the object being referred to by the given reference.
 
 A Function Object is polymorphic if:
 
- * The base type used to refer to the Function Object is virtual.
+* The base type used to refer to the Function Object is virtual. 
+__empty_line__
 
- * The type of the Function Object referred to is derived from the base type.
+* The type of the Function Object referred to is derived from the base type.
+__empty_line__
 
- * The implementation or actual behavior of the Function Object is 
- determined during run-time.
- 
+* The implementation or actual behavior of the Function Object is 
+  determined during run-time.
+
 The Overload Set treats a Polymorphic Function Object as a normal function 
 object, and the reference to the base type is used to determine at 
 run-time which actual implementation is invoked when the Overload Set is 
@@ -149,27 +169,31 @@ function object signatures it can encapsulate.
 An Overload Set allows the following operations: (assumes overload is 
 an instance of Boost.Overload)
 
- * overload.set(F) -- Maps a function object/pointer F to the appropriate 
- supported signature. F's signature is deduced at compile time, and the 
- static dispatch mechanism allows F to be matched to the appropriately typed 
- Boost.Function wrapper. In the case of F being a Multi-Signature Overloaded 
- Function Object, all the function operator overloads provided by F will be 
- mapped to the appropriately typed Boost.Function wrappers contained by the 
- Overload Set.
+* overload.set(F) -- Maps a function object/pointer F to the appropriate 
+  supported signature. F's signature is deduced at compile time, and the 
+  static dispatch mechanism allows F to be matched to the appropriately typed 
+  Boost.Function wrapper. In the case of F being a Multi-Signature Overloaded 
+  Function Object, all the function operator overloads provided by F will be 
+  mapped to the appropriately typed Boost.Function wrappers contained by the 
+  Overload Set.
+__empty_line__
 
- * overload.set<S>(F) -- Maps a function object/pointer F to the 
- Boost.Function object which supports the signature S.
- 
- * overload.set<N>(F) -- Maps a function object/pointer F to the N'th 
- signature supported by the Overload Set.
+* overload.set<S>(F) -- Maps a function object/pointer F to the 
+  Boost.Function object which supports the signature S.
+__empty_line__
 
- * overload.get<S>() -- Returns the actual Boost.Function object which 
- supports the signature S from those supported and encapsulated by the 
- Overload Set.
+* overload.set<N>(F) -- Maps a function object/pointer F to the N'th 
+  signature supported by the Overload Set.
+__empty_line__
 
- * overload.empty<S>() -- Returns whether the actual Boost.Function 
- object which supports the signature S is not mapped to an existing function.
- 
+* overload.get<S>() -- Returns the actual Boost.Function object which 
+  supports the signature S from those supported and encapsulated by the 
+  Overload Set.
+__empty_line__
+
+* overload.empty<S>() -- Returns whether the actual Boost.Function 
+  object which supports the signature S is not mapped to an existing function.
+
 The Overload Set is default constructable, copyable, and swappable. 
 
 [endsect]

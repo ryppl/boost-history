@@ -1,0 +1,529 @@
+
+[section:tutorial Tutorial]
+
+[section:basic_usage Basic usage]
+
+In order to instantiate a template class __overload__ you have to specify the 
+required signatures as template arguments and then you can set the callable 
+targets through the __set__ method which support automatic signature deduction 
+of the passed argument.
+
+[:*Example 1 - Basic usage*]
+    int int_sum(int x, int y)
+    {
+        return x + y;
+    }
+    
+    float float_inc(float x )
+    {
+        return x + 1.0f;
+    }
+    
+    int main()
+    {
+        overload<int (int, int ), float (float )> f;
+        
+        f.set(&int_sum);     // here automatic signature
+        f.set(&float_inc);   // deduction occurs
+        
+        int r1 = f(1, 2);    // calls int_sum
+        float r2 = f(3.0f);  // calls float_inc
+        
+        BOOST_ASSERT(r1 == 3);
+        BOOST_ASSERT(r2 == 4.0f);
+        
+        return 0;
+    }
+
+[important If you try to instantiate a template class __overload__ using the 
+same signature as template argument more than once you get a compile time 
+error.]
+
+Even if the callable targets are set at run-time, the function call relies on 
+standard C++ overload resolution: [_the right callable target is selected at 
+compile time], so the run-time overhead for the call is the same that you have 
+using [@http://www.boost.org/doc/html/function/misc.html#id1215718 
+Boost.Function].
+
+[endsect]
+
+[section:supported_callable_entity Supported types of callable entities]
+
+You can utilize different kinds of callable entities: free functions, function 
+objects, function objects wrapped with boost::ref and boost::functions. 
+Moreover you have support for member functions too. Given a member function 
+/mf/ of a class T, all you have to do is to specify a const or non-const 
+explicit signature of T::/mf/ as a template argument of __overload__ and pass a 
+pointer to the member function to the __set__ method. You'll get an overloaded 
+function call operator that is able to perform a forwarding call to T::/mf/ 
+using any object of type T.
+
+[: *Example 2 - Using different types of callable entities*]
+
+    /* free function */
+    void foo1(std::string s1, std::string s2, std::string s3)
+    {
+        std::cout << s1 << s2 << s3  << std::endl;
+    }
+    typedef void signature1_t (std::string , std::string , std::string );
+    
+    /* member function */
+    struct bar2
+    {
+        int foo2(char ) 
+        {
+            return 123;
+        }
+    };
+    typedef int signature2_t (bar2*, char ); // explicit non-const signature
+    
+    /* free function that will be wrapped by a boost::function */
+    char bar3(std::string )
+    {
+        return 'x';
+    }
+    typedef char signature3_t (std::string );
+    
+    /* class type function */
+    struct bar4
+    {
+        double operator() (int, char ) const
+        {
+            return 123.456;
+        }
+    };
+    typedef double signature4_t (int, char );
+    
+    /* another class type function */
+    struct bar5
+    {
+        int operator() (char )
+        {
+            return 123;
+        }
+    };
+    typedef int signature5_t (char );
+    
+    
+    int main()
+    {
+        overload<signature1_t, signature2_t,
+                signature3_t, signature4_t, signature5_t> f;
+    
+        /* instance that will be used for invoking the member function */
+        bar2 b2;
+        /* boost::function object that uses bar3 as callable target */
+        boost::function<signature3_t> foo3(&bar3);
+        /* function object */
+        bar4 foo4;
+        /* function object that will be wrapped with boost::ref */
+        bar5 foo5;
+    
+    
+        f.set(&foo1);
+        f.set(&bar2::foo2);
+        // sets the callable target of foo3 as 
+        // callable target of f tied to the signature 3
+        f.set(foo3);
+        f.set(foo4);
+        f.set(boost::ref(foo5));
+    
+    
+        f("Hello", " ", "world !");     // calls foo1 and print "Hello world !"
+        int     r2 = f(&b2, 'x');       // calls b2.foo2
+        char    r3 = f("hi");           // calls bar3
+        double  r4 = f(1, 'x');         // calls foo4
+        int     r5 = f('x');            // calls foo5
+    
+        BOOST_ASSERT(r2 == 123);
+        BOOST_ASSERT(r3 == 'x' );
+        BOOST_ASSERT(r4 > 123.455 && r4 < 123.457);
+        BOOST_ASSERT(r5 == 123);
+    
+        return 0;
+    }
+
+For simplifying the setting of callable targets the __set__ method has been 
+overloaded in order to support until BOOST_OVERLOAD_LIMIT arguments (defaults 
+to 10), the same is true for the constructors provided by the template class 
+__overload__. So in the above example we could write:
+
+    overload<signature1_t, signature2_t, signature3_t, signature4_t, signature5_t>
+        f(&bar2::foo2, &foo1, foo4, boost::ref(foo5), foo3);
+
+or:
+
+    f.set(&bar2::foo2, &foo1, foo4, boost::ref(foo5), foo3);
+
+as you can see the order of the passed arguments doesn't matter.
+
+[important If you try to set a callable entity with a signature not supported 
+by the given instantiation of the template class __overload__ you get a compile 
+time error.]
+
+[endsect]
+
+[section:multi_sig_func_obj Multi-signature function objects]
+
+The __set__ method can manage multi-signature function objects (i.e. function 
+objects whose operator() is overloaded or is a template function) and it 
+handles them in a special way. The passed function object sets/replaces all the 
+existent callable targets tied to the signatures supported by both the given 
+instantiation of the template class __overload__ and the passed function object 
+itself.
+
+[warning Signature deduction of multi-signature function objects is not 
+supported with Microsoft Visual C++ 7.1, you have to use the 
+[link boost_overload.tutorial.sig_based_syntax signature based syntax] ]
+
+[: *Example 3 - Overloaded function object*]
+    char foo2(std::string )
+    {
+        return 'x';
+    }
+    
+    struct bar
+    {
+        double operator() (float x)
+        {
+            return x + 1;
+        }
+    
+        double operator() (float x, float y)
+        {
+            return x + y;
+        }
+    };
+    
+    int main()
+    {
+        overload<char (std::string ), double (float ), double (float, float )> f;
+    
+        bar foo;
+    
+    
+        f.set(foo);    // sets foo as callable target for both the signature 
+                       // double (float ) and the signature double (float, float )
+    
+    
+        f.set(&foo2);
+    
+        char   r1 = f("hi");
+        double r2 = f(1.0f);          // calls the double foo(float ) overload
+        double r3 = f(2.0f, 3.0f);    // calls the double foo(float, float ) overload
+    
+        BOOST_ASSERT(r1 == 'x');
+        BOOST_ASSERT(r2 == 2.0);
+        BOOST_ASSERT(r3 == 5.0);
+    
+        return 0;
+    }
+
+[: *Example 4 -  Template function object*]
+    char foo2(std::string )
+    {
+        return 'x';
+    }
+    
+    struct bar
+    {
+        template<typename T> 
+        T operator()(T x)
+        {
+            return x + 1;
+        }
+    };
+    
+    int main()
+    {
+        overload<char (std::string ), int (int ), double (double )> f;
+    
+        bar foo;
+    
+        f.set(foo);     // sets foo as callable target for both the signature 
+                        // int (int ) and the signature double (double )
+    
+    
+        f.set(&foo2);
+    
+        char   r1 = f("hi");
+        int    r2 = f(1);          // calls int foo(int ) template instantiation
+        double r3 = f(2.0);        // calls double foo(double ) template instantiation
+    
+        BOOST_ASSERT(r1 == 'x');
+        BOOST_ASSERT(r2 == 2);
+        BOOST_ASSERT(r3 == 3.0);
+    
+        return 0;
+    }
+
+[tip In order to decrease the risk of run time side effects due to unexpected 
+assignments it's a good practice to set multi-signature function objects first.]
+
+[endsect]
+
+[section:sig_based_syntax The signature based syntax]
+
+If you need to set a multi-signature function object as the callable target for 
+only one specific supported signature you can always use the __set_sig__ method.
+Look at the following example:
+
+[: *Example 5 -  Using the signature based syntax with multi-signature function objects*]
+
+    struct bar
+    {
+        template<typename T> 
+        T operator()(T x)
+        {
+            return x;
+        }
+    };
+    
+    int main()
+    {
+        overload<int (int ), std::string (std::string )> f;
+    
+        bar foo;
+    
+        f.set<int (int )>(foo);     // we are using the signature syntax that sets foo
+                                    // as callable target for the signature int (int ) only
+                            
+        int    r1 = f(1);           // calls int foo(int ) template instantiation
+    
+        /*  Warning !!
+            This call produces a comiler error because there is no callable target
+            tied to the "std::string (std::string )" signature
+            std:string r2 = f( std::string("hi") );
+        */
+    
+        BOOST_ASSERT(r1 == 1);
+    
+        return 0;
+    }
+
+[important When you work with an instantiation of the template class 
+__overload__ that supports both the non-const and the const explicit signature 
+of a function member which is const qualified the __set__ method version that 
+relies on signature deduction will set the given member function as callable 
+target for both the signatures, however you'll get an ambiguous call error if 
+you try to pass a non-const pointer to an object of the related class type. In 
+this case the signature based syntax should be used  to tie the member function 
+to only one of the two supported explicit signatures.]
+
+[endsect]
+
+[section:helper_methods Helper Methods]
+
+There are some helper methods provided by the template class __overload__ and 
+that mimic the ones offered by the boost::function template class:
+
+* we have the __empty_sig__ method that tell us if it's set a callable target 
+related to the specified signature;
+__empty_line__
+
+* the __empty_all__ method that tell us if all callable targets are empty;
+__empty_line__
+
+* the __get_sig__ method return a (const) reference to the embedded object of 
+type boost::function<signature_type>;
+__empty_line__
+
+* the __clear_sig__ method clears the callable target related to the specified 
+signature;
+__empty_line__
+
+* the __clear_all__ method that clears all the callable targets;
+__empty_line__
+
+* finally we have the __swap_func__ method that takes only callable entities of 
+type boost::function<signature_type> where signature_type has to be a 
+supported signature by the given instantiation of the template class 
+__overload__; its action is to swap the callable target of the passed 
+boost::function<signature_type> instance with the callable target of the 
+embedded boost::function<signature_type> object.
+
+[: *Example 6 - Using helper methods*]
+
+    void foo1(std::string s1, std::string s2, std::string s3)
+    {
+        std::cout << s1 << s2 << s3  << std::endl;
+    }
+    typedef void signature1_t (std::string , std::string , std::string );
+    
+    
+    int foo2(int x)
+    {
+        return x + 1;
+    }
+    typedef int signature2_t (int );
+    
+    
+    int main()
+    {
+        overload<signature1_t, signature2_t> f(&foo1, &foo2);
+    
+        f("Hello", " ", "world !");                // print "Hello world !"
+    
+        f.clear<signature1_t>();
+        BOOST_ASSERT( f.empty<signature1_t>() );   // f has no callable target 
+                                                   // associated with signature 1
+
+        boost::function<signature1_t> g(&foo1);    // g has foo1 as callable target
+        f.swap_function(g);                        // after swapping f has foo1
+                                                   // as callable target
+        f("I'm ", "back ", "again !");             // associated with signature 1
+        BOOST_ASSERT( g.empty() );                 // and g has no callable target
+    
+        g = f.get<signature1_t>();                 // g is set to the embedded object
+        g("That's ", "all ", "folks !");           // of f with type 
+                                                   // boost::function<signature1_t>
+    
+        f.clear_all();                             // now f has no callable target
+        BOOST_ASSERT( f.empty_all() );             // associated to any signature
+    
+        return 0;
+    }
+
+[endsect]
+
+[section:overloaded_func Non-member and member overloaded functions]
+
+In order to set a free function overload as callable target there are two 
+options :
+
+[: *Example 7a - Setting a free function overload as callable target*]
+
+    int foo(int )
+    {
+        return 1;
+    }
+    
+    int foo(std::string )
+    {
+        return 2;
+    }
+    
+    int main()
+    {
+        overload<int (int ), int (std::string )> f;
+        
+        int (*foo1) (int ) = &foo;
+        int (*foo2) (std::string ) = &foo;
+        
+        f.set(foo1);
+        f.set(foo2);
+        
+        BOOST_ASSERT( f(0) == 1 );
+        BOOST_ASSERT( f("hi") == 2 );
+        
+        return 0;
+    }
+
+The above example shows the classic solution. The second example shows how it's 
+possible to achieve the same result using the signature based syntax.
+
+[: *Example 7b - Setting a free function overload as callable target*]
+
+    int foo(int )
+    {
+        return 1;
+    }
+    
+    int foo(std::string )
+    {
+        return 2;
+    }
+    
+    int main()
+    {
+        overload<int (int ), int (std::string )> f;
+        
+        // disambiguation through the signature based syntax
+        f.set<int (int )>(&foo);
+        f.set<int (std::string )>(&foo);
+        
+        BOOST_ASSERT( f(0) == 1 );
+        BOOST_ASSERT( f("hi") == 2 );
+        
+        return 0;
+    }
+
+For member function overloads you have the same options :
+
+[: *Example 8a - Setting a member function overload as callable target*]
+
+    struct bar
+    {
+    int foo(int )
+    {
+        return 1;
+    }
+    
+    int foo(std::string )
+    {
+        return 2;
+    }
+    };
+    
+    int main()
+    {
+        overload<int (bar*, int ), int (bar*, std::string )> f;
+        
+        bar b;
+        
+        int (bar::*foo1) (int ) = &bar::foo;
+        int (bar::*foo2) (std::string ) = &bar::foo;
+        
+        f.set(foo1);
+        f.set(foo2);
+        
+        BOOST_ASSERT( f(&b, 0) == 1 );
+        BOOST_ASSERT( f(&b, "hi") == 2 );
+        
+        return 0;
+    }
+
+the above example shows the classic solution. The second example shows how it's 
+possible to achieve the same result using the signature based syntax.
+
+[: *Example 8b - Setting a member function overload as callable target*]
+
+    struct bar
+    {
+    int foo(int )
+    {
+        return 1;
+    }
+    
+    int foo(std::string )
+    {
+        return 2;
+    }
+    };
+    
+    int main()
+    {
+        overload<int (bar*, int ), int (bar*, std::string )> f;
+        
+        bar b;
+        
+        // disambiguation through the signature based syntax
+        // note that you have to use the explicit signature
+        // of the related member function
+        f.set<int (bar*, int )>(&bar::foo);
+        f.set<int (bar*, std::string )>(&bar::foo);
+        
+        BOOST_ASSERT( f(&b, 0) == 1 );
+        BOOST_ASSERT( f(&b, "hi") == 2 );
+        
+        return 0;
+    }
+
+[important If the explicit signature supported by the instantiation of the 
+template class __overload__ is the non-const qualified version, the signature 
+based syntax is not able to manage the case of two member function overloads 
+with the same signature that differ for the const qualifier only.]
+
+[endsect]
+
+[endsect]
