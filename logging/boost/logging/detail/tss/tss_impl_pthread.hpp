@@ -67,7 +67,7 @@ inline unsigned int slot_idx() {
     static mutex cs;
     static unsigned int idx = 0;
     
-    scoped_lock lk(cs);
+    mutex::scoped_lock lk(cs);
 
     // note: if the Logging Lib is used with TLS, I'm guaranteed this will be called before main(),
     //       and that this will work
@@ -80,8 +80,6 @@ inline unsigned int slot_idx() {
 
 inline tss::~tss()
 {
-    boost::mutex::scoped_lock lock(*tss_data_mutex);
-    tss_data_dec_use(lock);
 }
 
 inline void* tss::get() const
