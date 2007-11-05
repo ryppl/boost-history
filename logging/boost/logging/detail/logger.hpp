@@ -176,6 +176,8 @@ namespace boost { namespace logging {
         typedef typename gather_msg::param param;
 
         logger() {}
+        // we have virtual functions, lets have a virtual destructor as well - many thanks Martin Baeker!
+        virtual ~logger() {}
 
         // FIXME watch for copy-construction!
         /** 

@@ -13,6 +13,7 @@ There are quite a few thanks I owe:
 - Pavel Vozelinek - for very thourough reviews and lots of comments
 - Pavel Savara - for feedback about docs, thread-safety and gcc
 - Jens Seidel - for helping me with issues with gcc (different versions), and extra feedback
+- Martin Baeker - for testing my lib, and pointing out problems
 
 */
 
