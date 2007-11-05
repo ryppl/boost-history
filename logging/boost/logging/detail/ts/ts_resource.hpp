@@ -182,10 +182,10 @@ namespace locker {
 
 
     private:
-        int m_cache_secs;
         mutable tss_value<value_and_time> m_cache;
         type m_val;
         mutable mutex m_cs;
+        int m_cache_secs;
     };
 
 #endif
