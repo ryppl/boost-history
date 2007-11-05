@@ -24,8 +24,6 @@
 #include <boost/utility.hpp>
 #include <boost/logging/detail/ts/ts.hpp>
 
-#if defined(BOOST_WINDOWS) || defined(BOOST_TEST_TSS_PTHREAD)
-
 
 #define BOOST_LOG_TSS_SLOTS_SIZE 128
 
@@ -82,7 +80,6 @@ public:
 
 }}
 
-#endif
 
 #endif 
 

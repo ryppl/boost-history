@@ -21,6 +21,13 @@
 # pragma once
 #endif
 
+#if defined(BOOST_WINDOWS) || defined(BOOST_TEST_TSS_PTHREAD)
+
+
+
+
+
+
 
 #if !defined(BOOST_LOG_NO_TSS)
 
@@ -76,6 +83,15 @@ private:
 }}
 
 #endif // !BOOST_LOG_NO_TSS
+
+
+
+
+
+
+
+
+#endif
 
 #endif
 
