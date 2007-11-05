@@ -73,7 +73,7 @@ struct write_time : formatter::class_<write_time, format_base, op_equal_no_conte
     }
 };
 
-struct append_enter : formatter::class_<append_enter, format_base, op_equal_no_context> {
+struct append_newline : formatter::class_<append_newline, format_base, op_equal_no_context> {
     void operator()(cache_string & str) const {
         str.append_string("\n");
     }
@@ -111,7 +111,7 @@ void test_simple_format_and_write_simple_formatter() {
     // add formatters : [idx] [time] message [enter]
     g_l->writer().add_formatter( write_idx() );
     g_l->writer().add_formatter( write_time() );
-    g_l->writer().add_formatter( append_enter() );
+    g_l->writer().add_formatter( append_newline() );
 
     // write to cout and file
     g_l->writer().add_destination( write_to_cout() );
@@ -123,7 +123,7 @@ void test_simple_format_and_write_simple_formatter() {
     L_ << "must be prefixed by index and time , enter is appended as well " << i++;
 
     g_l->writer().del_formatter( write_idx() );
-    g_l->writer().del_formatter( append_enter() );
+    g_l->writer().del_formatter( append_newline() );
     g_l->writer().del_destination( write_to_cout() );
 
     // will not be written to cout

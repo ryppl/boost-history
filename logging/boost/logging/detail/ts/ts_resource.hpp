@@ -24,6 +24,7 @@
 #include <boost/logging/detail/ts/ts.hpp>
 #include <boost/logging/detail/tss/tss.hpp>
 #include <time.h>
+#include <boost/assert.hpp>
 
 namespace boost { namespace logging { 
     
@@ -87,11 +88,10 @@ namespace locker {
 
         struct read {
             const self_type & self ;
-            read(const self_type & self) : self(self) {
-                self.m_cs.Lock();
+            typename mutex::scoped_lock locker;
+            read(const self_type & self) : self(self), locker(self.m_cs) {
             }
             ~read() {
-                self.m_cs.Unlock();
             }
 
             const type & use() { return self.m_val ; }
@@ -121,11 +121,12 @@ namespace locker {
 
     private:
         struct value_and_time {
-            value_and_time(const type & val = type() ) : val(val) {
-                time_ = time(0);
+            value_and_time() 
+                // so that the first time it's used, it'll be refreshed
+                : time_(0) {
             }
             type val;
-            time_t time_;
+            ::time_t time_;
         };
 
     public:
@@ -149,21 +150,32 @@ namespace locker {
         };
 
         struct read {
-            const type & val ;
-            read(const self_type & self) : val(self.m_cache->val) {
+            const type *val ;
+            read(const self_type & self) : val( &(self.m_cache->val) ) {
                 ::time_t now = time(0);
-                value_and_time & cached = *self.m_cache;
+                value_and_time & cached = *(self.m_cache);
                 if ( cached.time_ + self.m_cache_secs < now) {
                     // cache has expired
                     typename mutex::scoped_lock lk(self.m_cs);
-                    cached.val = self.m_val;
-                    cached.time_ = now;
+                    // see if another thread has updated the cache...
+                    if ( cached.time_ + self.m_cache_secs < now) {
+                        cached.val = self.m_val;
+#ifndef BOOST_LOG_TEST_TSS
+                        cached.time_ = now;
+#else
+                        // for testing , make sure we always refresh at a fixed time
+                        if ( cached.time_ != 0)
+                            cached.time_ += self.m_cache_secs;
+                        else
+                            cached.time_ = now;
+#endif
+                    }
                 }
             }
             ~read() {
             }
 
-            const type & use() { return val ; }
+            const type & use() { return *val ; }
             const type* operator->() { return &use(); }
         };
 

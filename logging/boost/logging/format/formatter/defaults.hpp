@@ -65,12 +65,12 @@ template<class convert = do_convert_format::prepend> struct idx_t : is_generic, 
 
 
 /** 
-@brief Appends an enter
+@brief Appends a new line
 
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::append> struct append_enter_t : is_generic, boost::logging::op_equal::always_equal {
+template<class convert = do_convert_format::append> struct append_newline_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
         convert::write( (const char_type*)BOOST_LOGGING_STR("\n"), str );
     }
@@ -78,12 +78,12 @@ template<class convert = do_convert_format::append> struct append_enter_t : is_g
 
 
 /** 
-@brief Appends an enter, if not already there
+@brief Appends a new line, if not already there
 
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::append> struct append_enter_if_needed_t : is_generic, boost::logging::op_equal::always_equal {
+template<class convert = do_convert_format::append> struct append_newline_if_needed_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
         bool is_needed = true;
         if ( !str.empty())
@@ -96,8 +96,8 @@ template<class convert = do_convert_format::append> struct append_enter_if_neede
 };
 
 typedef idx_t<> idx;
-typedef append_enter_t<> append_enter;
-typedef append_enter_if_needed_t<> append_enter_if_needed;
+typedef append_newline_t<> append_newline;
+typedef append_newline_if_needed_t<> append_newline_if_needed;
 
 }}}
 

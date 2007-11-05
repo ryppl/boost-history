@@ -115,19 +115,19 @@ void mul_levels_mul_logers_example() {
     // Err log
     g_log_err->writer().add_formatter( formatter::idx() );
     g_log_err->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_err->writer().add_formatter( formatter::append_enter() );
+    g_log_err->writer().add_formatter( formatter::append_newline() );
     g_log_err->writer().add_destination( destination::file("err.txt") );
 
     destination::file out("out.txt");
     // App log
     g_log_app->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_app->writer().add_formatter( formatter::append_enter() );
+    g_log_app->writer().add_formatter( formatter::append_newline() );
     g_log_app->writer().add_destination( out );
     g_log_app->writer().add_destination( destination::cout() );
 
     // Debug log
     g_log_dbg->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_dbg->writer().add_formatter( formatter::append_enter() );
+    g_log_dbg->writer().add_formatter( formatter::append_newline() );
     g_log_dbg->writer().add_destination( out );
     g_log_dbg->writer().add_destination( destination::dbg_window() );
 

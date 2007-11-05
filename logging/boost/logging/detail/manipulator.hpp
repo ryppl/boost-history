@@ -165,7 +165,7 @@ After this, you'll add formatter and/or destination classes to your logger(s):
 // add formatters : [idx] [time] message [enter]
 g_l->writer().add_formatter( formatter::idx() );
 g_l->writer().add_formatter( formatter::time() );
-g_l->writer().add_formatter( formatter::append_enter() );
+g_l->writer().add_formatter( formatter::append_newline() );
 
 // write to cout and file
 g_l->writer().add_destination( destination::cout() );
@@ -191,7 +191,7 @@ a message similar to this would appear on both the console, and the file:
 You can use the formatter and/or destination classes that come with the library:
 - formatters: in the formatter namespace. Here are a few examples:
   - formatter::idx - prepends an index
-  - formatter::append_enter - appends an enter after the message
+  - formatter::append_newline - appends an enter after the message
   - formatter::time - prepends the time
   - formatter::thread_id - prepends the current thread id
 - destinations: in the destination namespace

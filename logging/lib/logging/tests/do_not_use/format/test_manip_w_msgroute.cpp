@@ -83,7 +83,7 @@ struct write_time : format_base {
     }
 };
 
-struct append_enter : format_base {
+struct append_newline : format_base {
     void operator()(cache_string & str) const {
         str.append_string("\n");
     }
@@ -133,7 +133,7 @@ logger<process, filter::no_ts> g_l;
 void test_manipulator_with_msg_route() {
     g_l->writer().add_formatter( write_time() );
     g_l->writer().add_formatter( write_idx() );
-    g_l->writer().add_formatter( append_enter() );
+    g_l->writer().add_formatter( append_newline() );
 
     g_l->writer().add_destination( write_to_cout() );
     g_l->writer().add_destination( write_to_dbg() );
@@ -152,12 +152,12 @@ void test_manipulator_with_msg_route() {
     */
     g_l->writer().router().set_route()
         .fmt( write_time() ) 
-        .fmt( append_enter() )
+        .fmt( append_newline() )
         .dest( write_to_dbg() )
         .fmt( write_idx() )
         .dest( write_to_cout() )
         .clear()
-        .fmt( append_enter() )
+        .fmt( append_newline() )
         .dest( write_to_file())
         ;
 

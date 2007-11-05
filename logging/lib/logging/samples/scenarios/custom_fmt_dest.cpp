@@ -135,7 +135,7 @@ void custom_fmt_dest_example() {
     //         That is, how the message is to be formatted and where should it be written to
 
     g_l->writer().add_formatter( formatter::idx() );
-    g_l->writer().add_formatter( formatter::append_enter() );
+    g_l->writer().add_formatter( formatter::append_newline() );
     g_l->writer().add_formatter( secs_since_start() );
 
     g_l->writer().add_destination( destination::cout() );

@@ -112,18 +112,18 @@ void mul_logger_one_filter_example() {
     // Err log
     g_log_err->writer().add_formatter( formatter::idx() );
     g_log_err->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_err->writer().add_formatter( formatter::append_enter() );
+    g_log_err->writer().add_formatter( formatter::append_newline() );
     g_log_err->writer().add_destination( destination::file("err.txt") );
 
     // App log
     g_log_app->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_app->writer().add_formatter( formatter::append_enter() );
+    g_log_app->writer().add_formatter( formatter::append_newline() );
     g_log_app->writer().add_destination( destination::file("out.txt") );
     g_log_app->writer().add_destination( destination::cout() );
 
     // Debug log
     g_log_dbg->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_dbg->writer().add_formatter( formatter::append_enter() );
+    g_log_dbg->writer().add_formatter( formatter::append_newline() );
     g_log_dbg->writer().add_destination( destination::dbg_window() );
     g_log_dbg->writer().add_destination( destination::cout() );
 

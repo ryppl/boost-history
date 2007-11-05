@@ -2,6 +2,7 @@
 @page page_changelog Changelog
 
 v0.10.7, 3 nov 2007
+- append_enter -> append_newline
 - finalized tss_resouce_with_cache
 - added TSS tests 
   - test test_ts_resource_with_cache - not tested

@@ -240,7 +240,7 @@ logger<process, filter::no_ts> g_l;
 // add formatters : [idx] [time] message [enter]
 g_l->writer().add_formatter( write_idx() );
 g_l->writer().add_formatter( write_time() );
-g_l->writer().add_formatter( append_enter() );
+g_l->writer().add_formatter( append_newline() );
 
 // write to cout and file
 g_l->writer().add_destination( write_to_cout() );
@@ -251,7 +251,7 @@ int i = 1;
 L_ << "testing " << i << i+1 << i+2;
 @endcode
 
-    In the above case, @c write_idx() is called, then @c write_time(), then @c append_enter(). Now, the destinations are called:
+    In the above case, @c write_idx() is called, then @c write_time(), then @c append_newline(). Now, the destinations are called:
     @c write_to_cout(), and then @c write_to_file().
 
 
@@ -332,13 +332,13 @@ L_ << "testing " << i << i+1 << i+2;
 
     g_l->writer().router().set_route()
         .fmt( write_time() ) 
-        .fmt( append_enter() )
+        .fmt( append_newline() )
         .dest( write_to_dbg() )
         .fmt( write_idx() )
         .dest( write_to_cout() )
         .clear()
         .fmt( write_idx() )
-        .fmt( append_enter() )
+        .fmt( append_newline() )
         .fmt( write_to_file())
         ;
     @endcode

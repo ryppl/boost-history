@@ -19,6 +19,7 @@
       - I increase the size of the vector by 1
 */
 
+#define BOOST_LOG_TEST_TSS
 
 #define BOOST_LOG_TSS_USE_INTERNAL
 // this includes tss_value class
@@ -34,9 +35,34 @@
 #include <sstream>
 #include <iostream>
 
+#ifdef BOOST_WINDOWS
+#include <windows.h>
+#endif
+
 using namespace boost;
 typedef std::vector<int> array;
 typedef logging::locker::tss_resource_with_cache<array> resource;
+
+namespace boost { namespace logging { namespace detail {
+void on_end_delete_objects() {}
+}}}
+
+struct dump {
+    ~dump() {
+        std::string msg = out.str();
+        if ( msg.empty() )
+            return;
+        std::cout << msg;
+        std::cout.flush();
+#ifdef BOOST_WINDOWS
+        ::OutputDebugStringA( msg.c_str() );
+#endif
+    }  
+    dump& ref() { return *this; }
+    std::ostringstream out;
+};
+
+#define LOG_ dump().ref().out
 
 template<class type> struct ts_value {
     void set(const type & src) {
@@ -54,10 +80,7 @@ private:
     type m_val;
 };
 
-// for our resource, at what period is it updated on all threads?
-// note: this value should be at least 5 in order for the test to work:
-//       we sleep a bit, then we do lots of modifications, then we sleep a lot - so that the snapshots can be accurately taken
-int g_cache_period_secs = 10;
+extern int g_cache_period_secs ;
 
 // the vector we're constantly changing
 resource g_resource( array(), g_cache_period_secs);
@@ -88,7 +111,7 @@ void update_cur_val() {
 
     if ( change_idx % INCREASE_VECTOR_SIZE_PERIOD == 0 ) {
         cur.resize( cur.size() + 1);
-        std::cout << "****** new vector size " << cur.size() + 1;
+        LOG_ << "****** new vector size " << cur.size() << std::endl;
     }
 
     for ( int i = 0 ; i < (int)cur.size(); ++i)
@@ -106,15 +129,25 @@ void update_resource() {
 }
 
 
+void dump_array(const array & val, const std::string & array_name) {
+    LOG_ << array_name << "= " ;
+    for ( array::const_iterator b = val.begin(), e = val.end(); b != e; ++b)
+        LOG_ << *b << ", ";
+    LOG_ << std::endl;
+}
+
 void get_snapshot() {
     array snap = g_cur_val.get() ;
 
     array prev_snapshot = g_snapshot.get();
     g_snapshot.set(snap);
     g_prev_snapshot.set( prev_snapshot);
+
+    dump_array(snap, "got new snapshot");
 }
 
-void test_resource() {
+
+void test_resource(int idx) {
     array cur_val ;
     {
     resource::read res(g_resource);
@@ -122,9 +155,14 @@ void test_resource() {
     }
 
     array snap = g_snapshot.get();
-    array prev_snap = g_snapshot.get();
+    array prev_snap = g_prev_snapshot.get();
 
-    BOOST_ASSERT( cur_val == snap || cur_val == prev_snap);
+    if ( !(cur_val == snap || cur_val == prev_snap)) {
+        dump_array(cur_val, "resource");
+        dump_array(snap, "snapshot");
+        dump_array(prev_snap, "prev snapshot");
+        BOOST_ASSERT( false);
+    }
 }
 
 void do_sleep(int ms) {
@@ -142,9 +180,7 @@ void do_sleep(int ms) {
 
 
 
-
-// how many times do we update the resource, in a given pass?
-int g_update_per_thread_count = 200;
+extern int g_update_per_thread_count ;
 
 ts_value<int> g_thread_idx;
 // start time - we need all update threads to syncronize - to know until when to sleep
@@ -156,24 +192,51 @@ void update_thread() {
     g_thread_idx.set(thread_idx + 1);
  
     while ( true) {
-        next.sec += g_cache_period_secs;
-        do_sleep(1000);
+        next.sec += 1;
+        thread::sleep( next);
+        next.sec += g_cache_period_secs - 1;
 
-        std::cout << "thread " << thread_idx << " working" << std::endl;
+        LOG_ << "thread " << thread_idx << " working" << std::endl;
         for ( int i = 0; i < g_update_per_thread_count ; ++i) {
             update_resource();
             do_sleep(10);
         }        
-        std::cout << "thread " << thread_idx << " sleeping" << std::endl;
+        LOG_ << "thread " << thread_idx << " sleeping" << std::endl;
 
+        array cur_resource_val ;
+        {
+        resource::write res(g_resource);
+        cur_resource_val = res.use() ;
+        }
+        dump_array(cur_resource_val, "update_snapshot" );
         thread::sleep( next);
     }
 }
 
 void test_thread() {
+    int idx = 0;
     while ( true) {
+        // so that in case a test fails, we know when
+        ++idx;
         do_sleep(100);
-        test_resource();
+        test_resource(idx);
+    }
+}
+
+void get_snapshot_thread() {
+    xtime next = g_start;
+    get_snapshot(); 
+ 
+    while ( true) {
+        const int SECS_BEFORE_END_OF_PASS = 2;
+        next.sec += g_cache_period_secs - SECS_BEFORE_END_OF_PASS;
+
+        thread::sleep( next);
+        // get snapshot after all work has been done
+        get_snapshot(); 
+
+        next.sec += SECS_BEFORE_END_OF_PASS;
+        thread::sleep( next);
     }
 }
 
@@ -181,14 +244,21 @@ void test_thread() {
 
 
 
+// for our resource, at what period is it updated on all threads?
+// note: this value should be at least 5 in order for the test to work:
+//       we sleep a bit, then we do lots of modifications, then we sleep a lot - so that the snapshots can be accurately taken
+int g_cache_period_secs = 10;
+
+// how many times do we update the resource, in a given pass?
+int g_update_per_thread_count = 100;
 
 // how many threads that update the resource?
-int g_update_thread_count = 1; //10;
+int g_update_thread_count = 5;
 
 // how many threads that test the resource?
-int g_test_thread_count = 1; // 10;
+int g_test_thread_count = 10;
 
-int g_run_period_secs = 1000; //100;
+int g_run_period_secs = 200;
 
 int main()
 {
@@ -199,6 +269,8 @@ int main()
 
     for ( int i = 0; i < g_test_thread_count; ++i)
         thread t(&test_thread);
+
+    thread t(&get_snapshot_thread);
 
     do_sleep(g_run_period_secs * 1000);
 	return 0;

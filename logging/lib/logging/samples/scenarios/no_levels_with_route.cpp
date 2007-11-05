@@ -99,7 +99,7 @@ void no_levels_with_route_example() {
     //         That is, how the message is to be formatted...
     g_l->writer().add_formatter( formatter::idx() );
     g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_l->writer().add_formatter( formatter::append_enter() );
+    g_l->writer().add_formatter( formatter::append_newline() );
 
     //        ... and where should it be written to
     g_l->writer().add_destination( destination::cout() );
@@ -109,20 +109,20 @@ void no_levels_with_route_example() {
     // Now, specify the route
     g_l->writer().router().set_route()
         .fmt( formatter::time("$hh:$mm.$ss ") ) 
-        .fmt( formatter::append_enter() )
+        .fmt( formatter::append_newline() )
         .fmt( formatter::idx() )
         .clear()
         .fmt( formatter::time("$hh:$mm.$ss ") ) 
-        .fmt( formatter::append_enter() )
+        .fmt( formatter::append_newline() )
         .dest( destination::dbg_window() )
         .clear()
         .fmt( formatter::idx() )
         .fmt( formatter::time("$hh:$mm.$ss ") ) 
-        .fmt( formatter::append_enter() )
+        .fmt( formatter::append_newline() )
         .dest( destination::cout() )
         .clear()
         .fmt( formatter::idx() )
-        .fmt( formatter::append_enter() )
+        .fmt( formatter::append_newline() )
         .dest( destination::file("out.txt") );
 
     // Step 8: use it...

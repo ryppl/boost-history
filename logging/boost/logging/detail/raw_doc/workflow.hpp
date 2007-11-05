@@ -163,7 +163,7 @@ BOOST_DECLARE_LOG(g_l, log_type)
 // add formatters : [idx] [time] message <enter>
 g_l->writer().add_formatter( formatter::idx() );
 g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-g_l->writer().add_formatter( formatter::append_enter() );
+g_l->writer().add_formatter( formatter::append_newline() );
 // add destinations : console, output debug window, and a file called "out.txt"
 g_l->writer().add_destination( destination::cout() );
 g_l->writer().add_destination( destination::dbg_window() );

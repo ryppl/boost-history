@@ -72,7 +72,7 @@ void test_mul_levels_one_logger() {
     //         That is, how the message is to be formatted...
     g_l->writer().add_formatter( formatter::idx() );
     g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_l->writer().add_formatter( formatter::append_enter() );
+    g_l->writer().add_formatter( formatter::append_newline() );
 
     //        ... and where should it be written to
     g_l->writer().add_destination( destination::cout() );

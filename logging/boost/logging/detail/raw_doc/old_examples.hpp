@@ -92,7 +92,7 @@ int main() {
     // add formatters : [idx] [time] message [enter]
     g_l->writer().add_formatter( write_idx() );
     g_l->writer().add_formatter( write_time() );
-    g_l->writer().add_formatter( append_enter() );
+    g_l->writer().add_formatter( append_newline() );
 
     // write to cout and file
     g_l->writer().add_destination( write_to_cout() );
