@@ -78,6 +78,10 @@ inline unsigned int slot_idx() {
     return idx;
 }
 
+inline tss::tss() : m_slot( slot_idx() )
+{
+}
+
 inline tss::~tss()
 {
 }
