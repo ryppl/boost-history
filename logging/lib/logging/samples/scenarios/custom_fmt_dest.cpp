@@ -117,8 +117,8 @@ struct secs_since_start : formatter::class_<secs_since_start, formatter::impleme
 // Example of custom destination:
 // Dump each message as XML
 struct as_xml : 
-        destination::class_<as_xml, formatter::implement_op_equal::has_context>, 
-        formatter::non_const_context<std::ofstream> {
+        destination::class_<as_xml, destination::implement_op_equal::has_context>, 
+        destination::non_const_context<std::ofstream> {
 
     std::string m_name;
     as_xml(const char* name) : non_const_context_base(name), m_name(name) {}
