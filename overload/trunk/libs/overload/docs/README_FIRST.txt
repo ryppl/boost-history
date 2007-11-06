@@ -5,7 +5,7 @@ BOOST OVERLOAD    (updated 2007/10/28)
 Copyright (c) 2007 Marco Cecchetti
 
 Use, modification and distribution of this library is 
-subject to the Boost Software License, Version 1.0 .
+subject to the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or 
 copy at http://www.boost.org/LICENSE_1_0.txt)
 =================================================================
@@ -13,11 +13,11 @@ copy at http://www.boost.org/LICENSE_1_0.txt)
 =================================================================
 WARNING 
 this library is a proof of concept implementation only,
-and it comes without ABSOLUTELY ANY WARRANTY !
+and it comes without ABSOLUTELY ANY WARRANTY!
 =================================================================
 
-WARNING: at present Boost Overload IS NOT a Boost library !
-===========================================================
+WARNING: at present Boost Overload IS NOT a Boost library!
+=================================================================
 
 =================================================================
 Please report any bugs, compiler issues, comment or suggestion
@@ -60,7 +60,7 @@ MS VC++ 7.1    under Windows           partial*
 *all test passed but signature deduction of multi-signature function objects
 you have to use the signature based syntax with them.
 
-what's new
+What's new
 ===========
 
 - added partial support for MSVC 7.1, all work but signature deduction of
@@ -102,7 +102,7 @@ MS VC++ 8.0    under Windows           pass
 MS VC++ 7.1    under Windows           fail
 
 
-description
+Description
 ===========
 I went on working on the second implementation only.
 The source code has gone through refactoring and modularization.
@@ -146,7 +146,7 @@ a given set of signatures "ss" used as template arguments:
 
 tested on gcc 4.1.2 under Linux
 
-description
+Description
 ===========
 The archive includes two implementations.
 
