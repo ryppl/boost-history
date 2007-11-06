@@ -65,8 +65,6 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-10-29
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.static">30.1.1.6 <code>thread</code> static members [thread.threads.static]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.this">30.1.2 Namespace <code>this_thread</code> [thread.threads.this]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.onceflag">30.1.3 <code>struct once_flag</code> [thread.threads.onceflag]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.1.4 <code>non-member function call_once</code> [thread.threads.callonce]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex">30.2 Mutexs and locks [thread.mutex]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.concept">30.2.1 Mutex concepts [thread.mutex.concept]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a>
@@ -77,7 +75,10 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-10-29
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.concept">30.2.3 Locks [thread.lock.concept]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.guard">30.2.3.1 Class lock_guard [thread.lock.guard]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.unique">30.2.3.2 Class unique_lock [thread.lock.unique]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.algorithm">30.2.3 Generic Locking Algorithms [thread.lock.algorithm]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.once">30.2.5 Call Once [thread.mutex.once]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.onceflag">30.2.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.2.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condition">30.3 Condition variables [thread.condition]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.3.1 Class condition_variable [thread.condvar]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.3.2 Class condition_variable_any [thread.condvarany]</a>
@@ -260,17 +261,6 @@ namespace this_thread
         void sleep(const Duration&amp; rel_t);
 
 }  // this_thread
-
-struct once_flag
-{
-    constexpr once_flag();
-
-    once_flag(const once_flag&amp;) = delete;
-    once_flag&amp; operator=(const once_flag&amp;) = delete;
-};
-
-template&lt;class Callable, class ...Args&gt;
-void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 
 }  // std
 </code></pre>
@@ -899,121 +889,6 @@ Nothing.
 </dd>
 </dl>
 
-<h4><a name="thread.threads.onceflag">30.1.3 <code>struct once_flag</code> [thread.threads.onceflag]</a></h4>
-
-<p>
-Objects of class <code>once_flag</code> are opaque data structures that allow
-<code>call_once</code> to initialize data without causing a data race or
-deadlock.
-</p>
-
-<pre><code>
-constexpr once_flag();
-</code></pre>
-
-<dl>
-<dt>Effects:</dt>
-<dd>
-Constructs a object of type
-<code>once_flag</code>.
-</dd>
-
-<dt>Postconditions:</dt>
-<dd>
-Internal state is set to indicate to an invocation
-of <code>call_once</code> with this <code>once_flag</code> as its initial
-argument that no function has been called.
-</dd>
-</dl>
-
-
-<h4><a name="thread.threads.callonce">30.1.4 <code>non-member function call_once</code> [thread.threads.callonce]</a></h4>
-
-<pre><code>
-template&lt;class Callable, class Args...&gt;
-void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
-</code></pre>
-
-<dl>
-<dt>Requires:</dt>
-<dd>
-If <code>func</code> is an lvalue, Callable
-is
-<code>CopyConstructible</code>.
-If <code>func</code> is an rvalue, Callable is
-<code>MoveConstructible</code>.
-Copying or moving (as appropriate) shall have no side effects,
-and the effect of calling the
-copy shall be equivalent to calling the original.
-</dd>
-
-<dt>Effects:</dt>
-<dd>
-The argument <code>func</code> (or a copy thereof) is called exactly once
-for the <code>once_flag</code> object specified by <code>flag</code>,
-as-if by invoking
-<code>func(args)</code>,<code> </code>even if <code>call_once</code> is
-called multiple times for the same <code>once_flag</code> object.
-If multiple
-calls to <code>call_once</code> with the same <code>once_flag</code> object
-occur in separate threads, only one
-thread shall call <code>func</code>,
-and none shall proceed until the call to <code>func</code> has completed.
-<b>[Crowl: I.e. the return of <code>func</code> happens before
-the return of <code>call_once</code>.]</b>
-If the invocation of <code>func</code> results in an exception being thrown,
-the exception is propagated to the caller and the effects are as-if this
-invocation of <code>call_once</code> did not occur.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-<code>system_error</code> or any exception propagated from <code>func</code>.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-<p>
-Access to the same <code>once_flag</code> object by
-calls to <code>call_once</code> from different threads shall
-not result in a data race or deadlock.
-<b>[Crowl: The implementation shall not introduce these.]</b>
-</p>
-
-<p>
-[<i>Example:</i>
-</p>
-
-<blockquote>
-<pre><code>
-std::once_flag flag;
-
-void init();
-
-void f()
-{
-    std::call_once(flag,init);
-}
-
-struct initializer
-{
-    void operator()();
-};
-
-void g()
-{
-    static std::once_flag flag2;
-    std::call_once(flag2,initializer());
-}
-</code></pre>
-</blockquote>
-
-<p>
-&mdash;<i>end example</i>]
-</p>
-</dd>
-</dl>
-
 <h3><a name="thread.mutex">30.2 Mutexs and locks [thread.mutex]</a></h3>
 
 <p>
@@ -1048,6 +923,17 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</va
 
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
 template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
+
+struct once_flag
+{
+    constexpr once_flag();
+
+    once_flag(const once_flag&amp;) = delete;
+    once_flag&amp; operator=(const once_flag&amp;) = delete;
+};
+
+template&lt;class Callable, class ...Args&gt;
+void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 
 }  // std
 </code></pre>
@@ -2012,7 +1898,7 @@ Nothing.
 </dd>
 </dl>
 
-<h4><a name="thread.lock.algorithm">30.2.3 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
+<h4><a name="thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
 
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
@@ -2099,6 +1985,126 @@ by a call to <code>lock()</code> or <code>try_lock()</code>,
 there are no effects.
 </dd>
 </dl>
+
+
+<h4><a name="thread.mutex.once">30.2.5 Call Once [thread.mutex.once]</a></h4>
+
+<p>
+Objects of class <code>once_flag</code> are opaque data structures
+that allow <code>call_once</code> to initialize data
+without causing a data race or deadlock.
+</p>
+
+<h5><a name="thread.mutex.onceflag">30.2.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a></h5>
+
+<pre><code>
+constexpr once_flag();
+</code></pre>
+
+<dl>
+<dt>Effects:</dt>
+<dd>
+Constructs a object of type
+<code>once_flag</code>.
+</dd>
+
+<dt>Postconditions:</dt>
+<dd>
+Internal state is set to indicate to an invocation of <code>call_once</code>
+with this <code>once_flag</code> as its initial argument
+that no function has been called.
+</dd>
+</dl>
+
+
+<h5><a name="thread.threads.callonce">30.2.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a></h5>
+
+<pre><code>
+template&lt;class Callable, class Args...&gt;
+void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
+</code></pre>
+
+<dl>
+<dt>Requires:</dt>
+<dd>
+If <code>func</code> is an lvalue, Callable
+is
+<code>CopyConstructible</code>.
+If <code>func</code> is an rvalue, Callable is
+<code>MoveConstructible</code>.
+Copying or moving (as appropriate) shall have no side effects,
+and the effect of calling the
+copy shall be equivalent to calling the original.
+</dd>
+
+<dt>Effects:</dt>
+<dd>
+The argument <code>func</code> (or a copy thereof) is called exactly once
+for the <code>once_flag</code> object specified by <code>flag</code>,
+as-if by invoking <code>func(args)</code>,
+even if <code>call_once</code> is called multiple times
+for the same <code>once_flag</code> object.
+If multiple calls to <code>call_once</code>
+with the same <code>once_flag</code> object
+occur in separate threads,
+only one thread shall call <code>func</code>,
+and none shall proceed until the call to <code>func</code> has completed.
+<b>[Crowl: I.e. the return of <code>func</code> happens before
+the return of <code>call_once</code>.]</b>
+If the invocation of <code>func</code> results in an exception being thrown,
+the exception is propagated to the caller
+and the effects are as-if this invocation of <code>call_once</code>
+did not occur.
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+<code>system_error</code> or any exception propagated from <code>func</code>.
+</dd>
+
+<dt>Thread safety:</dt>
+<dd>
+<p>
+Access to the same <code>once_flag</code> object
+by calls to <code>call_once</code> from different threads
+shall not result in a data race or deadlock.
+<b>[Crowl: The implementation shall not introduce these.]</b>
+</p>
+
+<p>
+[<i>Example:</i>
+</p>
+
+<blockquote>
+<pre><code>
+std::once_flag flag;
+
+void init();
+
+void f()
+{
+    std::call_once(flag,init);
+}
+
+struct initializer
+{
+    void operator()();
+};
+
+void g()
+{
+    static std::once_flag flag2;
+    std::call_once(flag2,initializer());
+}
+</code></pre>
+</blockquote>
+
+<p>
+&mdash;<i>end example</i>]
+</p>
+</dd>
+</dl>
+
 
 <h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
 
