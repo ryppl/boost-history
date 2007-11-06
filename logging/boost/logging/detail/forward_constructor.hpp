@@ -40,6 +40,12 @@ namespace boost { namespace logging {
         template<class p1, class p2, class p3, class p4> class_name(const p1 & a1 , const p2 & a2, const p3 & a3, const p4 & a4) : forward_to(a1,a2,a3,a4) {} \
         template<class p1, class p2, class p3, class p4, class p5> class_name(const p1 & a1 , const p2 & a2, const p3 & a3, const p4 & a4, const p5 & a5) : forward_to(a1,a2,a3,a4,a5) {}
 
+#define BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(class_name,forward_to,init) \
+        template<class p1> class_name(const p1 & a1 ) : forward_to(a1) { init(); } \
+        template<class p1, class p2> class_name(const p1 & a1 , const p2 & a2) : forward_to(a1,a2) { init(); } \
+        template<class p1, class p2, class p3> class_name(const p1 & a1 , const p2 & a2, const p3 & a3) : forward_to(a1,a2,a3) { init(); } \
+        template<class p1, class p2, class p3, class p4> class_name(const p1 & a1 , const p2 & a2, const p3 & a3, const p4 & a4) : forward_to(a1,a2,a3,a4) { init(); } \
+        template<class p1, class p2, class p3, class p4, class p5> class_name(const p1 & a1 , const p2 & a2, const p3 & a3, const p4 & a4, const p5 & a5) : forward_to(a1,a2,a3,a4,a5) { init(); }
 
 
 #ifdef BOOST_MSVC

@@ -32,8 +32,8 @@
 namespace boost { namespace logging { namespace writer {
 
 namespace detail {
-    template<class msg_type> struct dedicated_context {
-        dedicated_context() : is_working(true), write_period_ms(100) {}
+    template<class msg_type> struct dedicated_thread_context {
+        dedicated_thread_context() : is_working(true), write_period_ms(100) {}
 
         bool is_working;
         int write_period_ms;
@@ -41,7 +41,8 @@ namespace detail {
         boost::logging::threading::mutex cs;
 
         // the thread doing the write
-        boost::shared_ptr<boost::thread> writer;
+        typedef boost::shared_ptr<boost::thread> thread_ptr;
+        thread_ptr writer;
 
         // ... so that reallocations are fast
         typedef boost::shared_ptr<msg_type> ptr;
@@ -67,77 +68,81 @@ Example:
 typedef gather::ostream_like::return_str<> string;
 
 // not thread-safe
-process_msg< string, write_to_cout> g_l;
+logger< string, write_to_cout> g_l;
 
 // thread-safe, on dedicated thread
-process_msg< string, on_dedicated_thread<string,write_to_cout> > g_l;
+logger< string, on_dedicated_thread<string,write_to_cout> > g_l;
 
 
 // not thread-safe
-process_msg< 
+logger< 
     string , 
-    format_write< 
-        format_base, 
-        destination_base, format_and_write::simple<string> > > g_l;
+    format_write<format_base, destination_base> > g_l;
 
 // thread-safe, on dedicated thread
-process_msg< 
+logger< 
     string , 
-    on_dedicated_thread<string, format_write< 
-        format_base, 
-        destination_base, format_and_write::simple<string> > > > g_l;
+    on_dedicated_thread<string, format_write< format_base, destination_base> > > g_l;
 @endcode
 
 */
 template<class msg_type, class base_type> 
 struct on_dedicated_thread 
         : base_type, 
-          boost::logging::manipulator::non_const_context<detail::dedicated_context<msg_type> > {
+          boost::logging::manipulator::non_const_context<detail::dedicated_thread_context<msg_type> > {
 
     typedef on_dedicated_thread<msg_type,base_type> self_type;
-    typedef detail::dedicated_context<msg_type> context_type;
+    typedef typename detail::dedicated_thread_context<msg_type> context_type;
+    typedef typename boost::logging::manipulator::non_const_context<detail::dedicated_thread_context<msg_type> > non_const_context_base;
 
     typedef boost::logging::threading::mutex::scoped_lock scoped_lock;
 
     on_dedicated_thread() {}
     BOOST_LOGGING_FORWARD_CONSTRUCTOR(on_dedicated_thread,base_type)
 
-    void write_period(int period_ms) {
-        scoped_lock lk( context_type::context().cs);
-        context_type::context().write_period_ms = period_ms;
+    /** 
+        @brief Sets the write period : on the dedicated thread (in milliseconds)
+    */
+    void write_period_ms(int period_ms) {
+        scoped_lock lk( non_const_context_base::context().cs);
+        non_const_context_base::context().write_period_ms = period_ms;
     }
 
     ~on_dedicated_thread() {
         boost::shared_ptr<boost::thread> writer;
-        { scoped_lock lk( context_type::context().cs);
-          context_type::context().is_working = false;
-          writer = context_type::context().writer;
+        { scoped_lock lk( non_const_context_base::context().cs);
+          non_const_context_base::context().is_working = false;
+          writer = non_const_context_base::context().writer;
         }
 
         if ( writer)
             writer->join();
+
+        // write last messages, if any
+        write_array();
     }
 
-    void operator()(const msg_type & msg) {
+    void operator()(const msg_type & msg) const {
         typedef typename context_type::ptr ptr;
+        typedef typename context_type::thread_ptr thread_ptr;
         ptr new_msg(new msg_type(msg));
 
-        scoped_lock lk( context_type::context().cs);
-        if ( !context_type::context().writer) 
-            context_type::context().writer = ptr( new boost::thread( boost::bind(&self_type::do_write,this) ));
+        scoped_lock lk( non_const_context_base::context().cs);
+        if ( !non_const_context_base::context().writer) 
+            non_const_context_base::context().writer = thread_ptr( new boost::thread( boost::bind(&self_type::do_write,this) ));
 
-        context_type::context().msgs.push_back(new_msg);
+        non_const_context_base::context().msgs.push_back(new_msg);
     }
 private:
-    void do_write() {
+    void do_write() const {
         const int NANOSECONDS_PER_SECOND = 1000 * 1000 * 1000;
 
         int sleep_ms = 0;
         while ( true) {
-            { scoped_lock lk( context_type::context().cs);
+            { scoped_lock lk( non_const_context_base::context().cs);
               // refresh it - just in case it got changed...
-              sleep_ms = context_type::context().write_period_ms;
-              if ( !context_type::context().is_working)
+              sleep_ms = non_const_context_base::context().write_period_ms;
+              if ( !non_const_context_base::context().is_working)
                   break; // we've been destroyed
             }
 
@@ -149,17 +154,22 @@ private:
             to_wait.nsec %= NANOSECONDS_PER_SECOND ;
             boost::thread::sleep( to_wait);
 
-            typedef typename context_type::array array;
-            array msgs;
-            { scoped_lock lk( context_type::context().cs);
-              std::swap( context_type::context().msgs, msgs);
-              // reserve elements - so that we don't get automatically resized often
-              context_type::context().msgs.reserve( msgs.size() );
-            }
-
-            for ( typename array::iterator b = msgs.begin(), e = msgs.end(); b != e; ++b)
-                base_type::operator()(*(b->get()));
+            write_array();
         }
+    }
+
+    void write_array() const {
+        typedef typename context_type::array array;
+
+        array msgs;
+        { scoped_lock lk( non_const_context_base::context().cs);
+          std::swap( non_const_context_base::context().msgs, msgs);
+          // reserve elements - so that we don't get automatically resized often
+          non_const_context_base::context().msgs.reserve( msgs.size() );
+        }
+
+        for ( typename array::iterator b = msgs.begin(), e = msgs.end(); b != e; ++b)
+            base_type::operator()(*(b->get()));
     }
 };
 

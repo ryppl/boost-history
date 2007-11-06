@@ -1,6 +1,6 @@
-// one_loger_one_filter.cpp
+// ts_loger_one_filter.cpp
 //
-// A test of the Logging library with one logger and one filter
+// A test of the Logging library with one logger and one filter. The logger is thread-safe
 
 // Boost Logging library
 //
@@ -17,32 +17,48 @@
 
 
 /**
-@example one_loger_one_filter.cpp
+@example ts_loger_one_filter.cpp
 
-@copydoc one_loger_one_filter
+@copydoc ts_loger_one_filter
 
-@page one_loger_one_filter one_loger_one_filter.cpp Example
+@page ts_loger_one_filter ts_loger_one_filter.cpp Example
 
 
 This usage:
-- You have one logger
-- You have one filter, which can be turned on or off
+- You have one @b thread-safe logger
+- You have one filter, which is always turned on
 - You want to format the message before it's written 
 - The logger has several log destinations
     - The output goes to console, debug output window, and a file called out.txt
-    - Formatting - prefix each message by its index, and append enter
+    - Formatting - prefix each message by its index, thread id, and append enter
 
 Optimizations:
 - use a cache string (from optimize namespace), in order to make formatting the message faster
 
 In this example, all output will be written to the console, debug window, and "out.txt" file.
-It will be:
+It will look similar to:
 
 @code
-[1] this is so cool 1
-[2] this is so cool again 2
-[3] hello, world
-[4] good to be back ;) 3
+[T5884] [1] message 0
+[T7168] [2] message 0
+[T7932] [3] message 0
+[T740] [4] message 0
+[T8124] [5] message 0
+[T5884] [6] message 1
+[T5884] [7] message 2
+[T740] [8] message 1
+[T7168] [9] message 1
+[T7932] [10] message 1
+[T8124] [11] message 1
+[T5884] [12] message 3
+[T7168] [13] message 2
+[T5884] [14] message 4
+[T740] [15] message 2
+[T7932] [16] message 2
+[T8124] [17] message 2
+[T7168] [18] message 3
+[T5884] [19] message 5
+...
 @endcode
 
 */
@@ -51,17 +67,18 @@ It will be:
 
 #define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format_fwd.hpp>
-
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
-#include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
+#include <boost/logging/format_ts.hpp>
+#include <boost/logging/format/formatter/thread_id.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/thread/xtime.hpp>
 
 using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
-typedef logger_format_write< > log_type;
+typedef logger_format_write< default_, default_, writer::threading::ts_write > log_type;
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
@@ -75,33 +92,45 @@ BOOST_DECLARE_LOG(g_l, log_type)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type)
 
+void do_sleep(int ms) {
+    using namespace boost;
+    xtime next;
+    xtime_get( &next, TIME_UTC);
+    next.nsec += (ms % 1000) * 1000000;
 
-void one_logger_one_filter_example() {
+    int nano_per_sec = 1000000000;
+    next.sec += next.nsec / nano_per_sec;
+    next.sec += ms / 1000;
+    next.nsec %= nano_per_sec;
+    thread::sleep( next);
+}
+
+void use_log_thread() {
+    // Step 8: use it...
+    for ( int i = 0; i < 50; ++i) {
+        L_ << "message " << i ;
+        do_sleep(1);
+    }
+
+    // Step 9 : Enjoy!
+}
+
+void ts_logger_one_filter_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
     g_l->writer().add_formatter( formatter::idx() );
+    g_l->writer().add_formatter( formatter::thread_id() );
     g_l->writer().add_formatter( formatter::append_newline() );
     g_l->writer().add_destination( destination::file("out.txt") );
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::dbg_window() );
 
-    // Step 8: use it...
-    int i = 1;
-    L_ << "this is so cool " << i++;
-    L_ << "this is so cool again " << i++;
+    for ( int i = 0 ; i < 5; ++i)
+        boost::thread t( &use_log_thread);
 
-    std::string hello = "hello", world = "world";
-    L_ << hello << ", " << world;
-
-    g_log_filter->set_enabled(false);
-    L_ << "this will not be written to the log";
-    L_ << "this won't be written to the log";
-
-    g_log_filter->set_enabled(true);
-    L_ << "good to be back ;) " << i++;
-
-    // Step 9 : Enjoy!
+    // allow for all threads to finish
+    do_sleep( 5000);
 }
 
 
@@ -109,7 +138,7 @@ void one_logger_one_filter_example() {
 #ifdef SINGLE_TEST
 
 int main() {
-    one_logger_one_filter_example();
+    ts_logger_one_filter_example();
 }
 
 #endif

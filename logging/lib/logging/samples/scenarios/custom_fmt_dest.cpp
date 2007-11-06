@@ -82,9 +82,10 @@ The out.txt file will look like this:
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 #include <boost/logging/format.hpp>
+using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
-typedef boost::logging::logger_format_write< > log_type;
+typedef logger_format_write< default_, default_, writer::threading::no_ts > log_type;
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
@@ -99,7 +100,6 @@ BOOST_DEFINE_LOG(g_l, log_type)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 
 
-using namespace boost::logging;
 
 // Example of custom formatter:
 // dump the no. of seconds since start of program

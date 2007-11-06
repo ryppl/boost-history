@@ -1,4 +1,4 @@
-// format_all.hpp
+// format_ts.hpp
 
 // Boost Logging library
 //
@@ -13,24 +13,30 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
-
-#ifndef JT28092007_format_all_HPP_DEFINED
-#define JT28092007_format_all_HPP_DEFINED
+#ifndef JT28092007_format_ts_HPP_DEFINED
+#define JT28092007_format_ts_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
 #endif
 
-#include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/format.hpp>
-#include <boost/logging/format/formatter/thread_id.hpp>
-#include <boost/logging/format/formatter/time.hpp>
-#include <boost/logging/format/destination/file.hpp>
-#include <boost/logging/format/destination/rolling_file.hpp>
 
+#include <boost/logging/writer/ts_write.hpp>
+#include <boost/logging/writer/on_dedicated_thread.hpp>
 
-// not tested yet
-//#include <boost/logging/format/destination/shared_memory.hpp>
+namespace boost { namespace logging {
+
+/** 
+@file boost/logging/format_ts.hpp
+
+Include this file when you're using @ref manipulator "formatters and destinations",
+and you want to define the logger classes, in a source file
+(using BOOST_DEFINE_LOG) and you've decided to use some form of thread-safety
+
+*/
+
+}}
 
 
 #endif

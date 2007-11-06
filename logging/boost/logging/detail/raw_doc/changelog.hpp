@@ -1,6 +1,10 @@
 /** 
 @page page_changelog Changelog
 
+v0.10.10, 6 nov 2007
+- added and tested thread-safety (ts_write/on_dedicated_thread) for logger_format_write<>
+- added 2 more scenarios: ts_loger_one_filter.cpp and ded_loger_one_filter.cpp
+
 v0.10.9, 3 nov 2007
 - added virtual destructor for logger<gather,default_> - many thanks Martin Baeker!
 - added TSS tests 

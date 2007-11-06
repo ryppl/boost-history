@@ -212,6 +212,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="D:\boosts\boost_1_33_1\bin\boost\libs\thread\build\libboost_thread.lib\vc-8_0\debug\threading-multi"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -692,6 +693,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\format_ts.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\detail\format_write_detail.hpp"
 					>
 				</File>
@@ -893,10 +898,23 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\..\samples\scenarios\ded_loger_one_filter.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\..\samples\scenarios\fastest_no_ostr_like.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -969,6 +987,17 @@
 				<FileConfiguration
 					Name="Test|Win32"
 					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\samples\scenarios\ts_loger_one_filter.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
