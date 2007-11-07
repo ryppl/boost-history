@@ -32,6 +32,7 @@
 
 #include <boost/fusion/functional/adapter/limits.hpp>
 
+#include <boost/config.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/utility/result_of.hpp>
 
@@ -127,7 +128,11 @@ namespace boost { namespace fusion
             (BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a))
 #endif
                 ;
-            return Function::operator()<N>(arg);
+            return Function::
+#ifndef BOOST_MSVC
+                             template
+#endif
+                             operator()<N>(arg);
         }
 #endif
 

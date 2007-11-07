@@ -10,6 +10,7 @@
 #include <boost/dataflow/signals/component/conditional_templated.hpp>
 #include <boost/dataflow/signals/connection/slot_selector.hpp>
 
+#include <boost/config.hpp>
 #include <boost/fusion/container/map.hpp>
 
 #include <functional>
@@ -57,8 +58,17 @@ public:
     {
         //return make_slot_selector<Signature> (&multiplexer::template operator()<N>, *this);
         return slot_map
-        (make_slot_selector<Signature> (&multiplexer::operator()<N>, *this),
-         make_slot_selector<typename base_type::fused_signature_type> (&multiplexer::operator()<N>, *this));
+        (make_slot_selector<Signature> (&multiplexer::
+#ifndef BOOST_MSVC
+                                                      template
+#endif
+                                                      operator()<N>, *this),
+         make_slot_selector<typename base_type::fused_signature_type>
+            (&multiplexer::
+#ifndef BOOST_MSVC
+                           template
+#endif            
+                           operator()<N>, *this));
 
     }
 };
