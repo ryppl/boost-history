@@ -1441,7 +1441,7 @@ public:
     void unlock();
 
     bool owns_lock() const;
-    operator <var>unspecified-bool-type</var> () const;
+    explicit operator bool () const;
     mutex_type* mutex() const;
 
     void swap(unique_lock&amp;&amp; <var>u</var>);
@@ -1809,14 +1809,13 @@ Nothing.
 </dl>
 
 <pre><code>
-operator <var>unspecified-bool-type</var> () const;
+explicit operator bool () const;
 </code></pre>
 
 <dl>
 <dt>Returns:</dt>
 <dd>
-Non-null if <code>owns_lock()</code> would return <code>true</code>,
-else returns null.
+<code>owns_lock()</code>.
 </dd>
 
 <dt>Throws:</dt>
