@@ -1702,7 +1702,7 @@ Calls <code>lock()</code> on the referenced mutex.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>.
+if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 
@@ -1731,7 +1731,7 @@ of the call to <code>try_lock()</code> on the referenced mutex.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>.
+if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 
@@ -1765,7 +1765,7 @@ of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>.
+if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 
