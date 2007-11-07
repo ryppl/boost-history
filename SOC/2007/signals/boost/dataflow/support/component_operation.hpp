@@ -46,7 +46,7 @@ template<typename Operation, typename Mechanism, typename T, typename Enable=voi
 struct implements_component_operation
     : public mpl::true_ {};
 
-template<typename Operation, typename Mechanism, typename Component, typename T>
+template<typename Operation, typename Mechanism, typename T>
 struct implements_component_operation<
     Operation,
     Mechanism,
@@ -54,7 +54,7 @@ struct implements_component_operation<
     typename detail::enable_if_defined<
         typename extension::component_operation_impl<
             Operation,
-            typename component_traits_of<Mechanism, Component>::type
+            typename component_traits_of<Mechanism, T>::type
         >::detail::not_specialized
     >::type
 >

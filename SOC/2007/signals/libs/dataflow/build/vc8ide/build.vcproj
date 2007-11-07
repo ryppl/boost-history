@@ -58,196 +58,112 @@
 	</References>
 	<Files>
 		<Filter
-			Name="signal_network"
+			Name="dataflow"
 			>
-			<File
-				RelativePath="..\..\..\..\boost\signal_network\connection.hpp"
-				>
-			</File>
 			<Filter
-				Name="detail"
+				Name="signals"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\connect_slot_template.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\signal\connection.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\connect_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\defines.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\loader.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\main_class_loader.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\serialize_fusion_vector.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\slot_type_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\template_loader.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\template_loader2.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_inherited.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_typed_class.hpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="connection"
-				>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\connection\connect.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\connection\operators.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\connection\signal.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\connection\slot_selector.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\connection\slot_selector_map.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\signal\support.hpp"
 					>
 				</File>
 				<Filter
-					Name="detail"
+					Name="component"
 					>
 					<File
-						RelativePath="..\..\..\..\boost\signal_network\connection\detail\bind_object.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\applicator.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\signal_network\connection\detail\replace_return_type.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\chain.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\signal_network\connection\detail\result_of_defined.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\conditional.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\signal_network\connection\detail\slot_type.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\conditional_modifier.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\counter.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\filter.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\filter_base.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\function.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\instantiator.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\junction.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\modifier.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\mutex.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\selector.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\socket_receiver.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\socket_sender.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\storage.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\component\timed_generator.hpp"
 						>
 					</File>
 				</Filter>
-			</Filter>
-			<Filter
-				Name="component"
-				>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\applicator.hpp"
+				<Filter
+					Name="connection"
 					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\chain.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\conditional.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\conditional_modifier.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\counter.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\filter.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\filter_base.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\function.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\instantiator.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\junction.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\modifier.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\mutex.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\selector.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\socket_receiver.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\socket_sender.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\storage.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\timed_generator.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\component\traits.hpp"
-					>
-				</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\connection\slot_selector.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signal\connection\slot_selector_map.hpp"
+						>
+					</File>
+				</Filter>
 				<Filter
 					Name="detail"
 					>
 					<File
-						RelativePath="..\..\..\..\boost\signal_network\component\detail\generic_template.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signal\detail\enable_if_defined.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\signal_network\component\detail\serialize_fusion_vector.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\signal_network\component\detail\storable.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\signal_network\component\detail\unfused_inherited.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signal\detail\unfused_typed_class.hpp"
 						>
 					</File>
 				</Filter>

@@ -57,8 +57,8 @@ public:
     {
         //return make_slot_selector<Signature> (&multiplexer::template operator()<N>, *this);
         return slot_map
-        (make_slot_selector<Signature> (&multiplexer::template operator()<N>, *this),
-         make_slot_selector<typename base_type::fused_signature_type> (&multiplexer::template operator()<N>, *this));
+        (make_slot_selector<Signature> (&multiplexer::operator()<N>, *this),
+         make_slot_selector<typename base_type::fused_signature_type> (&multiplexer::operator()<N>, *this));
 
     }
 };

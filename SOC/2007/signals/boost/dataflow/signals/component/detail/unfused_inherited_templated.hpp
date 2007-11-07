@@ -127,7 +127,7 @@ namespace boost { namespace fusion
             (BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a))
 #endif
                 ;
-            return Function::template operator()<N>(arg);
+            return Function::operator()<N>(arg);
         }
 #endif
 

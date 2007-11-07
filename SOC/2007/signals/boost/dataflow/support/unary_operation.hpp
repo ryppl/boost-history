@@ -45,7 +45,7 @@ template<typename Operation, typename Mechanism, typename PortCategory, typename
 struct implements_unary_operation
     : public mpl::true_ {};
 
-template<typename Operation, typename Mechanism, typename Producer, typename PortCategory, typename T>
+template<typename Operation, typename Mechanism, typename PortCategory, typename T>
 struct implements_unary_operation<
     Operation,
     Mechanism,
@@ -54,7 +54,7 @@ struct implements_unary_operation<
     typename detail::enable_if_defined<
         typename extension::unary_operation_impl<
             Operation,
-            typename port_traits_of<Mechanism, PortCategory, Producer>::type
+            typename port_traits_of<Mechanism, PortCategory, T>::type
         >::detail::not_specialized
     >::type
 >
