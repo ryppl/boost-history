@@ -5,11 +5,11 @@
 
 #include <boost/asio.hpp>
 
-#include <boost/dataflow/signal/component/socket_receiver.hpp>
-#include <boost/dataflow/signal/component/socket_sender.hpp>
-#include <boost/dataflow/signal/component/function.hpp>
-#include <boost/dataflow/signal/component/condition.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/socket_receiver.hpp>
+#include <boost/dataflow/signals/component/socket_sender.hpp>
+#include <boost/dataflow/signals/component/function.hpp>
+#include <boost/dataflow/signals/component/condition.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -41,8 +41,8 @@ void asio_server()
 	acceptor.accept(socket);
 
 	// instantiate the components - a float generator, a filter that adds 2, and a sender
-	signals::storage<void (float), signals::unfused> generator(1.0f);
-    signals::function<void (float), float(float), signals::unfused> add2(boost::bind(std::plus<float>(), _1, 2.0f));
+	signals::storage<void (float)> generator(1.0f);
+    signals::function<void (float), float(float)> add2(boost::bind(std::plus<float>(), _1, 2.0f));
     signals::socket_sender<void (float)> sender(socket);
 
 	// create the network

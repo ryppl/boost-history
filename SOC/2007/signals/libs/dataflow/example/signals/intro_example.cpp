@@ -3,8 +3,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 using namespace boost;
 
@@ -51,7 +51,7 @@ int main(int, char* [])
 {
 //[ signal_void_counter_main
     SignalVoidCounter counter;
-    signals::storage<void(), signals::unfused> storage;
+    signals::storage<void()> storage;
 
     storage >>= counter;
     for (int i=0; i<33; i++)

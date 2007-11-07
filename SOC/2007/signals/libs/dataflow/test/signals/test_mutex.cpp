@@ -3,10 +3,10 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/mutex.hpp>
-#include <boost/dataflow/signal/component/timed_generator.hpp>
-#include <boost/dataflow/signal/component/counter.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/mutex.hpp>
+#include <boost/dataflow/signals/component/timed_generator.hpp>
+#include <boost/dataflow/signals/component/counter.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -16,9 +16,9 @@ int test_main(int, char* [])
 {
     {
         //[ test_mutex_unfused
-        signals::timed_generator<void (), signals::unfused> banger1;
-        signals::timed_generator<void (), signals::unfused> banger2;
-        signals::mutex<void (), signals::unfused> lock;
+        signals::timed_generator<void ()> banger1;
+        signals::timed_generator<void ()> banger2;
+        signals::mutex<void ()> lock;
         signals::counter<void (), signals::unfused, volatile int> counter;
         
         banger1 >>= lock >>= counter;

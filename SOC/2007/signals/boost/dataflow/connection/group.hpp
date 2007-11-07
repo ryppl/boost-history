@@ -97,41 +97,14 @@ namespace extension
             > >::type >
     {
         template<typename Producer, typename Consumer>
-        struct apply
+        void operator()(const Producer &producer, const Consumer &consumer)
         {
-            static void call(const Producer &producer, const Consumer &consumer)
-            {
-                typedef boost::fusion::vector<const Producer&, const Consumer&>
-                    zip_type;
-                boost::fusion::zip_view<zip_type>
-                    zip(zip_type(producer, consumer));
-                boost::fusion::for_each(zip, detail::zip_connect());
-            }
-            static void call(const Producer &producer, Consumer &consumer)
-            {
-                typedef boost::fusion::vector<const Producer&, Consumer&>
-                    zip_type;
-                boost::fusion::zip_view<zip_type>
-                    zip(zip_type(producer, consumer));
-                boost::fusion::for_each(zip, detail::zip_connect());
-            }
-            static void call(Producer &producer, const Consumer &consumer)
-            {
-                typedef boost::fusion::vector<Producer&, const Consumer&>
-                    zip_type;
-                boost::fusion::zip_view<zip_type>
-                    zip(zip_type(producer, consumer));
-                boost::fusion::for_each(zip, detail::zip_connect());
-            }
-            static void call(Producer &producer, Consumer &consumer)
-            {
-                typedef boost::fusion::vector<Producer&, Consumer&>
-                    zip_type;
-                boost::fusion::zip_view<zip_type>
-                    zip(zip_type(producer, consumer));
-                boost::fusion::for_each(zip, detail::zip_connect());
-            } 
-        };
+            typedef boost::fusion::vector<const Producer&, const Consumer&>
+                zip_type;
+            boost::fusion::zip_view<zip_type>
+                zip(zip_type(producer, consumer));
+            boost::fusion::for_each(zip, detail::zip_connect());
+        }
     };
 }
     

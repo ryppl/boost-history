@@ -33,7 +33,7 @@ namespace iterator_relative
             {
                 return boost::dataflow::extension::phoenix::template get_value<
                     typename boost::dataflow::producer_category_of<T>::type>
-                    ::template apply<T>::call(t);
+                    ()(t);
             }
         };
 

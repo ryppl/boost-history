@@ -15,7 +15,8 @@ dataflow-oriented applications come from the realm of real-time
 [@http://en.wikipedia.org/wiki/Signal_processing signal processing],
 e.g. a video signal processor which perhaps starts with a video input,
 modifies it through a number of processing components (video filters),
-and finally outputs it to a video display.
+and finally outputs it to a video display.  Another example is event
+processing.
 
 [heading A motivating example]
 
@@ -72,7 +73,13 @@ The big picture now looks like the following:
 To give you a sense of how you would do something like this using the Dataflow
 library, we will present a slightly simplified example using [DataflowSignals].
 Instead of processing images, we will just process numbers - but the dataflow
-parts of the code are pretty much the same:
+parts of the code are pretty much the same.
+
+We will first define a few components to use for our network:
+
+[simple_example_components]
+
+And then connect them in a dataflow network:
 
 [simple_example]
 
@@ -279,7 +286,7 @@ namespaces.
 
 The fundamental user-oriented generic elements, such as `is_producer`,
 `producer_category_of` etc., are located in the `boost::dataflow` namespace.
-Function objects which must be specialized for different data trasport
+Function objects which must be specialized for different data transport
 mechanisms, such as `connect_impl`, are in the `boost::dataflow::extension`
 namespace.  The connection operators are in `boost::dataflow::operators`.
 
@@ -362,7 +369,7 @@ We will now use this tag in reference to the [VTK] dataflow mechanism.
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.producerconsumer
-    Setting up a Producer and Consumer] 
+    Setting up a ProducerPort and ConsumerPort] 
 [endsect][/mechanism]
 
 [section:producerconsumer Setting up a ProducerPort and ConsumerPort]
@@ -375,8 +382,8 @@ object ([vtkAlgorithmOutput] `*`) for an actual output port.
 
 In Dataflow concepts, [vtkAlgorithmOutput] can be made a [ProducerPortConcept]
 - it corresponds to a single data output point. We support it as such by
-creating a [PortTraitsConcept], and associating [vtkAlgorithmOutput]
-with the producer category:
+defining a [PortTraitsConcept] type, and associating it with
+[vtkAlgorithmOutput].
 
 [vtk_algorithm_output_producer]
 
@@ -427,7 +434,7 @@ to the vtk mechanism using the template include files for this purpose:
 
 [endsect][/connectable]
 
-[section:proxyproducer Setting up a ProxyProducer]
+[section:proxyproducer Setting up a ProxyPort]
 
 In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
 inherit [vtkAlgorithm].  
@@ -441,7 +448,7 @@ we need to make [vtkAlgorithm] a [ProducerPortConcept]. Since [vtkAlgorithm]
 forms its output connections using [vtkAlgorithmOutput] objects
 returned through the `GetOutputPort` member functions, and we've already
 configured [vtkAlgorithmOutput] as a [ProducerPortConcept], we can make use
-of the [ProxyProducerConcept] concept provided by the dataflow library.
+of the [ProxyPortConcept] concept provided by the dataflow library.
 In effect, we will make [vtkAlgorithm] delegate it's [ProducerPortConcept]
 functionality to [vtkAlgorithmOutput]:
 
@@ -457,7 +464,7 @@ Now, [vtkAlgorithm] is a [ProducerPortConcept].
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.filter
-    Setting up a Filter (Producer+Consumer)] 
+    Setting up a filter (ProducerPort+ConsumerPort)] 
 
 [endsect][/proxyproducer]
 
@@ -465,8 +472,7 @@ Now, [vtkAlgorithm] is a [ProducerPortConcept].
 
 In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
 data for a [vtkRenderer].  In this case, we can provide Dataflow support
-for a [vtkActor] as both a [ProducerPortConcept] and a [ConsumerPortConcept] in one
-fell swoop:
+for a [vtkActor] as both a [ProducerPortConcept] and a [ConsumerPortConcept]:
 
 [vtk_actor_filter]
 
@@ -581,7 +587,7 @@ The [DataflowSignals] layer is dependent on the [BoostSignals] library,
 which must be built and linked.  A few of the components ([socket_sender]
 and [socket_receiver]) are also dependent on [BoostAsio], which depends on
 the System library which must also be built and linked.  A few other components
-([mutex] and [condition]) are dependent on [BoostThreads], which has to be
+([mutex] and [condition]) are dependent on [BoostThread], which has to be
 linked as well.
 
 [endsect][/linking]

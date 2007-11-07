@@ -10,6 +10,7 @@
 #include <boost/dataflow/utility/copy_cv.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/utility/result_of.hpp>
 
 #include <boost/static_assert.hpp>
 
@@ -92,7 +93,7 @@ get_port(T &t)
     return
         extension::get_port_impl<
             typename proxy_port_traits_of<Mechanism, PortCategory, T>::type
-        >::template apply<T>::call(t);
+        >()(t);
 }
 
 namespace extension
@@ -100,8 +101,10 @@ namespace extension
     template<typename Mechanism, typename PortCategory, typename ProxiedPort, typename GetProxiedObject>
     struct get_port_impl<default_proxy_port<Mechanism, PortCategory, ProxiedPort, GetProxiedObject> >
     {
-        template<typename ProxyPort>
-        struct apply
+        template<typename Args> struct result;
+        
+        template<typename F, typename ProxyPort>
+        struct result<F(ProxyPort &)>
         {
             typedef typename
                 get_port_result_type<
@@ -109,19 +112,22 @@ namespace extension
                     PortCategory,
                     typename utility::copy_cv<ProxiedPort,ProxyPort>::type
                 >::type type;
-            
-            static type call(ProxyPort &t)
-            {
-                return get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
-            }
         };
+        
+        template<typename ProxyPort>
+        typename result<get_port_impl(ProxyPort &)>::type operator()(ProxyPort &t)
+        {
+            return get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
+        }
     };
     
     template<typename Mechanism, typename PortCategory, typename ProxiedPort, typename GetProxiedObject>
     struct get_port_impl<mutable_proxy_port<Mechanism, PortCategory, ProxiedPort, GetProxiedObject> >
     {
-        template<typename ProxyPort>
-        struct apply
+        template<typename Args> struct result;
+
+        template<typename F, typename ProxyPort>
+        struct result<F(ProxyPort &)>
         {
             typedef typename
                 get_port_result_type<
@@ -129,12 +135,13 @@ namespace extension
                     PortCategory,
                     ProxiedPort
                 >::type type;
-            
-            static type call(const ProxyPort &t)
-            {
-                return get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
-            }
         };
+        
+        template<typename ProxyPort>
+        typename result<get_port_impl(ProxyPort &)>::type operator()(const ProxyPort &t)
+        {
+            return get_port<Mechanism, PortCategory>(GetProxiedObject()(t));
+        }
     };
 }
 
@@ -147,13 +154,16 @@ struct get_port_result_type<
 {
     typedef
         typename
-            extension::get_port_impl<
-                typename proxy_port_traits_of<
-                    Mechanism,
-                    PortCategory,
-                    typename remove_cv<T>::type
-                >::type
-            >::template apply<T>::type type;
+            result_of<
+                typename
+                extension::get_port_impl<
+                    typename proxy_port_traits_of<
+                        Mechanism,
+                        PortCategory,
+                        typename remove_cv<T>::type
+                    >::type
+                >(T &)
+            >::type type;
 };
 
 template<typename Mechanism, typename PortCategory, typename T>

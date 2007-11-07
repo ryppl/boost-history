@@ -14,13 +14,10 @@ template<>
 struct unary_operation_impl<operations::disconnect_all, my_producer_traits>
 {
     template<typename Producer>
-    struct apply
+    void operator()(Producer &)
     {
-        static void call(Producer &)
-        {
-            disconnected = true;
-        }
-    };
+        disconnected = true;
+    }
 };
 
 }}}

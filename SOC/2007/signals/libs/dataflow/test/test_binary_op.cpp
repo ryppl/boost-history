@@ -16,39 +16,30 @@ template<>
 struct binary_operation_impl<operations::connect, my_producer_traits, my_consumer_traits>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &, Consumer &)
     {
-        static void call(Producer &, Consumer &)
-        {
-            connected = true;
-        }
-    };
+        connected = true;
+    }
 };
 
 template<>
 struct binary_operation_impl<operations::connect_only, my_producer_traits, my_consumer_traits>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &, Consumer &)
     {
-        static void call(Producer &, Consumer &)
-        {
-            only_connected = true;
-        }
-    };
+        only_connected = true;
+    }
 };
 
 template<>
 struct binary_operation_impl<operations::disconnect, my_producer_traits, my_consumer_traits>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &, Consumer &)
     {
-        static void call(Producer &, Consumer &)
-        {
-            disconnected = true;
-        }
-    };
+        disconnected = true;
+    }
 };
 
 }}}

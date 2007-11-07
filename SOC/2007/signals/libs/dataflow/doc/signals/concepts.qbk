@@ -1,104 +1,131 @@
 [section Concepts]
 
-[section SignalProducer]
-
-A [ProducerPortConcept] type `P` is a ['[SignalProducerConcept]] if it uses
-the boost::signal based data transport mechanism.
+[section:signalporttraits SignalPortTraits]
+A [PortTraitsConcept] type `T` is a [`[SignalPortTraitsConcept]] if
+its mechanism is `signals::mechanism`, and it specifies the signature
+of the underlying signal.
 
 [heading Refinement of]
-* [ProducerPortConcept]
-* [ConnectableConcept] with [SignalConsumerConcept] of compatible consumed type.
+* [PortTraitsConcept]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A [SignalProducerConcept] type.]]
-    [[C] [A [SignalConsumerConcept] type with compatible consumed type.]]
+    [[PT] [A [SignalPortTraitsConcept] type.]]
+    [[C] [A [ConnectableConcept] [SignalConsumerConcept].]]
     [[p] [An object of type `p`.]]
     [[c] [An object of type `c`.]]
 ]
 
 [heading Requirements]
 [table
-    [[Name] [Expression] [Result Type] [Description]]
+    [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Connect]
-        [`connect(p,c)`]
-        [Any type]
-        [
-            *Semantics:* Connects `p` to `c`. Any previous
-            connection coming out of `p` are left in tact.
-        ]
+        [Mechanism]
+        [`PT::mechanism`]
+        [`dataflow::signals::mechanism`]
+        [[MechanismConcept] type tag.]
     ]
     [
-        [Signal Type]
-        [`get_signal_type<P>::type`
-         [footnote `namespace boost::dataflow::extension::signals`]]
-        [`boost::signal` type]
-        [
-            *Semantics:* The type of signal storing the outgoing connections.
-        ]
-    ]
-    [
-        [Signal]
-        [`get_signal(p)`
-         [footnote `namespace boost::dataflow::extension::signals`]]
-        [`get_signal_type<P>::type &`]
-        [
-            *Semantics:* Reference to the signal storing the outgoing connections.
-        ]
+        [Signature]
+        [`PT::signature_type`]
+        [`any function type`]
+        [Signature of the underlying `boost::signal`/`boost::function`.]
     ]
 ]
 
-[heading Notes]
+[endsect]
 
-To define a new [ProducerPortConcept] class type, it is sufficient to define
-member typedefs `producer_category` and `signal_type`, and specialize
-the `get_signal` template.
+[section SignalProducer]
 
-[endsect][/signalproducer]
-
-[section SignalConsumer]
-
-A type `T` is a ['[SignalConsumerConcept]] if it uses the boost::signal based
-data transport mechanism.  I.e., it is [ConnectableConcept] to 
+A [ProducerPortConcept] type `P` is a ['[SignalProducerConcept]] if its
+[PortTraitsConcept] is a [SignalPortTraitsConcept], and the `get_port` function
+returns the underlying `boost::signal`.
 
 [heading Refinement of]
-* [ConsumerPortConcept]
-* [ConnectableConcept] with [SignalProducerConcept] of compatible produced type.
+* [ProducerPortConcept]
+* [ConnectableConcept] with [SignalConsumerConcept] of same signature.
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A [SignalProducerConcept] type.]]
-    [[C] [A [SignalConsumerConcept] type s.t. .]]
+    [[`P`] [A [SignalProducerConcept] type.]]
+    [[`PT`] [[PortTraitsConcept] of `P`]]
+    [[`C`] [A [ConnectableConcept] [SignalConsumerConcept].]]
+    [[`S`] [Signature of underlying signal]]
+    [[`p`] [An object of type `p`.]]
+    [[`c`] [An object of type `c`.]]
 ]
 
 [heading Requirements]
 [table
     [[Name] [Expression] [Result Type] [Description]]
     [
-        [Signal Connectable]
-        [`connect(p,c)`]
-        [Any type]
+        [Signal]
+        [`dataflow::get_port(p)`]
+        [`boost::signal<PT::signal_type,...> &`]
         [
-            *Semantics:* Connects p to c.  This overwrites any previous
-            connection coming out of p.
-        ]
-    ]
-    [
-        [Slot]
-        [`get_slot(c)`]
-        [`boost::function` type]
-        [
-            *Semantics:* Returns the `boost::function` referring to the
-            consumer's slot (function / member function that accepts the
-            data).
+            Reference to the signal storing the outgoing connections.
         ]
     ]
 ]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/signals/support.hpp>
+```
+
+[endsect][/signalproducer]
+
+[section SignalConsumer]
+
+A [ConsumerPortConcept] type `P` is a ['[SignalConsumerConcept]] if its
+[PortTraitsConcept] is a [SignalPortTraitsConcept], and the `get_port` function
+returns the underlying `boost::function`.
+
+[heading Refinement of]
+* [ConsumerPortConcept]
+* [ConnectableConcept] with [SignalProducerConcept] of same signature.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`C`] [A [SignalConsumerConcept] type.]]
+    [[`PT`] [[PortTraitsConcept] of `C`]]
+    [[`P`] [A [ConnectableConcept] [SignalProducerConcept].]]
+    [[`S`] [Signature of underlying signal]]
+    [[`c`] [An object of type `c`.]]
+    [[`p`] [An object of type `p`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Signal]
+        [`dataflow::get_port(p)`]
+        [`boost::function<PT::signature_type>`]
+        [
+            Boost.Function object for the slot.
+        ]
+    ]
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/signals/support.hpp>
+```
 
 [endsect][/signalconsumer]
 

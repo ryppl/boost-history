@@ -43,27 +43,21 @@ namespace extension
     struct invoke_impl
     {
         template<typename Invocable>
-        struct apply
+        void operator()(Invocable &)
         {
-            static void call(Invocable &)
-            {
-                // Error: invoke_impl has not been implemented for InvocableTag.
-                BOOST_STATIC_ASSERT(sizeof(Invocable)==0);
-            }
-        };
+            // Error: invoke_impl has not been implemented for InvocableTag.
+            BOOST_STATIC_ASSERT(sizeof(Invocable)==0);
+        }
     };
     
     template<>
     struct invoke_impl<boost::dataflow::functor_invocable>
     {
         template<typename Invocable>
-        struct apply
+        void operator()(Invocable &invocable)
         {
-            static void call(Invocable &invocable)
-            {
-                invocable();
-            }
-        };
+            invocable();
+        }
     };        
 }
 
@@ -72,7 +66,7 @@ typename boost::enable_if<is_invocable<Invocable> >::type
 invoke(Invocable &invocable)
 {
     extension::invoke_impl<typename invocable_category_of<Invocable>::type>
-        ::template apply<Invocable>::call(invocable);
+        ()(invocable);
 }
 
 template<typename Invocable>
@@ -80,7 +74,7 @@ typename boost::enable_if<is_invocable<Invocable> >::type
 invoke(const Invocable &invocable)
 {
     extension::invoke_impl<typename invocable_category_of<Invocable>::type>
-        ::template apply<const Invocable>::call(invocable);
+        ()(invocable);
 }
 
 } } // namespace boost::dataflow

@@ -27,15 +27,12 @@ namespace extension
     struct binary_operation_impl
     {
         template<typename Producer, typename Consumer>
-        struct apply
+        void operator()(Producer &, Consumer &)
         {
-            static void call(Producer &, Consumer &)
-            {
-                // Error: binary_operation_impl has not been implemented
-                // for ProducerTag and ConsumerTag.
-                BOOST_STATIC_ASSERT(sizeof(Producer)==0);
-            }
-        };
+            // Error: binary_operation_impl has not been implemented
+            // for ProducerTag and ConsumerTag.
+            BOOST_STATIC_ASSERT(sizeof(Producer)==0);
+        }
     };
 }
 
@@ -49,15 +46,8 @@ inline void binary_operation(Producer &producer, Consumer &consumer)
         Operation,
         typename port_traits_of<Mechanism, ports::producer, ProducerNoCV>::type,
         typename port_traits_of<Mechanism, ports::consumer, ConsumerNoCV>::type>
-            ::template apply<
-                typename boost::remove_reference<
-                    typename get_port_result_type<Mechanism, ports::producer, Producer>::type
-                >::type,
-                typename boost::remove_reference<
-                    typename get_port_result_type<Mechanism, ports::consumer, Consumer>::type
-                >::type
-            >::call(get_port<Mechanism, ports::producer>(producer),
-                    get_port<Mechanism, ports::consumer>(consumer));
+            ()(get_port<Mechanism, ports::producer>(producer),
+               get_port<Mechanism, ports::consumer>(consumer));
 }
 
 } } // namespace boost::dataflow

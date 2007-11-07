@@ -3,7 +3,7 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/connection/detail/bind_object.hpp>
+#include <boost/dataflow/signals/connection/detail/bind_object.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 

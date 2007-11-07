@@ -27,21 +27,18 @@ namespace extension
     template<typename Operation, typename ComponentTraits, typename Enable=void>
     struct component_operation_impl
     {
-        template<typename Component>
-        struct apply
+        struct detail
         {
-            struct detail
-            {
-                typedef void not_specialized;
-            };
-
-            static void call(Component &)
-            {
-                // Error: component_operation_impl Operation has not been
-                // implemented for ComponentTraits.
-                BOOST_STATIC_ASSERT(sizeof(Component)==0);
-            }
+            typedef void not_specialized;
         };
+
+        template<typename Component>
+        void operator()(Component &)
+        {
+            // Error: component_operation_impl Operation has not been
+            // implemented for ComponentTraits.
+            BOOST_STATIC_ASSERT(sizeof(Component)==0);
+        }
     };
 }
 
@@ -58,18 +55,18 @@ struct implements_component_operation<
         typename extension::component_operation_impl<
             Operation,
             typename component_traits_of<Mechanism, Component>::type
-        >::template apply<Component>::detail::not_specialized
+        >::detail::not_specialized
     >::type
 >
     : public mpl::false_ {};
 
 template<typename Operation, typename Mechanism, typename Component>
-void component_operation(Component &producer)
+void component_operation(Component &component)
 {
     extension::component_operation_impl<
         Operation,
         typename component_traits_of<Mechanism, Component>::type
-    >::template apply<Component>::call(producer);
+    >()(component);
 }
 
 } } // namespace boost::dataflow

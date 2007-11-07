@@ -41,26 +41,20 @@ template<>
 struct binary_operation_impl<operations::connect, my_producer_traits, my_consumer_traits>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &, Consumer &)
     {
-        static void call(Producer &, Consumer &)
-        {
-            connected++;
-        }
-    };
+        connected++;
+    }
 };
 
 template<>
 struct binary_operation_impl<operations::connect, my_other_producer_traits, my_other_consumer_traits>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &, Consumer &)
     {
-        static void call(Producer &, Consumer &)
-        {
-            connected_other = true;
-        }
-    };
+        connected_other = true;
+    }
 };
 
 }}}        

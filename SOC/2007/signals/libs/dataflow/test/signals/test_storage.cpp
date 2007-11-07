@@ -3,8 +3,8 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -15,14 +15,26 @@ int test_main(int, char* [])
     {
         //[ test_storage_unfused
         // instantiate all of the components we need
-        signals::storage<void (), signals::unfused> banger;
-        signals::storage<void (float), signals::unfused> floater(2.5f);
-        signals::storage<void (float), signals::unfused> collector(0.0f);
+        signals::storage<void ()> banger;
+        signals::storage<void (float)> floater(2.5f);
+        signals::storage<void (float)> collector(0.0f);
                 
-        // create the network (banger to floater.send, floater to collector)
+        // ---Connect the dataflow network -----------------------------
+        //
+        // ,--------.  void()   
+        // | banger | -------. 
+        // `--------'        |
+        //                   |
+        //                   V
+        //            ,-(send_slot)-.  void(float)   ,-----------.
+        //            |   floater   | -------------> | collector |
+        //            `-------------'                `-----------'
+        //
+        // -------------------------------------------------------------
         banger >>= floater.send_slot() >>= collector;
 
-        // signal from banger causes floater to output 2.5
+        // signal from banger is will invoke floater.send(), which causes
+        // floater to output 2.5
         banger();
         BOOST_CHECK_EQUAL(floater.at<0>(), 2.5f);
         BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);

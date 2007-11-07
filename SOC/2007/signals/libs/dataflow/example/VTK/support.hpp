@@ -69,30 +69,31 @@ DATAFLOW_PORT_TRAITS_ENABLE_IF(
 //[ vtk_connect_impl_algorithm
 namespace boost { namespace dataflow { namespace extension {
 
+// To implement Connectable, we specialize the binary_operation_impl
+// functor template.  We specify three things:
+//   operation (operations::connect)
+//   producer PortTraits (vtk::vtk_algorithm_output_producer)
+//   consumer PortTraits (vtk::vtk_algorithm_consumer)
 template<>
 struct binary_operation_impl<operations::connect, vtk::vtk_algorithm_output_producer, vtk::vtk_algorithm_consumer>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &producer, Consumer &consumer)
     {
-        static void call(Producer &producer, Consumer &consumer)
-        {
-            consumer.AddInputConnection(&producer);
-        }
-    };
+        consumer.AddInputConnection(&producer);
+    }
 };
 
+// To implement OnlyConnectable, we do the same thing except now the operation
+// is operations::connect_only
 template<>
 struct binary_operation_impl<operations::connect_only, vtk::vtk_algorithm_output_producer, vtk::vtk_algorithm_consumer>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &producer, Consumer &consumer)
     {
-        static void call(Producer &producer, Consumer &consumer)
-        {
-            consumer.SetInputConnection(&producer);
-        }
-    };
+        consumer.SetInputConnection(&producer);
+    }
 };
     
 } } } // namespace boost::dataflow::vtk
@@ -104,11 +105,15 @@ struct binary_operation_impl<operations::connect_only, vtk::vtk_algorithm_output
 
 namespace boost { namespace dataflow { namespace vtk {
 
+// First we need a ProxyPortTraits type
 struct vtk_algorithm_proxy_producer
     : public proxy_port_traits<mechanism, ports::producer> {};
 
 } } } // namespace boost::dataflow::vtk
 
+// Then we associate all descendants of vtkAlgorithm with the ProxyPortTraits.
+// vtkMapper is a descendant of vtkAlgorithm, but we want to exclude it's
+// descendants from this registration because they will be treated differently.
 DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
     T,
     mpl::and_<
@@ -119,19 +124,17 @@ DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
 
 namespace boost { namespace dataflow { namespace extension {
 
+// Finally, we specialize the get_port_impl functor template.
     template<>
     struct get_port_impl<vtk::vtk_algorithm_proxy_producer>
     {
+        typedef vtkAlgorithmOutput & result_type;
+
         template<typename ProxyProducer>
-        struct apply
+        result_type operator()(ProxyProducer &t)
         {
-            typedef vtkAlgorithmOutput &type;
-            
-            static type call(ProxyProducer &t)
-            {
-                return *t.GetOutputPort();
-            }
-        };
+            return *t.GetOutputPort();
+        }
     };
 
 } } } // namespace boost::dataflow::extension
@@ -168,9 +171,15 @@ DATAFLOW_PORT_TRAITS_ENABLE_IF(
 
 namespace boost { namespace dataflow { namespace vtk {
 
+// First we need a PortTraits type that we will use for vtkMapper connections.
 struct vtk_mapper_producer
     : public port_traits<mechanism, ports::producer, concepts::port> {};
 
+// Since vtkMapper itself will have multiple "faces" (depending on what we
+// are connecting to it), we will define a proxy type for vtkMapper that we
+// will use to specify that we want to use the mapper output for a vtkActor.
+// (rather than wanting to use the output for a vtkAlgorithm, in for which
+// we can use vtkAlgorithmOutput as the proxy object).
 struct vtk_mapper_proxy : public port<vtk_mapper_producer>
 {
     vtkMapper *ptr;
@@ -178,20 +187,23 @@ struct vtk_mapper_proxy : public port<vtk_mapper_producer>
     operator vtkMapper * () const {return ptr;}
 };
 
+// Next, we define a fusion map type to hold the mapping between consumers
+// and Port types.
 typedef boost::fusion::map<
             boost::fusion::pair<vtk::vtk_algorithm_consumer, vtkAlgorithmOutput &>,
             boost::fusion::pair<vtk::vtk_actor_consumer, vtk_mapper_proxy>
         > vtk_mapper_map;
 
+// ...And a ProxyPortTraits type...
 struct vtk_mapper_proxy_producer
     : public proxy_port_traits<
         vtk::mechanism,
         ports::producer
-//        port_map<mechanism, ports::producer, vtk_mapper_map>
     > {};
     
 } } } // namespace boost::dataflow::vtk
 
+// ... that we associate with vtkMapper descendants.
 DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkMapper BOOST_PP_COMMA() T>,
@@ -199,48 +211,45 @@ DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(
 
 namespace boost { namespace dataflow { namespace extension {
 
+// Now we specialize the get_port_imple functor template that will return
+// a port_map for a port with vtk_mapper_proxy_producer ProxyPortTraits.
+// The port_map object is a KeyedPort and takes care of providing the
+// appropriate Port depending on the consumer.
 template<>
 struct get_port_impl<vtk::vtk_mapper_proxy_producer>
 {
+    typedef const port_map<vtk::mechanism, ports::producer, vtk::vtk_mapper_map> result_type;
+
     template<typename ProxyProducer>
-    struct apply
+    result_type operator()(ProxyProducer &t)
     {
-        typedef const port_map<vtk::mechanism, ports::producer, vtk::vtk_mapper_map> type;
-        
-        static type call(ProxyProducer &t)
-        {
-            return vtk::vtk_mapper_map(t.GetNumberOfOutputPorts() ?
-                *t.GetOutputPort() : *(vtkAlgorithmOutput *)NULL,
-                vtk::vtk_mapper_proxy(&t));
-        }
-    };
+        return vtk::vtk_mapper_map(t.GetNumberOfOutputPorts() ?
+            *t.GetOutputPort() : *(vtkAlgorithmOutput *)NULL,
+            vtk::vtk_mapper_proxy(&t));
+    }
 };
 
+// Finally, we provide implementations for connect and connect_only
+// between vtk_mapper_producer and vtk_actor_consumer
 template<>
 struct binary_operation_impl<operations::connect_only, vtk::vtk_mapper_producer, vtk::vtk_actor_consumer>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &producer, Consumer &consumer)
     {
-        static void call(Producer &producer, Consumer &consumer)
-        {
-            consumer.SetMapper(producer);
-        }
-    };
+        consumer.SetMapper(producer);
+    }
 };
 
 template<>
 struct binary_operation_impl<operations::connect, vtk::vtk_mapper_producer, vtk::vtk_actor_consumer>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &producer, Consumer &consumer)
     {
-        static void call(Producer &producer, Consumer &consumer)
-        {
-            BOOST_ASSERT(!consumer.GetMapper());
-            consumer.SetMapper(producer);
-        }
-    };
+        BOOST_ASSERT(!consumer.GetMapper());
+        consumer.SetMapper(producer);
+    }
 };
 
 } } } // namespace boost::dataflow::extension
@@ -288,26 +297,20 @@ template<>
 struct binary_operation_impl<operations::connect, vtk::vtk_actor_producer, vtk::vtk_renderer_consumer>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &producer, Consumer &consumer)
     {
-        static void call(Producer &producer, Consumer &consumer)
-        {
-            consumer.AddActor(&producer);
-        }
-    };
+        consumer.AddActor(&producer);
+    }
 };
 
 template<>
 struct binary_operation_impl<operations::connect, vtk::vtk_renderer_producer, vtk::vtk_rendererwindow_consumer>
 {
     template<typename Producer, typename Consumer>
-    struct apply
+    void operator()(Producer &producer, Consumer &consumer)
     {
-        static void call(Producer &producer, Consumer &consumer)
-        {
-            consumer.AddRenderer(&producer);
-        }
-    };
+        consumer.AddRenderer(&producer);
+    }
 };
 
 } } } // namespace boost::dataflow::extension
@@ -345,31 +348,25 @@ namespace extension {
     template<typename T>
     struct get_port_impl<vtk::pointer_proxy_producer<T> >
     {
+        typedef T & result_type;
+
         template<typename ProxyProducer>
-        struct apply
+        result_type operator()(ProxyProducer &t)
         {
-            typedef T & type;
-            
-            static type call(ProxyProducer &t)
-            {
-                return *t;
-            }
-        };
+            return *t;
+        }
     };
 
     template<typename T>
     struct get_port_impl<vtk::pointer_proxy_consumer<T> >
     {
+        typedef T & result_type;
+        
         template<typename ProxyConsumer>
-        struct apply
+        result_type operator()(ProxyConsumer &t)
         {
-            typedef T & type;
-            
-            static type call(ProxyConsumer &t)
-            {
-                return *t;
-            }
-        };
+            return *t;
+        }
     };
     
 } // namespace extension
@@ -379,8 +376,11 @@ namespace extension {
 //]
 
 //[ vtk_specialize_connect
+// the include templates expect DATAFLOW_TEMPLATE_MECHANISM to have
+// the template type
 #define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::vtk::mechanism
 
+// the binary_operation.hpp template expects DATAFLOW_TEMPLATE_BINARY_OPERATION
 #define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
 #include <boost/dataflow/templates/binary_operation.hpp>
 #undef DATAFLOW_TEMPLATE_BINARY_OPERATION

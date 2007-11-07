@@ -3,17 +3,16 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 //[ test_multi_out_classes
 
-class SignalOutIntFloat : public signals::filter<void (float), signals::unfused>
+class SignalOutIntFloat : public signals::filter<void (float)>
 {
 public:
     SignalOutIntFloat(float x) : x(x) {}
@@ -35,8 +34,8 @@ int test_main(int, char* [])
         //[ test_multi_out_unfused
 
         SignalOutIntFloat multi_out(2.5f);
-        signals::storage<void (float), signals::unfused> float_collector(0);
-        signals::storage<void (int), signals::unfused> int_collector(0);
+        signals::storage<void (float)> float_collector(0);
+        signals::storage<void (int)> int_collector(0);
 
         multi_out >>= float_collector;
         multi_out.out_int >>= int_collector;

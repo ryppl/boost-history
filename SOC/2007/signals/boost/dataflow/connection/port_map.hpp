@@ -66,22 +66,25 @@ namespace extension
     template<typename Mechanism, typename PortCategory, typename KeyTag>
     struct get_keyed_port_impl<fusion_map_port<Mechanism, PortCategory>, KeyTag>
     {
-        template<typename KeyedPort, typename Key>
-        struct apply
+        template<typename Args> struct result;
+        
+        template<typename F, typename KeyedPort, typename Key>
+        struct result<F(KeyedPort &, Key &)>
         {
             typedef typename boost::fusion::result_of::at_key<
-                        typename KeyedPort::map_type,
-                        KeyTag
-                    >::type type;
-
-            static type
-            call(KeyedPort &port, Key &)
-            {
-                return boost::fusion::at_key<
-                        KeyTag
-                    >(port.map());
-            }
+                typename KeyedPort::map_type,
+                KeyTag
+            >::type type;
         };
+
+        template<typename KeyedPort, typename Key>
+        typename result<get_keyed_port_impl(KeyedPort &, Key &)>::type
+            operator()(KeyedPort &port, Key &)
+        {
+            return boost::fusion::at_key<
+                    KeyTag
+                >(port.map());
+        }
     };
 }
     

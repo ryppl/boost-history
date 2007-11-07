@@ -170,6 +170,7 @@
 		08F3FE0C0CA0975100F0E144 /* common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = common.hpp; sourceTree = "<group>"; };
 		08F418080CBD69FE007E7F7A /* port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port.hpp; sourceTree = "<group>"; };
 		08F418AB0CBD7668007E7F7A /* proxy_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = proxy_port.hpp; sourceTree = "<group>"; };
+		08F448760CD5368000E128A8 /* simple_example_components.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = simple_example_components.hpp; sourceTree = "<group>"; };
 		08F4FBB80C56AFDF00EB271A /* producer_wrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = producer_wrapper.hpp; sourceTree = "<group>"; };
 		08F4FC170C56C96300EB271A /* producer_container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = producer_container.hpp; sourceTree = "<group>"; };
 		08F585BE0C5A7ED70086F4F4 /* concepts.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = concepts.qbk; sourceTree = "<group>"; };
@@ -282,7 +283,7 @@
 			path = ../../test;
 			sourceTree = SOURCE_ROOT;
 		};
-		08EF9B200C5D506A00D4D206 /* signal */ = {
+		08EF9B200C5D506A00D4D206 /* signals */ = {
 			isa = PBXGroup;
 			children = (
 				08FBDA3B0CD2748100CC3891 /* conditional_templated.hpp */,
@@ -293,7 +294,7 @@
 				08EF9B450C5D506A00D4D206 /* detail */,
 				08EF9B480C5D506A00D4D206 /* trait */,
 			);
-			path = signal;
+			path = signals;
 			sourceTree = "<group>";
 		};
 		08EF9B210C5D506A00D4D206 /* component */ = {
@@ -498,6 +499,7 @@
 		08F98B3F0CD018E7009D642B /* signals */ = {
 			isa = PBXGroup;
 			children = (
+				08F448760CD5368000E128A8 /* simple_example_components.hpp */,
 				08C3EEA20C625AE30074AB9E /* simple_example.cpp */,
 				08668C4E0C19A16300ACB19A /* simple_distributed_example.cpp */,
 				08F98B400CD0190A009D642B /* Jamfile.v2 */,
@@ -522,7 +524,7 @@
 			children = (
 				08F348960CC021CE006D0A67 /* utility */,
 				08F079940CA88EAB001E6E24 /* templates */,
-				08EF9B200C5D506A00D4D206 /* signal */,
+				08EF9B200C5D506A00D4D206 /* signals */,
 				08F022C10C47556200C0ED27 /* connection */,
 				08F0216A0C473AE000C0ED27 /* detail */,
 				08F01F950C470E1500C0ED27 /* support */,

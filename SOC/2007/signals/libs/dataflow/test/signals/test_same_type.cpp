@@ -3,9 +3,9 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/component/counter.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/component/counter.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -13,10 +13,10 @@ using namespace boost;
 
 //[ test_same_type_classes
 
-class Signal2VoidCounter : public signals::counter<void (), signals::unfused>
+class Signal2VoidCounter : public signals::counter<void ()>
 {
 public:
-	signals::counter<void (), signals::unfused> other;
+	signals::counter<void ()> other;
 }; // end class Signal2VoidCounter
 
 class Signal2VoidInputs
@@ -47,7 +47,7 @@ int test_main(int, char* [])
 {
     {
         //[ test_same_type_unfused
-        signals::storage<void (), signals::unfused> banger;
+        signals::storage<void ()> banger;
         Signal2VoidCounter counter;
         
         banger

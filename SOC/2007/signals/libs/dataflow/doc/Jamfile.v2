@@ -18,9 +18,9 @@ xml dataflow_xml : dataflow.qbk ;
 #   :
 #      [ glob ../../../boost/dataflow/support.hpp ]
 #      [ glob ../../../boost/dataflow/support/*.hpp ]
-#      [ glob ../../../boost/dataflow/signal/*.hpp ]
-#      [ glob ../../../boost/dataflow/signal/connection/*.hpp ]
-#      [ glob ../../../boost/dataflow/signal/component/*.hpp ]
+#      [ glob ../../../boost/dataflow/signals/*.hpp ]
+#      [ glob ../../../boost/dataflow/signals/connection/*.hpp ]
+#      [ glob ../../../boost/dataflow/signals/component/*.hpp ]
 #   :
 #        <doxygen:param>TAB_SIZE=4
 #        <doxygen:param>EXAMPLE_PATH=../test

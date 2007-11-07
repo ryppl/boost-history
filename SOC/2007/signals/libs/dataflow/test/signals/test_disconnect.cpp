@@ -3,9 +3,9 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/component/counter.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/component/counter.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -15,12 +15,12 @@ int test_main(int, char* [])
 {
     {
         //[ test_disconnect_unfused
-        signals::storage<void (), signals::unfused> banger;
+        signals::storage<void ()> banger;
         {
-            signals::counter<void (), signals::unfused> counter;
-            signals::storage<void (float), signals::unfused> floater;
+            signals::counter<void ()> counter;
+            signals::storage<void (float)> floater;
             floater(2.5f);
-            signals::storage<void (float), signals::unfused> collector(0.0f);
+            signals::storage<void (float)> collector(0.0f);
 
             banger | counter;
             floater >>= collector;
@@ -42,7 +42,7 @@ int test_main(int, char* [])
 #endif
         BOOST_CHECK_EQUAL(banger.get_proxied_producer().num_slots(), 0u); 
         
-        signals::counter<void (), signals::unfused> counter;
+        signals::counter<void ()> counter;
         
         banger >>= counter;
         banger.disconnect_all_slots();

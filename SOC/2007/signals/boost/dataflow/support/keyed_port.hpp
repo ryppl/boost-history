@@ -25,29 +25,29 @@ namespace extension
     template<typename KeyedPortTag, typename KeyPortTag>
     struct get_keyed_port_impl
     {        
+        typedef void result_type;
+
         template<typename KeyedPort, typename Key>
-        struct apply
+        void operator()(KeyedPort &, Key &)
         {
-            typedef void type;
-            static void call(KeyedPort &, Key &)
-            {
-                // Error: get_keyed_port_impl has not been implemented
-                // for KeyedPortTag and KeyPort.
-                BOOST_STATIC_ASSERT(sizeof(KeyedPort)==0);
-            }
-        };
+            // Error: get_keyed_port_impl has not been implemented
+            // for KeyedPortTag and KeyPort.
+            BOOST_STATIC_ASSERT(sizeof(KeyedPort)==0);
+        }
     };
 }
     
 template<typename Mechanism, typename PortCategory, typename T1, typename T2>
-typename extension::get_keyed_port_impl<
-    typename port_traits_of<
-        Mechanism, PortCategory, typename boost::remove_cv<T1>::type
-    >::type,
-    typename port_traits_of<
-        Mechanism, typename PortCategory::complement, typename boost::remove_cv<T2>::type
-    >::type
->::template apply<T1, T2>::type
+typename result_of<
+    extension::get_keyed_port_impl<
+        typename port_traits_of<
+            Mechanism, PortCategory, typename boost::remove_cv<T1>::type
+        >::type,
+        typename port_traits_of<
+            Mechanism, typename PortCategory::complement, typename boost::remove_cv<T2>::type
+        >::type
+    > (T1 &, T2 &)
+>::type
 get_keyed_port(T1 &t1, T2 &t2)
 {
     return extension::get_keyed_port_impl<
@@ -57,7 +57,7 @@ get_keyed_port(T1 &t1, T2 &t2)
         typename port_traits_of<
             Mechanism, typename PortCategory::complement, typename boost::remove_cv<T2>::type
         >::type
-    >::template apply<T1, T2>::call(t1, t2);
+    >()(t1, t2);
 }
 
 namespace extension
@@ -69,14 +69,11 @@ namespace extension
         >::type >
     {
         template<typename Producer, typename Consumer>
-        struct apply
+        void operator()(Producer &producer, Consumer &consumer)
         {
-            static void call(Producer &producer, Consumer &consumer)
-            {
-                binary_operation<Operation, typename ProducerTag::mechanism>
-                    (get_keyed_port<typename ProducerTag::mechanism, typename ProducerTag::category>(producer, consumer), consumer);
-            }
-        };
+            binary_operation<Operation, typename ProducerTag::mechanism>
+                (get_keyed_port<typename ProducerTag::mechanism, typename ProducerTag::category>(producer, consumer), consumer);
+        }
     };
     
     template<typename Operation, typename ProducerTag, typename ConsumerTag>
@@ -86,14 +83,11 @@ namespace extension
         >::type >
     {
         template<typename Producer, typename Consumer>
-        struct apply
+        void operator()(Producer &producer, Consumer &consumer)
         {
-            static void call(Producer &producer, Consumer &consumer)
-            {
-                binary_operation<Operation, typename ProducerTag::mechanism>
-                    (producer, get_keyed_port<typename ProducerTag::mechanism, typename ConsumerTag::category>(consumer, producer));
-            }
-        };
+            binary_operation<Operation, typename ProducerTag::mechanism>
+                (producer, get_keyed_port<typename ProducerTag::mechanism, typename ConsumerTag::category>(consumer, producer));
+        }
     };
 
 }

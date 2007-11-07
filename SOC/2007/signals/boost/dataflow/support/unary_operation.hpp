@@ -3,66 +3,72 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DATAFLOW_SUPPORT_DISCONNECT_ALL_OUTS_HPP
-#define BOOST_DATAFLOW_SUPPORT_DISCONNECT_ALL_OUTS_HPP
+#ifndef BOOST_DATAFLOW_SUPPORT_UNARY_OPERATION_HPP
+#define BOOST_DATAFLOW_SUPPORT_UNARY_OPERATION_HPP
 
-#include <boost/dataflow/detail/enable_if_defined.hpp>
+#include <boost/dataflow/support/port.hpp>
 
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 
 
 namespace boost { namespace dataflow {
 
+namespace detail {
+    struct not_implemented;
+}
+
+namespace operations
+{
+    struct disconnect_all;
+}
+
 namespace extension
 {
-    template<typename Mechanism, typename ProducerTag, typename Enable=void>
-    struct disconnect_all_outs_impl
+    template<typename Operation, typename PortTraits, typename Enable=void>
+    struct unary_operation_impl
     {
-        template<typename Producer>
-        struct apply
+        struct detail
         {
-            struct detail
-            {
-                typedef void disconnect_all_outs_impl_unspecialized;
-            };
-
-            static void call(Producer &)
-            {
-                // Error: disconnect_all_outs_impl has not been implemented for
-                // ProducerTag.
-                BOOST_STATIC_ASSERT(sizeof(Producer)==0);
-            }
+            typedef void not_specialized;
         };
+        template<typename Producer>
+        void operator()(Producer &)
+        {
+            // Error: unary_operation_impl Operation has not been
+            // implemented for PortTraits.
+            BOOST_STATIC_ASSERT(sizeof(Producer)==0);
+        }
     };
 }
 
-template<typename Mechanism, typename T, typename Enable=void>
-struct is_out_disconnectable
-    : public boost::true_type {};
+template<typename Operation, typename Mechanism, typename PortCategory, typename T, typename Enable=void>
+struct implements_unary_operation
+    : public mpl::true_ {};
 
-template<typename Mechanism, typename Producer>
-struct is_out_disconnectable<
+template<typename Operation, typename Mechanism, typename Producer, typename PortCategory, typename T>
+struct implements_unary_operation<
+    Operation,
     Mechanism,
-    Producer,
+    PortCategory,
+    T,
     typename detail::enable_if_defined<
-        typename extension::disconnect_all_outs_impl<
-            Mechanism,
-            typename producer_category_of<Mechanism, Producer>::type
-        >::detail::template apply<Producer>::disconnect_all_outs_impl_unspecified
+        typename extension::unary_operation_impl<
+            Operation,
+            typename port_traits_of<Mechanism, PortCategory, Producer>::type
+        >::detail::not_specialized
     >::type
 >
-    : public boost::false_type {};
+    : public mpl::false_ {};
 
-template<typename Mechanism, typename Producer>
-void disconnect_all_outs(Producer &producer)
+template<typename Operation, typename Mechanism, typename PortCategory, typename Port>
+void unary_operation(Port &producer)
 {
-    extension::disconnect_all_outs_impl<
-        Mechanism,
-        typename producer_category_of<Mechanism, Producer>::type
-    >::template apply<Producer>::call(producer);
+    extension::unary_operation_impl<
+        Operation,
+        typename port_traits_of<Mechanism, PortCategory, Port>::type
+    >()(producer);
 }
 
 } } // namespace boost::dataflow
 
-#endif // BOOST_DATAFLOW_SUPPORT_DISCONNECT_ALL_OUTS_HPP
+#endif // BOOST_DATAFLOW_SUPPORT_UNARY_OPERATION_HPP

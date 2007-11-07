@@ -3,10 +3,10 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/connection/detail/result_of_defined.hpp>
+#include <boost/dataflow/signals/connection/detail/result_of_defined.hpp>
 #include <boost/fusion/container/map.hpp>
-#include <boost/dataflow/signal/component/junction.hpp>
-#include <boost/dataflow/signal/component/storage.hpp>
+#include <boost/dataflow/signals/component/junction.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -57,10 +57,10 @@ int test_main(int, char* [])
     BOOST_CHECK(!signals::detail::result_of_defined<has_result()>::value);
     BOOST_CHECK(!signals::detail::result_of_defined<has_result(float, float)>::value);
     bool junction_void_value = signals::detail::result_of_defined<
-        signals::junction<void(), signals::unfused> ()>::value;
+        signals::junction<void()> ()>::value;
     BOOST_CHECK(junction_void_value);
 //    bool junction_int_value = signals::detail::result_of_defined<
-//        signals::junction<void(), signals::unfused> (int)>::value;
+//        signals::junction<void()> (int)>::value;
 //    BOOST_CHECK(!junction_int_value);
     
    return 0;

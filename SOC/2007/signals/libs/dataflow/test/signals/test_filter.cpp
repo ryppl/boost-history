@@ -3,9 +3,9 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/filter.hpp>
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/filter.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 
@@ -15,7 +15,7 @@ using namespace boost;
 
 //[ test_filter_classes
 
-class DoublerClass : public signals::filter<void (float), signals::unfused>
+class DoublerClass : public signals::filter<void (float)>
 {
 public:
     void operator()(float x) {out(2*x);}

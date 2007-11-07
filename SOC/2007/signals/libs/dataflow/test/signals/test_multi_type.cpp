@@ -3,8 +3,8 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/optional.hpp>
 
@@ -46,10 +46,10 @@ int test_main(int, char* [])
 {
     {
         //[ test_multi_type_unfused
-        signals::storage<void (), signals::unfused> banger;
-        signals::storage<void (int), signals::unfused> inter;
+        signals::storage<void ()> banger;
+        signals::storage<void (int)> inter;
         inter(2);
-        signals::storage<void (float), signals::unfused> floater;
+        signals::storage<void (float)> floater;
         floater(3.3f);
         SignalIntFloatCollector collector;
         

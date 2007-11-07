@@ -3,7 +3,7 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/support.hpp>
+#include <boost/dataflow/signals/support.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -12,8 +12,6 @@
 struct receiver
     : public boost::dataflow::port<boost::dataflow::signals::call_consumer>    
 {
-    typedef void result_type;
-    
     receiver() : stored(0) {}
     
     void operator()(int x)
@@ -30,7 +28,7 @@ int test_main(int, char* [])
     boost::signal<void(int)> p;
     receiver r;
     
-    boost::dataflow::binary_operation<boost::dataflow::operations::connect, boost::dataflow::signals::mechanism>(p, r);
+    connect(p, r);
     
     p(3);
     

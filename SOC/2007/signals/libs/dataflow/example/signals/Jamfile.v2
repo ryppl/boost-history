@@ -11,9 +11,9 @@ project dataflow/example/signals
     ;
 
 exe intro_example : intro_example.cpp ;
-exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static/<thrd-api>pthread ;
+exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static ;
 exe simple_distributed_example : simple_distributed_example.cpp
     /boost/serialization//boost_serialization/<link>static
-    /boost/thread//boost_thread/<link>static/<thrd-api>pthread
+    /boost/thread//boost_thread/<link>static
     /boost/system//boost_system/<link>static ;
 

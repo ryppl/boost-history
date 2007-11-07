@@ -50,7 +50,7 @@ A ['[PortTraitsConcept]] specifies the traits of a [PortConcept].
 
 [heading Notation]
 [variablelist
-    [[PC] [A PortTraits type.]]
+    [[PT] [A PortTraits type.]]
     [[P] [A [PortConcept] type with port traits `PC`.]]
 ]
 
@@ -59,19 +59,19 @@ A ['[PortTraitsConcept]] specifies the traits of a [PortConcept].
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Mechanism]
-        [`PC::mechanism`]
+        [`PT::mechanism`]
         [any type]
         [[MechanismConcept] type tag.]
     ]
     [
         [Port Category]
-        [`PC::port_category`]
+        [`PT::port_category`]
         [[PortCategoryConcept] type]
         [The category of the port]
     ]
     [
         [Port Concept]
-        [`PC::port_concept`]
+        [`PT::port_concept`]
         [`concepts::port`, `concepts::keyed_port`]
         [The most refined producer concept that `P` satisfies.]
     ]
@@ -116,9 +116,10 @@ In that case,
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A Port type.]]
-    [[M] [A [MechanismConcept] type.]]
-    [[PC] [A [PortCategoryConcept] type.]]
+    [[`P`] [A Port type.]]
+    [[`M`] [A [MechanismConcept] type.]]
+    [[`PC`] [A [PortCategoryConcept] type.]]
+    [[`p`] [An object of type `P`]]
 ]
 
 [heading Requirements]
@@ -139,6 +140,16 @@ The following expressions are used in this document:
         [
             A trait encapsulating adherence to the Port
             concept.
+        ]
+    ]
+    [
+        [Get Port]
+        [`get_port<M,PC>()`]
+        [`get_port_result_type<M,PC,P>::type`]
+        [
+            Returns the underlying port object.  With regular ports,
+            this is typically the same as `p`.  With [ProxyPortConcept]
+            objects, it is typically the proxied port object.
         ]
     ]
 ]

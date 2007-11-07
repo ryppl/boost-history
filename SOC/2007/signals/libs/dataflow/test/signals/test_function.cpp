@@ -3,25 +3,24 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/function.hpp>
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/function.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 int test_main(int, char* [])
 {
     {
         //[ test_function_unfused
-        signals::function<void (float), float(float), signals::unfused>
+        signals::function<void (float), float(float)>
             double_fun1(boost::bind(std::multiplies<float>(), _1, 2.0f));
-        signals::function<void (float), float(float), signals::unfused>
+        signals::function<void (float), float(float)>
             double_fun2(boost::bind(std::multiplies<float>(), _1, 2.0f));
-        signals::storage<void (float), signals::unfused> floater(1.0f);
-        signals::storage<void (float), signals::unfused> collector(0.0f);
+        signals::storage<void (float)> floater(1.0f);
+        signals::storage<void (float)> collector(0.0f);
 
         floater >>= double_fun1 >>= double_fun2 >>= collector;
         floater.send();

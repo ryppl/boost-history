@@ -12,22 +12,22 @@ using boost::unit_test::test_suite;
 
 #define BOOST_SIGNALS_STATIC_LINK
 #include <boost/optional.hpp>
-#include <boost/dataflow/signal/filter.hpp>
-#include <boost/dataflow/signal/storage.hpp>
-#include <boost/dataflow/signal/junction.hpp>
-#include <boost/dataflow/signal/selector.hpp>
-#include <boost/dataflow/signal/mutex.hpp>
-#include <boost/dataflow/signal/timed_generator.hpp>
-#include <boost/dataflow/signal/function.hpp>
-#include <boost/dataflow/signal/chain.hpp>
+#include <boost/dataflow/signals/filter.hpp>
+#include <boost/dataflow/signals/storage.hpp>
+#include <boost/dataflow/signals/junction.hpp>
+#include <boost/dataflow/signals/selector.hpp>
+#include <boost/dataflow/signals/mutex.hpp>
+#include <boost/dataflow/signals/timed_generator.hpp>
+#include <boost/dataflow/signals/function.hpp>
+#include <boost/dataflow/signals/chain.hpp>
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define _WIN32_WINDOWS
 #endif
-#include <boost/dataflow/signal/socket_receiver.hpp>
-#include <boost/dataflow/signal/socket_sender.hpp>
+#include <boost/dataflow/signals/socket_receiver.hpp>
+#include <boost/dataflow/signals/socket_sender.hpp>
 #undef _WIN32_WINDOWS
 
 // for access to connection operators >>= and |
@@ -61,16 +61,16 @@ public:
 	}
 };
 
-class SignalMultiInheritedCollector : public signals::storage<void (float), signals::unfused>, public SignalVoidCounter, public SignalFloat2Collector
+class SignalMultiInheritedCollector : public signals::storage<void (float)>, public SignalVoidCounter, public SignalFloat2Collector
 {
 public:
-    SignalMultiInheritedCollector() : signals::storage<void (float), signals::unfused>(0) {}
+    SignalMultiInheritedCollector() : signals::storage<void (float)>(0) {}
 };
 
 void multi_num_args_inherited_test()
 {
-	signals::storage<void (), signals::unfused> banger;
-	signals::storage<void (float), signals::unfused> floater;
+	signals::storage<void ()> banger;
+	signals::storage<void (float)> floater;
 	floater(2.5f);
 	SignalFloatDuplicator duplicator;
 	SignalMultiInheritedCollector collector;
@@ -79,7 +79,7 @@ void multi_num_args_inherited_test()
 		| (SignalVoidCounter &) collector
 		|
 		(floater
-			| (signals::storage<void (float), signals::unfused> &) collector
+			| (signals::storage<void (float)> &) collector
 			| (duplicator >>= (SignalFloat2Collector &) collector));
 
 	banger();
@@ -94,11 +94,11 @@ void multi_num_args_inherited_test()
 
 void selector_test()
 {
-/*	signals::storage<void (), signals::unfused> banger;
-	signals::storage<void (float), signals::unfused> floater1, floater2;
+/*	signals::storage<void ()> banger;
+	signals::storage<void (float)> floater1, floater2;
 	floater1(1.0f);
 	floater2(2.0f);
-	signals::storage<void (float), signals::unfused> collector(0.0f);
+	signals::storage<void (float)> collector(0.0f);
 	signals::selector<2, void (float)> selector;
 
 	banger >>= floater1 >>= selector.slot1();

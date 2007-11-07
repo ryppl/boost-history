@@ -48,13 +48,13 @@ by the [DataflowSignals] module:
 * can receive both fused and unfused signals
 * has both a version that sends fused signals and a version that sends unfused signals.
 
-The type of sent signal is provided as a template argument to the class, and the default value can be set
-by defining `SIGNAL_NETWORK_DEFAULT_OUT` to either `unfused` or `fused` before including a sinal
-network component.
+The type of sent signal is provided as a template argument to the class, with
+the default value being `unfused`.
 
 For example,
 
     signals::storage<int (int, int &, const std::string &>), signals::unfused> unfused_storage;
+    signals::storage<int (int, int &, const std::string &>)> unfused_storage_by_default;
     signals::storage<int (int, int &, const std::string &>), signals::fused> fused_storage;
 
 In the above case, `unfused_storage` is similar to `f` above, and can be used as a slot
@@ -62,16 +62,21 @@ for signals which carry regular, unfused arguments.
 On the other hand, `fused_storage` acts as a function object similar to `fused_f` above.
 Hence, it can be used as a slot for signals which carry a fusion container as an argument.
 
-[heading Examples often show both versions]
+[heading Examples mostly show unfused versions]
 
-The examples shown in this documentation often show both a fused and unfused
-version.  In the vast majority of cases, when all of the components used are
-library-provided components, the fused and unfused examples are identical
-except for the specifications that the components should be fused or unfused.
+The examples shown in this documentation are mostly focused on the unfused
+versions of the components, since a user starting with the library
+is most likely to be using the library with unfused components.
+In the vast majority of cases, when all of the
+components used are library-provided components, the fused and unfused examples
+are identical except for the specifications that the components should be fused
+or unfused.
 
 The biggest differences come into play when the examples
 include user-implemented components - implementing a fused component can
 be slightly (or greatly) different from implementing an unfused component.
+In these situations, the documentation should state the differences in code
+when using fused components.
 
 [endsect][/fusion]
 
@@ -84,7 +89,7 @@ first.]
 [DataflowSignals] provides many common building block components for a
 signal-based dataflow network.  The most basic is [storage], which
 can be used to store a value received through a signal, send it on, 
-and/or retreive it.
+and/or retrieve it.
 
 By default, components in the library use `operator()` to receive a signal.
 For example, when a [storage] object receives a signal through its `operator()`
@@ -141,5 +146,91 @@ To proceed, you may want to look at
 * Using the [link dataflow.connections connection operators] to make connections.
 
 [endsect][/start]
+
+[section Examples]
+
+[section:pull Pull-based networks]
+
+The [DataflowSignals] module was built with push-based networks in
+mind (the data producer sends data through a signal), but it can also
+be used for pull-based networks (the data consumer requests data through
+a signal).
+
+For example, the following component requests a value through a signal,
+and returns twice the value:
+
+[test_pull_classes]
+
+This class can be connected using the usual [operators]:
+
+[test_pull_unfused]
+
+[endsect][/pull]
+
+[section:disconnect Disconnecting]
+
+Connections can be terminated in two ways.  One is through the "trackable"
+mechanism of Boost.Signals, which will automatically destroy connections
+to a trackable object when the object is destroyed.  The other
+way is through the disconnect_all_slots method of the signal sender.
+
+[test_disconnect_unfused]
+
+[endsect][/disconnect]
+
+[section:multiple_different Multiple slots of different signatures]
+
+It is simple to have an object provide multiple slots through operator() functions
+of different signatures.  The following class does so through providing unary slots
+of different types:
+
+[test_multi_type_classes]
+
+[/The following class, on the other hand, uses slots of different number of arguments:
+
+[test_multi_type_classes]]
+
+In such cases, where the operator() functions differ in their signature,
+standard connection operators will work out the correct connection:
+
+[test_multi_args_unfused]
+
+[endsect][/multiple_different]
+
+[section:multiple_same Multiple inputs of the same signature]
+
+In some cases, a class may want to receive multiple signals of the same
+signature.  [/For example, the following class can receive a void() signal
+through its inherited operator() function, as well as through the
+operator() function of member "other":
+
+[test_same_type_class1]
+
+For example, the following class could receive void() signals both
+through operator() and through AltInput:
+
+[test_same_type_classes]
+
+The following example shows how to connect signals to all of the above slots.
+For the class Signal2VoidInputs, this is accomplished using the
+slot_selector function:
+
+[test_same_type_unfused]
+
+[endsect][/multiple_same]
+
+[section:multi_out Multiple outputs]
+
+Multiple outputs can be achieved by introducing additional signals in the class.
+
+[test_multi_out_unfused]
+
+The example uses the following classes:
+
+[test_multi_out_classes]
+
+[endsect][/multi_out]
+
+[endsect][/examples]
 
 [endsect][/introduction]

@@ -25,13 +25,10 @@ template<>
 struct component_operation_impl<operations::invoke, my_component_traits>
 {
     template<typename Component>
-    struct apply
+    void operator()(Component &)
     {
-        static void call(Component &)
-        {
-            invoked = true;
-        }
-    };
+        invoked = true;
+    }
 };
 
 }}}

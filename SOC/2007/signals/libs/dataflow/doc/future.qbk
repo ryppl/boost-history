@@ -1,16 +1,55 @@
 [section:future Future Directions]
 
-There is also a planned /blueprint/ layer (not implemented yet), which
-would provide generic components that are used to provide a "big picture"
-of a dataflow network.  A blueprint component corresponds to an actual,
+[section:blueprint The blueprint layer]
+
+The current focus of the Dataflow library are mechanisms in which the
+dataflow network is stored in the individual components - i.e., there
+is no global picture of the network available through the library.
+
+One way of adressing this shortcoming is a planned /blueprint/ layer, which
+would provide generic components that would provide this "big picture"
+of a dataflow network.  A blueprint component corresponds to an actual
 component - but whereas the actual component takes care of the work, the
 blueprint component serves as a factory and serializer of the component.
 Hence, a dataflow network blueprint, made out of blueprint components, could
 be used to serialize or instantiate the underlying dataflow network made out
 of actual components.  The blueprint layer is likely to be implemented using
-virtual-based polymorphism and the Boost Graph library.
+run-time polymorphic classes and the Boost Graph library.
 
-[section:pin Comparison with a pin-based approach, proposed by Tobias Schwinger]
+[endsect]
+
+[section:gui GUI based dataflow network construction]
+
+Many dataflow-oriented frameworks have a visual programming environment.
+Examples are [@http://www.cycling74.com/products/maxmsp MAX/MSP] and
+[@http://www.ni.com/labview/ LabVIEW].
+
+The [@http://vcreatelogic.com/oss/vtkdesigner/index.html VTK Designer]
+has recently introduced a similar environment for C++ (and [VTK]),
+based on the [@http://vcreatelogic.com/oss/gcf/index.html Generic
+Component Framework] and is released under the GNU GPL license.
+
+Once the [blueprint] layer is built, it might be possible to integrate
+it with the Generic Component Framework to get a visual programming
+environment for the Dataflow library.
+
+[endsect]
+
+[section:layers Support for more layers]
+
+Several boost libraries are prime candidates for dataflow support, and the
+usefulness of the dataflow library would greatly increase either by adding
+support layers for these libraries, or providing examples of how to use these
+libraries with existing layers.
+
+Some of these libraries are:
+
+* Boost.Iostreams
+* Boost.GIL
+
+[endsect]
+
+[section:pin Supporing a pin-based approach, as proposed by Tobias Schwinger]
 
 In the early stages of the design of the then called Signal Network
 library, Tobias Schwinger discussed with me his ideas of an alternative
@@ -60,12 +99,6 @@ which the Dataflow generic support layer might need to grow to accomodate
 the pin-based implementation, but perhaps in the end it will show that the
 signal-based approach and the pin-based approach are not too different, and
 perhaps even compatible or convertible between each other.
-
-[/In the pin-based approach, the situation is reversed.  There is a "big picture" of what the complete
-network looks like, and the network control mechanism uses this information to decide when a component
-should be invoked and to manage the data shared between the components via pins.  Global
-knowledge of the network can be used for better optimization, serialization, etc.  However, it may
-come at the price of some intrusiveness to the computation components.]
 
 [endsect]
 

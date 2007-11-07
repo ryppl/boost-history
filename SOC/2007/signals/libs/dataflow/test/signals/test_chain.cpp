@@ -3,9 +3,9 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/chain.hpp>
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/chain.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
@@ -14,10 +14,9 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 //[ test_chain_classes
-class UnfusedDoublerClass : public signals::filter<void (float), signals::unfused>
+class UnfusedDoublerClass : public signals::filter<void (float)>
 {
 public:
     typedef void result_type;

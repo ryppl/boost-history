@@ -3,7 +3,7 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/counter.hpp>
+#include <boost/dataflow/signals/component/counter.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -13,7 +13,7 @@ int test_main(int, char* [])
 {
     {
         //[ test_counter_unfused
-        signals::counter<void (), signals::unfused> counter;
+        signals::counter<void ()> counter;
         
         for (int i=0; i<33; i++)
             counter();

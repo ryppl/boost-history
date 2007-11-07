@@ -16,6 +16,7 @@
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/utility/result_of.hpp>
 
 namespace boost { namespace dataflow {
 
@@ -145,17 +146,20 @@ namespace extension
     template<typename Traits>
     struct get_port_impl
     {
-        template<typename T>
-        struct apply
+        template<typename Args> struct result;
+        
+        template<typename F, typename T>
+        struct result<F(T &) >
         {
             typedef T & type;
-
-            static type call(T &p)
-            {
-                BOOST_MPL_ASSERT(( is_port<typename Traits::mechanism, typename Traits::category, T> ));
-                return p;
-            }
         };
+        
+        template<typename T>
+        T & operator()(T &p)
+        {
+            BOOST_MPL_ASSERT(( is_port<typename Traits::mechanism, typename Traits::category, T> ));
+            return p;
+        }
     };
 }
 
@@ -173,14 +177,16 @@ struct get_port_result_type<
     typename disable_if<is_proxy_port<Mechanism, PortCategory, T> >::type>
 {
     typedef
-        typename
-            extension::get_port_impl<
-                typename port_traits_of<
-                    Mechanism,
-                    PortCategory,
-                    typename utility::underlying_type<T>::type
-                >::type
-            >::template apply<typename remove_reference<T>::type>::type type;
+        typename result_of<
+            typename
+                extension::get_port_impl<
+                    typename port_traits_of<
+                        Mechanism,
+                        PortCategory,
+                        typename utility::underlying_type<T>::type
+                    >::type
+                >(T &)
+            >::type type;
 };
 
 template<typename Mechanism, typename PortCategory, typename T>
@@ -192,7 +198,7 @@ get_port(T &p)
 {
     return extension::get_port_impl<
             typename port_traits_of<Mechanism, PortCategory, typename boost::remove_cv<T>::type >::type
-            >::template apply<T>::call(p);
+            >()(p);
 }
 
 } } // namespace boost::dataflow

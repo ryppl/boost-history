@@ -38,8 +38,10 @@
 [template ComponentOperableConcept[] [link dataflow.concepts.componentoperable [^ComponentOperable]]]
 [template InvocableConcept[] [link dataflow.concepts.componentoperable [^Invocable]]]
 
+[template SignalPortTraitsConcept[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
 [template SignalProducerConcept[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
 [template SignalConsumerConcept[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
+
 [template PhoenixProducerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
 [template PhoenixConsumerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
@@ -79,6 +81,7 @@
 [template BoostFusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 [template BoostIostreams[] [@http://www.boost.org/libs/iostreams/doc/index.html]]
 [template BoostSignals[] [@http://www.boost.org/doc/html/signals.html Boost.Signals]]
+[template BoostThread[] [@http://www.boost.org/doc/html/thread.html Boost.Thread]]
 [template BoostPhoenix2[] [@http://spirit.sourceforge.net/ Boost.Phoenix2]]
 [template BoostPhoenix[] [@http://spirit.sourceforge.net/ Boost.Phoenix]]
 [template BoostAsio[] [@http://asio.sourceforge.net/boost_asio_0_3_8/libs/asio/doc/html/index.html Boost.Asio]]
@@ -91,6 +94,7 @@
 [template vtkActor[] [@http://www.vtk.org/doc/nightly/html/classvtkActor.html ['vtkActor]]]
 [template vtkRenderer[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkRenderer]]]
 
+[template blueprint[] [link dataflow.future.blueprint blueprint]]
 
 
 [import ../test/signals/test_connect.cpp]
@@ -113,8 +117,9 @@
 [import ../test/signals/test_mutex.cpp]
 
 [import ../example/fibonacci.cpp]
-[import ../example/simple_example.cpp]
-[import ../example/simple_distributed_example.cpp]
+[import ../example/signals/simple_example_components.hpp]
+[import ../example/signals/simple_example.cpp]
+[import ../example/signals/simple_distributed_example.cpp]
 [import ../example/signals/intro_example.cpp]
 
 [import ../example/VTK/support.hpp]
@@ -122,7 +127,8 @@
 Dataflow is a generic library for [WikiDataflow] programming using various data
 transport mechanisms.  It also has layers of support for
 two data transport mechanisms - one is based on
-[BoostSignals], and the other (experimental) is based connections made through
+[BoostSignals], and the other (experimental and currently broken) is based
+connections made through
 simple object pointers, with support for using [BoostPhoenix2]
 actors for data processing.
 
@@ -160,12 +166,31 @@ as well as some status updates can be found on the
 
 [section:discussion Discussion on Boost Community Feedback]
 
-The following summarizes some of the suggestions / comments given by the Boost community, and
-what has been done to incorporate this feedback.
+The following summarizes some of the suggestions / comments given by the Boost
+community, and what has been done to incorporate this feedback.
+
+[* Douglas Gregor has suggested the dataflow library could be applied to
+   [VTK] and [BoostIostreams], gave helpful suggestions on how deal with
+   fused/unfused issues in the [DataflowSignals] documentation and the code,
+   and suggested making the examples more connected to the introductory
+   examples and including visual diagrams for the dataflow networks.]
+
+* I have added an [link dataflow.introduction.examples.new_layer example]
+  of [VTK] support, but the library is not quite ready for [BoostIostreams].
+* As per Doug's suggestion, I have made the documentation focus on the
+  unfused components, and made the unfused components default in the
+  implementation.
+* I have started ASCII visual diagrams in the documentation.
+* Examples still need to be expanded and integrated more.
+
+[* Jake Voytko suggested having master table of [BoostDataflow] components
+   describing their use, adding instructions on linking with the library.]
+* A master table has been added to the [components] page.
+* I have started a [link dataflow.introduction.link linking] instruction page.
 
 [* Tobias Schwinger indicated that the library could be used for pulling rather than pushing data.]
 
-* [link dataflow.connections.pull An example] which illustrates this has been addded.
+* [link dataflow.signals.introduction.examples.pull An example] which illustrates this has been addded.
 
 [* James Jones suggested that a ||-like operator could be used for branching, and >> for chaining.]
 
@@ -177,7 +202,7 @@ operator.
 [* Paolo Coletta suggested a "video_generator >>= ( effect1 && effect2 ) >>= image_sum" - like syntax that
   would allow parallel processing of signals (identified as the "join" pattern by Yigong Liu)]
 
-* I have started to implement thread-related components in [timed_generator] and [mutex].
+* I have started to implement thread-related components in [timed_storage] and [mutex].
 More sophisticated threading components, control and syntax to follow.
 
 [* Yigong Liu suggested enhanced support for common network topologies, such as mesh. ]
@@ -239,9 +264,21 @@ Original request for interest version available as attachment to
 
 [section:acknowledgements Acknowledgements]
 
-* Thanks to Douglas Gregor for making himself available as a mentor for this project, and for his support, suggestions and feedback.
-* Thanks to all the members of the Boost community who have expressed an interest in this library
-  and contributed [link dataflow.discussion valuable feedback].
+* Thanks to the [@http://ame.asu.edu Arts, Media and Engineering Program] of
+  Arizona State University for
+  allowing the release of a prototype implementation of a boost::signal based
+  dataflow library for the purposes of proposing a Google Summer of
+  Code project.
+* Thanks to Google for funding and Boost for accepting the Dataflow library
+  as a GSoC project,
+  during which the library has been completely rewritten (several times) to
+  produce a much cleaner, more maintainable and more useful library.
+* Thanks to Douglas Gregor for making himself available as a mentor for the GSoC
+  project, and for his support, suggestions and feedback.
+* Thanks to all the members of the Boost community who have expressed an
+  interest in this library and contributed
+  [link dataflow.discussion valuable feedback], in particular Douglas Gregor and
+  Jake Voytko for in-depth reviews of the library.
 * Thanks to Tobias Schwinger for a most valuable discussion on various
   dataflow-oriented approaches and ideas.
 

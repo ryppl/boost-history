@@ -5,50 +5,13 @@
 
 //[ simple_example
 
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/component/timed_generator.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/component/timed_generator.hpp>
+#include <boost/dataflow/signals/connection.hpp>
+#include "simple_example_components.hpp"
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/normal_distribution.hpp>
-#include <boost/random/variate_generator.hpp>
-#include <iostream>
 
 using namespace boost;
-
-// This will be our data processor.  The signature void(double) designates
-// the output signal (we will be sending out an double).  The signals
-// we can receive depend on how we overload operator().
-class processor : public signals::filter<void (double)>
-{
-public:
-    // Initialize the Gaussian noise generator.
-    processor() : generator(mt, dist) {}
-    
-    // Receive void(double) signals, add some Gaussian noise, and send
-    // out the modified value.
-    void operator()(double x)
-    {
-        out(x + generator());
-    }
-private:
-    mt19937 mt;
-    normal_distribution<> dist;
-    boost::variate_generator<mt19937&, boost::normal_distribution<> > generator;
-};
-
-// This will be our data output.  We just need to make a function object,
-// and specify that it is a signals::call_consumer.
-class output
-{
-public:
-    typedef dataflow::signals::call_consumer port_traits;
-    
-    void operator()(double x)
-    {
-        std::cout << x << std::endl;
-    }
-};
 
 int main(int, char* [])
 {
@@ -57,14 +20,21 @@ int main(int, char* [])
     // at a specified time interval.  We'll store a value of 0 to be sent out.
     // The signature void(double) specifies that the signal carries a double,
     // and that there is no return value.
-    signals::timed_generator<void (double), signals::unfused> input(0);
+    signals::timed_generator<void (double)> input(0);
     
     // Data processor and output:
     processor proc;
     output out;
     
-    // Now connect the network:
+    // ---Connect the dataflow network ---------------------
+    //
+    //     ,---------.     ,---------.     ,---------.
+    //     |  input  | --> |  proc   | --> |   out   |
+    //     `---------'     `---------'     `---------'
+    //
+    // -----------------------------------------------------
     input >>= proc >>= out;
+
     // If you prefer, you can also do:
     // connect(input, proc);
     // connect(proc, out);

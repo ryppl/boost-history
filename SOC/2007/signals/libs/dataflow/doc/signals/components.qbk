@@ -6,10 +6,11 @@ and their use.
 
 [table
     [[Component][Use]]
-    [[[filter]][Base class for your own components]]
-    [[[junction]][This will be renamed to gate, it controls whether signals pass through it]]
-    [[[multiplexer]][Allows selection of which of the input ports is forwarded]] 
-    [[[counter]][Counts the number of signals passing through]]
+    [[[filter]][Base class for your own components.]]
+    [[[storage]][Stores signal arguments.]]
+    [[[counter]][Counts the number of signals passing through.]]
+    [[[junction]][Convenient when multiple producers need to be connected to the same set of consumers.  Also has gate functionality.]]
+    [[[multiplexer]][Allows selection of which of the input ports is forwarded]]
     [[[mutex]][Provides mutexing on incoming signals for multithreaded environments]]
     [[[condition]][Signals a threading condition whenever a signal is received]]
     [[[function]][Allows any Boost.Function object to be applied to a passing signal]]
@@ -148,10 +149,8 @@ Examples of modifiers:
 The [storage] class can store the arguments it receives from a signal,
 as well as transmit the stored argument values through its own signal.
 
-[table storage class use example
-    [[fused][unfused]]
-    [[[test_storage_fused]][[test_storage_unfused]]]
-]
+[test_storage_unfused]
+
 [endsect][/storage]
 
 [section:counter counter]
@@ -161,10 +160,7 @@ The [counter] class counts the number of passing signals.  Each time it
 receives a signal, it will increment an internal
 counter and forward the signal.
 
-[table counter class use example
-    [[fused][unfused]]
-    [[[test_counter_fused]][[test_counter_unfused]]]
-]
+[test_counter_unfused]
 
 [endsect][/counter]
 [endsect][/properties]
@@ -184,10 +180,8 @@ counter and forward the signal.
 The [junction] class can be used to bring in multiple signals, and forward
 them all to the same set of output signals.
 
-[table storage class use example
-    [[fused][unfused]]
-    [[[test_junction_fused]][[test_junction_unfused]]]
-]
+[test_junction_unfused]
+
 [endsect][/junction]
 
 [section multiplexer]
@@ -226,10 +220,8 @@ them all to the same set of output signals.
 The [mutex] class locks an internal mutex when it receives a signal, and then forwards the signal.
 [mutex] is an __instantiator__ with the Instantiation boost::mutex::scoped_lock and Member boost::mutex.
 
-[table mutex class use example
-    [[fused][unfused]]
-    [[[test_mutex_fused]][[test_mutex_unfused]]]
-]
+[test_mutex_unfused]
+
 [endsect][/mutex]
 
 [section:condition condition]
@@ -245,10 +237,8 @@ The [mutex] class locks an internal mutex when it receives a signal, and then fo
 
 The [condition] class signals a threading condition when receiving a signal.
 
-[table mutex class use example
-    [[fused][unfused]]
-    [[[test_mutex_fused]][[test_mutex_unfused]]]
-]
+[test_mutex_unfused]
+
 [endsect][/condition]
 
 [endsect][/threading]
@@ -268,10 +258,7 @@ The [condition] class signals a threading condition when receiving a signal.
 The [function] class can be used to apply a function to an incoming signal and output the result.
 [function] is a __modifier__ with the Modifier set to an adapter for the provided function.
 
-[table function class use example
-    [[fused][unfused]]
-    [[[test_function_fused]][[test_function_unfused]]]
-]
+[test_function_unfused]
 
 [endsect][/function]
 
@@ -316,7 +303,7 @@ The example above uses the following classes:
   
 [heading Description]
 
-The [socket_sender] class can be used to bridge a signal network accross multiple computers via a
+The [socket_sender] class can be used to bridge a signal network across multiple computers via a
 network connection.  Any signal going to the [socket_sender] will be serialized and sent over a provided
 socket.  A [socket_receiver] can be used on the other end to unserialize the signal and forward it.
 
@@ -335,7 +322,7 @@ Example:
   
 [heading Description]
 
-The [socket_receiver] class can be used to bridge a signal network accross multiple computers via a
+The [socket_receiver] class can be used to bridge a signal network across multiple computers via a
 network connection.  Any signal going to the [socket_sender] will be serialized and sent over a provided
 socket.  A [socket_receiver] can be used on the other end to unserialize the signal and forward it.
 

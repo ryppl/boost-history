@@ -62,15 +62,13 @@ namespace boost { namespace dataflow { namespace extension {
     template<>
     struct get_port_impl<my_non_intrusive_proxy_producer_traits>
     {
+        typedef my_producer & result_type;
+        
         template<typename T>
-        struct apply
+        result_type operator()(T &t)
         {
-            typedef my_producer &type;
-            static type call(T &t)
-            {
-                return t.my_producer;
-            }
-        };
+            return t.my_producer;
+        }
     };
     
 

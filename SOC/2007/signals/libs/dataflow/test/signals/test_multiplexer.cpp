@@ -3,9 +3,9 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signal/component/multiplexer.hpp>
-#include <boost/dataflow/signal/component/storage.hpp>
-#include <boost/dataflow/signal/connection.hpp>
+#include <boost/dataflow/signals/component/multiplexer.hpp>
+#include <boost/dataflow/signals/component/storage.hpp>
+#include <boost/dataflow/signals/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -15,8 +15,8 @@ int test_main(int, char* [])
 {
     {
         //[ test_multiplexer_unfused
-        signals::storage<void (float), signals::unfused> one(1.0f), two(2.0f), collector(-1.0f);
-        signals::multiplexer<void (float), signals::unfused> multiplexer;
+        signals::storage<void (float)> one(1.0f), two(2.0f), collector(-1.0f);
+        signals::multiplexer<void (float)> multiplexer;
         
         one >>= multiplexer.slot<1>();
         two >>= multiplexer.slot<2>();
