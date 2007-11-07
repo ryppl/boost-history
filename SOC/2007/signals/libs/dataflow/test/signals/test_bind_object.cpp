@@ -14,7 +14,7 @@ struct adder
     
     int add(int x, float y)
     {
-        return x + y + z;
+        return int(x + y + z);
     }
     
     int z;
@@ -28,7 +28,7 @@ int test_main(int, char* [])
     
     f = boost::signals::detail::bind_object<int(int, float), adder>()(&adder::add, a);
     
-    BOOST_CHECK_EQUAL(f(4, 2.1), 16);
+    BOOST_CHECK_EQUAL(f(4, 2.1f), 16);
     
     return 0;
 }
