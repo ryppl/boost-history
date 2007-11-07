@@ -13,10 +13,10 @@
 #include <map>
 #include <boost/system/error_code.hpp>
 
-#include "request_impl.hpp"
-#include "../detail/cgi_service_impl_base.hpp"
-#include "../detail/extract_params.hpp"
-#include "../connections/stdio.hpp"
+#include "boost/cgi/cgi/request_impl.hpp"
+#include "boost/cgi/detail/cgi_service_impl_base.hpp"
+#include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/connections/stdio.hpp"
 
 namespace cgi {
 

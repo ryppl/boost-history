@@ -168,8 +168,8 @@ namespace cgi {
         ostream_<< "Content-type: text/plain\r\n\r\n";
         headers_sent_ = true;
       }
-      cgi::write(req, headers_);
-      cgi::write(req, rdbuf()->data());
+      ::cgi::write(req, headers_);
+      ::cgi::write(req, rdbuf()->data());
       // the above function will throw on an error
       clear();
     }
@@ -188,7 +188,7 @@ namespace cgi {
         ostream_<< "Content-type: text/plain\r\n\r\n";
         headers_sent_ = true;
       }
-      if(!cgi::write(req, rdbuf()->data(), ec))
+      if(!::cgi::write(req, rdbuf()->data(), ec))
         clear();
       return ec;
     }
@@ -227,9 +227,9 @@ namespace cgi {
         ostream_<< "Content-type: text/plain\r\n\r\n";
         headers_sent_ = true;
       }
-      cgi::async_write(req, rdbuf()->data()
-                      , flush_handler<Handler>
-                          (*this, handler, boost::arg<1>()));
+      ::cgi::async_write(req, rdbuf()->data()
+                        , flush_handler<Handler>
+                            (*this, handler, boost::arg<1>()));
     }
 
 
@@ -277,7 +277,7 @@ namespace cgi {
         ostream_<< "Content-type: text/plain\r\n\r\n";
         headers_sent_ = true;
       }
-      cgi::write(req.client(), rdbuf()->data());
+      ::cgi::write(req.client(), rdbuf()->data());
       req.set_status(http_status_);
     }
 
@@ -295,7 +295,7 @@ namespace cgi {
         ostream_<< "Content-type: text/plain\r\n\r\n";
         headers_sent_ = true;
       }
-      cgi::write(req.client(), rdbuf()->data(), ec);
+      ::cgi::write(req.client(), rdbuf()->data(), ec);
       req.set_status(http_status_);
       return ec;
     }
@@ -313,7 +313,7 @@ namespace cgi {
         ostream_<< "Content-type: text/plain\r\n\r\n";
         headers_sent_ = true;
       }
-      cgi::async_write(req, rdbuf()->data(), handler);
+      ::cgi::async_write(req, rdbuf()->data(), handler);
     }
 
     /// Get the buffer associated with the stream
@@ -356,6 +356,6 @@ namespace cgi {
 
 } // namespace cgi
 
-#include "detail/pop_options.hpp"
+#include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_REQUEST_OSTREAM_HPP_INCLUDED__

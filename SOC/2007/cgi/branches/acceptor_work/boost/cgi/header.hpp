@@ -20,10 +20,18 @@ namespace cgi {
     {
     }
 
+    /*
     /// Templated constructor to allow user-defined types to be converted
     template<typename T>
-    header::header(T& t)
+    header(T& t)
       : content(t.to_string())
+    {
+    }
+    */
+
+    //template<>
+    header(const std::string& _content)
+      : content(_content)
     {
     }
 

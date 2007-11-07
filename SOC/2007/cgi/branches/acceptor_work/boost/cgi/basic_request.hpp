@@ -82,6 +82,7 @@ namespace cgi {
     typedef ProtocolService                              protocol_service_type;
     typedef boost::shared_ptr<type>                      pointer;
     typedef typename RequestService::implementation_type implementation_type;
+    typedef typename implementation_type::client_type    client_type;
 
 
     // Throws
@@ -214,6 +215,11 @@ namespace cgi {
     void abort()
     {
       this->service.set_status(this->impl, aborted);
+    }
+
+    client_type& client()
+    {
+      return this->service.client(this->impl);
     }
 
     /// Set the output for the request

@@ -9,6 +9,10 @@
 #ifndef CGI_BASIC_PROTOCOL_SERVICE_FWD_HPP_INCLUDED__
 #define CGI_BASIC_PROTOCOL_SERVICE_FWD_HPP_INCLUDED__
 
+#if _MSC_VER > 1020
+#pragma once
+#endif
+
 #include "boost/cgi/io_service_provider.hpp"
 
 namespace cgi {

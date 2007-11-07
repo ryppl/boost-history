@@ -28,10 +28,11 @@ namespace cgi {
     const short HEADER_LEN = 8;
 
     // Value for version component of Header
-    const short VERSION_1 = 1;
+    const short BOOST_CGI_FASTCGI_VERSION_1 = 1;
 
     // current version
-    const unsigned char VERSION_NUM = (unsigned char)VERSION_1;
+    const unsigned char VERSION_NUM
+      = (unsigned char)BOOST_CGI_FASTCGI_VERSION_1;
 
     // Values for the type component of Header
     enum request_t { BEGIN_REQUEST     =  1
@@ -74,73 +75,92 @@ namespace cgi {
     struct Header
     {
     private:
-      unsigned char version_;
-      unsigned char type_;
-      unsigned char requestIdB1_;
-      unsigned char requestIdB0_;
-      unsigned char contentLengthB1_;
-      unsigned char contentLengthB0_;
-      unsigned char paddingLength_;
-      unsigned char reserved_;
+      /// The underlying type of a FastCGI header.
+      /**
+       * To guarantee the header is laid out exactly as we want, the
+       * structure must be a POD-type (see http://tinyurl.com/yo9eav).
+       */
+      struct implementation_type
+      {
+        unsigned char version_;
+        unsigned char type_;
+        unsigned char requestIdB1_;
+        unsigned char requestIdB0_;
+        unsigned char contentLengthB1_;
+        unsigned char contentLengthB0_;
+        unsigned char paddingLength_;
+        unsigned char reserved_;
+      } impl;
+
     public:
-      Header() { memset(this, 0, sizeof(*this)); }
+      Header() { memset(this->impl, 0, sizeof(*this)); }
 
       Header(request_t t, int id, int len)
-            : version_        (VERSION_NUM)
-            , type_           ((unsigned char)t)
-            , requestIdB1_    ((unsigned char)(id  >> 8) & 0xff)
-            , requestIdB0_    ((unsigned char)(id      ) & 0xff)
-            , contentLengthB1_((unsigned char)(len >> 8) & 0xff)
-            , contentLengthB0_((unsigned char)(len     ) & 0xff)
-            , paddingLength_  ((unsigned char)0)
-            , reserved_       (0)
+            : impl.version_        (VERSION_NUM)
+            , impl.type_           ((unsigned char)t)
+            , impl.requestIdB1_    ((unsigned char)(id  >> 8) & 0xff)
+            , impl.requestIdB0_    ((unsigned char)(id      ) & 0xff)
+            , impl.contentLengthB1_((unsigned char)(len >> 8) & 0xff)
+            , impl.contentLengthB0_((unsigned char)(len     ) & 0xff)
+            , impl.paddingLength_  ((unsigned char)0)
+            , impl.reserved_       (0)
       { }
 
       std::u_int16_t version() const
       {
-        return version_;
+        return impl.version_;
       }
 
       std::u_int16_t type() const
       {
-        return type_;
+        return impl.type_;
       }
 
       std::u_int16_t request_id() const
       {
-        return requestIdB0_ + (requestIdB1_ << 8);
+        return impl.requestIdB0_ + (impl.requestIdB1_ << 8);
       }
 
       std::u_int16_t content_length() const
       {
-        return contentLengthB0_ + (contentLengthB1_ << 8);
+        return impl.contentLengthB0_ + (impl.contentLengthB1_ << 8);
       }
 
       std::u_int16_t padding_length() const
       {
-        return paddingLength_;
+        return impl.paddingLength_;
       }
       int body_length() const
       {
-        return content_length() + padding_length();
+        return impl.content_length() + impl.padding_length();
       }
     };
 
-    struct BeginRequestBody
+    class BeginRequestBody
     {
-      unsigned char roleB1_;
-      unsigned char roleB0_;
-      unsigned char flags_;
-      unsigned char reserved_[5];
+      /// The underlying type of a BeginRequestBody sub-header.
+      /**
+       * To guarantee the header is laid out exactly as we want, the
+       * structure must be a POD-type (see http://tinyurl.com/yo9eav).
+       */
+      struct implementation_type
+      {
+        unsigned char roleB1_;
+        unsigned char roleB0_;
+        unsigned char flags_;
+        unsigned char reserved_[5];
+      } impl;
+
+    public:
 
       int role() const
       {
-        return (roleB1_ << 8 ) + roleB0_;
+        return (impl.roleB1_ << 8 ) + impl.roleB0_;
       }
 
       unsigned char flags() const
       {
-        return flags_;
+        return impl.flags_;
       }
     };
 
@@ -150,63 +170,101 @@ namespace cgi {
       BeginRequestBody body_;
     };
 
-    struct EndRequestBody
+    class EndRequestBody
     {
-      unsigned char appStatusB3_;
-      unsigned char appStatusB2_;
-      unsigned char appStatusB1_;
-      unsigned char appStatusB0_;
-      unsigned char protocolStatus_;
-      unsigned char reserved_[3];
+      /// The underlying type of an EndRequestBody sub-header.
+      /**
+       * To guarantee the header is laid out exactly as we want, the
+       * structure must be a POD-type (see http://tinyurl.com/yo9eav).
+       */
+      struct implementation_type
+      {
+        unsigned char appStatusB3_;
+        unsigned char appStatusB2_;
+        unsigned char appStatusB1_;
+        unsigned char appStatusB0_;
+        unsigned char protocolStatus_;
+        unsigned char reserved_[3];
+      } impl;
 
+    public:
       EndRequestBody( std::u_int64_t appStatus
                     , status_t  procStatus
                     )
-        : appStatusB3_( (appStatus >> 24) & 0xff )
-        , appStatusB2_( (appStatus >> 16) & 0xff )
-        , appStatusB1_( (appStatus >>  8) & 0xff )
-        , appStatusB0_( (appStatus >>  0) & 0xff )
-        , protocolStatus_((unsigned char)procStatus)
+        : impl.appStatusB3_( (appStatus >> 24) & 0xff )
+        , impl.appStatusB2_( (appStatus >> 16) & 0xff )
+        , impl.appStatusB1_( (appStatus >>  8) & 0xff )
+        , impl.appStatusB0_( (appStatus >>  0) & 0xff )
+        , impl.protocolStatus_((unsigned char)procStatus)
       {
-        memset(reserved_, 0, sizeof(reserved_));
+        memset(impl.reserved_, 0, sizeof(impl.reserved_));
       }
     };
 
-    struct EndRequestRecord
+    class EndRequestRecord
     {
-      Header header_;
-      EndRequestBody body_;
+      /// The underlying type of an EndRequestRecord sub-header.
+      /**
+       * To guarantee the header is laid out exactly as we want, the
+       * structure must be a POD-type (see http://tinyurl.com/yo9eav).
+       */
+      struct implementation_type
+      {
+        Header header_;
+        EndRequestBody body_;
+      } impl;
 
+    public:
       EndRequestRecord( std::u_int16_t id
                       , std::u_int64_t appStatus
                       , status_t  procStatus
                       )
-        : header_( END_REQUEST, id, sizeof(EndRequestBody) )
-        , body_( appStatus, procStatus )
+        : impl.header_( END_REQUEST, id, sizeof(EndRequestBody) )
+        , impl.body_( appStatus, procStatus )
       {
       }
     };
 
-    struct UnknownTypeBody
+    class UnknownTypeBody
     {
-      unsigned char type_;
-      unsigned char reserved_[7];
+      /// The underlying type of an UnknownTypeBody sub-header.
+      /**
+       * To guarantee the header is laid out exactly as we want, the
+       * structure must be a POD-type (see http://tinyurl.com/yo9eav).
+       */
+      struct implementation_type
+      {
+        unsigned char type_;
+        unsigned char reserved_[7];
+      } impl;
 
+    public:
       UnknownTypeBody( unsigned char t )
-          : type_(t)
+          : impl.type_(t)
       {
-        memset(reserved_, 0, sizeof(reserved_));
+        memset(impl.reserved_, 0, sizeof(impl.reserved_));
       }
+
+      unsigned char type() const { return impl.type_; }
     };
 
-    struct UnknownTypeRecord
+    class UnknownTypeRecord
     {
-      Header header_;
-      UnknownTypeBody body_;
+      /// The underlying type of a UnknownTypeRecord sub-header
+      /**
+       * To guarantee the header is laid out exactly as we want, the
+       * structure must be a POD-type (see http://tinyurl.com/yo9eav).
+       */
+      struct implementation_type
+      {
+        Header header_;
+        UnknownTypeBody body_;
+      } impl;
 
+    public:
       UnknownTypeRecord( int type )
-        : header_( UNKNOWN_TYPE, 0, sizeof(UnknownTypeBody) )
-        , body_( (unsigned char)type )
+        : impl.header_( UNKNOWN_TYPE, 0, sizeof(UnknownTypeBody) )
+        , impl.body_( (unsigned char)type ) // not sure why this is C-style
       {
       }
     };

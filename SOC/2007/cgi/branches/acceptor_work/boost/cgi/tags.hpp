@@ -9,6 +9,10 @@
 #ifndef CGI_TAGS_HPP_INCLUDED__
 #define CGI_TAGS_HPP_INCLUDED__
 
+#if _MSC_VER > 1020
+#pragma once
+#endif
+
 namespace cgi {
 
   /// SCGI (note, this must be removed)

@@ -9,7 +9,8 @@
 #ifndef CGI_ACGI_REQUEST_IMPL_HPP_INCLUDED__
 #define CGI_ACGI_REQUEST_IMPL_HPP_INCLUDED__
 
-#include "service.hpp"
+#include "boost/cgi/acgi/service.hpp"
+#include "boost/cgi/basic_client.hpp"
 #include "boost/cgi/detail/cgi_request_impl_base.hpp"
 #include "boost/cgi/connections/async_stdio.hpp"
 
@@ -25,6 +26,8 @@ namespace cgi {
   {
   public:
     typedef acgi_service    protocol_service_type;
+    //typedef ::cgi::basic_client<async_stdio_connection, tags::acgi> client_type;
+    typedef async_stdio_connection client_type;
 
     acgi_request_impl()
       : cgi_request_impl_base<async_stdio_connection>()

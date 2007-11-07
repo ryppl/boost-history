@@ -15,6 +15,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/basic_client.hpp"
 #include "boost/cgi/connections/stdio.hpp"
 #include "boost/cgi/role_type.hpp"
 #include "boost/cgi/status_type.hpp"
@@ -40,6 +41,9 @@ namespace cgi {
     : public cgi_request_impl_base<stdio_connection>
   {
   public:
+    //typedef ::cgi::basic_client<stdio_connection, tags::cgi> client_type;
+    typedef stdio_connection client_type;
+
     /// Constructor
     /**
      * Since this request type is synchronous, there is no need for an

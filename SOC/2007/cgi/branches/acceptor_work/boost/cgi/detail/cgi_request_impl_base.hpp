@@ -42,6 +42,8 @@ namespace cgi {
   public:
     typedef ::cgi::map                         map_type;
     typedef Connection                         connection_type;
+    typedef typename 
+      basic_client<Connection, tags::acgi>     client_type;
     typedef typename connection_type::pointer  conn_ptr;
 
     /// Constructor
@@ -80,6 +82,7 @@ namespace cgi {
     status_type request_status_;
 
     conn_ptr connection_;
+    client_type client_;
 
     std::string null_str_;
   };

@@ -1,7 +1,7 @@
 #ifndef CGI_CGI_SERVICE_IMPL_BASE_HPP_INCLUDED__
 #define CGI_CGI_SERVICE_IMPL_BASE_HPP_INCLUDED__
 
-#include "../detail/push_options.hpp"
+#include "boost/cgi/detail/push_options.hpp"
 
 #include <string>
 #include <cstdlib>
@@ -11,6 +11,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "boost/cgi/map.hpp"
+#include "boost/cgi/basic_client.hpp"
 #include "boost/cgi/role_type.hpp"
 #include "boost/cgi/status_type.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
@@ -32,8 +33,8 @@ namespace cgi {
   class cgi_service_impl_base
   {
   public:
-    typedef RequestImplType    implementation_type;
-    typedef cgi::map           map_type;
+    typedef RequestImplType     implementation_type;
+    typedef ::cgi::map          map_type;
 
     cgi_service_impl_base()
     {
@@ -56,7 +57,7 @@ namespace cgi {
     }
 
     /// Return the connection associated with the request
-    typename implementation_type::connection_type&
+    typename implementation_type::client_type&
     client(implementation_type& impl)
     {
       return *impl.connection();
@@ -89,7 +90,7 @@ namespace cgi {
 
       parse_cookie_vars(impl, ec);
       impl.status() = loaded;
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
 
       return ec;
     }
@@ -117,16 +118,16 @@ namespace cgi {
       return meta_data[name];
     }
 
-    std::string meta_get(implementation_type& impl, const std::string& name
+    std::string GET(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       return var(impl.get_vars(), name, ec);
     }
 
-    map_type& meta_get(implementation_type& impl)
+    map_type& GET(implementation_type& impl)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       return impl.get_vars();
     }
 
@@ -142,11 +143,11 @@ namespace cgi {
      -----------------------------------------------
 
      */
-    std::string meta_post(implementation_type& impl, const std::string& name
-                         , boost::system::error_code& ec
-                         , bool greedy = true)
+    std::string POST(implementation_type& impl, const std::string& name
+                    , boost::system::error_code& ec
+                    , bool greedy = true)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       const std::string& val = var(impl.post_vars(), name, ec);
       if (val.empty() && greedy && !ec)
       {
@@ -156,9 +157,9 @@ namespace cgi {
       return val;
     }
 
-    map_type& meta_post(implementation_type& impl)
+    map_type& POST(implementation_type& impl)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       return impl.post_vars();
     }
 
@@ -167,29 +168,29 @@ namespace cgi {
     std::string cookie(implementation_type& impl, const std::string& name
                       , boost::system::error_code& ec)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       return var(impl.cookie_vars(), name, ec);
     }
 
-    map_type& meta_cookie(implementation_type& impl)
+    map_type& cookie(implementation_type& impl)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       return impl.cookie_vars();
     }
 
 
     /// Find the environment meta-variable matching name
-    std::string meta_env(implementation_type& impl, const std::string& name
+    std::string env(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       const char* c = ::getenv(name.c_str());
       return c ? c : impl.null_str();
     }
 
-    map_type& meta_env(implementation_type& impl)
+    map_type& env(implementation_type& impl)
     {
-      BOOST_ASSERT(impl.status() >= loaded);
+      //BOOST_ASSERT(impl.status() >= loaded);
       return impl.env_vars();
     }
 
@@ -211,7 +212,7 @@ namespace cgi {
     parse_get_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure the request is in a pre-loaded state
-      BOOST_ASSERT (impl.status() <= unloaded);
+      //BOOST_ASSERT (impl.status() <= unloaded);
 
       std::string& vars = impl.env_vars()["QUERY_STRING"];
       if (vars.empty())
@@ -231,7 +232,7 @@ namespace cgi {
     parse_cookie_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure the request is in a pre-loaded state
-      BOOST_ASSERT (impl.status() <= unloaded);
+      //BOOST_ASSERT (impl.status() <= unloaded);
 
       std::string& vars(impl.env_vars()["HTTP_COOKIE"]);
       if (vars.empty())
@@ -251,25 +252,25 @@ namespace cgi {
     parse_post_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
-      BOOST_ASSERT (!impl.stdin_parsed());
+      //BOOST_ASSERT (!impl.stdin_parsed());
 
       std::istream& is(std::cin);
       char ch;
       std::string name;
       std::string str;
-      cgi::map& post_map(impl.post_vars());
+      map_type& post_map(impl.post_vars());
 
       const char* a = ::getenv("content_length");
       if (a) str = a;
-      else std::cerr<< "no content-length";
+      else throw std::runtime_error("no content-length");
 
-      std::cerr<< "content length = ";
+      //std::cerr<< "content length = ";
       //var(impl.get_vars(), "CONTENT_LENGTH", ec);
-      std::cerr.flush();
+      //std::cerr.flush();
 
       while( is.get(ch) )
       {
-          std::cerr<< "; ch=" << ch << "; ";
+          //std::cerr<< "; ch=" << ch << "; ";
           switch(ch)
           {
           case '%': // unencode a hex character sequence
@@ -315,6 +316,6 @@ namespace cgi {
 
 } // namespace cgi
 
-#include "../detail/pop_options.hpp"
+#include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__
