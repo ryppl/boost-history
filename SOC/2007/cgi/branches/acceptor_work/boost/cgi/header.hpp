@@ -16,7 +16,7 @@ namespace cgi {
   struct header
   {
     header()
-      : content("\r\n")
+      : content()
     {
     }
 
@@ -36,7 +36,7 @@ namespace cgi {
     }
 
     header(const std::string& name, const std::string& val)
-      : content(name + ": " + val + "\r\n")
+      : content(name + ": " + val)
     {
     }
 

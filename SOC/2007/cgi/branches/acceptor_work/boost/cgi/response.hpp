@@ -12,28 +12,56 @@
 #include "boost/cgi/detail/push_options.hpp"
 
 #include <string>
+#include <fstream> // only for testing
 
 //#include "boost/cgi/request_ostream.hpp"
 #include "boost/cgi/buffer.hpp"
 #include "boost/cgi/cookie.hpp"
 #include "boost/cgi/header.hpp"
+#include <boost/foreach.hpp>
+
+/// This mess outputs a default Content-type header if the user hasn't set any.
+/**
+ * BOOST_CGI_ADD_DEFAULT_HEADER should not persiste beyond this file.
+ *
+ * It basically works like (default first):
+ *
+ * Debug mode:
+ * - Append a "Content-type: text/plain" header;
+ * - If BOOST_CGI_DEFAULT_CONTENT_TYPE is defined, set that as the
+ *   content-type;
+ * - If BOOST_CGI_NO_DEFAULT_CONTENT_TYPE is defined, do nothing.
+ *
+ * Release mode:
+ * - Do nothing.
+ */
+#if !defined(NDEBUG) && !defined(BOOST_CGI_NO_DEFAULT_CONTENT_TYPE)
+//{
+#  if !defined(BOOST_CGI_DEFAULT_CONTENT_TYPE)
+#    define BOOST_CGI_DEFAULT_CONTENT_TYPE "Content-type: text/plain"
+#  endif // !defined(BOOST_CGI_DEFAULT_CONTENT_TYPE)
+//}
+#  define BOOST_CGI_ADD_DEFAULT_HEADER   \
+      if (headers_.empty())              \
+        headers_.push_back(BOOST_CGI_DEFAULT_CONTENT_TYPE"\r\n");
+#else
+#  define BOOST_CGI_ADD_DEFAULT_HEADER
+#endif // !defined(NDEBUG) && !defined(BOOST_CGI_NO_DEFAULT_CONTENT_TYPE)
+
 
 namespace cgi {
 
-  /// The response class: a helper for responding to requests
-
-  // The request_ostream is destined to become a basic_request_ostream
-//typedef request_ostream<> response_;
-
-
+  /// The response class: a helper for responding to requests.
   class response
   {
   public:
+    typedef std::ostream ostream_type;
+
     response(http::status_code sc = http::ok)
       : buffer_(new ::cgi::streambuf())
       , ostream_(buffer_.get())
       , http_status_(sc)
-      , headers_sent_(false)
+      , headers_terminated_(false)
     {
     }
 
@@ -48,24 +76,6 @@ namespace cgi {
       , http_status_(sc)
     {
     }
-
-    /// Construct, taking a buffer from an external source
-    /**
-     * Gets a buffer from the request/protocol service held by the request.
-     * <strike>
-     * Takes a buffer from T (can be a model of ProtocolService or
-     * CommonGatewayRequest) to use internally.
-     * </strike>
-     */
-//    template<typename CommonGatewayRequest>
-//    request_ostream(CommonGatewayRequest& req, http::status_code sc = http::ok)
-//      : request_(&req)
-//      , buffer_(new cgi::streambuf())
-//      , ostream_(buffer_.get()) //detail::take_buffer(req))
-//      , http_status_(sc)
-////    , destination_(destination)
-//    {
-//    }
 
     ~response()
     {
@@ -96,16 +106,6 @@ namespace cgi {
       return buf.size();
     }
 
-    /// Synchronously flush the data to the current request
-    /**
-     * If there is no error, the buffer is cleared.
-     */
-    //void flush()
-    //{
-    //  BOOST_ASSERT(request_ != NULL);
-    //  flush(*request_);
-    //}
-
     /// Synchronously flush the data to the supplied request
     /**
      * This call uses throwing semantics. ie. an exception will be thrown on
@@ -116,10 +116,10 @@ namespace cgi {
     void flush(CommonGatewayRequest& req)
     {
       /*
-      if (!headers_sent_)
+      if (!headers_terminated_)
       {
         ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_sent_ = true;
+        headers_terminated_ = true;
       }
       */
       ::cgi::write(req, headers_);
@@ -137,13 +137,11 @@ namespace cgi {
     boost::system::error_code&
       flush(CommonGatewayRequest& req, boost::system::error_code& ec)
     {
-      /*
-      if (!headers_sent_)
+      if (!headers_terminated_)
       {
         ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_sent_ = true;
+        headers_terminated_ = true;
       }
-      */
       if(!::cgi::write(req, rdbuf()->data(), ec))
         clear();
       return ec;
@@ -179,10 +177,10 @@ namespace cgi {
     void async_flush(CommonGatewayRequest& req, Handler handler)
     {
       /*
-      if (!headers_sent_)
+      if (!headers_terminated_)
       {
         ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_sent_ = true;
+        headers_terminated_ = true;
       }
       */
       ::cgi::async_write(req, rdbuf()->data()
@@ -221,7 +219,7 @@ namespace cgi {
     //}
 
 
-    /// Synchronously send the data via the supplied request
+    /// Synchronously send the data via the supplied request.
     /**
      * This call uses throwing semantics. ie. an exception will be thrown on
      * any failure.
@@ -230,15 +228,9 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void send(CommonGatewayRequest& req)
     {
-      /*
-      if (!headers_sent_)
-      {
-        ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_sent_ = true;
-      }
-      */
-      ::cgi::write(req.client(), rdbuf()->data());
-      req.set_status(http_status_);
+      boost::system::error_code ec;
+      send(req, ec);
+      detail::throw_error(ec);
     }
 
     /// Synchronously send the data via the supplied request
@@ -250,15 +242,31 @@ namespace cgi {
     boost::system::error_code&
       send(CommonGatewayRequest& req, boost::system::error_code& ec)
     {
-      /*
-      if (!headers_sent_)
+      //BOOST_CGI_ADD_DEFAULT_HEADER
+
+      // Terminate the headers.
+      headers_.push_back("\r\n");
+
+      //{ Construct a ConstBufferSequence out of the headers we have.
+      std::vector<boost::asio::const_buffer> headers;
+      typedef std::vector<std::string>::iterator iter;
+      for (iter i(headers_.begin()), e(headers_.end()); i != e; ++i)
       {
-        ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_sent_ = true;
+        headers.push_back(::cgi::buffer(*i));
       }
-      */
-      ::cgi::write(req.client(), rdbuf()->data(), ec);
+      //}
+      //std::ofstream("test_stuff", std::out);
+      //of<< headers_.front();
+      ::cgi::write(req.client(), headers
+                  , boost::asio::transfer_all(), ec);
+      headers_terminated_ = true;
+      ::cgi::write(req.client(), rdbuf()->data()
+                  , boost::asio::transfer_all(), ec);
       req.set_status(http_status_);
+
+      //BOOST_FOREACH(headers_.begin(), headers_.end()
+      //             , headers.push_back(::cgi::buffer(*_1)));
+
       return ec;
     }
 
@@ -271,10 +279,10 @@ namespace cgi {
     {
       req.set_status(http_status_);
       /*
-      if (!headers_sent_)
+      if (!headers_terminated_)
       {
         ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_sent_ = true;
+        headers_terminated_ = true;
       }
       */
       ::cgi::async_write(req, rdbuf()->data(), handler);
@@ -287,55 +295,61 @@ namespace cgi {
       return static_cast<::cgi::streambuf*>(ostream_.rdbuf());
     }
 
-    void set_status(const http::status_code& num)
+    /// Set the status code associated with the response.
+    response& set_status(const http::status_code& num)
     {
       http_status_ = num;
+      return *this;
     }
 
+    /// Get the status code associated with the response.
     http::status_code& get_status()
     {
       return http_status_;
     }
 
-    void set_header(const std::string& value)
+    /// Allow more headers to be added (note, avoid using this).
+    void unterminate_headers()
     {
-      headers_.push_back(value);
+      headers_terminated_ = false;
     }
 
-    void set_header(const std::string& name, const std::string& value)
+    /// Add a header after appending the CRLF sequence.
+    response& set_header(const std::string& value)
     {
+      BOOST_ASSERT(!headers_terminated_);
+      headers_.push_back(value + "\r\n");
+      return *this;
+    }
+
+    /// Format and add a header given name and value, appending CRLF.
+    response& set_header(const std::string& name, const std::string& value)
+    {
+      BOOST_ASSERT(!headers_terminated_);
       headers_.push_back(name + ": " + value + "\r\n");
+      return *this;
     }
   protected:
+    // Vector of all the headers, each followed by a CRLF
     std::vector<std::string> headers_;
-    boost::shared_ptr<::cgi::streambuf> buffer_;
-    std::ostream ostream_;
+
+    boost::shared_ptr<::cgi::streambuf> buffer_; // maybe scoped_ptr?
+
+    ostream_type ostream_;
+
     http::status_code http_status_;
-    bool headers_sent_;
+
+    // True if no more headers are to be appended. 
+    bool headers_terminated_;
 
     template<typename T>
     friend response& operator<<(response& resp, const T& t);
 
     //template<typename T>
     //friend response& operator<<(response& resp, T t);
-
-    /// Some helper functions for the basic CGI 1.1 meta-variables
-//     void auth_type(const std::string& value)
-//     {
-//       std::string str("Auth-type: ");
-//       str += value;
-//       this->headers_.push_back(cgi::buffer(str.c_str(), str.size()));
-//     }
-// 
-//     void content_length(const std::string& value)
-//     {
-//       std::string str("Content-length: ");
-//       str += value;
-//       this->headers_.push_back(cgi::buffer(str.c_str(), str.size()));
-//     }
-
   };
 
+  /// Generic ostream template
   template<typename T>
   response& operator<<(response& resp, const T& t)
   {
@@ -343,35 +357,56 @@ namespace cgi {
     return resp;
   }
 
-  //template<typename T>
-  //response& operator<<(response& resp, T t)
-  //{
-  //  resp.ostream_<< t;
-  //  return resp;
-  //}
-
-  template<typename T>
-  response& operator<<(response& resp, const header& hdr)
+  /// You can stream a cgi::header into a response.
+  /**
+   * This is just a more convenient way of doing:
+   *
+   * ``
+   * resp.set_header(header_content)
+   * ``
+   *
+   * [tip
+   * If you stream a default-constructed header to a response, it
+   * 'terminates' the headers. ie. You can do this if you want to ensure
+   * no further headers are added to the response. It has no other side-
+   * effects; for instance, it won't write any data to the client.
+   * ]
+   */
+  template<>
+  response& operator<<(response& resp, const ::cgi::header& hdr)
   {
     if (hdr.content.empty()) {
-      resp.headers_sent_ = true;
-      return resp<< "\r\n";
+      resp.headers_terminated_ = true;
+      return resp;
     }else{
-      resp.headers_.push_back(hdr.content);
+      // We shouldn't allow headers to be sent after they're explicitly ended.
+      BOOST_ASSERT(!resp.headers_terminated_);
+      resp.set_header(hdr.content);
       return resp;
     }
   }
 
+  /// You can stream a cgi::cookie into a response.
+  /**
+   * This is just a shorthand way of setting a header that will set a
+   * client-side cookie.
+   *
+   * You cannot stream a cookie to a response after the headers have been
+   * terminated. In this case, an alternative could be to use the HTML tag:
+   * <meta http-equiv="Set-cookie" ...> (see http://tinyurl.com/3bxftv or
+   * http://tinyurl.com/33znkj), but this is outside the scope of this
+   * library.
+   */
   template<typename T>
-  response& operator<<(response& resp, const basic_cookie<T>& ck)
+  response& operator<<(response& resp, basic_cookie<T> ck)
   {
-    // Note: the 'set-cookie' isn't part of the cookie object since
-    // the cookie can also be set after the headers have been sent.
-    // See http://tinyurl.com/33znkj
-    return resp<< "Set-cookie: " << ck.to_string() << "\r\n";
+    resp.set_header("Set-cookie", ck.to_string());
+    return resp;
   }
 
 } // namespace cgi
+
+#undef BOOST_CGI_ADD_DEFAULT_HEADER
 
 #include "boost/cgi/detail/pop_options.hpp"
 
