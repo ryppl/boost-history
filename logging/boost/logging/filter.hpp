@@ -160,7 +160,7 @@ private:
 #ifndef BOOST_LOG_NO_TSS
 
 /** 
-    Uses TLS (Thread Local Storage) to find out if a filter is enabled or not. It caches the current "is_enabled" on each thread.
+    Uses TSS (Thread Specific Storage) to find out if a filter is enabled or not. It caches the current "is_enabled" on each thread.
     Then, at a given period, it retrieves the real "is_enabled".
 
     @remarks
@@ -168,10 +168,10 @@ private:
     Another implementation can be done, which could be faster - where you retrieve the "is_enabled" each X calls on a given thread
     (like, every 20 calls on a given thread)
 */
-struct use_tss_with_cache {
-    typedef locker::tss_resource_with_cache<bool> data;
+template<int default_cache_secs = 5> struct use_tss_with_cache {
+    typedef locker::tss_resource_with_cache<bool,default_cache_secs> data;
 
-    use_tss_with_cache(int cache_secs) : m_enabled(true, cache_secs) {}
+    use_tss_with_cache(int cache_secs = default_cache_secs) : m_enabled(true, cache_secs) {}
     bool is_enabled() const { 
         data::read enabled(m_enabled);
         return enabled.use(); 
@@ -183,6 +183,24 @@ struct use_tss_with_cache {
 private:
     data m_enabled;
 };
+
+
+struct use_tss_once_init {
+    typedef locker::tss_resource_once_init<bool> data;
+
+    use_tss_once_init() : m_enabled(true) {}
+    bool is_enabled() const { 
+        data::read enabled(m_enabled);
+        return enabled.use(); 
+    }
+    void set_enabled(bool enabled) { 
+        data::write cur(m_enabled);
+        cur.use() = enabled; 
+    }
+private:
+    data m_enabled;
+};
+
 
 #endif // #ifndef BOOST_LOG_NO_TSS
 

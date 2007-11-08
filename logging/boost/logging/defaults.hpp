@@ -85,7 +85,7 @@ Example:
     namespace level {
         struct holder_no_ts ;
         struct holder_ts ;
-        struct holder_tss_with_cache ;
+        template<int> struct holder_tss_with_cache ;
     }
 
     namespace locker {

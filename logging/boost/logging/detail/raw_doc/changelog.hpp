@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-v0.10.10, 6 nov 2007
+v0.10.11, 8 nov 2007
+- added tss_resource_once_init and correspondent filter/logger class
+- added scenario.hpp - not tested yet
 - added and tested thread-safety (ts_write/on_dedicated_thread) for logger_format_write<>
 - added 2 more scenarios: ts_loger_one_filter.cpp and ded_loger_one_filter.cpp
 

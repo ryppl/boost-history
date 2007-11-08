@@ -75,5 +75,8 @@ template<
 
 }}
 
+
+//#include <boost/logging/scenario.hpp>
+
 #endif
 

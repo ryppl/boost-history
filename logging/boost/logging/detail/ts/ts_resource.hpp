@@ -27,6 +27,9 @@
 #include <boost/assert.hpp>
 
 namespace boost { namespace logging { 
+
+
+
     
 /** 
     @brief Contains implementations of locker objects. Such a locker can lock data for read or write.
@@ -117,7 +120,7 @@ namespace locker {
         @sa default_cache_millis how many secs to cache the data. By default, 5
     */
     template<class type, int default_cache_secs = 5, class mutex = boost::logging::threading::mutex > struct tss_resource_with_cache {
-        typedef tss_resource_with_cache<type, default_cache_secs> self_type;
+        typedef tss_resource_with_cache<type, default_cache_secs, mutex> self_type;
 
     private:
         struct value_and_time {
@@ -179,14 +182,85 @@ namespace locker {
             const type* operator->() { return &use(); }
         };
 
-
-
     private:
         mutable tss_value<value_and_time> m_cache;
         type m_val;
         mutable mutex m_cs;
         int m_cache_secs;
     };
+
+
+
+
+    /** 
+        Locks a resource, and uses TSS. 
+
+        The resource can be initialized once, at any time, no matter how many threads.
+        Once the resource is initialized (basically, someone used resource::write), that is <b>the final value</b>
+
+        All other threads will use and cached the initialized value.
+
+        @sa locker
+        @sa default_cache_millis how many secs to cache the data. By default, 5
+    */
+    template<class type, class mutex = boost::logging::threading::mutex > struct tss_resource_once_init {
+        typedef tss_resource_once_init<type, mutex> self_type;
+
+    private:
+        struct cached_value {
+            cached_value(const type & val = type() ) : val(val), is_cached(false) {}
+            type val;
+            bool is_cached;
+        };
+
+    public:
+        tss_resource_once_init(const type& val = type() ) : m_val(val), m_cache(val), m_initialized(false) {}
+
+        struct read;
+        struct write;
+        friend struct read;
+        friend struct write;
+
+        struct write {
+            type & val;
+            typename mutex::scoped_lock locker;
+            write(self_type & self) : val(self.m_val), locker(self.m_cs) {
+                self.m_initialized = true;
+            }
+            ~write() {
+            }
+
+            type & use() { return val ; }
+            type* operator->() { return &use(); }
+        };
+
+        struct read {
+            const type *val ;
+            read(const self_type & self) {
+                cached_value & cached = *(self.m_cache);
+                val = &cached.val;
+                if ( !cached.is_cached) {
+                    mutex::scoped_lock lk(self.m_cs);
+                    if ( self.m_initialized) {
+                        cached.val = self.m_val;
+                        cached.is_cached = true;
+                    }
+                }
+            }
+            ~read() {
+            }
+
+            const type & use() { return *val ; }
+            const type* operator->() { return &use(); }
+        };
+
+    private:
+        type m_val;
+        mutable tss_value<cached_value> m_cache;
+        mutable mutex m_cs;
+        bool m_initialized;
+    };
+
 
 #endif
 

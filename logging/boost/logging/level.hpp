@@ -127,10 +127,10 @@ namespace level {
         Uses TLS (Thread Local Storage) to find out if a level is enabled or not. It caches the current "is_enabled" on each thread.
         Then, at a given period, it retrieves the real "level".
     */
-    struct holder_tss_with_cache {
-        typedef locker::tss_resource_with_cache<type> data;
+    template<int default_cache_secs = 5> struct holder_tss_with_cache {
+        typedef locker::tss_resource_with_cache<type, default_cache_secs> data;
 
-        holder_tss_with_cache(int cache_millis, type default_level = enable_all) : m_level(default_level, cache_millis) {}
+        holder_tss_with_cache(int cache_secs = default_cache_secs, type default_level = enable_all) : m_level(default_level, cache_secs) {}
         bool is_enabled(type test_level) const { 
             data::read cur_level(m_level);
             return test_level >= cur_level.use(); 
@@ -143,6 +143,21 @@ namespace level {
         data m_level;
     };
 
+    struct holder_tss_once_init {
+        typedef locker::tss_resource_once_init<type> data;
+
+        holder_tss_once_init(type default_level = enable_all) : m_level(default_level) {}
+        bool is_enabled(type test_level) const { 
+            data::read cur_level(m_level);
+            return test_level >= cur_level.use(); 
+        }
+        void set_enabled(type level) {
+            data::write cur_level(m_level);
+            cur_level.use() = level;
+        }
+    private:
+        data m_level;
+    };
 #endif
 
 

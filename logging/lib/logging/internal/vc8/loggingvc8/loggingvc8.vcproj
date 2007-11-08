@@ -630,6 +630,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\scenario.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\sink.hpp"
 				>
 			</File>
@@ -996,13 +1000,6 @@
 			<File
 				RelativePath="..\..\..\samples\scenarios\ts_loger_one_filter.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>
