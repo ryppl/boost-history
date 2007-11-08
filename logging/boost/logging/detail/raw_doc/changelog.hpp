@@ -1,9 +1,10 @@
 /** 
 @page page_changelog Changelog
 
-v0.11, 9 nov 2007
+@section changelog_cur_ver Current Version: v0.11.2, 9 nov 2007
+- can now see the current version from the contents
 - compiles with gcc 3.4.2, gcc 4.1, and VS 2005
-- we have boost::logging::scenario namespace, which finds the best filter/logger, based on your application's needs
+- we have boost::logging::scenario namespace, which finds the right filter/logger, based on your application's needs
 
 v0.10.12, 8 nov 2007
 - added tss_resource_once_init and correspondent filter/logger class

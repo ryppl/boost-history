@@ -7,6 +7,7 @@ namespace boost { namespace logging {
 - @ref main_intro
     - @ref main_motivation
     - @ref page_changelog
+        - @ref changelog_cur_ver 
 - @ref common_scenarios
     - @ref common_scenarios_1
     - @ref common_scenarios_2
