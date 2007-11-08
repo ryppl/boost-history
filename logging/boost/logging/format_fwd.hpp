@@ -28,6 +28,23 @@
 
 namespace boost { namespace logging {
 
+namespace writer {
+    template<class msg_type, class base_type> struct on_dedicated_thread ;
+    template<class base_type> struct ts_write ;
+
+    /** 
+        @brief specify thread-safety of your logger_format_write class
+    */
+    namespace threading {
+        /** @brief not thread-safe */
+        struct no_ts {};
+        /** @brief thread-safe write. All writes are protected by a lock */
+        struct ts_write {};
+        /** @brief thread-safe write on a dedicated thread. Very efficient. Formatting & writing to destinations happens on the dedicated thread */
+        struct on_dedicated_thread {};
+    }
+}
+
 /** 
 @file boost/logging/format_fwd.hpp
 
@@ -64,19 +81,21 @@ void init_logs();
 #endif
 @endcode
 */
-
 template<
             class format_base_type = default_, 
             class destination_base_type = default_ ,
             class thread_safety = default_ ,
-            class gather = default_
+            class gather = default_,
+            class lock_resource = default_
     > struct logger_format_write;
+
+
 
 
 }}
 
 
-//#include <boost/logging/scenario.hpp>
+#include <boost/logging/scenario.hpp>
 
 #endif
 

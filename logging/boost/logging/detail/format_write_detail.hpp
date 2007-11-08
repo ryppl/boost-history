@@ -112,6 +112,8 @@ An object of this type (apply_format_and_write) is created for each new logged m
 
 @param destination_base The base class for all destination classes from your application. See manipulator.
 
+@param lock_resource How will we lock important resources - routing them (msg_route)
+
 @param apply_format_and_write [optional] The class that knows how to call the formatters and destinations. See @ref apply_format_and_write_object
 
 @param router_type [optional] The class that knows when to call the formatters, and when to call the destinations. See @ref object_router.
@@ -125,9 +127,10 @@ Also, iterating over formatters/destinations would be slower, if we were to keep
 */
 template<
         class formatter_base, 
-        class destination_base, 
+        class destination_base,
+        class lock_resource = typename boost::logging::types<override>::lock_resource ,
         class apply_format_and_write = ::boost::logging::format_and_write::simple<typename formatter_base::raw_param>,
-        class router_type = msg_route::simple<formatter_base, destination_base> ,
+        class router_type = msg_route::simple<formatter_base, destination_base, lock_resource> ,
         class formatter_array = array::shared_ptr_holder<formatter_base> , 
         class destination_array = array::shared_ptr_holder<destination_base> >
 struct format_write {

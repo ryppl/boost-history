@@ -11,6 +11,7 @@ namespace boost { namespace logging {
     - @ref common_scenarios_1
     - @ref common_scenarios_2
     - @ref common_scenarios_3
+    - @ref common_your_scenario
     - @ref common_scenarios_4
     - @ref common_scenarios_5
     - @ref common_scenarios_6

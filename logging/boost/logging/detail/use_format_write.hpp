@@ -34,22 +34,6 @@
 
 namespace boost { namespace logging {
 
-namespace writer {
-    template<class msg_type, class base_type> struct on_dedicated_thread ;
-    template<class base_type> struct ts_write ;
-
-    /** 
-        @brief specify thread-safety of your logger_format_write class
-    */
-    namespace threading {
-        /** @brief not thread-safe */
-        struct no_ts {};
-        /** @brief thread-safe write. All writes are protected by a lock */
-        struct ts_write {};
-        /** @brief thread-safe write on a dedicated thread. Very efficient. Formatting & writing to destinations happens on the dedicated thread */
-        struct on_dedicated_thread {};
-    }
-}
 
 
 
@@ -59,17 +43,17 @@ namespace writer {
 
     namespace detail {
 
-        template<class string, class formatter_base, class destination_base> struct find_format_write_params {
+        template<class string, class formatter_base, class destination_base, class lock_resource> struct find_format_write_params {
             typedef typename boost::logging::format_and_write::simple<string> apply_format_and_write ;
-            typedef typename msg_route::simple<formatter_base, destination_base> router_type;
+            typedef typename msg_route::simple<formatter_base, destination_base, lock_resource> router_type;
         };
 
-        template<class string_type, class formatter_base, class destination_base> 
-            struct find_format_write_params< typename boost::logging::optimize::cache_string_several_str<string_type>, formatter_base, destination_base>
+        template<class string_type, class formatter_base, class destination_base, class lock_resource> 
+            struct find_format_write_params< typename boost::logging::optimize::cache_string_several_str<string_type>, formatter_base, destination_base, lock_resource>
         {
             typedef typename boost::logging::optimize::cache_string_several_str<string_type> cache_string;
             typedef typename boost::logging::format_and_write::use_cache<formatter_base, destination_base, cache_string> apply_format_and_write ;
-            typedef typename msg_route::with_route<formatter_base, destination_base> router_type;
+            typedef typename msg_route::with_route<formatter_base, destination_base, lock_resource> router_type;
         };
 
         template<class thread_safety, class gather_type, class format_write> struct find_writer_with_thread_safety {
@@ -103,18 +87,20 @@ namespace writer {
 template<
             class format_base_type , 
             class destination_base_type ,
-            class gather 
+            class gather ,
+            class lock_resource
     >
 struct use_format_write {
 
     typedef typename use_default<format_base_type, boost::logging::formatter::base<> > ::type format_base;
     typedef typename use_default<destination_base_type, boost::logging::destination::base<> > ::type destination_base;
+    typedef typename use_default<lock_resource, ::boost::logging::types<override>::lock_resource> ::type lock_resource_type;
 
     typedef typename format_base::raw_param format_param;
     typedef typename detail::find_gather<format_param>::type gather_type;
 
-    typedef typename detail::find_format_write_params<format_param, format_base, destination_base>::apply_format_and_write apply_format_and_write;
-    typedef typename detail::find_format_write_params<format_param, format_base, destination_base>::router_type router_type;
+    typedef typename detail::find_format_write_params<format_param, format_base, destination_base, lock_resource_type >::apply_format_and_write apply_format_and_write;
+    typedef typename detail::find_format_write_params<format_param, format_base, destination_base, lock_resource_type >::router_type router_type;
 };
 
 
@@ -142,32 +128,34 @@ FIXME need to have more template params
 @param thread_safety
 @param gather
 */
-template<class format_base, class destination_base, class thread_safety, class gather> 
+template<class format_base, class destination_base, class thread_safety, class gather, class lock_resource> 
 struct logger_format_write
     : logger< 
-            typename use_format_write<format_base, destination_base, gather>::gather_type,
+            typename use_format_write<format_base, destination_base, gather, lock_resource>::gather_type,
             typename detail::find_writer_with_thread_safety<
                 thread_safety,
-                typename use_format_write<format_base, destination_base, gather>::gather_type,
+                typename use_format_write<format_base, destination_base, gather, lock_resource>::gather_type,
                 writer::format_write<
-                    typename use_format_write<format_base, destination_base, gather>::format_base,
-                    typename use_format_write<format_base, destination_base, gather>::destination_base,
-                    typename use_format_write<format_base, destination_base, gather>::apply_format_and_write,
-                    typename use_format_write<format_base, destination_base, gather>::router_type
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::format_base,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::destination_base,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::lock_resource_type,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::apply_format_and_write,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::router_type
                 > 
             >::type
     >
 {
     typedef logger< 
-            typename use_format_write<format_base, destination_base, gather>::gather_type,
+            typename use_format_write<format_base, destination_base, gather, lock_resource>::gather_type,
             typename detail::find_writer_with_thread_safety<
                 thread_safety,
-                typename use_format_write<format_base, destination_base, gather>::gather_type,
+                typename use_format_write<format_base, destination_base, gather, lock_resource>::gather_type,
                 writer::format_write<
-                    typename use_format_write<format_base, destination_base, gather>::format_base,
-                    typename use_format_write<format_base, destination_base, gather>::destination_base,
-                    typename use_format_write<format_base, destination_base, gather>::apply_format_and_write,
-                    typename use_format_write<format_base, destination_base, gather>::router_type
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::format_base,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::destination_base,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::lock_resource_type,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::apply_format_and_write,
+                    typename use_format_write<format_base, destination_base, gather, lock_resource>::router_type
                 > 
             >::type
     >

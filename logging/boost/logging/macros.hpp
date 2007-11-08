@@ -143,35 +143,17 @@ BOOST_LOG_NO_TSS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Filter Macros 
 
-#define BOOST_DECLARE_LOG_FILTER_NO_NAMESPACE_PREFIX(name,type) type& name ## _boost_log_filter_impl_(); extern boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
-#define BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX(name,type)  type& name ## _boost_log_filter_impl_() \
+#define BOOST_DECLARE_LOG_FILTER(name,type) type& name ## _boost_log_filter_impl_(); extern boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
+#define BOOST_DEFINE_LOG_FILTER(name,type)  type& name ## _boost_log_filter_impl_() \
     { static type i; return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_filter_impl_() ); } \
     boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
 
-#define BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX_WITH_ARGS(name,type, args)  type& name ## _boost_log_filter_impl_() \
+#define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args)  type& name ## _boost_log_filter_impl_() \
     { static type i ( args ); return i; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_filter_impl_() ); } \
     boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
 
-
-/** 
-@note
-    It is assumed that @c type is a filter class from the @c boost::logging namespace.
-    In case you're creating your own filter class, make sure to have it in the boost::logging namespace. \n
-    Or, you can use the BOOST_DECLARE_LOG_FILTER_NO_NAMESPACE_PREFIX macro instead
-*/
-#define BOOST_DECLARE_LOG_FILTER(name,type) BOOST_DECLARE_LOG_FILTER_NO_NAMESPACE_PREFIX(name, ::boost::logging:: type)
-
-/** 
-@note
-    It is assumed that @c type is a filter class from the @c boost::logging namespace.
-    In case you're creating your own filter class, make sure to have it in the boost::logging namespace. \n
-    Or, you can use the BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX macro instead.
-*/
-#define BOOST_DEFINE_LOG_FILTER(name,type) BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX(name, ::boost::logging:: type)
-
-#define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args) BOOST_DEFINE_LOG_FILTER_NO_NAMESPACE_PREFIX_WITH_ARGS(name, ::boost::logging:: type, args)
 
 
 

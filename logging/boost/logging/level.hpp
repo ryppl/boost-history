@@ -132,11 +132,11 @@ namespace level {
 
         holder_tss_with_cache(int cache_secs = default_cache_secs, type default_level = enable_all) : m_level(default_level, cache_secs) {}
         bool is_enabled(type test_level) const { 
-            data::read cur_level(m_level);
+            typename data::read cur_level(m_level);
             return test_level >= cur_level.use(); 
         }
         void set_enabled(type level) {
-            data::write cur_level(m_level);
+            typename data::write cur_level(m_level);
             cur_level.use() = level;
         }
     private:

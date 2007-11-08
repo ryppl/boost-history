@@ -11,7 +11,7 @@ namespace boost { namespace logging {
 - @ref scenarios_code_6
 - @ref scenarios_code_7
 - @ref scenarios_code_8
-
+- @ref common_your_scenario_code
 
 \n\n\n
 @section scenarios_code_1 Scenario 1, Common usage: Multiple levels, One logging class, Multiple destinations.
@@ -69,6 +69,13 @@ namespace boost { namespace logging {
 @include custom_fmt_dest.cpp
 \n\n\n
 
+
+
+
+@section common_your_scenario_code Your Scenario : Find out logger and filter, based on your application's needs
+
+@include your_scenario.cpp
+\n\n\n
 
 */
 

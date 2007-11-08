@@ -1,4 +1,4 @@
-// Template.hpp
+// scenario.hpp
 
 // Boost Logging library
 //
@@ -14,8 +14,8 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-#ifndef JT28092007_TEMPLATE_HPP_DEFINED
-#define JT28092007_TEMPLATE_HPP_DEFINED
+#ifndef JT28092007_scenario_HPP_DEFINED
+#define JT28092007_scenario_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -24,7 +24,41 @@
 #include <boost/logging/detail/fwd.hpp>
 
 namespace boost { namespace logging {
+/** @page your_scenario_examples Examples of customizing your scenario 
 
+Example 1:
+- Use a filter that uses per-thread caching with resync once at 10 secs, 
+- The filter uses levels
+- Use a logger that will favor speed
+
+@code
+using namespace boost::logging::scenario::usage;
+typedef use< filter_::change::often<10>, filter_::level::use_levels, default_, logger_::favor::speed> finder;
+
+BOOST_DECLARE_LOG_FILTER(g_log_filter, finder::filter);
+BOOST_DECLARE_LOG(g_l, finder::logger) 
+...
+@endcode
+
+
+Example 2:
+- Use a filter that is initialized only once, when multiple threads are running
+- The filter does not use levels
+- Use a logger that is initialized only once, when only one thread is running
+
+@code
+using namespace boost::logging::scenario::usage;
+typedef use< filter_::change::set_once_when_multiple_threads, filter_::level::no_levels, logger_::change::set_once_when_one_thread> finder;
+
+BOOST_DECLARE_LOG_FILTER(g_log_filter, finder::filter);
+BOOST_DECLARE_LOG(g_l, finder::logger) 
+...
+@endcode
+
+To see scenario::usage used in code:
+- @ref common_your_scenario "Click to see description of the example"
+- @ref common_your_scenario_code "Click to see the code"
+*/
 
 namespace filter {
     template<int> struct use_tss_with_cache ;
@@ -39,17 +73,37 @@ namespace level {
     struct holder_ts;
     struct holder_no_ts ;
 }
-
+namespace writer {
+    namespace threading {
+        struct no_ts ;
+        struct ts_write ;
+        struct on_dedicated_thread ;
+    }
+}
 
 /** 
-    @brief Use it when you have a specific scenario, and want the best logger/filter classes for the scenario. Check out scenario::usage 
+@brief Use this when you have a specific scenario, and want the best logger/filter classes that fit that scenario. Check out scenario::usage and scenario::ts. 
+
+For example, if you want to specify a %scenario based on usage:
+
+@copydoc your_scenario_examples 
+
 */
 namespace scenario {
 
 /** 
-    @brief Find out the right logger/filter, based on how your application will use the loggers and filters
+@brief If you want the library to choose the best logger/filter classes based on how your application will %use the loggers and filters, %use this namespace.
 
-    First, don't forget to \n <tt>use namespace boost::logging::scenario::usage;</tt>
+First, don't forget to 
+
+@code 
+using namespace boost::logging::scenario::usage;
+@endcode
+
+Then, you can specify the logger and filter, in a very easy manner
+
+@copydoc your_scenario_examples 
+
 */
 namespace usage {
 
@@ -117,9 +171,7 @@ namespace usage {
         adding/removing formatters/destinations for instance.
         */
         namespace change {
-            /** @brief Optimize for often change. Does per-thread caching. At a given period, it re-synchronizes. 
-                
-                This is the default, for a multi-threaded application.
+            /** @brief Optimize for often change. Does per-thread caching. At a given period, it re-synchronizes. This is the default, for multi-threaded applications.
 
                 @param cache_period_secs At what period should we re-syncronize
             */
@@ -142,9 +194,7 @@ namespace usage {
             */
             struct always_accurate {};
 
-            /** @brief Single threading. It doesn't matter when/how often the filter/logger changes. 
-            
-                This is the default, for a single-threaded application.
+            /** @brief Single threading. It doesn't matter when/how often the filter/logger changes. This is the default, for single-threaded applications.
             */
             struct single_thread {};
 
@@ -165,13 +215,30 @@ namespace usage {
             */
             struct speed {};
 
-            /** @brief all messages will be logged 
-            
-            This is the default
+            /** @brief All messages will be logged. This is the default for multi-threaded application
             */
             struct correctness {};
 
+            /** @brief Single threading. It doesn't matter when/how often the filter/logger changes. This is the default, for single-threaded applications.
+            */
+            struct single_thread {};
+
+#ifdef BOOST_HAS_THREADS
             typedef correctness default_;
+#else
+            typedef single_thread default_;
+#endif
+        };
+
+        /** @brief How do you gather the message? */
+        namespace gather {
+            /** @brief Using the cool operator<< (default) */
+            struct ostream_like {};
+
+            /** @brief If you want to use your custom class, specify it here */
+            template<class gather_type> struct custom {};
+
+            typedef ostream_like default_;
         };
     }
 
@@ -185,8 +252,8 @@ namespace usage {
 
         template<class change_> struct find_filter_use_levels {};
         
-        template<int period_ms> struct find_filter_use_levels< change::often<period_ms> > {
-            typedef ::boost::logging::level::holder_tss_with_cache<period_ms> type;
+        template<int period_secs> struct find_filter_use_levels< change::often<period_secs> > {
+            typedef ::boost::logging::level::holder_tss_with_cache<period_secs> type;
         };
 
         template<> struct find_filter_use_levels< change::set_once_when_one_thread > {
@@ -211,8 +278,8 @@ namespace usage {
 
         template<class change_> struct find_filter_no_levels {};
         
-        template<int period_ms> struct find_filter_no_levels< change::often<period_ms> > {
-            typedef ::boost::logging::filter::use_tss_with_cache<period_ms> type;
+        template<int period_secs> struct find_filter_no_levels< change::often<period_secs> > {
+            typedef ::boost::logging::filter::use_tss_with_cache<period_secs> type;
         };
 
         template<> struct find_filter_no_levels< change::set_once_when_one_thread > {
@@ -248,40 +315,229 @@ namespace usage {
     namespace detail_find_logger {
         namespace favor = ::boost::logging::scenario::usage::logger_::favor;
         namespace change = ::boost::logging::scenario::usage::logger_::change;
+        namespace th = ::boost::logging::writer::threading;
+        namespace gather_usage = ::boost::logging::scenario::usage::logger_::gather;
+
+        template<class favor_> struct find_threading_from_favor {};
+        template<> struct find_threading_from_favor<favor::speed>           { typedef th::on_dedicated_thread type; };
+        template<> struct find_threading_from_favor<favor::correctness>     { typedef th::ts_write type; };
+        template<> struct find_threading_from_favor<favor::single_thread>   { typedef th::no_ts type; };
+
+        template<class gather_type> struct find_gather {};
+        template<> struct find_gather<gather_usage::ostream_like> { typedef ::boost::logging::default_ type; };
+        template<class custom_gather> struct find_gather<gather_usage::custom<custom_gather> > { typedef custom_gather type; };
+        
+        template<class favor_, class change_, class gather> struct find_logger {};
+        
+        template<class favor_, int period_secs, class gather> struct find_logger< favor_, change::often<period_secs>, gather > {
+            typedef typename find_threading_from_favor<favor_>::type threading_type;
+            template<int secs> struct lock_resource {
+               template<class lock_type> struct finder {
+                   typedef typename ::boost::logging::locker::tss_resource_with_cache<lock_type, secs, boost::logging::threading::mutex > type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write < default_, default_, threading_type, gather, lock_resource<period_secs> > type;
+        };
+
+        template<class favor_, class gather> struct find_logger< favor_, change::set_once_when_one_thread, gather > {
+            typedef typename find_threading_from_favor<favor_>::type threading_type;
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                    typedef typename locker::ts_resource_single_thread<lock_type> type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
+        };
+
+        template<class favor_, class gather> struct find_logger< favor_, change::set_once_when_multiple_threads, gather > {
+            typedef typename find_threading_from_favor<favor_>::type threading_type;
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                    typedef typename locker::tss_resource_once_init<lock_type, boost::logging::threading::mutex > type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
+        };
+
+        template<class favor_, class gather> struct find_logger< favor_, change::always_accurate, gather > {
+            typedef typename find_threading_from_favor<favor_>::type threading_type;
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                    typedef typename locker::ts_resource<lock_type, boost::logging::threading::mutex > type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
+        };
+
+        template<class favor_, class gather> struct find_logger< favor_, change::single_thread, gather > {
+            typedef typename find_threading_from_favor<favor_>::type threading_type;
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                    typedef typename locker::ts_resource_single_thread<lock_type> type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
+        };
     }
 
     /** 
-        @brief Finds a filter class and a logger class, based on your specific scenario
+        @brief Finds a filter class and a logger class that fit your application's needs
+
+        For this to happen, you will first need to specify your needs (the template parameters you'll pass to this class)
 
         @param filter_change (optional) How does the %filter change? Any of the classes in the filter_::change namespace
         @param filter_level_ (optional) Does our %filter %use levels? Any of the classes in the filter_::level namespace
         @param logger_change (optional) How does our %logger change? Any of the classes in the logger_::change namespace
         @param logger_favor (optional) What does the %logger favor? Any of the classes in the logger_::favor namespace
+        @param logger_gather (optional) What to %use as gather class. Any of the classes in the logger_::gather namespace
+
+        @copydoc your_scenario_examples 
     */
     template<
         class filter_change = default_,
         class filter_level = default_, 
         class logger_change = default_,
-        class logger_favor = default_>
+        class logger_favor = default_,
+        class logger_gather = default_ >
     struct use {
 
+    private:
         typedef typename use_default<filter_change, filter_::change::default_ >::type filter_change_type;
         typedef typename use_default<filter_level, filter_::level::default_ >::type filter_level_type;
 
+        typedef typename use_default<logger_change, logger_::change::default_ >::type logger_change_type;
+        typedef typename use_default<logger_favor, logger_::favor::default_>::type logger_favor_type;
+        typedef typename use_default<logger_gather, logger_::gather::default_>::type gather_usage_type;
+
+        typedef typename detail_find_logger::find_gather<gather_usage_type> ::type gather_type;
+
+    public:
         typedef typename detail_find_filter::find_filter<filter_change_type, filter_level_type>::type filter;
+        typedef typename detail_find_logger::find_logger< logger_favor_type, logger_change_type, gather_type>::type logger;
 
-
-//        typedef ... logger;
-  //      typedef ... filter;
     };
 }
 
 /** 
-    @brief Find out the right logger/filter, based on thread-safety of logger(s)/filter(s)
+@brief Find out the right logger/filter, based on thread-safety of logger(s)/filter(s)
 
-    First, don't forget to <tt>use namespace boost::logging::scenario::ts;</tt>
+First, don't forget to 
+    
+@code 
+using namespace boost::logging::scenario::ts;
+@endcode
+
+Then, you can specify the logger and filter, in a very easy manner
+
+Example:
+- Use a filter that uses TSS (Thread Specific Storage)
+- The filter uses levels
+- Use a logger that uses TSS
+
+@code
+using namespace boost::logging::scenario::ts;
+typedef use< filter_::use_tss, level_::use_levels, logger_::use_tss> finder;
+
+BOOST_DECLARE_LOG_FILTER(g_log_filter, finder::filter);
+BOOST_DECLARE_LOG(g_l, finder::logger) 
+...
+@endcode
+
+
+To see how you can specify the logger/filter based on how you will %use them, see usage namespace.
 */
 namespace ts {
+    /** @brief filter uses levels? */
+    struct level_ {
+        /** @brief type of %filter levels %usage */
+        enum type {
+            /** @brief %use levels */
+            use_levels,
+            /** @brief don't %use levels */
+            no_levels
+        };
+    };
+
+    /** @brief filter thread-safety */
+    struct filter_ {
+        /** @brief type of filter thread-safety */
+        enum type {
+            /** @brief not thread-safe */
+            none,
+            /** @brief %use TSS (thread-specific storage) */
+            use_tss,
+            /** @brief thread-safe (but slow) */
+            ts
+        };
+    };
+
+    /** logger thread-safety */
+    struct logger_ {
+        /** @brief type of logger thread-safety */
+        enum type {
+            /** @brief not thread-safe */
+            none,
+            /** @brief %use TSS (thread-specific storage) */
+            use_tss,
+            /** @brief thread-safe (but slow) */
+            ts
+        };
+    };
+
+    namespace detail {
+        namespace th = ::boost::logging::writer::threading;
+
+        template<filter_::type,level_::type> struct find_filter {};
+        template<> struct find_filter<filter_::none, level_::no_levels > { typedef ::boost::logging::filter::no_ts type; };
+        template<> struct find_filter<filter_::use_tss, level_::no_levels> { typedef  ::boost::logging::filter::use_tss_with_cache<5> type; };
+        template<> struct find_filter<filter_::ts, level_::no_levels> { typedef ::boost::logging::filter::ts type; };
+
+        template<> struct find_filter<filter_::none, level_::use_levels > { typedef ::boost::logging::level::holder_no_ts type; };
+        template<> struct find_filter<filter_::use_tss, level_::use_levels > { typedef ::boost::logging::level::holder_tss_with_cache<5> type; };
+        template<> struct find_filter<filter_::ts, level_::use_levels > { typedef ::boost::logging::level::holder_ts type; };
+
+        template<logger_::type> struct find_logger {};
+        template<> struct find_logger<logger_::none> { 
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                    typedef typename locker::ts_resource_single_thread<lock_type> type;
+               };
+            };
+            typedef ::boost::logging::logger_format_write< default_, default_, th::no_ts, default_, lock_resource > type ; 
+        };
+        template<> struct find_logger<logger_::use_tss> { 
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                   typedef typename ::boost::logging::locker::tss_resource_with_cache<lock_type, 5, boost::logging::threading::mutex > type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write< default_, default_, th::ts_write, default_, lock_resource > type ; 
+        };
+        template<> struct find_logger<logger_::ts> { 
+            struct lock_resource {
+               template<class lock_type> struct finder {
+                    typedef typename locker::ts_resource<lock_type, boost::logging::threading::mutex > type;
+               };
+            };
+
+            typedef ::boost::logging::logger_format_write< default_, default_, th::ts_write, default_, lock_resource > type ; 
+        };
+    }
+
+    /** @brief Find the right logger and filter, based on thread-safety: filter_::type, level_::type and logger_::type 
+    
+        @copydoc ts
+    */
+    template<filter_::type filter_type, level_::type level_type, logger_::type logger_type> struct use {
+        typedef typename detail::find_filter<filter_type,level_type>::type filter;
+        typedef typename detail::find_logger<logger_type>::type logger;
+    };
 }
 
 }

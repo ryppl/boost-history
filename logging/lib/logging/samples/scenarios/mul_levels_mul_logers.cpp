@@ -91,7 +91,7 @@ typedef boost::logging::logger_format_write< > log_type;
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
-BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
+BOOST_DECLARE_LOG_FILTER(g_log_level, boost::logging::level::holder ) // holds the application log level
 BOOST_DECLARE_LOG(g_log_err, log_type) 
 BOOST_DECLARE_LOG(g_log_app, log_type)
 BOOST_DECLARE_LOG(g_log_dbg, log_type)
@@ -102,7 +102,7 @@ BOOST_DECLARE_LOG(g_log_dbg, log_type)
 #define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app, g_log_level, info ) << "[app] "
 
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
-BOOST_DEFINE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
+BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
 BOOST_DEFINE_LOG(g_log_err, log_type)
 BOOST_DEFINE_LOG(g_log_app, log_type)
 BOOST_DEFINE_LOG(g_log_dbg, log_type)

@@ -173,11 +173,11 @@ template<int default_cache_secs = 5> struct use_tss_with_cache {
 
     use_tss_with_cache(int cache_secs = default_cache_secs) : m_enabled(true, cache_secs) {}
     bool is_enabled() const { 
-        data::read enabled(m_enabled);
+        typename data::read enabled(m_enabled);
         return enabled.use(); 
     }
     void set_enabled(bool enabled) { 
-        data::write cur(m_enabled);
+        typename data::write cur(m_enabled);
         cur.use() = enabled; 
     }
 private:

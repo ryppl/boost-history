@@ -6,6 +6,7 @@ namespace boost { namespace logging {
 - @ref common_scenarios_1
 - @ref common_scenarios_2
 - @ref common_scenarios_3
+- @ref common_your_scenario
 - @ref common_scenarios_4
 - @ref common_scenarios_5
 - @ref common_scenarios_6
@@ -95,7 +96,12 @@ Scenario 1 should be the most common.
 \n\n\n
 
 
+@section common_your_scenario Your Scenario : Find out logger and filter, based on your application's needs
 
+@copydoc your_scenario
+
+@ref common_your_scenario_code "Click to see the code"
+\n\n\n
 
 
 

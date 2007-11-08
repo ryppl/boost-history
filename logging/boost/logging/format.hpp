@@ -263,7 +263,8 @@ L_ << "testing " << i << i+1 << i+2;
     */
     template<
             class formatter_base, 
-            class destination_base > 
+            class destination_base,
+            class lock_resource = typename boost::logging::types<override>::lock_resource > 
     struct simple {
         typedef typename formatter_base::ptr_type formatter_ptr;
         typedef typename destination_base::ptr_type destination_ptr;
@@ -275,7 +276,7 @@ L_ << "testing " << i << i+1 << i+2;
             d_array destinations;
         };
 
-        typedef typename boost::logging::types<override>::lock_resource::finder<write_info>::type data;
+        typedef typename lock_resource::template finder<write_info>::type data;
 
         template<class formatter_array, class destination_array> simple(const formatter_array&, const destination_array&) {}
         
@@ -352,6 +353,7 @@ L_ << "testing " << i << i+1 << i+2;
     template<
             class formatter_base, 
             class destination_base,
+            class lock_resource = typename boost::logging::types<override>::lock_resource ,
             class formatter_array = boost::logging::array::shared_ptr_holder<formatter_base>,
             class destination_array = boost::logging::array::shared_ptr_holder<destination_base>
     > 
@@ -361,7 +363,7 @@ L_ << "testing " << i << i+1 << i+2;
 
         typedef formatter_and_destination_array_holder<formatter_array, destination_array> holder_base_type;
 
-        typedef with_route<formatter_base, destination_base, formatter_array, destination_array> self_type;
+        typedef with_route<formatter_base, destination_base, lock_resource, formatter_array, destination_array> self_type;
 
         typedef std::vector<formatter_ptr> f_array;
         typedef std::vector<destination_ptr> d_array;
@@ -374,7 +376,7 @@ L_ << "testing " << i << i+1 << i+2;
             bool do_clear_afterwards;
         };
         typedef std::vector<write_once> write_array;
-        typedef typename boost::logging::types<override>::lock_resource::finder<write_array>::type data;
+        typedef typename lock_resource::template finder<write_array>::type data;
 
     public:
         with_route(const formatter_array& formatters, const destination_array & destinations) : holder_base_type(formatters, destinations) {}

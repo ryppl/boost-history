@@ -108,6 +108,40 @@ namespace locker {
     };
 
 
+    template<class type> struct ts_resource_single_thread {
+        typedef ts_resource_single_thread<type> self_type;
+
+        ts_resource_single_thread(const type& val = type() ) : m_val(val) {}
+
+        struct read;
+        struct write;
+        friend struct read;
+        friend struct write;
+
+        struct write {
+            self_type & self ;
+            write(self_type & self) : self(self) {
+            }
+            ~write() {
+            }
+
+            type & use() { return self.m_val ; }
+            type* operator->() { return &use(); }
+        };
+
+        struct read {
+            const self_type & self ;
+            read(const self_type & self) : self(self) {
+            }
+            ~read() {
+            }
+
+            const type & use() { return self.m_val ; }
+            const type* operator->() { return &use(); }
+        };
+    private:
+        type m_val;
+    };
 
 
 #ifndef BOOST_LOG_NO_TSS
@@ -240,7 +274,7 @@ namespace locker {
                 cached_value & cached = *(self.m_cache);
                 val = &cached.val;
                 if ( !cached.is_cached) {
-                    mutex::scoped_lock lk(self.m_cs);
+                    typename mutex::scoped_lock lk(self.m_cs);
                     if ( self.m_initialized) {
                         cached.val = self.m_val;
                         cached.is_cached = true;
