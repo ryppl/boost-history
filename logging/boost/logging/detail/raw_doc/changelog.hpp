@@ -1,6 +1,10 @@
 /** 
 @page page_changelog Changelog
 
+v0.11, 9 nov 2007
+- compiles with gcc 3.4.2, gcc 4.1, and VS 2005
+- we have boost::logging::scenario namespace, which finds the best filter/logger, based on your application's needs
+
 v0.10.12, 8 nov 2007
 - added tss_resource_once_init and correspondent filter/logger class
 - added scenario.hpp + documentation for it

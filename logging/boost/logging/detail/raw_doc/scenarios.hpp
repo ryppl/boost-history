@@ -6,12 +6,16 @@ namespace boost { namespace logging {
 - @ref common_scenarios_1
 - @ref common_scenarios_2
 - @ref common_scenarios_3
-- @ref common_your_scenario
 - @ref common_scenarios_4
 - @ref common_scenarios_5
 - @ref common_scenarios_6
 - @ref common_scenarios_7
 - @ref common_scenarios_8
+- @ref common_scenarios_9
+- @ref common_scenarios_10
+
+- @ref common_your_scenario
+
 - @ref scenario_multiple_files
     - @ref scenario_multiple_files_program 
     - @ref scenario_multiple_files_log_h 
@@ -102,6 +106,24 @@ Scenario 1 should be the most common.
 
 @ref common_your_scenario_code "Click to see the code"
 \n\n\n
+
+
+
+@section common_scenarios_9 Scenario 9: One Thread-safe Logger, One Filter
+
+@copydoc ts_loger_one_filter
+
+@ref scenarios_code_9 "Click to see the code"
+\n\n\n
+
+
+@section common_scenarios_10 Scenario 10: One Logger on a dedicated thread, One Filter
+
+@copydoc ded_loger_one_filter
+
+@ref scenarios_code_10 "Click to see the code"
+\n\n\n
+
 
 
 

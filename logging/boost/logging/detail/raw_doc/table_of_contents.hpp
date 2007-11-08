@@ -12,11 +12,7 @@ namespace boost { namespace logging {
     - @ref common_scenarios_2
     - @ref common_scenarios_3
     - @ref common_your_scenario
-    - @ref common_scenarios_4
-    - @ref common_scenarios_5
-    - @ref common_scenarios_6
-    - @ref common_scenarios_7
-    - @ref common_scenarios_8
+    - @ref common_scenarios "More scenarios..."
     - @ref scenario_multiple_files
         - @ref scenario_multiple_files_program 
         - @ref scenario_multiple_files_log_h 

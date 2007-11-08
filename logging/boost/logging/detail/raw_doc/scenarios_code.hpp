@@ -11,6 +11,9 @@ namespace boost { namespace logging {
 - @ref scenarios_code_6
 - @ref scenarios_code_7
 - @ref scenarios_code_8
+- @ref scenarios_code_9
+- @ref scenarios_code_10
+
 - @ref common_your_scenario_code
 
 \n\n\n
@@ -71,11 +74,28 @@ namespace boost { namespace logging {
 
 
 
+@section scenarios_code_9 Scenario 9: One Thread-safe Logger, One Filter
+
+@include ts_loger_one_filter.cpp
+\n\n\n
+
+
+
+@section scenarios_code_10 Scenario 10: One Logger on a dedicated thread, One Filter
+
+@include ded_loger_one_filter.cpp
+\n\n\n
+
+
 
 @section common_your_scenario_code Your Scenario : Find out logger and filter, based on your application's needs
 
 @include your_scenario.cpp
 \n\n\n
+
+
+
+
 
 */
 
