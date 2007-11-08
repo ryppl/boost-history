@@ -22,6 +22,7 @@ namespace boost { namespace logging {
         - @ref scenario_multiple_files_log_h 
         - @ref scenario_multiple_files_log_cpp 
         - @ref scenario_multiple_files_main 
+- @ref scenario::usage "Choose the best filter/logger class, based on your application's needs"
 
 - @ref workflow
     - @ref workflow_introduction 
