@@ -180,13 +180,16 @@ The Dataflow library provides a convenience class
 [endsect][/port]
 
 [section ProxyPortTraits]
+
+
 [endsect][/proxyporttraits]
 
 [section ProxyPort]
 
-A type `PP` is a ['[ProxyPortConcept]] if specifies the proxied producer
-type, and if objects of the proxied type can be retreived from objects of
-[ProxyPortConcept] type.  If the proxied producer type is a valid
+A type `PP` is a ['[ProxyPortConcept]] for a mechanism `M` and port category `PC`
+if it specifies a [ProxyPortTraitsConcept] for that mechanism and port category.
+
+If the proxied port type is a valid
 [PortConcept], then 'PP' satisfies the [PortConcept] requirements
 in the same way.
 
@@ -202,30 +205,11 @@ The following expressions are used in this document:
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Proxy Port Category]
-        [`proxy_producer_category_of<PP>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
+        [Proxy Port Traits]
+        [`proxy_port_traits_of<PP>::type`]
+        [[ProxyPortTraitsConcept] type.]
         [
-            The category of the proxy producer, used for tag forwarding.
-        ]
-    ]
-    [
-        [Proxied Port Type]
-        [`proxied_producer_of<PP>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            The proxied producer type.
-        ]
-    ]
-    [
-        [Proxied Port]
-        [`get_proxied_producer(pp)`
-         [footnote `namespace boost::dataflow`]]
-        []
-        [
-            Retrieves a reference to the proxied producer object.
+            The traits of the proxy port.
         ]
     ]
 ]
@@ -241,13 +225,9 @@ files:
 
 [heading Notes]
 
-To define a new [ProxyPortConcept] class type, it is sufficient to define
-member typedefs `proxy_producer_category` and `proxy_producer_for`,
-and member function `get_proxied_producer`.
-
 [heading Examples]
 
 [endsect][/proxyport]
 
-[section PortMap]
-[endsect][/port_map]
+[section KeyedPort]
+[endsect][/keyed_port]

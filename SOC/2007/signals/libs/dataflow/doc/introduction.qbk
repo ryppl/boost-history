@@ -1,5 +1,32 @@
 [section:introduction Introduction]
 
+Dataflow is a generic library for [WikiDataflow] programming using various data
+transport mechanisms.  It also has layers of support for
+two data transport mechanisms - one is based on
+[BoostSignals], and the other (experimental and currently broken) is based
+connections made through
+simple object pointers, with support for using [BoostPhoenix2]
+actors for data processing.
+
+The two data transport mechanisms are implemented in the [DataflowSignals]
+and [DataflowPhoenix] layers.  The idea behind providing a generic dataflow
+library is that other data transport mechanisms can be easily adapted for
+use with the library.
+
+[warning Dataflow is not a part of the Boost libraries.  It is being developed
+as a part of the Google Summer of Code program.  The original proposal (for
+the Signal Network library, which became the Dataflow library)
+as well as some status updates can be found on the
+[@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
+
+* If you would like some more information about why one would want to connect
+  objects into a dataflow network, read about
+  [link dataflow.introduction.dataflow Dataflow programming in C++].
+* If you'd like to try out the library
+    * keep in mind that the interface is subject to change
+    * Read [how_to_use how to use this library and the documentation].
+    
+
 [section:dataflow Dataflow programming in C++ - motivation and advantages]
 
 The [WikiDataflow] programming paradigm is based on interconnected
@@ -309,7 +336,7 @@ convenient.]
 [endsect][/how_to_use]
 
 [section Examples]
-[section:new_layer Implementing support for a new mechanism]
+[section:new_layer Implementing support for a new mechanism (VTK)]
 
 This example shows how to implement support for a particular mechanism.
 Our victim is [VTK], a 3D visualization toolkit, which uses a data pipeline
@@ -406,7 +433,7 @@ for [vtkAlgorithm] accepting connections on its default input port:
 With the pair of [ProducerPortConcept] and [ConsumerPortConcept] registered, we
 can make them [ConnectableConcept] and/or [OnlyConnectableConcept].
 All we need to do is specialize the implementation for the appropriate
-categories:
+[PortTraits]:
 
 [vtk_connect_impl_algorithm]
 
@@ -478,11 +505,11 @@ for a [vtkActor] as both a [ProducerPortConcept] and a [ConsumerPortConcept]:
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.producermap
-    Setting up a ProducerMap] 
+    Setting up a KeyedPort] 
 
 [endsect][/filter]
 
-[section:producermap Setting up a ProducerMap]
+[section:producermap Setting up a KeyedPort]
 
 Sometimes, components can produce (or consume) multiple types of data.
 For example, [vtkMapper] objects can produce data for [vtkActor] objects,
@@ -491,9 +518,9 @@ objects.  Correspondingly, connecting a [vtkMapper] to a [vtkActor] is not
 the same as connecting a [vtkMapper] to another [vtkAlgorithm].
 
 To accomodate such situations, the Dataflow library provides
-[ProducerMapConcept]s, which are similar to [ProxyProducer]s but
-the [ProducerPortConcept] they delegate to is keyed on the category of
-[ConsumerPortConcept] they are being connected to.
+[KeyedPortConcept]s, which are similar to [ProxyPortConcept]s but
+the [PortConcept] they delegate to is keyed on the 
+[PortConcept] they are being connected to.
 
 [vtk_mapper_producer]
 
@@ -520,9 +547,8 @@ as [vtkAlgorithm] and [vtkAlgorithmOutput].  But [VTK] seems to exclusively
 use pointers to class types rather than class types themselves.  So, with what
 we have done so far, we can do `connect(*cone, *coneMapper)` but not
 `connect(cone, coneMapper)`.  To provide support for pointers, we
-simply make them adhere to the [ProxyProducerConcept] and,
-[ProxyConsumerConcept], and delegate the functionality to the object they
-point to.
+simply make them adhere to the [ProxyPortConcept] concept, and delegate the
+functionality to the object they point to.
 
 [vtk_support_pointer]
 
@@ -578,7 +604,52 @@ A sample run produces:
 
 [endsect][/examples]
 
-[section:linking How to link]
+[section:download Downloading, building and linking]
+
+[heading Downloading]
+
+I am currently preparing this library for submission for a Boost review. The
+latest version is located in the
+[@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2007/signals Boost sandbox].
+
+Version 0.8.0 -
+ \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
+
+* post-GSoC version
+* generic dataflow support layer with tests and examples
+* Dataflow.Signals layer (fusion-based implementation) with tests and examples
+* VTK example
+* quickbook docs
+
+[/Proposal for Boost / Google SoC version  \[[@signal_network.zip download]\]
+
+* finished the signals::socket_sender and signals::socket_receiver components
+
+Draft proposal for Boost / Google SoC version
+
+* changed the file and namespace structure
+* implemented a file-iteration based mechanism for arity-dependent classes
+* changed the operators used
+* signal_link is now signals::filter and does not need to know it's descendant's type
+* implemented signals::junction, signals::selector, signals::storage, signals::timed_generator,
+  signals::mutex, signals::chain, signals::function classes
+
+Original request for interest version available as attachment to
+[@http://lists.boost.org/Archives/boost/2007/02/116869.php]
+]
+
+[heading Building]
+
+The library comes with Boost.Build Jamfiles for all examples, tests, and docs.
+As long as your BOOST_ROOT environment variable is set, you should be able
+to build each one of those by going to the appropriate directory and
+running bjam.
+
+The library itself is header only, and requires no linking.  However, parts
+of it depend on boost libraries which do need to be built and linked (see
+the linking information below).
+
+[heading Linking]
 
 The generic Dataflow support layer is header-only, and relies only on other
 Boost header-only libraries (MPL, enable_if, and small parts of fusion).
@@ -590,6 +661,6 @@ the System library which must also be built and linked.  A few other components
 ([mutex] and [condition]) are dependent on [BoostThread], which has to be
 linked as well.
 
-[endsect][/linking]
+[endsect][/download]
 
 [endsect][/introduction]

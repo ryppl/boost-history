@@ -10,14 +10,31 @@
   can work on improving the information that is out there (on Wikipedia, etc.)
 * I chose /component/ to refer to a processing element of a dataflow network,
   because the term has no prior (to my knowledge) C++ meaning.
-* In differentiating components that output data from those that input data,
-  I originally thought about using "input component"
-  and "output component".  However, I realized that "input" and "output"
+* In differentiating ports that output data from those that input data,
+  I originally thought about using "input"
+  and "output".  However, I realized that "input" and "output"
   switch depending on perspective - from the perspective
-  of a component, it is "output" if it outputs data, but from the perspective
-  of a corresponding connection, that same component is the
-  "input".  A better choice might be /producer/ and /consumer/ as they don't
-  suffer from the same problem.  Perhaps "provider"
-  would be more accurate, and there is a precedent for this nomenclature.
+  of a port, it is "output" if it outputs data, but from the perspective
+  of a corresponding connection, that same port is the
+  "input".  A better choice seemed to be /producer/ and /consumer/ as they don't
+  suffer from the same problem.
 
+[heading Implementation choices]
+
+* Among various tag dispatch conventions, I chose to go with functor templates
+  because of relative simplicity as well as integration with boost::result_of.
+  Using a function might be another good alternative (as suggested
+  [@http://www.boost.org/more/generic_programming.html#tag_dispatching here]),
+  but might be problematic where the result type is not fixed (and in the
+  future all of the operations will probably be modified to return a value
+  where appropriate.
+* Port operations (as parts of [BinaryOperableConcept] and
+  [UnaryOperableConcept] concepts) have been rolled into a single class
+  template with the operation selected by type because all of these operations
+  share [ProxyPortConcept] and (for [BinaryOperableConcept]) [KeyedPortConcept] 
+  resolution.  [ComponentOperableConcept] operations have been implemented
+  the same way for consistency.
+  
 [endsect]
+  
+ 

@@ -1,6 +1,6 @@
 [article Dataflow
     [quickbook 1.4]
-    [version 0.1]
+    [version 0.8.0]
     [authors [Rajko, Stjepan]]
     [copyright 2007 Stjepan Rajko]
     [purpose Generic dataflow lirary providing support for data producers,
@@ -67,6 +67,7 @@
 [template instantiator[] [link dataflow.signals.components.generic.instantiator instantiator]]
 [template modifier[] [link dataflow.signals.components.generic.modifier modifier]]
 [template storage[] [link dataflow.signals.components.properties.storage storage]]
+[template timed_storage[] [link dataflow.signals.components.properties.timed_storage timed_storage]]
 [template counter[] [link dataflow.signals.components.properties.counter counter]]
 [template junction[] [link dataflow.signals.components.flow.junction junction]]
 [template multiplexer[] [link dataflow.signals.components.flow.multiplexer multiplexer]]
@@ -124,32 +125,6 @@
 
 [import ../example/VTK/support.hpp]
 
-Dataflow is a generic library for [WikiDataflow] programming using various data
-transport mechanisms.  It also has layers of support for
-two data transport mechanisms - one is based on
-[BoostSignals], and the other (experimental and currently broken) is based
-connections made through
-simple object pointers, with support for using [BoostPhoenix2]
-actors for data processing.
-
-The two data transport mechanisms are implemented in the [DataflowSignals]
-and [DataflowPhoenix] layers.  The idea behind providing a generic dataflow
-library is that other data transport mechanisms can be easily adapted for
-use with the library.
-
-[warning Dataflow is not a part of the Boost libraries.  It is being developed
-as a part of the Google Summer of Code program.  The original proposal (for
-the Signal Network library, which became the Dataflow library)
-as well as some status updates can be found on the
-[@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
-
-* If you would like some more information about why one would want to connect
-  objects into a dataflow network, read about
-  [link dataflow.introduction.dataflow Dataflow programming in C++].
-* If you'd like to try out the library
-    * keep in mind that the interface is subject to change
-    * Read [how_to_use how to use this library and the documentation].
-
 [include introduction.qbk]
 
 [include concepts.qbk]
@@ -183,10 +158,13 @@ community, and what has been done to incorporate this feedback.
 * I have started ASCII visual diagrams in the documentation.
 * Examples still need to be expanded and integrated more.
 
-[* Jake Voytko suggested having master table of [BoostDataflow] components
-   describing their use, adding instructions on linking with the library.]
+[* Jake Voytko suggested having master table of [DataflowSignals] components
+   describing their use, adding instructions on linking with the library,
+   and other suggestions on improving the documentation.]
+
 * A master table has been added to the [components] page.
-* I have started a [link dataflow.introduction.link linking] instruction page.
+* I have started a [link dataflow.introduction.download Downloading and Linking]
+  instruction page.
 
 [* Tobias Schwinger indicated that the library could be used for pulling rather than pushing data.]
 
@@ -202,7 +180,7 @@ operator.
 [* Paolo Coletta suggested a "video_generator >>= ( effect1 && effect2 ) >>= image_sum" - like syntax that
   would allow parallel processing of signals (identified as the "join" pattern by Yigong Liu)]
 
-* I have started to implement thread-related components in [timed_storage] and [mutex].
+* I have started to implement thread-related components in [timed_storage], [mutex] and [condition].
 More sophisticated threading components, control and syntax to follow.
 
 [* Yigong Liu suggested enhanced support for common network topologies, such as mesh. ]
@@ -228,33 +206,6 @@ to get a start on this concept.
 * Providing a call graph would be a great feature, but I am not sure what the best
   way to address that is, since each component might be of a different type.  Perhaps a graph
   in which only the edges are labeled (with connection objects) would be doable and useful.
-
-[endsect]
-
-[section:download Download and Changelog]
-
-Please keep in mind that this code is a prototype and far from the finished product.  I am learning
-as I go, and any feedback on improving the implementation is very welcome.
-
-GSoC Development version (*latest*) \[located in the Boost sandbox /SOC/2007/signals\]
-
-* converting documentation to boostbook, using Boost.Build
-
-Proposal for Boost / Google SoC version  \[[@signal_network.zip download]\]
-
-* finished the signals::socket_sender and signals::socket_receiver components
-
-Draft proposal for Boost / Google SoC version
-
-* changed the file and namespace structure
-* implemented a file-iteration based mechanism for arity-dependent classes
-* changed the operators used
-* signal_link is now signals::filter and does not need to know it's descendant's type
-* implemented signals::junction, signals::selector, signals::storage, signals::timed_generator,
-  signals::mutex, signals::chain, signals::function classes
-
-Original request for interest version available as attachment to
-[@http://lists.boost.org/Archives/boost/2007/02/116869.php]
 
 [endsect]
 
