@@ -21,10 +21,6 @@
 # pragma once
 #endif
 
-#if defined(BOOST_WINDOWS) || defined(BOOST_TEST_TSS_PTHREAD)
-
-
-
 
 
 
@@ -91,7 +87,6 @@ private:
 
 
 
-#endif
 
 #endif
 

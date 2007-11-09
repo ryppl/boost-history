@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.2, 9 nov 2007
+@section changelog_cur_ver Current Version: v0.11.3, 10 nov 2007
+- removed #ifdef that would allow TSS only on Windows
 - can now see the current version from the contents
 - compiles with gcc 3.4.2, gcc 4.1, and VS 2005
 - we have boost::logging::scenario namespace, which finds the right filter/logger, based on your application's needs
