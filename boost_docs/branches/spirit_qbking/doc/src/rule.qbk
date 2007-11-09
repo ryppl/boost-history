@@ -1,0 +1,198 @@
+
+[section:rule The Rule]
+
+The [*rule] is a polymorphic parser that acts as a named place-holder capturing the behavior of an EBNF expression assigned to it. Naming an EBNF expression allows it to be referenced later. The `rule` is a template class parameterized by the type of the scanner (`ScannerT`), the rule's [link __in_depth_the_parser_context__ context] and its [# tag]. Default template parameters are provided to make it easy to use the rule.
+
+``
+    template<
+        typename ScannerT = scanner<>,
+        typename ContextT = parser_context<>,
+        typename TagT = parser_address_tag>
+    class rule;
+``
+
+Default template parameters are supplied to handle the most common case. `ScannerT` defaults to `scanner<>`, a plain vanilla scanner that acts on `char const*` iterators and does nothing special at all other than iterate through all the `char`s in the null terminated input a character at a time. The rule tag, `TagT`, typically used with [link __trees__ ASTs], is used to identify a rule; it is explained [# tag here]. In trivial cases, declaring a rule as `rule<>` is enough. You need not be concerned at all with the `ContextT` template parameter unless you wish to tweak the low level behavior of the rule. Detailed information on the `ContextT` template parameter is provided elsewhere.
+
+[header Order of parameters]
+
+As of v1.8.0, the `ScannerT`, `ContextT` and `TagT` can be specified in any order. If a template parameter is missing, it will assume the defaults. Examples:
+
+``
+    rule<> rx1;
+    rule<scanner<> > rx2;
+    rule<parser_context<> > rx3;
+    rule<parser_context<>, parser_address_tag> rx4;
+    rule<parser_address_tag> rx5;
+    rule<parser_address_tag, scanner<>, parser_context<> > rx6;
+    rule<parser_context<>, scanner<>, parser_address_tag> rx7;
+``
+
+[header Multiple scanners]
+
+As of v1.8.0, rules can use one or more scanner types. There are cases, for instance, where we need a rule that can work on the phrase and character levels. Rule/scanner mismatch has been a source of confusion and is the no. 1 __FAQ__. To address this issue, we now have multiple scanner support. Example:
+
+``
+    typedef scanner_list<scanner<>, phrase_scanner_t> scanners;
+
+    rule<scanners>  r = +anychar_p;
+    assert(parse("abcdefghijk", r).full);
+    assert(parse("a b c d e f g h i j k", r, space_p).full);
+``
+
+Notice how rule `r` is used in both the phrase and character levels.
+
+By default support for multiple scanners is disabled. The macro `BOOST_SPIRIT_RULE_SCANNERTYPE_LIMIT` must be defined to the maximum number of scanners allowed in a scanner_list. The value must be greater than `1` to enable multiple scanners. Given the example above, to define a limit of two scanners for the list, the following line must be inserted into the source file before the inclusion of Spirit headers:
+
+``
+    #define BOOST_SPIRIT_RULE_SCANNERTYPE_LIMIT 2
+``
+
+[tip __FIX_LINKS_HERE__ See the techniques section for an example of a grammar using a multiple scanner enabled rule, `lexeme_scanner` and `as_lower_scanner`.]
+
+[header Rule Declarations]
+
+The `rule` class models EBNF's production rule. Example:
+
+``
+    rule<> a_rule = *(a | b) & +(c | d | e);
+``
+
+The type and behavior of the right-hand (rhs) EBNF expression, which may be arbitrarily complex, is encoded in the rule named `a_rule`. `a_rule` may now be referenced elsewhere in the grammar:
+
+``
+    rule<> another_rule = f >> g >> h >> a_rule;
+``
+
+[warning [*Referencing rules]
+
+When a rule is referenced anywhere in the right hand side of an EBNF expression, the rule is held by the expression by reference. It is the responsibility of the client to ensure that the referenced rule stays in scope and does not get destructed while it is being referenced.
+]
+
+``
+    a = int_p;
+    b = a;
+    c = int_p >> b;
+``
+
+[header Copying Rules]
+
+The rule is a weird C++ citizen, unlike any other C++ object. It does not have the proper copy and assignment semantics and cannot be stored and passed around by value. If you need to copy a rule you have to explicitly call its member function `copy()`:
+
+``
+    r.copy();
+``
+
+However, be warned that copying a rule will not deep copy other referenced rules of the source rule being copied. This might lead to dangling references. Again, it is the responsibility of the client to ensure that all referenced rules stay in scope and does not get destructed while it is being referenced. Caveat emptor.
+
+If you copy a rule, then you'll want to place it in a storage somewhere. The problem is how? The storage can't be another rule:
+
+``
+    rule<> r2 = r.copy(); // BAD!
+``
+
+because rules are weird and does not have the expected C++ copy-constructor and assignment semantics! As a general rule: Don't put a copied rule into another rule! Instead, use the `stored_rule` for that purpose.
+
+[header Forward declarations]
+
+A `rule` may be declared before being defined to allow cyclic structures typically found in BNF declarations. Example:
+
+``
+    rule<> a, b, c;
+
+    a = b | a;
+    b = c | a;
+``
+
+[header Recursion]
+
+The right-hand side of a rule may reference other rules, including itself. The limitation is that direct or indirect left recursion is not allowed (this is an unchecked run-time error that results in an infinite loop). This is typical of top-down parsers. Example:
+
+``
+    a = a | b; // infinite loop!
+``
+
+[note [*What is left recursion?]
+
+Left recursion happens when you have a rule that calls itself before anything else. A top-down parser will go into an infinite loop when this happens. See the FAQ for details on how to eliminate left recursion.
+]
+
+[header Undefined rules]
+
+An undefined rule matches nothing and is semantically equivalent to `nothing_p`.
+
+[header Redeclarations]
+
+Like any other C++ assignment, a second assignment to a rule is destructive and will redefine it. The old definition is lost. Rules are dynamic. A rule can change its definition anytime:
+
+``
+    r = a_definition;
+    r = another_definition;
+``
+
+Rule `r` loses the old definition when the second assignment is made. As mentioned, an undefined rule matches nothing and is semantically equivalent to `nothing_p`.
+
+[header Dynamic Parsers]
+
+Hosting declarative EBNF in imperative C++ yields an interesting blend. We have the best of both worlds. We have the ability to conveniently modify the grammar at run time using imperative constructs such as `if, else` statements. Example:
+
+``
+    if (feature_is_available)
+        r = add_this_feature;
+``
+
+Rules are essentially dynamic parsers. A dynamic parser is characterized by its ability to modify its behavior at run time. Initially, an undefined rule matches nothing. At any time, the rule may be defined and redefined, thus, dynamically altering its behavior.
+
+[header No start rule]
+
+Typically, parsers have what is called a `start` symbol, chosen to be the root of the grammar where parsing starts. The Spirit parser framework has no notion of a start symbol. Any rule can be a start symbol. This feature promotes step-wise creation of parsers. We can build parsers from the bottom up while fully testing each level or module up untill we get to the top-most level.
+
+[header Parser Tags]
+
+Rules may be tagged for identification purposes. This is necessary, especially when dealing with [link __trees__ parse trees and ASTs] to see which rule created a specific AST/parse tree node. Each rule has an ID of type `parser_id`. This ID can be obtained through the rule's `id()` member function:
+
+``
+    my_rule.id(); //  get my_rule's id
+``
+
+The `parser_id` class is declared as:
+
+``
+    class parser_id
+    {
+    public:
+                    parser_id();
+        explicit    parser_id(void const* p);
+                    parser_id(std::size_t l);
+    
+        bool        operator==(parser_id const& x) const;
+        bool        operator!=(parser_id const& x) const;
+        bool        operator<(parser_id const& x) const;
+        std::size_t to_long() const;
+    };
+``
+
+[header `parser_address_tag`]
+
+The rule's `TagT` template parameter supplies this ID. This defaults to `parser_address_tag`. The `parser_address_tag` uses the address of the rule as its ID. This is often not the most convenient, since it is not always possible to get the address of a rule to compare against.
+
+[header `parser_tag`]
+
+It is possible to have specific constant integers to identify a rule. For this purpose, we can use the `parser_tag<N>`, where `N` is a constant integer:
+
+``
+    rule<parser_tag<123> > my_rule; //  set my_rule's id to 123
+``
+
+[header `dynamic_parser_tag`]
+
+The `parser_tag<N>` can only specifiy a [*static ID], which is defined at compile time. If you need the ID to be [*dynamic] (changeable at runtime), you can use the `dynamic_parser_tag` class as the `TagT` template parameter. This template parameter enables the `set_id()` function, which may be used to set the required id at runtime:
+
+``
+    rule<dynamic_parser_tag> my_dynrule;
+    my_dynrule.set_id(1234);    // set my_dynrule's id to 1234
+``
+
+If the `set_id()` function isn't called, the parser id defaults to the address of the rule as its ID, just like the `parser_address_tag` template parameter would do. 
+
+[endsect][/ rule]
+

@@ -59,6 +59,7 @@ Introduction
 [include introduction.qbk]
 
 Quick Start
+[include quick_start.qbk]
 
 Basic Concepts
 [include basic_concepts.qbk]
@@ -75,20 +76,30 @@ Primitives
 [include primitives.qbk]
 
 Operators
+[include operators.qbk]
 
 Numerics
 [include numerics.qbk]
 
 The Rule
+[include rule.qbk]
+
 Epsilon
+[include epsilon.qbk]
+
 Directives
+[include directives.qbk]
 
 The Scanner and Parsing
 [include scanner.qbk]
 
 The Grammar
+
 Subrules
+[include subrules.qbk]
+
 Semantic Actions
+
 In-depth: The Parser
 
 In-depth: The Scanner
