@@ -1,0 +1,276 @@
+// Copyright Howard Hinnant 2007. Distributed under the Boost
+// Software License, Version 1.0. (see http://www.boost.org/LICENSE_1_0.txt)
+
+// mutex
+
+#ifndef _MUTEX
+#define _MUTEX
+
+/*
+    mutex synopsis
+
+    namespace std {
+
+    struct mutex
+    {
+    public:
+        mutex();
+        ~mutex();
+    
+        mutex(const mutex&) = delete;
+        mutex& operator=(const mutex&) = delete;
+
+        void lock();
+        bool try_lock();
+        void unlock();
+
+        typedef unspecified native_handle_type;  // optional.  example: pthread_mutex_t*
+        native_handle_type native_handle();      // optional
+    };
+
+    struct recursive_mutex
+    {
+    public:
+        recursive_mutex();
+        ~recursive_mutex();
+    
+        recursive_mutex(const recursive_mutex&) = delete;
+        recursive_mutex& operator=(const recursive_mutex&) = delete;
+
+        void lock();
+        bool try_lock();
+        void unlock();
+
+        typedef unspecified native_handle_type;  // optional.  example: pthread_mutex_t*
+        native_handle_type native_handle();      // optional
+    };
+
+    struct timed_mutex
+    {
+    public:
+        timed_mutex();
+        ~timed_mutex();
+    
+        timed_mutex(const timed_mutex&) = delete;
+        timed_mutex& operator=(const timed_mutex&) = delete;
+
+        void lock();
+        bool try_lock();
+        template <class elapsed_time>
+            bool timed_lock(const elapsed_time& rel_time);
+        bool timed_lock(const system_time& abs_time);
+        void unlock();
+
+        typedef unspecified native_handle_type;  // optional.  example: pthread_mutex_t*
+        native_handle_type native_handle();      // optional
+    };
+
+    struct recursive_timed_mutex
+    {
+    public:
+        recursive_timed_mutex();
+        ~recursive_timed_mutex();
+    
+        recursive_timed_mutex(const recursive_timed_mutex&) = delete;
+        recursive_timed_mutex& operator=(const recursive_timed_mutex&) = delete;
+
+        void lock();
+        bool try_lock();
+        template <class elapsed_time>
+            bool timed_lock(const elapsed_time& rel_time);
+        bool timed_lock(const system_time& abs_time);
+        void unlock();
+
+        typedef unspecified native_handle_type;  // optional.  example: pthread_mutex_t*
+        native_handle_type native_handle();      // optional
+    };
+
+    struct defer_lock_t  {};
+    struct try_to_lock_t {};
+    struct adopt_lock_t  {};
+    
+    extern const defer_lock_t  defer_lock;
+    extern const try_to_lock_t try_to_lock;
+    extern const adopt_lock_t  adopt_lock;
+    
+    class lock_error
+        : public std::exception
+    {
+    public:
+        virtual const char* what() const throw();
+    };
+
+    template <class Mutex>
+    class lock_guard
+    {
+    public:
+        typedef Mutex mutex_type;
+
+        explicit lock_guard(mutex_type& m);
+        lock_guard(mutex_type& m, adopt_lock_t);
+        ~lock_guard();
+
+        lock_guard(lock_guard const&) = delete;
+        lock_guard& operator=(lock_guard const&) = delete;
+
+        mutex_type* mutex() const;
+    };
+
+    template <class Mutex>
+    class unique_lock
+    {
+    public:
+        typedef Mutex mutex_type;
+
+        unique_lock();
+        explicit unique_lock(mutex_type& m);
+        unique_lock(mutex_type& m, defer_lock_t);
+        unique_lock(mutex_type& m, try_to_lock_t);
+        unique_lock(mutex_type& m, adopt_lock_t);
+        unique_lock(mutex_type& m, const system_time& abs_time);
+        template <class Duration>
+            unique_lock(mutex_type& m, const Duration& rel_t);
+        ~unique_lock();
+
+        unique_lock(unique_lock const&) = delete;
+        unique_lock& operator=(unique_lock const&) = delete;
+
+        unique_lock(unique_lock&& u);
+        unique_lock& operator=(unique_lock&& u);
+
+        void lock();
+        bool try_lock();
+        template <class Duration>
+            bool timed_lock(const Duration& rel_t);
+        bool timed_lock(const system_time& abs_time);
+        void unlock();
+    
+        bool owns() const;
+        operator unspecified-bool-type () const;
+        mutex_type* mutex() const;
+    
+        void swap(unique_lock&& u);
+        mutex_type* release();
+    };
+    
+    template <class Mutex> void swap(unique_lock<Mutex>&  x, unique_lock<Mutex>&  y);
+    template <class Mutex> void swap(unique_lock<Mutex>&& x, unique_lock<Mutex>&  y);
+    template <class Mutex> void swap(unique_lock<Mutex>&  x, unique_lock<Mutex>&& y);
+
+    template <class L1, class L2, class ...L3> int try_lock(L1&, L2&, L3&...);
+    template <class L1, class L2, class ...L3> void lock(L1&, L2&, L3&...);
+
+    struct once_flag
+    {
+        constexpr once_flag();
+    
+        once_flag(const once_flag&) = delete;
+        once_flag& operator=(const once_flag&) = delete;
+    };
+    
+    template<class Callable, class ...Args>
+        void call_once(once_flag& flag, Callable func, Args&&... args);
+
+
+    }  // std
+*/
+
+#include <mutex_base>
+#include <condition_variable>
+#include <hdate_time>
+#include <functional>
+
+namespace std
+{
+
+class timed_mutex
+{
+    mutex              mut_;
+    condition_variable gate1_;
+    bool               locked_;
+
+    timed_mutex(const timed_mutex&); // = delete;
+    timed_mutex& operator=(const timed_mutex&);  // = delete;
+public:
+
+    timed_mutex();
+    // ~timed_mutex() = default;
+
+    void lock();
+    bool try_lock();
+    template <class Duration>
+        bool timed_lock(const Duration& rel_time)
+            {return timed_lock(get_system_time() + rel_time);}
+    bool timed_lock(const system_time& abs_time);
+    void unlock();
+};
+
+class recursive_timed_mutex
+{
+    mutex               mut_;
+    condition_variable  gate1_;
+    unsigned            state_;
+    pthread_t           id_;
+
+    recursive_timed_mutex(const recursive_timed_mutex&); // = delete;
+    recursive_timed_mutex& operator=(const recursive_timed_mutex&);  // = delete;
+public:
+
+    recursive_timed_mutex();
+    // ~recursive_timed_mutex() = default;
+
+    void lock();
+    bool try_lock();
+    template <class Duration>
+        bool timed_lock(const Duration& rel_time)
+            {return timed_lock(get_system_time() + rel_time);}
+    bool timed_lock(const system_time& abs_time);
+    void unlock();
+};
+
+struct once_flag;
+
+template<class Callable, class ...Args>
+void
+call_once(once_flag& flag, Callable&& func, Args&&... args);
+
+struct once_flag
+{
+private:
+    mutex m_;
+    bool completed_;
+
+    template <class F> void run(F f);
+
+    template<class Callable, class ...Args>
+    friend
+    void
+    call_once(once_flag& flag, Callable&& func, Args&&... args);
+
+public:
+    //constexpr
+    once_flag() : completed_(false) {}
+};
+
+template <class F>
+void
+once_flag::run(F f)
+{
+    lock_guard<mutex> _(m_);
+    if (!completed_)
+    {
+        f();
+        completed_ = true;
+    }
+}
+
+template<class Callable, class ...Args>
+void
+call_once(once_flag& flag, Callable&& func, Args&&... args)
+{
+    flag.run(bind(std::forward<Callable>(func), std::forward<Args>(args)...));
+}
+
+}  // std
+
+#endif

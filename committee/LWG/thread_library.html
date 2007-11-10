@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-10-29
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-10
 </p>
 
 <address>
@@ -100,13 +100,7 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-10-29
 
 <p>
 This is a revision of
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2320.html">N2320</a>
-which removes cancellation/interruption and changes condition variables
-per the suggestions in
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2406.html">N2406</a>.
-This is the course of a action
-requested by the combined LWG/Concurrency working groups
-at the Kona meeting.
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2447.htm">N2447</a>.
 </p>
 
 <h2><a name="utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a></h2>
@@ -127,7 +121,7 @@ namespace std {
     ...
     // <em>Hash function specializations</em>
     ...
-    <ins>struct hash&lt;std::thread::id&gt;; // <b>should not be in this header file ?</b></ins>
+    <ins>struct hash&lt;std::thread::id&gt;;</ins>
 }
 </code></pre>
 </blockquote>
@@ -148,8 +142,9 @@ required to be instantiable for integer types (3.9.1), floating point
 types
 (3.9.1), pointer types (8.3.1), and <code>std::string</code>,
 <code>std::u16string</code>, <code>std::u32string</code>,
+<code>std::wstring</code>,
 <del>and</del>
-<code>std::wstring</code><ins>, and
+<code>std::error_code</code><ins>, and
 <code>std::thread::id</code></ins>.
 </p>
 </blockquote>
@@ -158,9 +153,7 @@ types
 
 <p>
 The following subclauses describe components to create and manage threads
-([<cite>reference
-to the new section from N2429 to be inserted between 1.9 and 1.10, titled
-"Multi-threaded executions and data races"</cite>]),
+([<cite>1.10 [intro.multithread]</cite>]),
 perform mutual exclusion and locking, and communicate
 between threads.
 </p>
@@ -180,7 +173,7 @@ between threads.
   </tr>
   <tr>
     <td><a href="#thread.condition">Condition variables</a></td>
-    <td><code>&lt;cond_var&gt;</code></td>
+    <td><code>&lt;condition_variable&gt;</code></td>
   </tr>
 </tbody></table>
 
@@ -287,7 +280,8 @@ public:
 
     // <em>construct/copy/destroy:</em>
     thread();
-    template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
+    template &lt;class F&gt; explicit thread(F f);
+    template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... args);
     ~thread();
     thread(const thread&amp;) = delete;
     thread(thread&amp;&amp;);
@@ -527,7 +521,8 @@ Nothing.
 </dl>
 
 <pre><code>
-template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
+template &lt;class F&gt; explicit thread(F f);
+template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... args);
 </code></pre>
 
 <dl>
@@ -538,7 +533,6 @@ If <code>f</code> is an lvalue, <code>F</code>
 is <code>CopyConstructible</code>.
 If <code>f</code> is an rvalue,
 <code>F</code> is <code>MoveConstructible</code>.
-<b>[Crowl: Is this enforced by code?]</b>
 </dd>
 
 <dt>Effects:</dt>
@@ -581,7 +575,7 @@ Constructs an object of type <code>thread</code> from <code><var>x</var></code>.
 <dd>
 <code><var>x</var>.joinable() == false</code>
 <br>
-<code><var>x</var>.get_id() == thread().get_id().joinable()</code>
+<code><var>x</var>.get_id() == thread().get_id()</code>. &nbsp; &nbsp;<code>joinable()</code>
 returns the value of <code><var>x</var>.joinable()</code>
 prior to the start of construction.
 <br>
@@ -635,7 +629,7 @@ and sets <code><var>x</var></code> to a default constructed state.
 <dd>
 <code><var>x</var>.joinable() == false</code>
 <br>
-<code><var>x</var>.get_id() == thread().get_id().joinable()</code> returns the
+<code><var>x</var>.get_id() == thread().get_id()</code>. &nbsp; &nbsp;<code>joinable()</code> returns the
 value of <code><var>x</var>.joinable()</code> prior to the
 assignment.
 <br>
@@ -696,11 +690,8 @@ void join();
 
 <dt>Effects:</dt>
 <dd>
-The current thread blocks until the thread
-represented by <code>*this</code> completes.
-<b>[Crowl: I.e. upon completion the thread does on a release
-on a memory location that the joiner does an acquire on.
-I.e. there is a happens before relationship.]</b>
+The completion of the thread represented by <code>*this</code> happens before
+[<cite>intro.multithread</cite>] <tt>join()</tt> returns.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -708,8 +699,8 @@ I.e. there is a happens before relationship.]</b>
 After a normal return of <code>join()</code>,
 <code>joinable()</code> is <code>false</code>.
 <br>
-If <code>join()</code> throws an exception, the thread represented by
-<code>*this</code> remains <code>joinable</code>.
+If <code>join()</code> throws an exception, the <code>joinable()</code> status remains
+unchanged.
 </dd>
 
 <dt>Throws:</dt>
@@ -735,9 +726,7 @@ void detach();
 The thread represented by
 <code>*this</code> continues execution.
 When the thread represented by
-<code>*this</code> ends execution it shall release any owned resources.
-<b>[Crowl: The programmer shall or the implementation shall?
-Which resources?]</b>
+<code>*this</code> ends execution the implementation shall release any owned resources.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -750,7 +739,8 @@ does not represent a thread.
 
 <dt>Throws:</dt>
 <dd>
-Nothing.
+<code>system_error</code> when an error condition occurs.
+The possible error conditions are implementation defined.
 </dd>
 </dl>
 
@@ -872,12 +862,6 @@ template &lt;class Duration&gt;
 </code></pre>
 
 <dl>
-<dt>Requires:</dt>
-<dd>
-<code>Duration</code>
-shall be explicitly convertible to <code>nanoseconds</code>.
-</dd>
-
 <dt>Effects:</dt>
 <dd>
 The current thread blocks for at least the amount of time specified.
@@ -982,7 +966,6 @@ For non-recursive mutexes the current thread shall not own the mutex.
 <dt>Effects:</dt>
 <dd>
 The current thread will block until the mutex is not owned by another thread.
-<b>[Crowl: I.e. happens before?]</b>
 Upon successful completion, the current thread owns the mutex.
 </dd>
 
@@ -995,7 +978,7 @@ possible error conditions are implementation defined.
 
 <dt>Thread safety:</dt>
 <dd>
-This is an acquire operation.
+This is an acquire operation [<cite>intro.multithread</cite>].
 </dd>
 </dl>
 
@@ -1034,7 +1017,7 @@ And such a guarantee would preclude potentially interesting
 
 <dt>Thread safety:</dt>
 <dd>
-This is an acquire operation if <code>try_lock</code> returns <code>true</code>.
+This is an acquire operation if <code>try_lock</code> returns <code>true</code> [<cite>intro.multithread</cite>].
 </dd>
 
 <dt>Throws:</dt>
@@ -1065,7 +1048,7 @@ or by any other locking function) before ownership is released.
 
 <dt>Thread safety:</dt>
 <dd>
-This is a release operation.
+This is a release operation [<cite>intro.multithread</cite>].
 </dd>
 
 <dt>Throws:</dt>
@@ -1145,7 +1128,7 @@ It shall be a standard-layout class (chapter 9 [class]).
 <p>
 To meet the requirements of the Timed Mutex concept,
 types are required to meet the requirements of the Mutex concept
-and to provide the member function <code>timed_lock</code>.
+and to provide the member functions <code>timed_lock</code>.
 </p>
 
 <pre><code>
@@ -1158,7 +1141,8 @@ template &lt;class Duration&gt;
 <dd>
 For non-recursive mutexes the current thread shall not own
 the mutex.
-<b>[Crowl: Roundup here instead of under various locks.]</b>
+If the resolution of <code>Duration</code> is greater than the native resolution
+the time is rounded up to the nearest native resolution.
 </dd>
 
 <dt>Effects:</dt>
@@ -1185,8 +1169,51 @@ but implementations are expected to make a strong effort to do so.
 
 <dt>Thread safety:</dt>
 <dd>
-This is a synchronization operation.
-<b>[Crowl: on the memory locations of the lock.]</b>
+This is an acquire operation if <code>timed_lock</code> returns <code>true</code> [<cite>intro.multithread</cite>].
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
+</dd>
+</dl>
+
+<pre><code>
+bool timed_lock(const system_time&amp; abs_time);
+</code></pre>
+
+<dl>
+<dt>Precondition:</dt>
+<dd>
+For non-recursive mutexes the current thread shall not own
+the mutex.
+</dd>
+
+<dt>Effects:</dt>
+<dd>
+The function attempts to obtain ownership of the mutex
+by the specified time.
+If the indicated time has already passed,
+the function still attempts to obtain ownership without
+blocking (as if by calling <code>try_lock()</code>).
+If the function returns by the specified time,
+it shall have obtained ownership.
+[<i>Note:</i>
+As with <code>try_lock()</code>,
+there is no guarantee that ownership will be obtained
+if the lock is available,
+but implementations are expected to make a strong effort to do so.
+&mdash;<i>end note</i>]
+</dd>
+
+<dt>Returns:</dt>
+<dd>
+<code>true</code> if ownership was obtained, otherwise <code>false</code>.
+</dd>
+
+<dt>Thread safety:</dt>
+<dd>
+This is an acquire operation if <code>timed_lock</code> returns <code>true</code> [<cite>intro.multithread</cite>].
 </dd>
 
 <dt>Throws:</dt>
@@ -1214,6 +1241,7 @@ public:
     bool try_lock();
     template &lt;class Duration&gt;
         bool timed_lock(const Duration&amp; rel_time);
+    bool timed_lock(const system_time&amp; abs_time);
     void unlock();
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
@@ -1249,6 +1277,7 @@ public:
     bool try_lock();
     template &lt;class Duration&gt;
         bool timed_lock(const Duration&amp; rel_time);
+    bool timed_lock(const system_time&amp; abs_time);
     void unlock();
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
@@ -1367,7 +1396,6 @@ of the <code>lock_guard</code> object.
 <dd>
 Stores a reference to <code><var>m</var></code>
 and calls <code><var>m</var>.lock()</code>.
-<b>[Crowl: An acquire specification is not necessary because of m.lock().]</b>
 </dd>
 </dl>
 
@@ -1423,6 +1451,9 @@ public:
     unique_lock(mutex_type&amp; <var>m</var>, defer_lock_t);
     unique_lock(mutex_type&amp; <var>m</var>, try_to_lock_t);
     unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
+    unique_lock(mutex_type&amp; <var>m</var>, const system_time&amp; <var>abs_time</var>);
+    template &lt;class Duration&gt;
+	    unique_lock(mutex_type&amp; <var>m</var>, const Duration&amp; <var>rel_time</var>);
     ~unique_lock();
 
     unique_lock(unique_lock const&amp;) = delete;
@@ -1592,6 +1623,69 @@ and performs no other operation on it.
 </dl>
 
 <pre><code>
+unique_lock(mutex_type&amp; <var>m</var>, const system_time&amp; <var>abs_time</var>);
+</code></pre>
+
+<dl>
+<dt>Precondition:</dt>
+<dd>
+If <code>mutex_type</code> is not a recursive mutex, then the current thread
+does not own the mutex.
+The lifetime of <code><var>m</var></code> includes the lifetime of the <code>
+unique_lock</code> object.
+</dd>
+
+<dt>Effects:</dt>
+<dd>
+Stores a reference to <code><var>m</var></code>
+and calls <code><var>m</var>.timed_lock(abs_time)</code>.
+</dd>
+
+<dt>Postconditions:</dt>
+<dd>
+<code>mutex() == &amp;<var>m</var></code>
+<br>
+<code>owns_lock() ==</code>
+the result of the call to <code><var>m</var>.timed_lock(<var>abs_time</var>)</code>
+</dd>
+</dl>
+
+<pre><code>
+template &lt;class Duration&gt;
+  unique_lock(mutex_type&amp; <var>m</var>, const Duration&amp; <var>rel_time</var>);
+</code></pre>
+
+<dt>Remarks:</dt>
+<dd>
+The implementation must ensure that only <code>Duration</code> types [<cite>reference to date-time library clause</cite>]
+will bind to this constructor.
+</dd>
+
+<dl>
+<dt>Precondition:</dt>
+<dd>
+If <code>mutex_type</code> is not a recursive mutex, then the current thread
+does not own the mutex.
+The lifetime of <code><var>m</var></code> includes the lifetime of the <code>
+unique_lock</code> object.
+</dd>
+
+<dt>Effects:</dt>
+<dd>
+Stores a reference to <code><var>m</var></code>
+and calls <code><var>m</var>.timed_lock(rel_time)</code>.
+</dd>
+
+<dt>Postconditions:</dt>
+<dd>
+<code>mutex() == &amp;<var>m</var></code>
+<br>
+<code>owns_lock() ==</code>
+the result of the call to <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>
+</dd>
+</dl>
+
+<pre><code>
 ~unique_lock();
 </code></pre>
 
@@ -1744,9 +1838,36 @@ template &lt;class Duration&gt;
 <dt>Effects:</dt>
 <dd>
 Calls <code>timed_lock(rel_t)</code> on the referenced mutex.
-If the resolution of Duration is greater <b>[Crowl: less]</b> than
-the native
-resolution the time is rounded up to the nearest native resolution.
+</dd>
+
+<dt>Returns:</dt>
+<dd>
+The result of the call to <code>timed_lock(rel_t)</code>
+on the referenced mutex.
+</dd>
+
+<dt>Postconditions:</dt>
+<dd>
+<code>owns_lock() == </code>
+the result
+of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+<code>lock_error</code>,
+if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
+</dd>
+</dl>
+
+<pre><code>
+bool timed_lock(const system_time&amp; abs_t);
+</code></pre>
+
+<dl>
+<dt>Effects:</dt>
+<dd>
+Calls <code>timed_lock(abs_t)</code> on the referenced mutex.
 </dd>
 
 <dt>Returns:</dt>
@@ -2046,10 +2167,8 @@ for the same <code>once_flag</code> object.
 If multiple calls to <code>call_once</code>
 with the same <code>once_flag</code> object
 occur in separate threads,
-only one thread shall call <code>func</code>,
-and none shall proceed until the call to <code>func</code> has completed.
-<b>[Crowl: I.e. the return of <code>func</code> happens before
-the return of <code>call_once</code>.]</b>
+the single non-exceptional return of <code>func</code> happens before [<cite>intro.multithreading</cite>]
+every non-exceptional <code>call_once</code> return.
 If the invocation of <code>func</code> results in an exception being thrown,
 the exception is propagated to the caller
 and the effects are as-if this invocation of <code>call_once</code>
@@ -2064,10 +2183,9 @@ did not occur.
 <dt>Thread safety:</dt>
 <dd>
 <p>
-Access to the same <code>once_flag</code> object
-by calls to <code>call_once</code> from different threads
-shall not result in a data race or deadlock.
-<b>[Crowl: The implementation shall not introduce these.]</b>
+The implememtation shall not introduce a data race or deadlock
+if different threads simultaneously use the same <code>once_flag</code> object
+to call <code>call_once</code>.
 </p>
 
 <p>
@@ -3252,6 +3370,12 @@ objects of the same type.
 <pre><code>
 class Duration {
 
+    // <em>traits information</em>
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+
     // <em>comparison operators</em>
     template&lt;typename RhsDuration&gt;
     bool operator&lt;  (const RhsDuration&amp;) const;
@@ -3298,6 +3422,56 @@ class Duration {
 }
 </code></pre>
 </blockquote>
+
+<pre><code>
+static tick_type ticks_per_second();
+</code></pre>
+
+<dl>
+<dt>Returns:</dt>
+<dd>
+A constant defined separately for each <tt>Duration</tt> type indicating the
+number of ticks per second (or 0 for types which are not <code>is_subsecond</code>).
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
+</dd>
+</dl>
+
+<pre><code>
+static tick_type seconds_per_tick();
+</code></pre>
+
+<dl>
+<dt>Returns:</dt>
+<dd>
+A constant defined separately for each <tt>Duration</tt> type indicating the
+number of seconds per tick (or 0 for types which are <code>is_subsecond</code>).
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
+</dd>
+</dl>
+
+<pre><code>
+static bool is_subsecond();
+</code></pre>
+
+<dl>
+<dt>Returns:</dt>
+<dd>
+<code>true</code> if the resolution of this Duration is greater than 1 second, and otherwise <code>false</code>.
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
+</dd>
+</dl>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;

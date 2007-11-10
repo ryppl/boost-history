@@ -1,0 +1,221 @@
+// Copyright Howard Hinnant 2007. Distributed under the Boost
+// Software License, Version 1.0. (see http://www.boost.org/LICENSE_1_0.txt)
+
+// condition_variable
+
+#ifndef _CONDITION_VARIABLE
+#define _CONDITION_VARIABLE
+
+/*
+    condition_variable synopsis
+
+    namespace std {
+
+    class condition_variable
+    {
+    public:
+       
+        condition_variable();
+        ~condition_variable();
+    
+        condition_variable(const condition_variable&) = delete;
+        condition_variable& operator=(const condition_variable&) = delete;
+    
+        void notify_one();
+        void notify_all();
+        void wait(unique_lock<mutex>& lock);
+        template <class Predicate>
+            void wait(unique_lock<mutex>& lock, Predicate pred);
+        bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time);
+        template <class Predicate>
+            bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred);
+
+        typedef pthread_cond_t* native_handle_type;
+        native_handle_type native_handle();
+    };
+    
+    class condition_variable_any
+    {
+    public:
+       
+        condition_variable_any();
+        ~condition_variable_any();
+    
+        condition_variable_any(const condition_variable_any&) = delete;
+        condition_variable_any& operator=(const condition_variable_any&) = delete;
+    
+        void notify_one();
+        void notify_all();
+        template <class Lock>
+            void wait(Lock& lock);
+        template <class Lock, class Predicate>
+            void wait(Lock& lock, Predicate pred);
+        template <class Lock>
+            bool timed_wait(Lock& lock, const system_time& abs_time);
+        template <class Lock, class Predicate>
+            bool timed_wait(Lock& lock, const system_time& abs_time, Predicate pred);
+    };
+
+    }  // std
+
+*/
+
+#include <mutex_base>
+#include <system_error>
+#include <hdate_time>
+#include <type_traits>
+
+namespace std
+{
+
+struct __lock_external
+{
+    template <class _Lock>
+    void operator()(_Lock* __m) {__m->lock();}
+};
+
+class condition_variable
+{
+    pthread_cond_t cv_;
+public:
+   
+    condition_variable();
+    ~condition_variable();
+private:
+    condition_variable(const condition_variable&); // = delete;
+    condition_variable& operator=(const condition_variable&); // = delete;
+public:
+    void notify_one();
+    void notify_all();
+    void wait(unique_lock<mutex>& lock);
+    template <class Predicate>
+        void wait(unique_lock<mutex>& lock, Predicate pred);
+    bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time);
+    template <class Predicate>
+        bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred);
+
+    typedef pthread_cond_t* native_handle_type;
+    native_handle_type native_handle() {return &cv_;}
+private:
+    void __do_wait(pthread_mutex_t*);
+    bool __do_timed_wait(pthread_mutex_t*, const system_time& abs_time);
+
+};
+
+inline
+void
+condition_variable::wait(unique_lock<mutex>& lock)
+{
+    __do_wait(lock.mutex()->native_handle());
+}
+
+template <class Predicate>
+void
+condition_variable::wait(unique_lock<mutex>& lock, Predicate pred)
+{
+    while (!pred())
+        __do_wait(lock.mutex()->native_handle());
+}
+
+inline
+bool
+condition_variable::timed_wait(unique_lock<mutex>& lock, const system_time& abs_time)
+{
+    return __do_timed_wait(lock.mutex()->native_handle(), abs_time);
+}
+
+template <class Predicate>
+bool
+condition_variable::timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred)
+{
+    while (!pred())
+        if (!__do_timed_wait(lock.mutex()->native_handle(), abs_time))
+            return pred();
+    return true;
+}
+
+class condition_variable_any
+{
+    condition_variable cv_;
+    mutex              mut_;
+public:
+   
+    // condition_variable_any() = default;
+    // ~condition_variable_any() = default;
+
+    // condition_variable_any(const condition_variable_any&) = delete;
+    // condition_variable_any& operator=(const condition_variable_any&) = delete;
+
+    void notify_one();
+    void notify_all();
+    template <class Lock>
+        void wait(Lock& lock);
+    template <class Lock, class Predicate>
+        void wait(Lock& lock, Predicate pred);
+    template <class Lock>
+        bool timed_wait(Lock& lock, const system_time& abs_time);
+    template <class Lock, class Predicate>
+        bool timed_wait(Lock& lock, const system_time& abs_time, Predicate pred);
+};
+
+inline
+void
+condition_variable_any::notify_one()
+{
+    lock_guard<mutex> _(mut_);
+    cv_.notify_one();
+}
+
+inline
+void
+condition_variable_any::notify_all()
+{
+    lock_guard<mutex> _(mut_);
+    cv_.notify_all();
+}
+
+template <class Lock>
+void
+condition_variable_any::wait(Lock& lock)
+{
+    unique_lock<mutex> lk(mut_);
+    lock.unlock();
+    unique_ptr<Lock, __lock_external> external_guard(&lock);
+    lock_guard<unique_lock<mutex>> internal_guard(lk, adopt_lock);
+    cv_.wait(lk);
+}  // mut_.unlock(), lock.lock()
+
+template <class Lock, class Predicate>
+inline
+void
+condition_variable_any::wait(Lock& lock, Predicate pred)
+{
+    while (!pred())
+        wait(lock);
+}
+
+template <class Lock>
+bool
+condition_variable_any::timed_wait(Lock& lock, const system_time& abs_time)
+{
+    unique_lock<mutex> lk(mut_);
+    lock.unlock();
+    unique_ptr<Lock, __lock_external> external_guard(&lock);
+    lock_guard<unique_lock<mutex>> internal_guard(lk, adopt_lock);
+    return cv_.timed_wait(lk, abs_time);
+}  // mut_.unlock(), lock.lock()
+
+template <class Lock, class Predicate>
+inline
+bool
+condition_variable_any::timed_wait(Lock& lock, const system_time& abs_time, Predicate pred)
+{
+    while (!pred())
+        if (!timed_wait(lock, abs_time))
+            return pred();
+    return true;
+}
+
+}  // std
+
+#endif
