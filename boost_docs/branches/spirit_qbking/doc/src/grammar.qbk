@@ -1,0 +1,222 @@
+
+[section:grammar The Grammar]
+
+The *Grammar* encapsulates a set of rules. The `grammar` class is a protocol base class. It is essentially an interface contract. The `grammar` is a template class that is parameterized by its derived class, `DerivedT`, and its context, `ContextT`. The template parameter `ContextT` defaults to `parser_context`, a predefined context.
+
+You need not be concerned at all with the `ContextT` template parameter unless you wish to tweak the low level behavior of the grammar. Detailed information on the `ContextT` template parameter is provided elsewhere. The grammar relies on the template parameter `DerivedT`, a grammar subclass to define the actual rules.
+
+Presented below is the public API. There may actually be more template parameters after `ContextT`. Everything after the `ContextT` parameter should not be of concern to the client and are strictly for internal use only.
+
+``
+    template<
+        typename DerivedT,
+        typename ContextT = parser_context<> >
+    struct grammar;
+``
+
+[section:definition Grammar definition]
+
+A concrete sub-class inheriting from grammar is expected to have a nested template class (or struct) named definition:
+
+* It is a nested template class with a typename ScannerT parameter.
+* Its constructor defines the grammar rules.
+* Its constructor is passed in a reference to the actual grammar self.
+* It has a member function named start that returns a reference to the start rule.
+
+[endsect][/ definition]
+
+[section:skeleton Grammar skeleton]
+
+``
+    struct my_grammar : public grammar<my_grammar>
+    {
+        template <typename ScannerT>
+        struct definition
+        {
+            rule<ScannerT>  r;
+            definition(my_grammar const& self)  { r = /*..define here..*/; }
+            rule<ScannerT> const& start() const { return r; }
+        };
+    };
+``
+
+Decoupling the scanner type from the rules that form a grammar allows the grammar to be used in different contexts possibly using different scanners. We do not care what scanner we are dealing with. The user-defined `my_grammar` can be used with [*any] type of scanner. Unlike the rule, the grammar is not tied to a specific scanner type. See "__Scanner_Business__" to see why this is important and to gain further understanding on this scanner-rule coupling problem.
+
+[header Instantiating and using `my_grammar`]
+
+Our grammar above may be instantiated and put into action:
+
+``
+    my_grammar g;
+
+    if (parse(first, last, g, space_p).full)
+        cout << "parsing succeeded\n";
+    else
+        cout << "parsing failed\n";
+``
+
+`my_grammar` [*IS-A] parser and can be used anywhere a parser is expected, even referenced by another rule:
+
+``
+    rule<>  r = g >> str_p("cool huh?");
+
+``
+
+[important [*Referencing grammars]
+
+Like the rule, the grammar is also held by reference when it is placed in the right hand side of an EBNF expression. It is the responsibility of the client to ensure that the referenced grammar stays in scope and does not get destructed while it is being referenced.
+]
+
+[endsect][/ skeleton]
+
+[section:example Full Grammar Example]
+
+Recalling our original calculator example, here it is now rewritten using a grammar:
+
+``
+    struct calculator : public grammar<calculator>
+    {
+        template <typename ScannerT>
+        struct definition
+        {
+            definition(calculator const& self)
+            {
+                group       = '(' >> expression >> ')';
+                factor      = integer | group;
+                term        = factor >> *(('*' >> factor) | ('/' >> factor));
+                expression  = term >> *(('+' >> term) | ('-' >> term));
+            }
+
+            rule<ScannerT> expression, term, factor, group;
+
+            rule<ScannerT> const&
+            start() const { return expression; }
+        };
+    };
+``
+
+__lens__ A fully working example with [link __semantic_actions__ semantic actions] can be [@__example__/fundamental/calc_plain.cpp viewed here]. This is part of the Spirit distribution.
+
+[info `self`
+
+You might notice that the definition of the grammar has a constructor that accepts a `const` reference to the outer grammar. In the example above, notice that `calculator::definition` takes in a `calculator const& self`. While this is unused in the example above, in many cases, this is very useful. The self argument is the definition's window to the outside world. For example, the calculator class might have a reference to some state information that the definition can update while parsing proceeds through [link __semantic_actions__ semantic_actions__].
+]
+
+[endsect][/ example]
+
+[section:capsules Grammar Capsules]
+
+As a grammar becomes complicated, it is a good idea to group parts into logical modules. For instance, when writing a language, it might be wise to put expressions and statements into separate grammar capsules. The grammar takes advantage of the encapsulation properties of C++ classes. The declarative nature of classes makes it a perfect fit for the definition of grammars. Since the grammar is nothing more than a class declaration, we can conveniently publish it in header files. The idea is that once written and fully tested, a grammar can be reused in many contexts. We now have the notion of grammar libraries.
+
+[endsect][/ capsules]
+
+[section:mt Reentrancy and multithreading]
+
+An instance of a grammar may be used in different places multiple times without any problem. The implementation is tuned to allow this at the expense of some overhead. However, we can save considerable cycles and bytes if we are certain that a grammar will only have a single instance. If this is desired, simply define `BOOST_SPIRIT_SINGLE_GRAMMAR_INSTANCE` before including any spirit header files.
+
+``
+    #define BOOST_SPIRIT_SINGLE_GRAMMAR_INSTANCE
+``
+
+On the other hand, if a grammar is intended to be used in multithreaded code, we should then define `BOOST_SPIRIT_THREADSAFE` before including any spirit header files. In this case it will also be required to link against __Boost_Thread__.
+
+``
+    #define BOOST_SPIRIT_THREADSAFE
+``
+
+[header Using more than one grammar `start` rule]
+
+Sometimes it is desirable to have more than one visible entry point to a grammar (apart from the `start` rule). To allow additional start points, Spirit provides a helper template `grammar_def`, which may be used as a base class for the definition subclass of your grammar. Here's an example:
+
+``
+    // this header has to be explicitly included
+    #include <boost/spirit/utility/grammar_def.hpp> 
+
+    struct calculator2 : public grammar<calculator2>
+    {
+        enum 
+        {
+            expression = 0,
+            term = 1,
+            factor = 2,
+        };
+
+        template <typename ScannerT>
+        struct definition
+        : public grammar_def<rule<ScannerT>, same, same>
+        {
+            definition(calculator2 const& self)
+            {
+                group       = '(' >> expression >> ')';
+                factor      = integer | group;
+                term        = factor >> *(('*' >> factor) | ('/' >> factor));
+                expression  = term >> *(('+' >> term) | ('-' >> term));
+
+                this->start_parsers(expression, term, factor); 
+            }
+
+            rule<ScannerT> expression, term, factor, group;
+        };
+    };
+``
+
+The `grammar_def` template has to be instantiated with the types of all the rules you wish to make visible from outside the grammar:
+
+``
+    grammar_def<rule<ScannerT>, same, same> 
+``
+
+The shorthand notation same is used to indicate that the same type be used as specified by the previous template parameter (e.g. `rule<ScannerT>`). Obviously, same may not be used as the first template parameter.
+
+[tip [*`grammar_def` start types]
+
+It may not be obvious, but it is interesting to note that aside from `rule<>`s, any parser type may be specified (e.g. `chlit<>`, `strlit<>`, `int_parser<>`, etc.).
+]
+
+Using the `grammar_def` class, there is no need to provide a `start()` member function anymore. Instead, you'll have to insert a call to the `this->start_parsers()` (which is a member function of the `grammar_def` template) to define the start symbols for your grammar. __note__ Note that the number and the sequence of the rules used as the parameters to the `start_parsers()` function should match the types specified in the `grammar_def` template:
+
+``
+    this->start_parsers(expression, term, factor);
+``
+
+The grammar entry point may be specified using the following syntax:
+
+``
+    g.use_parser<N>() // Where g is your grammar and N is the Nth entry.
+``
+
+This sample shows how to use the `term` rule from the `calculator2` grammar above:
+
+``
+    calculator2 g;
+
+    if (parse(
+            first, last, 
+            g.use_parser<calculator2::term>(),
+            space_p
+        ).full)
+    {
+        cout << "parsing succeeded\n";
+    }
+    else {
+        cout << "parsing failed\n";
+    }
+``
+
+The template parameter for the `use_parser<>` template type should be the zero based index into the list of rules specified in the `start_parsers()` function call.
+
+[note [*`use_parser<0>`]
+
+Note, that using `0` (zero) as the template parameter to `use_parser` is equivalent to using the `start` rule, exported by conventional means through the `start()` function, as shown in the first calculator sample above. So this notation may be used even for grammars exporting one rule through its `start()` function only. On the other hand, calling a grammar without the `use_parser` notation will execute the rule specified as the first parameter to the `start_parsers()` function.
+]
+
+The maximum number of usable start rules is limited by the preprocessor constant:
+
+``
+    BOOST_SPIRIT_GRAMMAR_STARTRULE_TYPE_LIMIT // defaults to 3
+``
+
+[endsect][/ mt]
+
+[endsect][/ grammar]
+

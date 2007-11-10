@@ -45,6 +45,10 @@
 [def __BLL__     [@http://www.boost.org/libs/lambda BLL]]
 [def __Phoenix__ [@http://www.boost.org/libs/spirit/phoenix]]
 
+[/ Internal Spirit doc link shortcuts]
+[def __lens__    [$../theme/lens.gif]]
+[def __note__    [$../theme/note.gif]]
+
 [def __boost_ref__ [@http://www.boost.org/libs/ref boost::ref]]
 [def __phoenix_var__ [@http://www.boost.org/libs/spirit/phoenix/doc/variables.html phoenix::var]]
 
@@ -94,18 +98,22 @@ The Scanner and Parsing
 [include scanner.qbk]
 
 The Grammar
+[include grammar.qbk]
 
 Subrules
 [include subrules.qbk]
 
 Semantic Actions
+[include semantic_actions.qbk]
 
 In-depth: The Parser
+[include in_depth/the_parser.qbk]
 
 In-depth: The Scanner
 [include in_depth/the_scanner.qbk]
 
 In-depth: The Parser Context
+[include in_depth/the_parser_context.qbk]
 
 [endsect][/ core]
 

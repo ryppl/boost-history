@@ -1,0 +1,243 @@
+
+[section Semantic Actions]
+
+Semantic actions have the form: [*expression\[action\]]
+
+Ultimately, after having defined our grammar and having generated a corresponding parser, we will need to produce some output and do some work besides syntax analysis; unless, of course, what we want is merely to check for the conformance of an input with our grammar, which is very seldom the case. Semantic actions may be attached to any expression at any level within the parser hierarchy. An action is a C/C++ function or function object that will be called if a match is found in the particular context where it is attached. The action function serves as a hook into the parser and may be used to, for example:
+
+* Generate output from the parser (ASTs, for example);
+* Report warnings or errors;
+* Manage symbol tables.
+
+[section:generic Generic Semantic Actions (Transduction Interface)]
+
+A generic semantic action can be any free function or function object that is compatible with the interface:
+
+``
+    void f(IteratorT first, IteratorT last);
+``
+
+where `IteratorT` is the type of iterator used, `first` points to the current input and `last` points to one after the end of the input (identical to STL iterator ranges). A function object (functor) should have a member `operator()` with the same signature as above:
+
+``
+    struct my_functor
+    {
+        void operator()(IteratorT first, IteratorT last) const;
+    };
+``
+
+Iterators pointing to the matching portion of the input are passed into the function/functor.
+
+In general, semantic actions accept the first-last iterator pair. This is the transduction interface. The action functions or functors receive the unprocessed data representing the matching production directly from the input. In many cases, this is sufficient. Examples are source to source translation, pre-processing, etc.
+
+[header:example Example:]
+
+``
+    void
+    my_action(char const* first, char const* last)
+    {
+        std::string str(first, last);
+        std::cout << str << std::endl;
+    }
+
+    rule<> myrule = (a | b | *(c >> d))[&my_action];
+``
+
+The function `my_action` will be called whenever the expression `(a | b | *(c >> d)` matches a portion of the input stream while parsing. Two iterators, `first` and `last`, are passed into the function. These iterators point to the start and end, respectively, of the portion of input stream where the match is found.
+
+[header Const-ness:]
+
+With functors, take note that the `operator()` should be `const`. This implies that functors are immutable. One may wish to have some member variables that are modified when the action gets called. This is not a good idea. First of all, functors are preferably lightweight. Functors are passed around a lot and it would incur a lot of overhead if the functors are heavily laden. Second, functors are passed by value. Thus, the actual functor object that finally attaches to the parser, will surely not be the original instance supplied by the client. What this means is that changes to a functor's state will not affect the original functor that the client passed in since they are distinct copies. If a functor needs to update some state variables, which is often the case, it is better to use references to external data. The following example shows how this can be done:
+
+``
+    struct my_functor
+    {
+        my_functor(std::string& str_)
+        : str(str_) {}
+
+        void
+        operator()(IteratorT first, IteratorT last) const
+        {
+            str.assign(first, last);
+        }
+
+        std::string& str;
+    };
+``
+
+[header:full_example Full Example:]
+
+Here now is our calculator enhanced with semantic actions:
+
+``
+    namespace
+    {
+        void    do_int(char const* str, char const* end)
+        {
+            string  s(str, end);
+            cout << "PUSH(" << s << ')' << endl;
+        }
+
+        void    do_add(char const*, char const*)    { cout << "ADD\n"; }
+        void    do_subt(char const*, char const*)   { cout << "SUBTRACT\n"; }
+        void    do_mult(char const*, char const*)   { cout << "MULTIPLY\n"; }
+        void    do_div(char const*, char const*)    { cout << "DIVIDE\n"; }
+        void    do_neg(char const*, char const*)    { cout << "NEGATE\n"; }
+    }
+``
+
+We augment our grammar with semantic actions:
+
+``
+    struct calculator : public grammar<calculator>
+    {
+        template <typename ScannerT>
+        struct definition
+        {
+            definition(calculator const& self)
+            {
+                expression
+                    =   term
+                        >> *(   ('+' >> term)[&do_add]
+                            |   ('-' >> term)[&do_subt]
+                            )
+                    ;
+
+                term =
+                    factor
+                        >> *(   ('*' >> factor)[&do_mult]
+                            |   ('/' >> factor)[&do_div]
+                            )
+                        ;
+
+                factor
+                    =   lexeme_d[(+digit_p)[&do_int]]
+                    |   '(' >> expression >> ')'
+                    |   ('-' >> factor)[&do_neg]
+                    |   ('+' >> factor)
+                    ;
+            }
+
+            rule<ScannerT> expression, term, factor;
+
+            rule<ScannerT> const&
+            start() const { return expression; }
+        };
+    };
+``
+
+Feeding in the expression `(-1 + 2) * (3 + -4)`, for example, to the rule `expression` will produce the expected output:
+
+``
+-1
+2
+ADD
+3
+-4
+ADD
+MULT
+``
+
+which, by the way, is the Reverse Polish Notation (RPN) of the given expression, reminiscent of some primitive calculators and the language Forth.
+
+[$__lens__ [@__examples__/fundamental/calc_plain.cpp View the complete source code here]. This is part of the Spirit distribution.
+
+[endsect][/ general]
+
+[section:specialized Specialized Actions]
+
+In general, semantic actions accept the first-last iterator pair. There are situations though where we might want to pass data in its processed form. A concrete example is the numeric parser. It is unwise to pass unprocessed data to a semantic action attached to a numeric parser and just throw away what has been parsed by the parser. We want to pass the actual parsed number.
+
+The function and functor signature of a semantic action varies depending on the parser where it is attached to. The following table lists the parsers that accept unique signatures.
+
+[note
+Unless explicitly stated in the documentation of a specific parser type, parsers not included in the list by default expect the generic signature as explained above.
+]
+
+[section Numeric Actions]
+
+[header Applies to:]
+
+* `uint_p`
+* `int_p`
+* `ureal_p`
+* `real_p`
+
+[header Signature for functions:]
+
+``
+    void func(NumT val);
+``
+
+[header Signature for functors:]
+
+``
+    struct ftor
+    {
+        void operator()(NumT val) const;
+    };
+``
+
+Where `NumT` is any primitive numeric type such as `int`, `long`, `float`, `double`, etc., or a user defined numeric type such as `big_int`. `NumT` is the same type used as template parameter to `uint_p`, `int_p`, `ureal_p` or `real_p`. The parsed number is passed into the function/functor.
+
+[endsect][/ numeric_actions]
+
+[section Character Actions]
+
+[header Applies to:]
+
+* `chlit`, `ch_p`
+* `range`, `range_p`
+* `anychar`
+* `alnum`, `alpha`
+* `cntrl`, `digit`
+* `graph`, `lower`
+* `print`, `punct`
+* `space`, `upper`
+* `xdigit`
+
+[header Signature for functions:]
+
+``
+    void func(CharT ch);
+``
+
+[header Signature for functors:]
+
+``
+    struct ftor
+    {
+        void operator()(CharT ch) const;
+    };
+``
+
+Where `CharT` is the `value_type` of the iterator used in parsing. A `char const*` iterator for example has a `value_type` of `char`. The matching character is passed into the function/functor.
+
+[endsect][/ specialized]
+
+[section:cascading Cascading Actions]
+
+Actions can be cascaded. Cascaded actions also inherit the function/functor interface of the original. For example:
+
+``
+    uint_p[fa][fb][fc]
+``
+
+Here, the functors `fa`, `fb` and `fc` all expect the signature `void operator()(unsigned n) const`.
+
+[endsect][/ cascading]
+
+[section:d_and_r Directives and Actions]
+
+Directives inherit the the function/functor interface of the subject it is enclosing. Example:
+
+``
+    as_lower_d[ch_p('x')][f]
+``
+
+Here, the functor `f` expects the signature `void operator()(char ch) const`, assuming that the iterator used is a `char const*`.
+
+[endsect][/ d_and_r]
+
+[endsect][/ semantic_actions]
+
