@@ -1,0 +1,465 @@
+
+[section:faq Frequently Asked Questions]
+
+[section The Scanner Business]
+
+[red Question:] Why doesn't this compile?
+
+``
+    rule<> r = /*...*/;
+    parse("hello world", r, space_p); // BAD [attempts phrase level parsing]
+``
+
+But if I remove the skip-parser, everything goes back to normal again:
+
+``
+    rule<> r = *anychar_p;
+    parse("hello world", r); // OK [character level parsing]
+``
+
+Sometimes you'll want to pass in a rule to one of the parse functions that Spirit provides. The problem is that the rule is a template class that is parameterized by the scanner type. This is rather awkward but unavoidable: [*the rule is tied to a scanner]. What's not obvious is that this scanner must be compatible with the scanner that is ultimately passed to the rule's parse member function. Otherwise, the compiler will complain.
+
+Why does the first call to parse not compile? Because of scanner incompatibility. Behind the scenes, the free parse function creates a scanner from the iterators passed in. In the first call to `parse`, the scanner created is a plain vanilla `scanner<>`. This is compatible with the default scanner type of `rule<>` \[see default template parameters of the [link \__rule__ rule]\]. The second call creates a scanner of type `phrase_scanner_t`. Thus, in order for the second call to succeed, the rule must be parameterized as `rule<phrase_scanner_t>`:
+
+``
+    rule<phrase_scanner_t> r = *anychar_p;
+    parse("hello world", r, space_p);       //  OK [phrase level parsing]
+``
+
+Take note however that `phrase_scanner_t` is compatible only when you are using `char const*` iterators and `space_p` as the skip parser. Other than that, you'll have to find the right type of scanner. This is tedious to do correctly. In light of this issue, [*it is best to avoid rules as arguments to the `parse` functions]. Keep in mind that this happens only with rules. The `rule` is the only parser that has to be tied to a particular scanner type. For instance:
+
+``
+    parse("hello world", *anychar_p);           //  OK  [character level parsing]
+    parse("hello world", *anychar_p, space_p);  //  OK  [phrase level parsing]
+``
+
+[note [*Multiple Scanner Support]
+
+As of v1.8.0, rules can use one or more scanner types. There are cases, for instance, where we need a rule that can work on the phrase and character levels. Rule/scanner mismatch has been a source of confusion and is the [link __FAQ__.the_scanner_business no. 1 FAQ]. To address this issue, we now have multiple scanner support.
+
+__bulb__ See the techniques section for an [link __techniques__#multi_scanner_support example] of a [link __grammar__ grammar] using a multiple scanner enabled `rule`, `lexeme_scanner` and `as_lower_scanner`.
+]
+
+[endsect][/ the_scanner_business]
+
+[section Eliminating Left Recursion]
+
+[red Question:] I ported a grammar from YACC. It's "kinda" working - the parser itself compiles with no errors. But when I try to parse, it gives me an "invalid page fault". I tracked down the problem to this grammar snippet:
+
+``
+    or_expr = xor_expr | (or_expr >> VBAR >> xor_expr);
+``
+
+What you should do is to eliminate direct and indirect left-recursion. This causes the invalid page fault because the program enters an infinite loop. The code above is good for bottom up parsers such as YACC but not for LL parsers such as Spirit.
+
+This is similar to a rule in Hartmut Kaiser's C parser (this should be available for download from [@http://spirit.sf.net Spirit's site] as soon as you read this).
+
+``
+    inclusive_or_expression
+    = exclusive_or_expression
+    | inclusive_or_expression >> OR >> exclusive_or_expression
+    ;
+``
+
+Transforming left recursion to right recursion, we have:
+
+``
+    inclusive_or_expression
+    = exclusive_or_expression >> inclusive_or_expression_helper
+    ;
+
+    inclusive_or_expression_helper
+    = OR >> exclusive_or_expression >> inclusive_or_expression_helper
+    | epsilon_p
+    ;
+``
+
+I'd go further. Since:
+
+``
+    r = a | epsilon_p;
+``
+
+is equivalent to:
+
+``
+    r = !a;
+``
+
+we can simplify `inclusive_or_expression_helper` thus:
+
+``
+    inclusive_or_expression_helper
+    = !(OR >> exclusive_or_expression >> inclusive_or_expression_helper)
+    ;
+``
+
+Now, since:
+
+``
+    r = !(a >> r);
+``
+
+is equivalent to:
+
+``
+    r = *a;
+``
+
+we have:
+
+``
+    inclusive_or_expression_helper
+    = *(OR >> exclusive_or_expression)
+    ;
+``
+
+Now simplifying `inclusive_or_expression` fully, we have:
+
+``
+    inclusive_or_expression
+    = exclusive_or_expression >> *(OR >> exclusive_or_expression)
+    ;
+``
+
+Reminds me of the calculators. So in short:
+
+``
+    a = b | a >> op >> b;
+``
+
+in pseudo-YACC is:
+
+``
+    a = b >> *(op >> b);
+``
+
+in Spirit. What could be simpler? Look Ma, no recursion, just iteration.
+
+[endsect][/ elminiating_left_recursion]
+
+[section Implementing Right Associativity]
+
+[red Question:] I tried adding `'^'` as an operator to compute the power to a calculator grammer. The following code
+
+``
+    pow_expression 
+    = pow_operand >> *( '^' >> pow_operand [ & do_pow ]
+                      )
+    ;
+``
+
+parses the input correctly, but I want the operator to be evalutated from right to left. In other words, the expression `2^3^4` is supposed to have the same semantics as `2^(3^4)` instead of `(2^3)^4`. How do I do it?
+
+The "textbook recipe" for Right Associativity is Right Recursion. In BNF that means:
+
+``
+    <pow_expression> ::=  <pow_operand> '^' <pow_expression> | <pow_operand>
+``
+
+But we better don't take the theory too literally here, because if the first alternative fails, the semantic actions within `pow_operand` might have been executed already and will then be executed again when trying the second alternative. So let's apply Left Factorization to factor out `pow_operand`:
+
+``
+    <pow_expression> ::=  <pow_operand> <pow_expression_helper>
+    <pow_expression_helper> ::= '^' <pow_expression> | e 
+``
+
+The production `pow_expression_helper` matches the empty string `e`, so we can replace the alternative with the optional operator in Spirit code.
+
+``
+    pow_expression 
+    = pow_operand >> !( '^' >> pow_expression [ & do_pow ]
+                      )
+    ;
+``
+
+Now any semantic actions within pow_operand can safely be executed. For stack-based evaluation that means that each match of `pow_operand` will leave one value on the stack and the recursion makes sure there are (at least) two values on the stack when `do_pow` is fired to reduce these two values to their power.
+
+In cases where this technique isn't applicable, such as C-style assignment
+
+``
+    assignment
+    = lvalue >> '=' >> assignment 
+    | ternary_conditional 
+    ;
+``
+
+you can append `| epsilon_p [ action ] >> nothing_p` to a parser to correct the semantic context when backtracking occurs (in the example case that would be dropping the address pushed by lvalue off the evaluation stack):
+
+``
+    assignment
+    = lvalue >> ( '=' >> assignment    [ & do_store ]
+                | epsilon_p            [ & do_drop  ]
+                  >> nothing_p
+                ) 
+    | ternary_conditional 
+    ;
+``
+
+However, this trick compromises the clear separation of syntax and semantics, so you also might want to consider using an AST instead of semantic actions so you can just go with the first definition of `assignment`.
+
+[endsect][/ implementing_right_associvity]
+
+[section:lexeme_d The `lexeme_d` directive and rules]
+
+[red Question:] Does `lexeme_d` not support expressions which include rules? In the example below, the definition of `atomicRule` compiles,
+
+``
+    rule<phrase_scanner_t> atomicRule
+        = lexeme_d[(alpha_p | '_') >> *(alnum_p | '.' | '-' | '_')];
+``
+
+but if I move `alnum_p | '.' | '-' | '_'` into its own rule, the compiler complains about conversion from `const scanner<...>` to `const phrase_scaner_t&`.
+
+``
+    rule<phrase_scanner_t> ch 
+        = alnum_p | '.' | '-' | '_';
+
+    rule<phrase_scanner_t> compositeRule
+        = lexeme_d[(alpha_p | '_') >> *(ch)]; // <- error source
+``
+
+You might get the impression that the `lexeme_d` directive and rules do not mix. Actually, this problem is related to the first FAQ entry: The Scanner Business. More precisely, the `lexeme_d` directive and rules with incompatible scanner types do not mix. This problem is more subtle. What's causing the scanner incompatibility is the directive itself. The `lexeme_d` directive transforms the scanner it receives into something that disables the skip parser. This non-skipping scanner, unfortunately, is incompatible with the original scanner before transformation took place.
+
+The simplest solution is not to use rules in the `lexeme_d`. Instead, you can definitely apply `lexeme_d` to subrules and grammars if you really need more complex parsers inside the `lexeme_d`. If you really must use a rule, you need to know the exact scanner used by the directive. The `lexeme_scanner` metafunction is your friend here. The example above will work as expected once we give the `ch` rule a correct scanner type:
+
+``
+    rule<lexeme_scanner<phrase_scanner_t>::type> ch 
+        = alnum_p | '.' | '-' | '_';
+``
+
+Note: make sure to add "`typename`" before `lexeme_scanner` when this is used inside a template class or function.
+
+The same thing happens when rules are used inside the `as_lower_d` directive. In such cases, you can use the `as_lower_scanner`. See the __lexeme_scanner__ and __as_lower_scanner__.
+
+[tip See the techniques section for an [link __techniques__#multiple_scanner_support example] of a [link __grammar__ grammar] using a multiple scanner enabled rule, `lexeme_scanner` and `as_lower_scanner`.
+]
+
+[endsect][/ lexeme_d]
+
+[section:infinite_loop Kleene Star infinite loop]
+
+[red Question:] Why Does This Loop Forever?
+
+``
+    rule<> optional = !(str_p("optional"));
+    rule<> list_of_optional = *optional;
+``
+
+The problem with this is that the kleene star will continue looping until it gets a no-match from it's enclosed parser. Because the `optional` rule is optional, it will always return a match. Even if the input doesn't match "optional" it will return a zero length match. `list_of_optional` will keep calling optional forever since optional will never return a no-match. So in general, any rule that can be "nullable" (meaning it can return a zero length match) must not be put inside a kleene star.
+
+[endsect][/ infinite_loop]
+
+[section:cvs Boost CVS and Spirit CVS]
+
+[red Question:] There is Boost CVS and Spirit CVS. Which is used for further development of Spirit?
+
+Generally, development takes place in Spirit's CVS. However, from time to time a new version of Spirit will be integrated in Boost. When this happens development takes place in the Boost CVS. There will be announcements on the Spirit mailing lists whenever the status of the Spirit CVS changes.
+
+[warning
+During development of Spirit v1.8.1 (released as part of boost-1.32.0) and v1.6.2, Spirit's developers decided to stop maintaining Spirit CVS for BRANCH_1_8 and BRANCH_1_6. This was necessary to reduce the added work of maintaining and synch'ing two repositories. The maintenance of these branches will take place on Boost CVS. At this time, new developments towards Spirit v2 and other experimental developments are expected to happen in Spirit CVS.
+]
+
+[endsect][/ cvs]
+
+[section:compilation_times How to reduce compilation times with complex Spirit grammars]
+
+[red Question:] Are there any techniques to minimize compile times using spirit? For simple parsers compile time doesn't seem to be a big issue, but recently I created a parser with about 78 rules and it took about 2 hours to compile. I would like to break the grammar up into smaller chunks, but it is not as easy as I thought it would be because rules in two grammar capsules are defined in terms of each other. Any thoughts?
+
+The only way to reduce compile times is
+
+* to split up your grammars into smaller chunks;
+* prevent the compiler from seeing all grammar definitions at the same time (in the same compilation unit).
+
+The first task is merely logistical, the second is rather a technical one.
+
+A good example of solving the first task is given in the Spirit cpp_lexer example written by JCAB (you may find it on the[link __spirit_apps__ applications' repository]).
+
+The cross referencing problems may be solved by some kind of forward declaration, or, if this does not work, by introducing some dummy template argument to the non-templated grammars. Thus allows the instantiation time to be defered until the compiler has seen all the defintions:
+
+``
+    template <typename T = int>
+    grammar2;
+
+
+
+    template <typename T = int>
+    struct grammar1 : public grammar<grammar1>
+    {
+    // refers to grammar2<>
+    };
+
+    template <typename T>
+    struct grammar2 : public grammar<grammar2>
+    {
+    // refers to grammar1<>
+    };
+
+    //...
+    grammar1<> g; // both grammars instantiated here
+``
+
+The second task is slightly more complex. You must ensure that in the first compilation unit the compiler sees only some function/template [*declaration] and in the second compilation unit the function/template [*definition]. Still no problem, if no templates are involved. If templates are involved, you need to manually (explicitly) instantiate these templates with the correct template parameters inside a separate compilation unit. This way the compilation time is split between several compilation units, reducing the overall required time drastically too.
+
+For a sample, showing how to achieve this, you may want to look at the `Wave` preprocessor library, where this technique is used extensively. (this should be available for download from [@http://spirit.sf.net Spirit's site] as soon as you read this).
+
+[endsect][/ compile_times]
+
+[section Closure frame assertion]
+
+[red Question:] When I run the parser I get an assertion ['"`frame.get() != 0` in file closures.hpp"]. What am I doing wrong?
+
+Basically, the assertion fires when you are accessing a closure variable that is not constructed yet. Here's an example. We have three rules `a`, `b` and `c`. Consider that the rule a has a closure member `m`. Now:
+
+``
+    a = b;
+    b = int_p[a.m = 123];
+    c = b;
+``
+
+When the rule a is invoked, its frame is set, along with its member `m`. So, when `b` is called from `a`, the semantic action `[a.m = 123]` will store `123` into a's closure member `m`. On the other hand, when `c` is invoked, and `c` attempts to call `b`, no frame for `a` is set. Thus, when `b` is called from `c`, the semantic action `[a.m = 123]` will fire the ['"`frame.get() != 0` in file closures.hpp"] assertion.
+
+[endsect][/ closure_frame_assertion]
+
+[section Greedy RD]
+
+[red Question:] I'm wondering why the this won't work when parsed:
+
+``
+    a = +anychar_p;
+    b = '(' >> a >> ')';
+``
+
+Try this:
+
+``
+    a = +(anychar_p - ')');
+    b = '(' >> a >> ')';
+``
+
+David Held writes: That's because it's like the langoliers--it eats everything up. You usually want to say what it shouldn't eat up by subtracting the terminating character from the parser. The moral being: Using `*anychar_p` or `+anychar_p` all by itself is usually a ['Bad Thing]™.
+
+In other words: Recursive Descent is inherently greedy (however, see [link __rationale__#exhaustive_rd Exhaustive backtracking and greedy RD]).
+
+[endsect][/ greedy_rd]
+
+[section:rules_and_construction Referencing a rule at construction time]
+
+[red Question:] The code below terminates with a segmentation fault, but I'm (obviously) confused about what I'm doing wrong.
+
+``
+    rule<ScannerT, clos::context_t> id = int_p[id.i = arg1];
+``
+
+You have a rule `id` being constructed. Before it is constructed, you reference `id.i` in the RHS of the constructor. It's a chicken and egg thing. The closure member `id.i` is not yet constructed at that point. Using assignment will solve the problem. Try this instead:
+
+``
+    rule<ScannerT, clos::context_t> id;
+    id = int_p[id.i = arg1];
+``
+
+[endsect][/ rules_and_construction]
+
+[section Storing Rules]
+
+[red Question:] Why can't I store rules in STL containers for later use and why can't I pass and return rules to and from functions by value?
+
+EBNF is primarily declarative. Like in functional programming, It's a static recipe and there's no notion of do this then that. However, in Spirit, we managed to coax imperative C++ to take in declarative EBNF. Hah! Fun!... We did that by masquerading the C++ assignment operator to mimic EBNF's ::=, among other things (e.g. `>>`, `|`, `&` etc.). We used the rule class to let us do that by giving its assignment operator (and copy constructor) a different meaning and semantics. Doing so made the rule unlike any other C++ object. You can't copy it. You can't assign it. You can't place it in a container (vector, stack, etc).Heck, you can't even return it from a function *by value*.
+
+[important
+The rule is a weird object, unlike any other C++ object. It does not have the proper copy and assignment semantics and cannot be stored and passed around by value.
+]
+
+However nice declarative EBNF is, the dynamic nature of C++ can be an advantage. We've seen this in action here and there. There are indeed some interesting applications of dynamic parsers using Spirit. Yet, we haven't fully utilized the power of dynamic parsing, unless(!), we have a rule that's not so alien to C++ (i.e. behaves as a good C++ object). With such a beast, we can write parsers that's defined at run time, as opposed to at compile time.
+
+Now that I started focusing on rules (hey, check out the hunky new rule features), it might be a good time to implement the rule-holder. It is basically just a rule, but with C++ object semantics. Yet it's not as simple. Without true garbage collection, the implementation will be a bit tricky. We can't simply use reference counting because a rule-holder (hey, anyone here has a better name?) *is-a* rule, and rules are typically recursive and thus cyclic. The problem is which will own which.
+
+['Ok...] this will do for now. You'll definitely see more of the rule-holder in the coming days.
+
+[endsect][/ storing_rules]
+
+[section Parsing Ints and Reals]
+
+[red Question:] I was trying to parse an `int` or `float` value with the `longest_d` directive and put some actors on the alternatives to visualize the results. When I parse `"123.456"`, the output reports:
+
+   1. (int) has been matched: full match = false
+   2. (double) has been matched: full match = true
+
+That is not what I expected. What am I missing?
+
+Actually, the problem is that both semantic actions of the `int` and real branch will be triggered because both branches will be tried. This doesn't buy us much. What actually wins in the end is what you expected. But there's no easy way to know which one wins. The problem stems from the ambiguity.
+
+    Case1: Consider this input: "2". Is it an int or a real? They are both (strictly following the grammar of a real).
+
+    Case2 : Now how about "1.0"? Is it an int or a real? They are both, albeit the int part gets a partial match: "1". That is why you are getting a (partial) match for your int rule (full match = false).
+
+Instead of using the `longest_d` to parse `int`s and reals, what I suggest is to remove the ambiguity and use the plain short-circuiting alternatives. The first step is to use __strict_real_p__ to make the first case unambiguous. Unlike `real_p`, `strict_real_p` requires a dot to be present for a number to be considered a successful match. Your grammar can be written unambiguously as:
+
+``
+    strict_real_p | int_p
+``
+
+Note that because ambiguity is resolved, attaching actions to both branches is safe. Only one will be triggered:
+
+``
+    strict_real_p[R] | int_p[I]
+
+    "1.0" ---> triggers R
+    "2" ---> triggers I
+``
+
+Again, as a rule of thumb, it is always best to resolve as much ambiguity as possible. The best grammars are those which involve no backtracking at all: an LL(1) grammar. Backtracking and semantic actions do not mix well.
+
+[endsect][/ parsing_ints_and_reals]
+
+[section:boost_spirit_debug `BOOST_SPIRIT_DEBUG` and missing `operator<<`]
+
+[red Question:] My code compiles fine in release mode but when I try to define `BOOST_SPIRIT_DEBUG` the compiler complains about a missing `operator<<`.
+
+When `BOOST_SPIRIT_DEBUG` is defined debug output is generated for spirit parsers. To this end it is expected that each closure member has the default output operator defined.
+
+You may provide the operator overload either in the namespace where the class is declared (will be found through Argument Dependent Lookup) or make it visible where it is used, that is `namespace boost::spirit`. Here's an example for `std::pair`:
+
+``
+    #include <iosfwd>
+    #include <utility>
+
+    namespace std {
+
+        template <
+            typename C,
+            typename E,
+            typename T1,
+            typename T2
+        >
+        basic_ostream<C, E> & operator<<(
+            basic_ostream<C, E> & out,
+            pair<T1, T2> const & what)
+        {
+            return out << '(' << what.first << ", "
+                << what.second << ')';
+        }
+
+    }
+``
+
+[endsect][/ boost_spirit_debug]
+
+[section:old_apps Applications that used to be part of spirit]
+
+[red Question:] Where can I find <insert great application>, that used to be part of the Spirit distribution?
+
+Old versions of Spirit used to include applications built with it. In order to streamline the distribution they were moved to a separate [link __spirit_apps__ applications repository]. In that page you'll find links to full applications that use the Spirit parser framework. We encourage you to send in your own applications for inclusion (see the page for instructions).
+
+You may also check out the [link __grammar_repo__ grammars' repository].
+
+[note
+You'll still find the example applications that complement (actually are part of) the documentation in the usual place: libs/spirit/example.
+
+__alert__ The applications and grammars listed in the repositories are works of the respective authors. It is the author's responsibility to provide support and maintenance. Should you have any questions, please send the author an email.
+]
+
+[endsect][/ old_apps]
+
+[endsect][/ faq]
+

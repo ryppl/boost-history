@@ -1,0 +1,179 @@
+
+[section:in_depth_parser_context In-depth: The Parser Context]
+[section Overview]
+
+The parser's [*context] is yet another concept. An instance (object) of the `context` class is created before a non-terminal starts parsing and is destructed after parsing has concluded. A non-terminal is either a `rule`, a `subrule`, or a `grammar`. Non-terminals have a `ContextT` template parameter. The following pseudo code depicts what's happening when a non-terminal is invoked:
+
+``
+    return_type
+    a_non_terminal::parse(ScannerT const& scan)
+    {
+        context_t ctx(/**/);
+        ctx.pre_parse(/**/);
+
+        //  main parse code of the non-terminal here...
+
+        return ctx.post_parse(/**/);
+    }
+``
+
+The context is provided for extensibility. Its main purpose is to expose the start and end of the non-terminal's parse member function to accommodate external hooks. We can extend the non-terminal in a multitude of ways by writing specialized context classes, without modifying the class itself. For example, we can make the non-terminal emit debug diagnostics information by writing a context class that prints out the current state of the scanner at each point in the parse traversal where the non-terminal is invoked.
+
+Example of a parser context that prints out debug information:
+
+``
+    pre_parse:      non-terminal XXX is entered. The current state of the input
+                    is "hello world, this is a test"
+
+    post_parse:     non-terminal XXX has concluded, the non-terminal matched "hello world".
+                    The current state of the input is ", this is a test"
+``
+
+Most of the time, the context will be invisible from the user's view. In general, clients of the framework need not deal directly nor even know about contexts. Power users, however, might find some use of contexts. Thus, this is part of the public API. Other parts of the framework in other layers above the core take advantage of the context to extend non-terminals.
+
+[endsect][/ overview]
+
+[section:declaration Class declaration]
+
+The `parser_context` class is the default context class that the non-terminal uses.
+
+``
+    template <typename AttrT = nil_t>
+    struct parser_context
+    {
+        typedef AttrT attr_t;
+        typedef implementation_defined base_t;
+        typedef parser_context_linker<parser_context<AttrT> > context_linker_t;
+
+        template <typename ParserT>
+        parser_context(ParserT const& p) {}
+
+        template <typename ParserT, typename ScannerT>
+        void
+        pre_parse(ParserT const& p, ScannerT const& scan) {}
+
+        template <typename ResultT, typename ParserT, typename ScannerT>
+        ResultT&
+        post_parse(ResultT& hit, ParserT const& p, ScannerT const& scan)
+        { return hit; }
+    };
+``
+
+The non-terminal's `ContextT` template parameter is a concept. The `parser_context` class above is the simplest model of this concept. The default `parser_context`'s `pre_parse` and `post_parse` member functions are simply no-ops. You can think of the non-terminal's `ContextT` template parameter as the policy that governs how the non-terminal will behave before and after parsing. The client can supply her own context policy by passing a user defined context template parameter to a particular non-terminal.
+
+[table Parser Context Policies
+ [
+  [`attr_t`]
+  [`typedef`: the attribute type of the non-terminal. See the [link __id_parser__#match match].]
+ ]
+ [
+  [`base_t`]
+  [`typedef`: the base class of the non-terminal. The non-terminal inherits from this class.]
+ ]
+ [
+  [`context_linker_t`]
+  [
+    `typedef`: this class type opens up the possibility for Spirit to plug in additional functionality into the non-terminal parse function or even bypass the given context. This should simply be typedefed to `parser_context_linker<T>` where `T` is the type of the user defined context class.
+  ]
+ ]
+ [
+  [`constructor`]
+  [Construct the context. The non-terminal is passed as an argument to the constructor.]
+ ]
+ [
+  [`pre_parse`]
+  [Do something prior to parsing. The non-terminal and the current scanner are passed as arguments.]
+ ]
+ [
+  [`post_parse`]
+  [
+    Do something after parsing. This is called regardless of the parse result. A reference to the parser's result is passed in. The context has the power to modify this. The non-terminal and the current scanner are also passed as arguments.
+  ]
+ ]
+]
+
+The `base_t` deserves further explanation. Here goes... The context is strictly a stack based class. It is created before parsing and destructed after the non-terminal's parse member function exits. Sometimes, we need auxiliary data that exists throughout the full lifetime of the non-terminal host. Since the non-terminal inherits from the context's `base_t`, the context itself, when created, gets access to this upon construction when the non-terminal is passed as an argument to the constructor. Ditto on `pre_parse` and `post_parse`.
+
+The non-terminal inherits from the context's `base_t` typedef. The sole requirement is that it is a class that is default constructible. The copy-construction and assignment requirements depends on the host. If the host requires it, so does the context's `base_t`. In general, it wouldn't hurt to provide these basic requirements.
+
+[endsect][/ declaration]
+
+[section:non_default_attribute Non-default Attribute Type]
+
+Right out of the box, the `parser_context` class may be paramaterized with a type other than the default `nil_t`. The following code demonstrates the usage of the `parser_context` template with an explicit argument to declare rules with match results different from `nil_t`:
+
+``
+    rule<parser_context<int> > int_rule = int_p;
+
+    parse(
+        "123",
+        // Using a returned value in the semantic action
+        int_rule[cout << arg1 << endl] 
+    ); 
+``
+
+In this example, `int_rule` is declared with `int` attribute type. Hence, the `int_rule` variable can hold any parser which returns an `int` value (for example `int_p` or `bin_p`). The important thing to note is that we can use the returned value in the semantic action bound to the `int_rule`.
+
+__lens__ See __parser_context_cpp__ in the examples. This is part of the Spirit distribution.
+
+[endsect][/ non_default_attribute]
+
+[section:example An Example]
+
+As an example let's have a look at the Spirit parser context, which inserts some debug output to the parsing process:
+
+``
+    template<typename ContextT>
+    struct parser_context_linker : public ContextT
+    {
+        typedef ContextT base_t;
+
+        template <typename ParserT>
+        parser_context_linker(ParserT const& p)
+        : ContextT(p) {}
+        
+    // This is called just before parsing of this non-terminal
+        template <typename ParserT, typename ScannerT>
+        void pre_parse(ParserT const& p, ScannerT &scan)
+        {
+        // call the pre_parse function of the base class
+            this->base_t::pre_parse(p, scan);
+
+#if BOOST_SPIRIT_DEBUG_FLAGS & BOOST_SPIRIT_DEBUG_FLAGS_NODES
+            if (trace_parser(p.derived())) {
+            // print out pre parse info
+                impl::print_node_info(
+                false, scan.get_level(), false,
+                parser_name(p.derived()),
+                scan.first, scan.last);
+            }
+            scan.get_level()++;  // increase nesting level
+#endif 
+        }
+    // This is called just after parsing of the current non-terminal
+        template <typename ResultT, typename ParserT, typename ScannerT>
+        ResultT& post_parse(
+            ResultT& hit, ParserT const& p, ScannerT& scan)
+        {
+
+#if BOOST_SPIRIT_DEBUG_FLAGS & BOOST_SPIRIT_DEBUG_FLAGS_NODES
+            --scan.get_level();  // decrease nesting level
+            if (trace_parser(p.derived())) {
+                impl::print_node_info(
+                    hit, scan.get_level(), true,
+                    parser_name(p.derived()),
+                    scan.first, scan.last);
+            }
+#endif
+        // call the post_parse function of the base class
+            return this->base_t::post_parse(hit, p, scan);
+        }
+    };
+``
+
+During debugging (`BOOST_SPIRIT_DEBUG` is defined) this parser context is injected into the derivation hierarchy of the current `parser_context`, which was originally specified to be used for a concrete parser, so the template parameter `ContextT` represents the original `parser_context`. For this reason the `pre_parse` and `post_parse` functions call it's counterparts from the base class. Additionally these functions call a special `print_node_info` function, which does the actual output of the parser state info of the current non-terminal. For more info about the printed information, you may want to have a look at the topic [link __debugging__ Debugging].
+
+[endsect][/ example]
+
+[endsect][/ in_depth_parser_context]
+
