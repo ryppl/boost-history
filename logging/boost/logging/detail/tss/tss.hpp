@@ -21,10 +21,6 @@
 # pragma once
 #endif
 
-
-
-
-
 #if !defined(BOOST_LOG_NO_TSS)
 
 #include <boost/logging/detail/fwd.hpp>
@@ -79,14 +75,6 @@ private:
 }}
 
 #endif // !BOOST_LOG_NO_TSS
-
-
-
-
-
-
-
-
 
 #endif
 

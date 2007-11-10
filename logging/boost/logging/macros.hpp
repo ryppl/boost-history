@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <boost/logging/detail/log_keeper.hpp>
+#include <boost/current_function.hpp>
 
 namespace boost { namespace logging {
 
@@ -190,7 +191,7 @@ BOOST_LOG_NO_TSS
 */
 #define BOOST_LOG_FORMAT_MSG(msg_class) \
     namespace boost { namespace logging { namespace formatter { \
-    template<> struct msg_type<override> { typedef msg_class & type; }; \
+    template<> struct msg_type<override> { typedef msg_class & type; typedef msg_class raw_type; }; \
     }}}
 
 /**
@@ -203,9 +204,33 @@ BOOST_LOG_NO_TSS
 */
 #define BOOST_LOG_DESTINATION_MSG(msg_class) \
     namespace boost { namespace logging { namespace destination { \
-    template<> struct msg_type<override> { typedef const msg_class & type; }; \
+    template<> struct msg_type<override> { typedef const msg_class & type; typedef msg_class raw_type; }; \
     }}}
 
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Tags
+
+#define BOOST_LOG_STRINGIZE2(x) #x
+#define BOOST_LOG_STRINGIZE(x) BOOST_LOG_STRINGIZE2(x)
+#define BOOST_LOG_FILE_AND_LINE __FILE__ ":" BOOST_LOG_STRINGIZE(__LINE__)
+
+
+#define BOOST_LOG_TAG(tag_type) ::boost::logging::tag:: tag_type
+
+#define BOOST_LOG_TAB_LEVEL(lvl) BOOST_LOG_TAG(level)(::boost::logging::level ::lvl )
+
+#define BOOST_LOG_TAB_FILELINE BOOST_LOG_TAG(file_line) (BOOST_LOG_FILE_AND_LINE)
+
+#define BOOST_LOG_TAB_FUNCTION BOOST_LOG_TAG(function) (BOOST_CURRENT_FUNCTION)
 
 
 }}

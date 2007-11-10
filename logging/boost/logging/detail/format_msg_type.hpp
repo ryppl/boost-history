@@ -36,6 +36,7 @@ namespace formatter {
     */
     template<class T = override> struct msg_type {
         typedef hold_string_type& type;
+        typedef hold_string_type raw_type;
     };
 }
 
@@ -46,6 +47,7 @@ namespace destination {
     template<class T = override> struct msg_type {
         // by default  - the default string
         typedef const hold_string_type& type;
+        typedef hold_string_type raw_type;
     };
 }
 

@@ -107,7 +107,7 @@ namespace boost { namespace logging {
     
     */
     template<class gather_msg = default_, class write_msg = default_ > struct logger {
-        typedef typename use_default<gather_msg, gather::ostream_like::return_str< std::basic_ostringstream<char_type> > > ::type gather_type;
+        typedef typename use_default<gather_msg, gather::ostream_like::return_str< std::basic_string<char_type>, std::basic_ostringstream<char_type> > > ::type gather_type;
         typedef write_msg write_type;
 
         typedef logger<gather_msg, write_msg> self;

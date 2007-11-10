@@ -24,7 +24,23 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/format/optimize.hpp>
 
-namespace boost { namespace logging { namespace formatter {
+namespace boost { namespace logging { 
+    
+template<
+        class string_ ,
+        class param1 ,
+        class param2 ,
+        class param3 ,
+        class param4 ,
+        class param5 ,
+        class param6 ,
+        class param7 ,
+        class param8 ,
+        class param9 ,
+        class param10> struct tag_holder ;
+    
+    
+namespace formatter {
 
 
 /** 
@@ -64,6 +80,11 @@ namespace convert {
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_several_str<string> & dest) {
             dest.prepend_string(src);
         }
+
+        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag_holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            write(src, static_cast<string&>(dest) );
+        }
+
     }
 
     /** 
@@ -80,6 +101,9 @@ namespace convert {
         }
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_several_str<string> & dest) {
             dest.append_string(src);
+        }
+        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag_holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            write(src, static_cast<string&>(dest) );
         }
     }
 
@@ -100,6 +124,9 @@ namespace convert {
         }
         template<class string> void write(string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
             dest.set_string_swap(src);
+        }
+        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag_holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            write(src, static_cast<string&>(dest) );
         }
     }
 }

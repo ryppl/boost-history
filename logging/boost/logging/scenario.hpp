@@ -65,7 +65,7 @@ namespace filter {
     struct no_ts ;
     struct ts ;
     struct use_tss_once_init ;
-};
+}
 
 namespace level {
     template<int> struct holder_tss_with_cache ;
@@ -148,7 +148,7 @@ namespace usage {
 #else
             typedef single_thread default_;
 #endif
-        };
+        }
 
         /** @brief What's our "level" policy? */
         namespace level {
@@ -158,7 +158,7 @@ namespace usage {
             struct use_levels {};
 
             typedef no_levels default_;
-        };
+        }
     }
 
     /** @brief Logger %usage settings : logger_::change and logger_::favor
@@ -203,7 +203,7 @@ namespace usage {
 #else
             typedef single_thread default_;
 #endif
-        };
+        }
 
         /** @brief When logging, what should we %favor? */
         namespace favor {
@@ -228,7 +228,7 @@ namespace usage {
 #else
             typedef single_thread default_;
 #endif
-        };
+        }
 
         /** @brief How do you gather the message? */
         namespace gather {
@@ -239,7 +239,7 @@ namespace usage {
             template<class gather_type> struct custom {};
 
             typedef ostream_like default_;
-        };
+        }
     }
 
 

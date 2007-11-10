@@ -122,10 +122,13 @@ struct on_dedicated_thread
         write_array();
     }
 
-    void operator()(const msg_type & msg) const {
+//    void operator()(const msg_type & msg) const {
+    void operator()(msg_type & msg) const {
         typedef typename context_type::ptr ptr;
         typedef typename context_type::thread_ptr thread_ptr;
-        ptr new_msg(new msg_type(msg));
+        //ptr new_msg(new msg_type(msg));
+        ptr new_msg(new msg_type);
+        std::swap(msg, *new_msg);
 
         scoped_lock lk( non_const_context_base::context().cs);
         if ( !non_const_context_base::context().writer) 

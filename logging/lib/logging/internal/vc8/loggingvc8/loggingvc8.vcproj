@@ -510,7 +510,6 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -732,6 +731,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\tags.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\..\boost\logging\format\formatter\thread_id.hpp"
 						>
 					</File>
@@ -805,16 +808,24 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="tags"
+				>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\tag\defaults.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\tags.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="internal docs"
 			>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\changelog.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\uk\logging_internal\desc.txt"
 				>
 			</File>
 			<File
@@ -1014,13 +1025,7 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

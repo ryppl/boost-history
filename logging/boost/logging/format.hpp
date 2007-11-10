@@ -233,7 +233,7 @@ and you want to define the logger classes, in a source file
     Example:
 
 @code
-typedef process_msg< gather::ostream_like::return_cache_str<> , format_write<...> > process;
+typedef process_msg< gather::ostream_like::return_str<> , format_write<...> > process;
 logger<process, filter::no_ts> g_l;
 #define L_ if ( !g_l) ; else g_l->read_msg().gather().out()
 
@@ -326,7 +326,7 @@ L_ << "testing " << i << i+1 << i+2;
     Example:
 
     @code
-    typedef process_msg< gather::ostream_like::return_cache_str<> , 
+    typedef process_msg< gather::ostream_like::return_str<> , 
         writer::format_write< format_base, destination_base, format_and_write::simple<cache_string>,
             msg_route::with_route<format_base,destination_base> > > process;
     logger<process, filter::no_ts> g_l;

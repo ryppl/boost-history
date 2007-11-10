@@ -50,7 +50,7 @@ inline tss_slots* get_slots()
     return slots;
 }
 
-extern "C" inline void cleanup_slots(void* p) {}
+extern "C" inline void cleanup_slots(void* ) {}
 
 inline void init_tss_data()
 {

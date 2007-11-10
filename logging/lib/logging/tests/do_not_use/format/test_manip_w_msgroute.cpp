@@ -118,7 +118,7 @@ struct write_to_file : destination_base, destination::non_const_context<std::ofs
 };
 
 typedef process_msg< 
-    gather::ostream_like::return_cache_str<> , 
+    gather::ostream_like::return_str<> , 
     writer::format_write< 
         format_base, 
         destination_base, 

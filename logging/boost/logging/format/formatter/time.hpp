@@ -74,13 +74,13 @@ public:
         assert( format.size() < 64);
 
         typedef hold_string_type::size_type uint;
-        uint day_idx    = format.find(BOOST_LOGGING_STR("$dd"));
-        uint month_idx  = format.find(BOOST_LOGGING_STR("$MM"));
-        uint yy_idx     = format.find(BOOST_LOGGING_STR("$yy"));
-        uint yyyy_idx   = format.find(BOOST_LOGGING_STR("$yyyy"));
-        uint hour_idx   = format.find(BOOST_LOGGING_STR("$hh"));
-        uint min_idx    = format.find(BOOST_LOGGING_STR("$mm"));
-        uint sec_idx    = format.find(BOOST_LOGGING_STR("$ss"));
+        uint day_idx    = format.find(BOOST_LOG_STR("$dd"));
+        uint month_idx  = format.find(BOOST_LOG_STR("$MM"));
+        uint yy_idx     = format.find(BOOST_LOG_STR("$yy"));
+        uint yyyy_idx   = format.find(BOOST_LOG_STR("$yyyy"));
+        uint hour_idx   = format.find(BOOST_LOG_STR("$hh"));
+        uint min_idx    = format.find(BOOST_LOG_STR("$mm"));
+        uint sec_idx    = format.find(BOOST_LOG_STR("$ss"));
 
         typedef std::vector<index_info> array;
         array indexes;
@@ -110,7 +110,7 @@ public:
         for ( typename array::iterator begin = indexes.begin(), end = indexes.end(); begin != end; ++begin) {
             m_format += format.substr( prev_idx, begin->src_idx - prev_idx);
             *begin->format_idx = idx;
-            m_format += (begin->size == 4) ? BOOST_LOGGING_STR("%04d") : BOOST_LOGGING_STR("%02d");
+            m_format += (begin->size == 4) ? BOOST_LOG_STR("%04d") : BOOST_LOG_STR("%02d");
             prev_idx = begin->src_idx + begin->size + 1;
             ++idx;
         }

@@ -57,7 +57,7 @@ template<class convert = do_convert_format::prepend> struct idx_t : is_generic, 
     idx_t() : non_const_context_base((int)0) {}
     template<class msg_type> void operator()(msg_type & str) const {
         std::basic_ostringstream<char_type> idx;
-        idx << BOOST_LOGGING_STR("[") << ++context() << BOOST_LOGGING_STR("] ");
+        idx << BOOST_LOG_STR("[") << ++context() << BOOST_LOG_STR("] ");
 
         convert::write( idx.str(), str );
     }
@@ -72,7 +72,7 @@ For instance, you might use @ref boost::logging::optimize::cache_string_one_str 
 */
 template<class convert = do_convert_format::append> struct append_newline_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
-        convert::write( (const char_type*)BOOST_LOGGING_STR("\n"), str );
+        convert::write( (const char_type*)BOOST_LOG_STR("\n"), str );
     }
 };
 
@@ -91,7 +91,7 @@ template<class convert = do_convert_format::append> struct append_newline_if_nee
                 is_needed = false;
 
         if ( is_needed)
-            convert::write( BOOST_LOGGING_STR("\n"), str );
+            convert::write( BOOST_LOG_STR("\n"), str );
     }
 };
 

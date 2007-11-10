@@ -30,7 +30,7 @@
 // minimize inclusion of STL headers in our headers!!!
 #include <string>
 
-#define BOOST_LOGGING_STR(x)      (const char_type*)ansi_unicode_char_holder ( x, L ## x)
+#define BOOST_LOG_STR(x)      (const char_type*)ansi_unicode_char_holder ( x, L ## x)
 
 
 /* 

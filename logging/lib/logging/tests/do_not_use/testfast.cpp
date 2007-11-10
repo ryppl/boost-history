@@ -17,93 +17,51 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-/**
-@example your_scenario.cpp
-
-@copydoc your_scenario 
-
-@page your_scenario your_scenario.cpp Example
-
-
-This usage:
-- You have several loggers
-- You have one filter, which can be turned on or off
-- You want to format the message before it's written 
-- Each logger has several log destinations
-- The logger and filter are specified using the boost::logging::scenario namespace
-  - the filter is always accurate (but slow)
-  - the filter does not use levels
-  - the logger favors speed (on a dedicated thread)
-  - the logger is initialized once, when only one thread is running
-
-Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
-
-Logs:
-- Error messages go into err.txt file
-  - formatting - prefix each message by time, index, and append enter
-- Info output goes to console, and a file called out.txt
-  - formatting - prefix each message by time and append enter
-- Debug messages go to the debug output window, and the console
-  - formatting - prefix each message by time, and append enter
-
-
-Here's how the output will look like:
-
-The debug output window:
-@code
-18:59.24 this is so cool 1
-18:59.24 this is so cool again 2
-@endcode
-
-
-The console:
-@code
-18:59.24 this is so cool 1
-18:59.24 this is so cool again 2
-18:59.24 hello, world
-18:59.24 good to be back ;) 4
-@endcode
-
-
-The out.txt file:
-@code
-18:59.24 hello, world
-18:59.24 good to be back ;) 4
-@endcode
-
-
-The err.txt file
-@code
-18:59.24 [1] first error 3
-18:59.24 [2] second error 5
-@endcode
-*/
-
-
 
 #define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format_fwd.hpp>
+#include <boost/logging/tags.hpp>
+
+using namespace boost::logging;
+typedef tag_holder< optimize::cache_string_one_str<>, tag::time, tag::file_line, tag::function> string;
 
 // Step 1: Optimize : use a cache string, to make formatting the message faster
-BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
+BOOST_LOG_FORMAT_MSG( string )
 
-#include <boost/logging/format_ts.hpp>
-using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
-//  - the filter is always accurate (but slow)
-//  - the filter does not use levels
-//  - the logger favors speed (on a dedicated thread)
-//  - the logger is initialized once, when only one thread is running
-using namespace boost::logging::scenario::usage;
-typedef use<filter_::change::always_accurate, filter_::level::no_levels, logger_::change::set_once_when_one_thread, logger_::favor::speed> finder;
+typedef logger_format_write< > log_type;
+
+#include <boost/logging/format.hpp>
+#include <boost/logging/writer/ts_write.hpp>
+#include <boost/logging/format/formatter/tags.hpp>
+
+
+// Step 4: declare which filters and loggers you'll use (usually in a header file)
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+BOOST_DEFINE_LOG(g_l, log_type) 
+
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag(BOOST_LOG_TAB_FILELINE ).set_tag(BOOST_LOG_TAB_FUNCTION)
+
 
 
 void your_scenario_example() {
-    finder ::filter f;
-    finder:: logger l;
-    int i = 0;
+
+    g_l->writer().add_formatter( formatter::idx() );
+//    g_l->writer().add_formatter( formatter::file_line() );
+    g_l->writer().add_formatter( formatter::function() );
+    g_l->writer().add_formatter( formatter::append_newline() );
+    g_l->writer().add_destination( destination::file("out.txt") );
+    g_l->writer().add_destination( destination::cout() );
+    g_l->writer().add_destination( destination::dbg_window() );
+
+    // Step 8: use it...
+    int i = 1;
+    L_ << "this is so cool " << i++;
+    L_ << "this is so cool again " << i++;
+
 }
 
 

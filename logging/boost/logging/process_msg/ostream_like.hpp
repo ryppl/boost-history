@@ -104,38 +104,12 @@ private:
 };
 
 
-/** 
-    @brief Allows you to write to a log using the cool "<<" operator. The .msg() returns a string.
-
-    Note that this is a very simple class.
-
-    @copydoc gather_the_message
-
-    See also:
-    - boost::logging::gather
-    - ostream_like
-
-*/
-template<class stream_type = std::basic_ostringstream<char_type> > struct return_str {
-    // what does the gather_msg class return?
-    typedef std::basic_string<char_type> & param;
-
-    return_str() {}
-    return_str(const return_str& other) : m_out(other.m_out.str()) {}
-
-    stream_type & out() { return m_out; }
-    /** returns a string */
-    std::basic_string<char_type> msg() { return m_out.str(); }
-private:
-    stream_type m_out;
-};
-
 
 
 /** 
-    @brief Allows you to write to a log using the cool "<<" operator. The .msg() returns a @ref boost::logging::optimize::cache_string_one_str "cache_string".
-
-    Returns a cache string
+    @brief Allows you to write to a log using the cool "<<" operator. The .msg() returns a string - whatever you set as first template param.
+    
+    By default, it's @ref boost::logging::optimize::cache_string_one_str "cache_string".
 
     @copydoc gather_the_message
 
@@ -147,23 +121,52 @@ private:
     @bug right now prepend_size and append_size are ignored; because we can also return a cache_string_several_str<>. When fixing, watch the find_gather class!
 */
 template<
-        class cache_string = boost::logging::optimize::cache_string_one_str<hold_string_type> , 
-        class stream_type = std::basic_ostringstream<char_type> > struct return_cache_str {
+        class string = boost::logging::optimize::cache_string_one_str<hold_string_type> , 
+        class stream_type = std::basic_ostringstream<char_type> > struct return_str {
 
     // what does the gather_msg class return?
-    typedef cache_string & param;
+    typedef string & param;
     
-    return_cache_str() {}
-    return_cache_str(const return_cache_str& other) : m_out(other.m_out.str()) {}
+    return_str() {}
+    return_str(const return_str& other) : m_out(other.m_out.str()) {}
 
     stream_type & out() { return m_out; }
-    /** returns a cache_string */
-    cache_string msg() { return cache_string( m_out.str() ); }
+    /** @brief returns a string */
+    string msg() { return string( m_out.str() ); }
 private:
     stream_type m_out;
 };
 
 
+
+/** 
+    @brief Returns a tag holder
+
+    See @ref boost::logging::tag namespace
+*/
+template<class holder_type, class stream_type> struct return_tag_holder {
+    // what does the gather_msg class return?
+    typedef holder_type& param;
+    
+    return_tag_holder() {}
+    return_tag_holder(const return_tag_holder& other) : m_out(other.m_out.str()), m_val(other.m_val) {}
+
+
+    return_tag_holder & out() { return *this; }
+    template<class tag_type> return_tag_holder& set_tag(const tag_type & tag) {
+        m_val.set_tag(tag);
+        return *this;
+    }
+
+    template<class val_type> stream_type & operator<<(const val_type& val) { m_out << val; return m_out; }
+
+    /** @brief returns the holder */
+    holder_type & msg() { m_val.set_string( m_out.str() ); return m_val; }
+private:
+    holder_type m_val;
+    stream_type m_out;
+
+};
 
 
 }}}}
