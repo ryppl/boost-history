@@ -124,8 +124,9 @@ private:
 
 };
 
-/** 
-    @brief shared_memory_t with default values. See shared_memory_t.
+/** @brief shared_memory_t with default values. See shared_memory_t
+
+@copydoc shared_memory_t
 */
 typedef shared_memory_t<> shared_memory;
 

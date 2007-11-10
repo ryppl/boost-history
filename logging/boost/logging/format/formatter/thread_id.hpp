@@ -51,7 +51,10 @@ template<class convert = do_convert_format::prepend> struct thread_id_t : is_gen
     }
 };
 
+/** @brief thread_id_t with default values. See thread_id_t
 
+@copydoc thread_id_t
+*/
 typedef thread_id_t<> thread_id;
 
 }}}

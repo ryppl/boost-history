@@ -95,8 +95,22 @@ template<class convert = do_convert_format::append> struct append_newline_if_nee
     }
 };
 
+/** @brief idx_t with default values. See idx_t
+
+@copydoc idx_t
+*/
 typedef idx_t<> idx;
+
+/** @brief append_newline_t with default values. See append_newline_t
+
+@copydoc append_newline_t
+*/
 typedef append_newline_t<> append_newline;
+
+/** @brief append_newline_if_needed_t with default values. See append_newline_if_needed_t
+
+@copydoc append_newline_if_needed_t
+*/
 typedef append_newline_if_needed_t<> append_newline_if_needed;
 
 }}}

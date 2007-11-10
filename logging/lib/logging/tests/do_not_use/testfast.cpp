@@ -23,7 +23,7 @@
 #include <boost/logging/tags.hpp>
 
 using namespace boost::logging;
-typedef tag_holder< optimize::cache_string_one_str<>, tag::time, tag::file_line, tag::function> string;
+typedef tag::holder< optimize::cache_string_one_str<>, tag::time, tag::file_line, tag::function> string;
 
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( string )
@@ -43,15 +43,15 @@ BOOST_DECLARE_LOG(g_l, log_type)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type) 
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag(BOOST_LOG_TAB_FILELINE ).set_tag(BOOST_LOG_TAB_FUNCTION)
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag(BOOST_LOG_TAG_FILELINE ).set_tag(BOOST_LOG_TAG_FUNCTION)
 
 
 
 void your_scenario_example() {
 
     g_l->writer().add_formatter( formatter::idx() );
-//    g_l->writer().add_formatter( formatter::file_line() );
-    g_l->writer().add_formatter( formatter::function() );
+//    g_l->writer().add_formatter( formatter::tag::file_line() );
+    g_l->writer().add_formatter( formatter::tag::function() );
     g_l->writer().add_formatter( formatter::append_newline() );
     g_l->writer().add_destination( destination::file("out.txt") );
     g_l->writer().add_destination( destination::cout() );

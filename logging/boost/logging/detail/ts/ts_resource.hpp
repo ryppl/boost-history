@@ -147,7 +147,7 @@ namespace locker {
 #ifndef BOOST_LOG_NO_TSS
 
     /** 
-        Locks a resource, and uses TLS. This holds the value, and each thread caches it.
+        Locks a resource, and uses TSS (Thread-specific storage). This holds the value, and each thread caches it.
         Once at a given period (like, every 5 seconds), when used, the latest object is copied.
 
         @sa locker
@@ -167,7 +167,7 @@ namespace locker {
         };
 
     public:
-        tss_resource_with_cache(const type& val , int cache_secs = default_cache_secs ) : m_val(val), m_cache_secs(cache_secs) {}
+        tss_resource_with_cache(const type& val = type() , int cache_secs = default_cache_secs ) : m_val(val), m_cache_secs(cache_secs) {}
 
         struct read;
         struct write;

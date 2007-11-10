@@ -66,13 +66,15 @@ template<class convert_dest = do_convert_destination > struct dbg_window_t : is_
     }
 };
 
-/** 
-    @brief cout_t with default values. See cout_t
+/** @brief cout_t with default values. See cout_t
+
+@copydoc cout_t
 */
 typedef cout_t<> cout;
 
-/** 
-    @brief dbg_window_t with default values. See dbg_window_t
+/** @brief dbg_window_t with default values. See dbg_window_t
+
+@copydoc dbg_window_t
 */
 typedef dbg_window_t<> dbg_window;
 

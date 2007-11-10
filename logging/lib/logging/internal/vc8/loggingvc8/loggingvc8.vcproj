@@ -510,6 +510,7 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1014,6 +1015,17 @@
 				<FileConfiguration
 					Name="Test|Win32"
 					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\samples\scenarios\using_tags.cpp"
+				>
+				<FileConfiguration
+					Name="Test|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

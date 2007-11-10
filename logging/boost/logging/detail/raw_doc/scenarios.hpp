@@ -100,14 +100,6 @@ Scenario 1 should be the most common.
 \n\n\n
 
 
-@section common_your_scenario Your Scenario : Find out logger and filter, based on your application's needs
-
-@copydoc your_scenario
-
-@ref common_your_scenario_code "Click to see the code"
-\n\n\n
-
-
 
 @section common_scenarios_9 Scenario 9: One Thread-safe Logger, One Filter
 
@@ -125,7 +117,20 @@ Scenario 1 should be the most common.
 \n\n\n
 
 
+@section common_your_scenario Your Scenario : Find out logger and filter, based on your application's needs
 
+@copydoc your_scenario
+
+@ref common_your_scenario_code "Click to see the code"
+\n\n\n
+
+
+
+@section common_scenario_using_tags Using tags : file/line, thread id and time
+
+@copydoc using_tags
+
+@ref scenarios_code_using_tags "Click to see the code"
 
 */
 

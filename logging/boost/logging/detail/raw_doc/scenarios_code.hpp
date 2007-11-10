@@ -95,6 +95,12 @@ namespace boost { namespace logging {
 
 
 
+@section scenarios_code_using_tags Using tags : file/line, thread id and time
+
+@include using_tags.cpp
+\n\n\n
+
+
 
 
 */

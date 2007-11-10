@@ -28,18 +28,20 @@ namespace boost { namespace logging {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // specialize logger for format_write class
     //
-    template<
-            class string_ ,
-            class param1 ,
-            class param2 ,
-            class param3 ,
-            class param4 ,
-            class param5 ,
-            class param6 ,
-            class param7 ,
-            class param8 ,
-            class param9 ,
-            class param10> struct tag_holder ;
+    namespace tag {
+        template<
+                class string_ ,
+                class param1 ,
+                class param2 ,
+                class param3 ,
+                class param4 ,
+                class param5 ,
+                class param6 ,
+                class param7 ,
+                class param8 ,
+                class param9 ,
+                class param10> struct holder ;
+    }
 
     namespace gather { namespace ostream_like {
         template<class, class> struct return_str ;
@@ -67,8 +69,8 @@ namespace boost { namespace logging {
 
 
         template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10>
-        struct find_gather< tag_holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> > {
-            typedef gather::ostream_like::return_tag_holder< tag_holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> , std::basic_ostringstream<char_type> > type;
+        struct find_gather< tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> > {
+            typedef gather::ostream_like::return_tag_holder< tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> , std::basic_ostringstream<char_type> > type;
         };
     }
 

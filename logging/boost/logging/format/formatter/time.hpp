@@ -120,12 +120,10 @@ public:
 
 
 
-
-    template<class msg_type> void operator()(msg_type & msg) const {
+    template<class msg_type> void write_time(msg_type & msg, ::time_t val) const {
         char_type buffer[64];
 
-        ::time_t t = ::time(0); 
-        tm details = *localtime( &t);
+        tm details = *localtime( &val);
 
         int vals[8];
         vals[m_day + 1]      = details.tm_mday;
@@ -144,6 +142,11 @@ public:
     #endif
 
         convert::write(buffer, msg);
+    }
+
+    template<class msg_type> void operator()(msg_type & msg) const {
+        ::time_t val = ::time(0); 
+        write_time(msg, val);
     }
 
     bool operator==(const time_t & other) const {
@@ -200,7 +203,16 @@ private:
 };
 
 
+/** @brief time_t with default values. See time_t
+
+@copydoc time_t
+*/
 typedef time_t<> time;
+
+/** @brief time_strf_t with default values. See time_strf_t
+
+@copydoc time_strf_t
+*/
 typedef time_strf_t<> time_strf;
 
 }}}

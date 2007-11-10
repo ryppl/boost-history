@@ -149,8 +149,9 @@ template<class convert_dest = do_convert_destination > struct rolling_file_t : i
     }
 };
 
-/** 
-@brief rolling_file_t with default values. See rolling_file_t
+/** @brief rolling_file_t with default values. See rolling_file_t
+
+@copydoc rolling_file_t
 */
 typedef rolling_file_t<> rolling_file;
 

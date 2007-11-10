@@ -105,8 +105,9 @@ template<class convert_dest = do_convert_destination > struct file_t : is_generi
     }
 };
 
-/** 
-@brief file_t with default values. See file_t
+/** @brief file_t with default values. See file_t
+
+@copydoc file_t
 */
 typedef file_t<> file;
 

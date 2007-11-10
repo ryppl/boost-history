@@ -90,6 +90,31 @@ template<
     > struct logger_format_write;
 
 
+/** 
+    dumps the default levels
+
+    Has a static function : dump, which dumps the level as string (works only for the default levels; for any other level, returns "")
+*/
+struct dump_default_levels {
+    static const char_type * dump(::boost::logging::level::type lvl) {
+        using namespace ::boost::logging::level;
+        switch ( lvl) {
+            case debug:     return BOOST_LOG_STR("[debug] ");
+            case info:      return BOOST_LOG_STR("[info]  ");
+            case warning:   return BOOST_LOG_STR("[warn]  ");
+            case error:     return BOOST_LOG_STR("[ERROR] ");
+            case fatal:     return BOOST_LOG_STR("[FATAL] ");
+            default:        return BOOST_LOG_STR("");
+        }
+    }
+};
+
+/** 
+    Specifies the class that will dump the levels . Used by formatter::tag::level class.
+*/
+template<class T = override> struct dump_level {
+    typedef dump_default_levels type;
+};
 
 
 }}

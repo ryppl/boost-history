@@ -31,6 +31,9 @@
 
 namespace boost { namespace logging { namespace writer {
 
+/** @file boost/logging/writer/on_dedidcated_thread.hpp
+*/
+
 namespace detail {
     template<class msg_type> struct dedicated_thread_context {
         dedicated_thread_context() : is_working(true), write_period_ms(100) {}
@@ -54,13 +57,32 @@ namespace detail {
 /** 
 @brief Performs all writes on a dedicated thread  - very efficient and <b>thread-safe</b>. 
 
-<tt>\#include <boost/logging/writer/on_dedidcated_thread.hpp> </tt>
+<tt>\#include <boost/logging/writer/on_dedicated_thread.hpp> </tt>
 
 Keeps locks in the worker threads to a minimum:
 whenever a message is logged, is put into a queue (this is how long the lock lasts).
-Then, a dedicated thread reads the queue, and processes it one by one.
+Then, a dedicated thread reads the queue, and processes the messages (applying formatters and destinations if needed).
 
-To transform a writer into on-dedicated-thread thread-safe writer, simply surround the writer with on_dedicated_thread:
+@section on_dedicated_thread_logger Transforming a logger into on-dedicated-thread writer
+
+To transform a @b logger into on-dedicated-thread (thread-safe) writer, simply specify @c on_dedicated_thread as the thread safety:
+
+@code
+typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > log_type;
+@endcode
+
+Of if you're using @ref boost::logging::scenario::usage scenarios, specify @c speed for the @c logger::favor_ :
+@code
+using namespace boost::logging::scenario::usage;
+typedef use< ..., ..., ..., logger_::favor::speed> finder;
+@endcode
+
+
+
+\n\n
+@section on_dedicated_thread_writer Transforming a writer into on-dedicated-thread writer
+
+To transform a @b writer into on-dedicated-thread thread-safe writer, simply surround the writer with @c on_dedicated_thread:
 
 Example:
 
@@ -72,18 +94,12 @@ logger< string, write_to_cout> g_l;
 
 // thread-safe, on dedicated thread
 logger< string, on_dedicated_thread<string,write_to_cout> > g_l;
-
-
-// not thread-safe
-logger< 
-    string , 
-    format_write<format_base, destination_base> > g_l;
-
-// thread-safe, on dedicated thread
-logger< 
-    string , 
-    on_dedicated_thread<string, format_write< format_base, destination_base> > > g_l;
 @endcode
+
+You should note that a @b writer is not necessary a %logger. It can be a destination, for instance. For example, you might have a destination
+where writing is time consuming, while writing to the rest of the destinations is very fast. 
+You can choose to write to all but that destination on the current thread, and to that destination on a dedicated thread.
+(If you want to write to all destinations on a different thread, we can go back to @ref on_dedicated_thread_logger "transforming a logger...")
 
 */
 template<class msg_type, class base_type> 

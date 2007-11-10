@@ -27,38 +27,57 @@
 
 namespace boost { namespace logging { namespace tag {
 
+/** @brief tag that holds file/line context information 
 
+See @ref boost::logging::tag "how to use tags".
+*/
 struct file_line {
     file_line(const char * val = "") : val(val) {}
     const char * val;
 };
 
-struct level {
-    level(::boost::logging::level::type val = 0) : val(val) {}
-    ::boost::logging::level::type val;
-};
+/** @brief tag that holds function name context information 
 
-struct time {
-    time() : val( ::time(0) ) {}
-    ::time_t val;
-};
-
+See @ref boost::logging::tag "how to use tags".
+*/
 struct function {
     function(const char* name = "") : val(name) {}
     const char * val;
 };
 
-template<class severity_type = int> struct severity {
-    severity(severity_type val) : val(val) {}
-    severity_type val;
+/** @brief tag that holds the log level context information 
+
+See @ref boost::logging::tag "how to use tags".
+*/
+struct level {
+    level(::boost::logging::level::type val = 0) : val(val) {}
+    ::boost::logging::level::type val;
 };
 
+/** @brief tag that holds the current time context information 
+
+See @ref boost::logging::tag "how to use tags".
+*/
+struct time {
+    time() : val( ::time(0) ) {}
+    ::time_t val;
+};
+
+
+/** @brief tag that holds module context information (note: you need to specify the module yourself) 
+
+See @ref boost::logging::tag "how to use tags".
+*/
 struct module {
     module(const char* name = "") : val(name) {}
     const char * val;
 };
 
 
+/** @brief tag that holds thread id context information 
+
+See @ref boost::logging::tag "how to use tags".
+*/
 struct thread_id {
     thread_id() {
 #if defined (BOOST_HAS_WINTHREADS)

@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.4, 10 nov 2007
+@section changelog_cur_ver Current Version: v0.11.6, 10 nov 2007
+- added tags - and documented them
+- applied patch from Jens Seidel - many thanks!
+
+v0.11.4, 10 nov 2007
 - made basic_usage compile again (some late changes made the build break)
 - removed #ifdef that would allow TSS only on Windows
 - can now see the current version from the contents

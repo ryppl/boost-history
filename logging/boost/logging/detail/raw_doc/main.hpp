@@ -19,12 +19,12 @@ how your application is used (which modules, etc.), how time-consuming certain p
 how much bandwidth you application consumes, etc. - it's up to you how much information you log, and where.
 
 The Boost Log Library has these features: 
-- A simple and clear separation of concepts 
+- A simple and clear separation of @ref namespace_concepts "concepts"
     - concepts are also easily separated into namespaces
 - A very flexible interface
 - You don't pay for what you don't use.
-- Fits a lot of scenarios: from very simple (dumping all to one log) 
-  to very complex (multiple logs, some enabled/some not, levels, etc).
+- Fits a lot of @ref common_scenarios "scenarios": from @ref common_scenarios_6 "very simple" (dumping all to one log) 
+  to @ref scenario::usage "very complex" (multiple logs, some enabled/some not, levels, etc).
 - Allows you to choose how you use logs in your code (by defining your own LOG_ macros, suiting your application)
 - Allows you to use Log levels (debug, error, fatal, etc). However this is an orthogonal concept - the library
   will work whether you use levels, categories or whatever , or not.
@@ -36,7 +36,7 @@ The Boost Log Library has these features:
     - Formatters and Destinations are orthogonal to the rest of the library - if you want you can use them, otherwise
       you can define your own writing mechanism
 - Easy manipulation of the logs (turning on/off, setting formatters, destinations, etc)
-
+- Allows you to use @ref tag "tags" (extra information about the context of the log: file/line, function name, thread id, etc.)
 
 \n\n
 @section main_common_usage Common Usage

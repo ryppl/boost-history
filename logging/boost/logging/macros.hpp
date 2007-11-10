@@ -221,16 +221,16 @@ BOOST_LOG_NO_TSS
 
 #define BOOST_LOG_STRINGIZE2(x) #x
 #define BOOST_LOG_STRINGIZE(x) BOOST_LOG_STRINGIZE2(x)
-#define BOOST_LOG_FILE_AND_LINE __FILE__ ":" BOOST_LOG_STRINGIZE(__LINE__)
+#define BOOST_LOG_FILE_AND_LINE __FILE__ ":" BOOST_LOG_STRINGIZE(__LINE__) " "
 
 
 #define BOOST_LOG_TAG(tag_type) ::boost::logging::tag:: tag_type
 
-#define BOOST_LOG_TAB_LEVEL(lvl) BOOST_LOG_TAG(level)(::boost::logging::level ::lvl )
+#define BOOST_LOG_TAG_LEVEL(lvl) BOOST_LOG_TAG(level)(::boost::logging::level ::lvl )
 
-#define BOOST_LOG_TAB_FILELINE BOOST_LOG_TAG(file_line) (BOOST_LOG_FILE_AND_LINE)
+#define BOOST_LOG_TAG_FILELINE BOOST_LOG_TAG(file_line) (BOOST_LOG_FILE_AND_LINE)
 
-#define BOOST_LOG_TAB_FUNCTION BOOST_LOG_TAG(function) (BOOST_CURRENT_FUNCTION)
+#define BOOST_LOG_TAG_FUNCTION BOOST_LOG_TAG(function) (BOOST_CURRENT_FUNCTION)
 
 
 }}

@@ -7,7 +7,7 @@ all gather classes - they need to typedef the param they take, so that I can cre
 no more process_msg class -> remove from docs!
 gathering the message - gather class must hold "param" type!
 gather namespace - rewrite docs
-
+update namespace_concepts - I have scenario/tags/ etc!
 tell about logger_format_write <> -  in format_write<> as well
 
 

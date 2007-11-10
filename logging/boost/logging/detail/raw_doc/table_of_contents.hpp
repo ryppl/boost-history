@@ -13,13 +13,16 @@ namespace boost { namespace logging {
     - @ref common_scenarios_2
     - @ref common_scenarios_3
     - @ref common_your_scenario
+    - @ref common_scenario_using_tags 
     - @ref common_scenarios "More scenarios..."
     - @ref scenario_multiple_files
         - @ref scenario_multiple_files_program 
         - @ref scenario_multiple_files_log_h 
         - @ref scenario_multiple_files_log_cpp 
         - @ref scenario_multiple_files_main 
+
 - @ref scenario::usage "Choose the best filter/logger class, based on your application's needs"
+- @ref tag "Using tags"
 
 - @ref workflow
     - @ref workflow_introduction 
