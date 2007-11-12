@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0.1 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Boost.Flyweight Documentation - Examples</title>
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="start" href="index.html">
+<link rel="prev" href="xxx.html">
+<link rel="up" href="index.html">
+<link rel="next" href="xxx.html">
+</head>
+
+<body>
+<h1><img src="../../../boost.png" alt="boost.png (6897 bytes)" align=
+"middle" width="277" height="86">Boost.Flyweight Examples</h1>
+
+<div class="prev_link"><a href="xxx.html"><img src="prev.gif" alt="xxx" border="0"><br>
+<font color="#ff0000">[not linked yet]</font>
+</a></div>
+<div class="up_link"><a href="index.html"><img src="up.gif" alt="index" border="0"><br>
+Index
+</a></div>
+<div class="next_link"><a href="xxx.html"><img src="next.gif" alt="xxx" border="0"><br>
+<font color="#ff0000">[not linked yet]</font>
+</a></div><br clear="all" style="clear: all;">
+<br clear="all" style="clear: all;">
+
+<hr>
+
+<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
+
+<h2>Contents</h2>
+
+<ul>
+  <li><a href="#example1">Example 1: basic usage</a></li>
+  <li><a href="#example2">Example 2: flyweights and the composite pattern</a></li>
+  <li><a href="#example3">Example 3: formatted text processing</a></li>
+  <li><a href="#example4">Example 4: serialization</a></li>
+  <li><a href="#example5">Example 5: performance comparison</a></li>
+</ul>
+
+<h2><a name="example1">Example 1: basic usage</a></h2>
+
+<p>
+See <a href="../example/basic.cpp">source code</a>.
+</p>
+
+<p>
+Dummy program showing the basic capabilities of <code>flyweight</code>
+explained at the <a href="tutorial/basics.html">tutorial</a>.
+</p>
+
+<h2><a name="example2">Example 2: flyweights and the composite pattern</a></h2>
+
+<p>
+See <a href="../example/composite.cpp">source code</a>.
+</p>
+
+<p>
+The <a href="http://c2.com/cgi/wiki?CompositePattern"><i>composite
+design pattern</i></a> revolves about the idea that a tree data structure
+can be easily constructed and manipulated by defining the tree node type
+polymorphically so that either is leaf node or else contains a list of
+pointers to their child nodes.
+This way, a tree is the exact same entity as its root node, which allows
+for very simple recursive tree-handling algorithms. Large composite trees
+having a high degree of duplication of nodes and subtrees (as for instance
+those generated when parsing a computer program) are a natural fit for the
+flyweight idiom: simply turning the node type into a flyweight
+automatically deals with duplication at the node and subtree level.
+</p>
+
+<p>
+The example program parses Lisp-like lists of the form
+<code>(a<sub>1</sub> ... a<sub><i>n</i></sub>)</code> where each
+<code>a<sub>i</sub></code> is a terminal string or a list. The parsed
+data structure is a composite type defined using Boost.Flyweight in conjunction
+with the recursive facilities of
+<a href="../../variant/index.html">Boost.Variant</a>. So, given the list
+</p>
+
+<blockquote><pre>
+(= (tan (+ x y))(/ (+ (tan x)(tan y))(- 1 (* (tan x)(tan y)))))
+</pre></blockquote>
+
+<p>
+the resulting data structure implicitly detects the duplicated
+occurrences of <code>+</code>, <code>x</code>, <code>y</code>,
+<code>tan</code>, <code>(tan x)</code> and <code>(tan y)</code>.
+</p>
+
+<h2><a name="example3">Example 3: formatted text processing</a></h2>
+
+<p>
+See <a href="../example/html.cpp">source code</a>.
+</p>
+
+<p>
+A classic example of application of the flyweight pattern is that of a
+text processor which handles characters with rich formatting information,
+like font type, size, color and special options (boldness, italics, etc.)
+Coding the formatting information of each character takes considerable
+space, but, given the high degree of repetition typical in a document,
+maintaining formatted characters as flyweight objects drastically reduces
+memory consumption.
+</p>
+
+<p>
+The example program parses, manipulates and stores HTML documents following
+flyweight-based representation techniques. Given the hierarchical nature
+of HTML markup, a crude approximation to the formatting options of a given
+character is just to equate them with the stack of tag contexts to which
+the character belongs, as the figure shows.
+</p>
+
+<p align="center">
+<img src="html.png"
+alt="formatting contexts of characters in an HTML document"
+width="320" height="275"><br>
+<b>Fig. 1: Formatting contexts of characters in an HTML document.</b>
+</p>
+
+<p>
+HTML documents are then parsed as arrays of (character, format)
+pairs, where the format is the tag context as described above. The very high
+degree of redundancy in formatting information is taken care of by the
+use of Boost.Flyweight. This character-based representation makes it
+easy to manipulate the document: transposition and elimination of
+portions of text are trivial operations. As an example, the program
+reverses the text occupying the central portion of the document.
+Saving the result in HTML reduces to traversing the array of formatted
+characters and emitting opening/closing HTML tags as the context of adjacent
+characters varies.
+</p>
+
+<p>
+For the sake of brevity, the HTML parsing capabilities of this program
+are coarse: for instance, elements without end-tag (like &lt;BR&gt), character
+enconding and HTML entities (e.g. "&amp;copy;" for &copy;) are not properly
+handled. Improving the parsing code is left as an exercise to the reader.
+</p>
+
+<h2><a name="example4">Example 4: serialization</a></h2>
+
+<p>
+See <a href="../example/serialization.cpp">source code</a>.
+</p>
+
+<p>
+If <code>T</code> is serializable (using
+<a href="../../serialization/index.html">Boost.Serialization</a>),
+<code>flyweight&lt;T&gt;</code> is automatically
+serializable as well. The example program performs the following two
+complementary procedures:
+<ul>
+  <li>Read a text file as a <code>std::vector&lt;flyweight&lt;std::string&gt; &gt;</code>
+    and save the structure to a serialization file.
+  </li>
+  <li>Load a <code>std::vector&lt;flyweight&lt;std::string&gt; &gt;</code> from a
+    serialization file and write it as a text file.
+  </li>
+</ul>
+If you visually inspect the contents of any of the generated serialization files
+you can notice that no word appears twice; Boost.Flyweight implements some internal
+machinery that avoids duplicating output information when saving equal
+<code>flyweight</code> objects.
+</p>
+
+<h2><a name="example5">Example 5: performance comparison</a></h2>
+
+<p>
+See <a href="../example/perf.cpp">source code</a>.
+</p>
+
+<p>
+This program measures the time and space performances of a simple
+string type against several differently configured <code>flyweight</code>
+instantations as used in a conventional task involving parsing a file and
+doing some manipulations on the parsed text.
+Memory consumption is computed by instrumenting the relevant
+components (the string type itself, flyweight factories, etc.) with custom
+allocators that keep track of the allocations and deallocations requested.
+</p>
+
+<hr>
+
+<div class="prev_link"><a href="xxx.html"><img src="prev.gif" alt="xxx" border="0"><br>
+<font color="#ff0000">[not linked yet]</font>
+</a></div>
+<div class="up_link"><a href="index.html"><img src="up.gif" alt="index" border="0"><br>
+Index
+</a></div>
+<div class="next_link"><a href="xxx.html"><img src="next.gif" alt="xxx" border="0"><br>
+<font color="#ff0000">[not linked yet]</font>
+</a></div><br clear="all" style="clear: all;">
+<br clear="all" style="clear: all;">
+<br>
+
+<p>Revised November 12th 2007</p>
+
+<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+Distributed under the Boost Software 
+License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
+LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
+http://www.boost.org/LICENSE_1_0.txt</a>)
+</p>
+
+</body>
+</html>
