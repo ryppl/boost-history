@@ -64,14 +64,13 @@ namespace this_thread
 {
 
 void
-sleep(const nanoseconds& rel_time)
+sleep(const system_time& abs_time)
 {
-    system_time limit = get_system_time() + rel_time;
     mutex mut;
     unique_lock<mutex> lk(mut);
     condition_variable cv;
-    while (get_system_time() < limit)
-        cv.timed_wait(lk, limit);
+    while (get_system_time() < abs_time)
+        cv.timed_wait(lk, abs_time);
 }
 
 }  // this_thread

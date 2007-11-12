@@ -29,6 +29,8 @@
         bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time);
         template <class Predicate>
             bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred);
+        template <class Duration, class Predicate>
+            bool timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred);
 
         typedef pthread_cond_t* native_handle_type;
         native_handle_type native_handle();
@@ -54,6 +56,8 @@
             bool timed_wait(Lock& lock, const system_time& abs_time);
         template <class Lock, class Predicate>
             bool timed_wait(Lock& lock, const system_time& abs_time, Predicate pred);
+        template <class Lock, class Duration, class Predicate>
+            bool timed_wait(Lock& lock, const Duration& rel_time, Predicate pred);
     };
 
     }  // std
@@ -93,6 +97,8 @@ public:
     bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time);
     template <class Predicate>
         bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred);
+    template <class Duration, class Predicate>
+        bool timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred);
 
     typedef pthread_cond_t* native_handle_type;
     native_handle_type native_handle() {return &cv_;}
@@ -134,6 +140,14 @@ condition_variable::timed_wait(unique_lock<mutex>& lock, const system_time& abs_
     return true;
 }
 
+template <class Duration, class Predicate>
+inline
+bool
+condition_variable::timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred)
+{
+    return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
+}
+
 class condition_variable_any
 {
     condition_variable cv_;
@@ -156,6 +170,8 @@ public:
         bool timed_wait(Lock& lock, const system_time& abs_time);
     template <class Lock, class Predicate>
         bool timed_wait(Lock& lock, const system_time& abs_time, Predicate pred);
+    template <class Lock, class Duration, class Predicate>
+        bool timed_wait(Lock& lock, const Duration& rel_time, Predicate pred);
 };
 
 inline
@@ -214,6 +230,14 @@ condition_variable_any::timed_wait(Lock& lock, const system_time& abs_time, Pred
         if (!timed_wait(lock, abs_time))
             return pred();
     return true;
+}
+
+template <class Lock, class Duration, class Predicate>
+inline
+bool
+condition_variable_any::timed_wait(Lock& lock, const Duration& rel_time, Predicate pred)
+{
+    return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
 }
 
 }  // std

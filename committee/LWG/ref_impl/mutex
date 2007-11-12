@@ -237,8 +237,11 @@ call_once(once_flag& flag, Callable&& func, Args&&... args);
 struct once_flag
 {
 private:
-    mutex m_;
+    pthread_mutex_t m_;
     bool completed_;
+
+    once_flag(const once_flag&); // = default;
+    once_flag& operator=(const once_flag&); // = default;
 
     template <class F> void run(F f);
 
@@ -249,7 +252,13 @@ private:
 
 public:
     //constexpr
-    once_flag() : completed_(false) {}
+    once_flag() : m_(PTHREAD_MUTEX_INITIALIZER), completed_(false) {}
+    ~once_flag() {pthread_mutex_destroy(&m_);}
+};
+
+struct __pthread_mutex_unlocker
+{
+    void operator()(pthread_mutex_t* m) {pthread_mutex_unlock(m);}
 };
 
 template <class F>
@@ -257,6 +266,7 @@ void
 once_flag::run(F f)
 {
     lock_guard<mutex> _(m_);
+    unique_ptr<pthread_mutex_t, __pthread_mutex_unlocker> _(&m_);
     if (!completed_)
     {
         f();

@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-10
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-12
 </p>
 
 <address>
@@ -130,6 +130,7 @@ namespace std {
 
 <p>
 Modify paragraph 1 as follows:
+</p>
 
 <blockquote>
 <p>
@@ -257,6 +258,7 @@ namespace this_thread
     thread::id get_id();
 
     void yield();
+    void sleep(const system_time&amp; abs_t);
     template &lt;class Duration&gt;
         void sleep(const Duration&amp; rel_t);
 
@@ -819,6 +821,7 @@ namespace this_thread {
 thread::id get_id();
 
 void yield();
+void sleep(const system_time&amp; abs_t);
 template &lt;class Duration&gt;
     void sleep(const Duration&amp; rel_t);
 
@@ -855,6 +858,22 @@ void yield();
 <dt>Effects:</dt>
 <dd>
 Offers the operating system the opportunity to schedule another thread.
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
+</dd>
+</dl>
+
+<pre><code>
+void sleep(const system_time&amp; abs_t);
+</code></pre>
+
+<dl>
+<dt>Effects:</dt>
+<dd>
+The current thread blocks at least until the time specified.
 </dd>
 
 <dt>Throws:</dt>
@@ -1460,7 +1479,7 @@ public:
     unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
     unique_lock(mutex_type&amp; <var>m</var>, const system_time&amp; <var>abs_time</var>);
     template &lt;class Duration&gt;
-	    unique_lock(mutex_type&amp; <var>m</var>, const Duration&amp; <var>rel_time</var>);
+        unique_lock(mutex_type&amp; <var>m</var>, const Duration&amp; <var>rel_time</var>);
     ~unique_lock();
 
     unique_lock(unique_lock const&amp;) = delete;
@@ -1662,11 +1681,13 @@ template &lt;class Duration&gt;
   unique_lock(mutex_type&amp; <var>m</var>, const Duration&amp; <var>rel_time</var>);
 </code></pre>
 
+<dl>
 <dt>Remarks:</dt>
 <dd>
 The implementation must ensure that only <code>Duration</code> types [<cite>reference to date-time library clause</cite>]
 will bind to this constructor.
 </dd>
+</dl>
 
 <dl>
 <dt>Precondition:</dt>
@@ -2233,7 +2254,8 @@ void g()
 <h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
 
 <p>
-[<i>Note:</i> For condition variables, time duration overloads are not provided because spurious wakeups
+[<i>Note:</i> For condition variables, time duration overloads are not provided for
+the <code>timed_wait</code> members which do not take a <code>Predicate</code> because spurious wakeups
 would cause endless loops unless extraordinary care were taken. The composability
 of absolute time provides an equivalent, but terminating, idiom:
 </p>
@@ -2302,6 +2324,8 @@ public:
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time);
     template &lt;class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
+    template &lt;class Duration, class Predicate&gt;
+        bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const Duration&amp; rel_time, Predicate pred);
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();                // <em>See [frontmatter]</em>
@@ -2584,6 +2608,44 @@ regardless of whether the timeout was triggered.
 </dd>
 </dl>
 
+<pre><code>
+template &lt;class Duration, class Predicate&gt;
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const Duration&amp; rel_time, Predicate pred);
+</code></pre>
+
+<dl>
+<dt>Effects:</dt>
+<dd>
+<p>
+As if:
+</p>
+
+<blockquote>
+<pre><code>
+return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
+</code></pre>
+</blockquote>
+</dd>
+
+<dt>Returns:</dt>
+<dd>
+<p>
+<code>pred()</code>.
+</p>
+
+<p>
+[<i>Note:</i>
+There is no blocking if <code>pred()</code> is initially <code>true</code>,
+even
+if the timeout has already expired.
+The return value indicates whether the predicate
+evaluates to <code>true</code>,
+regardless of whether the timeout was triggered.
+&mdash;<i>end note</i>]
+</p>
+</dd>
+</dl>
+
 <p>
 <code>condition_variable</code>
 shall be a standard-layout class (chapter 9 [class]).
@@ -2628,6 +2690,8 @@ public:
         bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
     template &lt;class Lock, class Predicate&gt;
         bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
+    template &lt;class Lock, class Duration, class Predicate&gt;
+        bool timed_wait(Lock&amp; lock, const Duration&amp; rel_time, Predicate pred);
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();                // <em>See [frontmatter]</em>
@@ -2877,6 +2941,43 @@ return true;
 <p>
 <code>pred()</code>.
 </p>
+<p>
+[<i>Note:</i>
+There is no blocking if <code>pred()</code> is initially <code>true</code>,
+even
+if the timeout has already expired.
+The return value indicates whether the predicate
+evaluates to <code>true</code>,
+regardless of whether the timeout was triggered.
+&mdash;<i>end note</i>]
+</p>
+</dd>
+</dl>
+
+<pre><code>
+template &lt;class Duration, class _Predicate&gt;
+    bool timed_wait(Lock&amp; lock, const Duration&amp; rel_time, Predicate pred);
+</code></pre>
+
+<dl>
+<dt>Effects:</dt>
+<dd>
+<p>
+As if:
+</p>
+
+<blockquote>
+<pre><code>
+return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
+</code></pre>
+</blockquote>
+</dd>
+
+<dt>Returns:</dt>
+<dd>
+<p>
+<code>pred()</code>.
+</p>
 
 <p>
 [<i>Note:</i>
@@ -2906,6 +3007,7 @@ Time points
 have an <dfn>epoch</dfn> or start of a given time scale.
 For time_t the epoch is
 1970-01-01 00:00:00.
+</p>
 
 <p>
 Throughout this clause, the names of template parameters are used to express
@@ -3035,7 +3137,7 @@ system_time(time_t secs, nanoseconds ns);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Construct<u>s</u> a utc
+Construct<var>s</var> a utc
 time object representing the time point
 that is secs + 1,000,000,000*ns after the epoch.
 </dd>
@@ -3075,7 +3177,7 @@ nanoseconds nanoseconds_since_epoch() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-The count of <u>nano</u>seconds
+The count of nanoseconds
 since 1970-01-01 00:00:00.
 </dd>
 
@@ -3146,8 +3248,8 @@ bool operator==(const system_time&amp; rhs) const;
 <dt>Returns:</dt>
 <dd>
 True if
-the <u>time
-represented by *this is equal to the time represented by rhs</u>.
+the time
+represented by <code>*this</code> is equal to the time represented by <var>rhs</var>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3163,8 +3265,8 @@ bool operator!=(const system_time&amp; rhs) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if the <u>time represented by *this is not equal to the time represented
-by rhs</u>
+True if the time represented by <code>*this</code> is not equal to the time represented
+by <var>rhs</var>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3180,8 +3282,8 @@ bool operator&gt;(const system_time&amp; rhs) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time <u>represented by
-*this is greater than the time represented by rhs</u>.
+True if time represented by
+<code>*this</code> is greater than the time represented by <var>rhs</var>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3197,8 +3299,8 @@ bool operator&gt;=(const system_time&amp; rhs) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time <u>represented
-by *this is greater or equal than the time represented by rhs</u>.
+True if time represented
+by <code>*this</code> is greater or equal than the time represented by <var>rhs</var>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3214,8 +3316,8 @@ bool operator&lt;(const system_time&amp; rhs) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time <u>represented by *this
-is less than the time represented by rhs</u>.
+True if time represented by <code>*this</code>
+is less than the time represented by <var>rhs</var>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3231,8 +3333,8 @@ bool operator&lt;=(const system_time&amp; rhs) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time <u>represented by *this
-is less or equal than the time represented by rhs</u>.
+True if time represented by <code>*this</code>
+is less or equal than the time represented by <var>rhs</var>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3248,9 +3350,8 @@ nanoseconds operator-(const system_time&amp; rhs) const
 <dl>
 <dt>Returns:</dt>
 <dd>
-<u>
-The difference in nanoseconds between the time represented by *this and the
-time represented by rhs.</u>
+The difference in nanoseconds between the time represented by <code>*this</code> and the
+time represented by <var>rhs</var>.
 </dd>
 
 <dt>Remarks:</dt>
@@ -3274,7 +3375,7 @@ system_time operator+(const Duration&amp; td) const;
 <dt>Returns:</dt>
 <dd>
 The duration converted to nanosecond resolution
-and added to the time <u>represented by *this</u>.
+and added to the time represented by <code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3315,7 +3416,7 @@ system_time operator-(const Duration&amp; td) const;
 <dt>Returns:</dt>
 <dd>
 The duration converted to nanosecond resolution
-and subtracted from the time <u>represented by *this</u>.
+and subtracted from the time represented by <code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -4250,7 +4351,7 @@ seconds(long long=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Construct<u>s</u> a<u>n object with a</u> count of seconds - default is
+Construct<var>s</var> an object with a count of seconds - default is
 zero.
 </dd>
 
@@ -4413,7 +4514,7 @@ minutes(long long=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Construct<u>s</u> a<u>n object with a</u> count of minutes - default is
+Construct<var>s</var> an object with a count of minutes - default is
 zero.
 </dd>
 
@@ -4593,7 +4694,7 @@ hours(long long=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Construct<u>s</u> a<u>n object with a</u> count of hours - default is zero.
+Construct<var>s</var> an object with a count of hours - default is zero.
 </dd>
 
 <dt>Throws:</dt>
