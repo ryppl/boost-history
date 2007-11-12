@@ -229,6 +229,13 @@ these members is inherently non-portable.
 &mdash;<i>end note</i>]
 </p>
 
+<p>
+Several functions described in this clause take an argument specifying
+a timeout. [<i>Note:</i> Reasonable use cases exist for both duration and
+absolute time based timeouts, so overloads for both are provided unless
+contraindicated. <i>--end note.</i>]
+</p>
+
 <h3><a name="thread.threads">30.1 Threads [thread.threads]</a></h3>
 
 <p>
@@ -2224,6 +2231,30 @@ void g()
 
 
 <h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
+
+<p>
+[<i>Note:</i> For condition variables, time duration overloads are not provided because spurious wakeups
+would cause endless loops unless extraordinary care were taken. The composability
+of absolute time provides an equivalent, but terminating, idiom:
+</p>
+
+<pre>     mutex mut;
+     condition_variable cv;
+     ...
+     system_time abs_time = get_system_time() + seconds(1);
+     while (!pred())
+        cv.timed_wait(mut, abs_time);
+     if (pred()) ...</pre>
+
+<p>
+Notice that changing the <code>time_wait</code> call to
+<code>cv.timed_wait(mut, get_system_time() + seconds(1));</code> to eliminate
+the <code>abs_time</code> variable could result in an endless loop.
+</p>
+
+<p>
+<i>--end note</i>]
+</p>
 
 <p>
 <strong>&lt;condition_variable&gt; synopsis</strong>
