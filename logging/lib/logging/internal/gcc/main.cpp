@@ -1,13 +1,9 @@
-#include <cstdlib>
-#include <iostream>
+#include <boost/logging/macros.hpp>
+#include <boost/logging/detail/fwd.hpp>
 
 
-using namespace std;
-void custom_fmt_dest_example() ;
 
 int main()
 {
-        custom_fmt_dest_example();
-
-    return EXIT_SUCCESS;
+ return 0;
 }

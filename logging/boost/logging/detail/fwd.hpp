@@ -21,6 +21,13 @@
 # pragma once
 #endif
 
+#include <boost/logging/detail/fwd.hpp>
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <boost/logging/detail/log_keeper.hpp>
+#include <boost/logging/macros.hpp>
+
 #include <boost/logging/detail/ts/ts.hpp>
 #include <boost/logging/detail/ts/ts_resource.hpp>
 #include <boost/logging/detail/util.hpp>

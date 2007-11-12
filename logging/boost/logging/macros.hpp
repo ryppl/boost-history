@@ -21,11 +21,12 @@
 # pragma once
 #endif
 
-#include <boost/logging/detail/fwd.hpp>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <boost/logging/detail/log_keeper.hpp>
+#if !defined(BOOST_LOG_TSS_USE_INTERNAL) && !defined(BOOST_LOG_TSS_USE_BOOST) && !defined(BOOST_LOG_TSS_USE_CUSTOM) && !defined(BOOST_LOG_NO_TSS)
+// use has not specified what TSS strategy to use
+#define BOOST_LOG_TSS_USE_INTERNAL
+
+#endif
+
 #include <boost/current_function.hpp>
 
 namespace boost { namespace logging {
@@ -79,11 +80,6 @@ BOOST_LOG_NO_TSS
 
 
 
-#if !defined(BOOST_LOG_TSS_USE_INTERNAL) && !defined(BOOST_LOG_TSS_USE_BOOST) && !defined(BOOST_LOG_TSS_USE_CUSTOM) && !defined(BOOST_LOG_NO_TSS)
-// use has not specified what TSS strategy to use
-#define BOOST_LOG_TSS_USE_INTERNAL
-
-#endif
 
 
 

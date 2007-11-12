@@ -24,7 +24,6 @@
 #if !defined(BOOST_LOG_NO_TSS)
 
 #include <boost/logging/detail/fwd.hpp>
-#include <boost/logging/macros.hpp>
 
 #if defined(BOOST_LOG_TSS_USE_INTERNAL)
 // use internal implementation
