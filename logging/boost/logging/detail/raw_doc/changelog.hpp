@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.6, 10 nov 2007
+@section changelog_cur_ver Current Version: v0.11.7, 12 nov 2007
+- added Boost.Logging Requirements page
 - added tags - and documented them
 - applied patch from Jens Seidel - many thanks!
 

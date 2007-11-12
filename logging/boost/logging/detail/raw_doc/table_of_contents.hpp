@@ -56,6 +56,8 @@ namespace boost { namespace logging {
 
 - @ref macros
 
+- @ref boost_logging_requirements 
+
 - @ref acknowledgements
 
 

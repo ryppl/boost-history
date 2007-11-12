@@ -870,6 +870,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\requirements.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\table_of_contents.hpp"
 				>
 			</File>
@@ -1024,13 +1028,6 @@
 			<File
 				RelativePath="..\..\..\samples\scenarios\using_tags.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\your_scenario.cpp"
