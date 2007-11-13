@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.9, 12 nov 2007
+@section changelog_cur_ver Current Version: v0.11.10, 12 nov 2007
+- added destination::stream and test_log_output
 - applied small patch from Jens Seidel - many thanks!
 - moved a few files into detail/ directory - to avoid confusion as to what header should be included when
 - fixed bug when including only macros.hpp file - many thanks Jens Seidel!

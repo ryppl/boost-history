@@ -36,7 +36,7 @@
 namespace boost { namespace logging { namespace destination {
 
 /** 
-    @brief settings for when constructing a file class
+    @brief settings for when constructing a file class. To see how it's used, see @ref dealing_with_flags.
 */
 struct file_settings {
     typedef detail::flag<file_settings> flag;
@@ -91,7 +91,7 @@ template<class convert_dest = do_convert_destination > struct file_t : is_generi
         @brief constructs the file destination
 
         @param file_name name of the file
-        @param set [optional] file settings - see file_settings class
+        @param set [optional] file settings - see file_settings class, and @ref dealing_with_flags
     */
     file_t(const std::string & file_name, file_settings set = file_settings() ) : non_const_context_base(file_name,set) {}
     template<class msg_type> void operator()(const msg_type & msg) const {

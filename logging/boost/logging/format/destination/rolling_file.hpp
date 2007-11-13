@@ -38,7 +38,7 @@ namespace boost { namespace logging { namespace destination {
 
 
 /** 
-    @brief Settings you can pass to the rolling file
+    @brief Settings you can pass to the rolling file. To see how it's used, see @ref dealing_with_flags.
 */
 struct rolling_file_settings {
     typedef boost::logging::detail::flag<rolling_file_settings> flag;
@@ -136,7 +136,7 @@ template<class convert_dest = do_convert_destination > struct rolling_file_t : i
 
         @param name_prefix the name to be used as prefix for the files
         
-        @param flags [optional] extra settings to pass to the rolling file. See rolling_file_settings.
+        @param flags [optional] extra settings to pass to the rolling file. See rolling_file_settings and @ref dealing_with_flags.
     */
     rolling_file_t(const std::string & name_prefix, rolling_file_settings flags = rolling_file_settings() ) : non_const_context_base(name_prefix, flags) {}
 

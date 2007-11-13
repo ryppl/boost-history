@@ -59,14 +59,31 @@ namespace boost { namespace logging {
 
 
 
-    /** 
+    /* 
         just in case you're doing a typo - "write" instead of "writer"
     */
     namespace write = writer;
 
 
 
+/** 
+@page dealing_with_flags Dealing with flags.
 
+Some classes have extra settings. You can specify these settings in the class'es constructor.
+When setting a certain value, there's a very simple pattern:
+
+@code
+some_object obj(..., some_object_settings().setting1(value1).setting2(value2)....);
+@endcode
+
+Example:
+
+@code
+using namespace destination;
+file f("out.txt", file_settings.initial_overwrite(true).do_append(false) );
+@endcode
+
+*/
 
 
 namespace detail {
@@ -88,6 +105,9 @@ namespace detail {
         self_type * m_self;
     };
 
+    /** 
+        @brief Can hold a flag. See dealing_with_flags
+    */
     template<class self_type> struct flag {
         template<class val_type> struct t : flag_with_self_type<self_type,val_type> {
             typedef flag_with_self_type<self_type,val_type> flag_base_type;

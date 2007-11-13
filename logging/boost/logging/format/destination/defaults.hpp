@@ -46,6 +46,43 @@ template<class convert_dest = do_convert_destination > struct cout_t : is_generi
 
 
 /** 
+    @brief writes to stream. 
+
+    The stream must outlive this object! Or, clear() the stream, before the stream is deleted.
+*/
+template<class convert_dest = do_convert_destination > struct stream_t : is_generic, non_const_context< std::basic_ostream<boost::logging::char_type> * > {
+    typedef std::basic_ostream<char_type> stream_type;
+    typedef non_const_context< stream_type* > non_const_context_base;
+
+    stream_t(stream_type * s) : non_const_context_base(s) {
+    }
+    stream_t(stream_type & s) : non_const_context_base(&s) {
+    }
+
+    template<class msg_type> void operator()(const msg_type & msg) const {
+        if ( non_const_context_base::context() )
+            convert_dest::write(msg, *non_const_context_base::context());
+    }
+
+    bool operator==(const stream_t & other) const {
+        return non_const_context_base::context() != other.non_const_context_base::context();
+    }
+
+    /** 
+        @brief resets the stream. Further output will be written to this stream
+    */
+    void stream(stream_type * p) { non_const_context_base::context() = p; }
+
+    /** 
+        @brief clears the stream. Further output will be ignored
+    */
+    void clear() { stream(0); }
+};
+
+
+
+
+/** 
     @brief Writes the string to output debug window
 
     For non-Windows systems, this is the console.
@@ -66,11 +103,18 @@ template<class convert_dest = do_convert_destination > struct dbg_window_t : is_
     }
 };
 
+
 /** @brief cout_t with default values. See cout_t
 
 @copydoc cout_t
 */
 typedef cout_t<> cout;
+
+/** @brief stream_t with default values. See stream_t
+
+@copydoc stream_t
+*/
+typedef stream_t<> stream;
 
 /** @brief dbg_window_t with default values. See dbg_window_t
 
