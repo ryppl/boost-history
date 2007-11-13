@@ -57,7 +57,11 @@ Couldn't agree more. I will provide for scoped logging soon.
 
 @subsection bl_requirements_eliminate Eliminate log statemets from generated code (Michael Lacher)
 
-I have not tested this thoroughly, but just in case you want to fully eliminate statements from your code,
+"Requirement: It should be possible to prevent all or a specified subset of log messages from generating any code, symbols or strings in the object file."
+
+<b>About code/symbols:</b>
+
+I have not tested this extensively, but just in case you want to fully eliminate statements from your code,
 you should use filter::always_disabled.
 
 Most likely, you'd have something like this:
@@ -69,6 +73,23 @@ BOOST_DECLARE_LOG_FILTER(g_log_filter, some_filter_class)
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::always_disabled) 
 #endif
 @endcode
+
+<b>About strings in the object file: </b>
+
+I assume you mean strings like file name, function name, etc.
+
+Note that these are added @b only if you use @ref tag "tags". So, just don't use these tags when you want this information stripped.
+Example:
+
+@code
+#ifndef ELIMINATE_LOG_STATEMENTS
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG_FILELINE)
+#else
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#endif
+@endcode
+
+
 
 @subsection bl_requirements_lazy Full lazy evaluation (Michael Lacher)
 
