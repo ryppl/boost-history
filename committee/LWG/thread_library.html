@@ -1167,7 +1167,8 @@ template &lt;class Duration&gt;
 <dd>
 For non-recursive mutexes the current thread shall not own
 the mutex.
-If the resolution of <code>Duration</code> is greater than the native resolution
+If the resolution of <code>Duration</code>
+is finer than the native resolution,
 the time is rounded up to the nearest native resolution.
 </dd>
 
@@ -3344,14 +3345,15 @@ Nothing.
 </dl>
 
 <pre><code>
-nanoseconds operator-(const system_time&amp; rhs) const
+nanoseconds operator-(const system_time&amp; <var>rhs</var>) const
 </code></pre>
 
 <dl>
 <dt>Returns:</dt>
 <dd>
-The difference in nanoseconds between the time represented by <code>*this</code> and the
-time represented by <var>rhs</var>.
+The difference in nanoseconds between
+the time represented by <code>*this</code> and
+the time represented by <code><var>rhs</var></code>.
 </dd>
 
 <dt>Remarks:</dt>
@@ -3392,13 +3394,14 @@ system_time&amp; operator+=(const Duration&amp; td);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Convert the duration to nanosecond resolution add to nanoseconds
-to the time represented by *this.
+Convert the duration to nanosecond resolution
+and add it to the time represented by <code>*this</code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
 Modified value of this.
+<b>[Crowl: not a reference to this?]</b>
 </dd>
 
 <dt>Throws:</dt>
@@ -3433,8 +3436,8 @@ system_time&amp; operator-=(const Duration&amp; td)
 <dl>
 <dt>Effects:</dt>
 <dd>
-Convert the duration to nanosecond resolution subtract and
-from the time represented by *this.
+Convert the duration to nanosecond resolution
+and subtract it from the time represented by <code>*this</code>.
 </dd>
 
 <dt>Returns:</dt>
@@ -3596,7 +3599,8 @@ static bool is_subsecond();
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if the resolution of this Duration is greater than 1 second, and otherwise <code>false</code>.
+<code>true</code> if the resolution of this Duration is finer than 1 second,
+and otherwise <code>false</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3738,9 +3742,8 @@ A duration value equal to this-rhs_duration.
 
 <dt>Remarks:</dt>
 <dd>
-This will fail to compile if the
-RhsDuration is
-of higher resolution.
+This will fail to compile
+if the <code>RhsDuration</code> is of finer resolution than <code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3751,26 +3754,28 @@ Nothing.
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
-Duration operator-=(const RhsDuration&amp; d)
+Duration operator-=(const RhsDuration&amp; <var>d</var>)
 </code></pre>
 
 <dl>
 <dt>Effects:</dt>
 <dd>
-Modifies to value equal to this-rhs_duration.
+Modifies the value to <code>*this-<var>d</var></code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
 <p>
-this
+<code>this</code>
+<b>[Crowl: but this statement is inconsistent with the declaration!]</b>
 </p>
+</dd>
 
-<p>
-<em>Remarks: This will fail to compiler if the
-RhsDuration is
-of higher resolution.</em>
-</p>
+<dt>Remarks:</dt>
+<dd>
+This will fail to compile
+if the <code>RhsDuration</code> is of finer resolution
+than <code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3790,12 +3795,13 @@ Duration operator+ (const RhsDuration&amp; d) const
 <p>
 Duration equal to this+rhs_duration.
 </p>
+</dd>
 
-<p>
-<em>Remarks: This will fail to compiler if the
-RhsDuration is
-of higher resolution.</em>
-</p>
+<dt>Remarks:</dt>
+<dd>
+This will fail to compile
+if the <code>RhsDuration</code> is of finer resolution
+than <code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3820,12 +3826,13 @@ Modifies to value equal to this+rhs_duration.
 <p>
 this
 </p>
+</dd>
 
-<p>
-<em>Remarks: This will fail to compiler if the
-RhsDuration is
-of higher resolution.</em>
-</p>
+<dt>Remarks:<dt>
+<dd>
+This will fail to compile
+if the <code>RhsDuration</code> is of finer resolution
+than <code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -3917,8 +3924,7 @@ tick_type get_count() const
 <dl>
 <dt>Returns:</dt>
 <dd>
-The count at the resolution of the time duration
-type.
+The count at the resolution of the time duration type.
 </dd>
 
 <dt>Throws:</dt>
