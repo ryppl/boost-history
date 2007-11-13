@@ -135,6 +135,11 @@ void do_sleep(int ms) {
 }
 
 void your_scenario_example() {
+    std::ofstream file;
+    file.open("blah.txt", std::ios::trunc);
+    file << "blabla" ;
+    file.close();
+
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
@@ -147,6 +152,7 @@ void your_scenario_example() {
     // App log
     g_log_app->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
     g_log_app->writer().add_formatter( formatter::append_newline() );
+//    g_log_app->writer().add_destination( destination::file("out.txt", destination::file_settings().initial_overwrite(true) ) );
     g_log_app->writer().add_destination( destination::file("out.txt") );
     g_log_app->writer().add_destination( destination::cout() );
 

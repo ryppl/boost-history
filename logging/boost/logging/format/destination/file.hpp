@@ -62,13 +62,10 @@ struct file_settings {
 namespace detail {
     inline std::ios_base::openmode open_flags(file_settings fs) {
         std::ios_base::openmode flags = std::ios_base::out | fs.extra_flags() ;
-        if ( fs.do_append() )
+        if ( fs.do_append() && !fs.initial_overwrite() )
             flags |= std::ios_base::app;
-        // note: on Linux, it opens it RW , and if the file does not exist, nothing happens
-#ifdef BOOST_WINDOWS
-        if ( !fs.initial_overwrite() )
-            flags |= std::ios_base::in;
-#endif
+        if ( fs.initial_overwrite() )
+            flags |= std::ios_base::trunc;
         return flags;
     }
 
