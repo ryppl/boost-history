@@ -242,7 +242,7 @@ namespace tag {
 @param param5 (optional) Fifth tag
 @param param6 (optional) Sixth tag
 @param param7 (optional) Seventh tag
-@param param8 (optional) Eith tag
+@param param8 (optional) Eigth tag
 @param param9 (optional) Nineth tag
 @param param10 (optional) Tenth tag
 */
@@ -281,11 +281,11 @@ template<
     }
 
     template<class tag_type> const tag_type & get_tag() const {
-        return operator const tag_type&();
+        return this->operator const tag_type&();
     }
 
     void set_string(const string_type & str) {
-        m_string = str;
+        tag_base_type::m_string = str;
     }
 
 private:

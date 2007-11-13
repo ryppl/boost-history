@@ -22,11 +22,11 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
-#include <boost/logging/filter.hpp>
+#include <boost/logging/detail/filter.hpp>
 #include <boost/logging/detail/logger.hpp>
-#include <boost/logging/macros.hpp>
+#include <boost/logging/detail/macros.hpp>
 #include <boost/logging/detail/tss/tss.hpp>
-#include <boost/logging/level.hpp>
+#include <boost/logging/detail/level.hpp>
 
 // just in case we might think of using formatters
 #include <boost/logging/detail/format_msg_type.hpp>

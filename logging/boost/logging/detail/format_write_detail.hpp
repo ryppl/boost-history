@@ -14,7 +14,7 @@
 // See http://www.torjo.com/log2/ for more details
 
 #ifndef JT28092007_format_HPP_DEFINED
-#error do not include directly include logging/format.hpp or logging/writer/format_write.hpp instead
+#error do not include directly include boost/logging/format.hpp or boost/logging/writer/format_write.hpp instead
 #endif
 
 // this is fixed!

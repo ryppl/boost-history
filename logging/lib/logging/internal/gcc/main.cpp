@@ -1,5 +1,3 @@
-#include <boost/logging/macros.hpp>
-#include <boost/logging/detail/fwd.hpp>
 
 
 

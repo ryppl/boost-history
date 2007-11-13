@@ -26,6 +26,7 @@
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format/formatter/time.hpp>
 #include <sstream>
+#include <boost/logging/format_fwd.hpp> // dump_level
 
 namespace boost { namespace logging { namespace formatter {
 

@@ -13,6 +13,9 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
+#ifndef JT28092007_format_fwd_HPP_DEFINED
+#error Please include boost/logging/format_fwd.hpp instead
+#endif
 
 #ifndef JT28092007_scenario_HPP_DEFINED
 #define JT28092007_scenario_HPP_DEFINED

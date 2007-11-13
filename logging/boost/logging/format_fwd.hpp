@@ -14,7 +14,7 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-
+// this needs to be fixed!
 #ifndef JT28092007_format_fwd_HPP_DEFINED
 #define JT28092007_format_fwd_HPP_DEFINED
 
@@ -110,7 +110,7 @@ struct dump_default_levels {
 };
 
 /** 
-    Specifies the class that will dump the levels . Used by formatter::tag::level class.
+    Specifies the class that will dump the levels. Used by formatter::tag::level class.
 */
 template<class T = override> struct dump_level {
     typedef dump_default_levels type;
@@ -120,7 +120,7 @@ template<class T = override> struct dump_level {
 }}
 
 
-#include <boost/logging/scenario.hpp>
+#include <boost/logging/detail/scenario.hpp>
 
 #endif
 
