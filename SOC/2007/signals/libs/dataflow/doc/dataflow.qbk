@@ -1,6 +1,6 @@
 [article Dataflow
     [quickbook 1.4]
-    [version 0.8.0]
+    [version 0.8.1]
     [authors [Rajko, Stjepan]]
     [copyright 2007 Stjepan Rajko]
     [purpose Generic dataflow lirary providing support for data producers,
@@ -25,6 +25,8 @@
 
 [template ComponentTraitsConcept[] [link dataflow.concepts.componenttraits [^ComponentTraits]]]
 [template ComponentConcept[] [link dataflow.concepts.component [^Component]]]
+[template ReflectiveComponentTraitsConcept[] [link dataflow.concepts.reflecivecomponenttraits [^ReflectiveComponentTraits]]]
+[template ReflectiveComponentConcept[] [link dataflow.concepts.reflectivecomponent [^ReflectiveComponent]]]
 
 [template BinaryOperableConcept[] [link dataflow.concepts.binaryoperable [^BinaryOperable]]]
 [template ConnectableConcept[] [link dataflow.concepts.binaryoperable [^Connectable]]]
@@ -98,6 +100,8 @@
 [template blueprint[] [link dataflow.future.blueprint blueprint]]
 
 
+[import ../test/test_port.cpp]
+
 [import ../test/signals/test_connect.cpp]
 [import ../test/signals/test_branching.cpp]
 [import ../test/signals/test_pull.cpp]
@@ -122,8 +126,10 @@
 [import ../example/signals/simple_example.cpp]
 [import ../example/signals/simple_distributed_example.cpp]
 [import ../example/signals/intro_example.cpp]
+[import ../example/signals/gil_example.cpp]
 
-[import ../example/VTK/support.hpp]
+[import ../example/VTK/vtk_dataflow_support.hpp]
+[import ../example/VTK/Cone.cxx]
 
 [include introduction.qbk]
 

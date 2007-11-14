@@ -11,6 +11,9 @@
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notice for more information.
 
+  NOTE:  This is a MODIFIED version of the original Cone.cxx distributed
+  with VTK.  Modifications (c) Stjepan Rajko 2007
+
 =========================================================================*/
 //
 // This example shows how to add an observer to a C++ program. It extends
@@ -24,8 +27,6 @@
 // is observed.
 //
 
-#include "operators.hpp"
-
 // first include the required header files for the vtk classes we are using
 #include "vtkConeSource.h"
 #include "vtkPolyDataMapper.h"
@@ -34,6 +35,8 @@
 #include "vtkCamera.h"
 #include "vtkActor.h"
 #include "vtkRenderer.h"
+
+#include "vtk_dataflow_support.hpp"
 
 // Callback for the interaction
 class vtkMyCallback : public vtkCommand
@@ -61,17 +64,13 @@ int main()
   cone->SetResolution( 10 );
 
   vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-  //coneMapper->SetInputConnection( cone->GetOutputPort() );
   vtkActor *coneActor = vtkActor::New();
-  //coneActor->SetMapper( coneMapper );
 
   vtkRenderer *ren1= vtkRenderer::New();
-  //ren1->AddActor( coneActor );
   ren1->SetBackground( 0.1, 0.2, 0.4 );
   ren1->ResetCamera();
 
   vtkRenderWindow *renWin = vtkRenderWindow::New();
-  //renWin->AddRenderer( ren1 );
   renWin->SetSize( 300, 300 );
 
   *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;

@@ -188,7 +188,7 @@ The Dataflow library currently has two useful parts:
 * The [DataflowSignals] layer, with a number of implemented components that
   facilitate implementation of dataflow networks using [BoostSignals] as
   a data transport mechanism.
-
+  
 There is also a (currently very experimental) [DataflowPhoenix] layer,
 which uses object pointers with support for
 [BoostPhoenix] actors specifying how the data is processed.
@@ -336,10 +336,271 @@ convenient.]
 [endsect][/how_to_use]
 
 [section Examples]
+[section:new_layer Implementing support for a new mechanism (VTK)]
 
-[include introduction/distributed_example.qbk]
-[include introduction/gil_example.qbk]
-[include introduction/vtk_example.qbk]
+This example shows how to implement support for a particular mechanism.
+Our victim is [VTK], a 3D visualization toolkit, which uses a data pipeline
+to move data from a source to the display (with possible transformations,
+scene construction etc. on the way).  For example, here is an excerpt from
+a VTK tutorial that sets up a whole source->render window pipeline:
+
+```
+    // allocate components
+    vtkConeSource *cone = vtkConeSource::New();
+    vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+    vtkActor *coneActor = vtkActor::New();
+    vtkRenderer *ren1= vtkRenderer::New();
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+
+    // make the connections
+    coneMapper->SetInputConnection( cone->GetOutputPort() );
+    coneActor->SetMapper( coneMapper );
+    ren1->AddActor( coneActor );
+    renWin->AddRenderer( ren1 );
+```
+
+Our goal will be to simplify the connection-making code by providing
+Dataflow support for VTK.  With that in place, we will be able to use the
+following connection code:
+
+```
+    // make the connections
+    connect(cone, coneMapper);
+    connect(coneMapper, coneActor);
+    connect(coneActor, ren1);
+    connect(ren1, renWin);
+```
+
+or even more concisely and clearly,
+
+```
+    // make the connections
+    // C++ rules prevent us from removing all of the pointer dereferencing here
+    *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
+```
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.mechanism
+    Setting up the Mechanism]
+
+[section:mechanism Setting up the Mechanism]
+
+The first thing we'll do is create a tag for the VTK [MechanismConcept], in
+namespace `boost::dataflow::vtk`.  Since there are currently no requirements
+for a [MechanismConcept], this is as simple as declaring a new type to be used
+as the mechanism tag:
+
+[vtk_mechanism]
+
+We will now use this tag in reference to the [VTK] dataflow mechanism.
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.producerconsumer
+    Setting up a ProducerPort and ConsumerPort] 
+[endsect][/mechanism]
+
+[section:producerconsumer Setting up a ProducerPort and ConsumerPort]
+
+Now that we have the mechanism, let's cover the basic data pipeline,
+which is implemented using the
+[vtkAlgorithm] class.  This class provides input and output ports. Output ports
+are accessible via `GetOuptutPort` member functions, which return a proxy
+object ([vtkAlgorithmOutput] `*`) for an actual output port.
+
+In Dataflow concepts, [vtkAlgorithmOutput] can be made a [ProducerPortConcept]
+- it corresponds to a single data output point. We support it as such by
+defining a [PortTraitsConcept] type, and associating it with
+[vtkAlgorithmOutput].
+
+[vtk_algorithm_output_producer]
+
+Now that we have a [ProducerPortConcept], we need a [ConsumerPortConcept].
+[vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
+and `SetInputConnection` member functions.  The code below provides support
+for [vtkAlgorithm] accepting connections on its default input port:
+
+[vtk_algorithm_consumer]
+
+[heading Next]
+
+[link dataflow.introduction.examples.new_layer.connectable
+    Making things Connectable] 
+
+[endsect][/producerconsumer]
+
+[section:connectable Making things Connectable]
+
+With the pair of [ProducerPortConcept] and [ConsumerPortConcept] registered, we
+can make them [ConnectableConcept] and/or [OnlyConnectableConcept].
+All we need to do is specialize the implementation for the appropriate
+[PortTraits]:
+
+[vtk_connect_impl_algorithm]
+
+Connections are done through the `boost::dataflow::binary_operation` function
+with either `operation::connect` or `operation::connect_only` operation tag,
+and the specified mechanism. To make connecting
+easier, we'll add forwarding connect and connect_only
+functions in the global namespace (where vtk classes live) specific
+to the vtk mechanism using the template include files for this purpose:
+
+[vtk_specialize_connect]
+
+[heading What we can do with what we have so far]
+
+```
+    // connect *cone to *coneMapper
+    connect(*cone->GetOutputPort(), *coneMapper);
+    // make *cone the only thing connected to *coneMapper
+    connect_only(*cone->GetOutputPort(), *coneMapper);
+```
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.proxyproducer
+    Setting up a ProxyProducer] 
+
+[endsect][/connectable]
+
+[section:proxyproducer Setting up a ProxyPort]
+
+In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
+inherit [vtkAlgorithm].  
+With the [vtkAlgorithmOutput] [ProducerPortConcept] and
+[vtkAlgorithm] [ConsumerPortConcept] we've set up,
+we can do things like `connect(cone->GetOutputPort(), *coneMapper);`.
+However, we would like to do `connect(*cone, *coneMapper)`.
+
+To do that,
+we need to make [vtkAlgorithm] a [ProducerPortConcept]. Since [vtkAlgorithm]
+forms its output connections using [vtkAlgorithmOutput] objects
+returned through the `GetOutputPort` member functions, and we've already
+configured [vtkAlgorithmOutput] as a [ProducerPortConcept], we can make use
+of the [ProxyPortConcept] concept provided by the dataflow library.
+In effect, we will make [vtkAlgorithm] delegate it's [ProducerPortConcept]
+functionality to [vtkAlgorithmOutput]:
+
+[vtk_algorithm_proxy_producer]
+
+Now, [vtkAlgorithm] is a [ProducerPortConcept].
+
+[heading What we can do with what we have so far]
+
+```
+    connect(*cone, *coneMapper)
+```
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.filter
+    Setting up a filter (ProducerPort+ConsumerPort)] 
+
+[endsect][/proxyproducer]
+
+[section:filter Setting up a Filter (Producer+Consumer)]
+
+In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
+data for a [vtkRenderer].  In this case, we can provide Dataflow support
+for a [vtkActor] as both a [ProducerPortConcept] and a [ConsumerPortConcept]:
+
+[vtk_actor_filter]
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.producermap
+    Setting up a KeyedPort] 
+
+[endsect][/filter]
+
+[section:producermap Setting up a KeyedPort]
+
+Sometimes, components can produce (or consume) multiple types of data.
+For example, [vtkMapper] objects can produce data for [vtkActor] objects,
+or (since [vtkMapper] inherits [vtkAlgorithm]) for other [vtkAlgorithm]
+objects.  Correspondingly, connecting a [vtkMapper] to a [vtkActor] is not
+the same as connecting a [vtkMapper] to another [vtkAlgorithm].
+
+To accomodate such situations, the Dataflow library provides
+[KeyedPortConcept]s, which are similar to [ProxyPortConcept]s but
+the [PortConcept] they delegate to is keyed on the 
+[PortConcept] they are being connected to.
+
+[vtk_mapper_producer]
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.remaining
+    Setting up the remaining components (more of the same)] 
+
+[endsect][/producermap]
+
+[section:remaining Setting up the remaining components (more of the same)]
+
+[vtk_setup_rest]
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.pointers
+    Supporting pointers] 
+
+[endsect][/remaining]
+
+[section:pointers Supporting pointers]
+
+All of the concepts we adapted so far have been adapted for class types such
+as [vtkAlgorithm] and [vtkAlgorithmOutput].  But [VTK] seems to exclusively
+use pointers to class types rather than class types themselves.  So, with what
+we have done so far, we can do `connect(*cone, *coneMapper)` but not
+`connect(cone, coneMapper)`.  To provide support for pointers, we
+simply make them adhere to the [ProxyPortConcept] concept, and delegate the
+functionality to the object they point to.
+
+[vtk_support_pointer]
+
+[endsect][/pointers]
+
+
+
+[endsect][/new_layer]
+
+[section:distributed Implementing distributed dataflow applications using
+    Dataflow.Signals and Boost.Asio]
+
+This example shows how you can take advantage of dataflow programming
+to create distributed applications.  It works as long as the data
+passed in the signal is serializable using [BoostSerialization].
+
+[DataflowSignals] provides two components
+which can be used to create a producer-consumer connection between two
+computers: [socket_sender] and [socket_receiver].  As long as we have
+a network socket set up between two computers, we can do the following to
+set up a connection between a [SignalProducerConcept] on one computer with a
+[SignalConsumerConcept] on another:
+
+* On the [SignalProducerConcept]'s computer, construct a [socket_sender] of
+the appropriate `Signature` with the given socket.
+[connect] the [SignalProducerConcept] to the [socket_sender].
+* On the [SignalConsumerConcept]'s computer, construct a [socket_receiver] of
+the appropriate `Signature` with the given socket.
+[connect] the [socket_receiver] to the [SignalConsumerConcept].
+
+That's it.  Now, every signal sent out of the [SignalProducerConcept] should
+be received by the [SignalConsumerConcept].
+
+The following is a modification of the example from the
+[link dataflow.introduction.dataflow motivation section] to a dataflow
+network that straddles a network socket:
+
+[simple_distributed_example]
+
+A sample run produces:
+
+[pre
+0.213436
+-0.49558
+1.57538
+-1.0592
+1.83927
+1.88577
+...
+]
+
+[endsect][/distributed]
 
 [endsect][/examples]
 
@@ -350,15 +611,6 @@ convenient.]
 I am currently preparing this library for submission for a Boost review. The
 latest version is located in the
 [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2007/signals Boost sandbox].
-
-The Dataflow library uses the trunk version of Boost - it might not work
-perfectly with release versions of boost.
-
-Version 0.8.1 (under construction)
-
-* expanding the [ComponentConcept] concept.
-* making VTK example Jamfile work for more than Darwin and X11.
-* provided an example using Boost.GIL.
 
 Version 0.8.0 -
  \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
@@ -392,9 +644,6 @@ The library comes with Boost.Build Jamfiles for all examples, tests, and docs.
 As long as your BOOST_ROOT environment variable is set, you should be able
 to build each one of those by going to the appropriate directory and
 running bjam.
-
-[warning The Jamfile for the VTK examples currently only works for Darwin
-and for VTK built for X]
 
 The library itself is header only, and requires no linking.  However, parts
 of it depend on boost libraries which do need to be built and linked (see

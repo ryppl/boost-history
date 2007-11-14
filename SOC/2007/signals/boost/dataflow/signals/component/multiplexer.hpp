@@ -43,7 +43,13 @@ public:
     void select(int selector)
     {   base_type::member = selector; }
     
-        typedef boost::fusion::map<
+    slot_selector<void(int), multiplexer>
+    select_slot()
+    {
+        return make_slot_selector<void(int)> (&multiplexer::select, *this);
+    }
+    
+    typedef boost::fusion::map<
         boost::fusion::pair<boost::dataflow::signals::producer<Signature>, slot_selector<Signature, multiplexer> >,
         boost::fusion::pair<
             boost::dataflow::signals::producer<typename base_type::fused_signature_type>,

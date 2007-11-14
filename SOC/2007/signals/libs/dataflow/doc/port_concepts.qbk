@@ -148,7 +148,7 @@ The following expressions are used in this document:
         [`get_port_result_type<M,PC,P>::type`]
         [
             Returns the underlying port object.  With regular ports,
-            this is typically the same as `p`.  With [ProxyPortConcept]
+            this is typically a reference to `p`.  With [ProxyPortConcept]
             objects, it is typically the proxied port object.
         ]
     ]
@@ -165,17 +165,65 @@ files:
 
 [heading Notes]
 
-To specify that a type `P` is a [PortConcept],
-it suffices to provide a specialization of `port_traits_of`.
-This can either be done explicitly, or intrusively by providing
-a `P::port_traits` member type specifying the
-[PortTraitsConcept].  `P::port_traits` can either be a [PortTraitsConcept]
-type, or an MPL sequence of [PortTraitsConcept] types.
+There is an intrusive as well as a non-intrusive way to register the
+[PortTraitsConcept] of a type `P`, thereby making it a [PortConcept].
 
-The Dataflow library provides a convenience class
+Non-intrusive registration is done by providing a specialization of
+the `port_traits_of` template (either directly, or through the provided
+macros DATAFLOW_PORT_TRAITS and DATAFLOW_PORT_TRAITS_ENABLE_IF).
+
+Intrusive registration can be done by providing
+a `P::port_traits` member type, which can be either a [PortTraitsConcept]
+type, or an MPL sequence of [PortTraitsConcept] types. Alternatively,
+the Dataflow library provides a convenience class
 `port` which you can inherit instead of declaring the member type.
 
+The below examples illustrate the avaliable registration methods.
+
 [heading Examples]
+
+All of the below examples use the following [MechanismConcept] and
+[PortTraitsConcept] types:
+
+[port_registration_example_prep]
+
+[heading Intrusive registration]
+
+Intrusive registration is the easiest, but assumes you can modify the
+[PortConcept]:
+
+[port_registration_example_intrusive]
+
+[heading Non-intrusive registration]
+
+Non-intrusive registration is done by specializing the `port_traits_of`
+template.  Since the `port_traits_of` template is keyed by [MechanismConcept]
+and [PortCategoryConcept], this is rather verbose:
+
+[port_registration_example_non_intrusive]
+
+To make things simpler, the Dataflow library provides a macro for non-intrusive
+registration (the macro also performs a static check on the
+[PortTraitsConcept]).
+
+[port_registration_example_non_intrusive_macro]
+
+[heading Non-intrusive mass registration]
+
+The `port_traits_of` template has an Enable template parameter for use with
+`boost::enable_if`.  Hence, we can register a number of types at the same time:
+
+[port_registration_example_non_intrusive_enable_if]
+
+And again, there is a convenient macro:
+
+[port_registration_example_non_intrusive_enable_if_macro]
+
+[heading Tests]
+
+With the above registrations, the following tests pass:
+
+[port_registration_check_example]
 
 [endsect][/port]
 

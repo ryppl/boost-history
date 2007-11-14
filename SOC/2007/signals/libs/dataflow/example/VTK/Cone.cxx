@@ -1,3 +1,5 @@
+//[ vtk_example_Cone_cxx
+
 /*=========================================================================
 
   Program:   Visualization Toolkit
@@ -11,6 +13,9 @@
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notice for more information.
 
+  NOTE:  This is a MODIFIED version of the original Cone.cxx distributed
+  with VTK.  Modifications (c) Stjepan Rajko 2007
+
 =========================================================================*/
 //
 // This example creates a polygonal model of a cone, and then renders it to
@@ -21,8 +26,6 @@
 
 // First include the required header files for the VTK classes we are using.
 
-#include "operators.hpp"
-
 #include "vtkAlgorithmOutput.h"
 #include "vtkConeSource.h"
 #include "vtkPolyDataMapper.h"
@@ -31,11 +34,11 @@
 #include "vtkActor.h"
 #include "vtkRenderer.h"
 
+// ... and include the VTK Dataflow support layer.
+#include "vtk_dataflow_support.hpp"
 
 int main()
 {
-  //using boost::dataflow::connect;
-  //using namespace boost::dataflow::operators;
     
   // 
   // Next we create an instance of vtkConeSource and set some of its
@@ -56,8 +59,6 @@ int main()
   // connect the output of the cone souece to the input of this mapper.
   //
   vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-  //coneMapper->SetInputConnection( cone->GetOutputPort() );
-  //connect(*cone, *coneMapper);
 
   // 
   // Create an actor to represent the cone. The actor orchestrates rendering
@@ -67,8 +68,6 @@ int main()
   // above.
   //
   vtkActor *coneActor = vtkActor::New();
-  //coneActor->SetMapper( coneMapper );
-  //connect (*coneMapper, *coneActor);
 
   //
   // Create the Renderer and assign actors to it. A renderer is like a
@@ -77,8 +76,6 @@ int main()
   // color here.
   //
   vtkRenderer *ren1= vtkRenderer::New();
-  //connect (*coneActor, *ren1);
-//  ren1->AddActor( coneActor );
   ren1->SetBackground( 0.1, 0.2, 0.4 );
 
   //
@@ -87,11 +84,17 @@ int main()
   // set the size to be 300 pixels by 300.
   //
   vtkRenderWindow *renWin = vtkRenderWindow::New();
-//  renWin->AddRenderer( ren1 );
   renWin->SetSize( 300, 300 );
   
-  *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= renWin;
-
+  // Finally, connect everything using the VTK Dataflow support layer:
+  *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
+  
+  // NOTE: this replaced the following code:
+  // coneMapper->SetInput( cone->GetOutput() );
+  // coneActor->SetMapper( coneMapper );
+  // ren1->AddActor( coneActor );
+  // renWin->AddRenderer( ren1 );
+  
   //
   // Now we loop over 360 degreeees and render the cone each time.
   //
@@ -117,4 +120,4 @@ int main()
   return 0;
 }
 
-
+//]

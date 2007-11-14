@@ -9,15 +9,12 @@
 #include <boost/dataflow/detail/enable_if_defined.hpp>
 
 #include <boost/mpl/and.hpp>
-#include <boost/mpl/at.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-//temp
-#include <boost/mpl/vector.hpp>
 
 namespace boost { namespace dataflow {
 

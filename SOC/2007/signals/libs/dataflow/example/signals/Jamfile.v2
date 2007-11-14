@@ -16,4 +16,4 @@ exe simple_distributed_example : simple_distributed_example.cpp
     /boost/serialization//boost_serialization/<link>static
     /boost/thread//boost_thread/<link>static
     /boost/system//boost_system/<link>static ;
-
+exe gil_example : gil_example.cpp /boost/thread//boost_thread/<link>static ;

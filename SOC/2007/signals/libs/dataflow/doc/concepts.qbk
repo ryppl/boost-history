@@ -63,9 +63,12 @@ Typically, a component is embedded in a class, and the different [PortConcept]s
 are accessible either through the class directly, or through its member
 functions and variables.
 
+The Dataflow library also offers a [ComponentConcept] concept, which is
+intented to provide compile-time introspection and other operations.
+
 [heading Proxies]
 
-It is often the case that a component delegates its [PortConcept]
+It is often the case that a port delegates its [PortConcept]
 functionality to some other element.  For example, a
 class that is a [DataflowSignals] component might delegate its
 [ProducerPortConcept] functionality to a member boost::signal.  It can
@@ -253,7 +256,7 @@ The following expressions are used in this document:
 
 [section ComponentTraits]
 
-A ['[ComponenTraitsConcept]] specifies the traits of a [ComponentConcept].
+A ['[ComponentTraitsConcept]] specifies the traits of a [ComponentConcept].
 
 [heading Notation]
 [variablelist
@@ -297,6 +300,8 @@ if it specifies a [ComponentTraitsConcept] for that mechanism.
 
 [heading Refinements]
 
+* [ReflectiveComponentConcept]
+
 [heading Notation]
 The following expressions are used in this document:
 
@@ -313,7 +318,7 @@ The following expressions are used in this document:
         [`component_traits_of<M, C>::type`]
         [Any [ComponentTraitsConcept] type]
         [
-            The [ComponentTraitsConcept] of the port.
+            The [ComponentTraitsConcept] of the component.
         ]
     ]
     [
@@ -323,6 +328,70 @@ The following expressions are used in this document:
         [
             A trait encapsulating adherence to the Component
             concept.
+        ]
+    ]
+]
+
+[heading Header]
+
+```
+    #include <boost/dataflow/support/component.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Notes]
+
+[heading Examples]
+
+[endsect][/component]
+
+[section ReflectiveComponent]
+
+A [ComponentConcept] `C` for a mechanism `M` is a ['[ReflectiveComponentConcept]] 
+if's [ComponentTraitsConcept] is a [ReflectiveComponentTraitsConcept], and it
+specializes the `get_component_port_impl` implementation to provide access
+to it's ports.
+
+[heading Refinement of]
+
+* [ComponentConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A ReflectiveComponent type.]]
+    [[M] [A [MechanismConcept] type.]]
+    [[I] [An MPL Integral Constant in the range 0, n of ports exposed by C.]]
+    [[c] [An object of type C.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Component Traits]
+        [`component_traits_of<M, C>::type`]
+        [Any [ReflectiveComponentTraitsConcept] type]
+        [
+            The [ReflectiveComponentTraitsConcept] of the component.
+        ]
+    ]
+    [
+        [IsReflectiveComponent Trait]
+        [`is_reflective_component<M, C>::type`]
+        [Boolean metafunction that evaluates to true]
+        [
+            A trait encapsulating adherence to the ReflectiveComponent
+            concept.
+        ]
+    ]
+    [
+        [ GetComponentPort ]
+        [`get_component_port<M, I>(c)`]
+        []
+        [
+            Returns the I'th [PortConcept] exposed by `C`
         ]
     ]
 ]

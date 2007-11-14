@@ -27,7 +27,7 @@ namespace detail {
     template<typename PortCategory, typename T, int N>
     struct lazy_is_same_port_traits_port_category
     {
-        typedef typename is_same<PortCategory, typename mpl::at_c<typename T::port_traits, N>::type::port_category>::type type;
+        typedef typename is_same<PortCategory, typename mpl::at_c<typename T::port_traits, N>::type::category>::type type;
     };
 }
 

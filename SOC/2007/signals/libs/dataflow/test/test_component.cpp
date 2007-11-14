@@ -4,6 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/dataflow/support/component_operation.hpp>
+#include <boost/fusion/container/vector/vector.hpp>
 
 bool invoked = false;
 
