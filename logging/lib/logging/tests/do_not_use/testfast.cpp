@@ -100,9 +100,9 @@ typedef use<
         //  filter does not use levels
         filter_::level::no_levels, 
         // the logger is initialized once, when only one thread is running
-        logger_::change::set_once_when_one_thread, 
+        logger_::change::single_thread 
         // the logger favors speed (on a dedicated thread)
-        logger_::favor::speed> finder;
+        > finder;
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
 BOOST_DECLARE_LOG_FILTER(g_log_filter, finder::filter ) 
@@ -135,10 +135,6 @@ void do_sleep(int ms) {
 }
 
 void your_scenario_example() {
-    std::ofstream file;
-    file.open("blah.txt", std::ios::trunc);
-    file << "blabla" ;
-    file.close();
 
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
@@ -151,20 +147,20 @@ void your_scenario_example() {
 
     // App log
     g_log_app->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_app->writer().add_formatter( formatter::append_newline() );
+    g_log_app->writer().add_formatter( formatter::append_newline_if_needed() );
 //    g_log_app->writer().add_destination( destination::file("out.txt", destination::file_settings().initial_overwrite(true) ) );
     g_log_app->writer().add_destination( destination::file("out.txt") );
     g_log_app->writer().add_destination( destination::cout() );
 
     // Debug log
     g_log_dbg->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_dbg->writer().add_formatter( formatter::append_newline() );
+    g_log_dbg->writer().add_formatter( formatter::append_newline_if_needed() );
     g_log_dbg->writer().add_destination( destination::dbg_window() );
     g_log_dbg->writer().add_destination( destination::cout() );
 
     // Step 8: use it...
     int i = 1;
-    LDBG_ << "this is so cool " << i++;
+    LDBG_ << "this is so cool " << i++ << "\n";
     LDBG_ << "this is so cool again " << i++;
     LERR_ << "first error " << i++;
 

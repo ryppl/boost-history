@@ -63,10 +63,22 @@ namespace convert {
     typedef boost::logging::char_type char_type;
     typedef std::basic_string<char_type> string_type;
 
+    inline const string_type & get_underlying_string(const string_type & str) { return str; }
+    template<class string> const string & get_underlying_string(const ::boost::logging::optimize::cache_string_one_str<string> & str) {
+        return str;
+    }
+    template<class string> const string & get_underlying_string(const ::boost::logging::optimize::cache_string_several_str<string> & str) {
+        return str;
+    }
+    template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> const string& get_underlying_string(const ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & str) {
+        return str;
+    }
+
     /**
     Example : write_time
     */
     namespace prepend {
+
         inline void write(const char_type * src, string_type & dest ) {
             const char_type * end = src;
             for ( ; *end; ++end) {}
@@ -133,11 +145,18 @@ namespace convert {
 }
 
 
-
 struct do_convert_format {
     typedef std::basic_string<char_type> string_type;
 
     struct prepend {
+        static inline const string_type & get_underlying_string(const string_type & str) { return convert::get_underlying_string(str); }
+        template<class string> static inline const string & get_underlying_string(const ::boost::logging::optimize::cache_string_several_str<string> & str) {
+            return convert::get_underlying_string(str);
+        }
+        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> static inline const string& get_underlying_string(const ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & str) {
+            return convert::get_underlying_string(str);
+        }
+
         template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::prepend::write(src, dest);
         }
@@ -147,6 +166,14 @@ struct do_convert_format {
     };
 
     struct append {
+        static inline const string_type & get_underlying_string(const string_type & str) { return convert::get_underlying_string(str); }
+        template<class string> static inline const string & get_underlying_string(const ::boost::logging::optimize::cache_string_several_str<string> & str) {
+            return convert::get_underlying_string(str);
+        }
+        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> static inline const string& get_underlying_string(const ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & str) {
+            return convert::get_underlying_string(str);
+        }
+
         template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::append::write(src, dest);
         }
@@ -156,6 +183,14 @@ struct do_convert_format {
     };
 
     struct modify {
+        static inline const string_type & get_underlying_string(const string_type & str) { return convert::get_underlying_string(str); }
+        template<class string> static inline const string & get_underlying_string(const ::boost::logging::optimize::cache_string_several_str<string> & str) {
+            return convert::get_underlying_string(str);
+        }
+        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> static inline const string& get_underlying_string(const ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & str ) {
+            return convert::get_underlying_string(str);
+        }
+
         template<class src_type, class string> static void write(const src_type & src, string & dest) {
             convert::modify::write(src, dest);
         }

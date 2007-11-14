@@ -72,7 +72,7 @@ For instance, you might use @ref boost::logging::optimize::cache_string_one_str 
 */
 template<class convert = do_convert_format::append> struct append_newline_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
-        convert::write( (const char_type*)BOOST_LOG_STR("\n"), str );
+        convert::write( BOOST_LOG_STR("\n"), str );
     }
 };
 
@@ -86,8 +86,8 @@ For instance, you might use @ref boost::logging::optimize::cache_string_one_str 
 template<class convert = do_convert_format::append> struct append_newline_if_needed_t : is_generic, boost::logging::op_equal::always_equal {
     template<class msg_type> void operator()(msg_type & str) const {
         bool is_needed = true;
-        if ( !str.empty())
-            if ( str[ str.size() - 1] == '\n')
+        if ( ! convert::get_underlying_string(str).empty())
+            if ( *(convert::get_underlying_string(str).rbegin()) == '\n')
                 is_needed = false;
 
         if ( is_needed)
