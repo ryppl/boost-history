@@ -509,13 +509,6 @@
 				RelativePath="..\..\..\tests\do_not_use\testfast.cpp"
 				>
 				<FileConfiguration
-					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="TestAll|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -874,6 +867,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\requirements.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\starter_project.hpp"
 				>
 			</File>
 			<File

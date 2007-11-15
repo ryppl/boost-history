@@ -64,7 +64,15 @@ using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
 using namespace boost::logging::scenario::usage;
-typedef use<default_,filter_::level::no_levels> finder;
+typedef use<
+        //  the filter is always accurate (but slow)
+        filter_::change::always_accurate, 
+        //  filter does not use levels
+        filter_::level::no_levels, 
+        // the logger is initialized once, when only one thread is running
+        logger_::change::set_once_when_one_thread, 
+        // the logger favors speed (on a dedicated thread)
+        logger_::favor::speed> finder;
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
 BOOST_DECLARE_LOG_FILTER(g_log_filter, finder::filter ) 

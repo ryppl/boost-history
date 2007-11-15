@@ -20,6 +20,7 @@ namespace boost { namespace logging {
         - @ref scenario_multiple_files_log_h 
         - @ref scenario_multiple_files_log_cpp 
         - @ref scenario_multiple_files_main 
+    - @ref starter_project 
 
 - @ref headers_to_include "Headers to #include"
 - @ref scenario::usage "Choose the best filter/logger class, based on your application's needs"
