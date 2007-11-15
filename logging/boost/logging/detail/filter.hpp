@@ -74,14 +74,14 @@ namespace logging {
     - filter::always_disabled
     - filter::debug_enabled
     - filter::release_enabled
-    - filter_level (when you use levels)
+    - in case you use levels, see level namespace
 
 */
 namespace filter {
 
 
 /** 
-    Manages is_enabled/set_enabled in a non-thread-safe way (usually, this is the default filter - unless you override it). 
+    @brief Manages is_enabled/set_enabled in a non-thread-safe way. 
 
     If you change set_enabled() while program is running, it can take a bit to propagate
     between threads. Most of the time, this should be acceptable.
@@ -96,7 +96,7 @@ private:
 
 
 /** 
-    Filter that is always enabled
+    @brief Filter that is always enabled
 */
 struct always_enabled {
     static bool is_enabled() { return true; }
@@ -104,7 +104,7 @@ struct always_enabled {
 
 
 /** 
-    Filter that is always disabled
+    @brief Filter that is always disabled
 */
 struct always_disabled {
     static bool is_enabled() { return false; }
@@ -112,7 +112,7 @@ struct always_disabled {
 
 
 /** 
-    Filter that is enabled in debug mode
+    @brief Filter that is enabled in debug mode
 */
 struct debug_enabled {
 #ifndef NDEBUG
@@ -124,7 +124,7 @@ struct debug_enabled {
 
 
 /** 
-    Filter that is enabled in release mode
+    @brief Filter that is enabled in release mode
 */
 struct release_enabled {
 #ifdef NDEBUG
@@ -136,7 +136,8 @@ struct release_enabled {
 
 
 /** 
-    Thread-safe filter. Manages is_enabled/set_enabled in a thread-safe way. 
+    @brief Thread-safe filter. Manages is_enabled/set_enabled in a thread-safe way. 
+
     However, it manages it rather ineffiently - always locking before asking.
 */
 struct ts {
@@ -160,7 +161,9 @@ private:
 #ifndef BOOST_LOG_NO_TSS
 
 /** 
-    Uses TSS (Thread Specific Storage) to find out if a filter is enabled or not. It caches the current "is_enabled" on each thread.
+    @brief Uses TSS (Thread Specific Storage) to find out if a filter is enabled or not. 
+    
+    It caches the current "is_enabled" on each thread.
     Then, at a given period, it retrieves the real "is_enabled".
 
     @remarks
@@ -184,7 +187,10 @@ private:
     data m_enabled;
 };
 
-
+/** 
+    @brief Uses TSS (Thread Specific Storage) to find out if a filter is enabled or not. Once the filter is initialized to a value, that value will always be used.
+    
+*/
 struct use_tss_once_init {
     typedef locker::tss_resource_once_init<bool> data;
 

@@ -586,7 +586,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\filter.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\filter.hpp"
 				>
 			</File>
 			<File
@@ -598,7 +598,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\level.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\level.hpp"
 				>
 			</File>
 			<File
@@ -614,7 +614,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\macros.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\macros.hpp"
 				>
 			</File>
 			<File
@@ -843,6 +843,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\customize_manipulator.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\defining_your_logger_filter.hpp"
 				>
 			</File>
 			<File

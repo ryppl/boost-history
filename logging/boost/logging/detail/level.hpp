@@ -43,7 +43,6 @@ namespace boost { namespace logging {
     If warning level is enabled, all messages are logged, but the warnings. 
     If debug level is enabled, messages that have levels debug, error, fatal will be logged.
 
-    @sa filter_level
 */
 namespace level {
     /** the higher the level , the more critical the error */

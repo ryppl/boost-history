@@ -227,15 +227,16 @@ and you want to define the logger classes, in a source file
         const destination_array & m_destinations;
     };
 
-    /** 
-    @brief Represents a simple router - first calls all formatters - in the order they were added, then all destinations - in the order they were added
+/** 
+@brief Represents a simple router - first calls all formatters - in the order they were added, then all destinations - in the order they were added
 
-    Example:
+Example:
 
 @code
-typedef process_msg< gather::ostream_like::return_str<> , format_write<...> > process;
-logger<process, filter::no_ts> g_l;
-#define L_ if ( !g_l) ; else g_l->read_msg().gather().out()
+typedef logger< gather::ostream_like::return_str<> , format_write<...> > log_type;
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+BOOST_DEFINE_LOG(g_l, log_type)
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
 
 // add formatters : [idx] [time] message [enter]
 g_l->writer().add_formatter( write_idx() );
@@ -251,14 +252,17 @@ int i = 1;
 L_ << "testing " << i << i+1 << i+2;
 @endcode
 
-    In the above case, @c write_idx() is called, then @c write_time(), then @c append_newline(). Now, the destinations are called:
-    @c write_to_cout(), and then @c write_to_file().
+In the above case:
+- First, the formatters are called: @c write_idx() is called, then @c write_time(), then @c append_newline(). 
+- Then, the destinations are called: @c write_to_cout(), and then @c write_to_file().
 
 
 
 @param format_base The base class for all formatter classes from your application. See manipulator.
 
 @param destination_base The base class for all destination classes from your application. See manipulator.
+
+@param lock_resource What class you use to do allow thread-safe access to an instance of this clas (used internally).
 
     */
     template<

@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.13, 15 nov 2007
+@section changelog_cur_ver Current Version: v0.11.14, 15 nov 2007
+- updated docs
+- updated macros documentation (still to do)
 - added @ref starter_project
 - solved bug when using append_newline_if_needed() - when not used with string
 - solved bug at opening file for initial overwrite

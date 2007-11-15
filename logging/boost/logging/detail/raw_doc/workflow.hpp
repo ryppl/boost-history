@@ -115,7 +115,6 @@ In other words, gathering the message means getting all the message in "one piec
 See the 
 - the gather namespace - classes for gathering
 - the gather::ostream_like - classes for gathering, using the cool "<<" operator
-- @ref macros_gathering "Macros for gathering" section.
 
 
 
