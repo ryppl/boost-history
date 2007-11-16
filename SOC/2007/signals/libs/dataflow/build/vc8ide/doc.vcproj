@@ -3,52 +3,71 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="doc"
-	ProjectGUID="{63CC95EA-4647-495B-9072-D38F368D4C6E}"
-	RootNamespace="doc"
-	Keyword="MakeFileProj"
+	ProjectGUID="{bbaad8a1-8792-4eae-9899-20c359b62645}"
 	>
-	<Platforms>
-		<Platform
+    <Platforms>
+        <Platform
 			Name="Win32"
 		/>
-	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
-	<Configurations>
-		<Configuration
+    </Platforms>
+    <ToolFiles>
+    </ToolFiles>
+    <Configurations>
+        <Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-			<Tool
+            <Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="cd ../../doc&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
 				ReBuildCommandLine="cd ../../doc&#x0D;&#x0A;bjam --v2 -a $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
+
 				Output=""
-				PreprocessorDefinitions="WIN32;NDEBUG"
+				PreprocessorDefinitions=""
 				IncludeSearchPath=""
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-		</Configuration>
-	</Configurations>
-	<References>
-	</References>
-	<Files>
+        </Configuration>
+    </Configurations>
+    <References>
+    </References>
+    <Files>
 		<File
-			RelativePath="..\..\doc\components.qbk"
+			RelativePath="..\..\doc\dataflow1.svg"
 			>
 		</File>
 		<File
-			RelativePath="..\..\doc\connections.qbk"
+			RelativePath="..\..\doc\dataflow2.svg"
 			>
 		</File>
 		<File
-			RelativePath="..\..\doc\introduction.qbk"
+			RelativePath="..\..\doc\dataflow3.svg"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\dataflow1.png"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\dataflow2.png"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\dataflow3.png"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\phoenix.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\dataflow_table.xml"
 			>
 		</File>
 		<File
@@ -56,10 +75,94 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\doc\signal_network.qbk"
+			RelativePath="..\..\doc\components.qbk"
 			>
 		</File>
-	</Files>
-	<Globals>
-	</Globals>
+		<File
+			RelativePath="..\..\doc\signals.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\future.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\concepts.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\rationale.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\introduction.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\port_concepts.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\dataflow.qbk"
+			>
+		</File>
+		<Filter
+			Name="signals"
+			>
+			<File
+				RelativePath="..\..\doc\signals\components.qbk"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\signals\concepts.qbk"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\signals\introduction.qbk"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\signals\connections.qbk"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="phoenix"
+			>
+			<File
+				RelativePath="..\..\doc\phoenix\concepts.qbk"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="introduction"
+			>
+			<File
+				RelativePath="..\..\doc\introduction\gil_example.qbk"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\introduction\distributed_example.qbk"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\introduction\blueprint_example.qbk"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\introduction\vtk_example.qbk"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="blueprint"
+			>
+			<File
+				RelativePath="..\..\doc\blueprint\blueprint.qbk"
+				>
+			</File>
+		</Filter>
+    </Files>
+    <Globals>
+    </Globals>
 </VisualStudioProject>

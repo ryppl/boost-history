@@ -3,79 +3,159 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="example"
-	ProjectGUID="{784DC2FD-A12D-48F9-9C2E-369833990427}"
-	RootNamespace="example"
-	Keyword="MakeFileProj"
+	ProjectGUID="{81616215-ae99-438d-acff-896032940990}"
 	>
-	<Platforms>
-		<Platform
+    <Platforms>
+        <Platform
 			Name="Win32"
 		/>
-	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
-	<Configurations>
-		<Configuration
+    </Platforms>
+    <ToolFiles>
+    </ToolFiles>
+    <Configurations>
+        <Configuration
 			Name="debug|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-			<Tool
+            <Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-				Output="$(OutDir)\example.exe"
+
+				Output=""
 				PreprocessorDefinitions=""
-				IncludeSearchPath="../../../"
+				IncludeSearchPath=""
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-		</Configuration>
-		<Configuration
+        </Configuration>
+        <Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-			<Tool
+            <Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-				Output="$(OutDir)\example.exe"
+
+				Output=""
 				PreprocessorDefinitions=""
-				IncludeSearchPath="../../../../"
+				IncludeSearchPath=""
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-		</Configuration>
-	</Configurations>
-	<References>
-	</References>
-	<Files>
-		<Filter
-			Name="Source Files"
+        </Configuration>
+    </Configurations>
+    <References>
+    </References>
+    <Files>
+		<File
+			RelativePath="..\..\example\edit_distance.cpp"
 			>
-			<File
-				RelativePath="..\..\example\example.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\example\timing_example.cpp"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\..\example\fibonacci.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\example.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\timing_example.cpp"
+			>
+		</File>
 		<File
 			RelativePath="..\..\example\Jamfile.v2"
 			>
 		</File>
-	</Files>
-	<Globals>
-	</Globals>
+		<Filter
+			Name="VTK"
+			>
+			<File
+				RelativePath="..\..\example\VTK\Cone3.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Cone4.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Cone5.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Cone6.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Jamfile.v2"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Cone.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Cone2.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\vtk_dataflow_support.hpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="signals"
+			>
+			<File
+				RelativePath="..\..\example\signals\simple_example_components.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\signals\simple_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\signals\intro_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\signals\simple_distributed_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\signals\gil_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\signals\Jamfile.v2"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="blueprint"
+			>
+			<File
+				RelativePath="..\..\example\blueprint\blueprint_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\blueprint\Jamfile.v2"
+				>
+			</File>
+		</Filter>
+    </Files>
+    <Globals>
+    </Globals>
 </VisualStudioProject>

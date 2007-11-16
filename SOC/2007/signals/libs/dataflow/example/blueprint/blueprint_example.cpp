@@ -30,8 +30,8 @@ int main()
     network_type::component_type
         source = network.add_component<signals::storage<void(int)> >(100),
         sink = network.add_component<signals::storage<void(int)> >(0),
-        source_float = network.add_component<signals::storage<void(float)> >(100.1),
-        sink_float = network.add_component<signals::storage<void(float)> >(0);
+        source_float = network.add_component<signals::storage<void(float)> >(100.1f),
+        sink_float = network.add_component<signals::storage<void(float)> >(0.0f);
     
     // Print some runtime info
     std::cout << "source has " << network[source].num_ports() << " ports. " << std::endl;

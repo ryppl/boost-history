@@ -3,29 +3,28 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="test"
-	ProjectGUID="{35BB1613-AEF0-4047-9F26-D42190A005EB}"
-	RootNamespace="test"
-	Keyword="MakeFileProj"
+	ProjectGUID="{151e2151-a02d-4748-aba6-f75a68d72cca}"
 	>
-	<Platforms>
-		<Platform
+    <Platforms>
+        <Platform
 			Name="Win32"
 		/>
-	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
-	<Configurations>
-		<Configuration
+    </Platforms>
+    <ToolFiles>
+    </ToolFiles>
+    <Configurations>
+        <Configuration
 			Name="debug|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-			<Tool
+            <Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
+
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -34,18 +33,19 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-		</Configuration>
-		<Configuration
+        </Configuration>
+        <Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-			<Tool
+            <Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
+
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -54,88 +54,136 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-		</Configuration>
-	</Configurations>
-	<References>
-	</References>
-	<Files>
+        </Configuration>
+    </Configurations>
+    <References>
+    </References>
+    <Files>
 		<File
-			RelativePath="..\..\test\test_bind_object.cpp"
+			RelativePath="..\..\test\test_binary_op.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_branching.cpp"
+			RelativePath="..\..\test\test_keyed_port.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_chain.cpp"
+			RelativePath="..\..\test\test_proxy_port.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_connect.cpp"
+			RelativePath="..\..\test\my_producer_consumer.hpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_connections.cpp"
+			RelativePath="..\..\test\test_unary_op.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_counter.cpp"
+			RelativePath="..\..\test\test_component.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_disconnect.cpp"
+			RelativePath="..\..\test\test_port.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_filter.cpp"
+			RelativePath="..\..\test\test_reflective_component.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\test\test_function.cpp"
+			RelativePath="..\..\test\Jamfile.v2"
 			>
 		</File>
-		<File
-			RelativePath="..\..\test\test_junction.cpp"
+		<Filter
+			Name="signals"
 			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_multi_args.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_multi_out.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_multi_type.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_mutex.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_pull.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_result_of_defined.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_same_type.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_socket.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\test\test_storage.cpp"
-			>
-		</File>
-	</Files>
-	<Globals>
-	</Globals>
+			<File
+				RelativePath="..\..\test\signals\test_mutex.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_storage.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_multi_args.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_multiplexer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_pull.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\Jamfile.v2"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_counter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_result_of_defined.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_multi_out.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_connections.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_chain.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_function.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_filter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_same_type.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_socket.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_junction.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_disconnect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_connect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_multi_type.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_branching.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\signals\test_bind_object.cpp"
+				>
+			</File>
+		</Filter>
+    </Files>
+    <Globals>
+    </Globals>
 </VisualStudioProject>

@@ -28,13 +28,19 @@ project dataflow/test/VTK
       <include>/usr/local/include/vtk-5.0/
       <define>BOOST_ALL_NO_LIB=1
       <toolset>darwin:<linkflags>"-framework CoreServices"
-      
+      <toolset>darwin:<library>GL
+      <toolset>darwin:<library>X11
+      <toolset>darwin:<library>Xt
+      <library>vtkCommon
+      <library>vtkRendering
+      <library>vtkFiltering
+      <library>vtkGraphics
     ;
 
-exe Cone : Cone.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-exe Cone2 : Cone2.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-#exe Cone3 : Cone3.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-#exe Cone4 : Cone4.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-#exe Cone5 : Cone5.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
+exe Cone : Cone.cxx ;
+exe Cone2 : Cone2.cxx ;
+#exe Cone3 : Cone3.cxx ;
+#exe Cone4 : Cone4.cxx ;
+#exe Cone5 : Cone5.cxx ;
 #exe Cone6 : Cone6.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics vtkWidgets GL ;
 
