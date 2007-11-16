@@ -131,7 +131,7 @@ If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;
   <i>Since those effects were already specified in the effects of notify and 
   notify_all, the offending sentence was simply removed from wait().</i><br>
 &nbsp;</li>
-  <li>condition_variable::wait [and timed_wait], throws: can throw only if a precondition is not 
+  <li>&#10004; condition_variable::wait [and timed_wait], throws: can throw only if a precondition is not 
   met? What if the system returns an error?<br>
 &nbsp;</li>
   <li>&#10004; condition_variable::wait(lock, pred): what are the constraints on the type 

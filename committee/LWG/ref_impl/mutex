@@ -252,8 +252,11 @@ private:
 
 public:
     //constexpr
-    once_flag() : m_(PTHREAD_MUTEX_INITIALIZER), completed_(false) {}
-    ~once_flag() {pthread_mutex_destroy(&m_);}
+    once_flag() {pthread_mutex_init(&m_, 0);}
+    ~once_flag()
+    {
+        pthread_mutex_destroy(&m_);
+    }
 };
 
 struct __pthread_mutex_unlocker
@@ -265,7 +268,10 @@ template <class F>
 void
 once_flag::run(F f)
 {
-    lock_guard<mutex> _(m_);
+    unique_ptr<pthread_mutex_t> p(new pthread_mutex_t);
+    pthread_mutex_init(p.get(), 0);
+    
+    pthread_mutex_lock(&m_);
     unique_ptr<pthread_mutex_t, __pthread_mutex_unlocker> _(&m_);
     if (!completed_)
     {

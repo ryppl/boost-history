@@ -68,6 +68,7 @@
 #include <system_error>
 #include <hdate_time>
 #include <type_traits>
+#include <memory>
 
 namespace std
 {
@@ -151,10 +152,10 @@ condition_variable::timed_wait(unique_lock<mutex>& lock, const Duration& rel_tim
 class condition_variable_any
 {
     condition_variable cv_;
-    mutex              mut_;
+    shared_ptr<mutex>  mut_;
 public:
    
-    // condition_variable_any() = default;
+    condition_variable_any() : mut_(new mutex) {}
     // ~condition_variable_any() = default;
 
     // condition_variable_any(const condition_variable_any&) = delete;
@@ -178,7 +179,7 @@ inline
 void
 condition_variable_any::notify_one()
 {
-    lock_guard<mutex> _(mut_);
+    {lock_guard<mutex> _(*mut_);}
     cv_.notify_one();
 }
 
@@ -186,7 +187,7 @@ inline
 void
 condition_variable_any::notify_all()
 {
-    lock_guard<mutex> _(mut_);
+    {lock_guard<mutex> _(*mut_);}
     cv_.notify_all();
 }
 
@@ -194,7 +195,8 @@ template <class Lock>
 void
 condition_variable_any::wait(Lock& lock)
 {
-    unique_lock<mutex> lk(mut_);
+    shared_ptr<mutex> mut = mut_;
+    unique_lock<mutex> lk(*mut);
     lock.unlock();
     unique_ptr<Lock, __lock_external> external_guard(&lock);
     lock_guard<unique_lock<mutex>> internal_guard(lk, adopt_lock);
@@ -214,7 +216,8 @@ template <class Lock>
 bool
 condition_variable_any::timed_wait(Lock& lock, const system_time& abs_time)
 {
-    unique_lock<mutex> lk(mut_);
+    shared_ptr<mutex> mut = mut_;
+    unique_lock<mutex> lk(*mut);
     lock.unlock();
     unique_ptr<Lock, __lock_external> external_guard(&lock);
     lock_guard<unique_lock<mutex>> internal_guard(lk, adopt_lock);

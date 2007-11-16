@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-12
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-15
 </p>
 
 <address>
@@ -362,6 +362,7 @@ to be used as keys in associative containers.
 id();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -378,11 +379,13 @@ Nothing.
 Represents the non-joinable identity.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator==(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -397,11 +400,13 @@ Otherwise returns <code>false</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator!=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -413,11 +418,13 @@ bool operator!=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&lt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -430,11 +437,13 @@ is a total ordering as described in [alg.sorting].
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&lt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -446,11 +455,13 @@ bool operator&lt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <va
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&gt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -462,11 +473,13 @@ bool operator&gt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&gt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -478,6 +491,7 @@ bool operator&gt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <va
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;class charT, class traits&gt;
@@ -485,6 +499,7 @@ basic_ostream&lt;charT, traits&gt;&amp;
 operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -497,6 +512,7 @@ the stream <code>out</code>.
 <code>out</code>.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.threads.constr">30.1.1.2 <code>thread</code> constructors [thread.threads.constr]</a></h5>
 
@@ -504,6 +520,7 @@ the stream <code>out</code>.
 thread();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -528,12 +545,14 @@ object after <code>detach</code> or <code>join</code> is successfully called.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class F&gt; explicit thread(F f);
 template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... args);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Requires:</dt>
 <dd>
@@ -569,11 +588,13 @@ exception, <code>std::terminate()</code> shall be called.
 <code>system_error</code> if unable to  start the new thread.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 thread(thread&amp;&amp; <var>x</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -598,6 +619,7 @@ start of construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.threads.destr">30.1.1.3 <code>thread</code> destructor [thread.threads.destr]</a></h5>
 
@@ -605,6 +627,7 @@ Nothing.
 ~thread();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -617,6 +640,7 @@ otherwise no effects.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.threads.assign">30.1.1.4 <code>thread</code> assignment [thread.threads.assign]</a></h5>
 
@@ -624,6 +648,7 @@ Nothing.
 thread&amp; operator=(thread&amp;&amp; <var>x</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -652,6 +677,7 @@ assignment.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.threads.member">30.1.1.5 <code>thread</code> members [thread.threads.member]</a></h5>
 
@@ -659,6 +685,7 @@ Nothing.
 void swap(thread&amp;&amp; <var>x</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -670,11 +697,13 @@ Swaps the state of <code>*this</code> and <code><var>x</var></code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool joinable() const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -686,11 +715,13 @@ bool joinable() const;
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void join();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -719,11 +750,13 @@ The
 possible error conditions are implementation defined.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void detach();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -752,11 +785,13 @@ does not represent a thread.
 The possible error conditions are implementation defined.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 id get_id() const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -770,6 +805,7 @@ represented by
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.threads.static">30.1.1.6 <code>thread</code> static members [thread.threads.static]</a></h5>
 
@@ -777,6 +813,7 @@ Nothing.
 unsigned hardware_concurrency();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -794,6 +831,7 @@ return value of 1 is recommended, but not required.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a></h5>
 
@@ -803,12 +841,14 @@ void swap(thread&amp;&amp; <var>x</var>, thread&amp;  <var>y</var>);
 void swap(thread&amp;  <var>x</var>, thread&amp;&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 <code><var>x</var>.swap(<var>y</var>)</code>.
 </dd>
 </dl>
+</blockquote>
 
 
 
@@ -833,6 +873,7 @@ template &lt;class Duration&gt;
 thread::id this_thread::get_id();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -849,11 +890,13 @@ a default constructed <code>thread::id</code>
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void yield();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -865,11 +908,13 @@ Offers the operating system the opportunity to schedule another thread.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void sleep(const system_time&amp; abs_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -881,12 +926,14 @@ The current thread blocks at least until the time specified.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Duration&gt;
     void sleep(const Duration&amp; rel_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -898,6 +945,7 @@ The current thread blocks for at least the amount of time specified.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="thread.mutex">30.2 Mutexs and locks [thread.mutex]</a></h3>
 
@@ -983,6 +1031,7 @@ A mutex type shall have the following member functions:
 void lock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1007,11 +1056,13 @@ possible error conditions are implementation defined.
 This is an acquire operation [<cite>intro.multithread</cite>].
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool try_lock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1051,11 +1102,13 @@ This is an acquire operation if <code>try_lock</code> returns <code>true</code> 
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void unlock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1082,6 +1135,7 @@ This is a release operation [<cite>intro.multithread</cite>].
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a></h5>
 
@@ -1162,6 +1216,7 @@ template &lt;class Duration&gt;
     bool timed_lock(const Duration&amp; rel_time);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1204,11 +1259,13 @@ This is an acquire operation if <code>timed_lock</code> returns <code>true</code
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool timed_lock(const system_time&amp; abs_time);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1248,6 +1305,7 @@ This is an acquire operation if <code>timed_lock</code> returns <code>true</code
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.timed.class">30.2.2.1 Class timed_mutex [thread.timed.class]</a></h5>
 
@@ -1410,6 +1468,7 @@ or transferred away from the <code>lock_guard</code>.
 explicit lock_guard(mutex_type&amp; <var>m</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1425,11 +1484,13 @@ Stores a reference to <code><var>m</var></code>
 and calls <code><var>m</var>.lock()</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 lock_guard(mutex_type&amp; <var>m</var>, adopt_lock_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1444,11 +1505,13 @@ Stores a reference to <code><var>m</var></code>
 and performs no other operation on it.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 ~lock_guard();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1460,6 +1523,7 @@ and performs no other operation on it.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h5><a name="thread.lock.unique">30.2.3.2 Class unique_lock [thread.lock.unique]</a></h5>
 
@@ -1527,6 +1591,7 @@ An object of type
 unique_lock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1540,11 +1605,13 @@ Constructs an object of type <code>unique_lock</code>.
 <code>owns_lock() == false</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 explicit unique_lock(mutex_type&amp; <var>m</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1567,11 +1634,13 @@ and calls <code><var>m</var>.lock()</code>.
 <code>owns_lock() == true</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 unique_lock(mutex_type&amp; <var>m</var>, defer_lock_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1594,11 +1663,13 @@ and performs no other operation on it.
 <code>owns_lock() == false</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 unique_lock(mutex_type&amp; <var>m</var>, try_to_lock_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1622,11 +1693,13 @@ and calls <code><var>m</var>.try_lock()</code>.
 the result of the call to <code><var>m</var>.try_lock()</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1648,11 +1721,13 @@ and performs no other operation on it.
 <code>owns_lock() == true</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 unique_lock(mutex_type&amp; <var>m</var>, const system_time&amp; <var>abs_time</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1676,12 +1751,14 @@ and calls <code><var>m</var>.timed_lock(abs_time)</code>.
 the result of the call to <code><var>m</var>.timed_lock(<var>abs_time</var>)</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Duration&gt;
   unique_lock(mutex_type&amp; <var>m</var>, const Duration&amp; <var>rel_time</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Remarks:</dt>
 <dd>
@@ -1689,7 +1766,9 @@ The implementation must ensure that only <code>Duration</code> types [<cite>refe
 will bind to this constructor.
 </dd>
 </dl>
+</blockquote>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
@@ -1713,11 +1792,13 @@ and calls <code><var>m</var>.timed_lock(rel_time)</code>.
 the result of the call to <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 ~unique_lock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1731,11 +1812,13 @@ Otherwise there are no effects.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 unique_lock(unique_lock&amp;&amp; <var>u</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1761,11 +1844,13 @@ the value of <code><var>u</var>.owns_lock()</code> prior to the construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 unique_lock&amp; operator=(unique_lock&amp;&amp; <var>u</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1806,11 +1891,13 @@ one.
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void lock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1828,11 +1915,13 @@ Calls <code>lock()</code> on the referenced mutex.
 if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool try_lock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1857,12 +1946,14 @@ of the call to <code>try_lock()</code> on the referenced mutex.
 if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Duration&gt;
    bool timed_lock(const Duration&amp; rel_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1888,11 +1979,13 @@ of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
 if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool timed_lock(const system_time&amp; abs_t);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1918,11 +2011,13 @@ of the call to <code>timed_lock(rel_t)</code> on the referenced mutex.
 if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void unlock();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -1940,11 +2035,13 @@ Calls <code>unlock()</code> on the referenced mutex.
 if on entry <code>owns_lock()</code> is <code>false</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool owns_lock() const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -1957,11 +2054,13 @@ else <code>false</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 explicit operator bool () const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -1973,11 +2072,13 @@ explicit operator bool () const;
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 mutex_type* mutex() const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -1989,11 +2090,13 @@ A pointer to the referenced mutex, or null if there is no referenced mutex.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void swap(unique_lock&amp;&amp; <var>u</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -2005,11 +2108,13 @@ Swaps state with <code><var>u</var></code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 mutex_type* release();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -2028,6 +2133,7 @@ A pointer to the referenced mutex, or null if there is no referenced mutex.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
@@ -2035,6 +2141,7 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x
 template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -2046,6 +2153,7 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</va
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h4><a name="thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
 
@@ -2053,6 +2161,7 @@ Nothing.
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Requires:</dt>
 <dd>
@@ -2097,11 +2206,13 @@ value indicating
 which argument failed to lock.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Requires:</dt>
 <dd>
@@ -2134,6 +2245,7 @@ by a call to <code>lock()</code> or <code>try_lock()</code>,
 there are no effects.
 </dd>
 </dl>
+</blockquote>
 
 
 <h4><a name="thread.mutex.once">30.2.5 Call Once [thread.mutex.once]</a></h4>
@@ -2150,6 +2262,7 @@ without causing a data race or deadlock.
 constexpr once_flag();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -2164,6 +2277,7 @@ with this <code>once_flag</code> as its initial argument
 that no function has been called.
 </dd>
 </dl>
+</blockquote>
 
 
 <h5><a name="thread.threads.callonce">30.2.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a></h5>
@@ -2173,6 +2287,7 @@ template&lt;class Callable, class Args...&gt;
 void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Requires:</dt>
 <dd>
@@ -2250,6 +2365,7 @@ void g()
 </p>
 </dd>
 </dl>
+</blockquote>
 
 
 <h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
@@ -2319,14 +2435,14 @@ public:
 
     void notify_one();
     void notify_all();
-    void wait(unique_lock&lt;mutex&gt;&amp; lock);
+    void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>);
     template &lt;class Predicate&gt;
-        void wait(unique_lock&lt;mutex&gt;&amp; lock, Predicate pred);
-    bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time);
+        void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, Predicate <var>pred</var>);
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
     template &lt;class Predicate&gt;
-        bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
+        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
     template &lt;class Duration, class Predicate&gt;
-        bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const Duration&amp; rel_time, Predicate pred);
+        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();                // <em>See [frontmatter]</em>
@@ -2340,21 +2456,30 @@ public:
 condition_variable();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 Constructs an object of class <code>condition_variable</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 ~condition_variable();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 Destroys the object.
+</dd>
+
+<dt>Remarks:</dt>
+<dd>
+It is safe to destroy the object as soon as all waiting threads have been notified, even if those
+threads have not yet returned from the <code>wait</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2362,67 +2487,68 @@ Destroys the object.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void notify_one();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-<p>
 If any threads are blocked waiting for <code>*this</code>,
-unblocks at least one those threads.
-<b>[Crowl: Is any lock released?]</b>
-</p>
-
-<p>
-<b>[Crowl: Needs to say release operation.]</b>
-</p>
+unblocks at least one those threads which subsequently reacquires its lock and returns
+from the wait function.
 </dd>
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
 of the same <code>condition_variable</code>
-object from different threads shall not result in data
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void notify_all();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Unblock all threads that are blocked waiting for <code>*this</code>.
-<b>[Crowl: Needs to say release operation.]</b>
+Unblock all threads that are blocked waiting for <code>*this</code>,
+which subsequently reacquire the lock and return
+from the wait functions.
 </dd>
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
 of the same <code>condition_variable</code>
-object from different threads shall not result in data
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-void wait(unique_lock&lt;mutex&gt;&amp; lock);
+void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
 <p>
-<code>lock</code> is locked by the current thread, and
+<code><var>lock</var></code> is locked by the current thread, and
 either:</p>
 
 <ul>
@@ -2443,98 +2569,113 @@ for this call to <code>wait</code>.
 
 <dt>Effects:</dt>
 <dd>
-Atomically blocks and releases the lock on
-<code>lock</code>.
-If the <code>wait</code> throws an exception, <code>lock</code> will be
-locked as the exception propagates.
-The current thread may
-unblock and return even in the absence of a notification.
-<b>[Crowl: Needs to say acquire operation.]</b>
+<ul>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+
+<li>The function will unblock when this thread is signaled by a call to
+<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, or spuriously.</li>
+
+<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
+will still be called prior to exiting the function scope.</li>
+</ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>lock</code> is locked by the current
+<code><var>lock</var></code> is locked by the current
 thread.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
-<b>???</b>
-[<b>Comment:</b>
-See issue 26.
-&mdash;<b>end comment</b>]
+<code>system_error</code> when an error condition occurs.
+The possible error conditions are implementation defined.
 </dd>
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
 of the same <code>condition_variable</code>
-object from different threads shall not result in data
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Predicate&gt;
-    void wait(unique_lock&lt;mutex&gt;&amp; lock, Predicate pred);
+    void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, Predicate <var>pred</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 <p>
-While <code>pred()</code> returns <code>false</code>
-calls <code>wait(lock)</code>.
+While <code><var>pred</var>()</code> returns <code>false</code>
+calls <code>wait(<var>lock</var>)</code>.
 </p>
 
 <p>
 [<i>Note:</i>
-Does not block if <code>pred()</code> is initially <code>true</code>.
+Does not block if <code><var>pred</var>()</code> is initially <code>true</code>.
 &mdash;<i>end note</i>]
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time);
+bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The <code>lock</code> is locked by the current thread.
-No
-other thread is waiting on this <code>condition_variable</code> object
-unless <code>lock</code>
-refers to, the same underlying <code>mutex</code> object.
+<p>
+<code><var>lock</var></code> is locked by the current thread, and
+either:</p>
+
+<ul>
+<li>
+No other thread is waiting on this <code>condition_variable</code> object, or
+</li>
+<li>
+The execution of the <code>mutex</code> member function
+on the <code><var>lock</var></code>
+objects supplied in the calls to <code>wait</code> or <code>timed_wait</code>
+in
+all the threads currently waiting on this <code>condition_variable</code> object
+would return the same value as <code><var>lock</var>-&gt;mutex()</code>
+for this call to <code>wait</code>.
+</li>
+</ul>
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-Atomically blocks and releases the lock on
-<code>lock</code>.
-If the <code>timed_wait</code> should throw an exception for
-any reason, <code>lock</code> will be locked as the exception propagates
-out.
-If the absolute time specified by <code>abs_time</code> passes (that
-is, system time equals or exceeds <code>abs_time</code>) before the
-<code>condition_variable</code> is notified,
-or if the absolute time specified by
-<code>abs_time</code> has already been passed at the time of the call, then
-<code>false</code> is returned.
-This thread shall unblock when
-another thread  issues a notification to this blocked thread.
-The current
-thread may unblock and return even in the absence of a
-notification.
+<ul>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+
+<li>The function will unblock when this thread is signaled by a call to
+<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, by the current
+time exceeding <code><var>abs_time</var></code>, or spuriously.</li>
+
+<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
+will still be called prior to exiting the function scope.</li>
+</ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>lock</code> is locked by the current
+<code><var>lock</var></code> is locked by the current
 thread.
 </dd>
 
@@ -2547,30 +2688,28 @@ otherwise returns <code>false</code>.
 
 <dt>Throws:</dt>
 <dd>
-<b>???</b>
-[<b>Comment:</b>
-See issue 26.
-&mdash;<b>end comment</b>]
+<code>system_error</code> when an error condition occurs.
+The possible error conditions are implementation defined.
 </dd>
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
 of the same <code>condition_variable</code>
-object from different threads shall not result in data
+object from different threads will not result in data
 races or deadlocks.
-<b>[Crowl: Needs to say acquire operation.
-Too much about other operations here.]</b>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Predicate&gt;
-    bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -2580,10 +2719,10 @@ As if:
 
 <blockquote>
 <pre><code>
-while (!pred())
+while (!<var>pred</var>())
 {
-    if (!timed_wait(lock, abs_time))
-        return pred();
+    if (!timed_wait(<var>lock</var>, <var>abs_time</var>))
+        return <var>pred</var>();
 }
 return true;
 </code></pre>
@@ -2593,12 +2732,12 @@ return true;
 <dt>Returns:</dt>
 <dd>
 <p>
-<code>pred()</code>.
+<code><var>pred</var>()</code>.
 </p>
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code>pred()</code> is initially <code>true</code>,
+There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
 even
 if the timeout has already expired.
 The return value indicates whether the predicate
@@ -2608,12 +2747,14 @@ regardless of whether the timeout was triggered.
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template &lt;class Duration, class Predicate&gt;
-    bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const Duration&amp; rel_time, Predicate pred);
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -2623,7 +2764,7 @@ As if:
 
 <blockquote>
 <pre><code>
-return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
+return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>));
 </code></pre>
 </blockquote>
 </dd>
@@ -2631,12 +2772,12 @@ return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
 <dt>Returns:</dt>
 <dd>
 <p>
-<code>pred()</code>.
+<code><var>pred</var>()</code>.
 </p>
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code>pred()</code> is initially <code>true</code>,
+There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
 even
 if the timeout has already expired.
 The return value indicates whether the predicate
@@ -2646,6 +2787,7 @@ regardless of whether the timeout was triggered.
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <p>
 <code>condition_variable</code>
@@ -2684,15 +2826,15 @@ public:
     void notify_one();
     void notify_all();
     template &lt;class Lock&gt;
-        void wait(Lock&amp; lock);
+        void wait(Lock&amp; <var>lock</var>);
     template &lt;class Lock, class Predicate&gt;
-        void wait(Lock&amp; lock, Predicate pred);
+        void wait(Lock&amp; <var>lock</var>, Predicate <var>pred</var>);
     template &lt;class Lock&gt;
-        bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
+        bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
     template &lt;class Lock, class Predicate&gt;
-        bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
+        bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
     template &lt;class Lock, class Duration, class Predicate&gt;
-        bool timed_wait(Lock&amp; lock, const Duration&amp; rel_time, Predicate pred);
+        bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
     native_handle_type native_handle();                // <em>See [frontmatter]</em>
@@ -2706,21 +2848,30 @@ public:
 condition_variable_any();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 Constructs an object of class <code>condition_variable_any</code>.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 ~condition_variable_any();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 Destroys the object.
+</dd>
+
+<dt>Remarks:</dt>
+<dd>
+It is safe to destroy the object as soon as all waiting threads have been notified, even if those
+threads have not yet returned from the <code>wait</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2728,82 +2879,84 @@ Destroys the object.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void notify_one();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 If any threads are blocked waiting for <code>*this</code>,
-unblocks at least one those threads.
+unblocks at least one those threads which subsequently reacquires its lock and returns
+from the wait function.
 </dd>
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
-of the same <code>condition_variable_any</code>
-object from different threads shall not result in data
+of the same <code>condition_variable</code>
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 void notify_all();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Unblock all threads  of execution
-that are blocked waiting for <code>*this</code>.
+Unblock all threads that are blocked waiting for <code>*this</code>,
+which subsequently reacquire the lock and return
+from the wait functions.
 </dd>
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
-of the same <code>condition_variable_any</code>
-object from different threads shall not result in data
+of the same <code>condition_variable</code>
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-void wait(Lock&amp; lock);
+template &lt;class Lock&gt;
+  void wait(Lock&amp; <var>lock</var>);
 </code></pre>
 
+<blockquote>
 <dl>
-<dt>Precondition:</dt>
-<dd>
-<code>lock</code> is locked by the current thread.
-If
-<code>Lock</code> supports recursive locking, the lock count is one.
-No
-other thread is waiting on this <code>condition_variable_any</code> object
-unless <code>lock</code>
-is, or refers to, the same underlying mutex object.
-</dd>
 
 <dt>Effects:</dt>
 <dd>
-Atomically blocks and releases the lock on
-<code>lock</code>.
-If the <code>wait</code> should throw an exception for any
-reason, <code>lock</code> will be locked as the exception propagates.
-This thread shall unblock when another thread issues a
-notification to this blocked thread.
-The current thread may
-unblock and return even in the absence of a notification.
+<ul>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+
+<li>The function will unblock when this thread is signaled by a call to
+<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, or spuriously.</li>
+
+<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
+will still be called prior to exiting the function scope.</li>
+</ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>lock</code> is locked by the current
+<code><var>lock</var></code> is locked by the current
 thread.
 </dd>
 
@@ -2816,75 +2969,67 @@ possible error conditions are implementation defined.
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
-of the same <code>condition_variable_any</code>
-object from different threads shall not result in data
+of the same <code>condition_variable</code>
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-template &lt;class Predicate&gt;
-    void wait(lock_type&amp; lock, Predicate pred);
+template &lt;class Lock, class Predicate&gt;
+    void wait(Lock&amp; <var>lock</var>, Predicate <var>pred</var>);
 </code></pre>
 
+<blockquote>
 <dl>
+
 <dt>Effects:</dt>
 <dd>
 <p>
-While <code>pred()</code> returns <code>false</code>,
-calls <code>wait(lock)</code>.
+While <code><var>pred</var>()</code> returns <code>false</code>,
+calls <code>wait(<var>lock</var>)</code>.
 </p>
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code>pred()</code> is initially <code>true</code>.
+There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>.
 &mdash;<i>end note</i>]
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
+template &lt;class Lock&gt;
+    bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
 </code></pre>
 
+<blockquote>
 <dl>
-<dt>Precondition:</dt>
-<dd>
-The <code>lock</code> is locked by the current thread.
-If
-<code>Lock</code> supports recursive locking, the lock count is one.
-No
-other thread is waiting on this <code>condition_variable_any</code> object
-unless <code>lock</code>
-is, or refers to, the same underlying mutex object.
-</dd>
 
 <dt>Effects:</dt>
 <dd>
-Atomically blocks and releases the lock on
-<code>lock</code>.
-If the <code>timed_wait</code> should throw an exception for
-any reason, <code>lock</code> will be locked as the exception propagates
-out.
-If the absolute time specified by <code>abs_time</code> passes (that
-is, system time equals or exceeds <code>abs_time</code>) before the
-<code>condition_variable_any</code> is notified,
-or if the absolute time specified by
-<code>abs_time</code> has already been passed at the time of the call, then
-<code>false</code> is returned.
-This thread shall unblock when
-another thread issues a notification to this blocked thread.
-The current
-thread may unblock and return even in the absence of a
-notification.
+<ul>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+
+<li>The function will unblock when this thread is signaled by a call to
+<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, by the current
+time exceeding <code><var>abs_time</var></code>, or spuriously.</li>
+
+<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
+will still be called prior to exiting the function scope.</li>
+</ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>lock</code> is locked by the current
+<code><var>lock</var></code> is locked by the current
 thread.
 </dd>
 
@@ -2904,21 +3049,24 @@ possible error conditions are implementation defined.
 
 <dt>Thread safety:</dt>
 <dd>
-Calls to the <code>wait</code>,
+The implementation shall assure that calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions
-of the same <code>condition_variable_any</code>
-object from different threads shall not result in data
+of the same <code>condition_variable</code>
+object from different threads will not result in data
 races or deadlocks.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-template &lt;class _Predicate&gt;
-    bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
+template &lt;class Lock, class Predicate&gt;
+    bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
 </code></pre>
 
+<blockquote>
 <dl>
+
 <dt>Effects:</dt>
 <dd>
 <p>
@@ -2927,10 +3075,10 @@ As if:
 
 <blockquote>
 <pre><code>
-while (!pred())
+while (!<var>pred</var>())
 {
-    if (!timed_wait(lock, abs_time))
-        return pred();
+    if (!timed_wait(<var>lock</var>, <var>abs_time</var>))
+        return <var>pred</var>();
 }
 return true;
 </code></pre>
@@ -2940,11 +3088,11 @@ return true;
 <dt>Returns:</dt>
 <dd>
 <p>
-<code>pred()</code>.
+<code><var>pred</var>()</code>.
 </p>
 <p>
 [<i>Note:</i>
-There is no blocking if <code>pred()</code> is initially <code>true</code>,
+There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
 even
 if the timeout has already expired.
 The return value indicates whether the predicate
@@ -2954,13 +3102,16 @@ regardless of whether the timeout was triggered.
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
-template &lt;class Duration, class _Predicate&gt;
-    bool timed_wait(Lock&amp; lock, const Duration&amp; rel_time, Predicate pred);
+template &lt;class Lock, class Duration, class Predicate&gt;
+    bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 </code></pre>
 
+<blockquote>
 <dl>
+
 <dt>Effects:</dt>
 <dd>
 <p>
@@ -2969,7 +3120,7 @@ As if:
 
 <blockquote>
 <pre><code>
-return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
+return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>));
 </code></pre>
 </blockquote>
 </dd>
@@ -2977,12 +3128,12 @@ return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
 <dt>Returns:</dt>
 <dd>
 <p>
-<code>pred()</code>.
+<code><var>pred</var>()</code>.
 </p>
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code>pred()</code> is initially <code>true</code>,
+There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
 even
 if the timeout has already expired.
 The return value indicates whether the predicate
@@ -2992,6 +3143,7 @@ regardless of whether the timeout was triggered.
 </p>
 </dd>
 </dl>
+</blockquote>
 
 <h2><a name="time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a></h2>
 
@@ -3118,6 +3270,7 @@ that can be represented in a signed 64 bit integer.
 system_time();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3130,11 +3283,13 @@ object representing the epoch time point 1970-01-01 00:00:00.000000000
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 system_time(time_t secs, nanoseconds ns);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3154,11 +3309,13 @@ incremented appropriately.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 time_t seconds_since_epoch() const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3170,11 +3327,13 @@ The count of seconds since 1970-01-01 00:00:00.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 nanoseconds nanoseconds_since_epoch() const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3187,11 +3346,13 @@ since 1970-01-01 00:00:00.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3203,11 +3364,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3224,11 +3387,13 @@ Since this is a subsecond type it returns 0 for seconds_per_tick.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3240,11 +3405,13 @@ true.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator==(const system_time&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3258,11 +3425,13 @@ represented by <code>*this</code> is equal to the time represented by <var>rhs</
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator!=(const system_time&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3275,11 +3444,13 @@ by <var>rhs</var>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&gt;(const system_time&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3292,11 +3463,13 @@ True if time represented by
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&gt;=(const system_time&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3309,11 +3482,13 @@ by <code>*this</code> is greater or equal than the time represented by <var>rhs<
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&lt;(const system_time&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3326,11 +3501,13 @@ is less than the time represented by <var>rhs</var>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 bool operator&lt;=(const system_time&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3343,11 +3520,13 @@ is less or equal than the time represented by <var>rhs</var>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 nanoseconds operator-(const system_time&amp; <var>rhs</var>) const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3367,12 +3546,14 @@ count.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename Duration&gt;
 system_time operator+(const Duration&amp; td) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3385,12 +3566,14 @@ and added to the time represented by <code>*this</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename Duration&gt;
 system_time&amp; operator+=(const Duration&amp; td);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3409,12 +3592,14 @@ Modified value of this.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename Duration&gt;
 system_time operator-(const Duration&amp; td) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3427,12 +3612,14 @@ and subtracted from the time represented by <code>*this</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename Duration&gt;
 system_time&amp; operator-=(const Duration&amp; td)
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3450,6 +3637,7 @@ Modified value of this.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 
 <h3><a name="time.getsystem">31.2 Function get_system_time [time.getsystem]</a></h3>
@@ -3562,6 +3750,7 @@ class Duration {
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3574,11 +3763,13 @@ number of ticks per second (or 0 for types which are not <code>is_subsecond</cod
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3591,11 +3782,13 @@ number of seconds per tick (or 0 for types which are <code>is_subsecond</code>).
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3608,12 +3801,14 @@ and otherwise <code>false</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 bool operator==(const RhsDuration&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3625,12 +3820,14 @@ True if rhs duration is greater.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 bool operator!=(const RhsDuration&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3642,12 +3839,14 @@ True if rhs is not the same time.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 bool operator&gt;(const RhsDuration&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3659,12 +3858,14 @@ True if the rhs duration is larger.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 bool operator&gt;=(const RhsDuration&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3676,12 +3877,14 @@ True if greater or equal than the rhs duration.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 bool operator&lt;(const RhsDuration&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3693,12 +3896,14 @@ True if less than the rhs duration.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 bool operator&lt;=(const RhsDuration&amp; rhs) const;
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3710,12 +3915,14 @@ True if less or equal to the rhs duration.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 // <em>sign inversion</em>
 Duration operator-() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3727,6 +3934,7 @@ Negated value of the duration.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 // <em>arithmetic operations</em>
@@ -3734,6 +3942,7 @@ template&lt;typename RhsDuration&gt;
 Duration operator- (const RhsDuration&amp; d) const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3751,12 +3960,14 @@ if the <code>RhsDuration</code> is of finer resolution than <code>*this</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 Duration operator-=(const RhsDuration&amp; <var>d</var>)
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3783,12 +3994,14 @@ than <code>*this</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 Duration operator+ (const RhsDuration&amp; d) const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3809,12 +4022,14 @@ than <code>*this</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 template&lt;typename RhsDuration&gt;
 Duration operator+=(const RhsDuration&amp; d)
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3840,11 +4055,13 @@ than <code>*this</code>.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 Duration operator/ (int divisor) const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3857,11 +4074,13 @@ integer arithmetic rules.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 Duration operator/=(int divisor)
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3879,11 +4098,13 @@ this
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 Duration operator* (int rhs) const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3895,11 +4116,13 @@ Duration with value equal to this*rhs
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 Duration operator*=(int rhs)
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3916,11 +4139,13 @@ this
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 tick_type get_count() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -3932,6 +4157,7 @@ The count at the resolution of the time duration type.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="time.nanoseconds">31.4 Class nanoseconds [time.nanoseconds]</a></h3>
 
@@ -3965,6 +4191,7 @@ public:
 nanoseconds(long long=0);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3977,11 +4204,13 @@ is zero.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 nanoseconds(const nanoseconds&amp; rhs);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -3993,11 +4222,13 @@ Copy construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4009,11 +4240,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4025,11 +4258,13 @@ static tick_type seconds_per_tick();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4041,6 +4276,7 @@ true
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="time.microseconds">31.5 Class microseconds [time.microseconds]</a></h3>
 
@@ -4079,6 +4315,7 @@ public:
 microseconds(long long=0);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4091,11 +4328,13 @@ is zero.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 microseconds(const microseconds&amp; rhs);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4107,12 +4346,14 @@ Copy construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 // <em>conversions</em>
 operator nanoseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4124,11 +4365,13 @@ microsecond count converted to nanoseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4140,11 +4383,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4156,11 +4401,13 @@ static tick_type seconds_per_tick();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4172,6 +4419,7 @@ true
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="time.milliseconds">31.6 Class milliseconds [time.milliseconds]</a></h3>
 
@@ -4208,6 +4456,7 @@ public:
 milliseconds(long long=0);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4220,11 +4469,13 @@ is zero.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 milliseconds(const milliseconds&amp; rhs);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4236,11 +4487,13 @@ Copy construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator nanoseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4252,11 +4505,13 @@ millisecond count converted to nanoseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator microseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4268,11 +4523,13 @@ millisecond count converted to microseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4284,11 +4541,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4300,11 +4559,13 @@ static tick_type seconds_per_tick();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4316,6 +4577,7 @@ true
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="time.seconds">31.7 Class seconds [time.seconds]</a></h3>
 
@@ -4354,6 +4616,7 @@ public:
 seconds(long long=0);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4366,11 +4629,13 @@ zero.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 seconds(const seconds&amp; rhs);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4382,11 +4647,13 @@ Copy construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator nanoseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4398,11 +4665,13 @@ second count converted to nanoseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator microseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4414,11 +4683,13 @@ second count converted to microseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator milliseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4430,11 +4701,13 @@ second count converted to milliseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4446,11 +4719,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4462,11 +4737,13 @@ static tick_type seconds_per_tick();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4478,6 +4755,7 @@ false
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="time.minutes">31.8 Class minutes [time.minutes]</a></h3>
 
@@ -4517,6 +4795,7 @@ public:
 minutes(long long=0);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4529,11 +4808,13 @@ zero.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 minutes(const minutes&amp; rhs);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4545,11 +4826,13 @@ Copy construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator nanoseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4561,11 +4844,13 @@ minute count converted to nanoseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator microseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4577,11 +4862,13 @@ minute count converted to microseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator milliseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4593,11 +4880,13 @@ minute count converted to milliseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator seconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4609,11 +4898,13 @@ minute count converted to seconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4625,11 +4916,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4641,11 +4934,13 @@ static tick_type seconds_per_tick();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4657,6 +4952,7 @@ false
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h3><a name="time.hours">31.9 Class hours [time.hours]</a></h3>
 
@@ -4697,6 +4993,7 @@ public:
 hours(long long=0);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4708,11 +5005,13 @@ Construct<var>s</var> an object with a count of hours - default is zero.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 hours(const hours&amp; rhs);
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
@@ -4724,11 +5023,13 @@ Copy construction.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator nanoseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4740,11 +5041,13 @@ hour count converted to nanoseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator microseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4756,11 +5059,13 @@ hour count converted to microseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator milliseconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4772,11 +5077,13 @@ hour count converted to milliseconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator seconds() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4788,11 +5095,13 @@ hour count converted to seconds
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 operator minutes() const
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4804,11 +5113,13 @@ hour count converted to seconds.
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type ticks_per_second();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4820,11 +5131,13 @@ static tick_type ticks_per_second();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static tick_type seconds_per_tick();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4836,11 +5149,13 @@ static tick_type seconds_per_tick();
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <pre><code>
 static bool is_subsecond();
 </code></pre>
 
+<blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
@@ -4852,6 +5167,7 @@ false
 Nothing.
 </dd>
 </dl>
+</blockquote>
 
 <h2><a name="References">References</a></h2>
 
