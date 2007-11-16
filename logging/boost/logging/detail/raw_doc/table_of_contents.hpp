@@ -24,9 +24,6 @@ namespace boost { namespace logging {
 - @ref tag "Using tags"
 
 
-need to modify the ..._fd.hpp file
-
-
 
 - @ref workflow
     - @ref workflow_introduction 
@@ -59,6 +56,14 @@ need to modify the ..._fd.hpp file
 
 
 - @ref macros
+    - @ref macros_if_else_strategy 
+    - @ref macros_using 
+        - @ref macros_define_declare 
+        - @ref macros_use 
+        - @ref macros_set_formatters 
+        - @ref macros_use_tags 
+        - @ref macros_compile_time 
+        - @ref macros_tss 
 
 - @ref boost_logging_requirements 
 

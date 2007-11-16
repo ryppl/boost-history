@@ -282,6 +282,9 @@ typedef logger< no_gather, destination::cout > app_log_type;
 @endcode
 
 
+
+
+\n\n
 @subsection macros_set_formatters Setting formatter/destination strings
 
 @subsubsection BOOST_LOG_FORMAT_MSG BOOST_LOG_FORMAT_MSG
@@ -322,8 +325,11 @@ to a given destination.
 
 
 
+\n\n
 
 @subsection macros_use_tags Using tags
+
+Note that tags are only used when you create your own macros for logging. See the tag namespace.
 
 @subsubsection BOOST_LOG_TAG BOOST_LOG_TAG
 
@@ -331,60 +337,147 @@ to a given destination.
 BOOST_LOG_TAG(tag_class)
 @endcode
 
+Adds a tag from the boost::logging::tag namespace.
+In other words, this is a shortcut for <tt> boost::logging::tag::tag_class</tt>. Note that in case the @c tag_class has a custom constructor,
+you need to pass the params as well, after the macro, like shown below.
+
+Example:
+
+@code
+#define L_(module_name) BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG(module)(module_name) )
+@endcode
+
 @subsubsection BOOST_LOG_TAG_LEVEL BOOST_LOG_TAG_LEVEL
+
+Adds a level tag.
 
 @code
 BOOST_LOG_TAG(tag_level)
 @endcode
 
+Example:
+
+@code
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, debug ) .set_tag( BOOST_LOG_TAG_LEVEL(debug) )
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, error ) .set_tag( BOOST_LOG_TAG_LEVEL(error) )
+@endcode
+
 @subsubsection BOOST_LOG_TAG_FILELINE BOOST_LOG_TAG_FILELINE 
+
+Ads the file/line tag (that is, the current @c __FILE__ and @c __LINE__ will be appended, for each logged message).
 
 @code
 BOOST_LOG_TAG_FILELINE
 @endcode
 
+Example:
+
+@code
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG_FILELINE)
+@endcode
+
 @subsubsection BOOST_LOG_TAG_FUNCTION BOOST_LOG_TAG_FUNCTION 
+
+Ads the function tag (that is, the @c BOOST_CURRENT_FUNCTION will be appended, for each logged message).
 
 @code
 BOOST_LOG_TAG_FUNCTION
 @endcode
 
+Example:
+
+@code
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG_FUNCTION)
+@endcode
+
+
+\n\n
 
 @subsection macros_compile_time Macros that treat compilation time
+
+Assume you're using formatters and destinations, and you 
+<tt>#include <boost/logging/format.hpp> </tt> or
+<tt>#include <boost/logging/format_ts.hpp> </tt>. If you include this in every file (indirectly, you'll
+be including some @c log.h file, which will then include the above), this will increase compilation time a lot.
+
+So, you can choose to:
+- have fast compilation time, and a virtual function call per each logged message (default)
+- have everything inline (no virtual function calls), very fast, and slow compilation
+
+Most of the time you won't notice the extra virtual function call, and the compilation time will be a lot faster.
+However, just in case you'll sometime want the very fast configuration, just turn the fast compilation off, by using the
+@ref BOOST_LOG_COMPILE_FAST_OFF directive.
+
+You might want this turned off, for the release configuration - either way, it's your call.
+In case you want to have both possibilities available to you (fast compilation and speedy), you'll want to take a look at
+the @ref starter_project "the starter project".
+
 
 @subsubsection BOOST_LOG_COMPILE_FAST_ON BOOST_LOG_COMPILE_FAST_ON
 
 If you define this, it turns fast compilation on (this is the default anyway).
-FIXME
 
 @subsubsection BOOST_LOG_COMPILE_FAST_OFF BOOST_LOG_COMPILE_FAST_OFF
 
-If you define this, it turns fast compilation off
+If you define this, it turns fast compilation off.
 
 @subsubsection BOOST_LOG_COMPILE_FAST BOOST_LOG_COMPILE_FAST
 
 If defined, it means we're doing fast-compile. Otherwise, we're not doing fast compile.
+
+@note
 Don't define this! It's defined automatically.
 
 
 
+
+
+
+\n\n
+
 @subsection macros_tss Macros that deal with Thread Specific Storage
+
+These are the macros that specify what implementation of TSS (Thread Specific Storage) we will be using.
+Note that I did my best to remove the dependency on boost::thread - the only dependence left is
+when you use use a logger that writes everything @ref writer::on_dedicated_thread "on a dedicated thread".
+
+By default, for TSS, we use the internal implementation (no dependency).
+
+The possibilities are:
+- @ref BOOST_LOG_TSS_USE_INTERNAL : use our internal implementation (no dependency on boost::thread)
+- @ref BOOST_LOG_TSS_USE_BOOST : use the implementation from boost::thread (dependency on boost::thread, of course).
+- @ref BOOST_LOG_TSS_USE_CUSTOM : uses a custom implementation. The interface of this implementation should match boost::thread's interface of @c thread_specific_ptr class
+- @ref BOOST_LOG_NO_TSS : don't use TSS
+
 
 @subsubsection BOOST_LOG_TSS_USE_INTERNAL BOOST_LOG_TSS_USE_INTERNAL
 
-If defined...
+If defined, it uses our internal implementation for @ref macros_tss "TSS"
 
 @subsubsection BOOST_LOG_TSS_USE_BOOST BOOST_LOG_TSS_USE_BOOST
 
-If defined...
+If defined, it uses the boost::thread's implementation for @ref macros_tss "TSS"
 
 @subsubsection BOOST_LOG_TSS_USE_CUSTOM BOOST_LOG_TSS_USE_CUSTOM
 
-If defined...
+If defined, it uses a custom implementation for @ref macros_tss "TSS".
+The interface of this implementation should match boost::thread's interface of @c thread_specific_ptr class.
+
+Your class should have this interface:
+@code
+template <typename T> class my_thread_specific_ptr ;
+@endcode
+
+When #defining BOOST_LOG_TSS_USE_CUSTOM, do it like this:
+
+@code
+#define BOOST_LOG_TSS_USE_CUSTOM = my_thread_specific_ptr
+@endcode
+
 
 @subsubsection BOOST_LOG_NO_TSS BOOST_LOG_NO_TSS
 
-If defined...
+If defined, we don't use @ref macros_tss "TSS" as all. 
 
 */
 
