@@ -33,6 +33,8 @@ namespace boost { namespace logging {
 A class that implements gathering the message needs 2 things:
 - a function that will gather the data - called <tt>.out()</tt>
 - define a function called <tt>.msg()</tt> that will return the gathered data (once all data has been gathered).
+- have a public type named "param" - be it a class or a typedef
+  - this contains what the gather_msg class return
 
 
 */

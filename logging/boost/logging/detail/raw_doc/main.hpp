@@ -5,6 +5,7 @@ namespace boost { namespace logging {
 
 - @ref main_motivation
 - @ref main_common_usage
+- @ref main_feeback 
 - @ref page_changelog 
 
 @section main_motivation Motivation
@@ -53,9 +54,21 @@ To see more examples, check out @ref common_scenarios.
 
 
 \n\n\n
+@section main_feeback Feedback
+
+I certainly welcome all feedback. So, be it a suggestion, or criticism, do write to me:
+- contact me: http://torjo.com/contact.html
+- If there's a feature you'd like, you can contact me, or drop a comment here:
+  http://torjo.blogspot.com/2007/11/boost-logging-v2-your-killer-feature.html \n
+  (this way, others can contribute with comments as well)
+
+
+\n\n\n
 @section main_changelog Changelog
 
 @ref page_changelog "See the changelog".
+
+
 
 */
 

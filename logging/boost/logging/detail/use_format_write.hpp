@@ -123,10 +123,10 @@ typedef logger_format_write<
 
 FIXME need to have more template params
 
-@param format_base_type your formatter base class
-@param destination_base your destination base class
-@param thread_safety
-@param gather
+@param format_base_type @ref misc_use_defaults "(optional)" Your formatter base class
+@param destination_base @ref misc_use_defaults "(optional)" Your destination base class
+@param thread_safety @ref misc_use_defaults "(optional)" Thread-safety. Any of the writer::threading classes.
+@param gather @ref misc_use_defaults "(optional)" The class that @ref gather "gathers" the message
 */
 template<class format_base, class destination_base, class thread_safety, class gather, class lock_resource> 
 struct logger_format_write

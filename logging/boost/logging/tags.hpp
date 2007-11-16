@@ -233,7 +233,7 @@ namespace tag {
 
 /** @brief Holds up to 10 @ref tag "tags".
 
-@param string_ The string class we use for holding logged messages. By default, std::(w)string. What you used to specify using BOOST_LOG_FORMAT_MSG.
+@param string_ (required) The string class we use for holding logged messages. By default, std::(w)string. What you used to specify using BOOST_LOG_FORMAT_MSG.
 
 @param param1 (optional) First tag
 @param param2 (optional) Second tag

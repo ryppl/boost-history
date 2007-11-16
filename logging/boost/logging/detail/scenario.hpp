@@ -393,11 +393,11 @@ namespace usage {
 
         For this to happen, you will first need to specify your needs (the template parameters you'll pass to this class)
 
-        @param filter_change (optional) How does the %filter change? Any of the classes in the filter_::change namespace
-        @param filter_level_ (optional) Does our %filter %use levels? Any of the classes in the filter_::level namespace
-        @param logger_change (optional) How does our %logger change? Any of the classes in the logger_::change namespace
-        @param logger_favor (optional) What does the %logger favor? Any of the classes in the logger_::favor namespace
-        @param logger_gather (optional) What to %use as gather class. Any of the classes in the logger_::gather namespace
+        @param filter_change @ref misc_use_defaults "(optional)" How does the %filter change? Any of the classes in the filter_::change namespace
+        @param filter_level_ @ref misc_use_defaults "(optional)" Does our %filter %use levels? Any of the classes in the filter_::level namespace
+        @param logger_change @ref misc_use_defaults "(optional)" How does our %logger change? Any of the classes in the logger_::change namespace
+        @param logger_favor @ref misc_use_defaults "(optional)" What does the %logger favor? Any of the classes in the logger_::favor namespace
+        @param logger_gather @ref misc_use_defaults "(optional)" What to %use as gather class. Any of the classes in the logger_::gather namespace
 
         @copydoc your_scenario_examples 
     */

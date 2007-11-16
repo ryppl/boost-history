@@ -430,7 +430,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\process_msg\ostream_like.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\gather\ostream_like.hpp"
 				>
 			</File>
 			<File
@@ -671,6 +671,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\main.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\miscelaneous.hpp"
 				>
 			</File>
 			<File

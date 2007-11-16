@@ -6,6 +6,7 @@ namespace boost { namespace logging {
 
 - @ref main_intro
     - @ref main_motivation
+    - @ref main_feeback
     - @ref page_changelog
         - @ref changelog_cur_ver 
     - @ref acknowledgements

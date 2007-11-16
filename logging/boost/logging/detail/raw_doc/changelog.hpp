@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.18, 16 nov 2007
+@section changelog_cur_ver Current Version: v0.11.20, 16 nov 2007
+- restructured some of the docs/added more - the docs should be rather ok now
+- removed sink.hpp - no need anymore
 - removed old_examples
 - removed do_not_use tests
 - more changes in the documentation ; also "refactored" table of contents
