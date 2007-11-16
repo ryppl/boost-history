@@ -26,7 +26,7 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/format/optimize.hpp>
-#include <boost/logging/process_msg/ostream_like.hpp>
+#include <boost/logging/gather/ostream_like.hpp>
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/detail/find_gather.hpp>
 #include <boost/type_traits/remove_reference.hpp>

@@ -164,47 +164,6 @@ namespace level {
     typedef boost::logging::level_holder_type holder;
 } // namespace level
 
-/** 
-    @brief It's a filter that enables holding a level
-
-    Allows managing whether a level is enabled or not (so that a logggers that wants to use levels,
-    can determine if it's enabled or not)
-
-    Example:
-
-@code
-typedef process_msg< gather::ostream_like::return_str<>, write_to_file> processor;
-level::holder_no_ts level_holder;
-
-typedef logger<processor, filter_level<level::holder_no_ts, level::debug> > debug_logger;
-typedef logger<processor, filter_level<level::holder_no_ts, level::error> > error_logger;
-typedef logger<processor, filter_level<level::holder_no_ts, level::info> > info_logger;
-
-debug_logger g_log_dbg( init_both, "dbg.txt", &level_holder );
-error_logger g_log_err( init_both, "err.txt", &level_holder );
-info_logger g_log_app( init_both, "out.txt", &level_holder );
-#define LAPP_ if ( !g_log_app) ; else g_log_app->read_msg().gather().out()
-#define LERR_ if ( !g_log_err) ; else g_log_err->read_msg().gather().out()
-#define LDBG_ if ( !g_log_dbg) ; else g_log_dbg->read_msg().gather().out()
-
-
-// usage
-LAPP_ << "info at : " << idx << " : reading word " << word;
-LDBG_ << "debug at: " << idx << ", reading " << word;
-LERR_ << "error at: " << idx << ", while reading " << word;
-
-@endcode
-
-    @sa level::holder_no_ts, level::holder_ts, level::holder_tss_with_cache
-*/
-template<class holder_type, int level> struct filter_level {
-    filter_level(holder_type * level_holder) : m_level_holder(*level_holder) {}
-    bool is_enabled() const {
-        return m_level_holder.is_enabled(level);
-    }
-private:
-    holder_type & m_level_holder;
-};
 
 }}
 

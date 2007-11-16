@@ -24,7 +24,7 @@
 
 #include <boost/logging/logging.hpp>
 #include <boost/logging/format/optimize.hpp>
-#include <boost/logging/process_msg/ostream_like.hpp>
+#include <boost/logging/gather/ostream_like.hpp>
 
 namespace boost { namespace logging {
 

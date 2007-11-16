@@ -330,21 +330,21 @@ In the above case:
     Example:
 
     @code
-    typedef process_msg< gather::ostream_like::return_str<> , 
+    typedef logger< default_, 
         writer::format_write< format_base, destination_base, format_and_write::simple<cache_string>,
-            msg_route::with_route<format_base,destination_base> > > process;
-    logger<process, filter::no_ts> g_l;
+            msg_route::with_route<format_base,destination_base> > > log_type;
+    log_type g_l;
 
     g_l->writer().router().set_route()
-        .fmt( write_time() ) 
-        .fmt( append_newline() )
-        .dest( write_to_dbg() )
-        .fmt( write_idx() )
-        .dest( write_to_cout() )
+        .fmt( formatter::time() ) 
+        .fmt( formatter::append_newline() )
+        .dest( destination::dbg_window() )
+        .fmt( formatter::write_idx() )
+        .dest( destination::cout() )
         .clear()
-        .fmt( write_idx() )
-        .fmt( append_newline() )
-        .fmt( write_to_file())
+        .fmt( formatter::write_idx() )
+        .fmt( formatter::append_newline() )
+        .fmt( formatter::write_to_file())
         ;
     @endcode
 
@@ -593,7 +593,7 @@ In the above case:
 
 #include <boost/logging/format/formatter/defaults.hpp>
 #include <boost/logging/format/destination/defaults.hpp>
-#include <boost/logging/process_msg/ostream_like.hpp>
+#include <boost/logging/gather/ostream_like.hpp>
 
 
 
