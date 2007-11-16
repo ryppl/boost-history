@@ -56,8 +56,7 @@ typedef bl::tag::holder< bl::optimize::cache_string_one_str<>, bl::tag::file_lin
 BOOST_LOG_FORMAT_MSG( log_string )
 
 
-#include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
+#include <boost/logging/format_ts.hpp>
 #include <boost/logging/format/formatter/tags.hpp>
 
 using namespace boost::logging;

@@ -26,6 +26,9 @@
 #include <map>
 #include <vector>
 
+#include <string.h>
+#include <wchar.h>
+
 namespace boost { namespace logging { 
 
 /** 
@@ -92,6 +95,43 @@ namespace optimize {
         void grow_size(int new_size) {
             m_grow_size = new_size;
         }
+
+    private:
+        static int str_len(const char* str)             { return (int)strlen(str); }
+        static int str_len(const wchar_t* str)          { return (int)wcslen(str); }
+    public:
+
+        void prepend_string(const char_type* str) {
+            int len = str_len(str);
+            if ( m_reserve_prepend < len) {
+                int new_reserve_prepend = len + m_grow_size ;
+                resize_string( new_reserve_prepend, m_reserve_append);
+            }
+
+            BOOST_ASSERT(m_reserve_prepend >= len );
+
+            int start_idx = m_reserve_prepend - len;
+            m_reserve_prepend -= len;
+
+            std::copy(str, str + len, m_str.begin() + start_idx);
+            m_full_msg_computed = false;
+        }
+        void append_string(const char_type* str) {
+            int len = str_len(str);
+            if ( m_reserve_append < len) {
+                int new_reserve_append = len + m_grow_size ;
+                resize_string( m_reserve_prepend, new_reserve_append);
+            }
+
+            BOOST_ASSERT(m_reserve_append >= len );
+
+            int start_idx = (int)m_str.size() - m_reserve_append;
+
+            std::copy(str, str + len, m_str.begin() + start_idx);
+            m_reserve_append -= len;
+            m_full_msg_computed = false;
+        }
+
 
 
         /** 

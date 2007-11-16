@@ -1,8 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.11.14, 15 nov 2007
-- updated docs
+@section changelog_cur_ver Current Version: v0.11.15, 15 nov 2007
+- solved bugs in append_newline_if_needed() when using tags
+- updated docs - added page showing how to declare/define your logger/filter classes
 - updated macros documentation (still to do)
 - added @ref starter_project
 - solved bug when using append_newline_if_needed() - when not used with string
