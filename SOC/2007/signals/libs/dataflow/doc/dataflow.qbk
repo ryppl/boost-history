@@ -50,6 +50,7 @@
 [template vtk_example[text] [link dataflow.introduction.examples.new_layer [text]]]
 [template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
 [template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
+[template DataflowBlueprint[] [link dataflow.blueprint Dataflow.Blueprint]]
 [template DataflowPhoenix[] [link dataflow.phoenix Dataflow.Phoenix]]
 
 [template producer_group[] [link dataflow.components.producer_group producer_group]]
@@ -131,6 +132,8 @@
 [import ../example/VTK/vtk_dataflow_support.hpp]
 [import ../example/VTK/Cone.cxx]
 
+[import ../example/blueprint/blueprint_example.cpp]
+
 [include introduction.qbk]
 
 [include concepts.qbk]
@@ -138,6 +141,8 @@
 [/[include components.qbk]]
 
 [include signals.qbk]
+
+[include blueprint/blueprint.qbk]
 
 [include phoenix.qbk]
 

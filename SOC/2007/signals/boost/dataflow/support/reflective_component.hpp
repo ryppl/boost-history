@@ -14,6 +14,13 @@
 
 namespace boost { namespace dataflow {
 
+template<typename Mechanism, typename PortSequence>
+struct reflective_component_traits
+{
+    typedef Mechanism mechanism;
+    typedef PortSequence ports;
+};
+
 namespace extension {
 
     template<typename ComponentTraits, typename Enable=void>
@@ -38,10 +45,16 @@ namespace extension {
 } // namespace extension
 
 template<typename Mechanism, typename T, typename Component>
-typename result_of<
+struct get_component_port_result_type
+{
+    typedef typename result_of<
     extension::get_component_port_impl<
         typename component_traits_of<Mechanism, Component>::type
-    >(Component &, T)>::type
+    >(Component &, T)>::type type;
+};
+
+template<typename Mechanism, typename T, typename Component>
+typename get_component_port_result_type<Mechanism, T, Component>::type
 get_component_port(Component &component)
 {
     return

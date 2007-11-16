@@ -232,6 +232,17 @@ For examples of how the [DataflowSignals] layer can be used, see:
   [link dataflow.introduction.examples.distributed distributed dataflow application].
 * The [DataflowSignals] documentation.
 
+[heading Dataflow.Blueprint layer]
+
+[DataflowBlueprint] provides run-time reflection and modeling of dataflow
+networks in a BGL graph for any mechanism with implemented Dataflow support.
+
+The development of this layer has only begun.  To find out more about it, see:
+
+* The example on [link dataflow.introduction.examples.blueprint run-time
+  reflection and connectivity modeling].
+
+
 [/[heading When to use]
 
 While the [link dataflow.introduction.dataflow dataflow] section hopefully
@@ -339,6 +350,7 @@ convenient.]
 
 [include introduction/distributed_example.qbk]
 [include introduction/gil_example.qbk]
+[include introduction/blueprint_example.qbk]
 [include introduction/vtk_example.qbk]
 
 [endsect][/examples]
@@ -356,6 +368,7 @@ perfectly with release versions of boost.
 
 Version 0.8.1 (under construction)
 
+* started the [DataflowBlueprint] layer.
 * expanding the [ComponentConcept] concept.
 * making VTK example Jamfile work for more than Darwin and X11.
 * provided an example using Boost.GIL.

@@ -26,8 +26,14 @@ namespace boost { namespace signals {
 >
 class storage;
 
+template<typename T>
 struct storage_component_traits
-    : public dataflow::component_traits<dataflow::signals::mechanism>
+    : public dataflow::reflective_component_traits<
+        dataflow::signals::mechanism,
+        mpl::vector<
+            dataflow::signals::producer<T>, // outgoing signal
+            dataflow::signals::consumer<T> // incoming signal
+        > >
 {};
 
 namespace detail
@@ -96,7 +102,7 @@ public:
     typedef typename storage_modifier<Signature>::storable_types storable_types;
     typedef typename storage_modifier<Signature>::storable_vector storable_vector;
     
-    typedef storage_component_traits component_traits;
+    typedef storage_component_traits<Signature> component_traits;
     
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
@@ -199,13 +205,46 @@ namespace boost { namespace dataflow {
 
 namespace extension {
     
-    template<>
-    struct component_operation_impl<operations::invoke, boost::signals::storage_component_traits>
+    template<typename T>
+    struct component_operation_impl<operations::invoke, boost::signals::storage_component_traits<T> >
     {
         template<typename Invocable>
         void operator()(Invocable &invocable)
         {
             invocable.send();
+        }
+    };
+    
+    template<typename T>
+    struct get_component_port_impl<boost::signals::storage_component_traits<T> >
+    {
+        template<typename FArgs> struct result;
+
+        template<typename F, typename Component>
+        struct result<F(Component &, boost::mpl::int_<0>)>
+        {
+            typedef signal<T> & type;
+        };
+        
+        template<typename F, typename Component>
+        struct result<F(Component &, boost::mpl::int_<1>)>
+        {
+            typedef function<T> type;
+        };
+        
+        template<typename Component>
+        signal<T> &
+        operator()(Component &component, boost::mpl::int_<0>)
+        {
+            return component.get_proxied_producer();
+        }
+        
+        template<typename Component>
+        function<T>
+        operator()(Component &component, boost::mpl::int_<1>)
+        {
+            return boost::signals::detail::bind_object<T, Component>()
+            (static_cast<typename boost::signals::detail::slot_type<T, Component>::type>(&Component::operator()), component);
         }
     };
     

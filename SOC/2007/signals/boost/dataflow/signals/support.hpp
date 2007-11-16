@@ -7,7 +7,7 @@
 #define SIGNAL_NETWORK_SIGNAL_SUPPORT_HPP
 
 #include <boost/dataflow/support.hpp>
-#include <boost/dataflow/signal/connection/detail/bind_object.hpp>
+#include <boost/dataflow/signals/connection/detail/bind_object.hpp>
 #include <boost/signal.hpp>
 
 
@@ -15,25 +15,29 @@ namespace boost { namespace dataflow {
 
 namespace signals {
 
-struct mechanism;
+struct mechanism
+{
+    template<typename PortTraits, typename Enable=void>
+    struct runtime_connection;
+};
 
 template<typename T>
 struct producer
     : public port_traits<mechanism, ports::producer, concepts::port>
 {
-    typedef T produced_signature_type;
+    typedef T signature_type;
 };
-
-struct call_consumer
-    : public port_traits<mechanism, ports::consumer, concepts::keyed_port>
-{};
 
 template<typename T>
 struct consumer
     : public port_traits<mechanism, ports::consumer, concepts::port>
 {
-    typedef T consumed_signature_type;
+    typedef T signature_type;
 };
+
+struct call_consumer
+    : public port_traits<mechanism, ports::consumer, concepts::keyed_port>
+{};
 
 } // namespace signals
 
@@ -54,16 +58,13 @@ namespace extension
     template<typename Signature>
     struct get_keyed_port_impl<signals::call_consumer, signals::producer<Signature> >
     {
+        typedef const boost::function<Signature> result_type;
+        
         template<typename ConsumerPort, typename ProducerPort>
-        struct apply
+        result_type operator()(ConsumerPort &consumer, ProducerPort &)
         {
-            typedef const boost::function<Signature> type;
-            
-            static type call(ConsumerPort &consumer, ProducerPort &)
-            {
-                return boost::signals::detail::bind_object<Signature, ConsumerPort>()
-                (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
-            };
+            return boost::signals::detail::bind_object<Signature, ConsumerPort>()
+            (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
         };
     };
     
@@ -71,13 +72,10 @@ namespace extension
     struct binary_operation_impl<operations::connect, signals::producer<T>, signals::consumer<T> >
     {
         template<typename Producer, typename Consumer>
-        struct apply
+        void operator()(Producer &producer, Consumer &consumer)
         {
-            static void call(Producer &producer, Consumer &consumer)
-            {
-                producer.connect(consumer);
-            }
-        };
+            producer.connect(consumer);
+        }
     };
 }
 

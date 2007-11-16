@@ -1,0 +1,32 @@
+[section:blueprint Run-time reflection and connectivity modeling using Dataflow.Blueprint]
+
+The (recently started) [DataflowBlueprint] layer offers run-time reflection
+of components and modeling of
+a dataflow network through a BGL graph.  The following example briefly
+illustrates some of the capabilities:
+
+[blueprint_example]
+
+The output is:
+
+[pre
+source has 2 ports. 
+  port 0 is a producer
+  port 1 is a consumer
+
+source port 0 is connectable to sink port 1
+source port 1 is not connectable to sink port 0
+source port 0 is not connectable to sink port 0
+source port 0 is not connectable to sink_float port 1
+
+Blueprint connecting source to sink, source_float to sink_float...
+
+Using BGL to analyze the network... There are 2 independent parts of the network.
+
+Making the connections...
+Invoking the sources...
+sink now has:100
+sink_float now has:100.1
+]
+
+[endsect]

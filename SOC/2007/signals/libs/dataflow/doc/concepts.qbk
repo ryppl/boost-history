@@ -269,6 +269,40 @@ A ['[ComponentTraitsConcept]] specifies the traits of a [ComponentConcept].
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Mechanism]
+        [`PC::ports`]
+        [MPL Sequence of [PortTraitsConcept] types.]
+        [[PortTraitsConcept] of exposed [PortConcept]s.]
+    ]
+]
+
+[heading Header]
+
+```
+    #include <boost/dataflow/support/component.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Notes]
+
+[heading Examples]
+
+[endsect][/componenttraits]
+
+[section ReflectiveComponentTraits]
+
+A ['[ReflectiveComponentTraitsConcept]] specifies the traits of a [ReflectiveComponentConcept].
+
+[heading Notation]
+[variablelist
+    [[CT] [A ReflectiveComponentTraits type.]]
+    [[C] [A [ReflectiveComponentConcept] type of traits `CT`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Mechanism]
         [`PC::mechanism`]
         [any type]
         [[MechanismConcept] type tag.]
@@ -286,8 +320,7 @@ A ['[ComponentTraitsConcept]] specifies the traits of a [ComponentConcept].
 
 [heading Examples]
 
-[endsect][/componenttraits]
-
+[endsect][/reflectivecomponenttraits]
 
 [section Component]
 

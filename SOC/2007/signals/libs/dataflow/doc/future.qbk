@@ -1,20 +1,7 @@
 [section:future Future Directions]
 
-[section:blueprint The blueprint layer]
+[section:blueprint Expanding the blueprint layer]
 
-The current focus of the Dataflow library are mechanisms in which the
-dataflow network is stored in the individual components - i.e., there
-is no global picture of the network available through the library.
-
-One way of adressing this shortcoming is a planned /blueprint/ layer, which
-would provide generic components that would provide this "big picture"
-of a dataflow network.  A blueprint component corresponds to an actual
-component - but whereas the actual component takes care of the work, the
-blueprint component serves as a factory and serializer of the component.
-Hence, a dataflow network blueprint, made out of blueprint components, could
-be used to serialize or instantiate the underlying dataflow network made out
-of actual components.  The blueprint layer is likely to be implemented using
-run-time polymorphic classes and the Boost Graph library.
 
 [endsect]
 
