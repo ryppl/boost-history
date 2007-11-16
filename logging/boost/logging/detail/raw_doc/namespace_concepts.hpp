@@ -4,6 +4,7 @@ namespace boost { namespace logging {
 @page namespace_concepts Concepts as namespaces
 
 - @ref namespace_general
+- @ref namespace_process 
 - @ref namespace_manipulator
 - @ref namespace_write
 
@@ -19,10 +20,10 @@ In the given namespace, you'll find possible implementations of that concept. Of
 - filter - available filter implementations
 - level - in case you want to use Log Levels
 - writer - %writer objects; they do the actual write of the message 
-
+- scenario - in case you want to easily specify the logger and filter class(es), based on your application's needs
 
 \n\n
-@section namespace_process Processing the message 
+@section namespace_process Logging (Processing) the message 
 (for more info, see logger class)
 - gather - gathering the message
 - writer - %writer objects; they do the actual write of the message 
@@ -34,7 +35,8 @@ In the given namespace, you'll find possible implementations of that concept. Of
 - manipulator - what a manipulator is: a formatter or a destination
 - formatter - available formatters
 - destination - available destinations
-
+- tag - available tags
+- formatter::tag - available tag formatters
 
 \n\n
 @section namespace_write Writing concepts

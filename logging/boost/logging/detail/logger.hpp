@@ -79,12 +79,14 @@ namespace boost { namespace logging {
     Check out writer::format_write - which allows you to use
     several formatters to further format the message, and then write it to destinations.
 
+    \n\n
+    You will seldom need to use the logger class directly. You can use @ref defining_your_logger "other wrapper classes".
 
 
     \n\n    
     The logger forwards 
     the gathering of the message to the @c gather_msg class. Once all message is gathered, it's passed on to the writer.
-    This is usually done through a @ref macros "macro".
+    This is usually done through a @ref macros_use "macro".
 
     @code
     typedef logger< ... > log_type;

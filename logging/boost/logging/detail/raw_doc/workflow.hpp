@@ -9,7 +9,7 @@ namespace boost { namespace logging {
 - @ref workflow_processing 
 - @ref workflow_2a 
 - @ref workflow_2b 
-
+- @ref workflow_formatters_destinations 
 
 
 @section workflow_introduction Introduction
@@ -97,7 +97,7 @@ The meaning of "gathering the message" depends on your application. The message 
 - or any combination of the above
 
 Depending on your needs, gathering can be complex or not. However, it's completely decoupled from the other steps.
-Gathering goes hand in hand with @ref macros "macros".
+Gathering goes hand in hand with @ref macros_use "macros".
 
 The cool thing is that you decide how the <i>Logging syntax</i> is - depending on how you want to gather the message.
 All of the below are viable options:
@@ -109,7 +109,7 @@ L_(dbg) << "happily debugging";
 L_(err,"chart")("Cannot load chart")(chart_path);
 @endcode
 
-How you gather your message, depends on how you <tt>\#define L_ ...</tt>.
+How you gather your message, depends on how you @ref macros_use "#define L_ ...".
 
 In other words, gathering the message means getting all the message in "one piece", so that it can be written. \n
 See the 
@@ -181,7 +181,19 @@ L_ << "this is so cool again " << i++;
 
 
 
+\n\n
+@section workflow_formatters_destinations Workflow when using formatters and destinations
 
+When using @ref manipulator "formatters and destinations", there are some steps you'll usually take.
+
+Remember:
+- formatter - allows formatting the message before writing it (like, prepending extra information - an index, the time, thread id, etc)
+- destination - is a place where the message is to be written to (like, the console, a file, a socket, etc)
+
+
+@copydoc common_usage_steps_fd
+
+There are plenty of @ref common_scenarios "examples" together with @ref scenarios_code "code".
 
 */
 

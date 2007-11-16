@@ -118,7 +118,7 @@ use the default formatter %base class and the default destination %base class.
 
 They are: <tt>formatter::base<> </tt> and <tt>destination::base<> </tt>.
 
-The default formatter %base class is computed based on your usage of the @c BOOST_LOG_FORMAT_MSG macro:
+The default formatter %base class is computed based on your usage of the @ref BOOST_LOG_FORMAT_MSG macro:
 - if you haven't used it, it's <tt>std::(w)string & </tt>
 - if you've used it, it's the type you specified there; see below
 
@@ -133,7 +133,7 @@ formatter::base<> = formatter::base< optimize::cache_string_several_str<>& >
 
 
 
-The default destination %base class is computed based on your usage of the @c BOOST_LOG_DESTINATION_MSG macro:
+The default destination %base class is computed based on your usage of the @ref BOOST_LOG_DESTINATION_MSG macro:
 - if you haven't used it, it's <tt>const std::(w)string & </tt>
 - if you've used it, it's the type you specified there; see below
 
@@ -156,7 +156,7 @@ destination::base<> = destination::base< const my_cool_string & >
 Now, you will define your @ref logger "logger(s)", to use the @ref boost::logging::writer::format_write "format_write" class:
 
 @code
-BOOST_DECLARE_LOG(g_l, logger< ... format_write<formatter_base,destination_base> > );
+BOOST_DECLARE_LOG(g_l, logger_format_write< formatter_base,destination_base> > );
 @endcode
 
 After this, you'll add formatter and/or destination classes to your logger(s):
@@ -192,10 +192,12 @@ You can use the formatter and/or destination classes that come with the library:
 - formatters: in the formatter namespace. Here are a few examples:
   - formatter::idx - prepends an index
   - formatter::append_newline - appends an enter after the message
+  - formatter::append_newline_if_needed - appends an enter after the message, if not already there
   - formatter::time - prepends the time
   - formatter::thread_id - prepends the current thread id
 - destinations: in the destination namespace
   - destination::cout - writes to console
+  - destination::stream - writes to a stream
   - destination::file - writes to file
   - destination::rolling_file - writes to a rolling file
   - destination::shared_memory - writes into shared memory (using @c boost::shmem::named_shared_object)
@@ -273,6 +275,36 @@ struct my_file : destination::class_<my_file,destination_base,op_equal_has_conte
 @endcode
 
 
+\n\n\n
+@section manipulator_use_it Using loggers in code
+
+Now that you've @ref manipulator_generic "added" formatters and/or destinations, you'll @ref macros_use "define the macros through which you'll do logging", 
+and then do logging in your code:
+
+@code
+// macros through which you'll do logging
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, debug )
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, info )
+
+// doing logging in code
+int i = 1;
+LDBG_ << "this is so cool " << i++;
+LERR_ << "first error " << i++;
+
+std::string hello = "hello", world = "world";
+LAPP_ << hello << ", " << world;
+
+g_log_level->set_enabled(level::error);
+LDBG_ << "this will not be written anywhere";
+LAPP_ << "this won't be written anywhere either";
+LERR_ << "second error " << i++;
+
+g_log_level->set_enabled(level::info);
+LAPP_ << "good to be back ;) " << i++;
+LERR_ << "third error " << i++;
+
+@endcode
 
 */
 namespace manipulator {

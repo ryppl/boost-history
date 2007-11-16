@@ -1,7 +1,7 @@
 namespace boost { namespace logging {
 
 /** 
-@page common_scenarios Usage Scenarios
+@page common_scenarios Usage Scenarios (together with code)
 
 - @ref common_scenarios_1
 - @ref common_scenarios_2
@@ -22,6 +22,7 @@ namespace boost { namespace logging {
     - @ref scenario_multiple_files_log_cpp 
     - @ref scenario_multiple_files_main 
 
+\n\n\n
 @copydoc common_usage_steps_fd 
 
 
