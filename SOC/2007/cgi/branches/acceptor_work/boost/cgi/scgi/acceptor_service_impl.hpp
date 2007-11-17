@@ -15,6 +15,7 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/system/error_code.hpp>
 

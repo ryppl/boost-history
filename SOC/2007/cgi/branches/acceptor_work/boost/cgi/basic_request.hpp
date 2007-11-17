@@ -196,7 +196,8 @@ namespace cgi {
      *
      * @returns The value of program_status
      */
-    int close(http::status_code http_status, int program_status)
+    int close(http::status_code http_status = http::ok
+             , int program_status = 0)
     {
       //BOOST_ASSERT( request_status_ != status_type::ended );
 

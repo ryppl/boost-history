@@ -144,6 +144,12 @@ namespace cgi {
       //typedef scgi_gateway_service                   gateway_service_type;
     };
 
+    template<>
+    struct protocol_traits<::cgi::scgi_>
+      : protocol_traits<tags::scgi>
+    {
+    };
+
  } // namespace detail
 } // namespace cgi
 

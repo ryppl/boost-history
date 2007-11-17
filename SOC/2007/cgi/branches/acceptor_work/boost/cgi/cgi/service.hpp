@@ -13,8 +13,6 @@
 #include "boost/cgi/connections/stdio.hpp"
 #include "boost/cgi/connections/async_stdio.hpp"
 #include "boost/cgi/basic_protocol_service_fwd.hpp"
-#include "boost/cgi/gateway_impl/acgi_gateway_impl.hpp"
-#include "boost/cgi/gateway_service/acgi_gateway_service.hpp"
 
 namespace cgi {
 

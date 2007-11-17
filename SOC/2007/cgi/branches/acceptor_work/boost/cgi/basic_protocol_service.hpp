@@ -19,6 +19,7 @@
 #include "boost/cgi/io_service_provider.hpp"
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
 

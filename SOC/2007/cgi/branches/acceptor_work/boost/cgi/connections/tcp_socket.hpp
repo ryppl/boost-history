@@ -32,6 +32,16 @@ namespace cgi {
     {
     }
 
+    bool is_open() const
+    {
+      return sock_.is_open();
+    }
+
+    void close()
+    {
+      sock_.close();
+    }
+
     static pointer create(io_service& ios)
     {
       return static_cast<pointer>(new basic_connection<tags::tcp_socket>(ios));
@@ -74,12 +84,6 @@ namespace cgi {
     {
       sock_.async_write_some(buf, handler);
     }
-
-    void close()
-    {
-      sock_.close();
-    }
-
   private:
     boost::asio::ip::tcp::socket sock_;
   };

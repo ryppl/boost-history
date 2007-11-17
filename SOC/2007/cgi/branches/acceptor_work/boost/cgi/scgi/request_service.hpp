@@ -37,7 +37,9 @@ namespace cgi {
       typedef ::cgi::map                        map_type;
       typedef tcp_connection                    connection_type;
       typedef ::cgi::scgi_                      protocol_type;
-      typedef basic_client<connection_type, protocol_type>     client_type;
+      typedef basic_client<
+        connection_type, protocol_type
+      >                                         client_type;
 
       implementation_type()
         : client_()
@@ -91,8 +93,27 @@ namespace cgi {
       //impl.set_state(aborted);
     }
 
-    boost::system::error_code& load(implementation_type& impl, bool parse_stdin
-                                   , boost::system::error_code& ec)
+    void shutdown_service()
+    {
+    }
+
+    bool is_open(implementation_type& impl)
+    {
+      return !impl.all_done_ && impl.client_.is_open();
+    }
+
+    /// Close the request.
+    int close(implementation_type& impl, http::status_code& hsc
+              , int program_status)
+    {
+      impl.all_done_ = true;
+      impl.client_.close();
+      return program_status;
+    }
+
+    boost::system::error_code&
+      load(implementation_type& impl, bool parse_stdin
+          , boost::system::error_code& ec)
     {
       //int header_len( get_length_of_header(impl, ec) );
       BOOST_ASSERT(!ec);

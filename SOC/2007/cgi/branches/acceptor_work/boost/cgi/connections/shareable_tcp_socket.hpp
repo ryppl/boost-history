@@ -39,6 +39,16 @@ namespace cgi {
     {
     }
 
+    bool is_open() const
+    {
+      return sock_.is_open();
+    }
+
+    void close()
+    {
+      sock_.close();
+    }
+
     static pointer create(io_service& ios)
     {
       return static_cast<pointer>(
@@ -81,11 +91,6 @@ namespace cgi {
     void async_write_some(ConstBufferSequence& buf, Handler handler)
     {
       sock_.async_write_some(buf, handler);
-    }
-
-    void close()
-    {
-      sock_.close();
     }
 
     mutex_type& mutex()        { return mutex_;     }

@@ -18,6 +18,9 @@
 #include "boost/cgi/buffer.hpp"
 #include "boost/cgi/cookie.hpp"
 #include "boost/cgi/header.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/streambuf.hpp"
 #include <boost/foreach.hpp>
 
 /// This mess outputs a default Content-type header if the user hasn't set any.
@@ -238,11 +241,21 @@ namespace cgi {
      * This call uses error_code semantics. ie. ec is set if an error occurs.
      * Note: The data in the stream isn't cleared after this call.
      */
-    template<typename CommonGatewayRequest>
+    /*
+    template<typename T, typename X, enum Y, typename Z>
     boost::system::error_code&
-      send(CommonGatewayRequest& req, boost::system::error_code& ec)
+      send(::cgi::basic_request<T, X, Y, Z>& req, boost::system::error_code& ec)
     {
-      //BOOST_CGI_ADD_DEFAULT_HEADER
+      send(req.client(), ec);
+      //req.set_status(http_status_);
+      return ec;      
+    }
+*/
+    template<typename SyncWriteStream>
+    boost::system::error_code&
+      send(SyncWriteStream& ws, boost::system::error_code& ec)
+    {
+      BOOST_CGI_ADD_DEFAULT_HEADER
 
       // Terminate the headers.
       headers_.push_back("\r\n");
@@ -255,14 +268,12 @@ namespace cgi {
         headers.push_back(::cgi::buffer(*i));
       }
       //}
-      //std::ofstream("test_stuff", std::out);
-      //of<< headers_.front();
-      ::cgi::write(req.client(), headers
+
+      ::cgi::write(ws, headers
                   , boost::asio::transfer_all(), ec);
       headers_terminated_ = true;
-      ::cgi::write(req.client(), rdbuf()->data()
+      ::cgi::write(ws, rdbuf()->data()
                   , boost::asio::transfer_all(), ec);
-      req.set_status(http_status_);
 
       //BOOST_FOREACH(headers_.begin(), headers_.end()
       //             , headers.push_back(::cgi::buffer(*_1)));
@@ -314,6 +325,12 @@ namespace cgi {
       headers_terminated_ = false;
     }
 
+    /// Get the length of the body of the response
+    std::size_t content_length()
+    {
+      return rdbuf()->size();
+    }
+
     /// Add a header after appending the CRLF sequence.
     response& set_header(const std::string& value)
     {
@@ -329,6 +346,21 @@ namespace cgi {
       headers_.push_back(name + ": " + value + "\r\n");
       return *this;
     }
+
+    void clear_headers()
+    {
+      BOOST_ASSERT(!headers_terminated_);
+      headers_.clear();
+    }
+
+    void reset_headers()
+    {
+      headers_.clear();
+      headers_terminated_ = false;
+    }
+    //response& operator<< (response& r1, response& r2)
+    //{
+    //  r1.
   protected:
     // Vector of all the headers, each followed by a CRLF
     std::vector<std::string> headers_;
@@ -342,11 +374,14 @@ namespace cgi {
     // True if no more headers are to be appended. 
     bool headers_terminated_;
 
+    //template<typename T>
+    //response& operator<<(const T& t) {
+    //  ostream_<< t;
+    //  return *this;
+    //}
+
     template<typename T>
     friend response& operator<<(response& resp, const T& t);
-
-    //template<typename T>
-    //friend response& operator<<(response& resp, T t);
   };
 
   /// Generic ostream template
@@ -372,8 +407,21 @@ namespace cgi {
    * effects; for instance, it won't write any data to the client.
    * ]
    */
-  template<>
-  response& operator<<(response& resp, const ::cgi::header& hdr)
+  template<typename T>
+  response& operator<<(response& resp, const ::cgi::basic_header<std::basic_string<T> >& hdr)
+  {
+    if (hdr.content.empty()) {
+      resp.headers_terminated_ = true;
+      return resp;
+    }else{
+      // We shouldn't allow headers to be sent after they're explicitly ended.
+      BOOST_ASSERT(!resp.headers_terminated_);
+      resp.set_header(hdr.content);
+      return resp;
+    }
+  }
+  template<typename StringT>
+  response& operator<<(response& resp, const ::cgi::basic_header<StringT>& hdr)
   {
     if (hdr.content.empty()) {
       resp.headers_terminated_ = true;
@@ -398,7 +446,7 @@ namespace cgi {
    * library.
    */
   template<typename T>
-  response& operator<<(response& resp, basic_cookie<T> ck)
+  response& operator<<(response& resp, typename basic_cookie<T> ck)
   {
     resp.set_header("Set-cookie", ck.to_string());
     return resp;

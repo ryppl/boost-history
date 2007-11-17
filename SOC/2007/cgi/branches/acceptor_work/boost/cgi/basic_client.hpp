@@ -55,6 +55,16 @@ namespace cgi {
     {
     }
 
+    bool is_open()
+    {
+      return connection_->is_open();
+    }
+
+    void close()
+    {
+      connection_->close();
+    }
+
     //io_service& io_service() { return io_service_; }
 
     /// Associate a connection with this client

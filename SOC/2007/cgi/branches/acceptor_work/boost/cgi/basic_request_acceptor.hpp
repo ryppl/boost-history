@@ -29,13 +29,17 @@ namespace cgi {
     typedef typename service_type::protocol_type    protocol_type;
     typedef int                            port_number_type;
 
-    explicit basic_request_acceptor(basic_protocol_service<protocol_type>& ps)
+    template<typename IoServiceProvider>
+    explicit basic_request_acceptor(basic_protocol_service<
+                                      protocol_type, IoServiceProvider>& ps)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {
-      this->service.set_protocol_service(this->implementation, s);
+      this->service.set_protocol_service(this->implementation, ps);
     }
 
-    explicit basic_request_acceptor(basic_protocol_service<protocol_type>& ps
+    template<typename IoServiceProvider>
+    explicit basic_request_acceptor(basic_protocol_service<
+                                      protocol_type, IoServiceProvider>& ps
                                    , port_number_type port_num)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {

@@ -19,7 +19,7 @@ namespace cgi {
  namespace scgi {
 
    // typedef for standard scgi::service (a model of ProtocolService)
-   typedef basic_protocol_service<tags::scgi> service;
+   typedef basic_protocol_service<::cgi::scgi_> service;
 
  }
 } // namespace cgi

@@ -34,6 +34,7 @@ namespace cgi {
     basic_connection()
       : in_(std::cin)
       , out_(std::cout)
+      , is_open_(true)
     {
     }
 
@@ -41,7 +42,18 @@ namespace cgi {
     basic_connection(T&)
       : in_(std::cin)
       , out_(std::cout)
+      , is_open_(true)
     {
+    }
+
+    bool is_open() const
+    {
+      return is_open_;
+    }
+
+    void close()
+    {
+      is_open_ = false;
     }
 
     static pointer create()
@@ -78,6 +90,7 @@ namespace cgi {
   protected:
     std::istream& in_;
     std::ostream& out_;
+    bool is_open_;
   };
 
   typedef basic_connection<tags::stdio> stdio_connection;

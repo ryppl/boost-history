@@ -36,6 +36,16 @@ namespace cgi {
     {
     }
 
+    bool is_open() const
+    {
+      return is_open_;
+    }
+
+    void close()
+    {
+      is_open_ = false;
+    }
+
     static pointer create(::cgi::io_service& ios)
     {
       return pointer(new basic_connection<tags::async_stdio>(ios));

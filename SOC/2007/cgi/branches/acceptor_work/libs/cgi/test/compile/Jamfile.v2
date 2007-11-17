@@ -2,6 +2,21 @@
 
 import testing ;
 
+test-suite scgi_compile_tests
+  :
+    [ compile scgi_service.cpp ]
+    [ compile scgi_request.cpp ]
+    [ compile scgi_acceptor.cpp ]
+  :
+    <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE=1
+    <toolset>msvc:<define>_CRT_NONSTDC_NO_DEPRECATE=1
+    <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE=1
+    <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+    <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
+  ;   
+
+explicit scgi_compile_tests ;
+
 test-suite compile_test_suite
   :
     # connections
@@ -24,7 +39,9 @@ test-suite compile_test_suite
     [ compile cgi_header_check.cpp       ]
     [ compile is_async_test.cpp          ]
   :
-    <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECIATE=1
+    <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE=1
     <toolset>msvc:<define>_CRT_NONSTDC_NO_DEPRECATE=1
     <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE=1
   ;
+
+explicit compile_test_suite ;

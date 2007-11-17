@@ -41,13 +41,14 @@ namespace cgi {
     typedef scgi::acceptor_service_impl<>               service_impl_type;
     typedef service_impl_type::implementation_type      implementation_type;
     typedef typename implementation_type::protocol_type          protocol_type;
-    typedef basic_protocol_service<protocol_type>       protocol_service_type;
+    //typedef basic_protocol_service<protocol_type>       protocol_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
 
     scgi_request_acceptor_service(::cgi::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
+      , service_impl_(ios)
     {
     }
 
@@ -88,6 +89,12 @@ namespace cgi {
     void async_accept(implementation_type& impl, Handler handler)
     {
       service_impl_.async_accept(impl, handler);
+    }
+
+    template<typename T>
+    void set_protocol_service(implementation_type& impl, T& ps)
+    {
+      impl.service_ = &ps;
     }
   private:
     service_impl_type service_impl_;

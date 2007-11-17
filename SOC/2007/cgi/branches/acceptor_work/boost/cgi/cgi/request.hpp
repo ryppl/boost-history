@@ -22,6 +22,9 @@ namespace cgi {
 
   typedef basic_request<cgi_request_service, cgi_service> cgi_request;
 
+ namespace cgi {
+   typedef cgi_request request;
+ } // namespace cgi
 } // namespace cgi
 
 #endif // CGI_CGI_REQUEST_HPP_INCLUDED__

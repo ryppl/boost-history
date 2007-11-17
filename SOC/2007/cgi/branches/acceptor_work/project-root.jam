@@ -1,0 +1,7 @@
+import os ;
+
+path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+path-constant BOOST_BUILD_PATH : [ os.environ BOOST_BUILD_PATH ] ;
+
+path-constant PROJECT_ROOT : . ;
+path-constant BOOST_CGI_BIN_DIR : c:/Apache/Apache2.2/cgi-bin ;
