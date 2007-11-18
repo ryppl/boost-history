@@ -12,8 +12,9 @@ blueprint component provides a run-time polymorphic interface which can be
 embedded in a BGL graph. A dataflow network blueprint uses such a graph
 to hold the blueprint components and the connectivity information.
 In addition, blueprint components provide run-time port reflection.
-In the future, the bluprint layer will be expanded to support serialization,
-copying, and other features.
+In the future, the bluprint layer will be expanded to support serialization
+and other features.  More details are in the [link dataflow.future.blueprint
+future work section].
 
 The [DataflowBlueprint] layer is built on top of the Dataflow library 
 [concepts].  Hence, it can be used with any mechanism for which a Dataflow

@@ -9,7 +9,6 @@
 #include <boost/dataflow/signals/component/storage.hpp>
 #include <boost/dataflow/signals/runtime_support.hpp>
 
-#include <boost/graph/copy.hpp>
 #include <boost/graph/connected_components.hpp>
 
 #include <iostream>
@@ -19,80 +18,131 @@ namespace df=boost::dataflow;
 
 using namespace boost;
 
-int main()
+class blueprint_example
 {
     typedef blueprint::network<df::signals::mechanism> network_type;
-    
-    // Start with the network.
+
+    // The network.
     network_type network;
 
-    // Add the components.
-    network_type::component_type
+    // The components (graph indices).
+    network_type::component_type source, sink, source_float, sink_float;
+
+public:
+    blueprint_example()
+    {
+        // Add the components to the network.
         source = network.add_component<signals::storage<void(int)> >(100),
         sink = network.add_component<signals::storage<void(int)> >(0),
         source_float = network.add_component<signals::storage<void(float)> >(100.1f),
         sink_float = network.add_component<signals::storage<void(float)> >(0.0f);
-    
-    // Print some runtime info
-    std::cout << "source has " << network[source].num_ports() << " ports. " << std::endl;
-    for (int i=0; i<network[source].num_ports(); i++)
-        std::cout << "  port " << i << " is a "
-            << (network.get_port(source, i)->category()) << std::endl;
-    std::cout << std::endl;
-
-    std::cout
-        << "source port 0 is "
-        << (network.are_connectable(source, 0, sink, 1) ? "" : "not ")
-        << "connectable to sink port 1" << std::endl;
-
-    std::cout
-        << "source port 1 is "
-        << (network.are_connectable(source, 1, sink, 0) ? "" : "not ")
-        << "connectable to sink port 0" << std::endl;
-    
-    std::cout
-        << "source port 0 is "
-        << (network.are_connectable(source, 0, sink, 0) ? "" : "not ")
-        << "connectable to sink port 0" << std::endl;
-
-    std::cout
-        << "source port 0 is "
-        << (network.are_connectable(source, 0, sink_float, 1) ? "" : "not ")
-        << "connectable to sink_float port 1" << std::endl;
-
-    // Make some connections
-    std::cout << std::endl << "Blueprint connecting source to sink, source_float to sink_float..." << std::endl;
-    network.add_connection(source, 0, sink, 1);
-    network.add_connection(source_float, 0, sink_float, 1);
-    
-    // Do some analysis on the connectivity graph
-    typedef boost::adjacency_list<
-        boost::vecS, boost::vecS, boost::undirectedS> ugraph_type;
+    }
+    void run()
+    {
+        // Print some runtime port info
+        std::cout << "Printing runtime info about all of the components:" << std::endl  << std::endl;
+        print_port_info("source", source);
+        print_port_info("sink", sink);
+        print_port_info("source_float", source_float);
+        print_port_info("sink_float", sink_float);
         
-    ugraph_type g;
-    copy_graph(network.graph(), g);
-    std::vector<int> component(num_vertices(g));
-    std::cout << std::endl << "Using BGL to analyze the network... There are "
-        << connected_components(g, &component[0])
-        << " independent parts of the network." << std::endl << std::endl;
+        // Print some runtime connectability info
+        print_connectability_info("source", source, 0, "sink", sink, 1);
+        print_connectability_info("source", source, 1, "sink", sink, 0);
+        print_connectability_info("source", source, 0, "sink", sink, 0);
+        print_connectability_info("source", source, 0, "sink_float", sink_float, 1);
+        std::cout << std::endl;
+        
+        // Make some connections
+        std::cout << "Making blueprint connections: source to sink, source_float to sink_float..." << std::endl;
+        network.add_connection(source, 0, sink, 1);
+        network.add_connection(source_float, 0, sink_float, 1);
     
-    // Connect the underlying components
-    std::cout << "Making the connections..." << std::endl;    
-    network.connect();
+        // Do some analysis on the connectivity graph
+        typedef boost::adjacency_list<
+            boost::vecS, boost::vecS, boost::undirectedS> ugraph_type;
+            
+        ugraph_type g;
+        copy_graph(network.graph(), g);
+        std::vector<int> component(num_vertices(g));
+        std::cout << std::endl << "Using BGL to analyze the network... There are "
+            << connected_components(g, &component[0])
+            << " independent parts of the network." << std::endl << std::endl;
+        
+        // Copy the network
+        std::cout << "Making a copy of the blueprint." << std::endl << std::endl;
+        network_type network_copy(network);
+        
+        std::cout << "Testing the original network..." << std::endl << std::endl;
+        test_network(network);
+        std::cout << "Testing the network copy..." << std::endl << std::endl;
+        test_network(network_copy);
+    }
+    void print_port_info(const char *c_name, network_type::component_type c)
+    {
+        std::cout << "\t" << c_name << " has " << network[c].num_ports() << " ports. " << std::endl;
+        for (int i=0; i<network[c].num_ports(); i++)
+            std::cout << "\t\tport " << i << " is a "
+                << (network.get_port(c, i)->traits().category().name()) << std::endl;
+        std::cout << std::endl;
+    }
+    void print_connectability_info(
+        const char *src_name, network_type::component_type src, size_t src_port,
+        const char *dst_name, network_type::component_type dst, size_t dst_port)
+    {
+        std::cout
+            << src_name << " port " << src_port << " is "
+            << (network.are_connectable(src, src_port, dst, dst_port) ? "" : "not ")
+            << "connectable to " << dst_name << " port " << dst_port << std::endl;
+    }
+
+    template<typename T>
+    void output_component_value(
+        network_type &network, const char *c_name, typename network_type::component_type c)
+    {
+        typedef blueprint::component_t<df::signals::mechanism, signals::storage<void(T)> > & c_type;
+        
+        std::cout << "\t\tvalue at " << c_name << ":"
+            << static_cast<c_type>(network[c]).get()
+            .template at<0>()
+            << std::endl;
+    }
+    void output_component_values(network_type &network)
+    {
+        std::cout << "\tValues at components:" << std::endl;    
+        output_component_value<int>(network, "source", source);
+        output_component_value<int>(network, "sink", sink);
+        output_component_value<float>(network, "source_float", source_float);
+        output_component_value<float>(network, "sink_float", sink_float);
+        std::cout << std::endl;
+    }
+
+    void test_network(network_type &network)
+    {
+        // Output the values at the components:
+        output_component_values(network);
+
+        // Connect the underlying components
+        std::cout << "\tConnecting the underlying components in the network..." << std::endl;    
+        network.connect();
+        
+        // Invoke the sources
+        std::cout << "\tInvoking the sources..." << std::endl;
+        network[source].invoke();
+        network[source_float].invoke();
+        std::cout << std::endl;
+        
+        // Output the values at the sinks:
+        output_component_values(network);
+    }
+};
+
+int main()
+{
+    blueprint_example example;
+    example.run();
     
-    // Invoke the sources
-    std::cout << "Invoking the sources..." << std::endl;
-    network[source].invoke();
-    network[source_float].invoke();
-
-    // Output the values at the sinks:
-    std::cout << "sink now has:"
-        << ((blueprint::component_t<df::signals::mechanism, signals::storage<void(int)> > &)
-            network[sink]).get().at<0>() << std::endl;
-    std::cout << "sink_float now has:"
-        << ((blueprint::component_t<df::signals::mechanism, signals::storage<void(float)> > &)
-        network[sink_float]).get().at<0>() << std::endl;
-
+    return 0;
 }
 
 //]

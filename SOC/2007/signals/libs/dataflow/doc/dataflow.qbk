@@ -25,7 +25,7 @@
 
 [template ComponentTraitsConcept[] [link dataflow.concepts.componenttraits [^ComponentTraits]]]
 [template ComponentConcept[] [link dataflow.concepts.component [^Component]]]
-[template ReflectiveComponentTraitsConcept[] [link dataflow.concepts.reflecivecomponenttraits [^ReflectiveComponentTraits]]]
+[template ReflectiveComponentTraitsConcept[] [link dataflow.concepts.reflectivecomponenttraits [^ReflectiveComponentTraits]]]
 [template ReflectiveComponentConcept[] [link dataflow.concepts.reflectivecomponent [^ReflectiveComponent]]]
 
 [template BinaryOperableConcept[] [link dataflow.concepts.binaryoperable [^BinaryOperable]]]

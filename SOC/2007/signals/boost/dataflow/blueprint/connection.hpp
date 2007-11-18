@@ -15,6 +15,7 @@ class connection
 {
 public:
     virtual void connect(port &producer, port &consumer)=0;
+    virtual std::auto_ptr<connection> copy() const=0;
     virtual ~connection() {};
 };
 

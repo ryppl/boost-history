@@ -10,6 +10,7 @@
 #include <boost/dataflow/blueprint/connection_t.hpp>
 
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/copy.hpp>
 
 #include <exception>
 #include <iostream>
@@ -32,9 +33,42 @@ class network
 public:
     typedef boost::adjacency_list<
         boost::vecS, boost::vecS, boost::bidirectionalS, node_t, edge_t> graph_type;
-
     typedef typename graph_type::vertex_descriptor component_type;
-
+    typedef typename graph_type::edge_descriptor connection_type;
+private:
+    struct vc
+    {
+        vc(const graph_type &g_src, graph_type &g_dst)
+            : g_src(g_src), g_dst(g_dst)
+        {}
+        void operator()(component_type src, component_type &dst)
+        {
+            g_dst[dst].ptr = g_src[src].ptr->copy();
+        }
+        const graph_type &g_src;
+        graph_type &g_dst;
+    };
+    struct ec
+    {
+        ec(const graph_type &g_src, graph_type &g_dst)
+            : g_src(g_src), g_dst(g_dst)
+        {}
+        void operator()(connection_type src, connection_type &dst)
+        {
+            g_dst[dst].ptr = g_src[src].ptr->copy();
+            g_dst[dst].producer_port = g_src[src].producer_port;
+            g_dst[dst].consumer_port = g_src[src].consumer_port;
+        }
+        const graph_type &g_src;
+        graph_type &g_dst;
+    };
+public:
+    network() {}
+    network(const network &n)
+    {
+        copy_graph(n.g, g, vertex_copy(vc(n.g, g)).edge_copy(ec(n.g, g)));
+    }
+    
     template<typename Component>
     component_type add_component()
     {
@@ -66,8 +100,8 @@ public:
         return (
             (typeid(*get_port(p, p_port)->connector().get())
                 == typeid(*get_port(c, c_port)->connector().get()))
-            && (get_port(p, p_port)->category_uuid() == 0)
-            && (get_port(c, c_port)->category_uuid() == 1));
+            && (get_port(p, p_port)->traits().category().uuid() == 0)
+            && (get_port(c, c_port)->traits().category().uuid() == 1));
     }
     void connect()
     {
@@ -89,6 +123,7 @@ public:
     {
         return g;
     }
+    
 private:
     void add_connection_(component_type p, int p_port, component_type c, int c_port,
         boost::shared_ptr<connection>)

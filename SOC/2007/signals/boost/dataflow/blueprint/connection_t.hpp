@@ -23,6 +23,10 @@ public:
             *(typename remove_reference<ProducerPort>::type *) producer.get(),
             *(typename remove_reference<ConsumerPort>::type *) consumer.get());
     }
+    virtual std::auto_ptr<connection> copy() const
+    {
+        return std::auto_ptr<connection>(new connection_t(*this));
+    }
 };
 
 } } } // namespace boost::dataflow::blueprint

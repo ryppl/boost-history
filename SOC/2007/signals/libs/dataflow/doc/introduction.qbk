@@ -1,5 +1,11 @@
 [section:introduction Introduction]
 
+[warning Dataflow is not a part of the Boost libraries.  It was developed
+as a part of the Google Summer of Code program.  The original proposal (for
+the Signal Network library, which became the Dataflow library)
+as well as some GSoC status updates can be found on the
+[@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
+
 Dataflow is a generic library for [WikiDataflow] programming using various data
 transport mechanisms.  It also has layers of support for
 two data transport mechanisms - one is based on
@@ -11,13 +17,8 @@ actors for data processing.
 The two data transport mechanisms are implemented in the [DataflowSignals]
 and [DataflowPhoenix] layers.  The idea behind providing a generic dataflow
 library is that other data transport mechanisms can be easily adapted for
-use with the library.
-
-[warning Dataflow is not a part of the Boost libraries.  It is being developed
-as a part of the Google Summer of Code program.  The original proposal (for
-the Signal Network library, which became the Dataflow library)
-as well as some status updates can be found on the
-[@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
+use with the library, and benefit from layers built on top of it
+(such as the recently started [DataflowBlueprint] layer).
 
 * If you would like some more information about why one would want to connect
   objects into a dataflow network, read about
@@ -25,7 +26,6 @@ as well as some status updates can be found on the
 * If you'd like to try out the library
     * keep in mind that the interface is subject to change
     * Read [how_to_use how to use this library and the documentation].
-    
 
 [section:dataflow Dataflow programming in C++ - motivation and advantages]
 
@@ -206,7 +206,8 @@ with [BoostPhoenix2], and [VTK] pipelines).
 Currently, the most useful functionality gained by developing a Dataflow
 support layer is the ability to connect components in a clean, readable
 manner. As more generic code is developed on top of
-the generic dataflow layer, providing a Dataflow support layer for your
+the generic dataflow layer (such as the recently started [DataflowBlueprint]),
+providing a Dataflow support layer for your
 favorite data transport mechanism will be more beneficial.
 
 See the [link dataflow.future future directions] of the Dataflow library
@@ -368,9 +369,9 @@ perfectly with release versions of boost.
 
 Version 0.8.1 (under construction)
 
-* started the [DataflowBlueprint] layer.
-* expanding the [ComponentConcept] concept.
-* making VTK example Jamfile work for more than Darwin and X11.
+* started the [DataflowBlueprint] layer (simple runtime reflection and network modeling).
+* expanding the [ComponentConcept] concept (compile-time reflection of ports).
+* VTK example Jamfile now works work with Windows (not just Darwin+X11 VTK).
 * provided an example using Boost.GIL.
 
 Version 0.8.0 -

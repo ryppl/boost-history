@@ -2,31 +2,81 @@
 
 The (recently started) [DataflowBlueprint] layer offers run-time reflection
 of components and modeling of
-a dataflow network through a BGL graph.  The following example briefly
-illustrates some of the capabilities:
+a dataflow network through a BGL graph.  Here is the output of a small example
+which briefly illustrates some of the capabilities:
 
-[blueprint_example]
-
-The output is:
 
 [pre
-source has 2 ports. 
-  port 0 is a producer
-  port 1 is a consumer
+Printing runtime info about all of the components:
+
+	source has 2 ports. 
+		port 0 is a producer
+		port 1 is a consumer
+
+	sink has 2 ports. 
+		port 0 is a producer
+		port 1 is a consumer
+
+	source_float has 2 ports. 
+		port 0 is a producer
+		port 1 is a consumer
+
+	sink_float has 2 ports. 
+		port 0 is a producer
+		port 1 is a consumer
 
 source port 0 is connectable to sink port 1
 source port 1 is not connectable to sink port 0
 source port 0 is not connectable to sink port 0
 source port 0 is not connectable to sink_float port 1
 
-Blueprint connecting source to sink, source_float to sink_float...
+Making blueprint connections: source to sink, source_float to sink_float...
 
 Using BGL to analyze the network... There are 2 independent parts of the network.
 
-Making the connections...
-Invoking the sources...
-sink now has:100
-sink_float now has:100.1
+Making a copy of the blueprint.
+
+Testing the original network...
+
+	Values at components:
+		value at source:100
+		value at sink:0
+		value at source_float:100.1
+		value at sink_float:0
+
+	Connecting the underlying components in the network...
+	Invoking the sources...
+
+	Values at components:
+		value at source:100
+		value at sink:100
+		value at source_float:100.1
+		value at sink_float:100.1
+
+Testing the network copy...
+
+	Values at components:
+		value at source:100
+		value at sink:0
+		value at source_float:100.1
+		value at sink_float:0
+
+	Connecting the underlying components in the network...
+	Invoking the sources...
+
+	Values at components:
+		value at source:100
+		value at sink:100
+		value at source_float:100.1
+		value at sink_float:100.1
+
+
+blueprint_example release has exited with status 0.
 ]
+
+The source is:
+
+[blueprint_example]
+
 
 [endsect]

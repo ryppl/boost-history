@@ -482,10 +482,10 @@
 				08F265450CEAC26F00DA01C9 /* component.hpp */,
 				08BD9AFB0CEB9D330069AFE2 /* get_port.hpp */,
 				08BD9B090CEB9E3D0069AFE2 /* port.hpp */,
+				08EF045E0CEBF1AD002ABBBC /* port_t.hpp */,
 				08256FE60CEBDFEC003EC1B4 /* network.hpp */,
 				08EF04520CEBF0EE002ABBBC /* connection.hpp */,
 				08EF04590CEBF153002ABBBC /* connection_t.hpp */,
-				08EF045E0CEBF1AD002ABBBC /* port_t.hpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";

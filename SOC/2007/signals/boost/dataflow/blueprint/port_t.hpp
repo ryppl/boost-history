@@ -59,16 +59,14 @@ class port_t : public port
 {
     typedef typename PortTraits::mechanism::template runtime_connection<PortTraits>::type connection_type;
 public:
-    port_t(Port p) : p(p), c(new connection_type()){}
+    port_t(Port p)
+        : port(port_category(
+            runtime::property<typename PortTraits::category, const char *>()(),
+            runtime::property<typename PortTraits::category, int>()()))
+        , p(p)
+        , c(new connection_type())
+    {}
     
-    const char * category() const
-    {
-        return runtime::property<typename PortTraits::category, const char *>()();
-    }
-    int category_uuid() const
-    {
-        return runtime::property<typename PortTraits::category, int>()();
-    }
     void *get()
     {
         return &p;

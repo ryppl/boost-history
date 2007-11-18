@@ -94,6 +94,8 @@ class filter<Signature, combined, Combiner, Group, GroupCompare>
     typedef filter<Signature, unfused, Combiner, Group, GroupCompare> base_type;
 public:
     filter() : fused_out(base_type::out) {}
+	filter(const filter &) : fused_out(base_type::out){}
+    const filter &operator = (const filter &) {return *this;}
 
     typedef typename base_type::signature_type signature_type;
     typedef typename base_type::signal_type signal_type;

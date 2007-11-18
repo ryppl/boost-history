@@ -2,6 +2,19 @@
 
 [section:blueprint Expanding the blueprint layer]
 
+The [DataflowBlueprint] layer now offers some limited dataflow network modeling
+via a BGL graph, and some basic runtime reflections for classes that model
+the [ReflectiveComponentConcept] concept.
+
+The following features are planned for the future:
+
+* *Serialization* - It should be possible to serialize and deserialize a
+  network blueprint. This could be used to store datafow programs, or to send
+  them over the network.
+  
+* *Component banks* - Banks of components which can be accessed at runtime.
+
+* *Documentation* - non-existant at this point...
 
 [endsect]
 
@@ -16,7 +29,7 @@ has recently introduced a similar environment for C++ (and [VTK]),
 based on the [@http://vcreatelogic.com/oss/gcf/index.html Generic
 Component Framework] and is released under the GNU GPL license.
 
-Once the [blueprint] layer is built, it might be possible to integrate
+Once the [DataflowBlueprint] layer is completed, it might be possible to integrate
 it with the Generic Component Framework to get a visual programming
 environment for the Dataflow library.
 

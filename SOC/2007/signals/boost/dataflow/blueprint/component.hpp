@@ -24,6 +24,8 @@ public:
     virtual void invoke()=0;
     virtual int num_ports() const=0;
     virtual std::auto_ptr<port> get_port(int port_num)=0;
+    
+    virtual std::auto_ptr<component> copy() const=0;
     virtual ~component() {};
 };
 
@@ -33,11 +35,11 @@ class component_t : public component
 public:
     component_t() {}
     template<typename T0>
-    component_t(const T0 &t0) : component(t0) {}
+    component_t(const T0 &t0) : c(t0) {}
     
     void invoke()
     {
-        component_operation<operations::invoke, Mechanism>(component);
+        component_operation<operations::invoke, Mechanism>(c);
     }
     int num_ports() const
     {
@@ -45,11 +47,15 @@ public:
     }
     std::auto_ptr<port> get_port(int port_num)
     {
-        return blueprint::get_port<Mechanism, Component>(component, port_num);
+        return blueprint::get_port<Mechanism, Component>(c, port_num);
     }
-    Component &get() {return component;}
+    virtual std::auto_ptr<component> copy() const
+    {
+        return std::auto_ptr<component>(new component_t<Mechanism,Component>(*this));
+    }
+    Component &get() {return c;}
 private:
-    Component component;
+    Component c;
 };
 
 } } } // namespace boost::dataflow::blueprint

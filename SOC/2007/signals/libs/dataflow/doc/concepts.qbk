@@ -85,7 +85,7 @@ which it collects data from.
 
 Operations between two ports such as /connect/, /connect_only/, /disconnect/,
 and /extract/ are captured by the [BinaryOperable] concept.  Operations
-on a single port such as /disconnect_all/ are covered by the [UnaryOperable]
+on a single port such as /disconnect_all/ are covered by the [UnaryOperableConcept]
 concept.
 
 [/
@@ -292,6 +292,10 @@ A ['[ComponentTraitsConcept]] specifies the traits of a [ComponentConcept].
 
 A ['[ReflectiveComponentTraitsConcept]] specifies the traits of a [ReflectiveComponentConcept].
 
+[heading Refinement of]
+
+* [ComponentTraitsConcept]
+
 [heading Notation]
 [variablelist
     [[CT] [A ReflectiveComponentTraits type.]]
@@ -303,16 +307,19 @@ A ['[ReflectiveComponentTraitsConcept]] specifies the traits of a [ReflectiveCom
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Mechanism]
-        [`PC::mechanism`]
-        [any type]
-        [[MechanismConcept] type tag.]
+        [`PC::ports`]
+        [MPL Sequence of [PortTraitsConcept] types]
+        [
+            An enumeration of the [PortTraitsConcept] of the exposed
+            [PortConcept]s.
+        ]
     ]
 ]
 
 [heading Header]
 
 ```
-    #include <boost/dataflow/support/component.hpp> // or
+    #include <boost/dataflow/support/reflective_component.hpp> // or
     #include <boost/dataflow/support.hpp>
 ```
 
