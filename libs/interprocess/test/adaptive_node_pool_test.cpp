@@ -9,16 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/interprocess/detail/config_begin.hpp>
 #include "node_pool_test.hpp"
-#include <boost/interprocess/allocators/detail/node_pool.hpp>
-
-
+#include <boost/interprocess/allocators/detail/adaptive_node_pool.hpp>
 
 int main ()
 {
    using namespace boost::interprocess;
    typedef managed_shared_memory::segment_manager segment_manager;
-   typedef detail::private_node_pool
-      <segment_manager, 4, 64> node_pool_t;
+
+   typedef detail::private_adaptive_node_pool
+      <segment_manager, 4, 64, 64> node_pool_t;
 
    if(!test::test_all_node_pool<node_pool_t>())
       return 1;
