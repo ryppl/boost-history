@@ -1,48 +1,57 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Running Boost Regression Tests</title>
-<link rel="stylesheet" type="text/css" href="../../../../doc/html/minimal.css">
+  <title>Running Boost Regression Tests</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="stylesheet" type="text/css" href=
+  "/style/section-development.css" />
+  <!--[if IE]> <style type="text/css"> body { behavior: url(/style/csshover.htc); } </style> <![endif]-->
 </head>
 
 <body>
+  <div id="heading">
+    <!--#include virtual="/common/heading.html" -->
+  </div>
 
-<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="831">
-  <tr>
-    <td width="277">
-<a href="../../../../index.htm">
-<img src="../../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
-    <td width="531" align="middle">
-    <font size="7">Running Boost Regression Tests</font>
-    </td>
-  </tr>
-</table>
+  <div id="body">
+    <div id="body-inner">
+      <div id="content">
+        <div class="section" id="intro">
+          <div class="section-0">
+            <div class="section-title">
+              <h1>Running Boost Regression Tests</h1>
+            </div>
 
-<h2>Requirements</h2>
-<ul>
-  <li>Python 2.3 or later.<br>
-&nbsp;</li>
-  <li>Subversion 1.4 or later.<br>
-&nbsp;</li>
-  <li>At least 5 gigabytes of disk space per compiler to be tested.</li>
-</ul>
-<h2>Step by step instructions</h2>
-<ol>
-  <li>Create a new directory for the branch you want to test.<br>
-&nbsp;</li>
-  <li>Download the
-  <a href="http://svn.boost.org/svn/boost/trunk/tools/regression/src/run.py">
-  run.py</a> script into that directory.<br>
-&nbsp;</li>
-  <li>Run &quot;<code>python run.py [options] [commands]</code>&quot;.</li>
-</ol>
-<dl>
-  <dd>
-  <pre>commands: cleanup, collect-logs, get-source, get-tools, patch,
+            <div class="section-body">
+              <h2>Requirements</h2>
+
+              <ul>
+                <li>Python 2.3 or later.</li>
+
+                <li>Subversion 1.4 or later.</li>
+
+                <li>At least 5 gigabytes of disk space per compiler to be
+                tested.</li>
+              </ul>
+
+              <h2>Step by step instructions</h2>
+
+              <ol>
+                <li>Create a new directory for the branch you want to
+                test.</li>
+
+                <li>Download the <a href=
+                "http://svn.boost.org/svn/boost/trunk/tools/regression/src/run.py">
+                run.py</a> script into that directory.</li>
+
+                <li>Run "<code>python run.py [options]
+                [commands]</code>".</li>
+              </ol>
+              <pre>
+commands: cleanup, collect-logs, get-source, get-tools, patch,
 regression, setup, show-revision, test, test-clean, test-process,
 test-run, update-source, upload-logs
 
@@ -74,7 +83,7 @@ options:
                          do neither a tarball download nor an SVN update;
                          used primarily for testing script changes
    --proxy=PROXY         HTTP proxy server address and port
-                         (e.g.'<a rel="nofollow" href="http://www.someproxy.com:3128'" target="_top">http://www.someproxy.com:3128'</a>)
+                         (e.g.'http://www.someproxy.com:3128')
    --ftp-proxy=FTP_PROXY
                          FTP proxy server (e.g. 'ftpproxy')
    --dart-server=DART_SERVER
@@ -89,21 +98,43 @@ options:
                          following form:
                          &lt;user&gt;:&lt;password&gt;@&lt;host&gt;[:&lt;port&gt;]
    --skip-tests=SKIP_TESTS
-                         do not run bjam; used for testing script changes</pre>
-  </dd>
-</dl>
-<p>To test trunk use &quot;<code>--tag=trunk</code>&quot; (the default), and to test the 
-release use &quot;<code>--tag=branches/release</code>&quot;. Or substitute any Boost tree 
-of your choice.</p>
+                         do not run bjam; used for testing script changes
+</pre>
 
-<hr>
+              <p>To test trunk use "<code>--tag=trunk</code>" (the default),
+              and to test the release use
+              "<code>--tag=branches/release</code>". Or substitute any Boost
+              tree of your choice.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<p>© Copyright Rene Rivera, 2007<br>
-Distributed under the Boost Software License, Version 1.0. See
-<a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
+      <div id="sidebar">
+        <!--#include virtual="/common/sidebar-common.html" -->
+        <!--#include virtual="/common/sidebar-development.html" -->
+      </div>
 
-<p>Revised 
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->November 14, 2007<!--webbot bot="Timestamp" endspan i-checksum="39589" --> </font>
-</p>
+      <div class="clear"></div>
+    </div>
+  </div>
 
+  <div id="footer">
+    <div id="footer-left">
+      <div id="revised">
+        <p>Revised $Date$</p>
+      </div>
+
+      <div id="copyright">
+        <p>Copyright Rene Rivera 2007.</p>
+      </div><!--#include virtual="/common/footer-license.html" -->
+    </div>
+
+    <div id="footer-right">
+      <!--#include virtual="/common/footer-banners.html" -->
+    </div>
+
+    <div class="clear"></div>
+  </div>
 </body>
+</html>
