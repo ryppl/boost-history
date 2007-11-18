@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_INTERPROCESS_CACHED_NODE_ALLOCATOR_HPP
-#define BOOST_INTERPROCESS_CACHED_NODE_ALLOCATOR_HPP
+#ifndef BOOST_INTERPROCESS_CACHED_ADAPTIVE_POOL_HPP
+#define BOOST_INTERPROCESS_CACHED_ADAPTIVE_POOL_HPP
 
 #if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
@@ -22,9 +22,10 @@
 #include <boost/interprocess/detail/utilities.hpp>
 #include <boost/assert.hpp>
 #include <boost/utility/addressof.hpp>
-#include <boost/interprocess/allocators/detail/node_pool.hpp>
+#include <boost/interprocess/allocators/detail/adaptive_node_pool.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 #include <boost/interprocess/exceptions.hpp>
+#include <boost/interprocess/allocators/detail/node_tools.hpp>
 #include <memory>
 #include <algorithm>
 #include <cstddef>
@@ -40,22 +41,24 @@ namespace interprocess {
 //!"typename SegmentManager::void_pointer" type. This allows
 //!placing the allocator in shared memory, memory mapped-files, etc...
 //!This node allocator shares a segregated storage between all instances of 
-//!cached_node_allocator with equal sizeof(T) placed in the same fixed size 
+//!cached_adaptive_pool with equal sizeof(T) placed in the same fixed size 
 //!memory segment. But also caches some nodes privately to
 //!avoid some synchronization overhead.
-template<class T, class SegmentManager, std::size_t NodesPerChunk>
-class cached_node_allocator
+template<class T, class SegmentManager, std::size_t NodesPerChunk, std::size_t MaxFreeChunks>
+class cached_adaptive_pool
 {
    /// @cond
-   typedef typename SegmentManager::void_pointer          void_pointer;
+   typedef typename SegmentManager::void_pointer         void_pointer;
    typedef typename detail::
-      pointer_to_other<void_pointer, const void>::type    cvoid_pointer;
-   typedef SegmentManager                                 segment_manager;
+      pointer_to_other<void_pointer, const void>::type   cvoid_pointer;
+   typedef SegmentManager                                segment_manager;
    typedef typename detail::
-      pointer_to_other<void_pointer, char>::type          char_pointer;
+      pointer_to_other<void_pointer, char>::type         char_pointer;
    typedef typename SegmentManager::mutex_family::mutex_type mutex_type;
-   typedef cached_node_allocator<T, SegmentManager, NodesPerChunk>   self_t;
+   typedef cached_adaptive_pool
+      <T, SegmentManager, NodesPerChunk, MaxFreeChunks>              self_t;
    enum { DEFAULT_MAX_CACHED_NODES = 64 };
+
    typedef typename detail::node_slist<void_pointer>::node_t         node_t;
    typedef typename detail::node_slist<void_pointer>::node_slist_t   cached_list_t;
    /// @endcond
@@ -73,61 +76,62 @@ class cached_node_allocator
                      <const value_type>::type            const_reference;
    typedef std::size_t                                   size_type;
    typedef std::ptrdiff_t                                difference_type;
-   typedef detail::shared_node_pool
+   typedef detail::shared_adaptive_node_pool
       < SegmentManager, mutex_type
-      , sizeof(T), NodesPerChunk>                        node_pool_t;
+      , sizeof(T), NodesPerChunk, MaxFreeChunks>         node_pool_t;
    typedef typename detail::
       pointer_to_other<void_pointer, node_pool_t>::type  node_pool_ptr;
 
-   //!Obtains cached_node_allocator from other cached_node_allocator
+   //!Obtains cached_adaptive_pool from other
+   //!cached_adaptive_pool
    template<class T2>
    struct rebind
    {  
-      typedef cached_node_allocator<T2, SegmentManager, NodesPerChunk>   other;
+      typedef cached_adaptive_pool<T2, SegmentManager, NodesPerChunk, MaxFreeChunks>   other;
    };
 
    /// @cond
    private:
 
-   //!Not assignable from related cached_node_allocator
-   template<class T2, class SegmentManager2, std::size_t N2>
-   cached_node_allocator& operator=
-      (const cached_node_allocator<T2, SegmentManager2, N2>&);
+   //!Not assignable from related cached_adaptive_pool
+   template<class T2, class SegmentManager2, std::size_t N2, std::size_t MaxFreeChunks2>
+   cached_adaptive_pool& operator=
+      (const cached_adaptive_pool<T2, SegmentManager2, N2, MaxFreeChunks2>&);
 
-   //!Not assignable from other cached_node_allocator
-   cached_node_allocator& operator=(const cached_node_allocator&);
+   //!Not assignable from other cached_adaptive_pool
+   cached_adaptive_pool& operator=(const cached_adaptive_pool&);
    /// @endcond
-
+   
    public:
    //!Constructor from a segment manager. If not present, constructs
    //!a node pool. Increments the reference count of the node pool.
    //!Can throw boost::interprocess::bad_alloc
-   cached_node_allocator(segment_manager *segment_mngr,
+   cached_adaptive_pool(segment_manager *segment_mngr,
                          std::size_t max_cached_nodes = DEFAULT_MAX_CACHED_NODES) 
       : mp_node_pool(priv_get_or_create(segment_mngr)),
         m_max_cached_nodes(max_cached_nodes)
    {}
 
-   //!Copy constructor from other cached_node_allocator. Increments the 
+   //!Copy constructor from other cached_adaptive_pool. Increments the 
    //!reference count of the associated node pool. Never throws
-   cached_node_allocator(const cached_node_allocator &other) 
+   cached_adaptive_pool(const cached_adaptive_pool &other) 
       : mp_node_pool(other.get_node_pool()),
         m_max_cached_nodes(other.get_max_cached_nodes())
-   {  mp_node_pool->inc_ref_count();   }
+   {     mp_node_pool->inc_ref_count();   }
 
-   //!Copy constructor from related cached_node_allocator. If not present, constructs
+   //!Copy constructor from related cached_adaptive_pool. If not present, constructs
    //!a node pool. Increments the reference count of the associated node pool.
    //!Can throw boost::interprocess::bad_alloc
    template<class T2>
-   cached_node_allocator
-      (const cached_node_allocator<T2, SegmentManager, NodesPerChunk> &other)
+   cached_adaptive_pool
+      (const cached_adaptive_pool<T2, SegmentManager, NodesPerChunk, MaxFreeChunks> &other)
       : mp_node_pool(priv_get_or_create(other.get_segment_manager())),
         m_max_cached_nodes(other.get_max_cached_nodes())
          { }
 
    //!Destructor, removes node_pool_t from memory
    //!if its reference count reaches to zero. Never throws
-   ~cached_node_allocator() 
+   ~cached_adaptive_pool() 
    {     
       priv_deallocate_all_cached_nodes();
       priv_destroy_if_last_link();   
@@ -136,7 +140,7 @@ class cached_node_allocator
    //!Returns a pointer to the node pool.
    //!Never throws
    node_pool_t* get_node_pool() const
-   {  return detail::get_pointer(mp_node_pool);   }
+      {  return detail::get_pointer(mp_node_pool);   }
 
    //!Returns the segment manager.
    //!Never throws
@@ -156,19 +160,20 @@ class cached_node_allocator
    std::size_t get_max_cached_nodes() const
       {  return m_max_cached_nodes;  }
 
-   //!Returns the number of elements that could be allocated. Never throws
+   //!Returns the number of elements that could be
+   //!allocated. Never throws
    size_type max_size() const
       {  return this->get_segment_manager()->get_size()/sizeof(value_type);  }
 
    //!Allocate memory for an array of count elements. 
    //!Throws boost::interprocess::bad_alloc if there is no enough memory
    pointer allocate(size_type count, cvoid_pointer hint = 0)
-   {
+   {  
       (void)hint;
       if(count > ((size_type)-1)/sizeof(value_type))
          throw bad_alloc();
-      typedef detail::shared_node_pool
-               <SegmentManager, mutex_type, sizeof(T), NodesPerChunk>   node_pool_t;
+      typedef detail::shared_adaptive_node_pool
+               <SegmentManager, mutex_type, sizeof(T), NodesPerChunk, MaxFreeChunks>   node_pool_t;
       
       void * ret;
       
@@ -186,12 +191,11 @@ class cached_node_allocator
       return pointer(static_cast<T*>(ret));
    }
 
-   //!Deallocate allocated memory.
-   //!Never throws
+   //!Deallocate allocated memory. Never throws
    void deallocate(const pointer &ptr, size_type count)
    {
-      typedef detail::shared_node_pool
-               <SegmentManager, mutex_type, sizeof(T), NodesPerChunk>   node_pool_t;
+      typedef detail::shared_adaptive_node_pool
+               <SegmentManager, mutex_type, sizeof(T), NodesPerChunk, MaxFreeChunks>   node_pool_t;
 
       if(count == 1){
          //Check if cache is full
@@ -209,6 +213,10 @@ class cached_node_allocator
       }
    }
 
+   //!Deallocates all free chunks of the pool
+   void deallocate_free_chunks()
+   {  mp_node_pool->deallocate_free_chunks();   }
+
    //!Swaps allocators. Does not throw. If each allocator is placed in a
    //!different shared memory segments, the result is undefined.
    friend void swap(self_t &alloc1, self_t &alloc2)
@@ -218,13 +226,8 @@ class cached_node_allocator
       detail::do_swap(alloc1.m_max_cached_nodes, alloc2.m_max_cached_nodes);
    }
 
-   //!Returns the cached nodes to the shared pool
    void deallocate_cache()
    {  this->priv_deallocate_all_cached_nodes(); }
-
-   //!Deallocates all free chunks of the pool
-   void deallocate_free_chunks()
-   {  mp_node_pool->deallocate_free_chunks();   }
 
    //These functions are obsolete. These are here to conserve
    //backwards compatibility with containers using them...
@@ -256,8 +259,8 @@ class cached_node_allocator
    //!increments reference count if it is already created
    struct get_or_create_func
    {
-      typedef detail::shared_node_pool
-               <SegmentManager, mutex_type, sizeof(T), NodesPerChunk>   node_pool_t;
+      typedef detail::shared_adaptive_node_pool
+               <SegmentManager, mutex_type, sizeof(T), NodesPerChunk, MaxFreeChunks>   node_pool_t;
 
       //!This connects or constructs the unique instance of node_pool_t
       //!Can throw boost::interprocess::bad_alloc
@@ -276,13 +279,16 @@ class cached_node_allocator
       get_or_create_func(segment_manager *hdr) : mp_named_alloc(hdr){}
       
       node_pool_t      *mp_node_pool;
-      segment_manager  *mp_named_alloc;
+      segment_manager     *mp_named_alloc;
    };
 
    //!Frees all cached nodes.
    //!Never throws
    void priv_deallocate_all_cached_nodes()
-   {  mp_node_pool->deallocate_nodes(m_cached_nodes); }
+   {
+      if(m_cached_nodes.empty()) return;
+      mp_node_pool->deallocate_nodes(m_cached_nodes);
+   }
 
    //!Frees all cached nodes at once.
    //!Never throws
@@ -293,10 +299,12 @@ class cached_node_allocator
       }
    }
 
-   //!Frees n cached nodes at once.
-   //!Never throws
+   //!Frees n cached nodes at once. Never throws
    void priv_deallocate_n_nodes(std::size_t n)
-   {  mp_node_pool->deallocate_nodes(m_cached_nodes, n); }   
+   {
+      //Deallocate all new linked list at once
+      mp_node_pool->deallocate_nodes(m_cached_nodes, n);
+   }   
 
    //!Initialization function, creates an executes atomically the 
    //!initialization object functions. Can throw boost::interprocess::bad_alloc
@@ -312,8 +320,8 @@ class cached_node_allocator
    //!Never throws
    struct destroy_if_last_link_func
    {
-      typedef detail::shared_node_pool
-               <SegmentManager, mutex_type,sizeof(T), NodesPerChunk>   node_pool_t;
+      typedef detail::shared_adaptive_node_pool
+               <SegmentManager, mutex_type,sizeof(T), NodesPerChunk, MaxFreeChunks>   node_pool_t;
 
       //!Decrements reference count and destroys the object if there is no 
       //!more attached allocators. Never throws
@@ -326,8 +334,8 @@ class cached_node_allocator
          mp_named_alloc->template destroy<node_pool_t>(unique_instance); 
       }  
 
-      //!Constructor. Initializes function object
-      //!parameters
+      //!Constructor. Initializes function
+      //!object parameters
       destroy_if_last_link_func(segment_manager    *nhdr,
                                 node_pool_t *phdr) 
                             : mp_named_alloc(nhdr), mp_node_pool(phdr){}
@@ -340,8 +348,8 @@ class cached_node_allocator
    //!object. Never throws
    void priv_destroy_if_last_link()
    {
-      typedef detail::shared_node_pool
-               <SegmentManager, mutex_type,sizeof(T), NodesPerChunk>   node_pool_t;
+      typedef detail::shared_adaptive_node_pool
+               <SegmentManager, mutex_type,sizeof(T), NodesPerChunk, MaxFreeChunks>   node_pool_t;
       //Get segment manager
       segment_manager *segment_mngr = this->get_segment_manager();
       //Execute destruction functor atomically
@@ -357,23 +365,24 @@ class cached_node_allocator
 };
 
 //!Equality test for same type of
-//!cached_node_allocator
-template<class T, class S, std::size_t NodesPerChunk> inline
-bool operator==(const cached_node_allocator<T, S, NodesPerChunk> &alloc1, 
-                const cached_node_allocator<T, S, NodesPerChunk> &alloc2)
+//!cached_adaptive_pool
+template<class T, class S, std::size_t NodesPerChunk, std::size_t M> inline
+bool operator==(const cached_adaptive_pool<T, S, NodesPerChunk, M> &alloc1, 
+                const cached_adaptive_pool<T, S, NodesPerChunk, M> &alloc2)
    {  return alloc1.get_node_pool() == alloc2.get_node_pool(); }
 
 //!Inequality test for same type of
-//!cached_node_allocator
-template<class T, class S, std::size_t NodesPerChunk> inline
-bool operator!=(const cached_node_allocator<T, S, NodesPerChunk> &alloc1, 
-                const cached_node_allocator<T, S, NodesPerChunk> &alloc2)
+//!cached_adaptive_pool
+template<class T, class S, std::size_t NodesPerChunk, std::size_t M> inline
+bool operator!=(const cached_adaptive_pool<T, S, NodesPerChunk, M> &alloc1, 
+                const cached_adaptive_pool<T, S, NodesPerChunk, M> &alloc2)
    {  return alloc1.get_node_pool() != alloc2.get_node_pool(); }
 
 }  //namespace interprocess {
+
 }  //namespace boost {
 
 #include <boost/interprocess/detail/config_end.hpp>
 
-#endif   //#ifndef BOOST_INTERPROCESS_CACHED_NODE_ALLOCATOR_HPP
+#endif   //#ifndef BOOST_INTERPROCESS_CACHED_ADAPTIVE_POOL_HPP
 
