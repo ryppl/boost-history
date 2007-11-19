@@ -20,6 +20,7 @@
 #include <boost/preprocessor/iteration/local.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 #ifndef BOOST_SWITCH_LIMIT
     #define BOOST_SWITCH_LIMIT 50
@@ -50,13 +51,19 @@ namespace switch_detail {
 // default is supplied.
 
 template<class R>
-R forced_return(R* r = 0) {
+inline R forced_return(typename boost::remove_reference<R>::type* r = 0) {
     return(*r);
 }
 
 // Thanks to Stjepan Rajko for catching this.
 template<>
-void forced_return<void>(void*) {}
+inline void forced_return<void>(void*) {}
+template<>
+inline const void forced_return<const void>(const void*) {}
+template<>
+inline volatile void forced_return<volatile void>(volatile void*) {}
+template<>
+inline const volatile void forced_return<const volatile void>(const volatile void*) {}
 
 template<class R>
 struct throw_exception {

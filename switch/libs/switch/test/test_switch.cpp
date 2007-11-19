@@ -34,18 +34,29 @@ namespace {
     struct limit_test {
         typedef int result_type;
         template<class Index>
-        int operator()(Index) {
+        int operator()(Index) const {
             return(-Index::value);
         }
     };
     typedef boost::mpl::range_c<int, 0, BOOST_SWITCH_LIMIT> limit_range;
     const int limit_value = BOOST_SWITCH_LIMIT - 1;
 
+    template<class T>
     struct void_return {
-        typedef void result_type;
+        typedef T result_type;
         template<class Index>
-        void operator()(Index) {
+        T operator()(Index) const {
             // Do Nothing.
+        }
+    };
+
+    int test_int;
+
+    struct return_reference {
+        typedef int& result_type;
+        template<class Index>
+        int& operator()(Index) const {
+            return(test_int);
         }
     };
 }
@@ -109,5 +120,12 @@ BOOST_AUTO_TEST_CASE(limit_with_default) {
 }
 
 BOOST_AUTO_TEST_CASE(test_void) {
-    boost::switch_<test_range>(0, void_return());
+    boost::switch_<test_range>(0, void_return<void>());
+    boost::switch_<test_range>(0, void_return<const void>());
+    boost::switch_<test_range>(0, void_return<volatile void>());
+    boost::switch_<test_range>(0, void_return<const volatile void>());
+}
+
+BOOST_AUTO_TEST_CASE(test_reference) {
+    boost::switch_<test_range>(0, return_reference());
 }

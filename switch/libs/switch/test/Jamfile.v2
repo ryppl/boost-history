@@ -10,7 +10,7 @@
 import testing ;
 
 project switch_test : :
-    requirements <include>../../.. <warnings>all
+    requirements <include>../../.. <include>$(BOOST_ROOT) <warnings>all
 ;
 
 
@@ -18,5 +18,6 @@ project switch_test : :
   test-suite switch_:
    :
     [ run test_switch.cpp $(BOOST_ROOT)/libs/test/build//boost_unit_test_framework : : : : ]
+    [ link test_odr1.cpp test_odr2.cpp ]
    ;
 }
