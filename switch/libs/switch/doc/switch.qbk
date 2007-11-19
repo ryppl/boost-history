@@ -1,0 +1,109 @@
+[library Boost.Switch
+  [version 1.0]
+  [authors [Watanabe, Steven]]
+  [copyright 2007 Steven Watanabe]
+  [license
+      Distributed under the Boost Software License, Version 1.0.
+      (See accompanying file LICENSE_1_0.txt or copy at
+      <ulink href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+  ]
+  [purpose generates a switch statement]
+]
+
+[section:introduction Introduction]
+
+The built in C/C++ switch statement is very efficient.
+Unfortunately, unlike a chained if/else construct there
+is no easy way to use it when the number of cases depends
+on a template parameter.
+
+[endsect]
+
+[section:switch_ switch_]
+
+    namespace boost {
+
+    template<class Cases, class Int, class F>
+    typename F::result_type switch_(Int n, F f);
+
+    template<class Cases, class Int, class F, class Default>
+    typename F::result_type switch_(Int n, F f, Default default_);
+
+    }
+
+[*Header]
+
+    #include <boost/switch.hpp>
+
+[variablelist Parameters
+    [[[^Cases]][MPL Forward Sequence of integer constants]]
+    [[[^n]][Integer]]
+    [[[^f]][Function object]]
+    [[[^default_]][Function object]]
+]
+
+Generates a switch statement. If the value of one
+of the elements of `Cases` is equal to `n`, then this function
+will call `f` with a parameter of that type.  Otherwise
+it will pass `n` to `default_` or throw an exception depending
+on whether `default_` was specified.  For example
+
+    template<class FusionSequence>
+    struct print_nth_function {
+        typedef void result_type;
+        template<class Case>
+        void operator()(Case) const {
+            std::cout << fusion::at<Case>(sequence) << std::endl;
+        }
+        print_nth(const FusionSequence& s) : sequence(s) {}
+        const FusionSequence& sequence;
+    };
+
+    struct throw_out_of_range {
+        template<class Int>
+        void operator()(Int) const {
+            throw(std::out_of_range());
+        }
+    };
+
+    template<class FusionSequence>
+    void print_nth(const FusionSequence& s, std::size_t n) {
+        typedef typename fusion::result_of::size<FusionSequence>::type size;
+        typedef mpl::range_c<std::size_t, 0, size::value> range;
+        switch_<range>(n, print_nth_function(s), throw_out_of_range());
+    }
+
+prints the nth element of a fusion sequence.
+
+[endsect]
+
+[section:bad_switch bad_switch]
+
+    namespace boost {
+
+    class bad_switch : public std::runtime_error {};
+
+    }
+
+[*Header]
+
+    #include <boost/switch.hpp>
+
+Thrown when the default case is executed
+and no default was provided.
+
+[endsect]
+
+[section:BOOST_SWITCH_LIMIT BOOST_SWITCH_LIMIT]
+
+    #define BOOST_SWITCH_LIMIT 50
+
+[*Header]
+
+    #include <boost/switch.hpp>
+
+Specifies the maximum number of cases supported.
+The default value of 50 can be overridden as long
+as it is the same in every translation unit.
+
+[endsect]
