@@ -151,13 +151,11 @@ void mul_logger_one_filter_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     mul_logger_one_filter_example();
 }
 
-#endif
 
 // End of file
 

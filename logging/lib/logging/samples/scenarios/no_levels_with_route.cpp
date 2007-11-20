@@ -145,13 +145,11 @@ void no_levels_with_route_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     no_levels_with_route_example();
 }
 
-#endif
 
 // End of file
 

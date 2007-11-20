@@ -99,13 +99,11 @@ void fastest_use_ostr_like_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     fastest_use_ostr_like_example();
 }
 
-#endif
 
 // End of file
 

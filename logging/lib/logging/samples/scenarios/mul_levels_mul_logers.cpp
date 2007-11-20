@@ -154,13 +154,11 @@ void mul_levels_mul_logers_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     mul_levels_mul_logers_example();
 }
 
-#endif
 
 // End of file
 

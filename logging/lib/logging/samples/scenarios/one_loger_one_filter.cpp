@@ -106,13 +106,11 @@ void one_logger_one_filter_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     one_logger_one_filter_example();
 }
 
-#endif
 
 // End of file
 

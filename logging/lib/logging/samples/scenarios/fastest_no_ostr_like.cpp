@@ -105,13 +105,11 @@ void fastest_no_ostr_like_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     fastest_no_ostr_like_example();
 }
 
-#endif
 
 // End of file
 

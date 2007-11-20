@@ -105,13 +105,11 @@ void using_tags_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     using_tags_example();
 }
 
-#endif
 
 // End of file
 

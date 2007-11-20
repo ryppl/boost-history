@@ -101,13 +101,11 @@ void test_mul_levels_one_logger() {
 }
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     test_mul_levels_one_logger();
 }
 
-#endif
 
 // End of file
 

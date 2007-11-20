@@ -162,12 +162,9 @@ void custom_fmt_dest_example() {
 
 
 
-#ifdef SINGLE_TEST
-
 int main() {
     custom_fmt_dest_example();
 }
 
-#endif
 
 // End of file

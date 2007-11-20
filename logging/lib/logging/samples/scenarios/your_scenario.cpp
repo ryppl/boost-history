@@ -182,13 +182,11 @@ void your_scenario_example() {
 
 
 
-#ifdef SINGLE_TEST
 
 int main() {
     your_scenario_example();
 }
 
-#endif
 
 // End of file
 
