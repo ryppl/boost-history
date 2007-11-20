@@ -64,7 +64,7 @@ namespace boost { namespace logging {
     - @ref destination "Destinations"
 
 - @ref boost_logging_requirements 
-
+- @ref page_todo 
 
 
 */

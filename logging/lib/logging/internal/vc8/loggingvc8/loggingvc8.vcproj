@@ -702,6 +702,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\todo.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\workflow.hpp"
 				>
 			</File>

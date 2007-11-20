@@ -141,7 +141,7 @@ BOOST_DECLARE_LOG_FILTER(g_filter, filter::no_ts)
 
 // usage
 int i = 100;
-L_ << "this is " << i << " times cooler then the average log";
+L_ << "this is " << i << " times cooler than the average log";
 @endcode
 
 You can define your own types of writers. The %writer classes that come with this library are in <tt>namespace writer</tt>.
