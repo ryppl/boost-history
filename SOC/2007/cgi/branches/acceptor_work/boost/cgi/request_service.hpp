@@ -35,7 +35,7 @@ namespace cgi {
     : public detail::service_base<request_service<Protocol> >
   {
     // The platform-specific implementation (only one for now)
-    typedef typename detail::protocol_traits<Protocol>::service_impl_type
+    typedef typename detail::protocol_traits<Protocol>::request_service_impl
       service_impl_type;
 
   public:

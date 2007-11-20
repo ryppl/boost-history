@@ -361,6 +361,10 @@ namespace cgi {
     //response& operator<< (response& r1, response& r2)
     //{
     //  r1.
+    bool headers_terminated() const
+    {
+      return headers_terminated_;
+    }
   protected:
     // Vector of all the headers, each followed by a CRLF
     std::vector<std::string> headers_;
@@ -406,7 +410,7 @@ namespace cgi {
    * no further headers are added to the response. It has no other side-
    * effects; for instance, it won't write any data to the client.
    * ]
-   */
+   * /
   template<typename T>
   response& operator<<(response& resp, const ::cgi::basic_header<std::basic_string<T> >& hdr)
   {
@@ -419,9 +423,10 @@ namespace cgi {
       resp.set_header(hdr.content);
       return resp;
     }
-  }
-  template<typename StringT>
-  response& operator<<(response& resp, const ::cgi::basic_header<StringT>& hdr)
+  }*/
+
+  template<>
+  response& operator<<(response& resp, const ::cgi::header& hdr)
   {
     if (hdr.content.empty()) {
       resp.headers_terminated_ = true;
@@ -446,8 +451,9 @@ namespace cgi {
    * library.
    */
   template<typename T>
-  response& operator<<(response& resp, typename basic_cookie<T> ck)
+  response& operator<<(response& resp, basic_cookie<T> ck)
   {
+    BOOST_ASSERT(!resp.headers_terminated());
     resp.set_header("Set-cookie", ck.to_string());
     return resp;
   }

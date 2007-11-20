@@ -33,7 +33,7 @@ namespace cgi {
    */
   template<typename Protocol = scgi_>
   class scgi_request_acceptor_service
-    : public detail::service_base<request_service<Protocol> >
+    : public detail::service_base<scgi_request_acceptor_service<Protocol> >
   {
   public:
     //typedef typename service_impl_type::impl_type     impl_type;
@@ -47,7 +47,7 @@ namespace cgi {
     //static boost::asio::io_service::id id;
 
     scgi_request_acceptor_service(::cgi::io_service& ios)
-      : detail::service_base<request_service<Protocol> >(ios)
+      : detail::service_base<scgi_request_acceptor_service<Protocol> >(ios)
       , service_impl_(ios)
     {
     }
@@ -77,8 +77,30 @@ namespace cgi {
       return service_impl_.close(impl);
     }
 
+    template<typename Protocol>
+    boost::system::error_code
+      open(implementation_type& impl, Protocol& protocol
+          , boost::system::error_code& ec)
+    {
+      return service_impl_.open(impl, protocol, ec);
+    }
+
+    template<typename Endpoint>
+    boost::system::error_code
+      bind(implementation_type& impl, Endpoint& endpoint
+          , boost::system::error_code& ec)
+    {
+      return service_impl_.bind(impl, endpoint, ec);
+    }
+
+    boost::system::error_code
+      listen(implementation_type& impl, boost::system::error_code& ec)
+    {
+      return service_impl_.listen(impl, ec);
+    }
+
     template<typename CommonGatewayRequest>
-    boost::system::error_code&
+    boost::system::error_code
       accept(implementation_type& impl, CommonGatewayRequest& request
             , boost::system::error_code& ec)
     {

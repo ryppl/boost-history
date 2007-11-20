@@ -13,6 +13,7 @@
 #include <boost/system/error_code.hpp>
 
 #include <boost/asio/basic_io_object.hpp>
+#include <boost/asio/ip/basic_endpoint.hpp>
 #include "boost/cgi/detail/throw_error.hpp"
 
 namespace cgi {
@@ -25,25 +26,57 @@ namespace cgi {
   {
   public:
     //  typedef impl_type;
-    typedef RequestAcceptorService         service_type;
-    typedef typename service_type::protocol_type    protocol_type;
-    typedef int                            port_number_type;
+    typedef RequestAcceptorService                service_type;
+    typedef typename service_type::protocol_type  protocol_type;
+    typedef unsigned short                        port_number_type;
 
     template<typename IoServiceProvider>
-    explicit basic_request_acceptor(basic_protocol_service<
-                                      protocol_type, IoServiceProvider>& ps)
+    explicit basic_request_acceptor(
+          basic_protocol_service<protocol_type, IoServiceProvider>& ps)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {
       this->service.set_protocol_service(this->implementation, ps);
     }
 
     template<typename IoServiceProvider>
-    explicit basic_request_acceptor(basic_protocol_service<
-                                      protocol_type, IoServiceProvider>& ps
-                                   , port_number_type port_num)
+    explicit basic_request_acceptor(
+          basic_protocol_service<protocol_type, IoServiceProvider>& ps,
+          port_number_type port_num)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {
       this->service.set_protocol_service(this->implementation, ps);
+
+      using boost::asio::ip::tcp;
+      // This strange-looking conditional checks there's no error at each
+      // stage of preparation.
+      boost::system::error_code ec;
+      if (this->service.open(this->implementation, tcp::v4(), ec)
+      ||  this->service.bind(this->implementation
+                            , tcp::endpoint(tcp::v4(), port_num), ec)
+      ||  this->service.listen(this->implementation, ec))
+      {
+        detail::throw_error(ec);
+      }
+    }
+
+    template<typename IoServiceProvider, typename InternetProtocol>
+    explicit basic_request_acceptor(
+          basic_protocol_service<protocol_type, IoServiceProvider>& ps,
+          const boost::asio::ip::basic_endpoint<InternetProtocol>& endpoint,
+          bool reuse_addr = true)
+      : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
+    {
+      this->service.set_protocol_service(this->implementation, ps);
+
+      // This strange-looking conditional checks there's no error at each
+      // stage of preparation.
+      boost::system::error_code ec;
+      if (this->service.open(this->implementation, endpoint.protocol(), ec)
+      ||  this->service.bind(this->implementation, endpoint, ec)
+      ||  this->service.listen(this->implementation, ec))
+      {
+        detail::throw_error(ec);
+      }
     }
 
     ~basic_request_acceptor()
@@ -106,7 +139,7 @@ namespace cgi {
 
     /// Accept one request
     template<typename CommonGatewayRequest>
-    boost::system::error_code&
+    boost::system::error_code
     accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
       return this->service.accept(this->implementation, request, ec);

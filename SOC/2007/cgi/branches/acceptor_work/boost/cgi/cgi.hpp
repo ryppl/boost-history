@@ -23,4 +23,11 @@ namespace cgi {
   
 } // namespace cgi
 
+/// Dump acgi stuff into the boost namespace
+namespace boost {
+ namespace cgi {
+   using namespace ::cgi::cgi;
+ } // namespace acgi
+} // namespace boost
+
 #endif // CGI_CGI_HPP_INCLUDED__

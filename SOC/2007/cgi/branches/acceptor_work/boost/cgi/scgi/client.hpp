@@ -9,10 +9,11 @@
 #ifndef CGI_SCGI_CLIENT_HPP_INCLUDED__
 #define CGI_SCGI_CLIENT_HPP_INCLUDED__
 
+#include <boost/shared_ptr.hpp>
 #include "boost/cgi/map.hpp"
 #include "boost/cgi/io_service.hpp"
 #include "boost/cgi/basic_client.hpp"
-
+#error BOOST_HAS_RVALUE_REFS
 namespace cgi {
  namespace scgi {
 
@@ -66,7 +67,7 @@ namespace cgi {
     {
       // make sure there isn't already a connection associated with the client
       if (!connection_) return false;
-      connection_ = conn;
+      connection_.reset(conn);
       return true;
     }
 

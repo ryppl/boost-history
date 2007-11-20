@@ -1,0 +1,20 @@
+
+project boost.cgi.examples.acgi.echo
+ : build-dir
+   $(PROJECT_ROOT)/bin.v2
+ ;
+
+exe acgi_echo
+ : main.cpp
+ :
+   <include>$(PROJECT_ROOT)
+   <include>$(BOOST_ROOT)
+   <define>_CRT_SECURE_NO_WARNINGS
+   <define>_SCL_SECURE_NO_WARNINGS
+ ;
+
+install acgi_echo_install
+ : acgi_echo
+ : <location>.
+   <library>../../../util/system//boost_system
+ ;

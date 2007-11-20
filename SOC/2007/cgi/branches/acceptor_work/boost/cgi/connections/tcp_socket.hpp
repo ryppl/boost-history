@@ -24,8 +24,9 @@ namespace cgi {
     : public connection_base
   {
   public:
-    typedef boost::shared_ptr<basic_connection<tags::tcp_socket> >
-      pointer;
+    typedef basic_connection<tags::tcp_socket> type;
+    typedef boost::shared_ptr<type>            pointer;
+    typedef boost::asio::ip::tcp::socket       next_layer_type;
 
     basic_connection(io_service& ios)
       : sock_(ios)
@@ -44,7 +45,7 @@ namespace cgi {
 
     static pointer create(io_service& ios)
     {
-      return static_cast<pointer>(new basic_connection<tags::tcp_socket>(ios));
+      return pointer(new basic_connection<tags::tcp_socket>(ios));
     }      
 
     template<typename MutableBufferSequence>
@@ -84,8 +85,13 @@ namespace cgi {
     {
       sock_.async_write_some(buf, handler);
     }
+
+    next_layer_type& next_layer()
+    {
+      return sock_;
+    }
   private:
-    boost::asio::ip::tcp::socket sock_;
+    next_layer_type sock_;
   };
 
   typedef basic_connection<tags::tcp_socket> tcp_connection;

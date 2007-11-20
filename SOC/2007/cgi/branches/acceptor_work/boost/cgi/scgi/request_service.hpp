@@ -71,7 +71,6 @@ namespace cgi {
 
     scgi_request_service(::cgi::io_service& ios)
       : detail::service_base<scgi_request_service>(ios)
-      //, io_service_(ios)
     {
     }
 
@@ -81,9 +80,11 @@ namespace cgi {
 
     void construct(implementation_type& impl)
     {
-      impl.client_.set_connection(
+      std::cerr<< "Creating connection" << std::endl;
+      impl.client_.set_connection(//new implementation_type::connection_type(this->io_service()));
         implementation_type::connection_type::create(this->io_service())
       );
+      std::cerr<< "conn.is_open() == " << impl.client_.is_open() << std::endl;
     }
 
     void destroy(implementation_type& impl)
@@ -135,6 +136,7 @@ namespace cgi {
   */    return ec;
     }
 
+    /* These Don't Belong Here.
     template<typename MutableBufferSequence>
     std::size_t read_some(implementation_type& impl
                          , const MutableBufferSequence& buf
@@ -153,6 +155,7 @@ namespace cgi {
     }
 
     //template<typename VarType> map_type& var(implementation_type&) const;
+   ********************************************/
 
 	std::string GET(implementation_type& impl, const std::string& name
                  , boost::system::error_code& ec)
@@ -220,6 +223,12 @@ namespace cgi {
     role_type get_role(implementation_type& impl)
     {
       return responder;
+    }
+
+    implementation_type::client_type&
+      client(implementation_type& impl)
+    {
+      return impl.client_;
     }
 
   protected:

@@ -1,0 +1,32 @@
+
+project boost.cgi.examples.acgi.login
+  : build-dir
+    $(PROJECT_ROOT)/bin.v2
+  ;
+
+exe Login
+  : Login.cpp
+  : <include>$(PROJECT_ROOT)
+    <include>$(BOOST_ROOT)
+  ;
+
+exe Logout
+  : Logout.cpp
+  : <include>$(PROJECT_ROOT)
+    <include>$(BOOST_ROOT)
+  ;
+
+exe CheckCookie
+  : CheckCookie.cpp
+  : <include>$(PROJECT_ROOT)
+    <include>$(BOOST_ROOT)
+  ;
+
+install _
+  :
+    Login
+    Logout
+    CheckCookie
+  :
+    <location>c:/Apache/Apache2.2/cgi-bin/
+  ;

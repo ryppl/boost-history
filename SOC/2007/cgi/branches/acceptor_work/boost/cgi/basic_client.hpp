@@ -65,6 +65,18 @@ namespace cgi {
       connection_->close();
     }
 
+    /// Associate a connection with this client
+    /**
+     * Note: the connection must have been created using the new operator
+     *
+    bool set_connection(connection_type* conn)
+    {
+      // make sure there isn't already a connection associated with the client
+      if (!connection_) return false;
+      connection_.reset(conn);
+      return true;
+    }*/
+
     //io_service& io_service() { return io_service_; }
 
     /// Associate a connection with this client
@@ -74,7 +86,8 @@ namespace cgi {
     bool set_connection(typename connection_type::pointer& conn)
     {
       // make sure there isn't already a connection associated with the client
-      if (!connection_) return false;
+      //if (!connection_) return false;
+      BOOST_ASSERT(conn != NULL);
       connection_  = conn;
       return true;
     }

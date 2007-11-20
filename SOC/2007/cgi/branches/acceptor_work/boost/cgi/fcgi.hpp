@@ -11,4 +11,11 @@
 
 // #include all fcgi-related files only
 
+/// Dump acgi stuff into the boost namespace
+namespace boost {
+ namespace fcgi {
+   using namespace ::cgi::fcgi;
+ } // namespace acgi
+} // namespace boost
+
 #endif // CGI_FCGI_HPP_INCLUDED__

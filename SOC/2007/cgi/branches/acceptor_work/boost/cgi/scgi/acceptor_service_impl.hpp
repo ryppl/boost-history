@@ -47,7 +47,7 @@ namespace cgi {
     */
    template<typename Protocol = ::cgi::scgi_>
    class acceptor_service_impl
-     : public detail::service_base<request_service<Protocol> >
+     : public detail::service_base<acceptor_service_impl<Protocol> >
    {
    public:
 
@@ -83,7 +83,7 @@ namespace cgi {
      //typedef typename acceptor_service_type::native_type native_type;
  
      explicit acceptor_service_impl(::cgi::io_service& ios)
-       : detail::service_base<request_service<Protocol> >(ios)
+       : detail::service_base<acceptor_service_impl<Protocol> >(ios)
        , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios))
      {
      }
@@ -133,15 +133,32 @@ namespace cgi {
       return acceptor_service_.open(impl.acceptor_, protocol, ec);
     }
 
+    template<typename Endpoint>
+    boost::system::error_code
+      bind(implementation_type& impl, Endpoint& endpoint
+          , boost::system::error_code& ec)
+    {
+      acceptor_service_.set_option(impl.acceptor_,
+          boost::asio::socket_base::reuse_address(true), ec);
+      return acceptor_service_.bind(impl.acceptor_, endpoint, ec);
+    }
+
     /// Assign an existing native acceptor to a *socket* acceptor.
     boost::system::error_code
       assign(implementation_type& impl, const native_protocol_type& protocol
             , const native_type& native_acceptor
             , boost::system::error_code& ec)
     {
-      return acceptor_service_.assign(impl.acceptor_, protocol, native_acceptor
-                                     , ec);
+      return acceptor_service_.assign(impl.acceptor_, protocol
+                                     , native_acceptor, ec);
     }    
+
+    boost::system::error_code
+      listen(implementation_type& impl, boost::system::error_code& ec)
+    {
+      return acceptor_service_.listen(impl.acceptor_,
+               boost::asio::socket_base::max_connections, ec);
+    }
 
     /// Accepts one request.
     template<typename CommonGatewayRequest>
@@ -149,6 +166,16 @@ namespace cgi {
       accept(implementation_type& impl, CommonGatewayRequest& request
             , boost::system::error_code& ec)
     {
+      /* THIS BIT IS BROKEN:
+       *-- The noncopyable semantics of a basic_request<> don't allow the
+           assignment. There are a couple of ways around this; the one that
+           seems sensible is to keep the basic_request<>s noncopyable, but
+           allow the actual data be copied. At the moment the actual data is
+           held in a vector<string> headers container and a cgi::streambuf.
+           These two bits should really be factored out into a message type.
+           IOW, the message type will be copyable (but should probably have
+           unique-ownership semantics).
+       --*
       {
         boost::mutex::scoped_lock lk(impl.mutex_);
         if (!impl.waiting_requests_.empty())
@@ -158,7 +185,9 @@ namespace cgi {
           return ec;
         }
       }
-      return impl.acceptor_.accept(request.client().connection(), ec);
+      */
+      return acceptor_service_.accept(impl.acceptor_,
+               request.client().connection()->next_layer(), 0, ec);
     }
 
     /// Asynchronously accepts one request.
@@ -167,8 +196,9 @@ namespace cgi {
                      , Handler handler, boost::system::error_code& ec)
     {
       this->io_service().post(
-        boost::bind(&scgi_request_acceptor_service::check_for_waiting_request
-                   , boost::ref(impl), boost::ref(request), handler, ec));      
+        boost::bind(
+          &acceptor_service_impl<protocol_type>::check_for_waiting_request,
+          boost::ref(impl), boost::ref(request), handler, ec));      
     }
   private:
     template<typename CommonGatewayRequest, typename Handler>
@@ -176,6 +206,7 @@ namespace cgi {
                                   , CommonGatewayRequest& request
                                   , Handler handler)
     {
+      /*
       {
         boost::mutex::scoped_lock lk(impl.mutex_);
         if (!impl.waiting_requests_.empty())
@@ -185,8 +216,9 @@ namespace cgi {
           return handler(ec); // this could be `io_service::post`ed again
         }
       }
-      return accceptor_service_.async_accept(request.client().connection()
-                                            , handler);
+      */
+      return accceptor_service_.async_accept(
+               request.client().connection()->next_layer(), handler);
     }
 
   private:
