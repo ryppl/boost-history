@@ -3,10 +3,14 @@
 
 // mutex.cpp
 
+#define __STDC_LIMIT_MACROS
+
 #include "mutex"
 #include "system_error"
 #undef NDEBUG
 #include <cassert>
+
+#include <stdint.h>
 
 namespace std
 {
@@ -253,5 +257,88 @@ recursive_timed_mutex::unlock()
 const defer_lock_t  defer_lock = defer_lock_t();
 const try_to_lock_t try_to_lock = try_to_lock_t();
 const adopt_lock_t  adopt_lock = adopt_lock_t();
+
+///////////////
+// call_once //
+///////////////
+
+// This is a variation of the Mike Burrows fast_pthread_once algorithm
+
+// Copyright (c) 2007, Google Inc. 
+// All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+// 
+// 	*	Redistributions of source code must retain the above copyright
+// 	notice, this list of conditions and the following disclaimer.
+// 	*	Redistributions in binary form must reproduce the above
+// 	copyright notice, this list of conditions and the following
+// 	disclaimer in the documentation and/or other materials provided with
+// 	the distribution.
+// 	*	Neither the name of Google Inc. nor the names
+// 	of its contributors may be used to endorse or promote products
+// 	derived from this software without specific prior written
+// 	permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+// OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Using pthread_getspecific as a poor man's thread_local
+// Making non-portable assumption that a sig_atomic_t can be stored in a void*
+
+pthread_mutex_t __call_once_mut = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t  __call_once_cv  = PTHREAD_COND_INITIALIZER;
+static once_flag global_epoch(SIG_ATOMIC_MAX);
+
+once_flag& __get_call_once_global_epoch()
+{
+    return global_epoch;
+}
+
+static pthread_key_t key;
+static pthread_once_t call_once_key_init = PTHREAD_ONCE_INIT;
+
+extern "C"
+{
+void call_once_init_key()
+{
+    pthread_key_create(&key, 0);
+}
+} // extern "C"
+
+
+static
+pthread_key_t
+get_once_key()
+{
+    pthread_once(&call_once_key_init, call_once_init_key);
+    return key;
+}
+
+void
+__set_once_per_thread_epoch(once_flag flag)
+{
+    pthread_setspecific(get_once_key(), (void*)flag);
+}
+
+once_flag
+__get_once_per_thread_epoch()
+{
+    once_flag f = (once_flag)pthread_getspecific(get_once_key());
+    if (f == once_flag(0))
+        f = once_flag(SIG_ATOMIC_MAX);
+    return f;
+}
 
 }  // std

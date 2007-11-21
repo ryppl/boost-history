@@ -179,6 +179,7 @@
 #include <condition_variable>
 #include <hdate_time>
 #include <functional>
+#include <csignal>
 
 namespace std
 {
@@ -228,63 +229,99 @@ public:
     void unlock();
 };
 
-struct once_flag;
+// This is a variation of the Mike Burrows fast_pthread_once algorithm
 
-template<class Callable, class ...Args>
-void
-call_once(once_flag& flag, Callable&& func, Args&&... args);
+// Copyright (c) 2007, Google Inc. 
+// All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+// 
+// 	*	Redistributions of source code must retain the above copyright
+// 	notice, this list of conditions and the following disclaimer.
+// 	*	Redistributions in binary form must reproduce the above
+// 	copyright notice, this list of conditions and the following
+// 	disclaimer in the documentation and/or other materials provided with
+// 	the distribution.
+// 	*	Neither the name of Google Inc. nor the names
+// 	of its contributors may be used to endorse or promote products
+// 	derived from this software without specific prior written
+// 	permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+// OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-struct once_flag
-{
-private:
-    pthread_mutex_t m_;
-    bool completed_;
+// once_flag should be a simple class with a constexpr default ctor setting a sig_atomic_t to 0
+typedef sig_atomic_t once_flag;
 
-    once_flag(const once_flag&); // = default;
-    once_flag& operator=(const once_flag&); // = default;
-
-    template <class F> void run(F f);
-
-    template<class Callable, class ...Args>
-    friend
-    void
-    call_once(once_flag& flag, Callable&& func, Args&&... args);
-
-public:
-    //constexpr
-    once_flag() {pthread_mutex_init(&m_, 0);}
-    ~once_flag()
-    {
-        pthread_mutex_destroy(&m_);
-    }
-};
-
-struct __pthread_mutex_unlocker
-{
-    void operator()(pthread_mutex_t* m) {pthread_mutex_unlock(m);}
-};
+once_flag __get_once_per_thread_epoch();
+void      __set_once_per_thread_epoch(once_flag flag);
+once_flag& __get_call_once_global_epoch();
+extern pthread_mutex_t __call_once_mut;
+extern pthread_cond_t __call_once_cv;
 
 template <class F>
 void
-once_flag::run(F f)
+__call_once(once_flag& flag, F f)
 {
-    unique_ptr<pthread_mutex_t> p(new pthread_mutex_t);
-    pthread_mutex_init(p.get(), 0);
-    
-    pthread_mutex_lock(&m_);
-    unique_ptr<pthread_mutex_t, __pthread_mutex_unlocker> _(&m_);
-    if (!completed_)
+    once_flag x = flag;
+    if (x < __get_once_per_thread_epoch())
     {
-        f();
-        completed_ = true;
+        pthread_mutex_lock(&__call_once_mut);
+        while (flag == once_flag(1))
+            pthread_cond_wait(&__call_once_cv, &__call_once_mut);
+        once_flag& global_epoch = __get_call_once_global_epoch();
+        if (flag == once_flag(0))
+        {
+            flag = once_flag(1);
+            pthread_mutex_unlock(&__call_once_mut);
+            try
+            {
+                f();
+            }
+            catch (...)
+            {
+                pthread_mutex_lock(&__call_once_mut);
+                flag = once_flag(0);
+                pthread_mutex_unlock(&__call_once_mut);
+                pthread_cond_broadcast(&__call_once_cv);
+               throw;
+            }
+            pthread_mutex_lock(&__call_once_mut);
+            flag = global_epoch;
+            --global_epoch;
+            pthread_cond_broadcast(&__call_once_cv);
+        }
+        __set_once_per_thread_epoch(global_epoch);
+        pthread_mutex_unlock(&__call_once_mut);
     }
 }
 
-template<class Callable, class ...Args>
+template <class F>
+inline
 void
-call_once(once_flag& flag, Callable&& func, Args&&... args)
+call_once(once_flag& flag, F f)
 {
-    flag.run(bind(std::forward<Callable>(func), std::forward<Args>(args)...));
+    if (flag < __get_once_per_thread_epoch())
+        __call_once(flag, std::move(f));
+}
+
+template<class F, class ...Args>
+inline
+void
+call_once(once_flag& flag, F&& func, Args&&... args)
+{
+    std::call_once(flag, bind(std::forward<F>(func), std::forward<Args>(args)...));
 }
 
 }  // std

@@ -104,8 +104,10 @@ class __thread_id
     friend class thread;
     explicit __thread_id(pthread_t t) : id_(t) {}
 public:
+    // Making non-portable assumption that pthread_t is a pointer
     __thread_id() : id_(0) {}
 
+    // Making non-portable assumption that pthread_t is a pointer
     friend bool operator==(const __thread_id& x, const __thread_id& y) {return x.id_ == y.id_;}
     friend bool operator!=(const __thread_id& x, const __thread_id& y) {return !(x == y);}
     friend bool operator< (const __thread_id& x, const __thread_id& y) {return x.id_ < y.id_;}
@@ -113,6 +115,7 @@ public:
     friend bool operator> (const __thread_id& x, const __thread_id& y) {return   y < x ;}
     friend bool operator>=(const __thread_id& x, const __thread_id& y) {return !(x < y);}
 
+    // Making non-portable assumption that pthread_t is a pointer
     template<class charT, class traits> friend
     basic_ostream<charT, traits>&
     operator<< (basic_ostream<charT, traits>&& out, const __thread_id& x)
@@ -123,6 +126,7 @@ class thread
 {
     pthread_t id_;
 public:
+    // Making non-portable assumption that pthread_t is a pointer
     thread() : id_(0) {}
     template <class F> explicit thread(F f);
     template <class F, class ...Args> thread(F&& f, Args&&... args)
@@ -136,6 +140,7 @@ public:
     private: thread(const thread&); public:// = delete;
     private: thread& operator=(const thread&); public:// = delete;
 
+    // Making non-portable assumption that pthread_t is a pointer
     thread(thread&& t) : id_(t.id_) {t.id_ = 0;}
     thread& operator=(thread&& t)
     {
@@ -151,6 +156,7 @@ public:
         t.id_ = temp;
     }
 
+    // Making non-portable assumption that pthread_t is a pointer
     bool joinable() const {return id_ != 0;}
     void join();
     void detach();
@@ -216,8 +222,8 @@ __thread_param<F>::start()
     {
     lock_guard<mutex> _(mut_);
     started_ = true;
-    }
     cv_.notify_one();
+    }
     try
     {
         f();
