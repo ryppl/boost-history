@@ -1,0 +1,81 @@
+#~ Copyright Redshift Software, Inc. 2007.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building Tecla library <http://www.astro.caltech.edu/~mcs/tecla/index.html>.
+### Targets:
+###     /ext/tecla//tecla
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+import path ;
+
+extension.declare tecla ;
+
+local rule when-file ( file : yes : no * )
+{
+    if [ path.exists [ path.make $(file) ] ]
+    {
+        return $(yes) ;
+    }
+    else
+    {
+        return $(no) ;
+    }
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define tecla $(version) : $(location) : $(options) ] ;
+    requirements = [ extension.refine tecla $(version) :
+        [ when-file "/usr/include/stat.h" : <define>HAVE_SYS_STAT_H=1 ]
+        [ when-file "/usr/include/stdlib.h" : <define>HAVE_STDLIB_H=1 ]
+        [ when-file "/usr/include/string.h" : <define>HAVE_STRING_H=1 ]
+        [ when-file "/usr/include/memory.h" : <define>HAVE_MEMORY_H=1 ]
+        [ when-file "/usr/include/strings.h" : <define>HAVE_STRINGS_H=1 ]
+        [ when-file "/usr/include/inttypes.h" : <define>HAVE_INTTYPES_H=1 ]
+        [ when-file "/usr/include/stdint.h" : <define>HAVE_STDINT_H=1 ]
+        [ when-file "/usr/include/unistd.h" : <define>HAVE_UNISTD_H=1 ]
+        [ when-file "/usr/include/curses.h" : <define>HAVE_CURSES_H=1 ]
+        [ when-file "/usr/include/term.h" : <define>HAVE_TERM_H=1 ]
+        [ when-file "/usr/include/sys/select.h" : <define>HAVE_SYS_SELECT_H=1 ]
+        
+        <target-os>linux:<define>USE_TERMINFO=1
+        <target-os>linux:<define>HAVE_SELECT=1
+        <target-os>linux:<define>HAVE_SYSV_PTY=1
+        ] ;
+    
+    lib tecla
+        :   $(location)/getline.c
+            $(location)/keytab.c
+            $(location)/freelist.c
+            $(location)/strngmem.c
+            $(location)/hash.c
+            $(location)/history.c
+            $(location)/direader.c
+            $(location)/homedir.c
+            $(location)/pathutil.c
+            $(location)/expand.c
+            $(location)/stringrp.c
+            $(location)/cplfile.c
+            $(location)/cplmatch.c
+            $(location)/pcache.c
+            $(location)/version.c
+            $(location)/chrqueue.c
+            $(location)/ioutil.c
+            $(location)/errmsg.c
+        :   $(requirements)
+            <tecla-version>$(version)
+            <tecla-location>$(location)
+            <include>$(location)
+            <location-prefix>tecla
+        :
+        :   <include>$(location)
+        ;
+}

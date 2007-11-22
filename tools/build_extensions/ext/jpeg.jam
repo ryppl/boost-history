@@ -1,0 +1,146 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building jpeg library <http://www.ijg.org/>.
+### Targets:
+###     /ext/jpeg//jpeg
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare jpeg ;
+
+rule config_h ( targets * : sources * : properties * )
+{
+    local define ;
+    local undef ;
+    local other ;
+    local version = [ property.select <jpeg-version> : $(properties) ] ;
+    
+    define +=
+        HAVE_PROTOTYPES HAVE_UNSIGNED_CHAR HAVE_UNSIGNED_SHORT
+        HAVE_STDDEF_H HAVE_STDLIB_H
+        ;
+    undef +=
+        void const CHAR_IS_UNSIGNED
+        NEED_BSD_STRINGS NEED_SYS_TYPES_H NEED_FAR_POINTERS NEED_SHORT_EXTERNAL_NAMES
+        INCOMPLETE_TYPES_BROKEN
+        ;
+    
+    VERSION on $(<) = $(version:G=) ;
+    CONFIG on $(<) =
+        "#define $(define) 1"
+        "#undef $(undef)"
+        $(other)
+        ;
+    NL on $(<) = "
+" ;
+}
+actions config_h
+{
+    @($(STDOUT):E=
+#ifndef JPEGLIB_CONFIG_H
+#define JPEGLIB_CONFIG_H
+
+$(CONFIG:J=$(NL))
+
+#ifdef JPEG_INTERNALS
+#undef RIGHT_SHIFT_IS_UNSIGNED
+#endif
+
+#ifdef JPEG_CJPEG_DJPEG
+#define BMP_SUPPORTED
+#define GIF_SUPPORTED
+#define PPM_SUPPORTED
+#undef RLE_SUPPORTED
+#define TARGA_SUPPORTED
+#undef TWO_FILE_COMMANDLINE
+#undef NEED_SIGNAL_CATCHER
+#undef DONT_USE_B_MODE
+#undef PROGRESS_REPORT
+#endif
+
+#endif // JPEGLIB_CONFIG_H
+) > "$(<)"
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define jpeg $(version) : $(location) : $(options) ] ;
+    
+    make jconfig.h : : @config_h
+        :   <jpeg-version>$(version)
+            <location-prefix>src
+        ;
+        explicit jconfig.h ;
+    
+    lib jpeg
+        :   $(location)/jcapimin.c
+            $(location)/jcapistd.c
+            $(location)/jccoefct.c
+            $(location)/jccolor.c
+            $(location)/jcdctmgr.c
+            $(location)/jchuff.c
+            $(location)/jcinit.c
+            $(location)/jcmainct.c
+            $(location)/jcmarker.c
+            $(location)/jcmaster.c
+            $(location)/jcomapi.c
+            $(location)/jcparam.c
+            $(location)/jcphuff.c
+            $(location)/jcprepct.c
+            $(location)/jcsample.c
+            $(location)/jctrans.c
+            $(location)/jdapimin.c
+            $(location)/jdapistd.c
+            $(location)/jdatadst.c
+            $(location)/jdatasrc.c
+            $(location)/jdcoefct.c
+            $(location)/jdcolor.c
+            $(location)/jddctmgr.c
+            $(location)/jdhuff.c
+            $(location)/jdinput.c
+            $(location)/jdmainct.c
+            $(location)/jdmarker.c
+            $(location)/jdmaster.c
+            $(location)/jdmerge.c
+            $(location)/jdphuff.c
+            $(location)/jdpostct.c
+            $(location)/jdsample.c
+            $(location)/jdtrans.c
+            $(location)/jerror.c
+            $(location)/jfdctflt.c
+            $(location)/jfdctfst.c
+            $(location)/jfdctint.c
+            $(location)/jidctflt.c
+            $(location)/jidctfst.c
+            $(location)/jidctint.c
+            $(location)/jidctred.c
+            $(location)/jquant1.c
+            $(location)/jquant2.c
+            $(location)/jutils.c
+            $(location)/jmemmgr.c
+            $(location)/jmemnobs.c
+        :   $(requirements)
+            <jpeg-version>$(version)
+            <jpeg-location>$(location)
+            <include>$(location)
+            <location-prefix>jpeg
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            <implicit-dependency>jconfig.h
+            <dependency>jconfig.h
+            <link>static
+        :
+        :   <include>$(location)
+            <implicit-dependency>jconfig.h
+            <dependency>jconfig.h
+        ;
+}

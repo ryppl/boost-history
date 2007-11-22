@@ -1,0 +1,83 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Minimal support for using the Windows Platform SDK with
+### BBv2 toolsets. Currently this only injects the needed
+### paths for finding the headers and libs. And hence is likely
+### to only work toolsets that don't come with *any* Win32
+### support, for example the Visual Studio C++ Express distribution.
+### To use declare the sdk in your user-config.jam with both
+### location and the toolsets you want it to apply to. For example:
+### 
+###     using windows-psdk : srv.2003.sp1
+###         : "C:/Program Files/Microsoft Platform SDK"
+###         : --toolset=msvc-8.0express ;
+### 
+### More than one "--toolset=*" can be given and will be applied. The
+### version number is optional and currently not used.
+
+
+import property ;
+import project ;
+import feature ;
+import toolset : flags ;
+
+project.extension windows-psdk ;
+
+feature.feature windows-psdk-version
+    :
+    :   propagated optional implicit ;
+
+feature.feature windows-psdk-location
+    :
+    :   free ;
+
+local rule prop ( option )
+{
+    local vals = [ MATCH "--([^-]+)-([^=]+)[=]?(.*)" : $(option) ] ;
+    if $(vals[2])
+    {
+        return <windows-psdk-$(vals[1])>$(vals[2]) ;
+    }
+    else
+    {
+        return <windows-psdk-$(vals[1])>enable ;
+    }
+}
+
+rule init ( version ? : location : options * )
+{
+    if $(version)
+    {
+        feature.extend windows-psdk-version : $(version) ;
+    }
+    
+    local requirements ;
+    local toolsets ;
+    for local option in $(options)
+    {
+        switch $(option)
+        {
+            case --enable-* :
+            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
+            case --disable-* :
+            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
+            case --toolset=* :
+            {
+                local toolset = [ MATCH "--toolset=(.*)" : $(option) ] ;
+                toolsets += $(toolset) ;
+            }
+        }
+    }
+    
+    for local toolset in $(toolsets)
+    {
+        local tool = [ MATCH "([^-]+)" : $(toolset) ] ;
+        modules.call-in $(tool) :
+            toolset.flags $(tool) INCLUDES <toolset>$(toolset) : $(location)/Include ;
+        modules.call-in $(tool) :
+            toolset.flags $(tool) LINKPATH <toolset>$(toolset) : $(location)/Lib ;
+    }
+}

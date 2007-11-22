@@ -1,0 +1,54 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building MNG library <http://gjuyn.xs4all.nl/libmng>.
+### Targets:
+###     /ext/mng//mng
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare mng ;
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define mng $(version) : $(location) : $(options) ] ;
+    
+    lib mng
+        :   [ glob $(location)/libmng_*.c ]
+            /ext/zlib//z
+            /ext/jpeg//jpeg
+        :   $(requirements)
+            <mng-version>$(version)
+            <mng-location>$(location)
+            <include>$(location)
+            <location-prefix>mng
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            <warnings>off
+            <define>MNG_SUPPORT_FULL
+            [ conditional <link>shared :
+                <define>MNG_BUILD_DLL
+                <define>MNG_BUILD_SO
+                <define>MNG_SKIP_ZLIB
+                <define>MNG_SKIP_LCMS
+                <define>MNG_SKIP_IJG6B
+                ]
+        :
+        :   <include>$(location)
+            [ conditional <link>shared :
+                <define>MNG_USE_DLL
+                <define>MNG_USE_SO
+                <define>MNG_SKIP_ZLIB
+                <define>MNG_SKIP_LCMS
+                <define>MNG_SKIP_IJG6B
+                ]
+        ;
+}

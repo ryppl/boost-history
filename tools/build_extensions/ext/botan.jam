@@ -1,0 +1,715 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building Botan library <http://botan.randombit.net/>.
+### Targets:
+###     /ext/botan//botan
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import regex ;
+import stage ;
+import common ;
+import set ;
+import notfile ;
+
+extension.declare botan ;
+
+rule code ( name : class-name * : header-guard * : sources * : facade ? )
+{
+    class-name ?= [ regex.replace $(name:U) [-.] _ ] ;
+    header-guard ?= $(class-name[1]:U) ;
+    
+    extension.option botan $(name) ;
+    .code.requirements +=
+        "<botan-$(name)>disable:<define>BOTAN_$(header-guard)_H__" ;
+    #~ .code.config.h +=
+        #~ "<botan-$(name)>disable:<>#define BOTAN_$(header-guard)_H__" ;
+    for local c in $(class-name)
+    {
+        .code.config.h +=
+            "<botan-$(name)>disable:<>namespace Botan { class $(c); }"
+            #~ "<botan-$(name)>disable:<>namespace Botan { struct $(c) { $(c)(...){} }; }"
+            ;
+    }
+    facade ?= Empty ;
+    .code.list.cpp +=
+        "<botan-$(name)>disable:<>#define $(class-name) Undefined<$(facade)Facade>"
+        ;
+    .code.sources.$(name) = $(sources) ;
+    .code.sources += $(sources) ;
+    .code += $(name) ;
+}
+
+rule algo ( name : class-name * : header-guard * : sources * : facade ? )
+{
+    code $(name) : $(class-name) : $(header-guard) : $(sources) : $(facade) ;
+}
+
+#~ Block ciphers...
+algo aes : AES AES_128 AES_192 AES_256 : AES : aes*.cpp : BlockCipher ;
+algo blowfish : Blowfish : : blowfish.cpp blfs_tab.cpp : BlockCipher ;
+algo cast : CAST_128 CAST_256 : CAST128 CAST256 : cast*.cpp : BlockCipher ;
+algo des : DES DESX TripleDES : DES : des*.cpp : BlockCipher ;
+algo gost : : : gost*.cpp : BlockCipher ;
+algo idea : : : idea.cpp : BlockCipher ;
+algo kasumi : : : kas*.cpp : BlockCipher ;
+algo luby-rackoff : LubyRackoff : LUBY_RACKOFF : lubyrack.cpp : BlockCipher ;
+algo mars : : : mars*.cpp : BlockCipher ;
+algo misty1 : : : mist*.cpp : BlockCipher ;
+algo rc2 : : : rc2.cpp : BlockCipher ;
+algo rc5 : : : rc5.cpp : BlockCipher ;
+algo rc6 : : : rc6.cpp : BlockCipher ;
+algo safer-sk : SAFER_SK : : safe*.cpp : BlockCipher ;
+algo seed : : : seed*.cpp : BlockCipher ;
+algo serpent : Serpent : : serpent.cpp : BlockCipher ;
+algo skipjack : Skipjack : : skipjack.cpp : BlockCipher ;
+algo square : Square : : sqr_tab.cpp square.cpp : BlockCipher ;
+algo tea : : : tea.cpp : BlockCipher ;
+algo twofish : Twofish : : two*.cpp : BlockCipher ;
+algo xtea : : : xtea.cpp : BlockCipher ;
+algo lion : Lion : : lion.cpp : BlockCipher ;
+
+#~ Stream ciphers...
+algo arc4 : ARC4 : : arc4.cpp : StreamCipher ;
+algo turing : Turing : : tur*.cpp : StreamCipher ;
+algo widerwake4+1-be : WiderWake_41_BE : WIDER_WAKE : wid_wake.cpp : StreamCipher ;
+algo isaac : : : isaac.cpp : StreamCipher ;
+algo seal-3.0-be : SEAL : : seal.cpp : StreamCipher ;
+
+#~ Hashes...
+algo adler32 : Adler32 : : adler32.cpp : HashFunction ;
+algo crc24 : : : crc24.cpp : HashFunction ;
+algo crc32 : : : crc32.cpp : HashFunction ;
+algo fork-256 : FORK_256 : : fork256.cpp : HashFunction ;
+algo has-160 : HAS_160 : : has160.cpp : HashFunction ;
+algo haval : : : haval.cpp : HashFunction ;
+algo mdx : MDx_HashFunction : MDX_BASE : mdx_hash.cpp : HashFunction ;
+algo md2 : : : md2.cpp : HashFunction ;
+algo md4 : : : md4.cpp : HashFunction ;
+algo md5 : : : md5.cpp : HashFunction ;
+algo ripemd-128 : RIPEMD_128 : : rmd128.cpp : HashFunction ;
+algo ripemd-160 : RIPEMD_160 : : rmd160.cpp : HashFunction ;
+algo sha-160 : SHA_160 : : sha160.cpp : HashFunction ;
+algo sha-256 : SHA_256 : : sha256.cpp : HashFunction ;
+algo sha-384-512 : SHA_384 SHA_512 : SHA_64BIT : sha_64.cpp : HashFunction ;
+algo tiger : Tiger : : tig*.cpp : HashFunction ;
+algo whirlpool : Whirlpool : : whrl*.cpp : HashFunction ;
+algo parallel : Parallel : PAR_HASH : par_hash.cpp : HashFunction ;
+
+#~ MACs...
+algo cmac : : : cmac.cpp : MessageAuthenticationCode ;
+algo hmac : : : hmac.cpp : MessageAuthenticationCode ;
+algo x9.19-mac : ANSI_X919_MAC : ANSI_X919_MAC : x919_mac.cpp : MessageAuthenticationCode ;
+
+#~ Key exchange...
+algo dh : : DIFFIE_HELLMAN : dh.cpp ;
+algo dsa : DSA_Operation : : dsa.cpp ;
+algo elgamal : : : elgamal.cpp ;
+algo pkcs :
+    EME EMSA MGF KDF NR_Operation ELG_Operation DH_Operation :
+    EME EMSA HASHID KDF KEYPAIR PK_LOOKUP MGF1 NYBERG_RUEPPEL PBE PBE_PKCS
+    PK_OPS PK_CORE PK_FILTERS PK_KEYS PK_KEY_FACTORY PUBKEY_UTIL
+    PKCS10 PKCS5 PKCS8 PUBKEY RSA RW
+    : def_ops.cpp eme1.cpp eme_pkcs.cpp emsa*.cpp get_enc.cpp get_pbe.cpp hash_id.cpp kdf.cpp
+    keypair.cpp look_pk.cpp mgf1.cpp nr.cpp pbes*.cpp pkcs*.cpp pk_*.cpp policy.cpp
+    prf_x942.cpp pubkey.cpp rsa.cpp rw.cpp ;
+algo pkcs5-pbkdf : PKCS5_PBKDF1 PKCS5_PBKDF2 : : : S2K ;
+
+#~ Certificates...
+algo asn1 :
+    IF_Operation :
+    ASN1 ASN1_OBJ ASN1_OID BER_DECODER DER_ENCODER IF_ALGO OIDS PEM
+    : asn1_*.cpp ber_*.cpp der_*.cpp if_algo.cpp oids.cpp pem.cpp ;
+algo x509 : :
+    CERT_STORE CRL_ENTRY X509_CA X509_CRL X509_PUBLIC_KEY X509_OBJECT
+    X509_CERTS X509_SELF X509_CERT_STORE
+    : certstore.cpp crl_ent.cpp x509*.cpp ;
+
+#~ ???...
+algo barrett : : : barrett.cpp ;
+#~ algo base64 : Base64_Encoder Base64_Decoder : BASE64 : base64.cpp charset.cpp ;
+algo mode : :
+    CBC CFB CTR CTS EAX ECB OFB MODEBASE
+    : cbc.cpp cfb.cpp ctr.cpp cts.cpp eax.cpp ecb.cpp ofb.cpp
+    modebase.cpp ;
+algo discrete-log : DL_Group : DL_ALGO DL_PARM : dl_*.cpp ;
+algo dlies : : : dlies.cpp ;
+algo fips-140 : : FIPS140 : fips140.cpp ;
+algo openpgp : OpenPGP_S2K : : openpgp.cpp pgp_s2k.cpp : S2K ;
+algo x931 : ANSI_X931_RNG : ANSI_X931_RNG : x931_rng.cpp ;
+algo blinder : Blinder : : blinding.cpp ;
+
+#~ Various code chunks...
+code policy : : POLICY_CONF : inifile.cpp conf.cpp ;
+code engine : Engine : ENGINE
+    : engine.cpp eng_base.cpp ;
+code default-engine : Default_Engine : DEFAULT_ENGINE
+    : def_alg.cpp def_ops.cpp def_mode.cpp ;
+code lookup : : NOTHING : lookup.cpp get_algo.cpp ;
+code algolist : : ALGOLIST ; #: algolist.cpp ;
+code filters : : FILTERS : filters.cpp ;
+
+rule mod ( name condition ? : def * : subdir ? : requirements * : usage * )
+{
+    def ?= [ regex.replace $(name:U) [-] _ ] ;
+    subdir ?= [ regex.replace $(name:L) [-] _ ] ;
+    .modules += $(name) ;
+    extension.option botan $(name) ;
+    if $(condition)
+    {
+        .module.config.h += "<botan-$(name)>enable,$(condition):<>#define BOTAN_EXT_$(def)" ;
+    }
+    else
+    {
+        .module.config.h += "<botan-$(name)>enable:<>#define BOTAN_EXT_$(def)" ;
+    }
+    .module.subdir.$(name) = $(subdir) ;
+    .module.requirements.$(name) = $(requirements) $(usage) ;
+    .module.usage.$(name) = $(usage) ;
+    .module.condition.$(name) = $(condition) ;
+}
+
+#~ Modules...
+mod alloc-mmap ;
+mod comp-bzip2 ;
+mod comp-zlib ;
+mod eng-aep : ENGINE_AEP ENTROPY_SRC_AEP ;
+mod eng-gmp : GNU_MP ;
+mod eng-ossl : OPENSSL ;
+mod es-beos : ENTROPY_SRC_BEOS ;
+mod es-capi : ENTROPY_SRC_CAPI ;
+mod es-egd : ENTROPY_SRC_EGD ;
+mod es-ftw : ENTROPY_SRC_FTW ;
+mod es-unix <target-os>linux : ENTROPY_SRC_UNIX ;
+mod es-win32 <target-os>windows : ENTROPY_SRC_WIN32 :
+    : : <target-os>windows:<find-shared-library>user32 ;
+mod fd-unix : PIPE_UNIXFD_IO ;
+mod ml-unix ;
+mod ml-win32  ;
+mod mod-qt : MUTEX_QT ;
+mod mp-asm64 ;
+mod mux-pthr : MUTEX_PTHREAD ;
+mod tm-hard : TIMER_HARDWARE ;
+mod tm-posix : TIMER_POSIX ;
+mod tm-unix : TIMER_UNIX ;
+mod tm-win32 : TIMER_WIN32 ;
+
+rule config_h ( targets * : sources * : properties * )
+{
+    local version = [ property.select <botan-version> : $(properties) ] ;
+    if ! [ property.select <architecture> : $(properties) ]
+    {
+        properties += [ property.evaluate-conditionals-in-context
+            <target-os>windows:<architecture>x86
+            <target-os>darwin:<architecture>power
+            <target-os>sgi:<architecture>mips32
+            : $(properties) ] ;
+    }
+    local config = [ property.evaluate-conditionals-in-context
+        "<architecture>x86:<>#define BOTAN_TARGET_ARCH_IS_IA32"
+        "<architecture>ia64:<>#define BOTAN_TARGET_ARCH_IS_IA64"
+        "<botan-mp-asm64>disable:<>#define BOTAN_MP_WORD_BITS 32"
+        "<botan-mp-asm64>enable:<>#define BOTAN_MP_WORD_BITS 64"
+        "<botan-policy>disable:<>
+#include <string>
+#include <vector>
+namespace Botan { namespace Config { namespace {
+    inline void load(const std::string&) {}
+    inline unsigned get_u32bit(const std::string&) { return 0; }
+    std::vector<std::string> get_list(const std::string&) { return std::vector<std::string>(); }
+    std::string get_string(const std::string&) { return \"\"; }
+} } }
+"
+        
+        $(.module.config.h)
+        $(.code.config.h)
+        : $(properties) ] ;
+    
+    VERSION on $(<) = [ regex.split $(version:G=) [.] ] ;
+    CONFIG on $(<) = $(config:G=) ;
+    NL on $(<) = "
+" ;
+}
+actions config_h
+{
+    @($(STDOUT):E=
+#ifndef BOTAN_CONFIG_H
+#define BOTAN_CONFIG_H
+
+#define BOTAN_VERSION_MAJOR $(VERSION[1])
+#define BOTAN_VERSION_MINOR $(VERSION[2])
+#define BOTAN_VERSION_PATCH $(VERSION[3])
+
+#define BOTAN_DEFAULT_BUFFER_SIZE 4096
+#define BOTAN_VECTOR_OVER_ALLOCATE 4
+#define BOTAN_GZIP_OS_CODE 255
+
+$(CONFIG:J=$(NL))
+
+namespace Botan { namespace {
+    template <typename B> struct Undefined;
+    struct EmptyFacade;
+    struct BlockCipherFacade;
+    struct StreamCipherFacade;
+    struct HashFunctionFacade;
+    struct MessageAuthenticationCodeFacade;
+    } }
+namespace Botan {
+    class Keyed_Filter;
+}
+
+#endif // BOTAN_CONFIG_H
+) > "$(<)"
+}
+
+actions autoinit_h
+{
+    @($(STDOUT):E=
+// Copyright Redshift Software, Inc. 2006.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+#ifndef com_redshift_software_sdk_botan_mods_autoinit_h
+#define com_redshift_software_sdk_botan_mods_autoinit_h
+
+#include <botan/init.h>
+#include <botan/rng.h>
+
+namespace Botan {
+    inline void initialize()
+    {
+        static Botan::LibraryInitializer init;
+        static bool seeded = false;
+        if (!seeded)
+        {
+            seeded = true;
+            Global_RNG::seed();
+        }
+    }
+}
+
+#endif
+) > "$(<)"
+}
+
+.algo.def = "
+namespace Botan { namespace {
+    template <typename B> struct Undefined : B {
+        inline Undefined()
+        { throw Algorithm_Not_Found(\"\"); }
+        template <typename A>
+        inline Undefined(A, ...)
+        { throw Algorithm_Not_Found(\"\"); }
+    };
+    struct EmptyFacade {
+        inline EmptyFacade() {}
+    };
+    struct BlockCipherFacade : BlockCipher {
+        inline BlockCipherFacade() : BlockCipher(0,0) {}
+        virtual std::string name() const { return \"\"; }
+        virtual void key(const byte[], u32bit) {}
+        virtual BlockCipher* clone() const { return 0; }
+        virtual void enc(const byte[], byte[]) const {}
+        virtual void dec(const byte[], byte[]) const {}
+    };
+    struct StreamCipherFacade : StreamCipher {
+        inline StreamCipherFacade() : StreamCipher(0) {}
+        virtual std::string name() const { return \"\"; }
+        virtual void key(const byte[], u32bit) {}
+        virtual StreamCipher* clone() const { return 0; }
+        virtual void cipher(const byte[], byte[], u32bit) {}
+    };
+    struct HashFunctionFacade : HashFunction {
+        inline HashFunctionFacade() : HashFunction(0) {}
+        virtual std::string name() const { return \"\"; }
+        virtual void add_data(const byte[], u32bit) {}
+        virtual void final_result(byte[]) {}
+        virtual HashFunction* clone() const { return 0; }
+    };
+    struct MessageAuthenticationCodeFacade : MessageAuthenticationCode {
+        inline MessageAuthenticationCodeFacade() : MessageAuthenticationCode(0,0) {}
+        virtual std::string name() const { return \"\"; }
+        virtual void add_data(const byte[], u32bit) {}
+        virtual void final_result(byte[]) {}
+        virtual MessageAuthenticationCode* clone() const { return 0; }
+        virtual void key(const byte[], u32bit) {}
+    };
+    struct S2KFacade : S2K {
+        inline S2KFacade() {}
+        virtual std::string name() const { return \"\"; }
+        virtual S2K* clone() const { return 0; }
+        virtual OctetString derive(u32bit, const std::string&, const byte[], u32bit, u32bit) const
+        { return OctetString() ; }
+    };
+} }
+" ;
+
+actions custom.cpp
+{
+    @($(STDOUT):E=
+#include <botan/config.h>
+#include <botan/exceptn.h>
+#include <botan/base.h>
+#include <botan/s2k.h>
+
+$(CONFIG:J=$(NL))
+
+#include$(_)"$(>[1])"
+
+) > "$(<)"
+}
+
+rule custom_cpp ( targets * : sources * : properties *
+    : conditional-config * : raw-config * )
+{
+    local config = [ property.evaluate-conditionals-in-context
+        $(conditional-config) : $(properties) ] $(raw-config) ;
+    CONFIG on $(<) = $(config:G=) ;
+    NL on $(<) = "
+" ;
+    _ on $(<) = " " ;
+    custom.cpp $(<) : $(>) ;
+}
+rule algolist_custom_cpp ( targets * : sources * : properties * )
+{
+    custom_cpp $(targets) : $(sources) : $(properties) : $(.code.list.cpp) : $(.algo.def) ;
+}
+rule init_custom_cpp ( targets * : sources * : properties * )
+{
+    custom_cpp $(targets) : $(sources) : $(properties) :
+        $(.code.list.cpp)
+        "<botan-fips-140>disable:<>
+namespace Botan { namespace {
+    struct FIPS140
+    {
+        static inline bool passes_self_tests() { return true; }
+    };
+} }
+namespace Botan { namespace Init {
+    inline void noop() {}
+    template <typename A0> inline void noop(A0) {}
+} }
+"
+        "<botan-x931>disable:<>
+#include <botan/randpool.h>
+#undef ANSI_X931_RNG
+#define ANSI_X931_RNG Randpool
+"
+        "<botan-discrete-log>disable:<>
+#define startup_dl_cache() noop()
+#define shutdown_dl_cache() noop()
+"
+        "<botan-policy>disable:<>
+#define add_default_oids() noop()
+#define add_default_aliases() noop()
+#define set_default_options() noop()
+#define startup_oids() noop()
+#define shutdown_oids() noop()
+#define startup_conf() noop()
+#define shutdown_conf() noop()
+"
+        "<botan-engine>disable:<>
+#define startup_engines() noop()
+#define shutdown_engines() noop()
+"
+        "<botan-lookup>disable:<>
+#define init_lookup_tables() noop()
+#define destroy_lookup_tables() noop()
+"
+        ;
+}
+rule minimal_engine_custom_cpp ( targets * : sources * : properties * )
+{
+    custom_cpp $(targets) : $(sources) : $(properties) :
+        "<botan-engine>disable:<>
+namespace Botan {
+    const BlockCipher * retrieve_block_cipher(const std::string &x) { return 0; }
+    const StreamCipher * retrieve_stream_cipher(const std::string &) { return 0; }
+    const HashFunction * retrieve_hash(const std::string &) { return 0; }
+    const MessageAuthenticationCode * retrieve_mac(const std::string &) { return 0; }
+}
+"
+        "<botan-engine>disable,<botan-barrett>enable:<>
+#include <botan/reducer.h>
+#include <botan/barrett.h>
+namespace Botan {
+    ModularReducer * get_reducer(const BigInt & n, bool) { return new BarrettReducer(n); }
+}
+"
+        ;
+}
+rule minimal_lookup_custom_cpp ( targets * : sources * : properties * )
+{
+    custom_cpp $(targets) : $(sources) : $(properties) :
+        "<botan-lookup>disable:<>
+namespace Botan {
+std::string deref_alias(const std::string & name) { return name; }
+}
+"
+        ;
+}
+rule minimal_get_algo_custom_cpp ( targets * : sources * : properties * )
+{
+    custom_cpp $(targets) : $(sources) : $(properties) :
+        "<botan-aes>enable:<>           #include <botan/aes.h>"
+        "<botan-adler32>enable:<>       #include <botan/adler32.h>"
+        "<botan-crc24>enable:<>         #include <botan/crc24.h>"
+        "<botan-crc32>enable:<>         #include <botan/crc32.h>"
+        "<botan-fork-256>enable:<>      #include <botan/fork256.h>"
+        "<botan-has-160>enable:<>       #include <botan/has160.h>"
+        "<botan-haval>enable:<>         #include <botan/haval.h>"
+        "<botan-md2>enable:<>           #include <botan/md2.h>"
+        "<botan-md4>enable:<>           #include <botan/md4.h>"
+        "<botan-md5>enable:<>           #include <botan/md5.h>"
+        "<botan-ripemd-128>enable:<>    #include <botan/rmd128.h>"
+        "<botan-ripemd-160>enable:<>    #include <botan/rmd160.h>"
+        "<botan-sha-160>enable:<>       #include <botan/sha160.h>"
+        "<botan-sha-256>enable:<>       #include <botan/sha256.h>"
+        "<botan-sha-384-512>enable:<>   #include <botan/sha_64.h>"
+        "<botan-tiger>enable:<>         #include <botan/tiger.h>"
+        "<botan-whirlpool>enable:<>     #include <botan/whrlpool.h>"
+        "<botan-parallel>enable:<>      #include <botan/par_hash.h>"
+        "<botan-cmac>enable:<>          #include <botan/cmac.h>"
+        "<botan-hmac>enable:<>          #include <botan/hmac.h>"
+        "<botan-x9.19-mac>enable:<>     #include <botan/x919_mac.h>"
+        
+        "<botan-lookup>disable:<>
+#include <botan/parsing.h>
+#include <botan/lookup.h>
+#include <memory>
+namespace {
+template <typename T> inline T * get_clone() {
+    return (new T); }
+template <typename T, typename A0> inline T * get_clone(A0 a0) {
+    return (new T(a0)); }
+template <typename T, typename A0, typename A1> inline T * get_clone(A0 a0, A1 a1) {
+    return (new T(a0,a1)); }
+}
+namespace Botan {
+BlockCipher * get_block_cipher(const std::string & name) {"
+        "<botan-aes>enable:<>
+            if (name == \"AES\") return get_clone<AES>();
+            if (name == \"AES-128\") return get_clone<AES_128>();
+            if (name == \"AES-192\") return get_clone<AES_192>();
+            if (name == \"AES-256\") return get_clone<AES_256>();"
+        "<botan-lookup>disable:<>
+    throw Algorithm_Not_Found(name); }
+
+StreamCipher * get_stream_cipher(const std::string & name) {
+    throw Algorithm_Not_Found(name); }
+
+HashFunction * get_hash(const std::string & name_) {
+    std::vector<std::string> names = parse_algorithm_name(name_);
+    if (!names.empty()) {
+        const std::string name = deref_alias(names[0]);"
+        "<botan-adler32>enable:<>
+            if (name == \"Adler32\") return get_clone<Adler32>();"
+        "<botan-crc24>enable:<>
+            if (name == \"CRC24\") return get_clone<CRC24>();"
+        "<botan-crc32>enable:<>
+            if (name == \"CRC32\") return get_clone<CRC32>();"
+        "<botan-fork-256>enable:<>
+            if (name == \"FORK-256\") return get_clone<FORK_256>();"
+        "<botan-has-160>enable:<>
+            if (name == \"HAS-160\") return get_clone<HAS_160>();"
+        "<botan-haval>enable:<>
+            if (name == \"HAVAL\") return get_clone<HAVAL>(32);"
+        "<botan-md2>enable:<>
+            if (name == \"MD2\") return get_clone<MD2>();"
+        "<botan-md4>enable:<>
+            if (name == \"MD4\") return get_clone<MD4>();"
+        "<botan-md5>enable:<>
+            if (name == \"MD5\") return get_clone<MD5>();"
+        "<botan-ripemd-128>enable:<>
+            if (name == \"RIPEMD-128\") return get_clone<RIPEMD_128>();"
+        "<botan-ripemd-160>enable:<>
+            if (name == \"RIPEMD-160\") return get_clone<RIPEMD_160>();"
+        "<botan-sha-160>enable:<>
+            if (name == \"SHA-160\") return get_clone<SHA_160>();"
+        "<botan-sha-256>enable:<>
+            if (name == \"SHA-256\") return get_clone<SHA_256>();"
+        "<botan-sha-384-512>enable:<>
+            if (name == \"SHA-384\") return get_clone<SHA_384>();
+            if (name == \"SHA-512\") return get_clone<SHA_512>();"
+        "<botan-tiger>enable:<>
+            if (name == \"Tiger\") return get_clone<Tiger>(24);"
+        "<botan-whirlpool>enable:<>
+            if (name == \"Whirlpool\") return get_clone<Whirlpool>();"
+        "<botan-parallel>enable:<>
+            if (name == \"Parallel\") return get_clone<Parallel>(names[1]);"
+        "<botan-lookup>disable:<>
+    }
+    throw Algorithm_Not_Found(name_); }
+
+MessageAuthenticationCode * get_mac(const std::string & name_) {
+    std::vector<std::string> names = parse_algorithm_name(name_);
+    if (!names.empty()) {
+        const std::string name = deref_alias(names[0]);"
+        "<botan-cmac>enable:<>
+            if (name == \"CMAC\") return get_clone<CMAC>(names[1]);"
+        "<botan-hmac>enable:<>
+            if (name == \"HMAC\") return get_clone<HMAC>(names[1]);"
+        "<botan-x9.19-mac>enable:<>
+            if (name == \"X9.19-MAC\") return get_clone<ANSI_X919_MAC>();"
+        "<botan-lookup>disable:<>
+    }
+    throw Algorithm_Not_Found(name_); }
+
+bool have_algorithm(const std::string & name) { return false; }
+bool have_block_cipher(const std::string & name) { return false; }
+bool have_stream_cipher(const std::string & name) { return false; }
+bool have_hash(const std::string & name) { return false; }
+bool have_mac(const std::string & name) { return false; }
+u32bit output_length_of(const std::string& name)
+{
+    const HashFunction* hash = get_hash(name);
+    if (hash) return hash->OUTPUT_LENGTH;
+    const MessageAuthenticationCode* mac = get_mac(name);
+    if (mac) return mac->OUTPUT_LENGTH;
+    throw Algorithm_Not_Found(name);
+}
+}
+"
+        ;
+}
+
+actions nothing { }
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define botan $(version) : $(location) : $(options) ] ;
+    local common-requirements ;
+    
+    make botan/config.h : : @config_h
+        :   <botan-version>$(version)
+            <location-prefix>src
+        ;
+        explicit botan/config.h ;
+    common-requirements +=
+        <implicit-dependency>botan/config.h
+        <dependency>botan/config.h ;
+    
+    make botan/autoinit.h : : @autoinit_h
+        :   <botan-version>$(version)
+            <location-prefix>src
+        ;
+        explicit botan/autoinit.h ;
+    common-requirements +=
+        <implicit-dependency>botan/autoinit.h
+        <dependency>botan/autoinit.h ;
+    
+    local custom-files = init algolist minimal_engine minimal_lookup minimal_get_algo ;
+    for local custom-file in $(custom-files)
+    {
+        make $(custom-file)_custom.cpp
+            :   [ glob $(location)/src/$(custom-file).cpp ]
+            :   @$(custom-file)_custom_cpp
+            :   <botan-version>$(version)
+                <location-prefix>src
+            ;
+            explicit $(custom-file)_custom.cpp ;
+        requirements += <source>$(custom-file)_custom.cpp ;
+    }
+    
+    local headers ;
+    local headers-requirements ;
+    
+    for local m in $(.modules)
+    {
+        if <botan-$(m)>enable in $(requirements)
+        {
+            local cpp = [ glob $(location)/modules/$(.module.subdir.$(m))/*.cpp ] ;
+            local h = [ glob $(location)/modules/$(.module.subdir.$(m))/*.h ] ;
+            for local f in $(h)
+            {
+                make botan/$(f:D=) : $(f) : common.copy
+                    :   <botan-version>$(version)
+                        <location-prefix>src
+                    ;
+                    explicit botan/$(f:D=) ;
+            }
+            headers += $(h:D=) ;
+            headers-requirements +=
+                <botan-$(m)>enable:<dependency>botan/$(h:D=) ;
+            if $(.module.condition.$(m))
+            {
+                requirements +=
+                    <botan-$(m)>enable,$(.module.condition.$(m)):<source>$(cpp) ;
+            }
+            else
+            {
+                requirements +=
+                    <botan-$(m)>enable:<source>$(cpp) ;
+            }
+            requirements += $(.module.requirements.$(m)) ;
+            common-requirements += $(.module.usage.$(m)) ;
+        }
+    }
+    
+    for local c in $(.code)
+    {
+        if $(.code.sources.$(c))
+        {
+            local cpp = [ glob $(location)/src/$(.code.sources.$(c)) ] ;
+            requirements += <botan-$(c)>enable:<source>$(cpp) ;
+        }
+    }
+    
+    requirements += $(.code.requirements) ;
+    
+    for local f in
+        [ glob $(location)/include/*.h ]
+    {
+        if ! $(f:D=) in $(headers)
+        {
+            make botan/$(f:D=) : $(f) : common.copy
+                :   <botan-version>$(version)
+                    <location-prefix>src
+                ;
+                explicit botan/$(f:D=) ;
+            headers-requirements +=
+                <dependency>botan/$(f:D=) ;
+        }
+    }
+    
+    local sources = [ set.difference
+        [ glob $(location)/src/*.cpp ] :
+        [ glob
+            $(location)/src/$(.code.sources)
+            $(location)/src/$(custom-files).cpp
+            ]
+        ] ;
+    
+    lib botan
+        :   $(sources)
+        :   $(requirements)
+            $(common-requirements)
+            $(headers-requirements)
+            <botan-version>$(version)
+            <botan-location>$(location)
+            <location-prefix>botan
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            #~ ## turn on exception specification handling
+            #~ <toolset>msvc-8.0:<cxxflags>/d1ESrt
+            ## inherits via dominance
+            <toolset>msvc:<cxxflags>/wd4250
+            ## C++ exception specification ignored... blah, blah, crappy compiler.
+            <toolset>msvc:<cxxflags>/wd4290
+            ## Include some headers always, to resolve missing declarations.
+            <toolset>msvc:<cxxflags>/FIbotan/botan.h
+            <toolset>msvc:<cxxflags>/FIbotan/basefilt.h
+            ## Bare use of ULL constants without ULL postfix cause errors in gcc.
+            <toolset>gcc:<cxxflags>-fpermissive
+        :
+        :   $(common-requirements)
+            $(headers-requirements)
+        ;
+}

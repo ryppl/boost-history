@@ -1,0 +1,57 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for BASS sound library <http://www.un4seen.com/bass.html>.
+### No configuration really possible with the BASS lib. So this only
+### declares the single Windows DLL target "/ext/bass//bass" for the
+### MSVC toolset. For other toolsets that support direct linking to the
+### DLL there is also a "/ext/bass//bass.dll" target (not tested).
+
+
+import property ;
+import project ;
+import feature ;
+
+project.extension bass ;
+
+feature.feature bass-version
+    :
+    :   propagated optional implicit ;
+
+feature.feature bass-location
+    :
+    :   free ;
+
+rule init ( version ? : location : options * )
+{
+    if $(version)
+    {
+        feature.extend bass-version : $(version) ;
+    }
+    
+    local requirements =
+        <bass-version>$(version)
+        <bass-location>$(location)
+        <location-prefix>bass
+        ;
+    
+    lib bass.dll
+        :
+        :   $(requirements)
+            <file>$(location)/bass.dll
+        ;
+    
+    lib bass
+        :   
+        :   $(requirements)
+            <toolset>msvc
+            <link>shared
+            <file>$(location)/c/bass.lib
+            <use>bass.dll
+        :
+        :   <include>$(location)/c
+            <library>bass.dll
+        ;
+}

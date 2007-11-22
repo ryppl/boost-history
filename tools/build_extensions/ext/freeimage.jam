@@ -1,0 +1,187 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building FreeImage library <http://freeimage.sourceforge.net/>.
+### Targets:
+###     /ext/freeimage//freeimage
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import regex ;
+import stage ;
+import common ;
+import set ;
+
+extension.declare freeimage ;
+
+actions include_h
+{
+    @($(STDOUT):E=
+$(TEXT:J=$(NL))
+
+) > "$(<)"
+}
+
+rule include_h ( targets * : sources * : properties * )
+{
+    TEXT on $(<) = "
+#ifndef CUSTOM_$(<[1]:B:U)_H
+#define CUSTOM_$(<[1]:B:U)_H
+
+#include <$(<[1]:D=:G=)>
+
+#endif
+" ;
+    NL on $(<) = "
+" ;
+    _ on $(<) = " " ;
+}
+
+.file.includes.PluginG3.cpp = tiffiop.h ;
+.file.includes.PluginMNG.cpp = libmng.h ;
+.file.includes.PluginPNG.cpp = png.h ;
+.file.includes.PluginTIFF.cpp = tiffiop.h ;
+.file.includes.ZLibInterface.cpp = zlib.h zutil.h ;
+.file.includes.XTIFF.cpp = tiffiop.h ;
+.file.text.PluginMNG.cpp = "
+#define mng_initialize(a,b,c,d) (mng_initialize)(a,(mng_memalloc)b,(mng_memfree)c,d)
+#define mng_setcb_errorproc(a,b) (mng_setcb_errorproc)(a,(mng_errorproc)b)
+#define mng_setcb_openstream(a,b) (mng_setcb_openstream)(a,(mng_openstream)b)
+#define mng_setcb_closestream(a,b) (mng_setcb_closestream)(a,(mng_closestream)b)
+#define mng_setcb_readdata(a,b) (mng_setcb_readdata)(a,(mng_readdata)b)
+#define mng_setcb_processheader(a,b) (mng_setcb_processheader)(a,(mng_processheader)b)
+#define mng_setcb_getcanvasline(a,b) (mng_setcb_getcanvasline)(a,(mng_getcanvasline)b)
+#define mng_setcb_refresh(a,b) (mng_setcb_refresh)(a,(mng_refresh)b)
+#define mng_setcb_gettickcount(a,b) (mng_setcb_gettickcount)(a,(mng_gettickcount)b)
+#define mng_setcb_settimer(a,b) (mng_setcb_settimer)(a,(mng_settimer)b)
+" ;
+
+actions custom_cpp
+{
+    @($(STDOUT):E=
+$(TEXT:J=$(NL))
+#include "$(>[1])"
+) > "$(<)"
+}
+
+rule custom_cpp ( targets * : sources * : properties * )
+{
+    TEXT on $(<) = "
+#include \"$(.file.includes.$(targets[1]:G=:D=))\"
+$(.file.text.$(targets[1]:G=:D=):E=)
+" ;
+    NL on $(<) = "
+" ;
+    _ on $(<) = " " ;
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define freeimage $(version) : $(location) : $(options) ] ;
+    local common-requirements =
+        <include>$(location)/Source
+        ;
+    
+    local header-requirements ;
+    for local f in
+        LibJPEG/jinclude.h
+        LibJPEG/jpeglib.h
+        LibJPEG/jerror.h
+        LibJPEG/transupp.h
+    {
+        make $(f)
+            :   [ glob $(location)/Source/$(f) ]
+            :   @include_h
+            :   <freeimage-version>$(version)
+                <location-prefix>src
+            ;
+        explicit $(custom-file) ;
+        header-requirements +=
+            <implicit-dependency>$(f)
+            <dependency>$(f) ;
+    }
+    
+    local custom-files =
+        FreeImage/PluginG3.cpp
+        FreeImage/PluginMNG.cpp
+        FreeImage/PluginPNG.cpp
+        FreeImage/PluginTIFF.cpp
+        FreeImage/ZLibInterface.cpp
+        Metadata/XTIFF.cpp
+        ;
+    for local custom-file in $(custom-files)
+    {
+        make $(custom-file)
+            :   [ glob $(location)/Source/$(custom-file) ]
+            :   @custom_cpp
+            :   <freeimage-version>$(version)
+                <location-prefix>src
+                $(header-requirements)
+            ;
+        explicit $(custom-file) ;
+        requirements +=
+            <source>$(custom-file)
+            <dependency>$(custom-file) ;
+    }
+    
+    for local custom-file in
+        FreeImage/PluginJPEG.cpp
+        Metadata/FreeImageTag.h
+    {
+        make $(custom-file) : $(location)/Source/$(custom-file)
+            : common.copy
+            :   <freeimage-version>$(version)
+                <location-prefix>src
+            ;
+        explicit $(custom-file) ;
+        custom-files += $(custom-file) ;
+        requirements += <dependency>$(custom-file) ;
+        if $(custom-file:S) in .cpp
+        {
+            requirements += <source>$(custom-file) ;
+        }
+    }
+    
+    local sources = [ set.difference
+        [ glob
+            $(location)/Source/FreeImage/*.cpp
+            $(location)/Source/FreeImageToolkit/*.cpp
+            $(location)/Source/Metadata/*.cpp ]
+        :
+        [ glob
+            $(location)/Source/$(custom-files)
+            $(location)/Source/FreeImageToolkit/JPEGTransform.cpp ]
+        ]
+        ;
+    
+    lib freeimage
+        :   $(sources)
+            /ext/zlib//z
+            /ext/jpeg//jpeg
+            /ext/png//png
+            /ext/mng//mng
+            /ext/libtiff//tiff
+        :   $(requirements)
+            $(common-requirements)
+            <freeimage-version>$(version)
+            <freeimage-location>$(location)
+            <location-prefix>freeimage
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            <link>static:<define>FREEIMAGE_LIB=1
+            <link>shared:<define>FREEIMAGE_EXPORTS
+            #~ <use>/ext/zlib//z
+            #~ <use>/ext/jpeg//jpeg
+            #~ <use>/ext/png//png
+            #~ <use>/ext/mng//mng
+            #~ <use>/ext/libtiff//tiff
+        :
+        :   $(common-requirements)
+        ;
+}

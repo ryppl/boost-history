@@ -1,0 +1,119 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for GigaBASE object relational embeded database
+### <http://sourceforge.net/projects/gigabase>. Only one
+### target is declared here "/ext/gigabase//gigabase". All
+### options normally set in the config.h of GigaBASE are selectable
+### through features. And can be consifured when declaring through
+### the use of "--enable-*" and "--disable-*" options.
+### 
+### NOTE: This onyl declares the core library, not the standalone
+### CLI server executable.
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare gigabase ;
+
+extension.option gigabase debug : none check trace ;
+
+extension.option gigabase pthreads : enable disable ;
+extension.option gigabase namespaces : enable disable ;
+extension.option gigabase secure-server : disable enable ;
+extension.option gigabase queue-manager : disable enable ;
+extension.option gigabase std-string : enable disable ;
+extension.option gigabase exception-on-error : enable disable ;
+
+extension.option gigabase autoincrement : enable disable ;
+extension.option gigabase clone-identifiers : disable enable ;
+extension.option gigabase rectangle-dimension : 2 ;
+extension.option gigabase coordinate-type : int double long float ;
+extension.option gigabase rectangle-area-type : db_int8 double ;
+extension.option gigabase set-null-dacl : disable enable ;
+extension.option gigabase int8-is-defined : disable enable ;
+extension.option gigabase mfc : disable enable ;
+extension.option gigabase atl : disable enable ;
+extension.option gigabase mfc-string : disable enable ;
+extension.option gigabase large-database-support : disable enable ;
+extension.option gigabase sparse-file : disable enable  ;
+extension.option gigabase align-header : disable enable ;
+extension.option gigabase regex : disable enable ;
+extension.option gigabase sock-linger : disable enable ;
+
+extension.option gigabase replicator : disable enable ;
+extension.option gigabase wwwapi : disable enable ;
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define gigabase $(version) : $(location) : $(options) ] ;
+    local common-requirements =
+        <include>$(location)
+        <define>__CONFIG_H__
+        <define>PACKAGE=\"gigabase\"
+        <define>VERSION=\"$(version)\"
+        <target-os>windows,<link>shared:<define>GIGABASE_DLL=1
+        <target-os>linux,<gigabase-pthreads>disable:<define>NO_PTHREADS=1
+        <target-os>linux,<threading>single:<define>NO_PTHREADS=1
+        
+        <gigabase-debug>none:<define>GIGABASE_DEBUG=DEBUG_NONE
+        <gigabase-debug>check:<define>DEBUG=DEBUG_CHECK
+        <gigabase-debug>trace:<define>DEBUG=DEBUG_TRACE
+        
+        <gigabase-namespaces>enable:<define>USE_NAMESPACES=1
+        <gigabase-secure-server>enable:<define>SECURE_SERVER=1
+        <gigabase-queue-manager>enable:<define>USE_QUEUE_MANAGER=1
+        <gigabase-std-string>enable:<define>USE_STD_STRING=1
+        <gigabase-exception-on-error>enable:<define>THROW_EXCEPTION_ON_ERROR=1
+        
+        <gigabase-autoincrement>enable:<define>AUTOINCREMENT_SUPPORT=1
+        <gigabase-clone-identifiers>enable:<define>CLONE_IDENTIFIERS=1
+        <gigabase-rectangle-dimension>2:<define>RECTANGLE_DIMENSION=2
+        <gigabase-coordinate-type>int:<define>RECTANGLE_COORDINATE_TYPE=int
+        <gigabase-coordinate-type>double:<define>RECTANGLE_COORDINATE_TYPE=double
+        <gigabase-coordinate-type>long:<define>RECTANGLE_COORDINATE_TYPE=long
+        <gigabase-coordinate-type>float:<define>RECTANGLE_COORDINATE_TYPE=float
+        <gigabase-rectangle-area-type>db_int8:<define>RECTANGLE_AREA_TYPE=db_int8
+        <gigabase-rectangle-area-type>double:<define>RECTANGLE_AREA_TYPE=double
+        <gigabase-set-null-dacl>enable:<define>SET_NULL_DACL=1
+        <gigabase-int8-is-defined>enable:<define>INT8_IS_DEFINED=1
+        <gigabase-mfc>enable:<define>USE_MFC=1
+        <gigabase-atl>enable:<define>USE_ATL=1
+        <gigabase-mfc-string>enable:<define>USE_MFC_STRING=1
+        <gigabase-large-database-support>enable:<define>LARGE_DATABASE_SUPPORT=1
+        <gigabase-sparse-file>enable:<define>SPARSE_FILE_OPTIMIZATION=true
+        <gigabase-align-header>enable:<define>ALIGN_HEADER=true
+        <gigabase-regex>enable:<define>USE_REGEX=true
+        <gigabase-sock-linger>enable:<define>SOCK_LINGER=1
+        ;
+    local files =
+        class compiler database hashtab file symtab btree
+        rtree cursor query pagepool blob container
+        exception localcli sync
+        ;
+    location,$(version) = $(location) ;
+    
+    lib gigabase
+        :   $(location)/$(files).cpp
+        :   $(requirements)
+            <gigabase-version>$(version)
+            <gigabase-location>$(location)
+            <location-prefix>gigabase
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            $(common-requirements)
+            <gigabase-replicator>enable:<source>$(location)/replicator.cpp
+            <gigabase-replicator>enable,<target-os>windows:<source>$(location)/w32sock.cpp
+            <gigabase-wwwapi>enable:<source>$(location)/wwwapi.cpp
+            <gigabase-wwwapi>enable,<target-os>windows:<source>$(location)/w32sock.cpp
+        :
+        :   $(common-requirements)
+        ;
+}

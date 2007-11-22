@@ -1,0 +1,304 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for Ogre3D rendering C++ engine <http://www.ogre3d.org>.
+
+import property ;
+import project ;
+import feature ;
+
+project.extension ogre ;
+
+feature.feature ogre-version
+    :
+    :   propagated implicit ;
+
+feature.feature ogre-location
+    :
+    :   free ;
+
+feature.feature ogre-opengl
+    : enable disable : propagated incidental ;
+feature.feature ogre-d3d9
+    : disable enable : propagated incidental ;
+feature.feature ogre-cg
+    : disable enable : propagated incidental ;
+
+feature.feature ogre-cegui
+    : disable enable : propagated incidental ;
+feature.feature ogre-bsp
+    : disable enable : propagated incidental ;
+feature.feature ogre-octree
+    : disable enable : propagated incidental ;
+feature.feature ogre-quake3
+    : disable enable : propagated incidental ;
+feature.feature ogre-terrain
+    : disable enable : propagated incidental ;
+
+ogre.hpp = "ogre.hpp" ;
+ogre.hpp.text = "
+#ifndef OGRE_HPP
+#define OGRE_HPP
+
+#if defined( _MSC_VER )
+#pragma warning( push )
+#endif
+
+// Disable the incredibly nasty Ogre memory manager.
+#define OGRE_DEBUG_MEMORY_MANAGER 0
+#include <Ogre.h>
+#include <OgreNoMemoryMacros.h>
+
+#if defined( _MSC_VER )
+#pragma warning( pop )
+#endif
+
+#endif
+" ;
+
+actions ogre_hpp
+{
+    @($(STDOUT):E=$(ogre.hpp.text)) > "$(<)"
+}
+
+local rule prop ( option )
+{
+    local vals = [ MATCH "--([^-]+)-([^=]+)[=]?(.*)" : $(option) ] ;
+    if $(vals[2])
+    {
+        return <ogre-$(vals[1])>$(vals[2]) ;
+    }
+    else
+    {
+        return <ogre-$(vals[1])>enable ;
+    }
+}
+
+rule init ( version ? : location : options * )
+{
+    if $(version)
+    {
+        feature.extend ogre-version : $(version) ;
+    }
+    
+    local requirements ;
+    local usage-requirements ;
+    
+    for local option in $(options)
+    {
+        switch $(option)
+        {
+            case --enable-* :
+            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
+            case --disable-* :
+            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
+            case --with-* :
+            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
+        }
+    }
+    
+    requirements +=
+        <ogre-version>$(version)
+        <ogre-location>$(location)
+        <location-prefix>ogre
+        ;
+    usage-requirements +=
+        <include>$(location)/include
+        <ogre-cegui>enable:<include>$(location)/include/CEGUI
+        <ogre-bsp>enable:<include>$(location)/include/opt
+        <ogre-octree>enable:<include>$(location)/include/opt
+        <ogre-quake3>enable:<include>$(location)/include/opt
+        <ogre-terrain>enable:<include>$(location)/include/opt
+        <implicit-dependency>$(ogre.hpp)
+        <dependency>$(ogre.hpp)
+        ;
+    
+    make $(ogre.hpp) : : @ogre_hpp
+        :   <ogre-version>$(version)
+            <location-prefix>ogre/setup
+        ;
+    explicit $(ogre.hpp) ;
+    
+    local libs-to-use ;
+    if ! <ogre-opengl>disable in $(requirements)
+    {
+        lib render-gl.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/RenderSystem_GL.dll ;
+        lib render-gl.dll : : $(requirements) <debug-symbols>off
+            <file>$(location)/bin/release/RenderSystem_GL.dll ;
+        
+        alias opengl
+            :
+            :   $(requirements)
+                <toolset>msvc
+                <target-os>windows
+                <link>shared
+            :
+            :   $(usage-requirements)
+                <library>render-gl.dll
+            ;
+        
+        libs-to-use += opengl ;
+    }
+    if <ogre-d3d9>enable in $(requirements)
+    {
+        lib render-d3d9.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/RenderSystem_Direct3D9.dll ;
+        lib render-d3d9.dll : : $(requirements) <debug-symbols>off
+            <file>$(location)/bin/release/RenderSystem_Direct3D9.dll ;
+        
+        alias d3d9
+            :
+            :   $(requirements)
+                <toolset>msvc
+                <target-os>windows
+                <link>shared
+            :
+            :   $(usage-requirements)
+                <library>render-d3d9.dll
+            ;
+        
+        libs-to-use += d3d9 ;
+    }
+    if <ogre-cg>enable in $(requirements)
+    {
+    }
+    if <ogre-cegui>enable in $(requirements)
+    {
+        lib cegui-renderer.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/OgreGUIRenderer_d.dll ;
+        lib cegui-base.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/CEGUIBase_d.dll ;
+        lib cegui-falagard-base.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/CEGUIFalagardBase_d.dll ;
+        lib cegui-tahares-look.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/CEGUITaharezLook_d.dll ;
+        lib cegui-windows-look.dll : : $(requirements) <debug-symbols>on
+            <file>$(location)/bin/debug/CEGUIWindowsLook_d.dll ;
+            
+        lib cegui-base.dll : : $(requirements) <debug-symbols>off
+            <file>$(location)/bin/release/CEGUIBase.dll ;
+        lib cegui-falagard-base.dll : : $(requirements) <debug-symbols>off
+            <file>$(location)/bin/release/CEGUIFalagardBase.dll ;
+        lib cegui-tahares-look.dll : : $(requirements) <debug-symbols>off
+            <file>$(location)/bin/release/CEGUITaharezLook.dll ;
+        lib cegui-windows-look.dll : : $(requirements) <debug-symbols>off
+            <file>$(location)/bin/release/CEGUIWindowsLook.dll ;
+        
+        lib cegui
+            :
+            :   $(requirements)
+                <toolset>msvc
+                <target-os>windows
+                <link>shared
+                <debug-symbols>on
+                <file>$(location)/lib/CEGUIBase_d.lib
+            :
+            :   $(usage-requirements)
+                <library>cegui-base.dll
+                <library>cegui-falagard-base.dll
+                <library>cegui-tahares-look.dll
+                <library>cegui-windows-look.dll
+            ;
+        
+        lib cegui
+            :
+            :   $(requirements)
+                <toolset>msvc
+                <target-os>windows
+                <link>shared
+                <debug-symbols>off
+                <file>$(location)/lib/CEGUIBase.lib
+            :
+            :   $(usage-requirements)
+                <library>cegui-base.dll
+                <library>cegui-falagard-base.dll
+                <library>cegui-tahares-look.dll
+                <library>cegui-windows-look.dll
+            ;
+        
+        libs-to-use += cegui ;
+    }
+    if <ogre-bsp>enable in $(requirements)
+    {
+    }
+    if <ogre-octree>enable in $(requirements)
+    {
+    }
+    if <ogre-quake3>enable in $(requirements)
+    {
+    }
+    if <ogre-terrain>enable in $(requirements)
+    {
+    }
+    
+    lib devil.dll : : $(requirements) <debug-symbols>on
+        <file>$(location)/bin/debug/DevIL.dll ;
+    lib devil.dll : : $(requirements) <debug-symbols>off
+        <file>$(location)/bin/release/DevIL.dll ;
+    
+    lib zlib1.dll : : $(requirements) <debug-symbols>on
+        <file>$(location)/bin/debug/zlib1.dll ;
+    lib zlib1.dll : : $(requirements) <debug-symbols>off
+        <file>$(location)/bin/release/zlib1.dll ;
+    
+    lib ogre-main.dll : : $(requirements) <debug-symbols>on
+        <file>$(location)/bin/debug/OgreMain_d.dll ;
+    lib ogre-main.dll : : $(requirements) <debug-symbols>off
+        <file>$(location)/bin/release/OgreMain.dll ;
+    
+    lib ogre-platform.dll : : $(requirements) <debug-symbols>on
+        <file>$(location)/bin/debug/OgrePlatform_d.dll ;
+    lib ogre-platform.dll : : $(requirements) <debug-symbols>off
+        <file>$(location)/bin/release/OgrePlatform.dll ;
+    
+    lib ilu.dll : : $(requirements) <debug-symbols>on
+        <file>$(location)/bin/debug/ILU.dll ;
+    lib ilu.dll : : $(requirements) <debug-symbols>off
+        <file>$(location)/bin/release/ILU.dll ;
+    
+    #~ lib ilut.dll : : $(requirements) <debug-symbols>on
+        #~ <file>$(location)/bin/debug/ILUT.dll ;
+    #~ lib ilut.dll : : $(requirements) <debug-symbols>off
+        #~ <file>$(location)/bin/release/ILUT.dll ;
+    
+    #~ ECHO --- $(libs-to-use) ;
+    
+    lib ogre
+        :
+        :   $(requirements)
+            <toolset>msvc
+            <target-os>windows
+            <link>shared
+            <debug-symbols>on
+            <file>$(location)/lib/OgreMain_d.lib
+            <use>$(libs-to-use)
+        :
+        :   $(usage-requirements)
+            <library>devil.dll
+            <library>zlib1.dll
+            <library>ilu.dll
+            <library>ogre-main.dll
+            <library>ogre-platform.dll
+        ;
+    
+    lib ogre
+        :
+        :   $(requirements)
+            <toolset>msvc
+            <target-os>windows
+            <link>shared
+            <debug-symbols>off
+            <file>$(location)/lib/OgreMain.lib
+            <use>$(libs-to-use)
+        :
+        :   $(usage-requirements)
+            <library>devil.dll
+            <library>zlib1.dll
+            <library>ilu.dll
+            <library>ogre-main.dll
+            <library>ogre-platform.dll
+        ;
+}

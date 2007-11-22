@@ -1,0 +1,75 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for using GTK library.
+
+import extension ;
+import property ;
+import path ;
+import feature ;
+
+extension.declare gtk ;
+
+feature.feature gtk-glib : : free ;
+feature.feature gtk-pango : : free ;
+feature.feature gtk-atk : : free ;
+
+local rule parent ( path ? )
+{
+    if $(path)
+    {
+        return [ path.parent $(path) ] ;
+    }
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define gtk $(version) : $(location) : $(options) ] ;
+    location = [ path.make $(location) ] ;
+    
+    #~ ECHO *** $(requirements) ; EXIT 1 ;
+    
+    local gtk-v = $(version) ;
+    local glib-v = [ feature.get-values <gtk-glib> : $(requirements) ] ;
+    local pango-v = [ feature.get-values <gtk-pango> : $(requirements) ] ;
+    local atk-v = [ feature.get-values <gtk-atk> : $(requirements) ] ;
+    
+    local includes =
+        [ parent [ path.glob $(location)/include/glib-$(glib-v) : glib.h ] ]
+        [ parent [ path.glob $(location)/lib/glib-$(glib-v)/include : glibconfig.h ] ]
+        [ parent [ parent [ path.glob $(location)/include/gtk-$(gtk-v)/gtk : gtk.h ] ] ]
+        [ parent [ path.glob $(location)/lib/gtk-$(gtk-v)/include : gdkconfig.h ] ]
+        [ parent [ parent [ path.glob $(location)/include/pango-$(pango-v)/pango : pango.h ] ] ]
+        [ parent [ parent [ path.glob $(location)/include/atk-$(pango-v)/atk : atk.h ] ] ]
+        [ parent [ path.glob $(location)/include/cairo : cairo.h ] ]
+        ;
+    #~ ECHO +++ GTK: $(includes) ; EXIT ;
+    
+    alias gtk
+        :
+        :   $(requirements)
+            <gtk-version>$(version)
+            <gtk-location>$(location)
+            <find-shared-library>glib-$(glib-v)
+            <find-shared-library>gthread-$(glib-v)
+            <find-shared-library>gmodule-$(glib-v)
+            <find-shared-library>gobject-$(glib-v)
+            <find-shared-library>gtk-x11-$(gtk-v)
+            <find-shared-library>gdk-x11-$(gtk-v)
+            <find-shared-library>pango-$(pango-v)
+            <find-shared-library>atk-$(atk-v)
+        :
+        :   <include>$(includes)
+            <find-shared-library>glib-$(glib-v)
+            <find-shared-library>gthread-$(glib-v)
+            <find-shared-library>gmodule-$(glib-v)
+            <find-shared-library>gobject-$(glib-v)
+            <find-shared-library>gtk-x11-$(gtk-v)
+            <find-shared-library>gdk-x11-$(gtk-v)
+            <find-shared-library>pango-$(pango-v)
+            <find-shared-library>atk-$(atk-v)
+        ;
+}

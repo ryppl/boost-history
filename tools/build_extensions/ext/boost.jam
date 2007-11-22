@@ -1,0 +1,168 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building Boost <http://www.boost.org/> externally.
+### Targets:
+###     /ext/boost//boost
+###     /ext/boost//thread
+###     /ext/boost//regex
+###     /ext/boost//interprocess
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import set ;
+import stage ;
+import common ;
+import path ;
+
+extension.declare boost ;
+
+feature.feature boost-interprocess : : free ;
+feature.feature boost-asio : : free ;
+
+rule boost-tag ( name : type ? : property-set )
+{
+    return [ common.format-name
+        boost_ <base> <toolset> <threading> <runtime> <version:boost-version>
+        : $(name) : $(type) : $(property-set) ] ;
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements =
+        [ extension.define boost $(version) : $(location) : $(options) ]
+        <boost-version>$(version)
+        <boost-location>$(location)
+        <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+        <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+        #~ <warnings>off
+        ;
+    requirements = [ extension.refine boost $(version) : <tag>@boost-tag ] ;
+    local common-requirements =
+        <include>$(location)
+        ;
+    
+    alias boost
+        :
+        :   $(common-requirements)
+            $(requirements)
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib thread
+        :   [ set.difference
+                [ glob $(location)/libs/thread/src/*.cpp ]
+                :
+                [ glob $(location)/libs/thread/src/tss_null.cpp ]
+                ]
+        :   $(requirements)
+            <location-prefix>thread
+            <use>boost
+            <threading>multi
+            <define>BOOST_THREAD_BUILD_DLL=1
+            <toolset>msvc:<cxxflags>/wd4275
+            <toolset>msvc:<cxxflags>/wd4251
+        :
+        :   <threading>multi
+            <define>BOOST_THREAD_USE_DLL=1
+        ;
+    
+    lib regex
+        :   [ glob $(location)/libs/regex/src/*.cpp ]
+        :   $(requirements)
+            <location-prefix>regex
+            <use>boost
+            <link>shared:<define>BOOST_REGEX_DYN_LINK=1
+            <toolset>msvc:<cxxflags>/wd4309
+            <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        :
+        :
+        ;
+    
+    if <boost-interprocess> in $(requirements:G)
+    {
+        local i = [ property.select <boost-interprocess> : $(requirements) ] ;
+        if ! ( $(i:G=) in enable disable )
+        {
+            local i-location = [ path.make $(i:G=) ] ;
+            local i-files = [ path.glob-tree $(i-location)/boost/interprocess : *.hpp ] ;
+            local custom-files ;
+            for local i-file in $(i-files)
+            {
+                local custom-file = [ path.relative $(i-file) $(i-location) ] ;
+                make $(custom-file) : $(i-file) : common.copy
+                    :   $(requirements)
+                        <location-prefix>interprocess
+                    ;
+                custom-files += $(custom-file) ;
+            }
+            alias interprocess
+                :
+                :   $(requirements)
+                    <use>boost
+                    <dependency>$(custom-files)
+                :
+                :   $(common-requirements)
+                    <dependency>$(custom-files)
+                    <implicit-dependency>$(custom-files)
+                ;
+        }
+        else if $(i:G=) = enable
+        {
+            alias interprocess
+                :
+                :   $(requirements)
+                    <use>boost
+                :
+                :
+                ;
+        }
+    }
+    
+    if <boost-asio> in $(requirements:G)
+    {
+        local i = [ property.select <boost-asio> : $(requirements) ] ;
+        if ! ( $(i:G=) in enable disable )
+        {
+            local i-location = [ path.make $(i:G=) ] ;
+            local i-files = [ path.glob-tree $(i-location)/boost/asio : *.hpp ] ;
+            local custom-files ;
+            for local i-file in $(i-files)
+            {
+                local custom-file = [ path.relative $(i-file) $(i-location) ] ;
+                make $(custom-file) : $(i-file) : common.copy
+                    :   $(requirements)
+                        <location-prefix>asio
+                    ;
+                custom-files += $(custom-file) ;
+            }
+            alias asio
+                :
+                :   $(requirements)
+                    <use>boost
+                    <dependency>$(custom-files)
+                :
+                :   $(common-requirements)
+                    <dependency>$(custom-files)
+                    <implicit-dependency>$(custom-files)
+                ;
+        }
+        else if $(i:G=) = enable
+        {
+            alias asio
+                :
+                :   $(requirements)
+                    <use>boost
+                :
+                :
+                ;
+        }
+    }
+}

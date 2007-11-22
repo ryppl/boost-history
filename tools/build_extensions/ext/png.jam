@@ -1,0 +1,45 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building PNG library <http://www.libpng.org/>.
+### Targets:
+###     /ext/png//png
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare png ;
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define png $(version) : $(location) : $(options) ] ;
+    
+    lib png
+        :   [ glob $(location)/png*.c ]
+            /ext/zlib//z
+        :   $(requirements)
+            <png-version>$(version)
+            <png-location>$(location)
+            <include>$(location)
+            <location-prefix>png
+            <target-os>windows,<link>shared:<define>PNG_BUILD_DLL
+            <define>PNG_iTXt_SUPPORTED
+            
+            <toolset>msvc,<link>shared:<define>PNG_IMPEXP=__declspec(dllexport)
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+        :
+        :   <include>$(location)
+            <target-os>windows,<link>shared:<define>PNG_USE_DLL
+            <define>PNG_iTXt_SUPPORTED
+            
+            <toolset>msvc,<link>shared:<define>PNG_IMPEXP=__declspec(dllimport)
+        ;
+}

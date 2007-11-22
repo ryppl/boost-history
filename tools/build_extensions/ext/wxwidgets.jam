@@ -1,0 +1,1361 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for bulding wxWidgets library <http://wxwidgets.org/>.
+### So far this only provides library targets for the multilib version
+### of the wxWidgets library. Initialization follow the same configure
+### options, or close to them, as are present if one uses the configure
+### script. For example:
+### 
+###     using wxwidgets
+###         :   2.6.3
+###         :   $(DEVELOPMENT)/wxWidgets-2.6.3
+###         :   --disable-metafile
+###             --disable-html
+###             --disable-xml
+###         ;
+### 
+### One can declare multiple versions, and variants of the same version
+### just by declaring and changing the version (2.6.3 above) to differentiate
+### each. Specific version are selectable by using the "wx-version" feature.
+### Any of the source distributions will work with this and we adjust to
+### the specific set of files available in the sources. This works because
+### we directly read in the file.bkl build file to figure out the files
+### and check that against the real files in the sources. One drawback
+### of this approach is a slow startup as parsing and checking is a bit of work.
+### 
+### Declared targets:
+### 
+###     (built in utility libs)
+###     /ext/wxwidgets//regex
+###     /ext/wxwidgets//zlib
+###     /ext/wxwidgets//jpeg
+###     /ext/wxwidgets//png
+###     /ext/wxwidgets//expat
+###     
+###     (wx multilib style libs)
+###     /ext/wxwidgets//base
+###     /ext/wxwidgets//net
+###     /ext/wxwidgets//core
+###     /ext/wxwidgets//adv
+###     /ext/wxwidgets//media
+###     /ext/wxwidgets//odbc
+###     /ext/wxwidgets//dbgrid
+###     /ext/wxwidgets//html
+###     /ext/wxwidgets//gl
+###     /ext/wxwidgets//qa
+###     /ext/wxwidgets//xml
+###     /ext/wxwidgets//xrc
+### 
+###     Some targets will not be declared based on the configured options.
+### 
+### Currently tested on:
+### 
+###     Windows: wx-platform=win32 wx-toolkit=msw
+### 
+### NOTE: This support is *very* preliminary and even on Windows, the
+### system I'm using actively, some libs don't compile... Some because they
+### depend on external SDKs that I don't have.
+### 
+### TODO:
+### - Declare the multilib target /ext/wxwidgets//all.
+### - Implement templates in BBv2 so clean up the declarations.
+### - Perhaps move the configured defs into the generated "setup.h". This
+###   requires better/easier BBv2 support for generated files.
+### - Support the wxWidgets library names in addition to the Boost names.
+
+
+import extension ;
+
+import "class" : new ;
+import property ;
+import project ;
+import targets ;
+import feature ;
+import stage ;
+import regex ;
+import os ;
+import set ;
+import type ;
+import virtual-target ;
+import common ;
+
+extension.declare wx ;
+
+feature.feature wx-platform
+    :   bsd macos macosx msdos os2 palmos unix win32
+    :   propagated optional implicit ;
+
+feature.feature wx-toolkit
+    :   cocoa gtk mac mgl microwin motif msw nanox pm x11 wince
+    :   propagated optional implicit ;
+
+feature.feature wx-gtk-version
+    :   1.2 1.27 2.0 2.4
+    :   propagated optional incidental ;
+
+feature.feature wx-gtk
+    :
+    :   free ;
+
+~options =
+    gui* -monolithic -plugins
+    ##1
+    #~ -gtk2 -gpe
+    -universal
+    ##2
+    libpng libjpeg libxpm libmspack -libsdl -libgnomeprint -libhildon -opengl
+    ##3
+    regex zlib expat -dmalloc -odbc
+    ##4
+    shared optimize debug omf -stl
+    ##5
+    -debug_flag -debug_info -debug_gdb -debug_context -mem_tracing -profile
+    -no_rtti -no_exceptions -permissive -no_deps -universal_binary -memory_tracing
+    ##6
+    -compatibility_2_2 compatibility_2_4
+    ##7
+    rpath
+    ##8
+    intl config
+    ##9
+    url protocol protocol_ftp protocol_http protocol_file sockets ole dataobj
+    ##10
+    ipc
+    ##11
+    apple_ieee archive_streams stackwalker on_fatal_exception cmdline_parser
+    datetime debugreport dialup_manager dynlib_class dynamic_loader exceptions
+    ffile file filesystem fontmap fs_inet fs_zip geometry log longlong
+    mimetype unicode_mslu snglinst_checker std_iostream std_string stdpaths
+    stopwatch streams system_options textbuffer textfile timer
+    sound experimental_printf zipstream -mediactrl -unicode
+    ##12
+    threads
+    ##13
+    doc_view_architecture help ms_html_help html wxhtml_help xrc constraints
+    printing_architecture mdi mdi_architecture loggui logwindow log_dialog
+    webkit
+    ##14
+    postscript normalized_ps_fonts afm_for_postscript postscript_architecture_in_msw
+    ##15
+    prologio -resources
+    ##16
+    clipboard drag_and_drop metafile treelayout -win_metafiles_always
+    ##17
+    controls
+    accel button bmpbutton calendarctrl caret checkbox checklistbox choice
+    choicebook combobox datepickctrl -display gauge grid imaglist
+    listbook listbox listctrl notebook radiobox radiobtn sash
+    scrollbar slider spinbtn spinctrl splitter statbmp statbox
+    statline stattext tabdialog textctrl togglebtn
+    toolbar toolbar_native toolbar_simple treectrl tipwindow
+    popupwin
+    statusbar statusbar_native
+    ##18
+    commondlgs choicedlg colourdlg filedlg fontdlg dirdlg msgdlg numberdlg
+    splash tab_dialog textdlg startup_tips progressdlg wizarddlg
+    ##19
+    menus miniframe tooltips splines mousewheel validators busyinfo
+    joystick dragimage dc_cacheing -accessibility
+    ##20
+    palette image gif pcx pnm xpm ico_cur -iff
+    ##21
+    -crashreport -xml -wchar_t qa dbghelp
+    
+    ## Contrib/other
+    -stc -generic
+    ;
+
+for local option in $(~options)
+{
+    if [ MATCH "^([-]).*" : $(option) ]
+    {
+        option = [ MATCH "^[-]([^*]*)([*]*)" : $(option) ] ;
+        extension.option wx $(option[1]) : disable enable ;
+    }
+    else
+    {
+        option = [ MATCH "^([^*]*)([*]*)" : $(option) ] ;
+        extension.option wx $(option[1]) : enable disable ;
+    }
+}
+
+local rule use-defs ( f : properties * )
+{
+    local result ;
+    for local val in $(~options)
+    {
+        val = [ MATCH "^[-]*([^*]*)([*]*)" : $(val) ] ;
+        if ! $(val[2]) && <wx-$(val[1]:L)>$(f) in $(properties)
+        {
+            result += wxUSE_$(val[1]:U) ;
+        }
+    }
+    return $(result) ;
+}
+
+setup.h = "wx/setup.h" ;
+rule setup_h ( targets * : sources * : properties * )
+{
+    local define-1 ;
+    local define-0 ;
+    local undef ;
+    local other ;
+    switch [ property.select <target-os> : $(properties) ]
+    {
+        case *linux* :
+        define-1 += wxUSE_UNIX HAVE_BOOL HAVE_CONST_CAST HAVE_CXA_DEMANGLE HAVE_DLOPEN
+            HAVE_ESD_H HAVE_EXPLICIT HAVE_FCNTL HAVE_FNMATCH HAVE_FNMATCH_H HAVE_FPUTWS
+            HAVE_FSEEKO HAVE_FSYNC HAVE_GETTIMEOFDAY HAVE_INET_ADDR HAVE_INET_ATON
+            HAVE_KNOWN_CDROM_INTERFACE HAVE_LANGINFO_H HAVE_LARGEFILE_SUPPORT HAVE_LOCALTIME
+            HAVE_MKSTEMP HAVE_NANOSLEEP HAVE_POLL HAVE_PTHREAD_ATTR_SETSTACKSIZE
+            HAVE_PTHREAD_CANCEL HAVE_PTHREAD_MUTEXATTR_T HAVE_PUTENV HAVE_PW_GECOS
+            HAVE_REINTERPRET_CAST HAVE_SCHED_H HAVE_SCHED_YIELD HAVE_SIGACTION HAVE_SNPRINTF
+            HAVE_SNPRINTF_DECL HAVE_SSIZE_T HAVE_STATFS HAVE_STATFS_DECL HAVE_STATIC_CAST
+            HAVE_STD_WSTRING HAVE_STRCASECMP_IN_STRING_H HAVE_STRPTIME HAVE_STRTOK_R
+            HAVE_SYS_SOUNDCARD_H HAVE_THREAD_PRIORITY_FUNCTIONS HAVE_TIMEGM HAVE_UNAME
+            HAVE_UNISTD_H HAVE_VA_COPY HAVE_VSNPRINTF HAVE_VSNPRINTF_DECL HAVE_WCHAR_H
+            HAVE_WCSLEN HAVE_WCSRTOMBS HAVE_X11_XKBLIB_H STDC_HEADERS
+            ;
+        #~ undef +=
+            #~ ;
+        other +=
+            "#define SIZEOF_CHAR 1"
+            "#define SIZEOF_WCHAR_T 4"
+            "#define SIZEOF_INT 4"
+            "#define SIZEOF_VOID_P 4"
+            "#define SIZEOF_LONG 4"
+            "#define SIZEOF_LONG_LONG 8"
+            "#define SIZEOF_SHORT 2"
+            "#define SIZEOF_SIZE_T 4"
+            "#define wxSIZE_T_IS_UINT 1"
+            "#define WX_TIMEZONE timezone"
+            "#define WX_SOCKLEN_T socklen_t"
+            "#define SOCKOPTLEN_T socklen_t"
+            "#define WX_STATFS_T struct statfs"
+            "#define wxTYPE_SA_HANDLER int"
+            ;
+        
+        case *windows* :
+        #~ define-1 +=
+            #~ ;
+        #~ undef +=
+            #~ ;
+        #~ other +=
+            #~ ;
+    }
+    if [ property.select <architecture> : $(properties) ] in
+        sparc power mips1 mips2 mips3 mips4 mips32 mips32r2 mips64
+    {
+        define-1 += WORDS_BIGENDIAN ;
+    }
+    switch [ feature.get-values <wx-gtk-version> : $(properties) ]
+    {
+        case 1.2 : define-1 += __WXGTK12__ ;
+        case 1.27 : define-1 += __WXGTK12__ __WXGTK127__ ;
+        case 2.0 : define-1 += __WXGTK12__ __WXGTK127__ __WXGTK20__ ;
+        case 2.4 : define-1 += __WXGTK12__ __WXGTK127__ __WXGTK20__ __WXGTK24__ ;
+    }
+    local version = [ property.select <wx-version> : $(properties) ] ;
+    define-1 += [ use-defs enable : $(properties) ] ;
+    define-0 += [ use-defs disable : $(properties) ] ;
+    VERSION on $(<) = $(version:G=) ;
+    SETUP on $(<) =
+        "#define $(define-1) 1"
+        "#define $(define-0) 0"
+        "#undef $(undef)"
+        $(other) ;
+    NL on $(<) = "
+" ;
+}
+actions setup_h
+{
+    @($(STDOUT):E=
+#ifndef __WX_SETUP_H__
+#define __WX_SETUP_H__
+
+$(SETUP:J=$(NL))
+
+#endif
+) > "$(<)"
+}
+
+custom-generic-listctrl.cpp = "
+#include <wx/defs.h>
+#include <wx/event.h>
+#if wxUSE_LISTCTRL
+    extern WXDLLEXPORT_DATA(const wxChar*) wxListCtrlNameStr;
+    #undef DEFINE_EVENT_TYPE
+    #define DEFINE_EVENT_TYPE(x)
+    #include <generic/listctrl.cpp>
+#endif
+" ;
+actions custom-generic-listctrl.cpp
+{
+    @($(STDOUT):E=$(custom-generic-listctrl.cpp)) > "$(<)"
+}
+
+local rule when-option ( option : requirements * : result * )
+{
+#~ ECHO + when-option $(option) :: $(requirements) ;
+    result ?= true ;
+    if  <wx-$(option)>enable in $(requirements)
+    {
+        return $(result) ;
+    }
+}
+
+local rule unless-option ( option : requirements * : result * )
+{
+#~ ECHO + unless-option $(option) :: $(requirements) ;
+    result ?= true ;
+    if  <wx-$(option)>disable in $(requirements)
+    {
+        return $(result) ;
+    }
+}
+
+rule wx-tag ( name : type ? : property-set )
+{
+    if [ type.is-subtype $(type) LIB ]
+    {
+        return [ common.format-name
+            wx_ <property:wx-toolkit>_ <base> <toolset> <threading> <runtime> <version:wx-version>
+            : $(name) : $(type) : $(property-set) ] ;
+    }
+    else if [ type.is-subtype $(type) OBJ ]
+    {
+        local target = [ $(property-set).get <target> ] ;
+        local action = [ $(target).action ] ;
+        local sources = [ $(action).sources ] ;
+        local name ;
+        if [ path.is-rooted [ $(sources[1]).name ] ]
+        {
+            name = [ regex.split [ path.relative
+                [ $(sources[1]).name ]
+                [ $(property-set).get <wx-location> ]
+                ] "/" ] ;
+        }
+        else
+        {
+            name = [ $(sources[1]).name ] ;
+        }
+        return [ virtual-target.add-prefix-and-suffix
+            $(name:S=:J=,) : $(type) : $(property-set) ] ;
+    }
+}
+
+rule init ( version ? : location : options * : *requirements* * )
+{
+    import path ;
+    import print ;
+    
+    version ?= default ;
+    location = [ path.make $(location) ] ;
+    local requirements = [ extension.define wx $(version) : $(location) : $(options) ] ;
+    
+    #~ ECHO --- $(version) ::: $(requirements) ;
+    
+    requirements = [ extension.refine wx $(version) :
+        [ unless-option xml : $(requirements) : <wx-xrc>disable ]
+        ] ;
+    requirements = [ extension.refine wx $(version) :
+        [ unless-option html : $(requirements) : <wx-wxhtml_help>disable ]
+        ] ;
+    requirements = [ extension.refine wx $(version) :
+        [ when-option xrc : $(requirements) : <wx-xml>enable ]
+        ] ;
+    requirements = [ extension.refine wx $(version) :
+        [ when-option xml : $(requirements) : <wx-wchar_t>enable ]
+        ] ;
+    requirements = [ extension.refine wx $(version) :
+        [ when-option expat : $(requirements) : <wx-wchar_t>enable ]
+        ] ;
+    requirements = [ extension.refine wx $(version) :
+        [ when-option dbghelp : $(requirements) : <wx-wchar_t>enable ]
+        ] ;
+    requirements = [ extension.refine wx $(version) :
+        [ when-option debug : $(requirements) :
+            <wx-debug_flag>enable <wx-debug_info>enable ]
+        ] ;
+    
+    local gtk-lib = [ property.select <wx-gtk> : $(requirements) ] ;
+    if $(gtk-lib)
+    {
+        requirements = [ extension.refine wx $(version) : <use>$(gtk-lib:G=) ] ;
+    }
+    
+    requirements = [ extension.refine wx $(version) : $(*requirements*) ] ;
+    
+    requirements = [ extension.refine wx $(version) : <tag>@wx-tag ] ;
+    
+    local files.bkl = [ new bakefile
+        $(version) : $(location) : $(location)/build/bakefiles/files.bkl ] ;
+    requirements += [ $(files.bkl).parse ] ;
+    
+    #~ ECHO --- $(version) ::: $(requirements) ;
+    #~ EXIT ;
+    
+    make $(setup.h) : : @setup_h
+        :   <wx-version>$(version)
+            <wx-location>$(location)
+            <location-prefix>src
+        ;
+    explicit $(setup.h) ;
+    local setup-requirements =
+        <implicit-dependency>$(setup.h)
+        <dependency>$(setup.h)
+        ;
+    
+    {
+        wx-lib regex $(version) : $(location) $(files.bkl)
+            :   $(location)/src/regex/regcomp.c
+                $(location)/src/regex/regexec.c
+                $(location)/src/regex/regerror.c
+                $(location)/src/regex/regfree.c
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=0
+                <define>_CRT_SECURE_NO_DEPRECATE
+            :
+            :   <include>$(location)/src/regex
+            ;
+            explicit regex ;
+        wx-lib zlib $(version) : $(location) $(files.bkl)
+            :   $(location)/src/zlib/adler32.c
+                $(location)/src/zlib/compress.c
+                $(location)/src/zlib/crc32.c
+                $(location)/src/zlib/gzio.c
+                $(location)/src/zlib/uncompr.c
+                $(location)/src/zlib/deflate.c
+                $(location)/src/zlib/trees.c
+                $(location)/src/zlib/zutil.c
+                $(location)/src/zlib/inflate.c
+                $(location)/src/zlib/infback.c
+                $(location)/src/zlib/inftrees.c
+                $(location)/src/zlib/inffast.c
+            :   $(requirements)
+                <define>wxUSE_GUI=0
+                <define>_CRT_SECURE_NO_DEPRECATE
+            :
+            :   <include>$(location)/src/zlib
+            ;
+            explicit zlib ;
+        wx-lib jpeg $(version) : $(location) $(files.bkl)
+            :   $(location)/src/jpeg/jcomapi.c
+                $(location)/src/jpeg/jutils.c
+                $(location)/src/jpeg/jerror.c
+                $(location)/src/jpeg/jmemmgr.c
+                $(location)/src/jpeg/jmemnobs.c
+                $(location)/src/jpeg/jcapimin.c
+                $(location)/src/jpeg/jcapistd.c
+                $(location)/src/jpeg/jctrans.c
+                $(location)/src/jpeg/jcparam.c
+                $(location)/src/jpeg/jdatadst.c
+                $(location)/src/jpeg/jcinit.c
+                $(location)/src/jpeg/jcmaster.c
+                $(location)/src/jpeg/jcmarker.c
+                $(location)/src/jpeg/jcmainct.c
+                $(location)/src/jpeg/jcprepct.c
+                $(location)/src/jpeg/jccoefct.c
+                $(location)/src/jpeg/jccolor.c
+                $(location)/src/jpeg/jcsample.c
+                $(location)/src/jpeg/jchuff.c
+                $(location)/src/jpeg/jcphuff.c
+                $(location)/src/jpeg/jcdctmgr.c
+                $(location)/src/jpeg/jfdctfst.c
+                $(location)/src/jpeg/jfdctflt.c
+                $(location)/src/jpeg/jfdctint.c
+                $(location)/src/jpeg/jdapimin.c
+                $(location)/src/jpeg/jdapistd.c
+                $(location)/src/jpeg/jdtrans.c
+                $(location)/src/jpeg/jdatasrc.c
+                $(location)/src/jpeg/jdmaster.c
+                $(location)/src/jpeg/jdinput.c
+                $(location)/src/jpeg/jdmarker.c
+                $(location)/src/jpeg/jdhuff.c
+                $(location)/src/jpeg/jdphuff.c
+                $(location)/src/jpeg/jdmainct.c
+                $(location)/src/jpeg/jdcoefct.c
+                $(location)/src/jpeg/jdpostct.c
+                $(location)/src/jpeg/jddctmgr.c
+                $(location)/src/jpeg/jidctfst.c
+                $(location)/src/jpeg/jidctflt.c
+                $(location)/src/jpeg/jidctint.c
+                $(location)/src/jpeg/jidctred.c
+                $(location)/src/jpeg/jdsample.c
+                $(location)/src/jpeg/jdcolor.c
+                $(location)/src/jpeg/jquant1.c
+                $(location)/src/jpeg/jquant2.c
+                $(location)/src/jpeg/jdmerge.c
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=0
+                <define>_CRT_SECURE_NO_DEPRECATE
+            :
+            :   <include>$(location)/src/jpeg
+            ;
+            explicit jpeg ;
+        wx-lib png $(version) : $(location) $(files.bkl)
+            :   $(location)/src/png/png.c
+                $(location)/src/png/pngerror.c
+                $(location)/src/png/pnggccrd.c
+                $(location)/src/png/pngget.c
+                $(location)/src/png/pngmem.c
+                $(location)/src/png/pngpread.c
+                $(location)/src/png/pngread.c
+                $(location)/src/png/pngrio.c
+                $(location)/src/png/pngrtran.c
+                $(location)/src/png/pngrutil.c
+                $(location)/src/png/pngset.c
+                $(location)/src/png/pngtrans.c
+                $(location)/src/png/pngvcrd.c
+                $(location)/src/png/pngwio.c
+                $(location)/src/png/pngwrite.c
+                $(location)/src/png/pngwtran.c
+                $(location)/src/png/pngwutil.c
+            :   $(requirements)
+                <define>wxUSE_GUI=0
+                <include>$(location)/src/zlib
+                <define>_CRT_SECURE_NO_DEPRECATE
+            :
+            :   <include>$(location)/src/png
+                <link>static:<library>zlib
+            ;
+            explicit png ;
+        wx-lib expat $(version) : $(location) $(files.bkl)
+            :   $(location)/src/expat/lib/xmlparse.c
+                $(location)/src/expat/lib/xmlrole.c
+                $(location)/src/expat/lib/xmltok.c
+            :   $(requirements)
+                <define>wxUSE_GUI=0
+                <define>_CRT_SECURE_NO_DEPRECATE
+                <wx-platform>os2:<define>OS2_32
+            :
+            :   <include>$(location)/src/expat/lib
+            ;
+            explicit expat ;
+    }
+    {
+        wx-lib base $(version) : $(location) $(files.bkl)
+            :   BASE_SRC BASE_AND_GUI_SRC
+            :   $(requirements)
+                <define>wxUSE_GUI=0
+                $(setup-requirements)
+                <define>wxUSE_BASE=1
+                <link>shared:<define>WXMAKINGDLL_BASE
+                <wx-regex>enable:<library>regex/<link>static
+                <wx-zlib>enable:<library>zlib/<link>static
+                [ conditional <wx-platform>win32,<wx-debug>enable :
+                    <find-shared-library>user32
+                    <find-shared-library>advapi32
+                    <find-shared-library>shell32 ]
+            :
+            :
+                $(setup-requirements)
+                <define>wxUSE_BASE=0
+                <link>shared:<define>WXUSINGDLL
+                [ conditional <wx-platform>win32,<wx-debug>enable :
+                    <find-shared-library>user32
+                    <find-shared-library>advapi32
+                    <find-shared-library>shell32 ]
+            ;
+    }
+    {
+        wx-lib net $(version) : $(location) $(files.bkl)
+            :   NET_SRC
+            :   $(requirements)
+                <define>wxUSE_GUI=0
+                $(setup-requirements)
+                <link>shared:<define>WXMAKINGDLL_NET
+                <link>shared:<library>base
+                <wx-platform>win32:<find-shared-library>ws2_32
+            :
+            :
+                $(setup-requirements)
+                <wx-platform>win32:<find-shared-library>ws2_32
+            ;
+    }
+    if  [ when-option gui : $(requirements) ]
+    {
+        make custom-generic-listctrl.cpp : : @custom-generic-listctrl.cpp
+            :   <wx-version>$(version)
+                <wx-location>$(location)
+                <location-prefix>src
+            ;
+            explicit custom-generic-listctrl.cpp ;
+        obj custom-generic-listctrl
+            :   custom-generic-listctrl.cpp
+            :   $(requirements)
+                $(setup-requirements)
+                <wx-location>$(location)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_CORE
+                <implicit-dependency>custom-generic-listctrl.cpp
+                <include>$(location)/src
+                <location-prefix>core
+                <use>base
+            ;
+            explicit custom-generic-listctrl ;
+        wx-lib core $(version) : $(location) $(files.bkl)
+            :   BASE_AND_GUI_SRC CORE_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_CORE
+                <link>shared:<library>base
+                <wx-libjpeg>enable:<library>jpeg/<link>static
+                <wx-libpng>enable:<library>png/<link>static
+                [ conditional <wx-platform>win32,<wx-toolkit>msw :
+                    <find-shared-library>gdi32
+                    <find-shared-library>comctl32
+                    <find-shared-library>comdlg32
+                    <find-shared-library>shell32 ]
+                <wx-generic>enable:<source>$(location)/src/generic/imaglist.cpp
+                <wx-generic>enable:<source>custom-generic-listctrl
+            :
+            :
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                [ conditional <wx-platform>win32,<wx-toolkit>msw :
+                    <find-shared-library>gdi32
+                    <find-shared-library>comctl32
+                    <find-shared-library>comdlg32
+                    <find-shared-library>shell32 ]
+            ;
+    }
+    if  [ when-option gui : $(requirements) ]
+    {
+        wx-lib adv $(version) : $(location) $(files.bkl)
+            :   ADVANCED_SRC PLUGIN_ADV_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_ADV
+                <link>shared:<library>base
+                <link>shared:<library>core
+                <wx-platform>win32,<wx-toolkit>msw:<find-shared-library>shell32
+                <wx-platform>win32,<wx-toolkit>msw,<wx-joystick>enable:<find-shared-library>winmm
+            :
+            :
+                $(setup-requirements)
+                <wx-platform>win32,<wx-toolkit>msw:<find-shared-library>shell32
+                <wx-platform>win32,<wx-toolkit>msw,<wx-joystick>enable:<find-shared-library>winmm
+            ;
+    }
+    if  [ when-option gui : $(requirements) ]
+    {
+        wx-lib media $(version) : $(location) $(files.bkl)
+            :   MEDIA_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_MEDIA
+                <link>shared:<library>base
+                <link>shared:<library>core
+                <wx-platform>win32,<wx-toolkit>msw:<find-shared-library>gdi32
+            :
+            :
+                $(setup-requirements)
+                <wx-platform>win32,<wx-toolkit>msw:<find-shared-library>gdi32
+            ;
+    }
+    if  [ when-option odbc : $(requirements) ]
+    {
+        wx-lib odbc $(version) : $(location) $(files.bkl)
+            :   ODBC_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=0
+                <link>shared:<define>WXMAKINGDLL_ODBC
+                <link>shared:<library>base
+            :
+            :
+                $(setup-requirements)
+            ;
+    }
+    if  [ when-option odbc : $(requirements) ] &&
+        [ when-option gui : $(requirements) ]
+    {
+        wx-lib dbgrid $(version) : $(location) $(files.bkl)
+            :   DBGRID_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_DBGRID
+                <link>shared:<library>base
+                <link>shared:<library>core
+                <link>shared:<library>adv
+                <link>shared:<library>odbc
+                [ conditional <wx-platform>win32 <wx-odbc>enable :
+                    <find-shared-library>odbc32
+                    <find-shared-library>ole32
+                    <find-shared-library>oleaut32 ]
+            :
+            :
+                $(setup-requirements)
+                [ conditional <wx-platform>win32 <wx-odbc>enable :
+                    <find-shared-library>odbc32
+                    <find-shared-library>ole32
+                    <find-shared-library>oleaut32 ]
+            ;
+    }
+    if  [ when-option html : $(requirements) ] &&
+        [ when-option gui : $(requirements) ]
+    {
+        wx-lib html $(version) : $(location) $(files.bkl)
+            :   HTML_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_HTML
+                <link>shared:<library>base
+                <link>shared:<library>core
+                <wx-platform>win32,<wx-libmspack>enable:<find-shared-library>mspack
+            :
+            :
+                $(setup-requirements)
+                <wx-platform>win32,<wx-libmspack>enable:<find-shared-library>mspack
+            ;
+    }
+    if  [ when-option opengl : $(requirements ] &&
+        [ when-option gui : $(requirements) ]
+    {
+        wx-lib gl $(version) : $(location) $(files.bkl)
+            :   OPENGL_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_GL
+                <wx-monolithic>disable,<link>shared:<library>base
+                <wx-monolithic>disable,<link>shared:<library>core
+                <wx-monolithic>enable,<link>shared:<library>mono
+                [ conditional <wx-platform>win32 <wx-opengl>enable :
+                    <find-shared-library>opengl32
+                    <find-shared-library>glu32 ]
+                [ conditional <wx-platform>macosx <wx-opengl>enable <toolset>darwin :
+                    <framework>OpenGL
+                    <framework>AGL ]
+                [ conditional <wx-platform>unix <wx-opengl>enable :
+                    <find-shared-library>GL
+                    <find-shared-library>GLU ]
+                [ conditional <wx-platform>bsd <wx-opengl>enable :
+                    <find-shared-library>GL
+                    <find-shared-library>GLU ]
+            :
+            :
+                $(setup-requirements)
+                [ conditional <wx-platform>win32 <wx-opengl>enable :
+                    <find-shared-library>opengl32
+                    <find-shared-library>glu32 ]
+                [ conditional <wx-platform>macosx <wx-opengl>enable <toolset>darwin :
+                    <framework>OpenGL
+                    <framework>AGL ]
+                [ conditional <wx-platform>unix <wx-opengl>enable :
+                    <find-shared-library>GL
+                    <find-shared-library>GLU ]
+                [ conditional <wx-platform>bsd <wx-opengl>enable :
+                    <find-shared-library>GL
+                    <find-shared-library>GLU ]
+            ;
+    }
+    if  [ when-option qa : $(requirements) ] &&
+        [ when-option gui : $(requirements) ] &&
+        [ when-option xml : $(requirements) ]
+    {
+        wx-lib qa $(version) : $(location) $(files.bkl)
+            :   QA_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_QA
+                <link>shared:<library>base
+                <link>shared:<library>core
+                <link>shared:<library>xml
+            :
+            :
+                $(setup-requirements)
+            ;
+    }
+    if  [ when-option xml : $(requirements) ]
+    {
+        wx-lib xml $(version) : $(location) $(files.bkl)
+            :   XML_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=0
+                <link>shared:<define>WXMAKINGDLL_XML
+                <link>shared:<library>base
+                <library>expat
+            :
+            :
+                $(setup-requirements)
+            ;
+    }
+    if  [ when-option xrc : $(requirements) ] &&
+        [ when-option gui : $(requirements) ] &&
+        [ when-option xml : $(requirements) ]
+    {
+        wx-lib xrc $(version) : $(location) $(files.bkl)
+            :   XRC_SRC
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <link>shared:<define>WXMAKINGDLL_XRC
+                <link>shared:<library>html
+                <link>shared:<library>adv
+                <link>shared:<library>core
+                <link>shared:<library>xml
+                <link>shared:<library>base
+            :
+            :
+                $(setup-requirements)
+            ;
+    }
+    if  [ when-option gui : $(requirements) ] &&
+        [ when-option stc : $(requirements) ]
+    {
+        wx-lib stc $(version) : $(location) $(files.bkl)
+            :   [ glob $(location)/contrib/src/stc/*.cpp ]
+                [ glob $(location)/contrib/src/stc/scintilla/src/*.cxx ]
+            :   $(requirements)
+                $(setup-requirements)
+                <define>wxUSE_GUI=1
+                <define>_CRT_SECURE_NO_DEPRECATE
+                <define>__WX__
+                <define>SCI_LEXER
+                <define>LINK_LEXERS
+                <include>$(location)/contrib/include
+                <include>$(location)/contrib/src/stc/scintilla/include
+                <include>$(location)/contrib/src/stc/scintilla/src
+                <link>shared:<define>WXUSINGDLL
+                <link>shared:<define>WXMAKINGDLL_STC
+                <link>shared:<library>base
+                <link>shared:<library>core
+                [ conditional <wx-platform>win32,<wx-toolkit>msw :
+                    <find-shared-library>gdi32 ]
+            :
+            :
+                $(setup-requirements)
+                <include>$(location)/contrib/include
+                [ conditional <wx-platform>win32,<wx-toolkit>msw :
+                    <find-shared-library>gdi32 ]
+            ;
+    }
+}
+
+local rule wx-lib ( name version ? : location files : sources *
+        : requirements * : default-build * : usage-requirements * )
+{
+    targets.main-target-alternative [ new wx-target $(name) $(version)
+        :   [ project.current ]
+        :   LIB
+        :   $(location) $(files)
+        :   $(sources)
+        :   $(requirements)
+        :   $(default-build)
+        :   $(usage-requirements)
+        ] ;
+}
+
+class wx-target : typed-target
+{
+    rule __init__ (
+        name version ?
+        : project
+        : type
+        : location files
+        : sources *
+        : requirements *
+        : default-build *
+        : usage-requirements *
+        )
+    {
+        #~ ECHO --- $(name) ;
+        self.location = $(location) ;
+        local bare-sources ;
+        local conditional-sources ;
+        for local src in $(sources)
+        {
+            local val = [ $(files).value $(src) : $(src) ] ;
+            for local v in $(val)
+            {
+                #~ ECHO --| " " $(v) ;
+                if $(v:G) { conditional-sources += $(v) ; }
+                else { bare-sources += $(v) ; }
+            }
+        }
+        requirements +=
+            <wx-version>$(version)
+            <wx-location>"$(location)"
+            <location-prefix>$(name)
+            <include>$(location)/include
+            [ platform ]
+            [ toolkit ]
+            [ configure ]
+            [ default-toolkit ]
+            ;
+        usage-requirements +=
+            <wx-version>$(version)
+            <include>$(location)/include
+            [ platform ]
+            [ toolkit ]
+            [ configure ]
+            [ default-toolkit ]
+            ;
+        sources
+            = [ targets.main-target-sources $(bare-sources) : $(name) ] ;
+        requirements
+            = [ targets.main-target-requirements
+                $(conditional-sources) $(requirements) : $(project) ] ;
+        default-build
+            = [ targets.main-target-default-build $(default-build) : $(project) ] ;
+        usage-requirements
+            = [ targets.main-target-usage-requirements
+                $(usage-requirements) : $(project) ] ;
+        
+        typed-target.__init__ $(name)
+            : $(project) : $(type)
+            : $(sources)
+            : $(requirements)
+            : $(default-build)
+            : $(usage-requirements)
+            ;
+    }
+
+    rule platform ( )
+    {
+        return
+            <define>__WX__
+            <target-os>aix:<wx-platform>unix
+            <target-os>bsd:<wx-platform>bsd
+            <target-os>darwin:<wx-platform>macosx
+            <target-os>dos:<wx-platform>msdos
+            <target-os>emx:<wx-platform>os2
+            <target-os>freebsd:<wx-platform>bsd
+            <target-os>hpux:<wx-platform>unix
+            <target-os>linux:<wx-platform>unix
+            <target-os>netbsd:<wx-platform>unix
+            <target-os>openbsd:<wx-platform>unix
+            <target-os>os2:<wx-platform>os2
+            <target-os>osf:<wx-platform>unix
+            <target-os>sgi:<wx-platform>svr4
+            <target-os>solaris:<wx-platform>unix
+            <target-os>sun:<wx-platform>unix
+            <target-os>sunos:<wx-platform>bsd
+            <target-os>svr4:<wx-platform>unix
+            <target-os>sysv:<wx-platform>unix
+            <target-os>ultrix:<wx-platform>unix
+            <target-os>unixware:<wx-platform>unix
+            <target-os>vms:<wx-platform>unix
+            <target-os>windows:<wx-platform>win32
+            
+            [ conditional <target-os>aix :
+                <define>__AIX__=1
+                <define>__SVR4__=1
+                <define>__SYSV__=1 ]
+            <target-os>bsd:<define>__BSD__=1
+            [ conditional <target-os>darwin :
+                <define>__BSD__=1
+                <define>__DARWIN__=1
+                #~ <define>TARGET_CARBON=1
+                ]
+            <target-os>dos:<define>__DOS__=1
+            [ conditional <target-os>emx :
+                <define>__EMX__=1
+                <define>__OS2__=1 ]
+            [ conditional <target-os>freebsd : 
+                <define>__BSD__=1
+                <define>__FREEBSD__=1 ]
+            <target-os>hpux:<define>__HPUX__=1
+            <target-os>linux:<define>__LINUX__=1
+            <target-os>netbsd:<define>__NETBSD__=1
+            [ conditional <target-os>openbsd : 
+                <define>__BSD__=1
+                <define>__OPENBSD__=1 ]
+            <target-os>os2:<define>__OS2__=1
+            [ conditional <target-os>osf :
+                <define>__ALPHA__=1
+                <define>__OSF__=1 ]
+            <target-os>sgi:<define>__SGI__=1
+            <target-os>sgi:<define>__SVR4__=1
+            [ conditional <target-os>solaris :
+                <define>__SUN__=1
+                <define>__SOLARIS__=1
+                <define>__SVR4__=1 ]
+            <target-os>sun:<define>__SUN__=1
+            [ conditional <target-os>sunos :
+                <define>__BSD__=1
+                <define>__SUN__=1
+                <define>__SUNOS__=1 ]
+            <target-os>svr4:<define>__SVR4__=1
+            [ conditional <target-os>sysv :
+                <define>__SVR4__=1
+                <define>__SYSV__=1 ]
+            <target-os>ultrix:<define>__ULTRIX__=1
+            <target-os>unixware:<define>__UNIXWARE__=1
+            <target-os>vms:<define>__VMS__=1
+            <target-os>windows:<define>__WINDOWS__=1
+            ;
+    }
+
+    rule toolkit ( )
+    {
+        return
+            <wx-toolkit>cocoa:<define>__WXCOCOA__
+            <wx-toolkit>gtk:<define>__WXGTK__
+            <wx-toolkit>mac:<define>__WXMAC__
+            <wx-toolkit>mgl:<define>__WXMGL__
+            <wx-toolkit>microwin:<define>__WXMICROWIN__
+            <wx-toolkit>motif:<define>__WXMOTIF__
+            <wx-toolkit>msw:<define>__WXMSW__
+            <wx-toolkit>nanox:<define>__WXNANOX__
+            <wx-toolkit>pm:<define>__WXPM__
+            <wx-toolkit>wince:<define>__WXWINCE__
+            ;
+    }
+
+    rule configure ( )
+    {
+        return
+            ## Configure settings...
+            
+            <wx-debug_flag>enable:<define>__WXDEBUG__
+            [ conditional <wx-memory_tracing>enable :
+                <define>wxUSE_GLOBAL_MEMORY_OPERATORS=1
+                <define>wxUSE_DEBUG_NEW_ALWAYS=1 ]
+            <wx-dmalloc>enable:<find-shared-library>dmallocthcxx
+            <wx-config>enable:<define>wxUSE_CONFIG_NATIVE
+            <wx-metafile>enable:<define>wxUSE_ENH_METAFILE
+            <wx-statusbar_native>enable:<define>wxUSE_NATIVE_STATUSBAR=1
+            <wx-statusbar_native>disable:<define>wxUSE_NATIVE_STATUSBAR=0
+            
+            <wx-platform>bsd:<define>WXWIN_OS_DESCRIPTION=BSD
+            <wx-platform>macosx:<define>WXWIN_OS_DESCRIPTION=MacOSX
+            <wx-platform>unix:<define>WXWIN_OS_DESCRIPTION=Unix
+            <wx-platform>win32:<define>WXWIN_OS_DESCRIPTION=Windows
+            
+            <wx-compatibility_2_2>enable:<define>WXWIN_COMPATIBILITY_2_2=1
+            <wx-compatibility_2_2>disable:<define>WXWIN_COMPATIBILITY_2_2=0
+            <wx-compatibility_2_4>enable:<define>WXWIN_COMPATIBILITY_2_4=1
+            <wx-compatibility_2_4>disable:<define>WXWIN_COMPATIBILITY_2_4=0
+            
+            <wx-toolkit>msw:<define>wxDIALOG_UNIT_COMPATIBILITY
+            
+            [ conditional <wx-platform>win32 <wx-dataobj>enable :
+                <find-shared-library>ole32
+                <find-shared-library>oleaut32
+                <find-shared-library>rpcrt4 ]
+            [ conditional <wx-platform>win32 <wx-clipboard>enable :
+                <find-shared-library>ole32
+                <find-shared-library>oleaut32
+                <find-shared-library>rpcrt4 ]
+            [ conditional <wx-platform>win32 <wx-ole>enable :
+                <find-shared-library>ole32
+                <find-shared-library>oleaut32
+                <find-shared-library>rpcrt4 ]
+            [ conditional <wx-platform>win32 <wx-drag_and_drop>enable :
+                <find-shared-library>ole32
+                <find-shared-library>oleaut32
+                <find-shared-library>rpcrt4 ]
+            
+            ## Windows settings...
+            
+            <wx-platform>win32:<define>__WIN32__
+            <wx-platform>win32:<define>__WIN95__
+            #~ <wx-platform>win32:<define>__GNUWIN32__
+            <wx-platform>win32:<define>STRICT
+            <wx-platform>win32:<define>WINVER=0x0400
+            <wx-platform>win32:<find-shared-library>kernel32
+            <wx-platform>win32:<find-shared-library>user32
+            
+            <wx-unicode>enable:<define>_GNU_SOURCE
+            <wx-threads>enable:<define>_GNU_SOURCE
+            
+            <wx-opengl>enable:<define>wxUSE_GLCANVAS
+            ;
+    }
+
+    rule default-toolkit ( )
+    {
+        return
+            <target-os>aix:<wx-toolkit>motif
+            <target-os>hpux:<wx-toolkit>motif
+            <target-os>osf:<wx-toolkit>motif
+            <target-os>sgi:<wx-toolkit>motif
+            <target-os>solaris:<wx-toolkit>motif
+            <target-os>sun:<wx-toolkit>motif
+            <target-os>sunos:<wx-toolkit>motif
+            <target-os>sysv:<wx-toolkit>motif
+            <target-os>svr4:<wx-toolkit>motif
+            <wx-platform>bsd:<wx-toolkit>gtk
+            <wx-platform>macosx:<wx-toolkit>cocoa
+            <wx-platform>msdos:<wx-toolkit>mgl
+            <wx-platform>os2:<wx-toolkit>pm
+            <wx-platform>unix:<wx-toolkit>gtk
+            <wx-platform>win32:<wx-toolkit>msw
+            ;
+    }
+
+    rule conditional ( condition + : requirements * )
+    {
+        return $(condition:J=,):$(requirements) ;
+    }
+}
+
+rule bakefile_jam ( targets * : sources * : properties * )
+{
+    local self = [ property.select <wx-bakefile> : $(properties) ] ;
+    self = $(self:G=) ;
+    BKL_VARS on $(<) = [ $(self).cache-content ] ;
+}
+
+actions bakefile_jam
+{
+    @($(STDOUT):E=$(BKL_VARS:E=empty)) > "$(<)"
+}
+
+feature.feature wx-bakefile
+    :
+    :   propagated implicit ;
+
+class bakefile
+{
+    import os ;
+    import path ;
+    import regex ;
+    import string ;
+    
+    rule __init__ ( version ? : root : file )
+    {
+        self.version = $(version) ;
+        self.file = [ path.native $(file) ] ;
+        self.root = $(root) ;
+        self.vars = ;
+        
+        local tmpdir ;
+        if ! $(tmpdir) && [ os.environ USERPROFILE ]
+        {
+            tmpdir = [ os.environ USERPROFILE ] "Local Settings" "Temp" ;
+            tmpdir = [ path.make $(tmpdir:J=/) ] ;
+        }
+        tmpdir ?= [ path.make $(TMPDIR) ] ;
+        self.cache = $(tmpdir)/wx-$(version:E=default)-$(self.file:B).jam ;
+        
+        self.nl = "
+" ;
+        self.ws = "$(self.nl)	 " ;
+        self.%line = "[$(self.ws)]*([^$(self.nl)]*)[$(self.nl)]*(.*)" ;
+        self.%word = "[$(self.ws)]*([^$(self.ws)<]+)?(<[^>]+>)?(.*)" ;
+        self.%tag = "[^<]*[<]([^>$(self.ws)]+)[$(self.ws)]*(.*)" ;
+        
+        modules.call-in wxwidgets : feature.extend wx-bakefile : $(__name__) ;
+    }
+    
+    rule value ( var : default * )
+    {
+        if $(var) in $(self.vars)
+        {
+            return $(self.$(var)) ;
+        }
+        else
+        {
+            return $(default) ;
+        }
+    }
+    
+    rule all-vars ( )
+    {
+        return $(self.vars) ;
+    }
+    
+    rule cache-content ( )
+    {
+        local result = [ string.join "self.vars" "=" $(self.vars) ";" : " " ] ;
+        for local var in $(self.vars)
+        {
+            result += [ string.join "self.$(var)" "=" "\"$(self.$(var))\"" ";" : " " ] ;
+        }
+        return $(result:J=$(self.nl)) ;
+    }
+    
+    rule match-first ( regex : text + )
+    {
+        local result = [ MATCH "$(regex)" : "$(text:J=)" ] ;
+        if $(result[1])
+        {
+            return "$(result[1])" "$(result[2-]:J= " ;
+        }
+        else
+        {
+            return "$(result[2])" "$(result[3-]:J= " ;
+        }
+    }
+
+    rule parse ( )
+    {
+        if [ path.exists [ path.native $(self.cache) ] ]
+        {
+            local cache = [ path.native $(self.cache) ] ;
+            include "$(cache)" ;
+        }
+        else
+        {
+            local content ;
+            if [ os.on-windows ]
+            {
+                content = [ COMMAND "TYPE $(self.file)" ] ;
+            }
+            else
+            {
+                content = [ COMMAND "cat $(self.file)" ] ;
+            }
+
+            while $(content)
+            {
+                local tag,rest = [ MATCH "$(self.%tag)" : "$(content)" ] ;
+                switch $(tag,rest[1])
+                {
+                    case "?xml" :
+                    tag,rest = [ MATCH "([?][>])[$(self.ws)]*(.*)" : "$(tag,rest[2])" ] ;
+                    
+                    case "!--" :
+                    tag,rest = [ MATCH "([-][-][>])[$(self.ws)]*(.*)" : "$(tag,rest[2])" ] ;
+                    
+                    case "set" :
+                    tag,rest = [ parse-set "$(tag,rest[2])" ] ;
+                    
+                    case "if" :
+                    tag,rest = [ MATCH "([^>]*)[>][$(self.ws)]*(.*)" : "$(tag,rest[2])" ] ;
+                }
+                content = "$(tag,rest[2])" ;
+            }
+            
+            for local var in $(self.vars)
+            {
+                #~ ECHO --- $(var) ;
+                local new-value ;
+                for local val in $(self.$(var))
+                {
+                    local condition ;
+                    local path ;
+                    
+                    local new-val = [ regex.split $(val) ":<source>" ] ;
+                    if $(new-val[3])
+                    {
+                        condition = $(new-val[1--2]) ;
+                        condition = $(condition:J=,):<source> ;
+                    }
+                    else if $(new-val[2])
+                    {
+                        condition = $(new-val[1]):<source> ;
+                    }
+                    local path = $(self.root)/$(new-val[-1]) ;
+                    new-val = $(condition:E="")$(path) ;
+                    #~ ECHO --| $(new-val) ;
+                    if [ path.exists [ path.native $(path) ] ]
+                    {
+                        new-value += $(new-val) ;
+                    }
+                }
+                self.$(var) = $(new-value) ;
+            }
+            
+            make $(self.cache)
+                :   $(self.file)
+                :   @bakefile_jam
+                :   <wx-version>$(self.version)
+                    <wx-bakefile>$(__name__)
+                ;
+        }
+        return <use>$(self.cache) ;
+    }
+    
+    rule parse-set ( content )
+    {
+        local tag,rest = [ match-first "([^>]*)[>][$(self.ws)]*(.*)" : "$(content)" ] ;
+        
+        local var = [ match-first "var=\"([^\"]+)\"" : "$(tag,rest[1])" ] ;
+        local value = ;
+        
+        local word,rest = [ match-first "$(self.%word)" : "$(tag,rest[2])" ] ;
+        local condition = "" ;
+        while $(word,rest[1])
+        {
+            switch "$(word,rest[1])"
+            {
+                case "<!--*" :
+                {
+                    word,rest = [ match-first "[-][-][>]$(self.%word)" : "$(word,rest)" ] ;
+                }
+                
+                case "</set>" :
+                {
+                    tag,rest = "$(word,rest[1])" "$(word,rest[2-]:J )" ;
+                    word,rest = ;
+                }
+                
+                case "</if>" :
+                {
+                    condition = "" ;
+                    word,rest = [ match-first "$(self.%word)" : "$(word,rest[2-])" ] ;
+                }
+                
+                case "<if*" :
+                {
+                    word,rest = [ match-first "([^>]*)[>](.*)" : "$(word,rest)" ] ;
+                    local cond = [ match-first "cond=\"([^\"]+)\"" : "$(word,rest[1])" ] ;
+                    switch $(cond)
+                    {
+                        case "TOOLKIT==*" :
+                        local toolkit = [ MATCH "'([^']+)'" : $(cond) ] ;
+                        toolkit ?= _ ;
+                        condition = <wx-toolkit>$(toolkit:L):<source> ;
+                        
+                        case "PLATFORM_*=='1'" :
+                        local platform = [ MATCH "PLATFORM_([^=]+)" : "$(cond)" ] ;
+                        condition = <wx-platform>$(platform:L):<source> ;
+                        
+                        case "USE_GUI=='1' and WXUNIV=='0'" :
+                        condition = <wx-gui>enable,<wx-universal>disable:<source> ;
+                        
+                        case "USE_GUI=='1' and WXUNIV=='1'" :
+                        condition = <wx-gui>enable,<wx-universal>enable:<source> ;
+                        
+                        case "WXUNIV=='0'" :
+                        condition = <wx-universal>disable:<source> ;
+                        
+                        case "WXUNIV=='1'" :
+                        condition = <wx-universal>enable:<source> ;
+                        
+                        case "USE_GUI=='0'" :
+                        condition = <wx-gui>disable:<source> ;
+                        
+                        case "USE_GUI=='1'" :
+                        condition = <wx-gui>enable:<source> ;
+                    }
+                    word,rest = [ match-first "$(self.%word)" : "$(word,rest[2-])" ] ;
+                }
+                
+                case "$\(*" :
+                {
+                    local ref = [ MATCH "[$][(]([^)]+)[)]" : "$(word,rest[1])" ] ;
+                    value += $(condition)$(self.$(ref)) ;
+                    word,rest = [ match-first "$(self.%word)" : "$(word,rest[2-])" ] ;
+                }
+                
+                case * :
+                {
+                    value += $(condition)$(word,rest[1]) ;
+                    word,rest = [ match-first "$(self.%word)" : "$(word,rest[2-])" ] ;
+                }
+            }
+        }
+        self.$(var) = $(value) ;
+        self.vars += $(var) ;
+
+        return "$(tag,rest)" ;
+    }
+}

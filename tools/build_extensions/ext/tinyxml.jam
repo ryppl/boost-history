@@ -1,0 +1,49 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building TinyXml library <http://www.grinninglizard.com/tinyxml/>.
+### Declares only one target "/ext/tinyxml//tinyxml". The only supported option
+### is to configure the use of STL by tinyxml. Fro example:
+### 
+###     using tinyxml : 2.5.0
+###         :   "C:/Development/TinyXML-2.5.0"
+###         :   --enable-stl
+###         ;
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare tinyxml ;
+
+extension.option tinyxml stl : enable disable ;
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define tinyxml $(version) : $(location) : $(options) ] ;
+    
+    lib tinyxml
+        :   $(location)/tinyxml.cpp
+            $(location)/tinyxmlparser.cpp
+            $(location)/tinyxmlerror.cpp
+            $(location)/tinystr.cpp
+        :   $(requirements)
+            <tinyxml-version>$(version)
+            <tinyxml-stl>enable:<define>TIXML_USE_STL
+            <tinyxml-location>$(location)
+            <link>static
+            <include>$(location)
+            <location-prefix>tinyxml
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+        :
+        :   <include>$(location)
+            <tinyxml-stl>enable:<define>TIXML_USE_STL
+        ;
+}

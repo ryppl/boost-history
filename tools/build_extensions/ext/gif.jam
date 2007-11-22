@@ -1,0 +1,121 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building giflib library <http://sourceforge.net/projects/libungif>.
+### Targets:
+###     /ext/gif//gif
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare gif ;
+
+rule config_h ( targets * : sources * : properties * )
+{
+    local define ;
+    local undef ;
+    local other ;
+    switch [ property.select <target-os> : $(properties) ]
+    {
+        case *linux* :
+        define +=
+            HAVE_DLFCN_H HAVE_FCNTL_H HAVE_INTTYPES_H HAVE_MEMORY_H
+            HAVE_STDARG_H HAVE_STDINT_H HAVE_STDLIB_H HAVE_STRDUP HAVE_STRINGS_H
+            HAVE_STRING_H HAVE_SYS_STAT_H HAVE_SYS_TYPES_H HAVE_UNISTD_H
+            HAVE_VPRINTF PROTOTYPES STDC_HEADERS __PROTOTYPES
+            ;
+        undef +=
+            HAVE_BASETSD_H HAVE_DOPRNT HAVE_IO_H HAVE_LIBGL_S HAVE_LIBX11
+            HAVE_VARARGS_H SETVBUF_REVERSED
+            SIZEOF_UNSIGNED_INT SIZEOF_UNSIGNED_LONG X_DISPLAY_MISSING const
+            ;
+        other +=
+            "#define UINT32 u_int32_t"
+            ;
+        
+        case *windows* :
+        define +=
+            HAVE_BASETSD_H HAVE_FCNTL_H HAVE_INTTYPES_H HAVE_IO_H HAVE_MEMORY_H
+            HAVE_STDARG_H HAVE_STDLIB_H HAVE_STRDUP HAVE_STRINGS_H
+            HAVE_STRING_H HAVE_SYS_STAT_H HAVE_SYS_TYPES_H
+            HAVE_VPRINTF PROTOTYPES STDC_HEADERS __PROTOTYPES
+            ;
+        undef +=
+            HAVE_DLFCN_H HAVE_DOPRNT HAVE_LIBGL_S HAVE_LIBX11 HAVE_UNISTD_H
+            HAVE_STDINT_H HAVE_VARARGS_H SETVBUF_REVERSED
+            SIZEOF_UNSIGNED_INT SIZEOF_UNSIGNED_LONG X_DISPLAY_MISSING const
+            ;
+    }
+    local version = [ property.select <gif-version> : $(properties) ] ;
+    VERSION on $(<) = $(version:G=) ;
+    CONFIG on $(<) =
+        "#define $(define) 1"
+        "#undef $(undef)"
+        $(other)
+        ;
+    NL on $(<) = "
+" ;
+}
+actions config_h
+{
+    @($(STDOUT):E=
+#ifndef GIFLIB_CONFIG_H
+#define GIFLIB_CONFIG_H
+
+#define PACKAGE "giflib"
+#define PACKAGE_BUGREPORT "abadger1999@sourceforge.net"
+#define PACKAGE_NAME "giflib"
+#define PACKAGE_STRING "giflib $(VERSION)"
+#define PACKAGE_TARNAME "giflib"
+#define PACKAGE_VERSION "$(VERSION)"
+$(CONFIG:J=$(NL))
+
+#endif // GIFLIB_CONFIG_H
+) > "$(<)"
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define gif $(version) : $(location) : $(options) ] ;
+    
+    make config.h : : @config_h
+        :   <gif-version>$(version)
+            <location-prefix>src
+        ;
+        explicit config.h ;
+    
+    lib gif
+        :   $(location)/lib/dev2gif.c
+            $(location)/lib/dgif_lib.c
+            $(location)/lib/egif_lib.c
+            $(location)/lib/gif_err.c
+            $(location)/lib/gif_font.c
+            $(location)/lib/gif_hash.c
+            $(location)/lib/gifalloc.c
+            $(location)/lib/qprintf.c
+            $(location)/lib/quantize.c
+        :   $(requirements)
+            <gif-version>$(version)
+            <gif-location>$(location)
+            <include>$(location)
+            <location-prefix>gif
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            <define>HAVE_CONFIG_H
+            <implicit-dependency>config.h
+            <dependency>config.h
+            <warnings>off
+            <link>static
+        :
+        :   <include>$(location)
+            <implicit-dependency>config.h
+            <dependency>config.h
+        ;
+}

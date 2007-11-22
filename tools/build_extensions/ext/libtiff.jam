@@ -1,0 +1,232 @@
+#~ Copyright Redshift Software, Inc. 2006.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for building libtiff library <http://www.libtiff.org/>.
+### Targets:
+###     /ext/libtiff//tiff
+
+import extension ;
+
+import property ;
+import project ;
+import feature ;
+import common ;
+
+extension.declare libtiff ;
+
+extension.option libtiff ccit : enable disable ;
+extension.option libtiff jpeg-ycbr-subsampling : enable disable ;
+extension.option libtiff jpeg : enable disable ;
+extension.option libtiff logluv : enable disable ;
+extension.option libtiff lzw : enable disable ;
+extension.option libtiff mdi : enable disable ;
+extension.option libtiff next : enable disable ;
+extension.option libtiff packbits : enable disable ;
+extension.option libtiff pixarlog : enable disable ;
+extension.option libtiff subifd : enable disable ;
+extension.option libtiff thunder : enable disable ;
+extension.option libtiff zip : enable disable ;
+
+rule config_h ( targets * : sources * : properties * )
+{
+    local define ;
+    local undef ;
+    local other ;
+    switch [ property.select <target-os> : $(properties) ]
+    {
+        case *linux* :
+        define +=
+            HAVE_ASSERT_H HAVE_DLFCN_H HAVE_FCNTL_H HAVE_INTTYPES_H HAVE_MEMORY_H
+            HAVE_LIMITS_H HAVE_MALLOC_H HAVE_SEARCH_H HAVE_STDINT_H HAVE_STDLIB_H
+            HAVE_STRINGS_H HAVE_STRING_H HAVE_SYS_STAT_H HAVE_SYS_TIME_H
+            HAVE_SYS_TYPES_H HAVE_UNISTD_H
+            HAVE_LIBC HAVE_LIBM HAVE_IEEEFP
+            ;
+        undef +=
+            HAVE_APPLE_OPENGL_FRAMEWORK HAVE_FLOOR
+            HAVE_INT16 HAVE_INT32 HAVE_INT8  HAVE_ISASCII
+            HAVE_LFIND  
+            HAVE_MEMMOVE HAVE_MEMSET HAVE_MMAP HAVE_POW
+            HAVE_PTHREAD HAVE_SQRT HAVE_STRCASECMP HAVE_STRCHR
+            HAVE_STRRCHR HAVE_STRSTR HAVE_STRTOL HAVE_STRTOUL 
+            HAVE_WINDOWS_H
+            NO_MINUS_C_MINUS_O
+            PTHREAD_CREATE_JOINABLE SIZEOF_INT SIZEOF_LONG STDC_HEADERS
+            TIME_WITH_SYS_TIME TM_IN_SYS_TIME WORDS_BIGENDIAN X_DISPLAY_MISSING
+            _FILE_OFFSET_BITS _LARGE_FILES const off_t size_t
+            USE_WIN32_FILEIO HAVE_IO_H
+            ;
+        other +=
+            "
+#ifndef __cplusplus
+#undef inline
+#endif
+"
+            ;
+        
+        case *windows* :
+        define +=
+            HAVE_ASSERT_H HAVE_FCNTL_H HAVE_IEEEFP HAVE_STRING_H HAVE_SYS_TYPES_H
+            HAVE_IO_H HAVE_SEARCH_H
+            USE_WIN32_FILEIO
+            ;
+        undef +=
+            HAVE_APPLE_OPENGL_FRAMEWORK
+            HAVE_DLFCN_H HAVE_FLOOR
+            HAVE_INT16 HAVE_INT32 HAVE_INT8 HAVE_INTTYPES_H HAVE_ISASCII
+            HAVE_LFIND HAVE_LIBC HAVE_LIBM HAVE_LIMITS_H HAVE_MALLOC_H
+            HAVE_MEMMOVE HAVE_MEMORY_H HAVE_MEMSET HAVE_MMAP HAVE_POW
+            HAVE_PTHREAD HAVE_SQRT HAVE_STDINT_H HAVE_STDLIB_H
+            HAVE_STRCASECMP HAVE_STRCHR HAVE_STRINGS_H
+            HAVE_STRRCHR HAVE_STRSTR HAVE_STRTOL HAVE_STRTOUL HAVE_SYS_STAT_H
+            HAVE_SYS_TIME_H HAVE_UNISTD_H HAVE_WINDOWS_H
+            NO_MINUS_C_MINUS_O
+            PTHREAD_CREATE_JOINABLE SIZEOF_INT SIZEOF_LONG STDC_HEADERS
+            TIME_WITH_SYS_TIME TM_IN_SYS_TIME WORDS_BIGENDIAN X_DISPLAY_MISSING
+            _FILE_OFFSET_BITS _LARGE_FILES const off_t size_t
+            ;
+        other +=
+            "#define lfind _lfind"
+            "
+#ifndef __cplusplus
+# ifndef inline
+#  define inline __inline
+# endif
+#endif
+"
+            ;
+    }
+    if [ property.select <architecture> : $(properties) ]
+        in <architecture>x86 <architecture>ia64
+    {
+        other +=
+            "#define HOST_FILLORDER FILLORDER_LSB2MSB"
+            "#undef WORDS_BIGENDIAN"
+            ;
+    }
+    else
+    {
+        other +=
+            "#define HOST_FILLORDER FILLORDER_MSB2LSB"
+            "#define WORDS_BIGENDIAN"
+            ;
+    }
+    local version = [ property.select <libtiff-version> : $(properties) ] ;
+    VERSION on $(<) = $(version:G=) ;
+    CONFIG on $(<) =
+        "#define $(define) 1"
+        "#undef $(undef)"
+        $(other)
+        ;
+    NL on $(<) = "
+" ;
+}
+actions config_h
+{
+    @($(STDOUT):E=
+#ifndef LIBTIFF_CONFIG_H
+#define LIBTIFF_CONFIG_H
+
+#define PACKAGE "tiff"
+#define PACKAGE_BUGREPORT "tiff@lists.maptools.org"
+#define PACKAGE_NAME "LibTIFF Software"
+#define PACKAGE_STRING "LibTIFF Software $(VERSION)"
+#define PACKAGE_TARNAME "tiff"
+#define PACKAGE_VERSION "$(VERSION)"
+#define SIZEOF_INT (sizeof(int))
+#define SIZEOF_LOG (sizeof(long))
+$(CONFIG:J=$(NL))
+
+#endif // LIBTIFF_CONFIG_H
+) > "$(<)"
+}
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements = [ extension.define libtiff $(version) : $(location) : $(options) ] ;
+    
+    make tif_config.h : : @config_h
+        :   <libtiff-version>$(version)
+            <location-prefix>src
+        ;
+        explicit tif_config.h ;
+    
+    local common-requirements =
+        <libtiff-ccit>enable:<define>CCITT_SUPPORT=1
+        <libtiff-jpeg-ycbr-subsampling>enable:<define>CHECK_JPEG_YCBCR_SUBSAMPLING=1
+        <libtiff-jpeg>enable:<define>JPEG_SUPPORT=1
+        <libtiff-logluv>enable:<define>LOGLUV_SUPPORT=1
+        <libtiff-lzw>enable:<define>LZW_SUPPORT=1
+        <libtiff-mdi>enable:<define>MDI_SUPPORT=1
+        <libtiff-next>enable:<define>NEXT_SUPPORT=1
+        <libtiff-packbits>enable:<define>PACKBITS_SUPPORT=1
+        <libtiff-pixarlog>enable:<define>PIXARLOG_SUPPORT=1
+        <libtiff-subifd>enable:<define>SUBIFD_SUPPORT=1
+        <libtiff-thunder>enable:<define>THUNDER_SUPPORT=1
+        <libtiff-zip>enable:<define>ZIP_SUPPORT=1
+        ;
+    
+    lib tiff
+        :   $(location)/libtiff/tif_aux.c
+            $(location)/libtiff/tif_close.c
+            $(location)/libtiff/tif_codec.c
+            $(location)/libtiff/tif_compress.c
+            $(location)/libtiff/tif_color.c
+            $(location)/libtiff/tif_dir.c
+            $(location)/libtiff/tif_dirinfo.c
+            $(location)/libtiff/tif_dirread.c
+            $(location)/libtiff/tif_dirwrite.c
+            $(location)/libtiff/tif_dumpmode.c
+            $(location)/libtiff/tif_error.c
+            $(location)/libtiff/tif_extension.c
+            $(location)/libtiff/tif_fax3.c
+            $(location)/libtiff/tif_fax3sm.c
+            $(location)/libtiff/tif_flush.c
+            $(location)/libtiff/tif_getimage.c
+            $(location)/libtiff/tif_jpeg.c
+            $(location)/libtiff/tif_luv.c
+            $(location)/libtiff/tif_lzw.c
+            $(location)/libtiff/tif_next.c
+            $(location)/libtiff/tif_ojpeg.c
+            $(location)/libtiff/tif_open.c
+            $(location)/libtiff/tif_packbits.c
+            $(location)/libtiff/tif_pixarlog.c
+            $(location)/libtiff/tif_predict.c
+            $(location)/libtiff/tif_print.c
+            $(location)/libtiff/tif_read.c
+            $(location)/libtiff/tif_strip.c
+            $(location)/libtiff/tif_swab.c
+            $(location)/libtiff/tif_thunder.c
+            $(location)/libtiff/tif_tile.c
+            $(location)/libtiff/tif_version.c
+            $(location)/libtiff/tif_warning.c
+            $(location)/libtiff/tif_write.c
+            $(location)/libtiff/tif_zip.c
+        :   <target-os>unix:<source>$(location)/libtiff/tif_unix.c
+            <target-os>windows:<source>$(location)/libtiff/tif_win32.c
+            <target-os>windows,<link>shared,<toolset>msvc:<def-file>$(location)/libtiff/libtiff.def
+            <target-os>windows,<link>shared,<toolset>msvc:<linkflags>/EXPORT:_TIFFDataSize
+            <libtiff-zip>enable:<library>/ext/zlib//z
+            <libtiff-jpeg>enable:<library>/ext/jpeg//jpeg
+            $(requirements)
+            <libtiff-version>$(version)
+            <libtiff-location>$(location)
+            <include>$(location)/libtiff
+            <location-prefix>libtiff
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            <define>TIF_PLATFORM_CONSOLE
+            <warnings>off
+            <implicit-dependency>tif_config.h
+            <dependency>tif_config.h
+            $(common-requirements)
+        :
+        :   <include>$(location)/libtiff
+            <implicit-dependency>tif_config.h
+            <dependency>tif_config.h
+            $(common-requirements)
+        ;
+}

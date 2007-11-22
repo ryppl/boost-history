@@ -1,0 +1,95 @@
+#~ Copyright 2006 Redshift Software, Inc.
+#~ Copyright 2007 Couch World Games Inc.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+import modules ;
+
+project build ;
+
+path-constant PACKAGES : [ MATCH --packages=(.*) : [ modules.peek : ARGV ] ] ;
+path-constant BOOST_ROOT(TRUNK) : [ modules.peek : BOOST_ROOT ] ;
+path-constant BOOST_ROOT(RELEASE) : [ MATCH --boost-release=(.*) : [ modules.peek : ARGV ] ] ;
+
+using zlib : 1.2.3 : $(PACKAGES)/zlib-1.2.3 : ;
+using gif : 4.1.4 : $(PACKAGES)/giflib-4.1.4 : ;
+using jpeg : 6b : $(PACKAGES)/jpeg-6b : ;
+using png : 1.2.12 : $(PACKAGES)/libpng-1.2.12 : ;
+using mng : 1.0.9 : $(PACKAGES)/libmng-1.0.9 : ;
+using libtiff : 3.8.2 : $(PACKAGES)/tiff-3.8.2 : ;
+#~ using freeimage : 3.9.1 : $(PACKAGES)/FreeImage391/FreeImage ;
+
+using expat : 2.0.0 : $(PACKAGES)/expat-2.0.0 : ;
+using tinyxml : 2.5.0 : $(PACKAGES)/TinyXml-2.5.0 : --enable-stl ;
+using lua : 5.1.1 : $(PACKAGES)/lua-5.1.1 ;
+using osg : 2.2 : $(PACKAGES)/OpenSceneGraph-2.2.0 ;
+
+#~ using botan : 1.4.12 : $(PACKAGES)/Botan-1.4.12 :
+	#~ --enable-adler32
+	#~ --enable-mdx
+	#~ --enable-md4
+	#~ --enable-md5
+	#~ --enable-isaac
+	#~ --enable-sha-256
+	#~ --enable-es-win32
+	#~ --enable-aes
+	#~ --enable-hmac
+	#~ ;
+#~ using boost : 1.33.1 : $(BOOST_ROOT(RELEASE)) :
+	#~ --with-interprocess=$(BOOST_ROOT(TRUNK)) ;
+#~ using gigabase : 3.56 : $(PACKAGES)/GigaBASE-3.56 ;
+#~ if [ os.on-unix ]
+#~ {
+	#~ using gtk : 2.0 : /usr :
+		#~ --with-glib=2.0
+		#~ --with-pango=1.0
+		#~ --with-atk=1.0
+		#~ ;
+	#~ using wxwidgets : 2.6.3 : $(PACKAGES)/wxWidgets-2.6.3 :
+		#~ --disable-metafile
+		#~ --disable-html
+		#~ --disable-xml
+		#~ --enable-stc
+		#~ --disable-statusbar_native
+		#~ --enable-no_exceptions
+		#~ --with-gtk=/ext/gtk//gtk/<gtk-version>2.0
+		#~ --with-gtk-version=2.4
+		#~ : <target-os>linux
+		#~ ;
+	#~ using tecla : 1.6.1 : $(PACKAGES)/libtecla-1.6.1 ;
+#~ }
+#~ else if [ os.on-windows ]
+#~ {
+	#~ using wxwidgets : 2.6.3 : $(PACKAGES)/wxWidgets-2.6.3 :
+		#~ --disable-metafile
+		#~ --disable-html
+		#~ --disable-xml
+		#~ --enable-stc
+		#~ --enable-generic
+		#~ --disable-statusbar_native
+		#~ --enable-no_exceptions
+		#~ : <target-os>windows
+		#~ ;
+#~ }
+
+build-project /ext/zlib ;
+build-project /ext/gif ;
+build-project /ext/png ;
+build-project /ext/jpeg ;
+build-project /ext/mng ;
+build-project /ext/libtiff ;
+#~ build-project /ext/freeimage ;
+
+build-project /ext/expat ;
+build-project /ext/tinyxml ;
+build-project /ext/lua ;
+build-project /ext/osg ;
+
+#~ build-project /ext/botan ;
+#~ build-project /ext/boost ;
+#~ build-project /ext/gigabase ;
+#~ if [ os.on-unix ] { build-project /ext/gtk ; }
+#~ build-project /ext/wx ;
+#~ if [ os.on-unix ] { build-project /ext/tecla ; }

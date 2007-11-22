@@ -1,0 +1,311 @@
+#~ Copyright Redshift Software, Inc. 2007.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+### Support for OpenSceneGraph
+### <http://www.openscenegraph.org>.
+
+import extension ;
+
+#~ import property ;
+#~ import project ;
+#~ import feature ;
+#~ import common ;
+import set ;
+import path ;
+
+extension.declare osg ;
+
+extension.option osg matrix-type : double float ;
+extension.option osg plane-type : double float ;
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements =
+        [ extension.define osg $(version) : $(location) : $(options) ]
+        <link>static:<define>OSG_LIBRARY_STATIC
+        ;
+    local common-requirements =
+        <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        
+        <osg-version>$(version)
+        <osg-location>$(location)
+        <include>$(location)/include
+        <target-os>windows:<define>WIN32
+        
+        <osg-matrix-type>float:<define>OSG_USE_FLOAT_MATRIX
+        <osg-plane-type>float:<define>OSG_USE_FLOAT_PLANE
+        ;
+    
+    location,$(version) = $(location) ;
+    
+    local rule conditional ( condition + : requirements * )
+    {
+        condition = $(condition:J=,) ;
+        if [ MATCH (:) : $(condition) ]
+        {
+            return $(condition)$(requirements) ;
+        }
+        else
+        {
+            return $(condition):$(requirements) ;
+        }
+    }
+    
+    alias gl
+        :
+        :
+        :
+        :   <target-os>windows:<find-shared-library>OpenGL32
+            <target-os>windows:<find-shared-library>GLU32
+        ;
+    
+    lib openthreads
+        :   [ glob $(location)/src/OpenThreads/common/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>openthreads
+            <link>shared:<define>OT_LIBRARY
+            <link>static:<define>OT_LIBRARY_STATIC
+            <link>shared:<define>OPENTHREADS_EXPORTS
+            [ conditional <target-os>windows:<source> :
+                [ glob $(location)/src/OpenThreads/win32/*.cpp ] ]
+        :
+        :   $(common-requirements)
+        ;
+        explicit openthreads ;
+    
+    lib osg
+        :   /ext/osg//openthreads /ext/osg//gl
+            [ set.difference
+                [ glob $(location)/src/osg/*.cpp ]
+                :
+                [ glob $(location)/src/osg/Matrix_implementation.cpp ]
+                ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osg
+            <link>shared:<define>OSG_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgDB
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg
+            [ glob $(location)/src/osgDB/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgDB
+            <link>shared:<define>OSGDB_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgUtil
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg
+            [ glob $(location)/src/osgUtil/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgUtil
+            <link>shared:<define>OSGUTIL_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgGA
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
+            [ glob $(location)/src/osgGA/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgGA
+            <link>shared:<define>OSGGA_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgText
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB
+            [ glob $(location)/src/osgText/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgText
+            <link>shared:<define>OSGTEXT_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgManipulator
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgGA /ext/osg//osgUtil
+            [ glob $(location)/src/osgManipulator/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgManipulator
+            <link>shared:<define>OSGMANIPULATOR_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgSim
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil /ext/osg//osgText
+            [ glob $(location)/src/osgSim/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgSim
+            <link>shared:<define>OSGSIM_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgFX
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
+            [ glob $(location)/src/osgFX/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgFX
+            <link>shared:<define>OSGFX_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgParticle
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
+            [ glob $(location)/src/osgParticle/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgParticle
+            <link>shared:<define>OSGPARTICLE_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgShadow
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
+            [ glob $(location)/src/osgShadow/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgShadow
+            <link>shared:<define>OSGSHADOW_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgTerrain
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
+            [ glob $(location)/src/osgTerrain/*.cpp ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgTerrain
+            <link>shared:<define>OSGTERRAIN_LIBRARY
+        :
+        :   $(common-requirements)
+        ;
+    
+    lib osgViewer
+        :   /ext/osg//openthreads /ext/osg//gl
+            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil /ext/osg//osgText  /ext/osg//osgGA
+            [ set.difference
+                [ glob $(location)/src/osgViewer/*.cpp ]
+                :
+                [ glob
+                    $(location)/src/osgViewer/*Win32.cpp
+                    $(location)/src/osgViewer/*Carbon.cpp
+                    $(location)/src/osgViewer/*X11.cpp ]
+                ]
+        :   $(requirements) $(common-requirements)
+            <location-prefix>osgViewer
+            <link>shared:<define>OSGVIEWER_LIBRARY
+            [ conditional <target-os>windows:<source> :
+                [ glob $(location)/src/osgViewer/*Win32.cpp ] ]
+            [ conditional <target-os>macosx:<source> :
+                [ glob $(location)/src/osgViewer/*Carbon.cpp ] ]
+            [ conditional <target-os>linux:<source> :
+                [ glob $(location)/src/osgViewer/*X11.cpp ] ]
+            [ conditional <target-os>windows:<find-shared-library> : user32 gdi32 ]
+        :
+        :   $(common-requirements)
+        ;
+    
+    local rule lib-osgdb ( name src ? : * )
+    {
+        src ?= $(name) ;
+        name = osgdb_$(name) ;
+        return [ lib $(name)
+            :
+                /ext/osg//openthreads /ext/osg//gl
+                /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
+                [ glob $(location)/src/osgPlugins/$(src)/*.cpp ]
+                $(2)
+            :
+                $(requirements) $(common-requirements)
+                <location-prefix>plugin/$(name)
+                $(3)
+            :   $(4)
+            :   $(common-requirements)
+                $(5)
+            ] ;
+    }
+    
+    #~ ############################################################
+    #~ #
+    #~ #  NodeKit/Psudo loader plugins
+    #~ #
+    lib-osgdb osgfx osgFX : /ext/osg//osgFX ;
+    lib-osgdb osgparticle osgParticle : /ext/osg//osgParticle ;
+    lib-osgdb osgsim osgSim : /ext/osg//osgSim ;
+    lib-osgdb osgtext osgText : /ext/osg//osgText ;
+    lib-osgdb osgviewer osgViewer : /ext/osg//osgViewer ;
+    lib-osgdb osgshadow osgShadow : /ext/osg//osgShadow ;
+    lib-osgdb osgterrain osgTerrain : /ext/osg//osgTerrain ;
+    lib-osgdb osga ;
+    lib-osgdb rot ;
+    lib-osgdb scale ;
+    lib-osgdb trans ;
+    lib-osgdb normals ;
+    lib-osgdb net : :
+        <target-os>windows:<find-shared-library>wsock32 ;
+    #~ ############################################################
+    #~ #
+    #~ #  Main native plugins
+    #~ #
+    lib-osgdb osg : /ext/osg//osgSim /ext/osg//osgFX /ext/osg//osgText ;
+    lib-osgdb ive : /ext/osg//osgSim /ext/osg//osgFX /ext/osg//osgText ;
+    #~ ############################################################
+    #~ #
+    #~ #  Image plugins
+    lib-osgdb rgb ;
+    lib-osgdb bmp ;
+    lib-osgdb pnm ;
+    lib-osgdb dds ;
+    lib-osgdb tga ;
+    lib-osgdb hdr ;
+    lib-osgdb jpeg : /ext/jpeg//jpeg ;
+    lib-osgdb png : /ext/png//png ;
+    lib-osgdb tiff : /ext/libtiff//tiff ;
+    #~ ############################################################
+    #~ #
+    #~ #  3rd party 3d plugins
+    #~ #
+    lib-osgdb 3dc ;
+    lib-osgdb lwo : /ext/osg//osgFX ;
+    lib-osgdb x ;
+    lib-osgdb dw ;
+    lib-osgdb dxf ;
+    lib-osgdb openflight OpenFlight : /ext/osg//osgSim ;
+    lib-osgdb geo : /ext/osg//osgSim /ext/osg//osgText ;
+    lib-osgdb obj ;
+    lib-osgdb pic ;
+    lib-osgdb stl ;
+    lib-osgdb 3ds ;
+    lib-osgdb ac ;
+    lib-osgdb logo ;
+    lib-osgdb lws ;
+    lib-osgdb md2 ;
+    lib-osgdb osgtgz ;
+    lib-osgdb tgz ;
+    lib-osgdb txp : /ext/osg//osgSim /ext/osg//osgText :
+        <include>$(location)/src/osgPlugins/txp ;
+    lib-osgdb shp ;
+    lib-osgdb txf : /ext/osg//osgText ;
+    lib-osgdb zip : /ext/zlib//z ;
+}
