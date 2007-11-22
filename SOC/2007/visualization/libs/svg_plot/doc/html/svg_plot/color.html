@@ -32,7 +32,7 @@
       by the SVG standard</a>.
     </p>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h4>
-<a name="id622075"></a>
+<a name="id622212"></a>
       <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"><code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h4>
 <p>
@@ -40,7 +40,10 @@
       an enumerated list.
     </p>
 <p>
-      The constants are defined at <a href="../..%5C..%5C..%5C..%5Cvisualization%5Cboost%5Csvg_plot%5Csvg_color.hpp" target="_top">svg_color.hpp</a>.
+      The constants are defined at <a href="../../../../../boost/svg_plot/svg_color.hpp" target="_top">svg_color.hpp</a>.
+    </p>
+<p>
+      Examples of colors are at <a href="../../../../svg_plot/example/svg_colors.cpp" target="_top">svg_colors.cpp</a>.
     </p>
 <p>
       The <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">colors are
@@ -54,7 +57,7 @@
       for defining defaults for functions, for example.
     </p>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h5>
-<a name="id622187"></a>
+<a name="id622335"></a>
       <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h5>
@@ -75,28 +78,27 @@
 </tr>
 <tr><td align="left" valign="top">
 <p>
-        </p>
-<p>
-          <code class="computeroutput"><span class="identifier">svg_color</span></code> has a constructor
-          for <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>,
-          so you can use a <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
-          in place of a <code class="computeroutput"><span class="identifier">svg_color</span></code>
-          and it will be implicitly converted. However, there is not currently an
-          <code class="computeroutput"><span class="identifier">svg_color</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">svg_color_constant</span><span class="special">)</span></code>
-          overload, so 
+        <code class="computeroutput"><span class="identifier">svg_color</span></code> has a constructor
+        for <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>, so
+        you can use a <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
+        in place of a <code class="computeroutput"><span class="identifier">svg_color</span></code> and
+        it will be implicitly converted. However, there is <span class="bold"><strong>not</strong></span>
+        currently an <code class="computeroutput"><span class="identifier">svg_color</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">svg_color_constant</span><span class="special">)</span></code>
+        overload, so 
 </p>
 <pre class="programlisting">
 <span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
 </pre>
 <p>
-          does not work.
-        </p>
-<p>
+        does not have the desired effect, and nor does <code class="computeroutput"><span class="identifier">cout</span>
+        <span class="special">&lt;&lt;</span> <span class="identifier">red</span>
+        <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span></code> output the expected RGB(255,0,0) but instead
+        119 the value of the enum!
       </p>
 </td></tr>
 </table></div>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"></a><h5>
-<a name="id678177"></a>
+<a name="id678342"></a>
       <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"><code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a>
     </h5>
 <p>
@@ -115,19 +117,13 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../../../../../trunk/doc/html/images/important.png"></td>
 <th align="left">Important</th>
 </tr>
-<tr><td align="left" valign="top">
-<p>
-        </p>
-<p>
-          Any integer value is accepted but negative values are contrained 0, and
-          positive values &gt; 255 are constrained to 255.
-        </p>
-<p>
-      </p>
-</td></tr>
+<tr><td align="left" valign="top"><p>
+        Any integer value is accepted but negative values are contrained 0, and positive
+        values &gt; 255 are constrained to 255.
+      </p></td></tr>
 </table></div>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_"></a><h5>
-<a name="id678332"></a>
+<a name="id678494"></a>
       <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color</span></code></a>
     </h5>
@@ -144,22 +140,16 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../../trunk/doc/html/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
-<tr><td align="left" valign="top">
-<p>
-        </p>
-<p>
-          <code class="computeroutput"><span class="identifier">svg_color</span></code>'s constructor
-          takes in three integer values. The <a href="http://www.w3.org/TR/SVG11/types.html" target="_top">SVG
-          1.1 standard</a> allows any integer to represent an RGB value, with
-          values less than 0 and greater than 255 being constrained to their respective
-          min and max.
-        </p>
-<p>
-      </p>
-</td></tr>
+<tr><td align="left" valign="top"><p>
+        <code class="computeroutput"><span class="identifier">svg_color</span></code>'s constructor takes
+        in three integer values. The <a href="http://www.w3.org/TR/SVG11/types.html" target="_top">SVG
+        1.1 standard</a> allows any integer to represent an RGB value, with values
+        less than 0 and greater than 255 being constrained to their respective min
+        and max.
+      </p></td></tr>
 </table></div>
 <a name="svg_plot.color.colors_internals_and_rationale"></a><h4>
-<a name="id678572"></a>
+<a name="id678730"></a>
       <a href="color.html#svg_plot.color.colors_internals_and_rationale">Colors Internals
       and Rationale</a>
     </h4>
@@ -175,13 +165,17 @@
       All color information is stored in RGB format as three 'unsigned char' in a
       <code class="computeroutput"><span class="identifier">svg_color</span></code> struct. The rationale
       for storing information in RGB format is because it is precise, and is always
-      representable the exact same way. Storing a floating-point percentage would
-      introduce the possibility of undesirable rounding error.
+      representable the exact same way. Storing a floating-point percent or fraction
+      would introduce the possibility of undesirable rounding error.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">

@@ -1,8 +1,11 @@
 // svg_boxplot.hpp
-// Copyright (C) Jacob Voytko 2007
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
-// -----------------------------------------------------------------
+
+// Copyright Jacob Voytko 2007
+
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_SVG_SVG_BOXPLOT_HPP
 #define BOOST_SVG_SVG_BOXPLOT_HPP
@@ -58,37 +61,52 @@ BOOST_PARAMETER_NAME((name,              keyword)  title);
 
 struct svg_boxplot_series
 {
-    double whisker_min, whisker_max, q1, q3, median;
-    std::vector<double> outliers, extreme_outliers;
+    double whisker_min;
+    double whisker_max;
+    double q1; // 1st lower quartile.
+    double q3;// 3rd upper quartile. TODO 4th?
+    double median;
+    std::vector<double> outliers;
+    std::vector<double> extreme_outliers;
     std::string title;
 
-    unsigned int whisker_length, box_width;
+    unsigned int whisker_length;
+    unsigned int box_width;
 
-    svg_style box_style, median_style, axis_style,
-              min_whisker_style, max_whisker_style;
+    svg_style box_style;
+    svg_style median_style;
+    svg_style axis_style;
+    svg_style min_whisker_style;
+    svg_style max_whisker_style;
 
-    plot_point_style mild_outlier, ext_outlier;
+    plot_point_style mild_outlier;
+    plot_point_style ext_outlier;
 
     template <class T>
-    svg_boxplot_series(T _begin, T _end, const std::string& _title,
-        unsigned int _whisk_length, unsigned int _box_width,
-        svg_style _box_style, svg_style _median_style, svg_style _axis_style,
-        svg_style _min_whisker, svg_style _max_whisker,
-        plot_point_style _mild_outlier, plot_point_style _ext_outlier):
-        title(_title),
-        whisker_length(_whisk_length),
-        box_width(_box_width), box_style(_box_style),
-        median_style(_median_style), axis_style(_axis_style),
-        min_whisker_style(_min_whisker),
-        max_whisker_style(_max_whisker),
-        mild_outlier(_mild_outlier), ext_outlier(_ext_outlier)
+    svg_boxplot_series(T begin, T end, const std::string& title,
+        unsigned int whisk_length,
+        unsigned int box_width,
+        svg_style box_style,
+        svg_style median_style,
+        svg_style axis_style,
+        svg_style min_whisker,
+        svg_style max_whisker,
+        plot_point_style mild_outlier,
+        plot_point_style ext_outlier) :
+        title(title),
+        whisker_length(whisk_length),
+        box_width(box_width), box_style(box_style),
+        median_style(median_style), axis_style(axis_style),
+        min_whisker_style(min_whisker),
+        max_whisker_style(max_whisker),
+        mild_outlier(mild_outlier), ext_outlier(ext_outlier)
     {
         //std::vector used for fast lookups of quartile values.
-        std::vector<double> data(_begin, _end);
+        std::vector<double> data(begin, end);
 
         if(data.empty())
         {
-            throw std::runtime_error("Empty dataset");
+            throw std::runtime_error("Empty dataset!");
         }
 
         std::sort(data.begin(), data.end());
@@ -104,9 +122,9 @@ struct svg_boxplot_series
         double iqr(q3-q1);
 
         double min_ext_cutoff = q1 - 3. * iqr;
-        double min_cutoff = q1 - 1.5 * iqr;
+        double min_cutoff = q1 - text_margin * iqr;
         double max_ext_cutoff = q3 + 3. * iqr;
-        double max_cutoff = q3 + 1.5 * iqr;
+        double max_cutoff = q3 + text_margin * iqr;
 
         std::vector<double>::const_iterator i;
 
@@ -116,7 +134,6 @@ struct svg_boxplot_series
             {
                 extreme_outliers.push_back(*i);
             }
-
             else if(*i < min_cutoff)
             {
                 outliers.push_back(*i);
@@ -124,24 +141,20 @@ struct svg_boxplot_series
         }
 
         whisker_min = *i;
-
         std::vector<double>::const_reverse_iterator j;
-
         for(j = data.rbegin(); *j > max_cutoff; ++j)
         {
             if(*j > max_ext_cutoff)
             {
                 extreme_outliers.push_back(*j);
             }
-
             else if(*j > max_cutoff)
             {
                 outliers.push_back(*j);
             }
         }
-
         whisker_max = *j;
-    }
+    } // 
 }; // struct svg_boxplot_series
 
 class svg_boxplot
@@ -150,7 +163,8 @@ private:
     // Stored so as to avoid rewriting style information constantly.
     svg image;
 
-    double y_scale, y_shift;
+    double y_scale;
+    double y_shift;
 
     text_element title_info;
     text_element x_label_info;
@@ -162,97 +176,103 @@ private:
     int plot_y1;
     int plot_y2;
 
-
     // Yes/no questions.
-    bool use_x_label;
+    bool use_x_label; // // Show X-axis label text.
     bool use_x_major_labels;
     bool use_y_major_labels;
     bool use_y_label;
     bool use_title;
 
-    // where we will be storing the data points for transformation.
+    // Where we will be storing the data points for transformation.
     std::vector<svg_boxplot_series> series;
     std::string plot_window_clip;
 
-    // axis information
-    double       y_min,  y_max;
-    double       y_major, y_axis, x_axis;
-    unsigned int x_major_length, y_major_length,  y_minor_length,
-                 y_num_minor;
+    // Axes information.
+    double y_min;
+    double y_max;
+    double y_major;
+    double y_axis;
+    double x_axis;
+    unsigned int x_major_tick_length_;
+    unsigned int x_major_tick_width_; // pixels.
 
-    void _clear_all()
+    unsigned int y_major_tick_length_;
+    unsigned int y_major_tick_width_;
+    unsigned int y_minor_tick_length_;
+    unsigned int y_minor_tick_width_;
+    unsigned int y_num_minor_ticks_;
+
+    void clear_all()
     {
         // TODO, fill
     }
 
-    void _transform_y(double& y)
+    void transform_y(double& y)
     {
         y = y * y_scale + y_shift;
     }
 
-    void _draw_y_minor_ticks(double j, path_element& tick_path)
+    void draw_y_minor_ticks(double j, path_element& tick_path)
     {
         double y1(j), x1(plot_x1);
-        double y_tick_length = y_minor_length / 2.;
+        double y_tick_length = y_minor_tick_length_ / 2.;
         double x2(plot_x1 - y_tick_length / 2.);
 
-        _transform_y(y1);
+        transform_y(y1);
 
         tick_path.M(x1, y1).L(x2, y1);
     }
 
 
-    void _draw_x_major_ticks(double i, path_element& tick_path,
+    void draw_x_major_ticks(double i, path_element& tick_path,
         const std::string& str)
     {
-        double x1(i), y1(0.), y2(image.get_x_size());
+        double x1(i), y1(0.), y2(image.x_size());
 
         // Draw major tick.
         x1=i;
 
         y1 = plot_y2;
-        y2 = plot_y2 + x_major_length;
+        y2 = plot_y2 + x_major_tick_length_;
 
         tick_path.M(x1, y1).L(x1, y2);
 
         if(use_x_major_labels)
         {
-            y1 += x_major_length;
-
-            image.get_g_element(boxplot::PLOT_LABELS).text(x1,
-                y1 + 12, str);
+            y1 += x_major_tick_length_;
+            image.get_g_element(boxplot::PLOT_LABELS).text(x1, y1 + 12, str);
         }
     }
 
-    void _draw_y_major_ticks(double i, path_element& tick_path)
+    void draw_y_major_ticks(double i, path_element& tick_path)
     {
-        double y1(i), x1(0.), x2(image.get_y_size());
+        double y1(i), x1(0.), x2(image.y_size());
 
-        // Draw major tick.
-        y1=i;
+        // Draw ith major tick.
+        y1 = i;
 
-        _transform_y(y1);
+        transform_y(y1);
 
-        double y_tick_length = y_major_length / 2.;
+        double y_tick_length = y_minor_tick_length_ / 2.;
 
         x1 = plot_x1;
-        x2 = plot_x1 - y_tick_length/2.;
+        x2 = plot_x1 - y_tick_length / 2.;
 
         tick_path.M(x1, y1).L(x2, y1);
 
         if(use_y_major_labels)
         {
             std::stringstream fmt;
-            fmt<<i;
+            fmt << i; // So fmt.str() has the value to label the tick.
 
-            x1 -= y_major_length;
+            x1 -= y_minor_tick_length_;
 
             image.get_g_element(boxplot::PLOT_LABELS).text(x1 + 12,
-                y1, fmt.str(), 12, center_align, -90);
+                y1, fmt.str(), 12, "", "", "", "", "", center_align, upward);
         }
     }
 
-    void _draw_y_axis()
+    void draw_y_axis()
     {
         path_element& minor_tick_path =
             image.get_g_element(boxplot::Y_MINOR_TICKS).path();
@@ -261,7 +281,7 @@ private:
             image.get_g_element(boxplot::Y_MAJOR_TICKS).path();
 
         // y_minor_jump is the interval between minor ticks.
-        double y_minor_jump = y_major/((double)(y_num_minor + 1.) );
+        double y_minor_jump = y_major/((double)(y_num_minor_ticks_ + 1.) );
 
         // Draw the ticks on the positive side.
         for(double i = 0; i < y_max; i += y_major)
@@ -270,31 +290,31 @@ private:
                        j < i + y_major;
                        j += y_minor_jump)
             {
-                _draw_y_minor_ticks(j, minor_tick_path);
+                draw_y_minor_ticks(j, minor_tick_path);
             }
 
-            _draw_y_major_ticks(i, major_tick_path);
+            draw_y_major_ticks(i, major_tick_path);
         }
 
         // Draw the ticks on the negative side.
         for(double i = 0; i > y_min; i -= y_major)
         {
             // draw minor ticks
-            for(double j=i; j>i-y_major; j-=y_major / (y_num_minor+1))
+            for(double j=i; j>i-y_major; j-=y_major / (y_num_minor_ticks_+1))
             {
-                _draw_y_minor_ticks(j, minor_tick_path);
+                draw_y_minor_ticks(j, minor_tick_path);
             }
 
-            _draw_y_major_ticks(i, major_tick_path);
+            draw_y_major_ticks(i, major_tick_path);
         }
     }
 
-    void _draw_x_axis()
+    void draw_x_axis()
     {
         double y1(0.);
 
         // Draw the axis line.
-        _transform_y(y1);
+        transform_y(y1);
 
         x_axis = y1;
 
@@ -304,64 +324,62 @@ private:
         // Draw the ticks on the positive side.
         for(size_t i = 0; i < series.size(); ++i)
         {
-            _draw_x_major_ticks(
+            draw_x_major_ticks(
                 plot_x1 + (plot_x2-plot_x1)*((double)(i + 1)) /
                     (double)(series.size() + 1),
                 major_tick_path, series[i].title);
         }
     }
 
-    void _draw_axis()
+    void draw_axes()
     {
-        _draw_y_axis();
-        _draw_x_axis();
+        draw_y_axis();
+        draw_x_axis();
     }
 
-    void _draw_title()
+    void draw_title()
     {
-        text_element title(image.get_x_size()/2.,
+        text_element title(image.x_size()/2.,
                            title_info.font_size(),
                            title_info.text());
 
-        title.alignment(center_align);
+        title.font_alignment(center_align);
         title.font_size(title_info.font_size());
         image.get_g_element(boxplot::TITLE).push_back(new text_element(title));
     }
 
-    void _draw_x_label()
+    void draw_x_label()
     {
         text_element to_use((plot_x2 + plot_x1) / 2.,
-            image.get_y_size() - 8, x_label_info.text());
+            image.y_size() - 8, x_label_info.text());
 
         to_use.font_size(12);
-        to_use.alignment(center_align);
+        to_use.font_alignment(center_align);
 
         image.get_g_element(boxplot::X_LABEL).push_back(new text_element(to_use));
     }
 
-    void _draw_y_label()
+    void draw_y_label()
     {
         image.get_g_element(boxplot::Y_LABEL).style().stroke_color(black);
-
         image.get_g_element(boxplot::Y_LABEL).push_back(new
-            text_element(12, (plot_y2 + plot_y1)/2.,
-            y_label_info.text(),
-            12, center_align, -90));
+            text_element(12, (plot_y2 + plot_y1) /2.,
+            y_label_info.text(), 12, "", "", "", "", "",center_align, upward));
     }
 
 
-    void _calculate_transform()
+    void calculate_transform()
     {
         y_scale = -(plot_y2-plot_y1)/(y_max-y_min);
  	    y_shift = plot_y1 - (y_max *(plot_y1-plot_y2)/(y_max-y_min));
     }
 
-    void _calculate_plot_window()
+    void calculate_plot_window()
     {
         plot_x1 = plot_y1 = 0;
 
-        plot_x2 = image.get_x_size();
-        plot_y2 = image.get_y_size();
+        plot_x2 = image.x_size();
+        plot_y2 = image.y_size();
 
         if(use_x_label)
         {
@@ -370,12 +388,12 @@ private:
 
         if(use_y_label)
         {
-            plot_x1 += (int)(y_label_info.font_size() * 1.5);
+            plot_x1 += (int)(y_label_info.font_size() * text_margin);
         }
 
         if(use_title)
         {
-            plot_y1 += (int)(title_info.font_size() * 1.5);
+            plot_y1 += (int)(title_info.font_size() * text_margin);
         }
 
         // Give the plot window a natural bit of padding.
@@ -385,11 +403,10 @@ private:
         plot_y2-=5;
 
         plot_x1 +=
-            y_major_length > y_minor_length ?
-            y_major_length :
-            y_minor_length ;
+            y_minor_tick_length_ > y_minor_tick_length_ ?
+            y_minor_tick_length_ : y_minor_tick_length_ ;
 
-        plot_y2 -= x_major_length + 10;
+        plot_y2 -= x_major_tick_length_ + 10;
 
         image.get_g_element(boxplot::PLOT_BACKGROUND).push_back(
                 new rect_element(plot_x1, plot_y1,
@@ -397,13 +414,12 @@ private:
 
     }
 
-    void _draw_whiskers(double min, double max, double length, double x,
+    void draw_whiskers(double min, double max, double length, double x,
         const svg_style& min_whisker, const svg_style& max_whisker,
         const svg_style& axis_whisker)
     {
         // Set up document structure for whiskers.
-        g_element& g_whisk_ptr = image.get_g_element(boxplot::WHISKER)
-            .add_g_element();
+        g_element& g_whisk_ptr = image.get_g_element(boxplot::WHISKER).add_g_element();
 
         // Set colors for whiskers.
         g_whisk_ptr.add_g_element().style()
@@ -425,8 +441,8 @@ private:
             .fill_color(axis_whisker.fill_color())
             .stroke_width(axis_whisker.stroke_width());
 
-        _transform_y(min);
-        _transform_y(max);
+        transform_y(min);
+        transform_y(max);
 
         double half_length = length / 2.;
 
@@ -443,7 +459,7 @@ private:
         g_whisk_ptr.clip_id(plot_window_clip);
     }
 
-    void _draw_box(double q1, double q3, double x, double width,
+    void draw_box(double q1, double q3, double x, double width,
         const svg_style& box_style)
     {
         g_element& g_ptr = image.get_g_element(boxplot::MEDIAN)
@@ -453,7 +469,7 @@ private:
                      .stroke_width(box_style.stroke_width())
                      .fill_color(box_style.fill_color());
 
-        _transform_y(q1); _transform_y(q3);
+        transform_y(q1); transform_y(q3);
 
         double half_width = width/2;
 
@@ -463,10 +479,10 @@ private:
         g_ptr.clip_id(plot_window_clip);
     }
 
-    void _draw_median(double median, double x_offset, double box_width,
+    void draw_median(double median, double x_offset, double box_width,
         const svg_style& median_style)
     {
-        _transform_y(median);
+        transform_y(median);
 
         g_element& g_ptr = image.get_g_element(boxplot::MEDIAN)
             .add_g_element();
@@ -483,7 +499,7 @@ private:
         g_ptr.clip_id(plot_window_clip);
     }
 
-    void _draw_outliers(double x, const std::vector<double>& outliers,
+    void draw_outliers(double x, const std::vector<double>& outliers,
         const std::vector<double>& extreme_outliers,
         const plot_point_style& mild_style, const plot_point_style& extreme_style)
     {
@@ -503,13 +519,13 @@ private:
 
         for(i = outliers.begin(); i != outliers.end(); ++i)
         {
-            _transform_y(temp = *i);
+            transform_y(temp = *i);
             g_mild_ptr.circle(x, temp, 2);
         }
 
         for(i = extreme_outliers.begin(); i != extreme_outliers.end(); ++i)
         {
-            _transform_y(temp = *i);
+            transform_y(temp = *i);
             g_ext_ptr.circle(x, temp, 2);
         }
 
@@ -518,36 +534,35 @@ private:
         g_ext_ptr.clip_id(plot_window_clip);
     }
 
-    void _draw_boxplot(const svg_boxplot_series& series, double x_offset)
+    void draw_boxplot(const svg_boxplot_series& series, double x_offset)
     {
-        _draw_whiskers(series.whisker_min, series.whisker_max,
+        draw_whiskers(series.whisker_min, series.whisker_max,
                        series.whisker_length, x_offset,
                        series.min_whisker_style, series.max_whisker_style,
                        series.axis_style);
 
-        _draw_box(series.q1, series.q3, x_offset, series.box_width,
+        draw_box(series.q1, series.q3, x_offset, series.box_width,
             series.box_style);
 
-        _draw_median(series.median, x_offset,
+        draw_median(series.median, x_offset,
             series.box_width - series.box_style.stroke_width(),
             series.median_style);
 
-        _draw_outliers(x_offset, series.outliers, series.extreme_outliers,
+        draw_outliers(x_offset, series.outliers, series.extreme_outliers,
             series.mild_outlier, series.ext_outlier);
     }
 
-    void _update_image()
+    void update_image()
     {
-        _clear_all();
+        clear_all();
 
         // Draw background.
         image.get_g_element(boxplot::BACKGROUND).push_back(
-                     new rect_element(0, 0, image.get_x_size(),
-                     image.get_y_size()));
+           new rect_element(0, 0, image.x_size(), image.y_size()) );
 
-        _draw_title();
-        _calculate_plot_window();
-        _calculate_transform();
+        draw_title();
+        calculate_plot_window();
+        calculate_transform();
 
         // Define the clip path for the plot window.
         // We don't want to allow overlap of the plot window lines,
@@ -557,39 +572,47 @@ private:
                                      plot_x2 - plot_x1 - 2, plot_y2 - plot_y1 - 2),
                                      plot_window_clip);
 
-        _draw_y_axis();
-        _draw_x_axis();
+        draw_y_axis();
+        draw_x_axis();
 
         if(use_x_label)
         {
-            _draw_x_label();
+            draw_x_label();
         }
 
         if(use_y_label)
         {
-            _draw_y_label();
+            draw_y_label();
         }
 
         for(unsigned int i=0; i<series.size(); ++i)
         {
-            _draw_boxplot(series[i],
+            draw_boxplot(series[i],
                 plot_x1 + (plot_x2-plot_x1)*((double)(i + 1)) / (double)(series.size() + 1));
         }
     }
 
 public:
 
-svg_boxplot():        title_info(0, 0, "Plot of data", 30),
-                      x_label_info(0, 0, "X Axis", 12),
-                      y_label_info(0, 0, "Y Axis", 12),
+svg_boxplot()
+:
+  title_info(0, 0, "Plot of data", 30),
+  x_label_info(0, 0, "X Axis", 12,"Lucida Sans Console", "", "", "", "", center_align, horizontal),
+  y_label_info(0, 0, "Y Axis", 12, "Lucida Sans Console", "", "", "", "", center_align, upward),
+  //  x_units_info(0, 0, "(units)", 12, "Lucida Sans Console", "", "", "", "", center_align, horizontal),
+  //  y_units_info(0, 0, "(units)", 12, "Lucida Sans Console", "", "", "", "", center_align, upward),
+
                       y_min(0), y_max(100),
-                      y_major(10), use_y_label(true),
-                      use_x_label(true), x_major_length(10),
-                      y_minor_length(5), y_num_minor(1),
-                      y_major_length(20),
-                      plot_window_clip("__clip_window"),
+                      y_major(10),
+                      use_y_label(true),
+                      use_x_label(true), 
+                      x_major_tick_length_(10),
+                      y_num_minor_ticks_(1),
+                      y_minor_tick_length_(20),
+                      plot_window_clip("__clip_window"), // TODO Why the __???
                       use_x_major_labels(true),
-                      use_title(true), use_y_major_labels(true)
+                      use_title(true),
+                      use_y_major_labels(true)
 
 {
     image.image_size(500, 350);
@@ -601,21 +624,11 @@ svg_boxplot():        title_info(0, 0, "Plot of data", 30),
     }
 
     // Set boxplot color defaults.
-    image.get_g_element(boxplot::BACKGROUND)
-        .style().fill_color(white);
-
-    image.get_g_element(boxplot::PLOT_BACKGROUND)
-        .style().fill_color(white).stroke_color(black);
-
-    image.get_g_element(boxplot::X_TICKS)
-        .style().stroke_color(black).stroke_width(2);
-
-    image.get_g_element(boxplot::Y_MINOR_TICKS)
-        .style().stroke_color(black).stroke_width(1);
-
-    image.get_g_element(boxplot::Y_MAJOR_TICKS)
-        .style().stroke_color(black).stroke_width(2);
-
+    image.get_g_element(boxplot::BACKGROUND).style().fill_color(white);
+    image.get_g_element(boxplot::PLOT_BACKGROUND).style().fill_color(white).stroke_color(black);
+    image.get_g_element(boxplot::X_TICKS).style().stroke_color(black).stroke_width(2);
+    image.get_g_element(boxplot::Y_MINOR_TICKS).style().stroke_color(black).stroke_width(1);
+    image.get_g_element(boxplot::Y_MAJOR_TICKS).style().stroke_color(black).stroke_width(2);
     image.get_g_element(boxplot::X_LABEL).style().stroke_color(black);
     image.get_g_element(boxplot::Y_LABEL).style().stroke_color(black);
     image.get_g_element(boxplot::TITLE).style().stroke_color(black);
@@ -633,13 +646,13 @@ svg_boxplot& load_stylesheet(const std::string& file)
     return *this;
 }
 
-svg_boxplot& write(const std::string& _str)
+svg_boxplot& write(const std::string& str)
 {
-    std::ofstream fout(_str.c_str());
+    std::ofstream fout(str.c_str());
 
     if(fout.fail())
     {
-        throw std::runtime_error("Unable to open "+_str);
+        throw std::runtime_error("Unable to open "+str);
     }
 
     write(fout);
@@ -649,88 +662,88 @@ svg_boxplot& write(const std::string& _str)
 
 svg_boxplot& write(std::ostream& s_out)
 {
-    _update_image();
+    update_image();
 
     image.write(s_out);
 
     return *this;
 }
 
-svg_boxplot& title_on(bool _cmd)
+svg_boxplot& title_on(bool cmd)
 {
-    use_title = _cmd;
+    use_title = cmd;
     return *this;
 }
 
-svg_boxplot& y_label_on(bool _cmd)
+svg_boxplot& y_label_on(bool cmd)
 {
-    use_y_label = _cmd;
+    use_y_label = cmd;
     return *this;
 }
 
-svg_boxplot& x_label_on(bool _cmd)
+svg_boxplot& x_label_on(bool cmd)
 {
-    use_x_label = _cmd;
+    use_x_label = cmd;
     return *this;
 }
 
-svg_boxplot& y_major_labels_on(bool _cmd)
+svg_boxplot& y_major_labels_on(bool cmd)
 {
-    use_y_major_labels = _cmd;
+    use_y_major_labels = cmd;
     return *this;
 }
 
-svg_boxplot& x_labels_on(bool _cmd)
+svg_boxplot& x_labels_on(bool cmd)
 {
-    use_x_major_labels = _cmd;
+    use_x_major_labels = cmd;
     return *this;
 }
 
-svg_boxplot& y_major_tick_color(const svg_color& _col)
+svg_boxplot& y_major_tick_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::Y_MAJOR_TICKS).style().stroke_color(_col);
+    image.get_g_element(boxplot::Y_MAJOR_TICKS).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& x_tick_color(const svg_color& _col)
+svg_boxplot& x_tick_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::X_TICKS).style().stroke_color(_col);
+    image.get_g_element(boxplot::X_TICKS).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& y_minor_tick_color(const svg_color& _col)
+svg_boxplot& y_minor_tick_color(const svg_color& col)
 {
-    image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(_col);
+    image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& title_color(const svg_color& _col)
+svg_boxplot& title_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::TITLE).style().stroke_color(_col);
+    image.get_g_element(boxplot::TITLE).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& background_color(const svg_color& _col)
+svg_boxplot& background_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::BACKGROUND).style().fill_color(_col);
+    image.get_g_element(boxplot::BACKGROUND).style().fill_color(col);
     return *this;
 }
 
-svg_boxplot& background_border_color(const svg_color& _col)
+svg_boxplot& background_border_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::BACKGROUND).style().stroke_color(_col);
+    image.get_g_element(boxplot::BACKGROUND).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& plot_background_color(const svg_color& _col)
+svg_boxplot& plot_background_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::PLOT_BACKGROUND).style().fill_color(_col);
+    image.get_g_element(boxplot::PLOT_BACKGROUND).style().fill_color(col);
     return *this;
 }
 
-svg_boxplot& plot_background_border_color(const svg_color& _col)
+svg_boxplot& plot_background_border_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::PLOT_BACKGROUND).style().stroke_color(_col);
+    image.get_g_element(boxplot::PLOT_BACKGROUND).style().stroke_color(col);
     return *this;
 }
 
@@ -747,9 +760,9 @@ svg_boxplot& y_range(double y1, double y2)
     return *this;
 }
 
-svg_boxplot& y_label(const std::string& _str)
+svg_boxplot& y_label(const std::string& str)
 {
-    y_label_info.text(_str);
+    y_label_info.text(str);
     return *this;
 }
 
@@ -759,175 +772,171 @@ svg_boxplot& image_size(unsigned int x, unsigned int y)
     return *this;
 }
 
-svg_boxplot& y_label_size(unsigned int _size)
+svg_boxplot& y_label_size(unsigned int size)
 {
-    y_label_info.font_size(_size);
+    y_label_info.font_size(size);
     return *this;
 }
 
-svg_boxplot& y_label_color(const svg_color& _col)
+svg_boxplot& y_label_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::Y_LABEL).style().stroke_color(_col);
+    image.get_g_element(boxplot::Y_LABEL).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& title(const std::string& _str)
+svg_boxplot& title(const std::string& str)
 {
-    y_label_info.text(_str);
+    y_label_info.text(str);
     return *this;
 }
 
-svg_boxplot& title_size(unsigned int _size)
+svg_boxplot& title_size(unsigned int size)
 {
-    y_label_info.font_size(_size);
+    y_label_info.font_size(size);
     return *this;
 }
 
-svg_boxplot& x_label(const std::string& _str)
+svg_boxplot& x_label(const std::string& str)
 {
-    x_label_info.text(_str);
+    x_label_info.text(str);
     return *this;
 }
 
-svg_boxplot& x_label_size(unsigned int _size)
+svg_boxplot& x_label_size(unsigned int size)
 {
-    x_label_info.font_size(_size);
+    x_label_info.font_size(size);
     return *this;
 }
 
-svg_boxplot& x_label_color(const svg_color& _col)
+svg_boxplot& x_label_color(const svg_color& col)
 {
-    image.get_g_element(boxplot::X_LABEL).style().stroke_color(_col);
+    image.get_g_element(boxplot::X_LABEL).style().stroke_color(col);
     return *this;
 }
 
-svg_boxplot& y_major_interval(double _inter)
+svg_boxplot& y_major_interval(double inter)
 {
-    y_major = _inter;
-
-    return *this;
-}
-
-svg_boxplot& x_tick_length(unsigned int _length)
-{
-    x_major_length = _length;
-    return *this;
-}
-
-svg_boxplot& y_major_tick_length(unsigned int _length)
-{
-    y_major_length = _length;
-    return *this;
-}
-
-svg_boxplot& y_minor_tick_length(unsigned int _length)
-{
-    y_minor_length = _length;
-    return *this;
-}
-
-svg_boxplot& y_num_minor_ticks(unsigned int _num)
-{
-    y_num_minor = _num;
-    return *this;
-}
-
-svg_boxplot& x_tick_width(unsigned int _width)
-{
-    image.get_g_element(boxplot::X_TICKS).style().stroke_width(_width);
+    y_major = inter;
 
     return *this;
 }
 
-svg_boxplot& y_major_tick_width(unsigned int _width)
+svg_boxplot& x_tick_length(unsigned int length)
 {
-    image.get_g_element(boxplot::Y_MAJOR_TICKS).style().stroke_width(_width);
-
+    x_major_tick_length_ = length;
     return *this;
 }
 
-svg_boxplot& y_minor_tick_width(unsigned int _width)
+svg_boxplot& y_major_tick_length(unsigned int length)
 {
-    image.get_g_element(boxplot::Y_MINOR_TICKS).style().stroke_width(_width);
-
+    y_major_tick_length_ = length;
     return *this;
 }
 
-
-unsigned int get_image_x_size()
+svg_boxplot& y_minor_tick_length(unsigned int length)
 {
-    return image.get_x_size();
+    y_minor_tick_length_ = length;
+    return *this;
 }
 
-unsigned int get_image_y_size()
+svg_boxplot& y_num_minor_ticks(unsigned int num)
 {
-    return image.get_x_size();
+    y_num_minor_ticks_ = num;
+    return *this;
 }
 
-std::string get_title()
+svg_boxplot& x_tick_wide(unsigned int width)
+{
+    image.get_g_element(boxplot::X_TICKS).style().stroke_width(width);
+    return *this;
+}
+
+svg_boxplot& y_major_tick_width(unsigned int width)
+{
+    image.get_g_element(boxplot::Y_MAJOR_TICKS).style().stroke_width(width);
+    return *this;
+}
+
+svg_boxplot& y_minor_tick_width(unsigned int width)
+{
+    image.get_g_element(boxplot::Y_MINOR_TICKS).style().stroke_width(width);
+    return *this;
+}
+
+unsigned int image_x_size()
+{ // TODO is this needed?
+    return image.x_size();
+}
+
+unsigned int image_y_size()
+{
+    return image.x_size();
+}
+
+std::string title()
 {
     return title_info.text();
 }
 
-bool get_x_label()
+bool x_label()
 {
     return use_x_label;
 }
 
-bool get_x_major_labels()
+bool x_major_labels()
 {
     return use_x_major_labels;
 }
 
 // color information
-svg_color get_title_color()
+svg_color title_color()
 {
     return image.get_g_element(boxplot::TITLE).style().stroke_color();
 }
 
-svg_color get_background_color()
+svg_color background_color()
 {
     return image.get_g_element(boxplot::BACKGROUND).style().fill_color();
 }
 
-svg_color get_background_border_color()
+svg_color background_border_color()
 {
     return image.get_g_element(boxplot::BACKGROUND).style().stroke_color();
 }
 
-svg_color get_plot_background_color()
+svg_color plot_background_color()
 {
     return image.get_g_element(boxplot::PLOT_BACKGROUND).style().fill_color();
 }
 
-svg_color get_x_label_color()
+svg_color x_label_color()
 {
     return image.get_g_element(boxplot::X_LABEL).style().stroke_color();
 }
 
-svg_color get_x_tick_color()
+svg_color x_tick_color()
 {
     return image.get_g_element(boxplot::X_TICKS).style().stroke_color();
 }
 
-unsigned int get_x_tick_length()
+unsigned int x_tick_length()
 {
-    return x_major_length;
+    return x_major_tick_length_;
 }
 
-unsigned int get_x_major_tick_width()
+unsigned int x_major_tick_width()
 {
     return image.get_g_element(boxplot::X_TICKS).style().stroke_width();
 }
 
-std::string get_x_label_text()
+std::string x_label_text()
 {
     return x_label_info.text();
 }
 
 svg& get_svg()
 {
-    _update_image();
+    update_image();
 
     return image;
 }
@@ -977,5 +986,3 @@ BOOST_PARAMETER_MEMBER_FUNCTION
 } // namespace svg
 } // namespace boost
 #endif // BOOST_SVG_SVG_BOXPLOT_HPP
-
-

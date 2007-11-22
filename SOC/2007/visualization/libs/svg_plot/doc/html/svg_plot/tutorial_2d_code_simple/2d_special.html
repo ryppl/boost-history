@@ -31,7 +31,7 @@
       2D Special Features</a>
 </h3></div></div></div>
 <a name="svg_plot.tutorial_2d_code_simple.2d_special.y_axis_grid_lines"></a><h5>
-<a name="id686272"></a>
+<a name="id686443"></a>
         <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.y_axis_grid_lines">Y-Axis
         Grid Lines</a>
       </h5>
@@ -71,7 +71,7 @@
 </span>       <span class="special">.</span><span class="identifier">y_minor_grid_color</span><span class="special">(</span><span class="identifier">azure</span><span class="special">);</span> <span class="comment">// lighter color for minor grid.
 </span></pre>
 <a name="svg_plot.tutorial_2d_code_simple.2d_special.external_y_axis_style"></a><h5>
-<a name="id686650"></a>
+<a name="id686821"></a>
         <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.external_y_axis_style">External
         Y Axis Style</a>
       </h5>
@@ -86,19 +86,13 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../../../../../../trunk/doc/html/images/important.png"></td>
 <th align="left">Important</th>
 </tr>
-<tr><td align="left" valign="top">
-<p>
-          </p>
-<p>
-            If the axis is turned off, <code class="computeroutput"><span class="identifier">y_external_style_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> will not turn the axis back on. To do
-            that, you must call <code class="computeroutput"><span class="identifier">axis_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code>
-          </p>
-<p>
-        </p>
-</td></tr>
+<tr><td align="left" valign="top"><p>
+          If the axis is turned off, <code class="computeroutput"><span class="identifier">y_external_style_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code>
+          will not turn the axis back on. To do that, you must call <code class="computeroutput"><span class="identifier">axis_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code>
+        </p></td></tr>
 </table></div>
 <a name="svg_plot.tutorial_2d_code_simple.2d_special.fill_the_area_between_the_plot_and_the_axis"></a><h5>
-<a name="id686788"></a>
+<a name="id686955"></a>
         <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.fill_the_area_between_the_plot_and_the_axis">Fill
         the area between the plot and the axis</a>
       </h5>
@@ -118,7 +112,7 @@
         <span class="inlinemediaobject"><img src="../../images/2d_area_fill.png" alt="2d_area_fill"></span>
       </p>
 <a name="svg_plot.tutorial_2d_code_simple.2d_special.curve_interpolation"></a><h5>
-<a name="id686993"></a>
+<a name="id687160"></a>
         <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.curve_interpolation">Curve
         Interpolation</a>
       </h5>
@@ -141,25 +135,23 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../../../../trunk/doc/html/images/warning.png"></td>
 <th align="left">Warning</th>
 </tr>
-<tr><td align="left" valign="top">
-<p>
-          </p>
-<p>
-            The <code class="computeroutput"><span class="identifier">_bezier_curve</span></code> feature
-            still displays undesired behavior in extreme circumstances. Do not use
-            this feature with curves that have a numeric_limit value (<code class="computeroutput"><span class="special">-</span><span class="identifier">NaN</span></code>,
-            for example), or with data that has high irregularity in X-Axis spacing
-            (for example, a clump of points between (0, 1) on the X axis, with the
-            next one at 100 on the X axis.)
-          </p>
-<p>
-        </p>
-</td></tr>
+<tr><td align="left" valign="top"><p>
+          The <code class="computeroutput"><span class="identifier">_bezier_curve</span></code> feature
+          still displays undesired behavior in extreme circumstances. Do not use
+          this feature with curves that have a numeric_limit value (<code class="computeroutput"><span class="special">-</span><span class="identifier">NaN</span></code>,
+          for example), or with data that has high irregularity in X-Axis spacing
+          (for example, a clump of points between (0, 1) on the X axis, with the
+          next one at 100 on the X axis.)
+        </p></td></tr>
 </table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">

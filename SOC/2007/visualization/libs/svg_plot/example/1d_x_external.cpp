@@ -38,7 +38,8 @@ int main()
     my_plot.x_major_grid_color(black)
            .x_minor_grid_color(lightgray);
 
-    my_plot.x_external_style_on(true);
+    my_plot.x_ticks_down(true); // external.
+    my_plot.y_ticks_left(true); // external.
 
     // Write to plot.
 	my_plot.plot(dan_times, "Dan", blue);

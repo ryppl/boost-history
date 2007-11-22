@@ -68,7 +68,7 @@ int main()
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
 	       .x_minor_tick_width(1)
-	       .x_num_minor_ticks(3)
+	       .x_num_minor__ticks(3)
 	
 	//Y axis settings.
 	       .y_major_interval(10)
@@ -80,7 +80,7 @@ int main()
 	my_plot.plot(data1, "Sqrt(x)",  red);
 	my_plot.plot(data2, "-2 + x^2", orange);
 	my_plot.plot(data3, "-1 + 2x",  yellow,
-		     _point_style = square, _size = 5);
+		     point_style = square, size = 5);
 
     my_plot.write("./2d_full.svg");
 

@@ -66,7 +66,7 @@
         <span class="inlinemediaobject"><img src="../../images/1d_simple.png" alt="1d_simple"></span>
       </p>
 <a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax"></a><h5>
-<a name="id679420"></a>
+<a name="id679578"></a>
         <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax">A
         Note On Syntax</a>
       </h5>
@@ -83,7 +83,7 @@
 </span></pre>
 <p>
         Within all of the plot classes, 'chaining' works the same way. Equivalent
-        code for the example is as follows:
+        tradional code for the example is as follows:
       </p>
 <pre class="programlisting">
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">);</span>
@@ -91,17 +91,17 @@
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
 <p>
-        Chaining allows you to group related settings together, and avoids relying
-        on the order of arguments in ordinary function calls that would clearly become
-        impracticable with dozens of arguments required to set all the myriad of
-        plot options.
+        Chaining allows you to avoid repeatedly typing <code class="computeroutput"><span class="identifier">myplot</span><span class="special">.</span></code> and to easily group related settings like
+        plot window, axes, ... together, and avoids relying on the order of arguments
+        in ordinary function calls. Order would clearly become impracticable with
+        dozens of arguments required to set all the myriad plot options.
       </p>
 <p>
         In the long run, I think you will find that chaining helps organize your
         code to read more clearly!
       </p>
 <a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown"></a><h5>
-<a name="id679813"></a>
+<a name="id679988"></a>
         <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown">Simple
         1D Example Breakdown</a>
       </h5>
@@ -163,7 +163,11 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">

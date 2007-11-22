@@ -7,7 +7,7 @@
 <link rel="start" href="../../index.html" title="SVG_Plot">
 <link rel="up" href="../interface.html" title=" Public Interfaces">
 <link rel="prev" href="svg_2d_plot_interface.html" title=" svg_2d_plot Public Interface">
-<link rel="next" href="../acknowledgements.html" title=" Acknowledgements">
+<link rel="next" href="../implementation.html" title=" Implementation &amp; Rationale">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,14 +20,14 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="svg_2d_plot_interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../acknowledgements.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="svg_2d_plot_interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../implementation.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="svg_plot.interface.svg_boxplot_interface"></a><a href="svg_boxplot_interface.html" title=" svg_boxplot Public Interface"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id702792"></a><p class="title"><b>Table 18. Boxplot Miscellaneous</b></p>
+<a name="id703972"></a><p class="title"><b>Table 18. Boxplot Miscellaneous</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Miscellaneous">
 <colgroup>
 <col>
@@ -102,7 +102,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id703086"></a><p class="title"><b>Table 19. Boxplot Commands</b></p>
+<a name="id704266"></a><p class="title"><b>Table 19. Boxplot Commands</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Commands">
 <colgroup>
 <col>
@@ -190,7 +190,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id703415"></a><p class="title"><b>Table 20. Boxplot Colors</b></p>
+<a name="id704595"></a><p class="title"><b>Table 20. Boxplot Colors</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Colors">
 <colgroup>
 <col>
@@ -341,7 +341,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id704147"></a><p class="title"><b>Table 21. Boxplot Axis Information</b></p>
+<a name="id705328"></a><p class="title"><b>Table 21. Boxplot Axis Information</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Axis Information">
 <colgroup>
 <col>
@@ -526,7 +526,7 @@
         (Note: Getters omitted for now - TODO)
       </p>
 <a name="svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id705049"></a>
+<a name="id706229"></a>
         <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
@@ -537,7 +537,7 @@
         named parameters, as well as a deduced parameter.
       </p>
 <div class="table">
-<a name="id705110"></a><p class="title"><b>Table 22. Required parameter</b></p>
+<a name="id706290"></a><p class="title"><b>Table 22. Required parameter</b></p>
 <div class="table-contents"><table class="table" summary="Required parameter">
 <colgroup>
 <col>
@@ -600,7 +600,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id705231"></a><p class="title"><b>Table 23. Optional Parameters</b></p>
+<a name="id706411"></a><p class="title"><b>Table 23. Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Optional Parameters">
 <colgroup>
 <col>
@@ -860,21 +860,21 @@
             <p>
               A class or that contains a conversion function. You will not have to
               worry about this, unless you are trying to accomplish stuff like plotting
-              a container of a user-defined class that does not have a conversion
-              to double. For example: 
+              a container of a user-defined class, for example human, that does not
+              have a conversion to double. For example: 
 </p>
 <pre class="programlisting">
 <span class="keyword">class</span> <span class="identifier">my_functor</span>
 <span class="special">{</span>
   <span class="identifier">typdef</span> <span class="keyword">double</span> <span class="identifier">result_type</span><span class="special">;</span>
 
-  <span class="keyword">double</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">human</span><span class="special">&amp;</span> <span class="identifier">_hum</span><span class="special">)</span> <span class="keyword">const</span>
+  <span class="keyword">double</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">human</span><span class="special">&amp;</span> <span class="identifier">body</span><span class="special">)</span> <span class="keyword">const</span>
   <span class="special">{</span>
-    <span class="keyword">return</span> <span class="keyword">double</span><span class="special">(</span><span class="identifier">_hum</span><span class="special">.</span><span class="identifier">age</span><span class="special">());</span>
+    <span class="keyword">return</span> <span class="keyword">double</span><span class="special">(</span><span class="identifier">body</span><span class="special">.</span><span class="identifier">age</span><span class="special">());</span>
   <span class="special">}</span>
 <span class="special">}</span>
 
-<span class="comment">// snip
+<span class="comment">// ...
 </span>
 <span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"People"</span><span class="special">,</span> <span class="identifier">functor</span> <span class="special">=</span> <span class="identifier">my_functor</span><span class="special">());</span>
 </pre>
@@ -884,8 +884,8 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">boost_default_convert</span></code>
-              (the default) is sufficient in all cases where the data stored in the
-              container can be directly cast to a double.
+              (default) is sufficient in all cases where the data stored in the container
+              can be directly cast to a double.
             </p>
             </td>
 </tr>
@@ -896,11 +896,15 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="svg_2d_plot_interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../acknowledgements.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="svg_2d_plot_interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../implementation.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -36,14 +36,15 @@ development list, or email me at jakevoytko (at) gmail (dot) com
 above.]
 [tip These blocks contain information that you may find helpful while coding.]
 [important These contain information that is imperative to understanding a 
-concept. Failure to follow these blocks will likely result in undesired behavior. 
+concept.
+Failure to follow suggestions in these blocks will probably result in undesired behavior. 
 Read all of these you find.]
 [warning It is imperative that you follow these. Failure to do so will lead to 
-incorrect, and likely undesired, results in the plot]
+incorrect, and likely undesired, results in the plot.]
 
 And the first admonishment I will use is as follows:
 
-[important This is not currently a Boost library. It is a
+[important This is not (yet) a Boost library. It is a
 [@http://code.google.com/soc/2007/boost/about.html GSoC project]
 whose mentor organization is Boost.]
 
@@ -65,7 +66,10 @@ will currently be written to a
 [@http://www.w3.org/TR/REC-xml/#sec-comments XML specification]
 and file format for describing two-dimensional vector graphics.
 
-SVG files (.svg) can be viewed with a browser like Mozilla Firefox (newer version), Adobe Acrobat Reader, many other graphics program, and by Microsoft Internet Explorer, provided a suitable
+SVG files (.svg) can be viewed with a browser like Mozilla Firefox (newer version),
+[@http://www.adobe.com/products/acrobat/readstep2.htmlAdobe Acrobat Reader],
+many other graphics program, and by Microsoft Internet Explorer,
+provided a suitable
 [@http://www.adobe.com/svg/ Adobe SVG Veiwer plug-in for SVG files] is installed.
 
 The goals of the project are:
@@ -130,7 +134,9 @@ as well as a number of colors that are
 `svg_color_constant` is simply an enumerated list.
 
 The constants are defined at
-[@..\..\..\..\visualization\boost\svg_plot\svg_color.hpp svg_color.hpp].
+[@../../../../boost/svg_plot/svg_color.hpp svg_color.hpp].
+
+Examples of colors are at [@../../../svg_plot/example/svg_colors.cpp svg_colors.cpp].
 
 The 
 [@http://www.w3.org/TR/SVG/types.html#ColorKeywords colors are defined by the SVG standard here].
@@ -153,12 +159,14 @@ This comes in handy for defining defaults for functions, for example.
   
 [note `svg_color` has a constructor for `svg_color_constant`, so you can use
 a `svg_color_constant` in place of a `svg_color` and it will be implicitly
-converted. However, there is not currently an 
+converted. However, there is *not* currently an 
 `svg_color::operator=(svg_color_constant)` overload, so 
 ``
 svg_color my_color = red;
 `` 
-does not work.]
+does not have the desired effect, and nor does
+`cout << red << endl;`
+output the expected RGB(255,0,0) but instead 119 the value of the enum!]
 
 [h4 `svg_color` interface]
 
@@ -197,7 +205,8 @@ conversion is implicit.
 
 All color information is stored in RGB format as three 'unsigned char' in a `svg_color` struct.
 The  rationale for storing information in RGB format is because it is precise,
-and is always representable the exact same way. Storing a floating-point percentage 
+and is always representable the exact same way.
+Storing a floating-point percent or fraction 
 would introduce the possibility of undesirable rounding error.
 
 [endsect] [/section:color Color]
@@ -246,14 +255,18 @@ operator, and output operator in the following code works:
 
   std::cout << a + b + c + d << std::endl;  // prints 12
 
-Within all of the plot classes, 'chaining' works the same way. Equivalent 
-code for the example is as follows:
+Within all of the plot classes, 'chaining' works the same way.
+Equivalent tradional code for the example is as follows:
 
   my_plot.title("Race Times");
   my_plot.legend_on(true);
   my_plot.x_range(-1, 11);
   
-Chaining allows you to group related settings together, and avoids relying on the order of arguments in ordinary function calls that would clearly become impracticable with dozens of arguments required to set all the myriad of plot options.
+Chaining allows you to avoid repeatedly typing `myplot.`
+and to easily group related settings like plot window, axes, ... together,
+and avoids relying on the order of arguments in ordinary function calls.
+Order would clearly become impracticable with dozens of arguments required
+to set all the myriad plot options.
 
 In the long run, I think you will find that chaining helps organize your code 
 to read more clearly! 
@@ -413,6 +426,8 @@ This will produce the following image:
 [$images/1d_x_grid.png]
 
 [h4 X-Axis External Style]
+
+TODO this has ben changed to x_up_ticks and x_down_ticks and y_left_ticks and y_right_ticks.
 
 By default the 'ticks' face into the plot area.
 Alternatively, you can use an 'external' style,
@@ -852,7 +867,7 @@ these points will appear at the bottom of the graph.
 Here is an example of numeric limits handling in action:
 
 [$images/2d_limit.png] [\TODO this file is missing!]
-[endsect][/section:numerical_limits]
+[endsect] [/section:numerical_limits]
 
 [section:behavior_stylesheets Stylesheets]
 Stylesheets currently have only a single way of being used with the program: they are parsed by the `svg` class, and if the stylesheet parses correctly, they are loaded directly into the SVG file. I recognize that it may also be desired to link to an external stylesheet, but this presents a few problems.
@@ -903,19 +918,20 @@ circle
 None of the power of CSS is compromised (I believe), but it becomes more verbose.
 ] [/caution]
 
-[endsect][/section:behavior_stylesheets]
-[endsect][/section:behavior Behavior]
+[endsect] [/section:behavior_stylesheets]
+[endsect] [/section:behavior Behavior]
 
 [section:plot_defaults Plot Defaults]
 
 [section:1d_defaults `svg_1d_plot` Defaults]
-You may have noticed that there are certain defaults that are true at the 
-beginning of the plotting. Here is a table of the defaults:
+There are certain defaults, tabulated below, that are true at the beginning of the plotting.
 
 [table Default Values
   [[object] [Default value] [Rationale]]
   [[All colors not defined in this table] [black] [Coloring, if any, will be highly dependent on user needs.]]
   [[Axis] [On, internal style] [Most graphs include an axis of some kind. The internal axis style is used because this seems to be the default behavior in many textbooks I have owned.]]
+  [[Coordinate precision] [3 decimal digits] [Sufficient 1 in 1000 precision for typical small plots. (Higher precision will increase svg file size).]]
+  
   [[Distance between major X ticks] [`3 units`] [Reasonably fits into a plot window.]]
   [[Font size of the legend title] [12] [Reasonable when paired with the image size.]]
   [[Font size of the X Label] [12] [Reasonable when paired with the image size.]]
@@ -986,28 +1002,43 @@ beginning of the plotting. Here is a table of the defaults:
 [section:interface Public Interfaces]
 [section:svg_interface `svg` Public Interface]
 [table class svg
-  [[Signature] [Description] [Notes]]
-  [[`svg()`] [Constructor] [The default image size is (400, 400).]]
+  [[Signature] [Description] [Notes & Examples]]
+  [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
+  
+  [[`svg& coord_precision(int)`] [Sets the precision output for coordinates (decimal digits)][default 3, but for mobiles, 2 might suffice.]]
+  [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
+  [[`svg& copyright_holder(const std::string)`] [Set copyright holder for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+<meta name="copyright" content="Paul A. Bristow" />]]
+  [[`svg& copyright_date(const std::string)`] [Set copyright date for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+<meta name="date" content="2007" />]]
+  [[`svg& description(const std::string)`] [Sets description for the SVG XML document, as comment and XML.][<!-- My Document description --> <desc>My Document description</desc>]]
+  [[`svg& document_title(const std::string)`] [Sets title for the SVG XML document (not the plot)][<title>My Document title</title>]]
+  [[`svg& license(const std::string, const std::string, const std::string, const std::string)`][Set license terms (if any): reproduction, distribution, attribution, commercialuse]["permits" (default), "requires", or "prohibits".]
+  [[1is_license(bool)][Adds a typical permissive Boost-like license.][permits reproduction & distribution but requires atribution.]]
+  [[`get_g_element`] [Class derived from svg_element.] [Graph element: line, circle, rect... Node element of document tree.]]
   [[`g_element& add_g_element()`] [Adds a g_element at the root of the document tree. Acts as a `push_back()`] [Returns the `g_element` that is pushed back. This allows you to do something like the following: `image.add_g_element().line(/**/).line(/**/).rect(/**/);  `
   which adds two lines and a rectangle to the g_element that was just created.]]
   [[`svg& circle(double x, double y, unsigned int radius = 5)`] [Adds a point at (x,y) in the root level of the document][If the user is calling the circle method, odds are they would prefer a real circle instead of a degenerate circle (a point). 5 is as good a default as any other, and the user is unlikely want a point if they are making this call.]]
   [[`g_element& get_g_element(int)`] [Gets the g_element at the index specified.] [Gives a runtime error if you specify an index that does not contain a `g_element`. An iterator interface to access these elements might be useful.]]
-  [[`unsigned int get_x_size()`] [Returns the width of the image (pixels).] []]
-  [[`unsigned int get_y_size()`] [Returns the height of the image (pixels).] []]
+  [[`svg& x_size(unsigned int)`] [Sets the width of the image (pixels).] []]
+  [[`svg& y_size(unsigned int)`] [Sets the height of the image (pixels).] []]
+  [[`unsigned int x_size()`] [Returns the width of the image (pixels).] []]
+  [[`unsigned int y_size()`] [Returns the height of the image (pixels).] []]
   [[`svg& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced,
   (pixels).][]]
   [[`svg& line(double x1, double y1, double x2, double y2)`] [Adds a line from (x1,y1) to (x2,y2) in the root level of the document.][]]
-  [[`path_element& path()`] [Pushes a `path_element` to the back of the tree and returns a reference to it. This allows you to do the following:
+  [[`path_element& path()`]
+  [Pushes a `path_element` to the back of the tree and returns a reference to it.
+  This allows chaining, for example:
 ``
 path_element& my_path = image.path();
 
 my_path.M(3, 3).l(150, 150);
 ``
-I'm open to suggestions for how to improve this process.
 ]]
   [[`svg& rect(double x1, double y1, 
-               double width, double height)`] [Adds a rectangle at point (x1, y1) that has width `width` and height `height`][]]
-  [[`svg& text(double x, double y, std::string text)`] [Adds text `text` at (x,y) in the root level of the document][]]
+               double width, double height)`] [Adds a rectangle at point (x1, y1) that has  `width` wide and `height` high.][]]
+  [[`svg& text(double x, double y, std::string text)`] [Adds string `text` at (x,y) in the root level of the document][]]
   [[`svg& write(const std::string&)`] [Writes the document to the file represented by the argument.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
   [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]]
 ]
@@ -1018,6 +1049,11 @@ I'm open to suggestions for how to improve this process.
   [[Signature] [Description]]
   [[`svg_1d_plot()`] [See the defaults section for further details]]
   [[`svg_1d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced (pixels)]]
+  [[`svg_1d_plot& coord_precision(int)`] [Sets the precision output for coordinates (decimal digits, default 3).]]
+  [[`svg_1d_plot& document_title(std::string)`] [Sets title for the SVG XML document (not the plot). <title>My Document title</title>]]
+  [[`svg_1d_plot& description(std::string)`] [Sets description for the SVG XML document, as comment and XML, for example: <!-- My Document description --> 
+<desc>My Document description</desc>]]
+  
   [[`svg_1d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.]]
   [[`svg_1d_plot& title(const std::string&)`] [Sets the string to be used for the title.]]
   [[`svg_1d_plot& title_font_size(unsigned int)`] [Sets the font size for the title.]]
@@ -1330,25 +1366,322 @@ few extra named parameters, as well as a deduced parameter.
 [[ext_outlier_style] [`const plot_point_style&`] [Styles outliers more than 3 IQRs away from the box.] [`plot_point_style(white, black, 1)`]]
 [[whisker_length] [unsigned int] [Determines how long the whiskers at the end of the data range line will be] [30]]
 [[box_width] [unsigned int] [Determines the width of the box.] [60]]
-[[functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a container of a user-defined class that does not have a conversion to double. For example:
+
+[[functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a container of a user-defined class, for example human, that does not have a conversion to double. For example:
 ``
 class my_functor
 {
   typdef double result_type;
 
-  double operator()(const human& _hum) const
+  double operator()(const human& body) const
   {
-    return double(_hum.age());
+    return double(body.age());
   }
 }
 
-// snip
+// ...
 
 plot(my_data, "People", functor = my_functor());
-``
-][`boost_default_convert` (the default) is sufficient in all cases where the data stored in the container can be directly cast to a double.]]]
-[endsect][/section:svg_2d_plot_interface]
-[endsect][/section:interface]
+``]
+[`boost_default_convert` (default) is sufficient in all cases where the data stored in the container can be directly cast to a double.]]
+] [/ table Required parameter]
+[endsect] [/section:svg_2d_plot_interface]
+[endsect] [/section:interface]
+
+[section:implementation Implementation & Rationale]
+
+This section provide more information about this implementation
+and some of the rationale for desing decisions.
+
+[h4 SVG Specification]
+
+[@http://www.w3.org/TR/SVG/ SVG version 1.1]
+was used in the design of this version but
+[@http://www.w3.org/TR/SVG12/ SVG 1.2 draft specification]
+is also available and appears to be final and designed to be backward compatible.
+No changes that affect the code produced
+have been detected from a quick perusal of this document.
+It is probable but untested that the svg files produced will also comply
+with the [@http://www.w3.org/TR/SVGMobile12/ Tiny svg for mobiles specification].
+
+[h4 Design]
+
+SVG would be a flat format if it weren't for
+the <g> elements: these make it parse into a tree.
+
+If each element has its own style (fill, stroke etc)
+then the .svg file size would be increased.
+(This style is used by other packages that output svg).
+
+So the [@http://www.w3.org/TR/SVG/struct.html#GElement group element]
+is used with each type given an id to allow reference back to it.
+
+svg_style_details.hpp contains a list of these groups,
+for example: PLOT_X_AXIS, PLOT_TITLE... indexing an array of string
+document id "yAxis", "title"...
+
+and these can be seen, with style information in the output, for example:
+
+  <g id="yAxis" stroke="rgb(0,0,0)"></g>
+
+  <g id="title">
+  <text x="250" y="20" text-anchor=" middle" font-size="20">Demo 1D plot</text></g>
+
+In the general case, the most that occurs grouped together is the
+style information: axis lines all share the same style information,
+points in a series all share the same color information, and this is
+also a logical grouping. One can can add a series, and then come back later
+and change the <g> element above the points, which is a single change,
+and have the change reflected on every point in the series. It seems
+this is the most logical way to represent the data in memory.
+
+
+
+
+
+[h4 Economising on .svg File Size]
+
+Some of the factors affecting the file size are:
+
+# Excessive precision of data points.
+
+If plots are to be viewed only at a modest size,
+then the precision of x and y coordinates
+does not need to be higher than about 1 in 1000,
+so a precision of about 3 decimal digits will suffice.
+
+A default of 3 decimal digits has been chosen,
+but the precision can be controlled to permit a higher resolution,
+for example on a map that is printed at 2000 dpi.
+or even only 2 decimal digits for a display on a mobile,
+where file transfer speed may make reducing file size important.
+
+# Excessive data points.
+When plotting functions, it is sensible to avoid using more data points
+than are justified by the resolution.  Again 1 in 1000 is a typical number,
+and by using bezier curve fitting, as few as 100 points should be sufficient
+to produce a visibly perfectly smooth curve for 'well-behaved' functions.
+
+Plotting extremely large datasets from files may cause memory overflow,
+as with any STL container held in memory.
+It may be necessary to perform some averaging or smoothing,
+or just using a 'stride' to select, for example, every 100th value
+to be plotted.
+
+# Redundant style specifications.
+
+The use of the g or group element has been used to try to reduce
+repeated (and thus redundant) style specifications.
+More efficient use of groups may be possible.
+
+# Not using default style and attributes where possible.
+
+Some effort has been made to use defaults, but more may be possible.
+
+[h4 Adding document information to the svg Image files]
+
+Several ways of adding useful information to the svg document are provided.
+If the strings are null (the default) nothing is output.
+
+Member function svg& description(const std::string) allows output like:
+
+  <desc>My Document description</desc>
+
+  svg& document_title(const std::string)
+
+  <title>My Document title</title>
+
+(Note that this is *not* the same as the title of the plot.)
+
+
+[h4 Adding Copyright and License conditions for the SVG Image files]
+
+In general, setting values for items like copyright_holder will ensure that
+they appear in the SVG document both as XML and as XML comment.
+If none are set, nothing will be output, to minimize file size.
+
+[@http://www.w3.org/TR/2004/WD-SVG12-20041027/nonvisual.html www.w3.org/TR/2004/WD-SVG12-20041027]
+discusses primary documents, of type .svg in section 17.3
+Adding Copyright information to an SVG document:
+SVG encourages the use of a common metadata format for inclusion of copyright information.
+Metadata relevant to the data copyright of the entire document
+should be added to metadata element of the topmost svg element.
+This allows the author to unambiguously state the licensing terms for the entire document.
+The scheme may also be used elsewhere in the document,
+for pieces that have different licensing. For example,
+an SVG font may have specific licensing details expressed in its own metadata element.
+
+Note that inclusion of this metadata does not provide the author with a method
+in which to protect or enforce their copyright,
+it simply bundles the copyright information with the content in a defined manner.
+Providing methods, technical or non-technical, for data protection
+is currently beyond the scope of the SVG specification.
+
+This does not exclude the use of other metadata schemes.
+
+A simple way of adding metadata for copyright is provided by functions to set
+  
+    copyright_holder(std::string);
+    copyright_date(std::string);
+  
+(as well as description and document_title, and .svg filename if any).
+  
+For example, setting these will incorporate an XML comment
+  
+   <!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+ 
+and also as meta data:
+ 
+   <meta name="copyright" content="Paul A. Bristow" />
+   <meta name="date" content="2007" />
+
+The Creative Commons Metadata Set is also provided as an option in this implementation,
+following [@http://www.ibm.com/developerworks/xml/library/x-think18.html this example.]
+
+The [@http://creativecommons.org/about/licenses Creative Commons License] is one method
+of providing license terms in a machine-readable format.
+
+Typical data added to the file would be XML like this:
+  
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/"
+             xmlns:dc="http://purl.org/dc/elements/1.1/"
+             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:work rdf:about="filename.svg">        
+        <!-- insert filename or title here -->
+        <dc:title>Plot title</dc:title>
+        <dc:creator>Boost.Plot</dc:creator>
+        <dc:author>Paul A. Bristow</dc:author>
+        <dc:format>application/xhtml+xml+svg</dc:format>
+          <cc:license rdf:about="http://creativecommons.org/licenses/by-sa/.0/">
+             <cc:requires rdf:resource="http://web.resource.org/cc/Notice"/>
+             <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+             <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+             <cc:requires rdf:resource="http://web.resource.org/cc/Attribution"/>
+             <cc:permits rdf:resource="http://web.resource.org/cc/CommercialUse"/>
+          </cc:license>
+      </cc:work>
+    </rdf:RDF>
+  </metadata>
+  
+cc:permits can also be cc:requires or cc:prohibits, as required.
+  
+A license that permits reproduction, distribution and commercial use,
+but requires both notice & attribution
+is probably most suitable for Boost documents as is therefore chosen as the default.
+
+This license can be included by calling svg  member function is_license(true).
+ 
+[@http://web.resource.org/rss/1.0/modules/cc/ RDF] is the metadata format chosen by
+[@http://creativecommons.org Creative Commons].
+
+and references the resource (cc) at
+[@http://web.resource.org/cc/] using the definition of its XML namespace:
+
+  rdf:RDF xmlns:cc="http://web.resource.org/cc/"
+
+Options are [@http://web.resource.org/rss/1.0/modules/cc/ summarized].
+
+A way of seting the author is also provided, in case the copyright has been assigned to someone else,
+for example a publisher.  svg set and get member functions:
+
+  author(const std::string);
+  const std::string author();
+  
+[h4 Using Unicode Symbols (usually Math Sumbols and Greek letters)]
+
+Unicode symbols that work on most browsers in html are listed at:
+
+[@boost\math_toolkit\libs\math\doc\sf_and_dist\html4_symbols.qbk html4_symbols],
+[@http://www.htmlhelp.com/reference/html40/entities/symbols.html reference/html40/entities/symbols],
+and  [@http://www.alanwood.net/demos/ent4_frame.html demos].
+
+However support for Unicode in SVG is much less fully implemented and displayed results are variable.
+
+The Unicode value in decimal 9830 or hex x2666 must be prefixed with `& `and terminated with `;`
+for example, `&x2666`; for xml
+and then enveloped with "" to convert to a const std::string, for example: "&#x2666;" for diamond.
+
+Thus diamond can be used a point marker.
+
+Similarly for greek in title, legend and axes:
+
+  .legend_title("My Legend &#956;") // generates <em>&#956;</em>  greek mu 
+  
+  
+[h4 Subscript and superscript in title, legend and labels]
+
+It is very common need to show superscript, in units for example, area (m[super 2]),
+and subscript for a[sub 0, a[sub 2]...
+
+Sadly, although these needs are both OK with html,
+showing sub and superscripts in svg doesn't work well as yet
+because browsers don't handle <sub> or <sup>, nor baseline-shift.
+
+The only reasonably widely supported feature is
+Unicode symbols for superscript 1, 2 and 3 (only).
+For example, Latin1_symbols: sup1 &185;  sup2 &178;  sup3 &179; work on Firefox & IE6/7.
+
+But&#2071; &#2075; &#2090; - show just square boxes.
+
+The SVG specification covers <sub, <super>, and the general baseline-shift,
+but these are just not implemented yet.
+
+[@http://unicode.org/reports/tr25/#_Toc28 2.8  Superscripts and Subscripts]
+[@http://www.unicode.org/charts/symbols.html symbols]
+
+At Nov 2007, the following commands don't have very useful coverage.
+<tspan baseline-shift = \"50%\" font-stretch = \"wider\" font-variant = \"small-caps\" > 3 </tspan>
+baseline-shift = \"50%\" & super and subscript down't work on Firefox 2.
+but DO on IE6 (and probably 7)
+font-stretch = \"wider\" No effect Firefox or IE6.
+font-variant = \"small-caps\"  No effect Firefox or IE6.
+<tspan baseline-shift = \"50%\" >3/4 </tspan>
+
+This has been reported as a bug to Mozilla,
+and is regarded a duplicate of other reports on sub and super
+https://bugzilla.mozilla.org/show_bug.cgi?id=401102
+
+but baseline-shift has no effect on Firefox 2. See
+http://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=7410&view=previous
+
+The use of <tspan to shift characters *is* feasible, as shown 
+[@http://www.w3.org/TR/SVG/images/text/tspan02.svg in this example],
+which displays correctly in all browsers, 
+
+and it is also possible to use
+
+  <svg:g transform="translate(5.062500, -5.367188)">
+  
+to shift the next letter up, but these parameters are font-size related,*
+and the svg most verbose.
+
+None of these method provides a *convenient* method of creating the right string 
+for titles, legends, or axis labels, but it may be possible to devise code that does.
+
+[h4 Coding style]
+
+In general [@http://www.boost.org/libs/spirit/doc/style_guide.html Boost coding style guide]
+and [@http://groups.yahoo.com/group/boost/files/coding_guidelines.html Boost coding guidelines]
+has been used.
+
+But some work is needed to rename arguments named with lading underscores in violation of
+guidance 2.14:
+
+Names containing double underscores (``__'') or beginning with single underscores (``_'')
+are entirely forbidden. These are reserved to the C++ implementation in various contexts.
+
+and also
+
+2.10. Data members should have a ``m_'' prefix, to distinguish them
+from an otherwise-identical member function name
+and to clarify their provenance in code which uses them.
+Non-member names must not have an ``m_'' prefix.
+
+Some data members end with _ to avoid name clashes, another widely used convention.
+
+[endsect] [/section:implementation Implementation & Rationale]
+
 
 [section:acknowledgements Acknowledgements]
 I would like to thank the following people:

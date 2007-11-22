@@ -68,7 +68,7 @@ int main()
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
 	       .x_minor_tick_width(1)
-	       .x_num_minor_ticks(3)
+	       .x_num_minor__ticks(3)
 	
 	//Y axis settings.
 	       .y_major_interval(25)
@@ -77,11 +77,11 @@ int main()
 	//legend settings
 	my_plot.legend_title_font_size(15);
 	
-	my_plot.plot(data1, "Sin(x)",  _point_style = circle,
-        _bezier_on = true, _size = 5, _fill_color = yellow);
+	my_plot.plot(data1, "Sin(x)",  point_style = circle,
+        bezier_on = true, size = 5, fill_color = yellow);
 
-    my_plot.plot(data2, "Cos(x)", _point_style = square,
-        _bezier_on = true, _size = 5, _fill_color = red);
+    my_plot.plot(data2, "Cos(x)", point_style = square,
+        bezier_on = true, size = 5, fill_color = red);
 
     my_plot.write("D:\\2d_bezier.svg");
 

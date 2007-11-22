@@ -1,18 +1,22 @@
 // functors.hpp
-// Copyright (C) Jacob Voytko 2007
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
-// ----------------------------------------------------------------- 
 
-#ifndef _BOOST_SVG_DETAIL_FUNCTORS_HPP
-#define _BOOST_SVG_DETAIL_FUNCTORS_HPP
+// Copyright Jacob Voytko 2007
+
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
+// -----------------------------------------------------------------
+
+#ifndef BOOST_SVG_DETAIL_FUNCTORS_HPP
+#define BOOST_SVG_DETAIL_FUNCTORS_HPP
 
 namespace boost {
 namespace svg {
 namespace detail {
 
 // -----------------------------------------------------------------
-// This functor allows any data convertible to doubles to be plotted
+// This functor allows any data convertible to doubles to be plotted.
 // -----------------------------------------------------------------
 class boost_default_convert
 {
@@ -24,7 +28,7 @@ public:
     {
         return (double)val;
     }
-};
+}; // class boost_default_convert
 
 // -----------------------------------------------------------------
 // This functor allows any data convertible to type
@@ -34,12 +38,11 @@ class boost_default_2d_convert
 {
 public:
     typedef std::pair<double, double> result_type;
-
     double i;
 
-    void start(double _i)
+    void start(double i)
     {
-        i = _i;
+        i = i;
     }
 
     template <class T, class U>
@@ -53,10 +56,10 @@ public:
     {
         return std::pair<double, double>(i++, (double)a);
     }
-};
+}; // class boost_default_2d_convert
 
-}
-}
-}
+} // namespace detail
+} // namespace svg
+} // namespace boost
 
-#endif
+#endif // BOOST_SVG_DETAIL_FUNCTORS_HPP

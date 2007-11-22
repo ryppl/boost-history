@@ -1,12 +1,15 @@
 // stylesheet.hpp 
-// Copyright (C) Jacob Voytko 2007
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
-// ----------------------------------------------------------------- 
 
-#ifndef _BOOST_SVG_STYLESHEET_HPP
-#define _BOOST_SVG_STYLESHEET_HPP
+// Copyright Jacob Voytko 2007
 
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
+// -----------------------------------------------------------------
+
+#ifndef BOOST_SVG_STYLESHEET_HPP
+#define BOOST_SVG_STYLESHEET_HPP
 
 #include <boost/spirit/core.hpp>
 #include <boost/spirit/utility/distinct.hpp>
@@ -17,8 +20,10 @@
 #include <ostream>
 #include <iostream>
 
-namespace boost{
-namespace svg{
+namespace boost
+{
+namespace svg
+{
 
 // Note: After GSoC, this will use the suggested CSS parser
 // from the W3C CSS 2.1 Standard
@@ -74,15 +79,16 @@ struct css_parse : public ::boost::spirit::grammar<css_parse>
         ::boost::spirit::rule<ScannerT> const&
         start() const { return expression; }
     };
-};
+}; // struct css_parse 
 
 bool validate_stylesheet(std::ifstream& file)
-{
+{ // stream version used by file version below.
     css_parse my_css_parser;
-    std::string str, tmp;
+    std::string str;
+    std::string tmp;
 
     while(getline(file, tmp))
-    {
+    { // Concatentate all the input lines to a single string.
         str += tmp;
     }
 
@@ -92,13 +98,11 @@ bool validate_stylesheet(std::ifstream& file)
         
     if (!info.full)
     {
-        std::cout<<info.stop;
+        std::cout << info.stop;
         return false;
     }
-    
-
     return true;
-}
+} // bool validate_stylesheet(std::ifstream& file)
 
 bool validate_stylesheet(const std::string& file)
 {
@@ -108,11 +112,10 @@ bool validate_stylesheet(const std::string& file)
     {
         throw std::runtime_error("Failed to open " + file);
     }
-
-    return validate_stylesheet(f_str);
+    return validate_stylesheet(f_str); // stream version.
 }
 
-}
-}
+} // namespace svg
+} // namespace boost
 
-#endif
+#endif // BOOST_SVG_STYLESHEET_HPP

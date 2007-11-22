@@ -30,7 +30,7 @@
       Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id692102"></a><p class="title"><b>Table 3. class svg</b></p>
+<a name="id692282"></a><p class="title"><b>Table 3. class svg</b></p>
 <div class="table-contents"><table class="table" summary="class svg">
 <colgroup>
 <col>
@@ -50,7 +50,7 @@
             </th>
 <th>
             <p>
-              Notes
+              Notes &amp; Examples
             </p>
             </th>
 </tr></thead>
@@ -68,9 +68,173 @@
             </td>
 <td>
             <p>
-              The default image size is (400, 400).
+              Default image size (pixels) is (400, 400).
             </p>
             </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">coord_precision</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the precision output for coordinates (decimal digits)
+            </p>
+            </td>
+<td>
+            <p>
+              default 3, but for mobiles, 2 might suffice.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Constructor
+            </p>
+            </td>
+<td>
+            <p>
+              Default image size (pixels) is (400, 400).
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">copyright_holder</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set copyright holder for the SVG XML document, as comment and XML.
+            </p>
+            </td>
+<td>
+            <p>
+              &lt;!-- SVG Plot Copyright Paul A. Bristow 2007 --&gt; &lt;meta name<code class="literal">"copyright"
+              content</code>"Paul A. Bristow" /&gt;
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">copyright_date</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set copyright date for the SVG XML document, as comment and XML.
+            </p>
+            </td>
+<td>
+            <p>
+              &lt;!-- SVG Plot Copyright Paul A. Bristow 2007 --&gt; &lt;meta name<code class="literal">"date"
+              content</code>"2007" /&gt;
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">description</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets description for the SVG XML document, as comment and XML.
+            </p>
+            </td>
+<td>
+            <p>
+              &lt;!-- My Document description --&gt; &lt;desc&gt;My Document description&lt;/desc&gt;
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">document_title</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets title for the SVG XML document (not the plot)
+            </p>
+            </td>
+<td>
+            <p>
+              &lt;title&gt;My Document title&lt;/title&gt;
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">license</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span>
+              <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set license terms (if any): reproduction, distribution, attribution,
+              commercialuse
+            </p>
+            </td>
+<td>
+            <p>
+              "permits" (default), "requires", or "prohibits".
+            </p>
+            </td>
+<td>
+            <p>
+              [1is_license(bool)
+            </p>
+            </td>
+<td>
+            <p>
+              Adds a typical permissive Boost-like license.
+            </p>
+            </td>
+<td>
+            <p>
+              permits reproduction &amp; distribution but requires atribution.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">get_g_element</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Class derived from svg_element.
+            </p>
+            </td>
+<td>
+            <p>
+              Graph element: line, circle, rect... Node element of document tree.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -93,6 +257,9 @@
               was just created.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -116,6 +283,9 @@
               are making this call.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -136,12 +306,55 @@
               interface to access these elements might be useful.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">x_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width of the image (pixels).
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <span class="identifier">y_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the height of the image (pixels).
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">int</span>
-              <span class="identifier">get_x_size</span><span class="special">()</span></code>
+              <span class="identifier">x_size</span><span class="special">()</span></code>
             </p>
             </td>
 <td>
@@ -153,12 +366,15 @@
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">int</span>
-              <span class="identifier">get_y_size</span><span class="special">()</span></code>
+              <span class="identifier">y_size</span><span class="special">()</span></code>
             </p>
             </td>
 <td>
@@ -170,6 +386,9 @@
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -188,6 +407,9 @@
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -205,6 +427,9 @@
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -217,7 +442,7 @@
             <p>
               Pushes a <code class="computeroutput"><span class="identifier">path_element</span></code>
               to the back of the tree and returns a reference to it. This allows
-              you to do the following: 
+              chaining, for example: 
 </p>
 <pre class="programlisting">
 <span class="identifier">path_element</span><span class="special">&amp;</span> <span class="identifier">my_path</span> <span class="special">=</span> <span class="identifier">image</span><span class="special">.</span><span class="identifier">path</span><span class="special">();</span>
@@ -225,9 +450,11 @@
 <span class="identifier">my_path</span><span class="special">.</span><span class="identifier">M</span><span class="special">(</span><span class="number">3</span><span class="special">,</span> <span class="number">3</span><span class="special">).</span><span class="identifier">l</span><span class="special">(</span><span class="number">150</span><span class="special">,</span> <span class="number">150</span><span class="special">);</span>
 </pre>
 <p>
-              I'm open to suggestions for how to improve this process.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 <td class="auto-generated"> </td>
 </tr>
 <tr>
@@ -239,14 +466,17 @@
             </td>
 <td>
             <p>
-              Adds a rectangle at point (x1, y1) that has width <code class="computeroutput"><span class="identifier">width</span></code>
-              and height <code class="computeroutput"><span class="identifier">height</span></code>
+              Adds a rectangle at point (x1, y1) that has <code class="computeroutput"><span class="identifier">width</span></code>
+              wide and <code class="computeroutput"><span class="identifier">height</span></code> high.
             </p>
             </td>
 <td>
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -257,14 +487,17 @@
             </td>
 <td>
             <p>
-              Adds text <code class="computeroutput"><span class="identifier">text</span></code> at (x,y)
-              in the root level of the document
+              Adds string <code class="computeroutput"><span class="identifier">text</span></code> at
+              (x,y) in the root level of the document
             </p>
             </td>
 <td>
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -284,6 +517,9 @@
               if it can not open the file.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -301,6 +537,9 @@
             <p>
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -309,7 +548,11 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">

@@ -1,14 +1,16 @@
-#   Copyright Paul A. Bristow 2007
 #   Copyright Jake Voytko 2007
+#   Copyright Paul A. Bristow 2007
   
 #   Distributed under the Boost Software License, Version 1.0.
 #   (See accompanying file LICENSE_1_0.txt
 #   or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#   Reminder: whitespace MUST terminate variable name!
+#   so space BEFORE ; and :
+
 # SVG plot documentation as html and pdf from Quickbook.
 
 # project boost/doc ;
-# import boostbook : boostbook ;
 
 using quickbook ;
 
@@ -20,6 +22,8 @@ xml svg_plot
     svg_plot.qbk
   :
 ;
+
+# import boostbook : boostbook ;
 
 boostbook standalone 
   :  

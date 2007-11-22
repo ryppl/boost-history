@@ -61,7 +61,7 @@ int main()
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
 	       .x_minor_tick_width(1)
-	       .x_num_minor_ticks(3)
+	       .x_num_minor__ticks(3)
 	
 	//Y axis settings.
 	       .y_major_interval(25)
@@ -70,8 +70,8 @@ int main()
 	//legend settings
 	my_plot.legend_title_font_size(15);
 	
-	my_plot.plot(data1, "Sqrt(x)",  _point_style = none,
-        _area_fill_color = red);
+	my_plot.plot(data1, "Sqrt(x)",  point_style = none,
+        area_fill_color = red);
 
     my_plot.write("./2d_area_fill.svg");
 

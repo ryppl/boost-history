@@ -51,7 +51,7 @@ int main()
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
 	       .x_minor_tick_width(1)
-	       .x_num_minor_ticks(3)
+	       .x_num_minor__ticks(3)
 	
 	//Y axis settings.
 	       .y_major_interval(25)
@@ -60,8 +60,8 @@ int main()
 	//legend settings
 	my_plot.legend_title_font_size(15);
 	
-	my_plot.plot(data1, "1 / x",  _point_style = square,
-        _size = 5, _line_on = false);
+	my_plot.plot(data1, "1 / x",  point_style = square,
+        size = 5, line_on = false);
 
     my_plot.write("D:\\2d_limit.svg");
 
