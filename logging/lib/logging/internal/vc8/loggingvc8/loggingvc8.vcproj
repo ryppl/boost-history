@@ -438,6 +438,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\scoped_log.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\sink.hpp"
 				>
 			</File>

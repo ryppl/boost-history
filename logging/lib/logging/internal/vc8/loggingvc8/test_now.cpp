@@ -64,26 +64,34 @@ void init_logs() {
       );
  */ g_l->writer().add_destination( destination::file("out.txt") );
 } 
+
+#define BOOST_LOG_USEASINT2(x) #x
+#define BOOST_LOG_USEASINT(x) BOOST_LOG_USEASINT2(x)
+
+#define BOOST_SCOPED_LOG_CTX(logger)
+
+/*
+#define BOOST_LOG_HOLDER2(x) x, L ## x
+#define BOOST_LOG_HOLDER(x) BOOST_LOG_HOLDER2(x)
+#define BOOST_LOG_STRTEST(x)      ( BOOST_LOG_HOLDER(x) )
+*/
+
+void test(int a, const char * str) {
+//    BOOST_SCOPED_LOG(LDBG, "testing inout" << a << str );
+    BOOST_SCOPED_LOG(LDBG << , "testing inout" );
+    BOOST_SCOPED_LOG(LDBG << , "testing inout2" );
+    int i = 1;
+    LDBG << "this is so cool " << i++ << "\n";
+}
+
 void your_scenario_example() {
 
     init_logs();
 
+    test(5, "cucu");
     // Step 8: use it...
     int i = 1;
-    LDBG << "this is so cool " << i++ << "\n";
-    LDBG << "this is so cool again " << i++;
-    LERR << "first error " << i++;
-
-    std::string hello = "hello", world = "world";
-    LWRN << hello << ", " << world;
-
-    LDBG << "this will not be written anywhere";
-    LWRN << "this won't be written anywhere either";
-    LERR << "this error is not logged " << i++;
-
-    LWRN << "good to be back ;) " << i++;
-    LERR << "second error " << i++;
-
+    LDBG << "the end" << i++ << "\n";
 }
 
 

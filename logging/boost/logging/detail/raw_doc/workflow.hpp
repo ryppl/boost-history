@@ -21,9 +21,7 @@ What happens when a message is written to the log?
         - gather the message
         - write the message to the destination(s)
     - if not (in other words, the log is turned off)
-        - completely ignore the message
-
-The part that says "Completely ignore the message" means that <em>if the log is not enabled, no processing takes place</em>.
+        - completely ignore the message: <em>if the log is not enabled, no processing takes place</em>.
 
 For instance, say you have:
 

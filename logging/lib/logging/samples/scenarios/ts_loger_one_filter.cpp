@@ -30,7 +30,7 @@ This usage:
 - You want to format the message before it's written 
 - The logger has several log destinations
     - The output goes to console, debug output window, and a file called out.txt
-    - Formatting - prefix each message by its index, thread id, and append enter
+    - Formatting - prefix each message by its index, thread id, and append newline
 
 Optimizations:
 - use a cache string (from optimize namespace), in order to make formatting the message faster

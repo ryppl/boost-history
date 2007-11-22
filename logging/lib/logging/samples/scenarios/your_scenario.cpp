@@ -41,11 +41,11 @@ Optimizations:
 
 Logs:
 - Error messages go into err.txt file
-  - formatting - prefix each message by time, index, and append enter
+  - formatting - prefix each message by time, index, and append newline
 - Info output goes to console, and a file called out.txt
-  - formatting - prefix each message by time and append enter
+  - formatting - prefix each message by time and append newline
 - Debug messages go to the debug output window, and the console
-  - formatting - prefix each message by time, and append enter
+  - formatting - prefix each message by time, and append newline
 
 
 Here's how the output will look like:

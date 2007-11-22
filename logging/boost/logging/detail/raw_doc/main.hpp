@@ -12,8 +12,10 @@ namespace boost { namespace logging {
 
 Applications today are becoming increasingly complex. Part of making them easier to develop/maintain is to do logging. 
 Logging allows you to later see what happened in your application. It can be a great help when debugging and/or testing it. 
-The great thing about logging is that it can (and usually does) also happen at the customer site - if an error occurs, 
+The great thing about logging is that you can use it on systems in production and/or in use - if an error occurs, 
 by examining the log, you can get a picture of where the problem is.
+
+Good logging is mandatory in support projects, you simply can’t live without it.
 
 Used properly, logging is a very powerful tool. Besides aiding debugging/ testing, it can also show you 
 how your application is used (which modules, etc.), how time-consuming certain parts of your program are, 

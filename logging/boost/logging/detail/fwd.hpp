@@ -37,7 +37,12 @@
 // minimize inclusion of STL headers in our headers!!!
 #include <string>
 
-#define BOOST_LOG_STR(x)      (const char_type*)ansi_unicode_char_holder ( x, L ## x)
+/* The following BOOST_LOG_STR("this " "and that") still doesn't work.
+#define BOOST_LOG_HOLDER2(x) x, L ## x
+#define BOOST_LOG_HOLDER(x) BOOST_LOG_HOLDER2(x)
+#define BOOST_LOG_STR(x)      (const ::boost::logging::char_type*)ansi_unicode_char_holder ( BOOST_LOG_HOLDER(x) )
+*/
+#define BOOST_LOG_STR(x)      (const ::boost::logging::char_type*)::boost::logging::ansi_unicode_char_holder ( x, L ## x )
 
 
 /* 

@@ -31,7 +31,7 @@ This usage:
 - You want to format the message before it's written 
 - The logger has several log destinations
     - The output goes to console, debug output window, and a file called out.txt - as XML
-    - Formatting - prefix each message by its start time, its index, and append enter
+    - Formatting - prefix each message by its start time, its index, and append newline
 
 \n\n
 Custom classes:

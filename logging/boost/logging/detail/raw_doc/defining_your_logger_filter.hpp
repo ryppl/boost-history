@@ -3,10 +3,6 @@ namespace boost { namespace logging {
 /** 
 @page defining_your_logger_filter Declaring/Defining your logger/filter class(es)
 
-When using the Boost Logging Lib, you need 2 things (see @ref workflow "Workflow"):
-- a filter : which tells you if a logger is enabled or not. Note that you can use the same filter for multiple loggers - if you want. 
-- a logger : which does the actual logging, once the filter is enabled
-
 
 - @ref defining_your_filter 
     - @ref defining_your_filter_scenario 
@@ -17,6 +13,9 @@ When using the Boost Logging Lib, you need 2 things (see @ref workflow "Workflow
     - @ref defining_your_logger_use_logger 
 
 
+When using the Boost Logging Lib, you need 2 things (see @ref workflow "Workflow"):
+- a filter : which tells you if a logger is enabled or not. Note that you can use the same filter for multiple loggers - if you want. 
+- a logger : which does the actual logging, once it's enabled
 
 
 
