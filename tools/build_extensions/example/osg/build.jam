@@ -1,0 +1,22 @@
+#~ Copyright 2006 Redshift Software, Inc.
+#~ Copyright 2007 Couch World Games Inc.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+using zlib : 1.2.3 : $(PACKAGES)/zlib-1.2.3 ;
+using png : 1.2.12 : $(PACKAGES)/libpng-1.2.12 ;
+using jpeg : 6.b : $(PACKAGES)/jpeg-6b ;
+using libtiff : 3.8.2 : $(PACKAGES)/tiff-3.8.2 ;
+using osg : 2.2 : $(PACKAGES)/OpenSceneGraph-2.2.0 ;
+
+import stage ;
+
+install stage-lib
+    : /ext/osg
+    : <location>$(STAGE_ROOT)/lib <install-dependencies>on <install-type>LIB
+    ;
+install stage-bin
+    : /ext/osg
+    : <location>$(STAGE_ROOT)/lib <install-dependencies>on <install-type>EXE
+    ;

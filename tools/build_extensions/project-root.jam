@@ -8,6 +8,15 @@ ECHO "--- RUNNING BUILD IN:" ;
 ECHO "---     " [ PWD ] "..." ;
 ECHO "--- " ;
 
+import os ;
+import modules ;
+
 project build-extensions
     : build-dir bin
     ;
+
+path-constant STAGE_ROOT : ./stage ;
+
+path-constant PACKAGES : [ MATCH --packages=(.*) : [ modules.peek : ARGV ] ] ;
+path-constant BOOST_ROOT(TRUNK) : [ modules.peek : BOOST_ROOT ] ;
+path-constant BOOST_ROOT(RELEASE) : [ MATCH --boost-release=(.*) : [ modules.peek : ARGV ] ] ;

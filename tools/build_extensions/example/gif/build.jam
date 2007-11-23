@@ -1,0 +1,14 @@
+#~ Copyright 2006 Redshift Software, Inc.
+#~ Copyright 2007 Couch World Games Inc.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+using gif : 4.1.4 : $(PACKAGES)/giflib-4.1.4 ;
+
+import stage ;
+
+install stage-lib
+    : /ext/gif//gif
+    : <location>$(STAGE_ROOT)/lib <install-dependencies>on <install-type>LIB
+    ;
