@@ -628,6 +628,8 @@ int cpp_main( int argc_param, char * argv_param[] )
       link_ck = true;
     else if ( std::strcmp( argv[1], "-long_name" ) == 0 )
       long_name_ck = true;
+    else if ( std::strcmp( argv[1], "-long-name" ) == 0 )
+      long_name_ck = true;
     else if ( std::strcmp( argv[1], "-tab" ) == 0 )
       tab_ck = true;
     else if ( std::strcmp( argv[1], "-minmax" ) == 0 )
@@ -758,7 +760,7 @@ int cpp_main( int argc_param, char * argv_param[] )
         itr != inspectors.end(); ++itr )
   {
     const string line_break (
-        display_text == display_format? "\n" : "<br>\n"); // gps
+        display_text == display_format? "\n" : "<br />\n"); // gps
 
     inspector_keys += static_cast<string>("  ")
         + itr->inspector->name()
