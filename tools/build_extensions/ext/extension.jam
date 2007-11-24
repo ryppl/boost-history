@@ -71,6 +71,19 @@ rule declare ( extension + : options * : * )
                 <base> <toolset> <threading> <runtime> <version:$(__extension__)-version>
                 : $(name) : $(type) : $(property-set) ] ;
         }
+
+
+        rule when-file ( file : yes * : no * )
+        {
+            if [ path.exists [ path.make $(file) ] ]
+            {
+                return $(yes) ;
+            }
+            else
+            {
+                return $(no) ;
+            }
+        }
     }
 }
 
@@ -106,6 +119,10 @@ rule define ( extension version ? : location : options * )
         <$(extension)-location>$(location)
         ;
     feature.compose <$(extension)-version>$(version) : $(requirements) ;
+    
+    local user-mod = [ CALLER_MODULE 2 ] ;
+    modules.poke $(user-mod) : LOCATION($(extension)-$(version)) : $(location) ;
+    
     return
         $(requirements)
         <tag>@default-tag

@@ -1098,11 +1098,6 @@ class wx-target : typed-target
             <wx-platform>win32:<wx-toolkit>msw
             ;
     }
-
-    rule conditional ( condition + : requirements * )
-    {
-        return $(condition:J=,):$(requirements) ;
-    }
 }
 
 rule bakefile_jam ( targets * : sources * : properties * )

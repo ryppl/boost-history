@@ -10,13 +10,35 @@ using jpeg : 6.b : $(PACKAGES)/jpeg-6b ;
 using libtiff : 3.8.2 : $(PACKAGES)/tiff-3.8.2 ;
 using osg : 2.2 : $(PACKAGES)/OpenSceneGraph-2.2.0 ;
 
-import stage ;
+import testing ;
 
-install stage-lib
-    : /ext/osg
-    : <location>$(STAGE_ROOT)/lib <install-dependencies>on <install-type>LIB
-    ;
-install stage-bin
-    : /ext/osg
-    : <location>$(STAGE_ROOT)/lib <install-dependencies>on <install-type>EXE
-    ;
+local rule osg-example ( name subdir ? : args * : src * )
+{
+    dir ?= $(LOCATION(osg-2.2))/examples/$(name) ;
+    return [
+        run-fail
+            [ glob $(dir)/*.cpp ]
+            /ext/osg//openthreads
+            /ext/osg//osg
+            /ext/osg//osgDB
+            /ext/osg//osgUtil
+            /ext/osg//osgGA
+            /ext/osg//osgViewer
+            /ext/osg//osgText
+            $(src)
+            : $(args)
+            :
+            :
+            : $(name) ] ;
+}
+
+#~ osg-example osgcamera ;
+#~ osg-example osgcompositeviewer : : /ext/osg//osgFX ;
+#~ osg-example osglight ;
+#~ osg-example osglogo ;
+#~ osg-example osgparticleeffects  : --screen 1 : /ext/osg//osgParticle ;
+#~ osg-example osgshadow : --screen 1 : /ext/osg//osgShadow ;
+#~ osg-example osgteapot ;
+#~ osg-example osgterrain : --screen 1 : /ext/osg//osgTerrain ;
+osg-example osgtext : --screen 1 ;
+#~ osg-example osgvertexprogram : --screen 1 ;

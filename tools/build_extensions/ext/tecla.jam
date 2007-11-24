@@ -17,18 +17,6 @@ import path ;
 
 extension.declare tecla ;
 
-local rule when-file ( file : yes : no * )
-{
-    if [ path.exists [ path.make $(file) ] ]
-    {
-        return $(yes) ;
-    }
-    else
-    {
-        return $(no) ;
-    }
-}
-
 rule init ( version ? : location : options * )
 {
     version ?= default ;

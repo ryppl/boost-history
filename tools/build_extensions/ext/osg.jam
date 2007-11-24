@@ -42,19 +42,6 @@ rule init ( version ? : location : options * )
     
     location,$(version) = $(location) ;
     
-    local rule conditional ( condition + : requirements * )
-    {
-        condition = $(condition:J=,) ;
-        if [ MATCH (:) : $(condition) ]
-        {
-            return $(condition)$(requirements) ;
-        }
-        else
-        {
-            return $(condition):$(requirements) ;
-        }
-    }
-    
     alias gl
         :
         :
