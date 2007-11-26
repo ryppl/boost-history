@@ -32,6 +32,7 @@ namespace boost { namespace logging {
 - @ref headers_to_include "Headers to #include"
 - @ref defining_your_logger_filter 
 - @ref scenario::usage "Choose the best filter/logger class, based on your application's needs"
+- @ref scoped_logs 
 - @ref tag "Using tags"
 - @ref thread_safety 
 - @ref macros

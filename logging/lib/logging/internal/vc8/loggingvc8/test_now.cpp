@@ -13,6 +13,9 @@ BOOST_LOG_FORMAT_MSG( log_string )
 #include <boost/logging/writer/ts_write.hpp>
 #include <boost/logging/format/formatter/tags.hpp>
 
+#include <boost/logging/detail/scoped_log.hpp>
+
+
 using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
@@ -50,9 +53,9 @@ void init_logs() {
   // Add formatters and destinations
   // That is, how the message is to be formatted...
   g_l->writer().add_formatter( formatter::tag::time("$hh:$mm.$ss ") );
-  g_l->writer().add_formatter( formatter::tag::file_line() );
+//  g_l->writer().add_formatter( formatter::tag::file_line() );
   g_l->writer().add_formatter( formatter::idx() );
-  g_l->writer().add_formatter( formatter::append_newline_if_needed() ); //(2a)
+//  g_l->writer().add_formatter( formatter::append_newline_if_needed() ); //(2a)
   g_l->writer().add_formatter( formatter::append_newline() ); //(2b)
 
   //        ... and where should it be written to
@@ -65,23 +68,21 @@ void init_logs() {
  */ g_l->writer().add_destination( destination::file("out.txt") );
 } 
 
-#define BOOST_LOG_USEASINT2(x) #x
-#define BOOST_LOG_USEASINT(x) BOOST_LOG_USEASINT2(x)
 
-#define BOOST_SCOPED_LOG_CTX(logger)
-
-/*
-#define BOOST_LOG_HOLDER2(x) x, L ## x
-#define BOOST_LOG_HOLDER(x) BOOST_LOG_HOLDER2(x)
-#define BOOST_LOG_STRTEST(x)      ( BOOST_LOG_HOLDER(x) )
-*/
 
 void test(int a, const char * str) {
 //    BOOST_SCOPED_LOG(LDBG, "testing inout" << a << str );
+    std::string s;
     BOOST_SCOPED_LOG(LDBG << , "testing inout" );
-    BOOST_SCOPED_LOG(LDBG << , "testing inout2" );
+//    BOOST_SCOPED_LOG(LDBG << , "testing inout2" );
     int i = 1;
-    LDBG << "this is so cool " << i++ << "\n";
+//    LDBG << "this is so cool " << i++ << "\n";
+}
+
+
+void test2(int a, const char * str) {
+    BOOST_SCOPED_LOG_CTX(LDBG) << "test21-" << a << ", str=" << str;
+    BOOST_SCOPED_LOG_CTX(LDBG) << "test22-" << a << ", str=" << str;
 }
 
 void your_scenario_example() {
@@ -89,6 +90,7 @@ void your_scenario_example() {
     init_logs();
 
     test(5, "cucu");
+    test2(5, "cucu2");
     // Step 8: use it...
     int i = 1;
     LDBG << "the end" << i++ << "\n";

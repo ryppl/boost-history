@@ -22,6 +22,7 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <algorithm>
 
 namespace boost { namespace logging {
 
@@ -52,18 +53,34 @@ struct class_name { \
 #endif
 
 
+namespace detail {
+    template<class writer> struct scoped_writer {
+        scoped_writer(const writer & w) : m_w( w ) {}
+        template<class msg_type> void operator()(msg_type & msg) const {
+            m_w.gather_msg(msg);
+        }
+    private:
+        const writer &m_w;
+    };
+}
 
-
-
-#define BOOST_SCOPED_LOG_CTX(logger)
+#define BOOST_SCOPED_LOG_CTX_IMPL(logger_macro, operator_, class_name) \
 struct class_name { \
-    class_name()  { logger ( "start of " msg ) ;} \
-    ~class_name() { logger ( "  end of " msg ) ; } \
-    boost::logging::logger<default_, 
-} BOOST_LOG_CONCATENATE(log_, __LINE__);
+    typedef ::boost::logging::hold_string_type string_type; \
+    class_name()  { } \
+    ~class_name() { logger_macro operator_ BOOST_LOG_STR("  end of ") operator_ m_str ; } \
+    void gather_msg(string_type & str) const { std::swap(m_str, str); logger_macro operator_ BOOST_LOG_STR("start of ") operator_ m_str ; } \
+    mutable string_type m_str; \
+} BOOST_LOG_CONCATENATE(log_, __LINE__); \
+::boost::logging::logger< ::boost::logging::gather::ostream_like::return_str< ::boost::logging::hold_string_type > , ::boost::logging::detail::scoped_writer< class_name > > \
+    BOOST_LOG_CONCATENATE(scoped_log_val, __LINE__) ( BOOST_LOG_CONCATENATE(log_, __LINE__) ); \
+    BOOST_LOG_CONCATENATE(scoped_log_val, __LINE__) .read_msg().gather().out()
 
 
 
+// note: to use BOOST_SCOPED_LOG_CTX, you need to #include <boost/logging/gather/ostream_like.hpp>
+//       This is included by default, in #include <boost/logging/format_fwd.hpp>
+#define BOOST_SCOPED_LOG_CTX(logger) BOOST_SCOPED_LOG_CTX_IMPL(logger, << , BOOST_LOG_CONCATENATE(boost_scoped_log,__LINE__) )
 
 
 }}

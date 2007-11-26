@@ -686,6 +686,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\scoped_logs.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\starter_project.hpp"
 				>
 			</File>

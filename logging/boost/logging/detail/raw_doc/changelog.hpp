@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.2, 20 nov 2007
+@section changelog_cur_ver Current Version: v0.12.3, 26 nov 2007
+- added scoped logs
 - removed #ifdef SINGLE_TEST from scenarios
 - added todo.html
 
