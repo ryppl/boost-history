@@ -27,16 +27,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c high           test TSS on vs2003 and gcc/pthreads \n
   (note: tested on pthreads; however - about internal implementation : 2 TSS objects are leaked on pthreads, need to see why)
 
-- @c must_have      scoped logs - see if possible not to lose any extra info \n
-  (for instance, LDBG_ << "somethign" might gather stuff like thread_id, etc.)
-  we could have: \n
-  scoped_log lg(start_end("start","end"), LDBG_ << startend << ....); \n
-  all depends on how easy your log macros are.
-  OR: \n
-  BOOST_SCOPED_LOG(LDBG_, some_info); \n
-  which creates a dummy class, and in its constructor calls LDBG_ << "start" << someinfo and
-  on destructor calls LDBG_ << "end" << someinfo.
-
 - @c high           if *used* before main, it'll cache the messages, and then write them ASAP; \n
     will have a func - like, do_write() - which will write all that was cached, and then turn cache off \n
     ----- i have to see if reasonable to later ask if a log is enabled or not, or just dump all messages written before initializing the log
