@@ -2381,8 +2381,9 @@ of absolute time provides an equivalent, but terminating, idiom:
      condition_variable cv;
      ...
      system_time abs_time = get_system_time() + seconds(1);
-     while (!pred())
-        cv.timed_wait(mut, abs_time);
+     bool within_time = true;
+     while (within_time &amp;&amp; !pred())
+        within_time = cv.timed_wait(mut, abs_time);
      if (pred()) ...</pre>
 
 <p>
