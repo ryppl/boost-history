@@ -3,7 +3,7 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/support/reflective_component.hpp>
+#include <boost/dataflow/support/component.hpp>
 //#include <boost/fusion/container/vector/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
@@ -72,8 +72,8 @@ int test_main(int, char* [])
 {
     my_component c;
     
-    my_consumer &cc = df::get_component_port<my_mechanism, boost::mpl::int_<0> >(c);
-    my_producer &cp = df::get_component_port<my_mechanism, boost::mpl::int_<1> >(c);
+    my_consumer &cc = df::get_component_port<boost::mpl::int_<0> >(c);
+    my_producer &cp = df::get_component_port<boost::mpl::int_<1> >(c);
     
     BOOST_CHECK_EQUAL(&cc, &c.consumer);
     BOOST_CHECK_EQUAL(&cp, &c.producer);

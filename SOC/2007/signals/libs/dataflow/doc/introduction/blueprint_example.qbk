@@ -9,21 +9,32 @@ which briefly illustrates some of the capabilities:
 [pre
 Printing runtime info about all of the components:
 
-	source has 2 ports. 
-		port 0 is a producer
-		port 1 is a consumer
+	source has 4 ports. 
+		port 0 is a signals connection producer
+		port 1 is a signals connection consumer
+		port 2 is a signals extraction producer
+		port 3 is a signals extraction consumer
 
-	sink has 2 ports. 
-		port 0 is a producer
-		port 1 is a consumer
+	sink has 4 ports. 
+		port 0 is a signals connection producer
+		port 1 is a signals connection consumer
+		port 2 is a signals extraction producer
+		port 3 is a signals extraction consumer
 
-	source_float has 2 ports. 
-		port 0 is a producer
-		port 1 is a consumer
+	source_float has 4 ports. 
+		port 0 is a signals connection producer
+		port 1 is a signals connection consumer
+		port 2 is a signals extraction producer
+		port 3 is a signals extraction consumer
 
-	sink_float has 2 ports. 
-		port 0 is a producer
-		port 1 is a consumer
+	sink_float has 4 ports. 
+		port 0 is a signals connection producer
+		port 1 is a signals connection consumer
+		port 2 is a signals extraction producer
+		port 3 is a signals extraction consumer
+
+
+Printing some runtime port connectability info:
 
 source port 0 is connectable to sink port 1
 source port 1 is not connectable to sink port 0
@@ -32,7 +43,7 @@ source port 0 is not connectable to sink_float port 1
 
 Making blueprint connections: source to sink, source_float to sink_float...
 
-Using BGL to analyze the network... There are 2 independent parts of the network.
+Using BGL to analyze the network... BGL says there are 2 independent parts of the network!
 
 Making a copy of the blueprint.
 
@@ -69,9 +80,6 @@ Testing the network copy...
 		value at sink:100
 		value at source_float:100.1
 		value at sink_float:100.1
-
-
-blueprint_example release has exited with status 0.
 ]
 
 The source is:

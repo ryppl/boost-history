@@ -7,12 +7,14 @@
 #define BOOST_DATAFLOW_BLUEPRINT_COMPONENT_HPP
 
 #include <boost/dataflow/blueprint/get_port.hpp>
-#include <boost/dataflow/support/reflective_component.hpp>
+#include <boost/dataflow/support/component.hpp>
 #include <boost/dataflow/support/component_operation.hpp>
 #include <boost/dataflow/support/binary_operation.hpp>
 
 #include <boost/mpl/size.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/shared_ptr.hpp>
+
 
 namespace boost { namespace dataflow { namespace blueprint {
 
@@ -22,40 +24,48 @@ class component
 {
 public:
     virtual void invoke()=0;
-    virtual int num_ports() const=0;
-    virtual std::auto_ptr<port> get_port(int port_num)=0;
+    virtual size_t num_ports() const=0;
+    virtual port & get_port(int port_num)=0;
     
     virtual std::auto_ptr<component> copy() const=0;
     virtual ~component() {};
 };
 
-template<typename Mechanism, typename Component>
+template<typename Component>
 class component_t : public component
 {
 public:
-    component_t() {}
+    component_t() {component_t_();}
     template<typename T0>
-    component_t(const T0 &t0) : c(t0) {}
+    component_t(const T0 &t0) : c(t0) {component_t_();}
+    component_t(const component_t &rhs) : c(rhs.c)
+    {   component_t_(); }
     
     void invoke()
     {
-        component_operation<operations::invoke, Mechanism>(c);
+        component_operation<operations::invoke>(c);
     }
-    int num_ports() const
+    size_t num_ports() const
     {
-        return mpl::size<typename component_traits_of<Mechanism, Component>::type::ports>::value;
+        return mpl::size<typename component_traits_of<Component>::type::ports>::value;
     }
-    std::auto_ptr<port> get_port(int port_num)
+    port & get_port(int port_num)
     {
-        return blueprint::get_port<Mechanism, Component>(c, port_num);
+        return ports[port_num];
     }
     virtual std::auto_ptr<component> copy() const
     {
-        return std::auto_ptr<component>(new component_t<Mechanism,Component>(*this));
+        return std::auto_ptr<component>(new component_t<Component>(*this));
     }
     Component &get() {return c;}
 private:
+    void component_t_()
+    {
+        for(size_t i=0; i<num_ports(); i++)
+            ports.push_back(blueprint::get_port<Component>(c, i));
+    }
     Component c;
+    ptr_vector<port> ports;
 };
 
 } } } // namespace boost::dataflow::blueprint

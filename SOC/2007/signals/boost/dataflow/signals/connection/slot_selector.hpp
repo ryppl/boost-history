@@ -74,8 +74,8 @@ namespace extension {
     {
         typedef const boost::function<Signature> result_type;
         
-        template<typename Consumer, typename Producer>
-        result_type operator()(Consumer &consumer, Producer &)
+        template<typename Consumer>
+        result_type operator()(Consumer &consumer)
         {
             return boost::signals::detail::bind_object<Signature, typename Consumer::class_type>()
             (static_cast<typename boost::signals::detail::slot_type<Signature, typename Consumer::class_type>::type>(consumer.func), consumer.object);

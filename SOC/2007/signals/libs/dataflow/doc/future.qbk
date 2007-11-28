@@ -4,7 +4,7 @@
 
 The [DataflowBlueprint] layer now offers some limited dataflow network modeling
 via a BGL graph, and some basic runtime reflections for classes that model
-the [ReflectiveComponentConcept] concept.
+the [ComponentConcept] concept.
 
 The following features are planned for the future:
 
@@ -13,6 +13,13 @@ The following features are planned for the future:
   them over the network.
   
 * *Component banks* - Banks of components which can be accessed at runtime.
+
+* *Dataflow support layer* - [DataflowBlueprint] ports, components and networks
+  should model the generic dataflow [concepts].  This will allow the use of
+  the common syntax, as well as the creation of blueprints of blueprints :-)
+
+* *Python bindings* - runtime configuration and operation of networks using
+  Python scripts.
 
 * *Documentation* - non-existant at this point...
 
@@ -37,15 +44,16 @@ environment for the Dataflow library.
 
 [section:layers Support for more layers]
 
-Several boost libraries are prime candidates for dataflow support, and the
+Several existing libraries and dataflow frameworks are prime candidates for
+Dataflow library support, and the
 usefulness of the dataflow library would greatly increase either by adding
 support layers for these libraries, or providing examples of how to use these
 libraries with existing layers.
 
 Some of these libraries are:
 
-* Boost.Iostreams
-* Boost.GIL
+* [BoostIostreams]
+* [GNURadio] (thanks to Phil Endecott for the reference)
 
 [endsect]
 
@@ -63,7 +71,7 @@ There was a lot of envisioned configurability of the connections made this way
 - the pins at each processing component could be in, out, or in/out, and links
 created by connecting two pins could be categorized as push, pull, push/pull,
 and would also have support for update tracking and trigger modes.  The
-framework would provide support for the data transport components and link/pin
+framework would provide support for the data transport objects and link/pin
 management, and would also be in charge of invoking the components (which
 could be done in an optimized way, depending on what parts of the network
 need to be updated).
@@ -85,14 +93,10 @@ With the Dataflow library in place, which came after merging the Signal Network
 library with the new generic-oriented [DataflowPhoenix], it is now
 a little clearer how the pin-based approach that Tobias proposed could
 be adapted into the generic Dataflow framework.
-Instead of a direct
-connection from a data-producing component to a data-consuming component,
-as is now typically done in both of the Dataflow modules,
-there would be a connection from a data-producing component's pin
-to a data transport component, and again a connection from the data transport
-component to to the pin of the data-consuming component.
-The processing components would be [InvocableConcept], while each data transport
-component would be both a [ProducerPortConcept] and a [ConsumerPortConcept].
+Here, a connection from a data-producing component to a data-consuming
+component would lead to them both being connected to the same data-transport
+object, which would be managed by the library.  The components
+could be invoked through the [InvocableConcept] by the library when needed.
 
 There are, of course, a lot of other issues to solve, and a lot of ways in
 which the Dataflow generic support layer might need to grow to accomodate

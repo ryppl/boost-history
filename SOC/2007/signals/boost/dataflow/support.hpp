@@ -8,10 +8,11 @@
 
 #include <boost/dataflow/support/port.hpp>
 #include <boost/dataflow/support/proxy_port.hpp>
+#include <boost/dataflow/support/complemented_port.hpp>
 #include <boost/dataflow/support/binary_operation.hpp>
 #include <boost/dataflow/support/keyed_port.hpp>
 #include <boost/dataflow/support/unary_operation.hpp>
-#include <boost/dataflow/support/reflective_component.hpp>
+#include <boost/dataflow/support/component.hpp>
 #include <boost/dataflow/support/component_operation.hpp>
 
 #endif // BOOST_DATAFLOW_SUPPORT_HPP

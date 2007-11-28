@@ -15,15 +15,11 @@ namespace boost { namespace dataflow {
 
 namespace signals {
 
-struct mechanism
-{
-    template<typename PortTraits, typename Enable=void>
-    struct runtime_connection;
-};
+struct mechanism {};
 
 template<typename T>
 struct producer
-    : public port_traits<mechanism, ports::producer, concepts::port>
+    : public complemented_port_traits<mechanism, ports::producer, boost::function<T> >
 {
     typedef T signature_type;
 };
@@ -39,18 +35,45 @@ struct call_consumer
     : public port_traits<mechanism, ports::consumer, concepts::keyed_port>
 {};
 
+    // mechanism used for data extraction
+    struct extract_mechanism {};
+    
+    template<typename T>
+    struct extract_producer
+    : public complemented_port_traits<extract_mechanism, ports::producer, boost::function<T> >
+    {
+        typedef T signature_type;
+    };
+    
+    template<typename T>
+    struct extract_consumer
+    : public port_traits<extract_mechanism, ports::consumer, concepts::port>
+    {
+        typedef T signature_type;
+    };
+    
+    struct extract_call_consumer
+    : public port_traits<extract_mechanism, ports::consumer, concepts::keyed_port>
+    {};
+
 } // namespace signals
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct port_traits_of<signals::mechanism, ports::producer, boost::signal<Signature, Combiner, Group, GroupCompare> >
+struct register_port_traits<signals::mechanism, ports::producer, boost::signal<Signature, Combiner, Group, GroupCompare> >
 {
     typedef signals::producer<Signature> type;
 };
 
 template<typename Signature>
-struct port_traits_of<signals::mechanism, ports::consumer, boost::function<Signature> >
+struct register_port_traits<signals::mechanism, ports::consumer, boost::function<Signature> >
 {
     typedef signals::consumer<Signature> type;
+};
+
+template<typename Signature>
+struct register_port_traits<signals::extract_mechanism, ports::consumer, boost::function<Signature> >
+{
+    typedef signals::extract_consumer<Signature> type;
 };
 
 namespace extension
@@ -60,8 +83,21 @@ namespace extension
     {
         typedef const boost::function<Signature> result_type;
         
-        template<typename ConsumerPort, typename ProducerPort>
-        result_type operator()(ConsumerPort &consumer, ProducerPort &)
+        template<typename ConsumerPort>
+        result_type operator()(ConsumerPort &consumer)
+        {
+            return boost::signals::detail::bind_object<Signature, ConsumerPort>()
+            (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
+        };
+    };
+    
+    template<typename Signature>
+    struct get_keyed_port_impl<signals::extract_call_consumer, signals::extract_producer<Signature> >
+    {
+        typedef const boost::function<Signature> result_type;
+        
+        template<typename ConsumerPort>
+        result_type operator()(ConsumerPort &consumer)
         {
             return boost::signals::detail::bind_object<Signature, ConsumerPort>()
             (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
@@ -89,10 +125,16 @@ namespace boost { namespace signals {
 #undef DATAFLOW_TEMPLATE_BINARY_OPERATION
 #undef DATAFLOW_TEMPLATE_MECHANISM
 
+#define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::signals::extract_mechanism
+#define DATAFLOW_TEMPLATE_BINARY_OPERATION extract
+#include <boost/dataflow/templates/binary_operation.hpp>
+#undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+#undef DATAFLOW_TEMPLATE_MECHANISM
+
 template<typename Component>
 inline void invoke(Component &component)
 {
-    boost::dataflow::component_operation<boost::dataflow::operations::invoke, boost::dataflow::signals::mechanism>(component);
+    boost::dataflow::component_operation<boost::dataflow::operations::invoke>(component);
 }
 
 } } // namespace boost::phoenix

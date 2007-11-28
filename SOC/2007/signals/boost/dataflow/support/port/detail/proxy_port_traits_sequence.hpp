@@ -33,7 +33,7 @@ namespace detail {
 
 } }
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, 1, <boost/dataflow/support/port/detail/proxy_port_traits_sequence.hpp>))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, 2, <boost/dataflow/support/port/detail/proxy_port_traits_sequence.hpp>))
     #include BOOST_PP_ITERATE()
 
     #endif

@@ -8,8 +8,6 @@
 
 #include <boost/dataflow/support/component.hpp>
 
-#include <boost/static_assert.hpp>
-#include <boost/utility/result_of.hpp>
 
 
 namespace boost { namespace dataflow {

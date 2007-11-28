@@ -4,16 +4,14 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/dataflow/support/component_operation.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/mpl/vector.hpp>
 
 bool invoked = false;
 
 struct my_mechanism;
 
-struct my_component_traits
-{
-    typedef my_mechanism mechanism;
-};
+struct my_component_traits : public boost::dataflow::component_traits<boost::mpl::vector< > >
+{};
 
 struct my_component
 {
@@ -42,7 +40,7 @@ int test_main(int, char* [])
 {
     my_component c;
     
-    df::component_operation<df::operations::invoke, my_mechanism>(c);
+    df::component_operation<df::operations::invoke>(c);
     BOOST_CHECK(invoked);    
     
     return 0;

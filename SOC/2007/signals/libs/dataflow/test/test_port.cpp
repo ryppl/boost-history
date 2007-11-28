@@ -46,10 +46,10 @@ struct non_intrusive_port
 
 namespace boost { namespace dataflow {
 
-// port_traits_of holds the PortTraits type of a Port, keyed by Mechanism
+// register_port_traits holds the PortTraits type of a Port, keyed by Mechanism
 // and PortCategory
 template<>
-struct port_traits_of<some_mechanism, df::ports::producer, non_intrusive_port>
+struct register_port_traits<some_mechanism, df::ports::producer, non_intrusive_port>
 {
     typedef producer_traits type;
 };
@@ -79,10 +79,10 @@ struct non_intrusive_port_base
 
 namespace boost { namespace dataflow {
 
-// port_traits_of holds the PortTraits type of a Port, keyed by Mechanism
+// register_port_traits holds the PortTraits type of a Port, keyed by Mechanism
 // and PortCategory
 template<typename T>
-struct port_traits_of<
+struct register_port_traits<
     some_mechanism,
     df::ports::producer,
     T,

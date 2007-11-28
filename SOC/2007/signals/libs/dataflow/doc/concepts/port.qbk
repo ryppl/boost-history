@@ -44,17 +44,72 @@ files:
 
 [endsect][/portcategory]
 
-[section PortTraits]
+[section:port Port, PortTraits]
 
-A ['[PortTraitsConcept]] specifies the traits of a [PortConcept].
+A ['[PortConcept]] is the fundamental point of data production or consumption.
+In order for a type `P` to satisfy the [PortConcept] concept requirements,
+a [PortTraitsConcept] type (specifying the traits of the port)
+must be registered for the port.  Registration can be
+performed in multiple ways (see the examples below).
+
+[PortConcept] concept
+requirements are always relative to a particular a [MechanismConcept] `M` and
+[PortCategoryConcept] `PC`.
+
+* If `PC` is `ports::producer`, then `P` is a [ProducerPortConcept]
+* If `PC` If `ports::consumer`, then `P` is a [ConsumerPortConcept]
+
+A type can be a [PortConcept] for multiple mechanisms and/or port categories.
+
+[heading Port Refinements]
+
+* [KeyedPortConcept]
+* [ComplementedPortConcept]
 
 [heading Notation]
+The following expressions are used in this document:
+
 [variablelist
-    [[PT] [A PortTraits type.]]
-    [[P] [A [PortConcept] type with port traits `PC`.]]
+    [[`M`] [A [MechanismConcept] type.]]
+    [[`PC`] [A [PortCategoryConcept] type.]]
+    [[`P`] [A Port type, for [MechanismConcept] `M` and [PortCategoryConcept] `PC`.]]
+    [[`PT`] [[PortTraitsConcept] of `P` for `M` and `PC`.]]
+    [[`p`] [An object of type `P`]]
 ]
 
-[heading Requirements]
+[heading Port Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`port_traits_of<M, PC, P>::type`]
+        [`PT`]
+        [
+            The [PortTraitsConcept] of the port.
+        ]
+    ]
+    [
+        [IsPort Trait]
+        [`is_port<M, PC, P>::type`]
+        [Boolean metafunction that evaluates to true]
+        [
+            A trait encapsulating adherence to the Port
+            concept.
+        ]
+    ]
+    [
+        [Get Port]
+        [`get_port<M,PC>(p)`]
+        [`get_port_result_type<M,PC,P>::type`]
+        [
+            Returns the underlying port object.  With regular ports,
+            this is typically a reference to `p`.  With [ProxyPortConcept]
+            objects, it is typically the proxied port object.
+        ]
+    ]
+]
+
+[heading PortTraits Requirements]
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
@@ -72,86 +127,10 @@ A ['[PortTraitsConcept]] specifies the traits of a [PortConcept].
     [
         [Port Concept]
         [`PT::port_concept`]
-        [`concepts::port`, `concepts::keyed_port`]
+        [`concepts::port`, `concepts::keyed_port`, `concepts::complemented_port`]
         [The most refined producer concept that `P` satisfies.]
     ]
-]
 
-[heading Header]
-The types, templates, and functions shown here are declared in the following
-files:
-
-```
-    #include <boost/dataflow/support/port.hpp> // or
-    #include <boost/dataflow/support.hpp>
-```
-
-[heading Notes]
-
-[heading Examples]
-
-The following code defines a port traits type for vtk_algorithm_output,
-and associates it with this type. It is a part of
-the [vtk_example example showing how to provide a VTK support layer].
-
-[vtk_algorithm_output_producer]
-
-[endsect][/porttraits]
-
-
-[section:port Port (ProducerPort, ConsumerPort)]
-
-A type `P` is a ['[PortConcept]] for a mechanism `M` and port category `PC`
-if it specifies a [PortTraitsConcept] for that mechanism and port category.
-
-In that case,
-
-* If `PC` is `ports::producer`, then `P` is a [ProducerPortConcept]
-* If `PC` If `ports::consumer`, then `P` is a [ConsumerPortConcept]
-
-[heading Refinements]
-
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[`P`] [A Port type.]]
-    [[`M`] [A [MechanismConcept] type.]]
-    [[`PC`] [A [PortCategoryConcept] type.]]
-    [[`p`] [An object of type `P`]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Semantics]]
-    [
-        [Port Traits]
-        [`port_traits_of<M, PC, P>::type`]
-        [Any [PortTraitsConcept] type]
-        [
-            The [PortTraitsConcept] of the port.
-        ]
-    ]
-    [
-        [IsPort Trait]
-        [`is_port<M, PC, P>::type`]
-        [Boolean metafunction that evaluates to true]
-        [
-            A trait encapsulating adherence to the Port
-            concept.
-        ]
-    ]
-    [
-        [Get Port]
-        [`get_port<M,PC>()`]
-        [`get_port_result_type<M,PC,P>::type`]
-        [
-            Returns the underlying port object.  With regular ports,
-            this is typically a reference to `p`.  With [ProxyPortConcept]
-            objects, it is typically the proxied port object.
-        ]
-    ]
 ]
 
 [heading Header]
@@ -169,7 +148,7 @@ There is an intrusive as well as a non-intrusive way to register the
 [PortTraitsConcept] of a type `P`, thereby making it a [PortConcept].
 
 Non-intrusive registration is done by providing a specialization of
-the `port_traits_of` template (either directly, or through the provided
+the `register_port_traits` template (either directly, or through the provided
 macros DATAFLOW_PORT_TRAITS and DATAFLOW_PORT_TRAITS_ENABLE_IF).
 
 Intrusive registration can be done by providing
@@ -196,8 +175,8 @@ Intrusive registration is the easiest, but assumes you can modify the
 
 [heading Non-intrusive registration]
 
-Non-intrusive registration is done by specializing the `port_traits_of`
-template.  Since the `port_traits_of` template is keyed by [MechanismConcept]
+Non-intrusive registration is done by specializing the `register_port_traits`
+template.  Since the `register_port_traits` template is keyed by [MechanismConcept]
 and [PortCategoryConcept], this is rather verbose:
 
 [port_registration_example_non_intrusive]
@@ -210,7 +189,7 @@ registration (the macro also performs a static check on the
 
 [heading Non-intrusive mass registration]
 
-The `port_traits_of` template has an Enable template parameter for use with
+The `register_port_traits` template has an Enable template parameter for use with
 `boost::enable_if`.  Hence, we can register a number of types at the same time:
 
 [port_registration_example_non_intrusive_enable_if]
@@ -227,12 +206,78 @@ With the above registrations, the following tests pass:
 
 [endsect][/port]
 
-[section ProxyPortTraits]
 
+[section:complementedport ComplementedPort, ComplementedPortTraits]
 
-[endsect][/proxyporttraits]
+A ComplementedPort `P` is a [PortConcept] s.t. whenever it is
+[BinaryOperableConcept] with another [PortConcept] `P2`, `P2` is
+a particular type - `P`'s complement type.
 
-[section ProxyPort]
+[ComplementedPortConcept]s are useful in situations where [PortConcept] types
+are [BinaryOperableConcept] in a one-to-one fashion (a pair of [PortConcept] types
+are each other's port complements), or in a one-to-many fashion (a number
+of [PortConcept] types have the same complement port).  An example of the
+latter is [DataflowSignals], where any `signal` of signature `T` has
+a complement port of type `function<T>`, and can therefore model
+[ComplementedPortConcept], but `function<T>` is cannot because there are many `signal`
+types to which it can be connected.
+
+The traits of a [ComplementedPortConcept] are captured by the
+[ComplementedPortTraitsConcept], which refines the [PortTraitsConcept] with
+an additional member type specifying the complement port type.
+
+[heading ComplementedPort Refines]
+* [PortConcept]
+
+[heading ComplementedPortTraits Refines]
+* [PortTraitsConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`M`] [A [MechanismConcept] type.]]
+    [[`PC`] [A [PortCategoryConcept] type.]]
+    [[`P`] [A [ComplementedPortConcept] type, for [MechanismConcept] `M` and [PortCategoryConcept] `PC`.]]
+    [[`PT`] [[ComplementedPortTraitsConcept]  of `P` for `M` and `PC`.]]
+]
+
+[heading ComplementedPort Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`port_traits_of<M, PC, P>::type`]
+        [`PT`]
+        [
+            The [ComplementedPortTraitsConcept] of the port.
+        ]
+    ]
+]
+
+[heading ComplementedPortTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Complement Port Type]
+        [`PT::complement_port_type`]
+        [Any [PortConcept] type]
+        [
+            The complement port type of the port type `P`.  If `P` is 
+            [BinaryOperableConcept] with another port type `P2`, then
+            `get_port<PT::mechanism, PT::category::complement>(p2)` must
+            return an object of type `PT::complement_port_type` or reference
+            to such.
+        ]
+    ]
+]
+
+[endsect]
+
+[section KeyedPort]
+[endsect][/keyed_port]
+
+[section ProxyPort, ProxyPortTraits]
 
 A type `PP` is a ['[ProxyPortConcept]] for a mechanism `M` and port category `PC`
 if it specifies a [ProxyPortTraitsConcept] for that mechanism and port category.
@@ -277,5 +322,3 @@ files:
 
 [endsect][/proxyport]
 
-[section KeyedPort]
-[endsect][/keyed_port]

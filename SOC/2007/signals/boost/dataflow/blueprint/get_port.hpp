@@ -7,7 +7,7 @@
 #define BOOST_DATAFLOW_BLUEPRINT_GET_PORT_HPP
 
 #include <boost/dataflow/blueprint/port_t.hpp>
-#include <boost/dataflow/support/reflective_component.hpp>
+#include <boost/dataflow/support/component.hpp>
 
 #include <boost/mpl/range_c.hpp>
 #include <boost/switch.hpp>
@@ -18,7 +18,7 @@ namespace boost { namespace dataflow { namespace blueprint {
 
 namespace detail {
 
-template<typename Mechanism, typename Component>
+template<typename Component>
 struct get_port_case
 {
     typedef void result_type;
@@ -27,15 +27,14 @@ struct get_port_case
     {
         ret.reset(new port_t<
             typename mpl::at_c<
-                typename component_traits_of<Mechanism, Component>::type::ports,
+                typename component_traits_of<Component>::type::ports,
                 Case::value
             >::type,
             typename get_component_port_result_type<
-                Mechanism,
                 mpl::int_<Case::value>,
                 Component
             >::type
-        >(get_component_port<Mechanism, mpl::int_<Case::value>, Component >(c))); \
+        >(get_component_port<mpl::int_<Case::value>, Component >(c))); \
     }
     get_port_case(Component& c, std::auto_ptr<port> &ret) : c(c), ret(ret)
     {}
@@ -45,7 +44,7 @@ struct get_port_case
 
 } // namespace detail
 
-template<typename Mechanism, typename Component>
+template<typename Component>
 std::auto_ptr<port> get_port(Component &c, int port_num)
 {
     std::auto_ptr<port> ret;
@@ -53,9 +52,9 @@ std::auto_ptr<port> get_port(Component &c, int port_num)
         int,
         0,
         mpl::size<
-            typename component_traits_of<Mechanism, Component>::type::ports>
+            typename component_traits_of<Component>::type::ports>
         ::value> range;
-    boost::switch_<range>(port_num, detail::get_port_case<Mechanism, Component>(c, ret));
+    boost::switch_<range>(port_num, detail::get_port_case<Component>(c, ret));
     return ret;
 }
 

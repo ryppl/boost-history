@@ -9,7 +9,7 @@
 
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
-#include <boost/fusion/sequence/generation/make_vector.hpp>
+#include <boost/fusion/include/make_vector.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 

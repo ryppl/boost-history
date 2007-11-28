@@ -14,6 +14,26 @@ local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
 
 xml dataflow_xml : dataflow.qbk ;
 
+doxygen dataflow_blueprint_doxygen
+   :
+      [ glob ../../../boost/dataflow/blueprint/*.hpp ]
+   :
+        <doxygen:param>TAB_SIZE=4
+        <doxygen:param>EXAMPLE_PATH=../test
+        <doxygen:param>EXAMPLE_PATH=../example
+        <doxygen:param>STRIP_FROM_PATH=$(root)
+        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
+        <doxygen:param>EXTRACT_ALL=NO
+        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+        <doxygen:param>INHERIT_DOCS=YES
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=../../..
+        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_ONLY
+   ;
+
 #doxygen dataflow_doxygen
 #   :
 #      [ glob ../../../boost/dataflow/support.hpp ]
@@ -41,6 +61,7 @@ xml dataflow_xml : dataflow.qbk ;
 boostbook standalone
    :
       dataflow_xml
+      dataflow_blueprint_doxygen
 #      dataflow_doxygen
     :
         # pull in the online .css and images

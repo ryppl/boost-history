@@ -1,12 +1,13 @@
 [section:blueprint Dataflow.Blueprint]
 
-The current focus of the Dataflow library are mechanisms in which the
-dataflow network is stored in the individual components - i.e., there
-is no global picture of the network available through the library.
+The [DataflowBlueprint] layer
+provides generic components that can hold the "big picture"
+of a dataflow network.  This is particularly useful for those dataflow
+frameworks (such as [DataflowSignals] where the dataflow network is stored in
+the individual components - i.e., there
+is no global picture of the network available.
 
-The [DataflowBlueprint] layer addresses this shortcoming by
-providing generic components that provide this "big picture"
-of a dataflow network.  A blueprint component corresponds to an actual
+A blueprint component corresponds to an actual
 component - but whereas the actual component takes care of the work, the
 blueprint component provides a run-time polymorphic interface which can be
 embedded in a BGL graph. A dataflow network blueprint uses such a graph
@@ -17,12 +18,14 @@ and other features.  More details are in the [link dataflow.future.blueprint
 future work section].
 
 The [DataflowBlueprint] layer is built on top of the Dataflow library 
-[concepts].  Hence, it can be used with any mechanism for which a Dataflow
-support layer has been implemented.
+[concepts].  Hence, it can be used with any dataflow framework for which a
+Dataflow support layer has been implemented.
 
 [warning The [DataflowBlueprint] layer development has only started, and
-the current implementation is very rough.  There is no documentation,
+the current implementation is very rough.  There is no detailed documentation,
 but the provided [link dataflow.introduction.examples.blueprint example]
 provides some insight into its usability.]
+
+[xinclude ../dataflow_blueprint_doxygen.xml]
 
 [endsect]

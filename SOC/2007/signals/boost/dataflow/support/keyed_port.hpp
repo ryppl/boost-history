@@ -15,11 +15,6 @@
 
 namespace boost { namespace dataflow {
 
-namespace concepts
-{
-    struct keyed_port;
-}
-
 namespace extension
 {
     template<typename KeyedPortTag, typename KeyPortTag>
@@ -28,7 +23,7 @@ namespace extension
         typedef void result_type;
 
         template<typename KeyedPort, typename Key>
-        void operator()(KeyedPort &, Key &)
+        void operator()(KeyedPort &)
         {
             // Error: get_keyed_port_impl has not been implemented
             // for KeyedPortTag and KeyPort.
@@ -36,17 +31,17 @@ namespace extension
         }
     };
 }
-    
-template<typename Mechanism, typename PortCategory, typename T1, typename T2>
-typename result_of<
+
+/*template<typename Mechanism, typename PortCategory, typename KeyPort, typename T>
+inline typename result_of<
     extension::get_keyed_port_impl<
         typename port_traits_of<
-            Mechanism, PortCategory, typename boost::remove_cv<T1>::type
+            Mechanism, PortCategory, typename boost::remove_cv<T>::type
         >::type,
         typename port_traits_of<
-            Mechanism, typename PortCategory::complement, typename boost::remove_cv<T2>::type
+            Mechanism, typename PortCategory::complement, typename boost::remove_cv<KeyPort>::type
         >::type
-    > (T1 &, T2 &)
+    > (T &)
 >::type
 get_keyed_port(T1 &t1, T2 &t2)
 {
@@ -58,6 +53,29 @@ get_keyed_port(T1 &t1, T2 &t2)
             Mechanism, typename PortCategory::complement, typename boost::remove_cv<T2>::type
         >::type
     >()(t1, t2);
+}*/
+
+template<typename KeyPortTraits, typename KeyPort>
+inline typename result_of<
+    extension::get_keyed_port_impl<
+        typename port_traits_of<
+            typename KeyPortTraits::mechanism,
+            typename KeyPortTraits::category::complement,
+            typename boost::remove_cv<KeyPort>::type
+        >::type,
+        KeyPortTraits
+    > (KeyPort &)
+>::type
+get_keyed_port(KeyPort &p)
+{
+    return extension::get_keyed_port_impl<
+        typename port_traits_of<
+            typename KeyPortTraits::mechanism,
+            typename KeyPortTraits::category::complement,
+            typename boost::remove_cv<KeyPort>::type
+        >::type,
+        KeyPortTraits
+    >()(p);
 }
 
 namespace extension
@@ -72,7 +90,7 @@ namespace extension
         void operator()(Producer &producer, Consumer &consumer)
         {
             binary_operation<Operation, typename ProducerTag::mechanism>
-                (get_keyed_port<typename ProducerTag::mechanism, typename ProducerTag::category>(producer, consumer), consumer);
+                (get_keyed_port<ConsumerTag>(producer), consumer);
         }
     };
     
@@ -86,7 +104,7 @@ namespace extension
         void operator()(Producer &producer, Consumer &consumer)
         {
             binary_operation<Operation, typename ProducerTag::mechanism>
-                (producer, get_keyed_port<typename ProducerTag::mechanism, typename ConsumerTag::category>(consumer, producer));
+                (producer, get_keyed_port<ProducerTag>(consumer));
         }
     };
 

@@ -68,8 +68,8 @@ namespace extension
     {
         template<typename Args> struct result;
         
-        template<typename F, typename KeyedPort, typename Key>
-        struct result<F(KeyedPort &, Key &)>
+        template<typename F, typename KeyedPort>
+        struct result<F(KeyedPort &)>
         {
             typedef typename boost::fusion::result_of::at_key<
                 typename KeyedPort::map_type,
@@ -77,9 +77,9 @@ namespace extension
             >::type type;
         };
 
-        template<typename KeyedPort, typename Key>
-        typename result<get_keyed_port_impl(KeyedPort &, Key &)>::type
-            operator()(KeyedPort &port, Key &)
+        template<typename KeyedPort>
+        typename result<get_keyed_port_impl(KeyedPort &)>::type
+            operator()(KeyedPort &port)
         {
             return boost::fusion::at_key<
                     KeyTag

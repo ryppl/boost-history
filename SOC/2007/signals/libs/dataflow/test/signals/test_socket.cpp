@@ -60,7 +60,7 @@ int test_main(int, char* [])
 	boost::mutex::scoped_lock lock(mutex_);
 	boost::thread t(asio_server);
 	cond.wait(lock);
-
+    
 	// set up the socket
 	asio::ip::tcp::endpoint endpoint_recv(asio::ip::address::from_string("127.0.0.1"), 1097);
 	asio::ip::tcp::socket socket(io_service);

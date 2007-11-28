@@ -21,18 +21,28 @@ int test_main(int, char* [])
             signals::storage<void (float)> floater;
             floater(2.5f);
             signals::storage<void (float)> collector(0.0f);
-
-            banger | counter;
-            floater >>= collector;
-            connect(banger, floater.send_slot());
-/*            
+                        
             banger
                 | counter
-                | (floater >>= collector).send_slot();*/
+                | (floater.send_slot() >>= collector);
             
             banger();
             BOOST_CHECK_EQUAL(counter.count(), 1);
             BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);
+            
+            #ifndef SIGNAL_NETWORK_THREAD_SAFE
+            BOOST_CHECK((
+                boost::is_base_of<
+                    boost::signals::trackable,
+                    signals::counter<void ()>
+                >::type::value));
+            BOOST_CHECK((
+                boost::is_base_of<
+                    boost::signals::trackable,
+                    signals::storage<void (float)>
+                >::type::value));
+            #endif
+
         } // counter, floater, and collector are now destroyed and disconnected with Boost.Signals
 #ifdef SIGNAL_NETWORK_THREAD_SAFE
         // if [DataflowSignals] has detected thread safe signals, we need to

@@ -27,6 +27,8 @@ namespace extension
     template<typename Operation, typename ComponentTraits, typename Enable=void>
     struct component_operation_impl
     {
+        BOOST_MPL_ASSERT((is_same<Enable, void>));
+
         struct detail
         {
             typedef void not_specialized;
@@ -42,30 +44,32 @@ namespace extension
     };
 }
 
-template<typename Operation, typename Mechanism, typename T, typename Enable=void>
+template<typename Operation, typename T, typename Enable=void>
 struct implements_component_operation
-    : public mpl::true_ {};
+    : public mpl::true_
+{
+    BOOST_MPL_ASSERT((is_same<Enable, void>));
+};
 
-template<typename Operation, typename Mechanism, typename T>
+template<typename Operation, typename T>
 struct implements_component_operation<
     Operation,
-    Mechanism,
     T,
     typename detail::enable_if_defined<
         typename extension::component_operation_impl<
             Operation,
-            typename component_traits_of<Mechanism, T>::type
+            typename component_traits_of<T>::type
         >::detail::not_specialized
     >::type
 >
     : public mpl::false_ {};
 
-template<typename Operation, typename Mechanism, typename Component>
+template<typename Operation, typename Component>
 void component_operation(Component &component)
 {
     extension::component_operation_impl<
         Operation,
-        typename component_traits_of<Mechanism, Component>::type
+        typename component_traits_of<Component>::type
     >()(component);
 }
 

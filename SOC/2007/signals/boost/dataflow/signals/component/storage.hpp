@@ -16,6 +16,7 @@
 #include <boost/fusion/container/map.hpp>
 #include <boost/dataflow/detail/make_ref.hpp>
 
+
 namespace boost { namespace signals {
 
     template<typename Signature,
@@ -28,11 +29,12 @@ class storage;
 
 template<typename T>
 struct storage_component_traits
-    : public dataflow::reflective_component_traits<
-        dataflow::signals::mechanism,
+    : public dataflow::component_traits<
         mpl::vector<
             dataflow::signals::producer<T>, // outgoing signal
-            dataflow::signals::consumer<T> // incoming signal
+            dataflow::signals::consumer<T>, // incoming signal
+            dataflow::signals::extract_producer<T>, // outgoing extraction port
+            dataflow::signals::extract_consumer<T> // incoming extraction port
         > >
 {};
 
@@ -104,6 +106,13 @@ public:
     
     typedef storage_component_traits<Signature> component_traits;
     
+    typedef mpl::vector<
+        typename boost::dataflow::signals::call_consumer,
+        typename boost::dataflow::signals::extract_producer<Signature>,
+        typename boost::dataflow::signals::extract_call_consumer
+         > port_traits;
+
+
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
         */
@@ -131,6 +140,11 @@ public:
     typename base_type::signal_type::result_type send(const boost::fusion::vector<> &)
     {
         return send();
+    }
+    typename base_type::signal_type::result_type call(const function<typename base_type::signature_type> &f)
+    {
+        boost::fusion::fused<function<typename base_type::signature_type> const &> fused_out(f);
+        return fused_out(base_type::modification.stored);
     }
     /** \return A reference to the fusion vector of stored parameter values.
     */
@@ -218,36 +232,50 @@ namespace extension {
     template<typename T>
     struct get_component_port_impl<boost::signals::storage_component_traits<T> >
     {
+        template<typename Component>
+        struct port_types
+        {
+            typedef fusion::vector<signal<T> &, function<T>, Component &, function<T> > type;
+        };
+        
+        template<typename Component>
+        typename port_types<Component>::type ports(Component &component)
+        {
+            return typename port_types<Component>::type(
+                component.get_proxied_producer(),
+                get_keyed_port<signals::producer<T> >(component),
+                component,
+                get_keyed_port<signals::extract_producer<T> >(component)
+                );
+        }
+
         template<typename FArgs> struct result;
 
-        template<typename F, typename Component>
-        struct result<F(Component &, boost::mpl::int_<0>)>
+        template<typename F, typename Component, typename N>
+        struct result<F(Component &, N)>
         {
-            typedef signal<T> & type;
+            typedef typename fusion::result_of::value_at<
+                typename port_types<Component>::type,
+                N>::type type;
         };
         
-        template<typename F, typename Component>
-        struct result<F(Component &, boost::mpl::int_<1>)>
+        template<typename Component, typename N>
+        typename result<get_component_port_impl(Component &, N)>::type
+        operator()(Component &component, N)
         {
-            typedef function<T> type;
-        };
-        
-        template<typename Component>
-        signal<T> &
-        operator()(Component &component, boost::mpl::int_<0>)
-        {
-            return component.get_proxied_producer();
-        }
-        
-        template<typename Component>
-        function<T>
-        operator()(Component &component, boost::mpl::int_<1>)
-        {
-            return boost::signals::detail::bind_object<T, Component>()
-            (static_cast<typename boost::signals::detail::slot_type<T, Component>::type>(&Component::operator()), component);
+            return fusion::at<N>(ports(component));
         }
     };
     
+    template<typename T>
+    struct binary_operation_impl<operations::extract, signals::extract_producer<T>, signals::extract_consumer<T> >
+    {
+        template<typename Producer, typename Consumer>
+        void operator()(Producer &producer, Consumer &consumer)
+        {
+            producer.call(consumer);
+        }
+    };
 }
 
 } } // namespace boost::dataflow

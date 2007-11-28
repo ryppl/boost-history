@@ -113,7 +113,7 @@ private:
     static char symbols[8];
 };
 
-char image_display::symbols[8] = {' ', '.', ',', ':', ';', '*', '#', '$' };
+char image_display::symbols[8] = {' ', '.', ',', '-', '+', 'x', 'X', '#'};
 
 //]
 
@@ -133,10 +133,10 @@ public:
             {
             // Keys ',' and '.' adjust the grayscale value
             case ',':
-                adjust(-20);
+                adjust(-32);
                 break;
             case '.':
-                adjust(20);
+                adjust(32);
                 break;
             // Keys '0' and '1' control the mux output
             case '0':
@@ -179,11 +179,11 @@ int main(int, char* [])
     signals::timed_generator<void ()> timer;
 
     // Data processor and output:
-    image_generator generator(10,10, 128);
+    image_generator generator(10,10, 32);
     noise_adder filter;
     image_display display;
 
-    controller control(128);
+    controller control(32);
     signals::multiplexer<void (const gil::gray8_image_t &)> mux;
 
     // ---Connect the dataflow network -----------------------------------------
@@ -209,16 +209,16 @@ int main(int, char* [])
     control.value_signal >>= generator;
     control.select_signal >>= mux.select_slot();
 
-    // Tell the timer to start producing signals, every 0.5s:
-    timer.enable(0.5);
+    // Tell the timer to start producing signals, every 1.0s:
+    timer.enable(1.0);
 
     // Run the controller
     std::cout
-        << "Use keys ',' and '.' to control the image intensity, "
-        << "and '0' and '1' to switch the display between the unfiltered"
-        << "and filtered image. 'q' will exit." << std::endl
-        << "Since we are using cin for the input, REMEMBER TO PRESS ENTER"
-        << "after each command.";
+        << "Use keys ',' and '.' to control the image intensity, " << std::endl
+        << "and '0' and '1' to switch the display between the unfiltered" << std::endl
+        << "and filtered image. 'q' will exit." << std::endl << std::endl
+        << "Since we are using cin for the input, REMEMBER TO PRESS ENTER" << std::endl
+        << "after each command." << std::endl << std::endl;
     control.run();
 
     timer.join();

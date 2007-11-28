@@ -14,18 +14,16 @@
 
 namespace boost { namespace dataflow {
 
-namespace operations {
-    struct connect;
-    struct connect_only;
-    struct disconnect;
-    struct extract;
-}
-
 namespace extension
 {
     template<typename Operation, typename ProducerTag, typename ConsumerTag, typename Enable=void>
     struct binary_operation_impl
     {
+        struct detail
+        {
+            typedef void not_specialized;
+        };
+        
         template<typename Producer, typename Consumer>
         void operator()(Producer &, Consumer &)
         {
@@ -49,6 +47,53 @@ inline void binary_operation(Producer &producer, Consumer &consumer)
             ()(get_port<Mechanism, ports::producer>(producer),
                get_port<Mechanism, ports::consumer>(consumer));
 }
+
+template<typename Operation, typename Mechanism, typename ProducerPort, typename ConsumerPort, typename Enable=void>
+struct are_binary_operable
+    : public mpl::false_
+{
+    BOOST_MPL_ASSERT((is_same<Enable, void>));
+};
+
+template<typename Operation, typename Mechanism, typename Producer, typename Consumer, typename Enable=void>
+struct specialized_binary_operation
+    : public mpl::true_
+{
+    BOOST_MPL_ASSERT((is_same<Enable, void>));
+};
+
+template<typename Operation, typename Mechanism, typename Producer, typename Consumer>
+struct specialized_binary_operation<
+    Operation,
+    Mechanism,
+    Producer,
+    Consumer,
+    typename detail::enable_if_defined<
+        typename extension::binary_operation_impl<
+            Operation,
+            typename port_traits_of<Mechanism, ports::producer, typename boost::remove_cv<Producer>::type>::type,
+            typename port_traits_of<Mechanism, ports::consumer, typename boost::remove_cv<Consumer>::type>::type
+        >::detail::not_specialized
+    >::type
+>
+    : public mpl::false_ {};
+
+template<typename Operation, typename Mechanism, typename Producer, typename Consumer>
+struct are_binary_operable<
+    Operation,
+    Mechanism,
+    Producer,
+    Consumer,
+    typename enable_if<
+        mpl::and_<
+            is_port<Mechanism, ports::producer, typename boost::remove_cv<Producer>::type>,
+            is_port<Mechanism, ports::consumer, typename boost::remove_cv<Consumer>::type>,
+            specialized_binary_operation<Operation,Mechanism,Producer,Consumer>
+        >
+    >::type
+>
+    : public mpl::true_ {};
+
 
 } } // namespace boost::dataflow
 

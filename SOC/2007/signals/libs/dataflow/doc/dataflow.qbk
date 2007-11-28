@@ -13,32 +13,33 @@
 ]
 
 [template concepts[] [link dataflow.concepts concepts]]
-[template MechanismConcept[] [link dataflow.concepts.mechanism [^Mechanism]]]
-[template PortCategoryConcept[] [link dataflow.concepts.portcategory [^PortCategory]]]
-[template PortTraitsConcept[] [link dataflow.concepts.porttraits [^PortTraits]]]
-[template PortConcept[] [link dataflow.concepts.port [^Port]]]
-[template ProducerPortConcept[] [link dataflow.concepts.port [^ProducerPort]]]
-[template ConsumerPortConcept[] [link dataflow.concepts.port [^ConsumerPort]]]
-[template KeyedPortConcept[] [link dataflow.concepts.keyedport [^KeyedPort]]]
-[template ProxyPortTraitsConcept[] [link dataflow.concepts.proxyporttraits [^ProxyPortTraits]]]
-[template ProxyPortConcept[] [link dataflow.concepts.proxyport [^ProxyPort]]]
+[template MechanismConcept[] [link dataflow.concepts.port_related.mechanism [^Mechanism]]]
+[template PortCategoryConcept[] [link dataflow.concepts.port_related.portcategory [^PortCategory]]]
+[template PortTraitsConcept[] [link dataflow.concepts.port_related.port [^PortTraits]]]
+[template PortConcept[] [link dataflow.concepts.port_related.port [^Port]]]
+[template ProducerPortConcept[] [link dataflow.concepts.port_related.port [^ProducerPort]]]
+[template ConsumerPortConcept[] [link dataflow.concepts.port_related.port [^ConsumerPort]]]
+[template ComplementedPortConcept[] [link dataflow.concepts.port_related.complementedport [^ComplementedPort]]]
+[template ComplementedPortTraitsConcept[] [link dataflow.concepts.port_related.complementedport [^ComplementedPortTraits]]]
+[template KeyedPortConcept[] [link dataflow.concepts.port_related.keyedport [^KeyedPort]]]
 
-[template ComponentTraitsConcept[] [link dataflow.concepts.componenttraits [^ComponentTraits]]]
-[template ComponentConcept[] [link dataflow.concepts.component [^Component]]]
-[template ReflectiveComponentTraitsConcept[] [link dataflow.concepts.reflectivecomponenttraits [^ReflectiveComponentTraits]]]
-[template ReflectiveComponentConcept[] [link dataflow.concepts.reflectivecomponent [^ReflectiveComponent]]]
+[template ProxyPortTraitsConcept[] [link dataflow.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
+[template ProxyPortConcept[] [link dataflow.concepts.port_related.proxyport [^ProxyPort]]]
 
-[template BinaryOperableConcept[] [link dataflow.concepts.binaryoperable [^BinaryOperable]]]
-[template ConnectableConcept[] [link dataflow.concepts.binaryoperable [^Connectable]]]
-[template OnlyConnectableConcept[] [link dataflow.concepts.binaryoperable [^OnlyConnectable]]]
-[template DisconnectableConcept[] [link dataflow.concepts.binaryoperable [^Disconnectable]]]
-[template ExtractableConcept[] [link dataflow.concepts.binaryoperable [^Extractable]]]
+[template BinaryOperableConcept[] [link dataflow.concepts.port_related.binaryoperable [^BinaryOperable]]]
+[template ConnectableConcept[] [link dataflow.concepts.port_related.binaryoperable [^Connectable]]]
+[template OnlyConnectableConcept[] [link dataflow.concepts.port_related.binaryoperable [^OnlyConnectable]]]
+[template DisconnectableConcept[] [link dataflow.concepts.port_related.binaryoperable [^Disconnectable]]]
+[template ExtractableConcept[] [link dataflow.concepts.port_related.binaryoperable [^Extractable]]]
 
-[template UnaryOperableConcept[] [link dataflow.concepts.unaryoperable [^UnaryOperable]]]
-[template AllDisconnectableConcept[] [link dataflow.concepts.unaryoperable [^AllDisconnectable]]]
+[template UnaryOperableConcept[] [link dataflow.concepts.port_related.unaryoperable [^UnaryOperable]]]
+[template AllDisconnectableConcept[] [link dataflow.concepts.port_related.unaryoperable [^AllDisconnectable]]]
 
-[template ComponentOperableConcept[] [link dataflow.concepts.componentoperable [^ComponentOperable]]]
-[template InvocableConcept[] [link dataflow.concepts.componentoperable [^Invocable]]]
+[template ComponentTraitsConcept[] [link dataflow.concepts.component_related.componenttraits [^ComponentTraits]]]
+[template ComponentConcept[] [link dataflow.concepts.component_related.component [^Component]]]
+
+[template ComponentOperableConcept[] [link dataflow.concepts.component_related.componentoperable [^ComponentOperable]]]
+[template InvocableConcept[] [link dataflow.concepts.component_related.componentoperable [^Invocable]]]
 
 [template SignalPortTraitsConcept[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
 [template SignalProducerConcept[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
@@ -88,8 +89,13 @@
 [template BoostThread[] [@http://www.boost.org/doc/html/thread.html Boost.Thread]]
 [template BoostPhoenix2[] [@http://spirit.sourceforge.net/ Boost.Phoenix2]]
 [template BoostPhoenix[] [@http://spirit.sourceforge.net/ Boost.Phoenix]]
+[template BoostGraph[] [@http://www.boost.org/libs/graph/doc/index.html Boost Graph Library]]
 [template BoostAsio[] [@http://asio.sourceforge.net/boost_asio_0_3_8/libs/asio/doc/html/index.html Boost.Asio]]
 [template BoostSerialization[] [@http://www.boost.org/libs/serialization/doc/index.html Boost.Serialization]]
+[template BoostGIL[] [@http://opensource.adobe.com/gil/ Boost.GIL]]
+
+[template GNURadio[] [@http://www.gnu.org/software/gnuradio/ GNU Radio]]
+
 [template WikiDataflow[] [@http://en.wikipedia.org/wiki/Dataflow_programming dataflow]]
 [template VTK[] [@http://www.vtk.org/ VTK]]
 [template vtkAlgorithm[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkAlgorithm]]]
@@ -134,9 +140,9 @@
 
 [import ../example/blueprint/blueprint_example.cpp]
 
-[include introduction.qbk]
+[include introduction/introduction.qbk]
 
-[include concepts.qbk]
+[include concepts/concepts.qbk]
 
 [/[include components.qbk]]
 

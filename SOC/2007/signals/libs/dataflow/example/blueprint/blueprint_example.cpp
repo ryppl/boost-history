@@ -20,7 +20,7 @@ using namespace boost;
 
 class blueprint_example
 {
-    typedef blueprint::network<df::signals::mechanism> network_type;
+    typedef blueprint::network network_type;
 
     // The network.
     network_type network;
@@ -47,6 +47,7 @@ public:
         print_port_info("sink_float", sink_float);
         
         // Print some runtime connectability info
+        std::cout << std::endl << "Printing some runtime port connectability info:" << std::endl  << std::endl;
         print_connectability_info("source", source, 0, "sink", sink, 1);
         print_connectability_info("source", source, 1, "sink", sink, 0);
         print_connectability_info("source", source, 0, "sink", sink, 0);
@@ -65,9 +66,9 @@ public:
         ugraph_type g;
         copy_graph(network.graph(), g);
         std::vector<int> component(num_vertices(g));
-        std::cout << std::endl << "Using BGL to analyze the network... There are "
+        std::cout << std::endl << "Using BGL to analyze the network... BGL says there are "
             << connected_components(g, &component[0])
-            << " independent parts of the network." << std::endl << std::endl;
+            << " independent parts of the network!" << std::endl << std::endl;
         
         // Copy the network
         std::cout << "Making a copy of the blueprint." << std::endl << std::endl;
@@ -81,9 +82,10 @@ public:
     void print_port_info(const char *c_name, network_type::component_type c)
     {
         std::cout << "\t" << c_name << " has " << network[c].num_ports() << " ports. " << std::endl;
-        for (int i=0; i<network[c].num_ports(); i++)
+        for (size_t i=0; i<network[c].num_ports(); i++)
             std::cout << "\t\tport " << i << " is a "
-                << (network.get_port(c, i)->traits().category().name()) << std::endl;
+                << (network.get_port(c, i).traits().mechanism().name()) << " "
+                << (network.get_port(c, i).traits().category().name()) << std::endl;
         std::cout << std::endl;
     }
     void print_connectability_info(
@@ -100,11 +102,11 @@ public:
     void output_component_value(
         network_type &network, const char *c_name, typename network_type::component_type c)
     {
-        typedef blueprint::component_t<df::signals::mechanism, signals::storage<void(T)> > & c_type;
-        
+        blueprint::component_t<signals::storage<void(T)> > value;
+        blueprint::extract(network[c].get_port(2), value.get_port(1));
+ 
         std::cout << "\t\tvalue at " << c_name << ":"
-            << static_cast<c_type>(network[c]).get()
-            .template at<0>()
+            << value.get().template at<0>()
             << std::endl;
     }
     void output_component_values(network_type &network)
