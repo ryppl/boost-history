@@ -34,7 +34,7 @@ int test_main(int, char* [])
         //[ test_multi_out_unfused
 
         SignalOutIntFloat multi_out(2.5f);
-        signals::storage<void (float)> float_collector(0);
+        signals::storage<void (float)> float_collector(0.0f);
         signals::storage<void (int)> int_collector(0);
 
         multi_out >>= float_collector;

@@ -3,28 +3,27 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="example"
-	ProjectGUID="{81616215-ae99-438d-acff-896032940990}"
+	ProjectGUID="{81616215-AE99-438D-ACFF-896032940990}"
 	>
-    <Platforms>
-        <Platform
+	<Platforms>
+		<Platform
 			Name="Win32"
 		/>
-    </Platforms>
-    <ToolFiles>
-    </ToolFiles>
-    <Configurations>
-        <Configuration
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
 			Name="debug|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-            <Tool
+			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -33,19 +32,18 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-        </Configuration>
-        <Configuration
+		</Configuration>
+		<Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-            <Tool
+			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -54,34 +52,22 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-        </Configuration>
-    </Configurations>
-    <References>
-    </References>
-    <Files>
-		<File
-			RelativePath="..\..\example\edit_distance.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\example\fibonacci.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\example\example.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\example\timing_example.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\example\Jamfile.v2"
-			>
-		</File>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
 		<Filter
 			Name="VTK"
 			>
+			<File
+				RelativePath="..\..\example\VTK\Cone.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\VTK\Cone2.cxx"
+				>
+			</File>
 			<File
 				RelativePath="..\..\example\VTK\Cone3.cxx"
 				>
@@ -103,14 +89,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\VTK\Cone.cxx"
-				>
-			</File>
-			<File
-				RelativePath="..\..\example\VTK\Cone2.cxx"
-				>
-			</File>
-			<File
 				RelativePath="..\..\example\VTK\vtk_dataflow_support.hpp"
 				>
 			</File>
@@ -119,11 +97,7 @@
 			Name="signals"
 			>
 			<File
-				RelativePath="..\..\example\signals\simple_example_components.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\example\signals\simple_example.cpp"
+				RelativePath="..\..\example\signals\gil_example.cpp"
 				>
 			</File>
 			<File
@@ -131,15 +105,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\example\signals\Jamfile.v2"
+				>
+			</File>
+			<File
 				RelativePath="..\..\example\signals\simple_distributed_example.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\signals\gil_example.cpp"
+				RelativePath="..\..\example\signals\simple_example.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\signals\Jamfile.v2"
+				RelativePath="..\..\example\signals\simple_example_components.hpp"
 				>
 			</File>
 		</Filter>
@@ -155,7 +133,27 @@
 				>
 			</File>
 		</Filter>
-    </Files>
-    <Globals>
-    </Globals>
+		<File
+			RelativePath="..\..\example\edit_distance.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\example.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\fibonacci.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\Jamfile.v2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\timing_example.cpp"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
 </VisualStudioProject>

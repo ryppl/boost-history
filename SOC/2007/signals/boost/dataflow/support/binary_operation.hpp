@@ -19,10 +19,7 @@ namespace extension
     template<typename Operation, typename ProducerTag, typename ConsumerTag, typename Enable=void>
     struct binary_operation_impl
     {
-        struct detail
-        {
-            typedef void not_specialized;
-        };
+        typedef void not_specialized;
         
         template<typename Producer, typename Consumer>
         void operator()(Producer &, Consumer &)
@@ -37,13 +34,10 @@ namespace extension
 template<typename Operation, typename Mechanism, typename Producer, typename Consumer>
 inline void binary_operation(Producer &producer, Consumer &consumer)
 {
-    typedef typename boost::remove_cv<Producer>::type ProducerNoCV;
-    typedef typename boost::remove_cv<Consumer>::type ConsumerNoCV;
-
     extension::binary_operation_impl<
         Operation,
-        typename port_traits_of<Mechanism, ports::producer, ProducerNoCV>::type,
-        typename port_traits_of<Mechanism, ports::consumer, ConsumerNoCV>::type>
+        typename port_traits_of<Mechanism, ports::producer, Producer>::type,
+        typename port_traits_of<Mechanism, ports::consumer, Consumer>::type>
             ()(get_port<Mechanism, ports::producer>(producer),
                get_port<Mechanism, ports::consumer>(consumer));
 }
@@ -71,9 +65,9 @@ struct specialized_binary_operation<
     typename detail::enable_if_defined<
         typename extension::binary_operation_impl<
             Operation,
-            typename port_traits_of<Mechanism, ports::producer, typename boost::remove_cv<Producer>::type>::type,
-            typename port_traits_of<Mechanism, ports::consumer, typename boost::remove_cv<Consumer>::type>::type
-        >::detail::not_specialized
+            typename port_traits_of<Mechanism, ports::producer, Producer>::type,
+			typename port_traits_of<Mechanism, ports::consumer, Consumer>::type
+		>::not_specialized
     >::type
 >
     : public mpl::false_ {};
@@ -86,8 +80,8 @@ struct are_binary_operable<
     Consumer,
     typename enable_if<
         mpl::and_<
-            is_port<Mechanism, ports::producer, typename boost::remove_cv<Producer>::type>,
-            is_port<Mechanism, ports::consumer, typename boost::remove_cv<Consumer>::type>,
+            is_port<Mechanism, ports::producer, Producer>,
+            is_port<Mechanism, ports::consumer, Consumer>,
             specialized_binary_operation<Operation,Mechanism,Producer,Consumer>
         >
     >::type

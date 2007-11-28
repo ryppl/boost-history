@@ -57,7 +57,7 @@ class port_t : public port_t_base<port, PortTraits, Port>
     BOOST_MPL_ASSERT((is_same<Enable, void>));
 
 public:
-    port_t(typename call_traits<Port>::const_reference p)
+    port_t(typename initializer_type<Port>::type p)
         : port_t_base<port, PortTraits, Port>(p)
     {}
     virtual port *clone() const
@@ -153,7 +153,7 @@ private:
         if(operation_uuid == runtime::property<operations::connect, int>()())
             return dataflow::are_binary_operable<
                 operations::connect, typename PortTraits::mechanism, producer_type, consumer_type>::type::value; 
-        
+
         if(operation_uuid == runtime::property<operations::extract, int>()())
             return typename dataflow::are_binary_operable<
                 operations::extract, typename PortTraits::mechanism, producer_type, consumer_type>::type();

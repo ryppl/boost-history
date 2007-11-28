@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="build"
-	ProjectGUID="{57094754-267b-4a64-9863-e12326346271}"
+	ProjectGUID="{57094754-267B-4A64-9863-E12326346271}"
 	>
 	<Platforms>
 		<Platform
@@ -24,7 +24,6 @@
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -45,7 +44,6 @@
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -70,11 +68,11 @@
 				Name="connection"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\connection\operators.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\connection\group.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\connection\group.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\connection\operators.hpp"
 					>
 				</File>
 				<File
@@ -94,11 +92,11 @@
 				Name="detail"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\detail\make_ref.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\detail\enable_if_defined.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\detail\enable_if_defined.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\detail\make_ref.hpp"
 					>
 				</File>
 			</Filter>
@@ -106,19 +104,7 @@
 				Name="phoenix"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\phoenix\static_function.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\phoenix\support.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\boost\dataflow\phoenix\advance.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\phoenix\static_value.hpp"
 					>
 				</File>
 				<File
@@ -126,11 +112,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\dataflow\phoenix\producer_container.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\dataflow\phoenix\sequence_environment.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\phoenix\producer_container.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\phoenix\static_function.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\phoenix\static_value.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\phoenix\support.hpp"
 					>
 				</File>
 				<Filter
@@ -149,7 +147,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\dataflow\phoenix\component\producer_accumulator.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\phoenix\component\consumer.hpp"
 						>
 					</File>
 					<File
@@ -157,11 +155,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\dataflow\phoenix\component\producer_wrapper.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\phoenix\component\producer_accumulator.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\dataflow\phoenix\component\consumer.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\phoenix\component\producer_wrapper.hpp"
 						>
 					</File>
 				</Filter>
@@ -178,7 +176,7 @@
 				Name="support"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\filter.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\support\binary_operation.hpp"
 					>
 				</File>
 				<File
@@ -186,27 +184,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\invocable.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\binary_operation.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\port.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\keyed_port.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\proxy_port.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\unary_operation.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\support\component.hpp"
 					>
 				</File>
 				<File
@@ -214,11 +192,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\dataflow\support\filter.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\support\invocable.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\support\keyed_port.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\support\port.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\support\proxy_port.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\dataflow\support\reflective_component.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\support\component.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\support\unary_operation.hpp"
 					>
 				</File>
 				<Filter
@@ -228,11 +226,11 @@
 						Name="detail"
 						>
 						<File
-							RelativePath="..\..\..\..\boost\dataflow\support\port\detail\proxy_port_traits_sequence.hpp"
+							RelativePath="..\..\..\..\boost\dataflow\support\port\detail\port_traits_sequence.hpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\boost\dataflow\support\port\detail\port_traits_sequence.hpp"
+							RelativePath="..\..\..\..\boost\dataflow\support\port\detail\proxy_port_traits_sequence.hpp"
 							>
 						</File>
 					</Filter>
@@ -258,11 +256,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\signals\support.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\signals\runtime_support.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\signals\runtime_support.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\signals\support.hpp"
 					>
 				</File>
 				<Filter
@@ -280,15 +278,15 @@
 						Name="detail"
 						>
 						<File
+							RelativePath="..\..\..\..\boost\dataflow\signals\connection\detail\bind_object.hpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\boost\dataflow\signals\connection\detail\replace_return_type.hpp"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\..\boost\dataflow\signals\connection\detail\result_of_defined.hpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\boost\dataflow\signals\connection\detail\bind_object.hpp"
 							>
 						</File>
 						<File
@@ -301,6 +299,50 @@
 					Name="component"
 					>
 					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\applicator.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\chain.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\condition.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\conditional.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\conditional_modifier.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\conditional_templated.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\counter.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\filter.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\filter_base.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\function.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\instantiator.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\boost\dataflow\signals\component\junction.hpp"
 						>
 					</File>
@@ -309,7 +351,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\applicator.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\multiplexer.hpp"
 						>
 					</File>
 					<File
@@ -317,51 +359,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\conditional_templated.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\conditional.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\timed_generator.hpp"
-						>
-					</File>
-					<File
 						RelativePath="..\..\..\..\boost\dataflow\signals\component\socket_receiver.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\instantiator.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\filter_base.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\counter.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\conditional_modifier.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\chain.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\function.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\filter.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\condition.hpp"
 						>
 					</File>
 					<File
@@ -373,14 +371,14 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\boost\dataflow\signals\component\multiplexer.hpp"
+						RelativePath="..\..\..\..\boost\dataflow\signals\component\timed_generator.hpp"
 						>
 					</File>
 					<Filter
 						Name="detail"
 						>
 						<File
-							RelativePath="..\..\..\..\boost\dataflow\signals\component\detail\storable.hpp"
+							RelativePath="..\..\..\..\boost\dataflow\signals\component\detail\generic_template.hpp"
 							>
 						</File>
 						<File
@@ -388,11 +386,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\boost\dataflow\signals\component\detail\unfused_inherited.hpp"
+							RelativePath="..\..\..\..\boost\dataflow\signals\component\detail\storable.hpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\boost\dataflow\signals\component\detail\generic_template.hpp"
+							RelativePath="..\..\..\..\boost\dataflow\signals\component\detail\unfused_inherited.hpp"
 							>
 						</File>
 						<File
@@ -418,11 +416,11 @@
 				Name="utility"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\utility\underlying_type.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\utility\copy_cv.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\utility\copy_cv.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\utility\underlying_type.hpp"
 					>
 				</File>
 			</Filter>
@@ -430,15 +428,11 @@
 				Name="blueprint"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\dataflow\blueprint\network.hpp"
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\component.hpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\dataflow\blueprint\connection.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\dataflow\blueprint\component.hpp"
 					>
 				</File>
 				<File
@@ -447,6 +441,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\dataflow\blueprint\get_port.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\network.hpp"
 					>
 				</File>
 				<File
@@ -467,11 +465,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\project-root.jam"
+				RelativePath="..\..\..\..\Jamfile.v2"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\Jamfile.v2"
+				RelativePath="..\..\..\..\project-root.jam"
 				>
 			</File>
 		</Filter>

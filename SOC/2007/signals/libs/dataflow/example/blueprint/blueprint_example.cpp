@@ -38,7 +38,7 @@ public:
         sink_float = network.add_component<signals::storage<void(float)> >(0.0f);
     }
     void run()
-    {
+    {			
         // Print some runtime port info
         std::cout << "Printing runtime info about all of the components:" << std::endl  << std::endl;
         print_port_info("source", source);

@@ -53,6 +53,7 @@ namespace detail
         typedef typename boost::fusion::result_of::as_vector<storable_types >::type storable_vector;
 
         storage_modifier(bool opened=true) : opened(opened) {}
+		storage_modifier(const storage_modifier &rhs) : stored(rhs.stored), opened(rhs.opened) {}
         template<typename Seq>
             storage_modifier(const Seq &seq, bool opened=true) : stored(seq), opened(opened) {}        
 
@@ -98,6 +99,7 @@ class storage : public conditional_modifier<storage_modifier<Signature>, Signatu
 {
 protected:
     typedef conditional_modifier<storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+	using base_type::modification;
 public:
     typedef typename storage_modifier<Signature>::parameter_types parameter_types;
 
@@ -113,17 +115,19 @@ public:
          > port_traits;
 
 
+	storage(const storage &rhs) : base_type(rhs.modification) {}
+
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
         */
     template<typename Seq>
-    storage(const Seq &seq) : base_type(seq) {}
+    storage(const Seq &seq, bool opened=true) : base_type(seq, opened) {}
     /**	Initializes the stored parameter values using its default constructor.
         */    
     storage() {}
     
-    void open() {base_type::member.open();}
-    void close() {base_type::member.close();}
+    void open() {base_type::modification.open();}
+    void close() {base_type::modification.close();}
 
     /**	Sends a signal containing the stored parameter values.
         \return Return value of the sent signal.
@@ -141,7 +145,7 @@ public:
     {
         return send();
     }
-    typename base_type::signal_type::result_type call(const function<typename base_type::signature_type> &f)
+	typename base_type::signal_type::result_type call(const boost::function<typename base_type::signature_type> &f)
     {
         boost::fusion::fused<function<typename base_type::signature_type> const &> fused_out(f);
         return fused_out(base_type::modification.stored);
