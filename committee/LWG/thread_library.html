@@ -99,8 +99,108 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-15
 <h2><a name="Introduction">Introduction</a></h2>
 
 <p>
-This is a revision of
+This paper is a revision of
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2447.htm">N2447</a>.
+It incorporates following changes:
+</p>
+
+<ul>
+<li> <code>call_once</code> moved
+from <code>&lt;thread&gt;</code> to <code>&lt;mutex&gt;</code>.
+</li>
+
+<li> <code>thread <var>F</var></code> constructor
+split in two for efficiency reasons.
+</li>
+
+<li> Description of <code>thread::id</code> clarified.
+</li>
+
+<li> All time-related functions have absolute and Duration time overloads
+except for condition variable wait not taking predicates.
+<b>[Crowl: Still under discussion.]</b>
+</li>
+
+<li> <code>native_handle</code> description consolidated to one place.
+</li>
+
+<li> Intended document section/sub-section structure clarified.
+</li>
+
+<li> <code>unique_lock</code> timed-constructors added
+to match timed-member functions.
+</li>
+
+<li> Condition variable destruction thread safety clarified
+to have Posix semantics.
+</li>
+
+<li> Condition variable wording for <code>wait</code>/<code>timed_wait</code>
+clarified.
+</li>
+
+<li> Traits information moved into Duration concept.
+</li>
+
+</ul>
+
+<p>
+This paper uses the following conventions in the HTML source
+to ease conversion into the format of the working paper.
+
+<ul>
+
+<li>Use HTML entities rather than non-ASCII characters.
+</li>
+
+<li>CSS is used on ly in the &lt;style&gt; head block.
+</li>
+
+<li>Non-normative parameter names use &lt;var&gt; phrase markup.
+</li>
+
+<li>Implementation-defined code uses &lt;var&gt;&lt;strong&gt; phrase markup.
+</li>
+
+<li>Source // comments use &lt;em&gt; phrase markup,
+except for namespace end brace comments.
+</li>
+
+<li>Standard comments and examples still use &lt;i&gt;,
+and these are the only uses.
+</li>
+
+<li>Code &lt;pre&gt; blocks also have explicit &lt;code&gt; phrase markup.
+</li>
+
+<li>Synopsis indicators use &lt;strong&gt; phrase markup.
+</li>
+
+<li>Inter-paper references use &lt;cite&gt; phrase markup.
+</li>
+
+<li>Term definitions use &lt;dfn&gt; phrase markup.
+</li>
+
+<li>Requirements clauses use descriptive lists.
+</li>
+
+<li>Note, example, and comment start and end text
+appear on separate lines.
+</li>
+
+<li>Paragraph tags are alone on their line.
+</li>
+
+</ul>
+
+
+<p>
+<b>[Crowl: 
+Currently, we inconsistently place synchronization under 'Effects:'
+and 'Thread safety:'.  I think we would reduce confusion by
+separating the synchronization from the rest of the other attributes.
+That is, to have a named 'Sychronization:' attribute.]</b>
 </p>
 
 <h2><a name="utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a></h2>
@@ -237,6 +337,13 @@ absolute time based timeouts, so overloads for both are provided unless
 contraindicated. <i>--end note.</i>]
 </p>
 
+<p>
+<b>[Crowl: I think we need a general statement that
+operations on std::thread are not thread-safe unless specifically mentioned.
+]</b>
+</p>
+
+
 <h3><a name="thread.threads">30.1 Threads [thread.threads]</a></h3>
 
 <p>
@@ -317,9 +424,7 @@ shall be standard-layout
 classes (chapter 9 [class]).
 </p>
 
-<h5><a name="thread.threads.types">30.1.1.1 <code>thread</code> types [thread.threads.types]</a></h5>
-
-<h6><a name="thread.threads.id">30.1.1.1.1 Class <code>thread::id</code> [thread.threads.id]</a></h6>
+<h5><a name="thread.threads.id">30.1.1.1 Class <code>thread::id</code> [thread.threads.id]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -329,12 +434,12 @@ public:
     id();
 };
 
-bool operator==(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
-bool operator!=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
-bool operator&lt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
-bool operator&lt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
-bool operator&gt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
-bool operator&gt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator==(thread::id <var>x</var>, thread::id <var>y</var>);
+bool operator!=(thread::id <var>x</var>, thread::id <var>y</var>);
+bool operator&lt;(thread::id <var>x</var>, thread::id <var>y</var>);
+bool operator&lt;=(thread::id <var>x</var>, thread::id <var>y</var>);
+bool operator&gt;(thread::id <var>x</var>, thread::id <var>y</var>);
+bool operator&gt;=(thread::id <var>x</var>, thread::id <var>y</var>);
 
 template&lt;class charT, class traits&gt;
 basic_ostream&lt;charT, traits&gt;&amp;
@@ -382,15 +487,15 @@ Represents the non-joinable identity.
 </blockquote>
 
 <pre><code>
-bool operator==(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator==(thread::id <var>x</var>, thread::id <var>y</var>);
 </code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
-If
-<code><var>x</var></code> and <code><var>y</var></code> represent the same identity,
+If <code><var>x</var></code> and <code><var>y</var></code>
+represent the same identity,
 returns <code>true</code>.
 Otherwise returns <code>false</code>.
 </dd>
@@ -403,7 +508,7 @@ Nothing.
 </blockquote>
 
 <pre><code>
-bool operator!=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator!=(thread::id <var>x</var>, thread::id <var>y</var>);
 </code></pre>
 
 <blockquote>
@@ -421,7 +526,7 @@ Nothing.
 </blockquote>
 
 <pre><code>
-bool operator&lt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator&lt;(thread::id <var>x</var>, thread::id <var>y</var>);
 </code></pre>
 
 <blockquote>
@@ -440,7 +545,7 @@ Nothing.
 </blockquote>
 
 <pre><code>
-bool operator&lt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator&lt;=(thread::id <var>x</var>, thread::id <var>y</var>);
 </code></pre>
 
 <blockquote>
@@ -458,7 +563,7 @@ Nothing.
 </blockquote>
 
 <pre><code>
-bool operator&gt;(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator&gt;(thread::id <var>x</var>, thread::id <var>y</var>);
 </code></pre>
 
 <blockquote>
@@ -476,7 +581,7 @@ Nothing.
 </blockquote>
 
 <pre><code>
-bool operator&gt;=(const thread::id&amp; <var>x</var>, const thread::id&amp; <var>y</var>);
+bool operator&gt;=(thread::id <var>x</var>, thread::id <var>y</var>);
 </code></pre>
 
 <blockquote>
@@ -572,6 +677,15 @@ in a new thread, where <code>t1, t2,
 Any return value from <code>f</code> is ignored.
 If <code>f</code> terminates with an uncaught
 exception, <code>std::terminate()</code> shall be called.
+</dd>
+
+<dt>Synchronization:</dt>
+<dd>
+<b>[Crowl:
+The invocation of the constructor
+happens before [<cite>intro.multithread</cite>]
+the invocation of <code><var>f</var></code>.
+]</b>
 </dd>
 
 <dt>Postconditions:</dt>
@@ -728,10 +842,11 @@ void join();
 <code>joinable()</code> is <code>true</code>.
 </dd>
 
-<dt>Effects:</dt>
+<dt>Synchronization:</dt>
 <dd>
-The completion of the thread represented by <code>*this</code> happens before
-[<cite>intro.multithread</cite>] <tt>join()</tt> returns.
+The completion of the thread represented by <code>*this</code>
+happens before [<cite>intro.multithread</cite>]
+<code>join()</code> returns.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -739,15 +854,14 @@ The completion of the thread represented by <code>*this</code> happens before
 After a normal return of <code>join()</code>,
 <code>joinable()</code> is <code>false</code>.
 <br>
-If <code>join()</code> throws an exception, the <code>joinable()</code> status remains
-unchanged.
+If <code>join()</code> throws an exception,
+the <code>joinable()</code> status remains unchanged.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>system_error</code> when an error condition occurs.
-The
-possible error conditions are implementation defined.
+The possible error conditions are implementation defined.
 </dd>
 </dl>
 </blockquote>
@@ -817,8 +931,7 @@ unsigned hardware_concurrency();
 <dl>
 <dt>Returns:</dt>
 <dd>
-The number of threads that can reasonably be expected to
-execute concurrently.
+The number of hardware thread contexts.
 [<i>Note:</i>
 This value should only be considered to be a hint.
 &mdash;<i>end note</i>]
@@ -883,6 +996,11 @@ that uniquely identifies the current thread
 and does not compare equal to a default constructed <code>thread::id</code>,
 else returns
 a default constructed <code>thread::id</code>
+<b>[Crowl:
+Why does <code>this_thread::get_id()</code>
+depend on <code>is_joinable()</code>?
+The <code>id</code> values will be preserved elsewhere.
+]</b>
 </dd>
 
 <dt>Throws:</dt>
@@ -903,6 +1021,11 @@ void yield();
 Offers the operating system the opportunity to schedule another thread.
 </dd>
 
+<dt>Synchronization:</dt>
+<dd>
+None.
+</dd>
+
 <dt>Throws:</dt>
 <dd>
 Nothing.
@@ -919,6 +1042,11 @@ void sleep(const system_time&amp; abs_t);
 <dt>Effects:</dt>
 <dd>
 The current thread blocks at least until the time specified.
+</dd>
+
+<dt>Synchronization:</dt>
+<dd>
+None.
 </dd>
 
 <dt>Throws:</dt>
@@ -938,6 +1066,11 @@ template &lt;class Duration&gt;
 <dt>Effects:</dt>
 <dd>
 The current thread blocks for at least the amount of time specified.
+</dd>
+
+<dt>Synchronization:</dt>
+<dd>
+None.
 </dd>
 
 <dt>Throws:</dt>
@@ -1027,6 +1160,104 @@ nor movable.
 A mutex type shall have the following member functions:
 </p>
 
+<p>
+<b>[Crowl:
+I think mutex constructon and destruction must be relaxed atomic,
+otherwise their state is undefined for subsequent try operations.
+]</b>
+</p>
+
+<p>
+<b>[Crowl:
+The concern is undefined behavior when the thread constructing the
+mutex is not the thread that does the first lock.  Without some form
+of defined atomicity, the programmer must ensure a 'happens before'
+through some other mechanism, like another lock, but then recursion.
+<br><br>
+For dynamically allocated mutexes, the "publishing of the pointer"
+can be a release and the subsequent "purchase of the pointer"
+can be an acquire.  That is, you can make the act of obtaining a
+reference be the mechanism for 'happens before'.
+<br><br>
+For function-local statics, the rules of N2444 effectively provide
+the synchronization needed.
+<br><br>
+For global statics, though, you can (and typically would) obtain
+a reference directly by name.  However, on further reflection,
+the initialization rules in N2444 would effectively require either
+waiting until after main starts to access the lock or doing something
+to the effect of what you say above.
+<br><br>
+So, finishing a lap around the barn, I've convinced myself that no
+normative change is necessary, but we should definitely add a note.
+]</b>
+</p>
+
+<p>
+<b>[Crowl:
+The native_handle operation should be relaxed atomic too.
+<br><br>
+As long as the native_handle is invariant after construction,
+I think this problem is solved by the discussion above.
+]</b>
+</p>
+
+<p>
+<b>[Crowl:
+The lock and try_lock operations are currently "acquire operations",
+but they need to be acquire operations on some atomic variable in
+the implementation of the lock.  Likewise, release with unlock.
+]</b>
+</p>
+
+<p>
+<b>[Crowl:
+Hm.  In retrospect, I think the "happens before" may be sufficient.
+If termination of the thread function body happens-before the
+return from join(), there must be a "synchronizes with"
+between the termination and the return, which in turn implies
+a "release and acquire" pair.  So we're okay there.  In
+addition, optimizing away the thread still leaves us with a
+sequential "sequenced before".
+]</b>
+</p>
+
+<p>
+<b>[Boehm:
+The intended memory model story here is that the library defines acquire
+and release operations on memory locations.  An acquire operation that
+reads the value written by a release operation gives rise to a
+"synchronizes with" relationship, which then gives rise to the "happens
+before" relationship.  I think it would be marginally cleaner to say
+"synchronizes with" in these cases, or even to express this in terms of
+acquire and release operations on memory locations, but I don't think
+this is a big deal either way.
+]</b>
+</p>
+
+<p>
+<b>[Boehm:
+Wouldn't a definition using acquire and release imply that eliding
+the operation is no longer possible?
+]</b>
+</p>
+
+<p>
+<b>[Boehm:
+I don't see how it would make a difference.  They would be specified to
+be acquire and release operations on some unspecified location in the
+thread object.  The implementation would have actually to do something
+along those lines, and that would typically involve at least a fence in
+the thread exit code and in the join implementation.  But I think those
+are bound tobe there anyway as a result of the synchronization required
+to access the thread structure.  What operation were you hoping to
+elide?
+<br><br>
+It's probably still easier just to say "synchronizes with" and dodge
+these details.
+]</b>
+</p>
+
 <pre><code>
 void lock();
 </code></pre>
@@ -1044,16 +1275,16 @@ The current thread will block until the mutex is not owned by another thread.
 Upon successful completion, the current thread owns the mutex.
 </dd>
 
+<dt>Synchronization:</dt>
+<dd>
+This is an acquire operation [<cite>intro.multithread</cite>].
+</dd>
+
 <dt>Throws:</dt>
 <dd>
 <code>system_error</code> when an error condition occurs.
 The
 possible error conditions are implementation defined.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-This is an acquire operation [<cite>intro.multithread</cite>].
 </dd>
 </dl>
 </blockquote>
@@ -1071,30 +1302,37 @@ For non-recursive mutexes the current thread shall not own the mutex.
 
 <dt>Effects:</dt>
 <dd>
-If ownership can be obtained without blocking,
-then an attempt is made to obtain ownership.
+Attempt to obtain ownership of the mutex for the current thread
+without blocking.
 If ownership is not obtained,
 there is no effect and <code>try_lock()</code> immediately returns.
-[<i>Note:</i>
-It is expected that <code>try_lock()</code> almost
-always obtains ownership if the lock is available,
-but it is not guaranteed that it always does so.
-Since a failed <code>try_lock()</code> is not an acquire operation [1.10],
-the resulting memory visibility rules are weak enough
-that they would render such a guarantee essentially useless.
-And such a guarantee would preclude potentially interesting
-<code>try_lock()</code> implementations based on <code>compare_swap</code>.
-&mdash;<i>end note</i>]
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if ownership was obtained, otherwise <code>false</code>.
+If ownership of the mutex was obtained for the current thread,
+<code>true</code>,
+otherwise,
+<code>false</code>.
+An implementation may fail to obtain the lock
+even if it is not held by any other thread.
+[<i>Note:</i>
+This spurious failure should be uncommon.
+&mdash;<i>end note</i>]
 </dd>
 
-<dt>Thread safety:</dt>
+<dt>Synchronization:</dt>
 <dd>
-This is an acquire operation if <code>try_lock</code> returns <code>true</code> [<cite>intro.multithread</cite>].
+If <code>try_lock</code> returns <code>true</code>,
+<code>try_lock</code> is an acquire operation [<cite>intro.multithread</cite>]
+on the atomic variable [<cite>atomics</cite>] within the mutex.
+[<i>Note:</i>
+Since a failed <code>try_lock()</code> is not an acquire operation [1.10],
+the resulting memory visibility rules are weak enough
+to permit potentially interesting
+<code>try_lock()</code> implementations based on
+<code>compare_swap</code> [<cite>atomics.operations</cite>].
+&mdash;<i>end note</i>]
 </dd>
 
 <dt>Throws:</dt>
@@ -1125,9 +1363,10 @@ the same number of times which the mutex was locked
 or by any other locking function) before ownership is released.
 </dd>
 
-<dt>Thread safety:</dt>
+<dt>Synchronization:</dt>
 <dd>
-This is a release operation [<cite>intro.multithread</cite>].
+<code>unlock</code> is a release operation [<cite>intro.multithread</cite>]
+on the atomic variable [<cite>atomics</cite>] within the mutex.
 </dd>
 
 <dt>Throws:</dt>
@@ -1249,9 +1488,10 @@ but implementations are expected to make a strong effort to do so.
 <code>true</code> if ownership was obtained, otherwise <code>false</code>.
 </dd>
 
-<dt>Thread safety:</dt>
+<dt>Synchronization:</dt>
 <dd>
-This is an acquire operation if <code>timed_lock</code> returns <code>true</code> [<cite>intro.multithread</cite>].
+If <code>timed_lock</code> returns <code>true</code>,
+it is an acquire operation [<cite>intro.multithread</cite>].
 </dd>
 
 <dt>Throws:</dt>
@@ -1295,9 +1535,10 @@ but implementations are expected to make a strong effort to do so.
 <code>true</code> if ownership was obtained, otherwise <code>false</code>.
 </dd>
 
-<dt>Thread safety:</dt>
+<dt>Synchronization:</dt>
 <dd>
-This is an acquire operation if <code>timed_lock</code> returns <code>true</code> [<cite>intro.multithread</cite>].
+If <code>timed_lock</code> returns <code>true</code>,
+it is an acquire operation [<cite>intro.multithread</cite>].
 </dd>
 
 <dt>Throws:</dt>
@@ -1379,7 +1620,7 @@ that satisfies all of the Timed Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4><a name="thread.lock.concept">30.2.3 Locks [thread.lock.concept]</a></h4>
+<h4><a name="thread.lock.intro">30.2.3 Locks [thread.lock.intro]</a></h4>
 
 <p>
 Locks are objects that hold a reference to a mutex
@@ -1394,16 +1635,20 @@ of unlocking the mutex under both normal and exceptional circumstances.
 </p>
 
 <p>
-Some locks may take tag types
-which describe what should be done with the mutex in the lock's
-constructor.
+Some lock constructors may take tag types,
+which describe what should be done with the mutex
+during the lock's construction.
+</p>
+
+<p>
+<b>[Crowl: The type and object definitions need comments as to their purpose.]</b>
 </p>
 
 <blockquote>
 <pre><code>
-struct defer_lock_t  {};
-struct try_to_lock_t {};
-struct adopt_lock_t  {};
+struct defer_lock_t  {}; // obtain the lock sometime after construction
+struct try_to_lock_t {}; // do not wait to obtain the lock
+struct adopt_lock_t  {}; // 
 
 extern const defer_lock_t   defer_lock;
 extern const try_to_lock_t  try_to_lock;
@@ -1857,6 +2102,15 @@ unique_lock&amp; operator=(unique_lock&amp;&amp; <var>u</var>);
 If <code>owns_lock()</code> calls <code>unlock()</code>, and then
 transfers mutex ownership (if any)
 from <code><var>u</var></code> to <code>this</code>.
+[<i>Note:</i>
+With a recursive mutex it is possible that both
+<code>this</code> and <code><var>u</var></code>
+own the same mutex before the assignment.
+In this case, <code>this</code> will own the mutex after the assignment (and
+<code><var>u</var></code> will not),
+but the mutex's lock count will be decremented by
+one.
+&mdash;<i>end note</i>]
 </dd>
 
 <dt>Postconditions:</dt>
@@ -1874,21 +2128,7 @@ the value of <code><var>u</var>.owns_lock()</code> prior to the construction.
 
 <dt>Throws:</dt>
 <dd>
-<p>
 Nothing.
-</p>
-
-<p>
-[<i>Note:</i>
-With a recursive mutex it is possible that both
-<code>this</code> and <code><var>u</var></code>
-own the same mutex before the assignment.
-In this case, <code>this</code> will own the mutex after the assignment (and
-<code><var>u</var></code> will not),
-but the mutex's lock count will be decremented by
-one.
-&mdash;<i>end note</i>]
-</p>
 </dd>
 </dl>
 </blockquote>
@@ -2262,6 +2502,12 @@ without causing a data race or deadlock.
 constexpr once_flag();
 </code></pre>
 
+<p>
+<b>[Crowl:
+The once_flag constructor needs to be relaxed atomic, when not static.
+]</b>
+</p>
+
 <blockquote>
 <dl>
 <dt>Effects:</dt>
@@ -2287,6 +2533,17 @@ template&lt;class Callable, class Args...&gt;
 void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </code></pre>
 
+<p>
+<b>[Crowl:
+The call_once function
+- when calling the given function object,
+ performs a release on the once_flag after function object execution
+ and before returning;
+- when not calling the given function object,
+ performs an acquire before returning.
+]</b>
+</p>
+
 <blockquote>
 <dl>
 <dt>Requires:</dt>
@@ -2308,15 +2565,21 @@ for the <code>once_flag</code> object specified by <code>flag</code>,
 as-if by invoking <code>func(args)</code>,
 even if <code>call_once</code> is called multiple times
 for the same <code>once_flag</code> object.
-If multiple calls to <code>call_once</code>
-with the same <code>once_flag</code> object
-occur in separate threads,
-the single non-exceptional return of <code>func</code> happens before [<cite>intro.multithreading</cite>]
-every non-exceptional <code>call_once</code> return.
 If the invocation of <code>func</code> results in an exception being thrown,
 the exception is propagated to the caller
 and the effects are as-if this invocation of <code>call_once</code>
 did not occur.
+<b>[Crowl: We cannot make this guarantee without transactions.]</b>
+</dd>
+
+<dt>Synchronization:</dt>
+<dd>
+If multiple calls to <code>call_once</code>
+with the same <code>once_flag</code> object
+occur in separate threads,
+the single non-exceptional return of <code>func</code>
+happens before [<cite>intro.multithreading</cite>]
+every non-exceptional <code>call_once</code> return.
 </dd>
 
 <dt>Throws:</dt>
@@ -2326,13 +2589,15 @@ did not occur.
 
 <dt>Thread safety:</dt>
 <dd>
-<p>
-The implememtation shall not introduce a data race or deadlock
-if different threads simultaneously use the same <code>once_flag</code> object
+<b>[Crowl: Reword?]</b>
+The implementation shall not introduce a data race or deadlock
+when different threads simultaneously use the same <code>once_flag</code> object
 to call <code>call_once</code>.
-</p>
+</dd>
+</dl>
 
 <p>
+<b>[Crowl: An example with dynamic memory.]</b>
 [<i>Example:</i>
 </p>
 
@@ -2363,37 +2628,21 @@ void g()
 <p>
 &mdash;<i>end example</i>]
 </p>
-</dd>
-</dl>
 </blockquote>
 
 
 <h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
 
 <p>
-[<i>Note:</i> For condition variables, time duration overloads are not provided for
-the <code>timed_wait</code> members which do not take a <code>Predicate</code> because spurious wakeups
-would cause endless loops unless extraordinary care were taken. The composability
-of absolute time provides an equivalent, but terminating, idiom:
-</p>
-
-<pre>     mutex mut;
-     condition_variable cv;
-     ...
-     system_time abs_time = get_system_time() + seconds(1);
-     bool within_time = true;
-     while (within_time &amp;&amp; !pred())
-        within_time = cv.timed_wait(mut, abs_time);
-     if (pred()) ...</pre>
-
-<p>
-Notice that changing the <code>time_wait</code> call to
-<code>cv.timed_wait(mut, get_system_time() + seconds(1));</code> to eliminate
-the <code>abs_time</code> variable could result in an endless loop.
+Condition variables provide a mechanism to implement the monitor pattern.
 </p>
 
 <p>
-<i>--end note</i>]
+Condition variables permit concurrent invocation
+of the <code>wait</code>, <code>timed_wait</code>,
+<code>notify_one</code> and <code>notify_all</code> member functions.
+The implementation shall behave as though
+they are executed in some unspecified order.
 </p>
 
 <p>
@@ -2416,8 +2665,14 @@ class condition_variable_any;
 <p>
 An object of class <code>condition_variable</code>
 is a synchronization primitive
-used to cause a thread to wait until notified by some other
-thread that some condition is met, or a UTC[(?)] time is reached.
+used to cause a thread to wait
+until notified by some other thread that some condition is met,
+or until a system time is reached.
+</p>
+
+<p>
+<b>[Crowl: Condvar construction and destruction are relaxed atomic.
+(If not, must be done before corresponding mutex.)]</b>
 </p>
 
 <blockquote>
@@ -2479,8 +2734,11 @@ Destroys the object.
 
 <dt>Remarks:</dt>
 <dd>
-It is safe to destroy the object as soon as all waiting threads have been notified, even if those
-threads have not yet returned from the <code>wait</code>.
+It is safe to destroy the object
+as soon as all waiting threads have been notified,
+even if those threads have not yet returned from the <code>wait</code>.
+<b>[Crowl:
+I think "have been notified" means "<code>notify</code> has returned".]</b>
 </dd>
 
 <dt>Throws:</dt>
@@ -2499,18 +2757,10 @@ void notify_one();
 <dt>Effects:</dt>
 <dd>
 If any threads are blocked waiting for <code>*this</code>,
-unblocks at least one those threads which subsequently reacquires its lock and returns
-from the wait function.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
+<code>notify_one</code> unblocks one of those threads.
+The unblocked thread
+subsequently reacquires its lock and returns from the wait function.
+The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -2523,19 +2773,10 @@ void notify_all();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Unblock all threads that are blocked waiting for <code>*this</code>,
-which subsequently reacquire the lock and return
-from the wait functions.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
+Unblock all threads that are blocked waiting for <code>*this</code>.
+The unblocked threads
+subsequently reacquire their locks and return from their wait functions.
+The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -2571,38 +2812,34 @@ for this call to <code>wait</code>.
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+</li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+</li>
 
-<li>The function will unblock when this thread is signaled by a call to
-<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, or spuriously.</li>
+<li>The function will unblock when this thread is signaled by
+a call to <code><var>this</var>-&gt;notify_one()</code>,
+a call to <code><var>this</var>-&gt;notify_all()</code>,
+or spuriously.
+</li>
 
-<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
-will still be called prior to exiting the function scope.</li>
+<li>If the function exits via an exception,
+<code><var>lock</var>.lock()</code> will still be called
+prior to exiting the function scope.
+</li>
 </ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code><var>lock</var></code> is locked by the current
-thread.
+<code><var>lock</var></code> is locked by the current thread.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>system_error</code> when an error condition occurs.
 The possible error conditions are implementation defined.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
 </dd>
 </dl>
 </blockquote>
@@ -2617,7 +2854,7 @@ template &lt;class Predicate&gt;
 <dt>Effects:</dt>
 <dd>
 <p>
-While <code><var>pred</var>()</code> returns <code>false</code>
+While <code><var>pred</var>()</code> returns <code>false</code>,
 calls <code>wait(<var>lock</var>)</code>.
 </p>
 
@@ -2648,10 +2885,10 @@ No other thread is waiting on this <code>condition_variable</code> object, or
 </li>
 <li>
 The execution of the <code>mutex</code> member function
-on the <code><var>lock</var></code>
-objects supplied in the calls to <code>wait</code> or <code>timed_wait</code>
-in
-all the threads currently waiting on this <code>condition_variable</code> object
+on the <code><var>lock</var></code> objects
+supplied in the calls to <code>wait</code> or <code>timed_wait</code>
+in all the threads
+currently waiting on this <code>condition_variable</code> object
 would return the same value as <code><var>lock</var>-&gt;mutex()</code>
 for this call to <code>wait</code>.
 </li>
@@ -2661,29 +2898,35 @@ for this call to <code>wait</code>.
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+</li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+</li>
 
-<li>The function will unblock when this thread is signaled by a call to
-<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, by the current
-time exceeding <code><var>abs_time</var></code>, or spuriously.</li>
+<li>The function will unblock when this thread is signaled by
+a call to <code><var>this</var>-&gt;notify_one()</code>,
+a call to <code><var>this</var>-&gt;notify_all()</code>,
+by the current time exceeding <code><var>abs_time</var></code>,
+or spuriously.
+</li>
 
-<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
-will still be called prior to exiting the function scope.</li>
+<li>If the function exits via an exception,
+<code><var>lock</var>.lock()</code> will still be called
+prior to exiting the function scope.
+</li>
 </ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code><var>lock</var></code> is locked by the current
-thread.
+<code><var>lock</var></code> is locked by the current thread.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if the call to <code>timed_wait</code> is notified prior
-to the indicated timeout,
+<code>true</code> if the call to <code>timed_wait</code> is notified
+prior to the indicated timeout,
 otherwise returns <code>false</code>.
 </dd>
 
@@ -2692,17 +2935,42 @@ otherwise returns <code>false</code>.
 <code>system_error</code> when an error condition occurs.
 The possible error conditions are implementation defined.
 </dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
-</dd>
 </dl>
+
+<p>
+[<i>Note:</i>
+For condition variables,
+time duration overloads are not provided
+for the <code>timed_wait</code> members
+that do not take a <code>Predicate</code>.
+Spurious wakeups would cause endless loops
+unless extraordinary care were taken.
+The composability of absolute time provides an equivalent,
+but terminating, idiom:
+</p>
+
+<blockquote>
+<pre><code>
+mutex mut;
+condition_variable cv;
+...
+system_time abs_time = get_system_time() + seconds(1);
+bool within_time = true;
+while (within_time &amp;&amp; !pred())
+    within_time = cv.timed_wait(mut, abs_time);
+if (pred()) ...
+</code></pre>
+</blockquote>
+
+<p>
+Notice that changing the <code>time_wait</code> call
+to <code>cv.timed_wait(mut, get_system_time() + seconds(1))</code>
+to eliminate the <code>abs_time</code> variable could result in an endless loop.
+</p>
+
+<p>
+<i>--end note</i>]
+</p>
 </blockquote>
 
 <pre><code>
@@ -2738,11 +3006,10 @@ return true;
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
-even
-if the timeout has already expired.
-The return value indicates whether the predicate
-evaluates to <code>true</code>,
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>,
+even if the timeout has already expired.
+The return value indicates whether the predicate evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
 </p>
@@ -2778,11 +3045,10 @@ return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std:
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
-even
-if the timeout has already expired.
-The return value indicates whether the predicate
-evaluates to <code>true</code>,
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>,
+even if the timeout has already expired.
+The return value indicates whether the predicate evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
 </p>
@@ -2801,12 +3067,13 @@ shall be a standard-layout class (chapter 9 [class]).
 An object of class <code>condition_variable_any</code>
 is a synchronization primitive
 used to cause a thread to wait until notified by some other
-thread that some condition is met, or a UTC[(?)] time is reached.
+thread that some condition is met, or a system time is reached.
 </p>
 
 <p>
-The <code>Lock</code> type must support member functions <code>lock</code>
-and <code>unlock</code> with the semantics of the mutex concept.
+The <code>Lock</code> type
+must support member functions <code>lock</code> and <code>unlock</code>
+with the semantics of the mutex concept.
 All of the standard mutex types
 meet this requirement.
 </p>
@@ -2871,8 +3138,10 @@ Destroys the object.
 
 <dt>Remarks:</dt>
 <dd>
-It is safe to destroy the object as soon as all waiting threads have been notified, even if those
-threads have not yet returned from the <code>wait</code>.
+It is safe to destroy the object
+as soon as all waiting threads have been notified,
+even if those threads have not yet returned from the <code>wait</code>.
+<b>[Crowl: See discussion of condition_variable destructor.]</b>
 </dd>
 
 <dt>Throws:</dt>
@@ -2891,18 +3160,10 @@ void notify_one();
 <dt>Effects:</dt>
 <dd>
 If any threads are blocked waiting for <code>*this</code>,
-unblocks at least one those threads which subsequently reacquires its lock and returns
-from the wait function.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
+unblocks one those threads.
+The unblocked thread
+subsequently reacquires its lock and returns from the wait function.
+The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -2915,19 +3176,10 @@ void notify_all();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Unblock all threads that are blocked waiting for <code>*this</code>,
-which subsequently reacquire the lock and return
-from the wait functions.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
+Unblock all threads that are blocked waiting for <code>*this</code>.
+The unblocked threads
+subsequently reacquire their locks and return from their wait functions.
+The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -2943,39 +3195,34 @@ template &lt;class Lock&gt;
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+</li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+</li>
 
-<li>The function will unblock when this thread is signaled by a call to
-<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, or spuriously.</li>
+<li>The function will unblock when this thread is signaled by
+a call to <code><var>this</var>-&gt;notify_one()</code>,
+a call to <code><var>this</var>-&gt;notify_all()</code>,
+or spuriously.
+</li>
 
-<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
-will still be called prior to exiting the function scope.</li>
+<li>If the function exits via an exception,
+<code><var>lock</var>.lock()</code> will still be called
+prior to exiting the function scope.
+</li>
 </ul>
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code><var>lock</var></code> is locked by the current
-thread.
+<code><var>lock</var></code> is locked by the current thread.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>system_error</code> when an error condition occurs.
-The
-possible error conditions are implementation defined.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
+The possible error conditions are implementation defined.
 </dd>
 </dl>
 </blockquote>
@@ -2997,7 +3244,8 @@ calls <code>wait(<var>lock</var>)</code>.
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>.
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>.
 &mdash;<i>end note</i>]
 </p>
 </dd>
@@ -3015,16 +3263,23 @@ template &lt;class Lock&gt;
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.</li>
+<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+</li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.</li>
+<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+</li>
 
-<li>The function will unblock when this thread is signaled by a call to
-<code><var>this</var>-&gt;notify_one()</code>, <code><var>this</var>-&gt;notify_all()</code>, by the current
-time exceeding <code><var>abs_time</var></code>, or spuriously.</li>
+<li>The function will unblock when this thread is signaled by
+a call to <code><var>this</var>-&gt;notify_one()</code>,
+a call to <code><var>this</var>-&gt;notify_all()</code>,
+by the current time exceeding <code><var>abs_time</var></code>,
+or spuriously.
+</li>
 
-<li>If the function exits via an exception, <code><var>lock</var>.lock()</code>
-will still be called prior to exiting the function scope.</li>
+<li>If the function exits via an exception,
+<code><var>lock</var>.lock()</code> will still be called
+prior to exiting the function scope.
+</li>
 </ul>
 </dd>
 
@@ -3036,26 +3291,16 @@ thread.
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if the call to <code>timed_wait</code> is notified prior
-to the indicated timeout,
-otherwise returns <code>false</code>.
+If the call to <code>timed_wait</code>
+is notified prior to the indicated timeout,
+<code>true</code>,
+otherwise <code>false</code>.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>system_error</code> when an error condition occurs.
-The
-possible error conditions are implementation defined.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-The implementation shall assure that calls to the <code>wait</code>,
-<code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions
-of the same <code>condition_variable</code>
-object from different threads will not result in data
-races or deadlocks.
+The possible error conditions are implementation defined.
 </dd>
 </dl>
 </blockquote>
@@ -3093,11 +3338,10 @@ return true;
 </p>
 <p>
 [<i>Note:</i>
-There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
-even
-if the timeout has already expired.
-The return value indicates whether the predicate
-evaluates to <code>true</code>,
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>,
+even if the timeout has already expired.
+The return value indicates whether the predicate evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
 </p>
@@ -3134,9 +3378,9 @@ return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std:
 
 <p>
 [<i>Note:</i>
-There is no blocking if <code><var>pred</var>()</code> is initially <code>true</code>,
-even
-if the timeout has already expired.
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>,
+even if the timeout has already expired.
 The return value indicates whether the predicate
 evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
@@ -3166,11 +3410,10 @@ For time_t the epoch is
 <p>
 Throughout this clause, the names of template parameters are used to express
 type requirements.
-[<b>Comment:</b>
+<b>[Someone:
 Define Duration, RhsDuration.
-&mdash;<b>end comment</b>]
+]</b>
 </p>
-
 
 <p>
 <b>Header &lt;date_time&gt; Synopsis</b>
@@ -3207,6 +3450,16 @@ Coordinated Universal Time, known as UTC, time.
 <code>system_time</code>
 shall provide an epoch time of 1970-01-01 00:00:00.000000000
 and a maximum time value of at least epoch time + 292 years.
+</p>
+
+<p>
+<b>[Crowl:
+Hm.  I hope I'm not getting too pedantic here, but I'd recommend
+encuraging a "system time" based on UTC rather than on defining
+it so.  The reason is that embedded systems need to function
+independent of the global time system when lives are at stake.
+I don't want the flight control software dependent on UTC.
+]</b>
 </p>
 
 <p>
