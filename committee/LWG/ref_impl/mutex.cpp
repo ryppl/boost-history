@@ -149,9 +149,9 @@ bool
 timed_mutex::timed_lock(const system_time& abs_time)
 {
     unique_lock<mutex> lk(mut_);
-    bool timed_out = get_system_time() > abs_time;
-    while (!timed_out && locked_)
-        timed_out = gate1_.timed_wait(lk, abs_time);
+    bool within_time = get_system_time() < abs_time;
+    while (within_time && locked_)
+        within_time = gate1_.timed_wait(lk, abs_time);
     if (!locked_)
     {
         locked_ = true;
@@ -226,9 +226,9 @@ recursive_timed_mutex::timed_lock(const system_time& abs_time)
         ++state_;
         return true;
     }
-    bool timed_out = get_system_time() > abs_time;
-    while (!timed_out && state_ != 0)
-        timed_out = gate1_.timed_wait(lk, abs_time);
+    bool within_time = get_system_time() < abs_time;
+    while (within_time && state_ != 0)
+        within_time = gate1_.timed_wait(lk, abs_time);
     if (state_ == 0)
     {
         state_ = 1;
@@ -299,10 +299,10 @@ const adopt_lock_t  adopt_lock = adopt_lock_t();
 
 pthread_mutex_t __call_once_mut = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t  __call_once_cv  = PTHREAD_COND_INITIALIZER;
-static once_flag global_epoch(SIG_ATOMIC_MAX);
 
 once_flag& __get_call_once_global_epoch()
 {
+    static once_flag global_epoch(SIG_ATOMIC_MAX);
     return global_epoch;
 }
 

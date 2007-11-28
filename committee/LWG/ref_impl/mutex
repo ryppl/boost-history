@@ -295,7 +295,7 @@ __call_once(once_flag& flag, F f)
                 flag = once_flag(0);
                 pthread_mutex_unlock(&__call_once_mut);
                 pthread_cond_broadcast(&__call_once_cv);
-               throw;
+                throw;
             }
             pthread_mutex_lock(&__call_once_mut);
             flag = global_epoch;
@@ -310,18 +310,19 @@ __call_once(once_flag& flag, F f)
 template <class F>
 inline
 void
-call_once(once_flag& flag, F f)
+call_once(once_flag& flag, F&& func)
 {
     if (flag < __get_once_per_thread_epoch())
-        __call_once(flag, std::move(f));
+        __call_once(flag, std::forward<F>(func));
 }
 
-template<class F, class ...Args>
+template<class F, class Arg0, class ...Args>
 inline
 void
-call_once(once_flag& flag, F&& func, Args&&... args)
+call_once(once_flag& flag, F&& func, Arg0&& arg0, Args&&... args)
 {
-    std::call_once(flag, bind(std::forward<F>(func), std::forward<Args>(args)...));
+    if (flag < __get_once_per_thread_epoch())
+        __call_once(flag, bind(std::forward<F>(func), std::forward<Arg0>(arg0), std::forward<Args>(args)...));
 }
 
 }  // std
