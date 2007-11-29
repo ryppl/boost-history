@@ -27,6 +27,8 @@
         template <class Predicate>
             void wait(unique_lock<mutex>& lock, Predicate pred);
         bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time);
+        template <class Duration>
+            bool timed_wait(unique_lock<mutex>& lock, const Duration& rel_time);
         template <class Predicate>
             bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred);
         template <class Duration, class Predicate>
@@ -54,6 +56,8 @@
             void wait(Lock& lock, Predicate pred);
         template <class Lock>
             bool timed_wait(Lock& lock, const system_time& abs_time);
+        template <class Lock, class Duration>
+            bool timed_wait(Lock& lock, const Duration& rel_time);
         template <class Lock, class Predicate>
             bool timed_wait(Lock& lock, const system_time& abs_time, Predicate pred);
         template <class Lock, class Duration, class Predicate>
@@ -96,10 +100,14 @@ public:
     template <class Predicate>
         void wait(unique_lock<mutex>& lock, Predicate pred);
     bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time);
+    template <class Duration>
+        bool timed_wait(unique_lock<mutex>& lock, const Duration& rel_time,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0);
     template <class Predicate>
         bool timed_wait(unique_lock<mutex>& lock, const system_time& abs_time, Predicate pred);
     template <class Duration, class Predicate>
-        bool timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred);
+        bool timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0);
 
     typedef pthread_cond_t* native_handle_type;
     native_handle_type native_handle() {return &cv_;}
@@ -114,6 +122,15 @@ void
 condition_variable::wait(unique_lock<mutex>& lock)
 {
     __do_wait(lock.mutex()->native_handle());
+}
+
+template <class Duration>
+inline
+bool
+condition_variable::timed_wait(unique_lock<mutex>& lock, const Duration& rel_time,
+                               typename enable_if<__is_duration<Duration>::value>::type*)
+{
+    return timed_wait(lock, get_system_time() + rel_time);
 }
 
 template <class Predicate>
@@ -144,7 +161,8 @@ condition_variable::timed_wait(unique_lock<mutex>& lock, const system_time& abs_
 template <class Duration, class Predicate>
 inline
 bool
-condition_variable::timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred)
+condition_variable::timed_wait(unique_lock<mutex>& lock, const Duration& rel_time, Predicate pred,
+                               typename enable_if<__is_duration<Duration>::value>::type*)
 {
     return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
 }
@@ -169,10 +187,14 @@ public:
         void wait(Lock& lock, Predicate pred);
     template <class Lock>
         bool timed_wait(Lock& lock, const system_time& abs_time);
+    template <class Lock, class Duration>
+        bool timed_wait(Lock& lock, const Duration& rel_time,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0);
     template <class Lock, class Predicate>
         bool timed_wait(Lock& lock, const system_time& abs_time, Predicate pred);
     template <class Lock, class Duration, class Predicate>
-        bool timed_wait(Lock& lock, const Duration& rel_time, Predicate pred);
+        bool timed_wait(Lock& lock, const Duration& rel_time, Predicate pred,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0);
 };
 
 inline
@@ -224,6 +246,15 @@ condition_variable_any::timed_wait(Lock& lock, const system_time& abs_time)
     return cv_.timed_wait(lk, abs_time);
 }  // mut_.unlock(), lock.lock()
 
+template <class Lock, class Duration>
+inline
+bool
+condition_variable_any::timed_wait(Lock& lock, const Duration& rel_time,
+                                   typename enable_if<__is_duration<Duration>::value>::type*)
+{
+    return timed_wait(lock, get_system_time() + rel_time);
+}
+
 template <class Lock, class Predicate>
 inline
 bool
@@ -238,7 +269,8 @@ condition_variable_any::timed_wait(Lock& lock, const system_time& abs_time, Pred
 template <class Lock, class Duration, class Predicate>
 inline
 bool
-condition_variable_any::timed_wait(Lock& lock, const Duration& rel_time, Predicate pred)
+condition_variable_any::timed_wait(Lock& lock, const Duration& rel_time, Predicate pred,
+                                   typename enable_if<__is_duration<Duration>::value>::type*)
 {
     return timed_wait(lock, get_system_time() + rel_time, std::move(pred));
 }

@@ -200,7 +200,8 @@ public:
     void lock();
     bool try_lock();
     template <class Duration>
-        bool timed_lock(const Duration& rel_time)
+        bool timed_lock(const Duration& rel_time,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0)
             {return timed_lock(get_system_time() + rel_time);}
     bool timed_lock(const system_time& abs_time);
     void unlock();
@@ -223,7 +224,8 @@ public:
     void lock();
     bool try_lock();
     template <class Duration>
-        bool timed_lock(const Duration& rel_time)
+        bool timed_lock(const Duration& rel_time,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0)
             {return timed_lock(get_system_time() + rel_time);}
     bool timed_lock(const system_time& abs_time);
     void unlock();

@@ -416,17 +416,40 @@
 */
 
 #include <ctime>
+#include <type_traits>
 
 namespace std {
 
 template <class T>
-class __is_duration
+class __has_tick_type
 {
 	struct two {char x; char y;};
 	template <class U> static two  test(...);
-	template <class U> static char test(typename U::tick_type* = 0);
+	template <class U> static char test(typename U::tick_type*);
 public:
 	static const bool value = sizeof(test<T>(0)) == 1;
+};
+
+template <class T, T val>
+struct __member_wrapper{};
+
+template <class T>
+class __has_get_count
+{
+	struct two {char x; char y;};
+	template <class U> static two  test(...);
+	template <class U> static char test(__member_wrapper<typename U::tick_type (U::*)() const, &U::get_count>*);
+public:
+	static const bool value = sizeof(test<T>(0)) == 1;
+};
+
+template <class T>
+class __is_duration
+{
+public:
+	static const bool value = __has_tick_type<T>::value &&
+	                          __has_get_count<T>::value &&
+	                          stb::is_convertible<long long, T>::value;
 };
 
 class nanoseconds

@@ -167,7 +167,8 @@ public:
     void lock();
     bool try_lock();
     template <class Duration>
-        bool timed_lock(const Duration& rel_t);
+        bool timed_lock(const Duration& rel_t,
+                        typename enable_if<__is_duration<Duration>::value>::type* =0);
     bool timed_lock(const system_time& abs_time);
     void unlock();
 
@@ -217,7 +218,8 @@ unique_lock<Mutex>::try_lock()
 template <class Mutex>
 template <class Duration>
 bool
-unique_lock<Mutex>::timed_lock(const Duration& rel_t)
+unique_lock<Mutex>::timed_lock(const Duration& rel_t,
+                               typename enable_if<__is_duration<Duration>::value>::type*)
 {
     if (m_ == 0 || owns_lock_)
         throw lock_error();

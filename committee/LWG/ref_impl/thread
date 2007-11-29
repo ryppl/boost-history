@@ -185,7 +185,9 @@ inline __thread_id get_id() {return __thread_id(pthread_self());}
 void sleep(const system_time& abs_time);
 template <class Duration>
 inline
-void sleep(const Duration& rel_t) {this_thread::sleep(get_system_time() + rel_t);}
+void sleep(const Duration& rel_t,
+           typename enable_if<__is_duration<Duration>::value>::type* =0)
+    {this_thread::sleep(get_system_time() + rel_t);}
 
 }  // this_thread
 
