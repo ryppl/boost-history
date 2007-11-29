@@ -31,7 +31,8 @@ class blueprint_example
 public:
     blueprint_example()
     {
-        // Add the components to the network.
+        // Add the components to the network.  So far, ONLY signals::storage
+        // models the Component concept.
         source = network.add_component<signals::storage<void(int)> >(100),
         sink = network.add_component<signals::storage<void(int)> >(0),
         source_float = network.add_component<signals::storage<void(float)> >(100.1f),

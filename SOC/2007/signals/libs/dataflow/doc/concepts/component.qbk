@@ -12,7 +12,7 @@ for a [ComponentConcept] (see examples below).
 [variablelist
     [[C] [A [ComponentConcept] type.]]
     [[CT] [The [ComponentTraitsConcept] type of `C`.]]
-    [[I] [An MPL Integral Constant in the range \[0, n of ports exposed by C).]]
+    [[I] [An MPL Integral Constant in the range \[0, number of ports exposed by C).]]
     [[c] [An object of type C.]]
 ]
 

@@ -6,19 +6,23 @@ the Signal Network library, which became the Dataflow library)
 as well as some GSoC status updates can be found on the
 [@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
 
-Dataflow is a generic library for [WikiDataflow] programming using various data
-transport mechanisms.  It also has layers of support for
-two data transport mechanisms - one is based on
-[BoostSignals], and the other (experimental and currently broken) is based
-connections made through
-simple object pointers, with support for using [BoostPhoenix2]
-actors for data processing.
+Dataflow is a generic library for [WikiDataflow] programming.  It offers:
 
-The two data transport mechanisms are implemented in the [DataflowSignals]
-and [DataflowPhoenix] layers.  The idea behind providing a generic dataflow
-library is that other data transport mechanisms can be easily adapted for
-use with the library, and benefit from layers built on top of it
-(such as the recently started [DataflowBlueprint] layer).
+* a number of generic [concepts] which capture various aspects of a
+dataflow framework.
+* a support layer for a particular dataflow framework ([DataflowSignals]).
+* a framework-independent layer ([DataflowBlueprint]) built on top of the
+  generic layer, which
+  provides dataflow network modeling/analysis via
+  the [BoostGraph], and support for run-time reflection of components.
+  
+The idea behind providing a generic dataflow library is that
+other data transport mechanisms and dataflow frameworks can be easily adapted for
+use with the library, and benefit from layers built on top of the generic layer.
+There is an example on how to do that for [VTK], and there is also an
+implementation of an (experimental and currently broken) layer based
+connections made through simple object pointers, with support for using
+[BoostPhoenix2] actors for data processing ([DataflowPhoenix]).
 
 * If you would like some more information about why one would want to connect
   objects into a dataflow network, read about
@@ -181,13 +185,15 @@ the Dataflow library, see
 
 [section:how_to_use How to use this library and the documentation]
 
-The Dataflow library currently has two useful parts:
+The Dataflow library currently has three useful parts:
 
 * A layer providing generic dataflow support, adaptable to various dataflow
-  mechanisms.
+  frameworks and data transport mechanisms.
 * The [DataflowSignals] layer, with a number of implemented components that
   facilitate implementation of dataflow networks using [BoostSignals] as
   a data transport mechanism.
+* The [DataflowBlueprint] layer, built on top of the generic layer and providing
+  runtime reflection and network modeling using the [BoostGraph].
 
 There is also a (currently very experimental) [DataflowPhoenix] layer,
 which uses object pointers with support for
@@ -196,8 +202,8 @@ which uses object pointers with support for
 [heading Generic dataflow layer]
 
 There are generic properties of dataflow programs which do not depend on the
-data transport mechanism,
-and can be exploited to develop mechanism-independent dataflow code.
+underlying dataflow framework or data transport mechanism,
+and can be exploited to develop generic dataflow code.
 The generic dataflow layer captures some of these properties, and
 has been sucessfully adapted to three
 different data transport mechanisms ([BoostSignals], pointers in conjunction
@@ -208,7 +214,7 @@ support layer is the ability to connect components in a clean, readable
 manner. As more generic code is developed on top of
 the generic dataflow layer (such as the recently started [DataflowBlueprint]),
 providing a Dataflow support layer for your
-favorite data transport mechanism will be more beneficial.
+favorite dataflow framework will be more beneficial.
 
 See the [link dataflow.future future directions] of the Dataflow library
 for an idea of what might become available in the future for data transport
@@ -225,23 +231,27 @@ layer, see the [concepts] documentation.
 
 This part of the Dataflow library provides components
 and connection-making capabilty which facilitates large-scale use of
-Boost.Signals as a mechanism to transfer data between processing components.
+[BoostSignals] as a mechanism to transfer data between processing components.
 
 For examples of how the [DataflowSignals] layer can be used, see:
 
 * The example on developing a 
   [link dataflow.introduction.examples.distributed distributed dataflow application].
+* The example on developing an  
+  [link dataflow.introduction.examples.gil image processing network].
 * The [DataflowSignals] documentation.
 
 [heading Dataflow.Blueprint layer]
 
 [DataflowBlueprint] provides run-time reflection and modeling of dataflow
-networks in a BGL graph for any mechanism with implemented Dataflow support.
+networks in a [BoostGraph] graph for any dataflow framework with
+implemented Dataflow library support.
 
 The development of this layer has only begun.  To find out more about it, see:
 
 * The example on [link dataflow.introduction.examples.blueprint run-time
   reflection and connectivity modeling].
+* The [DataflowBlueprint] documentation.
 
 
 [/[heading When to use]
@@ -367,12 +377,18 @@ latest version is located in the
 The Dataflow library uses the trunk version of Boost - it might not work
 perfectly with release versions of boost.
 
-Version 0.8.1 (under construction)
+Version 0.8.1
+ \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 
-* started the [DataflowBlueprint] layer (simple runtime reflection and network modeling).
-* expanding the [ComponentConcept] concept (compile-time reflection of ports).
+* Started the [DataflowBlueprint] layer (runtime reflection and network modeling).
+* Expanding the [ComponentConcept] concept (compile-time reflection of ports).
 * VTK example Jamfile now works work with Windows (not just Darwin+X11 VTK).
-* provided an example using Boost.GIL.
+* Provided an example using [BoostGIL].
+* The [MechanismConcept] concept is now limited to port-related operations.
+  In the future, an additional tag template parameter might be added to all
+  dataflow templates to allow specifying completely independent dataflow support
+  layers over the same types (the original intent of the [MechanismConcept]
+  parameter).
 
 Version 0.8.0 -
  \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]

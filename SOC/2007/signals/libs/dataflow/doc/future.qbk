@@ -11,6 +11,10 @@ The following features are planned for the future:
 * *Serialization* - It should be possible to serialize and deserialize a
   network blueprint. This could be used to store datafow programs, or to send
   them over the network.
+
+* *Separation of network blueprint and network instance* - Right now the
+  `network` class serves both as a blueprint and as an instance of the
+  network.  These two will be decoupled in the future.
   
 * *Component banks* - Banks of components which can be accessed at runtime.
 

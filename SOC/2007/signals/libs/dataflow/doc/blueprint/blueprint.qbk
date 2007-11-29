@@ -3,13 +3,13 @@
 The [DataflowBlueprint] layer
 provides generic components that can hold the "big picture"
 of a dataflow network.  This is particularly useful for those dataflow
-frameworks (such as [DataflowSignals] where the dataflow network is stored in
+frameworks such as [DataflowSignals] where the dataflow network is stored in
 the individual components - i.e., there
 is no global picture of the network available.
 
 A blueprint component corresponds to an actual
 component - but whereas the actual component takes care of the work, the
-blueprint component provides a run-time polymorphic interface which can be
+blueprint component provides a run-time polymorphic interface and can be
 embedded in a BGL graph. A dataflow network blueprint uses such a graph
 to hold the blueprint components and the connectivity information.
 In addition, blueprint components provide run-time port reflection.
