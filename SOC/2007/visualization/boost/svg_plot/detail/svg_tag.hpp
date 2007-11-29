@@ -104,7 +104,7 @@ namespace svg
       {
         s_out << " clip-path=\"url(#" << clip_name << ")\""; // Prefix with space.
       }
-      // Other references, 5.3.1, like color, fill, stroke, gradients...
+      // Inherited classes add other references, 5.3.1, like color, fill, stroke, gradients...
       // Example id: <g id="yMinorGrid" ></g>
       // Example URI: fill="url(#Gradient01) // local URL
     } // void write_attributes(std::ostream& s_out)
@@ -514,13 +514,13 @@ namespace svg
       switch(align)
       {
       case left_align:
-        anchor = " start";
+        anchor = "start";
         break;
       case right_align:
-        anchor = " end";
+        anchor = "end";
         break;
       case center_align:
-        anchor = " middle";
+        anchor = "middle";
         break;
       default:
         anchor = "";
@@ -664,7 +664,7 @@ namespace svg
     {
       if(relative)
       {
-        o_str<<"l";
+        o_str << "l";
       }
       else
       { // Absolute.
@@ -741,7 +741,7 @@ namespace svg
     {
       if(relative)
       {
-        o_str<<"c";
+        o_str << "c";
       }
       else
       { // Absolute.
@@ -885,8 +885,10 @@ namespace svg
     }
 
     path_element() : fill(true)
-    {
+    { // TODO why is the default fill(true)?
     }
+
+
 
     // Note 1: return of path_element& permits chaining calls like
     // my_path.M(3, 3).l(150, 150).l(200, 200)...;
@@ -999,19 +1001,23 @@ namespace svg
 
     void write(std::ostream& o_str)
     {
-      o_str << "<path d=\"";
-      for(ptr_vector<path_point>::iterator i = path.begin(); i != path.end(); ++i)
-      {
-        (*i).write(o_str); // M1,2
+      if (path.begin() != path.end() )
+      { // Is some path info (trying to avoid useless <path d=""/>"
+        // TODO or would this omit useful style & attributes?
+        o_str << "<path d=\"";
+        for(ptr_vector<path_point>::iterator i = path.begin(); i != path.end(); ++i)
+        {
+          (*i).write(o_str); // M1,2
+        }
+        o_str << "\"";
+        write_attributes(o_str); // id & clip_path
+        style_info.write(o_str); // fill, stroke, width...
+        if(!fill)
+        {
+          o_str << " fill=\"none\"";
+        }
+        o_str<<"/>"; // closing to match <path d=
       }
-      o_str << "\""; 
-      write_attributes(o_str); // id & clip_path
-      style_info.write(o_str); // fill, stroke, width...
-      if(!fill)
-      {
-        o_str << " fill = \"none\"";
-      }
-      o_str<<"/>";
       // Example: <path d="M5,175 L5,195 M148.571,175" />
     } // void write(std::ostream& o_str)
   }; // class path_element
@@ -1177,7 +1183,7 @@ namespace svg
     void write(std::ostream& o_str)
     {
       o_str << "<polygon points=\"";
-      for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i!=poly_points.end(); ++i)
+      for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i != poly_points.end(); ++i)
       {
         (*i).write(o_str); //  x, y coordinates as " 1,2"
       }
@@ -1298,17 +1304,20 @@ namespace svg
       return children.size();
     }
 
-    void write(std::ostream& rhs)
+    void write(std::ostream& os)
     {
-      rhs << "<g"; // Do NOT need space if convention is to start following with space.
-      write_attributes(rhs); // id="background"
-      style_info.write(rhs); // stroke="rgb(0,0,0)"
-      rhs << ">" ;
+      // WOuld be nice to avoid useless <g id="yMinorGrid"></g>
+      // TODO but would this mean that useful style is lost?
+
+      os << "<g"; // Do NOT need space if convention is to start following item with space.
+      write_attributes(os); // id="background"
+      style_info.write(os); // stroke="rgb(0,0,0)"
+      os << ">" ;
       for(unsigned int i = 0; i < children.size(); ++i)
       {
-        children[i].write(rhs); 
+        children[i].write(os); 
       }
-      rhs << "</g>" << std::endl;
+      os << "</g>" << std::endl;
       // Example:
       // <g fill="rgb(255,255,255)" id="background"><rect x="0" y="0" width="500" height="350"/></g>
     } // void write(std::ostream& rhs)

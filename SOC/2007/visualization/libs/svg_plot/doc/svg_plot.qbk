@@ -1390,6 +1390,37 @@ plot(my_data, "People", functor = my_functor());
 
 [section:implementation Implementation & Rationale]
 
+[h4 Number of  Minor ticks]
+
+`x_num_minor_ticks()` and `x_num_minor_ticks()`
+
+are provided control the number of minor ticks between the major ticks.
+
+There are a total of x_num_minor_ticks + 1 ticks for each major tick,
+for example, a major on 0, minor on 1,2,3,4, major on 5 ...
+
+For integer usually binary, octal and hexadecimal,
+num_minor_ticks = 2[super]n -1 are useful, for example
+ 1 if major ticks are even will give minor ticks on odd values),
+ 3 if major on 0, minor on 1, 2, 3 and major on 4...
+ 7 if major on 0, minor on 1,2,3,4,5,6,7 and major on 8 ...
+ 15 if major on 0, minor on 1,2,3,4,5,6,7, 8,9,A,B,C,D,E,F, major on 0x10...
+ 
+ For decimal based values, num_minor_ticks 1, 4, 9 are useful, for example:
+ 1 if major are even, major 0, minor 1, major 2 ...
+ 4 if major on 0, minor on 1,2,3,4, major on 5 ...
+ 9 if major on 0, minor on 1,2,3,4,5,6,7,8,9, major on 10
+ 
+ 
+ 
+ 
+ 
+
+
+
+[/h4 Minor ticks]
+
+
 This section provide more information about this implementation
 and some of the rationale for desing decisions.
 
@@ -1570,8 +1601,16 @@ A license that permits reproduction, distribution and commercial use,
 but requires both notice & attribution
 is probably most suitable for Boost documents as is therefore chosen as the default.
 
-This license can be included by calling svg  member function is_license(true).
- 
+This license can be included by calling svg  member function `is_license(true)`.
+If this license will be included can be discovered by calling svg  member function `is_license()`.
+
+Similarly functions
+  const std::string license_reproduction();`
+  const std::string license_distribution();
+  const std::string license_attribution();
+  const std::string license_commercialuse()
+allow you to find the current license requirements.
+
 [@http://web.resource.org/rss/1.0/modules/cc/ RDF] is the metadata format chosen by
 [@http://creativecommons.org Creative Commons].
 

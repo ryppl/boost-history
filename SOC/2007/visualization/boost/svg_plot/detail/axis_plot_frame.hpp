@@ -85,7 +85,7 @@ namespace detail
     }
 
     void draw_x_minor_ticks(double value, path_element& tick_path, path_element& grid_path)
-    { // draw X-axis minor ticks, and optionaloly grid.
+    { // draw X-axis minor ticks, and optional grid.
       // value is NOT (yet) shown beside the minor tick.
       double x1(value);
       transform_x(x1);
@@ -93,18 +93,18 @@ namespace detail
       double y2(derived().image.y_size());
 
       // Draw the minor grid, if wanted.
-      if(derived().use_x_minor_grid)
+      if(derived().use_x_minor_grid_)
       {
         if(!derived().use_plot_window)
         {  // Use whole image.
            // Make space for title and X-axis labels.
           if(derived().use_title)
-          { // Allow text_margin * font_size around text (pixels).
-            y1 += derived().title_info.font_size() * derived().text_margin;
+          { // Allow text_margin_ * font_size around text (pixels).
+            y1 += derived().title_info.font_size() * derived().text_margin_;
           }
           if(derived().use_x_label)
           {
-            y2 -= derived().x_label_info.font_size() * derived().text_margin;
+            y2 -= derived().x_label_info.font_size() * derived().text_margin_;
           }
         }
         else
@@ -177,17 +177,17 @@ namespace detail
     transform_x(x1);
     double y1(0.); // // y1 = upper,
     double y2(derived().image.x_size()); // y2 = lower end of tick.
-    if(derived().use_x_major_grid)
+    if(derived().use_x_major_grid_)
     { // Draw major grid vertical line.
       if(!derived().use_plot_window)
       { // Allow a modest margin around text of title and X-axis labels, if in use.
         if(derived().use_title)
         {
-          y1 += derived().title_info.font_size() * derived().text_margin;
+          y1 += derived().title_info.font_size() * derived().text_margin_;
         }
         if(derived().use_x_label)
         { // If use_x_major_labels then value may be shown beside the major tick.
-          y2 -= derived().x_label_info.font_size() * derived().text_margin;
+          y2 -= derived().x_label_info.font_size() * derived().text_margin_;
         }
       }
       else
@@ -200,7 +200,7 @@ namespace detail
 
     // Draw major tick (perhaps as well as grid - ticks might be wider than grid).
     // Make sure that we are drawing inside the allowed plot window.
-    if((x1 > derived().plot_x1) && (x1 < derived().plot_x2)) // < or <= ???
+    if((x1 >= derived().plot_x1) && (x1 <= derived().plot_x2)) // now <= 
     {
       double x_tick_length = derived().x_major_tick_length_;
       if(derived().use_x_ticks_on_plot_window_)
@@ -230,36 +230,42 @@ namespace detail
         }
       }
       tick_path.M(x1, y1).L(x1, y2);
+      // Leaving current position at the bottom end of the tick.
 
       if(derived().use_x_major_labels )
       { // Show value by the tick.
-        std::stringstream fmt;
-        fmt << value; // TODO precision problems here?
-        // TODO if 2-D, don NOT want a "0" here - cut in two by the Y-axis line!
-        // But DO want it if 1-D.  How do we tell if 2-D?
-        if(fmt.str() != "0")  // && is_2D)  wanted here.
-        {
-          if(derived().use_x_ticks)
-          {
-            y2 += derived().text_margin;
-            // move down by a font height?
-            if (derived().use_down_ticks)
-            { // Move down a tick.
-              y2 += derived().x_major_tick_length_;
-            }
-          }
-          else
-          { // ! internal_style
-            y2 += derived().text_margin + x_tick_length; // Move down.
-          }
-          derived().image.get_g_element(PLOT_PLOT_LABELS).text(x1, y2, fmt.str());
+        std::stringstream label;
+        label << value; // TODO precision problems here?
+
+        if(derived().use_down_ticks)
+        {  // No need to shift if derived().use_up_ticks as labels are below the X-axis.
+          y2 += derived().x_label_info.font_size(); // Move down just below bottom end of tick.
         }
-      }// use_x_major_labels
+        if(derived().use_x_ticks_on_plot_window_) 
+        { // Always want all values including "0" if labelling on the external plot window.
+          y2, 
+          derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1, y2,
+            label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
+            "", "", "", "", center_align,  // center label on the tick.
+            horizontal);
+        }
+        else
+        { // Internal - value labels just below horizontal X-axis.
+          if ((value != 0) && derived().use_x_axis_lines_)
+          { // Avoid a "0" below the X-axis if it would be cut through by the vertical Y-axis line.
+            y2,
+            derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1, y2,
+              label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
+              "", "", "", "", center_align, // center label on the tick.
+              horizontal);
+          }
+        }
+      } // use_x_major_labels
     }
     else
     { // Outside plot window - so do nothing?  Warning?
-        //std::cerr << "Writing draw_x_major_ticks OUTside plot window: "
-        //  "x1 = " << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
+      //std::cerr << "Writing draw_x_major_ticks OUTside plot window: "
+      //  "x1 = " << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
     }
   } // draw_x_major_ticks
 
@@ -276,22 +282,23 @@ namespace detail
 
     if(derived().use_x_axis_lines_)
     { // Draw the horizontal X-axis line.
-      derived().image.get_g_element(PLOT_X_AXIS).line(derived().plot_x1, derived().x_axis,
+      derived().image.get_g_element(PLOT_X_AXIS).line(
+        derived().plot_x1, derived().x_axis,
         derived().plot_x2, derived().x_axis);
     }
 
     // x_minor_jump is the interval between minor ticks.
-    double x_minor_jump = derived().x_major /
-      ((double)(derived().x_num_minor_ticks_ + 1.) );
+    double x_minor_jump = derived().x_major_interval_ /
+      (derived().x_num_minor_ticks_ + 1.);
 
     // TODO Problem here when using floating point??
     // Was i < y_max; but didn't show the tick and value at y_max so now i <= y_max;
     // But may still fail if a least significant bit or few out??
 
     // Draw the ticks on the positive side (right of zero).
-    for(double x = 0; x <= derived().x_max; x += derived().x_major)
+    for(double x = 0.; x <= derived().x_max; x += derived().x_major_interval_)
     {
-      for(double j = x + x_minor_jump; j < x + derived().x_major; j += x_minor_jump)
+      for(double j = x + x_minor_jump; j < x + derived().x_major_interval_; j += x_minor_jump)
       { // This will output 'orphaned' minor ticks that are beyond the plot window,
         // if the last major tick does not coincide with the plot window.
         // These are just ignored in draw_x_minor_ticks.
@@ -304,10 +311,12 @@ namespace detail
     }
 
     // Draw the ticks on the negative side (left of zero).
-    for(double x = 0; x >= derived().x_min; x -= derived().x_major)
+    for(double x = 0; x >= derived().x_min; x -= derived().x_major_interval_)
     {
       // Draw minor ticks.
-      for(double j = x; j > x-derived().x_major; j-= derived().x_major / (derived().x_num_minor_ticks_+1))
+      for(double j = x;
+        j > x-derived().x_major_interval_;
+        j-= derived().x_major_interval_ / (derived().x_num_minor_ticks_+1))
       {
         draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
       }
@@ -341,7 +350,7 @@ namespace detail
     }
     else
     { // use all image.
-      y = derived().title_info.font_size() * derived().text_margin; // Leave a linespace above.
+      y = derived().title_info.font_size() * derived().text_margin_; // Leave a linespace above.
     }
     derived().title_info.y(y);
     derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(derived().title_info));
@@ -350,12 +359,12 @@ namespace detail
   void draw_legend()
   {
     size_t num_points = derived().series.size();
-    int font_size = derived().legend_header.font_size();
+    int font_size = derived().legend_header_.font_size();
     int point_size =  derived().series[0].point_style.size;
     // Use whichever is the biggest of point marker and font.
 
     double spacing = (std::max)(font_size, point_size);
-    bool is_header = (derived().legend_header.text() != "");
+    bool is_header = (derived().legend_header_.text() != "");
     // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
     double legend_width(0); //
     size_t longest = 0;
@@ -375,12 +384,12 @@ namespace detail
     // space, text, trailing space before box margin.
 
     // legend_height must be *at least* enough for
-    // the legend title and text_margins around it
-    // (if any) plus a text_margin top and bottom.
+    // the legend title and text_margin_s around it
+    // (if any) plus a text_margin_ top and bottom.
     // Add more height depending on the number of lines of text.
     double legend_height = 2. * spacing;
     if (derived().use_title) // plot title
-      // && derived().legend_header.text() != "" leave space even if no string?
+      // && derived().legend_header_.text() != "" leave space even if no string?
     {
       legend_height += spacing;
     }
@@ -400,21 +409,25 @@ namespace detail
        << " pixels,  & so truncated. legend_width == " << legend_width << std::endl;
       // For example:
       // "Legend text line was too long by about 84 pixels & so truncated. legend_width == 252"
-      legend_width = x_size - legend_x_start - derived().text_margin;
-      // text_margin just allows the border box to show.
+      legend_width = x_size - legend_x_start - derived().text_margin_;
+      // text_margin_ just allows the border box to show.
     }
 
     // Draw border box round legend.
     g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
-    g_ptr->push_back(new rect_element(legend_x_start, legend_y_start,
-      legend_width, legend_height));
+    g_ptr->push_back(new
+      rect_element(legend_x_start, legend_y_start, legend_width, legend_height));
+    derived().legend_x1_ = legend_x_start; // Save for acces by legend_to_left
+    derived().legend_x2_ = legend_width;
+    derived().legend_y1_ = legend_y_start; // and legend_bottom_right.
+    derived().legend_y2_ = legend_height;
 
-    double legend_y_pos = legend_y_start + derived().text_margin * spacing;
+    double legend_y_pos = legend_y_start + derived().text_margin_ * spacing;
     if (is_header)
     { // Draw the legend text.
-      derived().legend_header.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
-      derived().legend_header.y(legend_y_pos);
-      derived().image.get_g_element(PLOT_LEGEND_TEXT).push_back(new text_element(derived().legend_header));
+      derived().legend_header_.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
+      derived().legend_header_.y(legend_y_pos);
+      derived().image.get_g_element(PLOT_LEGEND_TEXT).push_back(new text_element(derived().legend_header_));
       legend_y_pos += 2 * spacing;
     }
 
@@ -464,7 +477,7 @@ namespace detail
         legend_x_pos, // allow space for the marker.
         legend_y_pos,
         derived().series[i].title, // Text for this data series.
-        derived().legend_header.font_size(), // font size
+        derived().legend_header_.font_size(), // font size
         "", "", "", "", "", // TODO full font info for legend needed here?
         left_align));
       legend_y_pos += 2 * spacing;
@@ -473,38 +486,47 @@ namespace detail
     // TODO reconsider this.
     //if(derived().plot_x2 >= (int)derived().image.x_size())
     //{ // Put legend above plot because image is tall & thin.
-    //  // TODO this properly.
+    //  // TODO this with use control of the legend box position.
     //}
   } // void draw_legend()
 
   void draw_x_label()
   {
-    // color set in constructor.
+    // color is set in constructor.
     //image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color(black);
+    // and using y_label_color(color)
 
     std::string label = derived().x_label_info.text(); // x_axis label, and optional units.
     if (derived().use_x_label_units && (derived().x_units_info.text() != ""))
     { // Append the units, if any, providing brackets ().
       label += "  (" + derived().x_units_info.text() + ")";
     }
+    // Simplest to start from the bottom of the image.
+    // and move up to give enough sapce for the X-axis label.
 
-    double y(0.);
-    transform_y(y);
-    derived().x_axis = y; // X-axis line at y = 0.
-    y += derived().x_label_font_size() * 2.5; // values & label & half line space.
-    if (derived().use_down_ticks)
-    { // Make space for ticks down.
-      y += derived().x_major_tick_length(); // down.
-      // TODO actually want (std::max)::(derived().x_major_tick_length(), derived().x_minor_tick_length())?
-      //TODO where do the brackets go??
+    //double y(0.);
+    //transform_y(y);
+    //derived().x_axis = y; // X-axis line at y = 0.
+    //y += derived().x_label_font_size() * 2.5; // values & label & half line space.
+    //if (derived().use_down_ticks)
+    //{ // Make space for ticks down.
+    //  y += (std::max)(derived().x_major_tick_length(), derived().x_minor_tick_length());
+    //  // Brackets avoid trouble with any nasty macro max.
+    //  // Use max in case some joker uses longer minor ticks than major.
+    //}
+    //if (derived().x_ticks_on_plot_window_on())
+    //{ // Allow space for the values labelling the ticks.
+    //  y += derived().x_label_font_size() * derived().text_margin_;
+    //}
+    // Bottom of plot window plus two char height.
+    // derived().plot_y2 + (derived().x_label_font_size() * derived().text_margin_),
 
-    }
-
+    double y = derived().image.y_size();  // bottom edge of image.
+    y -= derived().x_label_font_size(); // Up enough for a space underneath label.
     derived().image.get_g_element(PLOT_X_LABEL).push_back(new text_element(
       ( // x position relative to the x-axis which is middle of plot window.
 				derived().plot_x2 + derived().plot_x1) / 2,  // x coordinate - middle.
-      // y position is down from plot window.
-      derived().plot_y2 + (derived().x_label_font_size() * derived().text_margin),
+      y, // Up from image bottom edge.
       label,
       derived().x_label_font_size(),
       derived().x_label_font_family(), "", "", "", "", center_align, horizontal)
@@ -687,12 +709,12 @@ namespace detail
 
   void clear_points()
   {
-    derived().image.get_g_element(PLOT_PLOT_POINTS).clear();
+    derived().image.get_g_element(PLOT_DATA_POINTS).clear();
   }
 
   void clear_plot_background()
   {
-    derived().image.get_g_element(PLOT_PLOT_BACKGROUND).clear();
+    derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).clear();
   }
 
   void clear_legend()
@@ -708,7 +730,7 @@ namespace detail
     derived().image.get_g_element(PLOT_X_MINOR_TICKS).clear();
     derived().image.get_g_element(PLOT_X_MAJOR_TICKS).clear();
     derived().image.get_g_element(PLOT_X_LABEL).clear();
-    derived().image.get_g_element(PLOT_PLOT_LABELS).clear();
+    derived().image.get_g_element(PLOT_VALUE_LABELS).clear();
   }
 
   void clear_y_axis()
@@ -720,6 +742,9 @@ namespace detail
   {
     derived().image.get_g_element(PLOT_X_MAJOR_GRID).clear();
     derived().image.get_g_element(PLOT_X_MINOR_GRID).clear();
+    // TODO don't we need to clear Y grids too??????
+    derived().image.get_g_element(PLOT_Y_MAJOR_GRID).clear();
+    derived().image.get_g_element(PLOT_Y_MINOR_GRID).clear();
   }
 
 private:
@@ -906,6 +931,33 @@ public:
     return derived();
   }
 
+  svg_color background_color()
+  {
+    return derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color();
+  }
+
+  Derived& background_border_color(const svg_color& col)
+  {
+    derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color(col);
+    return derived();
+  }
+
+  svg_color background_border_color()
+  {
+    return derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color();
+  }
+
+  Derived& background_border_width(double w)
+  {
+    derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_width(w);
+    return derived();
+  }
+
+  double background_border_width()
+  {
+    return derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_width();
+  }
+
   Derived& description(const std::string d)
   { // Writes description to the document(for header as <desc>).
     derived().image.description(d);
@@ -952,11 +1004,38 @@ public:
     return derived().image.copyright_date();
   }
 
-  Derived& license(std::string repro, std::string distrib, std::string attrib, std::string commercial)
+  Derived& license(std::string repro = "permits",
+    std::string distrib = "permits",
+    std::string attrib = "requires",
+    std::string commercial = "permits")
   { // Might check these are "permits", "requires", or "prohibits"?
-    // Default is permits.
     derived().image.license(repro, distrib, attrib, commercial);
     return derived();
+  }
+
+  const bool license_on()
+  {
+    return derived().image.is_license();
+  }
+
+  const std::string license_reproduction()
+  { // Get copyright_date.
+    return derived().image.reproduction();
+  }
+
+  const std::string license_distribution()
+  { // Get copyright_date.
+    return derived().image.distribution();
+  }
+
+  const std::string license_attribution()
+  { // Get copyright_date.
+    return derived().image.attribution();
+  }
+
+  const std::string license_commercialuse()
+  { // Get copyright_date.
+    return derived().image.commercialuse();
   }
 
   Derived& coord_precision(int digits)
@@ -968,6 +1047,17 @@ public:
   int coord_precision()
   { //
     return derived().image.coord_precision();
+  }
+
+  Derived& value_precision(int digits)
+  { // Precision of tick label values in decimal digits (default 3).
+    derived().value_precision_(digits);
+    return derived();
+  }
+
+  int value_precision()
+  { //
+    return derived().value_precision_;
   }
 
   Derived& title(const std::string title)
@@ -1071,24 +1161,52 @@ public:
 
   Derived& legend_title(const std::string title)
   {
-    derived().legend_header.text(title);
+    derived().legend_header_.text(title);
     return derived();
   }
 
   const std::string legend_title()
   {
-    return derived().legend_header.text();
+    return derived().legend_header_.text();
   }
 
   Derived& legend_title_font_size(unsigned int size)
   {
-    derived().legend_header.font_size(size);
+    derived().legend_header_.font_size(size);
     return derived();
   }
 
   unsigned int legend_title_font_size()
   {
-    return derived().legend_header.font_size();
+    return derived().legend_header_.font_size();
+  }
+
+  Derived& legend_top_left(double x, double y)
+  { // Position of top left of legend box (svg coordinates).
+    // Bottom right is controlled by contents, so cannot set it.
+    if((x < 0) || (x > derived().image.x_size()) || (y < 0) || (y > derived().image.y_size()))
+    {
+      throw std::runtime_error("Illegal legend box position.");
+    }
+    derived().legend_x1_ = x;
+    derived().legend_y1_ = y;
+    return derived();
+  }
+
+  std::pair<double, double> legend_top_left()
+  {// Top left of legend box
+    std::pair<double, double> r;
+    r.first = derived().legend_x1_; 
+    r.second = derived().legend_y1_;
+    return r;
+  }
+
+  std::pair<double, double> legend_bottom_right()
+  {// Top left of legend box
+    std::pair<double, double> r;
+    r.first = derived().legend_x2_; 
+    r.second = derived().legend_y2_;
+    return r;
   }
 
   Derived& line_on(bool is)
@@ -1105,7 +1223,6 @@ public:
   Derived& legend_on(bool cmd)
   {
     derived().use_legend = cmd;
-
     if(cmd)
     {
       derived().image.get_g_element(detail::PLOT_LEGEND_BACKGROUND)
@@ -1127,7 +1244,7 @@ public:
     if(cmd)
     { // set plot window color and border color.
       // TODO - allow user to change these.
-      derived().image.get_g_element(detail::PLOT_PLOT_BACKGROUND)
+      derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND)
         .style().fill_color(white)
         .stroke_color(black);
     }
@@ -1139,7 +1256,51 @@ public:
     return derived().use_plot_window;
   }
 
-  Derived& plot_window_x(unsigned int min_x, unsigned int max_x)
+  Derived& plot_border_color(const svg_color& col)
+  {
+    derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
+    return derived();
+  }
+
+  svg_color plot_border_color()
+  { 
+    return derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
+  }
+
+  double plot_border_width()
+  {
+      return derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
+  }
+
+  Derived& plot_border_width(double w)
+  {
+    derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
+    return derived();
+  }
+
+  Derived& border_margin(double w)
+  {
+    derived().border_margin_ = w;
+    return derived();
+  }
+
+  double border_margin()
+  {
+    return derived().border_margin_;
+  }
+
+  Derived& border_width(double w)
+  {
+    derived().border_width_ = w;
+    return derived();
+  }
+
+  double border_width()
+  {
+    return derived().border_width_;
+  }
+
+  Derived& plot_window_x(double min_x, double max_x)
   { // This is normally calculated from other plot values.
     if(max_x <= min_x)
     {
@@ -1150,7 +1311,7 @@ public:
     return derived();
   }
 
-  Derived& plot_window_y(unsigned int min_y, unsigned int max_y)
+  Derived& plot_window_y(double min_y, double max_y)
   { // This is normally calculated from other plot values.
     if(max_y <= min_y)
     {
@@ -1161,20 +1322,48 @@ public:
     return derived();
   }
 
-  std::pair<unsigned int, unsigned int> plot_window_x()
+  std::pair<double, double> plot_window_x()
   {
-    std::pair<unsigned int, unsigned int> r;
+    std::pair<double, double> r;
     r.first = derived().plot_x1;
     r.second = derived().plot_x2;
     return r;
   }
 
-  std::pair<unsigned int, unsigned int> plot_window_y()
+  double plot_window_x_left()
   {
-    std::pair<unsigned int, unsigned int> r;
+    return derived().plot_x1;
+  }
+  double plot_window_x_right()
+  {
+    return derived().plot_x2;
+  }
+  double plot_window_y_top()
+  {
+    return derived().plot_y1;
+  }
+  double plot_window_y_bottom()
+  {
+    return derived().plot_y2;
+  }
+
+
+  std::pair<double, double> plot_window_y()
+  {
+    std::pair<double, double> r;
     r.first = derived().plot_y1;
     r.second = derived().plot_y2;
     return r;
+  }
+
+  double x_minor_interval()
+  {
+    return derived().x_minor_interval_;  // interval
+  }
+
+  double y_minor_interval()
+  {
+    return derived().y_minor_interval_;  // interval
   }
 
   Derived& x_ticks_up_on(bool cmd)
@@ -1201,7 +1390,7 @@ public:
   // Only need y_ticks_left_on & y_ticks_right_on in 2D
 
   Derived& x_label_on(bool cmd)
-  { // Show X-axis label text.
+  { // Show X-axis label text, or not.
     derived().use_x_label = cmd;
     return derived();
   }
@@ -1223,7 +1412,6 @@ public:
     return derived().x_label_info.font_size();
   }
 
-
   Derived& x_label_font_family(const std::string& family)
   {
     derived().x_label_info.font_family(family);
@@ -1237,36 +1425,36 @@ public:
 
   Derived& x_axis_label_color(const svg_color& col)
   { // Set BOTH stroke and fill to the same color.
-    image.get_g_element(detail::PLOT_X_LABEL).style().fill_color(col);
-    image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color(col);
+    derived().image.get_g_element(detail::PLOT_X_LABEL).style().fill_color(col);
+    derived().image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color(col);
     return *this;
   }
 
   svg_color x_axis_label_color()
   { // But only return the stroke color.
-    return image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color();
+    return derived().image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color();
   }
 
   Derived& x_axis_value_color(const svg_color& col)
   { // Set BOTH stroke and fill to the same color.
-    image.get_g_element(detail::PLOT_PLOT_LABELS).style().fill_color(col);
-    image.get_g_element(detail::PLOT_PLOT_LABELS).style().stroke_color(col);
+    derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().fill_color(col);
+    derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
     return *this;
   }
 
   svg_color x_axis_value_color()
   { // But only return the stroke color.
-    return image.get_g_element(detail::PLOT_PLOT_LABELS).style().stroke_color();
+    return derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color();
   }
 
-  Derived& use_x_ticks_on_plot_window(bool cmd)
-  { // Was External style.
+  Derived& x_ticks_on_plot_window_on(bool cmd)
+  { // External style.
     derived().use_x_ticks_on_plot_window_ = cmd;
     return derived();
   }
 
-  bool use_x_ticks_on_plot_window()
-  {
+  bool x_ticks_on_plot_window_on()
+  { // External style = true.
     return derived().use_x_ticks_on_plot_window_;
   }
 
@@ -1292,6 +1480,17 @@ public:
     return derived().use_x_major_labels;
   }
 
+  Derived& x_major_label_up(bool cmd)
+  {
+    derived().use_x_label_up_ = cmd;
+    return derived();
+  }
+
+  bool x_major_label_up()
+  {
+    return derived().use_x_label_up_;
+  }
+
   Derived& title_on(bool cmd)
   {
     derived().use_title = cmd;
@@ -1305,24 +1504,24 @@ public:
 
   Derived& x_major_grid_on(bool is)
   {
-    derived().use_x_major_grid = is;
+    derived().use_x_major_grid_ = is;
     return derived();
   }
 
   bool x_major_grid_on()
   {
-    return derived().use_x_major_grid;
+    return derived().use_x_major_grid_;
   }
 
   Derived& x_minor_grid_on(bool is)
   {
-    derived().use_x_minor_grid = is;
+    derived().use_x_minor_grid_ = is;
     return derived();
   }
 
   bool x_minor_grid_on()
   {
-    return derived().use_x_minor_grid;
+    return derived().use_x_minor_grid_;
   }
 
   Derived& axes_on(bool is)
@@ -1338,7 +1537,7 @@ public:
   }
 
   Derived& x_axis_on(bool is)
-  {
+  { // Draw a horizontal x_axis line.
     derived().use_x_axis_lines_ = is;
     return derived();
   }
@@ -1349,14 +1548,14 @@ public:
   }
 
   Derived& y_axis_on(bool is)
-  {
-    derived().use_x_axis_lines_ = is;
+  {// Draw a vertical y_axis line.
+    derived().use_y_axis_lines_ = is;
     return derived();
   }
 
   bool y_axis_on()
   { // Should be always false for 1D.
-    return derived().use_x_axis_lines_;
+    return derived().use_y_axis_lines_;
   }
 
   // enums like PLOT_TITLE provide a std:string like "title"
@@ -1375,15 +1574,45 @@ public:
     return derived().image.get_g_element(PLOT_TITLE).style().stroke_color();
   }
 
+  Derived& title_width(double width)
+  { // width of text is effectively the boldness
+    derived().image.get_g_element(PLOT_TITLE).style().stroke_width(width); 
+    return derived();
+  }
+
+  double title_width()
+  {
+    return derived().image.get_g_element(PLOT_TITLE).style().stroke_width();
+  }
+
+  Derived& legend_color(const svg_color& col)
+  {
+    derived().image.get_g_element(PLOT_LEGEND_TEXT).style().fill_color(col);
+    derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color(col);
+    return derived();
+  }
+
+  svg_color legend_color()
+  { // Function legend_color sets both fill and stroke,
+    // but stroke (outside) is considered 'more important'.
+    return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color();
+  }
+
+  Derived& legend_width(double width)
+  { // width of text is effectively the boldness
+    derived().image.get_g_element(PLOT_LEGENDTEXT).style().stroke_width(width);
+    return derived();
+  }
+
+  double legend_width()
+  {
+    return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width();
+  }
+
   Derived& background_color(const svg_color& col)
   {
     derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color(col);
     return derived();
-  }
-
-  svg_color background_color()
-  {
-    return derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color();
   }
 
   Derived& legend_background_color(const svg_color& col)
@@ -1408,26 +1637,15 @@ public:
     return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().stroke_color();
   }
 
-  Derived& background_border_color(const svg_color& col)
-  {
-    derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color(col);
-    return derived();
-  }
-
-  svg_color background_border_color()
-  {
-    return derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color();
-  }
-
   Derived& plot_background_color(const svg_color& col)
   {
-    derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().fill_color(col);
+    derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
     return derived();
   }
 
   svg_color plot_background_color()
   {
-    return derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().fill_color();
+    return derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color();
   }
 
   Derived& x_axis_color(const svg_color& col)
@@ -1461,6 +1679,19 @@ public:
     derived().image.get_g_element(PLOT_X_LABEL).style().fill_color(col);
     derived().image.get_g_element(PLOT_X_LABEL).style().stroke_color(col);
     return derived();
+  }
+
+  Derived& x_label_width(double width)
+  { // width of text is effectively the boldness.
+    x_label_width_ = width;
+    derived().image.get_g_element(PLOT_X_LABEL).style().stroke_width(width);
+    return derived();
+  }
+
+  double x_label_width()
+  {
+    //return x_label_width_;
+    return derived().image.get_g_element(PLOT_X_LABEL).style().stroke_width();
   }
 
   svg_color x_label_color()
@@ -1513,13 +1744,13 @@ public:
     return derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color();
   }
 
-  Derived& x_major_grid_width(unsigned int w)
+  Derived& x_major_grid_width(double w)
   {
     derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(w);
     return derived();
   }
 
-  unsigned int x_major_grid_width()
+  double x_major_grid_width()
   {
     return derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width();
   }
@@ -1535,24 +1766,24 @@ public:
     return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_color();
   }
 
-  Derived& x_minor_grid_width(unsigned int w)
+  Derived& x_minor_grid_width(double w)
   {
     derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width(w);
     return derived();
   }
 
-  unsigned int x_minor_grid_width()
+  double x_minor_grid_width()
   {
     return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width();
   }
 
-  Derived& x_axis_width(unsigned int width)
+  Derived& x_axis_width(double width)
   {
     derived().image.get_g_element(PLOT_X_AXIS).style().stroke_width(width);
     return derived();
   }
 
-  unsigned int x_axis_width()
+  double x_axis_width()
   {
     return derived().image.get_g_element(PLOT_X_AXIS).style().stroke_width();
   }
@@ -1591,60 +1822,70 @@ public:
     return derived().y_label_info.text();
   }
 
+  Derived& y_label_units(const std::string& str)
+  {
+    derived().y_units_info.text(str);
+    return derived();
+  }
+
+  std::string y_label_units()
+  {
+    return derived().y_units_info.text();
+  }
+
   Derived& x_major_interval(double inter)
   {
-    derived().x_major = inter;
+    derived().x_major_interval_ = inter;
     return derived();
   }
 
   double x_major_interval()
   {
-    return derived().x_major;
+    return derived().x_major_interval_;
   }
 
-  Derived& x_major_tick_length(unsigned int length)
+  Derived& x_major_tick_length(double length)
   {
     derived().x_major_tick_length_ = length;
     return derived();
   }
 
-  unsigned int x_major_tick_length()
+  double x_major_tick_length()
   {
     return derived().x_major_tick_length_;
   }
 
-  Derived& x_major_tick_width(unsigned int width)
+  Derived& x_major_tick_width(double width)
   {
     derived().x_major_tick_width_ = width; // Redundant?
     derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
     return derived();
   }
 
-  unsigned int x_major_tick_width()
+  double x_major_tick_width()
   {
     return derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width();
   }
 
-  Derived& x_minor_tick_length(unsigned int length)
+  Derived& x_minor_tick_length(double length)
   {
     derived().x_minor_tick_length_ = length;
-    // TODO ?? derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width(width);
     return derived();
   }
 
-  unsigned int x_minor_tick_length()
+  double x_minor_tick_length()
   {
     return derived().x_minor_tick_length_;
   }
 
-  Derived& x_minor_tick_width(unsigned int width)
+  Derived& x_minor_tick_width(double width)
   {
     derived().x_minor_tick_width_ = width;
     derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width(width);
     return derived();
   }
 
-  unsigned int x_minor_tick_width()
+  double x_minor_tick_width()
   {
    // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
    return derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width();
@@ -1652,12 +1893,18 @@ public:
 
   Derived& x_major_tick(double d)
   { // Interval (Cartesian units) between major ticks.
-    derived().x_major = d;
+    derived().x_major_interval_ = d;
   }
 
   double x_major_tick()
   { // Interval (Cartesian units) between major ticks.
-    return derived().x_major;
+    return derived().x_major_interval_;
+  }
+
+  Derived& x_minor_interval(double interval)
+  { // aka x_minor_tick
+    derived().x_minor_interval_ = interval;
+    return derived();
   }
 
   Derived& x_num_minor_ticks(unsigned int num)
@@ -1667,7 +1914,7 @@ public:
   }
 
   unsigned int x_num_minor_ticks()
-  {
+  { // NB NOT float or double!
     return derived().x_num_minor_ticks_;
   }
 
@@ -1690,13 +1937,12 @@ public:
     return r;
   }
 
-  // Can't use names x_min or x_max because clashes
-  // with class svg_1d_plot variable x_min & x_max,
+  // Avoid clashes with class svg_1d_plot variable x_min & x_max,
   // so use longer x_minimum, x_maximum ...
   Derived& x_minimum(double min_x)
   {
     // Can't check here that x_max > x_min because may not have set x_max yet.
-    // TODO check that there is another check somewhere.
+    // TODO ensure that there is another check somewhere.
     derived().x_min = min_x;
     return derived();
   }

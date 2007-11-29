@@ -118,7 +118,6 @@ protected:
   std::string attribution_;
   std::string commercialuse_;
   std::string distribution_;
-
   int coord_precision_; // decimal digits precision for output of x and y coordinates to svg.
 
 private:
@@ -177,11 +176,11 @@ public:
     css(""), // stylesheet.
     filename_(""), // If written only to ostream, filename will not appear in comment.
     is_license_(false), // No default license.
-    reproduction_("permits"), // Set with license
+    reproduction_("permits"), // Set with license:
     distribution_("permits"), // permits, requires, or prohibits.
     attribution_("requires"),
     commercialuse_("permits"),
-    coord_precision_(3) // enough for 1 in 1000 resolution to suit 
+    coord_precision_(3) // enough for 1 in 1000 resolution to suit use.
   { // Default constructor.
   }
 
@@ -346,13 +345,16 @@ public:
     }
     write_css(s_out);// stylesheet, if any.
     write_document(s_out); // write clip paths and all document elements.
-    s_out << std::endl << "</svg>" << std::endl;   // close off svg tag (added newline).
+    s_out << "</svg>" << std::endl;   // close off svg tag.
     return *this;
   }
 
-  svg& license(const std::string repro, const std::string distrib, const std::string attrib, const std::string commercial)
+  svg& license( // Set license requirements for the svg document.
+    const std::string repro = "permits",
+    const std::string distrib = "permits",
+    const std::string attrib = "requires",
+    const std::string commercial = "permits")
   { // Might check these are "permits", "requires", or "prohibits"?
-    // Default is permits.
     reproduction_ = repro;
     distribution_ = distrib;
     attribution_ = attrib;
@@ -362,19 +364,37 @@ public:
   }
 
   svg& license(bool l)
-  { // Set license using all defaults (permits).
+  { // Set (or not) license using all requirement (default permits).
     is_license_ = l;
   }
 
   bool is_license()
-  { // Shows if a license has been requested.
+  { // Shows if a license has been requested in the svg header metatadata.
     return is_license_;
   }
 
-  // ------------------------------------------------------------------
+  const std::string& reproduction()
+  { // Gets license reproduction requirement.
+    return reproduction_;
+  }
+
+  const std::string& distribution()
+  { // Gets license distribution requirement.
+    return distribution_;
+  }
+  const std::string& attribution()
+  { // Gets license attribution requirement.
+    return attribution_;
+  }
+  const std::string& commercialuse()
+  { // Gets license commercialuse requirement.
+    return commercialuse_;
+  }
+
+  // -------------------------------------------------------
   // Writes the information about the image to the document.
   // TODO: allow other unit identifiers.
-  // ------------------------------------------------------------------
+  // -------------------------------------------------------
   svg& image_size(unsigned int x, unsigned int y)
   {
     x_size_ = x;
@@ -403,6 +423,7 @@ public:
   { // Gets description of the document(for header as <desc>).
     return author_;
   }
+
   svg& document_title(const std::string d)
   { // Writes document title for the document(for header as <title>)..
     title_document_ = d;
@@ -447,9 +468,9 @@ public:
     return filename_;
   }
 
-  // ----------------------------------------------------------------------------
-  // push_back the information about line, rec, circle & ellipse to the document.
-  // ----------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
+  // push_back information about line, rec, circle & ellipse to the document.
+  // ------------------------------------------------------------------------
   svg& line(double x1, double y1, double x2, double y2)
   { // 'line' element defines a line segment
     // that starts at one point and ends at another.
@@ -476,9 +497,9 @@ public:
     return *this;
   }
 
-  // -----------------------------------------------------------------
-  // push_back the information about text to the document.
-  // -----------------------------------------------------------------
+  // -------------------------------------------------
+  // push_back information about text to the document.
+  // -------------------------------------------------
   svg& text(double x, double y, const std::string& text, int text_size = 12,
     const std::string& font = "Lucida Sans Unicode",
     const std::string& style = "", const std::string& weight = "",
@@ -540,8 +561,8 @@ public:
     return *this; 
   }
 
-  svg& polyline(double x1, double y1, double x2, double y2) // Two points only, add others later with .P(x, y).
-  {
+  svg& polyline(double x1, double y1, double x2, double y2)
+  { // Two points only, add others later with .P(x, y).
     document.push_back(new polyline_element(x1, y1));
     document.push_back(new polyline_element(x2, y2));
     return *this; 
@@ -566,13 +587,13 @@ public:
   }
 
   svg& clip_path(const rect_element& rect, const std::string& id)
-  {
+  { // Rectangle outside which 'painting' is 'clipped' so doesn't show.
     clip_paths.push_back(clip_path_element(id, rect));
     return *this;
   }
 
   // -------------------------------------------------------------
-  // Writes the information about a group element to the document.
+  // Writes information about a group element to the document.
   // -------------------------------------------------------------
 
   g_element& add_g_element()
@@ -582,7 +603,7 @@ public:
 
   g_element& get_g_element(int i)
   { // Array of g_elements document,
-    // indexed by group type, PLOT_BACKGROUND, PLOT_PLOT_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN
+    // indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN
     return document.g_tag(i);
   }
 

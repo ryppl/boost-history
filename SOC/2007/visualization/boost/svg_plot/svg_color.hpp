@@ -55,7 +55,7 @@ enum svg_color_constant
     skyblue, slateblue, slategray, slategrey, snow, springgreen,
     steelblue, tan, teal, thistle, tomato, turquoise, violet,
     wheat, white, whitesmoke, yellow, yellowgreen,
-    blank // 'NotAColor'
+    blank // 'NotAColor' == 147
 };
 
 // Forward declarations in this module (see svg_fwd):
@@ -79,7 +79,7 @@ struct svg_color
     unsigned char r; // unsigned char provides range [0 to 255].
     unsigned char g;
     unsigned char b;
-    bool blank; // true means "Not to be displayed" 'pseudo-color'.
+    bool blank; // true means "Not to be displayed" a 'pseudo-color'.
     // TODO seems to display as black? - Need a check if is_blank == true?
 
     svg_color(int red, int green, int blue) : blank(false)
@@ -93,7 +93,7 @@ struct svg_color
     }
 
     svg_color(bool is) : blank(is)
-    { // Permits blank as a (non-)color.
+    { // Permits blank (=true) as a (non-)color.
       r = 0; // Safer to assign *some* value to rgb? zero, or 255?
       g = 0; // rather than leaving them random?
       b = 0;
@@ -108,7 +108,8 @@ struct svg_color
     { // Write color in svg format, for example, rgb(127,255,212).
         if(!blank)
         {
-            rhs << "rgb(" << (unsigned int)r << "," << (unsigned int) g << ","
+            rhs << "rgb(" << (unsigned int)r << ","
+                << (unsigned int) g << ","
                 << (unsigned int)b << ")" ;
         }
         else
@@ -167,7 +168,7 @@ std::ostream& operator<< (std::ostream& os, const svg_color& color)
     {
         os << "RGB("
            << (unsigned int)color.r << ","
-           << (unsigned int) color.g << ","
+           << (unsigned int)color.g << ","
            << (unsigned int)color.b << ")" ;
     }
     else

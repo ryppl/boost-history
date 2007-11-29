@@ -156,20 +156,32 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   //unsigned int x_major_label; // pixels. Now in x_units_info font size
 
   // Other information.
-  double text_margin; // Marginal space around text items like title,
+  double text_margin_; // Marginal space around text items like title,
   // as a fraction of font size, (pixels) (was fixed at 1.5).
-  int border_margin; // Marginal (pixels) space around the plot border.
+  int border_margin_; // Marginal (pixels) space around the plot border.
+    // text width is effectively the boldness of the font.
+  // 0 is default, 1 is bolder, 2 very bold...
+  // TODO SVG has also a not yet implemented boldness.
+  double title_width_; 
+  double legend_width_;
+  double legend_x1_; // Left of legend box. (Optionally set by legend_position).
+  double legend_y1_; // Top of legend box.
+  // Size of legend box is controlled by its contents,
+  // but may be helpful to store bottom right coordinates.
+  // legend_bottom_right() gives access.
+  double legend_x2_; // right of legend box.
+  double legend_y2_; // bottom of legend box.
 
   // X-Axis information.
   // (Y_axis stored as one point because this is a 1D graph).
   double x_min; // minimum x (Cartesian units).
   double x_max; // maximum x  (Cartesian units).
   double x_axis; // stroke width (pixels). ????
-  double x_major; // Interval (Cartesian units) between major ticks.
+  double x_major_interval_; // Interval (Cartesian units) between major ticks.
     // set/get by x_major_interval
-  double x_minor; // Interval (Cartesian units) between minor ticks.
+  double x_minor_interval_; // Interval (Cartesian units) between minor ticks.
   // because x_num_minor_ticks_ used to determine this instead,
-  // but one could calculate x_minor.
+  // but one could calculate x_minor_interval_.
 
   // Yes/no options.
   bool use_title; // Show plot title.
@@ -177,7 +189,9 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   bool use_plot_window; // rather than whole image.
   bool use_x_axis_lines_; // = x_axis_on()
   bool use_y_axis_lines_; // Note: is needed in 1D version too in draw_axes.
-  bool use_x_major_labels; // For example, to show value (like 1.2) by ticks.
+  bool use_x_major_labels; // For example, to show value (like 1.2) by major ticks.
+  //bool use_x_minor_labels; // For example, to show value (like 1.2) by minor ticks.
+  // Not yet implemented (doubt if needed).
   bool use_x_label_units;  // For example, to show, "length (meter)"
   bool use_x_major_grid; // provide major vertical lines.
   bool use_x_minor_grid;// provide minor vertical lines.
@@ -220,8 +234,10 @@ public:
     x_label_info(0, 0, "X Axis", 14, "Lucida Sans Console", "", "", "", "", center_align, horizontal), //
     x_units_info(0, 0, "(units)", 14, "Lucida Sans Console", "", "", "", "", right_align, horizontal),
     //x_units_info(0, 0, "(units)", 14, "Times New Roman", "italic", "bold", "wider", "underline", right_align, horizontal),
-    text_margin(2.), // for text was 1.5 // as a fraction of the font size.
-    border_margin(5), // Prevent plot window box begin right on edge.
+    text_margin_(2.), // for text was 1.5 // as a fraction of the font size.
+    border_margin_(5), // Prevent plot window box begin right on edge.
+    legend_x1_(-1), legend_x2_(-1),legend_y1_(-1),legend_y2_(-1), // Indicates not yet set.
+
     x_min(-10), x_max(10),
     use_legend(false),
     use_title(true),
@@ -243,7 +259,7 @@ public:
     use_x_minor_grid(false),
     use_x_axis_lines_(true),
     use_y_axis_lines_(false), // Not needed for 1D, but leave at false.
-    x_major(2), // interval between x major ticks
+    x_major_interval_(2), // interval between x major ticks
     x_major_tick_width_(3),
     x_minor_tick_width_(1),
     x_major_tick_length_(10), // If both up and down, total is twice this.
@@ -306,11 +322,11 @@ public:
       { // Use whole image.
         if(use_title)
         { // Allow space for title, taking account of font size.
-          y1 += title_info.font_size() * (text_margin +1);
+          y1 += title_info.font_size() * (text_margin_ +1);
         }
         if(use_x_label)
         {// Allow space for x tick values, taking account of font size.
-          y2 -= x_label_info.font_size() * text_margin;
+          y2 -= x_label_info.font_size() * text_margin_;
         }
       }
       else
@@ -333,10 +349,10 @@ public:
 
     if(use_plot_window)
     {
-      plot_x1 += border_margin; // small margin around border.
-      plot_x2 -= border_margin; //
-      plot_y1 += border_margin; //
-      plot_y2 -= border_margin;
+      plot_x1 += border_margin_; // small margin around border.
+      plot_x2 -= border_margin_; //
+      plot_y1 += border_margin_; //
+      plot_y2 -= border_margin_;
 
       if(use_title)
       {
@@ -350,7 +366,7 @@ public:
       }
       if(use_x_label)
       {// Allow space for x_label at bottom.
-        plot_y2 -= static_cast<int>(x_label_info.font_size() * text_margin);
+        plot_y2 -= static_cast<int>(x_label_info.font_size() * text_margin_);
       }
       if(use_down_ticks)
       { // Allow space for the downward ticks
@@ -361,7 +377,7 @@ public:
             x_major_tick_length_ : x_minor_tick_length_;
       }
       // Draw plot window rect.
-      image.get_g_element(detail::PLOT_PLOT_BACKGROUND).push_back(
+      image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).push_back(
         new rect_element(plot_x1, plot_y1, (plot_x2 - plot_x1), plot_y2 - plot_y1));
       // <g id="plotBackground" fill="rgb(248,248,255)"><rect x="43" y="53" width="302" height="304"/></g>
     } // use_plot_window
@@ -395,7 +411,7 @@ public:
     transform_y(y);
     for(unsigned int i = 0; i < series.size(); ++i)
     { // For each of the data series.
-      g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_POINTS).add_g_element();
+      g_element& g_ptr = image.get_g_element(detail::PLOT_DATA_POINTS).add_g_element();
 
       g_ptr.style().stroke_color(series[i].point_style.stroke_color);
       g_ptr.style().fill_color(series[i].point_style.fill_color);

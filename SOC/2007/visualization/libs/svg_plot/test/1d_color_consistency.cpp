@@ -115,6 +115,10 @@ int test_main(int, char*[])
 	//BOOST_CHECK_EQUAL(my_plot.image_x_size(), 400U);
   // check my_plot.image_x_size() == 400U failed [500 != 400]
 
+  BOOST_CHECK_EQUAL(my_plot.legend_top_left(), std::pair(-1., -1.); // default position unassigned = -1..
+  my_plot.legend_top_left(10., 20.);
+  BOOST_CHECK_EQUAL(my_plot.legend_top_left(), std::pair(10., 20.); // new assigned position.
+
   BOOST_CHECK_EQUAL(my_plot.title(), "Plot of data"); // Title of plot.
   my_plot.title("test");
   BOOST_CHECK_EQUAL(my_plot.title(), "test");

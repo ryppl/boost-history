@@ -122,9 +122,9 @@ struct svg_boxplot_series
         double iqr(q3-q1);
 
         double min_ext_cutoff = q1 - 3. * iqr;
-        double min_cutoff = q1 - text_margin * iqr;
+        double min_cutoff = q1 - text_margin_ * iqr;
         double max_ext_cutoff = q3 + 3. * iqr;
-        double max_cutoff = q3 + text_margin * iqr;
+        double max_cutoff = q3 + text_margin_ * iqr;
 
         std::vector<double>::const_iterator i;
 
@@ -190,7 +190,7 @@ private:
     // Axes information.
     double y_min;
     double y_max;
-    double y_major;
+    double y_major_interval_;
     double y_axis;
     double x_axis;
     unsigned int x_major_tick_length_;
@@ -281,13 +281,13 @@ private:
             image.get_g_element(boxplot::Y_MAJOR_TICKS).path();
 
         // y_minor_jump is the interval between minor ticks.
-        double y_minor_jump = y_major/((double)(y_num_minor_ticks_ + 1.) );
+        double y_minor_jump = y_major_interval_/((double)(y_num_minor_ticks_ + 1.) );
 
         // Draw the ticks on the positive side.
-        for(double i = 0; i < y_max; i += y_major)
+        for(double i = 0; i < y_max; i += y_major_interval_)
         {
             for(double j = i + y_minor_jump;
-                       j < i + y_major;
+                       j < i + y_major_interval_;
                        j += y_minor_jump)
             {
                 draw_y_minor_ticks(j, minor_tick_path);
@@ -297,10 +297,10 @@ private:
         }
 
         // Draw the ticks on the negative side.
-        for(double i = 0; i > y_min; i -= y_major)
+        for(double i = 0; i > y_min; i -= y_major_interval_)
         {
             // draw minor ticks
-            for(double j=i; j>i-y_major; j-=y_major / (y_num_minor_ticks_+1))
+            for(double j=i; j>i-y_major_interval_; j-=y_major_interval_ / (y_num_minor_ticks_+1))
             {
                 draw_y_minor_ticks(j, minor_tick_path);
             }
@@ -388,12 +388,12 @@ private:
 
         if(use_y_label)
         {
-            plot_x1 += (int)(y_label_info.font_size() * text_margin);
+            plot_x1 += (int)(y_label_info.font_size() * text_margin_);
         }
 
         if(use_title)
         {
-            plot_y1 += (int)(title_info.font_size() * text_margin);
+            plot_y1 += (int)(title_info.font_size() * text_margin_);
         }
 
         // Give the plot window a natural bit of padding.
@@ -603,7 +603,7 @@ svg_boxplot()
   //  y_units_info(0, 0, "(units)", 12, "Lucida Sans Console", "", "", "", "", center_align, upward),
 
                       y_min(0), y_max(100),
-                      y_major(10),
+                      y_major_interval_(10),
                       use_y_label(true),
                       use_x_label(true), 
                       x_major_tick_length_(10),
@@ -816,7 +816,7 @@ svg_boxplot& x_label_color(const svg_color& col)
 
 svg_boxplot& y_major_interval(double inter)
 {
-    y_major = inter;
+    y_major_interval_ = inter;
 
     return *this;
 }

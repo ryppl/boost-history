@@ -74,14 +74,14 @@ struct plot_point_style
 
 struct plot_line_style
 {    // TODO dotted and dashed line style?  Useful for B&W?
-    svg_color color;
-    svg_color area_fill; // Fill color from line to axis.
+    svg_color color; // line stroke color.
+    svg_color area_fill; // Fill color from line to axis. == true means color.blank = true.
     bool line_on;
     bool bezier_on;
 
-    plot_line_style(const svg_color& col, const svg_color& acol = blank, bool on = true, bool bezier_on = false)
+    plot_line_style(const svg_color& col, const svg_color& acol = true, bool on = true, bool bezier_on = false)
       :
-      color(col), line_on(on), area_fill(acol), bezier_on(bezier_on)
+      color(col), area_fill(acol), line_on(on), bezier_on(bezier_on)
     {
     }
 }; // struct plot_line_style
@@ -97,7 +97,7 @@ private: // Accesses only by set and get member functions below.
   // to permit use of names for set & get member functions.
     svg_color fill_;
     svg_color stroke_;
-    unsigned int width_;
+    double width_;
     bool fill_on_; // true means there is fill info.
     bool stroke_on_;
     bool width_on_;
@@ -129,8 +129,8 @@ public:
       return svg_color(stroke_);
     }
 
-    unsigned int stroke_width() const
-    { // TODO probably should be double???
+    double stroke_width() const
+    { 
       return width_;
     }
 
@@ -168,7 +168,7 @@ public:
     svg_style& fill_color(const svg_color& col)
     { 
         fill_ = col;
-        fill_on_ = true;
+        fill_on_ = ! col.blank; // if blank fill is off or "none"
         return *this;
     }
 
@@ -179,7 +179,7 @@ public:
         return *this;
     }
 
-    svg_style& stroke_width(unsigned int width)
+    svg_style& stroke_width(double width)
     { 
         width_ = width;
         width_on_ = true;
@@ -198,7 +198,7 @@ public:
         {
             rhs << " fill=\"";
             fill_.write(rhs);
-            rhs<<"\"";
+            rhs << "\"";
         }
         if(width_on_)
         {
@@ -207,6 +207,7 @@ public:
                 << "\"";
         }
     } // void write
+    // Examples: <g id="yMinorTicks" stroke="rgb(0,0,0)" stroke-width="1">
 }; // class svg_style
 
 }//svg
