@@ -434,7 +434,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\boost\logging\scenario.hpp"
+				RelativePath="..\..\..\..\..\boost\logging\detail\scenario.hpp"
 				>
 			</File>
 			<File
@@ -452,6 +452,10 @@
 			<Filter
 				Name="ts"
 				>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\ts\resource_finder.hpp"
+					>
+				</File>
 				<File
 					RelativePath="..\..\..\..\..\boost\logging\detail\ts\ts.hpp"
 					>

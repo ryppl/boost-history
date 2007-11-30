@@ -334,55 +334,35 @@ namespace usage {
         
         template<class favor_, int period_secs, class gather> struct find_logger< favor_, change::often<period_secs>, gather > {
             typedef typename find_threading_from_favor<favor_>::type threading_type;
-            template<int secs> struct lock_resource {
-               template<class lock_type> struct finder {
-                   typedef typename ::boost::logging::locker::tss_resource_with_cache<lock_type, secs, boost::logging::threading::mutex > type;
-               };
-            };
+            template<int secs> struct lock_resource : ::boost::logging::lock_resource_finder::tss_with_cache<secs> {};
 
             typedef ::boost::logging::logger_format_write < default_, default_, threading_type, gather, lock_resource<period_secs> > type;
         };
 
         template<class favor_, class gather> struct find_logger< favor_, change::set_once_when_one_thread, gather > {
             typedef typename find_threading_from_favor<favor_>::type threading_type;
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                    typedef typename locker::ts_resource_single_thread<lock_type> type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::single_thread lock_resource;
 
             typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
         };
 
         template<class favor_, class gather> struct find_logger< favor_, change::set_once_when_multiple_threads, gather > {
             typedef typename find_threading_from_favor<favor_>::type threading_type;
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                    typedef typename locker::tss_resource_once_init<lock_type, boost::logging::threading::mutex > type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::tss_once_init<> lock_resource;
 
             typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
         };
 
         template<class favor_, class gather> struct find_logger< favor_, change::always_accurate, gather > {
             typedef typename find_threading_from_favor<favor_>::type threading_type;
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                    typedef typename locker::ts_resource<lock_type, boost::logging::threading::mutex > type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::ts<> lock_resource;
 
             typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
         };
 
         template<class favor_, class gather> struct find_logger< favor_, change::single_thread, gather > {
             typedef typename find_threading_from_favor<favor_>::type threading_type;
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                    typedef typename locker::ts_resource_single_thread<lock_type> type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::single_thread lock_resource;
 
             typedef ::boost::logging::logger_format_write< default_, default_, threading_type, gather, lock_resource> type;
         };
@@ -506,28 +486,16 @@ namespace ts {
 
         template<logger_::type> struct find_logger {};
         template<> struct find_logger<logger_::none> { 
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                    typedef typename locker::ts_resource_single_thread<lock_type> type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::single_thread lock_resource;
             typedef ::boost::logging::logger_format_write< default_, default_, th::no_ts, default_, lock_resource > type ; 
         };
         template<> struct find_logger<logger_::use_tss> { 
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                   typedef typename ::boost::logging::locker::tss_resource_with_cache<lock_type, 5, boost::logging::threading::mutex > type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::tss_with_cache<> lock_resource;
 
             typedef ::boost::logging::logger_format_write< default_, default_, th::ts_write, default_, lock_resource > type ; 
         };
         template<> struct find_logger<logger_::ts> { 
-            struct lock_resource {
-               template<class lock_type> struct finder {
-                    typedef typename locker::ts_resource<lock_type, boost::logging::threading::mutex > type;
-               };
-            };
+            typedef ::boost::logging::lock_resource_finder::ts<> lock_resource;
 
             typedef ::boost::logging::logger_format_write< default_, default_, th::ts_write, default_, lock_resource > type ; 
         };

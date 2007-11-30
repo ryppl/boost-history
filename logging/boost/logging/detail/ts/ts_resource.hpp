@@ -300,5 +300,7 @@ namespace locker {
 
 }}}
 
+#include <boost/logging/detail/ts/resource_finder.hpp>
+
 #endif
 
