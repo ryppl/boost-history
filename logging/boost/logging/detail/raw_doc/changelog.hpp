@@ -1,7 +1,7 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.6, 30 nov 2007
+@section changelog_cur_ver Current Version: v0.12.7, 30 nov 2007
 - added boost::logging::formatter::named_spacer
 - created lock_resource_finder namespace - with existing resource lockers
 - added boost::logging::formatter::spacer

@@ -91,10 +91,10 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
   $Xhour - e.g. "1 h, 33 m, 20 s, 54 ms" \n
   $Xday  - e.g. "2 d, 1 h, 33 m, 20 s, 54 ms" \n
 
-- @c high           new formatter: thread ID (both Win32 and POSIX) is of low use. I suggest to add API to specify string name as alternative to thread ID 
+- @c normal           new formatter: thread ID (both Win32 and POSIX) is of low use. I suggest to add API to specify string name as alternative to thread ID 
    formatter.set_current_thread_name("gui thread");
 
-- @c high           Time string cashing time and time_strf calls are not cashed. It's a lot of work for nothing. Note: should use TSS
+- @c normal           Time string cashing time and time_strf calls are not cashed. It's a lot of work for nothing. Note: should use TSS
 
 - @c normal         Design: hexdump. I believe log library needs to provide support for dumping memory in hex format on log file. 
 
@@ -103,6 +103,7 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         new destination : to Event log
 
+- @c high           destination similar to named_spacer; but much easier. add to the docs as well
 
 @section todo_docs Documentation
 
