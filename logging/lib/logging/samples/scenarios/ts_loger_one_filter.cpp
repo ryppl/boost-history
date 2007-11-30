@@ -101,8 +101,8 @@ void ts_logger_one_filter_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
-    g_l->writer().add_formatter( formatter::idx() );
-    g_l->writer().add_formatter( formatter::thread_id() );
+    g_l->writer().add_formatter( formatter::idx(), "[%] "  );
+    g_l->writer().add_formatter( formatter::thread_id(), "[T%] "  );
     g_l->writer().add_formatter( formatter::append_newline() );
     g_l->writer().add_destination( destination::file("out.txt") );
     g_l->writer().add_destination( destination::cout() );

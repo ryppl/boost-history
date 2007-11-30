@@ -39,6 +39,7 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 #include <boost/logging/format.hpp>
 #include <boost/logging/format/formatter/thread_id.hpp>
+#include <boost/logging/format/formatter/named_spacer.hpp>
 #include <boost/logging/writer/ts_write.hpp>
 
 using namespace boost::logging;
@@ -59,12 +60,18 @@ BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 BOOST_DEFINE_LOG(g_l, log_type)
 
 
+
 void one_logger_one_filter_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
-    g_l->writer().add_formatter( formatter::idx(), "[%] " );
-    g_l->writer().add_formatter( formatter::thread_id(), "{T%}-_ " );
+    g_l->writer().add_formatter( 
+        formatter::named_spacer("[%idx%] %time% (T%thread%) ")
+            .add( "idx", formatter::idx())
+            .add( "thread", formatter::thread_id())
+            .add( "time", formatter::time("$mm"))
+    );
+
     g_l->writer().add_formatter( formatter::append_newline_if_needed() );
     g_l->writer().add_destination( destination::file("out.txt") );
     g_l->writer().add_destination( destination::cout() );

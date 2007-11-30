@@ -53,7 +53,7 @@ BOOST_DEFINE_LOG(g_l, log_type)
 void test_mul_levels_one_logger() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted...
-    g_l->writer().add_formatter( formatter::idx() );
+    g_l->writer().add_formatter( formatter::idx(), "[%] "  );
     g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
     g_l->writer().add_formatter( formatter::append_newline() );
 

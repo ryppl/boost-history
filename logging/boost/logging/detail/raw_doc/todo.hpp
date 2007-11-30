@@ -75,18 +75,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 @section todo_formatters Formatters
 
-- @c must_have      each formatter - should have a "syntax" - like: idx("[%] ") - write [idx]<space>; idx("{%} ") - write {idx}<space>
-  Or, have a formatter that can call other formatters, like format("[%1] [%2] {%3}"). Perhaps for starters, have a wrapper class
-  which calls original formatter and then wrappers?
-  actually - have a formatter that has a map of other formatters (std::string -> formatter) - THEN you can string at runtime.
-  we should have the same for destinations as well TOTHINK how do we initialize them? like - a file destination - how can i specify the file name?
-  have a spacer formatter which writes before & after - some text.
-  have a % formatter taht can write more formatters at the same time %1 %2- message %3
-  have a named formatter that can write more formatters at the same time, but based on name - make it easy to use, and somehow the default should
-  encompass all existing formatters TOTHINK the problem is still setting params at the constructor of certain objects - like - time(%m:%s) etc.
-  we should make it as easy as possible; perhaps make it very easy for named formatter - TOTHINK
-  maybe i can have an extra param as formatter - the "spacer" spacer<....>(construct - pass to it,"[%])
-  the named formatter - leave that "normal" for later
 
 - @c high           new formatter - write a more "exact" time - up to the millisec or so; should use Boost.DateTime for higher-resolution timestamps.
 

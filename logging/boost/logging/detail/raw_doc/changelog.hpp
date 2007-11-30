@@ -2,8 +2,9 @@
 @page page_changelog Changelog
 
 @section changelog_cur_ver Current Version: v0.12.6, 30 nov 2007
+- added boost::logging::formatter::named_spacer
 - created lock_resource_finder namespace - with existing resource lockers
-- added boost::logging::spacer
+- added boost::logging::formatter::spacer
 - removed copyright from examples (scenarios) - so that they're easier to read in the documentation
 - added scoped logs
 - removed #ifdef SINGLE_TEST from scenarios

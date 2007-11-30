@@ -66,6 +66,10 @@ namespace boost { namespace logging {
         
         template<class derived> void del(derived val) {
             base_type * p = get_ptr(val);
+            del(p);
+        }
+
+        void del(base_type * p) {
             scoped_lock lk(m_cs);
             for ( typename array_type::iterator b = m_array.begin(), e = m_array.end(); b != e; ++b)
                 if ( b->get() == p) {

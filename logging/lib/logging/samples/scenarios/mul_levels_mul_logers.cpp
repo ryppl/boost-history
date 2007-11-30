@@ -96,7 +96,7 @@ void mul_levels_mul_logers_example() {
     //         That is, how the message is to be formatted and where should it be written to
 
     // Err log
-    g_log_err->writer().add_formatter( formatter::idx() );
+    g_log_err->writer().add_formatter( formatter::idx(), "[%] "  );
     g_log_err->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
     g_log_err->writer().add_formatter( formatter::append_newline() );
     g_log_err->writer().add_destination( destination::file("err.txt") );

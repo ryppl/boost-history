@@ -27,13 +27,25 @@
 
 #include <boost/logging/detail/fwd.hpp>
 
-namespace boost { namespace logging { namespace lock_resource_finder {
+namespace boost { namespace logging { 
+    
+    /** 
+        @brief Possible ways to lock resource for read/write
+    */
+    namespace lock_resource_finder {
+
+    /** 
+        @brief Locks a resource thread-safe - each time, at read/write (safe but rather inefficient)
+    */
     template<class mutex = boost::logging::threading::mutex> struct ts {
             template<class lock_type> struct finder {
                 typedef typename boost::logging::locker::ts_resource<lock_type, mutex > type;
             };
     };
 
+    /** 
+        @brief Does not lock the resouce at read/write access
+    */
     struct single_thread {
             template<class lock_type> struct finder {
                 typedef typename boost::logging::locker::ts_resource_single_thread<lock_type> type;
@@ -41,15 +53,37 @@ namespace boost { namespace logging { namespace lock_resource_finder {
     };
 
 #if !defined( BOOST_LOG_NO_TSS) 
+    /** 
+        @brief Caches the resource on each thread, and refreshes it at @c refresh_secs period
+    */
     template<int refresh_secs = 5, class mutex = boost::logging::threading::mutex > struct tss_with_cache {
             template<class lock_type> struct finder {
                 typedef typename locker::tss_resource_with_cache<lock_type, refresh_secs, mutex > type;
             };
     };
 
+    /** 
+        @brief Allows you to initialize this resource once even if multiple threads are running. Then, all threads will use the initialized value
+    */
     template<class mutex = boost::logging::threading::mutex> struct tss_once_init {
             template<class lock_type> struct finder {
                 typedef typename boost::logging::locker::tss_resource_once_init <lock_type, mutex> type;
+            };
+    };
+
+#else
+
+    // Not using TSS at all 
+
+    template<int = 5, class = boost::logging::threading::mutex > struct tss_with_cache {
+            template<class lock_type> struct finder {
+                typedef typename locker::ts_resource_single_thread<lock_type> type;
+            };
+    };
+
+    template<class = boost::logging::threading::mutex> struct tss_once_init {
+            template<class lock_type> struct finder {
+                typedef typename locker::ts_resource_single_thread<lock_type> type;
             };
     };
 

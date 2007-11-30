@@ -328,6 +328,14 @@
 			<File
 				RelativePath=".\test_now.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -866,7 +874,6 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

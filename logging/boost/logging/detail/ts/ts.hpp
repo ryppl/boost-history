@@ -23,6 +23,8 @@
 
 #include <boost/config.hpp>
 
+#include <boost/logging/detail/ts/ts_none.hpp>
+
 #ifdef BOOST_HAS_THREADS
     
     #ifdef BOOST_LOG_USE_BOOST_THREADS

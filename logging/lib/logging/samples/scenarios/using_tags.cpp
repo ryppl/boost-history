@@ -40,6 +40,7 @@ BOOST_LOG_FORMAT_MSG( log_string )
 
 #include <boost/logging/format_ts.hpp>
 #include <boost/logging/format/formatter/tags.hpp>
+#include <boost/logging/format/formatter/named_spacer.hpp>
 
 using namespace boost::logging;
 
@@ -70,10 +71,13 @@ BOOST_DEFINE_LOG(g_l, finder::logger)
 void using_tags_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
-    g_l->writer().add_formatter( formatter::tag::time("$mm:$ss ") );            // time tag
-    g_l->writer().add_formatter( formatter::idx() );
-    g_l->writer().add_formatter( formatter::tag::thread_id() );                 // thread_id tag
-    g_l->writer().add_formatter( formatter::tag::file_line() );                 // file/line tag
+
+    g_l->writer().add_formatter( formatter::named_spacer( "%fileline% [T%thread_id%] [%idx%] %time%" )
+        .add( "time", formatter::tag::time("$mm:$ss ") )                // time tag
+        .add( "idx", formatter::idx() )                            
+        .add( "thread_id", formatter::tag::thread_id() )                // thread_id tag
+        .add( "fileline", formatter::tag::file_line() ) );              // file/line tag
+
     g_l->writer().add_formatter( formatter::append_newline() );     
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::file("out.txt") );
