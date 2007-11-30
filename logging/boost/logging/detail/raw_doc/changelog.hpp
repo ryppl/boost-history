@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.4, 26 nov 2007
+@section changelog_cur_ver Current Version: v0.12.5, 30 nov 2007
+- added boost::logging::spacer
 - removed copyright from examples (scenarios) - so that they're easier to read in the documentation
 - added scoped logs
 - removed #ifdef SINGLE_TEST from scenarios

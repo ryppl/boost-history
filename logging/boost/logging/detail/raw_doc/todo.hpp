@@ -27,7 +27,7 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c high           test TSS on vs2003 and gcc/pthreads \n
   (note: tested on pthreads; however - about internal implementation : 2 TSS objects are leaked on pthreads, need to see why)
 
-- @c high           if *used* before main, it'll cache the messages, and then write them ASAP; \n
+- @c must_have      if *used* before main, it'll cache the messages, and then write them ASAP; \n
     will have a func - like, do_write() - which will write all that was cached, and then turn cache off \n
     ----- i have to see if reasonable to later ask if a log is enabled or not, or just dump all messages written before initializing the log
 
@@ -85,6 +85,8 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
   have a named formatter that can write more formatters at the same time, but based on name - make it easy to use, and somehow the default should
   encompass all existing formatters TOTHINK the problem is still setting params at the constructor of certain objects - like - time(%m:%s) etc.
   we should make it as easy as possible; perhaps make it very easy for named formatter - TOTHINK
+  maybe i can have an extra param as formatter - the "spacer" spacer<....>(construct - pass to it,"[%])
+  the named formatter - leave that "normal" for later
 
 - @c high           new formatter - write a more "exact" time - up to the millisec or so; should use Boost.DateTime for higher-resolution timestamps.
 

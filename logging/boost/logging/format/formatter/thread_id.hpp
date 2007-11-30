@@ -35,9 +35,11 @@ namespace boost { namespace logging { namespace formatter {
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
 template<class convert = do_convert_format::prepend> struct thread_id_t : is_generic, boost::logging::op_equal::always_equal {
+    typedef convert convert_type;
+
     template<class msg_type> void operator()(msg_type & msg) const {
         std::basic_ostringstream<char_type> out;
-        out << BOOST_LOG_STR("[T")
+        out 
     #if defined (BOOST_HAS_WINTHREADS)
             << ::GetCurrentThreadId()
     #elif defined (BOOST_HAS_PTHREADS)
@@ -45,7 +47,7 @@ template<class convert = do_convert_format::prepend> struct thread_id_t : is_gen
     #elif defined (BOOST_HAS_MPTASKS)
             << MPCurrentTaskID()
     #endif
-            << BOOST_LOG_STR("] ");
+            ;
 
         convert::write( out.str(), msg );
     }

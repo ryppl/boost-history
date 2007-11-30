@@ -540,6 +540,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\named_spacer.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\spacer.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\..\boost\logging\format\formatter\tags.hpp"
 						>
 					</File>

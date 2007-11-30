@@ -49,6 +49,7 @@ Example: time("Today is $dd/$MM/$yyyy");
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
 template<class convert = do_convert_format::prepend> struct time_t : is_generic {
+    typedef convert convert_type;
 private:
 
     struct index_info {
@@ -169,6 +170,7 @@ private:
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
 template<class convert = do_convert_format::prepend> struct time_strf_t : is_generic {
+    typedef convert convert_type;
 
     /** 
         constructs a time_strf object

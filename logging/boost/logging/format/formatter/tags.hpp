@@ -60,6 +60,7 @@ namespace tag {
 See @ref boost::logging::tag "how to use tags".
 */
 template<class convert = do_convert_format::prepend> struct file_line_t : is_generic, uses_tag< file_line_t<convert>, ::boost::logging::tag::file_line >, boost::logging::op_equal::always_equal  {
+    typedef convert convert_type;
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
         convert::write( tag.val, str);
     }
@@ -72,6 +73,7 @@ template<class convert = do_convert_format::prepend> struct file_line_t : is_gen
 See @ref boost::logging::tag "how to use tags".
 */
 template<class convert = do_convert_format::prepend> struct function_t : is_generic, uses_tag< function_t<convert>, ::boost::logging::tag::function >, boost::logging::op_equal::always_equal  {
+    typedef convert convert_type;
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
         convert::write( tag.val, str);
     }
@@ -84,6 +86,7 @@ template<class convert = do_convert_format::prepend> struct function_t : is_gene
 See @ref boost::logging::tag "how to use tags".
 */
 template<class convert = do_convert_format::prepend> struct level_t : is_generic, uses_tag< level_t<convert>, ::boost::logging::tag::level >, boost::logging::op_equal::always_equal  {
+    typedef convert convert_type;
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
         typedef typename boost::logging::dump_level<>::type dump_type;
         convert::write( dump_type::dump(tag.val) , str);
@@ -99,6 +102,7 @@ Similar to boost::logging::formatter::time_t class - only that this one uses tag
 See @ref boost::logging::tag "how to use tags".
 */
 template<class convert = do_convert_format::prepend> struct time_t : is_generic, uses_tag< time_t<convert>, ::boost::logging::tag::time > {
+    typedef convert convert_type;
     typedef boost::logging::formatter::time_t<convert> time_write_type;
     time_write_type m_writer;
 
@@ -122,6 +126,7 @@ private:
 See @ref boost::logging::tag "how to use tags".
 */
 template<class convert = do_convert_format::prepend> struct module_t : is_generic, uses_tag< module_t<convert>, ::boost::logging::tag::module >, boost::logging::op_equal::always_equal  {
+    typedef convert convert_type;
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
         convert::write( tag.val, str);
     }
@@ -136,9 +141,10 @@ See @ref boost::logging::tag "how to use tags".
 template<class stream_type = ::std::basic_ostringstream<char_type> , class convert = do_convert_format::prepend> struct thread_id_t 
         : is_generic, uses_tag< thread_id_t< ::std::basic_ostringstream<char_type>, convert>, ::boost::logging::tag::thread_id >, boost::logging::op_equal::always_equal  {
 
+    typedef convert convert_type;
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
         stream_type out;
-        out << BOOST_LOG_STR("[T") << tag.val << BOOST_LOG_STR("] ");
+        out << tag.val ;
         convert::write( out.str(), str);
     }
 };

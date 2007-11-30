@@ -200,7 +200,9 @@ private:
 
 public:
     /** 
-        adds a formatter
+        @brief Adds a formatter
+
+        @param fmt The formatter
     */
     template<class formatter> void add_formatter(formatter fmt) {
         typedef boost::logging::manipulator::is_generic is_generic;
@@ -208,7 +210,19 @@ public:
     }
 
     /** 
-        deletes a formatter
+        @brief Adds a formatter. Also, the second argument is the @ref boost::logging::formatter::spacer_t "spacer" string
+
+        @param fmt The formatter
+        @param format_str The @ref boost::logging::formatter::spacer_t "spacer" string
+    */
+    template<class formatter> void add_formatter(formatter fmt, const char_type * format_str) {
+        add_formatter( spacer(fmt, format_str) );
+    }
+
+    /** 
+        @brief Deletes a formatter
+
+        @param fmt The formatter to delete
     */
     template<class formatter> void del_formatter(formatter fmt) {
         typedef boost::logging::manipulator::is_generic is_generic;
@@ -216,7 +230,7 @@ public:
     }
 
     /** 
-        adds a destination
+        @brief Adds a destination
     */
     template<class destination> void add_destination(destination dest) {
         typedef boost::logging::manipulator::is_generic is_generic;
@@ -224,7 +238,7 @@ public:
     }
 
     /** 
-        deletes a destination
+        @brief Deletes a destination
     */
     template<class destination> void del_destination(destination dest) {
         typedef boost::logging::manipulator::is_generic is_generic;
