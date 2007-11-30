@@ -2685,6 +2685,8 @@ public:
     void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>);
     template &lt;class Predicate&gt;
         void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, Predicate <var>pred</var>);
+    template &lt;class Duration&gt;
+        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>);
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
     template &lt;class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
@@ -2928,40 +2930,28 @@ The possible error conditions are implementation defined.
 </dd>
 </dl>
 
-<p>
-[<i>Note:</i>
-For condition variables,
-time duration overloads are not provided
-for the <code>timed_wait</code> members
-that do not take a <code>Predicate</code>.
-Spurious wakeups would cause endless loops
-unless extraordinary care were taken.
-The composability of absolute time provides an equivalent,
-but terminating, idiom:
-</p>
-
-<blockquote>
-<pre><code>
-mutex mut;
-condition_variable cv;
-...
-system_time abs_time = get_system_time() + seconds(1);
-bool within_time = true;
-while (within_time &amp;&amp; !pred())
-    within_time = cv.timed_wait(mut, abs_time);
-if (pred()) ...
-</code></pre>
 </blockquote>
 
-<p>
-Notice that changing the <code>time_wait</code> call
-to <code>cv.timed_wait(mut, get_system_time() + seconds(1))</code>
-to eliminate the <code>abs_time</code> variable could result in an endless loop.
-</p>
+<pre><code>
+template &lt;class Duration&gt;
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>);
+</code></pre>
 
-<p>
-<i>--end note</i>]
-</p>
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+As if returns <code>timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)</code>.
+</dd>
+
+<dt>Returns:</dt>
+<dd>
+<code>true</code> if the call to <code>timed_wait</code> is notified
+prior to the indicated timeout,
+otherwise returns <code>false</code>.
+</dd>
+
+</dl>
 </blockquote>
 
 <pre><code>
@@ -3090,6 +3080,8 @@ public:
         void wait(Lock&amp; <var>lock</var>, Predicate <var>pred</var>);
     template &lt;class Lock&gt;
         bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
+    template &lt;class Lock, class Duration&gt;
+        bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>);
     template &lt;class Lock, class Predicate&gt;
         bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
     template &lt;class Lock, class Duration, class Predicate&gt;
@@ -3293,6 +3285,28 @@ otherwise <code>false</code>.
 <code>system_error</code> when an error condition occurs.
 The possible error conditions are implementation defined.
 </dd>
+</dl>
+</blockquote>
+
+<pre><code>
+template &lt;class Lock, class Duration&gt;
+    bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+As if returns <code>timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)</code>.
+</dd>
+
+<dt>Returns:</dt>
+<dd>
+<code>true</code> if the call to <code>timed_wait</code> is notified
+prior to the indicated timeout,
+otherwise returns <code>false</code>.
+</dd>
+
 </dl>
 </blockquote>
 
