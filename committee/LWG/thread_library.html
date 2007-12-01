@@ -908,9 +908,10 @@ id get_id() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>this_thread::get_id()f</code>or the thread
+<code>this_thread::get_id()</code> for the thread
 represented by
-<code>*this.</code>
+<code>*this</code>,
+or a default constructed <code>id</code> if <code>*this</code> does not represent a thread.
 </dd>
 
 <dt>Throws:</dt>
