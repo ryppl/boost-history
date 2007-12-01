@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// \file transform.hpp
-/// Definition of case_ transform.
+/// Definition of when transform.
 //
 //  Copyright 2007 Eric Niebler. Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PROTO3_TRANSFORM_CASE_HPP_EAN_10_29_2007
-#define BOOST_PROTO3_TRANSFORM_CASE_HPP_EAN_10_29_2007
+#ifndef BOOST_PROTO_TRANSFORM_CASE_HPP_EAN_10_29_2007
+#define BOOST_PROTO_TRANSFORM_CASE_HPP_EAN_10_29_2007
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/logical.hpp>
@@ -16,9 +16,9 @@
 #include <boost/mpl/aux_/has_type.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/xpressive/proto3/proto_fwd.hpp>
-#include <boost/xpressive/proto3/transform/bind.hpp>
-#include <boost/xpressive/proto3/transform/apply.hpp>
+#include <boost/xpressive/proto/proto_fwd.hpp>
+#include <boost/xpressive/proto/transform/bind.hpp>
+#include <boost/xpressive/proto/transform/apply.hpp>
 
 namespace boost { namespace proto
 {
@@ -142,12 +142,12 @@ namespace boost { namespace proto
 
             template<typename R, typename... Args, typename Expr, typename State, typename Visitor>
             struct apply_lambda_<R(Args...), Expr, State, Visitor, no_transform>
-              : case_<_, R(Args...)>::template apply<Expr, State, Visitor>
+              : when<_, R(Args...)>::template apply<Expr, State, Visitor>
             {};
 
             template<typename R, typename... Args, typename Expr, typename State, typename Visitor>
             struct apply_lambda_<R(*)(Args...), Expr, State, Visitor, no_transform>
-              : case_<_, R(*)(Args...)>::template apply<Expr, State, Visitor>
+              : when<_, R(*)(Args...)>::template apply<Expr, State, Visitor>
             {};
 
             // work around GCC bug
@@ -212,7 +212,7 @@ namespace boost { namespace proto
                 static type call_(Expr const &expr, State const &state, Visitor &visitor, mpl::true_)
                 {
                     return detail::construct_<type>(
-                        case_<_, Args>::call(expr, state, visitor)...
+                        when<_, Args>::call(expr, state, visitor)...
                     );
                 }
 
@@ -261,7 +261,7 @@ namespace boost { namespace proto
         // Simple transform, takes a raw transform and
         // applies it directly.
         template<typename Grammar, typename Fun>
-        struct case_
+        struct when
           : Fun
         {
             typedef typename Grammar::proto_base_expr proto_base_expr;
@@ -271,7 +271,7 @@ namespace boost { namespace proto
         // transform with arguments and applies it, OR takes a
         // (possibly lambda) type and constructor arguments.
         template<typename Grammar, typename Return, typename... Args>
-        struct case_<Grammar, Return(Args...)>
+        struct when<Grammar, Return(Args...)>
           : raw_transform
         {
             typedef typename Grammar::proto_base_expr proto_base_expr;
@@ -291,7 +291,7 @@ namespace boost { namespace proto
         };
 
         template<typename Grammar, typename Return, typename... Args>
-        struct case_<Grammar, Return(*)(Args...)>
+        struct when<Grammar, Return(*)(Args...)>
           : raw_transform
         {
             typedef typename Grammar::proto_base_expr proto_base_expr;
