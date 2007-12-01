@@ -212,7 +212,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\boosts\boost_1_33_1\bin\boost\libs\thread\build\libboost_thread.lib\vc-8_0\debug\threading-multi"
+				AdditionalLibraryDirectories="D:\boosts\boost_1_33_1\bin\boost\libs\thread\build\libboost_thread.lib\vc-8_0\debug\threading-multi;D:\boosts\boost_1_33_1\bin\boost\libs\date_time\build\libboost_date_time.lib\vc-8_0\debug\threading-multi"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -328,14 +328,6 @@
 			<File
 				RelativePath=".\test_now.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -454,6 +446,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\time_format_holder.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\util.hpp"
 				>
 			</File>
@@ -552,6 +548,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\high_precision_time.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\..\boost\logging\format\formatter\named_spacer.hpp"
 						>
 					</File>
@@ -569,6 +569,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\..\..\boost\logging\format\formatter\time.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\time_strf.hpp"
 						>
 					</File>
 				</Filter>
@@ -874,6 +878,7 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

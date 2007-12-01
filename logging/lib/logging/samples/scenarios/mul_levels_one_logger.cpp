@@ -28,7 +28,6 @@ It will look similar to this one:
 
 
 
-#define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format.hpp>
 #include <boost/logging/writer/ts_write.hpp>
 

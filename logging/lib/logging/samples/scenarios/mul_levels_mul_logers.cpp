@@ -59,7 +59,6 @@ The err.txt file
 
 
 
-#define BOOST_LOG_COMPILE_FAST_ON
 #include <boost/logging/format_fwd.hpp>
 
 // Step 1: Optimize : use a cache string, to make formatting the message faster

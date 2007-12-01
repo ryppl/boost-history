@@ -28,7 +28,6 @@ logging\samples\scenarios\using_tags.cpp:95 [T7204] [2] 14:55 this is so cool ag
 
 
 
-#define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format_fwd.hpp>
 #include <boost/logging/tags.hpp>
 

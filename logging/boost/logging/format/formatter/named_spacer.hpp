@@ -192,6 +192,10 @@ namespace detail {
 /** 
 @brief Allows you to contain multiple formatters, and specify a %spacer between them. You have a %spacer string, and within it, you can escape your contained formatters.
 
+@code
+#include <boost/logging/format/formatter/named_spacer.hpp>
+@endcode
+
 This allows you:
 - to hold multiple formatters
 - each formatter is given a name, when being added

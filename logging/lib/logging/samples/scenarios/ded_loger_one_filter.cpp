@@ -54,7 +54,6 @@ It will look similar to:
 
 
 
-#define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format_fwd.hpp>
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )

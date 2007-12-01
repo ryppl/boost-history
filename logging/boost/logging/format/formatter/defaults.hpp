@@ -25,6 +25,7 @@
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format/formatter/convert_format.hpp>
 #include <boost/logging/format/formatter/time.hpp>
+#include <boost/logging/format/formatter/time_strf.hpp>
 #include <boost/logging/format/formatter/spacer.hpp>
 #include <stdio.h>
 #include <time.h>
