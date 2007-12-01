@@ -81,7 +81,7 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c low    new formatter: limit the text to gives maximal length. It may happend the dump is unexpectedly large and would
   fill disk/overwrite cache/take too much time/be unreadable. Limiting one log size would help here a lot and would relieve end user of doing it manually.
 
-- @c high           quite often I am not interested not in absolute time (2005/12/11 16:33) but in time offset from some event. 
+- @c normal           quite often I am not interested not in absolute time (2005/12/11 16:33) but in time offset from some event. 
   I suggest to add API: \n
   some_formatter.set_time_start_point( bool either_in_all_threads_or_just_in_current_thread); \n
   and escape sequences: \n
