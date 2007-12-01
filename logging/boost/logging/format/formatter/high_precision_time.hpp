@@ -57,7 +57,11 @@ $micro - microseconds (if the high precision clock allows; otherwise, it pads ze
 $nano - nanoseconds (if the high precision clock allows; otherwise, it pads zeros)
 
 
-Example: high_precision_time("$mm:$ss:$micro");
+Example: 
+
+@code
+high_precision_time("$mm:$ss:$micro");
+@endcode
 
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").

@@ -62,7 +62,7 @@ void one_logger_one_filter_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
-    g_l->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss:$mili ") );
+    g_l->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss:$nano ") );
     g_l->writer().add_formatter( formatter::append_newline_if_needed() );
     g_l->writer().add_destination( destination::file("out.txt") );
     g_l->writer().add_destination( destination::cout() );

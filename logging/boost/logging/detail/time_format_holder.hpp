@@ -36,9 +36,10 @@ private:
     struct index_info {
         typedef hold_string_type::size_type uint;
         
-        index_info(uint src_idx, int *format_idx, int size = 2) : src_idx(src_idx), format_idx(format_idx), size(size) {}
+        index_info(uint src_idx, int *format_idx, int advance_size = 2, int size = 2) : src_idx(src_idx), format_idx(format_idx), advance_size(advance_size), size(size) {}
         uint src_idx;
         int * format_idx;
+        int advance_size;
         int size;
 
         static bool by_index(const index_info & first, const index_info & second) {
@@ -92,11 +93,11 @@ public:
         if ( sec_idx != hold_string_type::npos)
             indexes.push_back( index_info(sec_idx, &m_sec) );
         if ( millisec_idx != hold_string_type::npos)
-            indexes.push_back( index_info(millisec_idx, &m_millisec, 3) );
+            indexes.push_back( index_info(millisec_idx, &m_millisec, 4, 3) );
         if ( microsec_idx != hold_string_type::npos)
-            indexes.push_back( index_info(microsec_idx, &m_microsec, 6) );
+            indexes.push_back( index_info(microsec_idx, &m_microsec, 5, 6) );
         if ( nanosec_idx != hold_string_type::npos)
-            indexes.push_back( index_info(nanosec_idx, &m_nanosec, 9) );
+            indexes.push_back( index_info(nanosec_idx, &m_nanosec, 4, 9) );
 
         std::sort( indexes.begin(), indexes.end(), index_info::by_index);
         
@@ -109,7 +110,7 @@ public:
             std::basic_ostringstream<char_type> cur_sprintf_format;
             cur_sprintf_format << BOOST_LOG_STR("%0") << begin->size << BOOST_LOG_STR("d");
             m_format += cur_sprintf_format.str();
-            prev_idx = begin->src_idx + begin->size + 1;
+            prev_idx = begin->src_idx + begin->advance_size + 1;
             ++idx;
         }
 

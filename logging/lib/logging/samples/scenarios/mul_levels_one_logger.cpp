@@ -16,12 +16,12 @@ In this example, all output will be written to the console, debug output window,
 It will look similar to this one:
 
 @code
-21:03.17 [1] this is so cool 1
-21:03.17 [2] first error 2
-21:03.17 [3] hello, world
-21:03.17 [4] second error 3
-21:03.17 [5] good to be back ;) 4
-21:03.17 [6] third error 5
+21:03.17.243 [1] this is so cool 1
+21:03.17.243 [2] first error 2
+21:03.17.243 [3] hello, world
+21:03.17.243 [4] second error 3
+21:03.17.243 [5] good to be back ;) 4
+21:03.17.243 [6] third error 5
 @endcode
 
 */
@@ -30,6 +30,7 @@ It will look similar to this one:
 
 #include <boost/logging/format.hpp>
 #include <boost/logging/writer/ts_write.hpp>
+#include <boost/logging/format/formatter/high_precision_time.hpp>
 
 using namespace boost::logging;
 // Step 3 : Specify your logging class(es)
@@ -53,7 +54,7 @@ void test_mul_levels_one_logger() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted...
     g_l->writer().add_formatter( formatter::idx(), "[%] "  );
-    g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_l->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss.$mili ") );
     g_l->writer().add_formatter( formatter::append_newline() );
 
     //        ... and where should it be written to

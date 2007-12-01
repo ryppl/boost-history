@@ -1,9 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.8, 1 dec 2007
-- added high precision timer - does not work correctly yet
-- bug: the named_spacer does not compile in gcc 4.1 - TO FIX
+@section changelog_cur_ver Current Version: v0.12.9, 1 dec 2007
+- added high precision timer 
 - removed "#define BOOST_LOG_COMPILE_FAST_OFF" from samples - no needed and could be misleading
 - added boost::logging::formatter::named_spacer
 - created lock_resource_finder namespace - with existing resource lockers

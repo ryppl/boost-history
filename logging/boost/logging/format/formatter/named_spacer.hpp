@@ -32,7 +32,7 @@ namespace boost { namespace logging { namespace formatter {
 namespace detail {
 
     template<class convert, class lock_resource, class format_base> struct named_spacer_context {
-        typedef typename use_default<lock_resource, boost::logging::lock_resource_finder::tss_with_cache<> >::type lock_resource;
+        typedef typename use_default<lock_resource, boost::logging::lock_resource_finder::tss_with_cache<> >::type lock_resource_type;
         typedef typename use_default<format_base, base<> >::type  format_base_type;
         typedef typename use_default<convert, boost::logging::formatter::do_convert_format::prepend> ::type convert_type;
         typedef ::boost::logging::array::shared_ptr_holder<format_base_type, boost::logging::threading::no_mutex > array;
@@ -56,7 +56,7 @@ namespace detail {
             typedef std::vector<write_step> write_step_array;
             write_step_array write_steps;
         };
-        typedef typename lock_resource::template finder<write_info>::type data;
+        typedef typename lock_resource_type::template finder<write_info>::type data;
         data m_data;
 
         template<class formatter> void add(const string_type & name, formatter fmt) {
@@ -68,7 +68,7 @@ namespace detail {
 
         void del(const string_type & name) {
             {
-            data::write info(m_data);
+            typename data::write info(m_data);
             format_base_type * p = info->name_to_formatter[name];
             info->name_to_formatter.erase(name);
             info->formatters.del(p);
@@ -77,7 +77,7 @@ namespace detail {
         }
 
         void format_string(const string_type & str) {
-            { data::write info(m_data);
+            { typename data::write info(m_data);
               info->format_string = str;
             }
             compute_write_steps();
@@ -91,7 +91,7 @@ namespace detail {
     private:
         template<class msg_type> void write_with_convert(msg_type & msg, ::boost::logging::formatter::do_convert_format::prepend*) const {
             // prepend
-            data::read info(m_data);
+            typename data::read info(m_data);
             typedef typename write_info::write_step_array array;
             for ( typename array::const_reverse_iterator b = info->write_steps.rbegin(), e = info->write_steps.rend(); b != e; ++b) {
                 if ( b->fmt)
@@ -101,7 +101,7 @@ namespace detail {
         }
         template<class msg_type> void write_with_convert(msg_type & msg, ...) const {
             // append
-            data::read info(m_data);
+            typename data::read info(m_data);
             typedef typename write_info::write_step_array array;
             for ( typename array::const_iterator b = info->write_steps.begin(), e = info->write_steps.end(); b != e; ++b) {
                 convert_type::write( b->prefix, msg);
@@ -130,7 +130,7 @@ namespace detail {
         void compute_write_steps() {
             typedef typename string_type::size_type size_type;
 
-            data::write info(m_data);
+            typename data::write info(m_data);
             info->write_steps.clear();
             string_type remaining = info->format_string;
             size_type start_search_idx = 0;
@@ -170,7 +170,7 @@ namespace detail {
     private:
         // non-generic
         template<class formatter> void add_impl(const string_type & name, formatter fmt, const boost::false_type& ) {
-            data::write info(m_data);
+            typename data::write info(m_data);
             format_base_type * p = info->formatters.append(fmt);
             info->name_to_formatter[name] = p;
         }
