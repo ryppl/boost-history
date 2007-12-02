@@ -44,6 +44,9 @@ into the WD. Comments:</p>
   <li>&#10004; thread::get_id() for a default-constructed thread returns an object that 
   refers to &quot;not any thread&quot;. That last term isn't used anywhere else, so 
   shouldn't be used.<br>
+  <br>
+  <i>Extensive rewording to clarify class id related issues, and provide a 
+  definition of &quot;not a thread&quot;, which is now used in several places.</i><br>
 &nbsp;</li>
   <li>&#10004; Default constructor for thread constructs an object that is not &quot;attached&quot; 
   to any thread; other constructors create objects that &quot;represent&quot; a thread. 
@@ -54,10 +57,8 @@ into the WD. Comments:</p>
   <li>&#10004; Template constructor for thread: &quot;if f is an rvalue, F must only be 
   MoveConstructible&quot;. Does this mean that F must not be CopyConstructible?<br>
   <br>
-  <i>I changed both sentences to: &quot;If <tt>f</tt> is an lvalue, <tt>F</tt> is <tt>CopyConstructible</tt>.
-If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;
-  <span style="background-color: #FFFF00">Howard, please verify that's the 
-  intended meaning.</span></i><br>
+  <i>Changed both sentences to: &quot;If <tt>f</tt> is an lvalue, <tt>F</tt> is <tt>CopyConstructible</tt>.
+If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;</i><br>
 &nbsp;</li>
   <li>&#10004; Thread::join &quot;may throw system_error&quot;. Under what circumstances?<br>
   <br>
@@ -203,7 +204,10 @@ or transferred away from the <code>lock_guard</code>.&quot; The last sentence ap
   <br>
   The definition of &quot;mutex&quot; under condition_variable_any is (and should be) 
   quite fuzzy! Perhaps this precondition should simply be removed from 
-  condition_variable_any::wait? (Added by Howard.)</li>
+  condition_variable_any::wait? (Added by Howard.)<br>
+&nbsp;</li>
+  <li>The term &quot;block&quot; is used a number of times, but is not defined either in 
+  this proposal or in the current working paper. (Added by Beman).</li>
 </ol>
 
 </body>

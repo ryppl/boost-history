@@ -377,12 +377,19 @@ namespace this_thread
 <h4><a name="thread.threads.class">30.1.1 Class thread [thread.threads.class]</a></h4>
 
 <p>
-An object of class <code>thread</code> represents and manages a thread.
+An object of class <code>thread</code> represents and manages a thread of 
+execution ([intro.multithread]).
 It provides a mechanism to create a new thread,
 for the current thread to wait for
 completion of a thread,
-and to perform other operations to manage and query the state of the thread.
-</p>
+and to perform other operations to manage and query the state of the thread. 
+Objects of type <code>thread</code> can only represent joinable threads of 
+execution or <b><i>not a thread</i></b> (referred to as <b><i>NAT</i></b>). <i>
+[Note: </i>Once a program calls a <code>thread</code> object's <code>join()</code> 
+or <code>detach()</code> members, or moves from a <code>thread</code> object, 
+then that <code>thread</code> object no longer represents a thread of execution. 
+Such a <code>thread</code> object represents NAT. Default constructed <code>thread</code> 
+objects also represent NAT.<i> -- end note]</i></p>
 
 <blockquote>
 <pre><code>
@@ -448,12 +455,14 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread
 </blockquote>
 
 <p>
-Objects of type <code>thread::id</code> represent the identity of threads.
-Each
-joinable thread has a unique identity.
-All non-joinable threads share the same
-identity, and this identify is different from that of any joinable thread.
-</p>
+An object of type <code>thread::id</code> provides either a unique identity for 
+a thread of execution or a NAT value ([thread.threads.class]). Each <code>thread</code> 
+object, other than a NAT <code>thread</code> object, has a <code>thread::id</code> 
+that compares not equal to the <code>thread::id</code> of all other <code>thread</code> 
+objects, including NAT <code>thread</code> objects.&nbsp; The <code>thread::id</code>'s 
+for all NAT <code>thread</code> objects compare equal to each other, and compare 
+not equal to the <code>thread::id</code>'s of all <code>thread</code> objects 
+not representing NAT.</p>
 
 <p>
 [<i>Note:</i>
@@ -480,8 +489,7 @@ Nothing.
 
 <dt>Postconditions:</dt>
 <dd>
-Represents the non-joinable identity.
-</dd>
+The constructed object has the NAT value.</dd>
 </dl>
 </blockquote>
 
@@ -532,7 +540,7 @@ bool operator&lt;(thread::id <var>x</var>, thread::id <var>y</var>);
 <dl>
 <dt>Returns:</dt>
 <dd>
-a value such that <code>operator&lt;</code>
+A value such that <code>operator&lt;</code>
 is a total ordering as described in [alg.sorting].
 </dd>
 
@@ -628,8 +636,7 @@ thread();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs a <code>thread</code> object that does not represent an
-actual thread.
+Constructs a <code>thread</code> object that represents NAT. 
 </dd>
 
 <dt>Postconditions:</dt>
@@ -718,7 +725,8 @@ Constructs an object of type <code>thread</code> from <code><var>x</var></code>.
 <dd>
 <code><var>x</var>.joinable() == false</code>
 <br>
-<code><var>x</var>.get_id() == thread().get_id()</code>. &nbsp; &nbsp;<code>joinable()</code>
+<code><var>x</var>.get_id() == thread().get_id()</code>.<br>
+<code>joinable()</code>
 returns the value of <code><var>x</var>.joinable()</code>
 prior to the start of construction.
 <br>
@@ -765,7 +773,8 @@ thread&amp; operator=(thread&amp;&amp; <var>x</var>);
 <dl>
 <dt>Effects:</dt>
 <dd>
-If <code>this</code> currently represents a <code>joinable</code> thread object,
+If
+<code>joinable()</code>,
 calls
 <code>detach()</code>.
 Then assigns the state of <code><var>x</var></code> to <code>*this</code>
@@ -776,7 +785,10 @@ and sets <code><var>x</var></code> to a default constructed state.
 <dd>
 <code><var>x</var>.joinable() == false</code>
 <br>
-<code><var>x</var>.get_id() == thread().get_id()</code>. &nbsp; &nbsp;<code>joinable()</code> returns the
+<code><var>x</var>.get_id() == thread().get_id()</code>.</dd>
+
+<dd>
+<code>joinable()</code> returns the
 value of <code><var>x</var>.joinable()</code> prior to the
 assignment.
 <br>
@@ -850,12 +862,9 @@ happens before [<cite>intro.multithread</cite>]
 
 <dt>Postconditions:</dt>
 <dd>
-After a normal return of <code>join()</code>,
-<code>joinable()</code> is <code>false</code>.
-<br>
 If <code>join()</code> throws an exception,
-the <code>joinable()</code> status remains unchanged.
-</dd>
+the <code>joinable()</code> status remains unchanged. Otherwise,
+<code>joinable()</code> is <code>false</code> and <code>get_id() == id()</code>.</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -888,8 +897,7 @@ When the thread represented by
 <dd>
 <code>joinable() == false</code>
 <br>
-<code>*this</code>
-does not represent a thread.
+<code>get_id() == id()</code>. 
 </dd>
 
 <dt>Throws:</dt>
@@ -2087,8 +2095,7 @@ With a recursive mutex it is possible that both
 <code>*this</code> and <code><var>u</var></code>
 own the same mutex before the assignment.
 In this case, <code>*this</code> will own the mutex after the assignment (and
-<code><var>u</var></code> will not), and the mutex will have one less level of 
-recursion.
+<code><var>u</var></code> will not).
 &mdash;<i>end note</i>] </p>
 </blockquote>
 
