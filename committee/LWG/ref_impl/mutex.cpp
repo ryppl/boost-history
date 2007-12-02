@@ -137,7 +137,7 @@ bool
 timed_mutex::try_lock()
 {
     unique_lock<mutex> lk(mut_, try_to_lock);
-    if (lk.owns() && !locked_)
+    if (lk.owns_lock() && !locked_)
     {
         locked_ = true;
         return true;
@@ -203,7 +203,7 @@ recursive_timed_mutex::try_lock()
 {
     pthread_t id = pthread_self();
     unique_lock<mutex> lk(mut_, try_to_lock);
-    if (lk.owns() && (state_ == 0 || pthread_equal(id, id_)))
+    if (lk.owns_lock() && (state_ == 0 || pthread_equal(id, id_)))
     {
         if (state_ == numeric_limits<unsigned>::max())
             return false;

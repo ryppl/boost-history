@@ -172,7 +172,7 @@ public:
     bool timed_lock(const system_time& abs_time);
     void unlock();
 
-    bool owns() const {return owns_lock_;}
+    bool owns_lock() const {return owns_lock_;}
     operator int __nat::* () const {return owns_lock_ ? &__nat::_ : 0;}
     mutex_type* mutex() const {return m_;}
 
@@ -257,7 +257,7 @@ int
 try_lock(L1& l1, L2& l2)
 {
     unique_lock<L1> u(l1, try_to_lock);
-    if (u.owns())
+    if (u.owns_lock())
     {
         if (l2.try_lock())
         {
@@ -275,7 +275,7 @@ try_lock(L1& l1, L2& l2, L3& l3...)
 {
     unsigned r = 0;
     unique_lock<L1> u(l1, try_to_lock);
-    if (u.owns())
+    if (u.owns_lock())
     {
         r = try_lock(l2, l3...);
         if (r == -1)

@@ -145,7 +145,7 @@
         bool timed_lock(const system_time& abs_time);
         void unlock();
     
-        bool owns() const;
+        bool owns_lock() const;
         operator unspecified-bool-type () const;
         mutex_type* mutex() const;
     
