@@ -13,12 +13,17 @@
 #  pragma warning(disable : 4180) // warning C4180: qualifier applied to function type has no meaning; ignored
 #  pragma warning(disable : 4172) // warning C4180: qualifier applied to function type has no meaning; ignored
 
-#  pragma warning(disable : 4310) //  cast truncates constant value
-#  pragma warning(disable : 4512) //  assignment operator could not be generated
-#  pragma warning(disable : 4702) //  unreachable code
+// added to boost.test/detail supress_warnings
+//#  pragma warning(disable : 4310) //  cast truncates constant value
+//#  pragma warning(disable : 4512) //  assignment operator could not be generated
+//#  pragma warning(disable : 4702) //  unreachable code
 #endif
 
-#include <boost/test/included/test_exec_monitor.hpp>
+#define BOOST_TEST_MAIN
+// Must come BEFORE this include.
+#include <boost/test/included/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
+
 #include <boost/svg_plot/svg_2d_plot.hpp>
 using namespace boost::svg;
 
@@ -26,7 +31,7 @@ using namespace boost::svg;
 using std::cout;
 using std::endl;
 
-int test_main(int, char*[])
+BOOST_AUTO_TEST_CASE( test1 )
 {
 	svg_2d_plot my_plot;
 
@@ -45,7 +50,7 @@ int test_main(int, char*[])
   my_plot.y_label("Y"); // 
  	BOOST_CHECK_EQUAL(my_plot.y_label(), "Y"); // & check.
 
-  BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), true); // Check default. 
+  BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // Check default. 
   my_plot.x_ticks_up_on(false); // Set
  	BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // & check.
  	BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // & check.
@@ -55,10 +60,10 @@ int test_main(int, char*[])
  	BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
  	BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
 
-  BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // Check default. 
-  my_plot.y_ticks_right_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), false); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), false); // & check.
+  BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), false); // Check default. 
+  my_plot.y_ticks_right_on(true); // Set
+ 	BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // & check.
+ 	BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.y_ticks_left_on(), true); // Check default. 
   my_plot.y_ticks_left_on(false); // Set
@@ -148,8 +153,9 @@ int test_main(int, char*[])
 	BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
 	BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
 	BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
-	return 0;
-}
+
+} // BOOST_AUTO_TEST_CASE( test1 )
+
 
 /*
 

@@ -1388,7 +1388,55 @@ plot(my_data, "People", functor = my_functor());
 [endsect] [/section:svg_2d_plot_interface]
 [endsect] [/section:interface]
 
+
+
+
 [section:implementation Implementation & Rationale]
+
+[h4 Controlling the format of Label values]
+
+Both the X and Y axis tick can be labelled with their values.
+
+The precision (number of decimal digits used) for both x and y
+can be controlled using the function
+`.x_value_precision(int);` and `.y_value_precision(int);`
+
+for example, `my_plot..y_value_precision(1) would suffice
+for values in a limited range, like from 0.0 to 0.5.
+
+The default is chosen to be 3
+(otherwise the C++ Standard default precision of 6 would be chosen,
+a rather larger precision than is typically required).
+
+If a lower precision is acceptable for the values used to label the axis,
+this will reduce the length and space required for the label.
+
+It may also be necessary to use exponent format to avoid either
+extremely long labels, or labels that are all the same.
+To control formatting, two functions
+`.x_value_ioflags(int);` and `.y_value_ioflags(int);`
+
+are provided and these provide control in the normal C++ Standard library
+iostream function `flags(int)`.
+
+Note that this function sets *all* the flags, so to obtain 'default' behaviour
+it is probably necessary to at least set the decimal bit with `ios::dec`.
+
+You may wish to prevent exponent format by including `ios::fixed`.
+
+Other settings can be added with other format flags, most usefully `ios::scientific`.
+
+[note It is, of course, possible to produce combinations that are probably not desired,
+like `ios::hex` | `ios::scientific` or whose effect is undefined behaviour.]
+
+If you need or want to use scientific (exponential format) it is unfortunate that
+the standard library specification always requires 3 exponent digits to be used:
+this is ugly, takes up valuable space and is rarely necessary,
+and indeed impossible with floats.
+
+However, with some experimentation, it is possible to label ticks values reasonably well.
+
+
 
 [h4 Number of  Minor ticks]
 
@@ -1422,7 +1470,7 @@ num_minor_ticks = 2[super]n -1 are useful, for example
 
 
 This section provide more information about this implementation
-and some of the rationale for desing decisions.
+and some of the rationale for design decisions.
 
 [h4 SVG Specification]
 

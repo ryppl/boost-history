@@ -232,32 +232,64 @@ namespace detail
       tick_path.M(x1, y1).L(x1, y2);
       // Leaving current position at the bottom end of the tick.
 
-      if(derived().use_x_major_labels )
-      { // Show value by the tick.
+      if(derived().use_x_major_labels)
+      { // Show value by the tick as "1.2" or "3.4e+000"...
         std::stringstream label;
-        label << value; // TODO precision problems here?
-
+        label.precision(derived().x_value_precision_);
+        label.flags(derived().x_value_ioflags_);
+        label << value; // "1.2" or "3.4e+000"...
+        double y = y2; // bottom end of the tick.
+        align_style alignment = center_align;
         if(derived().use_down_ticks)
         {  // No need to shift if derived().use_up_ticks as labels are below the X-axis.
-          y2 += derived().x_label_info.font_size(); // Move down just below bottom end of tick.
+          y += derived().x_label_info.font_size();
+          // Move down a font height below bottom end of tick.
         }
-        if(derived().use_x_ticks_on_plot_window_) 
-        { // Always want all values including "0" if labelling on the external plot window.
-          y2, 
-          derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1, y2,
-            label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
-            "", "", "", "", center_align,  // center label on the tick.
-            horizontal);
+        if (derived().x_label_rotation_ == upward)
+        { // 
+          alignment = right_align;
+          //y += label.str().size() * derived().x_label_info.font_size();
+          // so the last digit will be by the tick.
+        }
+        else if((derived().x_label_rotation_ == downward)
+          || (derived().x_label_rotation_ == downhill))
+        { // start from tick and write down.
+          alignment = left_align;
+        }
+        else if(derived().x_label_rotation_ == horizontal)
+        {
+          alignment = center_align; // center on the tick.
+        }
+        else if(derived().x_label_rotation_ == uphill)
+        { // 45 slope up,
+          alignment = left_align; // Uphill to end at tick.
+          y += label.str().size() * derived().x_label_info.font_size() * 0.7;
+          // sloping so need about sin(45) = 0.707 less space,
+          // so the last digit is by the tick.
         }
         else
-        { // Internal - value labels just below horizontal X-axis.
-          if ((value != 0) && derived().use_x_axis_lines_)
-          { // Avoid a "0" below the X-axis if it would be cut through by the vertical Y-axis line.
-            y2,
-            derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1, y2,
+        { // 45 slope down
+          alignment = left_align; // Assume downhill from tick,
+          // so no need to y adjustment.
+        }
+
+        //if(derived().use_x_ticks_on_plot_window_) // External style.
+        //{ // Always want all values including "0" if labelling on the external plot window.
+        //  derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
+        //    x1, y, // x centered on tick, 
+        //    label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
+        //    "", "", "", "", alignment,  // center label on the tick.
+        //    derived().x_label_rotation_);
+        //}
+        //else
+        { // ! use_x_ticks_on_plot_window_ = Internal - value labels just below horizontal X-axis.
+          if (derived().use_x_ticks_on_plot_window_ || ((value != 0) && derived().use_x_axis_lines_))
+          { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
+           derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
+              x1, y,
               label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
-              "", "", "", "", center_align, // center label on the tick.
-              horizontal);
+              "", "", "", "", alignment, // center label on the tick.
+              derived().x_label_rotation_);
           }
         }
       } // use_x_major_labels
@@ -281,10 +313,10 @@ namespace detail
     path_element& major_grid_path = derived().image.get_g_element(PLOT_X_MAJOR_GRID).path();
 
     if(derived().use_x_axis_lines_)
-    { // Draw the horizontal X-axis line.
+    { // Draw the horizontal X-axis line the full width of the plot window.
       derived().image.get_g_element(PLOT_X_AXIS).line(
-        derived().plot_x1, derived().x_axis,
-        derived().plot_x2, derived().x_axis);
+        derived().plot_x1, derived().x_axis, // y = 0
+        derived().plot_x2, derived().x_axis); // y = 0
     }
 
     // x_minor_jump is the interval between minor ticks.
@@ -364,9 +396,8 @@ namespace detail
     // Use whichever is the biggest of point marker and font.
 
     double spacing = (std::max)(font_size, point_size);
-    bool is_header = (derived().legend_header_.text() != "");
     // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
-    double legend_width(0); //
+    bool is_header = (derived().legend_header_.text() != "");
     size_t longest = 0;
     for(unsigned int i = 0; i < derived().series.size(); ++i)
     { // Find the longest text in all the data series.
@@ -377,7 +408,7 @@ namespace detail
         longest = siz;
       }
     }
-    legend_width = (6 + longest /2) * spacing;
+    double legend_width = (6 + longest /2) * spacing;
     // font_size is not exact because width varies.
     // Allow for a leading space, data marker symbol, space,
     // line in color (only if 2-D and line option selected TODO)
@@ -387,14 +418,13 @@ namespace detail
     // the legend title and text_margin_s around it
     // (if any) plus a text_margin_ top and bottom.
     // Add more height depending on the number of lines of text.
-    double legend_height = 2. * spacing;
-    if (derived().use_title) // plot title
-      // && derived().legend_header_.text() != "" leave space even if no string?
+    double legend_height = spacing;
+    if ( (derived().use_title) // plot title
+       && (derived().legend_header_.text() != "")) // & really is a legend title.
     {
-      legend_height += spacing;
+      legend_height += 2 * spacing;
     }
     legend_height += num_points * spacing * 2; // Space for the point symbols & text.
-    // legend_height += spacing;  // At bottom. Not needed?
 
     // x, y position of legend 'box' top left, level with top right of plot window.
     double legend_x_start(derived().plot_x2);
@@ -403,13 +433,13 @@ namespace detail
 
     int x_size = derived().image.x_size();
     if((legend_x_start + legend_width) > x_size)
-    { // Use all the image width available.
+    { // Use nearly all the image width available.
       std::cout << "Legend text line was too long by "
        << ((legend_x_start + legend_width) - x_size)
        << " pixels,  & so truncated. legend_width == " << legend_width << std::endl;
       // For example:
       // "Legend text line was too long by about 84 pixels & so truncated. legend_width == 252"
-      legend_width = x_size - legend_x_start - derived().text_margin_;
+      legend_width = x_size - legend_x_start - spacing; // derived().text_margin_;
       // text_margin_ just allows the border box to show.
     }
 
@@ -417,7 +447,7 @@ namespace detail
     g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
     g_ptr->push_back(new
       rect_element(legend_x_start, legend_y_start, legend_width, legend_height));
-    derived().legend_x1_ = legend_x_start; // Save for acces by legend_to_left
+    derived().legend_x1_ = legend_x_start; // Save for access by legend_to_left.
     derived().legend_x2_ = legend_width;
     derived().legend_y1_ = legend_y_start; // and legend_bottom_right.
     derived().legend_y2_ = legend_height;
@@ -443,32 +473,27 @@ namespace detail
       g_inner_ptr->style()
         .fill_color(derived().series[i].point_style.fill_color)
         .stroke_color(derived().series[i].point_style.stroke_color);
+      if(derived().series[i].point_style.shape != none)
+      {
+        draw_plot_point( // Plot point like circle, square...
+          legend_x_start + spacing, // space before point marker.
+          legend_y_pos,
+          *g_inner_ptr,
+          derived().series[i].point_style);
+        legend_x_pos += 2 * spacing;
+      }
 
-      draw_plot_point( // Plot point like circle, square...
-        legend_x_start + spacing, // space before point marker.
-        legend_y_pos,
-        *g_inner_ptr,
-        derived().series[i].point_style);
-      legend_x_pos += 2 * spacing ;
-
-      // TODO line markers properly
-      // only really applicable to 2-D sets plot_line_style,
-      // but svg_1d_plot does NOT DEFINE line_style.
-      // Meanwhile use svg_1d_plot .use_line and point color.
-      // SHOULD use both fill & stroke colors from the line's style.
-      // bool line_on = derived().series[i].plot_line_style.line_on;
-      // svg_color col = derived().series[i].plot_line_style.color;
+      // Line markers  - only really applicable to 2-D sets plot_line_style,
       if (derived().use_line)
       { // Need to draw a short line to show color for that data series.
-        g_inner_ptr->style() // Use fill & stroke colors from point style. (Should be plot_line_style!)
-          .fill_color(derived().series[i].point_style.fill_color)
-          .stroke_color(derived().series[i].point_style.stroke_color);
+        g_inner_ptr->style() // Use fill & stroke colors from line style.
+          .stroke_color(derived().series[i].line_style.color);
         g_inner_ptr->push_back(new line_element(
-          legend_x_pos,
+          legend_x_pos + spacing /2., // half space leading space
           legend_y_pos,
-          legend_x_pos + spacing, // line sample is one char long.
+          legend_x_pos + spacing * 1.5, // line sample is one char long.
           legend_y_pos));
-        legend_x_pos += 2 * spacing; // line & space.
+        legend_x_pos += 2. * spacing; // short line & space.
       } // use_line
 
       // Legend text for each Data Series added to the plot.
@@ -477,8 +502,9 @@ namespace detail
         legend_x_pos, // allow space for the marker.
         legend_y_pos,
         derived().series[i].title, // Text for this data series.
-        derived().legend_header_.font_size(), // font size
-        "", "", "", "", "", // TODO full font info for legend needed here?
+        derived().legend_header_.font_size(), // font size &
+        derived().legend_header_.font_family(), // font family.
+        "", "", "", "",
         left_align));
       legend_y_pos += 2 * spacing;
     } // for
@@ -1049,21 +1075,15 @@ public:
     return derived().image.coord_precision();
   }
 
-  Derived& value_precision(int digits)
-  { // Precision of tick label values in decimal digits (default 3).
-    derived().value_precision_(digits);
+  Derived& x_value_precision(int digits)
+  { // Precision of X tick label values in decimal digits (default 3).
+    derived().x_value_precision_ = digits;
     return derived();
   }
 
-  int value_precision()
+  int x_value_precision()
   { //
-    return derived().value_precision_;
-  }
-
-  Derived& title(const std::string title)
-  { // Plot title.
-    derived().title_info.text(title);
-    return derived();
+    return derived().x_value_precision_;
   }
 
   const std::string title()
@@ -1159,6 +1179,17 @@ public:
     return derived().title_info.font_alignment();
   }
 
+  Derived& legend_width(double width)
+  {
+    derived().legend_width_ = width;
+    return derived();
+  }
+
+  double legend_width()
+  {
+    return derived().legend_width_;
+  }
+
   Derived& legend_title(const std::string title)
   {
     derived().legend_header_.text(title);
@@ -1168,6 +1199,17 @@ public:
   const std::string legend_title()
   {
     return derived().legend_header_.text();
+  }
+
+  Derived& legend_font_family(const std::string& family)
+  {
+    derived().legend_header_.font_family(family);
+    return derived();
+  }
+
+  const std::string& legend_font_family()
+  {
+    return derived().legend_header_.font_family();
   }
 
   Derived& legend_title_font_size(unsigned int size)
@@ -1347,7 +1389,6 @@ public:
     return derived().plot_y2;
   }
 
-
   std::pair<double, double> plot_window_y()
   {
     std::pair<double, double> r;
@@ -1423,6 +1464,24 @@ public:
     return derived().x_label_info.font_family();
   }
 
+  Derived& x_value_ioflags(int flags)
+  { // IO flags of X tick label values (default 0X201).
+    derived().x_value_ioflags_ = flags;
+    return derived();
+  }
+
+  int x_value_ioflags()
+  { // ALL stream ioflags for control of format of X value labels.
+    return derived().x_value_ioflags_;
+  }
+
+  Derived& title(const std::string title)
+  { // Plot title.
+    derived().title_info.text(title);
+    return derived();
+  }
+
+
   Derived& x_axis_label_color(const svg_color& col)
   { // Set BOTH stroke and fill to the same color.
     derived().image.get_g_element(detail::PLOT_X_LABEL).style().fill_color(col);
@@ -1480,15 +1539,15 @@ public:
     return derived().use_x_major_labels;
   }
 
-  Derived& x_major_label_up(bool cmd)
+  Derived& x_major_label_rotation(int rot)
   {
-    derived().use_x_label_up_ = cmd;
+    derived().x_label_rotation_ = rot;
     return derived();
   }
 
-  bool x_major_label_up()
+  int x_major_label_rotation()
   {
-    return derived().use_x_label_up_;
+    return derived().x_label_rotation_;
   }
 
   Derived& title_on(bool cmd)
@@ -1574,13 +1633,13 @@ public:
     return derived().image.get_g_element(PLOT_TITLE).style().stroke_color();
   }
 
-  Derived& title_width(double width)
+  Derived& title_font_width(double width)
   { // width of text is effectively the boldness
     derived().image.get_g_element(PLOT_TITLE).style().stroke_width(width); 
     return derived();
   }
 
-  double title_width()
+  double title_font_width()
   {
     return derived().image.get_g_element(PLOT_TITLE).style().stroke_width();
   }
@@ -1598,13 +1657,13 @@ public:
     return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color();
   }
 
-  Derived& legend_width(double width)
-  { // width of text is effectively the boldness
-    derived().image.get_g_element(PLOT_LEGENDTEXT).style().stroke_width(width);
+  Derived& legend_font_width(double width)
+  { // width of text is effectively the boldness.
+    derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width(width);
     return derived();
   }
 
-  double legend_width()
+  double legend_font_width()
   {
     return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width();
   }

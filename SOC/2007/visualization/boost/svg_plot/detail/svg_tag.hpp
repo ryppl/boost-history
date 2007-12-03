@@ -340,9 +340,13 @@ namespace svg
   enum rotate_style
   { // Rotation in degrees from horizontal.
     horizontal = 0, // normal left to right.
+    uphill = -45, // slope up.
     upward = -90, // vertical writing up.
+    backup = -135, // slope up backwards.
+    downhill = 45, // slope down.
     downward = 90,  // vertical writing down.
-    upsidedown = 180 //
+    backdown = 135, // slope down backwards.
+    upsidedown = 180 // == -180
   };
 
   // text_element::text_element(double x, double y,

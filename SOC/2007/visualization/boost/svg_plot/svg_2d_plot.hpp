@@ -133,12 +133,17 @@ private:
   text_element title_info; // Plot title.
   text_element legend_header_; // legend box header or title (if any).
   text_element x_label_info; // For example: "length"
+  text_element x_label_value; // For example: "1.2" or "1.2e+001"
   text_element y_label_info; // For example: "volume"
   text_element x_units_info; // For example: "mm"
   text_element y_units_info; // 2-D only.
+  text_element y_label_value; // For example: "1.2" or "1.2e+001"
 
-  int value_precision_; // precision for tick value labels, usually 3 will suffice.
+  int x_value_precision_; // precision for tick value labels, usually 3 will suffice.
+  int y_value_precision_; // precision for tick value labels, usually 3 will suffice.
   // Used to decide how much space to allow for tick values.
+  int x_value_ioflags_;  // IO formatting flags for X-axis.
+  int y_value_ioflags_;  // IO formatting flags for Y-axis.
   double text_margin_; // Marginal space around text items like title,
   // as a fraction of font size, (pixels) (was fixed at 1.5).
   double border_margin_; // Marginal (pixels) space around the plot border.
@@ -166,8 +171,9 @@ private:
   // text width is effectively the boldness of the font.
   // 0 is default, 1 is bolder, 2 very bold...
   // TODO SVG has also a not yet implemented boldness.
-  double title_width_; 
-  double legend_width_;
+  double title_font_width_; 
+  double legend_font_width_;
+  double legend_width_; // width of legend box in pixels.
   double legend_x1_; // Left of legend box. (Optionally set by legend_position).
   double legend_y1_; // Top of legend box.
   // Size of legend box is controlled by its contents,
@@ -215,8 +221,8 @@ private:
   bool use_y_major_labels;
   bool use_x_label_units;
   bool use_y_label_units;
-  bool use_x_label_up_; // X_axis value labels written vertically up.
-  bool use_y_label_up_; // Y_axis value labels written vertically up.
+  int x_label_rotation_; // X_axis value labels written vertically up.
+  int y_label_rotation_; // Y_axis value labels written vertically up.
   bool use_x_major_grid_;
   bool use_x_minor_grid_;
   bool use_y_major_grid_;
@@ -256,22 +262,31 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     // See documentation for default settings rationale.
 
     title_info(0, 0, "Plot of data", 16, "Verdana", "", "", "", "", center_align, horizontal),
-    title_width_(1),  // text width is effectively the boldness of the font.
-    legend_width_(0.5),
+    title_font_width_(1),  // text width is effectively the boldness of the font.
+    legend_width_(200), // width of legend box (pixels)
+    legend_header_(0, 0, "", 14, "Verdana", "", "", "", "", center_align, horizontal),
+    legend_font_width_(0.5),
     x_label_info(0, 0, "X Axis", 14, "Verdana", "", "", "", "", center_align, horizontal),
+    x_label_value(0, 0, "", 12, "Verdana", "", "", "", "", center_align, horizontal),
+    // TODO use this and provide way to set'n'get separately.
     x_label_width_(0.5),
     y_label_info(0, 0, "Y Axis", 14, "Verdana", "", "", "", "", center_align, upward),
+    y_label_value(0, 0, "", 12, "Verdana", "", "", "", "", center_align, upward),
     y_label_width_(0.5),
+    x_label_rotation_(horizontal),
+    y_label_rotation_(horizontal),
     x_units_info(0, 0, "(units)", 14, "Verdana", "", "", "", "", center_align, horizontal),
     y_units_info(0, 0, "(units)", 14, "Verdana", "", "", "", "", center_align, upward),
     // Plot may look odd if font and size of label & units are different!
     // y_units_info(0, 0, "(units)", 11, "Times New Roman", "italic", "bold", "wider", "underline", right_align, upsidedown),
     // shows some values that might be useful if svg browsers are fully implemented
     // to support font modification to text characters.
-    value_precision_(3), // precision for tick value labels, usually 3 will suffice.
-    // TODO provide a way of controlling scientific format.
-    text_margin_(2.), // for text was 1.5 
-    // as a multiplier of the font size.
+    x_value_precision_(3), // precision for tick value labels, usually 3 will suffice.
+    x_value_ioflags_(std::ios::dec), // Provides a way of controlling scientific format, etc.
+    y_value_precision_(3), // precision for tick value labels, usually 3 will suffice.
+    y_value_ioflags_(std::ios::dec), // Provides a way of controlling scientific format, etc.
+    // Note that ALL the flags are set, overwriting the defaults.
+    text_margin_(2.), // for text, as a multiplier of the font size.
     border_margin_(5), // Prevent plot window box begin right on edge?
     // plot_x1, x2, y1, 2 are set in calculate_plot_window 
     border_width_(2), // width of border to plot window and legend box.
@@ -316,8 +331,6 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     use_y_label_units(false),
     use_x_major_labels(true), // tick value labels.
     use_y_major_labels(true),
-    use_x_label_up_(false),
-    use_y_label_up_(false),
     use_x_label(true), // "X-axis"
     use_y_label(true), // "Y-axis" - true for 2-D, false for 1-D.
     use_title(true),
@@ -361,10 +374,10 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     image.get_g_element(PLOT_Y_LABEL).style().stroke_color(black).stroke_width(y_label_width_);
     image.get_g_element(PLOT_VALUE_LABELS).style().stroke_color(black).stroke_width(x_label_width_); // text
     // TODO?? Y label width?
-    image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width(legend_width_);
-    image.get_g_element(PLOT_TITLE).style().stroke_width(title_width_); // 
+    image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width(legend_font_width_);
+    image.get_g_element(PLOT_TITLE).style().stroke_width(title_font_width_); // 
     image.get_g_element(PLOT_TITLE).style().stroke_color(black);
-    // If color is not set, then get a very 'thin' font and width has not effect! 
+    // If color is not set, then get a very 'thin' font and width has no effect! 
 
     // Note that widths are stored in member data *and* copied here.
     // Not sure if this is wise but ...
@@ -384,7 +397,7 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     // Grids.
     // TODO these may not be needed here - they MUST be set at call time in case use_x_major_grid_ has changed.
     if(use_x_major_grid_)
-    {
+    { // pale blue.
       image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(x_major_grid_width_).stroke_color(svg_color(200, 220, 255));
     }
     if(use_x_minor_grid_)
@@ -466,31 +479,70 @@ private:
       plot_x2 -= plot_border_width();
       plot_y1 += plot_border_width();
       plot_y2 -= plot_border_width();
-
+      // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
+      // determine the width of digits, so an arbitrary width height ratio is used:
+      const double wh = 0.7; // width compared to font height (assume size is this).
+      static const double sin45 = 0.707;
       if(use_legend)
       { // Space for legend at right.
         // TODO what if want legend elsewhere?
-        plot_x2 -= 150;  // This width 150 is an arbitrary legend box width.
+        plot_x2 -= legend_width_;  // legend box width.
         // TODO size could depend on font_size & length of text??? Sounds tricky.
       }
       if (use_y_major_labels && use_y_ticks_on_plot_window_)
-      { // Move edge right to give space for value_precision_ digits. 
-        // (perhaps allow + 1 for negative sign? What about exponent?).
-        plot_x1 += y_label_info.font_size() * (value_precision_ * 0.7);
-        // 0.7 because not as wide as high.
-      }
-      if (use_x_major_labels && use_x_ticks_on_plot_window_)
-      { // Move bottom up to give space for value_precision_ digits.
-        // (perhaps + 1 for negative sign?).
-        if (use_x_label_up_)
-        {
-          plot_y2 -= x_label_info.font_size() * (value_precision_ * 0.7);
-          // 0.7 because not as wide as high.
+      { // Move plot window right to make space for value labels.
+        // We would really like to know the length of the longest value label here!
+        // Might convert the max and then use its .length()?
+        int l = (y_value_precision_ + 2);
+         if(y_value_ioflags_ & std::ios::scientific)
+         { // ALso need space for e, sign & 3 exponent digits = 5)
+            l += 5;
+         }
+         else if(y_value_ioflags_ & std::ios::fixed)
+         { // Need space for decimal point & sign & at least 1 more digit)
+            l += 3;
+         }
+        if (y_label_rotation_ == horizontal)
+        { // Move edge right to give space for y_value_precision_ digits.
+          plot_x1 += y_label_info.font_size() * (l * wh);
+        }
+        else if((y_label_rotation_ == upward) || (y_label_rotation_ == downward))
+        { // Only need one char width.
+          plot_x1 += y_label_info.font_size() * 1.5;
         }
         else
-        { // Only 1 char height needed.
-          plot_y2 -= x_label_info.font_size();
+        { // assume some slope 45? So diagonally down from tick,
+          // and takes a bit less room.
+          plot_x1 +=  y_label_info.font_size() * l * wh * sin45;
         }
+      }
+      if (use_x_major_labels && use_x_ticks_on_plot_window_)
+      { // Move bottom up to give space for x value labels
+        // x_value_precision_ digits.
+        // (perhaps + 1 for negative sign?).
+        double l = x_value_precision_ + 1 + 1; // sign & decimal point.
+        if (x_value_ioflags_ == std::ios::scientific)
+        { // space for e+000
+           l += 5;
+        }
+        else if(y_value_ioflags_ & std::ios::fixed)
+        { // Need space for decimal point & sign & at least 1 more digit)
+          l += 3;
+        }
+
+        if ((x_label_rotation_ == upward) || (x_label_rotation_ == downward))
+        { // need
+          l += 2; // space at top and bottom?
+        }
+        else if(x_label_rotation_ != horizontal)
+        { // Only 1 char height needed if horizontal.
+          l = 2;
+        }
+        else
+        { // assume some slope, say 45 sin(45) = 0.707?
+          l *= 0.707;
+        }
+        plot_y2 -= x_label_info.font_size() * (l * wh);
       }
       if(use_left_ticks)
       { // Reduce plot to give space for biggest of any external left ticks.
@@ -573,14 +625,13 @@ private:
   } // void draw_y_minor_ticks
 
   void draw_y_major_ticks(double value, path_element& tick_path, path_element& grid_path)
-  { // Draw Y axis major ticks, grids & tick value labels.
+  { // Draw Y axis major ticks, tick value labels & grids.
     double y1(value);
     transform_y(y1); // cartesian to SVG coordinates.
     double x1(0.); // left end of tick.
     double x2(image.y_size()); // right end of tick.
     if(use_y_major_grid_)
     { // Draw horizontal major grid line.
-
       if(!use_plot_window)
       { // TODO is this right?
         //if (use_title())
@@ -591,13 +642,14 @@ private:
         { // Start further right to give space for y axis value label.
           y1 -= y_label_info.font_size() * text_margin_ ;
         }
+
         if(use_left_ticks)
         { // And similarly for left ticks.
           y1 -= y_major_tick_length_;
         }
       }
       else
-      { // use_plot_window
+      { // Do use_plot_window.
         x1 = plot_x1 + 1;
         x2 = plot_x2 - 1;
       }
@@ -630,42 +682,60 @@ private:
     }
 
     if(use_y_major_labels)
-    { // Label the tick with value, for example "1.3"
+    { // Label the tick with value, for example "1.2"
       std::stringstream label;
-      // TODO precision(?) - may be ugly because precision(6) if we do nothing.
-      label << value; // Example: label.str() == "20" or "0.25"
+      label.precision(y_value_precision_);
+      label.flags(y_value_ioflags_); // set ALL IOflags.
+      label << value; // Example: label.str() == "20" or "0.25" or "1.2e+015"
       if(use_left_ticks)
       {
         if (y_minor_tick_length_ > y_minor_tick_length_)
-        { // In case some joker has made the minor ticks are long than the major,
+        { // In case some joker has made the minor ticks longer than the major,
           // we might need to move left more for the longer tick.
           x1 -= (y_minor_tick_length_ - y_minor_tick_length_);
         }
-        x1 -= y_label_info.font_size() / text_margin_; // font height.
+        x1 -= y_label_info.font_size(); // move left by a font width.
       }
       else
       { // No need to move if right tick, or none.
       }
-      
+      // Need to work out how much space value labels will need.
+      double y = y1;
+      align_style alignment = center_align;
       if(use_y_ticks_on_plot_window_)
-      { // Always want all values including "0" if labelling on the external plot window.
+      { // External to plot window style.
+        if(y_label_rotation_ == horizontal)
+        {  // Just shift down half a digit to center value digits on tick.
+          alignment = right_align;
+          y += y_label_info.font_size() / 2;
+        }
+        else if ((y_label_rotation_ == upward) || (y_label_rotation_ == downward))
+        {// Tick value label straight up or down vertically on y axis.
+         // No shift y down to center.
+          alignment = center_align;
+        }
+        else
+        { // Assume some 45 slope, so need about sqrt(2) less space?
+           x1 += y_label_info.font_size() * 0.5; // move left by half a font width.
+          // no y shift needed.
+          alignment = right_align;
+        }
+        // Always want all values including "0", if labeling external to plot window.
         image.get_g_element(detail::PLOT_VALUE_LABELS).text(
           x1,
-          y1 + y_label_info.font_size() / 2, // shift down to center value digits on tick.
-          label.str(), y_label_info.font_size(), "", "", "", "", "", right_align, horizontal);
-        // Might want to label tick values vertically on y axis?
-        // then use center_align and no shift down to center.
+          y,
+          label.str(), y_label_info.font_size(), "", "", "", "", "", alignment, y_label_rotation_);
       }
       else
-      { // Internal - value labels close to left of vertical Y-axis.
+      { // ! use_y_ticks_on_plot_window_Internal - value labels close to left of vertical Y-axis.
         if ((value != 0) && use_x_axis_lines_)
-        { // Avoid a zero ON the Y-axis if it would be cut through by the horizontal X-axis line.
+        { // Avoid a zero ON the Y-axis as it would be cut through by the horizontal X-axis line.
+          y += y_label_info.font_size() / 2; 
           image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1, 
-            y1,
-            label.str(), y_label_info.font_size(), y_label_info.font_family(),
-            "", "", "", "", center_align, // on the tick
-            upward); // -90 degree rotation.
-          // If want to write horizontal ??
+            y, // Just shift down half a digit to center value digits on tick.
+            label.str(), y_label_info.font_size(), y_label_info.font_family(), "", "", "", "",
+            center_align, // on the tick ???
+            y_label_rotation_); 
         }
       }
     } // if(use_y_major_labels)
@@ -739,14 +809,15 @@ private:
     }
 
     image.get_g_element(detail::PLOT_Y_LABEL).push_back(new
-      text_element(y_label_info.font_size() * text_margin_,
+      text_element(y_label_info.font_size() * 1.5,
       // shift over one char height to right from left edge of image.
       (plot_y2 + plot_y1) / 2., // center on the plot window.
       label, // "Y-Axis" for example.
        y_label_info.font_size(),
        y_label_info.font_family(),
-       "", "", "", "", center_align,
-      upward)); // Y label must be drawn vertically.
+       "", "", "", "",
+       center_align, // One might want it to left or right_align?
+       upward)); // Y label must be drawn vertically.
   } // draw_y_label
 
   void draw_straight_lines(const svg_2d_plot_series& series)
@@ -1039,7 +1110,6 @@ public: // Member functions
     return use_x_label;
   }
 
-
   svg_2d_plot& y_major_labels_on(bool cmd)
   {
     use_y_major_labels = cmd;
@@ -1051,15 +1121,15 @@ public: // Member functions
     return use_y_major_labels;
   }
 
-  svg_2d_plot& y_major_label_up(bool cmd)
+  svg_2d_plot& y_major_label_rotation(int rot)
   {
-    use_y_label_up_ = cmd;
+    y_label_rotation_ = rot;
     return *this;
   }
 
-  bool y_major_label_up()
+  int y_major_label_rotation()
   {
-    return use_y_label_up_;
+    return y_label_rotation_;
   }
 
   svg_2d_plot& y_axis_width(double width)
@@ -1072,6 +1142,34 @@ public: // Member functions
   {
     return image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_width();
   }
+
+  svg_2d_plot& y_value_precision(int digits)
+  { // Precision of Y tick label values in decimal digits (default 3).
+    y_value_precision_ = digits;
+    return *this;
+  }
+
+  int y_value_precision()
+  { // Precision of Y tick label values in decimal digits (default 3).
+    return y_value_precision_;
+  }
+
+  svg_2d_plot& y_value_ioflags(int flags)
+  { // IO flags of Y tick label values (default 0X201).
+    y_value_ioflags_ = flags;
+    return *this;
+  }
+
+  int y_value_ioflags()
+  { // ALL stream ioflags for control of format of Y value labels.
+    return y_value_ioflags_;
+  }
+
+  //Derived& title(const std::string title)
+  //{ // Plot title.
+  //  derived().title_info.text(title);
+  //  return derived();
+  //}
 
   svg_2d_plot& y_axis_color(const svg_color& col)
   { // Set BOTH stroke and fill to the same color.
@@ -1377,7 +1475,7 @@ public: // Member functions
   }
 
   svg_2d_plot& y_label_font_size(unsigned int i)
-  { // TODO May be best to tie these two font sizes together?
+  { // May be best to tie label & unit font sizes together?
     y_label_info.font_size(i);
     // y_units_info.font_size(i);
     return *this;
