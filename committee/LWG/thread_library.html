@@ -49,8 +49,11 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-15
 <h2>Contents</h2>
 
 <p>
-<br><a href="#Introduction">Introduction</a>
-<br><a href="#utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a>
+<br><a href="#Introduction">Introduction</a> <br>
+<a href="#library">Chapter 17&nbsp;&nbsp; Library introduction [library]</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#defns.thread.blocked">17.1.? blocked thread 
+[defns.thread.blocked]</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#defns.deadlock">17.1.? deadlock [defns.deadlock]</a><br><a href="#utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#function.objects">20.5 Function objects [function.objects]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#unord.hash">20.5.15 Class template <code>hash</code> [unord.hash]</a>
 <br><a href="#thread">Chapter 30&nbsp;&nbsp; Multi-threading library [thread]</a>
@@ -201,6 +204,28 @@ and 'Thread safety:'.  I think we would reduce confusion by
 separating the synchronization from the rest of the other attributes.
 That is, to have a named 'Sychronization:' attribute.]</b>
 </p>
+
+<h2><a name="library">Chapter 17&nbsp;&nbsp; Library introduction [library]</a></h2>
+
+<p>Add the following definitions:</p>
+
+<blockquote>
+
+<h4>17.1.? blocked thread [<a name="defns.thread.blocked">defns.thread.blocked</a>]</h4>
+
+<p>a thread that is waiting for some condition (other than the availability of a 
+processor) to be satisfied before it can continue execution <sup>(footnote)</sup>. 
+As a verb, <i><b>to block</b></i> is to place a thread in the blocked state, and
+<b><i>to unblock</i></b> is to place a thread in the unblocked state.<br>
+<br>
+<sup>(footnote)</sup> This definition is taken from POSIX.</p>
+
+<h4>17.1.? deadlock [<a name="defns.deadlock">defns.deadlock</a>]</h4>
+
+<p>two or more threads are unable to continue execution because each is blocked 
+waiting for one or more of the others to satisfy some condition.</p>
+
+</blockquote>
 
 <h2><a name="utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a></h2>
 
@@ -2368,9 +2393,8 @@ template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, 
 <dt>Requires:</dt>
 <dd>
 <p>
-Each template parameter type must supply the following member functions
-with semantics
-corresponding to the Mutex concept,
+Each template parameter type supplies the following member functions
+with semantics that meet the requirements of the Mutex concept,
 except that <code>try_lock</code> is allowed to throw an
 exception.
 [<i>Note:</i>
@@ -2389,24 +2413,24 @@ void unlock();
 
 <dt>Effects:</dt>
 <dd>
-The functions attempts to lock all arguments
-without blocking by calling <code>try_lock()</code>
-on each of them.
-If any argument can not be locked,
-then all arguments which have already been locked will
-be unlocked.
-On return, either all arguments will be locked, or none of them will be locked.
-If an
-exception is thrown by a call to <code>try_lock()</code>, there are no effects.
-</dd>
+Calls <code>try_lock()</code> for each argument in order beginning with the 
+first until either all arguments have been processed, a call to <code>try_lock()</code> 
+returns <code>false</code>, or a call to <code>try_lock()</code> throws an 
+exception. If a call to <code>try_lock()</code> returns <code>false</code> or 
+throws an exception, the <code>unlock()</code> function is called for any prior 
+arguments.</dd>
+
+</dl>
+<dl>
 
 <dt>Returns:</dt>
 <dd>
-If all arguments were successfully locked, returns <code>-1</code>.
+If all calls to <code>try_lock()</code> returned <code>true</code>, returns <code>-1</code>.
 Otherwise returns a 0-based index
-value indicating
-which argument failed to lock.
-</dd>
+value indicating for
+which argument <code>try_lock()</code> returned <code>false</code>.&nbsp; <i>
+[Note:</i> On return, either all arguments will be locked or none will be 
+locked. <i>-- end note]</i></dd>
 </dl>
 </blockquote>
 
@@ -2419,9 +2443,8 @@ template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&
 <dt>Requires:</dt>
 <dd>
 <p>
-Each template parameter type must supply the following member functions
-with semantics
-corresponding to the Mutex concept,
+Each template parameter type supplies the following member functions
+with semantics that meet the requirements of the Mutex concept,
 except that <code>try_lock</code> is allowed to
 throw an exception
 [<i>Note:</i>
@@ -2441,11 +2464,14 @@ void unlock();
 
 <dt>Effects:</dt>
 <dd>
-All arguments are locked with an algorithm that avoids deadlock.
-If an exception is thrown
-by a call to <code>lock()</code> or <code>try_lock()</code>,
-there are no effects.
-</dd>
+All arguments are locked via a sequence of calls to <code>lock()</code>, <code>
+try_lock()</code>, or <code>unlock()</code>. The sequence of calls shall not 
+result in deadlock, but is otherwise unspecified. [Note: Implementations are 
+required to use a deadlock avoidance algorithm such as try-and-back-off, but the 
+specific algorithm is unspecified to avoid over-constraining implementors. --end 
+note] If an exception is thrown by a call to <code>lock()</code> or <code>
+try_lock()</code>, then <code>unlock()</code> will be called for any argument 
+which had been locked by a call to <code>lock()</code> or <code>try_lock()</code>.</dd>
 </dl>
 </blockquote>
 

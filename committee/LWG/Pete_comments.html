@@ -139,11 +139,16 @@ or transferred away from the <code>lock_guard</code>.&quot; The last sentence ap
   <i>Fixed. Wording changed. Wording posted to list to make sure others are 
   happy with it.</i><br>
 &nbsp;</li>
-  <li>generic locking algorithms: is there a requirement that the locks be 
+  <li>&#10004;  generic locking algorithms: is there a requirement that the locks be 
   attempted in any particular order?<br>
+  <br>
+  <i>Yes, for try_lock, no, for lock. Text clarified.</i><br>
 &nbsp;</li>
-  <li>generic locking algorithms, lock: what does &quot;an algorithm that avoids 
+  <li>&#10004;  generic locking algorithms, lock: what does &quot;an algorithm that avoids 
   deadlocks&quot; mean? What, exactly, is required?<br>
+  <br>
+  <i>Definitions for &quot;blocked thread&quot; and &quot;deadlock&quot; added to chapter 17. 
+  Generic locking algorithms text clarified accordingly.</i><br>
 &nbsp;</li>
   <li>&#10004; <a name="issue24">condition_variable</a>::wait: &quot;... unless lock refers to the same underlying 
   mutex object.&quot; Same as what?<br>
@@ -176,6 +181,11 @@ or transferred away from the <code>lock_guard</code>.&quot; The last sentence ap
   <li>&#10004; Use &quot;thread&quot; to describe a &quot;thread of execution&quot;. Use the term &quot;thread 
   object&quot; to describe objects of class thread. (Added by Beman, based on 
   guidance from Pete.)<br>
+  <br>
+  <i>Changed. Retrained a few usages of &quot;thread of execution&quot; relating to 
+  classes thread and thread::id where both thread objects and threads of 
+  execution are being discussed, and it is otherwise very easy to confuse the 
+  two.</i><br>
 &nbsp;</li>
   <li>&#10004; condition_variable::wait and time_wait specify &quot;<i>Throws:</i> May throw <tt>system_error</tt> if a precondition is not met.&quot; 
   That's redundant since precondition violations can always result in an 
