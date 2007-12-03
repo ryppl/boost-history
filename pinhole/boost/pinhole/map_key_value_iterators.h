@@ -8,6 +8,7 @@
 #ifndef BOOST_MAP_KEY_VALUE_ITERATORS
 #define BOOST_MAP_KEY_VALUE_ITERATORS
 
+#include <boost/config.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning(disable: 4561 4996)

@@ -31,7 +31,7 @@
 #endif
 
 #define BOOST_SETTER(c) boost::bind(c, this, _1)
-#if defined(BOOST_MSVC) && (_MSC_VER > 1310)
+#if defined(BOOST_MSVC) && (_MSC_VER > 1310) && (_MSC_VER <= 1400)
     #define BOOST_GETTER(c) boost::bind(boost::mem_fn(c), this)
 #else
     #define BOOST_GETTER(c) boost::bind(c, this)
@@ -84,13 +84,13 @@ namespace boost { namespace pinhole
         return boost::bind<T>(property_system_var_getter<T>(t));
     }
 
-    #define BOOST_GETTER_VAR(c) property_system_var_getter_builder(c)
+    #define BOOST_GETTER_VAR(c) boost::pinhole::property_system_var_getter_builder(c)
 
     struct no_setter_struct {};
     struct no_getter_struct {};
     
-    #define BOOST_SETTER_NONE no_setter_struct()
-    #define BOOST_GETTER_NONE no_getter_struct()
+    #define BOOST_SETTER_NONE boost::pinhole::no_setter_struct()
+    #define BOOST_GETTER_NONE boost::pinhole::no_getter_struct()
 
     class property_group;
 

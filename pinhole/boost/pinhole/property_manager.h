@@ -9,9 +9,11 @@
 #define BOOST_PROPERTY_MANAGER
 
 #include "exceptions.h"
+#include "map_key_value_iterators.h"
 #include <set>
 #include <string>
 
+#include <boost/config.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
@@ -77,7 +79,7 @@ namespace boost { namespace pinhole
         }
         
     public:
-        typedef multimap<string, property_group*> category_to_property_group_map;
+        typedef std::multimap<std::string, property_group*> category_to_property_group_map;
         typedef map_value_iterator<category_to_property_group_map::iterator> iterator;
         typedef map_value_iterator<category_to_property_group_map::const_iterator> const_iterator;
         
@@ -167,7 +169,7 @@ namespace boost { namespace pinhole
         /**
          * Retrieves an iterator pointing to the first property group for a specified category.
          */
-        iterator begin(const string& strCategory)
+        iterator begin(const std::string& strCategory)
         {
             return iterator( m_property_group_collection.lower_bound(strCategory) );
         }
@@ -175,7 +177,7 @@ namespace boost { namespace pinhole
         /**
          * Retrieves an iterator pointing to the first property group for a specified category.
          */
-        const_iterator begin(const string& strCategory) const
+        const_iterator begin(const std::string& strCategory) const
         {
             return const_iterator( m_property_group_collection.lower_bound(strCategory) );
         }
@@ -183,7 +185,7 @@ namespace boost { namespace pinhole
         /**
          * Retrieves an iterator pointing to the end of the root property list for a specified category.
          */
-        iterator end(const string& strCategory)
+        iterator end(const std::string& strCategory)
         {
             return iterator( m_property_group_collection.upper_bound(strCategory) );
         }
@@ -191,7 +193,7 @@ namespace boost { namespace pinhole
         /**
          * Retrieves an iterator pointing to the end of the root property list for a specified category.
          */
-        const_iterator end(const string& strCategory) const
+        const_iterator end(const std::string& strCategory) const
         {
             return  const_iterator( m_property_group_collection.upper_bound(strCategory) );
         }
@@ -199,7 +201,7 @@ namespace boost { namespace pinhole
         /**
          * Retrieves the number of property groups for a specified category.
          */
-        size_t count(const string& strCategory) const
+        size_t count(const std::string& strCategory) const
         {
             return m_property_group_collection.count(strCategory);
         }
@@ -240,13 +242,13 @@ namespace boost { namespace pinhole
         /**
          * Adds a new category for the property group.
          */
-        virtual void add_category( const string &category_name, property_group *group )
+        virtual void add_category( const std::string &category_name, property_group *group )
         {
             m_category_collection.insert( category_name );
             m_property_group_collection.insert( make_pair( category_name, group ) );
         }
         
-        virtual void remove_category( const string &category_name, property_group *group )
+        virtual void remove_category( const std::string &category_name, property_group *group )
         {
             category_to_property_group_map::iterator pgItr;
             for ( pgItr = m_property_group_collection.find( category_name ); 
