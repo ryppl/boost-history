@@ -68,10 +68,12 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-15
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.this">30.1.2 Namespace <code>this_thread</code> [thread.threads.this]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex">30.2 Mutexs and locks [thread.mutex]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.concept">30.2.1 Mutex concepts [thread.mutex.concept]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.concept">30.2.1 Mutex 
+requirements [thread.mutex.requirements]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.recursive">30.2.1.2 Class recursive_mutex [thread.mutex.recursive]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.concept">30.2.2 Timed Mutex concept [thread.timed.concept]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.concept">30.2.2 TimedMutex 
+requirements [thread.timedmutex.requirements]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.class">30.2.2.1 Class timed_mutex [thread.timed.class]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.recursive">30.2.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.intro">30.2.3 Locks [thread.lock.intro]</a>
@@ -1155,10 +1157,15 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </code></pre>
 </blockquote>
 
-<h4><a name="thread.mutex.concept">30.2.1 Mutex concepts [thread.mutex.concept]</a></h4>
+<h4><a name="thread.mutex.concept">30.2.1 Mutex requirements [thread.mutex.requirements]</a></h4>
 
 <p>
-Mutex objects provide synchronization operations to avoid data races.
+<a name="thread.mutex.concept">[thread.mutex.requirements]</a> describes 
+requirements on mutex types used to instantiate templates defined in the C++ 
+Standard Library</p>
+
+<p>
+Objects of mutex types provide synchronization operations to avoid data races.
 A
 mutex object supports mutual exclusion between threads by
 limiting its ownership to a single thread.
@@ -1171,7 +1178,12 @@ Mutexes may be either recursive or
 non-recursive.
 The syntax is the same for both recursive and
 non-recursive mutexes, but the semantics differ for the member functions
-as described below.
+as described below.</p>
+
+<p>
+The template definitions in the C++ Standard Library refer to the named Mutex 
+requirements whose details are set out below. In this description, <code>m</code> 
+is an object of a mutex type.
 </p>
 
 <p>
@@ -1179,11 +1191,8 @@ A mutex type
 shall be <code>DefaultConstructible</code> and <code>Destructible</code>.
 If initialization
 of a mutex type fails,
-an exception of type <code>system_error</code> shall be thrown.
-A mutex type is neither copyable
-nor movable.
-A mutex type shall have the following member functions:
-</p>
+an exception of type <code>system_error</code> shall be thrown. A mutex type is 
+neither copyable nor movable.</p>
 
 <p>
 <b>[Crowl:
@@ -1283,9 +1292,9 @@ these details.
 ]</b>
 </p>
 
-<pre><code>
-void lock();
-</code></pre>
+<p>
+The expression <code>m.lock()</code> shall be well-defined, and have the 
+following semantics:</p>
 
 <blockquote>
 <dl>
@@ -1299,6 +1308,9 @@ For non-recursive mutexes the current thread shall not own the mutex.
 The current thread will block until the mutex is not owned by another thread.
 Upon successful completion, the current thread owns the mutex.
 </dd>
+
+<dt>Return type:</dt>
+<dd><code>void</code></dd>
 
 <dt>Synchronization:</dt>
 <dd>
@@ -1314,9 +1326,9 @@ possible error conditions are implementation defined.
 </dl>
 </blockquote>
 
-<pre><code>
-bool try_lock();
-</code></pre>
+<p><code><br>
+</code>The expression <code>m.try_lock()</code> shall be well-defined, and have 
+the following semantics:</p>
 
 <blockquote>
 <dl>
@@ -1333,6 +1345,9 @@ If ownership is not obtained,
 there is no effect and <code>try_lock()</code> immediately returns.
 </dd>
 
+<dt>Return type:</dt>
+<dd><code>bool</code></dd>
+
 <dt>Returns:</dt>
 <dd>
 If ownership of the mutex was obtained for the current thread,
@@ -1342,7 +1357,7 @@ otherwise,
 An implementation may fail to obtain the lock
 even if it is not held by any other thread.
 [<i>Note:</i>
-This spurious failure should be uncommon.
+This spurious failure is normally uncommon.
 &mdash;<i>end note</i>]
 </dd>
 
@@ -1367,9 +1382,9 @@ Nothing.
 </dl>
 </blockquote>
 
-<pre><code>
-void unlock();
-</code></pre>
+<p><code><br>
+</code>The expression <code>m.unlock()</code> shall be well-defined, and have 
+the following semantics:</p>
 
 <blockquote>
 <dl>
@@ -1387,6 +1402,9 @@ the same number of times which the mutex was locked
 (via either <code>lock()</code> or <code>try_lock()</code>
 or by any other locking function) before ownership is released.
 </dd>
+
+<dt>Return type:</dt>
+<dd><code>void</code></dd>
 
 <dt>Synchronization:</dt>
 <dd>
@@ -1467,18 +1485,17 @@ which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4><a name="thread.timed.concept">30.2.2 Timed Mutex concept [thread.timed.concept]</a></h4>
+<h4><a name="thread.timed.concept">30.2.2 TimedMutex requirements [thread.timedmutex.requirements]</a></h4>
 
 <p>
-To meet the requirements of the Timed Mutex concept,
-types are required to meet the requirements of the Mutex concept
-and to provide the member functions <code>timed_lock</code>.
-</p>
+To meet the  TimedMutex requirements,
+types are required to meet the Mutex requirements. In addition, one or the other 
+of the following requirements shall be met, where <code>rel_time</code> denotes 
+an rvalue of a type meeting the Duration([]) requirements or <code>abs_time</code> 
+denotes an rvalue of type <code>system_time</code>:</p>
 
-<pre><code>
-template &lt;class Duration&gt;
-    bool timed_lock(const Duration&amp; rel_time);
-</code></pre>
+<p>The expression <code>m.timed_lock(rel_time)</code> shall be well-defined, and 
+have the following semantics:</p>
 
 <blockquote>
 <dl>
@@ -1508,6 +1525,9 @@ but implementations are expected to make a strong effort to do so.
 &mdash;<i>end note</i>]
 </dd>
 
+<dt>Return type:</dt>
+<dd><code>bool</code></dd>
+
 <dt>Returns:</dt>
 <dd>
 <code>true</code> if ownership was obtained, otherwise <code>false</code>.
@@ -1526,44 +1546,40 @@ Nothing.
 </dl>
 </blockquote>
 
-<pre><code>
-bool timed_lock(const system_time&amp; abs_time);
-</code></pre>
+<p><code><br>
+</code>The expression <code>m.timed_lock(abs_time)</code> shall be well-defined, 
+and have the following semantics:</p>
 
 <blockquote>
 <dl>
 <dt>Precondition:</dt>
 <dd>
-For non-recursive mutexes the current thread shall not own
-the mutex.
+For non-recursive mutexes the current thread shall not own the mutex. 
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-The function attempts to obtain ownership of the mutex
-by the specified time.
-If the indicated time has already passed,
-the function still attempts to obtain ownership without
-blocking (as if by calling <code>try_lock()</code>).
-If the function returns by the specified time,
-it shall have obtained ownership.
-[<i>Note:</i>
-As with <code>try_lock()</code>,
-there is no guarantee that ownership will be obtained
-if the lock is available,
-but implementations are expected to make a strong effort to do so.
-&mdash;<i>end note</i>]
+The function attempts to obtain ownership of the mutex by the specified time. If 
+the indicated time has already passed, the function still attempts to obtain 
+ownership without blocking (as if by calling <code>try_lock()</code>). If the 
+function returns by the specified time, it shall have obtained ownership. [<i>Note:</i> 
+As with <code>try_lock()</code>, there is no guarantee that ownership will be 
+obtained if the lock is available, but implementations are expected to make a 
+strong effort to do so. —<i>end note</i>] 
 </dd>
+
+<dt>Return type:</dt>
+<dd><code>bool</code></dd>
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if ownership was obtained, otherwise <code>false</code>.
+<code>true</code> if ownership was obtained, otherwise <code>false</code>. 
 </dd>
 
 <dt>Synchronization:</dt>
 <dd>
-If <code>timed_lock</code> returns <code>true</code>,
-it is an acquire operation [<cite>intro.multithread</cite>].
+If <code>timed_lock</code> returns <code>true</code>, it is an acquire operation 
+[<cite>intro.multithread</cite>]. 
 </dd>
 
 <dt>Throws:</dt>
@@ -1605,7 +1621,7 @@ public:
 
 <p>
 The class <code>timed_mutex</code> provides a non-recursive mutex type
-that satisfies all of the Timed Mutex requirements.
+that satisfies all of the TimedMutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -1641,7 +1657,7 @@ public:
 
 <p>
 The class <code>recursive_timed_mutex</code> provides a recursive mutex type
-that satisfies all of the Timed Mutex requirements.
+that satisfies all of the TimedMutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -2385,31 +2401,18 @@ Nothing.
 <h4><a name="thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
 
 <pre><code>
-template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
-</code></pre>
+template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);</code></pre>
 
-<blockquote>
-<dl>
-<dt>Requires:</dt>
-<dd>
-<p>
-Each template parameter type supplies the following member functions
-with semantics that meet the requirements of the Mutex concept,
+<p>Each template parameter type shall meet the Mutex requirements,
 except that <code>try_lock</code> is allowed to throw an
 exception.
 [<i>Note:</i>
 The <code>unique_lock</code> class template meets these requirements
 when suitable instantiated.
-&mdash;<i>end note</i>]
-</p>
+&mdash;<i>end note</i>] </p>
 
 <blockquote>
-<pre><code>
-bool try_lock();
-void unlock();
-</code></pre>
-</blockquote>
-</dd>
+<dl>
 
 <dt>Effects:</dt>
 <dd>
@@ -2435,16 +2438,10 @@ locked. <i>-- end note]</i></dd>
 </blockquote>
 
 <pre><code>
-template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
-</code></pre>
+template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);</code></pre>
 
-<blockquote>
-<dl>
-<dt>Requires:</dt>
-<dd>
 <p>
-Each template parameter type supplies the following member functions
-with semantics that meet the requirements of the Mutex concept,
+Each template parameter type shall meet the Mutex requirements,
 except that <code>try_lock</code> is allowed to
 throw an exception
 [<i>Note:</i>
@@ -2454,22 +2451,17 @@ when suitable instantiated.
 </p>
 
 <blockquote>
-<pre><code>
-void lock();
-bool try_lock();
-void unlock();
-</code></pre>
-</blockquote>
-</dd>
+<dl>
 
 <dt>Effects:</dt>
 <dd>
 All arguments are locked via a sequence of calls to <code>lock()</code>, <code>
-try_lock()</code>, or <code>unlock()</code>. The sequence of calls shall not 
-result in deadlock, but is otherwise unspecified. [Note: Implementations are 
-required to use a deadlock avoidance algorithm such as try-and-back-off, but the 
-specific algorithm is unspecified to avoid over-constraining implementors. --end 
-note] If an exception is thrown by a call to <code>lock()</code> or <code>
+try_lock()</code>, or <code>unlock()</code> on the argument. The sequence of calls shall not 
+result in deadlock, but is otherwise unspecified. <i>[Note:</i> A deadlock avoidance algorithm such as try-and-back-off 
+must be used, but the 
+specific algorithm is not specified to avoid over-constraining implementations.
+<i>--end 
+note]</i> If an exception is thrown by a call to <code>lock()</code> or <code>
 try_lock()</code>, then <code>unlock()</code> will be called for any argument 
 which had been locked by a call to <code>lock()</code> or <code>try_lock()</code>.</dd>
 </dl>
@@ -2968,8 +2960,7 @@ As if:
 </p>
 
 <blockquote>
-<pre><code>
-while (!<var>pred</var>())
+<pre><code>while (!<var>pred</var>())
 {
     if (!timed_wait(<var>lock</var>, <var>abs_time</var>))
         return <var>pred</var>();
@@ -3012,8 +3003,7 @@ As if:
 </p>
 
 <blockquote>
-<pre><code>
-return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>));
+<pre><code>return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>));
 </code></pre>
 </blockquote>
 </dd>
@@ -3052,11 +3042,9 @@ thread that some condition is met, or a system time is reached.
 </p>
 
 <p>
-The <code>Lock</code> type
-must support member functions <code>lock</code> and <code>unlock</code>
-with the semantics of the mutex concept.
-All of the standard mutex types
-meet this requirement.
+To meet the Lock requirement, types shall meet the Mutex requirement except that
+<code>try_lock</code> is not required. <i>[Note: </i>All of the standard mutex 
+types meet this requirement. <i>--end note] </i>
 </p>
 
 <blockquote>
@@ -3916,7 +3904,7 @@ system_time get_system_time();
 
 
 <p>
-[<b>Comment:</b>
+<i>[<b>Comment:</b>
 Typical personal computer platforms currently achieve microsecond level
 resolution from calls to the clock.
 The
@@ -3925,7 +3913,7 @@ Boost Date-Time Library</a>
 has a class that portably implements the proposed interface,
 but it uses different C-level interfaces depending on the operating
 system.
-&mdash;<b>end comment</b>]
+&mdash;<b>end comment</b>] </i>
 </p>
 
 <h3><a name="time.duration">31.3 Common Duration Functions [time.duration]</a></h3>
