@@ -80,7 +80,7 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-15
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.once">30.2.5 Call Once [thread.mutex.once]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.onceflag">30.2.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.2.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.2.5.2 Non-member function <code>call_once</code> [thread.threads.callonce]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condition">30.3 Condition variables [thread.condition]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.3.1 Class condition_variable [thread.condvar]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.3.2 Class condition_variable_any [thread.condvarany]</a>
@@ -2552,12 +2552,11 @@ The argument <code>func</code> (or a copy thereof) is called exactly once
 for the <code>once_flag</code> object specified by <code>flag</code>,
 as-if by invoking <code>func(args)</code>,
 even if <code>call_once</code> is called multiple times
-for the same <code>once_flag</code> object.
-If the invocation of <code>func</code> results in an exception being thrown,
+for the same <code>once_flag</code> object,
+except that if the invocation of <code>func</code> results in an exception being thrown,
 the exception is propagated to the caller
-and the effects are as-if this invocation of <code>call_once</code>
+and the effects on <code>once_flag</code> are as-if this invocation of <code>call_once</code>
 did not occur.
-<b>[Crowl: We cannot make this guarantee without transactions.]</b>
 </dd>
 
 <dt>Synchronization:</dt>
@@ -2577,10 +2576,14 @@ every non-exceptional <code>call_once</code> return.
 
 <dt>Thread safety:</dt>
 <dd>
-<b>[Crowl: Reword?]</b>
-The implementation shall not introduce a data race or deadlock
-when different threads simultaneously use the same <code>once_flag</code> object
-to call <code>call_once</code>.
+If multiple threads invoke <code>call_once</code> concurrently with the same <code>once_flag</code> object, and that
+<code>once_flag</code> object has not already been used as a parameter to a successfully-completed invocation of
+<code>call_once</code>, then all but one of the threads shall block, and the remaining thread shall invoke the argument
+<code>func</code>. Once an invocation of <code>func</code> has completed in a non-exceptional manner, then any threads blocked on
+this <code>once_flag</code> object shall be unblocked.
+
+Use of <code>call_once</code> from one thread with one <code>once_flag</code> object shall not affect any invocations of
+<code>call_once</code> from any thread with a different <code>once_flag</code> object.
 </dd>
 </dl>
 
