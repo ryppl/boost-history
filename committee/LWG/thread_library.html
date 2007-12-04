@@ -4,7 +4,7 @@
 <head>
 
 
-<meta http-equiv="content-type" content="text/html; charset=US-ASCII">
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
 <title>Thread Library Working Draft</title>
 
 <style type="text/css">
@@ -156,6 +156,7 @@ clarified.
 <p>
 This paper uses the following conventions in the HTML source
 to ease conversion into the format of the working paper.
+</p>
 
 <ul>
 
@@ -380,7 +381,7 @@ these members is inherently non-portable.
 </p>
 
 
-<h4><a name="thread.native">30.1.4 Duration Timeout [thread.duration]</a></h4>
+<h4><a name="thread.duration">30.1.4 Duration Timeout [thread.duration]</a></h4>
 
 <p>
 Several functions described in this clause take an argument specifying
@@ -389,7 +390,7 @@ absolute time based timeouts, so overloads for both are provided unless
 contraindicated. <i>--end note.</i>]
 </p>
 
-<h4><a name="thread.native">30.1.5 Thread Safety [thread.safety]</a></h4>
+<h4><a name="thread.safety">30.1.5 Thread Safety [thread.safety]</a></h4>
 
 <p>
 <b>[Crowl: I think we need a general statement that
@@ -402,7 +403,7 @@ operations on std::thread are not thread-safe unless specifically mentioned.
 
 <p>
 This section describes components to create and manage threads.
-<p>
+</p>
 
 <p>
 [<i>Note:</i>
@@ -1453,11 +1454,11 @@ It shall be a standard-layout class (chapter 9 [class]).
 <p>
 To meet the TimedMutex requirements,
 types are required to meet the Mutex requirements.
-In addition, one or the other of the following requirements shall be met,
+In addition, the following requirements shall be met,
 where <code>rel_time</code>
-denotes an rvalue of a type meeting the Duration([]) requirements
+denotes a value of a type meeting the Duration([time.duration]) requirements
 or <code>abs_time</code> 
-denotes an rvalue of type <code>system_time</code>:
+denotes a value of type <code>system_time</code>:
 </p>
 
 <p>
@@ -1534,7 +1535,7 @@ ownership without blocking (as if by calling <code>try_lock()</code>). If the
 function returns by the specified time, it shall have obtained ownership. [<i>Note:</i> 
 As with <code>try_lock()</code>, there is no guarantee that ownership will be 
 obtained if the lock is available, but implementations are expected to make a 
-strong effort to do so. —<i>end note</i>] 
+strong effort to do so. &mdash;<i>end note</i>] 
 </dd>
 
 <dt>Return type:</dt>
@@ -4245,7 +4246,7 @@ this
 </p>
 </dd>
 
-<dt>Remarks:<dt>
+<dt>Remarks:</dt>
 <dd>
 This will fail to compile
 if the <code>RhsDuration</code> is of finer resolution
