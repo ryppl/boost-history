@@ -27,18 +27,17 @@ namespace detail
     counter is an applicator with a postincrement application and default member of type volatile int.
     \param T Type of the internal counter variable.
 */
-template<typename Signature,
-typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-typename T=int,
-typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-typename Group = int,
-typename GroupCompare = std::less<Group> >
-class counter : public applicator<T, detail::postincrement<T>, Signature, OutSignal, Combiner, Group, GroupCompare>
+template<
+    typename Signature,
+    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
+    typename T=int,
+    typename SignalArgs=typename default_signal_args<Signature>::type
+ >
+class counter : public applicator<
+    counter<Signature, OutSignal, T, SignalArgs>,
+    T, detail::postincrement<T>, Signature, OutSignal, SignalArgs>
 {
-protected:
-    typedef applicator<T, detail::postincrement<T>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
 public:
-
     /** Initializes the internal counter to 0.
     */
     counter()
@@ -47,12 +46,12 @@ public:
     /** Sets the internal counter to 0.
     */
     void reset()
-    {   base_type::member = 0; }
+    {   counter::member = 0; }
 
     /** \return The internal signal counter.
     */
     T count() const
-    {   return base_type::member; }
+    {   return counter::member; }
 };
 
 } } // namespace boost::signals

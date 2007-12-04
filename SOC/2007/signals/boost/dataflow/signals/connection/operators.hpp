@@ -9,84 +9,23 @@
 #include <boost/dataflow/signals/support.hpp>
 
 namespace boost { namespace signals {
+
+// the include templates expect DATAFLOW_TEMPLATE_TAG to have
+// the mechanism type
+#define DATAFLOW_TEMPLATE_TAG boost::dataflow::signals::tag
+
+#   define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::signals::connect_mechanism
+#   define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
+#       define DATAFLOW_TEMPLATE_OPERATOR >>=
+#           include <boost/dataflow/templates/operator.hpp>
+#       undef DATAFLOW_TEMPLATE_OPERATOR
+#       define DATAFLOW_TEMPLATE_OPERATOR |
+#           include <boost/dataflow/templates/operator.hpp>
+#       undef DATAFLOW_TEMPLATE_OPERATOR
+#   undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+#   undef DATAFLOW_TEMPLATE_MECHANISM
+#undef DATAFLOW_TEMPLATE_TAG
     
-    ///	Connects two components (typically as a part of a chain of components).
-    /** This operator is identical to signals::operator| (it connects the
-    left component to the right component, and returns a reference to the left component),
-    except it is evaluated right to left.  This makes it semantics more suitable for
-    connecting a chain of components.
-    */
-template<typename Input, typename Output>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
-    >,
-    Input &
->::type
-operator >>= (Input &input, Output &output)
-{ connect(input, output); return input;}
-
-template<typename Input, typename Output>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
-    >,
-    Input &
->::type
-operator >>= (Input &input, const Output &output)
-{ connect(input, output); return input;}
-
-template<typename Input, typename Output>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
-    >,
-    const Input &
->::type
-operator >>= (const Input &input, Output &output)
-{ connect(input, output); return input;}
-
-template<typename Input, typename Output>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
-    >,
-    const Input &
->::type
-operator >>= (const Input &input, const Output &output)
-{ connect(input, output); return input;}
-    
-    /// Connects two components (typically as a part of branching from a single component).
-    /** This operator is identical to signals::operator>>=, (it connects the
-    left component to the right component, and returns a reference to the left component)
-    except it is evaluated left to right.  This makes its semantics more suitable for
-    branching connections.
-    */
-template<typename Input, typename Output>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
-    >,
-    Input &
->::type
-operator | (Input &input, Output &output)
-{ connect(input, output); return input;}
-
-template<typename Input, typename Output>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::producer, Input>,
-        boost::dataflow::is_port<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, Output>
-    >,
-    Input &
->::type
-operator | (Input &input, const Output &output)
-{ connect(input, output); return input;}
     
 } } // namespace boost::dataflow
 

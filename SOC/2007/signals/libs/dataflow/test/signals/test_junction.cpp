@@ -29,14 +29,14 @@ int test_main(int, char* [])
         BOOST_CHECK_EQUAL(counter1.count(), 2);
         BOOST_CHECK_EQUAL(counter2.count(), 2);
 
-        junction.disable();
+        junction.close();
         banger1.send();
         banger2.send();
 
         BOOST_CHECK_EQUAL(counter1.count(), 2);
         BOOST_CHECK_EQUAL(counter2.count(), 2);
 
-        junction.enable();
+        junction.open();
         banger1.send();
         banger2.send();
 
@@ -59,14 +59,14 @@ int test_main(int, char* [])
         BOOST_CHECK_EQUAL(counter1.count(), 2);
         BOOST_CHECK_EQUAL(counter2.count(), 2);
         
-        junction.disable();
+        junction.close();
         banger1();
         banger2();
         
         BOOST_CHECK_EQUAL(counter1.count(), 2);
         BOOST_CHECK_EQUAL(counter2.count(), 2);
         
-        junction.enable();
+        junction.open();
         banger1();
         banger2();
         

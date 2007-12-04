@@ -16,10 +16,13 @@
 
 namespace boost { namespace signals {
 
+template<typename Signature, typename T>
+class chain;
+
 namespace detail
 {
     template<typename Signature, typename T>
-    class chain_impl : public filter_base<typename T::signal_type>
+    class chain_impl : public filter_base<chain<Signature, T>, typename T::signal_type>
     {
     protected:
         typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
@@ -49,13 +52,13 @@ public:
             return boost::fusion::fused<T &>(components[0])(vec_par);
         }
         ///	The default signal coming out of the chain is the default signal of the last component in the chain.
-        typename T::signal_type &default_signal() const
+/*        typename T::signal_type &default_signal() const
         {
             return components[size-1].default_signal();
-        }
-        typename T::signal_type &get_proxied_producer() const
+        }*/
+        typename T::signal_type &default_signal() const
         {
-            return boost::dataflow::get_port<dataflow::signals::mechanism, dataflow::ports::producer>(components[size-1]);
+            return boost::dataflow::get_default_port<dataflow::directions::outgoing, dataflow::signals::connect_mechanism, dataflow::signals::tag >(components[size-1]);
         }
     private:
         void initialize(size_t copies, T *component=NULL)

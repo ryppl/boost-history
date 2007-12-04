@@ -11,10 +11,12 @@ bool disconnected = false;
 namespace boost { namespace dataflow { namespace extension {
 
 template<>
-struct unary_operation_impl<operations::disconnect_all, my_producer_traits>
+struct unary_operation_impl<my_producer_traits, operations::disconnect_all>
 {
-    template<typename Producer>
-    void operator()(Producer &)
+    typedef void result_type;
+    
+    template<typename Port>
+    void operator()(Port &)
     {
         disconnected = true;
     }
@@ -29,9 +31,14 @@ namespace df = boost::dataflow;
 int test_main(int, char* [])
 {
     my_producer p;
+    my_consumer c;
     
-    df::unary_operation<df::operations::disconnect_all, my_mechanism, df::ports::producer>(p);
+    BOOST_CHECK((df::is_unary_operable<my_producer, df::operations::disconnect_all>::value));
+    
+    df::unary_operation<df::operations::disconnect_all, df::default_tag>(p);
     BOOST_CHECK(disconnected);    
+    
+    BOOST_CHECK((!df::is_unary_operable<my_consumer, df::operations::disconnect_all>::value));
     
     return 0;
 } // int test_main(int, char* [])

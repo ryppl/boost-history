@@ -15,13 +15,11 @@ namespace boost { namespace signals {
 */
 template<typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
     >
-class timed_generator : public storage<Signature, OutSignal, Combiner, Group, GroupCompare>
+class timed_generator : public storage<Signature, OutSignal, SignalArgs>
 {
-    typedef storage<Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+    typedef storage<Signature, OutSignal, SignalArgs> base_type;
 public:    
 	/// Default constructor.  Starts the thread, but signals won't be sent until the enable() function is called.
 	timed_generator() : terminating(false), enabled(false)

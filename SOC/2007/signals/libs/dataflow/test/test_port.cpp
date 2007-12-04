@@ -13,10 +13,13 @@
 // for different port registrations
 
 //[ port_registration_example_prep
-struct some_mechanism;
+typedef df::port_traits<df::ports::producer, df::concepts::port> producer_traits;
+typedef df::port_traits<df::ports::consumer, df::concepts::port> consumer_traits;
 
-typedef df::port_traits<some_mechanism, df::ports::producer, df::concepts::port> producer_traits;
-typedef df::port_traits<some_mechanism, df::ports::consumer, df::concepts::port> consumer_traits;
+struct some_tag;
+struct whatever;
+
+typedef df::port_traits<df::ports::consumer, df::concepts::port, some_tag> other_consumer_traits;
 
 //]
 
@@ -29,11 +32,12 @@ struct intrusive_producer_port
     typedef producer_traits port_traits;
 };
 
-// Intrusive registration of multiple ports
+// Intrusive registration of a multiple ports
 struct intrusive_producer_consumer_port
 {
-    // intrusive_filter_port is a ProducerPort and a ConsumerPort
-    typedef boost::mpl::vector<producer_traits, consumer_traits> port_traits;
+    // intrusive_producer_port is a ProducerPort for the default_tag,
+    // and a ConsumerPort for some_tag
+    typedef boost::mpl::vector<producer_traits, other_consumer_traits> port_traits;
 };
 //]
 
@@ -46,10 +50,9 @@ struct non_intrusive_port
 
 namespace boost { namespace dataflow {
 
-// register_port_traits holds the PortTraits type of a Port, keyed by Mechanism
-// and PortCategory
+// register_port_traits holds the PortTraits type of a Port
 template<>
-struct register_port_traits<some_mechanism, df::ports::producer, non_intrusive_port>
+struct register_port_traits<non_intrusive_port>
 {
     typedef producer_traits type;
 };
@@ -79,13 +82,11 @@ struct non_intrusive_port_base
 
 namespace boost { namespace dataflow {
 
-// register_port_traits holds the PortTraits type of a Port, keyed by Mechanism
-// and PortCategory
+// register_port_traits holds the PortTraits type of a Port
 template<typename T>
 struct register_port_traits<
-    some_mechanism,
-    df::ports::producer,
     T,
+    default_tag,
     typename boost::enable_if<
         boost::is_base_of<non_intrusive_port_base, T>
     >::type>
@@ -131,36 +132,29 @@ int test_main(int, char* [])
     BOOST_CHECK(!df::is_port_traits<incomplete>::value);
     BOOST_CHECK(!df::is_port_traits<empty>::value);
     
-    BOOST_CHECK(( df::is_port<my_mechanism, df::ports::producer, my_producer>::value ));
-    BOOST_CHECK(( df::is_port<my_mechanism, df::ports::consumer, my_consumer>::value ));
+    BOOST_CHECK(( df::is_port<my_producer>::value ));
+    BOOST_CHECK(( df::is_port<my_consumer>::value ));
     
-    BOOST_CHECK(( !df::is_port<my_mechanism, df::ports::producer, incomplete>::value ));
-    BOOST_CHECK(( !df::is_port<my_mechanism, df::ports::producer, empty>::value ));
+    BOOST_CHECK(( !df::is_port<empty>::value ));
     
     my_producer p;
-    
-    BOOST_CHECK_EQUAL(&p, (&df::get_port<my_mechanism, df::ports::producer>(p) ));
-    BOOST_CHECK(( boost::is_same<df::get_port_result_type<my_mechanism, df::ports::producer, my_producer>::type, my_producer &>::value ));
-    
-    const volatile my_producer cp(p);
-    
-    BOOST_CHECK_EQUAL(&cp, (&df::get_port<my_mechanism, df::ports::producer>(cp)));
-    BOOST_CHECK(( boost::is_same<df::get_port_result_type<my_mechanism, df::ports::producer, const volatile my_producer>::type, const volatile my_producer &>::value ));
-    
+                
     // check registrations
     //[ port_registration_check_example
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::producer, intrusive_producer_port>::value ));
-
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::producer, intrusive_producer_consumer_port>::value ));
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::consumer, intrusive_producer_consumer_port>::value ));
+    BOOST_CHECK(( df::is_port<intrusive_producer_port>::value ));
     
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::producer, non_intrusive_port>::value ));
-
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::producer, non_intrusive_port2>::value ));
+    BOOST_CHECK(( df::is_port<intrusive_producer_consumer_port, some_tag>::value ));
     
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::producer, non_intrusive_port_descendant>::value ));
+    BOOST_CHECK(( df::is_port<non_intrusive_port>::value ));
 
-    BOOST_CHECK(( df::is_port<some_mechanism, df::ports::producer, non_intrusive_port_descendant2>::value ));
+    BOOST_CHECK(( df::is_port<non_intrusive_port2>::value ));
+    
+    BOOST_CHECK(( df::is_port<non_intrusive_port_descendant>::value ));
+
+    BOOST_CHECK(( df::is_port<non_intrusive_port_descendant2>::value ));
+    
+    BOOST_CHECK(( df::has_default_port<my_producer, whatever, whatever>::value ));
+    BOOST_CHECK_EQUAL(( &df::get_default_port<whatever, whatever, df::default_tag>(p)), &p );
     //]
     return 0;
 } // int test_main(int, char* [])

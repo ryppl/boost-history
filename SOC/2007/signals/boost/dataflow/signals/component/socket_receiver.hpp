@@ -25,12 +25,11 @@ namespace boost { namespace signals {
 */
 template<typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group> >
-class socket_receiver : public storage<Signature, OutSignal, Combiner, Group, GroupCompare>
+    typename SignalArgs=typename default_signal_args<Signature>::type
+>
+class socket_receiver : public storage<Signature, OutSignal, SignalArgs>
 {
-    typedef storage<Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+    typedef storage<Signature, OutSignal, SignalArgs> base_type;
 
 public:
     /// Initializes the socket_sender to use the provided socket.

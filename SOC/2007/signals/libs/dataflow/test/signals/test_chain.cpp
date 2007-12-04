@@ -16,14 +16,14 @@
 using namespace boost;
 
 //[ test_chain_classes
-class UnfusedDoublerClass : public signals::filter<void (float)>
+class UnfusedDoublerClass : public signals::filter<UnfusedDoublerClass, void (float)>
 {
 public:
     typedef void result_type;
 	void operator()(float x) {out(2*x);}
 };
 
-class FusedDoublerClass : public signals::filter<void (float), signals::fused>
+class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (float), signals::fused>
 {
 public:
     typedef void result_type;

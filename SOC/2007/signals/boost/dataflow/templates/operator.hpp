@@ -4,6 +4,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
+#ifndef DATAFLOW_TEMPLATE_TAG
+#error DATAFLOW_TEMPLATE_TAG undefined.
+#endif
 #ifndef DATAFLOW_TEMPLATE_MECHANISM
 #error DATAFLOW_TEMPLATE_MECHANISM undefined.
 #endif
@@ -13,47 +16,23 @@
 #ifndef DATAFLOW_TEMPLATE_BINARY_OPERATION
 #error DATAFLOW_TEMPLATE_OPERATOR undefined.
 #endif
-
-template<typename Producer, typename Consumer>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::producer, Producer>,
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::consumer, Consumer>
-    >,
-    Producer &
+    
+template<typename OutgoingPort, typename IncomingPort>
+inline typename enable_if<
+    mpl::and_<
+        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::directions::outgoing, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
+        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::directions::incoming, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
+    >, OutgoingPort &
 >::type
-operator DATAFLOW_TEMPLATE_OPERATOR (Producer &producer, Consumer &consumer)
-{ DATAFLOW_TEMPLATE_BINARY_OPERATION(producer, consumer); return producer;}
+operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &outgoing, IncomingPort &incoming)
+{ DATAFLOW_TEMPLATE_BINARY_OPERATION(outgoing, incoming); return outgoing;}
 
-template<typename Producer, typename Consumer>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::producer, Producer>,
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::consumer, Consumer>
-    >,
-    Producer &
+template<typename OutgoingPort, typename IncomingPort>
+inline typename enable_if<
+    mpl::and_<
+        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::directions::outgoing, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
+        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::directions::incoming, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
+    >, OutgoingPort &
 >::type
-operator DATAFLOW_TEMPLATE_OPERATOR (Producer &producer, const Consumer &consumer)
-{ DATAFLOW_TEMPLATE_BINARY_OPERATION(producer, consumer); return producer;}
-
-template<typename Producer, typename Consumer>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::producer, Producer>,
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::consumer, Consumer>
-    >,
-    const Producer &
->::type
-operator DATAFLOW_TEMPLATE_OPERATOR (const Producer &producer, Consumer &consumer)
-{ DATAFLOW_TEMPLATE_BINARY_OPERATION(producer, consumer); return producer;}
-
-template<typename Producer, typename Consumer>
-typename boost::enable_if<
-    boost::mpl::and_<
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::producer, Producer>,
-        boost::dataflow::is_port<DATAFLOW_TEMPLATE_MECHANISM, boost::dataflow::ports::consumer, Consumer>
-    >,
-    const Producer &
->::type
-operator DATAFLOW_TEMPLATE_OPERATOR (const Producer &producer, const Consumer &consumer)
-{ DATAFLOW_TEMPLATE_BINARY_OPERATION(producer, consumer); return producer;}
+operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &outgoing, const IncomingPort &incoming)
+{ DATAFLOW_TEMPLATE_BINARY_OPERATION(outgoing, incoming); return outgoing;}

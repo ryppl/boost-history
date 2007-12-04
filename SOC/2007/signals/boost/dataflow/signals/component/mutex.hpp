@@ -15,12 +15,12 @@ namespace boost { namespace signals {
 */
 template<typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
 >
 class mutex : public
-    instantiator<boost::mutex, boost::mutex::scoped_lock, Signature, OutSignal, Combiner, Group, GroupCompare>
+    instantiator<
+        mutex<Signature, OutSignal, SignalArgs>,
+        boost::mutex, boost::mutex::scoped_lock, Signature, OutSignal, SignalArgs>
 {
 };
 

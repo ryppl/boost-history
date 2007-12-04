@@ -17,7 +17,7 @@
 namespace boost { namespace dataflow { namespace signals {
 
 struct slot_selector_consumer
-    : public boost::dataflow::port_traits<mechanism, ports::consumer, concepts::keyed_port> {};
+    : public boost::dataflow::port_traits<ports::consumer, concepts::keyed_port, tag> {};
 
 } } // namespace dataflow::signals
 
@@ -28,21 +28,7 @@ namespace signals {
 template<typename Signature, typename T>
 struct slot_selector
 {
-    struct get_proxied_object
-    {
-        T &operator()(const slot_selector<Signature, T> &t)
-        {
-            return t.object;
-        };
-    };
-        
     typedef boost::dataflow::signals::slot_selector_consumer port_traits;
-    typedef boost::dataflow::mutable_proxy_port<
-        boost::dataflow::signals::mechanism,
-        boost::dataflow::ports::producer,
-        T,
-        get_proxied_object
-        > proxy_port_traits;
 
     typedef Signature signature_type;
     typedef T class_type;

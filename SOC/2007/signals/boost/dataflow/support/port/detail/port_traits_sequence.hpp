@@ -10,25 +10,22 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
 
+    #include <boost/mpl/at.hpp>
     #include <boost/mpl/int.hpp>
     #include <boost/mpl/less.hpp>
     #include <boost/mpl/size.hpp>
+
 
 namespace boost { namespace dataflow {
 
 namespace detail {
 
-    template<typename Mechanism, typename T, int N>
-    struct lazy_is_same_port_traits_mechanism
+    template<typename Tag, typename T, int N>
+    struct lazy_is_same_port_traits_tag
     {
-        typedef typename is_same<Mechanism, typename mpl::at_c<typename T::port_traits, N>::type::mechanism>::type type;
+        typedef typename is_same<Tag, typename mpl::at_c<typename T::port_traits, N>::type::tag>::type type;
     };
     
-    template<typename PortCategory, typename T, int N>
-    struct lazy_is_same_port_traits_port_category
-    {
-        typedef typename is_same<PortCategory, typename mpl::at_c<typename T::port_traits, N>::type::category>::type type;
-    };
 }
 
 } }
@@ -43,8 +40,10 @@ namespace detail {
 namespace boost { namespace dataflow {
 
 
-template<typename Mechanism, typename PortCategory, typename T>
-struct port_traits_of<Mechanism, PortCategory, T,
+template<typename T, typename Tag>
+struct port_traits_of<
+    T,
+    Tag,
     typename enable_if<
         mpl::and_<
             mpl::is_sequence<typename T::port_traits>,
@@ -52,8 +51,7 @@ struct port_traits_of<Mechanism, PortCategory, T,
                 mpl::int_<BOOST_PP_ITERATION()>,
                 typename mpl::size<typename T::port_traits>::type
             >::type,
-            detail::lazy_is_same_port_traits_mechanism<Mechanism, T, BOOST_PP_ITERATION()>,
-            detail::lazy_is_same_port_traits_port_category<PortCategory, T, BOOST_PP_ITERATION()>
+            detail::lazy_is_same_port_traits_tag<Tag, T, BOOST_PP_ITERATION()>
         >
     >::type
 >

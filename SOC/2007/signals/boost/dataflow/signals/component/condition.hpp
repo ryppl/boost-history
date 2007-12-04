@@ -37,14 +37,16 @@ namespace detail
 */
 template<typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
 >
 class condition : public
-    applicator<detail::cond_and_mutex, detail::notify_all, Signature, OutSignal, Combiner, Group, GroupCompare>
+    applicator<
+        condition<Signature, OutSignal, SignalArgs>,
+        detail::cond_and_mutex, detail::notify_all, Signature, OutSignal, SignalArgs>
 {
-    typedef applicator<detail::cond_and_mutex, detail::notify_all, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+    typedef applicator<
+        condition<Signature, OutSignal, SignalArgs>,
+        detail::cond_and_mutex, detail::notify_all, Signature, OutSignal, SignalArgs> base_type;
 public:
     /** Initializes the internal counter to 0.
     */

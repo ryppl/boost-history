@@ -376,22 +376,38 @@ namespace extension {
 //]
 
 //[ vtk_specialize_connect
-// the include templates expect DATAFLOW_TEMPLATE_MECHANISM to have
-// the template type
-#define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::vtk::mechanism
+// the include templates expect DATAFLOW_TEMPLATE_TAG to have
+// the mechanism type
+#define DATAFLOW_TEMPLATE_TAG boost::dataflow::vtk::mechanism
 
 // the binary_operation.hpp template expects DATAFLOW_TEMPLATE_BINARY_OPERATION
-#define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
-#include <boost/dataflow/templates/binary_operation.hpp>
-#undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+#   define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
+#       include <boost/dataflow/templates/binary_operation.hpp>
 
-#define DATAFLOW_TEMPLATE_BINARY_OPERATION connect_only
-#include <boost/dataflow/templates/binary_operation.hpp>
-#undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+// the operator.hpp template expects DATAFLOW_TEMPLATE_OPERATOR
+#       define DATAFLOW_TEMPLATE_OPERATOR >>=
+#           include <boost/dataflow/templates/operator.hpp>
+#       undef DATAFLOW_TEMPLATE_OPERATOR
 
-#undef DATAFLOW_TEMPLATE_MECHANISM
+#   undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+
+#   define DATAFLOW_TEMPLATE_BINARY_OPERATION connect_only
+#       include <boost/dataflow/templates/binary_operation.hpp>
+
+#       define DATAFLOW_TEMPLATE_OPERATOR ^=
+#           include <boost/dataflow/templates/operator.hpp>
+#       undef DATAFLOW_TEMPLATE_OPERATOR
+
+#   undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+
+#undef DATAFLOW_TEMPLATE_TAG
+
 // We now have connect and connect_only functions that each take a
 // vtk ProducerPort and vtk ConsumerPort as arguments, and try to connect them.
+
+// We also have operators >>= for the connect operation,
+// and ^= for the connect_only operation.
+
 //]
 
 #endif // BOOST_DATAFLOW_VTK_SUPPORT_HPP

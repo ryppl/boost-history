@@ -31,7 +31,9 @@ int test_main(int, char* [])
         //            `-------------'                `-----------'
         //
         // -------------------------------------------------------------
-        banger >>= floater.send_slot() >>= collector;
+        
+        banger >>= floater.send_slot();
+        floater >>= collector;
 
         // signal from banger is will invoke floater.send(), which causes
         // floater to output 2.5
@@ -39,6 +41,7 @@ int test_main(int, char* [])
         BOOST_CHECK_EQUAL(floater.at<0>(), 2.5f);
         BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);
 
+        floater.close();
         floater(1.5f); // change the value in floater
         invoke(floater); // we can also signal floater directly
         BOOST_CHECK_EQUAL(collector.at<0>(), 1.5f);
@@ -53,13 +56,15 @@ int test_main(int, char* [])
         signals::storage<void (float), signals::fused> collector(0.0f);
 
         // create the network (banger to floater.send, floater to collector)
-        banger >>= floater.send_slot() >>= collector;
+        banger >>= floater.send_slot();
+        floater >>= collector;
         
         // signal from banger causes floater to output 2.5
         banger();
         BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);
         
         // change the value in floater
+        floater.close();
         floater(1.5f);
         invoke(floater); // we can also signal floater directly
         BOOST_CHECK_EQUAL(collector.at<0>(), 1.5f);

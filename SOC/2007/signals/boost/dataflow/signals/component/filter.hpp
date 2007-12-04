@@ -14,9 +14,7 @@
 #include <boost/fusion/include/as_vector.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
 
-#ifndef SIGNAL_NETWORK_DEFAULT_OUT
 #define SIGNAL_NETWORK_DEFAULT_OUT unfused
-#endif
 
 namespace boost { namespace signals {
 
@@ -44,30 +42,62 @@ struct fused
     typedef fused filter_type;
 };
 
+template<
+    typename Combiner,
+    typename Group=int,
+    typename GroupCompare=std::less<Group> >
+struct signal_args
+{
+    typedef Combiner combiner_type;
+    typedef Group group_type;
+    typedef GroupCompare group_compare_type;
+};
+
+template<typename Signature,
+    typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
+    typename Group = int,
+    typename GroupCompare = std::less<Group> >
+struct default_signal_args
+{
+    typedef signal_args<Combiner, Group, GroupCompare> type;
+};
+
+template<typename Signature, typename SignalArgs>
+struct signal_from_args
+{
+    typedef boost::signal<
+        Signature,
+        typename SignalArgs::combiner_type,
+        typename SignalArgs::group_type,
+        typename SignalArgs::group_compare_type
+    > type;
+};
+
 ///	Provides a basis for filters (components that receive and send a signal).
 /**	\param Signature The signature of the signal being sent out.
 
 Use this class as a base class for classes that produce a signal
 of a particular signature.
 */
-template<typename Signature,
-typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
-typename Group = int,
-typename GroupCompare = std::less<Group>
+template<
+    typename Derived,
+    typename Signature,
+    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
+    typename SignalArgs=typename default_signal_args<Signature>::type
 >
 class filter;
 
 /** \brief Unfused version of the filter class
 */
-template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, unfused, Combiner, Group, GroupCompare>
-    : public filter_base<boost::signal<Signature, Combiner, Group, GroupCompare> >
+template<typename Derived, typename Signature, typename SignalArgs>
+class filter<Derived, Signature, unfused, SignalArgs>
+    : public filter_base<
+        Derived,
+        typename signal_from_args<Signature, SignalArgs>::type >
 {
 public:
     // the type of the signal
-    typedef boost::signal<Signature, Combiner, Group, GroupCompare> signal_type;
-
+    typedef typename signal_from_args<Signature, SignalArgs>::type signal_type;
     // the signature of the output signal
 	typedef Signature signature_type;
 
@@ -76,7 +106,7 @@ public:
     const filter &operator = (const filter &) {return *this;}
 
 	///	Returns the default out signal.
-  	signal_type &get_proxied_producer() const
+  	signal_type &default_signal() const
 	{	return out; }
 
 	///	Disconnects all slots connected to the signals::filter.
@@ -85,63 +115,61 @@ protected:
 	mutable signal_type out;
 }; // class filter
 
+
 /** \brief Combined version of the filter class
 */
-template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, combined, Combiner, Group, GroupCompare>
-: public filter<Signature, unfused, Combiner, Group, GroupCompare>
+template<typename Derived, typename Signature, typename SignalArgs>
+class filter<Derived, Signature, combined, SignalArgs>
+: public filter<Derived, Signature, unfused, SignalArgs>
 {
-    typedef filter<Signature, unfused, Combiner, Group, GroupCompare> base_type;
 public:
-    filter() : fused_out(base_type::out) {}
-	filter(const filter &) : fused_out(base_type::out){}
+    filter() : fused_out(filter::out) {}
+	filter(const filter &) : fused_out(filter::out){}
     const filter &operator = (const filter &) {return *this;}
-
-    typedef typename base_type::signature_type signature_type;
-    typedef typename base_type::signal_type signal_type;
     
     typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
     typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
-    typedef typename signal_type::result_type fused_signature_type (const parameter_vector &);
+    typedef typename filter::signal_type::result_type fused_signature_type (const parameter_vector &);
 
 protected:
-    boost::signal<fused_signature_type, Combiner, Group, GroupCompare> fusion_out;
-    boost::fusion::fused<typename base_type::signal_type const &> fused_out;
+    typename signal_from_args<fused_signature_type, SignalArgs>::type fusion_out;
+    boost::fusion::fused<typename filter::signal_type const &> fused_out;
 }; // class filter
 
 namespace detail
 {
-    template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
+    template<typename Signature, typename SignalArgs=typename default_signal_args<Signature>::type>
     struct fused_signal_type
     {
         typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
         typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
-        typedef typename Combiner::result_type signature_type (const parameter_vector &);
-        typedef typename Combiner::result_type fused_signature_type (const parameter_vector &);
-        typedef boost::signal<signature_type, Combiner, Group, GroupCompare> signal_type;
+        typedef typename SignalArgs::combiner_type::result_type signature_type (const parameter_vector &);
+        typedef typename SignalArgs::combiner_type::result_type fused_signature_type (const parameter_vector &);
+        typedef typename signal_from_args<fused_signature_type, SignalArgs>::type signal_type;
     };
 }
 
 /** \brief Fused version of the filter class
 */
-template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, fused, Combiner, Group, GroupCompare>
-: public filter_base<typename detail::fused_signal_type<Signature, Combiner, Group, GroupCompare>::signal_type>
+template<typename Derived, typename Signature, typename SignalArgs>
+class filter<Derived, Signature, fused, SignalArgs>
+: public filter_base<
+    Derived,
+    typename detail::fused_signal_type<Signature, SignalArgs>::signal_type>
 {
 public:
 	filter(const filter &) {}
 	filter(){}
     const filter &operator = (const filter &) {return *this;}
 
-    typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
-    typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
-    typedef typename Combiner::result_type signature_type (const parameter_vector &);
-    typedef typename Combiner::result_type fused_signature_type (const parameter_vector &);
-    typedef boost::signal<signature_type, Combiner, Group, GroupCompare> signal_type;
-    typedef signal_type proxy_producer_for;
+    typedef typename detail::fused_signal_type<Signature, SignalArgs>::parameter_types parameter_types;
+    typedef typename detail::fused_signal_type<Signature, SignalArgs>::parameter_vector parameter_vector;
+    typedef typename detail::fused_signal_type<Signature, SignalArgs>::signature_type signature_type;
+    typedef typename detail::fused_signal_type<Signature, SignalArgs>::fused_signature_type fused_signature_type;
+    typedef typename detail::fused_signal_type<Signature, SignalArgs>::signal_type signal_type;
 
 	///	Returns the default out signal.
-	proxy_producer_for &get_proxied_producer() const
+	signal_type &default_signal() const
 	{	return fused_out; }
 	///	Disconnects all slots connected to the signals::filter.
 	void disconnect_all_slots() {fused_out.disconnect_all_slots();}

@@ -31,7 +31,7 @@ struct my_component
 namespace boost { namespace dataflow { namespace extension {
 
 template<>
-struct get_component_port_impl<my_component_traits>
+struct get_port_impl<my_component_traits>
 {
     template<typename FArgs> struct result;
 
@@ -72,8 +72,8 @@ int test_main(int, char* [])
 {
     my_component c;
     
-    my_consumer &cc = df::get_component_port<boost::mpl::int_<0> >(c);
-    my_producer &cp = df::get_component_port<boost::mpl::int_<1> >(c);
+    my_consumer &cc = df::get_port<boost::mpl::int_<0> >(c);
+    my_producer &cp = df::get_port<boost::mpl::int_<1> >(c);
     
     BOOST_CHECK_EQUAL(&cc, &c.consumer);
     BOOST_CHECK_EQUAL(&cp, &c.producer);

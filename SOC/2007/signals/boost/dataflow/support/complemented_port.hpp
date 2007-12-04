@@ -10,21 +10,20 @@
 
 namespace boost { namespace dataflow {
 
-/// Convenience class for PortTraits types.
-template<typename Mechanism, typename PortCategory, typename ComplementPort>
+/// Convenience class for ComplementedPortTraits types.
+template<typename PortCategory, typename ComplementPort, typename Tag=default_tag>
 struct complemented_port_traits
+    : public port_traits<PortCategory, concepts::complemented_port, Tag>
 {
-    typedef Mechanism mechanism;
-    typedef PortCategory category; 
-    typedef concepts::complemented_port concept;
-    typedef ComplementPort complement_port_type;
+    typedef ComplementPort complement_port_type; ///< complement Port type.
 };
 
-/// Boolean metafunction determining whether a type is a PortTraits.
+/// Boolean metafunction determining whether a type is a ComplementedPortTraits.
 template<typename PortTraits, typename Enable=void>
 struct is_complemented_port_traits : public mpl::false_
 {};
 
+/// INTERNAL ONLY
 template<typename PortTraits>
 struct is_complemented_port_traits<PortTraits,
     typename detail::enable_if_defined<
@@ -37,14 +36,16 @@ struct is_complemented_port_traits<PortTraits,
     >::type>
  : public mpl::true_
 {
+    /// INTERNAL ONLY
     BOOST_MPL_ASSERT(( is_port_category<typename PortTraits::category> ));
 };
 
-/// Boolean metafunction determining whether a type is a PortTraits.
+/// Boolean metafunction determining whether a type is a ComplementedPort.
 template<typename Mechanism, typename PortCategory, typename T, typename Enable=void>
 struct is_complemented_port : public mpl::false_
 {};
 
+/// INTERNAL ONLY
 template<typename Mechanism, typename PortCategory, typename T>
 struct is_complemented_port<Mechanism, PortCategory, T,
         typename enable_if<
@@ -52,7 +53,7 @@ struct is_complemented_port<Mechanism, PortCategory, T,
                 typename port_traits_of<
                     Mechanism,
                     PortCategory,
-                    typename utility::underlying_type<T>::type
+                    typename remove_cv<T>::type
                 >::type
             >
         >::type >

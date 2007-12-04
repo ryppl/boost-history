@@ -15,43 +15,7 @@ int test_main(int, char* [])
 {
     {
         //[ test_disconnect_unfused
-        signals::storage<void ()> banger;
-        {
-            signals::counter<void ()> counter;
-            signals::storage<void (float)> floater;
-            floater(2.5f);
-            signals::storage<void (float)> collector(0.0f);
-                        
-            banger
-                | counter
-                | (floater.send_slot() >>= collector);
-            
-            banger();
-            BOOST_CHECK_EQUAL(counter.count(), 1);
-            BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);
-            
-            #ifndef SIGNAL_NETWORK_THREAD_SAFE
-            BOOST_CHECK((
-                boost::is_base_of<
-                    boost::signals::trackable,
-                    signals::counter<void ()>
-                >::type::value));
-            BOOST_CHECK((
-                boost::is_base_of<
-                    boost::signals::trackable,
-                    signals::storage<void (float)>
-                >::type::value));
-            #endif
-
-        } // counter, floater, and collector are now destroyed and disconnected with Boost.Signals
-#ifdef SIGNAL_NETWORK_THREAD_SAFE
-        // if [DataflowSignals] has detected thread safe signals, we need to
-        // touch the signal to disconnect things that are destroyed:
-        // unfortunatelly, this call hangs on MSVC!
-        // banger();
-#endif
-        BOOST_CHECK_EQUAL(banger.get_proxied_producer().num_slots(), 0u); 
-        
+        signals::storage<void ()> banger;        
         signals::counter<void ()> counter;
         
         banger >>= counter;

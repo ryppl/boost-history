@@ -14,7 +14,7 @@ using namespace boost;
 
 //[ test_multi_args_class1
 
-class SignalFloatDuplicator : public signals::filter<void (float, float)>
+class SignalFloatDuplicator : public signals::filter<SignalFloatDuplicator, void (float, float)>
 {
 public:
     typedef void result_type;

@@ -2,20 +2,20 @@
 
 [section PhoenixProducer]
 
-A [ProducerPortConcept] type `P` is a ['[PhoenixProducerConcept]] if it uses
+A [ProducerPort] type `P` is a ['[PhoenixProducer]] if it uses
 the underlying pointer based data transport mechanism.  It is
-[ConnectableConcept] with a compatible [PhoenixConsumerConcept].
+[Connectable] with a compatible [PhoenixConsumer].
 
 [heading Refinement of]
-* [ProducerPortConcept]
-* [InvocableConcept]
+* [ProducerPort]
+* [Invocable]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A [PhoenixProducerConcept] type.]]
-    [[C] [A [PhoenixConsumerConcept] type [ConnectableConcept] to `P`.]]
+    [[P] [A [PhoenixProducer] type.]]
+    [[C] [A [PhoenixConsumer] type [Connectable] to `P`.]]
     [[PCategory] [The producer category of `P`.]]
     [[p] [An object of type `P`.]]
     [[c] [An object of type `C`.]]
@@ -60,20 +60,20 @@ The following expressions are used in this document:
 
 [section PhoenixConsumer]
 
-A type `T` is a ['[PhoenixConsumerConcept]] if it uses the underlying pointer-based
-data transport mechanism.  I.e., it is [ConnectableConcept] to a
-[PhoenixProducerConcept] of compatible produced type.
+A type `T` is a ['[PhoenixConsumer]] if it uses the underlying pointer-based
+data transport mechanism.  I.e., it is [Connectable] to a
+[PhoenixProducer] of compatible produced type.
 
 [heading Refinement of]
-* [ConsumerPortConcept]
-* [ConnectableConcept] with [PhoenixProducerConcept] of compatible produced type.
+* [ConsumerPort]
+* [Connectable] with [PhoenixProducer] of compatible produced type.
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[C] [A [PhoenixConsumerConcept] type.]]
-    [[P] [A [PhoenixProducerConcept] type of compatible produced type.]]
+    [[C] [A [PhoenixConsumer] type.]]
+    [[P] [A [PhoenixProducer] type of compatible produced type.]]
     [[CCategory] [The consumer category of `C`.]]
     [[c] [An object of type `C`.]]
     [[p] [An object of type `P`.]]

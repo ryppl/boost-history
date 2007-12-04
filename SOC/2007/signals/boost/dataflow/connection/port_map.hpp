@@ -18,44 +18,21 @@
 
 namespace boost { namespace dataflow {
 
-template<typename Mechanism, typename PortCategory>
+template<typename PortCategory, typename Tag=default_tag>
 struct fusion_map_port
-    : public port_traits<Mechanism, PortCategory, concepts::keyed_port> {};
+    : public port_traits<PortCategory, concepts::keyed_port, Tag> {};
 
-template<typename Mechanism, typename PortCategory, typename T>
+template<typename PortCategory, typename T, typename Tag=default_tag>
 class port_map
 {
-    struct get_proxied_object
-    {
-        typename port_map::proxy_port_for & operator()(const port_map &map)
-        {
-            return boost::fusion::front(map.t).second;
-        }
-    };
-//                typedef typename boost::fusion::result_of::value_at_c<T, 0>::type::second_type
-//        proxy_consumer_for;
-    typedef
-        typename boost::remove_reference<
-            typename boost::remove_const<
-                typename boost::remove_reference<
-                    typename boost::fusion::result_of::front<T>::type
-                >::type
-            >::type::second_type
-        >::type proxy_port_for;
+
 public:
-    typedef Mechanism mechanism_type;
-    typedef PortCategory port_category_type;
     typedef T map_type;
     
     port_map(const T& t) : t(t) {}
     map_type &map() const {return t;}
     
-    typedef fusion_map_port<Mechanism, PortCategory> port_traits;
-    typedef mutable_proxy_port<
-        Mechanism,
-        typename PortCategory::complement,
-        proxy_port_for,
-        get_proxied_object> proxy_port_traits;
+    typedef fusion_map_port<PortCategory, Tag> port_traits;
 
 private:
     mutable map_type t;
@@ -63,17 +40,17 @@ private:
 
 namespace extension
 {
-    template<typename Mechanism, typename PortCategory, typename KeyTag>
-    struct get_keyed_port_impl<fusion_map_port<Mechanism, PortCategory>, KeyTag>
+    template<typename PortCategory, typename Tag, typename KeyPortTraits>
+    struct get_keyed_port_impl<fusion_map_port<PortCategory, Tag>, KeyPortTraits>
     {
-        template<typename Args> struct result;
+        template<typename FArgs> struct result;
         
         template<typename F, typename KeyedPort>
         struct result<F(KeyedPort &)>
         {
             typedef typename boost::fusion::result_of::at_key<
                 typename KeyedPort::map_type,
-                KeyTag
+                KeyPortTraits
             >::type type;
         };
 
@@ -82,7 +59,7 @@ namespace extension
             operator()(KeyedPort &port)
         {
             return boost::fusion::at_key<
-                    KeyTag
+                    KeyPortTraits
                 >(port.map());
         }
     };

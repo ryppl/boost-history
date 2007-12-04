@@ -22,16 +22,25 @@ struct receiver
     int stored;
 };
 
+int stored = 0;
+
+void f_receiver(int x)
+{
+    stored = x;
+};
+
 int test_main(int, char* [])
 {
-
+    namespace df = boost::dataflow;
+    
     boost::signal<void(int)> p;
     receiver r;
-    
+
+    connect(p, boost::function<void(int)>(f_receiver));
     connect(p, r);
-    
+
     p(3);
-    
+    BOOST_CHECK_EQUAL(stored, 3);
     BOOST_CHECK_EQUAL(r.stored, 3);
 
     return 0;

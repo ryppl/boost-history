@@ -1,0 +1,7 @@
+[section:support Generic Support Layer]
+
+[include concepts/concepts.qbk]
+
+[xinclude ../dataflow_support_doxygen.xml]
+
+[endsect]

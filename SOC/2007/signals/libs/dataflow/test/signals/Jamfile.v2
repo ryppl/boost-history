@@ -13,7 +13,7 @@ project dataflow/test/signals
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-run test_result_of_defined.cpp ;
+#run test_result_of_defined.cpp ;
 run test_bind_object.cpp ;
 run test_connect.cpp ;
 

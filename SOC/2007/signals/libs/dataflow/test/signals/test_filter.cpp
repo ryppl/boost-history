@@ -4,8 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/dataflow/signals/component/filter.hpp>
-#include <boost/dataflow/signals/component/storage.hpp>
-#include <boost/dataflow/signals/connection.hpp>
+#include <boost/dataflow/signals/connection/operators.hpp>
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 
@@ -15,19 +14,36 @@ using namespace boost;
 
 //[ test_filter_classes
 
-class DoublerClass : public signals::filter<void (float)>
+class DoublerClass : public signals::filter<DoublerClass, void (int)>
 {
 public:
-    void operator()(float x) {out(2*x);}
+    void operator()(int x) {out(2*x);}
 };
 
-class FusedDoublerClass : public signals::filter<void (float), signals::fused>
+struct receiver
+    : public boost::dataflow::port<boost::dataflow::signals::call_consumer>    
+{
+    receiver() : stored(0) {}
+    
+    void operator()(int x)
+    {
+        stored = x;
+    }
+    void operator()(const fusion::vector<int> &x)
+    {
+        stored = fusion::at_c<0>(x);
+    }
+    
+    int stored;
+};
+
+class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (int), signals::fused>
 {
 public:
-    void operator()(const fusion::vector<float> &x)
+    void operator()(const fusion::vector<int> &x)
     {
         // this could be more general but I'm having problems with the general approach...
-        fusion::vector<float> y;
+        fusion::vector<int> y;
         fusion::at_c<0>(y) = 2 * fusion::at_c<0>(x);
         fused_out(y);
     }
@@ -37,17 +53,17 @@ public:
 
 int test_main(int, char* [])
 {    
+    namespace df=boost::dataflow;
     {
         //[ test_filter_unfused
 
         DoublerClass doubler1, doubler2;
-        signals::storage<void (float)> floater(1.0f);
-        signals::storage<void (float)> collector(0.0f);
-
-        floater >>= doubler1 >>= doubler2 >>= collector;
-        floater.send();
+        receiver collector;
         
-        BOOST_CHECK_EQUAL(collector.at<0>(), 4.0f);
+        doubler1 >>= doubler2 >>= collector;
+        doubler1(1);
+        
+        BOOST_CHECK_EQUAL(collector.stored, 4);
         
         //]
     }
@@ -55,13 +71,12 @@ int test_main(int, char* [])
         //[ test_filter_fused
         
         FusedDoublerClass doubler1, doubler2;
-        signals::storage<void (float), signals::fused> floater(1.0f);
-        signals::storage<void (float), signals::fused> collector(0.0f);
+        receiver collector;
         
-        floater >>= doubler1 >>= doubler2 >>= collector;
-        floater.send();
+        doubler1 >>= doubler2 >>= collector;
+        doubler1(1);
         
-        BOOST_CHECK_EQUAL(collector.at<0>(), 4.0f);
+        BOOST_CHECK_EQUAL(collector.stored, 4.0f);
         
         //]
     }

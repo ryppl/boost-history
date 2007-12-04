@@ -30,11 +30,11 @@ struct get_port_case
                 typename component_traits_of<Component>::type::ports,
                 Case::value
             >::type,
-            typename get_component_port_result_type<
+            typename get_port_result_type<
                 mpl::int_<Case::value>,
                 Component
             >::type
-        >(get_component_port<mpl::int_<Case::value>, Component >(c))); \
+        >(get_port<mpl::int_<Case::value>, Component >(c))); \
     }
     get_port_case(Component& c, std::auto_ptr<port> &ret) : c(c), ret(ret)
     {}

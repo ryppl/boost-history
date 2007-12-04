@@ -11,7 +11,7 @@
 using namespace boost;
 
 //[ test_pull_classes
-class PullDoubler : public signals::filter<float ()>
+class PullDoubler : public signals::filter<PullDoubler, float ()>
 {
 public:
     float operator()()

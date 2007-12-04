@@ -22,7 +22,7 @@ struct reflective_component_traits
 namespace extension {
 
     template<typename ComponentTraits, typename Enable=void>
-    struct get_component_port_impl
+    struct get_port_impl
     {
         typedef void result_type;
         
@@ -34,7 +34,7 @@ namespace extension {
         template<typename Component, typename T>
         void operator()(Component &, T)
         {
-            // Error: get_component_port_impl has not been
+            // Error: get_port_impl has not been
             // implemented for ComponentTraits.
             BOOST_STATIC_ASSERT(sizeof(Component)==0);
         }
@@ -43,20 +43,20 @@ namespace extension {
 } // namespace extension
 
 template<typename Mechanism, typename T, typename Component>
-struct get_component_port_result_type
+struct get_port_result_type
 {
     typedef typename result_of<
-    extension::get_component_port_impl<
+    extension::get_port_impl<
         typename component_traits_of<Mechanism, Component>::type
     >(Component &, T)>::type type;
 };
 
 template<typename Mechanism, typename T, typename Component>
-typename get_component_port_result_type<Mechanism, T, Component>::type
-get_component_port(Component &component)
+typename get_port_result_type<Mechanism, T, Component>::type
+get_port(Component &component)
 {
     return
-        extension::get_component_port_impl<
+        extension::get_port_impl<
             typename component_traits_of<Mechanism, Component>::type
         >()(component, T());
 }

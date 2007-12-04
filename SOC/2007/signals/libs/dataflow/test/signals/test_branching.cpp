@@ -36,7 +36,8 @@ int test_main(int, char* [])
  
         banger
             | counter
-            | (floater.send_slot() >>= collector);
+            | floater.send_slot();
+        floater >>= collector;
         
         banger();
         BOOST_CHECK_EQUAL(counter.count(), 1);
@@ -51,10 +52,10 @@ int test_main(int, char* [])
         signals::storage<void (float), signals::fused> collector(0.0f);
         
         banger
-            // floater connects to collector, banger to floater.send_slot()
-            | (floater.send_slot() >>= collector)
-            | counter; // and banger to counter
-        
+            | counter
+            | floater.send_slot();
+        floater >>= collector;
+
         banger();
         BOOST_CHECK_EQUAL(counter.count(), 1);
         BOOST_CHECK_EQUAL(collector.at<0>(), 2.5f);

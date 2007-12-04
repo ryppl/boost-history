@@ -25,22 +25,21 @@ namespace boost { namespace signals {
 
 namespace detail
 {
-    /** \brief fused implementation of conditional modifier
-    */
-    template<
+template<
+    typename Derived,
     typename SIGNAL_NETWORK_GENERIC_TYPENAME,
 #ifdef SIGNAL_NETWORK_GENERIC_TYPENAME2
     typename SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif    
     typename Signature,
-    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group> >
-    class BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl) : public filter<Signature, typename OutSignal::filter_type, Combiner, Group, GroupCompare>
+    typename OutSignal,
+    typename SignalArgs
+    >
+class BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl)
+    : public filter<Derived, Signature, typename OutSignal::filter_type, SignalArgs>
 {
 protected:
-    typedef filter<Signature, typename OutSignal::filter_type, Combiner, Group, GroupCompare> base_type;
+    typedef filter<Derived, Signature, typename OutSignal::filter_type, SignalArgs> base_type;
 
 public:    
     SIGNAL_NETWORK_GENERIC_CLASS_IMPL() {}
@@ -65,35 +64,34 @@ protected:
 };
 }
 
-/** \brief Passes the incoming signal to a member modifier, and optionally forwards the returned result.
-*/
 template<
-typename SIGNAL_NETWORK_GENERIC_TYPENAME,
+    typename Derived,
+    typename SIGNAL_NETWORK_GENERIC_TYPENAME,
 #ifdef SIGNAL_NETWORK_GENERIC_TYPENAME2
-typename SIGNAL_NETWORK_GENERIC_TYPENAME2,
+    typename SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif
-typename Signature,
-typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-typename Group = int,
-typename GroupCompare = std::less<Group> >
+    typename Signature,
+    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
+    typename SignalArgs=typename default_signal_args<Signature>::type >
 class SIGNAL_NETWORK_GENERIC_CLASS
     : public boost::fusion::SIGNAL_NETWORK_GENERIC_UNFUSED_BASE
         <detail::SIGNAL_NETWORK_GENERIC_CLASS_IMPL<
+            Derived,
             SIGNAL_NETWORK_GENERIC_TYPENAME,
 #ifdef SIGNAL_NETWORK_GENERIC_TYPENAME2
             SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif
-            Signature, OutSignal, Combiner, Group, GroupCompare>,
+            Signature, OutSignal, SignalArgs>,
         typename boost::function_types::parameter_types<Signature>::type >
 {
     typedef boost::fusion::SIGNAL_NETWORK_GENERIC_UNFUSED_BASE
         <detail::SIGNAL_NETWORK_GENERIC_CLASS_IMPL<
+            Derived,
             SIGNAL_NETWORK_GENERIC_TYPENAME,
 #ifdef SIGNAL_NETWORK_GENERIC_TYPENAME2
             SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif
-            Signature, OutSignal, Combiner, Group, GroupCompare>,
+            Signature, OutSignal, SignalArgs>,
         typename boost::function_types::parameter_types<Signature>::type > base_type;
 public:
     SIGNAL_NETWORK_GENERIC_CLASS() {}

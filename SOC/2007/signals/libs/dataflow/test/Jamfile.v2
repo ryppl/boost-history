@@ -13,11 +13,11 @@ project dataflow/test
     ;
 
 run test_port.cpp ;
-run test_proxy_port.cpp ;
+#run test_proxy_port.cpp ;
 run test_unary_op.cpp ;
 run test_binary_op.cpp ;
 run test_keyed_port.cpp ;
 run test_component.cpp ;
-run test_reflective_component.cpp ;
+#run test_reflective_component.cpp ;
 
 build-project signals ;

@@ -26,8 +26,8 @@ and their use.
 
 [heading Model of]
 
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
+* [SignalConsumer]
+* [SignalProducer]
 
 [heading Description]
 
@@ -60,9 +60,9 @@ appropriate network.  Here is an example which uses the class defined above:
 [*See also]: [classref boost::signals::applicator applicator class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -94,9 +94,9 @@ Examples of conditionals:
 [*See also]: [classref boost::signals::instantiator instantiator class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -115,9 +115,9 @@ Examples of applicators:
 [*See also]: [classref boost::signals::modifier modifier class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -139,9 +139,9 @@ Examples of modifiers:
 [*See also]: [classref boost::signals::storage storage class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -170,9 +170,9 @@ counter and forward the signal.
 [*See also]: [classref boost::signals::junction junction class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -188,9 +188,9 @@ them all to the same set of output signals.
 [*See also]: [classref boost::signals::multiplexer multiplexer class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -210,9 +210,9 @@ them all to the same set of output signals.
 [*See also]: [classref boost::signals::mutex mutex class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -228,9 +228,9 @@ The [mutex] class locks an internal mutex when it receives a signal, and then fo
 [*See also]: [classref boost::signals::mutex mutex class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -248,9 +248,9 @@ The [condition] class signals a threading condition when receiving a signal.
 [*See also]: [classref boost::signals::function function class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -269,9 +269,9 @@ The [function] class can be used to apply a function to an incoming signal and o
 [section:chain chain]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [SignalProducerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [SignalProducer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -297,8 +297,8 @@ The example above uses the following classes:
 [*See also]: [classref boost::signals::socket_sender socket_sender class reference.]
 
 [heading Model of]
-* [SignalConsumerConcept]
-* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+* [SignalConsumer]
+* [Connectable] to any [SignalProducer] type `P` where 
   `Signature` matches `P`'s produced type.
   
 [heading Description]
@@ -318,7 +318,7 @@ Example:
 [*See also]: [classref boost::signals::socket_receiver socket_receiver class reference.]
 
 [heading Model of]
-* [SignalProducerConcept]
+* [SignalProducer]
   
 [heading Description]
 

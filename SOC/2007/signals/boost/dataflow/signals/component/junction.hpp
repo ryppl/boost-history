@@ -26,30 +26,30 @@ namespace detail
 also be disabled to stop the flow of signals.
     junction is a conditional with Condition identity and Member volatile bool
 */
-template<typename Signature,
+template<
+    typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
 >
-class junction : public conditional<volatile bool, detail::identity<bool>, Signature, OutSignal, Combiner, Group, GroupCompare>
+class junction
+    : public conditional<
+        junction<Signature, OutSignal, SignalArgs>,
+        volatile bool, detail::identity<bool>, Signature, OutSignal, SignalArgs>
 {
-protected:
-    typedef conditional<volatile bool, detail::identity<bool>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
 public:
     
     /** Initializes the junction to be enabled.
     */
-    junction(bool enabled=true)
+    junction(bool opened=true)
     {
-        enable();
+        junction::member=opened;
     }
     /** Enables the junction (signals will be forwarded).
     */
-    void enable() {base_type::member = true;}
+    void open() {junction::member = true;}
     /**	Disables the junction (signals will not be forwarded).
     */
-    void disable() {base_type::member = false;}
+    void close() {junction::member = false;}
 };
 
 } } // namespace boost::signals

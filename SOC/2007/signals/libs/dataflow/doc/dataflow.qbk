@@ -1,6 +1,6 @@
 [article Dataflow
     [quickbook 1.4]
-    [version 0.8.1]
+    [version 0.8.2]
     [authors [Rajko, Stjepan]]
     [copyright 2007 Stjepan Rajko]
     [purpose Generic dataflow lirary providing support for data producers,
@@ -12,41 +12,42 @@
     ]
 ]
 
-[template concepts[] [link dataflow.concepts concepts]]
-[template MechanismConcept[] [link dataflow.concepts.port_related.mechanism [^Mechanism]]]
-[template PortCategoryConcept[] [link dataflow.concepts.port_related.portcategory [^PortCategory]]]
-[template PortTraitsConcept[] [link dataflow.concepts.port_related.port [^PortTraits]]]
-[template PortConcept[] [link dataflow.concepts.port_related.port [^Port]]]
-[template ProducerPortConcept[] [link dataflow.concepts.port_related.port [^ProducerPort]]]
-[template ConsumerPortConcept[] [link dataflow.concepts.port_related.port [^ConsumerPort]]]
-[template ComplementedPortConcept[] [link dataflow.concepts.port_related.complementedport [^ComplementedPort]]]
-[template ComplementedPortTraitsConcept[] [link dataflow.concepts.port_related.complementedport [^ComplementedPortTraits]]]
-[template KeyedPortConcept[] [link dataflow.concepts.port_related.keyedport [^KeyedPort]]]
+[template concepts[] [link dataflow.support.concepts concepts]]
+[template Tag[] [link dataflow.support.concepts.port_related.tag [^Tag]]]
+[template Mechanism[] [link dataflow.support.concepts.port_related.mechanism [^Mechanism]]]
+[template PortCategory[] [link dataflow.support.concepts.port_related.portcategory [^PortCategory]]]
+[template PortTraits[] [link dataflow.support.concepts.port_related.port [^PortTraits]]]
+[template Port[] [link dataflow.support.concepts.port_related.port [^Port]]]
+[template ProducerPort[] [link dataflow.support.concepts.port_related.port [^ProducerPort]]]
+[template ConsumerPort[] [link dataflow.support.concepts.port_related.port [^ConsumerPort]]]
+[template ComplementedPort[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPort]]]
+[template ComplementedPortTraits[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPortTraits]]]
+[template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
 
-[template ProxyPortTraitsConcept[] [link dataflow.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
-[template ProxyPortConcept[] [link dataflow.concepts.port_related.proxyport [^ProxyPort]]]
+[template ProxyPortTraits[] [link dataflow.support.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
+[template ProxyPort[] [link dataflow.support.concepts.port_related.proxyport [^ProxyPort]]]
 
-[template BinaryOperableConcept[] [link dataflow.concepts.port_related.binaryoperable [^BinaryOperable]]]
-[template ConnectableConcept[] [link dataflow.concepts.port_related.binaryoperable [^Connectable]]]
-[template OnlyConnectableConcept[] [link dataflow.concepts.port_related.binaryoperable [^OnlyConnectable]]]
-[template DisconnectableConcept[] [link dataflow.concepts.port_related.binaryoperable [^Disconnectable]]]
-[template ExtractableConcept[] [link dataflow.concepts.port_related.binaryoperable [^Extractable]]]
+[template BinaryOperable[] [link dataflow.support.concepts.port_related.binaryoperable [^BinaryOperable]]]
+[template Connectable[] [link dataflow.support.concepts.port_related.binaryoperable [^Connectable]]]
+[template OnlyConnectable[] [link dataflow.support.concepts.port_related.binaryoperable [^OnlyConnectable]]]
+[template Disconnectable[] [link dataflow.support.concepts.port_related.binaryoperable [^Disconnectable]]]
+[template Extractable[] [link dataflow.support.concepts.port_related.binaryoperable [^Extractable]]]
 
-[template UnaryOperableConcept[] [link dataflow.concepts.port_related.unaryoperable [^UnaryOperable]]]
-[template AllDisconnectableConcept[] [link dataflow.concepts.port_related.unaryoperable [^AllDisconnectable]]]
+[template UnaryOperable[] [link dataflow.support.concepts.port_related.unaryoperable [^UnaryOperable]]]
+[template AllDisconnectable[] [link dataflow.support.concepts.port_related.unaryoperable [^AllDisconnectable]]]
 
-[template ComponentTraitsConcept[] [link dataflow.concepts.component_related.componenttraits [^ComponentTraits]]]
-[template ComponentConcept[] [link dataflow.concepts.component_related.component [^Component]]]
+[template ComponentTraits[] [link dataflow.support.concepts.component_related.componenttraits [^ComponentTraits]]]
+[template Component[] [link dataflow.support.concepts.component_related.component [^Component]]]
 
-[template ComponentOperableConcept[] [link dataflow.concepts.component_related.componentoperable [^ComponentOperable]]]
-[template InvocableConcept[] [link dataflow.concepts.component_related.componentoperable [^Invocable]]]
+[template ComponentOperable[] [link dataflow.support.concepts.component_related.componentoperable [^ComponentOperable]]]
+[template Invocable[] [link dataflow.support.concepts.component_related.componentoperable [^Invocable]]]
 
-[template SignalPortTraitsConcept[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
-[template SignalProducerConcept[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
-[template SignalConsumerConcept[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
+[template SignalPortTraits[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
+[template SignalProducer[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
+[template SignalConsumer[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
 
-[template PhoenixProducerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
-[template PhoenixConsumerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
+[template PhoenixProducer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
+[template PhoenixConsumer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
 [template vtk_example[text] [link dataflow.introduction.examples.new_layer [text]]]
 [template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
@@ -106,6 +107,18 @@
 
 [template blueprint[] [link dataflow.future.blueprint blueprint]]
 
+[template is_port_category[] [classref boost::dataflow::is_port_category is_port_category]]
+[template port_traits[] [classref boost::dataflow::port_traits [^port_traits]]]
+[template port_traits_of[] [classref boost::dataflow::port_traits_of port_traits_of]]
+[template register_port_traits[] [classref boost::dataflow::register_port_traits register_port_traits]]
+[template is_port[] [classref boost::dataflow::is_port [^is_port]]]
+[template port[] [classref boost::dataflow::port [^port]]]
+[template complemented_port_traits[] [classref boost::dataflow::complemented_port_traits [^complemented_port_traits]]]
+[template is_complemented_port[] [classref boost::dataflow::is_complemented_port [^is_complemented_port]]]
+
+[template DATAFLOW_PORT_TRAITS[] [macroref DATAFLOW_PORT_TRAITS DATAFLOW_PORT_TRAITS]]
+[template DATAFLOW_PORT_TRAITS_ENABLE_IF[] [macroref DATAFLOW_PORT_TRAITS_ENABLE_IF DATAFLOW_PORT_TRAITS_ENABLE_IF]]
+[template default_tag[] [classref boost::dataflow::default_tag [^concepts::default_tag]]]
 
 [import ../test/test_port.cpp]
 
@@ -142,7 +155,7 @@
 
 [include introduction/introduction.qbk]
 
-[include concepts/concepts.qbk]
+[include support/support.qbk]
 
 [/[include components.qbk]]
 

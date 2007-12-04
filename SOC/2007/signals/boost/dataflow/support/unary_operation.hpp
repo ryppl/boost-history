@@ -10,64 +10,27 @@
 
 #include <boost/static_assert.hpp>
 
+// ***************************************
+// * unary_operation
+// ***************************************
+#define DATAFLOW_SPECIALIZABLE_OPERATION_NAME unary_operation
+#define DATAFLOW_SPECIALIZABLE_OPERATION_CHECK is_unary_operable
+#define DATAFLOW_SPECIALIZABLE_OPERATION_TYPENAME_TEMPLATES typename Operation
+#define DATAFLOW_SPECIALIZABLE_OPERATION_TEMPLATES Operation
+#define DATAFLOW_SPECIALIZABLE_OPERATION_ARITY 1
+#define DATAFLOW_SPECIALIZABLE_OPERATION_TRAITS_OF port_traits_of
+#define DATAFLOW_SPECIALIZABLE_OPERATION_HAS_TRAITS is_port
+#include <boost/dataflow/support/detail/make_specializable_operation.hpp>
+
 
 namespace boost { namespace dataflow {
 
-namespace detail {
-    struct not_implemented;
-}
-
-namespace operations
+template<typename Port>
+inline void disconnect_all(Port &port)
 {
-    struct disconnect_all;
+    unary_operation<operations::disconnect_all, default_tag>(port);
 }
 
-namespace extension
-{
-    template<typename Operation, typename PortTraits, typename Enable=void>
-    struct unary_operation_impl
-    {
-        struct detail
-        {
-            typedef void not_specialized;
-        };
-        template<typename Producer>
-        void operator()(Producer &)
-        {
-            // Error: unary_operation_impl Operation has not been
-            // implemented for PortTraits.
-            BOOST_STATIC_ASSERT(sizeof(Producer)==0);
-        }
-    };
-}
-
-template<typename Operation, typename Mechanism, typename PortCategory, typename T, typename Enable=void>
-struct implements_unary_operation
-    : public mpl::true_ {};
-
-template<typename Operation, typename Mechanism, typename PortCategory, typename T>
-struct implements_unary_operation<
-    Operation,
-    Mechanism,
-    PortCategory,
-    T,
-    typename detail::enable_if_defined<
-        typename extension::unary_operation_impl<
-            Operation,
-            typename port_traits_of<Mechanism, PortCategory, T>::type
-        >::detail::not_specialized
-    >::type
->
-    : public mpl::false_ {};
-
-template<typename Operation, typename Mechanism, typename PortCategory, typename Port>
-void unary_operation(Port &producer)
-{
-    extension::unary_operation_impl<
-        Operation,
-        typename port_traits_of<Mechanism, PortCategory, Port>::type
-    >()(producer);
-}
 
 } } // namespace boost::dataflow
 

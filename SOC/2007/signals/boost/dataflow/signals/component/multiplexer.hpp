@@ -15,6 +15,11 @@
 
 #include <functional>
 
+#ifndef BOOST_MSVC
+#define BOOST_TEMPLATE_OPERATOR template operator
+#else
+#define BOOST_TEMPLATE_OPERATOR operator
+#endif
 
 namespace boost { namespace signals {
 
@@ -22,18 +27,17 @@ namespace boost { namespace signals {
 also be disabled to stop the flow of signals.
     junction is a conditional with Condition identity and Member volatile bool
 */
-template<typename Signature,
+template<
+    typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
 >
-class multiplexer : public conditional_templated<int, std::equal_to<int>, Signature, OutSignal, Combiner, Group, GroupCompare>
+class multiplexer
+    : public conditional_templated<
+        multiplexer<Signature, OutSignal, SignalArgs>,
+        int, std::equal_to<int>, Signature, OutSignal, SignalArgs>
 {
-protected:
-    typedef conditional_templated<int, std::equal_to<int>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
 public:
-    
     /** Initializes the multiplexer to forward the specified input.
     */
     multiplexer(int selector=0)
@@ -41,7 +45,7 @@ public:
     /** Enables the junction (signals will be forwarded).
     */
     void select(int selector)
-    {   base_type::member = selector; }
+    {   multiplexer::member = selector; }
     
     slot_selector<void(int), multiplexer>
     select_slot()
@@ -52,29 +56,19 @@ public:
     typedef boost::fusion::map<
         boost::fusion::pair<boost::dataflow::signals::producer<Signature>, slot_selector<Signature, multiplexer> >,
         boost::fusion::pair<
-            boost::dataflow::signals::producer<typename base_type::fused_signature_type>,
-            slot_selector<typename base_type::fused_signature_type, multiplexer>
+            boost::dataflow::signals::producer<typename multiplexer::fused_signature_type>,
+            slot_selector<typename multiplexer::fused_signature_type, multiplexer>
         >
     > slot_map;
     
     template<int N>
-    boost::dataflow::port_map<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, slot_map>
-    //slot_selector<Signature, multiplexer>
+    boost::dataflow::port_map<boost::dataflow::ports::consumer, slot_map, boost::dataflow::signals::tag>
     slot()
     {
-        //return make_slot_selector<Signature> (&multiplexer::template operator()<N>, *this);
         return slot_map
-        (make_slot_selector<Signature> (&multiplexer::
-#ifndef BOOST_MSVC
-                                                      template
-#endif
-                                                      operator()<N>, *this),
-         make_slot_selector<typename base_type::fused_signature_type>
-            (&multiplexer::
-#ifndef BOOST_MSVC
-                           template
-#endif            
-                           operator()<N>, *this));
+        (make_slot_selector<Signature> (&multiplexer::BOOST_TEMPLATE_OPERATOR()<N>, *this),
+         make_slot_selector<typename multiplexer::fused_signature_type>
+            (&multiplexer::BOOST_TEMPLATE_OPERATOR()<N>, *this));
 
     }
 };

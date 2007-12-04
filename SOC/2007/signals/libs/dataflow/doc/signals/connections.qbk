@@ -5,10 +5,10 @@
 [*See also]: [funcref boost::signals::connect connect function reference.]
 
 [DataflowSignals] provides a [connect] function in the `boost::signals`
-namespace, which connects a [SignalProducerConcept] and [SignalConsumerConcept]
-which are [ConnectableConcept].
+namespace, which connects a [SignalProducer] and [SignalConsumer]
+which are [Connectable].
 
-Given a [SignalProducerConcept] `p` and [SignalConsumerConcept] `c`,
+Given a [SignalProducer] `p` and [SignalConsumer] `c`,
 
     connect(p,c);
     
@@ -55,8 +55,8 @@ and `operator |`, with `operator |` being used for branching.
 [section invoke function]
 
 [DataflowSignals] provides an [invoke] function in the `boost::signals`
-namespace, which invokes a [InvocableConcept] [DataflowSignals]
-[ComponentConcept].
+namespace, which invokes a [Invocable] [DataflowSignals]
+[Component].
 
 [endsect]
 
@@ -73,7 +73,7 @@ See the [link dataflow.connections.examples.multiple_same  Multiple inputs of th
 [heading Models]
 
 * [SignalConsumer]
-* [ProxyPortConcept]
+* [ProxyPort]
 
 [endsect][/slot_selector]
 

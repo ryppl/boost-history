@@ -1,4 +1,4 @@
-[section:gil An image processing network using Dataflow.Signals and [BoostGIL]]
+[section:gil An image processing network using Dataflow.Signals and Boost.GIL]
 
 The [link dataflow.introduction.motivation motivation] section introduced a
 hypothetical video processing example.  Here, we will present an actual

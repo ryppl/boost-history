@@ -4,7 +4,7 @@
 
 The [DataflowBlueprint] layer now offers some limited dataflow network modeling
 via a BGL graph, and some basic runtime reflections for classes that model
-the [ComponentConcept] concept.
+the [Component] concept.
 
 The following features are planned for the future:
 
@@ -100,7 +100,7 @@ be adapted into the generic Dataflow framework.
 Here, a connection from a data-producing component to a data-consuming
 component would lead to them both being connected to the same data-transport
 object, which would be managed by the library.  The components
-could be invoked through the [InvocableConcept] by the library when needed.
+could be invoked through the [Invocable] by the library when needed.
 
 There are, of course, a lot of other issues to solve, and a lot of ways in
 which the Dataflow generic support layer might need to grow to accomodate

@@ -15,65 +15,47 @@ namespace boost { namespace dataflow {
 
 namespace signals {
 
-struct mechanism {};
+struct tag {};
+struct connect_mechanism {};
+struct extract_mechanism {};
 
 template<typename T>
 struct producer
-    : public complemented_port_traits<mechanism, ports::producer, boost::function<T> >
+    : public complemented_port_traits<ports::producer, boost::function<T>, tag>
 {
     typedef T signature_type;
 };
 
 template<typename T>
 struct consumer
-    : public port_traits<mechanism, ports::consumer, concepts::port>
+    : public port_traits<ports::consumer, concepts::port, tag>
 {
     typedef T signature_type;
 };
 
 struct call_consumer
-    : public port_traits<mechanism, ports::consumer, concepts::keyed_port>
+    : public port_traits<ports::consumer, concepts::keyed_port, tag>
 {};
 
-    // mechanism used for data extraction
-    struct extract_mechanism {};
-    
-    template<typename T>
-    struct extract_producer
-    : public complemented_port_traits<extract_mechanism, ports::producer, boost::function<T> >
-    {
-        typedef T signature_type;
-    };
-    
-    template<typename T>
-    struct extract_consumer
-    : public port_traits<extract_mechanism, ports::consumer, concepts::port>
-    {
-        typedef T signature_type;
-    };
-    
-    struct extract_call_consumer
-    : public port_traits<extract_mechanism, ports::consumer, concepts::keyed_port>
-    {};
+template<typename T>
+struct extract_producer
+    : public complemented_port_traits<ports::producer, boost::function<T>, tag>
+{
+    typedef T signature_type;
+};
 
 } // namespace signals
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct register_port_traits<signals::mechanism, ports::producer, boost::signal<Signature, Combiner, Group, GroupCompare> >
+struct register_port_traits<boost::signal<Signature, Combiner, Group, GroupCompare>, signals::tag >
 {
     typedef signals::producer<Signature> type;
 };
 
 template<typename Signature>
-struct register_port_traits<signals::mechanism, ports::consumer, boost::function<Signature> >
+struct register_port_traits<boost::function<Signature>, signals::tag >
 {
     typedef signals::consumer<Signature> type;
-};
-
-template<typename Signature>
-struct register_port_traits<signals::extract_mechanism, ports::consumer, boost::function<Signature> >
-{
-    typedef signals::extract_consumer<Signature> type;
 };
 
 namespace extension
@@ -90,23 +72,12 @@ namespace extension
             (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
         };
     };
-    
-    template<typename Signature>
-    struct get_keyed_port_impl<signals::extract_call_consumer, signals::extract_producer<Signature> >
-    {
-        typedef const boost::function<Signature> result_type;
-        
-        template<typename ConsumerPort>
-        result_type operator()(ConsumerPort &consumer)
-        {
-            return boost::signals::detail::bind_object<Signature, ConsumerPort>()
-            (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
-        };
-    };
-    
+
     template<typename T>
-    struct binary_operation_impl<operations::connect, signals::producer<T>, signals::consumer<T> >
+    struct binary_operation_impl<signals::producer<T>, signals::consumer<T>, operations::connect>
     {
+        typedef void result_type;
+        
         template<typename Producer, typename Consumer>
         void operator()(Producer &producer, Consumer &consumer)
         {
@@ -119,7 +90,9 @@ namespace extension
 
 namespace boost { namespace signals {
 
-#define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::signals::mechanism
+#define DATAFLOW_TEMPLATE_TAG boost::dataflow::signals::tag
+
+#define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::signals::connect_mechanism
 #define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
 #include <boost/dataflow/templates/binary_operation.hpp>
 #undef DATAFLOW_TEMPLATE_BINARY_OPERATION
@@ -130,6 +103,7 @@ namespace boost { namespace signals {
 #include <boost/dataflow/templates/binary_operation.hpp>
 #undef DATAFLOW_TEMPLATE_BINARY_OPERATION
 #undef DATAFLOW_TEMPLATE_MECHANISM
+#undef DATAFLOW_TEMPLATE_TAG
 
 template<typename Component>
 inline void invoke(Component &component)

@@ -42,17 +42,21 @@ namespace detail
 The signals::function object will receive signals of signature void(<i>function arguments</i>),
 and send signals of signature void(<i>function return type</i>).
 */
-template<typename Signature,
+template<
+    typename Signature,
     typename FunctionSignature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<void>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
 > 
-class function : public modifier<detail::function_adapter<FunctionSignature, Signature>, Signature, OutSignal, Combiner, Group, GroupCompare>
+class function
+    : public modifier<
+        function<Signature, FunctionSignature, OutSignal, SignalArgs>,
+        detail::function_adapter<FunctionSignature, Signature>, Signature, OutSignal, SignalArgs>
 {
 public:
-    typedef modifier<detail::function_adapter<FunctionSignature, Signature>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+    typedef modifier<
+        function<Signature, FunctionSignature, OutSignal, SignalArgs>,
+        detail::function_adapter<FunctionSignature, Signature>, Signature, OutSignal, SignalArgs> base_type;
 
     function(const boost::function<FunctionSignature> &f) : base_type(f) {}
 };

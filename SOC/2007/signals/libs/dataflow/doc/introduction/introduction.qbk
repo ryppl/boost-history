@@ -377,17 +377,22 @@ latest version is located in the
 The Dataflow library uses the trunk version of Boost - it might not work
 perfectly with release versions of boost.
 
+Version 0.8.2 (under construction)
+* Moved functionality from port related concepts to the component concepts.
+* Adapted the Dataflow.Signals layer and tests, most of the rest still broken.
+* Started adding Doxygen-generated support layer reference.
+
 Version 0.8.1
  \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 
 * Started the [DataflowBlueprint] layer (runtime reflection and network modeling).
-* Expanding the [ComponentConcept] concept (compile-time reflection of ports).
+* Expanding the [Component] concept (compile-time reflection of ports).
 * VTK example Jamfile now works work with Windows (not just Darwin+X11 VTK).
 * Provided an example using [BoostGIL].
-* The [MechanismConcept] concept is now limited to port-related operations.
+* The [Mechanism] concept is now limited to port-related operations.
   In the future, an additional tag template parameter might be added to all
   dataflow templates to allow specifying completely independent dataflow support
-  layers over the same types (the original intent of the [MechanismConcept]
+  layers over the same types (the original intent of the [Mechanism]
   parameter).
 
 Version 0.8.0 -
@@ -424,7 +429,7 @@ to build each one of those by going to the appropriate directory and
 running bjam.
 
 [warning The Jamfile for the VTK examples currently only works for Darwin
-and for VTK built for X]
+with VTK built for X11, and for MSVC]
 
 The library itself is header only, and requires no linking.  However, parts
 of it depend on boost libraries which do need to be built and linked (see

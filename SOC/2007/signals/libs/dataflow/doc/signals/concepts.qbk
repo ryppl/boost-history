@@ -1,19 +1,19 @@
 [section Concepts]
 
 [section:signalporttraits SignalPortTraits]
-A [PortTraitsConcept] type `T` is a [`[SignalPortTraitsConcept]] if
+A [PortTraits] type `T` is a [`[SignalPortTraits]] if
 its mechanism is `signals::mechanism`, and it specifies the signature
 of the underlying signal.
 
 [heading Refinement of]
-* [PortTraitsConcept]
+* [PortTraits]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[PT] [A [SignalPortTraitsConcept] type.]]
-    [[C] [A [ConnectableConcept] [SignalConsumerConcept].]]
+    [[PT] [A [SignalPortTraits] type.]]
+    [[C] [A [Connectable] [SignalConsumer].]]
     [[p] [An object of type `p`.]]
     [[c] [An object of type `c`.]]
 ]
@@ -25,7 +25,7 @@ The following expressions are used in this document:
         [Mechanism]
         [`PT::mechanism`]
         [`dataflow::signals::mechanism`]
-        [[MechanismConcept] type tag.]
+        [[Mechanism] type tag.]
     ]
     [
         [Signature]
@@ -39,21 +39,21 @@ The following expressions are used in this document:
 
 [section SignalProducer]
 
-A [ProducerPortConcept] type `P` is a ['[SignalProducerConcept]] if its
-[PortTraitsConcept] is a [SignalPortTraitsConcept], and the `get_port` function
+A [ProducerPort] type `P` is a ['[SignalProducer]] if its
+[PortTraits] is a [SignalPortTraits], and the `get_port` function
 returns the underlying `boost::signal`.
 
 [heading Refinement of]
-* [ProducerPortConcept]
-* [ConnectableConcept] with [SignalConsumerConcept] of same signature.
+* [ProducerPort]
+* [Connectable] with [SignalConsumer] of same signature.
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[`P`] [A [SignalProducerConcept] type.]]
-    [[`PT`] [[PortTraitsConcept] of `P`]]
-    [[`C`] [A [ConnectableConcept] [SignalConsumerConcept].]]
+    [[`P`] [A [SignalProducer] type.]]
+    [[`PT`] [[PortTraits] of `P`]]
+    [[`C`] [A [Connectable] [SignalConsumer].]]
     [[`S`] [Signature of underlying signal]]
     [[`p`] [An object of type `p`.]]
     [[`c`] [An object of type `c`.]]
@@ -85,21 +85,21 @@ files:
 
 [section SignalConsumer]
 
-A [ConsumerPortConcept] type `P` is a ['[SignalConsumerConcept]] if its
-[PortTraitsConcept] is a [SignalPortTraitsConcept], and the `get_port` function
+A [ConsumerPort] type `P` is a ['[SignalConsumer]] if its
+[PortTraits] is a [SignalPortTraits], and the `get_port` function
 returns the underlying `boost::function`.
 
 [heading Refinement of]
-* [ConsumerPortConcept]
-* [ConnectableConcept] with [SignalProducerConcept] of same signature.
+* [ConsumerPort]
+* [Connectable] with [SignalProducer] of same signature.
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[`C`] [A [SignalConsumerConcept] type.]]
-    [[`PT`] [[PortTraitsConcept] of `C`]]
-    [[`P`] [A [ConnectableConcept] [SignalProducerConcept].]]
+    [[`C`] [A [SignalConsumer] type.]]
+    [[`PT`] [[PortTraits] of `C`]]
+    [[`P`] [A [Connectable] [SignalProducer].]]
     [[`S`] [Signature of underlying signal]]
     [[`c`] [An object of type `c`.]]
     [[`p`] [An object of type `p`.]]

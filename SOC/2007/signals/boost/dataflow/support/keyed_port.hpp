@@ -8,6 +8,7 @@
 
 #include <boost/dataflow/support/binary_operation.hpp>
 
+#include <boost/utility/result_of.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -20,91 +21,65 @@ namespace extension
     template<typename KeyedPortTag, typename KeyPortTag>
     struct get_keyed_port_impl
     {        
-        typedef void result_type;
+        typedef detail::not_specialized result_type;
 
         template<typename KeyedPort, typename Key>
-        void operator()(KeyedPort &)
+        result_type operator()(KeyedPort &)
         {
             // Error: get_keyed_port_impl has not been implemented
             // for KeyedPortTag and KeyPort.
             BOOST_STATIC_ASSERT(sizeof(KeyedPort)==0);
+            return result_type();
         }
     };
 }
 
-/*template<typename Mechanism, typename PortCategory, typename KeyPort, typename T>
-inline typename result_of<
+template<typename KeyPortTraits, typename Tag, typename KeyedPort>
+inline typename boost::result_of<
     extension::get_keyed_port_impl<
-        typename port_traits_of<
-            Mechanism, PortCategory, typename boost::remove_cv<T>::type
-        >::type,
-        typename port_traits_of<
-            Mechanism, typename PortCategory::complement, typename boost::remove_cv<KeyPort>::type
-        >::type
-    > (T &)
->::type
-get_keyed_port(T1 &t1, T2 &t2)
-{
-    return extension::get_keyed_port_impl<
-        typename port_traits_of<
-            Mechanism, PortCategory, typename boost::remove_cv<T1>::type
-        >::type,
-        typename port_traits_of<
-            Mechanism, typename PortCategory::complement, typename boost::remove_cv<T2>::type
-        >::type
-    >()(t1, t2);
-}*/
-
-template<typename KeyPortTraits, typename KeyPort>
-inline typename result_of<
-    extension::get_keyed_port_impl<
-        typename port_traits_of<
-            typename KeyPortTraits::mechanism,
-            typename KeyPortTraits::category::complement,
-            typename boost::remove_cv<KeyPort>::type
-        >::type,
+        typename port_traits_of<KeyedPort, Tag>::type,
         KeyPortTraits
-    > (KeyPort &)
+    > (KeyedPort &)
 >::type
-get_keyed_port(KeyPort &p)
+get_keyed_port(KeyedPort &p)
 {
     return extension::get_keyed_port_impl<
-        typename port_traits_of<
-            typename KeyPortTraits::mechanism,
-            typename KeyPortTraits::category::complement,
-            typename boost::remove_cv<KeyPort>::type
-        >::type,
+        typename port_traits_of<KeyedPort, Tag>::type,
         KeyPortTraits
     >()(p);
 }
 
 namespace extension
 {
-    template<typename Operation, typename ProducerTag, typename ConsumerTag>
-    struct binary_operation_impl<Operation, ProducerTag, ConsumerTag,
+    template<typename ProducerTag, typename ConsumerTag, typename Operation>
+    struct binary_operation_impl<ProducerTag, ConsumerTag, Operation,
             typename enable_if<
             boost::is_same<typename ProducerTag::concept, concepts::keyed_port>
         >::type >
     {
+        typedef void result_type;
+        
         template<typename Producer, typename Consumer>
         void operator()(Producer &producer, Consumer &consumer)
         {
-            binary_operation<Operation, typename ProducerTag::mechanism>
-                (get_keyed_port<ConsumerTag>(producer), consumer);
+            binary_operation<Operation, typename ConsumerTag::tag>
+                (get_keyed_port<ConsumerTag, typename ProducerTag::tag>(producer), consumer);
         }
     };
     
-    template<typename Operation, typename ProducerTag, typename ConsumerTag>
-    struct binary_operation_impl<Operation, ProducerTag, ConsumerTag,
+    template<typename ProducerTag, typename ConsumerTag, typename Operation>
+    struct binary_operation_impl<ProducerTag, ConsumerTag, Operation,
             typename enable_if<
             boost::is_same<typename ConsumerTag::concept, concepts::keyed_port>
         >::type >
     {
+        typedef void result_type;
+
         template<typename Producer, typename Consumer>
         void operator()(Producer &producer, Consumer &consumer)
         {
-            binary_operation<Operation, typename ProducerTag::mechanism>
-                (producer, get_keyed_port<ProducerTag>(consumer));
+            binary_operation<Operation, typename ProducerTag::tag>
+                (producer, get_keyed_port<ProducerTag, typename ConsumerTag::tag>(consumer));
         }
     };
 

@@ -6,36 +6,26 @@
 #ifndef BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP
 #define BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP
 
+#include <boost/dataflow/connection/port_map.hpp>
+#include <boost/dataflow/detail/make_ref.hpp>
 #include <boost/dataflow/signals/component/conditional_modifier.hpp>
 #include <boost/dataflow/signals/component/detail/storable.hpp>
 #include <boost/dataflow/signals/connection/slot_selector.hpp>
-#include <boost/dataflow/connection/port_map.hpp>
 
+#include <boost/mpl/map.hpp>
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/view/transform_view.hpp>
 #include <boost/fusion/container/map.hpp>
-#include <boost/dataflow/detail/make_ref.hpp>
 
 
 namespace boost { namespace signals {
 
-    template<typename Signature,
-    typename OutSignal,
-    typename Combiner,
-    typename Group,
-    typename GroupCompare
->
+template<typename Signature, typename OutSignal, typename SignalArgs>
 class storage;
 
-template<typename T>
+template<typename Storage>
 struct storage_component_traits
-    : public dataflow::component_traits<
-        mpl::vector<
-            dataflow::signals::producer<T>, // outgoing signal
-            dataflow::signals::consumer<T>, // incoming signal
-            dataflow::signals::extract_producer<T>, // outgoing extraction port
-            dataflow::signals::extract_consumer<T> // incoming extraction port
-        > >
+    : public filter_component_traits<Storage, typename Storage::signal_type>
 {};
 
 namespace detail
@@ -81,7 +71,7 @@ namespace detail
         storable_vector stored;
         volatile bool opened;
 
-        template<typename Sig, typename OutSignal, typename Combiner, typename Group, typename GroupCompare>
+        template<typename Sig, typename OutSignal, typename SignalArgs>
         friend class storage;
     };
 
@@ -89,31 +79,27 @@ namespace detail
 /** \brief Stores and transmits arguments received from a signal.
     \param Signature Signature of the signal sent.
 */
-template<typename Signature,
+template<
+    typename Signature,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group>
+    typename SignalArgs=typename default_signal_args<Signature>::type
 >
-class storage : public conditional_modifier<storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare>
+class storage : public conditional_modifier<
+    storage<Signature,OutSignal,SignalArgs>,
+    storage_modifier<Signature>,
+    Signature,
+    OutSignal,
+    SignalArgs>
 {
 protected:
-    typedef conditional_modifier<storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+    typedef conditional_modifier<storage, storage_modifier<Signature>, Signature, OutSignal, SignalArgs> base_type;
 	using base_type::modification;
 public:
     typedef typename storage_modifier<Signature>::parameter_types parameter_types;
-
     typedef typename storage_modifier<Signature>::storable_types storable_types;
     typedef typename storage_modifier<Signature>::storable_vector storable_vector;
     
-    typedef storage_component_traits<Signature> component_traits;
-    
-    typedef mpl::vector<
-        typename boost::dataflow::signals::call_consumer,
-        typename boost::dataflow::signals::extract_producer<Signature>,
-        typename boost::dataflow::signals::extract_call_consumer
-         > port_traits;
-
+    typedef storage_component_traits<storage> component_traits;
 
 	storage(const storage &rhs) : base_type(rhs.modification) {}
 
@@ -179,7 +165,7 @@ public:
         >
     > send_map;
 
-    boost::dataflow::port_map<boost::dataflow::signals::mechanism, boost::dataflow::ports::consumer, send_map>
+    boost::dataflow::port_map<boost::dataflow::ports::consumer, send_map, dataflow::signals::tag>
     send_slot()
     {
         return send_map
@@ -190,7 +176,7 @@ public:
     */
     template<int N>
         slot_selector
-#ifndef DOXYGEN_DOCS_ONLY
+#ifndef DOXYGEN_DOCS_BUILD
         <typename boost::fusion::result_of::at_c<storable_vector, N>::type (), storage>
 #endif
     at_slot()
@@ -233,8 +219,8 @@ namespace extension {
         }
     };
     
-    template<typename T>
-    struct get_component_port_impl<boost::signals::storage_component_traits<T> >
+/*    template<typename T>
+    struct get_port_impl<boost::signals::storage_component_traits<T> >
     {
         template<typename Component>
         struct port_types
@@ -264,7 +250,7 @@ namespace extension {
         };
         
         template<typename Component, typename N>
-        typename result<get_component_port_impl(Component &, N)>::type
+        typename result<get_port_impl(Component &, N)>::type
         operator()(Component &component, N)
         {
             return fusion::at<N>(ports(component));
@@ -279,7 +265,7 @@ namespace extension {
         {
             producer.call(consumer);
         }
-    };
+    };*/
 }
 
 } } // namespace boost::dataflow

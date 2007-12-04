@@ -12,7 +12,7 @@ using namespace boost;
 
 //[ test_multi_out_classes
 
-class SignalOutIntFloat : public signals::filter<void (float)>
+class SignalOutIntFloat : public signals::filter<SignalOutIntFloat, void (float)>
 {
 public:
     SignalOutIntFloat(float x) : x(x) {}

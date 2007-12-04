@@ -4,63 +4,31 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include "my_producer_consumer.hpp"
-#include <boost/dataflow/support/binary_operation.hpp>
-
-bool connected = false;
-bool only_connected = false;
-bool disconnected = false;
-
-namespace boost { namespace dataflow { namespace extension {
-
-template<>
-struct binary_operation_impl<operations::connect, my_producer_traits, my_consumer_traits>
-{
-    template<typename Producer, typename Consumer>
-    void operator()(Producer &, Consumer &)
-    {
-        connected = true;
-    }
-};
-
-template<>
-struct binary_operation_impl<operations::connect_only, my_producer_traits, my_consumer_traits>
-{
-    template<typename Producer, typename Consumer>
-    void operator()(Producer &, Consumer &)
-    {
-        only_connected = true;
-    }
-};
-
-template<>
-struct binary_operation_impl<operations::disconnect, my_producer_traits, my_consumer_traits>
-{
-    template<typename Producer, typename Consumer>
-    void operator()(Producer &, Consumer &)
-    {
-        disconnected = true;
-    }
-};
-
-}}}
+#include "my_producer_consumer_operations.hpp"
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
 namespace df = boost::dataflow;
+
+struct whatever;
 
 int test_main(int, char* [])
 {
     my_producer p;
     my_consumer c;
     
-    df::binary_operation<df::operations::connect, my_mechanism>(p, c);
+    df::binary_operation<df::operations::connect, df::default_tag>(p, c);
     BOOST_CHECK(connected);
     
-    df::binary_operation<df::operations::connect_only, my_mechanism>(p, c);
+    df::binary_operation<df::operations::connect_only, df::default_tag>(p, c);
     BOOST_CHECK(only_connected);
 
-    df::binary_operation<df::operations::disconnect, my_mechanism>(p, c);
-    BOOST_CHECK(disconnected);    
+    df::binary_operation<df::operations::disconnect, df::default_tag>(p, c);
+    BOOST_CHECK(disconnected);
+    
+    connected = false;
+    df::binary_operation<df::operations::connect, whatever, df::default_tag>(p, c);
+    BOOST_CHECK(connected);
     
     return 0;
 } // int test_main(int, char* [])

@@ -10,71 +10,121 @@
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/has_key.hpp>
 #include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/map.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/result_of.hpp>
 
 
 namespace boost { namespace dataflow {
 
-template<typename PortSequence>
+/// Convenience base class for ComponentTraits types.
+template<typename PortSequence, typename DefaultPorts=mpl::map<>, typename ComponentConcept=concepts::component, typename Tag=default_tag>
 struct component_traits
 {
+    /// MPL Sequence of exposed port types.
     typedef PortSequence ports;
+    /// MPL Sequence of default ports.
+    typedef DefaultPorts default_ports;
+    /// Concept the Component models.
+    typedef ComponentConcept concept;
+    /// Tag.
+    typedef Tag tag;
+    /// INTERNAL ONLY
     BOOST_MPL_ASSERT((mpl::is_sequence<PortSequence>));
+    /// INTERNAL ONLY
+    BOOST_MPL_ASSERT((mpl::is_sequence<DefaultPorts>));
+    /// INTERNAL ONLY
+    BOOST_MPL_ASSERT((is_base_of<concepts::component, ComponentConcept>));
 };
 
 /// Boolean metafunction determining whether a type is a ComponentTraits.
 template<typename ComponentTraits, typename Enable=void>
 struct is_component_traits : public mpl::false_
 {
+    /// INTERNAL ONLY
     BOOST_MPL_ASSERT((is_same<Enable, void>));
 };
 
+/// INTERNAL ONLY
 template<typename ComponentTraits>
 struct is_component_traits<ComponentTraits,
     typename detail::enable_if_defined<
-        typename ComponentTraits::ports
+        detail::all_of<
+            typename ComponentTraits::ports,
+            typename ComponentTraits::default_ports,
+            typename ComponentTraits::concept,
+            typename ComponentTraits::tag
+        >
     >::type>
  : public mpl::true_
 {};
 
-/// Metafunction returning the ComponentTraits of a type.
-template<typename T, typename Enable=void>
+/// Metafunction returning the ComponentTraits of a Component.
+template<typename T, typename Tag=default_tag, typename Enable=void>
 struct component_traits_of
 {
+    /// INTERNAL ONLY
     BOOST_MPL_ASSERT((is_same<Enable, void>));
 };
 
-/// Specialization allowing intrusive specification of the ComponentTraits.
-template<typename T>
-struct component_traits_of<T>
+#ifndef DOXYGEN_DOCS_BUILD
+// Specialization allowing intrusive specification of the ComponentTraits.
+template<typename T, typename Tag>
+struct component_traits_of<
+    T,
+    Tag,
+    typename detail::enable_if_defined<typename T::component_traits>::type >
 {
     typedef typename T::component_traits type;
     BOOST_MPL_ASSERT(( is_component_traits<type> ));
 };
+#endif // DOXYGEN_DOCS_BUILD
 
+/// Boolean metafunction determining whether a type is a Component.
+template<typename T, typename Tag=default_tag, typename Enable=void>
+struct is_component
+    : public mpl::false_ {};
+
+/// INTERNAL ONLY
+template<typename T, typename Tag>
+struct is_component<
+    T,
+    Tag,
+    typename detail::enable_if_defined<
+        typename component_traits_of<T, Tag>::type
+    >::type >
+    : public mpl::true_ {};
+
+/// Convenience base class for Component types.
+template<typename ComponentTraits>
+struct component
+{
+    /// ComponentTraits of the Component.
+    typedef ComponentTraits component_traits;
+};
+
+#ifndef DOXYGEN_DOCS_BUILD
 namespace extension {
 
     template<typename ComponentTraits, typename Enable=void>
-    struct get_component_port_impl
+    struct get_port_impl
     {
         BOOST_MPL_ASSERT((is_same<Enable, void>));
 
         typedef void result_type;
         
-        struct detail
-        {
-            typedef void not_specialized;
-        };
+        typedef void not_specialized;
 
-        template<typename Component, typename T>
-        void operator()(Component &, T)
+        template<typename Component, int N>
+        void operator()(Component &, mpl::int_<N>)
         {
-            // Error: get_component_port_impl has not been
+            // Error: get_port_impl has not been
             // implemented for ComponentTraits.
             BOOST_STATIC_ASSERT(sizeof(Component)==0);
         }
@@ -82,25 +132,96 @@ namespace extension {
     
 } // namespace extension
 
-template<typename T, typename Component>
-struct get_component_port_result_type
+namespace result_of
 {
-    typedef typename result_of<
-    extension::get_component_port_impl<
-        typename component_traits_of<Component>::type
-    >(Component &, T)>::type type;
-};
-
-template<typename T, typename Component>
-typename get_component_port_result_type<T, Component>::type
-get_component_port(Component &component)
-{
-    return
-        extension::get_component_port_impl<
+    template<typename Component, int N>
+    struct get_port_c
+    {
+        typedef typename boost::result_of<
+            extension::get_port_impl<
             typename component_traits_of<Component>::type
-        >()(component, T());
+        >(Component &, mpl::int_<N>)>::type type;
+    };
+
+    template<typename Component, typename N>
+    struct get_port
+    {
+        typedef typename get_port_c<Component, N::value>::type type;
+    };
 }
 
+template<int N, typename Component>
+inline typename result_of::get_port_c<Component, N>::type
+get_port_c(Component &component)
+{
+    return
+        extension::get_port_impl<
+            typename component_traits_of<Component>::type
+        >()(component, mpl::int_<N>());
+}
+
+template<typename N, typename Component>
+inline typename result_of::get_port<Component, N>::type
+get_port(Component &component)
+{
+    return
+        extension::get_port_impl<
+            typename component_traits_of<Component>::type
+        >()(component, mpl::int_<N::value>());
+}
+
+template<typename Direction, typename Mechanism=default_mechanism>
+struct default_port_selector
+{
+    typedef Direction direction;
+    typedef Mechanism mechanism;
+};
+
+template<typename T, typename Tag>
+struct traits_of<T, Tag, typename enable_if<is_component<T> >::type>
+    : public component_traits_of<T>
+{};
+
+namespace extension {
+
+    template<typename ComponentTraits, typename Direction, typename Mechanism>
+    struct get_default_port_impl<
+        ComponentTraits,
+        Direction,
+        Mechanism,
+        typename enable_if<
+            mpl::and_<
+                is_component_traits<ComponentTraits>,
+                mpl::has_key<
+                    typename ComponentTraits::default_ports,
+                    default_port_selector<Direction, Mechanism>
+                >
+            >
+        >::type >
+    {
+        typedef typename mpl::at<
+                typename ComponentTraits::default_ports,
+                default_port_selector<Direction, Mechanism>
+            >::type port_number;
+            
+        template<typename FArgs>
+        struct result;
+        
+        template<typename F, typename Component>
+        struct result<F(Component &)>
+        {
+            typedef typename result_of::get_port<Component, port_number>::type type;
+        };
+        
+        template<typename Component>
+        typename result<get_default_port_impl(Component &)>::type operator()(Component &c)
+        {
+            return get_port<port_number>(c);
+        }
+    };
+    
+} // namespace extension
+#endif // DOXYGEN_DOCS_BUILD
 
 } } // namespace boost::dataflow
 
