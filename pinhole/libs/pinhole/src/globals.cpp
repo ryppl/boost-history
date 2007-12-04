@@ -5,6 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#define BOOST_PINHOLE_SOURCE 1
+
 #include <boost/pinhole.hpp>
 
 boost::shared_ptr<boost::pinhole::property_manager>
