@@ -9,12 +9,8 @@
 
 #define BOOST_TEST_MODULE PinholeLib
 #include <boost/test/unit_test.hpp>
-#include "TestClassesAndConstants.h"
-#include <boost/pinhole/property_group_wrapper.h>
-
-// I can hide these two line if I don't do everything in headers
-boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
-event_source* event_source::m_instance = 0;
+#include "TestClassesAndConstants.hpp"
+#include <boost/pinhole.hpp>
 
 BOOST_AUTO_TEST_CASE( TestPropertyGroupWrapper_Bool )
 {

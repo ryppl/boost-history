@@ -7,13 +7,7 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/pinhole/property_group.h>
-#include <boost/pinhole/IntegerEditor.h>
-#include <boost/pinhole/FloatEditor.h>
-#include <boost/pinhole/StringEditor.h>
-#include <boost/pinhole/BoolEditor.h>
-#include <boost/pinhole/DoubleEditor.h>
-#include <boost/pinhole/property_manager.h>
+#include <boost/pinhole.hpp>
 
 using namespace boost::pinhole;
 

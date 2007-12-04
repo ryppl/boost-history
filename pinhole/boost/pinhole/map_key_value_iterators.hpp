@@ -1,4 +1,4 @@
-// MscProperty system map_key_value_iterators.h file
+// Pinhole map_key_value_iterators.hpp file
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,7 +8,6 @@
 #ifndef BOOST_MAP_KEY_VALUE_ITERATORS
 #define BOOST_MAP_KEY_VALUE_ITERATORS
 
-#include <boost/config.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning(disable: 4561 4996)

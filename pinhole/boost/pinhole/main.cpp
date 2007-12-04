@@ -1,4 +1,4 @@
-// MscProperty system property_manager.h file
+// Pinhole demo source
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.

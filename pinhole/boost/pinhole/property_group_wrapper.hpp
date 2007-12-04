@@ -1,4 +1,4 @@
-// MscProperty system property_group_wrapper.h file
+// Pinhole property_group_wrapper.hpp file
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,7 +8,7 @@
 #ifndef BOOST_PROPERTY_GROUP_WRAPPER
 #define BOOST_PROPERTY_GROUP_WRAPPER
 
-#include "property_group.h"
+#include "property_group.hpp"
 
 namespace boost { namespace pinhole
 {

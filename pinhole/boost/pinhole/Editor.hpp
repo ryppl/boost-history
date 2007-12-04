@@ -1,4 +1,4 @@
-// MscProperty system Editor.h file
+// Pinhole Editor.hpp file
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -19,6 +19,7 @@ namespace boost { namespace pinhole
     enum EditorPropertyType
     {
         StringType,
+        WStringType,
         IntegerType,
         BooleanType,
         FloatType,

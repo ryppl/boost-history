@@ -1,4 +1,4 @@
-// MscProperty system property_manager.h file
+// Pinhole property_manager.hpp file
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,12 +8,11 @@
 #ifndef BOOST_PROPERTY_MANAGER
 #define BOOST_PROPERTY_MANAGER
 
-#include "exceptions.h"
-#include "map_key_value_iterators.h"
+#include "exceptions.hpp"
+#include "map_key_value_iterators.hpp"
 #include <set>
 #include <string>
 
-#include <boost/config.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
@@ -32,7 +31,7 @@ namespace boost { namespace pinhole
     typedef std::set<std::string> category_collection;
     typedef std::list<property_group*> children_collection;
     
-    class event_source
+    class BOOST_PINHOLE_DECL event_source
     {
     public :
         static event_source* instance()
@@ -70,7 +69,7 @@ namespace boost { namespace pinhole
         
     };
 
-    class property_manager
+    class BOOST_PINHOLE_DECL property_manager
     {
     private:
         static void deleter(property_manager* manager)

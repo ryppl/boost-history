@@ -1,4 +1,4 @@
-// MscProperty system action_info.h file
+// Pinhole action_info.hpp file
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -12,7 +12,7 @@
     #pragma warning(push)
     #pragma warning( disable: 4272 4394 )
 #endif
-#include "Editor.h"
+#include "Editor.hpp"
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif

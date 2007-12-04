@@ -1,4 +1,4 @@
-// MscProperty system property_group.h file
+// Pinhole property_group.hpp file
 //
 // Copyright Jared McIntyre 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,11 +8,11 @@
 #ifndef BOOST_PROPERTY_GROUP
 #define BOOST_PROPERTY_GROUP
 
-#include "map_key_value_iterators.h"
-#include "EditorTypeFinder.h"
-#include "property_info.h"
-#include "action_info.h"
-#include "property_manager.h"
+#include "map_key_value_iterators.hpp"
+#include "EditorTypeFinder.hpp"
+#include "property_info.hpp"
+#include "action_info.hpp"
+#include "property_manager.hpp"
 #include <set>
 #include <list>
 #include <sstream>
@@ -61,7 +61,7 @@ namespace boost { namespace pinhole
         return boost::bind<void>(property_system_var_setter<T>(t), _1);
     }
 
-    #define BOOST_SETTER_VAR(c) property_system_var_setter_builder(c)
+    #define BOOST_SETTER_VAR(c) boost::pinhole::property_system_var_setter_builder(c)
 
     template<typename T>
     struct property_system_var_getter
@@ -560,8 +560,6 @@ namespace boost { namespace pinhole
             }
 
         //@}
-
-    protected:
         
         /**
          * Adds a property to the property list.
@@ -682,6 +680,8 @@ namespace boost { namespace pinhole
                 property_manager::instance()->add_category( category_name, this );
             }
         }
+
+    protected:
 
         #if defined(BOOST_MSVC)
             #pragma warning(push)

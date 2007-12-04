@@ -9,18 +9,12 @@
 
 #define BOOST_TEST_MODULE PinholeLib
 
-#include <boost/pinhole/property_group.hpp>
-#include <boost/pinhole/property_manager.hpp>
+#include <boost/pinhole.hpp>
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
 using namespace boost;
 using namespace boost::pinhole;
-
-
-// I can hide these two line if I don't do everything in headers
-shared_ptr<property_manager> property_manager::m_instance(new property_manager);
-event_source* event_source::m_instance = 0;
 
 class TestGroup : public property_group
 {
