@@ -50,43 +50,47 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-11-15
 <h2>Contents</h2>
 
 <p>
-<br><a href="#Introduction">Introduction</a> <br>
-<a href="#library">Chapter 17&nbsp;&nbsp; Library introduction [library]</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#defns.thread.blocked">17.1.? blocked thread 
-[defns.thread.blocked]</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#defns.deadlock">17.1.? deadlock [defns.deadlock]</a><br><a href="#utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a>
+<br><a href="#Introduction">Introduction</a>
+<br><a href="#library">Chapter 17&nbsp;&nbsp; Library introduction [library]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#dfns.thread.blocked">17.1.? blocked thread [defns.thread.blocked]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#defns.deadlock">17.1.? deadlock [defns.deadlock]</a>
+<br><a href="#utilities">Chapter 20&nbsp;&nbsp; General utilities library [utilities]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#function.objects">20.5 Function objects [function.objects]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#unord.hash">20.5.15 Class template <code>hash</code> [unord.hash]</a>
 <br><a href="#thread">Chapter 30&nbsp;&nbsp; Multi-threading library [thread]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads">30.1 Threads [thread.threads]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.class">30.1.1 Class thread [thread.threads.class]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.id">30.1.1.1 Class <code>thread::id</code> [thread.threads.id]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.constr">30.1.1.2 <code>thread</code> constructors [thread.threads.constr]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.destr">30.1.1.3 <code>thread</code> destructor [thread.threads.destr]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.assign">30.1.1.4 <code>thread</code> assignment [thread.threads.assign]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.member">30.1.1.5 <code>thread</code> members [thread.threads.member]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.static">30.1.1.6 <code>thread</code> static members [thread.threads.static]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.this">30.1.2 Namespace <code>this_thread</code> [thread.threads.this]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex">30.2 Mutexs and locks [thread.mutex]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.concept">30.2.1 Mutex 
-requirements [thread.mutex.requirements]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.recursive">30.2.1.2 Class recursive_mutex [thread.mutex.recursive]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.concept">30.2.2 TimedMutex 
-requirements [thread.timedmutex.requirements]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.class">30.2.2.1 Class timed_mutex [thread.timed.class]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.recursive">30.2.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.intro">30.2.3 Locks [thread.lock.intro]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.guard">30.2.3.1 Class lock_guard [thread.lock.guard]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.unique">30.2.3.2 Class unique_lock [thread.lock.unique]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.once">30.2.5 Call Once [thread.mutex.once]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.onceflag">30.2.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.2.5.2 Non-member function <code>call_once</code> [thread.threads.callonce]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condition">30.3 Condition variables [thread.condition]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.3.1 Class condition_variable [thread.condvar]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.3.2 Class condition_variable_any [thread.condvarany]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.common">30.1 Common Issues [thread.common]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.tmplparmname">30.1.1 Template Parameter Names [thread.tmplparmname]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.exception">30.1.2 Exceptions [thread.exception]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.native">30.1.3 Native Handles [thread.native]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.native">30.1.4 Duration Timeout [thread.duration]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.native">30.1.5 Thread Safety [thread.safety]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads">30.2 Threads [thread.threads]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.class">30.2.1 Class thread [thread.threads.class]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.id">30.2.1.1 Class <code>thread::id</code> [thread.threads.id]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.constr">30.2.1.2 <code>thread</code> constructors [thread.threads.constr]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.destr">30.2.1.3 <code>thread</code> destructor [thread.threads.destr]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.assign">30.2.1.4 <code>thread</code> assignment [thread.threads.assign]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.member">30.2.1.5 <code>thread</code> members [thread.threads.member]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.static">30.2.1.6 <code>thread</code> static members [thread.threads.static]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.algorithm">30.2.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.this">30.2.2 Namespace <code>this_thread</code> [thread.threads.this]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex">30.3 Mutual Exclusion [thread.mutex]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.concept">30.3.1 Mutex requirements [thread.mutex.requirements]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.class">30.3.1.1 Class mutex [thread.mutex.class]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.recursive">30.3.1.2 Class recursive_mutex [thread.mutex.recursive]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.concept">30.3.2 TimedMutex requirements [thread.timedmutex.requirements]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.class">30.3.2.1 Class timed_mutex [thread.timed.class]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.timed.recursive">30.3.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.intro">30.3.3 Locks [thread.lock.intro]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.guard">30.3.3.1 Class lock_guard [thread.lock.guard]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.unique">30.3.3.2 Class unique_lock [thread.lock.unique]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.lock.algorithm">30.3.4 Generic Locking Algorithms [thread.lock.algorithm]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.once">30.3.5 Call Once [thread.mutex.once]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.mutex.onceflag">30.3.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.callonce">30.3.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condition">30.4 Condition variables [thread.condition]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.4.1 Class condition_variable [thread.condvar]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.4.2 Class condition_variable_any [thread.condvarany]</a>
 <br><a href="#time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.1 Class system_time [time.system]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.getsystem">31.2 Function get_system_time [time.getsystem]</a>
@@ -214,7 +218,7 @@ That is, to have a named 'Sychronization:' attribute.]</b>
 
 <blockquote>
 
-<h4>17.1.? blocked thread [<a name="defns.thread.blocked">defns.thread.blocked</a>]</h4>
+<h4><a name="dfns.thread.blocked">17.1.? blocked thread [defns.thread.blocked]</a></h4>
 
 <p>a thread that is waiting for some condition (other than the availability of a 
 processor) to be satisfied before it can continue execution <sup>(footnote)</sup>. 
@@ -223,7 +227,7 @@ As a verb, <i><b>to block</b></i> is to place a thread in the blocked state, and
 <br>
 <sup>(footnote)</sup> This definition is taken from POSIX.</p>
 
-<h4>17.1.? deadlock [<a name="defns.deadlock">defns.deadlock</a>]</h4>
+<h4><a name="defns.deadlock">17.1.? deadlock [defns.deadlock]</a></h4>
 
 <p>two or more threads are unable to continue execution because each is blocked 
 waiting for one or more of the others to satisfy some condition.</p>
@@ -282,8 +286,8 @@ types
 <p>
 The following subclauses describe components to create and manage threads
 ([<cite>1.10 [intro.multithread]</cite>]),
-perform mutual exclusion and locking, and communicate
-between threads.
+perform mutual exclusion,
+and communicate conditions between threads.
 </p>
 
 <table>
@@ -296,7 +300,7 @@ between threads.
     <td><code>&lt;thread&gt;</code></td>
   </tr>
   <tr>
-    <td><a href="#thread.mutex">Mutexs and locks</a></td>
+    <td><a href="#thread.mutex">Mutual Exclusion</a></td>
     <td><code>&lt;mutex&gt;</code></td>
   </tr>
   <tr>
@@ -305,16 +309,31 @@ between threads.
   </tr>
 </tbody></table>
 
+
+<h3><a name="thread.common">30.1 Common Issues [thread.common]</a></h3>
+
+
+<h4><a name="thread.tmplparmname">30.1.1 Template Parameter Names [thread.tmplparmname]</a></h4>
+
 <p>
-Throughout this clause, the names of template parameters are used to express
-type requirements.
+Throughout this clause,
+the names of template parameters are used to express type requirements.
+</p>
+
+<p>
 The requirements for Duration parameters are specified in
 [<cite>reference to date-time library clause</cite>].
+</p>
+
+<p>
 If a parameter is Predicate, <code>operator()</code>
 applied to the actual template argument
 shall return a value that is convertible
 to <code>bool</code>.
 </p>
+
+
+<h4><a name="thread.exception">30.1.2 Exceptions [thread.exception]</a></h4>
 
 <p>
 Implementations of functions described in this clause are permitted to call
@@ -342,6 +361,9 @@ interface (API).
 &mdash;<i>end note</i>]
 </p>
 
+
+<h4><a name="thread.native">30.1.3 Native Handles [thread.native]</a></h4>
+
 <p>
 Several classes described in this clause have members <code>
 native_handle_type</code> and <code>native_handle</code>.
@@ -357,12 +379,17 @@ these members is inherently non-portable.
 &mdash;<i>end note</i>]
 </p>
 
+
+<h4><a name="thread.native">30.1.4 Duration Timeout [thread.duration]</a></h4>
+
 <p>
 Several functions described in this clause take an argument specifying
 a timeout. [<i>Note:</i> Reasonable use cases exist for both duration and
 absolute time based timeouts, so overloads for both are provided unless
 contraindicated. <i>--end note.</i>]
 </p>
+
+<h4><a name="thread.native">30.1.5 Thread Safety [thread.safety]</a></h4>
 
 <p>
 <b>[Crowl: I think we need a general statement that
@@ -371,7 +398,17 @@ operations on std::thread are not thread-safe unless specifically mentioned.
 </p>
 
 
-<h3><a name="thread.threads">30.1 Threads [thread.threads]</a></h3>
+<h3><a name="thread.threads">30.2 Threads [thread.threads]</a></h3>
+
+<p>
+This section describes components to create and manage threads.
+<p>
+
+<p>
+[<i>Note:</i>
+These threads are intended to map one-to-one with operating system threads.
+&mdash;<i>end note</i>]
+
 
 <p>
 <strong>&lt;thread&gt; synopsis</strong>
@@ -402,7 +439,7 @@ namespace this_thread
 </code></pre>
 </blockquote>
 
-<h4><a name="thread.threads.class">30.1.1 Class thread [thread.threads.class]</a></h4>
+<h4><a name="thread.threads.class">30.2.1 Class thread [thread.threads.class]</a></h4>
 
 <p>
 An object of class <code>thread</code> represents and manages a thread of 
@@ -426,7 +463,7 @@ class thread
 public:
     // <em>types:</em>
     class id;
-    typedef <var><strong>implementation-defined</strong></var> native_handle_type; // <em>See [frontmatter]</em>
+    typedef <var><strong>implementation-defined</strong></var> native_handle_type; // <em>See [thread.native]</em>
 
     // <em>construct/copy/destroy:</em>
     thread();
@@ -444,7 +481,7 @@ public:
     void join();
     void detach();
     id get_id() const;
-    native_handle_type native_handle(); // <em>See [frontmatter]</em>
+    native_handle_type native_handle(); // <em>See [thread.native]</em>
 
     // <em>static members:</em>
     static unsigned hardware_concurrency();
@@ -458,7 +495,7 @@ shall be standard-layout
 classes (chapter 9 [class]).
 </p>
 
-<h5><a name="thread.threads.id">30.1.1.1 Class <code>thread::id</code> [thread.threads.id]</a></h5>
+<h5><a name="thread.threads.id">30.2.1.1 Class <code>thread::id</code> [thread.threads.id]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -654,7 +691,7 @@ the stream <code>out</code>.
 </dl>
 </blockquote>
 
-<h5><a name="thread.threads.constr">30.1.1.2 <code>thread</code> constructors [thread.threads.constr]</a></h5>
+<h5><a name="thread.threads.constr">30.2.1.2 <code>thread</code> constructors [thread.threads.constr]</a></h5>
 
 <pre><code>
 thread();
@@ -770,7 +807,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.threads.destr">30.1.1.3 <code>thread</code> destructor [thread.threads.destr]</a></h5>
+<h5><a name="thread.threads.destr">30.2.1.3 <code>thread</code> destructor [thread.threads.destr]</a></h5>
 
 <pre><code>
 ~thread();
@@ -791,7 +828,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.threads.assign">30.1.1.4 <code>thread</code> assignment [thread.threads.assign]</a></h5>
+<h5><a name="thread.threads.assign">30.2.1.4 <code>thread</code> assignment [thread.threads.assign]</a></h5>
 
 <pre><code>
 thread&amp; operator=(thread&amp;&amp; <var>x</var>);
@@ -832,7 +869,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.threads.member">30.1.1.5 <code>thread</code> members [thread.threads.member]</a></h5>
+<h5><a name="thread.threads.member">30.2.1.5 <code>thread</code> members [thread.threads.member]</a></h5>
 
 <pre><code>
 void swap(thread&amp;&amp; <var>x</var>);
@@ -957,7 +994,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.threads.static">30.1.1.6 <code>thread</code> static members [thread.threads.static]</a></h5>
+<h5><a name="thread.threads.static">30.2.1.6 <code>thread</code> static members [thread.threads.static]</a></h5>
 
 <pre><code>
 unsigned hardware_concurrency();
@@ -982,7 +1019,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.threads.algorithm">30.1.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a></h5>
+<h5><a name="thread.threads.algorithm">30.2.1.7 <code>thread</code> specialized algorithms [thread.threads.algorithm]</a></h5>
 
 <pre><code>
 void swap(thread&amp;  <var>x</var>, thread&amp;  <var>y</var>);
@@ -1001,7 +1038,7 @@ void swap(thread&amp;  <var>x</var>, thread&amp;&amp; <var>y</var>);
 
 
 
-<h4><a name="thread.threads.this">30.1.2 Namespace <code>this_thread</code> [thread.threads.this]</a></h4>
+<h4><a name="thread.threads.this">30.2.2 Namespace <code>this_thread</code> [thread.threads.this]</a></h4>
 
 <blockquote>
 <pre><code>
@@ -1108,7 +1145,14 @@ Nothing.
 </dl>
 </blockquote>
 
-<h3><a name="thread.mutex">30.2 Mutexs and locks [thread.mutex]</a></h3>
+<h3><a name="thread.mutex">30.3 Mutual Exclusion [thread.mutex]</a></h3>
+
+<p>
+This section provides mechanisms for mutual exclusion:
+mutexes, locks, and call once.
+These mechanisms ease the production of race-free programs
+[intro.multithread].
+</p>
 
 <p>
 <strong>&lt;mutex&gt; synopsis</strong>
@@ -1158,7 +1202,7 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </code></pre>
 </blockquote>
 
-<h4><a name="thread.mutex.concept">30.2.1 Mutex requirements [thread.mutex.requirements]</a></h4>
+<h4><a name="thread.mutex.concept">30.3.1 Mutex requirements [thread.mutex.requirements]</a></h4>
 
 <p>
 <a name="thread.mutex.concept">[thread.mutex.requirements]</a> describes 
@@ -1166,7 +1210,6 @@ requirements on mutex types used to instantiate templates defined in the C++
 Standard Library</p>
 
 <p>
-Objects of mutex types provide synchronization operations to avoid data races.
 A
 mutex object supports mutual exclusion between threads by
 limiting its ownership to a single thread.
@@ -1420,7 +1463,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.mutex.class">30.2.1.1 Class mutex [thread.mutex.class]</a></h5>
+<h5><a name="thread.mutex.class">30.3.1.1 Class mutex [thread.mutex.class]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1439,8 +1482,8 @@ public:
     bool try_lock();
     void unlock();
 
-    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
-    native_handle_type native_handle();                // <em>See [frontmatter]</em>
+    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
+    native_handle_type native_handle();                // <em>See [thread.native]</em>
 };
 
 }  // std
@@ -1453,7 +1496,7 @@ which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h5><a name="thread.mutex.recursive">30.2.1.2 Class recursive_mutex [thread.mutex.recursive]</a></h5>
+<h5><a name="thread.mutex.recursive">30.3.1.2 Class recursive_mutex [thread.mutex.recursive]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1472,8 +1515,8 @@ public:
     bool try_lock();
     void unlock();
 
-    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
-    native_handle_type native_handle();                // <em>See [frontmatter]</em>
+    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
+    native_handle_type native_handle();                // <em>See [thread.native]</em>
 };
 
 }  // std
@@ -1486,7 +1529,7 @@ which satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4><a name="thread.timed.concept">30.2.2 TimedMutex requirements [thread.timedmutex.requirements]</a></h4>
+<h4><a name="thread.timed.concept">30.3.2 TimedMutex requirements [thread.timedmutex.requirements]</a></h4>
 
 <p>
 To meet the  TimedMutex requirements,
@@ -1590,7 +1633,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.timed.class">30.2.2.1 Class timed_mutex [thread.timed.class]</a></h5>
+<h5><a name="thread.timed.class">30.3.2.1 Class timed_mutex [thread.timed.class]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1612,8 +1655,8 @@ public:
     bool timed_lock(const system_time&amp; abs_time);
     void unlock();
 
-    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
-    native_handle_type native_handle();                // <em>See [frontmatter]</em>
+    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
+    native_handle_type native_handle();                // <em>See [thread.native]</em>
 };
 
 }  // std
@@ -1626,7 +1669,7 @@ that satisfies all of the TimedMutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h5><a name="thread.timed.recursive">30.2.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a></h5>
+<h5><a name="thread.timed.recursive">30.3.2.2 Class recursive_timed_mutex [thread.timed.recursive]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1648,8 +1691,8 @@ public:
     bool timed_lock(const system_time&amp; abs_time);
     void unlock();
 
-    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
-    native_handle_type native_handle();                // <em>See [frontmatter]</em>
+    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
+    native_handle_type native_handle();                // <em>See [thread.native]</em>
 };
 
 }  // std
@@ -1662,7 +1705,7 @@ that satisfies all of the TimedMutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4><a name="thread.lock.intro">30.2.3 Locks [thread.lock.intro]</a></h4>
+<h4><a name="thread.lock.intro">30.3.3 Locks [thread.lock.intro]</a></h4>
 
 <p>
 Locks are objects that hold a reference to a mutex
@@ -1717,7 +1760,7 @@ public:
 </code></pre>
 </blockquote>
 
-<h5><a name="thread.lock.guard">30.2.3.1 Class lock_guard [thread.lock.guard]</a></h5>
+<h5><a name="thread.lock.guard">30.3.3.1 Class lock_guard [thread.lock.guard]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -1805,7 +1848,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h5><a name="thread.lock.unique">30.2.3.2 Class unique_lock [thread.lock.unique]</a></h5>
+<h5><a name="thread.lock.unique">30.3.3.2 Class unique_lock [thread.lock.unique]</a></h5>
 
 <blockquote>
 <pre><code>
@@ -2399,7 +2442,7 @@ Nothing.
 </dl>
 </blockquote>
 
-<h4><a name="thread.lock.algorithm">30.2.4 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
+<h4><a name="thread.lock.algorithm">30.3.4 Generic Locking Algorithms [thread.lock.algorithm]</a></h4>
 
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);</code></pre>
@@ -2469,7 +2512,7 @@ which had been locked by a call to <code>lock()</code> or <code>try_lock()</code
 </blockquote>
 
 
-<h4><a name="thread.mutex.once">30.2.5 Call Once [thread.mutex.once]</a></h4>
+<h4><a name="thread.mutex.once">30.3.5 Call Once [thread.mutex.once]</a></h4>
 
 <p>
 Objects of class <code>once_flag</code> are opaque data structures
@@ -2477,7 +2520,7 @@ that allow <code>call_once</code> to initialize data
 without causing a data race or deadlock.
 </p>
 
-<h5><a name="thread.mutex.onceflag">30.2.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a></h5>
+<h5><a name="thread.mutex.onceflag">30.3.5.1 <code>struct once_flag</code> [thread.mutex.onceflag]</a></h5>
 
 <pre><code>
 constexpr once_flag();
@@ -2507,7 +2550,7 @@ that no function has been called.
 </blockquote>
 
 
-<h5><a name="thread.threads.callonce">30.2.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a></h5>
+<h5><a name="thread.threads.callonce">30.3.5.2 <code>non-member function call_once</code> [thread.threads.callonce]</a></h5>
 
 <pre><code>
 template&lt;class Callable, class Args...&gt;
@@ -2615,7 +2658,7 @@ void g()
 </blockquote>
 
 
-<h3><a name="thread.condition">30.3 Condition variables [thread.condition]</a></h3>
+<h3><a name="thread.condition">30.4 Condition variables [thread.condition]</a></h3>
 
 <p>
 Condition variables provide a mechanism to implement the monitor pattern.
@@ -2644,7 +2687,7 @@ class condition_variable_any;
 </code></pre>
 </blockquote>
 
-<h4><a name="thread.condvar">30.3.1 Class condition_variable [thread.condvar]</a></h4>
+<h4><a name="thread.condvar">30.4.1 Class condition_variable [thread.condvar]</a></h4>
 
 <p>
 An object of class <code>condition_variable</code>
@@ -2686,8 +2729,8 @@ public:
     template &lt;class Duration, class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 
-    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
-    native_handle_type native_handle();                // <em>See [frontmatter]</em>
+    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
+    native_handle_type native_handle();                // <em>See [thread.native]</em>
 };
 
 }  // std
@@ -3033,7 +3076,7 @@ regardless of whether the timeout was triggered.
 shall be a standard-layout class (chapter 9 [class]).
 </p>
 
-<h4><a name="thread.condvarany">30.3.2 Class condition_variable_any [thread.condvarany]</a></h4>
+<h4><a name="thread.condvarany">30.4.2 Class condition_variable_any [thread.condvarany]</a></h4>
 
 <p>
 An object of class <code>condition_variable_any</code>
@@ -3076,8 +3119,8 @@ public:
     template &lt;class Lock, class Duration, class Predicate&gt;
         bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 
-    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [frontmatter]</em>
-    native_handle_type native_handle();                // <em>See [frontmatter]</em>
+    typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
+    native_handle_type native_handle();                // <em>See [thread.native]</em>
 };
 
 }  // std
