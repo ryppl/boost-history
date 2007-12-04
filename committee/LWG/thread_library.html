@@ -2870,9 +2870,8 @@ prior to exiting the function scope.
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if the call to <code>timed_wait</code> is notified
-prior to the indicated timeout,
-otherwise returns <code>false</code>.
+<code>false</code> if the call is returning because the time specified by
+<code>abs_time</code> was reached, <code>true</code> otherwise.
 </dd>
 
 <dt>Throws:</dt>
@@ -2898,9 +2897,8 @@ As if returns <code>timed_wait(<var>lock</var>, get_current_time() + <var>rel_ti
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if the call to <code>timed_wait</code> is notified
-prior to the indicated timeout,
-otherwise returns <code>false</code>.
+<code>false</code> if the call is returning because the time period specified by
+<code>rel_time</code> has elapsed, <code>true</code> otherwise.
 </dd>
 
 </dl>
@@ -3222,10 +3220,8 @@ thread.
 
 <dt>Returns:</dt>
 <dd>
-If the call to <code>timed_wait</code>
-is notified prior to the indicated timeout,
-<code>true</code>,
-otherwise <code>false</code>.
+<code>false</code> if the call is returning because the time specified by
+<code>abs_time</code> was reached, <code>true</code> otherwise.
 </dd>
 
 <dt>Throws:</dt>
@@ -3250,9 +3246,8 @@ As if returns <code>timed_wait(<var>lock</var>, get_current_time() + <var>rel_ti
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if the call to <code>timed_wait</code> is notified
-prior to the indicated timeout,
-otherwise returns <code>false</code>.
+<code>false</code> if the call is returning because the time period specified by
+<code>rel_time</code> has elapsed, <code>true</code> otherwise.
 </dd>
 
 </dl>
