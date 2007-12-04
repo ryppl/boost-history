@@ -215,23 +215,29 @@ That is, to have a named 'Sychronization:' attribute.]</b>
 
 <h2><a name="library">Chapter 17&nbsp;&nbsp; Library introduction [library]</a></h2>
 
-<p>Add the following definitions:</p>
+<p>
+Add the following definitions:
+</p>
 
 <blockquote>
 
 <h4><a name="dfns.thread.blocked">17.1.? blocked thread [defns.thread.blocked]</a></h4>
 
-<p>a thread that is waiting for some condition (other than the availability of a 
+<p>
+a thread that is waiting for some condition (other than the availability of a 
 processor) to be satisfied before it can continue execution <sup>(footnote)</sup>. 
 As a verb, <i><b>to block</b></i> is to place a thread in the blocked state, and
 <b><i>to unblock</i></b> is to place a thread in the unblocked state.<br>
 <br>
-<sup>(footnote)</sup> This definition is taken from POSIX.</p>
+<sup>(footnote)</sup> This definition is taken from POSIX.
+</p>
 
 <h4><a name="defns.deadlock">17.1.? deadlock [defns.deadlock]</a></h4>
 
-<p>two or more threads are unable to continue execution because each is blocked 
-waiting for one or more of the others to satisfy some condition.</p>
+<p>
+two or more threads are unable to continue execution because each is blocked 
+waiting for one or more of the others to satisfy some condition.
+</p>
 
 </blockquote>
 
@@ -456,7 +462,8 @@ execution or <b><i>not a thread</i></b> (referred to as <b><i>NAT</i></b>). <i>
 or <code>detach()</code> members, or moves from a <code>thread</code> object, 
 then that <code>thread</code> object no longer represents a thread of execution. 
 Such a <code>thread</code> object represents NAT. Default constructed <code>thread</code> 
-objects also represent NAT.<i> -- end note]</i></p>
+objects also represent NAT.<i> -- end note]</i>
+</p>
 
 <blockquote>
 <pre><code>
@@ -529,7 +536,8 @@ that compares not equal to the <code>thread::id</code> of all other <code>thread
 objects, including NAT <code>thread</code> objects.&nbsp; The <code>thread::id</code>'s 
 for all NAT <code>thread</code> objects compare equal to each other, and compare 
 not equal to the <code>thread::id</code>'s of all <code>thread</code> objects 
-not representing NAT.</p>
+not representing NAT.
+</p>
 
 <p>
 [<i>Note:</i>
@@ -1516,9 +1524,10 @@ Nothing.
 </dl>
 </blockquote>
 
-<p><code><br>
-</code>The expression <code>m.timed_lock(abs_time)</code> shall be well-defined, 
-and have the following semantics:</p>
+<p>
+The expression <code>m.timed_lock(abs_time)</code> shall be well-defined, 
+and have the following semantics:
+</p>
 
 <blockquote>
 <dl>
@@ -1719,7 +1728,8 @@ An object of type
 maintains ownership of a
 mutex throughout the <code>lock_guard</code>'s lifetime. Behavior is undefined 
 if the mutex pointed to by <code><var>pm</var></code> does not<span style="font-style: normal"> exist for the 
-entire lifetime ([basic.life]) of the </span> <code>lock_guard</code><span style="font-style: normal"> object.</span></p>
+entire lifetime ([basic.life]) of the </span> <code>lock_guard</code><span style="font-style: normal"> object.</span>
+</p>
 
 <pre><code>
 explicit lock_guard(mutex_type&amp; <var>m</var>);
@@ -1842,7 +1852,8 @@ An object of type
 <code>unique_lock</code> is not copyable but is movable. Behavior is undefined 
 if <code>mutex() != 0</code> and the mutex pointed to by <code>mutex()</code> 
 does not<span style="font-style: normal"> exist for the entire remaining lifetime ([basic.life]) of the
-<code>unique_lock</code> object.</span></p>
+<code>unique_lock</code> object.</span>
+</p>
 
 <pre><code>
 unique_lock();
@@ -2102,13 +2113,16 @@ u</var>.mutex() == 0</code>
 Nothing.
 </dd>
 </dl>
-<p>[<i>Note:</i>
+
+<p>
+[<i>Note:</i>
 With a recursive mutex it is possible that both
 <code>*this</code> and <code><var>u</var></code>
 own the same mutex before the assignment.
 In this case, <code>*this</code> will own the mutex after the assignment (and
 <code><var>u</var></code> will not).
-&mdash;<i>end note</i>] </p>
+&mdash;<i>end note</i>]
+</p>
 </blockquote>
 
 <pre><code>
@@ -2374,13 +2388,15 @@ Nothing.
 <pre><code>
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);</code></pre>
 
-<p>Each template parameter type shall meet the Mutex requirements,
+<p>
+Each template parameter type shall meet the Mutex requirements,
 except that <code>try_lock</code> is allowed to throw an
 exception.
 [<i>Note:</i>
 The <code>unique_lock</code> class template meets these requirements
 when suitable instantiated.
-&mdash;<i>end note</i>] </p>
+&mdash;<i>end note</i>]
+</p>
 
 <blockquote>
 <dl>
@@ -2738,7 +2754,8 @@ void wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>);
 <dd>
 <p>
 <code><var>lock</var></code> is locked by the current thread, and
-either:</p>
+either:
+</p>
 
 <ul>
 <li>
@@ -2824,7 +2841,8 @@ bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time
 <dd>
 <p>
 <code><var>lock</var></code> is locked by the current thread, and
-either:</p>
+either:
+</p>
 
 <ul>
 <li>
