@@ -7,9 +7,9 @@
 
 #include <iostream>
 
-#include "property_group.h"
-#include "property_manager.h"
-#include "find.h"
+#include "property_group.hpp"
+#include "property_manager.hpp"
+#include "find.hpp"
 
 using namespace std;
 using namespace boost;

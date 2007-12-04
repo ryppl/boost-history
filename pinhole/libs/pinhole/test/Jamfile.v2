@@ -20,16 +20,16 @@ project
 {
   test-suite pinhole
     : 
-  [ run TestPropertyGroups.cpp  ]
-  [ run TestPropertyGroupWrapper.cpp  ]
+  [ run test_property_groups.cpp  ]
+  #[ run test_property_group_wrapper.cpp  ]
   
-  [ run TestBoolProperties.cpp  ]
-  [ run TestDoubleProperties.cpp  ]
-  [ run TestFloatProperties.cpp  ]
-  [ run TestIntegerProperties.cpp  ]
-  [ run TestStringProperties.cpp  ]
+  [ run test_bool_properties.cpp  ]
+  [ run test_double_properties.cpp  ]
+  [ run test_float_properties.cpp  ]
+  [ run test_integer_properties.cpp  ]
+  [ run test_string_properties.cpp  ]
   
-  [ run TestActions.cpp  ]
+  [ run test_actions.cpp  ]
   
   #[ run TestSerializer.cpp  ]
  ;
