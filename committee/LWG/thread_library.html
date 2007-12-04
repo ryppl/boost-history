@@ -408,6 +408,7 @@ This section describes components to create and manage threads.
 [<i>Note:</i>
 These threads are intended to map one-to-one with operating system threads.
 &mdash;<i>end note</i>]
+</p>
 
 
 <p>
@@ -752,11 +753,9 @@ exception, <code>std::terminate()</code> shall be called.
 
 <dt>Synchronization:</dt>
 <dd>
-<b>[Crowl:
 The invocation of the constructor
-happens before [<cite>intro.multithread</cite>]
+happens before [intro.multithread]
 the invocation of <code><var>f</var></code>.
-]</b>
 </dd>
 
 <dt>Postconditions:</dt>
@@ -923,6 +922,9 @@ void join();
 The completion of the thread represented by <code>*this</code>
 happens before [<cite>intro.multithread</cite>]
 <code>join()</code> returns.
+[<i>Note:</i>
+Operations on <code>*this</code> are not synchronized.
+&mdash;<i>end note</i>]
 </dd>
 
 <dt>Postconditions:</dt>
@@ -954,8 +956,8 @@ void detach();
 <dd>
 The thread represented by
 <code>*this</code> continues execution.
-When the thread represented by
-<code>*this</code> ends execution the implementation shall release any owned resources.
+When the thread represented by <code>*this</code> ends execution,
+the implementation shall release any owned resources.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -1205,11 +1207,6 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 <h4><a name="thread.mutex.concept">30.3.1 Mutex requirements [thread.mutex.requirements]</a></h4>
 
 <p>
-<a name="thread.mutex.concept">[thread.mutex.requirements]</a> describes 
-requirements on mutex types used to instantiate templates defined in the C++ 
-Standard Library</p>
-
-<p>
 A
 mutex object supports mutual exclusion between threads by
 limiting its ownership to a single thread.
@@ -1220,125 +1217,43 @@ thread that calls <code>lock()</code> for a mutex object shall
 call <code>unlock()</code>.
 Mutexes may be either recursive or
 non-recursive.
-The syntax is the same for both recursive and
-non-recursive mutexes, but the semantics differ for the member functions
-as described below.</p>
+The syntax is the same for both recursive and non-recursive mutexes,
+but the semantics differ for the member functions
+as described below.
+</p>
 
 <p>
-The template definitions in the C++ Standard Library refer to the named Mutex 
-requirements whose details are set out below. In this description, <code>m</code> 
-is an object of a mutex type.
+This section describes requirements on template argument types
+used to instantiate templates defined in the C++ Standard Library.
+The template definitions in the C++ Standard Library
+refer to the named Mutex requirements
+whose details are set out below.
+In this description, <code>m</code> is an object of a mutex type.
 </p>
 
 <p>
 A mutex type
 shall be <code>DefaultConstructible</code> and <code>Destructible</code>.
-If initialization
-of a mutex type fails,
-an exception of type <code>system_error</code> shall be thrown. A mutex type is 
-neither copyable nor movable.</p>
-
-<p>
-<b>[Crowl:
-I think mutex constructon and destruction must be relaxed atomic,
-otherwise their state is undefined for subsequent try operations.
-]</b>
+If initialization of a mutex type fails,
+an exception of type <code>system_error</code> shall be thrown.
+A mutex type is neither copyable nor movable.
 </p>
 
 <p>
-<b>[Crowl:
-The concern is undefined behavior when the thread constructing the
-mutex is not the thread that does the first lock.  Without some form
-of defined atomicity, the programmer must ensure a 'happens before'
-through some other mechanism, like another lock, but then recursion.
-<br><br>
-For dynamically allocated mutexes, the "publishing of the pointer"
-can be a release and the subsequent "purchase of the pointer"
-can be an acquire.  That is, you can make the act of obtaining a
-reference be the mechanism for 'happens before'.
-<br><br>
-For function-local statics, the rules of N2444 effectively provide
-the synchronization needed.
-<br><br>
-For global statics, though, you can (and typically would) obtain
-a reference directly by name.  However, on further reflection,
-the initialization rules in N2444 would effectively require either
-waiting until after main starts to access the lock or doing something
-to the effect of what you say above.
-<br><br>
-So, finishing a lap around the barn, I've convinced myself that no
-normative change is necessary, but we should definitely add a note.
-]</b>
+The implementation will provide lock and unlock operations,
+as described below.
+The implementation shall serialize those operations.
+[<i>Note:</i>
+Construction and destruction of a mutex type need not be thread-safe;
+other synchronization must be used
+to ensure that mutexes are initialized and visible to other threads.
+&mdash;<i>end note</i>]
 </p>
 
 <p>
-<b>[Crowl:
-The native_handle operation should be relaxed atomic too.
-<br><br>
-As long as the native_handle is invariant after construction,
-I think this problem is solved by the discussion above.
-]</b>
+The expression <code>m.lock()</code> shall be well-defined,
+and have the following semantics:
 </p>
-
-<p>
-<b>[Crowl:
-The lock and try_lock operations are currently "acquire operations",
-but they need to be acquire operations on some atomic variable in
-the implementation of the lock.  Likewise, release with unlock.
-]</b>
-</p>
-
-<p>
-<b>[Crowl:
-Hm.  In retrospect, I think the "happens before" may be sufficient.
-If termination of the thread function body happens-before the
-return from join(), there must be a "synchronizes with"
-between the termination and the return, which in turn implies
-a "release and acquire" pair.  So we're okay there.  In
-addition, optimizing away the thread still leaves us with a
-sequential "sequenced before".
-]</b>
-</p>
-
-<p>
-<b>[Boehm:
-The intended memory model story here is that the library defines acquire
-and release operations on memory locations.  An acquire operation that
-reads the value written by a release operation gives rise to a
-"synchronizes with" relationship, which then gives rise to the "happens
-before" relationship.  I think it would be marginally cleaner to say
-"synchronizes with" in these cases, or even to express this in terms of
-acquire and release operations on memory locations, but I don't think
-this is a big deal either way.
-]</b>
-</p>
-
-<p>
-<b>[Boehm:
-Wouldn't a definition using acquire and release imply that eliding
-the operation is no longer possible?
-]</b>
-</p>
-
-<p>
-<b>[Boehm:
-I don't see how it would make a difference.  They would be specified to
-be acquire and release operations on some unspecified location in the
-thread object.  The implementation would have actually to do something
-along those lines, and that would typically involve at least a fence in
-the thread exit code and in the join implementation.  But I think those
-are bound tobe there anyway as a result of the synchronization required
-to access the thread structure.  What operation were you hoping to
-elide?
-<br><br>
-It's probably still easier just to say "synchronizes with" and dodge
-these details.
-]</b>
-</p>
-
-<p>
-The expression <code>m.lock()</code> shall be well-defined, and have the 
-following semantics:</p>
 
 <blockquote>
 <dl>
@@ -1358,7 +1273,8 @@ Upon successful completion, the current thread owns the mutex.
 
 <dt>Synchronization:</dt>
 <dd>
-This is an acquire operation [<cite>intro.multithread</cite>].
+This operation synchronizes with [intro.multithread]
+prior <code>unlock()</code> operations on the same object.
 </dd>
 
 <dt>Throws:</dt>
@@ -1370,9 +1286,10 @@ possible error conditions are implementation defined.
 </dl>
 </blockquote>
 
-<p><code><br>
-</code>The expression <code>m.try_lock()</code> shall be well-defined, and have 
-the following semantics:</p>
+<p>
+The expression <code>m.try_lock()</code> shall be well-defined,
+and have the following semantics:
+</p>
 
 <blockquote>
 <dl>
@@ -1408,10 +1325,11 @@ This spurious failure is normally uncommon.
 <dt>Synchronization:</dt>
 <dd>
 If <code>try_lock</code> returns <code>true</code>,
-<code>try_lock</code> is an acquire operation [<cite>intro.multithread</cite>]
-on the atomic variable [<cite>atomics</cite>] within the mutex.
+<code>try_lock</code> synchronizes with [<cite>intro.multithread</cite>]
+prior <code>unlock()</code> operations on the same object.
 [<i>Note:</i>
-Since a failed <code>try_lock()</code> is not an acquire operation [1.10],
+Since a failed <code>try_lock()</code>
+is not an acquire operation [intro.multithread],
 the resulting memory visibility rules are weak enough
 to permit potentially interesting
 <code>try_lock()</code> implementations based on
@@ -1426,9 +1344,10 @@ Nothing.
 </dl>
 </blockquote>
 
-<p><code><br>
-</code>The expression <code>m.unlock()</code> shall be well-defined, and have 
-the following semantics:</p>
+<p>
+The expression <code>m.unlock()</code> shall be well-defined,
+and have the following semantics:
+</p>
 
 <blockquote>
 <dl>
@@ -1452,8 +1371,8 @@ or by any other locking function) before ownership is released.
 
 <dt>Synchronization:</dt>
 <dd>
-<code>unlock</code> is a release operation [<cite>intro.multithread</cite>]
-on the atomic variable [<cite>atomics</cite>] within the mutex.
+This operation syncronizes with [intro.multithread]
+subsequent lock operations that obtain ownership on the same object.
 </dd>
 
 <dt>Throws:</dt>
@@ -1532,14 +1451,19 @@ It shall be a standard-layout class (chapter 9 [class]).
 <h4><a name="thread.timed.concept">30.3.2 TimedMutex requirements [thread.timedmutex.requirements]</a></h4>
 
 <p>
-To meet the  TimedMutex requirements,
-types are required to meet the Mutex requirements. In addition, one or the other 
-of the following requirements shall be met, where <code>rel_time</code> denotes 
-an rvalue of a type meeting the Duration([]) requirements or <code>abs_time</code> 
-denotes an rvalue of type <code>system_time</code>:</p>
+To meet the TimedMutex requirements,
+types are required to meet the Mutex requirements.
+In addition, one or the other of the following requirements shall be met,
+where <code>rel_time</code>
+denotes an rvalue of a type meeting the Duration([]) requirements
+or <code>abs_time</code> 
+denotes an rvalue of type <code>system_time</code>:
+</p>
 
-<p>The expression <code>m.timed_lock(rel_time)</code> shall be well-defined, and 
-have the following semantics:</p>
+<p>
+The expression <code>m.timed_lock(rel_time)</code> shall be well-defined,
+and have the following semantics:
+</p>
 
 <blockquote>
 <dl>
@@ -1580,7 +1504,8 @@ but implementations are expected to make a strong effort to do so.
 <dt>Synchronization:</dt>
 <dd>
 If <code>timed_lock</code> returns <code>true</code>,
-it is an acquire operation [<cite>intro.multithread</cite>].
+it synchronizes with [intro.multithread]
+prior <code>unlock()</code> operations on the same object.
 </dd>
 
 <dt>Throws:</dt>
@@ -2526,18 +2451,17 @@ without causing a data race or deadlock.
 constexpr once_flag();
 </code></pre>
 
-<p>
-<b>[Crowl:
-The once_flag constructor needs to be relaxed atomic, when not static.
-]</b>
-</p>
-
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
 Constructs a object of type
 <code>once_flag</code>.
+</dd>
+
+<dt>Synchronization:</dt>
+<dd>
+The construction of a once_flag is not synchronized.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2557,17 +2481,6 @@ template&lt;class Callable, class Args...&gt;
 void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </code></pre>
 
-<p>
-<b>[Crowl:
-The call_once function
-- when calling the given function object,
- performs a release on the once_flag after function object execution
- and before returning;
-- when not calling the given function object,
- performs an acquire before returning.
-]</b>
-</p>
-
 <blockquote>
 <dl>
 <dt>Requires:</dt>
@@ -2584,25 +2497,27 @@ copy shall be equivalent to calling the original.
 
 <dt>Effects:</dt>
 <dd>
-The argument <code>func</code> (or a copy thereof) is called exactly once
-for the <code>once_flag</code> object specified by <code>flag</code>,
-as-if by invoking <code>func(args)</code>,
-even if <code>call_once</code> is called multiple times
-for the same <code>once_flag</code> object,
-except that if the invocation of <code>func</code> results in an exception being thrown,
-the exception is propagated to the caller
-and the effects on <code>once_flag</code> are as-if this invocation of <code>call_once</code>
-did not occur.
+Calls to <code>call_once</code> on the same <code>once_flag</code> object
+are serialized.
+If there has been no prior successful <code>call_once</code>
+on the same <code>once_flag</code> object,
+the argument <code>func</code> (or a copy thereof)
+is called
+as-if by invoking <code>func(args)</code>.
+The <code>call_once</code>
+is successful if and only if
+<code>func(args)</code> returns without exception.
+If an exception is thrown,
+the exception is propagated to the caller.
 </dd>
 
 <dt>Synchronization:</dt>
 <dd>
-If multiple calls to <code>call_once</code>
-with the same <code>once_flag</code> object
-occur in separate threads,
-the single non-exceptional return of <code>func</code>
-happens before [<cite>intro.multithreading</cite>]
-every non-exceptional <code>call_once</code> return.
+A successful <code>call_once</code> invocation
+on a <code>once_flag</code> object,
+synchronizes with [intro.multithread]
+all subsequent <code>call_once</code> invocations
+on the same <code>once_flag</code> object.
 </dd>
 
 <dt>Throws:</dt>
@@ -2673,6 +2588,12 @@ they are executed in some unspecified order.
 </p>
 
 <p>
+Condition variable construction and destruction
+need not be synchronized.
+</p>
+
+
+<p>
 <strong>&lt;condition_variable&gt; synopsis</strong>
 </p>
 
@@ -2695,11 +2616,6 @@ is a synchronization primitive
 used to cause a thread to wait
 until notified by some other thread that some condition is met,
 or until a system time is reached.
-</p>
-
-<p>
-<b>[Crowl: Condvar construction and destruction are relaxed atomic.
-(If not, must be done before corresponding mutex.)]</b>
 </p>
 
 <blockquote>
