@@ -242,8 +242,7 @@ namespace detail
         align_style alignment = center_align;
         if(derived().use_down_ticks)
         {  // No need to shift if derived().use_up_ticks as labels are below the X-axis.
-          y += derived().x_label_info.font_size();
-          // Move down a font height below bottom end of tick.
+          // y += derived().x_label_value.font_size();
         }
         if (derived().x_label_rotation_ == upward)
         { // 
@@ -254,40 +253,33 @@ namespace detail
         else if((derived().x_label_rotation_ == downward)
           || (derived().x_label_rotation_ == downhill))
         { // start from tick and write down.
+          y += derived().x_label_value.font_size() * 0.5;
           alignment = left_align;
         }
         else if(derived().x_label_rotation_ == horizontal)
         {
+          y += derived().x_label_value.font_size() * 1.5;
           alignment = center_align; // center on the tick.
         }
         else if(derived().x_label_rotation_ == uphill)
         { // 45 slope up,
           alignment = left_align; // Uphill to end at tick.
           y += label.str().size() * derived().x_label_info.font_size() * 0.7;
-          // sloping so need about sin(45) = 0.707 less space,
+          // sloping up so need about sin(45) = 0.707 less space,
           // so the last digit is by the tick.
         }
         else
-        { // 45 slope down
+        { // 45 slope down.
           alignment = left_align; // Assume downhill from tick,
-          // so no need to y adjustment.
+          // so no need for y adjustment.
         }
 
-        //if(derived().use_x_ticks_on_plot_window_) // External style.
-        //{ // Always want all values including "0" if labelling on the external plot window.
-        //  derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
-        //    x1, y, // x centered on tick, 
-        //    label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
-        //    "", "", "", "", alignment,  // center label on the tick.
-        //    derived().x_label_rotation_);
-        //}
-        //else
         { // ! use_x_ticks_on_plot_window_ = Internal - value labels just below horizontal X-axis.
           if (derived().use_x_ticks_on_plot_window_ || ((value != 0) && derived().use_x_axis_lines_))
           { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
            derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
               x1, y,
-              label.str(), derived().x_label_info.font_size(), derived().x_label_info.font_family(),
+              label.str(), derived().x_label_value.font_size(), derived().x_label_value.font_family(),
               "", "", "", "", alignment, // center label on the tick.
               derived().x_label_rotation_);
           }
@@ -528,24 +520,7 @@ namespace detail
       label += "  (" + derived().x_units_info.text() + ")";
     }
     // Simplest to start from the bottom of the image.
-    // and move up to give enough sapce for the X-axis label.
-
-    //double y(0.);
-    //transform_y(y);
-    //derived().x_axis = y; // X-axis line at y = 0.
-    //y += derived().x_label_font_size() * 2.5; // values & label & half line space.
-    //if (derived().use_down_ticks)
-    //{ // Make space for ticks down.
-    //  y += (std::max)(derived().x_major_tick_length(), derived().x_minor_tick_length());
-    //  // Brackets avoid trouble with any nasty macro max.
-    //  // Use max in case some joker uses longer minor ticks than major.
-    //}
-    //if (derived().x_ticks_on_plot_window_on())
-    //{ // Allow space for the values labelling the ticks.
-    //  y += derived().x_label_font_size() * derived().text_margin_;
-    //}
-    // Bottom of plot window plus two char height.
-    // derived().plot_y2 + (derived().x_label_font_size() * derived().text_margin_),
+    // and move up to give enough space for the X-axis label.
 
     double y = derived().image.y_size();  // bottom edge of image.
     y -= derived().x_label_font_size(); // Up enough for a space underneath label.
@@ -1442,15 +1417,25 @@ public:
   }
 
   Derived& x_label_font_size(unsigned int i)
-  { // TODO May be best to tie these two font sizes together?
+  { 
     derived().x_label_info.font_size(i);
-    derived().x_units_info.font_size(i);
     return derived();
   }
 
   unsigned int x_label_font_size()
   {
     return derived().x_label_info.font_size();
+  }
+
+  Derived& x_value_font_size(unsigned int i)
+  { 
+    derived().x_value_value.font_size(i);
+    return derived();
+  }
+
+  unsigned int x_value_font_size()
+  {
+    return derived().x_value_value.font_size();
   }
 
   Derived& x_label_font_family(const std::string& family)

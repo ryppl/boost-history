@@ -266,8 +266,8 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     legend_width_(200), // width of legend box (pixels)
     legend_header_(0, 0, "", 14, "Verdana", "", "", "", "", center_align, horizontal),
     legend_font_width_(0.5),
-    x_label_info(0, 0, "X Axis", 14, "Verdana", "", "", "", "", center_align, horizontal),
-    x_label_value(0, 0, "", 12, "Verdana", "", "", "", "", center_align, horizontal),
+    x_label_info(0, 0, "X Axis", 16, "Verdana", "", "", "", "", center_align, horizontal),
+    x_label_value(0, 0, "", 10, "Verdana", "", "", "", "", center_align, horizontal),
     // TODO use this and provide way to set'n'get separately.
     x_label_width_(0.5),
     y_label_info(0, 0, "Y Axis", 14, "Verdana", "", "", "", "", center_align, upward),
@@ -504,16 +504,16 @@ private:
          }
         if (y_label_rotation_ == horizontal)
         { // Move edge right to give space for y_value_precision_ digits.
-          plot_x1 += y_label_info.font_size() * (l * wh);
+          plot_x1 += y_label_value.font_size() * (l * wh);
         }
         else if((y_label_rotation_ == upward) || (y_label_rotation_ == downward))
         { // Only need one char width.
-          plot_x1 += y_label_info.font_size() * 1.5;
+          plot_x1 += y_label_value.font_size() * 1.5;
         }
         else
         { // assume some slope 45? So diagonally down from tick,
           // and takes a bit less room.
-          plot_x1 +=  y_label_info.font_size() * l * wh * sin45;
+          plot_x1 +=  y_label_value.font_size() * l * wh * sin45;
         }
       }
       if (use_x_major_labels && use_x_ticks_on_plot_window_)
@@ -532,17 +532,17 @@ private:
 
         if ((x_label_rotation_ == upward) || (x_label_rotation_ == downward))
         { // need
-          l += 2; // space at top and bottom?
+          l += 2; // extra space at top and bottom?
         }
         else if(x_label_rotation_ != horizontal)
-        { // Only 1 char height needed if horizontal.
+        { // Only 1 char height & 1 space needed if horizontal.
           l = 2;
         }
         else
         { // assume some slope, say 45 sin(45) = 0.707?
           l *= 0.707;
         }
-        plot_y2 -= x_label_info.font_size() * (l * wh);
+        plot_y2 -= x_label_value.font_size() * l;
       }
       if(use_left_ticks)
       { // Reduce plot to give space for biggest of any external left ticks.
@@ -640,7 +640,7 @@ private:
         //}
         if(use_y_label)
         { // Start further right to give space for y axis value label.
-          y1 -= y_label_info.font_size() * text_margin_ ;
+          y1 -= y_label_value.font_size() * text_margin_ ;
         }
 
         if(use_left_ticks)
@@ -694,7 +694,7 @@ private:
           // we might need to move left more for the longer tick.
           x1 -= (y_minor_tick_length_ - y_minor_tick_length_);
         }
-        x1 -= y_label_info.font_size(); // move left by a font width.
+        x1 -= y_label_value.font_size(); // move left by a font width.
       }
       else
       { // No need to move if right tick, or none.
@@ -707,7 +707,7 @@ private:
         if(y_label_rotation_ == horizontal)
         {  // Just shift down half a digit to center value digits on tick.
           alignment = right_align;
-          y += y_label_info.font_size() / 2;
+          y += y_label_value.font_size() / 2;
         }
         else if ((y_label_rotation_ == upward) || (y_label_rotation_ == downward))
         {// Tick value label straight up or down vertically on y axis.
@@ -716,7 +716,7 @@ private:
         }
         else
         { // Assume some 45 slope, so need about sqrt(2) less space?
-           x1 += y_label_info.font_size() * 0.5; // move left by half a font width.
+           x1 += y_label_value.font_size() * 0.5; // move left by half a font width.
           // no y shift needed.
           alignment = right_align;
         }
@@ -724,16 +724,16 @@ private:
         image.get_g_element(detail::PLOT_VALUE_LABELS).text(
           x1,
           y,
-          label.str(), y_label_info.font_size(), "", "", "", "", "", alignment, y_label_rotation_);
+          label.str(), y_label_value.font_size(), "", "", "", "", "", alignment, y_label_rotation_);
       }
       else
       { // ! use_y_ticks_on_plot_window_Internal - value labels close to left of vertical Y-axis.
         if ((value != 0) && use_x_axis_lines_)
         { // Avoid a zero ON the Y-axis as it would be cut through by the horizontal X-axis line.
-          y += y_label_info.font_size() / 2; 
+          y += y_label_value.font_size() / 2; 
           image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1, 
             y, // Just shift down half a digit to center value digits on tick.
-            label.str(), y_label_info.font_size(), y_label_info.font_family(), "", "", "", "",
+            label.str(), y_label_value.font_size(), y_label_value.font_family(), "", "", "", "",
             center_align, // on the tick ???
             y_label_rotation_); 
         }
