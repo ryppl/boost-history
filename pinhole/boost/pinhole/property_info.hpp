@@ -12,7 +12,7 @@
     #pragma warning(push)
     #pragma warning( disable: 4272 4394 )
 #endif
-#include "Editor.h"
+#include "Editor.hpp"
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif
@@ -24,14 +24,15 @@
 #include <boost/type_traits.hpp>
 #include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif
 
 namespace boost { namespace pinhole { namespace detail
 {
-    #define BOOL_TRUE ("True")
-    #define BOOL_FALSE ("False")
+    #define BOOL_TRUE "True"
+    #define BOOL_FALSE "False"
 
     ///////////////////////////////////////////////////
     //               set_as_string Override Functors
@@ -87,7 +88,7 @@ namespace boost { namespace pinhole { namespace detail
         template<typename Set_Type>
         inline void operator()( Set_Type setter, std::string value )
         {
-            setter( value == BOOL_TRUE );
+            setter( boost::iequals(value, BOOL_TRUE) || value == "1" );
         }
     };
 

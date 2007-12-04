@@ -8,94 +8,84 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PinholeLib
+
+#include <boost/pinhole/property_group.hpp>
+#include <boost/pinhole/property_manager.hpp>
 #include <boost/test/unit_test.hpp>
-#include "TestClassesAndConstants.h"
+
+using namespace std;
+using namespace boost;
+using namespace boost::pinhole;
+
+class TestGroup : public property_group
+{
+public:
+#if defined(BOOST_MSVC)
+    #pragma warning(push)
+    #pragma warning( disable: 4355 )
+#endif
+	TestGroup() : property_group( "PropertyGroupName", NULL )
+	{
+        m_float_Func = 1.1f;
+	    m_float_Var  = 1.1f;
+
+		add_property("Float_Func", "Float description", BOOST_SETTER(&TestGroup::SetFloat), BOOST_GETTER(&TestGroup::GetFloat), NULL );
+		add_property("Float_Var",  "Float description", BOOST_SETTER_VAR(m_float_Var),      BOOST_GETTER_VAR(m_float_Var),     NULL );
+	}
+#if defined(BOOST_MSVC)
+    #pragma warning(pop)
+#endif
+
+	void SetFloat( float x ){ m_float_Func = x; }
+	float GetFloat(){ return( m_float_Func ); }
+
+private:
+	float m_float_Func;
+	float m_float_Var;
+};
 
 // I can hide these two line if I don't do everything in headers
 boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
 event_source* event_source::m_instance = 0;
 
-BOOST_AUTO_TEST_CASE( TestSetGetFloat )
+BOOST_AUTO_TEST_CASE( TestSetGetFloat_Func )
 {
-    TestPropertyGroup testGroup;
+    TestGroup testGroup;
+
+	testGroup.set( "Float_Func", 2.2f );
+	BOOST_CHECK_EQUAL( 2.2f, testGroup.get<float>( "Float_Func") );
     
-	float fValue;
-	testGroup.set_as_string( PROPERTY_FLOAT_1, PROPERTY_FLOAT_1_STRING_VALUE );
-	BOOST_CHECK( from_string<float>(fValue, testGroup.get_as_string(PROPERTY_FLOAT_1), std::dec) );
-	BOOST_CHECK_EQUAL( PROPERTY_FLOAT_1_VALUE, fValue );
+	testGroup.set_as_string( "Float_Func", "3.3" );
+	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string( "Float_Func") );
+	BOOST_CHECK_EQUAL( 3.3f, testGroup.get<float>( "Float_Func") );
 }
 
-BOOST_AUTO_TEST_CASE( TestSetGetFloatVar )
+BOOST_AUTO_TEST_CASE( TestSetGetFloat_Var )
 {
-    TestPropertyGroup testGroup;
+    TestGroup testGroup;
+
+	testGroup.set( "Float_Var", 2.2f );
+	BOOST_CHECK_EQUAL( 2.2f, testGroup.get<float>( "Float_Var") );
     
-	float fValue;
-	testGroup.set_as_string( PROPERTY_FLOAT_1_VAR, PROPERTY_FLOAT_1_STRING_VALUE );
-	BOOST_CHECK( from_string<float>(fValue, testGroup.get_as_string(PROPERTY_FLOAT_1_VAR), std::dec) );
-	BOOST_CHECK_EQUAL( PROPERTY_FLOAT_1_VALUE, fValue );
+	testGroup.set_as_string( "Float_Var", "3.3" );
+	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string( "Float_Var") );
+	BOOST_CHECK_EQUAL( 3.3f, testGroup.get<float>( "Float_Var") );
 }
 
 BOOST_AUTO_TEST_CASE( TestFloatPropertyType )
 {
-    TestPropertyGroup_4 testGroup;
+    TestGroup testGroup;
     
-    BOOST_CHECK( typeid(bool) != testGroup.get_type_info(PROPERTY_FLOAT_1) );
-    BOOST_CHECK( typeid(int) != testGroup.get_type_info(PROPERTY_FLOAT_1) );
-    BOOST_CHECK( typeid(float) == testGroup.get_type_info(PROPERTY_FLOAT_1) );
-    BOOST_CHECK( typeid(double) != testGroup.get_type_info(PROPERTY_FLOAT_1) );
-    BOOST_CHECK( typeid(std::string) != testGroup.get_type_info(PROPERTY_FLOAT_1) );
-
-	const FloatEditor *pEditor = dynamic_cast<const FloatEditor*>(testGroup.get_metadata( PROPERTY_FLOAT_1 ));
-	BOOST_CHECK( pEditor != NULL );
-	BOOST_CHECK( testGroup.get_metadata(PROPERTY_FLOAT_1)->getEditorPropertyType() == FloatType );
+    BOOST_CHECK( typeid(bool) != testGroup.get_type_info("Float_Func") );
+    BOOST_CHECK( typeid(int) != testGroup.get_type_info("Float_Func") );
+    BOOST_CHECK( typeid(float) == testGroup.get_type_info("Float_Func") );
+    BOOST_CHECK( typeid(double) != testGroup.get_type_info("Float_Func") );
+    BOOST_CHECK( typeid(std::string) != testGroup.get_type_info("Float_Func") );
 }
 
-BOOST_AUTO_TEST_CASE( TestFloatGetControlType )
+BOOST_AUTO_TEST_CASE( TestInvalidSet )
 {
-    TestPropertyGroup_4 testGroup;
+    TestGroup testGroup;
     
-	const FloatEditor *pEditor = dynamic_cast<const FloatEditor*>(testGroup.get_metadata( PROPERTY_FLOAT_1 ));
-	BOOST_CHECK( pEditor->GetControlType() == EditBox );
-}
-
-BOOST_AUTO_TEST_CASE( TestFloatGetUIOverrideType )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const FloatEditor *pEditor = dynamic_cast<const FloatEditor*>(testGroup.get_metadata( PROPERTY_FLOAT_2 ));
-	BOOST_CHECK( pEditor->GetControlType() == Tracker );
-}
-
-BOOST_AUTO_TEST_CASE( TestFloatHighLowIncrement )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const FloatEditor *pEditor = dynamic_cast<const FloatEditor*>(testGroup.get_metadata( PROPERTY_FLOAT_2 ));
-	BOOST_CHECK_EQUAL( FLOAT_LOW, pEditor->getLowRange() );
-	BOOST_CHECK_EQUAL( FLOAT_HIGH, pEditor->getHighRange() );
-	BOOST_CHECK_EQUAL( FLOAT_INCREMENT, pEditor->getIncrement() );
-}
-
-BOOST_AUTO_TEST_CASE( TestFloatGetRange )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const FloatEditor *pEditor = dynamic_cast<const FloatEditor*>(testGroup.get_metadata( PROPERTY_FLOAT_2 ));
-	BOOST_CHECK( pEditor->UseRange() == true );
-}
-
-BOOST_AUTO_TEST_CASE( TestAutoGeneratedDesignerFloat )
-{
-    TestAutoGeneratedDesigners testGroup;
-    
-	const Editor* pEditor = testGroup.get_metadata(PROPERTY_FLOAT_1);
-	BOOST_CHECK( NULL != dynamic_cast<const FloatEditor*>(pEditor) );
-}
-
-BOOST_AUTO_TEST_CASE( TestUpDownEditor)
-{
-    TestUpDownGroup testGroup;
-    
-	const Editor* pEditor = testGroup.get_metadata(PROPERTY_FLOAT_1);
-	BOOST_CHECK( pEditor->GetControlType() == UpDown );
+	BOOST_CHECK_THROW( testGroup.set_as_string( "Float_Func", "Foo" ), std::invalid_argument );
 }

@@ -8,75 +8,136 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PinholeLib
+
+#include <boost/pinhole/property_group.hpp>
+#include <boost/pinhole/property_manager.hpp>
 #include <boost/test/unit_test.hpp>
-#include "TestClassesAndConstants.h"
+
+using namespace std;
+using namespace boost;
+using namespace boost::pinhole;
+
 
 // I can hide these two line if I don't do everything in headers
-boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
+shared_ptr<property_manager> property_manager::m_instance(new property_manager);
 event_source* event_source::m_instance = 0;
 
-BOOST_AUTO_TEST_CASE( TestSetGetBool )
+class TestGroup : public property_group
 {
-    TestPropertyGroup testGroup;
+public:
+#if defined(BOOST_MSVC)
+    #pragma warning(push)
+    #pragma warning( disable: 4355 )
+#endif
+	TestGroup() : property_group( "PropertyGroupName", NULL )
+	{
+        m_bool_Func = false;
+	    m_bool_Var  = false;
+
+		add_property("Bool_Func", "Bool1 description", BOOST_SETTER(&TestGroup::SetBool), BOOST_GETTER(&TestGroup::GetBool), NULL );
+		add_property("Bool_Var",  "Bool2 description", BOOST_SETTER_VAR(m_bool_Var),      BOOST_GETTER_VAR(m_bool_Var),     NULL );
+	}
+#if defined(BOOST_MSVC)
+    #pragma warning(pop)
+#endif
+
+	void SetBool( bool x ){ m_bool_Func = x; }
+	bool GetBool(){ return( m_bool_Func ); }
+
+private:
+	bool m_bool_Func;
+	bool m_bool_Var;
+};
+
+BOOST_AUTO_TEST_CASE( TestSetGetBool_Func )
+{
+    TestGroup testGroup;
     
-	testGroup.set_as_string( PROPERTY_STRING_2, PROPERTY_STRING_2_VALUE );
-	BOOST_CHECK( PROPERTY_STRING_2_VALUE == testGroup.get_as_string( PROPERTY_STRING_2) );
+	testGroup.set( "Bool_Func", true );
+	BOOST_CHECK_EQUAL( true, testGroup.get<bool>( "Bool_Func") );
+
+	testGroup.set( "Bool_Func", false );
+	BOOST_CHECK_EQUAL( false, testGroup.get<bool>( "Bool_Func") );
+    
+	testGroup.set_as_string( "Bool_Func", "true" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Func") );
+
+	testGroup.set_as_string( "Bool_Func", "false" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Func") );
+    
+	testGroup.set_as_string( "Bool_Func", "True" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Func") );
+
+	testGroup.set_as_string( "Bool_Func", "False" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Func") );
+    
+	testGroup.set_as_string( "Bool_Func", "TrUe" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Func") );
+
+	testGroup.set_as_string( "Bool_Func", "FalSe" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Func") );
+    
+	testGroup.set_as_string( "Bool_Func", "TRUE" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Func") );
+
+	testGroup.set_as_string( "Bool_Func", "FALSE" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Func") );
+    
+	testGroup.set_as_string( "Bool_Func", "1" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Func") );
+
+	testGroup.set_as_string( "Bool_Func", "0" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Func") );
 }
 
-BOOST_AUTO_TEST_CASE( TestSetGetBoolVar )
+BOOST_AUTO_TEST_CASE( TestSetGetBool_Var )
 {
-    TestPropertyGroup testGroup;
+    TestGroup testGroup;
     
-	testGroup.set_as_string( PROPERTY_BOOL_VAR, PROPERTY_BOOL_VALUE );
-	BOOST_CHECK_EQUAL( testGroup.get_as_string( PROPERTY_BOOL_VAR), PROPERTY_BOOL_VALUE );
+	testGroup.set( "Bool_Func", true );
+	BOOST_CHECK_EQUAL( true, testGroup.get<bool>( "Bool_Func") );
+
+	testGroup.set( "Bool_Var", false );
+	BOOST_CHECK_EQUAL( false, testGroup.get<bool>( "Bool_Var") );
+    
+	testGroup.set_as_string( "Bool_Var", "true" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Var") );
+
+	testGroup.set_as_string( "Bool_Var", "false" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Var") );
+    
+	testGroup.set_as_string( "Bool_Var", "True" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Var") );
+
+	testGroup.set_as_string( "Bool_Var", "False" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Var") );
+    
+	testGroup.set_as_string( "Bool_Var", "TrUe" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Var") );
+
+	testGroup.set_as_string( "Bool_Var", "FalSe" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Var") );
+    
+	testGroup.set_as_string( "Bool_Var", "TRUE" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Var") );
+
+	testGroup.set_as_string( "Bool_Var", "FALSE" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Var") );
+    
+	testGroup.set_as_string( "Bool_Var", "1" );
+	BOOST_CHECK_EQUAL( "True", testGroup.get_as_string( "Bool_Var") );
+
+	testGroup.set_as_string( "Bool_Var", "0" );
+	BOOST_CHECK_EQUAL( "False", testGroup.get_as_string( "Bool_Var") );
 }
 
 BOOST_AUTO_TEST_CASE( TestBoolPropertyType )
 {
-    TestPropertyGroup_4 testGroup;
+    TestGroup testGroup;
     
-    BOOST_CHECK( typeid(bool) == testGroup.get_type_info(PROPERTY_BOOL) );
-    BOOST_CHECK( typeid(int) != testGroup.get_type_info(PROPERTY_BOOL) );
-    BOOST_CHECK( typeid(float) != testGroup.get_type_info(PROPERTY_BOOL) );
-    BOOST_CHECK( typeid(double) != testGroup.get_type_info(PROPERTY_BOOL) );
-    BOOST_CHECK( typeid(std::string) != testGroup.get_type_info(PROPERTY_BOOL) );
-
-	const BoolEditor *pEditor = dynamic_cast<const BoolEditor*>(testGroup.get_metadata( PROPERTY_BOOL ));
-	BOOST_CHECK( pEditor != NULL );
-	BOOST_CHECK( testGroup.get_metadata(PROPERTY_BOOL)->getEditorPropertyType() == BooleanType );
-}
-
-BOOST_AUTO_TEST_CASE( TestBoolGetControlType )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const BoolEditor *pEditor = dynamic_cast<const BoolEditor*>(testGroup.get_metadata( PROPERTY_BOOL ));
-	BOOST_CHECK( pEditor->GetControlType() == Radio );
-}
-
-BOOST_AUTO_TEST_CASE( TestBoolGetSet )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	testGroup.set_as_string( PROPERTY_BOOL, BOOL_TRUE );
-	BOOST_CHECK( testGroup.get_as_string( PROPERTY_BOOL ) == BOOL_TRUE );
-
-	testGroup.set_as_string( PROPERTY_BOOL, BOOL_FALSE );
-	BOOST_CHECK( testGroup.get_as_string( PROPERTY_BOOL ) == BOOL_FALSE );
-}
-
-BOOST_AUTO_TEST_CASE( TestInvalidSet )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	// TODO
-	testGroup.set_as_string( PROPERTY_BOOL, "Foo" );
-}
-
-BOOST_AUTO_TEST_CASE( TestAutoGeneratedDesignerBool )
-{
-    TestAutoGeneratedDesigners testGroup;
-    
-	const Editor* pEditor = testGroup.get_metadata(PROPERTY_BOOL);
-	BOOST_CHECK( NULL != dynamic_cast<const BoolEditor*>(pEditor) );
+    BOOST_CHECK( typeid(bool) == testGroup.get_type_info("Bool_Func") );
+    BOOST_CHECK( typeid(int) != testGroup.get_type_info("Bool_Func") );
+    BOOST_CHECK( typeid(float) != testGroup.get_type_info("Bool_Func") );
+    BOOST_CHECK( typeid(double) != testGroup.get_type_info("Bool_Func") );
+    BOOST_CHECK( typeid(std::string) != testGroup.get_type_info("Bool_Func") );
 }

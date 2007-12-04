@@ -8,94 +8,82 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PinholeLib
+
+#include <boost/pinhole/property_group.hpp>
+#include <boost/pinhole/property_manager.hpp>
 #include <boost/test/unit_test.hpp>
-#include "TestClassesAndConstants.h"
+
+using namespace std;
+using namespace boost;
+using namespace boost::pinhole;
 
 // I can hide these two line if I don't do everything in headers
 boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
 event_source* event_source::m_instance = 0;
 
-BOOST_AUTO_TEST_CASE( TestIntegerSetGet )
+class TestGroup : public property_group
 {
-    TestPropertyGroup testGroup;
+public:
+#if defined(BOOST_MSVC)
+    #pragma warning(push)
+    #pragma warning( disable: 4355 )
+#endif
+	TestGroup() : property_group( "PropertyGroupName", NULL )
+	{
+        m_int_Func = 0;
+	    m_int_Var  = 0;
+
+		add_property("Int_Func", "Int1 description", BOOST_SETTER(&TestGroup::SetInt), BOOST_GETTER(&TestGroup::GetInt), NULL );
+		add_property("Int_Var",  "Int2 description", BOOST_SETTER_VAR(m_int_Var),      BOOST_GETTER_VAR(m_int_Var),     NULL );
+	}
+#if defined(BOOST_MSVC)
+    #pragma warning(pop)
+#endif
+
+	void SetInt( int x ){ m_int_Func = x; }
+	int GetInt(){ return( m_int_Func ); }
+
+private:
+	int m_int_Func;
+	int m_int_Var;
+};
+
+BOOST_AUTO_TEST_CASE( TestIntegerSetGet_Func )
+{
+    TestGroup testGroup;
+
+	testGroup.set( "Int_Func", 1 );
+	BOOST_CHECK_EQUAL( 1, testGroup.get<int>( "Int_Func") );
     
-	int iValue;
-	testGroup.set_as_string( PROPERTY_INT_1, PROPERTY_INT_1_STRING_VALUE );
-	BOOST_CHECK( from_string<int>(iValue, testGroup.get_as_string(PROPERTY_INT_1), std::dec) );
-	BOOST_CHECK_EQUAL( iValue, PROPERTY_INT_1_VALUE );
+	testGroup.set_as_string( "Int_Func", "2" );
+	BOOST_CHECK_EQUAL( "2", testGroup.get_as_string( "Int_Func") );
 }
 
-BOOST_AUTO_TEST_CASE( TestIntegerSetGetVar )
+BOOST_AUTO_TEST_CASE( TestIntegerSetGet_Var )
 {
-    TestPropertyGroup testGroup;
+    TestGroup testGroup;
+
+	testGroup.set( "Int_Var", 1 );
+	BOOST_CHECK_EQUAL( 1, testGroup.get<int>( "Int_Var") );
     
-	int iValue;
-	testGroup.set_as_string( PROPERTY_INT_1_VAR, PROPERTY_INT_1_STRING_VALUE );
-	BOOST_CHECK( from_string<int>(iValue, testGroup.get_as_string(PROPERTY_INT_1_VAR), std::dec) );
-	BOOST_CHECK_EQUAL( iValue, PROPERTY_INT_1_VALUE );
+	testGroup.set_as_string( "Int_Var", "2" );
+	BOOST_CHECK_EQUAL( "2", testGroup.get_as_string( "Int_Var") );
 }
 
 BOOST_AUTO_TEST_CASE( TestIntegerEditorType )
 {
-    TestPropertyGroup_4 testGroup;
+    TestGroup testGroup;
     
-    BOOST_CHECK( typeid(bool) != testGroup.get_type_info(PROPERTY_INT_1) );
-    BOOST_CHECK( typeid(int) == testGroup.get_type_info(PROPERTY_INT_1) );
-    BOOST_CHECK( typeid(float) != testGroup.get_type_info(PROPERTY_INT_1) );
-    BOOST_CHECK( typeid(double) != testGroup.get_type_info(PROPERTY_INT_1) );
-    BOOST_CHECK( typeid(std::string) != testGroup.get_type_info(PROPERTY_INT_1) );
-
-	const IntegerEditor *pEditor = dynamic_cast<const IntegerEditor*>(testGroup.get_metadata( PROPERTY_INT_1 ));
-	BOOST_CHECK( pEditor != NULL );
-	BOOST_CHECK( testGroup.get_metadata(PROPERTY_INT_1)->getEditorPropertyType() == IntegerType );
+    BOOST_CHECK( typeid(bool) != testGroup.get_type_info("Int_Func") );
+    BOOST_CHECK( typeid(int) == testGroup.get_type_info("Int_Func") );
+    BOOST_CHECK( typeid(float) != testGroup.get_type_info("Int_Func") );
+    BOOST_CHECK( typeid(double) != testGroup.get_type_info("Int_Func") );
+    BOOST_CHECK( typeid(std::string) != testGroup.get_type_info("Int_Func") );
 }
 
-BOOST_AUTO_TEST_CASE( TestIntegerHighLowIncrement )
+BOOST_AUTO_TEST_CASE( TestInvalidSet )
 {
-    TestPropertyGroup_4 testGroup;
+    TestGroup testGroup;
     
-	const IntegerEditor *pEditor = dynamic_cast<const IntegerEditor*>(testGroup.get_metadata( PROPERTY_INT_1 ));
-	BOOST_CHECK_EQUAL( pEditor->getLowRange(), INT_LOW );
-	BOOST_CHECK_EQUAL( pEditor->getHighRange(), INT_HIGH );
-	BOOST_CHECK_EQUAL( pEditor->getIncrement(), INT_INCREMENT );
-}
-
-BOOST_AUTO_TEST_CASE( TestIntegerGetControlType )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const IntegerEditor *pEditor = dynamic_cast<const IntegerEditor*>(testGroup.get_metadata( PROPERTY_INT_1 ));
-	BOOST_CHECK( pEditor->GetControlType() == DropDown );
-	BOOST_CHECK( pEditor->UseRange() == true );
-}
-
-BOOST_AUTO_TEST_CASE( TestInteger2GetRange )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const IntegerEditor *pEditor = dynamic_cast<const IntegerEditor*>(testGroup.get_metadata( PROPERTY_INT_2 ));
-	BOOST_CHECK( pEditor->UseRange() == false );
-}
-
-BOOST_AUTO_TEST_CASE( TestInteger2GetControlType )
-{
-    TestPropertyGroup_4 testGroup;
-    
-	const IntegerEditor *pEditor = dynamic_cast<const IntegerEditor*>(testGroup.get_metadata( PROPERTY_INT_2 ));
-	BOOST_CHECK( pEditor->GetControlType() == EditBox );
-}
-
-BOOST_AUTO_TEST_CASE( TestIntegerGetEditorTypeFailure )
-{
-    TestPropertyGroup_5 testGroup;
-    
-	BOOST_CHECK_THROW( testGroup.get_metadata( PROPERTY_INT_1 ), no_metadata_defined_error );
-}
-
-BOOST_AUTO_TEST_CASE( TestAutoGeneratedDesignerInt )
-{
-    TestAutoGeneratedDesigners testGroup;
-    
-	const Editor* pEditor = testGroup.get_metadata(PROPERTY_INT_1);
-	BOOST_CHECK( NULL != dynamic_cast<const IntegerEditor*>(pEditor) );
+	BOOST_CHECK_THROW( testGroup.set_as_string( "Int_Func", "Foo" ), std::invalid_argument );
 }
