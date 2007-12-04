@@ -286,7 +286,7 @@ types
 
 <p>
 The following subclauses describe components to create and manage threads
-([<cite>1.10 [intro.multithread]</cite>]),
+(1.10 [intro.multithread]),
 perform mutual exclusion,
 and communicate conditions between threads.
 </p>
@@ -323,7 +323,7 @@ the names of template parameters are used to express type requirements.
 
 <p>
 The requirements for Duration parameters are specified in
-[<cite>reference to date-time library clause</cite>].
+Clause 31 [time].
 </p>
 
 <p>
@@ -734,7 +734,7 @@ template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... 
 <dl>
 <dt>Requires:</dt>
 <dd>
-<code>F</code> is a callable type [func.def].
+<code>F</code> is a callable type ([func.def]).
 If <code>f</code> is an lvalue, <code>F</code>
 is <code>CopyConstructible</code>.
 If <code>f</code> is an rvalue,
@@ -755,7 +755,7 @@ exception, <code>std::terminate()</code> shall be called.
 <dt>Synchronization:</dt>
 <dd>
 The invocation of the constructor
-happens before [intro.multithread]
+happens before ([intro.multithread])
 the invocation of <code><var>f</var></code>.
 </dd>
 
@@ -921,7 +921,7 @@ void join();
 <dt>Synchronization:</dt>
 <dd>
 The completion of the thread represented by <code>*this</code>
-happens before [<cite>intro.multithread</cite>]
+happens before ([intro.multithread])
 <code>join()</code> returns.
 [<i>Note:</i>
 Operations on <code>*this</code> are not synchronized.
@@ -1154,7 +1154,7 @@ Nothing.
 This section provides mechanisms for mutual exclusion:
 mutexes, locks, and call once.
 These mechanisms ease the production of race-free programs
-[intro.multithread].
+([intro.multithread]).
 </p>
 
 <p>
@@ -1274,7 +1274,7 @@ Upon successful completion, the current thread owns the mutex.
 
 <dt>Synchronization:</dt>
 <dd>
-This operation synchronizes with [intro.multithread]
+This operation synchronizes with ([intro.multithread])
 prior <code>unlock()</code> operations on the same object.
 </dd>
 
@@ -1326,15 +1326,15 @@ This spurious failure is normally uncommon.
 <dt>Synchronization:</dt>
 <dd>
 If <code>try_lock</code> returns <code>true</code>,
-<code>try_lock</code> synchronizes with [<cite>intro.multithread</cite>]
+<code>try_lock</code> synchronizes with ([intro.multithread])
 prior <code>unlock()</code> operations on the same object.
 [<i>Note:</i>
 Since a failed <code>try_lock()</code>
-is not an acquire operation [intro.multithread],
+is not an acquire operation ([intro.multithread]),
 the resulting memory visibility rules are weak enough
 to permit potentially interesting
 <code>try_lock()</code> implementations based on
-<code>compare_swap</code> [<cite>atomics.operations</cite>].
+<code>compare_swap</code> ([atomics.operations]).
 &mdash;<i>end note</i>]
 </dd>
 
@@ -1372,7 +1372,7 @@ or by any other locking function) before ownership is released.
 
 <dt>Synchronization:</dt>
 <dd>
-This operation syncronizes with [intro.multithread]
+This operation syncronizes with ([intro.multithread])
 subsequent lock operations that obtain ownership on the same object.
 </dd>
 
@@ -1456,7 +1456,7 @@ To meet the TimedMutex requirements,
 types are required to meet the Mutex requirements.
 In addition, the following requirements shall be met,
 where <code>rel_time</code>
-denotes a value of a type meeting the Duration([time.duration]) requirements
+denotes a value of a type meeting the Duration ([time.duration]) requirements
 or <code>abs_time</code> 
 denotes a value of type <code>system_time</code>:
 </p>
@@ -1505,7 +1505,7 @@ but implementations are expected to make a strong effort to do so.
 <dt>Synchronization:</dt>
 <dd>
 If <code>timed_lock</code> returns <code>true</code>,
-it synchronizes with [intro.multithread]
+it synchronizes with ([intro.multithread])
 prior <code>unlock()</code> operations on the same object.
 </dd>
 
@@ -1548,8 +1548,9 @@ strong effort to do so. &mdash;<i>end note</i>]
 
 <dt>Synchronization:</dt>
 <dd>
-If <code>timed_lock</code> returns <code>true</code>, it is an acquire operation 
-[<cite>intro.multithread</cite>]. 
+If <code>timed_lock</code> returns <code>true</code>,
+it is an acquire operation 
+([intro.multithread]). 
 </dd>
 
 <dt>Throws:</dt>
@@ -1996,7 +1997,7 @@ template &lt;class Duration&gt;
 <dl>
 <dt>Remarks:</dt>
 <dd>
-The implementation must ensure that only <code>Duration</code> types [<cite>reference to date-time library clause</cite>]
+The implementation must ensure that only <code>Duration</code> types ([time])
 will bind to this constructor.
 </dd>
 </dl>
@@ -2516,7 +2517,7 @@ the exception is propagated to the caller.
 <dd>
 A successful <code>call_once</code> invocation
 on a <code>once_flag</code> object,
-synchronizes with [intro.multithread]
+synchronizes with ([intro.multithread])
 all subsequent <code>call_once</code> invocations
 on the same <code>once_flag</code> object.
 </dd>
