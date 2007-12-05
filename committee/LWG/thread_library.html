@@ -225,11 +225,12 @@ Add the following definitions:
 
 <p>
 a thread that is waiting for some condition (other than the availability of a 
-processor) to be satisfied before it can continue execution <sup>(footnote)</sup>. 
+processor) to be satisfied before it can continue execution.
+[<i>Footnote:</i>
+This definition is taken from POSIX.
+&mdash;<i>end footnote</i>]
 As a verb, <i><b>to block</b></i> is to place a thread in the blocked state, and
-<b><i>to unblock</i></b> is to place a thread in the unblocked state.<br>
-<br>
-<sup>(footnote)</sup> This definition is taken from POSIX.
+<b><i>to unblock</i></b> is to place a thread in the unblocked state.
 </p>
 
 <h4><a name="defns.deadlock">17.1.? deadlock [defns.deadlock]</a></h4>
@@ -391,9 +392,12 @@ these members is inherently non-portable.
 
 <p>
 Several functions described in this clause take an argument specifying
-a timeout. [<i>Note:</i> Reasonable use cases exist for both duration and
+a timeout.
+[<i>Note:</i>
+Reasonable use cases exist for both duration and
 absolute time based timeouts, so overloads for both are provided unless
-contraindicated. <i>--end note.</i>]
+contraindicated.
+&mdash;<i>end note</i>]
 </p>
 
 <h4><a name="thread.safety">30.1.5 Thread Safety [thread.safety]</a></h4>
@@ -458,11 +462,13 @@ completion of a thread,
 and to perform other operations to manage and query the state of the thread. 
 Objects of type <code>thread</code> can only represent joinable threads of 
 execution or <b><i>not a thread</i></b> (referred to as <b><i>NAT</i></b>). <i>
-[Note: </i>Once a program calls a <code>thread</code> object's <code>join()</code> 
+[<i>Note:</i>
+Once a program calls a <code>thread</code> object's <code>join()</code> 
 or <code>detach()</code> members, or moves from a <code>thread</code> object, 
 then that <code>thread</code> object no longer represents a thread of execution. 
 Such a <code>thread</code> object represents NAT. Default constructed <code>thread</code> 
-objects also represent NAT.<i> -- end note]</i>
+objects also represent NAT.
+&mdash;<i>end note</i>]
 </p>
 
 <blockquote>
@@ -1541,10 +1547,12 @@ For non-recursive mutexes the current thread shall not own the mutex.
 The function attempts to obtain ownership of the mutex by the specified time. If 
 the indicated time has already passed, the function still attempts to obtain 
 ownership without blocking (as if by calling <code>try_lock()</code>). If the 
-function returns by the specified time, it shall have obtained ownership. [<i>Note:</i> 
+function returns by the specified time, it shall have obtained ownership.
+[<i>Note:</i>
 As with <code>try_lock()</code>, there is no guarantee that ownership will be 
 obtained if the lock is available, but implementations are expected to make a 
-strong effort to do so. &mdash;<i>end note</i>] 
+strong effort to do so.
+&mdash;<i>end note</i>]
 </dd>
 
 <dt>Return type:</dt>
@@ -2419,8 +2427,11 @@ If all calls to <code>try_lock()</code> returned <code>true</code>, returns <cod
 Otherwise returns a 0-based index
 value indicating for
 which argument <code>try_lock()</code> returned <code>false</code>.&nbsp; <i>
-[Note:</i> On return, either all arguments will be locked or none will be 
-locked. <i>-- end note]</i></dd>
+[<i>Note:</i>
+On return, either all arguments will be locked or none will be 
+locked.
+&mdash;<i>end note</i>]
+</dd>
 </dl>
 </blockquote>
 
@@ -2444,11 +2455,13 @@ when suitable instantiated.
 <dd>
 All arguments are locked via a sequence of calls to <code>lock()</code>, <code>
 try_lock()</code>, or <code>unlock()</code> on the argument. The sequence of calls shall not 
-result in deadlock, but is otherwise unspecified. <i>[Note:</i> A deadlock avoidance algorithm such as try-and-back-off 
+result in deadlock, but is otherwise unspecified.
+[<i>Note:</i>
+A deadlock avoidance algorithm such as try-and-back-off 
 must be used, but the 
 specific algorithm is not specified to avoid over-constraining implementations.
-<i>--end 
-note]</i> If an exception is thrown by a call to <code>lock()</code> or <code>
+&mdash;<i>end note</i>]
+If an exception is thrown by a call to <code>lock()</code> or <code>
 try_lock()</code>, then <code>unlock()</code> will be called for any argument 
 which had been locked by a call to <code>lock()</code> or <code>try_lock()</code>.</dd>
 </dl>
@@ -3021,8 +3034,10 @@ thread that some condition is met, or a system time is reached.
 
 <p>
 To meet the Lock requirement, types shall meet the Mutex requirement except that
-<code>try_lock</code> is not required. <i>[Note: </i>All of the standard mutex 
-types meet this requirement. <i>--end note] </i>
+<code>try_lock</code> is not required.
+[<i>Note:</i>
+All of the standard mutex types meet this requirement.
+&mdash;<i>end note</i>]
 </p>
 
 <blockquote>
