@@ -3494,9 +3494,9 @@ are duration types, <code>d</code> denotes a <code>const</code> value of type
 E</code>, <code>c</code> denotes an <code>int</code> value.</p>
 <table style="border-collapse: collapse;" border="1" bordercolor="#111111" cellpadding="5" cellspacing="0" width="100%">
   <tr>
-    <td width="25%">expression</td>
-    <td width="11%">return type</td>
-    <td width="39%">return value</td>
+    <td width="25%"><b><i>expression</i></b></td>
+    <td width="11%"><b><i>return type</i></b></td>
+    <td width="39%"><b><i>return value or other requirement</i></b></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>D::tick_type</code></td>
@@ -3504,95 +3504,72 @@ E</code>, <code>c</code> denotes an <code>int</code> value.</p>
     <td width="39%">&nbsp;</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::ticks_per_second();</code></td>
+    <td valign="top" width="25%"><code>D::ticks_per_second;</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">A constant indicating the number of ticks per 
-    second (or 0 for types for which <code>is_subsecond() == false</code>. </td>
+    <td valign="top" width="39%">The number of ticks per 
+    second, or 0 for types for which <code>is_subsecond() == false</code>. </td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::seconds_per_tick();</code></td>
+    <td valign="top" width="25%"><code>D::seconds_per_tick;</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">A constant indicating the number of seconds per 
-    tick (or 0 for types for which <code>is_subsecond() == true</code>. </td>
+    <td valign="top" width="39%">The number of seconds per 
+    tick, or 0 for types for which <code>is_subsecond() == true</code>. </td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::is_subsecond();</code></td>
+    <td valign="top" width="25%"><code>D::is_subsecond;</code></td>
     <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>true</code> if the resolution of D is 
+    <td valign="top" width="39%"><code>true</code> if the resolution of <code>D</code> is 
     finer than 1 second, and otherwise <code>false</code>. </td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d.get_count();</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d &lt;= e</code></td>
-    <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>!(e &lt; d)</code></td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d &gt; e</code></td>
-    <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>e &lt; d</code></td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d &gt;= e</code></td>
-    <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>!(d &lt; e)</code></td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d != e</code></td>
-    <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>!(d == e)</code></td>
+    <td valign="top" width="39%">The most recent value established by a 
+    non-const function.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>-d;</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d - e</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><code>D(-d.tick_count())</code></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d -= e</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d + e</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
+    d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code> 
+    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d += e</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
+    d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code> 
+    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d / c</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><code>D(d.tick_count()/c)</code></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d /= c</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() == 
+    d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d * c</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><code>D(d.tick_count()*c)</code></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d *= c</code></td>
     <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%">&nbsp;</td>
+    <td valign="top" width="39%"><i>Postcondition:</i>&nbsp; <code>d.tick_count() 
+    == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
-<p>Unless otherwise specified, no operations on duration types shall throw 
+<p>Unless otherwise specified, no functions specified for duration types shall throw 
 exceptions.</p>
 
 <h3><a name="time.system">31.2 Class system_time [time.system]</a></h3>
@@ -3671,6 +3648,10 @@ that can be represented in a signed 64 bit integer.
 &mdash;<i>end note</i>]
 </p>
 
+<p>Unless otherwise specified, no 
+<code>system_time</code> member functions shall throw 
+exceptions.</p>
+
 <pre><code>
 system_time();
 </code></pre>
@@ -3683,10 +3664,6 @@ Constructs a system_time
 object representing the epoch time point 1970-01-01 00:00:00.000000000
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3709,10 +3686,6 @@ If the total nanoseconds &gt; 1 second the seconds are
 incremented appropriately.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3727,10 +3700,6 @@ time_t seconds_since_epoch() const;
 The count of seconds since 1970-01-01 00:00:00.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3746,10 +3715,6 @@ The count of nanoseconds
 since 1970-01-01 00:00:00.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3764,10 +3729,6 @@ static tick_type ticks_per_second();
 1000000000
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3782,15 +3743,6 @@ static tick_type seconds_per_tick();
 0
 </dd>
 
-<dt>Remarks:</dt>
-<dd>
-Since this is a subsecond type it returns 0 for seconds_per_tick.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3805,10 +3757,6 @@ static bool is_subsecond();
 true.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3825,10 +3773,6 @@ the time
 represented by <code>*this</code> is equal to the time represented by <var>rhs</var>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3844,10 +3788,6 @@ True if the time represented by <code>*this</code> is not equal to the time repr
 by <var>rhs</var>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3863,10 +3803,6 @@ True if time represented by
 <code>*this</code> is greater than the time represented by <var>rhs</var>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3882,10 +3818,6 @@ True if time represented
 by <code>*this</code> is greater or equal than the time represented by <var>rhs</var>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3901,10 +3833,6 @@ True if time represented by <code>*this</code>
 is less than the time represented by <var>rhs</var>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3920,10 +3848,6 @@ True if time represented by <code>*this</code>
 is less or equal than the time represented by <var>rhs</var>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3946,10 +3870,6 @@ If rhs is greater the result will be a negative nanosecond.
 count.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3966,10 +3886,6 @@ The duration converted to nanosecond resolution
 and added to the time represented by <code>*this</code>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -3992,10 +3908,6 @@ Modified value of this.
 <b>[Crowl: not a reference to this?]</b>
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4012,10 +3924,6 @@ The duration converted to nanosecond resolution
 and subtracted from the time represented by <code>*this</code>.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4037,10 +3945,6 @@ and subtract it from the time represented by <code>*this</code>.
 Modified value of this.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4054,645 +3958,95 @@ resolution up to nanoseconds.
 The actual resolution may vary from platform to platform.
 </p>
 
-<blockquote>
 <pre><code>
-system_time get_system_time();
-</code></pre>
-</blockquote>
-
-
-<p>
-[<b>Comment:</b>
-Typical personal computer platforms currently achieve microsecond level
-resolution from calls to the clock.
-The
-<a href="http://www.boost.org/libs/date_time/index.html">
-Boost Date-Time Library</a>
-has a class that portably implements the proposed interface,
-but it uses different C-level interfaces depending on the operating
-system.
-&mdash;<b>end comment</b>]
-</p>
-
-<h3><span style="background-color: #FFFF00">xxxx Common Duration Functions [time.duration]</span></h3>
-
-<p>
-The following functions are common functions to all durations types.
-These
-functions provide the basis
-for durations to be EqualityComparable, LessThanComparable
-as well arithmetic operations.
-</p>
-
-<p>
-In the following text duration_type refers to the containing duration type.
-</p>
-
-<p>
-All duration types are EqualityComparable, LessThanComparable,
-CopyConstructable, DefaultConstructable, and Assignable for duration
-objects of the same type.
-</p>
-
-<blockquote>
-<pre><code>
-class Duration {
-
-    // <em>traits information</em>
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
-
-    // <em>comparison operators</em>
-    template&lt;typename RhsDuration&gt;
-    bool operator&lt;  (const RhsDuration&amp;) const;
-
-    template&lt;typename RhsDuration&gt;
-    bool operator&lt;= (const RhsDuration&amp;) const;
-
-    template&lt;typename RhsDuration&gt;
-    bool operator&gt;  (const RhsDuration&amp;) const;
-
-    template&lt;typename RhsDuration&gt;
-    bool operator&gt;= (const RhsDuration&amp;) const;
-
-    template&lt;typename RhsDuration&gt;
-    bool operator== (const RhsDuration&amp;) const;
-
-    template&lt;typename RhsDuration&gt;
-    bool operator!= (const RhsDuration&amp;) const;
-
-
-    // <em>sign inversion</em>
-    Duration operator-() const
-
-    // <em>arithmetic operations</em>
-    template&lt;typename RhsDuration&gt;
-    Duration operator- (const RhsDuration&amp; d) const
-
-    template&lt;typename RhsDuration&gt;
-    Duration operator-=(const RhsDuration&amp; d)
-
-    template&lt;typename RhsDuration&gt;
-    Duration operator+ (const RhsDuration&amp; d) const
-
-    template&lt;typename RhsDuration&gt;
-    Duration operator+=(const RhsDuration&amp; d)
-
-    Duration operator/ (int divisor) const
-    Duration operator/=(int divisor)
-    Duration operator* (int rhs) const
-    Duration operator*=(int divisor)
-
-    tick_type get_count() const
-
-}
-</code></pre>
-</blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
+system_time get_system_time();</code></pre>
 
 <blockquote>
 <dl>
-<dt>Returns:</dt>
-<dd>
-A constant defined separately for each <tt>Duration</tt> type indicating the
-number of ticks per second (or 0 for types which are not <code>is_subsecond</code>).
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-A constant defined separately for each <tt>Duration</tt> type indicating the
-number of seconds per tick (or 0 for types which are <code>is_subsecond</code>).
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-<code>true</code> if the resolution of this Duration is finer than 1 second,
-and otherwise <code>false</code>.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-bool operator==(const RhsDuration&amp; rhs) const;
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-True if rhs duration is greater.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-bool operator!=(const RhsDuration&amp; rhs) const;
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-True if rhs is not the same time.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-bool operator&gt;(const RhsDuration&amp; rhs) const;
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-True if the rhs duration is larger.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-bool operator&gt;=(const RhsDuration&amp; rhs) const;
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-True if greater or equal than the rhs duration.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-bool operator&lt;(const RhsDuration&amp; rhs) const;
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-True if less than the rhs duration.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-bool operator&lt;=(const RhsDuration&amp; rhs) const;
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-True if less or equal to the rhs duration.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-// <em>sign inversion</em>
-Duration operator-() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-Negated value of the duration.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-// <em>arithmetic operations</em>
-template&lt;typename RhsDuration&gt;
-Duration operator- (const RhsDuration&amp; d) const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-A duration value equal to this-rhs_duration.
-</dd>
-
-<dt>Remarks:</dt>
-<dd>
-This will fail to compile
-if the <code>RhsDuration</code> is of finer resolution than <code>*this</code>.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-Duration operator-=(const RhsDuration&amp; <var>d</var>)
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Modifies the value to <code>*this-<var>d</var></code>.
-</dd>
 
 <dt>Returns:</dt>
 <dd>
-<p>
-<code>this</code>
-<b>[Crowl: but this statement is inconsistent with the declaration!]</b>
-</p>
-</dd>
-
-<dt>Remarks:</dt>
-<dd>
-This will fail to compile
-if the <code>RhsDuration</code> is of finer resolution
-than <code>*this</code>.
-</dd>
+The system time ([time.system]) as provided by the operating system.</dd>
 
 <dt>Throws:</dt>
 <dd>
-Nothing.
-</dd>
+<code>system_error</code>
+([syserr.syserr]) if unable to return the specified value. The conditions for 
+which this might occur are implementation defined.</dd>
+
 </dl>
 </blockquote>
 
-<pre><code>
-template&lt;typename RhsDuration&gt;
-Duration operator+ (const RhsDuration&amp; d) const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-<p>
-Duration equal to this+rhs_duration.
-</p>
-</dd>
-
-<dt>Remarks:</dt>
-<dd>
-This will fail to compile
-if the <code>RhsDuration</code> is of finer resolution
-than <code>*this</code>.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-template&lt;typename RhsDuration&gt;
-Duration operator+=(const RhsDuration&amp; d)
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Modifies to value equal to this+rhs_duration.
-</dd>
-
-<dt>Returns:</dt>
-<dd>
-<p>
-this
-</p>
-</dd>
-
-<dt>Remarks:</dt>
-<dd>
-This will fail to compile
-if the <code>RhsDuration</code> is of finer resolution
-than <code>*this</code>.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-Duration operator/ (int divisor) const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-Duration with value equal to this/divisor according to
-integer arithmetic rules.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-Duration operator/=(int divisor)
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Change value of this by this/divisor according to integer
-arithmetic rules.
-</dd>
-
-<dt>Returns:</dt>
-<dd>
-this
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-Duration operator* (int rhs) const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-Duration with value equal to this*rhs
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-Duration operator*=(int rhs)
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Modifies to value equal to this*rhs.
-</dd>
-
-<dt>Returns:</dt>
-<dd>
-this
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-tick_type get_count() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-The count at the resolution of the time duration type.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
 
 <h3><a name="time.nanoseconds">32.4 Class nanoseconds [time.nanoseconds]</a></h3>
 
 <p>
 Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds. 
 Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions is not described 
-if they have the same apparent semantics as those specified by [time.duration.requirements].</p>
+For the sake of exposition, the semantics of member functions are not described 
+if they have the same apparent semantics as those specified for duration types.</p>
 
 <blockquote>
 <pre><code>
 class nanoseconds
 {
 public:
-
-    nanoseconds(long long=0);
-    nanoseconds(const nanoseconds&amp; rhs);
-    ~nanoseconds();
-
     // <em>traits information</em>
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
     typedef <var><strong>implementation-defined</strong></var> tick_type;
+    static const tick_type ticks_per_second = 1000000000;
+    static const tick_type seconds_per_tick = 0;
+    static const bool is_subsecond = true;
 
-    // <em>+ common functions</em>
+    // <i>construct/copy/destroy functions</i>
+    nanoseconds(long long ns=0);
+    nanoseconds(const nanoseconds&amp;);
+    nanoseconds(nanosecons&amp;&amp;);
+    nanoseconds&amp; operator=(const nanoseconds&amp;);
+    nanoseconds&amp; operator=(nanoseconds&amp;&amp;);
+   ~nanoseconds();
 
-};
-</code></pre>
+    // <em>observer functions</em>
+    tick_type get_count() const;
+
+<i>    // modifier functions</i>
+    template&lt;typename RhsDuration&gt;
+        nanoseconds&amp; operator-=(const RhsDuration&amp; d);
+    template&lt;typename RhsDuration&gt;
+        nanoseconds&amp; operator+=(const RhsDuration&amp; d);
+    nanoseconds&amp; operator/=(int divisor);
+    nanoseconds&amp; operator*=(int multiplier);
+
+    // <i>operations</i>
+    nanoseconds operator-() const;
+    nanoseconds operator*(int multiplier) const;
+    nanoseconds operator/(int divisor) const;
+};</code></pre>
 </blockquote>
 
 <pre><code>
-nanoseconds(long long=0);
-</code></pre>
+nanoseconds(long long ns=0);</code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object with a count of nanoseconds - default
-is zero.
+Constructs an object of type <code>nanoseconds</code>. 
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
+<dt>Postcondition:</dt>
+<dd><code>get_count() == ns;</code></dd>
 </dl>
 </blockquote>
 
 <pre><code>
-nanoseconds(const nanoseconds&amp; rhs);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Copy construction.
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-1000000000
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-0
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-true
-</dd>
-
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
-</dl>
-</blockquote>
-
-<h3><a name="time.microseconds">32.5 Class microseconds [time.microseconds]</a></h3>
+</code><a name="time.microseconds">32.5 Class microseconds [time.microseconds]</a></pre>
 
 <p>
 Objects of class <code>microseconds</code>
 can be used to represent a count of microseconds. Class <code>microseconds</code> 
 shall be a duration type ([time.duration.requirements]). For the sake of 
-exposition, the semantics of member functions is not described if they have the 
-same apparent semantics as those specified by [time.duration.requirements].</p>
+exposition, the semantics of member functions are not described if they have the 
+same apparent semantics as those specified for duration types.</p>
 
 <blockquote>
 <pre><code>
@@ -4732,10 +4086,6 @@ Constructs an object with a count of microseconds - default
 is zero.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4750,10 +4100,6 @@ microseconds(const microseconds&amp; rhs);
 Copy construction.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4769,10 +4115,6 @@ operator nanoseconds() const
 microsecond count converted to nanoseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4787,10 +4129,6 @@ static tick_type ticks_per_second();
 1000000
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4805,10 +4143,6 @@ static tick_type seconds_per_tick();
 0
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4823,10 +4157,6 @@ static bool is_subsecond();
 true
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4836,8 +4166,8 @@ Nothing.
 Objects of class <code>milliseconds</code>
 can be used to represent a count of milliseconds. Class <code>milliseconds</code> 
 shall be a duration type ([time.duration.requirements]). For the sake of 
-exposition, the semantics of member functions is not described if they have the 
-same apparent semantics as those specified by [time.duration.requirements].</p>
+exposition, the semantics of member functions are not described if they have the 
+same apparent semantics as those specified for duration types.</p>
 
 <blockquote>
 <pre><code>
@@ -4875,10 +4205,6 @@ Constructs an object with a count of milliseconds - default
 is zero.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4893,10 +4219,6 @@ milliseconds(const milliseconds&amp; rhs);
 Copy construction.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4911,10 +4233,6 @@ operator nanoseconds() const
 millisecond count converted to nanoseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4929,10 +4247,6 @@ operator microseconds() const
 millisecond count converted to microseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4947,10 +4261,6 @@ static tick_type ticks_per_second();
 1000
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4965,10 +4275,6 @@ static tick_type seconds_per_tick();
 0
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4983,10 +4289,6 @@ static bool is_subsecond();
 true
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -4996,8 +4298,8 @@ Nothing.
 Objects of class <code>seconds</code>
 can be used to represent a count of seconds. Class <code>seconds</code> shall be 
 a duration type ([time.duration.requirements]). For the sake of exposition, the 
-semantics of member functions is not described if they have the same apparent 
-semantics as those specified by [time.duration.requirements].</p>
+semantics of member functions are not described if they have the same apparent 
+semantics as those specified for duration types.</p>
 
 <blockquote>
 <pre><code>
@@ -5037,10 +4339,6 @@ Construct<var>s</var> an object with a count of seconds - default is
 zero.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5055,10 +4353,6 @@ seconds(const seconds&amp; rhs);
 Copy construction.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5073,10 +4367,6 @@ operator nanoseconds() const
 second count converted to nanoseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5091,10 +4381,6 @@ operator microseconds() const
 second count converted to microseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5109,10 +4395,6 @@ operator milliseconds() const
 second count converted to milliseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5127,10 +4409,6 @@ static tick_type ticks_per_second();
 1
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5145,10 +4423,6 @@ static tick_type seconds_per_tick();
 1
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5163,10 +4437,6 @@ static bool is_subsecond();
 false
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5176,8 +4446,8 @@ Nothing.
 Objects of class <code>minutes</code>
 can be used to represent a count of minutes. Class <code>minutes</code> shall be 
 a duration type ([time.duration.requirements]). For the sake of exposition, the 
-semantics of member functions is not described if they have the same apparent 
-semantics as those specified by [time.duration.requirements].</p>
+semantics of member functions are not described if they have the same apparent 
+semantics as those specified for duration types.</p>
 
 <blockquote>
 <pre><code>
@@ -5218,10 +4488,6 @@ Construct<var>s</var> an object with a count of minutes - default is
 zero.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5236,10 +4502,6 @@ minutes(const minutes&amp; rhs);
 Copy construction.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5254,10 +4516,6 @@ operator nanoseconds() const
 minute count converted to nanoseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5272,10 +4530,6 @@ operator microseconds() const
 minute count converted to microseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5290,10 +4544,6 @@ operator milliseconds() const
 minute count converted to milliseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5308,10 +4558,6 @@ operator seconds() const
 minute count converted to seconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5326,10 +4572,6 @@ static tick_type ticks_per_second();
 0
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5344,10 +4586,6 @@ static tick_type seconds_per_tick();
 60
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5362,10 +4600,6 @@ static bool is_subsecond();
 false
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5375,8 +4609,8 @@ Nothing.
 Objects of class <code>hours</code>
 can be used to represent a count of hours. Class <code>hours</code> shall be a 
 duration type ([time.duration.requirements]). For the sake of exposition, the 
-semantics of member functions is not described if they have the same apparent 
-semantics as those specified by [time.duration.requirements].</p>
+semantics of member functions are not described if they have the same apparent 
+semantics as those specified for duration types.</p>
 
 <blockquote>
 <pre><code>
@@ -5417,10 +4651,6 @@ hours(long long=0);
 Construct<var>s</var> an object with a count of hours - default is zero.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5435,10 +4665,6 @@ hours(const hours&amp; rhs);
 Copy construction.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5453,15 +4679,10 @@ operator nanoseconds() const
 hour count converted to nanoseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
-<pre><code>
-operator microseconds() const
+<pre><code>operator microseconds() const
 </code></pre>
 
 <blockquote>
@@ -5471,15 +4692,10 @@ operator microseconds() const
 hour count converted to microseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
-<pre><code>
-operator milliseconds() const
+<pre><code>operator milliseconds() const
 </code></pre>
 
 <blockquote>
@@ -5489,10 +4705,6 @@ operator milliseconds() const
 hour count converted to milliseconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5507,10 +4719,6 @@ operator seconds() const
 hour count converted to seconds
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5525,10 +4733,6 @@ operator minutes() const
 hour count converted to seconds.
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5543,10 +4747,6 @@ static tick_type ticks_per_second();
 0
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5561,10 +4761,6 @@ static tick_type seconds_per_tick();
 3600
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
@@ -5579,10 +4775,6 @@ static bool is_subsecond();
 false
 </dd>
 
-<dt>Throws:</dt>
-<dd>
-Nothing.
-</dd>
 </dl>
 </blockquote>
 
