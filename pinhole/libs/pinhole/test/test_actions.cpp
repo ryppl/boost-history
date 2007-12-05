@@ -8,8 +8,47 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PinholeLib
+
+#include <boost/pinhole.hpp>
 #include <boost/test/unit_test.hpp>
-#include "TestClassesAndConstants.hpp"
+
+using namespace std;
+using namespace boost;
+using namespace boost::pinhole;
+
+#define ACTION_1 ("BOOST_ACTION 1")
+#define ACTION_2 ("BOOST_ACTION 2")
+
+class TestActionsFixture : public property_group
+{
+public:
+#if defined(BOOST_MSVC)
+#pragma warning(push)
+#pragma warning( disable: 4355 )
+#endif
+    TestActionsFixture() : property_group( "PropertyGroupName", NULL )
+    {
+        bTriggeredAction1 = false;
+        bTriggeredAction2 = false;
+
+        add_action(ACTION_1, "First BOOST_ACTION",  BOOST_ACTION(&TestActionsFixture::Action1));
+        add_action(ACTION_2, "Second BOOST_ACTION", BOOST_ACTION(&TestActionsFixture::Action2));
+    }
+#if defined(BOOST_MSVC)
+#pragma warning(pop)
+#endif
+
+    void clear_actions()
+    {
+        m_actions.clear();
+    }
+
+    void Action1(){bTriggeredAction1 = true;}
+    void Action2(){bTriggeredAction2 = true;}
+
+    bool bTriggeredAction1;
+    bool bTriggeredAction2;
+};
 
 BOOST_AUTO_TEST_CASE( TestTriggerAction )
 {

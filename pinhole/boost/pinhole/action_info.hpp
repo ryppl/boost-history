@@ -10,15 +10,6 @@
 
 #if defined(BOOST_MSVC)
     #pragma warning(push)
-    #pragma warning( disable: 4272 4394 )
-#endif
-#include "Editor.hpp"
-#if defined(BOOST_MSVC)
-    #pragma warning(pop)
-#endif
-
-#if defined(BOOST_MSVC)
-    #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
 #endif
 #include <boost/type_traits.hpp>

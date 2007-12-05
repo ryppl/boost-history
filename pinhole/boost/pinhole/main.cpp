@@ -190,14 +190,7 @@ int main (int argc, char * const argv[])
     /*
     Areas that need work:
 
-    1) Generic Metadata: Properties need to have metadata associated with them so that the system can learn more about
-    them. However, this metadata is system specific. I don't want to force everyone to use my metadata, when they will
-    likely need something completely different. Currently the property system is built for our simulation's needs, so
-    this metadata is hardcoded to the types it wants. This needs to be made generic. Perhaps use boost::any or maybe
-    an additional key/value pair component would work. Either way, it would be nice to try to keep the auto-selection of
-    metadata that already exists in the system.
-
-    2) Algorithms: We currently only have one path based search algorithm. This expects a single matching value and
+    1) Algorithms: We currently only have one path based search algorithm. This expects a single matching value and
     throws otherwise. This is a useful search algorithm as is, but we need more. We need one that returns iterators
     over all the items found. We need a version of that that returns them as they exist in the system, and one that
     returns them sorted based on a given criteria. I also imagine there may be other algorithms for processing entire
@@ -205,33 +198,32 @@ int main (int argc, char * const argv[])
     the values of all properties. Given the same tree structure, it can re-walk the tree and set the values to their
     stored values.
 
-    3) More compile time optimizations: There are a lot of powerful things you can do by creating properties at runtime.
+    2) More compile time optimizations: There are a lot of powerful things you can do by creating properties at runtime.
     However, our experience shows that most properties are simple, and everything about them is known at compile time.
     There should be some template mechanism we could use for creating this type of property that would reduce the amount
     of time that is used at runtime to setup the property without reducing the utility of the system to create properties
     purely at runtime.
 
-    4) Property Manager Singleton: Currently the property manager is a singleton. This has been extremely helpful in
+    3) Property Manager Singleton: Currently the property manager is a singleton. This has been extremely helpful in
     allowing us to build out the full property group tree and access it from anywhere. However, some people have
     an aversion to this pattern, and there are cases where you may want multiple managers (if you have multiple copies
     of your data layer, you probably don't want all those copies combined into the same property group tree). We haven't
     really thought much further on how to do this better and are looking for insights.
      
-    5) Safe Property Group: This is something I've been toying around with for a while. Currently it is advantagious to
+    4) Safe Property Group: This is something I've been toying around with for a while. Currently it is advantagious to
     get a property group and hold on to it. However, since property groups are retrieved largely as pointers, this can
     be dangerious. I can't use shared_ptr since the object that it is pointing to may have been created on the stack,
     and it won't have control over deletion (among other issues). I have a prototype class that wraps the property group
     and listens to the property manager to see when it is destroyed, but I'm not sure I like that idea (and it is part of
     our C++/CLI wrapper, so it isn't something I can share).
 
-    6) Documentation: We currently have doxygen documented objects for this code. If we are going to submit to boost, we
+    5) Documentation: We currently have doxygen documented objects for this code. If we are going to submit to boost, we
     would need quickbook docs on top of that that show how to use everything.
     
     Discussion Points:
      
-    1) Header Files: I'm distributing this as header only. I did this since it simplified initial distribution (I didn't have
-    to get bjam working right away). In house, we build a library. There a lot of things that can be hidden from the user,
-    including defining the static instances of the singeltons, if we use a library.
+    1) Header Only: This is currently built as a library since the property_manager is a singleton, and the basic functionality
+    relies on that. If this fact changes, I'd like to look at making this header only.
      
     2) Right now we have several different begin/end function pairs in property_group for accessing the different data in
     the system. Is that really the best way to do it? Whould we be passing back const references to the collections instead?

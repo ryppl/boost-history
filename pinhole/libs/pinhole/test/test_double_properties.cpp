@@ -28,8 +28,8 @@ public:
         m_double_Func = 1.1;
 	    m_double_Var  = 1.1;
 
-		add_property("Double_Func", "Double1 description", BOOST_SETTER(&TestGroup::SetDouble), BOOST_GETTER(&TestGroup::GetDouble), NULL );
-		add_property("Double_Var",  "Double2 description", BOOST_SETTER_VAR(m_double_Var),      BOOST_GETTER_VAR(m_double_Var),     NULL );
+		add_property("Double_Func", "Double1 description", BOOST_SETTER(&TestGroup::SetDouble), BOOST_GETTER(&TestGroup::GetDouble) );
+		add_property("Double_Var",  "Double2 description", BOOST_SETTER_VAR(m_double_Var),      BOOST_GETTER_VAR(m_double_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -48,11 +48,15 @@ BOOST_AUTO_TEST_CASE( TestSetGetDouble_Func )
     TestGroup testGroup;
 
 	testGroup.set( "Double_Func", 2.2 );
-	BOOST_CHECK_EQUAL( 2.2, testGroup.get<double>( "Double_Func") );
+	BOOST_CHECK_EQUAL( 2.2, testGroup.get<double>("Double_Func") );
     
 	testGroup.set_as_string( "Double_Func", "3.3" );
-	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string( "Double_Func") );
-	BOOST_CHECK_EQUAL( 3.3, testGroup.get<double>( "Double_Func") );
+	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string("Double_Func") );
+    BOOST_CHECK_EQUAL( 3.3, testGroup.get<double>("Double_Func") );
+
+    testGroup.set_as_wstring( "Double_Func", L"4.4" );
+    //BOOST_CHECK_EQUAL( L"4.4", testGroup.get_as_wstring("Double_Func") );
+    BOOST_CHECK_EQUAL( 4.4, testGroup.get<double>("Double_Func") );
 }
 
 BOOST_AUTO_TEST_CASE( TestSetGetDouble_Var )
@@ -60,11 +64,15 @@ BOOST_AUTO_TEST_CASE( TestSetGetDouble_Var )
     TestGroup testGroup;
 
 	testGroup.set( "Double_Var", 2.2 );
-	BOOST_CHECK_EQUAL( 2.2, testGroup.get<double>( "Double_Var") );
+	BOOST_CHECK_EQUAL( 2.2, testGroup.get<double>("Double_Var") );
     
 	testGroup.set_as_string( "Double_Var", "3.3" );
-	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string( "Double_Var") );
-	BOOST_CHECK_EQUAL( 3.3, testGroup.get<double>( "Double_Var") );
+	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string("Double_Var") );
+    BOOST_CHECK_EQUAL( 3.3, testGroup.get<double>("Double_Var") );
+
+    testGroup.set_as_wstring( "Double_Var", L"4.4" );
+    //BOOST_CHECK_EQUAL( L"4.4", testGroup.get_as_wstring("Double_Var") );
+    BOOST_CHECK_EQUAL( 4.4, testGroup.get<double>("Double_Var") );
 }
 
 BOOST_AUTO_TEST_CASE( TestDoublePropertyType )
@@ -82,5 +90,6 @@ BOOST_AUTO_TEST_CASE( TestInvalidSet )
 {
     TestGroup testGroup;
     
-	BOOST_CHECK_THROW( testGroup.set_as_string( "Double_Func", "Foo" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.set_as_string( "Double_Func", "Foo" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.set_as_wstring( "Double_Func", L"Foo" ), std::invalid_argument );
 }

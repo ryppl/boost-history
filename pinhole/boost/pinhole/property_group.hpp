@@ -9,7 +9,6 @@
 #define BOOST_PROPERTY_GROUP
 
 #include "map_key_value_iterators.hpp"
-#include "EditorTypeFinder.hpp"
 #include "property_info.hpp"
 #include "action_info.hpp"
 #include "property_manager.hpp"
@@ -87,10 +86,8 @@ namespace boost { namespace pinhole
     #define BOOST_GETTER_VAR(c) boost::pinhole::property_system_var_getter_builder(c)
 
     struct no_setter_struct {};
-    struct no_getter_struct {};
     
     #define BOOST_SETTER_NONE boost::pinhole::no_setter_struct()
-    #define BOOST_GETTER_NONE boost::pinhole::no_getter_struct()
 
     class property_group;
 
@@ -365,7 +362,7 @@ namespace boost { namespace pinhole
             /**
              * Sets a property's value.
              * @param property The name of the property.
-             * @param value A String representation of the value to set on the property.
+             * @param value A string representation of the value to set on the property.
              * @throw boost::bad_function_call There isn't a set_as_string function associated with this property.
              * @throw std::out_of_range The property requested does not exist.
              * @throw std::invalid_argument The value string could not be converted to the
@@ -383,7 +380,34 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    stringstream err;
+                    std::stringstream err;
+                    err << "The requested property \"" << property << "\" does not exist.";
+                    throw std::out_of_range(err.str().c_str());
+                }
+            }
+
+            /**
+            * Sets a property's value.
+            * @param property The name of the property.
+            * @param value A wide-character string representation of the value to set on the property.
+            * @throw boost::bad_function_call There isn't a set_as_string function associated with this property.
+            * @throw std::out_of_range The property requested does not exist.
+            * @throw std::invalid_argument The value string could not be converted to the
+            * type expected by the internal setter function.
+            */
+            void set_as_wstring(const std::string &property, const std::wstring &value)
+            {
+                property_collection::iterator itemItr = m_properties.find(property);
+
+                if( m_properties.end() != itemItr )
+                {
+                    // throws  boost::bad_function_call if there isn't a set_as_string
+                    // function associated with this property.
+                    (*itemItr).second->set_as_wstring(value);
+                }
+                else
+                {
+                    std::stringstream err;
                     err << "The requested property \"" << property << "\" does not exist.";
                     throw std::out_of_range(err.str().c_str());
                 }
@@ -392,7 +416,7 @@ namespace boost { namespace pinhole
             /**
              * Gets a property's value.
              * @param property The name of the property.
-             * @return A String representation of the value of the property.
+             * @return A string representation of the value of the property.
              * @throw boost::bad_function_call There isn't a get_as_string function associated with this property.
              * @throw std::out_of_range The property requested does not exist.
              */
@@ -407,7 +431,30 @@ namespace boost { namespace pinhole
                     return (*itemItr).second->get_as_string();
                 }
                 
-                stringstream err;
+                std::stringstream err;
+                err << "The requested property \"" << property << "\" does not exist.";
+                throw std::out_of_range(err.str().c_str());    
+            }
+
+            /**
+            * Gets a property's value.
+            * @param property The name of the property.
+            * @return A wide-character string representation of the value of the property.
+            * @throw boost::bad_function_call There isn't a get_as_string function associated with this property.
+            * @throw std::out_of_range The property requested does not exist.
+            */
+            std::wstring get_as_wstring(const std::string &property) const
+            {
+                property_collection::const_iterator itemItr = m_properties.find(property);
+
+                if( m_properties.end() != itemItr )
+                {
+                    // throws  boost::bad_function_call if there isn't a get_as_string
+                    // function associated with this property.
+                    return (*itemItr).second->get_as_wstring();
+                }
+
+                std::stringstream err;
                 err << "The requested property \"" << property << "\" does not exist.";
                 throw std::out_of_range(err.str().c_str());    
             }
@@ -419,26 +466,17 @@ namespace boost { namespace pinhole
             * @throw no_metadata_defined_error There isn't a property editor associated with this property.
             * @throw std::out_of_range The property requested does not exist.
             */
-            const Editor* get_metadata(const std::string &property) const
+            const boost::any& get_metadata(const std::string &property) const
             {
                 property_collection::const_iterator itemItr = m_properties.find(property);
                 
                 if( itemItr != m_properties.end() )
                 {
-                    // throws  boost::bad_function_call if there isn't a get
-                    // function associated with this property.
-                    if ( (*itemItr).second->m_editor == NULL )
-                    {
-                        throw( no_metadata_defined_error() );
-                    }
-                    else
-                    {
-                        return( (*itemItr).second->m_editor );
-                    }
+                    return( (*itemItr).second->m_metadata );
                 }
                 else
                 {
-                    stringstream err;
+                    std::stringstream err;
                     err << "The requested property \"" << property << "\" does not exist.";
                     throw std::out_of_range(err.str().c_str());
                 }
@@ -460,7 +498,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    stringstream err;
+                    std::stringstream err;
                     err << "The requested property \"" << property << "\" does not exist.";
                     throw std::out_of_range(err.str().c_str());
                 }
@@ -483,7 +521,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    stringstream err;
+                    std::stringstream err;
                     err << "The requested property \"" << property << "\" does not exist.";
                     throw std::out_of_range(err.str().c_str());
                 }
@@ -553,7 +591,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    stringstream err;
+                    std::stringstream err;
                     err << "The requested action \"" << action << "\" does not exist.";
                     throw std::out_of_range(err.str().c_str());
                 }
@@ -574,7 +612,7 @@ namespace boost { namespace pinhole
                            Setter setter,
                            Getter getter)
         {
-            internal_add_property< typename Getter::result_type >( name, description, setter, getter);
+            internal_add_property< typename Getter::result_type >( name, description, setter, getter, boost::any());
         }
         
         /**
@@ -590,23 +628,7 @@ namespace boost { namespace pinhole
                            no_setter_struct setter,
                            Getter getter)
         {
-            internal_add_property< typename Getter::result_type >( name, description, NULL, getter);
-        }
-            
-        /**
-         * Adds a property to the property list.
-         * @param name The name of the property.
-         * @param description A brief description of the property for the user interface.
-         * @param setter The function used to set the property.
-         * @param getter The function used to get the property.
-         */
-        template<typename Setter, typename Getter>
-        void add_property( std::string name, 
-                           std::string description,
-                           Setter setter,
-                           no_getter_struct getter)
-        {
-            internal_add_property< typename Setter::argument_type >( name, description, setter, NULL);
+            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, boost::any());
         }
     
         /**
@@ -619,13 +641,13 @@ namespace boost { namespace pinhole
          *                if there isn't one.
          */
         template< typename Setter, typename Getter>
-        void add_property( string name,
-                           string description,
+        void add_property( std::string name,
+                           std::string description,
                            Setter setter,
                            Getter getter,
-                           Editor *pEditor )
+                           boost::any metadata )
         {
-            internal_add_property< typename Getter::result_type >( name, description, setter, getter, pEditor);
+            internal_add_property< typename Getter::result_type >( name, description, setter, getter, metadata);
         }
 
         /**
@@ -638,13 +660,13 @@ namespace boost { namespace pinhole
          *                if there isn't one.
          */
         template< typename Getter>
-        void add_property( string name,
-                           string description,
+        void add_property( std::string name,
+                           std::string description,
                            no_setter_struct,
                            Getter getter,
-                           Editor *pEditor )
+                           boost::any metadata )
         {
-            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, pEditor);
+            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, metadata);
         }
 
         /**
@@ -697,29 +719,20 @@ namespace boost { namespace pinhole
 
     private:
         property_group();
-            
-        template<typename Value_Type>
-        void internal_add_property( const std::string &name, 
-                                    const std::string &description,
-                                    boost::function<void (const Value_Type&)> setter, 
-                                    boost::function<Value_Type ()> getter )
-        {
-            typedef typename detail::EditorTypeFinder<Value_Type>::type editor_type;
-
-            // You are using a Value_Type that does not have a default editor defined. Use once
-            // of the add_property functions where you explicitly define the editor or editor type.
-            BOOST_STATIC_ASSERT((false == boost::is_same<editor_type, boost::mpl::void_>::value));
-
-            internal_add_property<Value_Type>( name, description, setter, getter, new editor_type() );
-        }
 
         template<typename Value_Type>
         void internal_add_property( const std::string &name, 
                                     const std::string &description,
                                     boost::function<void (const Value_Type&)> setter, 
                                     boost::function<Value_Type ()> getter,
-                                    Editor *pEditor )
+                                    boost::any &metadata )
         {
+            property_collection::iterator previousInstance = m_properties.find(name);
+            if( m_properties.end() != previousInstance )
+            {
+                delete (*previousInstance).second;
+            }
+
             // If you get an error here, then the type you are using for the property likely doesn't have a proper operator<< for it
             detail::property_info<Value_Type> *prop = new detail::property_info<Value_Type>();
 
@@ -727,13 +740,13 @@ namespace boost { namespace pinhole
             prop->m_description = description;
             if( NULL != setter )
             {
-            prop->setter  = setter;
+            prop->setter = setter;
             }
             if( NULL != getter )
             {
-            prop->getter  = getter;
+            prop->getter = getter;
             }
-            prop->m_editor  = pEditor;
+            prop->m_metadata = metadata;
 
             m_properties.insert( std::make_pair(name, prop) );
         }

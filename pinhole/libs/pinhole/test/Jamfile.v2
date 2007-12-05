@@ -22,7 +22,6 @@ project
   test-suite pinhole
     : 
   [ run test_property_groups.cpp  ]
-  #[ run test_property_group_wrapper.cpp  ]
   
   [ run test_bool_properties.cpp  ]
   [ run test_double_properties.cpp  ]

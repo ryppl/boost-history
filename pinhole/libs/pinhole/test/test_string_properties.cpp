@@ -25,19 +25,26 @@ public:
 #endif
 	TestGroup() : property_group( "PropertyGroupName", NULL )
 	{
-		add_property("String_Func", "String1 description", BOOST_SETTER(&TestGroup::SetString), BOOST_GETTER(&TestGroup::GetString), NULL );
-		add_property("String_Var",  "String2 description", BOOST_SETTER_VAR(m_string_Var),      BOOST_GETTER_VAR(m_string_Var),     NULL );
+		add_property("String_Func",  "String1 description",  BOOST_SETTER(&TestGroup::SetString),  BOOST_GETTER(&TestGroup::GetString) );
+		add_property("String_Var",   "String2 description",  BOOST_SETTER_VAR(m_string_Var),       BOOST_GETTER_VAR(m_string_Var) );
+        add_property("WString_Func", "Wstring1 description", BOOST_SETTER(&TestGroup::SetWString), BOOST_GETTER(&TestGroup::GetWString) );
+        add_property("WString_Var",  "Wstring2 description", BOOST_SETTER_VAR(m_wstring_Var),      BOOST_GETTER_VAR(m_wstring_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif
 
 	void SetString( string x ){ m_string_Func = x; }
-	string GetString(){ return( m_string_Func ); }
+    string GetString(){ return( m_string_Func ); }
+
+    void SetWString( wstring x ){ m_wstring_Func = x; }
+    wstring GetWString(){ return( m_wstring_Func ); }
 
 private:
 	string m_string_Func;
-	string m_string_Var;
+    string m_string_Var;
+    wstring m_wstring_Func;
+    wstring m_wstring_Var;
 };
 
 BOOST_AUTO_TEST_CASE( TestGetSetString_Func )
@@ -48,18 +55,56 @@ BOOST_AUTO_TEST_CASE( TestGetSetString_Func )
 	BOOST_CHECK_EQUAL( testGroup.get<string>("String_Func"), "first" );
     
 	testGroup.set_as_string( "String_Func", "second" );
-	BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Func"), "second" );
+    BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Func"), "second" );
+
+    BOOST_CHECK_THROW( testGroup.set_as_wstring( "String_Func", L"third" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.get_as_wstring("String_Func"), std::invalid_argument );
+    BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Func"), "second" );
 }
 
 BOOST_AUTO_TEST_CASE( TestGetSetString_Var )
 {
     TestGroup testGroup;
 
-	testGroup.set( "String_Var", string("first") );
-	BOOST_CHECK_EQUAL( testGroup.get<string>("String_Var"), "first" );
+	testGroup.set( "WString_Var", wstring(L"first") );
+	BOOST_CHECK( testGroup.get<wstring>("WString_Var") == L"first" );
     
-	testGroup.set_as_string( "String_Var", "second" );
-	BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Var"), "second" );
+	testGroup.set_as_wstring( "WString_Var", L"second" );
+    BOOST_CHECK( testGroup.get_as_wstring("WString_Var") == L"second" );
+
+    BOOST_CHECK_THROW( testGroup.set_as_string( "WString_Var", "third" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.get_as_string("WString_Var"), std::invalid_argument );
+    BOOST_CHECK( testGroup.get_as_wstring("WString_Var") == L"second" );
+}
+
+BOOST_AUTO_TEST_CASE( TestGetSetWString_Func )
+{
+    TestGroup testGroup;
+
+    testGroup.set( "WString_Func", wstring(L"first") );
+    BOOST_CHECK( testGroup.get<wstring>("WString_Func") == L"first" );
+
+    testGroup.set_as_wstring( "WString_Func", L"second" );
+    BOOST_CHECK( testGroup.get_as_wstring("WString_Func") == L"second" );
+
+    BOOST_CHECK_THROW( testGroup.set_as_string("WString_Func", "third" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.get_as_string("WString_Func"), std::invalid_argument );
+    BOOST_CHECK( testGroup.get_as_wstring("WString_Func") == L"second" );
+}
+
+BOOST_AUTO_TEST_CASE( TestGetSetWString_Var )
+{
+    TestGroup testGroup;
+
+    testGroup.set( "String_Var", string("first") );
+    BOOST_CHECK_EQUAL( testGroup.get<string>("String_Var"), "first" );
+
+    testGroup.set_as_string( "String_Var", "second" );
+    BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Var"), "second" );
+
+    BOOST_CHECK_THROW( testGroup.set_as_wstring("String_Var", L"third" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.get_as_wstring("String_Var"), std::invalid_argument );
+    BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Var"), "second" );
 }
 
 BOOST_AUTO_TEST_CASE( TestStringPropertyType )

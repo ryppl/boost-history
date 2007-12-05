@@ -28,8 +28,8 @@ public:
         m_float_Func = 1.1f;
 	    m_float_Var  = 1.1f;
 
-		add_property("Float_Func", "Float description", BOOST_SETTER(&TestGroup::SetFloat), BOOST_GETTER(&TestGroup::GetFloat), NULL );
-		add_property("Float_Var",  "Float description", BOOST_SETTER_VAR(m_float_Var),      BOOST_GETTER_VAR(m_float_Var),     NULL );
+		add_property("Float_Func", "Float description", BOOST_SETTER(&TestGroup::SetFloat), BOOST_GETTER(&TestGroup::GetFloat) );
+		add_property("Float_Var",  "Float description", BOOST_SETTER_VAR(m_float_Var),      BOOST_GETTER_VAR(m_float_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -48,11 +48,15 @@ BOOST_AUTO_TEST_CASE( TestSetGetFloat_Func )
     TestGroup testGroup;
 
 	testGroup.set( "Float_Func", 2.2f );
-	BOOST_CHECK_EQUAL( 2.2f, testGroup.get<float>( "Float_Func") );
+	BOOST_CHECK_EQUAL( 2.2f, testGroup.get<float>("Float_Func") );
     
 	testGroup.set_as_string( "Float_Func", "3.3" );
-	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string( "Float_Func") );
-	BOOST_CHECK_EQUAL( 3.3f, testGroup.get<float>( "Float_Func") );
+	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string("Float_Func") );
+    BOOST_CHECK_EQUAL( 3.3f, testGroup.get<float>("Float_Func") );
+
+    testGroup.set_as_wstring( "Float_Func", L"4.4" );
+    //BOOST_CHECK_EQUAL( "4.4", testGroup.get_as_wstring("Float_Func") );
+    BOOST_CHECK_EQUAL( 4.4f, testGroup.get<float>("Float_Func") );
 }
 
 BOOST_AUTO_TEST_CASE( TestSetGetFloat_Var )
@@ -63,8 +67,12 @@ BOOST_AUTO_TEST_CASE( TestSetGetFloat_Var )
 	BOOST_CHECK_EQUAL( 2.2f, testGroup.get<float>( "Float_Var") );
     
 	testGroup.set_as_string( "Float_Var", "3.3" );
-	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string( "Float_Var") );
-	BOOST_CHECK_EQUAL( 3.3f, testGroup.get<float>( "Float_Var") );
+	//BOOST_CHECK_EQUAL( "3.3", testGroup.get_as_string("Float_Var") );
+    BOOST_CHECK_EQUAL( 3.3f, testGroup.get<float>("Float_Var") );
+
+    testGroup.set_as_wstring( "Float_Var", L"4.4" );
+    //BOOST_CHECK_EQUAL( "4.4", testGroup.get_as_wstring("Float_Var") );
+    BOOST_CHECK_EQUAL( 4.4f, testGroup.get<float>("Float_Var") );
 }
 
 BOOST_AUTO_TEST_CASE( TestFloatPropertyType )
@@ -82,5 +90,6 @@ BOOST_AUTO_TEST_CASE( TestInvalidSet )
 {
     TestGroup testGroup;
     
-	BOOST_CHECK_THROW( testGroup.set_as_string( "Float_Func", "Foo" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.set_as_string( "Float_Func", "Foo" ), std::invalid_argument );
+    BOOST_CHECK_THROW( testGroup.set_as_wstring( "Float_Func", L"Foo" ), std::invalid_argument );
 }
