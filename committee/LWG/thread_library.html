@@ -570,7 +570,8 @@ Nothing.
 
 <dt>Postconditions:</dt>
 <dd>
-The constructed object has the NAT value.</dd>
+The constructed object has the NAT value.
+</dd>
 </dl>
 </blockquote>
 
@@ -864,7 +865,8 @@ and sets <code><var>x</var></code> to a default constructed state.
 <dd>
 <code><var>x</var>.joinable() == false</code>
 <br>
-<code><var>x</var>.get_id() == thread().get_id()</code>.</dd>
+<code><var>x</var>.get_id() == thread().get_id()</code>.
+</dd>
 
 <dd>
 <code>joinable()</code> returns the
@@ -946,7 +948,8 @@ Operations on <code>*this</code> are not synchronized.
 <dd>
 If <code>join()</code> throws an exception,
 the <code>joinable()</code> status remains unchanged. Otherwise,
-<code>joinable()</code> is <code>false</code> and <code>get_id() == id()</code>.</dd>
+<code>joinable()</code> is <code>false</code> and <code>get_id() == id()</code>.
+</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -1284,7 +1287,9 @@ Upon successful completion, the current thread owns the mutex.
 </dd>
 
 <dt>Return type:</dt>
-<dd><code>void</code></dd>
+<dd>
+<code>void</code>
+</dd>
 
 <dt>Synchronization:</dt>
 <dd>
@@ -1322,7 +1327,9 @@ there is no effect and <code>try_lock()</code> immediately returns.
 </dd>
 
 <dt>Return type:</dt>
-<dd><code>bool</code></dd>
+<dd>
+<code>bool</code>
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -1382,7 +1389,9 @@ or by any other locking function) before ownership is released.
 </dd>
 
 <dt>Return type:</dt>
-<dd><code>void</code></dd>
+<dd>
+<code>void</code>
+</dd>
 
 <dt>Synchronization:</dt>
 <dd>
@@ -1509,7 +1518,9 @@ but implementations are expected to make a strong effort to do so.
 </dd>
 
 <dt>Return type:</dt>
-<dd><code>bool</code></dd>
+<dd>
+<code>bool</code>
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -1556,7 +1567,9 @@ strong effort to do so.
 </dd>
 
 <dt>Return type:</dt>
-<dd><code>bool</code></dd>
+<dd>
+<code>bool</code>
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -1748,7 +1761,8 @@ explicit lock_guard(mutex_type&amp; <var>m</var>);
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, the current thread does not 
-own mutex <code>m</code>.</dd>
+own mutex <code>m</code>.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -1871,7 +1885,8 @@ unique_lock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>unique_lock</code>.</dd>
+Constructs an object of type <code>unique_lock</code>.
+</dd>
 
 <dt>Postconditions:</dt>
 <dd>
@@ -1891,7 +1906,8 @@ explicit unique_lock(mutex_type&amp; <var>m</var>);
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, the current thread does not 
-own the mutex.</dd>
+own the mutex.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -1916,11 +1932,13 @@ unique_lock(mutex_type&amp; <var>m</var>, defer_lock_t);
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, the current thread does not 
-own the mutex.</dd>
+own the mutex.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>unique_lock</code>.</dd>
+Constructs an object of type <code>unique_lock</code>.
+</dd>
 
 <dt>Postconditions:</dt>
 <dd>
@@ -1940,7 +1958,8 @@ unique_lock(mutex_type&amp; <var>m</var>, try_to_lock_t);
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, then the current thread 
-does not own the mutex.</dd>
+does not own the mutex.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -1965,7 +1984,8 @@ unique_lock(mutex_type&amp; <var>m</var>, adopt_lock_t);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The current thread owns mutex <code><var>m</var></code>.</dd>
+The current thread owns mutex <code><var>m</var></code>.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -1976,7 +1996,8 @@ Constructs an object of type <code>unique_lock</code>.
 <dd>
 <code>mutex() == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() == true</code></dd>
+<code>owns_lock() == true</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -1989,7 +2010,8 @@ unique_lock(mutex_type&amp; <var>m</var>, const system_time&amp; <var>abs_time</
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, then the current thread 
-does not own the mutex.</dd>
+does not own the mutex.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -2027,7 +2049,8 @@ will bind to this constructor.
 <dt>Precondition:</dt>
 <dd>
 If <code>mutex_type</code> is not a recursive mutex, then the current thread 
-does not own the mutex.</dd>
+does not own the mutex.
+</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -2053,7 +2076,8 @@ the result of the call to <code><var>m</var>.timed_lock(<var>rel_time</var>)</co
 <dt>Effects:</dt>
 <dd>
 If <code>owns_lock()</code>
-calls <code>mutex()-&gt;unlock()</code>.</dd>
+calls <code>mutex()-&gt;unlock()</code>.
+</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -2082,7 +2106,8 @@ u</var>.mutex() == 0</code>
 <br>
 <code><var>u</var>.owns_lock() == false</code>
 <br>
-&nbsp;</dd>
+&nbsp;
+</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -2416,7 +2441,8 @@ first until either all arguments have been processed, a call to <code>try_lock()
 returns <code>false</code>, or a call to <code>try_lock()</code> throws an 
 exception. If a call to <code>try_lock()</code> returns <code>false</code> or 
 throws an exception, the <code>unlock()</code> function is called for any prior 
-arguments.</dd>
+arguments.
+</dd>
 
 </dl>
 <dl>
@@ -2463,7 +2489,8 @@ specific algorithm is not specified to avoid over-constraining implementations.
 &mdash;<i>end note</i>]
 If an exception is thrown by a call to <code>lock()</code> or <code>
 try_lock()</code>, then <code>unlock()</code> will be called for any argument 
-which had been locked by a call to <code>lock()</code> or <code>try_lock()</code>.</dd>
+which had been locked by a call to <code>lock()</code> or <code>try_lock()</code>.
+</dd>
 </dl>
 </blockquote>
 
