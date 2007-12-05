@@ -1540,8 +1540,8 @@ but implementations are expected to make a strong effort to do so.
 <dt>Synchronization:</dt>
 <dd>
 If <code>timed_lock</code> returns <code>true</code>,
-it synchronizes with ([intro.multithread])
-prior <code>unlock()</code> operations on the same object.
+prior <code>unlock()</code> operations on the same object
+synchronize with ([intro.multithread]) this operation.
 </dd>
 
 <dt>Throws:</dt>
@@ -1592,8 +1592,8 @@ but implementations are expected to make a strong effort to do so.
 <dt>Synchronization:</dt>
 <dd>
 If <code>timed_lock</code> returns <code>true</code>,
-it is an acquire operation
-([intro.multithread]).
+prior <code>unlock()</code> operations on the same object
+synchronize with ([intro.multithread]) this operation.
 </dd>
 
 <dt>Throws:</dt>
