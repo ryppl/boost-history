@@ -1703,7 +1703,8 @@ during the lock's construction.
 <pre><code>
 struct defer_lock_t  {}; // do not obtain the lock
 struct try_to_lock_t {}; // try to obtain the lock without blocking
-struct adopt_lock_t  {}; // assume the lock is already obtained and take ownership of it
+struct adopt_lock_t  {}; // assume the lock is already obtained and
+                         // take ownership of it
 
 extern const defer_lock_t   defer_lock;
 extern const try_to_lock_t  try_to_lock;
@@ -1750,7 +1751,7 @@ public:
     lock_guard&amp; operator=(lock_guard const&amp;) = delete;
 
 private:
-    mutex_type* pm;  // for exposition only
+    mutex_type* <var>pm</var>;  // <em>for exposition only</em>
 };
 
 }  // std</code></pre>
@@ -2993,11 +2994,10 @@ As if:
 </p>
 
 <blockquote>
-<pre><code>while (!<var>pred</var>())
-{
+<pre><code>
+while (!<var>pred</var>())
     if (!timed_wait(<var>lock</var>, <var>abs_time</var>))
         return <var>pred</var>();
-}
 return true;
 </code></pre>
 </blockquote>
@@ -3347,10 +3347,8 @@ As if:
 <blockquote>
 <pre><code>
 while (!<var>pred</var>())
-{
     if (!timed_wait(<var>lock</var>, <var>abs_time</var>))
         return <var>pred</var>();
-}
 return true;
 </code></pre>
 </blockquote>
