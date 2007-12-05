@@ -1261,7 +1261,7 @@ inline
 typename __promote_duration<LhsDuration, RhsDuration>::type
 __duration_subtract(const LhsDuration& lhs, const RhsDuration& rhs, false_type)
 {
-    RhsDuration r(lhs);
+    RhsDuration r = __make<RhsDuration>::from(lhs);
     r -= rhs;
     return r;
 }
