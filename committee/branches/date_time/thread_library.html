@@ -94,9 +94,9 @@ Other contributors: <a href="mailto:Hans.Boehm$hp.com">Hans&nbsp;Boehm</a>,
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.4.1 Class condition_variable [thread.condvar]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.4.2 Class condition_variable_any [thread.condvarany]</a>
 <br><a href="#time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.1 Class system_time [time.system]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.getsystem">31.2 Function get_system_time [time.getsystem]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.duration">31.3 Common Duration Functions [time.duration]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.duration">31.1 Duration Requirements [time.duration.requirements]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.2 Class system_time [time.system]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.getsystem">31.3 Function get_system_time [time.getsystem]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nanoseconds">31.4 Class nanoseconds [time.nanoseconds]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.microseconds">31.5 Class microseconds [time.microseconds]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.milliseconds">31.6 Class milliseconds [time.milliseconds]</a>
@@ -1250,9 +1250,9 @@ as described below.
 </p>
 
 <p>
-This section describes requirements on template argument types
+This subclause describes requirements on template argument types
 used to instantiate templates defined in the C++ Standard Library.
-The template definitions in the C++ Standard Library
+Template definitions in the C++ Standard Library
 refer to the named Mutex requirements
 whose details are set out below.
 In this description, <code>m</code> is an object of a mutex type.
@@ -3448,11 +3448,9 @@ For time_t the epoch is
 
 <p>
 Throughout this clause, the names of template parameters are used to express
-type requirements.
-<b>[Someone:
-Define Duration, RhsDuration.
-]</b>
-</p>
+type requirements. Parameter names LhsDuration and RhsDuration express the 
+Duration ([<a name="time.duration">[time.duration.requirements]</a>]) 
+requirements.</p>
 
 <p>
 <strong>Header &lt;date_time&gt; Synopsis</strong>
@@ -3476,11 +3474,128 @@ class system_time;
 // <em>functions</em>
 system_time get_system_time();
 
-}  // std
-</code></pre>
+}  // std</code></pre>
 </blockquote>
 
-<h3><a name="time.system">31.1 Class system_time [time.system]</a></h3>
+<h3><a name="time.duration.requirements">31.1 Duration requirements 
+[time.duration.requirements]</a></h3>
+<p>This subclause describes requirements on duration types used to instantiate 
+templates defined in the C++ Standard Library.</p>
+<p>Objects of duration types provide relative time values and comparison and 
+arithmetic operations on those values.</p>
+<p>Template definitions in the C++ Standard Library refer to the named Duration 
+requirements for duration types whose details are specified below.</p>
+<p>A duration type shall be EqualityComparable, LessThanComparable, 
+CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and 
+Destructible.&nbsp; In addition, it must meet the requirements for well-defined 
+expressions specified it the following table, where <code>D</code> and <code>E</code> 
+are duration types, <code>d</code> denotes a <code>const</code> value of type
+<code>D</code>, <code>e</code> denotes a <code>const</code> value of type <code>
+E</code>, <code>c</code> denotes an <code>int</code> value.</p>
+<table style="border-collapse: collapse;" border="1" bordercolor="#111111" cellpadding="5" cellspacing="0" width="100%">
+  <tr>
+    <td width="25%">expression</td>
+    <td width="11%">return type</td>
+    <td width="39%">return value</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>D::tick_type</code></td>
+    <td width="11%"><i><b>implementation-defined</b></i></td>
+    <td width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>D::ticks_per_second();</code></td>
+    <td valign="top" width="11%"><code>D::tick_type</code></td>
+    <td valign="top" width="39%">A constant indicating the number of ticks per 
+    second (or 0 for types for which <code>is_subsecond() == false</code>. </td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>D::seconds_per_tick();</code></td>
+    <td valign="top" width="11%"><code>D::tick_type</code></td>
+    <td valign="top" width="39%">A constant indicating the number of seconds per 
+    tick (or 0 for types for which <code>is_subsecond() == true</code>. </td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>D::is_subsecond();</code></td>
+    <td valign="top" width="11%"><code>bool</code></td>
+    <td valign="top" width="39%"><code>true</code> if the resolution of D is 
+    finer than 1 second, and otherwise <code>false</code>. </td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d.get_count();</code></td>
+    <td valign="top" width="11%"><code>D::tick_type</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d &lt;= e</code></td>
+    <td valign="top" width="11%"><code>bool</code></td>
+    <td valign="top" width="39%"><code>!(e &lt; d)</code></td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d &gt; e</code></td>
+    <td valign="top" width="11%"><code>bool</code></td>
+    <td valign="top" width="39%"><code>e &lt; d</code></td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d &gt;= e</code></td>
+    <td valign="top" width="11%"><code>bool</code></td>
+    <td valign="top" width="39%"><code>!(d &lt; e)</code></td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d != e</code></td>
+    <td valign="top" width="11%"><code>bool</code></td>
+    <td valign="top" width="39%"><code>!(d == e)</code></td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>-d;</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d - e</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d -= e</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d + e</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d += e</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d / c</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d /= c</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d * c</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="25%"><code>d *= c</code></td>
+    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="39%">&nbsp;</td>
+  </tr>
+</table>
+<p>Unless otherwise specified, no operations on duration types shall throw 
+exceptions.</p>
+
+<h3><a name="time.system">31.2 Class system_time [time.system]</a></h3>
 
 <p>
 The class <code>system_time</code> provides a time point
@@ -3501,11 +3616,6 @@ need to function independent of the global time system
 when lives are at stake.
 I don't want the flight control software dependent on UTC.
 ]</b>
-</p>
-
-<p>
-class <code>system_time</code> shall be EqualityComparable, LessThanComparable,
-CopyConstructable, DefaultConstructable, and Assignable.
 </p>
 
 <blockquote>
@@ -3935,7 +4045,7 @@ Nothing.
 </blockquote>
 
 
-<h3><a name="time.getsystem">31.2 Function get_system_time [time.getsystem]</a></h3>
+<h3><a name="time.getsystem">32.3 Function get_system_time [time.getsystem]</a></h3>
 
 <p>
 The function <code>get_system_time</code>
@@ -3964,7 +4074,7 @@ system.
 &mdash;<b>end comment</b>]
 </p>
 
-<h3><a name="time.duration">31.3 Common Duration Functions [time.duration]</a></h3>
+<h3><span style="background-color: #FFFF00">xxxx Common Duration Functions [time.duration]</span></h3>
 
 <p>
 The following functions are common functions to all durations types.
@@ -4454,11 +4564,13 @@ Nothing.
 </dl>
 </blockquote>
 
-<h3><a name="time.nanoseconds">31.4 Class nanoseconds [time.nanoseconds]</a></h3>
+<h3><a name="time.nanoseconds">32.4 Class nanoseconds [time.nanoseconds]</a></h3>
 
 <p>
-Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
-</p>
+Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds. 
+Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]). 
+For the sake of exposition, the semantics of member functions is not described 
+if they have the same apparent semantics as those specified by [time.duration.requirements].</p>
 
 <blockquote>
 <pre><code>
@@ -4573,12 +4685,14 @@ Nothing.
 </dl>
 </blockquote>
 
-<h3><a name="time.microseconds">31.5 Class microseconds [time.microseconds]</a></h3>
+<h3><a name="time.microseconds">32.5 Class microseconds [time.microseconds]</a></h3>
 
 <p>
 Objects of class <code>microseconds</code>
-can be used to represent a count of microseconds.
-</p>
+can be used to represent a count of microseconds. Class <code>microseconds</code> 
+shall be a duration type ([time.duration.requirements]). For the sake of 
+exposition, the semantics of member functions is not described if they have the 
+same apparent semantics as those specified by [time.duration.requirements].</p>
 
 <blockquote>
 <pre><code>
@@ -4716,12 +4830,14 @@ Nothing.
 </dl>
 </blockquote>
 
-<h3><a name="time.milliseconds">31.6 Class milliseconds [time.milliseconds]</a></h3>
+<h3><a name="time.milliseconds">32.6 Class milliseconds [time.milliseconds]</a></h3>
 
 <p>
 Objects of class <code>milliseconds</code>
-can be used to represent a count of milliseconds.
-</p>
+can be used to represent a count of milliseconds. Class <code>milliseconds</code> 
+shall be a duration type ([time.duration.requirements]). For the sake of 
+exposition, the semantics of member functions is not described if they have the 
+same apparent semantics as those specified by [time.duration.requirements].</p>
 
 <blockquote>
 <pre><code>
@@ -4874,12 +4990,14 @@ Nothing.
 </dl>
 </blockquote>
 
-<h3><a name="time.seconds">31.7 Class seconds [time.seconds]</a></h3>
+<h3><a name="time.seconds">32.7 Class seconds [time.seconds]</a></h3>
 
 <p>
 Objects of class <code>seconds</code>
-can be used to represent a count of seconds.
-</p>
+can be used to represent a count of seconds. Class <code>seconds</code> shall be 
+a duration type ([time.duration.requirements]). For the sake of exposition, the 
+semantics of member functions is not described if they have the same apparent 
+semantics as those specified by [time.duration.requirements].</p>
 
 <blockquote>
 <pre><code>
@@ -5052,12 +5170,14 @@ Nothing.
 </dl>
 </blockquote>
 
-<h3><a name="time.minutes">31.8 Class minutes [time.minutes]</a></h3>
+<h3><a name="time.minutes">32.8 Class minutes [time.minutes]</a></h3>
 
 <p>
 Objects of class <code>minutes</code>
-can be used to represent a count of minutes.
-</p>
+can be used to represent a count of minutes. Class <code>minutes</code> shall be 
+a duration type ([time.duration.requirements]). For the sake of exposition, the 
+semantics of member functions is not described if they have the same apparent 
+semantics as those specified by [time.duration.requirements].</p>
 
 <blockquote>
 <pre><code>
@@ -5253,8 +5373,10 @@ Nothing.
 
 <p>
 Objects of class <code>hours</code>
-can be used to represent a count of hours.
-</p>
+can be used to represent a count of hours. Class <code>hours</code> shall be a 
+duration type ([time.duration.requirements]). For the sake of exposition, the 
+semantics of member functions is not described if they have the same apparent 
+semantics as those specified by [time.duration.requirements].</p>
 
 <blockquote>
 <pre><code>
