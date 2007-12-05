@@ -206,10 +206,11 @@ appear on separate lines.
 
 
 <p>
-<b>[Crowl: 
+<b>[Crowl:
 Currently, we inconsistently place synchronization under 'Effects:'
-and 'Thread safety:'.  I think we would reduce confusion by
-separating the synchronization from the rest of the other attributes.
+and 'Thread safety:'.
+I think we would reduce confusion
+by separating the synchronization from the rest of the other attributes.
 That is, to have a named 'Sychronization:' attribute.]</b>
 </p>
 
@@ -224,7 +225,7 @@ Add the following definitions:
 <h4><a name="dfns.thread.blocked">17.1.? blocked thread [defns.thread.blocked]</a></h4>
 
 <p>
-a thread that is waiting for some condition (other than the availability of a 
+a thread that is waiting for some condition (other than the availability of a
 processor) to be satisfied before it can continue execution.
 [<i>Footnote:</i>
 This definition is taken from POSIX.
@@ -236,7 +237,7 @@ and <dfn>to unblock</dfn> is to place a thread in the unblocked state.
 <h4><a name="defns.deadlock">17.1.? deadlock [defns.deadlock]</a></h4>
 
 <p>
-two or more threads are unable to continue execution because each is blocked 
+two or more threads are unable to continue execution because each is blocked
 waiting for one or more of the others to satisfy some condition.
 </p>
 
@@ -454,21 +455,21 @@ namespace this_thread
 <h4><a name="thread.threads.class">30.2.1 Class thread [thread.threads.class]</a></h4>
 
 <p>
-An object of class <code>thread</code> represents and manages a thread of 
+An object of class <code>thread</code> represents and manages a thread of
 execution ([intro.multithread]).
 It provides a mechanism to create a new thread,
 for the current thread to wait for
 completion of a thread,
-and to perform other operations to manage and query the state of the thread. 
+and to perform other operations to manage and query the state of the thread.
 Objects of type <code>thread</code>
 can only represent joinable threads of execution
 or <dfn>not a thread</dfn> (referred to as <dfn>NAT</dfn>).
 [<i>Note:</i>
-Once a program calls a <code>thread</code> object's <code>join()</code> 
-or <code>detach()</code> members, or moves from a <code>thread</code> object, 
-then that <code>thread</code> object no longer represents a thread of execution. 
-Such a <code>thread</code> object represents NAT. Default constructed <code>thread</code> 
-objects also represent NAT.
+Once a program calls a <code>thread</code> object's <code>join()</code>
+or <code>detach()</code> members, or moves from a <code>thread</code> object,
+then that <code>thread</code> object no longer represents a thread of execution.
+Such a <code>thread</code> object represents NAT.
+Default constructed <code>thread</code> objects also represent NAT.
 &mdash;<i>end note</i>]
 </p>
 
@@ -536,14 +537,17 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 </blockquote>
 
 <p>
-An object of type <code>thread::id</code> provides either a unique identity for 
-a thread of execution or a NAT value ([thread.threads.class]). Each <code>thread</code> 
-object, other than a NAT <code>thread</code> object, has a <code>thread::id</code> 
-that compares not equal to the <code>thread::id</code> of all other <code>thread</code> 
-objects, including NAT <code>thread</code> objects.&nbsp; The <code>thread::id</code>'s 
-for all NAT <code>thread</code> objects compare equal to each other, and compare 
-not equal to the <code>thread::id</code>'s of all <code>thread</code> objects 
-not representing NAT.
+An object of type <code>thread::id</code> provides either a unique identity for
+a thread of execution or a NAT value ([thread.threads.class]).
+Each <code>thread</code> object, other than a NAT <code>thread</code> object,
+has a <code>thread::id</code>
+that compares not equal to the <code>thread::id</code>
+of all other <code>thread</code> objects,
+including NAT <code>thread</code> objects.
+The <code>thread::id</code>'s for all NAT <code>thread</code> objects
+compare equal to each other,
+and compare not equal to the <code>thread::id</code>'s
+of all <code>thread</code> objects not representing NAT.
 </p>
 
 <p>
@@ -719,7 +723,7 @@ thread();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs a <code>thread</code> object that represents NAT. 
+Constructs a <code>thread</code> object that represents NAT.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -948,8 +952,9 @@ Operations on <code>*this</code> are not synchronized.
 <dt>Postconditions:</dt>
 <dd>
 If <code>join()</code> throws an exception,
-the <code>joinable()</code> status remains unchanged. Otherwise,
-<code>joinable()</code> is <code>false</code> and <code>get_id() == id()</code>.
+the <code>joinable()</code> status remains unchanged.
+Otherwise, <code>joinable()</code> is <code>false</code>
+and <code>get_id() == id()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -983,7 +988,7 @@ the implementation shall release any owned resources.
 <dd>
 <code>joinable() == false</code>
 <br>
-<code>get_id() == id()</code>. 
+<code>get_id() == id()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -1084,9 +1089,10 @@ thread::id this_thread::get_id();
 <dl>
 <dt>Returns:</dt>
 <dd>
-An object of type <code>thread::id</code> that uniquely identifies
-the current thread of execution.  The object returned shall not compare
-equal to a default constructed <code>thread::id</code>.
+An object of type <code>thread::id</code>
+that uniquely identifies the current thread of execution.
+The object returned
+shall not compare equal to a default constructed <code>thread::id</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -1481,7 +1487,7 @@ types are required to meet the Mutex requirements.
 In addition, the following requirements shall be met,
 where <code>rel_time</code>
 denotes a value of a type meeting the Duration ([time.duration]) requirements
-or <code>abs_time</code> 
+or <code>abs_time</code>
 denotes a value of type <code>system_time</code>:
 </p>
 
@@ -1543,7 +1549,7 @@ Nothing.
 </blockquote>
 
 <p>
-The expression <code>m.timed_lock(abs_time)</code> shall be well-defined, 
+The expression <code>m.timed_lock(abs_time)</code> shall be well-defined,
 and have the following semantics:
 </p>
 
@@ -1551,19 +1557,22 @@ and have the following semantics:
 <dl>
 <dt>Precondition:</dt>
 <dd>
-For non-recursive mutexes the current thread shall not own the mutex. 
+For non-recursive mutexes the current thread shall not own the mutex.
 </dd>
 
 <dt>Effects:</dt>
 <dd>
-The function attempts to obtain ownership of the mutex by the specified time. If 
-the indicated time has already passed, the function still attempts to obtain 
-ownership without blocking (as if by calling <code>try_lock()</code>). If the 
-function returns by the specified time, it shall have obtained ownership.
+The function attempts to obtain ownership of the mutex by the specified time.
+If the indicated time has already passed,
+the function still attempts to obtain ownership
+without blocking (as if by calling <code>try_lock()</code>).
+If the function returns by the specified time,
+it shall have obtained ownership.
 [<i>Note:</i>
-As with <code>try_lock()</code>, there is no guarantee that ownership will be 
-obtained if the lock is available, but implementations are expected to make a 
-strong effort to do so.
+As with <code>try_lock()</code>,
+there is no guarantee that ownership will be obtained
+if the lock is available,
+but implementations are expected to make a strong effort to do so.
 &mdash;<i>end note</i>]
 </dd>
 
@@ -1574,14 +1583,14 @@ strong effort to do so.
 
 <dt>Returns:</dt>
 <dd>
-<code>true</code> if ownership was obtained, otherwise <code>false</code>. 
+<code>true</code> if ownership was obtained, otherwise <code>false</code>.
 </dd>
 
 <dt>Synchronization:</dt>
 <dd>
 If <code>timed_lock</code> returns <code>true</code>,
-it is an acquire operation 
-([intro.multithread]). 
+it is an acquire operation
+([intro.multithread]).
 </dd>
 
 <dt>Throws:</dt>
@@ -1746,9 +1755,10 @@ private:
 
 <p>
 An object of type
-<code>lock_guard</code> controls the ownership of a mutex within a scope. A <code>lock_guard</code> object
-maintains ownership of a
-mutex throughout the <code>lock_guard</code>'s lifetime. Behavior is undefined 
+<code>lock_guard</code> controls the ownership of a mutex within a scope.
+A <code>lock_guard</code> object maintains ownership of a mutex
+throughout the <code>lock_guard</code>'s lifetime.
+Behavior is undefined
 if the mutex pointed to by <code><var>pm</var></code>
 does not exist for the entire lifetime ([basic.life])
 of the <code>lock_guard</code> object.
@@ -1762,7 +1772,7 @@ explicit lock_guard(mutex_type&amp; <var>m</var>);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-If <code>mutex_type</code> is not a recursive mutex, the current thread does not 
+If <code>mutex_type</code> is not a recursive mutex, the current thread does not
 own mutex <code>m</code>.
 </dd>
 
@@ -1781,7 +1791,7 @@ lock_guard(mutex_type&amp; <var>m</var>, adopt_lock_t);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-The current thread owns mutex <code><var>m</var></code>. 
+The current thread owns mutex <code><var>m</var></code>.
 </dd>
 
 <dt>Effects:</dt>
@@ -1870,11 +1880,14 @@ template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</va
 An object of type
 <code>unique_lock</code> controls the ownership of a mutex within a scope.
 Mutex ownership
-may be acquired at construction or subsequent to construction, and subsequent to 
-acquisition may be transferred to another <code>unique_lock</code> object.
+may be acquired at construction or subsequent to construction,
+and subsequent to acquisition
+may be transferred to another <code>unique_lock</code> object.
 An object of type
-<code>unique_lock</code> is not copyable but is movable. Behavior is undefined 
-if <code>mutex() != 0</code> and the mutex pointed to by <code>mutex()</code> 
+<code>unique_lock</code> is not copyable but is movable.
+Behavior is undefined
+if <code>mutex() != 0</code>
+and the mutex pointed to by <code>mutex()</code>
 does not exist for the entire remaining lifetime ([basic.life])
 of the <code>unique_lock</code> object.
 </p>
@@ -1907,7 +1920,7 @@ explicit unique_lock(mutex_type&amp; <var>m</var>);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-If <code>mutex_type</code> is not a recursive mutex, the current thread does not 
+If <code>mutex_type</code> is not a recursive mutex, the current thread does not
 own the mutex.
 </dd>
 
@@ -1933,7 +1946,7 @@ unique_lock(mutex_type&amp; <var>m</var>, defer_lock_t);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-If <code>mutex_type</code> is not a recursive mutex, the current thread does not 
+If <code>mutex_type</code> is not a recursive mutex, the current thread does not
 own the mutex.
 </dd>
 
@@ -1959,7 +1972,7 @@ unique_lock(mutex_type&amp; <var>m</var>, try_to_lock_t);
 <dl>
 <dt>Precondition:</dt>
 <dd>
-If <code>mutex_type</code> is not a recursive mutex, then the current thread 
+If <code>mutex_type</code> is not a recursive mutex, then the current thread
 does not own the mutex.
 </dd>
 
@@ -1991,7 +2004,7 @@ The current thread owns mutex <code><var>m</var></code>.
 
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>unique_lock</code>. 
+Constructs an object of type <code>unique_lock</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2011,7 +2024,7 @@ unique_lock(mutex_type&amp; <var>m</var>, const system_time&amp; <var>abs_time</
 <dl>
 <dt>Precondition:</dt>
 <dd>
-If <code>mutex_type</code> is not a recursive mutex, then the current thread 
+If <code>mutex_type</code> is not a recursive mutex, then the current thread
 does not own the mutex.
 </dd>
 
@@ -2050,7 +2063,7 @@ will bind to this constructor.
 <dl>
 <dt>Precondition:</dt>
 <dd>
-If <code>mutex_type</code> is not a recursive mutex, then the current thread 
+If <code>mutex_type</code> is not a recursive mutex, then the current thread
 does not own the mutex.
 </dd>
 
@@ -2125,7 +2138,7 @@ unique_lock&amp; operator=(unique_lock&amp;&amp; <var>u</var>);
 <dl>
 <dt>Effects:</dt>
 <dd>
-If <code>owns_lock()</code> calls <code>mutex()-&gt;unlock()</code>. 
+If <code>owns_lock()</code> calls <code>mutex()-&gt;unlock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2168,7 +2181,7 @@ void lock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;lock()</code>. 
+<code>mutex()-&gt;lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2191,12 +2204,12 @@ bool try_lock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;try_lock()</code>. 
+<code>mutex()-&gt;try_lock()</code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-The result of the call to <code>try_lock()</code>. 
+The result of the call to <code>try_lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2223,19 +2236,19 @@ template &lt;class Duration&gt;
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;timed_lock(rel_t)</code>. 
+<code>mutex()-&gt;timed_lock(rel_t)</code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-The result of the call to <code>timed_lock(rel_t)</code>. 
+The result of the call to <code>timed_lock(rel_t)</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
 <code>owns_lock() == </code>
 the result
-of the call to <code>timed_lock(rel_t)</code>. 
+of the call to <code>timed_lock(rel_t)</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2254,19 +2267,19 @@ bool timed_lock(const system_time&amp; abs_t);
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;timed_lock(abs_t)</code>. 
+<code>mutex()-&gt;timed_lock(abs_t)</code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-The result of the call to <code>timed_lock(rel_t)</code>. 
+The result of the call to <code>timed_lock(rel_t)</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
 <code>owns_lock() == </code>
 the result
-of the call to <code>timed_lock(rel_t)</code>. 
+of the call to <code>timed_lock(rel_t)</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2285,7 +2298,7 @@ void unlock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;unlock()</code>. 
+<code>mutex()-&gt;unlock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2345,7 +2358,7 @@ mutex_type* mutex() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code><var>pm</var></code>. 
+<code><var>pm</var></code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2381,7 +2394,7 @@ mutex_type* release();
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code><var>pm</var></code>. 
+<code><var>pm</var></code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2438,12 +2451,14 @@ when suitable instantiated.
 
 <dt>Effects:</dt>
 <dd>
-Calls <code>try_lock()</code> for each argument in order beginning with the 
-first until either all arguments have been processed, a call to <code>try_lock()</code> 
-returns <code>false</code>, or a call to <code>try_lock()</code> throws an 
-exception. If a call to <code>try_lock()</code> returns <code>false</code> or 
-throws an exception, the <code>unlock()</code> function is called for any prior 
-arguments.
+Calls <code>try_lock()</code>
+for each argument in order beginning with the first
+until either all arguments have been processed,
+a call to <code>try_lock()</code> returns <code>false</code>,
+or a call to <code>try_lock()</code> throws an exception.
+If a call to <code>try_lock()</code> returns <code>false</code>
+or throws an exception,
+the <code>unlock()</code> function is called for any prior arguments.
 </dd>
 
 </dl>
@@ -2454,9 +2469,9 @@ arguments.
 If all calls to <code>try_lock()</code> returned <code>true</code>, returns <code>-1</code>.
 Otherwise returns a 0-based index
 value indicating for
-which argument <code>try_lock()</code> returned <code>false</code>.&nbsp;
+which argument <code>try_lock()</code> returned <code>false</code>.
 [<i>Note:</i>
-On return, either all arguments will be locked or none will be 
+On return, either all arguments will be locked or none will be
 locked.
 &mdash;<i>end note</i>]
 </dd>
@@ -2481,17 +2496,20 @@ when suitable instantiated.
 
 <dt>Effects:</dt>
 <dd>
-All arguments are locked via a sequence of calls to <code>lock()</code>, <code>
-try_lock()</code>, or <code>unlock()</code> on the argument. The sequence of calls shall not 
-result in deadlock, but is otherwise unspecified.
+All arguments are locked via a sequence of calls to <code>lock()</code>,
+<code>try_lock()</code>, or <code>unlock()</code> on the argument.
+The sequence of calls shall not result in deadlock,
+but is otherwise unspecified.
 [<i>Note:</i>
-A deadlock avoidance algorithm such as try-and-back-off 
-must be used, but the 
-specific algorithm is not specified to avoid over-constraining implementations.
+A deadlock avoidance algorithm such as try-and-back-off must be used,
+but the specific algorithm is not specified
+to avoid over-constraining implementations.
 &mdash;<i>end note</i>]
-If an exception is thrown by a call to <code>lock()</code> or <code>
-try_lock()</code>, then <code>unlock()</code> will be called for any argument 
-which had been locked by a call to <code>lock()</code> or <code>try_lock()</code>.
+If an exception is thrown by a call to <code>lock()</code>
+or <code> try_lock()</code>,
+then <code>unlock()</code> will be called for any argument
+which had been locked
+by a call to <code>lock()</code> or <code>try_lock()</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2587,14 +2605,21 @@ on the same <code>once_flag</code> object.
 
 <dt>Thread safety:</dt>
 <dd>
-If multiple threads invoke <code>call_once</code> concurrently with the same <code>once_flag</code> object, and that
-<code>once_flag</code> object has not already been used as a parameter to a successfully-completed invocation of
-<code>call_once</code>, then all but one of the threads shall block, and the remaining thread shall invoke the argument
-<code>func</code>. Once an invocation of <code>func</code> has completed in a non-exceptional manner, then any threads blocked on
-this <code>once_flag</code> object shall be unblocked.
-
-Use of <code>call_once</code> from one thread with one <code>once_flag</code> object shall not affect any invocations of
-<code>call_once</code> from any thread with a different <code>once_flag</code> object.
+If multiple threads invoke <code>call_once</code> concurrently
+with the same <code>once_flag</code> object,
+and that <code>once_flag</code> object
+has not already been used as a parameter
+to a successfully-completed invocation of <code>call_once</code>,
+then all but one of the threads shall block,
+and the remaining thread shall invoke the argument <code>func</code>.
+Once an invocation of <code>func</code> has completed
+in a non-exceptional manner,
+then any threads blocked on this <code>once_flag</code> object
+shall be unblocked.
+Use of <code>call_once</code> from one thread
+with one <code>once_flag</code> object
+shall not affect any invocations of <code>call_once</code>
+from any thread with a different <code>once_flag</code> object.
 </dd>
 </dl>
 
@@ -3466,10 +3491,12 @@ and a maximum time value of at least epoch time + 292 years.
 
 <p>
 <b>[Crowl:
-Hm.  I hope I'm not getting too pedantic here, but I'd recommend
-encuraging a "system time" based on UTC rather than on defining
-it so.  The reason is that embedded systems need to function
-independent of the global time system when lives are at stake.
+I hope I'm not getting too pedantic here,
+but I'd recommend encuraging a "system time" based on UTC
+rather than on defining it so.
+The reason is that embedded systems
+need to function independent of the global time system
+when lives are at stake.
 I don't want the flight control software dependent on UTC.
 ]</b>
 </p>
