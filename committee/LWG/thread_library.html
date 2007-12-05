@@ -2579,7 +2579,7 @@ copy shall be equivalent to calling the original.
 <dd>
 Calls to <code>call_once</code> on the same <code>once_flag</code> object
 are serialized.
-If there has been no prior successful <code>call_once</code>
+If there has been no prior effective <code>call_once</code>
 on the same <code>once_flag</code> object,
 the argument <code>func</code> (or a copy thereof)
 is called
@@ -2589,11 +2589,15 @@ is successful if and only if
 <code>func(args)</code> returns without exception.
 If an exception is thrown,
 the exception is propagated to the caller.
+If there has been a prior effective <code>call_once</code>
+on the same once_flag object,
+the <code>call_once</code> returns without invoking <code>func</code>.
 </dd>
 
 <dt>Synchronization:</dt>
 <dd>
-A successful <code>call_once</code> invocation
+The completion of
+an effective <code>call_once</code> invocation
 on a <code>once_flag</code> object,
 synchronizes with ([intro.multithread])
 all subsequent <code>call_once</code> invocations
@@ -2603,25 +2607,6 @@ on the same <code>once_flag</code> object.
 <dt>Throws:</dt>
 <dd>
 <code>system_error</code> or any exception propagated from <code>func</code>.
-</dd>
-
-<dt>Thread safety:</dt>
-<dd>
-If multiple threads invoke <code>call_once</code> concurrently
-with the same <code>once_flag</code> object,
-and that <code>once_flag</code> object
-has not already been used as a parameter
-to a successfully-completed invocation of <code>call_once</code>,
-then all but one of the threads shall block,
-and the remaining thread shall invoke the argument <code>func</code>.
-Once an invocation of <code>func</code> has completed
-in a non-exceptional manner,
-then any threads blocked on this <code>once_flag</code> object
-shall be unblocked.
-Use of <code>call_once</code> from one thread
-with one <code>once_flag</code> object
-shall not affect any invocations of <code>call_once</code>
-from any thread with a different <code>once_flag</code> object.
 </dd>
 </dl>
 
