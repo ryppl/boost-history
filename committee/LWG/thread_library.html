@@ -1302,8 +1302,8 @@ Upon successful completion, the current thread owns the mutex.
 
 <dt>Synchronization:</dt>
 <dd>
-This operation synchronizes with ([intro.multithread])
-prior <code>unlock()</code> operations on the same object.
+Prior <code>unlock()</code> operations on the same object
+synchronize with ([intro.multithread]) this operation.
 </dd>
 
 <dt>Throws:</dt>
@@ -1349,22 +1349,23 @@ otherwise,
 An implementation may fail to obtain the lock
 even if it is not held by any other thread.
 [<i>Note:</i>
-This spurious failure is normally uncommon.
+This spurious failure is normally uncommon,
+but allows interesting implementations
+based on a simple <code>compare_swap</code> ([atomics.operations]).
 &mdash;<i>end note</i>]
 </dd>
 
 <dt>Synchronization:</dt>
 <dd>
 If <code>try_lock</code> returns <code>true</code>,
-<code>try_lock</code> synchronizes with ([intro.multithread])
-prior <code>unlock()</code> operations on the same object.
+prior <code>unlock()</code> operations on the same object
+synchronize with ([intro.multithread]) this operation.
 [<i>Note:</i>
-Since a failed <code>try_lock()</code>
-is not an acquire operation ([intro.multithread]),
-the resulting memory visibility rules are weak enough
-to permit potentially interesting
-<code>try_lock()</code> implementations based on
-<code>compare_swap</code> ([atomics.operations]).
+Since <code>lock()</code> does not synchronize with
+a failed subsequent <code>try_lock()</code>,
+the visibility rules are weak enough
+that little would be known about the state after a failure,
+even in the absence of spurious failures.
 &mdash;<i>end note</i>]
 </dd>
 
