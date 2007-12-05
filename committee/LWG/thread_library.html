@@ -229,8 +229,8 @@ processor) to be satisfied before it can continue execution.
 [<i>Footnote:</i>
 This definition is taken from POSIX.
 &mdash;<i>end footnote</i>]
-As a verb, <i><b>to block</b></i> is to place a thread in the blocked state, and
-<b><i>to unblock</i></b> is to place a thread in the unblocked state.
+As a verb, <dfn>to block</dfn> is to place a thread in the blocked state,
+and <dfn>to unblock</dfn> is to place a thread in the unblocked state.
 </p>
 
 <h4><a name="defns.deadlock">17.1.? deadlock [defns.deadlock]</a></h4>
@@ -460,8 +460,9 @@ It provides a mechanism to create a new thread,
 for the current thread to wait for
 completion of a thread,
 and to perform other operations to manage and query the state of the thread. 
-Objects of type <code>thread</code> can only represent joinable threads of 
-execution or <b><i>not a thread</i></b> (referred to as <b><i>NAT</i></b>). <i>
+Objects of type <code>thread</code>
+can only represent joinable threads of execution
+or <dfn>not a thread</dfn> (referred to as <dfn>NAT</dfn>).
 [<i>Note:</i>
 Once a program calls a <code>thread</code> object's <code>join()</code> 
 or <code>detach()</code> members, or moves from a <code>thread</code> object, 
@@ -1748,8 +1749,9 @@ An object of type
 <code>lock_guard</code> controls the ownership of a mutex within a scope. A <code>lock_guard</code> object
 maintains ownership of a
 mutex throughout the <code>lock_guard</code>'s lifetime. Behavior is undefined 
-if the mutex pointed to by <code><var>pm</var></code> does not<span style="font-style: normal"> exist for the 
-entire lifetime ([basic.life]) of the </span> <code>lock_guard</code><span style="font-style: normal"> object.</span>
+if the mutex pointed to by <code><var>pm</var></code>
+does not exist for the entire lifetime ([basic.life])
+of the <code>lock_guard</code> object.
 </p>
 
 <pre><code>
@@ -1873,8 +1875,8 @@ acquisition may be transferred to another <code>unique_lock</code> object.
 An object of type
 <code>unique_lock</code> is not copyable but is movable. Behavior is undefined 
 if <code>mutex() != 0</code> and the mutex pointed to by <code>mutex()</code> 
-does not<span style="font-style: normal"> exist for the entire remaining lifetime ([basic.life]) of the
-<code>unique_lock</code> object.</span>
+does not exist for the entire remaining lifetime ([basic.life])
+of the <code>unique_lock</code> object.
 </p>
 
 <pre><code>
@@ -2096,17 +2098,16 @@ unique_lock(unique_lock&amp;&amp; <var>u</var>);
 <dt>Postconditions:</dt>
 <dd>
 <code>mutex() ==</code>
-the value of <code><var>u</var>.mutex()</code> prior to establishment of 
-postconditions on <i><code>u</code></i>.
+the value of <code><var>u</var>.mutex()</code>
+prior to establishment of postconditions on <code><var>u</var></code>.
 <br>
 <code>owns_lock() ==</code>
-the value of <code><var>u</var>.owns_lock()</code> prior to establishment of 
-postconditions on <i><code>u</code></i>.<code><var><br>
-u</var>.mutex() == 0</code>
+the value of <code><var>u</var>.owns_lock()</code>
+prior to establishment of postconditions on <code><var>u</var></code>.
+<br>
+<code><var>u</var>.mutex() == 0</code>
 <br>
 <code><var>u</var>.owns_lock() == false</code>
-<br>
-&nbsp;
 </dd>
 
 <dt>Throws:</dt>
@@ -2130,13 +2131,14 @@ If <code>owns_lock()</code> calls <code>mutex()-&gt;unlock()</code>.
 <dt>Postconditions:</dt>
 <dd>
 <code>mutex() ==</code>
-the value of <code><var>u</var>.mutex()</code> prior to establishment of 
-postconditions on <i><code>u</code></i>.
+the value of <code><var>u</var>.mutex()</code>
+prior to establishment of postconditions on <code><var>u</var></code>.
 <br>
 <code>owns_lock() ==</code>
-the value of <code><var>u</var>.owns_lock()</code> prior to establishment of 
-postconditions on <i><code>u</code></i>.<code><var><br>
-u</var>.mutex() == 0</code>
+the value of <code><var>u</var>.owns_lock()</code>
+prior to establishment of postconditions on <code><var>u</var></code>.
+<br>
+<code><var>u</var>.mutex() == 0</code>
 <br>
 <code><var>u</var>.owns_lock() == false</code>
 </dd>
@@ -2452,7 +2454,7 @@ arguments.
 If all calls to <code>try_lock()</code> returned <code>true</code>, returns <code>-1</code>.
 Otherwise returns a 0-based index
 value indicating for
-which argument <code>try_lock()</code> returned <code>false</code>.&nbsp; <i>
+which argument <code>try_lock()</code> returned <code>false</code>.&nbsp;
 [<i>Note:</i>
 On return, either all arguments will be locked or none will be 
 locked.
@@ -3426,7 +3428,7 @@ Define Duration, RhsDuration.
 </p>
 
 <p>
-<b>Header &lt;date_time&gt; Synopsis</b>
+<strong>Header &lt;date_time&gt; Synopsis</strong>
 </p>
 
 <blockquote>
@@ -3921,7 +3923,7 @@ system_time get_system_time();
 
 
 <p>
-<i>[<b>Comment:</b>
+[<b>Comment:</b>
 Typical personal computer platforms currently achieve microsecond level
 resolution from calls to the clock.
 The
@@ -3930,7 +3932,7 @@ Boost Date-Time Library</a>
 has a class that portably implements the proposed interface,
 but it uses different C-level interfaces depending on the operating
 system.
-&mdash;<b>end comment</b>] </i>
+&mdash;<b>end comment</b>]
 </p>
 
 <h3><a name="time.duration">31.3 Common Duration Functions [time.duration]</a></h3>
