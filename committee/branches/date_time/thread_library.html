@@ -3566,8 +3566,7 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   <tr>
     <td valign="top" width="25%"><code>D::is_subsecond;</code></td>
     <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>true</code> if the resolution of <code>D</code> is 
-    finer than 1 second, and otherwise <code>false</code>. </td>
+    <td valign="top" width="39%"><code>seconds_per_tick == 0</code>. </td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d.count();</code></td>
@@ -3585,18 +3584,14 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
     <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
     d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code> 
-    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.<br>
-    <i>Remarks:</i> The resolution of <code>E</code> shall not be finer than the 
-    resolution of <code>D</code>. A diagnostic is required.</td>
+    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d += e</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
     d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code> 
-    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.<i><br>
-    Remarks:</i> The resolution of <code>E</code> shall not be finer than the 
-    resolution of <code>D</code>. A diagnostic is required.</td>
+    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d /= c</code></td>
@@ -3634,11 +3629,8 @@ public:
 
     // <i>construct/copy/destroy functions</i>
     nanoseconds(long long ns=0);
-    nanoseconds(const nanoseconds&amp;);
     nanoseconds(nanoseconds&amp;&amp;);
-    nanoseconds&amp; operator=(const nanoseconds&amp;);
     nanoseconds&amp; operator=(nanoseconds&amp;&amp;);
-   ~nanoseconds();
 
     // <em>observer functions</em>
     tick_type count() const;
@@ -3692,11 +3684,8 @@ public:
 
     // <i>construct/copy/destroy functions</i>
     microseconds(long long us=0);
-    microseconds(const microseconds&amp;);
     microseconds(microseconds&amp;&amp;);
-    microseconds&amp; operator=(const microseconds&amp;);
     microseconds&amp; operator=(microseconds&amp;&amp;);
-   ~microseconds();
 
     // <em>observer functions</em>
     tick_type count() const;
@@ -3766,11 +3755,8 @@ public:
 
     // <i>construct/copy/destroy functions</i>
     milliseconds(long long ms=0);
-    milliseconds(const milliseconds&amp;);
     milliseconds(milliseconds&amp;&amp;);
-    milliseconds&amp; operator=(const milliseconds&amp;);
     milliseconds&amp; operator=(milliseconds&amp;&amp;);
-   ~milliseconds();
 
     // <em>observer functions</em>
     tick_type count() const;
@@ -3854,11 +3840,8 @@ public:
 
     // <i>construct/copy/destroy functions</i>
     seconds(long long s=0);
-    seconds(const seconds&amp;);
     seconds(seconds&amp;&amp;);
-    seconds&amp; operator=(const seconds&amp;);
     seconds&amp; operator=(seconds&amp;&amp;);
-   ~seconds();
 
     // <em>observer functions</em>
     tick_type count() const;
@@ -3955,11 +3938,8 @@ public:
 
     // <i>construct/copy/destroy functions</i>
     minutes(long long m=0);
-    minutes(const minutes&amp;);
     minutes(minutes&amp;&amp;);
-    minutes&amp; operator=(const minutes&amp;);
     minutes&amp; operator=(minutes&amp;&amp;);
-   ~minutes();
 
     // <em>observer functions</em>
     tick_type count() const;
@@ -4069,11 +4049,8 @@ public:
 
     // <i>construct/copy/destroy functions</i>
     hours(long long h=0);
-    hours(const hours&amp;);
     hours(hours&amp;&amp;);
-    hours&amp; operator=(const hours&amp;);
     hours&amp; operator=(hours&amp;&amp;);
-   ~hours();
 
     // <em>observer functions</em>
     tick_type count() const;
@@ -4197,7 +4174,6 @@ public:
 
         system_time();
         explicit system_time(time_t, nanoseconds ns=0);
-       ~system_time();
 
         time_t seconds_since_epoch() const;
         nanoseconds nanoseconds_since_epoch() const;
@@ -4299,8 +4275,8 @@ since 1970-01-01 00:00:00 represented by the current value of <code>*this</code>
 <dt>Returns:</dt>
 <dd>
 True if
-the time
-represented by <code>*this</code> is equal to the time represented by <var>
+the time point
+represented by <code>*this</code> is the same as the time point represented by <var>
 <code>rhs</code></var>.
 </dd>
 
@@ -4313,7 +4289,8 @@ represented by <code>*this</code> is equal to the time represented by <var>
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if the time represented by <code>*this</code> is not equal to the time represented
+True if the time point represented by <code>*this</code> is not the same as the time 
+point represented
 by <var><code>rhs</code></var>.
 </dd>
 
@@ -4326,8 +4303,8 @@ by <var><code>rhs</code></var>.
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time represented by
-<code>*this</code> is greater than the time represented by <var><code>rhs</code></var>.
+True if the time point represented by
+<code>*this</code> is later than the time point represented by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
@@ -4339,8 +4316,8 @@ True if time represented by
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time represented
-by <code>*this</code> is greater or equal than the time represented by <var>
+True if the time point represented
+by <code>*this</code> is later or the same as the time point represented by <var>
 <code>rhs</code></var>.
 </dd>
 
@@ -4353,8 +4330,8 @@ by <code>*this</code> is greater or equal than the time represented by <var>
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time represented by <code>*this</code>
-is less than the time represented by <var><code>rhs</code></var>.
+True if the time point represented by <code>*this</code>
+is earlier than the time point represented by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
@@ -4366,8 +4343,8 @@ is less than the time represented by <var><code>rhs</code></var>.
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if time represented by <code>*this</code>
-is less or equal than the time represented by <var><code>rhs</code></var>.
+True if the time&nbsp; pointrepresented by <code>*this</code>
+is earlier or the same as the time point represented by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
@@ -4380,8 +4357,8 @@ is less or equal than the time represented by <var><code>rhs</code></var>.
 <dt>Returns:</dt>
 <dd>
 The difference in nanoseconds between
-the time represented by <code>*this</code> and
-the time represented by <code><var>rhs</var></code>.
+the time point represented by <code>*this</code> and
+the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 <dt>Remarks:</dt>
