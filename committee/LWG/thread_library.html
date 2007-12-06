@@ -2876,15 +2876,15 @@ template &lt;class Predicate&gt;
 <dt>Effects:</dt>
 <dd>
 <p>
-While <code><var>pred</var>()</code> returns <code>false</code>,
-calls <code>wait(<var>lock</var>)</code>.
+As if:
 </p>
 
-<p>
-[<i>Note:</i>
-Does not block if <code><var>pred</var>()</code> is initially <code>true</code>.
-&mdash;<i>end note</i>]
-</p>
+<blockquote>
+<pre><code>
+while (!pred())
+    wait(lock);
+</code></pre>
+</blockquote>
 </dd>
 </dl>
 </blockquote>
@@ -2970,7 +2970,15 @@ template &lt;class Duration&gt;
 <dl>
 <dt>Effects:</dt>
 <dd>
-As if returns <code>timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)</code>.
+<p>
+As if:
+</p>
+
+<blockquote>
+<pre><code>
+timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)
+</code></pre>
+</blockquote>
 </dd>
 
 <dt>Returns:</dt>
@@ -3013,9 +3021,6 @@ return true;
 
 <p>
 [<i>Note:</i>
-There is no blocking
-if <code><var>pred</var>()</code> is initially <code>true</code>,
-even if the timeout has already expired.
 The return value indicates whether the predicate evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
@@ -3038,9 +3043,18 @@ As if:
 </p>
 
 <blockquote>
-<pre><code>return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>));
+<pre><code>
+timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>))
 </code></pre>
 </blockquote>
+
+<p>
+[<i>Note:</i>
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>,
+even if the timeout has already expired.
+&mdash;<i>end note</i>]
+</p>
 </dd>
 
 <dt>Returns:</dt>
@@ -3051,9 +3065,6 @@ As if:
 
 <p>
 [<i>Note:</i>
-There is no blocking
-if <code><var>pred</var>()</code> is initially <code>true</code>,
-even if the timeout has already expired.
 The return value indicates whether the predicate evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
@@ -3246,16 +3257,15 @@ template &lt;class Lock, class Predicate&gt;
 <dt>Effects:</dt>
 <dd>
 <p>
-While <code><var>pred</var>()</code> returns <code>false</code>,
-calls <code>wait(<var>lock</var>)</code>.
+As if:
 </p>
 
-<p>
-[<i>Note:</i>
-There is no blocking
-if <code><var>pred</var>()</code> is initially <code>true</code>.
-&mdash;<i>end note</i>]
-</p>
+<blockquote>
+<pre><code>
+while (!pred())
+    wait(lock);
+</code></pre>
+</blockquote>
 </dd>
 </dl>
 </blockquote>
@@ -3320,7 +3330,14 @@ template &lt;class Lock, class Duration&gt;
 <dl>
 <dt>Effects:</dt>
 <dd>
-As if returns <code>timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)</code>.
+<p>
+As if:
+</p>
+<blockquote>
+<pre><code>
+timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)
+</code></pre>
+</blockquote>
 </dd>
 
 <dt>Returns:</dt>
@@ -3363,9 +3380,6 @@ return true;
 </p>
 <p>
 [<i>Note:</i>
-There is no blocking
-if <code><var>pred</var>()</code> is initially <code>true</code>,
-even if the timeout has already expired.
 The return value indicates whether the predicate evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
 &mdash;<i>end note</i>]
@@ -3390,9 +3404,17 @@ As if:
 
 <blockquote>
 <pre><code>
-return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>));
+timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std::move(<var>pred</var>))
 </code></pre>
 </blockquote>
+
+<p>
+[<i>Note:</i>
+There is no blocking
+if <code><var>pred</var>()</code> is initially <code>true</code>,
+even if the timeout has already expired.
+&mdash;<i>end note</i>]
+</p>
 </dd>
 
 <dt>Returns:</dt>
@@ -3403,9 +3425,6 @@ return timed_wait(<var>lock</var>, get_system_time() + <var>rel_time</var>, std:
 
 <p>
 [<i>Note:</i>
-There is no blocking
-if <code><var>pred</var>()</code> is initially <code>true</code>,
-even if the timeout has already expired.
 The return value indicates whether the predicate
 evaluates to <code>true</code>,
 regardless of whether the timeout was triggered.
