@@ -3500,6 +3500,14 @@ template &lt;class LhsDuration, class RhsDuration&gt;
   <i>FRDuration</i> operator+(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)
 template &lt;class LhsDuration, class RhsDuration&gt;
   <i>FRDuration</i> operator-(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)
+
+template &lt;class Duration&gt;
+  Duration operator*(Duration lhs, long rhs)
+template &lt;class Duration&gt;
+  Duration operator*(long lhs, Duration rhs)
+
+template &lt;class Duration&gt;
+  Duration operator/(Duration lhs, long rhs)
 }  // std</code></pre>
 </blockquote>
 
@@ -3591,20 +3599,10 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
     resolution of <code>D</code>. A diagnostic is required.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>d / c</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%"><code>D(d.tick_count()/c)</code></td>
-  </tr>
-  <tr>
     <td valign="top" width="25%"><code>d /= c</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() == 
     d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
-  </tr>
-  <tr>
-    <td valign="top" width="25%"><code>d * c</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%"><code>D(d.tick_count()*c)</code></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d *= c</code></td>
@@ -3655,8 +3653,6 @@ public:
 
     // <i>operations</i>
     nanoseconds operator-() const;
-    nanoseconds operator*(long multiplier) const;
-    nanoseconds operator/(long divisor) const;
 };</code></pre>
 </blockquote>
 
@@ -3715,8 +3711,6 @@ public:
 
     // <i>operations</i>
     microseconds operator-() const;
-    microseconds operator*(long multiplier) const;
-    microseconds operator/(long divisor) const;
 
     // <em>conversions</em>
     operator nanoseconds() const;
@@ -3791,8 +3785,6 @@ public:
 
     // <i>operations</i>
     milliseconds operator-() const;
-    milliseconds operator*(long multiplier) const;
-    milliseconds operator/(long divisor) const;
 
     // <em>conversions</em>
     operator nanoseconds() const;
@@ -3881,8 +3873,6 @@ public:
 
     // <i>operations</i>
     seconds operator-() const;
-    seconds operator*(long multiplier) const;
-    seconds operator/(long divisor) const;
 
     // <em>conversions</em>
     operator nanoseconds() const;
@@ -3984,8 +3974,6 @@ public:
 
     // <i>operations</i>
     minutes operator-() const;
-    minutes operator*(long multiplier) const;
-    minutes operator/(long divisor) const;
 
     // <em>conversions</em>
     operator nanoseconds() const;
@@ -4100,8 +4088,6 @@ public:
 
     // <i>operations</i>
     hours operator-() const;
-    hours operator*(long multiplier) const;
-    hours operator/(long divisor) const;
 
     // <em>conversions</em>
     operator nanoseconds() const;
@@ -4621,8 +4607,50 @@ LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x-rhs.count()), where
 x is lhs.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
-  <p>&nbsp;</p>
 </blockquote>
+
+<pre><code>template &lt;class Duration&gt;
+  Duration operator*(Duration lhs, long rhs)
+</code></pre>
+<blockquote>
+<dl>
+
+<dt>Returns:</dt>
+<dd>
+<code>lhs *= rhs</code>.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>template &lt;class Duration&gt;
+  Duration operator*(long lhs, Duration rhs)
+</code></pre>
+<blockquote>
+<dl>
+
+<dt>Returns:</dt>
+<dd>
+<code>rhs *= lhs</code>.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>template &lt;class Duration&gt;
+  Duration operator/(Duration lhs, long rhs)
+</code></pre>
+<blockquote>
+<dl>
+
+<dt>Returns:</dt>
+<dd>
+<code>lhs /= rhs</code>.
+</dd>
+
+</dl>
+</blockquote>
+
 <h2><a name="References">References</a></h2>
 
 <ul>
