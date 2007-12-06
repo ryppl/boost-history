@@ -3474,6 +3474,9 @@ class system_time;
 // <em>non-member functions </em></code>[time.nonmembers]<code>
 system_time get_system_time();
 
+template&lt;typename Duration&gt;
+  system_time operator+(const Duration&amp; td, const system_time&amp; rhs);
+
 template &lt;class LhsDuration, class RhsDuration&gt;
   bool operator==(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
 template &lt;class LhsDuration, class RhsDuration&gt;
@@ -4187,40 +4190,29 @@ Constructs an object of type <code>hours</code>.
     <code>system_time</code>
     shall provide an epoch time of 1970-01-01 00:00:00.000000000
     and a maximum time value of at least epoch time + 292 years.
-  </p>
-
-  <p>
-    <b>
-      [Crowl:
-      I hope I'm not getting too pedantic here,
-      but I'd recommend encuraging a "system time" based on UTC
-      rather than on defining it so.
-      The reason is that embedded systems
-      need to function independent of the global time system
-      when lives are at stake.
-      I don't want the flight control software dependent on UTC.
-      ]
-    </b>
+    [<i>Note:</i>
+    292 years represents the number of nanoseconds
+    that can be represented in a signed 64 bit integer.
+    &mdash;<i>end note</i>]
   </p>
 
   <blockquote>
-    <pre>      <code>
-        class system_time
-        {
-        public:
+    <pre><code>class system_time
+{
+public:
 
         system_time();
-        system_time(time_t, nanoseconds ns);
-        ~system_time();
+        explicit system_time(time_t, nanoseconds ns=0);
+       ~system_time();
 
         time_t seconds_since_epoch() const;
         nanoseconds nanoseconds_since_epoch() const;
 
         // <em>traits</em>
-        typedef 'implementation defined' tick_type;
-        static tick_type ticks_per_second();
-        static tick_type seconds_per_tick();
-        static bool is_subsecond();
+        typedef <b><i>implementation defined</i></b> tick_type;
+        static const tick_type ticks_per_second = 1000000000;
+        static const tick_type seconds_per_tick = 0;
+        static const bool is_subsecond = true;
 
         // <em>comparison functions</em>
         bool operator==(const system_time&amp; rhs) const;
@@ -4244,126 +4236,69 @@ Constructs an object of type <code>hours</code>.
 
         template&lt;typename Duration&gt;
         system_time&amp; operator-=(const Duration&amp; td)
-
-        };
-      </code>
-    </pre>
+};</code>    </pre>
   </blockquote>
 
-  <p>
-    [<i>Note:</i>
-    292 years represents the number of nanoseconds
-    that can be represented in a signed 64 bit integer.
-    &mdash;<i>end note</i>]
-  </p>
-
-  <pre>   <code>
-      system_time();   </code>  </pre>
+  <pre><code>system_time();   </code>  </pre>
 
   <blockquote>
     <dl>
       <dt>Effects:</dt>
       <dd>
-        Constructs a system_time
+        Constructs a <code>system_time</code>
         object representing the epoch time point 1970-01-01 00:00:00.000000000
       </dd>
 
     </dl>
   </blockquote>
 
-  <pre>    <code>
-      system_time(time_t secs, nanoseconds ns);</code>  </pre>
+  <pre><code>system_time(time_t secs, nanoseconds ns=0);</code>  </pre>
 
   <blockquote>
     <dl>
       <dt>Effects:</dt>
       <dd>
-        Construct<var>s</var> a utc
+        Construct<var>s</var> a <code>system_time</code>
         time object representing the time point
-        that is secs + 1,000,000,000*ns after the epoch.
+        <i><code>secs</code></i> + 1,000,000,000*<i><code>ns</code></i> after the epoch.
       </dd>
 
       <dt>Remarks:</dt>
       <dd>
-        If the total nanoseconds &gt; 1 second the seconds are
+        If the total nanoseconds is greater than 1 second, the seconds are
         incremented appropriately.
       </dd>
 
     </dl>
   </blockquote>
 
-  <pre>    <code>
-      time_t seconds_since_epoch() const;</code>  </pre>
+  <pre><code>time_t seconds_since_epoch() const;</code>  </pre>
 
   <blockquote>
     <dl>
       <dt>Returns:</dt>
       <dd>
-        The count of seconds since 1970-01-01 00:00:00.
+        The  seconds since 1970-01-01 00:00:00 represented by the current value 
+        of <code>*this</code>.
       </dd>
 
     </dl>
   </blockquote>
 
-  <pre>    <code>
-      nanoseconds nanoseconds_since_epoch() const; </code></pre>
+  <pre><code>nanoseconds nanoseconds_since_epoch() const; </code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
-The count of nanoseconds
-since 1970-01-01 00:00:00.
+The  nanoseconds
+since 1970-01-01 00:00:00 represented by the current value of <code>*this</code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-1000000000
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-0
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-true.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-bool operator==(const system_time&amp; rhs) const;
-</code></pre>
+<pre><code>bool operator==(const system_time&amp; rhs) const;</code></pre>
 
 <blockquote>
 <dl>
@@ -4371,90 +4306,80 @@ bool operator==(const system_time&amp; rhs) const;
 <dd>
 True if
 the time
-represented by <code>*this</code> is equal to the time represented by <var>rhs</var>.
+represented by <code>*this</code> is equal to the time represented by <var>
+<code>rhs</code></var>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-bool operator!=(const system_time&amp; rhs) const;
-</code></pre>
+<pre><code>bool operator!=(const system_time&amp; rhs) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if the time represented by <code>*this</code> is not equal to the time represented
-by <var>rhs</var>.
+by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-bool operator&gt;(const system_time&amp; rhs) const;
-</code></pre>
+<pre><code>bool operator&gt;(const system_time&amp; rhs) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if time represented by
-<code>*this</code> is greater than the time represented by <var>rhs</var>.
+<code>*this</code> is greater than the time represented by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-bool operator&gt;=(const system_time&amp; rhs) const;
-</code></pre>
+<pre><code>bool operator&gt;=(const system_time&amp; rhs) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if time represented
-by <code>*this</code> is greater or equal than the time represented by <var>rhs</var>.
+by <code>*this</code> is greater or equal than the time represented by <var>
+<code>rhs</code></var>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-bool operator&lt;(const system_time&amp; rhs) const;
-</code></pre>
+<pre><code>bool operator&lt;(const system_time&amp; rhs) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if time represented by <code>*this</code>
-is less than the time represented by <var>rhs</var>.
+is less than the time represented by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-bool operator&lt;=(const system_time&amp; rhs) const;
-</code></pre>
+<pre><code>bool operator&lt;=(const system_time&amp; rhs) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if time represented by <code>*this</code>
-is less or equal than the time represented by <var>rhs</var>.
+is less or equal than the time represented by <var><code>rhs</code></var>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-nanoseconds operator-(const system_time&amp; <var>rhs</var>) const
-</code></pre>
+<pre><code>nanoseconds operator-(const system_time&amp; <var>rhs</var>) const</code></pre>
 
 <blockquote>
 <dl>
@@ -4467,40 +4392,35 @@ the time represented by <code><var>rhs</var></code>.
 
 <dt>Remarks:</dt>
 <dd>
-If rhs is greater the result will be a negative nanosecond.
-count.
+If <code>*this &lt; rhs</code>, the result will be negative.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-template&lt;typename Duration&gt;
-system_time operator+(const Duration&amp; td) const;
-</code></pre>
+<pre><code>template&lt;typename Duration&gt;
+  system_time operator+(const Duration&amp; td) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
-The duration converted to nanosecond resolution
-and added to the time represented by <code>*this</code>.
+The sum of <code>td</code> converted to nanosecond resolution
+and the time represented by <code>*this</code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-template&lt;typename Duration&gt;
-system_time&amp; operator+=(const Duration&amp; td);
-</code></pre>
+<pre><code>template&lt;typename Duration&gt;
+  system_time&amp; operator+=(const Duration&amp; td);</code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Convert the duration to nanosecond resolution
-and add it to the time represented by <code>*this</code>.
+Converts <code>td</code> to nanosecond resolution
+and adds it to the time represented by <code>*this</code>.
 </dd>
 
 <dt>Returns:</dt>
@@ -4510,33 +4430,29 @@ and add it to the time represented by <code>*this</code>.
 </dl>
 </blockquote>
 
-<pre><code>
-template&lt;typename Duration&gt;
-system_time operator-(const Duration&amp; td) const;
-</code></pre>
+<pre><code>template&lt;typename Duration&gt;
+  system_time operator-(const Duration&amp; td) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
-The duration converted to nanosecond resolution
-and subtracted from the time represented by <code>*this</code>.
+The difference between the time represented by <code>*this</code> converted to nanosecond resolution
+and&nbsp; <code>td</code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>
-template&lt;typename Duration&gt;
-system_time&amp; operator-=(const Duration&amp; td)
-</code></pre>
+<pre><code>template&lt;typename Duration&gt;
+  system_time&amp; operator-=(const Duration&amp; td)</code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Convert the duration to nanosecond resolution
-and subtract it from the time represented by <code>*this</code>.
+Converts <code>td</code> to nanosecond resolution
+and subtracts it from the time represented by <code>*this</code>.
 </dd>
 
 <dt>Returns:</dt>
@@ -4563,11 +4479,24 @@ The system time as provided by the operating system.</dd>
 <i>&nbsp;[Note:</i> Provides access to the system clock at a
 resolution as fine as nanoseconds.
 The actual resolution may vary.<i> --end note]</i></dd>
-<blockquote>
+<dt>&nbsp;</dt>
   <dt>[Note: <span style="font-style: normal">No error reporting is provided. 
   Hosted implementations ([intro.compliance]) presumably utilize system clock 
   API's that never report errors. </span>--end note.] </dt>
+
+</dl>
 </blockquote>
+
+
+<pre><code>template&lt;typename Duration&gt;
+  system_time operator+(const Duration&amp; td, const system_time&amp; rhs);</code></pre>
+<blockquote>
+<dl>
+
+<dt>Returns:</dt>
+<dd>
+The sum of <code>td</code> converted to nanosecond resolution
+and the time represented by <code>rhs</code>. </dd>
 
 </dl>
 </blockquote>
