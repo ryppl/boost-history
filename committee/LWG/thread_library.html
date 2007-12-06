@@ -1393,7 +1393,7 @@ The current thread shall own the mutex.
 For a non-recursive mutex ownership is released.
 For a recursive mutex
 <code>unlock()</code> must be called
-the same number of times which the mutex was locked
+the same number of times that the mutex was locked
 (via either <code>lock()</code> or <code>try_lock()</code>
 or by any other locking function) before ownership is released.
 </dd>
@@ -1445,7 +1445,7 @@ public:
 
 <p>
 The class <code>mutex</code> provides a non-recursive mutex type
-which satisfies all of the Mutex requirements.
+that satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -1478,7 +1478,7 @@ public:
 
 <p>
 The class <code>recursive_mutex</code> provides a recursive mutex type
-which satisfies all of the Mutex requirements.
+that satisfies all of the Mutex requirements.
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
@@ -2512,7 +2512,7 @@ to avoid over-constraining implementations.
 If an exception is thrown by a call to <code>lock()</code>
 or <code> try_lock()</code>,
 then <code>unlock()</code> will be called for any argument
-which had been locked
+that had been locked
 by a call to <code>lock()</code> or <code>try_lock()</code>.
 </dd>
 </dl>
@@ -3422,8 +3422,8 @@ A <dfn>time point</dfn> represents a dimensionless instant
 in the time continuum.
 A <dfn>time duration</dfn> represents a length of time
 unattached to any time point.
-Time points and time durations have a
-<dfn>resolution</dfn> which is their smallest representable time duration.
+Time points and time durations have a <dfn>resolution</dfn>,
+which is their smallest representable time duration.
 Time points
 have an <dfn>epoch</dfn> or start of a given time scale.
 For time_t the epoch is
@@ -4033,8 +4033,9 @@ static tick_type ticks_per_second();
 <dl>
 <dt>Returns:</dt>
 <dd>
-A constant defined separately for each <tt>Duration</tt> type indicating the
-number of ticks per second (or 0 for types which are not <code>is_subsecond</code>).
+A constant defined separately for each <tt>Duration</tt> type
+indicating the number of ticks per second
+(or 0 for types that are not <code>is_subsecond</code>).
 </dd>
 
 <dt>Throws:</dt>
@@ -4052,8 +4053,9 @@ static tick_type seconds_per_tick();
 <dl>
 <dt>Returns:</dt>
 <dd>
-A constant defined separately for each <tt>Duration</tt> type indicating the
-number of seconds per tick (or 0 for types which are <code>is_subsecond</code>).
+A constant defined separately for each <tt>Duration</tt> type
+indicating the number of seconds per tick
+(or 0 for types that are <code>is_subsecond</code>).
 </dd>
 
 <dt>Throws:</dt>
@@ -5521,9 +5523,9 @@ created
 further existing practice.
 Proposals by Pete Becker, Peter Dimov, Ion Gazta&ntilde;aga,
 and Anthony Williams were also influential.
-Pete Becker also
-contributed numerous critiques, suggestions, and comments on the current
-proposal which are most appreciated.
+Pete Becker also contributed
+numerous critiques, suggestions, and comments on the current proposal,
+which are most appreciated.
 Jeff Garland
 contributed the date time portions of the proposal based on the Boost.DateTime
 Library and his TR2 proposals.
