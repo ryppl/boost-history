@@ -20,7 +20,7 @@ struct __make<timespec>
     {
         timespec ts;
         ts.tv_sec = t.seconds_since_epoch();
-        ts.tv_nsec = static_cast<long>(t.nanoseconds_since_epoch().get_count() % system_time::ticks_per_second());
+        ts.tv_nsec = static_cast<long>(t.nanoseconds_since_epoch().count() % system_time::ticks_per_second);
         return ts;
     }
 

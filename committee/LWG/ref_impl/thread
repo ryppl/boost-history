@@ -76,11 +76,11 @@
     }  // std
 */
 
+#include <ostream>
 #include <pthread.h>
 #include <mutex_base>
 #include <condition_variable>
 #include <functional>
-#include <ostream>
 #include <exception>
 
 namespace std
