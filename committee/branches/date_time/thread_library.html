@@ -3448,9 +3448,14 @@ have an <dfn>epoch</dfn> or start of a given time scale.
 
 <p>
 Throughout this clause, the names of template parameters are used to express
-type requirements. Parameter names LhsDuration and RhsDuration express the 
+type requirements. Parameter names <code>Duration</code>, <code>LhsDuration</code>
+and <code>RhsDuration</code> express the 
 Duration ([<a name="time.duration">[time.duration.requirements]</a>]) 
-requirements.</p>
+requirements.
+For all non-member functions in this clause which are templated on Duration types,
+the implementation shall constrain these function templates such that they will
+only instantiate for Duration types.
+</p>
 
 <p>
 <strong>Header &lt;date_time&gt; Synopsis</strong>
@@ -3523,7 +3528,10 @@ Destructible.&nbsp; In addition, it must meet the requirements for well-defined
 expressions specified it the following table, where <code>D</code> and <code>E</code> 
 are duration types, <code>d</code> denotes a <code>const</code> value of type
 <code>D</code>, <code>e</code> denotes a <code>const</code> value of type <code>
-E</code>, <code>c</code> denotes an <code>int</code> value.</p>
+E</code>, <code>c</code> denotes a <code>long</code> value.
+The resolution of <code>E</code> shall not be finer than the resolution of <code>D</code>
+(diagnostic required).
+</p>
 <table style="border-collapse: collapse;" border="1" bordercolor="#111111" cellpadding="5" cellspacing="0" width="100%">
   <tr>
     <td width="25%"><b><i>expression</i></b></td>
@@ -3539,13 +3547,13 @@ E</code>, <code>c</code> denotes an <code>int</code> value.</p>
     <td valign="top" width="25%"><code>D::ticks_per_second;</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
     <td valign="top" width="39%">The number of ticks per 
-    second, or 0 for types for which <code>is_subsecond() == false</code>. </td>
+    second, or 0 for types for which the number of ticks per second is less than 1. </td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>D::seconds_per_tick;</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
     <td valign="top" width="39%">The number of seconds per 
-    tick, or 0 for types for which <code>is_subsecond() == true</code>. </td>
+    tick, or 0 for types for which the number of seconds per tick is less than 1. </td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>D::is_subsecond;</code></td>
@@ -3629,7 +3637,7 @@ public:
     // <i>construct/copy/destroy functions</i>
     nanoseconds(long long ns=0);
     nanoseconds(const nanoseconds&amp;);
-    nanoseconds(nanosecons&amp;&amp;);
+    nanoseconds(nanoseconds&amp;&amp;);
     nanoseconds&amp; operator=(const nanoseconds&amp;);
     nanoseconds&amp; operator=(nanoseconds&amp;&amp;);
    ~nanoseconds();
@@ -3689,7 +3697,7 @@ public:
     // <i>construct/copy/destroy functions</i>
     microseconds(long long us=0);
     microseconds(const microseconds&amp;);
-    microseconds(nanosecons&amp;&amp;);
+    microseconds(microseconds&amp;&amp;);
     microseconds&amp; operator=(const microseconds&amp;);
     microseconds&amp; operator=(microseconds&amp;&amp;);
    ~microseconds();
@@ -3765,7 +3773,7 @@ public:
     // <i>construct/copy/destroy functions</i>
     milliseconds(long long ms=0);
     milliseconds(const milliseconds&amp;);
-    milliseconds(nanosecons&amp;&amp;);
+    milliseconds(milliseconds&amp;&amp;);
     milliseconds&amp; operator=(const milliseconds&amp;);
     milliseconds&amp; operator=(milliseconds&amp;&amp;);
    ~milliseconds();
@@ -3855,7 +3863,7 @@ public:
     // <i>construct/copy/destroy functions</i>
     seconds(long long s=0);
     seconds(const seconds&amp;);
-    seconds(nanosecons&amp;&amp;);
+    seconds(seconds&amp;&amp;);
     seconds&amp; operator=(const seconds&amp;);
     seconds&amp; operator=(seconds&amp;&amp;);
    ~seconds();
@@ -3958,7 +3966,7 @@ public:
     // <i>construct/copy/destroy functions</i>
     minutes(long long m=0);
     minutes(const minutes&amp;);
-    minutes(nanosecons&amp;&amp;);
+    minutes(minutes&amp;&amp;);
     minutes&amp; operator=(const minutes&amp;);
     minutes&amp; operator=(minutes&amp;&amp;);
    ~minutes();
@@ -4074,7 +4082,7 @@ public:
     // <i>construct/copy/destroy functions</i>
     hours(long long h=0);
     hours(const hours&amp;);
-    hours(nanosecons&amp;&amp;);
+    hours(hours&amp;&amp;);
     hours&amp; operator=(const hours&amp;);
     hours&amp; operator=(hours&amp;&amp;);
    ~hours();
