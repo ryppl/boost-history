@@ -34,11 +34,8 @@
     
         nanoseconds operator-() const;
     
-        nanoseconds  operator/ (int divisor) const;
-        nanoseconds& operator/=(int divisor);
-    
-        nanoseconds  operator* (int rhs) const;
-        nanoseconds& operator*=(int rhs);
+        nanoseconds& operator*=(long rhs);
+        nanoseconds& operator/=(long divisor);
     
         tick_type get_count() const;
     };
@@ -68,11 +65,8 @@
     
         microseconds operator-() const;
     
-        microseconds  operator/ (int divisor) const;
-        microseconds& operator/=(int divisor);
-    
-        microseconds  operator* (int rhs) const;
-        microseconds& operator*=(int rhs);
+        microseconds& operator*=(long rhs);
+        microseconds& operator/=(long divisor);
     
         tick_type get_count() const;
     };
@@ -103,11 +97,8 @@
     
         milliseconds operator-() const;
     
-        milliseconds  operator/ (int divisor) const;
-        milliseconds& operator/=(int divisor);
-    
-        milliseconds  operator* (int rhs) const;
-        milliseconds& operator*=(int rhs);
+        milliseconds& operator*=(long rhs);
+        milliseconds& operator/=(long divisor);
     
         tick_type get_count() const;
     };
@@ -139,11 +130,8 @@
     
         seconds operator-() const;
     
-        seconds  operator/ (int divisor) const;
-        seconds& operator/=(int divisor);
-    
-        seconds  operator* (int rhs) const;
-        seconds& operator*=(int rhs);
+        seconds& operator*=(long rhs);
+        seconds& operator/=(long divisor);
     
         tick_type get_count() const;
     };
@@ -176,11 +164,8 @@
     
         minutes operator-() const;
     
-        minutes  operator/ (int divisor) const;
-        minutes& operator/=(int divisor);
-    
-        minutes  operator* (int rhs) const;
-        minutes& operator*=(int rhs);
+        minutes& operator*=(long rhs);
+        minutes& operator/=(long divisor);
     
         tick_type get_count() const;
     };
@@ -214,11 +199,8 @@
     
         hours operator-() const;
     
-        hours  operator/ (int divisor) const;
-        hours& operator/=(int divisor);
-    
-        hours  operator* (int rhs) const;
-        hours& operator*=(int rhs);
+        hours& operator*=(long rhs);
+        hours& operator/=(long divisor);
     
         tick_type get_count() const;
     };
@@ -241,6 +223,14 @@
       <see note> operator+(const LhsDuration& lhs, const RhsDuration& rhs)
     template <class LhsDuration, class RhsDuration>
       <see note> operator-(const LhsDuration& lhs, const RhsDuration& rhs)
+
+    template <class Duration>
+      Duration operator*(Duration lhs, long rhs)
+    template <class Duration>
+      Duration operator*(long lhs, Duration rhs)
+
+    template <class Duration>
+      Duration operator/(Duration lhs, long rhs)
 
     class system_time
     {
@@ -352,11 +342,8 @@ public:
 
     nanoseconds operator-() const {return -ns_;}
 
-    nanoseconds  operator/ (int divisor) const {return ns_ / divisor;}
-    nanoseconds& operator/=(int divisor)       {ns_ /= divisor; return *this;}
-
-    nanoseconds  operator* (int rhs) const {return ns_ * rhs;}
-    nanoseconds& operator*=(int rhs)       {ns_ *= rhs; return *this;}
+    nanoseconds& operator*=(long rhs)       {ns_ *= rhs; return *this;}
+    nanoseconds& operator/=(long divisor)       {ns_ /= divisor; return *this;}
 
     tick_type get_count() const {return ns_;}
 };
@@ -388,11 +375,8 @@ public:
 
     microseconds operator-() const {return -us_;}
 
-    microseconds  operator/ (int divisor) const {return us_ / divisor;}
-    microseconds& operator/=(int divisor)       {us_ /= divisor; return *this;}
-
-    microseconds  operator* (int rhs) const {return us_ * rhs;}
-    microseconds& operator*=(int rhs)       {us_ *= rhs; return *this;}
+    microseconds& operator*=(long rhs)     {us_ *= rhs; return *this;}
+    microseconds& operator/=(long divisor) {us_ /= divisor; return *this;}
 
     tick_type get_count() const {return us_;}
 };
@@ -425,11 +409,8 @@ public:
 
     milliseconds operator-() const {return -ms_;}
 
-    milliseconds  operator/ (int divisor) const {return ms_ / divisor;}
-    milliseconds& operator/=(int divisor)       {ms_ /= divisor; return *this;}
-
-    milliseconds  operator* (int rhs) const {return ms_ * rhs;}
-    milliseconds& operator*=(int rhs)       {ms_ *= rhs; return *this;}
+    milliseconds& operator*=(long rhs)     {ms_ *= rhs; return *this;}
+    milliseconds& operator/=(long divisor) {ms_ /= divisor; return *this;}
 
     tick_type get_count() const {return ms_;}
 };
@@ -463,11 +444,9 @@ public:
 
     seconds operator-() const {return -s_;}
 
-    seconds  operator/ (int divisor) const {return s_ / divisor;}
-    seconds& operator/=(int divisor)       {s_ /= divisor; return *this;}
+    seconds& operator*=(long rhs)     {s_ *= rhs; return *this;}
+    seconds& operator/=(long divisor) {s_ /= divisor; return *this;}
 
-    seconds  operator* (int rhs) const {return s_ * rhs;}
-    seconds& operator*=(int rhs)       {s_ *= rhs; return *this;}
 
     tick_type get_count() const {return s_;}
 };
@@ -502,11 +481,8 @@ public:
 
     minutes operator-() const {return -mn_;}
 
-    minutes  operator/ (int divisor) const {return mn_ / divisor;}
-    minutes& operator/=(int divisor)       {mn_ /= divisor; return *this;}
-
-    minutes  operator* (int rhs) const {return mn_ * rhs;}
-    minutes& operator*=(int rhs)       {mn_ *= rhs; return *this;}
+    minutes& operator*=(long rhs)     {mn_ *= rhs; return *this;}
+    minutes& operator/=(long divisor) {mn_ /= divisor; return *this;}
 
     tick_type get_count() const {return mn_;}
 };
@@ -542,11 +518,8 @@ public:
 
     hours operator-() const {return -hr_;}
 
-    hours  operator/ (int divisor) const {return hr_ / divisor;}
-    hours& operator/=(int divisor)       {hr_ /= divisor; return *this;}
-
-    hours  operator* (int rhs) const {return hr_ * rhs;}
-    hours& operator*=(int rhs)       {hr_ *= rhs; return *this;}
+    hours& operator*=(long rhs)     {hr_ *= rhs; return *this;}
+    hours& operator/=(long divisor) {hr_ /= divisor; return *this;}
 
     tick_type get_count() const {return hr_;}
 };
@@ -1316,6 +1289,48 @@ operator-(const LhsDuration& lhs, const RhsDuration& rhs)
     return __duration_subtract(lhs, rhs, integral_constant<bool, __compare_resolution<LhsDuration, RhsDuration>::value>());
 }
 
+// Duration *
+
+template <class Duration>
+inline
+typename enable_if
+<
+    __is_duration<Duration>::value,
+    Duration
+>::type
+operator*(Duration d, long i)
+{
+    d *= i;
+    return d;
+}
+
+template <class Duration>
+inline
+typename enable_if
+<
+    __is_duration<Duration>::value,
+    Duration
+>::type
+operator*(long i, Duration d)
+{
+    d *= i;
+    return d;
+}
+
+// Duration /
+
+template <class Duration>
+inline
+typename enable_if
+<
+    __is_duration<Duration>::value,
+    Duration
+>::type
+operator/(Duration d, long i)
+{
+    d /= i;
+    return d;
+}
 
 class system_time
 {
