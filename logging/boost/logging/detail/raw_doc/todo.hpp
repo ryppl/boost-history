@@ -76,8 +76,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 @section todo_formatters Formatters
 
 
-- @c high           new formatter - write a more "exact" time - up to the millisec or so; should use Boost.DateTime for higher-resolution timestamps.
-
 - @c low    new formatter: limit the text to gives maximal length. It may happend the dump is unexpectedly large and would
   fill disk/overwrite cache/take too much time/be unreadable. Limiting one log size would help here a lot and would relieve end user of doing it manually.
 
@@ -104,6 +102,11 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c normal         new destination : to Event log
 
 - @c high           destination similar to named_spacer; but much easier. add to the docs as well
+  spacer string: every destination is separated by space. Each destination name cannot contain punctuation/spaces  ;
+  to know which destination is to be called, they're separated by space.
+  Also, just to make sure we're as friendly as possible (assuming this will go into a config file, and you want to see all names)
+  +name means write to this destination
+  -name means don't write to this destination
 
 @section todo_docs Documentation
 

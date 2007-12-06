@@ -649,6 +649,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\tag\high_precision_time.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\tags.hpp"
 					>
 				</File>

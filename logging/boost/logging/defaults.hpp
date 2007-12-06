@@ -63,11 +63,11 @@ Example:
 
 */
 
-// define this if you want your char type to be 'wchar_t'
-#undef BOOST_LOG_USE_WCHAR_T
+// define BOOST_LOG_USE_WCHAR_T if you want your char type to be 'wchar_t'
 
 #ifdef BOOST_WINDOWS
 #if defined( UNICODE) || defined(_UNICODE)
+#undef BOOST_LOG_USE_WCHAR_T
 #define BOOST_LOG_USE_WCHAR_T
 #endif
 #endif
