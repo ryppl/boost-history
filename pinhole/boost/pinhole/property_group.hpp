@@ -719,9 +719,7 @@ namespace boost { namespace pinhole
             #pragma warning(pop)
         #endif
 
-    private:
-        property_group();
-
+    protected:
         template<typename Value_Type>
         void internal_add_property( const std::string &name, 
                                     const std::string &description,
@@ -752,6 +750,9 @@ namespace boost { namespace pinhole
 
             m_properties.insert( std::make_pair(name, prop) );
         }
+
+    private:
+        property_group();
 
         void add_child(property_group* pChild)
         {
