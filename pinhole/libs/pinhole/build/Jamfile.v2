@@ -13,6 +13,7 @@ project boost/pinhole
 	<link>shared:<define>BOOST_ALL_DYN_LINK=1	
 	<link>static:<define>BOOST_PINHOLE_STATIC_LINK
 	<library>/boost/signals//boost_signals/
+    <library>/boost/signals//boost_signals/
     : usage-requirements
         <link>shared:<define>BOOST_PINHOLE_DYN_LINK=1
     : source-location ../src

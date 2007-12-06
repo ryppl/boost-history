@@ -24,10 +24,10 @@
 
 namespace boost { namespace pinhole { namespace detail
 {
-    #define BOOL_TRUE "True"
-    #define BOOL_FALSE "False"
-    #define W_BOOL_TRUE L"True"
-    #define W_BOOL_FALSE L"False"
+    #define BOOL_TRUE ("True")
+    #define BOOL_FALSE ("False")
+    #define W_BOOL_TRUE (L"True")
+    #define W_BOOL_FALSE (L"False")
 
     ///////////////////////////////////////////////////
     //               set_as_string Override Functors
@@ -249,14 +249,16 @@ namespace boost { namespace pinhole { namespace detail
     struct property_info_base
     {
     public:
-        property_info_base(const type_info &type) : 
+        property_info_base(const std::type_info &type) : 
           m_type(type)
         {;}
+        
+        virtual ~property_info_base(){;}
 
-        std::string      m_name;
-        std::string      m_description;
-        boost::any       m_metadata;
-        const type_info &m_type;
+        std::string           m_name;
+        std::string           m_description;
+        boost::any            m_metadata;
+        const std::type_info &m_type;
 
         virtual void set_as_string(std::string value) = 0;
         virtual void set_as_wstring(std::wstring value) = 0;

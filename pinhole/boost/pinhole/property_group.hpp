@@ -318,7 +318,7 @@ namespace boost { namespace pinhole
                     throw std::bad_cast();
                 }
                 
-                stringstream err;
+                std::stringstream err;
                 err << "The requested property \"" << property << "\" does not exist.";
                 throw std::out_of_range(err.str().c_str());                
             }
@@ -354,7 +354,7 @@ namespace boost { namespace pinhole
                     throw std::bad_cast();
                 }
                 
-                stringstream err;
+                std::stringstream err;
                 err << "The requested property \"" << property << "\" does not exist.";
                 throw std::out_of_range(err.str().c_str());                
             }
@@ -488,7 +488,7 @@ namespace boost { namespace pinhole
             * @return The type_info structure of the property.
             * @throw std::out_of_range The property requested does not exist.
             */
-            const type_info& get_type_info(const std::string &property) const
+            const std::type_info& get_type_info(const std::string &property) const
             {
                 property_collection::const_iterator itemItr = m_properties.find(property);
                 
@@ -612,7 +612,8 @@ namespace boost { namespace pinhole
                            Setter setter,
                            Getter getter)
         {
-            internal_add_property< typename Getter::result_type >( name, description, setter, getter, boost::any());
+            boost::any no_metadata;
+            internal_add_property< typename Getter::result_type >( name, description, setter, getter, no_metadata);
         }
         
         /**
@@ -628,7 +629,8 @@ namespace boost { namespace pinhole
                            no_setter_struct setter,
                            Getter getter)
         {
-            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, boost::any());
+            boost::any no_metadata;
+            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, no_metadata);
         }
     
         /**
@@ -637,8 +639,8 @@ namespace boost { namespace pinhole
          * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
-         * @param pEditor A pointer to the editor to be used with this property, or null
-         *                if there isn't one.
+         * @param metadata A pointer to the editor to be used with this property, or null
+         *                 if there isn't one.
          */
         template< typename Setter, typename Getter>
         void add_property( std::string name,
@@ -656,8 +658,8 @@ namespace boost { namespace pinhole
          * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
-         * @param pEditor A pointer to the editor to be used with this property, or null
-         *                if there isn't one.
+         * @param metadata A pointer to the editor to be used with this property, or null
+         *                 if there isn't one.
          */
         template< typename Getter>
         void add_property( std::string name,
