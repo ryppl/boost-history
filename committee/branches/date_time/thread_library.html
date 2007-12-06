@@ -26,7 +26,7 @@
 
 <body>
 
-<h1>Multi-threading Library for Standard C++</h1>
+<h1>Multi-threading Library for Standard C++ (Revision 1)</h1>
 
 <p>
 ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-04
@@ -95,14 +95,15 @@ Other contributors: <a href="mailto:Hans.Boehm$hp.com">Hans&nbsp;Boehm</a>,
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.4.2 Class condition_variable_any [thread.condvarany]</a>
 <br><a href="#time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.duration">31.1 Duration Requirements [time.duration.requirements]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.2 Class system_time [time.system]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.getsystem">31.3 Function get_system_time [time.getsystem]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nanoseconds">31.4 Class nanoseconds [time.nanoseconds]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.microseconds">31.5 Class microseconds [time.microseconds]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.milliseconds">31.6 Class milliseconds [time.milliseconds]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.seconds">31.7 Class seconds [time.seconds]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.minutes">31.8 Class minutes [time.minutes]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.hours">31.9 Class hours [time.hours]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nanoseconds">31.2 Class nanoseconds [time.nanoseconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.microseconds">31.3 Class microseconds [time.microseconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.milliseconds">31.4 Class milliseconds [time.milliseconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.seconds">31.5 Class seconds [time.seconds]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.minutes">31.6 Class minutes [time.minutes]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.hours">31.7 Class hours [time.hours]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.8 Class system_time [time.system]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nonmembers">31.9 Non-member functions 
+[time.nonmembers]</a>
 <br><a href="#References">References</a>
 <br><a href="#Acknowledgments">Acknowledgments</a>
 </p>
@@ -3468,14 +3469,36 @@ class milliseconds;
 class microseconds;
 class nanoseconds;
 
-// <em>timepoint</em>
+// <em>timepoint type</em>
 class system_time;
 
-// <em>functions</em>
+// <em>non-member functions </em></code>[time.nonmembers]<code>
 system_time get_system_time();
 
+template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator==(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator!=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+
+template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&lt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&lt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&gt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&gt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+
+template &lt;class LhsDuration, class RhsDuration&gt;
+  <i>FRDuration</i> operator+(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)
+template &lt;class LhsDuration, class RhsDuration&gt;
+  <i>FRDuration</i> operator-(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)
 }  // std</code></pre>
 </blockquote>
+
+<p>Types denoted as <i><code>FRDuration</code> </i>are the type with the finest 
+resolution of <code>LhsDuration</code> and <code>RhsDuration</code>. If their 
+resolutions are the same, <i><code>FRDuration</code> </i>is <code>LhsDuration</code>.</p>
 
 <h3><a name="time.duration.requirements">31.1 Duration requirements 
 [time.duration.requirements]</a></h3>
@@ -3534,17 +3557,21 @@ E</code>, <code>c</code> denotes an <code>int</code> value.</p>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d -= e</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
     d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code> 
-    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
+    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.<br>
+    <i>Remarks:</i> The resolution of <code>E</code> shall not be finer than the 
+    resolution of <code>D</code>. A diagnostic is required.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d += e</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
     d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code> 
-    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
+    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.<i><br>
+    Remarks:</i> The resolution of <code>E</code> shall not be finer than the 
+    resolution of <code>D</code>. A diagnostic is required.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d / c</code></td>
@@ -3553,7 +3580,7 @@ E</code>, <code>c</code> denotes an <code>int</code> value.</p>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d /= c</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() == 
     d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
   </tr>
@@ -3564,15 +3591,816 @@ E</code>, <code>c</code> denotes an <code>int</code> value.</p>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d *= c</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
+    <td valign="top" width="11%"><code>D&amp;</code></td>
     <td valign="top" width="39%"><i>Postcondition:</i>&nbsp; <code>d.tick_count() 
     == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
-<p>Unless otherwise specified, no functions specified for duration types shall throw 
+<p>Unless otherwise specified, no duration type functions shall throw 
 exceptions.</p>
 
-<h3><a name="time.system">31.2 Class system_time [time.system]</a></h3>
+
+<h3><a name="time.nanoseconds">32.2 Class nanoseconds [time.nanoseconds]</a></h3>
+
+<p>
+Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds. 
+Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]). 
+For the sake of exposition, the semantics of member functions are not described 
+if they have the same apparent semantics as those specified for duration types.</p>
+
+<blockquote>
+<pre><code>
+class nanoseconds
+{
+public:
+    // <em>traits information</em>
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+    static const tick_type ticks_per_second = 1000000000;
+    static const tick_type seconds_per_tick = 0;
+    static const bool is_subsecond = true;
+
+    // <i>construct/copy/destroy functions</i>
+    nanoseconds(long long ns=0);
+    nanoseconds(const nanoseconds&amp;);
+    nanoseconds(nanosecons&amp;&amp;);
+    nanoseconds&amp; operator=(const nanoseconds&amp;);
+    nanoseconds&amp; operator=(nanoseconds&amp;&amp;);
+   ~nanoseconds();
+
+    // <em>observer functions</em>
+    tick_type get_count() const;
+
+<i>    // modifier functions</i>
+    template&lt;typename RhsDuration&gt;
+        nanoseconds&amp; operator-=(const RhsDuration&amp; d);
+    template&lt;typename RhsDuration&gt;
+        nanoseconds&amp; operator+=(const RhsDuration&amp; d);
+    nanoseconds&amp; operator*=(long multiplier);
+    nanoseconds&amp; operator/=(long divisor);
+
+    // <i>operations</i>
+    nanoseconds operator-() const;
+    nanoseconds operator*(long multiplier) const;
+    nanoseconds operator/(long divisor) const;
+};</code></pre>
+</blockquote>
+
+<pre><code>
+nanoseconds(long long ns=0);</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Constructs an object of type <code>nanoseconds</code>. 
+</dd>
+
+<dt>Postcondition:</dt>
+<dd><code>get_count() == ns;</code></dd>
+</dl>
+</blockquote>
+
+<h3><code><br>
+</code><a name="time.microseconds">32.3 Class microseconds [time.microseconds]</a></h3>
+
+<p>
+Objects of class <code>microseconds</code>
+can be used to represent a count of microseconds. Class <code>microseconds</code> 
+shall be a duration type ([time.duration.requirements]). For the sake of 
+exposition, the semantics of member functions are not described if they have the 
+same apparent semantics as those specified for duration types.</p>
+
+<blockquote>
+<pre><code>
+class microseconds
+{
+public:
+
+    microseconds(long long=0);
+    microseconds(const microseconds&amp; rhs);
+    ~microseconds();
+
+    // <em>conversions</em>
+    operator nanoseconds() const
+
+    // <em>traits information</em>
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+
+    // <em>+ common functions</em>
+
+};
+
+</code></pre>
+</blockquote>
+
+<pre><code>
+microseconds(long long=0);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Constructs an object with a count of microseconds - default
+is zero.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+microseconds(const microseconds&amp; rhs);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Copy construction.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+// <em>conversions</em>
+operator nanoseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+microsecond count converted to nanoseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type ticks_per_second();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+1000000
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type seconds_per_tick();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+0
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static bool is_subsecond();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+true
+</dd>
+
+</dl>
+</blockquote>
+
+<h3><a name="time.milliseconds">32.4 Class milliseconds [time.milliseconds]</a></h3>
+
+<p>
+Objects of class <code>milliseconds</code>
+can be used to represent a count of milliseconds. Class <code>milliseconds</code> 
+shall be a duration type ([time.duration.requirements]). For the sake of 
+exposition, the semantics of member functions are not described if they have the 
+same apparent semantics as those specified for duration types.</p>
+
+<blockquote>
+<pre><code>
+class milliseconds
+{
+public:
+    milliseconds(long long=0);
+    milliseconds(const milliseconds&amp; rhs);
+    ~milliseconds();
+
+    // <em>conversions</em>
+    operator nanoseconds() const;
+    operator microseconds() const;
+
+    // <em>traits information</em>
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+
+    // <em>+ common functions</em>
+};
+</code></pre>
+</blockquote>
+
+<pre><code>
+milliseconds(long long=0);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Constructs an object with a count of milliseconds - default
+is zero.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+milliseconds(const milliseconds&amp; rhs);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Copy construction.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator nanoseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+millisecond count converted to nanoseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator microseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+millisecond count converted to microseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type ticks_per_second();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+1000
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type seconds_per_tick();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+0
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static bool is_subsecond();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+true
+</dd>
+
+</dl>
+</blockquote>
+
+<h3><a name="time.seconds">32.5 Class seconds [time.seconds]</a></h3>
+
+<p>
+Objects of class <code>seconds</code>
+can be used to represent a count of seconds. Class <code>seconds</code> shall be 
+a duration type ([time.duration.requirements]). For the sake of exposition, the 
+semantics of member functions are not described if they have the same apparent 
+semantics as those specified for duration types.</p>
+
+<blockquote>
+<pre><code>
+class  seconds
+{
+public:
+    seconds(long long s=0);
+    seconds(const seconds&amp; rhs);
+    ~seconds();
+
+    // <em>conversions</em>
+    operator nanoseconds() const
+    operator microseconds() const
+    operator milliseconds() const
+
+    // <em>traits information</em>
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+
+    // <em>+ common functions</em>
+
+};
+</code></pre>
+</blockquote>
+
+<pre><code>
+seconds(long long=0);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Construct<var>s</var> an object with a count of seconds - default is
+zero.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+seconds(const seconds&amp; rhs);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Copy construction.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator nanoseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+second count converted to nanoseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator microseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+second count converted to microseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator milliseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+second count converted to milliseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type ticks_per_second();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+1
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type seconds_per_tick();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+1
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static bool is_subsecond();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+false
+</dd>
+
+</dl>
+</blockquote>
+
+<h3><a name="time.minutes">32.6 Class minutes [time.minutes]</a></h3>
+
+<p>
+Objects of class <code>minutes</code>
+can be used to represent a count of minutes. Class <code>minutes</code> shall be 
+a duration type ([time.duration.requirements]). For the sake of exposition, the 
+semantics of member functions are not described if they have the same apparent 
+semantics as those specified for duration types.</p>
+
+<blockquote>
+<pre><code>
+class  minutes
+{
+public:
+    minutes(long long s=0);
+    minutes(const minutes&amp; rhs);
+    ~minutes();
+
+    // <em>conversions</em>
+    operator nanoseconds() const
+    operator microseconds() const
+    operator milliseconds() const
+    operator seconds() const
+
+    // <em>traits information</em>
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+
+    // <em>+ common functions</em>
+
+};
+</code></pre>
+</blockquote>
+
+<pre><code>
+minutes(long long=0);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Construct<var>s</var> an object with a count of minutes - default is
+zero.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+minutes(const minutes&amp; rhs);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Copy construction.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator nanoseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+minute count converted to nanoseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator microseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+minute count converted to microseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator milliseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+minute count converted to milliseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator seconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+minute count converted to seconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type ticks_per_second();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+0
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type seconds_per_tick();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+60
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static bool is_subsecond();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+false
+</dd>
+
+</dl>
+</blockquote>
+
+<h3><a name="time.hours">31.7 Class hours [time.hours]</a></h3>
+
+<p>
+Objects of class <code>hours</code>
+can be used to represent a count of hours. Class <code>hours</code> shall be a 
+duration type ([time.duration.requirements]). For the sake of exposition, the 
+semantics of member functions are not described if they have the same apparent 
+semantics as those specified for duration types.</p>
+
+<blockquote>
+<pre><code>
+class  hours
+{
+public:
+    hours(long long s=0);
+    hours(const hours&amp; rhs);
+    ~hours();
+
+    // <em>conversions</em>
+    operator nanoseconds() const
+    operator microseconds() const
+    operator milliseconds() const
+    operator seconds() const
+    operator minutes() const
+
+    // <em>traits information</em>
+    static tick_type ticks_per_second();
+    static tick_type seconds_per_tick();
+    static bool is_subsecond();
+    typedef <var><strong>implementation-defined</strong></var> tick_type;
+
+    // <em>+ common functions</em>
+
+};
+</code></pre>
+</blockquote>
+
+<pre><code>
+hours(long long=0);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Construct<var>s</var> an object with a count of hours - default is zero.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+hours(const hours&amp; rhs);
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Copy construction.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator nanoseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+hour count converted to nanoseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>operator microseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+hour count converted to microseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>operator milliseconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+hour count converted to milliseconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator seconds() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+hour count converted to seconds
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+operator minutes() const
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+hour count converted to seconds.
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type ticks_per_second();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+0
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static tick_type seconds_per_tick();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+3600
+</dd>
+
+</dl>
+</blockquote>
+
+<pre><code>
+static bool is_subsecond();
+</code></pre>
+
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+false
+</dd>
+
+</dl>
+</blockquote>
+
+<h3><a name="time.system">31.8 Class system_time [time.system]</a></h3>
 
 <p>
 The class <code>system_time</code> provides a time point
@@ -3904,9 +4732,7 @@ and add it to the time represented by <code>*this</code>.
 
 <dt>Returns:</dt>
 <dd>
-Modified value of this.
-<b>[Crowl: not a reference to this?]</b>
-</dd>
+<code>*this</code></dd>
 
 </dl>
 </blockquote>
@@ -3942,31 +4768,24 @@ and subtract it from the time represented by <code>*this</code>.
 
 <dt>Returns:</dt>
 <dd>
-Modified value of this.
-</dd>
+<code>*this</code></dd>
 
 </dl>
 </blockquote>
 
 
-<h3><a name="time.getsystem">32.3 Function get_system_time [time.getsystem]</a></h3>
+<h3><a name="time.nonmembers">32.9 Non-member functions[time.nonmembers]</a></h3>
 
-<p>
-The function <code>get_system_time</code>
-provides access to the system clock at a
-resolution up to nanoseconds.
-The actual resolution may vary from platform to platform.
-</p>
-
-<pre><code>
-system_time get_system_time();</code></pre>
+<pre><code>system_time get_system_time();</code></pre>
 
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-The system time ([time.system]) as provided by the operating system.</dd>
+The system time as provided by the operating system.<i> [Note:</i> Provides access to the system clock at a
+resolution up to nanoseconds.
+The actual resolution may vary from platform to platform.<i> --end note]</i></dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -3978,806 +4797,119 @@ which this might occur are implementation defined.</dd>
 </blockquote>
 
 
-<h3><a name="time.nanoseconds">32.4 Class nanoseconds [time.nanoseconds]</a></h3>
-
-<p>
-Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds. 
-Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as those specified for duration types.</p>
-
-<blockquote>
-<pre><code>
-class nanoseconds
-{
-public:
-    // <em>traits information</em>
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000000000;
-    static const tick_type seconds_per_tick = 0;
-    static const bool is_subsecond = true;
-
-    // <i>construct/copy/destroy functions</i>
-    nanoseconds(long long ns=0);
-    nanoseconds(const nanoseconds&amp;);
-    nanoseconds(nanosecons&amp;&amp;);
-    nanoseconds&amp; operator=(const nanoseconds&amp;);
-    nanoseconds&amp; operator=(nanoseconds&amp;&amp;);
-   ~nanoseconds();
-
-    // <em>observer functions</em>
-    tick_type get_count() const;
-
-<i>    // modifier functions</i>
-    template&lt;typename RhsDuration&gt;
-        nanoseconds&amp; operator-=(const RhsDuration&amp; d);
-    template&lt;typename RhsDuration&gt;
-        nanoseconds&amp; operator+=(const RhsDuration&amp; d);
-    nanoseconds&amp; operator/=(int divisor);
-    nanoseconds&amp; operator*=(int multiplier);
-
-    // <i>operations</i>
-    nanoseconds operator-() const;
-    nanoseconds operator*(int multiplier) const;
-    nanoseconds operator/(int divisor) const;
-};</code></pre>
-</blockquote>
-
-<pre><code>
-nanoseconds(long long ns=0);</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator==(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
 <blockquote>
 <dl>
-<dt>Effects:</dt>
-<dd>
-Constructs an object of type <code>nanoseconds</code>. 
-</dd>
 
-<dt>Postcondition:</dt>
-<dd><code>get_count() == ns;</code></dd>
-</dl>
-</blockquote>
-
-<pre><code>
-</code><a name="time.microseconds">32.5 Class microseconds [time.microseconds]</a></pre>
-
-<p>
-Objects of class <code>microseconds</code>
-can be used to represent a count of microseconds. Class <code>microseconds</code> 
-shall be a duration type ([time.duration.requirements]). For the sake of 
-exposition, the semantics of member functions are not described if they have the 
-same apparent semantics as those specified for duration types.</p>
-
-<blockquote>
-<pre><code>
-class microseconds
-{
-public:
-
-    microseconds(long long=0);
-    microseconds(const microseconds&amp; rhs);
-    ~microseconds();
-
-    // <em>conversions</em>
-    operator nanoseconds() const
-
-    // <em>traits information</em>
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-
-    // <em>+ common functions</em>
-
-};
-
-</code></pre>
-</blockquote>
-
-<pre><code>
-microseconds(long long=0);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Constructs an object with a count of microseconds - default
-is zero.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-microseconds(const microseconds&amp; rhs);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Copy construction.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-// <em>conversions</em>
-operator nanoseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
 <dt>Returns:</dt>
 <dd>
-microsecond count converted to nanoseconds
-</dd>
+If the resolution of <code>LhsDuration</code> is the same as the resolution of
+<code>RhsDuration</code>, <code>lhs.get_count()==rhs.get_count()</code>. 
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
+resolution of <code>RhsDuration</code>, <code>lhs.get_count()==x, where x is 
+rhs.get_count() </code>converted to the resolution of <code>LhsDuration</code>. 
+Otherwise,&nbsp; <code>x==rhs.get_count(), where x is lhs.get_count() </code>
+converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator!=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
 <blockquote>
 <dl>
+
 <dt>Returns:</dt>
 <dd>
-1000000
-</dd>
+<code>!(lhs==rhs)</code>.</dd>
 
 </dl>
 </blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&lt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
 <blockquote>
 <dl>
+
 <dt>Returns:</dt>
 <dd>
-0
-</dd>
+If the resolution of <code>LhsDuration</code> is the same as the resolution of
+<code>RhsDuration</code>, <code>lhs.get_count()&lt;rhs.get_count()</code>. 
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
+resolution of <code>RhsDuration</code>, <code>lhs.get_count()&lt;x, where x is 
+rhs.get_count() </code>converted to the resolution of <code>LhsDuration</code>. 
+Otherwise,&nbsp; <code>x&lt;rhs.get_count(), where x is lhs.get_count() </code>
+converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&lt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
 <blockquote>
 <dl>
+
 <dt>Returns:</dt>
 <dd>
-true
-</dd>
+<code>!(rhs&lt;lhs)</code>.</dd>
 
 </dl>
 </blockquote>
-
-<h3><a name="time.milliseconds">32.6 Class milliseconds [time.milliseconds]</a></h3>
-
-<p>
-Objects of class <code>milliseconds</code>
-can be used to represent a count of milliseconds. Class <code>milliseconds</code> 
-shall be a duration type ([time.duration.requirements]). For the sake of 
-exposition, the semantics of member functions are not described if they have the 
-same apparent semantics as those specified for duration types.</p>
-
-<blockquote>
-<pre><code>
-class milliseconds
-{
-public:
-    milliseconds(long long=0);
-    milliseconds(const milliseconds&amp; rhs);
-    ~milliseconds();
-
-    // <em>conversions</em>
-    operator nanoseconds() const;
-    operator microseconds() const;
-
-    // <em>traits information</em>
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-
-    // <em>+ common functions</em>
-};
-</code></pre>
-</blockquote>
-
-<pre><code>
-milliseconds(long long=0);
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&gt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
 <blockquote>
 <dl>
-<dt>Effects:</dt>
-<dd>
-Constructs an object with a count of milliseconds - default
-is zero.
-</dd>
 
-</dl>
-</blockquote>
-
-<pre><code>
-milliseconds(const milliseconds&amp; rhs);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Copy construction.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator nanoseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
 <dt>Returns:</dt>
 <dd>
-millisecond count converted to nanoseconds
-</dd>
+<code>rhs&lt;lhs)</code>.</dd>
 
 </dl>
 </blockquote>
-
-<pre><code>
-operator microseconds() const
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  bool operator&gt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
 <blockquote>
 <dl>
+
 <dt>Returns:</dt>
 <dd>
-millisecond count converted to microseconds
-</dd>
+<code>!(lhs&lt;rhs)</code>.</dd>
 
 </dl>
 </blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  <i>FRDuration</i> operator+(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)</code></pre>
 <blockquote>
 <dl>
+
 <dt>Returns:</dt>
 <dd>
-1000
-</dd>
+If the resolution of <code>LhsDuration</code> is the same as the resolution of
+<code>RhsDuration</code>, <code>LhsDuration(lhs.get_count()+rhs.get_count())</code>. 
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
+resolution of <code>RhsDuration</code>, <code>LhsDuration(lhs.get_count()+x), 
+where x is rhs.get_count() </code>converted to the resolution of <code>
+LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x+rhs.get_count()), where 
+x is lhs.get_count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
+<pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
+  <i>FRDuration</i> operator-(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)</code></pre>
 <blockquote>
 <dl>
+
 <dt>Returns:</dt>
 <dd>
-0
-</dd>
+If the resolution of <code>LhsDuration</code> is the same as the resolution of
+<code>RhsDuration</code>, <code>LhsDuration(lhs.get_count()-rhs.get_count())</code>. 
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
+resolution of <code>RhsDuration</code>, <code>LhsDuration(lhs.get_count()-x), 
+where x is rhs.get_count() </code>converted to the resolution of <code>
+LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x-rhs.get_count()), where 
+x is lhs.get_count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
+  <p>&nbsp;</p>
 </blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-true
-</dd>
-
-</dl>
-</blockquote>
-
-<h3><a name="time.seconds">32.7 Class seconds [time.seconds]</a></h3>
-
-<p>
-Objects of class <code>seconds</code>
-can be used to represent a count of seconds. Class <code>seconds</code> shall be 
-a duration type ([time.duration.requirements]). For the sake of exposition, the 
-semantics of member functions are not described if they have the same apparent 
-semantics as those specified for duration types.</p>
-
-<blockquote>
-<pre><code>
-class  seconds
-{
-public:
-    seconds(long long s=0);
-    seconds(const seconds&amp; rhs);
-    ~seconds();
-
-    // <em>conversions</em>
-    operator nanoseconds() const
-    operator microseconds() const
-    operator milliseconds() const
-
-    // <em>traits information</em>
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-
-    // <em>+ common functions</em>
-
-};
-</code></pre>
-</blockquote>
-
-<pre><code>
-seconds(long long=0);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Construct<var>s</var> an object with a count of seconds - default is
-zero.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-seconds(const seconds&amp; rhs);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Copy construction.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator nanoseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-second count converted to nanoseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator microseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-second count converted to microseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator milliseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-second count converted to milliseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-1
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-1
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-false
-</dd>
-
-</dl>
-</blockquote>
-
-<h3><a name="time.minutes">32.8 Class minutes [time.minutes]</a></h3>
-
-<p>
-Objects of class <code>minutes</code>
-can be used to represent a count of minutes. Class <code>minutes</code> shall be 
-a duration type ([time.duration.requirements]). For the sake of exposition, the 
-semantics of member functions are not described if they have the same apparent 
-semantics as those specified for duration types.</p>
-
-<blockquote>
-<pre><code>
-class  minutes
-{
-public:
-    minutes(long long s=0);
-    minutes(const minutes&amp; rhs);
-    ~minutes();
-
-    // <em>conversions</em>
-    operator nanoseconds() const
-    operator microseconds() const
-    operator milliseconds() const
-    operator seconds() const
-
-    // <em>traits information</em>
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-
-    // <em>+ common functions</em>
-
-};
-</code></pre>
-</blockquote>
-
-<pre><code>
-minutes(long long=0);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Construct<var>s</var> an object with a count of minutes - default is
-zero.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-minutes(const minutes&amp; rhs);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Copy construction.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator nanoseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-minute count converted to nanoseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator microseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-minute count converted to microseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator milliseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-minute count converted to milliseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator seconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-minute count converted to seconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-0
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-60
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-false
-</dd>
-
-</dl>
-</blockquote>
-
-<h3><a name="time.hours">31.9 Class hours [time.hours]</a></h3>
-
-<p>
-Objects of class <code>hours</code>
-can be used to represent a count of hours. Class <code>hours</code> shall be a 
-duration type ([time.duration.requirements]). For the sake of exposition, the 
-semantics of member functions are not described if they have the same apparent 
-semantics as those specified for duration types.</p>
-
-<blockquote>
-<pre><code>
-class  hours
-{
-public:
-    hours(long long s=0);
-    hours(const hours&amp; rhs);
-    ~hours();
-
-    // <em>conversions</em>
-    operator nanoseconds() const
-    operator microseconds() const
-    operator milliseconds() const
-    operator seconds() const
-    operator minutes() const
-
-    // <em>traits information</em>
-    static tick_type ticks_per_second();
-    static tick_type seconds_per_tick();
-    static bool is_subsecond();
-    typedef <var><strong>implementation-defined</strong></var> tick_type;
-
-    // <em>+ common functions</em>
-
-};
-</code></pre>
-</blockquote>
-
-<pre><code>
-hours(long long=0);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Construct<var>s</var> an object with a count of hours - default is zero.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-hours(const hours&amp; rhs);
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Effects:</dt>
-<dd>
-Copy construction.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator nanoseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-hour count converted to nanoseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>operator microseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-hour count converted to microseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>operator milliseconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-hour count converted to milliseconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator seconds() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-hour count converted to seconds
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-operator minutes() const
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-hour count converted to seconds.
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type ticks_per_second();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-0
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static tick_type seconds_per_tick();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-3600
-</dd>
-
-</dl>
-</blockquote>
-
-<pre><code>
-static bool is_subsecond();
-</code></pre>
-
-<blockquote>
-<dl>
-<dt>Returns:</dt>
-<dd>
-false
-</dd>
-
-</dl>
-</blockquote>
-
 <h2><a name="References">References</a></h2>
 
 <ul>
