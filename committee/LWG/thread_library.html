@@ -2715,9 +2715,11 @@ public:
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>);
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>);
     template &lt;class Predicate&gt;
-        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
+        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>,
+                        Predicate <var>pred</var>);
     template &lt;class Duration, class Predicate&gt;
-        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
+        bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>,
+                        Predicate <var>pred</var>);
 
     typedef <var><strong>implemenation-defined</strong></var> native_handle_type;  // <em>See [thread.native]</em>
     native_handle_type native_handle();                // <em>See [thread.native]</em>
