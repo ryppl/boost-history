@@ -5,7 +5,7 @@
 
 
 <meta http-equiv="content-type" content="text/html; charset=US-ASCII">
-<title>Multi-threading Library for Standard C++ (Revision 1)</title>
+<title>Thread Library Working Draft</title>
 
 <style type="text/css">
 	h1	{ text-align: center; }
@@ -3443,9 +3443,8 @@ Time points and time durations have a
 <dfn>resolution</dfn> which is their smallest representable time duration.
 Time points
 have an <dfn>epoch</dfn> or start of a given time scale.
-For time_t the epoch is
-1970-01-01 00:00:00.
-</p>
+<i>[Example: </i>For std::time_t the epoch is
+1970-01-01 00:00:00. <i>--end example]</i></p>
 
 <p>
 Throughout this clause, the names of template parameters are used to express
@@ -3499,6 +3498,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <p>Type <i><code>FRDuration</code> </i>is whichever of <code>LhsDuration</code> 
 or <code>RhsDuration</code> has the finest resolution. If their 
 resolutions are the same, <i><code>FRDuration</code> </i>is <code>LhsDuration</code>.</p>
+
+<p>Unless otherwise specified, no function in this clause shall throw 
+exceptions. <i>[Note: </i>Such blanket prohibition of exceptions is unusual in 
+the standard library, but without the prohibition time-related code becomes 
+littered with excessive try-catch blocks. These functions are also unusual in 
+that they encompass virtually no cases where errors can be detected and 
+reported.&nbsp; <i>--end note.]</i></p>
 
 <h3><a name="time.duration.requirements">31.1 Duration requirements 
 [time.duration.requirements]</a></h3>
@@ -3596,8 +3602,6 @@ E</code>, <code>c</code> denotes an <code>int</code> value.</p>
     == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
-<p>Unless otherwise specified, no duration type functions shall throw 
-exceptions.</p>
 
 
 <h3><a name="time.nanoseconds">32.2 Class nanoseconds [time.nanoseconds]</a></h3>
@@ -4253,16 +4257,8 @@ Constructs an object of type <code>hours</code>.
     &mdash;<i>end note</i>]
   </p>
 
-  <p>
-    Unless otherwise specified, no
-    <code>system_time</code> member functions shall throw
-    exceptions.
-  </p>
-
-  <pre>    <code>
-      system_time();
-    </code>
-  </pre>
+  <pre>   <code>
+      system_time();   </code>  </pre>
 
   <blockquote>
     <dl>
@@ -4276,9 +4272,7 @@ Constructs an object of type <code>hours</code>.
   </blockquote>
 
   <pre>    <code>
-      system_time(time_t secs, nanoseconds ns);
-    </code>
-  </pre>
+      system_time(time_t secs, nanoseconds ns);</code>  </pre>
 
   <blockquote>
     <dl>
@@ -4299,9 +4293,7 @@ Constructs an object of type <code>hours</code>.
   </blockquote>
 
   <pre>    <code>
-      time_t seconds_since_epoch() const;
-    </code>
-  </pre>
+      time_t seconds_since_epoch() const;</code>  </pre>
 
   <blockquote>
     <dl>
@@ -4314,8 +4306,7 @@ Constructs an object of type <code>hours</code>.
   </blockquote>
 
   <pre>    <code>
-      nanoseconds nanoseconds_since_epoch() const;
-    </code></pre>
+      nanoseconds nanoseconds_since_epoch() const; </code></pre>
 
 <blockquote>
 <dl>
@@ -4565,15 +4556,18 @@ and subtract it from the time represented by <code>*this</code>.
 
 <dt>Returns:</dt>
 <dd>
-The system time as provided by the operating system.<i> [Note:</i> Provides access to the system clock at a
-resolution up to nanoseconds.
-The actual resolution may vary from platform to platform.<i> --end note]</i></dd>
-
-<dt>Throws:</dt>
+The system time as provided by the operating system.</dd>
 <dd>
-<code>system_error</code>
-([syserr.syserr]) if unable to return the specified value. The conditions for 
-which this might occur are implementation defined.</dd>
+&nbsp;</dd>
+<dd>
+<i>&nbsp;[Note:</i> Provides access to the system clock at a
+resolution as fine as nanoseconds.
+The actual resolution may vary.<i> --end note]</i></dd>
+<blockquote>
+  <dt>[Note: <span style="font-style: normal">No error reporting is provided. 
+  Hosted implementations ([intro.compliance]) presumably utilize system clock 
+  API's that never report errors. </span>--end note.] </dt>
+</blockquote>
 
 </dl>
 </blockquote>
