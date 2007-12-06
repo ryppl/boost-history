@@ -318,6 +318,31 @@ public:
 	                          stb::is_convertible<long long, T>::value;
 };
 
+template <class LhsDuration, class RhsDuration,
+    bool = LhsDuration::is_subsecond, bool = RhsDuration::is_subsecond>
+struct __compare_resolution  // <LhsDuration, RhsDuration, true, true>
+{
+    static const bool value = LhsDuration::ticks_per_second >= RhsDuration::ticks_per_second;
+};
+
+template <class LhsDuration, class RhsDuration>
+struct __compare_resolution<LhsDuration, RhsDuration, true, false>
+{
+    static const bool value = true;
+};
+
+template <class LhsDuration, class RhsDuration>
+struct __compare_resolution<LhsDuration, RhsDuration, false, true>
+{
+    static const bool value = false;
+};
+
+template <class LhsDuration, class RhsDuration>
+struct __compare_resolution<LhsDuration, RhsDuration, false, false>
+{
+    static const bool value = LhsDuration::seconds_per_tick <= RhsDuration::seconds_per_tick;
+};
+
 class nanoseconds
 {
 public:
@@ -335,10 +360,20 @@ public:
     // + common functions
 
     template<typename RhsDuration>
-        nanoseconds& operator-=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<nanoseconds, RhsDuration>::value,
+            nanoseconds&
+        >::type
+        operator-=(const RhsDuration& d);
 
     template<typename RhsDuration>
-        nanoseconds& operator+=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<nanoseconds, RhsDuration>::value,
+            nanoseconds&
+        >::type
+        operator+=(const RhsDuration& d);
 
     nanoseconds operator-() const {return -ns_;}
 
@@ -368,10 +403,20 @@ public:
     // + common functions
 
     template<typename RhsDuration>
-        microseconds& operator-=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<microseconds, RhsDuration>::value,
+            microseconds&
+        >::type
+        operator-=(const RhsDuration& d);
 
     template<typename RhsDuration>
-        microseconds& operator+=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<microseconds, RhsDuration>::value,
+            microseconds&
+        >::type
+        operator+=(const RhsDuration& d);
 
     microseconds operator-() const {return -us_;}
 
@@ -402,10 +447,20 @@ public:
     // + common functions
 
     template<typename RhsDuration>
-        milliseconds& operator-=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<milliseconds, RhsDuration>::value,
+            milliseconds&
+        >::type
+        operator-=(const RhsDuration& d);
 
     template<typename RhsDuration>
-        milliseconds& operator+=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<milliseconds, RhsDuration>::value,
+            milliseconds&
+        >::type
+        operator+=(const RhsDuration& d);
 
     milliseconds operator-() const {return -ms_;}
 
@@ -437,10 +492,20 @@ public:
     // + common functions
 
     template<typename RhsDuration>
-        seconds& operator-=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<seconds, RhsDuration>::value,
+            seconds&
+        >::type
+        operator-=(const RhsDuration& d);
 
     template<typename RhsDuration>
-        seconds& operator+=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<seconds, RhsDuration>::value,
+            seconds&
+        >::type
+        operator+=(const RhsDuration& d);
 
     seconds operator-() const {return -s_;}
 
@@ -474,10 +539,20 @@ public:
     // + common functions
 
     template<typename RhsDuration>
-        minutes& operator-=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<minutes, RhsDuration>::value,
+            minutes&
+        >::type
+        operator-=(const RhsDuration& d);
 
     template<typename RhsDuration>
-        minutes& operator+=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<minutes, RhsDuration>::value,
+            minutes&
+        >::type
+        operator+=(const RhsDuration& d);
 
     minutes operator-() const {return -mn_;}
 
@@ -511,10 +586,20 @@ public:
     // + common functions
 
     template<typename RhsDuration>
-        hours& operator-=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<hours, RhsDuration>::value,
+            hours&
+        >::type
+        operator-=(const RhsDuration& d);
 
     template<typename RhsDuration>
-        hours& operator+=(const RhsDuration& d);
+        typename enable_if
+        <
+            __compare_resolution<hours, RhsDuration>::value,
+            hours&
+        >::type
+        operator+=(const RhsDuration& d);
 
     hours operator-() const {return -hr_;}
 
@@ -979,31 +1064,6 @@ public:
     }
 };
 
-template <class LhsDuration, class RhsDuration,
-    bool = LhsDuration::is_subsecond, bool = RhsDuration::is_subsecond>
-struct __compare_resolution  // <LhsDuration, RhsDuration, true, true>
-{
-    static const bool value = LhsDuration::ticks_per_second >= RhsDuration::ticks_per_second;
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __compare_resolution<LhsDuration, RhsDuration, true, false>
-{
-    static const bool value = true;
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __compare_resolution<LhsDuration, RhsDuration, false, true>
-{
-    static const bool value = false;
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __compare_resolution<LhsDuration, RhsDuration, false, false>
-{
-    static const bool value = LhsDuration::seconds_per_tick <= RhsDuration::seconds_per_tick;
-};
-
 // Duration ==
 
 template <class LhsDuration, class RhsDuration>
@@ -1128,63 +1188,123 @@ operator>=(const LhsDuration& lhs, const RhsDuration& rhs)
 
 template<typename RhsDuration>
 inline
-nanoseconds& nanoseconds::operator-=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<nanoseconds, RhsDuration>::value,
+    nanoseconds&
+>::type
+nanoseconds::operator-=(const RhsDuration& d)
     {ns_ -= __make<nanoseconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-nanoseconds& nanoseconds::operator+=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<nanoseconds, RhsDuration>::value,
+    nanoseconds&
+>::type
+nanoseconds::operator+=(const RhsDuration& d)
     {ns_ += __make<nanoseconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-microseconds& microseconds::operator-=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<microseconds, RhsDuration>::value,
+    microseconds&
+>::type
+microseconds::operator-=(const RhsDuration& d)
     {us_ -= __make<microseconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-microseconds& microseconds::operator+=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<microseconds, RhsDuration>::value,
+    microseconds&
+>::type
+microseconds::operator+=(const RhsDuration& d)
     {us_ += __make<microseconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-milliseconds& milliseconds::operator-=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<milliseconds, RhsDuration>::value,
+    milliseconds&
+>::type
+milliseconds::operator-=(const RhsDuration& d)
     {ms_ -= __make<milliseconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-milliseconds& milliseconds::operator+=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<milliseconds, RhsDuration>::value,
+    milliseconds&
+>::type
+milliseconds::operator+=(const RhsDuration& d)
     {ms_ += __make<milliseconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-seconds& seconds::operator-=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<seconds, RhsDuration>::value,
+    seconds&
+>::type
+seconds::operator-=(const RhsDuration& d)
     {s_ -= __make<seconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-seconds& seconds::operator+=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<seconds, RhsDuration>::value,
+    seconds&
+>::type
+seconds::operator+=(const RhsDuration& d)
     {s_ += __make<seconds>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-minutes& minutes::operator-=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<minutes, RhsDuration>::value,
+    minutes&
+>::type
+minutes::operator-=(const RhsDuration& d)
     {mn_ -= __make<minutes>::from(d).count(); return *this;}
 
 
 template<typename RhsDuration>
 inline
-minutes& minutes::operator+=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<minutes, RhsDuration>::value,
+    minutes&
+>::type
+minutes::operator+=(const RhsDuration& d)
     {mn_ += __make<minutes>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-hours& hours::operator-=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<hours, RhsDuration>::value,
+    hours&
+>::type
+hours::operator-=(const RhsDuration& d)
     {hr_ -= __make<hours>::from(d).count(); return *this;}
 
 template<typename RhsDuration>
 inline
-hours& hours::operator+=(const RhsDuration& d)
+typename enable_if
+<
+    __compare_resolution<hours, RhsDuration>::value,
+    hours&
+>::type
+hours::operator+=(const RhsDuration& d)
     {hr_ += __make<hours>::from(d).count(); return *this;}
 
 template <class LhsDuration, class RhsDuration, bool = __compare_resolution<LhsDuration, RhsDuration>::value>
