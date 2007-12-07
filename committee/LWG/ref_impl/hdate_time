@@ -238,7 +238,7 @@
         typedef long long tick_type;
     
         system_time();
-        system_time(time_t secs, nanoseconds ns);
+        system_time(time_t secs, nanoseconds ns = 0);
     
         time_t seconds_since_epoch() const;
         nanoseconds nanoseconds_since_epoch() const;
@@ -1461,7 +1461,7 @@ private:
 public:
 
     system_time() : ns_(0) {}
-    system_time(time_t secs, nanoseconds ns)
+    system_time(time_t secs, nanoseconds ns = 0)
         : ns_(secs * 1000000000LL + ns.count()) {}
 
     // ~system_time() = default;
