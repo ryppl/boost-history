@@ -4386,8 +4386,7 @@ If <code>*this &lt; <var>rhs</var></code>, the result will be negative.
 <dl>
 <dt>Returns:</dt>
 <dd>
-The sum of <code><var>td</var></code> converted to nanosecond resolution
-and the time represented by <code>*this</code>.
+<code>system_time(*this) += <var>td</var></code>.
 </dd>
 
 </dl>
@@ -4418,8 +4417,7 @@ and adds it to the time represented by <code>*this</code>.
 <dl>
 <dt>Returns:</dt>
 <dd>
-The difference between the time represented by <code>*this</code> converted to nanosecond resolution
-and&nbsp; <code><var>td</var></code>.
+<code>system_time(*this) -= <var>td</var></code>.
 </dd>
 
 </dl>
@@ -4476,8 +4474,8 @@ The actual resolution may vary.<i> --end note]</i></dd>
 
 <dt>Returns:</dt>
 <dd>
-The sum of <code><var>td</var></code> converted to nanosecond resolution
-and the time represented by <code><var>rhs</var></code>. </dd>
+<code><var>rhs</var> + <var>td</var>.
+</dd>
 
 </dl>
 </blockquote>
