@@ -1031,6 +1031,156 @@ namespace boost {
             }
         };
 
+        // Iterators
+        
+        template <typename Alloc, typename Data> class hash_iterator;
+        template <typename Alloc, typename Data> class hash_const_iterator;
+        template <typename Alloc, typename Data> class hash_local_iterator;
+        template <typename Alloc, typename Data> class hash_const_local_iterator;
+        class iterator_access;
+
+        // Local Iterators
+        //
+        // all no throw
+
+        template <typename Alloc, typename Data>
+        class hash_local_iterator
+            : public boost::iterator <
+                std::forward_iterator_tag,
+                BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type,
+                std::ptrdiff_t,
+                BOOST_DEDUCED_TYPENAME allocator_pointer<Alloc>::type,
+                BOOST_DEDUCED_TYPENAME allocator_reference<Alloc>::type >
+        {
+        public:
+            typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
+
+        private:
+            typedef BOOST_DEDUCED_TYPENAME Data::local_iterator_base base;
+            typedef hash_const_local_iterator<Alloc, Data> const_local_iterator;
+
+            friend class hash_const_local_iterator<Alloc, Data>;
+            base base_;
+
+        public:
+            hash_local_iterator() : base_() {}
+            explicit hash_local_iterator(base x) : base_(x) {}
+            BOOST_DEDUCED_TYPENAME allocator_reference<Alloc>::type operator*() const
+                { return *base_; }
+            value_type* operator->() const { return &*base_; }
+            hash_local_iterator& operator++() { base_.increment(); return *this; }
+            hash_local_iterator operator++(int) { hash_local_iterator tmp(base_); base_.increment(); return tmp; }
+            bool operator==(hash_local_iterator x) const { return base_ == x.base_; }
+            bool operator==(const_local_iterator x) const { return base_ == x.base_; }
+            bool operator!=(hash_local_iterator x) const { return base_ != x.base_; }
+            bool operator!=(const_local_iterator x) const { return base_ != x.base_; }
+        };
+
+        template <typename Alloc, typename Data>
+        class hash_const_local_iterator
+            : public boost::iterator <
+                std::forward_iterator_tag,
+                BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type,
+                std::ptrdiff_t,
+                BOOST_DEDUCED_TYPENAME allocator_const_pointer<Alloc>::type,
+                BOOST_DEDUCED_TYPENAME allocator_const_reference<Alloc>::type >
+        {
+        public:
+            typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
+
+        private:
+            typedef BOOST_DEDUCED_TYPENAME Data::local_iterator_base base;
+            typedef hash_local_iterator<Alloc, Data> local_iterator;
+            friend class hash_local_iterator<Alloc, Data>;
+            base base_;
+
+        public:
+            hash_const_local_iterator() : base_() {}
+            explicit hash_const_local_iterator(base x) : base_(x) {}
+            hash_const_local_iterator(local_iterator x) : base_(x.base_) {}
+            BOOST_DEDUCED_TYPENAME allocator_const_reference<Alloc>::type
+                operator*() const { return *base_; }
+            value_type const* operator->() const { return &*base_; }
+            hash_const_local_iterator& operator++() { base_.increment(); return *this; }
+            hash_const_local_iterator operator++(int) { hash_const_local_iterator tmp(base_); base_.increment(); return tmp; }
+            bool operator==(local_iterator x) const { return base_ == x.base_; }
+            bool operator==(hash_const_local_iterator x) const { return base_ == x.base_; }
+            bool operator!=(local_iterator x) const { return base_ != x.base_; }
+            bool operator!=(hash_const_local_iterator x) const { return base_ != x.base_; }
+        };
+
+        // iterators
+        //
+        // all no throw
+
+        template <typename Alloc, typename Data>
+        class hash_iterator
+            : public boost::iterator <
+                std::forward_iterator_tag,
+                BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type,
+                std::ptrdiff_t,
+                BOOST_DEDUCED_TYPENAME allocator_pointer<Alloc>::type,
+                BOOST_DEDUCED_TYPENAME allocator_reference<Alloc>::type >
+        {
+        public:
+            typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
+
+        private:
+            typedef BOOST_DEDUCED_TYPENAME Data::iterator_base base;
+            typedef hash_const_iterator<Alloc, Data> const_iterator;
+            friend class hash_const_iterator<Alloc, Data>;
+            base base_;
+
+        public:
+
+            hash_iterator() : base_() {}
+            explicit hash_iterator(base const& x) : base_(x) {}
+            BOOST_DEDUCED_TYPENAME allocator_reference<Alloc>::type
+                operator*() const { return *base_; }
+            value_type* operator->() const { return &*base_; }
+            hash_iterator& operator++() { base_.increment(); return *this; }
+            hash_iterator operator++(int) { hash_iterator tmp(base_); base_.increment(); return tmp; }
+            bool operator==(hash_iterator const& x) const { return base_ == x.base_; }
+            bool operator==(const_iterator const& x) const { return base_ == x.base_; }
+            bool operator!=(hash_iterator const& x) const { return base_ != x.base_; }
+            bool operator!=(const_iterator const& x) const { return base_ != x.base_; }
+        };
+
+        template <typename Alloc, typename Data>
+        class hash_const_iterator
+            : public boost::iterator <
+                std::forward_iterator_tag,
+                BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type,
+                std::ptrdiff_t,
+                BOOST_DEDUCED_TYPENAME allocator_const_pointer<Alloc>::type,
+                BOOST_DEDUCED_TYPENAME allocator_const_reference<Alloc>::type >
+        {
+        public:
+            typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
+
+        private:
+            typedef BOOST_DEDUCED_TYPENAME Data::iterator_base base;
+            typedef hash_iterator<Alloc, Data> iterator;
+            friend class hash_iterator<Alloc, Data>;
+            friend class iterator_access;
+            base base_;
+
+        public:
+
+            hash_const_iterator() : base_() {}
+            explicit hash_const_iterator(base const& x) : base_(x) {}
+            hash_const_iterator(iterator const& x) : base_(x.base_) {}
+            BOOST_DEDUCED_TYPENAME allocator_const_reference<Alloc>::type
+                operator*() const { return *base_; }
+            value_type const* operator->() const { return &*base_; }
+            hash_const_iterator& operator++() { base_.increment(); return *this; }
+            hash_const_iterator operator++(int) { hash_const_iterator tmp(base_); base_.increment(); return tmp; }
+            bool operator==(iterator const& x) const { return base_ == x.base_; }
+            bool operator==(hash_const_iterator const& x) const { return base_ == x.base_; }
+            bool operator!=(iterator const& x) const { return base_ != x.base_; }
+            bool operator!=(hash_const_iterator const& x) const { return base_ != x.base_; }
+        };
+
         class iterator_access
         {
         public:
@@ -1054,10 +1204,10 @@ namespace boost {
                     value_allocator, data> hash_table;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base iterator_base;
 
-            typedef hash_const_local_iterator_unique_keys<value_allocator> const_local_iterator;
-            typedef hash_local_iterator_unique_keys<value_allocator> local_iterator;
-            typedef hash_const_iterator_unique_keys<value_allocator> const_iterator;
-            typedef hash_iterator_unique_keys<value_allocator> iterator;
+            typedef hash_const_local_iterator<value_allocator, data> const_local_iterator;
+            typedef hash_local_iterator<value_allocator, data> local_iterator;
+            typedef hash_const_iterator<value_allocator, data> const_iterator;
+            typedef hash_iterator<value_allocator, data> iterator;
 
             typedef BOOST_DEDUCED_TYPENAME data::size_type size_type;
             typedef std::ptrdiff_t difference_type;
@@ -1077,10 +1227,10 @@ namespace boost {
                     value_allocator, data> hash_table;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base iterator_base;
 
-            typedef hash_const_local_iterator_equivalent_keys<value_allocator> const_local_iterator;
-            typedef hash_local_iterator_equivalent_keys<value_allocator> local_iterator;
-            typedef hash_const_iterator_equivalent_keys<value_allocator> const_iterator;
-            typedef hash_iterator_equivalent_keys<value_allocator> iterator;
+            typedef hash_const_local_iterator<value_allocator, data> const_local_iterator;
+            typedef hash_local_iterator<value_allocator, data> local_iterator;
+            typedef hash_const_iterator<value_allocator, data> const_iterator;
+            typedef hash_iterator<value_allocator, data> iterator;
 
             typedef BOOST_DEDUCED_TYPENAME data::size_type size_type;
             typedef std::ptrdiff_t difference_type;
