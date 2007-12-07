@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.9, 1 dec 2007
+@section changelog_cur_ver Current Version: v0.12.10, 7 dec 2007
+- added high precision_time tag
+- added new includes for files to be able to be compiled standalone - many thanks Jens Seidel!
 - added high precision timer 
 - removed "#define BOOST_LOG_COMPILE_FAST_OFF" from samples - no needed and could be misleading
 - added boost::logging::formatter::named_spacer

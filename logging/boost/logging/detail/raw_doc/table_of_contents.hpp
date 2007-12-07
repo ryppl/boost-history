@@ -35,6 +35,7 @@ namespace boost { namespace logging {
 - @ref scoped_logs 
 - @ref tag "Using tags"
 - @ref thread_safety 
+- @ref misc_unicode
 - @ref macros
     - @ref macros_if_else_strategy 
     - @ref macros_using 

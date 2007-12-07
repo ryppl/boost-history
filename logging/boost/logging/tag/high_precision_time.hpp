@@ -26,12 +26,22 @@
 #include <boost/date_time/microsec_time_clock.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <boost/logging/detail/manipulator.hpp> // is_generic
+#include <boost/logging/format/formatter/tags.hpp> // uses_tag
+#include <boost/logging/format/formatter/high_precision_time.hpp> // high_precision_time_t
+#include <boost/logging/format/formatter/convert_format.hpp> // do_convert_format
+
+
 namespace boost { namespace logging { 
 
 namespace tag {
 
 
 /** @brief tag that holds the current time (with high precision) context information 
+
+@code
+#include <boost/logging/tag/high_precision_time.hpp>
+@endcode
 
 See @ref boost::logging::tag "how to use tags".
 */
@@ -45,6 +55,10 @@ struct high_precision_time {
 namespace formatter { namespace tag {
 
 /** @brief Dumps current high_precision_time information (corresponds to boost::logging::tag::high_precision_time tag class) 
+
+@code
+#include <boost/logging/tag/high_precision_time.hpp>
+@endcode
 
 Similar to boost::logging::formatter::high_precision_time_t class - only that this one uses tags.
 
@@ -66,6 +80,12 @@ template<class convert = do_convert_format::prepend> struct high_precision_time_
     }
 
 };
+
+/** @brief high_precision_time_t with default values. See high_precision_time_t
+
+@copydoc high_precision_time_t
+*/
+typedef high_precision_time_t<> high_precision_time;
 
 
 }}

@@ -26,6 +26,7 @@ The Boost Log Library has these features:
     - concepts are also easily separated into namespaces
 - A very flexible interface
 - You don't pay for what you don't use.
+- Allows for internationalization (i18n) - can be used with Unicode characters
 - Fits a lot of @ref common_scenarios "scenarios": from @ref common_scenarios_6 "very simple" (dumping all to one log) 
   to @ref scenario::usage "very complex" (multiple logs, some enabled/some not, levels, etc).
 - Allows you to choose how you use logs in your code (by defining your own LOG_ macros, suiting your application)

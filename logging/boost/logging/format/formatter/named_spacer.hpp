@@ -26,6 +26,8 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/logging/detail/manipulator.hpp>
+#include <boost/logging/format/formatter/convert_format.hpp> // do_convert_format
+#include <boost/logging/format/array.hpp> // array
 
 namespace boost { namespace logging { namespace formatter {
 

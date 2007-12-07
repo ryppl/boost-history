@@ -23,8 +23,9 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <algorithm>
-#include <stdio.h>
+#include <cstdio>
 #include <vector>
+#include <sstream>
 
 namespace boost { namespace logging { namespace detail {
 

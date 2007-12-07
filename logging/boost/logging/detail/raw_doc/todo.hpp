@@ -123,8 +123,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         Documentation about performance of the library is missing - absolute times, # of dynamic allocations per typical log, etc.
 
-- @c high           explain that we can have unicode strings - easily
-
 */
 
 }}

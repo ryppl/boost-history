@@ -24,6 +24,7 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/logging/format/formatter/convert_format.hpp>
+#include <boost/logging/detail/manipulator.hpp> // is_generic
 
 namespace boost { namespace logging { namespace formatter {
 
