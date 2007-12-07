@@ -4232,7 +4232,7 @@ public:
     </dl>
   </blockquote>
 
-  <pre><code>system_time(time_t secs, nanoseconds <var>ns</var>=0);</code>  </pre>
+  <pre><code>system_time(time_t <var>secs</var>, nanoseconds <var>ns</var>=0);</code>  </pre>
 
   <blockquote>
     <dl>
@@ -4240,7 +4240,7 @@ public:
       <dd>
         Construct<var>s</var> a <code>system_time</code>
         time object representing the time point
-        <i><code>secs</code></i> + 1,000,000,000*<i><code><var>ns</var></code></i> after the epoch.
+        <code><var>secs</var> + <var>ns</var> / 1,000,000,000</code> seconds after the epoch.
       </dd>
 
       <dt>Remarks:</dt>
