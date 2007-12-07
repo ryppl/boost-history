@@ -2748,18 +2748,21 @@ Constructs an object of class <code>condition_variable</code>.
 
 <blockquote>
 <dl>
+<dt>Precondition:</dt>
+<dd>
+There shall be no thread blocked on <code>*this</code>.
+[<i>Note:</i>
+That is, all threads shall have been notified;
+they may subsequently block on the lock specified in the wait.
+Beware that destructing a <code>condition_variable</code>
+while the corresponding predicate is false
+is likely to lead to undefined behavior.
+&mdash;<i>end note</i>]
+</dd>
+
 <dt>Effects:</dt>
 <dd>
 Destroys the object.
-</dd>
-
-<dt>Remarks:</dt>
-<dd>
-It is safe to destroy the object
-as soon as all waiting threads have been notified,
-even if those threads have not yet returned from the <code>wait</code>.
-<b>[Crowl:
-I think "have been notified" means "<code>notify</code> has returned".]</b>
 </dd>
 
 <dt>Throws:</dt>
@@ -2779,9 +2782,6 @@ void notify_one();
 <dd>
 If any threads are blocked waiting for <code>*this</code>,
 <code>notify_one</code> unblocks one of those threads.
-The unblocked thread
-subsequently reacquires its lock and returns from the wait function.
-The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -2795,9 +2795,6 @@ void notify_all();
 <dt>Effects:</dt>
 <dd>
 Unblock all threads that are blocked waiting for <code>*this</code>.
-The unblocked threads
-subsequently reacquire their locks and return from their wait functions.
-The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -2834,10 +2831,13 @@ for this call to <code>wait</code>.
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+<li>Atomically calls <code><var>lock</var>.unlock()</code>
+and blocks on <code>*this</code>.
 </li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+<li>When unblocked, calls <code><var>lock</var>.lock()</code>
+(possibly blocking on the lock)
+and returns.
 </li>
 
 <li>The function will unblock when this thread is signaled by
@@ -2921,10 +2921,13 @@ for this call to <code>wait</code>.
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+<li>Atomically calls <code><var>lock</var>.unlock()</code>
+and blocks on <code>*this</code>.
 </li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+<li>When unblocked, calls <code><var>lock</var>.lock()</code>
+(possibly blocking on the lock)
+and returns.
 </li>
 
 <li>The function will unblock when this thread is signaled by
@@ -3150,17 +3153,21 @@ Constructs an object of class <code>condition_variable_any</code>.
 
 <blockquote>
 <dl>
+<dt>Precondition:</dt>
+<dd>
+There shall be no thread blocked on <code>*this</code>.
+[<i>Note:</i> 
+That is, all threads shall of been notified;
+they may subsequently block on the lock specified in the wait.
+Beware that destructing a <code>condition_variable</code>
+while the corresponding predicate is false
+is likely to lead to undefined behavior.
+&mdash;<i>end note</i>]
+</dd>
+
 <dt>Effects:</dt>
 <dd>
 Destroys the object.
-</dd>
-
-<dt>Remarks:</dt>
-<dd>
-It is safe to destroy the object
-as soon as all waiting threads have been notified,
-even if those threads have not yet returned from the <code>wait</code>.
-<b>[Crowl: See discussion of condition_variable destructor.]</b>
 </dd>
 
 <dt>Throws:</dt>
@@ -3180,9 +3187,6 @@ void notify_one();
 <dd>
 If any threads are blocked waiting for <code>*this</code>,
 unblocks one those threads.
-The unblocked thread
-subsequently reacquires its lock and returns from the wait function.
-The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -3196,9 +3200,6 @@ void notify_all();
 <dt>Effects:</dt>
 <dd>
 Unblock all threads that are blocked waiting for <code>*this</code>.
-The unblocked threads
-subsequently reacquire their locks and return from their wait functions.
-The invoking thread does not release its lock.
 </dd>
 </dl>
 </blockquote>
@@ -3214,10 +3215,13 @@ template &lt;class Lock&gt;
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+<li>Atomically calls <code><var>lock</var>.unlock()</code>
+and blocks on <code>*this</code>.
 </li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+<li>When unblocked, calls <code><var>lock</var>.lock()</code>
+(possibly blocking on the lock)
+and returns.
 </li>
 
 <li>The function will unblock when this thread is signaled by
@@ -3281,10 +3285,13 @@ template &lt;class Lock&gt;
 <dt>Effects:</dt>
 <dd>
 <ul>
-<li>Atomically calls <code><var>lock</var>.unlock()</code> and blocks.
+<li>Atomically calls <code><var>lock</var>.unlock()</code>
+and blocks on <code>*this</code>.
 </li>
 
-<li>When unblocked, calls <code><var>lock</var>.lock()</code> and returns.
+<li>When unblocked, calls <code><var>lock</var>.lock()</code>
+(possibly blocking on the lock)
+and returns.
 </li>
 
 <li>The function will unblock when this thread is signaled by
