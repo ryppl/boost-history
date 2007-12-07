@@ -3492,34 +3492,34 @@ class system_time;
 system_time get_system_time();
 
 template&lt;typename Duration&gt;
-  system_time operator+(const Duration&amp; td, const system_time&amp; rhs);
+  system_time operator+(const Duration&amp; <var>td</var>, const system_time&amp; <var>rhs</var>);
 
 template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator==(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+  bool operator==(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator!=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+  bool operator!=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 
 template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&lt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+  bool operator&lt; (const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&lt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+  bool operator&lt;=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&gt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+  bool operator&gt; (const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&gt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);
+  bool operator&gt;=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator+(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)
+  <i>FRDuration</i> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator-(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)
-
-template &lt;class Duration&gt;
-  Duration operator*(Duration lhs, long rhs)
-template &lt;class Duration&gt;
-  Duration operator*(long lhs, Duration rhs)
+  <i>FRDuration</i> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 
 template &lt;class Duration&gt;
-  Duration operator/(Duration lhs, long rhs)
+  Duration operator*(Duration <var>lhs</var>, long <var>rhs</var>)
+template &lt;class Duration&gt;
+  Duration operator*(long <var>lhs</var>, Duration <var>rhs</var>)
+
+template &lt;class Duration&gt;
+  Duration operator/(Duration <var>lhs</var>, long <var>rhs</var>)
 }  // std</code></pre>
 </blockquote>
 
@@ -3640,7 +3640,7 @@ public:
     static const bool is_subsecond = true;
 
     // <i>construct/copy/destroy functions</i>
-    nanoseconds(long long ns=0);
+    nanoseconds(long long <var>ns</var>=0);
     nanoseconds(nanoseconds&amp;&amp;);
     nanoseconds&amp; operator=(nanoseconds&amp;&amp;);
 
@@ -3649,11 +3649,11 @@ public:
 
 <i>    // modifier functions</i>
     template&lt;typename RhsDuration&gt;
-        nanoseconds&amp; operator-=(const RhsDuration&amp; d);
+        nanoseconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
-        nanoseconds&amp; operator+=(const RhsDuration&amp; d);
-    nanoseconds&amp; operator*=(long multiplier);
-    nanoseconds&amp; operator/=(long divisor);
+        nanoseconds&amp; operator+=(const RhsDuration&amp; <var>d</var>);
+    nanoseconds&amp; operator*=(long <var>multiplier</var>);
+    nanoseconds&amp; operator/=(long <var>divisor</var>);
 
     // <i>operations</i>
     nanoseconds operator-() const;
@@ -3661,7 +3661,7 @@ public:
 </blockquote>
 
 <pre><code>
-nanoseconds(long long ns=0);</code></pre>
+nanoseconds(long long <var>ns</var>=0);</code></pre>
 
 <blockquote>
 <dl>
@@ -3671,7 +3671,7 @@ Constructs an object of type <code>nanoseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == ns;</code></dd>
+<dd><code>count() == <var>ns</var>;</code></dd>
 </dl>
 </blockquote>
 
@@ -3695,7 +3695,7 @@ public:
     static const bool is_subsecond = true;
 
     // <i>construct/copy/destroy functions</i>
-    microseconds(long long us=0);
+    microseconds(long long <var>us</var>=0);
     microseconds(microseconds&amp;&amp;);
     microseconds&amp; operator=(microseconds&amp;&amp;);
 
@@ -3704,11 +3704,11 @@ public:
 
 <i>    // modifier functions</i>
     template&lt;typename RhsDuration&gt;
-        microseconds&amp; operator-=(const RhsDuration&amp; d);
+        microseconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
-        microseconds&amp; operator+=(const RhsDuration&amp; d);
-    microseconds&amp; operator*=(long multiplier);
-    microseconds&amp; operator/=(long divisor);
+        microseconds&amp; operator+=(const RhsDuration&amp; <var>d</var>);
+    microseconds&amp; operator*=(long <var>multiplier</var>);
+    microseconds&amp; operator/=(long <var>divisor</var>);
 
     // <i>operations</i>
     microseconds operator-() const;
@@ -3718,7 +3718,7 @@ public:
 };</code></pre>
 </blockquote>
 
-<pre><code>microseconds(long long us=0);</code></pre>
+<pre><code>microseconds(long long <var>us</var>=0);</code></pre>
 
 <blockquote>
 <dl>
@@ -3728,7 +3728,7 @@ Constructs an object of type <code>microseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == us;</code></dd>
+<dd><code>count() == <var>us</var>;</code></dd>
 </dl>
 </blockquote>
 
@@ -3766,7 +3766,7 @@ public:
     static const bool is_subsecond = true;
 
     // <i>construct/copy/destroy functions</i>
-    milliseconds(long long ms=0);
+    milliseconds(long long <var>ms</var>=0);
     milliseconds(milliseconds&amp;&amp;);
     milliseconds&amp; operator=(milliseconds&amp;&amp;);
 
@@ -3775,11 +3775,11 @@ public:
 
 <i>    // modifier functions</i>
     template&lt;typename RhsDuration&gt;
-        milliseconds&amp; operator-=(const RhsDuration&amp; d);
+        milliseconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
-        milliseconds&amp; operator+=(const RhsDuration&amp; d);
-    milliseconds&amp; operator*=(long multiplier);
-    milliseconds&amp; operator/=(long divisor);
+        milliseconds&amp; operator+=(const RhsDuration&amp; <var>d</var>);
+    milliseconds&amp; operator*=(long <var>multiplier</var>);
+    milliseconds&amp; operator/=(long <var>divisor</var>);
 
     // <i>operations</i>
     milliseconds operator-() const;
@@ -3791,7 +3791,7 @@ public:
 </blockquote>
 
 <pre><code>
-milliseconds(long long ms=0);</code></pre>
+milliseconds(long long <var>ms</var>=0);</code></pre>
 
 <blockquote>
 <dl>
@@ -3801,7 +3801,7 @@ Constructs an object of type <code>milliseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == ms;</code></dd>
+<dd><code>count() == <var>ms</var>;</code></dd>
 </dl>
 </blockquote>
 
@@ -3851,7 +3851,7 @@ public:
     static const bool is_subsecond = false;
 
     // <i>construct/copy/destroy functions</i>
-    seconds(long long s=0);
+    seconds(long long <var>s</var>=0);
     seconds(seconds&amp;&amp;);
     seconds&amp; operator=(seconds&amp;&amp;);
 
@@ -3860,11 +3860,11 @@ public:
 
 <i>    // modifier functions</i>
     template&lt;typename RhsDuration&gt;
-        seconds&amp; operator-=(const RhsDuration&amp; d);
+        seconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
-        seconds&amp; operator+=(const RhsDuration&amp; d);
-    seconds&amp; operator*=(long multiplier);
-    seconds&amp; operator/=(long divisor);
+        seconds&amp; operator+=(const RhsDuration&amp; <var>d</var>);
+    seconds&amp; operator*=(long <var>multiplier</var>);
+    seconds&amp; operator/=(long <var>divisor</var>);
 
     // <i>operations</i>
     seconds operator-() const;
@@ -3877,7 +3877,7 @@ public:
 </blockquote>
 
 <pre><code>
-seconds(long long s=0);</code></pre>
+seconds(long long <var>s</var>=0);</code></pre>
 
 <blockquote>
 <dl>
@@ -3887,7 +3887,7 @@ Constructs an object of type <code>seconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() ==  s;</code></dd>
+<dd><code>count() ==  <var>s</var>;</code></dd>
 </dl>
 </blockquote>
 
@@ -3949,7 +3949,7 @@ public:
     static const bool is_subsecond = false;
 
     // <i>construct/copy/destroy functions</i>
-    minutes(long long m=0);
+    minutes(long long <var>m</var>=0);
     minutes(minutes&amp;&amp;);
     minutes&amp; operator=(minutes&amp;&amp;);
 
@@ -3958,11 +3958,11 @@ public:
 
 <i>    // modifier functions</i>
     template&lt;typename RhsDuration&gt;
-        minutes&amp; operator-=(const RhsDuration&amp; d);
+        minutes&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
-        minutes&amp; operator+=(const RhsDuration&amp; d);
-    minutes&amp; operator*=(long multiplier);
-    minutes&amp; operator/=(long divisor);
+        minutes&amp; operator+=(const RhsDuration&amp; <var>d</var>);
+    minutes&amp; operator*=(long <var>multiplier</var>);
+    minutes&amp; operator/=(long <var>divisor</var>);
 
     // <i>operations</i>
     minutes operator-() const;
@@ -3976,7 +3976,7 @@ public:
 </blockquote>
 
 <pre><code>
-minutes(long long m=0);</code></pre>
+minutes(long long <var>m</var>=0);</code></pre>
 
 <blockquote>
 <dl>
@@ -3986,7 +3986,7 @@ Constructs an object of type <code>minutes</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == n;</code></dd>
+<dd><code>count() == <var>m</var>;</code></dd>
 </dl>
 </blockquote>
 
@@ -4060,7 +4060,7 @@ public:
     static const bool is_subsecond = false;
 
     // <i>construct/copy/destroy functions</i>
-    hours(long long h=0);
+    hours(long long <var>h</var>=0);
     hours(hours&amp;&amp;);
     hours&amp; operator=(hours&amp;&amp;);
 
@@ -4069,11 +4069,11 @@ public:
 
 <i>    // modifier functions</i>
     template&lt;typename RhsDuration&gt;
-        hours&amp; operator-=(const RhsDuration&amp; d);
+        hours&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
-        hours&amp; operator+=(const RhsDuration&amp; d);
-    hours&amp; operator*=(long multiplier);
-    hours&amp; operator/=(long divisor);
+        hours&amp; operator+=(const RhsDuration&amp; <var>d</var>);
+    hours&amp; operator*=(long <var>multiplier</var>);
+    hours&amp; operator/=(long <var>divisor</var>);
 
     // <i>operations</i>
     hours operator-() const;
@@ -4088,7 +4088,7 @@ public:
 </blockquote>
 
 <pre><code>
-hours(long long h=0);</code></pre>
+hours(long long <var>h</var>=0);</code></pre>
 
 <blockquote>
 <dl>
@@ -4098,7 +4098,7 @@ Constructs an object of type <code>hours</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == h;</code></dd>
+<dd><code>count() == <var>h</var>;</code></dd>
 </dl>
 </blockquote>
 
@@ -4185,7 +4185,7 @@ Constructs an object of type <code>hours</code>.
 public:
 
         system_time();
-        explicit system_time(time_t, nanoseconds ns=0);
+        explicit system_time(time_t, nanoseconds <var>ns</var>=0);
 
         time_t seconds_since_epoch() const;
         nanoseconds nanoseconds_since_epoch() const;
@@ -4197,27 +4197,27 @@ public:
         static const bool is_subsecond = true;
 
         // <em>comparison functions</em>
-        bool operator==(const system_time&amp; rhs) const;
-        bool operator!=(const system_time&amp; rhs) const;
-        bool operator&gt;(const system_time&amp; rhs) const;
-        bool operator&gt;=(const system_time&amp; rhs) const;
-        bool operator&lt;(const system_time&amp; rhs) const;
-        bool operator&lt;=(const system_time&amp; rhs) const;
+        bool operator==(const system_time&amp; <var>rhs</var>) const;
+        bool operator!=(const system_time&amp; <var>rhs</var>) const;
+        bool operator&gt;(const system_time&amp; <var>rhs</var>) const;
+        bool operator&gt;=(const system_time&amp; <var>rhs</var>) const;
+        bool operator&lt;(const system_time&amp; <var>rhs</var>) const;
+        bool operator&lt;=(const system_time&amp; <var>rhs</var>) const;
 
         // <em>arithmetic functions</em>
-        nanoseconds operator-(const system_time&amp; rhs) const
+        nanoseconds operator-(const system_time&amp; <var>rhs</var>) const
 
         template&lt;typename Duration&gt;
-        system_time operator+(const Duration&amp; td) const;
+        system_time operator+(const Duration&amp; <var>td</var>) const;
 
         template&lt;typename Duration&gt;
-        system_time&amp; operator+=(const Duration&amp; td);
+        system_time&amp; operator+=(const Duration&amp; <var>td</var>);
 
         template&lt;typename Duration&gt;
-        system_time operator-(const Duration&amp; td) const;
+        system_time operator-(const Duration&amp; <var>td</var>) const;
 
         template&lt;typename Duration&gt;
-        system_time&amp; operator-=(const Duration&amp; td)
+        system_time&amp; operator-=(const Duration&amp; <var>td</var>)
 };</code>    </pre>
   </blockquote>
 
@@ -4234,7 +4234,7 @@ public:
     </dl>
   </blockquote>
 
-  <pre><code>system_time(time_t secs, nanoseconds ns=0);</code>  </pre>
+  <pre><code>system_time(time_t secs, nanoseconds <var>ns</var>=0);</code>  </pre>
 
   <blockquote>
     <dl>
@@ -4242,7 +4242,7 @@ public:
       <dd>
         Construct<var>s</var> a <code>system_time</code>
         time object representing the time point
-        <i><code>secs</code></i> + 1,000,000,000*<i><code>ns</code></i> after the epoch.
+        <i><code>secs</code></i> + 1,000,000,000*<i><code><var>ns</var></code></i> after the epoch.
       </dd>
 
       <dt>Remarks:</dt>
@@ -4260,7 +4260,7 @@ public:
     <dl>
       <dt>Returns:</dt>
       <dd>
-        The  seconds since 1970-01-01 00:00:00 represented by the current value 
+        The  seconds since the epoch time represented by the current value 
         of <code>*this</code>.
       </dd>
 
@@ -4274,13 +4274,13 @@ public:
 <dt>Returns:</dt>
 <dd>
 The  nanoseconds
-since 1970-01-01 00:00:00 represented by the current value of <code>*this</code>.
+since the epoch time represented by the current value of <code>*this</code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>bool operator==(const system_time&amp; rhs) const;</code></pre>
+<pre><code>bool operator==(const system_time&amp; <var>rhs</var>) const;</code></pre>
 
 <blockquote>
 <dl>
@@ -4288,14 +4288,14 @@ since 1970-01-01 00:00:00 represented by the current value of <code>*this</code>
 <dd>
 True if
 the time point
-represented by <code>*this</code> is the same as the time point represented by <var>
-<code>rhs</code></var>.
+represented by <code>*this</code> is the same as the time point represented by 
+<code><var>rhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>bool operator!=(const system_time&amp; rhs) const;</code></pre>
+<pre><code>bool operator!=(const system_time&amp; <var>rhs</var>) const;</code></pre>
 
 <blockquote>
 <dl>
@@ -4303,60 +4303,60 @@ represented by <code>*this</code> is the same as the time point represented by <
 <dd>
 True if the time point represented by <code>*this</code> is not the same as the time 
 point represented
-by <var><code>rhs</code></var>.
+by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>bool operator&gt;(const system_time&amp; rhs) const;</code></pre>
+<pre><code>bool operator&gt;(const system_time&amp; <var>rhs</var>) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if the time point represented by
-<code>*this</code> is later than the time point represented by <var><code>rhs</code></var>.
+<code>*this</code> is later than the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>bool operator&gt;=(const system_time&amp; rhs) const;</code></pre>
+<pre><code>bool operator&gt;=(const system_time&amp; <var>rhs</var>) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if the time point represented
-by <code>*this</code> is later or the same as the time point represented by <var>
-<code>rhs</code></var>.
+by <code>*this</code> is later or the same as the time point represented by
+<code><var>rhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>bool operator&lt;(const system_time&amp; rhs) const;</code></pre>
+<pre><code>bool operator&lt;(const system_time&amp; <var>rhs</var>) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if the time point represented by <code>*this</code>
-is earlier than the time point represented by <var><code>rhs</code></var>.
+is earlier than the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
-<pre><code>bool operator&lt;=(const system_time&amp; rhs) const;</code></pre>
+<pre><code>bool operator&lt;=(const system_time&amp; <var>rhs</var>) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 True if the time&nbsp; pointrepresented by <code>*this</code>
-is earlier or the same as the time point represented by <var><code>rhs</code></var>.
+is earlier or the same as the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
@@ -4375,20 +4375,20 @@ the time point represented by <code><var>rhs</var></code>.
 
 <dt>Remarks:</dt>
 <dd>
-If <code>*this &lt; rhs</code>, the result will be negative.
+If <code>*this &lt; <var>rhs</var></code>, the result will be negative.
 </dd>
 
 </dl>
 </blockquote>
 
 <pre><code>template&lt;typename Duration&gt;
-  system_time operator+(const Duration&amp; td) const;</code></pre>
+  system_time operator+(const Duration&amp; <var>td</var>) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
-The sum of <code>td</code> converted to nanosecond resolution
+The sum of <code><var>td</var></code> converted to nanosecond resolution
 and the time represented by <code>*this</code>.
 </dd>
 
@@ -4396,13 +4396,13 @@ and the time represented by <code>*this</code>.
 </blockquote>
 
 <pre><code>template&lt;typename Duration&gt;
-  system_time&amp; operator+=(const Duration&amp; td);</code></pre>
+  system_time&amp; operator+=(const Duration&amp; <var>td</var>);</code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Converts <code>td</code> to nanosecond resolution
+Converts <code><var>td</var></code> to nanosecond resolution
 and adds it to the time represented by <code>*this</code>.
 </dd>
 
@@ -4414,27 +4414,27 @@ and adds it to the time represented by <code>*this</code>.
 </blockquote>
 
 <pre><code>template&lt;typename Duration&gt;
-  system_time operator-(const Duration&amp; td) const;</code></pre>
+  system_time operator-(const Duration&amp; <var>td</var>) const;</code></pre>
 
 <blockquote>
 <dl>
 <dt>Returns:</dt>
 <dd>
 The difference between the time represented by <code>*this</code> converted to nanosecond resolution
-and&nbsp; <code>td</code>.
+and&nbsp; <code><var>td</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
 <pre><code>template&lt;typename Duration&gt;
-  system_time&amp; operator-=(const Duration&amp; td)</code></pre>
+  system_time&amp; operator-=(const Duration&amp; <var>td</var>)</code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-Converts <code>td</code> to nanosecond resolution
+Converts <code><var>td</var></code> to nanosecond resolution
 and subtracts it from the time represented by <code>*this</code>.
 </dd>
 
@@ -4472,169 +4472,169 @@ The actual resolution may vary.<i> --end note]</i></dd>
 
 
 <pre><code>template&lt;typename Duration&gt;
-  system_time operator+(const Duration&amp; td, const system_time&amp; rhs);</code></pre>
+  system_time operator+(const Duration&amp; <var>td</var>, const system_time&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-The sum of <code>td</code> converted to nanosecond resolution
-and the time represented by <code>rhs</code>. </dd>
+The sum of <code><var>td</var></code> converted to nanosecond resolution
+and the time represented by <code><var>rhs</var></code>. </dd>
 
 </dl>
 </blockquote>
 
 
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator==(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
+  bool operator==(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>lhs.count()==rhs.count()</code>. 
+<code>RhsDuration</code>, <code><var>lhs</var>.count()==<var>rhs</var>.count()</code>. 
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code>lhs.count()==x, where x is 
-rhs.count() </code>converted to the resolution of <code>LhsDuration</code>. 
-Otherwise,&nbsp; <code>x==rhs.count(), where x is lhs.count() </code>
+resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()==x, where x is 
+<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
+Otherwise,&nbsp; <code>x==<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
 converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator!=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
+  bool operator!=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>!(lhs==rhs)</code>.</dd>
+<code>!(<var>lhs</var>==<var>rhs</var>)</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&lt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
+  bool operator&lt; (const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>lhs.count()&lt;rhs.count()</code>. 
+<code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;<var>rhs</var>.count()</code>. 
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code>lhs.count()&lt;x, where x is 
-rhs.count() </code>converted to the resolution of <code>LhsDuration</code>. 
-Otherwise,&nbsp; <code>x&lt;rhs.count(), where x is lhs.count() </code>
+resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;x, where x is 
+<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
+Otherwise,&nbsp; <code>x&lt;<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
 converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&lt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
+  bool operator&lt;=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>!(rhs&lt;lhs)</code>.</dd>
+<code>!(<var>rhs</var>&lt;<var>lhs</var>)</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&gt; (const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
+  bool operator&gt; (const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>rhs&lt;lhs)</code>.</dd>
+<code><var>rhs</var>&lt;<var>lhs</var>)</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  bool operator&gt;=(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs);</code></pre>
+  bool operator&gt;=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>!(lhs&lt;rhs)</code>.</dd>
+<code>!(<var>lhs</var>&lt;<var>rhs</var>)</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator+(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)</code></pre>
+  <i>FRDuration</i> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>LhsDuration(lhs.count()+rhs.count())</code>. 
+<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+<var>rhs</var>.count())</code>. 
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code>LhsDuration(lhs.count()+x), 
-where x is rhs.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x+rhs.count()), where 
-x is lhs.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
+resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x), 
+where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
+LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x+<var>rhs</var>.count()), where 
+x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator-(const LhsDuration&amp; lhs, const RhsDuration&amp; rhs)</code></pre>
+  <i>FRDuration</i> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)</code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>LhsDuration(lhs.count()-rhs.count())</code>. 
+<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-<var>rhs</var>.count())</code>. 
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code>LhsDuration(lhs.count()-x), 
-where x is rhs.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x-rhs.count()), where 
-x is lhs.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
+resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x), 
+where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
+LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x-<var>rhs</var>.count()), where 
+x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
 
 </dl>
 </blockquote>
 
 <pre><code>template &lt;class Duration&gt;
-  Duration operator*(Duration lhs, long rhs)
+  Duration operator*(Duration <var>lhs</var>, long <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>lhs *= rhs</code>.
+<code><var>lhs</var> *= <var>rhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
 <pre><code>template &lt;class Duration&gt;
-  Duration operator*(long lhs, Duration rhs)
+  Duration operator*(long <var>lhs</var>, Duration <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>rhs *= lhs</code>.
+<code><var>rhs</var> *= <var>lhs</var></code>.
 </dd>
 
 </dl>
 </blockquote>
 
 <pre><code>template &lt;class Duration&gt;
-  Duration operator/(Duration lhs, long rhs)
+  Duration operator/(Duration <var>lhs</var>, long <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-<code>lhs /= rhs</code>.
+<code><var>lhs</var> /= <var>rhs</var></code>.
 </dd>
 
 </dl>
