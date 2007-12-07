@@ -793,7 +793,7 @@ the invocation of <code><var>f</var></code>.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> if unable to  start the new thread.
+<code>system_error</code> or <code>bad_alloc</code> if unable to  start the new thread.
 </dd>
 </dl>
 </blockquote>
@@ -843,6 +843,16 @@ Nothing.
 If <code>joinable()</code> then <code>detach()</code>,
 otherwise no effects.
 </dd>
+
+<p>
+[<i>Note:</i> destroying a <code>joinable thread</code> can be unsafe if the
+thread accesses objects or the standard library
+unless the thread
+performs explicit synchronization to ensure that it does not access
+the objects or the standard library past their respective lifetimes.
+Terminating the process with <code>_exit</code> or <code>quick_exit</code> removes some of these
+obligations. &mdash; <i>end note</i>]
+</p>
 
 <dt>Throws:</dt>
 <dd>
@@ -1038,7 +1048,7 @@ The number of hardware thread contexts.
 This value should only be considered to be a hint.
 &mdash;<i>end note</i>]
 If this value is not computable or well defined a
-return value of 1 is recommended, but not required.
+return value of 0 is recommended, but not required.
 </dd>
 
 <dt>Throws:</dt>
@@ -4160,7 +4170,7 @@ Constructs an object of type <code>hours</code>.
     Coordinated Universal Time, known as UTC, time.
     <code>system_time</code>
     shall provide an epoch time of 1970-01-01 00:00:00.000000000
-    and a maximum time value of at least epoch time + 292 years.
+    and a maximum time value of at least epoch time &plusmn; 292 years.
     [<i>Note:</i>
     292 years represents the number of nanoseconds
     that can be represented in a signed 64 bit integer.
