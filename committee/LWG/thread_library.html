@@ -3601,7 +3601,7 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   <tr>
     <th>expression</th>
     <th>return type</th>
-    <th>return value or other requirement</th>
+    <th>return value</th>
   </tr>
   <tr>
     <td valign="top"><code>D::tick_type</code></td>
@@ -3629,7 +3629,7 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
     <td valign="top"><code>d.count()</code></td>
     <td valign="top"><code>D::tick_type</code></td>
     <td valign="top">The most recent value established by a
-    non-const function's <i>Postcondition</i>.</td>
+    non-const function's postcondition.</td>
   </tr>
   <tr>
     <td valign="top"><code>-d</code></td>
@@ -3637,29 +3637,36 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
     <td valign="top"><code>D(-d.tick_count())</code></td>
   </tr>
   <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>postcondition</th>
+  </tr>
+  <tr>
     <td valign="top"><code>d -= e</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><i>Postcondition:</i><code> d.tick_count ==
-    d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code>
-    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
+    <td valign="top"><code>d.tick_count ==
+    d.tick_count()</code><sub>at-entry</sub><code>-x</code>,
+    where <code>x</code> is <code>e.tick_count()</code>
+    converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top"><code>d += e</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><i>Postcondition:</i><code> d.tick_count ==
-    d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code>
-    is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
+    <td valign="top"><code>d.tick_count ==
+    d.tick_count()</code><sub>at-entry</sub><code>+x</code>,
+    where <code>x</code> is <code>e.tick_count()</code>
+    converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top"><code>d /= c</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><i>Postcondition:</i> <code>d.tick_count() ==
+    <td valign="top"><code>d.tick_count() ==
     d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
   </tr>
   <tr>
     <td valign="top"><code>d *= c</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><i>Postcondition:</i> <code>d.tick_count()
+    <td valign="top"><code>d.tick_count()
     == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
