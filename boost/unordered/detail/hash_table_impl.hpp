@@ -77,9 +77,9 @@ namespace boost {
             //
             // all no throw
 
+#if BOOST_UNORDERED_HASH_EQUIVALENT
             struct node_base : bucket
             {
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             public:
                 node_base() : group_prev_()
                 {
@@ -87,8 +87,200 @@ namespace boost {
                 }
 
                 link_ptr group_prev_;
-#endif
+
+                static link_ptr& prev_in_group(link_ptr n) {
+                    return static_cast<node_base&>(*n).group_prev_;
+                }
+
+                // pre: Must be pointing to the first node in a group.
+                static link_ptr last_in_group(link_ptr n) {
+                    BOOST_ASSERT(BOOST_HASH_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
+                    return prev_in_group(n);
+                }
+
+                // pre: Must be pointing to the first node in a group.
+                static link_ptr& next_group(link_ptr n) {
+                    BOOST_ASSERT(BOOST_HASH_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
+                    return prev_in_group(n)->next_;
+                }
+
+                // pre: Must be pointing to a node
+                static node_base& get_node(link_ptr p) {
+                    BOOST_ASSERT(p);
+                    return static_cast<node_base&>(*p);
+                }
+
+                static size_type group_count(link_ptr it)
+                {
+                    size_type count = 0;
+                    link_ptr first = it;
+                    do {
+                        ++count;
+                        it = prev_in_group(it);
+                    } while (it != first); // throws, strong
+                    return count;
+                }
+
+                static link_ptr* get_for_erase(bucket_ptr bucket, link_ptr n)
+                {
+                    // If the element isn't the first in its group, then
+                    // the link to it will be found in the previous element
+                    // in the group.
+                    link_ptr* it = &prev_in_group(n)->next_;
+                    if(*it == n) return it;
+
+                    // The element is the first in its group, so iterate
+                    // throught the groups, checking against the first element.
+                    it = &bucket->next_;
+                    while(*it != n) it = &next_group(*it);
+                    return it;
+                }
+
+                static void link_node(link_ptr n, link_ptr pos)
+                {
+                    node_base& node_ref = get_node(n);
+                    node_base& pos_ref = get_node(pos);
+                    node_ref.next_ = pos_ref.group_prev_->next_;
+                    node_ref.group_prev_ = pos_ref.group_prev_;
+                    pos_ref.group_prev_->next_ = n;
+                    pos_ref.group_prev_ = n;
+                }
+                
+                static void link_node_in_bucket(link_ptr n, bucket_ptr base)
+                {
+                    node_base& node_ref = get_node(n);
+                    node_ref.next_ = base->next_;
+                    node_ref.group_prev_ = n;
+                    base->next_ = n;
+                }
+
+                static void link_group(link_ptr n, bucket_ptr base)
+                {
+                    node_base& node_ref = get_node(n);
+                    node_base& last_ref = get_node(node_ref.group_prev_);
+                    last_ref.next_ = base->next_;
+                    base->next_ = n;
+                }
+
+                static void unlink_node(link_ptr* pos)
+                {
+                    node_base* n = &get_node(*pos);
+                    link_ptr next = n->next_;
+
+                    if(n->group_prev_ == *pos) {
+                        // The deleted node is the sole node in the group, so
+                        // no need to unlink it from a group.
+                    }
+                    else if(BOOST_HASH_BORLAND_BOOL(next) && prev_in_group(next) == *pos)
+                    {
+                        // The deleted node is not at the end of the group, so
+                        // change the link from the next node.
+                        prev_in_group(next) = n->group_prev_;
+                    }
+                    else {
+                        // The deleted node is at the end of the group, so the
+                        // first node in the group is pointing to it.
+                        // Find that to change its pointer.
+                        link_ptr it = n->group_prev_;
+                        while(prev_in_group(it) != *pos) {
+                            it = prev_in_group(it);
+                        }
+                        prev_in_group(it) = n->group_prev_;
+                    }
+                    *pos = next;
+                }
+
+                // Break a ciruclar list into two, with split as the beginning
+                // of the second group (if split is at the beginning then don't
+                // split).
+                static link_ptr split_group(link_ptr split) {
+                    // If split is at the beginning of the group then there's
+                    // nothing to split.
+                    if(prev_in_group(split)->next_ != split)
+                        return link_ptr();
+
+                    // Find the start of the group.
+                    link_ptr start = split;
+                    do {
+                        start = prev_in_group(start);
+                    } while(prev_in_group(start)->next_ == start);
+
+                    link_ptr last = prev_in_group(start);
+                    prev_in_group(start) = prev_in_group(split);
+                    prev_in_group(split) = last;
+
+                    return start;
+                }
+
+                static void split_group(link_ptr split1, link_ptr split2) {
+                    link_ptr begin1 = split_group(split1);
+                    link_ptr begin2 = split_group(split2);
+
+                    if(BOOST_HASH_BORLAND_BOOL(begin1) && split1 == begin2) {
+                        link_ptr end1 = prev_in_group(begin1);
+                        prev_in_group(begin1) = prev_in_group(begin2);
+                        prev_in_group(begin2) = end1;
+                    }
+                }
             };
+#else
+            struct node_base : bucket
+            {
+                link_ptr& prev_in_group(link_ptr) const {
+                    BOOST_ASSERT(false);
+                }
+
+                static link_ptr last_in_group(link_ptr n) {
+                    return n;
+                }
+
+                static link_ptr& next_group(link_ptr n) {
+                    BOOST_ASSERT(n);
+                    return n->next_;
+                }
+
+                // pre: Must be pointing to a node
+                static node_base& get_node(link_ptr p) {
+                    BOOST_ASSERT(p);
+                    return static_cast<node_base&>(*p);
+                }
+
+                static size_type group_count(link_ptr){
+                    return 1;
+                }
+
+                static link_ptr* get_for_erase(bucket_ptr bucket, link_ptr n)
+                {
+                    link_ptr* it = &bucket->next_;
+                    while(*it != n) it = &(*it)->next_;
+                    return it;
+                }
+
+                static void link_node(link_ptr n, link_ptr pos)
+                {
+                    BOOST_ASSERT(false);
+                }
+
+                static void link_node_in_bucket(link_ptr n, bucket_ptr base)
+                {
+                    n->next_ = base->next_;
+                    base->next_ = n;
+                }
+
+                static void link_group(link_ptr n, bucket_ptr base)
+                {
+                    link_node_in_bucket(n, base);
+                }
+
+                static void unlink_node(link_ptr* pos)
+                {
+                    *pos = (*pos)->next_;
+                }
+
+                static void split_group(link_ptr) {}
+                static void split_group(link_ptr, link_ptr) {}
+            };
+#endif
 
             struct node : node_base
             {
@@ -207,37 +399,18 @@ namespace boost {
 
             // Methods for navigating groups of elements with equal keys.
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             static link_ptr& prev_in_group(link_ptr n) {
-                return static_cast<node&>(*n).group_prev_;
+                return node_base::prev_in_group(n);
             }
 
             // pre: Must be pointing to the first node in a group.
             static link_ptr last_in_group(link_ptr n) {
-                BOOST_ASSERT(BOOST_HASH_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
-                return prev_in_group(n);
+                return node_base::last_in_group(n);
             }
 
             // pre: Must be pointing to the first node in a group.
             static link_ptr& next_group(link_ptr n) {
-                BOOST_ASSERT(BOOST_HASH_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
-                return prev_in_group(n)->next_;
-            }
-#else
-            static link_ptr last_in_group(link_ptr n) {
-                return n;
-            }
-
-            static link_ptr& next_group(link_ptr n) {
-                BOOST_ASSERT(n);
-                return n->next_;
-            }
-#endif
-
-            // pre: Must be pointing to a node
-            static node& get_node(link_ptr p) {
-                BOOST_ASSERT(p);
-                return static_cast<node&>(*p);
+                return node_base::next_group(n);
             }
 
             // pre: Must be pointing to a node
@@ -496,24 +669,10 @@ namespace boost {
                 return node_count(begin(n));
             }
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             size_type group_count(local_iterator_base first_node) const
             {
-                size_type count = 0;
-                link_ptr it = first_node.node_;
-                link_ptr first = it;
-                do {
-                    ++count;
-                    it = prev_in_group(it);
-                } while (it != first); // throws, strong
-                return count;
+                return node_base::group_count(first_node.node_);
             }
-#else
-            size_type group_count(local_iterator_base) const
-            {
-                return 1;
-            }
-#endif
 
             // get_for_erase
             //
@@ -521,32 +680,10 @@ namespace boost {
             //
             // no throw
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             link_ptr* get_for_erase(iterator_base r) const
             {
-                link_ptr n = r.local_.node_;
-
-                // If the element isn't the first in its group, then
-                // the link to it will be found in the previous element
-                // in the group.
-                link_ptr* it = &prev_in_group(n)->next_;
-                if(*it == n) return it;
-
-                // The element is the first in its group, so iterate
-                // throught the groups, checking against the first element.
-                it = &r.bucket_->next_;
-                while(*it != n) it = &HASH_TABLE_DATA::next_group(*it);
-                return it;
+                return node_base::get_for_erase(r.bucket_, r.local_.node_);
             }
-#else
-            link_ptr* get_for_erase(iterator_base r) const
-            {
-                link_ptr n = r.local_.node_;
-                link_ptr* it = &r.bucket_->next_;
-                while(*it != n) it = &(*it)->next_;
-                return it;
-            }
-#endif
 
             // Link/Unlink/Move Node
             //
@@ -555,85 +692,29 @@ namespace boost {
             //
             // no throw
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             void link_node(link_ptr n, local_iterator_base pos)
             {
-                node& node_ref = get_node(n);
-                node& pos_ref = get_node(pos.node_);
-                node_ref.next_ = pos_ref.group_prev_->next_;
-                node_ref.group_prev_ = pos_ref.group_prev_;
-                pos_ref.group_prev_->next_ = n;
-                pos_ref.group_prev_ = n;
+                node_base::link_node(n, pos.node_);
                 ++size_;
             }
 
             void link_node(link_ptr n, bucket_ptr base)
             {
-                node& node_ref = get_node(n);
-                node_ref.next_ = base->next_;
-                node_ref.group_prev_ = n;
-                base->next_ = n;
+                node_base::link_node_in_bucket(n, base);
                 ++size_;
                 if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
             }
 
             void link_group(link_ptr n, bucket_ptr base, size_type count)
             {
-                node& node_ref = get_node(n);
-                node& last_ref = get_node(node_ref.group_prev_);
-                last_ref.next_ = base->next_;
-                base->next_ = n;
+                node_base::link_group(n, base);
                 size_ += count;
                 if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
             }
-#else
-            void link_node(link_ptr, local_iterator_base)
-            {
-                BOOST_ASSERT(false);
-            }
 
-            void link_node(link_ptr n, bucket_ptr base)
-            {
-                n->next_ = base->next_;
-                base->next_ = n;
-                ++size_;
-                if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
-            }
-
-            void link_group(link_ptr n, bucket_ptr base, size_type)
-            {
-                link_node(n, base);
-            }
-#endif
-
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             void unlink_node(iterator_base it)
             {
-                link_ptr* pos = get_for_erase(it);
-                node* n = &get_node(it.local_.node_);
-                link_ptr next = n->next_;
-
-                if(n->group_prev_ == *pos) {
-                    // The deleted node is the sole node in the group, so
-                    // no need to unlink it from a group.
-                }
-                else if(BOOST_HASH_BORLAND_BOOL(next) && prev_in_group(next) == *pos)
-                {
-                    // The deleted node is not at the end of the group, so
-                    // change the link from the next node.
-                    prev_in_group(next) = n->group_prev_;
-                }
-                else {
-                    // The deleted node is at the end of the group, so the
-                    // first node in the group is pointing to it.
-                    // Find that to change its pointer.
-                    link_ptr it = n->group_prev_;
-                    while(prev_in_group(it) != *pos) {
-                        it = prev_in_group(it);
-                    }
-                    prev_in_group(it) = n->group_prev_;
-                }
-                *pos = next;
+                node_base::unlink_node(get_for_erase(it));
                 --size_;
             }
 
@@ -641,25 +722,9 @@ namespace boost {
             {
                 size_type count = group_count(local_iterator_base(*pos));
                 size_ -= count;
-                link_ptr last = last_in_group(*pos);
-                *pos = last->next_;
+                *pos = next_group(*pos);
                 return count;
             }
-#else
-            void unlink_node(iterator_base n)
-            {
-                link_ptr* pos = get_for_erase(n);
-                *pos = (*pos)->next_;
-                --size_;
-            }
-
-            size_type unlink_group(link_ptr* pos)
-            {
-                *pos = (*pos)->next_;
-                --size_;
-                return 1;
-            }
-#endif
 
             void unlink_nodes(iterator_base n)
             {
@@ -693,50 +758,18 @@ namespace boost {
                 size_ -= node_count(local_iterator_base(ptr), local_end);
             }
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             // Break a ciruclar list into two, with split as the beginning
             // of the second group (if split is at the beginning then don't
             // split).
-            link_ptr split_group(link_ptr split)
+            void split_group(link_ptr split)
             {
-                // If split is at the beginning of the group then there's
-                // nothing to split.
-                if(prev_in_group(split)->next_ != split)
-                    return link_ptr();
-
-                // Find the start of the group.
-                link_ptr start = split;
-                do {
-                    start = prev_in_group(start);
-                } while(prev_in_group(start)->next_ == start);
-
-                link_ptr last = prev_in_group(start);
-                prev_in_group(start) = prev_in_group(split);
-                prev_in_group(split) = last;
-
-                return start;
+                node_base::split_group(split);
             }
 
             void split_group(link_ptr split1, link_ptr split2)
             {
-                link_ptr begin1 = split_group(split1);
-                link_ptr begin2 = split_group(split2);
-
-                if(BOOST_HASH_BORLAND_BOOL(begin1) && split1 == begin2) {
-                    link_ptr end1 = prev_in_group(begin1);
-                    prev_in_group(begin1) = prev_in_group(begin2);
-                    prev_in_group(begin2) = end1;
-                }
+                node_base::split_group(split1, split2);
             }
-#else
-            void split_group(link_ptr)
-            {
-            }
-
-            void split_group(link_ptr, link_ptr)
-            {
-            }
-#endif
 
             // throws, strong exception-safety:
             link_ptr construct_node(value_type const& v)
