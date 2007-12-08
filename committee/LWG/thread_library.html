@@ -1221,9 +1221,12 @@ class lock_error;
 template &lt;class Mutex&gt; class lock_guard;
 template &lt;class Mutex&gt; class unique_lock;
 
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
 
 template &lt;class L1, class L2, class ...L3&gt; int try_lock(L1&amp;, L2&amp;, L3&amp;...);
 template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
@@ -1885,9 +1888,12 @@ private:
     bool owns;       // for exposition only
 };
 
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
 
 }  // std
 </code></pre>
@@ -2429,9 +2435,12 @@ Nothing.
 </blockquote>
 
 <pre><code>
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
-template &lt;class Mutex&gt; void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;&amp; <var>x</var>, unique_lock&lt;Mutex&gt;&amp;  <var>y</var>);
+template &lt;class Mutex&gt;
+    void swap(unique_lock&lt;Mutex&gt;&amp;  <var>x</var>, unique_lock&lt;Mutex&gt;&amp;&amp; <var>y</var>);
 </code></pre>
 
 <blockquote>
@@ -3010,7 +3019,8 @@ timed_wait(<var>lock</var>, get_current_time() + <var>rel_time</var>)
 
 <pre><code>
 template &lt;class Predicate&gt;
-    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>,
+                    Predicate <var>pred</var>);
 </code></pre>
 
 <blockquote>
@@ -3049,7 +3059,8 @@ regardless of whether the timeout was triggered.
 
 <pre><code>
 template &lt;class Duration, class Predicate&gt;
-    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
+    bool timed_wait(unique_lock&lt;mutex&gt;&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>,
+                    Predicate <var>pred</var>);
 </code></pre>
 
 <blockquote>
@@ -3137,7 +3148,8 @@ public:
     template &lt;class Lock, class Duration&gt;
         bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>);
     template &lt;class Lock, class Predicate&gt;
-        bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>, Predicate <var>pred</var>);
+        bool timed_wait(Lock&amp; <var>lock</var>, const system_time&amp; <var>abs_time</var>,
+                        Predicate <var>pred</var>);
     template &lt;class Lock, class Duration, class Predicate&gt;
         bool timed_wait(Lock&amp; <var>lock</var>, const Duration&amp; <var>rel_time</var>, Predicate <var>pred</var>);
 
