@@ -102,8 +102,7 @@ Other contributors: <a href="mailto:Hans.Boehm$hp.com">Hans&nbsp;Boehm</a>,
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.minutes">31.6 Class minutes [time.minutes]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.hours">31.7 Class hours [time.hours]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.system">31.8 Class system_time [time.system]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nonmembers">31.9 Non-member functions 
-[time.nonmembers]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nonmembers">31.9 Non-member functions [time.nonmembers]</a>
 <br><a href="#References">References</a>
 <br><a href="#Acknowledgments">Acknowledgments</a>
 </p>
@@ -3587,7 +3586,8 @@ requirements for duration types whose details are specified below.
 <p>
 A duration type shall be EqualityComparable, LessThanComparable, 
 CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and 
-Destructible.&nbsp; In addition, it must meet the requirements for well-defined 
+Destructible.
+In addition, it must meet the requirements for well-defined 
 expressions specified it the following table, where <code>D</code> and <code>E</code> 
 are duration types, <code>d</code> denotes a <code>const</code> value of type
 <code>D</code>, <code>e</code> denotes a <code>const</code> value of type <code>
@@ -3657,7 +3657,7 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   <tr>
     <td valign="top" width="25%"><code>d *= c</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i>&nbsp; <code>d.tick_count() 
+    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() 
     == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
@@ -4457,7 +4457,7 @@ bool operator&lt;=(const system_time&amp; <var>rhs</var>) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if the time&nbsp; pointrepresented by <code>*this</code>
+True if the time point represented by <code>*this</code>
 is earlier or the same as the time point represented by <code><var>rhs</var></code>.
 </dd>
 
@@ -4615,7 +4615,7 @@ If the resolution of <code>LhsDuration</code> is the same as the resolution of
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
 resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()==x, where x is 
 <var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
-Otherwise,&nbsp; <code>x==<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
+Otherwise, <code>x==<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
@@ -4649,7 +4649,7 @@ If the resolution of <code>LhsDuration</code> is the same as the resolution of
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
 resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;x, where x is 
 <var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
-Otherwise,&nbsp; <code>x&lt;<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
+Otherwise, <code>x&lt;<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
@@ -4711,7 +4711,7 @@ If the resolution of <code>LhsDuration</code> is the same as the resolution of
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
 resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x), 
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x+<var>rhs</var>.count()), where 
+LhsDuration</code>. Otherwise, <code>RhsDuration(x+<var>rhs</var>.count()), where 
 x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
@@ -4731,7 +4731,7 @@ If the resolution of <code>LhsDuration</code> is the same as the resolution of
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
 resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x), 
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x-<var>rhs</var>.count()), where 
+LhsDuration</code>. Otherwise, <code>RhsDuration(x-<var>rhs</var>.count()), where 
 x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
