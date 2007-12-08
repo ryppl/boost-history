@@ -994,9 +994,11 @@ void detach();
 <dt>Effects:</dt>
 <dd>
 The thread represented by
-<code>*this</code> continues execution.
+<code>*this</code> continues execution without the current thread blocking.
+When <code>detach()</code> returns <code>*this</code> no longer represents
+the possibly continuing thread of execution.
 When the thread represented by <code>*this</code> ends execution,
-the implementation shall release any owned resources.
+the implementation shall release any owned resources. 
 </dd>
 
 <dt>Postconditions:</dt>
@@ -1252,12 +1254,12 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 
 <p>
 A mutex object facilitates protection against data races and allows thread-safe 
-synchronization of data between&nbsp;threads. A thread obtains ownership of a mutex 
-object by calling lock()&nbsp;and relinquishes ownership by calling unlock(). The 
-thread that calls&nbsp;lock() for a mutex object shall call unlock(). Mutexes may be 
-either&nbsp;recursive or non-recursive, and may grant simultaneous ownership to one 
+synchronization of data between threads. A thread obtains ownership of a mutex
+object by calling <code>lock()</code> and relinquishes ownership by calling <code>unlock()</code>. The 
+thread that calls <code>lock()</code> for a mutex object shall call <code>unlock()</code>. Mutexes may be 
+either recursive or non-recursive, and may grant simultaneous ownership to one 
 or many threads. The mutex types supplied by the Standard Library 
-provide&nbsp;exclusive ownership semantics: only one thread may own the mutex at a 
+provide exclusive ownership semantics: only one thread may own the mutex at a 
 time. Both recursive and non-recursive mutexes are supplied.</p>
 
 <p>
@@ -1298,7 +1300,7 @@ and have the following semantics:
 
 <dt>Effects:</dt>
 <dd>
-The current thread will block until ownership of the mutex can be&nbsp;obtained for 
+The current thread will block until ownership of the mutex can be obtained for 
 the current thread.</dd>
 
 <dt>Postconditions:</dt>
@@ -1445,11 +1447,11 @@ public:
 <p>
 The class <code>mutex</code> provides a non-recursive mutex with exclusive 
 ownership semantics. It satisfies all the Mutex requirements ([thread.mutex.requirements]). 
-It shall be &nbsp;a standard-layout class ([class]).</p>
+It shall be a standard-layout class ([class]).</p>
 
 <p>
 If one thread owns the <code>mutex</code> object, attempts by another thread to 
-acquire&nbsp;ownership will fail (for <code>try_lock()</code>) or block (<code>for 
+acquire ownership will fail (for <code>try_lock()</code>) or block (<code>for 
 lock()</code>) until the first thread has released ownership with a call to
 <code>unlock()</code>.</p>
 
