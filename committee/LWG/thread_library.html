@@ -3466,7 +3466,8 @@ Time points and time durations have a
 Time points
 have an <dfn>epoch</dfn> or start of a given time scale.
 <i>[Example: </i>For std::time_t the epoch is
-1970-01-01 00:00:00. <i>--end example]</i></p>
+1970-01-01 00:00:00. <i>--end example]</i>
+</p>
 
 <p>
 Throughout this clause, the names of template parameters are used to express
@@ -3540,26 +3541,40 @@ template &lt;class Duration&gt;
 }  // std</code></pre>
 </blockquote>
 
-<p>Type <i><code>FRDuration</code> </i>is whichever of <code>LhsDuration</code> 
+<p>
+Type <i><code>FRDuration</code> </i>is whichever of <code>LhsDuration</code> 
 or <code>RhsDuration</code> has the finest resolution. If their 
-resolutions are the same, <i><code>FRDuration</code> </i>is <code>LhsDuration</code>.</p>
+resolutions are the same, <i><code>FRDuration</code> </i>is <code>LhsDuration</code>.
+</p>
 
-<p>Unless otherwise specified, no function in this clause shall throw 
+<p>
+Unless otherwise specified, no function in this clause shall throw 
 exceptions. <i>[Note: </i>Such blanket prohibition of exceptions is unusual in 
 the standard library, but without the prohibition time-related code becomes 
 littered with excessive try-catch blocks. These functions are also unusual in 
 that they encompass virtually no cases where errors can be detected and 
-reported.&nbsp; <i>--end note.]</i></p>
+reported.&nbsp; <i>--end note.]</i>
+</p>
 
-<h3><a name="time.duration.requirements">31.1 Duration requirements 
-[time.duration.requirements]</a></h3>
-<p>This subclause describes requirements on duration types used to instantiate 
-templates defined in the C++ Standard Library.</p>
-<p>Objects of duration types provide relative time values and comparison and 
-arithmetic operations on those values.</p>
-<p>Template definitions in the C++ Standard Library refer to the named Duration 
-requirements for duration types whose details are specified below.</p>
-<p>A duration type shall be EqualityComparable, LessThanComparable, 
+<h3><a name="time.duration.requirements">31.1 Duration requirements [time.duration.requirements]</a></h3>
+
+<p>
+This subclause describes requirements on duration types used to instantiate 
+templates defined in the C++ Standard Library.
+</p>
+
+<p>
+Objects of duration types provide relative time values and comparison and 
+arithmetic operations on those values.
+</p>
+
+<p>
+Template definitions in the C++ Standard Library refer to the named Duration 
+requirements for duration types whose details are specified below.
+</p>
+
+<p>
+A duration type shall be EqualityComparable, LessThanComparable, 
 CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and 
 Destructible.&nbsp; In addition, it must meet the requirements for well-defined 
 expressions specified it the following table, where <code>D</code> and <code>E</code> 
@@ -3643,7 +3658,8 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
 Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds. 
 Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]). 
 For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as specified for duration types.</p>
+if they have the same apparent semantics as specified for duration types.
+</p>
 
 <blockquote>
 <pre><code>
@@ -3696,7 +3712,8 @@ Constructs an object of type <code>nanoseconds</code>.
 Objects of class <code>microseconds</code> can be used to represent a count of microseconds. 
 Class <code>microseconds</code> shall be a duration type ([time.duration.requirements]). 
 For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as specified for duration types.</p>
+if they have the same apparent semantics as specified for duration types.
+</p>
 
 <blockquote>
 <pre><code>
@@ -3757,15 +3774,14 @@ Constructs an object of type <code>microseconds</code>.
 </dl>
 </blockquote>
 
-  <h3>
-    <a name="time.milliseconds">32.4 Class milliseconds [time.milliseconds]</a>
-  </h3>
+<h3><a name="time.milliseconds">32.4 Class milliseconds [time.milliseconds]</a></h3>
 
 <p>
 Objects of class <code>milliseconds</code> can be used to represent a count of milliseconds. 
 Class <code>milliseconds</code> shall be a duration type ([time.duration.requirements]). 
 For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as specified for duration types.</p>
+if they have the same apparent semantics as specified for duration types.
+</p>
 
 <blockquote>
 <pre><code>
@@ -3840,15 +3856,14 @@ Constructs an object of type <code>milliseconds</code>.
 </dl>
 </blockquote>
 
-  <h3>
-    <a name="time.seconds">32.5 Class seconds [time.seconds]</a>
-  </h3>
+<h3><a name="time.seconds">32.5 Class seconds [time.seconds]</a></h3>
 
 <p>
 Objects of class <code>seconds</code> can be used to represent a count of seconds. 
 Class <code>seconds</code> shall be a duration type ([time.duration.requirements]). 
 For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as specified for duration types.</p>
+if they have the same apparent semantics as specified for duration types.
+</p>
 
 <blockquote>
 <pre><code>
@@ -3936,15 +3951,14 @@ Constructs an object of type <code>seconds</code>.
 </dl>
 </blockquote>
 
-  <h3>
-    <a name="time.minutes">32.6 Class minutes [time.minutes]</a>
-  </h3>
+<h3><a name="time.minutes">32.6 Class minutes [time.minutes]</a></h3>
 
 <p>
 Objects of class <code>minutes</code> can be used to represent a count of minutes. 
 Class <code>minutes</code> shall be a duration type ([time.duration.requirements]). 
 For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as specified for duration types.</p>
+if they have the same apparent semantics as specified for duration types.
+</p>
 
 <blockquote>
 <pre><code>
@@ -4045,15 +4059,14 @@ Constructs an object of type <code>minutes</code>.
 </dl>
 </blockquote>
 
-  <h3>
-    <a name="time.hours">31.7 Class hours [time.hours]</a>
-  </h3>
+<h3><a name="time.hours">31.7 Class hours [time.hours]</a></h3>
 
 <p>
 Objects of class <code>hours</code> can be used to represent a count of hours. 
 Class <code>hours</code> shall be a duration type ([time.duration.requirements]). 
 For the sake of exposition, the semantics of member functions are not described 
-if they have the same apparent semantics as specified for duration types.</p>
+if they have the same apparent semantics as specified for duration types.
+</p>
 
 <blockquote>
 <pre><code>
@@ -4167,25 +4180,24 @@ Constructs an object of type <code>hours</code>.
 </dl>
 </blockquote>
 
-  <h3>
-    <a name="time.system">31.8 Class system_time [time.system]</a>
-  </h3>
+<h3><a name="time.system">31.8 Class system_time [time.system]</a></h3>
 
-  <p>
-    The class <code>system_time</code> provides a time point
-    that represents the current
-    Coordinated Universal Time, known as UTC, time.
-    <code>system_time</code>
-    shall provide an epoch time of 1970-01-01 00:00:00.000000000
-    and a maximum time value of at least epoch time &plusmn; 292 years.
-    [<i>Note:</i>
-    292 years represents the number of nanoseconds
-    that can be represented in a signed 64 bit integer.
-    &mdash;<i>end note</i>]
-  </p>
+<p>
+The class <code>system_time</code> provides a time point
+that represents the current
+Coordinated Universal Time, known as UTC, time.
+<code>system_time</code>
+shall provide an epoch time of 1970-01-01 00:00:00.000000000
+and a maximum time value of at least epoch time &plusmn; 292 years.
+[<i>Note:</i>
+292 years represents the number of nanoseconds
+that can be represented in a signed 64 bit integer.
+&mdash;<i>end note</i>]
+</p>
 
-  <blockquote>
-    <pre><code>class system_time
+<blockquote>
+<pre><code>
+class system_time
 {
 public:
 
