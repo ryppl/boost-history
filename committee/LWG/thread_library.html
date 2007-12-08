@@ -71,8 +71,7 @@ Other contributors:
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.tmplparmname">30.1.1 Template Parameter Names [thread.tmplparmname]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.exception">30.1.2 Exceptions [thread.exception]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.native">30.1.3 Native Handles [thread.native]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.native">30.1.4 Duration Timeout [thread.duration]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.native">30.1.5 Thread Safety [thread.safety]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.duration">30.1.4 Duration Timeout [thread.duration]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads">30.2 Threads [thread.threads]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.class">30.2.1 Class thread [thread.threads.class]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.threads.id">30.2.1.1 Class <code>thread::id</code> [thread.threads.id]</a>
@@ -101,7 +100,7 @@ Other contributors:
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvar">30.4.1 Class condition_variable [thread.condvar]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#thread.condvarany">30.4.2 Class condition_variable_any [thread.condvarany]</a>
 <br><a href="#time">Chapter 31&nbsp;&nbsp; Date Time Library [time]</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.duration">31.1 Duration Requirements [time.duration.requirements]</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.duration.requirements">31.1 Duration requirements [time.duration.requirements]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.nanoseconds">31.2 Class nanoseconds [time.nanoseconds]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.microseconds">31.3 Class microseconds [time.microseconds]</a>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#time.milliseconds">31.4 Class milliseconds [time.milliseconds]</a>
@@ -135,9 +134,7 @@ split in two for efficiency reasons.
 <li> Description of <code>thread::id</code> clarified.
 </li>
 
-<li> All time-related functions have absolute and Duration time overloads
-except for condition variable wait not taking predicates.
-<b>[Crowl: Still under discussion.]</b>
+<li> All time-related functions have absolute and Duration time overloads.
 </li>
 
 <li> <code>native_handle</code> description consolidated to one place.
@@ -214,15 +211,6 @@ appear on separate lines.
 
 </ul>
 
-
-<p>
-<b>[Crowl:
-Currently, we inconsistently place synchronization under 'Effects:'
-and 'Thread safety:'.
-I think we would reduce confusion
-by separating the synchronization from the rest of the other attributes.
-That is, to have a named 'Sychronization:' attribute.]</b>
-</p>
 
 <h2><a name="library">Chapter 17&nbsp;&nbsp; Library introduction [library]</a></h2>
 
@@ -331,6 +319,19 @@ and communicate conditions between threads.
 
 <h3><a name="thread.common">30.1 Common Issues [thread.common]</a></h3>
 
+<p>
+Unless otherwise stated,
+the thread-safety requirements of
+17.4.3.? ([constraints.?])
+and 
+17.4.4.9 ([res.on.thread.safety])
+as proposed by
+<cite>
+<a href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2007/n2410.html">
+N2410</a> Thread-Safety in the Standard Library (Rev 1)
+</cite>
+apply even to type and functions within this clause.
+</p>
 
 <h4><a name="thread.tmplparmname">30.1.1 Template Parameter Names [thread.tmplparmname]</a></h4>
 
@@ -409,14 +410,6 @@ Reasonable use cases exist for both duration and
 absolute time based timeouts, so overloads for both are provided unless
 contraindicated.
 &mdash;<i>end note</i>]
-</p>
-
-<h4><a name="thread.safety">30.1.5 Thread Safety [thread.safety]</a></h4>
-
-<p>
-<b>[Crowl: I think we need a general statement that
-operations on std::thread are not thread-safe unless specifically mentioned.
-]</b>
 </p>
 
 
@@ -1720,11 +1713,6 @@ which describe what should be done with the mutex
 during the lock's construction.
 </p>
 
-<p>
-<b>[Crowl:
-The type and object definitions need comments as to their purpose.]</b>
-</p>
-
 <blockquote>
 <pre><code>
 struct defer_lock_t  {}; // do not obtain the lock
@@ -2660,20 +2648,22 @@ on the same <code>once_flag</code> object.
 </dl>
 
 <p>
-<b>[Crowl: An example with dynamic memory.]</b>
 [<i>Example:</i>
 </p>
 
 <blockquote>
 <pre><code>
-std::once_flag flag;
+// <em>global flag, regular function</em>
 
 void init();
+std::once_flag flag;
 
 void f()
 {
     std::call_once(flag,init);
 }
+
+// <em>function static flag, function object</em>
 
 struct initializer
 {
@@ -2683,8 +2673,18 @@ struct initializer
 void g()
 {
     static std::once_flag flag2;
-    std::call_once(flag2,initializer());
+    std::call_once(flag2,initializer);
 }
+
+// <em>object flag, member function</em>
+
+class information
+{
+    std::once_flag verfified;
+    void verifier();
+public:
+    void verify() { std::call_once(verified,verifier); }
+};
 </code></pre>
 </blockquote>
 
@@ -3710,7 +3710,7 @@ shall not be finer than the resolution of <code>D</code>
 </table>
 
 
-<h3><a name="time.nanoseconds">32.2 Class nanoseconds [time.nanoseconds]</a></h3>
+<h3><a name="time.nanoseconds">31.2 Class nanoseconds [time.nanoseconds]</a></h3>
 
 <p>
 Objects of class <code>nanoseconds</code>
@@ -3771,7 +3771,7 @@ Constructs an object of type <code>nanoseconds</code>.
 </dl>
 </blockquote>
 
-<h3><a name="time.microseconds">32.3 Class microseconds [time.microseconds]</a></h3>
+<h3><a name="time.microseconds">31.3 Class microseconds [time.microseconds]</a></h3>
 
 <p>
 Objects of class <code>microseconds</code>
@@ -3848,7 +3848,7 @@ operator nanoseconds() const;
 </dl>
 </blockquote>
 
-<h3><a name="time.milliseconds">32.4 Class milliseconds [time.milliseconds]</a></h3>
+<h3><a name="time.milliseconds">31.4 Class milliseconds [time.milliseconds]</a></h3>
 
 <p>
 Objects of class <code>milliseconds</code>
@@ -3941,7 +3941,7 @@ operator microseconds() const;
 </dl>
 </blockquote>
 
-<h3><a name="time.seconds">32.5 Class seconds [time.seconds]</a></h3>
+<h3><a name="time.seconds">31.5 Class seconds [time.seconds]</a></h3>
 
 <p>
 Objects of class <code>seconds</code>
@@ -4049,7 +4049,7 @@ operator milliseconds() const;
 </dl>
 </blockquote>
 
-<h3><a name="time.minutes">32.6 Class minutes [time.minutes]</a></h3>
+<h3><a name="time.minutes">31.6 Class minutes [time.minutes]</a></h3>
 
 <p>
 Objects of class <code>minutes</code>
@@ -4622,7 +4622,7 @@ and subtracts it from the time represented by <code>*this</code>.
 </blockquote>
 
 
-<h3><a name="time.nonmembers">32.9 Non-member functions [time.nonmembers]</a></h3>
+<h3><a name="time.nonmembers">31.9 Non-member functions [time.nonmembers]</a></h3>
 
 <pre><code>
 system_time get_system_time();
