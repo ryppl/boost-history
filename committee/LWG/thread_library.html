@@ -21,14 +21,6 @@
 		  border: 1px solid; }
 	td	{ padding: 3px 10px 3px 10px;
 		  border: 1px solid; }
-	blockquote.note
-	{
-		background-color:#E0E0E0;
-		padding-left: 15px;
-		padding-right: 15px;
-		padding-top: 1px;
-		padding-bottom: 1px;
-	}
 </style>
 </head>
 
@@ -327,21 +319,21 @@ and communicate conditions between threads.
 
 <h3><a name="thread.common">30.1 Common Issues [thread.common]</a></h3>
 
-<blockquote class="note">
 <p>
 Unless otherwise stated,
 the thread-safety requirements of
 17.4.3.? ([constraints.?])
-and 
+and
 17.4.4.9 ([res.on.thread.safety])
+[<i>Editor:</i>
 as proposed by
 <cite>
 <a href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2007/n2410.html">
 N2410</a> Thread-Safety in the Standard Library (Rev 1)
 </cite>
+&mdash;<i>end editor</i>]
 apply even to type and functions within this clause.
 </p>
-</blockquote>
 
 <h4><a name="thread.tmplparmname">30.1.1 Template Parameter Names [thread.tmplparmname]</a></h4>
 
@@ -853,12 +845,7 @@ Nothing.
 <dd>
 If <code>joinable()</code> then <code>detach()</code>,
 otherwise no effects.
-</dd>
-
-<dt>
-<i>Note:</i>
-</dt>
-<dd>
+[<i>Note:</i>
 Destroying a <code>joinable thread</code> can be unsafe
 if the thread accesses objects or the standard library
 unless the thread performs explicit synchronization
@@ -866,6 +853,7 @@ to ensure that it does not access the objects or the standard library
 past their respective lifetimes.
 Terminating the process with <code>_exit</code> or <code>quick_exit</code>
 removes some of these obligations.
+&mdash;<i>end note</i>]
 </dd>
 
 <dt>Throws:</dt>
