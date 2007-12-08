@@ -2206,17 +2206,16 @@ namespace boost {
                 boost::unordered_detail::rebind_wrap<Alloc, ValueType>::type
                 value_allocator;
 
-            typedef hash_table_data<value_allocator, EquivKeys> data;
             typedef hash_table<ValueType, KeyType, Hash, Pred,
                     value_allocator, EquivKeys> hash_table;
-            typedef BOOST_DEDUCED_TYPENAME data::iterator_base iterator_base;
+            typedef BOOST_DEDUCED_TYPENAME hash_table::iterator_base iterator_base;
 
             typedef hash_const_local_iterator<value_allocator, EquivKeys> const_local_iterator;
             typedef hash_local_iterator<value_allocator, EquivKeys> local_iterator;
             typedef hash_const_iterator<value_allocator, EquivKeys> const_iterator;
             typedef hash_iterator<value_allocator, EquivKeys> iterator;
 
-            typedef BOOST_DEDUCED_TYPENAME data::size_type size_type;
+            typedef BOOST_DEDUCED_TYPENAME hash_table::size_type size_type;
             typedef std::ptrdiff_t difference_type;
         };
 
