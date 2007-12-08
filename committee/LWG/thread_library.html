@@ -3702,7 +3702,9 @@ Constructs an object of type <code>nanoseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == <var>ns</var>;</code></dd>
+<dd>
+<code>count() == <var>ns</var>;</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -3758,7 +3760,9 @@ Constructs an object of type <code>microseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == <var>us</var>;</code></dd>
+<dd>
+<code>count() == <var>us</var>;</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -3828,7 +3832,9 @@ Constructs an object of type <code>milliseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == <var>ms</var>;</code></dd>
+<dd>
+<code>count() == <var>ms</var>;</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -3911,7 +3917,9 @@ Constructs an object of type <code>seconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() ==  <var>s</var>;</code></dd>
+<dd>
+<code>count() ==  <var>s</var>;</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -4007,7 +4015,9 @@ Constructs an object of type <code>minutes</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == <var>m</var>;</code></dd>
+<dd>
+<code>count() == <var>m</var>;</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -4116,7 +4126,9 @@ Constructs an object of type <code>hours</code>.
 </dd>
 
 <dt>Postcondition:</dt>
-<dd><code>count() == <var>h</var>;</code></dd>
+<dd>
+<code>count() == <var>h</var>;</code>
+</dd>
 </dl>
 </blockquote>
 
@@ -4240,49 +4252,47 @@ public:
 
   <pre><code>system_time();   </code>  </pre>
 
-  <blockquote>
-    <dl>
-      <dt>Effects:</dt>
-      <dd>
-        Constructs a <code>system_time</code>
-        object representing the epoch time point 1970-01-01 00:00:00.000000000
-      </dd>
-
-    </dl>
-  </blockquote>
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Constructs a <code>system_time</code>
+object representing the epoch time point 1970-01-01 00:00:00.000000000
+</dd>
+</dl>
+</blockquote>
 
   <pre><code>system_time(time_t <var>secs</var>, nanoseconds <var>ns</var>=0);</code>  </pre>
 
-  <blockquote>
-    <dl>
-      <dt>Effects:</dt>
-      <dd>
-        Construct<var>s</var> a <code>system_time</code>
-        time object representing the time point
-        <code><var>secs</var> + <var>ns</var> / 1,000,000,000</code> seconds after the epoch.
-      </dd>
+<blockquote>
+<dl>
+<dt>Effects:</dt>
+<dd>
+Construct<var>s</var> a <code>system_time</code>
+time object representing the time point
+<code><var>secs</var> + <var>ns</var> / 1,000,000,000</code> seconds
+after the epoch.
+</dd>
 
-      <dt>Remarks:</dt>
-      <dd>
-        If the total nanoseconds is greater than 1 second, the seconds are
-        incremented appropriately.
-      </dd>
-
-    </dl>
-  </blockquote>
+<dt>Remarks:</dt>
+<dd>
+If the total nanoseconds is greater than 1 second, the seconds are
+incremented appropriately.
+</dd>
+</dl>
+</blockquote>
 
   <pre><code>time_t seconds_since_epoch() const;</code>  </pre>
 
-  <blockquote>
-    <dl>
-      <dt>Returns:</dt>
-      <dd>
-        The  seconds since the epoch time represented by the current value 
-        of <code>*this</code>.
-      </dd>
-
-    </dl>
-  </blockquote>
+<blockquote>
+<dl>
+<dt>Returns:</dt>
+<dd>
+The  seconds since the epoch time represented by the current value 
+of <code>*this</code>.
+</dd>
+</dl>
+</blockquote>
 
   <pre><code>nanoseconds nanoseconds_since_epoch() const; </code></pre>
 
@@ -4424,7 +4434,8 @@ and adds it to the time represented by <code>*this</code>.
 
 <dt>Returns:</dt>
 <dd>
-<code>*this</code></dd>
+<code>*this</code>
+</dd>
 
 </dl>
 </blockquote>
@@ -4455,7 +4466,8 @@ and subtracts it from the time represented by <code>*this</code>.
 
 <dt>Returns:</dt>
 <dd>
-<code>*this</code></dd>
+<code>*this</code>
+</dd>
 
 </dl>
 </blockquote>
@@ -4470,18 +4482,16 @@ and subtracts it from the time represented by <code>*this</code>.
 
 <dt>Returns:</dt>
 <dd>
-The system time as provided by the operating system.</dd>
-<dd>
-&nbsp;</dd>
-<dd>
+<p>
+The system time as provided by the operating system.
+</p>
 <i>&nbsp;[Note:</i> Provides access to the system clock at a
 resolution as fine as nanoseconds.
-The actual resolution may vary.<i> --end note]</i></dd>
-<dt>&nbsp;</dt>
+The actual resolution may vary.<i> --end note]</i>
   <dt>[Note: <span style="font-style: normal">No error reporting is provided. 
   Hosted implementations ([intro.compliance]) presumably utilize system clock 
-  API's that never report errors. </span>--end note.] </dt>
-
+  API's that never report errors. </span>--end note.]
+</dd>
 </dl>
 </blockquote>
 
@@ -4513,7 +4523,8 @@ Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
 resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()==x, where x is 
 <var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
 Otherwise,&nbsp; <code>x==<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
-converted to the resolution of <code>RhsDuration</code>.</dd>
+converted to the resolution of <code>RhsDuration</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4524,7 +4535,8 @@ converted to the resolution of <code>RhsDuration</code>.</dd>
 
 <dt>Returns:</dt>
 <dd>
-<code>!(<var>lhs</var>==<var>rhs</var>)</code>.</dd>
+<code>!(<var>lhs</var>==<var>rhs</var>)</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4541,7 +4553,8 @@ Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
 resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;x, where x is 
 <var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
 Otherwise,&nbsp; <code>x&lt;<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
-converted to the resolution of <code>RhsDuration</code>.</dd>
+converted to the resolution of <code>RhsDuration</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4552,7 +4565,8 @@ converted to the resolution of <code>RhsDuration</code>.</dd>
 
 <dt>Returns:</dt>
 <dd>
-<code>!(<var>rhs</var>&lt;<var>lhs</var>)</code>.</dd>
+<code>!(<var>rhs</var>&lt;<var>lhs</var>)</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4563,7 +4577,8 @@ converted to the resolution of <code>RhsDuration</code>.</dd>
 
 <dt>Returns:</dt>
 <dd>
-<code><var>rhs</var>&lt;<var>lhs</var>)</code>.</dd>
+<code><var>rhs</var>&lt;<var>lhs</var>)</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4574,7 +4589,8 @@ converted to the resolution of <code>RhsDuration</code>.</dd>
 
 <dt>Returns:</dt>
 <dd>
-<code>!(<var>lhs</var>&lt;<var>rhs</var>)</code>.</dd>
+<code>!(<var>lhs</var>&lt;<var>rhs</var>)</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4591,7 +4607,8 @@ Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
 resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x), 
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
 LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x+<var>rhs</var>.count()), where 
-x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
+x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
+</dd>
 
 </dl>
 </blockquote>
@@ -4608,7 +4625,8 @@ Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
 resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x), 
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
 LhsDuration</code>. Otherwise,&nbsp; <code>RhsDuration(x-<var>rhs</var>.count()), where 
-x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.</dd>
+x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
+</dd>
 
 </dl>
 </blockquote>
