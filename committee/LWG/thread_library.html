@@ -33,14 +33,21 @@ ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-07
 </p>
 
 <p>
-Lead author: <a href="mailto:hinnant@twcny.rr.com">Howard&nbsp;E.&nbsp;Hinnant</a>
-<br><br>
-Major contributors: <a href="mailto:Lawrence@Crowl.org">Lawrence&nbsp;Crowl</a>,
+Lead author:
+<a href="mailto:hinnant@twcny.rr.com">Howard&nbsp;E.&nbsp;Hinnant</a>
+</p>
+
+<p>
+Major contributors:
+<a href="mailto:Lawrence@Crowl.org">Lawrence&nbsp;Crowl</a>,
 <a href="mailto:bdawes@acm.org">Beman&nbsp;Dawes</a>,
 <a href="mailto:anthony@justsoftwaresolutions.co.uk">Anthony&nbsp;Williams</a>,
 <a href="mailto:jeff@crystalclearsoftware.com">Jeff&nbsp;Garland</a>
-<br><br>
-Other contributors: <a href="mailto:Hans.Boehm$hp.com">Hans&nbsp;Boehm</a>,
+</p>
+
+<p>
+Other contributors:
+<a href="mailto:Hans.Boehm$hp.com">Hans&nbsp;Boehm</a>,
 <a href="mailto:nick@usenix.org">Nick&nbsp;Stoughton</a>,
 <a href="mailto:chris@kohlhoff.com">Chris&nbsp;Kohlhoff</a>,
 <a href="mailto:prem.rao@hp.com">PremAnand&nbsp;M&nbsp;Rao</a>,
@@ -111,7 +118,8 @@ Other contributors: <a href="mailto:Hans.Boehm$hp.com">Hans&nbsp;Boehm</a>,
 
 <p>
 This paper is a revision of
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2447.htm">N2447</a>.
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2447.htm">
+N2447</a>.
 It incorporates following changes:
 </p>
 
@@ -792,7 +800,8 @@ the invocation of <code><var>f</var></code>.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> or <code>bad_alloc</code> if unable to  start the new thread.
+<code>system_error</code> or <code>bad_alloc</code>
+if unable to start the new thread.
 </dd>
 </dl>
 </blockquote>
@@ -845,13 +854,13 @@ otherwise no effects.
 
 <p>
 [<i>Note:</i>
-Destroying a <code>joinable thread</code> can be unsafe if the
-thread accesses objects or the standard library
-unless the thread
-performs explicit synchronization to ensure that it does not access
-the objects or the standard library past their respective lifetimes.
-Terminating the process with <code>_exit</code> or <code>quick_exit</code> removes some of these
-obligations.
+Destroying a <code>joinable thread</code> can be unsafe
+if the thread accesses objects or the standard library
+unless the thread performs explicit synchronization
+to ensure that it does not access the objects or the standard library
+past their respective lifetimes.
+Terminating the process with <code>_exit</code> or <code>quick_exit</code>
+removes some of these obligations.
 &mdash;<i>end note</i>]
 </p>
 
@@ -1024,7 +1033,8 @@ id get_id() const;
 <code>this_thread::get_id()</code> for the thread
 represented by
 <code>*this</code>,
-or a default constructed <code>id</code> if <code>*this</code> does not represent a thread.
+or a default constructed <code>id</code>
+if <code>*this</code> does not represent a thread.
 </dd>
 
 <dt>Throws:</dt>
@@ -1711,7 +1721,8 @@ during the lock's construction.
 </p>
 
 <p>
-<b>[Crowl: The type and object definitions need comments as to their purpose.]</b>
+<b>[Crowl:
+The type and object definitions need comments as to their purpose.]</b>
 </p>
 
 <blockquote>
@@ -1949,7 +1960,8 @@ own the mutex.
 
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>unique_lock</code>, calls<code><var> m</var>.lock()</code>.
+Constructs an object of type <code>unique_lock</code>,
+calls <code><var>m</var>.lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2001,7 +2013,8 @@ does not own the mutex.
 
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>unique_lock</code>, calls<code><var> m</var>.try_lock()</code>.
+Constructs an object of type <code>unique_lock</code>,
+calls <code><var>m</var>.try_lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2062,7 +2075,8 @@ and calls <code><var>m</var>.timed_lock(<var>abs_time</var>)</code>.
 <code>mutex() == &amp;<var>m</var></code>
 <br>
 <code>owns_lock() ==</code>
-the result of the call to <code><var>m</var>.timed_lock(<var>abs_time</var>)</code>
+the result of the call to
+<code><var>m</var>.timed_lock(<var>abs_time</var>)</code>
 </dd>
 </dl>
 </blockquote>
@@ -2092,7 +2106,8 @@ does not own the mutex.
 
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>unique_lock </code>and calls <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>.
+Constructs an object of type <code>unique_lock</code>
+and calls <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -2100,7 +2115,8 @@ Constructs an object of type <code>unique_lock </code>and calls <code><var>m</va
 <code>mutex() == &amp;<var>m</var></code>
 <br>
 <code>owns_lock() ==</code>
-the result of the call to <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>
+the result of the call to
+<code><var>m</var>.timed_lock(<var>rel_time</var>)</code>
 </dd>
 </dl>
 </blockquote>
@@ -2214,7 +2230,9 @@ void lock();
 
 <dt>Throws:</dt>
 <dd>
-<code>lock_error</code>, if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
+<code>lock_error</code>,
+if on entry <code>owns_lock()</code> is <code>true</code>
+or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2245,7 +2263,8 @@ of the call to <code>try_lock()</code>.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
+if on entry <code>owns_lock()</code> is <code>true</code>
+or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2277,7 +2296,8 @@ of the call to <code>timed_lock(rel_t)</code>.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
+if on entry <code>owns_lock()</code> is <code>true</code>
+or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2308,7 +2328,8 @@ of the call to <code>timed_lock(rel_t)</code>.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code> or if <code>mutex() == 0</code>.
+if on entry <code>owns_lock()</code> is <code>true</code>
+or if <code>mutex() == 0</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2399,7 +2420,8 @@ void swap(unique_lock&amp;&amp; <var>u</var>);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Swaps each data member of <code>*this</code> with the equivalent data member of <code><var>u</var></code>.
+Swaps each data member of <code>*this</code>
+with the equivalent data member of <code><var>u</var></code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2493,7 +2515,8 @@ the <code>unlock()</code> function is called for any prior arguments.
 
 <dt>Returns:</dt>
 <dd>
-If all calls to <code>try_lock()</code> returned <code>true</code>, returns <code>-1</code>.
+If all calls to <code>try_lock()</code> returned <code>true</code>,
+returns <code>-1</code>.
 Otherwise returns a 0-based index
 value indicating for
 which argument <code>try_lock()</code> returned <code>false</code>.
@@ -3493,7 +3516,8 @@ the names of template parameters are used to express type requirements.
 Parameter names
 <code>Duration</code>, <code>LhsDuration</code> and <code>RhsDuration</code>
 express the Duration requirements ([time.duration.requirements]).
-For all non-member functions in this clause which are templated on Duration types,
+For all non-member functions in this clause
+that are templated on Duration types,
 the implementation shall constrain these function templates such that they will
 only instantiate for Duration types.
 </p>
@@ -3601,12 +3625,14 @@ requirements for duration types whose details are specified below.
 A duration type shall be EqualityComparable, LessThanComparable,
 CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and
 Destructible.
-In addition, it must meet the requirements for well-defined
-expressions specified it the following table, where <code>D</code> and <code>E</code>
-are duration types, <code>d</code> denotes a <code>const</code> value of type
-<code>D</code>, <code>e</code> denotes a <code>const</code> value of type <code>
-E</code>, <code>c</code> denotes a <code>long</code> value.
-The resolution of <code>E</code> shall not be finer than the resolution of <code>D</code>
+In addition, it must meet the requirements
+for well-defined expressions specified in the following table,
+where <code>D</code> and <code>E</code> are duration types,
+<code>d</code> denotes a <code>const</code> value of type <code>D</code>,
+<code>e</code> denotes a <code>const</code> value of type <code>E</code>,
+<code>c</code> denotes a <code>long</code> value.
+The resolution of <code>E</code>
+shall not be finer than the resolution of <code>D</code>
 (diagnostic required).
 </p>
 <table>
@@ -3687,9 +3713,12 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
 <h3><a name="time.nanoseconds">32.2 Class nanoseconds [time.nanoseconds]</a></h3>
 
 <p>
-Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
-Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]).
-For the sake of exposition, the semantics of member functions are not described
+Objects of class <code>nanoseconds</code>
+can be used to represent a count of nanoseconds.
+Class <code>nanoseconds</code>
+shall be a duration type ([time.duration.requirements]).
+For the sake of exposition,
+the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -3745,8 +3774,10 @@ Constructs an object of type <code>nanoseconds</code>.
 <h3><a name="time.microseconds">32.3 Class microseconds [time.microseconds]</a></h3>
 
 <p>
-Objects of class <code>microseconds</code> can be used to represent a count of microseconds.
-Class <code>microseconds</code> shall be a duration type ([time.duration.requirements]).
+Objects of class <code>microseconds</code>
+can be used to represent a count of microseconds.
+Class <code>microseconds</code>
+shall be a duration type ([time.duration.requirements]).
 For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
@@ -3820,9 +3851,12 @@ operator nanoseconds() const;
 <h3><a name="time.milliseconds">32.4 Class milliseconds [time.milliseconds]</a></h3>
 
 <p>
-Objects of class <code>milliseconds</code> can be used to represent a count of milliseconds.
-Class <code>milliseconds</code> shall be a duration type ([time.duration.requirements]).
-For the sake of exposition, the semantics of member functions are not described
+Objects of class <code>milliseconds</code>
+can be used to represent a count of milliseconds.
+Class <code>milliseconds</code>
+shall be a duration type ([time.duration.requirements]).
+For the sake of exposition,
+the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -3910,9 +3944,12 @@ operator microseconds() const;
 <h3><a name="time.seconds">32.5 Class seconds [time.seconds]</a></h3>
 
 <p>
-Objects of class <code>seconds</code> can be used to represent a count of seconds.
-Class <code>seconds</code> shall be a duration type ([time.duration.requirements]).
-For the sake of exposition, the semantics of member functions are not described
+Objects of class <code>seconds</code>
+can be used to represent a count of seconds.
+Class <code>seconds</code>
+shall be a duration type ([time.duration.requirements]).
+For the sake of exposition,
+the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -4015,9 +4052,12 @@ operator milliseconds() const;
 <h3><a name="time.minutes">32.6 Class minutes [time.minutes]</a></h3>
 
 <p>
-Objects of class <code>minutes</code> can be used to represent a count of minutes.
-Class <code>minutes</code> shall be a duration type ([time.duration.requirements]).
-For the sake of exposition, the semantics of member functions are not described
+Objects of class <code>minutes</code>
+can be used to represent a count of minutes.
+Class <code>minutes</code>
+shall be a duration type ([time.duration.requirements]).
+For the sake of exposition,
+the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -4135,9 +4175,12 @@ operator seconds() const;
 <h3><a name="time.hours">31.7 Class hours [time.hours]</a></h3>
 
 <p>
-Objects of class <code>hours</code> can be used to represent a count of hours.
-Class <code>hours</code> shall be a duration type ([time.duration.requirements]).
-For the sake of exposition, the semantics of member functions are not described
+Objects of class <code>hours</code>
+can be used to represent a count of hours.
+Class <code>hours</code>
+shall be a duration type ([time.duration.requirements]).
+For the sake of exposition,
+the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -4416,9 +4459,8 @@ bool operator!=(const system_time&amp; <var>rhs</var>) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if the time point represented by <code>*this</code> is not the same as the time
-point represented
-by <code><var>rhs</var></code>.
+True if the time point represented by <code>*this</code>
+is not the same as the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
@@ -4432,8 +4474,8 @@ bool operator&gt;(const system_time&amp; <var>rhs</var>) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if the time point represented by
-<code>*this</code> is later than the time point represented by <code><var>rhs</var></code>.
+True if the time point represented by <code>*this</code>
+is later than the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
@@ -4479,7 +4521,8 @@ bool operator&lt;=(const system_time&amp; <var>rhs</var>) const;
 <dt>Returns:</dt>
 <dd>
 True if the time point represented by <code>*this</code>
-is earlier or the same as the time point represented by <code><var>rhs</var></code>.
+is earlier or the same as
+the time point represented by <code><var>rhs</var></code>.
 </dd>
 
 </dl>
@@ -4631,12 +4674,16 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code><var>lhs</var>.count()==<var>rhs</var>.count()</code>.
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
-resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()==x, where x is
-<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>x==<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
+If the resolution of <code>LhsDuration</code>
+is the same as the resolution of <code>RhsDuration</code>,
+<code><var>lhs</var>.count()==<var>rhs</var>.count()</code>.
+Otherwise, if the resolution of <code>LhsDuration</code>
+is finer than the resolution of <code>RhsDuration</code>,
+<code><var>lhs</var>.count()==x</code>,
+where <code>x</code> is <code><var>rhs</var>.count()</code>
+converted to the resolution of <code>LhsDuration</code>.
+Otherwise, <code>x==<var>rhs</var>.count()</code>,
+where <code>x</code> is <code><var>lhs</var>.count()</code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
@@ -4665,12 +4712,16 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;<var>rhs</var>.count()</code>.
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
-resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;x, where x is
-<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>x&lt;<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
+If the resolution of <code>LhsDuration</code>
+is the same as the resolution of <code>RhsDuration</code>,
+<code><var>lhs</var>.count()&lt;<var>rhs</var>.count()</code>.
+Otherwise, if the resolution of <code>LhsDuration</code>
+is finer than the resolution of <code>RhsDuration</code>,
+<code><var>lhs</var>.count()&lt;x</code>,
+where <code>x</code> is <code><var>rhs</var>.count()</code>
+converted to the resolution of <code>LhsDuration</code>.
+Otherwise, <code>x&lt;<var>rhs</var>.count()</code>,
+where <code>x</code> is <code><var>lhs</var>.count()</code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
@@ -4727,12 +4778,14 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+<var>rhs</var>.count())</code>.
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
-resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x),
-where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>.
+If the resolution of <code>LhsDuration</code>
+is the same as the resolution of <code>RhsDuration</code>,
+<code>LhsDuration(<var>lhs</var>.count()+<var>rhs</var>.count())</code>.
+Otherwise, if the resolution of <code>LhsDuration</code>
+is finer than the resolution of <code>RhsDuration</code>,
+<code>LhsDuration(<var>lhs</var>.count()+x)</code>,
+where <code>x</code> is <code><var>rhs</var>.count()</code>
+converted to the resolution of <code>LhsDuration</code>.
 Otherwise, <code>RhsDuration(x+<var>rhs</var>.count())</code>,
 where <code>x</code> is <code><var>lhs</var>.count()</code>
 converted to the resolution of <code>RhsDuration</code>.
@@ -4749,12 +4802,14 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-<var>rhs</var>.count())</code>.
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
-resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x),
-where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>.
+If the resolution of <code>LhsDuration</code>
+is the same as the resolution of <code>RhsDuration</code>,
+<code>LhsDuration(<var>lhs</var>.count()-<var>rhs</var>.count())</code>.
+Otherwise, if the resolution of <code>LhsDuration</code>
+is finer than the resolution of <code>RhsDuration</code>,
+<code>LhsDuration(<var>lhs</var>.count()-x)</code>,
+where <code>x</code> is <code><var>rhs</var>.count()</code>
+converted to the resolution of <code>LhsDuration</code>.
 Otherwise, <code>RhsDuration(x-<var>rhs</var>.count())<code>,
 where <code>x</code> is <code><var>lhs</var>.count()</code>
 converted to the resolution of <code>RhsDuration</code>.
@@ -4858,10 +4913,12 @@ template &lt;class Duration&gt;
 </li>
 <li>
   <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2411.html">
-  N2411</a>, Proposal for Date-Time Types in C++0x To Support Threading APIs v2, Jeff Garland
+  N2411</a>, Proposal for Date-Time Types in C++0x To Support Threading APIs v2,
+  Jeff Garland
 </li>
 <li>
-  <a href="http://www.iso.org/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=40874">
+  <a href
+="http://www.iso.org/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=40874">
   ISO 8601: 2004</a>, Data elements and interchange formats &mdash;
   Information interchange &mdash; Representation of dates and times
 </li>
