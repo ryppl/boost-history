@@ -3533,9 +3533,9 @@ template &lt;class LhsDuration, class RhsDuration&gt;
   bool operator&gt;=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FRDuration</var> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FRDuration</var> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 
 template &lt;class Duration&gt;
   Duration operator*(Duration <var>lhs</var>, long <var>rhs</var>)
@@ -3549,11 +3549,11 @@ template &lt;class Duration&gt;
 </blockquote>
 
 <p>
-Type <i><code>FRDuration</code> </i>
+Type <code><var>FRDuration</var></code>
 is whichever of <code>LhsDuration</code> or <code>RhsDuration</code>
 has the finest resolution.
 If their resolutions are the same,
-<i><code>FRDuration</code> </i>is <code>LhsDuration</code>.
+<code><var>FRDuration</var></code>is <code>LhsDuration</code>.
 </p>
 
 <p>
@@ -3605,7 +3605,7 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   </tr>
   <tr>
     <td valign="top" width="25%"><code>D::tick_type</code></td>
-    <td width="11%"><i><b>implementation-defined</b></i></td>
+    <td width="11%"><var><b>implementation-defined</b><var></td>
     <td width="39%">&nbsp;</td>
   </tr>
   <tr>
@@ -3685,13 +3685,13 @@ public:
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
-    // <i>construct/copy/destroy functions</i>
+    // <em>construct/copy/destroy functions</em>
     nanoseconds(long long <var>ns</var>=0);
 
     // <em>observer functions</em>
     tick_type count() const;
 
-<i>    // modifier functions</i>
+    // <em>modifier functions</em>
     template&lt;typename RhsDuration&gt;
         nanoseconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
@@ -3699,7 +3699,7 @@ public:
     nanoseconds&amp; operator*=(long <var>multiplier</var>);
     nanoseconds&amp; operator/=(long <var>divisor</var>);
 
-    // <i>operations</i>
+    // <em>operations</em>
     nanoseconds operator-() const;
 };
 </code></pre>
@@ -3743,13 +3743,13 @@ public:
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
-    // <i>construct/copy/destroy functions</i>
+    // <em>construct/copy/destroy functions</em>
     microseconds(long long <var>us</var>=0);
 
     // <em>observer functions</em>
     tick_type count() const;
 
-<i>    // modifier functions</i>
+    // <em>modifier functions</em>
     template&lt;typename RhsDuration&gt;
         microseconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
@@ -3757,7 +3757,7 @@ public:
     microseconds&amp; operator*=(long <var>multiplier</var>);
     microseconds&amp; operator/=(long <var>divisor</var>);
 
-    // <i>operations</i>
+    // <em>operations</em>
     microseconds operator-() const;
 
     // <em>conversions</em>
@@ -3818,13 +3818,13 @@ public:
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
-    // <i>construct/copy/destroy functions</i>
+    // <em>construct/copy/destroy functions</em>
     milliseconds(long long <var>ms</var>=0);
 
     // <em>observer functions</em>
     tick_type count() const;
 
-<i>    // modifier functions</i>
+    // <em>modifier functions</em>
     template&lt;typename RhsDuration&gt;
         milliseconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
@@ -3832,7 +3832,7 @@ public:
     milliseconds&amp; operator*=(long <var>multiplier</var>);
     milliseconds&amp; operator/=(long <var>divisor</var>);
 
-    // <i>operations</i>
+    // <em>operations</em>
     milliseconds operator-() const;
 
     // <em>conversions</em>
@@ -3908,13 +3908,13 @@ public:
     static const tick_type seconds_per_tick = 1;
     static const bool is_subsecond = false;
 
-    // <i>construct/copy/destroy functions</i>
+    // <em>construct/copy/destroy functions</em>
     seconds(long long <var>s</var>=0);
 
     // <em>observer functions</em>
     tick_type count() const;
 
-<i>    // modifier functions</i>
+    // <em>modifier functions</em>
     template&lt;typename RhsDuration&gt;
         seconds&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
@@ -3922,7 +3922,7 @@ public:
     seconds&amp; operator*=(long <var>multiplier</var>);
     seconds&amp; operator/=(long <var>divisor</var>);
 
-    // <i>operations</i>
+    // <em>operations</em>
     seconds operator-() const;
 
     // <em>conversions</em>
@@ -4013,13 +4013,13 @@ public:
     static const tick_type seconds_per_tick = 60;
     static const bool is_subsecond = false;
 
-    // <i>construct/copy/destroy functions</i>
+    // <em>construct/copy/destroy functions</em>
     minutes(long long <var>m</var>=0);
 
     // <em>observer functions</em>
     tick_type count() const;
 
-<i>    // modifier functions</i>
+    // <em>modifier functions</em>
     template&lt;typename RhsDuration&gt;
         minutes&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
@@ -4027,7 +4027,7 @@ public:
     minutes&amp; operator*=(long <var>multiplier</var>);
     minutes&amp; operator/=(long <var>divisor</var>);
 
-    // <i>operations</i>
+    // <em>operations</em>
     minutes operator-() const;
 
     // <em>conversions</em>
@@ -4133,13 +4133,13 @@ public:
     static const tick_type seconds_per_tick = 3600;
     static const bool is_subsecond = false;
 
-    // <i>construct/copy/destroy functions</i>
+    // <em>construct/copy/destroy functions</em>
     hours(long long <var>h</var>=0);
 
     // <em>observer functions</em>
     tick_type count() const;
 
-<i>    // modifier functions</i>
+    // <em>modifier functions</em>
     template&lt;typename RhsDuration&gt;
         hours&amp; operator-=(const RhsDuration&amp; <var>d</var>);
     template&lt;typename RhsDuration&gt;
@@ -4147,7 +4147,7 @@ public:
     hours&amp; operator*=(long <var>multiplier</var>);
     hours&amp; operator/=(long <var>divisor</var>);
 
-    // <i>operations</i>
+    // <em>operations</em>
     hours operator-() const;
 
     // <em>conversions</em>
@@ -4276,7 +4276,7 @@ public:
     nanoseconds nanoseconds_since_epoch() const;
 
     // <em>traits</em>
-    typedef <b><i>implementation defined</i></b> tick_type;
+    typedef <b><var>implementation defined</var></b> tick_type;
     static const tick_type ticks_per_second = 1000000000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
@@ -4701,7 +4701,7 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 </blockquote>
 <pre><code>
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FRDuration</var> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
@@ -4723,7 +4723,7 @@ converted to the resolution of <code>RhsDuration</code>.
 </blockquote>
 <pre><code>
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <i>FRDuration</i> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FRDuration</var> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
