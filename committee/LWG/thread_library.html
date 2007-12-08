@@ -995,7 +995,7 @@ void detach();
 <dd>
 The thread represented by
 <code>*this</code> continues execution without the current thread blocking.
-When <code>detach()</code> returns <code>*this</code> no longer represents
+When <code>detach()</code> returns, <code>*this</code> no longer represents
 the possibly continuing thread of execution.
 When the thread represented by <code>*this</code> ends execution,
 the implementation shall release any owned resources. 
