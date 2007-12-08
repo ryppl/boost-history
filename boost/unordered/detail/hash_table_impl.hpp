@@ -764,7 +764,7 @@ namespace boost {
 
             iterator_base create_node(value_type const& v, iterator_base position)
             {
-                BOOST_ASSERT(!BOOST_UNORDERED_HASH_EQUIVALENT);
+                BOOST_ASSERT(BOOST_UNORDERED_HASH_EQUIVALENT);
 
                 // throws, strong exception-safety:
                 link_ptr n = construct_node(v);
@@ -777,7 +777,7 @@ namespace boost {
             iterator_base create_node(value_type const& v,
                     bucket_ptr base, local_iterator_base position)
             {
-                BOOST_ASSERT(!BOOST_UNORDERED_HASH_EQUIVALENT);
+                BOOST_ASSERT(BOOST_UNORDERED_HASH_EQUIVALENT);
 
                 // throws, strong exception-safety:
                 link_ptr n = construct_node(v);
