@@ -1251,20 +1251,14 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 <h4><a name="thread.mutex.concept">30.3.1 Mutex requirements [thread.mutex.requirements]</a></h4>
 
 <p>
-A
-mutex object supports mutual exclusion between threads by
-limiting its ownership to a single thread.
-A thread  obtains ownership of a mutex object by calling <code>lock()</code>
-and relinquishes ownership by calling <code>unlock()</code>.
-The
-thread that calls <code>lock()</code> for a mutex object shall
-call <code>unlock()</code>.
-Mutexes may be either recursive or
-non-recursive.
-The syntax is the same for both recursive and non-recursive mutexes,
-but the semantics differ for the member functions
-as described below.
-</p>
+A mutex object facilitates protection against data races and allows thread-safe 
+synchronization of data between&nbsp;threads. A thread obtains ownership of a mutex 
+object by calling lock()&nbsp;and relinquishes ownership by calling unlock(). The 
+thread that calls&nbsp;lock() for a mutex object shall call unlock(). Mutexes may be 
+either&nbsp;recursive or non-recursive, and may grant simultaneous ownership to one 
+or many threads. The mutex types supplied by the Standard Library 
+provide&nbsp;exclusive ownership semantics: only one thread may own the mutex at a 
+time. Both recursive and non-recursive mutexes are supplied.</p>
 
 <p>
 This section describes requirements on template argument types
@@ -1301,16 +1295,14 @@ and have the following semantics:
 
 <blockquote>
 <dl>
-<dt>Precondition:</dt>
-<dd>
-For non-recursive mutexes the current thread shall not own the mutex.
-</dd>
 
 <dt>Effects:</dt>
 <dd>
-The current thread will block until the mutex is not owned by another thread.
-Upon successful completion, the current thread owns the mutex.
-</dd>
+The current thread will block until ownership of the mutex can be&nbsp;obtained for 
+the current thread.</dd>
+
+<dt>Postconditions:</dt>
+<dd>The current thread owns the mutex.</dd>
 
 <dt>Return type:</dt>
 <dd>
@@ -1339,10 +1331,6 @@ and have the following semantics:
 
 <blockquote>
 <dl>
-<dt>Precondition:</dt>
-<dd>
-For non-recursive mutexes the current thread shall not own the mutex.
-</dd>
 
 <dt>Effects:</dt>
 <dd>
@@ -1407,13 +1395,7 @@ The current thread shall own the mutex.
 
 <dt>Effects:</dt>
 <dd>
-For a non-recursive mutex ownership is released.
-For a recursive mutex
-<code>unlock()</code> must be called
-the same number of times that the mutex was locked
-(via either <code>lock()</code> or <code>try_lock()</code>
-or by any other locking function) before ownership is released.
-</dd>
+Releases the current thread's ownership of the mutex.</dd>
 
 <dt>Return type:</dt>
 <dd>
@@ -1422,7 +1404,7 @@ or by any other locking function) before ownership is released.
 
 <dt>Synchronization:</dt>
 <dd>
-This operation syncronizes with ([intro.multithread])
+This operation synchronizes with ([intro.multithread])
 subsequent lock operations that obtain ownership on the same object.
 </dd>
 
@@ -1461,10 +1443,25 @@ public:
 </blockquote>
 
 <p>
-The class <code>mutex</code> provides a non-recursive mutex type
-that satisfies all of the Mutex requirements.
-It shall be a standard-layout class (chapter 9 [class]).
-</p>
+The class <code>mutex</code> provides a non-recursive mutex with exclusive 
+ownership semantics. It satisfies all the Mutex requirements ([thread.mutex.requirements]). 
+It shall be &nbsp;a standard-layout class ([class]).</p>
+
+<p>
+If one thread owns the <code>mutex</code> object, attempts by another thread to 
+acquire&nbsp;ownership will fail (for <code>try_lock()</code>) or block (<code>for 
+lock()</code>) until the first thread has released ownership with a call to
+<code>unlock()</code>.</p>
+
+<p>
+It is undefined behavior:</p>
+
+<ul>
+  <li>for a thread to call <code>lock()</code> or <code>try_lock()</code> if it 
+  already owns the <code>mutex</code> object.</li>
+  <li>if a thread terminates while owning a <code>mutex</code> object.</li>
+  <li>to destroy a <code>mutex</code> object owned by any thread.</li>
+</ul>
 
 <h5><a name="thread.mutex.recursive">30.3.1.2 Class recursive_mutex [thread.mutex.recursive]</a></h5>
 
@@ -1494,10 +1491,35 @@ public:
 </blockquote>
 
 <p>
-The class <code>recursive_mutex</code> provides a recursive mutex type
-that satisfies all of the Mutex requirements.
-It shall be a standard-layout class (chapter 9 [class]).
-</p>
+The class <code>recursive_mutex</code> provides a recursive mutex with exclusive 
+ownership semantics. It satisfies all the Mutex requirements ([thread.mutex.requirements]). 
+It shall be a standard-layout class ([class]).</p>
+
+<p>
+If one thread owns the <code>recursive_mutex</code> object, attempts by another 
+thread to acquire ownership will fail (for <code>try_lock()</code>) or block 
+(for <code>lock()</code>) until the first thread has completely released 
+ownership.</p>
+
+<p>
+A thread that owns a <code>recursive_mutex</code> object may acquire additional 
+levels of ownership by calling <code>lock()</code> or <code>try_lock()</code>. 
+It is unspecified how many levels of ownership may be acquired by a single 
+thread. If a thread has already acquired the maximum level of ownership for a
+<code>recursive_mutex</code> object, additional calls to <code>try_lock()</code> 
+shall fail, and additional calls to <code>lock()</code> shall throw an exception 
+of type <code>system_error</code>. A thread must call <code>unlock()</code> once 
+for each level of ownership acquired by calls to <code>lock()</code> and <code>
+try_lock()</code>. Only when all levels of ownership have been released may 
+ownership be acquired by another thread.</p>
+
+<p>
+It is undefined behavior</p>
+
+<ul>
+  <li>if a thread terminates while owning a <code>recursive_mutex</code> object.</li>
+  <li>to destroy a <code>recursive_mutex</code> object owned by any thread.</li>
+</ul>
 
 <h4><a name="thread.timed.concept">30.3.2 TimedMutex requirements [thread.timedmutex.requirements]</a></h4>
 
