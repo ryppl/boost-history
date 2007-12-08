@@ -22,9 +22,13 @@ namespace boost {
         class HASH_TABLE_DATA
         {
         public:
+            typedef bucket<Alloc> bucket;
+            typedef typename bucket::bucket_allocator bucket_allocator;
+            typedef typename bucket::bucket_ptr bucket_ptr;
+            typedef typename bucket::link_ptr link_ptr;
+
             struct node_base;
             struct node;
-            struct bucket;
             typedef std::size_t size_type;
 
             typedef Alloc value_allocator;
@@ -35,43 +39,10 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME
                 boost::unordered_detail::rebind_wrap<Alloc, node_base>::type
                 node_base_allocator;
-            typedef BOOST_DEDUCED_TYPENAME
-                boost::unordered_detail::rebind_wrap<Alloc, bucket>::type
-                bucket_allocator;
 
             typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
             typedef BOOST_DEDUCED_TYPENAME allocator_pointer<node_allocator>::type node_ptr;
-            typedef BOOST_DEDUCED_TYPENAME allocator_pointer<bucket_allocator>::type bucket_ptr;
             typedef BOOST_DEDUCED_TYPENAME allocator_reference<value_allocator>::type reference;
-            typedef bucket_ptr link_ptr;
-
-            // Hash Bucket
-            //
-            // all no throw
-
-            struct bucket
-            {
-            private:
-                bucket& operator=(bucket const&);
-            public:
-                link_ptr next_;
-
-                bucket() : next_()
-                {
-                    BOOST_HASH_MSVC_RESET_PTR(next_);
-                }
-
-                bucket(bucket const& x) : next_(x.next_)
-                {
-                    // Only copy construct when allocating.
-                    BOOST_ASSERT(!x.next_);
-                }
-
-                bool empty() const
-                {
-                    return !this->next_;
-                }
-            };
 
             // Hash Node
             //

@@ -105,6 +105,41 @@ namespace boost {
         {
             return std::pair<Dst1, Dst2>(Dst1(x.first), Dst2(x.second));
         }
+
+        // Hash Bucket
+        //
+        // all no throw
+
+        template <typename Alloc>
+        struct bucket
+        {
+            typedef BOOST_DEDUCED_TYPENAME
+                boost::unordered_detail::rebind_wrap<Alloc, bucket>::type
+                bucket_allocator;
+
+            typedef BOOST_DEDUCED_TYPENAME allocator_pointer<bucket_allocator>::type bucket_ptr;
+            typedef bucket_ptr link_ptr;
+        private:
+            bucket& operator=(bucket const&);
+        public:
+            link_ptr next_;
+
+            bucket() : next_()
+            {
+                BOOST_HASH_MSVC_RESET_PTR(next_);
+            }
+
+            bucket(bucket const& x) : next_(x.next_)
+            {
+                // Only copy construct when allocating.
+                BOOST_ASSERT(!x.next_);
+            }
+
+            bool empty() const
+            {
+                return !this->next_;
+            }
+        };
     }
 }
 
