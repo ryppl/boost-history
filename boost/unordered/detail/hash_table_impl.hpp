@@ -587,6 +587,11 @@ namespace boost {
                 if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
             }
 #else
+            void link_node(link_ptr, local_iterator_base)
+            {
+                BOOST_ASSERT(false);
+            }
+
             void link_node(link_ptr n, bucket_ptr base)
             {
                 n->next_ = base->next_;
@@ -757,9 +762,10 @@ namespace boost {
                 return iterator_base(base, n);
             }
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             iterator_base create_node(value_type const& v, iterator_base position)
             {
+                BOOST_ASSERT(!BOOST_UNORDERED_HASH_EQUIVALENT);
+
                 // throws, strong exception-safety:
                 link_ptr n = construct_node(v);
 
@@ -771,6 +777,8 @@ namespace boost {
             iterator_base create_node(value_type const& v,
                     bucket_ptr base, local_iterator_base position)
             {
+                BOOST_ASSERT(!BOOST_UNORDERED_HASH_EQUIVALENT);
+
                 // throws, strong exception-safety:
                 link_ptr n = construct_node(v);
 
@@ -782,9 +790,7 @@ namespace boost {
 
                 return iterator_base(base, n);
             }
-#endif
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             void copy_group(local_iterator_base it, bucket_ptr dst)
             {
                 local_iterator_base end = it;
@@ -793,12 +799,6 @@ namespace boost {
                 for(it.increment(); it != end; it.increment())
                     create_node(*it, pos);
             }
-#else
-            void copy_group(local_iterator_base it, bucket_ptr dst)
-            {
-                create_node(*it, dst);
-            }
-#endif
 
             // Delete Node
             //
@@ -825,17 +825,10 @@ namespace boost {
                 }
             }
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
             void delete_group(link_ptr first_node)
             {
-                delete_nodes(first_node, prev_in_group(first_node)->next_);
+                delete_nodes(first_node, next_group(first_node));
             }
-#else
-            void delete_group(link_ptr node)
-            {
-                allocators_.destroy(node);
-            }
-#endif
 
             // Clear
             //
