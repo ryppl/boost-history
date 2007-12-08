@@ -3599,13 +3599,13 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
 </p>
 <table style="border-collapse: collapse;" border="1" bordercolor="#111111" cellpadding="5" cellspacing="0" width="100%">
   <tr>
-    <td width="25%"><b><i>expression</i></b></td>
-    <td width="11%"><b><i>return type</i></b></td>
-    <td width="39%"><b><i>return value or other requirement</i></b></td>
+    <th width="25%">expression</th>
+    <th width="11%">return type</th>
+    <th width="39%">return value or other requirement</th>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>D::tick_type</code></td>
-    <td width="11%"><var><b>implementation-defined</b><var></td>
+    <td width="11%"><var><strong>implementation-defined</strong></var></td>
     <td width="39%">&nbsp;</td>
   </tr>
   <tr>
@@ -4276,7 +4276,7 @@ public:
     nanoseconds nanoseconds_since_epoch() const;
 
     // <em>traits</em>
-    typedef <b><var>implementation defined</var></b> tick_type;
+    typedef <var><strong>implementation defined</strong></var> tick_type;
     static const tick_type ticks_per_second = 1000000000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
