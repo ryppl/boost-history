@@ -845,8 +845,10 @@ If <code>joinable()</code> then <code>detach()</code>,
 otherwise no effects.
 </dd>
 
-<p>
-[<i>Note:</i>
+<dt>
+<i>Note:</i>
+</dt>
+<dd>
 Destroying a <code>joinable thread</code> can be unsafe
 if the thread accesses objects or the standard library
 unless the thread performs explicit synchronization
@@ -854,8 +856,7 @@ to ensure that it does not access the objects or the standard library
 past their respective lifetimes.
 Terminating the process with <code>_exit</code> or <code>quick_exit</code>
 removes some of these obligations.
-&mdash;<i>end note</i>]
-</p>
+</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -2680,7 +2681,7 @@ void g()
 
 class information
 {
-    std::once_flag verfified;
+    std::once_flag verified;
     void verifier();
 public:
     void verify() { std::call_once(verified,verifier); }
@@ -4658,7 +4659,7 @@ template&lt;typename Duration&gt;
 
 <dt>Returns:</dt>
 <dd>
-<code><var>rhs</var> + <var>td</var>.
+<code><var>rhs</var> + <var>td</var></code>.
 </dd>
 
 </dl>
@@ -4810,7 +4811,7 @@ is finer than the resolution of <code>RhsDuration</code>,
 <code>LhsDuration(<var>lhs</var>.count()-x)</code>,
 where <code>x</code> is <code><var>rhs</var>.count()</code>
 converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>RhsDuration(x-<var>rhs</var>.count())<code>,
+Otherwise, <code>RhsDuration(x-<var>rhs</var>.count())</code>,
 where <code>x</code> is <code><var>lhs</var>.count()</code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
