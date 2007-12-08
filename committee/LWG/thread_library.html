@@ -3476,10 +3476,11 @@ For <code>std::time_t</code> the epoch is
 </p>
 
 <p>
-Throughout this clause, the names of template parameters are used to express
-type requirements. Parameter names <code>Duration</code>, <code>LhsDuration</code>
-and <code>RhsDuration</code> express the
-Duration requirements ([time.duration.requirements]).
+Throughout this clause,
+the names of template parameters are used to express type requirements.
+Parameter names
+<code>Duration</code>, <code>LhsDuration</code> and <code>RhsDuration</code>
+express the Duration requirements ([time.duration.requirements]).
 For all non-member functions in this clause which are templated on Duration types,
 the implementation shall constrain these function templates such that they will
 only instantiate for Duration types.
@@ -3548,20 +3549,22 @@ template &lt;class Duration&gt;
 </blockquote>
 
 <p>
-Type <i><code>FRDuration</code> </i>is whichever of <code>LhsDuration</code>
-or <code>RhsDuration</code> has the finest resolution. If their
-resolutions are the same, <i><code>FRDuration</code> </i>is <code>LhsDuration</code>.
+Type <i><code>FRDuration</code> </i>
+is whichever of <code>LhsDuration</code> or <code>RhsDuration</code>
+has the finest resolution.
+If their resolutions are the same,
+<i><code>FRDuration</code> </i>is <code>LhsDuration</code>.
 </p>
 
 <p>
 Unless otherwise specified, no function in this clause shall throw
 exceptions.
 [<i>Note:</i>
-Such blanket prohibition of exceptions is unusual in
-the standard library, but without the prohibition time-related code becomes
-littered with excessive try-catch blocks. These functions are also unusual in
-that they encompass virtually no cases where errors can be detected and
-reported.
+Such blanket prohibition of exceptions is unusual in the standard library,
+but without the prohibition time-related code
+becomes littered with excessive try-catch blocks.
+These functions are also unusual in that
+they encompass virtually no cases where errors can be detected and reported.
 &mdash;<i>end note</i>]
 </p>
 
@@ -4710,8 +4713,10 @@ If the resolution of <code>LhsDuration</code> is the same as the resolution of
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
 resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x),
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise, <code>RhsDuration(x+<var>rhs</var>.count()), where
-x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
+LhsDuration</code>.
+Otherwise, <code>RhsDuration(x+<var>rhs</var>.count())</code>,
+where <code>x</code> is <code><var>lhs</var>.count()</code>
+converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
 </dl>
@@ -4730,8 +4735,10 @@ If the resolution of <code>LhsDuration</code> is the same as the resolution of
 Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
 resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x),
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise, <code>RhsDuration(x-<var>rhs</var>.count()), where
-x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
+LhsDuration</code>.
+Otherwise, <code>RhsDuration(x-<var>rhs</var>.count())<code>,
+where <code>x</code> is <code><var>lhs</var>.count()</code>
+converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
 </dl>
