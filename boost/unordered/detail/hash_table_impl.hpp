@@ -27,7 +27,6 @@ namespace boost {
             typedef typename bucket::bucket_ptr bucket_ptr;
             typedef typename bucket::link_ptr link_ptr;
 
-            struct node_base;
             struct node;
             typedef std::size_t size_type;
 
@@ -36,9 +35,6 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME
                 boost::unordered_detail::rebind_wrap<Alloc, node>::type
                 node_allocator;
-            typedef BOOST_DEDUCED_TYPENAME
-                boost::unordered_detail::rebind_wrap<Alloc, node_base>::type
-                node_base_allocator;
 
             typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
             typedef BOOST_DEDUCED_TYPENAME allocator_pointer<node_allocator>::type node_ptr;
@@ -48,11 +44,10 @@ namespace boost {
             //
             // all no throw
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
-            struct node_base : bucket
+            struct node_base_equivalent_keys : bucket
             {
             public:
-                node_base() : group_prev_()
+                node_base_equivalent_keys() : group_prev_()
                 {
                     BOOST_HASH_MSVC_RESET_PTR(group_prev_);
                 }
@@ -60,7 +55,7 @@ namespace boost {
                 link_ptr group_prev_;
 
                 static link_ptr& prev_in_group(link_ptr n) {
-                    return static_cast<node_base&>(*n).group_prev_;
+                    return static_cast<node_base_equivalent_keys&>(*n).group_prev_;
                 }
 
                 // pre: Must be pointing to the first node in a group.
@@ -76,9 +71,9 @@ namespace boost {
                 }
 
                 // pre: Must be pointing to a node
-                static node_base& get_node(link_ptr p) {
+                static node_base_equivalent_keys& get_node(link_ptr p) {
                     BOOST_ASSERT(p);
-                    return static_cast<node_base&>(*p);
+                    return static_cast<node_base_equivalent_keys&>(*p);
                 }
 
                 static size_type group_count(link_ptr it)
@@ -109,8 +104,8 @@ namespace boost {
 
                 static void link_node(link_ptr n, link_ptr pos)
                 {
-                    node_base& node_ref = get_node(n);
-                    node_base& pos_ref = get_node(pos);
+                    node_base_equivalent_keys& node_ref = get_node(n);
+                    node_base_equivalent_keys& pos_ref = get_node(pos);
                     node_ref.next_ = pos_ref.group_prev_->next_;
                     node_ref.group_prev_ = pos_ref.group_prev_;
                     pos_ref.group_prev_->next_ = n;
@@ -119,7 +114,7 @@ namespace boost {
                 
                 static void link_node_in_bucket(link_ptr n, bucket_ptr base)
                 {
-                    node_base& node_ref = get_node(n);
+                    node_base_equivalent_keys& node_ref = get_node(n);
                     node_ref.next_ = base->next_;
                     node_ref.group_prev_ = n;
                     base->next_ = n;
@@ -127,15 +122,15 @@ namespace boost {
 
                 static void link_group(link_ptr n, bucket_ptr base)
                 {
-                    node_base& node_ref = get_node(n);
-                    node_base& last_ref = get_node(node_ref.group_prev_);
+                    node_base_equivalent_keys& node_ref = get_node(n);
+                    node_base_equivalent_keys& last_ref = get_node(node_ref.group_prev_);
                     last_ref.next_ = base->next_;
                     base->next_ = n;
                 }
 
                 static void unlink_node(link_ptr* pos)
                 {
-                    node_base* n = &get_node(*pos);
+                    node_base_equivalent_keys* n = &get_node(*pos);
                     link_ptr next = n->next_;
 
                     if(n->group_prev_ == *pos) {
@@ -194,8 +189,8 @@ namespace boost {
                     }
                 }
             };
-#else
-            struct node_base : bucket
+
+            struct node_base_unique_keys : bucket
             {
                 link_ptr& prev_in_group(link_ptr) const {
                     BOOST_ASSERT(false);
@@ -211,9 +206,9 @@ namespace boost {
                 }
 
                 // pre: Must be pointing to a node
-                static node_base& get_node(link_ptr p) {
+                static node_base_unique_keys& get_node(link_ptr p) {
                     BOOST_ASSERT(p);
-                    return static_cast<node_base&>(*p);
+                    return static_cast<node_base_unique_keys&>(*p);
                 }
 
                 static size_type group_count(link_ptr){
@@ -251,7 +246,16 @@ namespace boost {
                 static void split_group(link_ptr) {}
                 static void split_group(link_ptr, link_ptr) {}
             };
+
+#if BOOST_UNORDERED_HASH_EQUIVALENT
+            typedef node_base_equivalent_keys node_base;
+#else
+            typedef node_base_unique_keys node_base;
 #endif
+
+            typedef BOOST_DEDUCED_TYPENAME
+                boost::unordered_detail::rebind_wrap<Alloc, node_base>::type
+                node_base_allocator;
 
             struct node : node_base
             {
