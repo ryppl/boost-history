@@ -3478,8 +3478,8 @@ For <code>std::time_t</code> the epoch is
 <p>
 Throughout this clause, the names of template parameters are used to express
 type requirements. Parameter names <code>Duration</code>, <code>LhsDuration</code>
-and <code>RhsDuration</code> express the 
-Duration ([<a name="time.duration">[time.duration.requirements]</a>]) 
+and <code>RhsDuration</code> express the
+Duration ([<a name="time.duration">[time.duration.requirements]</a>])
 requirements.
 For all non-member functions in this clause which are templated on Duration types,
 the implementation shall constrain these function templates such that they will
@@ -3549,19 +3549,19 @@ template &lt;class Duration&gt;
 </blockquote>
 
 <p>
-Type <i><code>FRDuration</code> </i>is whichever of <code>LhsDuration</code> 
-or <code>RhsDuration</code> has the finest resolution. If their 
+Type <i><code>FRDuration</code> </i>is whichever of <code>LhsDuration</code>
+or <code>RhsDuration</code> has the finest resolution. If their
 resolutions are the same, <i><code>FRDuration</code> </i>is <code>LhsDuration</code>.
 </p>
 
 <p>
-Unless otherwise specified, no function in this clause shall throw 
+Unless otherwise specified, no function in this clause shall throw
 exceptions.
 [<i>Note:</i>
-Such blanket prohibition of exceptions is unusual in 
-the standard library, but without the prohibition time-related code becomes 
-littered with excessive try-catch blocks. These functions are also unusual in 
-that they encompass virtually no cases where errors can be detected and 
+Such blanket prohibition of exceptions is unusual in
+the standard library, but without the prohibition time-related code becomes
+littered with excessive try-catch blocks. These functions are also unusual in
+that they encompass virtually no cases where errors can be detected and
 reported.
 &mdash;<i>end note</i>]
 </p>
@@ -3569,26 +3569,26 @@ reported.
 <h3><a name="time.duration.requirements">31.1 Duration requirements [time.duration.requirements]</a></h3>
 
 <p>
-This subclause describes requirements on duration types used to instantiate 
+This subclause describes requirements on duration types used to instantiate
 templates defined in the C++ Standard Library.
 </p>
 
 <p>
-Objects of duration types provide relative time values and comparison and 
+Objects of duration types provide relative time values and comparison and
 arithmetic operations on those values.
 </p>
 
 <p>
-Template definitions in the C++ Standard Library refer to the named Duration 
+Template definitions in the C++ Standard Library refer to the named Duration
 requirements for duration types whose details are specified below.
 </p>
 
 <p>
-A duration type shall be EqualityComparable, LessThanComparable, 
-CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and 
+A duration type shall be EqualityComparable, LessThanComparable,
+CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and
 Destructible.
-In addition, it must meet the requirements for well-defined 
-expressions specified it the following table, where <code>D</code> and <code>E</code> 
+In addition, it must meet the requirements for well-defined
+expressions specified it the following table, where <code>D</code> and <code>E</code>
 are duration types, <code>d</code> denotes a <code>const</code> value of type
 <code>D</code>, <code>e</code> denotes a <code>const</code> value of type <code>
 E</code>, <code>c</code> denotes a <code>long</code> value.
@@ -3609,13 +3609,13 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   <tr>
     <td valign="top" width="25%"><code>D::ticks_per_second;</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">The number of ticks per 
+    <td valign="top" width="39%">The number of ticks per
     second, or 0 for types for which the number of ticks per second is less than 1. </td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>D::seconds_per_tick;</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">The number of seconds per 
+    <td valign="top" width="39%">The number of seconds per
     tick, or 0 for types for which the number of seconds per tick is less than 1. </td>
   </tr>
   <tr>
@@ -3626,7 +3626,7 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   <tr>
     <td valign="top" width="25%"><code>d.count();</code></td>
     <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">The most recent value established by a 
+    <td valign="top" width="39%">The most recent value established by a
     non-const function's <i>Postcondition</i>.</td>
   </tr>
   <tr>
@@ -3637,27 +3637,27 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
   <tr>
     <td valign="top" width="25%"><code>d -= e</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
-    d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code> 
+    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count ==
+    d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code>
     is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d += e</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count == 
-    d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code> 
+    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count ==
+    d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code>
     is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d /= c</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() == 
+    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() ==
     d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
   </tr>
   <tr>
     <td valign="top" width="25%"><code>d *= c</code></td>
     <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() 
+    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count()
     == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
@@ -3666,9 +3666,9 @@ The resolution of <code>E</code> shall not be finer than the resolution of <code
 <h3><a name="time.nanoseconds">32.2 Class nanoseconds [time.nanoseconds]</a></h3>
 
 <p>
-Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds. 
-Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
+Objects of class <code>nanoseconds</code> can be used to represent a count of nanoseconds.
+Class <code>nanoseconds</code> shall be a duration type ([time.duration.requirements]).
+For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -3711,7 +3711,7 @@ nanoseconds(long long <var>ns</var>=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>nanoseconds</code>. 
+Constructs an object of type <code>nanoseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
@@ -3724,9 +3724,9 @@ Constructs an object of type <code>nanoseconds</code>.
 <h3><a name="time.microseconds">32.3 Class microseconds [time.microseconds]</a></h3>
 
 <p>
-Objects of class <code>microseconds</code> can be used to represent a count of microseconds. 
-Class <code>microseconds</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
+Objects of class <code>microseconds</code> can be used to represent a count of microseconds.
+Class <code>microseconds</code> shall be a duration type ([time.duration.requirements]).
+For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -3772,7 +3772,7 @@ microseconds(long long <var>us</var>=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>microseconds</code>. 
+Constructs an object of type <code>microseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
@@ -3790,7 +3790,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000</code>. 
+<code>count() * 1000</code>.
 </dd>
 
 </dl>
@@ -3799,9 +3799,9 @@ operator nanoseconds() const;
 <h3><a name="time.milliseconds">32.4 Class milliseconds [time.milliseconds]</a></h3>
 
 <p>
-Objects of class <code>milliseconds</code> can be used to represent a count of milliseconds. 
-Class <code>milliseconds</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
+Objects of class <code>milliseconds</code> can be used to represent a count of milliseconds.
+Class <code>milliseconds</code> shall be a duration type ([time.duration.requirements]).
+For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -3848,7 +3848,7 @@ milliseconds(long long <var>ms</var>=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>milliseconds</code>. 
+Constructs an object of type <code>milliseconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
@@ -3866,7 +3866,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000000</code>. 
+<code>count() * 1000000</code>.
 </dd>
 
 </dl>
@@ -3880,7 +3880,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000</code>. 
+<code>count() * 1000</code>.
 </dd>
 
 </dl>
@@ -3889,9 +3889,9 @@ operator microseconds() const;
 <h3><a name="time.seconds">32.5 Class seconds [time.seconds]</a></h3>
 
 <p>
-Objects of class <code>seconds</code> can be used to represent a count of seconds. 
-Class <code>seconds</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
+Objects of class <code>seconds</code> can be used to represent a count of seconds.
+Class <code>seconds</code> shall be a duration type ([time.duration.requirements]).
+For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -3939,7 +3939,7 @@ seconds(long long <var>s</var>=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>seconds</code>. 
+Constructs an object of type <code>seconds</code>.
 </dd>
 
 <dt>Postcondition:</dt>
@@ -3957,7 +3957,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000000000</code>. 
+<code>count() * 1000000000</code>.
 </dd>
 
 </dl>
@@ -3971,7 +3971,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000000</code>. 
+<code>count() * 1000000</code>.
 </dd>
 
 </dl>
@@ -3985,7 +3985,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000</code>. 
+<code>count() * 1000</code>.
 </dd>
 
 </dl>
@@ -3994,9 +3994,9 @@ operator milliseconds() const;
 <h3><a name="time.minutes">32.6 Class minutes [time.minutes]</a></h3>
 
 <p>
-Objects of class <code>minutes</code> can be used to represent a count of minutes. 
-Class <code>minutes</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
+Objects of class <code>minutes</code> can be used to represent a count of minutes.
+Class <code>minutes</code> shall be a duration type ([time.duration.requirements]).
+For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -4045,7 +4045,7 @@ minutes(long long <var>m</var>=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>minutes</code>. 
+Constructs an object of type <code>minutes</code>.
 </dd>
 
 <dt>Postcondition:</dt>
@@ -4063,7 +4063,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60000000000</code>. 
+<code>count() * 60000000000</code>.
 </dd>
 
 </dl>
@@ -4077,7 +4077,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60000000</code>. 
+<code>count() * 60000000</code>.
 </dd>
 
 </dl>
@@ -4091,7 +4091,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60000</code>. 
+<code>count() * 60000</code>.
 </dd>
 
 </dl>
@@ -4105,7 +4105,7 @@ operator seconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60</code>. 
+<code>count() * 60</code>.
 </dd>
 
 </dl>
@@ -4114,9 +4114,9 @@ operator seconds() const;
 <h3><a name="time.hours">31.7 Class hours [time.hours]</a></h3>
 
 <p>
-Objects of class <code>hours</code> can be used to represent a count of hours. 
-Class <code>hours</code> shall be a duration type ([time.duration.requirements]). 
-For the sake of exposition, the semantics of member functions are not described 
+Objects of class <code>hours</code> can be used to represent a count of hours.
+Class <code>hours</code> shall be a duration type ([time.duration.requirements]).
+For the sake of exposition, the semantics of member functions are not described
 if they have the same apparent semantics as specified for duration types.
 </p>
 
@@ -4166,7 +4166,7 @@ hours(long long <var>h</var>=0);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>hours</code>. 
+Constructs an object of type <code>hours</code>.
 </dd>
 
 <dt>Postcondition:</dt>
@@ -4184,7 +4184,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600000000000</code>. 
+<code>count() * 3600000000000</code>.
 </dd>
 
 </dl>
@@ -4198,7 +4198,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600000000</code>. 
+<code>count() * 3600000000</code>.
 </dd>
 
 </dl>
@@ -4212,7 +4212,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600000</code>. 
+<code>count() * 3600000</code>.
 </dd>
 
 </dl>
@@ -4226,7 +4226,7 @@ operator seconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600</code>. 
+<code>count() * 3600</code>.
 </dd>
 
 </dl>
@@ -4240,7 +4240,7 @@ operator minutes() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60</code>. 
+<code>count() * 60</code>.
 </dd>
 
 </dl>
@@ -4349,7 +4349,7 @@ time_t seconds_since_epoch() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-The  seconds since the epoch time represented by the current value 
+The  seconds since the epoch time represented by the current value
 of <code>*this</code>.
 </dd>
 </dl>
@@ -4380,7 +4380,7 @@ bool operator==(const system_time&amp; <var>rhs</var>) const;
 <dd>
 True if
 the time point
-represented by <code>*this</code> is the same as the time point represented by 
+represented by <code>*this</code> is the same as the time point represented by
 <code><var>rhs</var></code>.
 </dd>
 
@@ -4395,7 +4395,7 @@ bool operator!=(const system_time&amp; <var>rhs</var>) const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-True if the time point represented by <code>*this</code> is not the same as the time 
+True if the time point represented by <code>*this</code> is not the same as the time
 point represented
 by <code><var>rhs</var></code>.
 </dd>
@@ -4576,7 +4576,7 @@ resolution as fine as nanoseconds.
 The actual resolution may vary.
 &mdash;<i>end note</i>]
 [<i>Note:</i>
-No error reporting is provided. 
+No error reporting is provided.
 Hosted implementations ([intro.compliance])
 presumably utilize system clock API's that never report errors.
 &mdash;<i>end note</i>]
@@ -4611,10 +4611,10 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code><var>lhs</var>.count()==<var>rhs</var>.count()</code>. 
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()==x, where x is 
-<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
+<code>RhsDuration</code>, <code><var>lhs</var>.count()==<var>rhs</var>.count()</code>.
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
+resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()==x, where x is
+<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>.
 Otherwise, <code>x==<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
@@ -4645,10 +4645,10 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;<var>rhs</var>.count()</code>. 
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;x, where x is 
-<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>. 
+<code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;<var>rhs</var>.count()</code>.
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
+resolution of <code>RhsDuration</code>, <code><var>lhs</var>.count()&lt;x, where x is
+<var>rhs</var>.count() </code>converted to the resolution of <code>LhsDuration</code>.
 Otherwise, <code>x&lt;<var>rhs</var>.count(), where x is <var>lhs</var>.count() </code>
 converted to the resolution of <code>RhsDuration</code>.
 </dd>
@@ -4707,11 +4707,11 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+<var>rhs</var>.count())</code>. 
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x), 
+<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+<var>rhs</var>.count())</code>.
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
+resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()+x),
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise, <code>RhsDuration(x+<var>rhs</var>.count()), where 
+LhsDuration</code>. Otherwise, <code>RhsDuration(x+<var>rhs</var>.count()), where
 x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
@@ -4727,11 +4727,11 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <dt>Returns:</dt>
 <dd>
 If the resolution of <code>LhsDuration</code> is the same as the resolution of
-<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-<var>rhs</var>.count())</code>. 
-Otherwise, if the resolution of <code>LhsDuration</code> is finer than the 
-resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x), 
+<code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-<var>rhs</var>.count())</code>.
+Otherwise, if the resolution of <code>LhsDuration</code> is finer than the
+resolution of <code>RhsDuration</code>, <code>LhsDuration(<var>lhs</var>.count()-x),
 where x is <var>rhs</var>.count() </code>converted to the resolution of <code>
-LhsDuration</code>. Otherwise, <code>RhsDuration(x-<var>rhs</var>.count()), where 
+LhsDuration</code>. Otherwise, <code>RhsDuration(x-<var>rhs</var>.count()), where
 x is <var>lhs</var>.count() </code>converted to the resolution of <code>RhsDuration</code>.
 </dd>
 
