@@ -360,27 +360,10 @@ namespace boost {
     }
 }
 
-#define BOOST_UNORDERED_HASH_EQUIVALENT 1
 #include <boost/unordered/detail/hash_table_impl.hpp>
-#undef BOOST_UNORDERED_HASH_EQUIVALENT
-
-#define BOOST_UNORDERED_HASH_EQUIVALENT 0
-#include <boost/unordered/detail/hash_table_impl.hpp>
-#undef BOOST_UNORDERED_HASH_EQUIVALENT
 
 namespace boost {
     namespace unordered_detail {
-        //
-        // Hash Table Data
-        //
-
-        // TODO: Only instantiate the version that is wanted.
-        template <typename Alloc, typename EquivKeys>
-        struct select_hash_table_data
-            : public boost::mpl::if_<
-                    EquivKeys,
-                    hash_table_data_equivalent_keys<Alloc>,
-                    hash_table_data_unique_keys<Alloc> > {};
 
         //
         // Hash Table
@@ -390,9 +373,9 @@ namespace boost {
             typename Hash, typename Pred,
             typename Alloc, typename EquivKeys>
         class hash_table
-            : public select_hash_table_data<Alloc, EquivKeys>::type
+            : public hash_table_data<Alloc, EquivKeys>
         {
-            typedef typename select_hash_table_data<Alloc, EquivKeys>::type data;
+            typedef hash_table_data<Alloc, EquivKeys> data;
             typedef typename data::node_constructor node_constructor;
             typedef typename data::bucket_ptr bucket_ptr;
             typedef typename data::link_ptr link_ptr;
@@ -1321,7 +1304,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
 
         private:
-            typedef typename select_hash_table_data<Alloc, EquivKeys>::type data;
+            typedef hash_table_data<Alloc, EquivKeys> data;
             typedef BOOST_DEDUCED_TYPENAME data::local_iterator_base base;
             typedef hash_const_local_iterator<Alloc, EquivKeys> const_local_iterator;
 
@@ -1355,7 +1338,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
 
         private:
-            typedef typename select_hash_table_data<Alloc, EquivKeys>::type data;
+            typedef hash_table_data<Alloc, EquivKeys> data;
             typedef BOOST_DEDUCED_TYPENAME data::local_iterator_base base;
             typedef hash_local_iterator<Alloc, EquivKeys> local_iterator;
             friend class hash_local_iterator<Alloc, EquivKeys>;
@@ -1393,7 +1376,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
 
         private:
-            typedef typename select_hash_table_data<Alloc, EquivKeys>::type data;
+            typedef hash_table_data<Alloc, EquivKeys> data;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base base;
             typedef hash_const_iterator<Alloc, EquivKeys> const_iterator;
             friend class hash_const_iterator<Alloc, EquivKeys>;
@@ -1427,7 +1410,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME allocator_value_type<Alloc>::type value_type;
 
         private:
-            typedef typename select_hash_table_data<Alloc, EquivKeys>::type data;
+            typedef hash_table_data<Alloc, EquivKeys> data;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base base;
             typedef hash_iterator<Alloc, EquivKeys> iterator;
             friend class hash_iterator<Alloc, EquivKeys>;
@@ -1468,7 +1451,7 @@ namespace boost {
                 boost::unordered_detail::rebind_wrap<Alloc, ValueType>::type
                 value_allocator;
 
-            typedef typename select_hash_table_data<value_allocator, boost::mpl::false_>::type data;
+            typedef hash_table_data<value_allocator, boost::mpl::false_> data;
             typedef hash_table<ValueType, KeyType, Hash, Pred,
                     value_allocator, boost::mpl::false_> hash_table;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base iterator_base;
@@ -1491,7 +1474,7 @@ namespace boost {
                 boost::unordered_detail::rebind_wrap<Alloc, ValueType>::type
                 value_allocator;
 
-            typedef typename select_hash_table_data<value_allocator, boost::mpl::true_>::type data;
+            typedef hash_table_data<value_allocator, boost::mpl::true_> data;
             typedef hash_table<ValueType, KeyType, Hash, Pred,
                     value_allocator, boost::mpl::true_> hash_table;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base iterator_base;

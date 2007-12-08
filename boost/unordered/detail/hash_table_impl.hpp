@@ -4,22 +4,23 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
-#define HASH_TABLE_DATA hash_table_data_equivalent_keys
-#else
-#define HASH_TABLE_DATA hash_table_data_unique_keys
-#endif
-
 namespace boost {
     namespace unordered_detail {
+
+        template <typename Alloc, typename EquivKeys>
+        struct select_node_base
+            : public boost::mpl::if_<
+                    EquivKeys,
+                    node_base_equivalent_keys<Alloc>,
+                    node_base_unique_keys<Alloc> > {};
 
         //
         // Hash Table Data
         //
         // Responsible for managing the hash buckets.
 
-        template <typename Alloc>
-        class HASH_TABLE_DATA
+        template <typename Alloc, typename EquivKeys>
+        class hash_table_data
         {
         public:
             typedef bucket<Alloc> bucket;
@@ -40,11 +41,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME allocator_pointer<node_allocator>::type node_ptr;
             typedef BOOST_DEDUCED_TYPENAME allocator_reference<value_allocator>::type reference;
 
-#if BOOST_UNORDERED_HASH_EQUIVALENT
-            typedef node_base_equivalent_keys<Alloc> node_base;
-#else
-            typedef node_base_unique_keys<Alloc> node_base;
-#endif
+            typedef typename select_node_base<Alloc, EquivKeys>::type node_base;
 
             typedef BOOST_DEDUCED_TYPENAME
                 boost::unordered_detail::rebind_wrap<Alloc, node_base>::type
@@ -229,7 +226,7 @@ namespace boost {
 
                 void next_group()
                 {
-                    node_ = HASH_TABLE_DATA::next_group(node_);
+                    node_ = hash_table_data::next_group(node_);
                 }
             };
 
@@ -288,7 +285,7 @@ namespace boost {
 
             // Constructors/Deconstructor
 
-            HASH_TABLE_DATA(size_type n, value_allocator const& a)
+            hash_table_data(size_type n, value_allocator const& a)
               : allocators_(a),
                 buckets_(), bucket_count_(next_prime(n)),
                 cached_begin_bucket_(), size_(0)
@@ -311,7 +308,7 @@ namespace boost {
                 buckets_ = constructor.release();
             }
 
-            HASH_TABLE_DATA(HASH_TABLE_DATA const& x, size_type n)
+            hash_table_data(hash_table_data const& x, size_type n)
               : allocators_(x.allocators_),
                 buckets_(), bucket_count_(next_prime(n)),
                 cached_begin_bucket_(), size_(0)
@@ -335,7 +332,7 @@ namespace boost {
             }
 
             // no throw
-            ~HASH_TABLE_DATA()
+            ~hash_table_data()
             {
                 if(buckets_) {
                     bucket_ptr begin = cached_begin_bucket_;
@@ -355,13 +352,13 @@ namespace boost {
 
         private:
 
-            HASH_TABLE_DATA(HASH_TABLE_DATA const&);
-            HASH_TABLE_DATA& operator=(HASH_TABLE_DATA const&);
+            hash_table_data(hash_table_data const&);
+            hash_table_data& operator=(hash_table_data const&);
 
         public:
 
             // no throw
-            void swap(HASH_TABLE_DATA& other)
+            void swap(hash_table_data& other)
             {
                 std::swap(buckets_, other.buckets_);
                 std::swap(bucket_count_, other.bucket_count_);
@@ -565,7 +562,7 @@ namespace boost {
 
             iterator_base create_node(value_type const& v, iterator_base position)
             {
-                BOOST_ASSERT(BOOST_UNORDERED_HASH_EQUIVALENT);
+                BOOST_ASSERT(EquivKeys::value);
 
                 // throws, strong exception-safety:
                 link_ptr n = construct_node(v);
@@ -578,7 +575,7 @@ namespace boost {
             iterator_base create_node(value_type const& v,
                     bucket_ptr base, local_iterator_base position)
             {
-                BOOST_ASSERT(BOOST_UNORDERED_HASH_EQUIVALENT);
+                BOOST_ASSERT(EquivKeys::value);
 
                 // throws, strong exception-safety:
                 link_ptr n = construct_node(v);
@@ -764,7 +761,7 @@ namespace boost {
 
 #if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
         template <>
-        class HASH_TABLE_DATA<int>
+        class hash_table_data<int>
         {
         public:
             typedef int size_type;
@@ -774,5 +771,3 @@ namespace boost {
 
     }
 }
-
-#undef HASH_TABLE_DATA
