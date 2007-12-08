@@ -3479,8 +3479,7 @@ For <code>std::time_t</code> the epoch is
 Throughout this clause, the names of template parameters are used to express
 type requirements. Parameter names <code>Duration</code>, <code>LhsDuration</code>
 and <code>RhsDuration</code> express the
-Duration ([<a name="time.duration">[time.duration.requirements]</a>])
-requirements.
+Duration requirements ([time.duration.requirements]).
 For all non-member functions in this clause which are templated on Duration types,
 the implementation shall constrain these function templates such that they will
 only instantiate for Duration types.
@@ -3512,7 +3511,7 @@ class hours;
 // <em>timepoint type</em>
 class system_time;
 
-// <em>non-member functions </em></code>[time.nonmembers]<code>
+// <em>non-member functions ([time.nonmembers])</em>
 system_time get_system_time();
 
 template&lt;typename Duration&gt;
@@ -4558,7 +4557,7 @@ and subtracts it from the time represented by <code>*this</code>.
 </blockquote>
 
 
-<h3><a name="time.nonmembers">32.9 Non-member functions[time.nonmembers]</a></h3>
+<h3><a name="time.nonmembers">32.9 Non-member functions [time.nonmembers]</a></h3>
 
 <pre><code>
 system_time get_system_time();
