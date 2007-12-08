@@ -3597,69 +3597,69 @@ E</code>, <code>c</code> denotes a <code>long</code> value.
 The resolution of <code>E</code> shall not be finer than the resolution of <code>D</code>
 (diagnostic required).
 </p>
-<table style="border-collapse: collapse;" border="1" bordercolor="#111111" cellpadding="5" cellspacing="0" width="100%">
+<table>
   <tr>
-    <th width="25%">expression</th>
-    <th width="11%">return type</th>
-    <th width="39%">return value or other requirement</th>
+    <th>expression</th>
+    <th>return type</th>
+    <th>return value or other requirement</th>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::tick_type</code></td>
-    <td width="11%"><var><strong>implementation-defined</strong></var></td>
-    <td width="39%">&nbsp;</td>
+    <td valign="top"><code>D::tick_type</code></td>
+    <td valign="top"><var><strong>implementation defined</strong></var></td>
+    <td>&nbsp;</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::ticks_per_second;</code></td>
-    <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">The number of ticks per
-    second, or 0 for types for which the number of ticks per second is less than 1. </td>
+    <td valign="top"><code>D::ticks_per_second;</code></td>
+    <td valign="top"><code>D::tick_type</code></td>
+    <td valign="top">The number of ticks per second,
+    or 0 for types for which the number of ticks per second is less than 1.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::seconds_per_tick;</code></td>
-    <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">The number of seconds per
-    tick, or 0 for types for which the number of seconds per tick is less than 1. </td>
+    <td valign="top"><code>D::seconds_per_tick;</code></td>
+    <td valign="top"><code>D::tick_type</code></td>
+    <td valign="top">The number of seconds per tick,
+    or 0 for types for which the number of seconds per tick is less than 1.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>D::is_subsecond;</code></td>
-    <td valign="top" width="11%"><code>bool</code></td>
-    <td valign="top" width="39%"><code>seconds_per_tick == 0</code>. </td>
+    <td valign="top"><code>D::is_subsecond;</code></td>
+    <td valign="top"><code>bool</code></td>
+    <td valign="top"><code>seconds_per_tick == 0</code>.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>d.count();</code></td>
-    <td valign="top" width="11%"><code>D::tick_type</code></td>
-    <td valign="top" width="39%">The most recent value established by a
+    <td valign="top"><code>d.count();</code></td>
+    <td valign="top"><code>D::tick_type</code></td>
+    <td valign="top">The most recent value established by a
     non-const function's <i>Postcondition</i>.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>-d;</code></td>
-    <td valign="top" width="11%"><code>D</code></td>
-    <td valign="top" width="39%"><code>D(-d.tick_count())</code></td>
+    <td valign="top"><code>-d;</code></td>
+    <td valign="top"><code>D</code></td>
+    <td valign="top"><code>D(-d.tick_count())</code></td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>d -= e</code></td>
-    <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count ==
+    <td valign="top"><code>d -= e</code></td>
+    <td valign="top"><code>D&amp;</code></td>
+    <td valign="top"><i>Postcondition:</i><code> d.tick_count ==
     d.tick_count()</code><sub>at-entry</sub><code>-x</code>, where <code>x</code>
     is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>d += e</code></td>
-    <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i><code> d.tick_count ==
+    <td valign="top"><code>d += e</code></td>
+    <td valign="top"><code>D&amp;</code></td>
+    <td valign="top"><i>Postcondition:</i><code> d.tick_count ==
     d.tick_count()</code><sub>at-entry</sub><code>+x</code>, where <code>x</code>
     is <code>e.tick_count()</code> converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>d /= c</code></td>
-    <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count() ==
+    <td valign="top"><code>d /= c</code></td>
+    <td valign="top"><code>D&amp;</code></td>
+    <td valign="top"><i>Postcondition:</i> <code>d.tick_count() ==
     d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
   </tr>
   <tr>
-    <td valign="top" width="25%"><code>d *= c</code></td>
-    <td valign="top" width="11%"><code>D&amp;</code></td>
-    <td valign="top" width="39%"><i>Postcondition:</i> <code>d.tick_count()
+    <td valign="top"><code>d *= c</code></td>
+    <td valign="top"><code>D&amp;</code></td>
+    <td valign="top"><i>Postcondition:</i> <code>d.tick_count()
     == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
   </tr>
 </table>
