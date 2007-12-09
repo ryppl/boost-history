@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>thread_id example</title>
+</head>
+<body>
+<p>
+This example compares <code>thread::get_id</code> with <code>this_thread::get_id</code>, and how  
+it plays with <code>detach()</code>.  In one spot <code>main</code> attempts to move a <code>std::thread</code>
+from itself to another scope.  Because my <code>bind</code> and <code>tuple</code> haven't been  
+"moved" yet, I had to fake it with an ugly <code>std::ref</code> followed by an  
+inappropriate move.
+</p>
+<p>
+If one follows the output and source together, as if you were a human  
+source-level debugger, the logic should become clear.    Also note  
+that <code>detach</code> is used (twice!) and process termination is guaranteed to  
+be orderly (in this example).
+</p>
+
+</body>
+</html>
