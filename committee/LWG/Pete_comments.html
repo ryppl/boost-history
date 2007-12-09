@@ -172,7 +172,7 @@ or transferred away from the <code>lock_guard</code>.&quot; The last sentence ap
   <i>Added the usual boilerplate wording to the front matter for the clause. 
   Ditto date-time clause, which was also missing the boilerplate.</i><br>
 &nbsp;</li>
-  <li>condition_variable::timed_wait: the requirement that the function return 
+  <li>&#10004; condition_variable::timed_wait: the requirement that the function return 
   false if the time elapses means that when a blocked thread is released by 
   notify, the release code must check whether the time has elapsed, since the 
   timeout may not have been noticed earlier. Is this intentional? Seems more 
