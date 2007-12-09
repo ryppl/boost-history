@@ -199,7 +199,7 @@ or transferred away from the <code>lock_guard</code>.&quot; The last sentence ap
   requirements. i.e. &quot;Mutex concepts&quot; -&gt; &quot;Mutex requirements&quot;.&nbsp; (Added by 
   Beman.)<br>
 &nbsp;</li>
-  <li>Anthony's wording [for <a href="#issue24">issue 24</a>] nails the problem 
+  <li>&#10004; Anthony's wording [for <a href="#issue24">issue 24</a>] nails the problem 
   for condition_variable, but we have the same problem with 
   condition_variable_any, and this looks more problematic. I was hoping that 
   condition_variable_any::wait would require only lock() and unlock() on the 
