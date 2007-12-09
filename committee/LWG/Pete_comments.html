@@ -86,7 +86,7 @@ If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;</i><
   extent that it's actually a precondition, it's a little fuzzy whether it only 
   applies to non-recursive mutexes.<br>
 &nbsp;</li>
-  <li>Timed Mutexes, Effects needs tightening.<br>
+  <li>&#10004; Timed Mutexes, Effects needs tightening.<br>
 &nbsp;</li>
   <li>&#10004; Class lock_guard: what does &quot;Mutex ownership cannot be deferred&quot; mean?<br>
   <br>
@@ -193,7 +193,7 @@ or transferred away from the <code>lock_guard</code>.&quot; The last sentence ap
   <br>
   <i>Removed. But also see 26.</i><br>
 &nbsp;</li>
-  <li>&quot;Common duration functions&quot; needs to be morphed into &quot;<code>Duration</code> 
+  <li>&#10004;  &quot;Common duration functions&quot; needs to be morphed into &quot;<code>Duration</code> 
   requirements&quot; to resolve issue 13. In general, the current standard has no 
   concept of &quot;concept&quot;. All concepts in the document need to be changed into 
   requirements. i.e. &quot;Mutex concepts&quot; -&gt; &quot;Mutex requirements&quot;.&nbsp; (Added by 
