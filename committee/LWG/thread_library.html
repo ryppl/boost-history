@@ -799,9 +799,28 @@ exception, <code>std::terminate()</code> shall be called.
 
 <dt>Synchronization:</dt>
 <dd>
+<p>
 The invocation of the constructor
 happens before ([intro.multithread])
 the invocation of <code><var>f</var></code>.
+</p>
+<p>
+Every thread shall ensure that
+all its uses of static-duration variables
+happen before ([intro.multithread ])
+their destruction
+and that all calls to the standard library
+happen before ([intro.multithread])
+completion of destruction of static-duration variables
+and execution of <code>std::atexit</code> registered functions
+([support.start.term]).
+[<i>Note:</i>
+Terminating the thread before
+a call to <code>std::exit</code> or the exit from <code>main</code>
+is sufficient, but not necessary, to satisfy this requirement.
+This requirement permits thread managers as static-duration objects.
+&mdash;<i>end note</i>]
+</p>
 </dd>
 
 <dt>Postconditions:</dt>
