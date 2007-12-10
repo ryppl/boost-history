@@ -1,0 +1,225 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>This is much better</title>
+</head>
+
+<body>
+
+<ol>
+  <li>&#10004; The description of the meaning of thread::id is distributed among several 
+  different clauses, and it's hard to figure out just what it means.<br>
+  <br>
+  <i>Centralized the description of the meaning in the introduction to class 
+  thread::id.</i><br>
+&nbsp;</li>
+  <li>&#10004; The description of thread::native_handle_type and native_handle() is so 
+  vague (appropriately so) that it might be better to leave it out completely. 
+  Since you can't do anything meaningful with it if it's present, just leave it 
+  up to the implementation to tell you what it supports and what you can do with 
+  it. Same thing applies to the corresponding things in the other classes. If it 
+  stays in, it's overconstrained. In particular, if it's copyable, this requires 
+  copying it to pass it to the OS, even if the OS takes a pointer to that 
+  object. Just leave it to the implementation to match what the OS requires.<br>
+  <br>
+  <i>Removed normative wording, following the above rationale. Added a note to 
+  clarify intent.</i><br>
+&nbsp;</li>
+  <li>&#10004; Objects of type thread::id &quot;uniquely identify&quot; threads of execution. 
+  Except that they don't, because default-constructed objects compare equal, and 
+  the id returned from a thread that is not joinable also compares equal to a 
+  default-constructed object.<br>
+  <br>
+  <i>Modified wording to resolve inconsistencies. Also defined thread::get_id() 
+  in terms of this_thread::get_id() so that there is not possibility that 
+  thread::get_id() and this_thread::get_id() for the same thread could return 
+  different values. It's poor standardese to specify the same thing in two 
+  places, since the specifications could diverge over time.</i><br>
+&nbsp;</li>
+  <li>&#10004; thread::get_id() for a default-constructed thread returns an object that 
+  refers to &quot;not any thread&quot;. That last term isn't used anywhere else, so 
+  shouldn't be used.<br>
+  <br>
+  <i>Extensive rewording to clarify class id related issues, and provide a 
+  definition of &quot;not a thread&quot;, which is now used in several places.</i><br>
+&nbsp;</li>
+  <li>&#10004; Default constructor for thread constructs an object that is not &quot;attached&quot; 
+  to any thread; other constructors create objects that &quot;represent&quot; a thread. 
+  Assignment operator talks about an object that &quot;refers&quot; to a thread.<br>
+  <br>
+  <i>Changed both to use &quot;represents&quot;.</i><br>
+&nbsp;</li>
+  <li>&#10004; Template constructor for thread: &quot;if f is an rvalue, F must only be 
+  MoveConstructible&quot;. Does this mean that F must not be CopyConstructible?<br>
+  <br>
+  <i>Changed both sentences to: &quot;If <tt>f</tt> is an lvalue, <tt>F</tt> is <tt>CopyConstructible</tt>.
+If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;</i><br>
+&nbsp;</li>
+  <li>&#10004; Thread::join &quot;may throw system_error&quot;. Under what circumstances?<br>
+  <br>
+  <i>Refined wording in the chapter's front matter, added additional wording for 
+  specific cases.</i><br>
+&nbsp;</li>
+  <li>&#10004;  call_once: &quot;F is CopyConstructible&quot;, but F is not defined.<br>
+&nbsp;</li>
+  <li>&#10004;  Mutex concepts: mutex type is required to be Destructible, so requirement 
+  that its destructor not exit by an exception is redundant.<br>
+&nbsp;</li>
+  <li>&#10004; &quot;If and only if the mutex type ...&quot;, followed by &quot;If there is no ...&quot; 
+  which is the obverse. Either use iff and only if, or use if ... else.<br>
+  <br>
+  <i>Descriptions of native_handle_type and native_handle have been simplified, 
+  consolidated, and moved to the frontmatter.</i><br>
+&nbsp;</li>
+  <li>&#10004; &quot;Implementations may supply additional ...&quot; is entirely redundant.<br>
+&nbsp;</li>
+  <li>&#10004; &quot;The class mutex is a ...&quot;, but &quot;The class recursive_mutex shall be a 
+  ...&quot;.<br>
+&nbsp;</li>
+  <li>&#10004; Timed Mutexes: &quot;The type TimeDuration provides resolution information...&quot; 
+  doesn't sound like a precondition, but an informative description. To the 
+  extent that it's actually a precondition, it's a little fuzzy whether it only 
+  applies to non-recursive mutexes.<br>
+&nbsp;</li>
+  <li>&#10004; Timed Mutexes, Effects needs tightening.<br>
+&nbsp;</li>
+  <li>&#10004; Class lock_guard: what does &quot;Mutex ownership cannot be deferred&quot; mean?<br>
+  <br>
+  <i>The full paragraph now reads: &quot;An object of type
+<code>lock_guard</code> controls the ownership of a mutex within a single scope. 
+  A <code>lock_guard</code> object
+  maintains ownership of a
+mutex throughout the <code>lock_guard</code>'s lifetime.
+Mutex ownership can not be deferred
+or transferred away from the <code>lock_guard</code>.&quot; The last sentence appears 
+  to add no additional information and so has been removed.</i><br>
+&nbsp;</li>
+  <li>&#10004; lock_guard, precondition: what does it mean for the lifetime of an object 
+  to be greater than the lifetime of another object? Further, it can't be a 
+  precondition that the mutex still be in existence after the call, since that's 
+  not &quot;pre&quot; (i.e. there's no way to test this condition on entry into the 
+  function).<br>
+  <br>
+  <i>Reworded, added reference to </i><span style="font-style: italic">([basic.life]) 
+  to make clear what definition of &quot;lifetime&quot; applies, changed 
+  lifetime requirement violation undefined behavior.</span><br>
+&nbsp;</li>
+  <li>&#10004;  unique_lock constructors: constructors that take mutex say that the object 
+  stores a reference to the passed mutex; what does that reference refer to 
+  after default construction?<br>
+  <br>
+  <i>Fixed. The fix involved adding private members and much editing. Also 
+  realized that issue 16 applied to unique_lock too, so applied its resolution.</i><br>
+&nbsp;</li>
+  <li>&#10004; unique_lock move constructor &quot;transfers mutex ownership&quot;. What does this 
+  mean?<br>
+  <br>
+  <i>Fixed. Extraneous wording removed. Postconditions are sufficient to specify 
+  transfer of ownership.<br>
+&nbsp;</i></li>
+  <li>&#10004; unique_lock::timed_lock: describes handling when the resolution of 
+  TimeDuration is greater than the native resolution; seems like this belongs in 
+  the description of mutex lock, not in this forwarder.<br>
+  <br>
+  <i>Fixed.</i><br>
+&nbsp;</li>
+  <li>&#10004; unique_lock::unspecified-bool-type: returns null or non-null. Seems to be 
+  assuming (or imposing) constraints on the type returned.<br>
+  <br>
+  <i>Fixed. The idiom has been changed to use the new explicit operator bool.</i><br>
+&nbsp;</li>
+  <li>&#10004; unique_lock assignment operator: what is the &quot;lock count&quot; of a recursive 
+  mutex?<br>
+  <br>
+  <i>Fixed. Wording changed. Wording posted to list to make sure others are 
+  happy with it.</i><br>
+&nbsp;</li>
+  <li>&#10004;  generic locking algorithms: is there a requirement that the locks be 
+  attempted in any particular order?<br>
+  <br>
+  <i>Yes, for try_lock, no, for lock. Text clarified.</i><br>
+&nbsp;</li>
+  <li>&#10004;  generic locking algorithms, lock: what does &quot;an algorithm that avoids 
+  deadlocks&quot; mean? What, exactly, is required?<br>
+  <br>
+  <i>Definitions for &quot;blocked thread&quot; and &quot;deadlock&quot; added to chapter 17. 
+  Generic locking algorithms text clarified accordingly.</i><br>
+&nbsp;</li>
+  <li>&#10004; <a name="issue24">condition_variable</a>::wait: &quot;... unless lock refers to the same underlying 
+  mutex object.&quot; Same as what?<br>
+  <br>
+  <i>Anthony supplied more precise wording.</i><br>
+&nbsp;</li>
+  <li>&#10004; condition_variable::wait, effects: &quot;If the wait should throw an 
+  exception...&quot; probably should be &quot;If the wait throws an exception...&quot;. &quot;for 
+  any reason&quot; is redundant. &quot;This thread of execution shall unblock ...&quot; is part 
+  of the effects of notify and notify_all, not of wait.<br>
+  <br>
+  <i>Since those effects were already specified in the effects of notify and 
+  notify_all, the offending sentence was simply removed from wait().</i><br>
+&nbsp;</li>
+  <li>&#10004; condition_variable::wait [and timed_wait], throws: can throw only if a precondition is not 
+  met? What if the system returns an error?<br>
+&nbsp;</li>
+  <li>&#10004; condition_variable::wait(lock, pred): what are the constraints on the type 
+  Predicate?<br>
+  <br>
+  <i>Added the usual boilerplate wording to the front matter for the clause. 
+  Ditto date-time clause, which was also missing the boilerplate.</i><br>
+&nbsp;</li>
+  <li>&#10004; condition_variable::timed_wait: the requirement that the function return 
+  false if the time elapses means that when a blocked thread is released by 
+  notify, the release code must check whether the time has elapsed, since the 
+  timeout may not have been noticed earlier. Is this intentional? Seems more 
+  useful to allow it to return true in this case.<br>
+&nbsp;</li>
+  <li>&#10004; Use &quot;thread&quot; to describe a &quot;thread of execution&quot;. Use the term &quot;thread 
+  object&quot; to describe objects of class thread. (Added by Beman, based on 
+  guidance from Pete.)<br>
+  <br>
+  <i>Changed. Retrained a few usages of &quot;thread of execution&quot; relating to 
+  classes thread and thread::id where both thread objects and threads of 
+  execution are being discussed, and it is otherwise very easy to confuse the 
+  two.</i><br>
+&nbsp;</li>
+  <li>&#10004; condition_variable::wait and time_wait specify &quot;<i>Throws:</i> May throw <tt>system_error</tt> if a precondition is not met.&quot; 
+  That's redundant since precondition violations can always result in an 
+  exception. (Added by Beman)<br>
+  <br>
+  <i>Removed. But also see 26.</i><br>
+&nbsp;</li>
+  <li>&#10004;  &quot;Common duration functions&quot; needs to be morphed into &quot;<code>Duration</code> 
+  requirements&quot; to resolve issue 13. In general, the current standard has no 
+  concept of &quot;concept&quot;. All concepts in the document need to be changed into 
+  requirements. i.e. &quot;Mutex concepts&quot; -&gt; &quot;Mutex requirements&quot;.&nbsp; (Added by 
+  Beman.)<br>
+&nbsp;</li>
+  <li>&#10004; Anthony's wording [for <a href="#issue24">issue 24</a>] nails the problem 
+  for condition_variable, but we have the same problem with 
+  condition_variable_any, and this looks more problematic. I was hoping that 
+  condition_variable_any::wait would require only lock() and unlock() on the 
+  Lock, and not mutex(). A motivating use case is a user-defined:<br>
+  <br>
+  template &lt;Mutex1, Mutex2&gt; class Lock2;<br>
+  <br>
+  What should Lock2::mutex() return? condition_variable_any::wait shouldn't 
+  care. Furthermore Lock2(mut1, mut2) ought to be &quot;co-waitable&quot; with Lock2(mut2, 
+  mut1). This is potentially two different types of lock, potentially returning 
+  different values for mutex() (if it has a mutex() member at all).<br>
+  <br>
+  The definition of &quot;mutex&quot; under condition_variable_any is (and should be) 
+  quite fuzzy! Perhaps this precondition should simply be removed from 
+  condition_variable_any::wait? (Added by Howard.)<br>
+&nbsp;</li>
+  <li>&#10004;  The term &quot;block&quot; is used a number of times, but is not defined either in 
+  this proposal or in the current working paper. (Added by Beman).<br>
+  <br>
+  <i>Definition provided. The definition was taken from the POSIX standard.</i></li>
+</ol>
+
+</body>
+
+</html>
