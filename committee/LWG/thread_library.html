@@ -1735,16 +1735,22 @@ public:
 </blockquote>
 
 <p>
-The class <code>timed_mutex</code> provides a non-recursive mutex with exclusive ownership semantics.
-It satisfies all of the TimedMutex requirements [thread.timedmutex.requirements].
+The class <code>timed_mutex</code>
+provides a non-recursive mutex with exclusive ownership semantics.
+It satisfies all of the TimedMutex requirements
+([thread.timedmutex.requirements]).
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <p>
-If one thread owns the <code>timed_mutex</code> object, attempts by another thread to
-acquire ownership will fail (for <code>try_lock()</code>) or block (<code>for
-lock()</code> and <code>timed_lock()</code>) until the first thread has released ownership with a call to
-<code>unlock()</code>, or the call to <code>timed_lock()</code> times out (having failed to obtain ownership).
+If one thread owns the <code>timed_mutex</code> object,
+attempts by another thread to acquire ownership
+will fail (for <code>try_lock()</code>)
+or block (<code>for lock()</code> and <code>timed_lock()</code>)
+until the first thread has released ownership with a call to
+<code>unlock()</code>,
+or the call to <code>timed_lock()</code> times out
+(having failed to obtain ownership).
 </p>
 
 <p>
@@ -1752,8 +1758,9 @@ It is undefined behavior:
 </p>
 
 <ul>
-<li>for a thread to call <code>lock()</code>, <code>try_lock()</code> or either overload of <code>timed_lock</code> if it
-already owns the <code>timed_mutex</code> object.
+<li>for a thread to call <code>lock()</code>,
+<code>try_lock()</code> or either overload of <code>timed_lock</code>
+if it already owns the <code>timed_mutex</code> object.
 </li>
 <li>if a thread terminates while owning a <code>timed_mutex</code> object.
 </li>
@@ -1792,27 +1799,34 @@ public:
 </blockquote>
 
 <p>
-The class <code>recursive_timed_mutex</code> provides a recursive mutex with exclusive ownership semantics.
-It satisfies all of the TimedMutex requirements ([thread.timedmutex.requirements]).
+The class <code>recursive_timed_mutex</code>
+provides a recursive mutex with exclusive ownership semantics.
+It satisfies all of the TimedMutex requirements
+([thread.timedmutex.requirements]).
 It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <p>
-If one thread owns the <code>recursive_timed_mutex</code> object, attempts by another
-thread to acquire ownership will fail (for <code>try_lock()</code>) or block
-(for <code>lock()</code> or <code>timed_lock()</code>) until the first thread has completely released
-ownership, or the call to <code>timed_lock()</code> times out (having failed to obtain ownership).
+If one thread owns the <code>recursive_timed_mutex</code> object,
+attempts by another thread to acquire ownership
+will fail (for <code>try_lock()</code>)
+or block (for <code>lock()</code> or <code>timed_lock()</code>)
+until the first thread has completely released ownership,
+or the call to <code>timed_lock()</code> times out
+(having failed to obtain ownership).
 </p>
 
 <p>
 A thread that owns a <code>recursive_timed_mutex</code> object
 may acquire additional levels of ownership
-by calling <code>lock()</code>, <code>try_lock()</code> or <code>timed_lock()</code>.
+by calling <code>lock()</code>, <code>try_lock()</code>
+or <code>timed_lock()</code>.
 It is unspecified how many levels of ownership
 may be acquired by a single thread.
 If a thread has already acquired the maximum level of ownership
 for a <code>recursive_timed_mutex</code> object,
-additional calls to <code>try_lock()</code> or <code>timed_lock()</code> shall fail,
+additional calls to <code>try_lock()</code> or <code>timed_lock()</code>
+shall fail,
 and additional calls to <code>lock()</code> shall throw an exception
 of type <code>system_error</code>.
 A thread must call <code>unlock()</code> once
@@ -1827,7 +1841,8 @@ It is undefined behavior
 </p>
 
 <ul>
-<li>if a thread terminates while owning a <code>recursive_timed_mutex</code> object.
+<li>if a thread terminates
+while owning a <code>recursive_timed_mutex</code> object.
 </li>
 <li>to destroy a <code>recursive_timed_mutex</code> object owned by any thread.
 </li>
