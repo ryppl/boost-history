@@ -480,22 +480,20 @@ namespace this_thread
 <h4><a name="thread.threads.class">30.2.1 Class thread [thread.threads.class]</a></h4>
 
 <p>
-An object of class <code>thread</code> represents and manages a thread of
-execution ([intro.multithread]).
-It provides a mechanism to create a new thread,
-for the current thread to wait for
-completion of a thread,
-and to perform other operations to manage and query the state of the thread.
-Objects of type <code>thread</code>
-can only represent joinable threads of execution
-or <dfn>not a thread</dfn> (referred to as <dfn>NAT</dfn>).
-[<i>Note:</i>
-Once a program calls a <code>thread</code> object's <code>join()</code>
-or <code>detach()</code> members, or moves from a <code>thread</code> object,
-then that <code>thread</code> object no longer represents a thread of execution.
-Such a <code>thread</code> object represents NAT.
-Default constructed <code>thread</code> objects also represent NAT.
-&mdash;<i>end note</i>]
+The class <code>thread</code> provides a mechanism
+to create a new thread of execution,
+and to <dfn>join</dfn> with a thread
+(i.e. wait for a thread to complete),
+and to perform other operations
+that manage and query the state of the thread.
+A <code>thread</code> object uniquely represents
+a particular thread of execution
+and the right to join with it.
+That right may be transfered to other thread objects.
+A thread of execution is <dfn>detached</dfn>
+when no <code>thread</code> object represents that thread.
+Objects of class <code>thread</code>
+may also represent <dfn>not a thread</dfn> (referred to as NAT).
 </p>
 
 <blockquote>
@@ -562,17 +560,14 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 </blockquote>
 
 <p>
-An object of type <code>thread::id</code> provides either a unique identity for
-a thread of execution or a NAT value ([thread.threads.class]).
-Each <code>thread</code> object, other than a NAT <code>thread</code> object,
-has a <code>thread::id</code>
-that compares not equal to the <code>thread::id</code>
-of all other <code>thread</code> objects,
-including NAT <code>thread</code> objects.
-The <code>thread::id</code>'s for all NAT <code>thread</code> objects
-compare equal to each other,
-and compare not equal to the <code>thread::id</code>'s
-of all <code>thread</code> objects not representing NAT.
+An object of type <code>thread::id</code> provides either
+a unique identity for a thread of execution
+or a NAT value ([thread.threads.class]).
+Each thread of execution has a <code>thread::id</code>
+that is not equal to the <code>thread::id</code>
+of other threads of execution
+and that is not equal to the <code>thread::id</code>
+of NAT <code>std::thread</code> objects.
 </p>
 
 <p>
