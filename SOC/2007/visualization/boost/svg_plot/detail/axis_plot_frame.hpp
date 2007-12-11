@@ -496,7 +496,7 @@ namespace detail
     // & trailing space before box margin.
     if (derived().use_line)
     { // colored line marker.
-       legend_width += spacing;
+       legend_width += spacing * 2.;
     }
     if(derived().series[0].point_style.shape() != none)
     { // colored data point marker, cross, round... & space
@@ -617,8 +617,7 @@ namespace detail
     // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
     bool is_header = (derived().legend_header_.text() != "");
 
-
-    // TODO use saved version
+    // TODO use saved version.
     size_t longest = 0;
     for(unsigned int i = 0; i < derived().series.size(); ++i)
     { // Find the longest text in all the data series.
@@ -629,44 +628,7 @@ namespace detail
         longest = siz;
       }
     }
-
-
-    //double legend_width = (6 + longest /2) * spacing;
-    //// font_size is not exact because width varies.
-    //// Allow for a leading space, data marker symbol, space,
-    //// line in color (only if 2-D and line option selected TODO)
-    //// space, text, trailing space before box margin.
-
-    //// legend_height must be *at least* enough for
-    //// the legend title and text_margin_s around it
-    //// (if any) plus a text_margin_ top and bottom.
-    //// Add more height depending on the number of lines of text.
-    //double legend_height = spacing;
-    //if ( (derived().use_title) // plot title
-    //   && (derived().legend_header_.text() != "")) // & really is a legend title.
-    //{
-    //  legend_height += 2 * spacing;
-    //}
-    //legend_height += num_points * spacing * 2; // Space for the point symbols & text.
-
-    //// x, y position of legend 'box' top left, level with top right of plot window.
-    //double legend_x_start(derived().plot_x2);
-    //legend_x_start += spacing; // leave a space between plot window and legend box.
-    //double legend_y_start(derived().plot_y1);
-
-    //if((legend_x_start + legend_width) > x_size)
-    //{ // Use nearly all the image width available.
-    //  std::cout << "Legend text line was too long by "
-    //   << ((legend_x_start + legend_width) - x_size)
-    //   << " pixels,  & so truncated. legend_width == " << legend_width << std::endl;
-    //  // For example:
-    //  // "Legend text line was too long by about 84 pixels & so truncated. legend_width == 252"
-    //  legend_width = x_size - legend_x_start - spacing; // derived().text_margin_;
-    //  // text_margin_ just allows the border box to show.
-    //}
-
     // Assume legend box position has already been sized and positioned by calculate_legend_box
-
     double legend_x_start = derived().legend_x1_; // Saved box location.
     double legend_width = derived().legend_width_;
     double legend_y_start = derived().legend_y1_; 
@@ -695,18 +657,19 @@ namespace detail
     { // Show point marker, text info and perhaps line for all the data series.
       double legend_x_pos = legend_x_start;
       g_inner_ptr = &(g_ptr->add_g_element());
-      // Use both fill & stroke colors from the point's style.
+      // Use both stroke colors from the point's style.
       g_inner_ptr->style()
-        .fill_color(derived().series[i].point_style.fill_color_)
         .stroke_color(derived().series[i].point_style.stroke_color_);
+      g_inner_ptr->style().stroke_width(2); // TODO create a global for this
+
       if(derived().series[i].point_style.shape() != none)
       {
         draw_plot_point( // Plot point like circle, square...
-          legend_x_start + spacing, // space before point marker.
+          legend_x_start + spacing / 2, // space before point marker.
           legend_y_pos,
           *g_inner_ptr,
           derived().series[i].point_style);
-        legend_x_pos += 2 * spacing;
+        legend_x_pos += 1.0 * spacing;
       }
 
       // Line markers  - only really applicable to 2-D sets plot_line_style,
@@ -717,9 +680,9 @@ namespace detail
         g_inner_ptr->push_back(new line_element(
           legend_x_pos + spacing /2., // half space leading space
           legend_y_pos,
-          legend_x_pos + spacing * 1.5, // line sample is one char long.
+          legend_x_pos + spacing * 2., // line sample is two char long.
           legend_y_pos));
-        legend_x_pos += 2. * spacing; // short line & space.
+        legend_x_pos += 2.5 * spacing; // short line & half space.
       } // use_line
 
       // Legend text for each Data Series added to the plot.

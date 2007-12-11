@@ -379,12 +379,12 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color(white);
     image.get_g_element(PLOT_WINDOW_BACKGROUND).style().stroke_width(1).stroke_color(lightyellow);
     image.get_g_element(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
-    image.get_g_element(PLOT_X_AXIS).style().stroke_color(red).stroke_width(x_axis_width_);
-    image.get_g_element(PLOT_Y_AXIS).style().stroke_color(blue).stroke_width(y_axis_width_);
+    image.get_g_element(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_width_);
+    image.get_g_element(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_width_);
     image.get_g_element(PLOT_X_LABEL).style().fill_color(black);
     image.get_g_element(PLOT_Y_LABEL).style().fill_color(black);
     image.get_g_element(PLOT_VALUE_LABELS).style().fill_color(black); // text
-    image.get_g_element(PLOT_LEGEND_TEXT).style().fill_color(blue);
+    image.get_g_element(PLOT_LEGEND_TEXT).style().fill_color(black);
     image.get_g_element(PLOT_TITLE).style().fill_color(black).stroke_on(false);
     // If stroke color is not set, then get a very 'thin' font and width has no effect.
     // Firefox text is rather thin compared to IE.
