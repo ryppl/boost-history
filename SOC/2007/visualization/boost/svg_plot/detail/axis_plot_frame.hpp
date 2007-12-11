@@ -472,7 +472,7 @@ namespace detail
     // Use height of whichever is the biggest of point marker and font.
 
     double spacing = (std::max)(font_size, point_size);
-    std::cout << spacing <<  ' ' << font_size << ' ' << point_size << endl;
+    std::cout << spacing <<  ' ' << font_size << ' ' << point_size << std::endl;
     bool is_header = (derived().legend_header_.text() != "");
 
     size_t longest = derived().legend_header_.text().size();
@@ -486,7 +486,7 @@ namespace detail
         longest = siz;
       }
     }
-    cout.flags(std::ios_base::dec);
+    std::cout.flags(std::ios_base::dec);
     std::cout << "Longest legend header or data descriptor " << longest << std::endl; // TODO remove.
 
     const double wh = 0.7; // TODO share a common value?
@@ -522,23 +522,23 @@ namespace detail
       // now that we know the size of box needed.
       if ((derived().legend_x1_ < 0) || (derived().legend_x1_ > derived().image.x_size()))
       { // left outside image.
-        cout << "Legend X left " << derived().legend_x1_
-          << " outside image!" << derived().image.x_size() << endl;
+         std::cout << "Legend X left " << derived().legend_x1_
+          << " outside image!" << derived().image.x_size() << std::endl;
       }
       else if ((derived().legend_y1_ < 0) || (derived().legend_y1_ > derived().image.y_size()))
       {// Outside image.
-        cout << "Legend Y top " << derived().legend_y1_
-          << " outside image!" << derived().image.y_size() << endl;
+        std::cout << "Legend Y top " << derived().legend_y1_
+          << " outside image!" << derived().image.y_size() << std::endl;
       }
       if (derived().legend_x1_ + legend_height > derived().image.x_size())
       { // Too wide!
-        cout << "Legend  " << derived().legend_x1_
-          << " too wide by " << legend_width - derived().image.x_size() << endl;
+        std::cout << "Legend  " << derived().legend_x1_
+          << " too wide by " << legend_width - derived().image.x_size() << std::endl;
       }
       else if (derived().legend_y1_ + legend_height > derived().image.y_size())
       {
-        cout << "Legend Y left " << derived().legend_y1_
-          << " too high by " << legend_height - derived().image.y_size() << endl;
+        std::cout << "Legend Y left " << derived().legend_y1_
+          << " too high by " << legend_height - derived().image.y_size() << std::endl;
       }
       // else
       //throw?
@@ -563,23 +563,23 @@ namespace detail
       // now that we know the size of box needed.
       if ((legend_x_start < 0) || (legend_x_start > derived().image.x_size()))
       { // Outside image - should never happen but check anyway?
-        cout << "Legend X left " << legend_x_start
-          << " outside image!" << derived().image.x_size() << endl;
+        std::cout << "Legend X left " << legend_x_start
+          << " outside image!" << derived().image.x_size() << std::endl;
       }
       else if ((legend_y_start < 0) || (legend_y_start > derived().image.y_size()))
       { // Outside image - should never happen but check anyway?
-        cout << "Legend Y top " << legend_y_start
-          << " outside image!" << derived().image.y_size() << endl;
+        std::cout << "Legend Y top " << legend_y_start
+          << " outside image!" << derived().image.y_size() << std::endl;
       }
       if (derived().legend_header_.x() + legend_height > derived().image.x_size())
       { // Too wide!
-        cout << "Legend  " << derived().legend_header_.x()
-          << " too wide by " << legend_width - derived().image_x_size() << endl;
+        std::cout << "Legend  " << derived().legend_header_.x()
+          << " too wide by " << legend_width - derived().image_x_size() << std::endl;
       }
       else if (derived().legend_header_.y() + legend_height > derived().image.y_size())
       {
-        cout << "Legend Y left " << derived().legend_header_.y()
-          << " too high by " << legend_height - derived().image.y_size() << endl;
+        std::cout << "Legend Y left " << derived().legend_header_.y()
+          << " too high by " << legend_height - derived().image.y_size() << std::endl;
       }
       else
       { // throw? or set anyway.
@@ -597,12 +597,12 @@ namespace detail
     g_ptr->push_back(new
       rect_element(derived().legend_x1_, derived().legend_y1_, legend_width, legend_height));
 
-    cout << "Legend width " << derived().legend_width_ << ", height "
+    std::cout << "Legend width " << derived().legend_width_ << ", height "
          << derived().legend_height_ << ", top left "
          << derived().legend_x1_ << ", top right "
          << derived().legend_x2_ << ", bottom left "
          << derived().legend_y1_ << ", botton right "
-         << derived().legend_y2_ << endl;
+         << derived().legend_y2_ << std::endl;
 
   } //  void calculate_legend_box()
 
