@@ -26,6 +26,12 @@ namespace boost
 namespace svg
 {
 
+// Forward declarations of classes in svg_style.hpp
+class svg_style;
+class plot_point_style;
+class plot_line_style;
+class text_style;
+
 enum point_shape
 { // Marking a data point.
   // Used in draw_plot_point in axis_plot_frame.hpp
@@ -53,27 +59,80 @@ enum point_shape
 // name circle changed to round to avoid clash with function named circle.
 }; 
 
-struct plot_point_style
+class plot_point_style
 {
-    svg_color fill_color; // Color of the centre of the shape.
-    svg_color stroke_color; // Color of circumference of shape.
-    int size; // diameter of circle, height of square, font_size  ...
-    point_shape shape; // round, square, point...
-    std::string symbols; // Unicode symbol (letters, digits, squiggles etc)
+public:
+    svg_color fill_color_; // Color of the centre of the shape.
+    svg_color stroke_color_; // Color of circumference of shape.
+    int size_; // diameter of circle, height of square, font_size  ...
+    point_shape shape_; // round, square, point...
+    std::string symbols_; // Unicode symbol (letters, digits, squiggles etc)
     // Caution: not all Unicode symbols are output by all browsers!
     // const std::string font = "Lucida Sans Unicode";
     // TODO? devise way of setting this font?
+    //text_style style_;
 
-    plot_point_style(const svg_color& fill, const svg_color& stroke,
+    plot_point_style(const svg_color& fill = blank, const svg_color& stroke = blank,
       int size = 10, point_shape shape = round, const std::string& symbols = "X")
         :
-        fill_color(fill), stroke_color(stroke), size(size), shape(shape), symbols(symbols)
-    { // TODO Should these be default colors?
+        fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols)
+    { // TODO Should there be default colors? or "none" == blank?
     }
+
+  plot_point_style& size(int i)
+  {
+    size_ = i;
+    return *this;
+  }
+
+  int size()
+  {
+    return size_;
+  }
+
+  plot_point_style& fill_color(const svg_color& f)
+  {
+    fill_color_ = f;
+    return *this;
+  }
+
+  svg_color& fill_color()
+  {
+    return fill_color_;
+  }
+
+  plot_point_style& stroke_color(const svg_color& f)
+  {
+    stroke_color_ = f;
+    return *this;
+  }
+
+  svg_color& stroke_color()
+  {
+    return stroke_color_;
+  }
+
+  plot_point_style& shape(point_shape s)
+  {
+    shape_ = s;
+    return *this;
+  }
+
+  point_shape shape()
+  {
+    return shape_;
+  }
+
+  //text_style& style()
+  //{
+  //  return style_;
+  //}
+
 }; // struct plot_point_style
 
-struct plot_line_style
+class plot_line_style
 {    // TODO dotted and dashed line style?  Useful for B&W?
+public:
     svg_color color; // line stroke color.
     svg_color area_fill; // Fill color from line to axis. == true means color.blank = true.
     bool line_on;
@@ -85,6 +144,105 @@ struct plot_line_style
     {
     }
 }; // struct plot_line_style
+
+
+class text_style
+{
+private:
+  int font_size_;
+  std::string font_family_;
+  std::string weight_;
+  std::string style_;
+  std::string stretch_;
+  std::string decoration_;
+
+public:
+  text_style(int size = 12,  
+  const std::string& font = "Lucida Sans Unicode",
+  const std::string& style = "",
+  const std::string& weight = "",
+  const std::string& stretch = "",
+  const std::string& decoration = "")
+  : // Constructor.
+  font_size_(size),
+    font_family_(font),
+    style_(style),
+    weight_(weight),
+    stretch_(stretch),
+    decoration_(decoration)
+  { //text_style default constructor, defines defaults for all private members.
+  }
+
+  int font_size()
+  {
+    return font_size_;
+  }
+
+  text_style& font_size(unsigned int i)
+  { // pixels, default 10.
+    font_size_ = i;
+    return *this;
+  }
+
+  const std::string& font_family() const
+  {
+    return font_family_;
+  }
+
+  text_style& font_family(const std::string& s)
+  { // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
+    font_family_ = s;
+    return *this;
+  }
+
+  const std::string& font_style() const
+  { // font-style: normal | bold | italic | oblique
+    return style_; // example "normal"
+  }
+
+  text_style& font_style(const std::string& s)
+  { // Examples: "italic"
+    style_ = s;
+    return *this;
+  }
+
+  const std::string& font_weight() const
+  {
+    return weight_;
+  }
+
+  text_style& font_weight(const std::string& s)
+  { // svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+    // Examples: "bold", "normal" 
+    weight_ = s;
+    return *this;
+  }
+
+  const std::string& font_stretch() const
+  {
+    return stretch_;
+  }
+
+  text_style& font_stretch(const std::string& s)
+  { // Examples: "wider" but implementation?
+    // font-stretch: normal | wider | narrower ...
+    stretch_ = s;
+    return *this;
+  }
+
+  const std::string& font_decoration() const
+  {
+    return decoration_;
+  }
+
+  text_style& font_decoration(const std::string& s)
+  { // Examples: "underline" | "overline" | "line-through"
+    decoration_ = s; // But implementation doubtful.
+    return *this;
+  }
+
+
+}; //   class text_style
 
 // -----------------------------------------------------------------
 // This is the style information for any <g> tag.
@@ -105,7 +263,7 @@ private: // Accesses only by set and get member functions below.
 public:
     svg_style() :
       fill_(svg_color(0, 0, 0)), // == black
-      stroke_(svg_color(0, 0, 0)),
+      stroke_(svg_color(0, 0, 0)), // == black
       width_(0),
       fill_on_(false), stroke_on_(false), width_on_(false)
     { // Default constructor initialises all private data.
@@ -169,7 +327,7 @@ public:
     { 
         fill_ = col;
         fill_on_ = ! col.blank; // if blank fill is off or "none"
-        return *this;
+        return *this; // Chainable.
     }
 
     svg_style& stroke_color(const svg_color& col) 
@@ -188,26 +346,26 @@ public:
     
     void write(std::ostream& rhs)
     { // Write any stroke, fill colors and/or width info (start with space).
-        if(stroke_on_)
-        {
-            rhs << " stroke=\"";
-            stroke_.write(rhs);
-            rhs << "\"";
-        }
-        if(fill_on_)
-        {
-            rhs << " fill=\"";
-            fill_.write(rhs);
-            rhs << "\"";
-        }
-        if(width_on_)
-        {
-            rhs << " stroke-width=\""
-                << width_
-                << "\"";
-        }
-    } // void write
-    // Examples: <g id="yMinorTicks" stroke="rgb(0,0,0)" stroke-width="1">
+      if(stroke_on_)
+      {
+          rhs << " stroke=\"";
+          stroke_.write(rhs);
+          rhs << "\"";
+      }
+      if(fill_on_)
+      {
+          rhs << " fill=\"";
+          fill_.write(rhs);
+          rhs << "\"";
+      }
+      if(width_on_)
+      { // TODO DO we ever want a 0 (or <0) width output???
+          rhs << " stroke-width=\""
+              << width_
+              << "\"";
+      }
+     // Examples: <g id="yMinorTicks" stroke="rgb(0,0,0)" stroke-width="1">
+   } // void write
 }; // class svg_style
 
 }//svg

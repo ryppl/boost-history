@@ -64,6 +64,55 @@ namespace detail
     // void clear_plot_background();
     // void clear_grids();
 
+    const std::string strip(std::string s)
+    { // Ugly hack to remove unwanted sign and leading zero in exponent.
+      // TODO It alters the layout because space
+      // is still allowed for the longest string.
+      // Would need to work out the longest value label before calculate_plot_window.
+      // But should be useful for values that spill over into exponent format
+      // 'by accident' - when leading zeros are likely.
+      using std::string;
+      size_t j = s.find("e+000");
+      if (j != string::npos)
+      {
+        s.erase(j, 5); // remove "e+000"
+        goto ret;
+      }
+      j = s.find("e-000");
+      if (j != string::npos)
+      {
+        s.erase(j, 5); // remove "e-000"
+        goto ret;
+      }
+      j = s.find("e+00");
+      if (j != string::npos)
+      {
+        s.erase(j + 1, 3); // remove "+00"
+        goto ret;
+      }
+
+      j = s.find("e-00");
+      if (j != string::npos)
+      {
+        s.erase(j+2, 2); // remove "00", leave "-"
+        goto ret;
+      }
+      j = s.find("e+0");
+      if (j != string::npos)
+      {
+        s.erase(j + 1, 2); // remove "+0"
+        goto ret;
+      }
+      j = s.find("e-0");
+      if (j != string::npos)
+      {
+        s.erase(j+2, 1); // remove "0", leave "-"
+        goto ret;
+      }
+    ret:
+      return s;
+    } // const std::string strip(double d)
+
     void transform_point(double& x, double& y)
     { // Scale & shift both x & y to graph coordinate.
       x = derived().x_scale * x + derived().x_shift;
@@ -85,11 +134,11 @@ namespace detail
     }
 
     void draw_x_minor_ticks(double value, path_element& tick_path, path_element& grid_path)
-    { // draw X-axis minor ticks, and optional grid.
-      // value is NOT (yet) shown beside the minor tick.
+    { // Draw X-axis minor ticks, and optional grid.
+      // Value is NOT (yet) shown beside the minor tick.
       double x1(value);
       transform_x(x1);
-      double y1(0.);
+      double y1(0.); // Start on the horizontal X-axis line.
       double y2(derived().image.y_size());
 
       // Draw the minor grid, if wanted.
@@ -142,8 +191,8 @@ namespace detail
         }
       }
       else
-      { // Internal style, draw tick up and/or down from the central X axis line.
-        y1 = derived().x_axis; // X-axis line.
+      { // Internal style, draw tick up and/or down from the X-axis line.
+        y1 = derived().x_axis; // X-axis horizontal line.
         y2 = derived().x_axis;
         if(derived().use_up_ticks)
         {
@@ -238,6 +287,11 @@ namespace detail
         label.precision(derived().x_value_precision_);
         label.flags(derived().x_value_ioflags_);
         label << value; // "1.2" or "3.4e+000"...
+        if (derived().strip_e0s_)
+        { // remove unecessary e, +, leadings 0s
+           std::string v = strip(label.str());
+           label.str(v);
+        }
         double y = y2; // bottom end of the tick.
         align_style alignment = center_align;
         if(derived().use_down_ticks)
@@ -279,7 +333,8 @@ namespace detail
           { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
            derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
               x1, y,
-              label.str(), derived().x_label_value.font_size(), derived().x_label_value.font_family(),
+              label.str(),
+              derived().x_label_value.font_size(), derived().x_label_value.font_family(),
               "", "", "", "", alignment, // center label on the tick.
               derived().x_label_rotation_);
           }
@@ -305,46 +360,70 @@ namespace detail
     path_element& major_grid_path = derived().image.get_g_element(PLOT_X_MAJOR_GRID).path();
 
     if(derived().use_x_axis_lines_)
-    { // Draw the horizontal X-axis line the full width of the plot window.
+    { // Draw the horizontal X-axis line the full width of the plot window,
+      // including an addition in lieu of a major tick.
+      double xleft = derived().plot_x1;
+      double yaxis = derived().x_axis; // y = 0
+      if (derived().use_left_ticks)
+      { // Extend the horizontal line left in lieu of longest tick.
+        xleft -= (std::max)(derived().y_minor_tick_length_, derived().y_major_tick_length_);
+      }
       derived().image.get_g_element(PLOT_X_AXIS).line(
-        derived().plot_x1, derived().x_axis, // y = 0
-        derived().plot_x2, derived().x_axis); // y = 0
+        xleft, yaxis,
+        derived().plot_x2, yaxis);
     }
 
     // x_minor_jump is the interval between minor ticks.
     double x_minor_jump = derived().x_major_interval_ /
       (derived().x_num_minor_ticks_ + 1.);
 
-    // TODO Problem here when using floating point??
-    // Was i < y_max; but didn't show the tick and value at y_max so now i <= y_max;
-    // But may still fail if a least significant bit or few out??
-
     // Draw the ticks on the positive side (right of zero).
     for(double x = 0.; x <= derived().x_max; x += derived().x_major_interval_)
     {
-      for(double j = x + x_minor_jump; j < x + derived().x_major_interval_; j += x_minor_jump)
+      for(double j = x + x_minor_jump;
+        j < (x + derived().x_major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
+        j += x_minor_jump)
+        // Reduce test value by a few bits to avoid accumulated rounding error 
+        // that intermittently puts minor ticks *at same value as* major ticks.
       { // This will output 'orphaned' minor ticks that are beyond the plot window,
         // if the last major tick does not coincide with the plot window.
         // These are just ignored in draw_x_minor_ticks.
-        // There might be 9 of them,
+        // There might be 9 of them, so
         // if you have the common 9 minor tick between major ticks!
         // TODO this seems ugly - as does the negative ones below.
         draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
+      } // for j
+      if ((x != 0. || !derived().use_y_axis_lines_) || derived().use_x_ticks_on_plot_window_)
+      { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
+        // (won't be Y-axis line for 1-D where the zero tick is always wanted).
+        draw_x_major_ticks(x, major_tick_path, major_grid_path);
       }
-      draw_x_major_ticks(x, major_tick_path, major_grid_path);
     }
 
     // Draw the ticks on the negative side (left of zero).
-    for(double x = 0; x >= derived().x_min; x -= derived().x_major_interval_)
+    for(double x = 0.; x >= derived().x_min; x -= derived().x_major_interval_)
     {
       // Draw minor ticks.
-      for(double j = x;
-        j > x-derived().x_major_interval_;
-        j-= derived().x_major_interval_ / (derived().x_num_minor_ticks_+1))
+      for(double j = x - x_minor_jump; 
+        j > (x - derived().x_major_interval_ + x_minor_jump) * (1. + 2 * std::numeric_limits<double>::epsilon());
+        // Increase test value by a few bits to avoid accumulated rounding error 
+        // that intermittently puts minor ticks *at same value as* major ticks.
+
+        j -= x_minor_jump)
       {
-        draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
+        if ((j != 0. || !derived().use_y_axis_lines_)  || derived().use_x_ticks_on_plot_window_)
+        { // Avoid a minor tick at x == 0 where there *is* a vertical Y-axis line.
+          // (won't be Y-axis line for 1-D where the zero tick is always wanted).
+          // But no tick means no value label 0 either unless on_plot_window.
+          draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
+        }
       }
-      draw_x_major_ticks(x, major_tick_path, major_grid_path);
+      if ((x != 0. || !derived().use_y_axis_lines_) || derived().use_x_ticks_on_plot_window_)
+      { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
+        // (won't be Y-axis line for 1-D where the zero tick is always wanted).
+        // But no tick means no value label 0 either unless on_plot_window.
+        draw_x_major_ticks(x, major_tick_path, major_grid_path);
+      }
     }
   } // void draw_x_axis()
 
@@ -354,14 +433,6 @@ namespace detail
 
   void draw_title()
   {
-  // text_element::text_element(double x, double y,
-  //  const std::string&,
-  //  int size,
-  //  const std::string& font,
-  //  const std::string& style, const std::string& weight,
-  //  const std::string& stretch, const std::string& decoration,
-  //  int align, int rotate);
-
     // Update title_info with position.
     derived().title_info.x(derived().image.x_size() / 2.); // Center of image.
     // Assumes align = center_align.
@@ -369,27 +440,185 @@ namespace detail
     if (derived().use_plot_window)
     {
        y = derived().plot_y1; // plot_y1 IS now assigned in calculate_plot_window
-    // Center the title in the space between top and plot window top.
-       y /= 2;
+       // y is distance from top of image to top of plot window.
+       y /= derived().text_margin_; // Center the title in the space between.
     }
     else
-    { // use all image.
+    { // Using all image.
       y = derived().title_info.font_size() * derived().text_margin_; // Leave a linespace above.
     }
     derived().title_info.y(y);
     derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(derived().title_info));
   } // void draw_title()
 
+  void calculate_legend_box()
+  {
+    if(derived().use_legend == false)
+    { // No legend.
+      // TODO might this overwrite some previous useful values?
+      // Set values to show legend position invalid.
+      derived().legend_x1_ = -1;
+      derived().legend_x2_ = -1;
+      derived().legend_y1_ = -1;
+      derived().legend_y2_ = -1;
+      return;
+    }
+
+    // Work out the size the legend box needs to be to hold the
+    // header, markers & text.
+    size_t num_series = derived().series.size(); // How many data series.
+    int font_size = derived().legend_header_.font_size();
+    int point_size =  derived().series[0].point_style.size();
+    // Use height of whichever is the biggest of point marker and font.
+
+    double spacing = (std::max)(font_size, point_size);
+    std::cout << spacing <<  ' ' << font_size << ' ' << point_size << endl;
+    bool is_header = (derived().legend_header_.text() != "");
+
+    size_t longest = derived().legend_header_.text().size();
+    // 0 if no header.
+    for(unsigned int i = 0; i < num_series; ++i)
+    { // Find the longest text in all the data series.
+      std::string s = derived().series[i].title;
+      size_t siz = s.size();
+      if (siz > longest)
+      {
+        longest = siz;
+      }
+    }
+    cout.flags(std::ios_base::dec);
+    std::cout << "Longest legend header or data descriptor " << longest << std::endl; // TODO remove.
+
+    const double wh = 0.7; // TODO share a common value?
+    // font_size is not exact because width varies but use 0.7.
+    double legend_width = (0 + longest) * wh * font_size;
+    // Allow for a leading space, longest 
+    // & trailing space before box margin.
+    if (derived().use_line)
+    { // colored line marker.
+       legend_width += spacing;
+    }
+    if(derived().series[0].point_style.shape() != none)
+    { // colored data point marker, cross, round... & space
+      legend_width += 2 * derived().series[0].point_style.size();
+    }
+    // else no point marker.
+
+    // legend_height must be *at least* enough for
+    // any legend header and text_margin_s around it
+    // (if any) plus a text_margin_ top and bottom.
+    // Add more height depending on the number of lines of text.
+    double legend_height = spacing; // At top
+    if (is_header) // is a legend header.
+    {
+      legend_height += 2 * font_size; // text & space after.
+    }
+    legend_height += num_series * spacing * 2; // Space for the data point symbols & text.
+
+    if ( (derived().legend_x1_ != -1) 
+      && (derived().legend_y1_ != -1))
+    { // Specific legend box top left position is requested.
+      // Check if the location requested will fit,
+      // now that we know the size of box needed.
+      if ((derived().legend_x1_ < 0) || (derived().legend_x1_ > derived().image.x_size()))
+      { // left outside image.
+        cout << "Legend X left " << derived().legend_x1_
+          << " outside image!" << derived().image.x_size() << endl;
+      }
+      else if ((derived().legend_y1_ < 0) || (derived().legend_y1_ > derived().image.y_size()))
+      {// Outside image.
+        cout << "Legend Y top " << derived().legend_y1_
+          << " outside image!" << derived().image.y_size() << endl;
+      }
+      if (derived().legend_x1_ + legend_height > derived().image.x_size())
+      { // Too wide!
+        cout << "Legend  " << derived().legend_x1_
+          << " too wide by " << legend_width - derived().image.x_size() << endl;
+      }
+      else if (derived().legend_y1_ + legend_height > derived().image.y_size())
+      {
+        cout << "Legend Y left " << derived().legend_y1_
+          << " too high by " << legend_height - derived().image.y_size() << endl;
+      }
+      // else
+      //throw?
+      // or Set anyway.
+      derived().legend_width_ = legend_width;
+      derived().legend_height_ = legend_height;
+      // derived().legend_.x1 & y1 are OK.
+      derived().legend_x2_ = derived().legend_x1_ + legend_width;
+      derived().legend_y2_ = derived().legend_y1_ + legend_height;
+    }
+    else
+    { // default legend position position.
+      // x, y position of legend 'box' top left, 
+      // default is level with top right of plot window, right by a small space.
+      double legend_x_start = derived().plot_x2;
+      legend_x_start += spacing; // leave a space between plot window and legend box.
+      double legend_y_start = derived().plot_y1;
+      legend_y_start += derived().title_info.font_size() * 2;
+      // leave space for title between image top and legend box.
+
+      // Check if the default location will fit,
+      // now that we know the size of box needed.
+      if ((legend_x_start < 0) || (legend_x_start > derived().image.x_size()))
+      { // Outside image - should never happen but check anyway?
+        cout << "Legend X left " << legend_x_start
+          << " outside image!" << derived().image.x_size() << endl;
+      }
+      else if ((legend_y_start < 0) || (legend_y_start > derived().image.y_size()))
+      { // Outside image - should never happen but check anyway?
+        cout << "Legend Y top " << legend_y_start
+          << " outside image!" << derived().image.y_size() << endl;
+      }
+      if (derived().legend_header_.x() + legend_height > derived().image.x_size())
+      { // Too wide!
+        cout << "Legend  " << derived().legend_header_.x()
+          << " too wide by " << legend_width - derived().image_x_size() << endl;
+      }
+      else if (derived().legend_header_.y() + legend_height > derived().image.y_size())
+      {
+        cout << "Legend Y left " << derived().legend_header_.y()
+          << " too high by " << legend_height - derived().image.y_size() << endl;
+      }
+      else
+      { // throw? or set anyway.
+      }
+      derived().legend_width_ = legend_width;
+      derived().legend_height_ = legend_height;
+      derived().legend_x1_ = legend_x_start;
+      derived().legend_x2_ = legend_x_start + legend_width;
+      derived().legend_y1_ = legend_y_start;
+      derived().legend_y2_ = legend_y_start + legend_height;
+    }
+
+    // Draw border box round legend.
+    g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
+    g_ptr->push_back(new
+      rect_element(derived().legend_x1_, derived().legend_y1_, legend_width, legend_height));
+
+    cout << "Legend width " << derived().legend_width_ << ", height "
+         << derived().legend_height_ << ", top left "
+         << derived().legend_x1_ << ", top right "
+         << derived().legend_x2_ << ", bottom left "
+         << derived().legend_y1_ << ", botton right "
+         << derived().legend_y2_ << endl;
+
+  } //  void calculate_legend_box()
+
   void draw_legend()
   {
-    size_t num_points = derived().series.size();
+    // size_t num_points = derived().series.size();
     int font_size = derived().legend_header_.font_size();
-    int point_size =  derived().series[0].point_style.size;
+    int point_size =  derived().series[0].point_style.size();
     // Use whichever is the biggest of point marker and font.
 
     double spacing = (std::max)(font_size, point_size);
     // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
     bool is_header = (derived().legend_header_.text() != "");
+
+
+    // TODO use saved version
     size_t longest = 0;
     for(unsigned int i = 0; i < derived().series.size(); ++i)
     { // Find the longest text in all the data series.
@@ -400,56 +629,61 @@ namespace detail
         longest = siz;
       }
     }
-    double legend_width = (6 + longest /2) * spacing;
-    // font_size is not exact because width varies.
-    // Allow for a leading space, data marker symbol, space,
-    // line in color (only if 2-D and line option selected TODO)
-    // space, text, trailing space before box margin.
 
-    // legend_height must be *at least* enough for
-    // the legend title and text_margin_s around it
-    // (if any) plus a text_margin_ top and bottom.
-    // Add more height depending on the number of lines of text.
-    double legend_height = spacing;
-    if ( (derived().use_title) // plot title
-       && (derived().legend_header_.text() != "")) // & really is a legend title.
-    {
-      legend_height += 2 * spacing;
-    }
-    legend_height += num_points * spacing * 2; // Space for the point symbols & text.
 
-    // x, y position of legend 'box' top left, level with top right of plot window.
-    double legend_x_start(derived().plot_x2);
-    legend_x_start += spacing; // leave a space between plot window and legend box.
-    double legend_y_start(derived().plot_y1);
+    //double legend_width = (6 + longest /2) * spacing;
+    //// font_size is not exact because width varies.
+    //// Allow for a leading space, data marker symbol, space,
+    //// line in color (only if 2-D and line option selected TODO)
+    //// space, text, trailing space before box margin.
 
-    int x_size = derived().image.x_size();
-    if((legend_x_start + legend_width) > x_size)
-    { // Use nearly all the image width available.
-      std::cout << "Legend text line was too long by "
-       << ((legend_x_start + legend_width) - x_size)
-       << " pixels,  & so truncated. legend_width == " << legend_width << std::endl;
-      // For example:
-      // "Legend text line was too long by about 84 pixels & so truncated. legend_width == 252"
-      legend_width = x_size - legend_x_start - spacing; // derived().text_margin_;
-      // text_margin_ just allows the border box to show.
-    }
+    //// legend_height must be *at least* enough for
+    //// the legend title and text_margin_s around it
+    //// (if any) plus a text_margin_ top and bottom.
+    //// Add more height depending on the number of lines of text.
+    //double legend_height = spacing;
+    //if ( (derived().use_title) // plot title
+    //   && (derived().legend_header_.text() != "")) // & really is a legend title.
+    //{
+    //  legend_height += 2 * spacing;
+    //}
+    //legend_height += num_points * spacing * 2; // Space for the point symbols & text.
+
+    //// x, y position of legend 'box' top left, level with top right of plot window.
+    //double legend_x_start(derived().plot_x2);
+    //legend_x_start += spacing; // leave a space between plot window and legend box.
+    //double legend_y_start(derived().plot_y1);
+
+    //if((legend_x_start + legend_width) > x_size)
+    //{ // Use nearly all the image width available.
+    //  std::cout << "Legend text line was too long by "
+    //   << ((legend_x_start + legend_width) - x_size)
+    //   << " pixels,  & so truncated. legend_width == " << legend_width << std::endl;
+    //  // For example:
+    //  // "Legend text line was too long by about 84 pixels & so truncated. legend_width == 252"
+    //  legend_width = x_size - legend_x_start - spacing; // derived().text_margin_;
+    //  // text_margin_ just allows the border box to show.
+    //}
+
+    // Assume legend box position has already been sized and positioned by calculate_legend_box
+
+    double legend_x_start = derived().legend_x1_; // Saved box location.
+    double legend_width = derived().legend_width_;
+    double legend_y_start = derived().legend_y1_; 
+    double legend_height = derived().legend_height_;
 
     // Draw border box round legend.
     g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
     g_ptr->push_back(new
       rect_element(legend_x_start, legend_y_start, legend_width, legend_height));
-    derived().legend_x1_ = legend_x_start; // Save for access by legend_to_left.
-    derived().legend_x2_ = legend_width;
-    derived().legend_y1_ = legend_y_start; // and legend_bottom_right.
-    derived().legend_y2_ = legend_height;
 
     double legend_y_pos = legend_y_start + derived().text_margin_ * spacing;
     if (is_header)
-    { // Draw the legend text.
+    { // Draw the legend header text "My Plot Legend".
       derived().legend_header_.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
       derived().legend_header_.y(legend_y_pos);
-      derived().image.get_g_element(PLOT_LEGEND_TEXT).push_back(new text_element(derived().legend_header_));
+      derived().image.get_g_element(PLOT_LEGEND_TEXT).push_back(new
+        text_element(derived().legend_header_));
       legend_y_pos += 2 * spacing;
     }
 
@@ -463,9 +697,9 @@ namespace detail
       g_inner_ptr = &(g_ptr->add_g_element());
       // Use both fill & stroke colors from the point's style.
       g_inner_ptr->style()
-        .fill_color(derived().series[i].point_style.fill_color)
-        .stroke_color(derived().series[i].point_style.stroke_color);
-      if(derived().series[i].point_style.shape != none)
+        .fill_color(derived().series[i].point_style.fill_color_)
+        .stroke_color(derived().series[i].point_style.stroke_color_);
+      if(derived().series[i].point_style.shape() != none)
       {
         draw_plot_point( // Plot point like circle, square...
           legend_x_start + spacing, // space before point marker.
@@ -573,7 +807,7 @@ namespace detail
     g_element& g_ptr,
     const plot_point_style& sty)
   {
-    int size = sty.size;
+    int size = sty.size_;
     double half_size = size / 2.;
 
     // For 1-D plots, the points do not *need* to be centered on the X-axis,
@@ -587,7 +821,7 @@ namespace detail
     // the vertical and horizontal ticks are deliberately offset above the axes.
     // TODO Not sure this is fully resolved.
 
-    switch(sty.shape) // from enum point_shape none, round, square, point, egg
+    switch(sty.shape_) // from enum point_shape none, round, square, point, egg
     {
     case round:
       g_ptr.circle(x, y, half_size);
@@ -622,7 +856,7 @@ namespace detail
       break;
 
     case symbol:
-      g_ptr.text(x, y + half_size, sty.symbols, size, "Lucida Sans Unicode"); // symbol(s), size and centre.
+      g_ptr.text(x, y + half_size, sty.symbols_, size, "Lucida Sans Unicode"); // symbol(s), size and centre.
       // TODO Need to provide way to set style.symbols when Boost.Parameter is unravelled.
 
       // Unicode symbols that work on most browsers are listed at
@@ -904,7 +1138,6 @@ public:
 
   Derived& image_size(unsigned int x, unsigned int y)
   { // Might put default sizes here?
-    // Might also alow to set x and y separately?
     // Check on sanity of these values?
     derived().image.image_size(x, y);
     return derived();
@@ -1108,6 +1341,17 @@ public:
   const std::string& title_font_weight()
   {
     return derived().title_info.font_weight();
+  }
+
+  Derived& legend_font_weight(const std::string& weight)
+  {
+    derived().legend_header_.font_weight(weight);
+    return derived();
+  }
+
+  const std::string& legend_font_weight()
+  {
+    return derived().legend_header_.font_weight();
   }
 
   Derived& title_font_stretch(const std::string& stretch)
@@ -1693,22 +1937,18 @@ public:
   }
 
   Derived& x_axis_color(const svg_color& col)
-  { // Note BOTH fill and stroke color are set (and are the same).
-    // stroke is the outside of any character, fill the center color.
-    // TODO But the axis is only a line, so set both for tidyness?
-    derived().image.get_g_element(PLOT_X_AXIS).style().fill_color(col);
+  { // Note only stroke color is set.
     derived().image.get_g_element(PLOT_X_AXIS).style().stroke_color(col);
     return derived();
   }
 
   svg_color x_axis_color()
-  { // Assumes that fill and stroke colors are the same.
+  { 
     return derived().image.get_g_element(PLOT_X_AXIS).style().stroke_color();
   }
 
   Derived& y_axis_color(const svg_color& col)
   {
-    derived().image.get_g_element(PLOT_Y_AXIS).style().fill_color(col);
     derived().image.get_g_element(PLOT_Y_AXIS).style().stroke_color(col);
     return derived();
   }
@@ -1830,6 +2070,17 @@ public:
   double x_axis_width()
   {
     return derived().image.get_g_element(PLOT_X_AXIS).style().stroke_width();
+  }
+
+  Derived& data_lines_width(double width)
+  {
+    derived().image.get_g_element(PLOT_DATA_LINES).style().stroke_width(width);
+    return derived();
+  }
+
+  double data_lines_width()
+  {
+    return derived().image.get_g_element(PLOT_DATA_LINES).style().stroke_width();
   }
 
   Derived& x_label(const std::string& str)

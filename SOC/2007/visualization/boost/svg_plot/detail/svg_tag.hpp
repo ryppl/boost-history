@@ -97,11 +97,11 @@ namespace svg
     void write_attributes(std::ostream& s_out)
     { // group_element id and clip-path.
       if(id_name.size() != 0)
-      {
+      { // Example: id="imageBackground"
         s_out << " id=\"" << id_name << "\""; // Prefix with space.
       }
       if(clip_name.size() != 0)
-      {
+      { // Example: clip-path="url(#plot_window)" 
         s_out << " clip-path=\"url(#" << clip_name << ")\""; // Prefix with space.
       }
       // Inherited classes add other references, 5.3.1, like color, fill, stroke, gradients...
@@ -370,18 +370,31 @@ namespace svg
     int size; // " font-size = 12"
     // http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
     std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
-    std::string style; // font-style: normal | bold | italic | oblique
+    // "sans", "serif", "times"
+    std::string style_; // font-style: normal | bold | italic | oblique
     std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
     std::string stretch; // font-stretch: normal | wider | narrower ...
     std::string decoration; // // "underline" | "overline" | "line-through"
     align_style align; // left_align, right_align, center_align
     int rotate; // horizontal, upward, downward, upsidedown
-
     // Example:
     // <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
 
+    text_style style_info_;
+
   public:
     // Set and get member functions.
+
+    text_style& style()
+    {
+      return style_info_;
+    }
+
+    const text_style& style() const
+    {
+      return style_info_;
+    }
+
     void font_alignment(align_style a)
     { // left_align, right_align, center_align
       align = a;
@@ -404,12 +417,12 @@ namespace svg
 
     void font_style(const std::string& s)
     {
-      style = s;
+      style_ = s;
     }
 
     const std::string& font_style() const
     {
-      return style;
+      return style_;
     }
 
     void font_weight(const std::string& s)
@@ -499,12 +512,12 @@ namespace svg
       const std::string& style = "", const std::string& weight = "",
       const std::string& stretch = "", const std::string& decoration = "",
       align_style align = center_align, int rotate = horizontal)
-      :
+      : // Constructor.
     x_coord(x), y_coord(y),
       txt(text),
       size(size),
       font(font),
-      style(style), weight(weight), stretch(stretch), decoration(decoration),
+      style_(style), weight(weight), stretch(stretch), decoration(decoration),
       align(align), rotate(rotate)
     { // text_element default constructor, defines defaults for all private members.
     }
@@ -545,9 +558,9 @@ namespace svg
       {
         rhs << " font-family=\"" << font << "\"";
       }
-      if (style.size() != 0)
+      if (style_.size() != 0)
       {
-        rhs << " font-style=\"" << style << "\"";
+        rhs << " font-style=\"" << style_ << "\"";
       }
       if (weight.size() != 0)
       {
@@ -561,11 +574,7 @@ namespace svg
       {
       rhs << " font-decoration=\"" << decoration << "\"";
       }
-      if(size == 0)
-      { // Use a default font size of 12 if none specified.
-        rhs << " font-size=\"12\">";
-      }
-      else
+      if(size != 0)
       {
         rhs << " font-size=\"" << size << "\">";
       }
@@ -574,6 +583,7 @@ namespace svg
     } // void write(std::ostream& rhs)
 
   }; // class text_element
+
 
   class clip_path_element: public svg_element
   { // The clipping path restricts the region to which paint can be applied.
@@ -891,8 +901,6 @@ namespace svg
     path_element() : fill(true)
     { // TODO why is the default fill(true)?
     }
-
-
 
     // Note 1: return of path_element& permits chaining calls like
     // my_path.M(3, 3).l(150, 150).l(200, 200)...;
@@ -1310,11 +1318,11 @@ namespace svg
 
     void write(std::ostream& os)
     {
-      // WOuld be nice to avoid useless <g id="yMinorGrid"></g>
+      // Would be nice to avoid useless <g id="yMinorGrid"></g>
       // TODO but would this mean that useful style is lost?
 
       os << "<g"; // Do NOT need space if convention is to start following item with space.
-      write_attributes(os); // id="background"
+      write_attributes(os); // id="background" (or clip_path)
       style_info.write(os); // stroke="rgb(0,0,0)"
       os << ">" ;
       for(unsigned int i = 0; i < children.size(); ++i)

@@ -24,6 +24,18 @@
 // SVG stands for Scalable Vector Graphics,
 // an XML grammar for stylable graphics, usable as an XML namespace.
 
+// http://www.adobe.com/svg/basics/intro.html SVG Workflow on optimising SVG
+// Gzip compression - can give files that are 1/10th size of gif or jpeg.
+// Use default values whenever possible rather than defining all attributes and properties explicitly.
+// Take advantage of the path data compaction facilities — use relative coordinates;
+// use h and v for horizontal and vertical lines;
+// use s or t for cubic and quadratic Bezier segments whenever possible;
+// eliminate extraneous white space and separators.
+// Use symbols if the same graphic appears multiple times in the document.
+//Use CSS property inheritance and selectors to consolidate commonly used properties into named styles
+// or to assign the properties to a parent <g> element.
+//Use filter effects to help construct graphics via client-side graphics operations. 
+
 namespace boost
 {
 namespace svg
@@ -53,8 +65,6 @@ namespace svg
 
 
 class svg;
-// TODO is it wise to have a class and a namespace with the same name?
-// No problems caused by this noted so far.
 
 // See svg_fwd.hpp for forward declarations.
 // Public member functions:
@@ -127,21 +137,57 @@ private:
   // ---------------------------------------------------------
   void write_header(std::ostream& s_out)
   {
-    s_out << "<?xml version=\"1.0\" standalone=\"no\"?>"
+    s_out << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
       << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" "
       << "\"http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd\">"
       << std::endl;
     // TODO IE6 with updates does not recognise this DOCTYPE, but displays OK.
     // http://jwatt.org/svg/authoring/#namespace-binding recommends NO DOCTYPE!
+
+
+    //s_out << "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n"
+    //         "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\"
+    //         \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n"
+    // This IS out of date? version 1.0 TR 2000, but the Adobe SVG viewer complains
+    // if it is missing - but ignore.
+    // But Firefox says document does not contain style.
+    // http://www.adobe.com/svg/basics/getstarted.html
+
+    // Inkscape uses encoding=\"UTF-8\" Unicode
+    // (encoding=\"iso-8859-1\" == Latin now obselete)
+
+    // example of style command:
+    // style="font-size:20px;font-weight:bold;text-decoration: line-through;fill:aqua"
+    
+    // font-family:Arial Narrow
+
+    // INscape uses: xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
   }
 
   void write_css(std::ostream& s_out)
   { // CSS (Cascading Style Sheet)
     if (css.size() != 0) // css != ""
     { // TODO confirm that this isn't useful if css is "".
+      // [CDATA[ ... ]] enclosing the style information
+      // is a standard XML construct for hiding information
+      // necessary since CSS style sheets can include characters,
+      // such as ">", which conflict with XML parsers.
       s_out << "<defs><style type=\"text/css\"><![CDATA[" << css
         << "]]></style></defs>" << std::endl;
-      // Example: <defs><style type="text/css"><![CDATA[]]></style></defs>
+      // CSS inline style can be declared within a style attribute in SVG 
+      // by specifying a semicolon-separated list of property declarations, 
+      // where each property declaration has the form "name: value".
+      // For example a style: style="fill:red; stroke:blue; stroke-width:3"
+      // class=
+      // Multiple class names must be separated by whitespace.
+
+      // Example: <defs><style type="text/css"><![CDATA[]]>
+      // .axes { fill:none;stroke:#333333;stroke-width:1.6 }
+      // .title{ font-size:20px;font-weight:bold;font-style:italic;fill:magenta }
+      // .legend_header{ font-size:16px;font-weight:bold;fill:darkblue;text-anchor:middle }
+      // .legend_item{ font-size:16px;font-weight:normal;fill:blue }
+      // .x_axis_value{ font-size:12px;font-weight:normal;fill:black }
+      //   </style></defs>
     }
   }
 
@@ -180,12 +226,13 @@ public:
     distribution_("permits"), // permits, requires, or prohibits.
     attribution_("requires"),
     commercialuse_("permits"),
-    coord_precision_(3) // enough for 1 in 1000 resolution to suit use.
+    coord_precision_(3) // enough for 1 in 1000 resolution to suit small image use.
   { // Default constructor.
   }
 
   svg(const svg& rhs) : x_size_(rhs.x_size_), y_size_(rhs.y_size_)
   { // Defined image size copy constructor.
+    // TODO Other member data items are NOT copied.  OK?
   }
 
   // Set & get functions for x_size_ and y_size_
@@ -266,13 +313,19 @@ public:
   { // Write whole .svg 'file' contents to stream (perhaps a file).
     write_header(s_out); // "<?xml version=...
     // write svg document, begin <svg tag.
+    // <svg xml:space="preserve" width="5.5in" height=".5in">
+
     s_out << "<svg width=\"" << x_size_ << "\" height =\"" << y_size_
       << "\" version=\"1.1\"" // http://www.w3.org/TR/SVG11/
       // 1.2 draft specification at http://www.w3.org/TR/SVG12/
       << " xmlns=\"http://www.w3.org/2000/svg\"\n"
       // xml namespace containing svg shapes rect, circle...
       // so can write rect or circle avoiding need for qualification svg:rect, svg:circle...
+      // This site isn't visited, but if missing Firefox, at least, will fail to render.
          " xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
+      // tells that elements and attributes which are prefixed by "xlink:"
+      // are a part of the xlink specification http://www.w3.org/1999/xlink.
+      // Need to use xlink:href to refer to xlink.
          " xmlns:ev=\"http://www.w3.org/2001/xml-events\">\n"
       << std::endl;
     // Bind the required namespaces, see http://jwatt.org/svg/authoring/#namespace-binding
