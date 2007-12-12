@@ -1,0 +1,328 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>V1 Issues</title>
+</head>
+
+<body>
+
+<h1>V1 Issues</h1>
+<p>1. [thread.exception] (30.1.2): &quot;Such exceptions shall be thrown
+when ...&quot;
+This seems too strong. The implementation can make OS calls that fail,
+and
+adjust accordingly. It's only if the failure of the OS call makes it
+impossible for the library function to fulfill its contract that it
+should
+throw an exception. Seems like it should be more like: &quot;Such
+exceptions shall
+be thrown if such a call results in an error that prevents the library
+function from satisfying its postconditions or from returning a
+meaningful
+value.&quot; I'm a little nervous about this, though, because I haven't
+read far
+enough ahead to know if it captures all the required situations. </p>
+<p>2. [thread.native] (30.1.3): whether native handles exist and, if they
+do,
+what they mean is implementation-defined? This seems completely
+pointless. All
+it does is reserve a couple of names that derived classes shouldn't
+use. If
+there are no constraints on what these things do, just drop them.
+Implementors
+can add things like this in the implementor's namespace. </p>
+<p>3. [thread.threads.class] (30.2.1): &quot;A thread object uniquely
+represents a
+particular thread of execution and the right to join with it. That
+right may
+be transfered to other thread objects.&quot; I don't know what the &quot;right
+to join&quot;
+means. I assume it means that the thread object's join member function
+lets
+you join that thread. But is the intention to make join-ability (i.e.
+&quot;right
+to join&quot;) transferrable separately from unique representation, which
+is what
+this implies? Seems to me the intention is that a thread object
+represents its
+thread of execution, and one of the things that that allows you to do
+is join
+that thread of execution. That is, it's one of the consequences of
+representing a thread of execution, and is transfered when
+representation of a
+thread of execution is transferred to a different thread object. </p>
+<p>4. [thread.threads.class] (30.2.1): &quot;Objects of class thread may also
+represent not a thread.&quot; This doesn't really say anything. &quot;Objects of
+class
+thread can be created that do not represent any thread of execution.
+Such
+objects are referred to as not-a-thread (NAT) objects.&quot; Or something
+like
+that. That's a little different from the usage in the paper. I'd
+change the
+description of the default constructor for thread::id from &quot;... has
+the NAT
+value&quot; to &quot;... has a value that identifiers a NAT thread object.&quot;
+Might need a
+little more to say that such an id is unique, but I think this
+approach makes
+it cleaner. </p>
+<p>5. [thread.threads.id] (30.2.1.1): &quot;... provides either a unique
+identity for
+a thread of execution or a NAT value.&quot; See previous. But, if threads of
+execution do not have id values in the absence of a corresponding thread
+object, this is probably better phrased as &quot;provides a unique
+identifer for
+each thread of execution and a distinct value for all NAT objects.&quot; </p>
+<p>6. [thread.threads.id] (30.2.1.1), id(): &quot;The constructed object has
+the NAT
+value.&quot; Searching for NAT value shows that it's only used in one other
+place,
+the thread() constructor. Seems simpler to get rid of it completely,
+and talk
+everywhere about &quot;a thread object that does not represent a thread of
+execution.&quot; </p>
+<p>6. [thread.threads.id] (30.2.1.1), operator==: &quot;If x and y represent
+the same
+identity, returns true.&quot; &quot;the same identity&quot; doesn't mean anything.
+&quot;Returns
+true only if x and y represent the same thread of execution or x and y
+both do
+not represent a thread of execution.&quot; </p>
+<p>7. [thread.threads.id] (30.2.1.1), operator&lt;&lt;: &quot;Inserts an unspecified
+text
+representation of the thread::id into the stream out.&quot; Need to say that
+distinct thread id's must have distinct representations. </p>
+<p>8. [thread.threads.constr] (30.2.1.2), thread(F f), etc.: requires &quot;F
+is a
+callable type&quot;. I think this is a little too broad. A callable type
+can be a
+pointer to member data. Is it really intended to allow users to kick
+of a
+thread with nothing more than the evaluation of a data member?
+Probably should
+be &quot;callable type that is not a pointer to member data.&quot; </p>
+<p>9. [thread.threads.constr] (30.2.1.2), thread(thread&amp;&amp;): the first two
+postconditions are a bit confusing, because they use two different
+techniques
+to describe the result. Choose one or the other. Either &quot;x.joinable() ==
+thread().joinable() and x.get_id() == thread().get_id()&quot; or
+&quot;x.joinable() ==
+false and x.get_id() == id()&quot;. I prefer the latter, but wouldn't
+insist on it. </p>
+<p>9. [thread.threads.assign] (30.2.1.2): here, the state of x after the
+operation is &quot;a default constructed state.&quot; That's different from the
+description for the effect of the move constructor. These two should
+be worded
+consistently. </p>
+<p>10. [thread.threads.member] (30.2.1.5), join(): &quot;the joinable()
+status&quot; is
+muddled. I think all the discussion of joining would benefit from
+defining a
+term &quot;joinable&quot; and describing join(), joinable(), and detach() using
+that
+term. </p>
+<p>11. [thread.threads.members] (30.2.1.5), join(), detach(): postcondition
+needn't say &quot;The possible error conditions are implementation
+defined.&quot; That's
+covered in the front matter. Or should be. &lt;g&gt; </p>
+<p>12. [thread.threads.members] (30.2.1.5), get_id(): the returns clause is
+confusing. I'd say &quot;a default constructed id if *this does not
+represent a
+thread, otherwise this_thread::get_id().&quot; </p>
+<p>13. [thread.threads.this] (30.2.2), get_id(): &quot;uniquely identifies the
+current
+thread of execution&quot; doesn't seem adequate. There are two
+requirements: no
+other thread has this id, and this thread will always have this id. I
+think
+this needs to be said explicitly. </p>
+<p>14. [thread.threads.this] (30.2.2), sleep(Duration): &quot;rounded up to the
+nearest native resolution&quot; should be &quot;rounded to the next larger value
+that
+can be represented in the native resolution&quot; </p>
+<p>15. [thread.mutex.requirements] (30.3.1), introduction: &quot;The thread
+that calls
+lock() for a mutex object shall call unlock().&quot; This is a requirement,
+mixed
+in with otherwise non-normative text. Remove it. </p>
+<p>16. [thread.mutex.requirements] (30.3.1), effects of m.lock(), etc.:
+&quot;The
+expression ... shall be well-defined...&quot; That last word should be
+&quot;well-formed&quot;. </p>
+<p>17. [thread.mutex.requirements] (30.3.1), effects of m.lock(): &quot;owns&quot;
+isn't
+really clear. The front matter for mutexes talks about &quot;obtains
+ownership&quot; and
+&quot;relinquishes ownership&quot;. I'd add a sentence after that one that says
+something like &quot;Between a successful call to lock() and a successful
+call to
+unlock(), the calling thread owns the mutex object.&quot; In fact, I'd
+probably
+drop the stuff about &quot;obtains ownership&quot; and &quot;relinquishes ownership&quot;
+in favor
+of simply defining &quot;owns&quot;: &quot;a thread owns a mutex from the time it
+successfully calls one of the lock functions until it calls unlock.&quot;
+That
+defines the key term, without confusing the issue with the somewhat
+similar
+but irrelevant notion of &quot;ownership&quot;. </p>
+<p>18. [thread.mutex.requirements] (30.3.1), effects of m.try_lock(): the
+returns
+clause says that the implementation is allowed to fail even if the
+lock isn't
+held. I think this belongs in the effects clause. </p>
+<p>19. [thread.mutex.class] (30.3.1.1), descriptive text: the first
+paragraph
+mixes normative and non-normative text. Separate them. I think I'd
+combine the
+first sentence of the first paragraph with the text in the second
+paragraph,
+and put the remaining sentences of the first paragraph in their own
+paragraph
+after this combined paragraph. </p>
+<p>20. [thread.mutex.class] (30.3.1.1), &quot;effects of m.try_lock(): &quot;It is
+undefined behavior:&quot; this isn't idiomatic. The undefinedness attaches
+to the
+program, not to the code that causes the problem. The correct phrasing
+is &quot;A
+program that does x, y, or z has undefined behavior&quot; or &quot;The behavior
+of a
+program that does x, y, or z is undefined.&quot; </p>
+<p>21. [thread.mutex.recursive] (30.3.1.2), see 19, 20. </p>
+<p>22. [thread.timedmutex.requirements] (30.3.2): &quot;To meet the TimedMutex
+requirements, types are required to meet the Mutex requirements.&quot;
+Instad of
+&quot;are required to&quot;, use &quot;shall&quot;. </p>
+<p>23. [thread.timedmutex.requirements] (30.3.2): see 14, 16 </p>
+<p>24. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
+indicated time duration is less than or equal to 0, the function still
+attempts to obtain ownership without blocking&quot; change &quot;indicated&quot; to
+&quot;requested&quot; and remove &quot;still&quot;. </p>
+<p>25. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
+function returns within the specified time duration, it shall have
+obtained
+ownership.&quot; This sentence is awkward. I'd phrase it &quot;The function
+shall return
+within the requested time duration only if is has obtained ownership
+of the
+mutex object.&quot; And even then, functions don't own mutex objects.
+Threads do. </p>
+<p>26. [thread.timedmutex.requirements] (30.3.2), effects clause for
+timed_lock:
+see 24 (&quot;still&quot;), 25. </p>
+<p>27. [thread.timedmutex.class] (30.3.2.1): see 19, 20. </p>
+<p>28. [thread.timedmutex.recursive] (30.3.2.2): see 19, 20. </p>
+<p>29. [thread.lock.intro] (30.3.3), first paragraph: this would be
+clearer in
+the singular: &quot;A lock is an object that holds a reference to a mutex and
+unlocks the mutex during the lock's destruction...&quot; </p>
+<p>30. [thread.lock.intro] (30.3.3), tag types: these are said to
+describe &quot;what
+should be done with the mutex&quot;, but their comments all talk about &quot;the
+lock&quot;.
+The next paragraph talks about a lock owning a mutex; this doesn't fit
+the
+model that seems to have been used earlier, that a thread owns a mutex. </p>
+<p>31. [thread.lock.guard] (30.3.3.1), first paragraph of text: see 20. </p>
+<p>32. [thread.lock.unique] (30.3.3.2), first paragraph: &quot;An object of type
+unique_lock is not copyable but is movable.&quot; This should be plural:
+&quot;Objects
+of type unique_lock are not copyable but are movable.&quot; </p>
+<p>33. [thread.lock.unique] (30.3.3.2), first paragraph: see 20. </p>
+<p>34. [thread.lock.unique] (30.3.3.2), requirements clauses: mutex() == 0,
+owns_lock() == false; the point of having &quot;exposition only&quot; private
+members is
+to use them in the descriptions of the member functions. These
+requirements
+should be pm == 0 and owns == 0, with analogous changes throughout. </p>
+<p>35. [thread.lock.unique] (30.3.3.2), unique_lock(..., Duration): the
+remark
+&quot;The implementation must ensure ...&quot; should be &quot;The implementation shall
+ensure ...&quot;. </p>
+<p>36. [thread.lock.unique] (30.3.3.2), release(): returns clause should
+be &quot;the
+previous value of pm&quot;, since one of the postconditions is that pm be 0. </p>
+<p>37. [thread.lock.algorithm] (30.3.4), try_lock(): I'd rephrase the first
+sentence of the Effects clause a bit. &quot;... until all arguments have been
+processed, or a call to try_lock() fails, either by returning false or
+by
+throwing an exception.&quot; Then the next sentence can start out &quot;If a
+call to
+try_lock fails ...&quot; </p>
+<p>38. [thread.lock.algorithm] (30.3.4), try_lock(): small change to the
+second
+sentence of the effects clause: &quot;Otherwise, returns a 0-based index
+value that
+indicates the argument for which try_lock() returned false.&quot; </p>
+<p>39. [thread.threads.callonce] (30.3.5.2), requires clause: last
+sentence seems
+excessive. Is it necessary? </p>
+<p>40. [thread.threads.callonce] (30.3.5.2), effects clause: I'd move the
+last
+sentence to immediately after the first one. Easier to follow the logic. </p>
+<p>41. [thread.condition] (30.4), first sentence: is &quot;the monitor pattern&quot;
+sufficiently well known that it's helpful to say this? </p>
+<p>42. [thread.condition] (30.4), second sentence: this seems trivial.
+Should it
+end with &quot;executed serially in some unspecified order&quot;? </p>
+<p>43. [thread.condvar] (30.4.1), wait() without predicate: the second
+bullet
+item is convoluted. How about: &quot;The lock objects passed by all the
+threads
+that are currently waiting on this condition variable manage the same
+mutex
+object, that is, for every lock object lck, lck-&gt;mutex() would returns
+the
+same value.&quot; </p>
+<p>44. [threads.condvar] (30.4.1), wait() without predicate: see 11. </p>
+<p>45. [threads.condvar] (30.4.1), timed_wait() without predicate: see
+11, 43. </p>
+<p>46. [threads.condvar] (30.4.1), last sentence: this belongs at the
+beginning
+of the [threads.condvar]. </p>
+<p>47. [threads.condvarany] (30.4.2): I haven't read this carefully, but
+I assume
+that it's mostly cut-and-paste, and that the same issues as in
+[threads.condvar] apply (except 46). </p>
+<p>48. [time.duration.requirements] (31.1), third paragraph: see 16. </p>
+<p>49. [time.duration.requirements] (31.1), table: the subscript at-entry
+is
+jarring at best. &lt;g&gt; How about defining another symbol, say, d0, which
+is
+defined to be d.tick_count() at entry into the function? Also, in the
+postconditions for -= and +=, the firs tmention of tick_count needs ()
+afterwards. </p>
+<p>50. [time.nanoseconds] (31.2): first paragraph mixes non-normative and
+normative text. Put the second sentence into a separate paragraph. </p>
+<p>51. [time.microseconds] (31.3): see 50. </p>
+<p>52. [time.milliseconds] (31.4): see 50. </p>
+<p>53. [time.seconds] (31.5): see 50. </p>
+<p>54. [time.seconds] (31.5) and the rest: would it help to write those
+multipliers as factors of 1000? So, for example, seconds::nanoseconds()
+instead of returning count() * 1000000000 would return count() * 1000
+* 1000 *
+1000. </p>
+<p>56. [time.minutes] (31.6): see 50. </p>
+<p>57. [time.hours] (31.7): see 50. </p>
+<p>58. [time.system] (31.8): separate non-normative from normative text:
+break
+into two paragraphs. </p>
+<p>59. [time.nonmembers] (31.9): would it help with the comparison
+functions to
+start by defining a new term, FD (which is terrible, but the best I
+can come
+up with after three hours of this stuff), defined as LhsDuration or
+RhsDuration, depending on which has finer resolution? Then, for example,
+operator== can be defined as FD(x.count()) == FD(y.count()), and the
+same
+pattern can be applied to operator&lt;, operator+, and operator-. </p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>
