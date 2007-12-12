@@ -491,11 +491,15 @@ that manage and query the state of the thread.
 A <code>thread</code> object uniquely represents
 a particular thread of execution
 and the right to join with it.
-That right may be transfered to other thread objects.
+That right may be transferred to other thread objects.
 A thread of execution is <dfn>detached</dfn>
 when no <code>thread</code> object represents that thread.
-Objects of class <code>thread</code>
-may also represent <dfn>not a thread</dfn> (referred to as NAT).
+Objects of class <code>thread</code> can be in a state that does not represent a 
+thread of execution.
+[<i>Note:</i> A <code>thread</code>
+object does not represent a thread of execution after default construction, or 
+after a successful call to <code>detach</code> or <code>join</code>.
+&mdash;<i>end note</i>]
 </p>
 
 <blockquote>
@@ -562,14 +566,14 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 </blockquote>
 
 <p>
-An object of type <code>thread::id</code> provides either
-a unique identity for a thread of execution
-or a NAT value ([thread.threads.class]).
+An object of type <code>thread::id</code> provides a unique identifer for each 
+thread of execution and a distinct value for all thread objects that do not 
+represent a thread of execution ([thread.threads.class]).
 Each thread of execution has a <code>thread::id</code>
 that is not equal to the <code>thread::id</code>
 of other threads of execution
-and that is not equal to the <code>thread::id</code>
-of NAT <code>std::thread</code> objects.
+and that is not equal to the <code>thread::id</code> of <code>std::thread</code> objects 
+that do not represent threads of execution.
 </p>
 
 <p>
@@ -597,7 +601,7 @@ Nothing.
 
 <dt>Postconditions:</dt>
 <dd>
-The constructed object has the NAT value.
+The constructed object does not represent a thread.
 </dd>
 </dl>
 </blockquote>
@@ -610,11 +614,9 @@ bool operator==(thread::id <var>x</var>, thread::id <var>y</var>);
 <dl>
 <dt>Returns:</dt>
 <dd>
-If <code><var>x</var></code> and <code><var>y</var></code>
-represent the same identity,
-returns <code>true</code>.
-Otherwise returns <code>false</code>.
-</dd>
+Returns <code>true</code> only if <code><var>x</var></code> and <code><var>y</var></code> 
+represent the same thread of execution or neither <code><var>x</var></code> nor
+<code><var>y</var></code> represent a thread of execution.</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -725,8 +727,8 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 <dt>Effects:</dt>
 <dd>
 Inserts an unspecified text representation of the <code>thread::id</code> into
-the stream <code>out</code>.
-</dd>
+the stream <code>out</code>. Distinct thread id's shall have distinct 
+representations.</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -745,7 +747,8 @@ thread();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs a <code>thread</code> object that represents NAT.
+Constructs a <code>thread</code> object that does not represent a thread of 
+execution. 
 </dd>
 
 <dt>Postconditions:</dt>
@@ -753,11 +756,6 @@ Constructs a <code>thread</code> object that represents NAT.
 <code>get_id() == thread::id()</code>
 <br>
 <code>joinable() == false</code>
-<br>
-[<i>Note:</i>
-This is also the state of a <code>thread</code>
-object after <code>detach</code> or <code>join</code> is successfully called.
-&mdash;<i>end note</i>]
 </dd>
 
 <dt>Throws:</dt>
@@ -1060,11 +1058,10 @@ id get_id() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>this_thread::get_id()</code> for the thread
-represented by
-<code>*this</code>,
-or a default constructed <code>id</code>
-if <code>*this</code> does not represent a thread.
+A default constructed <code>id</code>
+if <code>*this</code> does not represent a thread, otherwise
+<code>this_thread::get_id()</code> for the thread of execution represented by
+<code>*this</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -1144,7 +1141,9 @@ thread::id this_thread::get_id();
 <dt>Returns:</dt>
 <dd>
 An object of type <code>thread::id</code>
-that uniquely identifies the current thread of execution.
+that uniquely identifies the current thread of execution. No other thread of 
+execution shall have this id and this thread of execution shall always have this 
+id.
 The object returned
 shall not compare equal to a default constructed <code>thread::id</code>.
 </dd>

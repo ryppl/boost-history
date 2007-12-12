@@ -55,7 +55,7 @@ that thread of execution. That is, it's one of the consequences of
 representing a thread of execution, and is transfered when
 representation of a
 thread of execution is transferred to a different thread object. </p>
-<p>4. [thread.threads.class] (30.2.1): &quot;Objects of class thread may also
+<p>&#10004; 4. [thread.threads.class] (30.2.1): &quot;Objects of class thread may also
 represent not a thread.&quot; This doesn't really say anything. &quot;Objects of
 class
 thread can be created that do not represent any thread of execution.
@@ -71,14 +71,14 @@ Might need a
 little more to say that such an id is unique, but I think this
 approach makes
 it cleaner. </p>
-<p>5. [thread.threads.id] (30.2.1.1): &quot;... provides either a unique
+<p>&#10004; 5. [thread.threads.id] (30.2.1.1): &quot;... provides either a unique
 identity for
 a thread of execution or a NAT value.&quot; See previous. But, if threads of
 execution do not have id values in the absence of a corresponding thread
 object, this is probably better phrased as &quot;provides a unique
 identifer for
 each thread of execution and a distinct value for all NAT objects.&quot; </p>
-<p>6. [thread.threads.id] (30.2.1.1), id(): &quot;The constructed object has
+<p>&#10004; 6a. [thread.threads.id] (30.2.1.1), id(): &quot;The constructed object has
 the NAT
 value.&quot; Searching for NAT value shows that it's only used in one other
 place,
@@ -86,14 +86,14 @@ the thread() constructor. Seems simpler to get rid of it completely,
 and talk
 everywhere about &quot;a thread object that does not represent a thread of
 execution.&quot; </p>
-<p>6. [thread.threads.id] (30.2.1.1), operator==: &quot;If x and y represent
+<p>&#10004; 6b. [thread.threads.id] (30.2.1.1), operator==: &quot;If x and y represent
 the same
 identity, returns true.&quot; &quot;the same identity&quot; doesn't mean anything.
 &quot;Returns
 true only if x and y represent the same thread of execution or x and y
 both do
 not represent a thread of execution.&quot; </p>
-<p>7. [thread.threads.id] (30.2.1.1), operator&lt;&lt;: &quot;Inserts an unspecified
+<p>&#10004; 7. [thread.threads.id] (30.2.1.1), operator&lt;&lt;: &quot;Inserts an unspecified
 text
 representation of the thread::id into the stream out.&quot; Need to say that
 distinct thread id's must have distinct representations. </p>
@@ -130,11 +130,14 @@ term. </p>
 needn't say &quot;The possible error conditions are implementation
 defined.&quot; That's
 covered in the front matter. Or should be. &lt;g&gt; </p>
-<p>12. [thread.threads.members] (30.2.1.5), get_id(): the returns clause is
+<p>&#10004; 12. [thread.threads.members] (30.2.1.5), get_id(): the returns clause is
 confusing. I'd say &quot;a default constructed id if *this does not
 represent a
 thread, otherwise this_thread::get_id().&quot; </p>
-<p>13. [thread.threads.this] (30.2.2), get_id(): &quot;uniquely identifies the
+<p><i>Changed that to &quot;</i>otherwise this_thread::get_id() <u>for the thread of 
+execution represented by <code>*this</code></u>.<i>&quot; since that's the intended 
+semantics.&quot;</i></p>
+<p>&#10004; 13. [thread.threads.this] (30.2.2), get_id(): &quot;uniquely identifies the
 current
 thread of execution&quot; doesn't seem adequate. There are two
 requirements: no
