@@ -153,7 +153,7 @@ that calls
 lock() for a mutex object shall call unlock().&quot; This is a requirement,
 mixed
 in with otherwise non-normative text. Remove it. </p>
-<p>16. [thread.mutex.requirements] (30.3.1), effects of m.lock(), etc.:
+<p>&#10004; 16. [thread.mutex.requirements] (30.3.1), effects of m.lock(), etc.:
 &quot;The
 expression ... shall be well-defined...&quot; That last word should be
 &quot;well-formed&quot;. </p>
@@ -201,7 +201,7 @@ program that does x, y, or z is undefined.&quot; </p>
 requirements, types are required to meet the Mutex requirements.&quot;
 Instad of
 &quot;are required to&quot;, use &quot;shall&quot;. </p>
-<p>23. [thread.timedmutex.requirements] (30.3.2): see 14, 16 </p>
+<p>&#10004; (16) 23. [thread.timedmutex.requirements] (30.3.2): see 14, 16 </p>
 <p>24. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
 indicated time duration is less than or equal to 0, the function still
 attempts to obtain ownership without blocking&quot; change &quot;indicated&quot; to
@@ -292,7 +292,7 @@ of the [threads.condvar]. </p>
 I assume
 that it's mostly cut-and-paste, and that the same issues as in
 [threads.condvar] apply (except 46). </p>
-<p>48. [time.duration.requirements] (31.1), third paragraph: see 16. </p>
+<p>&#10004; 48. [time.duration.requirements] (31.1), third paragraph: see 16. </p>
 <p>49. [time.duration.requirements] (31.1), table: the subscript at-entry
 is
 jarring at best. &lt;g&gt; How about defining another symbol, say, d0, which

@@ -1333,7 +1333,7 @@ to ensure that mutexes are initialized and visible to other threads.
 </p>
 
 <p>
-The expression <code>m.lock()</code> shall be well-defined,
+The expression <code>m.lock()</code> shall be well-formed,
 and have the following semantics:
 </p>
 
@@ -1370,7 +1370,7 @@ synchronize with ([intro.multithread]) this operation.
 </blockquote>
 
 <p>
-The expression <code>m.try_lock()</code> shall be well-defined,
+The expression <code>m.try_lock()</code> shall be well-formed,
 and have the following semantics:
 </p>
 
@@ -1427,7 +1427,7 @@ Nothing.
 </blockquote>
 
 <p>
-The expression <code>m.unlock()</code> shall be well-defined,
+The expression <code>m.unlock()</code> shall be well-formed,
 and have the following semantics:
 </p>
 
@@ -1599,7 +1599,7 @@ denotes a value of type <code>system_time</code>:
 </p>
 
 <p>
-The expression <code>m.timed_lock(rel_time)</code> shall be well-defined,
+The expression <code>m.timed_lock(rel_time)</code> shall be well-formed,
 and have the following semantics:
 </p>
 
@@ -1654,7 +1654,7 @@ Nothing.
 </blockquote>
 
 <p>
-The expression <code>m.timed_lock(abs_time)</code> shall be well-defined,
+The expression <code>m.timed_lock(abs_time)</code> shall be well-formed,
 and have the following semantics:
 </p>
 
@@ -3778,7 +3778,7 @@ A duration type shall be EqualityComparable, LessThanComparable,
 CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and
 Destructible.
 In addition, it must meet the requirements
-for well-defined expressions specified in the following table,
+for well-formed expressions specified in the following table,
 where <code>D</code> and <code>E</code> are duration types,
 <code>d</code> denotes a <code>const</code> value of type <code>D</code>,
 <code>e</code> denotes a <code>const</code> value of type <code>E</code>,
