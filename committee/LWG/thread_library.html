@@ -1010,8 +1010,7 @@ and <code>get_id() == id()</code>.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The possible error conditions are implementation defined.
+<code>system_error</code> when the postconditions cannot be achieved.
 </dd>
 </dl>
 </blockquote>
@@ -1046,8 +1045,7 @@ the implementation shall release any owned resources.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The possible error conditions are implementation defined.
+<code>system_error</code> when the effects or postconditions cannot be achieved.
 </dd>
 </dl>
 </blockquote>
@@ -1366,9 +1364,7 @@ synchronize with ([intro.multithread]) this operation.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The
-possible error conditions are implementation defined.
+<code>system_error</code> when the effects or postconditions cannot be achieved.
 </dd>
 </dl>
 </blockquote>
@@ -2799,7 +2795,7 @@ on the same <code>once_flag</code> object.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> or any exception propagated from <code>func</code>.
+<code>system_error</code> when the effects cannot be achieved. or any exception propagated from <code>func</code>.
 </dd>
 </dl>
 
@@ -3063,8 +3059,7 @@ prior to exiting the function scope.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The possible error conditions are implementation defined.
+<code>system_error</code> when the effects or postconditions cannot be achieved.
 </dd>
 </dl>
 </blockquote>
@@ -3160,8 +3155,8 @@ prior to exiting the function scope.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The possible error conditions are implementation defined.
+<code>system_error</code> when the returned value, effects or postconditions 
+cannot be achieved.
 </dd>
 </dl>
 
@@ -3451,8 +3446,7 @@ prior to exiting the function scope.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The possible error conditions are implementation defined.
+<code>system_error</code> when the effects or postconditions cannot be achieved.
 </dd>
 </dl>
 </blockquote>
@@ -3529,8 +3523,8 @@ thread.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when an error condition occurs.
-The possible error conditions are implementation defined.
+<code>system_error</code> when the returned value, effects or postconditions 
+cannot be achieved.
 </dd>
 </dl>
 </blockquote>
