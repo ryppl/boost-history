@@ -3781,6 +3781,7 @@ In addition, it must meet the requirements
 for well-formed expressions specified in the following table,
 where <code>D</code> and <code>E</code> are duration types,
 <code>d</code> denotes a <code>const</code> value of type <code>D</code>,
+<code>d0</code> denotes <code>d.tick_count()</code> at entry into the function,
 <code>e</code> denotes a <code>const</code> value of type <code>E</code>,
 <code>c</code> denotes a <code>long</code> value.
 The resolution of <code>E</code>
@@ -3834,16 +3835,17 @@ shall not be finer than the resolution of <code>D</code>
   <tr>
     <td valign="top"><code>d -= e</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><code>d.tick_count ==
-    d.tick_count()</code><sub>at-entry</sub><code>-x</code>,
+    <td valign="top"><code>d.tick_count() ==
+    d0 - x</code>,
     where <code>x</code> is <code>e.tick_count()</code>
     converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top"><code>d += e</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><code>d.tick_count ==
-    d.tick_count()</code><sub>at-entry</sub><code>+x</code>,
+    <td valign="top"><code>d.tick_count() ==
+    
+    d0 + x</code>,
     where <code>x</code> is <code>e.tick_count()</code>
     converted to the resolution of <code>D</code>.</td>
   </tr>
@@ -3851,13 +3853,14 @@ shall not be finer than the resolution of <code>D</code>
     <td valign="top"><code>d /= c</code></td>
     <td valign="top"><code>D&amp;</code></td>
     <td valign="top"><code>d.tick_count() ==
-    d.tick_count()</code><sub>at-entry</sub><code>/c</code></td>
+    
+    d0 / c</code></td>
   </tr>
   <tr>
     <td valign="top"><code>d *= c</code></td>
     <td valign="top"><code>D&amp;</code></td>
     <td valign="top"><code>d.tick_count()
-    == d.tick_count()</code><sub>at-entry</sub><code>*c</code></td>
+    ==  d0 * c</code></td>
   </tr>
 </table>
 
