@@ -498,8 +498,9 @@ when no <code>thread</code> object represents that thread.
 Objects of class <code>thread</code> can be in a state that does not represent a 
 thread of execution.
 [<i>Note:</i> A <code>thread</code>
-object does not represent a thread of execution after default construction, or 
-after a successful call to <code>detach</code> or <code>join</code>.
+object does not represent a thread of execution after default construction,
+after being moved from,
+or after a successful call to <code>detach</code> or <code>join</code>.
 &mdash;<i>end note</i>]
 </p>
 
@@ -568,7 +569,7 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 
 <p>
 An object of type <code>thread::id</code> provides a unique identifer for each 
-thread of execution and a distinct value for all thread objects that do not 
+thread of execution and a single distinct value for all thread objects that do not 
 represent a thread of execution ([thread.threads.class]).
 Each thread of execution has a <code>thread::id</code>
 that is not equal to the <code>thread::id</code>
