@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++ (Revision 1)</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-09
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-12
 </p>
 
 <p>
@@ -382,8 +382,9 @@ Some functions
 described in this clause
 are specified to throw exceptions of type <code>system_error</code>
 ([syserr.syserr]).
-Such exceptions shall be thrown when one of these operating
-system or other low-level API calls result in an error.
+Such exceptions shall be thrown if such a call results in an error that
+prevents the library function from satisfying its postconditions or from
+returning a meaningful value.
 </p>
 
 <p>
