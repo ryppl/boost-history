@@ -380,7 +380,7 @@ namespace svg
     // Example:
     // <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
 
-    text_style style_info_;
+    text_style style_info_; // To replace above elements.
 
   public:
     // Set and get member functions.
@@ -511,14 +511,15 @@ namespace svg
       const std::string& font = "Lucida Sans Unicode",
       const std::string& style = "", const std::string& weight = "",
       const std::string& stretch = "", const std::string& decoration = "",
-      align_style align = center_align, int rotate = horizontal)
+      align_style align = center_align, int rotate = horizontal,
+      text_style ts = no_style) // To replace above elements.
       : // Constructor.
     x_coord(x), y_coord(y),
       txt(text),
       size(size),
       font(font),
       style_(style), weight(weight), stretch(stretch), decoration(decoration),
-      align(align), rotate(rotate)
+      align(align), rotate(rotate), style_info_(ts)
     { // text_element default constructor, defines defaults for all private members.
     }
 

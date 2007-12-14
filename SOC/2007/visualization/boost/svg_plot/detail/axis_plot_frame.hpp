@@ -34,7 +34,8 @@ namespace detail
     // axis_plot_frame is used as base class, for example:
     // class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
     // class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
-  protected:
+  //protected:
+  public:
     // --------------------------------------------------------------------
     // We don't use the SVG coordinate transform because then text would
     // be flipped. I'm considering using it to scale the image for resizes.
@@ -144,7 +145,7 @@ namespace detail
       // Draw the minor grid, if wanted.
       if(derived().use_x_minor_grid_)
       {
-        if(!derived().use_plot_window)
+        if(!derived().use_plot_window_)
         {  // Use whole image.
            // Make space for title and X-axis labels.
           if(derived().use_title)
@@ -157,7 +158,7 @@ namespace detail
           }
         }
         else
-        { // use_plot_window == true.
+        { // use_plot_window_ == true.
           y1 = derived().plot_y1 + 1; // Top. Why +1 and -1?
           y2 = derived().plot_y2 - 1; // Bottom. Ensure *inside* window?
         }
@@ -228,7 +229,7 @@ namespace detail
     double y2(derived().image.x_size()); // y2 = lower end of tick.
     if(derived().use_x_major_grid_)
     { // Draw major grid vertical line.
-      if(!derived().use_plot_window)
+      if(!derived().use_plot_window_)
       { // Allow a modest margin around text of title and X-axis labels, if in use.
         if(derived().use_title)
         {
@@ -240,7 +241,7 @@ namespace detail
         }
       }
       else
-      { // use_plot_window == true
+      { // use_plot_window_ == true
         y1 = derived().plot_y1; // Bottom of plot window.
         y2 = derived().plot_y2; // Top of plot window.
       }
@@ -350,28 +351,27 @@ namespace detail
 
   void draw_x_axis()
   {
-    double y1(0.); // Draw the horizontal X-axis line at y = 0.
-    transform_y(y1);
-    derived().x_axis = y1;
+    if(derived().use_x_axis_lines_)
+    { // Draw the horizontal X-axis line the full width of the plot window,
+      // perhaps including an addition in lieu of a major tick.
+      double xleft = derived().plot_x1;
+      double xright = derived().plot_x2;
+      if (derived().use_left_ticks && derived().use_x_ticks_on_plot_window_ 
+        && (derived().y_axis_position_ == y_intersect))
+      { // Extend the horizontal line left in lieu of longest tick.
+        xleft -= (std::max)(derived().y_minor_tick_length_, derived().y_major_tick_length_);
+      }
+      double y = derived().x_axis; // y = 0, (provided y range includes zero).
+      derived().image.get_g_element(PLOT_X_AXIS).line(
+        xleft, y,
+        xright, y);
+    }
+
     // Access the paths for the ticks & grids, ready for additions.
     path_element& minor_tick_path = derived().image.get_g_element(PLOT_X_MINOR_TICKS).path();
     path_element& major_tick_path = derived().image.get_g_element(PLOT_X_MAJOR_TICKS).path();
     path_element& minor_grid_path = derived().image.get_g_element(PLOT_X_MINOR_GRID).path();
     path_element& major_grid_path = derived().image.get_g_element(PLOT_X_MAJOR_GRID).path();
-
-    if(derived().use_x_axis_lines_)
-    { // Draw the horizontal X-axis line the full width of the plot window,
-      // including an addition in lieu of a major tick.
-      double xleft = derived().plot_x1;
-      double yaxis = derived().x_axis; // y = 0
-      if (derived().use_left_ticks)
-      { // Extend the horizontal line left in lieu of longest tick.
-        xleft -= (std::max)(derived().y_minor_tick_length_, derived().y_major_tick_length_);
-      }
-      derived().image.get_g_element(PLOT_X_AXIS).line(
-        xleft, yaxis,
-        derived().plot_x2, yaxis);
-    }
 
     // x_minor_jump is the interval between minor ticks.
     double x_minor_jump = derived().x_major_interval_ /
@@ -437,7 +437,7 @@ namespace detail
     derived().title_info.x(derived().image.x_size() / 2.); // Center of image.
     // Assumes align = center_align.
     double y;
-    if (derived().use_plot_window)
+    if (derived().use_plot_window_)
     {
        y = derived().plot_y1; // plot_y1 IS now assigned in calculate_plot_window
        // y is distance from top of image to top of plot window.
@@ -1463,7 +1463,7 @@ public:
 
   Derived& plot_window_on(bool cmd)
   {
-    derived().use_plot_window = cmd;
+    derived().use_plot_window_ = cmd;
 
     if(cmd)
     { // set plot window color and border color.
@@ -1477,7 +1477,7 @@ public:
 
   bool plot_window_on()
   {
-    return derived().use_plot_window;
+    return derived().use_plot_window_;
   }
 
   Derived& plot_border_color(const svg_color& col)

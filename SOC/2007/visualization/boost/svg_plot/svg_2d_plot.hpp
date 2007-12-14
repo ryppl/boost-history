@@ -77,6 +77,12 @@ namespace boost
 struct svg_2d_plot_series;
 class svg_2d_plot;
 
+static const double wh_ = 0.7; // font text width/height ratio.
+static const double sin45 = 0.707; // Use if axis value labels are sloping.
+
+    enum y_axis_intersect {left = -1, y_intersect = 0, right = +1};
+    enum x_axis_intersect {bottom = -1, x_intersect = 0, top = +1};
+
 struct svg_2d_plot_series
 {
   // 2-D Data series points to plot.
@@ -130,6 +136,8 @@ private:
   // Stored so as to avoid rewriting style information constantly.
   svg image;
 
+  text_style a_style; // Defaults.
+
   text_element title_info; // Plot title.
   text_element legend_header_; // legend box header or title (if any).
   text_element x_label_info; // For example: "length"
@@ -161,7 +169,7 @@ private:
   // X-Axis information.
   double x_min; // minimum x value (Cartesian units).
   double x_max; // maximum x value (Cartesian units).
-  double x_axis; // // x-axis (y = 0) transformed into SVG coordinates.
+  double x_axis; // // x-axis (y = 0) transformed into SVG Y coordinates. -1 if not caculated yet.
   double x_major_interval_; // x_major_interval_ is the stride or interval for major x ticks.
   // (Cartesian units)  set/get by x_major_interval
   double x_minor_interval_; // Interval (Cartesian units) between minor ticks.
@@ -169,8 +177,10 @@ private:
   // but one could calculate x_minor_interval_.
 
   // text width is effectively the boldness of the font.
-  // 0 is default, 1 is bolder, 2 very bold...
-  // TODO SVG has also a not yet implemented boldness.
+  // But only in graphics mode rather than text mode, and style "bold"
+  // and this is poor on some browsers, so recommend to not set width.
+  // 0 is default, 1 is bolder, 2 very bold and a not-yet-implemented boldness.
+  double image_border_width_;
   double title_font_width_;
   double legend_font_width_;
   double legend_width_; // width of legend box in pixels.
@@ -183,7 +193,7 @@ private:
   double legend_x2_; // right of legend box.
   double legend_y2_; // bottom of legend box.
   size_t legend_longest_; // longest string in legend box.
-  double x_label_width_; // Used for
+  double x_label_width_; // Used for value too.
   double x_axis_width_; // X-axis horizontal line width. set/get by x_axis_width()
   double x_major_tick_length_; // pixels.
   double x_major_tick_width_; // pixels.
@@ -194,7 +204,7 @@ private:
   double x_major_grid_width_; // pixels.
   double x_minor_grid_width_; // pixels.
   // grid width is set in style.stroke_width
-  // unsigned int x_major_label; // pixels. Now in x_units_info font size
+  int x_axis_position_; // 
 
   // Y-Axis information.
   unsigned int y_num_minor_ticks_; // number of minor ticks, eg 4 gives major 0, minor 1,2,3,4, major 5
@@ -203,7 +213,7 @@ private:
   double y_major_interval_; // y_major_interval_ is the stride or interval for major y ticks.
   double y_minor_interval_; // y_minor_interval_ is the stride or interval for minor y ticks.
   double y_label_width_; // TODO used for axis width too for now.  OK?
-  double y_axis; // Y-axis (x = 0) transformed into SVG coordinates.
+  double y_axis; // Y-axis (x = 0) transformed into X SVG coordinates. -1 if not caculated yet.
   double y_axis_width_; // Y-axis vertical line width.  set/get by y_axis_width()
   double y_major_tick_length_; // pixels.
   double y_major_tick_width_; // pixels.
@@ -213,20 +223,23 @@ private:
   // grid width is set in style.stroke_width
   double y_major_grid_width_; // pixels.
   double y_minor_grid_width_; // pixels.
+  double x_label_length_; // width (in SVG) of longest label on X-axis.
+  double y_label_length_; // width (in SVG) of longest label on Y-axis.
+  int y_axis_position_; // 
 
   // Yes/no options.
   bool use_title; // Provide a title for the whole plot.
   bool use_legend; // Provide a legend box.
   bool use_axis; // Draw x and y axes.  TODO split so can have either or both.
-  bool use_plot_window; // Use a separate plot window.
+  bool use_plot_window_; // Use a separate plot window.
   bool use_x_label; // Label axis with text.
   bool use_y_label;
   bool use_x_major_labels; // values for major ticks.
   bool use_y_major_labels;
   bool use_x_label_units;
   bool use_y_label_units;
-  int x_label_rotation_; // X_axis value labels written vertically up.
-  int y_label_rotation_; // Y_axis value labels written vertically up.
+  int x_label_rotation_; // X_axis value labels written.
+  int y_label_rotation_; // Y_axis value labels written.
   bool use_x_major_grid_;
   bool use_x_minor_grid_;
   bool use_y_major_grid_;
@@ -247,6 +260,7 @@ private:
   bool use_line; // get/set by line_on(bool); // Not really useful for 1-D,
   // TODO but needs Boost-Parameter removed to do properly.
   bool strip_e0s_;
+  unsigned int longest_; // string in legend box.
 
   // Where we will be storing the data points (series) for transformation.
   std::vector<svg_2d_plot_series> series; // Defined above.
@@ -259,6 +273,15 @@ private:
   // is allowed to show through but everything on the outside is masked out.
   // So the plot_window_clip limits display to a plot_window rectangle.
 
+  //text_style label_style(40); // Or use all defaults.
+  //text_style(int size = 12,  // defaults:
+  //const std::string& font = "sans",
+  //const std::string& style = "",
+  //const std::string& weight = "",
+  //const std::string& stretch = "",
+  //const std::string& decoration = "")
+  //label_style().font_weight("bold");
+
 public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
 
   svg_2d_plot() // Constructor, including all the very many default plot options.
@@ -266,17 +289,21 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     // TODO check that *all* options are initialized here.
     // See documentation for default settings rationale.
 
+
+    a_style(16, "serif"),
     title_info(0, 0, "Plot of data", 16, "Verdana", "", "", "", "", center_align, horizontal),
     title_font_width_(1),  // text width is effectively the boldness of the font.
     legend_width_(200), // width of legend box (pixels)
     legend_header_(0, 0, "", 14, "Verdana", "italic", "", "bold", "", center_align, horizontal),
     legend_font_width_(0.5),
     x_label_info(0, 0, "X Axis", 14, "Verdana", "", "bold", "", "", center_align, horizontal),
-    x_units_info(0, 0, "(units)", 14, "Verdana", "", "", "", "", center_align, horizontal),
+    x_units_info(0, 0, "(units)", 14, "Verdana", "", "", "", "", center_align, horizontal, a_style),
     x_label_value(0, 0, "", 12, "Verdana", "", "", "", "", center_align, horizontal),
     // TODO use this and provide way to set'n'get separately.
+    x_axis(-1), // -1 means not yet valid.
+    y_axis(-1), // -1 means not yet valid.
     x_label_width_(2),
-    x_axis_width_(2),
+    x_axis_width_(2), // Width of X-axis line.
     y_label_info(0, 0, "Y Axis", 14, "Verdana", "", "bold", "", "", center_align, upward),
     y_units_info(0, 0, "(units)", 14, "Verdana", "", "", "", "", center_align, upward),
     y_label_value(0, 0, "", 12, "Verdana", "", "", "", "", center_align, upward),
@@ -294,8 +321,9 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     y_value_precision_(3), // precision for tick value labels, usually 3 will suffice.
     y_value_ioflags_(std::ios::dec), // Provides a way of controlling scientific format, etc.
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
-    text_margin_(1.5), // for axis label text, as a multiplier of the font size.
-    border_margin_(10), // Prevent plot window box begin right on edge,
+    image_border_width_(1),
+    text_margin_(2.), // for axis label text, as a multiplier of the font size.
+    border_margin_(10), // Prevent plot window box beginning right on edge,
     border_width_(20), // width of any border to plot window and legend box.
     // less than half the font size of label value will result in clipping.
     // plot_x1, x2, y1, 2 are set in calculate_plot_window
@@ -325,6 +353,10 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     y_scale(1.), y_shift(0.),
     x_minor_interval_(0), // These are calculated from x & y_num_minor_ticks_
     y_minor_interval_(0), // but given a value here for safety.
+    x_axis_position_(0),
+    y_axis_position_(0),
+    x_label_length_(0),
+    y_label_length_(0),
 
     plot_window_clip("plot_window"), // for <clipPath id="plot_window" ...
 
@@ -352,32 +384,31 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
     use_x_minor_grid_(false),
     use_y_major_grid_(true),
     use_y_minor_grid_(false),
-    use_plot_window(true),
+    use_plot_window_(true),
     use_line(true)
     // TODO but needs Boost-Parameter removed to do properly.
 
   {
     image_size(500, 400); // Default image size for 2-D.
     // 2-D usually needs to be squarer than 1-D.
-    //use_x_ticks = use_up_ticks || use_down_ticks;
-    //use_y_ticks = use_left_ticks || use_right_ticks;
+
+    using namespace boost::svg::detail; // avoid detail::
 
     // Build the document tree by adding all children of the root node.
-    for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
+    for(int i = 0; i < SVG_PLOT_DOC_CHILDREN; ++i)
     {
       image.add_g_element();
     }
-    using namespace boost::svg::detail; // avoid detail::
     set_ids();
 
     // Set other SVG color, stroke & width defaults for various child PLOT nodes.
 
     // Tick length etc is now set above in the constructor, but width & color here.
     image.get_g_element(PLOT_BACKGROUND).style().fill_color(white);
-    image.get_g_element(PLOT_BACKGROUND).style().stroke_color(linen); // TODO test only ?
-    image.get_g_element(PLOT_BACKGROUND).style().stroke_width(0.5); //
+    image.get_g_element(PLOT_BACKGROUND).style().stroke_color(yellow); // TODO test only ?
+    image.get_g_element(PLOT_BACKGROUND).style().stroke_width(image_border_width_); //
     image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color(white);
-    image.get_g_element(PLOT_WINDOW_BACKGROUND).style().stroke_width(1).stroke_color(lightyellow);
+    image.get_g_element(PLOT_WINDOW_BACKGROUND).style().stroke_width(1).stroke_color(yellow);
     image.get_g_element(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
     image.get_g_element(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_width_);
     image.get_g_element(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_width_);
@@ -404,26 +435,9 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
       image.get_g_element(PLOT_Y_MINOR_TICKS).style().stroke_width(y_minor_tick_width_).stroke_color(black);
     }
     // Grids.
-    //// Note: may not be needed here - they MUST be set at call time in case use_x_major_grid_ has changed.
-    //if(use_x_major_grid_)
-    //{ // pale blue.
-    //  image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(x_major_grid_width_).stroke_color(svg_color(200, 220, 255));
-    //}
-    //if(use_x_minor_grid_)
-    //{
-    //  image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width(x_minor_grid_width_).stroke_color(svg_color(200, 220, 255));
-    //}
-    //if(use_y_major_grid_)
-    //{
-    //  image.get_g_element(PLOT_Y_MAJOR_GRID).style().stroke_width(y_major_grid_width_).stroke_color(svg_color(200, 220, 255));
-    //}
-    //if(use_y_minor_grid_)
-    //{
-    //  image.get_g_element(PLOT_Y_MINOR_GRID).style().stroke_width(y_minor_grid_width_).stroke_color(svg_color(200, 220, 255));
-    //}
-
-    // Default color for grid.
+    // Default color & width for grid, used or not.
       image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(x_major_grid_width_).stroke_color(svg_color(200, 220, 255));
+      BOOST_ASSERT(image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
       image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width(x_minor_grid_width_).stroke_color(svg_color(200, 220, 255));
       image.get_g_element(PLOT_Y_MAJOR_GRID).style().stroke_width(y_major_grid_width_).stroke_color(svg_color(200, 220, 255));
       image.get_g_element(PLOT_Y_MINOR_GRID).style().stroke_width(y_minor_grid_width_).stroke_color(svg_color(200, 220, 255));
@@ -434,7 +448,7 @@ public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
 private:
   // svg_2d_plot Member Functions.
 
-  void set_ids()
+  void set_ids()  // TODO is this only used once in constructor and should be inline?
   { // document ids for use in <g id = "PLOT_TITLE".../>
     for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
@@ -442,14 +456,14 @@ private:
     }
   } //  void set_ids()
 
-  void calculate_transform()
-  { // Calculate scale and shift factors for transform from Cartesian to plot.
-    // SVG image is 0, 0 at top left, Cartesian at bottom left.
-    x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
-    x_shift = plot_x1 - x_min *(plot_x2 - plot_x1) / (x_max - x_min);
-    y_scale = -(plot_y2-plot_y1) / (y_max-y_min);
-    y_shift = plot_y1 - (y_max * (plot_y1 - plot_y2) / (y_max - y_min));
-  } //   void calculate_transform()
+  //void calculate_transform() now inline in calcualte_plot_window
+  //{ // Calculate scale and shift factors for transform from Cartesian to plot.
+  //  // SVG image is 0, 0 at top left, Cartesian at bottom left.
+  //  x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
+  //  x_shift = plot_x1 - x_min *(plot_x2 - plot_x1) / (x_max - x_min);
+  //  y_scale = -(plot_y2-plot_y1) / (y_max-y_min);
+  //  y_shift = plot_y1 - (y_max * (plot_y1 - plot_y2) / (y_max - y_min));
+  //} //   void calculate_transform()
 
   void transform_pair(std::pair<double, double>& pt)
   { // Transform both x and y from Cartesian to SVG coordinates.
@@ -460,191 +474,336 @@ private:
   void calculate_plot_window()
   { // The plot window is used to set a clip path:
     // this ensures that data points and lines (and anything else)
-    // outside this window is NOT drawn.
-    // Start by assuming we can use all the svg image.
-    // TODO Should this be reduced by width of any image border?
-    plot_x1 = 0; // left
-    plot_y1 = 0; // top
-    plot_x2 = image.x_size(); // right
-    plot_y2 = image.y_size(); // bottom
+    // outside this window are NOT drawn.
+    // Start by assuming we can use all the svg image,
+    //  but reduce by width of any image border.
+    plot_x1 = 0 + image_border_width_; // left
+    plot_y1 = 0 + image_border_width_; // top
+    plot_x2 = image.x_size() - image_border_width_; // right
+    plot_y2 = image.y_size() - image_border_width_; // bottom
 
     calculate_legend_box();
-
+    if(use_legend 
+      && (legend_x1_ == -1) ) // Legend box position NOT been set by legend_top_left.
+    { // Leave space for legend at right of plot window.
+      plot_x2 -= legend_width_;  // legend box width.
+    }
     if(use_x_label)
     { // Leave space at bottom for X axis label.
-      plot_y2 -= x_label_info.font_size() * text_margin_;
+      plot_y2 -= x_label_info.font_size() * (text_margin_);
     }
     if(use_y_label)
     { // Leave space at left for Y axis label.
-      plot_x1 += y_label_info.font_size() * text_margin_;
+      plot_x1 += y_label_info.font_size() * (text_margin_ - 0.5);
     }
     if(use_title)
     { // Leave space at top for title.
       // TODO what if want to put title at bottom?
-      plot_y1 += title_font_size() * (text_margin_ + 1);
+      plot_y1 += title_font_size() * (text_margin_ + 0.5);
     }
-    if(use_plot_window)
+    if(use_plot_window_)
     { // Reduce to allow for legend, axes ticks to be on or outside plot_window.
       // Give the plot window a border (set with plot_border_width(double)).
       // Needed to allow any plot window border rectangle to show OK.
-      // border_margin is to prevent it being right on the image border,
-      // perhaps covered by any rectangle making image border.
+      // border_margin is to prevent it being right on the image border.
       plot_x1 += plot_border_width() + border_margin(); // pixels.
       plot_x2 -= plot_border_width() + border_margin();
       plot_y1 += plot_border_width() + border_margin();
       plot_y2 -= plot_border_width() + border_margin();
-      // Also need a >half font to allow the value label on any max major tick to avoid clipping.
-      // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
-      // determine the width of digits, so an arbitrary width height ratio wh is used:
-      const double wh = 0.7; // width compared to font height.
-      static const double sin45 = 0.707; // Use if axis value labels are sloping.
-      if(use_legend 
-        && (legend_x1_ == -1) ) // Legend box position NOT been set by legend_top_left.
-      { // Leave space for legend at right of plot window.
-        plot_x2 -= legend_width_;  // legend box width.
+    }
+    // Check if the axes will intersect.
+    y_axis_position_ = y_intersect;  // Y-axis will intersect X-axis.
+    if (x_min > std::numeric_limits<double>::min())
+    { // Y-axis > 0 so will not intersect X -axis, (all positive)
+      y_axis_position_ = left; // Y-axis free to left of end of X-axis.
+      use_y_ticks_on_plot_window_ = true;
+    }
+    else if (y_max < -std::numeric_limits<double>::min())
+    { // Y-axis < 0 so will not intersect X -axis, (all negative)
+      y_axis_position_ = right;
+      use_y_ticks_on_plot_window_ = true;
+    }
+    x_axis_position_ = x_intersect;  // X-axis will intersect Y-axis.
+    if (y_min > std::numeric_limits<double>::min()) // all definitely > zero.
+    { // y_min > 0 so X-axis will not intersect Y-axis, so use bottom plot window.
+      x_axis_position_ = bottom; // X-axis to bottom.
+      use_x_ticks_on_plot_window_ = true;
+    }
+    else if(y_max < -std::numeric_limits<double>::min())  // all definitely < zero.
+    { // // y_max < 0 so X-axis will not intersect Y-axis, so use top plot window.
+      x_axis_position_ = top; // X-axis to top.
+      use_x_ticks_on_plot_window_ = true;
+    }
+
+    // Also need a >half font to allow the value label on any max major tick to avoid clipping.
+    // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
+    // determine the width of digits, so an arbitrary average width height ratio wh is used:
+
+    // We would really like to know the length of the longest value label here!
+    // Might convert the max and then use its .length()?
+    int chars = (y_value_precision_ + 1 + 1); // sign & decimal point.
+    if((y_value_ioflags_ & std::ios::scientific) == std::ios::scientific)
+    { // precision is number of decimal places in the fractional part (default 6).
+      chars += 5; // Also need space for e, sign & 3 exponent digits = 5)
+    }
+    else if((y_value_ioflags_ & std::ios::fixed) == std::ios::fixed)
+    { // precision is 
+      chars += 2; // Need space for decimal point & at least 1 more digit)
+    }
+    else
+    { // Default neither fixed nor scientific, no leading or trailing zero(s).
+      // allowing sign and decimal point should probably be enough, 
+      // but only a check of the actual values will be accurate.  TODO?
+    }
+    y_label_length_ = 0; // SVG units.
+    if (y_label_rotation_ == horizontal)
+    { // Move edge right to give space for y_value_precision_ digits.
+      y_label_length_ += y_label_value.font_size() * (chars * wh_);
+    }
+    else if((y_label_rotation_ == upward) || (y_label_rotation_ == downward))
+    { // Only need one char width from Y-axis label.
+      y_label_length_ += y_label_value.font_size() * 1.5;
+    }
+    else
+    { // Assume some slope 45, so diagonally down from tick,
+      // and takes a bit less room.
+      y_label_length_ = y_label_value.font_size() * chars * wh_ * sin45;
+    }
+    if (use_y_major_labels && (y_axis_position_ != right) )
+    {
+      //if (abs(x_min/(x_max - x_min)) < 0.05) // < 5% of range.
+      //  // Y-axis is too close to the axis label.
+      //  // Want to do this:
+      //  //((y_axis - plot_x1) < (y_label_length_ - y_major_tick_width_)) )
+      //  // needs to calculate transform to get into SVG units, but this is changing plot_x1 !!
+      //{ // force onto plot window. BUT this only looks right if plot window is on.
+      //  // because makr ticks and label are on the plot window
+      // use_y_ticks_on_plot_window_ = true;
+      //}
+      //if (use_y_ticks_on_plot_window_) // on plot window
+      {  // Move plot window right to make space for value labels,
+        plot_x1 += y_label_length_;
       }
-      // value_precision is 
-      if (use_y_major_labels && use_y_ticks_on_plot_window_)
-      { // Move plot window right to make space for value labels.
-        // We would really like to know the length of the longest value label here!
-        // Might convert the max and then use its .length()?
-        int l = (y_value_precision_ + 1 + 1); // sign & decimal point.
-         if((y_value_ioflags_ & std::ios::scientific) == std::ios::scientific)
-         { // precision is number of decimal places in the fractional part (default 6).
-            l += 5; // Also need space for e, sign & 3 exponent digits = 5)
-         }
-         else if((y_value_ioflags_ & std::ios::fixed) == std::ios::fixed)
-         { // precision is 
-            l += 2; // Need space for decimal point & at least 1 more digit)
-         }
-         else
-         { // Default neither fixed nor scientific, no leading or trailing zero(s).
-           // allowing sign and decimal point should probably be enough, 
-           // but only a check of the actual values will be accurate.  TODO?
-         }
-        if (y_label_rotation_ == horizontal)
-        { // Move edge right to give space for y_value_precision_ digits.
-          plot_x1 += y_label_value.font_size() * (l * wh);
+    }
+
+    if (use_x_major_labels && (use_x_ticks_on_plot_window_ || (x_axis_position_ != top) ))
+    { // Move bottom of plot window up to give space for x value labels.
+      // x_value_precision_ digits etc.
+      double l = x_value_precision_ + 1 + 1; // sign & decimal point.
+      if(x_label_rotation_ == horizontal)
+      { // Only 1 char height & 1 space needed if horizontal.
+        l = 2;
+      } 
+      else 
+      { // will need more than 2
+        //l += 1; // extra space at top and bottom?
+        if ((x_value_ioflags_ & std::ios::scientific) == std::ios::scientific)
+        { // space for "e+000"
+          l += 5;
         }
-        else if((y_label_rotation_ == upward) || (y_label_rotation_ == downward))
-        { // Only need one char width from Y-axis label.
-          plot_x1 += y_label_value.font_size() * 1.5;
+        else if((x_value_ioflags_ & std::ios::fixed) == std::ios::fixed)
+        { // Need space for decimal point & sign & at least 1 more digit)
+          l += 3;
+        }
+        if ((x_label_rotation_ == upward) || (x_label_rotation_ == downward))
+        { // Need space for longest.
         }
         else
-        { // Assume some slope 45, so diagonally down from tick,
-          // and takes a bit less room.
-          plot_x1 +=  y_label_value.font_size() * l * wh * sin45;
+        { // Assume some slope, say 45, so * sin(45) = 0.707.
+          l *= sin45;
         }
       }
-      if (use_x_major_labels && use_x_ticks_on_plot_window_)
-      { // Move bottom of plot window up to give space for x value labels.
-        // x_value_precision_ digits etc.
-        double l = x_value_precision_ + 1 + 1; // sign & decimal point.
-        if(x_label_rotation_ == horizontal)
-        { // Only 1 char height & 1 space needed if horizontal.
-          l = 2;
-        } 
-        else 
-        { // will need more than 2
-          //l += 1; // extra space at top and bottom?
-          if ((x_value_ioflags_ & std::ios::scientific) == std::ios::scientific)
-          { // space for "e+000"
-             l += 5;
-          }
-          else if((x_value_ioflags_ & std::ios::fixed) == std::ios::fixed)
-          { // Need space for decimal point & sign & at least 1 more digit)
-            l += 3;
-          }
-         if ((x_label_rotation_ == upward) || (x_label_rotation_ == downward))
-          { // need space for longest.
-          }
-          else
-          { // Assume some slope, say 45 sin(45) = 0.707.
-            l *= sin45;
-          }
-        }
-        plot_y2 -= x_label_value.font_size() * l * wh; // Move up.
-      }
-      if(use_left_ticks)
-      { // Start left of plot to right to give space for biggest of any external left ticks.
-        plot_x1 += (std::max)(y_major_tick_length_, y_minor_tick_length_);  // Avoid macro max trap!
-          // TODO y_major_tick_length_ > y_minor_tick_length_ ? y_major_tick_length_ : y_minor_tick_length_;
-      }
-      if(use_down_ticks)
-      { // Start bottom of plot higher to give space for any external down ticks.
-        plot_y2 -=(std::max)(x_major_tick_length_, x_minor_tick_length_);
-          //x_major_tick_length_ > x_minor_tick_length_ ? x_major_tick_length_ : x_minor_tick_length_;
-      }
-      // Draw plot window rectangle with background and/or border.
-      image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).push_back(
-        new rect_element(plot_x1, plot_y1, (plot_x2 - plot_x1), plot_y2 - plot_y1));
-    } // use_plot_window
-  } // calculate_plot_window
-
-
-  void draw_y_minor_ticks(double value, path_element& tick_path, path_element& grid_path)
-  {
-    double x1(0.);
-    double y1(value); // for tick position and value label.
-    transform_y(y1);
-    double x2(image.y_size()); // right edge of image.
-
-    if(use_y_minor_grid_)
-    { // Draw the minor grid, if wanted.
-      if(!use_plot_window)
-      { // Use whole image, but make space for title & labels text.
-        //if(use_title)
-        //{ // If title at top, should make no difference, unlike X grid.
-        //  x2 -= title_info.font_size() * text_margin_;
-        //}
-        if(use_y_label)
-        {
-          x1 += y_label_info.font_size() * text_margin_;
-          x2 -= y_label_info.font_size() * text_margin_;
-        }
-      }
-      else
-      { // Use plot window.
-        x1 = plot_x1 + 1; // TODO what is the +1 for?
-        x2 = plot_x2 - 1; // Ensure *inside* window?
-      }
-      if((y1 >= plot_y1) && (x1 >= plot_x1) && (x2 <= plot_x2) )
-      { // // Make sure that we are drawing inside the allowed window.
-        grid_path.M(x1, y1).L(x2, y1);
-      }
-      // TODO else just ignore outside plot window?
-    }
-
-    if(use_y_ticks_on_plot_window_)
-    { // Put y minor ticks on the plot window border. External style.
-      x1 = plot_x1; // On the plot window border.
-      x2 = plot_x1;
-    }
-    else
-    { // Internal style.
-      x1 = y_axis; // On the Y-axis line.
-      x2 = y_axis;
+      plot_y2 -= x_label_value.font_size() * l * wh_; // Move up.
     }
     if(use_left_ticks)
-    {
-      x1 -= y_minor_tick_length_;
+    { // Start left of plot to right to give space for biggest of any external left ticks.
+      plot_x1 += (std::max)(y_major_tick_length_, y_minor_tick_length_);  // Avoid macro max trap!
     }
-    if(use_right_ticks)
-    {
-      x2 += y_minor_tick_length_;
+    if(use_down_ticks)
+    { // Start bottom of plot higher to give space for any external down ticks.
+      plot_y2 -= (std::max)(x_major_tick_length_, x_minor_tick_length_);
     }
-    //if((x1 >= plot_x1) && (x2 <= plot_x2) && (y1 <= plot_y2) && (y1 >= plot_y1))
-    // but can never be inside if left tick!
-    if((y1 <= plot_y2) && (y1 >= plot_y1))
-    { // Make sure that we are drawing inside of the allowed plot window.
-      tick_path.M(x1, y1).L(x2, y1); // Draw the tick.
-    }
-    else
-    {// Do nothing?  warn?
-     // std::cout << "y minor tick OUTside " << x1 << ' ' << y1 << ' ' << x2 << std::endl;
 
+
+   if (use_x_axis_lines_) 
+    { // Want a X-axis line, so check if range include zero, so axes intersect,
+      // and x_axis is svg coordinate of Y-axis (usually y = 0).
+      // If not fix axis to bottom of the plot window
+      // and leave space (and quiggle between) to show this.
+      if (x_axis_position_ == bottom) // All definitely > zero.
+      { // y_min > 0 so X-axis will not intersect Y-axis, so use plot window.
+        x_axis = plot_y2; // X-axis to bottom,
+        //plot_y2 -= 2 * y_label_info.font_size(); // with a space.
+      }
+      else if(x_axis_position_ == top)  // definitely < zero.
+      { // // y_max < 0 so X-axis will not intersect Y-axis, so use plot window.
+        x_axis = plot_y1; // X-axis to top, 
+        //plot_y1 += 2 * y_label_info.font_size(); // with a space.
+      }
+      else
+      { // y_axis_position_ == y_intersect
+        // Calculate below after transform is calculated.
+      }
+    } // if (use_x_axis_) 
+
+    if (use_y_axis_lines_) 
+    { // Want a Y-axis line, so check if range include zero, so axes intersect,
+      // and y_axis is svg coordinate of X-axis (usually x = 0).
+      // If not fix axis to left of the plot window
+      // and leave space (and quiggle between) to show this.
+      if (y_axis_position_ == left) // all definitely > zero.
+      { // Y-axis will not intersect X -axis, so put Y-axis line to left of plot window.
+        y_axis = plot_x1; // Y-axis to left,
+        //plot_x1 += 2 * y_label_info.font_size(); // with a space.
+      }
+      else if(y_axis_position_ == right) 
+      { 
+        y_axis = plot_x2; // Y-axis to right of plot window,
+        //plot_x2 -= 2 * y_label_info.font_size(); // with a space.
+      }
+      else
+      { // x_axis_position_ == x_intersect
+        // Calculate below after transform is calculated.
+      }
+    } // if (use_y_axis_) 
+
+
+    // Calculate scale and shift factors for transform from Cartesian to plot.
+    // SVG image is 0, 0 at top left,y increase *downwards*
+    // Cartesian 0, 0 at bottom left, y increasing upwards.
+    x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
+    x_shift = plot_x1 - x_min *(plot_x2 - plot_x1) / (x_max - x_min);
+    y_scale = -(plot_y2-plot_y1) / (y_max-y_min);
+    y_shift = plot_y1 - (y_max * (plot_y1 - plot_y2) / (y_max - y_min));
+
+    if (use_x_axis_lines_)
+    {
+      if(x_axis_position_ == x_intersect)
+      { // Y Range *does* include zero, so x_axis not yet calculated.
+        double y(0.); // Use y = 0
+        transform_y(y);
+        x_axis = y; // svg Y coordinate of horizontal X-axis line.
+      }
     }
-  } // void draw_y_minor_ticks
+    if (use_y_axis_lines_)
+    { // May need to calculate axes, if will intersect.
+      if(y_axis_position_ == y_intersect)
+      { // X Range *does* include zero, so y_axis not yet calculated.
+        double x(0.);
+        transform_x(x);
+        y_axis = x; // SVG x coordinate of vertical Y-axis.
+      }
+    }
+    if (use_plot_window_)
+    { // Draw plot window rectangle with background and/or border.
+      image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).push_back(
+        new rect_element(plot_x1, plot_y1, (plot_x2 - plot_x1), plot_y2 - plot_y1));
+    }
+
+    } // calculate_plot_window
+
+  void draw_y_axis()
+  {
+    double x;
+    x = y_axis; // Y-axis (x = 0) transformed into X SVG coordinates.
+    // Perhaps shifted to left or right if origin is missing.
+
+    if(use_y_axis_lines_)
+    { // Draw the vertical Y-axis line (at cartesian x = 0).
+      double ybottom = plot_y2;
+      if (use_down_ticks && use_y_ticks_on_plot_window_ && (x_axis_position_ == x_intersect) )
+      { // Extend the vertical line down in lieu of a tick.
+        ybottom += (std::max)(x_minor_tick_length_, x_major_tick_length_);
+      }
+      image.get_g_element(detail::PLOT_Y_AXIS).line(x, plot_y1, x, ybottom);
+    // <g id="yAxis" stroke="rgb(0,0,0)"><line x1="70.5" y1="53" x2="70.5" y2="357"/>
+    }
+    // Access the paths for the ticks & grids, ready for additions.
+    path_element& minor_tick_path = image.get_g_element(detail::PLOT_Y_MINOR_TICKS).path();
+    path_element& major_tick_path = image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).path();
+    path_element& minor_grid_path = image.get_g_element(detail::PLOT_Y_MINOR_GRID).path();
+    path_element& major_grid_path = image.get_g_element(detail::PLOT_Y_MAJOR_GRID).path();
+
+    if(use_y_ticks_on_plot_window_)
+    { // TODO ensure that labels allow space. - they don't at present.
+      // Was y_external style - so both labels and ticks are OUTSIDE the plot window.
+      // 
+    }
+
+    // y_minor_jump is the interval between minor ticks.
+    double y_minor_jump = y_major_interval_ / ((double)(y_num_minor_ticks_ + 1.) );
+    // TODO Problem here with using floating point?
+    // Was i < y_max; but didn't show the tick and value at y_max so now i <= y_max;
+    // But may still fail if a ls or few bits out? Seems to fail for y = 100, for example.
+
+    // Draw the ticks on the positive side.
+    for(double y = 0; y <= y_max; y += y_major_interval_)
+    {
+      for(double j = y + y_minor_jump;
+        j < (y + y_major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
+        j += y_minor_jump)
+      { // Draw minor ticks.
+        // This will output 'orphaned' minor ticks that are beyond the plot window,
+        // if the last major tick does not coincide with the plot window.
+        // These are just ignored in draw_x_minor_ticks.
+        // There might be 9 of them,
+        // if you have the common 9 minor tick between major ticks!
+        // TODO this seems ugly - as does the negative ones below.
+        if (j != 0. || ! use_x_axis_lines_)
+        { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
+          // (won't be X-axis line for 1-D where the zero tick is always wanted).
+          draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
+        }
+      }
+      if ((y != 0. || ! use_x_axis_lines_) || use_y_ticks_on_plot_window_)
+      { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
+        // (won't be X-axis line for 1-D where the zero tick is always wanted).
+        draw_y_major_ticks(y, major_tick_path, major_grid_path);
+      }
+    }
+
+    // Draw the ticks on the negative side.
+    for(double y = 0; y >= y_min; y -= y_major_interval_)
+    {
+      for(double j=y; j > y-y_major_interval_; j-= y_major_interval_ / (y_num_minor_ticks_ + 1))
+      { // Draw minor ticks.
+        if ((j != 0. || ! use_x_axis_lines_) || use_y_ticks_on_plot_window_)
+        { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
+          // (won't be X-axis line for 1-D where the zero tick is always wanted).
+          draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
+        }
+      }
+      if ((y != 0. || ! use_x_axis_lines_) || use_y_ticks_on_plot_window_)
+      { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
+        // (won't be X-axis line for 1-D where the zero tick is always wanted).
+        draw_y_major_ticks(y, major_tick_path, major_grid_path);
+      }
+    }
+  } // draw_y_axis
+
+  void draw_y_label()
+  {
+    // image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_color(black);
+    // Now set in constructor, and can be changed with member function .
+
+    std::string label = y_label_info.text(); // x_axis label, and optional units.
+    if (use_x_label_units && (y_units_info.text() != ""))
+    { // Append the units, if any, providing brackets ().
+      // TODO Is this the best policy - or should the user provide the ()s????
+      label += "  (" + y_units_info.text() + ")";
+    }
+
+    image.get_g_element(detail::PLOT_Y_LABEL).push_back(new
+      text_element(y_label_info.font_size() * 1.5,
+      // shift over one char height to right from left edge of image.
+      (plot_y2 + plot_y1) / 2., // center on the plot window.
+      label, // "Y-Axis" for example.
+       y_label_info.font_size(),
+       y_label_info.font_family(),
+       "", "", "", "",
+       center_align, // One might want it to left or right_align?
+       upward)); // Y label must be drawn vertically.
+  } // draw_y_label
 
   void draw_y_major_ticks(double value, path_element& tick_path, path_element& grid_path)
   { // Draw Y axis major ticks, tick value labels & grids.
@@ -654,7 +813,7 @@ private:
     double x2(image.y_size()); // right end of tick.
     if(use_y_major_grid_)
     { // Draw horizontal major grid line.
-      if(!use_plot_window)
+      if(!use_plot_window_)
       { // TODO is this right?
         //if (use_title())
         //{ // title has no effect if at the top.
@@ -743,128 +902,91 @@ private:
           alignment = right_align;
         }
         // Always want all values including "0", if labeling external to plot window.
+        // use_ticks_on_plot_window_ == true
         image.get_g_element(detail::PLOT_VALUE_LABELS).text(
           x1,
           y,
           label.str(), y_label_value.font_size(), "", "", "", "", "", alignment, y_label_rotation_);
       }
       else
-      { // ! use_y_ticks_on_plot_window_Internal - value labels close to left of vertical Y-axis.
+      { // ! use_y_ticks_on_plot_window_ == Internal - value labels close to left of vertical Y-axis.
         if ((value != 0) && use_x_axis_lines_)
-        { // Avoid a zero ON the Y-axis as it would be cut through by the horizontal X-axis line.
+        { // Avoid a zero ON the Y-axis if it would be cut through by any horizontal X-axis line.
           y += y_label_value.font_size() / 2;
-          image.get_g_element(detail::PLOT_VALUE_LABELS).text(x1,
+          image.get_g_element(detail::PLOT_VALUE_LABELS).text(
+            x1 ,
             y, // Just shift down half a digit to center value digits on tick.
             label.str(), y_label_value.font_size(), y_label_value.font_family(), "", "", "", "",
-            center_align, // on the tick ???
+            alignment, // on the tick ???
             y_label_rotation_);
         }
       }
     } // if(use_y_major_labels)
   } // draw_y_major_ticks
 
-  void draw_y_axis()
-  {
-    double x1(0.);
-    transform_x(x1);
-    y_axis = x1; // in SVG coordinates.
-    if(use_y_axis_lines_)
-    { // Draw the vertical Y-axis line (at cartesian x = 0).
-      double ybottom = plot_y2;
-      if (use_down_ticks)
-      { // Extend the vertical line down in lieu of a tick.
-        ybottom += (std::max)(x_minor_tick_length_, x_major_tick_length_);
+      void draw_y_minor_ticks(double value, path_element& tick_path, path_element& grid_path)
+    {
+      double x1(0.);
+      double y1(value); // for tick position and value label.
+      transform_y(y1);
+      double x2(image.y_size()); // right edge of image.
+
+    if(use_y_minor_grid_)
+    { // Draw the minor grid, if wanted.
+      if(!use_plot_window_)
+      { // Use whole image, but make space for title & labels text.
+        //if(use_title)
+        //{ // If title at top, should make no difference, unlike X grid.
+        //  x2 -= title_info.font_size() * text_margin_;
+        //}
+        if(use_y_label)
+        {
+          x1 += y_label_info.font_size() * text_margin_;
+          x2 -= y_label_info.font_size() * text_margin_;
+        }
       }
-      image.get_g_element(detail::PLOT_Y_AXIS).line(x1, plot_y1, x1, ybottom);
-    // <g id="yAxis" stroke="rgb(0,0,0)"><line x1="70.5" y1="53" x2="70.5" y2="357"/>
+      else
+      { // Use plot window.
+        x1 = plot_x1 + 1; // TODO what is the +1 for?
+        x2 = plot_x2 - 1; // Ensure *inside* window?
+      }
+      if((y1 >= plot_y1) && (x1 >= plot_x1) && (x2 <= plot_x2) )
+      { // // Make sure that we are drawing inside the allowed window.
+        grid_path.M(x1, y1).L(x2, y1);
+      }
+      // TODO else just ignore outside plot window?
     }
-    // Access the paths for the ticks & grids, ready for additions.
-    path_element& minor_tick_path = image.get_g_element(detail::PLOT_Y_MINOR_TICKS).path();
-    path_element& major_tick_path = image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).path();
-    path_element& minor_grid_path = image.get_g_element(detail::PLOT_Y_MINOR_GRID).path();
-    path_element& major_grid_path = image.get_g_element(detail::PLOT_Y_MAJOR_GRID).path();
 
     if(use_y_ticks_on_plot_window_)
-    { // TODO confirm that labels allow space.
-      // Was y_external style - so both labels (and ticks) are OUTSIDE the plot window.
-      //image.get_g_element(detail::PLOT_Y_AXIS).line(plot_y1, x_axis, plot_x2, x_axis);
-      // TODO this looks rubbish.
+    { // Put y minor ticks on the plot window border. External style.
+      x1 = plot_x1; // On the plot window border.
+      x2 = plot_x1;
     }
-
-    // y_minor_jump is the interval between minor ticks.
-    double y_minor_jump = y_major_interval_ / ((double)(y_num_minor_ticks_ + 1.) );
-    // TODO Problem here with using floating point?
-    // Was i < y_max; but didn't show the tick and value at y_max so now i <= y_max;
-    // But may still fail if a ls or few bits out? Seems to fail for y = 100, for example.
-
-    // Draw the ticks on the positive side.
-    for(double y = 0; y <= y_max; y += y_major_interval_)
+    else
+    { // Internal style.
+      x1 = y_axis; // On the Y-axis line.
+      x2 = y_axis;
+    }
+    if(use_left_ticks)
     {
-      for(double j = y + y_minor_jump;
-        j < (y + y_major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
-        j += y_minor_jump)
-      { // Draw minor ticks.
-        // This will output 'orphaned' minor ticks that are beyond the plot window,
-        // if the last major tick does not coincide with the plot window.
-        // These are just ignored in draw_x_minor_ticks.
-        // There might be 9 of them,
-        // if you have the common 9 minor tick between major ticks!
-        // TODO this seems ugly - as does the negative ones below.
-        if (j != 0. || ! use_x_axis_lines_)
-        { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
-          // (won't be X-axis line for 1-D where the zero tick is always wanted).
-          draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
-        }
-      }
-      if ((y != 0. || ! use_x_axis_lines_) || use_y_ticks_on_plot_window_)
-      { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
-        // (won't be X-axis line for 1-D where the zero tick is always wanted).
-        draw_y_major_ticks(y, major_tick_path, major_grid_path);
-      }
+      x1 -= y_minor_tick_length_;
     }
-
-    // Draw the ticks on the negative side.
-    for(double y = 0; y >= y_min; y -= y_major_interval_)
+    if(use_right_ticks)
     {
-      for(double j=y; j > y-y_major_interval_; j-= y_major_interval_ / (y_num_minor_ticks_ + 1))
-      { // Draw minor ticks.
-        if ((j != 0. || ! use_x_axis_lines_) || use_y_ticks_on_plot_window_)
-        { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
-          // (won't be X-axis line for 1-D where the zero tick is always wanted).
-          draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
-        }
-      }
-      if ((y != 0. || ! use_x_axis_lines_) || use_y_ticks_on_plot_window_)
-      { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
-        // (won't be X-axis line for 1-D where the zero tick is always wanted).
-        draw_y_major_ticks(y, major_tick_path, major_grid_path);
-      }
+      x2 += y_minor_tick_length_;
     }
-  } // draw_y_axis
-
-  void draw_y_label()
-  {
-    // image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_color(black);
-    // Now set in constructor, and can be changed with member function .
-
-    std::string label = y_label_info.text(); // x_axis label, and optional units.
-    if (use_x_label_units && (y_units_info.text() != ""))
-    { // Append the units, if any, providing brackets ().
-      // TODO Is this the best policy - or should the user provide the ()s????
-      label += "  (" + y_units_info.text() + ")";
+    //if((x1 >= plot_x1) && (x2 <= plot_x2) && (y1 <= plot_y2) && (y1 >= plot_y1))
+    // but can never be inside if left tick!
+    if((y1 <= plot_y2) && (y1 >= plot_y1))
+    { // Make sure that we are drawing inside of the allowed plot window.
+      tick_path.M(x1, y1).L(x2, y1); // Draw the tick.
     }
+    else
+    {// Do nothing?  warn?
+     // std::cout << "y minor tick OUTside " << x1 << ' ' << y1 << ' ' << x2 << std::endl;
 
-    image.get_g_element(detail::PLOT_Y_LABEL).push_back(new
-      text_element(y_label_info.font_size() * 1.5,
-      // shift over one char height to right from left edge of image.
-      (plot_y2 + plot_y1) / 2., // center on the plot window.
-      label, // "Y-Axis" for example.
-       y_label_info.font_size(),
-       y_label_info.font_family(),
-       "", "", "", "",
-       center_align, // One might want it to left or right_align?
-       upward)); // Y label must be drawn vertically.
-  } // draw_y_label
+    }
+  } // void draw_y_minor_ticks
 
   void draw_straight_lines(const svg_2d_plot_series& series)
   { // Straight line between data points (rather than a Bezier curve).
@@ -1035,7 +1157,6 @@ private:
       new rect_element(0, 0, image.x_size(),  image.y_size()));
 
     calculate_plot_window();
-    calculate_transform();
     draw_title(); // Moved to ensure plot_X and Y are valid.
 
     // Define the clip path for the plot window.
@@ -1230,7 +1351,7 @@ public: // Member functions
   }
 
   svg_color y_axis_color()
-  { // eturn the stroke color.
+  { // return the stroke color.
     return image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_color();
   }
 
@@ -1258,7 +1379,7 @@ public: // Member functions
   }
 
   svg_2d_plot& y_axis_value_color(const svg_color& col)
-  { // Set BOTH stroke and fill to the same color.
+  { // Set BOTH stroke and fill to the same color.  TODO only stroke color?
     image.get_g_element(detail::PLOT_VALUE_LABELS).style().fill_color(col);
     image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
     return *this;
@@ -1563,13 +1684,6 @@ public: // Member functions
   // Example of declaration but definition below.
   // TODO Probably better done this way,
   // but wait until parameter system removed.
-
-
-
-
-
-
-
 
   // plot member function, with several parameters, using Boost.Parameter,
   // to add data series to the plot window.

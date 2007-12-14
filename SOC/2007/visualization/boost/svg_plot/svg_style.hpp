@@ -158,7 +158,7 @@ private:
 
 public:
   text_style(int size = 12,  
-  const std::string& font = "Lucida Sans Unicode",
+  const std::string& font = "sans",
   const std::string& style = "",
   const std::string& weight = "",
   const std::string& stretch = "",
@@ -240,9 +240,9 @@ public:
     decoration_ = s; // But implementation doubtful.
     return *this;
   }
-
-
 }; //   class text_style
+
+text_style no_style;
 
 // -----------------------------------------------------------------
 // This is the style information for any <g> tag.

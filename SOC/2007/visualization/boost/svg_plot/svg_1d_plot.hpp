@@ -300,14 +300,14 @@ public:
     set_ids();
   } // svg_1d_plot()
 
-  void calculate_transform()
-  { // Calculate scale and shift factors for transform from Cartesian to plot.
-    // SVG image is 0, 0 at top left, Cartesian at bottom left.
-    x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
-    x_shift = plot_x1 - (x_min * (plot_x2 - plot_x1) / (x_max - x_min));
-    y_scale = 1.;
-    y_shift = plot_y1 - (plot_y1 - plot_y2) / 2.;
-  } // void calculate_transform()
+  //void calculate_transform()
+  //{ // Calculate scale and shift factors for transform from Cartesian to plot.
+  //  // SVG image is 0, 0 at top left, Cartesian at bottom left.
+  //  x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
+  //  x_shift = plot_x1 - (x_min * (plot_x2 - plot_x1) / (x_max - x_min));
+  //  y_scale = 1.;
+  //  y_shift = plot_y1 - (plot_y1 - plot_y2) / 2.;
+  //} // void calculate_transform()
 
   void draw_axes()
   { // For 1-D, there is, of course, only the X-axis!
@@ -393,7 +393,7 @@ public:
       new rect_element(0, 0, image.x_size(),  image.y_size()));
 
     calculate_plot_window();
-    calculate_transform();
+    //calculate_transform();
     draw_title(); // Call after above to the plot_x and y are defined.
     if(use_x_axis_lines_)
     {
