@@ -1271,8 +1271,6 @@ A mutex object facilitates protection against data races
 and allows thread-safe synchronization of data between threads.
 A thread obtains ownership of a mutex object by calling <code>lock()</code>
 and relinquishes ownership by calling <code>unlock()</code>.
-The thread that calls <code>lock()</code> for a mutex object
-shall call <code>unlock()</code>.
 Mutexes may be either recursive or non-recursive,
 and may grant simultaneous ownership to one or many threads.
 The mutex types supplied by the Standard Library
