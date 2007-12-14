@@ -1588,13 +1588,13 @@ the time is rounded up to the nearest native resolution.
 
 <dt>Effects:</dt>
 <dd>
-The function attempts to obtain ownership of the mutex
-within the specified time.
-If the indicated time duration is less than or equal to <code>0</code>,
-the function still attempts to obtain ownership without
-blocking (as if by calling <code>try_lock()</code>).
-If the function returns within the specified time duration,
-it shall have obtained ownership.
+The function attempts to obtain ownership of the mutex within the <code>rel_time</code> 
+time duration.
+If the <code>rel_time</code> time duration is less than or equal to <code>0</code>,
+the function attempts to obtain ownership without
+blocking (as if by calling <code>try_lock()</code>). The function shall return 
+within the <code>rel_time</code> time duration only if is has obtained ownership 
+of the mutex object.
 [<i>Note:</i>
 As with <code>try_lock()</code>,
 there is no guarantee that ownership will be obtained
@@ -1637,12 +1637,12 @@ and have the following semantics:
 
 <dt>Effects:</dt>
 <dd>
-The function attempts to obtain ownership of the mutex by the specified time.
-If the indicated time has already passed,
-the function still attempts to obtain ownership
+The function attempts to obtain ownership of the mutex by the <code>abs_time</code> 
+absolute time. If <code>abs_time</code> has already passed,
+the function attempts to obtain ownership
 without blocking (as if by calling <code>try_lock()</code>).
-If the function returns by the specified time,
-it shall have obtained ownership.
+The function shall return by the <code>abs_time</code> absolute time only if is 
+has obtained ownership of the mutex object.
 [<i>Note:</i>
 As with <code>try_lock()</code>,
 there is no guarantee that ownership will be obtained
