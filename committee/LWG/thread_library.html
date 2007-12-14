@@ -3846,7 +3846,7 @@ class nanoseconds
 public:
     // <em>traits information</em>
     typedef <var><strong>implementation-defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000000000;
+    static const tick_type ticks_per_second = 1000 * 1000 * 1000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
@@ -3908,7 +3908,7 @@ class microseconds
 public:
     // <em>traits information</em>
     typedef <var><strong>implementation-defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000000;
+    static const tick_type ticks_per_second = 1000 * 1000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
@@ -4042,7 +4042,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000000</code>.
+<code>count() * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4138,7 +4138,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000000000</code>.
+<code>count() * 1000 * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4152,7 +4152,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000000</code>.
+<code>count() * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4249,7 +4249,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60000000000</code>.
+<code>count() * 60 * 1000 * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4263,7 +4263,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60000000</code>.
+<code>count() * 60 * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4277,7 +4277,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60000</code>.
+<code>count() * 60 * 1000</code>.
 </dd>
 
 </dl>
@@ -4375,7 +4375,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600000000000</code>.
+<code>count() * 3600 * 1000 * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4389,7 +4389,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600000000</code>.
+<code>count() * 3600 * 1000 * 1000</code>.
 </dd>
 
 </dl>
@@ -4403,7 +4403,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600000</code>.
+<code>count() * 3600 * 1000</code>.
 </dd>
 
 </dl>
@@ -4468,7 +4468,7 @@ public:
 
     // <em>traits</em>
     typedef <var><strong>implementation defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000000000;
+    static const tick_type ticks_per_second = 1000 * 1000 * 1000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
