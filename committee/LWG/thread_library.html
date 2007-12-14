@@ -2824,8 +2824,9 @@ public:
 <h3><a name="thread.condition">30.4 Condition variables [thread.condition]</a></h3>
 
 <p>
-Condition variables provide a mechanism to implement the monitor pattern.
-</p>
+Condition variables provide a synchronization primitive used to block a thread 
+until notified by some other thread that some condition is met, or until a 
+system time is reached.</p>
 
 <p>
 Condition variables permit concurrent invocation
@@ -2857,14 +2858,6 @@ class condition_variable_any;
 </blockquote>
 
 <h4><a name="thread.condvar">30.4.1 Class condition_variable [thread.condvar]</a></h4>
-
-<p>
-An object of class <code>condition_variable</code>
-is a synchronization primitive
-used to cause a thread to wait
-until notified by some other thread that some condition is met,
-or until a system time is reached.
-</p>
 
 <blockquote>
 <pre><code>
@@ -3258,13 +3251,6 @@ shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h4><a name="thread.condvarany">30.4.2 Class condition_variable_any [thread.condvarany]</a></h4>
-
-<p>
-An object of class <code>condition_variable_any</code>
-is a synchronization primitive
-used to cause a thread to wait until notified by some other
-thread that some condition is met, or a system time is reached.
-</p>
 
 <p>
 To meet the Lock requirement, types shall meet the Mutex requirement except that
