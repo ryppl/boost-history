@@ -1491,15 +1491,15 @@ public:
 <p>
 The class <code>mutex</code>
 provides a non-recursive mutex with exclusive ownership semantics.
-It satisfies all the Mutex requirements ([thread.mutex.requirements]).
-It shall be a standard-layout class ([class]).
-</p>
-
-<p>
 If one thread owns the <code>mutex</code> object, attempts by another thread to
 acquire ownership will fail (for <code>try_lock()</code>) or block (<code>for
 lock()</code>) until the first thread has released ownership with a call to
 <code>unlock()</code>.
+</p>
+
+<p>
+It satisfies all the Mutex requirements ([thread.mutex.requirements]).
+It shall be a standard-layout class ([class]).
 </p>
 
 <p>
@@ -1547,15 +1547,15 @@ public:
 <p>
 The class <code>recursive_mutex</code>
 provides a recursive mutex with exclusive ownership semantics.
-It satisfies all the Mutex requirements ([thread.mutex.requirements]).
-It shall be a standard-layout class ([class]).
-</p>
-
-<p>
 If one thread owns the <code>recursive_mutex</code> object, attempts by another
 thread to acquire ownership will fail (for <code>try_lock()</code>) or block
 (for <code>lock()</code>) until the first thread has completely released
 ownership.
+</p>
+
+<p>
+It satisfies all the Mutex requirements ([thread.mutex.requirements]).
+It shall be a standard-layout class ([class]).
 </p>
 
 <p>
@@ -1735,12 +1735,6 @@ public:
 <p>
 The class <code>timed_mutex</code>
 provides a non-recursive mutex with exclusive ownership semantics.
-It satisfies all of the TimedMutex requirements
-([thread.timedmutex.requirements]).
-It shall be a standard-layout class (chapter 9 [class]).
-</p>
-
-<p>
 If one thread owns the <code>timed_mutex</code> object,
 attempts by another thread to acquire ownership
 will fail (for <code>try_lock()</code>)
@@ -1749,6 +1743,12 @@ until the first thread has released ownership with a call to
 <code>unlock()</code>,
 or the call to <code>timed_lock()</code> times out
 (having failed to obtain ownership).
+</p>
+
+<p>
+It satisfies all of the TimedMutex requirements
+([thread.timedmutex.requirements]).
+It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <p>
@@ -1798,19 +1798,18 @@ public:
 <p>
 The class <code>recursive_timed_mutex</code>
 provides a recursive mutex with exclusive ownership semantics.
-It satisfies all of the TimedMutex requirements
-([thread.timedmutex.requirements]).
-It shall be a standard-layout class (chapter 9 [class]).
-</p>
-
-<p>
 If one thread owns the <code>recursive_timed_mutex</code> object,
 attempts by another thread to acquire ownership
 will fail (for <code>try_lock()</code>)
 or block (for <code>lock()</code> or <code>timed_lock()</code>)
 until the first thread has completely released ownership,
 or the call to <code>timed_lock()</code> times out
-(having failed to obtain ownership).
+(having failed to obtain ownership).</p>
+
+<p>
+It satisfies all of the TimedMutex requirements
+([thread.timedmutex.requirements]).
+It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <p>
