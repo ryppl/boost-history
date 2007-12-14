@@ -1842,10 +1842,10 @@ during the lock's construction.
 
 <blockquote>
 <pre><code>
-struct defer_lock_t  {}; // do not obtain the lock
-struct try_to_lock_t {}; // try to obtain the lock without blocking
-struct adopt_lock_t  {}; // assume the lock is already obtained and
-                         // take ownership of it
+struct defer_lock_t  {}; // do not acquire ownership of the mutex
+struct try_to_lock_t {}; // try to acquire ownership of the mutex without blocking
+struct adopt_lock_t  {}; // assume the current thread has already obtained mutex ownership and
+                         // manage it
 
 extern const defer_lock_t   defer_lock;
 extern const try_to_lock_t  try_to_lock;
