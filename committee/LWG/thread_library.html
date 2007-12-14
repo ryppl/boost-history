@@ -2032,8 +2032,7 @@ Mutex ownership
 may be acquired at construction or subsequent to construction,
 and subsequent to acquisition
 may be transferred to another <code>unique_lock</code> object.
-An object of type
-<code>unique_lock</code> is not copyable but is movable.
+Objects of type <code>unique_lock</code> are not copyable but are movable.
 The behavior of a program is undefined
 if <code>mutex() != 0</code>
 and the mutex pointed to by <code>mutex()</code>
