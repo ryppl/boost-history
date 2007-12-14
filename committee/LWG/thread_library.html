@@ -1503,16 +1503,17 @@ lock()</code>) until the first thread has released ownership with a call to
 </p>
 
 <p>
-It is undefined behavior:
+The behavior of a program is undefined:
 </p>
 
 <ul>
-<li>for a thread to call <code>lock()</code> or <code>try_lock()</code> if it
+<li>if a thread calls <code>lock()</code> or <code>try_lock()</code> and the 
+thread
 already owns the <code>mutex</code> object.
 </li>
 <li>if a thread terminates while owning a <code>mutex</code> object.
 </li>
-<li>to destroy a <code>mutex</code> object owned by any thread.
+<li>if it destroys a <code>mutex</code> object owned by any thread.
 </li>
 </ul>
 
@@ -1576,13 +1577,13 @@ may ownership be acquired by another thread.
 </p>
 
 <p>
-It is undefined behavior
+The behavior of a program is undefined:
 </p>
 
 <ul>
 <li>if a thread terminates while owning a <code>recursive_mutex</code> object.
 </li>
-<li>to destroy a <code>recursive_mutex</code> object owned by any thread.
+<li>if it destroys a <code>recursive_mutex</code> object owned by any thread.
 </li>
 </ul>
 
@@ -1751,17 +1752,16 @@ or the call to <code>timed_lock()</code> times out
 </p>
 
 <p>
-It is undefined behavior:
-</p>
+The behavior of a program is undefined:</p>
 
 <ul>
-<li>for a thread to call <code>lock()</code>,
-<code>try_lock()</code> or either overload of <code>timed_lock</code>
-if it already owns the <code>timed_mutex</code> object.
+<li>if a thread calls <code>lock()</code>,
+<code>try_lock()</code> or either overload of <code>timed_lock</code> and the 
+thread already owns the <code>timed_mutex</code> object.
 </li>
 <li>if a thread terminates while owning a <code>timed_mutex</code> object.
 </li>
-<li>to destroy a <code>timed_mutex</code> object owned by any thread.
+<li>if it destroys a <code>timed_mutex</code> object owned by any thread.
 </li>
 </ul>
 
@@ -1834,14 +1834,13 @@ may ownership be acquired by another thread.
 </p>
 
 <p>
-It is undefined behavior
-</p>
+The behavior of a program is undefined:</p>
 
 <ul>
 <li>if a thread terminates
 while owning a <code>recursive_timed_mutex</code> object.
 </li>
-<li>to destroy a <code>recursive_timed_mutex</code> object owned by any thread.
+<li>if it destroys a <code>recursive_timed_mutex</code> object owned by any thread.
 </li>
 </ul>
 
@@ -1929,7 +1928,7 @@ An object of type
 <code>lock_guard</code> controls the ownership of a mutex within a scope.
 A <code>lock_guard</code> object maintains ownership of a mutex
 throughout the <code>lock_guard</code>'s lifetime.
-Behavior is undefined
+The behavior of a program is undefined
 if the mutex pointed to by <code><var>pm</var></code>
 does not exist for the entire lifetime ([basic.life])
 of the <code>lock_guard</code> object.
@@ -2059,7 +2058,7 @@ and subsequent to acquisition
 may be transferred to another <code>unique_lock</code> object.
 An object of type
 <code>unique_lock</code> is not copyable but is movable.
-Behavior is undefined
+The behavior of a program is undefined
 if <code>mutex() != 0</code>
 and the mutex pointed to by <code>mutex()</code>
 does not exist for the entire remaining lifetime ([basic.life])
