@@ -106,7 +106,7 @@ of a
 thread with nothing more than the evaluation of a data member?
 Probably should
 be &quot;callable type that is not a pointer to member data.&quot; </p>
-<p>9a. [thread.threads.constr] (30.2.1.2), thread(thread&amp;&amp;): the first two
+<p>&#9998; 9a. [thread.threads.constr] (30.2.1.2), thread(thread&amp;&amp;): the first two
 postconditions are a bit confusing, because they use two different
 techniques
 to describe the result. Choose one or the other. Either &quot;x.joinable() ==
@@ -114,12 +114,12 @@ thread().joinable() and x.get_id() == thread().get_id()&quot; or
 &quot;x.joinable() ==
 false and x.get_id() == id()&quot;. I prefer the latter, but wouldn't
 insist on it. </p>
-<p>9b. [thread.threads.assign] (30.2.1.2): here, the state of x after the
+<p>&#9998; 9b. [thread.threads.assign] (30.2.1.2): here, the state of x after the
 operation is &quot;a default constructed state.&quot; That's different from the
 description for the effect of the move constructor. These two should
 be worded
 consistently. </p>
-<p>10. [thread.threads.member] (30.2.1.5), join(): &quot;the joinable()
+<p>&#9998; 10. [thread.threads.member] (30.2.1.5), join(): &quot;the joinable()
 status&quot; is
 muddled. I think all the discussion of joining would benefit from
 defining a

@@ -755,9 +755,7 @@ execution.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>get_id() == thread::id()</code>
-<br>
-<code>joinable() == false</code>
+<code>get_id() == id()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -822,10 +820,7 @@ This requirement permits thread managers as static-duration objects.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>get_id() != thread::id()</code>
-<br>
-<code>joinable() == true</code>
-<br>
+<code>get_id() != id()</code>.
 <code>*this</code> represents the newly started thread.
 </dd>
 
@@ -845,21 +840,15 @@ thread(thread&amp;&amp; <var>x</var>);
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs an object of type <code>thread</code> from <code><var>x</var></code>.
+Constructs an object of type <code>thread</code> from <code><var>x</var></code>,
+and sets <code><var>x</var></code> to a default constructed state.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code><var>x</var>.joinable() == false</code>
-<br>
-<code><var>x</var>.get_id() == thread().get_id()</code>.<br>
-<code>joinable()</code>
-returns the value of <code><var>x</var>.joinable()</code>
-prior to the start of construction.
-<br>
+<code><var>x</var>.get_id() == id()</code> and 
 <code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
-prior to the
-start of construction.
+prior to the start of construction.
 </dd>
 
 <dt>Throws:</dt>
@@ -919,19 +908,9 @@ and sets <code><var>x</var></code> to a default constructed state.
 
 <dt>Postconditions:</dt>
 <dd>
-<code><var>x</var>.joinable() == false</code>
-<br>
-<code><var>x</var>.get_id() == thread().get_id()</code>.
-</dd>
-
-<dd>
-<code>joinable()</code> returns the
-value of <code><var>x</var>.joinable()</code> prior to the
-assignment.
-<br>
-<code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
-prior to the
-assignment.
+<code><var>x</var>.get_id() == id()</code>,
+and <code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
+prior to the assignment.
 </dd>
 
 <dt>Throws:</dt>
@@ -1003,9 +982,8 @@ Operations on <code>*this</code> are not synchronized.
 <dt>Postconditions:</dt>
 <dd>
 If <code>join()</code> throws an exception,
-the <code>joinable()</code> status remains unchanged.
-Otherwise, <code>joinable()</code> is <code>false</code>
-and <code>get_id() == id()</code>.
+the value returned by <code>get_id()</code> remains unchanged.
+Otherwise <code>get_id() == id()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -1038,8 +1016,6 @@ the implementation shall release any owned resources.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>joinable() == false</code>
-<br>
 <code>get_id() == id()</code>.
 </dd>
 
