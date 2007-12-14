@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++ (Revision 1)</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-12
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-14
 </p>
 
 <p>
@@ -776,11 +776,11 @@ template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... 
 <dl>
 <dt>Requires:</dt>
 <dd>
-<code>F</code> is a callable type ([func.def]).
-If <code>f</code> is an lvalue, <code>F</code>
-is <code>CopyConstructible</code>.
-If <code>f</code> is an rvalue,
-<code>F</code> is <code>MoveConstructible</code>.
+<code>F</code> and each <code>Ti</code> in <code>Args</code> shall be
+<code>CopyConstructible</code> if an lvalue and otherwise <code>MoveConstructible</code>.
+<code><var>INVOKE</var>(f, w1, w2, ..., wN)</code> [func.require] shall be a valid
+expression for some values <code><var>w1</var>, <var>w2</var>, ..., <var>wN</var></code>,
+where <code>N == sizeof...(Args)</code>.
 </dd>
 
 <dt>Effects:</dt>
