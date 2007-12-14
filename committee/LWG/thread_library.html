@@ -1188,7 +1188,8 @@ template &lt;class Duration&gt;
 <dd>
 The current thread blocks for at least the amount of time specified.
 If the resolution of <code>Duration</code> is finer than the native
-resolution, the time is rounded up to the nearest native resolution.
+resolution, the time is rounded to the next larger value that can be
+represented in the native resolution.
 </dd>
 
 <dt>Synchronization:</dt>
