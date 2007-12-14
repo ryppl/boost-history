@@ -2823,9 +2823,13 @@ public:
 <h3><a name="thread.condition">30.4 Condition variables [thread.condition]</a></h3>
 
 <p>
-Condition variables provide a synchronization primitive used to block a thread 
+Condition variables provide  synchronization primitives used to block a thread 
 until notified by some other thread that some condition is met or until a 
-system time is reached.</p>
+system time is reached. Class <code>condition_variable</code> provides a 
+condition variable that can only wait on a <code>unique_lock&lt;mutex&gt;</code>, 
+allowing maximum efficiency on some platforms. Class <code>
+condition_variable_any</code> provides a general condition variable that can 
+wait on user supplied lock types.</p>
 
 <p>
 Condition variables permit concurrent invocation
