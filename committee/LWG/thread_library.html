@@ -1819,9 +1819,13 @@ while owning a <code>recursive_timed_mutex</code> object.
 <h4><a name="thread.lock.intro">30.3.3 Locks [thread.lock.intro]</a></h4>
 
 <p>
-Locks are objects that hold a reference to a mutex
-and unlock the mutex during the lock's destruction
+A lock is an object that holds a reference to a mutex
+and may unlock the mutex during the lock's destruction
 (such as when leaving block scope).
+A thread of execution may use a lock to aid in managing
+mutex ownership in an exception safe manner.  A lock is
+said to <i>own a mutex</i> if it is currently managing 
+the mutex ownership for a thread of execution.
 The locks do not manage the lifetime of the mutex they
 reference, but only the ownership status of that mutex.
 [<i>Note:</i>
