@@ -495,8 +495,8 @@ and the right to join with it.
 That right may be transferred to other thread objects.
 A thread of execution is <dfn>detached</dfn>
 when no <code>thread</code> object represents that thread.
-Objects of class <code>thread</code> can be in a state that does not represent a 
-thread of execution.
+Objects of class <code>thread</code> can be in a state
+that does not represent a thread of execution.
 [<i>Note:</i>
 A <code>thread</code> object
 does not represent a thread of execution after default construction,
@@ -569,13 +569,15 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 </blockquote>
 
 <p>
-An object of type <code>thread::id</code> provides a unique identifer for each 
-thread of execution and a single distinct value for all thread objects that do not 
-represent a thread of execution ([thread.threads.class]).
+An object of type <code>thread::id</code> provides
+a unique identifier for each thread of execution
+and a single distinct value for all thread objects
+that do not represent a thread of execution ([thread.threads.class]).
 Each thread of execution has a <code>thread::id</code>
 that is not equal to the <code>thread::id</code>
 of other threads of execution
-and that is not equal to the <code>thread::id</code> of <code>std::thread</code> objects 
+and that is not equal to
+the <code>thread::id</code> of <code>std::thread</code> objects
 that do not represent threads of execution.
 </p>
 
@@ -617,9 +619,11 @@ bool operator==(thread::id <var>x</var>, thread::id <var>y</var>);
 <dl>
 <dt>Returns:</dt>
 <dd>
-Returns <code>true</code> only if <code><var>x</var></code> and <code><var>y</var></code> 
-represent the same thread of execution or neither <code><var>x</var></code> nor
-<code><var>y</var></code> represent a thread of execution.
+Returns <code>true</code>
+only if <code><var>x</var></code> and <code><var>y</var></code>
+represent the same thread of execution
+or neither <code><var>x</var></code> nor <code><var>y</var></code>
+represent a thread of execution.
 </dd>
 
 <dt>Throws:</dt>
@@ -730,9 +734,9 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 <dl>
 <dt>Effects:</dt>
 <dd>
-Inserts an unspecified text representation of the <code>thread::id</code> into
-the stream <code>out</code>. Distinct thread id's shall have distinct 
-representations.
+Inserts an unspecified text representation of the <code>thread::id</code>
+into the stream <code>out</code>.
+Distinct thread id's shall have distinct representations.
 </dd>
 
 <dt>Returns:</dt>
@@ -752,8 +756,8 @@ thread();
 <dl>
 <dt>Effects:</dt>
 <dd>
-Constructs a <code>thread</code> object that does not represent a thread of 
-execution. 
+Constructs a <code>thread</code> object
+that does not represent a thread of execution.
 </dd>
 
 <dt>Postconditions:</dt>
@@ -778,9 +782,11 @@ template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... 
 <dt>Requires:</dt>
 <dd>
 <code>F</code> and each <code>Ti</code> in <code>Args</code> shall be
-<code>CopyConstructible</code> if an lvalue and otherwise <code>MoveConstructible</code>.
-<code><var>INVOKE</var>(f, w1, w2, ..., wN)</code> [func.require] shall be a valid
-expression for some values <code><var>w1</var>, <var>w2</var>, ..., <var>wN</var></code>,
+<code>CopyConstructible</code>
+if an lvalue and otherwise <code>MoveConstructible</code>.
+<code><var>INVOKE</var>(f, w1, w2, ..., wN)</code> [func.require]
+shall be a valid expression
+for some values <code><var>w1</var>, <var>w2</var>, ..., <var>wN</var></code>,
 where <code>N == sizeof...(Args)</code>.
 </dd>
 
@@ -849,7 +855,7 @@ and sets <code><var>x</var></code> to a default constructed state.
 
 <dt>Postconditions:</dt>
 <dd>
-<code><var>x</var>.get_id() == id()</code> and 
+<code><var>x</var>.get_id() == id()</code> and
 <code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
 prior to the start of construction.
 </dd>
@@ -912,8 +918,8 @@ and sets <code><var>x</var></code> to a default constructed state.
 <dt>Postconditions:</dt>
 <dd>
 <code><var>x</var>.get_id() == id()</code>,
-and <code>get_id()</code> returns the value of <code><var>x</var>.get_id()</code>
-prior to the assignment.
+and <code>get_id()</code> returns
+the value of <code><var>x</var>.get_id()</code> prior to the assignment.
 </dd>
 
 <dt>Throws:</dt>
@@ -1120,9 +1126,9 @@ thread::id this_thread::get_id();
 <dt>Returns:</dt>
 <dd>
 An object of type <code>thread::id</code>
-that uniquely identifies the current thread of execution. No other thread of 
-execution shall have this id and this thread of execution shall always have this 
-id.
+that uniquely identifies the current thread of execution.
+No other thread of execution shall have this id
+and this thread of execution shall always have this id.
 The object returned
 shall not compare equal to a default constructed <code>thread::id</code>.
 </dd>
@@ -1360,9 +1366,9 @@ and have the following semantics:
 Attempt to obtain ownership of the mutex for the current thread
 without blocking.
 If ownership is not obtained,
-there is no effect and <code>try_lock()</code> immediately returns.&nbsp; An 
-implementation may fail to obtain the lock even if it is not held by any other 
-thread.
+there is no effect and <code>try_lock()</code> immediately returns.
+An implementation may fail to obtain the lock
+even if it is not held by any other thread.
 [<i>Note:</i>
 This spurious failure is normally uncommon,
 but allows interesting implementations
@@ -1485,7 +1491,7 @@ The behavior of a program is undefined:
 </p>
 
 <ul>
-<li>if a thread calls <code>lock()</code> or <code>try_lock()</code> and the 
+<li>if a thread calls <code>lock()</code> or <code>try_lock()</code> and the
 thread
 already owns the <code>mutex</code> object.
 </li>
@@ -1593,13 +1599,14 @@ the time is rounded up to the nearest native resolution.
 
 <dt>Effects:</dt>
 <dd>
-The function attempts to obtain ownership of the mutex within the <code>rel_time</code> 
-time duration.
-If the <code>rel_time</code> time duration is less than or equal to <code>0</code>,
-the function attempts to obtain ownership without
-blocking (as if by calling <code>try_lock()</code>). The function shall return 
-within the <code>rel_time</code> time duration only if is has obtained ownership 
-of the mutex object.
+The function attempts to obtain ownership of the mutex
+within the <code>rel_time</code> time duration.
+If the <code>rel_time</code> time duration
+is less than or equal to <code>0</code>,
+the function attempts to obtain ownership
+without blocking (as if by calling <code>try_lock()</code>).
+The function shall return within the <code>rel_time</code> time duration
+only if is has obtained ownership of the mutex object.
 [<i>Note:</i>
 As with <code>try_lock()</code>,
 there is no guarantee that ownership will be obtained
@@ -1642,12 +1649,13 @@ and have the following semantics:
 
 <dt>Effects:</dt>
 <dd>
-The function attempts to obtain ownership of the mutex by the <code>abs_time</code> 
-absolute time. If <code>abs_time</code> has already passed,
+The function attempts to obtain ownership of the mutex
+by the <code>abs_time</code> absolute time.
+If <code>abs_time</code> has already passed,
 the function attempts to obtain ownership
 without blocking (as if by calling <code>try_lock()</code>).
-The function shall return by the <code>abs_time</code> absolute time only if is 
-has obtained ownership of the mutex object.
+The function shall return by the <code>abs_time</code> absolute time
+only if is has obtained ownership of the mutex object.
 [<i>Note:</i>
 As with <code>try_lock()</code>,
 there is no guarantee that ownership will be obtained
@@ -1735,7 +1743,7 @@ The behavior of a program is undefined:
 
 <ul>
 <li>if a thread calls <code>lock()</code>,
-<code>try_lock()</code> or either overload of <code>timed_lock</code> and the 
+<code>try_lock()</code> or either overload of <code>timed_lock</code> and the
 thread already owns the <code>timed_mutex</code> object.
 </li>
 <li>if a thread terminates while owning a <code>timed_mutex</code> object.
@@ -1820,7 +1828,8 @@ The behavior of a program is undefined:
 <li>if a thread terminates
 while owning a <code>recursive_timed_mutex</code> object.
 </li>
-<li>if it destroys a <code>recursive_timed_mutex</code> object owned by any thread.
+<li>if it destroys a <code>recursive_timed_mutex</code> object
+owned by any thread.
 </li>
 </ul>
 
@@ -1831,9 +1840,9 @@ A lock is an object that holds a reference to a mutex
 and may unlock the mutex during the lock's destruction
 (such as when leaving block scope).
 A thread of execution may use a lock to aid in managing
-mutex ownership in an exception safe manner.  A lock is
-said to <i>own a mutex</i> if it is currently managing 
-the mutex ownership for a thread of execution.
+mutex ownership in an exception safe manner.
+A lock is said to <i>own a mutex</i>
+if it is currently managing the mutex ownership for a thread of execution.
 The locks do not manage the lifetime of the mutex they
 reference, but only the ownership status of that mutex.
 [<i>Note:</i>
@@ -1851,9 +1860,10 @@ during the lock's construction.
 <blockquote>
 <pre><code>
 struct defer_lock_t  {}; // do not acquire ownership of the mutex
-struct try_to_lock_t {}; // try to acquire ownership of the mutex without blocking
-struct adopt_lock_t  {}; // assume the current thread has already obtained mutex ownership and
-                         // manage it
+struct try_to_lock_t {}; // try to acquire ownership of the mutex
+                         // without blocking
+struct adopt_lock_t  {}; // assume the current thread has already
+                         // obtained mutex ownership and manage it
 
 extern const defer_lock_t   defer_lock;
 extern const try_to_lock_t  try_to_lock;
@@ -2777,7 +2787,8 @@ on the same <code>once_flag</code> object.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when the effects cannot be achieved. or any exception propagated from <code>func</code>.
+<code>system_error</code> when the effects cannot be achieved,
+or any exception propagated from <code>func</code>.
 </dd>
 </dl>
 
@@ -2831,13 +2842,17 @@ public:
 <h3><a name="thread.condition">30.4 Condition variables [thread.condition]</a></h3>
 
 <p>
-Condition variables provide  synchronization primitives used to block a thread 
-until notified by some other thread that some condition is met or until a 
-system time is reached. Class <code>condition_variable</code> provides a 
-condition variable that can only wait on a <code>unique_lock&lt;mutex&gt;</code>, 
-allowing maximum efficiency on some platforms. Class <code>
-condition_variable_any</code> provides a general condition variable that can 
-wait on user supplied lock types.
+Condition variables provide synchronization primitives
+used to block a thread until notified by some other thread
+that some condition is met
+or until a system time is reached.
+Class <code>condition_variable</code>
+provides a condition variable
+that can only wait on a <code>unique_lock&lt;mutex&gt;</code>,
+allowing maximum efficiency on some platforms.
+Class <code>condition_variable_any</code>
+provides a general condition variable
+that can wait on user supplied lock types.
 </p>
 
 <p>
@@ -3155,7 +3170,7 @@ prior to exiting the function scope.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when the returned value, effects or postconditions 
+<code>system_error</code> when the returned value, effects or postconditions
 cannot be achieved.
 </dd>
 </dl>
@@ -3516,7 +3531,7 @@ thread.
 
 <dt>Throws:</dt>
 <dd>
-<code>system_error</code> when the returned value, effects or postconditions 
+<code>system_error</code> when the returned value, effects or postconditions
 cannot be achieved.
 </dd>
 </dl>
@@ -3836,18 +3851,14 @@ shall not be finer than the resolution of <code>D</code>
   <tr>
     <td valign="top"><code>d += e</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><code>d.tick_count() ==
-    
-    d0 + x</code>,
+    <td valign="top"><code>d.tick_count() == d0 + x</code>,
     where <code>x</code> is <code>e.tick_count()</code>
     converted to the resolution of <code>D</code>.</td>
   </tr>
   <tr>
     <td valign="top"><code>d /= c</code></td>
     <td valign="top"><code>D&amp;</code></td>
-    <td valign="top"><code>d.tick_count() ==
-    
-    d0 / c</code></td>
+    <td valign="top"><code>d.tick_count() == d0 / c</code></td>
   </tr>
   <tr>
     <td valign="top"><code>d *= c</code></td>
