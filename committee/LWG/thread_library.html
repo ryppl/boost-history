@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++ (Revision 1)</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-14
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-15
 </p>
 
 <p>
@@ -3891,7 +3891,7 @@ class nanoseconds
 public:
     // <em>traits information</em>
     typedef <var><strong>implementation-defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000 * 1000 * 1000;
+    static const tick_type ticks_per_second = 1000L * 1000 * 1000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
@@ -3954,7 +3954,7 @@ class microseconds
 public:
     // <em>traits information</em>
     typedef <var><strong>implementation-defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000 * 1000;
+    static const tick_type ticks_per_second = 1000L * 1000;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
@@ -4007,7 +4007,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000</code>.
+<code>count() * (nanoseconds::ticks_per_second / microseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4089,7 +4089,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000 * 1000</code>.
+<code>count() * (nanoseconds::ticks_per_second / milliseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4103,7 +4103,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000</code>.
+<code>count() * (microseconds::ticks_per_second / milliseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4186,7 +4186,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000 * 1000 * 1000</code>.
+<code>count() * (seconds::seconds_per_tick * nanoseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4200,7 +4200,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000 * 1000</code>.
+<code>count() * (seconds::seconds_per_tick * microseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4214,7 +4214,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 1000</code>.
+<code>count() * (seconds::seconds_per_tick * milliseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4298,7 +4298,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60 * 1000 * 1000 * 1000</code>.
+<code>count() * (minutes::seconds_per_tick * nanoseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4312,7 +4312,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60 * 1000 * 1000</code>.
+<code>count() * (minutes::seconds_per_tick * microseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4326,7 +4326,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60 * 1000</code>.
+<code>count() * (minutes::seconds_per_tick * milliseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4340,7 +4340,7 @@ operator seconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60</code>.
+<code>count() * (minutes::seconds_per_tick / seconds::seconds_per_tick)</code>.
 </dd>
 
 </dl>
@@ -4425,7 +4425,7 @@ operator nanoseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600 * 1000 * 1000 * 1000</code>.
+<code>count() * (hours::seconds_per_tick * nanoseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4439,7 +4439,7 @@ operator microseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600 * 1000 * 1000</code>.
+<code>count() * (hours::seconds_per_tick * microseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4453,7 +4453,7 @@ operator milliseconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600 * 1000</code>.
+<code>count() * (hours::seconds_per_tick * milliseconds::ticks_per_second)</code>.
 </dd>
 
 </dl>
@@ -4467,7 +4467,7 @@ operator seconds() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 3600</code>.
+<code>count() * (hours::seconds_per_tick / seconds::seconds_per_tick)</code>.
 </dd>
 
 </dl>
@@ -4481,7 +4481,7 @@ operator minutes() const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>count() * 60</code>.
+<code>count() * (hours::seconds_per_tick / minutes::seconds_per_tick)</code>.
 </dd>
 
 </dl>
@@ -4519,7 +4519,7 @@ public:
 
     // <em>traits</em>
     typedef <var><strong>implementation defined</strong></var> tick_type;
-    static const tick_type ticks_per_second = 1000 * 1000 * 1000;
+    static const tick_type ticks_per_second = nanoseconds::ticks_per_second;
     static const tick_type seconds_per_tick = 0;
     static const bool is_subsecond = true;
 
