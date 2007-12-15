@@ -3729,9 +3729,9 @@ template &lt;class LhsDuration, class RhsDuration&gt;
   bool operator&gt;=(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>);
 
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <var>FRDuration</var> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FinestDuration</var> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <var>FRDuration</var> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FinestDuration</var> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 
 template &lt;class Duration&gt;
   Duration operator*(Duration <var>lhs</var>, long <var>rhs</var>)
@@ -3745,11 +3745,11 @@ template &lt;class Duration&gt;
 </blockquote>
 
 <p>
-Type <code><var>FRDuration</var></code>
+Through this clause, type <code><var>FinestDuration</var></code>
 is whichever of <code>LhsDuration</code> or <code>RhsDuration</code>
 has the finest resolution.
 If their resolutions are the same,
-<code><var>FRDuration</var></code>is <code>LhsDuration</code>.
+<code><var>FinestDuration </var></code>is <code>LhsDuration</code>.
 </p>
 
 <p>
@@ -4854,18 +4854,9 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code>
-is the same as the resolution of <code>RhsDuration</code>,
-<code><var>lhs</var>.count()==<var>rhs</var>.count()</code>.
-Otherwise, if the resolution of <code>LhsDuration</code>
-is finer than the resolution of <code>RhsDuration</code>,
-<code><var>lhs</var>.count()==x</code>,
-where <code>x</code> is <code><var>rhs</var>.count()</code>
-converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>x==<var>rhs</var>.count()</code>,
-where <code>x</code> is <code><var>lhs</var>.count()</code>
-converted to the resolution of <code>RhsDuration</code>.
-</dd>
+<code>FinestDuration(<var>lhs</var>.count()) == FinestDuration(<var>rhs</var>.count())<br>
+<br>
+</code>See [time] for description of <code>FinestDuration</code>.</dd>
 
 </dl>
 </blockquote>
@@ -4892,18 +4883,9 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code>
-is the same as the resolution of <code>RhsDuration</code>,
-<code><var>lhs</var>.count()&lt;<var>rhs</var>.count()</code>.
-Otherwise, if the resolution of <code>LhsDuration</code>
-is finer than the resolution of <code>RhsDuration</code>,
-<code><var>lhs</var>.count()&lt;x</code>,
-where <code>x</code> is <code><var>rhs</var>.count()</code>
-converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>x&lt;<var>rhs</var>.count()</code>,
-where <code>x</code> is <code><var>lhs</var>.count()</code>
-converted to the resolution of <code>RhsDuration</code>.
-</dd>
+<code>FinestDuration(<var>lhs</var>.count()) &lt; FinestDuration(<var>rhs</var>.count())<br>
+<br>
+</code>See [time] for description of <code>FinestDuration</code>.</dd>
 
 </dl>
 </blockquote>
@@ -4930,7 +4912,7 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 
 <dt>Returns:</dt>
 <dd>
-<code><var>rhs</var>&lt;<var>lhs</var>)</code>.
+<code><var>rhs</var>&lt;<var>lhs</var></code>.
 </dd>
 
 </dl>
@@ -4951,49 +4933,31 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 </blockquote>
 <pre><code>
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <var>FRDuration</var> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FinestDuration</var> operator+(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code>
-is the same as the resolution of <code>RhsDuration</code>,
-<code>LhsDuration(<var>lhs</var>.count()+<var>rhs</var>.count())</code>.
-Otherwise, if the resolution of <code>LhsDuration</code>
-is finer than the resolution of <code>RhsDuration</code>,
-<code>LhsDuration(<var>lhs</var>.count()+x)</code>,
-where <code>x</code> is <code><var>rhs</var>.count()</code>
-converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>RhsDuration(x+<var>rhs</var>.count())</code>,
-where <code>x</code> is <code><var>lhs</var>.count()</code>
-converted to the resolution of <code>RhsDuration</code>.
-</dd>
+<code>FinestDuration(<var>lhs</var>.count())+FinestDuration(<var>rhs</var>.count())<br>
+<br>
+</code>See [time] for description of <code>FinestDuration</code>.</dd>
 
 </dl>
 </blockquote>
 <pre><code>
 template &lt;class LhsDuration, class RhsDuration&gt;
-  <var>FRDuration</var> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
+  <var>FinestDuration</var> operator-(const LhsDuration&amp; <var>lhs</var>, const RhsDuration&amp; <var>rhs</var>)
 </code></pre>
 <blockquote>
 <dl>
 
 <dt>Returns:</dt>
 <dd>
-If the resolution of <code>LhsDuration</code>
-is the same as the resolution of <code>RhsDuration</code>,
-<code>LhsDuration(<var>lhs</var>.count()-<var>rhs</var>.count())</code>.
-Otherwise, if the resolution of <code>LhsDuration</code>
-is finer than the resolution of <code>RhsDuration</code>,
-<code>LhsDuration(<var>lhs</var>.count()-x)</code>,
-where <code>x</code> is <code><var>rhs</var>.count()</code>
-converted to the resolution of <code>LhsDuration</code>.
-Otherwise, <code>RhsDuration(x-<var>rhs</var>.count())</code>,
-where <code>x</code> is <code><var>lhs</var>.count()</code>
-converted to the resolution of <code>RhsDuration</code>.
-</dd>
+<code>FinestDuration(<var>lhs</var>.count())-FinestDuration(<var>rhs</var>.count())<br>
+<br>
+</code>See [time] for description of <code>FinestDuration</code>.</dd>
 
 </dl>
 </blockquote>
