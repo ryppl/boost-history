@@ -20,9 +20,9 @@
         nanoseconds(long long ns = 0);
     
         // traits information
-        static const tick_type ticks_per_second = 1000000000;
+        static const tick_type ticks_per_second = 1000L * 1000 * 1000;
         static const tick_type seconds_per_tick = 0;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // + common functions
     
@@ -48,9 +48,9 @@
         microseconds(long long us = 0);
     
         // traits information
-        static const tick_type ticks_per_second = 1000000;
+        static const tick_type ticks_per_second = 1000L * 1000;
         static const tick_type seconds_per_tick = 0;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // conversions
         operator nanoseconds() const;
@@ -81,7 +81,7 @@
         // traits information
         static const tick_type ticks_per_second = 1000;
         static const tick_type seconds_per_tick = 0;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // conversions
         operator nanoseconds() const;
@@ -113,7 +113,7 @@
         // traits information
         static const tick_type ticks_per_second = 1;
         static const tick_type seconds_per_tick = 1;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // conversions
         operator nanoseconds() const;
@@ -146,7 +146,7 @@
         // traits information
         static const tick_type ticks_per_second = 0;
         static const tick_type seconds_per_tick = 60;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // conversions
         operator nanoseconds() const;
@@ -180,7 +180,7 @@
         // traits information
         static const tick_type ticks_per_second = 0;
         static const tick_type seconds_per_tick = 3600;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // conversions
         operator nanoseconds() const;
@@ -238,15 +238,15 @@
         typedef long long tick_type;
     
         system_time();
-        system_time(time_t secs, nanoseconds ns = 0);
+        explicit system_time(time_t secs, nanoseconds ns = 0);
     
         time_t seconds_since_epoch() const;
         nanoseconds nanoseconds_since_epoch() const;
     
         // traits
-        static const tick_type ticks_per_second = 1000000000;
+        static const tick_type ticks_per_second = nanoseconds::ticks_per_second;
         static const tick_type seconds_per_tick = 0;
-        static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+        static const bool is_subsecond = seconds_per_tick == 0;
     
         // comparison functions
         bool operator==(const system_time& rhs) const;
@@ -353,9 +353,9 @@ public:
     nanoseconds(long long ns = 0) : ns_(ns) {}
 
     // traits information
-    static const tick_type ticks_per_second = 1000000000;
+    static const tick_type ticks_per_second = 1000L * 1000 * 1000;
     static const tick_type seconds_per_tick = 0;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // + common functions
 
@@ -393,12 +393,12 @@ public:
     microseconds(long long us = 0) : us_(us) {}
 
     // traits information
-    static const tick_type ticks_per_second = 1000000;
+    static const tick_type ticks_per_second = 1000L * 1000;
     static const tick_type seconds_per_tick = 0;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return us_ * 1000LL;}
+    operator nanoseconds() const  {return us_ * (nanoseconds::ticks_per_second / microseconds::ticks_per_second);}
 
     // + common functions
 
@@ -438,11 +438,11 @@ public:
     // traits information
     static const tick_type ticks_per_second = 1000;
     static const tick_type seconds_per_tick = 0;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return ms_ * 1000000LL;}
-    operator microseconds() const {return ms_ * 1000LL;}
+    operator nanoseconds() const  {return ms_ * (nanoseconds::ticks_per_second / milliseconds::ticks_per_second);}
+    operator microseconds() const {return ms_ * (microseconds::ticks_per_second / milliseconds::ticks_per_second);}
 
     // + common functions
 
@@ -482,12 +482,12 @@ public:
     // traits information
     static const tick_type ticks_per_second = 1;
     static const tick_type seconds_per_tick = 1;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return s_ * 1000000000LL;}
-    operator microseconds() const {return s_ * 1000000LL;}
-    operator milliseconds() const {return s_ * 1000LL;}
+    operator nanoseconds() const  {return s_ * (seconds::seconds_per_tick * nanoseconds::ticks_per_second);}
+    operator microseconds() const {return s_ * (seconds::seconds_per_tick * microseconds::ticks_per_second);}
+    operator milliseconds() const {return s_ * (seconds::seconds_per_tick * milliseconds::ticks_per_second);}
 
     // + common functions
 
@@ -528,13 +528,13 @@ public:
     // traits information
     static const tick_type ticks_per_second = 0;
     static const tick_type seconds_per_tick = 60;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return mn_ * 60000000000LL;}
-    operator microseconds() const {return mn_ * 60000000LL;}
-    operator milliseconds() const {return mn_ * 60000LL;}
-    operator seconds() const      {return mn_ * 60LL;}
+    operator nanoseconds() const  {return mn_ * (minutes::seconds_per_tick * nanoseconds::ticks_per_second);}
+    operator microseconds() const {return mn_ * (minutes::seconds_per_tick * microseconds::ticks_per_second);}
+    operator milliseconds() const {return mn_ * (minutes::seconds_per_tick * milliseconds::ticks_per_second);}
+    operator seconds() const      {return mn_ * (minutes::seconds_per_tick / seconds::seconds_per_tick);}
 
     // + common functions
 
@@ -574,14 +574,14 @@ public:
     // traits information
     static const tick_type ticks_per_second = 0;
     static const tick_type seconds_per_tick = 3600;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return hr_ * 3600000000000LL;}
-    operator microseconds() const {return hr_ * 3600000000LL;}
-    operator milliseconds() const {return hr_ * 3600000LL;}
-    operator seconds() const      {return hr_ * 3600LL;}
-    operator minutes() const      {return hr_ * 60LL;}
+    operator nanoseconds() const  {return hr_ * (hours::seconds_per_tick * nanoseconds::ticks_per_second);}
+    operator microseconds() const {return hr_ * (hours::seconds_per_tick * microseconds::ticks_per_second);}
+    operator milliseconds() const {return hr_ * (hours::seconds_per_tick * milliseconds::ticks_per_second);}
+    operator seconds() const      {return hr_ * (hours::seconds_per_tick / seconds::seconds_per_tick);}
+    operator minutes() const      {return hr_ * (hours::seconds_per_tick / minutes::seconds_per_tick);}
 
     // + common functions
 
@@ -1461,7 +1461,7 @@ private:
 public:
 
     system_time() : ns_(0) {}
-    system_time(time_t secs, nanoseconds ns = 0)
+    explicit system_time(time_t secs, nanoseconds ns = 0)
         : ns_(secs * 1000000000LL + ns.count()) {}
 
     // ~system_time() = default;
@@ -1470,9 +1470,9 @@ public:
     nanoseconds nanoseconds_since_epoch() const {return static_cast<nanoseconds>(ns_);}
 
     // traits
-    static const tick_type ticks_per_second = 1000000000;
+    static const tick_type ticks_per_second = nanoseconds::ticks_per_second;
     static const tick_type seconds_per_tick = 0;
-    static const bool is_subsecond = ticks_per_second > 0 && seconds_per_tick == 0;
+    static const bool is_subsecond = seconds_per_tick == 0;
 
     // comparison functions
     bool operator==(const system_time& rhs) const {return ns_ == rhs.ns_;}
