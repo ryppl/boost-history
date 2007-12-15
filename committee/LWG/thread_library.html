@@ -618,7 +618,8 @@ bool operator==(thread::id <var>x</var>, thread::id <var>y</var>);
 <dd>
 Returns <code>true</code> only if <code><var>x</var></code> and <code><var>y</var></code> 
 represent the same thread of execution or neither <code><var>x</var></code> nor
-<code><var>y</var></code> represent a thread of execution.</dd>
+<code><var>y</var></code> represent a thread of execution.
+</dd>
 
 <dt>Throws:</dt>
 <dd>
@@ -730,7 +731,8 @@ operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, thread::id i
 <dd>
 Inserts an unspecified text representation of the <code>thread::id</code> into
 the stream <code>out</code>. Distinct thread id's shall have distinct 
-representations.</dd>
+representations.
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -1376,7 +1378,8 @@ based on a simple <code>compare_swap</code> ([atomics.operations]).
 If ownership of the mutex was obtained for the current thread,
 <code>true</code>,
 otherwise,
-<code>false</code>.</dd>
+<code>false</code>.
+</dd>
 
 <dt>Synchronization:</dt>
 <dd>
@@ -1725,7 +1728,8 @@ It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <p>
-The behavior of a program is undefined:</p>
+The behavior of a program is undefined:
+</p>
 
 <ul>
 <li>if a thread calls <code>lock()</code>,
@@ -1777,7 +1781,8 @@ will fail (for <code>try_lock()</code>)
 or block (for <code>lock()</code> or <code>timed_lock()</code>)
 until the first thread has completely released ownership,
 or the call to <code>timed_lock()</code> times out
-(having failed to obtain ownership).</p>
+(having failed to obtain ownership).
+</p>
 
 <p>
 It satisfies all of the TimedMutex requirements
@@ -1806,7 +1811,8 @@ may ownership be acquired by another thread.
 </p>
 
 <p>
-The behavior of a program is undefined:</p>
+The behavior of a program is undefined:
+</p>
 
 <ul>
 <li>if a thread terminates
@@ -2829,7 +2835,8 @@ system time is reached. Class <code>condition_variable</code> provides a
 condition variable that can only wait on a <code>unique_lock&lt;mutex&gt;</code>, 
 allowing maximum efficiency on some platforms. Class <code>
 condition_variable_any</code> provides a general condition variable that can 
-wait on user supplied lock types.</p>
+wait on user supplied lock types.
+</p>
 
 <p>
 Condition variables permit concurrent invocation
@@ -3853,7 +3860,8 @@ shall not be finer than the resolution of <code>D</code>
 
 <p>
 Objects of class <code>nanoseconds</code>
-can be used to represent a count of nanoseconds.</p>
+can be used to represent a count of nanoseconds.
+</p>
 
 <p>
 Class <code>nanoseconds</code>
@@ -3916,7 +3924,8 @@ Constructs an object of type <code>nanoseconds</code>.
 
 <p>
 Objects of class <code>microseconds</code>
-can be used to represent a count of microseconds.</p>
+can be used to represent a count of microseconds.
+</p>
 
 <p>
 Class <code>microseconds</code>
@@ -3995,7 +4004,8 @@ operator nanoseconds() const;
 
 <p>
 Objects of class <code>milliseconds</code>
-can be used to represent a count of milliseconds.</p>
+can be used to represent a count of milliseconds.
+</p>
 
 <p>
 Class <code>milliseconds</code>
@@ -4090,7 +4100,8 @@ operator microseconds() const;
 
 <p>
 Objects of class <code>seconds</code>
-can be used to represent a count of seconds.</p>
+can be used to represent a count of seconds.
+</p>
 
 <p>
 Class <code>seconds</code>
@@ -4200,7 +4211,8 @@ operator milliseconds() const;
 
 <p>
 Objects of class <code>minutes</code>
-can be used to represent a count of minutes.</p>
+can be used to represent a count of minutes.
+</p>
 
 <p>
 Class <code>minutes</code>
@@ -4325,7 +4337,8 @@ operator seconds() const;
 
 <p>
 Objects of class <code>hours</code>
-can be used to represent a count of hours.</p>
+can be used to represent a count of hours.
+</p>
 
 <p>
 Class <code>hours</code>
@@ -4466,7 +4479,8 @@ operator minutes() const;
 <p>
 The class <code>system_time</code> provides a time point
 that represents the current
-Coordinated Universal Time, known as UTC, time.</p>
+Coordinated Universal Time, known as UTC, time.
+</p>
 
 <p>
 <code>system_time</code>
