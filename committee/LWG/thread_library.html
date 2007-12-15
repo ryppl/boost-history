@@ -1841,7 +1841,7 @@ and may unlock the mutex during the lock's destruction
 (such as when leaving block scope).
 A thread of execution may use a lock to aid in managing
 mutex ownership in an exception safe manner.
-A lock is said to <i>own a mutex</i>
+A lock is said to <dfn>own a mutex</dfn>
 if it is currently managing the mutex ownership for a thread of execution.
 The locks do not manage the lifetime of the mutex they
 reference, but only the ownership status of that mutex.
