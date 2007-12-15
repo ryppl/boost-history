@@ -94,6 +94,8 @@ sed -e '
 	/^<\/code><\/pre>$/	d
 ' thread_library.html
 
+echo
+echo "==== section references"
 sed -e '
 	/\[[^[]*\]/		! d
 	/^<h[1-6]>/		d
@@ -124,10 +126,11 @@ sed -e '
 ' thread_library.html
 
 echo
-echo "==== two sentence on one line"
+echo "==== two sentences on one line"
 sed -e '
 	/\. /		! d
 	/\. args/	d
+	/i\.e\.\ /	d
 ' thread_library.html
 
 echo
