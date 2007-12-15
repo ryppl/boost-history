@@ -14,14 +14,14 @@ public:
 // Set the priority ceiling of a POSIX mutex if possible
 
 template <class Mutex>
-typename stb::enable_if
+typename std::enable_if
 <
     has_native_handle_type<Mutex>::value,
     int
 >::type
 mutex_set_priority_ceiling(Mutex& mut, int priority)
 {
-    static_assert(stb::is_same<typename Mutex::native_handle_type, pthread_mutex_t*>::value,
+    static_assert(std::is_same<typename Mutex::native_handle_type, pthread_mutex_t*>::value,
                   "Mutex::native_handle_type isn't a pthread_mutex_t*");
     int old_priority;
     pthread_mutex_setprioceiling(mut.native_handle(), priority, &old_priority);
