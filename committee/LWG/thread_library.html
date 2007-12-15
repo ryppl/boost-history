@@ -784,7 +784,7 @@ template &lt;class F, class ...Args&gt; thread(F&amp;&amp; f, Args&amp;&amp;... 
 <code>F</code> and each <code>Ti</code> in <code>Args</code> shall be
 <code>CopyConstructible</code>
 if an lvalue and otherwise <code>MoveConstructible</code>.
-<code><var>INVOKE</var>(f, w1, w2, ..., wN)</code> [func.require]
+<code><var>INVOKE</var>(f, w1, w2, ..., wN)</code> ([func.require])
 shall be a valid expression
 for some values <code><var>w1</var>, <var>w2</var>, ..., <var>wN</var></code>,
 where <code>N == sizeof...(Args)</code>.
