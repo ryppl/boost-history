@@ -2835,8 +2835,28 @@ wait on user supplied lock types.</p>
 Condition variables permit concurrent invocation
 of the <code>wait</code>, <code>timed_wait</code>,
 <code>notify_one</code> and <code>notify_all</code> member functions.
+</p>
+
+<p>
+The execution of <code>wait</code> and <code>timed_wait</code>
+is performed in three atomic parts:
+</p>
+
+<ol>
+<li>The release of the mutex, and entry into the waiting state,
+</li>
+<li>The unblocking of the wait, and
+</li>
+<li>the reacquisition of the lock
+</li>
+</ol>
+
+<p>
 The implementation shall behave as though
-they are executed in some unspecified order.
+<code>notify_one</code>, <code>notify_all</code>,
+and each part of
+the <code>wait</code> and <code>timed_wait</code> executions
+are executed in some unspecified total order.
 </p>
 
 <p>
