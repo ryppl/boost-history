@@ -82,17 +82,21 @@ namespace boost {
 
         // no throw
         inline std::size_t next_prime(std::size_t n) {
+            std::size_t const* const prime_list_end = prime_list +
+                sizeof(prime_list) / sizeof(*prime_list);
             std::size_t const* bound =
-                std::lower_bound(prime_list,prime_list + 28, n);
-            if(bound == prime_list + 28)
+                std::lower_bound(prime_list,prime_list_end, n);
+            if(bound == prime_list_end)
                 bound--;
             return *bound;
         }
 
         // no throw
         inline std::size_t prev_prime(std::size_t n) {
+            std::size_t const* const prime_list_end = prime_list +
+                sizeof(prime_list) / sizeof(*prime_list);
             std::size_t const* bound =
-                std::upper_bound(prime_list,prime_list + 28, n);
+                std::upper_bound(prime_list,prime_list_end, n);
             if(bound != prime_list)
                 bound--;
             return *bound;
@@ -567,6 +571,11 @@ namespace boost {
                 reference operator*() const
                 {
                     return get_value(node_);
+                }
+
+                value_type* operator->() const
+                {
+                    return &get_value(node_);
                 }
 
                 void increment()
@@ -1295,32 +1304,17 @@ namespace boost {
 
             // Swap
             //
-            // Swap's behaviour when allocators aren't equal is in dispute, see
-            // this paper for full details:
-            //
-            // http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1599.html
-            //
-            // It lists 3 possible behaviours:
-            //
-            // 1 - If the allocators aren't equal then throw an exception.
-            // 2 - Reallocate the elements in the containers with the
-            //     appropriate allocators - messing up exception safety in
-            //     the process.
-            // 3 - Swap the allocators, hoping that the allocators have a
-            //     no-throw swap.
-            //
-            // The paper recommends #3.
+            // Swap's behaviour when allocators aren't equal is in dispute, for
+            // details see:
+            // 
+            // http://unordered.nfshost.com/doc/html/unordered/rationale.html#swapping_containers_with_unequal_allocators
             //
             // ----------------------------------------------------------------
             //
             // Strong exception safety (might change unused function objects)
             //
-            // Can throw if hash or predicate object's copy constructor throws.
-            // If allocators are unequal:
-            //     Can throw if allocator's swap throws
-            //          (I'm assuming that the allocator's swap doesn't throw
-            //           but this doesn't seem to be guaranteed. Maybe I
-            //           could double buffer the allocators).
+            // Can throw if hash or predicate object's copy constructor throws
+            // or if allocators are unequal
 
             void swap(hash_table& x)
             {
@@ -1333,10 +1327,18 @@ namespace boost {
                     this->data::swap(x); // no throw
                 }
                 else {
-                    // Note: I'm not sure that allocator swap is guaranteed to be no
-                    // throw.
-                    this->allocators_.swap(x.allocators_);
-                    this->data::swap(x);
+                    // Create new buckets in separate HASH_TABLE_DATA objects
+                    // which will clean up if anything throws an exception.
+                    // (all can throw, but with no effect as these are new objects).
+                    data new_this(*this, x.min_buckets_for_size(x.size_));
+                    copy_buckets(x, new_this, this->*new_func_this);
+
+                    data new_that(x, min_buckets_for_size(this->size_));
+                    x.copy_buckets(*this, new_that, x.*new_func_that);
+
+                    // Start updating the data here, no throw from now on.
+                    this->data::swap(new_this);
+                    x.data::swap(new_that);
                 }
 
                 // We've made it, the rest is no throw.
@@ -1997,6 +1999,86 @@ namespace boost {
                             this->end(), this->end());
                 }
             }
+
+            //
+            // equals
+            //
+
+private:
+            inline bool group_equals(local_iterator_base it1,
+                    local_iterator_base it2, type_wrapper<key_type>*) const
+            {
+                return this->group_count(it1) == this->group_count(it2);
+            }
+
+            inline bool group_equals(local_iterator_base it1,
+                    local_iterator_base it2, void*) const
+            {
+                if(!it2.not_finished()) return false;
+                local_iterator_base end1 = it1, end2 = it2;
+                end1.next_group(); end2.next_group();
+                do {
+                    if(it1->second != it2->second) return false;
+                    it1.increment();
+                    it2.increment();
+                } while(it1 != end1 && it2 != end2);
+                return it1 == end1 && it2 == end2;
+            }
+public:
+            bool equals(hash_table const& other) const
+            {
+                if(this->size() != other.size()) return false;
+
+                for(bucket_ptr i = this->cached_begin_bucket_,
+                        j = this->buckets_ + this->bucket_count_; i != j; ++i)
+                {
+                    for(local_iterator_base it(i->next_); it.not_finished(); it.next_group())
+                    {
+                        local_iterator_base other_pos = other.find_iterator(other.extract_key(*it));
+                        if(!other_pos.not_finished() ||
+                            !group_equals(it, other_pos, (type_wrapper<value_type>*)0))
+                            return false;
+                    }
+                }
+
+                return true;
+            }
+
+            inline bool group_hash(local_iterator_base it, type_wrapper<key_type>*) const
+            {
+                std::size_t seed = this->group_count(it);
+                boost::hash_combine(seed, hash_function()(*it));
+                return seed;
+            }
+
+            inline bool group_hash(local_iterator_base it, void*) const
+            {
+                std::size_t seed = hash_function()(it->first);
+
+                local_iterator_base end = it;
+                end.next_group();
+
+                do {
+                    boost::hash_combine(seed, it->second);
+                } while(it != end);
+
+                return seed;
+            }
+
+            std::size_t hash_value() const
+            {
+                std::size_t seed = 0;
+
+                for(bucket_ptr i = this->cached_begin_bucket_,
+                        j = this->buckets_ + this->bucket_count_; i != j; ++i)
+                {
+                    for(local_iterator_base it(i->next_); it.not_finished(); it.next_group())
+                        seed ^= group_hash(it, (type_wrapper<value_type>*)0);
+                }
+
+                return seed;
+            }
+
 
         private:
 
