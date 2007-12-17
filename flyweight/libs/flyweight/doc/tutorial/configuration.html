@@ -123,6 +123,7 @@ convenience header, which simply includes the headers for the class template
 <span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>flyweight</span><span class=special>/</span><span class=identifier>flyweight</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span>      <span class=comment>// class template flyweight</span>
 <span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>flyweight</span><span class=special>/</span><span class=identifier>hashed_factory</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span> <span class=comment>// hashed flyweight factory</span>
 <span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>flyweight</span><span class=special>/</span><span class=identifier>static_holder</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span>  <span class=comment>// regular factory instantiation</span>
+<span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>flyweight</span><span class=special>/</span><span class=identifier>simple_locking</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span> <span class=comment>// simple locking policy</span>
 <span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>flyweight</span><span class=special>/</span><span class=identifier>refcounted</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span>     <span class=comment>// refcounting tracking policy</span>
 </pre></blockquote>
 
@@ -541,16 +542,22 @@ is destroyed.
 <p>
 No flyweight tracking is done when this policy is selected, which implies
 that the values stored in the factory remain in it until program termination.
-In comparison with <code>refcounted</code>, <code>no_tracking</code> 
-produces flyweight objects which are faster to pass
-around and it also results in some reduction in memory usage due to the
-absence of reference counters. The most obvious drawback is that
-the number of unused entries stored in the factory can keep growing
-during the program lifetime, which can become a problem for certain
-patterns of flyweight creation where the set of active values "drifts"
-over time. Another drawback is a potential delay during program
-termination, since it is then when all the factory entries get destroyed
-at once.
+As compared with <code>refcounted</code>, <code>no_tracking</code> presents
+advantages and drawbacks. The benefits are:
+<ul>
+  <li>Non-tracked flyweight objects are faster to pass around than refcounted ones.</li>
+  <li>There is some in some reduction in memory usage due to the
+    absence of reference counters.</li>
+</ul>
+whereas potential drawbacks of using <code>no_tracking</code> include:
+<ul>
+  <li>The number of unused entries stored in the factory can keep growing
+    during the program lifetime, which can become a problem for certain
+    patterns of flyweight creation where the set of active values "drifts"
+    over time.</li>
+  <li>There can be a potential delay during program termination, since
+    it is then when all the factory entries get destroyed at once.</li>
+</ul>
 </p>
 
 <hr>
@@ -567,7 +574,7 @@ Extending Boost.Flyweight
 
 <br>
 
-<p>Revised August 16th 2007</p>
+<p>Revised November 29th 2007</p>
 
 <p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

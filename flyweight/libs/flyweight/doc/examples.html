@@ -8,7 +8,7 @@
 <link rel="start" href="index.html">
 <link rel="prev" href="xxx.html">
 <link rel="up" href="index.html">
-<link rel="next" href="xxx.html">
+<link rel="next" href="tests.html">
 </head>
 
 <body>
@@ -21,8 +21,8 @@
 <div class="up_link"><a href="index.html"><img src="up.gif" alt="index" border="0"><br>
 Index
 </a></div>
-<div class="next_link"><a href="xxx.html"><img src="next.gif" alt="xxx" border="0"><br>
-<font color="#ff0000">[not linked yet]</font>
+<div class="next_link"><a href="tests.html"><img src="next.gif" alt="tests" border="0"><br>
+Tests
 </a></div><br clear="all" style="clear: all;">
 <br clear="all" style="clear: all;">
 
@@ -38,6 +38,7 @@ Index
   <li><a href="#example3">Example 3: formatted text processing</a></li>
   <li><a href="#example4">Example 4: serialization</a></li>
   <li><a href="#example5">Example 5: performance comparison</a></li>
+  <li><a href="#example6">Example 6: custom factory</a></li>
 </ul>
 
 <h2><a name="example1">Example 1: basic usage</a></h2>
@@ -183,6 +184,18 @@ components (the string type itself, flyweight factories, etc.) with custom
 allocators that keep track of the allocations and deallocations requested.
 </p>
 
+<h2><a name="example6">Example 6: custom factory</a></h2>
+
+<p>
+See <a href="../example/custom_factory.cpp">source code</a>.
+</p>
+
+<p>
+The example shows how to write and use a custom factory class. This
+"verbose" factory outputs messages tracing the invocations of its public interface
+by Boost.Flyweight, so helping the user visualize factory usage patterns.
+</p>
+
 <hr>
 
 <div class="prev_link"><a href="xxx.html"><img src="prev.gif" alt="xxx" border="0"><br>
@@ -191,13 +204,14 @@ allocators that keep track of the allocations and deallocations requested.
 <div class="up_link"><a href="index.html"><img src="up.gif" alt="index" border="0"><br>
 Index
 </a></div>
-<div class="next_link"><a href="xxx.html"><img src="next.gif" alt="xxx" border="0"><br>
-<font color="#ff0000">[not linked yet]</font>
+<div class="next_link"><a href="tests.html"><img src="next.gif" alt="tests" border="0"><br>
+Tests
 </a></div><br clear="all" style="clear: all;">
 <br clear="all" style="clear: all;">
+
 <br>
 
-<p>Revised November 12th 2007</p>
+<p>Revised November 29th 2007</p>
 
 <p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

@@ -8,7 +8,7 @@
 <link rel="start" href="../index.html">
 <link rel="prev" href="configuration.html">
 <link rel="up" href="index.html">
-<link rel="next" href="lambda_expressions.html">
+<link rel="next" href="technical.html">
 </head>
 
 <body>
@@ -21,8 +21,8 @@ Configuring Boost.Flyweight
 <div class="up_link"><a href="index.html"><img src="../up.gif" alt="Boost.Flyweight tutorial" border="0"><br>
 Boost.Flyweight tutorial
 </a></div>
-<div class="next_link"><a href="lambda_expressions.html"><img src="../next.gif" alt="annex: MPL lambda expressions" border="0"><br>
-Annex: MPL lambda expressions
+<div class="next_link"><a href="technical.html"><img src="../next.gif" alt="technical issues" border="0"><br>
+Technical issues
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
@@ -68,8 +68,8 @@ Note that <code>static_holder</code> is a concrete type while
 <code>static_holder_class</code> is a class template, so a specifier can be
 seen as a convenient way to provide access to a family of related concrete
 components (the different possible instantiations of the class template):
-<code>flyweight</code> internally selects the concrete component
-appropriate for its internal types.
+<code>flyweight</code> internally selects the particular component
+appropriate for its internal needs.
 </p>
 
 <h2><a name="factories">Custom factories</a></h2>
@@ -116,6 +116,79 @@ definition of the <code>Factory</code> concept.
 </p>
 
 <p>
+Let us see an actual example of realization of a custom factory class. Suppose
+we want to trace the different invocations by Boost.Flyweight of the
+<code>insert()</code> and <code>erase()</code> member functions: this can be
+done by using a custom factory whose member methods emit trace messages
+to the program console. We base the implementation of the repository
+functionality on a regular <code>std::set</code>:
+
+<blockquote><pre>
+<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>&gt;</span>
+<span class=keyword>class</span> <span class=identifier>verbose_factory_class</span>
+<span class=special>{</span> 
+  <span class=keyword>typedef</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>set</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>Value</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>store_type</span><span class=special>;</span>
+
+  <span class=identifier>store_type</span> <span class=identifier>store</span><span class=special>;</span>
+
+<span class=keyword>public</span><span class=special>:</span>
+  <span class=keyword>typedef</span> <span class=keyword>typename</span> <span class=identifier>store_type</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>handle_type</span><span class=special>;</span>
+
+  <span class=identifier>handle_type</span> <span class=identifier>insert</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>Entry</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span>
+  <span class=special>{</span>
+    <span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>handle_type</span><span class=special>,</span> <span class=keyword>bool</span><span class=special>&gt;</span> <span class=identifier>p</span><span class=special>=</span><span class=identifier>store</span><span class=special>.</span><span class=identifier>insert</span><span class=special>(</span><span class=identifier>x</span><span class=special>);</span>
+    <span class=keyword>if</span><span class=special>(</span><span class=identifier>p</span><span class=special>.</span><span class=identifier>second</span><span class=special>){</span> <span class=comment>/* new entry */</span>
+      <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;new: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Value</span><span class=special>&amp;)</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+    <span class=special>}</span>
+    <span class=keyword>else</span><span class=special>{</span>         <span class=comment>/* existing entry */</span>
+      <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;hit: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Value</span><span class=special>&amp;)</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+    <span class=special>}</span>
+    <span class=keyword>return</span> <span class=identifier>p</span><span class=special>.</span><span class=identifier>first</span><span class=special>;</span>
+  <span class=special>}</span>
+
+  <span class=keyword>void</span> <span class=identifier>erase</span><span class=special>(</span><span class=identifier>handle_type</span> <span class=identifier>h</span><span class=special>)</span>
+  <span class=special>{</span>
+    <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;del: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Value</span><span class=special>&amp;)*</span><span class=identifier>h</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+    <span class=identifier>store</span><span class=special>.</span><span class=identifier>erase</span><span class=special>(</span><span class=identifier>h</span><span class=special>);</span>
+  <span class=special>}</span>
+
+  <span class=keyword>const</span> <span class=identifier>Entry</span><span class=special>&amp;</span> <span class=identifier>entry</span><span class=special>(</span><span class=identifier>handle_type</span> <span class=identifier>h</span><span class=special>)</span>
+  <span class=special>{</span>
+    <span class=keyword>return</span> <span class=special>*</span><span class=identifier>h</span><span class=special>;</span>
+  <span class=special>}</span>
+<span class=special>};</span>
+</pre></blockquote>
+
+<p>
+The code deserves some commentaries:
+<ul>
+  <li>
+    Note that the factory is parameterized by <code>Entry</code>
+    and <code>Value</code>, as these types are provided internally by Boost.Flyweight
+    when the factory is instantiated as part of the machinery of <code>flyeight</code>;
+    but     there is nothing to prevent us from having more template parameters for
+    finer configuration of the factory type: for instance, we could extend
+    <code>verbose_factory_class</code> to accept some comparison predicate rather than
+    the default <code>std::less&lt;Value&gt;</code>, or to specify the allocator
+    used by the internal <code>std::set</code>.
+  </li>
+  <li>
+    The fact that <code>Entry</code> is convertible to <code>const Value&</code>
+    (which is about the only property known about <code>Entry</code>) is
+    exploited in the specification of <code>std::less&lt;Value&gt</code> as
+    the comparison predicate for the <code>std::set</code> of <code>Entry</code>s
+    used as the internal repository.
+  </li>
+  <li>
+    As our public <code>handle_type</code> we are simply using an iterator to the
+    internal <code>std::set</code>.
+  </li>
+</ul>
+</p>
+
+<p>
+In order to plug a custom factory into the specification of a <code>flyweight</code>
+type, we need an associated construct called the <i>factory specifier</i>.
 A factory specifier is a 
 <a href="lambda_expressions.html"><code>Lambda
 Expression</code></a> accepting the two argument types <code>Entry</code>
@@ -195,6 +268,11 @@ to do this tagging:
 </pre></blockquote>
   </li>
 </ol>
+</p>
+
+<p>
+<a href="../examples.html#example6">Example 6</a> in the examples section develops
+in full the <code>verbose_factory_class</code> case sketched above.
 </p>
 
 <h2><a name="holders">Custom holders</a></h2>
@@ -443,9 +521,8 @@ it must be tagged much in the same way as the rest of specifiers.
 </pre></blockquote>
 
 <p>
-Note that a tracking policy is its own specifier, i.e. there is no
-additional class to be passed as a proxy for the real component as is
-the case with factories and holders.
+Tracking policies are their own specifiers, that is, they are provided directly
+as template arguments to the <code>flyweight</code> class template.
 </p>
 
 <hr>
@@ -456,13 +533,13 @@ Configuring Boost.Flyweight
 <div class="up_link"><a href="index.html"><img src="../up.gif" alt="Boost.Flyweight tutorial" border="0"><br>
 Boost.Flyweight tutorial
 </a></div>
-<div class="next_link"><a href="lambda_expressions.html"><img src="../next.gif" alt="annex: MPL lambda expressions" border="0"><br>
-Annex: MPL lambda expressions
+<div class="next_link"><a href="technical.html"><img src="../next.gif" alt="technical issues" border="0"><br>
+Technical issues
 </a></div><br clear="all" style="clear: all;">
 
 <br>
 
-<p>Revised September 11th 2007</p>
+<p>Revised November 29th 2007</p>
 
 <p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

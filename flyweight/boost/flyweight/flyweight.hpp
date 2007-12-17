@@ -143,6 +143,18 @@ private:
 public:
   typedef T                                    value_type;
 
+  /* static data initialization */
+
+  static bool init(){return core::init();}
+
+  class initializer
+  {
+  public:
+    initializer():b(init()){}
+  private:
+    bool b;
+  };
+
   /* construct/copy/destroy */
   
   flyweight():h(core::insert(T())){}

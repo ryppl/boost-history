@@ -41,6 +41,7 @@ Tags
       <li><a href="#flyweight">Class template <code>flyweight</code></a>
         <ul>
           <li><a href="#instantiation_types">Instantiation types</a></li>
+          <li><a href="#static_init">Static data initialization</a></li>
           <li><a href="#constructors">Constructors, copy and assignment</a></li>
           <li><a href="#convertibility">Convertibility to the underlying type</a></li>
           <li><a href="#modifiers">Modifiers</a></li>
@@ -167,14 +168,15 @@ is high enough, substituting <code>flyweight&lt;T,...&gt;</code> for
 </p>
 
 <p>
-<code>flyweight</code> is parameterized according to the following aspects:
+<code>flyweight</code> is parameterized according to some aspects:
 <ul>
   <li>The <a href="factories.html#factory">factory class</a> used to store
     and retrieve the shared value objects.
   </li>
   <li>The type of <a href="holders.html#holder">holder</a> used to
-    instantiate the flyweight factory, which is unique for each
-    specialization of the <code>flyweight</code> class template.
+    instantiate the flyweight factory and a mutex object, both of
+    which are unique to each specialization of the <code>flyweight</code>
+    class template.
   </li>
   <li>A <a href="locking.html#locking">locking policy</a> determining
     the synchronization mechanisms for internal access to shared resources.
@@ -182,6 +184,31 @@ is high enough, substituting <code>flyweight&lt;T,...&gt;</code> for
   <li>A <a href="tracking.html#tracking">tracking policy</a> which controls
    how values are treated when all their associated flyweight objects are
    destroyed.
+  </li>
+</ul>
+These aspects impact the internal structure and behavior
+of the <code>flyweight</code> instantiation in the following manner:
+<ul>
+  <li>Each instantation of <code>flyweight</code> internally owns
+    a unique factory object and a unique synchronization
+    <a href="locking.html#preliminary">mutex</a> object, both of which
+    are created through the use of an associated holder type.
+  </li>
+  <li>The flyweight factory stores elements of an undisclosed type
+    <code>Entry</code> that is implicitly convertible to
+    <code>const T&amp;</code>. Every flyweight object is associated
+    to a <code>const T</code> reference resulting from the conversion
+    from some <code>Entry</code> stored in the factory.
+  </li>
+  <li>The associated mutex object is used to protect all invocations
+    to the insertion and deletion functions of the internal flyweight
+    factory.
+  </li>
+  <li>Each flyweight object internally stores a value of some
+    undisclosed type <code>Handle</code>. <code>Handle</code> and
+    the <code>Entry</code> type referred to above are obtained
+    from invocations to the associated tracking policy, in the
+    manner described for this concept.
   </li>
 </ul>
 In what follows, we implicitly assume that <code>T</code> equivalence
@@ -198,6 +225,11 @@ refers to the equivalence relationship induced by the factory class used.
 <span class=keyword>public</span><span class=special>:</span>
   <span class=keyword>typedef</span> <span class=identifier>T</span> <span class=identifier>value_type</span><span class=special>;</span>
 
+  <span class=comment>// static data initialization:</span>
+
+  <span class=keyword>static</span> <span class=keyword>bool</span> <span class=identifier>init</span><span class=special>();</span>
+  <span class=keyword>class</span> <span class=identifier>initializer</span><span class=special>{</span><span class=keyword>public</span><span class=special>:</span><span class=identifier>initializer</span><span class=special>();</span><span class=special>};</span>
+    
   <span class=comment>// construct/copy/destroy:</span>
   
   <span class=identifier>flyweight</span><span class=special>();</span>
@@ -246,7 +278,12 @@ following, in no particular order:
   <li>a <a href="locking.html#locking">locking policy</a>,</li>
   <li>a <a href="tracking.html#tracking">tracking policy</a>.</li>
 </ul>
-No aspect can be specified twice. The default configuration arguments are:
+No aspect can be specified twice. Each internal component of the
+<code>flyweight</code> instantiation is obtained through use of the
+corresponding specifier; for instance, the factory results from a
+certain (MPL) invocation of the given factory specifier, the internal
+mutex from the given locking policy, etc.
+The default configuration arguments are:
 <ul>
   <li>No tagging,</li>
   <li><a href="factories.html#hashed_factory"><code>hashed_factory&lt;&gt;</code></a>,</li>
@@ -255,6 +292,31 @@ No aspect can be specified twice. The default configuration arguments are:
   <li><a href="tracking.html#refcounted"><code>refcounted</code></a> tracking policy.</li>
 </ul>
 </p>
+
+<h4><a name="static_init">Static data initialization</a></h4>
+
+<p>
+The static data internal to a given <code>flyweight</code> instantiation
+(factory instance, etc.) is constructed during the dynamic initialization
+phase of the program or just before the first program-wide use of the
+instantiated class, whichever comes first. The following utilities can be
+used when more control about the moment of construction is required.
+</p>
+
+<code>static bool init();</code>
+
+<blockquote>
+<b>Effects:</b> After execution of this function the static data associated
+to the instantiation of <code>flyweight</code> is guaranteed to be
+constructed.<br>
+<b>Note:</b> Concurrent execution of this function is not thread safe.
+</blockquote>
+
+<code>initializer::initializer();</code>
+
+<blockquote>
+<b>Effects:</b> Executes <code>init()</code>.
+</blockquote>
 
 <h4><a name="constructors">Constructors, copy and assignment</a></h4>
 
@@ -548,7 +610,7 @@ Tags
 
 <br>
 
-<p>Revised September 26th 2007</p>
+<p>Revised December 17th 2007</p>
 
 <p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

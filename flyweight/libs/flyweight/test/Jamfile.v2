@@ -11,6 +11,7 @@ test-suite "flyweight" :
     [ run test_assoc_cont_factory.cpp test_assoc_cont_fact_main.cpp ]
     [ run test_basic.cpp              test_basic_main.cpp           ]
     [ run test_custom_factory.cpp     test_custom_factory_main.cpp  ]
+    [ run test_init.cpp               test_init_main.cpp            ]
     [ run test_intermod_holder.cpp    test_intermod_holder_main.cpp
           intermod_holder_dll                                       
         : # command line

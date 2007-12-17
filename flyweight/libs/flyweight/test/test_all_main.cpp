@@ -14,6 +14,7 @@
 #include "test_basic.hpp"
 #include "test_custom_factory.hpp"
 #include "test_intermod_holder.hpp"
+#include "test_init.hpp"
 #include "test_multictor.hpp"
 #include "test_no_locking.hpp"
 #include "test_no_tracking.hpp"
@@ -25,6 +26,7 @@ int main()
   test_assoc_container_factory();
   test_basic();
   test_custom_factory();
+  test_init();
 
 #if !defined(BOOST_MSVC)||!(BOOST_MSVC<1300)
   test_intermodule_holder();

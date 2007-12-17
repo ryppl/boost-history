@@ -112,6 +112,8 @@ public:
   typedef typename LockingPolicy::mutex_type   mutex_type;
   typedef typename LockingPolicy::lock_type    lock_type;
 
+  static bool init(){return &(factory())!=0;}
+
   static handle_type insert(const Value& x)
   {
     lock_type lock(mutex());
@@ -159,9 +161,9 @@ template<
 bool flyweight_core<
   Value,Tag,TrackingPolicy,
   FactorySpecifier,LockingPolicy,HolderSpecifier>::static_force_holder_get=
-  &flyweight_core<
+  &(flyweight_core<
     Value,Tag,TrackingPolicy,
-    FactorySpecifier,LockingPolicy,HolderSpecifier>::holder_type::get()!=0;
+    FactorySpecifier,LockingPolicy,HolderSpecifier>::holder_type::get())!=0;
 
 } /* namespace flyweights::detail */
 

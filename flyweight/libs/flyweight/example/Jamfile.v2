@@ -17,6 +17,11 @@ exe composite
     : <include>$(BOOST_ROOT)
     ;
 
+exe custom_factory
+    : custom_factory.cpp
+    : <include>$(BOOST_ROOT)
+    ;
+
 exe html
     : html.cpp
     : <include>$(BOOST_ROOT)
