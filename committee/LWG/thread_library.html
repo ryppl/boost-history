@@ -2634,11 +2634,10 @@ when suitable instantiated.
 <dd>
 Calls <code>try_lock()</code>
 for each argument in order beginning with the first
-until either all arguments have been processed,
-a call to <code>try_lock()</code> returns <code>false</code>,
-or a call to <code>try_lock()</code> throws an exception.
-If a call to <code>try_lock()</code> returns <code>false</code>
-or throws an exception,
+until all arguments have been processed,
+or a call to <code>try_lock()</code> fails,
+either by returning <code>false</code> or by throwing an exception.
+If a call to <code>try_lock()</code> fails,
 the <code>unlock()</code> function is called for any prior arguments.
 </dd>
 
