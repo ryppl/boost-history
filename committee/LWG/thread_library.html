@@ -2761,6 +2761,9 @@ copy shall be equivalent to calling the original.</del>
 <dd>
 Calls to <code>call_once</code> on the same <code>once_flag</code> object
 are serialized.
+If there has been a prior effective <code>call_once</code>
+on the same once_flag object,
+the <code>call_once</code> returns without invoking <code>func</code>.
 If there has been no prior effective <code>call_once</code>
 on the same <code>once_flag</code> object,
 the argument <code>func</code> (or a copy thereof)
@@ -2771,9 +2774,6 @@ is effective if and only if
 <code>func(args)</code> returns without exception.
 If an exception is thrown,
 the exception is propagated to the caller.
-If there has been a prior effective <code>call_once</code>
-on the same once_flag object,
-the <code>call_once</code> returns without invoking <code>func</code>.
 </dd>
 
 <dt>Synchronization:</dt>
