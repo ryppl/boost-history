@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++ (Revision 1)</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-15
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-18
 </p>
 
 <p>
@@ -2649,8 +2649,8 @@ the <code>unlock()</code> function is called for any prior arguments.
 If all calls to <code>try_lock()</code> returned <code>true</code>,
 returns <code>-1</code>.
 Otherwise returns a 0-based index
-value indicating for
-which argument <code>try_lock()</code> returned <code>false</code>.
+value that indicates the argument for which
+<code>try_lock()</code> returned <code>false</code>.
 [<i>Note:</i>
 On return, either all arguments will be locked or none will be
 locked.
