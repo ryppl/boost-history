@@ -2862,8 +2862,10 @@ of the <code>wait</code>, <code>timed_wait</code>,
 </p>
 
 <p>
+The execution of <code>notify_one</code> and <code>notify_all</code>
+shall be atomic.
 The execution of <code>wait</code> and <code>timed_wait</code>
-is performed in three atomic parts:
+shall be performed in three atomic parts:
 </p>
 
 <ol>
