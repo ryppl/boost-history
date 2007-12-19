@@ -29,7 +29,7 @@
 <h1>Multi-threading Library for Standard C++ (Revision 1)</h1>
 
 <p>
-ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-18
+ISO/IEC JTC1 SC22 WG21 N???? = 07-???? - 2007-12-19
 </p>
 
 <p>
@@ -470,9 +470,9 @@ namespace this_thread
     thread::id get_id();
 
     void yield();
-    void sleep(const system_time&amp; abs_t);
+    void sleep(const system_time&amp; <var>abs_t</var>);
     template &lt;class Duration&gt;
-        void sleep(const Duration&amp; rel_t);
+        void sleep(const Duration&amp; <var>rel_t</var>);
 
 }  // this_thread
 
@@ -1109,9 +1109,9 @@ namespace this_thread {
 thread::id get_id();
 
 void yield();
-void sleep(const system_time&amp; abs_t);
+void sleep(const system_time&amp; <var>abs_t</var>);
 template &lt;class Duration&gt;
-    void sleep(const Duration&amp; rel_t);
+    void sleep(const Duration&amp; <var>rel_t</var>);
 
 }  // this_thread
 </code></pre>
@@ -1164,7 +1164,7 @@ Nothing.
 </blockquote>
 
 <pre><code>
-void sleep(const system_time&amp; abs_t);
+void sleep(const system_time&amp; <var>abs_t</var>);
 </code></pre>
 
 <blockquote>
@@ -1188,7 +1188,7 @@ Nothing.
 
 <pre><code>
 template &lt;class Duration&gt;
-    void sleep(const Duration&amp; rel_t);
+    void sleep(const Duration&amp; <var>rel_t</var>);
 </code></pre>
 
 <blockquote>
@@ -1910,7 +1910,7 @@ public:
     lock_guard&amp; operator=(lock_guard const&amp;) = delete;
 
 private:
-    mutex_type* <var>pm</var>;  // <em>for exposition only</em>
+    mutex_type&amp; <var>pm</var>;  // <em>for exposition only</em>
 };
 
 }  // std
@@ -1923,7 +1923,7 @@ An object of type
 A <code>lock_guard</code> object maintains ownership of a mutex
 throughout the <code>lock_guard</code>'s lifetime.
 The behavior of a program is undefined
-if the mutex pointed to by <code><var>pm</var></code>
+if the mutex referenced by <code><var>pm</var></code>
 does not exist for the entire lifetime ([basic.life])
 of the <code>lock_guard</code> object.
 </p>
@@ -1942,7 +1942,12 @@ own mutex <code>m</code>.
 
 <dt>Effects:</dt>
 <dd>
-<code><var>pm = &amp;m</var>;<var> m</var>.lock()</code>.
+<code><var>m</var>.lock()</code>.
+</dd>
+
+<dt>Postconditions:</dt>
+<dd>
+<code><var>&amp;pm == &amp;m</var></code>.
 </dd>
 </dl>
 </blockquote>
@@ -1958,9 +1963,14 @@ lock_guard(mutex_type&amp; <var>m</var>, adopt_lock_t);
 The current thread owns mutex <code><var>m</var></code>.
 </dd>
 
-<dt>Effects:</dt>
+<dt>Postconditions:</dt>
 <dd>
-<code><var>pm = &amp;m</var></code>.
+<code><var>&amp;pm == &amp;m</var></code>.
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -1973,7 +1983,7 @@ The current thread owns mutex <code><var>m</var></code>.
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code><var>m</var>.unlock()</code>.
+<code><var>pm</var>.unlock()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2015,7 +2025,7 @@ public:
     bool try_lock();
 
     template &lt;class Duration&gt;
-        bool timed_lock(const Duration&amp; rel_t);
+        bool timed_lock(const Duration&amp; <var>rel_t</var>);
     bool timed_lock(const system_time&amp; abs_time);
 
     void unlock();
@@ -2071,9 +2081,14 @@ Constructs an object of type <code>unique_lock</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == 0</code>
+<code><var>pm</var> == 0</code>
 <br>
-<code>owns_lock() == false</code>
+<code><var>owns</var> == false</code>
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -2098,9 +2113,9 @@ calls <code><var>m</var>.lock()</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == &amp;<var>m</var></code>
+<code><var>pm</var> == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() == true</code>
+<code><var>owns</var> == true</code>
 </dd>
 </dl>
 </blockquote>
@@ -2124,9 +2139,14 @@ Constructs an object of type <code>unique_lock</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == &amp;<var>m</var></code>
+<code><var>pm</var> == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() == false</code>
+<code><var>owns</var> == false</code>
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -2151,10 +2171,15 @@ calls <code><var>m</var>.try_lock()</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == &amp;<var>m</var></code>
+<code><var>pm</var> == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() ==</code>
+<code><var>owns</var> ==</code>
 the result of the call to <code><var>m</var>.try_lock()</code>
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -2177,9 +2202,14 @@ Constructs an object of type <code>unique_lock</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == &amp;<var>m</var></code>
+<code><var>pm</var> == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() == true</code>
+<code><var>owns</var> == true</code>
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -2204,11 +2234,16 @@ and calls <code><var>m</var>.timed_lock(<var>abs_time</var>)</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == &amp;<var>m</var></code>
+<code><var>pm</var> == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() ==</code>
+<code><var>owns</var> ==</code>
 the result of the call to
 <code><var>m</var>.timed_lock(<var>abs_time</var>)</code>
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -2244,11 +2279,16 @@ and calls <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == &amp;<var>m</var></code>
+<code><var>pm</var> == &amp;<var>m</var></code>
 <br>
-<code>owns_lock() ==</code>
+<code><var>owns</var> ==</code>
 the result of the call to
 <code><var>m</var>.timed_lock(<var>rel_time</var>)</code>
+</dd>
+
+<dt>Throws:</dt>
+<dd>
+Nothing.
 </dd>
 </dl>
 </blockquote>
@@ -2261,8 +2301,8 @@ the result of the call to
 <dl>
 <dt>Effects:</dt>
 <dd>
-If <code>owns_lock()</code>
-calls <code>mutex()-&gt;unlock()</code>.
+If <code><var>owns</var></code>
+calls <code><var>pm</var>-&gt;unlock()</code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2281,17 +2321,17 @@ unique_lock(unique_lock&amp;&amp; <var>u</var>);
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() ==</code>
-the value of <code><var>u</var>.mutex()</code>
+<code><var>pm</var> ==</code>
+the value of <code><var>u</var>.<var>pm</var></code>
 prior to establishment of postconditions on <code><var>u</var></code>.
 <br>
-<code>owns_lock() ==</code>
-the value of <code><var>u</var>.owns_lock()</code>
+<code><var>owns</var> ==</code>
+the value of <code><var>u</var>.<var>owns</var></code>
 prior to establishment of postconditions on <code><var>u</var></code>.
 <br>
-<code><var>u</var>.mutex() == 0</code>
+<code><var>u</var>.<var>pm</var> == 0</code>
 <br>
-<code><var>u</var>.owns_lock() == false</code>
+<code><var>u</var>.<var>owns</var> == false</code>
 </dd>
 
 <dt>Throws:</dt>
@@ -2309,22 +2349,22 @@ unique_lock&amp; operator=(unique_lock&amp;&amp; <var>u</var>);
 <dl>
 <dt>Effects:</dt>
 <dd>
-If <code>owns_lock()</code> calls <code>mutex()-&gt;unlock()</code>.
+If <code><var>owns</var></code> calls <code><var>pm</var>-&gt;unlock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() ==</code>
-the value of <code><var>u</var>.mutex()</code>
+<code><var>pm</var> ==</code>
+the value of <code><var>u</var>.<var>pm</var></code>
 prior to establishment of postconditions on <code><var>u</var></code>.
 <br>
-<code>owns_lock() ==</code>
-the value of <code><var>u</var>.owns_lock()</code>
+<code><var>owns</var> ==</code>
+the value of <code><var>u</var>.<var>owns</var></code>
 prior to establishment of postconditions on <code><var>u</var></code>.
 <br>
-<code><var>u</var>.mutex() == 0</code>
+<code><var>u</var>.<var>pm</var> == 0</code>
 <br>
-<code><var>u</var>.owns_lock() == false</code>
+<code><var>u</var>.<var>owns</var> == false</code>
 </dd>
 
 <dt>Throws:</dt>
@@ -2352,19 +2392,19 @@ void lock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;lock()</code>.
+<code><var>pm</var>-&gt;lock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == true</code>
+<code><var>owns</var> == true</code>
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>
-or if <code>mutex() == 0</code>.
+if on entry <code><var>owns</var></code> is <code>true</code>
+or if <code><var>pm</var> == 0</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2377,7 +2417,7 @@ bool try_lock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;try_lock()</code>.
+<code><var>pm</var>-&gt;try_lock()</code>.
 </dd>
 
 <dt>Returns:</dt>
@@ -2387,7 +2427,7 @@ The result of the call to <code>try_lock()</code>.
 
 <dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() ==</code>
+<code><var>owns</var> ==</code>
 the result
 of the call to <code>try_lock()</code>.
 </dd>
@@ -2395,73 +2435,73 @@ of the call to <code>try_lock()</code>.
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>
-or if <code>mutex() == 0</code>.
+if on entry <code><var>owns</var></code> is <code>true</code>
+or if <code><var>pm</var> == 0</code>.
 </dd>
 </dl>
 </blockquote>
 
 <pre><code>
 template &lt;class Duration&gt;
-   bool timed_lock(const Duration&amp; rel_t);
+   bool timed_lock(const Duration&amp; <var>rel_t</var>);
 </code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;timed_lock(rel_t)</code>.
+<code><var>pm</var>-&gt;timed_lock(<var>rel_t</var>)</code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-The result of the call to <code>timed_lock(rel_t)</code>.
+The result of the call to <code>timed_lock(<var>rel_t</var>)</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == </code>
+<code><var>owns</var> == </code>
 the result
-of the call to <code>timed_lock(rel_t)</code>.
+of the call to <code>timed_lock(<var>rel_t</var>)</code>.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>
-or if <code>mutex() == 0</code>.
+if on entry <code><var>owns</var></code> is <code>true</code>
+or if <code><var>pm</var> == 0</code>.
 </dd>
 </dl>
 </blockquote>
 
 <pre><code>
-bool timed_lock(const system_time&amp; abs_t);
+bool timed_lock(const system_time&amp; <var>abs_t</var>);
 </code></pre>
 
 <blockquote>
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;timed_lock(abs_t)</code>.
+<code><var>pm</var>-&gt;timed_lock(<var>abs_t</var>)</code>.
 </dd>
 
 <dt>Returns:</dt>
 <dd>
-The result of the call to <code>timed_lock(rel_t)</code>.
+The result of the call to <code>timed_lock(<var>rel_t</var>)</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == </code>
+<code><var>owns</var> == </code>
 the result
-of the call to <code>timed_lock(rel_t)</code>.
+of the call to <code>timed_lock(<var>rel_t</var>)</code>.
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>true</code>
-or if <code>mutex() == 0</code>.
+if on entry <code><var>owns</var></code> is <code>true</code>
+or if <code><var>pm</var> == 0</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2474,18 +2514,18 @@ void unlock();
 <dl>
 <dt>Effects:</dt>
 <dd>
-<code>mutex()-&gt;unlock()</code>.
+<code><var>pm</var>-&gt;unlock()</code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>owns_lock() == false</code>
+<code><var>owns</var> == false</code>
 </dd>
 
 <dt>Throws:</dt>
 <dd>
 <code>lock_error</code>,
-if on entry <code>owns_lock()</code> is <code>false</code>.
+if on entry <code><var>owns</var></code> is <code>false</code>.
 </dd>
 </dl>
 </blockquote>
@@ -2516,7 +2556,7 @@ explicit operator bool () const;
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code>owns_lock()</code>.
+<code><var>owns</var></code>.
 </dd>
 
 <dt>Throws:</dt>
@@ -2571,14 +2611,14 @@ mutex_type* release();
 <dl>
 <dt>Returns:</dt>
 <dd>
-<code><var>pm</var></code>.
+The previous value of <code><var>pm</var></code>.
 </dd>
 
 <dt>Postconditions:</dt>
 <dd>
-<code>mutex() == 0</code>
+<code><var>pm</var> == 0</code>
 <br>
-<code>owns_lock() == false</code>
+<code><var>owns</var> == false</code>
 </dd>
 
 <dt>Throws:</dt>

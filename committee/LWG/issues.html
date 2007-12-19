@@ -237,7 +237,7 @@ unique_lock is not copyable but is movable.&quot; This should be plural:
 &quot;Objects
 of type unique_lock are not copyable but are movable.&quot; </p>
 <p>&#9998; 33. [thread.lock.unique] (30.3.3.2), first paragraph: see 20. </p>
-<p>34. [thread.lock.unique] (30.3.3.2), requirements clauses: mutex() == 0,
+<p>&#9998; 34. [thread.lock.unique] (30.3.3.2), requirements clauses: mutex() == 0,
 owns_lock() == false; the point of having &quot;exposition only&quot; private
 members is
 to use them in the descriptions of the member functions. These
@@ -247,7 +247,7 @@ should be pm == 0 and owns == 0, with analogous changes throughout. </p>
 remark
 &quot;The implementation must ensure ...&quot; should be &quot;The implementation shall
 ensure ...&quot;. </p>
-<p>36. [thread.lock.unique] (30.3.3.2), release(): returns clause should
+<p>&#10004; 36. [thread.lock.unique] (30.3.3.2), release(): returns clause should
 be &quot;the
 previous value of pm&quot;, since one of the postconditions is that pm be 0. </p>
 <p>&#10004; 37. [thread.lock.algorithm] (30.3.4), try_lock(): I'd rephrase the first
