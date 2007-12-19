@@ -873,6 +873,8 @@ class wx-target : typed-target
         : usage-requirements *
         )
     {
+        IMPORT project-rules : conditional : $(self) : conditional ;
+        
         #~ ECHO --- $(name) ;
         self.location = $(location) ;
         local bare-sources ;
