@@ -327,8 +327,50 @@ RhsDuration, depending on which has finer resolution? Then, for example,
 operator== can be defined as FD(x.count()) == FD(y.count()), and the
 same
 pattern can be applied to operator&lt;, operator+, and operator-. </p>
-<p>&nbsp;</p>
 
+<p>
+60. We understand that use of native_handle() and native_handle_type "is 
+inherently non-portable." But we're concerned (a) that there's no way to 
+detect whether the function exists, and (b) that there aren't even any 
+minimal requirements on the type (e.g., copyable? movable? 
+equality-comparable? less-than-comparable? hashable?).
+</p>
+
+<p>
+61. We're equally or more concerned about the date-time aspects of the paper:
+</p>
+<p>
+  a) For a paper centered on a thread-handling library, there's an 
+awful lot of auxiliary stuff there.
+</p>
+<p>
+  b) That auxiliary stuff is clearly not intended to be a complete 
+date-time library, since that's been targeted for TR2, yet it's been 
+given its own chapter.
+</p>
+<p>
+  c) For purposes of threading, it seems vast overkill, reserving 
+important names in the std namespace for uses that may, after all, 
+change once the committee see the complete date-time library proposal 
+for TR2.
+</p>
+<p>
+We would feel somewhat differently if this paper's date-time parts were 
+moved from std into, say, std::thread or into a sub-namespace; that 
+alone would go a long way to address the concerns. However, there's more.
+</p>
+<p>
+For the purposes of the thread library, we believe there's no need for 
+this degree of complexity. Given the context, we would be happy for 
+minutes, seconds, etc., to be constexpr's of type int64_t or equivalent 
+(e.g., long long). We believe strongly that no unit of measure ought be 
+a type; they are universally accepted as constants and in our view ought 
+be represented as such. (E.g., were "duration" a type, "minute" would be 
+a constexpr of that type.) In addition, we have circa a dozen years of 
+experience in using them this way in our code.  Further, we may want to 
+apply N2378 ("User-defined Literals") in this context, should that paper 
+be approved for C++0X.
+</p>
 </body>
 
 </html>
