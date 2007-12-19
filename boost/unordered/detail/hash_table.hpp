@@ -122,7 +122,29 @@ namespace boost {
                 bucket_allocator;
 
             typedef BOOST_DEDUCED_TYPENAME allocator_pointer<bucket_allocator>::type bucket_ptr;
+            typedef BOOST_DEDUCED_TYPENAME allocator_reference<bucket_allocator>::type bucket_reference;
+
+#if 1
             typedef bucket_ptr link_ptr;
+#else
+            // This alternative version of link_ptr is used to check that the
+            // implementation is type safe wrt bucket_ptr and link_ptr.
+            //
+            // It's a sort of strict typedef.
+
+            struct link_ptr {
+                link_ptr() : ptr_() { BOOST_HASH_MSVC_RESET_PTR(ptr_); }
+                explicit link_ptr(bucket_ptr p) : ptr_(p) {}
+                bucket_reference operator*() const { return *ptr_; }
+                bucket* operator->() const { return &*ptr_; }
+                operator bool() const { return ptr_; }
+                bool operator==(link_ptr const& x) const { return ptr_ == x.ptr_; }
+                bool operator!=(link_ptr const& x) const { return ptr_ != x.ptr_; }
+            private:
+                bucket_ptr ptr_;
+            };
+#endif
+
         private:
             bucket& operator=(bucket const&);
         public:
@@ -164,29 +186,29 @@ namespace boost {
 
             link_ptr group_prev_;
 
-            static link_ptr& prev_in_group(link_ptr n) {
+            static inline link_ptr& prev_in_group(link_ptr n) {
                 return static_cast<node_base_equivalent_keys&>(*n).group_prev_;
             }
 
             // pre: Must be pointing to the first node in a group.
-            static link_ptr last_in_group(link_ptr n) {
+            static inline link_ptr last_in_group(link_ptr n) {
                 BOOST_ASSERT(BOOST_HASH_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
                 return prev_in_group(n);
             }
 
             // pre: Must be pointing to the first node in a group.
-            static link_ptr& next_group(link_ptr n) {
+            static inline link_ptr& next_group(link_ptr n) {
                 BOOST_ASSERT(BOOST_HASH_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
                 return prev_in_group(n)->next_;
             }
 
             // pre: Must be pointing to a node
-            static node_base_equivalent_keys& get_node(link_ptr p) {
+            static inline node_base_equivalent_keys& get_node(link_ptr p) {
                 BOOST_ASSERT(p);
                 return static_cast<node_base_equivalent_keys&>(*p);
             }
 
-            static size_type group_count(link_ptr it)
+            static inline size_type group_count(link_ptr it)
             {
                 size_type count = 0;
                 link_ptr first = it;
@@ -197,7 +219,7 @@ namespace boost {
                 return count;
             }
 
-            static link_ptr* get_for_erase(bucket_ptr bucket, link_ptr n)
+            static inline link_ptr* get_for_erase(bucket_ptr bucket, link_ptr n)
             {
                 // If the element isn't the first in its group, then
                 // the link to it will be found in the previous element
@@ -212,7 +234,7 @@ namespace boost {
                 return it;
             }
 
-            static void link_node(link_ptr n, link_ptr pos)
+            static inline void link_node(link_ptr n, link_ptr pos)
             {
                 node_base_equivalent_keys& node_ref = get_node(n);
                 node_base_equivalent_keys& pos_ref = get_node(pos);
@@ -222,7 +244,7 @@ namespace boost {
                 pos_ref.group_prev_ = n;
             }
             
-            static void link_node_in_bucket(link_ptr n, bucket_ptr base)
+            static inline void link_node_in_bucket(link_ptr n, bucket_ptr base)
             {
                 node_base_equivalent_keys& node_ref = get_node(n);
                 node_ref.next_ = base->next_;
@@ -230,7 +252,7 @@ namespace boost {
                 base->next_ = n;
             }
 
-            static void link_group(link_ptr n, bucket_ptr base)
+            static inline void link_group(link_ptr n, bucket_ptr base)
             {
                 node_base_equivalent_keys& node_ref = get_node(n);
                 node_base_equivalent_keys& last_ref = get_node(node_ref.group_prev_);
@@ -238,7 +260,7 @@ namespace boost {
                 base->next_ = n;
             }
 
-            static void unlink_node(link_ptr* pos)
+            static inline void unlink_node(link_ptr* pos)
             {
                 node_base_equivalent_keys* n = &get_node(*pos);
                 link_ptr next = n->next_;
@@ -269,11 +291,11 @@ namespace boost {
             // Break a ciruclar list into two, with split as the beginning
             // of the second group (if split is at the beginning then don't
             // split).
-            static link_ptr split_group(link_ptr split) {
+            static inline link_ptr split_group(link_ptr split) {
                 // If split is at the beginning of the group then there's
                 // nothing to split.
                 if(prev_in_group(split)->next_ != split)
-                    return link_ptr();
+                    return unordered_detail::null_ptr<link_ptr>();
 
                 // Find the start of the group.
                 link_ptr start = split;
@@ -288,7 +310,7 @@ namespace boost {
                 return start;
             }
 
-            static void split_group(link_ptr split1, link_ptr split2) {
+            static inline void split_group(link_ptr split1, link_ptr split2) {
                 link_ptr begin1 = split_group(split1);
                 link_ptr begin2 = split_group(split2);
 
@@ -311,55 +333,55 @@ namespace boost {
                 BOOST_ASSERT(false);
             }
 
-            static link_ptr last_in_group(link_ptr n) {
+            static inline link_ptr last_in_group(link_ptr n) {
                 return n;
             }
 
-            static link_ptr& next_group(link_ptr n) {
+            static inline link_ptr& next_group(link_ptr n) {
                 BOOST_ASSERT(n);
                 return n->next_;
             }
 
             // pre: Must be pointing to a node
-            static node_base_unique_keys& get_node(link_ptr p) {
+            static inline node_base_unique_keys& get_node(link_ptr p) {
                 BOOST_ASSERT(p);
                 return static_cast<node_base_unique_keys&>(*p);
             }
 
-            static size_type group_count(link_ptr){
+            static inline size_type group_count(link_ptr){
                 return 1;
             }
 
-            static link_ptr* get_for_erase(bucket_ptr bucket, link_ptr n)
+            static inline link_ptr* get_for_erase(bucket_ptr bucket, link_ptr n)
             {
                 link_ptr* it = &bucket->next_;
                 while(*it != n) it = &(*it)->next_;
                 return it;
             }
 
-            static void link_node(link_ptr n, link_ptr pos)
+            static inline void link_node(link_ptr n, link_ptr pos)
             {
                 BOOST_ASSERT(false);
             }
 
-            static void link_node_in_bucket(link_ptr n, bucket_ptr base)
+            static inline void link_node_in_bucket(link_ptr n, bucket_ptr base)
             {
                 n->next_ = base->next_;
                 base->next_ = n;
             }
 
-            static void link_group(link_ptr n, bucket_ptr base)
+            static inline void link_group(link_ptr n, bucket_ptr base)
             {
                 link_node_in_bucket(n, base);
             }
 
-            static void unlink_node(link_ptr* pos)
+            static inline void unlink_node(link_ptr* pos)
             {
                 *pos = (*pos)->next_;
             }
 
-            static void split_group(link_ptr) {}
-            static void split_group(link_ptr, link_ptr) {}
+            static inline void split_group(link_ptr) {}
+            static inline void split_group(link_ptr, link_ptr) {}
         };
 
         template <typename Alloc, typename EquivKeys>
@@ -519,51 +541,51 @@ namespace boost {
 
             // Methods for navigating groups of elements with equal keys.
 
-            static link_ptr& prev_in_group(link_ptr n) {
+            static inline link_ptr& prev_in_group(link_ptr n) {
                 return node_base::prev_in_group(n);
             }
 
             // pre: Must be pointing to the first node in a group.
-            static link_ptr last_in_group(link_ptr n) {
+            static inline link_ptr last_in_group(link_ptr n) {
                 return node_base::last_in_group(n);
             }
 
             // pre: Must be pointing to the first node in a group.
-            static link_ptr& next_group(link_ptr n) {
+            static inline link_ptr& next_group(link_ptr n) {
                 return node_base::next_group(n);
             }
 
             // pre: Must be pointing to a node
-            static reference get_value(link_ptr p) {
+            static inline reference get_value(link_ptr p) {
                 BOOST_ASSERT(p);
                 return static_cast<node&>(*p).value_;
             }
 
-            class local_iterator_base
+            class iterator_base
             {
             public:
+                bucket_ptr bucket_;
                 link_ptr node_;
 
-                local_iterator_base()
-                    : node_()
+                iterator_base()
+                    : bucket_(), node_()
                 {
+                    BOOST_HASH_MSVC_RESET_PTR(bucket_);
                     BOOST_HASH_MSVC_RESET_PTR(node_);
                 }
 
-                explicit local_iterator_base(link_ptr n)
-                    : node_(n) {}
+                explicit iterator_base(bucket_ptr b)
+                    : bucket_(b), node_(b->next_) {}
 
-                bool not_finished() const
-                {
-                    return node_ ? true : false;
-                }
+                iterator_base(bucket_ptr b, link_ptr n)
+                    : bucket_(b), node_(n) {}
 
-                bool operator==(local_iterator_base const& x) const
+                bool operator==(iterator_base const& x) const
                 {
                     return node_ == x.node_;
                 }
 
-                bool operator!=(local_iterator_base const& x) const
+                bool operator!=(iterator_base const& x) const
                 {
                     return node_ != x.node_;
                 }
@@ -573,64 +595,14 @@ namespace boost {
                     return get_value(node_);
                 }
 
-                value_type* operator->() const
-                {
-                    return &get_value(node_);
-                }
-
-                void increment()
-                {
-                    BOOST_ASSERT(node_);
-                    node_ = node_->next_;
-                }
-
-                void next_group()
-                {
-                    node_ = hash_table_data::next_group(node_);
-                }
-            };
-
-            class iterator_base
-            {
-            public:
-                bucket_ptr bucket_;
-                local_iterator_base local_;
-
-                iterator_base()
-                    : bucket_(), local_() {}
-
-                explicit iterator_base(bucket_ptr b)
-                    : bucket_(b), local_(b->next_) {}
-
-                iterator_base(bucket_ptr b, link_ptr n)
-                    : bucket_(b), local_(n) {}
-
-                iterator_base(bucket_ptr b, local_iterator_base const& it)
-                    : bucket_(b), local_(it) {}
-
-                bool operator==(iterator_base const& x) const
-                {
-                    return local_ == x.local_;
-                }
-
-                bool operator!=(iterator_base const& x) const
-                {
-                    return local_ != x.local_;
-                }
-
-                reference operator*() const
-                {
-                    return *local_;
-                }
-
                 void increment()
                 {
                     BOOST_ASSERT(bucket_);
-                    local_.increment();
+                    node_ = node_->next_;
 
-                    while (!local_.node_) {
+                    while (!node_) {
                         ++bucket_;
-                        local_ = local_iterator_base(bucket_->next_);
+                        node_ = bucket_->next_;
                     }
                 }
             };
@@ -750,41 +722,40 @@ namespace boost {
                 return iterator_base(buckets_ + bucket_count_);
             }
 
-            local_iterator_base begin(size_type n) const
+            link_ptr begin(size_type n) const
             {
-                return local_iterator_base(buckets_[n].next_);
+                return buckets_[n].next_;
             }
 
-            local_iterator_base end(size_type) const
+            link_ptr end(size_type) const
             {
-                return local_iterator_base();
+                return unordered_detail::null_ptr<link_ptr>();
             }
 
-            local_iterator_base begin(bucket_ptr b) const
+            link_ptr begin(bucket_ptr b) const
             {
-                return local_iterator_base(b->next_);
+                return b->next_;
             }
 
             // Bucket Size
 
             // no throw
-            size_type node_count(local_iterator_base it) const
+            static inline size_type node_count(link_ptr it)
             {
                 size_type count = 0;
-                while(it.not_finished()) {
+                while(BOOST_HASH_BORLAND_BOOL(it)) {
                     ++count;
-                    it.increment();
+                    it = it->next_;
                 }
                 return count;
             }
 
-            size_type node_count(local_iterator_base it1,
-                    local_iterator_base it2) const
+            static inline size_type node_count(link_ptr it1, link_ptr it2)
             {
                 size_type count = 0;
                 while(it1 != it2) {
                     ++count;
-                    it1.increment();
+                    it1 = it1->next_;
                 }
                 return count;
             }
@@ -794,9 +765,9 @@ namespace boost {
                 return node_count(begin(n));
             }
 
-            size_type group_count(local_iterator_base first_node) const
+            static inline size_type group_count(link_ptr first_node)
             {
-                return node_base::group_count(first_node.node_);
+                return node_base::group_count(first_node);
             }
 
             // get_for_erase
@@ -805,9 +776,9 @@ namespace boost {
             //
             // no throw
 
-            link_ptr* get_for_erase(iterator_base r) const
+            static inline link_ptr* get_for_erase(iterator_base r)
             {
-                return node_base::get_for_erase(r.bucket_, r.local_.node_);
+                return node_base::get_for_erase(r.bucket_, r.node_);
             }
 
             // Link/Unlink/Move Node
@@ -817,13 +788,13 @@ namespace boost {
             //
             // no throw
 
-            void link_node(link_ptr n, local_iterator_base pos)
+            void link_node(link_ptr n, link_ptr pos)
             {
-                node_base::link_node(n, pos.node_);
+                node_base::link_node(n, pos);
                 ++size_;
             }
 
-            void link_node(link_ptr n, bucket_ptr base)
+            void link_node_in_bucket(link_ptr n, bucket_ptr base)
             {
                 node_base::link_node_in_bucket(n, base);
                 ++size_;
@@ -845,7 +816,7 @@ namespace boost {
 
             size_type unlink_group(link_ptr* pos)
             {
-                size_type count = group_count(local_iterator_base(*pos));
+                size_type count = group_count(*pos);
                 size_ -= count;
                 *pos = next_group(*pos);
                 return count;
@@ -856,42 +827,39 @@ namespace boost {
                 link_ptr* it = get_for_erase(n);
                 split_group(*it);
                 unordered_detail::reset(*it);
-                size_ -= node_count(n.local_);
+                size_ -= node_count(n.node_);
             }
 
             void unlink_nodes(iterator_base begin, iterator_base end)
             {
                 BOOST_ASSERT(begin.bucket_ == end.bucket_);
-                local_iterator_base local_end = end.local_;
-
-                size_ -= node_count(begin.local_, local_end);
+                size_ -= node_count(begin.node_, end.node_);
                 link_ptr* it = get_for_erase(begin);
-                split_group(*it, local_end.node_);
-                *it = local_end.node_;
+                split_group(*it, end.node_);
+                *it = end.node_;
             }
 
             void unlink_nodes(bucket_ptr base, iterator_base end)
             {
                 BOOST_ASSERT(base == end.bucket_);
 
-                local_iterator_base local_end = end.local_;
-                split_group(local_end.node_);
+                split_group(end.node_);
             
                 link_ptr ptr(base->next_);
-                base->next_ = local_end.node_;
+                base->next_ = end.node_;
 
-                size_ -= node_count(local_iterator_base(ptr), local_end);
+                size_ -= node_count(ptr, end.node_);
             }
 
             // Break a ciruclar list into two, with split as the beginning
             // of the second group (if split is at the beginning then don't
             // split).
-            void split_group(link_ptr split)
+            static inline void split_group(link_ptr split)
             {
                 node_base::split_group(split);
             }
 
-            void split_group(link_ptr split1, link_ptr split2)
+            static inline void split_group(link_ptr split1, link_ptr split2)
             {
                 node_base::split_group(split1, split2);
             }
@@ -916,7 +884,7 @@ namespace boost {
                 link_ptr n = construct_node(v);
 
                 // Rest is no throw
-                link_node(n, base);
+                link_node_in_bucket(n, base);
                 return iterator_base(base, n);
             }
 
@@ -928,12 +896,12 @@ namespace boost {
                 link_ptr n = construct_node(v);
 
                 // Rest is no throw
-                link_node(n, position.local_);
+                link_node(n, position.node_);
                 return iterator_base(position.bucket_, n);
             }
 
             iterator_base create_node(value_type const& v,
-                    bucket_ptr base, local_iterator_base position)
+                    bucket_ptr base, link_ptr position)
             {
                 BOOST_ASSERT(EquivKeys::value);
 
@@ -941,21 +909,20 @@ namespace boost {
                 link_ptr n = construct_node(v);
 
                 // Rest is no throw
-                if(position.not_finished())
+                if(BOOST_HASH_BORLAND_BOOL(position))
                     link_node(n, position);
                 else
-                    link_node(n, base);
+                    link_node_in_bucket(n, base);
 
                 return iterator_base(base, n);
             }
 
-            void copy_group(local_iterator_base it, bucket_ptr dst)
+            void copy_group(link_ptr it, bucket_ptr dst)
             {
-                local_iterator_base end = it;
-                end.next_group();
-                iterator_base pos = create_node(*it, dst);
-                for(it.increment(); it != end; it.increment())
-                    create_node(*it, pos);
+                link_ptr end = next_group(it);
+                iterator_base pos = create_node(get_value(it), dst);
+                for(it = it->next_; it != end; it = it->next_)
+                    create_node(get_value(it), pos);
             }
 
             // Delete Node
@@ -1025,7 +992,7 @@ namespace boost {
                 iterator_base next = r;
                 next.increment();
                 unlink_node(r);
-                allocators_.destroy(r.local_.node_);
+                allocators_.destroy(r.node_);
                 // r has been invalidated but its bucket is still valid
                 recompute_begin_bucket(r.bucket_, next.bucket_);
                 return next;
@@ -1039,7 +1006,7 @@ namespace boost {
 
                     if (r1.bucket_ == r2.bucket_) {
                         unlink_nodes(r1, r2);
-                        delete_nodes(r1.local_.node_, r2.local_.node_);
+                        delete_nodes(r1.node_, r2.node_);
 
                         // No need to call recompute_begin_bucket because
                         // the nodes are only deleted from one bucket, which
@@ -1050,17 +1017,17 @@ namespace boost {
                         BOOST_ASSERT(r1.bucket_ < r2.bucket_);
 
                         unlink_nodes(r1);
-                        delete_to_bucket_end(r1.local_.node_);
+                        delete_to_bucket_end(r1.node_);
 
                         for(bucket_ptr i = r1.bucket_ + 1; i != r2.bucket_; ++i) {
-                            size_ -= node_count(local_iterator_base(i->next_));
+                            size_ -= node_count(i->next_);
                             clear_bucket(i);
                         }
 
                         if(r2 != end()) {
                             link_ptr first = r2.bucket_->next_;
                             unlink_nodes(r2.bucket_, r2);
-                            delete_nodes(first, r2.local_.node_);
+                            delete_nodes(first, r2.node_);
                         }
 
                         // r1 has been invalidated but its bucket is still
@@ -1159,7 +1126,6 @@ namespace boost {
 
             // iterators
 
-            typedef BOOST_DEDUCED_TYPENAME data::local_iterator_base local_iterator_base;
             typedef BOOST_DEDUCED_TYPENAME data::iterator_base iterator_base;
 
         private:
@@ -1622,11 +1588,11 @@ namespace boost {
                 // no throw:
                 for(bucket_ptr i = src.cached_begin_bucket_; i != end; ++i) {
                     // no throw:
-                    for(local_iterator_base it = src.begin(i);
-                            it.not_finished(); it.next_group()) {
+                    for(link_ptr it = src.begin(i);
+                            BOOST_HASH_BORLAND_BOOL(it); it = data::next_group(it)) {
                         // hash function can throw.
                         bucket_ptr dst_bucket = dst.buckets_ +
-                            dst.index_from_hash(hf(extract_key(*it)));
+                            dst.index_from_hash(hf(extract_key(data::get_value(it))));
                         // throws, strong
                         dst.copy_group(it, dst_bucket);
                     }
@@ -1650,7 +1616,7 @@ namespace boost {
                 size_type hash_value = hash_function()(k);
                 bucket_ptr bucket = this->buckets_
                     + this->index_from_hash(hash_value);
-                local_iterator_base position = find_iterator(bucket, k);
+                link_ptr position = find_iterator(bucket, k);
 
                 // Create the node before rehashing in case it throws an
                 // exception (need strong safety in such a case).
@@ -1666,12 +1632,12 @@ namespace boost {
 
                 link_ptr n = a.release();
 
-                // I'm relying on local_iterator_base not being invalidated by
+                // I'm relying on link_ptr not being invalidated by
                 // the rehash here.
-                if(position.not_finished())
+                if(BOOST_HASH_BORLAND_BOOL(position))
                     this->link_node(n, position);
                 else
-                    this->link_node(n, bucket);
+                    this->link_node_in_bucket(n, bucket);
 
                 return iterator_base(bucket, n);
             }
@@ -1692,9 +1658,9 @@ namespace boost {
                     // Find the first node in the group - so that the node
                     // will be inserted at the end of the group.
 
-                    local_iterator_base start(it.local_);
-                    while(this->prev_in_group(start.node_)->next_ == start.node_)
-                        start.node_ = this->prev_in_group(start.node_);
+                    link_ptr start(it.node_);
+                    while(this->prev_in_group(start)->next_ == start)
+                        start = this->prev_in_group(start);
 
                     // Create the node before rehashing in case it throws an
                     // exception (need strong safety in such a case).
@@ -1731,19 +1697,19 @@ namespace boost {
                 else {
                     // Only require basic exception safety here
                     reserve_extra(size() + distance);
+                    node_constructor a(this->allocators_);
 
                     for (; i != j; ++i) {
-                        node_constructor a(this->allocators_);
                         a.construct(*i);
 
                         key_type const& k = extract_key(a.get()->value_);
                         bucket_ptr bucket = get_bucket(k);
-                        local_iterator_base position = find_iterator(bucket, k);
+                        link_ptr position = find_iterator(bucket, k);
 
-                        if(position.not_finished())
+                        if(BOOST_HASH_BORLAND_BOOL(position))
                             this->link_node(a.release(), position);
                         else
-                            this->link_node(a.release(), bucket);
+                            this->link_node_in_bucket(a.release(), bucket);
                     }
                 }
             }
@@ -1781,10 +1747,10 @@ namespace boost {
 
                 size_type hash_value = hash_function()(k);
                 bucket_ptr bucket = this->buckets_ + this->index_from_hash(hash_value);
-                local_iterator_base pos = find_iterator(bucket, k);
+                link_ptr pos = find_iterator(bucket, k);
 
-                if (pos.not_finished())
-                    return *pos;
+                if (BOOST_HASH_BORLAND_BOOL(pos))
+                    return data::get_value(pos);
                 else
                 {
                     // Side effects only in this block.
@@ -1802,9 +1768,9 @@ namespace boost {
                     // Nothing after this point can throw.
 
                     link_ptr n = a.release();
-                    this->link_node(n, bucket);
+                    this->link_node_in_bucket(n, bucket);
 
-                    return *local_iterator_base(n);
+                    return data::get_value(n);
                 }
             }
 
@@ -1818,9 +1784,9 @@ namespace boost {
                 key_type const& k = extract_key(v);
                 size_type hash_value = hash_function()(k);
                 bucket_ptr bucket = this->buckets_ + this->index_from_hash(hash_value);
-                local_iterator_base pos = find_iterator(bucket, k);
+                link_ptr pos = find_iterator(bucket, k);
                 
-                if (pos.not_finished()) {
+                if (BOOST_HASH_BORLAND_BOOL(pos)) {
                     // Found an existing key, return it (no throw).
                     return std::pair<iterator_base, bool>(
                         iterator_base(bucket, pos), false);
@@ -1842,7 +1808,7 @@ namespace boost {
                     // Nothing after this point can throw.
 
                     link_ptr n = a.release();
-                    this->link_node(n, bucket);
+                    this->link_node_in_bucket(n, bucket);
 
                     return std::pair<iterator_base, bool>(
                         iterator_base(bucket, n), true);
@@ -1888,22 +1854,21 @@ namespace boost {
             template <typename InputIterator>
             void insert_unique(InputIterator i, InputIterator j)
             {
-                // If only inserting 1 element, get the required
-                // safety since insert is only called once.
+                node_constructor a(this->allocators_);
+
                 for (; i != j; ++i) {
                     // No side effects in this initial code
                     size_type hash_value = hash_function()(extract_key(*i));
                     bucket_ptr bucket = this->buckets_
                         + this->index_from_hash(hash_value);
-                    local_iterator_base pos = find_iterator(bucket, extract_key(*i));
+                    link_ptr pos = find_iterator(bucket, extract_key(*i));
                     
-                    if (!pos.not_finished()) {
+                    if (!BOOST_HASH_BORLAND_BOOL(pos)) {
                         // Doesn't already exist, add to bucket.
                         // Side effects only in this block.
 
                         // Create the node before rehashing in case it throws an
                         // exception (need strong safety in such a case).
-                        node_constructor a(this->allocators_);
                         value_type const& v = *i;
                         a.construct(v);
 
@@ -1915,7 +1880,7 @@ namespace boost {
                         }
 
                         // Nothing after this point can throw.
-                        this->link_node(a.release(), bucket);
+                        this->link_node_in_bucket(a.release(), bucket);
                     }
                 }
             }
@@ -1952,8 +1917,8 @@ namespace boost {
             // strong exception safety, no side effects
             size_type count(key_type const& k) const
             {
-                local_iterator_base it = find_iterator(k); // throws, strong
-                return it.not_finished() ? this->group_count(it) : 0;
+                link_ptr it = find_iterator(k); // throws, strong
+                return BOOST_HASH_BORLAND_BOOL(it) ? data::group_count(it) : 0;
             }
 
             // find
@@ -1962,9 +1927,9 @@ namespace boost {
             iterator_base find(key_type const& k) const
             {
                 bucket_ptr bucket = get_bucket(k);
-                local_iterator_base it = find_iterator(bucket, k);
+                link_ptr it = find_iterator(bucket, k);
 
-                if (it.not_finished())
+                if (BOOST_HASH_BORLAND_BOOL(it))
                     return iterator_base(bucket, it);
                 else
                     return this->end();
@@ -1973,10 +1938,10 @@ namespace boost {
             value_type& at(key_type const& k) const
             {
                 bucket_ptr bucket = get_bucket(k);
-                local_iterator_base it = find_iterator(bucket, k);
+                link_ptr it = find_iterator(bucket, k);
 
-                if (it.not_finished())
-                    return *it;
+                if (BOOST_HASH_BORLAND_BOOL(it))
+                    return data::get_value(it);
                 else
                     throw std::out_of_range("Unable to find key in unordered_map.");
             }
@@ -1987,10 +1952,10 @@ namespace boost {
             std::pair<iterator_base, iterator_base> equal_range(key_type const& k) const
             {
                 bucket_ptr bucket = get_bucket(k);
-                local_iterator_base it = find_iterator(bucket, k);
-                if (it.not_finished()) {
+                link_ptr it = find_iterator(bucket, k);
+                if (BOOST_HASH_BORLAND_BOOL(it)) {
                     iterator_base first(iterator_base(bucket, it));
-                    iterator_base second(iterator_base(bucket, this->last_in_group(it.node_)));
+                    iterator_base second(iterator_base(bucket, this->last_in_group(it)));
                     second.increment();
                     return std::pair<iterator_base, iterator_base>(first, second);
                 }
@@ -2005,22 +1970,21 @@ namespace boost {
             //
 
 private:
-            inline bool group_equals(local_iterator_base it1,
-                    local_iterator_base it2, type_wrapper<key_type>*) const
+            static inline bool group_equals(link_ptr it1, link_ptr it2,
+                    type_wrapper<key_type>*)
             {
-                return this->group_count(it1) == this->group_count(it2);
+                return data::group_count(it1) == data::group_count(it2);
             }
 
-            inline bool group_equals(local_iterator_base it1,
-                    local_iterator_base it2, void*) const
+            static inline bool group_equals(link_ptr it1, link_ptr it2, void*)
             {
-                if(!it2.not_finished()) return false;
-                local_iterator_base end1 = it1, end2 = it2;
-                end1.next_group(); end2.next_group();
+                if(!BOOST_HASH_BORLAND_BOOL(it2)) return false;
+                link_ptr end1 = data::next_group(it1);
+                link_ptr end2 = data::next_group(it2);
                 do {
-                    if(it1->second != it2->second) return false;
-                    it1.increment();
-                    it2.increment();
+                    if(data::get_value(it1).second != data::get_value(it2).second) return false;
+                    it1 = it1->next_;
+                    it2 = it2->next_;
                 } while(it1 != end1 && it2 != end2);
                 return it1 == end1 && it2 == end2;
             }
@@ -2032,10 +1996,10 @@ public:
                 for(bucket_ptr i = this->cached_begin_bucket_,
                         j = this->buckets_ + this->bucket_count_; i != j; ++i)
                 {
-                    for(local_iterator_base it(i->next_); it.not_finished(); it.next_group())
+                    for(link_ptr it(i->next_); BOOST_HASH_BORLAND_BOOL(it); it = data::next_group(it))
                     {
-                        local_iterator_base other_pos = other.find_iterator(other.extract_key(*it));
-                        if(!other_pos.not_finished() ||
+                        link_ptr other_pos = other.find_iterator(other.extract_key(data::get_value(it)));
+                        if(!BOOST_HASH_BORLAND_BOOL(other_pos) ||
                             !group_equals(it, other_pos, (type_wrapper<value_type>*)0))
                             return false;
                     }
@@ -2044,22 +2008,22 @@ public:
                 return true;
             }
 
-            inline bool group_hash(local_iterator_base it, type_wrapper<key_type>*) const
+            inline bool group_hash(link_ptr it, type_wrapper<key_type>*) const
             {
-                std::size_t seed = this->group_count(it);
-                boost::hash_combine(seed, hash_function()(*it));
+                std::size_t seed = data::group_count(it);
+                boost::hash_combine(seed, hash_function()(data::get_value(it)));
                 return seed;
             }
 
-            inline bool group_hash(local_iterator_base it, void*) const
+            inline bool group_hash(link_ptr it, void*) const
             {
-                std::size_t seed = hash_function()(it->first);
+                std::size_t seed = hash_function()(data::get_value(it).first);
 
-                local_iterator_base end = it;
-                end.next_group();
+                link_ptr end = data::next_group(it);
 
                 do {
-                    boost::hash_combine(seed, it->second);
+                    boost::hash_combine(seed, data::get_value(it).second);
+                    it = it->next_;
                 } while(it != end);
 
                 return seed;
@@ -2072,13 +2036,12 @@ public:
                 for(bucket_ptr i = this->cached_begin_bucket_,
                         j = this->buckets_ + this->bucket_count_; i != j; ++i)
                 {
-                    for(local_iterator_base it(i->next_); it.not_finished(); it.next_group())
+                    for(link_ptr it(i->next_); BOOST_HASH_BORLAND_BOOL(it); it = data::next_group(it))
                         seed ^= group_hash(it, (type_wrapper<value_type>*)0);
                 }
 
                 return seed;
             }
-
 
         private:
 
@@ -2089,18 +2052,18 @@ public:
             }
 
             // strong exception safety, no side effects
-            local_iterator_base find_iterator(key_type const& k) const
+            link_ptr find_iterator(key_type const& k) const
             {
                 return find_iterator(get_bucket(k), k);
             }
 
             // strong exception safety, no side effects
-            local_iterator_base find_iterator(bucket_ptr bucket,
+            link_ptr find_iterator(bucket_ptr bucket,
                     key_type const& k) const
             {
-                local_iterator_base it = this->begin(bucket);
-                while (it.not_finished() && !equal(k, *it))
-                    it.next_group();
+                link_ptr it = this->begin(bucket);
+                while (BOOST_HASH_BORLAND_BOOL(it) && !equal(k, data::get_value(it)))
+                    it = data::next_group(it);
 
                 return it;
             }
@@ -2109,8 +2072,8 @@ public:
             link_ptr* find_for_erase(bucket_ptr bucket, key_type const& k) const
             {
                 link_ptr* it = &bucket->next_;
-                while(BOOST_HASH_BORLAND_BOOL(*it) && !equal(k, this->get_value(*it)))
-                    it = &this->next_group(*it);
+                while(BOOST_HASH_BORLAND_BOOL(*it) && !equal(k, data::get_value(*it)))
+                    it = &data::next_group(*it);
 
                 return it;
             }
@@ -2142,24 +2105,26 @@ public:
 
         private:
             typedef hash_table_data<Alloc, EquivKeys> data;
-            typedef BOOST_DEDUCED_TYPENAME data::local_iterator_base base;
+            typedef BOOST_DEDUCED_TYPENAME data::link_ptr ptr;
             typedef hash_const_local_iterator<Alloc, EquivKeys> const_local_iterator;
 
             friend class hash_const_local_iterator<Alloc, EquivKeys>;
-            base base_;
+            ptr ptr_;
 
         public:
-            hash_local_iterator() : base_() {}
-            explicit hash_local_iterator(base x) : base_(x) {}
+            hash_local_iterator() : ptr_() {
+                BOOST_HASH_MSVC_RESET_PTR(ptr_);
+            }
+            explicit hash_local_iterator(ptr x) : ptr_(x) {}
             BOOST_DEDUCED_TYPENAME allocator_reference<Alloc>::type operator*() const
-                { return *base_; }
-            value_type* operator->() const { return &*base_; }
-            hash_local_iterator& operator++() { base_.increment(); return *this; }
-            hash_local_iterator operator++(int) { hash_local_iterator tmp(base_); base_.increment(); return tmp; }
-            bool operator==(hash_local_iterator x) const { return base_ == x.base_; }
-            bool operator==(const_local_iterator x) const { return base_ == x.base_; }
-            bool operator!=(hash_local_iterator x) const { return base_ != x.base_; }
-            bool operator!=(const_local_iterator x) const { return base_ != x.base_; }
+                { return data::get_value(ptr_); }
+            value_type* operator->() const { return &data::get_value(ptr_); }
+            hash_local_iterator& operator++() { ptr_ = ptr_->next_; return *this; }
+            hash_local_iterator operator++(int) { hash_local_iterator tmp(ptr_); ptr_ = ptr_->next_; return tmp; }
+            bool operator==(hash_local_iterator x) const { return ptr_ == x.ptr_; }
+            bool operator==(const_local_iterator x) const { return ptr_ == x.ptr_; }
+            bool operator!=(hash_local_iterator x) const { return ptr_ != x.ptr_; }
+            bool operator!=(const_local_iterator x) const { return ptr_ != x.ptr_; }
         };
 
         template <typename Alloc, typename EquivKeys>
@@ -2176,24 +2141,26 @@ public:
 
         private:
             typedef hash_table_data<Alloc, EquivKeys> data;
-            typedef BOOST_DEDUCED_TYPENAME data::local_iterator_base base;
+            typedef BOOST_DEDUCED_TYPENAME data::link_ptr ptr;
             typedef hash_local_iterator<Alloc, EquivKeys> local_iterator;
             friend class hash_local_iterator<Alloc, EquivKeys>;
-            base base_;
+            ptr ptr_;
 
         public:
-            hash_const_local_iterator() : base_() {}
-            explicit hash_const_local_iterator(base x) : base_(x) {}
-            hash_const_local_iterator(local_iterator x) : base_(x.base_) {}
+            hash_const_local_iterator() : ptr_() {
+                BOOST_HASH_MSVC_RESET_PTR(ptr_);
+            }
+            explicit hash_const_local_iterator(ptr x) : ptr_(x) {}
+            hash_const_local_iterator(local_iterator x) : ptr_(x.ptr_) {}
             BOOST_DEDUCED_TYPENAME allocator_const_reference<Alloc>::type
-                operator*() const { return *base_; }
-            value_type const* operator->() const { return &*base_; }
-            hash_const_local_iterator& operator++() { base_.increment(); return *this; }
-            hash_const_local_iterator operator++(int) { hash_const_local_iterator tmp(base_); base_.increment(); return tmp; }
-            bool operator==(local_iterator x) const { return base_ == x.base_; }
-            bool operator==(hash_const_local_iterator x) const { return base_ == x.base_; }
-            bool operator!=(local_iterator x) const { return base_ != x.base_; }
-            bool operator!=(hash_const_local_iterator x) const { return base_ != x.base_; }
+                operator*() const { return data::get_value(ptr_); }
+            value_type const* operator->() const { return &data::get_value(ptr_); }
+            hash_const_local_iterator& operator++() { ptr_ = ptr_->next_; return *this; }
+            hash_const_local_iterator operator++(int) { hash_const_local_iterator tmp(ptr_); ptr_ = ptr_->next_; return tmp; }
+            bool operator==(local_iterator x) const { return ptr_ == x.ptr_; }
+            bool operator==(hash_const_local_iterator x) const { return ptr_ == x.ptr_; }
+            bool operator!=(local_iterator x) const { return ptr_ != x.ptr_; }
+            bool operator!=(hash_const_local_iterator x) const { return ptr_ != x.ptr_; }
         };
 
         // iterators
