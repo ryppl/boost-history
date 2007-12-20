@@ -465,7 +465,7 @@ namespace boost {
             // Bucket Size
 
             // no throw
-            size_type node_count(link_ptr it) const
+            static inline size_type node_count(link_ptr it)
             {
                 size_type count = 0;
                 while(BOOST_UNORDERED_BORLAND_BOOL(it)) {
@@ -475,7 +475,7 @@ namespace boost {
                 return count;
             }
 
-            size_type node_count(link_ptr it1, link_ptr it2) const
+            static inline size_type node_count(link_ptr it1, link_ptr it2)
             {
                 size_type count = 0;
                 while(it1 != it2) {
@@ -493,13 +493,7 @@ namespace boost {
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
             static size_type group_count(link_ptr it)
             {
-                size_type count = 0;
-                link_ptr first = it;
-                do {
-                    ++count;
-                    it = prev_in_group(it);
-                } while (it != first); // throws, strong
-                return count;
+                return node_count(it, next_group(it));
             }
 #else
             static size_type group_count(link_ptr)
