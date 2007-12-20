@@ -36,6 +36,7 @@ namespace boost {
             struct node;
             struct bucket;
             typedef std::size_t size_type;
+            typedef std::ptrdiff_t difference_type;
 
             typedef Alloc value_allocator;
 
@@ -243,21 +244,11 @@ namespace boost {
             }
 
             // pre: Must be pointing to the first node in a group.
-            static inline link_ptr last_in_group(link_ptr n) {
-                BOOST_ASSERT(BOOST_UNORDERED_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
-                return prev_in_group(n);
-            }
-
-            // pre: Must be pointing to the first node in a group.
             static inline link_ptr& next_group(link_ptr n) {
                 BOOST_ASSERT(BOOST_UNORDERED_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
                 return prev_in_group(n)->next_;
             }
 #else
-            static inline link_ptr last_in_group(link_ptr n) {
-                return n;
-            }
-
             static inline link_ptr& next_group(link_ptr n) {
                 BOOST_ASSERT(n);
                 return n->next_;
@@ -320,6 +311,16 @@ namespace boost {
                         node_ = bucket_->next_;
                     }
                 }
+
+                void incrementGroup()
+                {
+                    node_ = data::next_group(node_);
+
+                    while (!node_) {
+                        ++bucket_;
+                        node_ = bucket_->next_;
+                    }
+                }
             };
 
             // Member Variables
@@ -345,7 +346,7 @@ namespace boost {
                 // Creates an extra bucket to act as a sentinel.
                 constructor.construct(bucket(), bucket_count_ + 1);
 
-                cached_begin_bucket_ = constructor.get() + bucket_count_;
+                cached_begin_bucket_ = constructor.get() + static_cast<difference_type>(bucket_count_);
 
                 // Set up the sentinel.
                 cached_begin_bucket_->next_ = link_ptr(cached_begin_bucket_);
@@ -368,7 +369,7 @@ namespace boost {
                 // Creates an extra bucket to act as a sentinel.
                 constructor.construct(bucket(), bucket_count_ + 1);
 
-                cached_begin_bucket_ = constructor.get() + bucket_count_;
+                cached_begin_bucket_ = constructor.get() + static_cast<difference_type>(bucket_count_);
 
                 // Set up the sentinel
                 cached_begin_bucket_->next_ = link_ptr(cached_begin_bucket_);
@@ -383,15 +384,16 @@ namespace boost {
             {
                 if(buckets_) {
                     bucket_ptr begin = cached_begin_bucket_;
-                    bucket_ptr end = buckets_ + bucket_count_;
+                    bucket_ptr end = buckets_end();
                     while(begin != end) {
                         clear_bucket(begin);
                         ++begin;
                     }
 
                     // Destroy an extra bucket for the sentinels.
-                    for(size_type i2 = 0; i2 < bucket_count_ + 1; ++i2)
-                        allocators_.bucket_alloc_.destroy(buckets_ + i2);
+                    ++end;
+                    for(begin = buckets_; begin != end; ++begin)
+                        allocators_.bucket_alloc_.destroy(begin);
 
                     allocators_.bucket_alloc_.deallocate(buckets_, bucket_count_ + 1);
                 }
@@ -413,17 +415,23 @@ namespace boost {
                 std::swap(size_, other.size_);
             }
 
-            // Return the bucket index for a hashed value.
+            // Return the bucket for a hashed value.
             //
             // no throw
-            size_type index_from_hash(size_type hashed) const
+            bucket_ptr bucket_from_hash(size_type hashed) const
             {
-                return hashed % bucket_count_;
+                return buckets_ + static_cast<difference_type>(hashed % bucket_count_);
             }
 
             // Begin & End
             //
             // no throw
+
+            bucket_ptr buckets_end() const
+            {
+                return buckets_ + static_cast<difference_type>(bucket_count_);
+            }
+
 
             iterator_base begin() const
             {
@@ -434,7 +442,7 @@ namespace boost {
 
             iterator_base end() const
             {
-                return iterator_base(buckets_ + bucket_count_);
+                return iterator_base(buckets_end());
             }
 
             link_ptr begin(size_type n) const
@@ -619,8 +627,7 @@ namespace boost {
             {
                 size_type count = group_count(*pos);
                 size_ -= count;
-                link_ptr last = last_in_group(*pos);
-                *pos = last->next_;
+                *pos = next_group(*pos);
                 return count;
             }
 #else
@@ -832,7 +839,7 @@ namespace boost {
             void clear()
             {
                 bucket_ptr begin = cached_begin_bucket_;
-                bucket_ptr end = buckets_ + bucket_count_;
+                bucket_ptr end = buckets_end();
 
                 size_ = 0;
                 cached_begin_bucket_ = end;
@@ -880,7 +887,8 @@ namespace boost {
                         unlink_nodes(r1);
                         delete_to_bucket_end(r1.node_);
 
-                        for(bucket_ptr i = r1.bucket_ + 1; i != r2.bucket_; ++i) {
+                        bucket_ptr i = r1.bucket_;
+                        for(++i; i != r2.bucket_; ++i) {
                             size_ -= node_count(i->next_);
                             clear_bucket(i);
                         }
@@ -917,7 +925,7 @@ namespace boost {
                         while (cached_begin_bucket_->empty())
                             ++cached_begin_bucket_;
                     } else {
-                        cached_begin_bucket_ = buckets_ + bucket_count_;
+                        cached_begin_bucket_ = buckets_end();
                     }
                 }
             }
@@ -929,7 +937,7 @@ namespace boost {
             void recompute_begin_bucket(bucket_ptr b1, bucket_ptr b2)
             {
                 BOOST_ASSERT(!(b1 < cached_begin_bucket_) && !(b2 < b1));
-                BOOST_ASSERT(b2 == buckets_ + bucket_count_ || !b2->empty());
+                BOOST_ASSERT(b2 == buckets_end() || !b2->empty());
 
                 if(b1 == cached_begin_bucket_ && b1->empty())
                     cached_begin_bucket_ = b2;
@@ -985,6 +993,7 @@ namespace boost {
             typedef Pred key_equal;
             typedef ValueType value_type;
             typedef std::size_t size_type;
+            typedef std::ptrdiff_t difference_type;
 
             // iterators
 
@@ -1248,13 +1257,14 @@ namespace boost {
             size_type bucket(key_type const& k) const
             {
                 // hash_function can throw:
-                return this->index_from_hash(hash_function()(k));
+                return hash_function()(k) % this->bucket_count_;
             }
+
 
             // strong safety
             bucket_ptr get_bucket(key_type const& k) const
             {
-                return this->buckets_ + bucket(k);
+                return this->buckets_ + static_cast<difference_type>(bucket(k));
             }
 
             // no throw
@@ -1416,7 +1426,7 @@ namespace boost {
                 BOOST_ASSERT(dst.size_ == 0);
                 //BOOST_ASSERT(src.allocators_.node_alloc_ == dst.allocators_.node_alloc_);
 
-                bucket_ptr end = src.buckets_ + src.bucket_count_;
+                bucket_ptr end = src.buckets_end();
 
                 for(; src.cached_begin_bucket_ != end;
                         ++src.cached_begin_bucket_) {
@@ -1426,8 +1436,7 @@ namespace boost {
                         // src_bucket to dst.
 
                         // This next line throws iff the hash function throws.
-                        bucket_ptr dst_bucket = dst.buckets_ +
-                            dst.index_from_hash(
+                        bucket_ptr dst_bucket = dst.bucket_from_hash(
                                 hf(extract_key(data::get_value(src_bucket->next_))));
 
                         link_ptr n = src_bucket->next_;
@@ -1444,7 +1453,7 @@ namespace boost {
             {
                 BOOST_ASSERT(dst.size_ == 0);
                 // no throw:
-                bucket_ptr end = src.buckets_ + src.bucket_count_;
+                bucket_ptr end = src.buckets_end();
                 hasher const& hf = f.hash_function();
 
                 // no throw:
@@ -1453,8 +1462,8 @@ namespace boost {
                     for(link_ptr it = src.begin(i);
                             BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it)) {
                         // hash function can throw.
-                        bucket_ptr dst_bucket = dst.buckets_ +
-                            dst.index_from_hash(hf(extract_key(data::get_value(it))));
+                        bucket_ptr dst_bucket = dst.bucket_from_hash(
+                                hf(extract_key(data::get_value(it))));
                         // throws, strong
                         dst.copy_group(it, dst_bucket);
                     }
@@ -1478,8 +1487,7 @@ namespace boost {
             {
                 key_type const& k = extract_key(v);
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = this->buckets_
-                    + this->index_from_hash(hash_value);
+                bucket_ptr bucket = this->bucket_from_hash(hash_value);
                 link_ptr position = find_iterator(bucket, k);
 
                 // Create the node before rehashing in case it throws an
@@ -1490,7 +1498,7 @@ namespace boost {
                 // reserve has basic exception safety if the hash function
                 // throws, strong otherwise.
                 if(reserve(size() + 1))
-                    bucket = this->buckets_ + this->index_from_hash(hash_value);
+                    bucket = this->bucket_from_hash(hash_value);
 
                 // Nothing after the point can throw.
 
@@ -1610,7 +1618,7 @@ namespace boost {
                 typedef BOOST_DEDUCED_TYPENAME value_type::second_type mapped_type;
 
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = this->buckets_ + this->index_from_hash(hash_value);
+                bucket_ptr bucket = this->bucket_from_hash(hash_value);
                 link_ptr pos = find_iterator(bucket, k);
 
                 if (BOOST_UNORDERED_BORLAND_BOOL(pos))
@@ -1626,8 +1634,8 @@ namespace boost {
 
                     // reserve has basic exception safety if the hash function
                     // throws, strong otherwise.
-                    if (reserve(size() + 1))
-                        bucket = this->buckets_ + this->index_from_hash(hash_value);
+                    if(reserve(size() + 1))
+                        bucket = this->bucket_from_hash(hash_value);
 
                     // Nothing after this point can throw.
 
@@ -1647,7 +1655,7 @@ namespace boost {
                 // No side effects in this initial code
                 key_type const& k = extract_key(v);
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = this->buckets_ + this->index_from_hash(hash_value);
+                bucket_ptr bucket = this->bucket_from_hash(hash_value);
                 link_ptr pos = find_iterator(bucket, k);
                 
                 if (BOOST_UNORDERED_BORLAND_BOOL(pos)) {
@@ -1667,7 +1675,7 @@ namespace boost {
                     // reserve has basic exception safety if the hash function
                     // throws, strong otherwise.
                     if(reserve(size() + 1))
-                        bucket = this->buckets_ + this->index_from_hash(hash_value);
+                        bucket = this->bucket_from_hash(hash_value);
 
                     // Nothing after this point can throw.
 
@@ -1723,8 +1731,7 @@ namespace boost {
                 for (; i != j; ++i) {
                     // No side effects in this initial code
                     size_type hash_value = hash_function()(extract_key(*i));
-                    bucket_ptr bucket = this->buckets_
-                        + this->index_from_hash(hash_value);
+                    bucket_ptr bucket = this->bucket_from_hash(hash_value);
                     link_ptr pos = find_iterator(bucket, extract_key(*i));
                     
                     if (!BOOST_UNORDERED_BORLAND_BOOL(pos)) {
@@ -1740,7 +1747,7 @@ namespace boost {
                         // throws, strong otherwise.
                         if(size() + 1 >= max_load_) {
                             reserve(size() + insert_size(i, j));
-                            bucket = this->buckets_ + this->index_from_hash(hash_value);
+                            bucket = this->bucket_from_hash(hash_value);
                         }
 
                         // Nothing after this point can throw.
@@ -1819,8 +1826,8 @@ namespace boost {
                 link_ptr it = find_iterator(bucket, k);
                 if (BOOST_UNORDERED_BORLAND_BOOL(it)) {
                     iterator_base first(iterator_base(bucket, it));
-                    iterator_base second(iterator_base(bucket, this->last_in_group(it)));
-                    second.increment();
+                    iterator_base second(first);
+                    second.incrementGroup();
                     return std::pair<iterator_base, iterator_base>(first, second);
                 }
                 else {
@@ -1872,7 +1879,7 @@ public:
                 if(this->size() != other.size()) return false;
 
                 for(bucket_ptr i = this->cached_begin_bucket_,
-                        j = this->buckets_ + this->bucket_count_; i != j; ++i)
+                        j = this->buckets_end(); i != j; ++i)
                 {
                     for(link_ptr it(i->next_); BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it))
                     {
@@ -1912,7 +1919,7 @@ public:
                 std::size_t seed = 0;
 
                 for(bucket_ptr i = this->cached_begin_bucket_,
-                        j = this->buckets_ + this->bucket_count_; i != j; ++i)
+                        j = this->buckets_end(); i != j; ++i)
                 {
                     for(link_ptr it(i->next_); BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it))
                         seed ^= group_hash(it, (type_wrapper<value_type>*)0);
