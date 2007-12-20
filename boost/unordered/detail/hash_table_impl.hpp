@@ -32,6 +32,8 @@ namespace boost {
         class BOOST_UNORDERED_TABLE_DATA
         {
         public:
+            typedef BOOST_UNORDERED_TABLE_DATA data;
+
             struct node_base;
             struct node;
             struct bucket;
@@ -244,21 +246,11 @@ namespace boost {
             }
 
             // pre: Must be pointing to the first node in a group.
-            static inline link_ptr last_in_group(link_ptr n) {
-                BOOST_ASSERT(BOOST_UNORDERED_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
-                return prev_in_group(n);
-            }
-
-            // pre: Must be pointing to the first node in a group.
             static inline link_ptr& next_group(link_ptr n) {
                 BOOST_ASSERT(BOOST_UNORDERED_BORLAND_BOOL(n) && n != prev_in_group(n)->next_);
                 return prev_in_group(n)->next_;
             }
 #else
-            static inline link_ptr last_in_group(link_ptr n) {
-                return n;
-            }
-
             static inline link_ptr& next_group(link_ptr n) {
                 BOOST_ASSERT(n);
                 return n->next_;
@@ -315,6 +307,16 @@ namespace boost {
                 {
                     BOOST_ASSERT(bucket_);
                     node_ = node_->next_;
+
+                    while (!node_) {
+                        ++bucket_;
+                        node_ = bucket_->next_;
+                    }
+                }
+
+                void incrementGroup()
+                {
+                    node_ = data::next_group(node_);
 
                     while (!node_) {
                         ++bucket_;
@@ -627,8 +629,7 @@ namespace boost {
             {
                 size_type count = group_count(*pos);
                 size_ -= count;
-                link_ptr last = last_in_group(*pos);
-                *pos = last->next_;
+                *pos = next_group(*pos);
                 return count;
             }
 #else
@@ -1827,8 +1828,8 @@ namespace boost {
                 link_ptr it = find_iterator(bucket, k);
                 if (BOOST_UNORDERED_BORLAND_BOOL(it)) {
                     iterator_base first(iterator_base(bucket, it));
-                    iterator_base second(iterator_base(bucket, this->last_in_group(it)));
-                    second.increment();
+                    iterator_base second(first);
+                    second.incrementGroup();
                     return std::pair<iterator_base, iterator_base>(first, second);
                 }
                 else {
