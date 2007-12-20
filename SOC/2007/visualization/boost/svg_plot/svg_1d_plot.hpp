@@ -164,13 +164,13 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // TODO SVG has also a not yet implemented boldness.
   double title_width_; 
   double legend_width_;
-  double legend_x1_; // Left of legend box. (Optionally set by legend_position).
-  double legend_y1_; // Top of legend box.
+  double legend_left_; // Left of legend box. (Optionally set by legend_position).
+  double legend_top_; // Top of legend box.
   // Size of legend box is controlled by its contents,
   // but may be helpful to store bottom right coordinates.
   // legend_bottom_right() gives access.
-  double legend_x2_; // right of legend box.
-  double legend_y2_; // bottom of legend box.
+  double legend_right_; // right of legend box.
+  double legend_bottom_; // bottom of legend box.
 
   // X-Axis information.
   // (Y_axis stored as one point because this is a 1D graph).
@@ -236,7 +236,7 @@ public:
     //x_units_info(0, 0, "(units)", 14, "Times New Roman", "italic", "bold", "wider", "underline", right_align, horizontal),
     text_margin_(2.), // for text was 1.5 // as a fraction of the font size.
     border_margin_(5), // Prevent plot window box begin right on edge.
-    legend_x1_(-1), legend_x2_(-1),legend_y1_(-1),legend_y2_(-1), // Indicates not yet set.
+    legend_left_(-1), legend_right_(-1),legend_top_(-1),legend_bottom_(-1), // Indicates not yet set.
 
     x_min(-10), x_max(10),
     use_legend(false),
