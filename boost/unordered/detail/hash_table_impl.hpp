@@ -491,12 +491,12 @@ namespace boost {
             }
 
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
-            static size_type group_count(link_ptr it)
+            static inline size_type group_count(link_ptr it)
             {
                 return node_count(it, next_group(it));
             }
 #else
-            static size_type group_count(link_ptr)
+            static inline size_type group_count(link_ptr)
             {
                 return 1;
             }
@@ -675,7 +675,7 @@ namespace boost {
             // Break a ciruclar list into two, with split as the beginning
             // of the second group (if split is at the beginning then don't
             // split).
-            link_ptr split_group(link_ptr split)
+            static inline link_ptr split_group(link_ptr split)
             {
                 // If split is at the beginning of the group then there's
                 // nothing to split.
@@ -695,7 +695,7 @@ namespace boost {
                 return start;
             }
 
-            void split_group(link_ptr split1, link_ptr split2)
+            static inline void split_group(link_ptr split1, link_ptr split2)
             {
                 link_ptr begin1 = split_group(split1);
                 link_ptr begin2 = split_group(split2);
@@ -707,11 +707,11 @@ namespace boost {
                 }
             }
 #else
-            void split_group(link_ptr)
+            static inline void split_group(link_ptr)
             {
             }
 
-            void split_group(link_ptr, link_ptr)
+            static inline void split_group(link_ptr, link_ptr)
             {
             }
 #endif
