@@ -1892,7 +1892,8 @@ public:
             inline std::size_t group_hash(link_ptr it, type_wrapper<key_type>*) const
             {
                 std::size_t seed = data::group_count(it);
-                boost::hash_combine(seed, hash_function()(data::get_value(it)));
+                std::size_t hashed_key = hash_function()(data::get_value(it)); 
+                boost::hash_combine(seed, hashed_key);
                 return seed;
             }
 
