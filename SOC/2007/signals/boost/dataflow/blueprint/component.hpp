@@ -6,7 +6,7 @@
 #ifndef BOOST_DATAFLOW_BLUEPRINT_COMPONENT_HPP
 #define BOOST_DATAFLOW_BLUEPRINT_COMPONENT_HPP
 
-#include <boost/dataflow/blueprint/get_port.hpp>
+#include <boost/dataflow/blueprint/port_t.hpp>
 #include <boost/dataflow/support/component.hpp>
 #include <boost/dataflow/support/component_operation.hpp>
 #include <boost/dataflow/support/binary_operation.hpp>
@@ -18,8 +18,7 @@
 
 namespace boost { namespace dataflow { namespace blueprint {
 
-struct mechanism;
-
+/// Base class for all blueprint component types.  Run-time analogue of the Component concept. 
 class component
 {
 public:
@@ -31,7 +30,7 @@ public:
     virtual ~component() {};
 };
 
-template<typename Component>
+template<typename Component, typename Tag=default_tag>
 class component_t : public component
 {
 public:
@@ -43,11 +42,11 @@ public:
     
     void invoke()
     {
-        component_operation<operations::invoke>(c);
+        component_operation<operations::invoke, Tag>(c);
     }
     size_t num_ports() const
     {
-        return mpl::size<typename component_traits_of<Component>::type::ports>::value;
+        return mpl::size<typename traits_of<Component, Tag>::type::ports>::value;
     }
     port & get_port(int port_num)
     {
@@ -55,14 +54,14 @@ public:
     }
     virtual std::auto_ptr<component> copy() const
     {
-        return std::auto_ptr<component>(new component_t<Component>(*this));
+        return std::auto_ptr<component>(new component_t<Component, Tag>(*this));
     }
     Component &get() {return c;}
 private:
     void component_t_()
     {
         for(size_t i=0; i<num_ports(); i++)
-            ports.push_back(blueprint::get_port<Component>(c, i));
+            ports.push_back(blueprint::get_port<Tag>(c, i));
     }
     Component c;
     ptr_vector<port> ports;

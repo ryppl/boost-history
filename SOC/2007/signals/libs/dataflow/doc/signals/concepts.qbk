@@ -22,10 +22,10 @@ The following expressions are used in this document:
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Mechanism]
+        [Tag]
         [`PT::mechanism`]
         [`dataflow::signals::mechanism`]
-        [[Mechanism] type tag.]
+        [[Tag] type tag.]
     ]
     [
         [Signature]
@@ -39,12 +39,12 @@ The following expressions are used in this document:
 
 [section SignalProducer]
 
-A [ProducerPort] type `P` is a ['[SignalProducer]] if its
+A producer [Port] type `P` is a ['[SignalProducer]] if its
 [PortTraits] is a [SignalPortTraits], and the `get_port` function
 returns the underlying `boost::signal`.
 
 [heading Refinement of]
-* [ProducerPort]
+* producer [Port]
 * [Connectable] with [SignalConsumer] of same signature.
 
 [heading Notation]
@@ -85,12 +85,12 @@ files:
 
 [section SignalConsumer]
 
-A [ConsumerPort] type `P` is a ['[SignalConsumer]] if its
+A consumer [Port] type `P` is a ['[SignalConsumer]] if its
 [PortTraits] is a [SignalPortTraits], and the `get_port` function
 returns the underlying `boost::function`.
 
 [heading Refinement of]
-* [ConsumerPort]
+* consumer [Port]
 * [Connectable] with [SignalProducer] of same signature.
 
 [heading Notation]

@@ -1,0 +1,95 @@
+[section:general General]
+
+[section:entity Entity,Traits]
+
+[heading Notation]
+
+[variablelist
+    [[T] [A [Traits] type.]]
+]
+
+[heading Requirements]
+
+[table
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support.hpp>
+```
+
+[endsect][/entity]
+
+[section:portvector PortVector, PortVectorTraits]
+
+[heading Notation]
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[PV] [A [PortVector] type.]]
+    [[PVT] [[PortVectorTraits] of `PV` for `T`.]]
+    [[pv] [An object of type `PV`.]]
+    [[I] [An integer in the range \[0, # of [Port]s exposed by `PV`)]]
+    [[IC] [An IntegralConstant with value in the range \[0, # of [Port]s exposed by `PV`)]]
+]
+
+[heading PortVector Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [PortVector Traits]
+        [`traits_of<>::type`]
+        [`PVT`]
+        [
+            The [ComponentTraits] of the component.
+        ]
+    ]
+    [
+        [ GetPort ]
+        [`get_port_c<M, I>(c)`]
+        []
+        [
+            Returns the I'th [PortVectorTraits] exposed by `C`
+        ]
+    ]
+    [
+        [ GetPort ]
+        [`get_port<M, IC>(c)`]
+        []
+        [
+            Returns the IC'th [PortVectorTraits] exposed by `C`
+        ]
+    ]
+]
+
+[heading PortVectorTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`PVT::ports`]
+        [MPL Sequence of [PortTraits] types]
+        [
+            An enumeration of the [PortTraits] of the exposed
+            [Port]s.
+        ]
+    ]
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support.hpp>
+```
+
+[endsect][/entity]
+
+
+[endsect]

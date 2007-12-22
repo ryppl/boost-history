@@ -12,32 +12,53 @@
 namespace boost { namespace dataflow {
 
 template<typename T, typename PortTraits, typename Tag=default_tag>
-struct port_adapter_traits : public PortTraits
-{};
-
-template<typename T, typename PortTraits, typename Tag=default_tag>
-struct port_adapter : public port<port_adapter_traits<T, PortTraits, Tag> >
+struct port_adapter : public port<PortTraits >
 {
     port_adapter(T & object) : object(object) {}
     T & object;
 };
 
-namespace extension
+template<typename T>
+inline T &get_object(T &t)
 {
-    template<typename T, typename PortTraits, typename Tag, typename KeyPortTraits>
-    struct get_keyed_port_impl<port_adapter_traits<T, PortTraits, Tag>, KeyPortTraits >
-    {
-       typedef typename boost::result_of<
-                get_keyed_port_impl<PortTraits, KeyPortTraits>(T &)
-            >::type result_type;
-        
-        template<typename PortAdapter>
-        result_type operator()(PortAdapter &adapter)
-        {
-            return get_keyed_port_impl<PortTraits, KeyPortTraits>()(adapter.object);
-        };
-    };
+    return t;
 }
+
+template<typename T>
+inline const T&get_object(const T &t)
+{
+    return t;
+}
+
+template<typename T, typename PortTraits, typename Tag>
+inline T&get_object(const port_adapter<T, PortTraits, Tag> &t)
+{
+    return t.object;
+}
+
+template<typename T, typename PortTraits, typename Tag>
+inline T&get_object(port_adapter<T, PortTraits, Tag> &t)
+{
+    return t.object;
+}
+
+template<typename T>
+struct get_object_type
+{
+    typedef T type;
+};
+
+template<typename T, typename PortTraits, typename Tag>
+struct get_object_type<port_adapter<T, PortTraits, Tag> >
+{
+    typedef T type;
+};
+
+template<typename T, typename PortTraits, typename Tag>
+struct get_object_type<const port_adapter<T, PortTraits, Tag> >
+{
+    typedef T type;
+};
 
 }} // namespace boost::dataflow
 

@@ -22,7 +22,7 @@ class chain;
 namespace detail
 {
     template<typename Signature, typename T>
-    class chain_impl : public filter_base<chain<Signature, T>, typename T::signal_type>
+    class chain_impl : public filter_base<chain<Signature, T>, typename T::signal_type, mpl::vector<> >
     {
     protected:
         typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;

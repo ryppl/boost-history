@@ -29,7 +29,7 @@ public:
         df::ports::producer,
         my_producer,
         get_my_producer
-        > proxy_port_traits;
+        > proxy_dataflow_traits;
 };
 
 struct my_non_intrusive_proxy_producer
@@ -93,7 +93,7 @@ public:
         my_mechanism,
         df::ports::producer,
         my_proxy_producer,
-        get_my_proxy_producer> proxy_port_traits;
+        get_my_proxy_producer> proxy_dataflow_traits;
 };
 
 int test_main(int, char* [])

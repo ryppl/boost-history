@@ -44,7 +44,7 @@ namespace boost { namespace dataflow {
 
 
 template<typename Mechanism, typename PortCategory, typename T>
-struct proxy_port_traits_of<Mechanism, PortCategory, T,
+struct proxy_traits_of<Mechanism, PortCategory, T,
     typename enable_if<
         mpl::and_<
             mpl::is_sequence<typename T::proxy_port_traits>,

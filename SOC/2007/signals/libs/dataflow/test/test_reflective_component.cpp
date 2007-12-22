@@ -22,7 +22,7 @@ struct my_component_traits
 
 struct my_component
 {
-    typedef my_component_traits component_traits;
+    typedef my_component_traits dataflow_traits;
 
     my_consumer consumer;
     my_producer producer;

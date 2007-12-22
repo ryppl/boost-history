@@ -12,6 +12,7 @@
 #define SIGNAL_NETWORK_GENERIC_TYPENAME Member
 #define SIGNAL_NETWORK_GENERIC_MEMBERNAME member
 #define SIGNAL_NETWORK_GENERIC_TYPENAME2 Application
+#define SIGNAL_NETWORK_GENERIC_STANDARD_RESULT
 
 #include <boost/dataflow/signals/component/detail/generic_template.hpp>
 
@@ -19,16 +20,8 @@
 
 #else // SIGNAL_NETWORK_GENERIC_CLASS
 
-    template <typename FArgs>
-    struct result;
-
-    template<typename T, typename Seq>
-    struct result<T(const Seq &)> : public boost::enable_if<boost::fusion::traits::is_sequence<Seq>,
-        typename base_type::signal_type::result_type> {};
-    
     /** Applies an instance of Application to the Member object.
-        */
-    
+        */    
     template <class Seq>
     typename result<applicator_impl(const Seq &)>::type
     operator()(const Seq &seq)

@@ -1,5 +1,31 @@
 [section Rationale]
 
+[heading General focus of the library]
+
+* The generic dataflow layer focuses mostly on connection and extraction
+  functionality of a dataflow framework.  The reason I started with connection
+  and extraction is that it is the single most uniformly present
+  aspect of dataflow frameworks (going to the very definition of dataflow).
+  While there are many other
+  functionalities that can be part of a dataflow framework (such as memory
+  management and different kinds of scheduling), these vary much more from
+  one dataflow framework to another, and are much harder to capture in the
+  generic layer.  While concepts related to memory management and scheduling
+  might be added to the generic layer in the future, I believe they are not
+  essential in the first version of this library.
+
+* The only dataflow framework included is [DataflowSignals] for two reasons.
+  One, a [BoostSignals]-based framework was the original focus of this project;
+  And two, [DataflowSignals] makes use of existing Boost functionality to make
+  the implementation of the dataflow framework extremely simple.  There is no
+  doubt that implementing other kinds of dataflow frameworks would be useful
+  (e.g., the [FuturePin]-based approach proposed by Tobias Schwinger, or
+  something like the simulation-oriented
+  [@http://en.wikipedia.org/wiki/DEVS Coupled DEVS model]).
+  However, implementing a whole new framework would take significant
+  time and effort, and I don't
+  believe that it is essential in the first version of this library.
+
 [heading Naming conventions]
 
 * I encountered the term /dataflow/ after starting this library.  Although
@@ -27,13 +53,13 @@
   [@http://www.boost.org/more/generic_programming.html#tag_dispatching here]),
   but might be problematic where the result type is not fixed (and in the
   future all of the operations will probably be modified to return a value
-  where appropriate.
-* Port operations (as parts of [BinaryOperable] and
-  [UnaryOperable] concepts) have been rolled into a single class
-  template with the operation selected by type because all of these operations
-  share [ProxyPort] and (for [BinaryOperable]) [KeyedPort] 
-  resolution.  [ComponentOperable] operations have been implemented
-  the same way for consistency.
+  where appropriate).
+* Most operations (as parts of [BinaryOperable], 
+  [UnaryOperable], and [ComponentOperable] concepts) have been rolled into a
+  single class
+  template with the operation selected by type because of some shared
+  functionality (e.g., [KeyedPort] resolution), and this way they can also be
+  treated in a generic fashion in code built on top of the generic layer.
   
 [endsect]
   

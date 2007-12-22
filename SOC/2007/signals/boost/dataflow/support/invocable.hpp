@@ -6,7 +6,7 @@
 #ifndef BOOST_DATAFLOW_SUPPORT_INVOCABLE_HPP
 #define BOOST_DATAFLOW_SUPPORT_INVOCABLE_HPP
 
-#include <boost/dataflow/detail/enable_if_defined.hpp>
+#include <boost/dataflow/utility/enable_if_type.hpp>
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -26,7 +26,7 @@ struct invocable_category_of;
 template<typename T>
 struct invocable_category_of<
     T,
-    typename detail::enable_if_defined<typename T::invocable_category>::type >
+    typename utility::enable_if_type<typename T::invocable_category>::type >
 {
     typedef typename T::invocable_category type;
 };
@@ -34,7 +34,7 @@ struct invocable_category_of<
 template<typename T>
 struct is_invocable<
     T,
-    typename detail::enable_if_defined<invocable_category_of<T> >::type >
+    typename utility::enable_if_type<invocable_category_of<T> >::type >
 : public boost::true_type {};
 
 namespace extension

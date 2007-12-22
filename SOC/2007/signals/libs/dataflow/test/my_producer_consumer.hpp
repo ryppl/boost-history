@@ -17,15 +17,11 @@ struct empty {};
 struct my_mechanism;
 
 struct my_producer_traits
-    : public df::port_traits<
-        df::ports::producer,
-        df::concepts::port>
+    : public df::port_traits<df::ports::producer>
 {};
 
 struct my_consumer_traits
-    : public df::port_traits<
-        df::ports::consumer,
-        df::concepts::port>
+    : public df::port_traits<df::ports::consumer>
 {};
 
 struct my_producer : public df::port<my_producer_traits>

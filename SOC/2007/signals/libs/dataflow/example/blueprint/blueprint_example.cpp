@@ -5,7 +5,12 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iostream>
+
 #include <boost/dataflow/blueprint/network.hpp>
+#include <boost/dataflow/blueprint/binary_operation_t.hpp>
+#include <boost/dataflow/blueprint/port_t.hpp>
+
 #include <boost/dataflow/signals/component/storage.hpp>
 #include <boost/dataflow/signals/runtime_support.hpp>
 
@@ -20,7 +25,7 @@ using namespace boost;
 
 class blueprint_example
 {
-    typedef blueprint::network network_type;
+    typedef blueprint::network<df::signals::tag> network_type;
 
     // The network.
     network_type network;
@@ -31,8 +36,7 @@ class blueprint_example
 public:
     blueprint_example()
     {
-        // Add the components to the network.  So far, ONLY signals::storage
-        // models the Component concept.
+        // Add the components to the network.
         source = network.add_component<signals::storage<void(int)> >(100),
         sink = network.add_component<signals::storage<void(int)> >(0),
         source_float = network.add_component<signals::storage<void(float)> >(100.1f),
@@ -55,7 +59,7 @@ public:
         print_connectability_info("source", source, 0, "sink_float", sink_float, 1);
         std::cout << std::endl;
         
-        // Make some connections
+/*        // Make some connections
         std::cout << "Making blueprint connections: source to sink, source_float to sink_float..." << std::endl;
         network.add_connection(source, 0, sink, 1);
         network.add_connection(source_float, 0, sink_float, 1);
@@ -78,15 +82,24 @@ public:
         std::cout << "Testing the original network..." << std::endl << std::endl;
         test_network(network);
         std::cout << "Testing the network copy..." << std::endl << std::endl;
-        test_network(network_copy);
+        test_network(network_copy);*/
     }
     void print_port_info(const char *c_name, network_type::component_type c)
     {
         std::cout << "\t" << c_name << " has " << network[c].num_ports() << " ports. " << std::endl;
         for (size_t i=0; i<network[c].num_ports(); i++)
+        {
+            blueprint::port &p = network.get_port(c, i);
             std::cout << "\t\tport " << i << " is a "
-                << (network.get_port(c, i).traits().mechanism().name()) << " "
-                << (network.get_port(c, i).traits().category().name()) << std::endl;
+                << (p.traits().tag().name()) << " "
+                << (p.traits().category().name())
+                << (p.is_complemented_port() ? " (complemented_port)" : "");
+            if (p.is_vector_port())
+                std::cout << " (vector_port x " << p.as<blueprint::vector_port>().num_ports() << ")";
+            std::cout
+                << (network.get_port(c, i).is_keyed_port() ? " (keyed_port)" : "")
+                << std::endl;
+        }
         std::cout << std::endl;
     }
     void print_connectability_info(
@@ -99,7 +112,7 @@ public:
             << "connectable to " << dst_name << " port " << dst_port << std::endl;
     }
 
-    template<typename T>
+/*    template<typename T>
     void output_component_value(
         network_type &network, const char *c_name, typename network_type::component_type c)
     {
@@ -137,7 +150,7 @@ public:
         
         // Output the values at the sinks:
         output_component_values(network);
-    }
+    }*/
 };
 
 int main()

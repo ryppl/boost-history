@@ -10,7 +10,7 @@
 //[ test_connect
 
 struct receiver
-    : public boost::dataflow::port<boost::dataflow::signals::call_consumer>    
+    : public boost::dataflow::port<boost::dataflow::signals::call_consumer<> >    
 {
     receiver() : stored(0) {}
     

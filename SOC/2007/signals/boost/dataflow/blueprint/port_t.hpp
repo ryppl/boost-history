@@ -6,9 +6,11 @@
 #ifndef BOOST_DATAFLOW_BLUEPRINT_PORT_T_HPP
 #define BOOST_DATAFLOW_BLUEPRINT_PORT_T_HPP
 
-#include <boost/dataflow/blueprint/port.hpp>
 #include <boost/dataflow/blueprint/binary_operation_t.hpp>
+#include <boost/dataflow/blueprint/port.hpp>
+#include <boost/dataflow/utility/copy_cv.hpp>
 #include <boost/dataflow/support/port.hpp>
+
 #include <boost/call_traits.hpp>
 
 #include <typeinfo>
@@ -16,49 +18,40 @@
 
 namespace boost { namespace dataflow { namespace blueprint {
 
-template<typename T>
-struct initializer_type
-{
-    typedef
-        typename mpl::if_<
-            is_reference<T>,
-            T,
-            typename call_traits<T>::const_reference
-        >::type type;
-};
-    
-template<typename Base, typename PortTraits, typename Port>
+template<typename Base, typename PortOrRef, typename Tag>
 class port_t_base : public Base
 {
+protected:
+    typedef typename remove_reference<PortOrRef>::type port_type;
+    typedef typename traits_of<port_type, Tag>::type port_traits_type;
 public:
-    port_t_base(typename initializer_type<Port>::type p)
+    port_t_base(typename call_traits<PortOrRef>::param_type p)
         : Base(
-            runtime_info(typename PortTraits::mechanism()),
-            runtime_info(typename PortTraits::category()),
-            runtime_info(typename PortTraits::concept()))
+            runtime_info(typename port_traits_type::category()),
+            runtime_info(typename port_traits_type::tag()))
         , p(p)
     {}
 
-    void *get()
+    virtual boost::any get()
     {
-        return &p;
+        return boost::any(&p);
     }
     virtual const std::type_info &port_type_info()
     {
-        return typeid(Port);
+        return typeid(port_type);
     };
-private:
-    Port p;
+protected:
+    PortOrRef p;
 };
 
-template<typename PortTraits, typename Port, typename Enable=void>
-class port_t : public port_t_base<port, PortTraits, Port>
+template<typename PortOrRef, typename Tag=default_tag, typename Enable=void>
+class port_t : public port_t_base<port, PortOrRef, Tag>
 {
     BOOST_MPL_ASSERT((is_same<Enable, void>));
 
 public:
-    port_t(typename initializer_type<Port>::type p)
-        : port_t_base<port, PortTraits, Port>(p)
+    port_t(typename call_traits<PortOrRef>::param_type p)
+        : port_t_base<port, PortOrRef, Tag>(p)
     {}
     virtual port *clone() const
     {
@@ -66,70 +59,58 @@ public:
     };
 };
 
-template<typename PortTraits, typename Port>
+template<typename PortOrRef, typename Tag>
 class port_t<
-    PortTraits,
-    Port,
+    PortOrRef,
+    Tag,
     typename enable_if<
         is_complemented_port<
-            typename PortTraits::mechanism,
-            typename PortTraits::category,
-            Port
-        >
+            typename remove_reference<PortOrRef>::type,
+            Tag>
     >::type >
-    : public port_t_base<complemented_port, PortTraits, Port>
+    : public port_t_base<complemented_port, PortOrRef, Tag>
 {
-
-    typedef
-        typename remove_reference<
-            typename get_port_result_type<
-                typename PortTraits::mechanism,
-                typename PortTraits::category,
-                Port
-            >::type
-        >::type get_port_type;
-        
-    typedef typename remove_reference<Port>::type port_type;
+    typedef typename port_t::port_type port_type;
+    typedef typename port_t::port_traits_type port_traits_type;
 
     template<typename Operation>
     struct operation_type
     {
-        typedef
-            typename mpl::if_<
-                is_same<typename PortTraits::category, ports::producer>,
-                blueprint::binary_operation_t<
-                    Operation,
-                    typename PortTraits::mechanism,
-                    get_port_type,
-                    typename PortTraits::complement_port_type
-                >,
-                blueprint::binary_operation_t<
-                    Operation,
-                    typename PortTraits::mechanism,
-                    typename PortTraits::complement_port_type,
-                    get_port_type
-                >
-            >::type type;
+        typedef blueprint::binary_operation_t<
+            Operation,
+            port_type,
+            typename port_traits_type::complement_port_type,
+            Tag
+            > p_to_c;
+        typedef blueprint::binary_operation_t<
+            Operation,
+            typename port_traits_type::complement_port_type,
+            port_type,
+            Tag
+        > c_to_p;
     };
 
 public:
-    port_t(typename initializer_type<Port>::type p)
-        : port_t_base<complemented_port, PortTraits, Port>(p)
-        , c(new typename operation_type<operations::connect>::type())
-        , e(new typename operation_type<operations::extract>::type())
+    port_t(typename call_traits<PortOrRef>::param_type p)
+        : port_t_base<complemented_port, PortOrRef, Tag>(p)
+        , c_to_p_connector(new typename operation_type<operations::connect>::c_to_p())
+        , c_to_p_extractor(new typename operation_type<operations::extract>::c_to_p())
+        , p_to_c_connector(new typename operation_type<operations::connect>::p_to_c())
+        , p_to_c_extractor(new typename operation_type<operations::extract>::p_to_c())
     {}
     
-    virtual shared_ptr<binary_operation<operations::connect> > connector()
-    {
-        return c;
-    };
-    virtual shared_ptr<binary_operation<operations::extract> > extractor()
-    {
-        return e;
-    };
+    virtual shared_ptr<binary_operation<operations::connect> > port_to_complement_connector()
+    {   return p_to_c_connector; }
+    virtual shared_ptr<binary_operation<operations::extract> > port_to_complement_extractor()
+    {   return p_to_c_extractor; }
+    virtual shared_ptr<binary_operation<operations::connect> > complement_to_port_connector()
+    {   return c_to_p_connector; }
+    virtual shared_ptr<binary_operation<operations::extract> > complement_to_port_extractor()
+    {   return c_to_p_extractor; }
+
     virtual const std::type_info &complement_type_info()
     {
-        return typeid(typename PortTraits::complement_port_type);
+        return typeid(typename port_traits_type::complement_port_type);
     }
     virtual port *clone() const
     {
@@ -137,36 +118,35 @@ public:
     };
 
 private:
-    virtual bool is_operable_with_complement(int operation_uuid)
+    virtual bool is_operable_port_to_complement(int operation_uuid)
     {
-        typedef typename mpl::if_<
-            is_same<typename PortTraits::category, ports::producer>,
-            port_type,
-            typename PortTraits::complement_port_type
-        >::type producer_type;
-        typedef typename mpl::if_<
-            is_same<typename PortTraits::category, ports::producer>,
-            typename PortTraits::complement_port_type,
-            port_type
-        >::type consumer_type;
-
+        typedef port_type outgoing_type;
+        typedef typename port_traits_type::complement_port_type incoming_type;
+        
         if(operation_uuid == runtime::property<operations::connect, int>()())
             return dataflow::are_binary_operable<
-                operations::connect, typename PortTraits::mechanism, producer_type, consumer_type>::type::value; 
+                outgoing_type, incoming_type, operations::connect, Tag>::type::value; 
 
         if(operation_uuid == runtime::property<operations::extract, int>()())
-            return typename dataflow::are_binary_operable<
-                operations::extract, typename PortTraits::mechanism, producer_type, consumer_type>::type();
-        
+            return dataflow::are_binary_operable<
+                outgoing_type, incoming_type, operations::extract, Tag>::type::value;
+
         return false;
     };
+    virtual bool is_operable_complement_to_port(int operation_uuid)
+    {
+        return false;
+    }
 
-    boost::shared_ptr<binary_operation<operations::connect> > c; 
-    boost::shared_ptr<binary_operation<operations::extract> > e; 
+    boost::shared_ptr<binary_operation<operations::connect> > c_to_p_connector;
+    boost::shared_ptr<binary_operation<operations::extract> > c_to_p_extractor; 
+    boost::shared_ptr<binary_operation<operations::connect> > p_to_c_connector; 
+    boost::shared_ptr<binary_operation<operations::extract> > p_to_c_extractor; 
 };
 
 } } } // namespace boost::dataflow::blueprint
 
-    
+#include <boost/dataflow/blueprint/vector_port_t.hpp>
+#include <boost/dataflow/blueprint/keyed_port_t.hpp>
 
 #endif // BOOST_DATAFLOW_BLUEPRINT_GET_PORT_HPP

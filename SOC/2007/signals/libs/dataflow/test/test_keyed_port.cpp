@@ -5,7 +5,8 @@
 
 #include "my_producer_consumer.hpp"
 #include <boost/dataflow/support/keyed_port.hpp>
-#include <boost/dataflow/connection/port_map.hpp>
+#include <boost/dataflow/support/fusion_keyed_port.hpp>
+#include <boost/dataflow/support/port_vector.hpp>
 
 #include <boost/fusion/container/map.hpp>
 #include <boost/test/included/test_exec_monitor.hpp>
@@ -16,15 +17,11 @@ int connected = 0;
 bool connected_other = false;
 
 struct my_other_producer_traits
-    : public df::port_traits<
-        df::ports::producer,
-        df::concepts::port>
+    : public df::port_traits<df::ports::producer>
 {};
 
 struct my_other_consumer_traits
-    : public df::port_traits<
-        df::ports::consumer,
-        df::concepts::port>
+    : public df::port_traits<df::ports::consumer>
 {};
 
 struct my_other_producer : public df::port<my_other_producer_traits>
@@ -74,7 +71,7 @@ int test_main(int, char* [])
             boost::fusion::pair<my_other_consumer_traits, my_other_producer &>
         > map_type;
         
-    df::port_map<
+    df::fusion_keyed_port<
         df::ports::producer,
         map_type
     > producer_map(map_type(producer, other_producer));
@@ -85,25 +82,8 @@ int test_main(int, char* [])
     BOOST_CHECK_EQUAL(connected, 1);
     BOOST_CHECK(connected_other);
     
-    typedef
-        boost::fusion::map<
-            boost::fusion::pair<my_consumer_traits, my_consumer &>,
-            boost::fusion::pair<my_other_consumer_traits, my_other_consumer &>
-        > proxy_map_type;
-    
-/*    typedef 
-    df::port_map<
-        df::ports::producer,
-        proxy_map_type
-    > proxy_type;
-    proxy_type proxy_map(proxy_map_type(consumer, other_consumer));
-    
-//    BOOST_CHECK(( df::is_proxy_port<my_mechanism, df::ports::consumer, proxy_type>::value ));
-    BOOST_CHECK(( df::is_port<my_mechanism, df::ports::consumer, proxy_type>::value ));
-    
-    df::binary_operation<df::operations::connect>(producer, proxy_map);
-
-    BOOST_CHECK_EQUAL(connected, 2);*/
+    BOOST_CHECK_EQUAL(&producer, &df::get_port_c<0>(producer_map));
+    BOOST_CHECK_EQUAL(&other_producer, &df::get_port_c<1>(producer_map));
 
     return 0;
 } // int test_main(int, char* [])

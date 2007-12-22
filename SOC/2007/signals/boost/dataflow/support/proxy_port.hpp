@@ -29,8 +29,8 @@ struct is_proxy_port_traits : public mpl::false_
 
 template<typename T>
 struct is_proxy_port_traits<T,
-    typename detail::enable_if_defined<
-        detail::all_of<
+    typename utility::enable_if_type<
+        utility::all_of<
             typename T::mechanism,
             typename T::category
         >
@@ -47,11 +47,11 @@ struct mutable_proxy_port : public proxy_port_traits<Mechanism, PortCategory>
 {};
 
 template<typename Mechanism, typename PortCategory, typename T, typename Enable=void>
-struct proxy_port_traits_of;
+struct proxy_traits_of;
 
 /// Specialization allowing intrusive specification of the PortTraits.
 template<typename Mechanism, typename PortCategory, typename T>
-struct proxy_port_traits_of<Mechanism, PortCategory, T,
+struct proxy_traits_of<Mechanism, PortCategory, T,
     typename enable_if<
         mpl::and_<
             mpl::not_<mpl::is_sequence<typename T::proxy_port_traits> >,
@@ -74,8 +74,8 @@ namespace boost { namespace dataflow {
 
 template<typename Mechanism, typename PortCategory, typename T>
 struct is_proxy_port<Mechanism, PortCategory, T,
-        typename detail::enable_if_defined<
-            typename proxy_port_traits_of<
+        typename utility::enable_if_type<
+            typename proxy_traits_of<
                 Mechanism,
                 PortCategory,
                 typename boost::remove_cv<T>::type
@@ -92,7 +92,7 @@ get_port(T &t)
 {
     return
         extension::get_port_impl<
-            typename proxy_port_traits_of<Mechanism, PortCategory, T>::type
+            typename proxy_traits_of<Mechanism, PortCategory, T>::type
         >()(t);
 }
 
@@ -157,7 +157,7 @@ struct get_port_result_type<
             result_of<
                 typename
                 extension::get_port_impl<
-                    typename proxy_port_traits_of<
+                    typename proxy_traits_of<
                         Mechanism,
                         PortCategory,
                         typename remove_cv<T>::type
@@ -167,11 +167,11 @@ struct get_port_result_type<
 };
 
 template<typename Mechanism, typename PortCategory, typename T>
-struct port_traits_of<Mechanism, PortCategory, T,
+struct traits_of<Mechanism, PortCategory, T,
     typename boost::enable_if<is_proxy_port<Mechanism, PortCategory, T> >::type>
 {
     typedef
-        typename port_traits_of<
+        typename traits_of<
             Mechanism,
             PortCategory,
             typename remove_cv<
@@ -187,7 +187,7 @@ struct port_traits_of<Mechanism, PortCategory, T,
 #define DATAFLOW_PROXY_PORT_TRAITS(ProxyPort,ProxyPortCategory) \
 namespace boost { namespace dataflow { \
 template<> \
-struct proxy_port_traits_of< \
+struct proxy_traits_of< \
     ProxyPortCategory::mechanism, \
     ProxyPortCategory::category, \
     ProxyPort> \
@@ -200,7 +200,7 @@ struct proxy_port_traits_of< \
 #define DATAFLOW_PROXY_PORT_TRAITS_ENABLE_IF(P,Cond,ProxyPortCategory) \
 namespace boost { namespace dataflow { \
 template<typename P> \
-struct proxy_port_traits_of< \
+struct proxy_traits_of< \
     typename ProxyPortCategory::mechanism, \
     typename ProxyPortCategory::category, \
     P, \

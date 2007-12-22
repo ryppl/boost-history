@@ -13,7 +13,7 @@ namespace boost { namespace dataflow {
 /// Convenience class for ComplementedPortTraits types.
 template<typename PortCategory, typename ComplementPort, typename Tag=default_tag>
 struct complemented_port_traits
-    : public port_traits<PortCategory, concepts::complemented_port, Tag>
+    : public port_traits<PortCategory, Tag>
 {
     typedef ComplementPort complement_port_type; ///< complement Port type.
 };
@@ -26,12 +26,11 @@ struct is_complemented_port_traits : public mpl::false_
 /// INTERNAL ONLY
 template<typename PortTraits>
 struct is_complemented_port_traits<PortTraits,
-    typename detail::enable_if_defined<
-        detail::all_of<
-            typename PortTraits::mechanism,
+    typename utility::enable_if_type<
+        utility::all_of<
             typename PortTraits::category,
-            typename PortTraits::concept,
-            typename PortTraits::complement_port_type
+            typename PortTraits::complement_port_type,
+            typename PortTraits::tag
         >
     >::type>
  : public mpl::true_
@@ -41,20 +40,16 @@ struct is_complemented_port_traits<PortTraits,
 };
 
 /// Boolean metafunction determining whether a type is a ComplementedPort.
-template<typename Mechanism, typename PortCategory, typename T, typename Enable=void>
+template<typename T, typename Tag=default_tag, typename Enable=void>
 struct is_complemented_port : public mpl::false_
 {};
 
 /// INTERNAL ONLY
-template<typename Mechanism, typename PortCategory, typename T>
-struct is_complemented_port<Mechanism, PortCategory, T,
+template<typename T, typename Tag>
+struct is_complemented_port<T, Tag,
         typename enable_if<
             is_complemented_port_traits<
-                typename port_traits_of<
-                    Mechanism,
-                    PortCategory,
-                    typename remove_cv<T>::type
-                >::type
+                typename traits_of<T, Tag>::type
             >
         >::type >
     : public mpl::true_ {};

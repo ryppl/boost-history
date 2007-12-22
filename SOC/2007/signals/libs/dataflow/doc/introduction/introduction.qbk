@@ -19,10 +19,11 @@ dataflow framework.
 The idea behind providing a generic dataflow library is that
 other data transport mechanisms and dataflow frameworks can be easily adapted for
 use with the library, and benefit from layers built on top of the generic layer.
-There is an example on how to do that for [VTK], and there is also an
+
+[/There is an example on how to do that for [VTK], and there is also an
 implementation of an (experimental and currently broken) layer based
 connections made through simple object pointers, with support for using
-[BoostPhoenix2] actors for data processing ([DataflowPhoenix]).
+[BoostPhoenix2] actors for data processing ([DataflowPhoenix]).]
 
 * If you would like some more information about why one would want to connect
   objects into a dataflow network, read about
@@ -195,33 +196,36 @@ The Dataflow library currently has three useful parts:
 * The [DataflowBlueprint] layer, built on top of the generic layer and providing
   runtime reflection and network modeling using the [BoostGraph].
 
-There is also a (currently very experimental) [DataflowPhoenix] layer,
+[/There is also a (currently very experimental) [DataflowPhoenix] layer,
 which uses object pointers with support for
-[BoostPhoenix] actors specifying how the data is processed.
+[BoostPhoenix] actors specifying how the data is processed.]
 
 [heading Generic dataflow layer]
 
 There are generic properties of dataflow programs which do not depend on the
 underlying dataflow framework or data transport mechanism,
-and can be exploited to develop generic dataflow code.
-The generic dataflow layer captures some of these properties, and
+and can be exploited to develop generic dataflow code.  Currently, the generic
+layer addresses mostly connection and extraction aspects - the [rationale]
+section discusses why.
+
+[/The generic dataflow layer captures some of these properties, and
 has been sucessfully adapted to three
 different data transport mechanisms ([BoostSignals], pointers in conjunction
-with [BoostPhoenix2], and [VTK] pipelines).
+with [BoostPhoenix2], and [VTK] pipelines).]
 
-Currently, the most useful functionality gained by developing a Dataflow
+At the moment, the most useful functionality gained by developing a Dataflow
 support layer is the ability to connect components in a clean, readable
 manner. As more generic code is developed on top of
 the generic dataflow layer (such as the recently started [DataflowBlueprint]),
 providing a Dataflow support layer for your
 favorite dataflow framework will be more beneficial.
 
-See the [link dataflow.future future directions] of the Dataflow library
-for an idea of what might become available in the future for data transport
-mechanisms with Dataflow library support.
+See the [link dataflow.future future directions] section
+for an idea of what might become available in the future for dataflow frameworks
+with Dataflow library support.
 
-* If you would like to implement Dataflow support for the data transport
-mechanism you are working with,  see the
+* If you would like to implement Dataflow support for the dataflow framework
+you are working with,  see the
 [link dataflow.introduction.examples.new_layer example] showing
 how the [VTK] support layer was developed.
 * If you are interested in developing generic code on top of the dataflow
@@ -377,10 +381,17 @@ latest version is located in the
 The Dataflow library uses the trunk version of Boost - it might not work
 perfectly with release versions of boost.
 
-Version 0.8.2 (under construction)
-* Moved functionality from port related concepts to the component concepts.
-* Adapted the Dataflow.Signals layer and tests, most of the rest still broken.
+Version 0.9.0 (under construction)
+
+* Revamped concepts one more time
+* added the port_adapter class to replace old ProxyPort functionality
+* slot_selector is now useless - replaced with just boost::function
+* Adapted the Dataflow.Signals layer, tests, and examples.
 * Started adding Doxygen-generated support layer reference.
+
+To Do:
+
+* Revise docs
 
 Version 0.8.1
  \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]

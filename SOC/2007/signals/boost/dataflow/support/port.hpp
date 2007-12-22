@@ -6,7 +6,6 @@
 #ifndef BOOST_DATAFLOW_SUPPORT_PORT_HPP
 #define BOOST_DATAFLOW_SUPPORT_PORT_HPP
 
-#include <boost/dataflow/support/port/traits.hpp>
 #include <boost/dataflow/support/port/port.hpp>
 #include <boost/dataflow/support/port/default_port_provider.hpp>
 

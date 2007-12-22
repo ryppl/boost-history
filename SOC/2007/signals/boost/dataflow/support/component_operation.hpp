@@ -8,71 +8,36 @@
 
 #include <boost/dataflow/support/component.hpp>
 
-#include <boost/static_assert.hpp>
 
+// ***************************************
+// * component_operation
+// ***************************************
+#define DATAFLOW_SPECIALIZABLE_OPERATION_NAME component_operation
+#define DATAFLOW_SPECIALIZABLE_OPERATION_CHECK is_component_operable
+#define DATAFLOW_SPECIALIZABLE_OPERATION_TYPENAME_TEMPLATES typename Operation
+#define DATAFLOW_SPECIALIZABLE_OPERATION_TEMPLATES Operation
+#define DATAFLOW_SPECIALIZABLE_OPERATION_ARITY 1
+#define DATAFLOW_SPECIALIZABLE_OPERATION_TRAITS_OF traits_of
+#define DATAFLOW_SPECIALIZABLE_OPERATION_HAS_TRAITS is_component
+#include <boost/dataflow/support/detail/make_specializable_operation.hpp>
 
 namespace boost { namespace dataflow {
-
-namespace detail {
-    struct not_implemented;
-}
 
 namespace operations
 {
     struct invoke;
 }
 
-namespace extension
+template<typename Component>
+inline typename enable_if<
+    dataflow::is_component<Component>,
+    void
+>::type invoke(Component &component)
 {
-    template<typename Operation, typename ComponentTraits, typename Enable=void>
-    struct component_operation_impl
-    {
-        BOOST_MPL_ASSERT((is_same<Enable, void>));
-
-        struct detail
-        {
-            typedef void not_specialized;
-        };
-
-        template<typename Component>
-        void operator()(Component &)
-        {
-            // Error: component_operation_impl Operation has not been
-            // implemented for ComponentTraits.
-            BOOST_STATIC_ASSERT(sizeof(Component)==0);
-        }
-    };
-}
-
-template<typename Operation, typename T, typename Enable=void>
-struct implements_component_operation
-    : public mpl::true_
-{
-    BOOST_MPL_ASSERT((is_same<Enable, void>));
-};
-
-template<typename Operation, typename T>
-struct implements_component_operation<
-    Operation,
-    T,
-    typename detail::enable_if_defined<
-        typename extension::component_operation_impl<
-            Operation,
-            typename component_traits_of<T>::type
-        >::detail::not_specialized
-    >::type
->
-    : public mpl::false_ {};
-
-template<typename Operation, typename Component>
-void component_operation(Component &component)
-{
-    extension::component_operation_impl<
-        Operation,
-        typename component_traits_of<Component>::type
-    >()(component);
+    boost::dataflow::component_operation<boost::dataflow::operations::invoke, default_tag>(component);
 }
 
 } } // namespace boost::dataflow
+
 
 #endif // BOOST_DATAFLOW_SUPPORT_COMPONENT_OPERATION_HPP

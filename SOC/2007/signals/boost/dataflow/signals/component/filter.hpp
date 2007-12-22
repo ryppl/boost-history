@@ -53,8 +53,26 @@ struct signal_args
     typedef GroupCompare group_compare_type;
 };
 
-template<typename Signature,
-    typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
+
+template<typename T, typename Enable=void>
+struct is_signal_args : public mpl::false_
+{};
+
+template<typename T>
+struct is_signal_args<
+    T,
+    typename dataflow::utility::enable_if_type<
+        dataflow::utility::all_of<
+            typename T::combiner_type,
+            typename T::group_type,
+            typename T::group_compare_type
+        >
+    >::type>
+    : public mpl::true_
+{};    
+    
+template<typename OutSignature,
+    typename Combiner = boost::last_value<typename boost::function_traits<OutSignature>::result_type>,
     typename Group = int,
     typename GroupCompare = std::less<Group> >
 struct default_signal_args
@@ -62,44 +80,50 @@ struct default_signal_args
     typedef signal_args<Combiner, Group, GroupCompare> type;
 };
 
-template<typename Signature, typename SignalArgs>
+template<typename OutSignature, typename SignalArgs>
 struct signal_from_args
 {
     typedef boost::signal<
-        Signature,
+        OutSignature,
         typename SignalArgs::combiner_type,
         typename SignalArgs::group_type,
         typename SignalArgs::group_compare_type
     > type;
 };
 
+
 ///	Provides a basis for filters (components that receive and send a signal).
-/**	\param Signature The signature of the signal being sent out.
+/**	\param OutSignature The signature of the signal being sent out.
 
 Use this class as a base class for classes that produce a signal
 of a particular signature.
 */
 template<
     typename Derived,
-    typename Signature,
+    typename OutSignature,
+    typename InSignatures=mpl::vector<>,
     typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
-    typename SignalArgs=typename default_signal_args<Signature>::type
+    typename SignalArgs=typename default_signal_args<OutSignature>::type
 >
 class filter;
 
 /** \brief Unfused version of the filter class
 */
-template<typename Derived, typename Signature, typename SignalArgs>
-class filter<Derived, Signature, unfused, SignalArgs>
+template<typename Derived, typename OutSignature, typename InSignatures, typename SignalArgs>
+class filter<Derived, OutSignature, InSignatures, unfused, SignalArgs>
     : public filter_base<
         Derived,
-        typename signal_from_args<Signature, SignalArgs>::type >
+        typename signal_from_args<OutSignature, SignalArgs>::type,
+        InSignatures >
 {
+    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
+    BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
+    
 public:
     // the type of the signal
-    typedef typename signal_from_args<Signature, SignalArgs>::type signal_type;
+    typedef typename signal_from_args<OutSignature, SignalArgs>::type signal_type;
     // the signature of the output signal
-	typedef Signature signature_type;
+	typedef OutSignature signature_type;
 
 	filter(const filter &) {}
 	filter(){}
@@ -118,16 +142,19 @@ protected:
 
 /** \brief Combined version of the filter class
 */
-template<typename Derived, typename Signature, typename SignalArgs>
-class filter<Derived, Signature, combined, SignalArgs>
-: public filter<Derived, Signature, unfused, SignalArgs>
+template<typename Derived, typename OutSignature, typename InSignatures, typename SignalArgs>
+class filter<Derived, OutSignature, InSignatures, combined, SignalArgs>
+: public filter<Derived, OutSignature, InSignatures, unfused, SignalArgs>
 {
+    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
+    BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
+
 public:
     filter() : fused_out(filter::out) {}
 	filter(const filter &) : fused_out(filter::out){}
     const filter &operator = (const filter &) {return *this;}
     
-    typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
+    typedef typename boost::function_types::parameter_types<OutSignature>::type parameter_types;
     typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
     typedef typename filter::signal_type::result_type fused_signature_type (const parameter_vector &);
 
@@ -138,10 +165,10 @@ protected:
 
 namespace detail
 {
-    template<typename Signature, typename SignalArgs=typename default_signal_args<Signature>::type>
+    template<typename OutSignature, typename SignalArgs=typename default_signal_args<OutSignature>::type>
     struct fused_signal_type
     {
-        typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
+        typedef typename boost::function_types::parameter_types<OutSignature>::type parameter_types;
         typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
         typedef typename SignalArgs::combiner_type::result_type signature_type (const parameter_vector &);
         typedef typename SignalArgs::combiner_type::result_type fused_signature_type (const parameter_vector &);
@@ -151,22 +178,26 @@ namespace detail
 
 /** \brief Fused version of the filter class
 */
-template<typename Derived, typename Signature, typename SignalArgs>
-class filter<Derived, Signature, fused, SignalArgs>
+template<typename Derived, typename OutSignature, typename InSignatures, typename SignalArgs>
+class filter<Derived, OutSignature, InSignatures, fused, SignalArgs>
 : public filter_base<
     Derived,
-    typename detail::fused_signal_type<Signature, SignalArgs>::signal_type>
+    typename detail::fused_signal_type<OutSignature, SignalArgs>::signal_type,
+    InSignatures>
 {
+    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
+    BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
+
 public:
 	filter(const filter &) {}
 	filter(){}
     const filter &operator = (const filter &) {return *this;}
 
-    typedef typename detail::fused_signal_type<Signature, SignalArgs>::parameter_types parameter_types;
-    typedef typename detail::fused_signal_type<Signature, SignalArgs>::parameter_vector parameter_vector;
-    typedef typename detail::fused_signal_type<Signature, SignalArgs>::signature_type signature_type;
-    typedef typename detail::fused_signal_type<Signature, SignalArgs>::fused_signature_type fused_signature_type;
-    typedef typename detail::fused_signal_type<Signature, SignalArgs>::signal_type signal_type;
+    typedef typename detail::fused_signal_type<OutSignature, SignalArgs>::parameter_types parameter_types;
+    typedef typename detail::fused_signal_type<OutSignature, SignalArgs>::parameter_vector parameter_vector;
+    typedef typename detail::fused_signal_type<OutSignature, SignalArgs>::signature_type signature_type;
+    typedef typename detail::fused_signal_type<OutSignature, SignalArgs>::fused_signature_type fused_signature_type;
+    typedef typename detail::fused_signal_type<OutSignature, SignalArgs>::signal_type signal_type;
 
 	///	Returns the default out signal.
 	signal_type &default_signal() const

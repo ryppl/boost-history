@@ -1,6 +1,6 @@
-[section:new_layer Implementing support for a new mechanism (VTK)]
+[section:new_layer Implementing support for a new framework (VTK)]
 
-This example shows how to implement support for a particular mechanism.
+This example shows how to implement support for a particular dataflow framework.
 Our victim is [VTK], a 3D visualization toolkit, which uses a data pipeline
 to move data from a source to the display (with possible transformations,
 scene construction etc. on the way).  For example, here is an excerpt from
@@ -27,17 +27,16 @@ following connection code:
 
 ```
     // make the connections
-    connect(cone, coneMapper);
-    connect(coneMapper, coneActor);
-    connect(coneActor, ren1);
-    connect(ren1, renWin);
+    connect(*cone, *coneMapper);
+    connect(*coneMapper, *coneActor);
+    connect(*coneActor, *ren1);
+    connect(*ren1, *renWin);
 ```
 
 or even more concisely and clearly,
 
 ```
     // make the connections
-    // C++ rules prevent us from removing all of the pointer dereferencing here
     *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
 ```
 
@@ -55,26 +54,25 @@ following in mind:
 ]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.mechanism
+[link dataflow.introduction.examples.new_layer.tag
     Setting up the Mechanism]
 
-[section:mechanism Setting up the Mechanism]
+[section:tag Setting up the Tag]
 
-The first thing we'll do is create a tag for the VTK [Mechanism], in
-namespace `boost::dataflow::vtk`.  Since there are currently no requirements
-for a [Mechanism], this is as simple as declaring a new type to be used
-as the mechanism tag:
+The first thing we'll do is create a [Tag] for the VTK framework, in
+namespace `boost::dataflow::vtk`.  All we have to do is inherit from
+`default_tag`:
 
-[vtk_mechanism]
+[vtk_tag]
 
-We will now use this tag in reference to the [VTK] dataflow mechanism.
+We will now use this tag in reference to the [VTK] dataflow framework.
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.producerconsumer
-    Setting up a ProducerPort and ConsumerPort] 
+    Setting up a producer Port and a consumer Port] 
 [endsect][/mechanism]
 
-[section:producerconsumer Setting up a ProducerPort and ConsumerPort]
+[section:producerconsumer Setting up a producer Port and a consumer Port]
 
 Now that we have the mechanism, let's cover the basic data pipeline,
 which is implemented using the
@@ -82,7 +80,7 @@ which is implemented using the
 are accessible via `GetOuptutPort` member functions, which return a proxy
 object ([vtkAlgorithmOutput] `*`) for an actual output port.
 
-In Dataflow concepts, [vtkAlgorithmOutput] can be made a [ProducerPort]
+In Dataflow concepts, [vtkAlgorithmOutput] can be made a producer [Port]
 - it corresponds to a single data output point. We support it as such by
 defining a [PortTraits] type, and associating it with
 [vtkAlgorithmOutput]:
@@ -92,7 +90,7 @@ defining a [PortTraits] type, and associating it with
 [note More details about registering [PortTraits] for a [Port]
 can be found on the [Port] documentation page.]
 
-Now that we have a [ProducerPort], we need a [ConsumerPort].
+Now that we have a producer [Port], we need a consumer [Port].
 [vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
 and `SetInputConnection` member functions.  The code below provides support
 for [vtkAlgorithm] accepting connections on its default input port:
@@ -108,7 +106,7 @@ for [vtkAlgorithm] accepting connections on its default input port:
 
 [section:connectable Making things Connectable]
 
-With the pair of [ProducerPort] and [ConsumerPort] registered, we
+With the pair of producer [Port] and consumer [Port] registered, we
 can make them [Connectable] and/or [OnlyConnectable].
 All we need to do is specialize the implementation for the appropriate
 [PortTraits]:
@@ -188,23 +186,23 @@ namespace.
 
 In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
 inherit [vtkAlgorithm].  
-With the [vtkAlgorithmOutput] [ProducerPort] and
-[vtkAlgorithm] [ConsumerPort] we've set up,
+With the [vtkAlgorithmOutput] producer [Port] and
+[vtkAlgorithm] consumer [Port] we've set up,
 we can do things like `connect(cone->GetOutputPort(), *coneMapper);`.
 However, we would like to do `connect(*cone, *coneMapper)`.
 
 To do that,
-we need to make [vtkAlgorithm] a [ProducerPort]. Since [vtkAlgorithm]
+we need to make [vtkAlgorithm] a producer [Port]. Since [vtkAlgorithm]
 forms its output connections using [vtkAlgorithmOutput] objects
 returned through the `GetOutputPort` member functions, and we've already
-configured [vtkAlgorithmOutput] as a [ProducerPort], we can make use
+configured [vtkAlgorithmOutput] as a producer [Port], we can make use
 of the [ProxyPort] concept provided by the dataflow library.
-In effect, we will make [vtkAlgorithm] delegate it's [ProducerPort]
+In effect, we will make [vtkAlgorithm] delegate it's producer [Port]
 functionality to [vtkAlgorithmOutput]:
 
 [vtk_algorithm_proxy_producer]
 
-Now, [vtkAlgorithm] is a [ProducerPort].
+Now, [vtkAlgorithm] is a producer [Port].
 
 [heading What we can do with what we have so far]
 
@@ -222,7 +220,7 @@ Now, [vtkAlgorithm] is a [ProducerPort].
 
 In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
 data for a [vtkRenderer].  In this case, we can provide Dataflow support
-for a [vtkActor] as both a [ProducerPort] and a [ConsumerPort]:
+for a [vtkActor] as both a producer [Port] and a consumer [Port]:
 
 [vtk_actor_filter]
 

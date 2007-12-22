@@ -10,6 +10,8 @@
 #include <boost/dataflow/support/fusion_component.hpp>
 #include <boost/mpl/map.hpp>
 
+#include <boost/test/included/test_exec_monitor.hpp>
+
 using namespace boost;
 
 namespace df=boost::dataflow;
@@ -30,25 +32,27 @@ struct my_component_traits : public boost::dataflow::fusion_component_traits<
             mpl::int_<1> >
     >
 >
-{};
+{
+    template<typename Component>
+    static typename my_component_traits::fusion_ports get_ports(Component &c)
+    {
+        return typename my_component_traits::fusion_ports(c.p, c.c);
+    }
+};
 
 struct my_component : public boost::dataflow::component<my_component_traits>
 {
     my_producer p;
     my_consumer c;
-    
-    template<typename Component>
-    my_component_traits::port_result_types get_ports(Component &)
-    {
-        return my_component_traits::port_result_types(p, c);
-    }
 };
 
 namespace boost { namespace dataflow { namespace extension {
 
 template<>
-struct component_operation_impl<operations::invoke, my_component_traits>
+struct component_operation_impl<my_component_traits, operations::invoke>
 {
+    typedef void result_type;
+    
     template<typename Component>
     void operator()(Component &)
     {
@@ -58,15 +62,13 @@ struct component_operation_impl<operations::invoke, my_component_traits>
 
 }}}
 
-#include <boost/test/included/test_exec_monitor.hpp>
-
 namespace df = boost::dataflow;
 
 int test_main(int, char* [])
 {
     my_component c;
     
-    df::component_operation<df::operations::invoke>(c);
+    invoke(c);
     BOOST_CHECK(invoked);
     
     BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<0> >(c)), &c.p);

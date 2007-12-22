@@ -35,6 +35,11 @@ public:
     {   return name_.c_str(); }
     int uuid() const
     {   return uuid_; }
+    template<typename T>
+    bool is() const
+    {
+        return uuid_ == runtime::property<T,int>()();
+    }
 private:
     std::string name_;
     int uuid_;
@@ -58,10 +63,6 @@ DATAFLOW_RUNTIME_PROPERTY(ports::producer, const char *, "producer")
 DATAFLOW_RUNTIME_PROPERTY(ports::producer, int, 0)
 DATAFLOW_RUNTIME_PROPERTY(ports::consumer, const char *, "consumer")
 DATAFLOW_RUNTIME_PROPERTY(ports::consumer, int, 1)
-DATAFLOW_RUNTIME_PROPERTY(concepts::port, const char *, "port")
-DATAFLOW_RUNTIME_PROPERTY(concepts::port, int, 0)
-DATAFLOW_RUNTIME_PROPERTY(concepts::complemented_port, const char *, "complemented_port")
-DATAFLOW_RUNTIME_PROPERTY(concepts::complemented_port, int, 1)    
 
 DATAFLOW_RUNTIME_PROPERTY(operations::connect, const char *, "connect")
 DATAFLOW_RUNTIME_PROPERTY(operations::connect, int, 0)

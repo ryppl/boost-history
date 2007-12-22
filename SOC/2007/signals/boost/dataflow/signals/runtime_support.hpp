@@ -9,9 +9,7 @@
 #include <boost/dataflow/support/runtime.hpp>
 #include <boost/dataflow/signals/support.hpp>
 
-DATAFLOW_RUNTIME_PROPERTY(signals::mechanism, const char *, "signals connection")
-DATAFLOW_RUNTIME_PROPERTY(signals::mechanism, int, 10)
-DATAFLOW_RUNTIME_PROPERTY(signals::extract_mechanism, const char *, "signals extraction")
-DATAFLOW_RUNTIME_PROPERTY(signals::extract_mechanism, int, 11)
+DATAFLOW_RUNTIME_PROPERTY(signals::tag, const char *, "Dataflow.Signals")
+DATAFLOW_RUNTIME_PROPERTY(signals::tag, int, 10)
 
 #endif // DATAFLOW_SIGNALS_RUNTIME_SUPPORT_HPP

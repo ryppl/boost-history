@@ -13,13 +13,13 @@
 // for different port registrations
 
 //[ port_registration_example_prep
-typedef df::port_traits<df::ports::producer, df::concepts::port> producer_traits;
-typedef df::port_traits<df::ports::consumer, df::concepts::port> consumer_traits;
+typedef df::port_traits<df::ports::producer> producer_traits;
+typedef df::port_traits<df::ports::consumer> consumer_traits;
 
-struct some_tag;
+struct some_tag : public df::default_tag {};
 struct whatever;
 
-typedef df::port_traits<df::ports::consumer, df::concepts::port, some_tag> other_consumer_traits;
+typedef df::port_traits<df::ports::consumer, some_tag> other_consumer_traits;
 
 //]
 
@@ -29,7 +29,7 @@ typedef df::port_traits<df::ports::consumer, df::concepts::port, some_tag> other
 struct intrusive_producer_port
 {
     // intrusive_producer_port is a ProducerPort
-    typedef producer_traits port_traits;
+    typedef producer_traits dataflow_traits;
 };
 
 // Intrusive registration of a multiple ports
@@ -37,7 +37,7 @@ struct intrusive_producer_consumer_port
 {
     // intrusive_producer_port is a ProducerPort for the default_tag,
     // and a ConsumerPort for some_tag
-    typedef boost::mpl::vector<producer_traits, other_consumer_traits> port_traits;
+    typedef boost::mpl::vector<producer_traits, other_consumer_traits> dataflow_traits;
 };
 //]
 
@@ -50,9 +50,9 @@ struct non_intrusive_port
 
 namespace boost { namespace dataflow {
 
-// register_port_traits holds the PortTraits type of a Port
+// register_traits holds the PortTraits type of a Port
 template<>
-struct register_port_traits<non_intrusive_port>
+struct register_traits<non_intrusive_port>
 {
     typedef producer_traits type;
 };
@@ -69,7 +69,7 @@ struct non_intrusive_port2
 // Can't or don't want to modify the type
 };
 
-DATAFLOW_PORT_TRAITS(non_intrusive_port2, producer_traits)
+DATAFLOW_TRAITS(non_intrusive_port2, producer_traits)
 
 //]
 
@@ -82,9 +82,9 @@ struct non_intrusive_port_base
 
 namespace boost { namespace dataflow {
 
-// register_port_traits holds the PortTraits type of a Port
+// register_traits holds the PortTraits type of a Port
 template<typename T>
-struct register_port_traits<
+struct register_traits<
     T,
     default_tag,
     typename boost::enable_if<
@@ -108,7 +108,7 @@ struct non_intrusive_port_base2
 {
 };
 
-DATAFLOW_PORT_TRAITS_ENABLE_IF(
+DATAFLOW_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<non_intrusive_port_base2 BOOST_PP_COMMA() T>,
     producer_traits)
@@ -131,7 +131,8 @@ int test_main(int, char* [])
     
     BOOST_CHECK(!df::is_port_traits<incomplete>::value);
     BOOST_CHECK(!df::is_port_traits<empty>::value);
-    
+
+
     BOOST_CHECK(( df::is_port<my_producer>::value ));
     BOOST_CHECK(( df::is_port<my_consumer>::value ));
     

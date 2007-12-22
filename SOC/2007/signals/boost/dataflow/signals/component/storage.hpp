@@ -6,11 +6,10 @@
 #ifndef BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP
 #define BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP
 
-#include <boost/dataflow/connection/port_map.hpp>
+#include <boost/dataflow/support/fusion_keyed_port.hpp>
 #include <boost/dataflow/detail/make_ref.hpp>
 #include <boost/dataflow/signals/component/conditional_modifier.hpp>
 #include <boost/dataflow/signals/component/detail/storable.hpp>
-#include <boost/dataflow/signals/connection/slot_selector.hpp>
 
 #include <boost/mpl/map.hpp>
 #include <boost/fusion/container/vector.hpp>
@@ -22,11 +21,6 @@ namespace boost { namespace signals {
 
 template<typename Signature, typename OutSignal, typename SignalArgs>
 class storage;
-
-template<typename Storage>
-struct storage_component_traits
-    : public filter_component_traits<Storage, typename Storage::signal_type>
-{};
 
 namespace detail
 {
@@ -76,6 +70,11 @@ namespace detail
     };
 
 
+template<typename Storage>
+struct storage_component_traits
+    : public Storage::base_type::dataflow_traits
+{};
+
 /** \brief Stores and transmits arguments received from a signal.
     \param Signature Signature of the signal sent.
 */
@@ -91,15 +90,16 @@ class storage : public conditional_modifier<
     OutSignal,
     SignalArgs>
 {
-protected:
+public:
     typedef conditional_modifier<storage, storage_modifier<Signature>, Signature, OutSignal, SignalArgs> base_type;
+protected:
 	using base_type::modification;
 public:
     typedef typename storage_modifier<Signature>::parameter_types parameter_types;
     typedef typename storage_modifier<Signature>::storable_types storable_types;
     typedef typename storage_modifier<Signature>::storable_vector storable_vector;
     
-    typedef storage_component_traits<storage> component_traits;
+    typedef storage_component_traits<storage> dataflow_traits;
 
 	storage(const storage &rhs) : base_type(rhs.modification) {}
 
@@ -158,14 +158,14 @@ public:
     }
 
     typedef boost::fusion::map<
-        boost::fusion::pair<boost::dataflow::signals::producer<void()>, slot_selector<void (), storage> >,
+        boost::fusion::pair<boost::dataflow::signals::producer<void()>, boost::function<void ()> >,
         boost::fusion::pair<
             boost::dataflow::signals::producer<void(const boost::fusion::vector<> &)>,
-            slot_selector<void (const boost::fusion::vector<> &), storage>
+            boost::function<void (const boost::fusion::vector<> &)>
         >
     > send_map;
 
-    boost::dataflow::port_map<boost::dataflow::ports::consumer, send_map, dataflow::signals::tag>
+    boost::dataflow::fusion_keyed_port<boost::dataflow::ports::consumer, send_map, dataflow::signals::tag>
     send_slot()
     {
         return send_map
@@ -175,9 +175,9 @@ public:
     /** \return The slot selector for the related at function.
     */
     template<int N>
-        slot_selector
+        boost::function
 #ifndef DOXYGEN_DOCS_BUILD
-        <typename boost::fusion::result_of::at_c<storable_vector, N>::type (), storage>
+        <typename boost::fusion::result_of::at_c<storable_vector, N>::type ()>
 #endif
     at_slot()
     {
@@ -188,9 +188,9 @@ public:
     /** \return The slot selector for the value_at function.
     */
     template<int N>
-   	slot_selector
+   	boost::function
 #ifndef DOXYGEN_DOCS_ONLY
-        <typename boost::mpl::at_c<parameter_types, N>::type (), storage>
+        <typename boost::mpl::at_c<parameter_types, N>::type ()>
 #endif
     value_at_slot()
 	{
@@ -210,8 +210,10 @@ namespace boost { namespace dataflow {
 namespace extension {
     
     template<typename T>
-    struct component_operation_impl<operations::invoke, boost::signals::storage_component_traits<T> >
+    struct component_operation_impl<boost::signals::storage_component_traits<T>, operations::invoke >
     {
+        typedef void result_type;
+        
         template<typename Invocable>
         void operator()(Invocable &invocable)
         {

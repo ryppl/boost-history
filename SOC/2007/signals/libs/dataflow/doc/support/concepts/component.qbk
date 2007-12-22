@@ -1,17 +1,17 @@
 
 [section:component Component, ComponentTraits]
 
-A ['[ComponentConcept]] is the fundamental data processing element.  It can
-have a number of [PortConcept]s, and can also be [InvocableConcept].
+A ['[Component]] is the fundamental data processing element.  It can
+have a number of [Port]s, and can also be [Invocable].
 
-The traits of a component are held in a ['[ComponentTraitsConcept]] type.
-There are multiple ways of registering the [ComponentTraitsConcept]
-for a [ComponentConcept] (see examples below).
+The traits of a component are held in a ['[ComponentTraits]] type.
+There are multiple ways of registering the [ComponentTraits]
+for a [Component] (see examples below).
 
 [heading Notation]
 [variablelist
-    [[C] [A [ComponentConcept] type.]]
-    [[CT] [The [ComponentTraitsConcept] type of `C`.]]
+    [[C] [A [Component] type.]]
+    [[CT] [The [ComponentTraits] type of `C`.]]
     [[I] [An MPL Integral Constant in the range \[0, number of ports exposed by C).]]
     [[c] [An object of type C.]]
 ]
@@ -21,10 +21,10 @@ for a [ComponentConcept] (see examples below).
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Component Traits]
-        [`component_traits_of<M, C>::type`]
+        [`traits_of<M, C>::type`]
         [`CT`]
         [
-            The [ComponentTraitsConcept] of the component.
+            The [ComponentTraits] of the component.
         ]
     ]
     [
@@ -38,10 +38,10 @@ for a [ComponentConcept] (see examples below).
     ]
     [
         [ GetComponentPort ]
-        [`get_component_port<M, I>(c)`]
+        [`get_port<M, I>(c)`]
         []
         [
-            Returns the I'th [PortConcept] exposed by `C`
+            Returns the I'th [Port] exposed by `C`
         ]
     ]
 ]
@@ -52,10 +52,10 @@ for a [ComponentConcept] (see examples below).
     [
         [Port Traits]
         [`CT::ports`]
-        [MPL Sequence of [PortTraitsConcept] types]
+        [MPL Sequence of [PortTraits] types]
         [
-            An enumeration of the [PortTraitsConcept] of the exposed
-            [PortConcept]s.
+            An enumeration of the [PortTraits] of the exposed
+            [Port]s.
         ]
     ]
 ]
@@ -78,19 +78,19 @@ for a [ComponentConcept] (see examples below).
 
 [section:componentoperable ComponentOperable (Invocable) ]
 
-A [ComponentConcept] `P` is /ComponentOperable/
+A [Component] `P` is /ComponentOperable/
 for a component operation `O`, and mechanism `M`, if the implementation of
 the component operation `O` has been specialized for `M` and `P`
 
 In this case,
 
-* If `O` is operations::invoke, `P` is [InvocableConcept]
+* If `O` is operations::invoke, `P` is [Invocable]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[C] [A [ComponentConcept] type.]]
+    [[C] [A [Component] type.]]
     [[c] [An object of type P.]]
 ]
 

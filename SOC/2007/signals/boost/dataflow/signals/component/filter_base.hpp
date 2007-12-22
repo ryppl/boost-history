@@ -13,14 +13,17 @@
 #include <boost/signal.hpp>
 
 
-namespace boost { namespace signals {
-
-template<typename Filter, typename Signal>
+namespace boost {  namespace signals {
+    
+template<typename Filter, typename Signal, typename OutSignatures>
 struct filter_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
             Signal &,
-            const dataflow::port_adapter<Filter, dataflow::signals::call_consumer, dataflow::signals::tag> >,
+            dataflow::port_adapter<
+                Filter,
+                dataflow::signals::call_consumer<OutSignatures>,
+            dataflow::signals::tag> >,
         mpl::map<
             mpl::pair<dataflow::default_port_selector
                 <dataflow::directions::outgoing, dataflow::signals::connect_mechanism>,
@@ -28,22 +31,21 @@ struct filter_component_traits
             mpl::pair<dataflow::default_port_selector
                 <dataflow::directions::incoming, dataflow::signals::connect_mechanism>,
                 mpl::int_<1> >
-        > >
-{};
-
-template<typename Filter, typename Signal>
-class filter_base : public dataflow::component<filter_component_traits<Filter, Signal> >
+        >,
+        dataflow::signals::tag>
 {
-public:
-//    using dataflow::component<filter_component_traits<Filter, Signal> >::component_traits;
-
     template<typename Component>
-    typename filter_base::component_traits::port_result_types get_ports(Component &component)
+    static typename filter_component_traits::fusion_ports get_ports(Component &component)
     {
-        return typename filter_base::component_traits::port_result_types(
+        return typename filter_component_traits::fusion_ports(
             component.default_signal(),
             component);
     };
+};
+
+template<typename Filter, typename Signal, typename OutSignatures>
+class filter_base : public dataflow::component<filter_component_traits<Filter, Signal, OutSignatures> >
+{
 };
 
 } }

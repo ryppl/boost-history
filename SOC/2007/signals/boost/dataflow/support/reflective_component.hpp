@@ -47,7 +47,7 @@ struct get_port_result_type
 {
     typedef typename result_of<
     extension::get_port_impl<
-        typename component_traits_of<Mechanism, Component>::type
+        typename traits_of<Mechanism, Component>::type
     >(Component &, T)>::type type;
 };
 
@@ -57,7 +57,7 @@ get_port(Component &component)
 {
     return
         extension::get_port_impl<
-            typename component_traits_of<Mechanism, Component>::type
+            typename traits_of<Mechanism, Component>::type
         >()(component, T());
 }
 

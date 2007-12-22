@@ -11,6 +11,7 @@
 #define SIGNAL_NETWORK_GENERIC_TYPENAME Member
 #define SIGNAL_NETWORK_GENERIC_MEMBERNAME member
 #define SIGNAL_NETWORK_GENERIC_TYPENAME2 Condition
+#define SIGNAL_NETWORK_GENERIC_STANDARD_RESULT
 
 #include <boost/dataflow/signals/component/detail/generic_template.hpp>
 
@@ -20,14 +21,6 @@
 
 /** \brief Forwards an incoming signal if an specified condition evaluates to true.
 */
-//typedef typename base_type::signal_type::result_type result_type;
-
-    template <typename FArgs>
-    struct result;
-
-    template<typename T, typename Seq>
-    struct result<T(const Seq &)> : public boost::enable_if<boost::fusion::traits::is_sequence<Seq>,
-        typename base_type::signal_type::result_type> {};
     
     /** Forwards the signal if the condition evaluates the true.
         \returns Return value of the sent signal if the condition evaluates to true,
@@ -40,7 +33,7 @@
         if (Condition()(member))
             return fused_out(seq);
         else
-            return typename base_type::signal_type::result_type();
+            return typename conditional_impl::signal_type::result_type();
     }
 
 #endif // SIGNAL_NETWORK_GENERIC_CLASS

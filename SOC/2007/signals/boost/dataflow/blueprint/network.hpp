@@ -13,10 +13,10 @@
 #include <boost/graph/copy.hpp>
 
 #include <exception>
-#include <iostream>
 
 namespace boost { namespace dataflow { namespace blueprint {
 
+template<typename Tag>
 class network
 {
     struct node_t
@@ -32,8 +32,8 @@ class network
 public:
     typedef boost::adjacency_list<
         boost::vecS, boost::vecS, boost::bidirectionalS, node_t, edge_t> graph_type;
-    typedef graph_type::vertex_descriptor component_type;
-    typedef graph_type::edge_descriptor connection_type;
+    typedef typename graph_type::vertex_descriptor component_type;
+    typedef typename graph_type::edge_descriptor connection_type;
 private:
     struct vc
     {
@@ -72,14 +72,14 @@ public:
     component_type add_component()
     {
         typename graph_type::vertex_descriptor v = add_vertex(g);
-        g[v].ptr.reset(new component_t<Component>());
+        g[v].ptr.reset(new component_t<Component, Tag>());
         return v;
     }
     template<typename Component, typename T0>
     component_type add_component(const T0 &t0)
     {
         typename graph_type::vertex_descriptor v = add_vertex(g);
-        g[v].ptr.reset(new component_t<Component>(t0));
+        g[v].ptr.reset(new component_t<Component, Tag>(t0));
         return v;
     }
     template<typename Mechanism, typename ProducerPort, typename ConsumerPort>
@@ -101,7 +101,7 @@ public:
     }
     void connect()
     {
-        graph_type::edge_iterator it;
+        typename graph_type::edge_iterator it;
         for (it = edges(g).first; it!=edges(g).second; it++)
             g[*it].ptr->invoke(
                 g[source(*it, g)].ptr->get_port(g[*it].producer_port),
@@ -124,7 +124,7 @@ private:
     void add_connection_(component_type p, int p_port, component_type c, int c_port,
         boost::shared_ptr<binary_operation<operations::connect> >)
     {
-        graph_type::edge_descriptor e = add_edge(p, c, g).first;
+        typename graph_type::edge_descriptor e = add_edge(p, c, g).first;
         g[e].ptr = get_binary_operation<operations::connect>(get_port(p, p_port), get_port(c, c_port));
         g[e].producer_port = p_port;
         g[e].consumer_port = c_port;        

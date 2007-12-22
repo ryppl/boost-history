@@ -6,9 +6,8 @@
 #ifndef SIGNAL_NETWORK_MULTIPLEXER_HPP
 #define SIGNAL_NETWORK_MULTIPLEXER_HPP
 
-#include <boost/dataflow/connection/port_map.hpp>
+#include <boost/dataflow/support/fusion_keyed_port.hpp>
 #include <boost/dataflow/signals/component/conditional_templated.hpp>
-#include <boost/dataflow/signals/connection/slot_selector.hpp>
 
 #include <boost/config.hpp>
 #include <boost/fusion/container/map.hpp>
@@ -47,22 +46,22 @@ public:
     void select(int selector)
     {   multiplexer::member = selector; }
     
-    slot_selector<void(int), multiplexer>
+    boost::function<void(int)>
     select_slot()
     {
         return make_slot_selector<void(int)> (&multiplexer::select, *this);
     }
     
     typedef boost::fusion::map<
-        boost::fusion::pair<boost::dataflow::signals::producer<Signature>, slot_selector<Signature, multiplexer> >,
+        boost::fusion::pair<boost::dataflow::signals::producer<Signature>, boost::function<Signature> >,
         boost::fusion::pair<
             boost::dataflow::signals::producer<typename multiplexer::fused_signature_type>,
-            slot_selector<typename multiplexer::fused_signature_type, multiplexer>
+            boost::function<typename multiplexer::fused_signature_type>
         >
     > slot_map;
     
     template<int N>
-    boost::dataflow::port_map<boost::dataflow::ports::consumer, slot_map, boost::dataflow::signals::tag>
+    boost::dataflow::fusion_keyed_port<boost::dataflow::ports::consumer, slot_map, boost::dataflow::signals::tag>
     slot()
     {
         return slot_map

@@ -23,7 +23,7 @@ public:
 	void operator()(float x) {out(2*x);}
 };
 
-class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (float), signals::fused>
+class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (float), mpl::vector<>, signals::fused>
 {
 public:
     typedef void result_type;

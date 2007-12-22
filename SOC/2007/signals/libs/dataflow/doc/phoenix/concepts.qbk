@@ -2,12 +2,12 @@
 
 [section PhoenixProducer]
 
-A [ProducerPort] type `P` is a ['[PhoenixProducer]] if it uses
+A producer [Port] type `P` is a ['[PhoenixProducer]] if it uses
 the underlying pointer based data transport mechanism.  It is
 [Connectable] with a compatible [PhoenixConsumer].
 
 [heading Refinement of]
-* [ProducerPort]
+* producer [Port]
 * [Invocable]
 
 [heading Notation]
@@ -65,7 +65,7 @@ data transport mechanism.  I.e., it is [Connectable] to a
 [PhoenixProducer] of compatible produced type.
 
 [heading Refinement of]
-* [ConsumerPort]
+* consumer [Port]
 * [Connectable] with [PhoenixProducer] of compatible produced type.
 
 [heading Notation]

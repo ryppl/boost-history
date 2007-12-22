@@ -31,7 +31,6 @@ namespace df = boost::dataflow;
 int test_main(int, char* [])
 {
     my_producer p;
-    my_consumer c;
     
     BOOST_CHECK((df::is_unary_operable<my_producer, df::operations::disconnect_all>::value));
     

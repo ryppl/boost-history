@@ -1,7 +1,7 @@
 [section PortCategory]
 
-A [PortCategoryConcept] designates a category of port in the Dataflow library.
-The library currently defines two [PortCategoryConcept]s:
+A [PortCategory] designates a category of port in the Dataflow library.
+The library currently defines two [PortCategory]s:
 
 * `boost::dataflow::ports::producer`, and
 * `boost::dataflow::ports::consumer`.
@@ -12,7 +12,7 @@ For a higher-level overview of the concepts, see the [concepts] introduction.
 The following expressions are used in this document:
 
 [variablelist
-    [[PC] [A [PortCategoryConcept] type.]]
+    [[PC] [A [PortCategory] type.]]
 ]
 
 [heading Requirements]
@@ -20,14 +20,22 @@ The following expressions are used in this document:
 [table
     [[Name] [Expression] [Result Type] [Description]]
     [
-        [Opposite PortCategory]
+        [Complementing PortCategory]
         [`PC::complement`]
-        [[PortCategoryConcept] type]
+        [[PortCategory] type]
         [
-            The complementing [PortCategoryConcept] of `PC`, meaning that it
-            is possible to make connections between [PortConcept]s of
-            [PortCategoryConcept] `PC` and [PortConcept]s of
-            [PortCategoryConcept] `PC::complement`.
+            The complementing [PortCategory] of `PC`, meaning that it
+            is possible to make connections between [Port]s of
+            [PortCategory] `PC` and [Port]s of
+            [PortCategory] `PC::complement`.
+        ]
+    ]
+    [
+        [Is PortCategory Trait]
+        [[^[is_port_category]<T>::type]]
+        [Boolean MPL Metafunction that evaulates to true]
+        [
+            Trait encapsulating adherence to the [PortCategory] concept.
         ]
     ]
 ]
@@ -46,34 +54,29 @@ files:
 
 [section:port Port, PortTraits]
 
-A ['[PortConcept]] is the fundamental point of data production or consumption.
-In order for a type `P` to satisfy the [PortConcept] concept requirements,
-a [PortTraitsConcept] type (specifying the traits of the port)
+A ['[Port]] is the fundamental point of data production or consumption.
+In order for a type `P` to satisfy the [Port] concept requirements,
+a [PortTraits] type (specifying the traits of the port)
 must be registered for the port.  Registration can be
 performed in multiple ways (see the examples below).
 
-[PortConcept] concept
-requirements are always relative to a particular a [MechanismConcept] `M` and
-[PortCategoryConcept] `PC`.
-
-* If `PC` is `ports::producer`, then `P` is a [ProducerPortConcept]
-* If `PC` If `ports::consumer`, then `P` is a [ConsumerPortConcept]
-
-A type can be a [PortConcept] for multiple mechanisms and/or port categories.
+[Port] concept
+requirements are always relative to a particular [Tag], so a type
+can be a [Port] for multiple [Tag]s.
 
 [heading Port Refinements]
 
-* [KeyedPortConcept]
-* [ComplementedPortConcept]
+* [KeyedPort]
+* [ComplementedPort]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[`M`] [A [MechanismConcept] type.]]
-    [[`PC`] [A [PortCategoryConcept] type.]]
-    [[`P`] [A Port type, for [MechanismConcept] `M` and [PortCategoryConcept] `PC`.]]
-    [[`PT`] [[PortTraitsConcept] of `P` for `M` and `PC`.]]
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`PC`] [A [PortCategory] type.]]
+    [[`P`] [A Port type, for [Tag] `T`.]]
+    [[`PT`] [[PortTraits] of `P` for `T`.]]
     [[`p`] [An object of type `P`]]
 ]
 
@@ -82,15 +85,15 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Port Traits]
-        [`port_traits_of<M, PC, P>::type`]
+        [[^[traits_of]<P, T>::type]]
         [`PT`]
         [
-            The [PortTraitsConcept] of the port.
+            The [PortTraits] of the port.
         ]
     ]
     [
         [IsPort Trait]
-        [`is_port<M, PC, P>::type`]
+        [[^[is_port]<P, T>::type]]
         [Boolean metafunction that evaluates to true]
         [
             A trait encapsulating adherence to the Port
@@ -98,13 +101,11 @@ The following expressions are used in this document:
         ]
     ]
     [
-        [Get Port]
-        [`get_port<M,PC>(p)`]
-        [`get_port_result_type<M,PC,P>::type`]
+        [Get Default Port]
+        [`get_default_port<D,M,T>(p)`]
+        [p]
         [
-            Returns the underlying port object.  With regular ports,
-            this is typically a reference to `p`.  With [ProxyPortConcept]
-            objects, it is typically the proxied port object.
+            Returns the port object.
         ]
     ]
 ]
@@ -113,24 +114,23 @@ The following expressions are used in this document:
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Mechanism]
-        [`PT::mechanism`]
-        [any type]
-        [[MechanismConcept] type tag.]
-    ]
-    [
         [Port Category]
-        [`PT::port_category`]
-        [[PortCategoryConcept] type]
+        [`PT::category`]
+        [[PortCategory] type]
         [The category of the port]
     ]
     [
-        [Port Concept]
-        [`PT::port_concept`]
+        [Port ]
+        [`PT::concept`]
         [`concepts::port`, `concepts::keyed_port`, `concepts::complemented_port`]
         [The most refined producer concept that `P` satisfies.]
     ]
-
+    [
+        [Tag]
+        [`PT::tag`]
+        [any type]
+        [[Tag] type tag.]
+    ]
 ]
 
 [heading Header]
@@ -142,54 +142,63 @@ files:
     #include <boost/dataflow/support.hpp>
 ```
 
+[heading Models]
+* [port]
+* [port_traits]
+
 [heading Notes]
 
 There is an intrusive as well as a non-intrusive way to register the
-[PortTraitsConcept] of a type `P`, thereby making it a [PortConcept].
+[PortTraits] of a type `P`, thereby making it a [Port].
 
-Non-intrusive registration is done by providing a specialization of
-the `register_port_traits` template (either directly, or through the provided
-macros DATAFLOW_PORT_TRAITS and DATAFLOW_PORT_TRAITS_ENABLE_IF).
+Non-intrusive registration is typically done by providing a specialization of
+the [register_traits] template (either directly, or through the provided
+macros [DATAFLOW_TRAITS] and [DATAFLOW_TRAITS_ENABLE_IF]).  This will
+specialize [traits_of] for all cv-qualified versions of type `P`.
+If cv-qualified versions of type `P` should have different [PortTraits]s,
+[traits_of] should be specialized directly.
 
 Intrusive registration can be done by providing
-a `P::port_traits` member type, which can be either a [PortTraitsConcept]
-type, or an MPL sequence of [PortTraitsConcept] types. Alternatively,
+a `P::port_traits` member type, which can be either a [PortTraits]
+type, or an MPL sequence of [PortTraits] types. Alternatively,
 the Dataflow library provides a convenience class
-`port` which you can inherit instead of declaring the member type.
+`port` which you can inherit instead of declaring the member type.  This
+provides the additional benefit of using the free functions in the
+`boost::dataflow` namespace using ADL.
 
 The below examples illustrate the avaliable registration methods.
 
 [heading Examples]
 
-All of the below examples use the following [MechanismConcept] and
-[PortTraitsConcept] types:
+All of the below examples use the following [Tag] and
+[PortTraits] types:
 
 [port_registration_example_prep]
 
 [heading Intrusive registration]
 
 Intrusive registration is the easiest, but assumes you can modify the
-[PortConcept]:
+[Port]:
 
 [port_registration_example_intrusive]
 
 [heading Non-intrusive registration]
 
-Non-intrusive registration is done by specializing the `register_port_traits`
-template.  Since the `register_port_traits` template is keyed by [MechanismConcept]
-and [PortCategoryConcept], this is rather verbose:
+Non-intrusive registration is done by specializing the `register_traits`
+template.  Since the `register_traits` template is keyed by [Tag]
+and [PortCategory], this is rather verbose:
 
 [port_registration_example_non_intrusive]
 
 To make things simpler, the Dataflow library provides a macro for non-intrusive
 registration (the macro also performs a static check on the
-[PortTraitsConcept]).
+[PortTraits]).
 
 [port_registration_example_non_intrusive_macro]
 
 [heading Non-intrusive mass registration]
 
-The `register_port_traits` template has an Enable template parameter for use with
+The [register_traits] template has an Enable template parameter for use with
 `boost::enable_if`.  Hence, we can register a number of types at the same time:
 
 [port_registration_example_non_intrusive_enable_if]
@@ -209,37 +218,37 @@ With the above registrations, the following tests pass:
 
 [section:complementedport ComplementedPort, ComplementedPortTraits]
 
-A ComplementedPort `P` is a [PortConcept] s.t. whenever it is
-[BinaryOperableConcept] with another [PortConcept] `P2`, `P2` is
+A ComplementedPort `P` is a [Port] s.t. whenever it is
+[BinaryOperable] with another [Port] `P2`, `P2` is
 a particular type - `P`'s complement type.
 
-[ComplementedPortConcept]s are useful in situations where [PortConcept] types
-are [BinaryOperableConcept] in a one-to-one fashion (a pair of [PortConcept] types
+[ComplementedPort]s are useful in situations where [Port] types
+are [BinaryOperable] in a one-to-one fashion (a pair of [Port] types
 are each other's port complements), or in a one-to-many fashion (a number
-of [PortConcept] types have the same complement port).  An example of the
+of [Port] types have the same complement port).  An example of the
 latter is [DataflowSignals], where any `signal` of signature `T` has
 a complement port of type `function<T>`, and can therefore model
-[ComplementedPortConcept], but `function<T>` is cannot because there are many `signal`
+[ComplementedPort], but `function<T>` is cannot because there are many `signal`
 types to which it can be connected.
 
-The traits of a [ComplementedPortConcept] are captured by the
-[ComplementedPortTraitsConcept], which refines the [PortTraitsConcept] with
+The traits of a [ComplementedPort] are captured by the
+[ComplementedPortTraits], which refines the [PortTraits] with
 an additional member type specifying the complement port type.
 
 [heading ComplementedPort Refines]
-* [PortConcept]
+* [Port]
 
 [heading ComplementedPortTraits Refines]
-* [PortTraitsConcept]
+* [PortTraits]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[`M`] [A [MechanismConcept] type.]]
-    [[`PC`] [A [PortCategoryConcept] type.]]
-    [[`P`] [A [ComplementedPortConcept] type, for [MechanismConcept] `M` and [PortCategoryConcept] `PC`.]]
-    [[`PT`] [[ComplementedPortTraitsConcept]  of `P` for `M` and `PC`.]]
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`PC`] [A [PortCategory] type.]]
+    [[`P`] [A [ComplementedPort] type, for [Tag] `T`.]]
+    [[`PT`] [[ComplementedPortTraits] of `P` for `T`.]]
 ]
 
 [heading ComplementedPort Requirements]
@@ -247,10 +256,10 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Port Traits]
-        [`port_traits_of<M, PC, P>::type`]
+        [`traits_of<M, PC, P>::type`]
         [`PT`]
         [
-            The [ComplementedPortTraitsConcept] of the port.
+            The [ComplementedPortTraits] of the port.
         ]
     ]
 ]
@@ -261,29 +270,59 @@ The following expressions are used in this document:
     [
         [Complement Port Type]
         [`PT::complement_port_type`]
-        [Any [PortConcept] type]
+        [Any [Port] type]
         [
-            The complement port type of the port type `P`.  If `P` is 
-            [BinaryOperableConcept] with another port type `P2`, then
-            `get_port<PT::mechanism, PT::category::complement>(p2)` must
-            return an object of type `PT::complement_port_type` or reference
-            to such.
+            The complement port type of `P`.  If `P` is 
+            [BinaryOperable] with another port type `P2`, then `P2` must
+            be `PT::complement_port_type`.
         ]
     ]
 ]
 
+[heading Models]
+
+* [complemented_port_traits]
+
 [endsect]
 
-[section KeyedPort]
+[section:vectorport VectorPort, VectorPortTraits]
+
+A [VectorPort] type `VP` is a [Port] that is composed of a number of
+sub-[Port]s.
+
+[heading VectorPort Refines]
+* [Port]
+* [PortVector]
+
+[heading VectorPortTraits Refines]
+* [PortTraits]
+* [PortVectorTraits]
+
+
+[endsect][/vectorport]
+
+[section:keyedport KeyedPort, KeyedPortTraits]
+
+A [KeyedPort] type `KP` is a [VectorPort] whose sub-[Port]s are accessible
+by key.  Whenever a binary operation is performed between a [Port] of type `P`
+and `KP`, it is forwarded to the binary operation between `P` and the 
+sub-[Port] in `KP` keyed by the [PortTraits] of `P`.
+
+[heading KeyedPort Refines]
+* [VectorPort]
+
+[heading VectorPortTraits Refines]
+* [VectorPortTraits]
+
 [endsect][/keyed_port]
 
 [section ProxyPort, ProxyPortTraits]
 
-A type `PP` is a ['[ProxyPortConcept]] for a mechanism `M` and port category `PC`
-if it specifies a [ProxyPortTraitsConcept] for that mechanism and port category.
+A type `PP` is a ['[ProxyPort]] for a mechanism `M` and port category `PC`
+if it specifies a [ProxyPortTraits] for that mechanism and port category.
 
 If the proxied port type is a valid
-[PortConcept], then 'PP' satisfies the [PortConcept] requirements
+[Port], then 'PP' satisfies the [Port] requirements
 in the same way.
 
 [heading Notation]
@@ -299,8 +338,8 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Proxy Port Traits]
-        [`proxy_port_traits_of<PP>::type`]
-        [[ProxyPortTraitsConcept] type.]
+        [`proxy_traits_of<PP>::type`]
+        [[ProxyPortTraits] type.]
         [
             The traits of the proxy port.
         ]

@@ -36,11 +36,16 @@ template<
     typename SignalArgs
     >
 class BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl)
-    : public filter<Derived, Signature, typename OutSignal::filter_type, SignalArgs>
+    : public filter<
+        Derived,
+        Signature,
+        mpl::vector<
+            Signature,
+            typename fused_signal_type<Signature>::signature_type
+        >,
+        typename OutSignal::filter_type,
+        SignalArgs>
 {
-protected:
-    typedef filter<Derived, Signature, typename OutSignal::filter_type, SignalArgs> base_type;
-
 public:    
     SIGNAL_NETWORK_GENERIC_CLASS_IMPL() {}
     template<typename T1>
@@ -54,7 +59,7 @@ public:
     
     template<typename T, typename Seq>
     struct result<T(const Seq &)> : public boost::enable_if<boost::fusion::traits::is_sequence<Seq>,
-        typename base_type::signal_type::result_type> {};
+        typename SIGNAL_NETWORK_GENERIC_CLASS_IMPL::signal_type::result_type> {};
 #   endif // SIGNAL_NETWORK_GENERIC_STANDARD_RESULT
 
 #   include SIGNAL_NETWORK_GENERIC_FILE
@@ -99,6 +104,7 @@ public:
     SIGNAL_NETWORK_GENERIC_CLASS(const T1 &t1) : base_type(t1) {}
     template<typename T1, typename T2>
     SIGNAL_NETWORK_GENERIC_CLASS(const T1 &t1, const T2 &t2) : base_type(t1, t2) {}
+    
 };
 
 } } // namespace boost::signals

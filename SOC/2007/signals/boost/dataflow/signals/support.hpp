@@ -7,15 +7,17 @@
 #define SIGNAL_NETWORK_SIGNAL_SUPPORT_HPP
 
 #include <boost/dataflow/support.hpp>
+#include <boost/dataflow/support/port/port_adapter.hpp>
 #include <boost/dataflow/signals/connection/detail/bind_object.hpp>
-#include <boost/signal.hpp>
 
+#include <boost/mpl/vector.hpp>
+#include <boost/signal.hpp>
 
 namespace boost { namespace dataflow {
 
 namespace signals {
 
-struct tag {};
+struct tag : public default_tag {};
 struct connect_mechanism {};
 struct extract_mechanism {};
 
@@ -28,13 +30,39 @@ struct producer
 
 template<typename T>
 struct consumer
-    : public port_traits<ports::consumer, concepts::port, tag>
+    : public port_traits<ports::consumer, tag>
 {
     typedef T signature_type;
 };
 
+namespace detail
+{
+    template<typename T>
+    struct wrap_producer
+    {
+        typedef producer<T> type;
+    };
+    
+    template<typename T>
+    struct wrap_function
+    {
+        typedef boost::function<T> type;
+    };
+}
+
+template<typename SignatureSequence=mpl::vector<> >
 struct call_consumer
-    : public port_traits<ports::consumer, concepts::keyed_port, tag>
+    : public keyed_port_traits<
+        ports::consumer,
+        typename mpl::transform<
+            SignatureSequence,
+            detail::wrap_producer<mpl::_1>
+        >::type,
+        typename mpl::transform<
+            SignatureSequence,
+            detail::wrap_function<mpl::_1>
+        >::type,
+        tag>
 {};
 
 template<typename T>
@@ -47,29 +75,31 @@ struct extract_producer
 } // namespace signals
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct register_port_traits<boost::signal<Signature, Combiner, Group, GroupCompare>, signals::tag >
+struct register_traits<boost::signal<Signature, Combiner, Group, GroupCompare>, signals::tag >
 {
     typedef signals::producer<Signature> type;
 };
 
 template<typename Signature>
-struct register_port_traits<boost::function<Signature>, signals::tag >
+struct register_traits<boost::function<Signature>, signals::tag >
 {
     typedef signals::consumer<Signature> type;
 };
 
 namespace extension
 {
-    template<typename Signature>
-    struct get_keyed_port_impl<signals::call_consumer, signals::producer<Signature> >
+    template<typename SignatureSequence, typename Signature>
+    struct get_keyed_port_impl<signals::call_consumer<SignatureSequence>, signals::producer<Signature> >
     {
         typedef const boost::function<Signature> result_type;
         
         template<typename ConsumerPort>
         result_type operator()(ConsumerPort &consumer)
         {
-            return boost::signals::detail::bind_object<Signature, ConsumerPort>()
-            (static_cast<typename boost::signals::detail::slot_type<Signature, ConsumerPort>::type>(&ConsumerPort::operator()), consumer);
+            typedef typename get_object_type<ConsumerPort>::type object_type;
+            
+            return boost::signals::detail::bind_object<Signature, object_type>()
+            (static_cast<typename boost::signals::detail::slot_type<Signature, object_type>::type>(&object_type::operator()), get_object(consumer));
         };
     };
 
@@ -106,9 +136,19 @@ namespace boost { namespace signals {
 #undef DATAFLOW_TEMPLATE_TAG
 
 template<typename Component>
-inline void invoke(Component &component)
+inline typename enable_if<
+    dataflow::is_component<Component, dataflow::signals::tag>,
+    void
+>::type invoke(Component &component)
 {
-    boost::dataflow::component_operation<boost::dataflow::operations::invoke>(component);
+    boost::dataflow::component_operation<boost::dataflow::operations::invoke, dataflow::signals::tag>(component);
+}
+
+template<typename Signature, typename T>
+boost::function<Signature> make_slot_selector(typename detail::slot_type<Signature, T>::type func, T &object)
+{
+	return boost::signals::detail::bind_object<Signature, T>()
+            (static_cast<typename boost::signals::detail::slot_type<Signature, T>::type>(func), object);
 }
 
 } } // namespace boost::phoenix

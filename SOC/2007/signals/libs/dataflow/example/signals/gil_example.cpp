@@ -21,7 +21,7 @@ using namespace boost;
 
 //[ gil_example_image_generator
 
-class image_generator : public signals::filter<void(const gil::gray8_image_t &)>
+class image_generator : public signals::filter<image_generator, void(const gil::gray8_image_t &)>
 {
 public:
     // constructed with the width, height, and initial grayscale value of the image
@@ -48,7 +48,7 @@ private:
 
 //[ gil_example_noise_adder
 
-class noise_adder : public signals::filter<void(const gil::gray8_image_t &)>
+class noise_adder : public signals::filter<noise_adder, void(const gil::gray8_image_t &)>
 {
 public:
     noise_adder() : dist(0, 10), generator(mt, dist)
@@ -93,7 +93,7 @@ private:
 class image_display
 {
 public:
-    typedef dataflow::signals::call_consumer port_traits;
+    typedef dataflow::signals::call_consumer<> dataflow_traits;
     
     // Upon receiving an image, cout an ASCII approximation.
     void operator()(const gil::gray8_image_t &image)

@@ -11,6 +11,7 @@
 #define SIGNAL_NETWORK_GENERIC_FILE <boost/dataflow/signals/component/conditional_modifier.hpp>
 #define SIGNAL_NETWORK_GENERIC_TYPENAME Modification
 #define SIGNAL_NETWORK_GENERIC_MEMBERNAME modification
+#define SIGNAL_NETWORK_GENERIC_STANDARD_RESULT
 
 #include <boost/dataflow/signals/component/detail/generic_template.hpp>
 
@@ -20,15 +21,6 @@
 
     /** Applies the Modification object to the received signal parameters.
     */
-    template <typename Args>
-    struct result;
-
-    template <typename F, typename Seq>
-    struct result<F(const Seq &seq)> : public boost::enable_if<
-        boost::fusion::traits::is_sequence<Seq>,
-        typename base_type::signal_type::result_type>
-    {};
-
     template <class Seq>
     typename result<conditional_modifier_impl(const Seq &)>::type
     operator()(const Seq &seq)

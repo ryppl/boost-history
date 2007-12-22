@@ -18,8 +18,8 @@
 #endif
     
 template<typename OutgoingPort, typename IncomingPort>
-inline typename enable_if<
-    mpl::and_<
+inline typename boost::enable_if<
+    boost::mpl::and_<
         boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::directions::outgoing, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
         boost::dataflow::has_default_port<IncomingPort, boost::dataflow::directions::incoming, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
     >, OutgoingPort &
@@ -28,8 +28,8 @@ operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &outgoing, IncomingPort &incom
 { DATAFLOW_TEMPLATE_BINARY_OPERATION(outgoing, incoming); return outgoing;}
 
 template<typename OutgoingPort, typename IncomingPort>
-inline typename enable_if<
-    mpl::and_<
+inline typename boost::enable_if<
+    boost::mpl::and_<
         boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::directions::outgoing, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
         boost::dataflow::has_default_port<IncomingPort, boost::dataflow::directions::incoming, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
     >, OutgoingPort &
