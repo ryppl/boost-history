@@ -59,7 +59,7 @@ public:
         print_connectability_info("source", source, 0, "sink_float", sink_float, 1);
         std::cout << std::endl;
         
-/*        // Make some connections
+        // Make some connections
         std::cout << "Making blueprint connections: source to sink, source_float to sink_float..." << std::endl;
         network.add_connection(source, 0, sink, 1);
         network.add_connection(source_float, 0, sink_float, 1);
@@ -82,7 +82,7 @@ public:
         std::cout << "Testing the original network..." << std::endl << std::endl;
         test_network(network);
         std::cout << "Testing the network copy..." << std::endl << std::endl;
-        test_network(network_copy);*/
+        test_network(network_copy);
     }
     void print_port_info(const char *c_name, network_type::component_type c)
     {
@@ -112,11 +112,11 @@ public:
             << "connectable to " << dst_name << " port " << dst_port << std::endl;
     }
 
-/*    template<typename T>
+    template<typename T>
     void output_component_value(
         network_type &network, const char *c_name, typename network_type::component_type c)
     {
-        blueprint::component_t<signals::storage<void(T)> > value;
+        blueprint::component_t<signals::storage<void(T)>, df::signals::tag> value;
         blueprint::extract(network[c].get_port(2), value.get_port(1));
  
         std::cout << "\t\tvalue at " << c_name << ":"
@@ -150,7 +150,7 @@ public:
         
         // Output the values at the sinks:
         output_component_values(network);
-    }*/
+    }
 };
 
 int main()

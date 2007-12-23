@@ -6,6 +6,7 @@
 build-project VTK ;
 build-project signals ;
 build-project blueprint ;
+build-project fltk_gui ;
 
 project dataflow/example
     : requirements
