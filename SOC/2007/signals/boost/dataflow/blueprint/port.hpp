@@ -37,6 +37,7 @@ private:
 
 class complemented_port;
 class vector_port;
+class keyed_port;
 
 /// Base class for all blueprint port types.  Run-time analogue of the Port concept. 
 class port
@@ -60,8 +61,10 @@ public:
 
     virtual boost::any get()=0;
     virtual const std::type_info &port_type_info()=0;
+    virtual const std::type_info &port_traits_type_info()=0;
     virtual ~port() {};
     virtual port *clone() const =0;
+    port &resolve_key(port &key);
 private:
     port_traits traits_;
 };
@@ -151,7 +154,18 @@ public:
 
     virtual bool is_keyed_port() const
     {   return true; }
+    virtual bool has_key(const std::type_info &info)=0;
+    virtual port &get_keyed_port(const std::type_info &info)=0;
 };
+
+inline port &port::resolve_key(port &key)
+{
+    port *resolved = this;
+    while (resolved->is_keyed_port() &&
+            resolved->as<keyed_port>().has_key(key.port_traits_type_info()))
+        resolved = &resolved->as<keyed_port>().get_keyed_port(key.port_traits_type_info());
+    return *resolved;
+}
 
 } } } // namespace boost::dataflow::blueprint
 

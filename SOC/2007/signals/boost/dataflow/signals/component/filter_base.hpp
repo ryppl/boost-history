@@ -46,6 +46,8 @@ struct filter_component_traits
 template<typename Filter, typename Signal, typename OutSignatures>
 class filter_base : public dataflow::component<filter_component_traits<Filter, Signal, OutSignatures> >
 {
+public:
+    typedef OutSignatures out_signatures_type;
 };
 
 } }

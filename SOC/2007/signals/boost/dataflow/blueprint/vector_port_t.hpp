@@ -22,6 +22,7 @@ namespace detail {
     class vector_port_impl
         : public port_t_base<Base, PortOrRef, Tag>
     {
+    protected:
         typedef typename vector_port_impl::port_type port_type;
         typedef typename vector_port_impl::port_traits_type port_traits_type;
 
@@ -38,16 +39,17 @@ namespace detail {
         }
         port & get_port(int port_num)
         {
-            return ports[port_num];
+            return m_ports[port_num];
         }
 
+    protected:
+        ptr_vector<port> m_ports;
     private:
         void port_t_()
         {
             for(size_t i=0; i<num_ports(); i++)
-                ports.push_back(blueprint::get_port<Tag>(vector_port_impl::p, i));
+                m_ports.push_back(blueprint::get_port<Tag>(vector_port_impl::p, i));
         }
-        ptr_vector<port> ports;
     };
 }
 

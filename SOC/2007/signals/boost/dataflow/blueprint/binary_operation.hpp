@@ -24,16 +24,20 @@ bool are_binary_operable(port &outgoing, port &incoming)
 {    
     if (outgoing.is_complemented_port())
     {
+        port &resolved_incoming = incoming.resolve_key(outgoing);
+
         return outgoing.as<complemented_port>().template is_operable_port_to_complement<Operation>()
             && (outgoing.as<complemented_port>().complement_type_info()
-                == incoming.port_type_info());
+                == resolved_incoming.port_type_info());
     }
 
     if (incoming.is_complemented_port())
     {
+        port &resolved_outgoing = outgoing.resolve_key(outgoing);
+        
         return incoming.as<complemented_port>().template is_operable_complement_to_port<Operation>()
             && (incoming.as<complemented_port>().complement_type_info()
-            == outgoing.port_type_info());
+            == resolved_outgoing.port_type_info());
     }
 
     return false;

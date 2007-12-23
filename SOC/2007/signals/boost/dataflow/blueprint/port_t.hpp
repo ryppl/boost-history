@@ -40,8 +40,12 @@ public:
     {
         return typeid(port_type);
     };
+    virtual const std::type_info &port_traits_type_info()
+    {
+        return typeid(port_traits_type);
+    };
 protected:
-    PortOrRef p;
+    typename remove_const<PortOrRef>::type p;
 };
 
 template<typename PortOrRef, typename Tag=default_tag, typename Enable=void>
@@ -77,15 +81,15 @@ class port_t<
     struct operation_type
     {
         typedef blueprint::binary_operation_t<
-            Operation,
             port_type,
             typename port_traits_type::complement_port_type,
+            Operation,
             Tag
             > p_to_c;
         typedef blueprint::binary_operation_t<
-            Operation,
             typename port_traits_type::complement_port_type,
             port_type,
+            Operation,
             Tag
         > c_to_p;
     };

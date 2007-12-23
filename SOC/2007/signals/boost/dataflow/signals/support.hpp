@@ -11,6 +11,7 @@
 #include <boost/dataflow/signals/connection/detail/bind_object.hpp>
 
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/joint_view.hpp>
 #include <boost/signal.hpp>
 
 namespace boost { namespace dataflow {
@@ -35,12 +36,25 @@ struct consumer
     typedef T signature_type;
 };
 
+template<typename T>
+struct extract_producer
+    : public complemented_port_traits<ports::producer, boost::function<T>, tag>
+{
+    typedef T signature_type;
+};
+
 namespace detail
 {
     template<typename T>
     struct wrap_producer
     {
         typedef producer<T> type;
+    };
+    
+    template<typename T>
+    struct wrap_extract_producer
+    {
+        typedef extract_producer<T> type;
     };
     
     template<typename T>
@@ -54,23 +68,28 @@ template<typename SignatureSequence=mpl::vector<> >
 struct call_consumer
     : public keyed_port_traits<
         ports::consumer,
-        typename mpl::transform<
-            SignatureSequence,
-            detail::wrap_producer<mpl::_1>
-        >::type,
-        typename mpl::transform<
-            SignatureSequence,
-            detail::wrap_function<mpl::_1>
-        >::type,
+        mpl::joint_view<
+            typename mpl::transform<
+                SignatureSequence,
+                detail::wrap_producer<mpl::_1>
+            >::type,
+            typename mpl::transform<
+                SignatureSequence,
+                detail::wrap_extract_producer<mpl::_1>
+            >::type
+        >,
+        mpl::joint_view<
+            typename mpl::transform<
+                SignatureSequence,
+                detail::wrap_function<mpl::_1>
+            >::type,
+            typename mpl::transform<
+                SignatureSequence,
+                detail::wrap_function<mpl::_1>
+            >::type
+        >,
         tag>
 {};
-
-template<typename T>
-struct extract_producer
-    : public complemented_port_traits<ports::producer, boost::function<T>, tag>
-{
-    typedef T signature_type;
-};
 
 } // namespace signals
 
@@ -112,6 +131,33 @@ namespace extension
         void operator()(Producer &producer, Consumer &consumer)
         {
             producer.connect(consumer);
+        }
+    };
+    
+    template<typename SignatureSequence, typename Signature>
+    struct get_keyed_port_impl<signals::call_consumer<SignatureSequence>, signals::extract_producer<Signature> >
+    {
+        typedef const boost::function<Signature> result_type;
+        
+        template<typename ConsumerPort>
+        result_type operator()(ConsumerPort &consumer)
+        {
+            typedef typename get_object_type<ConsumerPort>::type object_type;
+            
+            return boost::signals::detail::bind_object<Signature, object_type>()
+            (static_cast<typename boost::signals::detail::slot_type<Signature, object_type>::type>(&object_type::operator()), get_object(consumer));
+        };
+    };
+
+    template<typename T>
+    struct binary_operation_impl<signals::extract_producer<T>, signals::consumer<T>, operations::extract>
+    {
+        typedef void result_type;
+        
+        template<typename Producer, typename Consumer>
+        void operator()(Producer &producer, Consumer &consumer)
+        {
+            get_object(producer).call(consumer);
         }
     };
 }

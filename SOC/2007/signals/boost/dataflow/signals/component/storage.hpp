@@ -70,10 +70,44 @@ namespace detail
     };
 
 
+//template<typename Storage>
+//struct storage_component_traits
+//    : public Storage::base_type::dataflow_traits
+//{};
+
 template<typename Storage>
 struct storage_component_traits
-    : public Storage::base_type::dataflow_traits
-{};
+    : public dataflow::fusion_component_traits<
+        fusion::vector<
+            typename Storage::signal_type &,
+            dataflow::port_adapter<
+                Storage,
+                dataflow::signals::call_consumer<typename Storage::out_signatures_type>,
+                dataflow::signals::tag>,
+            dataflow::port_adapter<
+                Storage,
+                dataflow::signals::extract_producer<typename Storage::signature_type>,
+                dataflow::signals::tag>
+        >,
+        mpl::map<
+            mpl::pair<dataflow::default_port_selector
+                <dataflow::directions::outgoing, dataflow::signals::connect_mechanism>,
+                mpl::int_<0> >,
+            mpl::pair<dataflow::default_port_selector
+                <dataflow::directions::incoming, dataflow::signals::connect_mechanism>,
+                mpl::int_<1> >
+        >,
+        dataflow::signals::tag>
+{
+    template<typename Component>
+    static typename storage_component_traits::fusion_ports get_ports(Component &component)
+    {
+        return typename storage_component_traits::fusion_ports(
+            component.default_signal(),
+            component,
+            component);
+    };
+};
 
 /** \brief Stores and transmits arguments received from a signal.
     \param Signature Signature of the signal sent.
