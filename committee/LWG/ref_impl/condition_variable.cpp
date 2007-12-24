@@ -11,21 +11,6 @@
 namespace std
 {
 
-template <>
-struct __make<timespec>
-{
-    static
-    timespec
-    from(const system_time& t)
-    {
-        timespec ts;
-        ts.tv_sec = t.seconds_since_epoch();
-        ts.tv_nsec = static_cast<long>(t.nanoseconds_since_epoch().count() % system_time::ticks_per_second);
-        return ts;
-    }
-
-};
-
 condition_variable::condition_variable()
 {
     error_code::value_type ec = pthread_cond_init(&cv_, 0);
@@ -64,10 +49,12 @@ condition_variable::__do_wait(pthread_mutex_t* mut)
 }
 
 bool
-condition_variable::__do_timed_wait(pthread_mutex_t* mut, const system_time& abs_time)
+condition_variable::__do_timed_wait(pthread_mutex_t* mut, const datetime::system_time& abs_time)
 {
-    timespec __tm = __make<timespec>::from(abs_time);
-    error_code::value_type ec = pthread_cond_timedwait(&cv_, mut, &__tm);
+    timespec ts;
+    ts.tv_sec = abs_time.seconds_since_epoch();
+    ts.tv_nsec = static_cast<long>(abs_time.nanoseconds_since_epoch().count() % datetime::system_time::ticks_per_second);
+    error_code::value_type ec = pthread_cond_timedwait(&cv_, mut, &ts);
     if (ec != 0 && ec != ETIMEDOUT)
         throw system_error(ec, native_category, "condition_variable timed_wait failed");
     return ec == 0;

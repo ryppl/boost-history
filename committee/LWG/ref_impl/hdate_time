@@ -318,6 +318,8 @@ public:
 	                          stb::is_convertible<long long, T>::value;
 };
 
+// __compare_resolution
+
 template <class LhsDuration, class RhsDuration,
     bool = LhsDuration::is_subsecond, bool = RhsDuration::is_subsecond>
 struct __compare_resolution  // <LhsDuration, RhsDuration, true, true>
@@ -343,6 +345,85 @@ struct __compare_resolution<LhsDuration, RhsDuration, false, false>
     static const bool value = LhsDuration::seconds_per_tick <= RhsDuration::seconds_per_tick;
 };
 
+// __duration_cast
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, true_type, true_type, false_type)
+{
+    return ToDuration(fd.count() * ToDuration::ticks_per_second / FromDuration::ticks_per_second);
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, true_type, true_type, true_type)  // exact
+{
+    return ToDuration(fd.count() * (ToDuration::ticks_per_second / FromDuration::ticks_per_second));
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, true_type, true_type)
+{
+    return __duration_cast_imp<ToDuration>(fd, true_type(), true_type(),
+               integral_constant<bool, ToDuration::ticks_per_second % FromDuration::ticks_per_second == 0>());
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, false_type, true_type)
+{
+    return ToDuration(fd.count() / (ToDuration::seconds_per_tick * FromDuration::ticks_per_second));
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, true_type, false_type)  // exact
+{
+    return ToDuration(fd.count() * (ToDuration::ticks_per_second * FromDuration::seconds_per_tick));
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, false_type, false_type, false_type)
+{
+    return ToDuration(fd.count() * FromDuration::seconds_per_tick / ToDuration::seconds_per_tick);
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, false_type, false_type, true_type)  // exact
+{
+    return ToDuration(fd.count() * (FromDuration::seconds_per_tick / ToDuration::seconds_per_tick));
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast_imp(const FromDuration& fd, false_type, false_type)
+{
+    return __duration_cast_imp<ToDuration>(fd, false_type(), false_type(),
+               integral_constant<bool, FromDuration::seconds_per_tick % ToDuration::seconds_per_tick == 0>());
+}
+
+template <class ToDuration, class FromDuration>
+inline
+ToDuration
+__duration_cast(const FromDuration& fd)
+{
+    return __duration_cast_imp<ToDuration>(fd, integral_constant<bool, ToDuration::is_subsecond>(),
+                                               integral_constant<bool, FromDuration::is_subsecond>());
+}
+
+// Durations
+
 class nanoseconds
 {
 public:
@@ -365,7 +446,11 @@ public:
             __compare_resolution<nanoseconds, RhsDuration>::value,
             nanoseconds&
         >::type
-        operator-=(const RhsDuration& d);
+        operator-=(const RhsDuration& d)
+        {
+            ns_ -= __duration_cast<nanoseconds>(d).count();
+            return *this;
+        }
 
     template<typename RhsDuration>
         typename enable_if
@@ -373,12 +458,16 @@ public:
             __compare_resolution<nanoseconds, RhsDuration>::value,
             nanoseconds&
         >::type
-        operator+=(const RhsDuration& d);
+        operator+=(const RhsDuration& d)
+        {
+            ns_ += __duration_cast<nanoseconds>(d).count();
+            return *this;
+        }
 
     nanoseconds operator-() const {return -ns_;}
 
     nanoseconds& operator*=(long rhs)       {ns_ *= rhs; return *this;}
-    nanoseconds& operator/=(long divisor)       {ns_ /= divisor; return *this;}
+    nanoseconds& operator/=(long divisor)   {ns_ /= divisor; return *this;}
 
     tick_type count() const {return ns_;}
 };
@@ -398,7 +487,7 @@ public:
     static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return us_ * (nanoseconds::ticks_per_second / microseconds::ticks_per_second);}
+    operator nanoseconds() const  {return __duration_cast<nanoseconds>(*this);}
 
     // + common functions
 
@@ -408,7 +497,11 @@ public:
             __compare_resolution<microseconds, RhsDuration>::value,
             microseconds&
         >::type
-        operator-=(const RhsDuration& d);
+        operator-=(const RhsDuration& d)
+        {
+            us_ -= __duration_cast<microseconds>(d).count();
+            return *this;
+        }
 
     template<typename RhsDuration>
         typename enable_if
@@ -416,7 +509,11 @@ public:
             __compare_resolution<microseconds, RhsDuration>::value,
             microseconds&
         >::type
-        operator+=(const RhsDuration& d);
+        operator+=(const RhsDuration& d)
+        {
+            us_ += __duration_cast<microseconds>(d).count();
+            return *this;
+        }
 
     microseconds operator-() const {return -us_;}
 
@@ -441,8 +538,8 @@ public:
     static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return ms_ * (nanoseconds::ticks_per_second / milliseconds::ticks_per_second);}
-    operator microseconds() const {return ms_ * (microseconds::ticks_per_second / milliseconds::ticks_per_second);}
+    operator nanoseconds()  const {return __duration_cast<nanoseconds>(*this);}
+    operator microseconds() const {return __duration_cast<microseconds>(*this);}
 
     // + common functions
 
@@ -452,7 +549,11 @@ public:
             __compare_resolution<milliseconds, RhsDuration>::value,
             milliseconds&
         >::type
-        operator-=(const RhsDuration& d);
+        operator-=(const RhsDuration& d)
+        {
+            ms_ -= __duration_cast<milliseconds>(d).count();
+            return *this;
+        }
 
     template<typename RhsDuration>
         typename enable_if
@@ -460,7 +561,11 @@ public:
             __compare_resolution<milliseconds, RhsDuration>::value,
             milliseconds&
         >::type
-        operator+=(const RhsDuration& d);
+        operator+=(const RhsDuration& d)
+        {
+            ms_ += __duration_cast<milliseconds>(d).count();
+            return *this;
+        }
 
     milliseconds operator-() const {return -ms_;}
 
@@ -485,9 +590,9 @@ public:
     static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return s_ * (seconds::seconds_per_tick * nanoseconds::ticks_per_second);}
-    operator microseconds() const {return s_ * (seconds::seconds_per_tick * microseconds::ticks_per_second);}
-    operator milliseconds() const {return s_ * (seconds::seconds_per_tick * milliseconds::ticks_per_second);}
+    operator nanoseconds()  const {return __duration_cast<nanoseconds>(*this);}
+    operator microseconds() const {return __duration_cast<microseconds>(*this);}
+    operator milliseconds() const {return __duration_cast<milliseconds>(*this);}
 
     // + common functions
 
@@ -497,7 +602,11 @@ public:
             __compare_resolution<seconds, RhsDuration>::value,
             seconds&
         >::type
-        operator-=(const RhsDuration& d);
+        operator-=(const RhsDuration& d)
+        {
+            s_ -= __duration_cast<seconds>(d).count();
+            return *this;
+        }
 
     template<typename RhsDuration>
         typename enable_if
@@ -505,7 +614,11 @@ public:
             __compare_resolution<seconds, RhsDuration>::value,
             seconds&
         >::type
-        operator+=(const RhsDuration& d);
+        operator+=(const RhsDuration& d)
+        {
+            s_ += __duration_cast<seconds>(d).count();
+            return *this;
+        }
 
     seconds operator-() const {return -s_;}
 
@@ -531,10 +644,10 @@ public:
     static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return mn_ * (minutes::seconds_per_tick * nanoseconds::ticks_per_second);}
-    operator microseconds() const {return mn_ * (minutes::seconds_per_tick * microseconds::ticks_per_second);}
-    operator milliseconds() const {return mn_ * (minutes::seconds_per_tick * milliseconds::ticks_per_second);}
-    operator seconds() const      {return mn_ * (minutes::seconds_per_tick / seconds::seconds_per_tick);}
+    operator nanoseconds()  const {return __duration_cast<nanoseconds>(*this);}
+    operator microseconds() const {return __duration_cast<microseconds>(*this);}
+    operator milliseconds() const {return __duration_cast<milliseconds>(*this);}
+    operator seconds()      const {return __duration_cast<seconds>(*this);}
 
     // + common functions
 
@@ -544,7 +657,11 @@ public:
             __compare_resolution<minutes, RhsDuration>::value,
             minutes&
         >::type
-        operator-=(const RhsDuration& d);
+        operator-=(const RhsDuration& d)
+        {
+            mn_ -= __duration_cast<minutes>(d).count();
+            return *this;
+        }
 
     template<typename RhsDuration>
         typename enable_if
@@ -552,7 +669,11 @@ public:
             __compare_resolution<minutes, RhsDuration>::value,
             minutes&
         >::type
-        operator+=(const RhsDuration& d);
+        operator+=(const RhsDuration& d)
+        {
+            mn_ += __duration_cast<minutes>(d).count();
+            return *this;
+        }
 
     minutes operator-() const {return -mn_;}
 
@@ -577,11 +698,11 @@ public:
     static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    operator nanoseconds() const  {return hr_ * (hours::seconds_per_tick * nanoseconds::ticks_per_second);}
-    operator microseconds() const {return hr_ * (hours::seconds_per_tick * microseconds::ticks_per_second);}
-    operator milliseconds() const {return hr_ * (hours::seconds_per_tick * milliseconds::ticks_per_second);}
-    operator seconds() const      {return hr_ * (hours::seconds_per_tick / seconds::seconds_per_tick);}
-    operator minutes() const      {return hr_ * (hours::seconds_per_tick / minutes::seconds_per_tick);}
+    operator nanoseconds()  const {return __duration_cast<nanoseconds>(*this);}
+    operator microseconds() const {return __duration_cast<microseconds>(*this);}
+    operator milliseconds() const {return __duration_cast<milliseconds>(*this);}
+    operator seconds()      const {return __duration_cast<seconds>(*this);}
+    operator minutes()      const {return __duration_cast<minutes>(*this);}
 
     // + common functions
 
@@ -591,7 +712,11 @@ public:
             __compare_resolution<hours, RhsDuration>::value,
             hours&
         >::type
-        operator-=(const RhsDuration& d);
+        operator-=(const RhsDuration& d)
+        {
+            hr_ -= __duration_cast<hours>(d).count();
+            return *this;
+        }
 
     template<typename RhsDuration>
         typename enable_if
@@ -599,7 +724,11 @@ public:
             __compare_resolution<hours, RhsDuration>::value,
             hours&
         >::type
-        operator+=(const RhsDuration& d);
+        operator+=(const RhsDuration& d)
+        {
+            hr_ += __duration_cast<hours>(d).count();
+            return *this;
+        }
 
     hours operator-() const {return -hr_;}
 
@@ -609,461 +738,6 @@ public:
     tick_type count() const {return hr_;}
 };
 
-template <class To>
-class __make
-{
-    template <class Duration>
-    static To
-    __from(const Duration& t, true_type, true_type)
-    {
-        return To(t.count() * To::ticks_per_second / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static To
-    __from(const Duration& t, false_type, true_type)
-    {
-        return To(t.count() / To::seconds_per_tick / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static To
-    __from(const Duration& t, true_type, false_type)
-    {
-        return To(t.count() * To::ticks_per_second * Duration::seconds_per_tick);
-    }
-
-    template <class Duration>
-    static To
-    __from(const Duration& t, false_type, false_type)
-    {
-        return To(t.count() * Duration::seconds_per_tick / To::seconds_per_tick);
-    }
-public:
-    template <class Duration>
-    static
-    To
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, To::is_subsecond>(),
-                         integral_constant<bool, Duration::is_subsecond>());
-    }
-};
-
-template <>
-class __make<nanoseconds>
-{
-    template <class Duration>
-    static nanoseconds
-    __from(const Duration& t, true_type)
-    {
-        return nanoseconds(t.count() * nanoseconds::ticks_per_second / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static nanoseconds
-    __from(const Duration& t, false_type)
-    {
-        return nanoseconds(t.count() * nanoseconds::ticks_per_second * Duration::seconds_per_tick);
-    }
-
-public:
-    template <class Duration>
-    static
-    nanoseconds
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, Duration::is_subsecond>());
-    }
-
-    static
-    nanoseconds
-    from(const nanoseconds& t)
-    {
-        return t;
-    }
-
-    static
-    nanoseconds
-    from(const microseconds& t)
-    {
-        return nanoseconds(t.count() * 1000LL);
-    }
-
-    static
-    nanoseconds
-    from(const milliseconds& t)
-    {
-        return nanoseconds(t.count() * 1000000LL);
-    }
-
-    static
-    nanoseconds
-    from(const seconds& t)
-    {
-        return nanoseconds(t.count() * 1000000000LL);
-    }
-
-    static
-    nanoseconds
-    from(const minutes& t)
-    {
-        return nanoseconds(t.count() * 60000000000LL);
-    }
-
-    static
-    nanoseconds
-    from(const hours& t)
-    {
-        return nanoseconds(t.count() * 3600000000000LL);
-    }
-};
-
-template <>
-class __make<microseconds>
-{
-    template <class Duration>
-    static microseconds
-    __from(const Duration& t, true_type)
-    {
-        return microseconds(t.count() * microseconds::ticks_per_second / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static microseconds
-    __from(const Duration& t, false_type)
-    {
-        return microseconds(t.count() * microseconds::ticks_per_second * Duration::seconds_per_tick);
-    }
-
-public:
-    template <class Duration>
-    static
-    microseconds
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, Duration::is_subsecond>());
-    }
-
-    static
-    microseconds
-    from(const nanoseconds& t)
-    {
-        return microseconds(t.count() / 1000LL);
-    }
-
-    static
-    microseconds
-    from(const microseconds& t)
-    {
-        return t;
-    }
-
-    static
-    microseconds
-    from(const milliseconds& t)
-    {
-        return microseconds(t.count() * 1000LL);
-    }
-
-    static
-    microseconds
-    from(const seconds& t)
-    {
-        return microseconds(t.count() * 1000000LL);
-    }
-
-    static
-    microseconds
-    from(const minutes& t)
-    {
-        return microseconds(t.count() * 60000000LL);
-    }
-
-    static
-    microseconds
-    from(const hours& t)
-    {
-        return microseconds(t.count() * 3600000000LL);
-    }
-};
-
-template <>
-class __make<milliseconds>
-{
-    template <class Duration>
-    static milliseconds
-    __from(const Duration& t, true_type)
-    {
-        return milliseconds(t.count() * milliseconds::ticks_per_second / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static milliseconds
-    __from(const Duration& t, false_type)
-    {
-        return milliseconds(t.count() * milliseconds::ticks_per_second * Duration::seconds_per_tick);
-    }
-
-public:
-    template <class Duration>
-    static
-    milliseconds
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, Duration::is_subsecond>());
-    }
-
-    static
-    milliseconds
-    from(const nanoseconds& t)
-    {
-        return milliseconds(t.count() / 1000000LL);
-    }
-
-    static
-    milliseconds
-    from(const microseconds& t)
-    {
-        return milliseconds(t.count() / 1000LL);
-    }
-
-    static
-    milliseconds
-    from(const milliseconds& t)
-    {
-        return t;
-    }
-
-    static
-    milliseconds
-    from(const seconds& t)
-    {
-        return milliseconds(t.count() * 1000LL);
-    }
-
-    static
-    milliseconds
-    from(const minutes& t)
-    {
-        return milliseconds(t.count() * 60000LL);
-    }
-
-    static
-    milliseconds
-    from(const hours& t)
-    {
-        return milliseconds(t.count() * 3600000LL);
-    }
-};
-
-template <>
-class __make<seconds>
-{
-    template <class Duration>
-    static seconds
-    __from(const Duration& t, true_type)
-    {
-        return seconds(t.count() / seconds::seconds_per_tick / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static seconds
-    __from(const Duration& t, false_type)
-    {
-        return seconds(t.count() * Duration::seconds_per_tick / seconds::seconds_per_tick);
-    }
-
-public:
-    template <class Duration>
-    static
-    seconds
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, Duration::is_subsecond>());
-    }
-
-    static
-    seconds
-    from(const nanoseconds& t)
-    {
-        return seconds(t.count() / 1000000000LL);
-    }
-
-    static
-    seconds
-    from(const microseconds& t)
-    {
-        return seconds(t.count() / 1000000LL);
-    }
-
-    static
-    seconds
-    from(const milliseconds& t)
-    {
-       return seconds(t.count() / 1000LL);
-    }
-
-    static
-    seconds
-    from(const seconds& t)
-    {
-        return t;
-    }
-
-    static
-    seconds
-    from(const minutes& t)
-    {
-        return seconds(t.count() * 60LL);
-    }
-
-    static
-    seconds
-    from(const hours& t)
-    {
-        return seconds(t.count() * 3600LL);
-    }
-};
-
-template <>
-class __make<minutes>
-{
-    template <class Duration>
-    static minutes
-    __from(const Duration& t, true_type)
-    {
-        return minutes(t.count() / minutes::seconds_per_tick / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static minutes
-    __from(const Duration& t, false_type)
-    {
-        return minutes(t.count() * Duration::seconds_per_tick / minutes::seconds_per_tick);
-    }
-
-public:
-    template <class Duration>
-    static
-    minutes
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, Duration::is_subsecond>());
-    }
-
-    static
-    minutes
-    from(const nanoseconds& t)
-    {
-        return minutes(t.count() / 60000000000LL);
-    }
-
-    static
-    minutes
-    from(const microseconds& t)
-    {
-        return minutes(t.count() / 60000000L);
-    }
-
-    static
-    minutes
-    from(const milliseconds& t)
-    {
-       return minutes(t.count() / 60000L);
-    }
-
-    static
-    minutes
-    from(const seconds& t)
-    {
-        return minutes(t.count() / 60L);
-    }
-
-    static
-    minutes
-    from(const minutes& t)
-    {
-        return t;
-    }
-
-    static
-    minutes
-    from(const hours& t)
-    {
-        return minutes(t.count() * 60L);
-    }
-};
-
-template <>
-class __make<hours>
-{
-    template <class Duration>
-    static hours
-    __from(const Duration& t, true_type)
-    {
-        return hours(t.count() / hours::seconds_per_tick / Duration::ticks_per_second);
-    }
-
-    template <class Duration>
-    static hours
-    __from(const Duration& t, false_type)
-    {
-        return hours(t.count() * Duration::seconds_per_tick / hours::seconds_per_tick);
-    }
-
-public:
-    template <class Duration>
-    static
-    hours
-    from(const Duration& t)
-    {
-        return __from(t, integral_constant<bool, Duration::is_subsecond>());
-    }
-
-    static
-    hours
-    from(const nanoseconds& t)
-    {
-        return hours(t.count() / 3600000000000LL);
-    }
-
-    static
-    hours
-    from(const microseconds& t)
-    {
-        return hours(t.count() / 3600000000LL);
-    }
-
-    static
-    hours
-    from(const milliseconds& t)
-    {
-       return hours(t.count() / 3600000L);
-    }
-
-    static
-    hours
-    from(const seconds& t)
-    {
-        return hours(t.count() / 3600L);
-    }
-
-    static
-    hours
-    from(const minutes& t)
-    {
-        return hours(t.count() / 60L);
-    }
-
-    static
-    hours
-    from(const hours& t)
-    {
-        return t;
-    }
-};
-
 // Duration ==
 
 template <class LhsDuration, class RhsDuration>
@@ -1071,7 +745,7 @@ inline
 bool
 __duration_eq(const LhsDuration& lhs, const RhsDuration& rhs, true_type)
 {
-    return lhs.count() == __make<LhsDuration>::from(rhs).count();
+    return lhs.count() == __duration_cast<LhsDuration>(rhs).count();
 }
 
 template <class LhsDuration, class RhsDuration>
@@ -1079,7 +753,7 @@ inline
 bool
 __duration_eq(const LhsDuration& lhs, const RhsDuration& rhs, false_type)
 {
-    return __make<RhsDuration>::from(lhs).count() == rhs.count();
+    return __duration_cast<RhsDuration>(lhs).count() == rhs.count();
 }
 
 template <class LhsDuration, class RhsDuration>
@@ -1117,7 +791,7 @@ inline
 bool
 __duration_lt(const LhsDuration& lhs, const RhsDuration& rhs, true_type)
 {
-    return lhs.count() < __make<LhsDuration>::from(rhs).count();
+    return lhs.count() < __duration_cast<LhsDuration>(rhs).count();
 }
 
 template <class LhsDuration, class RhsDuration>
@@ -1125,7 +799,7 @@ inline
 bool
 __duration_lt(const LhsDuration& lhs, const RhsDuration& rhs, false_type)
 {
-    return __make<RhsDuration>::from(lhs).count() < rhs.count();
+    return __duration_cast<RhsDuration>(lhs).count() < rhs.count();
 }
 
 template <class LhsDuration, class RhsDuration>
@@ -1186,126 +860,6 @@ operator>=(const LhsDuration& lhs, const RhsDuration& rhs)
     return !(lhs < rhs);
 }
 
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<nanoseconds, RhsDuration>::value,
-    nanoseconds&
->::type
-nanoseconds::operator-=(const RhsDuration& d)
-    {ns_ -= __make<nanoseconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<nanoseconds, RhsDuration>::value,
-    nanoseconds&
->::type
-nanoseconds::operator+=(const RhsDuration& d)
-    {ns_ += __make<nanoseconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<microseconds, RhsDuration>::value,
-    microseconds&
->::type
-microseconds::operator-=(const RhsDuration& d)
-    {us_ -= __make<microseconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<microseconds, RhsDuration>::value,
-    microseconds&
->::type
-microseconds::operator+=(const RhsDuration& d)
-    {us_ += __make<microseconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<milliseconds, RhsDuration>::value,
-    milliseconds&
->::type
-milliseconds::operator-=(const RhsDuration& d)
-    {ms_ -= __make<milliseconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<milliseconds, RhsDuration>::value,
-    milliseconds&
->::type
-milliseconds::operator+=(const RhsDuration& d)
-    {ms_ += __make<milliseconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<seconds, RhsDuration>::value,
-    seconds&
->::type
-seconds::operator-=(const RhsDuration& d)
-    {s_ -= __make<seconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<seconds, RhsDuration>::value,
-    seconds&
->::type
-seconds::operator+=(const RhsDuration& d)
-    {s_ += __make<seconds>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<minutes, RhsDuration>::value,
-    minutes&
->::type
-minutes::operator-=(const RhsDuration& d)
-    {mn_ -= __make<minutes>::from(d).count(); return *this;}
-
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<minutes, RhsDuration>::value,
-    minutes&
->::type
-minutes::operator+=(const RhsDuration& d)
-    {mn_ += __make<minutes>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<hours, RhsDuration>::value,
-    hours&
->::type
-hours::operator-=(const RhsDuration& d)
-    {hr_ -= __make<hours>::from(d).count(); return *this;}
-
-template<typename RhsDuration>
-inline
-typename enable_if
-<
-    __compare_resolution<hours, RhsDuration>::value,
-    hours&
->::type
-hours::operator+=(const RhsDuration& d)
-    {hr_ += __make<hours>::from(d).count(); return *this;}
 
 template <class LhsDuration, class RhsDuration, bool = __compare_resolution<LhsDuration, RhsDuration>::value>
 struct __compute_promotion
@@ -1396,7 +950,7 @@ inline
 typename __promote_duration<LhsDuration, RhsDuration>::type
 __duration_subtract(const LhsDuration& lhs, const RhsDuration& rhs, false_type)
 {
-    RhsDuration r = __make<RhsDuration>::from(lhs);
+    RhsDuration r = __duration_cast<RhsDuration>(lhs);
     r -= rhs;
     return r;
 }
@@ -1489,13 +1043,13 @@ public:
         system_time operator+(const Duration& td) const {system_time t(*this); t += td; return t;}
 
     template<typename Duration>
-        system_time& operator+=(const Duration& td) {ns_ += __make<nanoseconds>::from(td).count(); return *this;}
+        system_time& operator+=(const Duration& td) {ns_ += __duration_cast<nanoseconds>(td).count(); return *this;}
 
     template<typename Duration>
         system_time operator-(const Duration& td) const {system_time t(*this); t -= td; return t;}
 
     template<typename Duration>
-    system_time& operator-=(const Duration& td) {ns_ -= __make<nanoseconds>::from(td).count(); return *this;}
+    system_time& operator-=(const Duration& td) {ns_ -= __duration_cast<nanoseconds>(td).count(); return *this;}
 
 };
 
