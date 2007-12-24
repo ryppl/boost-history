@@ -1,6 +1,6 @@
 // combinatorial.h header file - r-permutation and r-combination algorithms ---//
 
-// Copyright © Philip F. Garofalo 2002. All rights reserved.
+// Copyright © Philip F. Garofalo 2008. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -44,15 +44,95 @@
 #include <algorithm>            // std::sort(), std::rotate(), etc.
 #include <functional>           // less<>(), binary_function
 #include <stdexcept>            // out_of_range, invalid_argument
+#include <string>
 #include <boost/utility.hpp>    // next()
 #include <algorithm.hpp>        // is_sorted()
-#include <minmax.hpp>           // min/max_element_if()
+#include <minmax.hpp>           // formerly contained min/max_element_if()
+
+/* PROPOSED STANDARD EXTENSIONS:
+ *
+ * min_element_if(first, last, predicate)
+ * Effect: returns the smallest element of the subsequence of [first,last)
+ *         satisfying the predicate (or last if none)
+ *
+ * min_element_if(first, last, comp, predicate)
+ * Effect: returns the smallest element, for the order comp, of the subsequence
+ *         of [first,last) satisfying the predicate (or last if none)
+ *
+ * max_element_if(first, last, predicate)
+ * Effect: returns the largest element of the subsequence of [first,last)
+ *         satisfying the predicate (or last if none)
+ *
+ * max_element_if(first, last, comp, predicate)
+ * Effect: returns the largest element, for the order comp, of the subsequence
+ *         of [first,last) satisfying the predicate (or last if none)
+ */
+
+  template <class ForwardIter, class UnaryPredicate>
+  ForwardIter
+  min_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond)
+  {
+    while (first != last && !cond(*first))
+      ++first;
+    if (first == last) return last;
+    ForwardIter min_result = first;
+    while (++first != last)
+      if (cond(*first) && *first < *min_result)
+        min_result = first;
+    return min_result;
+  }	// min_element_if
+
+  template <class ForwardIter, class BinaryPredicate, class UnaryPredicate>
+  ForwardIter
+  min_element_if(ForwardIter first, ForwardIter last,
+                 BinaryPredicate comp, UnaryPredicate cond)
+  {
+    while (first != last && !cond(*first))
+      ++first;
+    if (first == last) return last;
+    ForwardIter min_result = first;
+    while (++first != last)
+      if (cond(*first) && comp(*first, *min_result))
+        min_result = first;
+    return min_result;
+  }	// min_element_if
+
+  template <class ForwardIter, class UnaryPredicate>
+  ForwardIter
+  max_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond)
+  {
+    while (first != last && !cond(*first))
+      ++first;
+    if (first == last) return last;
+    ForwardIter max_result = first;
+    while (++first != last)
+      if (cond(*first) && *max_result < *first)
+        max_result = first;
+    return max_result;
+  }	// max_element_if
+
+  template <class ForwardIter, class BinaryPredicate, class UnaryPredicate>
+  ForwardIter
+  max_element_if(ForwardIter first, ForwardIter last,
+                 BinaryPredicate comp, UnaryPredicate cond)
+  {
+    while (first != last && !cond(*first))
+      ++first;
+    if (first == last) return last;
+    ForwardIter max_result = first;
+    while (++first != last)
+      if (cond(*first) && comp(*max_result, *first))
+        max_result = first;
+    return max_result;
+  }	// max_element_if
+
 
 namespace boost {
 
     // Binary predicate argument reverser
     
-    #define BINFUNC std::binary_function<Predicate::first_argument_type, Predicate::second_argument_type, bool>
+    #define BINFUNC std::binary_function<typename Predicate::first_argument_type,\
+    typename Predicate::second_argument_type, bool>
 
     template <class Predicate>
     class binary_reverse : public BINFUNC
@@ -61,8 +141,9 @@ namespace boost {
         const Predicate pred;
     public:
         binary_reverse(const Predicate& x) : pred(x) {}
-        BINFUNC::result_type operator()(const BINFUNC::first_argument_type& x,
-            const BINFUNC::second_argument_type& y) const
+        typename BINFUNC::result_type operator()(
+            const typename BINFUNC::first_argument_type& x,
+            const typename BINFUNC::second_argument_type& y) const
         {
             return pred(y, x);
         }
@@ -81,7 +162,7 @@ namespace boost {
 
     struct combinatorial_range_error : public std::out_of_range
     {
-        combinatorial_range_error(const string& func) :
+        combinatorial_range_error(const std::string& func) :
             std::out_of_range(func +  ": r is not in range (first, last]")
             { }
     };
@@ -90,7 +171,7 @@ namespace boost {
 
     struct combinatorial_sequence_disorder : public std::invalid_argument
     {
-        combinatorial_sequence_disorder(const string& func) :
+        combinatorial_sequence_disorder(const std::string& func) :
             std::invalid_argument(func + ": [first, r) is not in order")
             { }
     };
@@ -113,7 +194,7 @@ namespace boost {
         next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last)
     {
-        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+        typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
@@ -125,7 +206,7 @@ namespace boost {
         {
             // find smallest element greater than *i after index i.
             RandomAccessIterator k =
-                min_element_if(i + 1, last, bind1st(less<T>(), *i));
+                min_element_if(i + 1, last, std::bind1st(std::less<T>(), *i));
 
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -154,7 +235,7 @@ namespace boost {
         next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+        typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
      
         if (last - first < 2)
             return false;
@@ -166,7 +247,7 @@ namespace boost {
         {
             // find smallest element greater than *i after index i.
             RandomAccessIterator k =
-                min_element_if(i + 1, last, comp, bind2nd(reverse_args(comp), *i));
+                min_element_if(i + 1, last, /*comp,*/ std::bind2nd(reverse_args(comp), *i));
 
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -203,7 +284,7 @@ namespace boost {
         prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last)
     {
-        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+        typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
@@ -215,12 +296,12 @@ namespace boost {
         {
             // find the largest element less than *i after index i.
             RandomAccessIterator k =
-                max_element_if(i + 1, last, bind2nd(less<T>(), *i));
+                max_element_if(i + 1, last, std::bind2nd(std::less<T>(), *i));
             
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, reverse_args(less<T>()));
+                    std::partial_sort(first, r, last, reverse_args(std::less<T>()));
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -228,7 +309,7 @@ namespace boost {
             else
             {
                 std::swap(*i,* k);
-                std::partial_sort(i+1, r, last, reverse_args(less<T>()));    // O(n lg n), heapsort
+                std::partial_sort(i+1, r, last, reverse_args(std::less<T>()));    // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -244,7 +325,7 @@ namespace boost {
         prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+        typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
@@ -256,7 +337,7 @@ namespace boost {
         {
             // find the largest element less than *i after index i.
             RandomAccessIterator k =
-                max_element_if(i + 1, last, comp, bind2nd(comp, *i));
+                max_element_if(i + 1, last, /*comp,*/ std::bind2nd(comp, *i));
             
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -293,7 +374,7 @@ namespace boost {
         next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last)
     {
-        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+        typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
@@ -307,7 +388,7 @@ namespace boost {
         {
             // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
-                min_element_if(r, last, bind1st(less<T>(), *i));
+                min_element_if(r, last, std::bind1st(std::less<T>(), *i));
             if (j == last)
                 if (i == first)
                 {
@@ -322,7 +403,7 @@ namespace boost {
                 for(++i; i < r; i++)
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
-                    j = min_element_if(r, last, bind1st(less<T>(), *(i - 1)));
+                    j = min_element_if(r, last, std::bind1st(std::less<T>(), *(i - 1)));
                     if (j != last)
                         std::swap(*i,* j);
                 }    // for
@@ -341,7 +422,7 @@ namespace boost {
         next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+        typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
@@ -355,7 +436,7 @@ namespace boost {
         {
             // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
-                min_element_if(r, last, comp, bind2nd(reverse_args(comp), *i));
+                min_element_if(r, last, /*comp,*/ std::bind2nd(reverse_args(comp), *i));
             if (j == last)
                 if (i == first)
                 {
@@ -370,8 +451,8 @@ namespace boost {
                 for(++i; i < r; ++i)
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
-                    j = min_element_if(r, last, comp,
-                        bind2nd(reverse_args(comp), *(i - 1)));
+                    j = min_element_if(r, last, /*comp,*/
+                        std::bind2nd(reverse_args(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
                 }    // for
