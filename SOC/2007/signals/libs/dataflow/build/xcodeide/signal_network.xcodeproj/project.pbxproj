@@ -99,6 +99,13 @@
 		084482560CA0B37200B88137 /* operators.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = operators.hpp; sourceTree = "<group>"; };
 		084B11CE0D08EB2C00491E27 /* forwardable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = forwardable.hpp; sourceTree = "<group>"; };
 		084D2E6E0CE7DFE900E861FA /* gil_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gil_example.cpp; sourceTree = "<group>"; };
+		08622E2E0D1EE4A70068A238 /* component_bank.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = component_bank.hpp; sourceTree = "<group>"; };
+		086231CB0D1F422F0068A238 /* BlueprintWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlueprintWindow.hpp; sourceTree = "<group>"; };
+		086231CD0D1F42650068A238 /* BlueprintBank.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlueprintBank.hpp; sourceTree = "<group>"; };
+		086231CE0D1F42650068A238 /* BlueprintBank.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlueprintBank.cpp; sourceTree = "<group>"; };
+		086231CF0D1F42A10068A238 /* BlueprintComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlueprintComponent.hpp; sourceTree = "<group>"; };
+		086231D00D1F42A10068A238 /* BlueprintComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlueprintComponent.cpp; sourceTree = "<group>"; };
+		086231D10D1F42B60068A238 /* BlueprintWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlueprintWindow.cpp; sourceTree = "<group>"; };
 		08668C4E0C19A16300ACB19A /* simple_distributed_example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = simple_distributed_example.cpp; sourceTree = "<group>"; };
 		08668C4F0C19A16300ACB19A /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08B9D4190CC3D0790050F10B /* test_binary_op.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_binary_op.cpp; sourceTree = "<group>"; };
@@ -348,6 +355,12 @@
 			children = (
 				08D2C7330D1DDE5C008388D7 /* Jamfile.v2 */,
 				08D2C7390D1DDEB8008388D7 /* fltk_gui_example.cpp */,
+				086231CB0D1F422F0068A238 /* BlueprintWindow.hpp */,
+				086231D10D1F42B60068A238 /* BlueprintWindow.cpp */,
+				086231CD0D1F42650068A238 /* BlueprintBank.hpp */,
+				086231CE0D1F42650068A238 /* BlueprintBank.cpp */,
+				086231CF0D1F42A10068A238 /* BlueprintComponent.hpp */,
+				086231D00D1F42A10068A238 /* BlueprintComponent.cpp */,
 			);
 			path = fltk_gui;
 			sourceTree = "<group>";
@@ -551,6 +564,7 @@
 				08256FE60CEBDFEC003EC1B4 /* network.hpp */,
 				08F346EC0D0CFE9700A037A3 /* vector_port_t.hpp */,
 				08F244EA0D1B682D00EC9B03 /* keyed_port_t.hpp */,
+				08622E2E0D1EE4A70068A238 /* component_bank.hpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";
@@ -845,7 +859,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ../../doc\nbjam --v2 --toolset=darwin release";
+			shellScript = "style=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \ncd ../../doc\nbjam --v2 --toolset=darwin $style";
 		};
 		08FD5E6E0C1BA8BC00F00877 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

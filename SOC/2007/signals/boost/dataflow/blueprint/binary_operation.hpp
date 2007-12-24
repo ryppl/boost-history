@@ -55,7 +55,7 @@ shared_ptr<binary_operation<Operation> > get_binary_operation(port & producer, p
     return shared_ptr<binary_operation<Operation> >();
 }
 
-void extract(port & producer, port & consumer)
+inline void extract(port & producer, port & consumer)
 {
     get_binary_operation<operations::extract>(producer, consumer)->invoke(producer, consumer);
 }

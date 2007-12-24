@@ -23,12 +23,38 @@ class component
 {
 public:
     virtual void invoke()=0;
+    virtual bool is_invocable()=0;
     virtual size_t num_ports() const=0;
     virtual port & get_port(int port_num)=0;
     
     virtual std::auto_ptr<component> copy() const=0;
     virtual ~component() {};
 };
+
+namespace detail
+{
+    template<typename T, typename Tag, typename Enable=void>
+    struct try_invoke
+    {
+        void operator()(T &) const
+        {
+            throw std::exception();
+        }
+    };
+    
+    template<typename T, typename Tag>
+    struct try_invoke<
+        T, Tag,
+        typename enable_if<
+            is_component_operable<T, operations::invoke, Tag>
+        >::type >
+    {
+        void operator()(T &c) const
+        {
+            component_operation<operations::invoke, Tag>(c);
+        }
+    };
+}
 
 template<typename Component, typename Tag=default_tag>
 class component_t : public component
@@ -42,8 +68,12 @@ public:
     
     void invoke()
     {
-        component_operation<operations::invoke, Tag>(c);
+        detail::try_invoke<Component, Tag>()(c);
     }
+    virtual bool is_invocable()
+    {
+        return is_component_operable<Component, operations::invoke, Tag>::type::value;
+    };
     size_t num_ports() const
     {
         return mpl::size<typename traits_of<Component, Tag>::type::ports>::value;

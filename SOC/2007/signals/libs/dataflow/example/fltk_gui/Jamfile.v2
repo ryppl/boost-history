@@ -14,4 +14,4 @@ project dataflow/example/blueprint
       <toolset>darwin:<linkflags>"-framework Carbon"
     ;
 
-exe fltk_gui_example : fltk_gui_example.cpp ;
+exe fltk_gui_example : fltk_gui_example.cpp BlueprintWindow.cpp BlueprintBank.cpp BlueprintComponent.cpp ;

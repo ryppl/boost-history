@@ -50,13 +50,13 @@ namespace switch_detail {
 // default is supplied.
 
 template<class R>
-R forced_return(R* r = 0) {
+inline R forced_return(R* r = 0) {
     return(*r);
 }
 
 // Thanks to Stjepan Rajko for catching this.
 template<>
-void forced_return<void>(void*) {}
+inline void forced_return<void>(void*) {}
 
 template<class R>
 struct throw_exception {

@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+#include <boost/dataflow/blueprint/component_bank.hpp>
 #include <boost/dataflow/blueprint/network.hpp>
 #include <boost/dataflow/blueprint/binary_operation_t.hpp>
 #include <boost/dataflow/blueprint/port_t.hpp>
@@ -23,12 +24,24 @@ namespace df=boost::dataflow;
 
 using namespace boost;
 
+class example_bank : public blueprint::tag_component_bank<df::signals::tag>
+{
+public:
+    example_bank()
+    {
+        add_component<signals::storage<void(int)> >("storage_int");
+        add_component<signals::storage<void(float)> >("storage_float_100_1", 100.1f);
+        add_component<signals::storage<void(float)> >("storage_float_0", 0.0f);
+    }
+};
+
 class blueprint_example
 {
-    typedef blueprint::network<df::signals::tag> network_type;
+    typedef blueprint::tag_network<df::signals::tag> network_type;
 
     // The network.
     network_type network;
+    example_bank bank;
 
     // The components (graph indices).
     network_type::component_type source, sink, source_float, sink_float;
@@ -39,11 +52,11 @@ public:
         // Add the components to the network.
         source = network.add_component<signals::storage<void(int)> >(100),
         sink = network.add_component<signals::storage<void(int)> >(0),
-        source_float = network.add_component<signals::storage<void(float)> >(100.1f),
-        sink_float = network.add_component<signals::storage<void(float)> >(0.0f);
+        source_float = network.add_component(bank.make("storage_float_100_1"));
+        sink_float = network.add_component(bank.make("storage_float_0"));
     }
     void run()
-    {			
+    {
         // Print some runtime port info
         std::cout << "Printing runtime info about all of the components:" << std::endl  << std::endl;
         print_port_info("source", source);
