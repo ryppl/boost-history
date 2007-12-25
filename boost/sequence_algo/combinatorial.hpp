@@ -1,4 +1,4 @@
-// combinatorial.h header file - r-permutation and r-combination algorithms ---//
+// combinatorial.hpp header file - r-permutation and r-combination algorithms ---//
 
 // Copyright © Philip F. Garofalo 2008. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
@@ -9,6 +9,8 @@
 // See http://www.boost.org for updates, documentation, and revision
 // history.
 
+// $log$
+//
 // Jun 20 2002  Removed TABs and put in std:: when needed [Herve Bronnimann]
 //              Also replaced all iter_swap(i,j) by swap(*i,*j)
 //              
@@ -47,84 +49,7 @@
 #include <string>
 #include <boost/utility.hpp>    // next()
 #include <algorithm.hpp>        // is_sorted()
-#include <minmax.hpp>           // formerly contained min/max_element_if()
-
-/* PROPOSED STANDARD EXTENSIONS:
- *
- * min_element_if(first, last, predicate)
- * Effect: returns the smallest element of the subsequence of [first,last)
- *         satisfying the predicate (or last if none)
- *
- * min_element_if(first, last, comp, predicate)
- * Effect: returns the smallest element, for the order comp, of the subsequence
- *         of [first,last) satisfying the predicate (or last if none)
- *
- * max_element_if(first, last, predicate)
- * Effect: returns the largest element of the subsequence of [first,last)
- *         satisfying the predicate (or last if none)
- *
- * max_element_if(first, last, comp, predicate)
- * Effect: returns the largest element, for the order comp, of the subsequence
- *         of [first,last) satisfying the predicate (or last if none)
- */
-
-  template <class ForwardIter, class UnaryPredicate>
-  ForwardIter
-  min_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter min_result = first;
-    while (++first != last)
-      if (cond(*first) && *first < *min_result)
-        min_result = first;
-    return min_result;
-  }	// min_element_if
-
-  template <class ForwardIter, class BinaryPredicate, class UnaryPredicate>
-  ForwardIter
-  min_element_if(ForwardIter first, ForwardIter last,
-                 BinaryPredicate comp, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter min_result = first;
-    while (++first != last)
-      if (cond(*first) && comp(*first, *min_result))
-        min_result = first;
-    return min_result;
-  }	// min_element_if
-
-  template <class ForwardIter, class UnaryPredicate>
-  ForwardIter
-  max_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter max_result = first;
-    while (++first != last)
-      if (cond(*first) && *max_result < *first)
-        max_result = first;
-    return max_result;
-  }	// max_element_if
-
-  template <class ForwardIter, class BinaryPredicate, class UnaryPredicate>
-  ForwardIter
-  max_element_if(ForwardIter first, ForwardIter last,
-                 BinaryPredicate comp, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter max_result = first;
-    while (++first != last)
-      if (cond(*first) && comp(*max_result, *first))
-        max_result = first;
-    return max_result;
-  }	// max_element_if
+#include <minmaxif.hpp>           // formerly contained min/max_element_if()
 
 
 namespace boost {
