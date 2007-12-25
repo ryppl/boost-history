@@ -121,3 +121,31 @@ int main()
 }
 
 //]
+
+void ignore_this()
+{
+  vtkConeSource *cone = vtkConeSource::New();
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+
+//[ vtk_connect_unforwarded
+    using namespace boost::dataflow;
+    
+    // connect *cone to *coneMapper
+    binary_operation<operations::connect, vtk::tag>
+        (*cone->GetOutputPort(), vtk::vtk_algorithm_consumer_adapter(*coneMapper));
+    
+    // make *cone the only thing connected to *coneMapper
+    binary_operation<operations::connect_only, vtk::tag>
+        (*cone->GetOutputPort(), vtk::vtk_algorithm_consumer_adapter(*coneMapper));
+//]
+
+//[ vtk_connect_forwarded
+    using namespace boost::dataflow;
+    
+    // connect *cone to *coneMapper
+    connect(*cone->GetOutputPort(), vtk::vtk_algorithm_consumer_adapter(*coneMapper));
+    
+    // make *cone the only thing connected to *coneMapper
+    connect(*cone->GetOutputPort(), vtk::vtk_algorithm_consumer_adapter(*coneMapper));
+//]
+}

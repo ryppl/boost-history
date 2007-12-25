@@ -40,22 +40,16 @@ or even more concisely and clearly,
     *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
 ```
 
-[note Going through the following pages, you might think that implementing a VTK
-support layer is a whole lot of effort for very little benefit.  Please keep the
-following in mind:
-
-* The support layer needs to be implemented only once (per mechanism).  Since
-  this example takes care of [VTK], to get the
-  benefits of the Dataflow library (which are admitedly few at the moment)
-  all you need to do is include the provided header.
-
-* Once more things are implemented on top of the generic Dataflow layer, having
-  Dataflow library support will be more beneficial.
-]
+Once we have the [VTK] support layer built, we can include it in any
+[VTK] application and start using the Dataflow library with [VTK] objects.
+In addition to
+the simpler syntax, this also allows us to use anything build on top of the
+generic layer - like [DataflowBlueprint], or
+the [gui_example GUI editor] currently under development.
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.tag
-    Setting up the Mechanism]
+    Setting up the Tag]
 
 [section:tag Setting up the Tag]
 
@@ -65,7 +59,7 @@ namespace `boost::dataflow::vtk`.  All we have to do is inherit from
 
 [vtk_tag]
 
-We will now use this tag in reference to the [VTK] dataflow framework.
+We can now use it to tag all of our [VTK] support classes.
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.producerconsumer
@@ -92,8 +86,10 @@ can be found on the [Port] documentation page.]
 
 Now that we have a producer [Port], we need a consumer [Port].
 [vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
-and `SetInputConnection` member functions.  The code below provides support
-for [vtkAlgorithm] accepting connections on its default input port:
+and `SetInputConnection` member functions.  Since we will make [vtkAlgorithm]
+a [Component], we can't make it a [Port] directly - but we can use 
+the [port_adapter] class to refer to the [Port] functionality of [vtkAlgorithm],
+so we set up a [PortTraits] class to represent this [Port] functionality:
 
 [vtk_algorithm_consumer]
 
@@ -120,20 +116,7 @@ and operators that will make connections easier.
 
 [heading What we can do with what we have so far]
 
-```
-    // connect *cone to *coneMapper
-    boost::dataflow::binary_operation<
-        boost::dataflow::operation::connect,
-        boost::dataflow::vtk::mechanism>
-        (*cone->GetOutputPort(), *coneMapper);
-    
-    // make *cone the only thing connected to *coneMapper
-    boost::dataflow::binary_operation<
-        boost::dataflow::operation::connect_only,
-        boost::dataflow::vtk::mechanism>
-        (*cone->GetOutputPort(), *coneMapper);
-    
-```
+[vtk_connect_unforwarded]
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.forwarding
@@ -150,57 +133,39 @@ to the vtk mechanism. The Dataflow library provides inlcude file templates
 for this purpose.
 
 Including `<boost/dataflow/templates/binary_operation.hpp>` with `#define`d
-DATAFLOW_TEMPLATE_TAG and DATAFLOW_TEMPLATE_BINARY_OPERATION will
-define a forwarding function DATAFLOW_TEMPLATE_BINARY_OPERATION in the
+`DATAFLOW_TEMPLATE_TAG` and `DATAFLOW_TEMPLATE_BINARY_OPERATION` will
+define a forwarding function `DATAFLOW_TEMPLATE_BINARY_OPERATION` in the
 current namespace.
 
 Including `<boost/dataflow/templates/operator.hpp>`  with `#define`d
-DATAFLOW_TEMPLATE_TAG, DATAFLOW_TEMPLATE_BINARY_OPERATION, and
-DATAFLOW_TEMPLATE_OPERATOR will define a forwarding operator in the current
+`DATAFLOW_TEMPLATE_TAG`, `DATAFLOW_TEMPLATE_BINARY_OPERATION`, and
+`DATAFLOW_TEMPLATE_OPERATOR` will define a forwarding operator in the current
 namespace.
 
 [vtk_specialize_connect]
 
 [heading What we can do with what we have so far]
 
-```
-    // connect *cone to *coneMapper
-    connect(*cone->GetOutputPort(), *coneMapper);
-    // or
-    *cone->GetOutputPort() >>= *coneMapper
-    
-    // make *cone the only thing connected to *coneMapper
-    connect_only(*cone->GetOutputPort(), *coneMapper);
-    // or
-    *cone->GetOutputPort() ^= *coneMapper
-    
-```
+[vtk_connect_unforwarded]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.proxyproducer
-    Setting up a ProxyProducer] 
+[link dataflow.introduction.examples.new_layer.component
+    Setting up a Component] 
 
 [endsect][/forwarding]
 
-[section:proxyproducer Setting up a ProxyPort]
+[section:component Setting up a Component]
 
 In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
-inherit [vtkAlgorithm].  
-With the [vtkAlgorithmOutput] producer [Port] and
-[vtkAlgorithm] consumer [Port] we've set up,
-we can do things like `connect(cone->GetOutputPort(), *coneMapper);`.
-However, we would like to do `connect(*cone, *coneMapper)`.
+inherit [vtkAlgorithm].  We've set up [Port]s that we can get to, and
+connect.  However, we would like to be able to connect the two components
+directly, with something like `connect(*cone, *coneMapper)`.
 
 To do that,
-we need to make [vtkAlgorithm] a producer [Port]. Since [vtkAlgorithm]
-forms its output connections using [vtkAlgorithmOutput] objects
-returned through the `GetOutputPort` member functions, and we've already
-configured [vtkAlgorithmOutput] as a producer [Port], we can make use
-of the [ProxyPort] concept provided by the dataflow library.
-In effect, we will make [vtkAlgorithm] delegate it's producer [Port]
-functionality to [vtkAlgorithmOutput]:
+we need to make [vtkAlgorithm] a [Component], which allows us to
+designate default ports to be used when, e.g., connecting:
 
-[vtk_algorithm_proxy_producer]
+[vtk_algorithm_component]
 
 Now, [vtkAlgorithm] is a producer [Port].
 
@@ -214,9 +179,9 @@ Now, [vtkAlgorithm] is a producer [Port].
 [link dataflow.introduction.examples.new_layer.filter
     Setting up a filter (ProducerPort+ConsumerPort)] 
 
-[endsect][/proxyproducer]
+[endsect][/component]
 
-[section:filter Setting up a Filter (Producer+Consumer)]
+[section:filter Setting up another Component]
 
 In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
 data for a [vtkRenderer].  In this case, we can provide Dataflow support
@@ -239,9 +204,8 @@ objects.  Correspondingly, connecting a [vtkMapper] to a [vtkActor] is not
 the same as connecting a [vtkMapper] to another [vtkAlgorithm].
 
 To accomodate such situations, the Dataflow library provides
-[KeyedPort]s, which are similar to [ProxyPort]s but
-the [Port] they delegate to is keyed on the 
-[Port] they are being connected to.
+[KeyedPort]s, which delegate fuctionality to a [Port]
+determined by the [Port] they are being connected to.
 
 [vtk_mapper_producer]
 
@@ -251,33 +215,16 @@ the [Port] they delegate to is keyed on the
 
 [endsect][/producermap]
 
-[section:remaining Setting up the remaining components (more of the same)]
+[section:remaining Setting up the remaining Components (more of the same)]
 
 [vtk_setup_rest]
-
-[heading Next]
-[link dataflow.introduction.examples.new_layer.pointers
-    Supporting pointers] 
-
-[endsect][/remaining]
-
-[section:pointers Supporting pointers]
-
-All of the concepts we adapted so far have been adapted for class types such
-as [vtkAlgorithm] and [vtkAlgorithmOutput].  But [VTK] seems to exclusively
-use pointers to class types rather than class types themselves.  So, with what
-we have done so far, we can do `connect(*cone, *coneMapper)` but not
-`connect(cone, coneMapper)`.  To provide support for pointers, we
-simply make them adhere to the [ProxyPort] concept, and delegate the
-functionality to the object they point to.
-
-[vtk_support_pointer]
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.using_support_layer
     Using the VTK support layer] 
 
-[endsect][/pointers]
+[endsect][/remaining]
+
 
 [section:using_support_layer Using the VTK support layer]
 

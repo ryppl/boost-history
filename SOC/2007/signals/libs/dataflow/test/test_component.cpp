@@ -25,10 +25,10 @@ struct my_component_traits : public boost::dataflow::fusion_component_traits<
     >,
     mpl::map<
         mpl::pair<
-            df::default_port_selector<df::directions::outgoing>,
+            df::default_port_selector<df::args::left>,
             mpl::int_<0> >,
         mpl::pair<
-            df::default_port_selector<dataflow::directions::incoming>,
+            df::default_port_selector<dataflow::args::right>,
             mpl::int_<1> >
     >
 >

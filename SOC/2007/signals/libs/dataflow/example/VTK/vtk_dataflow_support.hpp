@@ -22,7 +22,7 @@
 #include <boost/fusion/container/map.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
-//[ vtk_mechanism
+//[ vtk_tag
 
 namespace boost { namespace dataflow { namespace vtk {
 
@@ -48,7 +48,7 @@ struct vtk_algorithm_output_producer
 // PortTraits, and also verifies that the PortTraits requirements are satisfied.
 // The traits_of template is used by the Dataflow library to associate
 // a Port with its PortTraits.
-DATAFLOW_TRAITS(vtkAlgorithmOutput *, vtk::vtk_algorithm_output_producer)
+DATAFLOW_TRAITS(vtkAlgorithmOutput, vtk::vtk_algorithm_output_producer)
 //]
 
 
@@ -58,14 +58,11 @@ namespace boost { namespace dataflow { namespace vtk {
 struct vtk_algorithm_consumer
     : public port_traits<ports::consumer, vtk::tag> {};
     
+typedef port_adapter<vtkAlgorithm, vtk::vtk_algorithm_consumer, vtk::tag>
+    vtk_algorithm_consumer_adapter;
+    
 } } } // namespace boost::dataflow::vtk
 
-// Since vtkAlgorithm is typically inherited, we will specialize the
-// traits_of template for all its descendants.
-/*DATAFLOW_TRAITS_ENABLE_IF(
-    T,
-    boost::is_base_of<vtkAlgorithm BOOST_PP_COMMA() T>,
-    vtk::vtk_algorithm_consumer)*/
 //]
 
 //[ vtk_connect_impl_algorithm
@@ -73,9 +70,9 @@ namespace boost { namespace dataflow { namespace extension {
 
 // To implement Connectable, we specialize the binary_operation_impl
 // functor template.  We specify three things:
-//   operation (operations::connect)
 //   producer PortTraits (vtk::vtk_algorithm_output_producer)
 //   consumer PortTraits (vtk::vtk_algorithm_consumer)
+//   operation (operations::connect)
 template<>
 struct binary_operation_impl<vtk::vtk_algorithm_output_producer, vtk::vtk_algorithm_consumer, operations::connect>
 {
@@ -84,7 +81,8 @@ struct binary_operation_impl<vtk::vtk_algorithm_output_producer, vtk::vtk_algori
     template<typename Producer, typename Consumer>
     void operator()(Producer &producer, Consumer &consumer)
     {
-        get_object(consumer).AddInputConnection(get_object(producer));
+        // To interface with port_adaptor objects, we use get_object
+        get_object(consumer).AddInputConnection(&get_object(producer));
     }
 };
 
@@ -98,7 +96,7 @@ struct binary_operation_impl<vtk::vtk_algorithm_output_producer, vtk::vtk_algori
     template<typename Producer, typename Consumer>
     void operator()(Producer &producer, Consumer &consumer)
     {
-        consumer.SetInputConnection(&producer);
+        get_object(consumer).SetInputConnection(&get_object(producer));
     }
 };
     
@@ -107,7 +105,7 @@ struct binary_operation_impl<vtk::vtk_algorithm_output_producer, vtk::vtk_algori
 //]
 
 
-//[ vtk_algorithm_proxy_producer
+//[ vtk_algorithm_component
 
 namespace boost { namespace dataflow { namespace vtk {
 
@@ -115,35 +113,35 @@ namespace detail {
     
     typedef mpl::map<
                 mpl::pair<dataflow::default_port_selector
-                    <dataflow::directions::outgoing>,
+                    <dataflow::args::left>,
                     mpl::int_<0> >,
                 mpl::pair<dataflow::default_port_selector
-                    <dataflow::directions::incoming>,
+                    <dataflow::args::right>,
                     mpl::int_<1> >
             >::type default_map;
 
 }
 
-// First we need a ProxyPortTraits type
+// First we need a ComponentTraits type
 template<typename T>
 struct vtk_algorithm_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
-            vtkAlgorithmOutput *,
-            dataflow::port_adapter<T, vtk_algorithm_consumer, tag> >,
+            vtkAlgorithmOutput &,
+            vtk_algorithm_consumer_adapter>,
         detail::default_map,
         tag>
 {
     template<typename Component>
     static typename vtk_algorithm_component_traits::fusion_ports get_ports(Component &c)
     {
-        return typename vtk_algorithm_component_traits::fusion_ports(c.GetOutputPort(), c);
+        return typename vtk_algorithm_component_traits::fusion_ports(*c.GetOutputPort(), c);
     }
 };
 
 } } } // namespace boost::dataflow::vtk
 
-// Then we associate all descendants of vtkAlgorithm with the ProxyPortTraits.
+// Then we associate all descendants of vtkAlgorithm with the ComponentTraits.
 // vtkMapper is a descendant of vtkAlgorithm, but we want to exclude it's
 // descendants from this registration because they will be treated differently.
 DATAFLOW_TRAITS_ENABLE_IF(
@@ -204,17 +202,17 @@ struct vtk_mapper_producer
 // Next, we define a fusion map type to hold the mapping between consumers
 // and Port types.
 typedef boost::fusion::map<
-            boost::fusion::pair<vtk::vtk_algorithm_consumer, vtkAlgorithmOutput *>,
-            boost::fusion::pair<vtk::vtk_actor_consumer, port_adapter<vtkMapper, vtk_mapper_producer> >
+            boost::fusion::pair<vtk::vtk_algorithm_consumer, vtkAlgorithmOutput &>,
+            boost::fusion::pair<vtk::vtk_actor_consumer, port_adapter<vtkMapper, vtk_mapper_producer, tag> >
         > vtk_mapper_map;
 
-// ...And a ProxyPortTraits type...
+// ...And a ComponentTraits type...
 template<typename T>
 struct vtk_mapper_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
             fusion_keyed_port<ports::producer, vtk::vtk_mapper_map, tag>,
-            dataflow::port_adapter<T, vtk_algorithm_consumer, tag> >,
+            vtk_algorithm_consumer_adapter >,
         detail::default_map,
         tag>
 {
@@ -222,9 +220,9 @@ struct vtk_mapper_component_traits
     static typename vtk_mapper_component_traits::fusion_ports get_ports(Component &c)
     {
         return typename vtk_mapper_component_traits::fusion_ports(
-            fusion_keyed_port<ports::producer, vtk::vtk_mapper_map, tag>(
-                vtk::vtk_mapper_map(c.GetNumberOfOutputPorts() ? c.GetOutputPort() : (vtkAlgorithmOutput *)NULL,
-                port_adapter<vtkMapper, vtk_mapper_producer>(c))),
+            fusion_keyed_port<dataflow::ports::producer, vtk::vtk_mapper_map, tag>(
+                vtk::vtk_mapper_map(c.GetNumberOfOutputPorts() ? *c.GetOutputPort() : *(vtkAlgorithmOutput *)NULL,
+                port_adapter<vtkMapper, vtk_mapper_producer, tag>(c))),
             c);
     }
 };

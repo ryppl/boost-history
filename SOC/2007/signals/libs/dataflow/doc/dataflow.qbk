@@ -56,7 +56,9 @@
 [template PhoenixConsumer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
 [template vtk_example[text] [link dataflow.introduction.examples.new_layer [text]]]
+[template gui_example[text] [link dataflow.introduction.examples.fltk_gui [text]]]
 [template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
+
 [template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
 [template DataflowBlueprint[] [link dataflow.blueprint Dataflow.Blueprint]]
 [template DataflowPhoenix[] [link dataflow.phoenix Dataflow.Phoenix]]
@@ -102,7 +104,8 @@
 [template BoostGIL[] [@http://opensource.adobe.com/gil/ Boost.GIL]]
 
 [template GNURadio[] [@http://www.gnu.org/software/gnuradio/ GNU Radio]]
-
+[template FLTK[] [@http://fltk.org/ FLTK2]]
+[template cppgui[] [@http://sourceforge.net/projects/cppgui cppgui]]
 [template WikiDataflow[] [@http://en.wikipedia.org/wiki/Dataflow_programming dataflow]]
 [template VTK[] [@http://www.vtk.org/ VTK]]
 [template vtkAlgorithm[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkAlgorithm]]]
@@ -111,6 +114,7 @@
 [template vtkActor[] [@http://www.vtk.org/doc/nightly/html/classvtkActor.html ['vtkActor]]]
 [template vtkRenderer[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkRenderer]]]
 
+[template future_work[] [link dataflow.future future_work]]
 [template blueprint[] [link dataflow.future.blueprint blueprint]]
 [template FuturePin[] [link dataflow.future.pin pin]]
 [template rationale[] [link dataflow.development.rationale rationale]]
@@ -160,6 +164,8 @@
 [import ../example/VTK/Cone.cxx]
 
 [import ../example/blueprint/blueprint_example.cpp]
+
+[import ../example/fltk_gui/fltk_gui_example.cpp]
 
 [include introduction/introduction.qbk]
 

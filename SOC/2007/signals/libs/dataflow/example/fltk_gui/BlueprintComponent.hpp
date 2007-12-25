@@ -16,12 +16,18 @@ class BlueprintComponent : public fltk::Group
     typedef blueprint::network::component_type id_type;
 public:
     BlueprintComponent(int x, int y, int w, int h, const char *label, blueprint::component &c, id_type id);
-    void invoke() {m_component.invoke();}
+    BlueprintComponent(int x, int y, int w, int h, const char *label);
+    void set_component(blueprint::component &c, id_type id);
+    void gui_begin();
+    void gui_end();
+    void invoke() {m_component->invoke();}
     id_type id() {return m_id;}
 private:
-    blueprint::component &m_component;
+    void BlueprintComponent_(const char *label);
+    blueprint::component *m_component;
     std::string m_name;
     id_type m_id;
+    fltk::Group *m_gui_group;
 };
 
 class BlueprintComponentPort : public fltk::Button
@@ -33,6 +39,10 @@ public:
     int handle(int event);
     BlueprintComponent &component()
     {   return *static_cast<BlueprintComponent *>(parent()); }
+    int center_x_root()
+    {   return parent()->x() + center_x(); }
+    int center_y_root()
+    {   return parent()->y() + center_y(); }
     size_t id() {return m_id;}
 private:
     BlueprintWindow &blueprint()

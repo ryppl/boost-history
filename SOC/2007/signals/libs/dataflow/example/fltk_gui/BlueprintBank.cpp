@@ -12,7 +12,7 @@ namespace boost { namespace dataflow { namespace fltk_gui {
 void BlueprintBank::button_callback(fltk::Widget* widget, void*b)
 {
     BlueprintBank *bank= static_cast<BlueprintBank *>(b);
-    bank->m_blueprint->add_component(bank->m_bank.make(widget->label()), widget->label());
+    bank->m_blueprint->add_component(bank->m_bank[widget->label()], widget->label());
 }
     
 void BlueprintBank::rearrange()

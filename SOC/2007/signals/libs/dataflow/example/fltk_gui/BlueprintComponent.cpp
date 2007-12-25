@@ -17,13 +17,12 @@ public:
         , m_invocable(invocable)
     {
         callback((fltk::Callback *)on_push, this);
-        
     }
     int handle(int event);
 private:
     static void on_push(fltk::Widget *widget, BlueprintComponentCore *core)
     {
-        if (core->m_invocable)
+        if (!core->m_dragged && core->m_invocable)
             core->component().invoke();
     }
     BlueprintComponent &component()
@@ -44,9 +43,6 @@ int BlueprintComponentCore::handle(int event)
         push_y = fltk::event_y_root();
         m_dragged = event==fltk::DRAG;
         return fltk::Button::handle(event);
-    case fltk::RELEASE:
-        if (!m_dragged)
-            return fltk::Button::handle(event);
     }
     return fltk::Button::handle(event);
 }
@@ -58,6 +54,7 @@ int BlueprintComponentPort::handle(int event)
         case fltk::DND_RELEASE:
             return blueprint().register_drop(this);;
         case fltk::DND_ENTER:
+        case fltk::DND_LEAVE:
             return 1;
         case fltk::PASTE:
             blueprint().connect_dragged_with(this);
@@ -72,9 +69,38 @@ int BlueprintComponentPort::handle(int event)
 
 BlueprintComponent::BlueprintComponent(int x, int y, int w, int h, const char *label, blueprint::component &c, id_type id)
     : fltk::Group(x, y, w, h)
-    , m_component(c), m_id(id)
+{
+    BlueprintComponent_(label);
+    set_component(c, id);
+}
+
+BlueprintComponent::BlueprintComponent(int x, int y, int w, int h, const char *label)
+    : fltk::Group(x, y, w, h)
+{
+    BlueprintComponent_(label);
+}
+
+void BlueprintComponent::BlueprintComponent_(const char *label)
 {
     copy_label(label);
+    add(m_gui_group = new fltk::Group(0,80,100,60));
+    resize(100, 160);
+}
+
+void BlueprintComponent::gui_begin()
+{
+    m_gui_group->begin();
+}
+
+void BlueprintComponent::gui_end()
+{
+    m_gui_group->end();
+}
+
+void BlueprintComponent::set_component(blueprint::component &c, id_type id)
+{
+    m_component=&c;
+    m_id = id;
     add(new BlueprintComponentCore(20, 20, 60, 60, c.is_invocable()));
     
     int y_left = 20;
@@ -92,5 +118,6 @@ BlueprintComponent::BlueprintComponent(int x, int y, int w, int h, const char *l
             y_left+=20;
         }
 }
+
 
 } } }

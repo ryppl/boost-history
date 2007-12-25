@@ -6,18 +6,37 @@
   functionality of a dataflow framework.  The reason I started with connection
   and extraction is that it is the single most uniformly present
   aspect of dataflow frameworks (going to the very definition of dataflow).
-  While there are many other
-  functionalities that can be part of a dataflow framework (such as memory
-  management and different kinds of scheduling), these vary much more from
-  one dataflow framework to another, and are much harder to capture in the
-  generic layer.  While concepts related to memory management and scheduling
-  might be added to the generic layer in the future, I believe they are not
-  essential in the first version of this library.
 
-* The only dataflow framework included is [DataflowSignals] for two reasons.
-  One, a [BoostSignals]-based framework was the original focus of this project;
-  And two, [DataflowSignals] makes use of existing Boost functionality to make
-  the implementation of the dataflow framework extremely simple.  There is no
+ * Much of current dataflow framework development is dedicated to framework-specific
+   visual programming
+   environments, and bindings to outside languages.  Much of this
+   can be done in a generic fashion, given generic support for connecting
+   components and extracting data of the Dataflow library.
+   
+ * While there are many other
+   functionalities that can be part of a dataflow framework (such as memory
+   management and different kinds of scheduling), these vary much more from
+   one dataflow framework to another, and are much harder to capture in the
+   generic layer.  While concepts related to memory management and scheduling
+   might be added to the generic layer in the future, I believe they are not
+   essential in the first version of this library.
+
+* The only dataflow framework included at the moment
+  is [DataflowSignals] for three reasons:
+
+ * a [BoostSignals]-based framework was the original focus of this project;
+ * components in other frameworks (e.g., [VTK]) don't rely exclusively on
+   their framework's dataflow mechanisms to do their work
+   (e.g., apart from connecting
+   [VTK] components and moving data through [VTK]'s pipeline,
+   you can also call the components' methods to customize their
+   behavior).  [BoostSignals], since it is based on function calls, can
+   then be used to access function calling behavior in a way that is
+   native to the Dataflow library.
+ * [DataflowSignals] makes use of existing Boost functionality to make
+  the implementation of the dataflow framework extremely simple.
+  
+* There is no
   doubt that implementing other kinds of dataflow frameworks would be useful
   (e.g., the [FuturePin]-based approach proposed by Tobias Schwinger, or
   something like the simulation-oriented
@@ -31,7 +50,7 @@
 * I encountered the term /dataflow/ after starting this library.  Although
   the information I can find about dataflow as
   a programming paradigm seems to be a little sub-par,
-  it seems like the right name for this programming paradigm.
+  it seems like the right name for this library.
   As a part of developing this library and doing the accompanying research I
   can work on improving the information that is out there (on Wikipedia, etc.)
 * I chose /component/ to refer to a processing element of a dataflow network,
@@ -58,7 +77,7 @@
   [UnaryOperable], and [ComponentOperable] concepts) have been rolled into a
   single class
   template with the operation selected by type because of some shared
-  functionality (e.g., [KeyedPort] resolution), and this way they can also be
+  functionality, and this way they can also be
   treated in a generic fashion in code built on top of the generic layer.
   
 [endsect]

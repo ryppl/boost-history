@@ -9,15 +9,13 @@ the [Component] concept.
 The following features are planned for the future:
 
 * *Serialization* - It should be possible to serialize and deserialize a
-  network blueprint. This could be used to store datafow programs, or to send
+  network blueprint. This could be used to store dataflow programs, or to send
   them over the network.
 
 * *Separation of network blueprint and network instance* - Right now the
   `network` class serves both as a blueprint and as an instance of the
   network.  These two will be decoupled in the future.
   
-* *Component banks* - Banks of components which can be accessed at runtime.
-
 * *Dataflow support layer* - [DataflowBlueprint] ports, components and networks
   should model the generic dataflow [concepts].  This will allow the use of
   the common syntax, as well as the creation of blueprints of blueprints :-)
@@ -33,16 +31,22 @@ The following features are planned for the future:
 
 Many dataflow-oriented frameworks have a visual programming environment.
 Examples are [@http://www.cycling74.com/products/maxmsp MAX/MSP] and
-[@http://www.ni.com/labview/ LabVIEW].
-
-The [@http://vcreatelogic.com/oss/vtkdesigner/index.html VTK Designer]
+[@http://www.ni.com/labview/ LabVIEW]. Also,
+the [@http://vcreatelogic.com/oss/vtkdesigner/index.html VTK Designer]
 has recently introduced a similar environment for C++ (and [VTK]),
 based on the [@http://vcreatelogic.com/oss/gcf/index.html Generic
 Component Framework] and is released under the GNU GPL license.
 
-Once the [DataflowBlueprint] layer is completed, it might be possible to integrate
-it with the Generic Component Framework to get a visual programming
-environment for the Dataflow library.
+I have started a small [gui_example example GUI dataflow editor] built
+on top of the [DataflowBlueprint] layer, showing that the Dataflow library
+is an adequate basis for such a visual programming environment.  This
+will be developed more in time.  In particular, I'm interested in
+
+* testing the GUI with frameworks other than [DataflowSignals]
+
+* incorporating saving/loading of designs
+
+
 
 [endsect]
 

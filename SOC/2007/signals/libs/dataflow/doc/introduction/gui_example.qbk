@@ -1,0 +1,23 @@
+[section:fltk_gui A GUI dataflow editor]
+
+The Dataflow library contains an example GUI editor for dataflow networks.
+The editor is built on top of
+[DataflowBlueprint], it can be used for any framework with Dataflow support.
+The capabilities of the editor are fairly limited at the moment - it's purpose
+is mainly to verify that something useful can be built on top of
+[DataflowBlueprint] layer.
+
+The following is a screenshot of the editor:
+
+[$blueprint_screenshot.png]
+
+To build the GUI example, you will need to download [FLTK].  At some point
+I will probably develop another version for the [cppgui] library being
+developed.
+
+The main part of the code is as follows (the GUI classes can be found in
+the `examples/fltk_gui` directory):
+
+[fltk_gui_example]
+
+[endsect]
