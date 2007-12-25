@@ -1,7 +1,11 @@
 // minmaxif.hpp -- min_ and max_element_if functions. Originally in minmax.hpp
 // (C) Copyright Hervé Brönnimann, Polytechnic University, 2002--2004
 //
-// $log$
+
+//
+// Dec 24 2007  Consolidated the min_element_if and max_element_if functions
+//              into the this file.
+//
 
 #ifndef BOOST_MINMAXIF_HPP
 #define BOOST_MINMAXIF_HPP

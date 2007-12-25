@@ -1,4 +1,4 @@
-// combinatorial.hpp header file - r-permutation and r-combination algorithms ---//
+// combinatorial.hpp header file - r-permutation and r-combination algorithms
 
 // Copyright © Philip F. Garofalo 2008. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
@@ -9,7 +9,14 @@
 // See http://www.boost.org for updates, documentation, and revision
 // history.
 
-// $log$
+//
+// Dec 24 2007  Consolidated the min_element_if and max_element_if functions
+//              into the minmaxif.hpp header file. Added typename specifier
+//              and scope resolutions detail:: for the iterator_trait
+//              references and std:: for string and STL predicate references.
+//              Also added max_element_if functions from previous old version
+//              of minmax.hpp.
+//
 //
 // Jun 20 2002  Removed TABs and put in std:: when needed [Herve Bronnimann]
 //              Also replaced all iter_swap(i,j) by swap(*i,*j)
