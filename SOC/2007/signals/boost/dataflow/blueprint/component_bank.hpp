@@ -57,6 +57,8 @@ public:
     {   return key_iterator<map_type>(m_components.begin()); }
     key_iterator<map_type> end()
     {   return key_iterator<map_type>(m_components.end()); }
+    boost::function<component * ()> operator[](const std::string& k)
+    {   return m_components[k]; }
 protected:
     map_type m_components;
 };

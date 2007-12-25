@@ -26,10 +26,10 @@ struct filter_component_traits
             dataflow::signals::tag> >,
         mpl::map<
             mpl::pair<dataflow::default_port_selector
-                <dataflow::directions::outgoing, dataflow::signals::connect_mechanism>,
+                <dataflow::args::left, dataflow::signals::connect_mechanism>,
                 mpl::int_<0> >,
             mpl::pair<dataflow::default_port_selector
-                <dataflow::directions::incoming, dataflow::signals::connect_mechanism>,
+                <dataflow::args::right, dataflow::signals::connect_mechanism>,
                 mpl::int_<1> >
         >,
         dataflow::signals::tag>

@@ -27,29 +27,29 @@ namespace boost { namespace dataflow {
 
 template<typename Operation, typename Mechanism, typename Tag, typename OutgoingPort, typename IncomingPort>
 inline void
-binary_operation(OutgoingPort &outgoing, IncomingPort &incoming)
+binary_operation(OutgoingPort &left, IncomingPort &right)
 {
     extension::binary_operation_impl<
-        typename default_traits_of<OutgoingPort, directions::outgoing, Mechanism, Tag>::type,
-        typename default_traits_of<IncomingPort, directions::incoming, Mechanism, Tag>::type,
+        typename default_traits_of<OutgoingPort, args::left, Mechanism, Tag>::type,
+        typename default_traits_of<IncomingPort, args::right, Mechanism, Tag>::type,
         Operation>
             ()(static_cast<typename utility::forwardable<
-                    typename result_of::get_default_port<OutgoingPort, directions::outgoing, Mechanism, Tag>::type>::type >
-                (get_default_port<directions::outgoing, Mechanism, Tag>(outgoing)),
+                    typename result_of::get_default_port<OutgoingPort, args::left, Mechanism, Tag>::type>::type >
+                (get_default_port<args::left, Mechanism, Tag>(left)),
                static_cast<typename utility::forwardable<
-                    typename result_of::get_default_port<IncomingPort, directions::incoming, Mechanism, Tag>::type>::type >
-                (get_default_port<directions::incoming, Mechanism, Tag>(incoming)));
+                    typename result_of::get_default_port<IncomingPort, args::right, Mechanism, Tag>::type>::type >
+                (get_default_port<args::right, Mechanism, Tag>(right)));
 }
 
 template<typename OutgoingPort, typename IncomingPort>
 inline typename enable_if<
     mpl::and_<
-        has_default_port<OutgoingPort, directions::outgoing, default_mechanism, default_tag>,
-        has_default_port<IncomingPort, directions::incoming, default_mechanism, default_tag>
+        has_default_port<OutgoingPort, args::left, default_mechanism, default_tag>,
+        has_default_port<IncomingPort, args::right, default_mechanism, default_tag>
     > >::type    
-connect(OutgoingPort &outgoing, IncomingPort &incoming)
+connect(OutgoingPort &left, IncomingPort &right)
 {
-    binary_operation<operations::connect, default_mechanism, default_tag>(outgoing, incoming);
+    binary_operation<operations::connect, default_mechanism, default_tag>(left, right);
 }
 
 } } // namespace boost::dataflow

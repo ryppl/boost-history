@@ -20,19 +20,19 @@
 template<typename OutgoingPort, typename IncomingPort>
 inline typename boost::enable_if<
     boost::mpl::and_<
-        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::directions::outgoing, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
-        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::directions::incoming, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
+        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::args::left, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
+        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::args::right, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
     >, OutgoingPort &
 >::type
-operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &outgoing, IncomingPort &incoming)
-{ DATAFLOW_TEMPLATE_BINARY_OPERATION(outgoing, incoming); return outgoing;}
+operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &left, IncomingPort &right)
+{ DATAFLOW_TEMPLATE_BINARY_OPERATION(left, right); return left;}
 
 template<typename OutgoingPort, typename IncomingPort>
 inline typename boost::enable_if<
     boost::mpl::and_<
-        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::directions::outgoing, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
-        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::directions::incoming, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
+        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::args::left, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
+        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::args::right, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
     >, OutgoingPort &
 >::type
-operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &outgoing, const IncomingPort &incoming)
-{ DATAFLOW_TEMPLATE_BINARY_OPERATION(outgoing, incoming); return outgoing;}
+operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &left, const IncomingPort &right)
+{ DATAFLOW_TEMPLATE_BINARY_OPERATION(left, right); return left;}

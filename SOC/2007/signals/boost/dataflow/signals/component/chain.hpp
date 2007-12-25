@@ -58,7 +58,7 @@ public:
         }*/
         typename T::signal_type &default_signal() const
         {
-            return boost::dataflow::get_default_port<dataflow::directions::outgoing, dataflow::signals::connect_mechanism, dataflow::signals::tag >(components[size-1]);
+            return boost::dataflow::get_default_port<dataflow::args::left, dataflow::signals::connect_mechanism, dataflow::signals::tag >(components[size-1]);
         }
     private:
         void initialize(size_t copies, T *component=NULL)

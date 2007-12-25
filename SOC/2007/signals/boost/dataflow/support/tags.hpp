@@ -84,11 +84,11 @@ namespace operations {
     struct disconnect_all {};
 }
 
-namespace directions {
-    /// Tag specifying the outgoing direction in binary operations.
-    struct outgoing {};
-    /// Tag specifying the incoming direction in binary operations.
-    struct incoming {};
+namespace args {
+    /// Tag specifying the left direction in binary operations.
+    struct left {};
+    /// Tag specifying the right direction in binary operations.
+    struct right {};
 }
 
 } } // namespace boost::dataflow
