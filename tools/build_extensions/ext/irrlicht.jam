@@ -3,296 +3,211 @@
 #~ (See accompanying file LICENSE_1_0.txt or copy at
 #~ http://www.boost.org/LICENSE_1_0.txt)
 
-### Support for OpenSceneGraph
-### <http://www.openscenegraph.org>.
+### Support for Irrlicht Engine.
+### <http://irrlicht.sourceforge.net/>.
+###
+###     /ext/irrlicht//Irrlicht
 
 import extension ;
 
-#~ import property ;
-#~ import project ;
-#~ import feature ;
-#~ import common ;
-import set ;
-import path ;
+extension.declare irrlicht ;
 
-extension.declare osg ;
-
-extension.option osg matrix-type : double float ;
-extension.option osg plane-type : double float ;
+extension.option irrlicht device : default sdl ;
+extension.option irrlicht d3d9 : enable disable ;
+extension.option irrlicht opengl : enable disable ;
+extension.option irrlicht software : enable disable ;
+extension.option irrlicht burnings-video : beatiful fast ultra-fast disable ;
+extension.option irrlicht x11 : enable disable ;
+extension.option irrlicht x11-vidmode : enable disable ;
+extension.option irrlicht x11-randr : disable enable ;
+extension.option irrlicht gui : enable disable ;
+extension.option irrlicht zlib : enable disable ;
+extension.option irrlicht jpg : enable disable ;
+extension.option irrlicht png : enable disable ;
+extension.option irrlicht d3d-shader-debug : disable enable ;
+extension.option irrlicht skinned-mesh : enable disable ;
+extension.option irrlicht b3d-loader : enable disable ;
+extension.option irrlicht ms3d-loader : enable disable ;
+extension.option irrlicht x-loader : enable disable ;
+extension.option irrlicht irr-loader : enable disable ;
+extension.option irrlicht md2-loader : enable disable ;
+extension.option irrlicht md3-loader : enable disable ;
+extension.option irrlicht 3ds-loader : enable disable ;
+extension.option irrlicht collada-loader : enable disable ;
+extension.option irrlicht csm-loader : enable disable ;
+extension.option irrlicht bsp-loader : enable disable ;
+extension.option irrlicht dmf-loader : enable disable ;
+extension.option irrlicht lmts-loader : enable disable ;
+extension.option irrlicht my3d-loader : enable disable ;
+extension.option irrlicht obj-loader : enable disable ;
+extension.option irrlicht oct-loader : enable disable ;
+extension.option irrlicht ogre-loader : enable disable ;
+extension.option irrlicht stl-loader : enable disable ;
+extension.option irrlicht irr-writer : enable disable ;
+extension.option irrlicht collada-writer : enable disable ;
+extension.option irrlicht stl-writer : enable disable ;
+extension.option irrlicht bmp-loader : enable disable ;
+extension.option irrlicht jpg-loader : enable disable ;
+extension.option irrlicht pcx-loader : enable disable ;
+extension.option irrlicht png-loader : enable disable ;
+extension.option irrlicht ppm-loader : enable disable ;
+extension.option irrlicht psd-loader : enable disable ;
+extension.option irrlicht tga-loader : enable disable ;
+extension.option irrlicht bmp-writer : enable disable ;
+extension.option irrlicht jpg-writer : enable disable ;
+extension.option irrlicht pcx-writer : enable disable ;
+extension.option irrlicht png-writer : enable disable ;
+extension.option irrlicht ppm-writer : enable disable ;
+extension.option irrlicht psd-writer : enable disable ;
+extension.option irrlicht tga-writer : enable disable ;
 
 rule init ( version ? : location : options * )
 {
     version ?= default ;
     local requirements =
-        [ extension.define osg $(version) : $(location) : $(options) ]
-        <link>static:<define>OSG_LIBRARY_STATIC
-        ;
-    local common-requirements =
+        [ extension.define irrlicht $(version) : $(location) : $(options) ]
+        <irrlicht-version>$(version)
+        <irrlicht-location>$(location)
         <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
-        
-        <osg-version>$(version)
-        <osg-location>$(location)
+        ;
+    local common-requirements =
         <include>$(location)/include
         <target-os>windows:<define>WIN32
-        
-        <osg-matrix-type>float:<define>OSG_USE_FLOAT_MATRIX
-        <osg-plane-type>float:<define>OSG_USE_FLOAT_PLANE
+        <target-os>windows,<address-model>64:<define>WIN64
+        [ conditional <target-os>windows :
+            <find-shared-library>user32
+            <find-shared-library>gdi32
+            <find-shared-library>advapi32
+            ]
         ;
     
     location,$(version) = $(location) ;
     
-    alias gl
-        :
-        :
-        :
-        :   <target-os>windows:<find-shared-library>OpenGL32
-            <target-os>windows:<find-shared-library>GLU32
+    extension.text irrlicht $(version)
+        :   IrrCompileConfig.h
+        :   ## format
+        "#ifndef __IRR_COMPILE_CONFIG_H_INCLUDED__"
+        
+        <irrlicht-device>sdl:<>"#define _IRR_USE_SDL_DEVICE_"
+        
+        "#include \"$(location)/include/IrrCompileConfig.h\""
+        "#undef _IRR_USE_NON_SYSTEM_ZLIB_"
+        "#undef _IRR_USE_NON_SYSTEM_JPEG_LIB_"
+        "#undef _IRR_USE_NON_SYSTEM_LIB_PNG_"
+        "#undef _IRR_COMPILE_WITH_DIRECT3D_8_"
+        
+        <irrlicht-d3d9>disable:<>"#undef _IRR_COMPILE_WITH_DIRECT3D_9_"
+        <irrlicht-opengl>disable:<>"#undef _IRR_COMPILE_WITH_OPENGL_"
+        <irrlicht-software>disable:<>"#undef _IRR_COMPILE_WITH_SOFTWARE_"
+        [ conditional <irrlicht-burnigs-video>disable :
+            <>"#undef _IRR_COMPILE_WITH_BURNINGSVIDEO_"
+            <>"#undef BURNINGVIDEO_RENDERER_BEAUTIFUL"
+            <>"#undef BURNINGVIDEO_RENDERER_FAST"
+            <>"#undef BURNINGVIDEO_RENDERER_ULTRA_FAST" ]
+        [ conditional <irrlicht-burnigs-video>fast :
+            <>"#undef BURNINGVIDEO_RENDERER_BEAUTIFUL"
+            <>"#define BURNINGVIDEO_RENDERER_FAST" ]
+        [ conditional <irrlicht-burnigs-video>ultra-fast :
+            <>"#undef BURNINGVIDEO_RENDERER_BEAUTIFUL"
+            <>"#define BURNINGVIDEO_RENDERER_ULTRA_FAST" ]
+        
+        <irrlicht-x11>disable:<>"#undef _IRR_COMPILE_WITH_X11_"
+        <irrlicht-vidmode>disable:<>"#undef _IRR_LINUX_X11_VIDMODE_"
+        <irrlicht-randr>enable:<>"#define _IRR_LINUX_X11_VIDMODE_"
+        <irrlicht-gui>disable:<>"#undef _IRR_COMPILE_WITH_GUI_"
+        <irrlicht-zlib>disable:<>"#undef _IRR_COMPILE_WITH_ZLIB_"
+        <irrlicht-jpg>disable:<>"#undef _IRR_COMPILE_WITH_LIBJPEG_"
+        <irrlicht-png>disable:<>"#undef _IRR_COMPILE_WITH_LIBPNG_"
+        
+        <irrlicht-d3d-shader-debug>enable:<>"#undef _IRR_D3D_NO_SHADER_DEBUGGING"
+        [ conditional <irrlicht-skinned-mesh>disable:
+            <>"#undef _IRR_COMPILE_WITH_SKINNED_MESH_SUPPORT_"
+            <>"#undef _IRR_COMPILE_WITH_B3D_LOADER_"
+            <>"#undef _IRR_COMPILE_WITH_MS3D_LOADER_"
+            <>"#undef _IRR_COMPILE_WITH_X_LOADER_" ]
+        
+        <irrlicht-b3d-loader>disable:<>"#undef _IRR_COMPILE_WITH_B3D_LOADER_"
+        <irrlicht-ms3d-loader>disable:<>"#undef _IRR_COMPILE_WITH_MS3D_LOADER_"
+        <irrlicht-x-loader>disable:<>"#undef _IRR_COMPILE_WITH_X_LOADER_"
+        <irrlicht-irr-loader>disable:<>"#undef _IRR_COMPILE_WITH_IRR_MESH_LOADER_"
+        <irrlicht-md2-loader>disable:<>"#undef _IRR_COMPILE_WITH_MD2_LOADER_"
+        <irrlicht-md3-loader>disable:<>"#undef _IRR_COMPILE_WITH_MD3_LOADER_"
+        <irrlicht-3ds-loader>disable:<>"#undef _IRR_COMPILE_WITH_3DS_LOADER_"
+        <irrlicht-collada-loader>disable:<>"#undef _IRR_COMPILE_WITH_COLLADA_LOADER_"
+        <irrlicht-csm-loader>disable:<>"#undef _IRR_COMPILE_WITH_CSM_LOADER_"
+        <irrlicht-bsp-loader>disable:<>"#undef _IRR_COMPILE_WITH_BSP_LOADER_"
+        <irrlicht-dmf-loader>disable:<>"#undef _IRR_COMPILE_WITH_DMF_LOADER_"
+        <irrlicht-lmts-loader>disable:<>"#undef _IRR_COMPILE_WITH_LMTS_LOADER_"
+        <irrlicht-my3d-loader>disable:<>"#undef _IRR_COMPILE_WITH_MY3D_LOADER_"
+        <irrlicht-obj-loader>disable:<>"#undef _IRR_COMPILE_WITH_OBJ_LOADER_"
+        <irrlicht-oct-loader>disable:<>"#undef _IRR_COMPILE_WITH_OCT_LOADER_"
+        <irrlicht-ogre-loader>disable:<>"#undef _IRR_COMPILE_WITH_OGRE_LOADER_"
+        <irrlicht-stl-loader>disable:<>"#undef _IRR_COMPILE_WITH_STL_LOADER_"
+        
+        <irrlicht-irr-writer>disable:<>"#undef _IRR_COMPILE_WITH_IRR_WRITER_"
+        <irrlicht-collada-writer>disable:<>"#undef _IRR_COMPILE_WITH_COLLADA_WRITER_"
+        <irrlicht-stl-writer>disable:<>"#undef _IRR_COMPILE_WITH_STL_WRITER_"
+        
+        <irrlicht-bmp-loader>disable:<>"#undef _IRR_COMPILE_WITH_BMP_LOADER_"
+        <irrlicht-jpg-loader>disable:<>"#undef _IRR_COMPILE_WITH_JPG_LOADER_"
+        <irrlicht-pcx-loader>disable:<>"#undef _IRR_COMPILE_WITH_PCX_LOADER_"
+        <irrlicht-png-loader>disable:<>"#undef _IRR_COMPILE_WITH_PNG_LOADER_"
+        <irrlicht-ppm-loader>disable:<>"#undef _IRR_COMPILE_WITH_PPM_LOADER_"
+        <irrlicht-psd-loader>disable:<>"#undef _IRR_COMPILE_WITH_PSD_LOADER_"
+        <irrlicht-tga-loader>disable:<>"#undef _IRR_COMPILE_WITH_TGA_LOADER_"
+        <irrlicht-bmp-writer>disable:<>"#undef _IRR_COMPILE_WITH_BMP_WRITER_"
+        <irrlicht-jpg-writer>disable:<>"#undef _IRR_COMPILE_WITH_JPG_WRITER_"
+        <irrlicht-pcx-writer>disable:<>"#undef _IRR_COMPILE_WITH_PCX_WRITER_"
+        <irrlicht-png-writer>disable:<>"#undef _IRR_COMPILE_WITH_PNG_WRITER_"
+        <irrlicht-ppm-writer>disable:<>"#undef _IRR_COMPILE_WITH_PPM_WRITER_"
+        <irrlicht-psd-writer>disable:<>"#undef _IRR_COMPILE_WITH_PSD_WRITER_"
+        <irrlicht-tga-writer>disable:<>"#undef _IRR_COMPILE_WITH_TGA_WRITER_"
+        "#endif"
+        :   $(requirements)
+        ;
+    common-requirements += <implicit-dependency>IrrCompileConfig.h ;
+    
+    alias gl : : : :
+        <target-os>windows,<irrlicht-opengl>enable:<find-shared-library>OpenGL32
+        <target-os>linux:<find-shared-library>GL
+        <target-os>linux,<irrlicht-x11>enable:<find-shared-library>Xxf86vm
         ;
     
-    lib openthreads
-        :   [ glob $(location)/src/OpenThreads/common/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>openthreads
-            <link>shared:<define>OT_LIBRARY
-            <link>static:<define>OT_LIBRARY_STATIC
-            <link>shared:<define>OPENTHREADS_EXPORTS
-            [ conditional <target-os>windows:<source> :
-                [ glob $(location)/src/OpenThreads/win32/*.cpp ] ]
-        :
-        :   $(common-requirements)
-        ;
-        explicit openthreads ;
-    
-    lib osg
-        :   /ext/osg//openthreads /ext/osg//gl
-            [ set.difference
-                [ glob $(location)/src/osg/*.cpp ]
-                :
-                [ glob $(location)/src/osg/Matrix_implementation.cpp ]
-                ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osg
-            <link>shared:<define>OSG_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgDB
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg
-            [ glob $(location)/src/osgDB/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgDB
-            <link>shared:<define>OSGDB_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgUtil
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg
-            [ glob $(location)/src/osgUtil/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgUtil
-            <link>shared:<define>OSGUTIL_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgGA
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
-            [ glob $(location)/src/osgGA/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgGA
-            <link>shared:<define>OSGGA_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgText
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB
-            [ glob $(location)/src/osgText/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgText
-            <link>shared:<define>OSGTEXT_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgManipulator
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgGA /ext/osg//osgUtil
-            [ glob $(location)/src/osgManipulator/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgManipulator
-            <link>shared:<define>OSGMANIPULATOR_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgSim
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil /ext/osg//osgText
-            [ glob $(location)/src/osgSim/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgSim
-            <link>shared:<define>OSGSIM_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgFX
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
-            [ glob $(location)/src/osgFX/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgFX
-            <link>shared:<define>OSGFX_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgParticle
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
-            [ glob $(location)/src/osgParticle/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgParticle
-            <link>shared:<define>OSGPARTICLE_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgShadow
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
-            [ glob $(location)/src/osgShadow/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgShadow
-            <link>shared:<define>OSGSHADOW_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgTerrain
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
-            [ glob $(location)/src/osgTerrain/*.cpp ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgTerrain
-            <link>shared:<define>OSGTERRAIN_LIBRARY
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib osgViewer
-        :   /ext/osg//openthreads /ext/osg//gl
-            /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil /ext/osg//osgText  /ext/osg//osgGA
-            [ set.difference
-                [ glob $(location)/src/osgViewer/*.cpp ]
-                :
-                [ glob
-                    $(location)/src/osgViewer/*Win32.cpp
-                    $(location)/src/osgViewer/*Carbon.cpp
-                    $(location)/src/osgViewer/*X11.cpp ]
-                ]
-        :   $(requirements) $(common-requirements)
-            <location-prefix>osgViewer
-            <link>shared:<define>OSGVIEWER_LIBRARY
-            [ conditional <target-os>windows:<source> :
-                [ glob $(location)/src/osgViewer/*Win32.cpp ] ]
-            [ conditional <target-os>macosx:<source> :
-                [ glob $(location)/src/osgViewer/*Carbon.cpp ] ]
-            [ conditional <target-os>linux:<source> :
-                [ glob $(location)/src/osgViewer/*X11.cpp ] ]
-            [ conditional <target-os>windows:<find-shared-library> : user32 gdi32 ]
-        :
-        :   $(common-requirements)
-        ;
-    
-    local rule lib-osgdb ( name src ? : * )
+    local ext-libs = ;
+    if <irrlicht-zlib>enable in $(requirements)
     {
-        src ?= $(name) ;
-        name = osgdb_$(name) ;
-        return [ lib $(name)
-            :
-                /ext/osg//openthreads /ext/osg//gl
-                /ext/osg//osg /ext/osg//osgDB /ext/osg//osgUtil
-                [ glob $(location)/src/osgPlugins/$(src)/*.cpp ]
-                $(2)
-            :
-                $(requirements) $(common-requirements)
-                <location-prefix>plugin/$(name)
-                $(3)
-            :   $(4)
-            :   $(common-requirements)
-                $(5)
-            ] ;
+        ext-libs += /ext/zlib//z/<link>static ;
+    }
+    if <irrlicht-png>enable in $(requirements) ||
+        <irrlicht-png-loader>enable in $(requirements) ||
+        <irrlicht-png-writer>enable in $(requirements)
+    {
+        ext-libs += /ext/png//png/<link>static ;
+    }
+    if <irrlicht-jpg>enable in $(requirements) ||
+        <irrlicht-jpg-loader>enable in $(requirements) ||
+        <irrlicht-jpg-writer>enable in $(requirements)
+    {
+        ext-libs += /ext/jpeg//jpeg/<link>static ;
+    }
+    if <irrlicht-d3d9>enable in $(requirements)
+    {
+        ext-libs += /ext/directxsdk//d3d-9 ;
+    }
+    if <irrlicht-opengl>enable in $(requirements)
+    {
+        ext-libs += /ext/irrlicht//gl ;
     }
     
-    #~ ############################################################
-    #~ #
-    #~ #  NodeKit/Psudo loader plugins
-    #~ #
-    lib-osgdb osgfx osgFX : /ext/osg//osgFX ;
-    lib-osgdb osgparticle osgParticle : /ext/osg//osgParticle ;
-    lib-osgdb osgsim osgSim : /ext/osg//osgSim ;
-    lib-osgdb osgtext osgText : /ext/osg//osgText ;
-    lib-osgdb osgviewer osgViewer : /ext/osg//osgViewer ;
-    lib-osgdb osgshadow osgShadow : /ext/osg//osgShadow ;
-    lib-osgdb osgterrain osgTerrain : /ext/osg//osgTerrain ;
-    lib-osgdb osga ;
-    lib-osgdb rot ;
-    lib-osgdb scale ;
-    lib-osgdb trans ;
-    lib-osgdb normals ;
-    lib-osgdb net : :
-        <target-os>windows:<find-shared-library>wsock32 ;
-    #~ ############################################################
-    #~ #
-    #~ #  Main native plugins
-    #~ #
-    lib-osgdb osg : /ext/osg//osgSim /ext/osg//osgFX /ext/osg//osgText ;
-    lib-osgdb ive : /ext/osg//osgSim /ext/osg//osgFX /ext/osg//osgText ;
-    #~ ############################################################
-    #~ #
-    #~ #  Image plugins
-    lib-osgdb rgb ;
-    lib-osgdb bmp ;
-    lib-osgdb pnm ;
-    lib-osgdb dds ;
-    lib-osgdb tga ;
-    lib-osgdb hdr ;
-    lib-osgdb jpeg : /ext/jpeg//jpeg ;
-    lib-osgdb png : /ext/png//png ;
-    lib-osgdb tiff : /ext/libtiff//tiff ;
-    #~ ############################################################
-    #~ #
-    #~ #  3rd party 3d plugins
-    #~ #
-    lib-osgdb 3dc ;
-    lib-osgdb lwo : /ext/osg//osgFX ;
-    lib-osgdb x ;
-    lib-osgdb dw ;
-    lib-osgdb dxf ;
-    lib-osgdb openflight OpenFlight : /ext/osg//osgSim ;
-    lib-osgdb geo : /ext/osg//osgSim /ext/osg//osgText ;
-    lib-osgdb obj ;
-    lib-osgdb pic ;
-    lib-osgdb stl ;
-    lib-osgdb 3ds ;
-    lib-osgdb ac ;
-    lib-osgdb logo ;
-    lib-osgdb lws ;
-    lib-osgdb md2 ;
-    lib-osgdb osgtgz ;
-    lib-osgdb tgz ;
-    lib-osgdb txp : /ext/osg//osgSim /ext/osg//osgText :
-        <include>$(location)/src/osgPlugins/txp ;
-    lib-osgdb shp ;
-    lib-osgdb txf : /ext/osg//osgText ;
-    lib-osgdb zip : /ext/zlib//z ;
+    lib Irrlicht
+        :   [ glob $(location)/source/Irrlicht/*.cpp ]
+            $(ext-libs)
+        :   $(requirements) $(common-requirements)
+            <location-prefix>Irrlicht
+            <link>shared:<define>IRRLICHT_EXPORTS=1
+            <link>static:<define>_IRR_STATIC_LIB_
+        :
+        :   $(common-requirements)
+        ;
 }
