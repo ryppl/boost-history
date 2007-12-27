@@ -9,6 +9,8 @@ import project ;
 import path ;
 import modules ;
 
+feature.feature extension : : optional implicit ;
+
 # Defines a Boost.Build extension project. Such extensions usually
 # contain library targets and features that can be used by many people.
 # Even though extensions are really projects, they can be initialize as
@@ -44,6 +46,9 @@ rule declare ( extension + : options * : * )
             root-project = [ project.attribute $(root-project) parent-module ] ;
         }
         
+        # Add the extension to the know list.
+        feature.extend extension : $(ext) ;
+        
         # Create the project data, and bring in the project rules
         # into the module.
         project.initialize $(__name__) :
@@ -58,8 +63,13 @@ rule declare ( extension + : options * : * )
         project.inherit-attributes $(__name__) : $(root-project) ;
         $(attributes).set parent-module : $(root-project) : exact ;
         
+        # Set the extension value in the requirements.
+        local requirements = [ $(attributes).get requirements ] ;
+        $(attributes).set requirements :
+            [ $(requirements).add-raw <extension>$(ext) ] : exact ;
+        
         # All exntensions get version and location features. The version
-        # feature is composed to include the options for the each extension
+        # feature is composed to include the options for each extension
         # version.
         #~ feature.feature $(ext) : : optional ;
         feature.feature $(ext)-version : : optional implicit composite ;
@@ -212,4 +222,55 @@ local rule option-requirements ( extension : requirements * : options * )
         }
     }
     return $(requirements) ;
+}
+
+#######################################################################
+
+rule text ( extension version ?
+    : name
+    : format *
+    : requirements * : usage-requirements * )
+{
+    local mod = [ CALLER_MODULE ] ;
+    .format,$(extension),$(version),$(name) = $(format) ;
+    module $(mod)
+    {
+        local extension = $(1[1]) ;
+        local version = $(1[2]) ;
+        make $(2) : : @extension.make-text
+            :   <$(extension)-version>$(version)
+                <location-prefix>src
+                $(4)
+            :   $(5)
+            ;
+            explicit $(2) ;
+    }
+}
+
+rule make-text ( targets * : sources * : properties * )
+{
+    local ext = [ property.select <extension> : $(properties) ] ;
+    local version = [ property.select <$(ext:G=)-version> : $(properties) ] ;
+    local NL = "
+" ;
+    local text = ;
+    local format = $(.format,$(ext:G=),$(version:G=),$(targets[1]:G=)) ;
+    for local f in $(format)
+    {
+        if $(f:G)
+        {
+            local t = [ property.evaluate-conditionals-in-context $(f) : $(properties) ] ;
+            text += $(t:G=) ;
+        }
+        else
+        {
+            text += $(f) ;
+        }
+    }
+    TEXT on $(targets) = $(text:J=$(NL)) ;
+}
+
+actions make-text
+{
+    @($(STDOUT):E=$(TEXT)) > "$(<)"
 }

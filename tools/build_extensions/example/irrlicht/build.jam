@@ -1,0 +1,44 @@
+#~ Copyright 2006 Redshift Software, Inc.
+#~ Copyright 2007 Couch World Games Inc.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+using zlib : 1.2.3 : $(PACKAGES)/zlib-1.2.3 ;
+using png : 1.2.12 : $(PACKAGES)/libpng-1.2.12 ;
+using jpeg : 6.b : $(PACKAGES)/jpeg-6b ;
+using libtiff : 3.8.2 : $(PACKAGES)/tiff-3.8.2 ;
+using osg : 2.2 : $(PACKAGES)/OpenSceneGraph-2.2.0 ;
+
+import testing ;
+
+local rule osg-example ( name subdir ? : args * : src * )
+{
+    dir ?= $(LOCATION(osg-2.2))/examples/$(name) ;
+    return [
+        run-fail
+            [ glob $(dir)/*.cpp ]
+            /ext/osg//openthreads
+            /ext/osg//osg
+            /ext/osg//osgDB
+            /ext/osg//osgUtil
+            /ext/osg//osgGA
+            /ext/osg//osgViewer
+            /ext/osg//osgText
+            $(src)
+            : $(args)
+            :
+            :
+            : $(name) ] ;
+}
+
+#~ osg-example osgcamera ;
+#~ osg-example osgcompositeviewer : : /ext/osg//osgFX ;
+#~ osg-example osglight ;
+#~ osg-example osglogo ;
+#~ osg-example osgparticleeffects  : --screen 1 : /ext/osg//osgParticle ;
+#~ osg-example osgshadow : --screen 1 : /ext/osg//osgShadow ;
+#~ osg-example osgteapot ;
+#~ osg-example osgterrain : --screen 1 : /ext/osg//osgTerrain ;
+osg-example osgtext : --screen 1 ;
+#~ osg-example osgvertexprogram : --screen 1 ;
