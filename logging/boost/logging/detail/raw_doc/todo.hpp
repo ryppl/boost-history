@@ -70,7 +70,7 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
   Such assert would log into log file and invoke system assert depends in assert level. It could be an addon to core functionality. \n
   Note: SMART_ASSERT should be used for this.
 
-
+- @c normal           Allow using log from DLL and EXE (on Windows). Same for Linux. This should normally work - just need to explain how.
 
 
 @section todo_formatters Formatters

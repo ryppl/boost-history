@@ -48,6 +48,7 @@ struct rolling_file_settings {
         , file_count(this, 10)
         , initial_erase(this, false)
         , start_where_size_not_exceeded(this, true) 
+        , flush_each_time(this, false)
     {}
 
     /// maximum size in bytes, by default 1Mb
@@ -59,6 +60,9 @@ struct rolling_file_settings {
     /// if true, it starts with the first file that hasn't exceeded the max size;
     /// otherwise, it starts with the first file (default = true)
     flag::t<bool> start_where_size_not_exceeded;
+
+    /// if true, always flush after write (by default, false)
+    flag::t<bool> flush_each_time;
 };
 
 namespace detail {
@@ -102,14 +106,26 @@ namespace detail {
         void recreate_file() {
             m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
                 std::ios_base::out | std::ios_base::app));
+            if ( m_out->tellp() > m_flags.max_size_bytes()) {
+                // this file is already full - clear it first
+                m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
+                    std::ios_base::out | std::ios_base::trunc));
+            }
         }
 
         template<class msg_type> void write( const msg_type& msg) {
             convert_dest::write(msg, (*m_out) );
+            if ( m_flags.flush_each_time())
+                m_out->flush();
+
             if ( m_out->tellp() > m_flags.max_size_bytes()) {
                 m_cur_idx = (m_cur_idx + 1) % m_flags.file_count();
                 recreate_file();
             }            
+        }
+
+        void flush() {
+            m_out->flush();            
         }
 
         boost::shared_ptr< std::basic_ofstream<char_type> > m_out;
@@ -146,6 +162,13 @@ template<class convert_dest = do_convert_destination > struct rolling_file_t : i
 
     bool operator==(const rolling_file_t & other) const {
         return non_const_context_base::context().m_name_prefix == other.context().m_name_prefix;
+    }
+
+    /** 
+        manual flush()ing the currently opened file. 
+    */
+    void flush() {
+        non_const_context_base::context().flush();
     }
 };
 
