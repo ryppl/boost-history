@@ -82,7 +82,17 @@ rule init ( version ? : location : options * )
             <use>boost
             <link>shared:<define>BOOST_REGEX_DYN_LINK=1
             <toolset>msvc:<cxxflags>/wd4309
-            <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        :
+        :
+        ;
+    
+    lib program_options
+        :   [ glob $(location)/libs/program_options/src/*.cpp ]
+        :   $(requirements)
+            <location-prefix>program_options
+            <use>boost
+            <link>shared:<define>BOOST_PROGRAM_OPTIONS_DYN_LINK=1
+            <toolset>msvc:<cxxflags>/wd4800
         :
         :
         ;
