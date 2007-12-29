@@ -30,7 +30,7 @@ It will look similar to this one:
 
 #include <boost/logging/format.hpp>
 #include <boost/logging/writer/ts_write.hpp>
-#include <boost/logging/format/formatter/high_precision_time.hpp>
+//#include <boost/logging/format/formatter/high_precision_time.hpp>
 #include <boost/logging/format/destination/named.hpp>
 
 using namespace boost::logging;
@@ -55,7 +55,7 @@ void test_mul_levels_one_logger() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted...
     g_l->writer().add_formatter( formatter::idx(), "[%] "  );
-    g_l->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss.$mili ") );
+    //g_l->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss.$mili ") );
     g_l->writer().add_formatter( formatter::append_newline() );
 
     //        ... and where should it be written to

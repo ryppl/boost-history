@@ -84,6 +84,7 @@ namespace boost { namespace logging {
 
 
 
+
 template<
             class format_base_type , 
             class destination_base_type ,
@@ -97,7 +98,7 @@ struct use_format_write {
     typedef typename use_default<lock_resource, ::boost::logging::types<override>::lock_resource> ::type lock_resource_type;
 
     typedef typename format_base::raw_param format_param;
-    typedef typename detail::find_gather<format_param>::type gather_type;
+    typedef typename ::boost::logging::gather::find<override>::template from_msg_type<format_param>::type gather_type;
 
     typedef typename detail::find_format_write_params<format_param, format_base, destination_base, lock_resource_type >::apply_format_and_write apply_format_and_write;
     typedef typename detail::find_format_write_params<format_param, format_base, destination_base, lock_resource_type >::router_type router_type;
@@ -117,6 +118,7 @@ instead of
 
 @code
 typedef logger_format_write< 
+        format_base, destination_base
         gather::ostream_like::return_str<>, 
         writer::format_write<formatter_base,destination_base> > > logger_type;
 @endcode
@@ -145,6 +147,8 @@ struct logger_format_write
             >::type
     >
 {
+    // FIXME we don't use gather - to define the gather class you use BOOST_LOG_GATHER_CLASS
+
     typedef logger< 
             typename use_format_write<format_base, destination_base, gather, lock_resource>::gather_type,
             typename detail::find_writer_with_thread_safety<

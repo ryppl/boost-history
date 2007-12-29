@@ -45,16 +45,40 @@ namespace boost { namespace logging {
 
 
 template<class type, template<typename> class thread_specific_ptr_type BOOST_LOG_TSS_DEFAULT_CLASS > struct tss_value {
-    tss_value(const type & default_ ) : m_default( default_), m_use_default(true) {}
-    tss_value() : m_use_default(false) {}
+    tss_value() {}
 
     type * get() const {
         type * result = m_value.get();
         if ( !result) {
 #if defined(BOOST_LOG_TSS_USE_INTERNAL)
-            result = m_use_default ? detail::new_object_ensure_delete<type>(m_default) : detail::new_object_ensure_delete<type>();
+            result = detail::new_object_ensure_delete<type>();
 #else
-            result = m_use_default ? (new type(m_default)) : (new type);
+            result = new type;
+#endif
+            m_value.reset( result );
+        }
+        return result;
+    }
+
+    type* operator->() const { return get(); }
+    type& operator*() const { return *get(); }
+private:
+    mutable thread_specific_ptr_type<type> m_value;
+};
+
+
+
+
+template<class type, template<typename> class thread_specific_ptr_type BOOST_LOG_TSS_DEFAULT_CLASS > struct tss_value_with_default {
+    tss_value_with_default(const type & default_ ) : m_default( default_) {}
+
+    type * get() const {
+        type * result = m_value.get();
+        if ( !result) {
+#if defined(BOOST_LOG_TSS_USE_INTERNAL)
+            result = detail::new_object_ensure_delete<type>(m_default) ;
+#else
+            result = new type(m_default);
 #endif
             m_value.reset( result );
         }
@@ -67,9 +91,8 @@ private:
     mutable thread_specific_ptr_type<type> m_value;
     // the default value - to assign each time a new value is created
     type m_default;
-    // if true, use default, otherwise not
-    bool m_use_default;
 };
+
 
 }}
 

@@ -125,6 +125,7 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         Explain about config files - you can use named_spacer,named.
 
+- @c normal         explain about gather class - how to define (BOOST_LOG_GATHER_CLASS)
 */
 
 }}

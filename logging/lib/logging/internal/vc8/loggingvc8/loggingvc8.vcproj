@@ -652,6 +652,10 @@
 					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss_impl_win32.hpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\tss\tss_ostringstream.hpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="tags"
@@ -834,6 +838,7 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -887,6 +892,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\samples\scenarios\use_tss_ostringstream.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\using_tags.cpp"

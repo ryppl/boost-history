@@ -54,23 +54,23 @@ namespace boost { namespace logging {
     }
 
     namespace detail {
-        template<class param> struct find_gather {};
-        template<> struct find_gather< std::basic_string<char_type> > { typedef gather::ostream_like::return_str< std::basic_string<char_type>, std::basic_ostringstream<char_type> > type ; };
+        template<class stream, class param> struct find_gather {};
+        template<class stream> struct find_gather< stream, std::basic_string<char_type> > { typedef gather::ostream_like::return_str< std::basic_string<char_type>, stream > type ; };
 
-        template< class string_type> 
-        struct find_gather< boost::logging::optimize::cache_string_one_str<string_type> > { 
-            typedef gather::ostream_like::return_str< boost::logging::optimize::cache_string_one_str<string_type>, std::basic_ostringstream<char_type> > type;
+        template< class stream, class string_type> 
+        struct find_gather< stream, boost::logging::optimize::cache_string_one_str<string_type> > { 
+            typedef gather::ostream_like::return_str< boost::logging::optimize::cache_string_one_str<string_type>, stream > type;
         };
 
-        template< class string_type> 
-        struct find_gather< boost::logging::optimize::cache_string_several_str<string_type,void*> > { 
-            typedef gather::ostream_like::return_str< boost::logging::optimize::cache_string_several_str<string_type,void*>, std::basic_ostringstream<char_type> > type;
+        template< class stream, class string_type> 
+        struct find_gather< stream, boost::logging::optimize::cache_string_several_str<string_type,void*> > { 
+            typedef gather::ostream_like::return_str< boost::logging::optimize::cache_string_several_str<string_type,void*>, stream > type;
         };
 
 
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10>
-        struct find_gather< tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> > {
-            typedef gather::ostream_like::return_tag_holder< tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> , std::basic_ostringstream<char_type> > type;
+        template<class stream, class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10>
+        struct find_gather< stream, tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> > {
+            typedef gather::ostream_like::return_tag_holder< tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> , stream > type;
         };
     }
 

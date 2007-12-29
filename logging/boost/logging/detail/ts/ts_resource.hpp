@@ -242,13 +242,13 @@ namespace locker {
 
     private:
         struct cached_value {
-            cached_value(const type & val = type() ) : val(val), is_cached(false) {}
+            cached_value( ) : val( type() ), is_cached(false) {}
             type val;
             bool is_cached;
         };
 
     public:
-        tss_resource_once_init(const type& val = type() ) : m_val(val), m_cache(val), m_initialized(false) {}
+        tss_resource_once_init(const type& val = type() ) : m_val(val), m_initialized(false) {}
 
         struct read;
         struct write;

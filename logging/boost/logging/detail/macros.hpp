@@ -603,7 +603,7 @@ If defined, we don't use @ref macros_tss "TSS" as all.
     template<> struct msg_type<override> { typedef msg_class & type; typedef msg_class raw_type; }; \
     }}}
 
-/**
+/** @section BOOST_LOG_DESTINATION_MSG BOOST_LOG_DESTINATION_MSG
 
 @note
     When using BOOST_LOG_FORMAT_MSG or BOOST_LOG_DESTINATION_MSG, you must not be within any namespace scope.
@@ -617,8 +617,11 @@ If defined, we don't use @ref macros_tss "TSS" as all.
     }}}
 
 
-
-
+#define BOOST_LOG_GATHER_CLASS(gather_class) \
+    namespace boost { namespace logging { namespace gather { \
+        template<> struct find<override> { template<class msg_type> struct from_msg_type { \
+            typedef typename ::boost::logging::detail::find_gather_from_class<msg_type, gather_class > ::type type; }; }; \
+    }}}
 
 
 
