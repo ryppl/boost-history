@@ -10,6 +10,8 @@
 // history.
 
 //
+// Dec 29 2007  Restored some temporary commented arguments.
+//
 // Dec 24 2007  Consolidated the min_element_if and max_element_if functions
 //              into the minmaxif.hpp header file. Added typename specifier
 //              and scope resolutions detail:: for the iterator_trait
@@ -72,7 +74,7 @@ namespace boost {
     protected:
         const Predicate pred;
     public:
-        binary_reverse(const Predicate& x) : pred(x) {}
+        explicit binary_reverse(const Predicate& x) : pred(x) {}
         typename BINFUNC::result_type operator()(
             const typename BINFUNC::first_argument_type& x,
             const typename BINFUNC::second_argument_type& y) const
@@ -87,7 +89,7 @@ namespace boost {
     {
         return binary_reverse<Predicate>(pred);
     }
-    
+
     // Two exception objects
 
     // combinatorial_range_error ------------------------------------------//
@@ -179,7 +181,7 @@ namespace boost {
         {
             // find smallest element greater than *i after index i.
             RandomAccessIterator k =
-                min_element_if(i + 1, last, /*comp,*/ std::bind2nd(reverse_args(comp), *i));
+                min_element_if(i + 1, last, comp, std::bind2nd(reverse_args(comp), *i));
 
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -269,7 +271,7 @@ namespace boost {
         {
             // find the largest element less than *i after index i.
             RandomAccessIterator k =
-                max_element_if(i + 1, last, /*comp,*/ std::bind2nd(comp, *i));
+                max_element_if(i + 1, last, comp, std::bind2nd(comp, *i));
             
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -368,7 +370,7 @@ namespace boost {
         {
             // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
-                min_element_if(r, last, /*comp,*/ std::bind2nd(reverse_args(comp), *i));
+                min_element_if(r, last, comp, std::bind2nd(reverse_args(comp), *i));
             if (j == last)
                 if (i == first)
                 {
@@ -383,7 +385,7 @@ namespace boost {
                 for(++i; i < r; ++i)
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
-                    j = min_element_if(r, last, /*comp,*/
+                    j = min_element_if(r, last, comp,
                         std::bind2nd(reverse_args(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
