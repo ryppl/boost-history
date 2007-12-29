@@ -384,6 +384,92 @@ be approved for C++0X.
 But <code>d</code> can't be <code>const</code>.  It is used in a non-<code>const</code> manner.
 </p>
 
+<p>
+&#9998; 63. [time.duration.requirements] says in part:
+</p>
+
+<blockquote>
+... The resolution of <code>E</code> shall not be finer than the resolution of <code>D</code> (diagnostic required).
+</blockquote>
+
+<p>
+This wording works fine for the std-defined durations.  Each duration that has courser resolution than
+another is <em>exactly convertible</em> to that other duration of finer resolution.  However for
+user-defined durations, having a courser resolution than some std-defined duration is no guarantee
+that the user-defined duration is exactly convertible to the finer std-defined duration.  For
+example consider a user-defined duration that has <code>ticks_per_second = 30</code>.  The
+following example compiles with the current wording:
+</p>
+
+<blockquote><pre>
+std::milliseconds ms;
+frame_time_duration ft = 1;
+ms += ft;  // ms.count() == 33
+</pre></blockquote>
+
+<p>
+However 33 milliseconds is not exactly 1/30 of a second.  This is an inexact conversion, arbitrarily
+coded with truncation as opposed to round-up, or round-to-nearest.
+</p>
+<p>
+I propose that we change the requirement on <code>E</code> from "not finer than" to "exactly
+convertible to" which matches the original intent.  A new <code>&lt;hdate_time&gt;</code> has
+been checked in which demonstrates this change is implementable.  However I have not yet updated
+the paper (pending discussion) with:
+</p>
+
+<blockquote>
+... The resolution of <code>E</code> shall <del>not</del> be <del>finer than</del>
+<ins>exactly convertible to</ins> the resolution of <code>D</code> (diagnostic required).
+</blockquote>
+
+<p>
+If need be we can precisely define <i>exactly convertible</i> as:
+</p>
+
+<blockquote>
+<p>
+The duration <code>E</code> is <i>exactly convertible</i> to <code>D</code> if
+</p>
+
+<ul>
+<li>
+<code>E::is_subsecond</code> is <code>false</code> and <code>D::is_subsecond</code>
+is <code>true</code>, or
+</li>
+<li>
+<code>E::is_subsecond</code> is <code>false</code> and <code>D::is_subsecond</code>
+is <code>false</code>, and <code>E::seconds_per_tick % D::seconds_per_tick == 0</code>, or
+</li>
+<li>
+<code>E::is_subsecond</code> is <code>true</code> and <code>D::is_subsecond</code>
+is <code>true</code>, and <code>D::ticks_per_second % E::ticks_per_second == 0</code>.
+</li>
+</ul>
+
+<p>
+Otherwise the duration <code>E</code> is not exactly convertible to <code>D</code>.
+</p>
+
+</blockquote>
+
+<p>
+This change would make the above code fail to compile:
+</p>
+
+<blockquote><pre>
+std::milliseconds ms;
+frame_time_duration ft = 1;
+ms += ft;
+
+error: no match for ‘operator+=’ in ‘ms += ft’
+</pre></blockquote>
+
+<p>
+However if <code>frame_time_duration::ticks_per_second</code> is changed to 40, the example now compiles
+since 25 milliseconds is exactly equal to 1/40 of a second.
+</p>
+
 </body>
 
 </html>
