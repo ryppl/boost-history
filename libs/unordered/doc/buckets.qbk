@@ -78,9 +78,9 @@ load factor below.
 You can't control the bucket count directly but there are two ways to
 influence it:
 
- * Specify the minimum number of buckets when constructing a container or
-   when calling `rehash`.
- * Suggest a maximum load factor by calling `max_load_factor`.
+* Specify the minimum number of buckets when constructing a container or
+  when calling `rehash`.
+* Suggest a maximum load factor by calling `max_load_factor`.
 
 `max_load_factor` doesn't let you set the maximum load factor yourself, it just
 lets you give a /hint/.  And even then, the draft standard doesn't actually
