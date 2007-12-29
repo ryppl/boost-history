@@ -64,28 +64,37 @@ keep collisions to a minimum.
 [h2 Controlling the number of buckets]
 
 As more elements are added to an unordered associative container, the number
-of elements in the buckets will increase causing performance to get worse. To
-combat this the containers increase the bucket count as elements are inserted.
+of elements in the buckets will increase causing performance to degrade.
+To combat this the containers increase the bucket count as elements are inserted.
+You can also tell the container to change the bucket count (if required) by
+calling `rehash`.
 
-The standard gives you two methods to influence the bucket count. First you can
-specify the minimum number of buckets in the constructor, and later, by calling
-`rehash`.
+The standard leaves a lot of freedom to the implementor to decide how the
+number of buckets are chosen, but it does make some requirements based on the
+container's 'load factor', the average number of elements per bucket.
+Containers also have a 'maximum load factor' which they should try to keep the
+load factor below.
 
-The other method is the `max_load_factor` member function. The 'load factor'
-is the average number of elements per bucket, `max_load_factor` can be used
-to give a /hint/ of a value that the load factor should be kept below. The
-draft standard doesn't actually require the container to pay much attention
-to this value. The only time the load factor is /required/ to be less than the
-maximum is following a call to `rehash`. But most implementations will probably
-try to keep the number of elements below the max load factor, and set the
-maximum load factor something the same or near to your hint - unless your hint
-is unreasonably small.
+You can't control the bucket count directly but there are two ways to
+influence it:
 
-It is not specified anywhere how member functions other than `rehash` affect
+ * Specify the minimum number of buckets when constructing a container or
+   when calling `rehash`.
+ * Suggest a maximum load factor by calling `max_load_factor`.
+
+`max_load_factor` doesn't let you set the maximum load factor yourself, it just
+lets you give a /hint/.  And even then, the draft standard doesn't actually
+require the container to pay much attention to this value. The only time the
+load factor is /required/ to be less than the maximum is following a call to
+`rehash`. But most implementations will try to keep the number of elements
+below the max load factor, and set the maximum load factor to be the same as
+or close to the hint - unless your hint is unreasonably small or large.
+
+It is not specified how member functions other than `rehash` affect
 the bucket count, although `insert` is only allowed to invalidate iterators
-when the insertion causes the load factor to reach the maximum. Which will
-typically mean that insert will only change the number of buckets when an
-insert causes this.
+when the insertion causes the load factor to reach the maximum load factor.
+Which will typically mean that insert will only change the number of buckets
+when this happens.
 
 In a similar manner to using `reserve` for `vector`s, it can be a good idea
 to call `rehash` before inserting a large number of elements. This will get
@@ -95,8 +104,8 @@ elements into container `x`, you could first call:
 
     x.rehash((x.size() + n) / x.max_load_factor() + 1);
 
-[blurb Note: `rehash`'s argument is the number of buckets, not the number of
-elements, which is why the new size is divided by the maximum load factor.  The
+[blurb Note: `rehash`'s argument is the minimum number of buckets, not the
+number of elements, which is why the new size is divided by the maximum load factor.  The
 + 1 guarantees there is no invalidation; without it, reallocation could occur
 if the number of bucket exactly divides the target size, since the container is
 allowed to rehash when the load factor is equal to the maximum load factor.]
