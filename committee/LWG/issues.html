@@ -371,6 +371,19 @@ experience in using them this way in our code.  Further, we may want to
 apply N2378 ("User-defined Literals") in this context, should that paper 
 be approved for C++0X.
 </p>
+
+<p>
+&#10004; 62.  [time.duration.requirements] says in part:
+</p>
+
+<blockquote>
+... <code>d</code> denotes a <code>const</code> value of type <cocde>D</code>, ...
+</blockquote>
+
+<p>
+But <code>d</code> can't be <code>const</code>.  It is used in a non-<code>const</code> manner.
+</p>
+
 </body>
 
 </html>
