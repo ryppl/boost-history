@@ -56,6 +56,8 @@ keep collisions to a minimum.
             local_iterator end(size_type n);
             const_local_iterator begin(size_type n) const;
             const_local_iterator end(size_type n) const;
+            const_local_iterator cbegin(size_type n) const;
+            const_local_iterator cend(size_type n) const;
         ``]
         [Return begin and end iterators for bucket `n`.]
     ]
