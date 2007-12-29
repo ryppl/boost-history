@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.11, 11 dec 2007
+@section changelog_cur_ver Current Version: v0.12.12, 29 dec 2007
+- added destination::named - similar to formatter::named_spacer, but for destinations
 - added possibility to flush a rolling file, and fixed a bug
 - added high precision_time tag
 - added new includes for files to be able to be compiled standalone - many thanks Jens Seidel!

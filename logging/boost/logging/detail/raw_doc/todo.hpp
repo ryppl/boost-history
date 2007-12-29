@@ -101,12 +101,9 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         new destination : to Event log
 
-- @c high           destination similar to named_spacer; but much easier. add to the docs as well
-  spacer string: every destination is separated by space. Each destination name cannot contain punctuation/spaces  ;
-  to know which destination is to be called, they're separated by space.
-  Also, just to make sure we're as friendly as possible (assuming this will go into a config file, and you want to see all names)
-  +name means write to this destination
-  -name means don't write to this destination
+- @c normal         shared_memory is to use interprocess lib.
+
+
 
 @section todo_docs Documentation
 
@@ -122,6 +119,11 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c low            Nice to have docs wish: a page discussing stranghts of this logger vs other common ones (log4cpp etc).
 
 - @c normal         Documentation about performance of the library is missing - absolute times, # of dynamic allocations per typical log, etc.
+
+- @c high           For formatters/destinations - make it easier to see - not necessary from examples.
+                    By looking at the namespace itself, it contains other stuff as well. See if I can use @ ingroup or something
+
+- @c normal         Explain about config files - you can use named_spacer,named.
 
 */
 

@@ -41,6 +41,7 @@ BOOST_LOG_FORMAT_MSG( log_string )
 #include <boost/logging/format_ts.hpp>
 #include <boost/logging/format/formatter/tags.hpp>
 #include <boost/logging/format/formatter/named_spacer.hpp>
+#include <boost/logging/format/destination/named.hpp>
 
 using namespace boost::logging;
 
@@ -79,8 +80,13 @@ void using_tags_example() {
         .add( "fileline", formatter::tag::file_line() ) );              // file/line tag
 
     g_l->writer().add_formatter( formatter::append_newline() );     
-    g_l->writer().add_destination( destination::cout() );
-    g_l->writer().add_destination( destination::file("out.txt") );
+
+    g_l->writer().add_destination( 
+        destination::named("+cout out -debug")
+            .add( "cout", destination::cout())
+            .add( "debug", destination::dbg_window() )
+            .add( "out", destination::file("out.txt"))
+         );
 
     // Step 8: use it...
     int i = 1;

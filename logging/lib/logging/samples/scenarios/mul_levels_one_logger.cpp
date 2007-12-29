@@ -31,6 +31,7 @@ It will look similar to this one:
 #include <boost/logging/format.hpp>
 #include <boost/logging/writer/ts_write.hpp>
 #include <boost/logging/format/formatter/high_precision_time.hpp>
+#include <boost/logging/format/destination/named.hpp>
 
 using namespace boost::logging;
 // Step 3 : Specify your logging class(es)
@@ -58,9 +59,12 @@ void test_mul_levels_one_logger() {
     g_l->writer().add_formatter( formatter::append_newline() );
 
     //        ... and where should it be written to
-    g_l->writer().add_destination( destination::cout() );
-    g_l->writer().add_destination( destination::dbg_window() );
-    g_l->writer().add_destination( destination::file("out.txt") );
+    g_l->writer().add_destination( 
+        destination::named("cout debug out")
+            .add( "cout", destination::cout())
+            .add( "out", destination::file("out.txt"))
+            .add( "debug", destination::dbg_window() )
+         );
 
     // Step 8: use it...
     int i = 1;
