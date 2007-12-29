@@ -209,5 +209,6 @@ rule init ( version ? : location : options * )
             <link>static:<define>_IRR_STATIC_LIB_
         :
         :   $(common-requirements)
+            <link>static:<define>_IRR_STATIC_LIB_
         ;
 }
