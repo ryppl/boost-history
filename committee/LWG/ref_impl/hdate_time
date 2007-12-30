@@ -288,24 +288,24 @@ namespace std {
 
 // __gcd
 
-template <long X, long Y>
+template <long long X, long long Y>
 struct __gcd
 {
-    static const long value = __gcd<Y, X % Y>::value;
+    static const long long value = __gcd<Y, X % Y>::value;
 };
 
-template <long X>
+template <long long X>
 struct __gcd<X, 0>
 {
-    static const long value = X;
+    static const long long value = X;
 };
 
 // __lcm
 
-template <long X, long Y>
+template <long long X, long long Y>
 struct __lcm
 {
-    static const long value = X / __gcd<X, Y>::value * Y;
+    static const long long value = X / __gcd<X, Y>::value * Y;
 };
 
 // __is_duration
@@ -586,32 +586,14 @@ public:
 // __choose_duration
 
 template <class LhsDuration, class RhsDuration,
-    bool = __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
-    bool = __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>
+    bool = __is_duration<LhsDuration>::value,
+    bool = __is_duration<RhsDuration>::value>
 struct __choose_duration
 {
 };
 
 template <class LhsDuration, class RhsDuration>
 struct __choose_duration<LhsDuration, RhsDuration, true, true>
-{
-    typedef LhsDuration type;
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __choose_duration<LhsDuration, RhsDuration, true, false>
-{
-    typedef LhsDuration type;
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __choose_duration<LhsDuration, RhsDuration, false, true>
-{
-    typedef RhsDuration type;
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __choose_duration<LhsDuration, RhsDuration, false, false>
 {
     typedef typename __make_duration<LhsDuration, RhsDuration>::type type;
 };
