@@ -600,39 +600,48 @@ struct __choose_duration<LhsDuration, RhsDuration, true, true>
 
 // Duration ==
 
-template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_eq(const LhsDuration& lhs, const RhsDuration& rhs, false_type, false_type)
+template <class LhsDuration, class RhsDuration,
+          bool = __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+          bool = __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>
+struct __duration_eq;
+
+template <class LhsDuration>
+struct __duration_eq<LhsDuration, LhsDuration, true, true>
 {
-    typedef typename __make_duration<LhsDuration, RhsDuration>::type CommonDuration;
-    return CommonDuration(lhs).count() == CommonDuration(rhs).count();
-}
+    bool operator()(const LhsDuration& lhs, const LhsDuration& rhs)
+        {return lhs.count() == rhs.count();}
+};
 
 template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_eq(const LhsDuration& lhs, const RhsDuration& rhs, false_type, true_type)
+struct __duration_eq<LhsDuration, RhsDuration, true, true>
 {
-    return RhsDuration(lhs).count() == rhs.count();
-}
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {return lhs.count() == LhsDuration(rhs).count();}
+};
 
 template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_eq(const LhsDuration& lhs, const RhsDuration& rhs, false_type)
+struct __duration_eq<LhsDuration, RhsDuration, true, false>
 {
-    return __duration_eq(lhs, rhs, false_type(),
-               integral_constant<bool, __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>());
-}
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {return lhs.count() == LhsDuration(rhs).count();}
+};
 
 template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_eq(const LhsDuration& lhs, const RhsDuration& rhs, true_type)
+struct __duration_eq<LhsDuration, RhsDuration, false, true>
 {
-    return lhs.count() == LhsDuration(rhs).count();
-}
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {return RhsDuration(lhs).count() == rhs.count();}
+};
+
+template <class LhsDuration, class RhsDuration>
+struct __duration_eq<LhsDuration, RhsDuration, false, false>
+{
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {
+            typedef typename __make_duration<LhsDuration, RhsDuration>::type CommonDuration;
+            return CommonDuration(lhs).count() == CommonDuration(rhs).count();
+        }
+};
 
 template <class LhsDuration, class RhsDuration>
 inline
@@ -644,7 +653,7 @@ typename enable_if
 >::type
 operator==(const LhsDuration& lhs, const RhsDuration& rhs)
 {
-    return __duration_eq(lhs, rhs, integral_constant<bool, __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value>());
+    return __duration_eq<LhsDuration, RhsDuration>()(lhs, rhs);
 }
 
 // Duration !=
@@ -664,38 +673,48 @@ operator!=(const LhsDuration& lhs, const RhsDuration& rhs)
 
 // Duration <
 
-template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_lt(const LhsDuration& lhs, const RhsDuration& rhs, false_type, false_type)
+template <class LhsDuration, class RhsDuration,
+          bool = __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+          bool = __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>
+struct __duration_lt;
+
+template <class LhsDuration>
+struct __duration_lt<LhsDuration, LhsDuration, true, true>
 {
-    typedef typename __make_duration<LhsDuration, RhsDuration>::type CommonDuration;
-    return CommonDuration(lhs).count() < CommonDuration(rhs).count();
-}
+    bool operator()(const LhsDuration& lhs, const LhsDuration& rhs)
+        {return lhs.count() < rhs.count();}
+};
 
 template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_lt(const LhsDuration& lhs, const RhsDuration& rhs, false_type, true_type)
+struct __duration_lt<LhsDuration, RhsDuration, true, true>
 {
-    return RhsDuration(lhs).count() < rhs.count();
-}
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {return lhs.count() < LhsDuration(rhs).count();}
+};
 
 template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_lt(const LhsDuration& lhs, const RhsDuration& rhs, false_type)
+struct __duration_lt<LhsDuration, RhsDuration, true, false>
 {
-    return __duration_lt(lhs, rhs, false_type(), integral_constant<bool, __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>());
-}
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {return lhs.count() < LhsDuration(rhs).count();}
+};
 
 template <class LhsDuration, class RhsDuration>
-inline
-bool
-__duration_lt(const LhsDuration& lhs, const RhsDuration& rhs, true_type)
+struct __duration_lt<LhsDuration, RhsDuration, false, true>
 {
-    return lhs.count() < LhsDuration(rhs).count();
-}
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {return RhsDuration(lhs).count() < rhs.count();}
+};
+
+template <class LhsDuration, class RhsDuration>
+struct __duration_lt<LhsDuration, RhsDuration, false, false>
+{
+    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
+        {
+            typedef typename __make_duration<LhsDuration, RhsDuration>::type CommonDuration;
+            return CommonDuration(lhs).count() < CommonDuration(rhs).count();
+        }
+};
 
 template <class LhsDuration, class RhsDuration>
 inline
@@ -707,7 +726,7 @@ typename enable_if
 >::type
 operator< (const LhsDuration& lhs, const RhsDuration& rhs)
 {
-    return __duration_lt(lhs, rhs, integral_constant<bool, __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value>());
+    return __duration_lt<LhsDuration, RhsDuration>()(lhs, rhs);
 }
 
 // Duration >
