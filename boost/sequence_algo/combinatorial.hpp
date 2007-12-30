@@ -74,7 +74,7 @@ namespace boost {
     protected:
         const Predicate pred;
     public:
-        explicit binary_reverse(const Predicate& x) : pred(x) {}
+        binary_reverse(const Predicate& x) : pred(x) {}
         typename BINFUNC::result_type operator()(
             const typename BINFUNC::first_argument_type& x,
             const typename BINFUNC::second_argument_type& y) const
@@ -83,6 +83,13 @@ namespace boost {
         }
     };  // binary_reverse class
 
+    template <class Predicate>
+        inline binary_reverse<Predicate>
+        reverse_args(const Predicate& pred)
+    {
+        return binary_reverse<Predicate>(pred);
+    }
+    
     // Two exception objects
 
     // combinatorial_range_error ------------------------------------------//
@@ -230,7 +237,7 @@ namespace boost {
                 if (i == first)
                 {
                     std::partial_sort(first, r, last,
-                        binary_reverse(std::less<T>()));
+                        reverse_args(std::less<T>()));
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -239,7 +246,7 @@ namespace boost {
             {
                 std::swap(*i,* k);
                 std::partial_sort(i+1, r, last,
-                    binary_reverse(std::less<T>())); // O(n lg n), heapsort
+                    reverse_args(std::less<T>())); // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -272,7 +279,8 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, binary_reverse<Compare>(comp));
+                    std::partial_sort(first, r, last,
+                        binary_reverse<Compare>(comp));
                     return false;    // we're done--end of permutations
                 }
                 else
