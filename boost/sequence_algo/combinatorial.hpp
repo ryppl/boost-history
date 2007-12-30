@@ -83,13 +83,6 @@ namespace boost {
         }
     };  // binary_reverse class
 
-    template <class Predicate>
-        inline binary_reverse<Predicate>
-        reverse_args(const Predicate& pred)
-    {
-        return binary_reverse<Predicate>(pred);
-    }
-
     // Two exception objects
 
     // combinatorial_range_error ------------------------------------------//
@@ -181,7 +174,8 @@ namespace boost {
         {
             // find smallest element greater than *i after index i.
             RandomAccessIterator k =
-                min_element_if(i + 1, last, comp, std::bind2nd(reverse_args(comp), *i));
+                min_element_if(i + 1, last, comp,
+                std::bind2nd(binary_reverse<Compare>(comp), *i));
 
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -194,7 +188,7 @@ namespace boost {
             else
             {
                 std::swap(*i,* k);
-                std::partial_sort(i + 1, r, last, comp);    // O(n lg n), heapsort
+                std::partial_sort(i + 1, r, last, comp); // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -235,7 +229,8 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, reverse_args(std::less<T>()));
+                    std::partial_sort(first, r, last,
+                        binary_reverse(std::less<T>()));
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -243,7 +238,8 @@ namespace boost {
             else
             {
                 std::swap(*i,* k);
-                std::partial_sort(i+1, r, last, reverse_args(std::less<T>()));    // O(n lg n), heapsort
+                std::partial_sort(i+1, r, last,
+                    binary_reverse(std::less<T>())); // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -276,7 +272,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, reverse_args(comp));
+                    std::partial_sort(first, r, last, binary_reverse<Compare>(comp));
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -284,7 +280,8 @@ namespace boost {
             else
             {
                 std::swap(*i,* k);
-                std::partial_sort(i + 1, r, last, reverse_args(comp));    // O(n lg n), heapsort 
+                std::partial_sort(i + 1, r, last,
+                    binary_reverse<Compare>(comp)); // O(n lg n), heapsort 
                 return true;
             }    // else
         }    // while
@@ -337,7 +334,8 @@ namespace boost {
                 for(++i; i < r; i++)
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
-                    j = min_element_if(r, last, std::bind1st(std::less<T>(), *(i - 1)));
+                    j = min_element_if(r, last,
+                        std::bind1st(std::less<T>(), *(i - 1)));
                     if (j != last)
                         std::swap(*i,* j);
                 }    // for
@@ -370,7 +368,8 @@ namespace boost {
         {
             // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
-                min_element_if(r, last, comp, std::bind2nd(reverse_args(comp), *i));
+                min_element_if(r, last, comp,
+                std::bind2nd(binary_reverse<Compare>(comp), *i));
             if (j == last)
                 if (i == first)
                 {
@@ -386,7 +385,7 @@ namespace boost {
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
                     j = min_element_if(r, last, comp,
-                        std::bind2nd(reverse_args(comp), *(i - 1)));
+                        std::bind2nd(binary_reverse<Compare>(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
                 }    // for
