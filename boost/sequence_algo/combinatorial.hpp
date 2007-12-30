@@ -182,7 +182,7 @@ namespace boost {
             // find smallest element greater than *i after index i.
             RandomAccessIterator k =
                 min_element_if(i + 1, last, comp,
-                std::bind2nd(binary_reverse<Compare>(comp), *i));
+                std::bind2nd(reverse_args(comp), *i));
 
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -194,7 +194,7 @@ namespace boost {
                     --i;
             else
             {
-                std::swap(*i,* k);
+                std::swap(*i, *k);
                 std::partial_sort(i + 1, r, last, comp); // O(n lg n), heapsort
                 return true;
             }    // else
@@ -244,7 +244,7 @@ namespace boost {
                     --i;
             else
             {
-                std::swap(*i,* k);
+                std::swap(*i, *k);
                 std::partial_sort(i+1, r, last,
                     reverse_args(std::less<T>())); // O(n lg n), heapsort
                 return true;
@@ -280,16 +280,16 @@ namespace boost {
                 if (i == first)
                 {
                     std::partial_sort(first, r, last,
-                        binary_reverse<Compare>(comp));
+                        reverse_args(comp));
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
             else
             {
-                std::swap(*i,* k);
+                std::swap(*i, *k);
                 std::partial_sort(i + 1, r, last,
-                    binary_reverse<Compare>(comp)); // O(n lg n), heapsort 
+                    reverse_args(comp)); // O(n lg n), heapsort 
                 return true;
             }    // else
         }    // while
@@ -338,8 +338,8 @@ namespace boost {
                     --i;
             else
             {
-                std::swap(*i,* j);
-                for(++i; i < r; i++)
+                std::swap(*i, *j);
+                for(++i; i < r; ++i)
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
                     j = min_element_if(r, last,
@@ -377,7 +377,7 @@ namespace boost {
             // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
                 min_element_if(r, last, comp,
-                std::bind2nd(binary_reverse<Compare>(comp), *i));
+                std::bind2nd(reverse_args(comp), *i));
             if (j == last)
                 if (i == first)
                 {
@@ -393,7 +393,7 @@ namespace boost {
                 {
                     // find smallest element greater than *(i - 1) after r - 1.
                     j = min_element_if(r, last, comp,
-                        std::bind2nd(binary_reverse<Compare>(comp), *(i - 1)));
+                        std::bind2nd(reverse_args(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
                 }    // for
