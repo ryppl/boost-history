@@ -110,7 +110,7 @@ namespace boost {
             { }
     };
     
-    // next_r_permutation -----------------------------------------------//
+    // next_partial_permutation -----------------------------------------------//
     
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the next
@@ -125,15 +125,15 @@ namespace boost {
     
     template<class RandomAccessIterator>
         bool
-        next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last)
+        next_partial_permutation(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("next_r_permutation");
+            throw combinatorial_range_error("next_partial_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
@@ -157,24 +157,24 @@ namespace boost {
                 return true;
             }    // else
         }    // while
-    }    // next_r_permutation
+    }    // next_partial_permutation
     
-    // next_r_permutation -----------------------------------------------//
+    // next_partial_permutation -----------------------------------------------//
     
     // Identical to the above, except that it uses a user-supplied binary
     // comparison operator.
     
     template<class RandomAccessIterator, class Compare>
         bool
-        next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last, Compare comp)
+        next_partial_permutation(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
      
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("next_r_permutation");
+            throw combinatorial_range_error("next_partial_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
@@ -199,9 +199,9 @@ namespace boost {
                 return true;
             }    // else
         }    // while
-    }    // next_r_permutation
+    }    // next_partial_permutation
     
-    // prev_r_permutation -----------------------------------------------//
+    // prev_partial_permutation -----------------------------------------------//
     
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the previous
@@ -216,15 +216,15 @@ namespace boost {
     
     template<class RandomAccessIterator>
         bool
-        prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last)
+        prev_partial_permutation(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("prev_r_permutation");
+            throw combinatorial_range_error("prev_partial_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
@@ -250,24 +250,24 @@ namespace boost {
                 return true;
             }    // else
         }    // while
-    }    // prev_r_permutation
+    }    // prev_partial_permutation
     
-    // prev_r_permutation -----------------------------------------------//
+    // prev_partial_permutation -----------------------------------------------//
     
     // Identical to the above, except that it uses a user-supplied
     // binary comparison operator.
     
     template<class RandomAccessIterator, class Compare>
         bool
-        prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last, Compare comp)
+        prev_partial_permutation(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("prev_r_permutation");
+            throw combinatorial_range_error("prev_partial_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
@@ -293,10 +293,10 @@ namespace boost {
                 return true;
             }    // else
         }    // while
-    }    // prev_r_permutation
+    }    // prev_partial_permutation
     
     
-    // next_r_combination -----------------------------------------------//
+    // next_partial_combination -----------------------------------------------//
     
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the next
@@ -310,17 +310,17 @@ namespace boost {
     
     template<class RandomAccessIterator>
         bool
-        next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last)
+        next_partial_combination(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("next_r_combination");
+            throw combinatorial_range_error("next_partial_combination");
         if (!is_sorted(first, r))
-            throw combinatorial_sequence_disorder("next_r_combination");
+            throw combinatorial_sequence_disorder("next_partial_combination");
         
         RandomAccessIterator i = r - 1;
         while(true)
@@ -350,26 +350,26 @@ namespace boost {
                 return true;
             }    // else
         }    // while
-    }    // next_r_combination
+    }    // next_partial_combination
     
-    // next_r_combination -----------------------------------------------//
+    // next_partial_combination -----------------------------------------------//
     
     // Identical to the above, except that it uses a user-supplied
     // binary comparison operator.
     
     template<class RandomAccessIterator, class Compare>
         bool
-        next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last, Compare comp)
+        next_partial_combination(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("next_r_combination");
+            throw combinatorial_range_error("next_partial_combination");
         if (!is_sorted(first, r, comp))
-            throw combinatorial_sequence_disorder("next_r_combination");
+            throw combinatorial_sequence_disorder("next_partial_combination");
         
         RandomAccessIterator i = r - 1;
         while(true)
@@ -400,10 +400,10 @@ namespace boost {
                 return true;
             }    // else
         }    // while
-    }    // next_r_combination
+    }    // next_partial_combination
     
     
-    // prev_r_combination -----------------------------------------------//
+    // prev_partial_combination -----------------------------------------------//
     
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the
@@ -417,15 +417,15 @@ namespace boost {
     
     template<class RandomAccessIterator>
         bool
-        prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last)
+        prev_partial_combination(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last)
     {
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("prev_r_combination");
+            throw combinatorial_range_error("prev_partial_combination");
         if (!is_sorted(first, r))
-            throw combinatorial_sequence_disorder("prev_r_combination");
+            throw combinatorial_sequence_disorder("prev_partial_combination");
 
         std::sort(r, last);
         for (RandomAccessIterator i = last - 1; i >= r; --i)
@@ -439,24 +439,24 @@ namespace boost {
                 }    // if
         std::rotate(first, first + (last - r), last);
         return false;
-    }    // prev_r_combination
+    }    // prev_partial_combination
     
-    // prev_r_combination -----------------------------------------------//
+    // prev_partial_combination -----------------------------------------------//
     
     // Identical to the above, except that it uses a user-supplied
     // binary comparison operator.
     
     template<class RandomAccessIterator, class Compare>
         bool
-        prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-            RandomAccessIterator last, Compare comp)
+        prev_partial_combination(RandomAccessIterator first,
+            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
     {
         if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw combinatorial_range_error("prev_r_combination");
+            throw combinatorial_range_error("prev_partial_combination");
         if (!is_sorted(first, r, comp))
-            throw combinatorial_sequence_disorder("prev_r_combination");
+            throw combinatorial_sequence_disorder("prev_partial_combination");
 
         std::sort(r, last, comp);
         for (RandomAccessIterator i = last - 1; i >= r; i--)
@@ -470,7 +470,7 @@ namespace boost {
                 }    // if
         std::rotate(first, first + (last - r), last);
         return false;
-    }    // prev_r_combination
+    }    // prev_partial_combination
     
 }    // namespace boost
 
