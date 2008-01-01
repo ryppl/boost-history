@@ -1,4 +1,4 @@
-// combinatorial.hpp header file - r-permutation and r-combination algorithms
+// combinatorial.hpp header file - partial permutation and partial combination algorithms
 
 // Copyright © Philip F. Garofalo 2008. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
@@ -32,10 +32,10 @@
 //              renamed the function smallest_greater to min_element_greater than
 //              and largest_less to max_element_less_than.
 
-// Jun 27 2002  All functions now throw std::out_of_bounds if r (the iterator
+// Jun 27 2002  All functions now throw std::out_of_bounds if middle (the iterator
 //              that points into the middle of the sequence) is not within
 //              (first, last]. The combination functions throw std::invalid_argument
-//              if the selection [first, r) is not in sorted order. [Phil Garofalo]
+//              if the selection [first, middle) is not in sorted order. [Phil Garofalo]
 
 // Jul 01 2002  Replaced about two-thirds of the calls to sort with partial_sort.
 //              This should result in a more efficient program. Also introduced
@@ -97,7 +97,7 @@ namespace boost {
     struct combinatorial_range_error : public std::out_of_range
     {
         combinatorial_range_error(const std::string& func) :
-            std::out_of_range(func +  ": r is not in range (first, last]")
+            std::out_of_range(func +  ": middle is not in range (first, last]")
             { }
     };
 
@@ -106,19 +106,19 @@ namespace boost {
     struct combinatorial_sequence_disorder : public std::invalid_argument
     {
         combinatorial_sequence_disorder(const std::string& func) :
-            std::invalid_argument(func + ": [first, r) is not in order")
+            std::invalid_argument(func + ": [first, middle) is not in order")
             { }
     };
     
     // next_partial_permutation -----------------------------------------------//
     
-    // Arranges the elements in [first, r), from the larger range [first,
-    // last) where first < r <= last, such that they represent the next
-    // r-permutation of elements in lexicographical (or dictionary) order.
+    // Arranges the elements in [first, middle), from the larger range [first,
+    // last) where first < middle <= last, such that they represent the next
+    // middle-permutation of elements in lexicographical (or dictionary) order.
     // When calling the function for the first time, the elements in
     // [first, last) should be in ascending lexicographical order to start
     // the permutation sequence at its beginning. Typically, when the function
-    // is called it arranges the next r-permutation in [first, r) and returns
+    // is called it arranges the next middle-permutation in [first, middle) and returns
     // true. When the last permutation in lexicographical order is passed in,
     // the function std::sorts the entire range, [first, last) into ascending
     // order, restarting the sequence, and returns false.
@@ -126,16 +126,16 @@ namespace boost {
     template<class RandomAccessIterator>
         bool
         next_partial_permutation(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last)
+            RandomAccessIterator middle, RandomAccessIterator last)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("next_partial_permutation");
         
-        RandomAccessIterator i = r - 1;
+        RandomAccessIterator i = middle - 1;
         while(true)
         {
             // find smallest element greater than *i after index i.
@@ -145,7 +145,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last);
+                    std::partial_sort(first, middle, last);
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -153,7 +153,7 @@ namespace boost {
             else
             {
                 std::swap(*i, *k);
-                std::partial_sort(i + 1, r, last);    // O(n lg n), heapsort
+                std::partial_sort(i + 1, middle, last);    // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -167,16 +167,16 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
         bool
         next_partial_permutation(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
+            RandomAccessIterator middle, RandomAccessIterator last, Compare comp)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
      
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("next_partial_permutation");
         
-        RandomAccessIterator i = r - 1;
+        RandomAccessIterator i = middle - 1;
         while(true)
         {
             // find smallest element greater than *i after index i.
@@ -187,7 +187,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, comp);
+                    std::partial_sort(first, middle, last, comp);
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -195,7 +195,7 @@ namespace boost {
             else
             {
                 std::swap(*i, *k);
-                std::partial_sort(i + 1, r, last, comp); // O(n lg n), heapsort
+                std::partial_sort(i + 1, middle, last, comp); // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -203,13 +203,13 @@ namespace boost {
     
     // prev_partial_permutation -----------------------------------------------//
     
-    // Arranges the elements in [first, r), from the larger range [first,
-    // last) where first < r <= last, such that they represent the previous
-    // r-permutation of elements in lexicographical order. When calling
+    // Arranges the elements in [first, middle), from the larger range [first,
+    // last) where first < middle <= last, such that they represent the previous
+    // middle-permutation of elements in lexicographical order. When calling
     // the function for the first time, the elements in [first, last) should
     // be in descending lexicographical order to start a new series at the
     // end. Typically, when the function is called it arranges the previous
-    // r-permutation in [first, r) and returns true. When the first permutation
+    // middle-permutation in [first, middle) and returns true. When the first permutation
     // in lexicographical order is passed in, the function std::sorts the entire
     // range, [first, last) into descending order, restarting the sequence
     // at the end, and returns false.
@@ -217,16 +217,16 @@ namespace boost {
     template<class RandomAccessIterator>
         bool
         prev_partial_permutation(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last)
+            RandomAccessIterator middle, RandomAccessIterator last)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("prev_partial_permutation");
         
-        RandomAccessIterator i = r - 1;
+        RandomAccessIterator i = middle - 1;
         while(true)
         {
             // find the largest element less than *i after index i.
@@ -236,7 +236,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last,
+                    std::partial_sort(first, middle, last,
                         reverse_args(std::less<T>()));
                     return false;    // we're done--end of permutations
                 }
@@ -245,7 +245,7 @@ namespace boost {
             else
             {
                 std::swap(*i, *k);
-                std::partial_sort(i+1, r, last,
+                std::partial_sort(i+1, middle, last,
                     reverse_args(std::less<T>())); // O(n lg n), heapsort
                 return true;
             }    // else
@@ -260,16 +260,16 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
         bool
         prev_partial_permutation(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
+            RandomAccessIterator middle, RandomAccessIterator last, Compare comp)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("prev_partial_permutation");
         
-        RandomAccessIterator i = r - 1;
+        RandomAccessIterator i = middle - 1;
         while(true)
         {
             // find the largest element less than *i after index i.
@@ -279,7 +279,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last,
+                    std::partial_sort(first, middle, last,
                         reverse_args(comp));
                     return false;    // we're done--end of permutations
                 }
@@ -288,7 +288,7 @@ namespace boost {
             else
             {
                 std::swap(*i, *k);
-                std::partial_sort(i + 1, r, last,
+                std::partial_sort(i + 1, middle, last,
                     reverse_args(comp)); // O(n lg n), heapsort 
                 return true;
             }    // else
@@ -298,12 +298,12 @@ namespace boost {
     
     // next_partial_combination -----------------------------------------------//
     
-    // Arranges the elements in [first, r), from the larger range [first,
-    // last) where first < r <= last, such that they represent the next
-    // r-combination of elements in lexicographical order. The elements
-    // in [first, r) must be in ascending lexicographical order.
+    // Arranges the elements in [first, middle), from the larger range [first,
+    // last) where first < middle <= last, such that they represent the next
+    // middle-combination of elements in lexicographical order. The elements
+    // in [first, middle) must be in ascending lexicographical order.
     // When the function is called and a next combination exists,
-    // it arranges the next r-combination in [first, r) and returns true. 
+    // it arranges the next middle-combination in [first, middle) and returns true. 
     // If the next combination does not exist, the function std::sorts the
     // entire range, [first, last) into ascending order, restarting the
     // sequence, and returns false.
@@ -311,27 +311,27 @@ namespace boost {
     template<class RandomAccessIterator>
         bool
         next_partial_combination(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last)
+            RandomAccessIterator middle, RandomAccessIterator last)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("next_partial_combination");
-        if (!is_sorted(first, r))
+        if (!is_sorted(first, middle))
             throw combinatorial_sequence_disorder("next_partial_combination");
         
-        RandomAccessIterator i = r - 1;
+        RandomAccessIterator i = middle - 1;
         while(true)
         {
-            // find smallest element greater than *i after r - 1.
+            // find smallest element greater than *i after middle - 1.
             RandomAccessIterator j =
-                min_element_if(r, last, std::bind1st(std::less<T>(), *i));
+                min_element_if(middle, last, std::bind1st(std::less<T>(), *i));
             if (j == last)
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last);
+                    std::partial_sort(first, middle, last);
                     return false;
                 }
                 else
@@ -339,10 +339,10 @@ namespace boost {
             else
             {
                 std::swap(*i, *j);
-                for(++i; i < r; ++i)
+                for(++i; i < middle; ++i)
                 {
-                    // find smallest element greater than *(i - 1) after r - 1.
-                    j = min_element_if(r, last,
+                    // find smallest element greater than *(i - 1) after middle - 1.
+                    j = min_element_if(middle, last,
                         std::bind1st(std::less<T>(), *(i - 1)));
                     if (j != last)
                         std::swap(*i,* j);
@@ -360,28 +360,28 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
         bool
         next_partial_combination(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
+            RandomAccessIterator middle, RandomAccessIterator last, Compare comp)
     {
         typedef typename detail::iterator_traits<RandomAccessIterator>::value_type T;
 
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("next_partial_combination");
-        if (!is_sorted(first, r, comp))
+        if (!is_sorted(first, middle, comp))
             throw combinatorial_sequence_disorder("next_partial_combination");
         
-        RandomAccessIterator i = r - 1;
+        RandomAccessIterator i = middle - 1;
         while(true)
         {
-            // find smallest element greater than *i after r - 1.
+            // find smallest element greater than *i after middle - 1.
             RandomAccessIterator j =
-                min_element_if(r, last, comp,
+                min_element_if(middle, last, comp,
                 std::bind2nd(reverse_args(comp), *i));
             if (j == last)
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, comp);
+                    std::partial_sort(first, middle, last, comp);
                     return false;
                 }
                 else
@@ -389,10 +389,10 @@ namespace boost {
             else
             {
                 std::swap(*i, *j);
-                for(++i; i < r; ++i)
+                for(++i; i < middle; ++i)
                 {
-                    // find smallest element greater than *(i - 1) after r - 1.
-                    j = min_element_if(r, last, comp,
+                    // find smallest element greater than *(i - 1) after middle - 1.
+                    j = min_element_if(middle, last, comp,
                         std::bind2nd(reverse_args(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
@@ -405,39 +405,39 @@ namespace boost {
     
     // prev_partial_combination -----------------------------------------------//
     
-    // Arranges the elements in [first, r), from the larger range [first,
-    // last) where first < r <= last, such that they represent the
-    // previous r-combination of elements in lexicographical order.
-    // The elements in [first, r) must be in ascending lexicographical
+    // Arranges the elements in [first, middle), from the larger range [first,
+    // last) where first < middle <= last, such that they represent the
+    // previous middle-combination of elements in lexicographical order.
+    // The elements in [first, middle) must be in ascending lexicographical
     // order. When the function is called and a prior combination exists,
-    // it arranges the previous r-combination in [first, r) and returns 
+    // it arranges the previous middle-combination in [first, middle) and returns 
     // true. If the prior combination does not exist, the function 
-    // arranges the sequence [first, last) into the last r-combination,
+    // arranges the sequence [first, last) into the last middle-combination,
     // thus restarting the sequence at the end, and returns false.
     
     template<class RandomAccessIterator>
         bool
         prev_partial_combination(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last)
+            RandomAccessIterator middle, RandomAccessIterator last)
     {
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("prev_partial_combination");
-        if (!is_sorted(first, r))
+        if (!is_sorted(first, middle))
             throw combinatorial_sequence_disorder("prev_partial_combination");
 
-        std::sort(r, last);
-        for (RandomAccessIterator i = last - 1; i >= r; --i)
-            for (RandomAccessIterator j = first; j < r; ++j)
+        std::sort(middle, last);
+        for (RandomAccessIterator i = last - 1; i >= middle; --i)
+            for (RandomAccessIterator j = first; j < middle; ++j)
                 if (*i < *j)
                 {
                     std::swap(*j, *i);
                     std::sort(++j, last);    // O(n lg n)
-                    std::rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+                    std::rotate(j, j + (last - middle), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
                     return true;
                 }    // if
-        std::rotate(first, first + (last - r), last);
+        std::rotate(first, first + (last - middle), last);
         return false;
     }    // prev_partial_combination
     
@@ -449,26 +449,26 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
         bool
         prev_partial_combination(RandomAccessIterator first,
-            RandomAccessIterator r, RandomAccessIterator last, Compare comp)
+            RandomAccessIterator middle, RandomAccessIterator last, Compare comp)
     {
         if (last - first < 2)
             return false;
-        if (!(first < r && r <= last))
+        if (!(first < middle && middle <= last))
             throw combinatorial_range_error("prev_partial_combination");
-        if (!is_sorted(first, r, comp))
+        if (!is_sorted(first, middle, comp))
             throw combinatorial_sequence_disorder("prev_partial_combination");
 
-        std::sort(r, last, comp);
-        for (RandomAccessIterator i = last - 1; i >= r; i--)
-            for (RandomAccessIterator j = first; j < r; j++)
+        std::sort(middle, last, comp);
+        for (RandomAccessIterator i = last - 1; i >= middle; i--)
+            for (RandomAccessIterator j = first; j < middle; j++)
                 if (comp(*i, *j))
                 {
                     std::swap(*j, *i);
                     std::sort(++j, last, comp);    // O(n lg n)
-                    std::rotate(j, last - (r - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+                    std::rotate(j, last - (middle - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
                     return true;
                 }    // if
-        std::rotate(first, first + (last - r), last);
+        std::rotate(first, first + (last - middle), last);
         return false;
     }    // prev_partial_combination
     
