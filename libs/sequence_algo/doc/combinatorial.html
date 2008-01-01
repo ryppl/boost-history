@@ -2,11 +2,18 @@
 <html lang="en-us">
 <head>
 
+
+
+  
+  
   
   <title>Generic Combinatorial Algorithms</title>
 </head>
 
+
 <body style="direction: ltr;" bgcolor="#ffffff" text="#000000">
+
+
 
 <h1>
   
@@ -14,36 +21,60 @@
     next_partial_permutation, prev_partial_permutation, next_partial_combination, prev_partial_combination
   </center>
 
+
+
 </h1>
+
+
 
 <h3>
   Contents
 </h3>
 
+
+
 <ul>
+
+
 
   <li>
     <a href="#Introduction">Introduction</a>
   </li>
+
+
   <li>
     <a href="#Description">Description</a>
   </li>
+
+
   <li>
     <a href="#Performance">Performance</a>
   </li>
+
+
   <li>
     <a href="#Examples">Examples and Test Programs</a>
   </li>
+
+
   <li>
     <a href="#References">References</a>
   </li>
+
+
 </ul>
+
+
 
 <p>
 </p>
+
+
 <h3>
   <a name="Introduction">Introduction</a>
 </h3>
+
+
 
 <p>
 A common problem in discrete mathematics is the need to generate all the
@@ -53,42 +84,66 @@ will work on entire sets, but not on subsets and obviously, will only return
 permutations. For this reason, I've written a suite of generic combinatorial
 algorithms to complement the existing functions. Specifically, they are
 algorithms to implement ordered and unordered selection without replacement,
-referred to as r-permutations and r-combinations, respectively, in many texts.
+referred to as r-permutations and r-combinations, respectively, in some texts.
 For instance, see <a href="#Johnsonbaugh">[1]</a>.
 </p>
+
+
 <p>
 The programs have been compiled and tested on MacOS 9 using Metrowerks
 Codewarrior version 5 and on Windows 98 using Microsoft Visual C++ version
 6.0.
 </p>
+
+
 <p>
 </p>
+
+
 <h3>
   <a name="Description">Description</a>
 </h3>
+
+
 
 <p>
 There are eight primary functions in this collection and they follow the
 format and semantics commonly found among functions in the STL. They are
 </p>
+
+
 <ul>
+
+
 
   <li>
     <a href="#next_r_permutation">next_partial_permutation</a>,
   </li>
+
+
   <li>
     <a href="#prev_r_permutation">prev_partial_permutation</a>,
   </li>
+
+
   <li>
     <a href="#next_r_combination">next_partial_combination</a>,
   </li>
+
+
   <li>
     <a href="#prev_r_combination">prev_partial_combination</a>,
   </li>
+
+
   <li>
     and user-supplied binary comparison predicate versions of each.
   </li>
+
+
 </ul>
+
+
 
 <p>
 They're defined in the header file <strong>conbinatorial.hpp</strong> in
@@ -97,137 +152,178 @@ The file itself uses a function from the boost library, so make sure that
 the Boost directory is in your header include path. See the example programs
 listed in the section below.
 </p>
+
+
 <p>
 Items in input sequences must either work with the built-in less than (&lt;)
 operator, have a less than operator defined, or have a user-defined binary
 comparison operation provided at the point of call.
 </p>
+
+
 <p>
 Like the STL's permutation algorithms, objects in the input sequence to these
 functions should be in lexicographical order (based on the less than operator,
 unless a binary comparison function is supplied) on the first call.
 </p>
+
+
 <p>
 The input must define a strict weak ordering <a href="#Musser">[3]</a>.
 </p>
+
+
 <p>
 <strong><a name="next_r_permutation">next_partial_permutation</a></strong> - arranges
-the elements in [first, r), from the larger range [first, last) where first
-&lt; r &lt;= last, such that they represent the next r-permutation of elements
+the elements in [first, middle), from the larger range [first, last) where first
+&lt; middle &lt;= last, such that they represent the next r-permutation of elements
 in lexicographical order. When calling the function for the first time, the
 elements in [first, last) must be in ascending lexicographical order. Typically,
 when the function is called it arranges the next r-permutation in [first,
-r) and returns true. When the last permutation in lexicographical order is
+middle) and returns true. When the last permutation in lexicographical order is
 passed in, the function sorts the entire range, [first, last) into ascending
 order, restarting the sequence, and returns false.
 </p>
-<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>next_partial_permutation(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>next_partial_permutation(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
+<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>next_partial_permutation(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>next_partial_permutation(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
 
 <p>
 <strong><a name="prev_r_permutation">prev_partial_permutation</a></strong> - arranges
-the elements in [first, r), from the larger range [first, last) where first
-&lt; r &lt;= last, such that they represent the previous r-permutation of
+the elements in [first, middle), from the larger range [first, last) where first
+&lt; middle &lt;= last, such that they represent the previous r-permutation of
 elements in lexicographical order. When calling the function for the first
 time, the elements in [first, last) must be in descending lexicographical
 order. Typically, when the function is called it arranges the previous
-r-permutation in [first, r) and returns true. When the first permutation
+r-permutation in [first, middle) and returns true. When the first permutation
 in lexicographical order is passed in, the function sorts the entire range,
 [first, last) into descending order, restarting the sequence at the end,
 and returns false.
 </p>
-<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>prev_partial_permutation(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>prev_partial_permutation(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
+<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>prev_partial_permutation(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>prev_partial_permutation(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
 
 <p>
 <strong><a name="next_r_combination">next_partial_combination</a></strong> - arranges
-the elements in [first, r), from the larger range [first, last) where first
-&lt; r &lt;= last, such that they represent the next r-combination of elements
+the elements in [first, middle), from the larger range [first, last) where first
+&lt; middle &lt;= last, such that they represent the next r-combination of elements
 in lexicographical order. The elements in [first, last) must be in ascending
 lexicographical order. When the function is called and a next combination
-exists, it arranges the next r-combination in [first, r) and returns true.
+exists, it arranges the next r-combination in [first, middle) and returns true.
 If the next combination does not exist, the function sorts the entire range,
 [first, last) into ascending order, thus restarting the sequence, and returns
 false.
 </p>
-<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>next_partial_combination(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>next_partial_combination(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
+<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>next_partial_combination(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>next_partial_combination(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
 
 <p>
 <strong><a name="prev_r_combination">prev_partial_combination</a></strong> - arranges
-the elements in [first, r), from the larger range [first, last) where first
-&lt; r &lt;= last, such that they represent the previous r-combination of
+the elements in [first, middle), from the larger range [first, last) where first
+&lt; middle &lt;= last, such that they represent the previous r-combination of
 elements in lexicographical order. The elements in [first, last) must be
 in ascending lexicographical order. When the function is called and a prior
-combination exists, it arranges the previous r-combination in [first, r)
+combination exists, it arranges the previous r-combination in [first, middle)
 and returns true. If the prior combination does not exist, the function arranges
 the sequence [first, last) into the last r-combination, thus restarting the
 sequence at the end, and returns false.
 </p>
-<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>prev_partial_combination(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>prev_partial_combination(RandomAccessIterator first, RandomAccessIterator r,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
+<pre>template&lt;class RandomAccessIterator&gt;<br>bool<br>prev_partial_combination(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last)<br><br>template&lt;class RandomAccessIterator, class Compare&gt;<br>bool<br>prev_partial_combination(RandomAccessIterator first, RandomAccessIterator middle,<br>    RandomAccessIterator last, Compare comp)<br></pre>
+
+
 
 <h4>
   -- Support Functions --
 </h4>
 
+
+
 <p>
 <strong>is_sorted</strong> - returns true if [first, last) is in sorted order,
 based on the less than operator or the compare operator.
 </p>
-<pre>template&lt;class ForwardIterator&gt;<br>bool<br>is_sorted(ForwardIterator first, ForwardIterator last)<br><br>template&lt;class ForwardIterator, class Compare&gt;<br>bool<br>is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)<br></pre>
+
+
+<pre>template&lt;class ForwardIterator&gt;<br>bool<br>is_sorted(ForwardIterator first, ForwardIterator last)<br><br>template&lt;class ForwardIterator, class Compare&gt;<br>bool<br>is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)<br><br></pre>
+
+
 
 <p>
-<strong>min_element_greater_than</strong> - returns an iterator pointing
-to the smallest value in [first, last) greater than x. last is returned if
-value is not found. Time complexity is linear, O((last-first)/2) assignments
-in average case.
-</p>
-<pre>template&lt;class ForwardIterator, class T&gt;<br>ForwardIterator<br>min_element_greater_than(ForwardIterator first, ForwardIterator last,<br>    const T&amp; x)<br><br>template&lt;class ForwardIterator, class T, class Compare&gt;<br>ForwardIterator<br>min_element_greater_than(ForwardIterator first, ForwardIterator last,<br>    const T&amp; x, Compare comp)<br></pre>
-
-<p>
-<strong>max_element_less_than</strong> - returns an iterator pointing to
-the largest object in [first, last) less than x. last is returned if the
-object doesn't exist.
-</p>
-<pre>template&lt;class ForwardIterator, class T&gt;<br>ForwardIterator<br>max_element_less_than(ForwardIterator first, ForwardIterator last, const T&amp; x)<br><br>template&lt;class ForwardIterator, class T, class Compare&gt;<br>ForwardIterator<br>max_element_less_than(ForwardIterator first, ForwardIterator last,<br>    const T&amp; x, Compare comp)<br></pre>
-
-<h3>
-  <a name="Performance">Performance</a>
+<strong>min_element_if</strong> -&nbsp;returns the smallest element, for the order comp, of the subsequence        of [first,last) satisfying the predicate (or last if none</p>
+<pre>template &lt;class ForwardIter, class UnaryPredicate&gt;<br>ForwardIter<br>min_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond);<br><br>template &lt;class ForwardIter, class BinaryPredicate, class UnaryPredicate&gt;<br>ForwardIter<br>min_element_if(ForwardIter first, ForwardIter last,<br>               BinaryPredicate comp, UnaryPredicate cond);<br>&nbsp;<br></pre>
+<p><strong>max_element_if</strong> -&nbsp;returns the largest element of the subsequence of [first,last)         satisfying the predicate (or last if none).</p>
+<pre>template &lt;class ForwardIter, class UnaryPredicate&gt;<br>ForwardIter<br>max_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond);<br><br>template &lt;class ForwardIter, class BinaryPredicate, class UnaryPredicate&gt;<br>ForwardIter<br>max_element_if(ForwardIter first, ForwardIter last,<br>               BinaryPredicate comp, UnaryPredicate cond)<br><span style="font-weight: bold;"></span></pre>
+<h3><a name="Performance">Performance</a>
 </h3>
 
+
+
 <p>
-Each permutation or combination function performs (r - first)/2 swaps on
+Each permutation or combination function performs (middle - first)/2 swaps on
 average. (To be verified.)
 </p>
+
+
 <h3>
   <a name="Examples">Examples and Test Programs</a>
 </h3>
 
+
+
 <p>
-The following programs include boost/sequence_algo/conbinatorial.hpp, headers
-from the C++ standard library, and Boost. Make sure these files are in your
+The following programs include boost/sequence_algo/combinatorial.hpp, headers
+from the C++ standard library, and Boost. These folders must be in your
 compiler include paths.
 </p>
+
+
 <p>
 </p>
+
+
 <dl>
+
+
 
   <dt>
     <strong>combinatorial_ex1.cpp</strong>
   </dt>
+
+
   <dd>
     This is interactive console I/O program presents a menu that lets you run
     each function individually. It is in the libs/sequence_algo/example subdirectory.
   </dd>
+
+
   <dt>
     <strong>combinatorial_ex2.cpp</strong>
   </dt>
+
+
   <dd>
     This console I/O program solves a puzzle from a recent "Ask Marilyn" column
     in <cite>Parade</cite> magazine using next_partial_permutation. It reads in the
     dictionary file lexicon.txt. You'll the files in the libs/sequence_algo/example
     subdirectory.
   </dd>
+
+
   <dt>
     <strong>test_combinatorial.cpp</strong>
   </dt>
+
+
   <dd>
     This program uses the Boost Unit Test framework for error reporting and is
     compatible with the Boost regression test program. It is a modification and
@@ -239,59 +335,93 @@ compiler include paths.
     in the libs/sequence_algo/test subdirectory. To build this program, it is
     necessary to link to cpp_main.cpp and test_main.cpp in boost/test.
   </dd>
+
+
   <dt>
   </dt>
+
+
 </dl>
+
+
 
 <h3>
   <a name="References">References</a>
 </h3>
 
+
+
 <p>
 </p>
+
+
 <ol>
+
+
 
   <li>
     <a name="Johnsonbaugh">Johnsonbaugh</a>, Richard. <cite>Discrete
     Mathematics</cite>. 2nd ed. New York: Macmillan, 1990.
   </li>
+
+
   <li>
     Lippman, Stanley B. and Jos&eacute;e Lajoie. <cite>C++ Primer</cite>. 3rd
     ed. Reading, MA: Addison-Wesley-AT&amp;T, 1998.
   </li>
+
+
   <li>
     <a name="Musser">Musser</a>, David R. and Atul Saini. <cite>STL Tutorial
     and Reference Guide: C++ Programming with the Standard Template Library</cite>.
     Reading, MA: Addison-Wesley-Modena Software, 1996.
   </li>
+
+
   <li>
     Sedgewick, Robert. <cite>Algorithms</cite>. 2nd ed. Reading, MA: Addison-Wesley,
     1988.
   </li>
+
+
   <li>
     Stepanov, Alexander and Meng Lee. <cite>The Standard Template Library</cite>.
     Palo Alto: Hewlett-Packard, 1995.
   </li>
+
+
   <li>
     Stroustrup, Bjarne. <cite>The C++ Programming Language</cite>. Special ed.
-    Reading, MA: Addison-Wesley-AT&amp;T, 2000.
-  </li>
+    Reading, MA: Addison-Wesley-AT&amp;T, 2000.</li>
+  <li>Sedgewick, Robert. "Permutation Generation Methods". Association for Computing Machinery, Inc., 1977</li>
+
+
 </ol>
+
+
 
 <p>
   </p>
+
+
 <hr size="2" width="100%">
 <p>
 Copyright &copy; Philip F. Garofalo 2002. All rights reserved.
 </p>
+
+
 <p>
 Permission to copy, use, modify, sell and distribute this software is granted
 provided this copyright notice appears in all copies. This software is provided
 "as is" without express or implied warranty, and with no claim as to its
 suitability for any purpose.
 </p>
+
+
 <p>
 Updated on June 20, 2002
 </p>
+
+
 </body>
 </html>
