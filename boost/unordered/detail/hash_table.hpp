@@ -407,6 +407,7 @@ namespace boost {
 
             struct node;
             typedef std::size_t size_type;
+            typedef std::ptrdiff_t difference_type;
 
             typedef Alloc value_allocator;
 
@@ -608,7 +609,7 @@ namespace boost {
 
                 void increment_group()
                 {
-                    node_ = data::next_group(node_);
+                    node_ = hash_table_data::next_group(node_);
 
                     while (!node_) {
                         ++bucket_;
@@ -1631,7 +1632,7 @@ namespace boost {
             {
                 key_type const& k = extract_key(v);
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = this->buckets_from_hash(hash_value);
+                bucket_ptr bucket = this->bucket_from_hash(hash_value);
                 link_ptr position = find_iterator(bucket, k);
 
                 // Create the node before rehashing in case it throws an
@@ -1642,7 +1643,7 @@ namespace boost {
                 // reserve has basic exception safety if the hash function
                 // throws, strong otherwise.
                 if(reserve(size() + 1))
-                    bucket = this->buckets_from_hash(hash_value);
+                    bucket = this->bucket_from_hash(hash_value);
 
                 // Nothing after the point can throw.
 
