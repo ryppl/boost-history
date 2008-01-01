@@ -58,7 +58,7 @@
 #include <string>
 #include <boost/utility.hpp>    // next()
 #include <algorithm.hpp>        // is_sorted()
-#include <minmaxif.hpp>           // formerly contained min/max_element_if()
+#include <minmaxif.hpp>         // formerly contained min/max_element_if()
 
 
 namespace boost {
