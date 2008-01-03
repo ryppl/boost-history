@@ -132,9 +132,22 @@ interval<T, Policies> operator+(const T& x, const interval<T, Policies>& y)
                               rnd.add_up  (x, y.upper()), true);
 }
 
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator+(const T2& x, const interval<T, Policies>& y)
+{
+   interval<T, Policies> result(x);
+   return result += y;
+}
+
 template<class T, class Policies> inline
 interval<T, Policies> operator+(const interval<T, Policies>& x, const T& y)
 { return y + x; }
+
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator+(const interval<T, Policies>& x, const T2& y)
+{ 
+   return y + interval<T, Policies>(x);
+}
 
 template<class T, class Policies> inline
 interval<T, Policies> operator-(const interval<T, Policies>& x,
@@ -157,6 +170,13 @@ interval<T, Policies> operator-(const T& x, const interval<T, Policies>& y)
                               rnd.sub_up  (x, y.lower()), true);
 }
 
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator-(const T2& x, const interval<T, Policies>& y)
+{ 
+   interval<T, Policies> result(x);
+   return result -= y;
+}
+
 template<class T, class Policies> inline
 interval<T, Policies> operator-(const interval<T, Policies>& x, const T& y)
 {
@@ -165,6 +185,13 @@ interval<T, Policies> operator-(const interval<T, Policies>& x, const T& y)
   typename Policies::rounding rnd;
   return interval<T,Policies>(rnd.sub_down(x.lower(), y),
                               rnd.sub_up  (x.upper(), y), true);
+}
+
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator-(const interval<T, Policies>& x, const T2& y)
+{ 
+   interval<T, Policies> result(x);
+   return result -= interval<T, Policies>(y);
 }
 
 template<class T, class Policies> inline
@@ -240,9 +267,20 @@ interval<T, Policies> operator*(const T& x, const interval<T, Policies>& y)
     return I(rnd.mul_down(x, yl), rnd.mul_up(x, yu), true);
 }
 
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator*(const T2& x, const interval<T, Policies>& y)
+{ 
+   interval<T, Policies> result(x);
+   return result *= y;
+}
+
 template<class T, class Policies> inline
 interval<T, Policies> operator*(const interval<T, Policies>& x, const T& y)
 { return y * x; }
+
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator*(const interval<T, Policies>& x, const T2& y)
+{ return y * interval<T, Policies>(x); }
 
 template<class T, class Policies> inline
 interval<T, Policies> operator/(const interval<T, Policies>& x,
@@ -285,6 +323,13 @@ interval<T, Policies> operator/(const T& x, const interval<T, Policies>& y)
     return interval_lib::detail::div_non_zero(x, y);
 }
 
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator/(const T2& x, const interval<T, Policies>& y)
+{
+   interval<T, Policies> result(x);
+   return result /= y;
+}
+
 template<class T, class Policies> inline
 interval<T, Policies> operator/(const interval<T, Policies>& x, const T& y)
 {
@@ -297,6 +342,13 @@ interval<T, Policies> operator/(const interval<T, Policies>& x, const T& y)
     return interval<T, Policies>(rnd.div_down(xu, y), rnd.div_up(xl, y), true);
   else
     return interval<T, Policies>(rnd.div_down(xl, y), rnd.div_up(xu, y), true);
+}
+
+template<class T, class Policies, class T2> inline
+interval<T, Policies> operator/(const interval<T, Policies>& x, const T2& y)
+{
+   interval<T, Policies> result(x);
+   return result /= interval<T, Policies>(y);
 }
 
 } // namespace numeric

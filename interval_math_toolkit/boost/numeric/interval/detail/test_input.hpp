@@ -44,14 +44,14 @@ bool test_input(const interval<T, Policies1>& x, const interval<T, Policies2>& y
          checking2::is_empty(y.lower(), y.upper());
 }
 
-template<class T, class Policies> inline
-bool test_input(const T& x, const interval<T, Policies>& y) {
+template<class T2, class T, class Policies> inline
+bool test_input(const T2& x, const interval<T, Policies>& y) {
   typedef typename Policies::checking checking;
-  return checking::is_nan(x) || checking::is_empty(y.lower(), y.upper());
+  return checking::is_nan(static_cast<T>(x)) || checking::is_empty(y.lower(), y.upper());
 }
 
-template<class T, class Policies> inline
-bool test_input(const interval<T, Policies>& x, const T& y) {
+template<class T, class Policies, class T2> inline
+bool test_input(const interval<T, Policies>& x, const T2& y) {
   typedef typename Policies::checking checking;
   return checking::is_empty(x.lower(), x.upper()) || checking::is_nan(y);
 }

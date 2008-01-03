@@ -12,6 +12,10 @@
 
 #include <boost/numeric/interval/rounding.hpp>
 #include <boost/numeric/interval/detail/bugs.hpp>
+#include <boost/type_traits/make_signed.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include <cmath>
 
 namespace boost {
@@ -26,8 +30,8 @@ namespace interval_lib {
 template<class T, class Rounding>
 struct rounded_arith_exact: Rounding {
   void init() { }
-  template<class U> T conv_down(U const &v) { return v; }
-  template<class U> T conv_up  (U const &v) { return v; }
+  template<class U> T conv_down(U const &v) { return static_cast<T>(v); }
+  template<class U> T conv_up  (U const &v) { return static_cast<T>(v); }
   T add_down (const T& x, const T& y) { return x + y; }
   T add_up   (const T& x, const T& y) { return x + y; }
   T sub_down (const T& x, const T& y) { return x - y; }
@@ -90,8 +94,14 @@ struct rounded_arith_opp: Rounding {
     return r
 # define BOOST_UP(EXPR) return this->force_rounding(EXPR)
 # define BOOST_UP_NEG(EXPR) return -this->force_rounding(EXPR)
-  template<class U> T conv_down(U const &v) { BOOST_UP_NEG(-v); }
-  template<class U> T conv_up  (U const &v) { BOOST_UP(v); }
+  template<class U> T conv_down(U const &v) 
+  {
+      typedef typename mpl::eval_if<
+         is_integral<U>, make_signed<U>, mpl::identity<U> >::type signed_type;
+
+     BOOST_UP_NEG(static_cast<T>(-static_cast<signed_type>(v))); 
+  }
+  template<class U> T conv_up  (U const &v) { BOOST_UP(static_cast<T>(v)); }
   T add_down(const T& x, const T& y) { BOOST_UP_NEG((-x) - y); }
   T sub_down(const T& x, const T& y) { BOOST_UP_NEG(y - x); }
   T mul_down(const T& x, const T& y) { BOOST_UP_NEG(x * (-y)); }

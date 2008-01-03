@@ -145,7 +145,7 @@ interval<T, Policies>::interval(T const &v): low(v), up(v)
 template<class T, class Policies> template<class T1> inline
 interval<T, Policies>::interval(T1 const &v)
 {
-  if (checking::is_nan(v)) set_empty();
+  if (checking::is_nan(static_cast<T>(v))) set_empty();
   else {
     rounding rnd;
     low = rnd.conv_down(v);
