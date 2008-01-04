@@ -41,6 +41,7 @@ second error
 using namespace boost::logging;
 
 struct no_gather {
+    typedef const char* msg_type ;
     const char * m_msg;
     no_gather() : m_msg(0) {}
     const char * msg() const { return m_msg; }
@@ -66,6 +67,9 @@ BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 #define LERR_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_err, g_log_filter->is_enabled() ) 
 
 void fastest_no_ostr_like_example() {
+    g_log_app->turn_cache_off();
+    g_log_err->turn_cache_off();
+
     // Step 5: use it...
     LAPP_("this is so cool\n");
     LERR_("first error \n");

@@ -40,16 +40,6 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 BOOST_LOG_GATHER_CLASS( use_ostringstream< tss_ostringstream<> > )
 
-#if 0
-    namespace boost { namespace logging { namespace gather { 
-        template<> struct find<override> { 
-            template<class msg_type> struct from_msg_type { 
-                typedef typename ::boost::logging::detail::find_gather_from_class<msg_type, use_ostringstream< tss_ostringstream<> > > ::type type; 
-            }; 
-        }; 
-    }}}
-#endif
-
 
 #include <boost/logging/format.hpp>
 #include <boost/logging/writer/ts_write.hpp>
@@ -80,6 +70,7 @@ void use_tss_ostringstream_example() {
     g_l->writer().add_formatter( formatter::append_newline_if_needed() );
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::dbg_window() );
+    g_l->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;

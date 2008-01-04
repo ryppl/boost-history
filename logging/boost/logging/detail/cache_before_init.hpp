@@ -51,6 +51,9 @@ inline thread_id_type get_thread_id() {
 #endif
 }
 
+#ifndef BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS
+#define BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS ::boost::logging::lock_resource_finder::single_thread 
+#endif
 
 #if defined( BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER) || defined( BOOST_LOG_BEFORE_INIT_USE_LOG_ALL)
 //////////////////////////////////////////////////////////////////
@@ -66,7 +69,7 @@ inline thread_id_type get_thread_id() {
 
 
 */
-template<class msg_type, class lock_resource = ::boost::logging::lock_resource_finder::single_thread > struct cache_before_init {
+template<class msg_type, class lock_resource = BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS > struct cache_before_init {
 private:
     typedef typename lock_resource::template finder<bool>::type is_cache_enabled_data;
     typedef bool (*is_enabled_func)();
@@ -106,11 +109,13 @@ public:
 
         // now we go the slow way - use mutex to see if cache is turned off
         mutex::scoped_lock lk(m_cs);
-        return !(m_cache.is_using_cache);
+        return (m_cache.is_using_cache);
     }
 
-protected:
-    template<class self_type> void turn_cache_off(self_type & self) {
+    template<class writer_type> void turn_cache_off(writer_type & writer) {
+        if ( !is_cache_turned_on() )
+            return; // already turned off
+
         {
         mutex::scoped_lock lk(m_cs);
         m_cache.is_using_cache = false;
@@ -122,14 +127,19 @@ protected:
         }
 
         // dump messages
-        cache::message_array msgs;
+        typename cache::message_array msgs;
         {
         mutex::scoped_lock lk(m_cs);
         std::swap( m_cache.msgs, msgs);
         }
-        for ( cache::message_array::const_iterator b = msgs.begin(), e = msgs.end(); b != e; ++b)
-            if ( b->is_enabled() )
-                self( b->string );
+        for ( typename cache::message_array::iterator b = msgs.begin(), e = msgs.end(); b != e; ++b) {
+            if ( !(b->is_enabled) )
+                // no filter
+                writer( b->string );
+            else if ( b->is_enabled() )
+                // filter enabled
+                writer( b->string );
+        }
     }
 
     // called after all data has been gathered
@@ -140,6 +150,13 @@ protected:
             writer(msg); 
     }
 
+protected:
+    void add_msg(const msg_type & msg) const {
+        mutex::scoped_lock lk(m_cs);
+        // note : last_enabled can be null, if we don't want to use filters (BOOST_LOG_BEFORE_INIT_USE_LOG_ALL)
+        is_enabled_func func = m_cache.threads[ get_thread_id() ].last_enabled ;
+        m_cache.msgs.push_back( message(func, msg) );
+    }
 
 public:
     void set_callback(is_enabled_func f) {
@@ -147,20 +164,14 @@ public:
         m_cache.threads[ get_thread_id() ].last_enabled = f;
     }
 
-    void add_msg(const msg_type & msg) {
-        mutex::scoped_lock lk(m_cs);
-        // note : last_enabled can be null, if we don't want to use filters (BOOST_LOG_BEFORE_INIT_USE_LOG_ALL)
-        is_enabled_func func = m_cache.threads[ get_thread_id() ].last_enabled ;
-        m_cache.msgs.push_back( message(func, msg) );
-    }
 
 
 
 
 
 private:
-    mutex m_cs;
-    cache m_cache;
+    mutable mutex m_cs;
+    mutable cache m_cache;
     /** 
     IMPORTANT: to make sure we know when the cache is off as efficiently as possible, I have this mechanism:
     - first, query m_is_enabled,which at the beginning is false (this is very efficient, we can use TSS here)
@@ -179,7 +190,13 @@ private:
 //////////////////////////////////////////////////////////////////
 // Messages that were logged before initializing the log - NOT Caching them
 
-template<class msg_type, class lock_resource = ::boost::logging::lock_resource_finder::single_thread > struct cache_before_init {
+template<class msg_type, class lock_resource = BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS > struct cache_before_init {
+    template<class writer_type> void on_do_write(msg_type & msg, const writer_type & writer) const {
+        writer(msg); 
+    }
+
+    template<class writer_type> void turn_cache_off(writer_type & writer) {
+    }
 
 };
 

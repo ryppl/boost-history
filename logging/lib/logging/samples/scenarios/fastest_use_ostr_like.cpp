@@ -58,6 +58,9 @@ BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 #define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err, g_log_filter->is_enabled() ) 
 
 void fastest_use_ostr_like_example() {
+    g_log_app->turn_cache_off();
+    g_log_err->turn_cache_off();
+
     // Step 5: use it...
     int i = 1;
     LAPP_ << "this is so cool " << i++ << "\n";

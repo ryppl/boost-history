@@ -67,6 +67,8 @@ void one_logger_one_filter_example() {
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::dbg_window() );
 
+    g_l->turn_cache_off();
+
     // Step 8: use it...
     int i = 1;
     L_ << "this is so cool " << i++;

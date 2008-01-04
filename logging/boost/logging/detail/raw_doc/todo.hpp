@@ -22,6 +22,8 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 @section todo_implementation Implementation
 
+- @c high           What should I do if someone is trying to use the log after it's been destroyed?
+
 - @c high           Provide a Jamfile to build the examples/tests
 
 - @c high           test TSS on vs2003 and gcc/pthreads \n

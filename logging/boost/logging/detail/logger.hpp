@@ -24,6 +24,7 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/forward_constructor.hpp>
 #include <boost/logging/detail/find_gather.hpp>
+#include <boost/logging/detail/cache_before_init.hpp>
 
 namespace boost { namespace logging {
 
@@ -50,6 +51,12 @@ namespace boost { namespace logging {
 
     namespace detail {
         template<class type> type& as_non_const(const type & t) { return const_cast<type&>(t); }
+
+        template<class gather_msg> struct find_gather_if_default {
+            typedef typename use_default<gather_msg, 
+                    gather::ostream_like::return_str< std::basic_string<char_type>, std::basic_ostringstream<char_type> > > ::type gather_type;
+            typedef typename gather_type::msg_type msg_type;
+        };
     }
 
 
@@ -109,13 +116,19 @@ namespace boost { namespace logging {
     
     */
     template<class gather_msg = default_, class write_msg = default_ > struct logger {
-        typedef typename use_default<gather_msg, gather::ostream_like::return_str< std::basic_string<char_type>, std::basic_ostringstream<char_type> > > ::type gather_type;
+        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
         typedef write_msg write_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
 
         typedef logger<gather_msg, write_msg> self;
 
         logger() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger,m_writer)
+
+        ~logger() {
+            // force writing all messages from cache, if cache hasn't been turned off yet
+            turn_cache_off();
+        }
 
         /** 
             reads all data about a log message (gathers all the data about it)
@@ -125,79 +138,119 @@ namespace boost { namespace logging {
         write_msg & writer()                    { return m_writer; }
         const write_msg & writer() const        { return m_writer; }
 
+        cache_type & cache()                    { return m_cache; }
+        const cache_type & cache() const        { return m_cache; }
+
         // called after all data has been gathered
         void on_do_write(gather_type & gather) const {
-            m_writer( detail::as_non_const(gather.msg()) );
+            cache().on_do_write( detail::as_non_const(gather.msg()), writer() );
+        }
+        void turn_cache_off() {
+            cache().turn_cache_off( writer() );
         }
 
     private:
         write_msg m_writer;
+        cache_type m_cache;
     };
 
     // specialize for write_msg* pointer!
     template<class gather_msg, class write_msg> struct logger<gather_msg, write_msg* > {
-        typedef gather_msg gather_type;
+        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
         typedef write_msg write_type;
 
         typedef logger<gather_msg, write_msg*> self;
 
-        logger(write_msg * writer = 0) : m_writer(writer) {}
+        logger(write_msg * writer = 0) : m_writer(writer) {
+        }
+        ~logger() {
+            // force writing all messages from cache, if cache hasn't been turned off yet
+            turn_cache_off();
+        }
 
         void set_writer(write_msg* writer) {
             m_writer = writer;
         }
 
-        // FIXME watch for copy-construction!
         /** 
             reads all data about a log message (gathers all the data about it)
-            FIXME
         */
         gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
 
         write_msg & writer()                    { return *m_writer; }
         const write_msg & writer() const        { return *m_writer; }
 
+        cache_type & cache()                    { return m_cache; }
+        const cache_type & cache() const        { return m_cache; }
+
         // called after all data has been gathered
         void on_do_write(gather_msg & gather) const {
-            (*m_writer)( detail::as_non_const(gather.msg()) );
+            cache().on_do_write( detail::as_non_const(gather.msg()), writer() );
+        }
+        void turn_cache_off() {
+            cache().turn_cache_off( writer() );
         }
 
     private:
         write_msg *m_writer;
+        cache_type m_cache;
     };
 
 
     // specialize when write_msg is not set - in this case, you need to derive from this
     template<class gather_msg> struct logger<gather_msg, default_ > {
-        typedef gather_msg gather_type;
+        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
         typedef void_ write_type;
 
         typedef logger<gather_msg, default_> self;
         typedef typename gather_msg::msg_type msg_type;
 
-        logger() {}
+        logger() : m_cache(0) {}
         // we have virtual functions, lets have a virtual destructor as well - many thanks Martin Baeker!
-        virtual ~logger() {}
+        virtual ~logger() {
+            // force writing all messages from cache, if cache hasn't been turned off yet
+            turn_cache_off();
+        }
 
-        // FIXME watch for copy-construction!
         /** 
             reads all data about a log message (gathers all the data about it)
-            FIXME
         */
         gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
 
         write_type & writer()                    { return m_writer; }
         const write_type & writer() const        { return m_writer; }
 
+        cache_type & cache()                    { return *m_cache; }
+        const cache_type & cache() const        { return *m_cache; }
+
+        void set_cache(cache_type * cache_) {
+            m_cache = cache_;
+        }
+
+    private:
+        struct call_do_write {
+            const logger & self;
+            call_do_write(const logger & self) : self(self) {}
+            void operator()(msg_type & msg) const {
+                self.do_write(msg);
+            }
+        };
+    public:
         // called after all data has been gathered
         void on_do_write(gather_msg & gather) const {
-            do_write( detail::as_non_const(gather.msg()) );
+            cache().on_do_write( detail::as_non_const(gather.msg()), call_do_write(*this) );
+        }
+        void turn_cache_off() {
+            cache().turn_cache_off( call_do_write(*this) );
         }
 
         virtual void do_write(msg_type&) const = 0;
     private:
         // we don't know the writer
         void_ m_writer;
+        cache_type *m_cache;
     };
 
     /** 
@@ -221,12 +274,16 @@ namespace boost { namespace logging {
     // specialization for pointers
     template<class gather_msg, class write_msg> struct implement_default_logger<gather_msg,write_msg*> : logger<gather_msg, default_> {
         typedef typename gather_msg::msg_type msg_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
+        typedef logger<gather_msg, default_> log_base;
 
-        implement_default_logger(write_msg * writer = 0) : m_writer(writer) {}
+        implement_default_logger(write_msg * writer = 0, cache_type * cache_ = 0) : m_writer(writer) {
+            log_base::set_cache( cache_);
+        }
 
         void set_writer(write_msg* writer) {
             m_writer = writer;
-        }
+        }   
 
         virtual void do_write(msg_type &a) const {
             (*m_writer)(a);

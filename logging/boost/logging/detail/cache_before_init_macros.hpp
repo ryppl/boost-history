@@ -55,11 +55,11 @@ namespace boost { namespace logging {
                 set_callback_if_needed();                                           \
         }                                                                           \
         void set_callback_if_needed() {                                             \
+            if ( l .base()->cache().is_cache_turned_on() )                                           \
+                l  .base()->cache().set_callback( &is_enabled_callback );                             \
         }                                                                           \
     } param_name = ( !(is_log_enabled) ) ? (void*)0 : l .base()-> do_func
 
-//            if ( l.is_cache_turned_on() )                                           \
-  //              l.set_callback( &is_enabled_callback );                             \
 
 #define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) \
     BOOST_LOG_USE_LOG_LOCAL_CLASS( l, do_func, is_log_enabled, \
@@ -70,6 +70,7 @@ namespace boost { namespace logging {
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Messages that were logged before initializing the log - cache the message (and I'll write it even if the filter is turned off)
 
+#define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) if ( !(is_log_enabled) ) ; else l .base()-> do_func
 
 #elif defined( BOOST_LOG_BEFORE_INIT_USE_IGNORE_BEFORE_INIT)
 /////////////////////////////////////////////////////////////////////////////////////////////

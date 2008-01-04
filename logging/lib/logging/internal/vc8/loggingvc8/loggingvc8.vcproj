@@ -330,6 +330,7 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -780,6 +781,10 @@
 		<Filter
 			Name="scenarios"
 			>
+			<File
+				RelativePath="..\..\..\samples\scenarios\cache_before_init.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\custom_fmt_dest.cpp"
 				>

@@ -122,6 +122,7 @@ void custom_fmt_dest_example() {
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::dbg_window() );
     g_l->writer().add_destination( as_xml("out.txt") );
+    g_l->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;

@@ -66,6 +66,8 @@ void test_mul_levels_one_logger() {
             .add( "debug", destination::dbg_window() )
          );
 
+    g_l->turn_cache_off();
+
     // Step 8: use it...
     int i = 1;
     LDBG_ << "this is so cool " << i++;

@@ -135,6 +135,9 @@ void your_scenario_example() {
     g_log_dbg->writer().add_formatter( formatter::append_newline() );
     g_log_dbg->writer().add_destination( destination::dbg_window() );
     g_log_dbg->writer().add_destination( destination::cout() );
+    g_log_app->turn_cache_off();
+    g_log_err->turn_cache_off();
+    g_log_dbg->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;

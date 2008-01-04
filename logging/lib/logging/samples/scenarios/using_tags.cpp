@@ -80,6 +80,7 @@ void using_tags_example() {
     g_l->writer().add_formatter( formatter::append_newline() );     
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::file("out.txt") );
+    g_l->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;
