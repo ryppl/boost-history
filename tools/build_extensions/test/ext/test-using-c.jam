@@ -10,14 +10,10 @@ import project ;
 import feature ;
 import common ;
 
-extension.declare test-using-a ;
-
-using test-using-b : : . ;
+extension.declare test-using-b ;
 
 rule init ( version ? : location : options * )
 {
     version ?= default ;
-    local requirements = [ extension.define test-using-a $(version) : $(location) : $(options) ] ;
-
-    using test-using-c : : . ;
+    local requirements = [ extension.define test-using-b $(version) : $(location) : $(options) ] ;
 }
