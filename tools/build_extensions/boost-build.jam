@@ -40,7 +40,7 @@ BOOST_ROOT ?= $(boost-src) ;
 
 #~ Add the local extensions...
 
-BOOST_BUILD_PATH += $(.boost-build-file:D)/ext ;
+BOOST_BUILD_PATH += $(.boost-build-file:D)/ext  $(.boost-build-file:D)/test/ext ;
 
 #~ And load up Boost.Build...
 
