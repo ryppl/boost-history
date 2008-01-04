@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE( TestSingletonPropertyManager )
 	TestPropertyManagerGuard gaurd;
 	TestPropertyManager *p_manager = gaurd.p_manager;
 
-    BOOST_CHECK( property_manager::instance() == p_manager );
+    BOOST_CHECK( property_manager::instance().get() == p_manager );
 }
 
 BOOST_AUTO_TEST_CASE( TestSetParent )

@@ -71,6 +71,9 @@ namespace boost { namespace pinhole
 
     class BOOST_PINHOLE_DECL property_manager
     {
+    public:
+        typedef boost::shared_ptr<property_manager> instance_type;
+
     private:
         static void deleter(property_manager* manager)
         {
@@ -82,24 +85,24 @@ namespace boost { namespace pinhole
         typedef map_value_iterator<category_to_property_group_map::iterator> iterator;
         typedef map_value_iterator<category_to_property_group_map::const_iterator> const_iterator;
         
-        static property_manager* instance()
+        static instance_type instance()
         {
-            if ( m_instance.get() == NULL )  // is it the first call?
+            if ( !m_instance )  // is it the first call?
             {  
                 m_instance.reset( new property_manager, property_manager::deleter ); // create sole instance
             }
             
-            return m_instance.get(); // address of sole instance
+            return m_instance; // address of sole instance
         }
         
         static bool exists()
         {
-            return m_instance.get() != NULL;
+            return m_instance;
         }
         
         static void delete_instance()
         {
-            if( m_instance.get() != NULL )
+            if( m_instance )
             {
                 m_instance.reset();
             }

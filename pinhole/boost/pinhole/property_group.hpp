@@ -113,14 +113,13 @@ namespace boost { namespace pinhole
             m_name( name ), 
             m_parent( parent )
         {
-                setup_parent_and_category_and_manager();
+            setup_parent_and_category_and_manager();
         }
         
-        explicit property_group( const property_group& old_property_group )
+        explicit property_group( const property_group& old_property_group ) :
+            m_name( old_property_group.m_name ), 
+            m_parent( old_property_group.m_parent )
         {
-            m_name    = old_property_group.m_name;
-            m_parent = old_property_group.m_parent;
-            
             setup_parent_and_category_and_manager();
         }
 
@@ -143,10 +142,10 @@ namespace boost { namespace pinhole
                 m_parent->remove_child(this);
             }
             
-            if ( property_manager::instance() != NULL )
+            if ( m_manager != NULL )
             {
                 // Unregister this group with this property manager...
-                property_manager::instance()->unregister_property_group( this, m_category_collection );
+                m_manager->unregister_property_group( this, m_category_collection );
             }
             
             // cleanup all the property_manager classes
@@ -186,10 +185,11 @@ namespace boost { namespace pinhole
         */
         void set_parent(property_group* new_parent)
         {
-            if( NULL != property_manager::instance() )
+            if( m_manager )
             {
                 // Register this group with this property manager...
-                property_manager::instance()->unregister_property_group(this, m_category_collection);
+                m_manager->unregister_property_group(this, m_category_collection);
+                m_manager.reset();
             }
             
             if ( NULL != m_parent )
@@ -203,12 +203,21 @@ namespace boost { namespace pinhole
             if ( NULL != m_parent )
             {
                 m_parent->add_child(this);
+                
+                if( new_parent->m_manager )
+                {
+                    m_manager = new_parent->m_manager;
+                }
             }
-            
-            if( NULL != property_manager::instance() )
+            else
+            {
+                m_manager = property_manager::instance();
+            }
+
+            if( m_manager )
             {
                 // Register this group with this property manager...
-                property_manager::instance()->register_property_group(this);
+                m_manager->register_property_group(this);
             }
         }
 
@@ -699,9 +708,9 @@ namespace boost { namespace pinhole
             m_category_collection.insert( category_name );
             
             // notify the Property Manager of this new category
-            if ( property_manager::instance() != NULL )
+            if ( m_manager )
             {
-                property_manager::instance()->add_category( category_name, this );
+                m_manager->add_category( category_name, this );
             }
         }
 
@@ -775,19 +784,25 @@ namespace boost { namespace pinhole
             if ( NULL != m_parent )
             {
                 m_parent->add_child(this);
+                m_manager = m_parent->m_manager;
+            }
+            else
+            {
+                m_manager = property_manager::instance();
+            }
+
+            if ( m_manager != NULL )
+            {
+                // Register this group with this property manager...
+                m_manager->register_property_group( this );
             }
             
             add_category( "All" );
-            
-            if ( property_manager::instance() != NULL )
-            {
-                // Register this group with this property manager...
-                property_manager::instance()->register_property_group( this );
-            }
         }        
 
         std::string m_name;
         property_group *m_parent;
+        property_manager::instance_type m_manager;
     };
 
 }}
