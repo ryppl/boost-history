@@ -44,8 +44,8 @@ struct no_gather {
     const char * m_msg;
     no_gather() : m_msg(0) {}
     const char * msg() const { return m_msg; }
-    void out(const char* msg) { m_msg = msg; }
-    void out(const std::string& msg) { m_msg = msg.c_str(); }
+    void *out(const char* msg) { m_msg = msg; return this; }
+    void *out(const std::string& msg) { m_msg = msg.c_str(); return this; }
 };
 
 // Step 1 : Specify your logging class(es)

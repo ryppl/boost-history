@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.12.13, 29 dec 2007
+@section changelog_cur_ver Current Version: v0.13.1, 4 jan 2008
+- began implementation of caching messages before initialization of logs
+- gather classes now have msg_type instead of param (msg_type contains the type of the returned msg - without const or &)
+
+v0.12.13, 29 dec 2007
 - added tss_ostringstream - allow faster creation of stringstreams (one stringstream per thread)
 - added destination::named - similar to formatter::named_spacer, but for destinations
 - added possibility to flush a rolling file, and fixed a bug

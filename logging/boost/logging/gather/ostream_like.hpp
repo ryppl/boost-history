@@ -65,6 +65,19 @@ namespace optimize {
 */
 namespace gather {
 
+/** 
+    @brief In case your gather class returns anything else than a std::basic_ostream, that returned class @b must derive from this.
+
+    This is needed when :
+    - in your application, you could have messages logged before your logs are initialized
+    - you want filters to work even "in advance" - that is, if a message was logged before your log was initialized,
+      and when you initialize the log, its corresponding filter is turned on, that message will be logged.
+      Otherwise, it will @b not be logged.
+*/
+struct out_base {
+    operator const void*() const { return this; }
+};
+
 
 /** 
     @brief Gathering the message: Allows you to write to a log using the cool "<<" operator.
@@ -90,7 +103,8 @@ namespace ostream_like {
 */
 template<class stream_type = std::basic_ostringstream<char_type> > struct return_raw_stream {
     // what does the gather_msg class return?
-    typedef stream_type& param;
+//    typedef stream_type& param;
+    typedef stream_type msg_type;
 
     return_raw_stream() {}
     return_raw_stream(const return_raw_stream& other) : m_out( other.m_out.str() ) {}
@@ -127,7 +141,8 @@ template<
         class stream_type = std::basic_ostringstream<char_type> > struct return_str {
 
     // what does the gather_msg class return?
-    typedef string & param;
+//    typedef string & param;
+    typedef string msg_type;
     
     return_str() {}
     return_str(const return_str& other) : m_out(other.m_out.str()) {}
@@ -146,9 +161,10 @@ private:
 
     See @ref boost::logging::tag namespace
 */
-template<class holder_type, class stream_type> struct return_tag_holder {
+    template<class holder_type, class stream_type> struct return_tag_holder : out_base {
     // what does the gather_msg class return?
-    typedef holder_type& param;
+//    typedef holder_type& param;
+    typedef holder_type msg_type;
     
     return_tag_holder() {}
     return_tag_holder(const return_tag_holder& other) : m_out(other.m_out.str()), m_val(other.m_val) {}

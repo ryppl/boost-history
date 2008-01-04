@@ -26,9 +26,6 @@
 
 namespace boost { namespace logging {
 
-#define BOOST_LOG_CONCATENATE2(a,b) a ## b
-
-#define BOOST_LOG_CONCATENATE(a,b) BOOST_LOG_CONCATENATE2(a,b)
 
 #ifndef BOOST_LOG_USE_WCHAR_T
 

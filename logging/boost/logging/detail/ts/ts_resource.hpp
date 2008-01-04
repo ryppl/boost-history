@@ -160,7 +160,7 @@ namespace locker {
         struct value_and_time {
             value_and_time() 
                 // so that the first time it's used, it'll be refreshed
-                : time_(0) {
+                : val( type() ), time_(0) {
             }
             type val;
             ::time_t time_;

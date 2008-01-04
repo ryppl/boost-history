@@ -38,8 +38,9 @@ It will be:
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
-//BOOST_LOG_GATHER_CLASS( use_ostringstream< tss_ostringstream<> > )
+BOOST_LOG_GATHER_CLASS( use_ostringstream< tss_ostringstream<> > )
 
+#if 0
     namespace boost { namespace logging { namespace gather { 
         template<> struct find<override> { 
             template<class msg_type> struct from_msg_type { 
@@ -47,7 +48,7 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
             }; 
         }; 
     }}}
-
+#endif
 
 
 #include <boost/logging/format.hpp>

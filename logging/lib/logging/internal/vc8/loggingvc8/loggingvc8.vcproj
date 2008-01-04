@@ -330,7 +330,6 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -397,6 +396,14 @@
 		<Filter
 			Name="headers"
 			>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\cache_before_init.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\cache_before_init_macros.hpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\defaults.hpp"
 				>
@@ -896,6 +903,14 @@
 			<File
 				RelativePath="..\..\..\samples\scenarios\use_tss_ostringstream.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\using_tags.cpp"

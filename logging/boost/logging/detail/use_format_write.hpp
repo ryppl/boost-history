@@ -29,8 +29,6 @@
 #include <boost/logging/gather/ostream_like.hpp>
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/detail/find_gather.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/remove_const.hpp>
 
 namespace boost { namespace logging {
 
@@ -74,9 +72,7 @@ namespace boost { namespace logging {
         };
 
         template<class gather_type, class format_write> struct find_writer_with_thread_safety<boost::logging::writer::threading::on_dedicated_thread,gather_type,format_write> {
-            typedef typename gather_type::param param;
-            typedef typename boost::remove_reference<param>::type param_no_ref;
-            typedef typename boost::remove_const<param_no_ref>::type msg_type;
+            typedef typename gather_type::msg_type msg_type;
     
             typedef writer::on_dedicated_thread<msg_type, format_write> type;
         };

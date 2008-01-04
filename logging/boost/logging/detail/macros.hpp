@@ -28,6 +28,7 @@
 #endif
 
 #include <boost/current_function.hpp>
+#include <boost/logging/detail/cache_before_init_macros.hpp>
 
 namespace boost { namespace logging {
 
@@ -575,14 +576,12 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 // Log Macros
 
 
-#define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) if ( !(is_log_enabled) ) ; else l .base()-> do_func
 
 #define BOOST_LOG_USE_LOG_IF_LEVEL(l, holder, the_level) BOOST_LOG_USE_LOG(l, read_msg().gather().out(), holder->is_enabled(::boost::logging::level:: the_level) )
 
 #define BOOST_LOG_USE_LOG_IF_FILTER(l, the_filter) BOOST_LOG_USE_LOG(l, read_msg().gather().out(), the_filter)
 
-#define BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(l, is_log_enabled) if ( !(is_log_enabled) ) ; else l .base() ->read_msg().gather().out 
-
+#define BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(l, is_log_enabled) BOOST_LOG_USE_LOG(l, read_msg().gather().out, is_log_enabled)
 
 
 

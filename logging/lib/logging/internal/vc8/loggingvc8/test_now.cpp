@@ -90,8 +90,20 @@ void using_tags_example() {
 
     // Step 8: use it...
     int i = 1;
+#if 0
+    struct local_class {                                                            
+        static bool is_enabled_callback() { return (g_log_filter->is_enabled()); }              
+        local_class (const void * p) {
+            if ( p)
+                set_callback_if_needed();                                               
+        }                                                                           
+        void set_callback_if_needed() {                                             
+        }                                                                           
+    } param_name = ( !(g_log_filter->is_enabled()) ) ? (void*)0 : g_l .base()-> read_msg().gather().out() << "this is so cool " << i++;
+#endif
+
     L_ << "this is so cool " << i++;
-    L_ << "this is so cool again " << i++;
+  //  L_ << "this is so cool again " << i++;
     // Step 9 : Enjoy!
 }
 

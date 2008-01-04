@@ -13,7 +13,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
-
+// IMPORTANT : the JT28092007_logger_HPP_DEFINED needs to remain constant - don't change the macro name!
 #ifndef JT28092007_logger_HPP_DEFINED
 #define JT28092007_logger_HPP_DEFINED
 
@@ -117,10 +117,8 @@ namespace boost { namespace logging {
         logger() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger,m_writer)
 
-        // FIXME watch for copy-construction!
         /** 
             reads all data about a log message (gathers all the data about it)
-            FIXME
         */
         gather_holder<self, gather_type> read_msg() const { return gather_holder<self, gather_type>(*this) ; }
 
@@ -175,7 +173,7 @@ namespace boost { namespace logging {
         typedef void_ write_type;
 
         typedef logger<gather_msg, default_> self;
-        typedef typename gather_msg::param param;
+        typedef typename gather_msg::msg_type msg_type;
 
         logger() {}
         // we have virtual functions, lets have a virtual destructor as well - many thanks Martin Baeker!
@@ -196,7 +194,7 @@ namespace boost { namespace logging {
             do_write( detail::as_non_const(gather.msg()) );
         }
 
-        virtual void do_write(param) const = 0;
+        virtual void do_write(msg_type&) const = 0;
     private:
         // we don't know the writer
         void_ m_writer;
@@ -207,12 +205,12 @@ namespace boost { namespace logging {
     @param write_msg the write message class. If a pointer, forwards to a pointer. If not a pointer, it holds it by value.
     */
     template<class gather_msg, class write_msg> struct implement_default_logger : logger<gather_msg, default_> {
-        typedef typename gather_msg::param param;
+        typedef typename gather_msg::msg_type msg_type;
 
         implement_default_logger() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(implement_default_logger,m_writer)
 
-        virtual void do_write(param a) const {
+        virtual void do_write(msg_type &a) const {
             m_writer(a);
         }
 
@@ -222,7 +220,7 @@ namespace boost { namespace logging {
 
     // specialization for pointers
     template<class gather_msg, class write_msg> struct implement_default_logger<gather_msg,write_msg*> : logger<gather_msg, default_> {
-        typedef typename gather_msg::param param;
+        typedef typename gather_msg::msg_type msg_type;
 
         implement_default_logger(write_msg * writer = 0) : m_writer(writer) {}
 
@@ -230,7 +228,7 @@ namespace boost { namespace logging {
             m_writer = writer;
         }
 
-        virtual void do_write(param a) const {
+        virtual void do_write(msg_type &a) const {
             (*m_writer)(a);
         }
 
