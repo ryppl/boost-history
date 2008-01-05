@@ -7,7 +7,6 @@
 #define _HDATE_TIME
 
 /*
-
     hdate_time synopsis
 
     namespace std {
@@ -277,36 +276,15 @@
 
     system_time get_system_time();
 
-    }
-    
+    }  // std
 */
 
 #include <ctime>
 #include <type_traits>
 
+#define EXACT
+
 namespace std {
-
-// __gcd
-
-template <long long X, long long Y>
-struct __gcd
-{
-    static const long long value = __gcd<Y, X % Y>::value;
-};
-
-template <long long X>
-struct __gcd<X, 0>
-{
-    static const long long value = X;
-};
-
-// __lcm
-
-template <long long X, long long Y>
-struct __lcm
-{
-    static const long long value = X / __gcd<X, Y>::value * Y;
-};
 
 // __is_duration
 
@@ -434,7 +412,6 @@ template <class FromDuration, class ToDuration>
 struct __is_duration_exactly_convertible_imp<FromDuration, ToDuration, true, true>
 {
     static const bool value = ToDuration::ticks_per_second % FromDuration::ticks_per_second == 0;
-//    static const bool value = ToDuration::ticks_per_second >= FromDuration::ticks_per_second;
 };
 
 template <class FromDuration, class ToDuration>
@@ -453,7 +430,6 @@ template <class FromDuration, class ToDuration>
 struct __is_duration_exactly_convertible_imp<FromDuration, ToDuration, false, false>
 {
     static const bool value = FromDuration::seconds_per_tick % ToDuration::seconds_per_tick == 0;
-//    static const bool value = FromDuration::seconds_per_tick >= ToDuration::seconds_per_tick;
 };
 
 template <class FromDuration, class ToDuration, bool BothDurations>
@@ -477,6 +453,56 @@ struct __is_duration_exactly_convertible
                                                 __is_duration<ToDuration>::value>::value;
 };
 
+// __is_duration_no_finer_than
+
+template <class FromDuration, class ToDuration, bool FromSubSecond, bool ToSubSecond>
+struct __is_duration_no_finer_than_imp;
+
+template <class FromDuration, class ToDuration>
+struct __is_duration_no_finer_than_imp<FromDuration, ToDuration, true, true>
+{
+    static const bool value = FromDuration::ticks_per_second <= ToDuration::ticks_per_second;
+};
+
+template <class FromDuration, class ToDuration>
+struct __is_duration_no_finer_than_imp<FromDuration, ToDuration, false, true>
+{
+    static const bool value = true;
+};
+
+template <class FromDuration, class ToDuration>
+struct __is_duration_no_finer_than_imp<FromDuration, ToDuration, true, false>
+{
+    static const bool value = false;
+};
+
+template <class FromDuration, class ToDuration>
+struct __is_duration_no_finer_than_imp<FromDuration, ToDuration, false, false>
+{
+    static const bool value = FromDuration::seconds_per_tick >= ToDuration::seconds_per_tick;
+};
+
+template <class FromDuration, class ToDuration, bool BothDurations>
+struct __is_duration_no_finer_than_imp_imp
+{
+    static const bool value = false;
+};
+
+template <class FromDuration, class ToDuration>
+struct __is_duration_no_finer_than_imp_imp<FromDuration, ToDuration, true>
+{
+    static const bool value = __is_duration_no_finer_than_imp<FromDuration, ToDuration,
+                                             FromDuration::is_subsecond, ToDuration::is_subsecond>::value;
+};
+
+template <class FromDuration, class ToDuration>
+struct __is_duration_no_finer_than
+{
+    static const bool value = __is_duration_no_finer_than_imp_imp<FromDuration, ToDuration,
+                                                __is_duration<FromDuration>::value &&
+                                                __is_duration<ToDuration>::value>::value;
+};
+
 // Durations
 
 template <class TickType, TickType TicksPerSecond, TickType SecondsPerTick>
@@ -495,9 +521,9 @@ public:
     static const bool is_subsecond = seconds_per_tick == 0;
 
     // conversions
-    template <class RhsDuration>
-    __basic_duration(const RhsDuration& d,
-        typename enable_if<__is_duration_exactly_convertible<RhsDuration, __basic_duration>::value>::type* = 0)
+    template <class TT, TT TPS, TT SPT>
+    __basic_duration(const __basic_duration<TT, TPS, SPT>& d,
+        typename enable_if<__is_duration_exactly_convertible<__basic_duration<TT, TPS, SPT>, __basic_duration>::value>::type* = 0)
             : tick_(__duration_cast<__basic_duration>(d).count()) {}
 
     // + common functions
@@ -505,7 +531,11 @@ public:
     template<typename RhsDuration>
         typename enable_if
         <
+#ifdef EXACT
             __is_duration_exactly_convertible<RhsDuration, __basic_duration>::value,
+#else
+            __is_duration_no_finer_than<RhsDuration, __basic_duration>::value,
+#endif
             __basic_duration&
         >::type
         operator-=(const RhsDuration& d)
@@ -517,7 +547,11 @@ public:
     template<typename RhsDuration>
         typename enable_if
         <
+#ifdef EXACT
             __is_duration_exactly_convertible<RhsDuration, __basic_duration>::value,
+#else
+            __is_duration_no_finer_than<RhsDuration, __basic_duration>::value,
+#endif
             __basic_duration&
         >::type
         operator+=(const RhsDuration& d)
@@ -541,68 +575,63 @@ typedef __basic_duration<long long, 1,                   1> seconds;
 typedef __basic_duration<long,      0,                  60> minutes;
 typedef __basic_duration<long,      0,                3600> hours;
 
-// __make_duration
+// __choose_finer_duration
 
 template <class LhsDuration, class RhsDuration,
     bool = LhsDuration::is_subsecond,
     bool = RhsDuration::is_subsecond>
-struct __make_duration  // false, false
+struct __choose_finer_duration  // false, false
 {
-private:
-    static const seconds::tick_type seconds_per_tick = __gcd<LhsDuration::seconds_per_tick,
-                                                             RhsDuration::seconds_per_tick>::value;
-    typedef typename stb::conditional<seconds_per_tick < 5,
-                                       long long,
-                                       long>::type tick_type;
-public:
-    typedef __basic_duration<tick_type, seconds_per_tick == 1, seconds_per_tick> type;
+    typedef typename stb::conditional<LhsDuration::seconds_per_tick <= RhsDuration::seconds_per_tick,
+                                      LhsDuration,
+                                      RhsDuration>::type type;
 };
 
 template <class LhsDuration, class RhsDuration>
-struct __make_duration<LhsDuration, RhsDuration, false, true>
+struct __choose_finer_duration<LhsDuration, RhsDuration, false, true>
 {
     typedef RhsDuration type;
 };
 
 template <class LhsDuration, class RhsDuration>
-struct __make_duration<LhsDuration, RhsDuration, true, false>
+struct __choose_finer_duration<LhsDuration, RhsDuration, true, false>
 {
     typedef LhsDuration type;
 };
 
 template <class LhsDuration, class RhsDuration>
-struct __make_duration<LhsDuration, RhsDuration, true, true>
+struct __choose_finer_duration<LhsDuration, RhsDuration, true, true>
 {
-private:
-    static const seconds::tick_type ticks_per_second = __lcm<LhsDuration::ticks_per_second,
-                                                             RhsDuration::ticks_per_second>::value;
-    typedef typename stb::conditional<!(RhsDuration::ticks_per_second < LhsDuration::ticks_per_second),
-                                       typename LhsDuration::tick_type,
-                                       typename RhsDuration::tick_type>::type tick_type;
-public:
-    typedef __basic_duration<tick_type, ticks_per_second, ticks_per_second == 1> type;
+    typedef typename stb::conditional<!(LhsDuration::ticks_per_second < RhsDuration::ticks_per_second),
+                                      LhsDuration,
+                                      RhsDuration>::type type;
 };
 
 // __choose_duration
 
 template <class LhsDuration, class RhsDuration,
-    bool = __is_duration<LhsDuration>::value,
-    bool = __is_duration<RhsDuration>::value>
+#ifdef EXACT
+    bool = __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value ||
+           __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>
+#else
+    bool = __is_duration<LhsDuration>::value &&
+           __is_duration<RhsDuration>::value>
+#endif
 struct __choose_duration
 {
 };
 
 template <class LhsDuration, class RhsDuration>
-struct __choose_duration<LhsDuration, RhsDuration, true, true>
+struct __choose_duration<LhsDuration, RhsDuration, true>
 {
-    typedef typename __make_duration<LhsDuration, RhsDuration>::type type;
+    typedef typename __choose_finer_duration<LhsDuration, RhsDuration>::type type;
 };
 
 // Duration ==
 
 template <class LhsDuration, class RhsDuration,
-          bool = __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
-          bool = __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>
+          bool = __is_duration_no_finer_than<RhsDuration, LhsDuration>::value,
+          bool = __is_duration_no_finer_than<LhsDuration, RhsDuration>::value>
 struct __duration_eq;
 
 template <class LhsDuration>
@@ -616,39 +645,34 @@ template <class LhsDuration, class RhsDuration>
 struct __duration_eq<LhsDuration, RhsDuration, true, true>
 {
     bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {return lhs.count() == LhsDuration(rhs).count();}
+        {return lhs.count() == __duration_cast<LhsDuration>(rhs).count();}
 };
 
 template <class LhsDuration, class RhsDuration>
 struct __duration_eq<LhsDuration, RhsDuration, true, false>
 {
     bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {return lhs.count() == LhsDuration(rhs).count();}
+        {return lhs.count() == __duration_cast<LhsDuration>(rhs).count();}
 };
 
 template <class LhsDuration, class RhsDuration>
 struct __duration_eq<LhsDuration, RhsDuration, false, true>
 {
     bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {return RhsDuration(lhs).count() == rhs.count();}
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __duration_eq<LhsDuration, RhsDuration, false, false>
-{
-    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {
-            typedef typename __make_duration<LhsDuration, RhsDuration>::type CommonDuration;
-            return CommonDuration(lhs).count() == CommonDuration(rhs).count();
-        }
+        {return __duration_cast<RhsDuration>(lhs).count() == rhs.count();}
 };
 
 template <class LhsDuration, class RhsDuration>
 inline
 typename enable_if
 <
+#ifdef EXACT
+    __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value ||
+    __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+#else
     __is_duration<LhsDuration>::value &&
     __is_duration<RhsDuration>::value,
+#endif
     bool
 >::type
 operator==(const LhsDuration& lhs, const RhsDuration& rhs)
@@ -662,8 +686,13 @@ template <class LhsDuration, class RhsDuration>
 inline
 typename enable_if
 <
+#ifdef EXACT
+    __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value ||
+    __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+#else
     __is_duration<LhsDuration>::value &&
     __is_duration<RhsDuration>::value,
+#endif
     bool
 >::type
 operator!=(const LhsDuration& lhs, const RhsDuration& rhs)
@@ -674,8 +703,8 @@ operator!=(const LhsDuration& lhs, const RhsDuration& rhs)
 // Duration <
 
 template <class LhsDuration, class RhsDuration,
-          bool = __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
-          bool = __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value>
+          bool = __is_duration_no_finer_than<RhsDuration, LhsDuration>::value,
+          bool = __is_duration_no_finer_than<LhsDuration, RhsDuration>::value>
 struct __duration_lt;
 
 template <class LhsDuration>
@@ -689,39 +718,34 @@ template <class LhsDuration, class RhsDuration>
 struct __duration_lt<LhsDuration, RhsDuration, true, true>
 {
     bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {return lhs.count() < LhsDuration(rhs).count();}
+        {return lhs.count() < __duration_cast<LhsDuration>(rhs).count();}
 };
 
 template <class LhsDuration, class RhsDuration>
 struct __duration_lt<LhsDuration, RhsDuration, true, false>
 {
     bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {return lhs.count() < LhsDuration(rhs).count();}
+        {return lhs.count() < __duration_cast<LhsDuration>(rhs).count();}
 };
 
 template <class LhsDuration, class RhsDuration>
 struct __duration_lt<LhsDuration, RhsDuration, false, true>
 {
     bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {return RhsDuration(lhs).count() < rhs.count();}
-};
-
-template <class LhsDuration, class RhsDuration>
-struct __duration_lt<LhsDuration, RhsDuration, false, false>
-{
-    bool operator()(const LhsDuration& lhs, const RhsDuration& rhs)
-        {
-            typedef typename __make_duration<LhsDuration, RhsDuration>::type CommonDuration;
-            return CommonDuration(lhs).count() < CommonDuration(rhs).count();
-        }
+        {return __duration_cast<RhsDuration>(lhs).count() < rhs.count();}
 };
 
 template <class LhsDuration, class RhsDuration>
 inline
 typename enable_if
 <
+#ifdef EXACT
+    __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value ||
+    __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+#else
     __is_duration<LhsDuration>::value &&
     __is_duration<RhsDuration>::value,
+#endif
     bool
 >::type
 operator< (const LhsDuration& lhs, const RhsDuration& rhs)
@@ -735,8 +759,13 @@ template <class LhsDuration, class RhsDuration>
 inline
 typename enable_if
 <
+#ifdef EXACT
+    __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value ||
+    __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+#else
     __is_duration<LhsDuration>::value &&
     __is_duration<RhsDuration>::value,
+#endif
     bool
 >::type
 operator> (const LhsDuration& lhs, const RhsDuration& rhs)
@@ -750,8 +779,13 @@ template <class LhsDuration, class RhsDuration>
 inline
 typename enable_if
 <
+#ifdef EXACT
+    __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value ||
+    __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+#else
     __is_duration<LhsDuration>::value &&
     __is_duration<RhsDuration>::value,
+#endif
     bool
 >::type
 operator<=(const LhsDuration& lhs, const RhsDuration& rhs)
@@ -759,14 +793,19 @@ operator<=(const LhsDuration& lhs, const RhsDuration& rhs)
     return !(rhs < lhs);
 }
 
-// Duration <=
+// Duration >=
 
 template <class LhsDuration, class RhsDuration>
 inline
 typename enable_if
 <
+#ifdef EXACT
+    __is_duration_exactly_convertible<LhsDuration, RhsDuration>::value ||
+    __is_duration_exactly_convertible<RhsDuration, LhsDuration>::value,
+#else
     __is_duration<LhsDuration>::value &&
     __is_duration<RhsDuration>::value,
+#endif
     bool
 >::type
 operator>=(const LhsDuration& lhs, const RhsDuration& rhs)
@@ -781,7 +820,8 @@ inline
 typename __choose_duration<LhsDuration, RhsDuration>::type
 operator+(const LhsDuration& lhs, const RhsDuration& rhs)
 {
-    typename __choose_duration<LhsDuration, RhsDuration>::type result = lhs;
+    typedef typename __choose_duration<LhsDuration, RhsDuration>::type CommonDuration;
+    CommonDuration result = __duration_cast<CommonDuration>(lhs);
     result += rhs;
     return result;
 }
@@ -793,7 +833,8 @@ inline
 typename __choose_duration<LhsDuration, RhsDuration>::type
 operator-(const LhsDuration& lhs, const RhsDuration& rhs)
 {
-    typename __choose_duration<LhsDuration, RhsDuration>::type result = lhs;
+    typedef typename __choose_duration<LhsDuration, RhsDuration>::type CommonDuration;
+    CommonDuration result = __duration_cast<CommonDuration>(lhs);
     result -= rhs;
     return result;
 }
