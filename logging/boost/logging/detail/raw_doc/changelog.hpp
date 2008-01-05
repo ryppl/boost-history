@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.13.1, 4 jan 2008
+@section changelog_cur_ver Current Version: v0.13.2, 4 jan 2008
+- breaks compilation on gcc4.1
 - can cache messages before initialization of logs
 - gather classes now have msg_type instead of param (msg_type contains the type of the returned msg - without const or &)
 

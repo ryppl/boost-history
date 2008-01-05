@@ -112,7 +112,7 @@ public:
         return (m_cache.is_using_cache);
     }
 
-    template<class writer_type> void turn_cache_off(writer_type & writer) {
+    template<class writer_type> void turn_cache_off(const writer_type & writer) {
         if ( !is_cache_turned_on() )
             return; // already turned off
 
@@ -195,7 +195,7 @@ template<class msg_type, class lock_resource = BOOST_LOG_BEFORE_INIT_LOCK_RESOUR
         writer(msg); 
     }
 
-    template<class writer_type> void turn_cache_off(writer_type & writer) {
+    template<class writer_type> void turn_cache_off(const writer_type & writer) {
     }
 
 };
