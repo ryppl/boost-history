@@ -347,7 +347,7 @@ namespace boost
         // (e ^ -mean * mean ^ k) / k!
         // == exp(log(e ^ -mean) + log (mean ^ k) - lgamma(k+1))
         // exp( -mean + log(mean) * k - lgamma(k+1))
-        return exp(-mean + log(mean) * k - boost::math::lgamma(k+1, Policy()));
+        return exp(-mean + log(mean) * k - boost::math::lgamma(static_cast<RealType>(k+1), Policy()));
         // return gamma_p_derivative(k+1, mean); // equivalent & also passes tests.
       }
     } // pdf
@@ -444,7 +444,7 @@ namespace boost
       }
       if (k == 0)
       { // Avoid repeated checks on k and mean in gamma_p.
-         return -boost::math::expm1(-mean, Policy());
+         return -boost::math::expm1(static_cast<RealType>(-mean), Policy());
       }
       // Unlike un-complemented cdf (sum from 0 to k),
       // can't use finite sum from k+1 to infinity for small integral k,
@@ -493,7 +493,7 @@ namespace boost
       if(z < 1)
          guess = z;
       else
-         guess = boost::math::detail::inverse_poisson_cornish_fisher(z, p, 1-p, Policy());
+         guess = boost::math::detail::inverse_poisson_cornish_fisher(z, p, static_cast<RealType>(1-p), Policy());
       if(z > 5)
       {
          if(z > 1000)
@@ -561,7 +561,7 @@ namespace boost
       if(z < 1)
          guess = z;
       else
-         guess = boost::math::detail::inverse_poisson_cornish_fisher(z, 1-q, q, Policy());
+         guess = boost::math::detail::inverse_poisson_cornish_fisher(z, static_cast<RealType>(1-q), q, Policy());
       if(z > 5)
       {
          if(z > 1000)

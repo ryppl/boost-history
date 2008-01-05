@@ -12,7 +12,9 @@
 
 #include <boost/cstdint.hpp> // for boost::uintmax_t
 #include <boost/config.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/tr1/tuple.hpp>
 #include <algorithm>  // for min and max
 #include <cmath>
 #include <climits>
@@ -159,6 +161,63 @@
 #  define BOOST_MATH_CONTROL_FP
 #endif
 //
+// Forward declare interval type so we can handle it as a special
+// case where required.
+//
+namespace boost{ namespace numeric{ 
+
+template <class T, class Policy>
+class interval;
+
+template <class T>
+struct is_interval : public boost::mpl::false_{};
+
+template <class T, class Policy>
+struct is_interval<interval<T, Policy> > : public boost::mpl::true_{};
+
+template <class T>
+struct interval_base_type
+{
+   typedef T type;
+};
+
+template <class T, class Policy>
+struct interval_base_type<interval<T, Policy> >
+{
+   typedef T type;
+};
+
+// Namespace forward declarations:
+namespace interval_math_compare{}
+namespace interval_lib{ namespace compare{ namespace possible{} } }
+
+template <class T, class Policy>
+inline std::tr1::tuple<T,T> make_printable(const boost::numeric::interval<T, Policy>& v)
+{
+   return std::make_pair(v.lower(), v.upper());
+}
+
+template <class T>
+inline const T& make_printable(const T& v)
+{
+   return v;
+}
+
+#ifdef BOOST_MATH_INSTRUMENT
+//
+// We need a stream operator for interval types, this may well conflict
+// with a user provided definition:
+//
+template <class T, class Policy>
+std::ostream& operator << (std::ostream& os, const interval<T, Policy>& val)
+{
+   os << "{ " << val.lower() << ", " << val.upper() << " }";
+   return os;
+}
+#endif
+
+}} // namespaces
+//
 // Helper macro for using statements:
 //
 #define BOOST_MATH_STD_USING \
@@ -184,7 +243,8 @@
    using std::ceil;\
    using std::floor;\
    using std::log10;\
-   using std::sqrt;
+   using std::sqrt;\
+   using namespace boost::numeric::interval_math_compare;
 
 
 namespace boost{ namespace math{
@@ -194,14 +254,101 @@ namespace tools
 template <class T>
 inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c)
 {
-   return (std::max)((std::max)(a, b), c);
+   using std::max;
+   return max BOOST_PREVENT_MACRO_SUBSTITUTION(max BOOST_PREVENT_MACRO_SUBSTITUTION(a, b), c);
 }
 
 template <class T>
 inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d)
 {
-   return (std::max)((std::max)(a, b), (std::max)(c, d));
+   using std::max;
+   return max BOOST_PREVENT_MACRO_SUBSTITUTION(max BOOST_PREVENT_MACRO_SUBSTITUTION(a, b), max BOOST_PREVENT_MACRO_SUBSTITUTION(c, d));
 }
+//
+// Interval aware "soft" comparisons:
+//
+template <class T>
+inline bool maybe_equal(const T& a, const T& b)
+{
+   return a == b;
+}
+template <class T>
+inline bool maybe_less(const T& a, const T& b)
+{
+   return a < b;
+}
+template <class T>
+inline bool maybe_less_equal(const T& a, const T& b)
+{
+   return a <= b;
+}
+template <class T>
+inline bool maybe_greater(const T& a, const T& b)
+{
+   return a > b;
+}
+template <class T>
+inline bool maybe_greater_equal(const T& a, const T& b)
+{
+   return a >= b;
+}
+
+template <class T, class Policy>
+inline bool maybe_equal(const boost::numeric::interval<T, Policy>& a, const boost::numeric::interval<T, Policy>& b)
+{
+   using namespace boost::numeric::interval_lib::compare::possible;
+   return a == b;
+}
+template <class T, class Policy>
+inline bool maybe_less(const boost::numeric::interval<T, Policy>& a, const boost::numeric::interval<T, Policy>& b)
+{
+   using namespace boost::numeric::interval_lib::compare::possible;
+   return a < b;
+}
+template <class T, class Policy>
+inline bool maybe_less_equal(const boost::numeric::interval<T, Policy>& a, const boost::numeric::interval<T, Policy>& b)
+{
+   using namespace boost::numeric::interval_lib::compare::possible;
+   return a <= b;
+}
+template <class T, class Policy>
+inline bool maybe_greater(const boost::numeric::interval<T, Policy>& a, const boost::numeric::interval<T, Policy>& b)
+{
+   using namespace boost::numeric::interval_lib::compare::possible;
+   return a > b;
+}
+template <class T, class Policy>
+inline bool maybe_greater_equal(const boost::numeric::interval<T, Policy>& a, const boost::numeric::interval<T, Policy>& b)
+{
+   using namespace boost::numeric::interval_lib::compare::possible;
+   return a >= b;
+}
+
+//
+// Normalisation functions:
+//
+template <class T>
+inline void normalize_median(T&){}
+template <class T, class Policy>
+inline void normalize_median(boost::numeric::interval<T, Policy>& v)
+{
+   v = median(v);
+}
+template <class T>
+inline void normalize_up(T&){}
+template <class T, class Policy>
+inline void normalize_up(boost::numeric::interval<T, Policy>& v)
+{
+   v = v.upper();
+}
+template <class T>
+inline void normalize_down(T&){}
+template <class T, class Policy>
+inline void normalize_down(boost::numeric::interval<T, Policy>& v)
+{
+   v = v.lower();
+}
+
 } // namespace tools
 }} // namespace boost namespace math
 

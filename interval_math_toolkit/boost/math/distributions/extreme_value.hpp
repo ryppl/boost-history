@@ -153,7 +153,7 @@ inline RealType cdf(const complemented2_type<extreme_value_distribution<RealType
    if(0 == detail::verify_scale_b("boost::math::cdf(const extreme_value_distribution<%1%>&, %1%)", b, &result, Policy()))
       return result;
 
-   result = -boost::math::expm1(-exp((a-c.param)/b), Policy());
+   result = -boost::math::expm1(static_cast<RealType>(-exp((a-c.param)/b)), Policy());
 
    return result;
 }
@@ -179,7 +179,7 @@ RealType quantile(const complemented2_type<extreme_value_distribution<RealType, 
    if(q == 1)
       return -policies::raise_overflow_error<RealType>(function, 0, Policy());
 
-   result = a - log(-boost::math::log1p(-q, Policy())) * b;
+   result = a - log(-boost::math::log1p(static_cast<RealType>(-q), Policy())) * b;
 
    return result;
 }

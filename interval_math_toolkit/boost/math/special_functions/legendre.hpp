@@ -45,7 +45,7 @@ T legendre_imp(unsigned l, T x, const Policy& pol, bool second = false)
    if(second)
    {
       // A solution of the second kind (Q):
-      p0 = (boost::math::log1p(x, pol) - boost::math::log1p(-x, pol)) / 2;
+      p0 = (boost::math::log1p(x, pol) - boost::math::log1p(static_cast<T>(-x), pol)) / 2;
       p1 = x * p0 - 1;
    }
    else

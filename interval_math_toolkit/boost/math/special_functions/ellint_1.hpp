@@ -88,9 +88,9 @@ T ellint_f_imp(T phi, T k, const Policy& pol)
        // so rewritten to use fmod instead:
        //
        BOOST_MATH_INSTRUMENT_CODE("pi/2 = " << constants::pi<T>() / 2);
-       T rphi = boost::math::tools::fmod_workaround(phi, constants::pi<T>() / 2);
+       T rphi = boost::math::tools::fmod_workaround(phi, static_cast<T>(constants::pi<T>() / 2));
        BOOST_MATH_INSTRUMENT_VARIABLE(rphi);
-       T m = 2 * (phi - rphi) / constants::pi<T>();
+       T m = floor(2 * (phi - rphi) / constants::pi<T>() + 0.5f);
        BOOST_MATH_INSTRUMENT_VARIABLE(m);
        int s = 1;
        if(boost::math::tools::fmod_workaround(m, T(2)) > 0.5)
@@ -104,7 +104,7 @@ T ellint_f_imp(T phi, T k, const Policy& pol)
        T cosp = cos(rphi);
        BOOST_MATH_INSTRUMENT_VARIABLE(sinp);
        BOOST_MATH_INSTRUMENT_VARIABLE(cosp);
-       result = s * sinp * ellint_rf_imp(cosp * cosp, 1 - k * k * sinp * sinp, T(1), pol);
+       result = s * sinp * ellint_rf_imp(static_cast<T>(cosp * cosp), static_cast<T>(1 - k * k * sinp * sinp), T(1), pol);
        BOOST_MATH_INSTRUMENT_VARIABLE(result);
        if(m != 0)
        {

@@ -705,7 +705,6 @@ mpfr_class bessel_i1(mpfr_class x)
     return value;
 }
 
-
 } // namespace detail
 
 }}

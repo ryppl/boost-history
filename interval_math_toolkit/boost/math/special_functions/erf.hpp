@@ -122,9 +122,9 @@ T erf_imp(T z, bool invert, const Policy& pol, const Tag& t)
    if(z < 0)
    {
       if(!invert)
-         return -erf_imp(-z, invert, pol, t);
+         return -erf_imp(static_cast<T>(-z), invert, pol, t);
       else
-         return 1 + erf_imp(-z, false, pol, t);
+         return 1 + erf_imp(static_cast<T>(-z), false, pol, t);
    }
 
    T result;
@@ -142,7 +142,7 @@ T erf_imp(T z, bool invert, const Policy& pol, const Tag& t)
       if(x < 0.6)
       {
          // Compute P:
-         result = z * exp(-x);
+         result = z * exp(static_cast<T>(-x));
          result /= sqrt(boost::math::constants::pi<T>());
          if(result != 0)
             result *= 2 * detail::lower_gamma_series(T(0.5f), x, pol);

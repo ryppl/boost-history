@@ -66,7 +66,7 @@ T temme_method_1_ibeta_inverse(T a, T b, T z, const Policy& pol)
    // get the first approximation for eta from the inverse
    // error function (Eq: 2.9 and 2.10).
    //
-   T eta0 = boost::math::erfc_inv(2 * z, pol);
+   T eta0 = boost::math::erfc_inv(static_cast<T>(2 * z), pol);
    eta0 /= -sqrt(a / 2);
 
    T terms[4] = { eta0 };
@@ -106,7 +106,7 @@ T temme_method_1_ibeta_inverse(T a, T b, T z, const Policy& pol)
    //
    // Bring them together to get a final estimate for eta:
    //
-   T eta = tools::evaluate_polynomial(terms, 1/a, 4);
+   T eta = tools::evaluate_polynomial(terms, static_cast<T>(1/a), 4);
    //
    // now we need to convert eta to x, by solving the appropriate
    // quadratic equation:
@@ -143,7 +143,7 @@ T temme_method_2_ibeta_inverse(T /*a*/, T /*b*/, T z, T r, T theta, const Policy
    // Get first estimate for eta, see Eq 3.9 and 3.10,
    // but note there is a typo in Eq 3.10:
    //
-   T eta0 = boost::math::erfc_inv(2 * z, pol);
+   T eta0 = boost::math::erfc_inv(static_cast<T>(2 * z), pol);
    eta0 /= -sqrt(r / 2);
 
    T s = sin(theta);
@@ -207,7 +207,7 @@ T temme_method_2_ibeta_inverse(T /*a*/, T /*b*/, T z, T r, T theta, const Policy
    // Bring the correction terms together to evaluate eta,
    // this is the last equation on page 151:
    //
-   T eta = tools::evaluate_polynomial(terms, 1/r, 4);
+   T eta = tools::evaluate_polynomial(terms, static_cast<T>(1/r), 4);
    //
    // Now that we have eta we need to back solve for x,
    // we seek the value of x that gives eta in Eq 3.2.
@@ -453,6 +453,8 @@ template <class T, class Policy>
 T ibeta_inv_imp(T a, T b, T p, T q, const Policy& pol, T* py)
 {
    BOOST_MATH_STD_USING  // For ADL of math functions.
+   using std::max;
+   using std::min;
 
    //
    // The flag invert is set to true if we swap a for b and p for q,
@@ -521,8 +523,8 @@ T ibeta_inv_imp(T a, T b, T p, T q, const Policy& pol, T* py)
          std::swap(p, q);
          invert = !invert;
       }
-      T minv = (std::min)(a, b);
-      T maxv = (std::max)(a, b);
+      T minv = min BOOST_PREVENT_MACRO_SUBSTITUTION(a, b);
+      T maxv = max BOOST_PREVENT_MACRO_SUBSTITUTION(a, b);
       if((sqrt(minv) > (maxv - minv)) && (minv > 5))
       {
          //
@@ -660,7 +662,7 @@ T ibeta_inv_imp(T a, T b, T p, T q, const Policy& pol, T* py)
       //
       T lx = log(p * a * boost::math::beta(a, b, pol)) / a;
       x = exp(lx);
-      y = x < 0.9 ? 1 - x : -boost::math::expm1(lx, pol);
+      y = x < 0.9 ? static_cast<T>(1 - x) : static_cast<T>(-boost::math::expm1(lx, pol));
 
       if((b < a) && (x < 0.2))
       {
@@ -734,7 +736,6 @@ T ibeta_inv_imp(T a, T b, T p, T q, const Policy& pol, T* py)
          x = 1 - y;
       }
    }
-
    //
    // Now we have a guess for x (and for y) we can set things up for
    // iteration.  If x > 0.5 it pays to swap things round:
@@ -804,7 +805,7 @@ T ibeta_inv_imp(T a, T b, T p, T q, const Policy& pol, T* py)
    //BOOST_ASSERT(x != upper);
    //BOOST_ASSERT((x != lower) || (x == boost::math::tools::min_value<T>()) || (x == boost::math::tools::epsilon<T>()));
    //
-   // Tidy up, if we "lower" was too high then zero is the best answer we have:
+   // Tidy up, if "lower" was too high then zero is the best answer we have:
    //
    if(x == lower)
       x = 0;

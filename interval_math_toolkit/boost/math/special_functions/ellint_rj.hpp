@@ -94,7 +94,7 @@ T ellint_rj_imp(T x, T y, T z, T p, const Policy& pol)
        value = boost::math::ellint_rj(x, y, z, p, pol);
        value *= pmy;
        value -= 3 * boost::math::ellint_rf(x, y, z, pol);
-       value += 3 * sqrt((x * y * z) / (x * z + p * q)) * boost::math::ellint_rc(x * z + p * q, p * q, pol);
+       value += 3 * sqrt((x * y * z) / (x * z + p * q)) * boost::math::ellint_rc(static_cast<T>(x * z + p * q), static_cast<T>(p * q), pol);
        value /= (y + q);
        return value;
     }

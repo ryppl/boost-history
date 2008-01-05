@@ -124,7 +124,7 @@ inline RealType cdf(const exponential_distribution<RealType, Policy>& dist, cons
       return result;
    if(0 == detail::verify_exp_x(function, x, &result, Policy()))
       return result;
-   result = -boost::math::expm1(-x * lambda, Policy());
+   result = -boost::math::expm1(static_cast<RealType>(-x * lambda), Policy());
 
    return result;
 } // cdf
@@ -148,7 +148,7 @@ inline RealType quantile(const exponential_distribution<RealType, Policy>& dist,
    if(p == 1)
       return policies::raise_overflow_error<RealType>(function, 0, Policy());
 
-   result = -boost::math::log1p(-p, Policy()) / lambda;
+   result = -boost::math::log1p(static_cast<RealType>(-p), Policy()) / lambda;
    return result;
 } // quantile
 

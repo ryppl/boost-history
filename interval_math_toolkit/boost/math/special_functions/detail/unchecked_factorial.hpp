@@ -279,8 +279,16 @@ struct max_factorial<double>
       value = ::boost::math::max_factorial<long double>::value);
 };
 
+namespace detail{
+
 template <class T>
-inline T unchecked_factorial(unsigned i BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
+inline T unchecked_factorial_imp(const mpl::true_&, unsigned i BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
+{
+   return boost::math::unchecked_factorial<typename T::base_type>(i);
+}
+
+template <class T>
+inline T unchecked_factorial_imp(const mpl::false_&, unsigned i BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
 {
    static const boost::array<T, 101> factorials = {{
       boost::lexical_cast<T>("1"),
@@ -387,6 +395,15 @@ inline T unchecked_factorial(unsigned i BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE
    }};
 
    return factorials[i];
+}
+
+} // namespace detail
+
+template <class T>
+inline T unchecked_factorial(unsigned i BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
+{
+   typedef typename boost::numeric::is_interval<T>::type tag_type;
+   return detail::unchecked_factorial_imp<T>(tag_type(), i);
 }
 
 template <class T>

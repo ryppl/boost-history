@@ -166,7 +166,7 @@ inline RealType cdf(const normal_distribution<RealType, Policy>& dist, const Rea
      return result;
    }
    RealType diff = (x - mean) / (sd * constants::root_two<RealType>());
-   result = boost::math::erfc(-diff, Policy()) / 2;
+   result = boost::math::erfc(static_cast<RealType>(-diff), Policy()) / 2;
    return result;
 } // cdf
 
@@ -187,7 +187,7 @@ inline RealType quantile(const normal_distribution<RealType, Policy>& dist, cons
    if(false == detail::check_probability(function, p, &result, Policy()))
       return result;
 
-   result= boost::math::erfc_inv(2 * p, Policy());
+   result= boost::math::erfc_inv(static_cast<RealType>(2 * p), Policy());
    result = -result;
    result *= sd * constants::root_two<RealType>();
    result += mean;
@@ -247,7 +247,7 @@ inline RealType quantile(const complemented2_type<normal_distribution<RealType, 
    RealType q = c.param;
    if(false == detail::check_probability(function, q, &result, Policy()))
       return result;
-   result = boost::math::erfc_inv(2 * q, Policy());
+   result = boost::math::erfc_inv(static_cast<RealType>(2 * q), Policy());
    result *= sd * constants::root_two<RealType>();
    result += mean;
    return result;

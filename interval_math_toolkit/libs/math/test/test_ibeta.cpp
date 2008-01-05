@@ -3,7 +3,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/beta.hpp>
@@ -515,6 +520,7 @@ void test_spots(T)
 int test_main(int, char* [])
 {
    expected_results();
+#ifndef TEST_INTERVAL
    BOOST_MATH_CONTROL_FP;
 #ifdef TEST_GSL
    gsl_set_error_handler_off();
@@ -557,6 +563,9 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
+#else // TEST_INTERVAL
+   test_beta(interval_type(), "boost::numeric::interval<double>");
+#endif // TEST_INTERVAL
    return 0;
 }
 

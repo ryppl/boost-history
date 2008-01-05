@@ -23,7 +23,9 @@ template <class F, class T>
 std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t& max_iter)
 {
    BOOST_MATH_STD_USING
-   bits = (std::min)(policies::digits<T, policies::policy<> >() / 2, bits);
+   using std::min;
+
+   bits = min BOOST_PREVENT_MACRO_SUBSTITUTION(policies::digits<T, policies::policy<> >() / 2, bits);
    T tolerance = static_cast<T>(ldexp(1.0, 1-bits));
    T x;  // minima so far
    T w;  // second best point

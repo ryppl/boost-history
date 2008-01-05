@@ -61,7 +61,7 @@ T ellint_pi_imp(T v, T phi, T k, T vc, const Policy& pol)
 
     T sphi = sin(fabs(phi));
 
-    if(v > 1 / (sphi * sphi))
+    if(tools::maybe_greater(v, static_cast<T>(1 / (sphi * sphi))))
     {
         // Complex result is a domain error:
        return policies::raise_domain_error<T>(function,
@@ -102,7 +102,7 @@ T ellint_pi_imp(T v, T phi, T k, T vc, const Policy& pol)
           // v > 1:
           T vcr = sqrt(-vc);
           T arg = vcr * tan(phi);
-          return (boost::math::log1p(arg, pol) - boost::math::log1p(-arg, pol)) / (2 * vcr);
+          return (boost::math::log1p(arg, pol) - boost::math::log1p(static_cast<T>(-arg), pol)) / (2 * vcr);
        }
     }
 
@@ -185,8 +185,8 @@ T ellint_pi_imp(T v, T phi, T k, T vc, const Policy& pol)
     }
     else
     {
-       T rphi = boost::math::tools::fmod_workaround(fabs(phi), constants::pi<T>() / 2);
-       T m = 2 * (fabs(phi) - rphi) / constants::pi<T>();
+       T rphi = boost::math::tools::fmod_workaround(fabs(phi), static_cast<T>(constants::pi<T>() / 2));
+       T m = floor(2 * (fabs(phi) - rphi) / constants::pi<T>() + 0.5f);
        int sign = 1;
        if(boost::math::tools::fmod_workaround(m, T(2)) > 0.5)
        {

@@ -22,7 +22,7 @@ T sin_pi(T x)
 {
    BOOST_MATH_STD_USING // ADL of std names
    if(x < 0)
-      return -sin_pi(-x);
+      return -sin_pi(static_cast<T>(-x));
    // sin of pi*x:
    bool invert;
    if(x < 0.5)

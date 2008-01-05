@@ -111,7 +111,7 @@ void handle_test_result(const boost::math::tools::test_result<T>& result,
                        const char* test_name, 
                        const char* group_name)
 {
-   using namespace std; // To aid selection of the right pow.
+   BOOST_MATH_STD_USING
    T eps = boost::math::tools::epsilon<T>();
    std::cout << std::setprecision(4);
 
@@ -120,8 +120,8 @@ void handle_test_result(const boost::math::tools::test_result<T>& result,
    //
    // Begin by printing the main tag line with the results:
    //
-   std::cout << test_name << "<" << type_name << "> Max = " << max_error_found
-      << " RMS Mean=" << mean_error_found;
+   std::cout << test_name << "<" << type_name << "> Max = " << boost::numeric::make_printable(max_error_found)
+      << " RMS Mean=" << boost::numeric::make_printable(mean_error_found);
    //
    // If the max error is non-zero, give the row of the table that
    // produced the worst error:
@@ -137,7 +137,7 @@ void handle_test_result(const boost::math::tools::test_result<T>& result,
 #if defined(__SGI_STL_PORT)
          std::cout << boost::math::tools::real_cast<double>(worst[i]);
 #else
-         std::cout << worst[i];
+         std::cout << boost::numeric::make_printable(worst[i]);
 #endif
       }
       std::cout << " }";
@@ -146,16 +146,19 @@ void handle_test_result(const boost::math::tools::test_result<T>& result,
    //
    // Now verify that the results are within our expected bounds:
    //
-   std::pair<boost::uintmax_t, boost::uintmax_t> const& bounds = get_max_errors(type_name, test_name, group_name);
-   if(bounds.first < max_error_found)
+   if(!boost::numeric::is_interval<T>::value)
    {
-      std::cerr << "Peak error greater than expected value of " << bounds.first << std::endl;
-      BOOST_CHECK(bounds.first >= max_error_found);
-   }
-   if(bounds.second < mean_error_found)
-   {
-      std::cerr << "Mean error greater than expected value of " << bounds.second << std::endl;
-      BOOST_CHECK(bounds.second >= mean_error_found);
+      std::pair<boost::uintmax_t, boost::uintmax_t> const& bounds = get_max_errors(type_name, test_name, group_name);
+      if(bounds.first < max_error_found)
+      {
+         std::cerr << "Peak error greater than expected value of " << bounds.first << std::endl;
+         BOOST_CHECK(bounds.first >= max_error_found);
+      }
+      if(bounds.second < mean_error_found)
+      {
+         std::cerr << "Mean error greater than expected value of " << bounds.second << std::endl;
+         BOOST_CHECK(bounds.second >= mean_error_found);
+      }
    }
    std::cout << std::endl;
 }
@@ -193,6 +196,24 @@ void print_test_result(const boost::math::tools::test_result<T>& result,
    }
    std::cout << std::endl;
 }
+
+#ifdef TEST_INTERVAL
+
+#include <boost/math/bindings/interval.hpp>
+
+typedef boost::numeric::interval<double,
+   boost::numeric::interval_lib::policies<
+      boost::numeric::interval_lib::save_state<
+         boost::numeric::interval_lib::rounded_transc_nearest<
+            double, 
+            boost::numeric::interval_lib::rounded_arith_opp<double> 
+         > 
+      >,
+      boost::numeric::interval_lib::checking_base<double> 
+   > 
+> interval_type;
+
+#endif
 
 #endif // BOOST_MATH_HANDLE_TEST_RESULT
 

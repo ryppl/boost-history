@@ -26,12 +26,14 @@ public:
    eps_tolerance(unsigned bits)
    {
       BOOST_MATH_STD_USING
-      eps = (std::max)(T(ldexp(1.0F, 1-bits)), 2 * tools::epsilon<T>());
+      using std::max;
+      eps = max BOOST_PREVENT_MACRO_SUBSTITUTION(T(ldexp(1.0F, 1-bits)), T(2 * tools::epsilon<T>()));
    }
    bool operator()(const T& a, const T& b)
    {
       BOOST_MATH_STD_USING
-      return (fabs(a - b) / (std::min)(fabs(a), fabs(b))) <= eps;
+      using std::min;
+      return (fabs(a - b) / min BOOST_PREVENT_MACRO_SUBSTITUTION(fabs(a), fabs(b))) <= eps;
    }
 private:
    T eps;
@@ -193,9 +195,9 @@ T quadratic_interpolate(const T& a, const T& b, T const& d,
    //
    // Start by obtaining the coefficients of the quadratic polynomial:
    //
-   T B = safe_div(fb - fa, b - a, tools::max_value<T>());
-   T A = safe_div(fd - fb, d - b, tools::max_value<T>());
-   A = safe_div(A - B, d - a, T(0));
+   T B = safe_div(static_cast<T>(fb - fa), static_cast<T>(b - a), tools::max_value<T>());
+   T A = safe_div(static_cast<T>(fd - fb), static_cast<T>(d - b), tools::max_value<T>());
+   A = safe_div(static_cast<T>(A - B), static_cast<T>(d - a), T(0));
 
    if(a == 0)
    {
@@ -220,7 +222,7 @@ T quadratic_interpolate(const T& a, const T& b, T const& d,
    for(unsigned i = 1; i <= count; ++i)
    {
       //c -= safe_div(B * c, (B + A * (2 * c - a - b)), 1 + c - a);
-      c -= safe_div(fa+(B+A*(c-b))*(c-a), (B + A * (2 * c - a - b)), 1 + c - a);
+      c -= safe_div(static_cast<T>(fa+(B+A*(c-b))*(c-a)), static_cast<T>((B + A * (2 * c - a - b))), static_cast<T>(1 + c - a));
    }
    if((c <= a) || (c >= b))
    {
@@ -436,7 +438,7 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
       //
       e = d;
       fe = fd;
-      detail::bracket(f, a, b, a + (b - a) / 2, fa, fb, d, fd);
+      detail::bracket(f, a, b, static_cast<T>(a + (b - a) / 2), fa, fb, d, fd);
       --count;
       BOOST_MATH_INSTRUMENT_CODE("Not converging: Taking a bisection!!!!");
       BOOST_MATH_INSTRUMENT_CODE(" a = " << a << " b = " << b);

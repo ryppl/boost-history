@@ -88,7 +88,7 @@ typename tools::promote_args<T>::type log1p(T x, const Policy& pol)
          function, 0, pol);
 
    result_type a = abs(result_type(x));
-   if(a > result_type(0.5L))
+   if(a > result_type(0.5f))
       return log(1 + result_type(x));
    // Note that without numeric_limits specialisation support, 
    // epsilon just returns zero, and our "optimisation" will always fail:
@@ -248,7 +248,7 @@ inline typename tools::promote_args<T>::type
          function, 0, pol);
 
    result_type a = abs(result_type(x));
-   if(a > result_type(0.95L))
+   if(a > result_type(0.95f))
       return log(1 + result_type(x)) - result_type(x);
    // Note that without numeric_limits specialisation support, 
    // epsilon just returns zero, and our "optimisation" will always fail:

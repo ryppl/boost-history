@@ -79,7 +79,7 @@ T double_factorial(unsigned i, const Policy& pol)
       // Fallthrough: i is too large to use table lookup, try the 
       // gamma function instead.
       //
-      T result = boost::math::tgamma(static_cast<T>(i) / 2 + 1, pol) / sqrt(constants::pi<T>());
+      T result = boost::math::tgamma(static_cast<T>(static_cast<T>(i) / 2 + 1), pol) / sqrt(constants::pi<T>());
       if(ldexp(tools::max_value<T>(), -static_cast<int>(i+1) / 2) > result)
          return ceil(result * ldexp(T(1), (i+1) / 2) - 0.5f);
    }
@@ -125,7 +125,7 @@ T rising_factorial_imp(T x, int n, const Policy& pol)
          n = -n;
          inv = true;
       }
-      T result = ((n&1) ? -1 : 1) * falling_factorial(-x, n, pol);
+      T result = ((n&1) ? -1 : 1) * falling_factorial(static_cast<T>(-x), n, pol);
       if(inv)
          result = 1 / result;
       return result;
@@ -152,7 +152,7 @@ inline T falling_factorial_imp(T x, unsigned n, const Policy& pol)
       // For x < 0 we really have a rising factorial
       // modulo a possible change of sign:
       //
-      return (n&1 ? -1 : 1) * rising_factorial(-x, n, pol);
+      return (n&1 ? -1 : 1) * rising_factorial(static_cast<T>(-x), n, pol);
    }
    if(n == 0)
       return 1;
@@ -163,15 +163,15 @@ inline T falling_factorial_imp(T x, unsigned n, const Policy& pol)
       // handle it, split the product up into three parts:
       //
       T xp1 = x + 1;
-      unsigned n2 = tools::real_cast<unsigned>(floor(xp1));
+      unsigned n2 = tools::real_cast<unsigned>(static_cast<T>(floor(xp1)));
       if(n2 == xp1)
          return 0;
-      T result = boost::math::tgamma_delta_ratio(xp1, -static_cast<T>(n2), pol);
+      T result = boost::math::tgamma_delta_ratio(xp1, static_cast<T>(-static_cast<T>(n2)), pol);
       x -= n2;
       result *= x;
       ++n2;
       if(n2 < n)
-         result *= falling_factorial(x - 1, n - n2, pol);
+         result *= falling_factorial(static_cast<T>(x - 1), n - n2, pol);
       return result;
    }
    //
@@ -181,7 +181,7 @@ inline T falling_factorial_imp(T x, unsigned n, const Policy& pol)
    // because tgamma_delta_ratio is alreay optimised
    // for that use case:
    //
-   return boost::math::tgamma_delta_ratio(x + 1, -static_cast<T>(n), pol);
+   return boost::math::tgamma_delta_ratio(static_cast<T>(x + 1), static_cast<T>(-static_cast<T>(n)), pol);
 }
 
 } // namespace detail

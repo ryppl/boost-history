@@ -12,7 +12,12 @@
 // Constants are too big for float case, but this doesn't matter for test.
 #endif
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/hermite.hpp>
@@ -168,8 +173,7 @@ int test_main(int, char* [])
 {
    BOOST_MATH_CONTROL_FP;
 
-   boost::math::hermite(51, 915.0);
-
+#ifndef TEST_INTERVAL
 #ifndef BOOST_MATH_BUGGY_LARGE_FLOAT_CONSTANTS
    test_spots(0.0F, "float");
 #endif
@@ -196,6 +200,9 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
+#else // TEST_INTERVAL
+   test_hermite(interval_type(), "boost::numeric::interval<double>");
+#endif // TEST_INTERVAL
    return 0;
 }
 

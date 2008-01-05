@@ -127,8 +127,9 @@ typename Dist::value_type
          }
          else
          {
+            using std::max;
             b = a;
-            a = (std::max)(b - 1, value_type(0));
+            a = (max)(static_cast<value_type>(b - 1), value_type(0));
             if(a < min_bound)
                a = min_bound;
             fa = f(a);
@@ -158,7 +159,8 @@ typename Dist::value_type
       }
       else
       {
-         b = (std::max)(a - adder, value_type(0));
+         using std::max;
+         b = max BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<value_type>(a - adder), value_type(0));
          if(b < min_bound)
             b = min_bound;
       }
@@ -182,7 +184,8 @@ typename Dist::value_type
          }
          else
          {
-            b = (std::max)(a - adder, value_type(0));
+            using std::max;
+            b = max BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<value_type>(a - adder), value_type(0));
             if(b < min_bound)
                b = min_bound;
          }

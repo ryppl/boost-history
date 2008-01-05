@@ -46,21 +46,21 @@ int temme_jy(T v, T x, T* Y, T* Y1, const Policy& pol)
     BOOST_ASSERT(fabs(v) <= 0.5f);  // precondition for using this routine
 
     T gp = boost::math::tgamma1pm1(v, pol);
-    T gm = boost::math::tgamma1pm1(-v, pol);
+    T gm = boost::math::tgamma1pm1(static_cast<T>(-v), pol);
     T spv = boost::math::sin_pi(v, pol);
-    T spv2 = boost::math::sin_pi(v/2, pol);
+    T spv2 = boost::math::sin_pi(static_cast<T>(v/2), pol);
     T xp = pow(x/2, v);
 
     a = log(x / 2);
     sigma = -a * v;
     d = abs(sigma) < tools::epsilon<T>() ?
         T(1) : sinh(sigma) / sigma;
-    e = abs(v) < tools::epsilon<T>() ? v*pi<T>()*pi<T>() / 2
-        : 2 * spv2 * spv2 / v;
+    e = abs(v) < tools::epsilon<T>() ? static_cast<T>(v*pi<T>()*pi<T>() / 2)
+        : static_cast<T>(2 * spv2 * spv2 / v);
 
-    T g1 = (v == 0) ? -euler<T>() : (gp - gm) / ((1 + gp) * (1 + gm) * 2 * v);
+    T g1 = (v == 0) ? static_cast<T>(-euler<T>()) : static_cast<T>((gp - gm) / ((1 + gp) * (1 + gm) * 2 * v));
     T g2 = (2 + gp + gm) / ((1 + gp) * (1 + gm) * 2);
-    T vspv = (fabs(v) < tools::epsilon<T>()) ? 1/constants::pi<T>() : v / spv;
+    T vspv = (fabs(v) < tools::epsilon<T>()) ? static_cast<T>(1/constants::pi<T>()) : static_cast<T>(v / spv);
     f = (g1 * cosh(sigma) - g2 * a * d) * 2 * vspv;
 
     p = vspv / (xp * (1 + gm));
@@ -118,7 +118,7 @@ int CF1_jy(T v, T x, T* fv, int* sign, const Policy& pol)
     tolerance = 2 * tools::epsilon<T>();
     tiny = sqrt(tools::min_value<T>());
     C = f = tiny;                           // b0 = 0, replace with tiny
-    D = 0.0L;
+    D = 0;
     for (k = 1; k < policies::get_max_series_iterations<Policy>() * 100; k++)
     {
         a = -1;
@@ -131,7 +131,7 @@ int CF1_jy(T v, T x, T* fv, int* sign, const Policy& pol)
         delta = C * D;
         f *= delta;
         if (D < 0) { s = -s; }
-        if (abs(delta - 1.0L) < tolerance) 
+        if (abs(delta - 1) < tolerance) 
         { break; }
     }
     policies::check_series_iterations("boost::math::bessel_jy<%1%>(%1%,%1%) in CF1_jy", k / 100, pol);
@@ -158,7 +158,7 @@ int CF2_jy(T v, T x, T* p, T* q, const Policy& pol)
     typedef typename complex_trait<T>::type complex_type;
 
     complex_type C, D, f, a, b, delta, one(1);
-    T tiny, zero(0.0L);
+    T tiny, zero(0);
     unsigned long k;
 
     // |x| >= |v|, CF2_jy converges rapidly
@@ -169,7 +169,7 @@ int CF2_jy(T v, T x, T* p, T* q, const Policy& pol)
     // Lentz, Applied Optics, vol 15, 668 (1976)
     T tolerance = 2 * tools::epsilon<T>();
     tiny = sqrt(tools::min_value<T>());
-    C = f = complex_type(-0.5f/x, 1.0L);
+    C = f = complex_type(static_cast<T>(-0.5f/x), 1);
     D = 0;
     for (k = 1; k < policies::get_max_series_iterations<Policy>(); k++)
     {
@@ -225,7 +225,7 @@ int bessel_jy(T v, T x, T* J, T* Y, int kind, const Policy& pol)
         v = -v;                             // v is non-negative from here
         kind = need_j|need_y;               // need both for reflection formula
     }
-    n = real_cast<unsigned>(v + 0.5L);
+    n = real_cast<unsigned>(static_cast<T>(v + 0.5f));
     u = v - n;                              // -1/2 <= u < 1/2
 
     if (x == 0)
@@ -279,7 +279,8 @@ int bessel_jy(T v, T x, T* J, T* Y, int kind, const Policy& pol)
            lim = asymptotic_bessel_y_limit<T>(tag_type());
            break;
         default:
-           lim = (std::max)(
+           using std::max;
+           lim = max BOOST_PREVENT_MACRO_SUBSTITUTION(
               asymptotic_bessel_j_limit<T>(v, tag_type()),
               asymptotic_bessel_y_limit<T>(tag_type()));
            break;
@@ -289,7 +290,7 @@ int bessel_jy(T v, T x, T* J, T* Y, int kind, const Policy& pol)
            if(kind&need_y)
            {
               Yu = asymptotic_bessel_y_large_x_2(u, x);
-              Yu1 = asymptotic_bessel_y_large_x_2(u + 1, x);
+              Yu1 = asymptotic_bessel_y_large_x_2(static_cast<T>(u + 1), x);
            }
            else
               Yu = std::numeric_limits<T>::quiet_NaN(); // any value will do, we're not using it.

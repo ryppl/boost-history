@@ -48,7 +48,7 @@ T inverse_poisson_cornish_fisher(T lambda, T p, T q, const Policy& pol)
    // kurtosis:
    // T k = 1/lambda;
    // Get the inverse of a std normal distribution:
-   T x = boost::math::erfc_inv(p > q ? 2 * q : 2 * p, pol) * constants::root_two<T>();
+   T x = boost::math::erfc_inv(p > q ? static_cast<T>(2 * q) : static_cast<T>(2 * p), pol) * constants::root_two<T>();
    // Set the sign:
    if(p < 0.5)
       x = -x;
@@ -153,25 +153,25 @@ T gamma_inva_imp(const T& z, const T& p, const T& q, const Policy& pol)
 template <class T, class Policy>
 inline T gamma_p_inva(T x, T p, const Policy& pol)
 {
-   return detail::gamma_inva_imp(x, p, 1 - p, pol);
+   return detail::gamma_inva_imp(x, p, static_cast<T>(1 - p), pol);
 }
 
 template <class T, class Policy>
 inline T gamma_q_inva(T x, T q, const Policy& pol)
 {
-   return detail::gamma_inva_imp(x, 1 - q, q, pol);
+   return detail::gamma_inva_imp(x, static_cast<T>(1 - q), q, pol);
 }
 
 template <class T>
 inline T gamma_p_inva(T x, T p)
 {
-   return detail::gamma_inva_imp(x, p, 1 - p, policies::policy<>());
+   return detail::gamma_inva_imp(x, p, static_cast<T>(1 - p), policies::policy<>());
 }
 
 template <class T>
 inline T gamma_q_inva(T x, T q)
 {
-   return detail::gamma_inva_imp(x, 1 - q, q, policies::policy<>());
+   return detail::gamma_inva_imp(x, static_cast<T>(1 - q), q, policies::policy<>());
 }
 
 } // namespace math

@@ -221,7 +221,7 @@ inline RealType variance(const lognormal_distribution<RealType, Policy>& dist)
    if(0 == detail::check_scale("boost::math::variance(const lognormal_distribution<%1%>&)", sigma, &result, Policy()))
       return result;
 
-   return boost::math::expm1(sigma * sigma, Policy()) * exp(2 * mu + sigma * sigma);
+   return boost::math::expm1(static_cast<RealType>(sigma * sigma), Policy()) * exp(2 * mu + sigma * sigma);
 }
 
 template <class RealType, class Policy>

@@ -212,11 +212,11 @@ namespace boost{ namespace math
     }
     if (x == lower)
     { // (mode - lower) == 0 which would lead to divide by zero!
-      return (mode == lower) ? 2 / (upper - lower) : 0;
+      return (mode == lower) ? RealType(2) / (upper - lower) : RealType(0);
     }
     else if (x == upper)
     {
-      return (mode == upper) ? 2 / (upper - lower) : 0;
+      return (mode == upper) ? RealType(2) / (upper - lower) : RealType(0);
     }
     else if (x <= mode)
     {
@@ -468,7 +468,7 @@ namespace boost{ namespace math
     RealType mode = dist.mode();
     RealType upper = dist.upper();
     RealType result; // of checks.
-    if(false == detail::check_triangular(function,lower, mode, upper, &result, Policy()))
+    if(false == boost::math::detail::check_triangular(function,lower, mode, upper, &result, Policy()))
     {
       return result;
     }

@@ -18,6 +18,7 @@
 #include <boost/math/policies/policy.hpp>
 #include <boost/math/tools/precision.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/tr1/tuple.hpp>
 #ifdef BOOST_MSVC
 #  pragma warning(push) // Quiet warnings in boost/format.hpp
 #  pragma warning(disable: 4996) // _SCL_SECURE_NO_DEPRECATE
@@ -55,6 +56,17 @@ T user_denorm_error(const char* function, const char* message, const T& val);
 template <class T>
 T user_evaluation_error(const char* function, const char* message, const T& val);
 
+template <class T>
+inline T make_printable_type(const T& v)
+{  return v;  }
+
+template <class T, class Policy>
+inline std::tr1::tuple<T, T>
+make_printable_type(const boost::numeric::interval<T, Policy>& inter)
+{  
+   return std::tr1::tuple<T, T>(inter.lower(), inter.upper());
+}
+
 namespace detail
 {
 
@@ -89,7 +101,7 @@ void raise_error(const char* function, const char* message, const T& val)
   msg += message;
 
   int prec = 2 + (boost::math::policies::digits<T, boost::math::policies::policy<> >() * 30103UL) / 100000UL;
-  msg = (boost::format(msg) % boost::io::group(std::setprecision(prec), val)).str();
+  msg = (boost::format(msg) % boost::io::group(std::setprecision(prec), make_printable_type(val))).str();
 
   E e(msg);
   boost::throw_exception(e);
@@ -429,7 +441,7 @@ template <class R, class T, class Policy>
 inline bool check_overflow(T val, R* result, const char* function, const Policy& pol)
 {
    BOOST_MATH_STD_USING
-   if(fabs(val) > tools::max_value<R>())
+   if(boost::math::tools::maybe_greater(fabs(val), static_cast<T>(tools::max_value<R>())))
    {
       *result = static_cast<R>(boost::math::policies::detail::raise_overflow_error<R>(function, 0, pol));
       return true;
@@ -439,7 +451,7 @@ inline bool check_overflow(T val, R* result, const char* function, const Policy&
 template <class R, class T, class Policy>
 inline bool check_underflow(T val, R* result, const char* function, const Policy& pol)
 {
-   if((val != 0) && (static_cast<R>(val) == 0))
+   if(!boost::math::tools::maybe_equal(val, T(0)) && boost::math::tools::maybe_equal(static_cast<R>(val), R(0)))
    {
       *result = static_cast<R>(boost::math::policies::detail::raise_underflow_error<R>(function, 0, pol));
       return true;
@@ -450,7 +462,7 @@ template <class R, class T, class Policy>
 inline bool check_denorm(T val, R* result, const char* function, const Policy& pol)
 {
    BOOST_MATH_STD_USING
-   if((fabs(val) < static_cast<T>(tools::min_value<R>())) && (static_cast<R>(val) != 0))
+   if(boost::math::tools::maybe_less(fabs(val), static_cast<T>(tools::min_value<R>())) && !boost::math::tools::maybe_equal(static_cast<R>(val), R(0)))
    {
       *result = static_cast<R>(boost::math::policies::detail::raise_denorm_error<R>(function, 0, static_cast<R>(val), pol));
       return true;

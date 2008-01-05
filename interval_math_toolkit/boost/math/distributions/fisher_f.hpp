@@ -115,13 +115,13 @@ RealType pdf(const fisher_f_distribution<RealType, Policy>& dist, const RealType
    if(v1x > df2)
    {
       result = (df2 * df1) / ((df2 + v1x) * (df2 + v1x));
-      result *= ibeta_derivative(df2 / 2, df1 / 2, df2 / (df2 + v1x), Policy());
+      result *= ibeta_derivative(static_cast<RealType>(df2 / 2), static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / (df2 + v1x)), Policy());
    }
    else
    {
       result = df2 + df1 * x;
       result = (result * df1 - x * df1 * df1) / (result * result);
-      result *= ibeta_derivative(df1 / 2, df2 / 2, v1x / (df2 + v1x), Policy());
+      result *= ibeta_derivative(static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / 2), static_cast<RealType>(v1x / (df2 + v1x)), Policy());
    }
    return result;
 } // pdf
@@ -157,8 +157,8 @@ inline RealType cdf(const fisher_f_distribution<RealType, Policy>& dist, const R
    // to switch things around so we're passing 1-z instead.
    //
    return v1x > df2
-      ? boost::math::ibetac(df2 / 2, df1 / 2, df2 / (df2 + v1x), Policy())
-      : boost::math::ibeta(df1 / 2, df2 / 2, v1x / (df2 + v1x), Policy());
+      ? boost::math::ibetac(static_cast<RealType>(df2 / 2), static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / (df2 + v1x)), Policy())
+      : boost::math::ibeta(static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / 2), static_cast<RealType>(v1x / (df2 + v1x)), Policy());
 } // cdf
 
 template <class RealType, class Policy>
@@ -179,7 +179,7 @@ inline RealType quantile(const fisher_f_distribution<RealType, Policy>& dist, co
 
    RealType x, y;
 
-   x = boost::math::ibeta_inv(df1 / 2, df2 / 2, p, &y, Policy());
+   x = boost::math::ibeta_inv(static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / 2), p, &y, Policy());
 
    return df2 * x / (df1 * y);
 } // quantile
@@ -216,8 +216,8 @@ inline RealType cdf(const complemented2_type<fisher_f_distribution<RealType, Pol
    // to switch things around so we're passing 1-z instead.
    //
    return v1x > df2
-      ? boost::math::ibeta(df2 / 2, df1 / 2, df2 / (df2 + v1x), Policy())
-      : boost::math::ibetac(df1 / 2, df2 / 2, v1x / (df2 + v1x), Policy());
+      ? boost::math::ibeta(static_cast<RealType>(df2 / 2), static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / (df2 + v1x)), Policy())
+      : boost::math::ibetac(static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / 2), static_cast<RealType>(v1x / (df2 + v1x)), Policy());
 }
 
 template <class RealType, class Policy>
@@ -239,7 +239,7 @@ inline RealType quantile(const complemented2_type<fisher_f_distribution<RealType
 
    RealType x, y;
 
-   x = boost::math::ibetac_inv(df1 / 2, df2 / 2, p, &y, Policy());
+   x = boost::math::ibetac_inv(static_cast<RealType>(df1 / 2), static_cast<RealType>(df2 / 2), p, &y, Policy());
 
    return df2 * x / (df1 * y);
 }

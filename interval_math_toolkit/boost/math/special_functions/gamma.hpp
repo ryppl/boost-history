@@ -146,7 +146,7 @@ T gamma_imp(T z, const Policy& pol, const L& l)
       return policies::raise_pole_error<T>(function, "Evaluation of tgamma at a negative integer %1%.", z, pol);
    if(z <= -20)
    {
-      result = gamma_imp(-z, pol, l) * sinpx(z);
+      result = gamma_imp(static_cast<T>(-z), pol, l) * sinpx(z);
       if((fabs(result) < 1) && (tools::max_value<T>() * fabs(result) < boost::math::constants::pi<T>()))
          return policies::raise_overflow_error<T>(function, "Result of tgamma is too large to represent.", pol);
       result = -boost::math::constants::pi<T>() / result;
@@ -233,13 +233,17 @@ T lgamma_imp(T z, const Policy& pol, const L& l, int* sign = 0)
    {
       typedef typename policies::precision<T, Policy>::type precision_type;
       typedef typename mpl::if_<
-         mpl::less_equal<precision_type, mpl::int_<64> >,
-         mpl::int_<64>,
-         typename mpl::if_<
-            mpl::less_equal<precision_type, mpl::int_<113> >,
-            mpl::int_<113>, mpl::int_<0> >::type
-          >::type tag_type;
-      result = lgamma_small_imp(z, z - 1, z - 2, tag_type(), pol, l);
+         mpl::less_equal<precision_type, mpl::int_<0> >,
+         mpl::int_<0>,
+         mpl::if_<
+            mpl::less_equal<precision_type, mpl::int_<64> >,
+            mpl::int_<64>,
+            typename mpl::if_<
+               mpl::less_equal<precision_type, mpl::int_<113> >,
+               mpl::int_<113>, mpl::int_<0> >::type
+         >::type
+      >::type tag_type;
+      result = lgamma_small_imp(z, static_cast<T>(z - 1), static_cast<T>(z - 2), tag_type(), pol, l);
    }
    else if((z >= 3) && (z < 100))
    {
@@ -346,7 +350,7 @@ T gamma_imp(T z, const Policy& pol, const lanczos::undefined_lanczos& l)
       return policies::raise_pole_error<T>(function, "Evaluation of tgamma at a negative integer %1%.", z, pol);
    if(z <= -20)
    {
-      T result = gamma_imp(-z, pol, l) * sinpx(z);
+      T result = gamma_imp(static_cast<T>(-z), pol, l) * sinpx(z);
       if((fabs(result) < 1) && (tools::max_value<T>() * fabs(result) < boost::math::constants::pi<T>()))
          return policies::raise_overflow_error<T>(function, "Result of tgamma is too large to represent.", pol);
       result = -boost::math::constants::pi<T>() / result;
@@ -414,7 +418,8 @@ T lgamma_imp(T z, const Policy& pol, const lanczos::undefined_lanczos& l, int*si
    }
    else if((z != 1) && (z != 2))
    {
-      T limit = (std::max)(z+1, T(10));
+      using std::max;
+      T limit = max BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<T>(z+1), T(10));
       T prefix = z * log(limit) - limit;
       T sum = detail::lower_gamma_series(z, limit, pol) / z;
       sum += detail::upper_gamma_fraction(z, limit, ::boost::math::policies::digits<T, Policy>());
@@ -456,14 +461,14 @@ T tgammap1m1_imp(T dz, Policy const& pol, const L& l)
       if(dz < -0.5)
       {
          // Best method is simply to subtract 1 from tgamma:
-         result = boost::math::tgamma(1+dz, pol) - 1;
+         result = boost::math::tgamma(static_cast<T>(1+dz), pol) - 1;
          BOOST_MATH_INSTRUMENT_CODE(result);
       }
       else
       {
          // Use expm1 on lgamma:
-         result = boost::math::expm1(-boost::math::log1p(dz, pol) 
-            + lgamma_small_imp(dz+2, dz + 1, dz, tag_type(), pol, l));
+         result = boost::math::expm1(static_cast<T>(-boost::math::log1p(dz, pol) 
+            + lgamma_small_imp(static_cast<T>(dz+2), static_cast<T>(dz + 1), dz, tag_type(), pol, l)));
          BOOST_MATH_INSTRUMENT_CODE(result);
       }
    }
@@ -472,13 +477,13 @@ T tgammap1m1_imp(T dz, Policy const& pol, const L& l)
       if(dz < 2)
       {
          // Use expm1 on lgamma:
-         result = boost::math::expm1(lgamma_small_imp(dz+1, dz, dz-1, tag_type(), pol, l), pol);
+         result = boost::math::expm1(lgamma_small_imp(static_cast<T>(dz+1), dz, static_cast<T>(dz-1), tag_type(), pol, l), pol);
          BOOST_MATH_INSTRUMENT_CODE(result);
       }
       else
       {
          // Best method is simply to subtract 1 from tgamma:
-         result = boost::math::tgamma(1+dz, pol) - 1;
+         result = boost::math::tgamma(static_cast<T>(1+dz), pol) - 1;
          BOOST_MATH_INSTRUMENT_CODE(result);
       }
    }
@@ -496,7 +501,7 @@ inline T tgammap1m1_imp(T dz, Policy const& pol,
    // algebra isn't easy for the general case....
    // Start by subracting 1 from tgamma:
    //
-   T result = gamma_imp(1 + dz, pol, l) - 1;
+   T result = gamma_imp(static_cast<T>(1 + dz), pol, l) - 1;
    BOOST_MATH_INSTRUMENT_CODE(result);
    //
    // Test the level of cancellation error observed: we loose one bit
@@ -597,6 +602,9 @@ template <class T, class Policy, class L>
 T regularised_gamma_prefix(T a, T z, const Policy& pol, const L& l)
 {
    BOOST_MATH_STD_USING
+   using std::max;
+   using std::min;
+
    T agh = a + static_cast<T>(L::g()) - T(0.5);
    T prefix;
    T d = ((z - a) - static_cast<T>(L::g()) + T(0.5)) / agh;
@@ -639,16 +647,16 @@ T regularised_gamma_prefix(T a, T z, const Policy& pol, const L& l)
       //
       T alz = a * log(z / agh);
       T amz = a - z;
-      if(((std::min)(alz, amz) <= tools::log_min_value<T>()) || ((std::max)(alz, amz) >= tools::log_max_value<T>()))
+      if((min BOOST_PREVENT_MACRO_SUBSTITUTION(alz, amz) <= tools::log_min_value<T>()) || (max BOOST_PREVENT_MACRO_SUBSTITUTION(alz, amz) >= tools::log_max_value<T>()))
       {
          T amza = amz / a;
-         if(((std::min)(alz, amz)/2 > tools::log_min_value<T>()) && ((std::max)(alz, amz)/2 < tools::log_max_value<T>()))
+         if((min BOOST_PREVENT_MACRO_SUBSTITUTION(alz, amz)/2 > tools::log_min_value<T>()) && (max BOOST_PREVENT_MACRO_SUBSTITUTION(alz, amz)/2 < tools::log_max_value<T>()))
          {
             // compute square root of the result and then square it:
             T sq = pow(z / agh, a / 2) * exp(amz / 2);
             prefix = sq * sq;
          }
-         else if(((std::min)(alz, amz)/4 > tools::log_min_value<T>()) && ((std::max)(alz, amz)/4 < tools::log_max_value<T>()) && (z > a))
+         else if((min BOOST_PREVENT_MACRO_SUBSTITUTION(alz, amz)/4 > tools::log_min_value<T>()) && (max BOOST_PREVENT_MACRO_SUBSTITUTION(alz, amz)/4 < tools::log_max_value<T>()) && (z > a))
          {
             // compute the 4th root of the result then square it twice:
             T sq = pow(z / agh, a / 4) * exp(amz / 4);
@@ -679,8 +687,10 @@ template <class T, class Policy>
 T regularised_gamma_prefix(T a, T z, const Policy& pol, const lanczos::undefined_lanczos&)
 {
    BOOST_MATH_STD_USING
+   using std::max;
+   using std::min;
 
-   T limit = (std::max)(T(10), a);
+   T limit = max BOOST_PREVENT_MACRO_SUBSTITUTION(T(10), a);
    T sum = detail::lower_gamma_series(a, limit, pol) / a;
    sum += detail::upper_gamma_fraction(a, limit, ::boost::math::policies::digits<T, Policy>());
 
@@ -701,7 +711,7 @@ T regularised_gamma_prefix(T a, T z, const Policy& pol, const lanczos::undefined
    T amz = a - z;
    T alzoa = a * log(zoa);
    T prefix;
-   if(((std::min)(alzoa, amz) <= tools::log_min_value<T>()) || ((std::max)(alzoa, amz) >= tools::log_max_value<T>()))
+   if((min BOOST_PREVENT_MACRO_SUBSTITUTION(alzoa, amz) <= tools::log_min_value<T>()) || (max BOOST_PREVENT_MACRO_SUBSTITUTION(alzoa, amz) >= tools::log_max_value<T>()))
    {
       T amza = amz / a;
       if((amza <= tools::log_min_value<T>()) || (amza >= tools::log_max_value<T>()))
@@ -777,7 +787,7 @@ T finite_half_gamma_q(T a, T x, T* p_derivative, const Policy& pol)
    // Calculates normalised Q when a is a half-integer:
    //
    BOOST_MATH_STD_USING
-   T e = boost::math::erfc(sqrt(x), pol);
+   T e = boost::math::erfc(static_cast<T>(sqrt(x)), pol);
    if((e != 0) && (a > 1))
    {
       T term = exp(-x) / sqrt(constants::pi<T>() * x);
@@ -1025,7 +1035,7 @@ T tgamma_delta_ratio_imp_lanczos(T z, T delta, const Policy& pol, const L&)
    T result;
    if(fabs(delta) < 10)
    {
-      result = exp((constants::half<T>() - z) * boost::math::log1p(delta / zgh, pol));
+      result = exp((constants::half<T>() - z) * boost::math::log1p(static_cast<T>(delta / zgh), pol));
    }
    else
    {
@@ -1095,7 +1105,7 @@ T tgamma_delta_ratio_imp(T z, T delta, const Policy& pol)
          //
          if((z <= max_factorial<T>::value) && (z + delta <= max_factorial<T>::value))
          {
-            return unchecked_factorial<T>(tools::real_cast<unsigned>(z) - 1) / unchecked_factorial<T>(tools::real_cast<unsigned>(z + delta) - 1);
+            return unchecked_factorial<T>(tools::real_cast<unsigned>(z) - 1) / unchecked_factorial<T>(tools::real_cast<unsigned>(static_cast<T>(z + delta)) - 1);
          }
       }
       if(fabs(delta) < 20)
@@ -1426,7 +1436,7 @@ inline typename tools::promote_args<T1, T2>::type
       policies::discrete_quantile<>,
       policies::assert_undefined<> >::type forwarding_policy;
 
-   return policies::checked_narrowing_cast<result_type, forwarding_policy>(detail::tgamma_delta_ratio_imp(static_cast<value_type>(a), static_cast<value_type>(b) - static_cast<value_type>(a), forwarding_policy()), "boost::math::tgamma_delta_ratio<%1%>(%1%, %1%)");
+   return policies::checked_narrowing_cast<result_type, forwarding_policy>(detail::tgamma_delta_ratio_imp(static_cast<value_type>(a), static_cast<value_type>(static_cast<value_type>(b) - static_cast<value_type>(a)), forwarding_policy()), "boost::math::tgamma_delta_ratio<%1%>(%1%, %1%)");
 }
 template <class T1, class T2>
 inline typename tools::promote_args<T1, T2>::type 

@@ -107,7 +107,7 @@ RealType pdf(const chi_squared_distribution<RealType, Policy>& dist, const RealT
       }
    }
 
-   return gamma_p_derivative(degrees_of_freedom / 2, chi_square / 2, Policy()) / 2;
+   return gamma_p_derivative(static_cast<RealType>(degrees_of_freedom / 2), static_cast<RealType>(chi_square / 2), Policy()) / 2;
 } // pdf
 
 template <class RealType, class Policy>
@@ -128,7 +128,7 @@ inline RealType cdf(const chi_squared_distribution<RealType, Policy>& dist, cons
          function, "Chi Square parameter was %1%, but must be > 0 !", chi_square, Policy());
    }
 
-   return boost::math::gamma_p(degrees_of_freedom / 2, chi_square / 2, Policy());
+   return boost::math::gamma_p(static_cast<RealType>(degrees_of_freedom / 2), static_cast<RealType>(chi_square / 2), Policy());
 } // cdf
 
 template <class RealType, class Policy>
@@ -165,7 +165,7 @@ inline RealType cdf(const complemented2_type<chi_squared_distribution<RealType, 
          function, "Chi Square parameter was %1%, but must be > 0 !", chi_square, Policy());
    }
 
-   return boost::math::gamma_q(degrees_of_freedom / 2, chi_square / 2, Policy());
+   return boost::math::gamma_q(static_cast<RealType>(degrees_of_freedom / 2), static_cast<RealType>(chi_square / 2), Policy());
 }
 
 template <class RealType, class Policy>

@@ -492,7 +492,7 @@ T lgamma_small_imp(T z, T zm1, T zm2, const mpl::int_<0>&, const Policy& pol, co
       // special case near 2:
       T dz = zm2;
       result = dz * log((z + L::g() - T(0.5)) / boost::math::constants::e<T>());
-      result += boost::math::log1p(dz / (L::g() + T(1.5)), pol) * T(1.5);
+      result += boost::math::log1p(static_cast<T>(dz / (L::g() + T(1.5))), pol) * T(1.5);
       result += boost::math::log1p(L::lanczos_sum_near_2(dz), pol);
    }
    else
@@ -500,7 +500,7 @@ T lgamma_small_imp(T z, T zm1, T zm2, const mpl::int_<0>&, const Policy& pol, co
       // special case near 1:
       T dz = zm1;
       result = dz * log((z + L::g() - T(0.5)) / boost::math::constants::e<T>());
-      result += boost::math::log1p(dz / (L::g() + T(0.5)), pol) / 2;
+      result += boost::math::log1p(static_cast<T>(dz / (L::g() + T(0.5))), pol) / 2;
       result += boost::math::log1p(L::lanczos_sum_near_1(dz), pol);
    }
    return result;

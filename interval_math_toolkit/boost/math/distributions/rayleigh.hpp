@@ -129,7 +129,7 @@ inline RealType cdf(const rayleigh_distribution<RealType, Policy>& dist, const R
    {
       return result;
    }
-   result = -boost::math::expm1(-x * x / ( 2 * sigma * sigma), Policy());
+   result = -boost::math::expm1(static_cast<RealType>(-x * x / ( 2 * sigma * sigma)), Policy());
    return result;
 } // cdf
 
@@ -154,7 +154,7 @@ inline RealType quantile(const rayleigh_distribution<RealType, Policy>& dist, co
    {
      return policies::raise_overflow_error<RealType>(function, 0, Policy());
    }
-   result = sqrt(-2 * sigma * sigma * boost::math::log1p(-p, Policy()));
+   result = sqrt(-2 * sigma * sigma * boost::math::log1p(static_cast<RealType>(-p), Policy()));
    return result;
 } // quantile
 

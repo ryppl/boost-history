@@ -431,6 +431,7 @@ namespace boost
       // BUT Cephes/CodeCogs says: finds argument p (0 to 1) such that cdf(k, n, p) = y
       static const char* function = "boost::math::quantile(const negative_binomial_distribution<%1%>&, %1%)";
       BOOST_MATH_STD_USING // ADL of std functions.
+      using std::min;
 
       RealType p = dist.success_fraction();
       RealType r = dist.successes();
@@ -468,14 +469,14 @@ namespace boost
       RealType guess = 0;
       RealType factor = 5;
       if(r * r * r * P * p > 0.005)
-         guess = detail::inverse_negative_binomial_cornish_fisher(r, p, 1-p, P, 1-P, Policy());
+         guess = detail::inverse_negative_binomial_cornish_fisher(r, p, static_cast<RealType>(1-p), P, static_cast<RealType>(1-P), Policy());
 
       if(guess < 10)
       {
          //
          // Cornish-Fisher Negative binomial approximation not accurate in this area:
          //
-         guess = (std::min)(r * 2, RealType(10));
+         guess = min BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<RealType>(r * 2), RealType(10));
       }
       else
          factor = (1-P < sqrt(tools::epsilon<RealType>())) ? 2 : (guess < 20 ? 1.2f : 1.1f);
@@ -503,6 +504,7 @@ namespace boost
        // complement of the probability Q = 1 - P.
        static const char* function = "boost::math::quantile(const negative_binomial_distribution<%1%>&, %1%)";
        BOOST_MATH_STD_USING
+       using std::min;
 
        // Error checks:
        RealType Q = c.param;
@@ -545,14 +547,14 @@ namespace boost
        RealType guess = 0;
        RealType factor = 5;
        if(r * r * r * (1-Q) * p > 0.005)
-          guess = detail::inverse_negative_binomial_cornish_fisher(r, p, 1-p, 1-Q, Q, Policy());
+          guess = detail::inverse_negative_binomial_cornish_fisher(r, p, static_cast<RealType>(1-p), static_cast<RealType>(1-Q), Q, Policy());
 
        if(guess < 10)
        {
           //
           // Cornish-Fisher Negative binomial approximation not accurate in this area:
           //
-          guess = (std::min)(r * 2, RealType(10));
+          guess = min BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<RealType>(r * 2), RealType(10));
        }
        else
           factor = (Q < sqrt(tools::epsilon<RealType>())) ? 2 : (guess < 20 ? 1.2f : 1.1f);

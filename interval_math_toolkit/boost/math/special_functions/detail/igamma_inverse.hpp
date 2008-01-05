@@ -88,7 +88,7 @@ inline T didonato_FN(T p, T a, T x, unsigned N, T tolerance, const Policy& pol)
    // See equation 34.
    //
    BOOST_MATH_STD_USING
-   T u = log(p) + boost::math::lgamma(a + 1, pol);
+   T u = log(p) + boost::math::lgamma(static_cast<T>(a + 1), pol);
    return exp((u + x - log(didonato_SN(a, x, N, tolerance))) / a);
 }
 
@@ -105,6 +105,7 @@ T find_inverse_gamma(T a, T p, T q, const Policy& pol)
    // December 1986, Pages 377-393.
    //
    BOOST_MATH_STD_USING
+   using std::max;
 
    T result;
 
@@ -209,7 +210,7 @@ T find_inverse_gamma(T a, T p, T q, const Policy& pol)
          }
          else
          {
-            T D = (std::max)(T(2), a * (a - 1));
+            T D = max BOOST_PREVENT_MACRO_SUBSTITUTION(T(2), static_cast<T>(a * (a - 1)));
             T lg = boost::math::lgamma(a, pol);
             T lb = log(q) + lg;
             if(lb < -D * 2.3)
@@ -261,7 +262,7 @@ T find_inverse_gamma(T a, T p, T q, const Policy& pol)
          {
             // DiDonato and Morris Eq 36:
             T zb = didonato_FN(p, a, z, 100, T(1e-4), pol);
-            T u = log(p) + boost::math::lgamma(a + 1, pol);
+            T u = log(p) + boost::math::lgamma(static_cast<T>(a + 1), pol);
             result = zb * (1 - (a * log(zb) - zb - u + log(didonato_SN(a, z, 100, T(1e-4)))) / (a - zb));
          }
       }
@@ -357,7 +358,7 @@ T gamma_p_inv_imp(T a, T p, const Policy& pol)
       return tools::max_value<T>();
    if(p == 0)
       return 0;
-   T guess = detail::find_inverse_gamma(a, p, 1 - p, pol);
+   T guess = detail::find_inverse_gamma(a, p, static_cast<T>(1 - p), pol);
    T lower = tools::min_value<T>();
    if(guess <= lower)
       guess = tools::min_value<T>();
@@ -399,7 +400,7 @@ T gamma_q_inv_imp(T a, T q, const Policy& pol)
       return tools::max_value<T>();
    if(q == 1)
       return 0;
-   T guess = detail::find_inverse_gamma(a, 1 - q, q, pol);
+   T guess = detail::find_inverse_gamma(a, static_cast<T>(1 - q), q, pol);
    T lower = tools::min_value<T>();
    if(guess <= lower)
       guess = tools::min_value<T>();

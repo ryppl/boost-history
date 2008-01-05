@@ -14,6 +14,7 @@
 #include <boost/math/tools/stats.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/test/test_tools.hpp>
+#include <boost/mpl/bool.hpp>
 #include <stdexcept>
 
 namespace boost{ namespace math{ namespace tools{
@@ -158,7 +159,7 @@ void print_row(const Seq& row)
    {
       if(i)
          std::cout << ", ";
-      std::cout << row[i];
+      std::cout << boost::numeric::make_printable(row[i]);
    }
    std::cout << std::endl;
 }
@@ -171,7 +172,7 @@ void print_row(const Seq& row)
 // expressions.
 //
 template <class A, class F1, class F2>
-test_result<typename calculate_result_type<A>::value_type> test(const A& a, F1 test_func, F2 expect_func)
+test_result<typename calculate_result_type<A>::value_type> test(const A& a, F1 test_func, F2 expect_func, const mpl::false_&)
 {
    typedef typename A::value_type         row_type;
    typedef typename row_type::value_type  value_type;
@@ -236,6 +237,116 @@ test_result<typename calculate_result_type<A>::value_type> test(const A& a, F1 t
          result.set_worst(i);
    }
    return result;
+}
+
+template <class A, class F1, class F2>
+test_result<typename calculate_result_type<A>::value_type> test(const A& a, F1 test_func, F2 expect_func, const mpl::true_&)
+{
+   typedef typename A::value_type         row_type;
+   typedef typename row_type::value_type  value_type;
+
+   test_result<value_type> result;
+
+   for(unsigned i = 0; i < a.size(); ++i)
+   {
+      const row_type& row = a[i];
+      value_type point;
+      try
+      {
+         point = test_func(row);
+      }
+      catch(const std::underflow_error&)
+      {
+         point = 0;
+      }
+      catch(const std::overflow_error&)
+      {
+         point = std::numeric_limits<value_type>::has_infinity ? 
+            std::numeric_limits<value_type>::infinity()
+            : tools::max_value<value_type>();
+      }
+      catch(const std::exception& e)
+      {
+         std::cerr << e.what() << std::endl;
+         print_row(row);
+         BOOST_ERROR("Unexpected exception.");
+         // so we don't get further errors:
+         point = expect_func(row);
+      }
+      value_type expected = expect_func(row);
+      value_type err = (median(point) != 0) 
+         ? width(point) / median(point)
+         : width(point);
+
+#ifdef BOOST_INSTRUMENT
+      if(err != 0)
+      {
+         std::cout << std::setprecision(35);
+         std::cout << row[0] << " " << err;
+         std::cout << " (" << err.lower() / tools::epsilon<value_type>() << "eps)";
+         std::cout << std::endl;
+      }
+#endif
+      if(!(boost::math::isfinite)(point) && (boost::math::isfinite)(expected))
+      {
+         std::cout << std::setprecision(35);
+         std::cout << "CAUTION: Found non-finite result, when a finite value was expected at entry " << i << "\n";
+         std::cout << "Found: " << boost::numeric::make_printable(point) << " Expected " << boost::numeric::make_printable(expected) << " Error: " << boost::numeric::make_printable(err) << std::endl;
+         print_row(row);
+         BOOST_ERROR("Unexpected non-finite result");
+      }
+      if(err > 0.5)
+      {
+         std::cout << std::setprecision(35);
+         std::cout << "CAUTION: Gross error found at entry " << i << ".\n";
+         std::cout << "Found: " << boost::numeric::make_printable(point) << " Expected " << boost::numeric::make_printable(expected) << " Error: " << boost::numeric::make_printable(err) << std::endl;
+         print_row(row);
+         BOOST_ERROR("Gross error");
+      }
+      //
+      // Check whether the interval includes the result:
+      //
+      if(!overlap(point, expected))
+      {
+         //
+         // Since the transcendental functions do *not* guarentee
+         // to bracket the true value, we only raise an error if
+         // we're more than a few epsilon from the true value:
+         //
+         bool have_error = false;
+         int max_eps = 3;
+         typename value_type::base_type err = 0;
+         if(point.upper() < expected.lower())
+            err = (relative_error(point.upper(), expected.lower()) / epsilon<typename value_type::base_type>());
+         else if(point.lower() > expected.upper())
+            err = (relative_error(point.lower(), expected.upper()) / epsilon<typename value_type::base_type>());
+         have_error = max_eps < err;
+
+         if(have_error)
+         {
+            std::cout << std::setprecision(35);
+            std::cout << "Interval and expected result do not overlap.\n";
+            std::cout << "Found: " << boost::numeric::make_printable(point) << " Expected " << boost::numeric::make_printable(expected) << " Error: " << boost::numeric::make_printable(err) << std::endl;
+            print_row(row);
+            BOOST_ERROR("Non Overlapping Interval Error");
+         }
+      }
+
+      result.add(err);
+      if(maybe_greater_equal((result.max)(), err))
+         result.set_worst(i);
+   }
+   return result;
+}
+
+template <class A, class F1, class F2>
+inline test_result<typename calculate_result_type<A>::value_type> test(const A& a, F1 test_func, F2 expect_func)
+{
+   typedef typename A::value_type         row_type;
+   typedef typename row_type::value_type  value_type;
+   typedef typename boost::numeric::is_interval<value_type>::type tag_type;
+   
+   return test(a, test_func, expect_func, tag_type());
 }
 
 } // namespace tools

@@ -836,7 +836,7 @@ T zeta_imp(T s, T sc, const Policy& pol, const Tag& tag)
          result = 0;
       else
       {
-         result = boost::math::sin_pi(0.5f * sc, pol)
+         result = boost::math::sin_pi(static_cast<T>(0.5f * sc), pol)
             * 2 * pow(2 * constants::pi<T>(), -s) 
             * boost::math::tgamma(s, pol) 
             * zeta_imp(s, sc, pol, tag);
@@ -884,7 +884,7 @@ inline typename tools::promote_args<T>::type zeta(T s, const Policy&)
 
    return policies::checked_narrowing_cast<result_type, forwarding_policy>(detail::zeta_imp(
       static_cast<value_type>(s),
-      1 - static_cast<value_type>(s),
+      static_cast<value_type>(1 - static_cast<value_type>(s)),
       forwarding_policy(),
       tag_type()), "boost::math::zeta<%1%>(%1%)");
 }

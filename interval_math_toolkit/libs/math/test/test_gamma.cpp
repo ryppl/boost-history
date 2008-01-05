@@ -5,7 +5,12 @@
 
 #define BOOST_MATH_OVERFLOW_ERROR_POLICY ignore_error
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
@@ -450,6 +455,7 @@ void test_spots(T)
 int test_main(int, char* [])
 {
    expected_results();
+#ifndef TEST_INTERVAL
    BOOST_MATH_CONTROL_FP;
 
 #ifndef BOOST_MATH_BUGGY_LARGE_FLOAT_CONSTANTS
@@ -478,6 +484,9 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
+#else // TEST_INTERVAL
+   test_gamma(interval_type(), "boost::numeric::interval<double>");
+#endif // TEST_INTERVAL
    return 0;
 }
 

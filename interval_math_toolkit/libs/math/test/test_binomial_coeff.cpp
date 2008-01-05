@@ -3,7 +3,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/binomial.hpp>
@@ -163,6 +168,7 @@ void test_spots(T, const char* name)
 
 int test_main(int, char* [])
 {
+#ifndef TEST_INTERVAL
    expected_results();
    BOOST_MATH_CONTROL_FP;
 
@@ -186,6 +192,9 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
+#else // TEST_INTERVAL
+   test_binomial(interval_type(), "boost:math::interval<double>");
+#endif // TEST_INTERVAL
    return 0;
 }
 

@@ -11,7 +11,12 @@
 // Constants are too big for float case, but this doesn't matter for test.
 #endif
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/ellint_2.hpp>
@@ -183,6 +188,7 @@ void test_spots(T, const char* type_name)
 int test_main(int, char* [])
 {
     expected_results();
+#ifndef TEST_INTERVAL
     BOOST_MATH_CONTROL_FP;
 #ifndef BOOST_MATH_BUGGY_LARGE_FLOAT_CONSTANTS
     test_spots(0.0F, "float");
@@ -199,6 +205,8 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
-
+#else // TEST_INTERVAL
+    test_spots(interval_type(0), "boost::numeric::interval<double>");
+#endif // TEST_INTERVAL
     return 0;
 }

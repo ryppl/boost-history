@@ -3,7 +3,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/tools/stats.hpp>
@@ -115,6 +120,7 @@ void test_cbrt(T, const char* name)
 
 int test_main(int, char* [])
 {
+#ifndef TEST_INTERVAL
    expected_results();
    BOOST_MATH_CONTROL_FP;
    test_cbrt(0.1F, "float");
@@ -125,6 +131,9 @@ int test_main(int, char* [])
    test_cbrt(boost::math::concepts::real_concept(0.1), "real_concept");
 #endif
 #endif
+#else // TEST_INTERVAL
+   test_cbrt(interval_type(0.1), "boost::numeric::interval<double>");
+#endif // TEST_INTERVAL
    return 0;
 }
 

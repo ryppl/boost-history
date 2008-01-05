@@ -44,20 +44,20 @@ void handle_zero_derivative(F f,
                             T& delta,
                             T& result,
                             T& guess,
-                            const T& min,
-                            const T& max)
+                            const T& vmin,
+                            const T& vmax)
 {
    if(last_f0 == 0)
    {
       // this must be the first iteration, pretend that we had a
-      // previous one at either min or max:
-      if(result == min)
+      // previous one at either vmin or vmax:
+      if(result == vmin)
       {
-         guess = max;
+         guess = vmax;
       }
       else
       {
-         guess = min;
+         guess = vmin;
       }
       last_f0 = std::tr1::get<0>(f(guess));
       delta = guess - result;
@@ -67,11 +67,11 @@ void handle_zero_derivative(F f,
       // we've crossed over so move in opposite direction to last step:
       if(delta < 0)
       {
-         delta = (result - min) / 2;
+         delta = (result - vmin) / 2;
       }
       else
       {
-         delta = (result - max) / 2;
+         delta = (result - vmax) / 2;
       }
    }
    else
@@ -79,11 +79,11 @@ void handle_zero_derivative(F f,
       // move in same direction as last step:
       if(delta < 0)
       {
-         delta = (result - max) / 2;
+         delta = (result - vmax) / 2;
       }
       else
       {
-         delta = (result - min) / 2;
+         delta = (result - vmin) / 2;
       }
    }
 }
@@ -91,28 +91,28 @@ void handle_zero_derivative(F f,
 } // namespace
 
 template <class F, class T, class Tol, class Policy>
-std::pair<T, T> bisect(F f, T min, T max, Tol tol, boost::uintmax_t& max_iter, const Policy& pol)
+std::pair<T, T> bisect(F f, T vmin, T vmax, Tol tol, boost::uintmax_t& max_iter, const Policy& pol)
 {
-   T fmin = f(min);
-   T fmax = f(max);
+   T fmin = f(vmin);
+   T fmax = f(vmax);
    if(fmin == 0)
-      return std::make_pair(min, min);
+      return std::make_pair(vmin, vmin);
    if(fmax == 0)
-      return std::make_pair(max, max);
+      return std::make_pair(vmax, vmax);
 
    //
    // Error checking:
    //
    static const char* function = "boost::math::tools::bisect<%1%>";
-   if(min >= max)
+   if(vmin >= vmax)
    {
       policies::raise_evaluation_error(function, 
-         "Arguments in wrong order in boost::math::tools::bisect (first arg=%1%)", min, pol);
+         "Arguments in wrong order in boost::math::tools::bisect (first arg=%1%)", vmin, pol);
    }
    if(fmin * fmax >= 0)
    {
       policies::raise_evaluation_error(function, 
-         "No change of sign in boost::math::tools::bisect, either there is no root to find, or there are multiple roots in the interval (f(min) = %1%).", fmin, pol);
+         "No change of sign in boost::math::tools::bisect, either there is no root to find, or there are multiple roots in the interval (f(vmin) = %1%).", fmin, pol);
    }
 
    //
@@ -124,25 +124,25 @@ std::pair<T, T> bisect(F f, T min, T max, Tol tol, boost::uintmax_t& max_iter, c
    else
       count -= 3;
 
-   while(count && (0 == tol(min, max)))
+   while(count && (0 == tol(vmin, vmax)))
    {
-      T mid = (min + max) / 2;
+      T mid = (vmin + vmax) / 2;
       T fmid = f(mid);
-      if((mid == max) || (mid == min))
+      if((mid == vmax) || (mid == vmin))
          break;
       if(fmid == 0)
       {
-         min = max = mid;
+         vmin = vmax = mid;
          break;
       }
       else if(sign(fmid) * sign(fmin) < 0)
       {
-         max = mid;
+         vmax = mid;
          fmax = fmid;
       }
       else
       {
-         min = mid;
+         vmin = mid;
          fmin = fmid;
       }
       --count;
@@ -161,24 +161,24 @@ std::pair<T, T> bisect(F f, T min, T max, Tol tol, boost::uintmax_t& max_iter, c
    }
 #endif
 
-   return std::make_pair(min, max);
+   return std::make_pair(vmin, vmax);
 }
 
 template <class F, class T, class Tol>
-inline std::pair<T, T> bisect(F f, T min, T max, Tol tol, boost::uintmax_t& max_iter)
+inline std::pair<T, T> bisect(F f, T vmin, T vmax, Tol tol, boost::uintmax_t& max_iter)
 {
-   return bisect(f, min, max, tol, max_iter, policies::policy<>());
+   return bisect(f, vmin, vmax, tol, max_iter, policies::policy<>());
 }
 
 template <class F, class T, class Tol>
-inline std::pair<T, T> bisect(F f, T min, T max, Tol tol)
+inline std::pair<T, T> bisect(F f, T vmin, T vmax, Tol tol)
 {
    boost::uintmax_t m = (std::numeric_limits<boost::uintmax_t>::max)();
-   return bisect(f, min, max, tol, m, policies::policy<>());
+   return bisect(f, vmin, vmax, tol, m, policies::policy<>());
 }
 
 template <class F, class T>
-T newton_raphson_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_iter)
+T newton_raphson_iterate(F f, T guess, T vmin, T vmax, int digits, boost::uintmax_t& max_iter)
 {
    BOOST_MATH_STD_USING
 
@@ -205,7 +205,7 @@ T newton_raphson_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_
 #ifdef BOOST_MATH_INSTRUMENT
          std::cout << "Newton iteration, zero derivative found" << std::endl;
 #endif
-         detail::handle_zero_derivative(f, last_f0, f0, delta, result, guess, min, max);
+         detail::handle_zero_derivative(f, last_f0, f0, delta, result, guess, vmin, vmax);
       }
       else
       {
@@ -217,29 +217,29 @@ T newton_raphson_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_
       if(fabs(delta * 2) > fabs(delta2))
       {
          // last two steps haven't converged, try bisection:
-         delta = (delta > 0) ? (result - min) / 2 : (result - max) / 2;
+         delta = (delta > 0) ? (result - vmin) / 2 : (result - vmax) / 2;
       }
       guess = result;
       result -= delta;
-      if(result <= min)
+      if(result <= vmin)
       {
-         delta = 0.5F * (guess - min);
+         delta = 0.5F * (guess - vmin);
          result = guess - delta;
-         if((result == min) || (result == max))
+         if((result == vmin) || (result == vmax))
             break;
       }
-      else if(result >= max)
+      else if(result >= vmax)
       {
-         delta = 0.5F * (guess - max);
+         delta = 0.5F * (guess - vmax);
          result = guess - delta;
-         if((result == min) || (result == max))
+         if((result == vmin) || (result == vmax))
             break;
       }
       // update brackets:
       if(delta > 0)
-         max = guess;
+         vmax = guess;
       else
-         min = guess;
+         vmin = guess;
    }while(--count && (fabs(result * factor) < fabs(delta)));
 
    max_iter -= count;
@@ -259,22 +259,23 @@ T newton_raphson_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_
 }
 
 template <class F, class T>
-inline T newton_raphson_iterate(F f, T guess, T min, T max, int digits)
+inline T newton_raphson_iterate(F f, T guess, T vmin, T vmax, int digits)
 {
    boost::uintmax_t m = (std::numeric_limits<boost::uintmax_t>::max)();
-   return newton_raphson_iterate(f, guess, min, max, digits, m);
+   return newton_raphson_iterate(f, guess, vmin, vmax, digits, m);
 }
 
 template <class F, class T>
-T halley_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_iter)
+T halley_iterate(F f, T guess, T vmin, T vmax, int digits, boost::uintmax_t& max_iter)
 {
    BOOST_MATH_STD_USING
+   using std::max;
 
    T f0(0), f1, f2;
    T result = guess;
 
    T factor = static_cast<T>(ldexp(1.0, 1 - digits));
-   T delta = (std::max)(10000000 * guess, T(10000000));  // arbitarily large delta
+   T delta = max BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<T>(10000000 * guess), T(10000000));  // arbitarily large delta
    T last_f0 = 0;
    T delta1 = delta;
    T delta2 = delta;
@@ -300,7 +301,7 @@ T halley_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_i
 #ifdef BOOST_MATH_INSTRUMENT
          std::cout << "Halley iteration, zero derivative found" << std::endl;
 #endif
-         detail::handle_zero_derivative(f, last_f0, f0, delta, result, guess, min, max);
+         detail::handle_zero_derivative(f, last_f0, f0, delta, result, guess, vmin, vmax);
       }
       else
       {
@@ -331,7 +332,7 @@ T halley_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_i
       if((convergence > 0.8) && (convergence < 2))
       {
          // last two steps haven't converged, try bisection:
-         delta = (delta > 0) ? (result - min) / 2 : (result - max) / 2;
+         delta = (delta > 0) ? (result - vmin) / 2 : (result - vmax) / 2;
          // reset delta2 so that this branch will *not* be taken on the
          // next iteration:
          delta2 = delta * 3;
@@ -340,53 +341,53 @@ T halley_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_i
       result -= delta;
 
       // check for out of bounds step:
-      if(result < min)
+      if(result < vmin)
       {
-         T diff = ((fabs(min) < 1) && (fabs(result) > 1) && (tools::max_value<T>() / fabs(result) < fabs(min))) ? 1000  : result / min;
+         T diff = ((fabs(vmin) < 1) && (fabs(result) > 1) && (tools::max_value<T>() / fabs(result) < fabs(vmin))) ? static_cast<T>(1000)  : static_cast<T>(result / vmin);
          if(fabs(diff) < 1)
             diff = 1 / diff;
          if(!out_of_bounds_sentry && (diff > 0) && (diff < 3))
          {
             // Only a small out of bounds step, lets assume that the result
-            // is probably approximately at min:
-            delta = 0.99f * (guess  - min);
+            // is probably approximately at vmin:
+            delta = 0.99f * (guess  - vmin);
             result = guess - delta;
             out_of_bounds_sentry = true; // only take this branch once!
          }
          else
          {
-            delta = (guess - min) / 2;
+            delta = (guess - vmin) / 2;
             result = guess - delta;
-            if((result == min) || (result == max))
+            if((result == vmin) || (result == vmax))
                break;
          }
       }
-      else if(result > max)
+      else if(result > vmax)
       {
-         T diff = ((fabs(max) < 1) && (fabs(result) > 1) && (tools::max_value<T>() / fabs(result) < fabs(max))) ? 1000  : result / max;
+         T diff = ((fabs(vmax) < 1) && (fabs(result) > 1) && (tools::max_value<T>() / fabs(result) < fabs(vmax))) ? static_cast<T>(1000)  : static_cast<T>(result / vmax);
          if(fabs(diff) < 1)
             diff = 1 / diff;
          if(!out_of_bounds_sentry && (diff > 0) && (diff < 3))
          {
             // Only a small out of bounds step, lets assume that the result
-            // is probably approximately at min:
-            delta = 0.99f * (guess  - max);
+            // is probably approximately at vmin:
+            delta = 0.99f * (guess  - vmax);
             result = guess - delta;
             out_of_bounds_sentry = true; // only take this branch once!
          }
          else
          {
-            delta = (guess - max) / 2;
+            delta = (guess - vmax) / 2;
             result = guess - delta;
-            if((result == min) || (result == max))
+            if((result == vmin) || (result == vmax))
                break;
          }
       }
       // update brackets:
       if(delta > 0)
-         max = guess;
+         vmax = guess;
       else
-         min = guess;
+         vmin = guess;
    }while(--count && (fabs(result * factor) < fabs(delta)));
 
    max_iter -= count;
@@ -406,14 +407,14 @@ T halley_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_i
 }
 
 template <class F, class T>
-inline T halley_iterate(F f, T guess, T min, T max, int digits)
+inline T halley_iterate(F f, T guess, T vmin, T vmax, int digits)
 {
    boost::uintmax_t m = (std::numeric_limits<boost::uintmax_t>::max)();
-   return halley_iterate(f, guess, min, max, digits, m);
+   return halley_iterate(f, guess, vmin, vmax, digits, m);
 }
 
 template <class F, class T>
-T schroeder_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& max_iter)
+T schroeder_iterate(F f, T guess, T vmin, T vmax, int digits, boost::uintmax_t& max_iter)
 {
    BOOST_MATH_STD_USING
 
@@ -444,7 +445,7 @@ T schroeder_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& ma
 #ifdef BOOST_MATH_INSTRUMENT
          std::cout << "Halley iteration, zero derivative found" << std::endl;
 #endif
-         detail::handle_zero_derivative(f, last_f0, f0, delta, result, guess, min, max);
+         detail::handle_zero_derivative(f, last_f0, f0, delta, result, guess, vmin, vmax);
       }
       else
       {
@@ -462,32 +463,32 @@ T schroeder_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& ma
       if(fabs(delta * 2) > fabs(delta2))
       {
          // last two steps haven't converged, try bisection:
-         delta = (delta > 0) ? (result - min) / 2 : (result - max) / 2;
+         delta = (delta > 0) ? (result - vmin) / 2 : (result - vmax) / 2;
       }
       guess = result;
       result -= delta;
 #ifdef BOOST_MATH_INSTRUMENT
       std::cout << "Halley iteration, delta = " << delta << std::endl;
 #endif
-      if(result <= min)
+      if(result <= vmin)
       {
-         delta = 0.5F * (guess - min);
+         delta = 0.5F * (guess - vmin);
          result = guess - delta;
-         if((result == min) || (result == max))
+         if((result == vmin) || (result == vmax))
             break;
       }
-      else if(result >= max)
+      else if(result >= vmax)
       {
-         delta = 0.5F * (guess - max);
+         delta = 0.5F * (guess - vmax);
          result = guess - delta;
-         if((result == min) || (result == max))
+         if((result == vmin) || (result == vmax))
             break;
       }
       // update brackets:
       if(delta > 0)
-         max = guess;
+         vmax = guess;
       else
-         min = guess;
+         vmin = guess;
    }while(--count && (fabs(result * factor) < fabs(delta)));
 
    max_iter -= count;
@@ -507,10 +508,10 @@ T schroeder_iterate(F f, T guess, T min, T max, int digits, boost::uintmax_t& ma
 }
 
 template <class F, class T>
-inline T schroeder_iterate(F f, T guess, T min, T max, int digits)
+inline T schroeder_iterate(F f, T guess, T vmin, T vmax, int digits)
 {
    boost::uintmax_t m = (std::numeric_limits<boost::uintmax_t>::max)();
-   return schroeder_iterate(f, guess, min, max, digits, m);
+   return schroeder_iterate(f, guess, vmin, vmax, digits, m);
 }
 
 } // namespace tools

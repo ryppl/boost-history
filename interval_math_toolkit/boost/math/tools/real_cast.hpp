@@ -10,6 +10,8 @@
 #pragma once
 #endif
 
+#include <boost/math/tools/config.hpp>
+
 namespace boost{ namespace math
 {
   namespace tools
@@ -18,6 +20,11 @@ namespace boost{ namespace math
     inline To real_cast(T t)
     {
        return static_cast<To>(t);
+    }
+    template <class To, class T, class Policy>
+    inline To real_cast(boost::numeric::interval<T, Policy> t)
+    {
+       return real_cast<To>(norm(t));
     }
   } // namespace tools
 } // namespace math

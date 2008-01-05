@@ -173,7 +173,7 @@ namespace boost
             // kurtosis:
             // T k = (1 - 6 * sf * (1 - sf) ) / (n * sf * (1 - sf));
             // Get the inverse of a std normal distribution:
-            T x = boost::math::erfc_inv(p > q ? 2 * q : 2 * p, pol) * constants::root_two<T>();
+            T x = boost::math::erfc_inv(p > q ? static_cast<T>(2 * q) : static_cast<T>(2 * p), pol) * constants::root_two<T>();
             // Set the sign:
             if(p < 0.5)
                x = -x;
@@ -649,13 +649,13 @@ namespace boost
       template <class RealType, class Policy>
       inline RealType quantile(const binomial_distribution<RealType, Policy>& dist, const RealType& p)
       {
-         return binomial_detail::quantile_imp(dist, p, 1-p);
+         return binomial_detail::quantile_imp(dist, p, static_cast<RealType>(1-p));
       } // quantile
 
       template <class RealType, class Policy>
       RealType quantile(const complemented2_type<binomial_distribution<RealType, Policy>, RealType>& c)
       {
-         return binomial_detail::quantile_imp(c.dist, 1-c.param, c.param);
+         return binomial_detail::quantile_imp(c.dist, static_cast<RealType>(1-c.param), c.param);
       } // quantile
 
       template <class RealType, class Policy>

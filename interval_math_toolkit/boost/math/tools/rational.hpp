@@ -98,19 +98,19 @@ inline V evaluate_polynomial(const boost::array<T,N>& a, const V& val)
 template <class T, class U>
 inline U evaluate_even_polynomial(const T* poly, U z, std::size_t count)
 {
-   return evaluate_polynomial(poly, z*z, count);
+   return evaluate_polynomial(poly, static_cast<U>(z*z), count);
 }
 
 template <std::size_t N, class T, class V>
 inline V evaluate_even_polynomial(const T(&a)[N], const V& z)
 {
-   return evaluate_polynomial(a, z*z);
+   return evaluate_polynomial(a, static_cast<V>(z*z));
 }
 
 template <std::size_t N, class T, class V>
 inline V evaluate_even_polynomial(const boost::array<T,N>& a, const V& z)
 {
-   return evaluate_polynomial(a, z*z);
+   return evaluate_polynomial(a, static_cast<V>(z*z));
 }
 //
 // Odd polynomials come next:
@@ -118,21 +118,21 @@ inline V evaluate_even_polynomial(const boost::array<T,N>& a, const V& z)
 template <class T, class U>
 inline U evaluate_odd_polynomial(const T* poly, U z, std::size_t count)
 {
-   return poly[0] + z * evaluate_polynomial(poly+1, z*z, count-1);
+   return poly[0] + z * evaluate_polynomial(poly+1, static_cast<U>(z*z), count-1);
 }
 
 template <std::size_t N, class T, class V>
 inline V evaluate_odd_polynomial(const T(&a)[N], const V& z)
 {
    typedef mpl::int_<N-1> tag_type;
-   return a[0] + z * detail::evaluate_polynomial_c_imp(static_cast<const T*>(a) + 1, z*z, static_cast<tag_type const*>(0));
+   return a[0] + z * detail::evaluate_polynomial_c_imp(static_cast<const T*>(a) + 1, static_cast<V>(z*z), static_cast<tag_type const*>(0));
 }
 
 template <std::size_t N, class T, class V>
 inline V evaluate_odd_polynomial(const boost::array<T,N>& a, const V& z)
 {
    typedef mpl::int_<N-1> tag_type;
-   return a[0] + z * detail::evaluate_polynomial_c_imp(static_cast<const T*>(a.data()) + 1, z*z, static_cast<tag_type const*>(0));
+   return a[0] + z * detail::evaluate_polynomial_c_imp(static_cast<const T*>(a.data()) + 1, static_cast<V>(z*z), static_cast<tag_type const*>(0));
 }
 
 template <class T, class U, class V>

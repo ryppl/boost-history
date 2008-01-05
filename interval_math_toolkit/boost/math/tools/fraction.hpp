@@ -116,7 +116,7 @@ typename detail::fraction_traits<Gen>::result_type continued_fraction_b(Gen& g, 
       D = 1/D;
       delta = C*D;
       f = f * delta;
-   }while(fabs(delta - 1) > factor);
+   }while(!maybe_less_equal(fabs(delta - 1), factor));
 
    return f;
 }
@@ -155,7 +155,7 @@ typename detail::fraction_traits<Gen>::result_type continued_fraction_b(Gen& g, 
       D = 1/D;
       delta = C*D;
       f = f * delta;
-   }while((fabs(delta - 1) > factor) && --counter);
+   }while(!maybe_less_equal(fabs(delta - 1), factor) && --counter);
 
    max_terms = max_terms - counter;
 
@@ -209,7 +209,7 @@ typename detail::fraction_traits<Gen>::result_type continued_fraction_a(Gen& g, 
       D = 1/D;
       delta = C*D;
       f = f * delta;
-   }while(fabs(delta - 1) > factor);
+   }while(!maybe_less_equal(fabs(delta - 1), factor));
 
    return a0/f;
 }
@@ -249,7 +249,7 @@ typename detail::fraction_traits<Gen>::result_type continued_fraction_a(Gen& g, 
       D = 1/D;
       delta = C*D;
       f = f * delta;
-   }while((fabs(delta - 1) > factor) && --counter);
+   }while(!maybe_less_equal(fabs(delta - 1), factor) && --counter);
 
    max_terms = max_terms - counter;
 

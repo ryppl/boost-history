@@ -158,7 +158,7 @@ inline RealType cdf(const weibull_distribution<RealType, Policy>& dist, const Re
    if(false == detail::check_weibull_x(function, x, &result, Policy()))
       return result;
 
-   result = -boost::math::expm1(-pow(x / scale, shape), Policy());
+   result = -boost::math::expm1(static_cast<RealType>(-pow(x / scale, shape)), Policy());
 
    return result;
 }
@@ -182,7 +182,7 @@ inline RealType quantile(const weibull_distribution<RealType, Policy>& dist, con
    if(p == 1)
       return policies::raise_overflow_error<RealType>(function, 0, Policy());
 
-   result = scale * pow(-boost::math::log1p(-p, Policy()), 1 / shape);
+   result = scale * pow(-boost::math::log1p(static_cast<RealType>(-p), Policy()), 1 / shape);
 
    return result;
 }
@@ -247,7 +247,7 @@ inline RealType mean(const weibull_distribution<RealType, Policy>& dist)
    if(false == detail::check_weibull(function, scale, shape, &result, Policy()))
       return result;
 
-   result = scale * boost::math::tgamma(1 + 1 / shape, Policy());
+   result = scale * boost::math::tgamma(static_cast<RealType>(1 + 1 / shape), Policy());
    return result;
 }
 
@@ -264,9 +264,9 @@ inline RealType variance(const weibull_distribution<RealType, Policy>& dist)
    {
       return result;
    }
-   result = boost::math::tgamma(1 + 1 / shape, Policy());
+   result = boost::math::tgamma(static_cast<RealType>(1 + 1 / shape), Policy());
    result *= -result;
-   result += boost::math::tgamma(1 + 2 / shape, Policy());
+   result += boost::math::tgamma(static_cast<RealType>(1 + 2 / shape), Policy());
    result *= scale * scale;
    return result;
 }
@@ -327,9 +327,9 @@ inline RealType skewness(const weibull_distribution<RealType, Policy>& dist)
    }
    RealType g1, g2, g3, d;
 
-   g1 = boost::math::tgamma(1 + 1 / shape, Policy());
-   g2 = boost::math::tgamma(1 + 2 / shape, Policy());
-   g3 = boost::math::tgamma(1 + 3 / shape, Policy());
+   g1 = boost::math::tgamma(static_cast<RealType>(1 + 1 / shape), Policy());
+   g2 = boost::math::tgamma(static_cast<RealType>(1 + 2 / shape), Policy());
+   g3 = boost::math::tgamma(static_cast<RealType>(1 + 3 / shape), Policy());
    d = pow(g2 - g1 * g1, RealType(1.5));
 
    result = (2 * g1 * g1 * g1 - 3 * g1 * g2 + g3) / d;
@@ -352,10 +352,10 @@ inline RealType kurtosis_excess(const weibull_distribution<RealType, Policy>& di
 
    RealType g1, g2, g3, g4, d, g1_2, g1_4;
 
-   g1 = boost::math::tgamma(1 + 1 / shape, Policy());
-   g2 = boost::math::tgamma(1 + 2 / shape, Policy());
-   g3 = boost::math::tgamma(1 + 3 / shape, Policy());
-   g4 = boost::math::tgamma(1 + 4 / shape, Policy());
+   g1 = boost::math::tgamma(static_cast<RealType>(1 + 1 / shape), Policy());
+   g2 = boost::math::tgamma(static_cast<RealType>(1 + 2 / shape), Policy());
+   g3 = boost::math::tgamma(static_cast<RealType>(1 + 3 / shape), Policy());
+   g4 = boost::math::tgamma(static_cast<RealType>(1 + 4 / shape), Policy());
    g1_2 = g1 * g1;
    g1_4 = g1_2 * g1_2;
    d = g2 - g1_2;

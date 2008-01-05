@@ -33,7 +33,7 @@ typename Functor::result_type sum_series(Functor& func, int bits)
       next_term = func();
       result += next_term;
    }
-   while(fabs(result) < fabs(factor * next_term));
+   while(!maybe_greater_equal(fabs(result), fabs(factor * next_term)));
    return result;
 }
 
@@ -53,7 +53,7 @@ typename Functor::result_type sum_series(Functor& func, int bits, boost::uintmax
       next_term = func();
       result += next_term;
    }
-   while((fabs(result) < fabs(factor * next_term)) && --counter);
+   while(!maybe_greater_equal(fabs(result), fabs(factor * next_term)) && --counter);
 
    // set max_terms to the actual number of terms of the series evaluated:
    max_terms = max_terms - counter;
@@ -75,7 +75,7 @@ typename Functor::result_type sum_series(Functor& func, int bits, U init_value)
       next_term = func();
       result += next_term;
    }
-   while(fabs(result) < fabs(factor * next_term));
+   while(!maybe_greater_equal(fabs(result), fabs(factor * next_term)));
 
    return result;
 }
@@ -96,7 +96,7 @@ typename Functor::result_type sum_series(Functor& func, int bits, boost::uintmax
       next_term = func();
       result += next_term;
    }
-   while((fabs(result) < fabs(factor * next_term)) && --counter);
+   while(!maybe_greater_equal(fabs(result), fabs(factor * next_term)) && --counter);
 
    // set max_terms to the actual number of terms of the series evaluated:
    max_terms = max_terms - counter;
@@ -135,7 +135,7 @@ typename Functor::result_type kahan_sum_series(Functor& func, int bits)
       carry -= y;
       result = t;
    }
-   while(fabs(result) < fabs(factor * next_term));
+   while(!maybe_greater_equal(fabs(result), fabs(factor * next_term)));
    return result;
 }
 
@@ -160,7 +160,7 @@ typename Functor::result_type kahan_sum_series(Functor& func, int bits, boost::u
       carry -= y;
       result = t;
    }
-   while((fabs(result) < fabs(factor * next_term)) && --counter);
+   while(!maybe_greater_equal(fabs(result), fabs(factor * next_term)) && --counter);
 
    // set max_terms to the actual number of terms of the series evaluated:
    max_terms = max_terms - counter;

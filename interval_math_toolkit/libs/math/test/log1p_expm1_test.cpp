@@ -5,7 +5,12 @@
 
 #define BOOST_MATH_OVERFLOW_ERROR_POLICY ignore_error
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/log1p.hpp>
@@ -104,6 +109,7 @@ void test(T, const char* type_name)
 
    do_test(log1p_expm1_data, type_name, "expm1 and log1p");
 
+#ifndef TEST_INTERVAL
    //
    // C99 Appendix F special cases:
    static const T zero = 0;
@@ -117,11 +123,13 @@ void test(T, const char* type_name)
       BOOST_CHECK_EQUAL(boost::math::expm1(-std::numeric_limits<T>::infinity()), m_one);
       BOOST_CHECK_EQUAL(boost::math::expm1(std::numeric_limits<T>::infinity()), std::numeric_limits<T>::infinity());
    }
+#endif
 }
 
 
 int test_main(int, char* [])
 {
+#ifndef TEST_INTERVAL
    expected_results();
    BOOST_MATH_CONTROL_FP;
    test(float(0), "float");
@@ -142,5 +150,8 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
+#else // TEST_INTERVAL
+   test((interval_type)(0), "boost::interval<double>");
+#endif // TEST_INTERVAL
    return 0;
 }

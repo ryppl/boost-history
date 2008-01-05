@@ -42,17 +42,17 @@ int temme_ik(T v, T x, T* K, T* K1, const Policy& pol)
     BOOST_ASSERT(abs(v) <= 0.5f);
 
     T gp = boost::math::tgamma1pm1(v, pol);
-    T gm = boost::math::tgamma1pm1(-v, pol);
+    T gm = boost::math::tgamma1pm1(static_cast<T>(-v), pol);
 
     a = log(x / 2);
     b = exp(v * a);
     sigma = -a * v;
     c = abs(v) < tools::epsilon<T>() ?
-       1 : boost::math::sin_pi(v) / (v * pi<T>());
+       static_cast<T>(1) : static_cast<T>(boost::math::sin_pi(v) / (v * pi<T>()));
     d = abs(sigma) < tools::epsilon<T>() ?
-        1 : sinh(sigma) / sigma;
+        static_cast<T>(1) : static_cast<T>(sinh(sigma) / sigma);
     gamma1 = abs(v) < tools::epsilon<T>() ?
-        -euler<T>() : (0.5f / v) * (gp - gm) * c;
+        static_cast<T>(-euler<T>()) : static_cast<T>((0.5f / v) * (gp - gm) * c);
     gamma2 = (2 + gp + gm) * c / 2;
 
     // initial values
@@ -234,7 +234,7 @@ int bessel_ik(T v, T x, T* I, T* K, int kind, const Policy& pol)
         v = -v;                             // v is non-negative from here
         kind |= need_k;
     }
-    n = tools::real_cast<unsigned>(v + 0.5f);
+    n = tools::real_cast<unsigned>(static_cast<T>(v + 0.5f));
     u = v - n;                              // -1/2 <= u < 1/2
     BOOST_MATH_INSTRUMENT_VARIABLE(n);
     BOOST_MATH_INSTRUMENT_VARIABLE(u);

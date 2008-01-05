@@ -5,7 +5,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef TEST_INTERVAL
+#include <boost/math/bindings/interval.hpp>
+#else
 #include <boost/math/concepts/real_concept.hpp>
+#endif
+
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/ellint_rf.hpp>
@@ -195,7 +200,7 @@ void do_test_ellint_rd(T& data, const char* type_name, const char* test)
 
    std::cout << "Testing: " << test << std::endl;
 
-    value_type (*fp)(value_type, value_type, value_type) = boost::math::ellint_rd;
+   value_type (*fp)(value_type, value_type, value_type) = boost::math::ellint_rd;
     boost::math::tools::test_result<value_type> result;
  
     result = boost::math::tools::test(
@@ -214,6 +219,8 @@ void test_spots(T, const char* type_name)
 {
    using namespace boost::math;
    using namespace std;
+
+#ifndef TEST_INTERVAL
    // Spot values from Numerical Computation of Real or Complex 
    // Elliptic Integrals, B. C. Carlson: http://arxiv.org/abs/math.CA/9409227
    // RF:
@@ -281,7 +288,7 @@ void test_spots(T, const char* type_name)
       s2 = ellint_rj(x, y, z, z);
       BOOST_CHECK_CLOSE_FRACTION(s1, s2, eps40);
    }
-
+#endif // TEST_INTERVAL
    //
    // Now random spot values:
    //
@@ -304,6 +311,7 @@ void test_spots(T, const char* type_name)
 
 int test_main(int, char* [])
 {
+#ifndef TEST_INTERVAL
     expected_results();
     BOOST_MATH_CONTROL_FP;
 
@@ -322,7 +330,9 @@ int test_main(int, char* [])
       "not available at all, or because they are too inaccurate for these tests "
       "to pass.</note>" << std::cout;
 #endif
-
+#else // TEST_INTERVAL
+   test_spots(interval_type(0), "boost::numeric::interval<double>");
+#endif // TEST_INTERVAL
     return 0;
 }
 

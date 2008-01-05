@@ -51,7 +51,7 @@ T inverse_negative_binomial_cornish_fisher(T n, T sf, T sfc, T p, T q, const Pol
    // kurtosis:
    T k = (6 - sf * (5+sfc)) / (n * (sfc));
    // Get the inverse of a std normal distribution:
-   T x = boost::math::erfc_inv(p > q ? 2 * q : 2 * p, pol) * constants::root_two<T>();
+   T x = boost::math::erfc_inv(p > q ? static_cast<T>(2 * q) : static_cast<T>(2 * p), pol) * constants::root_two<T>();
    // Set the sign:
    if(p < 0.5)
       x = -x;
@@ -74,6 +74,7 @@ template <class T, class Policy>
 T ibeta_inv_ab_imp(const T& b, const T& z, const T& p, const T& q, bool swap_ab, const Policy& pol)
 {
    BOOST_MATH_STD_USING  // for ADL of std lib math functions
+   using std::min;
    //
    // Special cases first:
    //
@@ -120,11 +121,11 @@ T ibeta_inv_ab_imp(const T& b, const T& z, const T& p, const T& q, bool swap_ab,
       //
       if((p < q) != swap_ab)
       {
-         guess = (std::min)(b * 2, T(1));
+         guess = min BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<T>(b * 2), T(1));
       }
       else
       {
-         guess = (std::min)(b / 2, T(1));
+         guess = min BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<T>(b / 2), T(1));
       }
    }
    if(n * n * n * u * sf > 0.005)
@@ -137,11 +138,11 @@ T ibeta_inv_ab_imp(const T& b, const T& z, const T& p, const T& q, bool swap_ab,
       //
       if((p < q) != swap_ab)
       {
-         guess = (std::min)(b * 2, T(10));
+         guess = min BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<T>(b * 2), T(10));
       }
       else
       {
-         guess = (std::min)(b / 2, T(10));
+         guess = min BOOST_PREVENT_MACRO_SUBSTITUTION(static_cast<T>(b / 2), T(10));
       }
    }
    else
@@ -162,49 +163,49 @@ T ibeta_inv_ab_imp(const T& b, const T& z, const T& p, const T& q, bool swap_ab,
 template <class T, class Policy>
 inline T ibeta_inva(T b, T x, T p, const Policy& pol)
 {
-   return detail::ibeta_inv_ab_imp(b, x, p, 1 - p, false, pol);
+   return detail::ibeta_inv_ab_imp(b, x, p, static_cast<T>(1 - p), false, pol);
 }
 
 template <class T, class Policy>
 inline T ibetac_inva(T b, T x, T q, const Policy& pol)
 {
-   return detail::ibeta_inv_ab_imp(b, x, 1 - q, q, false, pol);
+   return detail::ibeta_inv_ab_imp(b, x, static_cast<T>(1 - q), q, false, pol);
 }
 
 template <class T, class Policy>
 inline T ibeta_invb(T b, T x, T p, const Policy& pol)
 {
-   return detail::ibeta_inv_ab_imp(b, x, p, 1 - p, true, pol);
+   return detail::ibeta_inv_ab_imp(b, x, p, static_cast<T>(1 - p), true, pol);
 }
 
 template <class T, class Policy>
 inline T ibetac_invb(T b, T x, T q, const Policy& pol)
 {
-   return detail::ibeta_inv_ab_imp(b, x, 1 - q, q, true, pol);
+   return detail::ibeta_inv_ab_imp(b, x, static_cast<T>(1 - q), q, true, pol);
 }
 
 template <class T>
 inline T ibeta_inva(T b, T x, T p)
 {
-   return detail::ibeta_inv_ab_imp(b, x, p, 1 - p, false, policies::policy<>());
+   return detail::ibeta_inv_ab_imp(b, x, p, static_cast<T>(1 - p), false, policies::policy<>());
 }
 
 template <class T>
 inline T ibetac_inva(T b, T x, T q)
 {
-   return detail::ibeta_inv_ab_imp(b, x, 1 - q, q, false, policies::policy<>());
+   return detail::ibeta_inv_ab_imp(b, x, static_cast<T>(1 - q), q, false, policies::policy<>());
 }
 
 template <class T>
 inline T ibeta_invb(T b, T x, T p)
 {
-   return detail::ibeta_inv_ab_imp(b, x, p, 1 - p, true, policies::policy<>());
+   return detail::ibeta_inv_ab_imp(b, x, p, static_cast<T>(1 - p), true, policies::policy<>());
 }
 
 template <class T>
 inline T ibetac_invb(T b, T x, T q)
 {
-   return detail::ibeta_inv_ab_imp(b, x, 1 - q, q, true, policies::policy<>());
+   return detail::ibeta_inv_ab_imp(b, x, static_cast<T>(1 - q), q, true, policies::policy<>());
 }
 
 } // namespace math

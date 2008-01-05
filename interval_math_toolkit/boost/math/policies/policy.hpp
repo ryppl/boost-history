@@ -730,25 +730,26 @@ struct precision<long double, Policy>
 template <class Real, class Policy>
 struct precision
 {
+   typedef typename boost::numeric::interval_base_type<Real>::type base_type;
 #ifndef __BORLANDC__
    typedef typename Policy::precision_type precision_type;
    typedef typename mpl::if_c<
-      ((::std::numeric_limits<Real>::is_specialized == 0) || (::std::numeric_limits<Real>::digits == 0)),
+      ((::std::numeric_limits<base_type>::is_specialized == 0) || (::std::numeric_limits<base_type>::digits == 0)),
       // Possibly unknown precision:
       precision_type,
       typename mpl::if_c<
-         ((::std::numeric_limits<Real>::digits <= precision_type::value)
+         ((::std::numeric_limits<base_type>::digits <= precision_type::value)
          || (Policy::precision_type::value <= 0)),
          // Default case, full precision for RealType:
-         digits2< ::std::numeric_limits<Real>::digits>,
+         digits2< ::std::numeric_limits<base_type>::digits>,
          // User customised precision:
          precision_type
       >::type
    >::type type;
 #else
    typedef typename Policy::precision_type precision_type;
-   typedef mpl::int_< ::std::numeric_limits<Real>::digits> digits_t;
-   typedef mpl::bool_< ::std::numeric_limits<Real>::is_specialized> spec_t;
+   typedef mpl::int_< ::std::numeric_limits<base_type>::digits> digits_t;
+   typedef mpl::bool_< ::std::numeric_limits<base_type>::is_specialized> spec_t;
    typedef typename mpl::if_<
       mpl::or_<mpl::equal_to<spec_t, mpl::false_>, mpl::equal_to<digits_t, mpl::int_<0> > >,
       // Possibly unknown precision:
@@ -756,7 +757,7 @@ struct precision
       typename mpl::if_<
          mpl::or_<mpl::less_equal<digits_t, precision_type>, mpl::less_equal<precision_type, mpl::int_<0> > >,
          // Default case, full precision for RealType:
-         digits2< ::std::numeric_limits<Real>::digits>,
+         digits2< ::std::numeric_limits<base_type>::digits>,
          // User customised precision:
          precision_type
       >::type
