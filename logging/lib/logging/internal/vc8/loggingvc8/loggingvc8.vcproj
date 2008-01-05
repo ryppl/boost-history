@@ -702,6 +702,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\caching.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\common_usage_steps_fd.hpp"
 				>
 			</File>
@@ -731,6 +735,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\namespace_concepts.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\rationale.hpp"
 				>
 			</File>
 			<File

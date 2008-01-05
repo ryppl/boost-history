@@ -174,7 +174,7 @@ private:
     mutable cache m_cache;
     /** 
     IMPORTANT: to make sure we know when the cache is off as efficiently as possible, I have this mechanism:
-    - first, query m_is_enabled,which at the beginning is false (this is very efficient, we can use TSS here)
+    - first, query m_is_enabled, which at the beginning is false (this is very efficient, we can use TSS here)
       - if this is true, it's clear that caching has been turned off
       - if this is false, we don't know for sure, thus, continue to ask
     

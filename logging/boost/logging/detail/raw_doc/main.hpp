@@ -41,6 +41,14 @@ The Boost Log Library has these features:
       you can define your own writing mechanism
 - Easy manipulation of the logs (turning on/off, setting formatters, destinations, etc)
 - Allows you to use @ref tag "tags" (extra information about the context of the log: file/line, function name, thread id, etc.)
+- Allows for @ref scoped_logs "scoped logs"
+- Has @ref formatter::high_precision_time_t "high precision time formatter"
+- easy to configure at run-time, if you wish
+  - @ref formatter::named_spacer
+  - @ref destination::named
+- @ref caching "cache messages before logs are initialized"
+
+
 
 \n\n
 @section main_common_usage Common Usage
