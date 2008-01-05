@@ -1,0 +1,26 @@
+# Copyright (c) John Torjo 2008
+# Boost Logging Library Build Tests Jamfile
+#
+#  Distributed under the Boost Software License, Version 1.0. (See
+#  accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+
+project 
+    : requirements 
+      <include>../../../.. 
+      <include>$(BOOST_ROOT) 
+      <include>D:/john/code/latest_boost 
+      <library>/boost/thread//boost_thread 
+    ;
+
+# bring in rules for testing
+import testing ;
+
+test-suite log_tests :
+    [ run test_log_output/test_log_output.cpp ]
+    [ run test_simple_tss/test_simple_tss.cpp ]
+    [ run test_ts_resouce_with_cache/test_ts_resource.cpp ]
+#    [ run  ]
+#    [ run  ]
+    ;
+
