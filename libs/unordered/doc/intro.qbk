@@ -113,11 +113,12 @@ can be in any order. For example, it might be:
 
 To store an object in an unordered associative container requires both an
 key equality function and a hash function. The default function objects in
-the standard containers support integer types, floating point types, pointer
-types, the standard strings and std::error_code. Since Boost.Unordered uses
-[classref boost::hash] it also supports the standard containers and any types
-customized for [link hash Boost.Hash]. You can also use your custom equality
-predicates and hash functions. See the
+the standard containers support a few basic types including integer types,
+floating point types, pointer types, and the standard strings. Since
+Boost.Unordered uses [classref boost::hash] it also supports some other types,
+including standard containers. To use any types not supported by these methods
+you have to [link hash.custom extend Boost.Hash to support the type] or use
+your own custom equality predicates and hash functions. See the
 [link unordered.hash_equality Equality Predicates and Hash Functions] section
 for more details.
 
