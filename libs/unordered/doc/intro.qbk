@@ -78,8 +78,8 @@ details). If accepted the containers should also be added to __boost-tr1__.
         class ``[classref boost::unordered_multimap unordered_multimap]``;
     }
 
-If using Boost.TR1, these classes will be included from `<unordered_set>` and
-`<unordered_map>`, with the classes included in the `std::tr1` namespace.
+When using Boost.TR1, these classes are included from `<unordered_set>` and
+`<unordered_map>`, with the classes added to the `std::tr1` namespace.
 
 The containers are used in a similar manner to the normal associative
 containers:
