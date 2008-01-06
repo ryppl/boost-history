@@ -22,9 +22,13 @@ that value to choose a bucket to place the element in.
 
 Retreiving the elements for a given key is simple. The same process is applied
 to the key to find the correct bucket. Then the key is compared with the
-elements in the bucket to find any elements that match.  If the hash
-function has worked well the elements will be evenly distributed amongst the
-buckets so only a small number of elements will need to be examined.
+elements in the bucket to find any elements that match (using the equality
+predicate `Pred`).  If the hash function has worked well the elements will be
+evenly distributed amongst the buckets so only a small number of elements will
+need to be examined.
+
+There is [link unordered.hash_equality more information on hash functions and
+equality predicates in the next section].
 
 You can see in the diagram that `A` & `D` have been placed in the same bucket.
 When looking for elements in this bucket up to 2 comparisons are made, making
