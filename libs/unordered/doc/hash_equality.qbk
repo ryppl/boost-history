@@ -26,8 +26,8 @@ it.  So, if you wanted to use the
 An example implementation of FNV-1, and some other hash functions are supplied
 in the examples directory.
 
-Alternatively, you might wish to use a different equality function. If so, make
-sure you use a hash function that matches it. So to implement a
+Alternatively, you might wish to use a different equality function. If you do
+this you will need to use a hash function that matches it. So to implement a
 case-insensitive dictionary:
 
 [import src_code/insensitive.cpp]
