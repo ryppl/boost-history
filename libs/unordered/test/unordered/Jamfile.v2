@@ -12,10 +12,13 @@ project unordered-test/unordered
         <toolset>msvc:<cxxflags>/W4
     ;
 
-test-suite unordered-tests
+test-suite unordered
     :
+        [ run set_compile.cpp ]
+        [ run map_compile.cpp ]
+        [ run link_test_1.cpp link_test_2.cpp ]
+        [ run simple_tests.cpp ]
         [ run equivalent_keys_tests.cpp ]
-        [ run compile_tests.cpp ]
         [ run constructor_tests.cpp ]
         [ run copy_tests.cpp ]
         [ run assign_tests.cpp ]
