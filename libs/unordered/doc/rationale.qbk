@@ -198,4 +198,15 @@ allow placement insert, as described in __n2345__. To fully implement this
 new constructors in `std::pair`. But partial support is possible - especially
 if I don't use the `construct` member of allocators.
 
+[h3 Equality operator]
+
+While `operator==` and `operator!=` are not included in the standard, it's
+possible to implement them for all the containers - this is helped by having
+stable order of elements with equivalent keys. They will need to be specified
+differently to the standard associative containers, probably comparing keys
+using the equality predicate rather than `operator==`. This is inconsistent
+with the other containers but it is probably closer to user's expectations.
+
+If these are added then a `hash_value` free function should also be added.
+
 [endsect]

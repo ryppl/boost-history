@@ -70,8 +70,11 @@
             required to have any correspondence.)]
     ]
     [
-        [Can be compared using the `==`, `!=`, `<`, `<=`, `>`, `>=` operators]
-        [No comparison operators are defined]
+        [Can be compared using the `==`, `!=`, `<`, `<=`, `>`, `>=` operators.]
+        [No comparison operators are defined in the standard, although
+            [link unordered.rationale.equality_operator
+            implementations might extend the containers to support `==` and
+            `!=`].]
     ]
     [
         []
