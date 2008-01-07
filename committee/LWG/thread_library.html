@@ -1279,8 +1279,8 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 <p>
 A mutex object facilitates protection against data races
 and allows thread-safe synchronization of data between threads.
-A thread obtains ownership of a mutex object by calling <code>lock()</code>
-and relinquishes ownership by calling <code>unlock()</code>.
+A thread owns a mutex from the time it successfully calls one of the
+lock functions until it calls <code>unlock</code>.
 Mutexes may be either recursive or non-recursive,
 and may grant simultaneous ownership to one or many threads.
 The mutex types supplied by the Standard Library
