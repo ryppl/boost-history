@@ -490,9 +490,10 @@ and to <dfn>join</dfn> with a thread
 and to perform other operations
 that manage and query the state of the thread.
 A <code>thread</code> object uniquely represents
-a particular thread of execution
-and the right to join with it.
-That right may be transferred to other thread objects.
+a particular thread of execution.
+That representation may be transferred to other thread objects
+in such a way that no two <code>thread</code> objects simultaneously
+represent the same thread of execution.
 A thread of execution is <dfn>detached</dfn>
 when no <code>thread</code> object represents that thread.
 Objects of class <code>thread</code> can be in a state
