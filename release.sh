@@ -1,4 +1,4 @@
-TARBALL_DIR=../tarballs
+TARBALL_DIR=../../../../tarballs
 UNORDERED_DST=$TARBALL_DIR/unordered
 
 mkdir -p $TARBALL_DIR
