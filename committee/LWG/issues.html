@@ -202,11 +202,11 @@ requirements, types are required to meet the Mutex requirements.&quot;
 Instad of
 &quot;are required to&quot;, use &quot;shall&quot;. </p>
 <p>&#10004; (16) 23. [thread.timedmutex.requirements] (30.3.2): see 14, 16 </p>
-<p>&#9998; 24. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
+<p>&#10004; 24. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
 indicated time duration is less than or equal to 0, the function still
 attempts to obtain ownership without blocking&quot; change &quot;indicated&quot; to
 &quot;requested&quot; and remove &quot;still&quot;. </p>
-<p>&#9998; 25. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
+<p>&#10004; 25. [thread.timedmutex.requirements] (30.3.2), effects clause: &quot;If the
 function returns within the specified time duration, it shall have
 obtained
 ownership.&quot; This sentence is awkward. I'd phrase it &quot;The function
@@ -215,7 +215,7 @@ within the requested time duration only if is has obtained ownership
 of the
 mutex object.&quot; And even then, functions don't own mutex objects.
 Threads do. </p>
-<p>&#9998; 26. [thread.timedmutex.requirements] (30.3.2), effects clause for
+<p>&#10004; 26. [thread.timedmutex.requirements] (30.3.2), effects clause for
 timed_lock:
 see 24 (&quot;still&quot;), 25. </p>
 <p>&#10004; (19), &#10004; (20) 27. [thread.timedmutex.class] (30.3.2.1): see 19, 20. </p>
