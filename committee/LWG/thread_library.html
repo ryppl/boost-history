@@ -3075,13 +3075,9 @@ either:
 No other thread is waiting on this <code>condition_variable</code> object, or
 </li>
 <li>
-The execution of the <code>mutex</code> member function
-on the <code>lock</code>
-objects supplied in the calls to <code>wait</code> or <code>timed_wait</code>
-in
-all the threads currently waiting on this <code>condition_variable</code> object
-would return the same value as <code>lock-&gt;mutex()</code>
-for this call to <code>wait</code>.
+The <code><var>lock</var></code> arguments supplied by all concurrently waiting
+threads (via <code>wait</code> or <code>timed_wait</code>) return
+the same value for <code><var>lock</var>.mutex()</code>.
 </li>
 </ul>
 </dd>
@@ -3164,13 +3160,9 @@ either:
 No other thread is waiting on this <code>condition_variable</code> object, or
 </li>
 <li>
-The execution of the <code>mutex</code> member function
-on the <code><var>lock</var></code> objects
-supplied in the calls to <code>wait</code> or <code>timed_wait</code>
-in all the threads
-currently waiting on this <code>condition_variable</code> object
-would return the same value as <code><var>lock</var>-&gt;mutex()</code>
-for this call to <code>wait</code>.
+The <code><var>lock</var></code> arguments supplied by all concurrently waiting
+threads (via <code>wait</code> or <code>timed_wait</code>) return
+the same value for <code><var>lock</var>.mutex()</code>.
 </li>
 </ul>
 </dd>
