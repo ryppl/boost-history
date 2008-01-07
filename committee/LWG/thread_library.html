@@ -3819,6 +3819,28 @@ requirements for duration types whose details are specified below.
 </p>
 
 <p>
+A duration type <code>E</code> is said to be <i>exactly convertible</i>
+to another duration type <code>D</code> if and only if:
+</p>
+
+<ul>
+<li>
+<code>E::is_subsecond</code> is <code>false</code> and 
+<code>D::is_subsecond</code> is <code>true</code>, or
+</li>
+<li>
+<code>E::is_subsecond</code> is <code>false</code> and 
+<code>D::is_subsecond</code> is <code>false</code> and
+<code>E::seconds_per_tick % D::seconds_per_tick == 0</code> , or
+</li>
+<li>
+<code>E::is_subsecond</code> is <code>true</code> and 
+<code>D::is_subsecond</code> is <code>true</code> and
+<code>D::ticks_per_second % E::ticks_per_second == 0</code>.
+</li>
+</ul>
+
+<p>
 A duration type shall be EqualityComparable, LessThanComparable,
 CopyConstructible, DefaultConstructible, CopyAssignable, Swappable, and
 Destructible.
@@ -3829,9 +3851,7 @@ where <code>D</code> and <code>E</code> are duration types,
 <code>d0</code> denotes <code>d.tick_count()</code> at entry into the function,
 <code>e</code> denotes a <code>const</code> value of type <code>E</code>,
 <code>c</code> denotes a <code>long</code> value.
-The resolution of <code>E</code>
-shall not be finer than the resolution of <code>D</code>
-(diagnostic required).
+<code>E</code> shall be exactly convertible to <code>D</code> (diagnostic required).
 </p>
 <table>
   <tr>
@@ -4889,6 +4909,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <blockquote>
 <dl>
 
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
+
 <dt>Returns:</dt>
 <dd>
 <code>FinestDuration(<var>lhs</var>.count()) == FinestDuration(<var>rhs</var>.count())<br>
@@ -4904,6 +4931,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <blockquote>
 <dl>
 
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
+
 <dt>Returns:</dt>
 <dd>
 <code>!(<var>lhs</var>==<var>rhs</var>)</code>.
@@ -4917,6 +4951,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 </code></pre>
 <blockquote>
 <dl>
+
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -4933,6 +4974,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <blockquote>
 <dl>
 
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
+
 <dt>Returns:</dt>
 <dd>
 <code>!(<var>rhs</var>&lt;<var>lhs</var>)</code>.
@@ -4946,6 +4994,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 </code></pre>
 <blockquote>
 <dl>
+
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -4961,6 +5016,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 <blockquote>
 <dl>
 
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
+
 <dt>Returns:</dt>
 <dd>
 <code>!(<var>lhs</var>&lt;<var>rhs</var>)</code>.
@@ -4974,6 +5036,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 </code></pre>
 <blockquote>
 <dl>
+
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
 
 <dt>Returns:</dt>
 <dd>
@@ -4989,6 +5058,13 @@ template &lt;class LhsDuration, class RhsDuration&gt;
 </code></pre>
 <blockquote>
 <dl>
+
+<dt>Requires:</dt>
+<dd>
+Either
+<code>LhsDuration</code> shall be exactly convertible to <code>RhsDuration</code> or
+<code>RhsDuration</code> shall be exactly convertible to <code>LhsDuration</code> (diagnostic required).
+</dd>
 
 <dt>Returns:</dt>
 <dd>
