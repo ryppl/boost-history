@@ -1,0 +1,22 @@
+[section:tutorial_stylesheet Stylesheet Tutorial]
+
+To include a stylesheet into a program with any plot, simply use the `load_stylesheet(const std::string& filename)` method to load an external stylesheet. To load the file ./style.css, for instance, we would call:
+
+  my_plot.load_stylesheet("./style.css");
+
+There are a few instances when a `std::runtime_error` exception may be thrown.
+
+* If the filename is incorrect.
+* If the file does not pass the parsing phase.
+
+[h4 Using the stylesheet]
+Here is the output file for the simple 1D example, as used before:
+
+[$images/1d_simple.png]
+
+Here it is with a simple stylesheet applied (from $PROJECT_ROOT/libs/svg_plot/example/style.css):
+
+[caution When the user will have the option to convert the graph to another image format, the stylesheets will be ignored. These would provide the user with an even more complex function object that they would need to implement. If you provide a stylesheet, make sure you know what will not be converted. (Currently, that is everything in the stylesheets.)]
+[$images/1d_simple_style.png]
+
+[endsect] [/section:tutorial_stylesheet Stylesheet Tutorial]

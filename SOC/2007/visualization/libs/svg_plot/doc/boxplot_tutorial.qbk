@@ -1,0 +1,8 @@
+[section:svg_boxplot_tutorial Tutorial: Boxplot]
+
+[include boxplot_simple_tutorial.qbk]
+
+[include boxplot_full_tutorial.qbk]
+
+
+[endsect] [/section:tutorial]

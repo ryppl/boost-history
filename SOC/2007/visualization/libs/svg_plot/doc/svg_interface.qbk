@@ -1,0 +1,103 @@
+[section:svg_interface `svg` Public Interface]
+[table class `svg` Standard C++ Methods 
+  [[Signature] [Description] [Notes & Examples]]
+
+  [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
+
+  [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
+]
+
+[table `svg` shapes
+  [[Signature] [Description] [Notes & Examples]]
+  [[`svg& line(double x1, double y1, double x2, double y2)`] [Adds a line from (x1,y1) to (x2,y2) in the root level of the document.][]]
+
+  [[`path_element& path()`]
+  [Pushes a `path_element` to the back of the tree and returns a reference to it.
+  This allows chaining, for example:
+``
+path_element& my_path = image.path();
+
+my_path.M(3, 3).l(150, 150);
+``
+]]
+
+  [[`get_g_element`] [Class derived from svg_element.] [Graph element: line, circle, rect... Node element of document tree.]]
+
+  [[`g_element& add_g_element()`] [Adds a g_element at the root of the document tree. Acts as a `push_back()`] [Returns the `g_element` that is pushed back. This allows you to do something like the following: `image.add_g_element().line(/**/).line(/**/).rect(/**/);  `
+  which adds two lines and a rectangle to the g_element that was just created.]]
+
+  [[`svg& circle(double x, double y, unsigned int radius = 5)`] [Adds a point at (x,y) in the root level of the document][If the user is calling the circle method, odds are they would prefer a real circle instead of a degenerate circle (a point). 5 is as good a default as any other, and the user is unlikely want a point if they are making this call.]]
+
+  [[`g_element& get_g_element(int)`] [Gets the g_element at the index specified.] [Gives a runtime error if you specify an index that does not contain a `g_element`. An iterator interface to access these elements might be useful.]]
+
+  [[`svg& rect(double x1, double y1, 
+               double width, double height)`] [Adds a rectangle at point (x1, y1) that has  `width` wide and `height` high.][]]
+
+  [[`svg& text(double x, double y, std::string text)`] [Adds string `text` at (x,y) in the root level of the document][]]
+
+][/SVG C++ default methods table]
+
+[table `svg` Copyright
+  [[Signature] [Description] [Notes & Examples]]
+
+  [[`svg& copyright_holder(const std::string)`] [Set copyright holder for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+<meta name="copyright" content="Paul A. Bristow" />]]
+
+  [[`svg& license(const std::string, const std::string, const std::string, const std::string)`][Set license terms (if any): reproduction, distribution, attribution, commercialuse]["permits" (default), "requires", or "prohibits".]]
+
+  [[`const std::string& reproduction()`] [Returns the Reproduction segment of the license] [The default is `""`]]
+
+  [[`const std::string& distribution()`] [Returns the Distribution segment of the license] [The default is `""`]]
+
+  [[`const std::string& attribution()`] [Returns the Attribution segment of the license] [The default is `""`]]
+
+  [[`const std::string& commercialuse()`] [Returns the Commercial Use segment of the license] [The default is `""`]]
+
+  [[`const std::string& copyright_holder`] [Returns the copyright holder for the SVG XML document] [Returns the input value for copyright holder. Does not return any XML]]
+
+  [[`svg& license(bool)`] [Sets whether or not the license information should be added to the written document] [`false`]]
+
+  [[`bool is_license()`][Returns whether or not a license will be output with a written document.][Permits reproduction & distribution but requires atribution.]]
+
+  [[`svg& author(const std::string)`] [Sets the author of the document] [The copyright_holder is the default author]]
+
+  [[`svg& copyright_date(const std::string)`] [Set copyright date for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+<meta name="date" content="2007" />]]
+
+  [[`const std::string& copyright_date()`] [Returns the copyright date for the SVG XML document] [Returns the date string, not the associated XML.]]
+
+  [[`svg& description(const std::string)`] [Sets description for the SVG XML document, as comment and XML.][<!-- My Document description --> <desc>My Document description</desc>]]
+
+  [[`const std::string& description()`] [Returns the description of the document.] [Returns the description string, not the associated XML]]
+
+  [[`const std::string& author()`] [Returns the author of the document.] [The default is the copyright_holder.]]
+
+][/Copyright table]
+
+[table `svg` document settings and writing
+  [[Signature] [Description] [Notes & Examples]]
+
+  [[`svg& coord_precision(int)`] [Sets the precision output for coordinates (decimal digits)][default 3, but for mobiles, 2 might suffice.]]
+
+  [[`svg& document_title(const std::string)`] [Sets title for the SVG XML document (not the plot)][<title>My Document title</title>]]
+
+  [[`int document_size()`] [Returns the number of elements in the root of the document] [] ]
+
+  [[`int coord_precision(int)`] [Returns the current precision of doubles in the document] [The default is 3]]
+
+  [[`svg& x_size(unsigned int)`] [Sets the width of the image (pixels).] []]
+
+  [[`svg& y_size(unsigned int)`] [Sets the height of the image (pixels).] []]
+
+  [[`unsigned int x_size()`] [Returns the width of the image (pixels).] []]
+
+  [[`unsigned int y_size()`] [Returns the height of the image (pixels).] []]
+
+  [[`svg& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced,
+  (pixels).][]]
+
+  [[`svg& write(const std::string&)`] [Writes the document to the file represented by the argument.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
+
+  [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]]
+]
+[endsect] [/section:svg_interface]
