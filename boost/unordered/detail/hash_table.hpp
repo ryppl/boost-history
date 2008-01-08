@@ -48,8 +48,8 @@ namespace boost {
     namespace unordered_detail {
         template <class T> struct type_wrapper {};
 
-        const static std::size_t default_initial_bucket_count = 50;
-        const static float minimum_max_load_factor = 1e-3f;
+        static const std::size_t default_initial_bucket_count = 50;
+        static const float minimum_max_load_factor = 1e-3f;
         inline std::size_t next_prime(std::size_t n);
 
         template <class T>
