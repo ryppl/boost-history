@@ -3,6 +3,10 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+// Define some minimal classes which provide the bare minimum concepts to
+// test that the containers don't rely on something that they shouldn't.
+// They are not intended to be good examples of how to implement the concepts.
+
 #if !defined(BOOST_UNORDERED_OBJECTS_MINIMAL_HEADER)
 #define BOOST_UNORDERED_OBJECTS_MINIMAL_HEADER
 
@@ -100,9 +104,6 @@ namespace minimal
     public:
         ptr() : ptr_(0) {}
 
-        typedef void (ptr::*bool_type)() const;
-        void this_type_does_not_support_comparisons() const {}
-
         T& operator*() const { return *ptr_; }
         T* operator->() const { return ptr_; }
         ptr& operator++() { ++ptr_; return *this; }
@@ -111,12 +112,10 @@ namespace minimal
         friend ptr operator+(std::ptrdiff_t s, ptr p) { return ptr<T>(s + p.ptr_); }
         T& operator[](std::ptrdiff_t s) const { return ptr_[s]; }
         bool operator!() const { return !ptr_; }
-
-        operator bool_type() const {
-            return ptr_ ?
-                &ptr::this_type_does_not_support_comparisons
-                : 0;
-        }
+        
+        // I'm not using the safe bool idiom because the containers should be
+        // able to cope with bool conversions.
+        operator bool() const { return !!ptr_; }
 
         bool operator==(ptr const& x) const { return ptr_ == x.ptr_; }
         bool operator!=(ptr const& x) const { return ptr_ != x.ptr_; }
@@ -145,9 +144,6 @@ namespace minimal
         const_ptr() : ptr_(0) {}
         const_ptr(ptr<T> const& x) : ptr_(x.ptr_) {}
 
-        typedef void (const_ptr::*bool_type)() const;
-        void this_type_does_not_support_comparisons() const {}
-
         T const& operator*() const { return *ptr_; }
         T const* operator->() const { return ptr_; }
         const_ptr& operator++() { ++ptr_; return *this; }
@@ -156,12 +152,7 @@ namespace minimal
         friend const_ptr operator+(std::ptrdiff_t s, const_ptr p) { return ptr<T>(s + p.ptr_); }
         T const& operator[](int s) const { return ptr_[s]; }
         bool operator!() const { return !ptr_; }
-
-        operator bool_type() const {
-            return ptr_ ?
-                &const_ptr::this_type_does_not_support_comparisons
-                : 0;
-        }
+        operator bool() const { return !!ptr_; }
 
         bool operator==(ptr<T> const& x) const { return ptr_ == x.ptr_; }
         bool operator!=(ptr<T> const& x) const { return ptr_ != x.ptr_; }
