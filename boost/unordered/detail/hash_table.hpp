@@ -65,7 +65,7 @@ namespace boost {
 
         inline std::size_t float_to_size_t(float f)
         {
-            return f > static_cast<float>((std::numeric_limits<std::size_t>::max)()) ?
+            return f >= static_cast<float>((std::numeric_limits<std::size_t>::max)()) ?
                 (std::numeric_limits<std::size_t>::max)() :
                 static_cast<std::size_t>(f);
         }
