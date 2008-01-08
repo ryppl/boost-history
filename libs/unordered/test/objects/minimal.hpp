@@ -107,8 +107,9 @@ namespace minimal
         T* operator->() const { return ptr_; }
         ptr& operator++() { ++ptr_; return *this; }
         ptr operator++(int) { ptr tmp(*this); ++ptr_; return tmp; }
-        ptr operator+(int s) const { return ptr<T>(ptr_ + s); }
-        T& operator[](int s) const { return ptr_[s]; }
+        ptr operator+(std::ptrdiff_t s) const { return ptr<T>(ptr_ + s); }
+        friend ptr operator+(std::ptrdiff_t s, ptr p) { return ptr<T>(s + p.ptr_); }
+        T& operator[](std::ptrdiff_t s) const { return ptr_[s]; }
         bool operator!() const { return !ptr_; }
 
         operator bool_type() const {
@@ -151,7 +152,8 @@ namespace minimal
         T const* operator->() const { return ptr_; }
         const_ptr& operator++() { ++ptr_; return *this; }
         const_ptr operator++(int) { const_ptr tmp(*this); ++ptr_; return tmp; }
-        const_ptr operator+(int s) const { return const_ptr(ptr_ + s); }
+        const_ptr operator+(std::ptrdiff_t s) const { return const_ptr(ptr_ + s); }
+        friend const_ptr operator+(std::ptrdiff_t s, const_ptr p) { return ptr<T>(s + p.ptr_); }
         T const& operator[](int s) const { return ptr_[s]; }
         bool operator!() const { return !ptr_; }
 
