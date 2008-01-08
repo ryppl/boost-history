@@ -32,6 +32,7 @@
 #include <boost/logging/format/destination/convert_destination.hpp>
 #include <boost/logging/format/array.hpp> // array
 #include <vector>
+#include <map>
 #include <boost/type_traits/is_base_of.hpp>
 #include <sstream>
 
