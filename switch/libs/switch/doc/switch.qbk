@@ -15,7 +15,8 @@
 The built in C/C++ switch statement is very efficient.
 Unfortunately, unlike a chained if/else construct there
 is no easy way to use it when the number of cases depends
-on a template parameter.
+on a template parameter.  This library attempts to provide
+for such usage.
 
 [endsect]
 
@@ -36,17 +37,32 @@ on a template parameter.
     #include <boost/switch.hpp>
 
 [variablelist Parameters
-    [[[^Cases]][MPL Forward Sequence of integer constants]]
-    [[[^n]][Integer]]
-    [[[^f]][Function object]]
-    [[[^default_]][Function object]]
+    [[[^Cases]][MPL Forward Sequence.  Each of the elements must have a nested integral
+        constant ::value suitable for use in a case statement]]
+    [[[^n]][Must be of a built-in integal type]]
+    [[[^f]][Unary function object.  f(T()) must be defined for every T in Cases and must
+        return a type convertible to F::result_type]]
+    [[[^default_]][Unary function object such that default_(n) returns a type convertible to the result type]]
 ]
 
-Generates a switch statement. If the value of one
+Generates a switch statement. If the nested ::value of one
 of the elements of `Cases` is equal to `n`, then this function
-will call `f` with a parameter of that type.  Otherwise
-it will pass `n` to `default_` or throw an exception depending
-on whether `default_` was specified.  For example
+will call `f` with a default constructed parameter of that type.
+Otherwise it will either pass `n` to `default_` or throw an exception
+depending on whether `default_` was specified.
+
+Thus, `switch<Cases>(n, f, default_)` is equivalent to
+
+    switch(n) {
+        case mpl::at_c<Cases, 0>::type::value: return(f(mpl::at_c<Cases, 0>::type()));
+        case mpl::at_c<Cases, 1>::type::value: return(f(mpl::at_c<Cases, 1>::type()));
+        case mpl::at_c<Cases, 2>::type::value: return(f(mpl::at_c<Cases, 2>::type()));
+        ...
+        case mpl::at_c<Cases, N>::type::value: return(f(mpl::at_c<Cases, N>::type()));
+        default: return(default_(n));
+    }
+
+For example
 
     template<class FusionSequence>
     struct print_nth_function {
@@ -105,5 +121,24 @@ and no default was provided.
 Specifies the maximum number of cases supported.
 The default value of 50 can be overridden as long
 as it is the same in every translation unit.
+
+[endsect]
+
+[section:Alternatives Alternatives]
+
+Another way to achieve similar functionality is to use a map to
+function pointers or Boost.Functions.  The advantages of this
+approach are
+
+* The number of cases is only limited by memory contraints.
+* The key can be any type, not just built-in integers
+
+The disadvantages are:
+
+* The extra indirection makes it harder for the
+  compiler to optimize.
+* The table needs to be initialized somehow.  The
+  easy method of using a local static variable is not
+  thread-safe.  Making it thread-safe adds more overhead.
 
 [endsect]
