@@ -1,0 +1,261 @@
+// Copyright Howard Hinnant 2007. Distributed under the Boost
+// Software License, Version 1.0. (see http://www.boost.org/LICENSE_1_0.txt)
+
+// thread
+
+#ifndef THREAD
+#define THREAD
+
+/*
+    thread synopsis
+
+    namespace std {
+
+    class thread
+    {
+    public:
+        thread();
+        explicit template <class F> explicit thread(F f);
+        template <class F, class ...Args> thread(F&& f, Args&&... args);
+        ~thread();
+    
+        thread(const thread&) = delete;
+        thread& operator=(const thread&) = delete;
+
+        thread(thread&&);
+        thread& operator=(thread&&);
+    
+        void swap(thread&&);
+    
+        bool joinable() const;
+        void join();
+        void detach();
+    
+        class id;
+        id get_id() const;
+    
+        typedef implementation-defined native_handle_type;
+        native_handle_type native_handle();
+    
+        static unsigned hardware_concurrency();
+    };
+    
+    void swap(thread&  x, thread&  y);
+    void swap(thread&& x, thread&  y);
+    void swap(thread&  x, thread&& y);
+
+    class thread::id
+    {
+    public:
+        id();
+    };
+
+    bool operator==(const thread::id& x, const thread::id& y);
+    bool operator!=(const thread::id& x, const thread::id& y);
+    bool operator< (const thread::id& x, const thread::id& y);
+    bool operator<=(const thread::id& x, const thread::id& y);
+    bool operator> (const thread::id& x, const thread::id& y);
+    bool operator>=(const thread::id& x, const thread::id& y);
+
+    template<class charT, class traits>
+    basic_ostream<charT, traits>&
+    operator<< (basic_ostream<charT, traits>&& out, const thread::id& id);
+
+    namespace this_thread
+    {
+    
+        thread::id get_id();
+        
+        void yield();
+        void sleep(const system_time& abs_t);
+        template <class Duration>
+            void sleep(const Duration& rel_t);
+    
+    }  // this_thread
+
+    }  // std
+*/
+
+#include <ostream>
+#include <pthread.h>
+#include <mutex_base>
+#include <condition_variable>
+#include <functional>
+#include <exception>
+
+namespace std
+{
+
+class __thread_id;
+class thread;
+
+namespace this_thread
+{
+
+__thread_id get_id();
+
+}  // this_thread
+
+class __thread_id
+{
+    pthread_t id_;
+
+    friend __thread_id this_thread::get_id();
+    friend class thread;
+    explicit __thread_id(pthread_t t) : id_(t) {}
+public:
+    // Making non-portable assumption that pthread_t is a pointer
+    __thread_id() : id_(0) {}
+
+    // Making non-portable assumption that pthread_t is a pointer
+    friend bool operator==(const __thread_id& x, const __thread_id& y) {return x.id_ == y.id_;}
+    friend bool operator!=(const __thread_id& x, const __thread_id& y) {return !(x == y);}
+    friend bool operator< (const __thread_id& x, const __thread_id& y) {return x.id_ < y.id_;}
+    friend bool operator<=(const __thread_id& x, const __thread_id& y) {return !(y < x);}
+    friend bool operator> (const __thread_id& x, const __thread_id& y) {return   y < x ;}
+    friend bool operator>=(const __thread_id& x, const __thread_id& y) {return !(x < y);}
+
+    // Making non-portable assumption that pthread_t is a pointer
+    template<class charT, class traits> friend
+    basic_ostream<charT, traits>&
+    operator<< (basic_ostream<charT, traits>&& out, const __thread_id& x)
+        {return out << x.id_;}
+};
+
+class thread
+{
+    pthread_t id_;
+public:
+    // Making non-portable assumption that pthread_t is a pointer
+    thread() : id_(0) {}
+    template <class F> explicit thread(F f);
+    template <class F, class ...Args> thread(F&& f, Args&&... args)
+        : thread(bind(std::forward<F>(f), std::forward<Args>(args)...)) {}
+
+    ~thread()
+    {
+        __detach();
+    }
+
+    private: thread(const thread&); public:// = delete;
+    private: thread& operator=(const thread&); public:// = delete;
+
+    // Making non-portable assumption that pthread_t is a pointer
+    thread(thread&& t) : id_(t.id_) {t.id_ = 0;}
+    thread& operator=(thread&& t)
+    {
+        __detach();
+        swap(t);
+        return *this;
+    }
+
+    void swap(thread&& t)
+    {
+        pthread_t temp = id_;
+        id_ = t.id_;
+        t.id_ = temp;
+    }
+
+    // Making non-portable assumption that pthread_t is a pointer
+    bool joinable() const {return id_ != 0;}
+    void join();
+    void detach();
+
+    typedef __thread_id id;
+    id get_id() const {return id(id_);}
+
+    typedef pthread_t native_handle_type;
+    native_handle_type native_handle() {return id_;}
+
+    static unsigned hardware_concurrency();
+
+private:
+    int __detach();
+};
+    
+inline void swap(thread&  x, thread&  y) {x.swap(y);}
+inline void swap(thread&& x, thread&  y) {x.swap(y);}
+inline void swap(thread&  x, thread&& y) {x.swap(y);}
+
+namespace this_thread
+{
+
+inline __thread_id get_id() {return __thread_id(pthread_self());}
+
+void sleep(const system_time& abs_time);
+template <class Duration>
+inline
+void sleep(const Duration& rel_t,
+           typename enable_if<__is_duration<Duration>::value>::type* =0)
+    {this_thread::sleep(get_system_time() + rel_t);}
+
+}  // this_thread
+
+template <class F>
+class __thread_param
+{
+private:
+    void (*f1_)(void*);
+    F* f2_;
+    mutex mut_;
+    condition_variable cv_;
+    bool started_;
+
+public:
+    __thread_param(void (*f1)(void*), F* f2) : f1_(f1), f2_(f2), started_(false) {}
+    void wait();
+    void start();
+};
+
+template <class F>
+void
+__thread_param<F>::wait()
+{
+    unique_lock<mutex> lk(mut_);
+    while (!started_)
+        cv_.wait(lk);
+}
+
+template <class F>
+void
+__thread_param<F>::start()
+{
+    F f(std::move(*f2_));
+    {
+    lock_guard<mutex> _(mut_);
+    started_ = true;
+    cv_.notify_one();
+    }
+    try
+    {
+        f();
+    }
+    catch (...)
+    {
+        terminate();
+    }
+}
+
+extern "C" void* __thread_proxy(void*);
+
+template <class F>
+void
+__cpp_proxy(void* vp)
+{
+    __thread_param<F>* p = static_cast<__thread_param<F>*>(vp);
+    p->start();
+}
+
+template <class F>
+thread::thread(F f)
+{
+    __thread_param<F> p(&__cpp_proxy<F>, &f);
+    error_code::value_type ec = pthread_create(&id_, 0, &__thread_proxy, &p);
+    if (ec)
+        throw system_error(ec, native_category, "thread constructor failed");
+    p.wait();
+}
+
+}  // std
+
+#endif

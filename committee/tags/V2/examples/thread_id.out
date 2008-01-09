@@ -1,0 +1,28 @@
+main executing
+main sees f1::id as 0xb0081000
+main asking f1 to execute
+f1 executing
+f1 sees std::this_thread::get_id() as 0xb0081000 which is the same value main saw earlier
+f1 asking main to execute
+main executing
+main sees f1::id as 0 because it has moved f1 to the f2 thread
+main sees f2::id as 0xb0103000
+f2 detached by main
+main sees f2::id as 0 because it has detached f2
+main asking f2 to execute
+f2 executing
+f2 sees f1::id as 0xb0081000 which is the same value both main and f1 saw earlier
+f2 sees std::this_thread::get_id() as 0xb0103000 which is the same value main saw earlier
+f1 detached by f2
+f2 asking f1 to execute
+f1 executing
+f1 sees std::this_thread::get_id() as 0xb0081000 which is the same value both main and f2 saw earlier
+f1 asking f2 to execute
+f1 ending
+f2 executing
+f2 sees f1::id as 0 because it has detached f1
+f2 sees std::this_thread::get_id() as 0xb0103000
+f2 asking main to execute
+f2 ending
+main executing
+main ending

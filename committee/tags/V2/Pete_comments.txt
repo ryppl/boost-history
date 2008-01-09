@@ -1,0 +1,34 @@
+This is much better, but it's still in draft stage, not ready yet for voting into the WD. Comments:
+
+1. the description of the meaning of thread::id is distributed among several different clauses, and it's hard to figure out just what it means.
+2. the description of thread::native_handle_type and native_handle() is so vague (appropriately so) that it might be better to leave it out completely. Since you can't do anything meaningful with it if it's present, just leave it up to the implementation to tell you what it supports and what you can do with it. Same thing applies to the corresponding things in the other classes. If it stays in, it's overconstrained. In particular, if it's copyable, this requires copying it to pass it to the OS, even if the OS takes a pointer to that object. Just leave it to the implementation to match what the OS requires.
+3. objects of type thread::id "uniquely identify" threads of execution. Except that they don't, because default-constructed objects compare equal, and the id returned from a thread that is not joinable also compares equal to a default-constructed object.
+4. thread::get_id() for a default-constructed thread returns an object that refers to "not any thread". That last term isn't used anywhere else, so shouldn't be used.
+5. default constructor for thread constructs an object that is not "attached" to any thread; other constructors create objects that "represent" a thread. Assignment operator talks about an object that "refers" to a thread.
+6. template constructor for thread: "if f is an rvalue, F must only be MoveConstructible". Does this mean that F must not be CopyConstructible?
+7. thread::join "may throw system_error". Under what circumstances?
+8. call_once: "F is CopyConstructible", but F is not defined.
+9. Mutex concepts: mutex type is required to be Destructible, so requirement that its destructor not exit by an exception is redundant.
+10. "If and only if the mutex type ...", followed by "If there is no ..." which is the obverse. Either use iff and only if, or use if ... else.
+11. "Implementations may supply additional ..." is entirely redundant.
+12. "The class mutex is a ...", but "The class recursive_mutex shall be a ...".
+13. Timed Mutexes: "The type TimeDuration provides resolution information..." doesn't sound like a precondition, but an informative description. To the extent that it's actually a precondition, it's a little fuzzy whether it only applies to non-recursive mutexes.
+14. Timed Mutexes, Effects needs tightening.
+15. Class lock_guard: what does "Mutex ownership cannot be deferred" mean?
+16. lock_guard, precondition: what does it mean for the lifetime of an object to be greater than the lifetime of another object? Further, it can't be a precondition that the mutex still be in existence after the call, since that's not "pre" (i.e. there's no way to test this condition on entry into the function).
+17. unique_lock constructors: constructors that take mutex say that the object stores a reference to the passed mutex; what does that reference refer to after default construction?
+18. unique_lock move constructor "transfers mutex ownership". What does this mean?
+19. unique_lock::timed_lock: describes handling when the resolution of TimeDuration is greater than the native resolution; seems like this belongs in the description of mutex lock, not in this forwarder.
+20. unique_lock::unspecified-bool-type: returns null or non-null. Seems to be assuming (or imposing) constraints on the type returned.
+21. unique_lock assignment operator: what is the "lock count" of a recursive mutex?
+22. generic locking algorithms: is there a requirement that the locks be attempted in any particular order?
+23. generic locking algorithms, lock: what does "an algorithm that avoids deadlocks" mean? What, exactly, is required?
+24. condition_variable::wait: "... unless lock refers to the same underlying mutex object." Same as what?
+25. condition_variable::wait, effects: "If the wait should throw an exception..." probably should be "If the wait throws an exception...". "for any reason" is redundant. "This thread of execution shall unblock ..." is part of the effects of notify and notify_all, not of wait.
+26. condition_variable::wait, throws: can throw only if a precondition is not met? What if the system returns an error?
+27. condition_variable::wait(lock, pred): what are the constraints on the type Predicate?
+28. condition_variable::timed_wait: the requirement that the function return false if the time elapses means that when a blocked thread is released by notify, the release code must check whether the time has elapsed, since the timeout may not have been noticed earlier. Is this intentional? Seems more useful to allow it to return true in this case.
+
+ -- Pete
+
+Roundhouse Consulting, Ltd.
