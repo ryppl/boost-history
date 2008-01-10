@@ -1723,8 +1723,7 @@ namespace boost {
 
                         // Create the node before rehashing in case it throws an
                         // exception (need strong safety in such a case).
-                        value_type const& v = *i;
-                        a.construct(v);
+                        a.construct(*i);
 
                         // reserve has basic exception safety if the hash function
                         // throws, strong otherwise.
