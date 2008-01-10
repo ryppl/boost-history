@@ -27,7 +27,7 @@ namespace boost {
 #else
 namespace test {
 #endif
-    std::size_t hash_value(count_copies const&) {
+    std::size_t hash_value(test::count_copies const&) {
         return 0;
     }
 }
@@ -40,7 +40,7 @@ namespace test {
     {
         count_copies::count = 0;
         T x;
-        typename T::value_type a;
+        BOOST_DEDUCED_TYPENAME T::value_type a;
         BOOST_TEST(count_copies::count == 1);
         x.insert(a);
         BOOST_TEST(count_copies::count == 2);

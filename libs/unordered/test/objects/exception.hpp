@@ -150,8 +150,8 @@ namespace test {
         test_runner(Test const& t) : test_(t) {}
         void operator()() const {
             DISABLE_EXCEPTIONS;
-            typename Test::data_type x(test_.init());
-            typename Test::strong_type strong;
+            BOOST_DEDUCED_TYPENAME Test::data_type x(test_.init());
+            BOOST_DEDUCED_TYPENAME Test::strong_type strong;
             strong.store(x);
             try {
                 ENABLE_EXCEPTIONS;
