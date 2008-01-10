@@ -6,6 +6,10 @@
 #if !defined(BOOST_UNORDERED_TEST_OBJECTS_HEADER)
 #define BOOST_UNORDERED_TEST_OBJECTS_HEADER
 
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
+#include <boost/test/exception_safety.hpp>
+
 #include <cstddef>
 #include <boost/limits.hpp>
 #include <boost/test/test_tools.hpp>
