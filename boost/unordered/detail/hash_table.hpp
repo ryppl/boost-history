@@ -32,7 +32,7 @@
 
 #include <boost/mpl/aux_/config/eti.hpp>
 
-#if BOOST_WORKAROUND(__BORLANDC__, <= 0x0551)
+#if BOOST_WORKAROUND(__BORLANDC__, <= 0x0582)
 #define BOOST_UNORDERED_BORLAND_BOOL(x) (bool)(x)
 #else
 #define BOOST_UNORDERED_BORLAND_BOOL(x) x
