@@ -6,7 +6,13 @@
 #if !defined(BOOST_UNORDERED_TEST_MEMORY_HEADER)
 #define BOOST_UNORDERED_TEST_MEMORY_HEADER
 
-#define HASH_CHECK(test) if(!(test)) BOOST_ERROR(BOOST_STRINGIZE(test))
+#if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
+#define UNORDERED_CHECK(x) BOOST_CHECK(x)
+#define UNORDERED_REQUIRE(x) BOOST_REQUIRE(x)
+#else
+#define UNORDERED_CHECK(x) BOOST_TEST(x)
+#define UNORDERED_REQUIRE(x) if(!(x)) { BOOST_ERROR(BOOST_STRINGIZE(x)); throw test::lightweight::test_failure(); }
+#endif
 
 namespace test
 {
@@ -84,7 +90,7 @@ namespace test
 
             void allocator_unref()
             {
-                HASH_CHECK(count_allocators > 0);
+                UNORDERED_CHECK(count_allocators > 0);
                 if(count_allocators > 0) {
                     --count_allocators;
                     if(count_allocators == 0) {
@@ -97,9 +103,9 @@ namespace test
                         count_constructions = 0;
                         allocated_memory.clear();
 
-                        HASH_CHECK(no_allocations_left);
-                        HASH_CHECK(no_constructions_left);
-                        HASH_CHECK(allocated_memory_empty);
+                        UNORDERED_CHECK(no_allocations_left);
+                        UNORDERED_CHECK(no_constructions_left);
+                        UNORDERED_CHECK(allocated_memory_empty);
                     }
                 }
             }
@@ -123,12 +129,12 @@ namespace test
                 if(pos == allocated_memory.end()) {
                     BOOST_ERROR("Deallocating unknown pointer.");
                 } else {
-                    HASH_CHECK(pos->first.start == ptr);
-                    HASH_CHECK(pos->first.end == (char*) ptr + n * size);
-                    HASH_CHECK(pos->second.tag_ == tag);
+                    UNORDERED_CHECK(pos->first.start == ptr);
+                    UNORDERED_CHECK(pos->first.end == (char*) ptr + n * size);
+                    UNORDERED_CHECK(pos->second.tag_ == tag);
                     allocated_memory.erase(pos);
                 }
-                HASH_CHECK(count_allocations > 0);
+                UNORDERED_CHECK(count_allocations > 0);
                 if(count_allocations > 0) --count_allocations;
             }
 
@@ -139,7 +145,7 @@ namespace test
 
             void track_destroy(void* ptr, std::size_t /*size*/, int tag)
             {
-                HASH_CHECK(count_constructions > 0);
+                UNORDERED_CHECK(count_constructions > 0);
                 if(count_constructions > 0) --count_constructions;
             }
         };

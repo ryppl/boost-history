@@ -22,7 +22,7 @@ struct self_swap_base : public test::exception_base
         std::string scope(test::scope);
 
 #if BOOST_UNORDERED_SWAP_METHOD != 2
-        HASH_CHECK(
+        UNORDERED_CHECK(
                 scope == "hash::operator(hash)" ||
                 scope == "hash::operator=(hash)" ||
                 scope == "equal_to::operator(equal_to)" ||
@@ -73,7 +73,7 @@ struct swap_base : public test::exception_base
         std::string scope(test::scope);
 
 #if BOOST_UNORDERED_SWAP_METHOD != 2
-        HASH_CHECK(
+        UNORDERED_CHECK(
                 scope == "hash::operator(hash)" ||
                 scope == "hash::operator=(hash)" ||
                 scope == "equal_to::operator(equal_to)" ||

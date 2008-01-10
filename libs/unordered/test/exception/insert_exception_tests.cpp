@@ -9,7 +9,7 @@
 #include "../helpers/invariants.hpp"
 #include "../helpers/strong.hpp"
 #include "../helpers/input_iterator.hpp"
-
+#include <boost/utility.hpp>
 #include <cmath>
 
 test::seed_t seed(747373);
@@ -108,10 +108,10 @@ struct insert_test_rehash1 : public insert_test_base<T>
         size_type bucket_count = x.bucket_count();
         size_type initial_elements = static_cast<size_type>(
             std::ceil(bucket_count * x.max_load_factor()) - 1);
-        BOOST_REQUIRE(initial_elements < this->values.size());
+        UNORDERED_REQUIRE(initial_elements < this->values.size());
         x.insert(this->values.begin(),
                 boost::next(this->values.begin(), initial_elements));
-        BOOST_REQUIRE(bucket_count == x.bucket_count());
+        UNORDERED_REQUIRE(bucket_count == x.bucket_count());
         return x;
     }
 
@@ -130,7 +130,7 @@ struct insert_test_rehash1 : public insert_test_base<T>
 
         // This isn't actually a failure, but it means the test isn't doing its
         // job.
-        BOOST_REQUIRE(x.bucket_count() != bucket_count);
+        UNORDERED_REQUIRE(x.bucket_count() != bucket_count);
     }
 };
 
@@ -153,7 +153,7 @@ struct insert_test_rehash2 : public insert_test_rehash1<T>
 
         // This isn't actually a failure, but it means the test isn't doing its
         // job.
-        BOOST_REQUIRE(x.bucket_count() != bucket_count);
+        UNORDERED_REQUIRE(x.bucket_count() != bucket_count);
     }
 };
 
@@ -176,10 +176,10 @@ struct insert_test_rehash3 : public insert_test_base<T>
 
         size_type initial_elements = rehash_bucket_count - 5;
 
-        BOOST_REQUIRE(initial_elements < this->values.size());
+        UNORDERED_REQUIRE(initial_elements < this->values.size());
         x.insert(this->values.begin(),
                 boost::next(this->values.begin(), initial_elements));
-        BOOST_REQUIRE(original_bucket_count == x.bucket_count());
+        UNORDERED_REQUIRE(original_bucket_count == x.bucket_count());
         return x;
     }
 
@@ -191,7 +191,7 @@ struct insert_test_rehash3 : public insert_test_base<T>
 
         // This isn't actually a failure, but it means the test isn't doing its
         // job.
-        BOOST_REQUIRE(x.bucket_count() != bucket_count);
+        UNORDERED_REQUIRE(x.bucket_count() != bucket_count);
     }
 
     void check(T const& x) const {
