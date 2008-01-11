@@ -1,0 +1,20 @@
+
+subproject libs/sql_cli/example ;
+
+import ../build/odbc ;
+
+rule sql-cli-example ( name extra-sources * )
+{
+    exe $(name)
+        : # sources
+          $(name).cpp
+          <lib>../build/boost_sql_cli
+          <lib>@boost/libs/signals/build/boost_signals
+          <template>odbc
+        : # build requirements
+          <include>$(BOOST_ROOT)
+        ;
+}
+
+sql-cli-example demo ;
+

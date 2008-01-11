@@ -1,0 +1,34 @@
+# Boost.SqlCli
+#
+# Copyright (c) 2006 - 2007 Nicola Musatti.
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+using quickbook ;
+
+xml sql_cli
+  :
+    sql_cli.qbk
+  :
+    <xsl:param>boost.root=../../../..
+    <xsl:param>boost.libraries=../../../../libs/libraries.htm
+    <xsl:param>navig.graphics.path="../../../../doc/html/images/ "
+    <xsl:param>chapter.autolabel=0
+    <xsl:param>chunk.section.depth=8
+    <xsl:param>chunk.first.sections=1
+    <xsl:param>toc.section.depth=2
+    <xsl:param>toc.max.depth=1
+    <xsl:param>generate.section.toc.level=1
+    <xsl:param>generate.toc="\"chapter toc,title section toc,title\""
+  ;
+
+boostbook standalone
+  :
+    sql_cli
+  ;
+
+install html
+  :
+    /boost//doc/html/boostbook.css
+  ;
+

@@ -1,0 +1,100 @@
+[/
+[article Boost.SqlCli - To Do list
+    [quickbook 1.4]
+    [version 0.1]
+    [authors [Musatti, Nicola]]
+    [copyright 2007 Nicola Musatti]
+    [purpose Action items for the development of the Boost.SqlCli library]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [last-revision $Date: 2007/04/23 16:13:13 $]
+]
+]
+
+[section:todo Things to Do]
+
+This chapter lists things to do, in contrast with the next one which describes
+decisions to take. Ideally all the following items should be included in the
+next release, but it's quite possible that some of them may lead to further
+unresolved issues, especially since some tasks involve design rather than
+coding.
+
+[section:devel Design and Implementation]
+
+* Revise the architecture of backends so as to make it simpler and more
+  obvious for others to understand what should be done to implement additional
+  backends.
+  * Document the backend API and conventions.
+
+* Add support for date and time fields, using Boost.DateTime as C++ counterpart.
+
+* Identify which additional types for parameters and fields should be supported.
+
+* Support dynamic typing by providing boost/TR1 =any= input parameters and field
+  values.
+
+* Support composite data types / full row handling, both for user convenience
+  and to leverage batch query processing that might be supported by the
+  underlying technology.
+  * Use TR1 =tuple= for static typing.
+  * Is an underlying collection necessary for dynamic typing or are iterators
+    sufficient? In the first case, should =std::vector= be used?
+
+* Support iterative statement composition, e.g. by providing an
+  =add_parameter()= and a parameterless =prepare()= member function to the
+  =statement= class.
+
+* Revise the representation of connection parameters.
+  * Consider using a collection of name/value pairs, to be passed unchanged to
+    the underlying DBMS.
+
+* Add support for stored procedures.
+
+[section:odbc_backend ODBC Backend]
+
+* Revise the use of =traits= and =value_buffer= for =odbc::field=.
+  * Unify the two?
+  * Generalize everything that might be useful to implement other backends.
+
+* Handle iterated value retrieval from ODBC primitives (see
+  =boost::sql_cli::odbc::row=).
+
+[endsect]
+
+[endsect]
+
+[section:environment Environment]
+
+* Replace Dev-C++ with Code::Blocks as g++ IDE. Dev-C++ development appears to
+  have stopped and the IDE hasn't aged well. Code::Blocks appears to be
+  definitely more promising.
+
+* Port to 32 bit Linux.
+
+* Port to 64 bit systems.
+
+[section:tests Tests]
+
+* A mechanism for the repetition of tests over different DBMS.
+  * A local configuration file for the available DBMS's.
+
+[endsect]
+
+[endsect]
+
+[section:doc Documentation]
+
+* User's guide
+
+* Reference manual 
+
+* Rationale
+  * With a comparison with other libraries, especially SOCI.
+
+[endsect]
+
+[endsect]
+

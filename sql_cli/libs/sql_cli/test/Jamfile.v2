@@ -1,0 +1,30 @@
+# Boost.SqlCli
+#
+# Copyright (c) 2006 - 2007 Nicola Musatti.
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+rule sql-cli-run ( sources + : args * : input-files * : requirements * )
+{
+    return  
+        [ run $(sources) ../build//boost_sql_cli
+	: $(args)
+        : $(input-files)
+	: $(requirements) <toolset>msvc:<asynch-exceptions>on ]
+        ;
+}
+
+test-suite "sql_cli"
+    :
+      [ sql-cli-run trivial_test.cpp ]
+      [ sql-cli-run direct_statements_test.cpp ]
+      [ sql-cli-run prepared_statements_test.cpp ]
+      [ sql-cli-run null_test.cpp ]
+      [ sql-cli-run field_types_test.cpp ]
+      [ sql-cli-run scalar_types_test.cpp ]
+      [ sql-cli-run unsigned_types_test.cpp ]
+      [ sql-cli-run tinyint_test.cpp ]
+      [ sql-cli-run numeric_types_test.cpp ]
+      [ sql-cli-run string_test.cpp ]
+      [ sql-cli-run wide_string_test.cpp ]
+    ;

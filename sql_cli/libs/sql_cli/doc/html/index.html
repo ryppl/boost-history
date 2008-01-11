@@ -1,0 +1,294 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Boost.SqlCli 0.2</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="index.html" title="Boost.SqlCli 0.2">
+<link rel="next" href="boost_sqlcli/architecture.html" title=" Architecture">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.htm">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="../../people/people.htm">People</a></td>
+<td align="center"><a href="../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_sqlcli/architecture.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="article" lang="en">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="boost_sqlcli"></a>Boost.SqlCli 0.2</h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Nicola</span> <span class="surname">Musatti</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright © 2006, 2007 Nicola Musatti</p></div>
+<div><div class="legalnotice">
+<a name="id455057"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_sqlcli.intro"> Introduction</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_sqlcli.intro.example"> A Concrete Example</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_sqlcli/architecture.html"> Architecture</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_sqlcli/architecture.html#boost_sqlcli.architecture.connection"> The <code class="literal">connection</code>
+      class</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_sqlcli/todo.html"> Things to Do</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sqlcli/todo.html#boost_sqlcli.todo.devel"> Design and Implementation</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/todo.html#boost_sqlcli.todo.environment"> Environment</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/todo.html#boost_sqlcli.todo.doc"> Documentation</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html"> Open Issues</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html#boost_sqlcli.open_issues.architecture"> The Architecture</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html#boost_sqlcli.open_issues.interface"> The Programming
+      Interface</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html#boost_sqlcli.open_issues.structure"> Library Structure
+      and Design</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html#boost_sqlcli.open_issues.odbc"> ODBC Specific Issues</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html#boost_sqlcli.open_issues.environment"> Environment</a></span></dt>
+<dt><span class="section"><a href="boost_sqlcli/open_issues.html#boost_sqlcli.open_issues.desiderata"> Desiderata</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sqlcli/reference.html"> Reference</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sqlcli.intro"></a><a href="index.html#boost_sqlcli.intro" title=" Introduction"> Introduction</a>
+</h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_sqlcli.intro.example"> A Concrete Example</a></span></dt></dl></div>
+<p>
+      In the spring of 2006 a lively discussion took place on the Boost Developers'
+      mailing list about submitting the <a href="http://soci.sourceforge.net" target="_top">SOCI</a>
+      library to Boost as a first step towards presenting a proposal to the Standard
+      Committee for an interface to relational databases. SOCI is an actively developed
+      open source project that is attracting a growing user base, but its current
+      API is significantly different from Boost's (and the Committee's) conventions.
+      Boost.SqlCli is an exploration of what a more "compliant" API might
+      look like.
+    </p>
+<p>
+      Boost.SqlCli aims at providing a C++ <a href="http://en.wikipedia.org/wiki/Call_Level_Interface" target="_top">Call
+      Level Interface</a> to SQL systems that feels natural to C++ programmers.
+      This is achieved by pursuing several design goals:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="underline">Abstraction from the underlying technology</span>:
+        Boost.SqlCli should hide all details of the underling DBMS technology, with
+        the possible exception of
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            the parameters required to connect to a database
+          </li>
+<li>
+            access to product specific extensions to the standard SQL syntax
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="underline">Minimality</span>: While coverage of SQL features
+        should be as wide as possible, Boost.SqlCli should only provide the minimal
+        functionality required to provide native and standard types' values for query
+        parameters and to retrieve the same types of values from query results. In
+        addition dynamic type handling will be provided by means of boost/TR1 any.
+        Bare bones support for handling composite data will be provided by means
+        of boost/TR1 tuples for the static, type-safe approach and by means of ranges
+        of boost/TR1 any for the dynamic approach.
+      </li>
+<li><span class="underline">Use of modern, idiomatic C++</span></li>
+</ul></div>
+<p>
+      Development is still at a very early stage. The fundamental elements of the
+      library's interface are present, but only a subset of the planned scalar data
+      types are supported as parameter and field values. Dynamic typing and composite
+      data are not available yet. Currently only a very incomplete ODBC backend is
+      available. The library has been built with Microsoft Visual C++ 2005, Borland
+      C++ Builder 6 &amp; 2006, as well as MinGW G++ 3.4.2, all under Windows.
+    </p>
+<p>
+      The documentation contains a currently very incomplete Architecture section,
+      which describes the structure of the library and explains why it was done this
+      way; a To Do chapter, which lists those work items that have been identified
+      in a reasonably clear way; and an Open Issues section, which presents topics
+      over which a definite decision hasn't been made or which would be nice to have
+      but haven't been planned yet. A Doxygen generated reference is also available.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.intro.example"></a><a href="index.html#boost_sqlcli.intro.example" title=" A Concrete Example"> A Concrete Example</a>
+</h3></div></div></div>
+<p>
+        This is the <code class="literal">demo.cpp</code> demo program from the <code class="literal">libs/sql_cli/examples</code>
+        directory. Hopefully it is self explanatory...
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="comment">// An example of what a Boost database interface library might look like
+</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">ostream</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_ALL_DYN_LINK</span> <span class="number">1</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">workaround</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">BOOST_WORKAROUND</span><span class="special">(</span><span class="identifier">__BORLANDC__</span><span class="special">,</span> <span class="special">&lt;=</span> <span class="number">0x564</span><span class="special">)</span>
+<span class="preprocessor">#   pragma</span> <span class="identifier">hdrstop</span>
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">none</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sql_cli</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">try</span>
+    <span class="special">{</span>
+
+<span class="comment">// Connect to a database, specifying the underlying technology. Unless
+</span><span class="comment">// specific SQL syntax is used, this should be the only place where the
+</span><span class="comment">// actual DBMS product / technology is evident
+</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">connection</span> <span class="identifier">conn</span><span class="special">(</span><span class="string">"ODBC"</span><span class="special">);</span>
+        <span class="identifier">conn</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="string">"PVAL"</span><span class="special">,</span> <span class="string">"dba"</span><span class="special">,</span> <span class="string">"sql"</span><span class="special">);</span>
+
+<span class="comment">// Execute a couple of simple queries
+</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">statement</span> <span class="identifier">st</span><span class="special">(</span><span class="identifier">conn</span><span class="special">);</span>
+        <span class="keyword">try</span>
+        <span class="special">{</span>
+            <span class="identifier">st</span><span class="special">.</span><span class="identifier">exec</span><span class="special">(</span><span class="string">"drop table t"</span><span class="special">);</span>
+            <span class="identifier">conn</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="keyword">catch</span> <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">error</span> <span class="special">&amp;</span> <span class="identifier">e</span> <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="identifier">st</span><span class="special">.</span><span class="identifier">exec</span><span class="special">(</span><span class="string">"create table t ( a int, b varchar(10), c double, "</span>
+                <span class="string">"d_is_an_incredibly_long_column_name int )"</span><span class="special">);</span>
+
+<span class="comment">// Execute a parameterized query
+</span>
+        <span class="keyword">long</span> <span class="identifier">a</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">b</span><span class="special">;</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">c</span><span class="special">;</span>      <span class="comment">// a value that may be null
+</span>        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">null_value</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">;</span> <span class="comment">// a value that is always null
+</span>
+        <span class="comment">// prepare the statement and bind input parameters, so get to be able
+</span>        <span class="comment">// to execute it in a loop with different values
+</span>
+        <span class="identifier">st</span><span class="special">.</span><span class="identifier">prepare</span><span class="special">(</span><span class="string">"insert into t ( a, b, c, "</span>
+                <span class="string">"d_is_an_incredibly_long_column_name ) values ( ?, ?, ?, ? )"</span><span class="special">,</span>
+                <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">);</span>
+
+        <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">nums</span><span class="special">[]</span> <span class="special">=</span> <span class="special">{</span> <span class="string">"zero"</span><span class="special">,</span> <span class="string">"one"</span><span class="special">,</span> <span class="string">"two"</span><span class="special">,</span> <span class="string">"three"</span><span class="special">,</span> <span class="string">"four"</span><span class="special">,</span> <span class="string">"five"</span><span class="special">,</span> <span class="string">"six"</span><span class="special">,</span>
+                <span class="string">"seven"</span><span class="special">,</span> <span class="string">"eight"</span><span class="special">,</span> <span class="string">"nine"</span> <span class="special">};</span> 
+        <span class="keyword">for</span> <span class="special">(</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">a</span> <span class="special">&lt;</span> <span class="number">10</span><span class="special">;</span> <span class="special">++</span><span class="identifier">a</span> <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">nums</span><span class="special">[</span><span class="identifier">a</span><span class="special">];</span> 
+            <span class="keyword">if</span> <span class="special">(</span> <span class="identifier">a</span> <span class="special">%</span> <span class="number">2</span> <span class="special">)</span>
+                <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">a</span> <span class="special">*</span> <span class="number">1.1</span><span class="special">;</span>
+            <span class="keyword">else</span>
+                <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span><span class="special">;</span>
+            <span class="identifier">st</span><span class="special">.</span><span class="identifier">exec</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="identifier">conn</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+
+<span class="comment">// Execute a query that returns a result set
+</span>
+        <span class="identifier">st</span><span class="special">.</span><span class="identifier">exec</span><span class="special">(</span><span class="string">"select * from t"</span><span class="special">);</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">result_set</span> <span class="identifier">rs</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
+
+        <span class="comment">// Explore the structure of the result set
+</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"No. of columns: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">rs</span><span class="special">.</span><span class="identifier">column_count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+        <span class="keyword">for</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">rs</span><span class="special">.</span><span class="identifier">column_count</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">rs</span><span class="special">[</span><span class="identifier">i</span><span class="special">].</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\t "</span> <span class="special">&lt;&lt;</span> <span class="identifier">rs</span><span class="special">[</span><span class="identifier">i</span><span class="special">].</span><span class="identifier">type</span><span class="special">().</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'('</span> <span class="special">&lt;&lt;</span> 
+                    <span class="identifier">rs</span><span class="special">[</span><span class="identifier">i</span><span class="special">].</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span> <span class="special">&lt;&lt;</span> <span class="identifier">rs</span><span class="special">[</span><span class="identifier">i</span><span class="special">].</span><span class="identifier">precision</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">')'</span><span class="special">;</span>
+            <span class="keyword">if</span> <span class="special">(</span> <span class="identifier">rs</span><span class="special">[</span><span class="identifier">i</span><span class="special">].</span><span class="identifier">nullable</span><span class="special">()</span> <span class="special">)</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\t null"</span><span class="special">;</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+        <span class="special">}</span>
+
+        <span class="comment">// Print the actual results
+</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nRows:\n"</span><span class="special">;</span>
+        <span class="keyword">for</span> <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">result_set</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">rs</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> 
+                <span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">rs</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">row</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">i</span><span class="special">;</span>
+
+            <span class="comment">// Columns may be accessed by position...
+</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">r</span><span class="special">[</span><span class="number">0</span><span class="special">].</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;()</span> <span class="special">&lt;&lt;</span> <span class="string">"\t "</span><span class="special">;</span>
+            
+            <span class="comment">// ...or by name
+</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">r</span><span class="special">[</span><span class="string">"b"</span><span class="special">].</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;()</span> <span class="special">&lt;&lt;</span> <span class="string">"\t "</span><span class="special">;</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">[</span><span class="number">2</span><span class="special">].</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+            <span class="keyword">if</span> <span class="special">(</span> <span class="special">!</span> <span class="identifier">c</span> <span class="special">)</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"(null)\t "</span><span class="special">;</span>
+            <span class="keyword">else</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">c</span> <span class="special">&lt;&lt;</span> <span class="string">"\t "</span><span class="special">;</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">[</span><span class="number">3</span><span class="special">].</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+            <span class="keyword">if</span> <span class="special">(</span> <span class="special">!</span> <span class="identifier">d</span> <span class="special">)</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"(null)\n"</span><span class="special">;</span>
+            <span class="keyword">else</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="identifier">st</span><span class="special">.</span><span class="identifier">exec</span><span class="special">(</span><span class="string">"drop table t"</span><span class="special">);</span>
+        <span class="identifier">conn</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+        <span class="identifier">conn</span><span class="special">.</span><span class="identifier">disconnect</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="keyword">catch</span> <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sql_cli</span><span class="special">::</span><span class="identifier">error</span> <span class="special">&amp;</span> <span class="identifier">e</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Failure!\n"</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Success!\n"</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+
+</pre>
+<p>
+        </p>
+<p>
+        </p>
+<p>
+          </p>
+<div class="calloutlist"><table border="0" summary="Callout list"></table></div>
+<p>
+        </p>
+<p>
+      </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><small><p>Last revised: April 23, 2007 at 16:13:13 GMT</p></small></td>
+<td align="right"><small></small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_sqlcli/architecture.html"><img src="images/next.png" alt="Next"></a></div>
+</body>
+</html>

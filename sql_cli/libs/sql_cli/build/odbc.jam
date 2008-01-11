@@ -1,0 +1,67 @@
+
+rule sql-cli-odbc-lib ( toolset variant : properties * )
+{
+    # if SQL_CLI_ODBC_LIB is set we trust the user to know which library/ies
+    # must be linked
+    set-as-singleton SQL_CLI_ODBC_LIB ;
+    if $(SQL_CLI_ODBC_LIB)
+    {
+        for local l in $(SQL_CLI_ODBC_LIB)
+        {
+            properties += <library-file>$(l) ;
+        }
+    }
+    else if $(NT)
+    {
+        set-as-singleton PROGRAMFILES BCCROOT ;
+        PROGRAMFILES ?= "C:\\Program Files" ;
+        # For Borland either BCCROOT is set or we assume BCB6
+        if [ MATCH ^(borland).* : $(toolset) ]
+        {
+            BCCROOT ?= $(PROGRAMFILES:J=" ")/Borland/CBuilder6 ;
+            properties += <$(toolset)><*><library-file>$(BCCROOT)/Lib/Psdk/odbc32.lib ;
+        }
+        # For Microsoft only VC++ 8.x is supported. Either MSSdk is set or it
+        # is assumed to be under VC80_ROOT\PlatformSDK
+        else if [ MATCH ^(vc-8).* : $(toolset) ]
+        {
+            set-as-singleton VC80_ROOT ;
+            VC80_ROOT ?= $(PROGRAMFILES:J=" ")"\\Microsoft Visual Studio 8\\VC" ;
+            MSSdk ?= $(VC80_ROOT:J=" ")/PlatformSDK ;
+            properties += <$(toolset)><*><library-file>$(MSSdk)/lib/odbc32.lib ;
+        }
+        else if [ MATCH .*(mingw).* : $(toolset) ]
+        {
+            properties += <$(toolset)><*><library-file>$(MINGW_ROOT_DIRECTORY)/lib/libodbc32.a ;
+            properties += <$(toolset)><*><library-file>$(MINGW_ROOT_DIRECTORY)/lib/libodbccp32.a ;
+        }
+        else
+        {
+            properties += <build>no ;
+        }
+    }
+    # To be added
+    else if $(OS) = LINUX
+    {
+        properties += <build>no ;
+    }
+    else
+    {
+        properties += <build>no ;
+    }
+    return $(properties) ;
+}
+
+template odbc
+	: # source
+	: # build requirements
+#          <vc-8_0><*><library-file>"C:\\Program Files\\Microsoft Visual Studio 8\\VC\\PlatformSDK\\lib\\odbc32.lib"
+#          <borland><*><library-file>"C:\\Program Files\\Borland\\CBuilder6\\Lib\\Psdk\\odbc32.lib"
+#          <borland-5_6_4><*><library-file>"C:\\Program Files\\Borland\\CBuilder6\\Lib\\Psdk\\odbc32.lib"
+#          <borland-5_8_2><*><library-file>"C:\\Program Files\\Borland\\BDS\\4.0\\Lib\\Psdk\\odbc32.lib"
+#          <mingw><*><library-file>"D:\\opt\\Dev-Cpp\\lib\\libodbc32.a"
+#          <mingw><*><library-file>"D:\\opt\\Dev-Cpp\\lib\\libodbccp32.a"
+      sql-cli-odbc-lib
+	: # build variants
+	;
+

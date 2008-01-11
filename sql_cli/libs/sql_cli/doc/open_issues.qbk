@@ -1,0 +1,218 @@
+[/
+[article Boost.SqlCli - Open Issues
+    [quickbook 1.4]
+    [version 0.1]
+    [authors [Musatti, Nicola]]
+    [copyright 2007 Nicola Musatti]
+    [purpose Open questions related to the design of the Boost.SqlCli library]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http:\/www.boost.org/LICENSE_1_0.txt])
+    ]
+    [last-revision $Date: 2007/04/23 16:13:13 $]
+]
+]
+
+[def __sqlalchemy__     [@http://http://www.sqlalchemy.org/ SqlAlchemy]]
+
+[section:open_issues Open Issues]
+
+There are several areas within Boost.SqlCli where key design decisions have yet
+to be made. What follows is an attempt to organise these open issues in a
+coherent structure. I realize that some of it is plain stream of consciousness.
+I hope you can find something useful here and I apologize if you do not.
+
+[section:architecture The Architecture]
+
+* _Should fields contain values or just provide means to retrieve them?_
+  This appears to be the approach taken in bpeabody's attempt to implement a
+  similar [@http://boost-sandbox.cvs.sourceforge.net/boost-sandbox/database/
+  library]. On the other hand filling fields with values that aren't going to be
+  used is a waste of resources.
+
+[endsect]
+
+[section:interface The Programming Interface]
+
+[section:connection_parms Connection Parameters]
+
+* _How should parameters to =connection::connect()= be defined?_
+  The current solution of using db, name & password is naive, not necessarily
+  meaningful on all platforms and doesn't allow the specification of
+  additional, platform specific connection parameters. In order to provide
+  support for more parameters there are several possible approaches. One is the
+  use of native connection strings, as used by the different platforms; this is
+  the simplest alternative in terms of implementation, but it isn't very
+  friendly towards developers of cross-dbms solutions.
+  Another alternative is the use of an ad hoc syntax; one interesting candidate
+  is the URL based one used by __sqlalchemy__, a Python DB access /
+  Object-Relational mapping framework.
+  A completely different approach would be to provide parameters as name/value
+  pairs; here however the choice of representation is problematic: is it
+  reasonable to impose the use of a specific container type? I guess not,
+  however using a range of iterators over pairs of strings would imply the use
+  of a template member function, which I'd very much like to avoid; a solution
+  could be the use of some form of polymorphic iterator, but that would mean
+  getting it approved for Boost and eventually the committee.
+
+[endsect]
+
+[section:query_parms Query Parameters]
+
+* _Implement named parameters?_
+  What about technologies that do not support them?  I don't like the idea of
+  preprocessing statements' text before passing it to the backend, yet
+  libraries such as SOCI, Borland's VCL and SqlApi++ do provide this
+  functionality.
+
+* Provide value assignment for input parameters?
+
+* Provide binding for output parameters?
+
+[endsect]
+
+[section:result_sets Handling Query Results]
+
+* _How should full rows be represented dynamically?_
+  From a dynamic point of view a row is a sequence of boost/TR1 =any=, but how
+  should that sequence be represented in practice? I'd rather avoid member
+  function templates if possible, but the alternative seems to be to force a
+  specific collection on users.
+
+* _Consider storing result sets for multipass iteration._ Note however that many
+  databases expect buffers in which to store possibly converted values. This may
+  lead to excessive copying. All in all it may be preferable to defer multipass
+  iteration to some library above SqlCli.
+
+[endsect]
+
+[section:diagnostics Diagnostics]
+
+* _How should informative diagnostics for non fatal problems be provided, e.g.
+  field truncation?_
+  One idea is to combine actual values and diagnostic information in a custom
+  return type, which provides access to both by means of conversion operators.
+  This ensures that diagnostic information is "pushed" onto the user, but it is
+  rather cumbersome, especially when the wrapping function is an overloaded
+  operator. However callback oriented mechanisms are even more cumbersome.
+  Providing specific flags in the relevant classes "a la iostreams" appears to
+  be the least of all evils. On the other hand this too has its shortcomings,
+  most notably the fact that the place where to look for errors is not always
+  obvious, nor are the operations that might invalidate an error condition.
+
+[endsect]
+
+[section:sql Representation of SQL Entities]
+
+One area of Boost.SqlCli that is still at a very primitive stage is the
+representation of concepts pertaining to those elements of the SQL language that
+users may need to handle explicitly.
+
+* [_Should SQL data types be made explicit, e.g. by providing an enum, or is it
+  better to keep using only C++ types, e.g. by means of =std::type_info?= (see
+  =boost::sql_cli::column=).]
+  This may become necessary to allow multiple C++ types to map to the same SQL
+  type and to handle portability issues (e.g. sizes of C++ types vs. sizes of
+  SQL types). Moreover the implementation dependence of =std::type_info= makes
+  it a poor choice for an external representation. On the other hand it is not
+  yet clear to me how significant the SQL CLI standard types are for different
+  CLI libraries (eg. Oracle's OCI, PostgreSQL's libpq, etc.).
+  An alternative is to mimick how column types are specified in SQL DDL,
+  possibly by providing an enum for types and integral values for size and
+  precision.
+  * Could Boost.Serialization's strong typedef be useful in this respect?
+
+* Should a way to check that a specific type is supported by the underlying
+  technology be provided?
+
+* More generally, should a way be devised to query the available, possibly
+  technology specific, functionality?
+
+[endsect]
+
+[endsect]
+
+[section:structure Library Structure and Design]
+
+This section describes the portions of the library's internals that still need
+to be clearly outlined.
+
+* _Are there better ways to implement pseudo virtual member function
+  templates?_
+  Should plain virtual member functions be used instead? (see 
+  =boost::sql_cli::statement= and =boost::sql_cli::row=).
+  I consider this rather critical, because the template based interface is
+  very convenient and because it would be nice if each backend could support
+  their own specific data types, without forsaking type safety.
+  For the time being dispatching has been factored into the database class.
+
+* [_Does it make sense to use the handle-body idiom for classes that can only be
+  instantiated by factories, e.g. =boost::sql_cli::column=?]
+  Probably yes, as they can be implemented by means of the flyweight pattern and
+  thus be passed by value.
+
+* _Should a plugin oriented architecture be introduced to facilitate the
+  introduction of support for additional technologies?_
+  This really depends on whether the aim is to provide a complete solution to
+  database access for the most popular DBMS's or to define an interface so that
+  DBMS suppliers may implement it.
+  I'm inclined to think that adding support for additional backends should be
+  made as easy as possible, but proper plugins are not really needed.
+
+* _Should fixed size field buffers be supported?_ If so, consider using TR1's
+  arrays. These may come handy for long character fields and blobs, and to
+  prevent unrestrained buffer growth.
+
+* It has been suggested that some sort of "null" backend be provided, where
+  result sets may be filled by hand, for testing purposes. I'm not convinced
+  it is worth the effort, though.
+
+[endsect]
+
+[section:odbc ODBC Specific Issues]
+
+* =odbc::handle= : Cycle on all the available diagnostic records?
+
+* =odbc::connection= : Allocating/deallocating handles in the
+  constructor/destructor favours a RAII approach, but limits the available
+  diagnostics. Is it reasonable? (the same goes for =odbc::environment= and
+  =odbc::statement=)
+
+* =odbc::field= : Are we sure that the column size is always known?
+
+* =odbc::field= : Is it always acceptable to read the whole column in a single
+  step?
+
+* =odbc::field= : Should =SQL_NO_TOTAL= be handled?
+
+[warning =odbc::warning= is currently commented out and doesn't appear likely
+ to resurrect]
+
+* =odbc::warning= : Should it be possible to combine warnings? e.g.
+  * Construct a list
+  * Keep only the last one
+
+[endsect]
+
+[section:environment Environment]
+
+* How do you check for the presence of the test database(s) from within
+  Boost.Test?
+  * Ideally it should be possible to perform the tests on a set of available
+    databases.
+  * Some form of test configuration should be provided.
+
+[endsect]
+
+[section:desiderata Desiderata]
+
+These aren't even open issues, but rather features that would be nice to have.
+
+* Support for multithreading at connection level.
+
+* Connection pooling.
+
+[endsect]
+
+[endsect]

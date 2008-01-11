@@ -1,0 +1,353 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Open Issues</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.SqlCli 0.2">
+<link rel="up" href="../index.html" title="Boost.SqlCli 0.2">
+<link rel="prev" href="todo.html" title=" Things to Do">
+<link rel="next" href="reference.html" title=" Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="todo.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sqlcli.open_issues"></a><a href="open_issues.html" title=" Open Issues"> Open Issues</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.architecture"> The Architecture</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.interface"> The Programming
+      Interface</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.structure"> Library Structure
+      and Design</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.odbc"> ODBC Specific Issues</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.environment"> Environment</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.desiderata"> Desiderata</a></span></dt>
+</dl></div>
+<p>
+      There are several areas within Boost.SqlCli where key design decisions have
+      yet to be made. What follows is an attempt to organise these open issues in
+      a coherent structure. I realize that some of it is plain stream of consciousness.
+      I hope you can find something useful here and I apologize if you do not.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.open_issues.architecture"></a><a href="open_issues.html#boost_sqlcli.open_issues.architecture" title=" The Architecture"> The Architecture</a>
+</h3></div></div></div>
+<div class="itemizedlist"><ul type="disc"><li>
+<span class="underline">Should fields contain values or just provide
+          means to retrieve them?</span> This appears to be the approach taken
+          in bpeabody's attempt to implement a similar <a href="http://boost-sandbox.cvs.sourceforge.net/boost-sandbox/database/" target="_top">library</a>.
+          On the other hand filling fields with values that aren't going to be used
+          is a waste of resources.
+        </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.open_issues.interface"></a><a href="open_issues.html#boost_sqlcli.open_issues.interface" title=" The Programming
+      Interface"> The Programming
+      Interface</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.interface.connection_parms">
+        Connection Parameters</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.interface.query_parms"> Query
+        Parameters</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.interface.result_sets"> Handling
+        Query Results</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.interface.diagnostics"> Diagnostics</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#boost_sqlcli.open_issues.interface.sql"> Representation
+        of SQL Entities</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.open_issues.interface.connection_parms"></a><a href="open_issues.html#boost_sqlcli.open_issues.interface.connection_parms" title="
+        Connection Parameters">
+        Connection Parameters</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul type="disc"><li>
+<span class="underline">How should parameters to =connection::connect()=
+            be defined?</span> The current solution of using db, name &amp; password
+            is naive, not necessarily meaningful on all platforms and doesn't allow
+            the specification of additional, platform specific connection parameters.
+            In order to provide support for more parameters there are several possible
+            approaches. One is the use of native connection strings, as used by the
+            different platforms; this is the simplest alternative in terms of implementation,
+            but it isn't very friendly towards developers of cross-dbms solutions.
+            Another alternative is the use of an ad hoc syntax; one interesting candidate
+            is the URL based one used by <a href="http://http://www.sqlalchemy.org/" target="_top">SqlAlchemy</a>,
+            a Python DB access / Object-Relational mapping framework. A completely
+            different approach would be to provide parameters as name/value pairs;
+            here however the choice of representation is problematic: is it reasonable
+            to impose the use of a specific container type? I guess not, however
+            using a range of iterators over pairs of strings would imply the use
+            of a template member function, which I'd very much like to avoid; a solution
+            could be the use of some form of polymorphic iterator, but that would
+            mean getting it approved for Boost and eventually the committee.
+          </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.open_issues.interface.query_parms"></a><a href="open_issues.html#boost_sqlcli.open_issues.interface.query_parms" title=" Query
+        Parameters"> Query
+        Parameters</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="underline">Implement named parameters?</span> What
+            about technologies that do not support them? I don't like the idea of
+            preprocessing statements' text before passing it to the backend, yet
+            libraries such as SOCI, Borland's VCL and SqlApi++ do provide this functionality.
+          </li>
+<li>
+            Provide value assignment for input parameters?
+          </li>
+<li>
+            Provide binding for output parameters?
+          </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.open_issues.interface.result_sets"></a><a href="open_issues.html#boost_sqlcli.open_issues.interface.result_sets" title=" Handling
+        Query Results"> Handling
+        Query Results</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="underline">How should full rows be represented dynamically?</span>
+            From a dynamic point of view a row is a sequence of boost/TR1 <code class="literal">any</code>,
+            but how should that sequence be represented in practice? I'd rather avoid
+            member function templates if possible, but the alternative seems to be
+            to force a specific collection on users.
+          </li>
+<li>
+<span class="underline">Consider storing result sets for multipass
+            iteration.</span> Note however that many databases expect buffers
+            in which to store possibly converted values. This may lead to excessive
+            copying. All in all it may be preferable to defer multipass iteration
+            to some library above SqlCli.
+          </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.open_issues.interface.diagnostics"></a><a href="open_issues.html#boost_sqlcli.open_issues.interface.diagnostics" title=" Diagnostics"> Diagnostics</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul type="disc"><li>
+<span class="underline">How should informative diagnostics for non
+            fatal problems be provided, e.g. field truncation?</span> One idea
+            is to combine actual values and diagnostic information in a custom return
+            type, which provides access to both by means of conversion operators.
+            This ensures that diagnostic information is "pushed" onto the
+            user, but it is rather cumbersome, especially when the wrapping function
+            is an overloaded operator. However callback oriented mechanisms are even
+            more cumbersome. Providing specific flags in the relevant classes "a
+            la iostreams" appears to be the least of all evils. On the other
+            hand this too has its shortcomings, most notably the fact that the place
+            where to look for errors is not always obvious, nor are the operations
+            that might invalidate an error condition.
+          </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.open_issues.interface.sql"></a><a href="open_issues.html#boost_sqlcli.open_issues.interface.sql" title=" Representation
+        of SQL Entities"> Representation
+        of SQL Entities</a>
+</h4></div></div></div>
+<p>
+          One area of Boost.SqlCli that is still at a very primitive stage is the
+          representation of concepts pertaining to those elements of the SQL language
+          that users may need to handle explicitly.
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="underline">Should SQL data types be made explicit, e.g.
+            by providing an enum, or is it better to keep using only C++ types, e.g.
+            by means of <code class="literal">std::type_info?</code> (see <code class="literal">boost::sql_cli::column</code>).</span>
+            This may become necessary to allow multiple C++ types to map to the same
+            SQL type and to handle portability issues (e.g. sizes of C++ types vs.
+            sizes of SQL types). Moreover the implementation dependence of <code class="literal">std::type_info</code>
+            makes it a poor choice for an external representation. On the other hand
+            it is not yet clear to me how significant the SQL CLI standard types
+            are for different CLI libraries (eg. Oracle's OCI, PostgreSQL's libpq,
+            etc.). An alternative is to mimick how column types are specified in
+            SQL DDL, possibly by providing an enum for types and integral values
+            for size and precision.
+            <div class="itemizedlist"><ul type="circle"><li>
+                Could Boost.Serialization's strong typedef be useful in this respect?
+              </li></ul></div>
+</li>
+<li>
+            Should a way to check that a specific type is supported by the underlying
+            technology be provided?
+          </li>
+<li>
+            More generally, should a way be devised to query the available, possibly
+            technology specific, functionality?
+          </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.open_issues.structure"></a><a href="open_issues.html#boost_sqlcli.open_issues.structure" title=" Library Structure
+      and Design"> Library Structure
+      and Design</a>
+</h3></div></div></div>
+<p>
+        This section describes the portions of the library's internals that still
+        need to be clearly outlined.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="underline">Are there better ways to implement pseudo virtual
+          member function templates?</span> Should plain virtual member functions
+          be used instead? (see <code class="literal">boost::sql_cli::statement</code> and
+          <code class="literal">boost::sql_cli::row</code>). I consider this rather critical,
+          because the template based interface is very convenient and because it
+          would be nice if each backend could support their own specific data types,
+          without forsaking type safety. For the time being dispatching has been
+          factored into the database class.
+        </li>
+<li>
+<span class="underline">Does it make sense to use the handle-body idiom
+          for classes that can only be instantiated by factories, e.g. <code class="literal">boost::sql_cli::column</code>?</span>
+          Probably yes, as they can be implemented by means of the flyweight pattern
+          and thus be passed by value.
+        </li>
+<li>
+<span class="underline">Should a plugin oriented architecture be introduced
+          to facilitate the introduction of support for additional technologies?</span>
+          This really depends on whether the aim is to provide a complete solution
+          to database access for the most popular DBMS's or to define an interface
+          so that DBMS suppliers may implement it. I'm inclined to think that adding
+          support for additional backends should be made as easy as possible, but
+          proper plugins are not really needed.
+        </li>
+<li>
+<span class="underline">Should fixed size field buffers be supported?</span>
+          If so, consider using TR1's arrays. These may come handy for long character
+          fields and blobs, and to prevent unrestrained buffer growth.
+        </li>
+<li>
+          It has been suggested that some sort of "null" backend be provided,
+          where result sets may be filled by hand, for testing purposes. I'm not
+          convinced it is worth the effort, though.
+        </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.open_issues.odbc"></a><a href="open_issues.html#boost_sqlcli.open_issues.odbc" title=" ODBC Specific Issues"> ODBC Specific Issues</a>
+</h3></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="literal">odbc::handle</code> : Cycle on all the available diagnostic
+          records?
+        </li>
+<li>
+<code class="literal">odbc::connection</code> : Allocating/deallocating handles in
+          the constructor/destructor favours a RAII approach, but limits the available
+          diagnostics. Is it reasonable? (the same goes for <code class="literal">odbc::environment</code>
+          and <code class="literal">odbc::statement</code>)
+        </li>
+<li>
+<code class="literal">odbc::field</code> : Are we sure that the column size is always
+          known?
+        </li>
+<li>
+<code class="literal">odbc::field</code> : Is it always acceptable to read the whole
+          column in a single step?
+        </li>
+<li>
+<code class="literal">odbc::field</code> : Should <code class="literal">SQL_NO_TOTAL</code>
+          be handled?
+        </li>
+</ul></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+          </p>
+<p>
+            <code class="literal">odbc::warning</code> is currently commented out and doesn't
+            appear likely to resurrect
+          </p>
+<p>
+        </p>
+</td></tr>
+</table></div>
+<div class="itemizedlist"><ul type="disc"><li>
+<code class="literal">odbc::warning</code> : Should it be possible to combine warnings?
+          e.g.
+          <div class="itemizedlist"><ul type="circle">
+<li>
+              Construct a list
+            </li>
+<li>
+              Keep only the last one
+            </li>
+</ul></div>
+</li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.open_issues.environment"></a><a href="open_issues.html#boost_sqlcli.open_issues.environment" title=" Environment"> Environment</a>
+</h3></div></div></div>
+<div class="itemizedlist"><ul type="disc"><li>
+          How do you check for the presence of the test database(s) from within Boost.Test?
+          <div class="itemizedlist"><ul type="circle">
+<li>
+              Ideally it should be possible to perform the tests on a set of available
+              databases.
+            </li>
+<li>
+              Some form of test configuration should be provided.
+            </li>
+</ul></div>
+</li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.open_issues.desiderata"></a><a href="open_issues.html#boost_sqlcli.open_issues.desiderata" title=" Desiderata"> Desiderata</a>
+</h3></div></div></div>
+<p>
+        These aren't even open issues, but rather features that would be nice to
+        have.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Support for multithreading at connection level.
+        </li>
+<li>
+          Connection pooling.
+        </li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006, 2007 Nicola Musatti</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="todo.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

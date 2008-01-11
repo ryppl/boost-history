@@ -1,0 +1,176 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Things to Do</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.SqlCli 0.2">
+<link rel="up" href="../index.html" title="Boost.SqlCli 0.2">
+<link rel="prev" href="architecture.html" title=" Architecture">
+<link rel="next" href="open_issues.html" title=" Open Issues">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="architecture.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sqlcli.todo"></a><a href="todo.html" title=" Things to Do"> Things to Do</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="todo.html#boost_sqlcli.todo.devel"> Design and Implementation</a></span></dt>
+<dt><span class="section"><a href="todo.html#boost_sqlcli.todo.environment"> Environment</a></span></dt>
+<dt><span class="section"><a href="todo.html#boost_sqlcli.todo.doc"> Documentation</a></span></dt>
+</dl></div>
+<p>
+      This chapter lists things to do, in contrast with the next one which describes
+      decisions to take. Ideally all the following items should be included in the
+      next release, but it's quite possible that some of them may lead to further
+      unresolved issues, especially since some tasks involve design rather than coding.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.todo.devel"></a><a href="todo.html#boost_sqlcli.todo.devel" title=" Design and Implementation"> Design and Implementation</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="todo.html#boost_sqlcli.todo.devel.odbc_backend"> ODBC Backend</a></span></dt></dl></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Revise the architecture of backends so as to make it simpler and more obvious
+          for others to understand what should be done to implement additional backends.
+          <div class="itemizedlist"><ul type="circle"><li>
+              Document the backend API and conventions.
+            </li></ul></div>
+</li>
+<li>
+          Add support for date and time fields, using Boost.DateTime as C++ counterpart.
+        </li>
+<li>
+          Identify which additional types for parameters and fields should be supported.
+        </li>
+<li>
+          Support dynamic typing by providing boost/TR1 <code class="literal">any</code> input
+          parameters and field values.
+        </li>
+<li>
+          Support composite data types / full row handling, both for user convenience
+          and to leverage batch query processing that might be supported by the underlying
+          technology.
+          <div class="itemizedlist"><ul type="circle">
+<li>
+              Use TR1 <code class="literal">tuple</code> for static typing.
+            </li>
+<li>
+              Is an underlying collection necessary for dynamic typing or are iterators
+              sufficient? In the first case, should <code class="literal">std::vector</code>
+              be used?
+            </li>
+</ul></div>
+</li>
+<li>
+          Support iterative statement composition, e.g. by providing an <code class="literal">add_parameter()</code>
+          and a parameterless <code class="literal">prepare()</code> member function to the
+          <code class="literal">statement</code> class.
+        </li>
+<li>
+          Revise the representation of connection parameters.
+          <div class="itemizedlist"><ul type="circle"><li>
+              Consider using a collection of name/value pairs, to be passed unchanged
+              to the underlying DBMS.
+            </li></ul></div>
+</li>
+<li>
+          Add support for stored procedures.
+        </li>
+</ul></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.todo.devel.odbc_backend"></a><a href="todo.html#boost_sqlcli.todo.devel.odbc_backend" title=" ODBC Backend"> ODBC Backend</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Revise the use of <code class="literal">traits</code> and <code class="literal">value_buffer</code>
+            for <code class="literal">odbc::field</code>.
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Unify the two?
+              </li>
+<li>
+                Generalize everything that might be useful to implement other backends.
+              </li>
+</ul></div>
+</li>
+<li>
+            Handle iterated value retrieval from ODBC primitives (see <code class="literal">boost::sql_cli::odbc::row</code>).
+          </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.todo.environment"></a><a href="todo.html#boost_sqlcli.todo.environment" title=" Environment"> Environment</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="todo.html#boost_sqlcli.todo.environment.tests"> Tests</a></span></dt></dl></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Replace Dev-C++ with Code::Blocks as g++ IDE. Dev-C++ development appears
+          to have stopped and the IDE hasn't aged well. Code::Blocks appears to be
+          definitely more promising.
+        </li>
+<li>
+          Port to 32 bit Linux.
+        </li>
+<li>
+          Port to 64 bit systems.
+        </li>
+</ul></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sqlcli.todo.environment.tests"></a><a href="todo.html#boost_sqlcli.todo.environment.tests" title=" Tests"> Tests</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul type="disc"><li>
+            A mechanism for the repetition of tests over different DBMS.
+            <div class="itemizedlist"><ul type="circle"><li>
+                A local configuration file for the available DBMS's.
+              </li></ul></div>
+</li></ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sqlcli.todo.doc"></a><a href="todo.html#boost_sqlcli.todo.doc" title=" Documentation"> Documentation</a>
+</h3></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          User's guide
+        </li>
+<li>
+          Reference manual
+        </li>
+<li>
+          Rationale
+          <div class="itemizedlist"><ul type="circle"><li>
+              With a comparison with other libraries, especially SOCI.
+            </li></ul></div>
+</li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006, 2007 Nicola Musatti</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="architecture.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

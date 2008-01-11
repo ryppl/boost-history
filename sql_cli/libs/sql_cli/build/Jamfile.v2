@@ -1,0 +1,47 @@
+# Boost.SqlCli
+#
+# Copyright (c) 2006 - 2007 Nicola Musatti. Distributed under the Boost 
+# Software License, Version 1.0. (See accompanying file 
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+project boost/sql_cli 
+    : source-location ../src
+    ;
+
+import common ;
+
+rule borland-path ( properties * )
+{
+    local res ;
+    if ( <toolset>borland in $(properties) )
+    {
+        local path = [ common.get-absolute-tool-path [
+                common.get-invocation-command borland : bcc32 ] ] ;
+        path-constant borland_root : $(path:D) ;
+        res = <search>$(borland_root)/lib/psdk ;
+    }
+    return $(res) ;
+}
+
+SOURCES =
+    backend
+    odbc_column
+    odbc_connection
+    odbc_environment
+    odbc_result_set
+    odbc_state
+    odbc_statement
+    ;
+
+lib odbc
+    :
+    : <name>odbc32
+#      <toolset>borland:<search>"C:/Program Files/Borland/CBuilder6/Lib/Psdk"
+      <conditional>@borland-path
+    ;
+
+lib boost_sql_cli
+    : $(SOURCES).cpp /boost/signals//boost_signals odbc
+    : <link>shared:<define>BOOST_SQL_CLI_DYN_LINK=1
+    ;
+

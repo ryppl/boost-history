@@ -1,0 +1,58 @@
+[/
+[article Boost.SqlCli - Design & Rationale
+    [quickbook 1.4]
+    [version 0.2]
+    [authors [Musatti, Nicola]]
+    [copyright 2007 Nicola Musatti]
+    [purpose The design of the Boost.SqlCli library]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [last-revision $Date: 2007/04/23 16:13:13 $]
+]
+]
+
+[section:architecture Architecture]
+
+The main elements of a DBMS access library have been identified in a rather
+uniform way across several libraries and Boost.SqlCli is no exception. Thus we
+have a =connection= class that represents an interface towards a database; a
+=statement= class, which allows users to perform queries against the database
+and a =result_set= that allows navigation of retrieved data and their structure.
+The =column= class describes a field in the retrieved data and the =row= class
+represents a retrieved record, whose fields' values are represented by means of
+the =field= class.
+
+The handle/body idiom is used pervasively across the library to make it possible
+to represent most of its elements by means of classes with value semantics,
+which use inheritance to provide a uniform representation over the available
+backends. Each backend provides support for a specific DBMS product or
+technology, such as ODBC, PostgreSQL, etc.
+
+[section:connection The =connection= class]
+
+The =connection= class represents a communication channel towards a DBMS of a
+specific technology. The choice of technology is performed at instantiation
+time, by means of a conventional construction parameter.
+
+In order to perform the actual connection a combination of database, user and
+password parameters have to be supplied. This choice will have to be modified in
+order to provide means to specify other connection parameters, but a specific
+mechanism for this has yet to be identified.
+
+The =connection= class is also meant to represent the granularity at which safe
+multithreaded access to databases may be performed. Ideally the library should
+guarantee that in-thread access to a connection should not require explicit
+synchronization and that all queries issued against a specific connection are
+performed sequentially. Currently, however, no explict support for multithreaded
+applications is available.
+
+Another feature that will be added in a later release is explicit connection
+pooling.
+
+[endsect]
+
+[endsect]
+

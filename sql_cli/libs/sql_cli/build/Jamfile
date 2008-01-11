@@ -1,0 +1,55 @@
+
+subproject libs/sql_cli/build ;
+
+import ./odbc ;
+
+SOURCES = backend_traits database dispatch odbc_column odbc_connection
+	odbc_environment odbc_result_set odbc_statement ;
+
+template sql-cli
+	: # source
+      ../src/$(SOURCES).cpp
+#      <template>odbc
+	: # build requirements
+      sql-cli-odbc-lib
+      [ common-names ] # magic for install and auto-link features
+      <include>$(BOOST_ROOT) <sysinclude>$(BOOST_ROOT)
+    : # build variants
+      debug release
+    ;
+
+lib boost_sql_cli
+	: # source
+       <template>sql-cli
+    : # build requirements
+    : # build variants
+    ;
+
+dll boost_sql_cli
+	: # source
+       <template>sql-cli
+       <dll>@boost/libs/signals/build/boost_signals
+    : # build requirements
+       <define>BOOST_ALL_DYN_LINK=1  # tell source we're building dll's
+       <runtime-link>dynamic  # build only for dynamic runtimes
+    : # build variants
+    ;
+
+install sql_cli lib
+     : <lib>boost_sql_cli <dll>boost_sql_cli
+     ;
+
+stage stage/lib : <lib>boost_sql_cli <dll>boost_sql_cli
+    :
+        # copy to a path rooted at BOOST_ROOT:
+        <locate>$(BOOST_ROOT)
+        # make sure the names of the libraries are correctly named:
+        [ common-names ]
+        # add this target to the "stage" and "all" psuedo-targets:
+        <target>stage
+        <target>all
+    :
+        debug release
+    ;
+
+# end

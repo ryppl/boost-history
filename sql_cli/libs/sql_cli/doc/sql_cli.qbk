@@ -1,0 +1,86 @@
+[article Boost.SqlCli
+    [quickbook 1.4]
+    [version 0.2]
+    [authors [Musatti, Nicola]]
+    [copyright 2006 2007 Nicola Musatti]
+    [purpose An informal presentation of the Boost.SqlCli library]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [last-revision $Date: 2007/04/23 16:13:13 $]
+]
+
+
+[def __soci__     [@http://soci.sourceforge.net SOCI]]
+[def __cli__      [@http://en.wikipedia.org/wiki/Call_Level_Interface Call Level
+                   Interface]]
+
+[section:intro Introduction]
+
+In the spring of 2006 a lively discussion took place on the Boost Developers'
+mailing list about submitting the __soci__ library to Boost as a first step
+towards presenting a proposal to the Standard Committee for an interface to
+relational databases. SOCI is an actively developed open source project that is
+attracting a growing user base, but its current API is significantly different
+from Boost's (and the Committee's) conventions. Boost.SqlCli is an exploration
+of what a more "compliant" API might look like.
+
+Boost.SqlCli aims at providing a C++ __cli__ to SQL systems that feels natural
+to C++ programmers. This is achieved by pursuing several design goals:
+
+* _Abstraction from the underlying technology_:
+  Boost.SqlCli should hide all details of the underling DBMS technology, with
+  the possible exception of
+  * the parameters required to connect to a database
+  * access to product specific extensions to the standard SQL syntax
+
+* _Minimality_:
+  While coverage of SQL features should be as wide as possible, Boost.SqlCli
+  should only provide the minimal functionality required to provide native and
+  standard types' values for query parameters and to retrieve the same types
+  of values from query results. In addition dynamic type handling will be
+  provided by means of boost/TR1 any. Bare bones support for handling composite
+  data will be provided by means of boost/TR1 tuples for the static, type-safe
+  approach and by means of ranges of boost/TR1 any for the dynamic approach.
+
+* _Use of modern, idiomatic C++_
+
+Development is still at a very early stage. The fundamental elements of the
+library's interface are present, but only a subset of the planned scalar data
+types are supported as parameter and field values. Dynamic typing and composite
+data are not available yet. Currently only a very incomplete ODBC backend is
+available. The library has been built with Microsoft Visual C++ 2005, Borland
+C++ Builder 6 & 2006, as well as MinGW G++ 3.4.2, all under Windows.
+
+The documentation contains a currently very incomplete Architecture section,
+which describes the structure of the library and explains why it was done this
+way; a To Do chapter, which lists those work items that have been identified in
+a reasonably clear way; and an Open Issues section, which presents topics over
+which a definite decision hasn't been made or which would be nice to have but
+haven't been planned yet. A Doxygen generated reference is also available.
+
+[section:example A Concrete Example]
+
+This is the =demo.cpp= demo program from the =libs/sql_cli/examples= directory.
+Hopefully it is self explanatory...
+
+[import ../example/demo.cpp]
+
+[demo]
+
+[endsect]
+[endsect]
+
+[include architecture.qbk]
+[include todo.qbk]
+[include open_issues.qbk]
+
+[section:reference Reference]
+
+The Doxygen reference hasn't been integrated in this document yet. You can find
+it [@file:../reference/index.html here].
+
+[endsect]
+
