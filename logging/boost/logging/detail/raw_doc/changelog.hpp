@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.13.7, 8 jan 2008
+@section changelog_cur_ver Current Version: v0.13.9, 11 jan 2008
+- solved bug - when used LOG_ in switch - thanks to Todd Neal!
+- added test for formatter::file
 - included <map> in destination::named - many thanks Jens Seidel!
 - added Jamfiles for building examples/tests - not fully tested yet, since had problems buidling latest boost from SVN
 - added docs about caching messages

@@ -48,7 +48,7 @@ namespace boost { namespace logging {
 // Messages that were logged before initializing the log - cache the message & the filter
 
 #define BOOST_LOG_USE_LOG_LOCAL_CLASS(l, do_func, is_log_enabled, local_class, param_name) \
-    struct local_class {                                                            \
+    if (false) ; else struct local_class {                                                            \
         static bool is_enabled_callback() { return (is_log_enabled); }              \
         local_class (const void * p) {                                              \
             if ( p)                                                                 \
@@ -62,8 +62,9 @@ namespace boost { namespace logging {
 
 
 #define BOOST_LOG_USE_LOG(l, do_func, is_log_enabled) \
-    BOOST_LOG_USE_LOG_LOCAL_CLASS( l, do_func, is_log_enabled, \
-        BOOST_LOG_CONCATENATE(local_class_,__LINE__), BOOST_LOG_CONCATENATE(param_,__LINE__) )
+    BOOST_LOG_USE_LOG_LOCAL_CLASS( l, do_func, is_log_enabled, local_class_, param_ )
+//    BOOST_LOG_USE_LOG_LOCAL_CLASS( l, do_func, is_log_enabled, \
+  //      BOOST_LOG_CONCATENATE(local_class_,__LINE__), BOOST_LOG_CONCATENATE(param_,__LINE__) )
 
 
 #elif defined( BOOST_LOG_BEFORE_INIT_USE_LOG_ALL)
