@@ -92,6 +92,10 @@ void using_tags_example() {
     // Step 8: use it...
     int i = 1;
 
+    switch ( i) {
+        case 0:L_ << "this is so cool " << i++; break;
+        case 1:L_ << "this is so cool " << i++; break;
+    }
     L_ << "this is so cool " << i++;
   //  L_ << "this is so cool again " << i++;
     // Step 9 : Enjoy!
