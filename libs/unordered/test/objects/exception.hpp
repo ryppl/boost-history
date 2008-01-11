@@ -184,15 +184,17 @@ namespace test {
             strong.store(x);
             try {
                 ENABLE_EXCEPTIONS;
-                call_ignore_extra_parameters(&Test::run, test_, x, strong);
+                call_ignore_extra_parameters<Test, BOOST_DEDUCED_TYPENAME Test::data_type, BOOST_DEDUCED_TYPENAME Test::strong_type>(&Test::run, test_, x, strong);
             }
             catch(...) {
-                call_ignore_extra_parameters(&Test::check, test_,
+                call_ignore_extra_parameters<Test, BOOST_DEDUCED_TYPENAME Test::data_type const, BOOST_DEDUCED_TYPENAME Test::strong_type const>(&Test::check, test_,
                         constant(x), constant(strong));
                 throw;
             }
         }
     };
+    
+    
 
 #if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
     template <class Test>
@@ -625,6 +627,16 @@ namespace exception
     }
 }
 }
+
+// Workaround for ADL deficient compilers
+#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+namespace test
+{
+    test::exception::object generate(test::exception::object const* x) {
+        return test::exception::generate(x);
+    }
+}
+#endif
 
 #endif
 

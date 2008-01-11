@@ -6,6 +6,8 @@
 #if !defined(BOOST_UNORDERED_TEST_MEMORY_HEADER)
 #define BOOST_UNORDERED_TEST_MEMORY_HEADER
 
+#include <boost/mpl/apply.hpp>
+
 #if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
 #define UNORDERED_CHECK(x) BOOST_CHECK(x)
 #define UNORDERED_REQUIRE(x) BOOST_REQUIRE(x)
@@ -64,8 +66,7 @@ namespace test
         template <class AllocatorHolder = default_allocator_holder>
         struct memory_tracker {
             typedef std::map<memory_area, memory_track, memory_area_compare,
-                BOOST_DEDUCED_TYPENAME AllocatorHolder::
-                template apply<std::pair<memory_area const, memory_track> >::type
+                BOOST_DEDUCED_TYPENAME boost::mpl::apply1<AllocatorHolder, std::pair<memory_area const, memory_track> >::type
             > allocated_memory_type;
 
             allocated_memory_type allocated_memory;
@@ -117,8 +118,10 @@ namespace test
                 }
                 else {
                     ++count_allocations;
-                    allocated_memory[memory_area(ptr, (char*) ptr + n * size)] =
-                        memory_track(tag);
+                    allocated_memory.insert(
+                        std::pair<memory_area const, memory_track>(
+                            memory_area(ptr, (char*) ptr + n * size),
+                            memory_track(tag)));
                 }
             }
 
