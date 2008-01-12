@@ -202,7 +202,8 @@ namespace test {
         ::boost::itest::exception_safety(runner, name);
     }
 #else
-    // Quick and dirty exception testing based on lightweight test
+
+    // Quick exception testing based on lightweight test
 
     namespace lightweight {
         static int iteration;
