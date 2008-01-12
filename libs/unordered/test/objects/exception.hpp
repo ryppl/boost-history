@@ -6,7 +6,7 @@
 #if !defined(BOOST_UNORDERED_TEST_OBJECTS_HEADER)
 #define BOOST_UNORDERED_TEST_OBJECTS_HEADER
 
-#if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
+#if defined(BOOST_UNORDERED_USE_TEST)
 #define BOOST_TEST_MAIN
 #include <boost/test/exception_safety.hpp>
 #include <boost/test/test_tools.hpp>
@@ -40,7 +40,7 @@
     )
 
 
-#if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
+#if defined(BOOST_UNORDERED_USE_TEST)
 #define UNORDERED_EXCEPTION_TEST_PREFIX
 #define UNORDERED_EXCEPTION_TEST_CASE(name, test_func, type) \
     BOOST_AUTO_TEST_CASE(name) \
@@ -65,7 +65,7 @@
         !unordered_test_guard.dismissed(); \
         unordered_test_guard.dismiss())
 
-#if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
+#if defined(BOOST_UNORDERED_USE_TEST)
 #define EPOINT(name) \
     if(::test::exceptions_enabled) { \
         BOOST_ITEST_EPOINT(name); \
@@ -195,7 +195,7 @@ namespace test {
     
     
 
-#if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
+#if defined(BOOST_UNORDERED_USE_TEST)
     template <class Test>
     void exception_safety(Test const& f, char const* name) {
         test_runner<Test> runner(f);
