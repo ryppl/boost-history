@@ -16,15 +16,14 @@
 #endif
 
 #include <cstddef>
+#include <iostream>
 #include <boost/limits.hpp>
 #include <boost/preprocessor/seq/for_each_product.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <iostream>
 #include "../helpers/fwd.hpp"
 #include "../helpers/allocator.hpp"
-#include "memory.hpp"
-#include <map>
+#include "./memory.hpp"
 
 #define RUN_EXCEPTION_TESTS(test_seq, param_seq) \
     UNORDERED_EXCEPTION_TEST_PREFIX \

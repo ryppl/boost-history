@@ -6,15 +6,20 @@
 #if !defined(BOOST_UNORDERED_TEST_MEMORY_HEADER)
 #define BOOST_UNORDERED_TEST_MEMORY_HEADER
 
-#include <boost/mpl/apply.hpp>
-
+#include <memory>
 #if defined(BOOST_UNORDERED_EXCEPTION_USE_TEST)
+#include <boost/test/test_tools.hpp>
 #define UNORDERED_CHECK(x) BOOST_CHECK(x)
 #define UNORDERED_REQUIRE(x) BOOST_REQUIRE(x)
 #else
+#include <boost/detail/lightweight_test.hpp>
 #define UNORDERED_CHECK(x) BOOST_TEST(x)
 #define UNORDERED_REQUIRE(x) if(!(x)) { BOOST_ERROR(BOOST_STRINGIZE(x)); throw test::lightweight::test_failure(); }
 #endif
+
+#include <map>
+#include <boost/mpl/apply.hpp>
+#include <boost/assert.hpp>
 
 namespace test
 {
