@@ -319,8 +319,10 @@ namespace boost {
             return false;
         if (!(first < middle && middle <= last))
             throw combinatorial_range_error("next_partial_combination");
+#ifndef SKIPSORTCHECK
         if (!is_sorted(first, middle))
             throw combinatorial_sequence_disorder("next_partial_combination");
+#endif  // SKIPSORTCHECK
         
         RandomAccessIterator i = middle - 1;
         while(true)
@@ -368,8 +370,10 @@ namespace boost {
             return false;
         if (!(first < middle && middle <= last))
             throw combinatorial_range_error("next_partial_combination");
+#ifndef SKIPSORTCHECK
         if (!is_sorted(first, middle, comp))
             throw combinatorial_sequence_disorder("next_partial_combination");
+#endif  // SKIPSORTCHECK
         
         RandomAccessIterator i = middle - 1;
         while(true)
@@ -424,8 +428,10 @@ namespace boost {
             return false;
         if (!(first < middle && middle <= last))
             throw combinatorial_range_error("prev_partial_combination");
+#ifndef SKIPSORTCHECK
         if (!is_sorted(first, middle))
             throw combinatorial_sequence_disorder("prev_partial_combination");
+#endif  // SKIPSORTCHECK
 
         std::sort(middle, last);
         for (RandomAccessIterator i = last - 1; i >= middle; --i)
@@ -455,8 +461,10 @@ namespace boost {
             return false;
         if (!(first < middle && middle <= last))
             throw combinatorial_range_error("prev_partial_combination");
+#ifndef SKIPSORTCHECK
         if (!is_sorted(first, middle, comp))
             throw combinatorial_sequence_disorder("prev_partial_combination");
+#endif  // SKIPSORTCHECK
 
         std::sort(middle, last, comp);
         for (RandomAccessIterator i = last - 1; i >= middle; i--)
