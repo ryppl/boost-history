@@ -1,7 +1,7 @@
-// combinatorial_ex1.cpp -- Test program for r-permutation and r-combination generic functions
+// combinatorial_ex1.cpp -- Test program for partial permutation and partial combination generic functions
 //                   in combinatorial.h.
 
-// Copyright © Philip F. Garofalo 2002. All rights reserved.
+// Copyright © Philip F. Garofalo 2008. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -20,7 +20,6 @@
 #include <string>
 #include <fstream>
 #include <stdexcept>
-using namespace std;
 
 #ifdef __MWERKS__
 #include <console.h>
@@ -41,7 +40,7 @@ char numerals[] = { '6', '3', '2', '5', '4', '1' };
 // partial template specialization, so we'll need to explicitly specialize
 // iterator_traits for the container type, which is char* in this test app.
 // It is required only before the call to the default version of
-// prev_r_permutation,the one without the user-supplied compare function.
+// prev_partial_permutation,the one without the user-supplied compare function.
 //
 namespace std {
    template<>
@@ -57,56 +56,47 @@ namespace std {
 
 
 // PrintLetters ---------------------------------------------------------//
-
-
-
 //   This function prints a line of letters with a vertical bar
-
 //   separating the the first r letters from the remainder.
-
 
 inline void PrintLetters(int r)
 {
-    copy(numerals, numerals + r, ostream_iterator<char>(cout, "  "));
-    cout << "|  ";
-    copy(numerals + r, numerals + DIM(numerals), ostream_iterator<char>(cout, "  "));
-    cout << '\n';
+    std::copy(numerals, numerals + r, std::ostream_iterator<char>(std::cout, "  "));
+    std::cout << "|  ";
+    std::copy(numerals + r, numerals + DIM(numerals),
+        std::ostream_iterator<char>(std::cout, "  "));
+    std::cout << '\n';
 }    // PrintLetters
 
-
+char theMsg[] = "\nPlease select a function to test:\n\n"
+                "1. Next partial permutation\n"
+                "2. Previous partial permutation\n"
+                "3. Next partial combination\n"
+                "4. Previous partial combination\n"
+                "5. Next partial permutation with compare functor\n"
+                "6. Previous partial permutation with compare functor\n"
+                "7. Next partial combination with compare functor\n"
+                "8. Previous partial combination with compare functor\n"
+                "9. Quit\n"
+                "\nEnter the number of your selection: ";
 
 // main -----------------------------------------------------------------//
 
 
 int main(int argc, char** argv)
 {
-#ifdef __MWERKS__
-    argc = ccommand(&argv);
-#endif
-    
     unsigned r = argc < 2 ? 2 : lexical_cast<unsigned>(argv[1]);
 
-    cout << "\nr is equal to " << r << ". Change on command line, e.g., "
+    std::cout << "\nr is equal to " << r << ". Change on command line, e.g., "
         << argv[0] << " 5\n\n";
-    
-    cout << "Please select a function to test:\n\n"
-        << "1. Next r-permutation\n"
-        << "2. Previous r-permutation\n"
-        << "3. Next r-combination\n"
-        << "4. Previous r-combination\n"
-        << "5. Next r-permutation with compare functor\n"
-        << "6. Previous r-permutation with compare functor\n"
-        << "7. Next r-combination with compare functor\n"
-        << "8. Previous r-combination with compare functor\n"
-        << "9. Quit\n";
     
      unsigned selection;
      while(true)
      {    
-	    cout << "\nEnter the number of your selection: ";
-	    cin >> selection;
+        std::cout << theMsg;
+	    std::cin >> selection;
 	    
-	    cout << "\nR-permutations and r-combinations appear to the left of the\n"
+	    std::cout << "\nPartial permutations and partial combinations appear to the left of the\n"
 	        << "vertical bar.\n";
 
 	    unsigned count = 1;
@@ -114,79 +104,88 @@ int main(int argc, char** argv)
 	    switch(selection)
 	    {
 	    case 1:
-	        cout << "\n\tNext r-permutations\n\n";
-	        partial_sort(numerals, numerals + r, numerals + DIM(numerals));
+	        std::cout << "\n\tNext partial permutations\n\n";
+	        std::partial_sort(numerals, numerals + r, numerals + DIM(numerals));
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(next_r_permutation(numerals, numerals + r, numerals + DIM(numerals)));
+	        } while(next_partial_permutation(numerals, numerals + r, numerals + DIM(numerals)));
 	        break;
 	    case 2:
-	        cout << "\n\tPrevious r-permutations\n\n";
-	        partial_sort(numerals, numerals + r, numerals + DIM(numerals), greater<char>());
+	        std::cout << "\n\tPrevious partial permutations\n\n";
+	        std::partial_sort(numerals, numerals + r, numerals + DIM(numerals),
+                std::greater<char>());
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(prev_r_permutation(numerals, numerals + r, numerals + DIM(numerals)));
+	        } while(prev_partial_permutation(numerals, numerals + r,
+                numerals + DIM(numerals)));
 	        break;
 	    case 3:
-	        cout <<  "\n\tNext r-combinations\n\n";
-	        partial_sort(numerals, numerals + r, numerals + DIM(numerals));
+	        std::cout <<  "\n\tNext partial combinations\n\n";
+	        std::partial_sort(numerals, numerals + r, numerals + DIM(numerals));
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(next_r_combination(numerals, numerals + r, numerals + DIM(numerals)));
+	        } while(next_partial_combination(numerals, numerals + r, numerals + DIM(numerals)));
 	        break;
 	    case 4:
-	        cout <<  "\n\tPrevious r-combinations\n\n";
-	        sort(numerals, numerals + DIM(numerals));
-	        rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
+	        std::cout <<  "\n\tPrevious partial combinations\n\n";
+	        std::sort(numerals, numerals + DIM(numerals));
+	        std::rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(prev_r_combination(numerals, numerals + r, numerals + DIM(numerals)));
+	        } while(prev_partial_combination(numerals, numerals + r, numerals + DIM(numerals)));
 	        break;
 	    case 5:
-	        cout <<  "\n\tNext r-permutations using compare functor\n\n";
-	        partial_sort(numerals, numerals + r, numerals + DIM(numerals), greater<char>());
+	        std::cout <<  "\n\tNext partial permutations using compare functor\n\n";
+	        std::partial_sort(numerals, numerals + r, numerals + DIM(numerals),
+                std::greater<char>());
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(next_r_permutation(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+	        } while(next_partial_permutation(numerals, numerals + r,
+                numerals + DIM(numerals), std::greater<char>()));
 	        break;
 	    case 6:
-	        cout <<  "\n\tPrevious r-permutations using compare functor\n\n";
-	        partial_sort(numerals, numerals + r, numerals + DIM(numerals));
+	        std::cout <<  "\n\tPrevious partial permutations using compare functor\n\n";
+	        std::partial_sort(numerals, numerals + r, numerals + DIM(numerals));
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(prev_r_permutation(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+	        } while(prev_partial_permutation(numerals, numerals + r,
+                numerals + DIM(numerals), std::greater<char>()));
 	        break;
 	    case 7:
-	        cout <<  "\n\tNext r-combinations using compare functor\n\n";
-	        partial_sort(numerals, numerals + r, numerals + DIM(numerals), greater<char>());
+	        std::cout <<  "\n\tNext partial combinations using compare functor\n\n";
+	        std::partial_sort(numerals, numerals + r, numerals + DIM(numerals),
+                std::greater<char>());
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(next_r_combination(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+	        } while(next_partial_combination(numerals, numerals + r,
+                numerals + DIM(numerals), std::greater<char>()));
 	        break;
 	    case 8:
-	        cout <<  "\n\tPrevious r-combinations using compare functor\n\n";
-	        sort(numerals, numerals + DIM(numerals), greater<char>());
-	        rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
+	        std::cout <<  "\n\tPrevious partial combinations using compare functor\n\n";
+	        std::sort(numerals, numerals + DIM(numerals), std::greater<char>());
+	        std::rotate(numerals, numerals + DIM(numerals) - r,
+                numerals + DIM(numerals));
 	        do {
-	            cout << setw(3) << count++ << ". ";
+	            std::cout << std::setw(3) << count++ << ". ";
 	            PrintLetters(r);
-	        } while(prev_r_combination(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+	        } while(prev_partial_combination(numerals, numerals + r,
+                numerals + DIM(numerals), std::greater<char>()));
 	        break;
 	    case 9:
 	    default:
-		    cout << "\nAll done!" << endl;
+		    std::cout << "\nAll done!" << std::endl;
 	    	return EXIT_SUCCESS;
 	    }    // switch
 	    
 	    // Print numerals again to verify that last function call resets string.
-	    cout << "  1. ";
+	    std::cout << "  1. ";
 	    PrintLetters(r);
     }	// while
     
