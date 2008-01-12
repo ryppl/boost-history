@@ -49,6 +49,7 @@ struct rolling_file_settings {
         , initial_erase(this, false)
         , start_where_size_not_exceeded(this, true) 
         , flush_each_time(this, false)
+        , extra_flags(this, std::ios_base::out) 
     {}
 
     /// maximum size in bytes, by default 1Mb
@@ -63,6 +64,9 @@ struct rolling_file_settings {
 
     /// if true, always flush after write (by default, false)
     flag::t<bool> flush_each_time;
+
+    /// just in case you have some extra flags to pass, when opening each file
+    flag::t<std::ios_base::openmode> extra_flags;
 };
 
 namespace detail {
@@ -92,6 +96,9 @@ namespace detail {
                         // file not found, we'll create it now
                         break;
 
+                if ( m_cur_idx >= m_flags.file_count())
+                    // all files are too full (we'll overwrite the first one)
+                    m_cur_idx = 0;
             }
 
             recreate_file();
@@ -99,17 +106,20 @@ namespace detail {
 
         std::string file_name(int idx) {
             std::ostringstream out; 
-            out << m_name_prefix << "." << (idx+1);
+            if ( idx > 0)
+                out << m_name_prefix << "." << (idx+1);
+            else
+                out << m_name_prefix;
             return out.str();
         }
 
         void recreate_file() {
             m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
-                std::ios_base::out | std::ios_base::app));
-            if ( m_out->tellp() > m_flags.max_size_bytes()) {
+                m_flags.extra_flags() | std::ios_base::out | std::ios_base::app));
+            if ( fs::file_size( file_name(m_cur_idx)) > m_flags.max_size_bytes()) {
                 // this file is already full - clear it first
                 m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
-                    std::ios_base::out | std::ios_base::trunc));
+                    m_flags.extra_flags() | std::ios_base::out | std::ios_base::trunc));
             }
         }
 

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="test"
+	Name="test_rolling_file"
 	ProjectGUID="{C5897099-5FA2-4E12-AFFC-2015364347FA}"
 	RootNamespace="test"
 	Keyword="Win32Proj"
@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\boosts\boost_1_33_1\bin\boost\libs\thread\build\libboost_thread.lib\vc-8_0\debug\threading-multi"
+				AdditionalLibraryDirectories="D:\boosts\boost_1_33_1\bin\boost\libs\thread\build\libboost_thread.lib\vc-8_0\debug\threading-multi;D:\boosts\boost_1_33_1\bin\boost\libs\filesystem\build\libboost_filesystem.lib\vc-8_0\debug\threading-multi"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
