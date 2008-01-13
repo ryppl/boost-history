@@ -1,15 +1,12 @@
 #~ Copyright Redshift Software, Inc. 2006.
+#~ Copyright Rene Rivera 2007.
 #~ Distributed under the Boost Software License, Version 1.0.
 #~ (See accompanying file LICENSE_1_0.txt or copy at
 #~ http://www.boost.org/LICENSE_1_0.txt)
 
-### Support for building Lua interpreter <http://www.lua.org/>.
+### Luabind <http://www.rasterbar.com/products/luabind.html>
 ### Targets:
-###     /ext/lua//luacore
-###     /ext/lua//lualib
-###     /ext/lua//luai (core+lib)
-###     /ext/lua//lua
-###     /ext/lua//luac
+###     /ext/luabind//luabind
 
 import extension ;
 
@@ -18,94 +15,58 @@ import project ;
 import feature ;
 import common ;
 
-extension.declare lua ;
+extension.declare luabind ;
+extension.option luabind max-arity : 5 1 2 3 4 6 7 8 9 10 ;
+extension.option luabind max-bases : 4 1 2 3 5 ;
+extension.option luabind error-checking : enable disable ;
+extension.option luabind exceptions : enable disable ;
+extension.option luabind rtti : enable disable ;
 
 rule init ( version ? : location : options * )
 {
     version ?= default ;
     local requirements =
-        [ extension.define lua $(version) : $(location) : $(options) ]
-        <lua-version>$(version)
-        <lua-location>$(location)
+        [ extension.define luabind $(version) : $(location) : $(options) ]
+        <luabind-version>$(version)
+        <luabind-location>$(location)
         <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
         <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
-        <location-prefix>lua
+        <location-prefix>luabind
         #~ <warnings>off
-        <target-os>windows,<link>shared:<define>LUA_BUILD_AS_DLL
-        <target-os>linux:<define>LUA_USE_LINUX
+        <toolset>msvc,<link>shared:<define>LUABIND_EXPORT=__declspec(dllexport)
+        <toolset>msvc,<link>shared:<define>LUABIND_IMPORT=__declspec(dllimport)
+        <toolset>msvc:<cxxflags>-wd4251
         ;
     local common-requirements =
-            <include>$(location)/src
+        <include>$(location)
+        <luabind-max-arity>1:<define>LUABIND_MAX_ARITY=1
+        <luabind-max-arity>2:<define>LUABIND_MAX_ARITY=2
+        <luabind-max-arity>3:<define>LUABIND_MAX_ARITY=3
+        <luabind-max-arity>4:<define>LUABIND_MAX_ARITY=4
+        <luabind-max-arity>5:<define>LUABIND_MAX_ARITY=5
+        <luabind-max-arity>6:<define>LUABIND_MAX_ARITY=6
+        <luabind-max-arity>7:<define>LUABIND_MAX_ARITY=7
+        <luabind-max-arity>8:<define>LUABIND_MAX_ARITY=8
+        <luabind-max-arity>9:<define>LUABIND_MAX_ARITY=9
+        <luabind-max-arity>10:<define>LUABIND_MAX_ARITY=10
+        <luabind-max-bases>1:<define>LUABIND_MAX_BASES=1
+        <luabind-max-bases>2:<define>LUABIND_MAX_BASES=2
+        <luabind-max-bases>3:<define>LUABIND_MAX_BASES=3
+        <luabind-max-bases>4:<define>LUABIND_MAX_BASES=4
+        <luabind-max-bases>5:<define>LUABIND_MAX_BASES=5
+        <luabind-error-checking>disable:<define>LUABIND_NO_ERROR_CHECKING
+        <luabind-exceptions>disable:<define>LUABIND_NO_EXCEPTIONS
+        <luabind-rtti>disable:<define>LUABIND_NO_RTTI
         ;
     
-    alias luacore
-        :   $(location)/src/lapi.c
-            $(location)/src/lcode.c
-            $(location)/src/ldebug.c
-            $(location)/src/ldo.c
-            $(location)/src/ldump.c
-            $(location)/src/lfunc.c
-            $(location)/src/lgc.c
-            $(location)/src/llex.c
-            $(location)/src/lmem.c
-            $(location)/src/lobject.c
-            $(location)/src/lopcodes.c
-            $(location)/src/lparser.c
-            $(location)/src/lstate.c
-            $(location)/src/lstring.c
-            $(location)/src/ltable.c
-            $(location)/src/ltm.c
-            $(location)/src/lundump.c
-            $(location)/src/lvm.c
-            $(location)/src/lzio.c
+    lib luabind
+        :   /ext/boost//boost
+            /ext/lua//luai
+            [ glob $(location)/src/*.cpp ]
         :   $(common-requirements)
             $(requirements)
+            <define>LUABIND_BUILDING
         :
         :   $(common-requirements)
-        ;
-    
-    alias lualib
-        :   $(location)/src/lauxlib.c
-            $(location)/src/lbaselib.c
-            $(location)/src/ldblib.c
-            $(location)/src/liolib.c
-            $(location)/src/lmathlib.c
-            $(location)/src/loslib.c
-            $(location)/src/ltablib.c
-            $(location)/src/lstrlib.c
-            $(location)/src/loadlib.c
-            $(location)/src/linit.c
-        :   $(common-requirements)
-            $(requirements)
-        :
-        :   $(common-requirements)
-        ;
-    
-    lib luai
-        :   luacore
-            lualib
-        :   $(common-requirements)
-            $(requirements)
-        :
-        :   $(common-requirements)
-        ;
-    
-    exe lua
-        :   $(location)/src/lua.c
-            luai
-        :   $(common-requirements)
-            $(requirements)
-            <target-os>linux:<find-shared-library>dl
-            <target-os>linux:<find-shared-library>readline
-            <target-os>linux:<find-shared-library>history
-            <target-os>linux:<find-shared-library>ncurses
-        ;
-    
-    exe luac
-        :   $(location)/src/luac.c
-            $(location)/src/print.c
-            luai/<link>static
-        :   $(common-requirements)
-            $(requirements)
         ;
 }
