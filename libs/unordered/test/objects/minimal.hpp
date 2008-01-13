@@ -22,6 +22,7 @@ namespace test
 namespace minimal
 {
     class copy_constructible;
+    class copy_constructible_equality_comparable;
     class default_copy_constructible;
     class assignable;
     template <class T> class hash;
@@ -40,6 +41,29 @@ namespace minimal
         copy_constructible& operator=(copy_constructible const&);
         copy_constructible() {}
     };
+
+    class copy_constructible_equality_comparable
+    {
+    public:
+        static copy_constructible_equality_comparable create() { return copy_constructible_equality_comparable(); }
+        copy_constructible_equality_comparable(copy_constructible_equality_comparable const&) {}
+        ~copy_constructible_equality_comparable() {}
+    private:
+        copy_constructible_equality_comparable& operator=(copy_constructible_equality_comparable const&);
+        copy_constructible_equality_comparable() {}
+    };
+
+    bool operator==(copy_constructible_equality_comparable, copy_constructible_equality_comparable) {
+        return true;
+    }
+
+    bool operator!=(copy_constructible_equality_comparable, copy_constructible_equality_comparable) {
+        return false;
+    }
+
+    std::size_t hash_value(copy_constructible_equality_comparable) {
+        return 1;
+    }
 
     class default_copy_constructible
     {

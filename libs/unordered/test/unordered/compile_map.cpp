@@ -42,6 +42,32 @@ void test0()
     container_test(multimap, value);
 }
 
+void equality_tests() {
+    typedef std::pair<test::minimal::assignable const,
+            test::minimal::copy_constructible_equality_comparable> value_type;
+    value_type value(
+            test::minimal::assignable::create(),
+            test::minimal::copy_constructible_equality_comparable::create());
+
+    boost::unordered_map<
+        test::minimal::assignable,
+        test::minimal::copy_constructible_equality_comparable,
+        test::minimal::hash<test::minimal::assignable>,
+        test::minimal::equal_to<test::minimal::assignable>,
+        test::minimal::allocator<value_type> > map;
+
+    equality_test(map, value);
+
+    boost::unordered_multimap<
+        test::minimal::assignable,
+        test::minimal::copy_constructible_equality_comparable,
+        test::minimal::hash<test::minimal::assignable>,
+        test::minimal::equal_to<test::minimal::assignable>,
+        test::minimal::allocator<value_type> > multimap;
+
+    equality_test(multimap, value);
+}
+
 void test1()
 {
     boost::hash<int> hash;
@@ -124,6 +150,7 @@ void test2()
 int main()
 {
     test0();
+    equality_tests();
     test1();
     test2();
 

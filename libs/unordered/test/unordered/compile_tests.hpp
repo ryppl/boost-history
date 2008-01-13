@@ -120,8 +120,6 @@ void container_test(X& r, T&)
     test::check_return_type<const_iterator>::equals(a.cend());
     test::check_return_type<const_iterator>::equals(a_const.cend());
 
-    // No tests for ==, != since they're not required for unordered containers.
-
     a.swap(b);
     test::check_return_type<X>::equals_ref(r = a);
     test::check_return_type<size_type>::equals(a.size());
@@ -144,6 +142,20 @@ void unordered_map_test(X&, Key const&, T const&)
     typedef BOOST_DEDUCED_TYPENAME X::value_type value_type;
     typedef BOOST_DEDUCED_TYPENAME X::key_type key_type;
     BOOST_MPL_ASSERT((boost::is_same<value_type, std::pair<key_type const, T> >));
+}
+
+template <class X, class T>
+void equality_test(X& r, T&)
+{
+    X const a = r, b = r;
+
+    test::check_return_type<bool>::equals(a == b);
+    test::check_return_type<bool>::equals(a != b);
+#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+    test::check_return_type<std::size_t>::equals(boost::hash_value(a));
+#else
+    test::check_return_type<std::size_t>::equals(hash_value(a));
+#endif
 }
 
 template <class X, class T>

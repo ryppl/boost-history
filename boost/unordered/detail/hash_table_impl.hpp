@@ -1818,6 +1818,99 @@ namespace boost {
                 }
             }
 
+            //
+            // equals
+            //
+
+private:
+#if BOOST_UNORDERED_EQUIVALENT_KEYS
+            static inline bool group_equals(link_ptr it1, link_ptr it2,
+                    type_wrapper<key_type>*)
+            {
+                return data::group_count(it1) == data::group_count(it2);
+            }
+
+            static inline bool group_equals(link_ptr it1, link_ptr it2, void*)
+            {
+                if(!BOOST_UNORDERED_BORLAND_BOOL(it2)) return false;
+                link_ptr end1 = data::next_group(it1);
+                link_ptr end2 = data::next_group(it2);
+                do {
+                    if(data::get_value(it1).second != data::get_value(it2).second) return false;
+                    it1 = it1->next_;
+                    it2 = it2->next_;
+                } while(it1 != end1 && it2 != end2);
+                return it1 == end1 && it2 == end2;
+            }
+#else
+            static inline bool group_equals(link_ptr it1, link_ptr it2,
+                    type_wrapper<key_type>*)
+            {
+                return true;
+            }
+
+            static inline bool group_equals(link_ptr it1, link_ptr it2, void*)
+            {
+                return data::get_value(it1).second == data::get_value(it2).second;
+            }
+#endif
+
+public:
+            bool equals(BOOST_UNORDERED_TABLE const& other) const
+            {
+                if(this->size() != other.size()) return false;
+
+                for(bucket_ptr i = this->cached_begin_bucket_,
+                        j = this->buckets_end(); i != j; ++i)
+                {
+                    for(link_ptr it(i->next_); BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it))
+                    {
+                        link_ptr other_pos = other.find_iterator(other.extract_key(data::get_value(it)));
+                        if(!BOOST_UNORDERED_BORLAND_BOOL(other_pos) ||
+                            !group_equals(it, other_pos, (type_wrapper<value_type>*)0))
+                            return false;
+                    }
+                }
+
+                return true;
+            }
+
+            inline std::size_t group_hash(link_ptr it, type_wrapper<key_type>*) const
+            {
+                std::size_t seed = data::group_count(it);
+                std::size_t hashed_key = hash_function()(data::get_value(it)); 
+                boost::hash_combine(seed, hashed_key);
+                return seed;
+            }
+
+            inline std::size_t group_hash(link_ptr it, void*) const
+            {
+                std::size_t seed = hash_function()(data::get_value(it).first);
+
+                link_ptr end = data::next_group(it);
+
+                do {
+                    boost::hash_combine(seed, data::get_value(it).second);
+                    it = it->next_;
+                } while(it != end);
+
+                return seed;
+            }
+
+            std::size_t hash_value() const
+            {
+                std::size_t seed = 0;
+
+                for(bucket_ptr i = this->cached_begin_bucket_,
+                        j = this->buckets_end(); i != j; ++i)
+                {
+                    for(link_ptr it(i->next_); BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it))
+                        seed ^= group_hash(it, (type_wrapper<value_type>*)0);
+                }
+
+                return seed;
+            }
+
         private:
 
             // strong exception safety, no side effects
