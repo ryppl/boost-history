@@ -16,13 +16,6 @@
 // This file svg_tag.hpp defines all classes that can occur in the SVG parse tree.
 // -------------------------------------------------------------------------------
 
-#if defined (BOOST_MSVC)
-#  pragma warning(push)
-#  pragma warning(disable: 4127) // "conditional expression is constant."
-#  pragma warning(disable: 4512) // "assignment operator could not be generated."
-#  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
-#endif
-
 #include <boost/ptr_container/ptr_container.hpp>
 // using boost::vec_ptr;
 #include <boost/array.hpp>
@@ -36,10 +29,6 @@
 // using std::string;
 #include <vector>
 // using std::vector;
-
-#if defined (BOOST_MSVC)
-#  pragma warning(pop)
-#endif
 
 namespace boost
 {
@@ -90,7 +79,7 @@ namespace svg
   class svg_element
   { // Base class 
   protected:
-    svg_style style_info; // fill, stroke, width, get by function style.
+    svg_style style_info; // fill, stroke, width, get by function style().
     std::string id_name; // set & get by function id.
     std::string clip_name; // set & get by function clip_id.
 
@@ -156,7 +145,7 @@ namespace svg
     }
 
     void clip_id(const std::string& id)
-    { // Named clip, for example: g_ptr.clip_id(plot_window_clip);
+    { // Named clip, for example: g_ptr.clip_id(plot_window_clip_);
       clip_name = id;
     }
 
@@ -194,8 +183,10 @@ namespace svg
       // Example: <line x1="5" y1="185" x2="340" y2="185"/>
     }
   }; // class line_element
+
+
   // --------------------------------------------------
-  // class rect_element; Represents a single rectangle.
+  // class rect_element: Represents a single rectangle.
   // --------------------------------------------------
 
   class rect_element : public svg_element
@@ -327,8 +318,6 @@ namespace svg
     }
   }; // class ellipse_element
 
-
-
   // ----------------------------------------------------------------------
   // text_element Represents a single block of text, with font & alignment.
   // ----------------------------------------------------------------------
@@ -337,202 +326,144 @@ namespace svg
     left_align, right_align, center_align
   };
 
-  enum rotate_style
-  { // Rotation in degrees from horizontal.
-    horizontal = 0, // normal left to right.
-    uphill = -45, // slope up.
-    upward = -90, // vertical writing up.
-    backup = -135, // slope up backwards.
-    downhill = 45, // slope down.
-    downward = 90,  // vertical writing down.
-    backdown = 135, // slope down backwards.
-    upsidedown = 180 // == -180
-  };
-
-  // text_element::text_element(double x, double y,
-  //  const std::string&,
-  //  int,
-  //  const std::string& font,
-  //  const std::string& style, const std::string& weight,
-  //  const std::string& stretch, const std::string& decoration,
-  //  int align, int rotate);
+  //enum rotate_style defined in svg_style.
+  //{ // Rotation in degrees from horizontal.
+  //  horizontal = 0, // normal left to right.
+  //  uphill = -45, // slope up.
+  //  upward = -90, // vertical writing up.
+  //  backup = -135, // slope up backwards.
+  //  downhill = 45, // slope down.
+  //  downward = 90,  // vertical writing down.
+  //  backdown = 135, // slope down backwards.
+  //  upsidedown = 180 // == -180
+  //};
 
   class text_element: public svg_element
   { // Holds text with position, size, font, (& styles) & orientation.
     // Not necessarily shown correctly by all browsers, alas.
    private: // Access only via member functions below.
-    double x_coord; // Cartesian units.
-    double y_coord;
-    // http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
-    // 10.10 Font selection properties
-    std::string txt; // Actual text to display
-    // (may contain embedded xml characters for Greek, math etc, for example &#x3A9;).
-    int size; // " font-size = 12"
-    // http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
-    std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
-    // "sans", "serif", "times"
-    std::string style_; // font-style: normal | bold | italic | oblique
-    std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
-    std::string stretch; // font-stretch: normal | wider | narrower ...
-    std::string decoration; // // "underline" | "overline" | "line-through"
-    align_style align; // left_align, right_align, center_align
-    int rotate; // horizontal, upward, downward, upsidedown
-    // Example:
-    // <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
+    // SVG Coordinates of 1st character EM box, see
+    // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
+    // So any text with y coordinate = 0  shows only any roman lower case descenders!
+    double x_; // Left edge.
+    double y_; // Bottom of roman capital character.
+    std::string text_; // Actual text to display.
+    text_style style_; // font variants.
+    align_style align_; // left_align, right_align, center_align
+    rotate_style rotate_; // horizontal, upward, downward, upsidedown
 
-    text_style style_info_; // To replace above elements.
+    // (Text may contain embedded xml Unicode characters
+    // for Greek, math etc, for example: &#x3A9;).
+    //int size; // " font-size = 12"
+    //// http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
+    //std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
+    //// "sans", "serif", "times"
+    //// http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
+    //// 10.10 Font selection properties
+    //std::string style_; // font-style: normal | bold | italic | oblique
+    //std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+    //std::string stretch; // font-stretch: normal | wider | narrower ...
+    //std::string decoration; // // "underline" | "overline" | "line-through"
+    //// Example:
+    //// <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
 
   public:
     // Set and get member functions.
 
     text_style& style()
-    {
-      return style_info_;
+    { // Access to font family, size ...
+      return style_;
     }
 
     const text_style& style() const
     {
-      return style_info_;
-    }
-
-    void font_alignment(align_style a)
-    { // left_align, right_align, center_align
-      align = a;
-    }
-
-    align_style font_alignment()
-    { // left_align, right_align, center_align
-      return align;
-    }
-
-    void font_family(const std::string& s)
-    { // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
-      font = s;
-    }
-
-    const std::string& font_family() const
-    {
-      return font;
-    }
-
-    void font_style(const std::string& s)
-    {
-      style_ = s;
-    }
-
-    const std::string& font_style() const
-    {
       return style_;
     }
 
-    void font_weight(const std::string& s)
-    { // normal | bold | bolder | lighter | 100 | 200 .. 900
-      weight = s;
+    void alignment(align_style a)
+    { // left_align, right_align, center_align
+      align_ = a;
     }
 
-    const std::string& font_weight() const
-    {
-      return weight;
+    align_style alignment()
+    { // left_align, right_align, center_align
+      return align_;
     }
 
-    void font_stretch(const std::string& s)
-    { // normal | wider | narrower .
-      stretch = s;
-    }
-
-    const std::string& font_stretch() const
-    {
-      return stretch;
-    }
-
-    void font_decoration(const std::string& s)
-    { // "underline" | "overline" | "line-through"
-      decoration = s;
-    }
-
-    const std::string& font_decoration() const
-    {
-      return decoration;
-    }
-
-    void font_size(unsigned int i)
-    { // pixels, default 10.
-      size = i;
-    }
-
-    int font_size() const
-    {
-      return size;
-    }
-
-    void font_rotation(int rot)
+    void rotation(rotate_style rot)
     { // Degrees: horizontal  = 0, upward = -90, downward, upsidedown
-      rotate = rot;
+      rotate_ = rot;
     }
 
-    int font_rotation() const
+    rotate_style rotation() const
     {
-      return rotate;
+      return rotate_;
     }
 
     void x(double x)
     { // x coordinate of text to write.
-      x_coord = x;
+      x_ = x;
     }
 
     double x() const
     { // x coordinate of text to write.
-      return x_coord;
+      return x_;
     }
 
     void y(double y)
     { // y coordinate of text to write.
-      y_coord = y;
+      y_ = y;
     }
 
     double y() const
     { // y coordinate of text to write.
-      return y_coord;
+      return y_;
     }
 
     void text(const std::string& t)
     { // text to write.
-      txt = t;
+      text_ = t;
     }
 
-    std::string text()
+    const std::string& text()
     {
-      return txt;
+      return text_;
     }
 
-    text_element(double x = 0., double y = 0.,
-      const std::string& text = "",
-      int size = 12,
-      const std::string& font = "Lucida Sans Unicode",
-      const std::string& style = "", const std::string& weight = "",
-      const std::string& stretch = "", const std::string& decoration = "",
-      align_style align = center_align, int rotate = horizontal,
-      text_style ts = no_style) // To replace above elements.
+    text_element(
+      // Coordinates of 1st character EM box, see
+      // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
+      double x = 0., // Left edge.
+      double y = 0., // Bottom of character (roman capital).
+      // So any text with y coordinate = 0  shows only the roman lower case descenders!
+      const std::string text = "",
+      text_style ts = no_style, // Left to SVG defaults.
+      align_style align = left_align,
+      rotate_style rotate = horizontal)
       : // Constructor.
-    x_coord(x), y_coord(y),
-      txt(text),
-      size(size),
-      font(font),
-      style_(style), weight(weight), stretch(stretch), decoration(decoration),
-      align(align), rotate(rotate), style_info_(ts)
+      x_(x), y_(y), // location.
+      text_(text),
+      //size(size), font(font), style_(style), weight(weight), stretch(stretch), decoration(decoration),
+      style_(ts),
+      align_(align),
+      rotate_(rotate)
     { // text_element default constructor, defines defaults for all private members.
     }
 
-    void write(std::ostream& rhs)
-    { // text & atributes to stream.
+    void write(std::ostream& os)
+    { // text_element, style & attributes to stream.
       // Changed to new convention on spaces:
       // NO trailing space, but *start* each item with a space.
-      rhs << "<text x=\"" << x_coord << "\" y=\"" << y_coord << "\"";
+      // For debug, may be convenient to start with newline.
+      // os << " <text x=\"" << x_ << "\" y=\"" << y_ << "\"";
+      os << "\n<text x=\"" << x_ << "\" y=\"" << y_ << "\"";
       std::string anchor;
-      switch(align)
+      switch(align_)
       {
       case left_align:
-        anchor = "start";
+        // anchor = "start"; // This is the initial == default.
+        // so should be possible to reduce file size this by:
+        anchor = "";
         break;
       case right_align:
         anchor = "end";
@@ -546,44 +477,56 @@ namespace svg
       }
       if(anchor != "")
       {
-        rhs << " text-anchor=\"" << anchor << "\"";
+        os << " text-anchor=\"" << anchor << "\"";
       }
-      if(rotate != 0)
+      if(rotate_ != 0)
       {
-        rhs << " transform = \"rotate("
-          << rotate << " "
-          << x_coord << " "
-          << y_coord << " )\"";
+        os << " transform = \"rotate("
+          << rotate_ << " "
+          << x_ << " "
+          << y_ << " )\"";
       }
-      if (font.size() != 0)
+      if (style_.font_size() != 0)
       {
-        rhs << " font-family=\"" << font << "\"";
+        os << " font-size=\"" << style_.font_size() << "\"";
       }
-      if (style_.size() != 0)
+      if (style_.font_family() != "")
+      { // Example: Arial.
+        os << " font-family=\"" << style_.font_family() << "\"";
+      }
+      if (style_.font_style().size() != 0)
+      { // Example: italic.
+        os << " font-style=\"" << style_.font_style() << "\"";
+      }
+      if (style_.font_weight().size() != 0)
+      { // Example: bold.
+      os << " font-weight=\"" << style_.font_weight() << "\"";
+      }
+      if (style_.font_stretch().size() != 0)
       {
-        rhs << " font-style=\"" << style_ << "\"";
+      os << " font-stretch=\"" << style_.font_stretch() << "\"";
       }
-      if (weight.size() != 0)
+      if (style_.font_decoration().size() != 0)
       {
-      rhs << " font-weight=\"" << weight << "\"";
+      os << " font-decoration=\"" << style_.font_decoration() << "\"";
       }
-      if (stretch.size() != 0)
-      {
-      rhs << " font-stretch=\"" << stretch << "\"";
-      }
-      if (decoration.size() != 0)
-      {
-      rhs << " font-decoration=\"" << decoration << "\"";
-      }
-      if(size != 0)
-      {
-        rhs << " font-size=\"" << size << "\">";
-      }
-      rhs << txt << "</text>";
-      // Example: <text x="149" y="207" text-anchor=" middle" font-family="Lucida Sans Unicode" font-size="12">3 </text>
-    } // void write(std::ostream& rhs)
+      os << '>' << text_ << "</text>";
+      // Example: 
+    } // void write(std::ostream& os)
 
+    
   }; // class text_element
+
+  std::ostream& operator<< (std::ostream& os, text_element& t)
+  {  //
+      os << "text(" << t.x() << ", " << t.y() << ", " 
+         << t.text() << ", "
+         << t.alignment()<< ", " 
+         << t.rotation() << ")" ;
+    // Usage: text_element t(20, 30, "sometest", left_align, horizontal);  cout << t << endl; 
+    // Outputs:  
+    return os;
+  } // std::ostream& operator<<
 
 
   class clip_path_element: public svg_element
@@ -1066,7 +1009,7 @@ namespace svg
 
   std::ostream& operator<< (std::ostream& os, const poly_path_point& p)
   { // May be needed for Boost.Test.
-    os << "(" << p.x << ", " << p.y  << ")" ;
+    os << "(" << p.x << ", " << p.y  << ")";
     // Usage:  poly_path_point p0(100, 200);
     // cout << p0 << endl;
     // Outputs: (100, 200)
@@ -1081,6 +1024,9 @@ namespace svg
     // A polygon is defined by including a 'path'  element
     // which contains a points="(path data)"  attribute,
     // where the d attribute contains the x, y coordinate pairs.
+    friend std::ostream& operator<< (std::ostream&, const polygon_element&);
+    friend std::ostream& operator<< (std::ostream&, polygon_element&);
+
   private:
     //using boost::ptr_vector;
     ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs,
@@ -1213,7 +1159,35 @@ namespace svg
       //             850,325 742,262.6 742,137.5" />
     } // void write(std::ostream& o_str)
 
+    std::ostream& operator<< (std::ostream& os)
+    { // May be needed for Boost.Test. 
+      for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i != poly_points.end(); ++i)
+      {
+        os << (*i); //  x, y coordinates as " (1, 2)"
+      }
+      // using os << "(" << p.x << ", " << p.y  << ")" ;
+      // Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
+      //   my_polygon.operator<<(cout);  
+      // But NOT cout << my_polygon << endl;
+      // Outputs: (1, 2)(3, 4)(5, 6)
+      return os;
+    } // std::ostream& operator<<
+
   }; // class polygon_element
+
+  std::ostream& operator<< (std::ostream& os, polygon_element& p)
+  { // May be needed for Boost.Test.
+    // ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs,
+    for(ptr_vector<poly_path_point>::iterator i = p.poly_points.begin(); i != p.poly_points.end(); ++i)
+    {
+      os << (*i); //  x, y coordinates as " (1, 2)(3, 4)..."
+      // using os << "(" << p.x << ", " << p.y  << ")" ;
+    }
+    // Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
+    // cout << p << endl;
+    // Outputs: (1, 2)(3, 4)(5, 6)
+    return os;
+  } // std::ostream& operator<<
 
   class polyline_element: public svg_element
   { // http://www.w3.org/TR/SVG/shapes.html#PolylineElement
@@ -1228,6 +1202,7 @@ namespace svg
     //   perform an absolute lineto operation to that coordinate pair.
     // The advantage of polyline is in reducing file size,
     // avoiding M and repeated L before x & y coordinate pairs.
+  friend std::ostream& operator<< (std::ostream&, polyline_element&);
 
   private:
     ptr_vector<poly_path_point> poly_points; // All the (x, y) coordinate pairs,
@@ -1288,11 +1263,26 @@ namespace svg
 
   }; // class polyline_element
 
+  std::ostream& operator<< (std::ostream& os, polyline_element& p)
+  { // May be needed for Boost.Test.
+    // ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs,
+    for(ptr_vector<poly_path_point>::iterator i = p.poly_points.begin(); i != p.poly_points.end(); ++i)
+    {
+      os << (*i); //  x, y coordinates as " (1, 2)(3, 4)..."
+      // using os << "(" << p.x << ", " << p.y  << ")" ;
+    }
+    // Usage:  polyline_element p(1, 2, 3, 4, 5, 6);
+    // cout << p << endl;
+    // Outputs: (1, 2)(3, 4)(5, 6)
+    return os;
+  } // std::ostream& operator<<
+
+
   // -------------------------------------------------------------------
   // g_element (group element) is the node element of our document tree.
   // 'g' element is a container element for grouping together <g /></g>
   // related graphics elements, for example:
-  // <g fill="rgb(255,255,255)" id="background"><rect width="500" height="350"/></g>
+  // <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
   // -------------------------------------------------------------------
   class g_element: public svg_element
   {
@@ -1378,23 +1368,13 @@ namespace svg
     }
 
     g_element& text(double x = 0., double y = 0.,
-      // The order of arguments DOES NOW match svg& text_element!
-      // text_element::text_element(double x, double y,
-      //  const std::string&,
-      //  int,
-      //  const std::string& font,
-      //  const std::string& style, const std::string& weight,
-      //  const std::string& stretch, const std::string& decoration,
-      //  int align, int rotate);
-
       const std::string& text = "",
-      int text_size = 12,
-      const std::string& font = "Lucida Sans Unicode",
-      const std::string& style = "", const std::string& weight = "",
-      const std::string& stretch = "", const std::string& decoration = "",
-      align_style align = center_align, int rotate = horizontal)
+      text_style& style = no_style, // Use svg implementation's defaults.
+      align_style align = left_align,
+      rotate_style rotate = horizontal)
     {
-      children.push_back(new text_element(x, y, text, text_size, font, style, weight, stretch, decoration, align, rotate));
+      children.push_back(new text_element(x, y, text, style, align, rotate));
+      // font, style, weight, stretch, decoration, now in text_style.
       return *this;
     }
 
@@ -1410,38 +1390,52 @@ namespace svg
       return *this;
     }
 
-    g_element& polygon(double x1, double y1, bool f)
+    // TODO should the default be fill or not?
+    g_element& polygon(double x1, double y1, bool f = true)
     {
       children.push_back(new polygon_element(x1, y1, f));
       return *this;
     }
 
-    g_element& polygon(std::vector<poly_path_point>& points, bool f)
+    g_element& polygon(std::vector<poly_path_point>& points, bool f = true)
     {
       children.push_back(new polygon_element(points, f));
       return *this;
     }
 
-    g_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f)
+    g_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
     {
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, f));
       return *this;
     }
 
-    g_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f)
+    g_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
     {
-      children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, f));
+      children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, f = true));
       return *this;
     }
 
-    g_element& polyline(double x1, double y1, bool f)
+    g_element& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
+    { // push_back a complete pentagon to the document.
+      children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, f));
+      return *this; // svg& 
+    }
+
+    g_element& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
+    { // push_back a complete 6-sided star to the document.
+      children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, f));
+      return *this; // svg& 
+    }
+
+    g_element& polyline(double x1, double y1, bool f = true)
     {
       children.push_back(new polygon_element(x1, y1, f));
       return *this;
     }
 
-   // These return a reference to the last child node just pushed.
+    // These return a reference to the last child node just pushed.
     // (Unlike the above functions that return a g_element&).
+    // TODO why?
     polygon_element& polygon()
     {
       children.push_back(new polygon_element()); // Empty polygon,

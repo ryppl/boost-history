@@ -28,17 +28,17 @@ namespace boost
 
     enum legend_places
     {  // Placing of legend box, if requested by legend_on(true).
-      inside = 0,  // Default place for inside is top left of plot window,
+      nowhere = 0,
+      inside = -1,  // Default place for inside is top left of plot window,
       // exact location controlled by legend_top_left().
-      outside_left = -1, // Outside 
-      outside_right = +1,  // Default for outside.
-      outside_top = +2,
-      outside_bottom = -2
+      outside_left = 1, // Outside 
+      outside_right = +2,  // Default for outside.
+      outside_top = +3,
+      outside_bottom = +4
     };
 
     namespace detail
     {
-
       template <class Derived>
       class axis_plot_frame
       {
@@ -75,60 +75,10 @@ namespace boost
         // void clear_points();
         // void clear_plot_background();
         // void clear_grids();
-
-        const std::string strip(std::string s)
-        { // Ugly hack to remove unwanted sign and leading zero in exponent.
-          // TODO It alters the layout because space
-          // is still allowed for the longest string.
-          // Would need to work out the longest value label before calculate_plot_window.
-          // But should be useful for values that spill over into exponent format
-          // 'by accident' - when leading zeros are likely.
-          using std::string;
-          size_t j = s.find("e+000");
-          if (j != string::npos)
-          {
-            s.erase(j, 5); // remove "e+000"
-            goto ret;
-          }
-          j = s.find("e-000");
-          if (j != string::npos)
-          {
-            s.erase(j, 5); // remove "e-000"
-            goto ret;
-          }
-          j = s.find("e+00");
-          if (j != string::npos)
-          {
-            s.erase(j + 1, 3); // remove "+00"
-            goto ret;
-          }
-
-          j = s.find("e-00");
-          if (j != string::npos)
-          {
-            s.erase(j+2, 2); // remove "00", leave "-"
-            goto ret;
-          }
-          j = s.find("e+0");
-          if (j != string::npos)
-          {
-            s.erase(j + 1, 2); // remove "+0"
-            goto ret;
-          }
-          j = s.find("e-0");
-          if (j != string::npos)
-          {
-            s.erase(j+2, 1); // remove "0", leave "-"
-            goto ret;
-          }
-ret:
-          return s;
-        } // const std::string strip(double d)
-
         void transform_point(double& x, double& y)
         { // Scale & shift both x & y to graph coordinate.
-          x = derived().x_scale * x + derived().x_shift;
-          y = derived().y_scale * y + derived().y_shift;
+          x = derived().x_scale_ * x + derived().x_shift_;
+          y = derived().y_scale_ * y + derived().y_shift_;
           adjust_limits(x, y); // In case either hits max, min, infinity or NaN.
         }
         // TODO do we need to adjust_limit(x); // In case hits max, min, infinity or NaN?
@@ -137,12 +87,12 @@ ret:
 
         void transform_x(double & x)
         { // Scale and shift x only.
-          x = derived().x_scale * x + derived().x_shift;
+          x = derived().x_scale_ * x + derived().x_shift_;
         }
 
         void transform_y(double & y)
         { // Scale and shift y only.
-          y = derived().y_scale * y + derived().y_shift;
+          y = derived().y_scale_ * y + derived().y_shift_;
         }
 
         void draw_x_minor_ticks(double value, path_element& tick_path, path_element& grid_path)
@@ -154,72 +104,70 @@ ret:
           double y2(derived().image.y_size());
 
           // Draw the minor grid, if wanted.
-          if(derived().use_x_minor_grid_)
+          if(derived().x_ticks_.minor_grid_on_)
           {
-            if(!derived().use_plot_window_)
-            {  // Use whole image.
+            if(!derived().plot_window_on_)
+            { // Use whole image.
               // Make space for title and X-axis labels.
-              if(derived().use_title)
+              if(derived().title_on_)
               { // Allow text_margin_ * font_size around text (pixels).
-                y1 += derived().title_info.font_size() * derived().text_margin_;
+                y1 += derived().title_info_.style().font_size() * derived().text_margin_;
               }
-              if(derived().use_x_label)
+              if(derived().x_axis_.label_on_)
               {
-                y2 -= derived().x_label_info.font_size() * derived().text_margin_;
+                y2 -= derived().x_label_info_.style().font_size() * derived().text_margin_;
               }
             }
             else
-            { // use_plot_window_ == true.
-              y1 = derived().plot_y1 + 1; // Top. Why +1 and -1?
-              y2 = derived().plot_y2 - 1; // Bottom. Ensure *inside* window?
+            { // plot_window_on_ == true.
+              y1 = derived().plot_top_ + 1; // Top. Why +1 and -1?
+              y2 = derived().plot_bottom_ - 1; // Bottom. Ensure *inside* window?
             }
             // Make sure that we are drawing inside the allowed window.
-            if((x1 >= derived().plot_x1) && (x1 <= derived().plot_x2)) // allow = too?
+            if((x1 >= derived().plot_left_) && (x1 <= derived().plot_right_)) // allow = too?
             {
               //std::cerr << "Writing draw_x_minor_ticks grid inside plot window: x1 = "
-              //  << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
+              //  << x1 << ", plot_left_ = " << derived().plot_left_ << ", plot_right_ = " << derived().plot_right_ << std::endl;
               grid_path.M(x1, y1).L(x1, y2);
             }
             else
             { // This will happen but is designed to be ignored!
               // TODO check this is best. See comment in draw_x_axis
               //std::cerr << "Writing draw_x_minor_ticks grid OUTside plot window: x1 = "
-              //  << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
+              //  << x1 << ", plot_left_ = " << derived().plot_left_ << ", plot_right_ = " << derived().plot_right_ << std::endl;
             }
           } // use_x_minor_grid
 
-          double x_tick_length = derived().x_minor_tick_length_;
-          if(derived().use_x_ticks_on_plot_window_)
+          double x_tick_length = derived().x_ticks_.minor_tick_length_;
+          if(derived().x_ticks_.ticks_on_plot_window_on_)
           { // Put minor ticks on the plot window border.
-            y1 = derived().plot_y2; // on the window line.
-            y2 = derived().plot_y2; // y1 = upper, y2 = lower end of tick.
-            if(derived().use_up_ticks)
+            y1 = derived().plot_bottom_; // on the window line.
+            y2 = derived().plot_bottom_; // y1 = upper, y2 = lower end of tick.
+            if(derived().x_ticks_.up_ticks_on_)
             { //
               y1 -= x_tick_length; // up.
             }
-            if (derived().use_down_ticks)
+            if (derived().x_ticks_.down_ticks_on_)
             {
               y2 += x_tick_length; // down.
             }
           }
           else
           { // Internal style, draw tick up and/or down from the X-axis line.
-            y1 = derived().x_axis; // X-axis horizontal line.
-            y2 = derived().x_axis;
-            if(derived().use_up_ticks)
+            y1 = derived().x_axis_.axis_; // X-axis horizontal line.
+            y2 = derived().x_axis_.axis_;
+            if(derived().x_ticks_.up_ticks_on_)
             {
               y1 -=  x_tick_length; // up
             }
-            if (derived().use_down_ticks)
+            if (derived().x_ticks_.down_ticks_on_)
             {
               y2 += x_tick_length; // down.
             }
           }
           // Make sure that we are drawing inside the allowed window.
-          if((x1 >= derived().plot_x1) && (x1 <= derived().plot_x2)) // TODO allow < or <=
+          if((x1 >= derived().plot_left_) && (x1 <= derived().plot_right_)) // TODO allow < or <=
           {
-            //std::cerr << "Writing draw_x_minor_ticks inside plot window: x1 = "
-            // << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
             tick_path.M(x1, y1).L(x1, y2);
             // No value labels on minor ticks, at present.
           }
@@ -227,110 +175,113 @@ ret:
           { // This will happen but is designed to be ignored!
             //  TODO check this is best. See comment in draw_x_axis
             //std::cerr << "Writing draw_x_minor_ticks OUTside plot window: x1 = "
-            // << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
+            // << x1 << ", plot_left_ = " << derived().plot_left_ << ", plot_right_ = " << derived().plot_right_ << std::endl;
           }
         } // void draw_x_minor_ticks
 
         void draw_x_major_ticks(double value, path_element& tick_path, path_element& grid_path)
         { // draw ticks - and grid too if wanted.
-          // If use_x_major_labels then value may be shown beside the major tick.
-          double x1(value); //
-          transform_x(x1);
-          double y1(0.); // // y1 = upper,
-          double y2(derived().image.x_size()); // y2 = lower end of tick.
-          if(derived().use_x_major_grid_)
+          // If major_value_labels_on then value shown beside the major tick.
+          double x(value); //
+          transform_x(x); // x value in svg.
+          double y_up(0.); // upper end of tick.
+          double y_down(derived().image.x_size()); // y_down = lower end of tick.
+          if(derived().x_ticks_.major_grid_on_)
           { // Draw major grid vertical line.
-            if(!derived().use_plot_window_)
+            if(!derived().plot_window_on_)
             { // Allow a modest margin around text of title and X-axis labels, if in use.
-              if(derived().use_title)
+              if(derived().title_on_)
               {
-                y1 += derived().title_info.font_size() * derived().text_margin_;
+                y_up += derived().title_info_.style().font_size() * derived().text_margin_;
               }
-              if(derived().use_x_label)
+              if(derived().x_ticks_.major_value_labels_on)
               { // If use_x_major_labels then value may be shown beside the major tick.
-                y2 -= derived().x_label_info.font_size() * derived().text_margin_;
+                y_down -= derived().x_label_info_.style().font_size() * derived().text_margin_;
               }
             }
             else
-            { // use_plot_window_ == true
-              y1 = derived().plot_y1; // Bottom of plot window.
-              y2 = derived().plot_y2; // Top of plot window.
+            { // plot_window_on_ == true
+              y_up = derived().plot_top_; // Bottom of plot window.
+              y_down = derived().plot_bottom_; // Top of plot window.
             }
-            grid_path.M(x1, y1).L(x1, y2); // Vertical grid line.
+            if((y_down <= derived().plot_bottom_) && (y_up >= derived().plot_top_) && (x >= derived().plot_left_) && (x <= derived().plot_right_))
+            { // Make sure that we are drawing inside the allowed window.
+              grid_path.M(x, y_up).L(x, y_down); // Vertical grid line.
+            }
           } // use_x_major_grid
 
           // Draw major tick (perhaps as well as grid - ticks might be wider than grid).
           // Make sure that we are drawing inside the allowed plot window.
-          if((x1 >= derived().plot_x1) && (x1 <= derived().plot_x2)) // now <= 
+          if((x >= derived().plot_left_) && (x <= derived().plot_right_)) // now <= 
           {
-            double x_tick_length = derived().x_major_tick_length_;
-            if(derived().use_x_ticks_on_plot_window_)
+            double x_tick_length = derived().x_ticks_.major_tick_length_;
+            if(derived().x_ticks_.ticks_on_plot_window_on_)
             { // Put the ticks on the plot window border (was external).
-              y1 = derived().plot_y2; // on the window line.
-              y2 = derived().plot_y2; // y1 = upper, y2 = lower.
-              if(derived().use_up_ticks)
+              y_up = derived().plot_bottom_; // on the window line.
+              y_down = derived().plot_bottom_; // y_up = upper, y_down = lower.
+              if(derived().x_ticks_.up_ticks_on_)
               {
-                y1 -= x_tick_length; // up
+                y_up -= x_tick_length; // up
               }
-              if (derived().use_down_ticks)
+              if (derived().x_ticks_.down_ticks_on_)
               {
-                y2 += x_tick_length; // down.
+                y_down += x_tick_length; // down.
               }
             }
             else
             { // Internal_style, draw tick from the central X axis line.
-              y1 = derived().x_axis; // X-axis line.
-              y2 = derived().x_axis;
-              if(derived().use_up_ticks)
+              y_up = derived().x_axis_.axis_; // X-axis line.
+              y_down = derived().x_axis_.axis_;
+              if(derived().x_ticks_.up_ticks_on_)
               {
-                y1 -=  x_tick_length; // up
+                y_up -=  x_tick_length; // up
               }
-              if (derived().use_down_ticks)
+              if (derived().x_ticks_.down_ticks_on_)
               {
-                y2 += x_tick_length; // down.
+                y_down += x_tick_length; // down.
               }
             }
-            tick_path.M(x1, y1).L(x1, y2);
+            tick_path.M(x, y_up).L(x, y_down);
             // Leaving current position at the bottom end of the tick.
 
-            if(derived().use_x_major_labels)
+            if(derived().x_ticks_.major_value_labels_on)
             { // Show value by the tick as "1.2" or "3.4e+000"...
               std::stringstream label;
-              label.precision(derived().x_value_precision_);
-              label.flags(derived().x_value_ioflags_);
+              label.precision(derived().x_ticks_.value_precision_);
+              label.flags(derived().x_ticks_.value_ioflags_);
               label << value; // "1.2" or "3.4e+000"...
-              if (derived().strip_e0s_)
+              if (derived().x_ticks_.strip_e0s_)
               { // remove unecessary e, +, leadings 0s
-                std::string v = strip(label.str());
+                std::string v = strip_e0s(label.str());
                 label.str(v);
               }
-              double y = y2; // bottom end of the tick.
+              double y = y_down; // bottom end of the tick.
               align_style alignment = center_align;
-              if(derived().use_down_ticks)
-              {  // No need to shift if derived().use_up_ticks as labels are below the X-axis.
-                // y += derived().x_label_value.font_size();
+              if(derived().x_ticks_.down_ticks_on_)
+              {  // No need to shift if derived().up_ticks_on_ as labels are below the X-axis.
+                // y += derived().x_label_value_.font_size();
               }
-              if (derived().x_label_rotation_ == upward)
+              if (derived().x_ticks_.label_rotation_ == upward)
               { // 
                 alignment = right_align;
-                //y += label.str().size() * derived().x_label_info.font_size();
+                //y += label.str().size() * derived().x_label_info_.font_size();
                 // so the last digit will be by the tick.
               }
-              else if((derived().x_label_rotation_ == downward)
-                || (derived().x_label_rotation_ == downhill))
+              else if((derived().x_ticks_.label_rotation_ == downward)
+                || (derived().x_ticks_.label_rotation_ == downhill))
               { // start from tick and write down.
-                y += derived().x_label_value.font_size() * 0.5;
+                y += derived().x_label_value_.style().font_size() * 0.5;
                 alignment = left_align;
               }
-              else if(derived().x_label_rotation_ == horizontal)
+              else if(derived().x_ticks_.label_rotation_ == horizontal)
               {
-                y += derived().x_label_value.font_size() * 1.5;
+                y += derived().x_label_value_.style().font_size() * 1.5;
                 alignment = center_align; // center on the tick.
               }
-              else if(derived().x_label_rotation_ == uphill)
+              else if(derived().x_ticks_.label_rotation_ == uphill)
               { // 45 slope up,
                 alignment = left_align; // Uphill to end at tick.
-                y += label.str().size() * derived().x_label_info.font_size() * 0.7;
+                y += label.str().size() * derived().x_label_info_.style().font_size() * 0.7;
                 // sloping up so need about sin(45) = 0.707 less space,
                 // so the last digit is by the tick.
               }
@@ -341,14 +292,14 @@ ret:
               }
 
               { // ! use_x_ticks_on_plot_window_ = Internal - value labels just below horizontal X-axis.
-                if (derived().use_x_ticks_on_plot_window_ || ((value != 0) && derived().use_x_axis_lines_))
+                if (derived().x_ticks_.ticks_on_plot_window_on_ || ((value != 0) && derived().x_axis_.axis_line_on_))
                 { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
                   derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
-                    x1, y,
+                    x, y,
                     label.str(),
-                    derived().x_label_value.font_size(), derived().x_label_value.font_family(),
-                    "", "", "", "", alignment, // center label on the tick.
-                    derived().x_label_rotation_);
+                    derived().x_label_value_.style(),
+                    alignment, // center label on the tick.
+                    derived().x_ticks_.label_rotation_);
                 }
               }
             } // use_x_major_labels
@@ -356,23 +307,23 @@ ret:
           else
           { // Outside plot window - so do nothing?  Warning?
             //std::cerr << "Writing draw_x_major_ticks OUTside plot window: "
-            //  "x1 = " << x1 << ", plot_x1 = " << derived().plot_x1 << ", plot_x2 = " << derived().plot_x2 << std::endl;
+            //  "x = " << x << ", plot_left_ = " << derived().plot_left_ << ", plot_right_ = " << derived().plot_right_ << std::endl;
           }
         } // draw_x_major_ticks
 
         void draw_x_axis()
-        {
-          if(derived().use_x_axis_lines_)
+        { // Draw horizontal X-axis line &.
+          if(derived().x_axis_.axis_line_on_)
           { // Draw the horizontal X-axis line the full width of the plot window,
             // perhaps including an addition in lieu of a major tick.
-            double xleft = derived().plot_x1;
-            double xright = derived().plot_x2;
-            if (derived().use_left_ticks && derived().use_x_ticks_on_plot_window_ 
+            double xleft = derived().plot_left_;
+            double xright = derived().plot_right_;
+            if (derived().y_ticks_.left_ticks_on_ && derived().x_ticks_.ticks_on_plot_window_on_ 
               && (derived().y_axis_position_ == y_intersect))
             { // Extend the horizontal line left in lieu of longest tick.
-              xleft -= (std::max)(derived().y_minor_tick_length_, derived().y_major_tick_length_);
+              xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
             }
-            double y = derived().x_axis; // y = 0, (provided y range includes zero).
+            double y = derived().x_axis_.axis_; // y = 0, (provided y range includes zero).
             derived().image.get_g_element(PLOT_X_AXIS).line(
               xleft, y,
               xright, y);
@@ -385,14 +336,14 @@ ret:
           path_element& major_grid_path = derived().image.get_g_element(PLOT_X_MAJOR_GRID).path();
 
           // x_minor_jump is the interval between minor ticks.
-          double x_minor_jump = derived().x_major_interval_ /
-            (derived().x_num_minor_ticks_ + 1.);
+          double x_minor_jump = derived().x_ticks_.major_interval_ /
+            (derived().x_ticks_.num_minor_ticks_ + 1.);
 
           // Draw the ticks on the positive side (right of zero).
-          for(double x = 0.; x <= derived().x_max; x += derived().x_major_interval_)
+          for(double x = 0.; x <= derived().x_axis_.max_; x += derived().x_ticks_.major_interval_)
           {
             for(double j = x + x_minor_jump;
-              j < (x + derived().x_major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
+              j < (x + derived().x_ticks_.major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
               j += x_minor_jump)
               // Reduce test value by a few bits to avoid accumulated rounding error 
               // that intermittently puts minor ticks *at same value as* major ticks.
@@ -404,7 +355,7 @@ ret:
               // TODO this seems ugly - as does the negative ones below.
               draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
             } // for j
-            if ((x != 0. || !derived().use_y_axis_lines_) || derived().use_x_ticks_on_plot_window_)
+            if ((x != 0. || !derived().y_axis_.axis_line_on_) || derived().x_ticks_.ticks_on_plot_window_on_)
             { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
               // (won't be Y-axis line for 1-D where the zero tick is always wanted).
               draw_x_major_ticks(x, major_tick_path, major_grid_path);
@@ -412,24 +363,24 @@ ret:
           }
 
           // Draw the ticks on the negative side (left of zero).
-          for(double x = 0.; x >= derived().x_min; x -= derived().x_major_interval_)
+          for(double x = 0.; x >= derived().x_axis_.min_; x -= derived().x_ticks_.major_interval_)
           {
             // Draw minor ticks.
             for(double j = x - x_minor_jump; 
-              j > (x - derived().x_major_interval_ + x_minor_jump) * (1. + 2 * std::numeric_limits<double>::epsilon());
+              j > (x - derived().x_ticks_.major_interval_ + x_minor_jump) * (1. + 2 * std::numeric_limits<double>::epsilon());
               // Increase test value by a few bits to avoid accumulated rounding error 
               // that intermittently puts minor ticks *at same value as* major ticks.
 
               j -= x_minor_jump)
             {
-              if ((j != 0. || !derived().use_y_axis_lines_)  || derived().use_x_ticks_on_plot_window_)
+              if ((j != 0. || !derived().y_axis_.axis_line_on_)  || derived().x_ticks_.ticks_on_plot_window_on_)
               { // Avoid a minor tick at x == 0 where there *is* a vertical Y-axis line.
                 // (won't be Y-axis line for 1-D where the zero tick is always wanted).
                 // But no tick means no value label 0 either unless on_plot_window.
                 draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
               }
             }
-            if ((x != 0. || !derived().use_y_axis_lines_) || derived().use_x_ticks_on_plot_window_)
+            if ((x != 0. || !derived().y_axis_.axis_line_on_) || derived().x_ticks_.ticks_on_plot_window_on_)
             { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
               // (won't be Y-axis line for 1-D where the zero tick is always wanted).
               // But no tick means no value label 0 either unless on_plot_window.
@@ -444,28 +395,19 @@ ret:
 
         void draw_title()
         {
-          // Update title_info with position.
-          derived().title_info.x(derived().image.x_size() / 2.); // Center of image.
+          // Update title_info_ with position.
+          derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
           // Assumes align = center_align.
           double y;
-          if (derived().use_plot_window_)
-          {
-            y = derived().plot_y1; // plot_y1 IS now assigned in calculate_plot_window
-            // y is distance from top of image to top of plot window.
-            y /= derived().text_margin_; // Center the title in the space between.
-          }
-          else
-          { // Using all image.
-            y = derived().title_info.font_size() * derived().text_margin_; // Leave a linespace above.
-          }
-          derived().title_info.y(y);
-          derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(derived().title_info));
+          y = derived().title_info_.style().font_size() * derived().text_margin_; // Leave a linespace above.
+          derived().title_info_.y(y);
+          derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(derived().title_info_));
         } // void draw_title()
 
         void size_legend_box()
         { // Calculate how big the legend box needs to be.
           // Store in legend_width_ and legend_height_
-          if(derived().use_legend == false)
+          if(derived().legend_on_ == false)
           { // No legend, so set values to show legend position invalid.
             derived().legend_left_ = -1;
             derived().legend_right_ = -1;
@@ -476,12 +418,12 @@ ret:
             return;
           }
           else
-          { // use_legend == true
+          { // legend_on_ == true
             // Work out the size the legend box needs to be to hold the
             // header, markers & text.
             size_t num_series = derived().series.size(); // How many data series.
-            int font_size = derived().legend_header_.font_size();
-            int point_size =  derived().series[0].point_style.size();
+            int font_size = derived().legend_header_.style().font_size();
+            int point_size =  derived().series[0].point_style_.size();
             // Use height of whichever is the biggest of point marker and font.
             double spacing = (std::max)(font_size, point_size);
             // std::cout << spacing <<  ' ' << font_size << ' ' << point_size << std::endl;
@@ -491,7 +433,7 @@ ret:
             // 0 if no header.
             for(unsigned int i = 0; i < num_series; ++i)
             { // Find the longest text in all the data series.
-              std::string s = derived().series[i].title;
+              std::string s = derived().series[i].title_;
               size_t siz = s.size();
               if (siz > longest)
               {
@@ -499,20 +441,17 @@ ret:
               }
             } // for
             std::cout.flags(std::ios_base::dec);
-            std::cout << "\nLongest legend header or data descriptor " << longest << " chars" << std::endl; // TODO remove.
-
-            const double wh = 0.7; // TODO share a common value?
-            // font_size is not exact because width varies but use 0.7.
-            derived().legend_width_ = (0 + longest) * wh * font_size;
-            // Allow for a leading space, longest 
+            // std::cout << "\nLongest legend header or data descriptor " << longest << " chars" << std::endl;
+            derived().legend_width_ = (1 + longest) * wh * font_size;
+            // Allow for a leading space, longest text
             // & trailing space before box margin.
-            if (derived().use_line)
-            { // colored line marker.
+            if (derived().legend_lines_)
+            { // colored line marker in legend.
               derived().legend_width_ += spacing * 2.;
             }
-            if(derived().series[0].point_style.shape() != none)
+            if(derived().series[0].point_style_.shape() != none)
             { // colored data point marker, cross, round... & space
-              derived().legend_width_ += 2 * derived().series[0].point_style.size();
+              derived().legend_width_ += 2 * derived().series[0].point_style_.size();
             }
             // else no point marker.
 
@@ -526,29 +465,31 @@ ret:
               derived().legend_height_ += 2 * font_size; // text & space after.
             }
             derived().legend_height_ += num_series * spacing * 2; // Space for the data point symbols & text.
-          } // use_legend == true
+          } // legend_on_ == true
 
-          std::cout << "Legend width " << derived().legend_width_
-            << ", height " << derived().legend_height_ << std::endl;
+          std::cout << "Legend width " << derived().legend_width_ << ", height " << derived().legend_height_ << std::endl;
         } //  void size_legend_box()
 
         void place_legend_box()
         {
-          if(derived().use_legend) // Legend box required.
+          if(derived().legend_on_) // Legend box required.
           {
-            derived().use_outside_legend_ = true; // Unless proves to be inside.
+            derived().outside_legend_on_ = true; // Unless proves to be inside.
+            double spacing = derived().y_label_font_size() * 1.; // Around any legend box - beyond any border.
             switch (derived().legend_place_)
             {
+            case nowhere:
+              return;
             case inside:
-              derived().use_outside_legend_ = false;
+              derived().outside_legend_on_ = false;
               if (derived().legend_left_ == -1)
               { // Legend box position NOT been set by legend_top_left.
                 // Default inside position is top left of plot window.
-                derived().legend_left_ = derived().plot_x1;
-                derived().legend_right_ = derived().plot_x1 + derived().legend_width_;
-                derived().plot_x1 = derived().legend_right_;
-                derived().legend_top_ = derived().plot_y1; // Level with top of plot window.
-                if (derived().use_title)
+                derived().legend_left_ = derived().plot_left_;
+                derived().legend_right_ = derived().plot_left_ + derived().legend_width_;
+                derived().plot_left_ = derived().legend_right_;
+                derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
+                if (derived().title_on_)
                 {
                   derived().legend_top_ += derived().title_font_size() * 2.; // below title.
                 }
@@ -561,21 +502,43 @@ ret:
               break;
                 // If outside then reserve space for legend by reducing plot window.
             case outside_right:
-              derived().legend_right_ = derived().plot_x2; // right image edge less border.
-              derived().legend_right_ -= derived().y_label_font_size() * 2.; // space from right edge.
+              // so that it isn't too close to the image edge or the plot window.
+              derived().legend_right_ = derived().plot_right_; // right image edge less border.
+              derived().legend_right_ -= spacing; // space from right edge.
               derived().legend_left_ = derived().legend_right_ - derived().legend_width_;
-              derived().plot_x2 = derived().legend_left_; // Narrow plot window from left.
-              derived().plot_x2 -= derived().y_label_font_size() * 2.; // space.
-              derived().legend_top_ = derived().plot_y1; // Level with top of plot window.
-              derived().legend_top_ +=  derived().y_label_font_size() * 2.; // TODO ???
+              derived().plot_right_ = derived().legend_left_; // Narrow plot window from left.
+              derived().plot_right_ -= spacing;
+              derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
+              derived().legend_top_ += spacing; 
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
             case outside_left:
-              // TODO implement.
+              derived().legend_left_ = derived().plot_left_;
+              derived().legend_left_ += derived().y_label_font_size() * spacing;
+              derived().plot_left_ += derived().legend_width_; // Contract plot window right to make room,
+              derived().plot_left_ += spacing;
+              derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
+              derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
+              derived().legend_top_ += spacing; 
+              derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
             case outside_top:
+              // centered.
+               derived().legend_left_ = derived().image.x_size() / 2. - derived().legend_width_ / 2;
+               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
+               derived().plot_top_ += derived().legend_height_ + spacing ;
+               derived().legend_top_ = derived().title_info_.y() + derived().title_font_size() * derived().text_margin_;
+               derived().legend_top_ += spacing;
+               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
-            case outside_bottom:
+            case outside_bottom: 
+               // centered.
+               derived().legend_left_ = derived().image.x_size()/  2. - derived().legend_width_ / 2;
+               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
+               derived().plot_bottom_ -= derived().legend_height_;
+               derived().plot_bottom_ -= spacing;
+               derived().legend_top_ = derived().plot_bottom_;
+               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
               } // switch
 
@@ -612,32 +575,21 @@ ret:
               g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
               g_ptr->push_back(new
                 rect_element(derived().legend_left_, derived().legend_top_, derived().legend_width_, derived().legend_height_));
-            } // if use_legend
+            } // if legend_on_
           } //  void calculate_legend_box()
 
           void draw_legend()
           {
             // size_t num_points = derived().series.size();
-            int font_size = derived().legend_header_.font_size();
-            int point_size =  derived().series[0].point_style.size();
+            int font_size = derived().legend_header_.style().font_size();
+            int point_size =  derived().series[0].point_style_.size();
             // Use whichever is the biggest of point marker and font.
 
             double spacing = (std::max)(font_size, point_size);
             // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
             bool is_header = (derived().legend_header_.text() != "");
 
-            // TODO use saved version.
-            size_t longest = 0;
-            for(unsigned int i = 0; i < derived().series.size(); ++i)
-            { // Find the longest text in all the data series.
-              std::string s = derived().series[i].title;
-              size_t siz = s.size();
-              if (siz > longest)
-              {
-                longest = siz;
-              }
-            }
-            // Assume legend box position has already been sized by calculate_legend_box.
+           // Assume legend box position has already been sized by calculate_legend_box.
             double legend_x_start = derived().legend_left_; // Saved box location.
             double legend_width = derived().legend_width_;
             double legend_y_start = derived().legend_top_; 
@@ -665,44 +617,42 @@ ret:
             for(unsigned int i = 0; i < derived().series.size(); ++i)
             { // Show point marker, text info and perhaps line for all the data series.
               double legend_x_pos = legend_x_start;
+              legend_x_pos += spacing; // space before point marker.
               g_inner_ptr = &(g_ptr->add_g_element());
               // Use both stroke colors from the point's style.
-              g_inner_ptr->style()
-                .stroke_color(derived().series[i].point_style.stroke_color_);
-              g_inner_ptr->style().stroke_width(2); // TODO create a global for this
+              g_inner_ptr->style().stroke_color(derived().series[i].point_style_.stroke_color_);
+              g_inner_ptr->style().stroke_width(2);
 
-              if(derived().series[i].point_style.shape() != none)
+              if(derived().series[i].point_style_.shape() != none)
               {
                 draw_plot_point( // Plot point like circle, square...
-                  legend_x_start + spacing / 2, // space before point marker.
+                  legend_x_pos,
                   legend_y_pos,
                   *g_inner_ptr,
-                  derived().series[i].point_style);
+                  derived().series[i].point_style_);
                 legend_x_pos += 1.0 * spacing;
               }
 
               // Line markers  - only really applicable to 2-D sets plot_line_style,
-              if (derived().use_line)
+              if (derived().legend_lines_)
               { // Need to draw a short line to show color for that data series.
                 g_inner_ptr->style() // Use fill & stroke colors from line style.
-                  .stroke_color(derived().series[i].line_style.color);
+                  .stroke_color(derived().series[i].line_style_.color_);
                 g_inner_ptr->push_back(new line_element(
                   legend_x_pos + spacing /2., // half space leading space
                   legend_y_pos,
                   legend_x_pos + spacing * 2., // line sample is two char long.
                   legend_y_pos));
                 legend_x_pos += 2.5 * spacing; // short line & half space.
-              } // use_line
+              } // legend_lines_
 
               // Legend text for each Data Series added to the plot.
               g_inner_ptr = &(derived().image.get_g_element(PLOT_LEGEND_TEXT));
               g_inner_ptr->push_back(new text_element(
                 legend_x_pos, // allow space for the marker.
                 legend_y_pos,
-                derived().series[i].title, // Text for this data series.
-                derived().legend_header_.font_size(), // font size &
-                derived().legend_header_.font_family(), // font family.
-                "", "", "", "",
+                derived().series[i].title_, // Text for this data series.
+                derived().legend_header_.style(),
                 left_align));
               legend_y_pos += 2 * spacing;
             } // for
@@ -712,25 +662,30 @@ ret:
           {
             // color is set in constructor.
             //image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color(black);
-            // and using y_label_color(color)
+            // and using x_label_color(color)
 
-            std::string label = derived().x_label_info.text(); // x_axis label, and optional units.
-            if (derived().use_x_label_units && (derived().x_units_info.text() != ""))
-            { // Append the units, if any, providing brackets ().
-              label += "  (" + derived().x_units_info.text() + ")";
+            std::string label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
+            if (derived().x_axis_.label_units_on_ && (derived().x_units_info_.text() != ""))
+            { // Append the units, if any, use providing brackets () if required.
+              label += derived().x_units_info_.text();
             }
             // Simplest to start from the bottom of the image.
             // and move up to give enough space for the X-axis label.
 
             double y = derived().image.y_size();  // bottom edge of image.
-            y -= derived().x_label_font_size(); // Up enough for a space underneath label.
+            if (derived().image_border_.border_on_)
+            {
+              y -= derived().image_border_.width_; // Allow space for border.
+              y -= derived().image_border_.margin_; // Allow a margin.
+              y -= derived().x_axis_label_style_.font_size() / 2; // Allow a half font too.
+            }
             derived().image.get_g_element(PLOT_X_LABEL).push_back(new text_element(
               ( // x position relative to the x-axis which is middle of plot window.
-              derived().plot_x2 + derived().plot_x1) / 2,  // x coordinate - middle.
+              derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
               y, // Up from image bottom edge.
               label,
-              derived().x_label_font_size(),
-              derived().x_label_font_family(), "", "", "", "", center_align, horizontal)
+              derived().x_label_info_.style(),
+              center_align, horizontal)
               );
           } // void draw_x_label()
 
@@ -741,37 +696,37 @@ ret:
             // use the appropriate plot min or max.
             if(detail::limit_max(x))
             {
-              x = derived().plot_x2;
+              x = derived().plot_right_;
             }
             if(detail::limit_max(y))
             {
-              y = derived().plot_y1;
+              y = derived().plot_top_;
             }
             if(detail::limit_min(x))
             {
-              x = derived().plot_x1;
+              x = derived().plot_left_;
             }
             if(detail::limit_min(y))
             {
-              y = derived().plot_y1;
+              y = derived().plot_top_;
             }
             // If value is NaN, use zero instead.
             // TODO Do we want/get a different color or shape for NaNs??
             if(detail::limit_NaN(x))
             {
-              x = 0;
+              x = 0.;
               transform_x(x);
             }
             if(detail::limit_NaN(y))
             {
-              y = 0;
+              y = 0.;
               transform_y(y);
             }
           } // void adjust_limits
 
           void draw_plot_point(double x, double y,
             g_element& g_ptr,
-            const plot_point_style& sty)
+            plot_point_style& sty)
           {
             int size = sty.size_;
             double half_size = size / 2.;
@@ -822,7 +777,7 @@ ret:
               break;
 
             case symbol:
-              g_ptr.text(x, y + half_size, sty.symbols_, size, "Lucida Sans Unicode"); // symbol(s), size and centre.
+              g_ptr.text(x, y + half_size, sty.symbols(), sty.style(), center_align, horizontal); // symbol(s), size and centre.
               // TODO Need to provide way to set style.symbols when Boost.Parameter is unravelled.
 
               // Unicode symbols that work on most browsers are listed at
@@ -835,32 +790,32 @@ ret:
 
               break;
             case diamond:
-              g_ptr.text(x, y, "&#x2666;", size, "Lucida Sans Unicode");
+              g_ptr.text(x, y, "&#x2666;", sty.symbols_style_, center_align, horizontal);
               // size / 4. puts bottom tip on the X-axis,
               // size / 2. put center above the X-axis
               // x, y, put on the X-axis - probably what is needed for 2-D plots.
               // diamond, spades, clubs & hearts fill with expected fill_color.
               break;
             case asterisk:
-              g_ptr.text(x, y - size / 3., "&#x2217;", size, "Lucida Sans Unicode");
+              g_ptr.text(x, y - size / 3., "&#x2217;", sty.symbols_style_, center_align, horizontal);
               // asterisk is black filled.
               // size /3 puts the bottom tip on the X-axis.
               break;
             case lozenge:
-              g_ptr.text(x, y - size / 3., "&#x25CA;", size, "Lucida Sans Unicode");
+              g_ptr.text(x, y - size / 3., "&#x25CA;", sty.symbols_style_, center_align, horizontal);
               // size / 3 to get tip of lozenge just on the X-axis.
               // lozenge seems not to fill?
               break;
             case club:
-              g_ptr.text(x, y, "&#x2663;", size, "Lucida Sans Unicode");
+              g_ptr.text(x, y, "&#x2663;", sty.symbols_style_, center_align, horizontal);
               // x, y, puts club just on the X-axis
               break;
             case spade:
-              g_ptr.text(x, y, "&#x2660;", size, "Lucida Sans Unicode");
+              g_ptr.text(x, y, "&#x2660;", sty.symbols_style_, center_align, horizontal);
               //
               break;
             case heart:
-              g_ptr.text(x, y , "&#x2665;", size, "Lucida Sans Unicode");
+              g_ptr.text(x, y , "&#x2665;", sty.symbols_style_, center_align, horizontal);
               //
               break;
             case cone: // Pointing down triangle.
@@ -951,8 +906,8 @@ ret:
         private:
           Derived& derived()
           {
-            return static_cast<Derived&>(*this); // Why is cast required?
-            //  error C2440: 'return' : cannot convert from 'boost::svg::detail::axis_plot_frame<Derived>' to 'boost::svg::svg_1d_plot &'
+            return static_cast<Derived&>(*this);
+            //http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern
           }
           const Derived& derived()const
           {
@@ -1213,7 +1168,7 @@ ret:
             return derived();
           }
 
-          const bool license_on()
+          bool license_on()
           {
             return derived().image.is_license();
           }
@@ -1251,117 +1206,117 @@ ret:
 
           Derived& x_value_precision(int digits)
           { // Precision of X tick label values in decimal digits (default 3).
-            derived().x_value_precision_ = digits;
+            derived().x_ticks_.value_precision_ = digits;
             return derived();
           }
 
           int x_value_precision()
           { //
-            return derived().x_value_precision_;
+            return derived().x_ticks_.value_precision_;
           }
 
           const std::string title()
           {
-            return derived().title_info.text();
+            return derived().title_info_.text();
           }
 
           Derived& title_font_size(unsigned int i)
           {
-            derived().title_info.font_size(i);
+            derived().title_info_.style().font_size(i);
             return derived();
           }
 
           unsigned int title_font_size()
           {
-            return derived().title_info.font_size();
+            return derived().title_info_.style().font_size();
           }
 
           Derived& title_font_family(const std::string& family)
           {
-            derived().title_info.font_family(family);
+            derived().title_info_.style().font_family(family);
             return derived();
           }
 
           const std::string& title_font_family()
           {
-            return derived().title_info.font_family();
+            return derived().title_info_.style().font_family();
           }
 
           Derived& title_font_style(const std::string& style)
           {
-            derived().title_info.font_style(style);
+            derived().title_info_.style().font_style(style);
             return derived();
           }
 
           const std::string& title_font_style()
           {
-            return derived().title_info.font_style();
+            return derived().title_info_.style().font_style();
           }
 
           Derived& title_font_weight(const std::string& weight)
           {
-            derived().title_info.font_weight(weight);
+            derived().title_info_.style().font_weight(weight);
             return derived();
           }
 
           const std::string& title_font_weight()
           {
-            return derived().title_info.font_weight();
+            return derived().title_info_.style().font_weight();
           }
 
           Derived& legend_font_weight(const std::string& weight)
           {
-            derived().legend_header_.font_weight(weight);
+            derived().legend_header_.style().font_weight(weight);
             return derived();
           }
 
           const std::string& legend_font_weight()
           {
-            return derived().legend_header_.font_weight();
+            return derived().legend_header_.style().font_weight();
           }
 
           Derived& title_font_stretch(const std::string& stretch)
           {
-            derived().title_info.font_stretch(stretch);
+            derived().title_info_.style().font_stretch(stretch);
             return derived();
           }
 
           const std::string& title_font_stretch()
           {
-            return derived().title_info.font_stretch();
+            return derived().title_info_.style().font_stretch();
           }
 
           Derived& title_font_decoration(const std::string& decoration)
           {
-            derived().title_info.font_decoration(decoration);
+            derived().title_info_.style().font_decoration(decoration);
             return derived();
           }
 
           const std::string& title_font_decoration()
           {
-            return derived().title_info.font_decoration();
+            return derived().title_info_.style().font_decoration();
           }
 
-          Derived& title_font_rotation(int rotate)
+          Derived& title_font_rotation(rotate_style rotate)
           { // Degrees (0 to 360).
-            derived().title_info.font_rotation(rotate);
+            derived().title_info_.rotation(rotate);
             return derived();
           }
 
           int title_font_rotation()
           {
-            return derived().title_info.font_rotation();
+            return derived().title_info_.rotation();
           }
 
           Derived& title_font_alignment(align_style alignment)
           {
-            derived().title_info.font_alignment(alignment);
+            derived().title_info_.font_alignment(alignment);
             return derived();
           }
 
           align_style title_font_alignment()
           {
-            return derived().title_info.font_alignment();
+            return derived().title_info_.alignment();
           }
 
           Derived& legend_width(double width)
@@ -1388,24 +1343,24 @@ ret:
 
           Derived& legend_font_family(const std::string& family)
           {
-            derived().legend_header_.font_family(family);
+            derived().legend_header_.style().font_family(family);
             return derived();
           }
 
           const std::string& legend_font_family()
           {
-            return derived().legend_header_.font_family();
+            return derived().legend_header_.style().font_family();
           }
 
           Derived& legend_title_font_size(unsigned int size)
           {
-            derived().legend_header_.font_size(size);
+            derived().legend_header_.style().font_size(size);
             return derived();
           }
 
           unsigned int legend_title_font_size()
           {
-            return derived().legend_header_.font_size();
+            return derived().legend_header_.style().font_size();
           }
 
           Derived& legend_top_left(double x, double y)
@@ -1436,20 +1391,20 @@ ret:
             return r;
           }
 
-          Derived& line_on(bool is)
+          Derived& legend_lines(bool is)
           {
-            derived().use_line = is;
+            derived().legend_lines_ = is;
             return derived();
           }
 
-          bool line_on()
+          bool legend_lines()
           {
-            return derived().use_line;
+            return derived().legend_lines_;
           }
 
           Derived& legend_on(bool cmd)
           {
-            derived().use_legend = cmd;
+            derived().legend_on_ = cmd;
             if(cmd)
             {
               derived().image.get_g_element(detail::PLOT_LEGEND_BACKGROUND)
@@ -1461,7 +1416,7 @@ ret:
 
           bool legend_on()
           {
-            return derived().use_legend;
+            return derived().legend_on_;
           }
 
           Derived& legend_place(legend_places l)
@@ -1477,30 +1432,30 @@ ret:
 
           bool legend_outside()
           {
-            return derived().use_outside_legend_;
+            return derived().outside_legend_on_;
           }
           Derived& plot_window_on(bool cmd)
           {
-            derived().use_plot_window_ = cmd;
+            derived().plot_window_on_ = cmd;
 
             if(cmd)
-            { // set plot window color and border color.
-              // TODO - allow user to change these.
-              derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND)
-                .style().fill_color(white)
-                .stroke_color(black);
+            { // Set plot window
+              derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style()
+                .fill_color(derived().plot_window_border_.fill_) // background color and
+                .stroke_color(derived().plot_window_border_.stroke_); // border color.
             }
-            derived().legend_place_ = outside_right;
+            //derived().legend_place_ = outside_right;
             return derived();
           }
 
           bool plot_window_on()
           {
-            return derived().use_plot_window_;
+            return derived().plot_window_on_;
           }
 
           Derived& plot_border_color(const svg_color& col)
           {
+            derived().plot_window_border_.stroke_ = col;
             derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
             return derived();
           }
@@ -1517,178 +1472,188 @@ ret:
 
           Derived& plot_border_width(double w)
           {
+            derived().plot_window_border_.width_ = w;
             derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
             return derived();
           }
 
-          Derived& border_margin(double w)
+          Derived& image_border_margin(double w)
           {
-            derived().border_margin_ = w;
+            derived().image_border_.margin_ = w;
             return derived();
           }
 
-          double border_margin()
+          double image_border_margin()
           {
-            return derived().border_margin_;
+            return derived().image_border_.margin_;
           }
 
-          Derived& border_width(double w)
+          Derived& image_border_width(double w)
           {
-            derived().border_width_ = w;
+            derived().image_border_.width_ = w;
             return derived();
           }
 
-          double border_width()
+          double image_border_width()
           {
-            return derived().border_width_;
+            return derived().image_border_.width_;
           }
 
           Derived& plot_window_x(double min_x, double max_x)
           { // This is normally calculated from other plot values.
             if(max_x <= min_x)
             {
-              throw std::runtime_error("plot_window_x: X range: x_max < x_min");
+              throw std::runtime_error("plot_window X: x_max_ <= x_min_");
             }
-            derived().plot_x1 = min_x;
-            derived().plot_x2 = max_x;
+            if((max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000)
+            { // Range too small to display.
+              throw std::runtime_error("plot_window X range too small!" );
+            }
+            derived().plot_left_ = min_x;
+            derived().plot_right_ = max_x;
             return derived();
           }
 
           Derived& plot_window_y(double min_y, double max_y)
           { // This is normally calculated from other plot values.
+            
             if(max_y <= min_y)
             {
-              throw std::runtime_error("plot_window_y : Y range: y_max < y_min");
+              throw std::runtime_error("plot_window Y: y_max_ <= x_min_");
             }
-            derived().plot_y1 = min_y;
-            derived().plot_y2 = max_y;
+            if(max_y <= min_y)
+            {
+              throw std::runtime_error("plot_window Y range too small!");
+            }
+            derived().plot_top_ = min_y;
+            derived().plot_bottom_ = max_y;
             return derived();
           }
 
           std::pair<double, double> plot_window_x()
           {
             std::pair<double, double> r;
-            r.first = derived().plot_x1;
-            r.second = derived().plot_x2;
+            r.first = derived().plot_left_;
+            r.second = derived().plot_right_;
             return r;
           }
 
           double plot_window_x_left()
           {
-            return derived().plot_x1;
+            return derived().plot_left_;
           }
           double plot_window_x_right()
           {
-            return derived().plot_x2;
+            return derived().plot_right_;
           }
           double plot_window_y_top()
           {
-            return derived().plot_y1;
+            return derived().plot_top_;
           }
           double plot_window_y_bottom()
           {
-            return derived().plot_y2;
+            return derived().plot_bottom_;
           }
 
           std::pair<double, double> plot_window_y()
           {
             std::pair<double, double> r;
-            r.first = derived().plot_y1;
-            r.second = derived().plot_y2;
+            r.first = derived().plot_top_;
+            r.second = derived().plot_bottom_;
             return r;
           }
 
           double x_minor_interval()
           {
-            return derived().x_minor_interval_;  // interval
+            return derived().x_ticks_.minor_interval_;  // interval
           }
 
           double y_minor_interval()
           {
-            return derived().y_minor_interval_;  // interval
+            return derived().y_ticks_.minor_interval_;  // interval
           }
 
           Derived& x_ticks_up_on(bool cmd)
           {
-            derived().use_up_ticks = cmd;
+            derived().x_ticks_.up_ticks_on_ = cmd;
             return derived();
           }
 
           bool x_ticks_up_on()
           {
-            return derived().use_up_ticks;
+            return derived().x_ticks_.up_ticks_on_;
           }
 
           Derived& x_ticks_down_on(bool cmd)
           {
-            derived().use_down_ticks = cmd;
+            derived().x_ticks_.down_ticks_on_ = cmd;
             return derived();
           }
 
           bool x_ticks_down_on()
           {
-            return derived().use_down_ticks;
+            return derived().x_ticks_.down_ticks_on_;
           }
           // Only need y_ticks_left_on & y_ticks_right_on in 2D
 
           Derived& x_label_on(bool cmd)
           { // Show X-axis label text, or not.
-            derived().use_x_label = cmd;
+            derived().x_axis_.label_on_ = cmd;
             return derived();
           }
 
           bool x_label_on()
           {
-            return derived().use_x_label;
+            return derived().x_axis_.label_on_;
           }
 
           Derived& x_label_font_size(unsigned int i)
           { 
-            derived().x_label_info.font_size(i);
+            derived().x_label_info_.style().font_size(i);
             return derived();
           }
 
           unsigned int x_label_font_size()
           {
-            return derived().x_label_info.font_size();
+            return derived().x_label_info_.style().font_size();
           }
 
           Derived& x_value_font_size(unsigned int i)
           { 
-            derived().x_value_value.font_size(i);
+            derived().x_value_value.style().font_size(i);
             return derived();
           }
 
           unsigned int x_value_font_size()
           {
-            return derived().x_value_value.font_size();
+            return derived().x_value_value.style().font_size();
           }
 
           Derived& x_label_font_family(const std::string& family)
           {
-            derived().x_label_info.font_family(family);
+            derived().x_label_info_.style().font_family(family);
             return derived();
           }
 
           const std::string& x_label_font_family()
           {
-            return derived().x_label_info.font_family();
+            return derived().x_label_info_.style().font_family();
           }
 
           Derived& x_value_ioflags(int flags)
           { // IO flags of X tick label values (default 0X201).
-            derived().x_value_ioflags_ = flags;
+            derived().x_ticks_.value_ioflags_ = flags;
             return derived();
           }
 
           int x_value_ioflags()
           { // ALL stream ioflags for control of format of X value labels.
-            return derived().x_value_ioflags_;
+            return derived().x_ticks_.value_ioflags_;
           }
 
           Derived& title(const std::string title)
           { // Plot title.
-            derived().title_info.text(title);
+            derived().title_info_.text(title);
             return derived();
           }
 
@@ -1718,113 +1683,113 @@ ret:
 
           Derived& x_ticks_on_plot_window_on(bool cmd)
           { // External style.
-            derived().use_x_ticks_on_plot_window_ = cmd;
+            derived().x_ticks_.ticks_on_plot_window_on_ = cmd;
             return derived();
           }
 
           bool x_ticks_on_plot_window_on()
           { // External style = true.
-            return derived().use_x_ticks_on_plot_window_;
+            return derived().x_ticks_.ticks_on_plot_window_on_;
           }
 
           Derived& x_label_units_on(bool cmd)
           {
-            derived().use_x_label_units = cmd;
+            derived().x_axis_.label_units_on = cmd;
             return derived();
           }
 
           bool x_label_units_on()
           {
-            return derived().use_x_label_units;
+            return derived().x_axis_.label_units_on_;
           }
 
           Derived& x_major_labels_on(bool cmd)
           {
-            derived().use_x_major_labels = cmd;
+            derived().x_ticks_.major_value_labels_on = cmd;
             return derived();
           }
 
           bool x_major_labels_on()
           {
-            return derived().use_x_major_labels;
+            return derived().x_ticks_.major_value_labels_on;
           }
 
-          Derived& x_major_label_rotation(int rot)
+          Derived& x_major_label_rotation(rotate_style rot)
           {
-            derived().x_label_rotation_ = rot;
+            derived().x_ticks_.label_rotation_ = rot;
             return derived();
           }
 
-          int x_major_label_rotation()
+          rotate_style x_major_label_rotation()
           {
-            return derived().x_label_rotation_;
+            return derived().x_ticks_.label_rotation_;
           }
 
           Derived& title_on(bool cmd)
           {
-            derived().use_title = cmd;
+            derived().title_on_ = cmd;
             return derived();
           }
 
           bool title_on()
           {
-            return derived().use_title;
+            return derived().title_on_;
           }
 
           Derived& x_major_grid_on(bool is)
           {
-            derived().use_x_major_grid_ = is;
+            derived().x_ticks_.major_grid_on_ = is;
             return derived();
           }
 
           bool x_major_grid_on()
           {
-            return derived().use_x_major_grid_;
+            return derived().x_ticks_.major_grid_on_;
           }
 
           Derived& x_minor_grid_on(bool is)
           {
-            derived().use_x_minor_grid_ = is;
+            derived().x_ticks_.minor_grid_on_ = is;
             return derived();
           }
 
           bool x_minor_grid_on()
           {
-            return derived().use_x_minor_grid_;
+            return derived().x_ticks_.minor_grid_on_;
           }
 
           Derived& axes_on(bool is)
           { // Draw *both* x and y axes (note plural).
-            derived().use_x_axis_lines_ = is;
-            derived().use_y_axis_lines_ = is;
+            derived().x_axis_.axis_line_on_ = is;
+            derived().y_axis_.axis_line_on_ = is;
             return derived();
           }
 
           bool axes_on()
           { // Used X in preference to Y for 1D, but now require *both* x and y axis on.
-            return derived().use_x_axis_lines_ && derived().use_y_axis_lines_;
+            return derived().x_axis_.axis_line_on_ && derived().y_axis_.axis_line_on_;
           }
 
           Derived& x_axis_on(bool is)
-          { // Draw a horizontal x_axis line.
-            derived().use_x_axis_lines_ = is;
+          { // Draw a horizontal x_axis_ line.
+            derived().x_axis_.axis_line_on_ = is;
             return derived();
           }
 
           bool x_axis_on()
           { // Use X in preference to Y for 1D
-            return derived().use_x_axis_lines_;
+            return derived().x_axis_.axis_line_on_;
           }
 
           Derived& y_axis_on(bool is)
-          {// Draw a vertical y_axis line.
-            derived().use_y_axis_lines_ = is;
+          {// Draw a vertical y_axis_ line.
+            derived().y_axis_.axis_line_on_ = is;
             return derived();
           }
 
           bool y_axis_on()
           { // Should be always false for 1D.
-            return derived().use_y_axis_lines_;
+            return derived().y_axis_.axis_line_on_;
           }
 
           // enums like PLOT_TITLE provide a std:string like "title"
@@ -1915,6 +1880,21 @@ ret:
           svg_color plot_background_color()
           {
             return derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color();
+          }
+
+          const std::string x_axis_position()
+          {
+            switch(derived().x_axis_position_)
+            {
+            case top:
+              return "y_axis_position top (all values < 0)"; break;
+            case x_intersect:
+              return "y_axis_position intersects X axis (range includes zero)"; break;
+            case bottom:
+              return "y_axis_position right (all values > 0)"; break;
+            default:
+              return "?"; break;
+            }
           }
 
           Derived& x_axis_color(const svg_color& col)
@@ -2066,74 +2046,74 @@ ret:
 
           Derived& x_label(const std::string& str)
           {
-            derived().x_label_info.text(str);
+            derived().x_label_info_.text(str);
             return derived();
           }
 
           std::string x_label()
           {
-            return derived().x_label_info.text();
+            return derived().x_label_info_.text();
           }
 
           Derived& x_label_units(const std::string& str)
           {
-            derived().x_units_info.text(str);
+            derived().x_units_info_.text(str);
             return derived();
           }
 
           std::string x_label_units()
           {
-            return derived().x_units_info.text();
+            return derived().x_units_info_.text();
           }
 
           // y_label not needed in 1D.
           Derived& y_label(const std::string& str)
           {
-            derived().y_label_info.text(str);
+            derived().y_label_info_.text(str);
             return derived();
           }
 
           std::string y_label()
           {
-            return derived().y_label_info.text();
+            return derived().y_label_info_.text();
           }
 
           Derived& y_label_units(const std::string& str)
           {
-            derived().y_units_info.text(str);
+            derived().y_units_info_.text(str);
             return derived();
           }
 
           std::string y_label_units()
           {
-            return derived().y_units_info.text();
+            return derived().y_units_info_.text();
           }
 
           Derived& x_major_interval(double inter)
           {
-            derived().x_major_interval_ = inter;
+            derived().x_ticks_.major_interval_ = inter;
             return derived();
           }
 
           double x_major_interval()
           {
-            return derived().x_major_interval_;
+            return derived().x_ticks_.major_interval_;
           }
 
           Derived& x_major_tick_length(double length)
           {
-            derived().x_major_tick_length_ = length;
+            derived().x_ticks_.major_tick_length_ = length;
             return derived();
           }
 
           double x_major_tick_length()
           {
-            return derived().x_major_tick_length_;
+            return derived().x_ticks_.major_tick_length_;
           }
 
           Derived& x_major_tick_width(double width)
           {
-            derived().x_major_tick_width_ = width; // Redundant?
+            derived().x_ticks_.major_tick_width_ = width; // Redundant?
             derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
             return derived();
           }
@@ -2145,18 +2125,18 @@ ret:
 
           Derived& x_minor_tick_length(double length)
           {
-            derived().x_minor_tick_length_ = length;
+            derived().x_ticks_.minor_tick_length_ = length;
             return derived();
           }
 
           double x_minor_tick_length()
           {
-            return derived().x_minor_tick_length_;
+            return derived().x_ticks_.minor_tick_length_;
           }
 
           Derived& x_minor_tick_width(double width)
           {
-            derived().x_minor_tick_width_ = width;
+            derived().x_ticks_.minor_tick_width_ = width;
             derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width(width);
             return derived();
           }
@@ -2169,99 +2149,100 @@ ret:
 
           Derived& x_major_tick(double d)
           { // Interval (Cartesian units) between major ticks.
-            derived().x_major_interval_ = d;
+            derived().x_ticks_.major_interval_ = d;
           }
 
           double x_major_tick()
           { // Interval (Cartesian units) between major ticks.
-            return derived().x_major_interval_;
+            return derived().x_ticks_.major_interval_;
           }
 
           Derived& x_minor_interval(double interval)
           { // aka x_minor_tick
-            derived().x_minor_interval_ = interval;
+            derived().x_ticks_.minor_interval_ = interval;
             return derived();
           }
 
           Derived& x_num_minor_ticks(unsigned int num)
           {
-            derived().x_num_minor_ticks_ = num;
+            derived().x_ticks_.num_minor_ticks_ = num;
             return derived();
           }
 
           unsigned int x_num_minor_ticks()
           { // NB NOT float or double!
-            return derived().x_num_minor_ticks_;
+            return derived().x_ticks_.num_minor_ticks_;
           }
 
           Derived& x_range(double min_x, double max_x)
           {
             if(max_x <= min_x)
-            {
-              throw std::runtime_error("Illegal Argument: X range: x_max < x_min");
+            { // max_x <= min_x.
+              throw std::runtime_error("X range: max <= min!");
             }
-            derived().x_min = min_x;
-            derived().x_max = max_x;
+            if((max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000)
+            { // Range too small to display.
+              throw std::runtime_error("X range too small!" );
+            }
+            derived().x_axis_.min_ = min_x;
+            derived().x_axis_.max_ = max_x;
             return derived();
           }
 
           std::pair<double, double> x_range()
           {
             std::pair<double, double> r;
-            r.first = derived().x_min;
-            r.second = derived().x_max;
+            r.first = derived().x_axis_.min_;
+            r.second = derived().x_axis_.max_;
             return r;
           }
 
-          // Avoid clashes with class svg_1d_plot variable x_min & x_max,
-          // so use longer x_minimum, x_maximum ...
-          Derived& x_minimum(double min_x)
+          Derived& x_min(double min_x)
           {
-            // Can't check here that x_max > x_min because may not have set x_max yet.
-            // TODO ensure that there is another check somewhere.
-            derived().x_min = min_x;
+            // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
+            derived().x_axis_.min_ = min_x;
             return derived();
           }
 
-          double x_minimum()
+          double x_min()
           {
-            return derived().x_min;
+            return derived().x_axis_.min_;
           }
 
-          Derived& x_maximum(double x)
+          Derived& x_max(double x)
           {
-            // Can't check here that x_max > x_min because may not have set x_min yet.
-            // TODO check that there is another check somewhere.
-            derived().x_max = x;
+            // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
+            derived().x_axis_.max_ = x;
             return derived();
           }
 
-          double x_maximum()
+          double x_max()
           {
-            return derived().x_max;
+            return derived().x_axis_.max_;
           }
 
-          // Stylesheet.
+          //// Stylesheet.
+          // Removed for now to avoid compile warning in spirit.
 
-          Derived& load_stylesheet(const std::string& file)
-          {
-            derived().image.load_stylesheet(file);
-            return derived();
-          }
+          //Derived& load_stylesheet(const std::string& file)
+          //{
+          //  derived().image.load_stylesheet(file);
+          //  return derived();
+          //}
 
-          // Image info (& identical const version).
+          //// Image info (& identical const version).
 
-          svg& get_svg()
-          {
-            derived()._update_image();
-            return derived().image;
-          }
+          //svg& get_svg()
+          //{
+          //  derived()._update_image();
+          //  return derived().image;
+          //}
 
-          const svg& get_svg() const
-          {
-            derived()._update_image();
-            return derived().image;
-          }
+          //const svg& get_svg() const
+          //{
+          //  derived()._update_image();
+          //  return derived().image;
+          //}
         }; // template <class Derived> class axis_plot_frame
 
       } // detail

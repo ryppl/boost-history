@@ -17,7 +17,7 @@
 #include <exception>
 #include <vector>
 
-#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
+//#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
 #include "detail/svg_tag.hpp" // element class definitions.
 #include "svg_style.hpp"
 
@@ -91,12 +91,6 @@ class svg;
 // svg& circle(double x, double y, unsigned int radius = 5)
 // svg& ellipse(double rx, double ry, double cx, double cy)
 
-// svg& text(double x, double y, const std::string& text, int text_size = 12,
-//   const std::string& font = "Lucida Sans Unicode",
-//   const std::string& style = "", const std::string& weight = "",
-//   const std::string& stretch = "", const std::string& decoration = "",
-//   align_style align = center_align,  int rotate = 0)
-
 // write image out to ostream and file:
 // svg& write(std::ostream& s_out)
 // svg& write(const std::string& file)
@@ -124,6 +118,7 @@ protected:
   std::string filename_; // file written to.
   std::string author_; // Probably == copyright holder.
   bool is_license_;
+  bool is_boost_license_;
   std::string reproduction_; // "permits", "requires", or "prohibits"
   std::string attribution_;
   std::string commercialuse_;
@@ -222,6 +217,7 @@ public:
     css(""), // stylesheet.
     filename_(""), // If written only to ostream, filename will not appear in comment.
     is_license_(false), // No default license.
+    is_boost_license_(false), // No Boost license unless requested.
     reproduction_("permits"), // Set with license:
     distribution_("permits"), // permits, requires, or prohibits.
     attribution_("requires"),
@@ -371,6 +367,14 @@ public:
     }
     s_out.precision(coord_precision());
 
+    if (is_boost_license_ == true)
+    {
+      s_out << 
+        "<!-- Use, modification and distribution of this Scalable Vector Graphic file -->"
+        "\n<!-- are subject to the Boost Software License, Version 1.0. -->"
+        "\n<!-- (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) -->\n" 
+        << std::endl;
+    } // is_boost_license
     if (is_license_ == true)
     {
       s_out <<
@@ -395,7 +399,7 @@ public:
            "</rdf:RDF>\n"
          "</metadata>"
        << std::endl;
-    }
+    } // is_license
     write_css(s_out);// stylesheet, if any.
     write_document(s_out); // write clip paths and all document elements.
     s_out << "</svg>" << std::endl;   // close off svg tag.
@@ -419,6 +423,7 @@ public:
   svg& license(bool l)
   { // Set (or not) license using all requirement (default permits).
     is_license_ = l;
+    return *this;
   }
 
   bool is_license()
@@ -426,6 +431,16 @@ public:
     return is_license_;
   }
 
+  svg& boost_license(bool l)
+  { // Set (or not) Boost license.
+    is_boost_license_ = l;
+    return *this;
+  }
+
+  bool is_boost_license()
+  { // Shows if a license has been requested in the svg header metatadata.
+    return is_boost_license_;
+  }
   const std::string& reproduction()
   { // Gets license reproduction requirement.
     return reproduction_;
@@ -553,15 +568,12 @@ public:
   // -------------------------------------------------
   // push_back information about text to the document.
   // -------------------------------------------------
-  svg& text(double x, double y, const std::string& text, int text_size = 12,
-    const std::string& font = "Lucida Sans Unicode",
-    const std::string& style = "", const std::string& weight = "",
-    const std::string& stretch = "", const std::string& decoration = "",
-    align_style align = center_align,  int rotate = 0)
+  svg& text(double x, double y, const std::string& text,
+    const text_style& style, // size, font etc.
+    align_style align = center_align, rotate_style rotate = horizontal
+    )
   {
-    document.push_back(new text_element(x, y,
-      text, text_size, font, style, weight, stretch, decoration, align, rotate)
-      );
+    document.push_back(new text_element(x, y, text, style, align, rotate) );
     return *this;
   }
 
@@ -584,18 +596,18 @@ public:
 
   svg& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
   { // push_back a complete triangle to the document.
-    document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3,  f));
+    document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, f));
     return *this; // svg& 
   }
 
   svg& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
-  { // push_back a complete rhobus to the document.
+  { // push_back a complete rhombus to the document.
     document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, f));
     return *this; // svg& 
   }
 
   svg& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
-  { // push_back a complete rhobus to the document.
+  { // push_back a complete pentagon to the document.
     document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, f));
     return *this; // svg& 
   }
@@ -660,32 +672,32 @@ public:
     return document.g_tag(i);
   }
 
-  // -------------------------------------------------------------
-  // Load stylesheet
-  // -------------------------------------------------------------
+  //// -------------------------------------------------------------
+  //// Load stylesheet
+  //// -------------------------------------------------------------
 
-  svg& load_stylesheet(const std::string& input)
-  { // Load a stylesheet into string css from an input file.
-    std::ifstream if_str(input.c_str());
+  //svg& load_stylesheet(const std::string& input)
+  //{ // Load a stylesheet into string css from an input file.
+  //  std::ifstream if_str(input.c_str());
 
-    if(if_str.fail())
-    {
-      throw std::runtime_error("Error opening file " + input);
-    }
-    if(!validate_stylesheet(if_str))
-    {
-      throw std::runtime_error("Error loading stylesheet!");
-    }
-    if_str.clear();
-    if_str.seekg(0);
-    std::string tmp;
-    css = "";
-    while(std::getline(if_str, tmp))
-    {
-      css += tmp;
-    }
-    return *this;
-  } // svg& load_stylesheet
+  //  if(if_str.fail())
+  //  {
+  //    throw std::runtime_error("Error opening file " + input);
+  //  }
+  //  if(!validate_stylesheet(if_str))
+  //  {
+  //    throw std::runtime_error("Error loading stylesheet!");
+  //  }
+  //  if_str.clear();
+  //  if_str.seekg(0);
+  //  std::string tmp;
+  //  css = "";
+  //  while(std::getline(if_str, tmp))
+  //  {
+  //    css += tmp;
+  //  }
+  //  return *this;
+  //} // svg& load_stylesheet
 }; // class svg
 
 } // namespace svg

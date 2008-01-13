@@ -14,6 +14,8 @@
 #include <boost/spirit/core.hpp>
 #include <boost/spirit/utility/distinct.hpp>
 
+// TODO get some inscrutable errors from this and so commented out of other modules.
+
 #include <exception>
 #include <string>
 #include <fstream>

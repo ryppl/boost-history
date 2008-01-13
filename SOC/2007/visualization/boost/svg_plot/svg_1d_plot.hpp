@@ -12,11 +12,6 @@
 #ifndef BOOST_SVG_SVG_1D_PLOT_HPP
 #define BOOST_SVG_SVG_1D_PLOT_HPP
 
-//#if defined (BOOST_MSVC)
-//#  pragma warning (disable: 4005) // 'BOOST_PARAMETER_MAX_ARITY' : macro redefinition
-//#endif
-
-#define BOOST_PARAMETER_MAX_ARITY 12
 
 #include <boost/bind.hpp>
 
@@ -126,10 +121,10 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // Stored so as to avoid rewriting style information constantly.
   svg image;
 
-  text_element title_info; // Title of whole plot.
+  text_element title_info_; // Title of whole plot.
   text_element legend_header; // legend box header (if any).
-  text_element x_label_info; // Example: "length of widget"
-  text_element x_units_info; // For example, to display, "length (meter)"
+  text_element x_label_info_; // Example: "length of widget"
+  text_element x_units_info_; // For example, to display, "length (meter)"
   // No Y-axis info for 1D.
   // Note that text_elements hold font_size.
 
@@ -137,10 +132,10 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // Allows for title and legend to be separate.
   // Initially set to the width and height of the image.
   // TODO Should this be unsigned int??? to be consistent.
-  int plot_x1; // calculate_plot_window() sets these values.
-  int plot_y1;
-  int plot_x2;
-  int plot_y2;
+  int plot_left_; // calculate_plot_window() sets these values.
+  int plot_top_;
+  int plot_right_;
+  int plot_bottom_;
 
   // X-Axis information.
   unsigned int x_major_tick_length_; // pixels.
@@ -153,7 +148,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // TODO Not sure it is wise to store in two places?
   unsigned int x_major_grid_width_; // pixels.
   unsigned int x_minor_grid_width_; // pixels.
-  //unsigned int x_major_label; // pixels. Now in x_units_info font size
+  //unsigned int x_major_label; // pixels. Now in x_units_info_ font size
 
   // Other information.
   double text_margin_; // Marginal space around text items like title,
@@ -174,9 +169,9 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
 
   // X-Axis information.
   // (Y_axis stored as one point because this is a 1D graph).
-  double x_min; // minimum x (Cartesian units).
-  double x_max; // maximum x  (Cartesian units).
-  double x_axis; // stroke width (pixels). ????
+  double x_min_; // minimum x (Cartesian units).
+  double x_max_; // maximum x  (Cartesian units).
+  double x_axis_; // stroke width (pixels). ????
   double x_major_interval_; // Interval (Cartesian units) between major ticks.
     // set/get by x_major_interval
   double x_minor_interval_; // Interval (Cartesian units) between minor ticks.
@@ -184,11 +179,11 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // but one could calculate x_minor_interval_.
 
   // Yes/no options.
-  bool use_title; // Show plot title.
-  bool use_legend; // Show legend box.
+  bool title_on_; // Show plot title.
+  bool legend_on_; // Show legend box.
   bool use_plot_window; // rather than whole image.
-  bool use_x_axis_lines_; // = x_axis_on()
-  bool use_y_axis_lines_; // Note: is needed in 1D version too in draw_axes.
+  bool use_x_axis_line_; // = x_axis_on()
+  bool use_y_axis_line_; // Note: is needed in 1D version too in draw_axes.
   bool use_x_major_labels; // For example, to show value (like 1.2) by major ticks.
   //bool use_x_minor_labels; // For example, to show value (like 1.2) by minor ticks.
   // Not yet implemented (doubt if needed).
@@ -196,15 +191,15 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   bool use_x_major_grid; // provide major vertical lines.
   bool use_x_minor_grid;// provide minor vertical lines.
   bool use_x_label; // Show label text for the axis, like "X-axis"
-  bool use_up_ticks; // ticks only up from Y = 0 horizontal X-axis.
-  bool use_down_ticks;// ticks only down from Y = 0 horizontal X-axis.
-  //bool use_left_ticks; // only for 2D.
-  //bool use_right_ticks;
-  bool use_x_ticks; // = use_up_ticks || use_down_ticks
-  // bool use_y_ticks; // = use_left_ticks || use_right_ticks only for 2-D
+  bool up_ticks_on_; // ticks only up from Y = 0 horizontal X-axis.
+  bool down_ticks_on_;// ticks only down from Y = 0 horizontal X-axis.
+  //bool left_ticks_on_; // only for 2D.
+  //bool right_ticks_on_;
+  bool x_ticks_on_; // = up_ticks_on_ || down_ticks_on_
+  // bool y_ticks_on_; // = left_ticks_on_ || right_ticks_on_ only for 2-D
  // Note: can have ticks both up and down (the original style).
   bool use_x_ticks_on_plot_window_; // rather than on Y = 0 horizontal axis.
-  bool use_line; // set by line_on(bool); // Not really useful for 1-D,
+  bool legend_lines_; // set by legend_lines(bool); // Not really useful for 1-D,
   // TODO but needs Boost-Parameter removed to do properly.
 
 private:
@@ -214,10 +209,10 @@ private:
   std::vector<svg_plot_series> series;
   // These are sorted into two vectors for normal and abnormal (max, inf and NaN).
 
-  double x_scale; // Used for transform from Cartesian to SVG coordinates.
-  double x_shift; // SVG origin is top left, Cartesian is bottom right.
-  double y_scale;
-  double y_shift;
+  double x_scale_; // Used for transform from Cartesian to SVG coordinates.
+  double x_shift_; // SVG origin is top left, Cartesian is bottom right.
+  double y_scale_;
+  double y_shift_;
 
   // Public member functions, defined below.
   // void calculate_transform(); //
@@ -229,36 +224,36 @@ private:
 public:
   svg_1d_plot() : // Default constructor.
     // Many ( but not all - see below) default values here.
-    title_info(0, 0, "Plot of data", 20, "Verdana", "", "", "", "", center_align, horizontal),
+    title_info_(0, 0, "Plot of data", 20, "Verdana", "", "", "", "", center_align, horizontal),
     legend_header(0, 0, "Legend", 16, "Arial", "", "", "", "", center_align, horizontal),
-    x_label_info(0, 0, "X Axis", 14, "Lucida Sans Console", "", "", "", "", center_align, horizontal), //
-    x_units_info(0, 0, "(units)", 14, "Lucida Sans Console", "", "", "", "", right_align, horizontal),
-    //x_units_info(0, 0, "(units)", 14, "Times New Roman", "italic", "bold", "wider", "underline", right_align, horizontal),
+    x_label_info_(0, 0, "X Axis", 14, "Lucida Sans Console", "", "", "", "", center_align, horizontal), //
+    x_units_info_(0, 0, "(units)", 14, "Lucida Sans Console", "", "", "", "", right_align, horizontal),
+    //x_units_info_(0, 0, "(units)", 14, "Times New Roman", "italic", "bold", "wider", "underline", right_align, horizontal),
     text_margin_(2.), // for text was 1.5 // as a fraction of the font size.
     border_margin_(5), // Prevent plot window box begin right on edge.
     legend_left_(-1), legend_right_(-1),legend_top_(-1),legend_bottom_(-1), // Indicates not yet set.
 
-    x_min(-10), x_max(10),
-    use_legend(false),
-    use_title(true),
+    x_min_(-10), x_max_(10),
+    legend_on_(false),
+    title_on_(true),
     use_plot_window(false),
     use_x_label(false), // Label like "volume".
     use_x_label_units(false),
     use_x_major_labels(true), // Values on major ticks.
     x_major_grid_width_(3),
     x_minor_grid_width_(1),
-    use_up_ticks(false),
-    use_down_ticks(true),
+    up_ticks_on_(false),
+    down_ticks_on_(true),
     use_x_ticks_on_plot_window_(false), // was external_style
     // use_y_ticks_on_plot_window_(false), // was external_style
-    use_x_ticks(true), // use_up_ticks || use_down_ticks
+    x_ticks_on_(true), // up_ticks_on_ || down_ticks_on_
     // 2D has left and right ticks too.
-    use_line(true),
+    legend_lines_(true),
     use_x_major_grid(false),
     // x_minor_grid_width(1),
     use_x_minor_grid(false),
-    use_x_axis_lines_(true),
-    use_y_axis_lines_(false), // Not needed for 1D, but leave at false.
+    use_x_axis_line_(true),
+    use_y_axis_line_(false), // Not needed for 1D, but leave at false.
     x_major_interval_(2), // interval between x major ticks
     x_major_tick_width_(3),
     x_minor_tick_width_(1),
@@ -266,15 +261,15 @@ public:
     x_minor_tick_length_(5), // If both up and down, total is twice this.
     x_num_minor_ticks_(2),
     // legend_title_size(12), TD remove - now in text_element
-    x_scale(1.), x_shift(0),
-    y_scale(1.), y_shift(0)
+    x_scale_(1.), x_shift_(0),
+    y_scale_(1.), y_shift_(0)
   // See documentation for default settings rationale.
   {
     image_size(500, 200); // Default image size.
     // Only need to be quite shallow (y_size) for a 1-D plot.
     // 200 barely leaves enough room for five data series in the legend).
     // (2-D usually needs to be much more rectangular).
-    use_x_ticks = use_up_ticks || use_down_ticks;
+    x_ticks_on_ = up_ticks_on_ || down_ticks_on_;
     // Only 2D has left and right ticks.
 
     // Build the document tree & add all the children of the root node.
@@ -303,10 +298,10 @@ public:
   //void calculate_transform()
   //{ // Calculate scale and shift factors for transform from Cartesian to plot.
   //  // SVG image is 0, 0 at top left, Cartesian at bottom left.
-  //  x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
-  //  x_shift = plot_x1 - (x_min * (plot_x2 - plot_x1) / (x_max - x_min));
-  //  y_scale = 1.;
-  //  y_shift = plot_y1 - (plot_y1 - plot_y2) / 2.;
+  //  x_scale_ = (plot_right_ - plot_left_) / (x_max_ - x_min_);
+  //  x_shift_ = plot_left_ - (x_min_ * (plot_right_ - plot_left_) / (x_max_ - x_min_));
+  //  y_scale_ = 1.;
+  //  y_shift_ = plot_top_ - (plot_top_ - plot_bottom_) / 2.;
   //} // void calculate_transform()
 
   void draw_axes()
@@ -316,23 +311,23 @@ public:
     double y2(image.y_size());
     transform_x(x);
     // Draw origin, making sure it is in the plot window.
-    if(use_x_axis_lines_ && (x > plot_x1) && (x < plot_x2))
+    if(use_x_axis_line_ && (x > plot_left_) && (x < plot_right_))
     { // TODO >= and <= ? instead.
       if(!use_plot_window)
       { // Use whole image.
-        if(use_title)
+        if(title_on_)
         { // Allow space for title, taking account of font size.
-          y1 += title_info.font_size() * (text_margin_ +1);
+          y1 += title_info_.font_size() * (text_margin_ +1);
         }
         if(use_x_label)
         {// Allow space for x tick values, taking account of font size.
-          y2 -= x_label_info.font_size() * text_margin_;
+          y2 -= x_label_info_.font_size() * text_margin_;
         }
       }
       else
       { // Use plot window.
-        y1 = plot_y1;
-        y2 = plot_y2;
+        y1 = plot_top_;
+        y2 = plot_bottom_;
       }
       image.get_g_element(detail::PLOT_X_AXIS).line(x, y1, x, y2);
     }
@@ -341,44 +336,40 @@ public:
 
   void calculate_plot_window()
   { // For 1-D
-    x_axis = (plot_y2 + plot_y1) / 2.; // Put X-axis halfway up plot window.
-    plot_x1 = 0; // Top left of image.
-    plot_y1 = 0;
-    plot_x2 = image.x_size(); // Bottom right of image.
-    plot_y2 = image.y_size();
+    x_axis_ = (plot_bottom_ + plot_top_) / 2.; // Put X-axis halfway up plot window.
+    plot_left_ = 0; // Top left of image.
+    plot_top_ = 0;
+    plot_right_ = image.x_size(); // Bottom right of image.
+    plot_bottom_ = image.y_size();
 
     if(use_plot_window)
     {
-      plot_x1 += border_margin_; // small margin around border.
-      plot_x2 -= border_margin_; //
-      plot_y1 += border_margin_; //
-      plot_y2 -= border_margin_;
+      plot_left_ += border_margin_; // small margin around border.
+      plot_right_ -= border_margin_; //
+      plot_top_ += border_margin_; //
+      plot_bottom_ -= border_margin_;
 
-      if(use_title)
-      {
-        // Allow a blank line, title lines and a line space.
-        plot_y1 += title_font_size() * 2;
+      if(title_on_)
+      { // Allow a blank line, title lines and a line space.
+        plot_top_ += title_font_size() * 2;
       }
-      if(use_legend)
+      if(legend_on_)
       { // Allow space for legend at right.
-        plot_x2 -= 150;  // This 150 is an arbitrary legend box width.
+        plot_right_ -= 150;  // This 150 is an arbitrary legend box width.
         // TODO size could depend on font_size & length of text?
       }
       if(use_x_label)
       {// Allow space for x_label at bottom.
-        plot_y2 -= static_cast<int>(x_label_info.font_size() * text_margin_);
+        plot_bottom_ -= static_cast<int>(x_label_info_.font_size() * text_margin_);
       }
-      if(use_down_ticks)
+      if(down_ticks_on_)
       { // Allow space for the downward ticks
         // (so don't go into/over the border margin).
-        // TODO use std::max here.
-        plot_y2 -=
-          (x_major_tick_length_ > x_minor_tick_length_) ?
-            x_major_tick_length_ : x_minor_tick_length_;
+        plot_bottom_ -= (std::max)(x_major_tick_length_, x_minor_tick_length_)
       }
       // Draw plot window rect.
       image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).push_back(
-        new rect_element(plot_x1, plot_y1, (plot_x2 - plot_x1), plot_y2 - plot_y1));
+        new rect_element(plot_left_, plot_top_, (plot_right_ - plot_left_), plot_bottom_ - plot_top_));
       // <g id="plotBackground" fill="rgb(248,248,255)"><rect x="43" y="53" width="302" height="304"/></g>
     } // use_plot_window
   } //  void calculate_plot_window()
@@ -395,11 +386,11 @@ public:
     calculate_plot_window();
     //calculate_transform();
     draw_title(); // Call after above to the plot_x and y are defined.
-    if(use_x_axis_lines_)
+    if(use_x_axis_line_)
     {
       draw_axes();
     }
-    if(use_legend)
+    if(legend_on_)
     {
       draw_legend();
     }
@@ -413,20 +404,20 @@ public:
     { // For each of the data series.
       g_element& g_ptr = image.get_g_element(detail::PLOT_DATA_POINTS).add_g_element();
 
-      g_ptr.style().stroke_color(series[i].point_style.stroke_color);
-      g_ptr.style().fill_color(series[i].point_style.fill_color);
+      g_ptr.style().stroke_color(series[i].point_style_.stroke_color);
+      g_ptr.style().fill_color(series[i].point_style_.fill_color);
 
       for(unsigned int j = 0; j < series[i].series.size(); ++j)
       { // Draw points for jth series.
         double x = series[i].series[j];
         transform_x(x);
         if( // Check point is inside plot_window (otherwise ignore it).
-             (x > plot_x1) // TODO <=?
-          && (x < plot_x2)
-          && (y > plot_y1)
-          && (y < plot_y2) )
+             (x > plot_left_) // TODO <=?
+          && (x < plot_right_)
+          && (y > plot_top_)
+          && (y < plot_bottom_) )
         {
-          draw_plot_point(x, y, g_ptr, series[i].point_style);
+          draw_plot_point(x, y, g_ptr, series[i].point_style_);
         }
       } // for j
     } // for
@@ -467,9 +458,9 @@ public:
     // Default stream precision 6 decimal digits is probably excessive.
     // 4.1 Basic data types, integer or float in decimal or scientific (using e format).
     // - probably enough if image size is under 1000 x 1000.
-    // This will reduce .svg file sizes significantly for curves represented with many data points.
+    // Reduces .svg file sizes significantly for curves represented with many data points.
     // For example, if a curve is shown using 100 points,
-    // reducing to coord_precision(3) from 6 will reduce file size by 300 bytes.
+    // reducing to coord_precision(3) from default of 6 will reduce file size by 300 bytes.
     image.write(s_out);
     return (svg_1d_plot&)*this;
   }
