@@ -59,14 +59,8 @@ const char tri[12][4] = {
     "spa",
     "tic"
 };
-#if !defined _MSC_VER
-std::vector<string> theSegs(tri, &tri[12]);
-#else
-// I couldn't assuage MSC about the pointer parameters in the above
-// definition so, I'll define it with the default constructor here
-// and initialize it in main().
-std::vector<std::string> theSegs;
-#endif
+
+std::vector<std::string> theSegs(tri, &tri[12]);
 
 const int R = 4;    // select 4 three-letter words at a time
 
@@ -108,6 +102,7 @@ Dictionary::Dictionary(const char* filename)
     {
         std::ostringstream os;
         os << "Couldn't open " << filename << std::ends;
+        std::cerr << os.str() << std::endl;
         throw os.str();
     }
 
@@ -196,11 +191,6 @@ int main()
     mat new per sop spa tic\n\
 \
   --Misty Covington, Sparks, MD.\n\n";
-
-#if defined _MSC_VER
-    // See comment above on the definition of theSegs vector.
-    std::copy(&tri[0], &tri[DIM(tri)], back_inserter(theSegs));
-#endif
     
     // First method; search the dictionary for every permutation. Stop after
     // the third word is found.
