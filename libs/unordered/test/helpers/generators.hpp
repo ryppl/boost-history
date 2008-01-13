@@ -15,6 +15,7 @@
 #include <utility>
 #include <stdexcept>
 #include <cstdlib>
+#include <boost/type_traits/add_const.hpp>
 
 #include "./fwd.hpp"
 
@@ -43,9 +44,10 @@ namespace test
     struct generator
     {
         typedef T value_type;
-        value_type operator()()
+        typedef BOOST_DEDUCED_TYPENAME boost::add_const<T>::type const_value_type;
+        value_type operator()() const
         {
-            return generate((T const*) 0);
+            return generate((const_value_type*) 0);
         }
     };
 
@@ -84,6 +86,7 @@ namespace test
 
     float generate(float const*)
     {
+        using namespace std;
         return (float) rand() / (float) RAND_MAX;
     }
 }

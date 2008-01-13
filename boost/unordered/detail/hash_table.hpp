@@ -32,7 +32,7 @@
 
 #include <boost/mpl/aux_/config/eti.hpp>
 
-#if BOOST_WORKAROUND(__BORLANDC__, <= 0x0551)
+#if BOOST_WORKAROUND(__BORLANDC__, <= 0x0582)
 #define BOOST_UNORDERED_BORLAND_BOOL(x) (bool)(x)
 #else
 #define BOOST_UNORDERED_BORLAND_BOOL(x) x
@@ -48,8 +48,8 @@ namespace boost {
     namespace unordered_detail {
         template <class T> struct type_wrapper {};
 
-        const static std::size_t default_initial_bucket_count = 50;
-        const static float minimum_max_load_factor = 1e-3f;
+        static const std::size_t default_initial_bucket_count = 50;
+        static const float minimum_max_load_factor = 1e-3f;
         inline std::size_t next_prime(std::size_t n);
 
         template <class T>
@@ -63,9 +63,9 @@ namespace boost {
 #endif
         }
 
-        inline std::size_t float_to_size_t(float f)
+        inline std::size_t double_to_size_t(double f)
         {
-            return f > static_cast<float>((std::numeric_limits<std::size_t>::max)()) ?
+            return f >= static_cast<double>((std::numeric_limits<std::size_t>::max)()) ?
                 (std::numeric_limits<std::size_t>::max)() :
                 static_cast<std::size_t>(f);
         }

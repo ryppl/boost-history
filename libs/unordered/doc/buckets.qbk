@@ -20,11 +20,15 @@ value of type `std::size_t`.  `std::size_t` has a much greater range of values
 then the number of buckets, so that container applies another transformation to
 that value to choose a bucket to place the element in.
 
-Retreiving the elements for a given key is simple. The same process is applied
+Retrieving the elements for a given key is simple. The same process is applied
 to the key to find the correct bucket. Then the key is compared with the
-elements in the bucket to find any elements that match.  If the hash
-function has worked well the elements will be evenly distributed amongst the
-buckets so only a small number of elements will need to be examined.
+elements in the bucket to find any elements that match (using the equality
+predicate `Pred`).  If the hash function has worked well the elements will be
+evenly distributed amongst the buckets so only a small number of elements will
+need to be examined.
+
+There is [link unordered.hash_equality more information on hash functions and
+equality predicates in the next section].
 
 You can see in the diagram that `A` & `D` have been placed in the same bucket.
 When looking for elements in this bucket up to 2 comparisons are made, making
@@ -71,7 +75,7 @@ To combat this the containers increase the bucket count as elements are inserted
 You can also tell the container to change the bucket count (if required) by
 calling `rehash`.
 
-The standard leaves a lot of freedom to the implementor to decide how the
+The standard leaves a lot of freedom to the implementer to decide how the
 number of buckets are chosen, but it does make some requirements based on the
 container's 'load factor', the average number of elements per bucket.
 Containers also have a 'maximum load factor' which they should try to keep the
@@ -115,11 +119,15 @@ or close to the hint - unless your hint is unreasonably small or large.
 
 ]
 
+[h2 Iterator Invalidation]
+
 It is not specified how member functions other than `rehash` affect
 the bucket count, although `insert` is only allowed to invalidate iterators
 when the insertion causes the load factor to be greater than or equal to the
 maximum load factor. For most implementations this means that insert will only
-change the number of buckets when this happens.
+change the number of buckets when this happens. While iterators can be
+invalidated by calls to `insert` and `rehash`, pointers and references to the
+container's elements are never invalidated.
 
 In a similar manner to using `reserve` for `vector`s, it can be a good idea
 to call `rehash` before inserting a large number of elements. This will get

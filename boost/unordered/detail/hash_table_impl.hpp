@@ -58,26 +58,8 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME allocator_reference<value_allocator>::type reference;
             typedef BOOST_DEDUCED_TYPENAME allocator_reference<bucket_allocator>::type bucket_reference;
 
-#if 1
             typedef bucket_ptr link_ptr;
-#else
-            // This alternative version of link_ptr is used to check that the
-            // implementation is type safe wrt bucket_ptr and link_ptr.
-            //
-            // It's a sort of strict typedef.
 
-            struct link_ptr {
-                link_ptr() : ptr_() { BOOST_UNORDERED_MSVC_RESET_PTR(ptr_); }
-                explicit link_ptr(bucket_ptr p) : ptr_(p) {}
-                bucket_reference operator*() const { return *ptr_; }
-                bucket* operator->() const { return &*ptr_; }
-                operator bool() const { return ptr_; }
-                bool operator==(link_ptr const& x) const { return ptr_ == x.ptr_; }
-                bool operator!=(link_ptr const& x) const { return ptr_ != x.ptr_; }
-            private:
-                bucket_ptr ptr_;
-            };
-#endif
             // Hash Bucket
             //
             // all no throw
@@ -149,7 +131,7 @@ namespace boost {
 
                 void destroy(link_ptr ptr)
                 {
-                    node_ptr n(node_alloc_.address(static_cast<node&>(*ptr)));
+                    node_ptr n(node_alloc_.address(*static_cast<node*>(&*ptr)));
                     value_alloc_.destroy(value_alloc_.address(n->value_));
                     node_base_alloc_.destroy(node_base_alloc_.address(*n));
                     node_alloc_.deallocate(n, 1);
@@ -242,7 +224,7 @@ namespace boost {
 
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
             static inline link_ptr& prev_in_group(link_ptr n) {
-                return static_cast<node&>(*n).group_prev_;
+                return static_cast<node*>(&*n)->group_prev_;
             }
 
             // pre: Must be pointing to the first node in a group.
@@ -260,13 +242,13 @@ namespace boost {
             // pre: Must be pointing to a node
             static inline node& get_node(link_ptr p) {
                 BOOST_ASSERT(p);
-                return static_cast<node&>(*p);
+                return *static_cast<node*>(&*p);
             }
 
             // pre: Must be pointing to a node
             static inline reference get_value(link_ptr p) {
                 BOOST_ASSERT(p);
-                return static_cast<node&>(*p).value_;
+                return static_cast<node*>(&*p)->value_;
             }
 
             class iterator_base
@@ -314,7 +296,7 @@ namespace boost {
                     }
                 }
 
-                void incrementGroup()
+                void increment_group()
                 {
                     node_ = data::next_group(node_);
 
@@ -434,7 +416,6 @@ namespace boost {
                 return buckets_ + static_cast<difference_type>(bucket_count_);
             }
 
-
             iterator_base begin() const
             {
                 return size_
@@ -449,7 +430,7 @@ namespace boost {
 
             link_ptr begin(size_type n) const
             {
-                return buckets_[n].next_;
+                return (buckets_ + static_cast<difference_type>(n))->next_;
             }
 
             link_ptr end(size_type) const
@@ -1244,9 +1225,11 @@ namespace boost {
             // no throw
             size_type max_size() const
             {
+                using namespace std;
+
                 // size < mlf_ * count
-                return float_to_size_t(ceil(
-                        max_bucket_count() * mlf_)) - 1;
+                return double_to_size_t(ceil(
+                        (double) mlf_ * max_bucket_count())) - 1;
             }
 
             // strong safety
@@ -1291,7 +1274,7 @@ namespace boost {
                 //
                 // Or from rehash post-condition:
                 // count > size / mlf_
-                return static_cast<size_type>(floor(n / mlf_)) + 1;
+                return double_to_size_t(floor(n / (double) mlf_)) + 1;
             }
 
             // no throw
@@ -1301,7 +1284,8 @@ namespace boost {
 
                 // From 6.3.1/13:
                 // Only resize when size >= mlf_ * count
-                max_load_ = float_to_size_t(ceil(mlf_ * this->bucket_count_));
+                max_load_ = double_to_size_t(ceil(
+                        (double) mlf_ * this->bucket_count_));
             }
 
             // basic exception safety
@@ -1322,10 +1306,13 @@ namespace boost {
             // factor. This is to try to avoid excessive rehashes.
             bool reserve_extra(size_type n)
             {
+                using namespace std;
+
                 bool need_to_reserve = n >= max_load_;
                 // throws - basic:
                 if (need_to_reserve) {
-                    rehash_impl(static_cast<size_type>(floor(n / mlf_ * 1.25)) + 1);
+                    rehash_impl(double_to_size_t(floor(
+                    	n / (double) mlf_ * 1.25)) + 1);
                 }
                 BOOST_ASSERT(n < max_load_ || n > max_size());
                 return need_to_reserve;
@@ -1736,8 +1723,7 @@ namespace boost {
 
                         // Create the node before rehashing in case it throws an
                         // exception (need strong safety in such a case).
-                        value_type const& v = *i;
-                        a.construct(v);
+                        a.construct(*i);
 
                         // reserve has basic exception safety if the hash function
                         // throws, strong otherwise.
@@ -1823,7 +1809,7 @@ namespace boost {
                 if (BOOST_UNORDERED_BORLAND_BOOL(it)) {
                     iterator_base first(iterator_base(bucket, it));
                     iterator_base second(first);
-                    second.incrementGroup();
+                    second.increment_group();
                     return std::pair<iterator_base, iterator_base>(first, second);
                 }
                 else {
