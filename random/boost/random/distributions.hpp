@@ -21,7 +21,7 @@
 #include <boost/random/fisher_f_distribution.hpp>
 #include <boost/random/students_t_distribution.hpp>
 #include <boost/random/cauchy_distribution.hpp>
-#include <boost/random/extreme_value_distribution.hpp>
+#include <boost/random/extreme_value_i_distribution.hpp>
 #include <boost/random/weibull_distribution.hpp>
 #include <boost/random/rayleigh_distribution.hpp>
 #include <boost/random/pareto_distribution.hpp>
