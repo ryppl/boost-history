@@ -37,6 +37,7 @@ It will be:
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 #include <boost/logging/format.hpp>
+#include <boost/logging/format/destination/rolling_file.hpp>
 #include <boost/logging/writer/ts_write.hpp>
 
 using namespace boost::logging;
@@ -57,7 +58,7 @@ BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 BOOST_DEFINE_LOG(g_l, log_type)
 
 void f () {
-    BOOST_SCOPED_LOG_CTX(L_);// << "execution_pool::executor_defer_func(...)";
+//    BOOST_SCOPED_LOG_CTX(L_);// << "execution_pool::executor_defer_func(...)";
     L_ << "Executing component ";
 }
 
@@ -70,6 +71,15 @@ void one_logger_one_filter_example() {
     g_l->writer().add_destination( destination::file("out.txt") );
     g_l->writer().add_destination( destination::cout() );
     g_l->writer().add_destination( destination::dbg_window() );
+
+
+    destination::rolling_file_settings settings;
+    settings
+        .file_count( 10 )
+        .max_size_bytes( 5242880 )
+        .flush_each_time(true); 
+    destination::rolling_file loggerFile( "test.txt", settings );
+    g_l->writer().add_destination( loggerFile );
 
     g_l->turn_cache_off();
 

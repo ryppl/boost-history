@@ -231,6 +231,10 @@ namespace optimize {
     };
 
 
+    template<class stream, class string> inline stream& operator <<(stream & out, const cache_string_one_str<string> & val) {
+        out << val.full_string();
+        return out;
+    }
 
 
 
@@ -384,6 +388,12 @@ namespace optimize {
         coll m_cached;
         array m_cur_msg;
     };
+
+    template<class stream, class string, class ptr_type> inline stream& operator <<(stream & out, const cache_string_several_str<string,ptr_type> & val) {
+        out << val.full_string();
+        return out;
+    }
+
 
 }}}
 
