@@ -1,0 +1,27 @@
+# Copyright Andrew Sutton 2007
+#
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0. (See accompanying file
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+
+# Define BOOST_ROOT to point to a different version of Boost. Define BOOST_MATH
+# to point to the root of the Boost.Math library.
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+local BOOST_MATH = [ os.environ BOOST_MATH ] ;
+
+# The order of includes is important. We need to ensure that the local include
+# path is being searched before the system paths because we have to override
+# the include for the gamma distribution. This could also apply to the lognormal
+# distribution also.
+
+project
+    : requirements
+        <include>../../../
+        <include>$(BOOST_ROOT)
+        <include>$(BOOST_MATH)
+    ;
+
+exe generate : generate.cpp ;
+
