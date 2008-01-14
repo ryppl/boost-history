@@ -114,6 +114,8 @@ namespace detail {
         }
 
         void recreate_file() {
+            // many thanks to Benjamin de Dardel!
+            namespace fs = boost::filesystem;
             m_out = boost::shared_ptr< std::basic_ofstream<char_type> >(new std::basic_ofstream<char_type>( file_name(m_cur_idx).c_str(),
                 m_flags.extra_flags() | std::ios_base::out | std::ios_base::app));
             if ( fs::file_size( file_name(m_cur_idx)) > m_flags.max_size_bytes()) {
