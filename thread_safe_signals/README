@@ -13,6 +13,9 @@ The web page for thread_safe_signals is at:
 
 http://www.comedi.org/projects/thread_safe_signals/libs/thread_safe_signals/doc/html/index.html
 
+Releases should also contain the html documentation, under the 
+subdirectory libs/thread_safe_signals/doc/html/
+
 The latest version of this library should be available from the
 boost sandbox svn:
 
