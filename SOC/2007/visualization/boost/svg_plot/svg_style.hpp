@@ -514,12 +514,13 @@ class plot_line_style
 public:
     svg_color color_; // line stroke color. (no fill color for lines)
     svg_color area_fill_; // Fill color from line to axis. == true means color.blank = true.
+    double width_;
     bool line_on_;
     bool bezier_on_;
 
-    plot_line_style(const svg_color& col = black, const svg_color& acol = true, bool on = true, bool bezier_on = false)
+    plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool on = true, bool bezier_on = false)
       :
-      color_(col), area_fill_(acol), line_on_(on), bezier_on_(bezier_on)
+      color_(col), area_fill_(acol), width_(width), line_on_(on), bezier_on_(bezier_on)
     { // Defaults for all private data.
     }
 }; // class plot_line_style
@@ -554,8 +555,8 @@ public:
     svg_color color_; // line stroke color.
     double axis_width_; // line width.
     int axis_position_; // How the axes intersect with values as below:
-    // enum x_axis_intersect {bottom = -1, x_intersect = 0, top = +1};
-    // enum y_axis_intersect {left = -1, y_intersect = 0, right = +1};
+    // enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+    // enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
     // If axes look like an L, then is bottom left.
     // If a T then y intersects and x is at bottom.
     // TODO check this is right!

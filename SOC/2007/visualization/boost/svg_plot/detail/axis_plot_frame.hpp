@@ -313,13 +313,13 @@ namespace boost
 
         void draw_x_axis()
         { // Draw horizontal X-axis line &.
-          if(derived().x_axis_.axis_line_on_)
+          if((derived().x_axis_.axis_line_on_) && (derived().x_axis_position_ == x_intersects_y))
           { // Draw the horizontal X-axis line the full width of the plot window,
             // perhaps including an addition in lieu of a major tick.
             double xleft = derived().plot_left_;
             double xright = derived().plot_right_;
             if (derived().y_ticks_.left_ticks_on_ && derived().x_ticks_.ticks_on_plot_window_on_ 
-              && (derived().y_axis_position_ == y_intersect))
+              )
             { // Extend the horizontal line left in lieu of longest tick.
               xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
             }
@@ -327,7 +327,7 @@ namespace boost
             derived().image.get_g_element(PLOT_X_AXIS).line(
               xleft, y,
               xright, y);
-          }
+          } // x_axis_.axis_line_on_
 
           // Access the paths for the ticks & grids, ready for additions.
           path_element& minor_tick_path = derived().image.get_g_element(PLOT_X_MINOR_TICKS).path();
@@ -467,7 +467,7 @@ namespace boost
             derived().legend_height_ += num_series * spacing * 2; // Space for the data point symbols & text.
           } // legend_on_ == true
 
-          std::cout << "Legend width " << derived().legend_width_ << ", height " << derived().legend_height_ << std::endl;
+         //std::cout << "Legend width " << derived().legend_width_ << ", height " << derived().legend_height_ << std::endl;
         } //  void size_legend_box()
 
         void place_legend_box()
@@ -503,37 +503,34 @@ namespace boost
                 // If outside then reserve space for legend by reducing plot window.
             case outside_right:
               // so that it isn't too close to the image edge or the plot window.
-              derived().legend_right_ = derived().plot_right_; // right image edge less border.
-              derived().legend_right_ -= spacing; // space from right edge.
-              derived().legend_left_ = derived().legend_right_ - derived().legend_width_;
-              derived().plot_right_ = derived().legend_left_; // Narrow plot window from left.
-              derived().plot_right_ -= spacing;
+              derived().plot_right_ -= derived().legend_width_ + spacing; // Narrow plot window from right.
+              derived().legend_left_ = derived().plot_right_; // plot + border.
+              derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
               derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
-              derived().legend_top_ += spacing; 
+              //derived().legend_top_ += spacing;  // down a bit.
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
             case outside_left:
-              derived().legend_left_ = derived().plot_left_;
-              derived().legend_left_ += derived().y_label_font_size() * spacing;
-              derived().plot_left_ += derived().legend_width_; // Contract plot window right to make room,
-              derived().plot_left_ += spacing;
+              derived().legend_left_ = derived().plot_left_ + spacing; // left edge + space.
+              derived().plot_left_ += derived().legend_width_ + spacing; // Push plot window right to make room,
+              // derived().legend_left_ += derived().y_label_font_size() * spacing;
               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
               derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
               derived().legend_top_ += spacing; 
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
             case outside_top:
-              // centered.
-               derived().legend_left_ = derived().image.x_size() / 2. - derived().legend_width_ / 2;
+              // Centered.
+               derived().legend_left_ = derived().image.x_size() / 2. - derived().legend_width_ / 2; // Center.
                derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
-               derived().plot_top_ += derived().legend_height_ + spacing ;
+               derived().plot_top_ += derived().legend_height_ + spacing;
                derived().legend_top_ = derived().title_info_.y() + derived().title_font_size() * derived().text_margin_;
                derived().legend_top_ += spacing;
                derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
             case outside_bottom: 
-               // centered.
-               derived().legend_left_ = derived().image.x_size()/  2. - derived().legend_width_ / 2;
+               // Centered.
+               derived().legend_left_ = derived().image.x_size()/  2. - derived().legend_width_ / 2; // Center.
                derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
                derived().plot_bottom_ -= derived().legend_height_;
                derived().plot_bottom_ -= spacing;
@@ -602,7 +599,7 @@ namespace boost
 
             double legend_y_pos = legend_y_start + derived().text_margin_ * spacing;
             if (is_header)
-            { // Draw the legend header text "My Plot Legend".
+            { // Draw the legend header text for example: "My Plot Legend".
               derived().legend_header_.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
               derived().legend_header_.y(legend_y_pos);
               derived().image.get_g_element(PLOT_LEGEND_TEXT).push_back(new
@@ -619,12 +616,13 @@ namespace boost
               double legend_x_pos = legend_x_start;
               legend_x_pos += spacing; // space before point marker.
               g_inner_ptr = &(g_ptr->add_g_element());
-              // Use both stroke colors from the point's style.
+              // Use both stroke & fill colors from the point's style.
               g_inner_ptr->style().stroke_color(derived().series[i].point_style_.stroke_color_);
-              g_inner_ptr->style().stroke_width(2);
+              g_inner_ptr->style().fill_color(derived().series[i].point_style_.fill_color_);
+              g_inner_ptr->style().stroke_width(2); // Applies to shape AND line.
 
-              if(derived().series[i].point_style_.shape() != none)
-              {
+              if(derived().series[i].point_style_.shape_ != none)
+              { // Is a shape to show.
                 draw_plot_point( // Plot point like circle, square...
                   legend_x_pos,
                   legend_y_pos,
@@ -636,8 +634,11 @@ namespace boost
               // Line markers  - only really applicable to 2-D sets plot_line_style,
               if (derived().legend_lines_)
               { // Need to draw a short line to show color for that data series.
-                g_inner_ptr->style() // Use fill & stroke colors from line style.
+                g_inner_ptr->style() // Use stroke colors from line style.
                   .stroke_color(derived().series[i].line_style_.color_);
+               // g_inner_ptr->style().width(4); // Use stroke colors from line style. 
+               // == image.get_g_element(PLOT_DATA_LINES).style().stroke_width(width);
+                // but this sets width for BOTH point and line :-(
                 g_inner_ptr->push_back(new line_element(
                   legend_x_pos + spacing /2., // half space leading space
                   legend_y_pos,
@@ -724,7 +725,7 @@ namespace boost
             }
           } // void adjust_limits
 
-          void draw_plot_point(double x, double y,
+          void draw_plot_point(double x, double y, // SVG ?
             g_element& g_ptr,
             plot_point_style& sty)
           {
@@ -898,7 +899,6 @@ namespace boost
           {
             derived().image.get_g_element(PLOT_X_MAJOR_GRID).clear();
             derived().image.get_g_element(PLOT_X_MINOR_GRID).clear();
-            // TODO don't we need to clear Y grids too??????
             derived().image.get_g_element(PLOT_Y_MAJOR_GRID).clear();
             derived().image.get_g_element(PLOT_Y_MINOR_GRID).clear();
           }
@@ -907,7 +907,7 @@ namespace boost
           Derived& derived()
           {
             return static_cast<Derived&>(*this);
-            //http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern
+            // http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern
           }
           const Derived& derived()const
           {
@@ -1887,11 +1887,11 @@ namespace boost
             switch(derived().x_axis_position_)
             {
             case top:
-              return "y_axis_position top (all values < 0)"; break;
-            case x_intersect:
-              return "y_axis_position intersects X axis (range includes zero)"; break;
+              return "x_axis_position top (all Y values < 0)"; break;
+            case x_intersects_y:
+              return "x_axis_position intersects Y axis (Y range includes zero)"; break;
             case bottom:
-              return "y_axis_position right (all values > 0)"; break;
+              return "x_axis_position bottom (all Y values > 0)"; break;
             default:
               return "?"; break;
             }
