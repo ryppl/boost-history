@@ -10,7 +10,10 @@
 #if ! defined(BOOST_SQL_CLI_ODBC_CONFIG_HPP)
 #define BOOST_SQL_CLI_ODBC_CONFIG_HPP
 
-#include <windows.h>
+#if defined(_WIN32)
+#   include <windows.h>
+#endif
+
 #include <sql.h>
 #include <sqlext.h>
 
