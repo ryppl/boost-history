@@ -172,7 +172,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\test.cpp"
+			RelativePath=".\test_tags.cpp"
 			>
 		</File>
 	</Files>

@@ -40,7 +40,7 @@ namespace tag {
             class param9 ,
             class param10> struct holder ;
 }
-    
+
 namespace formatter {
 
 
@@ -108,7 +108,8 @@ namespace convert {
             dest.prepend_string(src);
         }
 
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+        template<class string_, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag::holder<string_,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            typedef typename use_default<string_, hold_string_type>::type string;
             write(src, static_cast<string&>(dest) );
         }
 
@@ -121,7 +122,8 @@ namespace convert {
             dest.prepend_string(src);
         }
 
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(char_array src, ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+        template<class string_, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(char_array src, ::boost::logging::tag::holder<string_,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            typedef typename use_default<string_, hold_string_type>::type string;
             write(src, static_cast<string&>(dest) );
         }
     }
@@ -138,7 +140,8 @@ namespace convert {
         template<class string> void write(const string_type & src, boost::logging::optimize::cache_string_several_str<string> & dest) {
             dest.append_string(src);
         }
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+        template<class string_, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag::holder<string_,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            typedef typename use_default<string_, hold_string_type>::type string;
             write(src, static_cast<string&>(dest) );
         }
 
@@ -152,7 +155,8 @@ namespace convert {
         template<class string> void write(char_array src, boost::logging::optimize::cache_string_several_str<string> & dest) {
             dest.append_string(src);
         }
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(char_array src, ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+        template<class string_, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(char_array src, ::boost::logging::tag::holder<string_,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            typedef typename use_default<string_, hold_string_type>::type string;
             write(src, static_cast<string&>(dest) );
         }
 
@@ -173,7 +177,8 @@ namespace convert {
         template<class string> void write(string_type & src, boost::logging::optimize::cache_string_one_str<string> & dest) {
             dest.set_string_swap(src);
         }
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+        template<class string_, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(const string_type & src, ::boost::logging::tag::holder<string_,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            typedef typename use_default<string_, hold_string_type>::type string;
             write(src, static_cast<string&>(dest) );
         }
 
@@ -188,7 +193,8 @@ namespace convert {
         template<class string> void write(char_array src, boost::logging::optimize::cache_string_several_str<string> & dest) {
             dest.set_string(src);
         }
-        template<class string, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(char_array src, ::boost::logging::tag::holder<string,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+        template<class string_, class p1, class p2, class p3, class p4, class p5, class p6, class p7, class p8, class p9, class p10> void write(char_array src, ::boost::logging::tag::holder<string_,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10> & dest) {
+            typedef typename use_default<string_, hold_string_type>::type string;
             write(src, static_cast<string&>(dest) );
         }
     }

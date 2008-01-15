@@ -124,6 +124,11 @@ An object of this type (apply_format_and_write) is created for each new logged m
 @remarks Normally the router could own the formatters and destination objects. However, then, it would need to own the objects,
 which would mean needing to come up with a smart pointer strategy. This would complicate the router logic.
 Also, iterating over formatters/destinations would be slower, if we were to keep smart pointers within the router itself.
+
+
+
+@bug adding a spaced generic formatter and deleting the formatter - it won't happen
+
 */
 template<
         class formatter_base, 

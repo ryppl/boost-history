@@ -31,7 +31,7 @@ logging\samples\scenarios\using_tags.cpp:95 [T7204] [2] 14:55 this is so cool ag
 #include <boost/logging/format_fwd.hpp>
 #include <boost/logging/tags.hpp>
 
-// Step 1: Optimize : use a cache string, to make formatting the message faster
+// Step 1: Optimize : use tags (on top of a cache string, to make formatting the message faster)
 namespace bl = boost::logging;
 typedef bl::tag::holder< bl::optimize::cache_string_one_str<>, bl::tag::file_line, bl::tag::thread_id, bl::tag::time> log_string;
 BOOST_LOG_FORMAT_MSG( log_string )
