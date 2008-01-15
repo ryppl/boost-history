@@ -1,4 +1,4 @@
-#~ Copyright Redshift Software, Inc. 2006.
+#~ Copyright Redshift Software, Inc. 2006-2008.
 #~ Distributed under the Boost Software License, Version 1.0.
 #~ (See accompanying file LICENSE_1_0.txt or copy at
 #~ http://www.boost.org/LICENSE_1_0.txt)
@@ -19,60 +19,26 @@
 ### version number is optional and currently not used.
 
 
-import property ;
-import project ;
-import feature ;
-import toolset : flags ;
+import extension ;
 
-project.extension windows-psdk ;
-
-feature.feature windows-psdk-version
-    :
-    :   propagated optional implicit ;
-
-feature.feature windows-psdk-location
-    :
-    :   free ;
-
-local rule prop ( option )
-{
-    local vals = [ MATCH "--([^-]+)-([^=]+)[=]?(.*)" : $(option) ] ;
-    if $(vals[2])
-    {
-        return <windows-psdk-$(vals[1])>$(vals[2]) ;
-    }
-    else
-    {
-        return <windows-psdk-$(vals[1])>enable ;
-    }
-}
+extension.declare windows-psdk ;
 
 rule init ( version ? : location : options * )
 {
-    if $(version)
-    {
-        feature.extend windows-psdk-version : $(version) ;
-    }
+    version ?= default ;
+    local requirements =
+        [ extension.define windows-psdk $(version) : $(location) : $(options) ]
+        <windows-psdk-version>$(version)
+        <windows-psdk-location>$(location)
+        #~ <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+        #~ <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        ;
+    local common-requirements =
+        ;
     
-    local requirements ;
-    local toolsets ;
-    for local option in $(options)
-    {
-        switch $(option)
-        {
-            case --enable-* :
-            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
-            case --disable-* :
-            requirements = [ property.refine $(requirements) : [ prop $(option) ] ] ;
-            case --toolset=* :
-            {
-                local toolset = [ MATCH "--toolset=(.*)" : $(option) ] ;
-                toolsets += $(toolset) ;
-            }
-        }
-    }
+    import modules ;
     
-    for local toolset in $(toolsets)
+    for local toolset in [ MATCH "--toolset=(.*)" : $(options) ]
     {
         local tool = [ MATCH "([^-]+)" : $(toolset) ] ;
         modules.call-in $(tool) :
