@@ -234,7 +234,7 @@ You could have an output like this:
 @bug Use_tags.cpp example when on dedicated thread, fails with named_spacer. If using the old code, it works.
 
 */
-template< class convert = do_convert_format::prepend, class lock_resource = default_, class format_base = default_ > 
+template< class convert = default_, class lock_resource = default_, class format_base = default_ > 
         struct named_spacer_t : is_generic, non_const_context< detail::named_spacer_context<convert,lock_resource,format_base> > {
 
     typedef non_const_context< detail::named_spacer_context<convert,lock_resource,format_base> > context_base;

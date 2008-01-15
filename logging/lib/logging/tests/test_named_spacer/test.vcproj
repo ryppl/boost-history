@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="test"
+	Name="test_named_spacer"
 	ProjectGUID="{C5897099-5FA2-4E12-AFFC-2015364347FA}"
 	RootNamespace="test"
 	Keyword="Win32Proj"

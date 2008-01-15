@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.13.12, 14 jan 2008
+@section changelog_cur_ver Current Version: v0.13.13, 15 jan 2008
+- added test_named_spacer test
 - solved bug if user doesn't use formatters/destinations, but uses cached string classes
 - solved bug in rolling_file - it could not compile on gcc
 - added test_rolling_file (tests rolling_file)

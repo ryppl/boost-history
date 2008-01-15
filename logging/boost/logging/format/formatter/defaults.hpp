@@ -27,6 +27,7 @@
 #include <boost/logging/format/formatter/time.hpp>
 #include <boost/logging/format/formatter/time_strf.hpp>
 #include <boost/logging/format/formatter/spacer.hpp>
+#include <boost/logging/format/formatter/thread_id.hpp>
 #include <stdio.h>
 #include <time.h>
 #include <sstream>

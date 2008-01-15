@@ -109,6 +109,9 @@ Then, you can specify the logger and filter, in a very easy manner
 
 */
 namespace usage {
+    // ... bring it in this namespace
+    typedef ::boost::logging::default_ default_;
+
 
     /** @brief Filter usage settings : filter_::change and filter_::level
     */
@@ -435,6 +438,9 @@ BOOST_DECLARE_LOG(g_l, finder::logger)
 To see how you can specify the logger/filter based on how you will %use them, see usage namespace.
 */
 namespace ts {
+    // ... bring it in this namespace
+    typedef ::boost::logging::default_ default_;
+
     /** @brief filter uses levels? */
     struct level_ {
         /** @brief type of %filter levels %usage */
