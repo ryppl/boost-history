@@ -10,6 +10,7 @@
 #include <map>
 #include <boost/mpl/apply.hpp>
 #include <boost/assert.hpp>
+#include <boost/unordered/detail/allocator.hpp>
 #include "../helpers/test.hpp"
 
 namespace test
@@ -56,14 +57,15 @@ namespace test
             }
         };
 
-        struct default_allocator_holder { template <class T> struct apply {
-            typedef std::allocator<T> type; }; };
-
-        template <class AllocatorHolder = default_allocator_holder>
+        template <class Alloc = std::allocator<int> >
         struct memory_tracker {
+            typedef BOOST_DEDUCED_TYPENAME
+                boost::unordered_detail::rebind_wrap<Alloc,
+                    std::pair<memory_area const, memory_track> >::type
+                allocator;
+
             typedef std::map<memory_area, memory_track, memory_area_compare,
-                BOOST_DEDUCED_TYPENAME boost::mpl::apply1<AllocatorHolder, std::pair<memory_area const, memory_track> >::type
-            > allocated_memory_type;
+                allocator> allocated_memory_type;
 
             allocated_memory_type allocated_memory;
             unsigned int count_allocators;
