@@ -11,6 +11,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/assert.hpp>
 #include <boost/unordered/detail/allocator.hpp>
+#include <boost/mpl/aux_/config/eti.hpp>
 #include "../helpers/test.hpp"
 
 namespace test
@@ -57,15 +58,28 @@ namespace test
             }
         };
 
+        template <class Alloc>
+        struct allocator_memory_type_gen {
+            typedef std::map<memory_area, memory_track, memory_area_compare,
+                Alloc> type;
+        };
+
+#if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
+        template <>
+        struct allocator_memory_type_gen<int> {
+            typedef std::map<memory_area, memory_track, memory_area_compare> type;
+        };
+#endif
+
         template <class Alloc = std::allocator<int> >
         struct memory_tracker {
             typedef BOOST_DEDUCED_TYPENAME
                 boost::unordered_detail::rebind_wrap<Alloc,
                     std::pair<memory_area const, memory_track> >::type
-                allocator;
+                allocator_type;
 
-            typedef std::map<memory_area, memory_track, memory_area_compare,
-                allocator> allocated_memory_type;
+            typedef BOOST_DEDUCED_TYPENAME allocator_memory_type_gen<allocator_type>::type
+                allocated_memory_type;
 
             allocated_memory_type allocated_memory;
             unsigned int count_allocators;
