@@ -51,8 +51,13 @@ rule declare ( extension + : options * : * )
         
         # Create the project data, and bring in the project rules
         # into the module.
+        local ext-path = [ project.attribute $(root-project) location ] ;
+        if $(ext-path)
+        {
+            ext-path = [ path.join [ project.attribute $(root-project) location ] ext $(ext:L) ] ;
+        }
         project.initialize $(__name__) :
-            [ path.join [ project.attribute $(root-project) location ] ext $(ext:L) ] ;
+            $(ext-path) ;
         
         # Create the project itself, i.e. the attributes.
         # All extensions are created in the "/ext" project space.
