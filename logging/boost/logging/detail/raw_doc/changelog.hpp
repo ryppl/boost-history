@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.13.14, 15 jan 2008
+@section changelog_cur_ver Current Version: v0.13.16, 15 jan 2008
+- added destination::named test
+- automatically include writer/ts_write.hpp from format.hpp
 - added test_tags test
 - added test_named_spacer test
 - solved bug if user doesn't use formatters/destinations, but uses cached string classes
