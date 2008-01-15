@@ -64,7 +64,6 @@ The err.txt file
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)

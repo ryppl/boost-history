@@ -594,6 +594,7 @@ In the above case:
 #include <boost/logging/format/formatter/defaults.hpp>
 #include <boost/logging/format/destination/defaults.hpp>
 #include <boost/logging/gather/ostream_like.hpp>
+#include <boost/logging/writer/ts_write.hpp>
 
 
 

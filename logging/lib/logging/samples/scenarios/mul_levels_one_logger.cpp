@@ -29,7 +29,6 @@ It will look similar to this one:
 
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 //#include <boost/logging/format/formatter/high_precision_time.hpp>
 #include <boost/logging/format/destination/named.hpp>
 

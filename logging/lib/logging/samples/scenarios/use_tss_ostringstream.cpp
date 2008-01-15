@@ -42,7 +42,6 @@ BOOST_LOG_GATHER_CLASS( use_ostringstream< tss_ostringstream<> > )
 
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 
 using namespace boost::logging;
 

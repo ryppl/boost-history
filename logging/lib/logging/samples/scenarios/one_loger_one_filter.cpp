@@ -37,7 +37,6 @@ It will be:
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 
 using namespace boost::logging;
 

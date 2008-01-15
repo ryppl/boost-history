@@ -69,7 +69,6 @@ The err.txt file
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 
 typedef boost::logging::logger_format_write< > log_type;
 

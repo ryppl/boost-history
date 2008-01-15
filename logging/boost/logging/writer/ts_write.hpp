@@ -34,7 +34,7 @@ namespace boost { namespace logging { namespace writer {
     }
 
 /** 
-<tt>\#include <boost/logging/writer/on_dedicated_thread.hpp> </tt>
+<tt>\#include <boost/logging/format.hpp> </tt>
 
 Performs all writes in a thread-safe manner.
 In other words, makes sure that all operator() calls of base_type are called in a thread-safe manner.
