@@ -1,37 +1,41 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Colors</title>
+<title> Colors</title>
 <link rel="stylesheet" href="../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
 <link rel="start" href="../index.html" title="SVG_Plot">
 <link rel="up" href="../index.html" title="SVG_Plot">
-<link rel="prev" href="todo.html" title="To Do List">
-<link rel="next" href="svg_tutorial.html" title="SVG tutorial">
+<link rel="prev" href="todo.html" title=" To Do List">
+<link rel="next" href="svg_tutorial.html" title=" SVG tutorial">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%">
+<table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../trunk/index.htm">Home</a></td>
 <td align="center"><a href="../libraries.html">Libraries</a></td>
 <td align="center"><a href="../../../../../../../../../trunk/people/people.htm">People</a></td>
 <td align="center"><a href="../../../../../../../../../trunk/more/faq.htm">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../trunk/more/index.htm">More</a></td>
-</table>
+</tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="todo.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_tutorial.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="todo.html"><img src="../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="svg_tutorial.html"><img src="../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="svg_plot.color"></a> Colors</h2></div></div></div>
+<a name="svg_plot.color"></a><a href="color.html" title=" Colors"> Colors</a>
+</h2></div></div></div>
 <p>
       The project supports any <a href="http://en.wikipedia.org/wiki/RGB_color_model" target="_top">RGB
       color</a>, as well as a number of colors that are <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">named
       by the SVG standard</a>.
     </p>
+<a name="svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h4>
+<a name="id622212"></a>
+      <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"><code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
+    </h4>
 <p>
-      [heading <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>]
       <code class="computeroutput"><span class="identifier">svg_color_constant</span></code> is simply
       an enumerated list.
     </p>
@@ -53,8 +57,9 @@
       for defining defaults for functions, for example.
     </p>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h5>
-<a name="id385510"></a>
-      Example of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
+<a name="id622335"></a>
+      <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_">Example
+      of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h5>
 <pre class="programlisting">
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
@@ -68,7 +73,7 @@
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../../trunk/doc/html/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top">
@@ -82,17 +87,19 @@
         overload, so 
 </p>
 <pre class="programlisting">
-<span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
 </pre>
 <p>
-        does not have the desired effect, and nor does <code class="computeroutput"><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">red</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span></code> output the expected RGB(255,0,0) but instead
+        does not have the desired effect, and nor does <code class="computeroutput"><span class="identifier">cout</span>
+        <span class="special">&lt;&lt;</span> <span class="identifier">red</span>
+        <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span></code> output the expected RGB(255,0,0) but instead
         119 the value of the enum!
       </p>
 </td></tr>
 </table></div>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"></a><h5>
-<a name="id385821"></a>
-      <code class="computeroutput"><span class="identifier">svg_color</span></code> interface
+<a name="id678342"></a>
+      <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"><code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a>
     </h5>
 <p>
       You can define a <code class="computeroutput"><span class="identifier">svg_color</span></code>
@@ -107,7 +114,7 @@
 </pre>
 <div class="important"><table border="0" summary="Important">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../images/important.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../../../../../trunk/doc/html/images/important.png"></td>
 <th align="left">Important</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -116,8 +123,9 @@
       </p></td></tr>
 </table></div>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_"></a><h5>
-<a name="id385937"></a>
-      Example of using <code class="computeroutput"><span class="identifier">svg_color</span></code>
+<a name="id678494"></a>
+      <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_">Example
+      of using <code class="computeroutput"><span class="identifier">svg_color</span></code></a>
     </h5>
 <pre class="programlisting">
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
@@ -129,7 +137,7 @@
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../../trunk/doc/html/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -140,9 +148,11 @@
         and max.
       </p></td></tr>
 </table></div>
-<p>
-      [heading Colors Internals and Rationale]
-    </p>
+<a name="svg_plot.color.colors_internals_and_rationale"></a><h4>
+<a name="id678730"></a>
+      <a href="color.html#svg_plot.color.colors_internals_and_rationale">Colors Internals
+      and Rationale</a>
+    </h4>
 <p>
       Constants are defined in an enum, <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>,
       in alphabetical order. <a href="../..%5C..%5C..%5C..%5Cboost%5Csvg_plot%5Csvg_color.hpp" target="_top">color
@@ -161,11 +171,15 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="todo.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_tutorial.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="todo.html"><img src="../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="svg_tutorial.html"><img src="../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

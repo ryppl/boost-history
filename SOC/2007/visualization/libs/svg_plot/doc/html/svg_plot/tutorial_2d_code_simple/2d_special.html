@@ -1,33 +1,39 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Tutorial: 2D Special Features</title>
+<title> Tutorial:
+      2D Special Features</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
 <link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../tutorial_2d_code_simple.html" title="Tutorial: 2D">
-<link rel="prev" href="full_2d_layout.html" title="Tutorial: Fuller Layout Example">
-<link rel="next" href="../svg_boxplot_tutorial.html" title="Tutorial: Boxplot">
+<link rel="up" href="../tutorial_2d_code_simple.html" title=" Tutorial: 2D">
+<link rel="prev" href="full_2d_layout.html" title=" Tutorial:
+      Fuller Layout Example">
+<link rel="next" href="../svg_boxplot_tutorial.html" title=" Tutorial: Boxplot">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%">
+<table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.htm">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/people/people.htm">People</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/faq.htm">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
-</table>
+</tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="full_2d_layout.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_2d_code_simple.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../svg_boxplot_tutorial.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="full_2d_layout.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_2d_code_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../svg_boxplot_tutorial.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.tutorial_2d_code_simple.2d_special"></a> Tutorial: 2D Special Features</h3></div></div></div>
+<a name="svg_plot.tutorial_2d_code_simple.2d_special"></a><a href="2d_special.html" title=" Tutorial:
+      2D Special Features"> Tutorial:
+      2D Special Features</a>
+</h3></div></div></div>
 <a name="svg_plot.tutorial_2d_code_simple.2d_special.y_axis_grid_lines"></a><h5>
-<a name="id392705"></a>
-        Y-Axis Grid Lines
+<a name="id686467"></a>
+        <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.y_axis_grid_lines">Y-Axis
+        Grid Lines</a>
       </h5>
 <p>
         If you would like horizontal grid lines that go across the graph, you can
@@ -64,9 +70,11 @@
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_major_grid_color</span><span class="special">(</span><span class="identifier">lightblue</span><span class="special">)</span> <span class="comment">// Darker color for major grid.
 </span>       <span class="special">.</span><span class="identifier">y_minor_grid_color</span><span class="special">(</span><span class="identifier">azure</span><span class="special">);</span> <span class="comment">// lighter color for minor grid.
 </span></pre>
-<p>
-        [heading External Y Axis Style]
-      </p>
+<a name="svg_plot.tutorial_2d_code_simple.2d_special.external_y_axis_style"></a><h5>
+<a name="id686845"></a>
+        <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.external_y_axis_style">External
+        Y Axis Style</a>
+      </h5>
 <p>
         For an alternate way to display a regular axis, you can use an external style:
       </p>
@@ -75,7 +83,7 @@
 </pre>
 <div class="important"><table border="0" summary="Important">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../images/important.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../../../../../../trunk/doc/html/images/important.png"></td>
 <th align="left">Important</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -83,9 +91,11 @@
           will not turn the axis back on. To do that, you must call <code class="computeroutput"><span class="identifier">axis_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code>
         </p></td></tr>
 </table></div>
-<p>
-        [heading Fill the area between the plot and the axis]
-      </p>
+<a name="svg_plot.tutorial_2d_code_simple.2d_special.fill_the_area_between_the_plot_and_the_axis"></a><h5>
+<a name="id686980"></a>
+        <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.fill_the_area_between_the_plot_and_the_axis">Fill
+        the area between the plot and the axis</a>
+      </h5>
 <p>
         When there is a call to the plot() method, define <code class="computeroutput"><span class="identifier">_area_fill_color</span></code>
       </p>
@@ -102,8 +112,9 @@
         <span class="inlinemediaobject"><img src="../../images/2d_area_fill.png" alt="2d_area_fill"></span>
       </p>
 <a name="svg_plot.tutorial_2d_code_simple.2d_special.curve_interpolation"></a><h5>
-<a name="id393265"></a>
-        Curve Interpolation
+<a name="id687184"></a>
+        <a href="2d_special.html#svg_plot.tutorial_2d_code_simple.2d_special.curve_interpolation">Curve
+        Interpolation</a>
       </h5>
 <p>
         If you would like an <span class="bold"><strong>interpolated curve</strong></span>
@@ -121,7 +132,7 @@
       </p>
 <div class="warning"><table border="0" summary="Warning">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../../../../trunk/doc/html/images/warning.png"></td>
 <th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -136,11 +147,15 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="full_2d_layout.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_2d_code_simple.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../svg_boxplot_tutorial.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="full_2d_layout.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_2d_code_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../svg_boxplot_tutorial.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

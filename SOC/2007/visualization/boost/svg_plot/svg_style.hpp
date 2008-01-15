@@ -559,7 +559,6 @@ public:
     // enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
     // If axes look like an L, then is bottom left.
     // If a T then y intersects and x is at bottom.
-    // TODO check this is right!
     bool label_on_; // Label X-axis with text - example: "length".
     bool label_units_on_; // Label X-axis units, example: "cm".
     bool axis_line_on_; // Draw a X horizontal or Y vertical axis line.
@@ -567,13 +566,15 @@ public:
     axis_line_style(dim d = X,
       double min = -10., double max = +10., // defaults.
       const svg_color col = black, double width = 1,
-      int axis_position = 0, bool use_label = true)
+      int axis_position = 0, bool label_on = true,
+      bool label_units_on = false,
+      bool axis_lines_on = true)
       :
       dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
       axis_position_(axis_position),
-      label_on_(use_label),
-      label_units_on_(true), // default is include units.
-      axis_line_on_(true),
+      label_on_(label_on),
+      label_units_on_(label_units_on), // default is include units.
+      axis_line_on_(axis_lines_on),
       axis_(-1) // Not calculated yet.
    { // Initialize all private data.
       if(max_ <= min_)
@@ -670,18 +671,17 @@ public:
     // Simplest to have all of these although only one pair like up or down is used.
     // Unused are always false.
     bool major_value_labels_on; // Label X values for major ticks.
-    bool label_units_on_; // Label X-axis units.
     rotate_style label_rotation_; // Direction X_axis value labels written.
     bool major_grid_on_;  // Draw X grid at major ticks.
     bool minor_grid_on_;// Draw X grid at minor ticks.
     int value_precision_; // precision for tick value labels, usually 3 will suffice.
     int value_ioflags_;  // IO formatting flags for the axis.
-    bool strip_e0s_;
+    bool strip_e0s_; // If redundant zero, + and e are to be stripped.
     rotate_style x_label_rotation_; // Direction X_axis value labels written.
-    //double label_length_; // width (in SVG units) of longest label on axis.
     size_t label_max_chars_;  // width (in SVG units) of longest label on axis.
-    // TODO appear to be duplicates.
-    bool ticks_on_plot_window_on_; // Value labels & ticks on the plot window rather than on X or Y-axis.
+    int ticks_on_plot_window_on_; // Value labels & ticks on the plot window rather than on X or Y-axis.
+    // For X-axis -1 = left, 0 = false, +1 = right. Default left.
+    // For Y-axis -1 = bottom, 0 = false, +1 = top. Default bottom.
 
     ticks_labels_style(dim d = X,
       double max = 10., double min = -10.,
@@ -717,7 +717,7 @@ public:
     // Simplest to have all of these although only one pair like up or down is used.
     // Unused are always false.
     major_value_labels_on(true), // Label values for major ticks.
-    label_units_on_(true), // Label axis units.
+    //label_units_on_(true), // Label axis units.
     label_rotation_(horizontal), // Direction axis value labels written.
     major_grid_on_(false),  // Draw grid at major ticks.
     minor_grid_on_(false),// Draw grid at minor ticks.
@@ -726,7 +726,8 @@ public:
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
     strip_e0s_(true), // strip superflous zeros and signs.
     label_max_chars_(0), // width (in SVG units) of longest label on axis.
-    ticks_on_plot_window_on_(true) // Value labels & ticks on the plot window rather than on X or Y-axis.
+    ticks_on_plot_window_on_(-1) // Value labels & ticks on the plot window rather than on X or Y-axis.
+    // Default -1 means left or bottom.
   {
       if(max_ <= min_)
       { // max_ <= min_.

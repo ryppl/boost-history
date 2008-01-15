@@ -1,30 +1,31 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Numerical Limits</title>
+<title> Numerical Limits</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
 <link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../behavior.html" title="Behavior">
-<link rel="prev" href="../behavior.html" title="Behavior">
-<link rel="next" href="behavior_stylesheets.html" title="Stylesheets">
+<link rel="up" href="../behavior.html" title=" Behavior">
+<link rel="prev" href="../behavior.html" title=" Behavior">
+<link rel="next" href="behavior_stylesheets.html" title=" Stylesheets">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%">
+<table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.htm">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/people/people.htm">People</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/faq.htm">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
-</table>
+</tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../behavior.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../behavior.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="behavior_stylesheets.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../behavior.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../behavior.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="behavior_stylesheets.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.behavior.behavior_limits"></a> Numerical Limits</h3></div></div></div>
+<a name="svg_plot.behavior.behavior_limits"></a><a href="behavior_limits.html" title=" Numerical Limits"> Numerical Limits</a>
+</h3></div></div></div>
 <p>
         All limits that are dealt with are double precision floating-point limits.
         Limits are detected when data is added to the plot by the call to the <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
@@ -32,15 +33,18 @@
       </p>
 <p>
         Currently, the line interpolation algorithms do not take limits into account,
-        so behavior may be incorrect for such plots as <code class="computeroutput"><span class="number">1</span> <span class="special">/</span> <span class="identifier">x</span></code>.
+        so behavior may be incorrect for such plots as <code class="computeroutput"><span class="number">1</span>
+        <span class="special">/</span> <span class="identifier">x</span></code>.
       </p>
 <p>
-        Data at the limits are drawn as a circle with <code class="computeroutput"><span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">lightgray</span></code>
-        and <code class="computeroutput"><span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">whitesmoke</span></code>. This will become customizable.
+        Data at the limits are drawn as a circle with <code class="computeroutput"><span class="identifier">_stroke_color</span>
+        <span class="special">=</span> <span class="identifier">lightgray</span></code>
+        and <code class="computeroutput"><span class="identifier">_fill_color</span> <span class="special">=</span>
+        <span class="identifier">whitesmoke</span></code>. This will become customizable.
       </p>
 <a name="svg_plot.behavior.behavior_limits.nan"></a><h5>
-<a name="id394930"></a>
-        NaN
+<a name="id689274"></a>
+        <a href="behavior_limits.html#svg_plot.behavior.behavior_limits.nan">NaN</a>
       </h5>
 <p>
         Any double precision floating-point numbers that return a nonzero value for
@@ -49,8 +53,8 @@
         user-defined coordinates as 0.
       </p>
 <a name="svg_plot.behavior.behavior_limits.infinity"></a><h5>
-<a name="id394971"></a>
-        Infinity
+<a name="id689333"></a>
+        <a href="behavior_limits.html#svg_plot.behavior.behavior_limits.infinity">Infinity</a>
       </h5>
 <p>
         Any double precision floating point number that is equal to either of the
@@ -66,8 +70,9 @@
         appear at the top of the graph.
       </p>
 <a name="svg_plot.behavior.behavior_limits.negative_infinity"></a><h5>
-<a name="id395078"></a>
-        Negative Infinity
+<a name="id689469"></a>
+        <a href="behavior_limits.html#svg_plot.behavior.behavior_limits.negative_infinity">Negative
+        Infinity</a>
       </h5>
 <p>
         Any double precision floating point number that is equal to either of the
@@ -92,11 +97,15 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../behavior.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../behavior.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="behavior_stylesheets.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../behavior.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../behavior.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="behavior_stylesheets.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

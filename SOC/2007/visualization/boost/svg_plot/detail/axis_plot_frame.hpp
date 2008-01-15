@@ -139,10 +139,23 @@ namespace boost
           } // use_x_minor_grid
 
           double x_tick_length = derived().x_ticks_.minor_tick_length_;
-          if(derived().x_ticks_.ticks_on_plot_window_on_)
-          { // Put minor ticks on the plot window border.
+          if (derived().x_ticks_.ticks_on_plot_window_on_ < 0)
+          { // Put minor ticks on the plot window border bottom.
             y1 = derived().plot_bottom_; // on the window line.
             y2 = derived().plot_bottom_; // y1 = upper, y2 = lower end of tick.
+            if(derived().x_ticks_.up_ticks_on_)
+            { //
+              y1 -= x_tick_length; // up.
+            }
+            if (derived().x_ticks_.down_ticks_on_)
+            {
+              y2 += x_tick_length; // down.
+            }
+          }
+          else if  (derived().x_ticks_.ticks_on_plot_window_on_ < 0)
+          { // Put minor ticks on the plot window border top.
+            y1 = derived().plot_top_; // on the window line.
+            y2 = derived().plot_top_; // y1 = upper, y2 = lower end of tick.
             if(derived().x_ticks_.up_ticks_on_)
             { //
               y1 -= x_tick_length; // up.
@@ -215,10 +228,23 @@ namespace boost
           if((x >= derived().plot_left_) && (x <= derived().plot_right_)) // now <= 
           {
             double x_tick_length = derived().x_ticks_.major_tick_length_;
-            if(derived().x_ticks_.ticks_on_plot_window_on_)
+            if(derived().x_ticks_.ticks_on_plot_window_on_ < 0)
             { // Put the ticks on the plot window border (was external).
               y_up = derived().plot_bottom_; // on the window line.
               y_down = derived().plot_bottom_; // y_up = upper, y_down = lower.
+              if(derived().x_ticks_.up_ticks_on_)
+              {
+                y_up -= x_tick_length; // up
+              }
+              if (derived().x_ticks_.down_ticks_on_)
+              {
+                y_down += x_tick_length; // down.
+              }
+            }
+            else if(derived().x_ticks_.ticks_on_plot_window_on_ > 0)
+            { // Put the ticks on the plot window border (was external).
+              y_up = derived().plot_top_; // on the window line.
+              y_down = derived().plot_top_; // y_up = upper, y_down = lower.
               if(derived().x_ticks_.up_ticks_on_)
               {
                 y_up -= x_tick_length; // up
@@ -292,7 +318,7 @@ namespace boost
               }
 
               { // ! use_x_ticks_on_plot_window_ = Internal - value labels just below horizontal X-axis.
-                if (derived().x_ticks_.ticks_on_plot_window_on_ || ((value != 0) && derived().x_axis_.axis_line_on_))
+                if ((derived().x_ticks_.ticks_on_plot_window_on_ != 0) || ((value != 0) && derived().x_axis_.axis_line_on_))
                 { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
                   derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
                     x, y,
@@ -312,21 +338,40 @@ namespace boost
         } // draw_x_major_ticks
 
         void draw_x_axis()
-        { // Draw horizontal X-axis line &.
-          if((derived().x_axis_.axis_line_on_) && (derived().x_axis_position_ == x_intersects_y))
-          { // Draw the horizontal X-axis line the full width of the plot window,
-            // perhaps including an addition in lieu of a major tick.
+        { // Draw horizontal X-axis line & plot window line to hold.
+          if(derived().x_axis_.axis_line_on_)
+          {
             double xleft = derived().plot_left_;
             double xright = derived().plot_right_;
-            if (derived().y_ticks_.left_ticks_on_ && derived().x_ticks_.ticks_on_plot_window_on_ 
-              )
-            { // Extend the horizontal line left in lieu of longest tick.
-              xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
+            if (derived().x_axis_position_ == x_intersects_y)
+            { // Draw the horizontal X-axis line the full width of the plot window,
+              // perhaps including an addition in lieu of a major tick.
+              if (derived().y_ticks_.left_ticks_on_ && (derived().x_ticks_.ticks_on_plot_window_on_ != 0))
+              { // Extend the horizontal line left in lieu of longest tick.
+                xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
+              }
+              double y = derived().x_axis_.axis_; // y = 0, (provided y range includes zero).
+              derived().image.get_g_element(PLOT_X_AXIS).line(xleft, y, xright, y);
+              if (derived().x_ticks_.ticks_on_plot_window_on_ < 0) 
+              { // Draw a vertical line holding the ticks on the top of plot window.
+                derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
+              }
+              else if (derived().x_ticks_.ticks_on_plot_window_on_ > 0) 
+              {// Draw a vertical line holding the ticks on the bottom of plot window.
+                derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
+              }
             }
-            double y = derived().x_axis_.axis_; // y = 0, (provided y range includes zero).
-            derived().image.get_g_element(PLOT_X_AXIS).line(
-              xleft, y,
-              xright, y);
+            else if (derived().x_axis_position_ == top)
+            {
+               derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
+            }
+            else if (derived().x_axis_position_ == bottom)
+            {
+               derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
+            }
+            else
+            { // warn that things have gone wrong?
+            }
           } // x_axis_.axis_line_on_
 
           // Access the paths for the ticks & grids, ready for additions.
@@ -355,7 +400,7 @@ namespace boost
               // TODO this seems ugly - as does the negative ones below.
               draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
             } // for j
-            if ((x != 0. || !derived().y_axis_.axis_line_on_) || derived().x_ticks_.ticks_on_plot_window_on_)
+            if ((x != 0. || !derived().y_axis_.axis_line_on_) || (derived().x_ticks_.ticks_on_plot_window_on_ != 0))
             { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
               // (won't be Y-axis line for 1-D where the zero tick is always wanted).
               draw_x_major_ticks(x, major_tick_path, major_grid_path);
@@ -373,14 +418,14 @@ namespace boost
 
               j -= x_minor_jump)
             {
-              if ((j != 0. || !derived().y_axis_.axis_line_on_)  || derived().x_ticks_.ticks_on_plot_window_on_)
+              if ((j != 0. || !derived().y_axis_.axis_line_on_)  || (derived().x_ticks_.ticks_on_plot_window_on_ != 0))
               { // Avoid a minor tick at x == 0 where there *is* a vertical Y-axis line.
                 // (won't be Y-axis line for 1-D where the zero tick is always wanted).
                 // But no tick means no value label 0 either unless on_plot_window.
                 draw_x_minor_ticks(j, minor_tick_path, minor_grid_path);
               }
             }
-            if ((x != 0. || !derived().y_axis_.axis_line_on_) || derived().x_ticks_.ticks_on_plot_window_on_)
+            if ((x != 0. || !derived().y_axis_.axis_line_on_) || (derived().x_ticks_.ticks_on_plot_window_on_ != 0))
             { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
               // (won't be Y-axis line for 1-D where the zero tick is always wanted).
               // But no tick means no value label 0 either unless on_plot_window.
@@ -501,13 +546,13 @@ namespace boost
               }
               break;
                 // If outside then reserve space for legend by reducing plot window.
-            case outside_right:
+            case outside_right: // Default.
               // so that it isn't too close to the image edge or the plot window.
               derived().plot_right_ -= derived().legend_width_ + spacing; // Narrow plot window from right.
               derived().legend_left_ = derived().plot_right_; // plot + border.
               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
               derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
-              //derived().legend_top_ += spacing;  // down a bit.
+              //derived().legend_top_ += spacing;  // down a bit? Or could center vertically?
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
             case outside_left:
@@ -539,11 +584,11 @@ namespace boost
               break;
               } // switch
 
-            std::cout << "Legend: left " << derived().legend_left_ 
-                << ", right " << derived().legend_right_
-                << ", top " << derived().legend_top_
-                << ", bottom " << derived().legend_bottom_
-                << std::endl;
+            //std::cout << "Legend: left " << derived().legend_left_ 
+            //    << ", right " << derived().legend_right_
+            //    << ", top " << derived().legend_top_
+            //    << ", bottom " << derived().legend_bottom_
+            //    << std::endl;
 
               // Check if the location requested will fit,
               // now that we know the size of box needed.
@@ -1170,7 +1215,23 @@ namespace boost
 
           bool license_on()
           {
-            return derived().image.is_license();
+            return derived().image.license_on();
+          }
+
+          Derived&  license_on(bool l)
+          {
+            derived().image.license_on(l);
+            return derived();
+          }
+          bool boost_license_on()
+          {
+            return derived().image.boost_license_one();
+          }
+
+          Derived& boost_license_on(bool l)
+          {
+            derived().image.boost_license_on(l);
+            return derived();
           }
 
           const std::string license_reproduction()
@@ -1681,20 +1742,20 @@ namespace boost
             return derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color();
           }
 
-          Derived& x_ticks_on_plot_window_on(bool cmd)
-          { // External style.
+          Derived& x_ticks_on_plot_window_on(int cmd)
+          { // External style, top = +1, bottom = -1 (default).
             derived().x_ticks_.ticks_on_plot_window_on_ = cmd;
             return derived();
           }
 
-          bool x_ticks_on_plot_window_on()
+          int x_ticks_on_plot_window_on()
           { // External style = true.
             return derived().x_ticks_.ticks_on_plot_window_on_;
           }
 
           Derived& x_label_units_on(bool cmd)
           {
-            derived().x_axis_.label_units_on = cmd;
+            derived().x_axis_.label_units_on_ = cmd;
             return derived();
           }
 

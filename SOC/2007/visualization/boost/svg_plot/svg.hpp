@@ -20,6 +20,7 @@
 //#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
 #include "detail/svg_tag.hpp" // element class definitions.
 #include "svg_style.hpp"
+//#include "svg_fwd.hpp"
 
 // SVG stands for Scalable Vector Graphics,
 // an XML grammar for stylable graphics, usable as an XML namespace.
@@ -420,27 +421,29 @@ public:
     return *this;
   }
 
-  svg& license(bool l)
+  svg& license_on(bool l)
   { // Set (or not) license using all requirement (default permits).
+    // Implicitly set by setting a license requirement using license above.
     is_license_ = l;
     return *this;
   }
 
-  bool is_license()
+  bool license_on()
   { // Shows if a license has been requested in the svg header metatadata.
     return is_license_;
   }
 
-  svg& boost_license(bool l)
+  svg& boost_license_on(bool l)
   { // Set (or not) Boost license.
     is_boost_license_ = l;
     return *this;
   }
 
-  bool is_boost_license()
+  bool boost_license_on()
   { // Shows if a license has been requested in the svg header metatadata.
     return is_boost_license_;
   }
+
   const std::string& reproduction()
   { // Gets license reproduction requirement.
     return reproduction_;
