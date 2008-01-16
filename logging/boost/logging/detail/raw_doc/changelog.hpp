@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.13.17, 16 jan 2008
+@section changelog_cur_ver Current Version: v0.14.1, 17 jan 2008
+- added test_after_destroyed - works on VC8
+- moved logger::cached into a base class and made it virtual
+
+v0.13.17, 16 jan 2008
 - added sample compile_time (for testing compile time)
 - added destination::named test
 - automatically include writer/ts_write.hpp from format.hpp

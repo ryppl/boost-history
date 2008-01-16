@@ -541,7 +541,7 @@ If defined, we don't use @ref macros_tss "TSS" as all.
     ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
     { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
     typedef type::write_type write_msg; \
-    static ::boost::logging::implement_default_logger< gather_msg, write_msg* > p( &(name ## _boost_log_impl_().writer()), &(name ## _boost_log_impl_().cache()) ); \
+    static ::boost::logging::forward_to_logger< gather_msg, write_msg > p( name ## _boost_log_impl_() ); \
     return p; } \
     namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
     boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
