@@ -90,19 +90,21 @@ void plot(const std::string& title, const std::string& file,
   my_plot.title(title)
           .title_font_size(20)
           .x_label(x_label)
-          .y_label(y_label);
-
-  // Commands.
+          .y_label(y_label)
+          ;
+  // Legend settings.
   my_plot.legend_on(true)
           //.legend_place(outside_bottom)
-          .legend_place(outside_right)
+          //.legend_place(outside_right)
           .title_on(true)
           .plot_window_on(true)
           .plot_border_color(magenta)
           .x_label_on(true)
           .y_label_on(true)
-          .y_major_labels_on(true)
-          .x_major_labels_on(true);
+          .y_major_labels_on(-1)
+          .x_major_labels_on(-1)
+          .legend_title("Function")
+          .legend_title_font_size(16);
 
   // Color settings chosen for visibility rather than taste!
 
@@ -111,10 +113,17 @@ void plot(const std::string& title, const std::string& file,
           .legend_background_color(svg_color(lightyellow))
           .legend_border_color(svg_color(yellow))
           .plot_background_color(svg_color(white))
-          .plot_border_color(svg_color(blue))
+          .plot_border_color(svg_color(green))
           .plot_border_width(1)
           .title_color(red)
           ;
+  // Options for x and/or y num_minor_ticks.
+  // .y_num_minor_ticks(4)  // 0 major, 2,4,6,7,8 minor, 10 major ...	
+  // .y_num_minor_ticks(1) // 0 major, 5, minor, 10 major ...	
+  // .y_num_minor_ticks(2) // show half points.
+  // .y_num_minor_ticks(3) // show half and quarter points.
+  // .y_num_minor_ticks(4) // 0 major, 2,4,6,7,8 minor, 10 major ...	
+  // .y_num_minor_ticks(9) // 0 major, 1,2,3,4,5,6,7,8,9 minor, 10 major ...		
 
   // X axis settings.
   my_plot.x_range(xmin, xmax)
@@ -125,53 +134,41 @@ void plot(const std::string& title, const std::string& file,
           .x_minor_tick_width(1) // pixels
           .x_num_minor_ticks(4) // plus 1 major = 5 ticks per major step.
           ;
-  // Options for x and/or y num_minor_ticks.
-  // .y_num_minor_ticks(4)  // 0 major, 2,4,6,7,8 minor, 10 major ...	
-  // .y_num_minor_ticks(1) // 0 major, 5, minor, 10 major ...	
-  // .y_num_minor_ticks(2) // show half points.
-  // .y_num_minor_ticks(3) // show half and quarter points.
-  // .y_num_minor_ticks(4) // 0 major, 2,4,6,7,8 minor, 10 major ...	
-  // .y_num_minor_ticks(9) // 0 major, 1,2,3,4,5,6,7,8,9 minor, 10 major ...		
 
   // Y-axis settings.
  my_plot
     .y_range(ymin, ymax)
     .y_major_interval(1.)
+    .y_num_minor_ticks(4) // plus 1 major = 5 ticks per major step.
     .y_major_tick_length(10) // pixels
     .y_major_tick_width(2) // pixels
     .y_minor_tick_length(5) // pixels
     .y_minor_tick_width(1) // pixels
-    .y_num_minor_ticks(4); // plus 1 major = 5 ticks per major step.
+    ;
 
   // Very pale blue grid - like old fashioned graph paper.
   my_plot.x_major_grid_color(svg_color(200, 220, 255))
          .x_minor_grid_color(svg_color(240, 240, 255))
          .y_major_grid_color(svg_color(200, 220, 255))
          .y_minor_grid_color(svg_color(240, 240, 255))
-         //.y_minor_grid_color(green)
          .y_major_grid_width(2)
-         .y_minor_grid_width(1);
+         .y_minor_grid_width(1)
+         .x_major_grid_on(true)  // But nothing shows - until you make .major_grid_on(true)!
+         .x_minor_grid_on(true)
+         .y_major_grid_on(true)
+         .y_minor_grid_on(true);
 
-  //  - but nothing shows - until you make .major_grid_on(true)!
-  my_plot.x_major_grid_on(true)
-          .x_minor_grid_on(true)
-          .y_major_grid_on(true)
-          .y_minor_grid_on(true);
-
-  my_plot.x_ticks_down_on(true);
-  my_plot.y_ticks_left_on(true);
-  //my_plot.x_ticks_on_plot_window_on(true); // default false
-  //my_plot.y_ticks_on_plot_window_on(true);
+  my_plot.x_ticks_down_on(true); // X-axis.
+  my_plot.y_ticks_left_on(true); // Y-axis.
+  my_plot.x_ticks_on_plot_window_on(0); // default on axes, if possible.
+  my_plot.y_ticks_on_plot_window_on(0);
 
   my_plot.y_value_ioflags(ios::dec | ios::fixed).y_value_precision(1);
   my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
   //  my_plot.x_value_ioflags(ios::dec).x_value_precision(2);
 
-  // Legend settings
-  my_plot.legend_title("Function");
-  my_plot.legend_title_font_size(16);
   my_plot.y_major_label_rotation(uphill); 
-  my_plot.x_major_label_rotation(downward); // slope
+  my_plot.x_major_label_rotation(downward); // sloping.
    //my_plot.y_major_label_rotation(horizontal); // defaults.
    //my_plot.x_major_label_rotation(horizontal);
 
@@ -189,7 +186,6 @@ void plot(const std::string& title, const std::string& file,
 
 int main()
 {
-
   // boost::array or anything in boost such that pair_type has
   // std and boost as associated namespaces.
   typedef ::std::pair< ::boost::array<int, 1>, int> pair_type;
@@ -208,10 +204,10 @@ int main()
     data3[i] = h(i);
   }
 
-   //Demonstrate/test plots with various range of x and y, some *not* including zero.
+   // Demonstrate/test plots with various range of x and y, some *not* including zero.
 
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYPM.svg", "X-axis", -10., +10., "Y-axis", -10., +10.); // Both X & Y include zero.
-    plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
+   plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XN.svg", "X-axis", -10., -1., "Y-axis", -10., 10.); // x all < 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_YP.svg", "X-axis", -1., +10., "Y-axis", +1., +10.); // Y all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_YN.svg", "X-axis", -1., +10., "Y-axis", -10., -1.); // y all < 0

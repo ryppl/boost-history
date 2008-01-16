@@ -212,7 +212,7 @@ private:
         y = y * y_scale_ + y_shift_;
     }
 
-    void draw_y_minor_ticks(double j, path_element& tick_path)
+    void draw_y_minor_tick(double j, path_element& tick_path)
     {
         double y1(j), x1(plot_left_);
         double y_tick_length = y_minor_tick_length_ / 2.;
@@ -244,7 +244,7 @@ private:
         }
     }
 
-    void draw_y_major_ticks(double i, path_element& tick_path)
+    void draw_y_major_tick(double i, path_element& tick_path)
     {
         double y1(i), x1(0.), x2(image.y_size());
 
@@ -290,10 +290,10 @@ private:
                        j < i + y_major_interval_;
                        j += y_minor_jump)
             {
-                draw_y_minor_ticks(j, minor_tick_path);
+                draw_y_minor_tick(j, minor_tick_path);
             }
 
-            draw_y_major_ticks(i, major_tick_path);
+            draw_y_major_tick(i, major_tick_path);
         }
 
         // Draw the ticks on the negative side.
@@ -302,10 +302,10 @@ private:
             // draw minor ticks
             for(double j=i; j>i-y_major_interval_; j-=y_major_interval_ / (y_num_minor_ticks_+1))
             {
-                draw_y_minor_ticks(j, minor_tick_path);
+                draw_y_minor_tick(j, minor_tick_path);
             }
 
-            draw_y_major_ticks(i, major_tick_path);
+            draw_y_major_tick(i, major_tick_path);
         }
     }
 
@@ -687,7 +687,7 @@ svg_boxplot& x_label_on(bool cmd)
     return *this;
 }
 
-svg_boxplot& y_major_labels_on(bool cmd)
+svg_boxplot& y_major_labels_on(int cmd)
 {
     use_y_major_labels = cmd;
     return *this;

@@ -207,7 +207,7 @@ namespace boost
               {
                 y_up += derived().title_info_.style().font_size() * derived().text_margin_;
               }
-              if(derived().x_ticks_.major_value_labels_on)
+              if(derived().x_ticks_.major_value_labels_on_ != 0)
               { // If use_x_major_labels then value may be shown beside the major tick.
                 y_down -= derived().x_label_info_.style().font_size() * derived().text_margin_;
               }
@@ -270,7 +270,7 @@ namespace boost
             tick_path.M(x, y_up).L(x, y_down);
             // Leaving current position at the bottom end of the tick.
 
-            if(derived().x_ticks_.major_value_labels_on)
+            if(derived().x_ticks_.major_value_labels_on_ != 0)
             { // Show value by the tick as "1.2" or "3.4e+000"...
               std::stringstream label;
               label.precision(derived().x_ticks_.value_precision_);
@@ -290,13 +290,15 @@ namespace boost
               if (derived().x_ticks_.label_rotation_ == upward)
               { // 
                 alignment = right_align;
-                //y += label.str().size() * derived().x_label_info_.font_size();
+                x -= derived().x_label_info_.style().font_size() * 0.3;  // To centre digit and - on tick.
+                //y += label.str().size() * derived().x_label_info_.font_size()  * 0.5;  // Part digit space.
                 // so the last digit will be by the tick.
               }
               else if((derived().x_ticks_.label_rotation_ == downward)
                 || (derived().x_ticks_.label_rotation_ == downhill))
               { // start from tick and write down.
-                y += derived().x_label_value_.style().font_size() * 0.5;
+                y += derived().x_label_value_.style().font_size() * 0.5; // Part digit space.
+                x -= derived().x_label_info_.style().font_size() * 0.3;  // To centre digit and - on tick.
                 alignment = left_align;
               }
               else if(derived().x_ticks_.label_rotation_ == horizontal)
@@ -321,7 +323,8 @@ namespace boost
                 if ((derived().x_ticks_.ticks_on_plot_window_on_ != 0) || ((value != 0) && derived().x_axis_.axis_line_on_))
                 { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
                   derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
-                    x, y,
+                    x, // to centre on tick
+                    y,
                     label.str(),
                     derived().x_label_value_.style(),
                     alignment, // center label on the tick.
@@ -1010,7 +1013,7 @@ namespace boost
           // std::string x_label()
           // bool x_label_units_on() //
           // std::string x_label_units() // Show X-axis units text.
-          // bool x_major_labels_on()
+          // int x_major_labels_on()
           // svg_color x_label_color()
           // bool axes_on()
           // svg_color x_axis_color()
@@ -1050,7 +1053,7 @@ namespace boost
           //Derived& x_ticks_down_on(bool cmd)
           //Derived& x_label_on(bool cmd)
           //Derived& x_label_units_on(bool cmd)
-          //Derived& x_major_labels_on(bool cmd)
+          //Derived& x_major_labels_on(int cmd)
           //Derived& title_on(bool cmd)
           //Derived& x_major_grid_on(bool is)
           //Derived& x_minor_grid_on(bool is)
@@ -1764,15 +1767,15 @@ namespace boost
             return derived().x_axis_.label_units_on_;
           }
 
-          Derived& x_major_labels_on(bool cmd)
+          Derived& x_major_labels_on(int cmd)
           {
-            derived().x_ticks_.major_value_labels_on = cmd;
+            derived().x_ticks_.major_value_labels_on_ = cmd;
             return derived();
           }
 
-          bool x_major_labels_on()
+          int x_major_labels_on()
           {
-            return derived().x_ticks_.major_value_labels_on;
+            return derived().x_ticks_.major_value_labels_on_;
           }
 
           Derived& x_major_label_rotation(rotate_style rot)
