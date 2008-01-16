@@ -28,12 +28,12 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <map>
 #include <vector>
-#include <boost/thread/detail/config.hpp>
+//#include <boost/thread/detail/config.hpp>
+#include <boost/config.hpp>
 #include <boost/assert.hpp>
 
 namespace boost { namespace logging { namespace detail {
 
-//    have a cache class!!!!!!!!! log the thread as well
 
 #if defined (BOOST_HAS_WINTHREADS)
 typedef DWORD thread_id_type;

@@ -61,6 +61,7 @@ namespace boost { namespace logging {
         - @ref BOOST_LOG_COMPILE_FAST_ON 
         - @ref BOOST_LOG_COMPILE_FAST_OFF 
         - @ref BOOST_LOG_COMPILE_FAST 
+        - @ref boost_log_compile_results 
     - @ref macros_tss 
         - @ref BOOST_LOG_TSS_USE_INTERNAL 
         - @ref BOOST_LOG_TSS_USE_BOOST 
@@ -399,13 +400,13 @@ Example:
 Assume you're using formatters and destinations, and you 
 <tt>#include <boost/logging/format.hpp> </tt> or
 <tt>#include <boost/logging/format_ts.hpp> </tt>. If you include this in every file (indirectly, you'll
-be including some @c log.h file, which will then include the above), this will increase compilation time a lot.
+be including some @c log.h file, which will then include the above), this will increase compilation time quite a bit.
 
 So, you can choose to:
 - have fast compilation time, and a virtual function call per each logged message (default)
 - have everything inline (no virtual function calls), very fast, and slow compilation
 
-Most of the time you won't notice the extra virtual function call, and the compilation time will be a lot faster.
+Most of the time you won't notice the extra virtual function call, and the compilation time will be faster.
 However, just in case you'll sometime want the very fast configuration, just turn the fast compilation off, by using the
 @ref BOOST_LOG_COMPILE_FAST_OFF directive.
 
@@ -428,6 +429,32 @@ If defined, it means we're doing fast-compile. Otherwise, we're not doing fast c
 
 @note
 Don't define this! It's defined automatically.
+
+@subsubsection boost_log_compile_results Compile time sample (and results)
+
+Recently I created a sample (compile_time) to test the effect of @c BOOST_LOG_COMPILE_FAST_ON. 
+The results were not as promising as I had hoped. However, still, when @c BOOST_LOG_COMPILE_FAST_ON is on,
+will compile faster by 20-40%. Noting that this is just an simple example, the results might not be that conclusive.
+Anyway, here they are:
+
+
+Tested on 16 jan 2008/intel core duo 2.16Ghz machine, 5400Rpm HDD
+
+- VC 8.0 (no precompiled header)
+  - Debug
+    - Compile with BOOST_LOG_COMPILE_FAST_ON (default) - 33 secs 
+    - Compile with BOOST_LOG_COMPILE_FAST_OFF  - 43 secs 
+- gcc 3.4.2
+  - Debug
+    - Compile with BOOST_LOG_COMPILE_FAST_ON (default) - 24 secs 
+    - Compile with BOOST_LOG_COMPILE_FAST_OFF  -  31 secs
+- gcc 4.1
+  - Debug
+    - Compile with BOOST_LOG_COMPILE_FAST_ON (default) - 20.5 secs 
+    - Compile with BOOST_LOG_COMPILE_FAST_OFF  -  24 secs
+
+If you have other results, or results from a big program using Boost Logging, please share them with me. Thanks!
+
 
 
 

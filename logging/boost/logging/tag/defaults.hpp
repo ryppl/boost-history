@@ -23,7 +23,8 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/logging.hpp>
-#include <boost/thread/detail/config.hpp>
+//#include <boost/thread/detail/config.hpp>
+#include <boost/config.hpp>
 
 namespace boost { namespace logging { namespace tag {
 
@@ -86,6 +87,8 @@ struct thread_id {
         val = ::GetCurrentThreadId();
 #elif defined (BOOST_HAS_PTHREADS)
         val = pthread_self ();
+#else 
+#error Unknown type of threads
 #endif
     }
 

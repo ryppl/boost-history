@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.13.16, 15 jan 2008
+@section changelog_cur_ver Current Version: v0.13.17, 16 jan 2008
+- added sample compile_time (for testing compile time)
 - added destination::named test
 - automatically include writer/ts_write.hpp from format.hpp
 - added test_tags test
