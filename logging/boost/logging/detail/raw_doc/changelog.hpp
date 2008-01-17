@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.20.3, 17 jan 2008
+@section changelog_cur_ver Current Version: v0.20.4, 17 jan 2008
+- added dll_and_exe - show how you can use a logger that is defined in a DLL, and use it from an EXE
 - explained the breaking change in the docs
 - updated the tests to compile (after the breaking change)
 - @ref breaking_change_v_20 "BREAKING CHANGE" : when you use the filters/loggers, use them as function names (append "()" to them)
