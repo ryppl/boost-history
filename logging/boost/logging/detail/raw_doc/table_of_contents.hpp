@@ -10,6 +10,9 @@ namespace boost { namespace logging {
     - @ref page_changelog
         - @ref changelog_cur_ver 
     - @ref acknowledgements
+    - @ref breaking_changes
+      - @ref breaking_change_v_20
+
 
 - @ref workflow
     - @ref workflow_introduction 

@@ -702,6 +702,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\breaking_changes.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\caching.hpp"
 				>
 			</File>
@@ -864,13 +868,6 @@
 			<File
 				RelativePath="..\..\..\samples\scenarios\mul_levels_one_logger.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\mul_loggers_one_filter.cpp"

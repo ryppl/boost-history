@@ -27,8 +27,30 @@ I use this because:
 
 
 
+@section rationale_use_functions Rationale for - Why BOOST_LOG_DECLARE/DEFINE define a function, instead of a variable
 
+Note: this section applies to both loggers and filters.
 
+When using BOOST_LOG_DECLARE/DEFINE, they internally declare/define a function:
+
+@code
+BOOST_DECLARE_LOG(g_l, log_type) 
+
+// equivalent to:
+implementation_defined g_l();
+@endcode
+
+The reason we're defining a @b function that returns something (logger/filter), instead of a @b variable of the same type, is
+that if we were in the latter case, we could end up using a logger/filter @b before it's initialized.
+
+We could end up with this scenario:
+- have 2 translation units: T1 and T2
+  - in T1 I define a logger
+  - in T2 I create a static object, which in its constructor, uses the logger defined in T1
+
+The order of initialization between translation units is unspecified, so you could end up using the logger from T1, before its constructor is called.
+
+When using a function, this problem is avoided.
 
 
 
