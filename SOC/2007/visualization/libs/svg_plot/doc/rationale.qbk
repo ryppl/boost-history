@@ -22,13 +22,7 @@ num_minor_ticks = 2[super]n -1 are useful, for example
  9 if major on 0, minor on 1,2,3,4,5,6,7,8,9, major on 10
  
  
- 
- 
- 
-
-
-
-[/h4 Minor ticks]
+ [/h4 Minor ticks]
 
 
 This section provide more information about this implementation
@@ -330,3 +324,10 @@ Non-member names must not have an ``m_'' prefix.
 Some data members end with _ to avoid name clashes, another widely used convention.
 
 [endsect] [/section:implementation Implementation & Rationale]
+
+[/ rationale.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]

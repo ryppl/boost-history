@@ -3,8 +3,6 @@
   [[Signature] [Description] [Notes & Examples]]
 
   [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
-
-  [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
 ]
 
 [table `svg` shapes
@@ -17,7 +15,7 @@
 ``
 path_element& my_path = image.path();
 
-my_path.M(3, 3).l(150, 150);
+my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 ``
 ]]
 
@@ -101,3 +99,11 @@ my_path.M(3, 3).l(150, 150);
   [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]]
 ]
 [endsect] [/section:svg_interface]
+
+
+[/ svg_interface.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]

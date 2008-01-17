@@ -90,3 +90,12 @@ This writes our plot to the file "simple.svg". SVG files can be viewed with most
 or embedded into documents.
 
 [endsect] [/section:tutorial_code_1d_simple 1D Simple Program]
+
+
+[/ 1d_simple_tutorial.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+

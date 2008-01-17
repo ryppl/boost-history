@@ -4,5 +4,11 @@
 
 [include boxplot_full_tutorial.qbk]
 
-
 [endsect] [/section:tutorial]
+
+[/ boxplot_tutorial.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]

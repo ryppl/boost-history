@@ -64,3 +64,10 @@ This produces something like the following images:
 [warning The `_bezier_curve` feature still displays undesired behavior in extreme circumstances. Do not use this feature with curves that have a numeric_limit value (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (for example, a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis.)]
 
 [endsect] [/2d_special Tutorial: 2D Special Features]
+
+[/ 2d_special_tutorial.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]

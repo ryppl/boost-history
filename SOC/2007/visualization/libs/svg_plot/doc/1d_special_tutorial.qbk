@@ -37,3 +37,10 @@ The following is an example of the style that you can produce with this:
 turn the axis back on. To do that, you must call `axis_on(true)`]
 
 [endsect] [/1d_special Tutorial: 1D Special Features]
+
+[/ 1d_special_tutorial.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]

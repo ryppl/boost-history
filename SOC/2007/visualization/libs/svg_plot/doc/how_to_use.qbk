@@ -52,11 +52,17 @@ will currently be written to a
 [@http://www.w3.org/TR/REC-xml/#sec-comments XML specification]
 and file format for describing two-dimensional vector graphics.
 
-SVG files (.svg) can be viewed with a browser like Mozilla Firefox (newer version),
+SVG files (.svg) can be viewed with a internet browser:
+
+* Mozilla Firefox (newer versions),
 [@http://www.adobe.com/products/acrobat/readstep2.htmlAdobe Acrobat Reader],
-many other graphics program, and by Microsoft Internet Explorer,
-provided a suitable
-[@http://www.adobe.com/svg/ Adobe SVG Veiwer plug-in for SVG files] is installed.
+* [@www.opera.com Opera] has [@http://www.opera.com/docs/specs/svg/ svg support]
+but the quality if redering is often not as good as other browsers.
+* Microsoft Internet Explorer, provided a suitable
+[@http://www.adobe.com/svg/ Adobe SVG Viewer plug-in for SVG files] is installed,
+* [@http://www.inkscape.org/ Inkscape, a fine Open Source SVG viewer
+with excellent rendering, full scaling and other editing features.
+* and by many other graphics programs.
 
 The goals of the project are:
 

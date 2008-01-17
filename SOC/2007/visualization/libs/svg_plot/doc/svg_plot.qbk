@@ -10,31 +10,23 @@
     ]
 ]
 
-[/ Editorial work by Paul A. Bristow 16 Oct 2007]
-
 [include how_to_use.qbk]
-
 [include to_do.qbk]
-
 [include colors.qbk]
-
 [include svg_tutorial.qbk]
-
 [include 1d_tutorial.qbk]
-
 [include 2d_tutorial.qbk]
-
 [include boxplot_tutorial.qbk]
-
 [include stylesheet_tutorial.qbk]
-
 [include behavior_tutorial.qbk]
-
 [include plot_defaults.qbk]
-
 [include interface.qbk]
-
 [include rationale.qbk]
-
 [include acknowledgements.qbk]
 
+[/ svg_plot.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
