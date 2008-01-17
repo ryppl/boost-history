@@ -66,16 +66,16 @@ and then all destinations are called, in the order they were added. You can easi
 typedef logger< gather::ostream_like::return_cache_str<> , format_write< ... > > log_type;
 BOOST_DECLARE_LOG(g_l, log_type) 
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // add formatters : [idx] [time] message [enter]
-g_l->writer().add_formatter( formatter::idx() );
-g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-g_l->writer().add_formatter( formatter::append_newline() );
+g_l()->writer().add_formatter( formatter::idx() );
+g_l()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+g_l()->writer().add_formatter( formatter::append_newline() );
 
 // write to cout and file
-g_l->writer().add_destination( destination::cout() );
-g_l->writer().add_destination( destination::file("out.txt") );
+g_l()->writer().add_destination( destination::cout() );
+g_l()->writer().add_destination( destination::file("out.txt") );
 
 // usage
 int i = 1;

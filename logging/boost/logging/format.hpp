@@ -236,16 +236,16 @@ Example:
 typedef logger< gather::ostream_like::return_str<> , format_write<...> > log_type;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type)
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // add formatters : [idx] [time] message [enter]
-g_l->writer().add_formatter( write_idx() );
-g_l->writer().add_formatter( write_time() );
-g_l->writer().add_formatter( append_newline() );
+g_l()->writer().add_formatter( write_idx() );
+g_l()->writer().add_formatter( write_time() );
+g_l()->writer().add_formatter( append_newline() );
 
 // write to cout and file
-g_l->writer().add_destination( write_to_cout() );
-g_l->writer().add_destination( write_to_file("out.txt") );
+g_l()->writer().add_destination( write_to_cout() );
+g_l()->writer().add_destination( write_to_file("out.txt") );
 
 // usage
 int i = 1;
@@ -333,9 +333,9 @@ In the above case:
     typedef logger< default_, 
         writer::format_write< format_base, destination_base, format_and_write::simple<cache_string>,
             msg_route::with_route<format_base,destination_base> > > log_type;
-    log_type g_l;
+    log_type g_l();
 
-    g_l->writer().router().set_route()
+    g_l()->writer().router().set_route()
         .fmt( formatter::time() ) 
         .fmt( formatter::append_newline() )
         .dest( destination::dbg_window() )

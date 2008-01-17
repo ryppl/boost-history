@@ -30,6 +30,7 @@
 
 namespace boost { namespace logging { 
 
+    struct override {};
 
     struct default_ {};
     template<class param, class default_type> struct use_default                    { typedef param type; };

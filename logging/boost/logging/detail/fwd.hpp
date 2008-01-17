@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <boost/logging/detail/util.hpp>
-#include <boost/logging/detail/log_keeper.hpp>
 #include <boost/logging/detail/macros.hpp>
 
 #include <boost/logging/detail/ts/ts.hpp>

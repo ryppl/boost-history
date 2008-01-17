@@ -90,10 +90,10 @@ Example:
 typedef gather::ostream_like::return_str<> string;
 
 // not thread-safe
-logger< string, write_to_cout> g_l;
+logger< string, write_to_cout> g_l();
 
 // thread-safe, on dedicated thread
-logger< string, on_dedicated_thread<string,write_to_cout> > g_l;
+logger< string, on_dedicated_thread<string,write_to_cout> > g_l();
 @endcode
 
 You should note that a @b writer is not necessary a %logger. It can be a destination, for instance. For example, you might have a destination
@@ -113,7 +113,6 @@ struct on_dedicated_thread
 
     typedef boost::logging::threading::mutex::scoped_lock scoped_lock;
 
-    on_dedicated_thread() {}
     BOOST_LOGGING_FORWARD_CONSTRUCTOR(on_dedicated_thread,base_type)
 
     /** 

@@ -208,9 +208,9 @@ This allows you:
 Example:
 
 @code
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
-g_l->writer().add_formatter( formatter::named_spacer("[%index%] %time% (T%thread%) ")
+g_l()->writer().add_formatter( formatter::named_spacer("[%index%] %time% (T%thread%) ")
         .add( "index", formatter::idx())
         .add( "thread", formatter::thread_id())
         .add( "time", formatter::time("$mm")) );

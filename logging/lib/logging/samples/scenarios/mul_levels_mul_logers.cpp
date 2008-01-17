@@ -77,9 +77,10 @@ BOOST_DECLARE_LOG(g_log_app, log_type)
 BOOST_DECLARE_LOG(g_log_dbg, log_type)
 
 // Step 5: define the macros through which you'll log
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, debug ) << "[dbg] "
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err, g_log_level, error )
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app, g_log_level, info ) << "[app] "
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) << "[dbg] "
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) << "[app] "
+
 
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
@@ -94,27 +95,27 @@ void mul_levels_mul_logers_example() {
     //         That is, how the message is to be formatted and where should it be written to
 
     // Err log
-    g_log_err->writer().add_formatter( formatter::idx(), "[%] "  );
-    g_log_err->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_err->writer().add_formatter( formatter::append_newline() );
-    g_log_err->writer().add_destination( destination::file("err.txt") );
+    g_log_err()->writer().add_formatter( formatter::idx(), "[%] "  );
+    g_log_err()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_err()->writer().add_formatter( formatter::append_newline() );
+    g_log_err()->writer().add_destination( destination::file("err.txt") );
 
     destination::file out("out.txt");
     // App log
-    g_log_app->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_app->writer().add_formatter( formatter::append_newline() );
-    g_log_app->writer().add_destination( out );
-    g_log_app->writer().add_destination( destination::cout() );
+    g_log_app()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_app()->writer().add_formatter( formatter::append_newline() );
+    g_log_app()->writer().add_destination( out );
+    g_log_app()->writer().add_destination( destination::cout() );
 
     // Debug log
-    g_log_dbg->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_dbg->writer().add_formatter( formatter::append_newline() );
-    g_log_dbg->writer().add_destination( out );
-    g_log_dbg->writer().add_destination( destination::dbg_window() );
+    g_log_dbg()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_dbg()->writer().add_formatter( formatter::append_newline() );
+    g_log_dbg()->writer().add_destination( out );
+    g_log_dbg()->writer().add_destination( destination::dbg_window() );
 
-    g_log_app->turn_cache_off();
-    g_log_err->turn_cache_off();
-    g_log_dbg->turn_cache_off();
+    g_log_app()->turn_cache_off();
+    g_log_err()->turn_cache_off();
+    g_log_dbg()->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;
@@ -125,11 +126,11 @@ void mul_levels_mul_logers_example() {
     std::string hello = "hello", world = "world";
     LAPP_ << hello << ", " << world;
 
-    g_log_level->set_enabled(level::error);
+    g_log_level()->set_enabled(level::error);
     LDBG_ << "this will not be written anywhere";
     LAPP_ << "this won't be written anywhere either";
 
-    g_log_level->set_enabled(level::info);
+    g_log_level()->set_enabled(level::info);
     LAPP_ << "good to be back ;) " << i++;
     LERR_ << "second error " << i++;
 

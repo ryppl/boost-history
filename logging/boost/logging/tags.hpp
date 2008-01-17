@@ -66,7 +66,7 @@ namespace detail {
 First of all, note that the easiest way to log some extra context is to simply append it, when definining your macro:
 
 @code
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, debug ) << __FILE__ << ":" << __LINE__ << " [dbg] "
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), debug ) << __FILE__ << ":" << __LINE__ << " [dbg] "
 @endcode
 
 In the above case, you appended file & line, and the level of the logged message. Usage is just the same:
@@ -171,14 +171,14 @@ Examples:
 
 @code
 // add file/line and function tags
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag(BOOST_LOG_TAG_FILELINE) .set_tag(BOOST_LOG_TAG_FUNCTION)
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) .set_tag(BOOST_LOG_TAG_FILELINE) .set_tag(BOOST_LOG_TAG_FUNCTION)
 
 // add function and level
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, debug ) .set_tag(BOOST_LOG_TAG_FUNCTION) .set_tag( BOOST_LOG_TAG_LEVEL(debug) )
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) .set_tag(BOOST_LOG_TAG_FUNCTION) .set_tag( BOOST_LOG_TAG_LEVEL(debug) )
 
 // add module information - you specify the module name whe using the L_ macro. Example:
 // L_("chart") << "Initializing environment";
-#define L_(module_name) BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG(module)(module_name) )
+#define L_(module_name) BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) .set_tag( BOOST_LOG_TAG(module)(module_name) )
 
 @endcode
 
@@ -193,16 +193,16 @@ Example:
 #include <boost/logging/format/formatter/tags.hpp>
 ...
 
-g_l->writer().add_formatter( formatter::idx() );
-g_l->writer().add_formatter( formatter::append_newline() );
+g_l()->writer().add_formatter( formatter::idx() );
+g_l()->writer().add_formatter( formatter::append_newline() );
 
 // formatters to add the file/line and level
-g_l->writer().add_formatter( formatter::tag::file_line() );
-g_l->writer().add_formatter( formatter::tag::level() );
+g_l()->writer().add_formatter( formatter::tag::file_line() );
+g_l()->writer().add_formatter( formatter::tag::level() );
 
-g_l->writer().add_destination( destination::file("out.txt") );
-g_l->writer().add_destination( destination::cout() );
-g_l->writer().add_destination( destination::dbg_window() );
+g_l()->writer().add_destination( destination::file("out.txt") );
+g_l()->writer().add_destination( destination::cout() );
+g_l()->writer().add_destination( destination::dbg_window() );
 @endcode
 
 Note that the library comes with default formatters for each tag class. However, you can create your own formatter class, for a given tag class.

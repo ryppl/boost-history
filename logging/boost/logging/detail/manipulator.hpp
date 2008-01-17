@@ -163,13 +163,13 @@ After this, you'll add formatter and/or destination classes to your logger(s):
 
 @code
 // add formatters : [idx] [time] message [enter]
-g_l->writer().add_formatter( formatter::idx() );
-g_l->writer().add_formatter( formatter::time() );
-g_l->writer().add_formatter( formatter::append_newline() );
+g_l()->writer().add_formatter( formatter::idx() );
+g_l()->writer().add_formatter( formatter::time() );
+g_l()->writer().add_formatter( formatter::append_newline() );
 
 // write to cout and file
-g_l->writer().add_destination( destination::cout() );
-g_l->writer().add_destination( destination::file("out.txt") );
+g_l()->writer().add_destination( destination::cout() );
+g_l()->writer().add_destination( destination::file("out.txt") );
 @endcode
 
 In the above case, if you were to write:
@@ -283,9 +283,9 @@ and then do logging in your code:
 
 @code
 // macros through which you'll do logging
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, debug )
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, error )
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, info )
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), debug )
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), info )
 
 // doing logging in code
 int i = 1;
@@ -295,12 +295,12 @@ LERR_ << "first error " << i++;
 std::string hello = "hello", world = "world";
 LAPP_ << hello << ", " << world;
 
-g_log_level->set_enabled(level::error);
+g_log_level()->set_enabled(level::error);
 LDBG_ << "this will not be written anywhere";
 LAPP_ << "this won't be written anywhere either";
 LERR_ << "second error " << i++;
 
-g_log_level->set_enabled(level::info);
+g_log_level()->set_enabled(level::info);
 LAPP_ << "good to be back ;) " << i++;
 LERR_ << "third error " << i++;
 
@@ -402,7 +402,6 @@ private:
     typedef boost::shared_ptr<context_type> ptr_type;
 
 protected:
-    non_const_context() : m_context(new context_type) {}
     non_const_context(const non_const_context& other) : m_context(other.m_context) {}
     
     BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW(non_const_context,m_context,context_type)
@@ -441,15 +440,15 @@ is, the code will still work. You can add your %formatter/ %destination classes,
 
 @code
 typedef ... formatter_base;
-logger< format_write<...> > g_l;
+logger< format_write<...> > g_l();
 
 struct my_cool_formatter : formatter_base { ... };
 
 // adding formatter class from the Logging lib
-g_l.add_formatter( formatter::thread_id() );
+g_l().add_formatter( formatter::thread_id() );
 
 // adding formatter class defined by you
-g_l.add_formatter( my_cool_formatter() );
+g_l().add_formatter( my_cool_formatter() );
 @endcode
 
 @sa boost::logging::destination::convert, boost::logging::formatter::convert

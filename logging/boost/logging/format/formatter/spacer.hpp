@@ -76,14 +76,14 @@ formatter::spacer( formatter::thread_id(), "{T%} ");
 When adding a spacer formatter, you'll do something similar to:
 
 @code
-g_l->writer().add_formatter( formatter::spacer( formatter::idx(), "[%] ") );
+g_l()->writer().add_formatter( formatter::spacer( formatter::idx(), "[%] ") );
 @endcode
 
 However, to make this even simpler, I allow an ever easier syntax:
 
 @code
 // equivalent to the above
-g_l->writer().add_formatter( formatter::idx(), "[%] " );
+g_l()->writer().add_formatter( formatter::idx(), "[%] " );
 @endcode
 
 

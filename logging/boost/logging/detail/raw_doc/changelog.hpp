@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.14.1, 17 jan 2008
+@section changelog_cur_ver Current Version: v0.20.1, 17 jan 2008
+- *** BREAKING CHANGE : when you use the filters/loggers, use them as function names (append "()" to them)
+  - Please take a look at the updated examples or at the online help. Thanks for understanding.
+
+v0.14.1, 17 jan 2008
 - added test_after_destroyed - works on VC8
 - moved logger::cached into a base class and made it virtual
 
@@ -140,9 +144,9 @@ v0.9.0, 28 oct 2007
   - filters are declared with BOOST_DECLARE_LOG_FILTER, and defined with BOOST_DEFINE_LOG_FILTER
   - filters are now used with operator->, instead of "."
   - Example: 
-		BOOST_DEFINE_LOG_LEVEL(g_log_level, level::holder ) 
+		BOOST_DEFINE_LOG_LEVEL(g_log_level(), level::holder ) 
 		... 
-		g_log_level->set_enabled(level::error);
+		g_log_level()->set_enabled(level::error);
   - rationale: filters, same as levels, could be used before main
 
 

@@ -41,9 +41,9 @@ BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder )
 BOOST_DECLARE_LOG(g_l, log_type) 
 
 // Step 5: define the macros through which you'll log
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, debug )
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, error )
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, info )
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), debug )
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), info )
 
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
@@ -53,19 +53,19 @@ BOOST_DEFINE_LOG(g_l, log_type)
 void test_mul_levels_one_logger() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted...
-    g_l->writer().add_formatter( formatter::idx(), "[%] "  );
-    //g_l->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss.$mili ") );
-    g_l->writer().add_formatter( formatter::append_newline() );
+    g_l()->writer().add_formatter( formatter::idx(), "[%] "  );
+    //g_l()->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss.$mili ") );
+    g_l()->writer().add_formatter( formatter::append_newline() );
 
     //        ... and where should it be written to
-    g_l->writer().add_destination( 
+    g_l()->writer().add_destination( 
         destination::named("cout debug out")
             .add( "cout", destination::cout())
             .add( "out", destination::file("out.txt"))
             .add( "debug", destination::dbg_window() )
          );
 
-    g_l->turn_cache_off();
+    g_l()->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;
@@ -75,12 +75,12 @@ void test_mul_levels_one_logger() {
     std::string hello = "hello", world = "world";
     LAPP_ << hello << ", " << world;
 
-    g_log_level->set_enabled(level::error);
+    g_log_level()->set_enabled(level::error);
     LDBG_ << "this will not be written anywhere";
     LAPP_ << "this won't be written anywhere either";
     LERR_ << "second error " << i++;
 
-    g_log_level->set_enabled(level::info);
+    g_log_level()->set_enabled(level::info);
     LAPP_ << "good to be back ;) " << i++;
     LERR_ << "third error " << i++;
 

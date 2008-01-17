@@ -45,21 +45,21 @@ Example:
 
 @code
 // not thread-safe
-logger< gather::ostream_like::return_str<>, write_to_cout> g_l;
+logger< gather::ostream_like::return_str<>, write_to_cout> g_l();
 
 // thread-safe
-logger< gather::ostream_like::return_str<>, ts_write<write_to_cout> > g_l;
+logger< gather::ostream_like::return_str<>, ts_write<write_to_cout> > g_l();
 
 
 // not thread-safe
 logger< 
     gather::ostream_like::return_cache_str<> , 
-    format_write< format_base, destination_base> > g_l;
+    format_write< format_base, destination_base> > g_l();
 
 // thread-safe
 logger< 
     gather::ostream_like::return_cache_str<> , 
-    ts_write< format_write< format_base, destination_base > > > g_l;
+    ts_write< format_write< format_base, destination_base > > > g_l();
 @endcode
 
 Depending on your scenario, you could prefer on_dedicated_thread class.
@@ -69,7 +69,6 @@ Depending on your scenario, you could prefer on_dedicated_thread class.
     template<class base_type> struct ts_write : base_type, ::boost::logging::manipulator::non_const_context<detail::ts_write_context> {
         typedef ::boost::logging::manipulator::non_const_context<detail::ts_write_context> non_const_context_base;
 
-        ts_write() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(ts_write,base_type)
 
         template<class msg_type> void operator()(msg_type msg) const {

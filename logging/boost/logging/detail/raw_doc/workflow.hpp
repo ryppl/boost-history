@@ -51,7 +51,7 @@ you'll have one %filter, and several loggers:
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DECLARE_LOG(g_l, log_type) 
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 
 // Example 2 : 1 filter (containing a level), several loggers
@@ -60,9 +60,9 @@ BOOST_DECLARE_LOG(g_log_err, log_type)
 BOOST_DECLARE_LOG(g_log_app, log_type)
 BOOST_DECLARE_LOG(g_log_dbg, log_type)
 
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, debug ) 
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err, g_log_level, error )
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app, g_log_level, info ) 
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) 
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) 
 @endcode
 
 Every time, before anything gets written to the log, the filter is asked if "it's enabled". If so, the processing of the message takes place
@@ -155,16 +155,16 @@ typedef logger_format_write< > log_type;
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DECLARE_LOG(g_l, log_type) 
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // add formatters : [idx] [time] message <enter>
-g_l->writer().add_formatter( formatter::idx() );
-g_l->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-g_l->writer().add_formatter( formatter::append_newline() );
+g_l()->writer().add_formatter( formatter::idx() );
+g_l()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+g_l()->writer().add_formatter( formatter::append_newline() );
 // add destinations : console, output debug window, and a file called "out.txt"
-g_l->writer().add_destination( destination::cout() );
-g_l->writer().add_destination( destination::dbg_window() );
-g_l->writer().add_destination( destination::file("out.txt") );
+g_l()->writer().add_destination( destination::cout() );
+g_l()->writer().add_destination( destination::dbg_window() );
+g_l()->writer().add_destination( destination::file("out.txt") );
 
 // usage
 int i = 1;

@@ -63,12 +63,12 @@ BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 // FIXME most likely I can use BOOST_LOG_USE_IF_FILTER
 
 // Step 4: define the macros through which you'll log
-#define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app, g_log_filter->is_enabled() ) 
-#define LERR_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_err, g_log_filter->is_enabled() ) 
+#define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app(), g_log_filter()->is_enabled() ) 
+#define LERR_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() ) 
 
 void fastest_no_ostr_like_example() {
-    g_log_app->turn_cache_off();
-    g_log_err->turn_cache_off();
+    g_log_app()->turn_cache_off();
+    g_log_err()->turn_cache_off();
 
     // Step 5: use it...
     LAPP_("this is so cool\n");
@@ -77,12 +77,12 @@ void fastest_no_ostr_like_example() {
     std::string hello = "hello", world = "world";
     LAPP_(hello + ", " + world + "\n");
 
-    g_log_filter->set_enabled(false);
+    g_log_filter()->set_enabled(false);
     LAPP_("this will not be written to the log");
     LAPP_("this won't be written to the log");
     LERR_("this error is not logged ");
 
-    g_log_filter->set_enabled(true);
+    g_log_filter()->set_enabled(true);
     LAPP_("good to be back ;) \n" );
     LERR_("second error \n" );
 

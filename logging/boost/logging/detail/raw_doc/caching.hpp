@@ -63,12 +63,12 @@ Again, this is the default - if you do want to enforce it, make sure you define 
 
 @code
 ...
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 ...
 
 L_ << "this message will not be logged";
-g_log_filter->set_enabled(false);
-g_l->turn_cache_off();
+g_log_filter()->set_enabled(false);
+g_l()->turn_cache_off();
 @endcode
 
 
@@ -81,12 +81,12 @@ If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE
 
 @code
 ...
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 ...
 
 L_ << "this message will be logged, even if filter will be turned off";
-g_log_filter->set_enabled(false);
-g_l->turn_cache_off();
+g_log_filter()->set_enabled(false);
+g_l()->turn_cache_off();
 @endcode
 
 
@@ -99,11 +99,11 @@ If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE
 
 @code
 ...
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 ...
 
 L_ << "this message will NOT be logged";
-g_l->turn_cache_off();
+g_l()->turn_cache_off();
 @endcode
 
 

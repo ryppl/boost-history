@@ -24,9 +24,10 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         on_dedicated_thead - remove dependency on boost::thread
 
-- @c high           What should I do if someone is trying to use the log after it's been destroyed?
+- @c low            in the same way I've created convert_to_base(), I can create a convert_to_top(), on top of which
+                    I can create my own way to gather message, and then write it.
 
-- @c high           Provide a Jamfile to build the examples/tests
+- @c high           What should I do if someone is trying to use the log after it's been destroyed?
 
 - @c high           test TSS on vs2003 and gcc/pthreads \n
   (note: tested on pthreads; however - about internal implementation : 2 TSS objects are leaked on pthreads, need to see why)

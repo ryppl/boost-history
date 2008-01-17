@@ -143,7 +143,7 @@ corresponding to this name, I will call it.
 Example:
 
 @code
-g_l->writer().add_destination( 
+g_l()->writer().add_destination( 
     destination::named("cout out debug")
         .add( "cout", destination::cout())
         .add( "debug", destination::dbg_window() )

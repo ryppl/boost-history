@@ -71,7 +71,7 @@ This allows you to simply log context in a straighforward manner, using the oper
 Example:
 
 @code
-#define LDBG BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_filter, debug ) 
+#define LDBG BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_filter(), debug ) 
 ...
 
 void func(int a, const char * str) {
@@ -100,7 +100,7 @@ The fast way makes no assumptions about your @ref workflow_2a "Usage Syntax". Ho
 Example:
 
 @code
-#define LDBG BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_filter, debug ) 
+#define LDBG BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_filter(), debug ) 
 ...
 void func(int a, const char * str) {
     BOOST_SCOPED_LOG(LDBG << , "testing inout" );

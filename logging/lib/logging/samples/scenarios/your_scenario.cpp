@@ -91,9 +91,9 @@ BOOST_DECLARE_LOG(g_log_app, finder::logger )
 BOOST_DECLARE_LOG(g_log_dbg, finder::logger )
 
 // Step 5: define the macros through which you'll log
-#define LDBG_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_dbg, g_log_filter->is_enabled() ) 
-#define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err, g_log_filter->is_enabled() )
-#define LAPP_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_app, g_log_filter->is_enabled() ) 
+#define LDBG_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_dbg(), g_log_filter()->is_enabled() ) 
+#define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_app(), g_log_filter()->is_enabled() ) 
 
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, finder::filter ) 
@@ -119,25 +119,25 @@ void your_scenario_example() {
     //         That is, how the message is to be formatted and where should it be written to
 
     // Err log
-    g_log_err->writer().add_formatter( formatter::idx(), "[%] "  );
-    g_log_err->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_err->writer().add_formatter( formatter::append_newline() );
-    g_log_err->writer().add_destination( destination::file("err.txt") );
+    g_log_err()->writer().add_formatter( formatter::idx(), "[%] "  );
+    g_log_err()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_err()->writer().add_formatter( formatter::append_newline() );
+    g_log_err()->writer().add_destination( destination::file("err.txt") );
 
     // App log
-    g_log_app->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_app->writer().add_formatter( formatter::append_newline() );
-    g_log_app->writer().add_destination( destination::file("out.txt") );
-    g_log_app->writer().add_destination( destination::cout() );
+    g_log_app()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_app()->writer().add_formatter( formatter::append_newline() );
+    g_log_app()->writer().add_destination( destination::file("out.txt") );
+    g_log_app()->writer().add_destination( destination::cout() );
 
     // Debug log
-    g_log_dbg->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_dbg->writer().add_formatter( formatter::append_newline() );
-    g_log_dbg->writer().add_destination( destination::dbg_window() );
-    g_log_dbg->writer().add_destination( destination::cout() );
-    g_log_app->turn_cache_off();
-    g_log_err->turn_cache_off();
-    g_log_dbg->turn_cache_off();
+    g_log_dbg()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_dbg()->writer().add_formatter( formatter::append_newline() );
+    g_log_dbg()->writer().add_destination( destination::dbg_window() );
+    g_log_dbg()->writer().add_destination( destination::cout() );
+    g_log_app()->turn_cache_off();
+    g_log_err()->turn_cache_off();
+    g_log_dbg()->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;
@@ -148,12 +148,12 @@ void your_scenario_example() {
     std::string hello = "hello", world = "world";
     LAPP_ << hello << ", " << world;
 
-    g_log_filter->set_enabled(false);
+    g_log_filter()->set_enabled(false);
     LDBG_ << "this will not be written anywhere";
     LAPP_ << "this won't be written anywhere either";
     LERR_ << "this error is not logged " << i++;
 
-    g_log_filter->set_enabled(true);
+    g_log_filter()->set_enabled(true);
     LAPP_ << "good to be back ;) " << i++;
     LERR_ << "second error " << i++;
 

@@ -72,9 +72,9 @@ typedef logger_format_write< > log_type;
 BOOST_DECLARE_LOG(g_l, log_type)
 BOOST_DECLARE_LOG_FILTER(g_l_filter, level::holder)
 
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, debug ) << "[dbg] "
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, error ) << "[ERR] "
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_log_level, info ) << "[app] "
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), debug ) << "[dbg] "
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), error ) << "[ERR] "
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), info ) << "[app] "
 
 void init_logs();
 

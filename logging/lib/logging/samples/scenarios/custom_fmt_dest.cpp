@@ -74,7 +74,7 @@ BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts )
 BOOST_DECLARE_LOG(g_l, log_type) 
 
 // Step 5: define the macros through which you'll log
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG(g_l, log_type)
@@ -115,14 +115,14 @@ void custom_fmt_dest_example() {
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
-    g_l->writer().add_formatter( formatter::idx(), "[%] " );
-    g_l->writer().add_formatter( formatter::append_newline() );
-    g_l->writer().add_formatter( secs_since_start() );
+    g_l()->writer().add_formatter( formatter::idx(), "[%] " );
+    g_l()->writer().add_formatter( formatter::append_newline() );
+    g_l()->writer().add_formatter( secs_since_start() );
 
-    g_l->writer().add_destination( destination::cout() );
-    g_l->writer().add_destination( destination::dbg_window() );
-    g_l->writer().add_destination( as_xml("out.txt") );
-    g_l->turn_cache_off();
+    g_l()->writer().add_destination( destination::cout() );
+    g_l()->writer().add_destination( destination::dbg_window() );
+    g_l()->writer().add_destination( as_xml("out.txt") );
+    g_l()->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;
@@ -132,11 +132,11 @@ void custom_fmt_dest_example() {
     std::string hello = "hello", world = "world";
     L_ << hello << ", " << world;
 
-    g_log_filter->set_enabled(false);
+    g_log_filter()->set_enabled(false);
     L_ << "this will not be written to the log";
     L_ << "this won't be written to the log";
 
-    g_log_filter->set_enabled(true);
+    g_log_filter()->set_enabled(true);
     L_ << "good to be back ;) " << i++;
 
     // Step 9 : Enjoy!

@@ -161,7 +161,6 @@ struct logger_format_write
     >
      logger_base_type;
 
-    logger_format_write() {}
     BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger_format_write, logger_base_type)
 };
 

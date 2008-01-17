@@ -24,6 +24,7 @@
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/filter.hpp>
 #include <boost/logging/detail/logger.hpp>
+#include <boost/logging/detail/log_keeper.hpp>
 #include <boost/logging/detail/macros.hpp>
 #include <boost/logging/detail/tss/tss.hpp>
 #include <boost/logging/detail/level.hpp>

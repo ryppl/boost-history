@@ -74,7 +74,6 @@ Example:
 
 
 
-    struct override {};
 
     // forward defines
 

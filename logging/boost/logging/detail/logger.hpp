@@ -25,6 +25,7 @@
 #include <boost/logging/detail/forward_constructor.hpp>
 #include <boost/logging/detail/find_gather.hpp>
 #include <boost/logging/detail/cache_before_init.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 
 namespace boost { namespace logging {
 
@@ -116,7 +117,7 @@ namespace boost { namespace logging {
     BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
     BOOST_DECLARE_LOG(g_l, log_type) 
 
-    #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+    #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
     // usage
     L_ << "this is so cool " << i++;
@@ -131,89 +132,7 @@ namespace boost { namespace logging {
     - check out the writer namespace
     
     */
-    template<class gather_msg = default_, class write_msg = default_ > struct logger 
-            : detail::default_cache_keeper<  detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > > {
-        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
-        typedef write_msg write_type;
-        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
-        typedef detail::default_cache_keeper<cache_type> cache_base;
-        using cache_base::cache;
-
-        typedef logger<gather_msg, write_msg> self;
-
-        logger() {}
-        BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger,m_writer)
-
-        ~logger() {
-            // force writing all messages from cache, if cache hasn't been turned off yet
-            turn_cache_off();
-        }
-
-        /** 
-            reads all data about a log message (gathers all the data about it)
-        */
-        gather_holder<self, gather_type> read_msg() const { return gather_holder<self, gather_type>(*this) ; }
-
-        write_msg & writer()                    { return m_writer; }
-        const write_msg & writer() const        { return m_writer; }
-
-        // called after all data has been gathered
-        void on_do_write(gather_type & gather) const {
-            cache().on_do_write( detail::as_non_const(gather.msg()), writer() );
-        }
-        void turn_cache_off() {
-            cache().turn_cache_off( writer() );
-        }
-
-    private:
-        write_msg m_writer;
-    };
-
-    // specialize for write_msg* pointer!
-    template<class gather_msg, class write_msg> struct logger<gather_msg, write_msg* > 
-            : detail::default_cache_keeper<  detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > > {
-        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
-        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
-        typedef detail::default_cache_keeper<cache_type> cache_base;
-        using cache_base::cache;
-        typedef write_msg write_type;
-
-        typedef logger<gather_msg, write_msg*> self;
-
-        logger(write_msg * writer = 0) : m_writer(writer) {
-        }
-        ~logger() {
-            // force writing all messages from cache, if cache hasn't been turned off yet
-            turn_cache_off();
-        }
-
-        void set_writer(write_msg* writer) {
-            m_writer = writer;
-        }
-
-        /** 
-            reads all data about a log message (gathers all the data about it)
-        */
-        gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
-
-        write_msg & writer()                    { return *m_writer; }
-        const write_msg & writer() const        { return *m_writer; }
-
-        virtual cache_type & cache()                    { return m_cache; }
-        virtual const cache_type & cache() const        { return m_cache; }
-
-        // called after all data has been gathered
-        void on_do_write(gather_msg & gather) const {
-            cache().on_do_write( detail::as_non_const(gather.msg()), writer() );
-        }
-        void turn_cache_off() {
-            cache().turn_cache_off( writer() );
-        }
-
-    private:
-        write_msg *m_writer;
-        cache_type m_cache;
-    };
+    template<class gather_msg = default_, class write_msg = default_ > struct logger ;
 
 
     // specialize when write_msg is not set - in this case, you need to derive from this
@@ -226,9 +145,9 @@ namespace boost { namespace logging {
         using cache_base::cache;
 
         typedef logger<gather_msg, default_> self;
-        typedef typename gather_msg::msg_type msg_type;
+        typedef typename gather_type::msg_type msg_type;
 
-        logger() : m_cache(0) {}
+        logger() {}
         // we have virtual functions, lets have a virtual destructor as well - many thanks Martin Baeker!
         virtual ~logger() {
             // force writing all messages from cache, if cache hasn't been turned off yet
@@ -243,9 +162,8 @@ namespace boost { namespace logging {
         write_type & writer()                    { return m_writer; }
         const write_type & writer() const        { return m_writer; }
 
-        void set_cache(cache_type * cache_) {
-            m_cache = cache_;
-        }
+        const logger* base() const              { return this; }
+        logger* base()                          { return this; }
 
     private:
         struct call_do_write {
@@ -268,8 +186,160 @@ namespace boost { namespace logging {
     private:
         // we don't know the writer
         void_ m_writer;
-        cache_type *m_cache;
     };
+
+
+    /** 
+        @brief Forwards everything to a different logger. 
+        
+        This includes:
+        - the writing (writer)
+        - the caching
+        - the on_destroyed (if present)
+    */
+    template<class gather_msg, class write_msg> struct forward_to_logger : logger<gather_msg, default_> {
+        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
+        typedef typename gather_type::msg_type msg_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
+        typedef logger<gather_msg, default_> log_base;
+        // ... might be called for a specialization of logger - for logger<gather_msg,write_msg*>
+        typedef typename boost::remove_pointer<write_msg>::type write_type;
+
+        typedef logger<gather_msg, write_msg> original_logger_type;
+        forward_to_logger(original_logger_type *original_logger = 0) : m_original_logger( original_logger), m_writer(0) {
+            if ( m_original_logger)
+                m_writer = &m_original_logger->writer();
+        }
+
+        /** 
+            specifies the logger to forward to
+        */
+        void forward_to(original_logger_type *original_logger) {
+            m_original_logger = original_logger;
+            m_writer = &m_original_logger->writer();
+        }
+
+        virtual void do_write(msg_type &a) const {
+            (*m_writer)(a);
+        }
+
+        virtual cache_type & cache()                    { return m_original_logger->cache(); }
+        virtual const cache_type & cache() const        { return m_original_logger->cache(); }
+
+    private:
+        write_type* m_writer;
+        original_logger_type * m_original_logger;
+    };
+
+
+
+    // default implementation - when gather_msg and write_msg are both known
+    template<class gather_msg , class write_msg > struct logger 
+            : detail::default_cache_keeper<  detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > > {
+        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
+        typedef write_msg write_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
+        typedef detail::default_cache_keeper<cache_type> cache_base;
+        typedef logger<gather_type> logger_base_type;
+        using cache_base::cache;
+
+        typedef logger<gather_msg, write_msg> self;
+
+        BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(logger,m_writer, init)
+
+        ~logger() {
+            // force writing all messages from cache, if cache hasn't been turned off yet
+            turn_cache_off();
+        }
+
+        /** 
+            reads all data about a log message (gathers all the data about it)
+        */
+        gather_holder<self, gather_type> read_msg() const { return gather_holder<self, gather_type>(*this) ; }
+
+        write_msg & writer()                    { return m_writer; }
+        const write_msg & writer() const        { return m_writer; }
+
+        /** 
+            ... returns a base object - one that can be used to log messages, without having to know the full log's definition (its declaration is enough).
+                Thus, it can also be passed between a library and the application that uses it, and vice-versa.
+        */
+        const logger_base_type* base() const    { return m_base; }
+        logger_base_type* base()                { return m_base; }
+
+        // called after all data has been gathered
+        void on_do_write(gather_type & gather) const {
+            cache().on_do_write( detail::as_non_const(gather.msg()), writer() );
+        }
+        void turn_cache_off() {
+            cache().turn_cache_off( writer() );
+        }
+
+    private:
+        void init() {
+            m_base.forward_to(this);
+        }
+
+    private:
+        write_msg m_writer;
+        // a base object - one that can be used to log messages, without having to know the full type of the log.
+        forward_to_logger<gather_msg, write_type> m_base;
+    };
+
+    // specialize for write_msg* pointer!
+    template<class gather_msg, class write_msg> struct logger<gather_msg, write_msg* > 
+            : detail::default_cache_keeper<  detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > > {
+        typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
+        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
+        typedef detail::default_cache_keeper<cache_type> cache_base;
+        typedef logger<gather_type> logger_base_type;
+        using cache_base::cache;
+        typedef write_msg write_type;
+
+        typedef logger<gather_msg, write_msg*> self;
+
+        logger(write_msg * writer = 0) : m_writer(writer) {
+            m_base.forward_to(this);
+        }
+        ~logger() {
+            // force writing all messages from cache, if cache hasn't been turned off yet
+            turn_cache_off();
+        }
+
+        void set_writer(write_msg* writer) {
+            m_writer = writer;
+        }
+
+        /** 
+            reads all data about a log message (gathers all the data about it)
+        */
+        gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
+
+        write_msg & writer()                    { return *m_writer; }
+        const write_msg & writer() const        { return *m_writer; }
+
+        /** 
+            ... returns a base object - one that can be used to log messages, without having to know the full type of the log.
+                Thus, it can also be passed between a library and the application that uses it, and vice-versa.
+        */
+        const logger_base_type* base() const    { return m_base; }
+        logger_base_type* base()                { return m_base; }
+
+        // called after all data has been gathered
+        void on_do_write(gather_msg & gather) const {
+            cache().on_do_write( detail::as_non_const(gather.msg()), writer() );
+        }
+        void turn_cache_off() {
+            cache().turn_cache_off( writer() );
+        }
+
+    private:
+        write_msg *m_writer;
+        // a base object - one that can be used to log messages, without having to know the full type of the log.
+        forward_to_logger<gather_msg, write_type*> m_base;
+    };
+
+
 
     /** 
     
@@ -278,7 +348,6 @@ namespace boost { namespace logging {
     template<class gather_msg, class write_msg> struct implement_default_logger : logger<gather_msg, default_> {
         typedef typename gather_msg::msg_type msg_type;
 
-        implement_default_logger() {}
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(implement_default_logger,m_writer)
 
         virtual void do_write(msg_type &a) const {
@@ -309,35 +378,6 @@ namespace boost { namespace logging {
     };
 
 
-    /** 
-        @brief Forwards everything to a different logger. 
-        
-        This includes:
-        - the writing (writer)
-        - the caching
-        - the on_destroyed (if present)
-    */
-    template<class gather_msg, class write_msg> struct forward_to_logger : logger<gather_msg, default_> {
-        typedef typename gather_msg::msg_type msg_type;
-        typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
-        typedef logger<gather_msg, default_> log_base;
-
-        typedef logger<gather_msg, write_msg> original_logger_type;
-        forward_to_logger(original_logger_type &original_logger) : m_original_logger( &original_logger) {
-            m_writer = &m_original_logger->writer();
-        }
-
-        virtual void do_write(msg_type &a) const {
-            (*m_writer)(a);
-        }
-
-        virtual cache_type & cache()                    { return m_original_logger->cache(); }
-        virtual const cache_type & cache() const        { return m_original_logger->cache(); }
-
-    private:
-        write_msg * m_writer;
-        original_logger_type * m_original_logger;
-    };
 
 
 

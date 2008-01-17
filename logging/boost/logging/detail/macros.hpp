@@ -167,7 +167,7 @@ Example:
 @code
 typedef logger< default_, destination::file> err_log_type;
 ...
-BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
+BOOST_DEFINE_LOG_WITH_ARGS( g_log_err(), err_log_type, ("err.txt") )
 @endcode
 
 
@@ -231,7 +231,7 @@ Example:
 BOOST_DECLARE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
 BOOST_DECLARE_LOG(g_log_err, log_type) 
 
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err, g_log_level, error )
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
 @endcode
 
 @subsubsection BOOST_LOG_USE_LOG_IF_FILTER BOOST_LOG_USE_LOG_IF_FILTER
@@ -244,7 +244,7 @@ BOOST_LOG_USE_LOG_IF_FILTER(log, filter_is_enabled)
 
 Example:
 @code
-#define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err, g_log_filter->is_enabled() )
+#define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() )
 @endcode
 
 
@@ -280,7 +280,7 @@ struct no_gather {
 
 typedef logger< no_gather, destination::cout > app_log_type;
 
-#define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app, g_log_filter->is_enabled() ) 
+#define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app(), g_log_filter()->is_enabled() ) 
 @endcode
 
 
@@ -346,7 +346,7 @@ you need to pass the params as well, after the macro, like shown below.
 Example:
 
 @code
-#define L_(module_name) BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG(module)(module_name) )
+#define L_(module_name) BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) .set_tag( BOOST_LOG_TAG(module)(module_name) )
 @endcode
 
 @subsubsection BOOST_LOG_TAG_LEVEL BOOST_LOG_TAG_LEVEL
@@ -360,8 +360,8 @@ BOOST_LOG_TAG(tag_level)
 Example:
 
 @code
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, debug ) .set_tag( BOOST_LOG_TAG_LEVEL(debug) )
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg, g_log_level, error ) .set_tag( BOOST_LOG_TAG_LEVEL(error) )
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) .set_tag( BOOST_LOG_TAG_LEVEL(debug) )
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), error ) .set_tag( BOOST_LOG_TAG_LEVEL(error) )
 @endcode
 
 @subsubsection BOOST_LOG_TAG_FILELINE BOOST_LOG_TAG_FILELINE 
@@ -375,7 +375,7 @@ BOOST_LOG_TAG_FILELINE
 Example:
 
 @code
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG_FILELINE)
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) .set_tag( BOOST_LOG_TAG_FILELINE)
 @endcode
 
 @subsubsection BOOST_LOG_TAG_FUNCTION BOOST_LOG_TAG_FUNCTION 
@@ -389,7 +389,7 @@ BOOST_LOG_TAG_FUNCTION
 Example:
 
 @code
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) .set_tag( BOOST_LOG_TAG_FUNCTION)
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) .set_tag( BOOST_LOG_TAG_FUNCTION)
 @endcode
 
 
@@ -530,49 +530,31 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 
 #ifdef BOOST_LOG_COMPILE_FAST
 // ****** Fast compile ******
+#define BOOST_DECLARE_LOG(name,type) ::boost::logging::log_holder< type > & name ();
 
-#define BOOST_DECLARE_LOG(name,type) \
-    type& name ## _boost_log_impl_(); \
-    ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_(); \
-    extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
+#define BOOST_DEFINE_LOG(name,type)  ::boost::logging::log_holder< type > & name () \
+    { static ::boost::logging::log_holder< type > l; return l; } \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 
-#define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
-    { static type i; return i; } \
-    ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
-    { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
-    typedef type::write_type write_msg; \
-    static ::boost::logging::forward_to_logger< gather_msg, write_msg > p( name ## _boost_log_impl_() ); \
-    return p; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
-
-#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type& name ## _boost_log_impl_() \
-    { static type i ( args ); return i; } \
-    ::boost::logging::detail::fast_compile_with_default_gather<>::log_type & name ## _boost_log_impl_light_()  \
-    { typedef ::boost::logging::detail::fast_compile_with_default_gather<>::gather_msg gather_msg; \
-    typedef type::write_type write_msg; \
-    static ::boost::logging::implement_default_logger< gather_msg, write_msg* > p( &(name ## _boost_log_impl_().writer()), &(name ## _boost_log_impl_().cache()) ); \
-    return p; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_, ::boost::logging::detail::fast_compile_with_default_gather<>::log_type, name ## _boost_log_impl_light_ > name; 
-
+#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::log_holder< type > & name () \
+    { static ::boost::logging::log_holder< type > l ( args ); return l; } \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 
 
 #else
 // don't compile fast
-#define BOOST_DECLARE_LOG(name,type) type& name ## _boost_log_impl_(); extern boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
-#define BOOST_DEFINE_LOG(name,type)  type& name ## _boost_log_impl_() \
-    { static type i; return i; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
+#define BOOST_DECLARE_LOG(name,type) type* name ();
 
-#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type& name ## _boost_log_impl_() \
-    { static type i ( args); return i; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_impl_() ); } \
-    boost::logging::detail::log_keeper<type, name ## _boost_log_impl_ > name; 
+#define BOOST_DEFINE_LOG(name,type)  type* name () \
+    { static type l; return &l; } \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 
+#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type* name () \
+    { static type l ( args ); return &l; } \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 
 #endif
+
 
 
 
@@ -581,16 +563,18 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Filter Macros 
 
-#define BOOST_DECLARE_LOG_FILTER(name,type) type& name ## _boost_log_filter_impl_(); extern boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
-#define BOOST_DEFINE_LOG_FILTER(name,type)  type& name ## _boost_log_filter_impl_() \
-    { static type i; return i; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_filter_impl_() ); } \
-    boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
+#define BOOST_DECLARE_LOG_FILTER(name,type) type* name ();
+#define BOOST_DEFINE_LOG_FILTER(name,type)  type * name () \
+    { static type l; return &l; } \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 
-#define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args)  type& name ## _boost_log_filter_impl_() \
-    { static type i ( args ); return i; } \
-    namespace { boost::logging::detail::fake_using_log ensure_log_is_created_before_main ## name ( name ## _boost_log_filter_impl_() ); } \
-    boost::logging::detail::log_filter_keeper<type, name ## _boost_log_filter_impl_ > name; 
+#define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args)  type * name () { \
+    { static type l ( args ); return &l; } \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
+
+
+
+
 
 
 
