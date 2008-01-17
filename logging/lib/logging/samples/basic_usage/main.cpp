@@ -120,7 +120,7 @@ int main(int argc, char * argv[])
             lev_str = "info";
         }
     }
-    g_l_filter->set_enabled(lev);
+    g_l_filter()->set_enabled(lev);
 
     LAPP_ << "Verbosity: " << lev_str;
 

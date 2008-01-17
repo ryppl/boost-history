@@ -37,15 +37,15 @@ BOOST_DECLARE_LOG(g_l, log_type)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type) 
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 void test_log_output() {
     std::ostringstream out_str;
     destination::stream dest_out(out_str);
-    g_l->writer().add_formatter( formatter::idx() );
-    g_l->writer().add_formatter( formatter::append_newline() );
-    g_l->writer().add_destination( destination::cout() );
-    g_l->writer().add_destination( dest_out );
+    g_l()->writer().add_formatter( formatter::idx() );
+    g_l()->writer().add_formatter( formatter::append_newline() );
+    g_l()->writer().add_destination( destination::cout() );
+    g_l()->writer().add_destination( dest_out );
 
     // Step 8: use it...
     int i = 1;

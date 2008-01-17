@@ -13,7 +13,7 @@ using namespace boost::logging;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, finder::filter  ) 
 BOOST_DEFINE_LOG(g_l, finder::logger )
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 
 // whatever we log, is logged here too (easy was to find out all the info that was logged)
@@ -43,14 +43,14 @@ std::string g_msg = "hello world";
 std::string g_thread_id;
 
 void init_logs() {
-    g_l->writer().add_formatter( g_ns
+    g_l()->writer().add_formatter( g_ns
         .add( "idx", formatter::idx() )
         .add( "tid", formatter::thread_id() )
         .add( "abc", abc() ));
-    g_l->writer().add_formatter( formatter::append_newline() );
-    g_l->writer().add_destination( destination::stream(g_out) );
-    g_l->writer().add_destination( destination::cout() );
-    g_l->turn_cache_off();
+    g_l()->writer().add_formatter( formatter::append_newline() );
+    g_l()->writer().add_destination( destination::stream(g_out) );
+    g_l()->writer().add_destination( destination::cout() );
+    g_l()->turn_cache_off();
 }
 
 void test_with_all_formatters() {

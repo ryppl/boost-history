@@ -568,7 +568,7 @@ If defined, we don't use @ref macros_tss "TSS" as all.
     { static type l; return &l; } \
     namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 
-#define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args)  type * name () { \
+#define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args)  type * name () \
     { static type l ( args ); return &l; } \
     namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 

@@ -14,10 +14,11 @@ VC 8.0
 
 Debug
 Compile with BOOST_LOG_COMPILE_FAST_ON (default) - 33 secs 
-
 Compile with BOOST_LOG_COMPILE_FAST_OFF  - 43 secs 
 
-
+Release
+Compile with BOOST_LOG_COMPILE_FAST_ON (default) - 24 secs 
+Compile with BOOST_LOG_COMPILE_FAST_OFF - 29 secs	
 
 gcc 3.4.2
 Debug

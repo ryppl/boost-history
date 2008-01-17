@@ -14,22 +14,22 @@ typedef logger_format_write< > log_type;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type)
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 
 void write_to_clean_file() {
     // first, write to a clean file (that is, don't append to it)
-    g_l->writer().add_destination( destination::file("out.txt", destination::file_settings().initial_overwrite(true) ));
-    g_l->writer().add_formatter( formatter::append_newline_if_needed() );
-    g_l->writer().add_destination( destination::cout() );
-    g_l->turn_cache_off();
+    g_l()->writer().add_destination( destination::file("out.txt", destination::file_settings().initial_overwrite(true) ));
+    g_l()->writer().add_formatter( formatter::append_newline_if_needed() );
+    g_l()->writer().add_destination( destination::cout() );
+    g_l()->turn_cache_off();
 
     // read this .cpp file - every other line is logged (odd lines)
     std::ifstream in("test.cpp");
     bool enabled = true;
     std::string line;
     while ( std::getline(in, line) ) {
-        g_log_filter->set_enabled(enabled);
+        g_log_filter()->set_enabled(enabled);
         L_ << "line odd " << line;
         enabled = !enabled;
     }
@@ -39,9 +39,9 @@ void append_to_file() {
     // second, append to the same file
 
     // ... first, remove old destination
-    g_l->writer().del_destination( destination::file("out.txt"));
+    g_l()->writer().del_destination( destination::file("out.txt"));
     // ... now, re-add the same file - but now, for appending
-    g_l->writer().add_destination( destination::file("out.txt", 
+    g_l()->writer().add_destination( destination::file("out.txt", 
         destination::file_settings().initial_overwrite(false).do_append(true) ));
 
     // read this .cpp file - every other line is logged (even lines now)
@@ -49,13 +49,13 @@ void append_to_file() {
     bool enabled = false;
     std::string line;
     while ( std::getline(in, line) ) {
-        g_log_filter->set_enabled(enabled);
+        g_log_filter()->set_enabled(enabled);
         L_ << "line even " << line;
         enabled = !enabled;
     }
 
-    g_l->writer().del_destination( destination::file("out.txt"));
-    g_log_filter->set_enabled(true);
+    g_l()->writer().del_destination( destination::file("out.txt"));
+    g_log_filter()->set_enabled(true);
     L_ << "should not be written to file, only to console";
 }
 

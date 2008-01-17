@@ -14,7 +14,7 @@ using namespace boost::logging;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, finder::filter  ) 
 BOOST_DEFINE_LOG(g_l, finder::logger )
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l, g_log_filter->is_enabled() ) 
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 
 std::stringstream g_first;
@@ -27,14 +27,14 @@ destination::named_t<lock_resource_finder::single_thread> g_n;
 std::string g_msg = "hello world";
 
 void init_logs() {
-    g_l->writer().add_destination( g_n
+    g_l()->writer().add_destination( g_n
         .add( "first", destination::stream(g_first) )
         .add( "second", destination::stream(g_second) )
         .add( "third", destination::stream(g_third) ));
 
-    g_l->writer().add_formatter( formatter::append_newline() );
-    g_l->writer().add_destination( destination::cout() );
-    g_l->turn_cache_off();
+    g_l()->writer().add_formatter( formatter::append_newline() );
+    g_l()->writer().add_destination( destination::cout() );
+    g_l()->turn_cache_off();
 }
 
 void test_use_all() {

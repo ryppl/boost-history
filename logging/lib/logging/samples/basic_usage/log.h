@@ -19,9 +19,9 @@ BOOST_DECLARE_LOG_FILTER(g_l_filter, boost::logging::level::holder)
 BOOST_DECLARE_LOG(g_l, log_type)
 
 // Step 5: define the macros through which you'll log
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_l_filter, debug ) << "[dbg] "
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_l_filter, error ) << "[ERR] "
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_l_filter, info )
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), debug ) << "[dbg] "
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), error ) << "[ERR] "
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), info )
 
 void init_logs();
 

@@ -53,7 +53,7 @@
 using namespace boost;
 
 // creating this (a log, or a filter), makes sure we initialize TSS
-BOOST_DEFINE_LOG_FILTER_WITH_ARGS(g_log_filter, filter::use_tss_with_cache , 10) 
+BOOST_DEFINE_LOG_FILTER_WITH_ARGS(g_log_filter, logging::filter::use_tss_with_cache<> , 10) 
 
 extern object_count * g_object_count ;
 extern object_count * g_running_thread_count ;

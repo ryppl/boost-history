@@ -26,9 +26,9 @@ BOOST_DECLARE_LOG_FILTER(g_l_filter, finder::filter )
 BOOST_DECLARE_LOG(g_l, finder::logger) 
 
 // Step 5: define the macros through which you'll log
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_l_filter, debug ) .set_tag( BOOST_LOG_TAG_FILELINE)
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_l_filter, error ) .set_tag( BOOST_LOG_TAG_FILELINE)
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l, g_l_filter, info ) .set_tag( BOOST_LOG_TAG_FILELINE)
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), debug ) .set_tag( BOOST_LOG_TAG_FILELINE)
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), error ) .set_tag( BOOST_LOG_TAG_FILELINE)
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), info ) .set_tag( BOOST_LOG_TAG_FILELINE)
 
 void init_logs();
 
