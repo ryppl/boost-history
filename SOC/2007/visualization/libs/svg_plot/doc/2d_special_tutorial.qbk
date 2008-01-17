@@ -11,7 +11,9 @@ you can make the following call to `svg_2d_plot`:
 To style it, you could use the following calls:
   
   my_plot.y_major_grid_color(lightgray) // Darker color for major grid.
-         .y_minor_grid_color(whitesmoke); // lighter color for minor grid.
+         .y_minor_grid_color(whitesmoke); // Lighter color for minor grid.
+         
+      
 
 This will produce the following image:
 
@@ -22,10 +24,15 @@ Similarly you can have horizontal and/or vertical lines:
   my_plot.x_major_grid_on(true)  
          .x_minor_grid_on(true);
          
-and color it similarly:
+and color it similarly for faint blues like old fashioned graph paper:         
          
-  my_plot.y_major_grid_color(lightblue) // Darker color for major grid.
-         .y_minor_grid_color(azure); // lighter color for minor grid.
+  my_plot.y_major_grid_color(svg_color(200, 220, 255)) // Darker color for major grid.
+         .y_minor_grid_color(svg_color(240, 240, 255); // lighter color for minor grid.
+         
+and to make the major grid much wider than the minor grid:
+
+  my_plot.y_major_grid_width(4)
+         .y_minor_grid_width(1)
          
 [heading External Y Axis Style]
 
@@ -38,12 +45,12 @@ turn the axis back on. To do that, you must call `axis_on(true)`]
 
 [heading Fill the area between the plot and the axis]
 
-When there is a call to the plot() method, define `_area_fill_color`
+When there is a call to the plot() method, define `area_fill_color`
 
   multimap<double, double> my_data;
   svg_2d_plot my_plot;
 
-  my_plot.plot(my_data, "Data", _area_fill_color(red));
+  my_plot.plot(my_data, "Data", area_fill_color(red));
 
 This produces the following image:
 
@@ -55,13 +62,21 @@ If you would like an *interpolated curve* shown over your data
 (rather than the default straight lines joining points),
 simply use the following command:
 
-  my_plot.plot(data, "Series 1", _bezier_curve = "true");
+  my_plot.plot(data, "Series 1", bezier_on(true);
 
 This produces something like the following images:
 
 [$images/2d_bezier.png]
 
-[warning The `_bezier_curve` feature still displays undesired behavior in extreme circumstances. Do not use this feature with curves that have a numeric_limit value (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (for example, a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis.)]
+[warning The `_bezier_curve` feature still displays undesired behavior in extreme circumstances.
+Do not use this feature with curves that have a numeric_limit value (`-NaN`, for example),
+or with data that has high irregularity in X-Axis spacing
+(for example, a clump of points between (0, 1) on the X axis,
+with the next one at 100 on the X axis.)
+In general, curves must be reasonably well-behaved to be smoothable.
+In general, using more data points will make smoothing work better,
+but wil increase svg file sizes.
+]
 
 [endsect] [/2d_special Tutorial: 2D Special Features]
 

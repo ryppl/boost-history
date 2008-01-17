@@ -70,14 +70,14 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`const std::string& author()`] [Returns the author of the document.] [The default is the copyright_holder.]]
 
-][/Copyright table]
+] [/ Copyright table]
 
 [table `svg` document settings and writing
   [[Signature] [Description] [Notes & Examples]]
 
   [[`svg& coord_precision(int)`] [Sets the precision output for coordinates (decimal digits)][default 3, but for mobiles, 2 might suffice.]]
 
-  [[`svg& document_title(const std::string)`] [Sets title for the SVG XML document (not the plot)][<title>My Document title</title>]]
+  [[`svg& document_title(const std::string)`] [Sets title for the SVG XML document (*not the plot*)][<title>My Document title</title>]]
 
   [[`int document_size()`] [Returns the number of elements in the root of the document] [] ]
 
@@ -96,8 +96,10 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`svg& write(const std::string&)`] [Writes the document to the file represented by the argument.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
 
-  [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]]
-]
+  [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]
+  ] 
+] [/table `svg` document settings and writing]
+
 [endsect] [/section:svg_interface]
 
 

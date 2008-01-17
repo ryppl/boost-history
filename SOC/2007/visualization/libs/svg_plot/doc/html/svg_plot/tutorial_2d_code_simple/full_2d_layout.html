@@ -42,39 +42,42 @@
 </span><span class="keyword">double</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
 <span class="special">{</span>
   <span class="keyword">return</span> <span class="identifier">sqrt</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
-<span class="special">}</span>
+  <span class="comment">// Note: negative values will all return NaN.
+</span><span class="special">}</span>
 
 <span class="keyword">double</span> <span class="identifier">g</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="keyword">return</span> <span class="special">-</span><span class="number">2</span> <span class="special">+</span> <span class="identifier">x</span><span class="special">*</span><span class="identifier">x</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="special">-</span><span class="number">2</span> <span class="special">+</span> <span class="identifier">x</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="special">}</span>
 
 <span class="keyword">double</span> <span class="identifier">h</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="keyword">return</span> <span class="special">-</span><span class="number">1</span> <span class="special">+</span> <span class="number">2</span><span class="special">*</span><span class="identifier">x</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="special">-</span><span class="number">1</span> <span class="special">+</span> <span class="number">2</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
   <span class="identifier">multimap</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">data1</span><span class="special">,</span> <span class="identifier">data2</span><span class="special">,</span> <span class="identifier">data3</span><span class="special">;</span>
   
-  <span class="keyword">for</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;=</span><span class="number">10.</span><span class="special">;</span> <span class="identifier">i</span><span class="special">+=</span><span class="number">1.</span><span class="special">)</span>
-  <span class="special">{</span>
-    <span class="identifier">data1</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+  <span class="keyword">for</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;=</span> <span class="number">10.</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">+=</span> <span class="number">1.</span><span class="special">)</span>
+  <span class="special">{</span> <span class="comment">// Evaluate the functions as demonstration data.
+</span>    <span class="identifier">data1</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
     <span class="identifier">data2</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">g</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
     <span class="identifier">data3</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">h</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span> 
   <span class="special">}</span>
 
-  <span class="identifier">svg_2d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
-
-  <span class="comment">// Size/scale settings.
+  <span class="identifier">svg_2d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span> <span class="comment">// Construct a new plot.
+</span>
+  <span class="comment">// Override a few default settings with our choices:
+</span>  
+  <span class="comment">// Size of SVG image and X and Y range settings.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">image_size</span><span class="special">(</span><span class="number">700</span><span class="special">,</span> <span class="number">500</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">y_range</span><span class="special">(-</span><span class="number">5</span><span class="special">,</span> <span class="number">100</span><span class="special">)</span>
 
   <span class="comment">// Text settings.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Plot of Mathematical Functions"</span><span class="special">)</span>
-         <span class="special">.</span><span class="identifier">title_font_size</span><span class="special">(</span><span class="number">29</span><span class="special">)</span>
+         <span class="special">.</span><span class="identifier">title_font_size</span><span class="special">(</span><span class="number">25</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">x_label</span><span class="special">(</span><span class="string">"Time in Months"</span><span class="special">);</span>
   
   <span class="comment">// Commands.
@@ -90,7 +93,7 @@
          <span class="special">.</span><span class="identifier">plot_background_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">136</span><span class="special">,</span> <span class="number">188</span><span class="special">,</span> <span class="number">126</span><span class="special">))</span>
          <span class="special">.</span><span class="identifier">title_color</span><span class="special">(</span><span class="identifier">white</span><span class="special">);</span>
 
-  <span class="comment">//X axis settings.
+  <span class="comment">// X axis settings.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_major_interval</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">x_major_tick_length</span><span class="special">(</span><span class="number">14</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">x_major_tick_width</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
@@ -105,16 +108,12 @@
   <span class="comment">// Legend settings.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">legend_title_font_size</span><span class="special">(</span><span class="number">15</span><span class="special">);</span>
   
-  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data1</span><span class="special">,</span> <span class="string">"Sqrt(x)"</span><span class="special">,</span>  <span class="identifier">blue</span><span class="special">,</span>   
-         <span class="identifier">_point_style</span> <span class="special">=</span> <span class="identifier">none</span><span class="special">,</span>
-         <span class="identifier">_show_line</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">);</span>
-
-  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data2</span><span class="special">,</span> <span class="string">"-2 + x^2"</span><span class="special">,</span> <span class="identifier">orange</span><span class="special">,</span> 
-         <span class="identifier">_show_line</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">);</span>
-
-  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data3</span><span class="special">,</span> <span class="string">"-1 + 2x"</span><span class="special">,</span>  <span class="identifier">red</span><span class="special">,</span>
-         <span class="identifier">_point_style</span> <span class="special">=</span> <span class="identifier">square</span><span class="special">);</span>
-
+  <span class="comment">// Add the 3 data series to the plot, using different markers and line colors.
+</span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data1</span><span class="special">,</span> <span class="string">"Sqrt(x)"</span><span class="special">).</span><span class="identifier">fill_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">);</span>
+  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data2</span><span class="special">,</span> <span class="string">"-2 + x^2"</span><span class="special">).</span><span class="identifier">fill_color</span><span class="special">(</span><span class="identifier">orange</span><span class="special">).</span><span class="identifier">size</span><span class="special">(</span><span class="number">5</span><span class="special">);</span>
+  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data3</span><span class="special">,</span> <span class="string">"-1 + 2x"</span><span class="special">).</span><span class="identifier">fill_color</span><span class="special">(</span><span class="identifier">yellow</span><span class="special">).</span><span class="identifier">bezier_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">).</span><span class="identifier">line_color</span><span class="special">(</span><span class="identifier">blue</span><span class="special">).</span><span class="identifier">shape</span><span class="special">(</span><span class="identifier">square</span><span class="special">);</span>
+  <span class="comment">// Note how the options can be chained.
+</span>
   <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"2d_full.svg"</span><span class="special">);</span>
 
   <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>

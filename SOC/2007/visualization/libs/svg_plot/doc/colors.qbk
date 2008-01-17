@@ -13,9 +13,13 @@ The constants are defined at
 
 Examples of colors are at [@../../../svg_plot/example/svg_colors.cpp svg_colors.cpp].
 
-The 
-[@http://www.w3.org/TR/SVG/types.html#ColorKeywords colors are defined by the SVG standard here].
-The list contains all of your expected colors, such as magenta, pink and red, and many other shades.
+[@http://www.w3.org/TR/SVG/types.html#ColorKeywords Colors are defined by the SVG standard].
+The list contains all your expected colors,
+such as red, blue, green, magenta, cyan, yellow, pink and orange,
+as well as nearly 150 other shades.
+
+You will probably still find that the colors names do not meet your requirements
+and so it is also possible to define any RGB combination.
 
 The list also contains one extra color element, `blank`, defined as `false`,
 used when you need to pass a color, but would not like it to be visible.
@@ -41,7 +45,7 @@ svg_color my_color = red;
 `` 
 does not have the desired effect, and nor does
 `cout << red << endl;`
-output the expected RGB(255,0,0) but instead 119 the value of the enum!]
+output the expected "RGB(255,0,0)" but instead "119", the value of the enum!]
 
 [h4 `svg_color` interface]
 
@@ -53,7 +57,9 @@ You can define a `svg_color` using two different constructors:
   // Use a pre-existing color constant.
   svg_color(svg_color_constant);
 
-[important Any integer value is accepted but negative values are contrained 0, and positive values > 255 are constrained to 255.]
+[important Any integer value is accepted
+but negative values are constrained to 0,
+and positive values > 255 are constrained to 255.]
 
 [h4 Example of using `svg_color`]
 
@@ -64,6 +70,11 @@ You can define a `svg_color` using two different constructors:
   
   BOOST_ASSERT(my_white == const_white);
 
+[note You will find it convenient to use the namespace boost::svg,
+perhaps at local scope, 
+to avoid having to fully qualify *every* color that you want to use,
+for example: `using boost::svg::azure;`
+]
 
 [note `svg_color`'s constructor takes in three integer values.
 The [@http://www.w3.org/TR/SVG11/types.html SVG 1.1 standard]

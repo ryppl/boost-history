@@ -32,7 +32,7 @@
       by the SVG standard</a>.
     </p>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h4>
-<a name="id622212"></a>
+<a name="id622265"></a>
       <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"><code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h4>
 <p>
@@ -46,9 +46,14 @@
       Examples of colors are at <a href="../../../../svg_plot/example/svg_colors.cpp" target="_top">svg_colors.cpp</a>.
     </p>
 <p>
-      The <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">colors are
-      defined by the SVG standard here</a>. The list contains all of your expected
-      colors, such as magenta, pink and red, and many other shades.
+      <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">Colors are defined
+      by the SVG standard</a>. The list contains all your expected colors, such
+      as red, blue, green, magenta, cyan, yellow, pink and orange, as well as nearly
+      150 other shades.
+    </p>
+<p>
+      You will probably still find that the colors names do not meet your requirements
+      and so it is also possible to define any RGB combination.
     </p>
 <p>
       The list also contains one extra color element, <code class="computeroutput"><span class="identifier">blank</span></code>,
@@ -57,7 +62,7 @@
       for defining defaults for functions, for example.
     </p>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h5>
-<a name="id622335"></a>
+<a name="id622398"></a>
       <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h5>
@@ -92,13 +97,13 @@
 <p>
         does not have the desired effect, and nor does <code class="computeroutput"><span class="identifier">cout</span>
         <span class="special">&lt;&lt;</span> <span class="identifier">red</span>
-        <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span></code> output the expected RGB(255,0,0) but instead
-        119 the value of the enum!
+        <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span></code> output the expected "RGB(255,0,0)"
+        but instead "119", the value of the enum!
       </p>
 </td></tr>
 </table></div>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"></a><h5>
-<a name="id678342"></a>
+<a name="id678404"></a>
       <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"><code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a>
     </h5>
 <p>
@@ -118,12 +123,12 @@
 <th align="left">Important</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-        Any integer value is accepted but negative values are contrained 0, and positive
-        values &gt; 255 are constrained to 255.
+        Any integer value is accepted but negative values are constrained to 0, and
+        positive values &gt; 255 are constrained to 255.
       </p></td></tr>
 </table></div>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_"></a><h5>
-<a name="id678494"></a>
+<a name="id678556"></a>
       <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color</span></code></a>
     </h5>
@@ -141,6 +146,18 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
+        You will find it convenient to use the namespace boost::svg, perhaps at local
+        scope, to avoid having to fully qualify <span class="bold"><strong>every</strong></span>
+        color that you want to use, for example: <code class="computeroutput"><span class="keyword">using</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">::</span><span class="identifier">azure</span><span class="special">;</span></code>
+      </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../../trunk/doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
         <code class="computeroutput"><span class="identifier">svg_color</span></code>'s constructor takes
         in three integer values. The <a href="http://www.w3.org/TR/SVG11/types.html" target="_top">SVG
         1.1 standard</a> allows any integer to represent an RGB value, with values
@@ -149,7 +166,7 @@
       </p></td></tr>
 </table></div>
 <a name="svg_plot.color.colors_internals_and_rationale"></a><h4>
-<a name="id678730"></a>
+<a name="id678854"></a>
       <a href="color.html#svg_plot.color.colors_internals_and_rationale">Colors Internals
       and Rationale</a>
     </h4>

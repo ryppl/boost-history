@@ -65,7 +65,7 @@
 <span class="special">}</span>
 </pre>
 <a name="svg_plot.tutorial_2d_code_simple.2d_simple_code_example.resulting_simple_2d_example_image"></a><h5>
-<a name="id683752"></a>
+<a name="id683876"></a>
         <a href="2d_simple_code_example.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example.resulting_simple_2d_example_image">Resulting
         Simple_2D Example Image</a>
       </h5>
@@ -73,7 +73,7 @@
         <span class="inlinemediaobject"><img src="../../images/2d_simple.png" alt="2d_simple"></span>
       </p>
 <a name="svg_plot.tutorial_2d_code_simple.2d_simple_code_example.simple_2d_example_breakdown"></a><h5>
-<a name="id683799"></a>
+<a name="id683923"></a>
         <a href="2d_simple_code_example.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example.simple_2d_example_breakdown">Simple_2D
         Example Breakdown</a>
       </h5>
@@ -84,8 +84,17 @@
 <span class="identifier">svg_2d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
 </pre>
 <p>
-        This constructor initializes a new 2D plot. This also sets the many default
-        values.
+        This constructor initializes a new 2D plot. This also sets the very many
+        default values.
+      </p>
+<p>
+        We could accept all of these and just plot one series of data with
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">map1</span><span class="special">,</span> <span class="string">"Series 1"</span><span class="special">);</span> <span class="comment">// Data point marker color is default black.
+</span></pre>
+<p>
+        but we can also add a few optional details:
       </p>
 <pre class="programlisting">
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
@@ -104,7 +113,7 @@
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> means
-          that the legend will show up.
+          that the legend box will show up (by default at top right).
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">)</span></code> means that the axis displayed will be
@@ -112,7 +121,8 @@
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">background_border_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">)</span></code> sets the border around the image to <code class="computeroutput"><span class="identifier">black</span></code>. Ordinarily it is left to be the
-          color of the background (and so no border of plot area will be visible).
+          color of the whole image background (and so no border of the plot area
+          will be visible).
         </li>
 </ul></div>
 <pre class="programlisting">
@@ -122,22 +132,28 @@
 <p>
         This draws <code class="computeroutput"><span class="identifier">map1</span></code> and <code class="computeroutput"><span class="identifier">map2</span></code> to <code class="computeroutput"><span class="identifier">my_plot</span></code>.
         As many containers as you want can be drawn to <code class="computeroutput"><span class="identifier">my_plot</span></code>.
-        Evntually the plot will become cluttered and confusing, when I recommend
-        just creating another plot!
+        Eventually the plot will become cluttered and confusing, when creating other
+        plot(s) becomes sensible!
       </p>
 <p>
         The name of the series is <code class="computeroutput"><span class="string">"Race times"</span></code>,
-        and that text will show in the legend. These are the two required parameters
+        and that text will show in the legend box. These are the two required parameters
         for this function call. There are many optional parameters, as seen in the
         section <a href="../../plot_function" target="_top">Getting More Out of the <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Function</a>
+      </p>
+<p>
+        Finally
       </p>
 <pre class="programlisting">
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple_2d.svg"</span><span class="special">);</span>
 </pre>
 <p>
-        This writes plot <code class="computeroutput"><span class="identifier">my_plot</span></code>
-        to the file "simple_2d.svg".
+        writes plot <code class="computeroutput"><span class="identifier">my_plot</span></code> to the
+        file "simple_2d.svg".
+      </p>
+<p>
+        You can view this file with most internet browsers, and other programs too.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

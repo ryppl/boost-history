@@ -28,7 +28,7 @@
 <a name="svg_plot.interface.svg_1d_plot_interface"></a><a href="svg_1d_plot_interface.html" title=" svg_1d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id695552"></a><p class="title"><b>Table 7. 1D_plot Miscellaneous Functions</b></p>
+<a name="id696024"></a><p class="title"><b>Table 7. 1D_plot Miscellaneous Functions</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Miscellaneous Functions">
 <colgroup>
 <col>
@@ -133,6 +133,19 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">legend_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color to be used for the legend text.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
               <span class="identifier">title</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
             </p>
             </td>
@@ -152,6 +165,19 @@
 <td>
             <p>
               Sets the font size for the title.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">title_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color to be used for the title.
             </p>
             </td>
 </tr>
@@ -185,7 +211,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id696238"></a><p class="title"><b>Table 8. 1D_plot Commands</b></p>
+<a name="id696862"></a><p class="title"><b>Table 8. 1D_plot Commands</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Commands">
 <colgroup>
 <col>
@@ -301,12 +327,12 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_major_labels_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+              <span class="identifier">x_major_labels_on</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              sets whether or not the major ticks will be labelled on the X-axis
+              sets whether or not the major ticks will be labelled on the X-axis.
             </p>
             </td>
 </tr>
@@ -353,7 +379,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id696927"></a><p class="title"><b>Table 9. 1D_plot Colors</b></p>
+<a name="id697550"></a><p class="title"><b>Table 9. 1D_plot Colors</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Colors">
 <colgroup>
 <col>
@@ -376,21 +402,6 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">background_border_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
-              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Set the background border color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
-              an RGB color.
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
               <span class="identifier">background_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
               <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
             </p>
@@ -398,6 +409,34 @@
 <td>
             <p>
               Set the background color for the whole image.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">background_border_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background border color for the whole image as <code class="computeroutput"><span class="identifier">col</span></code>, an RGB color.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">background_border_width</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background border width for the whole image.
             </p>
             </td>
 </tr>
@@ -512,7 +551,7 @@
             </td>
 <td>
             <p>
-              Sets the color of the major ticks of the x-axis.
+              Sets the color of the major ticks of the X-axis.
             </p>
             </td>
 </tr>
@@ -526,7 +565,7 @@
             </td>
 <td>
             <p>
-              Sets the color of the minor grid of the x-axis
+              Sets the color of the minor grid of the X-axis
             </p>
             </td>
 </tr>
@@ -540,7 +579,7 @@
             </td>
 <td>
             <p>
-              Sets the color of the minor ticks of the x-axis.
+              Sets the color of the minor ticks of the X-axis.
             </p>
             </td>
 </tr>
@@ -548,7 +587,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id697913"></a><p class="title"><b>Table 10. 1D_plot X-Axis Definition</b></p>
+<a name="id698612"></a><p class="title"><b>Table 10. 1D_plot X-Axis Definition</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot X-Axis Definition">
 <colgroup>
 <col>
@@ -576,7 +615,7 @@
             </td>
 <td>
             <p>
-              Sets the stroke width of the x-axis.
+              Sets the stroke width of the X-axis.
             </p>
             </td>
 </tr>
@@ -589,7 +628,7 @@
             </td>
 <td>
             <p>
-              Sets the label of the x-axis. This does not guarantee that it will
+              Sets the label of the X-axis. This does not guarantee that it will
               be shown. You must call <code class="computeroutput"><span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display.
             </p>
             </td>
@@ -603,7 +642,7 @@
             </td>
 <td>
             <p>
-              Sets the distance (in Cartesian units) between ticks on the x-axis.
+              Sets the distance (in Cartesian units) between ticks on the X-axis.
             </p>
             </td>
 </tr>
@@ -616,7 +655,7 @@
             </td>
 <td>
             <p>
-              Sets the length (pixels) of the x-axis major ticks.
+              Sets the length (pixels) of the X-axis major ticks.
             </p>
             </td>
 </tr>
@@ -629,7 +668,7 @@
             </td>
 <td>
             <p>
-              Sets the width (pixels) of the major ticks on the x-axis.
+              Sets the width (pixels) of the major ticks on the X-axis.
             </p>
             </td>
 </tr>
@@ -642,7 +681,7 @@
             </td>
 <td>
             <p>
-              Sets the length (pixels) of the x-axis minor tick lengths.
+              Sets the length (pixels) of the X-axis minor tick lengths.
             </p>
             </td>
 </tr>
@@ -655,7 +694,7 @@
             </td>
 <td>
             <p>
-              Sets the width (pixels) of the minor ticks on the x-axis.
+              Sets the width (pixels) of the minor ticks on the X-axis.
             </p>
             </td>
 </tr>
@@ -682,7 +721,7 @@
 <td>
             <p>
               Sets the scale of the x axis from x1 to x2. Throws an exception if
-              x2&lt;=x1.
+              x2&lt;=x1, or if the range is too small to produce a useful plot.
             </p>
             </td>
 </tr>
@@ -690,7 +729,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="svg_plot.interface.svg_1d_plot_interface.the_1d_plot__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id698577"></a>
+<a name="id699275"></a>
         <a href="svg_1d_plot_interface.html#svg_plot.interface.svg_1d_plot_interface.the_1d_plot__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         1D_plot <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
@@ -701,7 +740,7 @@
         named parameters, as well as a deduced parameter.
       </p>
 <div class="table">
-<a name="id698635"></a><p class="title"><b>Table 11. 1D_plot Required parameter</b></p>
+<a name="id699334"></a><p class="title"><b>Table 11. 1D_plot Required parameter</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Required parameter">
 <colgroup>
 <col>
@@ -764,7 +803,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id698757"></a><p class="title"><b>Table 12. 1D_plot Deduced parameter</b></p>
+<a name="id699455"></a><p class="title"><b>Table 12. 1D_plot Deduced parameter</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Deduced parameter">
 <colgroup>
 <col>
@@ -820,7 +859,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id698863"></a><p class="title"><b>Table 13. 1D_plot Optional Parameters</b></p>
+<a name="id699562"></a><p class="title"><b>Table 13. 1D_plot Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Optional Parameters">
 <colgroup>
 <col>
@@ -971,35 +1010,15 @@
         method:
       </p>
 <a name="svg_plot.interface.svg_1d_plot_interface.using_1d_plot_fill_and_stroke_colors"></a><h5>
-<a name="id699416"></a>
+<a name="id700114"></a>
         <a href="svg_1d_plot_interface.html#svg_plot.interface.svg_1d_plot_interface.using_1d_plot_fill_and_stroke_colors">Using
         1D_plot fill and stroke colors</a>
       </h5>
 <pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> 
-<span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">,</span> 
-<span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">black</span><span class="special">);</span>
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">)</span> 
+  <span class="special">.</span><span class="identifier">fill_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">).</span>
+  <span class="special">.</span><span class="identifier">line_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
 </pre>
-<p>
-        This has the same effect as the following:
-      </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span> <span class="identifier">black</span><span class="special">);</span> <span class="comment">// Order is significant:
-</span><span class="comment">// fill is red and stroke is black.
-</span></pre>
-<p>
-        and also the same effect as:
-      </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> 
-<span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">black</span><span class="special">,</span>  
-<span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">);</span>
-</pre>
-<p>
-        Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors
-        are used in the same function call, they are always inferred in the following
-        order: (fill, stroke).
-      </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

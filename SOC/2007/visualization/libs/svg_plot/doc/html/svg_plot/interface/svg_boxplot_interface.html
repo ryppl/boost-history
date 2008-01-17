@@ -27,7 +27,7 @@
 <a name="svg_plot.interface.svg_boxplot_interface"></a><a href="svg_boxplot_interface.html" title=" svg_boxplot Public Interface"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id704963"></a><p class="title"><b>Table 21. Boxplot Miscellaneous</b></p>
+<a name="id705824"></a><p class="title"><b>Table 21. Boxplot Miscellaneous</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Miscellaneous">
 <colgroup>
 <col>
@@ -102,7 +102,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id705257"></a><p class="title"><b>Table 22. Boxplot Commands</b></p>
+<a name="id706118"></a><p class="title"><b>Table 22. Boxplot Commands</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Commands">
 <colgroup>
 <col>
@@ -190,7 +190,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id705587"></a><p class="title"><b>Table 23. Boxplot Colors</b></p>
+<a name="id706447"></a><p class="title"><b>Table 23. Boxplot Colors</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Colors">
 <colgroup>
 <col>
@@ -341,7 +341,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706319"></a><p class="title"><b>Table 24. Boxplot Axis Information</b></p>
+<a name="id707180"></a><p class="title"><b>Table 24. Boxplot Axis Information</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Axis Information">
 <colgroup>
 <col>
@@ -515,7 +515,7 @@
 <td>
             <p>
               Sets the scale of the Y-axis from y1 to y2. Throws an exception if
-              y2 &lt;= y1.
+              y2 &lt;= y1, or if the range is too small to produce a useful plot.
             </p>
             </td>
 </tr>
@@ -523,22 +523,24 @@
 </table></div>
 </div>
 <br class="table-break"><p>
-        (Note: Getters omitted for now - TODO)
+        Accessor get functions are also provided for all the above set functions.
+        These allow one to check the current value (default if not changed by the
+        preceeding code).
       </p>
 <a name="svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id707221"></a>
+<a name="id708084"></a>
         <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
       </h5>
 <p>
         The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
-        method is defined using Boost.Parameter. As such, it supports a few extra
-        named parameters, as well as a deduced parameter.
+        method allows data series parameters and further chained functions to control
+        their display.
       </p>
 <div class="table">
-<a name="id707281"></a><p class="title"><b>Table 25. Required parameter</b></p>
-<div class="table-contents"><table class="table" summary="Required parameter">
+<a name="id708144"></a><p class="title"><b>Table 25. Required parameters</b></p>
+<div class="table-contents"><table class="table" summary="Required parameters">
 <colgroup>
 <col>
 <col>
@@ -600,8 +602,8 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id707403"></a><p class="title"><b>Table 26. Optional Parameters</b></p>
-<div class="table-contents"><table class="table" summary="Optional Parameters">
+<a name="id708265"></a><p class="title"><b>Table 26. Optional Functions</b></p>
+<div class="table-contents"><table class="table" summary="Optional Functions">
 <colgroup>
 <col>
 <col>

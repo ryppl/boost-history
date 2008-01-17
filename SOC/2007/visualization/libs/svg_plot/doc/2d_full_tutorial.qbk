@@ -10,39 +10,42 @@
   double f(double x)
   {
     return sqrt(x);
+    // Note: negative values will all return NaN.
   }
   
   double g(double x)
   {
-    return -2 + x*x;
+    return -2 + x * x;
   }
   
   double h(double x)
   {
-    return -1 + 2*x;
+    return -1 + 2 * x;
   }
   
   int main()
   {
     multimap<double, double> data1, data2, data3;
     
-    for(double i=0; i<=10.; i+=1.)
-    {
+    for(double i = 0; i <= 10.; i += 1.)
+    { // Evaluate the functions as demonstration data.
       data1[i] = f(i);
       data2[i] = g(i);
       data3[i] = h(i); 
     }
   
-    svg_2d_plot my_plot;
+    svg_2d_plot my_plot; // Construct a new plot.
   
-    // Size/scale settings.
+    // Override a few default settings with our choices:
+    
+    // Size of SVG image and X and Y range settings.
     my_plot.image_size(700, 500)
            .x_range(-1, 10)
            .y_range(-5, 100)
   
     // Text settings.
     my_plot.title("Plot of Mathematical Functions")
-           .title_font_size(29)
+           .title_font_size(25)
            .x_label("Time in Months");
     
     // Commands.
@@ -58,7 +61,7 @@
            .plot_background_color(svg_color(136, 188, 126))
            .title_color(white);
   
-    //X axis settings.
+    // X axis settings.
     my_plot.x_major_interval(2)
            .x_major_tick_length(14)
            .x_major_tick_width(1)
@@ -73,15 +76,11 @@
     // Legend settings.
     my_plot.legend_title_font_size(15);
     
-    my_plot.plot(data1, "Sqrt(x)",  blue,   
-           _point_style = none,
-           _show_line = true);
-
-    my_plot.plot(data2, "-2 + x^2", orange, 
-           _show_line = true);
-
-    my_plot.plot(data3, "-1 + 2x",  red,
-           _point_style = square);
+    // Add the 3 data series to the plot, using different markers and line colors.
+    my_plot.plot(data1, "Sqrt(x)").fill_color(red);
+    my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5);
+    my_plot.plot(data3, "-1 + 2x").fill_color(yellow).bezier_on(true).line_color(blue).shape(square);
+    // Note how the options can be chained.
   
     my_plot.write("2d_full.svg");
   

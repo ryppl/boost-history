@@ -13,10 +13,13 @@
 <desc>My Document description</desc>]]
   
   [[`svg_1d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.]]
+  [[`svg_1d_plot& legend_color(const svg_color& col)`] [Sets the color to be used for the legend text.]]
   [[`svg_1d_plot& title(const std::string&)`] [Sets the string to be used for the title.]]
   [[`svg_1d_plot& title_font_size(unsigned int)`] [Sets the font size for the title.]]
+  [[`svg_1d_plot& title_color(const svg_color& col)`] [Sets the color to be used for the title.]]
   [[`svg_1d_plot& write(const std::string&)`] [Writes the plot to the file passed as a parameter.]]
-  [[`svg_1d_plot& write(ostream&)`] [Writes the plot to a stream passed as a parameter.]]]
+  [[`svg_1d_plot& write(ostream&)`] [Writes the plot to a stream passed as a parameter.]]
+] [/ table 1D_plot Miscellaneous Functions]
 
 [table 1D_plot Commands
   [[Signature] [Description]]
@@ -27,15 +30,17 @@
   [[`svg_1d_plot& x_axis_on(bool)`] [Determines whether or not the X-axis is displayed.]]
   [[`svg_1d_plot& x_external_style_on(bool)`] [Determines whether or not the axis is inside or outside of the plot. Defaults is `false`.]]
   [[`svg_1d_plot& x_label_on(bool)`] [Sets whether or not the X-axis label will show]]
-  [[`svg_1d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the X-axis]]
+  [[`svg_1d_plot& x_major_labels_on(int)`] [sets whether or not the major ticks will be labelled on the X-axis. ]]
   [[`svg_1d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed.]]
   [[`svg_1d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed.]]
-  [[`svg_1d_plot& y_axis_on(bool)`] [Determines whether or not the Y axis is displayed.]]]
+  [[`svg_1d_plot& y_axis_on(bool)`] [Determines whether or not the Y axis is displayed.]]
+  ] [/ table 1D_plot Commands]
 
 [table 1D_plot Colors
   [[Signature] [Description]]
-  [[`svg_1d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color.]]
   [[`svg_1d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image.]]
+  [[`svg_1d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the whole image as `col`, an RGB color.]]
+  [[`svg_1d_plot& background_border_width(const svg_color &col)`] [Set the background border width for the whole image.]]
   [[`svg_1d_plot& legend_background_color(const svg_color &col)`] [Set the background color for the legend as `col`, an RGB color.]]
   [[`svg_1d_plot& legend_border_color(const svg_color &col)`] [Set the border color for the legend as `col`, an RGB color.]]
   [[`svg_1d_plot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called.]]
@@ -43,23 +48,24 @@
   [[`svg_1d_plot& x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis.]]
   [[`svg_1d_plot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis.]]
   [[`svg_1d_plot& x_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the X axis.]]
-  [[`svg_1d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis.]]
-  [[`svg_1d_plot& x_minor_grid_color(const svg_color &col)`] [Sets the color of the minor grid of the x-axis]]
-  [[`svg_1d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis.]]
-  ]
+  [[`svg_1d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the X-axis.]]
+  [[`svg_1d_plot& x_minor_grid_color(const svg_color &col)`] [Sets the color of the minor grid of the X-axis]]
+  [[`svg_1d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the X-axis.]]
+] [/ table 1D_plot Colors]
 
 [table 1D_plot X-Axis Definition
   [[Signature] [Description]]
-  [[`svg_1d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis.] ]
-  [[`svg_1d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must call `x_label_on(true)` to display.] ]
-  [[`svg_1d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis.] ]
-  [[`svg_1d_plot& x_major_tick_length(int)`] [Sets the length (pixels) of the x-axis major ticks.] ]
-  [[`svg_1d_plot& x_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the x-axis.] ]
-  [[`svg_1d_plot& x_minor_tick_length(int)`] [Sets the length (pixels) of the x-axis minor tick lengths.] ]
-  [[`svg_1d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the x-axis.] ]
+  [[`svg_1d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the X-axis.] ]
+  [[`svg_1d_plot& x_label(const std::string&)`] [Sets the label of the X-axis. This does not guarantee that it will be shown. You must call `x_label_on(true)` to display.] ]
+  [[`svg_1d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the X-axis.] ]
+  [[`svg_1d_plot& x_major_tick_length(int)`] [Sets the length (pixels) of the X-axis major ticks.] ]
+  [[`svg_1d_plot& x_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the X-axis.] ]
+  [[`svg_1d_plot& x_minor_tick_length(int)`] [Sets the length (pixels) of the X-axis minor tick lengths.] ]
+  [[`svg_1d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the X-axis.] ]
   [[`svg_1d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
-  [[`svg_1d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1. ] ]
-]
+  [[`svg_1d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1, or if the range is too small to produce a useful plot. ] ]
+] [/table 1D_plot X-Axis Definition]
+
 
 [heading The 1D_plot `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
@@ -68,11 +74,13 @@ few extra named parameters, as well as a deduced parameter.
 [table 1D_plot Required parameter
 [[ID] [Type (* is a wildcard)] [Description]]
 [[_container] [*] [Any object that can return an iterator with begin() and end()]]
-[[_title] [`std::string`] [The name of this data series.]]]
+[[_title] [`std::string`] [The name of this data series.]]
+] [/ table 1D_plot Required parameter]
 
 [table 1D_plot Deduced parameter
 [[ID] [Type] [Description] [Default]]
-[[_fill_color] [`svg_color`] [Color that shows *inside the circle* being drawn.] [white] ]]
+[[_fill_color] [`svg_color`] [Color that shows *inside the circle* being drawn.] [white]]
+] [/ table 1D_plot Deduced parameter]
 
 [table 1D_plot Optional Parameters
 [[ID] [Type] [Description] [Default]]
@@ -97,28 +105,16 @@ plot(my_plot, my_data, "Lions", _x_functor = my_functor());
 ``
 ][
 `boost_default_convert` is sufficient in all cases where the data stored in 
-the container can be directly cast to a `double`.]]]
+the container can be directly cast to a `double`.]]
+] [/ table 1D_plot Optional Parameters]
 
 Here are some examples of using of the 1D_plot `plot` method:
 [h4 Using 1D_plot fill and stroke colors]
 
-  my_plot.plot(my_data, "Lions", 
-  _fill_color = red, 
-  _stroke_color = black);
+  my_plot.plot(my_data, "Lions") 
+    .fill_color(red).
+    .line_color(black);
 
-This has the same effect as the following:
-
-  my_plot.plot(my_data, "Lions", red, black); // Order is significant:
-  // fill is red and stroke is black.
-
-and also the same effect as:
-
-  my_plot.plot(my_data, "Lions", 
-  _stroke_color = black,  
-  _fill_color = red);
-
-Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors are used in the same function call, they are always inferred in the following order:
-(fill, stroke).
 [endsect] [/svg_1d_plot_interface]
 
 [section:svg_2d_plot_interface `svg_2d_plot` Public Interface]
@@ -128,7 +124,8 @@ Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors ar
   [[`svg_2d_plot& image_size(unsigned int, unsigned int)`] [Sets the size (pixels) of the plot image produced.]]
   [[`svg_2d_plot& title(const std::string&)`] [Sets the string to be used for the title.]]
   [[`svg_2d_plot& title_font_size(unsigned int)`] [Sets the font size for the title.]]
-  [[`svg_2d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.]]]
+  [[`svg_2d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.]]
+ ] [/ table 2D_plot Miscellaneous]
 
 [table 2D_plot Commands
   [[Signature] [Description]]
@@ -138,12 +135,36 @@ Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors ar
   [[`svg_2d_plot& title_on(bool)`] [Determines whether or not the image title is displayed.]]
   [[`svg_2d_plot& x_label_on(bool)`] [Sets whether or not the X axis label will show.]]
   [[`svg_2d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed.]]
-  [[`svg_2d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis.]]
+  [[`svg_2d_plot& x_major_labels_on(int)`] [Sets if and how the major ticks will be labelled on the x axis.
+< 0 means down (default), 0 (false) means none, > 0 means to top)]]
   [[`svg_2d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed.]]
   [[`svg_2d_plot& y_label_on(bool)`] [Sets whether or not the Y axis label will show.]]
   [[`svg_2d_plot& y_major_grid_on(bool)`] [Determines whether or not the major grid on the Y axis will be displayed.]]
-  [[`svg_2d_plot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis.]]
-  [[`svg_2d_plot& y_minor_grid_on(bool)`] [Determines whether or not the minor grid on the Y axis will be displayed.]]]
+  [[`svg_2d_plot& y_major_labels_on(int)`] [sets if and how the major ticks will be labelled on the Y axis.
+  < 0 means to left (default), 0 (false) means none, > 0 means to right.]]
+  [[`svg_2d_plot& y_minor_grid_on(bool)`] [Determines whether or not the minor grid on the Y axis will be displayed.]]
+  [[`svg_2d_plot& x_value_precision(int)`] [Determines the iostream precison for value labels on the X axis major ticks will be displayed. Default is 3 (rather than the iostream default of 6).]]
+  [[`svg_2d_plot& x_value_ioflags(int)`] [Determines the iostream flags for value labels on the X axis major ticks will be displayed. Default is std::ios::dec.  This allows fine control of the value labels using, for example (ios::dec | ios::scientific), or (ios::dec | ios::fixed), particularly in conjunction with precision.]]
+  [[`svg_2d_plot& y_value_precision(int)`] [Determines the iostream precison for value labels on the Y axis major ticks will be displayed. Default is 3 (rather than the iostream default of 6).]]
+  [[`svg_2d_plot& y_value_ioflags(int)`] [Determines the iostream flags for value labels on the Y axis major ticks will be displayed. Default is std::ios::dec.  This allows fine control of the value labels using, for example (ios::dec | ios::scientific), or (ios::dec | ios::fixed), particularly in conjunction with precision.]]
+  [[`svg_2d_plot& (int)`x_major_label_rotation] [Determines the direction of writing of value labels from the y axis ticks. `enum rotate_style` provides control is 45 degree steps. The default is horizontal. 
+  
+    `enum rotate_style { // Rotation in degrees from horizontal. horizontal = 0, // normal left to right.
+      uphill = -45, // slope up.
+      upward = -90, // vertical writing up.
+      backup = -135, // slope up backwards.
+      downhill = 45, // slope down.
+      downward = 90,  // vertical writing down.
+      backdown = 135, // slope down backwards.
+      upsidedown = 180 // == -180
+    };
+    
+  ]]
+  [[`svg_2d_plot& (int)`x_major_label_rotation] [Determines the direction of writing of value labels from the X axis ticks. `enum rotate_style` provides control is 45 degree steps. The default is horizontal.]]
+  [[`svg_2d_plot& x_label_strip_e0s(bool)`] [Determines whether or not the X axis value labels for major ticks are stripped of redundant zero, e or E,, and + sign.  This can markedly reduce visual clutter, for example, reducing "1.2e+000" to "1.2".]]
+  [[`svg_2d_plot& y_label_strip_e0s(bool)`] [Determines whether or not the Y axis value labels for major ticks are stripped of redundant zero, e or E,, and + sign.  This can markedly reduce visual clutter, for example, reducing "1.2e+000" to "1.2".]]
+  
+] [/ table 2D_plot Commands]
 
 [table 2D_plot Colors
   [[Signature] [Description]]
@@ -155,9 +176,9 @@ Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors ar
   [[`svg_2d_plot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called.]]
   [[`svg_2d_plot& x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis.]]
   [[`svg_2d_plot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis.]]
-  [[`svg_2d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis.]]
+  [[`svg_2d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the X-axis.]]
   [[`svg_2d_plot& x_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the X axis]]
-  [[`svg_2d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis.]]
+  [[`svg_2d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the X-axis.]]
   [[`svg_2d_plot& y_axis_color(const svg_color &col)`] [Sets the color of the lines that form the Y axis.]]
   [[`svg_2d_plot& y_label_color(const svg_color &col)`] [Sets the color of the labels that go along the Y axis.]]
   [[`svg_2d_plot& y_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the Y-axis.]]
@@ -167,17 +188,17 @@ Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors ar
 
 [table 2D_plot Axis Information
   [[Signature] [Description]]
-  [[`svg_2d_plot& x_axis_width(unsigned int)`] [Sets the stroke width (pixels) of the x-axis.] ]
-  [[`svg_2d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. You must set `x_label(true)` to display the label.] ]
-  [[`svg_2d_plot& x_major_interval(double)`] [Sets the distance (Cartesian units) between ticks on the x-axis.] ]
-  [[`svg_2d_plot& x_major_tick_length(int)`] [Sets the length (pixels) of the x-axis major ticks.] ]
-  [[`svg_2d_plot& x_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the x-axis.] ]
-  [[`svg_2d_plot& x_minor_tick(unsigned int)`] [Sets the length (pixels) of the x-axis minor ticks.] ]
-  [[`svg_2d_plot& x_minor_tick_length(int)`] [Sets the length (pixels) of the x-axis minor tick lengths.] ]
-  [[`svg_2d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the x-axis.] ]
+  [[`svg_2d_plot& x_axis_width(unsigned int)`] [Sets the line or stroke width (pixels) of the X-axis.] ]
+  [[`svg_2d_plot& x_label(const std::string&)`] [Sets the label of the X-axis. You must set `x_label(true)` to display the label.] ]
+  [[`svg_2d_plot& x_major_interval(double)`] [Sets the distance (Cartesian units) between ticks on the X-axis.] ]
+  [[`svg_2d_plot& x_major_tick_length(int)`] [Sets the length (pixels) of the X-axis major ticks.] ]
+  [[`svg_2d_plot& x_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the X-axis.] ]
+  [[`svg_2d_plot& x_minor_tick(unsigned int)`] [Sets the length (pixels) of the X-axis minor ticks.] ]
+  [[`svg_2d_plot& x_minor_tick_length(int)`] [Sets the length (pixels) of the X-axis minor tick lengths.] ]
+  [[`svg_2d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the X-axis.] ]
   [[`svg_2d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
   [[`svg_2d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2 <= x1.] ]
-  [[`svg_2d_plot& y_axis_width(unsigned int)`] [Sets the stroke width of the x-axis.] ]
+  [[`svg_2d_plot& y_axis_width(unsigned int)`] [Sets the stroke width of the X-axis.] ]
   [[`svg_2d_plot& y_label(const std::string&)`] [Sets the label of the Y-axis. You must set `x_label(true)` to display the label.] ]
   [[`svg_2d_plot& y_major_tick(double)`] [Sets the distance (in Cartesian units) between ticks on the Y axis] ]
   [[`svg_2d_plot& y_major_tick_length(int)`] [Sets the length (pixels) of the Y axis major ticks.] ]
@@ -189,7 +210,7 @@ Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors ar
   [[`svg_2d_plot& y_scale(double y1, double y2)`] [Sets the scale of the Y axis from y1 to y2. Throws an exception if y2 <= y1.] ]
 ]
 
-(Note: Getters omitted for now. TODO)
+Accessor get functions are also provided for all the above set functions.  These allow one to check the current value (default if not changed by the preceeding code).
 
 [heading The `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
@@ -198,12 +219,14 @@ few extra named parameters, as well as a deduced parameter.
 [table 2D_plot Required parameter
 [[ID] [Type (* is a wildcard)] [Description]]
 [[_container] [*] [Any object that can return an iterator with begin() and end()]]
-[[_title] [`std::string`] [The name of this series]]]
+[[_title] [`std::string`] [The name of this series]]
+] [/ table 2D_plot Required parameter]
 
 [table 2D_plot Deduced parameter
 [[ID] [Type] [Description] [Default]]
 [[_fill_color] [`svg_color`] [This is the color that shows up inside of the circle that is 
-being drawn] [white] ]]
+being drawn] [white]]
+] [/ table 2D_plot Deduced parameter]
 
 [table 2D_plot Optional Parameters
 [[ID] [Type] [Description] [Default]]
@@ -232,28 +255,16 @@ plot(my_plot, my_data, "People", _x_functor = my_functor());
 ``
 ][
 `boost_default_2d_convert` (the default) is sufficient in all cases where the data stored in 
-the container can be directly cast to a double.]]]
+the container can be directly cast to a double.]]
+] [/ table 2D_plot Optional Parameters]
 
 Here are some examples of correct uses:
 [h3 Using fill and stroke colors]
 
-  my_plot.(my_data, "Lions", 
-  _fill_color = red, 
-  _stroke_color = black);
+  my_plot.(my_data, "Lions") 
+  .fill_color(red) 
+  .stroke_color(black);
 
-This has the same effect as the following:
-
-  my_plot.plot(my_data, "Lions", red, black);
-
-and also the same effect as:
-
-  my_plot.plot(my_data, "Lions", 
-  _stroke_color = black,  
-  _fill_color = red);
-
-Since _fill_color is a deduced parameter, when two svg_colors are used in the 
-same function call, they are always inferred in the following order: (fill, 
-stroke).
 [endsect] [/section:svg_2d_plot_interface]
 
 [section:svg_boxplot_interface `svg_boxplot` Public Interface]
@@ -262,7 +273,8 @@ stroke).
   [[`svg_boxplot()`] [See the defaults section for further details.]]
   [[`svg_boxplot& image_size(unsigned int, unsigned int)`] [Sets the size (pixels) of the plot image produced.]]
   [[`svg_boxplot& title(const std::string&)`] [Sets the string to be used for the plot title.]]
-  [[`svg_boxplot& title_size(unsigned int)`] [Sets the font size for the plot title.]]]
+  [[`svg_boxplot& title_size(unsigned int)`] [Sets the font size for the plot title.]]
+] [/ table Boxplot Miscellaneous]
 
 [table Boxplot Commands
   [[Signature] [Description]]
@@ -270,7 +282,8 @@ stroke).
   [[`svg_boxplot& x_label_on(bool)`] [Sets whether or not the X-axis label will show.]]
   [[`svg_boxplot& x_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis.]]
   [[`svg_boxplot& y_label_on(bool)`] [Sets whether or not the Y-axis label will show.]]
-  [[`svg_boxplot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis.]]]
+  [[`svg_boxplot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis.]]
+] [/ table Boxplot Commands]
 
 [table Boxplot Colors
   [[Signature] [Description]]
@@ -283,7 +296,7 @@ stroke).
   [[`svg_boxplot& y_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X-axis.]]
   [[`svg_boxplot& y_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the Y-axis.]]
   [[`svg_boxplot& y_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the Y-axis.]]
-  ]
+] [/ table Boxplot Colors]
 
 [table Boxplot Axis Information
   [[Signature] [Description]]
@@ -298,22 +311,22 @@ stroke).
   [[`svg_boxplot& y_major_tick_length(int)`] [Sets the length (pixels) of the Y-axis minor tick lengths.] ]
   [[`svg_boxplot& y_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the Y-axis.] ]
   [[`svg_boxplot& y_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
-  [[`svg_boxplot& y_range(double y1, double y2)`] [Sets the scale of the Y-axis from y1 to y2. Throws an exception if y2 <= y1.] ]
-]
+  [[`svg_boxplot& y_range(double y1, double y2)`] [Sets the scale of the Y-axis from y1 to y2. Throws an exception if y2 <= y1, or if the range is too small to produce a useful plot.] ]
+] [/table Boxplot Axis Information]
 
-(Note: Getters omitted for now - TODO)
+Accessor get functions are also provided for all the above set functions.  These allow one to check the current value (default if not changed by the preceeding code).
 
 [heading The `plot()` Method]
 
-The `plot()` method is defined using Boost.Parameter. As such, it supports a 
-few extra named parameters, as well as a deduced parameter.
+The `plot()` method allows data series parameters and further chained functions to control their display.
 
-[table Required parameter
+[table Required parameters
 [[ID] [Type (* is a wildcard)] [Description]]
 [[ctr] [*] [Any object that can return an iterator with begin() and end().]]
-[[name] [`std::string`] [The name of this data series.]]]
+[[name] [`std::string`] [The name of this data series.]]
+] [/ table Required parameter]
 
-[table Optional Parameters
+[table Optional Functions
 [[ID] [Type] [Description] [Default]]
 [[box_style] [`const svg_style&`] [Styles the box of the boxplot.] [`svg_style(white, black, 1)`.]]
 [[median_style] [`const svg_style&`] [Styles the median of the boxplot.] [`svg_style(white, black, 1)`.]]
@@ -342,7 +355,7 @@ class my_functor
 plot(my_data, "People", functor = my_functor());
 ``]
 [`boost_default_convert` (default) is sufficient in all cases where the data stored in the container can be directly cast to a double.]]
-] [/ table Required parameter]
+] [/ table Optional Functions]
 [endsect] [/section:svg_2d_plot_interface]
 [endsect] [/section:interface]
 

@@ -1,5 +1,3 @@
-NEEDS REDOING TO USE STYLES
-
 // test_svg.cpp
 
 // Copyright Jacob Voytko 2007
@@ -15,14 +13,12 @@ NEEDS REDOING TO USE STYLES
 //#if defined (BOOST_MSVC) // requires a prior Boost include, so use MSC_VER instead.
 
 #if defined (_MSC_VER)
-#  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int'
-#  pragma warning(disable : 4172) //  returning address of local variable or temporary
-// in spirit
-// TODO delete when Boost.Parameter goes.
+//#  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int'
+//#  pragma warning(disable : 4172) //  returning address of local variable or temporary
 
 #  pragma warning(disable : 4310) //  cast truncates constant value
 #  pragma warning(disable : 4512) //  assignment operator could not be generated
-#  pragma warning(disable : 4702) //  unreachable code
+//#  pragma warning(disable : 4702) //  unreachable code 
 
 #endif
 
@@ -115,18 +111,18 @@ NEEDS REDOING TO USE STYLES
   BOOST_CHECK_EQUAL(my_point.size(), 10);
 
   plot_line_style my_plot_line(svg_color(black), false, false);
-  BOOST_CHECK_EQUAL(my_plot_line.color, svg_color(black));
-  BOOST_CHECK_EQUAL(my_plot_line.area_fill, blank);
-  BOOST_CHECK_EQUAL(my_plot_line.line_on, false);
-  BOOST_CHECK_EQUAL(my_plot_line.bezier_on, false);
+  BOOST_CHECK_EQUAL(my_plot_line.color(), svg_color(black));
+  BOOST_CHECK_EQUAL(my_plot_line.area_fill(), blank);
+  BOOST_CHECK_EQUAL(my_plot_line.line_on(), true);
+  BOOST_CHECK_EQUAL(my_plot_line.bezier_on(), false);
   plot_line_style my_plot_line2(svg_color(red), true, true);
-  my_plot_line2.area_fill = green;
+  my_plot_line2.area_fill(green);
   // Note 1: it is a color constant, nor a svg_color.
   // Note 2:  
-  BOOST_CHECK_EQUAL(my_plot_line2.color, svg_color(red));
-  BOOST_CHECK_EQUAL(my_plot_line2.area_fill, green);
-  BOOST_CHECK_EQUAL(my_plot_line2.line_on, true);
-  BOOST_CHECK_EQUAL(my_plot_line2.bezier_on, false);
+  BOOST_CHECK_EQUAL(my_plot_line2.color(), svg_color(red));
+  BOOST_CHECK_EQUAL(my_plot_line2.area_fill(), green);
+  BOOST_CHECK_EQUAL(my_plot_line2.line_on(), true);
+  BOOST_CHECK_EQUAL(my_plot_line2.bezier_on(), false);
 
   // Test the class svg_style.
 
@@ -289,7 +285,6 @@ NEEDS REDOING TO USE STYLES
   oss << ppp;
   BOOST_CHECK_EQUAL(oss.str().c_str(), "(1, 2)");
 
-
   polygon_element my_polygon(0, 0);
   my_polygon.P(50, 50);
   my_polygon.P(0, 100);
@@ -315,6 +310,7 @@ NEEDS REDOING TO USE STYLES
 
 Output:
 
+------ Build started: Project: test_svg, Configuration: Debug Win32 ------
 Compiling...
 test_svg.cpp
 Linking...
@@ -339,8 +335,14 @@ text_style(12, Arial, italic, bold)
 <title>Document Title</title>
 </svg>
 rect_element my_rect2(1, 2, 3, 4);  = rect(1, 2, 3, 4)
+poly_path_point ppp(1, 2) (1, 2)
+my_polygon (0, 0)(50, 50)(0, 100)(100, 100)
+(1, 2)(3, 4)(5, 6)
 *** No errors detected
-Build Time 0:13
+Build Time 0:04
+Build log was saved at "file://j:\Cpp\SVG\test_svg\Debug\BuildLog.htm"
+test_svg - 0 error(s), 0 warning(s)
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
 
 
 
