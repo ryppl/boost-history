@@ -99,21 +99,21 @@ private:
         bool is_using_cache;
     };
 public:
-    bool is_cache_turned_on() const { 
+    bool is_cache_turned_off() const { 
         {
         typename is_cache_enabled_data::read info(m_is_caching_off);
         bool is_caching_off = info.use();
         if ( is_caching_off)
-            return false; // cache has been turned on 
+            return true; // cache has been turned on 
         }
 
         // now we go the slow way - use mutex to see if cache is turned off
         mutex::scoped_lock lk(m_cs);
-        return (m_cache.is_using_cache);
+        return !(m_cache.is_using_cache);
     }
 
     template<class writer_type> void turn_cache_off(const writer_type & writer) {
-        if ( !is_cache_turned_on() )
+        if ( is_cache_turned_off() )
             return; // already turned off
 
         {
@@ -144,10 +144,10 @@ public:
 
     // called after all data has been gathered
     template<class writer_type> void on_do_write(msg_type & msg, const writer_type & writer) const {
-        if ( is_cache_turned_on() )
-            add_msg(msg);
-        else
+        if ( is_cache_turned_off() )
             writer(msg); 
+        else
+            add_msg(msg);
     }
 
 protected:

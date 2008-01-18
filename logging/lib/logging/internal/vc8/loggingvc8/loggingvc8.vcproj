@@ -330,7 +330,6 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -398,6 +397,10 @@
 			Name="headers"
 			>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\after_being_destroyed.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\cache_before_init.hpp"
 				>
 			</File>
@@ -435,6 +438,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\logger.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\logger_base.hpp"
 				>
 			</File>
 			<File
@@ -868,6 +875,14 @@
 			<File
 				RelativePath="..\..\..\samples\scenarios\mul_levels_one_logger.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\mul_loggers_one_filter.cpp"

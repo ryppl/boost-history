@@ -1,34 +1,3 @@
-/**
-@example one_loger_one_filter.cpp
-
-@copydoc one_loger_one_filter
-
-@page one_loger_one_filter one_loger_one_filter.cpp Example
-
-
-This usage:
-- You have one logger
-- You have one filter, which can be turned on or off
-- You want to format the message before it's written 
-- The logger has several log destinations
-    - The output goes to console, debug output window, and a file called out.txt
-    - Formatting - prefix each message by its index, and append newline
-
-Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
-
-In this example, all output will be written to the console, debug window, and "out.txt" file.
-It will be:
-
-@code
-[1] this is so cool 1
-[2] this is so cool again 2
-[3] hello, world
-[4] good to be back ;) 3
-@endcode
-
-*/
-
 
 #define BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT
 #include <boost/logging/format_fwd.hpp>
@@ -62,6 +31,8 @@ void f () {
 }
 
 void one_logger_one_filter_example() {
+    forward_to_logger< default_, destination::cout > l;
+    logger<default_> * ll = l.common_base();
     // Step 7: add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 

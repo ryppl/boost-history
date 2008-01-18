@@ -41,7 +41,7 @@ namespace detail {
 */
 template<class type, class gather_msg = default_, class dummy = override> struct log_holder {
     typedef typename use_default<gather_msg, typename ::boost::logging::detail::fast_compile_with_default_gather<dummy>::gather_msg > ::type gather_type;
-    typedef logger<gather_type> logger_base;
+    typedef logger<gather_type> logger_base_type;
 
     BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW_AND_INIT(log_holder, m_log, type, init)
     ~log_holder() { 
@@ -61,8 +61,8 @@ template<class type, class gather_msg = default_, class dummy = override> struct
     type* get()                         { return m_log; }
 
 
-    const logger_base * base() const    { return m_base; }
-    logger_base * base()                { return m_base; }
+    const logger_base_type * base() const    { return m_base; }
+    logger_base_type * base()                { return m_base; }
 
 private:
     void init() {
@@ -72,7 +72,7 @@ private:
     }
 private:
     type * m_log;
-    logger_base * m_base;
+    logger_base_type * m_base;
 };
 
 /** 
@@ -117,8 +117,12 @@ typedef ensure_early_log_creation ensure_early_filter_creation;
 template<class logger> inline logger* get_logger_base(logger * l) { return l; }
 template<class logger> inline const logger* get_logger_base(const logger * l) { return l; }
 
-template<class type, class gather_msg> inline typename log_holder<type,gather_msg>::logger_base* get_logger_base(log_holder<type,gather_msg> & l) { return l.base(); }
-template<class type, class gather_msg> inline const typename log_holder<type,gather_msg>::logger_base* get_logger_base(const log_holder<type,gather_msg> & l) { return l.base(); }
+template<class type, class gather_msg> inline typename log_holder<type,gather_msg>::logger_base_type* get_logger_base(log_holder<type,gather_msg> & l) { 
+    return l.base(); 
+}
+template<class type, class gather_msg> inline const typename log_holder<type,gather_msg>::logger_base_type* get_logger_base(const log_holder<type,gather_msg> & l) { 
+    return l.base(); 
+}
 
 
 

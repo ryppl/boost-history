@@ -49,10 +49,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
   and see the namespace/class name from there. Or, I could implement it using __FILE__.
   - Votes: 1
 
-- @c high          TSS ostringstream:  I can have a tss(std::ostringstream), when gathering data if creation of std::ostringstream takes time.
-  this does not need to apply to ostringstream only - it should apply to any gather::ostream_like class
-  - Votes: 1
-
 - @c low            have a "class"/"function" filter \n - so basically you can have is_enabled(this), which will call
   is_enabled<some_type>, which you can later on, or at runtime, enable or disable.
   --> turn on/off based on class name (typeid(name).string() - could be problematic in case the names are cryptic.

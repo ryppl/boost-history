@@ -55,7 +55,9 @@ namespace boost { namespace logging {
                 set_callback_if_needed();                                           \
         }                                                                           \
         void set_callback_if_needed() {                                             \
-            if ( ::boost::logging::get_logger_base( l )->cache().is_cache_turned_on() )                                           \
+            if ( ::boost::logging::get_logger_base( l )->is_cache_turned_off() )                                           \
+                ; \
+            else \
                 ::boost::logging::get_logger_base( l )->cache().set_callback( &is_enabled_callback );                             \
         }                                                                           \
     } param = ( !(is_log_enabled) ) ? (void*)0 : ::boost::logging::get_logger_base( l )-> do_func
