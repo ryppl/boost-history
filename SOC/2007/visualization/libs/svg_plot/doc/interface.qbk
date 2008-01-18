@@ -357,6 +357,9 @@ plot(my_data, "People", functor = my_functor());
 [`boost_default_convert` (default) is sufficient in all cases where the data stored in the container can be directly cast to a double.]]
 ] [/ table Optional Functions]
 [endsect] [/section:svg_2d_plot_interface]
+
+[include settings.qbk]
+
 [endsect] [/section:interface]
 
 [/ interface.qbk

@@ -523,7 +523,8 @@ namespace boost
           if(derived().legend_on_) // Legend box required.
           {
             derived().outside_legend_on_ = true; // Unless proves to be inside.
-            double spacing = derived().y_label_font_size() * 1.; // Around any legend box - beyond any border.
+            //double spacing = derived().y_label_font_size() * 1.; // Around any legend box - beyond any border.
+            double spacing = derived().y_axis_label_style_.font_size() * 1.; // Around any legend box - beyond any border.
             switch (derived().legend_place_)
             {
             case nowhere:
@@ -1279,6 +1280,28 @@ namespace boost
             return derived().x_ticks_.value_precision_;
           }
 
+          Derived& x_value_ioflags(int flags)
+          { // IO flags of X tick label values (default 0X201).
+            derived().x_ticks_.value_ioflags_ = flags;
+            return derived();
+          }
+
+          int x_value_ioflags()
+          { // ALL stream ioflags for control of format of X value labels.
+            return derived().x_ticks_.value_ioflags_;
+          }
+
+          Derived& x_labels_strip_e0s(bool cmd)
+          {
+            derived().x_ticks_.strip_e0s_ = cmd;
+            return *this;
+          }
+
+          bool y_labels_strip_e0s()
+          {
+            return derived().x_ticks_.strip_e0s_;
+          }
+
           const std::string title()
           {
             return derived().title_info_.text();
@@ -1704,16 +1727,6 @@ namespace boost
             return derived().x_label_info_.style().font_family();
           }
 
-          Derived& x_value_ioflags(int flags)
-          { // IO flags of X tick label values (default 0X201).
-            derived().x_ticks_.value_ioflags_ = flags;
-            return derived();
-          }
-
-          int x_value_ioflags()
-          { // ALL stream ioflags for control of format of X value labels.
-            return derived().x_ticks_.value_ioflags_;
-          }
 
           Derived& title(const std::string title)
           { // Plot title.
@@ -1873,7 +1886,9 @@ namespace boost
           }
 
           Derived& title_font_width(double width)
-          { // width of text is effectively the boldness
+          { // width of text is effectively the boldness.
+            // Not useful with current browsers, setting this may cause lower quality graphic fonts
+            // perhaps because the font is created using graphics rather than a built-in font.
             derived().image.get_g_element(PLOT_TITLE).style().stroke_width(width); 
             return derived();
           }
@@ -1885,14 +1900,13 @@ namespace boost
 
           Derived& legend_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_LEGEND_TEXT).style().fill_color(col);
             derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color(col);
             return derived();
           }
 
           svg_color legend_color()
-          { // Function legend_color sets both fill and stroke,
-            // but stroke (outside) is considered 'more important'.
+          { // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
+            // (It produces much lower quality fonts on some browsers).
             return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color();
           }
 
@@ -1903,12 +1917,12 @@ namespace boost
           }
 
           double legend_font_width()
-          {
+          { // Probably not useful at present (se above).
             return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width();
           }
 
           Derived& background_color(const svg_color& col)
-          {
+          { // 
             derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color(col);
             return derived();
           }

@@ -158,11 +158,11 @@ void show_plot_settings(svg_2d_plot& plot)
   // doesn't work - no filename is shown.
   
   cout << "axes_on " << plot.axes_on() << endl;
+  cout << "background_border_width " << plot.background_border_width() << endl;
   cout << "background_border_color " << plot.background_border_color() << endl;
   cout << "background_color " << plot.background_color() << endl;
   cout << "image_border_margin() " << plot.image_border_margin() << endl;
   cout << "image_border_width() " << plot.image_border_width() << endl;
-  cout << "background_border_width " << plot.background_border_width() << endl;
   cout << "coord_precision " << plot.coord_precision() << endl;
   cout << "copyright_date  " << plot.copyright_date() << endl;
   cout << "copyright_holder " << plot.copyright_holder() << endl;

@@ -518,11 +518,67 @@ public:
     bool line_on_;
     bool bezier_on_;
 
-    plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool on = true, bool bezier_on = false)
+    plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool line_on = true, bool bezier_on = false)
       :
-      color_(col), area_fill_(acol), width_(width), line_on_(on), bezier_on_(bezier_on)
+      color_(col), area_fill_(acol), width_(width), line_on_(line_on), bezier_on_(bezier_on)
     { // Defaults for all private data.
     }
+
+  plot_line_style& width(double w)
+  {
+    width_ = w;
+    return *this;
+  }
+
+  double width()
+  {
+    return width_;
+  }
+
+  plot_line_style& color(const svg_color& f)
+  {
+    color_ = f;
+    return *this;
+  }
+
+  svg_color& color()
+  {
+    return color_;
+  }
+
+  plot_line_style& area_fill(const svg_color& f)
+  {
+    area_fill_ = f;
+    return *this;
+  }
+
+  svg_color& area_fill()
+  {
+    return area_fill_;
+  }
+
+  bool line_on() const
+  {
+    return line_on_;
+  }
+
+  plot_line_style& line_on(bool is) 
+  {
+    line_on_ = is;
+    return *this; // Make chainable.
+  }
+
+  bool bezier_on() const
+  {
+    return bezier_on_;
+  }
+
+  plot_line_style& bezier_on(bool is) 
+  {
+    bezier_on_ = is;
+    return *this; // Make chainable.
+  }
+
 }; // class plot_line_style
 
 std::ostream& operator<< (std::ostream& os, plot_line_style p)
@@ -680,7 +736,7 @@ public:
     bool major_grid_on_;  // Draw X grid at major ticks.
     bool minor_grid_on_;// Draw X grid at minor ticks.
     int value_precision_; // precision for tick value labels, usually 3 will suffice.
-    int value_ioflags_;  // IO formatting flags for the axis.
+    int value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; // If redundant zero, + and e are to be stripped.
     size_t label_max_chars_;  // width (in SVG units) of longest label on axis.
     int ticks_on_plot_window_on_; // Value labels & ticks on the plot window border 
@@ -871,7 +927,7 @@ public:
     fill_on_(fill_on)
     { // Initializes all private data.
     }
-}; // class axis_line_style
+}; // class box_style
 
 const std::string strip_e0s(std::string s)
 { // Ugly hack to remove unwanted sign and leading zero(s) in exponent.

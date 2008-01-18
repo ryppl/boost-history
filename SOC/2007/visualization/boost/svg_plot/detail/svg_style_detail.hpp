@@ -28,10 +28,10 @@ namespace detail
 
 // Caution: these two enum and ids must match because
 // the enum value is used to index the array of id strings.
-//  void set_ids() copies all strings to matching image.get_g_element(i).id()
+// void set_ids() copies all strings to matching image.get_g_element(i).id()
 // Add any new id items to both!
 enum plot_doc_structure
-{
+{ // Order control the painting order, later ones overwriting earlier layers.
   PLOT_BACKGROUND = 0, // Must be zero to index array document_ids[]
     PLOT_WINDOW_BACKGROUND, // the smaller plot window (if used).
     PLOT_Y_MINOR_GRID, PLOT_Y_MAJOR_GRID, // 2, 3
