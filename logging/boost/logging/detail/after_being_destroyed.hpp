@@ -54,6 +54,12 @@ namespace destination { template<class T > struct msg_type; }
         typedef typename destination::msg_type<T>::raw_type raw_type;
         typedef void (*after_destroyed_func)(const raw_type&) ;
 
+
+        void set_after_destroyed(after_destroyed_func f) {
+            m_after_being_destroyed = f;
+        }
+
+    protected:
         // default implementation - do nothing
         static void nothing(const raw_type&) {}
 
@@ -62,7 +68,6 @@ namespace destination { template<class T > struct msg_type; }
             m_after_being_destroyed(msg); 
         }
 
-    protected:
         after_being_destroyed_defer_to_function () : m_is_destroyed(false), m_after_being_destroyed(&nothing) {}
         ~after_being_destroyed_defer_to_function () {
             m_is_destroyed = true;

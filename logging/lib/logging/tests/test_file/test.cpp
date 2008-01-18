@@ -4,7 +4,6 @@
 */
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 #include <string>
 
 using namespace boost::logging;
