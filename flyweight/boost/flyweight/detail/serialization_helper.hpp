@@ -27,7 +27,11 @@ namespace flyweights{
 
 namespace detail{
 
-/* TODO:comment
+/* The serialization helper for flyweight<T> maps numerical IDs to
+ * flyweight exemplars --an exemplar is the flyweight object
+ * associated to a given value that appears first on the serialization
+ * stream, so that subsequent equivalent flyweight objects will be made
+ * to refer to it during the serialization process.
  */
 
 template<typename Flyweight>

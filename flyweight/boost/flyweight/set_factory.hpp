@@ -37,16 +37,16 @@ class set_factory_class:
   public assoc_container_factory_class<
     std::set<
       Entry,
-	  typename boost::mpl::if_<
-	    mpl::is_na<Compare>,
-	    std::less<Value>,
-	    Compare
-	  >::type,
-	  typename boost::mpl::if_<
-	    mpl::is_na<Allocator>,
-	    std::allocator<Entry>,
-	    Allocator
-	  >::type
+      typename boost::mpl::if_<
+        mpl::is_na<Compare>,
+        std::less<Value>,
+        Compare
+      >::type,
+      typename boost::mpl::if_<
+        mpl::is_na<Allocator>,
+        std::allocator<Entry>,
+        Allocator
+      >::type
     >
   >
 {

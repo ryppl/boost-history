@@ -3,7 +3,7 @@
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
  *
- * See http://www.boost.org/libs/multi_index for library home page.
+ * See http://www.boost.org/libs/flyweight for library home page.
  */
 
 #ifndef BOOST_FLYWEIGHT_DETAIL_ARCHIVE_CONSTRUCTED_HPP

@@ -42,13 +42,13 @@ class hashed_factory_class:public factory_marker
         multi_index::identity<Entry>,
         typename boost::mpl::if_<
           mpl::is_na<Hash>,
-	      hash<Value>,
-	      Hash
+          hash<Value>,
+          Hash
         >::type,
         typename boost::mpl::if_<
-	      mpl::is_na<Pred>,
-	      std::equal_to<Value>,
-	      Pred
+          mpl::is_na<Pred>,
+          std::equal_to<Value>,
+          Pred
         >::type
       >
     >
@@ -57,11 +57,11 @@ class hashed_factory_class:public factory_marker
   typedef multi_index::multi_index_container<
     Entry,
     index_list,
-	typename boost::mpl::if_<
-	  mpl::is_na<Allocator>,
-	  std::allocator<Entry>,
-	  Allocator
-	>::type
+    typename boost::mpl::if_<
+      mpl::is_na<Allocator>,
+      std::allocator<Entry>,
+      Allocator
+    >::type
   > container_type;
 
 public:
@@ -69,7 +69,7 @@ public:
   
   handle_type insert(const Entry& x)
   {
-  	return &*cont.insert(x).first;
+    return &*cont.insert(x).first;
   }
 
   void erase(handle_type h)

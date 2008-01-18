@@ -42,7 +42,7 @@ struct intermodule_holder_class
     static instantiator instance;    
     return instance.get();
   }
-	
+
 private:
   struct instantiator
   {
@@ -56,7 +56,7 @@ private:
        * that we call "new" in an unlocked situation, thus minimizing the
        * chance of leaving dangling locks due to catastrophic failure.
        */
-    	 
+
       {
         interprocess::scoped_lock<interprocess::named_mutex> lock(mutex);
         ppref=seg.find_or_construct<referenced_instance*>(
@@ -75,7 +75,7 @@ private:
         }
       }
       if(!*ppref){
-      	std::auto_ptr<referenced_instance> apc(
+        std::auto_ptr<referenced_instance> apc(
           new referenced_instance(segment_name));
         interprocess::scoped_lock<interprocess::named_mutex> lock(mutex);
         ppref=seg.find_or_construct<referenced_instance*>(
@@ -113,7 +113,7 @@ private:
     
     char mutex_name[128];
     char segment_name[128];
-  	
+
     const char* compute_mutex_name()
     {
       std::sprintf(
@@ -125,7 +125,7 @@ private:
         (unsigned)compute_hash(typeid(C).name(),1),
         (unsigned)compute_hash(typeid(C).name(),2),
         (unsigned)compute_hash(typeid(C).name(),3));
-    	
+
       return mutex_name;
     }
     

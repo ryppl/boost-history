@@ -36,16 +36,16 @@ class refcounted_value
 {
 public:
   explicit refcounted_value(const Value& x_):
-  	x(x_),ref(0)
+    x(x_),ref(0)
   {}
   
   refcounted_value(const refcounted_value& r):
-  	x(r.x),ref(0)
+    x(r.x),ref(0)
   {}
   
   refcounted_value& operator=(const refcounted_value& r)
   {
-  	x=r.x;
+    x=r.x;
     return *this;
   }
   

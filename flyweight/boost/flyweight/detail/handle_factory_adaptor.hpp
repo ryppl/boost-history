@@ -13,8 +13,8 @@
 #pragma once
 #endif
 
-/* Given a Factory and a Handle type convertible from and implicitly
- * constructible to Factory::handle_type, handle_factory_adaptor
+/* Given a Factory and a Handle type constructible from and implicitly
+ * convertible to Factory::handle_type, handle_factory_adaptor
  * adapts Factory to present Handle as the associated handle_type.
  */
  
@@ -32,7 +32,7 @@ public:
 
   handle_type insert(const Entry& x)
   {
-  	return static_cast<handle_type>(base().insert(x));
+    return static_cast<handle_type>(base().insert(x));
   }
 
 private:

@@ -35,7 +35,7 @@ public:
   
   handle_type insert(const entry_type& x)
   {
-  	return cont.insert(x).first;
+    return cont.insert(x).first;
   }
 
   void erase(handle_type h)

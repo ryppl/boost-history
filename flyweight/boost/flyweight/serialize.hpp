@@ -23,7 +23,6 @@
 #include <memory>
 
 /* Serialization routines for flyweight<T>. 
- * TODO: comment
  */
 
 namespace boost{
