@@ -81,11 +81,14 @@ public:
   // sorting them into the correct std::vector, normal or not.
   // -------------------------------------------------------------
   template <class T> // T an STL container: array, vector ...
-  svg_1d_plot_series(T begin, T end, const std::string& title, const plot_point_style& style)
+  svg_1d_plot_series(T begin, T end, const std::string& title) //, const plot_point_style& style = )
     :
   title_(title),
-  point_style_(style),
-  line_style_  // Meaning of line style for 1-D as yet undefined?
+  point_style_(black, blank, 10, round), // Default point style. TODO vertical line better?
+  // plot_line_style(const svg_color& col = black, const svg_color& acol = true, bool on = true, bool bezier_on = false)
+  limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
+  line_style_(black, true, 2, true, false) // Default line style, no fill.
+  // Meaning of line style for 1-D as yet undefined?
   {
     for(T i = begin; i != end; ++i)
     {  // No defaults for begin and end.

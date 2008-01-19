@@ -508,6 +508,8 @@ std::ostream& operator<< (std::ostream& os, plot_point_style p)
   return os;
 } // std::ostream& operator<<
 
+plot_point_style default_plot_point_style(); // Uses all the defaults.
+
 class plot_line_style
 { // Style of line joining data series values. 
   // TODO dotted and dashed line style?  Useful for B&W?
