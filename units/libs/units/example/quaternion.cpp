@@ -11,7 +11,7 @@
 /** 
 \file
     
-\brief unit_example_8.cpp
+\brief quaternion.cpp
 
 \detailed
 Demonstrate interoperability with Boost.Quaternion.
@@ -19,7 +19,7 @@ Demonstrate interoperability with Boost.Quaternion.
 Output:
 @verbatim
 
-//[unit_example_8_output_1
+//[quaternion_output_1
 +L      = (4,3,2,1) m
 -L      = (-4,-3,-2,-1) m
 L+L     = (8,6,4,2) m
@@ -29,7 +29,7 @@ L/L     = (1,0,0,0) dimensionless
 L^3     = (-104,102,68,34) m^3
 //]
 
-//[unit_example_8_output_2
+//[quaternion_output_2
 +L      = (4 m,3 m,2 m,1 m)
 -L      = (-4 m,-3 m,-2 m,-1 m)
 L+L     = (8 m,6 m,4 m,2 m)
@@ -65,15 +65,17 @@ namespace boost {
 
 namespace units {
 
-//[unit_example_8_class_snippet_1
+//[quaternion_class_snippet_1
 /// specialize power typeof helper
 template<class Y,long N,long D> 
-struct power_dimof_helper<boost::math::quaternion<Y>,static_rational<N,D> >                
+struct power_dimof_helper<boost::math::quaternion<Y>,static_rational<N,D> >
 { 
     // boost::math::quaternion only supports integer powers
     BOOST_STATIC_ASSERT(D==1);
     
-    typedef boost::math::quaternion<typename power_dimof_helper<Y,static_rational<N,D> >::type>    type; 
+    typedef boost::math::quaternion<
+        typename power_dimof_helper<Y,static_rational<N,D> >::type
+    > type; 
     
     static type value(const boost::math::quaternion<Y>& x)  
     {   
@@ -83,12 +85,14 @@ struct power_dimof_helper<boost::math::quaternion<Y>,static_rational<N,D> >
 
 /// specialize root typeof helper
 template<class Y,long N,long D> 
-struct root_typeof_helper<boost::math::quaternion<Y>,static_rational<N,D> >                
+struct root_typeof_helper<boost::math::quaternion<Y>,static_rational<N,D> >
 { 
     // boost::math::quaternion only supports integer powers
     BOOST_STATIC_ASSERT(N==1);
     
-    typedef boost::math::quaternion<typename root_typeof_helper<Y,static_rational<N,D> >::type>    type; 
+    typedef boost::math::quaternion<
+        typename root_typeof_helper<Y,static_rational<N,D> >::type
+    > type; 
     
     static type value(const boost::math::quaternion<Y>& x)  
     { 
@@ -97,23 +101,34 @@ struct root_typeof_helper<boost::math::quaternion<Y>,static_rational<N,D> >
 };
 //]
 
-//[unit_example_8_class_snippet_2
+//[quaternion_class_snippet_2
 /// specialize power typeof helper for quaternion<quantity<Unit,Y> >
 template<class Unit,long N,long D,class Y> 
-struct power_dimof_helper<boost::math::quaternion<quantity<Unit,Y> >,static_rational<N,D> >                
+struct power_dimof_helper<
+    boost::math::quaternion<quantity<Unit,Y> >,
+    static_rational<N,D> >                
 { 
-    typedef typename power_dimof_helper<Y,static_rational<N,D> >::type     value_type;
-    typedef typename power_dimof_helper<Unit,static_rational<N,D> >::type  unit_type;
-    typedef quantity<unit_type,value_type>                                  quantity_type;
-    typedef boost::math::quaternion<quantity_type>                          type; 
+    typedef typename power_dimof_helper<
+        Y,
+        static_rational<N,D>
+    >::type     value_type;
+
+    typedef typename power_dimof_helper<
+        Unit,
+        static_rational<N,D>
+    >::type  unit_type;
+
+    typedef quantity<unit_type,value_type>         quantity_type;
+    typedef boost::math::quaternion<quantity_type> type; 
     
     static type value(const boost::math::quaternion<quantity<Unit,Y> >& x)  
     { 
         const boost::math::quaternion<value_type>   tmp = 
-            pow<static_rational<N,D> >(boost::math::quaternion<Y>(x.R_component_1().value(),
-                                                                  x.R_component_2().value(),
-                                                                  x.R_component_3().value(),
-                                                                  x.R_component_4().value()));
+            pow<static_rational<N,D> >(boost::math::quaternion<Y>(
+                x.R_component_1().value(),
+                x.R_component_2().value(),
+                x.R_component_3().value(),
+                x.R_component_4().value()));
         
         return type(quantity_type::from_value(tmp.R_component_1()),
                     quantity_type::from_value(tmp.R_component_2()),
@@ -124,20 +139,31 @@ struct power_dimof_helper<boost::math::quaternion<quantity<Unit,Y> >,static_rati
 
 /// specialize root typeof helper for quaternion<quantity<Unit,Y> >
 template<class Unit,long N,long D,class Y> 
-struct root_typeof_helper<boost::math::quaternion<quantity<Unit,Y> >,static_rational<N,D> >                
+struct root_typeof_helper<
+    boost::math::quaternion<quantity<Unit,Y> >,
+    static_rational<N,D> >                
 { 
-    typedef typename root_typeof_helper<Y,static_rational<N,D> >::type      value_type;
-    typedef typename root_typeof_helper<Unit,static_rational<N,D> >::type   unit_type;
-    typedef quantity<unit_type,value_type>                                  quantity_type;
-    typedef boost::math::quaternion<quantity_type>                          type; 
+    typedef typename root_typeof_helper<
+        Y,
+        static_rational<N,D>
+    >::type      value_type;
+
+    typedef typename root_typeof_helper<
+        Unit,
+        static_rational<N,D>
+    >::type   unit_type;
+
+    typedef quantity<unit_type,value_type>         quantity_type;
+    typedef boost::math::quaternion<quantity_type> type; 
     
     static type value(const boost::math::quaternion<quantity<Unit,Y> >& x)  
     { 
         const boost::math::quaternion<value_type>   tmp = 
-            root<static_rational<N,D> >(boost::math::quaternion<Y>(x.R_component_1().value(),
-                                                                   x.R_component_2().value(),
-                                                                   x.R_component_3().value(),
-                                                                   x.R_component_4().value()));
+            root<static_rational<N,D> >(boost::math::quaternion<Y>(
+                x.R_component_1().value(),
+                x.R_component_2().value(),
+                x.R_component_3().value(),
+                x.R_component_4().value()));
         
         return type(quantity_type::from_value(tmp.R_component_1()),
                     quantity_type::from_value(tmp.R_component_2()),
@@ -160,7 +186,7 @@ int main(void)
     std::stringstream sstream1, sstream2;
     
     {
-    //[unit_example_8_snippet_1
+    //[quaternion_snippet_1
     typedef quantity<length,quaternion<double> >     length_dimension;
         
     length_dimension    L(quaternion<double>(4.0,3.0,2.0,1.0)*meters);
@@ -180,7 +206,7 @@ int main(void)
     }
     
     {
-    //[unit_example_8_snippet_2
+    //[quaternion_snippet_2
     typedef quaternion<quantity<length> >     length_dimension;
         
     length_dimension    L(4.0*meters,3.0*meters,2.0*meters,1.0*meters);
@@ -229,14 +255,16 @@ int main(void)
         
         if(str1.size() < str2.size()) 
         {
-            std::string::iterator iter = std::mismatch(str1.begin(), str1.end(), str2.begin()).first;
+            std::string::iterator iter =
+                std::mismatch(str1.begin(), str1.end(), str2.begin()).first;
             
             std::cout << iter - str1.begin() << std::endl;
             std::cout << std::count(str1.begin(), iter, '\n') << std::endl;
         } 
         else 
         {
-            std::string::iterator iter = std::mismatch(str2.begin(), str2.end(), str1.begin()).first;
+            std::string::iterator iter =
+                std::mismatch(str2.begin(), str2.end(), str1.begin()).first;
             
             std::cout << iter - str2.begin() << std::endl;
             std::cout << std::count(str2.begin(), iter, '\n') << std::endl;

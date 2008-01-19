@@ -11,7 +11,7 @@
 /** 
 \file
     
-\brief unit_example_5.cpp
+\brief conversion.cpp
 
 \detailed
 Test explicit and implicit unit conversion.
@@ -19,7 +19,7 @@ Test explicit and implicit unit conversion.
 Output:
 @verbatim
 
-//[unit_example_5_output_1
+//[conversion_output_1
 L1 = 2 m
 L2 = 2 m
 L3 = 2 m
@@ -29,7 +29,7 @@ L6 = 4 m
 L7 = 200 cm
 //]
 
-//[unit_example_5_output_2
+//[conversion_output_2
 volume (m^3)  = 1 m^3
 volume (cm^3) = 1e+06 cm^3
 volume (m^3)  = 1 m^3
@@ -42,7 +42,7 @@ velocity (2 m/s)  = 2 m s^-1
 velocity (2 cm/s) = 0.02 m s^-1
 //]
 
-//[unit_example_5_output_3
+//[conversion_output_3
 implicit conversions enabled
 volume (m^3)  = 1 m^3
 volume (cm^3) = 1e+06 cm^3
@@ -77,22 +77,22 @@ int main()
     // test quantity_cast
     {
     // implicit value_type conversions
-    //[unit_example_5_snippet_1
-    quantity<SI::length>        L1 = quantity<SI::length,int>(int(2.5)*SI::meters);
-    quantity<SI::length,int>    L2(quantity<SI::length,double>(2.5*SI::meters));
+    //[conversion_snippet_1
+    quantity<SI::length>     L1 = quantity<SI::length,int>(int(2.5)*SI::meters);
+    quantity<SI::length,int> L2(quantity<SI::length,double>(2.5*SI::meters));
     //]
     
-    //[unit_example_5_snippet_3
-    quantity<SI::length,int>    L3 = static_cast<quantity<SI::length,int> >(L1);
+    //[conversion_snippet_3
+    quantity<SI::length,int> L3 = static_cast<quantity<SI::length,int> >(L1);
     //]
     
-    //[unit_example_5_snippet_4
-    quantity<CGS::length>       L4 = static_cast<quantity<CGS::length> >(L1);
+    //[conversion_snippet_4
+    quantity<CGS::length>    L4 = static_cast<quantity<CGS::length> >(L1);
     //]
     
-    quantity<SI::length,int>    L5(4*SI::meters),
-                                L6(5*SI::meters);
-    quantity<CGS::length>       L7(L1);
+    quantity<SI::length,int> L5(4*SI::meters),
+                             L6(5*SI::meters);
+    quantity<CGS::length>    L7(L1);
     
     swap(L5,L6);
     
@@ -108,7 +108,7 @@ int main()
     
     // test explicit unit system conversion
     {
-    //[unit_example_5_snippet_5
+    //[conversion_snippet_5
     quantity<SI::volume>    vs(1.0*pow<3>(SI::meter));      
     quantity<CGS::volume>   vc(vs);
     quantity<SI::volume>    vs2(vc);
@@ -118,7 +118,7 @@ int main()
     quantity<SI::energy>    es2(ec);
                         
     quantity<SI::velocity>  v1 = 2.0*SI::meters/SI::second,     
-                            v2(quantity<CGS::velocity>(2.0*CGS::centimeters/CGS::second));
+                            v2(2.0*CGS::centimeters/CGS::second);
     //]
     
     sstream1 << "volume (m^3)  = " << vs << std::endl
@@ -142,7 +142,7 @@ int main()
              << "implicit conversions enabled"
              << std::endl;
               
-    //[unit_example_5_snippet_6
+    //[conversion_snippet_6
     quantity<SI::volume>     vs(1.0*pow<3>(SI::meter));      
     quantity<CGS::volume>    vc;
     
@@ -218,14 +218,16 @@ int main()
         
         if(str1.size() < str2.size()) 
         {
-            std::string::iterator iter = std::mismatch(str1.begin(), str1.end(), str2.begin()).first;
+            std::string::iterator iter =
+                std::mismatch(str1.begin(), str1.end(), str2.begin()).first;
             
             std::cout << iter - str1.begin() << std::endl;
             std::cout << std::count(str1.begin(), iter, '\n') << std::endl;
         } 
         else 
         {
-            std::string::iterator iter = std::mismatch(str2.begin(), str2.end(), str1.begin()).first;
+            std::string::iterator iter =
+                std::mismatch(str2.begin(), str2.end(), str1.begin()).first;
             
             std::cout << iter - str2.begin() << std::endl;
             std::cout << std::count(str2.begin(), iter, '\n') << std::endl;

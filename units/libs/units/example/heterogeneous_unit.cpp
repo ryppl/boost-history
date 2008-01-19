@@ -11,7 +11,7 @@
 /** 
 \file
     
-\brief unit_example_18.cpp
+\brief heterogeneous_unit.cpp
 
 \detailed
 Test heterogeneous units and quantities.
@@ -19,7 +19,7 @@ Test heterogeneous units and quantities.
 Output:
 @verbatim
 
-//[unit_example_18_output_1
+//[heterogeneous_unit_output_1
 1.5 m
 1 g
 1.5 m g
@@ -32,7 +32,7 @@ Output:
 1 cm m^-1 kg s^-2
 //]
 
-//[unit_example_18_output_2
+//[heterogeneous_unit_output_2
 0.015 m^2
 //]
 
@@ -57,7 +57,7 @@ int main()
 {
     std::stringstream sstream1, sstream2;
 
-    //[unit_example_18_snippet_1
+    //[heterogeneous_unit_snippet_1
     quantity<SI::length>        L(1.5*SI::meter);
     quantity<CGS::mass>         M(1.0*CGS::gram);
     
@@ -68,15 +68,15 @@ int main()
              << std::endl;
               
     sstream1 << 1.0*SI::meter*SI::kilogram/pow<2>(SI::second) << std::endl
-             << 1.0*SI::meter*SI::kilogram/pow<2>(SI::second)/SI::meter << std::endl
-             << std::endl;
+             << 1.0*SI::meter*SI::kilogram/pow<2>(SI::second)/SI::meter
+             << std::endl << std::endl;
 
     sstream1 << 1.0*CGS::centimeter*SI::kilogram/pow<2>(SI::second) << std::endl
-             << 1.0*CGS::centimeter*SI::kilogram/pow<2>(SI::second)/SI::meter << std::endl
-             << std::endl;
+             << 1.0*CGS::centimeter*SI::kilogram/pow<2>(SI::second)/SI::meter
+             << std::endl << std::endl;
     //]
     
-    //unit_example_18_snippet_2
+    //heterogeneous_unit_snippet_2
     quantity<SI::area>      A(1.5*SI::meter*CGS::centimeter);
     
     sstream1 << A << std::endl
@@ -112,14 +112,16 @@ int main()
         
         if(str1.size() < str2.size()) 
         {
-            std::string::iterator iter = std::mismatch(str1.begin(), str1.end(), str2.begin()).first;
+            std::string::iterator iter =
+                std::mismatch(str1.begin(), str1.end(), str2.begin()).first;
             
             std::cout << iter - str1.begin() << std::endl;
             std::cout << std::count(str1.begin(), iter, '\n') << std::endl;
         } 
         else 
         {
-            std::string::iterator iter = std::mismatch(str2.begin(), str2.end(), str1.begin()).first;
+            std::string::iterator iter =
+                std::mismatch(str2.begin(), str2.end(), str1.begin()).first;
             
             std::cout << iter - str2.begin() << std::endl;
             std::cout << std::count(str2.begin(), iter, '\n') << std::endl;
