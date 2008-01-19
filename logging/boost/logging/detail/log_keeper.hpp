@@ -38,36 +38,95 @@ namespace detail {
     @brief Allows using a log without knowing its full type yet. Even if the log is not fully @b defined, you can still use it.
 
     This will allow you to log messages even if you don't know the full type of the log (which can aid compilation time).
+
+    This is a base class. Use logger_holder_by_value or logger_holder_by_ptr instead
 */
-template<class type, class gather_msg = default_, class dummy = override> struct log_holder {
+template<class type, class gather_msg = default_, class dummy = override> struct logger_holder {
     typedef typename use_default<gather_msg, typename ::boost::logging::detail::fast_compile_with_default_gather<dummy>::gather_msg > ::type gather_type;
     typedef logger<gather_type> logger_base_type;
 
-    BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(log_holder, m_log, init)
-
-    const type* operator->() const      { return &m_log; }
-    type* operator->()                  { return &m_log; }
+    const type* operator->() const      { return m_log; }
+    type* operator->()                  { return m_log; }
 
     /** 
         in case you want to get the real log object
     */
-    const type* get() const             { return &m_log; }
-    type* get()                         { return &m_log; }
+    const type* get() const             { return m_log; }
+    type* get()                         { return m_log; }
 
 
     const logger_base_type * base() const    { return m_base; }
     logger_base_type * base()                { return m_base; }
 
-private:
-    void init() {
-        m_base = 0;
+protected:
+    logger_holder() : m_log(0), m_base(0) {}
+    virtual ~logger_holder() {}
+
+    void init(type * log) {
+        m_log = log;
         typedef typename type::write_type write_type;
-        m_base = m_log.common_base();
+        m_base = m_log->common_base();
     }
 private:
-    type m_log;
+    // note: I have a pointer to the log, as opposed to having it by value, because the whole purpose of this class
+    // is to be able to use a log without knowing its full type
+    type *m_log;
     logger_base_type * m_base;
 };
+
+
+
+/** 
+    @brief Allows using a log without knowing its full type yet. Even if the log is not fully @b defined, you can still use it.
+
+    This will allow you to log messages even if you don't know the full type of the log (which can aid compilation time).
+
+    This keeps the logger by value, so that the after_being_destroyed stuff works.
+    More specifically, in case the logger is used after it's been destroyed, the logger_holder instances CAN ONLY BE GLOBAL.
+*/
+template<class type, class gather_msg = default_> struct logger_holder_by_value : logger_holder<type, gather_msg> {
+    typedef logger_holder<type, gather_msg> base_type;
+
+    BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(logger_holder_by_value, m_log, init)
+private:
+    void init() {
+        base_type::init( &m_log_value);
+    }
+private:
+    // VERY IMPORTANT: we keep this BY VALUE, because, at destruction, we don't want the memory to be freed
+    // (in order for the after_being_destroyed to work, for global instances of this type)
+    type m_log_value;
+};
+
+
+/** 
+    @brief Allows using a log without knowing its full type yet. Even if the log is not fully @b defined, you can still use it.
+
+    This will allow you to log messages even if you don't know the full type of the log (which can aid compilation time).
+
+    This keeps the logger by value, so that the after_being_destroyed stuff works.
+    More specifically, in case the logger is used after it's been destroyed, the logger_holder instances CAN ONLY BE GLOBAL.
+*/
+template<class type, class gather_msg = default_> struct logger_holder_by_ptr : logger_holder<type, gather_msg> {
+    typedef logger_holder<type, gather_msg> base_type;
+
+    BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW_AND_INIT(logger_holder_by_ptr, m_log_ptr, type, init)
+    ~logger_holder_by_ptr() { 
+        delete m_log_ptr; 
+    }
+private:
+    void init() {
+        base_type::init( m_log_ptr);
+    }
+private:
+    type *m_log_ptr;
+};
+
+
+
+
+
+
 
 /** 
     @brief Ensures the log is created before main(), even if not used before main
@@ -104,17 +163,17 @@ struct ensure_early_log_creation {
 typedef ensure_early_log_creation ensure_early_filter_creation;
 
 /** 
-    Useful for log_holder - to get the logger' base (so that we can use it even without knowing the full log's definition).
+    Useful for logger_holder - to get the logger' base (so that we can use it even without knowing the full log's definition).
 
     If used on a logger, it just returns it .
 */
 template<class logger> inline logger* get_logger_base(logger * l) { return l; }
 template<class logger> inline const logger* get_logger_base(const logger * l) { return l; }
 
-template<class type, class gather_msg> inline typename log_holder<type,gather_msg>::logger_base_type* get_logger_base(log_holder<type,gather_msg> & l) { 
+template<class type, class gather_msg> inline typename logger_holder<type,gather_msg>::logger_base_type* get_logger_base(logger_holder<type,gather_msg> & l) { 
     return l.base(); 
 }
-template<class type, class gather_msg> inline const typename log_holder<type,gather_msg>::logger_base_type* get_logger_base(const log_holder<type,gather_msg> & l) { 
+template<class type, class gather_msg> inline const typename logger_holder<type,gather_msg>::logger_base_type* get_logger_base(const logger_holder<type,gather_msg> & l) { 
     return l.base(); 
 }
 

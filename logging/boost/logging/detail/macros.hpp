@@ -530,27 +530,27 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 
 #ifdef BOOST_LOG_COMPILE_FAST
 // ****** Fast compile ******
-#define BOOST_DECLARE_LOG(name,type) ::boost::logging::log_holder< type > & name ();
+#define BOOST_DECLARE_LOG(name,type) ::boost::logging::logger_holder< type > & name ();
 
 #ifdef BOOST_LOG_AFTER_BEING_DESTROYED_LEAK_LOGGER
     // leak the loggers
-    #define BOOST_DEFINE_LOG(name,type)  ::boost::logging::log_holder< type > & name () \
-        { static ::boost::logging::log_holder< type > *l = new ::boost::logging::log_holder< type > ; return *l; } \
+    #define BOOST_DEFINE_LOG(name,type)  ::boost::logging::logger_holder< type > & name () \
+        { static ::boost::logging::logger_holder_by_value< type > *l = new ::boost::logging::logger_holder< type > ; return *l; } \
         namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 
-    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::log_holder< type > & name () \
-        { static ::boost::logging::log_holder< type > *l = new ::boost::logging::log_holder< type > ( args ); return *l; } \
+    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::logger_holder< type > & name () \
+        { static ::boost::logging::logger_holder_by_value< type > *l = new ::boost::logging::logger_holder< type > ( args ); return *l; } \
         namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 
 #else
 
     // don't leak
-    #define BOOST_DEFINE_LOG(name,type)  ::boost::logging::log_holder< type > & name () \
-        { static ::boost::logging::log_holder< type > l; return l; } \
+    #define BOOST_DEFINE_LOG(name,type)  ::boost::logging::logger_holder< type > & name () \
+        { static ::boost::logging::logger_holder_by_value< type > l; return l; } \
         namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 
-    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::log_holder< type > & name () \
-        { static ::boost::logging::log_holder< type > l ( args ); return l; } \
+    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::logger_holder< type > & name () \
+        { static ::boost::logging::logger_holder_by_value< type > l ( args ); return l; } \
         namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 #endif
 
