@@ -43,22 +43,16 @@ template<class type, class gather_msg = default_, class dummy = override> struct
     typedef typename use_default<gather_msg, typename ::boost::logging::detail::fast_compile_with_default_gather<dummy>::gather_msg > ::type gather_type;
     typedef logger<gather_type> logger_base_type;
 
-    BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW_AND_INIT(log_holder, m_log, type, init)
-    ~log_holder() { 
-        delete m_base;
-        m_base = 0;
-        delete m_log; 
-        m_log = 0;
-    }
+    BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(log_holder, m_log, init)
 
-    const type* operator->() const      { return m_log; }
-    type* operator->()                  { return m_log; }
+    const type* operator->() const      { return &m_log; }
+    type* operator->()                  { return &m_log; }
 
     /** 
         in case you want to get the real log object
     */
-    const type* get() const             { return m_log; }
-    type* get()                         { return m_log; }
+    const type* get() const             { return &m_log; }
+    type* get()                         { return &m_log; }
 
 
     const logger_base_type * base() const    { return m_base; }
@@ -68,10 +62,10 @@ private:
     void init() {
         m_base = 0;
         typedef typename type::write_type write_type;
-        m_base = new forward_to_logger<gather_type, write_type>(m_log);
+        m_base = m_log.common_base();
     }
 private:
-    type * m_log;
+    type m_log;
     logger_base_type * m_base;
 };
 

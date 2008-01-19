@@ -49,6 +49,11 @@ namespace boost { namespace logging {
         */
         template<class cache_type> struct default_cache_keeper {
             default_cache_keeper() : m_is_cache_turned_off(false) {}
+            ~default_cache_keeper() {
+                // after we're destroyed, always consider the cache turned off
+                // (just in case someone is using the logger after it's been destroyed
+                m_is_cache_turned_off = true;
+            }
 
             /** 
                 I've implemented this as a fast "is turned off" question.
@@ -59,7 +64,12 @@ namespace boost { namespace logging {
                 if ( m_is_cache_turned_off)
                     return true;
 
-                return cache().is_cache_turned_off();
+                if ( cache().is_cache_turned_off() ) {
+                    m_is_cache_turned_off = true;
+                    return true;
+                }
+                else
+                    return false;
             }
 
             /** note: this call does not need to be very efficient, since the cache is used seldom, 
@@ -70,7 +80,7 @@ namespace boost { namespace logging {
             virtual const cache_type & cache() const        { return m_cache; }
         private:
             cache_type m_cache;
-            bool m_is_cache_turned_off;
+            mutable bool m_is_cache_turned_off;
         };
 
     }
@@ -79,13 +89,14 @@ namespace boost { namespace logging {
     namespace detail {
         template<class gather_msg , class write_msg > struct common_base_holder {
             typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
-            typedef logger<gather_type, default_> common_base_type;
+            typedef logger<gather_msg, default_> common_base_type;
+
             /** 
                 ... returns a base object - one that can be used to log messages, without having to know the full type of the log.
                     Thus, it can also be passed between a library and the application that uses it, and vice-versa.
             */
-            const common_base_type* common_base() const    { return m_base; }
-            common_base_type* common_base()                { return m_base; }
+            const common_base_type* common_base() const    { return &m_base; }
+            common_base_type* common_base()                { return &m_base; }
 
         protected:
             // a base object - one that can be used to log messages, without having to know the full type of the log.
@@ -112,6 +123,19 @@ namespace boost { namespace logging {
         using cache_base::cache;
 
         typedef logger<gather_msg, write_msg> subclass_type;
+        typedef after_being_destroyed<dummy> after_being_destroyed_base;
+        typedef detail::common_base_holder<gather_msg, write_msg> common_base_type;
+        typedef typename after_being_destroyed_base::after_destroyed_func after_destroyed_func ;
+
+        virtual void set_after_destroyed(after_destroyed_func f) {
+            if ( f == after_being_destroyed_base::m_after_being_destroyed )
+                // avoid infinite calls (since this can be forwarded back and forth - to the 
+                // forward logger and back)
+                return;
+            after_being_destroyed_base::m_after_being_destroyed = f;
+            // we have a forwarder - forward it to that as well
+            common_base_type::common_base()->set_after_destroyed(f);
+        }
 
     };
 

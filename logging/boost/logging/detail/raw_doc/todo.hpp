@@ -27,6 +27,11 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c low            in the same way I've created convert_to_base(), I can create a convert_to_top(), on top of which
                     I can create my own way to gather message, and then write it.
 
+- @c low            when leaking/not leaking loggers/using after_destroyed - have a templated class that allows this
+                    (only if users ask for it)
+                    I could probably do a bit more about caching as well - however, in this case, I should allow
+                    for macros to be visible in client code (for instance, if client wants BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER)
+
 - @c high           What should I do if someone is trying to use the log after it's been destroyed?
 
 - @c high           test TSS on vs2003 and gcc/pthreads \n

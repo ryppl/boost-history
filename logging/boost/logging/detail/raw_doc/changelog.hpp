@@ -1,8 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.20.5, 18 jan 2008
-- handle using logger after it's been destroyed (partially)
+@section changelog_cur_ver Current Version: v0.20.7, 18 jan 2008
+- added test for using logger after it's been destroyed 
+- handle using logger after it's been destroyed 
 - simpler version of logger (derive from logger_base)
 - added dll_and_exe - show how you can use a logger that is defined in a DLL, and use it from an EXE
 - explained the breaking change in the docs

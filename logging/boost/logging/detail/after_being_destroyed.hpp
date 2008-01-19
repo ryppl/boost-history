@@ -54,11 +54,6 @@ namespace destination { template<class T > struct msg_type; }
         typedef typename destination::msg_type<T>::raw_type raw_type;
         typedef void (*after_destroyed_func)(const raw_type&) ;
 
-
-        void set_after_destroyed(after_destroyed_func f) {
-            m_after_being_destroyed = f;
-        }
-
     protected:
         // default implementation - do nothing
         static void nothing(const raw_type&) {}
@@ -74,13 +69,24 @@ namespace destination { template<class T > struct msg_type; }
         }
     private:
         bool m_is_destroyed;
+    protected:
         after_destroyed_func m_after_being_destroyed;
     };
 
     template<class T = override> struct after_being_destroyed_none {
+        typedef typename destination::msg_type<T>::raw_type raw_type;
+        typedef void (*after_destroyed_func)(const raw_type&) ;
+
+    protected:
+        after_being_destroyed_none () : m_after_being_destroyed(0) {}
+
         static bool is_still_alive() { return true; }
         // never called
         template<class type> void call_after_destroyed(const type&) const {}
+
+    protected:
+        // never used, needed for set_after_destroyed
+        after_destroyed_func m_after_being_destroyed;
     };
 
     template<class T = override> struct after_being_destroyed

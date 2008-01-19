@@ -195,6 +195,13 @@ namespace boost { namespace logging {
             m_writer = &m_original_logger->writer();
         }
 
+        // if we set_after_destroyed, set the one we forward to as well
+        virtual void set_after_destroyed(typename log_base::after_destroyed_func f) {
+            log_base::set_after_destroyed(f);
+            if ( m_original_logger)
+                m_original_logger->set_after_destroyed(f);
+        }
+
         virtual void do_write(msg_type &a) const {
             (*m_writer)(a);
         }

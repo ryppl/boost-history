@@ -36,6 +36,7 @@ struct before_log {
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, log_type)
 
+
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // whatever we log to the rolling file, we log here too (easy was to find out all the info that was logged)
