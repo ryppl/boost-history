@@ -51,15 +51,15 @@ namespace destination { template<class T > struct msg_type; }
 
     */
     template<class T = override> struct after_being_destroyed_defer_to_function {
-        typedef typename destination::msg_type<T>::raw_type raw_type;
-        typedef void (*after_destroyed_func)(const raw_type&) ;
+        typedef typename destination::msg_type<T>::type type;
+        typedef void (*after_destroyed_func)(const type&) ;
 
     protected:
         // default implementation - do nothing
-        static void nothing(const raw_type&) {}
+        static void nothing(const type&) {}
 
         bool is_still_alive() const { return !m_is_destroyed; }
-        void call_after_destroyed(const raw_type& msg) const { 
+        void call_after_destroyed(const type& msg) const { 
             m_after_being_destroyed(msg); 
         }
 
@@ -74,8 +74,8 @@ namespace destination { template<class T > struct msg_type; }
     };
 
     template<class T = override> struct after_being_destroyed_none {
-        typedef typename destination::msg_type<T>::raw_type raw_type;
-        typedef void (*after_destroyed_func)(const raw_type&) ;
+        typedef typename destination::msg_type<T>::type type;
+        typedef void (*after_destroyed_func)(const type&) ;
 
     protected:
         after_being_destroyed_none () : m_after_being_destroyed(0) {}

@@ -29,8 +29,6 @@
 #include <set>
 #include <boost/shared_ptr.hpp>
 
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format_fwd.hpp>
@@ -357,6 +355,7 @@ In the above case:
     template<
             class formatter_base, 
             class destination_base,
+            // note: we're counting on these defaults in format_find_writer
             class lock_resource = typename boost::logging::types<override>::lock_resource ,
             class formatter_array = boost::logging::array::shared_ptr_holder<formatter_base>,
             class destination_array = boost::logging::array::shared_ptr_holder<destination_base>

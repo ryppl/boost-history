@@ -315,9 +315,7 @@ namespace boost { namespace logging {
 
 
 
-    /** 
-        Given a logger class, finds its gather_msg , without needing to know the logger's definition
-        (a typedef is enough)
+    /** @brief Given a logger class, finds its gather_msg , without needing to know the logger's definition (a typedef is enough)
     */
     template<class> struct logger_to_gather {};
     template<class gather_msg, class write_msg> struct logger_to_gather< logger<gather_msg,write_msg> > {

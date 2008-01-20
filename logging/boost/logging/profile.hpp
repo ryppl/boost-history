@@ -34,8 +34,20 @@
 #include <boost/function.hpp>
 #include <string>
 #include <sstream>
+#include <boost/logging/format_fwd.hpp>
+#include <boost/logging/detail/find_format_writer.hpp>
 
-namespace boost { namespace logging { namespace profile {
+namespace boost { namespace logging { 
+    
+namespace writer {
+    template<class msg_type, class base_type> struct on_dedicated_thread ;
+}
+
+/** @brief Allows profiling your application
+
+See compute_for_logger and compute_for_filter classes
+*/    
+namespace profile {
 
 
 /** 
@@ -123,11 +135,10 @@ struct scoped_compute {
 };
 
 
-template<class msg_type, class base_type> struct on_dedicated_thread ;
 
 template<class gather_msg> struct compute_gather : gather_msg {
     compute_gather() : m_lk( get_compute(), compute::gather) {}
-    compute_gather(const compute_gather& other) : : m_lk( get_compute(), compute::gather), gather_msg(other) {}
+    compute_gather(const compute_gather& other) : m_lk( get_compute(), compute::gather), gather_msg(other) {}
 
     compute& get_compute() const { return compute::inst(); }
 private:
@@ -137,7 +148,7 @@ private:
 template<class writer_msg> struct compute_write : writer_msg {
     compute& get_compute() const { return compute::inst(); }
 
-    template<class msg_type> void operator()(const msg_type& msg) const {
+    template<class msg_type> void operator()(msg_type& msg) const {
         scoped_compute lk( get_compute(), compute::writer );
         writer_msg::operator()(msg);
     }
@@ -145,23 +156,24 @@ template<class writer_msg> struct compute_write : writer_msg {
     // just in case you do write on another thread
     virtual void write_array() const {
         scoped_compute lk( get_compute(), compute::on_other_thread );
-        write_array_impl( *this);
+        write_array_impl( this);
     }
 private:
-    template<class msg_type, class base_type> void write_array_impl(const on_dedicated_thread<msg_type,base_type> &) const {
+    template<class msg_type, class base_type> void write_array_impl(const ::boost::logging::writer::on_dedicated_thread<msg_type,base_type> *) const {
         // call base class's implementation
         writer_msg::write_array();
     }
 
     // does not derive from on_dedicated_thread
-    void write_array_impl(...) const {}
+    void write_array_impl(const void *) const {}
 };
 
-/** 
-    In case you want to profile your filter, there's just one requirement:
-    - your function must be called @c is_enabled() and be const
+/** @brief Profiles a filter. Don't use directly, use compute_for_filter instead.
+
 */
 template<class filter_msg> struct compute_filter : filter_msg {
+    BOOST_LOGGING_FORWARD_CONSTRUCTOR(compute_filter, filter_msg)
+
     // is_enabled - for any up to 5 params - const function
     compute& get_compute() const { return compute::inst(); }
 
@@ -185,12 +197,146 @@ template<class filter_msg> struct compute_filter : filter_msg {
         scoped_compute lk( get_compute(), compute::filter );
         return filter_msg::is_enabled(v1, v2, v3, v4);
     }
-    template<class p1, class p2, class p3, class p4, class p5> bool is_enabled(const p1 & v1, const p2 &v2, const p3 & v3, const p4 & v4, class p5 & v5) const {
+    template<class p1, class p2, class p3, class p4, class p5> bool is_enabled(const p1 & v1, const p2 &v2, const p3 & v3, const p4 & v4, const p5 & v5) const {
         scoped_compute lk( get_compute(), compute::filter );
         return filter_msg::is_enabled(v1, v2, v3, v4, v5);
     }
 
 };
+
+
+
+
+/** @brief given the logger type, gets the write_msg part, without needing to know the logger's definition (a typedef is enough)
+
+*/
+template<class> struct logger_to_write {};
+template<class gather_msg, class write_msg> struct logger_to_write< logger<gather_msg,write_msg> > {
+    // ... the easy part
+    typedef write_msg write_type;
+};
+
+// specialize for logger_format_write
+template<class format_base, class destination_base, class thread_safety, class gather, class lock_resource> 
+        struct logger_to_write< logger_format_write<format_base, destination_base, thread_safety, gather, lock_resource> > {
+
+    typedef typename detail::format_find_writer<format_base, destination_base, lock_resource, thread_safety>::type write_type;
+};
+
+
+
+/** @brief Allows you to compute profiling for your logger class
+
+@code
+#include <boost/logging/profile.hpp>
+@endcode
+
+To do profiling for a logger, just surround it with compute_for_logger. Example:
+
+<b>Old code</b>
+
+@code
+#include <boost/logging/format_fwd.hpp>
+
+namespace bl = boost::logging ;
+typedef bl::logger_format_write< > log_type;
+
+BOOST_DECLARE_LOG(g_l, log_type) 
+...
+BOOST_DEFINE_LOG(g_l, log_type) 
+
+@endcode
+
+
+<b>New code</b>
+
+@code
+#include <boost/logging/format_fwd.hpp>
+#include <boost/logging/profile.hpp>
+
+namespace bl = boost::logging ;
+typedef bl::logger_format_write< > <b>raw_log_type</b>;
+typedef bl::profile::compute_for_logger<raw_log_type>::type log_type;
+
+BOOST_DECLARE_LOG(g_l, log_type) 
+...
+BOOST_DEFINE_LOG(g_l, log_type) 
+
+@endcode
+
+@sa compute_for_filter
+
+*/
+template<class logger_type> struct compute_for_logger {
+    typedef logger<
+        compute_gather< typename logger_to_gather<logger_type>::gather_type > ,
+        compute_write< typename logger_to_write<logger_type>::write_type > > type;
+
+};
+
+
+
+
+/** @brief Allows you to compute profiling for your filter class
+
+@code
+#include <boost/logging/profile.hpp>
+@endcode
+
+In case you want to profile your filter, there's just one requirement:
+- your function must be called @c is_enabled() and be const
+
+
+
+
+
+
+To do profiling for a filter, just surround it with compute_for_filter. Example:
+
+<b>Old code</b>
+
+@code
+#include <boost/logging/format_fwd.hpp>
+
+namespace bl = boost::logging ;
+typedef bl::filter::no_ts filter;
+
+BOOST_DECLARE_LOG_FILTER(g_l_filter, filter) 
+...
+BOOST_DEFINE_LOG_FILTER(g_l_filter, filter) 
+
+@endcode
+
+
+<b>New code</b>
+
+@code
+#include <boost/logging/format_fwd.hpp>
+#include <boost/logging/profile.hpp>
+
+namespace bl = boost::logging ;
+typedef bl::filter::no_ts <b>raw_filter</b>;
+typedef compute_for_filter<raw_filter>::type filter;
+
+BOOST_DECLARE_LOG_FILTER(g_l_filter, filter) 
+...
+BOOST_DEFINE_LOG_FILTER(g_l_filter, filter) 
+
+@endcode
+
+
+
+
+
+
+
+@sa compute_for_logger
+
+*/
+template<class filter_type> struct compute_for_filter {
+    typedef compute_filter<filter_type> type;
+};
+
 
 
 }}}

@@ -38,6 +38,30 @@ namespace boost { namespace logging {
 
     struct void_ {};
 
+
+    namespace detail {
+        /** this is just a simple way to always return override; however, in this case we postpone the instantiation
+         until our template parameter is known
+        
+
+        For instance:
+        @code
+        typedef typename formatter::msg_type<override>::type msg_type;
+        @endcode
+
+        would compute msg_type right now; however, we want the compiler to wait, until the user has actually set the msg_type,
+        for example, using the BOOST_LOG_FORMAT_MSG macro. Thus, we do:
+
+        @code
+        typedef typename detail::to_override<format_base>::type T;
+        typedef typename formatter::msg_type<T>::type msg_type;
+        @endcode
+        */
+        template<class> struct to_override { typedef override type; };
+        template<> struct to_override<void_> { typedef void_ type; };
+    }
+
+
     struct ansi_unicode_char_holder {
         const char * str;
         const wchar_t * wstr;

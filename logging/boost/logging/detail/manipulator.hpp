@@ -32,7 +32,6 @@
 #include <boost/logging/format/op_equal.hpp>
 #include <boost/logging/detail/forward_constructor.hpp> // BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW
 #include <boost/shared_ptr.hpp>
-#include <boost/type_traits/remove_const.hpp>
 
 
 namespace boost { namespace logging {
@@ -317,23 +316,29 @@ namespace manipulator {
 
     When using formatters and destinations, formatters must share a %base class,
     and destinations must share a %base class - see manipulator namespace.
+
+    @note
+    Don't use directly. Use formatter::base<> or destination::base<> instead.
 */
 template<
-        class arg_type, 
+        class raw_param_type, 
+        class param_type,
         class ptr_type_ = default_ > 
     struct base : boost::logging::op_equal::same_type_op_equal_base {
 
-    typedef base<arg_type, ptr_type_> self_type;
+    typedef base<raw_param_type, param_type, ptr_type_> self_type;
 
     typedef typename use_default<ptr_type_, self_type*>::type ptr_type;
-    typedef arg_type param;
 
-    typedef typename boost::remove_const<param>::type non_const_param;
     // used as msg_type in format_and_write classes
-    typedef typename boost::remove_reference<non_const_param>::type raw_param;
+    typedef raw_param_type raw_param;
+    typedef param_type param;
 
-    virtual ~base() {}
     virtual void operator()(param val) const = 0;
+protected:
+    // signify that we're only a base class - not to be used directly
+    base() {}
+    virtual ~base() {}
 };
 
 
@@ -510,9 +515,10 @@ namespace formatter {
     and destinations must share a %base class - see manipulator namespace.
     */
     template<
+        // note: I'm counting on these defaults, in format_find_writer class
         class arg_type = typename msg_type<override>::type, 
         class ptr_type_ = default_ > 
-    struct base : boost::logging::manipulator::base<arg_type, ptr_type_> {
+    struct base : boost::logging::manipulator::base< arg_type, arg_type& , ptr_type_> {
     };
 
     /** 
@@ -547,10 +553,6 @@ namespace formatter {
 Some viable destinations are : the console, a file, a socket, etc.
 
 
-talk about destination_base
-
-FIXME
-
 */
 namespace destination {
     /** 
@@ -560,9 +562,10 @@ namespace destination {
     and destinations must share a %base class - see manipulator namespace.
     */
     template<
+        // note: I'm counting on these defaults, in format_find_writer class
         class arg_type = typename msg_type<override>::type, 
         class ptr_type_ = default_ > 
-    struct base : boost::logging::manipulator::base<arg_type, ptr_type_> {
+    struct base : boost::logging::manipulator::base< arg_type, const arg_type& , ptr_type_> {
     };
 
     using boost::logging::manipulator::non_const_context;

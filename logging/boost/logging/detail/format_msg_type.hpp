@@ -23,7 +23,6 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <boost/logging/detail/find_gather.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 #include <boost/logging/detail/tss/tss_ostringstream.hpp>
 
 namespace boost { namespace logging {
@@ -35,8 +34,7 @@ namespace formatter {
     @brief what is the default type of your string, in formatter_base ? See BOOST_LOG_FORMAT_MSG
     */
     template<class T = override> struct msg_type {
-        typedef hold_string_type& type;
-        typedef hold_string_type raw_type;
+        typedef hold_string_type type;
     };
 }
 
@@ -46,8 +44,7 @@ namespace destination {
     */
     template<class T = override> struct msg_type {
         // by default  - the default string
-        typedef const hold_string_type& type;
-        typedef hold_string_type raw_type;
+        typedef hold_string_type type;
     };
 }
 

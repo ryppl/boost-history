@@ -637,7 +637,7 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 */
 #define BOOST_LOG_FORMAT_MSG(msg_class) \
     namespace boost { namespace logging { namespace formatter { \
-    template<> struct msg_type<override> { typedef msg_class & type; typedef msg_class raw_type; }; \
+    template<> struct msg_type<override> { typedef msg_class type; }; \
     }}}
 
 /** @section BOOST_LOG_DESTINATION_MSG BOOST_LOG_DESTINATION_MSG
@@ -650,7 +650,7 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 */
 #define BOOST_LOG_DESTINATION_MSG(msg_class) \
     namespace boost { namespace logging { namespace destination { \
-    template<> struct msg_type<override> { typedef const msg_class & type; typedef msg_class raw_type; }; \
+    template<> struct msg_type<override> { typedef msg_class type; }; \
     }}}
 
 

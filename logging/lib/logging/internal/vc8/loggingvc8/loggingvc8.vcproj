@@ -513,6 +513,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\find_format_writer.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\detail\find_gather.hpp"
 					>
 				</File>

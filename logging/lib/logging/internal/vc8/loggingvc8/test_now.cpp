@@ -1,97 +1,153 @@
-// log.h
-#ifndef LOG_H_header
-#define LOG_H_header
+/**
+@example custom_fmt_dest.cpp
+
+@copydoc custom_fmt_dest
+
+@page custom_fmt_dest custom_fmt_dest.cpp Example
+
+This example shows you how easy it is to add your custom formatter /destination classes.
+
+This usage:
+- You have one logger
+- You have one filter, which can be turned on or off
+- You want to format the message before it's written 
+- The logger has several log destinations
+    - The output goes to console, debug output window, and a file called out.txt - as XML
+    - Formatting - prefix each message by its start time, its index, and append newline
+
+\n\n
+Custom classes:
+- secs_since_start - custom formatter
+- as_xml - custom destination
+
+
+\n\n
+Optimizations:
+- use a cache string (from optimize namespace), in order to make formatting the message faster
+
+
+\n\n
+The output will look similar to this one:
+
+
+The console and the debug window will be the same:
+@code
++6s [1] this is so cool 1
++6s [2] this is so cool again 2
++7s [3] hello, world
++7s [4] good to be back ;) 3
+@endcode
+
+
+The out.txt file will look like this:
+
+
+@code
+<msg>+6s [1] this is so cool 1
+</msg>
+<msg>+6s [2] this is so cool again 2
+</msg>
+<msg>+7s [3] hello, world
+</msg>
+<msg>+7s [4] good to be back ;) 3
+</msg>
+@endcode
+
+*/
+
 
 #include <boost/logging/format_fwd.hpp>
-// If you want to use tags...
-#include <boost/logging/tags.hpp>
+#include <boost/logging/profile.hpp>
 
-// Step 1: Specify the class to hold the message
-namespace b_l = boost::logging;
-typedef b_l::tag::holder<
-    // string class
-    b_l::optimize::cache_string_one_str<>,
-    // tags
-    b_l::tag::thread_id, b_l::tag::time> log_string_type;
-// note: if you don't use tags, you can simply use a string class:
-// typedef b_l::optimize::cache_string_one_str<> log_string_type;
-BOOST_LOG_FORMAT_MSG( log_string_type )
+// Step 1: Optimize : use a cache string, to make formatting the message faster
+BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
-// if not compiling fast...
-#ifndef BOOST_LOG_COMPILE_FAST
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
-
-// If you use tags...
-#include <boost/logging/format/formatter/tags.hpp>
-
-// uncomment if you want to use do logging on a dedicated thread
-// #include <boost/logging/writer/on_dedicated_thread.hpp>
-#endif
-
+using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
-using namespace boost::logging::scenario::usage;
-typedef use<
-        //  how often do you manipulate (change) the filter?
-        filter_::change::often<10>,
-        //  does the filter use levels?
-        filter_::level::no_levels,
-        // how often do you manipulate (change) the logger?
-        logger_::change::often<10>,
-        // for the logger: do you favor speed or correctness?
-        logger_::favor::correctness> finder;
+typedef logger_format_write< default_, default_, writer::threading::no_ts > raw_log_type;
+//typedef raw_log_type log_type;
+typedef profile::compute_for_logger<raw_log_type>::type log_type;
 
-// Step 4: declare which filters and loggers you'll use
-BOOST_DECLARE_LOG_FILTER(g_l_filter, finder::filter)
-BOOST_DECLARE_LOG(g_l, finder::logger)
+// Step 4: declare which filters and loggers you'll use (usually in a header file)
+BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts )
+BOOST_DECLARE_LOG(g_l, log_type) 
 
 // Step 5: define the macros through which you'll log
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
-// initialize thy logs..
-void init_logs();
-
-#endif
-
+// Step 6: Define the filters and loggers you'll use (usually in a source file)
+BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 
 
 
+// Example of custom formatter:
+// dump the no. of seconds since start of program
+struct secs_since_start : formatter::class_<secs_since_start, formatter::implement_op_equal::no_context> {
+    ::time_t m_start;
+    secs_since_start() : m_start( ::time(0) ) {}
+    void operator()(param str) const {
+        ::time_t now = ::time(0);
+        std::stringstream out;
+        out << "+" << (int)(now-m_start) << "s ";
+        str.prepend_string( out.str() );
+    }
+};
+
+// Example of custom destination:
+// Dump each message as XML
+struct as_xml : 
+        destination::class_<as_xml, destination::implement_op_equal::has_context>, 
+        destination::non_const_context<std::ofstream> {
+
+    std::string m_name;
+    as_xml(const char* name) : non_const_context_base(name), m_name(name) {}
+    void operator()(param str) const {
+        context() << "<msg>" << str << "</msg>" << std::endl; 
+    }
+
+    bool operator==(const as_xml& other) const { return m_name == other.m_name; }
+};
 
 
+void custom_fmt_dest_example() {
+    // Step 7: add formatters and destinations
+    //         That is, how the message is to be formatted and where should it be written to
 
-
-
-
-
-
-
-
-// log.cpp
-#include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
-#include <boost/logging/format/formatter/tags.hpp>
-
-// uncomment if you want to use do logging on a dedicated thread
-// #include <boost/logging/writer/on_dedicated_thread.hpp>
-
-using namespace boost::logging;
-
-// Step 6: Define the filters and loggers you'll use
-BOOST_DEFINE_LOG_FILTER(g_log_filter, finder::filter ) 
-BOOST_DEFINE_LOG(g_l, finder::logger) 
-
-
-void init_logs() {
-    // Add formatters and destinations
-    // That is, how the message is to be formatted...
-    g_l()->writer().add_formatter( formatter::tag::thread_id() );
-    g_l()->writer().add_formatter( formatter::tag::time("$hh:$mm.$ss ") );
-    g_l()->writer().add_formatter( formatter::idx() );
+    g_l()->writer().add_formatter( formatter::idx(), "[%] " );
     g_l()->writer().add_formatter( formatter::append_newline() );
+    g_l()->writer().add_formatter( secs_since_start() );
 
-    //        ... and where should it be written to
     g_l()->writer().add_destination( destination::cout() );
     g_l()->writer().add_destination( destination::dbg_window() );
-    g_l()->writer().add_destination( destination::file("out.txt") );
+    g_l()->writer().add_destination( as_xml("out.txt") );
+    g_l()->turn_cache_off();
+
+    // Step 8: use it...
+    int i = 1;
+    L_ << "this is so cool " << i++;
+    L_ << "this is so cool again " << i++;
+
+    std::string hello = "hello", world = "world";
+    L_ << hello << ", " << world;
+
+    g_log_filter()->set_enabled(false);
+    L_ << "this will not be written to the log";
+    L_ << "this won't be written to the log";
+
+    g_log_filter()->set_enabled(true);
+    L_ << "good to be back ;) " << i++;
+
+    // Step 9 : Enjoy!
 }
+
+
+
+int main() {
+    custom_fmt_dest_example();
+}
+
+
+// End of file
