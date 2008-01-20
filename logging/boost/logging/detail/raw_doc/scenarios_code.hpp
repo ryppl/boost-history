@@ -102,6 +102,10 @@ namespace boost { namespace logging {
 
 
 
+@section scenarios_code_profile Profiling the time spent while logging
+
+@include use_profiler.cpp
+\n\n\n
 
 */
 

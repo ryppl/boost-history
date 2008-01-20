@@ -15,6 +15,8 @@ namespace boost { namespace logging {
 - @ref common_scenarios_10
 
 - @ref common_your_scenario
+- @ref common_scenario_using_tags 
+- @ref common_scenario_profile 
 
 - @ref scenario_multiple_files
     - @ref scenario_multiple_files_program 
@@ -132,6 +134,19 @@ Scenario 1 should be the most common.
 @copydoc using_tags
 
 @ref scenarios_code_using_tags "Click to see the code"
+\n\n\n
+
+
+
+
+@section common_scenario_profile Profiling the time spent while logging
+
+@copydoc use_profiler
+
+@ref scenarios_code_profile "Click to see the code"
+\n\n\n
+
+
 
 */
 

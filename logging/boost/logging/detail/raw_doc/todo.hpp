@@ -24,6 +24,8 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         on_dedicated_thead - remove dependency on boost::thread
 
+- @c normal         must have helper to call on on_destructed - like, to be able to write to cout,etc
+
 - @c high           make it compile faster (most likely improve use_format_write, etc)
 
 - @c normal         profiler - we can care about threads as well (that is, for instance, when logging on another thread, see how much time

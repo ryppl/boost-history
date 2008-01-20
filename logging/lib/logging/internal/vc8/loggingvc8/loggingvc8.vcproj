@@ -328,6 +328,14 @@
 			<File
 				RelativePath=".\test_now.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -932,6 +940,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\samples\scenarios\use_profiler.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\use_tss_ostringstream.cpp"

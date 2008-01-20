@@ -14,7 +14,8 @@
 // See http://www.torjo.com/log2/ for more details
 
 /** 
-    Allows you to profile your application' logging
+    @file boost/logging/profile.hpp 
+    @brief Allows you to profile your application' logging
 
     That is, see how much CPU time is taken for logging
 */
@@ -255,7 +256,7 @@ BOOST_DEFINE_LOG(g_l, log_type)
 #include <boost/logging/profile.hpp>
 
 namespace bl = boost::logging ;
-typedef bl::logger_format_write< > <b>raw_log_type</b>;
+typedef bl::logger_format_write< > raw_log_type;
 typedef bl::profile::compute_for_logger<raw_log_type>::type log_type;
 
 BOOST_DECLARE_LOG(g_l, log_type) 
@@ -315,7 +316,7 @@ BOOST_DEFINE_LOG_FILTER(g_l_filter, filter)
 #include <boost/logging/profile.hpp>
 
 namespace bl = boost::logging ;
-typedef bl::filter::no_ts <b>raw_filter</b>;
+typedef bl::filter::no_ts raw_filter;
 typedef compute_for_filter<raw_filter>::type filter;
 
 BOOST_DECLARE_LOG_FILTER(g_l_filter, filter) 

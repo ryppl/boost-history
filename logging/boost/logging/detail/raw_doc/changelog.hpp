@@ -1,7 +1,10 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.20.10, 20 jan 2008
+@section changelog_cur_ver Current Version: v0.20.12, 20 jan 2008
+- added example using profiling, @ref common_scenario_profile "see it"
+- refactored finding the writer; added logger_to_writer class
+- fully implemented profiling 
 - added logger_to_gather, removed DEFINE_GATHER_CLASS; 
 - modified compile_time example, to see compile time with precompiled header
 - added profiler - allow profiling the logging code

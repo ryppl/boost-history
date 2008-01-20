@@ -28,6 +28,7 @@ namespace boost { namespace logging {
     - @ref common_scenarios_3
     - @ref common_your_scenario
     - @ref common_scenario_using_tags 
+    - @ref common_scenario_profile 
     - @ref common_scenarios "More scenarios..."
     - @ref scenario_multiple_files
     - @ref starter_project 
