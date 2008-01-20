@@ -210,5 +210,6 @@ rule init ( version ? : location : options * )
         :
         :   $(common-requirements)
             <link>static:<define>_IRR_STATIC_LIB_
+            <include>$(location)/source/Irrlicht
         ;
 }
