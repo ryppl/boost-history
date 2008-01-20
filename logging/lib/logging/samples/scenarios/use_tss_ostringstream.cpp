@@ -38,8 +38,7 @@ It will be:
 // Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 
-BOOST_LOG_GATHER_CLASS( use_ostringstream< tss_ostringstream<> > )
-
+// FIXME need to set the gather class
 
 #include <boost/logging/format.hpp>
 

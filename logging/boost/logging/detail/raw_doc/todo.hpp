@@ -24,6 +24,8 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         on_dedicated_thead - remove dependency on boost::thread
 
+- @c high           make it compile faster (most likely improve use_format_write, etc)
+
 - @c normal         profiler - we can care about threads as well (that is, for instance, when logging on another thread, see how much time
                     it takes from the threads that actually work)
 
@@ -34,8 +36,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
                     (only if users ask for it)
                     I could probably do a bit more about caching as well - however, in this case, I should allow
                     for macros to be visible in client code (for instance, if client wants BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER)
-
-- @c high           What should I do if someone is trying to use the log after it's been destroyed?
 
 - @c high           test TSS on vs2003 and gcc/pthreads \n
   (note: tested on pthreads; however - about internal implementation : 2 TSS objects are leaked on pthreads, need to see why)
@@ -130,8 +130,6 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
                     By looking at the namespace itself, it contains other stuff as well. See if I can use @ ingroup or something
 
 - @c normal         Explain about config files - you can use named_spacer,named.
-
-- @c normal         explain about gather class - how to define (BOOST_LOG_GATHER_CLASS)
 */
 
 }}

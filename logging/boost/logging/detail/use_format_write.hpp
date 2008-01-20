@@ -93,6 +93,7 @@ struct use_format_write {
     typedef typename use_default<destination_base_type, boost::logging::destination::base<> > ::type destination_base;
     typedef typename use_default<lock_resource, ::boost::logging::types<override>::lock_resource> ::type lock_resource_type;
 
+    // FIXME I might be able to get this from formatter::msg_type<>::raw_type
     typedef typename format_base::raw_param format_param;
     typedef typename ::boost::logging::gather::find<override>::template from_msg_type<format_param>::type gather_type;
 
@@ -143,7 +144,7 @@ struct logger_format_write
             >::type
     >
 {
-    // FIXME we don't use gather - to define the gather class you use BOOST_LOG_GATHER_CLASS
+    // FIXME we don't use gather - to see what we should do here
 
     typedef logger< 
             typename use_format_write<format_base, destination_base, gather, lock_resource>::gather_type,
@@ -163,6 +164,9 @@ struct logger_format_write
 
     BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger_format_write, logger_base_type)
 };
+
+
+
 
 }}
 

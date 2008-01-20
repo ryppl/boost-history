@@ -1,6 +1,9 @@
+#include "stdafx.h"
 
 #include "log.h"
 #include <boost/logging/format.hpp>
+
+#ifndef COMPILE_WITHOUT_LOG
 
 using namespace boost::logging;
 
@@ -22,3 +25,5 @@ void init_logs() {
     g_l()->writer().add_destination( destination::file("out.txt") );
     g_l()->turn_cache_off();
 }
+
+#endif

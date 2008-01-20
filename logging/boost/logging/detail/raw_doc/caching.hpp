@@ -55,11 +55,9 @@ You'll see that I'm doing this on all examples that come with the library.</b>
 
 @section caching_BOOST_LOG_BEFORE_INIT_CACHE_FILTER Cache messages before logs are initialized/ cache their filter as well (BOOST_LOG_BEFORE_INIT_CACHE_FILTER)
 
-The first case is the default. It's a bit inefficient (after invoking the filter, it will always ask if cache is on or off). Also,
+It's a bit inefficient (after invoking the filter, it will always ask if cache is on or off). Also,
 it increases the application's size a bit - for each log statement, I will generate a callback that I can call later to see if the filter
 is still turned on or off.
-
-Again, this is the default - if you do want to enforce it, make sure you define the @c BOOST_LOG_BEFORE_INIT_CACHE_FILTER globally.
 
 @code
 ...
@@ -74,7 +72,7 @@ g_l()->turn_cache_off();
 
 @section caching_BOOST_LOG_BEFORE_INIT_LOG_ALL Cache messages before logs are initialized regardless of their filter (BOOST_LOG_BEFORE_INIT_LOG_ALL)
 
-In the second case, when cache is on, all messages are cached, regardless of their filter (it's like all filters are on).
+This case is the @b default. In the second case, when cache is on, all messages are cached, regardless of their filter (it's like all filters are on).
 Then, when cache is turned off, all messages are logged.
 
 If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE_INIT_LOG_ALL globally.

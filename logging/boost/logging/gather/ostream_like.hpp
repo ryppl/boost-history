@@ -161,7 +161,7 @@ private:
 
     See @ref boost::logging::tag namespace
 */
-    template<class holder_type, class stream_type> struct return_tag_holder : out_base {
+template<class holder_type, class stream_type> struct return_tag_holder : out_base {
     // what does the gather_msg class return?
 //    typedef holder_type& param;
     typedef holder_type msg_type;

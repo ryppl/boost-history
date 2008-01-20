@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.20.9, 19 jan 2008
+@section changelog_cur_ver Current Version: v0.20.10, 20 jan 2008
+- added logger_to_gather, 
 - added profiler - allow profiling the logging code
 - solved bug in logger_holder_by_value - many thanks to Olaf!
 - refactored logger_holder - that is, we need to return logger_holder, 

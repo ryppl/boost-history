@@ -117,6 +117,35 @@ template<class T = override> struct dump_level {
 };
 
 
+
+namespace detail {
+    /** this is just a simple way to always return override; however, in this case we postpone the instantiation
+     until the type parameter is known
+    
+
+    For instance:
+    typedef typename formatter::msg_type<override>::raw_type msg_type;
+
+    would compute msg_type right now; however, we want the compiler to wait, until the user has actually set the msg_type,
+    for example, using the BOOST_LOG_FORMAT_MSG macro
+    */
+    template<class> struct to_override { typedef override type; };
+    template<> struct to_override<void_> { typedef void_ type; };
+}
+
+// specialize for logger_format_write
+template<class format_base, class destination_base, class thread_safety, class gather, class lock_resource> 
+        struct logger_to_gather< logger_format_write<format_base, destination_base, thread_safety, gather, lock_resource> > {
+
+    typedef typename detail::to_override<format_base>::type T;
+
+    // FIXME in the future, I might provide gather as a specific class!
+    typedef typename formatter::msg_type<T>::raw_type msg_type;
+    typedef typename ::boost::logging::gather::find<T>::template from_msg_type<msg_type>::type gather_type;
+        
+};
+
+
 }}
 
 

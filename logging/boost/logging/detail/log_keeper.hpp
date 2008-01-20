@@ -28,7 +28,6 @@ namespace boost { namespace logging {
 
 namespace detail {
 
-    template<class T> struct fast_compile_with_default_gather ;
 
 
 } // namespace detail
@@ -41,8 +40,8 @@ namespace detail {
 
     This is a base class. Use logger_holder_by_value or logger_holder_by_ptr instead
 */
-template<class type, class gather_msg = default_, class dummy = override> struct logger_holder {
-    typedef typename use_default<gather_msg, typename ::boost::logging::detail::fast_compile_with_default_gather<dummy>::gather_msg > ::type gather_type;
+template<class type> struct logger_holder {
+    typedef typename logger_to_gather<type> ::gather_type gather_type;
     typedef logger<gather_type> logger_base_type;
 
     const type* operator->() const      { return m_log; }
@@ -84,8 +83,8 @@ private:
     This keeps the logger by value, so that the after_being_destroyed stuff works.
     More specifically, in case the logger is used after it's been destroyed, the logger_holder instances CAN ONLY BE GLOBAL.
 */
-template<class type, class gather_msg = default_> struct logger_holder_by_value : logger_holder<type, gather_msg> {
-    typedef logger_holder<type, gather_msg> base_type;
+template<class type> struct logger_holder_by_value : logger_holder<type> {
+    typedef logger_holder<type> base_type;
 
     BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(logger_holder_by_value, m_log_value, init)
 private:
@@ -107,8 +106,8 @@ private:
     This keeps the logger by value, so that the after_being_destroyed stuff works.
     More specifically, in case the logger is used after it's been destroyed, the logger_holder instances CAN ONLY BE GLOBAL.
 */
-template<class type, class gather_msg = default_> struct logger_holder_by_ptr : logger_holder<type, gather_msg> {
-    typedef logger_holder<type, gather_msg> base_type;
+template<class type> struct logger_holder_by_ptr : logger_holder<type> {
+    typedef logger_holder<type> base_type;
 
     BOOST_LOGGING_FORWARD_CONSTRUCTOR_WITH_NEW_AND_INIT(logger_holder_by_ptr, m_log_ptr, type, init)
     ~logger_holder_by_ptr() { 
@@ -170,10 +169,10 @@ typedef ensure_early_log_creation ensure_early_filter_creation;
 template<class logger> inline logger* get_logger_base(logger * l) { return l; }
 template<class logger> inline const logger* get_logger_base(const logger * l) { return l; }
 
-template<class type, class gather_msg> inline typename logger_holder<type,gather_msg>::logger_base_type* get_logger_base(logger_holder<type,gather_msg> & l) { 
+template<class type> inline typename logger_holder<type>::logger_base_type* get_logger_base(logger_holder<type> & l) { 
     return l.base(); 
 }
-template<class type, class gather_msg> inline const typename logger_holder<type,gather_msg>::logger_base_type* get_logger_base(const logger_holder<type,gather_msg> & l) { 
+template<class type> inline const typename logger_holder<type>::logger_base_type* get_logger_base(const logger_holder<type> & l) { 
     return l.base(); 
 }
 

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 // main.cpp : Where the main() action is
 
 /**  

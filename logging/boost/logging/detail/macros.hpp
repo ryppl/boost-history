@@ -654,12 +654,6 @@ If defined, we don't use @ref macros_tss "TSS" as all.
     }}}
 
 
-#define BOOST_LOG_GATHER_CLASS(gather_class) \
-    namespace boost { namespace logging { namespace gather { \
-        template<> struct find<override> { template<class msg_type> struct from_msg_type { \
-            typedef typename ::boost::logging::detail::find_gather_from_class<msg_type, gather_class > ::type type; }; }; \
-    }}}
-
 
 
 

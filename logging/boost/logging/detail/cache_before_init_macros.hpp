@@ -37,7 +37,7 @@ namespace boost { namespace logging {
     #define BOOST_LOG_BEFORE_INIT_USE_IGNORE_BEFORE_INIT
 #else
 // use default
-    #define BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER
+    #define BOOST_LOG_BEFORE_INIT_USE_LOG_ALL
 #endif
 
 

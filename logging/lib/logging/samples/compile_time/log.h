@@ -1,6 +1,8 @@
 #ifndef LOG_H_header
 #define LOG_H_header
 
+#ifndef COMPILE_WITHOUT_LOG
+
 #include <boost/logging/format_fwd.hpp>
 #include <boost/logging/tags.hpp>
 
@@ -31,5 +33,23 @@ BOOST_DECLARE_LOG(g_l, finder::logger)
 #define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_filter(), info ) .set_tag( BOOST_LOG_TAG_FILELINE)
 
 void init_logs();
+
+#else
+
+#include <sstream>
+#include <iostream>
+
+namespace boost { namespace logging {} }
+
+struct temp {
+    std::ostringstream& out() { return m_out; }
+    std::ostringstream m_out;
+};
+
+#define LDBG_ temp().out()
+#define LERR_ temp().out()
+#define LAPP_ temp().out()
+
+#endif
 
 #endif
