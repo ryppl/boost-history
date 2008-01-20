@@ -176,7 +176,9 @@ private:
         }
     }
 
-    void write_array() const {
+protected:
+    // note: this is virtual, so that if you want to do profiling, you can (that is, you can override this as well
+    virtual void write_array() const {
         typedef typename context_type::array array;
 
         array msgs;

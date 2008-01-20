@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.20.8, 19 jan 2008
+@section changelog_cur_ver Current Version: v0.20.9, 19 jan 2008
+- added profiler - allow profiling the logging code
+- solved bug in logger_holder_by_value - many thanks to Olaf!
 - refactored logger_holder - that is, we need to return logger_holder, 
   but keep logger_holder_by_value, for after_destroyed to work
 - added test for using logger after it's been destroyed 

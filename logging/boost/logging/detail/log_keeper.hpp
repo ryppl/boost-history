@@ -87,7 +87,7 @@ private:
 template<class type, class gather_msg = default_> struct logger_holder_by_value : logger_holder<type, gather_msg> {
     typedef logger_holder<type, gather_msg> base_type;
 
-    BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(logger_holder_by_value, m_log, init)
+    BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(logger_holder_by_value, m_log_value, init)
 private:
     void init() {
         base_type::init( &m_log_value);

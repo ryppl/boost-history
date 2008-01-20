@@ -25,7 +25,7 @@
 #include <boost/logging/detail/after_being_destroyed.hpp>
 
 #ifndef JT28092007_logger_HPP_DEFINED
-#error don't include this directly. include <boost/logging/logging.hpp> instead
+#error donot include this directly. include <boost/logging/logging.hpp> instead
 #endif
 
 namespace boost { namespace logging {

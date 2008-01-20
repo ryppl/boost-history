@@ -24,6 +24,9 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         on_dedicated_thead - remove dependency on boost::thread
 
+- @c normal         profiler - we can care about threads as well (that is, for instance, when logging on another thread, see how much time
+                    it takes from the threads that actually work)
+
 - @c low            in the same way I've created convert_to_base(), I can create a convert_to_top(), on top of which
                     I can create my own way to gather message, and then write it.
 
@@ -37,16 +40,13 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c high           test TSS on vs2003 and gcc/pthreads \n
   (note: tested on pthreads; however - about internal implementation : 2 TSS objects are leaked on pthreads, need to see why)
 
-- @c must_have      if *used* before main, it'll cache the messages, and then write them ASAP; \n
-    will have a func - like, do_write() - which will write all that was cached, and then turn cache off \n
-    ----- i have to see if reasonable to later ask if a log is enabled or not, or just dump all messages written before initializing the log
-
 - @c normal         allow to see how much time logging actually takes \n
   This should work even if logging happens on a dedicated thread. Give a name to your tracker - so you can track logging time when messages are logged,
   and time logging actually happens (on dedicated thread).
   I should feature this on the documentation - I don't think any other lib has this! I should be able to add this for filter as well.
 
 - @c low            configuration :  should allow the library to be configured at runtime, from a file, much like log4j
+                    note: see formatter::named_spacer, destination::named
   - Votes : 1
 
 - @c low      hierarchical logs : just like log4j - be able to have some logs inherit from parent logs

@@ -328,13 +328,6 @@
 			<File
 				RelativePath=".\test_now.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -454,6 +447,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\gather\ostream_like.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\profile.hpp"
 				>
 			</File>
 			<File
