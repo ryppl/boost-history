@@ -32,6 +32,7 @@
 #  include <windows.h>
 #  include <winreg.h>
 #  include <cstdio>
+#  include <cstring>
 
 #  if !defined(NDEBUG) && defined(_MSC_VER)
 #    define BOOST_MS_CRT_BASED_DEBUG
@@ -58,6 +59,7 @@ namespace std { using ::memset; using ::sprintf; }
 // STL
 #include <cstring>
 #include <map>
+#include <cstdio>
 #include <stdarg.h> // !! ?? cstdarg
 
 // SYSTEM API
@@ -964,3 +966,4 @@ break_memory_alloc( long mem_alloc_order_num )
 #include <boost/test/detail/enable_warnings.hpp>
 
 #endif // BOOST_TEST_DEBUG_API_IPP_112006GER
+
