@@ -117,8 +117,8 @@ namespace boost {
 		#define BOOST_UNORDERED_DISTANCE ::boost::unordered_detail::distance
 		
 		template <class ForwardIterator>
-		inline std::size_type distance(ForwardIterator i, ForwardIterator j) {
-			std::size_type x;
+		inline std::size_t distance(ForwardIterator i, ForwardIterator j) {
+			std::size_t x;
 			std::distance(i, j, x);
 			return x;
 		}
