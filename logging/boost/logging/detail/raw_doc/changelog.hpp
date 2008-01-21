@@ -1,7 +1,10 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.20.16, 21 jan 2008
+@section changelog_cur_ver Current Version: v0.21.1, 21 jan 2008
+- should only fix bugs & update docs until review
+
+v0.20.16, 21 jan 2008
 - docs about using loggers/filters are they were destroyed
 - more docs about @ref defining_your_logger_filter 
 - added example using profiling, @ref common_scenario_profile "see it"
