@@ -109,6 +109,23 @@ namespace boost {
         {
             return std::pair<Dst1, Dst2>(Dst1(x.first), Dst2(x.second));
         }
+
+		// Workaround for Apache stdcxx/Rogue Wave on compilers without partial specialization.
+		// (Might not work on older versions?)
+
+#if BOOST_RWSTD_VER && _RWSTD_NO_CLASS_PARTIAL_SPEC
+		#define BOOST_UNORDERED_DISTANCE ::boost::unordered_detail::distance
+		
+		template <class ForwardIterator>
+		inline std::size_type distance(ForwardIterator i, ForwardIterator j) {
+			std::size_type x;
+			std::distance(i, j, x);
+			return x;
+		}
+#else
+		#define BOOST_UNORDERED_DISTANCE ::std::distance
+#endif
+
     }
 }
 
@@ -179,6 +196,7 @@ namespace boost {
     } // namespace boost::unordered_detail
 } // namespace boost
 
+#undef BOOST_UNORDERED_DISTANCE
 #undef BOOST_UNORDERED_BORLAND_BOOL
 #undef BOOST_UNORDERED_MSVC_RESET_PTR
 
