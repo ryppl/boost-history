@@ -580,6 +580,8 @@ of other threads of execution
 and that is not equal to
 the <code>thread::id</code> of <code>std::thread</code> objects
 that do not represent threads of execution.
+The library may reuse the value of a <code>thread::id</code> of a
+terminated thread that can no longer be joined.
 </p>
 
 <p>
