@@ -17,7 +17,7 @@
 #include <exception>
 #include <vector>
 
-//#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
+#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
 #include "detail/svg_tag.hpp" // element class definitions.
 #include "svg_style.hpp"
 //#include "svg_fwd.hpp"
@@ -233,26 +233,23 @@ public:
   }
 
   // Set & get functions for x_size_ and y_size_
-  svg& x_size(unsigned int x)
+  void x_size(unsigned int x)
   {
     x_size_ = x;
-    return *this;
+  }
+
+  void y_size(unsigned int y)
+  {
+    y_size_ = y;
   }
 
   unsigned int x_size()
-  { //  x_size_ name is now used in class to permit function called x_size.
-    // TODO Better called image_x_size()?
+  { 
     return x_size_;
   }
 
-  svg& y_size(unsigned int y)
-  {
-    y_size_ = y;
-    return *this;
-  }
-
   unsigned int y_size()
-  { //  y_size_ name is now used in class to permit function called y_size.
+  { 
     return y_size_;
   }
 
@@ -261,7 +258,7 @@ public:
     return static_cast<unsigned int>(document.size());
   }
 
-  svg& coord_precision(int digits)
+  void coord_precision(int digits)
   { // Set decimal digits to be output for output of coordinates.
     // Default stream precision 6 decimal digits is probably excessive.
     // 4.1 Basic data types, integer or float in decimal or scientific (using e format).
@@ -273,7 +270,6 @@ public:
     // but can be changed using this function.
     // Used in svg.write below and so applies to all the svg document.
     coord_precision_ = digits;
-    return *this;
   }
 
   int coord_precision()
@@ -292,7 +288,7 @@ public:
   // recommends MUST have  correct Content-Encoding headers.
   // --------------------------------------------------------------------------------
 
-  svg& write(const std::string& file)
+  void write(const std::string& file)
   {// Write whole .svg 'file' contents to file.
     std::ofstream f_out(file.c_str());
     if(f_out.fail())
@@ -303,10 +299,9 @@ public:
     }
     filename_ = file; // Note so that can embed into file as comment.
     write(f_out);
-    return *this;
   }
 
-  svg& write(std::ostream& s_out)
+  void write(std::ostream& s_out)
   { // Write whole .svg 'file' contents to stream (perhaps a file).
     write_header(s_out); // "<?xml version=...
     // write svg document, begin <svg tag.
@@ -404,10 +399,9 @@ public:
     write_css(s_out);// stylesheet, if any.
     write_document(s_out); // write clip paths and all document elements.
     s_out << "</svg>" << std::endl;   // close off svg tag.
-    return *this;
   }
 
-  svg& license( // Set license requirements for the svg document.
+  void license( // Set license requirements for the svg document.
     const std::string repro = "permits",
     const std::string distrib = "permits",
     const std::string attrib = "requires",
@@ -418,14 +412,12 @@ public:
     attribution_ = attrib;
     commercialuse_ = commercial;
     is_license_ = true;  // Assume want this if set these?
-    return *this;
   }
 
-  svg& license_on(bool l)
+  void license(bool l)
   { // Set (or not) license using all requirement (default permits).
     // Implicitly set by setting a license requirement using license above.
     is_license_ = l;
-    return *this;
   }
 
   bool license_on()
@@ -433,10 +425,9 @@ public:
     return is_license_;
   }
 
-  svg& boost_license_on(bool l)
+  void boost_license_on(bool l)
   { // Set (or not) Boost license.
     is_boost_license_ = l;
-    return *this;
   }
 
   bool boost_license_on()
@@ -466,17 +457,15 @@ public:
   // Writes the information about the image to the document.
   // TODO: allow other unit identifiers.
   // -------------------------------------------------------
-  svg& image_size(unsigned int x, unsigned int y)
+  void image_size(unsigned int x, unsigned int y)
   {
     x_size_ = x;
     y_size_ = y;
-    return *this;
   }
 
-  svg& description(const std::string d)
+  void description(const std::string d)
   { // Writes description to the document(for header as <desc>).
     image_desc_ = d;
-    return *this;
   }
 
   const std::string& description()
@@ -484,10 +473,9 @@ public:
     return image_desc_;
   }
 
-  svg& author(const std::string a)
+  void author(const std::string a)
   { // Writes author to the document (default is copyright_holder).
     author_ = a;
-    return *this;
   }
 
   const std::string& author()
@@ -495,10 +483,9 @@ public:
     return author_;
   }
 
-  svg& document_title(const std::string d)
+  void document_title(const std::string d)
   { // Writes document title for the document(for header as <title>)..
     title_document_ = d;
-    return *this;
   }
 
   const std::string document_title()
@@ -506,10 +493,9 @@ public:
     return title_document_;
   }
 
-  svg& copyright_holder(const std::string d)
+  void copyright_holder(const std::string d)
   { // Writes document title for the document(for header as <title>)..
     holder_copyright_ = d;
-    return *this;
   }
 
   const std::string copyright_holder()
@@ -517,10 +503,9 @@ public:
     return holder_copyright_;
   }
 
-  svg& copyright_date(const std::string d)
+  void copyright_date(const std::string d)
   { // Writes document title for the document(for header as <title>)..
     date_copyright_ = d;
-    return *this;
   }
 
   const std::string copyright_date()
@@ -528,10 +513,9 @@ public:
     return date_copyright_;
   }
 
-  svg& image_filename(const std::string filename)
+  void image_filename(const std::string filename)
   { // Writes image filename for the document(for header as <title>)..
     filename_ = filename;
-    return *this;
   }
 
   const std::string image_filename()
@@ -542,105 +526,89 @@ public:
   // ------------------------------------------------------------------------
   // push_back information about line, rec, circle & ellipse to the document.
   // ------------------------------------------------------------------------
-  svg& line(double x1, double y1, double x2, double y2)
+  line_element& line(double x1, double y1, double x2, double y2)
   { // 'line' element defines a line segment
     // that starts at one point and ends at another.
-    document.push_back(new line_element(x1, y1, x2, y2));
-    return *this;
+    return document.line(x1, y1, x2, y2);
   }
 
-  svg& rect(double x1, double y1, double x2, double y2)
+  rect_element& rect(double x1, double y1, double x2, double y2)
   {
-    document.push_back(new rect_element(x1, y1, x2, y2));
-
-    return *this;
+    return document.rect(x1, y1, x2, y2);
   }
 
-  svg& circle(double x, double y, unsigned int radius = 5)
+  circle_element& circle(double x, double y, unsigned int radius = 5)
   {
-    document.push_back(new circle_element(x, y, radius));
-    return *this;
+    return document.circle(x, y, radius);
   }
 
-  svg& ellipse(double rx, double ry, double cx, double cy)
-  { //
-    document.push_back(new ellipse_element(rx, ry, cx, cy));
-    return *this;
+  ellipse_element& ellipse(double rx, double ry, double cx, double cy)
+  { 
+    return document.ellipse(rx, ry, cx, cy);
   }
 
   // -------------------------------------------------
   // push_back information about text to the document.
   // -------------------------------------------------
-  svg& text(double x, double y, const std::string& text,
-    const text_style& style, // size, font etc.
-    align_style align = center_align, rotate_style rotate = horizontal
-    )
+  text_element& text(double x, double y, const std::string& text,
+        const text_style& style, // size, font etc.
+        align_style align, rotate_style rotate)
   {
-    document.push_back(new text_element(x, y, text, style, align, rotate) );
-    return *this;
-  }
+    return document.text(x, y, text, style, align, rotate);
+  } 
 
   // push_back info about polygon shapes:
   // Polygon for shapes with many vertices.
-  
-  svg& polygon(double x, double y, bool f = true) // 1st point only, add others later with .P(x, y).
+  polygon_element& polygon(double x, double y, bool f = true) // 1st point only, add others later with .P(x, y).
   {
-    document.push_back(new polygon_element(x, y, f));
-    return *this; 
+    return document.polygon(x, y, f);
   }
 
-  svg& polygon(std::vector<poly_path_point>& v, bool f = true)
+  //JVTODO: Replace with template version
+  polygon_element& polygon(std::vector<poly_path_point>& v, bool f = true)
   { // push_back a complete many-sided polygon to the document.
-    document.push_back(new polygon_element(v, f));
-    return *this; // svg& 
+    return document.polygon(v, f);
   }
 
+  // JVTODO: These are not in the standard. Remove, or keep as convenience?
   // Specific polygon shapes: triangle, rhombus, pentagon & hexagon.
 
-  svg& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
+  polygon_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
   { // push_back a complete triangle to the document.
-    document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, f));
-    return *this; // svg& 
+    return document.polygon(x1, y1, f).P(x2, y2).P(x3, y3);
   }
 
-  svg& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
+  polygon_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
   { // push_back a complete rhombus to the document.
-    document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, f));
-    return *this; // svg& 
+    return document.polygon(x1, y1, f).P(x2, y2).P(x3, y3).P(x4, y4);
   }
 
-  svg& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
+  polygon_element& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
   { // push_back a complete pentagon to the document.
-    document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, f));
-    return *this; // svg& 
+    return document.polygon(x1, y1, f).P(x2, y2).P(x3, y3).P(x4, y4).P(x5, y5);
   }
 
-  svg& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
+  polygon_element& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
   { // push_back a complete 6-sided star to the document.
-    document.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, f));
-    return *this; // svg& 
+    return document.polygon(x1, y1, f).P(x2, y2).P(x3, y3).P(x4, y4).P(x5, y5).P(x6, y6);
   }
 
   // push_back info about polylines.
 
-  svg& polyline(double x, double y) // 1st point only, add others later with .P(x, y).
+  polyline_element& polyline(double x, double y) // 1st point only, add others later with .P(x, y).
   {
-    document.push_back(new polyline_element(x, y));
-    return *this; 
+    return document.polyline(x, y);
   }
 
-  svg& polyline(double x1, double y1, double x2, double y2)
+  polyline_element& polyline(double x1, double y1, double x2, double y2)
   { // Two points only, add others later with .P(x, y).
-    document.push_back(new polyline_element(x1, y1));
-    document.push_back(new polyline_element(x2, y2));
-    return *this; 
+    return document.polyline(x1, y1).P(x2, y2);
   }
 
-  svg& polyline(std::vector<poly_path_point>& v, bool f = true)
+  polyline_element& polyline(std::vector<poly_path_point>& v)
   { // push_back a complete many-sided polygon to the document,
     // from a vector of points.
-    document.push_back(new polygon_element(v, f));
-    return *this; // svg& 
+    return document.polyline(v);
   }
 
   // --------------------------------------------------------------------------------
@@ -649,58 +617,58 @@ public:
 
   path_element& path()
   {
-    document.push_back(new path_element());  // empty path, ready for additions with M., L. ...
-    return *(static_cast<path_element*>(&(document[(unsigned int)(document.size()-1)])));
-    // reference to the path_element just pushed.
+    return document.path();  // empty path, ready for additions with M., L. ...
   }
 
-  svg& clip_path(const rect_element& rect, const std::string& id)
+  clip_path_element& clip_path(const rect_element& rect, const std::string& id)
   { // Rectangle outside which 'painting' is 'clipped' so doesn't show.
     clip_paths.push_back(clip_path_element(id, rect));
-    return *this;
+    return clip_paths[clip_paths.size()-1];
   }
 
   // -------------------------------------------------------------
   // Writes information about a group element to the document.
   // -------------------------------------------------------------
 
-  g_element& add_g_element()
+  g_element& g()
   {
-    return document.add_g_element();
+    return document.g();
   }
 
-  g_element& get_g_element(int i)
+  g_element& g(int i)
   { // Array of g_elements document,
     // indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN
-    return document.g_tag(i);
+    return document.g(i);
   }
 
   //// -------------------------------------------------------------
   //// Load stylesheet
   //// -------------------------------------------------------------
 
-  //svg& load_stylesheet(const std::string& input)
-  //{ // Load a stylesheet into string css from an input file.
-  //  std::ifstream if_str(input.c_str());
+  void load_stylesheet(const std::string& input)
+  { // Load a stylesheet into string css from an input file.
+    std::ifstream if_str(input.c_str());
 
-  //  if(if_str.fail())
-  //  {
-  //    throw std::runtime_error("Error opening file " + input);
-  //  }
-  //  if(!validate_stylesheet(if_str))
-  //  {
-  //    throw std::runtime_error("Error loading stylesheet!");
-  //  }
-  //  if_str.clear();
-  //  if_str.seekg(0);
-  //  std::string tmp;
-  //  css = "";
-  //  while(std::getline(if_str, tmp))
-  //  {
-  //    css += tmp;
-  //  }
-  //  return *this;
-  //} // svg& load_stylesheet
+    if(if_str.fail())
+    {
+      throw std::runtime_error("Error opening file " + input);
+    }
+    if(!validate_stylesheet(if_str))
+    {
+      throw std::runtime_error("Error loading stylesheet!");
+    }
+
+    if_str.clear();
+    if_str.seekg(0);
+
+    std::string tmp;
+    css = "";
+
+    while(std::getline(if_str, tmp))
+    {
+      css += tmp;
+    }
+  } // svg& load_stylesheet
 }; // class svg
 
 } // namespace svg

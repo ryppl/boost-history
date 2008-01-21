@@ -42,24 +42,6 @@ namespace boost
     class svg_2d_plot; // Plot.
     class svg_2d_plot_series; // plot data series.
 
-    static const double wh = 0.7; // font text width/height ratio.
-    // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
-    // determine the exact width of digits, so an
-    // arbitrary average width height ratio wh = 0.7 is used as a good approximation.
-
-    static const double sin45 = 0.707; // Use if axis value labels are sloping.
-
-    // x_axis_position_ and y_axis_position_  use these.
-    enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
-    // bottom = X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
-    // top = X-axis free above top of X-axis (case of all Y definitely > 0).
-    // x_intersects_y when Y values include zero, so X intersects the Y axis.
-
-    enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
-    // left = Y-axis free to left of end of X-axis (case of all X definitely < 0).
-    // right = Y-axis free to left of end of X-axis (case of all X definitely > 0).
-    // y_intersects_x when X values include zero, so intersects the X axis.
-
     // -----------------------------------------------------------------
     // This allows us to store plot state locally in svg_plot. We don't
     // store it in "svg" because transforming the points after they are
@@ -200,6 +182,8 @@ namespace boost
       text_style y_value_label_style_;
       text_style point_symbols_style_; // Used for data point marking.
 
+      double x_label_width_;
+
       text_element title_info_; // Plot title.
       text_element legend_header_; // legend box header or title (if any).
       text_element x_label_info_; // For example: "length"
@@ -274,7 +258,7 @@ namespace boost
         y_axis_label_style_(14, "Verdana", "", ""),
         y_value_label_style_(12, "Verdana", "", ""),
         point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
-
+        x_label_width_(5),
         title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal),
         x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
         x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
@@ -315,25 +299,25 @@ namespace boost
         // Build the document tree by adding all children of the root node.
         for(int i = 0; i < SVG_PLOT_DOC_CHILDREN; ++i)
         {
-          image.add_g_element();
+          image.g();
         }
         set_ids();
 
         // Set other SVG color, stroke & width defaults for various child PLOT nodes.
 
-        image.get_g_element(PLOT_BACKGROUND).style().fill_color(image_border_.fill_);
-        image.get_g_element(PLOT_BACKGROUND).style().stroke_color(image_border_.stroke_);
-        image.get_g_element(PLOT_BACKGROUND).style().stroke_width(image_border_.width_); //
-        image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color(plot_window_border_.fill_);
-        image.get_g_element(PLOT_WINDOW_BACKGROUND).style().stroke_width(plot_window_border_.width_).stroke_color(plot_window_border_.stroke_);
-        image.get_g_element(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
-        image.get_g_element(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
-        image.get_g_element(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_.width());
-        image.get_g_element(PLOT_X_LABEL).style().fill_color(black);
-        image.get_g_element(PLOT_Y_LABEL).style().fill_color(black);
-        image.get_g_element(PLOT_VALUE_LABELS).style().fill_color(black);
-        image.get_g_element(PLOT_LEGEND_TEXT).style().fill_color(black);
-        image.get_g_element(PLOT_TITLE).style().fill_color(black).stroke_on(false);
+        image.g(PLOT_BACKGROUND).style().fill_color(image_border_.fill_);
+        image.g(PLOT_BACKGROUND).style().stroke_color(image_border_.stroke_);
+        image.g(PLOT_BACKGROUND).style().stroke_width(image_border_.width_); //
+        image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(plot_window_border_.fill_);
+        image.g(PLOT_WINDOW_BACKGROUND).style().stroke_width(plot_window_border_.width_).stroke_color(plot_window_border_.stroke_);
+        image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
+        image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
+        image.g(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_.width());
+        image.g(PLOT_X_LABEL).style().fill_color(black);
+        image.g(PLOT_Y_LABEL).style().fill_color(black);
+        image.g(PLOT_VALUE_LABELS).style().fill_color(black);
+        image.g(PLOT_LEGEND_TEXT).style().fill_color(black);
+        image.g(PLOT_TITLE).style().fill_color(black).stroke_on(false);
 
         // Note that widths are stored in member data *and* copied here.
         // Not sure if this is wise but ...
@@ -341,22 +325,22 @@ namespace boost
         // Ticks
         if(x_ticks_.use_up_ticks() || x_ticks_.use_down_ticks())
         {
-          image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width(x_ticks_.major_tick_width_).stroke_color(black);
-          image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width(x_ticks_.minor_tick_width_).stroke_color(black);
+          image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(x_ticks_.major_tick_width_).stroke_color(black);
+          image.g(PLOT_X_MINOR_TICKS).style().stroke_width(x_ticks_.minor_tick_width_).stroke_color(black);
         }
         if(y_ticks_.left_ticks_on_ || y_ticks_.right_ticks_on_)
         {
-          image.get_g_element(PLOT_Y_MAJOR_TICKS).style().stroke_width(y_ticks_.major_tick_width_).stroke_color(black);
-          image.get_g_element(PLOT_Y_MINOR_TICKS).style().stroke_width(y_ticks_.minor_tick_width_).stroke_color(black);
+          image.g(PLOT_Y_MAJOR_TICKS).style().stroke_width(y_ticks_.major_tick_width_).stroke_color(black);
+          image.g(PLOT_Y_MINOR_TICKS).style().stroke_width(y_ticks_.minor_tick_width_).stroke_color(black);
         }
         // Grids.
         // Default color & width for grid, used or not.
-        image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
-        BOOST_ASSERT(image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
-        image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
-        image.get_g_element(PLOT_Y_MAJOR_GRID).style().stroke_width(y_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
-        image.get_g_element(PLOT_Y_MINOR_GRID).style().stroke_width(y_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
-        image.get_g_element(PLOT_DATA_LINES).style().stroke_width(2); // default width.
+        image.g(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
+        BOOST_ASSERT(image.g(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
+        image.g(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
+        image.g(PLOT_Y_MAJOR_GRID).style().stroke_width(y_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
+        image.g(PLOT_Y_MINOR_GRID).style().stroke_width(y_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
+        image.g(PLOT_DATA_LINES).style().stroke_width(2); // default width.
         // Alter with plot.data_lines_width(4);
 
         legend_place_ = (plot_window_on_) ? outside_right : inside; // Defaults.
@@ -376,7 +360,7 @@ namespace boost
       { // document ids for use in <g id = "PLOT_TITLE".../>
         for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
         {	// Order determines the painting order.
-          image.get_g_element(i).id(detail::document_ids[i]);
+          image.g(i).id(detail::document_ids[i]);
         }
       } //  void set_ids()
 
@@ -612,7 +596,7 @@ namespace boost
         }
         if (plot_window_on_)
         { // Draw plot window rectangle with border and/or background.
-          image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).push_back(
+          image.g(detail::PLOT_WINDOW_BACKGROUND).push_back(
             new rect_element(plot_left_, plot_top_, (plot_right_ - plot_left_), plot_bottom_ - plot_top_));
         }
 
@@ -633,24 +617,24 @@ namespace boost
             { // Extend the vertical line down in lieu of longest tick.
               ybottom += (std::max)(x_ticks_.minor_tick_length_, x_ticks_.major_tick_length_);// Avoid macro max trap!
             }
-            image.get_g_element(detail::PLOT_Y_AXIS).line(x, plot_top_, x, ybottom);
+            image.g(detail::PLOT_Y_AXIS).line(x, plot_top_, x, ybottom);
             // <g id="yAxis" stroke="rgb(0,0,0)"><line x1="70.5" y1="53" x2="70.5" y2="357"/>
             if (y_ticks_.ticks_on_plot_window_on_ < 0) //(y_axis_position_ == left)
             { // Draw vertical line holding the ticks on the left of plot window.
-              image.get_g_element(detail::PLOT_Y_AXIS).line(plot_left_, plot_top_, plot_left_, plot_bottom_);
+              image.g(detail::PLOT_Y_AXIS).line(plot_left_, plot_top_, plot_left_, plot_bottom_);
             }
             else
             {// Draw vertical line holding the ticks on the right of plot window.
-              image.get_g_element(detail::PLOT_Y_AXIS).line(plot_right_, plot_top_, plot_right_, plot_bottom_);
+              image.g(detail::PLOT_Y_AXIS).line(plot_right_, plot_top_, plot_right_, plot_bottom_);
             }
           }
           else if (y_axis_position_ == left)
           { // Draw on the left of plot window.
-            image.get_g_element(detail::PLOT_Y_AXIS).line(plot_left_, plot_top_, plot_left_, plot_bottom_);
+            image.g(detail::PLOT_Y_AXIS).line(plot_left_, plot_top_, plot_left_, plot_bottom_);
           }
           else if (y_axis_position_ == right)
           {// Draw on the lright of plot window.
-            image.get_g_element(detail::PLOT_Y_AXIS).line(plot_right_, plot_top_, plot_right_, plot_bottom_);
+            image.g(detail::PLOT_Y_AXIS).line(plot_right_, plot_top_, plot_right_, plot_bottom_);
           }
           else
           { // ??? Warn that things have gone wrong?
@@ -658,10 +642,10 @@ namespace boost
         }
 
         // Access the paths for the ticks & grids, ready for additions.
-        path_element& minor_tick_path = image.get_g_element(detail::PLOT_Y_MINOR_TICKS).path();
-        path_element& major_tick_path = image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).path();
-        path_element& minor_grid_path = image.get_g_element(detail::PLOT_Y_MINOR_GRID).path();
-        path_element& major_grid_path = image.get_g_element(detail::PLOT_Y_MAJOR_GRID).path();
+        path_element& minor_tick_path = image.g(detail::PLOT_Y_MINOR_TICKS).path();
+        path_element& major_tick_path = image.g(detail::PLOT_Y_MAJOR_TICKS).path();
+        path_element& minor_grid_path = image.g(detail::PLOT_Y_MINOR_GRID).path();
+        path_element& major_grid_path = image.g(detail::PLOT_Y_MAJOR_GRID).path();
 
         // y_minor_jump is the interval between minor ticks.
         double y_minor_jump = y_ticks_.major_interval_ / ((double)(y_ticks_.num_minor_ticks_ + 1.) );
@@ -723,7 +707,7 @@ namespace boost
         }
 
         double y = image_border_.width_ + image_border_.margin_ + y_axis_label_style_.font_size();
-        image.get_g_element(detail::PLOT_Y_LABEL).push_back(new
+        image.g(detail::PLOT_Y_LABEL).push_back(new
           text_element(y,
           // shift over one char height to right from left edge of image.
           (plot_bottom_ + plot_top_) / 2., // center on the plot window.
@@ -833,7 +817,7 @@ namespace boost
             }
             // Always want all values including "0", if labeling external to plot window.
             // y_ticks_.ticks_on_plot_window_on_ == true != 0
-            image.get_g_element(detail::PLOT_VALUE_LABELS).text(
+            image.g(detail::PLOT_VALUE_LABELS).text(
               x_left,
               y,
               label.str(), y_value_label_style_, alignment, y_ticks_.label_rotation_);
@@ -843,7 +827,7 @@ namespace boost
             if ((value != 0) && y_axis_.axis_line_on_)
             { // Avoid a zero ON the Y-axis if it would be cut through by any horizontal X-axis line.
               y += y_value_label_style_.font_size() / 2;
-              image.get_g_element(detail::PLOT_VALUE_LABELS).text(
+              image.g(detail::PLOT_VALUE_LABELS).text(
                 x_left ,
                 y, // Just shift down half a digit to center value digits on tick.
                 label.str(),
@@ -927,7 +911,7 @@ namespace boost
         double temp_x(0.);
         double temp_y;
 
-        g_element& g_ptr = image.get_g_element(detail::PLOT_DATA_LINES).add_g_element();
+        g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
         g_ptr.style().stroke_color(series.line_style_.color_);
         g_ptr.style().fill_color(series.line_style_.area_fill_);
@@ -989,7 +973,7 @@ namespace boost
 
       void draw_bezier_lines(const svg_2d_plot_series& series)
       {
-        g_element& g_ptr = image.get_g_element(detail::PLOT_DATA_LINES).add_g_element();
+        g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
         g_ptr.style().stroke_color(series.line_style_.color_);
         path_element& path = g_ptr.path();
@@ -1085,7 +1069,7 @@ namespace boost
         // painting, so the order of drawing is important.
 
         // Draw image background (perhaps with border and/or fill color).
-        image.get_g_element(detail::PLOT_BACKGROUND).push_back(
+        image.g(detail::PLOT_BACKGROUND).push_back(
           new rect_element(0, 0, image.x_size(),  image.y_size()));
 
         calculate_plot_window();
@@ -1101,7 +1085,7 @@ namespace boost
           plot_window_clip_);
         // <clipPath id="plot_window"><rect x="35" y="38" width="309" height="322"/></clipPath>
 
-        image.get_g_element(detail::PLOT_DATA_POINTS).clip_id(plot_window_clip_);
+        image.g(detail::PLOT_DATA_POINTS).clip_id(plot_window_clip_);
 
         // Draw axes, labels & legend, as required.
         draw_x_axis(); // Must do X-axis first.
@@ -1126,7 +1110,7 @@ namespace boost
         double y(0.);
         for(unsigned int i = 0; i < series.size(); ++i)
         {
-          g_element& g_ptr = image.get_g_element(detail::PLOT_DATA_POINTS).add_g_element();
+          g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
 
           g_ptr.style()
             .fill_color(series[i].point_style_.fill_color_)
@@ -1148,7 +1132,7 @@ namespace boost
         // Draw all the 'bad' at_limit points.
         for(unsigned int i = 0; i < series.size(); ++i)
         {
-          g_element& g_ptr = image.get_g_element(detail::PLOT_LIMIT_POINTS);
+          g_element& g_ptr = image.g(detail::PLOT_LIMIT_POINTS);
 
           for(std::multimap<double,double>::const_iterator j = series[i].series_limits.begin();
             j!=series[i].series_limits.end(); ++j)
@@ -1266,13 +1250,13 @@ namespace boost
 
       svg_2d_plot& y_axis_width(double width)
       {
-        image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_width(width);
+        image.g(detail::PLOT_Y_AXIS).style().stroke_width(width);
         return *this;
       }
 
       double y_axis_width()
       {
-        return image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_width();
+        return image.g(detail::PLOT_Y_AXIS).style().stroke_width();
       }
 
       svg_2d_plot& y_value_precision(int digits)
@@ -1286,7 +1270,7 @@ namespace boost
         return y_ticks_.value_precision_;
       }
 
-      svg_2d_plot& y_value_ioflags(int flags)
+      svg_2d_plot& y_value_ioflags(std::_Ios_Fmtflags flags)
       { // IO flags of Y tick label values (default 0X201).
         y_ticks_.value_ioflags_ = flags;
         return *this;
@@ -1310,24 +1294,24 @@ namespace boost
 
       svg_2d_plot& y_axis_color(const svg_color& col)
       { // Set only stroke color.
-        image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_color(col);
+        image.g(detail::PLOT_Y_AXIS).style().stroke_color(col);
         return *this;
       }
 
       svg_color y_axis_color()
       { // return the stroke color.
-        return image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_color();
+        return image.g(detail::PLOT_Y_AXIS).style().stroke_color();
       }
 
       svg_2d_plot& y_axis_label_color(const svg_color& col)
       { // Set stroke color.
-        image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
+        image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
         return *this;
       }
 
       svg_color y_axis_label_color()
       { // But only return the stroke color.
-        return image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color();
+        return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
       svg_2d_plot& y_label_units_on(bool b)
@@ -1343,68 +1327,68 @@ namespace boost
 
       svg_2d_plot& y_axis_value_color(const svg_color& col)
       {
-        image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
+        image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
         return *this;
       }
 
       svg_color y_axis_value_color()
       { // Only return the stroke color.
-        return image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color();
+        return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
       svg_2d_plot& y_label_width(double width)
       {
-        image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_width(width);
+        image.g(detail::PLOT_Y_LABEL).style().stroke_width(width);
         return *this;
       }
 
       double y_label_width()
       {
-        return image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_width();
+        return image.g(detail::PLOT_Y_LABEL).style().stroke_width();
       }
 
       svg_2d_plot& y_major_grid_color(const svg_color& col)
       {
-        image.get_g_element(detail::PLOT_Y_MAJOR_GRID).style().stroke_color(col);
+        image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_color(col);
         return *this;
       }
 
       const svg_color y_major_grid_color()
       {
-        return image.get_g_element(detail::PLOT_Y_MAJOR_GRID).style().stroke_color();
+        return image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_color();
       }
 
       svg_2d_plot& y_minor_grid_color(const svg_color& col)
       {
-        image.get_g_element(detail::PLOT_Y_MINOR_GRID).style().stroke_color(col);
+        image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_color(col);
         return *this;
       }
 
       const svg_color y_minor_grid_color()
       {
-        return image.get_g_element(detail::PLOT_Y_MINOR_GRID).style().stroke_color();
+        return image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_color();
       }
 
       svg_2d_plot& y_major_tick_color(const svg_color& col)
       {
-        image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(col);
+        image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(col);
         return *this;
       }
 
       const svg_color y_major_tick_color()
       {
-        return image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color();
+        return image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color();
       }
 
       svg_2d_plot& y_minor_tick_color(const svg_color& col)
       {
-        image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
+        image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
         return *this;
       }
 
       const svg_color y_minor_tick_color()
       {
-        return image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color();
+        return image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color();
       }
 
       const std::string y_axis_position()
@@ -1514,7 +1498,7 @@ namespace boost
       svg_2d_plot& y_major_tick_width(double width)
       {
         y_ticks_.major_tick_width_ = width;
-        image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_width(width);
+        image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_width(width);
         return *this;
       }
 
@@ -1526,7 +1510,7 @@ namespace boost
       svg_2d_plot& y_minor_tick_width(double width)
       {
         y_ticks_.minor_tick_width_ = width;
-        image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_width(width);
+        image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_width(width);
         return *this;
       }
 
@@ -1606,7 +1590,7 @@ namespace boost
       svg_2d_plot& y_minor_grid_width(double width)
       {
         y_ticks_.minor_grid_width_ = width;
-        image.get_g_element(detail::PLOT_Y_MINOR_GRID).style().stroke_width(width);
+        image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_width(width);
         return *this;
       }
 
@@ -1618,7 +1602,7 @@ namespace boost
       svg_2d_plot& y_major_grid_width(double width)
       {
         y_ticks_.major_grid_width_ = width;
-        image.get_g_element(detail::PLOT_Y_MAJOR_GRID).style().stroke_width(width);
+        image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_width(width);
         return *this;
       }
 

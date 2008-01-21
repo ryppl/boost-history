@@ -25,6 +25,26 @@ namespace boost
 {
   namespace svg
   {
+    //JV: G++ can't resolve names in these enums in axis_plot_frame
+    //    when they are in svg_2d_plot.hpp
+
+    static const double wh = 0.7; // font text width/height ratio.
+    // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
+    // determine the exact width of digits, so an
+    // arbitrary average width height ratio wh = 0.7 is used as a good approximation.
+
+    static const double sin45 = 0.707; // Use if axis value labels are sloping.
+
+    // x_axis_position_ and y_axis_position_  use these.
+    enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+    // bottom = X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
+    // top = X-axis free above top of X-axis (case of all Y definitely > 0).
+    // x_intersects_y when Y values include zero, so X intersects the Y axis.
+
+    enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
+    // left = Y-axis free to left of end of X-axis (case of all X definitely < 0).
+    // right = Y-axis free to left of end of X-axis (case of all X definitely > 0).
+    // y_intersects_x when X values include zero, so intersects the X axis.
 
     enum legend_places
     {  // Placing of legend box, if requested by legend_on(true).
@@ -322,7 +342,7 @@ namespace boost
               { // ! use_x_ticks_on_plot_window_ = Internal - value labels just below horizontal X-axis.
                 if ((derived().x_ticks_.ticks_on_plot_window_on_ != 0) || ((value != 0) && derived().x_axis_.axis_line_on_))
                 { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
-                  derived().image.get_g_element(detail::PLOT_VALUE_LABELS).text(
+                  derived().image.g(detail::PLOT_VALUE_LABELS).text(
                     x, // to centre on tick
                     y,
                     label.str(),
@@ -354,23 +374,23 @@ namespace boost
                 xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
               }
               double y = derived().x_axis_.axis_; // y = 0, (provided y range includes zero).
-              derived().image.get_g_element(PLOT_X_AXIS).line(xleft, y, xright, y);
+              derived().image.g(PLOT_X_AXIS).line(xleft, y, xright, y);
               if (derived().x_ticks_.ticks_on_plot_window_on_ < 0) 
               { // Draw a vertical line holding the ticks on the top of plot window.
-                derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
+                derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
               }
               else if (derived().x_ticks_.ticks_on_plot_window_on_ > 0) 
               {// Draw a vertical line holding the ticks on the bottom of plot window.
-                derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
+                derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
               }
             }
             else if (derived().x_axis_position_ == top)
             {
-               derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
+               derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
             }
             else if (derived().x_axis_position_ == bottom)
             {
-               derived().image.get_g_element(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
+               derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
             }
             else
             { // warn that things have gone wrong?
@@ -378,10 +398,10 @@ namespace boost
           } // x_axis_.axis_line_on_
 
           // Access the paths for the ticks & grids, ready for additions.
-          path_element& minor_tick_path = derived().image.get_g_element(PLOT_X_MINOR_TICKS).path();
-          path_element& major_tick_path = derived().image.get_g_element(PLOT_X_MAJOR_TICKS).path();
-          path_element& minor_grid_path = derived().image.get_g_element(PLOT_X_MINOR_GRID).path();
-          path_element& major_grid_path = derived().image.get_g_element(PLOT_X_MAJOR_GRID).path();
+          path_element& minor_tick_path = derived().image.g(PLOT_X_MINOR_TICKS).path();
+          path_element& major_tick_path = derived().image.g(PLOT_X_MAJOR_TICKS).path();
+          path_element& minor_grid_path = derived().image.g(PLOT_X_MINOR_GRID).path();
+          path_element& major_grid_path = derived().image.g(PLOT_X_MAJOR_GRID).path();
 
           // x_minor_jump is the interval between minor ticks.
           double x_minor_jump = derived().x_ticks_.major_interval_ /
@@ -449,7 +469,7 @@ namespace boost
           double y;
           y = derived().title_info_.style().font_size() * derived().text_margin_; // Leave a linespace above.
           derived().title_info_.y(y);
-          derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(derived().title_info_));
+          derived().image.g(PLOT_TITLE).push_back(new text_element(derived().title_info_));
         } // void draw_title()
 
         void size_legend_box()
@@ -490,7 +510,10 @@ namespace boost
             } // for
             std::cout.flags(std::ios_base::dec);
             // std::cout << "\nLongest legend header or data descriptor " << longest << " chars" << std::endl;
-            derived().legend_width_ = (1 + longest) * wh * font_size;
+            derived().legend_width_ = (1 + longest) 
+                                    * ::boost::svg::wh  
+                                    * font_size;
+                                    
             // Allow for a leading space, longest text
             // & trailing space before box margin.
             if (derived().legend_lines_)
@@ -618,7 +641,7 @@ namespace boost
               }
 
               // Draw border box round legend.
-              g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
+              g_element* g_ptr = &(derived().image.g(PLOT_LEGEND_BACKGROUND));
               g_ptr->push_back(new
                 rect_element(derived().legend_left_, derived().legend_top_, derived().legend_width_, derived().legend_height_));
             } // if legend_on_
@@ -642,7 +665,7 @@ namespace boost
             double legend_height = derived().legend_height_;
 
             // Draw border box round legend.
-            g_element* g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_BACKGROUND));
+            g_element* g_ptr = &(derived().image.g(PLOT_LEGEND_BACKGROUND));
             g_ptr->push_back(new
               rect_element(legend_x_start, legend_y_start, legend_width, legend_height));
 
@@ -651,20 +674,20 @@ namespace boost
             { // Draw the legend header text for example: "My Plot Legend".
               derived().legend_header_.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
               derived().legend_header_.y(legend_y_pos);
-              derived().image.get_g_element(PLOT_LEGEND_TEXT).push_back(new
+              derived().image.g(PLOT_LEGEND_TEXT).push_back(new
                 text_element(derived().legend_header_));
               legend_y_pos += 2 * spacing;
             }
 
-            g_ptr = &(derived().image.get_g_element(PLOT_LEGEND_POINTS));
+            g_ptr = &(derived().image.g(PLOT_LEGEND_POINTS));
             g_element* g_inner_ptr = g_ptr;
-            g_inner_ptr = &(derived().image.get_g_element(PLOT_LEGEND_TEXT));
+            g_inner_ptr = &(derived().image.g(PLOT_LEGEND_TEXT));
 
             for(unsigned int i = 0; i < derived().series.size(); ++i)
             { // Show point marker, text info and perhaps line for all the data series.
               double legend_x_pos = legend_x_start;
               legend_x_pos += spacing; // space before point marker.
-              g_inner_ptr = &(g_ptr->add_g_element());
+              g_inner_ptr = &(g_ptr->g());
               // Use both stroke & fill colors from the point's style.
               g_inner_ptr->style().stroke_color(derived().series[i].point_style_.stroke_color_);
               g_inner_ptr->style().fill_color(derived().series[i].point_style_.fill_color_);
@@ -686,7 +709,7 @@ namespace boost
                 g_inner_ptr->style() // Use stroke colors from line style.
                   .stroke_color(derived().series[i].line_style_.color_);
                // g_inner_ptr->style().width(4); // Use stroke colors from line style. 
-               // == image.get_g_element(PLOT_DATA_LINES).style().stroke_width(width);
+               // == image.g(PLOT_DATA_LINES).style().stroke_width(width);
                 // but this sets width for BOTH point and line :-(
                 g_inner_ptr->push_back(new line_element(
                   legend_x_pos + spacing /2., // half space leading space
@@ -697,7 +720,7 @@ namespace boost
               } // legend_lines_
 
               // Legend text for each Data Series added to the plot.
-              g_inner_ptr = &(derived().image.get_g_element(PLOT_LEGEND_TEXT));
+              g_inner_ptr = &(derived().image.g(PLOT_LEGEND_TEXT));
               g_inner_ptr->push_back(new text_element(
                 legend_x_pos, // allow space for the marker.
                 legend_y_pos,
@@ -711,7 +734,7 @@ namespace boost
           void draw_x_label()
           {
             // color is set in constructor.
-            //image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color(black);
+            //image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
             // and using x_label_color(color)
 
             std::string label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
@@ -729,7 +752,7 @@ namespace boost
               y -= derived().image_border_.margin_; // Allow a margin.
               y -= derived().x_axis_label_style_.font_size() / 2; // Allow a half font too.
             }
-            derived().image.get_g_element(PLOT_X_LABEL).push_back(new text_element(
+            derived().image.g(PLOT_X_LABEL).push_back(new text_element(
               ( // x position relative to the x-axis which is middle of plot window.
               derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
               y, // Up from image bottom edge.
@@ -795,7 +818,7 @@ namespace boost
             switch(sty.shape_) // from enum point_shape none, round, square, point, egg
             {
             case round:
-              g_ptr.circle(x, y, half_size);
+              g_ptr.circle(x, y, (int)half_size);
               break;
             case square:
               g_ptr.rect(x - half_size, y - half_size, size, size);
@@ -905,51 +928,51 @@ namespace boost
 
           void clear_background()
           {
-            derived().image.get_g_element(PLOT_BACKGROUND).clear();
+            derived().image.g(PLOT_BACKGROUND).clear();
           }
 
           void clear_title()
           {
-            derived().image.get_g_element(PLOT_TITLE).clear();
+            derived().image.g(PLOT_TITLE).clear();
           }
 
           void clear_points()
           {
-            derived().image.get_g_element(PLOT_DATA_POINTS).clear();
+            derived().image.g(PLOT_DATA_POINTS).clear();
           }
 
           void clear_plot_background()
           {
-            derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).clear();
+            derived().image.g(PLOT_WINDOW_BACKGROUND).clear();
           }
 
           void clear_legend()
           {
-            derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).clear();
-            derived().image.get_g_element(PLOT_LEGEND_POINTS).clear();
-            derived().image.get_g_element(PLOT_LEGEND_TEXT).clear();
+            derived().image.g(PLOT_LEGEND_BACKGROUND).clear();
+            derived().image.g(PLOT_LEGEND_POINTS).clear();
+            derived().image.g(PLOT_LEGEND_TEXT).clear();
           }
 
           void clear_x_axis()
           {
-            derived().image.get_g_element(PLOT_X_AXIS).clear();
-            derived().image.get_g_element(PLOT_X_MINOR_TICKS).clear();
-            derived().image.get_g_element(PLOT_X_MAJOR_TICKS).clear();
-            derived().image.get_g_element(PLOT_X_LABEL).clear();
-            derived().image.get_g_element(PLOT_VALUE_LABELS).clear();
+            derived().image.g(PLOT_X_AXIS).clear();
+            derived().image.g(PLOT_X_MINOR_TICKS).clear();
+            derived().image.g(PLOT_X_MAJOR_TICKS).clear();
+            derived().image.g(PLOT_X_LABEL).clear();
+            derived().image.g(PLOT_VALUE_LABELS).clear();
           }
 
           void clear_y_axis()
           {
-            derived().image.get_g_element(PLOT_Y_AXIS).clear();
+            derived().image.g(PLOT_Y_AXIS).clear();
           }
 
           void clear_grids()
           {
-            derived().image.get_g_element(PLOT_X_MAJOR_GRID).clear();
-            derived().image.get_g_element(PLOT_X_MINOR_GRID).clear();
-            derived().image.get_g_element(PLOT_Y_MAJOR_GRID).clear();
-            derived().image.get_g_element(PLOT_Y_MINOR_GRID).clear();
+            derived().image.g(PLOT_X_MAJOR_GRID).clear();
+            derived().image.g(PLOT_X_MINOR_GRID).clear();
+            derived().image.g(PLOT_Y_MAJOR_GRID).clear();
+            derived().image.g(PLOT_Y_MINOR_GRID).clear();
           }
 
         private:
@@ -1137,29 +1160,29 @@ namespace boost
 
           svg_color background_color()
           {
-            return derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color();
+            return derived().image.g(PLOT_BACKGROUND).style().fill_color();
           }
 
           Derived& background_border_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color(col);
+            derived().image.g(PLOT_BACKGROUND).style().stroke_color(col);
             return derived();
           }
 
           svg_color background_border_color()
           {
-            return derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color();
+            return derived().image.g(PLOT_BACKGROUND).style().stroke_color();
           }
 
           Derived& background_border_width(double w)
           {
-            derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_width(w);
+            derived().image.g(PLOT_BACKGROUND).style().stroke_width(w);
             return derived();
           }
 
           double background_border_width()
           {
-            return derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_width();
+            return derived().image.g(PLOT_BACKGROUND).style().stroke_width();
           }
 
           Derived& description(const std::string d)
@@ -1494,7 +1517,7 @@ namespace boost
             derived().legend_on_ = cmd;
             if(cmd)
             {
-              derived().image.get_g_element(detail::PLOT_LEGEND_BACKGROUND)
+              derived().image.g(detail::PLOT_LEGEND_BACKGROUND)
                 .style().fill_color(white)
                 .stroke_color(black);
             }
@@ -1527,7 +1550,7 @@ namespace boost
 
             if(cmd)
             { // Set plot window
-              derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style()
+              derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style()
                 .fill_color(derived().plot_window_border_.fill_) // background color and
                 .stroke_color(derived().plot_window_border_.stroke_); // border color.
             }
@@ -1543,24 +1566,24 @@ namespace boost
           Derived& plot_border_color(const svg_color& col)
           {
             derived().plot_window_border_.stroke_ = col;
-            derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
+            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
             return derived();
           }
 
           svg_color plot_border_color()
           { 
-            return derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
+            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
           }
 
           double plot_border_width()
           {
-            return derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
+            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
           }
 
           Derived& plot_border_width(double w)
           {
             derived().plot_window_border_.width_ = w;
-            derived().image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
+            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
             return derived();
           }
 
@@ -1736,26 +1759,26 @@ namespace boost
 
           Derived& x_axis_label_color(const svg_color& col)
           { // Set BOTH stroke and fill to the same color.
-            derived().image.get_g_element(detail::PLOT_X_LABEL).style().fill_color(col);
-            derived().image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color(col);
+            derived().image.g(detail::PLOT_X_LABEL).style().fill_color(col);
+            derived().image.g(detail::PLOT_X_LABEL).style().stroke_color(col);
             return *this;
           }
 
           svg_color x_axis_label_color()
           { // But only return the stroke color.
-            return derived().image.get_g_element(detail::PLOT_X_LABEL).style().stroke_color();
+            return derived().image.g(detail::PLOT_X_LABEL).style().stroke_color();
           }
 
           Derived& x_axis_value_color(const svg_color& col)
           { // Set BOTH stroke and fill to the same color.
-            derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().fill_color(col);
-            derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
+            derived().image.g(detail::PLOT_VALUE_LABELS).style().fill_color(col);
+            derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
             return *this;
           }
 
           svg_color x_axis_value_color()
           { // But only return the stroke color.
-            return derived().image.get_g_element(detail::PLOT_VALUE_LABELS).style().stroke_color();
+            return derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
           }
 
           Derived& x_ticks_on_plot_window_on(int cmd)
@@ -1874,90 +1897,90 @@ namespace boost
 
           Derived& title_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_TITLE).style().stroke_color(col);
-            derived().image.get_g_element(PLOT_TITLE).style().fill_color(col);
+            derived().image.g(PLOT_TITLE).style().stroke_color(col);
+            derived().image.g(PLOT_TITLE).style().fill_color(col);
             return derived();
           }
 
           svg_color title_color()
           { // Function title_color sets both fill and stroke,
             // but stroke (outside) is considered 'more important'.
-            return derived().image.get_g_element(PLOT_TITLE).style().stroke_color();
+            return derived().image.g(PLOT_TITLE).style().stroke_color();
           }
 
           Derived& title_font_width(double width)
           { // width of text is effectively the boldness.
             // Not useful with current browsers, setting this may cause lower quality graphic fonts
             // perhaps because the font is created using graphics rather than a built-in font.
-            derived().image.get_g_element(PLOT_TITLE).style().stroke_width(width); 
+            derived().image.g(PLOT_TITLE).style().stroke_width(width); 
             return derived();
           }
 
           double title_font_width()
           {
-            return derived().image.get_g_element(PLOT_TITLE).style().stroke_width();
+            return derived().image.g(PLOT_TITLE).style().stroke_width();
           }
 
           Derived& legend_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color(col);
+            derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
             return derived();
           }
 
           svg_color legend_color()
           { // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
             // (It produces much lower quality fonts on some browsers).
-            return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_color();
+            return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
           }
 
           Derived& legend_font_width(double width)
           { // width of text is effectively the boldness.
-            derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width(width);
+            derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
             return derived();
           }
 
           double legend_font_width()
           { // Probably not useful at present (se above).
-            return derived().image.get_g_element(PLOT_LEGEND_TEXT).style().stroke_width();
+            return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
           }
 
           Derived& background_color(const svg_color& col)
           { // 
-            derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color(col);
+            derived().image.g(PLOT_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           Derived& legend_background_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
+            derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           svg_color legend_background_color()
           {
-            return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().fill_color();
+            return derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
           }
 
           Derived& legend_border_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
+            derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
             return derived();
           }
 
           svg_color legend_border_color()
           {
-            return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().stroke_color();
+            return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
           }
 
           Derived& plot_background_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
+            derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           svg_color plot_background_color()
           {
-            return derived().image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color();
+            return derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
           }
 
           const std::string x_axis_position()
@@ -1977,149 +2000,148 @@ namespace boost
 
           Derived& x_axis_color(const svg_color& col)
           { // Note only stroke color is set.
-            derived().image.get_g_element(PLOT_X_AXIS).style().stroke_color(col);
+            derived().image.g(PLOT_X_AXIS).style().stroke_color(col);
             return derived();
           }
 
           svg_color x_axis_color()
           { 
-            return derived().image.get_g_element(PLOT_X_AXIS).style().stroke_color();
+            return derived().image.g(PLOT_X_AXIS).style().stroke_color();
           }
 
           Derived& y_axis_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_Y_AXIS).style().stroke_color(col);
+            derived().image.g(PLOT_Y_AXIS).style().stroke_color(col);
             return derived();
           }
 
           svg_color y_axis_color()
           {
-            return derived().image.get_g_element(PLOT_Y_AXIS).style().stroke_color();
+            return derived().image.g(PLOT_Y_AXIS).style().stroke_color();
           }
 
           Derived& x_label_color(const svg_color& col)
           { // add fill as well PAB Oct 07
-            derived().image.get_g_element(PLOT_X_LABEL).style().fill_color(col);
-            derived().image.get_g_element(PLOT_X_LABEL).style().stroke_color(col);
+            derived().image.g(PLOT_X_LABEL).style().fill_color(col);
+            derived().image.g(PLOT_X_LABEL).style().stroke_color(col);
             return derived();
           }
 
           Derived& x_label_width(double width)
           { // width of text is effectively the boldness.
-            x_label_width_ = width;
-            derived().image.get_g_element(PLOT_X_LABEL).style().stroke_width(width);
+            derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
             return derived();
           }
 
           double x_label_width()
           {
             //return x_label_width_;
-            return derived().image.get_g_element(PLOT_X_LABEL).style().stroke_width();
+            return derived().image.g(PLOT_X_LABEL).style().stroke_width();
           }
 
           svg_color x_label_color()
           {
-            return derived().image.get_g_element(PLOT_X_LABEL).style().fill_color();
+            return derived().image.g(PLOT_X_LABEL).style().fill_color();
           }
 
           Derived& y_label_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_Y_LABEL).style().fill_color(col);
-            derived().image.get_g_element(PLOT_Y_LABEL).style().stroke_color(col);
+            derived().image.g(PLOT_Y_LABEL).style().fill_color(col);
+            derived().image.g(PLOT_Y_LABEL).style().stroke_color(col);
             return derived();
           }
 
           svg_color y_label_color()
           {
-            return derived().image.get_g_element(PLOT_Y_LABEL).style().fill_color();
+            return derived().image.g(PLOT_Y_LABEL).style().fill_color();
           }
 
           Derived& x_major_tick_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
+            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
             return derived();
           }
 
           svg_color x_major_tick_color()
           {
-            return derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_color();
+            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
           }
 
           Derived& x_minor_tick_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_color(col);
+            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color(col);
             return derived();
           }
 
           svg_color x_minor_tick_color()
           {
-            return derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_color();
+            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color();
           }
 
           Derived& x_major_grid_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color(col);
+            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color(col);
             return derived();
           }
 
           svg_color x_major_grid_color()
           {
-            return derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color();
+            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color();
           }
 
           Derived& x_major_grid_width(double w)
           {
-            derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(w);
+            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width(w);
             return derived();
           }
 
           double x_major_grid_width()
           {
-            return derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width();
+            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width();
           }
 
           Derived& x_minor_grid_color(const svg_color& col)
           {
-            derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_color(col);
+            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color(col);
             return derived();
           }
 
           svg_color x_minor_grid_color()
           {
-            return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_color();
+            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color();
           }
 
           Derived& x_minor_grid_width(double w)
           {
-            derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width(w);
+            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width(w);
             return derived();
           }
 
           double x_minor_grid_width()
           {
-            return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width();
+            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width();
           }
 
           Derived& x_axis_width(double width)
           {
-            derived().image.get_g_element(PLOT_X_AXIS).style().stroke_width(width);
+            derived().image.g(PLOT_X_AXIS).style().stroke_width(width);
             return derived();
           }
 
           double x_axis_width()
           {
-            return derived().image.get_g_element(PLOT_X_AXIS).style().stroke_width();
+            return derived().image.g(PLOT_X_AXIS).style().stroke_width();
           }
 
           Derived& data_lines_width(double width)
           {
-            derived().image.get_g_element(PLOT_DATA_LINES).style().stroke_width(width);
+            derived().image.g(PLOT_DATA_LINES).style().stroke_width(width);
             return derived();
           }
 
           double data_lines_width()
           {
-            return derived().image.get_g_element(PLOT_DATA_LINES).style().stroke_width();
+            return derived().image.g(PLOT_DATA_LINES).style().stroke_width();
           }
 
           Derived& x_label(const std::string& str)
@@ -2192,13 +2214,13 @@ namespace boost
           Derived& x_major_tick_width(double width)
           {
             derived().x_ticks_.major_tick_width_ = width; // Redundant?
-            derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
+            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
             return derived();
           }
 
           double x_major_tick_width()
           {
-            return derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width();
+            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
           }
 
           Derived& x_minor_tick_length(double length)
@@ -2215,14 +2237,14 @@ namespace boost
           Derived& x_minor_tick_width(double width)
           {
             derived().x_ticks_.minor_tick_width_ = width;
-            derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width(width);
+            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width(width);
             return derived();
           }
 
           double x_minor_tick_width()
           {
             // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
-            return derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width();
+            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width();
           }
 
           Derived& x_major_tick(double d)

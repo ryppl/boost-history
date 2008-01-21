@@ -12,9 +12,10 @@
 #ifndef BOOST_SVG_TAG_HPP
 #define BOOST_SVG_TAG_HPP
 
-// -------------------------------------------------------------------------------
-// This file svg_tag.hpp defines all classes that can occur in the SVG parse tree.
-// -------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// This file svg_tag.hpp defines all classes that can occur in the 
+// SVG parse tree.
+// -----------------------------------------------------------------------------
 
 #include <boost/ptr_container/ptr_container.hpp>
 // using boost::vec_ptr;
@@ -22,6 +23,7 @@
 // using boost::array;
 
 #include "../svg_style.hpp"
+#include "svg_style_detail.hpp"
 
 #include <ostream>
 // using std::ostream;
@@ -67,38 +69,62 @@ namespace svg
   // for grouping together related graphics elements, for example:
   // <g stroke="rgb(255,0,0)" <rect x="0" y="0"  width="500"  height="600"/> </g>
 
-  // -----------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   // svg_element is base class for all the leaf elements:
   // rect_element, circle_element, line_element, text_element,
-  // polygon_element, polyline_element, path_element, clip_path_element, g_element
+  // polygon_element, polyline_element, path_element, clip_path_element, 
+  // g_element
+  //
   // g_element ('g' element is a container element
   // for grouping together related graphics elements).
   // http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview
-  // -----------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
 
   class svg_element
   { // Base class 
   protected:
-    svg_style style_info; // fill, stroke, width, get by function style().
-    std::string id_name; // set & get by function id.
-    std::string clip_name; // set & get by function clip_id.
+    svg_style style_info_; // fill, stroke, width, get by function style.
+    std::string id_name_; // set & get by function id.
+    std::string class_name_; // set & get by class id.
+    std::string clip_name_; // set & get by function clip_id.
 
     void write_attributes(std::ostream& s_out)
     { // group_element id and clip-path.
-      if(id_name.size() != 0)
+      if(id_name_.size() != 0)
       { // Example: id="imageBackground"
-        s_out << " id=\"" << id_name << "\""; // Prefix with space.
+        s_out << " id=\"" << id_name_ << "\""; // Prefix with space.
       }
-      if(clip_name.size() != 0)
+      if(class_name_.size() != 0)
+      {
+        s_out << " class=\"" << class_name_ << "\"";
+      }
+      if(clip_name_.size() != 0)
       { // Example: clip-path="url(#plot_window)" 
-        s_out << " clip-path=\"url(#" << clip_name << ")\""; // Prefix with space.
+        s_out << " clip-path=\"url(#" << clip_name_ << ")\""; // Prefix with space.
       }
       // Inherited classes add other references, 5.3.1, like color, fill, stroke, gradients...
       // Example id: <g id="yMinorGrid" ></g>
+      // Example class: <g class="grid_style"></g>
       // Example URI: fill="url(#Gradient01) // local URL
     } // void write_attributes(std::ostream& s_out)
 
   public:
+
+    svg_element(const svg_style& style_info, 
+                const std::string& id_name = "",
+                const std::string& class_name = "",
+                const std::string& clip_name = "")
+                :style_info_(style_info),
+                id_name_(id_name),
+                class_name_(class_name),
+                clip_name_(clip_name)
+    {
+    }
+
+    svg_element()
+    {
+    }
+
     virtual void write(std::ostream& rhs) = 0;
     virtual ~svg_element()
     {
@@ -106,18 +132,18 @@ namespace svg
 
     bool operator==(const svg_element& lhs)
     { // might be useful for Boost.Test.
-      return lhs.id_name == id_name;
+      return lhs.id_name_ == id_name_;
     }
 
     // Set and get member functions.
     svg_style& style()
     {
-      return style_info;
+      return style_info_;
     }
 
     const svg_style& style() const
     { // const version.
-      return style_info;
+      return style_info_;
     }
 
     void id(const std::string& id)
@@ -135,23 +161,36 @@ namespace svg
       // A group of elements, as well as individual objects,
       // can be given a name using the id attribute.
       // Named groups are needed for several purposes such as animation and re-usable objects.
-      id_name = id;
+      id_name_ = id;
       // Example: id="plotBackground"
     }
 
     std::string id()
     { // Unique name for an element.
-      return id_name;
+      return id_name_;
+    }
+
+    void class_id(const std::string& class_id)
+    { // Non-unique identifier for an element.
+      // http://www.w3.org/TR/2001/REC-SVG-20010904/styling.html#ClassAttribute
+      // 6.12 Attributes common to all elements: id and xml:base
+      // Example: class="info"
+      class_name_ = class_id;
+    }
+
+    std::string class_id()
+    { // Unique name for an element.
+      return class_name_;
     }
 
     void clip_id(const std::string& id)
     { // Named clip, for example: g_ptr.clip_id(plot_window_clip_);
-      clip_name = id;
+      clip_name_ = id;
     }
 
     std::string clip_id()
     {
-      return clip_name;
+      return clip_name_;
     }
   }; // class svg_element
 
@@ -165,21 +204,32 @@ namespace svg
   class line_element: public svg_element
   {
   private:
-    double x1; // Line from (x1, x2) to (y1, y2)
-    double x2;
-    double y1;
-    double y2;
+    double x1_; // Line from (x1_, x2_) to (y1_, y2_)
+    double x2_;
+    double y1_;
+    double y2_;
 
   public:
     line_element(double x1, double y1, double x2,  double y2)
-      :   x1(x1), y1(y1),  x2(x2), y2(y2)
+      :   x1_(x1), y1_(y1),  x2_(x2), y2_(y2)
+    {
+    }
+
+    line_element(double x1, double y1,
+                 double x2, double y2, 
+                 const svg_style& style_info, 
+                 const std::string& id_name="", 
+                 const std::string& class_name="",
+                 const std::string& clip_name = "") 
+                : x1_(x1), y1_(y1), x2_(x2), y2_(y2),
+                  svg_element(style_info, id_name, class_name, clip_name)
     {
     }
 
     void write(std::ostream& rhs)
     {
-      rhs << "<line x1=\"" << x1 << "\" y1=\"" << y1
-          << "\" x2=\"" << x2 << "\" y2=\"" << y2 << "\"/>";
+      rhs << "<line x1=\"" << x1_ << "\" y1=\"" << y1_
+          << "\" x2=\"" << x2_ << "\" y2=\"" << y2_ << "\"/>";
       // Example: <line x1="5" y1="185" x2="340" y2="185"/>
     }
   }; // class line_element
@@ -206,6 +256,16 @@ namespace svg
     { // Constructor defines all private data (no defaults).
     }
 
+    rect_element(double x, double y, double w, double h,
+                 const svg_style& style_info,
+                 const std::string& id_name,
+                 const std::string& class_name,
+                 const std::string& clip_name)
+      : x_(x), y_(y), width_(w), height_(h),
+        svg_element(style_info, id_name, class_name, clip_name)
+    { // Constructor defines all private data (no defaults).
+    }
+    
     double x() const
     {
       return x_;
@@ -281,6 +341,17 @@ namespace svg
     { // Define all private data.
     }
 
+    circle_element(double x, double y, double radius,
+                 const svg_style& style_info,
+                 const std::string& id_name="",
+                 const std::string& class_name="",
+                 const std::string& clip_name=""
+                 )
+      : x(x), y(y), radius(radius),
+        svg_element(style_info, id_name, class_name, clip_name)
+    { // Define all private data.
+    }
+
     void write(std::ostream& rhs)
     {
       rhs << "<circle";
@@ -308,6 +379,26 @@ namespace svg
     { // Define all private data.
     }
 
+    ellipse_element(double cx, double cy, double rx,  double ry,
+                 const svg_style& style_info,
+                 const std::string& id_name="",
+                 const std::string& class_name="",
+                 const std::string& clip_name="")
+      : cx(cx), cy(cy), rx(rx), ry(ry), 
+        svg_element(style_info, id_name, class_name, clip_name)
+    { // Define all private data.
+    }
+
+    ellipse_element(double cx, double cy,
+                 const svg_style& style_info,
+                 const std::string& id_name="",
+                 const std::string& class_name="",
+                 const std::string& clip_name="")
+      : cx(cx), cy(cy), rx(4), ry(8), // 4 and 8 are the same defaults used above
+        svg_element(style_info, id_name, class_name, clip_name)
+    { // Define all private data.
+    }
+
     void write(std::ostream& rhs)
     {
       rhs << "<ellipse";
@@ -326,196 +417,182 @@ namespace svg
     left_align, right_align, center_align
   };
 
-  //enum rotate_style defined in svg_style.
-  //{ // Rotation in degrees from horizontal.
-  //  horizontal = 0, // normal left to right.
-  //  uphill = -45, // slope up.
-  //  upward = -90, // vertical writing up.
-  //  backup = -135, // slope up backwards.
-  //  downhill = 45, // slope down.
-  //  downward = 90,  // vertical writing down.
-  //  backdown = 135, // slope down backwards.
-  //  upsidedown = 180 // == -180
-  //};
 
-  class text_element: public svg_element
-  { // Holds text with position, size, font, (& styles) & orientation.
-    // Not necessarily shown correctly by all browsers, alas.
-   private: // Access only via member functions below.
-    // SVG Coordinates of 1st character EM box, see
+class text_element: public svg_element
+{ // Holds text with position, size, font, (& styles) & orientation.
+  // Not necessarily shown correctly by all browsers, alas.
+ private: // Access only via member functions below.
+  // SVG Coordinates of 1st character EM box, see
+  // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
+  // So any text with y coordinate = 0  shows only any roman lower case descenders!
+  double x_; // Left edge.
+  double y_; // Bottom of roman capital character.
+  std::string text_; // Actual text to display.
+  text_style style_; // font variants.
+  align_style align_; // left_align, right_align, center_align
+  rotate_style rotate_; // horizontal, upward, downward, upsidedown
+
+  // (Text may contain embedded xml Unicode characters
+  // for Greek, math etc, for example: &#x3A9;).
+  //int size; // " font-size = 12"
+  // http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
+  //std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
+  // "sans", "serif", "times"
+  // http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
+  // 10.10 Font selection properties
+  //std::string style_; // font-style: normal | bold | italic | oblique
+  //std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+  //std::string stretch; // font-stretch: normal | wider | narrower ...
+  //std::string decoration; // // "underline" | "overline" | "line-through"
+  // Example:
+  // <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
+
+public:
+
+  text_style& style()
+  { // Access to font family, size ...
+    return style_;
+  }
+
+  const text_style& style() const
+  {
+    return style_;
+  }
+
+  void alignment(align_style a)
+  { // left_align, right_align, center_align
+    align_ = a;
+  }
+
+  align_style alignment()
+  { // left_align, right_align, center_align
+    return align_;
+  }
+
+  void rotation(rotate_style rot)
+  { // Degrees: horizontal  = 0, upward = -90, downward, upsidedown
+    rotate_ = rot;
+  }
+
+  rotate_style rotation() const
+  {
+    return rotate_;
+  }
+
+  void x(double x)
+  { // x coordinate of text to write.
+    x_ = x;
+  }
+
+  double x() const
+  { // x coordinate of text to write.
+    return x_;
+  }
+
+  void y(double y)
+  { // y coordinate of text to write.
+    y_ = y;
+  }
+
+  double y() const
+  { // y coordinate of text to write.
+    return y_;
+  }
+
+  void text(const std::string& t)
+  { // text to write.
+    text_ = t;
+  }
+
+  const std::string& text()
+  {
+    return text_;
+  }
+
+  text_element(
+    // Coordinates of 1st character EM box, see
     // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
-    // So any text with y coordinate = 0  shows only any roman lower case descenders!
-    double x_; // Left edge.
-    double y_; // Bottom of roman capital character.
-    std::string text_; // Actual text to display.
-    text_style style_; // font variants.
-    align_style align_; // left_align, right_align, center_align
-    rotate_style rotate_; // horizontal, upward, downward, upsidedown
+    double x = 0., // Left edge.
+    double y = 0., // Bottom of character (roman capital).
+    // So any text with y coordinate = 0  shows only the roman lower case descenders!
+    const std::string text = "",
+    text_style ts = no_style, // Left to SVG defaults.
+    align_style align = left_align,
+    rotate_style rotate = horizontal)
+    : // Constructor.
+    x_(x), y_(y), // location.
+    text_(text),
+    //size(size), font(font), style_(style), weight(weight), stretch(stretch), decoration(decoration),
+    style_(ts),
+    align_(align),
+    rotate_(rotate)
+  { // text_element default constructor, defines defaults for all private members.
+  }
 
-    // (Text may contain embedded xml Unicode characters
-    // for Greek, math etc, for example: &#x3A9;).
-    //int size; // " font-size = 12"
-    //// http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
-    //std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
-    //// "sans", "serif", "times"
-    //// http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
-    //// 10.10 Font selection properties
-    //std::string style_; // font-style: normal | bold | italic | oblique
-    //std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
-    //std::string stretch; // font-stretch: normal | wider | narrower ...
-    //std::string decoration; // // "underline" | "overline" | "line-through"
-    //// Example:
-    //// <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
-
-  public:
-    // Set and get member functions.
-
-    text_style& style()
-    { // Access to font family, size ...
-      return style_;
-    }
-
-    const text_style& style() const
+  void write(std::ostream& os)
+  { // text_element, style & attributes to stream.
+    // Changed to new convention on spaces:
+    // NO trailing space, but *start* each item with a space.
+    // For debug, may be convenient to start with newline.
+    // os << " <text x=\"" << x_ << "\" y=\"" << y_ << "\"";
+    os << "\n<text x=\"" << x_ << "\" y=\"" << y_ << "\"";
+    std::string anchor;
+    switch(align_)
     {
-      return style_;
+    case left_align:
+      // anchor = "start"; // This is the initial == default.
+      // so should be possible to reduce file size this by:
+      anchor = "";
+      break;
+    case right_align:
+      anchor = "end";
+      break;
+    case center_align:
+      anchor = "middle";
+      break;
+    default:
+      anchor = "";
+      break;
     }
-
-    void alignment(align_style a)
-    { // left_align, right_align, center_align
-      align_ = a;
-    }
-
-    align_style alignment()
-    { // left_align, right_align, center_align
-      return align_;
-    }
-
-    void rotation(rotate_style rot)
-    { // Degrees: horizontal  = 0, upward = -90, downward, upsidedown
-      rotate_ = rot;
-    }
-
-    rotate_style rotation() const
+    if(anchor != "")
     {
-      return rotate_;
+      os << " text-anchor=\"" << anchor << "\"";
     }
-
-    void x(double x)
-    { // x coordinate of text to write.
-      x_ = x;
-    }
-
-    double x() const
-    { // x coordinate of text to write.
-      return x_;
-    }
-
-    void y(double y)
-    { // y coordinate of text to write.
-      y_ = y;
-    }
-
-    double y() const
-    { // y coordinate of text to write.
-      return y_;
-    }
-
-    void text(const std::string& t)
-    { // text to write.
-      text_ = t;
-    }
-
-    const std::string& text()
+    if(rotate_ != 0)
     {
-      return text_;
+      os << " transform = \"rotate("
+        << rotate_ << " "
+        << x_ << " "
+        << y_ << " )\"";
     }
-
-    text_element(
-      // Coordinates of 1st character EM box, see
-      // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
-      double x = 0., // Left edge.
-      double y = 0., // Bottom of character (roman capital).
-      // So any text with y coordinate = 0  shows only the roman lower case descenders!
-      const std::string text = "",
-      text_style ts = no_style, // Left to SVG defaults.
-      align_style align = left_align,
-      rotate_style rotate = horizontal)
-      : // Constructor.
-      x_(x), y_(y), // location.
-      text_(text),
-      //size(size), font(font), style_(style), weight(weight), stretch(stretch), decoration(decoration),
-      style_(ts),
-      align_(align),
-      rotate_(rotate)
-    { // text_element default constructor, defines defaults for all private members.
+    if (style_.font_size() != 0)
+    {
+      os << " font-size=\"" << style_.font_size() << "\"";
     }
-
-    void write(std::ostream& os)
-    { // text_element, style & attributes to stream.
-      // Changed to new convention on spaces:
-      // NO trailing space, but *start* each item with a space.
-      // For debug, may be convenient to start with newline.
-      // os << " <text x=\"" << x_ << "\" y=\"" << y_ << "\"";
-      os << "\n<text x=\"" << x_ << "\" y=\"" << y_ << "\"";
-      std::string anchor;
-      switch(align_)
-      {
-      case left_align:
-        // anchor = "start"; // This is the initial == default.
-        // so should be possible to reduce file size this by:
-        anchor = "";
-        break;
-      case right_align:
-        anchor = "end";
-        break;
-      case center_align:
-        anchor = "middle";
-        break;
-      default:
-        anchor = "";
-        break;
-      }
-      if(anchor != "")
-      {
-        os << " text-anchor=\"" << anchor << "\"";
-      }
-      if(rotate_ != 0)
-      {
-        os << " transform = \"rotate("
-          << rotate_ << " "
-          << x_ << " "
-          << y_ << " )\"";
-      }
-      if (style_.font_size() != 0)
-      {
-        os << " font-size=\"" << style_.font_size() << "\"";
-      }
-      if (style_.font_family() != "")
-      { // Example: Arial.
-        os << " font-family=\"" << style_.font_family() << "\"";
-      }
-      if (style_.font_style().size() != 0)
-      { // Example: italic.
-        os << " font-style=\"" << style_.font_style() << "\"";
-      }
-      if (style_.font_weight().size() != 0)
-      { // Example: bold.
-      os << " font-weight=\"" << style_.font_weight() << "\"";
-      }
-      if (style_.font_stretch().size() != 0)
-      {
-      os << " font-stretch=\"" << style_.font_stretch() << "\"";
-      }
-      if (style_.font_decoration().size() != 0)
-      {
-      os << " font-decoration=\"" << style_.font_decoration() << "\"";
-      }
-      os << '>' << text_ << "</text>";
-      // Example: 
-    } // void write(std::ostream& os)
-
-    
-  }; // class text_element
+    if (style_.font_family() != "")
+    { // Example: Arial.
+      os << " font-family=\"" << style_.font_family() << "\"";
+    }
+    if (style_.font_style().size() != 0)
+    { // Example: italic.
+      os << " font-style=\"" << style_.font_style() << "\"";
+    }
+    if (style_.font_weight().size() != 0)
+    { // Example: bold.
+    os << " font-weight=\"" << style_.font_weight() << "\"";
+    }
+    if (style_.font_stretch().size() != 0)
+    {
+    os << " font-stretch=\"" << style_.font_stretch() << "\"";
+    }
+    if (style_.font_decoration().size() != 0)
+    {
+    os << " font-decoration=\"" << style_.font_decoration() << "\"";
+    }
+    os << '>' << text_ << "</text>";
+    // Example:
+  } // void write(std::ostream& os)
+}; // class text_element_
 
   std::ostream& operator<< (std::ostream& os, text_element& t)
   {  //
@@ -527,7 +604,6 @@ namespace svg
     // Outputs:  
     return os;
   } // std::ostream& operator<<
-
 
   class clip_path_element: public svg_element
   { // The clipping path restricts the region to which paint can be applied.
@@ -842,6 +918,14 @@ namespace svg
       path = (const_cast<path_element&>(rhs)).path.release();
     }
 
+    path_element(const svg_style& style_info, 
+        const std::string& id_name="", 
+        const std::string& class_name="",
+        const std::string& clip_name="")
+        : svg_element(style_info, id_name, class_name, clip_name)
+    {
+    }
+
     path_element() : fill(true)
     { // TODO why is the default fill(true)?
     }
@@ -966,8 +1050,11 @@ namespace svg
           (*i).write(o_str); // M1,2
         }
         o_str << "\"";
+
         write_attributes(o_str); // id & clip_path
-        style_info.write(o_str); // fill, stroke, width...
+
+        style_info_.write(o_str); // fill, stroke, width...
+
         if(!fill)
         {
           o_str << " fill=\"none\"";
@@ -1102,7 +1189,7 @@ namespace svg
         poly_points.push_back(new poly_path_point(p.x, p.y));
       }
     }
-
+/*
     template<int n> 
     polygon_element (boost::array<const poly_path_point, n>& points, bool f = true)
       :
@@ -1131,7 +1218,7 @@ namespace svg
         poly_points.push_back(new poly_path_point(p.x, p.y));
       }
     }
-
+*/
     // Member function to add more points to polygon.
     polygon_element& P(double x, double y)
     { // Add another  (x, y) - absolute only.
@@ -1148,7 +1235,7 @@ namespace svg
       }
       o_str << "\"";
       write_attributes(o_str);
-      style_info.write(o_str);
+      style_info_.write(o_str);
       if(!fill)
       {
         o_str << " fill = \"none\"";
@@ -1256,7 +1343,7 @@ namespace svg
       } 
       o_str << "\"";
       write_attributes(o_str);
-      style_info.write(o_str);
+      style_info_.write(o_str);
       o_str<<"/>";
       // Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
     } // void write(std::ostream& o_str)
@@ -1314,7 +1401,7 @@ namespace svg
 
       os << "<g"; // Do NOT need space if convention is to start following item with space.
       write_attributes(os); // id="background" (or clip_path)
-      style_info.write(os); // stroke="rgb(0,0,0)"
+      style_info_.write(os); // stroke="rgb(0,0,0)"
       os << ">" ;
       for(unsigned int i = 0; i < children.size(); ++i)
       {
@@ -1325,22 +1412,78 @@ namespace svg
       // <g fill="rgb(255,255,255)" id="background"><rect x="0" y="0" width="500" height="350"/></g>
     } // void write(std::ostream& rhs)
 
-    g_element& g_tag(int i)
+    g_element& g(int i)
     { // i is index of children nodes.
       return *(static_cast<g_element*>(&children[i]));
     }
 
     // Returns a reference to the new child node just created.
-    g_element& add_g_element()
+    g_element& g()
     {
-      children.push_back(new g_element);
+      children.push_back(new g_element());
       return *(static_cast<g_element*>(&children[children.size()-1]));
     }
 
-    // get ith g_element or child node.
-    g_element& get_g_element(int i)
+    line_element& line(double x1, double y1, double x2, double y2)
     {
-      return *(static_cast<g_element*>(&children[i]));
+      children.push_back(new line_element(x1, y1, x2, y2));
+      return *(static_cast<line_element*>(&children[children.size()-1])); 
+    }
+
+    rect_element& rect(double x1, double y1, double x2, double y2)
+    {
+      children.push_back(new rect_element(x1, y1, x2, y2));
+      return *(static_cast<rect_element*>(&children[children.size()-1])); 
+    }
+
+    circle_element& circle(double x, double y, unsigned int radius = 5)
+    {
+      children.push_back(new circle_element(x, y, radius));
+      return *(static_cast<circle_element*>(&children[children.size()-1])); 
+    }
+
+    ellipse_element& ellipse(double rx, double ry, double cx, double cy)
+    {
+      children.push_back(new ellipse_element(rx, ry, cx, cy));
+      return *(static_cast<ellipse_element*>(&children[children.size()-1])); 
+    }
+
+    text_element& text(double x = 0., double y = 0.,
+    const std::string& text = "",
+    const text_style& style = no_style, // Use svg implementation's defaults.
+    const align_style& align = left_align,
+    const rotate_style& rotate = horizontal)
+    {
+      children.push_back(new text_element(x, y, text, style, align, rotate));
+      return *(static_cast<text_element*>(&children[children.size()-1])); 
+    }
+
+    // push_back info about polygon shapes:
+    // Polygon for shapes with many vertices.
+    polygon_element& polygon(double x, double y, bool f = true)
+    {
+      children.push_back(new polygon_element(x, y, f));
+      return *(static_cast<polygon_element*>(&children[children.size()-1])); 
+    }
+
+    //JVTODO: Replace with template version
+    polygon_element& polygon(std::vector<poly_path_point>& v, bool f = true)
+    { // push_back a complete many-sided polygon to the document.
+      children.push_back(new polygon_element(v, f));
+      return *(static_cast<polygon_element*>(&children[children.size()-1])); 
+    }
+    
+    //JVTODO: Replace with template version
+    polyline_element& polyline(std::vector<poly_path_point>& v)
+    { // push_back a complete many-sided polygon to the document.
+      children.push_back(new polyline_element(v));
+      return *(static_cast<polyline_element*>(&children[children.size()-1])); 
+    }
+
+    polyline_element& polyline(double x, double y) // 1st point only, add others later with .P(x, y).
+    {
+      children.push_back(new polyline_element(x, y));
+      return *(static_cast<polyline_element*>(&children[children.size()-1])); 
     }
 
     void push_back(svg_element* g)
@@ -1348,94 +1491,32 @@ namespace svg
       children.push_back(g);
     }
 
-    void clear()
-    {
-      children.clear();
-    }
-
-    // Push_back the several elements:
-    // circle, ellipse, rect, line, path, text, polyline, polygon.
-    g_element& circle(double x, double y, double radius = 5.)
-    {
-      children.push_back(new circle_element(x, y, radius));
-      return *this;
-    }
-
-    g_element& ellipse(double x, double y, double radius_x = 3., double radius_y = 6.)
-    {
-      children.push_back(new ellipse_element(x, y, radius_x, radius_y));
-      return *this;
-    }
-
-    g_element& text(double x = 0., double y = 0.,
-      const std::string& text = "",
-      text_style& style = no_style, // Use svg implementation's defaults.
-      align_style align = left_align,
-      rotate_style rotate = horizontal)
-    {
-      children.push_back(new text_element(x, y, text, style, align, rotate));
-      // font, style, weight, stretch, decoration, now in text_style.
-      return *this;
-    }
-
-    g_element& rect(double x1, double y1, double x2, double y2)
-    {
-      children.push_back(new rect_element(x1, y1, x2, y2));
-      return *this;
-    }
-
-    g_element& line(double x1, double y1, double x2, double y2)
-    {
-      children.push_back(new line_element(x1, y1, x2, y2));
-      return *this;
-    }
-
-    // TODO should the default be fill or not?
-    g_element& polygon(double x1, double y1, bool f = true)
-    {
-      children.push_back(new polygon_element(x1, y1, f));
-      return *this;
-    }
-
-    g_element& polygon(std::vector<poly_path_point>& points, bool f = true)
-    {
-      children.push_back(new polygon_element(points, f));
-      return *this;
-    }
-
-    g_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
+    polygon_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f)
     {
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, f));
-      return *this;
+      return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
-    g_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
+    polygon_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f)
     {
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, f = true));
-      return *this;
+      return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
-    g_element& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
+    polygon_element& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
     { // push_back a complete pentagon to the document.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, f));
-      return *this; // svg& 
+      return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
-    g_element& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
+    polygon_element& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
     { // push_back a complete 6-sided star to the document.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, f));
-      return *this; // svg& 
-    }
-
-    g_element& polyline(double x1, double y1, bool f = true)
-    {
-      children.push_back(new polygon_element(x1, y1, f));
-      return *this;
+      return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     // These return a reference to the last child node just pushed.
     // (Unlike the above functions that return a g_element&).
-    // TODO why?
     polygon_element& polygon()
     {
       children.push_back(new polygon_element()); // Empty polygon,
@@ -1454,6 +1535,12 @@ namespace svg
       children.push_back(new path_element()); // Empty path.
       return *(static_cast<path_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
+
+    void clear()
+    {
+      children.clear();
+    }
+
 
   }; // class g_element
 

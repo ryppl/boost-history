@@ -738,7 +738,7 @@ public:
     bool major_grid_on_;  // Draw X grid at major ticks.
     bool minor_grid_on_;// Draw X grid at minor ticks.
     int value_precision_; // precision for tick value labels, usually 3 will suffice.
-    int value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
+    std::_Ios_Fmtflags value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; // If redundant zero, + and e are to be stripped.
     size_t label_max_chars_;  // width (in SVG units) of longest label on axis.
     int ticks_on_plot_window_on_; // Value labels & ticks on the plot window border 

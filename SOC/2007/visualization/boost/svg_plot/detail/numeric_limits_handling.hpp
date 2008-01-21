@@ -12,7 +12,7 @@
 #ifndef BOOST_SVG_NUMERIC_LIMITS_HANDLING_DETAIL_HPP
 #define BOOST_SVG_NUMERIC_LIMITS_HANDLING_DETAIL_HPP
 
-#include <boost\math\special_functions\fpclassify.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 
 // TODO use the boost version instead to be more portable?
 // Since only double is used, template versions are not needed,
