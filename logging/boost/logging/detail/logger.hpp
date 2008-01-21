@@ -52,62 +52,6 @@ namespace boost { namespace logging {
     };
 
 
-
-
-    /** 
-    @brief The logger class. Every log from your application is an instance of this (see @ref workflow_processing "workflow")
-
-    As described in @ref workflow_processing "workflow", processing the message is composed of 2 things:
-    - @ref workflow_2a "Gathering the message" 
-    - @ref workflow_2b "Processing the message"
-
-    The logger class has 2 template parameters:
-
-
-    @param gather_msg A new gather instance is created each time a message is written. 
-    The @c gather_msg class needs to be default-constructible.
-    The @c gather_msg must have a function called @c .msg() which contains all information about the written message.
-    It will be passed to the write_msg class.
-    You can implement your own @c gather_msg class, or use any from the gather namespace.
-
-
-    @param write_msg This is the object that does the @ref workflow_2b "second step" - the writing of the message.
-    It can be a simple functor.
-    Or, it can be a more complex object that contains logic of how the message is to be further formatted,
-    and written to multiple destinations. 
-    You can implement your own @c write_msg class, or it can be any of the classes defined in writer namespace.
-    Check out writer::format_write - which allows you to use
-    several formatters to further format the message, and then write it to destinations.
-
-    \n\n
-    You will seldom need to use the logger class directly. You can use @ref defining_your_logger "other wrapper classes".
-
-
-    \n\n    
-    The logger forwards 
-    the gathering of the message to the @c gather_msg class. Once all message is gathered, it's passed on to the writer.
-    This is usually done through a @ref macros_use "macro".
-
-    @code
-    typedef logger< ... > log_type;
-    BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-    BOOST_DECLARE_LOG(g_l, log_type) 
-
-    #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
-
-    // usage
-    L_ << "this is so cool " << i++;
-
-    @endcode
-
-
-
-    \n\n        
-    To understand more on the workflow that involves %logging:
-    - check out the gather namespace
-    - check out the writer namespace
-    
-    */
     template<class gather_msg = default_, class write_msg = default_ > struct logger ;
 
 
@@ -216,8 +160,64 @@ namespace boost { namespace logging {
 
 
 
-    // default implementation - when gather_msg and write_msg are both known
-    template<class gather_msg , class write_msg > struct logger : logger_base<gather_msg, write_msg> {
+    /** 
+    @brief The logger class. Every log from your application is an instance of this (see @ref workflow_processing "workflow")
+
+    As described in @ref workflow_processing "workflow", processing the message is composed of 2 things:
+    - @ref workflow_2a "Gathering the message" 
+    - @ref workflow_2b "Processing the message"
+
+    The logger class has 2 template parameters:
+
+
+    @param gather_msg A new gather instance is created each time a message is written. 
+    The @c gather_msg class needs to be default-constructible.
+    The @c gather_msg must have a function called @c .msg() which contains all information about the written message.
+    It will be passed to the write_msg class.
+    You can implement your own @c gather_msg class, or use any from the gather namespace.
+
+
+    @param write_msg This is the object that does the @ref workflow_2b "second step" - the writing of the message.
+    It can be a simple functor.
+    Or, it can be a more complex object that contains logic of how the message is to be further formatted,
+    and written to multiple destinations. 
+    You can implement your own @c write_msg class, or it can be any of the classes defined in writer namespace.
+    Check out writer::format_write - which allows you to use
+    several formatters to further format the message, and then write it to destinations.
+
+    \n\n
+    You will seldom need to use the logger class directly. You can use @ref defining_your_logger "other wrapper classes".
+
+
+    \n\n    
+    The logger forwards 
+    the gathering of the message to the @c gather_msg class. Once all message is gathered, it's passed on to the writer.
+    This is usually done through a @ref macros_use "macro".
+
+    @code
+    typedef logger< ... > log_type;
+    BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
+    BOOST_DECLARE_LOG(g_l, log_type) 
+
+    #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
+
+    // usage
+    L_ << "this is so cool " << i++;
+
+    @endcode
+
+
+
+    \n\n        
+    To understand more on the workflow that involves %logging:
+    - check out the gather namespace
+    - check out the writer namespace
+    
+    */
+    template<class gather_msg , class write_msg > struct logger 
+            // note: default implementation - when gather_msg and write_msg are both known
+            : logger_base<gather_msg, write_msg> {
+
         typedef typename detail::find_gather_if_default<gather_msg>::gather_type gather_type;
         typedef typename gather_type::msg_type msg_type;
         typedef write_msg write_type;

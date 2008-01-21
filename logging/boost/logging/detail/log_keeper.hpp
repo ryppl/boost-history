@@ -102,9 +102,6 @@ private:
     @brief Allows using a log without knowing its full type yet. Even if the log is not fully @b defined, you can still use it.
 
     This will allow you to log messages even if you don't know the full type of the log (which can aid compilation time).
-
-    This keeps the logger by value, so that the after_being_destroyed stuff works.
-    More specifically, in case the logger is used after it's been destroyed, the logger_holder instances CAN ONLY BE GLOBAL.
 */
 template<class type> struct logger_holder_by_ptr : logger_holder<type> {
     typedef logger_holder<type> base_type;

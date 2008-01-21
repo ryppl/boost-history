@@ -26,7 +26,11 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         must have helper to call on on_destructed - like, to be able to write to cout,etc
 
-- @c high           make it compile faster (most likely improve use_format_write, etc)
+- @c high           cut down compile time: make it compile faster (most likely improve use_format_write, etc)
+
+- @c high           logger_format_write<> should be just like other find classes - have logger_format_write<>::type
+                    this should uncomplicate code a bit - at least specializing logger_to_gather/writer for logger_format_write<>. \n
+                    I will first need to see if this will cut down compilation time or not.
 
 - @c normal         profiler - we can care about threads as well (that is, for instance, when logging on another thread, see how much time
                     it takes from the threads that actually work)
@@ -132,6 +136,10 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
                     By looking at the namespace itself, it contains other stuff as well. See if I can use @ ingroup or something
 
 - @c normal         Explain about config files - you can use named_spacer,named.
+
+- @c high           explain about common_base()
+
+
 */
 
 }}

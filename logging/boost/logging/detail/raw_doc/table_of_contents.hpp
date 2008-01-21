@@ -33,11 +33,19 @@ namespace boost { namespace logging {
     - @ref scenario_multiple_files
     - @ref starter_project 
 
-- @ref headers_to_include "Headers to #include"
-- @ref defining_your_logger_filter 
-- @ref scenario::usage "Choose the best filter/logger class, based on your application's needs"
-- @ref scoped_logs 
-- @ref tag "Using tags"
+- Tutorial
+    - @ref headers_to_include "Headers to #include"
+    - @ref defining_your_logger_filter 
+    - @ref scenario::usage "Choose the best filter/logger class, based on your application's needs"
+    - @ref scoped_logs 
+    - @ref tag "Using tags"
+
+    FIXME macros for logging/ profiling
+
+    FIXME Special cases : after destruction
+
+\n\n
+Advanced concepts
 - @ref thread_safety 
 - @ref misc_unicode
 - @ref caching 
