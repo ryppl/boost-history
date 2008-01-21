@@ -26,6 +26,10 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         must have helper to call on on_destructed - like, to be able to write to cout,etc
 
+- @c high           should see that if I have a tss* object, if used AFTER destruction, will not crash the application.
+                    in other words, if I have tss_with_cache<int>, after this is destroyed, I should always reference the original int or so.
+                    I need this when using a filter using TSS, after the filter has been destroyed. 
+
 - @c high           cut down compile time: make it compile faster (most likely improve use_format_write, etc)
 
 - @c high           logger_format_write<> should be just like other find classes - have logger_format_write<>::type

@@ -46,7 +46,50 @@ namespace writer {
 
 /** @brief Allows profiling your application
 
-See compute_for_logger and compute_for_filter classes
+If you want to profile your application (find out how much time is spent logging), all you need to do is to surround your logger and filter class(es)
+by profile::compute_for_logger and with profile::compute_for_filter, like shown below:
+
+Your code:
+@code
+namespace bl = boost::logging;
+typedef bl::logger_format_write< > logger_type;
+typedef bl::filter::no_ts filter_type;
+@endcode
+
+
+Your code with profiling:
+@code
+// notice the extra include
+#include <boost/logging/profile.hpp>
+
+namespace bl = boost::logging;
+typedef bl::logger_format_write< > raw_logger_type;
+typedef bl::profile::compute_for_logger<raw_logger_type>::type logger_type;
+typedef bl::filter::no_ts raw_filter_type;
+typedef bl::profile::compute_for_filter<raw_filter_type>::type filter_type;
+@endcode
+
+In addition to the above, you'll need to set a place where to dump the profile information (which will be dumped at end of the program).
+This is just a functor that takes a <tt>const std::string&</tt> argument. Thus, it can be any destination class. For instance:
+
+@code
+// where shall the profile results be outputted?
+bl::profile::compute::inst().log_results( bl::destination::file("profile.txt") );
+@endcode
+
+\n
+Results can look like this:
+
+@code
+gather time:      5.562500 seconds 
+write time:       5.265625 seconds 
+filter time:      0.31250 seconds 
+otherthread time: 0.0 seconds 
+@endcode
+
+
+\n\n
+For more info, see compute_for_logger and compute_for_filter classes.
 */    
 namespace profile {
 
