@@ -15,6 +15,10 @@
 //#  pragma warning (disable : 4267) // conversion from 'size_t' to 'const unsigned int', possible loss of data
 #  pragma warning (disable : 4127) // conditional expression is constant
 #  pragma warning (disable : 4512) // assignment operator could not be generated (in fusion)
+#  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
+#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
+#  pragma warning (disable : 4267) //  conversion from 'size_t' to 'const unsigned int', possible loss of data
+#  pragma warning (disable : 4172) //  returning address of local variable or temporary
 #endif
 
 #include <boost/math/special_functions.hpp>

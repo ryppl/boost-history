@@ -16,6 +16,15 @@
 //#  pragma warning (disable : 4224) // nonstandard extension used : formal parameter 'function_ptr' was previously defined as a type
 #endif
 
+#ifdef _MSC_VER
+#  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
+#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
+#  pragma warning (disable : 4172) // returning address of local variable or temporary
+#  pragma warning (disable : 4512) // assignment operator could not be generated
+#  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
+#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
+#endif
+
 #include <boost/svg_plot/svg_2d_plot.hpp>
 
 #include <boost/svg_plot/show_2d_settings.hpp>
