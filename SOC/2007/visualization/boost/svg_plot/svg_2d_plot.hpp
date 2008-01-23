@@ -195,6 +195,7 @@ namespace boost
 
       box_style image_border_; // rectangular border of all image width, color...
       box_style plot_window_border_; // rectangular border of plot window width, color...
+      box_style legend_box_; // rectangular box of legend width, color...
 
  // TODO doubles also could be float?
       double plot_left_;
@@ -273,7 +274,8 @@ namespace boost
         y_label_value_(0, 0, "", y_value_label_style_, center_align, upward),
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
-        plot_window_border_(yellow, svg_color(255, 255, 255), 2, 3, true, false),
+        plot_window_border_(red, svg_color(255, 255, 255), 2, 3, true, false),
+        legend_box_(yellow, azure, 2, 4, true, true),
         legend_header_(0, 0, "", legend_style_, center_align, horizontal),
         legend_width_(200), // width of legend box (pixels) // TODO isn't this calculated?
         legend_height_(0), // height of legend box (pixels)

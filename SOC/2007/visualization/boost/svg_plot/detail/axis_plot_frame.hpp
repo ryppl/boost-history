@@ -474,13 +474,13 @@ namespace boost
         { // Calculate how big the legend box needs to be.
           // Store in legend_width_ and legend_height_
           if(derived().legend_on_ == false)
-          { // No legend, so set values to show legend position invalid.
-            derived().legend_left_ = -1;
-            derived().legend_right_ = -1;
-            derived().legend_top_ = -1;
-            derived().legend_bottom_ = -1;
-            derived().legend_height_ = 0;
-            derived().legend_width_ = 0;
+          { // No legend, so set values to show legend positions invalid.
+            derived().legend_left_ = -1.;
+            derived().legend_right_ = -1.;
+            derived().legend_top_ = -1.;
+            derived().legend_bottom_ = -1.;
+            derived().legend_height_ = 0.;
+            derived().legend_width_ = 0.;
             return;
           }
           else
@@ -495,13 +495,12 @@ namespace boost
             // std::cout << spacing <<  ' ' << font_size << ' ' << point_size << std::endl;
             bool is_header = (derived().legend_header_.text() != "");
 
-            double longest = string_svg_length(derived().legend_header_.text(), derived().legend_style_);
-            std::cout << "\nLegend header " << longest << " svg units." << std::endl;
-
             //text_element legend_header_; // legend box header or title (if any).
             //text_style legend_style_;
-            // was size_t longest = derived().legend_header_.text().size();
-            // 0 if no header.
+            double longest = string_svg_length(derived().legend_header_.text(), derived().legend_style_);
+            //std::cout << "\nLegend header " << longest << " svg units." << std::endl;
+            derived().legend_width_ = 2 * (derived().legend_box_.margin() * derived().legend_box_.width());
+            // Don't plan to write on the border, or within the 'forbidden' margin of the box.
             for(size_t i = 0; i < num_series; ++i)
             { // Find the longest text (if longer than header) in all the data series.
               std::string s = derived().series[i].title_;
@@ -512,23 +511,23 @@ namespace boost
               }
             } // for
             // std::cout.flags(std::ios_base::dec); should not be needed  TODO
-            std::cout << "\nLongest legend header or data descriptor " << longest << " svg units." << std::endl;
-            derived().legend_width_ = (1 + longest);
+            // std::cout << "\nLongest legend header or data descriptor " << longest << " svg units." << std::endl;
+            derived().legend_width_ += longest; // Space for longest text.
                                     
             // Allow for a leading space, longest text
             // & trailing space before box margin.
             if (derived().legend_lines_)
-            { // colored line marker in legend.
-              derived().legend_width_ += spacing * 2.;
+            { // Add for colored line marker in legend.
+              derived().legend_width_ += spacing * 1.5;
             }
             if(derived().series[0].point_style_.shape() != none)
-            { // colored data point marker, cross, round... & space
-              derived().legend_width_ += 2 * derived().series[0].point_style_.size();
+            { // Add for colored data point marker, cross, round... & space.
+              derived().legend_width_ += 1.5 * derived().series[0].point_style_.size();
             }
             // else no point marker.
 
             // legend_height must be *at least* enough for
-            // any legend header and text_margin_s around it
+            // any legend header and text_margin(s) around it
             // (if any) plus a text_margin_ top and bottom.
             // Add more height depending on the number of lines of text.
             derived().legend_height_ = spacing; // At top
@@ -544,14 +543,14 @@ namespace boost
 
         void place_legend_box()
         {
-          if(derived().legend_on_) // Legend box required.
+          if(derived().legend_on_ == true) // Legend box required.
           {
             derived().outside_legend_on_ = true; // Unless proves to be inside.
-            //double spacing = derived().y_label_font_size() * 1.; // Around any legend box - beyond any border.
+            //double spacing = derived().legend_box_.margin(); // Might be better to use this, but needs redoing.
             double spacing = derived().y_axis_label_style_.font_size() * 1.; // Around any legend box - beyond any border.
             switch (derived().legend_place_)
             {
-            case nowhere:
+            case nowhere: 
               return;
             case inside:
               derived().outside_legend_on_ = false;
@@ -641,6 +640,13 @@ namespace boost
                   << " outside " << derived().image.y_size() << std::endl;
               }
 
+               derived().image.g(detail::PLOT_LEGEND_BACKGROUND)
+              .style().fill_color(derived().legend_box_.fill()) // 
+              .stroke_color(derived().legend_box_.stroke())
+              .stroke_width(derived().legend_box_.width())
+              .stroke_on(derived().legend_box_.border_on())
+              ;
+
               // Draw border box round legend.
               g_element* g_ptr = &(derived().image.g(PLOT_LEGEND_BACKGROUND));
               g_ptr->push_back(new
@@ -651,6 +657,8 @@ namespace boost
           void draw_legend()
           {
             // size_t num_points = derived().series.size();
+            //cout << derived().legend_box_.width() <<  ' ' << derived().legend_box_.margin() << endl;
+
             int font_size = derived().legend_header_.style().font_size();
             int point_size =  derived().series[0].point_style_.size();
             // Use whichever is the biggest of point marker and font.
@@ -667,6 +675,7 @@ namespace boost
 
             // Draw border box round legend.
             g_element* g_ptr = &(derived().image.g(PLOT_LEGEND_BACKGROUND));
+            
             g_ptr->push_back(new
               rect_element(legend_x_start, legend_y_start, legend_width, legend_height));
 
@@ -677,7 +686,7 @@ namespace boost
               derived().legend_header_.y(legend_y_pos);
               derived().image.g(PLOT_LEGEND_TEXT).push_back(new
                 text_element(derived().legend_header_));
-              legend_y_pos += 2 * spacing;
+              legend_y_pos += 2 * spacing; // Might be 1.5?
             }
 
             g_ptr = &(derived().image.g(PLOT_LEGEND_POINTS));
@@ -685,23 +694,23 @@ namespace boost
             g_inner_ptr = &(derived().image.g(PLOT_LEGEND_TEXT));
 
             for(unsigned int i = 0; i < derived().series.size(); ++i)
-            { // Show point marker, text info and perhaps line for all the data series.
+            { // Show point marker, perhaps line, & text info for all the data series.
               double legend_x_pos = legend_x_start;
-              legend_x_pos += spacing; // space before point marker.
+              legend_x_pos += spacing; // space before point marker and/or line & text.
               g_inner_ptr = &(g_ptr->g());
               // Use both stroke & fill colors from the point's style.
               g_inner_ptr->style().stroke_color(derived().series[i].point_style_.stroke_color_);
               g_inner_ptr->style().fill_color(derived().series[i].point_style_.fill_color_);
-              g_inner_ptr->style().stroke_width(2); // Applies to shape AND line.
+              g_inner_ptr->style().stroke_width(derived().series[i].line_style_.width_); // Applies to shape AND line.
 
               if(derived().series[i].point_style_.shape_ != none)
-              { // Is a shape to show.
+              { // Is a data marker shape to show.
                 draw_plot_point( // Plot point like circle, square...
                   legend_x_pos,
                   legend_y_pos,
                   *g_inner_ptr,
                   derived().series[i].point_style_);
-                legend_x_pos += 1.0 * spacing;
+                legend_x_pos += 1.5 * spacing;
               }
 
               // Line markers  - only really applicable to 2-D sets plot_line_style,
@@ -709,15 +718,15 @@ namespace boost
               { // Need to draw a short line to show color for that data series.
                 g_inner_ptr->style() // Use stroke colors from line style.
                   .stroke_color(derived().series[i].line_style_.color_);
-               // g_inner_ptr->style().width(4); // Use stroke colors from line style. 
+               // Use stroke colors from line style. 
                // == image.g(PLOT_DATA_LINES).style().stroke_width(width);
                 // but this sets width for BOTH point and line :-(
                 g_inner_ptr->push_back(new line_element(
-                  legend_x_pos + spacing /2., // half space leading space
+                  legend_x_pos,
                   legend_y_pos,
-                  legend_x_pos + spacing * 2., // line sample is two char long.
+                  legend_x_pos + spacing, // line sample is one char long.
                   legend_y_pos));
-                legend_x_pos += 2.5 * spacing; // short line & half space.
+                legend_x_pos += 1.5 * spacing; // short line & a space.
               } // legend_lines_
 
               // Legend text for each Data Series added to the plot.
@@ -1516,12 +1525,13 @@ namespace boost
           Derived& legend_on(bool cmd)
           {
             derived().legend_on_ = cmd;
-            if(cmd)
-            {
-              derived().image.g(detail::PLOT_LEGEND_BACKGROUND)
-                .style().fill_color(white)
-                .stroke_color(black);
-            }
+            //if(cmd)
+            //{
+            //  derived().image.g(detail::PLOT_LEGEND_BACKGROUND)
+            //    .style().fill_color(white) // defaults.
+            //    .stroke_color(black).
+            //    .stroke_on(derived().legend_box_.border_on());
+            //}
             return derived();
           }
 

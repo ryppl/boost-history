@@ -237,7 +237,7 @@ private:
 
 public: 
   text_style(int size = 20,  
-  const std::string& font = "", // default is sans with Firefox & IE but serif with Opera
+  const std::string& font = "", // Default is sans with Firefox & IE but serif with Opera.
   const std::string& style = "",
   const std::string& weight = "",
   const std::string& stretch = "",
@@ -378,7 +378,6 @@ std::ostream& operator<< (std::ostream& os, const text_style& ts)
 
 text_style no_style; // Uses all constructor defaults.
 
-
 enum point_shape
 { // Marking a data point.
   // Used in draw_plot_point in axis_plot_frame.hpp
@@ -417,14 +416,13 @@ public:
     point_shape shape_; // round, square, point...
     std::string symbols_; // Unicode symbol (letters, digits, squiggles etc)
     // Caution: not all Unicode symbols are output by all browsers!
-    // Set symbol(s) font using .style().font_family("arial");
     text_style symbols_style_;
 
-    plot_point_style(const svg_color& fill = blank, const svg_color& stroke = blank,
+    plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
       int size = 10, point_shape shape = round, const std::string& symbols = "X")
         :
         fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols)
-    { // TODO Should there be default colors? or "none" == blank?
+    { // Best to have a fixed width font for symbols?
       symbols_style_.font_size(size);
       symbols_style_.font_family("Lucida Sans Unicode");
     }
@@ -928,18 +926,91 @@ public:
     bool fill_on_; // Color fill the box.
 
     box_style(const svg_color& scolor = black,
-      const svg_color& fcolor = antiquewhite,
+      const svg_color& fcolor = white,
       double width = 1, // of border
-      double margin = 2.,
-      bool border_on = true,
-      bool fill_on = false)
+      double margin = 2., // 
+      bool border_on = true, // Draw a border of width.
+      bool fill_on = false) // Apply fill color.
       :
     stroke_(scolor), fill_(fcolor), width_(width),
     margin_(margin),
     border_on_(border_on),
     fill_on_(fill_on)
-    { // Initializes all private data.
+    { // Initializes all private data with defaults.
     }
+
+  box_style& stroke(const svg_color& color)
+  {
+    stroke_ = color;
+    return *this; // Make chainable.
+  }
+
+  svg_color stroke()
+  {
+    return stroke_;
+  }
+
+  box_style& fill(const svg_color& color)
+  {
+    fill_ = color;
+    return *this; // Make chainable.
+  }
+
+  svg_color fill()
+  {
+    return fill_;
+  }
+
+  box_style& width(double w)
+  {
+    width_ = w;
+    return *this; // Make chainable.
+  }
+
+  double width()
+  {
+    return width_;
+  }
+
+  box_style& margin(double w)
+  {
+    margin_ = w;
+    return *this; // Make chainable.
+  }
+
+  double margin()
+  {
+    return margin_;
+  }
+
+  bool border_on() const
+  {
+    return border_on_;
+  }
+
+  box_style& border_on(bool is) 
+  {
+    border_on_ = is;
+    return *this; // Make chainable.
+  }  
+  
+  bool fill_on() const
+  {
+    return fill_on_;
+  }
+
+  box_style& fill_on(bool is) 
+  {
+    fill_on_ = is;
+    return *this; // Make chainable.
+  }
+
+
+
+
+
+
+
 }; // class box_style
 
 const std::string strip_e0s(std::string s);
@@ -1029,7 +1100,7 @@ double string_svg_length(const std::string& s, const text_style& style)
     }
     d++;
  }
- std::cout << "string " << s << " has " << d << " characters." << std::endl; 
+ // std::cout << "string " << s << " has " << d << " characters." << std::endl; 
  return d * style.font_size() * wh;
 } // double string_svg_length(
 
