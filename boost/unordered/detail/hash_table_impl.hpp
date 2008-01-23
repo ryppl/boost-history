@@ -1312,7 +1312,7 @@ namespace boost {
                 // throws - basic:
                 if (need_to_reserve) {
                     rehash_impl(double_to_size_t(floor(
-                    	n / (double) mlf_ * 1.25)) + 1);
+                        n / (double) mlf_ * 1.25)) + 1);
                 }
                 BOOST_ASSERT(n < max_load_ || n > max_size());
                 return need_to_reserve;
