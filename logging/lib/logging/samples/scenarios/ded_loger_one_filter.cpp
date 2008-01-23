@@ -67,19 +67,19 @@ using namespace boost::logging;
 
 // Step 3 : Specify your logging class(es)
 //          In our case, we're also writing on a dedidcated thread
-typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > log_type;
+typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > logger_type;
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 
 // Step 5: define the macros through which you'll log
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG(g_l, logger_type)
 
 void do_sleep(int ms) {
     using namespace boost;

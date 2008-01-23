@@ -75,6 +75,13 @@ namespace detail {
             compute_write_steps();
         }
 
+        void configure(const string_type & name, const string_type & configure_str) {
+            typename data::write info(m_data);
+            destination_base_type * p = info->name_to_destination[name];
+            if ( p)
+                p->configure(configure_str);
+        }
+
         void format_string(const string_type & str) {
             { typename data::write info(m_data);
               info->format_string = str;
@@ -175,7 +182,7 @@ In the above example, I know that the available destinations are @c out_file, @c
 #include <boost/logging/format/destination/named.hpp>
 @endcode
 */
-template<class lock_resource = default_, class destination_base = default_ > struct named_t : is_generic, non_const_context<detail::named_context<lock_resource,destination_base> > {
+template<class destination_base = default_, class lock_resource = default_ > struct named_t : is_generic, non_const_context<detail::named_context<lock_resource,destination_base> > {
     typedef non_const_context< detail::named_context<lock_resource,destination_base> > non_const_context_base;
     typedef hold_string_type string_type;
 
@@ -203,6 +210,13 @@ template<class lock_resource = default_, class destination_base = default_ > str
         return *this;
     }
 
+    void del(const string_type & name) {
+        non_const_context_base::context().del(name);
+    }
+
+    void configure_inner(const string_type & name, const string_type & configure_str) {
+        non_const_context_base::context().configure(name, configure_str);
+    }
 
     bool operator==(const named_t & other) const {
         return &( non_const_context_base::context()) == &( other.non_const_context_base::context());

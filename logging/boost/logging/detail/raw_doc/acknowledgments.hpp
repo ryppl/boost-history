@@ -16,6 +16,7 @@ There are quite a few thanks I owe:
 - Martin Baeker - for testing my lib, and pointing out problems
 - Thomas Kreisel - for testing my lib in Linux, providing patches, finding possible problems in my lib
 - Lucian Ciufudean - for giving me thorough feedback on the documentation, even though he's a Java freak...
+- Andrei Alexandrescu - for reminding me that the default syntax should be soooo easy... Thus, named_logger was born!
 
 */
 

@@ -66,10 +66,10 @@ BOOST_LOG_FORMAT_MSG( boost::logging::optimize::cache_string_one_str<> )
 #if defined(BOOST_LOG_DEFINE_LOGS)
 #include <boost/logging/format.hpp>
 
-typedef logger_format_write< > log_type;
+typedef logger_format_write< > logger_type;
 #endif
 
-BOOST_DECLARE_LOG(g_l, log_type)
+BOOST_DECLARE_LOG(g_l, logger_type)
 BOOST_DECLARE_LOG_FILTER(g_l_filter, level::holder)
 
 #define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), debug ) << "[dbg] "
@@ -136,6 +136,37 @@ template<class format_base, class destination_base, class thread_safety, class g
     typedef typename detail::format_find_gather<gather>::type gather_type;
 };
 
+namespace writer {
+    template<class format_write_ = default_ > struct named ;
+}
+
+/** @brief named_logger<...>::type finds a logger that uses @ref writer::named<> "Named Formatters and Destinations"
+
+@code
+#include <boost/logging/format/named_writer.hpp>
+@endcode
+
+Example:
+@code
+typedef boost::logging::named_logger<>::type logger_type;
+@endcode
+
+Setting the formatters and destinations to write to is extremely simple:
+
+@code
+// first param - the formatter(s) , second param : the destination(s)
+g_l()->writer().write("%time%($hh:$mm.$ss.$mili) [%idx%] |\n", "cout file(out.txt) debug");
+@endcode
+
+To see the syntax, see writer::named
+
+*/
+template<class gather = default_> struct named_logger {
+    typedef typename detail::format_find_gather<gather>::type gather_type;
+
+    /** @copydoc named_logger */
+    typedef logger< gather_type, writer::named<> > type;
+};
 
 }}
 

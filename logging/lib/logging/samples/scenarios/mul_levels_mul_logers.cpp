@@ -59,63 +59,36 @@ The err.txt file
 
 
 
-#include <boost/logging/format_fwd.hpp>
-
-// Step 1: Optimize : use a cache string, to make formatting the message faster
-BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
-
-#include <boost/logging/format.hpp>
-
-// Step 3 : Specify your logging class(es)
-typedef boost::logging::logger_format_write< > log_type;
-
-
-// Step 4: declare which filters and loggers you'll use (usually in a header file)
-BOOST_DECLARE_LOG_FILTER(g_log_level, boost::logging::level::holder ) // holds the application log level
-BOOST_DECLARE_LOG(g_log_err, log_type) 
-BOOST_DECLARE_LOG(g_log_app, log_type)
-BOOST_DECLARE_LOG(g_log_dbg, log_type)
+#include <boost/logging/format/named_writer.hpp>
+typedef boost::logging::named_logger<>::type logger_type;
 
 // Step 5: define the macros through which you'll log
 #define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) << "[dbg] "
 #define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
 #define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) << "[app] "
 
-
 // Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
-BOOST_DEFINE_LOG(g_log_err, log_type)
-BOOST_DEFINE_LOG(g_log_app, log_type)
-BOOST_DEFINE_LOG(g_log_dbg, log_type)
+BOOST_DEFINE_LOG(g_log_err, logger_type)
+BOOST_DEFINE_LOG(g_log_app, logger_type)
+BOOST_DEFINE_LOG(g_log_dbg, logger_type)
 
 using namespace boost::logging;
 
 void mul_levels_mul_logers_example() {
-    // Step 7: add formatters and destinations
-    //         That is, how the message is to be formatted and where should it be written to
-
-    // Err log
-    g_log_err()->writer().add_formatter( formatter::idx(), "[%] "  );
-    g_log_err()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_err()->writer().add_formatter( formatter::append_newline() );
-    g_log_err()->writer().add_destination( destination::file("err.txt") );
-
+    // reuse the same destination for 2 logs
     destination::file out("out.txt");
-    // App log
-    g_log_app()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_app()->writer().add_formatter( formatter::append_newline() );
-    g_log_app()->writer().add_destination( out );
-    g_log_app()->writer().add_destination( destination::cout() );
+    g_log_app()->writer().replace_destination("file", out);
+    g_log_dbg()->writer().replace_destination("file", out);
+    // formatting (first param) and destinations (second param)
+    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "file(err.txt)");
+    g_log_app()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout");
+    g_log_dbg()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout debug");
 
-    // Debug log
-    g_log_dbg()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_log_dbg()->writer().add_formatter( formatter::append_newline() );
-    g_log_dbg()->writer().add_destination( out );
-    g_log_dbg()->writer().add_destination( destination::dbg_window() );
+    g_log_app()->mark_as_initialized();
+    g_log_err()->mark_as_initialized();
+    g_log_dbg()->mark_as_initialized();
 
-    g_log_app()->turn_cache_off();
-    g_log_err()->turn_cache_off();
-    g_log_dbg()->turn_cache_off();
 
     // Step 8: use it...
     int i = 1;

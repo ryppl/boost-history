@@ -51,19 +51,20 @@ Note: for a high precision clock, try high_precision_time (uses boost::date_time
 @param convert [optional] In case there needs to be a conversion between std::(w)string and the string that holds your logged message. See convert_format.
 For instance, you might use @ref boost::logging::optimize::cache_string_one_str "a cached_string class" (see @ref boost::logging::optimize "optimize namespace").
 */
-template<class convert = do_convert_format::prepend> struct time_t : is_generic {
+template<class convert = do_convert_format::prepend> struct time_t : is_generic, non_const_context<boost::logging::detail::time_format_holder> {
     typedef convert convert_type;
+    typedef non_const_context<boost::logging::detail::time_format_holder> non_const_context_base;
 
     /** 
         constructs a time object
     */
-    time_t(const hold_string_type & format) : m_format(format) {}
+    time_t(const hold_string_type & format) : non_const_context_base(format) {}
 
     template<class msg_type> void write_time(msg_type & msg, ::time_t val) const {
         char_type buffer[64];
 
         tm details = *localtime( &val);
-        m_format.write_time( buffer, details.tm_mday, details.tm_mon + 1, details.tm_year + 1900, details.tm_hour, details.tm_min, details.tm_sec);
+        non_const_context_base::context().write_time( buffer, details.tm_mday, details.tm_mon + 1, details.tm_year + 1900, details.tm_hour, details.tm_min, details.tm_sec);
 
         convert::write(buffer, msg);
     }
@@ -74,11 +75,17 @@ template<class convert = do_convert_format::prepend> struct time_t : is_generic 
     }
 
     bool operator==(const time_t & other) const {
-        return m_format == other.m_format;
+        return non_const_context_base::context() == other.non_const_context_base::context();
     }
 
-private:
-    boost::logging::detail::time_format_holder m_format;
+    /** @brief configure through script 
+
+        the string = the time format
+    */
+    void configure(const hold_string_type & str) {
+        non_const_context_base::context().set_format(str);
+    }
+
 };
 
 

@@ -27,64 +27,35 @@ It will look similar to this one:
 */
 
 
+#include <boost/logging/format/named_writer.hpp>
+typedef boost::logging::named_logger<>::type logger_type;
 
-#include <boost/logging/format.hpp>
-//#include <boost/logging/format/formatter/high_precision_time.hpp>
-#include <boost/logging/format/destination/named.hpp>
+#define L_(lvl) BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), lvl )
 
-using namespace boost::logging;
-// Step 3 : Specify your logging class(es)
-typedef logger_format_write< > log_type;
-
-// Step 4: declare which filters and loggers you'll use (usually in a header file)
-BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) 
-BOOST_DECLARE_LOG(g_l, log_type) 
-
-// Step 5: define the macros through which you'll log
-#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), debug )
-#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), error )
-#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), info )
-
-// Step 6: Define the filters and loggers you'll use (usually in a source file)
-BOOST_DEFINE_LOG_FILTER(g_log_level, level::holder ) // holds the application log level
-BOOST_DEFINE_LOG(g_l, log_type)
-
+BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) // holds the application log level
+BOOST_DEFINE_LOG(g_l, logger_type)
 
 void test_mul_levels_one_logger() {
-    // Step 7: add formatters and destinations
-    //         That is, how the message is to be formatted...
-    g_l()->writer().add_formatter( formatter::idx(), "[%] "  );
-    //g_l()->writer().add_formatter( formatter::high_precision_time("$hh:$mm:$ss.$mili ") );
-    g_l()->writer().add_formatter( formatter::append_newline() );
+    // formatting (first param) and destinations (second param)
+    g_l()->writer().write("%time%($hh:$mm.$ss.$mili) [%idx%] |\n", "cout file(out.txt) debug");
+    g_l()->mark_as_initialized();
 
-    //        ... and where should it be written to
-    g_l()->writer().add_destination( 
-        destination::named("cout debug out")
-            .add( "cout", destination::cout())
-            .add( "out", destination::file("out.txt"))
-            .add( "debug", destination::dbg_window() )
-         );
-
-    g_l()->turn_cache_off();
-
-    // Step 8: use it...
     int i = 1;
-    LDBG_ << "this is so cool " << i++;
-    LERR_ << "first error " << i++;
+    L_(debug) << "this is so cool " << i++;
+    L_(error) << "first error " << i++;
 
     std::string hello = "hello", world = "world";
-    LAPP_ << hello << ", " << world;
+    L_(debug) << hello << ", " << world;
 
+    using namespace boost::logging;
     g_log_level()->set_enabled(level::error);
-    LDBG_ << "this will not be written anywhere";
-    LAPP_ << "this won't be written anywhere either";
-    LERR_ << "second error " << i++;
+    L_(debug) << "this will not be written anywhere";
+    L_(info) << "this won't be written anywhere either";
+    L_(error) << "second error " << i++;
 
     g_log_level()->set_enabled(level::info);
-    LAPP_ << "good to be back ;) " << i++;
-    LERR_ << "third error " << i++;
-
-    // Step 9 : Enjoy!
+    L_(info) << "good to be back ;) " << i++;
+    L_(error) << "third error " << i++;
 }
 
 

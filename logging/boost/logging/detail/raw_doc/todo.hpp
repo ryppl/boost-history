@@ -26,6 +26,17 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         must have helper to call on on_destructed - like, to be able to write to cout,etc
 
+- @c high           based on formatter::named_spacer and destination::named, make it even easier to use
+                    existing formatters, destinations (like, include them all, by default, with existing names)
+                    thus, the user of the lib can just write ONE line, which will do:
+                    specify formatter(s), and destination(s), and automatically turn the cache off.
+                    i have to figure out how to specify params to send to inner formatters/destinations (like, "file(err.txt)" etc)
+
+- @c normal         turn_cache_off() -> find better name, like mark_init_complete()  (add a function named like this to call turn_cache_off()).
+
+- @c high           scenario::use class - have ::gather and ::write typedefs !!!
+                    this way we can have: named_logger< finder::gather , writer::named<finder::writer> >
+
 - @c high           should see that if I have a tss* object, if used AFTER destruction, will not crash the application.
                     in other words, if I have tss_with_cache<int>, after this is destroyed, I should always reference the original int or so.
                     I need this when using a filter using TSS, after the filter has been destroyed. 

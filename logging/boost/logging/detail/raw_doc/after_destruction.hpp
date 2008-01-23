@@ -14,6 +14,15 @@ namespace boost { namespace logging {
 
 
 \n\n
+FIXME this is obsolete, many thanks to Daniel Kruger ("destructing of global objects" thread)
+http://groups.google.ro/group/comp.lang.c++.moderated/tree/browse_frm/thread/17987673016b2098/d4c6bdcdca1e8fe9?hl=ro&rnum=1&_done=%2Fgroup%2Fcomp.lang.c%2B%2B.moderated%2Fbrowse_frm%2Fthread%2F17987673016b2098%3Fhl%3Dro%26#doc_aa38c20511f81615
+
+So the solution should be: if in a translation unit you have a static instance of some class, and in its destructor you might end up doing logging, you should include the logging header (which will do the initialization trick)
+--> same thing needs to apply to filters
+--> in BOOST_DECLARE_LOG/LOG_FILTER -> need to have the init trick.
+
+
+\n\n
 @section after_destruction_can_happen Can this happen?
 
 The short answer : yes. How? The order of inialization between translation units is not defined, thus the same applies

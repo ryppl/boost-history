@@ -63,7 +63,7 @@ but use it as a variable:
 @code
 // before version v0.20
 
-BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG(g_l, logger_type)
 
 // in code, "g_l" is used like a variable
 g_l->writer().add_formatter( formatter::idx(), "[%] "  );

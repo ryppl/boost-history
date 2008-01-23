@@ -1,4 +1,4 @@
-// Template.hpp
+// time_format_holder.hpp
 
 // Boost Logging library
 //
@@ -14,8 +14,8 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-#ifndef JT28092007_TEMPLATE_HPP_DEFINED
-#define JT28092007_TEMPLATE_HPP_DEFINED
+#ifndef JT28092007_time_format_holder_HPP_DEFINED
+#define JT28092007_time_format_holder_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -58,8 +58,15 @@ public:
         constructs a time format holder object
     */
     time_format_holder(const hold_string_type & format) : m_day(-1), m_month(-1), m_yy(-1), m_yyyy(-1), m_hour(-1), m_min(-1), m_sec(-1),m_millisec(-1),m_microsec(-1),m_nanosec(-1) {
+        set_format(format);
+    }
+
+    void set_format(const hold_string_type & format) {
         // format too big
         BOOST_ASSERT( format.size() < 64);
+        m_format.clear();
+
+        m_day = -1; m_month = -1; m_yy = -1; m_yyyy = -1; m_hour = -1; m_min = -1; m_sec = -1;m_millisec = -1;m_microsec = -1;m_nanosec = -1;
 
         typedef hold_string_type::size_type uint;
         uint day_idx    = format.find(BOOST_LOG_STR("$dd"));

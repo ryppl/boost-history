@@ -126,39 +126,39 @@ There are several types of macros that this library supplies. They're explained 
 @subsubsection BOOST_DECLARE_LOG BOOST_DECLARE_LOG - declaring a log
 
 @code
-BOOST_DECLARE_LOG(log_name, log_type)
+BOOST_DECLARE_LOG(log_name, logger_type)
 @endcode
 
 This declares a log. It should be used in a header file, to declare the log. 
-Note that @c log_type only needs to be a declaration (a @c typedef, for instance)
+Note that @c logger_type only needs to be a declaration (a @c typedef, for instance)
 
 Example:
 @code
-typedef logger_format_write< > log_type;
-BOOST_DECLARE_LOG(g_l, log_type) 
+typedef logger_format_write< > logger_type;
+BOOST_DECLARE_LOG(g_l, logger_type) 
 @endcode
 
 
 @subsubsection BOOST_DEFINE_LOG BOOST_DEFINE_LOG - defining a log
 
 @code
-BOOST_DEFINE_LOG(log_name, log_type)
+BOOST_DEFINE_LOG(log_name, logger_type)
 @endcode
 
 This defines a log. It should be used in a source file, to define the log. 
 
 Example:
 @code
-typedef logger_format_write< > log_type;
+typedef logger_format_write< > logger_type;
 ...
-BOOST_DEFINE_LOG(g_l, log_type) 
+BOOST_DEFINE_LOG(g_l, logger_type) 
 @endcode
 
 
 @subsubsection BOOST_DEFINE_LOG_WITH_ARGS BOOST_DEFINE_LOG_WITH_ARGS - defining a log with arguments
 
 @code
-BOOST_DEFINE_LOG_WITH_ARGS (log_name, log_type, args)
+BOOST_DEFINE_LOG_WITH_ARGS (log_name, logger_type, args)
 @endcode
 
 This defines a log - and specifies some arguments to be used at its constructed. It should be used in a source file, to define the log. 
@@ -229,7 +229,7 @@ BOOST_LOG_USE_LOG_IF_LEVEL(log, level_filter, level )
 Example:
 @code
 BOOST_DECLARE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
-BOOST_DECLARE_LOG(g_log_err, log_type) 
+BOOST_DECLARE_LOG(g_log_err, logger_type) 
 
 #define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
 @endcode

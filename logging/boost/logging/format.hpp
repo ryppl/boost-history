@@ -231,9 +231,9 @@ and you want to define the logger classes, in a source file
 Example:
 
 @code
-typedef logger< gather::ostream_like::return_str<> , format_write<...> > log_type;
+typedef logger< gather::ostream_like::return_str<> , format_write<...> > logger_type;
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG(g_l, logger_type)
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 // add formatters : [idx] [time] message [enter]
@@ -330,8 +330,8 @@ In the above case:
     @code
     typedef logger< default_, 
         writer::format_write< format_base, destination_base, format_and_write::simple<cache_string>,
-            msg_route::with_route<format_base,destination_base> > > log_type;
-    log_type g_l();
+            msg_route::with_route<format_base,destination_base> > > logger_type;
+    logger_type g_l();
 
     g_l()->writer().router().set_route()
         .fmt( formatter::time() ) 

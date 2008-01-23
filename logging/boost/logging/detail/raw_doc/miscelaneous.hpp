@@ -11,7 +11,7 @@ Just leave it as @c default_, and move on to the paramers you're interested in.
 Example:
 
 @code
-typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > log_type;
+typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > logger_type;
 @endcode
 
 @section misc_unicode Internationalization - Using Unicode charaters

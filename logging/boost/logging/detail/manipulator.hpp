@@ -335,6 +335,13 @@ template<
     typedef param_type param;
 
     virtual void operator()(param val) const = 0;
+
+    /** @brief Override this if you want to allow configuration through scripting
+
+    That is, this allows configuration of your manipulator (formatter/destination) at run-time.        
+    */
+    virtual void configure(const hold_string_type& ) {}
+
 protected:
     // signify that we're only a base class - not to be used directly
     base() {}
@@ -368,9 +375,16 @@ namespace detail {
     @brief Use this when implementing your own formatter or destination class. Don't use this directly. Use formatter::class_ or destination::class_
 */
 template<class type, implement_op_equal::type op_e, class base_type> struct class_ 
-    : base_type, 
-      detail::op_equal_base<op_e>, 
-      boost::logging::op_equal::same_type_op_equal<type> {
+        : base_type, 
+          detail::op_equal_base<op_e>, 
+          boost::logging::op_equal::same_type_op_equal<type> {
+
+    /** @brief Override this if you want to allow configuration through scripting
+
+    That is, this allows configuration of your manipulator (formatter/destination) at run-time.        
+    */
+    virtual void configure(const hold_string_type& ) {}
+
 };
 
 
@@ -458,7 +472,14 @@ g_l().add_formatter( my_cool_formatter() );
 
 @sa boost::logging::destination::convert, boost::logging::formatter::convert
 */
-struct is_generic {};
+struct is_generic {
+
+    /** @brief Override this if you want to allow configuration through scripting
+
+    That is, this allows configuration of your manipulator (formatter/destination) at run-time.        
+    */
+    virtual void configure(const hold_string_type& ) {}
+};
 
 namespace detail {
 
@@ -479,6 +500,10 @@ namespace detail {
 
         virtual void operator()(param val) const {
             m_val.operator()(val);
+        }
+
+        virtual void configure(const hold_string_type& str) {
+            m_val.configure(str);
         }
     };
 }

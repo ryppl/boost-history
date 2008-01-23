@@ -32,6 +32,7 @@
 #include <boost/logging/format/destination/convert_destination.hpp>
 #include <fstream>
 #include <boost/config.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace boost { namespace logging { namespace destination {
 
@@ -70,10 +71,17 @@ namespace detail {
     }
 
     struct file_info {
-        file_info(const std::string& name, file_settings settings) : name(name), out(name.c_str(), open_flags(settings) ), settings(settings) {}
+        file_info(const std::string& name, file_settings settings) 
+            : name(name), 
+              out( new std::basic_ofstream<char_type>( name.c_str(), open_flags(settings) )), 
+              settings(settings) {}
+
+        void reopen() {
+            out = boost::shared_ptr< std::basic_ofstream<char_type> > ( new std::basic_ofstream<char_type>( name.c_str(), open_flags(settings) ) );
+        }
 
         std::string name;
-        std::basic_ofstream<char_type> out;
+        boost::shared_ptr< std::basic_ofstream<char_type> > out;
         file_settings settings;
     };
 }
@@ -92,13 +100,22 @@ template<class convert_dest = do_convert_destination > struct file_t : is_generi
     */
     file_t(const std::string & file_name, file_settings set = file_settings() ) : non_const_context_base(file_name,set) {}
     template<class msg_type> void operator()(const msg_type & msg) const {
-        convert_dest::write(msg, non_const_context_base::context().out );
+        convert_dest::write(msg, *( non_const_context_base::context().out) );
         if ( non_const_context_base::context().settings.flush_each_time() )
-            non_const_context_base::context().out.flush();
+            non_const_context_base::context().out->flush();
     }
 
     bool operator==(const file_t & other) const {
         return non_const_context_base::context().name == other.context().name;
+    }
+
+    /** configure through script 
+        right now, you can only specify the file name
+    */
+    void configure(const hold_string_type & str) {
+        // configure - the file name, for now
+        non_const_context_base::context().name = str;
+        non_const_context_base::context().reopen();
     }
 };
 

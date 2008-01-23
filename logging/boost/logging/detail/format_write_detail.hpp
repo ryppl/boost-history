@@ -63,8 +63,8 @@ specifies how formatters and destinations are called. By default, all formatters
 and then all destinations are called, in the order they were added. You can easily access the router() instance.
 
 @code
-typedef logger< gather::ostream_like::return_cache_str<> , format_write< ... > > log_type;
-BOOST_DECLARE_LOG(g_l, log_type) 
+typedef logger< gather::ostream_like::return_cache_str<> , format_write< ... > > logger_type;
+BOOST_DECLARE_LOG(g_l, logger_type) 
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
@@ -141,6 +141,11 @@ template<
 struct format_write {
     typedef typename formatter_base::ptr_type formatter_ptr;
     typedef typename destination_base::ptr_type destination_ptr;
+
+    typedef formatter_base formatter_base_type; 
+    typedef destination_base destination_base_type;
+    typedef lock_resource lock_resource_type;
+
 
     format_write() : m_router(m_formatters, m_destinations) {}
 

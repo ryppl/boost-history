@@ -68,7 +68,7 @@ Then, a dedicated thread reads the queue, and processes the messages (applying f
 To transform a @b logger into on-dedicated-thread (thread-safe) writer, simply specify @c on_dedicated_thread as the thread safety:
 
 @code
-typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > log_type;
+typedef logger_format_write< default_, default_, writer::threading::on_dedicated_thread > logger_type;
 @endcode
 
 Of if you're using @ref boost::logging::scenario::usage scenarios, specify @c speed for the @c logger::favor_ :

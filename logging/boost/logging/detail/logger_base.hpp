@@ -137,6 +137,25 @@ namespace boost { namespace logging {
             common_base_type::common_base()->set_after_destroyed(f);
         }
 
+    protected:
+        logger_base() {}
+        logger_base(const logger_base&) {}
+
+    private:
+        subclass_type & self()                      { return static_cast<subclass_type &>(*this); }
+        const subclass_type & self() const          { return static_cast<const subclass_type &>(*this); }
+
+
+    public:
+
+        /** @brief Marks this logger as initialized
+
+        You might log messages before the logger is initialized. In this case, they are cached, and written to the logger, 
+        when you mark it as "initialized"
+        */
+        void mark_as_initialized() {
+            self().turn_cache_off();
+        }
     };
 
 }}

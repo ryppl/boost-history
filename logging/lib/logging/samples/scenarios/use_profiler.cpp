@@ -67,7 +67,7 @@ typedef bl::logger_format_write< bl::default_, bl::default_, bl::writer::threadi
 #else
 typedef bl::logger_format_write< > raw_log_type;
 #endif
-typedef bl::profile::compute_for_logger<raw_log_type>::type log_type;
+typedef bl::profile::compute_for_logger<raw_log_type>::type logger_type;
 
 typedef bl::profile::compute_for_filter<bl::filter::no_ts>::type filter_type;
 
@@ -80,7 +80,7 @@ typedef bl::profile::compute_for_filter<bl::filter::no_ts>::type filter_type;
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter_type ) 
-BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG(g_l, logger_type)
 
 void do_sleep(int ms) {
     using namespace boost;

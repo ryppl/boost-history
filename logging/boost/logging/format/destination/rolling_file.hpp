@@ -76,6 +76,16 @@ namespace detail {
         rolling_file_info (const std::string& name_prefix, rolling_file_settings flags ) 
                 // many thanks to Martin Bauer
                 : m_name_prefix(name_prefix), m_flags(flags), m_cur_idx(0) {
+
+            namespace fs = boost::filesystem;
+            if ( fs::path::default_name_check_writable() )
+                // so that we don't get exceptions
+                fs::path::default_name_check( fs::no_check);
+
+            restart();
+        }
+
+        void restart() {
             namespace fs = boost::filesystem;
             
             if ( m_flags.initial_erase()) {
@@ -157,7 +167,7 @@ namespace detail {
     And so on, until we reach name_prefix.N (N = file_count). When that gets fool, we start over, with name_prefix.1.
 */
 template<class convert_dest = do_convert_destination > struct rolling_file_t : is_generic, non_const_context<detail::rolling_file_info<convert_dest> > {
-    typedef non_const_context<detail::rolling_file_info<convert_dest> > non_const_context_base;
+    typedef non_const_context< detail::rolling_file_info<convert_dest> > non_const_context_base;
 
     /** 
         Constructs a rolling file
@@ -182,6 +192,17 @@ template<class convert_dest = do_convert_destination > struct rolling_file_t : i
     void flush() {
         non_const_context_base::context().flush();
     }
+
+    /** configure through script 
+        right now, you can only specify the file name prefix
+    */
+    void configure(const hold_string_type & str) {
+        // configure - the file prefix, for now
+        non_const_context_base::context().m_name_prefix = str;
+        non_const_context_base::context().m_cur_idx = 0;
+        non_const_context_base::context().restart();
+    }
+
 };
 
 /** @brief rolling_file_t with default values. See rolling_file_t

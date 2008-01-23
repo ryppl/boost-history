@@ -49,16 +49,16 @@ you'll have one %filter, and several loggers:
 @code
 // Example 1 : 1 filter, 1 logger
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
 
 // Example 2 : 1 filter (containing a level), several loggers
 BOOST_DECLARE_LOG_FILTER(g_log_level, level::holder ) 
-BOOST_DECLARE_LOG(g_log_err, log_type) 
-BOOST_DECLARE_LOG(g_log_app, log_type)
-BOOST_DECLARE_LOG(g_log_dbg, log_type)
+BOOST_DECLARE_LOG(g_log_err, logger_type) 
+BOOST_DECLARE_LOG(g_log_app, logger_type)
+BOOST_DECLARE_LOG(g_log_dbg, logger_type)
 
 #define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) 
 #define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
@@ -131,8 +131,8 @@ struct write_to_cout {
     }
 };
 
-typedef logger< gather::ostream_like::return_str<>, write_to_cout> log_type;
-BOOST_DECLARE_LOG(g_single_log, log_type)
+typedef logger< gather::ostream_like::return_str<>, write_to_cout> logger_type;
+BOOST_DECLARE_LOG(g_single_log, logger_type)
 BOOST_DECLARE_LOG_FILTER(g_filter, filter::no_ts)
 
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_single_log, g_filter->is_enabled() ) 
@@ -150,10 +150,10 @@ Simply put, this means formatting the message, and then writing it to destinatio
 For each log, you decide how messages are formatted and to what destinations they are written. Example:
 
 @code
-typedef logger_format_write< > log_type;
+typedef logger_format_write< > logger_type;
 
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 

@@ -78,6 +78,13 @@ namespace detail {
             compute_write_steps();
         }
 
+        void configure(const string_type & name, const string_type & configure_str) {
+            typename data::write info(m_data);
+            format_base_type * p = info->name_to_formatter[name];
+            if ( p)
+                p->configure(configure_str);
+        }
+
         void format_string(const string_type & str) {
             { typename data::write info(m_data);
               info->format_string = str;
@@ -234,7 +241,7 @@ You could have an output like this:
 @bug Use_tags.cpp example when on dedicated thread, fails with named_spacer. If using the old code, it works.
 
 */
-template< class convert = default_, class lock_resource = default_, class format_base = default_ > 
+template< class convert = default_, class format_base = default_, class lock_resource = default_ > 
         struct named_spacer_t : is_generic, non_const_context< detail::named_spacer_context<convert,lock_resource,format_base> > {
 
     typedef non_const_context< detail::named_spacer_context<convert,lock_resource,format_base> > context_base;
@@ -253,6 +260,14 @@ template< class convert = default_, class lock_resource = default_, class format
     template<class formatter> named_spacer_t & add(const string_type & name, formatter fmt) {
         context_base::context().add(name, fmt);
         return *this;
+    }
+
+    void del(const string_type & name) {
+        context_base::context().del(name);
+    }
+
+    void configure_inner(const string_type & name, const string_type & configure_str) {
+        context_base::context().configure(name, configure_str);
     }
 
     template<class msg_type> void operator()(msg_type & msg) const {

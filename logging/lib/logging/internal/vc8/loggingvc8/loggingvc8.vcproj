@@ -557,6 +557,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\format\named_writer.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\format\op_equal.hpp"
 					>
 				</File>
@@ -642,6 +646,10 @@
 				>
 				<File
 					RelativePath="..\..\..\..\..\boost\logging\writer\format_write.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\writer\named.hpp"
 					>
 				</File>
 				<File
@@ -930,7 +938,6 @@
 				>
 				<FileConfiguration
 					Name="Test|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -952,6 +959,14 @@
 			<File
 				RelativePath="..\..\..\samples\scenarios\use_profiler.cpp"
 				>
+				<FileConfiguration
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\samples\scenarios\use_tss_ostringstream.cpp"

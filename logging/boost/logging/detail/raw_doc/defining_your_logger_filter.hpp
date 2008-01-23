@@ -172,13 +172,13 @@ just leave them @c default_.
 #include <boost/logging/format_fwd.hpp>
 
 namespace b_l = boost::logging;
-typedef b_l::logger_format_write< b_l::default_, b_l::default_, b_l::writer::threading::on_dedicated_thread > log_type;
+typedef b_l::logger_format_write< b_l::default_, b_l::default_, b_l::writer::threading::on_dedicated_thread > logger_type;
 
 // declare
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 
 // define
-BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG(g_l, logger_type)
 @endcode
 
 
@@ -191,13 +191,13 @@ just like to do things very manually, you can use the logger class directly:
 @code
 #include <boost/logging/logging.hpp>
 
-typedef logger< gather::ostream_like::return_str<>, destination::cout> log_type;
+typedef logger< gather::ostream_like::return_str<>, destination::cout> logger_type;
 
 // declare
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 
 // define
-BOOST_DEFINE_LOG(g_l, log_type)
+BOOST_DEFINE_LOG(g_l, logger_type)
 @endcode
 
 

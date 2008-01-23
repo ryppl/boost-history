@@ -3,6 +3,18 @@ namespace boost { namespace logging {
 /** 
 @page headers_to_include Headers to #include
 
+
+- when using the Named Writer (an easy interface to Formatters and Destinations)
+
+@code
+// when declaring logs
+#include <boost/logging/format_fwd.hpp>
+
+// when defining logs
+#include <boost/logging/format/named_writer.hpp>
+    @endcode
+
+
 - when using Formatters and Destinations
 
 @code

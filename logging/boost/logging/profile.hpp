@@ -283,11 +283,11 @@ To do profiling for a logger, just surround it with compute_for_logger. Example:
 #include <boost/logging/format_fwd.hpp>
 
 namespace bl = boost::logging ;
-typedef bl::logger_format_write< > log_type;
+typedef bl::logger_format_write< > logger_type;
 
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 ...
-BOOST_DEFINE_LOG(g_l, log_type) 
+BOOST_DEFINE_LOG(g_l, logger_type) 
 
 @endcode
 
@@ -300,11 +300,11 @@ BOOST_DEFINE_LOG(g_l, log_type)
 
 namespace bl = boost::logging ;
 typedef bl::logger_format_write< > raw_log_type;
-typedef bl::profile::compute_for_logger<raw_log_type>::type log_type;
+typedef bl::profile::compute_for_logger<raw_log_type>::type logger_type;
 
-BOOST_DECLARE_LOG(g_l, log_type) 
+BOOST_DECLARE_LOG(g_l, logger_type) 
 ...
-BOOST_DEFINE_LOG(g_l, log_type) 
+BOOST_DEFINE_LOG(g_l, logger_type) 
 
 @endcode
 

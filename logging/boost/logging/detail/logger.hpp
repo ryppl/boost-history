@@ -64,7 +64,7 @@ namespace boost { namespace logging {
         typedef logger_base<gather_msg, default_> logger_base_type;
         using logger_base_type::cache;
 
-        typedef logger<gather_msg, default_> self;
+        typedef logger<gather_msg, default_> self_type;
 
         logger() {}
         // we have virtual functions, lets have a virtual destructor as well - many thanks Martin Baeker!
@@ -76,17 +76,22 @@ namespace boost { namespace logging {
         /** 
             reads all data about a log message (gathers all the data about it)
         */
-        gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
+        gather_holder<self_type, gather_type> read_msg() const { return gather_holder<self_type, gather_type>(*this) ; }
+//        gather_holder<self_type, gather_msg> read_msg() const { return gather_holder<self_type, gather_msg>(*this) ; }
 
         write_type & writer()                    { return m_writer; }
         const write_type & writer() const        { return m_writer; }
 
+        void turn_cache_off() {
+            cache().turn_cache_off( call_do_write(*this) );
+        }
+
     private:
         struct call_do_write {
-            const logger & self;
-            call_do_write(const logger & self) : self(self) {}
+            const logger & self_;
+            call_do_write(const logger & self_) : self_(self_) {}
             void operator()(msg_type & msg) const {
-                self.do_write(msg);
+                self_.do_write(msg);
             }
         };
     public:
@@ -96,9 +101,6 @@ namespace boost { namespace logging {
                 cache().on_do_write( msg, call_do_write(*this) );
             else
                 logger_base_type::call_after_destroyed(msg);
-        }
-        void turn_cache_off() {
-            cache().turn_cache_off( call_do_write(*this) );
         }
 
         virtual void do_write(msg_type&) const = 0;
@@ -195,9 +197,9 @@ namespace boost { namespace logging {
     This is usually done through a @ref macros_use "macro".
 
     @code
-    typedef logger< ... > log_type;
+    typedef logger< ... > logger_type;
     BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-    BOOST_DECLARE_LOG(g_l, log_type) 
+    BOOST_DECLARE_LOG(g_l, logger_type) 
 
     #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
 
@@ -224,7 +226,7 @@ namespace boost { namespace logging {
         typedef logger_base<gather_msg, write_msg> logger_base_type;
         using logger_base_type::cache;
 
-        typedef logger<gather_msg, write_msg> self;
+        typedef logger<gather_msg, write_msg> self_type;
 
         BOOST_LOGGING_FORWARD_CONSTRUCTOR_INIT(logger,m_writer, init)
 
@@ -236,10 +238,14 @@ namespace boost { namespace logging {
         /** 
             reads all data about a log message (gathers all the data about it)
         */
-        gather_holder<self, gather_type> read_msg() const { return gather_holder<self, gather_type>(*this) ; }
+        gather_holder<self_type, gather_type> read_msg() const { return gather_holder<self_type, gather_type>(*this) ; }
 
         write_msg & writer()                    { return m_writer; }
         const write_msg & writer() const        { return m_writer; }
+
+        void turn_cache_off() {
+            cache().turn_cache_off( writer() );
+        }
 
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
@@ -248,10 +254,6 @@ namespace boost { namespace logging {
             else
                 logger_base_type::call_after_destroyed(msg);
         }
-        void turn_cache_off() {
-            cache().turn_cache_off( writer() );
-        }
-
     private:
         void init() {
             logger_base_type::m_base.forward_to(this);
@@ -273,7 +275,7 @@ namespace boost { namespace logging {
         using logger_base_type::cache;
 
 
-        typedef logger<gather_msg, write_msg*> self;
+        typedef logger<gather_msg, write_msg*> self_type;
 
         logger(write_msg * writer = 0) : m_writer(writer) {
             logger_base_type::m_base.forward_to(this);
@@ -290,10 +292,14 @@ namespace boost { namespace logging {
         /** 
             reads all data about a log message (gathers all the data about it)
         */
-        gather_holder<self, gather_msg> read_msg() const { return gather_holder<self, gather_msg>(*this) ; }
+        gather_holder<self_type, gather_msg> read_msg() const { return gather_holder<self_type, gather_msg>(*this) ; }
 
         write_msg & writer()                    { return *m_writer; }
         const write_msg & writer() const        { return *m_writer; }
+
+        void turn_cache_off() {
+            cache().turn_cache_off( writer() );
+        }
 
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
@@ -302,10 +308,6 @@ namespace boost { namespace logging {
             else
                 logger_base_type::call_after_destroyed(msg);
         }
-        void turn_cache_off() {
-            cache().turn_cache_off( writer() );
-        }
-
     private:
         write_msg *m_writer;
         // a base object - one that can be used to log messages, without having to know the full type of the log.

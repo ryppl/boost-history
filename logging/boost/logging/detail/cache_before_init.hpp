@@ -112,7 +112,7 @@ public:
         return !(m_cache.is_using_cache);
     }
 
-    template<class writer_type> void turn_cache_off(const writer_type & writer) {
+    template<class writer_type> void turn_cache_off(const writer_type & writer_) {
         if ( is_cache_turned_off() )
             return; // already turned off
 
@@ -135,10 +135,10 @@ public:
         for ( typename cache::message_array::iterator b = msgs.begin(), e = msgs.end(); b != e; ++b) {
             if ( !(b->is_enabled) )
                 // no filter
-                writer( b->string );
+                writer_( b->string );
             else if ( b->is_enabled() )
                 // filter enabled
-                writer( b->string );
+                writer_( b->string );
         }
     }
 
