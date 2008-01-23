@@ -17,7 +17,7 @@
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
 #endif
-#include <boost/shared_ptr.hpp>
+#include <boost/tr1/memory.hpp>
 #include <boost/signals.hpp>
 #include <boost/algorithm/string.hpp>
 #if defined(BOOST_MSVC)
@@ -72,7 +72,7 @@ namespace boost { namespace pinhole
     class BOOST_PINHOLE_DECL property_manager
     {
     public:
-        typedef boost::shared_ptr<property_manager> instance_type;
+        typedef std::tr1::shared_ptr<property_manager> instance_type;
 
     private:
         static void deleter(property_manager* manager)
@@ -272,7 +272,7 @@ namespace boost { namespace pinhole
             #pragma warning(push)
             #pragma warning( disable: 4251 )
         #endif
-            static boost::shared_ptr<property_manager> m_instance;
+            static std::tr1::shared_ptr<property_manager> m_instance;
             category_to_property_group_map m_property_group_collection;
             category_collection m_category_collection;
         #if defined(BOOST_MSVC)

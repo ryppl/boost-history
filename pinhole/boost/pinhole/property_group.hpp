@@ -20,10 +20,10 @@
     #pragma warning(push)
     #pragma warning( disable: 4561)
 #endif
-#include <boost/bind.hpp>
+#include <boost/tr1/memory.hpp>
+#include <boost/tr1/type_traits.hpp>
+#include <boost/tr1/functional.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/function.hpp>
 #include <boost/any.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -55,9 +55,9 @@ namespace boost { namespace pinhole
     };
 
     template<typename T>
-    inline boost::function<void (const T&)> property_system_var_setter_builder(T &t)
+    inline std::tr1::function<void (const T&)> property_system_var_setter_builder(T &t)
     {
-        return boost::bind<void>(property_system_var_setter<T>(t), _1);
+        return std::tr1::bind<void>(property_system_var_setter<T>(t), _1);
     }
 
     #define BOOST_SETTER_VAR(c) boost::pinhole::property_system_var_setter_builder(c)
@@ -78,9 +78,9 @@ namespace boost { namespace pinhole
     };
 
     template<typename T>
-    inline boost::function<T ()> property_system_var_getter_builder(T &t)
+    inline std::tr1::function<T ()> property_system_var_getter_builder(T &t)
     {
-        return boost::bind<T>(property_system_var_getter<T>(t));
+        return std::tr1::bind<T>(property_system_var_getter<T>(t));
     }
 
     #define BOOST_GETTER_VAR(c) boost::pinhole::property_system_var_getter_builder(c)
