@@ -28,11 +28,6 @@ namespace boost
     //JV: G++ can't resolve names in these enums in axis_plot_frame
     //    when they are in svg_2d_plot.hpp
 
-    static const double wh = 0.7; // font text width/height ratio.
-    // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
-    // determine the exact width of digits, so an
-    // arbitrary average width height ratio wh = 0.7 is used as a good approximation.
-
     static const double sin45 = 0.707; // Use if axis value labels are sloping.
 
     // x_axis_position_ and y_axis_position_  use these.
@@ -275,7 +270,7 @@ namespace boost
               }
             }
             else
-            { // Internal_style, draw tick from the central X axis line.
+            { // Draw tick from the central X axis line (Internal_style).
               y_up = derived().x_axis_.axis_; // X-axis line.
               y_down = derived().x_axis_.axis_;
               if(derived().x_ticks_.up_ticks_on_)
@@ -301,7 +296,7 @@ namespace boost
                 std::string v = strip_e0s(label.str());
                 label.str(v);
               }
-              double y = y_down; // bottom end of the tick.
+              double y = (derived().x_ticks_.major_value_labels_on_ < 0) ? y_down : y_up; // bottom or top end of the tick.
               align_style alignment = center_align;
               if(derived().x_ticks_.down_ticks_on_)
               {  // No need to shift if derived().up_ticks_on_ as labels are below the X-axis.
@@ -310,7 +305,7 @@ namespace boost
               if (derived().x_ticks_.label_rotation_ == upward)
               { // 
                 alignment = right_align;
-                x -= derived().x_label_info_.style().font_size() * 0.3;  // To centre digit and - on tick.
+                x -= derived().x_label_info_.style().font_size() * 0.3;  // To centre digit and minus (or plus) sign - on tick.
                 //y += label.str().size() * derived().x_label_info_.font_size()  * 0.5;  // Part digit space.
                 // so the last digit will be by the tick.
               }
@@ -466,6 +461,9 @@ namespace boost
           // Update title_info_ with position.
           derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
           // Assumes align = center_align.
+          // And center_align will ensure that will center correctly
+          // even if original string is long because contains Unicode like &#x3A9;
+          // because the render engine does the centering.
           double y;
           y = derived().title_info_.style().font_size() * derived().text_margin_; // Leave a linespace above.
           derived().title_info_.y(y);
@@ -488,7 +486,7 @@ namespace boost
           else
           { // legend_on_ == true
             // Work out the size the legend box needs to be to hold the
-            // header, markers & text.
+            // header, markers, lines & text.
             size_t num_series = derived().series.size(); // How many data series.
             int font_size = derived().legend_header_.style().font_size();
             int point_size =  derived().series[0].point_style_.size();
@@ -497,22 +495,25 @@ namespace boost
             // std::cout << spacing <<  ' ' << font_size << ' ' << point_size << std::endl;
             bool is_header = (derived().legend_header_.text() != "");
 
-            size_t longest = derived().legend_header_.text().size();
+            double longest = string_svg_length(derived().legend_header_.text(), derived().legend_style_);
+            std::cout << "\nLegend header " << longest << " svg units." << std::endl;
+
+            //text_element legend_header_; // legend box header or title (if any).
+            //text_style legend_style_;
+            // was size_t longest = derived().legend_header_.text().size();
             // 0 if no header.
-            for(unsigned int i = 0; i < num_series; ++i)
-            { // Find the longest text in all the data series.
+            for(size_t i = 0; i < num_series; ++i)
+            { // Find the longest text (if longer than header) in all the data series.
               std::string s = derived().series[i].title_;
-              size_t siz = s.size();
+              double siz = string_svg_length(s, derived().legend_style_);
               if (siz > longest)
               {
                 longest = siz;
               }
             } // for
-            std::cout.flags(std::ios_base::dec);
-            // std::cout << "\nLongest legend header or data descriptor " << longest << " chars" << std::endl;
-            derived().legend_width_ = (1 + longest) 
-                                    * ::boost::svg::wh  
-                                    * font_size;
+            // std::cout.flags(std::ios_base::dec); should not be needed  TODO
+            std::cout << "\nLongest legend header or data descriptor " << longest << " svg units." << std::endl;
+            derived().legend_width_ = (1 + longest);
                                     
             // Allow for a leading space, longest text
             // & trailing space before box margin.
@@ -573,15 +574,15 @@ namespace boost
               }
               break;
                 // If outside then reserve space for legend by reducing plot window.
-            case outside_right: // Default.
+            case outside_right: // Default legend position is outside_right,
               // so that it isn't too close to the image edge or the plot window.
               derived().plot_right_ -= derived().legend_width_ + spacing; // Narrow plot window from right.
-              derived().legend_left_ = derived().plot_right_; // plot + border.
+              derived().legend_left_ = derived().plot_right_  + spacing; // plot + border.
               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
               derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
-              //derived().legend_top_ += spacing;  // down a bit? Or could center vertically?
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
+              // TODO other positions untested.
             case outside_left:
               derived().legend_left_ = derived().plot_left_ + spacing; // left edge + space.
               derived().plot_left_ += derived().legend_width_ + spacing; // Push plot window right to make room,
@@ -1420,7 +1421,7 @@ namespace boost
 
           Derived& title_font_alignment(align_style alignment)
           {
-            derived().title_info_.font_alignment(alignment);
+            derived().title_info_.alignment(alignment);
             return derived();
           }
 
@@ -1485,7 +1486,7 @@ namespace boost
             return derived();
           }
 
-          std::pair<double, double> legend_top_left()
+          const std::pair<double, double> legend_top_left()
           {// Top left of legend box.
             std::pair<double, double> r;
             r.first = derived().legend_left_; 
@@ -1493,8 +1494,8 @@ namespace boost
             return r;
           }
 
-          std::pair<double, double> legend_bottom_right()
-          {// BOttom right of legend box.
+          const std::pair<double, double> legend_bottom_right()
+          {// Bottom right of legend box.
             std::pair<double, double> r;
             r.first = derived().legend_right_; 
             r.second = derived().legend_bottom_;
@@ -1502,7 +1503,7 @@ namespace boost
           }
 
           Derived& legend_lines(bool is)
-          {
+          { // If legend should include samples of the lines joining data points.
             derived().legend_lines_ = is;
             return derived();
           }
@@ -1544,6 +1545,19 @@ namespace boost
           {
             return derived().outside_legend_on_;
           }
+
+
+          Derived& legend_header_font_size(int size)
+          {
+            derived().legend_header_.style().font_size(size);
+            return *this;
+          }
+
+          int legend_header_font_size()
+          {
+            return derived().legend_header_.style().font_size();
+          }
+
           Derived& plot_window_on(bool cmd)
           {
             derived().plot_window_on_ = cmd;
@@ -1556,7 +1570,7 @@ namespace boost
             }
             //derived().legend_place_ = outside_right;
             return derived();
-          }
+          } 
 
           bool plot_window_on()
           {
@@ -1861,7 +1875,7 @@ namespace boost
           Derived& axes_on(bool is)
           { // Draw *both* x and y axes (note plural).
             derived().x_axis_.axis_line_on_ = is;
-            derived().y_axis_.axis_line_on_ = is;
+            derived().y_axis_.axis_line_on_ = is; // Unsuitable for 1D?
             return derived();
           }
 
@@ -2286,6 +2300,10 @@ namespace boost
             }
             derived().x_axis_.min_ = min_x;
             derived().x_axis_.max_ = max_x;
+            //derived().x_ticks_.max_ = min_x;
+            //derived().y_ticks_.max_ = max_x;
+            // done in calculate_plot_window. 
+            // TODO May be best to combine these?
             return derived();
           }
 

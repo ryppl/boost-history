@@ -19,7 +19,7 @@
 #include "svg_color.hpp"
 #include "detail/svg_style_detail.hpp"
 
-#include <ostream>
+#include <iostream>
 // using std::ostream;
 #include <sstream>
 // using std::stringstream;
@@ -53,6 +53,8 @@ enum rotate_style
 
 const std::string strip_e0s(std::string s);
 // Ugly hack to remove unwanted sign and leading zero(s) in exponent.
+double string_svg_length(const std::string& s, const text_style& style);
+// Estimate length of string when appears as svg units.
 
 // -----------------------------------------------------------------
 // This is the style information for any <g> tag.
@@ -250,12 +252,12 @@ public:
   { // text_style default constructor, defines defaults for all private members.
   }
 
-  int font_size()
+  int font_size() const
   {
     return font_size_;
   }
 
-  text_style& font_size(unsigned int i)
+  const text_style& font_size(unsigned int i)
   { // pixels, default 10.
     font_size_ = i;
     return *this;
@@ -266,7 +268,7 @@ public:
     return font_family_;
   }
 
-  text_style& font_family(const std::string& s)
+  const text_style& font_family(const std::string& s)
   { // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
     font_family_ = s;
     return *this;
@@ -277,7 +279,7 @@ public:
     return style_; // example "normal"
   }
 
-  text_style& font_style(const std::string& s)
+  const text_style& font_style(const std::string& s)
   { // Examples: "italic"
     style_ = s;
     return *this;
@@ -288,7 +290,7 @@ public:
     return weight_;
   }
 
-  text_style& font_weight(const std::string& s)
+  const text_style& font_weight(const std::string& s)
   { // svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
     // Examples: "bold", "normal" 
     weight_ = s;
@@ -300,7 +302,7 @@ public:
     return stretch_;
   }
 
-  text_style& font_stretch(const std::string& s)
+  const text_style& font_stretch(const std::string& s)
   { // Examples: "wider" but implementation?
     // font-stretch: normal | wider | narrower ...
     stretch_ = s;
@@ -312,7 +314,7 @@ public:
     return decoration_;
   }
 
-  text_style& font_decoration(const std::string& s)
+  const text_style& font_decoration(const std::string& s)
   { // Examples: "underline" | "overline" | "line-through"
     decoration_ = s; // But implementation doubtful.
     return *this;
@@ -375,6 +377,7 @@ std::ostream& operator<< (std::ostream& os, const text_style& ts)
 } // std::ostream& operator<<
 
 text_style no_style; // Uses all constructor defaults.
+
 
 enum point_shape
 { // Marking a data point.
@@ -738,20 +741,23 @@ public:
     bool major_grid_on_;  // Draw X grid at major ticks.
     bool minor_grid_on_;// Draw X grid at minor ticks.
     int value_precision_; // precision for tick value labels, usually 3 will suffice.
-    std::_Ios_Fmtflags value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
+    std::ios_base::fmtflags value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; // If redundant zero, + and e are to be stripped.
-    size_t label_max_chars_;  // width (in SVG units) of longest label on axis.
+    double label_max_width_;  // width (in SVG units) of longest label on axis.
     int ticks_on_plot_window_on_; // Value labels & ticks on the plot window border 
     // (rather than on X or Y-axis).
-    // For X-axis -1 = left, 0 = false, +1 = right. Default left of plot window.
-    // For Y-axis -1 = bottom, 0 = false, +1 = top. Default bottom of plot window.
+    // For X-axis -1 = left, 0 = false, +1 = right. Default -1 left of plot window.
+    // For Y-axis -1 = bottom, 0 = false, +1 = top. Default -1 bottom of plot window.
+    const text_style& value_label_style_;
 
     ticks_labels_style(dim d = X,
+      const text_style& style = no_style,
       double max = 10., double min = -10.,
       double major_interval = 2.,
       unsigned int num_minor_ticks = 4)
       : // Constructor.
       dim_(d),
+      value_label_style_(style),
       max_(max), min_(min),
       major_interval_(major_interval),
       num_minor_ticks_(num_minor_ticks),
@@ -787,7 +793,7 @@ public:
     value_ioflags_(std::ios::dec),  // IO formatting flags for the axis.
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
     strip_e0s_(true), // strip superflous zeros and signs.
-    label_max_chars_(0), // width (in SVG units) of longest label on axis.
+    label_max_width_(0.), // width (estimated in SVG units) of longest label on axis.
     ticks_on_plot_window_on_(-1) // Value labels & ticks on the plot window rather than on X or Y-axis.
     // Default -1 means left or bottom.
   {
@@ -800,8 +806,9 @@ public:
         throw std::runtime_error("Axis ticks & labels range too small!" );
       }
   }
+    
 
-  size_t label_length(double value)
+  double label_length(double value)
   { // Find the length of label for a value.
     // Needs to know the IO precision & flags for the axis,
     // and if zeros are to be stripped, so can't be a free function.
@@ -809,20 +816,24 @@ public:
     label.precision(value_precision_);
     label.flags(value_ioflags_);
     label << value; // "1.2" or "3.4e+000"...
+    double r;
     if (strip_e0s_)
     { // Do want to strip unecessary e, +, & leading exponent zeros.
       std::string stripped = strip_e0s(label.str());
-      return stripped.size();
+      r = string_svg_length(stripped, value_label_style_);
+      // want x_or y_value_label_style_ here!
+      return r;
     }
-    return label.str().size();
-  } // int x_label_length
+    r = string_svg_length(label.str(), value_label_style_);
+    return r;
+  } // double label_length
 
-  size_t longest_label()
-  { // Update label_max_chars_ with the longest value label as pixels,
+  double longest_label()
+  { // Update label_max_width_ with the longest value label as pixels,
     // return the count of digits etc.
     if(major_value_labels_on_ != 0) // ! none
     { // Show values by the tick as "1.2" or "3.4e+000"...
-      size_t longest = 0;
+      double longest = 0;
       
       //axis_line_style& axis = (dim_ = X) ? y_axis() : x_axis(); // The intersecting *other* axis.
       //  || !axis.axis_line_on_ ignore these tests to avoid the above that doesn't work.
@@ -838,7 +849,7 @@ public:
           // or avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
           // (won't be a Y-axis line for 1-D,
           // where both the zero tick & value label is always wanted).
-          size_t l = label_length(v);
+          double l = label_length(v);
           if (l > longest)
           {
             longest = l;
@@ -852,19 +863,19 @@ public:
         { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
           // (won't be Y-axis line for 1-D where the zero tick is always wanted).
           // But no tick means no value label 0 either unless on_plot_window.
-          size_t l = label_length(v);
+          double l = label_length(v);
           if (l > longest)
           {
             longest = l;
           }
         }
       } // for v
-      label_max_chars_ = longest;
+      label_max_width_ = longest;
       return longest; 
     }
     else
     {
-      label_max_chars_ = 0;
+      label_max_width_ = 0;
       return 0;
     }
   } // longest_label()
@@ -931,6 +942,8 @@ public:
     }
 }; // class box_style
 
+const std::string strip_e0s(std::string s);
+
 const std::string strip_e0s(std::string s)
 { // Ugly hack to remove unwanted sign and leading zero(s) in exponent.
   // Use to work out the longest value label before calculate_plot_window.
@@ -977,6 +990,48 @@ const std::string strip_e0s(std::string s)
   return s; // Perhaps unchanged.
 } // const std::string strip(double d)
 
+ static const double wh = 0.7; // font text width/height ratio.
+  // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
+  // determine the exact width of digits, so an 
+  // arbitrary average width height ratio wh = 0.7 is used as a good approximation.
+
+double string_svg_length(const std::string& s, const text_style& style)
+{ // Return length of string in SVG units depending on font size etc.
+  // If possible use an actual length, else use average char width,
+  // and deal with Unicode, for example &#x3A9; = greek omega, 
+  // counting each symbol(s) embedded between & amd ; as one character,
+  // and ignore embedded xml like <sub> (not implemented by browsers yet).
+
+ double d = 0.; // Estimated or actual width of resulting svg string.
+ bool in_esc = false;
+ for (std::string::const_iterator i = s.begin(); i != s.end(); i++)
+ {
+    if (*i == '&')
+    { // Start of Unicode 'escape sequence' &#x3A9;
+      in_esc = true;
+       while ((*i != ';')
+         && (i != s.end())) // In case mistakenly not terminated.
+       {
+          i++; // Only count &#x3A9; as 1 character wide.
+       }
+       in_esc = false;
+    }
+    if (*i == '<')
+    {
+      in_esc = true;
+       while ((*i != '>')
+         && (i != s.end())) // In case mistakenly not terminated.
+       {
+          i++; // Only count <...>; as NO character wide.
+       }
+       d--;
+       in_esc = false;
+    }
+    d++;
+ }
+ std::cout << "string " << s << " has " << d << " characters." << std::endl; 
+ return d * style.font_size() * wh;
+} // double string_svg_length(
 
 
 }//svg

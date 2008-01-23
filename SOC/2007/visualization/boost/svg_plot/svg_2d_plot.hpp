@@ -215,7 +215,7 @@ namespace boost
       double legend_bottom_; // bottom of legend box.
       size_t legend_longest_; // longest (both header & data) string in legend box,
 
-      axis_line_style x_axis_;
+      axis_line_style x_axis_; 
       axis_line_style y_axis_;
 
       ticks_labels_style x_ticks_;
@@ -266,8 +266,8 @@ namespace boost
         x_axis_(X, -10., +10., black, 1, 0, true, false, true),
         y_axis_(Y, -10., +10., black, 1, 0, true, false, true),
         // Might fill in all values, but there are rather many for ticks_labels_style,
-        x_ticks_(X),// so for defaults see ticks_labels_style.
-        y_ticks_(Y),
+        x_ticks_(X, x_value_label_style_),// so for other defaults see ticks_labels_style.
+        y_ticks_(Y, y_value_label_style_),
         y_label_info_(0, 0, "Y Axis", y_axis_label_style_, center_align, upward),
         y_units_info_(0, 0, " (units)", y_axis_label_style_, center_align, upward),
         y_label_value_(0, 0, "", y_value_label_style_, center_align, upward),
@@ -389,8 +389,6 @@ namespace boost
           plot_top_ += title_font_size() * (text_margin_ + 0.5);
         }
 
-       size_legend_box(); // Size depends on its contents.
-       place_legend_box(); // according to options chosen.
        // Assume that axis labels are always at bottom and left.
        if(x_axis_.label_on_)
        { // Leave space at bottom for X axis label.
@@ -410,7 +408,10 @@ namespace boost
           plot_top_ += image_border_.margin_;
           plot_bottom_ -=  image_border_.margin_;
         }
-        // Check if the axes will intersect.
+       size_legend_box(); // Size depends on its contents.
+       place_legend_box(); // according to options chosen.
+
+       // Check if the axes will intersect.
         // X axis position is determined by the range of Y min and max label values.
         x_axis_position_ = x_intersects_y;  // Assume X-axis will intersect Y-axis (range of Y values includes zero).
         if (y_axis_.min_ > std::numeric_limits<double>::min()) // all Y values definitely > zero.
@@ -437,8 +438,14 @@ namespace boost
           y_ticks_.ticks_on_plot_window_on_ = +1; // right = true;
         }
 
+        // Ensure both axis and ticks have the same range.
+        x_ticks_.max_ = x_axis_.max_;
+        x_ticks_.min_ = x_axis_.min_;
+        y_ticks_.max_ = y_axis_.max_;
+        y_ticks_.min_ = y_axis_.min_;
+
         // Calculate the number of chars of the longest value labels.
-        x_ticks_.longest_label();
+        x_ticks_.longest_label(); // Updates label_max_width_
         y_ticks_.longest_label();
 
         // Check that labels won't collide and advise if they will.
@@ -447,16 +454,16 @@ namespace boost
         double y_label_length_ = 0.; // Width of y labels, depending on orientation.
         if (y_ticks_.label_rotation_ == horizontal)
         { // Move plot left edge right to give space for y_value_precision_ digits.
-          y_label_length_ += y_ticks_.label_max_chars_  * y_axis_label_style_.font_size() * wh; // SVG units
+           y_label_length_ += y_ticks_.label_max_width_; // SVG units.
         }
         else if((y_ticks_.label_rotation_ == upward) || (y_ticks_.label_rotation_ == downward))
         { // Only need one char & 1 space width from Y-axis label.
-          y_label_length_ += y_value_label_style_.font_size() * 2 * wh;
+          y_label_length_ += 2 * y_value_label_style_.font_size() * wh;
         }
         else
         { // Assume some slope 45, so diagonally down from tick,
           // and takes a bit less room.
-          y_label_length_ = y_ticks_.label_max_chars_ * y_value_label_style_.font_size() * wh * sin45;
+          y_label_length_ = y_ticks_.label_max_width_  * sin45;
         }
 
         if (y_ticks_.major_value_labels_on_ != 0)
@@ -471,30 +478,30 @@ namespace boost
           {  // Contract plot window right to left to make space for value labels on right.
            plot_right_ -= y_label_length_;
           }
-          // else y_ticks_.ticks_on_plot_window_on_ == 0 // On vertical Y-axis line.
-          // Ignore the unusual case of Y-axis line too close to the axis label?
-          // In this case the value labels may overflow the plot window
-          // and collide with the axis label!
-          // User must change to put value label downward, or on other side of the axis line.
-          // using major_value_labels_on(int d)
-          // to set tick value labels to left (<0), none (==0) or right (>0).
           else
-          { // no labels on plot window (may be on mid-plot Y-axis).
+          { // y_ticks_.ticks_on_plot_window_on_ == 0
+            // no labels on plot window (may be on mid-plot Y-axis line).
+            // Ignore the unusual case of Y-axis line too close to the axis label.
+            // In this case the value labels may overflow the plot window
+            // and collide with the axis label!
+            // User must change to put value label downward, or on other side of the axis line.
+            // using major_value_labels_on(int d)
+            // to set tick value labels to left (<0), none (==0) or right (>0).
           }
         } // y_ticks_. major_value_labels_on
 
         double x_label_length_ = 0; // Work out the longest value label for X-Axis.
         if (x_ticks_.label_rotation_ == horizontal)
         { // Only 1 char height & 1 space needed if labels are horizontal.
-          x_label_length_ = 2 * x_value_label_style_.font_size() * wh; // SVG chars
+          x_label_length_ = 2 * x_value_label_style_.font_size() * wh; // 2 SVG chars
         }
         else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
         { // ! horizontal so will need more than 2 chars worth.
-            x_label_length_+= x_ticks_.label_max_chars_ * x_value_label_style_.font_size() * wh; // SVG chars.
+            x_label_length_+= x_ticks_.label_max_width_ ; // SVG chars.
         }
         else
         { // Assume label is sloping, say 45, so * sin(45) = 0.707.
-            x_label_length_+= x_ticks_.label_max_chars_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
+            x_label_length_+= x_ticks_.label_max_width_ * sin45; // SVG 'chars'.
         }
 
         if (x_ticks_.major_value_labels_on_ != 0)
@@ -511,6 +518,7 @@ namespace boost
           }
           else
           { // no labels on plot window (may be on mid-plot X-axis).
+            // See also notes above on case where labels can overwrite axis.
           }
         } // x_ticks_. major_value_labels_on
 
@@ -525,16 +533,16 @@ namespace boost
         }
 
         if (x_axis_.axis_line_on_)
-        { // Want a X-axis line, so check if range includes zero, so axes intersect,
+        { // Want an X-axis line, so check if range includes zero, so axes intersect,
           // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
-          // If not fix axis to bottom of the plot window.
-          if ((x_axis_position_ == bottom) // All definitely > zero.
+          // If not fix axis to bottom (or top) of the plot window.
+          if ((x_axis_position_ == bottom) // All Y values definitely > zero.
             && !(x_ticks_.ticks_on_plot_window_on_ < 0) ) // & not already at bottom.
           { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
             plot_bottom_ -= x_label_length_; // Move up for the value labels.
             x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
           }
-          else if ((x_axis_position_ == top)  // definitely < zero.
+          else if ((x_axis_position_ == top)  // All Y values definitely < zero.
             && !(x_ticks_.ticks_on_plot_window_on_ > 0) ) // & not already at top.
           { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
              plot_top_ += x_label_length_; // Move down for labels.
@@ -549,14 +557,14 @@ namespace boost
         if (y_axis_.axis_line_on_)
         { // Want a Y-axis line, so check if range includes zero, so axes intersect,
           // and y_axis_ is svg coordinate of X-axis (usually x = 0).
-          // If not fix axis to left of the plot window
-          // and perhaps leave space (and quiggle between) to show this?
-          if (y_axis_position_ == left) // all definitely > zero.
-          { // Y-axis will not intersect X -axis, so put Y-axis line to left of plot window.
+          // If not fix axis to left (or right) of the plot window.
+// TODO more logic here as X???
+          if (y_axis_position_ == left) // All X values definitely > zero.
+          { // Y-axis will not intersect X -axis, so put Y-axis line on plot window.
             y_axis_.axis_ = plot_left_; // Y-axis to left,
             //plot_left_ += 2 * y_label_info_.font_size(); // with a space.
           }
-          else if(y_axis_position_ == right)
+          else if(y_axis_position_ == right) // All X values definitely < zero.
           {
             y_axis_.axis_ = plot_right_; // Y-axis to right of plot window,
             //plot_right_ -= 2 * y_label_info_.font_size(); // with a space.
@@ -567,12 +575,23 @@ namespace boost
           }
         } // if (use_y_axis_line_)
 
-        // TODO this can move up to after last change to plot_left ...???
+        if (plot_right_ <= plot_left_)
+        {
+          std::cout << "plot window left " << plot_left_ << ", right " << plot_right_ << std::endl;
+          throw std::runtime_error("Plot window right <= left!");
+        }
+
+        if (plot_top_ >= plot_bottom_)
+        {
+           std::cout << "plot window top " << plot_top_ << ", bottom " << plot_bottom_ << std::endl;
+          throw std::runtime_error("Plot window top >= bottom!");
+        }
+
         // Calculate scale and shift factors for transform from Cartesian to plot.
         // SVG image is 0, 0 at top left,y increase *downwards*
         // Cartesian 0, 0 at bottom left, y increasing upwards.
         x_scale_ = (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_);
-        x_shift_ = plot_left_ - x_axis_.min_ *(plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_);
+        x_shift_ = plot_left_ - x_axis_.min_ * (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_);
         y_scale_ = -(plot_bottom_-plot_top_) / (y_axis_.max_-y_axis_.min_);
         y_shift_ = plot_top_ - (y_axis_.max_ * (plot_top_ - plot_bottom_) / (y_axis_.max_ - y_axis_.min_));
 
@@ -1270,7 +1289,7 @@ namespace boost
         return y_ticks_.value_precision_;
       }
 
-      svg_2d_plot& y_value_ioflags(std::_Ios_Fmtflags flags)
+      svg_2d_plot& y_value_ioflags( std::ios_base::fmtflags flags)
       { // IO flags of Y tick label values (default 0X201).
         y_ticks_.value_ioflags_ = flags;
         return *this;

@@ -38,23 +38,26 @@ namespace svg
 {
   // Forward declarations.
   const std::string strip_e0s(std::string s); // Strip unncessary zeros and e and sign.
+  double string_svg_length(const std::string& s, const text_style& style);
+
   class svg_1d_plot; // Plot.
   class svg_1d_plot_series; // plot data series.
+  // see axis_plot_frame.hpp
 
-  static const double wh = 0.7; // font text width/height ratio.
+//  static const double wh = 0.7; // font text width/height ratio.
   // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
   // determine the exact width of digits, so an 
   // arbitrary average width height ratio wh = 0.7 is used as a good approximation.
 
-  static const double sin45 = 0.707; // Use if axis value labels are sloping.
+//  static const double sin45 = 0.707; // Use if axis value labels are sloping.
 
   // x_axis_position_ and y_axis_position_  use these.
-  enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+//  enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
   // bottom = X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
   // top = X-axis free above top of X-axis (case of all Y definitely > 0).
   // x_intersects_y when Y values include zero, so X intersects the Y axis.
 
-  enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
+//  enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
   // left = Y-axis free to left of end of X-axis (case of all X definitely < 0).
   // right = Y-axis free to left of end of X-axis (case of all X definitely > 0).
   // y_intersects_x when X values include zero, so intersects the X axis.
@@ -271,6 +274,8 @@ public:
     x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
     x_label_value_(0, 0, "", x_value_label_style_, center_align, horizontal),
     x_axis_(X, -10., +10., black, 1, 0, true, false, true),
+    y_axis_(Y, 0., +1., black, 1, 0, false, false, false),
+
     // Might fill in all values, but there are rather many for ticks_labels_style,
     x_ticks_(X),// so for defaults see ticks_labels_style.
     image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
@@ -304,21 +309,21 @@ public:
     // Build the document tree & add all the children of the root node.
     for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
-      image.add_g_element();
+      image.g();
     }
 
     // Set other SVG color, stroke & width defaults for various child PLOT nodes.
-    image.get_g_element(PLOT_BACKGROUND).style().fill_color(image_border_.fill_);
-    image.get_g_element(PLOT_BACKGROUND).style().stroke_color(image_border_.stroke_);
-    image.get_g_element(PLOT_BACKGROUND).style().stroke_width(image_border_.width_); //
-    image.get_g_element(PLOT_WINDOW_BACKGROUND).style().fill_color(plot_window_border_.fill_);
-    image.get_g_element(PLOT_WINDOW_BACKGROUND).style().stroke_width(plot_window_border_.width_).stroke_color(plot_window_border_.stroke_);
-    image.get_g_element(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
-    image.get_g_element(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
-    image.get_g_element(PLOT_X_LABEL).style().fill_color(black);
-    image.get_g_element(PLOT_VALUE_LABELS).style().fill_color(black);
-    image.get_g_element(PLOT_LEGEND_TEXT).style().fill_color(black);
-    image.get_g_element(PLOT_TITLE).style().fill_color(black).stroke_on(false);
+    image.g(PLOT_BACKGROUND).style().fill_color(image_border_.fill_);
+    image.g(PLOT_BACKGROUND).style().stroke_color(image_border_.stroke_);
+    image.g(PLOT_BACKGROUND).style().stroke_width(image_border_.width_); //
+    image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(plot_window_border_.fill_);
+    image.g(PLOT_WINDOW_BACKGROUND).style().stroke_width(plot_window_border_.width_).stroke_color(plot_window_border_.stroke_);
+    image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
+    image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
+    image.g(PLOT_X_LABEL).style().fill_color(black);
+    image.g(PLOT_VALUE_LABELS).style().fill_color(black);
+    image.g(PLOT_LEGEND_TEXT).style().fill_color(black);
+    image.g(PLOT_TITLE).style().fill_color(black).stroke_on(false);
 
     // Note that widths are stored in member data *and* copied here.
     // Not sure if this is wise but ...
@@ -326,15 +331,15 @@ public:
     // Ticks
     if(x_ticks_.use_up_ticks() || x_ticks_.use_down_ticks())
     {
-      image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_width(x_ticks_.major_tick_width_).stroke_color(black);
-      image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_width(x_ticks_.minor_tick_width_).stroke_color(black);
+      image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(x_ticks_.major_tick_width_).stroke_color(black);
+      image.g(PLOT_X_MINOR_TICKS).style().stroke_width(x_ticks_.minor_tick_width_).stroke_color(black);
     }
     // Grids.
     // Default color & width for grid, used or not.
-    image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
-    BOOST_ASSERT(image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
-    image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
-    //image.get_g_element(PLOT_DATA_LINES).style().stroke_width(2); // default width.
+    image.g(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
+    BOOST_ASSERT(image.g(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
+    image.g(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
+    //image.g(PLOT_DATA_LINES).style().stroke_width(2); // default width.
     // Alter with plot.data_lines_width(4); 
 
     legend_place_ = (plot_window_on_) ? outside_right : inside; // Defaults.
@@ -394,11 +399,11 @@ public:
       } 
       else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
       { // ! horizontal so will need more than 2 chars worth.
-          x_label_length_+= x_ticks_.label_max_chars_ * x_value_label_style_.font_size() * wh; // SVG chars.
+          x_label_length_+= x_ticks_.label_max_width_ * x_value_label_style_.font_size() * wh; // SVG chars.
       }
       else
       { // Assume label is sloping, say 45, so * sin(45) = 0.707.
-          x_label_length_+= x_ticks_.label_max_chars_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
+          x_label_length_+= x_ticks_.label_max_width_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
       }
 
       if (x_ticks_.major_value_labels_on_ != 0)
@@ -450,7 +455,7 @@ public:
     if(plot_window_on_)
     {
       // Draw plot window rect.
-      image.get_g_element(detail::PLOT_WINDOW_BACKGROUND).push_back(
+      image.g(detail::PLOT_WINDOW_BACKGROUND).push_back(
         new rect_element(plot_left_, plot_top_, (plot_right_ - plot_left_), plot_bottom_ - plot_top_));
     } // plot_window_on_
   } //  void calculate_plot_window()
@@ -490,7 +495,7 @@ public:
         y1 = plot_top_;
         y2 = plot_bottom_;
       }
-      image.get_g_element(detail::PLOT_X_AXIS).line(x, y1, x, y2);
+      image.g(detail::PLOT_X_AXIS).line(x, y1, x, y2);
     }
     draw_x_axis();
   } //  draw_axes()
@@ -501,7 +506,7 @@ public:
     clear_all();
 
     // Draw plot background.
-    image.get_g_element(detail::PLOT_BACKGROUND).push_back(
+    image.g(detail::PLOT_BACKGROUND).push_back(
       new rect_element(0, 0, image.x_size(),  image.y_size()));
 
     calculate_plot_window();
@@ -523,7 +528,7 @@ public:
     transform_y(y);
     for(unsigned int i = 0; i < series.size(); ++i)
     { // For each of the data series.
-      g_element& g_ptr = image.get_g_element(detail::PLOT_DATA_POINTS).add_g_element();
+      g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
 
       g_ptr.style().stroke_color(series[i].point_style_.stroke_color_);
       g_ptr.style().fill_color(series[i].point_style_.fill_color_);
@@ -548,7 +553,7 @@ public:
   { // document ids for use in <g id = "PLOT_TITLE".../>
     for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
-      image.get_g_element(i).id(detail::document_ids[i]);
+      image.g(i).id(detail::document_ids[i]);
     }
   } //  void set_ids()
 

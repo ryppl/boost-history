@@ -46,19 +46,19 @@ namespace boost
 namespace svg
 {
 
-BOOST_PARAMETER_NAME((box_style,          keyword) box);
-BOOST_PARAMETER_NAME((median_style,       keyword) median);
-BOOST_PARAMETER_NAME((axis_style,         keyword) axis);
-BOOST_PARAMETER_NAME((min_whisker_style,  keyword) min_whisker);
-BOOST_PARAMETER_NAME((max_whisker_style,  keyword) max_whisker);
-BOOST_PARAMETER_NAME((mild_outlier_style, keyword) mild_outlier);
-BOOST_PARAMETER_NAME((ext_outlier_style,  keyword) ext_outlier);
-BOOST_PARAMETER_NAME((whisker_length,     keyword) whisker);
-BOOST_PARAMETER_NAME((box_width,          keyword) width);
-BOOST_PARAMETER_NAME((functor,            keyword) fnctr);
-BOOST_PARAMETER_NAME((ctr,                keyword) container);
-BOOST_PARAMETER_NAME((name,              keyword)  title);
-
+//BOOST_PARAMETER_NAME((box_style,          keyword) box);
+//BOOST_PARAMETER_NAME((median_style,       keyword) median);
+//BOOST_PARAMETER_NAME((axis_style,         keyword) axis);
+//BOOST_PARAMETER_NAME((min_whisker_style,  keyword) min_whisker);
+//BOOST_PARAMETER_NAME((max_whisker_style,  keyword) max_whisker);
+//BOOST_PARAMETER_NAME((mild_outlier_style, keyword) mild_outlier);
+//BOOST_PARAMETER_NAME((ext_outlier_style,  keyword) ext_outlier);
+//BOOST_PARAMETER_NAME((whisker_length,     keyword) whisker);
+//BOOST_PARAMETER_NAME((box_width,          keyword) width);
+//BOOST_PARAMETER_NAME((functor,            keyword) fnctr);
+//BOOST_PARAMETER_NAME((ctr,                keyword) container);
+//BOOST_PARAMETER_NAME((name,              keyword)  title);
+//
 struct svg_boxplot_series
 {
     double whisker_min;

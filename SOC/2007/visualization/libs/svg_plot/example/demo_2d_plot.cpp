@@ -112,7 +112,8 @@ void plot(const std::string& title, const std::string& file,
           .y_label_on(true)
           .y_major_labels_on(-1)
           .x_major_labels_on(-1)
-          .legend_title("Function")
+          //.legend_title("Function")
+          .legend_title("Unicode &#x3A9;&#x3A6;")
           .legend_title_font_size(16);
 
   // Color settings chosen for visibility rather than taste!
@@ -195,6 +196,8 @@ void plot(const std::string& title, const std::string& file,
 
 int main()
 {
+  try
+  {
   // boost::array or anything in boost such that pair_type has
   // std and boost as associated namespaces.
   typedef ::std::pair< ::boost::array<int, 1>, int> pair_type;
@@ -216,12 +219,19 @@ int main()
    // Demonstrate/test plots with various range of x and y, some *not* including zero.
 
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYPM.svg", "X-axis", -10., +10., "Y-axis", -10., +10.); // Both X & Y include zero.
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
+    plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XN.svg", "X-axis", -10., -1., "Y-axis", -10., 10.); // x all < 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_YP.svg", "X-axis", -1., +10., "Y-axis", +1., +10.); // Y all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_YN.svg", "X-axis", -1., +10., "Y-axis", -10., -1.); // y all < 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYP.svg", "X-axis", +1., +10., "Y-axis", +1., +10.); // x & y all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYN.svg", "X-axis", -10., -1., "Y-axis", -10., -1.); // x & y all < 0
+   plot("Title with Unicode <sup>-&#945; </sup> &#x3A9; &#x3A6; &#x221A; &#x221E; &#x3B6; &#x00B1;", "./demo_2d_plot_XYPM.svg", "X-axis &#x00B1;&#x3A9;", -10., +10., "Y-axis &#x221E;&#x221A;", -10., +10.); // Both X & Y include zero.
+
+  }
+  catch (char* message)
+  {
+    cout << message << endl;
+  }
   return 0;
 } // int main()
 
