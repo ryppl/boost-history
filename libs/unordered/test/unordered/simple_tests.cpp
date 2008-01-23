@@ -8,6 +8,7 @@
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <cstdlib>
 #include <algorithm>
 #include "../helpers/equivalent.hpp"
 
