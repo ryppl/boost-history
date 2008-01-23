@@ -210,7 +210,9 @@ Here are some examples of using of the 1D_plot `plot` method:
   [[`svg_2d_plot& y_scale(double y1, double y2)`] [Sets the scale of the Y axis from y1 to y2. Throws an exception if y2 <= y1.] ]
 ]
 
-Accessor get functions are also provided for all the above set functions.  These allow one to check the current value (default if not changed by the preceeding code).
+Accessor get functions are also provided for all the above set functions.
+These allow one to check the current value
+(default if not changed by the preceeding code).
 
 [heading The `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
@@ -218,14 +220,14 @@ few extra named parameters, as well as a deduced parameter.
 
 [table 2D_plot Required parameter
 [[ID] [Type (* is a wildcard)] [Description]]
-[[_container] [*] [Any object that can return an iterator with begin() and end()]]
-[[_title] [`std::string`] [The name of this series]]
+[[_container] [*] [Any object that can return an iterator with begin() and end().]]
+[[_title] [`std::string`] [The name of this series.]]
 ] [/ table 2D_plot Required parameter]
 
 [table 2D_plot Deduced parameter
 [[ID] [Type] [Description] [Default]]
-[[_fill_color] [`svg_color`] [This is the color that shows up inside of the circle that is 
-being drawn] [white]]
+[[fill_color] [`svg_color`] [This is the color that shows inside of the circle that is 
+being drawn.] [white]]
 ] [/ table 2D_plot Deduced parameter]
 
 [table 2D_plot Optional Parameters
@@ -316,9 +318,10 @@ Here are some examples of correct uses:
 
 Accessor get functions are also provided for all the above set functions.  These allow one to check the current value (default if not changed by the preceeding code).
 
-[heading The `plot()` Method]
+[heading The `plot()` Function]
 
-The `plot()` method allows data series parameters and further chained functions to control their display.
+The `plot()` function allows data series parameters,
+and further chained functions to control their display.
 
 [table Required parameters
 [[ID] [Type (* is a wildcard)] [Description]]
@@ -356,6 +359,246 @@ plot(my_data, "People", functor = my_functor());
 ``]
 [`boost_default_convert` (default) is sufficient in all cases where the data stored in the container can be directly cast to a double.]]
 ] [/ table Optional Functions]
+
+[h4 Styles providing addition control]
+
+Several style classes are used internally but are available for external use too.
+For most applications the functions listed above will provide enough control,
+but styles are documented here:
+
+  class svg_style;
+  class text_style; // Font, size, etc parameters of text like title, legend, labels ...
+  class plot_point_style; // Parameters of points maarking data series values.
+  class plot_line_style; // Parameters of lines joining data series values.
+  class axis_line_style; // Parameters of the axes.
+  class ticks_labels_style; // Parameters of the axis, grids, & ticks and their value labels.
+
+[h6 Box Style defines a rectangular box.]
+A box has a border and may be filled with the same or different colors.
+
+  class box_style
+  { // Style of a rectangular box.
+    // Use for image and plot window.
+  public:
+      svg_color stroke_; // Box line stroke color.
+      svg_color fill_; // Box fill color.
+      double width_; // plot border rectangle width.
+      double margin_; // Marginal (svg units) space around the box (inside or out).
+      bool border_on_; // Display the border.
+      bool fill_on_; // Color fill the box.
+
+      box_style(const svg_color& scolor = black,
+        const svg_color& fcolor = antiquewhite,
+        double width = 1, // of border
+        double margin = 2., // 
+        bool border_on = true, // Draw a border of width.
+        bool fill_on = false) // Apply fill color.
+        :
+      stroke_(scolor), fill_(fcolor), width_(width),
+      margin_(margin),
+      border_on_(border_on),
+      fill_on_(fill_on)
+      { // Initializes all private data with defaults.
+      }
+  }; // class box_style
+
+[table Box Style Constructor
+[[parameter #] [name] [Default] [Description]]
+[[1] [scolor] [black] [stroke color of the border of the rectangle.]]
+[[2] [fcolor] [white] [Fill color of the rectangle.]]
+[[3] [width] [1] [Width the svg units of border]]
+[[4] [margin] [2] [Margin provided to avoid text etc being too close to the border, or the border colliding with other rectangles.]]
+[[4] [border_on] [true (border drawn)] [if true, the a border is drawn.]]
+[[5] [fill_on] [false (not filled)] [if true, fill color drawn inside border, if any.]]
+] [/ table Box Style]
+
+[table Box Style Accessor functions (all are chainable).
+[[name] [parameter type] [Default value] [Description] [Examples]]
+[[scolor] [svg_color] [black] [Sets color of border of box] [my_box.scolor(red); my_box.scolor();]]
+[[fcolor] [svg_color] [white] [Sets fill color of box] [my_box.fcolor(red); my_box.fcolor();]]
+[[width] [real_type] [1 svg unit] [Sets width of border.] [my_box.width(2); my_box.width()]]
+[[margin] [real_type] [1 svg unit] [Sets margin around border (inside and out).] [my_box.width(2); my_box.width()]]
+[[border_on] [bool] [true] [If true, draws a border of box.] [my_box.border_on(true); my_box.border();]]
+[[fill_on] [bool] [false] [If true, color fills the box.] [my_box.fill_on(true); my_box.fill();]]
+] [/table Box style Accessor functions]
+
+[h6 Text Style defines text Font, Size etc.]
+
+Text style constructor.
+
+  text_style(int size = 20,  
+  const std::string& font = "", // Default is sans with Firefox & IE, but serif with Opera.
+  const std::string& style = "",
+  const std::string& weight = "",
+  const std::string& stretch = "",
+  const std::string& decoration = "")
+  : // Constructor.
+  font_size_(size),
+    font_family_(font),
+    style_(style),
+    weight_(weight),
+    stretch_(stretch),
+    decoration_(decoration)
+  { // text_style default constructor, defines defaults for all private members.
+  }
+  
+[table Text Style Constructor
+[[parameter #] [name] [Default] [Description]]
+[[1] [font_size] [20] [text font size (svg units).]]
+[[2] [font_family] [""] [Font family ( Default is sans with Firefox & IE but serif with Opera).]]
+[[3] [font_style] [""] [Allows italic or bold.]]
+[[Functions that are not yet implemented by browsers:]]
+[[4] [font_weight] [""] [Font weight: normal | bold | bolder | lighter | 100 | 200 .. 900.]]
+[[5] [font_stretch] [""] [normal | wider | narrower ....]]
+[[6] [font_decoration] [""] ["underline" | "overline" | "line-through".]]
+] [/ table Box Style]
+
+Examples:
+  text_style my_style;
+  
+produces a normal default font of size 20 svg units (usually pixels).
+
+  text_style my_style(14, "Lucida Sans Unicode", "italic");
+  
+produces a Lucida Sans Unicode font of size of 14 svg units (usually pixels). 
+
+[table Text Style Accessor functions
+[[name] [parameter type] [Default value] [Description] [Examples]]
+[[font_size] [int] [black] [Sets size of font in svg units] [my_text.font_size(10); my_text.font_size();]]
+[[font_family] [std::string] [""] [Sets font family] [my_text.font_family("Arial"); my_text.font_family();]]
+[[font_style] [std::string] [""] [Sets font style (normal | bold  | italic).] [my_text.font_style("italic"); my_text.font_style()]]
+[[Functions that are not yet implemented by browsers:]]
+[[font_weight] [std::string] [""] [Sets font weight.] [my_text.font_weight("bold"); my_text.font_weight()]]
+[[font_stretch] [std::string] [""] [Sets font stretch (wider | narrower).] [my_text.font_stretch(true); my_text.font_stretch();]]
+[[font_decoration] [std::string] [""] [Set decoration (underline | overline | strike thru).] [my_text.font_decoration("underline"); my_text.font_decoration();]]
+] [/table text style Accessor functions]
+
+[h6 plot_point_style defines how data points are marked.]
+
+  class plot_point_style
+  {
+  public:
+    svg_color fill_color_; // Color of the centre of the shape.
+    svg_color stroke_color_; // Color of circumference of shape.
+    int size_; // diameter of circle, height of square, font_size  ...
+    point_shape shape_; // round, square, point...
+    std::string symbols_; // Unicode symbol (letters, digits, squiggles etc)
+    // Caution: not all Unicode symbols are output by all browsers!
+    // Set symbol(s) font using .style().font_family("arial");
+    text_style symbols_style_;
+
+    plot_point_style(const svg_color& fill = blank, const svg_color& stroke = blank,
+      int size = 10, point_shape shape = round, const std::string& symbols = "X")
+        :
+        fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols)
+    { // TODO Should there be default colors? or "none" == blank?
+      symbols_style_.font_size(size);
+      symbols_style_.font_family("Lucida Sans Unicode");
+    }
+    
+[table Plot Point Style Constructor
+[[parameter #] [name] [Default] [Description]]
+[[1] [fill] [blank] [SVG fill color.]]
+[[2] [stroke] [blank] [SVG stroke color.]]
+[[3] [size] [10] [size of marker (svg units).]]
+[[4] [shape] [round] [shape in enum point_shape]
+[[5] [symbol(s)] ["X"] [Unicode symbol(s) (letters, digits, squiggles etc)]]
+] [/ table Plot point Style]
+
+Examples:
+
+  point_style_(black, blank, 10, round), // Default point style, black 10 point unfilled circle.
+  point_style_(red, yellow, 5, square), // Point style, red 5 square filled yellow.
+  
+It is usually convenient to override point styles onto calls of plot function by chaining thus:
+  
+  my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5).shape(square);
+
+Shapes available are:
+
+  enum point_shape
+  { // Marking a data point.
+    // Used in draw_plot_point in axis_plot_frame.hpp
+    none = 0,
+    round, square, point, egg, // ellipse
+    vertical_line,  // line up & down from axis.
+    horizontal_line, // line left & right from axis.
+    vertical_tick, // tick up from axis.
+    horizontal_tick, // line left & right from axis.
+    // Note horizontal will not be useful for 1D plot - will be on the axis.
+    cone, // pointing up - 'rightwayup'.
+    triangle, // pointing down 'upsidedown'.
+    star, // using polygon.
+    lozenge, // Using Unicode symbols.
+    diamond,
+    heart,
+    club,
+    spade,
+    asterisk, // *
+    x, // x
+    cross,
+    symbol // Unicode symbol including letters, digits, greek & 'squiggles'.
+    // For example: &#x3A9; = greek omega
+    // Other shapes may be added.
+  }; 
+
+[table Plot Point Style Accessor functions
+[[name] [parameter type] [Default value] [Description] [Examples]]
+[[size] [int] [10] [Sets size of point marker or font in svg units] [my_mark.size(10); my_mark.font_size();]]
+[[fill_color] [svg_color] [none] [Sets fill color] [my_mark.fill_color(red); my_mark.fill_color();]]
+[[stroke_color] [black] [""] [Sets stroke color for mark.] [my_mark.stroke_color(green); my_mark.stroke_color()]]
+[[shape] [point_shape] [none] [Sets plot point marker] [my_mark.shape(egg); my_mark.shape()]]
+[[symbols] [std::string] ["X"] [Sets symbol as plot point marker.] [my_mark.symbols("&#x3A9;"); (greek omega) my_mark.symbols();]]
+[[style] [svg::text_style] ["Lucida Sans Unicode" with plot_point size.] [Set font and size for a symbol marking points.] [my_mark.style(my_symbol_style); my_mark.style();]]
+] [/table Plot Point style Accessor functions]
+
+[h6 plot_line_style defines how data points are joined.]
+
+  class plot_line_style
+  { // Style of line joining data series values. 
+  public:
+      svg_color color_; // Line stroke color. (No fill color for lines).
+      svg_color area_fill_; // Fill color from line to axis. == true means color.blank = true.
+      double width_; // Width of line.
+      bool line_on_; // If straight line is to be drawn between points.
+      bool bezier_on_; // If a smooth bezier line is to be drawn between points.
+
+      plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool line_on = true, bool bezier_on = false)
+        :
+        color_(col), area_fill_(acol), width_(width), line_on_(line_on), bezier_on_(bezier_on)
+      { // Defaults for all private data.
+      }
+
+    
+[table Plot line Style Constructor
+[[parameter #] [name] [Default] [Description]]
+[[1] [color] [black] [line color (SVG stroke color).]]
+[[2] [area_fill] [blank] [area_fill color (if required).]]
+[[3] [width] [2] [width of line (svg units).]]
+[[4] [line_on] [true] [true if straight line required.]
+[[5] [bezier_on] [false] [true if bezier smoothed line required.]]
+] [/ table Plot Line Style]
+
+Examples:
+  
+  my_line_style line_style_(black, true, 2, true, false);
+  // Black straight line joining points (without area fill).
+  
+In practice it is often convenient to chain function calls onto plot function calls thus:
+  
+    my_plot.plot(data3, "-1 + 2x").bezier_on(true).line_color(blue);
+
+
+[table Plot Line Style Accessor functions
+[[name] [parameter type] [Default value] [Description] [Examples]]
+[[width] [int] [10] [Sets width of line in svg units] [my_mark.width(1); my_mark.width();]]
+[[color] [svg_color] [black] [Sets line color] [my_mark.color(red); my_mark.fill_color();]]
+[[area_fill] [svg_color] [black] [Sets area_fill color.] [my_mark.area_fill(green); my_mark.area_fill()]]
+[[line_on] [bool] [true] [If true draws a line.] [my_mark.line_on(true); my_mark.line_on()]]
+[[bezier_on] [bool] [false] [If true draws a curve.] [my_mark.bezier_on(true); my_mark.bezier_on()]]
+] [/table Plot Line style Accessor functions]
+
+
 [endsect] [/section:svg_2d_plot_interface]
 
 [include settings.qbk]

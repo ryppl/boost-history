@@ -27,7 +27,7 @@
 <a name="svg_plot.interface.svg_boxplot_interface"></a><a href="svg_boxplot_interface.html" title=" svg_boxplot Public Interface"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id705824"></a><p class="title"><b>Table 21. Boxplot Miscellaneous</b></p>
+<a name="id707244"></a><p class="title"><b>Table 22. Boxplot Miscellaneous</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Miscellaneous">
 <colgroup>
 <col>
@@ -102,7 +102,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706118"></a><p class="title"><b>Table 22. Boxplot Commands</b></p>
+<a name="id707538"></a><p class="title"><b>Table 23. Boxplot Commands</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Commands">
 <colgroup>
 <col>
@@ -190,7 +190,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706447"></a><p class="title"><b>Table 23. Boxplot Colors</b></p>
+<a name="id707868"></a><p class="title"><b>Table 24. Boxplot Colors</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Colors">
 <colgroup>
 <col>
@@ -341,7 +341,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id707180"></a><p class="title"><b>Table 24. Boxplot Axis Information</b></p>
+<a name="id708600"></a><p class="title"><b>Table 25. Boxplot Axis Information</b></p>
 <div class="table-contents"><table class="table" summary="Boxplot Axis Information">
 <colgroup>
 <col>
@@ -527,19 +527,19 @@
         These allow one to check the current value (default if not changed by the
         preceeding code).
       </p>
-<a name="svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id708084"></a>
-        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
+<a name="svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__function"></a><h5>
+<a name="id709504"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__function">The
         <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
-        Method</a>
+        Function</a>
       </h5>
 <p>
         The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
-        method allows data series parameters and further chained functions to control
-        their display.
+        function allows data series parameters, and further chained functions to
+        control their display.
       </p>
 <div class="table">
-<a name="id708144"></a><p class="title"><b>Table 25. Required parameters</b></p>
+<a name="id709564"></a><p class="title"><b>Table 26. Required parameters</b></p>
 <div class="table-contents"><table class="table" summary="Required parameters">
 <colgroup>
 <col>
@@ -602,7 +602,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id708265"></a><p class="title"><b>Table 26. Optional Functions</b></p>
+<a name="id709685"></a><p class="title"><b>Table 27. Optional Functions</b></p>
 <div class="table-contents"><table class="table" summary="Optional Functions">
 <colgroup>
 <col>
@@ -888,6 +888,1670 @@
               <code class="computeroutput"><span class="identifier">boost_default_convert</span></code>
               (default) is sufficient in all cases where the data stored in the container
               can be directly cast to a double.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="svg_plot.interface.svg_boxplot_interface.styles_providing_addition_control"></a><h5>
+<a name="id710830"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.styles_providing_addition_control">Styles
+        providing addition control</a>
+      </h5>
+<p>
+        Several style classes are used internally but are available for external
+        use too. For most applications the functions listed above will provide enough
+        control, but styles are documented here:
+      </p>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">svg_style</span><span class="special">;</span>
+<span class="keyword">class</span> <span class="identifier">text_style</span><span class="special">;</span> <span class="comment">// Font, size, etc parameters of text like title, legend, labels ...
+</span><span class="keyword">class</span> <span class="identifier">plot_point_style</span><span class="special">;</span> <span class="comment">// Parameters of points maarking data series values.
+</span><span class="keyword">class</span> <span class="identifier">plot_line_style</span><span class="special">;</span> <span class="comment">// Parameters of lines joining data series values.
+</span><span class="keyword">class</span> <span class="identifier">axis_line_style</span><span class="special">;</span> <span class="comment">// Parameters of the axes.
+</span><span class="keyword">class</span> <span class="identifier">ticks_labels_style</span><span class="special">;</span> <span class="comment">// Parameters of the axis, grids, &amp; ticks and their value labels.
+</span></pre>
+<a name="svg_plot.interface.svg_boxplot_interface.box_style_defines_a_rectangular_box_"></a><h4>
+<a name="id711011"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.box_style_defines_a_rectangular_box_">Box
+        Style defines a rectangular box.</a>
+      </h4>
+<p>
+        A box has a border and may be filled with the same or different colors.
+      </p>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">box_style</span>
+<span class="special">{</span> <span class="comment">// Style of a rectangular box.
+</span>  <span class="comment">// Use for image and plot window.
+</span><span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">svg_color</span> <span class="identifier">stroke_</span><span class="special">;</span> <span class="comment">// Box line stroke color.
+</span>    <span class="identifier">svg_color</span> <span class="identifier">fill_</span><span class="special">;</span> <span class="comment">// Box fill color.
+</span>    <span class="keyword">double</span> <span class="identifier">width_</span><span class="special">;</span> <span class="comment">// plot border rectangle width.
+</span>    <span class="keyword">double</span> <span class="identifier">margin_</span><span class="special">;</span> <span class="comment">// Marginal (svg units) space around the box (inside or out).
+</span>    <span class="keyword">bool</span> <span class="identifier">border_on_</span><span class="special">;</span> <span class="comment">// Display the border.
+</span>    <span class="keyword">bool</span> <span class="identifier">fill_on_</span><span class="special">;</span> <span class="comment">// Color fill the box.
+</span>
+    <span class="identifier">box_style</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">scolor</span> <span class="special">=</span> <span class="identifier">black</span><span class="special">,</span>
+      <span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">fcolor</span> <span class="special">=</span> <span class="identifier">antiquewhite</span><span class="special">,</span>
+      <span class="keyword">double</span> <span class="identifier">width</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="comment">// of border
+</span>      <span class="keyword">double</span> <span class="identifier">margin</span> <span class="special">=</span> <span class="number">2.</span><span class="special">,</span> <span class="comment">// 
+</span>      <span class="keyword">bool</span> <span class="identifier">border_on</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">,</span> <span class="comment">// Draw a border of width.
+</span>      <span class="keyword">bool</span> <span class="identifier">fill_on</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">)</span> <span class="comment">// Apply fill color.
+</span>      <span class="special">:</span>
+    <span class="identifier">stroke_</span><span class="special">(</span><span class="identifier">scolor</span><span class="special">),</span> <span class="identifier">fill_</span><span class="special">(</span><span class="identifier">fcolor</span><span class="special">),</span> <span class="identifier">width_</span><span class="special">(</span><span class="identifier">width</span><span class="special">),</span>
+    <span class="identifier">margin_</span><span class="special">(</span><span class="identifier">margin</span><span class="special">),</span>
+    <span class="identifier">border_on_</span><span class="special">(</span><span class="identifier">border_on</span><span class="special">),</span>
+    <span class="identifier">fill_on_</span><span class="special">(</span><span class="identifier">fill_on</span><span class="special">)</span>
+    <span class="special">{</span> <span class="comment">// Initializes all private data with defaults.
+</span>    <span class="special">}</span>
+<span class="special">};</span> <span class="comment">// class box_style
+</span></pre>
+<div class="table">
+<a name="id711647"></a><p class="title"><b>Table 28. Box Style Constructor</b></p>
+<div class="table-contents"><table class="table" summary="Box Style Constructor">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              parameter #
+            </p>
+            </th>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              1
+            </p>
+            </td>
+<td>
+            <p>
+              scolor
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              stroke color of the border of the rectangle.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              fcolor
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              Fill color of the rectangle.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              3
+            </p>
+            </td>
+<td>
+            <p>
+              width
+            </p>
+            </td>
+<td>
+            <p>
+              1
+            </p>
+            </td>
+<td>
+            <p>
+              Width the svg units of border
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              4
+            </p>
+            </td>
+<td>
+            <p>
+              margin
+            </p>
+            </td>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              Margin provided to avoid text etc being too close to the border, or
+              the border colliding with other rectangles.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              4
+            </p>
+            </td>
+<td>
+            <p>
+              border_on
+            </p>
+            </td>
+<td>
+            <p>
+              true (border drawn)
+            </p>
+            </td>
+<td>
+            <p>
+              if true, the a border is drawn.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              5
+            </p>
+            </td>
+<td>
+            <p>
+              fill_on
+            </p>
+            </td>
+<td>
+            <p>
+              false (not filled)
+            </p>
+            </td>
+<td>
+            <p>
+              if true, fill color drawn inside border, if any.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id711898"></a><p class="title"><b>Table 29. Box Style Accessor functions (all are chainable).</b></p>
+<div class="table-contents"><table class="table" summary="Box Style Accessor functions (all are chainable).">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              parameter type
+            </p>
+            </th>
+<th>
+            <p>
+              Default value
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Examples
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              scolor
+            </p>
+            </td>
+<td>
+            <p>
+              svg_color
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              Sets color of border of box
+            </p>
+            </td>
+<td>
+            <p>
+              my_box.scolor(red); my_box.scolor();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              fcolor
+            </p>
+            </td>
+<td>
+            <p>
+              svg_color
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              Sets fill color of box
+            </p>
+            </td>
+<td>
+            <p>
+              my_box.fcolor(red); my_box.fcolor();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              width
+            </p>
+            </td>
+<td>
+            <p>
+              real_type
+            </p>
+            </td>
+<td>
+            <p>
+              1 svg unit
+            </p>
+            </td>
+<td>
+            <p>
+              Sets width of border.
+            </p>
+            </td>
+<td>
+            <p>
+              my_box.width(2); my_box.width()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              margin
+            </p>
+            </td>
+<td>
+            <p>
+              real_type
+            </p>
+            </td>
+<td>
+            <p>
+              1 svg unit
+            </p>
+            </td>
+<td>
+            <p>
+              Sets margin around border (inside and out).
+            </p>
+            </td>
+<td>
+            <p>
+              my_box.width(2); my_box.width()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              border_on
+            </p>
+            </td>
+<td>
+            <p>
+              bool
+            </p>
+            </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td>
+            <p>
+              If true, draws a border of box.
+            </p>
+            </td>
+<td>
+            <p>
+              my_box.border_on(true); my_box.border();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              fill_on
+            </p>
+            </td>
+<td>
+            <p>
+              bool
+            </p>
+            </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td>
+            <p>
+              If true, color fills the box.
+            </p>
+            </td>
+<td>
+            <p>
+              my_box.fill_on(true); my_box.fill();
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="svg_plot.interface.svg_boxplot_interface.text_style_defines_text_font__size_etc_"></a><h4>
+<a name="id712213"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.text_style_defines_text_font__size_etc_">Text
+        Style defines text Font, Size etc.</a>
+      </h4>
+<p>
+        Text style constructor.
+      </p>
+<pre class="programlisting">
+<span class="identifier">text_style</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">20</span><span class="special">,</span>  
+<span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">font</span> <span class="special">=</span> <span class="string">""</span><span class="special">,</span> <span class="comment">// Default is sans with Firefox &amp; IE, but serif with Opera.
+</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">style</span> <span class="special">=</span> <span class="string">""</span><span class="special">,</span>
+<span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">weight</span> <span class="special">=</span> <span class="string">""</span><span class="special">,</span>
+<span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">stretch</span> <span class="special">=</span> <span class="string">""</span><span class="special">,</span>
+<span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">decoration</span> <span class="special">=</span> <span class="string">""</span><span class="special">)</span>
+<span class="special">:</span> <span class="comment">// Constructor.
+</span><span class="identifier">font_size_</span><span class="special">(</span><span class="identifier">size</span><span class="special">),</span>
+  <span class="identifier">font_family_</span><span class="special">(</span><span class="identifier">font</span><span class="special">),</span>
+  <span class="identifier">style_</span><span class="special">(</span><span class="identifier">style</span><span class="special">),</span>
+  <span class="identifier">weight_</span><span class="special">(</span><span class="identifier">weight</span><span class="special">),</span>
+  <span class="identifier">stretch_</span><span class="special">(</span><span class="identifier">stretch</span><span class="special">),</span>
+  <span class="identifier">decoration_</span><span class="special">(</span><span class="identifier">decoration</span><span class="special">)</span>
+<span class="special">{</span> <span class="comment">// text_style default constructor, defines defaults for all private members.
+</span><span class="special">}</span>
+</pre>
+<div class="table">
+<a name="id712711"></a><p class="title"><b>Table 30. Text Style Constructor</b></p>
+<div class="table-contents"><table class="table" summary="Text Style Constructor">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              parameter #
+            </p>
+            </th>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              1
+            </p>
+            </td>
+<td>
+            <p>
+              font_size
+            </p>
+            </td>
+<td>
+            <p>
+              20
+            </p>
+            </td>
+<td>
+            <p>
+              text font size (svg units).
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              font_family
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Font family ( Default is sans with Firefox &amp; IE but serif with
+              Opera).
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              3
+            </p>
+            </td>
+<td>
+            <p>
+              font_style
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Allows italic or bold.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Functions that are not yet implemented by browsers:
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              4
+            </p>
+            </td>
+<td>
+            <p>
+              font_weight
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Font weight: normal | bold | bolder | lighter | 100 | 200 .. 900.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              5
+            </p>
+            </td>
+<td>
+            <p>
+              font_stretch
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              normal | wider | narrower ....
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              6
+            </p>
+            </td>
+<td>
+            <p>
+              font_decoration
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              "underline" | "overline" | "line-through".
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        Examples: text_style my_style;
+      </p>
+<p>
+        produces a normal default font of size 20 svg units (usually pixels).
+      </p>
+<pre class="programlisting">
+<span class="identifier">text_style</span> <span class="identifier">my_style</span><span class="special">(</span><span class="number">14</span><span class="special">,</span> <span class="string">"Lucida Sans Unicode"</span><span class="special">,</span> <span class="string">"italic"</span><span class="special">);</span>
+</pre>
+<p>
+        produces a Lucida Sans Unicode font of size of 14 svg units (usually pixels).
+      </p>
+<div class="table">
+<a name="id713047"></a><p class="title"><b>Table 31. Text Style Accessor functions</b></p>
+<div class="table-contents"><table class="table" summary="Text Style Accessor functions">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              parameter type
+            </p>
+            </th>
+<th>
+            <p>
+              Default value
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Examples
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              font_size
+            </p>
+            </td>
+<td>
+            <p>
+              int
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              Sets size of font in svg units
+            </p>
+            </td>
+<td>
+            <p>
+              my_text.font_size(10); my_text.font_size();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              font_family
+            </p>
+            </td>
+<td>
+            <p>
+              std::string
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Sets font family
+            </p>
+            </td>
+<td>
+            <p>
+              my_text.font_family("Arial"); my_text.font_family();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              font_style
+            </p>
+            </td>
+<td>
+            <p>
+              std::string
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Sets font style (normal | bold | italic).
+            </p>
+            </td>
+<td>
+            <p>
+              my_text.font_style("italic"); my_text.font_style()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Functions that are not yet implemented by browsers:
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              font_weight
+            </p>
+            </td>
+<td>
+            <p>
+              std::string
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Sets font weight.
+            </p>
+            </td>
+<td>
+            <p>
+              my_text.font_weight("bold"); my_text.font_weight()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              font_stretch
+            </p>
+            </td>
+<td>
+            <p>
+              std::string
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Sets font stretch (wider | narrower).
+            </p>
+            </td>
+<td>
+            <p>
+              my_text.font_stretch(true); my_text.font_stretch();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              font_decoration
+            </p>
+            </td>
+<td>
+            <p>
+              std::string
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Set decoration (underline | overline | strike thru).
+            </p>
+            </td>
+<td>
+            <p>
+              my_text.font_decoration("underline"); my_text.font_decoration();
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="svg_plot.interface.svg_boxplot_interface.plot_point_style_defines_how_data_points_are_marked_"></a><h4>
+<a name="id713373"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.plot_point_style_defines_how_data_points_are_marked_">plot_point_style
+        defines how data points are marked.</a>
+      </h4>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">plot_point_style</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">svg_color</span> <span class="identifier">fill_color_</span><span class="special">;</span> <span class="comment">// Color of the centre of the shape.
+</span>  <span class="identifier">svg_color</span> <span class="identifier">stroke_color_</span><span class="special">;</span> <span class="comment">// Color of circumference of shape.
+</span>  <span class="keyword">int</span> <span class="identifier">size_</span><span class="special">;</span> <span class="comment">// diameter of circle, height of square, font_size  ...
+</span>  <span class="identifier">point_shape</span> <span class="identifier">shape_</span><span class="special">;</span> <span class="comment">// round, square, point...
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">symbols_</span><span class="special">;</span> <span class="comment">// Unicode symbol (letters, digits, squiggles etc)
+</span>  <span class="comment">// Caution: not all Unicode symbols are output by all browsers!
+</span>  <span class="comment">// Set symbol(s) font using .style().font_family("arial");
+</span>  <span class="identifier">text_style</span> <span class="identifier">symbols_style_</span><span class="special">;</span>
+
+  <span class="identifier">plot_point_style</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">fill</span> <span class="special">=</span> <span class="identifier">blank</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">stroke</span> <span class="special">=</span> <span class="identifier">blank</span><span class="special">,</span>
+    <span class="keyword">int</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">10</span><span class="special">,</span> <span class="identifier">point_shape</span> <span class="identifier">shape</span> <span class="special">=</span> <span class="identifier">round</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">symbols</span> <span class="special">=</span> <span class="string">"X"</span><span class="special">)</span>
+      <span class="special">:</span>
+      <span class="identifier">fill_color_</span><span class="special">(</span><span class="identifier">fill</span><span class="special">),</span> <span class="identifier">stroke_color_</span><span class="special">(</span><span class="identifier">stroke</span><span class="special">),</span> <span class="identifier">size_</span><span class="special">(</span><span class="identifier">size</span><span class="special">),</span> <span class="identifier">shape_</span><span class="special">(</span><span class="identifier">shape</span><span class="special">),</span> <span class="identifier">symbols_</span><span class="special">(</span><span class="identifier">symbols</span><span class="special">)</span>
+  <span class="special">{</span> <span class="comment">// TODO Should there be default colors? or "none" == blank?
+</span>    <span class="identifier">symbols_style_</span><span class="special">.</span><span class="identifier">font_size</span><span class="special">(</span><span class="identifier">size</span><span class="special">);</span>
+    <span class="identifier">symbols_style_</span><span class="special">.</span><span class="identifier">font_family</span><span class="special">(</span><span class="string">"Lucida Sans Unicode"</span><span class="special">);</span>
+  <span class="special">}</span>
+</pre>
+<div class="table">
+<a name="id714005"></a><p class="title"><b>Table 32. Plot Point Style Constructor</b></p>
+<div class="table-contents"><table class="table" summary="Plot Point Style Constructor">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              parameter #
+            </p>
+            </th>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              1
+            </p>
+            </td>
+<td>
+            <p>
+              fill
+            </p>
+            </td>
+<td>
+            <p>
+              blank
+            </p>
+            </td>
+<td>
+            <p>
+              SVG fill color.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              stroke
+            </p>
+            </td>
+<td>
+            <p>
+              blank
+            </p>
+            </td>
+<td>
+            <p>
+              SVG stroke color.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              3
+            </p>
+            </td>
+<td>
+            <p>
+              size
+            </p>
+            </td>
+<td>
+            <p>
+              10
+            </p>
+            </td>
+<td>
+            <p>
+              size of marker (svg units).
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              4
+            </p>
+            </td>
+<td>
+            <p>
+              shape
+            </p>
+            </td>
+<td>
+            <p>
+              round
+            </p>
+            </td>
+<td>
+            <p>
+              shape in enum point_shape
+            </p>
+            </td>
+<td>
+            <p>
+              [5
+            </p>
+            </td>
+<td>
+            <p>
+              symbol(s)
+            </p>
+            </td>
+<td>
+            <p>
+              "X"
+            </p>
+            </td>
+<td>
+            <p>
+              Unicode symbol(s) (letters, digits, squiggles etc)
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        Examples:
+      </p>
+<pre class="programlisting">
+<span class="identifier">point_style_</span><span class="special">(</span><span class="identifier">black</span><span class="special">,</span> <span class="identifier">blank</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="identifier">round</span><span class="special">),</span> <span class="comment">// Default point style, black 10 point unfilled circle.
+</span><span class="identifier">point_style_</span><span class="special">(</span><span class="identifier">red</span><span class="special">,</span> <span class="identifier">yellow</span><span class="special">,</span> <span class="number">5</span><span class="special">,</span> <span class="identifier">square</span><span class="special">),</span> <span class="comment">// Point style, red 5 square filled yellow.
+</span></pre>
+<p>
+        It is usually convenient to override point styles onto calls of plot function
+        by chaining thus:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data2</span><span class="special">,</span> <span class="string">"-2 + x^2"</span><span class="special">).</span><span class="identifier">fill_color</span><span class="special">(</span><span class="identifier">orange</span><span class="special">).</span><span class="identifier">size</span><span class="special">(</span><span class="number">5</span><span class="special">).</span><span class="identifier">shape</span><span class="special">(</span><span class="identifier">square</span><span class="special">);</span>
+</pre>
+<p>
+        Shapes available are:
+      </p>
+<pre class="programlisting">
+<span class="keyword">enum</span> <span class="identifier">point_shape</span>
+<span class="special">{</span> <span class="comment">// Marking a data point.
+</span>  <span class="comment">// Used in draw_plot_point in axis_plot_frame.hpp
+</span>  <span class="identifier">none</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span>
+  <span class="identifier">round</span><span class="special">,</span> <span class="identifier">square</span><span class="special">,</span> <span class="identifier">point</span><span class="special">,</span> <span class="identifier">egg</span><span class="special">,</span> <span class="comment">// ellipse
+</span>  <span class="identifier">vertical_line</span><span class="special">,</span>  <span class="comment">// line up &amp; down from axis.
+</span>  <span class="identifier">horizontal_line</span><span class="special">,</span> <span class="comment">// line left &amp; right from axis.
+</span>  <span class="identifier">vertical_tick</span><span class="special">,</span> <span class="comment">// tick up from axis.
+</span>  <span class="identifier">horizontal_tick</span><span class="special">,</span> <span class="comment">// line left &amp; right from axis.
+</span>  <span class="comment">// Note horizontal will not be useful for 1D plot - will be on the axis.
+</span>  <span class="identifier">cone</span><span class="special">,</span> <span class="comment">// pointing up - 'rightwayup'.
+</span>  <span class="identifier">triangle</span><span class="special">,</span> <span class="comment">// pointing down 'upsidedown'.
+</span>  <span class="identifier">star</span><span class="special">,</span> <span class="comment">// using polygon.
+</span>  <span class="identifier">lozenge</span><span class="special">,</span> <span class="comment">// Using Unicode symbols.
+</span>  <span class="identifier">diamond</span><span class="special">,</span>
+  <span class="identifier">heart</span><span class="special">,</span>
+  <span class="identifier">club</span><span class="special">,</span>
+  <span class="identifier">spade</span><span class="special">,</span>
+  <span class="identifier">asterisk</span><span class="special">,</span> <span class="comment">// *
+</span>  <span class="identifier">x</span><span class="special">,</span> <span class="comment">// x
+</span>  <span class="identifier">cross</span><span class="special">,</span>
+  <span class="identifier">symbol</span> <span class="comment">// Unicode symbol including letters, digits, greek &amp; 'squiggles'.
+</span>  <span class="comment">// For example: &amp;#x3A9; = greek omega
+</span>  <span class="comment">// Other shapes may be added.
+</span><span class="special">};</span> 
+</pre>
+<div class="table">
+<a name="id714878"></a><p class="title"><b>Table 33. Plot Point Style Accessor functions</b></p>
+<div class="table-contents"><table class="table" summary="Plot Point Style Accessor functions">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              parameter type
+            </p>
+            </th>
+<th>
+            <p>
+              Default value
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Examples
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              size
+            </p>
+            </td>
+<td>
+            <p>
+              int
+            </p>
+            </td>
+<td>
+            <p>
+              10
+            </p>
+            </td>
+<td>
+            <p>
+              Sets size of point marker or font in svg units
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.size(10); my_mark.font_size();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              fill_color
+            </p>
+            </td>
+<td>
+            <p>
+              svg_color
+            </p>
+            </td>
+<td>
+            <p>
+              none
+            </p>
+            </td>
+<td>
+            <p>
+              Sets fill color
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.fill_color(red); my_mark.fill_color();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              stroke_color
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              Sets stroke color for mark.
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.stroke_color(green); my_mark.stroke_color()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              shape
+            </p>
+            </td>
+<td>
+            <p>
+              point_shape
+            </p>
+            </td>
+<td>
+            <p>
+              none
+            </p>
+            </td>
+<td>
+            <p>
+              Sets plot point marker
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.shape(egg); my_mark.shape()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              symbols
+            </p>
+            </td>
+<td>
+            <p>
+              std::string
+            </p>
+            </td>
+<td>
+            <p>
+              "X"
+            </p>
+            </td>
+<td>
+            <p>
+              Sets symbol as plot point marker.
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.symbols("&amp;#x3A9;"); (greek omega) my_mark.symbols();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              style
+            </p>
+            </td>
+<td>
+            <p>
+              svg::text_style
+            </p>
+            </td>
+<td>
+            <p>
+              "Lucida Sans Unicode" with plot_point size.
+            </p>
+            </td>
+<td>
+            <p>
+              Set font and size for a symbol marking points.
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.style(my_symbol_style); my_mark.style();
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="svg_plot.interface.svg_boxplot_interface.plot_line_style_defines_how_data_points_are_joined_"></a><h4>
+<a name="id715195"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.plot_line_style_defines_how_data_points_are_joined_">plot_line_style
+        defines how data points are joined.</a>
+      </h4>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">plot_line_style</span>
+<span class="special">{</span> <span class="comment">// Style of line joining data series values. 
+</span><span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">svg_color</span> <span class="identifier">color_</span><span class="special">;</span> <span class="comment">// Line stroke color. (No fill color for lines).
+</span>    <span class="identifier">svg_color</span> <span class="identifier">area_fill_</span><span class="special">;</span> <span class="comment">// Fill color from line to axis. == true means color.blank = true.
+</span>    <span class="keyword">double</span> <span class="identifier">width_</span><span class="special">;</span> <span class="comment">// Width of line.
+</span>    <span class="keyword">bool</span> <span class="identifier">line_on_</span><span class="special">;</span> <span class="comment">// If straight line is to be drawn between points.
+</span>    <span class="keyword">bool</span> <span class="identifier">bezier_on_</span><span class="special">;</span> <span class="comment">// If a smooth bezier line is to be drawn between points.
+</span>
+    <span class="identifier">plot_line_style</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">col</span> <span class="special">=</span> <span class="identifier">black</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">svg_color</span><span class="special">&amp;</span> <span class="identifier">acol</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">width</span> <span class="special">=</span> <span class="number">2</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">line_on</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">bezier_on</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">)</span>
+      <span class="special">:</span>
+      <span class="identifier">color_</span><span class="special">(</span><span class="identifier">col</span><span class="special">),</span> <span class="identifier">area_fill_</span><span class="special">(</span><span class="identifier">acol</span><span class="special">),</span> <span class="identifier">width_</span><span class="special">(</span><span class="identifier">width</span><span class="special">),</span> <span class="identifier">line_on_</span><span class="special">(</span><span class="identifier">line_on</span><span class="special">),</span> <span class="identifier">bezier_on_</span><span class="special">(</span><span class="identifier">bezier_on</span><span class="special">)</span>
+    <span class="special">{</span> <span class="comment">// Defaults for all private data.
+</span>    <span class="special">}</span>
+</pre>
+<div class="table">
+<a name="id715705"></a><p class="title"><b>Table 34. Plot line Style Constructor</b></p>
+<div class="table-contents"><table class="table" summary="Plot line Style Constructor">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              parameter #
+            </p>
+            </th>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              1
+            </p>
+            </td>
+<td>
+            <p>
+              color
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              line color (SVG stroke color).
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              area_fill
+            </p>
+            </td>
+<td>
+            <p>
+              blank
+            </p>
+            </td>
+<td>
+            <p>
+              area_fill color (if required).
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              3
+            </p>
+            </td>
+<td>
+            <p>
+              width
+            </p>
+            </td>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              width of line (svg units).
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              4
+            </p>
+            </td>
+<td>
+            <p>
+              line_on
+            </p>
+            </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td>
+            <p>
+              true if straight line required.
+            </p>
+            </td>
+<td>
+            <p>
+              [5
+            </p>
+            </td>
+<td>
+            <p>
+              bezier_on
+            </p>
+            </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td>
+            <p>
+              true if bezier smoothed line required.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        Examples:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_line_style</span> <span class="identifier">line_style_</span><span class="special">(</span><span class="identifier">black</span><span class="special">,</span> <span class="keyword">true</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="keyword">true</span><span class="special">,</span> <span class="keyword">false</span><span class="special">);</span>
+<span class="comment">// Black straight line joining points (without area fill).
+</span></pre>
+<p>
+        In practice it is often convenient to chain function calls onto plot function
+        calls thus:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data3</span><span class="special">,</span> <span class="string">"-1 + 2x"</span><span class="special">).</span><span class="identifier">bezier_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">).</span><span class="identifier">line_color</span><span class="special">(</span><span class="identifier">blue</span><span class="special">);</span>
+</pre>
+<div class="table">
+<a name="id716109"></a><p class="title"><b>Table 35. Plot Line Style Accessor functions</b></p>
+<div class="table-contents"><table class="table" summary="Plot Line Style Accessor functions">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              name
+            </p>
+            </th>
+<th>
+            <p>
+              parameter type
+            </p>
+            </th>
+<th>
+            <p>
+              Default value
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Examples
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              width
+            </p>
+            </td>
+<td>
+            <p>
+              int
+            </p>
+            </td>
+<td>
+            <p>
+              10
+            </p>
+            </td>
+<td>
+            <p>
+              Sets width of line in svg units
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.width(1); my_mark.width();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              color
+            </p>
+            </td>
+<td>
+            <p>
+              svg_color
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              Sets line color
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.color(red); my_mark.fill_color();
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              area_fill
+            </p>
+            </td>
+<td>
+            <p>
+              svg_color
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              Sets area_fill color.
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.area_fill(green); my_mark.area_fill()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              line_on
+            </p>
+            </td>
+<td>
+            <p>
+              bool
+            </p>
+            </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td>
+            <p>
+              If true draws a line.
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.line_on(true); my_mark.line_on()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              bezier_on
+            </p>
+            </td>
+<td>
+            <p>
+              bool
+            </p>
+            </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td>
+            <p>
+              If true draws a curve.
+            </p>
+            </td>
+<td>
+            <p>
+              my_mark.bezier_on(true); my_mark.bezier_on()
             </p>
             </td>
 </tr>

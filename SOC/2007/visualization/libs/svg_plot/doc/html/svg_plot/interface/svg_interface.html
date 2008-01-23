@@ -104,7 +104,107 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <code class="computeroutput"><span class="identifier">g_element</span><span class="special">&amp;</span>
+              <span class="identifier">add_g_element</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Adds a g_element at the root of the document tree. Acts as a <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the <code class="computeroutput"><span class="identifier">g_element</span></code>
+              that is pushed back. This allows you to do something like the following:
+              <code class="computeroutput"><span class="identifier">image</span><span class="special">.</span><span class="identifier">add_g_element</span><span class="special">().</span><span class="identifier">line</span><span class="special">(/**/).</span><span class="identifier">line</span><span class="special">(/**/).</span><span class="identifier">rect</span><span class="special">(/**/);</span>
+              </code> which adds two lines and a rectangle to the g_element that
+              was just created.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">circle_element</span><span class="special">&amp;</span>
+              <span class="identifier">circle</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span>
+              <span class="identifier">radius</span> <span class="special">=</span>
+              <span class="number">5</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Adds a point at (x,y) in the root level of the document
+            </p>
+            </td>
+<td>
+            <p>
+              If the user is calling the circle method, odds are they would prefer
+              a real circle instead of a degenerate circle (a point). 5 is as good
+              a default as any other, and the user is unlikely want a point if they
+              are making this call.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">ellipse_element</span><span class="special">&amp;</span>
+              <span class="identifier">ellipse</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">rx</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">ry</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">cx</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">cy</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Adds an ellipse at the root level of the doucment
+            </p>
+            </td>
+<td>
+            <p>
+              The widths of the ellipse are required
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">g_element</span><span class="special">&amp;</span>
+              <span class="identifier">get_g_element</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Gets the g_element at the index specified.
+            </p>
+            </td>
+<td>
+            <p>
+              Gives a runtime error if you specify an index that does not contain
+              a <code class="computeroutput"><span class="identifier">g_element</span></code>. An iterator
+              interface to access these elements might be useful.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">get_g_element</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Class derived from svg_element.
+            </p>
+            </td>
+<td>
+            <p>
+              Graph element: line, circle, rect... Node element of document tree.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">line_element</span><span class="special">&amp;</span>
               <span class="identifier">line</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">)</span></code>
             </p>
             </td>
@@ -144,89 +244,100 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">get_g_element</span></code>
+              <code class="computeroutput"><span class="identifier">polygon_element</span><span class="special">&amp;</span>
+              <span class="identifier">polygon</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">f</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Class derived from svg_element.
+              Begins a polygon at point (x, y). Fill is determined by <code class="computeroutput"><span class="identifier">f</span></code>
             </p>
             </td>
 <td>
             <p>
-              Graph element: line, circle, rect... Node element of document tree.
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">g_element</span><span class="special">&amp;</span>
-              <span class="identifier">add_g_element</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Adds a g_element at the root of the document tree. Acts as a <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the <code class="computeroutput"><span class="identifier">g_element</span></code>
-              that is pushed back. This allows you to do something like the following:
-              <code class="computeroutput"><span class="identifier">image</span><span class="special">.</span><span class="identifier">add_g_element</span><span class="special">().</span><span class="identifier">line</span><span class="special">(/**/).</span><span class="identifier">line</span><span class="special">(/**/).</span><span class="identifier">rect</span><span class="special">(/**/);</span>
-              </code> which adds two lines and a rectangle to the g_element that
-              was just created.
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">circle</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span>
-              <span class="identifier">radius</span> <span class="special">=</span>
-              <span class="number">5</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="identifier">polygon_element</span><span class="special">&amp;</span>
+              <span class="identifier">polygon</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">poly_path_point</span><span class="special">&gt;&amp;</span>
+              <span class="identifier">v</span><span class="special">,</span>
+              <span class="keyword">bool</span> <span class="identifier">f</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Adds a point at (x,y) in the root level of the document
+              Generates a polygon from the vector input using Cartesian coordinates.
             </p>
             </td>
 <td>
             <p>
-              If the user is calling the circle method, odds are they would prefer
-              a real circle instead of a degenerate circle (a point). 5 is as good
-              a default as any other, and the user is unlikely want a point if they
-              are making this call.
+              Fill is determined by <code class="computeroutput"><span class="identifier">f</span></code>.
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">g_element</span><span class="special">&amp;</span>
-              <span class="identifier">get_g_element</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="identifier">polyline_element</span><span class="special">&amp;</span>
+              <span class="identifier">polyline</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Gets the g_element at the index specified.
+              Places a polyline at coordinate (x, y)
             </p>
             </td>
 <td>
             <p>
-              Gives a runtime error if you specify an index that does not contain
-              a <code class="computeroutput"><span class="identifier">g_element</span></code>. An iterator
-              interface to access these elements might be useful.
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <code class="computeroutput"><span class="identifier">polyline_element</span><span class="special">&amp;</span>
+              <span class="identifier">polyline</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Adds a polyline to the root of the SVG document from (x1, y1) to (x2,
+              y2)
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">polyline_element</span><span class="special">&amp;</span>
+              <span class="identifier">polyline</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">poly_path_point</span><span class="special">&gt;&amp;</span>
+              <span class="identifier">v</span><span class="special">,</span>
+              <span class="keyword">bool</span> <span class="identifier">f</span><span class="special">=</span><span class="keyword">true</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Adds a polyline to the root of the SVG document with
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">f</span></code> denotes the option
+              to provide a fill for the polyline.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">rect_element</span><span class="special">&amp;</span>
               <span class="identifier">rect</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">width</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">height</span><span class="special">)</span></code>
             </p>
             </td>
@@ -244,7 +355,26 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
+              <code class="computeroutput"><span class="identifier">polygon_element</span><span class="special">&amp;</span>
+              <span class="identifier">rhombus</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x3</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y3</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x4</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y4</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">f</span>
+              <span class="special">=</span> <span class="keyword">true</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Generates a rhombus at the four coordinates provided
+            </p>
+            </td>
+<td>
+            <p>
+              Fill is determined by <code class="computeroutput"><span class="identifier">f</span></code>.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">text_element</span><span class="special">&amp;</span>
               <span class="identifier">text</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">text</span><span class="special">)</span></code>
             </p>
             </td>
@@ -259,11 +389,96 @@
             </p>
             </td>
 </tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">polygon_element</span><span class="special">&amp;</span>
+              <span class="identifier">triangle</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x3</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y3</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">f</span>
+              <span class="special">=</span> <span class="keyword">true</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Generates a triangle at the three Cartesian coordinates specified
+            </p>
+            </td>
+<td>
+            <p>
+              Fill is determined by <code class="computeroutput"><span class="identifier">f</span></code>
+            </p>
+            </td>
+</tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id693843"></a><p class="title"><b>Table 5. `svg` Copyright</b></p>
+<a name="id694987"></a><p class="title"><b>Table 5. Special methods</b></p>
+<div class="table-contents"><table class="table" summary="Special methods">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Notes &amp; Examples
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">clip_path_element</span><span class="special">&amp;</span>
+              <span class="identifier">clip_path</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">rect_element</span><span class="special">&amp;</span> <span class="identifier">rect</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span>
+              <span class="identifier">id</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Allows a rectangle to be defined as a clipping element. The clip elements
+              are referenced by name, so you must provide the ID
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">load_stylesheet</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span>
+              <span class="identifier">input</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Allows you to define the filename of a stylesheet. The stylesheet is
+              validated as being a strict subset of the CSS syntax.
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id695246"></a><p class="title"><b>Table 6. `svg` Copyright</b></p>
 <div class="table-contents"><table class="table" summary="`svg` Copyright">
 <colgroup>
 <col>
@@ -291,8 +506,127 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">copyright_holder</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">attribution</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the Attribution segment of the license
+            </p>
+            </td>
+<td>
+            <p>
+              The default is <code class="computeroutput"><span class="string">""</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">author</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the author of the document.
+            </p>
+            </td>
+<td>
+            <p>
+              The default is the copyright_holder.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">author</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the author of the document
+            </p>
+            </td>
+<td>
+            <p>
+              The copyright_holder is the default author
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">commercialuse</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the Commercial Use segment of the license
+            </p>
+            </td>
+<td>
+            <p>
+              The default is <code class="computeroutput"><span class="string">""</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">copyright_date</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the copyright date for the SVG XML document
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the date string, not the associated XML.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">copyright_date</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set copyright date for the SVG XML document, as comment and XML.
+            </p>
+            </td>
+<td>
+            <p>
+              &lt;!-- SVG Plot Copyright Paul A. Bristow 2007 --&gt; &lt;meta name<code class="literal">"date"
+              content</code>"2007" /&gt;
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">copyright_holder</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the copyright holder for the SVG XML document
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the input value for copyright holder. Does not return any XML
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">copyright_holder</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -310,9 +644,115 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">license</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span>
-              <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">description</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the description of the document.
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the description string, not the associated XML
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">description</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets description for the SVG XML document, as comment and XML.
+            </p>
+            </td>
+<td>
+            <p>
+              &lt;!-- My Document description --&gt; &lt;desc&gt;My Document description&lt;/desc&gt;
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">distribution</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the Distribution segment of the license
+            </p>
+            </td>
+<td>
+            <p>
+              The default is <code class="computeroutput"><span class="string">""</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              `void image_filename(const std::string)
+            </p>
+            </td>
+<td>
+            <p>
+              Writes the image filename for the document as a title element in the
+              SVG document
+            </p>
+            </td>
+<td>
+            <p>
+              If the wrong filename is provided, the right one will be set upon a
+              call to write(). You should not have to set this, as it will be overridden
+              upon write.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">is_license</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns whether or not a license will be output with a written document.
+            </p>
+            </td>
+<td>
+            <p>
+              Permits reproduction &amp; distribution but requires atribution.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">license</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether or not the license information should be added to the
+              written document
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">false</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">license</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span>
+              <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span>
+              <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -344,221 +784,11 @@
             </p>
             </td>
 </tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">distribution</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the Distribution segment of the license
-            </p>
-            </td>
-<td>
-            <p>
-              The default is <code class="computeroutput"><span class="string">""</span></code>
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">attribution</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the Attribution segment of the license
-            </p>
-            </td>
-<td>
-            <p>
-              The default is <code class="computeroutput"><span class="string">""</span></code>
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">commercialuse</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the Commercial Use segment of the license
-            </p>
-            </td>
-<td>
-            <p>
-              The default is <code class="computeroutput"><span class="string">""</span></code>
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">copyright_holder</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the copyright holder for the SVG XML document
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the input value for copyright holder. Does not return any XML
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">license</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Sets whether or not the license information should be added to the
-              written document
-            </p>
-            </td>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">false</span></code>
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">is_license</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns whether or not a license will be output with a written document.
-            </p>
-            </td>
-<td>
-            <p>
-              Permits reproduction &amp; distribution but requires atribution.
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">author</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Sets the author of the document
-            </p>
-            </td>
-<td>
-            <p>
-              The copyright_holder is the default author
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">copyright_date</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Set copyright date for the SVG XML document, as comment and XML.
-            </p>
-            </td>
-<td>
-            <p>
-              &lt;!-- SVG Plot Copyright Paul A. Bristow 2007 --&gt; &lt;meta name<code class="literal">"date"
-              content</code>"2007" /&gt;
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">copyright_date</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the copyright date for the SVG XML document
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the date string, not the associated XML.
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">description</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Sets description for the SVG XML document, as comment and XML.
-            </p>
-            </td>
-<td>
-            <p>
-              &lt;!-- My Document description --&gt; &lt;desc&gt;My Document description&lt;/desc&gt;
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">description</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the description of the document.
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the description string, not the associated XML
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">author</span><span class="special">()</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Returns the author of the document.
-            </p>
-            </td>
-<td>
-            <p>
-              The default is the copyright_holder.
-            </p>
-            </td>
-</tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id695136"></a><p class="title"><b>Table 6. `svg` document settings and writing</b></p>
+<a name="id696540"></a><p class="title"><b>Table 7. `svg` document settings and writing</b></p>
 <div class="table-contents"><table class="table" summary="`svg` document settings and writing">
 <colgroup>
 <col>
@@ -586,8 +816,24 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">coord_precision</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="keyword">int</span> <span class="identifier">coord_precision</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the current precision of doubles in the document
+            </p>
+            </td>
+<td>
+            <p>
+              The default is 3
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">coord_precision</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -604,19 +850,17 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">document_title</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+              <span class="identifier">document_title</span><span class="special">()</span></code>
             </p>
             </td>
 <td>
             <p>
-              Sets title for the SVG XML document (<span class="bold"><strong>not the
-              plot</strong></span>)
+              Returns the title of the SVG XML document
             </p>
             </td>
 <td>
             <p>
-              &lt;title&gt;My Document title&lt;/title&gt;
             </p>
             </td>
 </tr>
@@ -639,47 +883,31 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="keyword">int</span> <span class="identifier">coord_precision</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">document_title</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Returns the current precision of doubles in the document
+              Sets title for the SVG XML document (not the plot)
             </p>
             </td>
 <td>
             <p>
-              The default is 3
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">x_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Sets the width of the image (pixels).
-            </p>
-            </td>
-<td>
-            <p>
+              &lt;title&gt;My Document title&lt;/title&gt;
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">y_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">image_size</span><span class="special">(</span><span class="keyword">unsigned</span>
+              <span class="keyword">int</span><span class="special">,</span>
+              <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Sets the height of the image (pixels).
+              Sets the size of the image produced, (pixels).
             </p>
             </td>
 <td>
@@ -707,6 +935,23 @@
 <tr>
 <td>
             <p>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">x_size</span><span class="special">(</span><span class="keyword">unsigned</span>
+              <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width of the image (pixels).
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
               <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">int</span>
               <span class="identifier">y_size</span><span class="special">()</span></code>
             </p>
@@ -724,14 +969,13 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">image_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">unsigned</span>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">y_size</span><span class="special">(</span><span class="keyword">unsigned</span>
               <span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Sets the size of the image produced, (pixels).
+              Sets the height of the image (pixels).
             </p>
             </td>
 <td>
@@ -742,8 +986,7 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
             </p>
             </td>
 <td>
@@ -761,8 +1004,7 @@
 <tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span>
-              <span class="identifier">write</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;)</span></code>
+              <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">write</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;)</span></code>
             </p>
             </td>
 <td>
