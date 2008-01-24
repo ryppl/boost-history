@@ -97,7 +97,7 @@ namespace boost { namespace pinhole
         
         static bool exists()
         {
-            return m_instance;
+            return (m_instance != NULL);
         }
         
         static void delete_instance()
