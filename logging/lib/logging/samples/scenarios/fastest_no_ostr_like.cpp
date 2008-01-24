@@ -67,8 +67,8 @@ BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 #define LERR_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() ) 
 
 void fastest_no_ostr_like_example() {
-    g_log_app()->turn_cache_off();
-    g_log_err()->turn_cache_off();
+    g_log_app()->mark_as_initialized();
+    g_log_err()->mark_as_initialized();
 
     // Step 5: use it...
     LAPP_("this is so cool\n");

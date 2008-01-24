@@ -27,7 +27,7 @@ Scenario 1 should be the most common.
 
 @copydoc mul_levels_one_logger 
 
-@ref scenarios_code_1 "Click to see the code"
+@ref scenarios_code_mom "Click to see the code"
 \n\n\n
 
 
@@ -36,7 +36,7 @@ Scenario 1 should be the most common.
 
 @copydoc one_loger_one_filter
 
-@ref scenarios_code_5 "Click to see the code"
+@ref scenarios_code_noo "Click to see the code"
 \n\n\n
 
 
@@ -45,7 +45,7 @@ Scenario 1 should be the most common.
 
 @copydoc fastest_no_ostr_like
 
-@ref scenarios_code_6 "Click to see the code"
+@ref scenarios_code_mon "Click to see the code"
 \n\n\n
 
 

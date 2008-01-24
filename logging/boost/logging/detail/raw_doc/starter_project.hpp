@@ -6,21 +6,21 @@ namespace boost { namespace logging {
 You've probably looked at the @ref common_scenarios "scenarios", at @ref scenario_multiple_files "basic_usage example",
 and just in case, here's a something to get you started in your own project(s). 
 
-You need 2 files:
-- @c log.h - where you declare your log(s)
-- @c log.cpp - where you define and initialize your log(s)
+In your project, you will need to create 2 files:
+- <tt><em>my_app_log</em>.h</tt> - where you declare your log(s)
+- <tt><em>my_app_log</em>.cpp</tt> - where you define and initialize your log(s)
 
 Again, this is just a starter project, you can customize it as you wish. Enjoy!
 
 \n\n
-The log.h file
+The <em>my_app_log</em>.h file
 
-@include starter/log.h
+@include starter/my_app_log.h
 
 \n\n
-The log.cpp file
+The <em>my_app_log</em>.cpp file
 
-@include starter/log.cpp
+@include starter/my_app_log.cpp
 
 
 */

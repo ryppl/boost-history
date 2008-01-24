@@ -102,7 +102,7 @@ void one_logger_one_filter_example() {
     g_l()->writer().add_destination(    bl::destination::file("out.txt") );
     g_l()->writer().add_destination(    bl::destination::cout() );
     g_l()->writer().add_destination(    bl::destination::dbg_window() );
-    g_l()->turn_cache_off();
+    g_l()->mark_as_initialized();
 
     // where shall the profile results be outputted?
     bl::profile::compute::inst().log_results( bl::destination::file("profile.txt") );

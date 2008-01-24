@@ -106,7 +106,7 @@ void no_levels_with_route_example() {
         .fmt( formatter::append_newline() )
         .dest( destination::file("out.txt") );
 
-    g_l()->turn_cache_off();
+    g_l()->mark_as_initialized();
 
     // Step 8: use it...
     int i = 1;

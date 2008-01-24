@@ -198,7 +198,7 @@ template<class convert_dest = do_convert_destination > struct rolling_file_t : i
     */
     void configure(const hold_string_type & str) {
         // configure - the file prefix, for now
-        non_const_context_base::context().m_name_prefix = str;
+        non_const_context_base::context().m_name_prefix.assign( str.begin(), str.end());
         non_const_context_base::context().m_cur_idx = 0;
         non_const_context_base::context().restart();
     }

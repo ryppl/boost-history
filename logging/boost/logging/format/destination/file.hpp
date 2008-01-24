@@ -114,7 +114,7 @@ template<class convert_dest = do_convert_destination > struct file_t : is_generi
     */
     void configure(const hold_string_type & str) {
         // configure - the file name, for now
-        non_const_context_base::context().name = str;
+        non_const_context_base::context().name.assign( str.begin(), str.end() );
         non_const_context_base::context().reopen();
     }
 };

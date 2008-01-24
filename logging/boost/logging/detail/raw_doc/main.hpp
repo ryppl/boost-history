@@ -15,13 +15,14 @@ Logging allows you to later see what happened in your application. It can be a g
 The great thing about logging is that you can use it on systems in production and/or in use - if an error occurs, 
 by examining the log, you can get a picture of where the problem is.
 
-Good logging is mandatory in support projects, you simply can’t live without it.
+Good logging is mandatory in support projects, you simply can't live without it.
 
 Used properly, logging is a very powerful tool. Besides aiding debugging/ testing, it can also show you 
 how your application is used (which modules, etc.), how time-consuming certain parts of your program are, 
-how much bandwidth you application consumes, etc. - it's up to you how much information you log, and where.
+how much bandwidth your application consumes, etc. - it's up to you how much information you log, and where.
 
-The Boost Log Library has these features: 
+<b>Features</b>
+
 - A simple and clear separation of @ref namespace_concepts "concepts"
     - concepts are also easily separated into namespaces
 - A very flexible interface
@@ -47,7 +48,7 @@ The Boost Log Library has these features:
   - @ref formatter::named_spacer
   - @ref destination::named
 - @ref caching "cache messages before logs are initialized"
-
+- Allows for @ref profile "profiling itself"
 
 
 \n\n

@@ -73,14 +73,65 @@ g_l()->writer().format("%time%($hh:$mm.$ss.$mili) [%idx%] |\n");
 g_l()->writer().destination("cout file(out.txt) debug");
 @endcode
 
-The syntax of the format string:
 
-The syntax of the destination string:
+@section format_string_syntax The syntax of the format string
+
+- The format string specifies how the message is to be logged
+- Every formatter is escaped using %<em>fmt</em>%
+  - Available formatters:
+    - <tt>"%idx%"</tt> - writes the index of the message (formatter::idx)
+    - <tt>"%time%"</tt> - writes the time (formatter::high_precision_time)
+    - <tt>"%thread_id%"</tt> - writes the thread id (formatter::thread_id)
+    - if you want to write "%", double it, like this: "%%"
+- "|" is used to specify the original message. What is before it, is prepended to the message, what is after, is appended to the message 
+- If a formatter is configurable, append "(params)" to it
+  - For now, only "%time%" is configurable. For instance, "%time%($hh:$mm.$ss.$mili)" writes time like "21:14.24.674"
+
+Example:
+@code
+"%time%($hh:$mm.$ss.$mili) [%idx%] |\n"
+@endcode
+
+The output can look like:
+
+@code
+21:03.17.243 [1] this is so cool 
+21:03.17.243 [2] first error 
+21:03.17.243 [3] hello, world
+@endcode
 
 
-FIXME - need to allow tags by default, here!
+@section dest_string_syntax The syntax of the destinations string
+
+- The syntax of the destination string specifies where the message is to be logged
+  - Every destination is specified by name
+  - Separate destinations by space (' ')
+- Available destinations
+  - <tt>"cout"</tt> - writes to std::cout (destination::cout)
+  - <tt>"debug"</tt> - writes to the debug window: OutputDebugString in Windows, console on Linux (destination::dbg_window)
+  - <tt>"file"</tt> - writes to a file (destination::file)
+  - <tt>"file2"</tt> - writes to a second file (destination::file)
+  - <tt>"rol_file"</tt> - writes to a rolling file (destination::rolling_file)
+  - <tt>"rol_file2"</tt> - writes to a second rolling file (destination::rolling_file)
+- If a destination is configurable, append "(params)" to it
+  - Right now, "file", "file2", "rol_file" and "rol_file2" are configurable
+    - Append "(filename)" to them to specify the file name. Example: "file(out.txt)" will write to the out.txt file
+
+Examples:
+- "file(out.txt) cout" - will write to a file called out.txt and to cout
+- "cout debug" - will write to cout and debug window (see above)
+- "cout file(out.txt) file2(dbg.txt)" - will write to cout, and to 2 files - out.txt and dbg.txt
+- "cout rol_file(r.txt)" - will write to cout and to a @ref destination::rolling_file "rolling_file" called r.txt
+
+@note
+If you want to output to 2 files, don't use "file(one.txt) file(two.txt)". This will just configure "file" twice, ending up with writing only to "two.txt" file.
+Use "file(one.txt) file2(two.txt)" instead!
+
+
 
 @param format_write_ the underlying format writer
+
+
 */
 template<class format_write_ /* = default_ */ > struct named {
     typedef typename use_default< format_write_, format_write< formatter::base<> , destination::base<> > >::type format_write_type;

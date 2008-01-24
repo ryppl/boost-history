@@ -26,7 +26,7 @@ Before:
 g_l->writer().add_formatter( formatter::idx(), "[%] "  );
 g_l->writer().add_formatter( formatter::append_newline_if_needed() );
 g_l->writer().add_destination( destination::file("out.txt") );
-g_l->turn_cache_off();
+g_l->mark_as_initialized();
 
 g_log_filter->set_enabled(false);
 
@@ -40,7 +40,7 @@ After:
 g_l()->writer().add_formatter( formatter::idx(), "[%] "  );
 g_l()->writer().add_formatter( formatter::append_newline_if_needed() );
 g_l()->writer().add_destination( destination::file("out.txt") );
-g_l()->turn_cache_off();
+g_l()->mark_as_initialized();
 
 g_log_filter()->set_enabled(false);
 

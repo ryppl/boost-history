@@ -129,9 +129,9 @@ void init_logs() {
     // if you change this, you'll get a different output (more or less verbose)
     g_log_level()->set_enabled(level::info);
 
-    g_log_err()->turn_cache_off();
-    g_log_app()->turn_cache_off();
-    g_log_dbg()->turn_cache_off();
+    g_log_err()->mark_as_initialized();
+    g_log_app()->mark_as_initialized();
+    g_log_dbg()->mark_as_initialized();
 }
 
 void cache_before_init_example() {

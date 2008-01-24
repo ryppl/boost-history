@@ -106,7 +106,7 @@ void ts_logger_one_filter_example() {
     g_l()->writer().add_destination( destination::file("out.txt") );
     g_l()->writer().add_destination( destination::cout() );
     g_l()->writer().add_destination( destination::dbg_window() );
-    g_l()->turn_cache_off();
+    g_l()->mark_as_initialized();
 
     for ( int i = 0 ; i < 5; ++i)
         boost::thread t( &use_log_thread);

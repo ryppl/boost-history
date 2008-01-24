@@ -66,7 +66,7 @@ is still turned on or off.
 
 L_ << "this message will not be logged";
 g_log_filter()->set_enabled(false);
-g_l()->turn_cache_off();
+g_l()->mark_as_initialized();
 @endcode
 
 
@@ -84,7 +84,7 @@ If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE
 
 L_ << "this message will be logged, even if filter will be turned off";
 g_log_filter()->set_enabled(false);
-g_l()->turn_cache_off();
+g_l()->mark_as_initialized();
 @endcode
 
 
@@ -101,7 +101,7 @@ If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE
 ...
 
 L_ << "this message will NOT be logged";
-g_l()->turn_cache_off();
+g_l()->mark_as_initialized();
 @endcode
 
 

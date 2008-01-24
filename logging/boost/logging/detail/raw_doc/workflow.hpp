@@ -32,7 +32,7 @@ LDBG_ << "user count = " << some_func_taking_a_lot_of_cpu_time();
 If @c LDBG_ is disabled, everything after "LDBG_" is ignored. Thus, @c some_func_taking_a_lot_of_cpu_time() will not be called.
 
 First of all, we have 2 concepts:
-- logger : a "logical" log - something you write to; it kwnows its destination(s), that is, where to write to
+- logger : a "logical" log - something you write to; it knows its destination(s), that is, where to write to
 - filter : this provides a way to say if a logger is enabled or not. Whatever that "way to say a logger is enabled or not" means,
   is up to the designer of the filter class.
 

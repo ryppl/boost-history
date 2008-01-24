@@ -52,7 +52,7 @@ void test_before_destroyed() {
     g_l()->writer().add_formatter( formatter::append_newline() );
     g_l()->writer().add_destination( destination::cout() );
     g_l()->writer().add_destination( destination::stream(g_stringstream) );
-    g_l()->turn_cache_off();
+    g_l()->mark_as_initialized();
     g_l()->set_after_destroyed( called_after_log_destruction);
 
     L_ << "hello world";

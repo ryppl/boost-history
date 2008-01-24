@@ -33,9 +33,6 @@ It will be:
 
 #include <boost/logging/format_fwd.hpp>
 
-// Optimize : use a cache string, to make formatting the message faster
-BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
-
 #include <boost/logging/format/named_writer.hpp>
 typedef boost::logging::named_logger<>::type logger_type;
 
