@@ -19,6 +19,7 @@ namespace boost{ namespace math{ namespace detail
 template <class RealType, class Policy>
 inline bool check_probability(const char* function, RealType const& prob, RealType* result, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if((prob < 0) || (prob > 1) || !(boost::math::isfinite)(prob))
    {
       *result = policies::raise_domain_error<RealType>(
@@ -32,6 +33,7 @@ inline bool check_probability(const char* function, RealType const& prob, RealTy
 template <class RealType, class Policy>
 inline bool check_df(const char* function, RealType const& df, RealType* result, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if((df <= 0) || !(boost::math::isfinite)(df))
    {
       *result = policies::raise_domain_error<RealType>(
@@ -49,6 +51,7 @@ inline bool check_scale(
       RealType* result,
       const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if((scale <= 0) || !(boost::math::isfinite)(scale))
    { // Assume scale == 0 is NOT valid for any distribution.
       *result = policies::raise_domain_error<RealType>(

@@ -135,6 +135,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_mean_NZ(const char* function, const RealType& mean, RealType* result, const Policy& pol)
       { // mean == 0 is considered an error.
+        BOOST_MATH_STD_USING
         if( !(boost::math::isfinite)(mean) || (mean <= 0))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -154,6 +155,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_k(const char* function, const RealType& k, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if((k < 0) || !(boost::math::isfinite)(k))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -178,6 +180,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_prob(const char* function, const RealType& p, RealType* result, const Policy& pol)
       { // Check 0 <= p <= 1
+        BOOST_MATH_STD_USING
         if(!(boost::math::isfinite)(p) || (p < 0) || (p > 1))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -422,6 +425,7 @@ namespace boost
       // The terms are not summed directly (at least for larger k)
       // instead the incomplete gamma integral is employed,
 
+      BOOST_MATH_STD_USING
       RealType const& k = c.param;
       poisson_distribution<RealType, Policy> const& dist = c.dist;
 
@@ -457,6 +461,7 @@ namespace boost
     inline RealType quantile(const poisson_distribution<RealType, Policy>& dist, const RealType& p)
     { // Quantile (or Percent Point) Poisson function.
       // Return the number of expected events k for a given probability p.
+      BOOST_MATH_STD_USING
       RealType result; // of Argument checks:
       if(false == poisson_detail::check_prob(
         "boost::math::quantile(const poisson_distribution<%1%>&, %1%)",
@@ -490,6 +495,7 @@ namespace boost
       boost::uintmax_t max_iter = policies::get_max_root_iterations<Policy>();
       RealType guess, factor = 8;
       RealType z = dist.mean();
+      BOOST_MATH_STD_USING
       if(z < 1)
          guess = z;
       else
@@ -526,6 +532,7 @@ namespace boost
       // complement of the probability q.
       //
       // Error checks:
+      BOOST_MATH_STD_USING
       RealType q = c.param;
       const poisson_distribution<RealType, Policy>& dist = c.dist;
       RealType result;  // of argument checks.

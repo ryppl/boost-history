@@ -195,6 +195,7 @@ T quadratic_interpolate(const T& a, const T& b, T const& d,
    //
    // Start by obtaining the coefficients of the quadratic polynomial:
    //
+   BOOST_MATH_STD_USING
    T B = safe_div(static_cast<T>(fb - fa), static_cast<T>(b - a), tools::max_value<T>());
    T A = safe_div(static_cast<T>(fd - fb), static_cast<T>(d - b), tools::max_value<T>());
    A = safe_div(static_cast<T>(A - B), static_cast<T>(d - a), T(0));

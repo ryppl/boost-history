@@ -158,6 +158,7 @@ inline V evaluate_rational_c_imp(const T* num, const U* denom, const V& z, const
 template <class T, class U, class V>
 V evaluate_rational(const T* num, const U* denom, const V& z_, std::size_t count)
 {
+   BOOST_MATH_STD_USING
    V z(z_);
    V s1, s2;
    if(z <= 1)

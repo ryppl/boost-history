@@ -45,6 +45,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_success_fraction(const char* function, const RealType& p, RealType* result, const Policy& /* pol */)
       {
+        BOOST_MATH_STD_USING
         if(!(boost::math::isfinite)(p) || (p < 0) || (p > 1))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -62,6 +63,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_dist_and_k(const char* function, const RealType& p, RealType k, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if(check_dist(function, p, result, Policy()) == false)
         {
           return false;
@@ -151,6 +153,7 @@ namespace boost
     template <class RealType, class Policy>
     RealType pdf(const bernoulli_distribution<RealType, Policy>& dist, const RealType& k)
     { // Probability Density/Mass Function.
+      BOOST_MATH_STD_USING
       BOOST_FPU_EXCEPTION_GUARD
       // Error check:
       RealType result; // of checks.
@@ -176,6 +179,7 @@ namespace boost
     template <class RealType, class Policy>
     inline RealType cdf(const bernoulli_distribution<RealType, Policy>& dist, const RealType& k)
     { // Cumulative Distribution Function Bernoulli.
+      BOOST_MATH_STD_USING
       RealType p = dist.success_fraction();
       // Error check:
       RealType result;
@@ -200,6 +204,7 @@ namespace boost
     template <class RealType, class Policy>
     inline RealType cdf(const complemented2_type<bernoulli_distribution<RealType, Policy>, RealType>& c)
     { // Complemented Cumulative Distribution Function bernoulli.
+      BOOST_MATH_STD_USING
       RealType const& k = c.param;
       bernoulli_distribution<RealType, Policy> const& dist = c.dist;
       RealType p = dist.success_fraction();
@@ -280,6 +285,7 @@ namespace boost
     template <class RealType, class Policy>
     inline RealType mode(const bernoulli_distribution<RealType, Policy>& dist)
     {
+      BOOST_MATH_STD_USING
       return static_cast<RealType>((dist.success_fraction() <= 0.5) ? 0 : 1); // p = 0.5 can be 0 or 1
     }
 

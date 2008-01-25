@@ -30,6 +30,7 @@ namespace detail{
 template <class RealType, class Policy>
 inline bool verify_lambda(const char* function, RealType l, RealType* presult, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if(l <= 0)
    {
       *presult = policies::raise_domain_error<RealType>(
@@ -43,6 +44,7 @@ inline bool verify_lambda(const char* function, RealType l, RealType* presult, c
 template <class RealType, class Policy>
 inline bool verify_exp_x(const char* function, RealType x, RealType* presult, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if(x < 0)
    {
       *presult = policies::raise_domain_error<RealType>(

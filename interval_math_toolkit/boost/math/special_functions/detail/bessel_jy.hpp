@@ -205,6 +205,7 @@ enum
 template <typename T, typename Policy>
 int bessel_jy(T v, T x, T* J, T* Y, int kind, const Policy& pol)
 {
+    BOOST_MATH_STD_USING
     BOOST_ASSERT(x >= 0);
 
     T u, Jv, Ju, Yv, Yv1, Yu, Yu1(0), fv, fu;

@@ -304,6 +304,7 @@ inline T cyl_bessel_k_imp(int v, T x, const bessel_int_tag&, const Policy& pol)
 template <class T, class Policy>
 inline T cyl_neumann_imp(T v, T x, const bessel_no_int_tag&, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::cyl_neumann<%1%>(%1%,%1%)";
    if(x <= 0)
    {

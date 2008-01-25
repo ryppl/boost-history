@@ -77,6 +77,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_successes(const char* function, const RealType& r, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if( !(boost::math::isfinite)(r) || (r <= 0) )
         {
           *result = policies::raise_domain_error<RealType>(
@@ -89,6 +90,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_success_fraction(const char* function, const RealType& p, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if( !(boost::math::isfinite)(p) || (p < 0) || (p > 1) )
         {
           *result = policies::raise_domain_error<RealType>(
@@ -107,6 +109,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_dist_and_k(const char* function, const RealType& r, const RealType& p, RealType k, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if(check_dist(function, r, p, result, pol) == false)
         {
           return false;

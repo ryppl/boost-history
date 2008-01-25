@@ -33,6 +33,7 @@ namespace detail{
 template <class T, class Policy>
 T legendre_imp(unsigned l, T x, const Policy& pol, bool second = false)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::legrendre_p<%1%>(unsigned, %1%)";
    // Error handling:
    if((x < -1) || (x > 1))
@@ -119,6 +120,7 @@ namespace detail{
 template <class T, class Policy>
 T legendre_p_imp(int l, int m, T x, T sin_theta_power, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    // Error handling:
    if((x < -1) || (x > 1))
       return policies::raise_domain_error<T>(

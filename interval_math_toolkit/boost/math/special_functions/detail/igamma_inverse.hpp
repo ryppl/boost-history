@@ -275,6 +275,7 @@ struct gamma_p_inverse_func
 {
    gamma_p_inverse_func(T a_, T p_, bool inv) : a(a_), p(p_), invert(inv)
    {
+      BOOST_MATH_STD_USING
       //
       // If p is too near 1 then P(x) - p suffers from cancellation
       // errors causing our root-finding algorithms to "thrash", better

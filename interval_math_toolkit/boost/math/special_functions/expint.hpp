@@ -416,7 +416,7 @@ inline T expint_as_series(unsigned n, T z, const Policy& pol)
       fact *= ++k;
    }
    BOOST_MATH_INSTRUMENT_VARIABLE(result)
-   result += pow(-z, (int)n - 1) 
+   result += pow(-z, (T)n - 1) 
       * (boost::math::digamma(static_cast<T>(n)) - log(z)) / fact;
    BOOST_MATH_INSTRUMENT_VARIABLE(result)
 
@@ -502,6 +502,7 @@ T expint_i_as_series(T z, const Policy& pol)
 template <class T, class Policy, class Tag>
 T expint_i_imp(T z, const Policy& pol, const Tag& tag)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::expint<%1%>(%1%)";
    if(z < 0)
       return -expint_imp(1, static_cast<T>(-z), pol, tag);

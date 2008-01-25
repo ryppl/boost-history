@@ -373,6 +373,7 @@ boost::numeric::interval<T, Policy> halley_iterate(
       boost::numeric::interval<T, Policy>,
       boost::numeric::interval<T, Policy> > f_result_type;
    typedef boost::numeric::interval<T, Policy> policy_type;
+   typedef boost::numeric::interval<T, Policy> interval_type;
 
    boost::uintmax_t miter = max_iter;
 
@@ -411,6 +412,7 @@ boost::numeric::interval<T, Policy> schroeder_iterate(
       boost::numeric::interval<T, Policy>,
       boost::numeric::interval<T, Policy> > f_result_type;
    typedef boost::numeric::interval<T, Policy> policy_type;
+   typedef boost::numeric::interval<T, Policy> interval_type;
 
    boost::uintmax_t miter = max_iter;
 
@@ -448,6 +450,7 @@ boost::numeric::interval<T, Policy> newton_raphson_iterate(
       boost::numeric::interval<T, Policy>,
       boost::numeric::interval<T, Policy> > f_result_type;
    typedef boost::numeric::interval<T, Policy> policy_type;
+   typedef boost::numeric::interval<T, Policy> interval_type;
 
    boost::uintmax_t miter = max_iter;
 

@@ -28,6 +28,7 @@ namespace detail
         RealType const& x,
         RealType* result, const Policy& pol)
   {
+     BOOST_MATH_STD_USING
      if((x < 0) || !(boost::math::isfinite)(x))
      {
         *result = policies::raise_domain_error<RealType>(

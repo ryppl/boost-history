@@ -144,6 +144,16 @@ inline int real_cast<int, mpfr_class>(mpfr_class t)
 {
    return t.get_si();
 }
+template <>
+inline double real_cast<double, mpfr_class>(mpfr_class t)
+{
+   return t.get_d();
+}
+template <>
+inline float real_cast<float, mpfr_class>(mpfr_class t)
+{
+   return static_cast<float>(t.get_d());
+}
 
 template <>
 inline mpfr_class max_value<mpfr_class>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(mpfr_class))

@@ -61,6 +61,7 @@ inline typename Distribution::value_type hazard(const Distribution& dist, const 
   // http://www.itl.nist.gov/div898/handbook/eda/section3/eda362.htm#HAZ
    typedef typename Distribution::value_type value_type;
    typedef typename Distribution::policy_type policy_type;
+   BOOST_MATH_STD_USING
    value_type p = cdf(complement(dist, x));
    value_type d = pdf(dist, x);
    if(d > p * tools::max_value<value_type>())
@@ -87,6 +88,7 @@ inline typename Distribution::value_type coefficient_of_variation(const Distribu
 {
    typedef typename Distribution::value_type value_type;
    typedef typename Distribution::policy_type policy_type;
+   BOOST_MATH_STD_USING
 
    using std::abs;
 

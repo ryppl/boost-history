@@ -129,6 +129,7 @@ RealType pdf(const fisher_f_distribution<RealType, Policy>& dist, const RealType
 template <class RealType, class Policy>
 inline RealType cdf(const fisher_f_distribution<RealType, Policy>& dist, const RealType& x)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::cdf(fisher_f_distribution<%1%> const&, %1%)";
    RealType df1 = dist.degrees_of_freedom1();
    RealType df2 = dist.degrees_of_freedom2();
@@ -187,6 +188,7 @@ inline RealType quantile(const fisher_f_distribution<RealType, Policy>& dist, co
 template <class RealType, class Policy>
 inline RealType cdf(const complemented2_type<fisher_f_distribution<RealType, Policy>, RealType>& c)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::cdf(fisher_f_distribution<%1%> const&, %1%)";
    RealType df1 = c.dist.degrees_of_freedom1();
    RealType df2 = c.dist.degrees_of_freedom2();
@@ -247,6 +249,7 @@ inline RealType quantile(const complemented2_type<fisher_f_distribution<RealType
 template <class RealType, class Policy>
 inline RealType mean(const fisher_f_distribution<RealType, Policy>& dist)
 { // Mean of F distribution = v.
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::mean(fisher_f_distribution<%1%> const&)";
    RealType df1 = dist.degrees_of_freedom1();
    RealType df2 = dist.degrees_of_freedom2();
@@ -268,6 +271,7 @@ inline RealType mean(const fisher_f_distribution<RealType, Policy>& dist)
 template <class RealType, class Policy>
 inline RealType variance(const fisher_f_distribution<RealType, Policy>& dist)
 { // Variance of F distribution.
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::variance(fisher_f_distribution<%1%> const&)";
    RealType df1 = dist.degrees_of_freedom1();
    RealType df2 = dist.degrees_of_freedom2();
@@ -289,6 +293,7 @@ inline RealType variance(const fisher_f_distribution<RealType, Policy>& dist)
 template <class RealType, class Policy>
 inline RealType mode(const fisher_f_distribution<RealType, Policy>& dist)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::mode(fisher_f_distribution<%1%> const&)";
    RealType df1 = dist.degrees_of_freedom1();
    RealType df2 = dist.degrees_of_freedom2();
@@ -350,6 +355,7 @@ inline RealType kurtosis(const fisher_f_distribution<RealType, Policy>& dist)
 template <class RealType, class Policy>
 inline RealType kurtosis_excess(const fisher_f_distribution<RealType, Policy>& dist)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::kurtosis_excess(fisher_f_distribution<%1%> const&)";
    // See http://mathworld.wolfram.com/F-Distribution.html
    RealType df1 = dist.degrees_of_freedom1();

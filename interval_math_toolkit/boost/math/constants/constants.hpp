@@ -40,19 +40,20 @@ namespace boost{ namespace math
   #define BOOST_DEFINE_MATH_CONSTANT(name, x, y, exp)\
    template <class T> T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE(T));\
    namespace detail{\
-      template <class T> inline T name(boost::mpl::false_& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
+      template <class T> inline T name(const boost::mpl::false_& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
       {\
          static const T result = ::boost::lexical_cast<T>(BOOST_STRINGIZE(BOOST_JOIN(BOOST_JOIN(x, y), BOOST_JOIN(e, exp))));\
          return result;\
       }\
-      template <class T> inline T name(boost::mpl::true_& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
+      template <class T> inline T name(const boost::mpl::true_& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
       {\
          return boost::math::constants::name<typename T::base_type>();\
       }\
    }\
    template <class T> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE(T))\
    {\
-      return detail::name<T>(boost::numeric::is_interval<T>());\
+      typedef typename boost::numeric::is_interval<T>::type tag_type;\
+      return detail::name<T>(tag_type());\
    }\
    template <> inline float name<float>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(float))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), F); }\

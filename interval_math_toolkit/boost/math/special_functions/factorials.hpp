@@ -108,6 +108,7 @@ namespace detail{
 template <class T, class Policy>
 T rising_factorial_imp(T x, int n, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if(x < 0)
    {
       //

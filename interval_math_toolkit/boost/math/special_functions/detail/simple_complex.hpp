@@ -71,14 +71,17 @@ public:
    }
    bool operator == (const simple_complex& o)
    {
+      BOOST_MATH_STD_USING
       return (r == o.r) && (i == o.i);
    }
    bool operator != (const simple_complex& o)
    {
+      BOOST_MATH_STD_USING
       return !((r == o.r) && (i == o.i));
    }
    bool operator == (const T& o)
    {
+      BOOST_MATH_STD_USING
       return (r == o) && (i == 0);
    }
    simple_complex& operator += (const T& o)

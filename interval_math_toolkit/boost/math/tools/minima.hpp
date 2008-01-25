@@ -20,7 +20,7 @@
 namespace boost{ namespace math{ namespace tools{
 
 template <class F, class T>
-std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t& max_iter)
+std::pair<T, T> brent_find_minima(F f, T vmin, T vmax, int bits, boost::uintmax_t& max_iter)
 {
    BOOST_MATH_STD_USING
    using std::min;
@@ -34,12 +34,12 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
    T delta;  // The distance moved in the last step
    T delta2; // The distance moved in the step before last
    T fu, fv, fw, fx;  // function evaluations at u, v, w, x
-   T mid; // midpoint of min and max
+   T mid; // midpoint of vmin and vmax
    T fract1, fract2;  // minimal relative movement in x
 
    static const T golden = 0.3819660f;  // golden ratio, don't need too much precision here!
 
-   x = w = v = max;
+   x = w = v = vmax;
    fw = fv = fx = f(x);
    delta2 = delta = 0;
 
@@ -47,11 +47,11 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
 
    do{
       // get midpoint
-      mid = (min + max) / 2;
+      mid = (vmin + vmax) / 2;
       // work out if we're done already:
       fract1 = tolerance * fabs(x) + tolerance / 4;
       fract2 = 2 * fract1;
-      if(fabs(x - mid) <= (fract2 - (max - min) / 2))
+      if(fabs(x - mid) <= (fract2 - (vmax - vmin) / 2))
          break;
 
       if(fabs(delta2) > fract1)
@@ -67,10 +67,10 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
          T td = delta2;
          delta2 = delta;
          // determine whether a parabolic step is acceptible or not:
-         if((fabs(p) >= fabs(q * td / 2)) || (p <= q * (min - x)) || (p >= q * (max - x)))
+         if((fabs(p) >= fabs(q * td / 2)) || (p <= q * (vmin - x)) || (p >= q * (vmax - x)))
          {
             // nope, try golden section instead
-            delta2 = (x >= mid) ? min - x : max - x;
+            delta2 = (x >= mid) ? vmin - x : vmax - x;
             delta = golden * delta2;
          }
          else
@@ -78,14 +78,14 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
             // whew, parabolic fit:
             delta = p / q;
             u = x + delta;
-            if(((u - min) < fract2) || ((max- u) < fract2))
+            if(((u - vmin) < fract2) || ((vmax- u) < fract2))
                delta = (mid - x) < 0 ? -fabs(fract1) : fabs(fract1);
          }
       }
       else
       {
          // golden section:
-         delta2 = (x >= mid) ? min - x : max - x;
+         delta2 = (x >= mid) ? vmin - x : vmax - x;
          delta = golden * delta2;
       }
       // update current position:
@@ -96,9 +96,9 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
          // good new point is an improvement!
          // update brackets:
          if(u >= x)
-            min = x;
+            vmin = x;
          else
-            max = x;
+            vmax = x;
          // update control points:
          v = w;
          w = x;
@@ -112,9 +112,9 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
          // Oh dear, point u is worse than what we have already,
          // even so it *must* be better than one of our endpoints:
          if(u < x)
-            min = u;
+            vmin = u;
          else
-            max = u;
+            vmax = u;
          if((fu <= fw) || (w == x))
          {
             // however it is at least second best:
@@ -139,10 +139,10 @@ std::pair<T, T> brent_find_minima(F f, T min, T max, int bits, boost::uintmax_t&
 }
 
 template <class F, class T>
-inline std::pair<T, T> brent_find_minima(F f, T min, T max, int digits)
+inline std::pair<T, T> brent_find_minima(F f, T vmin, T vmax, int digits)
 {
    boost::uintmax_t m = (std::numeric_limits<boost::uintmax_t>::max)();
-   return brent_find_minima(f, min, max, digits, m);
+   return brent_find_minima(f, vmin, vmax, digits, m);
 }
 
 }}} // namespaces

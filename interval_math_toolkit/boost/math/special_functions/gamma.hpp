@@ -235,7 +235,7 @@ T lgamma_imp(T z, const Policy& pol, const L& l, int* sign = 0)
       typedef typename mpl::if_<
          mpl::less_equal<precision_type, mpl::int_<0> >,
          mpl::int_<0>,
-         mpl::if_<
+         typename mpl::if_<
             mpl::less_equal<precision_type, mpl::int_<64> >,
             mpl::int_<64>,
             typename mpl::if_<
@@ -821,6 +821,7 @@ template <class T, class Policy>
 T gamma_incomplete_imp(T a, T x, bool normalised, bool invert, 
                        const Policy& pol, T* p_derivative)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "boost::math::gamma_p<%1%>(%1%, %1%)";
    if(a <= 0)
       policies::raise_domain_error<T>(function, "Argument a to the incomplete gamma function must be greater than zero (got a=%1%).", a, pol);
@@ -1145,6 +1146,7 @@ T tgamma_delta_ratio_imp(T z, T delta, const Policy& pol)
 template <class T, class Policy>
 T gamma_p_derivative_imp(T a, T x, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    //
    // Usual error checks first:
    //

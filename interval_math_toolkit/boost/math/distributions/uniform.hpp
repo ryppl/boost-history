@@ -205,6 +205,7 @@ namespace boost{ namespace math
   template <class RealType, class Policy>
   inline RealType quantile(const uniform_distribution<RealType, Policy>& dist, const RealType& p)
   {
+    BOOST_MATH_STD_USING
     RealType lower = dist.lower();
     RealType upper = dist.upper();
     RealType result; // of checks
@@ -256,6 +257,7 @@ namespace boost{ namespace math
   template <class RealType, class Policy>
   inline RealType quantile(const complemented2_type<uniform_distribution<RealType, Policy>, RealType>& c)
   {
+    BOOST_MATH_STD_USING
     RealType lower = c.dist.lower();
     RealType upper = c.dist.upper();
     RealType q = c.param;

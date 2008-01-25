@@ -105,6 +105,7 @@ inline RealType pdf(const students_t_distribution<RealType, Policy>& dist, const
 template <class RealType, class Policy>
 inline RealType cdf(const students_t_distribution<RealType, Policy>& dist, const RealType& t)
 {
+   BOOST_MATH_STD_USING
    RealType degrees_of_freedom = dist.degrees_of_freedom();
    // Error check:
    RealType error_result;
@@ -320,6 +321,7 @@ inline RealType median(const students_t_distribution<RealType, Policy>& /*dist*/
 template <class RealType, class Policy>
 inline RealType skewness(const students_t_distribution<RealType, Policy>& dist)
 {
+   BOOST_MATH_STD_USING
    if(dist.degrees_of_freedom() <= 3)
    {
       policies::raise_domain_error<RealType>(
@@ -333,6 +335,7 @@ inline RealType skewness(const students_t_distribution<RealType, Policy>& dist)
 template <class RealType, class Policy>
 inline RealType kurtosis(const students_t_distribution<RealType, Policy>& dist)
 {
+   BOOST_MATH_STD_USING
    RealType df = dist.degrees_of_freedom();
    if(df <= 3)
    {
@@ -348,6 +351,7 @@ template <class RealType, class Policy>
 inline RealType kurtosis_excess(const students_t_distribution<RealType, Policy>& dist)
 {
    // see http://mathworld.wolfram.com/Kurtosis.html
+   BOOST_MATH_STD_USING
    RealType df = dist.degrees_of_freedom();
    if(df <= 3)
    {

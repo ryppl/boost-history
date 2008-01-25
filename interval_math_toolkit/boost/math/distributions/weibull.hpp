@@ -28,6 +28,7 @@ inline bool check_weibull_shape(
       RealType shape,
       RealType* result, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if((shape < 0) || !(boost::math::isfinite)(shape))
    {
       *result = policies::raise_domain_error<RealType>(
@@ -44,6 +45,7 @@ inline bool check_weibull_x(
       RealType const& x,
       RealType* result, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    if((x < 0) || !(boost::math::isfinite)(x))
    {
       *result = policies::raise_domain_error<RealType>(

@@ -28,6 +28,7 @@ namespace detail
   template <class RealType, class Policy>
   inline bool verify_sigma(const char* function, RealType sigma, RealType* presult, const Policy& pol)
   {
+     BOOST_MATH_STD_USING
      if(sigma <= 0)
      {
         *presult = policies::raise_domain_error<RealType>(
@@ -41,6 +42,7 @@ namespace detail
   template <class RealType, class Policy>
   inline bool verify_rayleigh_x(const char* function, RealType x, RealType* presult, const Policy& pol)
   {
+     BOOST_MATH_STD_USING
      if(x < 0)
      {
         *presult = policies::raise_domain_error<RealType>(

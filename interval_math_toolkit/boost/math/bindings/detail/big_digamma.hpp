@@ -281,6 +281,7 @@ T big_digamma_helper(T x)
 template <class T>
 T big_digamma(T x)
 {
+   BOOST_MATH_STD_USING
    if(x < 0)
    {
       return big_digamma_helper(static_cast<T>(1-x)) + constants::pi<T>() / tan(constants::pi<T>() * (1-x));

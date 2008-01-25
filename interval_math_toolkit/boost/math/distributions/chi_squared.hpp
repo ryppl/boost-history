@@ -113,6 +113,7 @@ RealType pdf(const chi_squared_distribution<RealType, Policy>& dist, const RealT
 template <class RealType, class Policy>
 inline RealType cdf(const chi_squared_distribution<RealType, Policy>& dist, const RealType& chi_square)
 {
+   BOOST_MATH_STD_USING
    RealType degrees_of_freedom = dist.degrees_of_freedom();
    // Error check:
    RealType error_result;
@@ -150,6 +151,7 @@ inline RealType quantile(const chi_squared_distribution<RealType, Policy>& dist,
 template <class RealType, class Policy>
 inline RealType cdf(const complemented2_type<chi_squared_distribution<RealType, Policy>, RealType>& c)
 {
+   BOOST_MATH_STD_USING
    RealType const& degrees_of_freedom = c.dist.degrees_of_freedom();
    RealType const& chi_square = c.param;
    static const char* function = "boost::math::cdf(const chi_squared_distribution<%1%>&, %1%)";
@@ -200,6 +202,7 @@ inline RealType variance(const chi_squared_distribution<RealType, Policy>& dist)
 template <class RealType, class Policy>
 inline RealType mode(const chi_squared_distribution<RealType, Policy>& dist)
 {
+   BOOST_MATH_STD_USING
    RealType df = dist.degrees_of_freedom();
    static const char* function = "boost::math::mode(const chi_squared_distribution<%1%>&)";
    if(df <= 2)

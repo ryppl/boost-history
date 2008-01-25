@@ -14,19 +14,33 @@
 
 namespace boost{ namespace math
 {
-  namespace tools
-  {
-    template <class To, class T>
-    inline To real_cast(T t)
-    {
-       return static_cast<To>(t);
-    }
-    template <class To, class T, class Policy>
-    inline To real_cast(boost::numeric::interval<T, Policy> t)
-    {
-       return real_cast<To>(norm(t));
-    }
-  } // namespace tools
+   namespace tools
+   {
+      template <class To, class T>
+      To real_cast(T t);
+
+      namespace detail{
+
+         template <class To, class T>
+         inline To real_cast(T t, const mpl::false_&)
+         {
+            return static_cast<To>(t);
+         }
+         template <class To, class T>
+         inline To real_cast(T t, const mpl::true_&)
+         {
+            return boost::math::tools::real_cast<To>(median(t));
+         }
+
+      }
+
+      template <class To, class T>
+      inline To real_cast(T t)
+      {
+         typedef boost::numeric::is_interval<T> tag_type;
+         return detail::real_cast<To>(t, tag_type());
+      }
+   } // namespace tools
 } // namespace math
 } // namespace boost
 

@@ -33,6 +33,7 @@ namespace boost
         RealType location,
         RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if((boost::math::isfinite)(location))
         { // any > 0 finite value is OK.
           if (location > 0)
@@ -62,6 +63,7 @@ namespace boost
         RealType shape,
         RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if((boost::math::isfinite)(shape))
         { // Any finite value > 0 is OK.
           if (shape > 0)
@@ -91,6 +93,7 @@ namespace boost
         RealType const& x,
         RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if((boost::math::isfinite)(x))
         { // 
           if (x > 0)
@@ -334,6 +337,7 @@ namespace boost
     template <class RealType, class Policy>
     inline RealType variance(const pareto_distribution<RealType, Policy>& dist)
     {
+      BOOST_MATH_STD_USING
       RealType result;
       RealType location = dist.location();
       RealType shape = dist.shape();
@@ -385,6 +389,7 @@ namespace boost
     template <class RealType, class Policy>
     inline RealType kurtosis(const pareto_distribution<RealType, Policy>& dist)
     {
+      BOOST_MATH_STD_USING
       RealType result;
       RealType shape = dist.shape();
       static const char* function = "boost::math::pdf(const pareto_distribution<%1%>&, %1%)";
@@ -409,6 +414,7 @@ namespace boost
     template <class RealType, class Policy>
     inline RealType kurtosis_excess(const pareto_distribution<RealType, Policy>& dist)
     {
+      BOOST_MATH_STD_USING
       RealType result;
       RealType shape = dist.shape();
       static const char* function = "boost::math::pdf(const pareto_distribution<%1%>&, %1%)";

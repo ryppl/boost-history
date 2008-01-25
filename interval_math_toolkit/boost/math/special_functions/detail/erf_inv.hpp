@@ -293,6 +293,7 @@ private:
 template <class T, class Policy>
 T erf_inv_imp(const T& p, const T& q, const Policy& pol, const boost::mpl::int_<0>*)
 {
+   BOOST_MATH_STD_USING
    //
    // Generic version, get a guess that's accurate to 64-bits (10^-19)
    //
@@ -325,6 +326,7 @@ T erf_inv_imp(const T& p, const T& q, const Policy& pol, const boost::mpl::int_<
 template <class T, class Policy>
 typename tools::promote_args<T>::type erfc_inv(T z, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    typedef typename tools::promote_args<T>::type result_type;
    //
    // Begin by testing for domain errors, and other special cases:
@@ -386,6 +388,7 @@ typename tools::promote_args<T>::type erfc_inv(T z, const Policy& pol)
 template <class T, class Policy>
 typename tools::promote_args<T>::type erf_inv(T z, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    typedef typename tools::promote_args<T>::type result_type;
    //
    // Begin by testing for domain errors, and other special cases:

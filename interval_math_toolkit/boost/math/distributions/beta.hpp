@@ -49,6 +49,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_alpha(const char* function, const RealType& alpha, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if(!(boost::math::isfinite)(alpha) || (alpha <= 0))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -62,6 +63,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_beta(const char* function, const RealType& beta, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if(!(boost::math::isfinite)(beta) || (beta <= 0))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -75,6 +77,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_prob(const char* function, const RealType& p, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if((p < 0) || (p > 1) || !(boost::math::isfinite)(p))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -88,6 +91,7 @@ namespace boost
       template <class RealType, class Policy>
       inline bool check_x(const char* function, const RealType& x, RealType* result, const Policy& pol)
       {
+        BOOST_MATH_STD_USING
         if(!(boost::math::isfinite)(x) || (x < 0) || (x > 1))
         {
           *result = policies::raise_domain_error<RealType>(
@@ -109,7 +113,7 @@ namespace boost
       inline bool check_dist_and_x(const char* function, const RealType& alpha, const RealType& beta, RealType x, RealType* result, const Policy& pol)
       {
         return check_dist(function, alpha, beta, result, pol)
-          && check_x(function, x, result, pol);
+           && beta_detail::check_x(function, x, result, pol);
       } // bool check_dist_and_x
 
       template <class RealType, class Policy>
@@ -307,6 +311,7 @@ namespace boost
     inline RealType mode(const beta_distribution<RealType, Policy>& dist)
     {
       static const char* function = "boost::math::mode(beta_distribution<%1%> const&)";
+      BOOST_MATH_STD_USING
 
       RealType result;
       if ((dist.alpha() <= 1))
@@ -467,6 +472,7 @@ namespace boost
       // is whatever probability you supplied as an argument.
 
       static const char* function = "boost::math::quantile(beta_distribution<%1%> const&, %1%)";
+      BOOST_MATH_STD_USING
 
       RealType result; // of argument checks:
       RealType a = dist.alpha();
@@ -497,6 +503,7 @@ namespace boost
       // complement of the probability q.
 
       static const char* function = "boost::math::quantile(beta_distribution<%1%> const&, %1%)";
+      BOOST_MATH_STD_USING
 
       //
       // Error checks:

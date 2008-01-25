@@ -625,6 +625,7 @@ inline T ibeta_fraction2(T a, T b, T x, T y, const Policy& pol, bool normalised,
 template <class T, class Policy>
 T ibeta_a_step(T a, T b, T x, T y, int k, const Policy& pol, bool normalised, T* p_derivative)
 {
+   BOOST_MATH_STD_USING
    typedef typename lanczos::lanczos<T, Policy>::type lanczos_type;
    T prefix = ibeta_power_terms(a, b, x, y, lanczos_type(), normalised, pol);
    if(p_derivative)
@@ -1144,6 +1145,7 @@ inline T ibeta_imp(T a, T b, T x, const Policy& pol, bool inv, bool normalised)
 template <class T, class Policy>
 T ibeta_derivative_imp(T a, T b, T x, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    static const char* function = "ibeta_derivative<%1%>(%1%,%1%,%1%)";
    //
    // start with the usual error checks:

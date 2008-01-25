@@ -18,12 +18,14 @@ namespace boost{ namespace math{
 template <class T>
 inline int sign BOOST_NO_MACRO_EXPAND(const T& z)
 {
+   BOOST_MATH_STD_USING
    return (z == 0) ? 0 : (z < 0) ? -1 : 1;
 }
 
 template <class T>
 inline int signbit BOOST_NO_MACRO_EXPAND(const T& z)
 {
+   BOOST_MATH_STD_USING
    return (z < 0) ? 1 : 0;
 }
 

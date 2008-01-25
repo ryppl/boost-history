@@ -367,7 +367,7 @@ void test_data<T>::create_test_points(std::set<T>& points, const parameter_info<
       {
          BOOST_ASSERT(arg1.z1 < arg1.z2);
          BOOST_ASSERT(arg1.n1 > 0);
-         float interval = real_cast<float>((arg1.z2 - arg1.z1) / arg1.n1);
+         float interval = real_cast<float>(static_cast<T>((arg1.z2 - arg1.z1) / arg1.n1));
          T val = arg1.z1;
          while(val < arg1.z2)
          {
@@ -383,7 +383,7 @@ void test_data<T>::create_test_points(std::set<T>& points, const parameter_info<
          typedef float random_type;
          typedef typename boost::mpl::if_<
             ::boost::is_floating_point<T>,
-            T, long double>::type power_type;
+            T, double>::type power_type;
 
          std::tr1::mt19937 rnd;
          std::tr1::uniform_real<random_type> ur_a(1.0, 2.0);
@@ -393,7 +393,7 @@ void test_data<T>::create_test_points(std::set<T>& points, const parameter_info<
          {
             random_type r = gen();
             power_type p = ldexp(static_cast<power_type>(r), power);
-            points.insert(truncate_to_float(real_cast<float>(arg1.z1 + p)));
+            points.insert(truncate_to_float(real_cast<float>(static_cast<T>(arg1.z1 + p))));
          }
       }
       break;
