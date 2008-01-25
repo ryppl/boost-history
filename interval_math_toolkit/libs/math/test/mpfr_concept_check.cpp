@@ -19,7 +19,7 @@
 
 void foo()
 {
-   //instantiate(mpfr_class());
+   instantiate(mpfr_class());
 }
 
 int main()

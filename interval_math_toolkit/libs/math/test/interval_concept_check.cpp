@@ -8,20 +8,13 @@
 // conceptual requirements, and that we can instantiate
 // all our distributions and special functions on this type.
 //
-#define BOOST_MATH_INSTRUMENT
-
+#define TEST_INTERVAL
 #define BOOST_MATH_ASSERT_UNDEFINED_POLICY false
 
 #include <boost/math/bindings/interval.hpp>
 #include <boost/math/concepts/real_type_concept.hpp>
 #include "compile_test/instantiate.hpp"
-
-
-typedef boost::numeric::interval<double,
-   boost::numeric::interval_lib::policies<
-      boost::numeric::interval_lib::save_state<
-         boost::numeric::interval_lib::rounded_transc_opp<double> >,
-            boost::numeric::interval_lib::checking_base<double> > > interval_type;
+#include "handle_test_result.hpp" // for interval_type
 
 
 void foo()
