@@ -21,8 +21,6 @@ import testing ;
 
 {
   test-suite numeric/interval :
-    [ compile libs/numeric/interval/test/integer.cpp ]
-
     [ run libs/numeric/interval/test/add.cpp      ]
     [ run libs/numeric/interval/test/det.cpp      ]
     [ run libs/numeric/interval/test/fmod.cpp     ]
@@ -45,5 +43,8 @@ import testing ;
         ../../../test/build//boost_test_exec_monitor/<link>static ]
     [ run libs/numeric/interval/test/test_float.cpp
         ../../../test/build//boost_test_exec_monitor/<link>static ]
+    [ run libs/numeric/interval/test/integer.cpp
+        ../../../test/build//boost_test_exec_monitor/<link>static ]
   ;
 }
+
