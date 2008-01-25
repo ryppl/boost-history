@@ -77,6 +77,27 @@ public:
   interval& operator/= (const T& r);
   interval& operator/= (const interval& r);
 
+  template <class U>
+  interval& operator+= (const U& r)
+  {
+     return *this += interval(r);
+  }
+  template <class U>
+  interval& operator-= (const U& r)
+  {
+     return *this -= interval(r);
+  }
+  template <class U>
+  interval& operator*= (const U& r)
+  {
+     return *this *= interval(r);
+  }
+  template <class U>
+  interval& operator/= (const U& r)
+  {
+     return *this /= interval(r);
+  }
+
   bool operator< (const interval_holder& r) const;
   bool operator> (const interval_holder& r) const;
   bool operator<= (const interval_holder& r) const;
