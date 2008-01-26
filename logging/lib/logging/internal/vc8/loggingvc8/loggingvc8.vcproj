@@ -700,7 +700,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\tags.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\detail\tags.hpp"
 					>
 				</File>
 			</Filter>

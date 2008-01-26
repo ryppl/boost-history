@@ -21,6 +21,11 @@
 # pragma once
 #endif
 
+#ifndef JT28092007_format_fwd_HPP_DEFINED
+#error Donot include directly. Please include <boost/logging/format_fwd.hpp>
+#endif
+
+
 #include <boost/logging/detail/fwd.hpp>
 
 namespace boost { namespace logging {
@@ -224,7 +229,7 @@ When adding the formatters, don't forget to:
 
 @copydoc using_tags
 
-@ref scenarios_code_using_tags "Click to see the code"
+@include using_tags.cpp
 
 That's it, enjoy!
 

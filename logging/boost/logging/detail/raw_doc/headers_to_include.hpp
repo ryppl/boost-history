@@ -8,7 +8,11 @@ namespace boost { namespace logging {
 - @ref headers_to_include_example 
 
 \n
-@section headers_to_include_declare When declaring the logs
+@section headers_to_include_declare When declaring the loggers
+
+@attention
+If you want to log a message using a certain logger, that logger needs to be declared.
+
 
 - when using Formatters and Destinations, or the Named Writer (an easy interface to Formatters and Destinations)
 
@@ -22,10 +26,15 @@ namespace boost { namespace logging {
 #include <boost/logging/logging.hpp>
 @endcode
 
+Note that these need to be included first, before any other Boost Log headers.
 
 
 \n\n
-@section headers_to_include_define When defining the logs
+@section headers_to_include_define When defining/initializing the loggers
+
+@attention
+If you want to construct the logger, or to initialize it, the logger needs to be defined.
+In other words, the corresponding logger class needs to be defined.
 
 
 - when using the Named Writer (an easy interface to Formatters and Destinations)

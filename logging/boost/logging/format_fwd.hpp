@@ -172,7 +172,7 @@ template<class gather = default_> struct named_logger {
 
 
 #include <boost/logging/detail/scenario.hpp>
-#include <boost/logging/tags.hpp>
+#include <boost/logging/detail/tags.hpp>
 
 #endif
 
