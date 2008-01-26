@@ -104,7 +104,7 @@ Otherwise, welcome to the world of @b tags!
 @section tag_explained Tags - explained
 
 @code
-#include <boost/logging/tags.hpp>
+#include <boost/logging/format_fwd.hpp>
 @endcode
 
 

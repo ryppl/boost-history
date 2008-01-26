@@ -20,7 +20,7 @@ In case you want to log unicode characters, it's very easy:
 
 - just <tt>\#define BOOST_LOG_USE_WCHAR_T</tt> before including any Boost.Logging files
 - For Windows, in case the @c UNICODE or @c _UNICODE is defined, the @c BOOST_LOG_USE_WCHAR_T is defined automatically for you
-
+  - If you don't wish that, please <tt>#define BOOST_LOG_DONOT_USE_WCHAR_T</tt> globally, before including any Boost Log files.
 
 
 */

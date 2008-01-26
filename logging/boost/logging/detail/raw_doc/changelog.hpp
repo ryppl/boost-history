@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.21.3, 24 jan 2008
+@section changelog_cur_ver Current Version: v0.21.4, 26 jan 2008
+- added BOOST_LOG_DONOT_USE_WCHAR_T for Windows users
 - added more docs to named_logger
 - added named_logger - much easier to use the logging lib - doesn't require any advanced knowledge at all
 - simplified examples, removed some of them from the "Scenarios" page; they're still found in the "Examples" section in the docs

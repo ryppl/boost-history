@@ -44,6 +44,8 @@ BOOST_DEFINE_LOG(g_l, logger_type)
 
 
 void one_logger_one_filter_example() {
+    // formatting    : [idx] message \n
+    // destinations  : console, file "out.txt" and debug window
     g_l()->writer().write("[%idx%] |\n", "cout file(out.txt) debug");
     g_l()->mark_as_initialized();
 
