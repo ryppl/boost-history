@@ -27,7 +27,7 @@ It will look similar to this one:
 */
 
 
-#include <boost/logging/format/named_writer.hpp>
+#include <boost/logging/format/named_write.hpp>
 typedef boost::logging::named_logger<>::type logger_type;
 
 #define L_(lvl) BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), lvl )

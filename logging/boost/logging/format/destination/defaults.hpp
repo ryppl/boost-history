@@ -46,6 +46,22 @@ template<class convert_dest = do_convert_destination > struct cout_t : is_generi
 
 
 /** 
+    @brief Writes the string to cerr
+*/
+template<class convert_dest = do_convert_destination > struct cerr_t : is_generic, boost::logging::op_equal::always_equal {
+
+    template<class msg_type> void operator()(const msg_type & msg) const {
+#ifndef BOOST_LOG_USE_WCHAR_T
+        convert_dest::write(msg, std::cerr);
+#else
+        convert_dest::write(msg, std::wcerr);
+#endif
+    }
+};
+
+
+
+/** 
     @brief writes to stream. 
 
     The stream must outlive this object! Or, clear() the stream, before the stream is deleted.
@@ -109,6 +125,12 @@ template<class convert_dest = do_convert_destination > struct dbg_window_t : is_
 @copydoc cout_t
 */
 typedef cout_t<> cout;
+
+/** @brief cerr_t with default values. See cerr_t
+
+@copydoc cerr_t
+*/
+typedef cerr_t<> cerr;
 
 /** @brief stream_t with default values. See stream_t
 

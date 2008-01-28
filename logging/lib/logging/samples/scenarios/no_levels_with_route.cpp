@@ -53,7 +53,6 @@ The console:
 
 #include <boost/logging/format_fwd.hpp>
 
-// Step 1: Optimize : use a cache string, to make formatting the message faster
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_several_str<> )
 
 #include <boost/logging/format.hpp>
@@ -61,22 +60,18 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_several_str<> )
 using namespace boost::logging;
 
 
-// Step 3 : Specify your logging class(es)
 typedef logger_format_write< > logger_type;
 
-// Step 4: declare which filters and loggers you'll use (usually in a header file)
 BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DECLARE_LOG(g_l, logger_type) 
 
-// Step 5: define the macros through which you'll log
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() )
 
-// Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 BOOST_DEFINE_LOG(g_l, logger_type)
 
 void no_levels_with_route_example() {
-    // Step 7: add formatters and destinations
+    //         add formatters and destinations
     //         That is, how the message is to be formatted...
     g_l()->writer().add_formatter( formatter::idx(), "[%] "  );
     g_l()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
@@ -108,7 +103,6 @@ void no_levels_with_route_example() {
 
     g_l()->mark_as_initialized();
 
-    // Step 8: use it...
     int i = 1;
     L_ << "this is so cool " << i++;
 
@@ -121,8 +115,6 @@ void no_levels_with_route_example() {
 
     g_log_filter()->set_enabled(true);
     L_ << "good to be back ;) " << i++;
-
-    // Step 9 : Enjoy!
 }
 
 

@@ -170,7 +170,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -328,13 +328,6 @@
 			<File
 				RelativePath=".\test_now.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -540,6 +533,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\format_fwd_detail.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\detail\format_msg_type.hpp"
 					>
 				</File>
@@ -556,7 +553,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\format\named_writer.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\format\named_write.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\format\named_write_fwd.hpp"
 					>
 				</File>
 				<File
@@ -648,7 +649,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\boost\logging\writer\named.hpp"
+					RelativePath="..\..\..\..\..\boost\logging\writer\named_write.hpp"
 					>
 				</File>
 				<File

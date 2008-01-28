@@ -13,7 +13,7 @@
 @section scenario_multiple_files_program What the program does
 
 This represents a small program to count lines of code from a directory and its subdirs.
-It's a simple application, just to show you how to use the Boost Log library v2 in your own projects.
+It's a simple application, just to show you how to use the Boost Logging Lib v2 in your own projects.
 
 It counts code lines, empty lines, and comment lines.
 Again, it's a very simple program, thus:

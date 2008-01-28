@@ -65,10 +65,10 @@ BOOST_DECLARE_LOG(g_log_dbg, logger_type)
 #define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) 
 @endcode
 
-Every time, before anything gets written to the log, the filter is asked if "it's enabled". If so, the processing of the message takes place
+Every time, before anything gets written to the log, the filter is asked if <em>it's enabled</em>. If so, the processing of the message takes place
 (gathering the message and then writing it). Otherwise, the log message is completely ignored.
 
-What "it's enabled" is depends on the filter class you use:
+What <em>it's enabled</em> is depends on the filter class you use:
 - if it's a simple class (filter::no_ts, filter::ts, filter::use_tss_with_cache), it's simply the @c is_enabled function (Example 1, above)
 - if it's a more complex class, it's up to you
   - for instance, the level::holder_no_ts exposes an <tt>is_enabled(level)</tt>, so you can ask if a certain level is enabled (Example 2, above)
@@ -131,7 +131,7 @@ struct write_to_cout {
     }
 };
 
-typedef logger< gather::ostream_like::return_str<>, write_to_cout> logger_type;
+typedef logger< gather::ostream_like::return_str<std::string>, write_to_cout> logger_type;
 BOOST_DECLARE_LOG(g_single_log, logger_type)
 BOOST_DECLARE_LOG_FILTER(g_filter, filter::no_ts)
 

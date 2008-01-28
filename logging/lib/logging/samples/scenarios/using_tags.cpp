@@ -30,7 +30,6 @@ logging\samples\scenarios\using_tags.cpp:95 [T7204] [2] 14:55 this is so cool ag
 
 #include <boost/logging/format_fwd.hpp>
 
-// Step 1: Optimize : use tags (on top of a cache string, to make formatting the message faster)
 namespace bl = boost::logging;
 typedef bl::tag::holder< bl::optimize::cache_string_one_str<>, bl::tag::file_line, bl::tag::thread_id, bl::tag::time> log_string;
 BOOST_LOG_FORMAT_MSG( log_string )
@@ -42,7 +41,6 @@ BOOST_LOG_FORMAT_MSG( log_string )
 
 using namespace boost::logging;
 
-// Step 3 : Specify your logging class(es)
 using namespace boost::logging::scenario::usage;
 typedef use<
         //  the filter is always accurate (but slow)
@@ -54,20 +52,17 @@ typedef use<
         // the logger favors speed (on a dedicated thread)
         logger_::favor::speed> finder;
 
-// Step 4: declare which filters and loggers you'll use (usually in a header file)
 BOOST_DECLARE_LOG_FILTER(g_log_filter, finder::filter ) 
 BOOST_DECLARE_LOG(g_l, finder::logger) 
 
-// Step 5: define the macros through which you'll log
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) .set_tag( BOOST_LOG_TAG_FILELINE)
 
-// Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_filter, finder::filter ) 
 BOOST_DEFINE_LOG(g_l, finder::logger) 
 
 
 void using_tags_example() {
-    // Step 7: add formatters and destinations
+    //         add formatters and destinations
     //         That is, how the message is to be formatted and where should it be written to
 
     g_l()->writer().add_formatter( formatter::named_spacer( "%fileline% [T%thread_id%] [%idx%] %time%" )
@@ -81,11 +76,9 @@ void using_tags_example() {
     g_l()->writer().add_destination( destination::file("out.txt") );
     g_l()->mark_as_initialized();
 
-    // Step 8: use it...
     int i = 1;
     L_ << "this is so cool " << i++;
     L_ << "this is so cool again " << i++;
-    // Step 9 : Enjoy!
 }
 
 

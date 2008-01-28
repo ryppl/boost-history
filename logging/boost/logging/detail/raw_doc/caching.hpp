@@ -130,7 +130,7 @@ Now, for the @c is_enabled variable, we can use several TSS tricks - like:
 There are several such policies, find them in the lock_resource_finder namespace.
 
 If you want to override the above, make sure you define the @c BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS macro before including
-any Boost Log headers. Example:
+any Boost Logging Lib headers. Example:
 
 @code
 #define BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS ::boost::logging::lock_resource_finder::tss_once_init<>

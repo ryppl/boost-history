@@ -50,7 +50,7 @@ Example:
     #include <boost/logging/defaults.hpp>
 
     namespace boost { namespace logging {
-        struct types<override> {
+        struct types<override> : default_types {
             // define your types
             typedef wchar_t char_type;
             // etc.

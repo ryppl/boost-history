@@ -1,15 +1,16 @@
-// log.cpp
-#include "log.h"
+// my_app_log.cpp
+#include "my_app_log.h"
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 #include <boost/logging/format/formatter/tags.hpp>
 
 // uncomment if you want to use do logging on a dedicated thread
 // #include <boost/logging/writer/on_dedicated_thread.hpp>
 
+// uncomment if you're using Named Formatters and Destinations
+// #include <boost/logging/format/named_write.hpp>
+
 using namespace boost::logging;
 
-// Step 6: Define the filters and loggers you'll use
 BOOST_DEFINE_LOG_FILTER(g_log_filter, finder::filter ) 
 BOOST_DEFINE_LOG(g_l, finder::logger) 
 

@@ -14,11 +14,20 @@ namespace boost { namespace logging {
 If you want to log a message using a certain logger, that logger needs to be declared.
 
 
-- when using Formatters and Destinations, or the Named Writer (an easy interface to Formatters and Destinations)
+- when using the @ref boost::logging::writer::named_write "Named Writer" (an easy interface to Formatters and Destinations)
+
+@code
+#include <boost/logging/format/named_write_fwd.hpp>
+@endcode
+
+
+- when using Formatters and Destinations
 
 @code
 #include <boost/logging/format_fwd.hpp>
 @endcode
+
+
 
 - when using Logging, without Formatters/Destinations
 
@@ -26,7 +35,7 @@ If you want to log a message using a certain logger, that logger needs to be dec
 #include <boost/logging/logging.hpp>
 @endcode
 
-Note that these need to be included first, before any other Boost Log headers.
+Note that these need to be included first, before any other Boost Logging Lib headers.
 
 
 \n\n
@@ -37,10 +46,10 @@ If you want to construct the logger, or to initialize it, the logger needs to be
 In other words, the corresponding logger class needs to be defined.
 
 
-- when using the Named Writer (an easy interface to Formatters and Destinations)
+- when using the @ref boost::logging::writer::named_write "Named Writer" (an easy interface to Formatters and Destinations)
 
 @code
-#include <boost/logging/format/named_writer.hpp>
+#include <boost/logging/format/named_write.hpp>
 @endcode
 
 

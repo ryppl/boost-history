@@ -260,16 +260,19 @@ In the above case:
 
 @param destination_base The base class for all destination classes from your application. See manipulator.
 
-@param lock_resource What class you use to do allow thread-safe access to an instance of this clas (used internally).
+@param lock_resource_type What class you use to do allow thread-safe access to an instance of this clas (used internally).
 
     */
     template<
             class formatter_base, 
             class destination_base,
-            class lock_resource = typename boost::logging::types<override>::lock_resource > 
+            class lock_resource = default_ > 
     struct simple {
         typedef typename formatter_base::ptr_type formatter_ptr;
         typedef typename destination_base::ptr_type destination_ptr;
+
+        typedef typename detail::to_override<formatter_base>::type override_;
+        typedef typename use_default<lock_resource, typename boost::logging::types<override_>::lock_resource > ::type lock_resource_type;
 
         typedef std::vector<formatter_ptr> f_array;
         typedef std::vector<destination_ptr> d_array;
@@ -278,7 +281,7 @@ In the above case:
             d_array destinations;
         };
 
-        typedef typename lock_resource::template finder<write_info>::type data;
+        typedef typename lock_resource_type::template finder<write_info>::type data;
 
         template<class formatter_array, class destination_array> simple(const formatter_array&, const destination_array&) {}
         
@@ -355,8 +358,8 @@ In the above case:
     template<
             class formatter_base, 
             class destination_base,
+            class lock_resource = default_ ,
             // note: we're counting on these defaults in format_find_writer
-            class lock_resource = typename boost::logging::types<override>::lock_resource ,
             class formatter_array = boost::logging::array::shared_ptr_holder<formatter_base>,
             class destination_array = boost::logging::array::shared_ptr_holder<destination_base>
     > 
@@ -364,9 +367,12 @@ In the above case:
         typedef typename formatter_base::ptr_type formatter_ptr;
         typedef typename destination_base::ptr_type destination_ptr;
 
+        typedef typename detail::to_override<formatter_base>::type override_;
+        typedef typename use_default<lock_resource, typename boost::logging::types<override_>::lock_resource > ::type lock_resource_type;
+
         typedef formatter_and_destination_array_holder<formatter_array, destination_array> holder_base_type;
 
-        typedef with_route<formatter_base, destination_base, lock_resource, formatter_array, destination_array> self_type;
+        typedef with_route<formatter_base, destination_base, lock_resource_type, formatter_array, destination_array> self_type;
 
         typedef std::vector<formatter_ptr> f_array;
         typedef std::vector<destination_ptr> d_array;
@@ -379,7 +385,7 @@ In the above case:
             bool do_clear_afterwards;
         };
         typedef std::vector<write_once> write_array;
-        typedef typename lock_resource::template finder<write_array>::type data;
+        typedef typename lock_resource_type::template finder<write_array>::type data;
 
     public:
         with_route(const formatter_array& formatters, const destination_array & destinations) : holder_base_type(formatters, destinations) {}

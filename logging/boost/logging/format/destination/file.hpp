@@ -40,7 +40,7 @@ namespace boost { namespace logging { namespace destination {
     @brief settings for when constructing a file class. To see how it's used, see @ref dealing_with_flags.
 */
 struct file_settings {
-    typedef detail::flag<file_settings> flag;
+    typedef ::boost::logging::detail::flag<file_settings> flag;
 
     file_settings() 
         : flush_each_time(this, true)

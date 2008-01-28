@@ -137,7 +137,6 @@ struct on_dedicated_thread
         write_array();
     }
 
-//    void operator()(const msg_type & msg) const {
     void operator()(msg_type & msg) const {
         typedef typename context_type::ptr ptr;
         typedef typename context_type::thread_ptr thread_ptr;

@@ -49,20 +49,15 @@ struct no_gather {
     void *out(const std::string& msg) { m_msg = msg.c_str(); return this; }
 };
 
-// Step 1 : Specify your logging class(es)
+
 typedef logger< no_gather, destination::cout > app_log_type;
 typedef logger< no_gather, destination::file > err_log_type;
 
-// Step 2 : Set up a filter
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
 
-// Step 3: declare which loggers you'll use
 BOOST_DEFINE_LOG(g_log_app, app_log_type)
 BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 
-// FIXME most likely I can use BOOST_LOG_USE_IF_FILTER
-
-// Step 4: define the macros through which you'll log
 #define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app(), g_log_filter()->is_enabled() ) 
 #define LERR_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() ) 
 
@@ -70,7 +65,6 @@ void fastest_no_ostr_like_example() {
     g_log_app()->mark_as_initialized();
     g_log_err()->mark_as_initialized();
 
-    // Step 5: use it...
     LAPP_("this is so cool\n");
     LERR_("first error \n");
 
@@ -85,8 +79,6 @@ void fastest_no_ostr_like_example() {
     g_log_filter()->set_enabled(true);
     LAPP_("good to be back ;) \n" );
     LERR_("second error \n" );
-
-    // Step 6 : Enjoy!
 }
 
 

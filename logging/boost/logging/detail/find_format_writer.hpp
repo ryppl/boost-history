@@ -123,8 +123,8 @@ namespace detail {
         typedef typename ::boost::logging::destination::msg_type<override_>::type destination_msg_type;
         typedef typename ::boost::logging::types<override_>::lock_resource default_lock_resource;
 
-        typedef ::boost::logging::formatter::base< format_msg_type, default_ > default_format_base;
-        typedef ::boost::logging::destination::base< destination_msg_type, default_ > default_destination_base;
+        typedef ::boost::logging::formatter::base< default_, default_ > default_format_base;
+        typedef ::boost::logging::destination::base< default_, default_ > default_destination_base;
 
         typedef typename use_default<format_base_type, default_format_base > ::type format_base;
         typedef typename use_default<destination_base_type, default_destination_base > ::type destination_base;

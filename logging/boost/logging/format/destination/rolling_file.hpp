@@ -41,7 +41,7 @@ namespace boost { namespace logging { namespace destination {
     @brief Settings you can pass to the rolling file. To see how it's used, see @ref dealing_with_flags.
 */
 struct rolling_file_settings {
-    typedef boost::logging::detail::flag<rolling_file_settings> flag;
+    typedef ::boost::logging::detail::flag<rolling_file_settings> flag;
 
     rolling_file_settings() 
         : max_size_bytes(this, 1024 * 1024)

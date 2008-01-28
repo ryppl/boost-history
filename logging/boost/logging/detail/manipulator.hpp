@@ -525,13 +525,15 @@ namespace detail {
 /** 
 @brief Formatter is a manipulator. It allows you to format the message before writing it to the destination(s)
 
-talk about format_base
-
-FIXME
-
-@sa manipulator::base, manipulator::base_no_opearator_call, manipulator::non_const_context
+@sa manipulator, manipulator::non_const_context
 */
 namespace formatter {
+    namespace detail {
+        template<class arg, class ptr, class dummy = override > struct format_base_finder {
+            typedef typename use_default<arg, typename boost::logging::formatter::msg_type<dummy>::type > ::type arg_type;
+            typedef boost::logging::manipulator::base< arg_type, arg_type &, ptr> type;
+        };
+    }
 
     /** 
     @brief What to use as base class, for your formatter classes
@@ -541,9 +543,9 @@ namespace formatter {
     */
     template<
         // note: I'm counting on these defaults, in format_find_writer class
-        class arg_type = typename msg_type<override>::type, 
+        class arg_type = default_ , 
         class ptr_type_ = default_ > 
-    struct base : boost::logging::manipulator::base< arg_type, arg_type& , ptr_type_> {
+    struct base : detail::format_base_finder<arg_type,ptr_type_>::type {
     };
 
     /** 
@@ -577,9 +579,17 @@ namespace formatter {
 
 Some viable destinations are : the console, a file, a socket, etc.
 
+@sa manipulator, manipulator::non_const_context
 
 */
 namespace destination {
+    namespace detail {
+        template<class arg, class ptr, class dummy = override > struct destination_base_finder {
+            typedef typename use_default<arg, typename boost::logging::destination::msg_type<dummy>::type > ::type arg_type;
+            typedef boost::logging::manipulator::base< arg_type, const arg_type &, ptr> type;
+        };
+    }
+
     /** 
     @brief What to use as base class, for your destination classes
 
@@ -588,9 +598,9 @@ namespace destination {
     */
     template<
         // note: I'm counting on these defaults, in format_find_writer class
-        class arg_type = typename msg_type<override>::type, 
+        class arg_type = default_ , 
         class ptr_type_ = default_ > 
-    struct base : boost::logging::manipulator::base< arg_type, const arg_type& , ptr_type_> {
+    struct base : detail::destination_base_finder<arg_type,ptr_type_>::type {
     };
 
     using boost::logging::manipulator::non_const_context;

@@ -114,6 +114,10 @@ namespace boost { namespace logging {
     }
 
 
+    /** @brief logger base class. 
+
+    @class logger_base
+    */
     template<class gather_msg , class write_msg, class dummy = override > struct logger_base 
             : detail::default_cache_keeper<  detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > >,
               detail::common_base_holder<gather_msg, write_msg>,
@@ -150,8 +154,18 @@ namespace boost { namespace logging {
 
         /** @brief Marks this logger as initialized
 
-        You might log messages before the logger is initialized. In this case, they are cached, and written to the logger, 
-        when you mark it as "initialized"
+        You might log messages before the logger is initialized. In this case, they are cached, and will be written to the logger
+        only when you mark it as "initialized"
+
+        Example:
+
+        @code
+        // the logger
+        BOOST_DEFINE_LOG(g_l, logger_type)
+
+        // marking the logger as initialized
+        g_l()->mark_as_initialized();
+        @endcode
         */
         void mark_as_initialized() {
             self().turn_cache_off();

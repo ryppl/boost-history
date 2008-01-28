@@ -1,4 +1,4 @@
-// format_fwd.hpp
+// named_write_fwd.hpp
 
 // Boost Logging library
 //
@@ -14,21 +14,22 @@
 // See http://www.torjo.com/log2/ for more details
 
 
-// this needs to be fixed!
-#ifndef JT28092007_format_fwd_HPP_DEFINED
-#define JT28092007_format_fwd_HPP_DEFINED
+#ifndef JT28092007_format_named_writer_fwd_HPP_DEFINED
+#define JT28092007_format_named_writer_fwd_HPP_DEFINED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
 #endif
 
-#include <boost/logging/detail/format_fwd_detail.hpp>
+#include <boost/logging/format_fwd.hpp>
 
 #if !defined( BOOST_LOG_COMPILE_FAST)
 // slow compile
-#include <boost/logging/format.hpp>
+#include <boost/logging/writer/named_write.hpp>
 #endif
 
 
+
 #endif
+
 

@@ -30,10 +30,14 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         have a logger_with_filter class, to make using the lib easier (this would hold the logger and the filter).
 
-- @c normal         writer::named<> need to allow tags by default, here!
+- @c high           writer::named_write<> need to allow tags by default, here!
 
 - @c high           scenario::use class - have ::gather and ::write typedefs !!!
                     this way we can have: named_logger< finder::gather , writer::named<finder::writer> >
+                    same goes for logger_format_write class.
+
+- @c normal         make it so that I use BOOST_LOG_USE_WCHAR_T as little as possible
+                    for instance, it's not needed in cout_t, cerr_t.
 
 - @c high           should see that if I have a tss* object, if used AFTER destruction, will not crash the application.
                     in other words, if I have tss_with_cache<int>, after this is destroyed, I should always reference the original int or so.
@@ -136,6 +140,8 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c low            have a document with differences from v1 and v2
   - Votes: 1
+
+- @c normal         explain BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER (defining_logger_macros)
 
 - @c normal         explain about cachestring clases
 

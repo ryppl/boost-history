@@ -38,6 +38,12 @@ namespace boost { namespace logging {
 
 
 
+@section common_your_mul_logger_one_filter Multiple loggers, one filter
+
+@include mul_loggers_one_filter.cpp
+\n\n\n
+
+
 */
 
 }}

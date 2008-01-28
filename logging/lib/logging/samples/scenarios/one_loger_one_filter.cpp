@@ -33,7 +33,7 @@ It will be:
 
 #include <boost/logging/format_fwd.hpp>
 
-#include <boost/logging/format/named_writer.hpp>
+#include <boost/logging/format/named_write.hpp>
 typedef boost::logging::named_logger<>::type logger_type;
 
 #define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 

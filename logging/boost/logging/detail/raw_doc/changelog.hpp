@@ -1,7 +1,12 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.21.4, 26 jan 2008
+@section changelog_cur_ver Current Version: v0.21.6, 28 jan 2008
+- made it much easier to include Boost Logging Lib headers: format_fwd.hpp, named_write_fwd.hpp, which internally accomodate for slow compilation
+  (that is, even if slow compile, you won't need to include more headers in your your_app_log.h file)
+- updated docs + named_writer -> named_write
+- now can include <boost/logging/format.hpp> without including format_fwd.hpp before, and use BOOST_LOG* macros, and code still compiles and works as expected
+- moved tags.hpp - not to be included directly by mistake
 - added BOOST_LOG_DONOT_USE_WCHAR_T for Windows users
 - added more docs to named_logger
 - added named_logger - much easier to use the logging lib - doesn't require any advanced knowledge at all

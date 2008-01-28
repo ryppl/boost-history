@@ -59,15 +59,13 @@ The err.txt file
 
 
 
-#include <boost/logging/format/named_writer.hpp>
+#include <boost/logging/format/named_write.hpp>
 typedef boost::logging::named_logger<>::type logger_type;
 
-// Step 5: define the macros through which you'll log
 #define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) << "[dbg] "
 #define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
 #define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) << "[app] "
 
-// Step 6: Define the filters and loggers you'll use (usually in a source file)
 BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
 BOOST_DEFINE_LOG(g_log_err, logger_type)
 BOOST_DEFINE_LOG(g_log_app, logger_type)

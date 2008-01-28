@@ -41,19 +41,14 @@ second error 5
 
 using namespace boost::logging;
 
-
-// Step 1 : Specify your logging class(es)
 typedef logger< default_, destination::cout> app_log_type;
 typedef logger< default_, destination::file> err_log_type;
 
-// Step 2 : Set up a filter
 BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
 
-// Step 3: declare which loggers you'll use
 BOOST_DEFINE_LOG(g_log_app, app_log_type )
 BOOST_DEFINE_LOG_WITH_ARGS( g_log_err, err_log_type, ("err.txt") )
 
-// Step 4: define the macros through which you'll log
 #define LAPP_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_app(), g_log_filter()->is_enabled() ) 
 #define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() ) 
 
@@ -61,7 +56,6 @@ void fastest_use_ostr_like_example() {
     g_log_app()->mark_as_initialized();
     g_log_err()->mark_as_initialized();
 
-    // Step 5: use it...
     int i = 1;
     LAPP_ << "this is so cool " << i++ << "\n";
     LAPP_ << "this is so cool again " << i++ << "\n";
@@ -78,8 +72,6 @@ void fastest_use_ostr_like_example() {
     g_log_filter()->set_enabled(true);
     LAPP_ << "good to be back ;) " << i++ << "\n";
     LERR_ << "second error " << i++ << "\n";
-
-    // Step 6 : Enjoy!
 }
 
 

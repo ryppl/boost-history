@@ -133,8 +133,8 @@ Also, iterating over formatters/destinations would be slower, if we were to keep
 template<
         class formatter_base, 
         class destination_base,
-        class lock_resource = typename boost::logging::types<override>::lock_resource ,
-        class apply_format_and_write = ::boost::logging::format_and_write::simple<typename formatter_base::raw_param>,
+        class lock_resource = default_ ,
+        class apply_format_and_write = default_ ,
         class router_type = msg_route::simple<formatter_base, destination_base, lock_resource> ,
         class formatter_array = array::shared_ptr_holder<formatter_base> , 
         class destination_array = array::shared_ptr_holder<destination_base> >
@@ -142,9 +142,13 @@ struct format_write {
     typedef typename formatter_base::ptr_type formatter_ptr;
     typedef typename destination_base::ptr_type destination_ptr;
 
+    typedef typename use_default<apply_format_and_write, ::boost::logging::format_and_write::simple<typename formatter_base::raw_param> > ::type apply_format_and_write_type;
+
+    typedef typename boost::logging::detail::to_override<formatter_base>::type override_;
+    typedef typename use_default<lock_resource, typename boost::logging::types<override_>::lock_resource > ::type lock_resource_type;
+
     typedef formatter_base formatter_base_type; 
     typedef destination_base destination_base_type;
-    typedef lock_resource lock_resource_type;
 
 
     format_write() : m_router(m_formatters, m_destinations) {}
@@ -269,7 +273,7 @@ public:
         does the actual write
     */
     template<class msg_type> void operator()(msg_type & msg) const {
-        router().template write<apply_format_and_write>(msg);
+        router().template write<apply_format_and_write_type>(msg);
     }
 
 private:

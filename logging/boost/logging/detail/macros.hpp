@@ -45,7 +45,7 @@ namespace boost { namespace logging {
         - @ref BOOST_DEFINE_LOG_FILTER 
         - @ref BOOST_DEFINE_LOG_FILTER_WITH_ARGS 
     - @ref macros_use 
-        - @ref BOOST_LOG_USE_LOG 
+        - @ref BOOST_LOG_USE_LOG
         - @ref BOOST_LOG_USE_LOG_IF_LEVEL 
         - @ref BOOST_LOG_USE_LOG_IF_FILTER 
         - @ref BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER 
@@ -58,9 +58,8 @@ namespace boost { namespace logging {
         - @ref BOOST_LOG_TAG_FILELINE 
         - @ref BOOST_LOG_TAG_FUNCTION 
     - @ref macros_compile_time 
-        - @ref BOOST_LOG_COMPILE_FAST_ON 
-        - @ref BOOST_LOG_COMPILE_FAST_OFF 
-        - @ref BOOST_LOG_COMPILE_FAST 
+        - @ref macros_compile_time_fast 
+        - @ref macros_compile_time_slow
         - @ref boost_log_compile_results 
     - @ref macros_tss 
         - @ref BOOST_LOG_TSS_USE_INTERNAL 
@@ -216,7 +215,7 @@ Example:
 
 
 
-@subsection macros_use Defining your own macros for logging
+@subsection macros_use Macros that help you define your own macros for logging
 
 @subsubsection BOOST_LOG_USE_LOG_IF_LEVEL BOOST_LOG_USE_LOG_IF_LEVEL
 
@@ -234,6 +233,8 @@ BOOST_DECLARE_LOG(g_log_err, logger_type)
 #define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
 @endcode
 
+See @ref defining_logger_macros for more details
+
 @subsubsection BOOST_LOG_USE_LOG_IF_FILTER BOOST_LOG_USE_LOG_IF_FILTER
 
 Uses a logger if a filter is enabled:
@@ -247,6 +248,7 @@ Example:
 #define LERR_ BOOST_LOG_USE_LOG_IF_FILTER(g_log_err(), g_log_filter()->is_enabled() )
 @endcode
 
+See @ref defining_logger_macros for more details
 
 @subsubsection BOOST_LOG_USE_LOG BOOST_LOG_USE_LOG
 
@@ -258,6 +260,7 @@ BOOST_LOG_USE_LOG(l, do_func, is_log_enabled)
 
 Normally you don't use this directly. You use @ref BOOST_LOG_USE_LOG_IF_FILTER or @ref BOOST_LOG_USE_LOG_IF_LEVEL instead.
 
+See @ref defining_logger_macros for more details
 
 @subsubsection BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER
 
@@ -283,6 +286,7 @@ typedef logger< no_gather, destination::cout > app_log_type;
 #define LAPP_ BOOST_LOG_USE_SIMPLE_LOG_IF_FILTER(g_log_app(), g_log_filter()->is_enabled() ) 
 @endcode
 
+See @ref defining_logger_macros for more details
 
 
 
@@ -398,37 +402,41 @@ Example:
 @subsection macros_compile_time Macros that treat compilation time
 
 Assume you're using formatters and destinations, and you 
-<tt>#include <boost/logging/format.hpp> </tt> or
-<tt>#include <boost/logging/format_ts.hpp> </tt>. If you include this in every file (indirectly, you'll
-be including some @c log.h file, which will then include the above), this will increase compilation time quite a bit.
+<tt>#include <boost/logging/format.hpp> </tt> in every source file when you want to do logging.
+This will increase compilation time quite a bit (30 to 50%, in my tests; depending on your application' complexity, this could go higher).
 
-So, you can choose to:
-- have fast compilation time, and a virtual function call per each logged message (default)
-- have everything inline (no virtual function calls), very fast, and slow compilation
+Thus, you can choose to:
+-# have fast compilation time, and a virtual function call per each logged message (default on debug mode)
+-# have everything inline (no virtual function calls), very fast, and slower compilation (default on release mode)
 
-Most of the time you won't notice the extra virtual function call, and the compilation time will be faster.
-However, just in case you'll sometime want the very fast configuration, just turn the fast compilation off, by using the
-@ref BOOST_LOG_COMPILE_FAST_OFF directive.
+In the former case, most of the time you won't notice the extra virtual function call, and the compilation time will be faster.
 
-You might want this turned off, for the release configuration - either way, it's your call.
-In case you want to have both possibilities available to you (fast compilation and speedy), you'll want to take a look at
+\n\n
+@subsubsection macros_compile_time_fast Fast Compilation time
+
+- this is turned on by default on debug mode
+- this is turned off by default on release mode
+- to force it, define BOOST_LOG_COMPILE_FAST_ON directive
+
+FIXME explain about what to include
+
+\n\n
+@subsubsection macros_compile_time_slow Slow Compilation time
+
+- this is turned off by default on debug mode
+- this is turned on by default on release mode
+- to force it, define BOOST_LOG_COMPILE_FAST_OFF directive
+
+FIXME explain about what to include
+
+In case you want to have both possibilities available to you (fast compilation and slow compilation), you'll want to take a look at
 the @ref starter_project "the starter project".
 
 
-@subsubsection BOOST_LOG_COMPILE_FAST_ON BOOST_LOG_COMPILE_FAST_ON
 
-If you define this, it turns fast compilation on (this is the default anyway).
 
-@subsubsection BOOST_LOG_COMPILE_FAST_OFF BOOST_LOG_COMPILE_FAST_OFF
 
-If you define this, it turns fast compilation off.
 
-@subsubsection BOOST_LOG_COMPILE_FAST BOOST_LOG_COMPILE_FAST
-
-If defined, it means we're doing fast-compile. Otherwise, we're not doing fast compile.
-
-@note
-Don't define this! It's defined automatically.
 
 @subsubsection boost_log_compile_results Compile time sample (and results)
 
@@ -514,8 +522,13 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 #elif defined(BOOST_LOG_COMPILE_FAST_OFF)
 #undef BOOST_LOG_COMPILE_FAST
 #else
-// by default, turned on
-#define BOOST_LOG_COMPILE_FAST
+    // by default...
+    #if defined(NDEBUG)
+    // ... turned off in release
+    #else
+    // ... turned on in debug
+    #define BOOST_LOG_COMPILE_FAST
+    #endif
 #endif
 
 
