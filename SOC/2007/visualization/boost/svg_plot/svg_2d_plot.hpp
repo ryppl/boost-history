@@ -182,7 +182,7 @@ namespace boost
       text_style y_value_label_style_;
       text_style point_symbols_style_; // Used for data point marking.
 
-      double x_label_width_;
+      //double x_label_width_;
 
       text_element title_info_; // Plot title.
       text_element legend_header_; // legend box header or title (if any).
@@ -216,7 +216,7 @@ namespace boost
       double legend_bottom_; // bottom of legend box.
       size_t legend_longest_; // longest (both header & data) string in legend box,
 
-      axis_line_style x_axis_; 
+      axis_line_style x_axis_;
       axis_line_style y_axis_;
 
       ticks_labels_style x_ticks_;
@@ -259,7 +259,6 @@ namespace boost
         y_axis_label_style_(14, "Verdana", "", ""),
         y_value_label_style_(12, "Verdana", "", ""),
         point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
-        x_label_width_(5),
         title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal),
         x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
         x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
@@ -267,6 +266,7 @@ namespace boost
         x_axis_(X, -10., +10., black, 1, 0, true, false, true),
         y_axis_(Y, -10., +10., black, 1, 0, true, false, true),
         // Might fill in all values, but there are rather many for ticks_labels_style,
+        // And this would separate any changes in styles defaults from plot default.  TODO?
         x_ticks_(X, x_value_label_style_),// so for other defaults see ticks_labels_style.
         y_ticks_(Y, y_value_label_style_),
         y_label_info_(0, 0, "Y Axis", y_axis_label_style_, center_align, upward),
@@ -394,11 +394,11 @@ namespace boost
        // Assume that axis labels are always at bottom and left.
        if(x_axis_.label_on_)
        { // Leave space at bottom for X axis label.
-          plot_bottom_ -= x_axis_label_style_.font_size() * (text_margin_);
+          plot_bottom_ -= x_axis_label_style_.font_size() * text_margin_;
        }
         if(y_axis_.label_on_)
         { // Leave space at left for Y axis label.
-          plot_left_ += x_axis_label_style_.font_size() * (text_margin_ - 0.5);
+          plot_left_ += x_axis_label_style_.font_size() * text_margin_;
         }
         if(plot_window_on_)
         { // Needed to allow any plot window border rectangle to show OK.
@@ -419,28 +419,31 @@ namespace boost
         if (y_axis_.min_ > std::numeric_limits<double>::min()) // all Y values definitely > zero.
         { // y_min_ > 0, so X-axis will not intersect Y-axis, so use bottom plot window.
           x_axis_position_ = bottom; // X-axis to bottom of plot window.
-          x_ticks_.ticks_on_plot_window_on_ = -1; // bottom = true;
+          x_ticks_.ticks_on_window_or_axis_ = -1; // bottom = true;
         }
         else if(y_axis_.max_ < -std::numeric_limits<double>::min())  // all Y values definitely < zero.
         { // // y_max_ < 0, so X-axis will not intersect Y-axis, so use top plot window.
           x_axis_position_ = top; // X-axis to top of plot window.
-          x_ticks_.ticks_on_plot_window_on_ = +1; // top = true;
+          x_ticks_.ticks_on_window_or_axis_ = +1; // top = true;
         }
         // Y axis position is determined by the range of X values.
         y_axis_position_ = y_intersects_x;  // Assume Y-axis will intersect X-axis (X range includes zero).
         if (x_axis_.min_ > std::numeric_limits<double>::min()) // X values all definitely > zero.
         { // Y-axis > 0, so will not intersect X-axis.
           y_axis_position_ = left; // Y-axis free to left of end of X-axis.
-          y_ticks_.ticks_on_plot_window_on_ = -1; // left true; // because floating off end of X-axis.
+          y_ticks_.ticks_on_window_or_axis_ = -1; // left true; // because floating off end of X-axis.
           // so need to put the labels on the plot window instead of the X-axis.
         }
         else if (x_axis_.max_ < -std::numeric_limits<double>::min()) // Y all definitely < zero.
         { // Y-axis < 0, so will not intersect X-axis.
           y_axis_position_ = right;
-          y_ticks_.ticks_on_plot_window_on_ = +1; // right = true;
+          y_ticks_.ticks_on_window_or_axis_ = +1; // right = true;
         }
 
-        // Ensure both axis and ticks have the same range.
+        // Ensure both axis and ticks have the *same* range.
+        // (To use the separation, made to give the potential for different ranges,
+        // one would have to *not* do this,
+        // but to make sure they are both assigned correctly).
         x_ticks_.max_ = x_axis_.max_;
         x_ticks_.min_ = x_axis_.min_;
         y_ticks_.max_ = y_axis_.max_;
@@ -468,29 +471,29 @@ namespace boost
           y_label_length_ = y_ticks_.label_max_width_  * sin45;
         }
 
-        if (y_ticks_.major_value_labels_on_ != 0)
-        { // Some value labels.
-          if ((y_ticks_.ticks_on_plot_window_on_ < 0) // On left of plot window.
-            && (y_ticks_.major_value_labels_on_ < 0) ) // & labels on left.
+        if (y_ticks_.major_value_labels_side_ != 0)
+        { // Some major tick value labels wanted.
+          if ((y_ticks_.ticks_on_window_or_axis_ < 0) // On left of plot window.
+            && (y_ticks_.major_value_labels_side_ < 0) ) // & labels on left.
           {  // Contract plot window left edge to right to make space for value labels on left.
             plot_left_ += y_label_length_;
           }
-          else if ((y_ticks_.ticks_on_plot_window_on_ > 0) // On right of plot window.
-            && (y_ticks_.major_value_labels_on_ > 0) ) // & labels to right.
+          else if ((y_ticks_.ticks_on_window_or_axis_ > 0) // On right of plot window.
+            && (y_ticks_.major_value_labels_side_ > 0) ) // & labels to right.
           {  // Contract plot window right to left to make space for value labels on right.
            plot_right_ -= y_label_length_;
           }
           else
-          { // y_ticks_.ticks_on_plot_window_on_ == 0
-            // no labels on plot window (may be on mid-plot Y-axis line).
+          { // y_ticks_.ticks_on_window_or_axis_ == 0
+            // no value labels on plot window (may be on mid-plot Y-axis line).
             // Ignore the unusual case of Y-axis line too close to the axis label.
             // In this case the value labels may overflow the plot window
             // and collide with the axis label!
             // User must change to put value label downward, or on other side of the axis line.
-            // using major_value_labels_on(int d)
+            // using major_value_labels_side(int d)
             // to set tick value labels to left (<0), none (==0) or right (>0).
           }
-        } // y_ticks_. major_value_labels_on
+        } // y_ticks_. major_value_labels_side
 
         double x_label_length_ = 0; // Work out the longest value label for X-Axis.
         if (x_ticks_.label_rotation_ == horizontal)
@@ -506,15 +509,15 @@ namespace boost
             x_label_length_+= x_ticks_.label_max_width_ * sin45; // SVG 'chars'.
         }
 
-        if (x_ticks_.major_value_labels_on_ != 0)
+        if (x_ticks_.major_value_labels_side_ != 0)
         { // Some value labels.
-          if ((x_ticks_.ticks_on_plot_window_on_ < 0) // on bottom of plot window.
-             && (x_ticks_.major_value_labels_on_ < 0) ) // & labels on bottom.
+          if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
+             && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
           {  // Contract plot window bottom edge up to make space for x value labels on bottom.
             plot_bottom_ -= x_label_length_; // Move up.
           }
-          else if ((x_ticks_.ticks_on_plot_window_on_ > 0) //
-             && (x_ticks_.major_value_labels_on_ > 0) ) // & x labels to top.
+          else if ((x_ticks_.ticks_on_window_or_axis_ > 0) //
+             && (x_ticks_.major_value_labels_side_ > 0) ) // & x labels to top.
           { // Move top of plot window down to give space for x value labels.
             plot_top_ += x_label_length_; // Move down.
           }
@@ -522,7 +525,7 @@ namespace boost
           { // no labels on plot window (may be on mid-plot X-axis).
             // See also notes above on case where labels can overwrite axis.
           }
-        } // x_ticks_. major_value_labels_on
+        } // x_ticks_. major_value_labels_side
 
         // Make space for any ticks.
         if(y_ticks_.left_ticks_on_)
@@ -539,13 +542,13 @@ namespace boost
           // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
           // If not fix axis to bottom (or top) of the plot window.
           if ((x_axis_position_ == bottom) // All Y values definitely > zero.
-            && !(x_ticks_.ticks_on_plot_window_on_ < 0) ) // & not already at bottom.
+            && !(x_ticks_.ticks_on_window_or_axis_ < 0) ) // & not already at bottom.
           { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
             plot_bottom_ -= x_label_length_; // Move up for the value labels.
             x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
           }
           else if ((x_axis_position_ == top)  // All Y values definitely < zero.
-            && !(x_ticks_.ticks_on_plot_window_on_ > 0) ) // & not already at top.
+            && !(x_ticks_.ticks_on_window_or_axis_ > 0) ) // & not already at top.
           { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
              plot_top_ += x_label_length_; // Move down for labels.
              x_axis_.axis_ = plot_top_; // Put X-axis on top.
@@ -560,16 +563,18 @@ namespace boost
         { // Want a Y-axis line, so check if range includes zero, so axes intersect,
           // and y_axis_ is svg coordinate of X-axis (usually x = 0).
           // If not fix axis to left (or right) of the plot window.
-// TODO more logic here as X???
-          if (y_axis_position_ == left) // All X values definitely > zero.
+          if ((y_axis_position_ == left) // All X values definitely > zero.
+             //&& !(y_ticks_.ticks_on_window_or_axis_ < 0) // & not already at left.
+             )
           { // Y-axis will not intersect X -axis, so put Y-axis line on plot window.
             y_axis_.axis_ = plot_left_; // Y-axis to left,
             //plot_left_ += 2 * y_label_info_.font_size(); // with a space.
           }
-          else if(y_axis_position_ == right) // All X values definitely < zero.
+          else if ((y_axis_position_ == right) // All X values definitely < zero.
+            //&& !(y_ticks_.ticks_on_window_or_axis_ > 0) // & not already at right.
+            )
           {
             y_axis_.axis_ = plot_right_; // Y-axis to right of plot window,
-            //plot_right_ -= 2 * y_label_info_.font_size(); // with a space.
           }
           else
           { // x_axis_position_ == x_intersects_y
@@ -634,13 +639,13 @@ namespace boost
           if (y_axis_position_ == y_intersects_x)
           { // Draw the vertical Y-axis line at cartesian x = 0).
             double ybottom = plot_bottom_;
-            if (x_ticks_.down_ticks_on_ && (y_ticks_.ticks_on_plot_window_on_ != 0) && (x_axis_position_ == x_intersects_y) )
+            if (x_ticks_.down_ticks_on_ && (y_ticks_.ticks_on_window_or_axis_ != 0) && (x_axis_position_ == x_intersects_y) )
             { // Extend the vertical line down in lieu of longest tick.
               ybottom += (std::max)(x_ticks_.minor_tick_length_, x_ticks_.major_tick_length_);// Avoid macro max trap!
             }
             image.g(detail::PLOT_Y_AXIS).line(x, plot_top_, x, ybottom);
             // <g id="yAxis" stroke="rgb(0,0,0)"><line x1="70.5" y1="53" x2="70.5" y2="357"/>
-            if (y_ticks_.ticks_on_plot_window_on_ < 0) //(y_axis_position_ == left)
+            if (y_ticks_.ticks_on_window_or_axis_ < 0) //(y_axis_position_ == left)
             { // Draw vertical line holding the ticks on the left of plot window.
               image.g(detail::PLOT_Y_AXIS).line(plot_left_, plot_top_, plot_left_, plot_bottom_);
             }
@@ -680,7 +685,7 @@ namespace boost
           for(double j = y + y_minor_jump;
             j < (y + y_ticks_.major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
             j += y_minor_jump)
-          { // Draw minor ticks.
+          { // Draw minor tick.
             // This will output 'orphaned' minor ticks that are beyond the plot window,
             // if the last major tick does not coincide with the plot window.
             // These are just ignored in draw_x_minor_ticks.
@@ -693,10 +698,16 @@ namespace boost
               draw_y_minor_tick(j, minor_tick_path, minor_grid_path);
             }
           }
-          if ((y != 0. || ! x_axis_.axis_line_on_) || (y_ticks_.ticks_on_plot_window_on_ != 0))
+          // Draw major tick.
+          if ((y != 0. || ! x_axis_.axis_line_on_) // axis line requested.
+            || (y_ticks_.ticks_on_window_or_axis_ != 0)) // ticks & labels on plot window.
           { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
             // (won't be X-axis line for 1-D where the zero tick is always wanted).
             draw_y_major_tick(y, major_tick_path, major_grid_path);
+          }
+          else
+          {
+            // std::cout << "Missed y " << y << std::endl; // Only miss 0s
           }
         }
 
@@ -705,13 +716,16 @@ namespace boost
         {
           for(double j = y; j > y - y_ticks_.major_interval_; j-= y_ticks_.major_interval_ / (y_ticks_.num_minor_ticks_ + 1))
           { // Draw minor ticks.
-            if ((j != 0. || ! y_axis_.axis_line_on_) || (y_ticks_.ticks_on_plot_window_on_ != 0))
+            if ( (j != 0. || ! y_axis_.axis_line_on_)
+              || (y_ticks_.ticks_on_window_or_axis_ != 0) // ticks & labels on plot window.
+              )
             { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
               // (won't be X-axis line for 1-D where the zero tick is always wanted).
               draw_y_minor_tick(j, minor_tick_path, minor_grid_path);
             }
           }
-          if ((y != 0. || ! x_axis_.axis_line_on_) || (y_ticks_.ticks_on_plot_window_on_ != 0))
+          if ((y != 0. || ! x_axis_.axis_line_on_)
+            || (y_ticks_.ticks_on_window_or_axis_ != 0) ) // ticks & labels on plot window.
           { // Avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
             // (won't be X-axis line for 1-D where the zero tick is always wanted).
             draw_y_major_tick(y, major_tick_path, major_grid_path);
@@ -742,17 +756,19 @@ namespace boost
       { // Draw a Y axis major tick, tick value labels & grids.
         double y(value); // for tick and/or grid.
         transform_y(y); // Cartesian to SVG coordinates.
-        if((y < plot_top_) || (y > plot_bottom_))
-        { // tick value is outside plot window, so nothing to do.
+        if((y < plot_top_ - 0.01) || (y > plot_bottom_ + 0.01))
+          // Allow a bit extra to allow for round-off errors.
+        { // tick value is way outside plot window, so nothing to do.
+          // std::cout << y << std::endl;
           return;
         }
         double x_left(0.); // Left end of tick.
-        double x_right(image.y_size());
+        double x_right(image.y_size()); // Right end of tick.
         if(y_ticks_.major_grid_on_)
         { // Draw horizontal major grid line.
           if(!plot_window_on_ != 0)
-          {
-            if(y_ticks_.major_value_labels_on_ < 0)
+          { 
+            if(y_ticks_.major_value_labels_side_ < 0)
             { // Start further right to give space for y axis value label.
               y -= y_value_label_style_.font_size() * text_margin_;
             }
@@ -768,104 +784,195 @@ namespace boost
             x_right = plot_right_ - plot_window_border_.width_;
             grid_path.M(x_left, y).L(x_right, y); // Horizontal grid line.
           }
-        } // use_y_major_grid_
+        } // y_major_grid_on
 
-        if ((y <= plot_bottom_) && (y >= plot_top_))
-        { // Make sure that we are drawing inside the allowed window.
-          double y_tick_length = y_ticks_.major_tick_length_;
-          if (y_ticks_.ticks_on_plot_window_on_ < 0)
-          { // Start ticks on the plot window border left.
-            x_left = plot_left_; // x_left = left,
-            x_right = plot_left_; //  x_right = right.
-          }
-          else if (y_ticks_.ticks_on_plot_window_on_ > 0)
-          { // Start ticks on the plot window border right.
-            x_left = plot_right_;
-            x_right = plot_right_;
-          }
-          else
-          { // Internal style ticks on vertical Y-axis.
-            x_left = y_axis_.axis_; // Y-axis line.
-            x_right = y_axis_.axis_;
-          }
-          if(y_ticks_.left_ticks_on_)
-          {
-            x_left -= y_tick_length; // left
-          }
-          if (y_ticks_.right_ticks_on_)
-          {
-            x_right += y_tick_length; // right.
-          }
-          tick_path.M(x_left, y).L(x_right, y); // Draw the major tick.
-          // leaving x_left at the left most end of any tick.
+        // Draw major ticks & value label, if necessary.
+        double y_tick_length = y_ticks_.major_tick_length_;
+        if (y_ticks_.ticks_on_window_or_axis_ < 0)
+        { // Start ticks on the plot window border left.
+          x_left = plot_left_; // x_left = left,
+          x_right = plot_left_; //  x_right = right.
         }
+        else if (y_ticks_.ticks_on_window_or_axis_ > 0)
+        { // Start ticks on the plot window border right.
+          x_left = plot_right_;
+          x_right = plot_right_;
+        }
+        else // y_ticks_.ticks_on_window_or_axis_== 0
+        { // Internal style ticks on vertical Y-axis.
+          x_left = y_axis_.axis_; // Y-axis line.
+          x_right = y_axis_.axis_;
+        }
+        if(y_ticks_.left_ticks_on_)
+        {
+          x_left -= y_tick_length; // left
+        }
+        if (y_ticks_.right_ticks_on_)
+        {
+          x_right += y_tick_length; // right.
+        }
+        //if ((y <= (plot_bottom_ - 0.01)) && (y >= (plot_top_ + 0.01)))
+        //{ // Make sure that we are drawing inside the allowed window.
+        // TODO remove this completely.  Should not be necessary.
+        tick_path.M(x_left, y).L(x_right, y); // Draw the major tick.
+        // leaving x_left at the left most end of any tick,
+        // and x_right at the rightmost end of any tick.
+        // These may be on the axis line.
+        // y is the vertical tick position.
+        //} // in plot window
 
-        if(y_ticks_.major_value_labels_on_ != 0)
-        { // Label the tick with value, for example "1.2"
+        if(y_ticks_.major_value_labels_side_ != 0)
+        { // Label the tick with a value, for example "1.2"
           std::stringstream label;
           label.precision(y_ticks_.value_precision_);
           label.flags(y_ticks_.value_ioflags_); // set ALL IOflags.
           label << value; // Example: label.str() == "20" or "0.25" or "1.2e+015"
-          if(y_ticks_.left_ticks_on_)
-          {
-            // In case some joker has made the minor ticks longer than the major,
-              // we might need to move left more for the longer tick.
-            x_left -= (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_);// Avoid macro max trap!
-            // x_left -= y_value_label_style_.font_size() * wh; // move left by a font width.
-          }
-          else
-          { // No need to move if right tick, or none.
-          }
-          // Need to work out how much space value labels will need.
+					if (y_ticks_.strip_e0s_)
+					{ // Remove unecessary e, +, leadings 0s.
+						std::string v = strip_e0s(label.str());
+						label.str(v);
+					}
+
+          double x = 0; // Where to start writing from, at end of left or right tick, if any.
+          // = 0 is only to avoid unitialised warning.
           align_style alignment = center_align;
-          if(y_ticks_.ticks_on_plot_window_on_ != 0)
-          { // External to plot window style left or right.
-            if(y_ticks_.label_rotation_ == horizontal)
-            {  // Just shift down third a digit to center value digits on tick.
+          // Adjustments to provide space from end of tick before or after writing label.
+          if (y_ticks_.label_rotation_ == horizontal)
+          {  // Just shift up to center value digits on tick.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y += y_value_label_style_.font_size() * 0.2;
+              x = x_left - y_value_label_style_.font_size() * 0.5;
               alignment = right_align;
-              y += y_value_label_style_.font_size() * 0.3;
             }
-            else if ((y_ticks_.label_rotation_ == upward) || (y_ticks_.label_rotation_ == downward))
-            {// Tick value label straight up or down vertically on y axis.
-              // No shift y down to center.
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+             y += y_value_label_style_.font_size() * 0.2;
+             x = x_right + y_value_label_style_.font_size() * 0.5;
+              alignment = left_align;
+            }
+          }
+          else if (y_ticks_.label_rotation_ == upsidedown)
+           {  // Just shift up to center value digits on tick.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y -= y_value_label_style_.font_size() * 0.1;
+              x = x_left - y_value_label_style_.font_size() * 0.5;
+              alignment = left_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              y -= y_value_label_style_.font_size() * 0.1;
+              x = x_right + y_value_label_style_.font_size() * 0.5;
+              alignment = right_align;
+            }
+          }
+          else if (y_ticks_.label_rotation_ == uphill)
+          { // Assume some 45 slope, so need about sqrt(2) less space.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y -= y_value_label_style_.font_size() * 0.2;
+              x = x_left - y_value_label_style_.font_size() * 0.2;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = right_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              y += y_value_label_style_.font_size() * 0.2;
+              x = x_right + y_value_label_style_.font_size() * 0.7;
+              alignment = left_align;
+            }
+          }
+          else if (y_ticks_.label_rotation_ == downhill)
+          { // Assume some 45 slope, so need about sqrt(2) less space.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y += y_value_label_style_.font_size() * 0.3;
+              x = x_left - y_value_label_style_.font_size() * 0.7;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = right_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              y -= y_value_label_style_.font_size() * 0.3;
+              x = x_right + y_value_label_style_.font_size() * 0.1;
+              alignment = left_align;
+            }
+          }
+          else if (y_ticks_.label_rotation_ == upward)
+          { // Tick value label straight up vertically on Y-axis.
+            y -= y_value_label_style_.font_size() * 0.1;
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              x = x_left - y_value_label_style_.font_size() * 0.7;
+              // Seems to need a bit more space for right than left if rotated.
               alignment = center_align;
             }
-            else
-            { // Assume some 45 slope, so need about sqrt(2) less space?
-              x_left += y_value_label_style_.font_size() * 0.5; // move left by half a font width.
-              // no y shift needed.
-              alignment = right_align;
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              x = x_right + y_value_label_style_.font_size() * 1.5;
+              alignment = center_align;
             }
+					}
+					else if (y_ticks_.label_rotation_ == downward)
+					{ // Tick value label straight down vertically on Y-axis.
+            y -= y_value_label_style_.font_size() * 0.1;
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              x = x_left - y_value_label_style_.font_size() * 1.2;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = center_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              x = x_right + y_value_label_style_.font_size() * 0.7;
+              alignment = center_align;
+            }
+					}
+					else
+					{ // Others not yet implemented.
+            return; // Without any value label.
+         } // All rotations.
+
+        if (x <= 0)
+        { // Sanity checks on svg coordinates.
+          throw std::runtime_error("Y-tick X value wrong!");
+        }
+        if (y <= 0)
+        {
+          throw std::runtime_error("Y-tick Y value wrong!");
+        }
+        if(y_ticks_.ticks_on_window_or_axis_ != 0)
+          { // External to plot window style left or right.
             // Always want all values including "0", if labeling external to plot window.
-            // y_ticks_.ticks_on_plot_window_on_ == true != 0
+            // y_ticks_.ticks_on_window_or_axis_ == true != 0
             image.g(detail::PLOT_VALUE_LABELS).text(
-              x_left,
+              x,
               y,
               label.str(), y_value_label_style_, alignment, y_ticks_.label_rotation_);
           }
           else
-          { // ! y_ticks_.y_ticks_on_plot_window_ == 0 Internal - value labels close to left of vertical Y-axis.
+          { // ! y_ticks_.y_ticks_on_plot_window_ == 0 'Internal' - value labels either side of vertical Y-axis.
             if ((value != 0) && y_axis_.axis_line_on_)
             { // Avoid a zero ON the Y-axis if it would be cut through by any horizontal X-axis line.
-              y += y_value_label_style_.font_size() / 2;
               image.g(detail::PLOT_VALUE_LABELS).text(
-                x_left ,
-                y, // Just shift down half a digit to center value digits on tick.
+                x,
+                y,
                 label.str(),
                 y_value_label_style_,
-                alignment, // on the tick ???
+                alignment,
                 y_ticks_.label_rotation_);
             }
-          }
-        } // if(use_y_major_labels)
+          } // either on plot window or 'on axis'.
+        } // want value label on tick
       } // draw_y_major_tick
 
       void draw_y_minor_tick(double value, path_element& tick_path, path_element& grid_path)
       { // Draw a Y-axis minor tick and optional grid.
-        double x_left(0.);
-        double y(value); // tick position and value label.
-        transform_y(y); // to svg.
+        double x_left(0.); // Start on vertical Y axis line.
         double x_right(image.y_size()); // right edge of image.
+        double y(value); // Tick position and value label,
+        transform_y(y); // convert to svg.
 
         if(y_ticks_.minor_grid_on_)
         { // Draw the minor grid, if wanted.
@@ -888,20 +995,21 @@ namespace boost
             grid_path.M(x_left, y).L(x_right, y); // Draw grid line.
           }
           // TODO else just ignore outside plot window?
-        }
+        } // y_minor_grid
 
-        if(y_ticks_.ticks_on_plot_window_on_ < 0)
+        // Draw y minor ticks.
+        if(y_ticks_.ticks_on_window_or_axis_ < 0)
         { // Put y minor ticks on the plot window border left.
           x_left = plot_left_;
           x_right = plot_left_;
         }
-        else if (y_ticks_.ticks_on_plot_window_on_ > 0)
+        else if (y_ticks_.ticks_on_window_or_axis_ > 0)
         { // Put y minor ticks on the plot window border left.
           x_left = plot_right_;
           x_right = plot_right_;
         }
         else
-        { // Internal style,
+        { // Internal style, y_ticks_.ticks_on_window_or_axis_ == 0
           x_left = y_axis_.axis_; // On the Y-axis line itself.
           x_right = y_axis_.axis_;
         }
@@ -1180,8 +1288,14 @@ namespace boost
       // document node, which calls all other nodes through the Visitor pattern.
       // -----------------------------------------------------------------
 
-      svg_2d_plot& write(const std::string& filename)
+      svg_2d_plot& write(const std::string& file)
       { // Write the plot image to a named file.
+        std::string filename(file); // Copy to avoid problem with const if try to append.
+        if (filename.find(".svg") == std::string::npos)
+        { // No file type suffix, so provide the default .svg.
+          filename.append(".svg");
+        }
+
         std::ofstream fout(filename.c_str());
         if(fout.fail())
         {
@@ -1249,13 +1363,13 @@ namespace boost
 
       svg_2d_plot& y_major_labels_on(int cmd)
       { //< 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top).
-        y_ticks_.major_value_labels_on_ = cmd;
+        y_ticks_.major_value_labels_side_ = cmd;
         return *this;
       }
 
       int y_major_labels_on()
       {
-        return y_ticks_.major_value_labels_on_;
+        return y_ticks_.major_value_labels_side_;
       }
 
       svg_2d_plot& y_major_label_rotation(rotate_style rot)
@@ -1540,26 +1654,48 @@ namespace boost
         return y_ticks_.minor_tick_width_;
       }
 
-      svg_2d_plot& x_ticks_on_plot_window_on(int is)
+      svg_2d_plot& x_ticks_on_window_or_axis(int is)
       {
-        x_ticks_.ticks_on_plot_window_on_ = is;
+        x_ticks_.ticks_on_window_or_axis_ = is;
         return *this;
       }
 
-      bool x_ticks_on_plot_window_on()
+      int x_ticks_on_window_or_axis()
       {
-        return x_ticks_.ticks_on_plot_window_on_;
+        return x_ticks_.ticks_on_window_or_axis_;
       }
 
-      svg_2d_plot& y_ticks_on_plot_window_on(int is)
-      {
-        y_ticks_.ticks_on_plot_window_on_ = is;
+      svg_2d_plot& x_major_value_labels_side(int is)
+      { // Label values side for major ticks left -1, (right +1 or none 0).
+        x_ticks_.major_value_labels_side_ = is;
         return *this;
       }
 
-      bool y_ticks_on_plot_window_on()
+      int x_major_value_labels_side()
+      { // Label values side for major ticks left -1, (right +1 or none 0).
+        return x_ticks_.major_value_labels_side_;
+      }
+
+      svg_2d_plot& y_ticks_on_window_or_axis(int is)
       {
-        return y_ticks_.ticks_on_plot_window_on_;
+        y_ticks_.ticks_on_window_or_axis_ = is;
+        return *this;
+      }
+
+      int y_ticks_on_window_or_axis()
+      {
+        return y_ticks_.ticks_on_window_or_axis_;
+      }
+
+      svg_2d_plot& y_major_value_labels_side(int is)
+      {  // Label values side for major ticks left -1, (right +1 or none 0).
+        y_ticks_.major_value_labels_side_ = is;
+        return *this;
+      }
+
+      int y_major_value_labels_side()
+      { // Label values side for major ticks left -1, (right +1 or none 0).
+        return y_ticks_.major_value_labels_side_;
       }
 
       svg_2d_plot& y_ticks_left_on(bool cmd)

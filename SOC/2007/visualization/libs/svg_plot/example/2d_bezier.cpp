@@ -45,7 +45,7 @@ int main()
 	my_plot.title("Plot of trig functions")
 	       .title_font_size(29)
 	       .x_label("X Axis Units")
-           .y_major_labels_on(true)
+           .y_major_value_labels_side(true)
            .y_major_grid_on(true);
 	
 	// Commands.

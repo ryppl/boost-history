@@ -288,8 +288,13 @@ public:
   // recommends MUST have  correct Content-Encoding headers.
   // --------------------------------------------------------------------------------
 
-  void write(const std::string& file)
+  void write(const std::string& filename)
   {// Write whole .svg 'file' contents to file.
+    std::string file(filename); // Copy to avoid problems with const if need to append.
+    if (file.find('.') == std::string::npos)
+    { // No file type suffix, so provide the default .svg.
+      file.append(".svg");
+    }
     std::ofstream f_out(file.c_str());
     if(f_out.fail())
     {

@@ -227,7 +227,6 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "x_axis_label_color " << plot.x_axis_label_color() << endl;
   cout << "x_axis_value_color " << plot.x_axis_value_color() << endl;
   cout << "x_axis_width " << plot.x_axis_width() << endl;
-
   cout << "x_label_on " << plot.x_label_on() << endl;
   cout << "x_label " << plot.x_label() << endl;
   cout << "x_label_color " << plot.x_label_color() << endl;
@@ -236,7 +235,7 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "x_label_units " << plot.x_label_units() << endl;
   cout << "x_label_units_on " << plot.x_label_units_on() << endl;
   cout << "x_label_width " << plot.x_label_width() << endl;
-  cout << "x_major_labels_on " << l_or_r(plot.x_major_labels_on()) << endl;
+  cout << "x_major_value_labels_side " << l_or_r(plot.x_major_value_labels_side()) << endl;
   cout << "x_major_label_rotation " << plot.x_major_label_rotation() << endl;
   cout << "x_major_grid_color " << plot.x_major_grid_color() << endl;
   cout << "x_major_grid_on " << plot.x_major_grid_on() << endl;
@@ -257,8 +256,7 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "x_num_minor_ticks " << plot.x_num_minor_ticks() << endl;
   cout << "x_ticks_down_on " << plot.x_ticks_down_on() << endl;
   cout << "x_ticks_up_on " << plot.x_ticks_up_on() << endl;
-  cout << "x_ticks_on_plot_window_on " << plot.x_ticks_on_plot_window_on() << endl;
-  cout << "y_ticks_on_plot_window_on " << plot.y_ticks_on_plot_window_on() << endl;
+  cout << "x_ticks_on_window_or_axis " << t_or_b(plot.x_ticks_on_window_or_axis()) << endl;
   cout << "y_axis_position " << plot.y_axis_position() << endl;
   cout << "x_axis_position " << plot.x_axis_position() << endl;
   cout << "y_label_on " << plot.y_label_on() << endl;
@@ -281,7 +279,7 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "y_major_grid_color " << plot.y_major_grid_color() << endl;
   cout << "y_major_grid_width " << plot.y_major_grid_width() << endl;
   cout << "y_major_interval " << plot.y_major_interval() << endl;
-  cout << "y_major_labels_on " << t_or_b(plot.y_major_labels_on()) << endl;
+  cout << "y_major_value_labels_side " << t_or_b(plot.y_major_value_labels_side()) << endl;
   cout << "y_major_label_rotation " << plot.y_major_label_rotation() << endl;
   cout << "y_major_tick_color " << plot.y_major_tick_color() << endl;
   cout << "y_major_tick_length  " << plot.y_major_tick_length() << endl;
@@ -298,7 +296,7 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "y_num_minor_ticks " << endl;
   cout << "y_ticks_left_on " << plot.y_ticks_left_on() << endl;
   cout << "y_ticks_right_on " << plot.y_ticks_right_on() << endl;
-  cout << "y_ticks_on_plot_window_on " << plot.y_ticks_on_plot_window_on() << endl;
+  cout << "y_ticks_on_window_or_axis " << l_or_r(plot.y_ticks_on_window_or_axis()) << endl;
   cout << "y_max " << plot.y_max() << endl;
   cout << "y_min " << plot.y_min() << endl;
   cout << "data lines width " << plot.data_lines_width() << endl;

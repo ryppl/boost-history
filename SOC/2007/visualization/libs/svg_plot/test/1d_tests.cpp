@@ -37,6 +37,17 @@
 #include <string>
   using std::string;
 
+    enum side
+  { 
+    left_side = -1,
+    on_axis = 0,
+    right_side = +1,
+    bottom_side = -1,
+    top_side = +1,
+  };
+
+
+
 BOOST_AUTO_TEST_CASE( test1 )
 {
   // Check on default values and all set and get functions.
@@ -235,11 +246,11 @@ BOOST_AUTO_TEST_CASE( test1 )
   my_plot.x_label_units_on(true); // Set
  	BOOST_CHECK_EQUAL(my_plot.x_label_units_on(), true); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_labels_on(), -1); // Check default.
-  my_plot.x_major_labels_on(0); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_major_labels_on(), 0); // & check.
-  my_plot.x_major_labels_on(+1); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_major_labels_on(), +1); // & check.
+ 	BOOST_CHECK_EQUAL(my_plot.x_major_value_labels_side(), left_side); // Check default.
+  my_plot.x_major_value_labels_side(0); // Set
+ 	BOOST_CHECK_EQUAL(my_plot.x_major_value_labels_side(), none); // & check.
+  my_plot.x_major_value_labels_side(+1); // Set
+ 	BOOST_CHECK_EQUAL(my_plot.x_major_value_labels_side(), right_side); // & check.
 
  	BOOST_CHECK_EQUAL(my_plot.title_on(), true); // Check default.
   my_plot.title_on(false); // Set

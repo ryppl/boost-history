@@ -56,7 +56,18 @@ using namespace boost::svg;
 // and very many named colors in this namespace.
 
   // Use map with both x and y double.
-  map<double, double> data1, data2, data3;
+  map<double, double> data1;
+  map<double, double> data2;
+  map<double, double> data3;
+
+  enum side
+  { 
+    left_side = -1,
+    on_axis = 0,
+    right_side = +1,
+    bottom_side = -1,
+    top_side = +1,
+  };
 
 // Several simple math functions to demonstrate:
 double f(double x)
@@ -88,7 +99,9 @@ void plot(const std::string& title, const std::string& file,
     const std::string& x_label = std::string(), // default is ""
     double xmin = 0., double xmax = 0.,
     const std::string& y_label = std::string(),
-    double ymin = 0., double ymax = 0.)
+    double ymin = 0., double ymax = 0.,
+    int x_major_label = -1, int y_major_label = -1,
+    int x_rotation = horizontal, int y_rotation = horizontal) // 
 {
     using namespace boost::svg;
 
@@ -110,8 +123,8 @@ void plot(const std::string& title, const std::string& file,
           .plot_border_color(magenta)
           .x_label_on(true)
           .y_label_on(true)
-          .y_major_labels_on(-1)
-          .x_major_labels_on(-1)
+          .y_major_value_labels_side(left_side)
+          .x_major_value_labels_side(left_side)
           //.legend_title("Function")
           .legend_title("Unicode &#x3A9;&#x3A6;")
           .legend_title_font_size(16);
@@ -137,19 +150,19 @@ void plot(const std::string& title, const std::string& file,
 
   // X axis settings.
   my_plot.x_range(xmin, xmax)
-          .x_major_interval(1)
+          .x_major_interval(2.)
           .x_major_tick_length(10) // pixels
           .x_major_tick_width(2) // pixels
           .x_minor_tick_length(5) // pixels
           .x_minor_tick_width(1) // pixels
-          .x_num_minor_ticks(4) // plus 1 major = 5 ticks per major step.
+          .x_num_minor_ticks(2) // plus 1 major = 5 ticks per major step.
           ;
 
   // Y-axis settings.
  my_plot
     .y_range(ymin, ymax)
-    .y_major_interval(1.)
-    .y_num_minor_ticks(4) // plus 1 major = 5 ticks per major step.
+    .y_major_interval(2.)
+    .y_num_minor_ticks(2) // plus 1 major = 5 ticks per major step.
     .y_major_tick_length(10) // pixels
     .y_major_tick_width(2) // pixels
     .y_minor_tick_length(5) // pixels
@@ -163,34 +176,58 @@ void plot(const std::string& title, const std::string& file,
          .y_minor_grid_color(svg_color(240, 240, 255))
          .y_major_grid_width(2)
          .y_minor_grid_width(1)
-         .x_major_grid_on(true)  // But nothing shows - until you make .major_grid_on(true)!
+     // But nothing shows - until you make .major_grid_on(true)!
+         .x_major_grid_on(true) 
          .x_minor_grid_on(true)
          .y_major_grid_on(true)
          .y_minor_grid_on(true);
 
   my_plot.x_ticks_down_on(true); // X-axis.
   my_plot.y_ticks_left_on(true); // Y-axis.
-  my_plot.x_ticks_on_plot_window_on(0); // default on axes, if possible.
-  my_plot.y_ticks_on_plot_window_on(0);
+
+  // Where the ticks (and labels if any) go, left/right, on axis, or bottom/top.
+  // Default x_ticks_on_window_or_axis == -1 left or bottom, +1 right to top, 0 = on axis.
+  // my_plot.x_ticks_on_window_or_axis(+1); // 
+  // my_plot.y_ticks_on_window_or_axis(+1);
+  // my_plot.x_ticks_on_window_or_axis(-1); // right or top.
+  // my_plot.y_ticks_on_window_or_axis(-1);
+  // x_ticks_on_window_or_axis == 0 : on axes, if possible.
+  my_plot.x_ticks_on_window_or_axis(0); // ticks on axes.
+  my_plot.y_ticks_on_window_or_axis(0); // ticks on axes.
+
+  // Which side of axis line or plot window the value labels go.
+  //my_plot.x_major_value_labels_side(0); // NO value labels.
+  //my_plot.y_major_value_labels_side(0); // NO value labels.
+
+  //my_plot.x_major_value_labels_side(top_side); // Top side value labels.
+  //my_plot.x_major_value_labels_side(bottom_side); // Bottom side value labels (default).
+  //my_plot.y_major_value_labels_side(no_labels); // NO value labels.
+  //my_plot.y_major_value_labels_side(right_side); // Right side of axis value labels.
+  //my_plot.y_major_value_labels_side(left_side); // Left side value labels (default).
+
+
+  //my_plot.y_major_label_rotation(downhill); // sloping.
+  //my_plot.y_major_label_rotation(uphill); 
+  //my_plot.y_major_label_rotation(horizontal); // Default.
+  //my_plot.y_major_label_rotation(downward);
+
+  //my_plot.x_major_label_rotation(upward); 
+  //my_plot.x_major_label_rotation(downward); 
+  //my_plot.x_major_label_rotation(uphill); 
+  //my_plot.x_major_label_rotation(downhill); 
 
   my_plot.y_value_ioflags(ios::dec | ios::fixed).y_value_precision(1);
   my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
   //  my_plot.x_value_ioflags(ios::dec).x_value_precision(2);
 
-  my_plot.y_major_label_rotation(uphill); 
-  my_plot.x_major_label_rotation(downward); // sloping.
-   //my_plot.y_major_label_rotation(horizontal); // defaults.
-   //my_plot.x_major_label_rotation(horizontal);
-
   //my_plot.data_lines_width(4); // A bit gross!
 	my_plot.plot(data1, "Sqrt(x)").fill_color(red);
-	my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5);
-	my_plot.plot(data3, "-1 + 2x").fill_color(yellow).bezier_on(true).line_color(blue).shape(square);
+	my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5).bezier_on(true);
+	my_plot.plot(data3, "-1 + 2x").fill_color(yellow).line_color(blue).shape(square);
 
   cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " << file << endl;
   my_plot.write(file);
   show_plot_settings(my_plot);
-
 
   } // plot
 
@@ -200,14 +237,15 @@ int main()
   {
   // boost::array or anything in boost such that pair_type has
   // std and boost as associated namespaces.
-  typedef ::std::pair< ::boost::array<int, 1>, int> pair_type;
-  pair_type p1;  pair_type p2;
+  //typedef ::std::pair< ::boost::array<int, 1>, int> pair_type;
+  //pair_type p1;
+  //pair_type p2;
 
-  p1.first[0] = p1.second = 0;
-  p2.first[0] = p2.second = 1;
+  //p1.first[0] = p1.second = 0;
+  //p2.first[0] = p2.second = 1;
 
-  array<pair<double, double>, 10> ddpairs;
-  ddpairs[0].first = 1.; ddpairs[0].second = 2.;
+  //array<pair<double, double>, 10> ddpairs;
+  //ddpairs[0].first = 1.; ddpairs[0].second = 2.;
   
   for(double i = -10; i <= 10.; i += 1.)
   {
@@ -219,7 +257,7 @@ int main()
    // Demonstrate/test plots with various range of x and y, some *not* including zero.
 
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYPM.svg", "X-axis", -10., +10., "Y-axis", -10., +10.); // Both X & Y include zero.
-    plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
+   plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XN.svg", "X-axis", -10., -1., "Y-axis", -10., 10.); // x all < 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_YP.svg", "X-axis", -1., +10., "Y-axis", +1., +10.); // Y all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_YN.svg", "X-axis", -1., +10., "Y-axis", -10., -1.); // y all < 0
@@ -232,6 +270,8 @@ int main()
   {
     cout << message << endl;
   }
+
+
   return 0;
 } // int main()
 

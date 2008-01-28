@@ -147,9 +147,9 @@ Here are some examples of using of the 1D_plot `plot` method:
   [[`svg_2d_plot& x_value_ioflags(int)`] [Determines the iostream flags for value labels on the X axis major ticks will be displayed. Default is std::ios::dec.  This allows fine control of the value labels using, for example (ios::dec | ios::scientific), or (ios::dec | ios::fixed), particularly in conjunction with precision.]]
   [[`svg_2d_plot& y_value_precision(int)`] [Determines the iostream precison for value labels on the Y axis major ticks will be displayed. Default is 3 (rather than the iostream default of 6).]]
   [[`svg_2d_plot& y_value_ioflags(int)`] [Determines the iostream flags for value labels on the Y axis major ticks will be displayed. Default is std::ios::dec.  This allows fine control of the value labels using, for example (ios::dec | ios::scientific), or (ios::dec | ios::fixed), particularly in conjunction with precision.]]
-  [[`svg_2d_plot& (int)`x_major_label_rotation] [Determines the direction of writing of value labels from the y axis ticks. `enum rotate_style` provides control is 45 degree steps. The default is horizontal. 
+  [[`svg_2d_plot& `y_major_label_rotation(int)] [Determines the direction of writing of value labels from the Y axis ticks. `enum rotate_style` provides control is 45 degree steps. The default is horizontal. 
   
-    `enum rotate_style { // Rotation in degrees from horizontal. horizontal = 0, // normal left to right.
+    ``enum rotate_style { // Rotation in degrees from horizontal. horizontal = 0, // normal left to right.
       uphill = -45, // slope up.
       upward = -90, // vertical writing up.
       backup = -135, // slope up backwards.
@@ -158,11 +158,15 @@ Here are some examples of using of the 1D_plot `plot` method:
       backdown = 135, // slope down backwards.
       upsidedown = 180 // == -180
     };
+    ``
     
   ]]
-  [[`svg_2d_plot& (int)`x_major_label_rotation] [Determines the direction of writing of value labels from the X axis ticks. `enum rotate_style` provides control is 45 degree steps. The default is horizontal.]]
-  [[`svg_2d_plot& x_label_strip_e0s(bool)`] [Determines whether or not the X axis value labels for major ticks are stripped of redundant zero, e or E,, and + sign.  This can markedly reduce visual clutter, for example, reducing "1.2e+000" to "1.2".]]
-  [[`svg_2d_plot& y_label_strip_e0s(bool)`] [Determines whether or not the Y axis value labels for major ticks are stripped of redundant zero, e or E,, and + sign.  This can markedly reduce visual clutter, for example, reducing "1.2e+000" to "1.2".]]
+  [[`svg_2d_plot& `x_major_value_labels_on(int)`] [Determines if label values for X major ticks, and direction:  -1 = bottom, 0 = *no* value labels, +1 = top. Default -1, bottom of plot window.]]
+  [[`svg_2d_plot& `y_major_value_labels_on(int)`] [Determines if label values for Y major ticks, and direction:  -1 = left, 0 = *no* value labels, +1 = right. Default -1, left of plot window.]]
+  [[`svg_2d_plot& `x_ticks_on_plot_window_on(int)`] [Determines the position of Y axis of value labels & ticks:  -1 = left, 0 = on Y-axis, +1 = right. Default -1, left of plot window.]]
+  [[`svg_2d_plot& `y_ticks_on_plot_window_on(int)`] [Determines the position of X axis of value labels & ticks: -1 = bottom, 0 = on X-axis, +1 = top. Default -1, bottom of plot window.]]
+  [[`svg_2d_plot& `x_label_strip_e0s(bool)`] [Determines whether or not the X axis value labels for major ticks are stripped of redundant zero(s), e or E, and + sign.  This can markedly reduce visual clutter, for example, reducing "1.2e+000" to "1.2".]]
+  [[`svg_2d_plot& `y_label_strip_e0s(bool)`] [Determines whether or not the Y axis value labels for major ticks are stripped of redundant zero(s), e or E, and + sign.  This can markedly reduce visual clutter, for example, reducing "1.2e+000" to "1.2".]]
   
 ] [/ table 2D_plot Commands]
 

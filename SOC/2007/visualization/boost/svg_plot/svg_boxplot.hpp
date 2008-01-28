@@ -646,26 +646,25 @@ svg_boxplot& load_stylesheet(const std::string& file)
     return *this;
 }
 
-svg_boxplot& write(const std::string& str)
+svg_boxplot& write(std::string& file)
 {
-    std::ofstream fout(str.c_str());
-
+    std::string filename(file); // Copy to avoid problems with const if need to append.
+    if (filename.find(".svg") == std::string::npos)
+    { // No file type suffix, so provide the default .svg.
+      filename.append(".svg");
+    }
+    std::ofstream fout(filename.c_str());
     if(fout.fail())
     {
-        throw std::runtime_error("Unable to open "+str);
+        throw std::runtime_error("Unable to open "+ filename);
     }
-
-    write(fout);
-
     return *this;
 }
 
 svg_boxplot& write(std::ostream& s_out)
 {
     update_image();
-
     image.write(s_out);
-
     return *this;
 }
 
@@ -687,7 +686,7 @@ svg_boxplot& x_label_on(bool cmd)
     return *this;
 }
 
-svg_boxplot& y_major_labels_on(int cmd)
+svg_boxplot& y_major_value_labels_side(int cmd)
 {
     use_y_major_labels = cmd;
     return *this;

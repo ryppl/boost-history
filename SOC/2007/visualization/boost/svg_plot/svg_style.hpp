@@ -733,7 +733,7 @@ public:
     bool right_ticks_on_; // Draw ticks right from vertical Y-axis line.
     // Simplest to have all of these although only one pair like up or down is used.
     // Unused are always false.
-    int major_value_labels_on_; // Label values for major ticks.
+    int major_value_labels_side_; // Label values for major ticks, and direction.
     // < 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top)/
     rotate_style label_rotation_; // Direction axis value labels written.
     bool major_grid_on_;  // Draw X grid at major ticks.
@@ -742,10 +742,10 @@ public:
     std::ios_base::fmtflags value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; // If redundant zero, + and e are to be stripped.
     double label_max_width_;  // width (in SVG units) of longest label on axis.
-    int ticks_on_plot_window_on_; // Value labels & ticks on the plot window border 
+    int ticks_on_window_or_axis_; // Value labels & ticks on the plot window border 
     // (rather than on X or Y-axis).
-    // For X-axis -1 = left, 0 = false, +1 = right. Default -1 left of plot window.
-    // For Y-axis -1 = bottom, 0 = false, +1 = top. Default -1 bottom of plot window.
+    // For X-axis -1 = left, 0 = false, +1 = right. Default -1 to left of plot window.
+    // For Y-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
     const text_style& value_label_style_;
 
     ticks_labels_style(dim d = X,
@@ -783,7 +783,7 @@ public:
     right_ticks_on_(false), // Draw ticks right from vertical Y-axis line.
     // Simplest to have all of these although only one pair like up or down is used.
     // Unused are always false.
-    major_value_labels_on_(-1), // Label values side for major ticks left (right or none).
+    major_value_labels_side_(-1), // Label values side for major ticks left (right or none).
     label_rotation_(horizontal), // Direction axis value labels written.
     major_grid_on_(false),  // Draw grid at major ticks.
     minor_grid_on_(false),// Draw grid at minor ticks.
@@ -792,7 +792,8 @@ public:
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
     strip_e0s_(true), // strip superflous zeros and signs.
     label_max_width_(0.), // width (estimated in SVG units) of longest label on axis.
-    ticks_on_plot_window_on_(-1) // Value labels & ticks on the plot window rather than on X or Y-axis.
+    ticks_on_window_or_axis_(-1) // Value labels & ticks on the plot window
+    // rather than on X or Y-axis.
     // Default -1 means left or bottom.
   {
       if(max_ <= min_)
@@ -829,7 +830,7 @@ public:
   double longest_label()
   { // Update label_max_width_ with the longest value label as pixels,
     // return the count of digits etc.
-    if(major_value_labels_on_ != 0) // ! none
+    if(major_value_labels_side_ != 0) // ! none
     { // Show values by the tick as "1.2" or "3.4e+000"...
       double longest = 0;
       
@@ -842,7 +843,7 @@ public:
       // Check length of label for the ticks on the positive side (right or above zero).
       for(double v = 0.; v <= max_; v += major_interval_)
       {
-        if (v != 0. || ticks_on_plot_window_on_)
+        if (v != 0. || ticks_on_window_or_axis_)
         { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line,
           // or avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
           // (won't be a Y-axis line for 1-D,
@@ -857,7 +858,7 @@ public:
       // Check length of label of the ticks on the negative side (left of zero).
       for(double v = 0.; v >= min_; v -= major_interval_)
       {
-        if (v != 0. || ticks_on_plot_window_on_)
+        if (v != 0. || ticks_on_window_or_axis_)
         { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
           // (won't be Y-axis line for 1-D where the zero tick is always wanted).
           // But no tick means no value label 0 either unless on_plot_window.
@@ -901,14 +902,14 @@ public:
     return *this; // Make chainable.
   }
 
-  int major_value_labels_on() const
+  int major_value_labels_side() const
   { // Get tick value labels to left (<0), none (==0) or right (>0).
-    return major_value_labels_on_;
+    return major_value_labels_side_;
   }
 
-  ticks_labels_style& major_value_labels_on(int is) 
+  ticks_labels_style& major_value_labels_side(int is) 
   { // Set tick value labels to left (<0), none (==0) or right (>0).
-    major_value_labels_on_ = is;
+    major_value_labels_side_ = is;
     return *this; // Make chainable.
   }
 

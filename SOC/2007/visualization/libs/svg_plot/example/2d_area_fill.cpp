@@ -39,13 +39,13 @@ int main()
 	my_plot.title("Plot of 50 * sin(x)")
 	       .title_font_size(29)
 	       .x_label("X Axis Units")
-           .y_major_labels_on(true)
+           .y_major_value_labels_side(true)
            .y_major_grid_on(true);
 	
 	// Commands.
 	my_plot.plot_window_on(true)
 	       .x_label_on(true)
-	       .x_major_labels_on(true);
+	       .x_major_value_labels_side(true);
 	
 	// Color settings.
 	my_plot.background_color(svg_color(67, 111, 69))

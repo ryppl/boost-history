@@ -359,12 +359,12 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>x_major_label_rotation
+              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>y_major_label_rotation
             </p>
             </td>
 <td>
             <p>
-              Determines the direction of writing of value labels from the y axis
+              Determines the direction of writing of value labels from the Y axis
               ticks. <code class="computeroutput"><span class="keyword">enum</span> <span class="identifier">rotate_style</span></code>
               provides control is 45 degree steps. The default is horizontal.
             </p>
@@ -385,14 +385,55 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>x_major_label_rotation
+              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>x_major_value_labels<span class="underline">on</span>
             </p>
             </td>
 <td>
             <p>
-              Determines the direction of writing of value labels from the X axis
-              ticks. <code class="computeroutput"><span class="keyword">enum</span> <span class="identifier">rotate_style</span></code>
-              provides control is 45 degree steps. The default is horizontal.
+              Determines if label values for X major ticks, and direction.: -1 =
+              bottom, 0 = no value labels, +1 = top. Default -1, bottom of plot window.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>y_major_value_labels<span class="underline">on</span>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines if label values for Y major ticks, and direction.: -1 =
+              left, 0 = no value labels, +1 = right. Default -1, left of plot window.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>x_ticks_on_plot_window_on
+            </p>
+            </td>
+<td>
+            <p>
+              Determines the side of Y axis of value labels &amp; ticks: -1 = left,
+              0 = on Y-axis, +1 = right. Default -1, left of plot window.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>y_ticks_on_plot_window_on
+            </p>
+            </td>
+<td>
+            <p>
+              Determines the side or X axis of value labels &amp; ticks: -1 = bottom,
+              0 = on X-axis, +1 = top. Default -1, bottom of plot window.
             </p>
             </td>
 </tr>
@@ -432,7 +473,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id703322"></a><p class="title"><b>Table 17. 2D_plot Colors</b></p>
+<a name="id703487"></a><p class="title"><b>Table 17. 2D_plot Colors</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Colors">
 <colgroup>
 <col>
@@ -683,7 +724,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id704611"></a><p class="title"><b>Table 18. 2D_plot Axis Information</b></p>
+<a name="id704776"></a><p class="title"><b>Table 18. 2D_plot Axis Information</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Axis Information">
 <colgroup>
 <col>
@@ -973,7 +1014,7 @@
         preceeding code).
       </p>
 <a name="svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id706014"></a>
+<a name="id706181"></a>
         <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
@@ -984,7 +1025,7 @@
         named parameters, as well as a deduced parameter.
       </p>
 <div class="table">
-<a name="id706074"></a><p class="title"><b>Table 19. 2D_plot Required parameter</b></p>
+<a name="id706241"></a><p class="title"><b>Table 19. 2D_plot Required parameter</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Required parameter">
 <colgroup>
 <col>
@@ -1047,7 +1088,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706195"></a><p class="title"><b>Table 20. 2D_plot Deduced parameter</b></p>
+<a name="id706362"></a><p class="title"><b>Table 20. 2D_plot Deduced parameter</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Deduced parameter">
 <colgroup>
 <col>
@@ -1102,7 +1143,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706295"></a><p class="title"><b>Table 21. 2D_plot Optional Parameters</b></p>
+<a name="id706460"></a><p class="title"><b>Table 21. 2D_plot Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Optional Parameters">
 <colgroup>
 <col>
@@ -1337,7 +1378,7 @@
         Here are some examples of correct uses:
       </p>
 <a name="svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors"></a><h4>
-<a name="id707100"></a>
+<a name="id707265"></a>
         <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors">Using
         fill and stroke colors</a>
       </h4>

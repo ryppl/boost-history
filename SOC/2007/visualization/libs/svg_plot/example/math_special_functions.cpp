@@ -140,7 +140,7 @@ public:
       //plot.legend_place(outside_right);
 
       plot
-        .x_major_labels_on(-1).y_major_labels_on(-1) // left and bottom
+        .x_major_value_labels_side(-1).y_major_value_labels_side(-1) // left and bottom
         .x_label_units_on(false).y_label_units_on(false);
       double x_delta = (m_max_x - m_min_x) / 50;
       double y_delta = (m_max_y - m_min_y) / 50;
@@ -415,7 +415,7 @@ int main()
    surface.legend_title_font_size(15);
    surface.title("Circle");
    surface.legend_on(false).title_on(true);
-   surface.x_major_labels_on(true).y_major_labels_on(true);
+   surface.x_major_value_labels_side(true).y_major_value_labels_side(true);
    surface.x_range(-2.2, 2.2)
       .y_range(-2.2, 2.2);
    surface.x_label_on(true).x_label("x");

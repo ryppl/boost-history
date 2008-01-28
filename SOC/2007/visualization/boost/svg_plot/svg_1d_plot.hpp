@@ -406,22 +406,22 @@ public:
           x_label_length_+= x_ticks_.label_max_width_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
       }
 
-      if (x_ticks_.major_value_labels_on_ != 0)
+      if (x_ticks_.major_value_labels_side_ != 0)
       { // Some value labels.
-        if ((x_ticks_.ticks_on_plot_window_on_ < 0) // on bottom of plot window.
-           && (x_ticks_.major_value_labels_on_ < 0) ) // & labels on bottom.
+        if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
+           && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
         {  // Contract plot window bottom edge up to make space for x value labels on bottom.
           plot_bottom_ -= x_label_length_; // Move up.
         }
-        else if ((x_ticks_.ticks_on_plot_window_on_ > 0) // 
-           && (x_ticks_.major_value_labels_on_ > 0) ) // & x labels to top.
+        else if ((x_ticks_.ticks_on_window_or_axis_ > 0) // 
+           && (x_ticks_.major_value_labels_side_ > 0) ) // & x labels to top.
         { // Move top of plot window down to give space for x value labels.
           plot_top_ += x_label_length_; // Move down.
         }
         else
         { // no labels on plot window (may be on mid-plot X-axis).
         }
-      } // x_ticks_. major_value_labels_on
+      } // x_ticks_. major_value_labels_side
 
       // Make space for any ticks.
       if(x_ticks_.down_ticks_on_)
@@ -433,13 +433,13 @@ public:
         // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
         // If not fix axis to bottom of the plot window.
         if ((x_axis_position_ == bottom) // All definitely > zero.
-          && !(x_ticks_.ticks_on_plot_window_on_ < 0) ) // & not already at bottom.
+          && !(x_ticks_.ticks_on_window_or_axis_ < 0) ) // & not already at bottom.
         { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
           plot_bottom_ -= x_label_length_; // Move up for the value labels.
           x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
         }
         else if ((x_axis_position_ == top)  // definitely < zero.
-          && !(x_ticks_.ticks_on_plot_window_on_ > 0) ) // & not already at top.
+          && !(x_ticks_.ticks_on_window_or_axis_ > 0) ) // & not already at top.
         { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
            plot_top_ += x_label_length_; // Move down for labels.
            x_axis_.axis_ = plot_top_; // Put X-axis on top.
@@ -565,8 +565,13 @@ public:
   // document node, which calls all other nodes through the Visitor pattern.
   // ------------------------------------------------------------------------
 
-  svg_1d_plot& write(const std::string& filename)
+  svg_1d_plot& write(std::string& file)
   {
+    std::string filename(file); // Copy to avoid problems with const if need to append.
+    if (filename.find(".svg") == std::string::npos)
+    { // No file type suffix, so provide the default .svg.
+      filename.append(".svg");
+    }
     std::ofstream fout(filename.c_str());
     if(fout.fail())
     {

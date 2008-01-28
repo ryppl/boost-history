@@ -38,12 +38,12 @@ int main()
 	// Text settings.
 	my_plot.title("Plot of 1 / x")
 	       .x_label("X Axis Units")
-           .y_major_labels_on(true)
+           .y_major_value_labels_side(true)
            .y_major_grid_on(true);
 	
 	// Commands.
 	my_plot.plot_window_on(true)
-	       .x_major_labels_on(true);
+	       .x_major_value_labels_side(true);
 
 	//X axis settings.
 	my_plot.x_major_interval(2)

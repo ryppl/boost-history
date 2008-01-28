@@ -124,7 +124,7 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`void y_size(unsigned int)`] [Sets the height of the image (pixels).] []]
 
-  [[`void write(const std::string&)`] [Writes the document to the file represented by the argument.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
+  [[`void write(const std::string&)`] [Writes the document to the file represented by the argument. (If not file type sufix is provided, the default file suffix `".svg"` is appended.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
 
   [[`void write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]] 
 ] [/table `svg` document settings and writing]

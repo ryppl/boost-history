@@ -20,10 +20,8 @@ num_minor_ticks = 2[super]n -1 are useful, for example
  1 if major are even, major 0, minor 1, major 2 ...
  4 if major on 0, minor on 1,2,3,4, major on 5 ...
  9 if major on 0, minor on 1,2,3,4,5,6,7,8,9, major on 10
- 
- 
- [/h4 Minor ticks]
 
+ [/h4 Minor ticks]
 
 This section provide more information about this implementation
 and some of the rationale for desing decisions.
@@ -46,7 +44,8 @@ the <g> elements: these make it parse into a tree.
 
 If each element has its own style (fill, stroke etc)
 then the .svg file size would be increased.
-(This style is used by other packages that output svg).
+(This style is used by other packages that output svg
+and often leads to larger file sizes).
 
 So the [@http://www.w3.org/TR/SVG/struct.html#GElement group element]
 is used with each type given an id to allow reference back to it.
@@ -69,10 +68,6 @@ also a logical grouping. One can can add a series, and then come back later
 and change the <g> element above the points, which is a single change,
 and have the change reflected on every point in the series. It seems
 this is the most logical way to represent the data in memory.
-
-
-
-
 
 [h4 Economising on .svg File Size]
 
