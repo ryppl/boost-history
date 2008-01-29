@@ -1,6 +1,6 @@
 // Boost.Pinhole library
 
-// Copyright Jared McIntyre 2007. Use, modification and
+// Copyright Jared McIntyre 2007-2008. Use, modification and
 // distribution is subject to the Boost Software License, Version
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -108,16 +108,9 @@ public:
 		property_manager::m_instance.reset( this );
 			
 		uiChildCount                       = 0;
-		uiSelectSingleNodeCallCount        = 0;
 		uiRegisterPropertyGroupCallCount   = 0;
 		uiUnRegisterPropertyGroupCallCount = 0;
 		uiAddCategoryCallCount             = 0;
-	}
-	virtual property_group* select_single_node(property_group* pCurrentPropertyGroup, const string& xpath)
-	{
-		++uiSelectSingleNodeCallCount;
-
-		return 0;
 	}
 	virtual void register_property_group( property_group *pPropertyGroup )
 	{
@@ -143,7 +136,6 @@ public:
 	}
 
 	unsigned int uiChildCount;
-	unsigned int uiSelectSingleNodeCallCount;
 	unsigned int uiRegisterPropertyGroupCallCount;
 	unsigned int uiUnRegisterPropertyGroupCallCount;
 	unsigned int uiAddCategoryCallCount;
