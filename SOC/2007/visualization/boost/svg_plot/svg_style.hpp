@@ -741,11 +741,12 @@ public:
     int value_precision_; // precision for tick value labels, usually 3 will suffice.
     std::ios_base::fmtflags value_ioflags_;  // IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; // If redundant zero, + and e are to be stripped.
-    double label_max_width_;  // width (in SVG units) of longest label on axis.
+    double label_max_length_;  // width (in SVG units) of longest value label text on axis.
+    double label_max_space_;  // Space needed for value label adjusted for rotation.
     int ticks_on_window_or_axis_; // Value labels & ticks on the plot window border 
     // (rather than on X or Y-axis).
-    // For X-axis -1 = left, 0 = false, +1 = right. Default -1 to left of plot window.
-    // For Y-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
+    // For Y-axis -1 = left, 0 = false, +1 = right. Default -1 to left of plot window.
+    // For X-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
     const text_style& value_label_style_;
 
     ticks_labels_style(dim d = X,
@@ -791,7 +792,9 @@ public:
     value_ioflags_(std::ios::dec),  // IO formatting flags for the axis.
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
     strip_e0s_(true), // strip superflous zeros and signs.
-    label_max_width_(0.), // width (estimated in SVG units) of longest label on axis.
+    label_max_length_(0.), // length (estimated in SVG units) of longest label on axis.
+    label_max_space_(0.), // Space (estimated in SVG units) of longest label on axis
+    // adjusted for rotation.
     ticks_on_window_or_axis_(-1) // Value labels & ticks on the plot window
     // rather than on X or Y-axis.
     // Default -1 means left or bottom.
@@ -805,7 +808,6 @@ public:
         throw std::runtime_error("Axis ticks & labels range too small!" );
       }
   }
-    
 
   double label_length(double value)
   { // Find the length of label for a value.
@@ -828,7 +830,7 @@ public:
   } // double label_length
 
   double longest_label()
-  { // Update label_max_width_ with the longest value label as pixels,
+  { // Update label_max_length_ with the longest value label as pixels,
     // return the count of digits etc.
     if(major_value_labels_side_ != 0) // ! none
     { // Show values by the tick as "1.2" or "3.4e+000"...
@@ -869,12 +871,12 @@ public:
           }
         }
       } // for v
-      label_max_width_ = longest;
+      label_max_length_ = longest;
       return longest; 
     }
     else
     {
-      label_max_width_ = 0;
+      label_max_length_ = 0;
       return 0;
     }
   } // longest_label()
@@ -922,7 +924,7 @@ public:
     svg_color stroke_; // box line stroke color.
     svg_color fill_; // box fill color.
     double width_; // plot border rectangle width.
-    double margin_; // Marginal (pixels) space around the box (nside or out).
+    double margin_; // Marginal (pixels) space around the box (inside or out).
     bool border_on_; // Display the border.
     bool fill_on_; // Color fill the box.
 
@@ -1005,12 +1007,6 @@ public:
     fill_on_ = is;
     return *this; // Make chainable.
   }
-
-
-
-
-
-
 
 }; // class box_style
 

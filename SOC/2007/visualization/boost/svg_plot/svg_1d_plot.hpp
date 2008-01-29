@@ -392,18 +392,18 @@ public:
 
       // Calculate the number of chars of the longest value label.
       x_ticks_.longest_label();
-      double x_label_length_ = 0; // Work out the longest value label for X-Axis.
+      x_ticks_.label_max_space_ = 0; // Work out the longest value label for X-Axis.
       if (x_ticks_.label_rotation_ == horizontal)
       { // Only 1 char height & 1 space needed if labels are horizontal.
-        x_label_length_ = 2 * x_value_label_style_.font_size() * wh; // SVG chars
+        x_ticks_.label_max_space_ = 2 * x_value_label_style_.font_size() * wh; // SVG chars
       } 
       else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
       { // ! horizontal so will need more than 2 chars worth.
-          x_label_length_+= x_ticks_.label_max_width_ * x_value_label_style_.font_size() * wh; // SVG chars.
+          x_ticks_.label_max_space_+= x_ticks_.label_max_length_ * x_value_label_style_.font_size() * wh; // SVG chars.
       }
       else
       { // Assume label is sloping, say 45, so * sin(45) = 0.707.
-          x_label_length_+= x_ticks_.label_max_width_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
+          x_ticks_.label_max_space_+= x_ticks_.label_max_length_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
       }
 
       if (x_ticks_.major_value_labels_side_ != 0)
@@ -411,12 +411,12 @@ public:
         if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
            && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
         {  // Contract plot window bottom edge up to make space for x value labels on bottom.
-          plot_bottom_ -= x_label_length_; // Move up.
+          plot_bottom_ -= x_ticks_.label_max_space_; // Move up.
         }
         else if ((x_ticks_.ticks_on_window_or_axis_ > 0) // 
            && (x_ticks_.major_value_labels_side_ > 0) ) // & x labels to top.
         { // Move top of plot window down to give space for x value labels.
-          plot_top_ += x_label_length_; // Move down.
+          plot_top_ += x_ticks_.label_max_space_; // Move down.
         }
         else
         { // no labels on plot window (may be on mid-plot X-axis).
@@ -435,13 +435,13 @@ public:
         if ((x_axis_position_ == bottom) // All definitely > zero.
           && !(x_ticks_.ticks_on_window_or_axis_ < 0) ) // & not already at bottom.
         { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
-          plot_bottom_ -= x_label_length_; // Move up for the value labels.
+          plot_bottom_ -= x_ticks_.label_max_space_; // Move up for the value labels.
           x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
         }
         else if ((x_axis_position_ == top)  // definitely < zero.
           && !(x_ticks_.ticks_on_window_or_axis_ > 0) ) // & not already at top.
         { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
-           plot_top_ += x_label_length_; // Move down for labels.
+           plot_top_ += x_ticks_.label_max_space_; // Move down for labels.
            x_axis_.axis_ = plot_top_; // Put X-axis on top.
         }
         else

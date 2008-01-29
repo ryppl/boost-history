@@ -17,7 +17,7 @@
 #include <exception>
 #include <vector>
 
-#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
+//#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
 #include "detail/svg_tag.hpp" // element class definitions.
 #include "svg_style.hpp"
 //#include "svg_fwd.hpp"
@@ -650,30 +650,30 @@ public:
   //// Load stylesheet
   //// -------------------------------------------------------------
 
-  void load_stylesheet(const std::string& input)
-  { // Load a stylesheet into string css from an input file.
-    std::ifstream if_str(input.c_str());
+  //void load_stylesheet(const std::string& input)
+  //{ // Load a stylesheet into string css from an input file.
+  //  std::ifstream if_str(input.c_str());
 
-    if(if_str.fail())
-    {
-      throw std::runtime_error("Error opening file " + input);
-    }
-    if(!validate_stylesheet(if_str))
-    {
-      throw std::runtime_error("Error loading stylesheet!");
-    }
+  //  if(if_str.fail())
+  //  {
+  //    throw std::runtime_error("Error opening file " + input);
+  //  }
+  //  if(!validate_stylesheet(if_str))
+  //  {
+  //    throw std::runtime_error("Error loading stylesheet!");
+  //  }
 
-    if_str.clear();
-    if_str.seekg(0);
+  //  if_str.clear();
+  //  if_str.seekg(0);
 
-    std::string tmp;
-    css = "";
+  //  std::string tmp;
+  //  css = "";
 
-    while(std::getline(if_str, tmp))
-    {
-      css += tmp;
-    }
-  } // svg& load_stylesheet
+  //  while(std::getline(if_str, tmp))
+  //  {
+  //    css += tmp;
+  //  }
+  //} // svg& load_stylesheet
 }; // class svg
 
 } // namespace svg

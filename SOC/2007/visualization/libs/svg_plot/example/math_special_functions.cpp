@@ -18,7 +18,7 @@
 #  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
 #  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
 #  pragma warning (disable : 4267) //  conversion from 'size_t' to 'const unsigned int', possible loss of data
-#  pragma warning (disable : 4172) //  returning address of local variable or temporary
+//#  pragma warning (disable : 4172) //  returning address of local variable or temporary
 #endif
 
 #include <boost/math/special_functions.hpp>

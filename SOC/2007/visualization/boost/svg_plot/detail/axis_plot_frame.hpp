@@ -49,7 +49,8 @@ namespace boost
       outside_left = 1, // Outside 
       outside_right = +2,  // Default for outside.
       outside_top = +3,
-      outside_bottom = +4
+      outside_bottom = +4,
+      somewhere = +5 // legend_top_left(x, y)
     };
 
     namespace detail
@@ -378,7 +379,6 @@ namespace boost
                 throw std::runtime_error("X-tick Y value wrong!");
               }
 
-
               if(derived().x_ticks_.ticks_on_window_or_axis_ != 0)
               { // External to plot window style bottom or top.
                 // Always want all values including "0", if labeling external to plot window.
@@ -412,23 +412,33 @@ namespace boost
         void draw_x_axis()
         { // Draw horizontal X-axis line & plot window line to hold.
           if(derived().x_axis_.axis_line_on_)
-          {
+          { // Want an X-axis line.
             double xleft = derived().plot_left_;
             double xright = derived().plot_right_;
             if (derived().x_axis_position_ == x_intersects_y)
             { // Draw the horizontal X-axis line the full width of the plot window,
               // perhaps including an addition in lieu of a major tick.
-              if (derived().y_ticks_.left_ticks_on_ && (derived().x_ticks_.ticks_on_window_or_axis_ != 0))
-              { // Extend the horizontal line left in lieu of longest tick.
-                xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
+              if (derived().y_ticks_.left_ticks_on_)
+              {
+                if (derived().y_ticks_.ticks_on_window_or_axis_ < 0) // left
+                { // Extend the horizontal line left in lieu of longest tick.
+                  xleft -= (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
+                }
+              }
+              else if (derived().y_ticks_.right_ticks_on_)
+              {
+                if (derived().y_ticks_.ticks_on_window_or_axis_ > 0) // right
+                { // Extend the horizontal line right in lieu of longest tick.
+                  xright += (std::max)(derived().y_ticks_.minor_tick_length_, derived().y_ticks_.major_tick_length_);
+                }
               }
               double y = derived().x_axis_.axis_; // y = 0, (provided y range includes zero).
               derived().image.g(PLOT_X_AXIS).line(xleft, y, xright, y);
-              if (derived().x_ticks_.ticks_on_window_or_axis_ < 0) 
+              if (derived().x_ticks_.ticks_on_window_or_axis_ < 0) // bottom
               { // Draw a vertical line holding the ticks on the top of plot window.
                 derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
               }
-              else if (derived().x_ticks_.ticks_on_window_or_axis_ > 0) 
+              else if (derived().x_ticks_.ticks_on_window_or_axis_ > 0)  // top
               {// Draw a vertical line holding the ticks on the bottom of plot window.
                 derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
               }
@@ -528,11 +538,11 @@ namespace boost
         { // Calculate how big the legend box needs to be.
           // Store in legend_width_ and legend_height_
           if(derived().legend_on_ == false)
-          { // No legend, so set values to show legend positions invalid.
-            derived().legend_left_ = -1.;
-            derived().legend_right_ = -1.;
-            derived().legend_top_ = -1.;
-            derived().legend_bottom_ = -1.;
+          { // No legend, so set values to show legend positions invalid?
+            //derived().legend_left_ = -1.;
+            //derived().legend_right_ = -1.;
+            //derived().legend_top_ = -1.;
+            //derived().legend_bottom_ = -1.;
             derived().legend_height_ = 0.;
             derived().legend_width_ = 0.;
             return;
@@ -604,28 +614,31 @@ namespace boost
             double spacing = derived().y_axis_label_style_.font_size() * 1.; // Around any legend box - beyond any border.
             switch (derived().legend_place_)
             {
-            case nowhere: 
-              return;
+            case nowhere:
+              return; // Actually places it at (0, 0), probably overwriting the plot.
+            case somewhere: 
+              // Assume legend_top_left will place it somewhere where there is nothing else.
+               //derived().legend_left_; set by legend_top_left
+               //derived().legend_top_;
+               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
+               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
+               break;
             case inside:
               derived().outside_legend_on_ = false;
               if (derived().legend_left_ == -1)
               { // Legend box position NOT been set by legend_top_left.
-                // Default inside position is top left of plot window.
-                derived().legend_left_ = derived().plot_left_;
-                derived().legend_right_ = derived().plot_left_ + derived().legend_width_;
-                derived().plot_left_ = derived().legend_right_;
-                derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
-                if (derived().title_on_)
-                {
-                  derived().legend_top_ += derived().title_font_size() * 2.; // below title.
-                }
-                derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
-             }
-              else
-              { // Legend position has been specified by legend_top_left.
+                // Default inside position is top left level with plot window.
+              derived().legend_left_ = derived().image_border_.width_ + derived().image_border_.margin_; // left image edge + space.
+              derived().plot_left_ += derived().legend_width_ + spacing; // Push plot window right same amount to make room,
+              derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
+              derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
+              derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
+            }
+             else
+             { // Legend position has been specified by legend_top_left.
                 break;
-              }
-              break;
+             }
+             break;
                 // If outside then reserve space for legend by reducing plot window.
             case outside_right: // Default legend position is outside_right,
               // so that it isn't too close to the image edge or the plot window.
@@ -635,16 +648,13 @@ namespace boost
               derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
               break;
-              // TODO other positions untested.
             case outside_left:
-              derived().legend_left_ = derived().plot_left_ + spacing; // left edge + space.
-              derived().plot_left_ += derived().legend_width_ + spacing; // Push plot window right to make room,
-              // derived().legend_left_ += derived().y_label_font_size() * spacing;
+              derived().plot_left_ += derived().legend_width_ + spacing /2 ; // Push plot window right same amount to make room,
+              derived().legend_left_ = derived().image_border_.width_ + derived().image_border_.margin_; // left image edge + space.
               derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
               derived().legend_top_ = derived().plot_top_; // Level with top of plot window.
-              derived().legend_top_ += spacing; 
               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
-              break;
+             break;
             case outside_top:
               // Centered.
                derived().legend_left_ = derived().image.x_size() / 2. - derived().legend_width_ / 2; // Center.
@@ -656,12 +666,13 @@ namespace boost
               break;
             case outside_bottom: 
                // Centered.
+               derived().legend_bottom_ = derived().image.y_size();
+               derived().legend_bottom_ -= (derived().image_border_.width_ + derived().image_border_.margin_); // up
+               derived().legend_top_ = derived().legend_bottom_ - derived().legend_height_;
                derived().legend_left_ = derived().image.x_size()/  2. - derived().legend_width_ / 2; // Center.
                derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
-               derived().plot_bottom_ -= derived().legend_height_;
-               derived().plot_bottom_ -= spacing;
-               derived().legend_top_ = derived().plot_bottom_;
-               derived().legend_bottom_ = derived().legend_top_ + derived().legend_height_;
+               derived().plot_bottom_ = derived().legend_top_;
+               derived().plot_bottom_ -= 2 * spacing;
               break;
               } // switch
 
@@ -797,37 +808,40 @@ namespace boost
 
           void draw_x_label()
           {
-            // color is set in constructor.
-            //image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
-            // and using x_label_color(color)
+            // X-label color is set in constructor thus: 
+            // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
+            // and changed using x_label_color(color);
 
             std::string label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
             if (derived().x_axis_.label_units_on_ && (derived().x_units_info_.text() != ""))
             { // Append the units, if any, use providing brackets () if required.
               label += derived().x_units_info_.text();
             }
-            // Simplest to start from the bottom of the image.
-            // and move up to give enough space for the X-axis label.
 
-            double y = derived().image.y_size();  // bottom edge of image.
-            if (derived().image_border_.border_on_)
-            {
-              y -= derived().image_border_.width_; // Allow space for border.
-              y -= derived().image_border_.margin_; // Allow a margin.
-              y -= derived().x_axis_label_style_.font_size() / 2; // Allow a half font too.
+            double y = derived().plot_bottom_;
+            y += derived().x_ticks_.value_label_style_.font_size() * 2.; // Shift down to suit.
+            if (derived().x_ticks_.ticks_on_window_or_axis_ < 0)
+            { // Ticks & value labels below X-axis.
+              if (derived().x_ticks_.major_value_labels_side_ < 0)
+              { // Shift down to allow for any value labels.
+                y += derived().x_ticks_.label_max_space_;
+              }
+              if (derived().x_ticks_.down_ticks_on_)
+              { // Shift down for biggest of any ticks.
+                y += (std::max)(derived().x_ticks_.minor_tick_length_, derived().x_ticks_.major_tick_length_);
+              }
             }
+
             derived().image.g(PLOT_X_LABEL).push_back(new text_element(
               ( // x position relative to the x-axis which is middle of plot window.
               derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
-              y, // Up from image bottom edge.
+              y, // Down from plot window.
               label,
               derived().x_label_info_.style(),
               center_align, horizontal)
               );
           } // void draw_x_label()
 
-          // TODO split into adjust_limit(double& x) and call twice?,
-          // and TODO use to check 1-D for limit values too?
           void adjust_limits(double& x, double& y)
           { // If value reaches limit of max, min, infinity,
             // use the appropriate plot min or max.
@@ -1542,7 +1556,7 @@ namespace boost
             // Bottom right is controlled by contents, so cannot set it.
             if((x < 0) || (x > derived().image.x_size()) || (y < 0) || (y > derived().image.y_size()))
             {
-              throw std::runtime_error("Illegal legend box position.");
+              throw std::runtime_error("Legend box position outside image!");
             }
             derived().legend_left_ = x;
             derived().legend_top_ = y;
