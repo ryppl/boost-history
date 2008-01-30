@@ -9,7 +9,6 @@ project
     : requirements 
       <include>../../../.. 
       <include>$(BOOST_ROOT) 
-      <include>D:/john/code/latest_boost 
       <library>/boost/thread//boost_thread 
     ;
 
