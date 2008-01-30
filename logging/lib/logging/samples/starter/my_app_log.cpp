@@ -3,9 +3,6 @@
 #include <boost/logging/format.hpp>
 #include <boost/logging/format/formatter/tags.hpp>
 
-// uncomment if you want to use do logging on a dedicated thread
-// #include <boost/logging/writer/on_dedicated_thread.hpp>
-
 // uncomment if you're using Named Formatters and Destinations
 // #include <boost/logging/format/named_write.hpp>
 

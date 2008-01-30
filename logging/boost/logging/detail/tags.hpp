@@ -89,10 +89,10 @@ my_cool_sample:234 [dbg] hello, world
 
 I can see a few issues with the above
 - The context formatting is fixed 
-  - You can't choose at runtime - I want to see the level first, then the file & line
+  - You can't choose at runtime - what if I want to see the level first, then the file & line?
   - You can't choose at runtime if you want to ignore some of that context (to speed up the app in some cases, you might decide not to log the file & line)
   - You can't mix the context formatting with the rest of the formatting. For example, what if I want to log info like this : \n
-    <tt>[idx] file_and_line [time] [level] message</tt> ?
+    <tt>[idx] file_and_line [time] message [level]</tt> ?
   - You can't do extra formatting to any of the context. For example, when dumping file/line, 
     what if you want to strip some information from the file (the file name could be pretty big). Or, you might want to @em normalize 
     the file/line (like, fix it at 50 chars - by stripping or padding information)

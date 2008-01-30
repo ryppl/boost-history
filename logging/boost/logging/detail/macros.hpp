@@ -411,38 +411,35 @@ Thus, you can choose to:
 
 In the former case, most of the time you won't notice the extra virtual function call, and the compilation time will be faster.
 
-\n\n
+\n
 @subsubsection macros_compile_time_fast Fast Compilation time
 
 - this is turned on by default on debug mode
 - this is turned off by default on release mode
 - to force it, define BOOST_LOG_COMPILE_FAST_ON directive
+- applies only to logs that are @ref declare_define "declared/defined using BOOST_DECLARE_LOG and BOOST_DEFINE_LOG macros"
+  - this is @em transparent to you, the programmer
+- to see what headers you should include, @ref headers_to_include "click here"
 
-FIXME explain about what to include
 
-\n\n
+\n
 @subsubsection macros_compile_time_slow Slow Compilation time
 
 - this is turned off by default on debug mode
 - this is turned on by default on release mode
 - to force it, define BOOST_LOG_COMPILE_FAST_OFF directive
-
-FIXME explain about what to include
-
-In case you want to have both possibilities available to you (fast compilation and slow compilation), you'll want to take a look at
-the @ref starter_project "the starter project".
+- applies only to logs that are @ref declare_define "declared/defined using BOOST_DECLARE_LOG and BOOST_DEFINE_LOG macros"
+  - this is @em transparent to you, the programmer
+- to see what headers you should include, @ref headers_to_include "click here"
 
 
 
-
-
-
-
+\n
 @subsubsection boost_log_compile_results Compile time sample (and results)
 
 Recently I created a sample (compile_time) to test the effect of @c BOOST_LOG_COMPILE_FAST_ON. 
 The results were not as promising as I had hoped. However, still, when @c BOOST_LOG_COMPILE_FAST_ON is on,
-will compile faster by 20-40%. Noting that this is just an simple example, the results might not be that conclusive.
+will compile faster by 30-40%. Noting that this is just an simple example, the results might not be that conclusive.
 Anyway, here they are:
 
 
@@ -543,55 +540,26 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 
 #ifdef BOOST_LOG_COMPILE_FAST
 // ****** Fast compile ******
-#define BOOST_DECLARE_LOG(name,type) ::boost::logging::logger_holder< type > & name ();
+#define BOOST_DECLARE_LOG(name,type) ::boost::logging::logger_holder< type > & name (); \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
 
-#ifdef BOOST_LOG_AFTER_BEING_DESTROYED_LEAK_LOGGER
-    // leak the loggers
-    #define BOOST_DEFINE_LOG(name,type)  ::boost::logging::logger_holder< type > & name () \
-        { static ::boost::logging::logger_holder_by_value< type > *l = new ::boost::logging::logger_holder< type > ; return *l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
+#define BOOST_DEFINE_LOG(name,type)  ::boost::logging::logger_holder< type > & name () \
+    { static ::boost::logging::logger_holder_by_value< type > l; return l; } 
 
-    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::logger_holder< type > & name () \
-        { static ::boost::logging::logger_holder_by_value< type > *l = new ::boost::logging::logger_holder< type > ( args ); return *l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
-
-#else
-
-    // don't leak
-    #define BOOST_DEFINE_LOG(name,type)  ::boost::logging::logger_holder< type > & name () \
-        { static ::boost::logging::logger_holder_by_value< type > l; return l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
-
-    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::logger_holder< type > & name () \
-        { static ::boost::logging::logger_holder_by_value< type > l ( args ); return l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( name () ); }
-#endif
+#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  ::boost::logging::logger_holder< type > & name () \
+    { static ::boost::logging::logger_holder_by_value< type > l ( args ); return l; } 
 
 #else
 
 // don't compile fast
-#define BOOST_DECLARE_LOG(name,type) type* name ();
+#define BOOST_DECLARE_LOG(name,type) type* name (); \
+    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 
-#ifdef BOOST_LOG_AFTER_BEING_DESTROYED_LEAK_LOGGER
-    // leak the loggers
-    #define BOOST_DEFINE_LOG(name,type)  type* name () \
-        { static type *l = new type; return l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
+#define BOOST_DEFINE_LOG(name,type)  type* name () \
+    { static type l; return &l; } 
 
-    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type* name () \
-        { static type *l = new type ( args ); return l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
-#else
-
-    // don't leak
-    #define BOOST_DEFINE_LOG(name,type)  type* name () \
-        { static type l; return &l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
-
-    #define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type* name () \
-        { static type l ( args ); return &l; } \
-        namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
-#endif
+#define BOOST_DEFINE_LOG_WITH_ARGS(name,type, args)  type* name () \
+    { static type l ( args ); return &l; } 
 
 #endif
 
@@ -603,14 +571,14 @@ If defined, we don't use @ref macros_tss "TSS" as all.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Filter Macros 
 
-#define BOOST_DECLARE_LOG_FILTER(name,type) type* name ();
-#define BOOST_DEFINE_LOG_FILTER(name,type)  type * name () \
-    { static type l; return &l; } \
+#define BOOST_DECLARE_LOG_FILTER(name,type) type* name (); \
     namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
 
+#define BOOST_DEFINE_LOG_FILTER(name,type)  type * name () \
+    { static type l; return &l; } 
+
 #define BOOST_DEFINE_LOG_FILTER_WITH_ARGS(name,type, args)  type * name () \
-    { static type l ( args ); return &l; } \
-    namespace { boost::logging::ensure_early_log_creation ensure_log_is_created_before_main ## name ( * name () ); }
+    { static type l ( args ); return &l; } 
 
 
 

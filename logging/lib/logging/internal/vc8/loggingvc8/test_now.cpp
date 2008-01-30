@@ -1,93 +1,96 @@
+#define BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER
 
-#define BOOST_LOG_COMPILE_FAST_OFF
-#include <boost/logging/format/named_write_fwd.hpp>
+// uncomment this, and all messages inside singleton's constructor will be logged!
+//#define BOOST_LOG_BEFORE_INIT_LOG_ALL
 
+// uncomment this, and NO messages inside singleton's constructor will be logged
+//#define BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT
+
+#include <boost/logging/format_fwd.hpp>
 
 BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
+
+#include <boost/logging/format.hpp>
+
+typedef boost::logging::logger_format_write< > logger_type;
+
+
+BOOST_DECLARE_LOG_FILTER(g_log_level, boost::logging::level::holder ) // holds the application log level
+BOOST_DECLARE_LOG(g_log_err, logger_type) 
+BOOST_DECLARE_LOG(g_log_app, logger_type)
+BOOST_DECLARE_LOG(g_log_dbg, logger_type)
+
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) << "[dbg] "
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) << "[app] "
+
+BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
+BOOST_DEFINE_LOG(g_log_err, logger_type)
+BOOST_DEFINE_LOG(g_log_app, logger_type)
+BOOST_DEFINE_LOG(g_log_dbg, logger_type)
+
 using namespace boost::logging;
 
-typedef logger_format_write< default_, default_, writer::threading::no_ts > logger_type;
+struct singleton {
+    singleton() {
+        // note: these messages are written before logs are initialized
+        int i = 1;
+        LDBG_ << "this is so cool " << i++;
+        LDBG_ << "this is so cool again " << i++;
+        LERR_ << "first error " << i++;
 
+        std::string hello = "hello", world = "world";
+        LAPP_ << hello << ", " << world;
 
-BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts )
-BOOST_DECLARE_LOG(g_l, logger_type) 
-
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
-
-BOOST_DEFINE_LOG(g_l, logger_type)
-BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts )
-
-
-
-// Example of custom formatter:
-// dump the no. of seconds since start of program
-struct secs_since_start : formatter::class_<secs_since_start, formatter::implement_op_equal::no_context > {
-    ::time_t m_start;
-    secs_since_start() : m_start( ::time(0) ) {}
-    void operator()(param str) const {
-        ::time_t now = ::time(0);
-        std::stringstream out;
-        out << "+" << (int)(now-m_start) << "s ";
-        str.prepend_string( out.str() );
+        LAPP_ << "coolio " << i++;
+        LERR_ << "second error " << i++;
+        LDBG_ << "some debug message" << i++;
     }
-};
+} s_;
 
-// Example of custom destination:
-// Dump each message as XML
-struct as_xml : 
-        destination::class_<as_xml, destination::implement_op_equal::has_context>, 
-        destination::non_const_context<std::ofstream> {
+void init_logs() {
+    // Err log
+    g_log_err()->writer().add_formatter( formatter::idx(), "[%] "  );
+    g_log_err()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_err()->writer().add_formatter( formatter::append_newline() );
+    g_log_err()->writer().add_destination( destination::file("err.txt") );
 
-    std::string m_name;
-    as_xml(const char* name) : non_const_context_base(name), m_name(name) {}
-    void operator()(param str) const {
-        context() << "<msg>" << str << "</msg>" << std::endl; 
-    }
+    destination::file out("out.txt");
+    // App log
+    g_log_app()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_app()->writer().add_formatter( formatter::append_newline() );
+    g_log_app()->writer().add_destination( out );
+    g_log_app()->writer().add_destination( destination::cout() );
 
-    bool operator==(const as_xml& other) const { return m_name == other.m_name; }
-};
+    // Debug log
+    g_log_dbg()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
+    g_log_dbg()->writer().add_formatter( formatter::append_newline() );
+    g_log_dbg()->writer().add_destination( out );
+    g_log_dbg()->writer().add_destination( destination::dbg_window() );
 
-#if 0
-int main() {
-    secs_since_start s;
-    secs_since_start::raw_param a;
-    std::cout << a;
+    // if you change this, you'll get a different output (more or less verbose)
+    g_log_level()->set_enabled(level::info);
+
+    g_log_err()->mark_as_initialized();
+    g_log_app()->mark_as_initialized();
+    g_log_dbg()->mark_as_initialized();
 }
-#endif
 
-#if 1
-void custom_fmt_dest_example() {
-    //         add formatters and destinations
-    //         That is, how the message is to be formatted and where should it be written to
-    g_l()->writer().add_formatter( formatter::idx(), "[%] " );
-    g_l()->writer().add_formatter( formatter::append_newline() );
-    g_l()->writer().add_formatter( secs_since_start() );
-
-    g_l()->writer().add_destination( destination::cout() );
-    g_l()->writer().add_destination( destination::dbg_window() );
-    g_l()->writer().add_destination( as_xml("out.txt") );
-    g_l()->mark_as_initialized();
-
-    int i = 1;
-    L_ << "this is so cool " << i++;
-    L_ << "this is so cool again " << i++;
-
-    std::string hello = "hello", world = "world";
-    L_ << hello << ", " << world;
-
-    g_log_filter()->set_enabled(false);
-    L_ << "this will not be written to the log";
-    L_ << "this won't be written to the log";
-
-    g_log_filter()->set_enabled(true);
-    L_ << "good to be back ;) " << i++;
+void cache_before_init_example() {
+    init_logs();
+    int i = 10;
+    LAPP_ << "after logs have been initialized " << i++;
+    g_log_level()->set_enabled(level::debug);
+    LDBG_ << "some debug message after logs have been initialized " << i++;
 }
+
 
 
 
 int main() {
-    custom_fmt_dest_example();
+    cache_before_init_example();
 }
 
-#endif
+
 // End of file
+

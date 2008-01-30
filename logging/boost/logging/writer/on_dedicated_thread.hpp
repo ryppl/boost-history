@@ -36,10 +36,17 @@ namespace boost { namespace logging { namespace writer {
 
 namespace detail {
     template<class msg_type> struct dedicated_thread_context {
-        dedicated_thread_context() : is_working(true), write_period_ms(100) {}
+        dedicated_thread_context() : is_working(true), write_period_ms(100), is_paused(false), pause_acknowledged (false) {}
 
         bool is_working;
         int write_period_ms;
+
+        // if true, we've paused writing
+        // this is useful for when you want to manipulate the formatters/destinations
+        // (for instance, when you want to delete a destination)
+        bool is_paused;
+        // when true, the dedicated thread has acknowledged the pause
+        bool pause_acknowledged ;
 
         boost::logging::threading::mutex cs;
 
@@ -150,10 +157,63 @@ struct on_dedicated_thread
 
         non_const_context_base::context().msgs.push_back(new_msg);
     }
-private:
-    void do_write() const {
-        const int NANOSECONDS_PER_SECOND = 1000 * 1000 * 1000;
 
+    /** @brief Resumes the writes, after a pause()
+    */
+    void resume() {
+        scoped_lock lk( non_const_context_base::context().cs);
+        non_const_context_base::context().is_paused = false;
+    }
+
+    /** @brief Pauses the writes, so that you can manipulate the base object (the formatters/destinations, for instance)
+
+    After this function has been called, you can be @b sure that the other (dedicated) thread is not writing any messagges.
+    In other words, the other thread is not manipulating the base object (formatters/destinations, for instance), but you can do it.
+
+    FIXME allow a timeout as well
+    */
+    void pause() {
+        { scoped_lock lk( non_const_context_base::context().cs);
+          non_const_context_base::context().is_paused = true; 
+          non_const_context_base::context().pause_acknowledged = false;
+        }
+
+        while ( true) {
+            do_sleep(10);
+            scoped_lock lk( non_const_context_base::context().cs);
+            if ( non_const_context_base::context().pause_acknowledged )
+                // the other thread has acknowledged 
+                break;
+        }
+    }
+private:
+    static void do_sleep (int sleep_ms) {
+        const int NANOSECONDS_PER_SECOND = 1000 * 1000 * 1000;
+        boost::xtime to_wait;
+        xtime_get(&to_wait, boost::TIME_UTC);
+        to_wait.sec += sleep_ms / 1000;
+        to_wait.nsec += (sleep_ms % 1000) * (NANOSECONDS_PER_SECOND / 1000);
+        to_wait.sec += to_wait.nsec / NANOSECONDS_PER_SECOND ;
+        to_wait.nsec %= NANOSECONDS_PER_SECOND ;
+        boost::thread::sleep( to_wait);
+    }
+
+    // normally it sleeps for sleep_ms millisecs
+    // however, if we've been paused, it stops waiting
+    void wait_or_wake_up_on_pause(int sleep_ms) const {
+        int PERIOD = 100;
+        while ( sleep_ms > 0) {
+            do_sleep(sleep_ms > PERIOD ? PERIOD : sleep_ms);
+            sleep_ms -= PERIOD;
+
+            scoped_lock lk( non_const_context_base::context().cs);
+            if ( non_const_context_base::context().is_paused) 
+                // this way we wake up early after we've been pause()d, even if sleep_ms has a high value
+                break;
+        }
+    }
+
+    void do_write() const {
         int sleep_ms = 0;
         while ( true) {
             { scoped_lock lk( non_const_context_base::context().cs);
@@ -162,16 +222,21 @@ private:
               if ( !non_const_context_base::context().is_working)
                   break; // we've been destroyed
             }
+            wait_or_wake_up_on_pause(sleep_ms);
 
-            boost::xtime to_wait;
-            xtime_get(&to_wait, boost::TIME_UTC);
-            to_wait.sec += sleep_ms / 1000;
-            to_wait.nsec += (sleep_ms % 1000) * (NANOSECONDS_PER_SECOND / 1000);
-            to_wait.sec += to_wait.nsec / NANOSECONDS_PER_SECOND ;
-            to_wait.nsec %= NANOSECONDS_PER_SECOND ;
-            boost::thread::sleep( to_wait);
-
+            { scoped_lock lk( non_const_context_base::context().cs);
+              if ( non_const_context_base::context().is_paused) {
+                  // we're paused
+                  non_const_context_base::context().pause_acknowledged = true;
+                  continue;
+              }
+            }
             write_array();
+            { scoped_lock lk( non_const_context_base::context().cs);
+              if ( non_const_context_base::context().is_paused) 
+                // we're paused
+                non_const_context_base::context().pause_acknowledged = true;
+            }
         }
     }
 

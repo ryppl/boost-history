@@ -97,10 +97,7 @@ namespace boost { namespace logging {
     public:
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
-            if ( logger_base_type::is_still_alive() )
-                cache().on_do_write( msg, call_do_write(*this) );
-            else
-                logger_base_type::call_after_destroyed(msg);
+            cache().on_do_write( msg, call_do_write(*this) );
         }
 
         virtual void do_write(msg_type&) const = 0;
@@ -139,13 +136,6 @@ namespace boost { namespace logging {
         void forward_to(original_logger_type *original_logger) {
             m_original_logger = original_logger;
             m_writer = &m_original_logger->writer();
-        }
-
-        // if we set_after_destroyed, set the one we forward to as well
-        virtual void set_after_destroyed(typename log_base::after_destroyed_func f) {
-            log_base::set_after_destroyed(f);
-            if ( m_original_logger)
-                m_original_logger->set_after_destroyed(f);
         }
 
         virtual void do_write(msg_type &a) const {
@@ -249,10 +239,7 @@ namespace boost { namespace logging {
 
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
-            if ( logger_base_type::is_still_alive() )
-                cache().on_do_write( msg, writer() );
-            else
-                logger_base_type::call_after_destroyed(msg);
+            cache().on_do_write( msg, writer() );
         }
     private:
         void init() {
@@ -303,10 +290,7 @@ namespace boost { namespace logging {
 
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
-            if ( logger_base_type::is_still_alive() )
-                cache().on_do_write( msg, writer() );
-            else
-                logger_base_type::call_after_destroyed(msg);
+            cache().on_do_write( msg, writer() );
         }
     private:
         write_msg *m_writer;

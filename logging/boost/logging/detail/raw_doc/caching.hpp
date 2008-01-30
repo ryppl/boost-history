@@ -4,10 +4,10 @@ namespace boost { namespace logging {
 @page caching Caching messages before logs are initialized
 
 - @ref caching_why 
-- @ref caching_BOOST_LOG_BEFORE_INIT_CACHE_FILTER 
 - @ref caching_BOOST_LOG_BEFORE_INIT_LOG_ALL 
+- @ref caching_BOOST_LOG_BEFORE_INIT_CACHE_FILTER 
+    - @ref caching_BOOST_LOG_BEFORE_INIT_CACHE_FILTER_the_catch 
 - @ref caching_BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT 
-- @ref caching_ts 
 
 @section caching_why Caching - why is it needed?
 
@@ -47,12 +47,33 @@ Thus, I came up with a caching mechanism. You can choose to:
 - Cache messages that are written before logs are initialized. When logs are initialized, all these cached messages are logged
 - Ignore messages that are written before the logs are initialized
 
-<b>By default, for each log, cache is turned on. To turn cache off (mark the log as initialized), just call @c turn_cache_off() on it.
+<b>By default, for each log, cache is turned on. To turn cache off (mark the log as initialized), just call @c mark_as_initialized() on it.
 You'll see that I'm doing this on all examples that come with the library.</b>
 
 
 
 
+
+
+@section caching_BOOST_LOG_BEFORE_INIT_LOG_ALL Cache messages before logs are initialized regardless of their filter (BOOST_LOG_BEFORE_INIT_LOG_ALL)
+
+This case is the @b default. When cache is on, all messages are cached, regardless of their filter (as if all filters are turned on).
+Then, when cache is marked as initialized, all cached messages are logged.
+
+If you want to force this setting, make sure you define the @c BOOST_LOG_BEFORE_INIT_LOG_ALL globally (it's on by default anyway).
+
+@code
+...
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
+...
+
+L_ << "this message will be logged, even if filter will be turned off";
+g_log_filter()->set_enabled(false);
+g_l()->mark_as_initialized();
+@endcode
+
+
+\n
 @section caching_BOOST_LOG_BEFORE_INIT_CACHE_FILTER Cache messages before logs are initialized/ cache their filter as well (BOOST_LOG_BEFORE_INIT_CACHE_FILTER)
 
 It's a bit inefficient (after invoking the filter, it will always ask if cache is on or off). Also,
@@ -69,29 +90,47 @@ g_log_filter()->set_enabled(false);
 g_l()->mark_as_initialized();
 @endcode
 
+If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE_INIT_CACHE_FILTER globally.
 
-@section caching_BOOST_LOG_BEFORE_INIT_LOG_ALL Cache messages before logs are initialized regardless of their filter (BOOST_LOG_BEFORE_INIT_LOG_ALL)
 
-This case is the @b default. In the second case, when cache is on, all messages are cached, regardless of their filter (it's like all filters are on).
-Then, when cache is turned off, all messages are logged.
+@subsection caching_BOOST_LOG_BEFORE_INIT_CACHE_FILTER_the_catch BOOST_LOG_BEFORE_INIT_CACHE_FILTER - the catch...
 
-If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE_INIT_LOG_ALL globally.
+@note
+If you don't want to cache the filter, just skip to the @ref caching_BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT "next section".
+
+If you cache the filter as well, in order for the caching process to work, all the parameters you pass to the filter need to be:
+- either compile-time constants, or
+- global values
+
+Assume you have a logger with a filter based on levels:
+@code
+// for exposition only - normally you'd use BOOST_LOG_USE_LOG_IF_LEVEL
+#define L_(lvl) BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_level()->is_enabled( lvl ) )
+@endcode
+
+If you cache the filter, the expression <tt>g_log_level()->is_enabled( lvl )</tt> needs to be recomputed at a later time 
+(when the log is marked as initialized, and all messages that were cached, are logged).
+Thus, all parameters that are passed to the your L_ macro need to be either compile-time constants or global values. Otherwise, a compile-time error will
+be issued:
 
 @code
-...
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() ) 
-...
-
-L_ << "this message will be logged, even if filter will be turned off";
-g_log_filter()->set_enabled(false);
-g_l()->mark_as_initialized();
+void f() {
+  boost::logging::level lvl = ...;
+  // will generate a compile-time error : using a local variable as param
+  L_(lvl) << "wish it could work";
+}
 @endcode
 
 
+Normally you should not care about this, since whatever you pass to your logging macros should indeed be constant.
 
-@section caching_BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT Ignore all messages before turn_cache_off (BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT)
 
-In the last case, all messages before @c turn_cache_off() are ignored.
+
+
+\n
+@section caching_BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT Ignore all messages before mark_as_initialized (BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT)
+
+In the last case, all messages before @c mark_as_initialized() are ignored.
 
 If you do want to use this setting, make sure you define the @c BOOST_LOG_BEFORE_INIT_IGNORE_BEFORE_INIT globally.
 
@@ -106,35 +145,6 @@ g_l()->mark_as_initialized();
 
 
 
-@section caching_ts Setting thread-safety of "is_cache_turned_on"
-
-In case you chose to use cache (either @c BOOST_LOG_BEFORE_INIT_CACHE_FILTER or @c BOOST_LOG_BEFORE_INIT_LOG_ALL), you can also set 
-thread-safety of "is_cache_turned_on".
-
-Each time a message is logged, we need to ask : @c is_cache_turned_on. However, we also want to be as efficient as possible - we don't want
-this question to take too much CPU time. Thus, I came up with a simple algorithm:
-- first, query an @c is_enabled bool-like variable, which at the beginning is false (very efficient, we can use TSS here)
-  - if this is true, it's clear that caching has been turned off
-  - if this is false, we don't know for sure, thus, continue to ask
-- second, use a thread-safe "bool"-like variable (surrounded by a mutex, a bit slow, but that's life)
-  - if this is true, we're still using cache 
-  - if this is false, caching has been turned off
-    - set @c is_enabled to true
-
-Now, for the @c is_enabled variable, we can use several TSS tricks - like:
-- use @c ts_resource_single_thread (the default) - is_enabled is a simple bool variable. This is very efficient,
-  and is perfect if for your logs, you call turn_cache_off() while there's a single thread running (thus, no concurrency issues).
-- use @c tss_resource_once_init - this resource, once initialized, it propagates through all threads. 
-- use @c tss_resource_with_cache - each thread updates its value once at a certain period
-
-There are several such policies, find them in the lock_resource_finder namespace.
-
-If you want to override the above, make sure you define the @c BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS macro before including
-any Boost Logging Lib headers. Example:
-
-@code
-#define BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS ::boost::logging::lock_resource_finder::tss_once_init<>
-@endcode
 
 */
 

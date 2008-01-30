@@ -7,6 +7,10 @@
 // uncomment if you're using Named Formatters and Destinations
 //#include <boost/logging/format/named_write_fwd.hpp>
 
+// uncomment if you want to do logging on a dedicated thread
+// #include <boost/logging/writer/on_dedicated_thread.hpp>
+
+
 namespace bl = boost::logging;
 typedef bl::tag::holder<
     // string class
@@ -16,12 +20,6 @@ typedef bl::tag::holder<
 // note: if you don't use tags, you can simply use a string class:
 // typedef bl::optimize::cache_string_one_str<> log_string_type;
 BOOST_LOG_FORMAT_MSG( log_string_type )
-
-// if not compiling fast...
-#ifndef BOOST_LOG_COMPILE_FAST
-// uncomment if you want to do logging on a dedicated thread
-// #include <boost/logging/writer/on_dedicated_thread.hpp>
-#endif
 
 
 using namespace boost::logging::scenario::usage;

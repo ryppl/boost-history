@@ -47,7 +47,7 @@ namespace boost { namespace logging {
 - @ref manipulator_generic 
 - @ref manipulator_create 
 - @ref manipulator_share_data 
-
+- @ref manipulator_manipulate 
 
 
 \n\n\n
@@ -262,7 +262,7 @@ In case the data needs to be changed - it needs to be shared. Several copies of 
 I've already provided a class you can derive from , when this is the case: the non_const_context class.
 
 @code
-struct my_file : destination::class_<my_file,destination_base,op_equal_has_context>, non_const_context<std::ofstream> {
+struct my_file : destination::class_<my_file,destination_base,op_equal_has_context>, destination::non_const_context<std::ofstream> {
     std::string m_filename;
     bool operator==(const my_file & other) { return m_filename == other.m_filename; }
 
@@ -275,9 +275,60 @@ struct my_file : destination::class_<my_file,destination_base,op_equal_has_conte
 
 
 \n\n\n
+@section manipulator_manipulate Modifying a manipulator's state
+
+When it comes to keeping its state, a manipulator (formatter or destination) instance, has 2 possibilities:
+-# either all its member data is constant - in which case you can't manipulate it (you can't modify it), OR
+-# it has non const information, which can change, and thus, some can be manipulated
+
+In the former case, all the member functions the manipulator exposes are <tt>const</tt>ant.
+
+In the latter case, 
+- your manipulator class can have member functions that can change its state (non-const member functions).
+- your manipulator class @b must use the non_const_context class to hold all its non-const state  
+
+What this guarantees is @ref non_const_pointer_semantics "pointer-like semantics".
+
+Assume that you have your logger that uses formatters and destinations. You've added a manipulator to your logger,
+and at a later time, you want to modify it (the manipulator, that is). To achieve this, you'll create a copy, and modify that one (this will work
+because of the @ref non_const_pointer_semantics "pointer-like semantics"):
+
+Example 1: reusing the same %destination for 2 logs
+
+@code
+destination::file out("out.txt");
+g_l_dbg()->writer().add_destination(out);
+g_l_app()->writer().add_destination(out);
+@endcode
+
+\n
+Example 2: allow resetting/clearing a destination's stream
+
+@code
+// allow resetting a destination's stream
+destination::stream g_out(std::cout);
+g_l()->writer().add_destintination(g_out);
+
+// assuming this uses g_l(), this will output to std::cout
+L_ << "hello world";
+
+g_out.stream(&std::cerr);
+// assuming this uses g_l(), this will output to std::cerr
+L_ << "hello world 2";
+
+g_out.clear();
+// assuming this uses g_l(), this will not output anything
+L_ << "hello world 3";
+
+@endcode
+
+
+
+
+\n\n\n
 @section manipulator_use_it Using loggers in code
 
-Now that you've @ref manipulator_generic "added" formatters and/or destinations, you'll @ref macros_use "define the macros through which you'll do logging", 
+Now that you've @ref manipulator_generic "added" formatters and/or destinations, you'll @ref defining_logger_macros "define the macros through which you'll do logging", 
 and then do logging in your code:
 
 @code
@@ -389,15 +440,14 @@ template<class type, implement_op_equal::type op_e, class base_type> struct clas
 
 
 
-/** 
-    In case your manipulator (formatter or destination) needs to hold non-const context information, it can to derive from this.
-    This automatically creates a shared pointer to the context information.
+/** @brief In case your manipulator (formatter or destination) needs to hold non-const context information, it can to derive from this.
+This automatically creates a shared pointer to the context information.
 
-    Also, it provides the following operations:
+Also, it provides the following operations:
 
-    @c context(), which returns a <tt>context_type &</tt> reference
+@c context(), which returns a <tt>context_type &</tt> reference
 
-    Example:
+Example:
 
 @code
 struct write_to_file : destination_base, destination::non_const_context<std::ofstream> {
@@ -408,9 +458,27 @@ void operator()(param msg) const {
 };
 @endcode
 
+@section non_const_pointer_semantics non_const_context - Pointer-like semantics
 
-    @remarks
-    In case your manipulator has constant data, you don't need this
+Using non_const_context guarantees @em pointer-like semantics: if you copy-construct or copy-assign a value, both values will point to the same context:
+
+@code
+write_to_file a, b = a;
+a.file_name("t1.txt");
+// a == b  (a's state == b's state)
+
+write_to_file c, d;
+c.file_name("t2.txt");
+// c != d  (c's state != d's state)
+
+d = c;
+c.file_name("t3.txt");
+// c == d  (c's state == d's state)
+@endcode
+
+
+@remarks
+In case your manipulator has constant data, you don't need this
 */
 template<class context_type> struct non_const_context {
 
@@ -525,7 +593,15 @@ namespace detail {
 /** 
 @brief Formatter is a manipulator. It allows you to format the message before writing it to the destination(s)
 
-@sa manipulator, manipulator::non_const_context
+Examples of formatters are : @ref formatter::time_t "prepend the time", @ref formatter::high_precision_time_t "prepend high-precision time", 
+@ref formatter::idx_t "prepend the index of the message", etc.
+
+
+See:
+- @ref manipulator "The manipulator namespace"
+- @ref manipulator_manipulate "Modifying a formatter's state"
+- @ref manipulator::non_const_context "formatter::non_const_context"
+
 */
 namespace formatter {
     namespace detail {
@@ -577,9 +653,13 @@ namespace formatter {
 /**  
 @brief Destination is a manipulator. It contains a place where the message, after being formatted, is to be written to.
 
-Some viable destinations are : the console, a file, a socket, etc.
+Some viable destinations are : @ref destination::cout_t "the console", @ref destination::file_t "a file", a socket, etc.
 
-@sa manipulator, manipulator::non_const_context
+See:
+- @ref manipulator "The manipulator namespace"
+- @ref manipulator_manipulate "Modifying a destination's state"
+- @ref manipulator::non_const_context "formatter::non_const_context"
+
 
 */
 namespace destination {

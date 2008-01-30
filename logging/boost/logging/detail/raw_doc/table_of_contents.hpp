@@ -75,6 +75,8 @@ Advanced concepts
     - @ref manipulator_generic 
     - @ref manipulator_create 
     - @ref manipulator_share_data 
+    - @ref manipulator_manipulate "Modifying a formatter's state"
+    - @ref manipulator_manipulate "Modifying a destination's state"
     - @ref formatter "Formatters"
     - @ref destination "Destinations"
 

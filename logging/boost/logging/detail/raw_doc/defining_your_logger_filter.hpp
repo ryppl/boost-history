@@ -21,6 +21,7 @@ namespace boost { namespace logging {
         - @ref declare_define_use_macros_as_functions 
         - @ref declare_define_use_macros_fast_compile 
         - @ref declare_define_use_macros_before_main 
+        - @ref declare_define_use_macros_no_after_destroyed 
     - @ref declare_define_manually 
         - @ref declare_define_manually_f_vs_v 
         - @ref declare_define_manually_logger_holder 
@@ -280,6 +281,7 @@ When using the @c BOOST_DECLARE_LOG* and @c BOOST_DEFINE_LOG* macros, this is wh
 -# cares about @ref BOOST_LOG_COMPILE_FAST_ON "Fast Compile" (default) or @ref BOOST_LOG_COMPILE_FAST_OFF "not"
 -# ensures the logger/filter object is instantiated before @c main(), even if not used before main(). This is very useful,
    since we can assume that before main() there won't be more than 1 threads, thus no problems at initializing the static variable.
+-# ensures we don't @ref after_destruction "use a logger and/or filter after it's been destroyed"
 
 \n\n
 @subsubsection declare_define_use_macros_as_functions logger/filter as functions
@@ -378,6 +380,7 @@ In the latter case, logger_holder<> holds a pointer to the original log, and whe
 it forwards it to the real logger (implemented in logger_holder_by_value).
 
 
+
 \n\n
 @subsubsection declare_define_use_macros_before_main Ensuring instantiation before main()
 
@@ -392,6 +395,11 @@ ensure_early_log_creation ensure( g_l() );
 @endcode
 
 
+
+\n\n
+@subsubsection declare_define_use_macros_no_after_destroyed Ensuring you don't use a logger and/or filter after it's been destroyed
+
+See @ref after_destruction "this" for more details.
 
 
 

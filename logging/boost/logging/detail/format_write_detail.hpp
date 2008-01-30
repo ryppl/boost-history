@@ -83,7 +83,7 @@ L_ << "testing " << i << i+1 << i+2;
 @endcode
 
 In the above case, @c formatter::idx() is called, then @c formatter::time(), then @c formatter::append_newline(). Now, the destinations are called:
-@c destinatino::cout(), and then @c destination::file().
+@c destination::cout(), and then @c destination::file().
 
 Most of the time this is ok, and this is what the @ref msg_route::simple "default router" does. However, there are other routers
 in the msg_route namespace. For instance, take a look at msg_route::with_route class.
@@ -95,7 +95,7 @@ in the msg_route namespace. For instance, take a look at msg_route::with_route c
 
 Once the formatters and destinations are added, and you know the route, you have an extra object - the format_and_write - which
 contains the logic for calling the formatters and destinations. 
-The format_and_write class knows how to call the formatters and destination @c objects. Usually you'll be happy with the 
+The format_and_write class knows how to call the formatters and destinations @em objects. Usually you'll be happy with the 
 format_and_write::simple class - which simply calls @c operator() on the formatters , and @c operator() on the destinations.
 Otherwise, take a look at format_and_write namespace.
 

@@ -22,13 +22,26 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 @section todo_implementation Implementation
 
+- @c normal         destination::stream_ptr - just like stream, but hold the stream as a shared pointer. Thus , we won't have to worry
+                    about outliving the stream.
+
 - @c normal         on_dedicated_thead - remove dependency on boost::thread
+
+- @c normal         on_dedicated_thead - I should see it I use logger::always_accurate increases logging time as opposed to some caching strategy.
+                    I'm asking this because even if we were to use a critical section on the base_type writer's operator(), this will
+                    *always* happen on the dedicated thread. Thus, I would think it should have very small overhead
+
+- @c high           bug: if using named_writer on top of on_dedicated_thread writer, and I reset the format or destination strings,
+                    I might end up modifying a formatter or destination, while some other thread is using it
+                    perhaps it's not a bug - but pause()/resume() need to be called on it. Perhaps I can automate this!
 
 - @c normal         must have helper to call on on_destructed - like, to be able to write to cout,etc
 
 - @c normal         turn_cache_off() -> find better name, like mark_init_complete()  (add a function named like this to call turn_cache_off()).
 
 - @c normal         have a logger_with_filter class, to make using the lib easier (this would hold the logger and the filter).
+
+- @c high           destination::stream - have flush() and flush_each_time
 
 - @c high           writer::named_write<> need to allow tags by default, here!
 
@@ -158,7 +171,10 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c high           explain about common_base()
 
+- @c high           on_dedicated_thread : explain about manipulating it - while pause() TOTHINK if I can automate this
 
+- @c normal         "Manipulating thy manipulator" - another way is to create another manipulator, delete the current one , and add the new one
+                    i should explain that this could not work immediately because of caching.
 */
 
 }}

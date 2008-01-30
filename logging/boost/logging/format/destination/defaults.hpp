@@ -64,6 +64,7 @@ template<class convert_dest = do_convert_destination > struct cerr_t : is_generi
 /** 
     @brief writes to stream. 
 
+    @note:
     The stream must outlive this object! Or, clear() the stream, before the stream is deleted.
 */
 template<class convert_dest = do_convert_destination > struct stream_t : is_generic, non_const_context< std::basic_ostream<boost::logging::char_type> * > {

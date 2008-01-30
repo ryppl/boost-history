@@ -51,9 +51,6 @@ inline thread_id_type get_thread_id() {
 #endif
 }
 
-#ifndef BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS
-#define BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS ::boost::logging::lock_resource_finder::single_thread 
-#endif
 
 #if defined( BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER) || defined( BOOST_LOG_BEFORE_INIT_USE_LOG_ALL)
 //////////////////////////////////////////////////////////////////
@@ -69,9 +66,8 @@ inline thread_id_type get_thread_id() {
 
 
 */
-template<class msg_type, class lock_resource = BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS > struct cache_before_init {
+template<class msg_type> struct cache_before_init {
 private:
-    typedef typename lock_resource::template finder<bool>::type is_cache_enabled_data;
     typedef bool (*is_enabled_func)();
 
     struct message {
@@ -98,18 +94,18 @@ private:
 
         bool is_using_cache;
     };
+
 public:
+    cache_before_init() : m_is_caching_off(false) {}
+
     bool is_cache_turned_off() const { 
-        {
-        typename is_cache_enabled_data::read info(m_is_caching_off);
-        bool is_caching_off = info.use();
-        if ( is_caching_off)
-            return true; // cache has been turned on 
-        }
+        if ( m_is_caching_off)
+            return true; // cache has been turned off
 
         // now we go the slow way - use mutex to see if cache is turned off
         mutex::scoped_lock lk(m_cs);
-        return !(m_cache.is_using_cache);
+        m_is_caching_off = !(m_cache.is_using_cache);
+        return m_is_caching_off;
     }
 
     template<class writer_type> void turn_cache_off(const writer_type & writer_) {
@@ -119,11 +115,6 @@ public:
         {
         mutex::scoped_lock lk(m_cs);
         m_cache.is_using_cache = false;
-        }
-
-        {
-        typename is_cache_enabled_data::write info(m_is_caching_off);
-        info.use() = true;
         }
 
         // dump messages
@@ -174,7 +165,7 @@ private:
     mutable cache m_cache;
     /** 
     IMPORTANT: to make sure we know when the cache is off as efficiently as possible, I have this mechanism:
-    - first, query m_is_enabled, which at the beginning is false (this is very efficient, we can use TSS here)
+    - first, query m_is_enabled, which at the beginning is false 
       - if this is true, it's clear that caching has been turned off
       - if this is false, we don't know for sure, thus, continue to ask
     
@@ -183,14 +174,14 @@ private:
       - if m_cache.is_using_cache is false, caching has been turned off
         - set m_is_enabled to true, thus this will propagate to all threads soon (depending on your lock_resource)
     */
-    is_cache_enabled_data m_is_caching_off;
+    mutable bool m_is_caching_off;
 };
 
 #else
 //////////////////////////////////////////////////////////////////
 // Messages that were logged before initializing the log - NOT Caching them
 
-template<class msg_type, class lock_resource = BOOST_LOG_BEFORE_INIT_LOCK_RESOURCE_CLASS > struct cache_before_init {
+template<class msg_type> struct cache_before_init {
     template<class writer_type> void on_do_write(msg_type & msg, const writer_type & writer) const {
         writer(msg); 
     }
@@ -198,6 +189,7 @@ template<class msg_type, class lock_resource = BOOST_LOG_BEFORE_INIT_LOCK_RESOUR
     template<class writer_type> void turn_cache_off(const writer_type & writer) {
     }
 
+    bool is_cache_turned_off() const { return true; }
 };
 
 #endif

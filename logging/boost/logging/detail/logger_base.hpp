@@ -22,7 +22,8 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
-#include <boost/logging/detail/after_being_destroyed.hpp>
+// see "Using the logger(s)/filter(s) after they've been destroyed" section in the documentation
+//#include <boost/logging/detail/after_being_destroyed.hpp>
 
 #ifndef JT28092007_logger_HPP_DEFINED
 #error donot include this directly. include <boost/logging/logging.hpp> instead
@@ -120,26 +121,13 @@ namespace boost { namespace logging {
     */
     template<class gather_msg , class write_msg, class dummy = override > struct logger_base 
             : detail::default_cache_keeper<  detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > >,
-              detail::common_base_holder<gather_msg, write_msg>,
-              after_being_destroyed<dummy> {
+              detail::common_base_holder<gather_msg, write_msg> {
         typedef detail::cache_before_init<typename detail::find_gather_if_default<gather_msg>::msg_type > cache_type;
         typedef detail::default_cache_keeper< cache_type > cache_base;
         using cache_base::cache;
 
         typedef logger<gather_msg, write_msg> subclass_type;
-        typedef after_being_destroyed<dummy> after_being_destroyed_base;
         typedef detail::common_base_holder<gather_msg, write_msg> common_base_type;
-        typedef typename after_being_destroyed_base::after_destroyed_func after_destroyed_func ;
-
-        virtual void set_after_destroyed(after_destroyed_func f) {
-            if ( f == after_being_destroyed_base::m_after_being_destroyed )
-                // avoid infinite calls (since this can be forwarded back and forth - to the 
-                // forward logger and back)
-                return;
-            after_being_destroyed_base::m_after_being_destroyed = f;
-            // we have a forwarder - forward it to that as well
-            common_base_type::common_base()->set_after_destroyed(f);
-        }
 
     protected:
         logger_base() {}

@@ -33,8 +33,8 @@ namespace boost { namespace logging {
 A class that implements gathering the message needs 2 things:
 - a function that will gather the data - called <tt>.out()</tt>
 - define a function called <tt>.msg()</tt> that will return the gathered data (once all data has been gathered).
-- have a public type named "param" - be it a class or a typedef
-  - this contains what the gather_msg class return
+- have a public type named "msg_type" - be it a class or a typedef
+  - this contains what the gather_msg class returns, as non-reference, non-const (that is, msg_type != const msg_type, "msg_type&" is a not a reference-to-reference)
 
 
 */
@@ -103,7 +103,6 @@ namespace ostream_like {
 */
 template<class stream_type = std::basic_ostringstream<char_type> > struct return_raw_stream {
     // what does the gather_msg class return?
-//    typedef stream_type& param;
     typedef stream_type msg_type;
 
     return_raw_stream() {}
@@ -141,7 +140,6 @@ template<
         class stream_type = std::basic_ostringstream<char_type> > struct return_str {
 
     // what does the gather_msg class return?
-//    typedef string & param;
     typedef string msg_type;
     
     return_str() {}
@@ -163,7 +161,6 @@ private:
 */
 template<class holder_type, class stream_type> struct return_tag_holder : out_base {
     // what does the gather_msg class return?
-//    typedef holder_type& param;
     typedef holder_type msg_type;
     
     return_tag_holder() {}

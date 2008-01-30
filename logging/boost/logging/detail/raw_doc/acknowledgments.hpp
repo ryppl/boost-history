@@ -18,7 +18,7 @@ There are quite a few thanks I owe:
 - Lucian Ciufudean - for giving me thorough feedback on the documentation, even though he's a Java freak...
 - Andrei Alexandrescu - for reminding me that the default syntax should be soooo easy... Thus, named_logger was born!
 - Amit Jain - for giving me quite a lot of criticism, but who made me make the docs a lot easier (or at least I hope so :))
-
+- Daniel Kruger - for helping me with the "destruction of global objects" issue
 
 */
 

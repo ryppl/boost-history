@@ -17,6 +17,9 @@
 #ifndef JT28092007_after_being_destroyed_HPP_DEFINED
 #define JT28092007_after_being_destroyed_HPP_DEFINED
 
+// see "Using the logger(s)/filter(s) after they've been destroyed" section in the documentation
+#error this is obsolete
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
 #endif

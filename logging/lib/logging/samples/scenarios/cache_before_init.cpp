@@ -57,6 +57,7 @@ The err.txt file
 */
 
 
+#define BOOST_LOG_BEFORE_INIT_USE_CACHE_FILTER
 
 // uncomment this, and all messages inside singleton's constructor will be logged!
 //#define BOOST_LOG_BEFORE_INIT_LOG_ALL

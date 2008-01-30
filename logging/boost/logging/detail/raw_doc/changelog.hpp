@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.21.6, 28 jan 2008
+@section changelog_cur_ver Current Version: v0.21.7, 30 jan 2008
+- updated docs : about caching/destruction
+- not using after_being_destroyed.hpp anymore - no need (see @ref after_destruction).
 - made it much easier to include Boost Logging Lib headers: format_fwd.hpp, named_write_fwd.hpp, which internally accomodate for slow compilation
   (that is, even if slow compile, you won't need to include more headers in your your_app_log.h file)
 - updated docs + named_writer -> named_write

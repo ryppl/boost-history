@@ -35,7 +35,14 @@ If you want to log a message using a certain logger, that logger needs to be dec
 #include <boost/logging/logging.hpp>
 @endcode
 
-Note that these need to be included first, before any other Boost Logging Lib headers.
+
+- if in addition, if you want to do %logging on a dedicated thread
+
+@code
+// when you log messages on a dedicated thread (see writer::on_dedicated_thread class)
+#include <boost/logging/writer/on_dedicated_thread.hpp> 
+@endcode
+
 
 
 \n\n
@@ -58,9 +65,6 @@ In other words, the corresponding logger class needs to be defined.
 @code
 // when defining logs and you don't log messages on a dedicated thread 
 #include <boost/logging/format.hpp>
-
-// when defining logs and you log messages on a dedicated thread (see writer::on_dedicated_thread class)
-#include <boost/logging/format_ts.hpp>
 @endcode
 
 
