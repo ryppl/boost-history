@@ -2038,12 +2038,14 @@ namespace boost
 
           Derived& background_color(const svg_color& col)
           { // 
+            derived().legend_box_.fill(col);
             derived().image.g(PLOT_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           Derived& legend_background_color(const svg_color& col)
           {
+            derived().legend_box_.fill(col);
             derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
             return derived();
           }
@@ -2055,6 +2057,7 @@ namespace boost
 
           Derived& legend_border_color(const svg_color& col)
           {
+            derived().legend_box_.stroke(col);
             derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
             return derived();
           }

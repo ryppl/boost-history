@@ -1065,7 +1065,8 @@ const std::string strip_e0s(std::string s)
 
 double string_svg_length(const std::string& s, const text_style& style)
 { // Return length of string in SVG units depending on font size etc.
-  // If possible use an actual length, else use average char width,
+  // If possible use an actual length, but probably platform and/or browser-dependent,
+  // else use average char width,
   // and deal with Unicode, for example &#x3A9; = greek omega, 
   // counting each symbol(s) embedded between & amd ; as one character,
   // and ignore embedded xml like <sub> (not implemented by browsers yet).
