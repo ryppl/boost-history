@@ -558,13 +558,12 @@ namespace boost
             double spacing = (std::max)(font_size, point_size);
             // std::cout << spacing <<  ' ' << font_size << ' ' << point_size << std::endl;
             bool is_header = (derived().legend_header_.text() != "");
-
             //text_element legend_header_; // legend box header or title (if any).
             //text_style legend_style_;
             double longest = string_svg_length(derived().legend_header_.text(), derived().legend_style_);
             //std::cout << "\nLegend header " << longest << " svg units." << std::endl;
             derived().legend_width_ = 2 * (derived().legend_box_.margin() * derived().legend_box_.width());
-            // Don't plan to write on the border, or within the 'forbidden' margin of the box.
+            // Don't plan to write on either side border, or on the 'forbidden' margins of the box.
             for(size_t i = 0; i < num_series; ++i)
             { // Find the longest text (if longer than header) in all the data series.
               std::string s = derived().series[i].title_;
@@ -574,18 +573,20 @@ namespace boost
                 longest = siz;
               }
             } // for
-            // std::cout.flags(std::ios_base::dec); should not be needed  TODO
             // std::cout << "\nLongest legend header or data descriptor " << longest << " svg units." << std::endl;
-            derived().legend_width_ += longest; // Space for longest text.
+            derived().legend_width_ += longest * 0.8; // Space for longest text.
+            // Kludge factor to allow for not knowing the real length.
                                     
-            // Allow for a leading space, longest text
+            // Allow width for a leading space, and trailing
+              derived().legend_width_ += spacing * 2.5;
+
             // & trailing space before box margin.
             if (derived().legend_lines_)
             { // Add for colored line marker in legend.
               derived().legend_width_ += spacing * 1.5;
             }
             if(derived().series[0].point_style_.shape() != none)
-            { // Add for colored data point marker, cross, round... & space.
+            { // Add for any colored data point marker, cross, round... & space.
               derived().legend_width_ += 1.5 * derived().series[0].point_style_.size();
             }
             // else no point marker.
@@ -595,8 +596,9 @@ namespace boost
             // (if any) plus a text_margin_ top and bottom.
             // Add more height depending on the number of lines of text.
             derived().legend_height_ = spacing; // At top
-            if (is_header) // is a legend header line.
-            {
+            if ( (is_header) // is a legend header line.
+              && (derived().legend_header_.text() != "") )
+            { 
               derived().legend_height_ += 2 * font_size; // text & space after.
             }
             derived().legend_height_ += num_series * spacing * 2; // Space for the data point symbols & text.
@@ -727,7 +729,6 @@ namespace boost
             int font_size = derived().legend_header_.style().font_size();
             int point_size =  derived().series[0].point_style_.size();
             // Use whichever is the biggest of point marker and font.
-
             double spacing = (std::max)(font_size, point_size);
             // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
             bool is_header = (derived().legend_header_.text() != "");
@@ -751,7 +752,7 @@ namespace boost
               derived().legend_header_.y(legend_y_pos);
               derived().image.g(PLOT_LEGEND_TEXT).push_back(new
                 text_element(derived().legend_header_));
-              legend_y_pos += 2 * spacing; // Might be 1.5?
+              legend_y_pos += 2 * spacing; // Might be 1.5? - useful if many series makes the box too tall.
             }
 
             g_ptr = &(derived().image.g(PLOT_LEGEND_POINTS));

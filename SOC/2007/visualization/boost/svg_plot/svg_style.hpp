@@ -417,6 +417,17 @@ public:
     std::string symbols_; // Unicode symbol (letters, digits, squiggles etc)
     // Caution: not all Unicode symbols are output by all browsers!
     text_style symbols_style_;
+    //bool show_x_value_; // Show the X value near the point.
+    //bool show_y_value_;  // Show the Y value near the point.
+    //// if both true, then shows both as a pair "1.2, 3.4"
+    //int dist; // from the point to the value.
+    //rotate_style orient_; // Orientation of the value from the point.
+    //// Note that this needs to alter the text alignment, center, left or right,
+    //// to avoid writing over the point marker.
+    //rotate_style rotation_; // Rotation of the value text string itself.
+    //// Note that this also needs to alter the text alignment, center, left or right,
+    //// to avoid writing over the point marker.
+    //text_style value_style_; // Size, font, color etc of the value.
 
     plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
       int size = 10, point_shape shape = round, const std::string& symbols = "X")
@@ -931,7 +942,7 @@ public:
     box_style(const svg_color& scolor = black,
       const svg_color& fcolor = white,
       double width = 1, // of border
-      double margin = 2., // 
+      double margin = 4., // 
       bool border_on = true, // Draw a border of width.
       bool fill_on = false) // Apply fill color.
       :
