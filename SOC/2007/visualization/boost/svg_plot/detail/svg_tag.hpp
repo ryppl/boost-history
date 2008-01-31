@@ -702,7 +702,7 @@ public:
 
   tspan_element& tspan(const std::string& t)
   {
-    data_.push_back(new tspan_element(t));
+    data_.push_back(new tspan_element(t, style_));
     return *(static_cast<tspan_element*>(&data_[data_.size()-1]));
   }
 
