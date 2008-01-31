@@ -417,6 +417,193 @@ namespace svg
     left_align, right_align, center_align
   };
 
+class text_parent
+{ // An ancestor to both tspan and strings for the text_element
+  //    class. This allows an array of both to be stored in text_element.
+  protected:
+    std::string text_;
+
+  public:
+    virtual void write(std::ostream& o_str) { } 
+
+    text_parent(const std::string& text): text_(text) { }
+};
+
+class text_element_text: public text_parent
+{
+public:
+  text_element_text(const std::string& text): text_parent(text) { }
+
+  void write(std::ostream& o_str)
+  {
+    o_str<<text_;
+  }
+};
+
+class tspan_element: public text_parent, public svg_element
+{
+private:
+  
+  // Absolute position
+  double x_, y_;
+
+  // Relative position
+  double dx_, dy_;
+
+  int rotate_;
+  
+  // Allows the author to provide exact alignment
+  double text_length_;
+
+  // dx_, dy_, and rotate_ can all be omitted if they have a certain value,
+  // but x_, y_, and text_length need a flag.
+  bool use_x_, use_y_, use_text_length_;
+
+  text_style style_; // font variants.
+
+public:
+  tspan_element(const std::string& text, const text_style& style = no_style):
+    x_(0), y_(0), dx_(0), dy_(0), rotate_(0), text_length_(0),
+    use_x_(false), use_y_(false), use_text_length_(false),
+    style_(style), text_parent(text)
+  {
+  }
+
+  // All of the setters.
+  tspan_element& text(const std::string& text) 
+  { 
+    text_=text; 
+    return *this;
+  }
+
+  tspan_element& dx(double dx) 
+  { 
+    dx_ = dx; 
+    return *this;
+  }
+
+  tspan_element& dy(double dy) 
+  { 
+    dy_ = dy; 
+    return *this;
+  }
+
+  tspan_element& rotation(int rotation) 
+  { 
+    rotate_ = rotation; 
+    return *this;
+  }
+
+  tspan_element& x(double x)
+  {
+    x_ = x;
+    use_x_ = true;
+    return *this;
+  }
+
+  tspan_element& y(double y)
+  {
+    y_ = y;
+    use_y_ = true;
+    return *this;
+  }
+
+  tspan_element& text_length(double text_length)
+  {
+    text_length_ = text_length;
+    use_text_length_ = true;
+    return *this;
+  }
+
+  // All of the getters.
+  std::string text(){ return text_; }
+  double x() { return x_; }
+  double y() { return y_; }
+  double dx() { return dx_; }
+  double dy() { return dy_; }
+  int rotation() { return rotate_; }
+  double text_length() { return text_length_; }
+
+  text_style& font_style()
+  { // Access to font family, size ...
+    return style_;
+  }
+
+  const text_style& font_style() const
+  {
+    return style_;
+  }
+
+
+  void write(std::ostream& os)
+  {
+    os<<"<tspan";
+
+    write_attributes(os); // id & clip_path
+    style_info_.write(os); // fill, stroke, width...
+
+    // All of the conditional writes within tspan_element.
+    
+    // First, all of the elements that can be tested based on their value.
+    if(rotate_ != 0)
+    {
+      os<<" rotate=\""<<rotate_<<"\"";
+    }
+
+    if(dx_!= 0)
+    {
+      os<<" dx=\""<<dx_<<"\"";
+    }
+
+    if(dy_!= 0)
+    {
+      os<<" dy=\""<<dy_<<"\"";
+    }
+
+    // Now, add all of the elements that can be tested with the flags.
+    if(use_x_)
+    {
+      os<<"x=\""<<x_<<"\"";
+    }
+
+    if(use_y_)
+    {
+      os<<"y=\""<<y_<<"\"";
+    }
+
+    if(use_text_length_)
+    {
+      os<<"textLength=\""<<text_length_<<"\"";
+    }
+
+    if (style_.font_size() != 0)
+    {
+      os << " font-size=\"" << style_.font_size() << "\"";
+    }
+    if (style_.font_family() != "")
+    { // Example: Arial.
+      os << " font-family=\"" << style_.font_family() << "\"";
+    }
+    if (style_.font_style().size() != 0)
+    { // Example: italic.
+      os << " font-style=\"" << style_.font_style() << "\"";
+    }
+    if (style_.font_weight().size() != 0)
+    { // Example: bold.
+    os << " font-weight=\"" << style_.font_weight() << "\"";
+    }
+    if (style_.font_stretch().size() != 0)
+    {
+    os << " font-stretch=\"" << style_.font_stretch() << "\"";
+    }
+    if (style_.font_decoration().size() != 0)
+    {
+    os << " font-decoration=\"" << style_.font_decoration() << "\"";
+    }
+    os<<">"<<text_<<"</tspan>";
+
+  }
+};
 
 class text_element: public svg_element
 { // Holds text with position, size, font, (& styles) & orientation.
@@ -427,11 +614,20 @@ class text_element: public svg_element
   // So any text with y coordinate = 0  shows only any roman lower case descenders!
   double x_; // Left edge.
   double y_; // Bottom of roman capital character.
-  std::string text_; // Actual text to display.
+  ptr_vector<text_parent> data_; // Stores all of the containing data.
   text_style style_; // font variants.
   align_style align_; // left_align, right_align, center_align
   rotate_style rotate_; // horizontal, upward, downward, upsidedown
-
+  
+  void _generate_text(std::ostream& os)
+  {
+    for(ptr_vector<text_parent>::iterator i = data_.begin(); 
+        i!=data_.end(); 
+        ++i)
+    {
+      (*i).write(os);
+    }
+  }
   // (Text may contain embedded xml Unicode characters
   // for Greek, math etc, for example: &#x3A9;).
   //int size; // " font-size = 12"
@@ -501,12 +697,13 @@ public:
 
   void text(const std::string& t)
   { // text to write.
-    text_ = t;
+    data_.push_back(new text_element_text(t));
   }
 
-  const std::string& text()
+  tspan_element& tspan(const std::string& t)
   {
-    return text_;
+    data_.push_back(new tspan_element(t));
+    return *(static_cast<tspan_element*>(&data_[data_.size()-1]));
   }
 
   text_element(
@@ -521,14 +718,42 @@ public:
     rotate_style rotate = horizontal)
     : // Constructor.
     x_(x), y_(y), // location.
-    text_(text),
+    data_(ptr_vector<text_parent>()),
     //size(size), font(font), style_(style), weight(weight), stretch(stretch), decoration(decoration),
     style_(ts),
     align_(align),
     rotate_(rotate)
   { // text_element default constructor, defines defaults for all private members.
+    data_.push_back(new text_element_text(text));
   }
 
+  // Interestingly, we only need to define the copy constructor and 
+  // operator=().. we don't need the destructor
+  text_element(const text_element& rhs):
+    x_(rhs.x_), y_(rhs.y_), data_(rhs.data_.clone()), style_(rhs.style_),
+    align_(rhs.align_), rotate_(rhs.rotate_)
+  {
+
+  }
+
+  text_element& operator=(const text_element& rhs)
+  {
+    x_ = rhs.x_;
+    y_ = rhs.y_;
+    data_ = rhs.data_.clone();
+    style_ = rhs.style_;
+    align_ = rhs.align_; 
+    rotate_ = rhs.rotate_;
+  }
+
+  std::string text()
+  {
+   std::stringstream os;
+
+    _generate_text(os);
+
+   return os.str();
+  }
   void write(std::ostream& os)
   { // text_element, style & attributes to stream.
     // Changed to new convention on spaces:
@@ -589,17 +814,18 @@ public:
     {
     os << " font-decoration=\"" << style_.font_decoration() << "\"";
     }
-    os << '>' << text_ << "</text>";
+    os << '>' ;
+
+    _generate_text(os);
+
+    os << "</text>";
     // Example:
   } // void write(std::ostream& os)
 }; // class text_element_
 
   std::ostream& operator<< (std::ostream& os, text_element& t)
   {  //
-      os << "text(" << t.x() << ", " << t.y() << ", " 
-         << t.text() << ", "
-         << t.alignment()<< ", " 
-         << t.rotation() << ")" ;
+      t.write(os);
     // Usage: text_element t(20, 30, "sometest", left_align, horizontal);  cout << t << endl; 
     // Outputs:  
     return os;
