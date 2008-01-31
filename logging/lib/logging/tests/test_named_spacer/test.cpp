@@ -2,6 +2,8 @@
     Tests named_spacer
 */
 
+#include <boost/test/minimal.hpp>
+
 #include <boost/logging/format.hpp>
 #include <boost/logging/format/formatter/named_spacer.hpp>
 
@@ -34,7 +36,7 @@ struct abc : formatter::class_<abc, formatter::implement_op_equal::no_context> {
 };
 
 // our named spacer - the one we're testing
-formatter::named_spacer_t<boost::logging::default_, lock_resource_finder::single_thread > g_ns;
+formatter::named_spacer_t<boost::logging::default_, boost::logging::default_, lock_resource_finder::single_thread > g_ns;
 
 // we're constantly writing hello world
 std::string g_msg = "hello world";
@@ -56,34 +58,34 @@ void init_logs() {
 void test_with_all_formatters() {
     g_ns.string("[%idx%] {%tid%} (%abc%)-");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[1] {" + g_thread_id + "} (a)-hello world\n");
+    BOOST_CHECK( g_out.str() == "[1] {" + g_thread_id + "} (a)-hello world\n");
     g_out.str("");
 
     g_ns.string("[%idx%] (%abc%)-{%tid%}/");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[2] (b)-{" + g_thread_id + "}/hello world\n");
+    BOOST_CHECK( g_out.str() == "[2] (b)-{" + g_thread_id + "}/hello world\n");
     g_out.str("");
 
     g_ns.string("[%idx%]/[%abc%]/[%tid%]/ ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[3]/[c]/[" + g_thread_id + "]/ hello world\n");
+    BOOST_CHECK( g_out.str() == "[3]/[c]/[" + g_thread_id + "]/ hello world\n");
     g_out.str("");
 }
 
 void test_with_2_formatters() {
     g_ns.string("[%idx%] (%abc%)-");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[4] (d)-hello world\n");
+    BOOST_CHECK( g_out.str() == "[4] (d)-hello world\n");
     g_out.str("");
 
     g_ns.string("[%tid%] (%idx%)-");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[" + g_thread_id + "] (5)-hello world\n");
+    BOOST_CHECK( g_out.str() == "[" + g_thread_id + "] (5)-hello world\n");
     g_out.str("");
 
     g_ns.string("[%abc%] [%tid%]: ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[e] [" + g_thread_id + "]: hello world\n");
+    BOOST_CHECK( g_out.str() == "[e] [" + g_thread_id + "]: hello world\n");
     g_out.str("");
 
 }
@@ -91,17 +93,17 @@ void test_with_2_formatters() {
 void test_with_1_formatter() {
     g_ns.string("[%idx%]/ ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "[6]/ hello world\n");
+    BOOST_CHECK( g_out.str() == "[6]/ hello world\n");
     g_out.str("");
 
     g_ns.string("{%tid%}- ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "{" + g_thread_id + "}- hello world\n");
+    BOOST_CHECK( g_out.str() == "{" + g_thread_id + "}- hello world\n");
     g_out.str("");
 
     g_ns.string("%abc%/ ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "f/ hello world\n");
+    BOOST_CHECK( g_out.str() == "f/ hello world\n");
     g_out.str("");
 
 }
@@ -110,23 +112,23 @@ void test_with_1_formatter() {
 void test_with_no_formatters() {
     g_ns.string("/ ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "/ hello world\n");
+    BOOST_CHECK( g_out.str() == "/ hello world\n");
     g_out.str("");
 
     g_ns.string("abc ");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "abc hello world\n");
+    BOOST_CHECK( g_out.str() == "abc hello world\n");
     g_out.str("");
 
     g_ns.string("");
     L_ << g_msg;
-    BOOST_ASSERT( g_out.str() == "hello world\n");
+    BOOST_CHECK( g_out.str() == "hello world\n");
     g_out.str("");
 
 }
 
 
-int main() {
+int test_main(int, char *[]) { 
     init_logs();
     std::ostringstream out;
     out << detail::get_thread_id();
@@ -136,4 +138,5 @@ int main() {
     test_with_2_formatters();
     test_with_1_formatter();
     test_with_no_formatters();
+    return 0;
 }

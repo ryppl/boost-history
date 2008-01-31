@@ -40,8 +40,7 @@ extern object_count * g_running_thread_count ;
 namespace boost { namespace logging { namespace detail {
 void on_end_delete_objects() {
     if( g_object_count->count() != 0) {
-        std::cout << "end delete objects, remaining = " << g_object_count->count() << std::endl;
-        BOOST_ASSERT(false);
+        std::cout << "TEST FAILED : end delete objects, remaining = " << g_object_count->count() << std::endl;
     }
 }
 

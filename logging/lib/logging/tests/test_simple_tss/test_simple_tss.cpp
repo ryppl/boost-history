@@ -21,6 +21,7 @@
     the same object is returned.
 
 */
+#include <boost/test/minimal.hpp>
 
 #define BOOST_LOG_TSS_USE_INTERNAL
 // this includes tss_value class
@@ -51,7 +52,7 @@ struct object_count {
     void decrement() {
         scoped_lock lk(m_cs);
         --m_count;
-        BOOST_ASSERT(m_count >= 0);
+        BOOST_CHECK(m_count >= 0);
     }
 
     int count() const { 
@@ -112,14 +113,14 @@ void use_dummy_thread() {
         dummy * cur_dummy = &*g_dummy;
         if ( cur_dummy != local_dummy) {
             std::cout << "thread " << thread_idx << ": assertion failed - dummy - at try " << try_idx;
-            BOOST_ASSERT( false);
+            BOOST_CHECK( false);
         }
 
         local_str += thread_idx_str;
         copy_str += thread_idx_str;
         if ( copy_str != g_dummy->str) {
             std::cout << "thread " << thread_idx << ": assertion failed - local_str - at try " << try_idx;
-            BOOST_ASSERT( false);
+            BOOST_CHECK( false);
         }
     }
 
@@ -130,14 +131,15 @@ void use_dummy_thread() {
 
 int g_total_thread_count = 20;
 
-int g_run_test_secs = 20;
+int g_run_test_secs = 10;
 
-int main()
-{
+int test_main(int, char *[]) { 
     for ( int i = 0; i < g_total_thread_count ; ++i)
         thread t( &use_dummy_thread);
 
+    std::cout << "running test for " << g_run_test_secs << " secs " << std::endl;
     do_sleep( g_run_test_secs * 1000 );
+    std::cout << "done " << std::endl;
 	return 0;
 }
 

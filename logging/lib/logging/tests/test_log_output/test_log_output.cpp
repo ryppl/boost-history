@@ -1,3 +1,4 @@
+
 // test_log_output.cpp
 //
 // Tests that logging messages are output correctly
@@ -15,11 +16,10 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 // See http://www.torjo.com/log2/ for more details
 
-
+#include <boost/test/minimal.hpp>
 
 #define BOOST_LOG_COMPILE_FAST_OFF
 #include <boost/logging/format_fwd.hpp>
-#include <boost/logging/tags.hpp>
 
 using namespace boost::logging;
 
@@ -28,7 +28,6 @@ BOOST_LOG_FORMAT_MSG( optimize::cache_string_one_str<> )
 typedef logger_format_write< > log_type;
 
 #include <boost/logging/format.hpp>
-#include <boost/logging/writer/ts_write.hpp>
 
 
 // Step 4: declare which filters and loggers you'll use (usually in a header file)
@@ -42,10 +41,11 @@ BOOST_DEFINE_LOG(g_l, log_type)
 void test_log_output() {
     std::ostringstream out_str;
     destination::stream dest_out(out_str);
-    g_l()->writer().add_formatter( formatter::idx() );
+    g_l()->writer().add_formatter( formatter::idx(), "[%] " );
     g_l()->writer().add_formatter( formatter::append_newline() );
     g_l()->writer().add_destination( destination::cout() );
     g_l()->writer().add_destination( dest_out );
+    g_l()->mark_as_initialized();
 
     // Step 8: use it...
     int i = 1;
@@ -57,9 +57,13 @@ void test_log_output() {
     L_ << "only to console " << i++;
 
     std::string logged_msg = out_str.str();
-    BOOST_ASSERT( logged_msg == "[1] this is so cool 1\n[2] this is so cool again 2\n");
+    BOOST_CHECK( logged_msg == "[1] this is so cool 1\n[2] this is so cool again 2\n");
 }
 
 
 
-int main() { test_log_output() ; }
+int test_main(int, char *[]) { 
+    test_log_output() ; 
+    return 0;
+}
+

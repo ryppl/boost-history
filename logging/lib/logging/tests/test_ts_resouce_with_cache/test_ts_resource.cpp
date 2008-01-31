@@ -20,6 +20,7 @@
 */
 
 #define BOOST_LOG_TEST_TSS
+#include <boost/test/minimal.hpp>
 
 #define BOOST_LOG_TSS_USE_INTERNAL
 // this includes tss_value class
@@ -34,6 +35,8 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <fstream>
+#include <stdexcept>
 
 #ifdef BOOST_WINDOWS
 #include <windows.h>
@@ -52,8 +55,9 @@ struct dump {
         std::string msg = out.str();
         if ( msg.empty() )
             return;
-        std::cout << msg;
-        std::cout.flush();
+
+        std::ofstream file_out("ts_resource.txt", std::ios_base::out | std::ios_base::app);
+        file_out << msg;
 #ifdef BOOST_WINDOWS
         ::OutputDebugStringA( msg.c_str() );
 #endif
@@ -161,7 +165,10 @@ void test_resource(int idx) {
         dump_array(cur_val, "resource");
         dump_array(snap, "snapshot");
         dump_array(prev_snap, "prev snapshot");
-        BOOST_ASSERT( false);
+        // we throw, so that the program ends (otherwise we could 
+        // get a lot of failed assertions,all dumped at console from different threads)
+        throw std::runtime_error("assertion failed");
+//        BOOST_CHECK( false);
     }
 }
 
@@ -260,8 +267,8 @@ int g_test_thread_count = 10;
 
 int g_run_period_secs = 200;
 
-int main()
-{
+int test_main(int, char *[]) { 
+    std::cout << "running test for " << g_run_period_secs << " secs" << std::endl;
     xtime_get( &g_start, TIME_UTC);
 
     for ( int i = 0; i < g_update_thread_count; ++i)

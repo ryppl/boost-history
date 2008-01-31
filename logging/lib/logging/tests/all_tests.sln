@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_after_destroyed", "test_after_destroyed\test_after_destroyed.vcproj", "{C5897099-5FA2-4E12-AFFC-2015364347FA}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_file", "test_file\test_file.vcproj", "{A098514E-1836-49C4-8309-03291403A994}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_named", "test_named\test_named.vcproj", "{279DABB5-79C6-4188-BB0D-330C5D6C2EFA}"
@@ -25,10 +23,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C5897099-5FA2-4E12-AFFC-2015364347FA}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C5897099-5FA2-4E12-AFFC-2015364347FA}.Debug|Win32.Build.0 = Debug|Win32
-		{C5897099-5FA2-4E12-AFFC-2015364347FA}.Release|Win32.ActiveCfg = Release|Win32
-		{C5897099-5FA2-4E12-AFFC-2015364347FA}.Release|Win32.Build.0 = Release|Win32
 		{A098514E-1836-49C4-8309-03291403A994}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A098514E-1836-49C4-8309-03291403A994}.Debug|Win32.Build.0 = Debug|Win32
 		{A098514E-1836-49C4-8309-03291403A994}.Release|Win32.ActiveCfg = Release|Win32

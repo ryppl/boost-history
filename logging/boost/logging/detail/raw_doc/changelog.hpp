@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.21.7, 30 jan 2008
+@section changelog_cur_ver Current Version: v0.21.8, 31 jan 2008
+- updated Jamfile.v2 to actually build the tests + the tests to use BOOST_CHECK
 - updated docs : about caching/destruction
 - not using after_being_destroyed.hpp anymore - no need (see @ref after_destruction).
 - made it much easier to include Boost Logging Lib headers: format_fwd.hpp, named_write_fwd.hpp, which internally accomodate for slow compilation

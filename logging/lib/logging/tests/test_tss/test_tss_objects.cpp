@@ -13,6 +13,7 @@
 
 // so that we can catch the end of deleting all objects
 #define BOOST_LOG_TEST_TSS
+#include <boost/test/minimal.hpp>
 
 #define BOOST_LOG_TSS_USE_INTERNAL
 // this includes tss_value class
@@ -125,7 +126,7 @@ void process_file() {
         std::string local_word = local_file.read_word();
         // it should behave just like a "local" variable
         if ( word != local_word)
-            BOOST_ASSERT( false);
+            BOOST_CHECK( false);
         str->add_word(word);
         if ( word.empty() )
             break;

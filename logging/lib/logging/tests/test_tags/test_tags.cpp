@@ -4,9 +4,9 @@
     - tests dumping the module and the thread_id
     
 */
+#include <boost/test/minimal.hpp>
 
 #include <boost/logging/format_fwd.hpp>
-#include <boost/logging/tags.hpp>
 
 // Optimize : use tags 
 namespace bl = boost::logging;
@@ -58,13 +58,13 @@ bool test_str_contains(const std::string & str, const std::string & find) {
 void test_fileline_function() {
     init_logs_fileline_function();
     LOG_FILE_FUNC_ << g_msg;
-    BOOST_ASSERT( test_str_contains( g_out.str(), "test_tags.cpp"));
-    BOOST_ASSERT( test_str_contains( g_out.str(), "test_fileline_function"));
+    BOOST_CHECK( test_str_contains( g_out.str(), "test_tags.cpp"));
+    BOOST_CHECK( test_str_contains( g_out.str(), "test_fileline_function"));
     g_out.str("");
 
     LOG_FILE_FUNC_ << g_msg;
-    BOOST_ASSERT( test_str_contains( g_out.str(), "test_tags.cpp"));
-    BOOST_ASSERT( test_str_contains( g_out.str(), "test_fileline_function"));
+    BOOST_CHECK( test_str_contains( g_out.str(), "test_tags.cpp"));
+    BOOST_CHECK( test_str_contains( g_out.str(), "test_fileline_function"));
     g_out.str("");
 }
 
@@ -75,8 +75,8 @@ void init_logs_module_thread_id() {
 
     // after deleting the file/line and function formatters, they shouldn't be called
     LOG_FILE_FUNC_ << g_msg;
-    BOOST_ASSERT( !test_str_contains( g_out.str(), "test_tags.cpp"));
-    BOOST_ASSERT( !test_str_contains( g_out.str(), "test_fileline_function"));
+    BOOST_CHECK( !test_str_contains( g_out.str(), "test_tags.cpp"));
+    BOOST_CHECK( !test_str_contains( g_out.str(), "test_fileline_function"));
     g_out.str("");
 
     g_l()->writer().add_formatter( formatter::tag::module(), "[%] " );     
@@ -91,12 +91,13 @@ void test_module_and_thread_id() {
     std::string thread_id = out.str();
 
     LOG_MODULE_("module_a") << g_msg;
-    BOOST_ASSERT( test_str_contains( g_out.str(), "[module_a]"));
-    BOOST_ASSERT( test_str_contains( g_out.str(), "[" + thread_id + "]"));
+    BOOST_CHECK( test_str_contains( g_out.str(), "[module_a]"));
+    BOOST_CHECK( test_str_contains( g_out.str(), "[" + thread_id + "]"));
 }
 
-int main() {
+int test_main(int, char *[]) { 
     test_fileline_function();
     test_module_and_thread_id();
+    return 0;
 }
 

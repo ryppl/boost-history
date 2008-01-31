@@ -6,6 +6,8 @@
       thus, we should start writing from the first file
 */
 
+#include <boost/test/minimal.hpp>
+
 #include <boost/logging/format.hpp>
 #include <boost/logging/writer/ts_write.hpp>
 #include <boost/logging/format/destination/rolling_file.hpp>
@@ -14,6 +16,8 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
 namespace fs = boost::filesystem;
+
+const char INPUT_FILE_NAME []= "test.cpp";
 
 using namespace boost::logging;
 
@@ -56,7 +60,7 @@ void init_logs() {
 
 void write_to_clean_rolling_file() {
     // read this .cpp file - every other line is logged (odd lines)
-    std::ifstream in("test.cpp");
+    std::ifstream in(INPUT_FILE_NAME);
     bool enabled = true;
     std::string line;
     while ( std::getline(in, line) ) {
@@ -80,7 +84,7 @@ void write_to_existing_rolling_file() {
             ));
 
     // read this .cpp file - every other line is logged (even lines now)
-    std::ifstream in("test.cpp");
+    std::ifstream in(INPUT_FILE_NAME);
     bool enabled = false;
     std::string line;
     while ( std::getline(in, line) ) {
@@ -109,7 +113,7 @@ void test_contents() {
         out << cur_file.rdbuf();
         std::string cur_file_contents = out.str();
         std::string & cur_block = g_blocks[idx];
-        BOOST_ASSERT( cur_file_contents == cur_block);
+        BOOST_CHECK( cur_file_contents == cur_block);
     }
 }
 
@@ -144,7 +148,7 @@ void test_contents_after_write_to_existing_rolling_file() {
         out << cur_file.rdbuf();
         std::string cur_file_contents = out.str();
         std::string & cur_block = g_blocks[idx];
-        BOOST_ASSERT( cur_file_contents == cur_block);
+        BOOST_CHECK( cur_file_contents == cur_block);
     }
 }
 
@@ -180,7 +184,7 @@ void write_to_too_full_rolling_file() {
 
     // read this .cpp file - every Xth line is written
     const int LINE_PERIOD = 6;
-    std::ifstream in("test.cpp");
+    std::ifstream in(INPUT_FILE_NAME);
     int line_idx = 0;
     std::string line;
     while ( std::getline(in, line) ) {
@@ -214,8 +218,7 @@ void test_contents_after_writing_to_full_rolling_file() {
     test_contents();
 }
 
-
-int main() {
+int test_main(int, char *[]) { 
     fs::path::default_name_check( fs::no_check);
 
     init_logs();
@@ -224,4 +227,5 @@ int main() {
     test_contents_after_write_to_existing_rolling_file();
     write_to_too_full_rolling_file();
     test_contents_after_writing_to_full_rolling_file();
+    return 0;
 }

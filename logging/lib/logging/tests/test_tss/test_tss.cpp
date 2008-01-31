@@ -64,8 +64,7 @@ int g_thread_count = 50;
 void do_sleep(int ms) ; 
 void process_file() ;
 
-int main(int argc, char* argv[])
-{
+int test_main(int argc, char *argv[]) { 
     if ( argc > 1) {
         std::istringstream in(argv[1]);
         in >> g_thread_count;

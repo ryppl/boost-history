@@ -2,6 +2,7 @@
 /* 
     Tests formatter::file
 */
+#include <boost/test/minimal.hpp>
 
 #include <boost/logging/format.hpp>
 #include <string>
@@ -66,7 +67,7 @@ void test_write_ok() {
     // first, odd lines
     while ( std::getline(test, test_line) ) {
         std::getline(out, out_line);
-        BOOST_ASSERT( "line odd " + test_line == out_line );
+        BOOST_CHECK( "line odd " + test_line == out_line );
         std::getline(test, test_line); // ignore even line
     }
 
@@ -76,18 +77,19 @@ void test_write_ok() {
     // second, even lines
     while ( std::getline(test2, test_line) && std::getline(test2, test_line) ) {
         std::getline(out, out_line);
-        BOOST_ASSERT( "line even " + test_line == out_line );
+        BOOST_CHECK( "line even " + test_line == out_line );
     }
 
     // out.txt - should have no more lines
     std::getline(out, out_line);
-    BOOST_ASSERT( out_line.empty() );
+    BOOST_CHECK( out_line.empty() );
 }
 
 
-int main() {
+int test_main(int, char *[]) { 
     write_to_clean_file();
     append_to_file();
     test_write_ok();
+    return 0;
 }
 
