@@ -5,12 +5,23 @@
 #  accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt)
 
+import modules ;
+
+# Look for BOOST_ROOT_DIR environment variable
+local BOOST_ROOT = [ modules.peek : BOOST_ROOT_DIR ] ;
+
+use-project /boost : $(BOOST_ROOT) ; 
+
 project 
     : requirements 
       <include>../../../.. 
       <include>$(BOOST_ROOT) 
-      <include>D:/john/code/latest_boost 
-      <library>/boost/thread//boost_thread 
+      <threading>multi 
+      <runtime-link>static 
+      <link>static 
+      <library>/boost//thread 
+      <library>/boost//filesystem 
+      <library>/boost//date_time 
     ;
 
 exe cache_before_init
@@ -55,6 +66,10 @@ exe one_loger_one_filter
 
 exe ts_loger_one_filter
     : ts_loger_one_filter.cpp
+    ;
+
+exe use_profiler
+    : use_profiler.cpp
     ;
 
 exe use_tss_ostringstream
