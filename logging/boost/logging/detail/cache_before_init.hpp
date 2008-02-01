@@ -133,15 +133,6 @@ public:
         }
     }
 
-    // called after all data has been gathered
-    template<class writer_type> void on_do_write(msg_type & msg, const writer_type & writer) const {
-        if ( is_cache_turned_off() )
-            writer(msg); 
-        else
-            add_msg(msg);
-    }
-
-protected:
     void add_msg(const msg_type & msg) const {
         mutex::scoped_lock lk(m_cs);
         // note : last_enabled can be null, if we don't want to use filters (BOOST_LOG_BEFORE_INIT_USE_LOG_ALL)

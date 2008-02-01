@@ -22,6 +22,7 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 @section todo_implementation Implementation
 
+
 - @c normal         destination::stream_ptr - just like stream, but hold the stream as a shared pointer. Thus , we won't have to worry
                     about outliving the stream.
 
@@ -175,6 +176,9 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 
 - @c normal         "Manipulating thy manipulator" - another way is to create another manipulator, delete the current one , and add the new one
                     i should explain that this could not work immediately because of caching.
+
+- @c normal         scoped logs - scoped_write_msg - explain that you need to implement this in case you have your own gather.read_msg().out() class
+
 */
 
 }}

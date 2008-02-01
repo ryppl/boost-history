@@ -23,6 +23,18 @@ In case you want to log unicode characters, it's very easy:
   - If you don't wish that, please <tt>#define BOOST_LOG_DONOT_USE_WCHAR_T</tt> globally, before including any Boost Logging Lib files.
 
 
+
+@section misc_compilers Compilers it's been tested on
+
+The Boost Logging Lib has been tested with the following compilers:
+
+- VC 2005 
+- VC 2003
+- gcc 3.4.2
+- gcc 4.1
+
+
+
 */
 
 }}

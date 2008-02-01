@@ -63,7 +63,6 @@ In other words, the corresponding logger class needs to be defined.
 - when using Formatters and Destinations
 
 @code
-// when defining logs and you don't log messages on a dedicated thread 
 #include <boost/logging/format.hpp>
 @endcode
 

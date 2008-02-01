@@ -81,11 +81,15 @@ void func(int a, const char * str) {
 @endcode
 
 Things you should know:
-- You can only use @c BOOST_SCOPED_LOG_CTX, if your loggers use << to @ref workflow_2a "gather the message"
 - When using @c BOOST_SCOPED_LOG_CTX, you pass as parameter, one of the @ref macros_use "macros" you've already defined.
+- When using @c BOOST_SCOPED_LOG_CTX, you'll always @em have to use @c << to write the message, even though
+  your logger might use a different syntax (see @ref workflow_2a "gathering the message")
 - When you use this macro (BOOST_SCOPED_LOG_CTX), a temporary variable is created, which will hold the result
-  of gathering your context. In the above case, this variable will contain the contents of:
+  of gathering your context. In the above case, this variable will contain the contents of: \n
   <tt> "func(" << a << ", str=" << str << ")"; </tt>
+- @c BOOST_SCOPED_LOG_CTX preserves the "is_enabled" policy of the underlying logger. In other words, if you do \n
+  <tt> BOOST_SCOPED_LOG_CTX(LDBG) << "func" << some_time_consuming_func(); </tt> \n
+  and the logger is disabled, the @c some_time_consuming_func() will not be called
 
 
 

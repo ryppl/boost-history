@@ -23,6 +23,7 @@
 
 #include <boost/logging/detail/fwd.hpp>
 #include <algorithm>
+#include <iosfwd>
 
 namespace boost { namespace logging {
 
@@ -49,29 +50,62 @@ struct class_name { \
 
 #endif
 
-
-namespace detail {
-    template<class writer> struct scoped_writer {
-        scoped_writer(const writer & w) : m_w( w ) {}
-        template<class msg_type> void operator()(msg_type & msg) const {
-            m_w.gather_msg(msg);
-        }
-    private:
-        const writer &m_w;
-    };
+// default scoped write - in case your gather class .read_msg().out() returns an STL ostream
+template<class char_type, class char_traits> inline void scoped_write_msg(const hold_string_type & str, std::basic_ostream<char_type, char_traits> & out) {
+    out << str;
 }
 
+namespace detail {
+
+    template<class gather_msg = default_> struct scoped_gather_base {
+        typedef typename detail::find_gather_if_default<gather_msg>::msg_type msg_type;
+        virtual void do_gather(const msg_type & ) = 0;
+    };
+
+    /** 
+        when doing scoped logging, we use this as a trick to find out if a logger is enabled.
+        That is, we want to do the overhead of gathering the message to happen only if logging is enabled
+    */
+    template<class ostream_type = std::basic_ostringstream<char_type> , class gather_msg = default_ > struct scoped_logger {
+
+        typedef scoped_gather_base<gather_msg> scoped_gather;
+        scoped_logger(scoped_gather & do_gather) : m_gather(do_gather) {}
+        scoped_logger(const scoped_logger & other) : m_out( other.m_out.str() ), m_gather( other.m_gather) {}
+
+        template<class type> scoped_logger & operator<<(const type& val) {
+            m_out << val;
+            return *this;
+        }
+
+        // when we enter here, we know the logger is enabled
+        hold_string_type gathered_info() {
+            hold_string_type str = m_out.str();
+            m_gather.do_gather(str);
+            return BOOST_LOG_STR("start of ") + str;
+        }
+
+    private:
+        ostream_type m_out;
+        scoped_gather & m_gather;
+    };
+
+    template<class gather_type, class ostream_type> inline gather_type & operator,(gather_type & g, scoped_logger<ostream_type> & val) {
+        scoped_write_msg( val.gathered_info(), g);
+        return g;
+    }
+}
+
+
+
 #define BOOST_SCOPED_LOG_CTX_IMPL(logger_macro, operator_, class_name) \
-struct class_name { \
-    typedef ::boost::logging::hold_string_type string_type; \
-    class_name()  { } \
-    ~class_name() { logger_macro operator_ BOOST_LOG_STR("  end of ") operator_ m_str ; } \
-    void gather_msg(string_type & str) const { std::swap(m_str, str); logger_macro operator_ BOOST_LOG_STR("start of ") operator_ m_str ; } \
-    mutable string_type m_str; \
+struct class_name : ::boost::logging::detail::scoped_gather_base<> { \
+    class_name() : m_is_enabled(false) { } \
+    ~class_name() {  if ( m_is_enabled) logger_macro operator_ BOOST_LOG_STR("  end of ") operator_ m_str ; } \
+    void do_gather(const msg_type & str) { m_str = str; m_is_enabled = true; } \
+    msg_type m_str; \
+    bool m_is_enabled; \
 } BOOST_LOG_CONCATENATE(log_, __LINE__); \
-::boost::logging::logger< ::boost::logging::gather::ostream_like::return_str< ::boost::logging::hold_string_type > , ::boost::logging::detail::scoped_writer< class_name > > \
-    BOOST_LOG_CONCATENATE(scoped_log_val, __LINE__) ( BOOST_LOG_CONCATENATE(log_, __LINE__) ); \
-    BOOST_LOG_CONCATENATE(scoped_log_val, __LINE__) .read_msg().gather().out()
+    logger_macro , ::boost::logging::detail::scoped_logger<>( BOOST_LOG_CONCATENATE(log_, __LINE__) ) 
 
 
 

@@ -97,7 +97,10 @@ namespace boost { namespace logging {
     public:
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
-            cache().on_do_write( msg, call_do_write(*this) );
+            if ( logger_base_type::is_cache_turned_off() )
+                do_write(msg);
+            else
+                cache().add_msg(msg);
         }
 
         virtual void do_write(msg_type&) const = 0;
@@ -239,7 +242,10 @@ namespace boost { namespace logging {
 
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
-            cache().on_do_write( msg, writer() );
+            if ( logger_base_type::is_cache_turned_off() )
+                writer()(msg);
+            else
+                cache().add_msg(msg);
         }
     private:
         void init() {
@@ -290,7 +296,10 @@ namespace boost { namespace logging {
 
         // called after all data has been gathered
         void on_do_write(msg_type & msg) const {
-            cache().on_do_write( msg, writer() );
+            if ( logger_base_type::is_cache_turned_off() )
+                writer()(msg);
+            else
+                cache().add_msg(msg);
         }
     private:
         write_msg *m_writer;

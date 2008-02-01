@@ -356,11 +356,11 @@ std::string hello = "hello", world = "world";
 L_ << hello << ", " << world;
 @endcode
 
-If fast compile is off, when using the logs, you'll need to know the full type of the logger (the definition of the logger class). 
+If fast compile is off, when using the logs, you'll need to know the full type of the logger (the definition of the logger class). \n
 When using formatters/destinations, this means <tt>\#include <boost/logging/format.hpp></tt>. Also, when logging a message,
 the code for doing the actual logging will be generated inline, this taking a bit of compilation time.
 
-From my experiments, with fast compiling on, you get about 30% faster compile times. If you'd like to share your results, please drop me an email.
+@ref macros_compile_time "More details here".
 
 In short, 
 

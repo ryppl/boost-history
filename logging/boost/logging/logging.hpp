@@ -28,6 +28,7 @@
 #include <boost/logging/detail/macros.hpp>
 #include <boost/logging/detail/tss/tss.hpp>
 #include <boost/logging/detail/level.hpp>
+#include <boost/logging/detail/scoped_log.hpp>
 
 // just in case we might think of using formatters
 #include <boost/logging/detail/format_msg_type.hpp>

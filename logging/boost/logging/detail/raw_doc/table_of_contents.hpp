@@ -12,6 +12,7 @@ namespace boost { namespace logging {
     - @ref acknowledgements
     - @ref breaking_changes
       - @ref breaking_change_v_20
+    - @ref misc_compilers 
 
 
 - @ref workflow
