@@ -42,6 +42,10 @@ public:
         add_property(PROP_FLOAT,  "PropFloat description",  BOOST_SETTER(&TestPropertyChildGroup::SetFloat),  BOOST_GETTER(&TestPropertyChildGroup::GetFloat));
         add_property(PROP_INT,    "PropInt description",    BOOST_SETTER(&TestPropertyChildGroup::SetInt),    BOOST_GETTER(&TestPropertyChildGroup::GetInt));
         add_property(PROP_STRING, "PropString description", BOOST_SETTER(&TestPropertyChildGroup::SetString), BOOST_GETTER(&TestPropertyChildGroup::GetString));
+    
+        add_category(PROPERTY_GROUP_CATEGORY1);
+        add_category(PROPERTY_GROUP_CATEGORY2);
+        add_category(PROPERTY_GROUP_CATEGORY3);
     }
 
     float GetFloat() const{return( m_float );}
@@ -71,6 +75,10 @@ public:
         add_property(PROP_FLOAT,    "PropFloat description",  BOOST_SETTER(&TestPropertyGroup::SetFloat),  BOOST_GETTER(&TestPropertyGroup::GetFloat));
         add_property(PROP_INT,      "PropInt description",    BOOST_SETTER(&TestPropertyGroup::SetInt),    BOOST_GETTER(&TestPropertyGroup::GetInt));
         add_property(PROPERTY_BOOL, "PropBool description",   BOOST_SETTER(&TestPropertyGroup::SetBool),   BOOST_GETTER(&TestPropertyGroup::GetBool));
+
+        add_category(PROPERTY_GROUP_CATEGORY1);
+        add_category(PROPERTY_GROUP_CATEGORY2);
+        add_category(PROPERTY_GROUP_CATEGORY3);
     }
 #if defined(BOOST_MSVC)
 #pragma warning(pop)
@@ -103,95 +111,101 @@ private:
 class TestPropertyManager : public property_manager
 {
 public:
-	TestPropertyManager() : property_manager()
-	{
-		property_manager::m_instance.reset( this );
-			
-		uiChildCount                       = 0;
-		uiRegisterPropertyGroupCallCount   = 0;
-		uiUnRegisterPropertyGroupCallCount = 0;
-		uiAddCategoryCallCount             = 0;
-	}
-	virtual void register_property_group( property_group *pPropertyGroup )
-	{
-		++uiRegisterPropertyGroupCallCount;
+    TestPropertyManager() : property_manager()
+    {
+        property_manager::m_instance.reset( this );
+            
+        uiChildCount                       = 0;
+        uiRegisterPropertyGroupCallCount   = 0;
+        uiUnRegisterPropertyGroupCallCount = 0;
+        uiAddCategoryCallCount             = 0;
+    }
+    virtual void register_property_group( property_group *pPropertyGroup )
+    {
+        ++uiRegisterPropertyGroupCallCount;
 
-		if( NULL == pPropertyGroup->get_parent() )
-		{
-			++uiChildCount;
-		}
-	}
-	virtual void unregister_property_group( property_group *pPropertyGroup, category_collection &categories )
-	{
-		++uiUnRegisterPropertyGroupCallCount;
+        if( NULL == pPropertyGroup->get_parent() )
+        {
+            ++uiChildCount;
+        }
 
-		if( NULL == pPropertyGroup->get_parent() )
-		{
-			--uiChildCount;
-		}
-	}
-	virtual void AddCategory( const string &sCategoryName, property_group *pPropertyGroup )
-	{
-		++uiAddCategoryCallCount;
-	}
+        property_manager::register_property_group( pPropertyGroup );
+    }
+    virtual void unregister_property_group( property_group *pPropertyGroup, category_collection &categories )
+    {
+        ++uiUnRegisterPropertyGroupCallCount;
 
-	unsigned int uiChildCount;
-	unsigned int uiRegisterPropertyGroupCallCount;
-	unsigned int uiUnRegisterPropertyGroupCallCount;
-	unsigned int uiAddCategoryCallCount;
+        if( NULL == pPropertyGroup->get_parent() )
+        {
+            --uiChildCount;
+        }
+
+        property_manager::unregister_property_group( pPropertyGroup, categories );
+    }
+    virtual void add_category( const string &sCategoryName, property_group *pPropertyGroup )
+    {
+        ++uiAddCategoryCallCount;
+
+        property_manager::add_category( sCategoryName, pPropertyGroup );
+    }
+
+    unsigned int uiChildCount;
+    unsigned int uiRegisterPropertyGroupCallCount;
+    unsigned int uiUnRegisterPropertyGroupCallCount;
+    unsigned int uiAddCategoryCallCount;
 };
 
 class TestPropertyManagerGuard
 {
-	public:
-		TestPropertyManagerGuard()
-		{
-			property_manager::delete_instance();
-			
-			p_manager = new TestPropertyManager();
-		}
-		
-		~TestPropertyManagerGuard()
-		{
-			property_manager::delete_instance();
-		}
-		
-		TestPropertyManager *p_manager;
+    public:
+        TestPropertyManagerGuard()
+        {
+            property_manager::delete_instance();
+            
+            p_manager = new TestPropertyManager();
+        }
+        
+        ~TestPropertyManagerGuard()
+        {
+            property_manager::delete_instance();
+        }
+        
+        TestPropertyManager *p_manager;
 };
 
 BOOST_AUTO_TEST_CASE( TestPropertyParent )
 {
-	TestPropertyGroup testGroup;
-	
-	BOOST_CHECK( NULL == testGroup.get_parent() );
-	BOOST_CHECK( testGroup.m_child1.get_parent() == (property_group*)&testGroup );
+    TestPropertyGroup testGroup;
+    
+    BOOST_CHECK( NULL == testGroup.get_parent() );
+    BOOST_CHECK( testGroup.m_child1.get_parent() == (property_group*)&testGroup );
 }
 
 BOOST_AUTO_TEST_CASE( TestPropertyGroupGetName )
 {
-	TestPropertyGroup testGroup;
-	
-	BOOST_CHECK_EQUAL( PROPERTY_GROUP_NAME, testGroup.get_name() );
+    TestPropertyGroup testGroup;
+    
+    BOOST_CHECK_EQUAL( PROPERTY_GROUP_NAME, testGroup.get_name() );
 }
 
 BOOST_AUTO_TEST_CASE( TestBogusPropertyNameForEditor )
 {
-	TestPropertyGroup testGroup;
-	
-	BOOST_CHECK_THROW( testGroup.get_metadata( "bogus property name" ), std::out_of_range );
+    TestPropertyGroup testGroup;
+    
+    BOOST_CHECK_THROW( testGroup.get_metadata( "bogus property name" ), std::out_of_range );
 }
 
 BOOST_AUTO_TEST_CASE( TestDynamicAddingAndReadingOfPropertyGroups )
 {
-	// TODO: implement test for dynamic property groups
+    // TODO: implement test for dynamic property groups
 }
 
 BOOST_AUTO_TEST_CASE( TestNumberOfProperties )
 {
     bool test_bool(false);
-	property_group testGroup("TEST_GROUP", NULL);
-	
-	BOOST_CHECK_EQUAL( testGroup.prop_count(), 0u );
+    property_group testGroup("TEST_GROUP", NULL);
+    
+    BOOST_CHECK_EQUAL( testGroup.prop_count(), 0u );
 
     testGroup.add_property("Test1", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 1u );
@@ -211,11 +225,11 @@ BOOST_AUTO_TEST_CASE( TestNumberOfProperties )
 
 BOOST_AUTO_TEST_CASE( TestPropertyIteration )
 {
-	TestPropertyGroup testGroup;
-	
+    TestPropertyGroup testGroup;
+    
     // Note: This is a map, the order is alphabetical on string name
 
-	property_group::prop_iterator itr = testGroup.prop_begin();
+    property_group::prop_iterator itr = testGroup.prop_begin();
     BOOST_CHECK_EQUAL( (*itr), PROPERTY_BOOL );
     ++itr;
     BOOST_CHECK_EQUAL( (*itr), PROP_FLOAT );
@@ -229,95 +243,95 @@ BOOST_AUTO_TEST_CASE( TestPropertyIteration )
 
 BOOST_AUTO_TEST_CASE( TestPropertyGroupCategory )
 {
-	property_group testGroup("TEST_GROUP", NULL);
-	
-	testGroup.add_category( PROPERTY_GROUP_CATEGORY1 );
-	testGroup.add_category( PROPERTY_GROUP_CATEGORY2 );
-	testGroup.add_category( PROPERTY_GROUP_CATEGORY3 );
-	testGroup.add_category( PROPERTY_GROUP_CATEGORY3 );	// duplicate should not be inserted
+    property_group testGroup("TEST_GROUP", NULL);
+    
+    testGroup.add_category( PROPERTY_GROUP_CATEGORY1 );
+    testGroup.add_category( PROPERTY_GROUP_CATEGORY2 );
+    testGroup.add_category( PROPERTY_GROUP_CATEGORY3 );
+    testGroup.add_category( PROPERTY_GROUP_CATEGORY3 );	// duplicate should not be inserted
 
-	BOOST_CHECK( testGroup.get_category_collection().size() == 4 );	// there is also an 'All' category which automatically gets added
+    BOOST_CHECK( testGroup.get_category_collection().size() == 4 );	// there is also an 'All' category which automatically gets added
 
-	category_collection::const_iterator pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), PROPERTY_GROUP_CATEGORY1 );
-	BOOST_CHECK( *pos == PROPERTY_GROUP_CATEGORY1 );
-	pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), PROPERTY_GROUP_CATEGORY2 );
-	BOOST_CHECK( *pos == PROPERTY_GROUP_CATEGORY2 );
-	pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), PROPERTY_GROUP_CATEGORY3 );
-	BOOST_CHECK( *pos == PROPERTY_GROUP_CATEGORY3 );
-	pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), "bogus category" );
-	BOOST_CHECK( pos == testGroup.get_category_collection().end() );
+    category_collection::const_iterator pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), PROPERTY_GROUP_CATEGORY1 );
+    BOOST_CHECK( *pos == PROPERTY_GROUP_CATEGORY1 );
+    pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), PROPERTY_GROUP_CATEGORY2 );
+    BOOST_CHECK( *pos == PROPERTY_GROUP_CATEGORY2 );
+    pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), PROPERTY_GROUP_CATEGORY3 );
+    BOOST_CHECK( *pos == PROPERTY_GROUP_CATEGORY3 );
+    pos = find( testGroup.get_category_collection().begin(), testGroup.get_category_collection().end(), "bogus category" );
+    BOOST_CHECK( pos == testGroup.get_category_collection().end() );
 }
 
 BOOST_AUTO_TEST_CASE( TestSingletonPropertyManager )
 {
-	TestPropertyManagerGuard gaurd;
-	TestPropertyManager *p_manager = gaurd.p_manager;
+    TestPropertyManagerGuard gaurd;
+    TestPropertyManager *p_manager = gaurd.p_manager;
 
     BOOST_CHECK( property_manager::instance().get() == p_manager );
 }
 
 BOOST_AUTO_TEST_CASE( TestSetParent )
 {
-	TestPropertyManagerGuard gaurd;
-	TestPropertyManager *p_manager = gaurd.p_manager;
+    TestPropertyManagerGuard gaurd;
+    TestPropertyManager *p_manager = gaurd.p_manager;
 
-	// The first item should parent to root
-	TestPropertyChildGroup rootGroup(NULL);
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 1u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
+    // The first item should parent to root
+    TestPropertyChildGroup rootGroup(NULL);
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 1u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
 
-	// The second item should parent to the first
-	TestPropertyChildGroup childGroup(&rootGroup);
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 2u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
-	BOOST_CHECK_EQUAL( rootGroup.get_children_collection().size(), 1u );
-	BOOST_CHECK( &rootGroup == childGroup.get_parent() );
+    // The second item should parent to the first
+    TestPropertyChildGroup childGroup(&rootGroup);
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 2u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
+    BOOST_CHECK_EQUAL( rootGroup.get_children_collection().size(), 1u );
+    BOOST_CHECK( &rootGroup == childGroup.get_parent() );
 
-	// Reparent child to root
-	childGroup.set_parent(NULL);
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 3u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 1u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 2u );
-	BOOST_CHECK_EQUAL( rootGroup.get_children_collection().size(), 0u );
-	BOOST_CHECK( NULL == childGroup.get_parent() );
+    // Reparent child to root
+    childGroup.set_parent(NULL);
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 3u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 1u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 2u );
+    BOOST_CHECK_EQUAL( rootGroup.get_children_collection().size(), 0u );
+    BOOST_CHECK( NULL == childGroup.get_parent() );
 
-	// Reparent child to rootGroup
-	childGroup.set_parent(&rootGroup);
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 4u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 2u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
-	BOOST_CHECK_EQUAL( rootGroup.get_children_collection().size(), 1u );
-	BOOST_CHECK( &rootGroup == childGroup.get_parent() );
+    // Reparent child to rootGroup
+    childGroup.set_parent(&rootGroup);
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 4u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 2u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
+    BOOST_CHECK_EQUAL( rootGroup.get_children_collection().size(), 1u );
+    BOOST_CHECK( &rootGroup == childGroup.get_parent() );
 }
 
 BOOST_AUTO_TEST_CASE( TestAutoReparentToRootInDestructor )
 {
-	TestPropertyManagerGuard gaurd;
-	TestPropertyManager *p_manager = gaurd.p_manager;
+    TestPropertyManagerGuard gaurd;
+    TestPropertyManager *p_manager = gaurd.p_manager;
 
-	// The first item should parent to root
-	TestPropertyChildGroup *pRootGroup = new TestPropertyChildGroup(NULL);
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 1u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
+    // The first item should parent to root
+    TestPropertyChildGroup *pRootGroup = new TestPropertyChildGroup(NULL);
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 1u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
 
-	// The second item should parent to the first
-	TestPropertyChildGroup childGroup(pRootGroup);
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 2u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
-	BOOST_CHECK_EQUAL( pRootGroup->get_children_collection().size(), 1u );
-	BOOST_CHECK( pRootGroup == childGroup.get_parent() );
+    // The second item should parent to the first
+    TestPropertyChildGroup childGroup(pRootGroup);
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 2u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 0u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
+    BOOST_CHECK_EQUAL( pRootGroup->get_children_collection().size(), 1u );
+    BOOST_CHECK( pRootGroup == childGroup.get_parent() );
 
-	// Delete rootGroup.
-	// This should cause childGroup to be reparented to root.
-	delete pRootGroup;
-	BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 3u );
-	BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 2u );
-	BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
-	BOOST_CHECK( NULL == childGroup.get_parent() );
+    // Delete rootGroup.
+    // This should cause childGroup to be reparented to root.
+    delete pRootGroup;
+    BOOST_CHECK_EQUAL( p_manager->uiRegisterPropertyGroupCallCount, 3u );
+    BOOST_CHECK_EQUAL( p_manager->uiUnRegisterPropertyGroupCallCount, 2u );
+    BOOST_CHECK_EQUAL( p_manager->uiChildCount, 1u );
+    BOOST_CHECK( NULL == childGroup.get_parent() );
 }
 
 // This is counter intuitive, but by default, if an object inherits from property_group,
@@ -336,8 +350,8 @@ BOOST_AUTO_TEST_CASE( TestNoCopyConstructorProperties )
     testGroup.add_property("Test2", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 2u );
 
-	property_group copiedGroup( testGroup );
-	BOOST_CHECK_EQUAL( copiedGroup.prop_count(), 0u );
+    property_group copiedGroup( testGroup );
+    BOOST_CHECK_EQUAL( copiedGroup.prop_count(), 0u );
 }
 
 void NullOpFunction(){;}
@@ -351,22 +365,22 @@ void NullOpFunction(){;}
 BOOST_AUTO_TEST_CASE( TestNoCopyConstructorActions )
 {
     // For this test, testGroup shouldn't have a copy constructor
-	property_group testGroup("TEST_GROUP", NULL);
+    property_group testGroup("TEST_GROUP", NULL);
     testGroup.add_action("Test1", "", boost::bind(NullOpFunction));
     testGroup.add_action("Test2", "", boost::bind(NullOpFunction));
     BOOST_CHECK_EQUAL( testGroup.action_count(), 2u );
 
-	property_group copiedGroup( testGroup );
-	BOOST_CHECK_EQUAL( copiedGroup.action_count(), 0u );
+    property_group copiedGroup( testGroup );
+    BOOST_CHECK_EQUAL( copiedGroup.action_count(), 0u );
 }
 
 BOOST_AUTO_TEST_CASE( TestCopyConstructor_RootObject )
 {
-	property_group testGroup("TEST_GROUP", NULL);
-	property_group copiedGroup( testGroup );
+    property_group testGroup("TEST_GROUP", NULL);
+    property_group copiedGroup( testGroup );
 
-	BOOST_CHECK_EQUAL( "TEST_GROUP", copiedGroup.get_name() );
-	BOOST_CHECK( NULL == copiedGroup.get_parent() );
+    BOOST_CHECK_EQUAL( "TEST_GROUP", copiedGroup.get_name() );
+    BOOST_CHECK( NULL == copiedGroup.get_parent() );
 }
 
 BOOST_AUTO_TEST_CASE( TestCopyConstructor_ChildObject )
@@ -375,8 +389,8 @@ BOOST_AUTO_TEST_CASE( TestCopyConstructor_ChildObject )
     property_group childGroup("TEST_CHILD_GROUP", &testGroup);
     property_group copiedGroup( testGroup );
 
-	BOOST_CHECK_EQUAL( copiedGroup.get_name(), "TEST_GROUP" );
-	BOOST_CHECK( NULL == copiedGroup.get_parent() );
+    BOOST_CHECK_EQUAL( copiedGroup.get_name(), "TEST_GROUP" );
+    BOOST_CHECK( NULL == copiedGroup.get_parent() );
 }
 
 BOOST_AUTO_TEST_CASE( TestIsReadOnly )
@@ -386,9 +400,55 @@ BOOST_AUTO_TEST_CASE( TestIsReadOnly )
     property_group testGroup("TEST_GROUP", NULL);
     testGroup.add_property("read_only", "", BOOST_SETTER_NONE,           BOOST_GETTER_VAR(test_bool));
     testGroup.add_property("writable",  "", BOOST_SETTER_VAR(test_bool), BOOST_GETTER_VAR(test_bool));
-	
-	BOOST_CHECK_EQUAL( testGroup.is_read_only("read_only"), true );
-	BOOST_CHECK_EQUAL( testGroup.is_read_only("writable"),  false );
+    
+    BOOST_CHECK_EQUAL( testGroup.is_read_only("read_only"), true );
+    BOOST_CHECK_EQUAL( testGroup.is_read_only("writable"),  false );
 
     BOOST_CHECK_THROW( testGroup.set("read_only", false), boost::bad_function_call);
+}
+
+BOOST_AUTO_TEST_CASE( TestAddDeletePropertyGroupsInManager )
+{
+    TestPropertyManagerGuard gaurd;
+    TestPropertyManager *p_manager = gaurd.p_manager;
+
+    BOOST_CHECK_EQUAL( 0, p_manager->count() );
+
+    TestPropertyGroup *p_pg1 = new TestPropertyGroup();
+    TestPropertyGroup *p_pg2 = new TestPropertyGroup();
+
+    BOOST_CHECK_EQUAL( 2, p_manager->count() );
+
+    delete( p_pg1 );
+
+    BOOST_CHECK_EQUAL( 1, p_manager->count() );
+
+    delete( p_pg2 );
+
+    BOOST_CHECK_EQUAL( 0, p_manager->count() );
+}
+
+BOOST_AUTO_TEST_CASE( TestCategoryCollectionInManager )
+{
+    TestPropertyManagerGuard gaurd;
+    TestPropertyManager *p_manager = gaurd.p_manager;
+
+    const category_collection *pCategoryCollection = p_manager->get_category_collection();
+
+    TestPropertyGroup pg1;
+    TestPropertyGroup pg2;
+
+    BOOST_CHECK_EQUAL( 4, pCategoryCollection->size() );
+
+    BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( "All" ) );
+    BOOST_CHECK_EQUAL( 2, p_manager->count("All") );
+
+    BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( PROPERTY_GROUP_CATEGORY1 ) );
+    BOOST_CHECK_EQUAL( 2, p_manager->count(PROPERTY_GROUP_CATEGORY1) );
+
+    BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( PROPERTY_GROUP_CATEGORY2 ) );
+    BOOST_CHECK_EQUAL( 2, p_manager->count(PROPERTY_GROUP_CATEGORY2) );
+
+    BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( PROPERTY_GROUP_CATEGORY3 ) );
+    BOOST_CHECK_EQUAL( 2, p_manager->count(PROPERTY_GROUP_CATEGORY3) );
 }

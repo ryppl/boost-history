@@ -707,8 +707,9 @@ namespace boost { namespace pinhole
         {
             m_category_collection.insert( category_name );
             
-            // notify the Property Manager of this new category
-            if ( m_manager )
+            // notify the Property Manager of this new category if we are a root
+            // element (and therefore managed by the manager directly.
+            if ( m_manager && NULL == m_parent )
             {
                 m_manager->add_category( category_name, this );
             }
