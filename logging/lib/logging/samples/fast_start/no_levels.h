@@ -7,12 +7,12 @@
 
 namespace bl = boost::logging;
 typedef bl::named_logger<>::type logger_type;
-typedef bl::level::holder filter_type;
+typedef bl::filter::no_ts filter_type;
 
-BOOST_DECLARE_LOG_FILTER(g_l_level, filter_type)
+BOOST_DECLARE_LOG_FILTER(g_l_filter, filter_type)
 BOOST_DECLARE_LOG(g_l, logger_type)
 
-#define L_(lvl) BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_level(), lvl )
+#define L_ BOOST_LOG_USE_LOG_IF_FILTER( g_l(), g_log_filter()->is_enabled() ) 
 
 // initialize thy logs..
 void init_logs();
@@ -20,10 +20,10 @@ void init_logs();
 #endif
 
 // my_app_log.cpp - DEFINE your loggers & filters here
-//#include "my_app_log.h"
+#include "my_app_log.h"
 #include <boost/logging/format/named_write.hpp>
 
-BOOST_DEFINE_LOG_FILTER(g_l_level, filter_type ) 
+BOOST_DEFINE_LOG_FILTER(g_log_filter, filter_type ) 
 BOOST_DEFINE_LOG(g_l, logger_type) 
 
 
@@ -36,7 +36,7 @@ void init_logs() {
 
 void use_logger() {
     int i = 1;
-    L_(debug) << "this is a simple message " << i;
+    L_ << "this is a simple message " << i;
     std::string hello = "hello";
-    L_(info) << hello << " world";
+    L_ << hello << " world";
 }

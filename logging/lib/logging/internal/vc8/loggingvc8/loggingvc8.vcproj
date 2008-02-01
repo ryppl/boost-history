@@ -758,7 +758,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\getting_started.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\headers_to_include.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\known_issues.hpp"
 				>
 			</File>
 			<File

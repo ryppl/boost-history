@@ -20,7 +20,7 @@ void init_logs();
 #endif
 
 // my_app_log.cpp - DEFINE your loggers & filters here
-//#include "my_app_log.h"
+#include "my_app_log.h"
 #include <boost/logging/format/named_write.hpp>
 
 BOOST_DEFINE_LOG_FILTER(g_l_level, filter_type ) 
