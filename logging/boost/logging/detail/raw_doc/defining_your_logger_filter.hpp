@@ -172,8 +172,8 @@ just leave them @c default_.
 @code
 #include <boost/logging/format_fwd.hpp>
 
-namespace b_l = boost::logging;
-typedef b_l::logger_format_write< b_l::default_, b_l::default_, b_l::writer::threading::on_dedicated_thread > logger_type;
+namespace bl = boost::logging;
+typedef bl::logger_format_write< bl::default_, bl::default_, bl::writer::threading::on_dedicated_thread > logger_type;
 
 // declare
 BOOST_DECLARE_LOG(g_l, logger_type) 
@@ -370,7 +370,7 @@ When fast compile is off, BOOST_DEFINE_LOG will generate code similar to this:
 logger_type * g_l() { static logger_type l; return &l; }
 @endcode
 
-When fast compile is off, BOOST_DEFINE_LOG will generate code similar to this:
+When fast compile is on, BOOST_DEFINE_LOG will generate code similar to this:
 
 @code
 logger_holder<logger_type> & g_l() { static logger_holder_by_value<logger_type> l; return l; }

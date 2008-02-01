@@ -1,7 +1,10 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.21.10, 31 jan 2008
+@section changelog_cur_ver Current Version: v0.21.13, 1 feb 2008
+- added known_issues section
+- added getting_started section
+- fixed scoped logs and added test
 - added test_on_dedicated_thread
 - updated Jamfile.v2 files for examples and test, for them to compile all files tests/examples
 - updated Jamfile.v2 to actually build the tests + the tests to use BOOST_CHECK

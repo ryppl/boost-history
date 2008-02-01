@@ -14,6 +14,7 @@ namespace boost { namespace logging {
       - @ref breaking_change_v_20
     - @ref misc_compilers 
 
+- @ref getting_started
 
 - @ref workflow
     - @ref workflow_introduction 
@@ -31,8 +32,10 @@ namespace boost { namespace logging {
     - @ref scenario_multiple_files
     - @ref starter_project 
 
+
 \n
-- @b Tutorial
+@section log_tutorial Tutorial
+
     - @ref headers_to_include "Headers to #include"
     - @ref defining_your_logger_filter 
     - @ref defining_logger_macros
@@ -41,13 +44,17 @@ namespace boost { namespace logging {
     - @ref tag "Using tags"
     - @ref profile "Profiling - computing the time spent while logging"
 
+
+
 \n
-- <b>Special cases</b>
+@section special_cases Special Cases
+
     - @ref caching 
     - @ref after_destruction 
 
-\n\n
-Advanced concepts
+\n
+@section advanced_concepts Advanced concepts
+
 - @ref thread_safety 
 - @ref misc_unicode
 - @ref macros
@@ -84,6 +91,7 @@ Advanced concepts
 - @ref boost_logging_requirements 
 - @ref page_todo 
 - @ref rationale 
+- @ref known_issues 
 
 */
 

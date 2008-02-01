@@ -26,15 +26,15 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c normal         destination::stream_ptr - just like stream, but hold the stream as a shared pointer. Thus , we won't have to worry
                     about outliving the stream.
 
+- @c normal         make it possible to initialize from a file - thus we'd need no caching!
+                    also allow for extra syntax for the named_writer - {} - to be applied to a destination
+                    this way, you can specify some extra formatters to be applied only to a specific destination
+
 - @c normal         on_dedicated_thead - remove dependency on boost::thread
 
 - @c normal         on_dedicated_thead - I should see it I use logger::always_accurate increases logging time as opposed to some caching strategy.
                     I'm asking this because even if we were to use a critical section on the base_type writer's operator(), this will
                     *always* happen on the dedicated thread. Thus, I would think it should have very small overhead
-
-- @c high           bug: if using named_writer on top of on_dedicated_thread writer, and I reset the format or destination strings,
-                    I might end up modifying a formatter or destination, while some other thread is using it
-                    perhaps it's not a bug - but pause()/resume() need to be called on it. Perhaps I can automate this!
 
 - @c normal         must have helper to call on on_destructed - like, to be able to write to cout,etc
 
@@ -53,11 +53,10 @@ If you want to make sure a feature is implemented sooner, drop me a note: http:/
 - @c normal         make it so that I use BOOST_LOG_USE_WCHAR_T as little as possible
                     for instance, it's not needed in cout_t, cerr_t.
 
-- @c high           should see that if I have a tss* object, if used AFTER destruction, will not crash the application.
-                    in other words, if I have tss_with_cache<int>, after this is destroyed, I should always reference the original int or so.
-                    I need this when using a filter using TSS, after the filter has been destroyed. 
-
 - @c high           cut down compile time: make it compile faster (most likely improve use_format_write, etc)
+
+- @c high           named_write<> - due to @ref known_issue_modifying_manipulator - whenever I modify the format and/or destination string,
+                    i need to add/delete all formatters and/or destinations in order to avoid that scenario TOTHINK
 
 - @c high           logger_format_write<> should be just like other find classes - have logger_format_write<>::type
                     this should uncomplicate code a bit - at least specializing logger_to_gather/writer for logger_format_write<>. \n
