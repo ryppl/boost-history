@@ -106,6 +106,7 @@ void ts_logger_one_filter_example() {
         boost::thread t( &use_log_thread);
 
     // allow for all threads to finish
+    std::cout << "sleep 5s " << std::endl;
     do_sleep( 5000);
 }
 

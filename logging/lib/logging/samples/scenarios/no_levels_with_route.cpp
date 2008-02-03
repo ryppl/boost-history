@@ -86,18 +86,25 @@ void no_levels_with_route_example() {
     g_l()->writer().router().set_route()
         .fmt( formatter::time("$hh:$mm.$ss ") ) 
         .fmt( formatter::append_newline() )
-        .fmt( formatter::idx() )
+        /* 
+        Not like this: .fmt( formatter::idx() )
+
+        This is because 
+        add_formatter( formatter::idx(), "[%] "  );
+        has surrounded formatter::idx() in a spacer - see formatter::spacer
+        */
+        .fmt( formatter::spacer( formatter::idx(), "[%] ") )
         .clear()
         .fmt( formatter::time("$hh:$mm.$ss ") ) 
         .fmt( formatter::append_newline() )
         .dest( destination::dbg_window() )
         .clear()
-        .fmt( formatter::idx() )
+        .fmt( formatter::spacer( formatter::idx(), "[%] ") )
         .fmt( formatter::time("$hh:$mm.$ss ") ) 
         .fmt( formatter::append_newline() )
         .dest( destination::cout() )
         .clear()
-        .fmt( formatter::idx() )
+        .fmt( formatter::spacer( formatter::idx(), "[%] ") )
         .fmt( formatter::append_newline() )
         .dest( destination::file("out.txt") );
 
