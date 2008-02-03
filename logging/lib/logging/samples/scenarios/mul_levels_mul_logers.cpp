@@ -88,7 +88,6 @@ void mul_levels_mul_logers_example() {
     g_log_dbg()->mark_as_initialized();
 
 
-    // Step 8: use it...
     int i = 1;
     LDBG_ << "this is so cool " << i++;
     LDBG_ << "this is so cool again " << i++;
@@ -104,8 +103,6 @@ void mul_levels_mul_logers_example() {
     g_log_level()->set_enabled(level::info);
     LAPP_ << "good to be back ;) " << i++;
     LERR_ << "second error " << i++;
-
-    // Step 9 : Enjoy!
 }
 
 
