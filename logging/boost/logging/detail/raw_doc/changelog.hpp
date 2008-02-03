@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.22.3, 3 feb 2008
+@section changelog_cur_ver Current Version: v0.22.4, 3 feb 2008
+- ts_posix.hpp - use BOOST_ASSERT instead of assert
 - solved bug in using_tags - delete_array used after logger destroyed
 - solved bug in no_levels_with_route - care about formatter::spacer
 - solved gcc warning - m_writer initialized before m_original_logger

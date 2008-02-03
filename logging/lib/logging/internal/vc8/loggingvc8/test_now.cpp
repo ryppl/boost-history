@@ -1,127 +1,118 @@
 /**
-@example no_levels_with_route.cpp
+@example mul_levels_mul_logers.cpp
 
-@copydoc no_levels_with_route
+@copydoc mul_levels_mul_logers 
 
-@page no_levels_with_route no_levels_with_route.cpp Example
+@page mul_levels_mul_logers mul_levels_mul_logers.cpp Example
+
 
 This usage:
-- There are no levels
-- There is only one logger
-- The logger has multiple destinations
-- We use a custom route
+- You have multiple levels (in this example: debug < info < error)
+- You want to format the message before it's written 
+  (in this example: prefix it by time, by index and append newline to it)
+- You have several loggers
+- Each logger has several log destinations
 
-A custom route means you don't want to first run all formatters, and then write to all destinations.
-Depending on the destination, you'll want a certain formatting of the message
+Optimizations:
+- use a cache string (from optimize namespace), in order to make formatting the message faster
 
-In our example:
+Logs:
+- Error messages go into err.txt file
+  - formatting - prefix each message by time, index, and append newline
+- Info output goes to console, and a file called out.txt
+  - formatting - prefix each message by "[app]", time, and append newline
+- Debug messages go to the debug output window, and a file called out.txt
+  - formatting - prefix each message by "[dbg]", time, and append newline
+
+
+Here's how the output will look like:
+
+The debug output window:
 @code
-to cout:        [idx] [time] message [enter]
-to dbg_window:  [time] message [enter]
-to file:        [idx] message [enter]
+07:52.30 [dbg] this is so cool 1
+07:52.30 [dbg] this is so cool again 2
 @endcode
 
-We will use an @c apply_format_and_write class that caches the formatting, so that it'll format faster
-(more specifically, the boost::logging::format_and_write::use_cache, together with boost::logging::optimize::cache_string_several_str).
-
-The output will be similar to this:
-
-The debug window
-@code
-12:15.12 this is so cool 1
-12:15.12 hello, world
-12:15.12 good to be back ;) 2
-@endcode
-
-The file:
-@code
-[1] this is so cool 1
-[2] hello, world
-[3] good to be back ;) 2
-@endcode
 
 The console:
 @code
-[1] 12:15.12 this is so cool 1
-[2] 12:15.12 hello, world
-[3] 12:15.12 good to be back ;) 2
+07:52.30 [app] hello, world
+07:52.30 [app] good to be back ;) 4
 @endcode
 
+
+The out.txt file:
+@code
+07:52.30 [dbg] this is so cool 1
+07:52.30 [dbg] this is so cool again 2
+07:52.30 [app] hello, world
+07:52.30 [app] good to be back ;) 4
+@endcode
+
+
+The err.txt file
+@code
+07:52.30 [1] first error 3
+07:52.30 [2] second error 5
+@endcode
 */
 
 
 
-#include <boost/logging/format_fwd.hpp>
+#include <boost/logging/format/named_write.hpp>
+typedef boost::logging::named_logger<>::type logger_type;
 
-BOOST_LOG_FORMAT_MSG( optimize::cache_string_several_str<> )
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) << "[dbg] "
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) << "[app] "
 
-#include <boost/logging/format.hpp>
+BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
+BOOST_DEFINE_LOG(g_log_err, logger_type)
+BOOST_DEFINE_LOG(g_log_app, logger_type)
+BOOST_DEFINE_LOG(g_log_dbg, logger_type)
 
 using namespace boost::logging;
 
+void mul_levels_mul_logers_example() {
+    // reuse the same destination for 2 logs
+    destination::file out("out.txt");
+    g_log_app()->writer().replace_destination("file", out);
+    g_log_dbg()->writer().replace_destination("file", out);
+    // formatting (first param) and destinations (second param)
+    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "file(err.txt)");
+    g_log_app()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout");
+    g_log_dbg()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout debug");
 
-typedef logger_format_write< > logger_type;
+    g_log_app()->mark_as_initialized();
+    g_log_err()->mark_as_initialized();
+    g_log_dbg()->mark_as_initialized();
 
-BOOST_DECLARE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DECLARE_LOG(g_l, logger_type) 
 
-#define L_ BOOST_LOG_USE_LOG_IF_FILTER(g_l(), g_log_filter()->is_enabled() )
-
-BOOST_DEFINE_LOG_FILTER(g_log_filter, filter::no_ts ) 
-BOOST_DEFINE_LOG(g_l, logger_type)
-
-void no_levels_with_route_example() {
-    //         add formatters and destinations
-    //         That is, how the message is to be formatted...
-    g_l()->writer().add_formatter( formatter::idx(), "[%] "  );
-    g_l()->writer().add_formatter( formatter::time("$hh:$mm.$ss ") );
-    g_l()->writer().add_formatter( formatter::append_newline() );
-
-    //        ... and where should it be written to
-    g_l()->writer().add_destination( destination::cout() );
-    g_l()->writer().add_destination( destination::dbg_window() );
-    g_l()->writer().add_destination( destination::file("out.txt") );
-
-    // Now, specify the route
-    g_l()->writer().router().set_route()
-        .fmt( formatter::time("$hh:$mm.$ss ") ) 
-        .fmt( formatter::append_newline() )
-        .fmt( formatter::idx() )
-        .clear()
-        .fmt( formatter::time("$hh:$mm.$ss ") ) 
-        .fmt( formatter::append_newline() )
-        .dest( destination::dbg_window() )
-        .clear()
-        .fmt( formatter::idx() )
-        .fmt( formatter::time("$hh:$mm.$ss ") ) 
-        .fmt( formatter::append_newline() )
-        .dest( destination::cout() )
-        .clear()
-        .fmt( formatter::idx() )
-        .fmt( formatter::append_newline() )
-        .dest( destination::file("out.txt") );
-
-    g_l()->mark_as_initialized();
-
+    // Step 8: use it...
     int i = 1;
-    L_ << "this is so cool " << i++;
+    LDBG_ << "this is so cool " << i++;
+    LDBG_ << "this is so cool again " << i++;
+    LERR_ << "first error " << i++;
 
     std::string hello = "hello", world = "world";
-    L_ << hello << ", " << world;
+    LAPP_ << hello << ", " << world;
 
-    g_log_filter()->set_enabled(false);
-    L_ << "this will not be written anywhere";
-    L_ << "this won't be written anywhere either";
+    g_log_level()->set_enabled(level::error);
+    LDBG_ << "this will not be written anywhere";
+    LAPP_ << "this won't be written anywhere either";
 
-    g_log_filter()->set_enabled(true);
-    L_ << "good to be back ;) " << i++;
+    g_log_level()->set_enabled(level::info);
+    LAPP_ << "good to be back ;) " << i++;
+    LERR_ << "second error " << i++;
+
+    // Step 9 : Enjoy!
 }
 
 
 
 
 int main() {
-    no_levels_with_route_example();
+    mul_levels_mul_logers_example();
 }
 
 

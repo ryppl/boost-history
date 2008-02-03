@@ -38,7 +38,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdexcept>
-#include <cassert>
+#include <boost/assert.hpp>
 
 namespace boost { namespace logging {
 
@@ -56,15 +56,15 @@ public:
     mutex_posix() : m_mutex() {
         pthread_mutexattr_t attr;
         int res = pthread_mutexattr_init(&attr);
-        assert(res == 0);
+        BOOST_ASSERT(res == 0);
 
         res = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-        assert(res == 0);
+        BOOST_ASSERT(res == 0);
 
         res = pthread_mutex_init(&m_mutex, &attr);
         {
             int res = pthread_mutexattr_destroy(&attr);
-            assert(res == 0);
+            BOOST_ASSERT(res == 0);
         }
         if (res != 0)
             throw std::runtime_error("could not create mutex_posix");
@@ -72,17 +72,17 @@ public:
     ~mutex_posix() {
         int res = 0;
         res = pthread_mutex_destroy(&m_mutex);
-        assert(res == 0);
+        BOOST_ASSERT(res == 0);
     }
 
     void Lock() {
         int res = 0;
         res = pthread_mutex_lock(&m_mutex);
-        assert(res == 0);
+        BOOST_ASSERT(res == 0);
         if (++m_count > 1)
         {
             res = pthread_mutex_unlock(&m_mutex);
-            assert(res == 0);
+            BOOST_ASSERT(res == 0);
         }
     }
     void Unlock() {
@@ -90,7 +90,7 @@ public:
         {
             int res = 0;
             res = pthread_mutex_unlock(&m_mutex);
-            assert(res == 0);
+            BOOST_ASSERT(res == 0);
         }
     }
 private:
