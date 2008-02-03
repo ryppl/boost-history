@@ -79,9 +79,17 @@ void mul_levels_mul_logers_example() {
     g_log_app()->writer().replace_destination("file", out);
     g_log_dbg()->writer().replace_destination("file", out);
     // formatting (first param) and destinations (second param)
-    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "file(err.txt)");
+    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "cout file(err.txt)"); // line A
     g_log_app()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout");
     g_log_dbg()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout debug");
+
+    /* 
+    Note : the "line A" above originally was:
+    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "file(err.txt)");
+
+    This caused a very strange assertion failure on Fedora8, when the program exits, while destroying the global variables.
+    I've spent some time debugging it but to no avail. I will certainly look more into this.
+    */
 
     g_log_app()->mark_as_initialized();
     g_log_err()->mark_as_initialized();
