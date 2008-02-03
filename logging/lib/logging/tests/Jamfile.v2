@@ -18,7 +18,7 @@ project
       <include>../../.. 
       <include>$(BOOST_ROOT) 
       <threading>multi 
-      <runtime-link>static 
+      <toolset>msvc:<runtime-link>static 
       <link>static 
       <library>/boost//thread 
       <library>/boost//filesystem 

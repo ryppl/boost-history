@@ -34,6 +34,18 @@ The Boost Logging Lib has been tested with the following compilers:
 - gcc 4.1
 
 
+@section misc_bjam Compiling with bjam
+
+You can compile the scenarios and/or tests with bjam. The easy way:
+
+- On Windows:
+  - go the the scenarios or tests directory
+  - run @c run_win.bat @em path_to_boost
+  - example: <tt>run_win d:/boosts/boost_1_34_1/ </tt>
+- On Linux
+  - go the the scenarios or tests directory
+  - run @c <tt>bash run_linux.sh <em> path_to_boost toolset</em> </tt>
+  - example: <tt>sh run_linux.sh /home/jtorjo/Desktop/boost_1_34_1/ gcc </tt>
 
 */
 

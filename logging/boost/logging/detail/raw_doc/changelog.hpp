@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.21.13, 1 feb 2008
+@section changelog_cur_ver Current Version: v0.22.1, 3 feb 2008
+- solved gcc warning - m_writer initialized before m_original_logger
+- fixed issue in Jamfile.v2 - runtime-link should refer only to msvc
+
+v0.21.13, 1 feb 2008
 - added known_issues section
 - added getting_started section
 - fixed scoped logs and added test

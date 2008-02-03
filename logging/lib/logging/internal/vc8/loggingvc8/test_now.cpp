@@ -1,42 +1,70 @@
-// my_app_log.h - DECLARE your loggers & filters here
-#ifndef my_app_LOG_H_header
-#define my_app_LOG_H_header
+/**
+@example mul_levels_one_logger.cpp
 
-#include <boost/logging/format/named_write_fwd.hpp>
-// #include <boost/logging/writer/on_dedicated_thread.hpp> // uncomment if you want to do logging on a dedicated thread
+@copydoc mul_levels_one_logger
 
-namespace bl = boost::logging;
-typedef bl::named_logger<>::type logger_type;
-typedef bl::level::holder filter_type;
+@page mul_levels_one_logger mul_levels_one_logger.cpp Example
 
-BOOST_DECLARE_LOG_FILTER(g_l_level, filter_type)
-BOOST_DECLARE_LOG(g_l, logger_type)
+This usage:
+- You have multiple levels (in this example: debug < info < error)
+- You want to format the message before it's written 
+  (in this example: prefix it by time, by index, and append newline to it)
+- You have <b>one log</b>, which writes to several log destinations
+  (in this example: the console, the debug output window, and a file)
 
-#define L_(lvl) BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_level(), lvl )
+In this example, all output will be written to the console, debug output window, and "out.txt" file.
+It will look similar to this one:
 
-// initialize thy logs..
-void init_logs();
+@code
+21:03.17.243 [1] this is so cool 1
+21:03.17.243 [2] first error 2
+21:03.17.243 [3] hello, world
+21:03.17.243 [4] second error 3
+21:03.17.243 [5] good to be back ;) 4
+21:03.17.243 [6] third error 5
+@endcode
 
-#endif
+*/
 
-// my_app_log.cpp - DEFINE your loggers & filters here
-//#include "my_app_log.h"
+
 #include <boost/logging/format/named_write.hpp>
+typedef boost::logging::named_logger<>::type logger_type;
 
-BOOST_DEFINE_LOG_FILTER(g_l_level, filter_type ) 
-BOOST_DEFINE_LOG(g_l, logger_type) 
+#define L_(lvl) BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_log_level(), lvl )
 
+BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) // holds the application log level
+BOOST_DEFINE_LOG(g_l, logger_type)
 
-void init_logs() {
+void test_mul_levels_one_logger() {
     // formatting    : time [idx] message \n
     // destinations  : console, file "out.txt" and debug window
     g_l()->writer().write("%time%($hh:$mm.$ss.$mili) [%idx%] |\n", "cout file(out.txt) debug");
     g_l()->mark_as_initialized();
+
+    int i = 1;
+    L_(debug) << "this is so cool " << i++;
+    L_(error) << "first error " << i++;
+
+    std::string hello = "hello", world = "world";
+    L_(debug) << hello << ", " << world;
+
+    using namespace boost::logging;
+    g_log_level()->set_enabled(level::error);
+    L_(debug) << "this will not be written anywhere";
+    L_(info) << "this won't be written anywhere either";
+    L_(error) << "second error " << i++;
+
+    g_log_level()->set_enabled(level::info);
+    L_(info) << "good to be back ;) " << i++;
+    L_(error) << "third error " << i++;
 }
 
-void use_logger() {
-    int i = 1;
-    L_(debug) << "this is a simple message " << i;
-    std::string hello = "hello";
-    L_(info) << hello << " world";
+
+
+int main() {
+    test_mul_levels_one_logger();
 }
+
+
+// End of file
+
