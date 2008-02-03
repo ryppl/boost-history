@@ -46,6 +46,7 @@ struct delete_array : std::vector< do_delete_base* > {
     typedef boost::logging::threading::mutex mutex;
     typedef std::vector< do_delete_base* > vector_base;
 
+    delete_array() {}
     ~delete_array () {
         for ( const_iterator b = begin(), e = end(); b != e; ++b)
             delete *b;

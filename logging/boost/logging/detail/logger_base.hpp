@@ -22,6 +22,8 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/logging/detail/tss/tss.hpp>
+
 // see "Using the logger(s)/filter(s) after they've been destroyed" section in the documentation
 //#include <boost/logging/detail/after_being_destroyed.hpp>
 
@@ -130,7 +132,13 @@ namespace boost { namespace logging {
         typedef detail::common_base_holder<gather_msg, write_msg> common_base_type;
 
     protected:
-        logger_base() {}
+        logger_base() {
+#if defined(BOOST_LOG_TSS_USE_INTERNAL)
+            // we need ALL loggers to depend on delete_array - this way, delete_array will be destroyed
+            // after all loggers are destroyed
+            detail::new_object_ensure_delete< default_ > ();
+#endif
+        }
         logger_base(const logger_base&) {}
 
     private:

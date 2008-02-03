@@ -1,7 +1,8 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.22.2, 3 feb 2008
+@section changelog_cur_ver Current Version: v0.22.3, 3 feb 2008
+- solved bug in using_tags - delete_array used after logger destroyed
 - solved bug in no_levels_with_route - care about formatter::spacer
 - solved gcc warning - m_writer initialized before m_original_logger
 - fixed issue in Jamfile.v2 - runtime-link should refer only to msvc
