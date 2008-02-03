@@ -1,7 +1,9 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.22.6, 3 feb 2008
+@section changelog_cur_ver Current Version: v0.22.7, 3 feb 2008
+- v0.22.7 - the version that is Boost Reviewed
+- updated batches for building with bjam
 - made mul_levels_mul_logers run successfully on Fedora8
 - ts_posix.hpp - use BOOST_ASSERT instead of assert
 - solved bug in using_tags - delete_array used after logger destroyed
