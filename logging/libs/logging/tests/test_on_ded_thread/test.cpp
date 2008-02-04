@@ -104,9 +104,9 @@ void test_on_dedicated_thread() {
         boost::thread t( &use_log_thread);
 
     // allow for all threads to finish
-    int sleep_ms = MESSAGES_PER_THREAD * THREAD_COUNT * 2 ;
+    int sleep_ms = MESSAGES_PER_THREAD * THREAD_COUNT * 5 /* just in case*/;
     std::cout << "sleeping for " << sleep_ms << " milliseconds" << std::endl;
-    do_sleep( MESSAGES_PER_THREAD * THREAD_COUNT * 2 /* just in case*/);
+    do_sleep( sleep_ms );
     test_logged_messages();
 }
 
