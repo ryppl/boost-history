@@ -1,7 +1,12 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.22.7, 3 feb 2008
+@section changelog_cur_ver Current Version: v0.22.8, 4 feb 2008
+- added license to all .h .cpp files (in scenarios/tests - they were missing)
+- removed loggingvc8.cpp file (useless)
+- lib -> libs
+- doxygen.txt -> [lib -> libs]
+
 - v0.22.7 - the version that is Boost Reviewed
 - updated batches for building with bjam
 - made mul_levels_mul_logers run successfully on Fedora8

@@ -334,10 +334,6 @@
 			Name="main"
 			>
 			<File
-				RelativePath=".\loggingvc8.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\ReadMe.txt"
 				>
 			</File>
@@ -459,10 +455,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\scoped_log.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\boost\logging\detail\sink.hpp"
 				>
 			</File>
 			<File
