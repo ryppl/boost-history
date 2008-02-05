@@ -1,0 +1,26 @@
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+
+use-project gui
+  : /Development/cppgui
+  ;
+
+project dataflow/example/cppgui_gui
+    : requirements
+      <include>../../../..
+      <library>/gui//gui/<link>static
+      <define>BOOST_ALL_NO_LIB=1
+    ;
+
+local sources =
+    cppgui_example
+    blueprint_bank
+    blueprint_window
+    blueprint_component
+    ;
+
+exe cppgui_example : $(sources).cpp ;
