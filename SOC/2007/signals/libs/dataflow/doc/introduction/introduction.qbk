@@ -6,24 +6,85 @@ the Signal Network library, which became the Dataflow library)
 as well as some GSoC status updates can be found on the
 [@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].]
 
-Dataflow is a generic library for [WikiDataflow] programming.  It offers:
+[heading Description]
 
-* a number of generic [concepts] which capture various aspects of a
-dataflow framework.
-* a support layer for a particular dataflow framework ([DataflowSignals]).
-* a framework-independent layer ([DataflowBlueprint]) built on top of the
-  generic layer, which
-  provides dataflow network modeling/analysis via
-  the [BoostGraph], and support for run-time reflection of components.
-  
+Dataflow is a generic library for [WikiDataflow] programming.  Dataflow
+programs can typically be expressed as a graph in which vertices represent
+components that process data, and edges represent the flow of data between
+the components.  As such, dataflow programs can be easily reconfigured by
+changing the components and/or the connections.
+
+[heading Library Layers]
+The Dataflow library currently offers three layers:
+
+* A layer providing generic dataflow support centered around [concepts],
+  adaptable to various dataflow frameworks and data transport mechanisms.
+* The [DataflowSignals] layer, with a number of implemented components use
+  [BoostSignals] as a data transport mechanism.
+* The [DataflowBlueprint] layer, built on top of the generic layer and providing
+  runtime reflection and network modeling using the [BoostGraph].
+
+The relationship of these layers is shown in the following diagram:
+
+[$layers.png]
+
+As indicated by the diagram, classes provided by [DataflowSignals] model
+the concepts from the generic dataflow layer.  [DataflowBlueprint] class
+templates require these concepts, hence they can be used with [DataflowSignals].
 The idea behind providing a generic dataflow library is that
 other data transport mechanisms and dataflow frameworks can be easily adapted for
-use with the library, and benefit from layers built on top of the generic layer.
+use with the library (through modeling the appropriate concepts), and benefit from
+any layers built on top of the generic layer (through requiring the appropriate
+concepts).
+
+[/There is also a (currently very experimental) [DataflowPhoenix] layer,
+which uses object pointers with support for
+[BoostPhoenix] actors specifying how the data is processed.]
+
+[h5 Generic dataflow layer]
+
+The generic dataflow layer provides [concepts] which are applicable to
+different dataflow frameworks, and can be used to develop generic dataflow
+code.  Currently, the concepts adress things such as [Component]s and [Port]s,
+as well as the connection and data extraction functionality
+(the [rationale] section discusses why this is the initial focus).
+
+[DataflowSignals] has a (very thin) support layer which makes `boost::signal`
+and `boost::function` model the Dataflow [concepts], and there is an
+[vtk_example example] showing how to do the same for [VTK].  Support layers
+for other dataflow frameworks will be added in the future.
+
+Developing a Dataflow support layer for a dataflow framework allows
+anything that is built on top of the generic layer (e.g., [DataflowBlueprint],
+a [gui_example GUI dataflow editor], and operators which can be used
+to connect components in a clean, readable manner) to be used with the
+framework.  See the [link dataflow.future future directions] section
+for an idea of about other things in planning.
+
+[h5 Dataflow.Signals layer]
+
+This part of the Dataflow library provides Dataflow support and processing
+components which use [BoostSignals] as a mechanism to transfer data
+between the components.
+
+[h5 Dataflow.Blueprint layer]
+
+[DataflowBlueprint] provides run-time reflection and modeling of dataflow
+networks in a [BoostGraph] graph for any dataflow framework with
+implemented Dataflow library support.
 
 [/There is an example on how to do that for [VTK], and there is also an
 implementation of an (experimental and currently broken) layer based
 connections made through simple object pointers, with support for using
 [BoostPhoenix2] actors for data processing ([DataflowPhoenix]).]
+
+[heading What the Dataflow library doesn't offer]
+
+Ideally, the Dataflow library should at some point offer a native dataflow
+framework which offers memory management, flexible scheduling, optimized
+evaluation, etc.  At this point, such a framework is missing.
+
+[heading Where to go from here]
 
 * If you would like some more information about why one would want to connect
   objects into a dataflow network, read about
@@ -186,43 +247,11 @@ the Dataflow library, see
 
 [section:how_to_use How to use this library and the documentation]
 
-The Dataflow library currently has three useful parts:
+Different layers of the library are covered in different sections of the
+documentation.  Here are some good starting points for the different layers:
 
-* A layer providing generic dataflow support, adaptable to various dataflow
-  frameworks and data transport mechanisms.
-* The [DataflowSignals] layer, with a number of implemented components that
-  facilitate implementation of dataflow networks using [BoostSignals] as
-  a data transport mechanism.
-* The [DataflowBlueprint] layer, built on top of the generic layer and providing
-  runtime reflection and network modeling using the [BoostGraph].
-
-[/There is also a (currently very experimental) [DataflowPhoenix] layer,
-which uses object pointers with support for
-[BoostPhoenix] actors specifying how the data is processed.]
 
 [heading Generic dataflow layer]
-
-There are generic properties of dataflow programs which do not depend on the
-underlying dataflow framework or data transport mechanism,
-and can be exploited to develop generic dataflow code.  Currently, the generic
-layer addresses mostly connection and extraction aspects - the [rationale]
-section discusses why.
-
-[/The generic dataflow layer captures some of these properties, and
-has been sucessfully adapted to three
-different data transport mechanisms ([BoostSignals], pointers in conjunction
-with [BoostPhoenix2], and [VTK] pipelines).]
-
-At the moment, the most useful functionality gained by developing a Dataflow
-support layer is the ability to connect components in a clean, readable
-manner. As more generic code is developed on top of
-the generic dataflow layer (such as the recently started [DataflowBlueprint]),
-providing a Dataflow support layer for your
-favorite dataflow framework will be more beneficial.
-
-See the [link dataflow.future future directions] section
-for an idea of what might become available in the future for dataflow frameworks
-with Dataflow library support.
 
 * If you would like to implement Dataflow support for the dataflow framework
 you are working with,  see the
@@ -233,25 +262,17 @@ layer, see the [concepts] documentation.
 
 [heading Dataflow.Signals layer]
 
-This part of the Dataflow library provides components
-and connection-making capabilty which facilitates large-scale use of
-[BoostSignals] as a mechanism to transfer data between processing components.
-
 For examples of how the [DataflowSignals] layer can be used, see:
 
-* The example on developing a 
+* The example on developing a
   [link dataflow.introduction.examples.distributed distributed dataflow application].
-* The example on developing an  
+* The example on developing an
   [link dataflow.introduction.examples.gil image processing network].
 * The [DataflowSignals] documentation.
 
 [heading Dataflow.Blueprint layer]
 
-[DataflowBlueprint] provides run-time reflection and modeling of dataflow
-networks in a [BoostGraph] graph for any dataflow framework with
-implemented Dataflow library support.
-
-The development of this layer has only begun.  To find out more about it, see:
+The development of this layer is ongoing.  To find out more about it, see:
 
 * The example on [link dataflow.introduction.examples.blueprint run-time
   reflection and connectivity modeling].
@@ -404,7 +425,7 @@ Short term to-do list:
 * make dispatching possible on other than just the [PortTraits]
 * `port_adapter` should be renamed to `adapter`
 * [Invocable] should be a part of [UnaryOperable]
-* propagate return values where they should be
+* propagate return values where they should be propagated
 
 See the [future_work] section for more information on what is planned.
 
@@ -455,7 +476,7 @@ to build each one of those by going to the appropriate directory and
 running bjam.
 
 [warning The Jamfile for the VTK examples currently only works for Darwin
-with VTK built for X11, and for MSVC]
+with VTK built for X11, and for MSVC.]
 
 The library itself is header only, and requires no linking.  However, parts
 of it depend on boost libraries which do need to be built and linked (see
@@ -464,7 +485,7 @@ the linking information below).
 [heading Linking]
 
 The generic Dataflow support layer is header-only, and relies only on other
-Boost header-only libraries (MPL, enable_if, and small parts of fusion).
+Boost header-only libraries.
 
 The [DataflowSignals] layer is dependent on the [BoostSignals] library,
 which must be built and linked.  A few of the components ([socket_sender]
@@ -472,6 +493,9 @@ and [socket_receiver]) are also dependent on [BoostAsio], which depends on
 the System library which must also be built and linked.  A few other components
 ([mutex] and [condition]) are dependent on [BoostThread], which has to be
 linked as well.
+
+The [vtk_example VTK example] requires [VTK], and the [gui_example GUI dataflow
+editor example] requires [FTLK].
 
 [endsect][/download]
 

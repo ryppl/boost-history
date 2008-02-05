@@ -3,15 +3,15 @@
 [heading General focus of the library]
 
 * The generic dataflow layer focuses mostly on connection and extraction
-  functionality of a dataflow framework.  The reason I started with connection
-  and extraction is that it is the single most uniformly present
-  aspect of dataflow frameworks (going to the very definition of dataflow).
+  functionality of a dataflow framework, since this functionality should
+  be present in all dataflow frameworks
+  (going to the very definition of dataflow).   
 
- * Much of current dataflow framework development is dedicated to framework-specific
-   visual programming
-   environments, and bindings to outside languages.  Much of this
-   can be done in a generic fashion, given generic support for connecting
-   components and extracting data of the Dataflow library.
+ * Generic treatment of component connection and data extraction is useful
+   because, for example, much of current dataflow framework development is
+   dedicated to visual programming environments, and bindings to outside
+   languages.  Rather than reinventing the wheel for every framework separately,
+   much of this can be done in a generic fashion instead.
    
  * While there are many other
    functionalities that can be part of a dataflow framework (such as memory
@@ -25,16 +25,15 @@
   is [DataflowSignals] for three reasons:
 
  * a [BoostSignals]-based framework was the original focus of this project;
+ * [DataflowSignals] uses existing Boost functionality to make
+   the implementation of the dataflow framework extremely simple.
  * components in other frameworks (e.g., [VTK]) don't rely exclusively on
-   their framework's dataflow mechanisms to do their work
-   (e.g., apart from connecting
-   [VTK] components and moving data through [VTK]'s pipeline,
-   you can also call the components' methods to customize their
-   behavior).  [BoostSignals], since it is based on function calls, can
-   then be used to access function calling behavior in a way that is
-   native to the Dataflow library.
- * [DataflowSignals] makes use of existing Boost functionality to make
-  the implementation of the dataflow framework extremely simple.
+   their framework's dataflow mechanisms to do their work.  For example,
+   apart from connecting [VTK] components and moving data through [VTK]'s
+   pipeline, the user also needs to call the components' methods to customize
+   their behavior).  Since [BoostSignals] is based on data transfer through
+   function calls, it can be used to expose [VTK] components' methods
+   in a way that is native to the Dataflow library.
   
 * There is no
   doubt that implementing other kinds of dataflow frameworks would be useful
@@ -66,7 +65,8 @@
 
 [heading Implementation choices]
 
-* Among various tag dispatch conventions, I chose to go with functor templates
+* Among various tag dispatch conventions, I chose to go with function object
+  templates
   because of relative simplicity as well as integration with boost::result_of.
   Using a function might be another good alternative (as suggested
   [@http://www.boost.org/more/generic_programming.html#tag_dispatching here]),

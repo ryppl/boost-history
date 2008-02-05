@@ -17,14 +17,15 @@
 [template Traits[] [link dataflow.support.concepts.general.entity [^Traits]]]
 [template Entity[] [link dataflow.support.concepts.general.entity [^Entity]]]
 [template PortCategory[] [link dataflow.support.concepts.port_related.portcategory [^PortCategory]]]
+[template Mechanism[] [link dataflow.support.concepts.port_related.mechanism [^Mechanism]]]
 [template PortTraits[] [link dataflow.support.concepts.port_related.port [^PortTraits]]]
 [template Port[] [link dataflow.support.concepts.port_related.port [^Port]]]
 [template ProducerPort[] [link dataflow.support.concepts.port_related.port [^ProducerPort]]]
 [template ConsumerPort[] [link dataflow.support.concepts.port_related.port [^ConsumerPort]]]
 [template ComplementedPort[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPort]]]
 [template ComplementedPortTraits[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPortTraits]]]
-[template PortVector[] [link dataflow.support.concepts.general.portvector [^PortVector]]]
-[template PortVectorTraits[] [link dataflow.support.concepts.general.portvector [^PortVectorTraits]]]
+[template PortVector[] [link dataflow.support.concepts.component.portvector [^PortVector]]]
+[template PortVectorTraits[] [link dataflow.support.concepts.component.portvector [^PortVectorTraits]]]
 [template VectorPort[] [link dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
 [template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraitr]]]
 [template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
@@ -119,10 +120,13 @@
 [template FuturePin[] [link dataflow.future.pin pin]]
 [template rationale[] [link dataflow.development.rationale rationale]]
 
+[template is_tag[] [classref boost::dataflow::is_tag is_tag]]
+[template is_mechanism[] [classref boost::dataflow::is_mechanism is_mechanism]]
 [template is_port_category[] [classref boost::dataflow::is_port_category is_port_category]]
 [template port_traits[] [classref boost::dataflow::port_traits [^port_traits]]]
 [template traits_of[] [classref boost::dataflow::traits_of traits_of]]
 [template register_traits[] [classref boost::dataflow::register_traits register_traits]]
+[template is_entity[] [classref boost::dataflow::is_entity [^is_entity]]]
 [template is_port[] [classref boost::dataflow::is_port [^is_port]]]
 [template port[] [classref boost::dataflow::port [^port]]]
 [template complemented_port_traits[] [classref boost::dataflow::complemented_port_traits [^complemented_port_traits]]]
@@ -130,7 +134,9 @@
 
 [template DATAFLOW_TRAITS[] [macroref DATAFLOW_TRAITS DATAFLOW_TRAITS]]
 [template DATAFLOW_TRAITS_ENABLE_IF[] [macroref DATAFLOW_TRAITS_ENABLE_IF DATAFLOW_TRAITS_ENABLE_IF]]
-[template default_tag[] [classref boost::dataflow::default_tag [^concepts::default_tag]]]
+[template default_tag[] [classref boost::dataflow::default_tag [^default_tag]]]
+
+[template true[] Boolean MPL Metafunction that evaulates to true]
 
 [import ../test/test_port.cpp]
 

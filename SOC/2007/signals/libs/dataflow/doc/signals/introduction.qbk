@@ -1,90 +1,38 @@
 [section Introduction]
 
-[section:fusion DataflowSignals and Boost.Fusion]
+[/The Signal Network library relies on moving the data via function parameters and return values.
+Here, the Boost.Signals library is used to model these individual data channels which couple
+the data transfer and the computational component invocation.  This is one possible dataflow-oriented
+approach.
 
-The components in the [DataflowSignals] module are implemented using [fusion].  To use the
-[DataflowSignals] module, you might benefit from the following if you're not familiar with fusion.
+Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
+network is local - each component knows about where its signals are going, but it knows nothing
+of where the signals arriving at its own slots are coming from.  Unless we record how the network was
+constructed, there is no "big picture" of what the complete network looks like.  Similarly,
+the network is executed autonomously - the components invoke one another when appropriate, and
+no external control mechanism is required.]
 
-[heading Fused vs. unfused]
-A simple C++ function object might look something like this:
 
-    struct f
-    {
-        int operator()(int arg1, int &arg2, const std::string &arg3)
-        {
-            ...
-        }
-    }
+[BoostSignals] is an excellent building block for dataflow networks,
+as it provides support for all of the essential elements -
+data transport through parameters and return values, combining
+return values from multiple signal calls, component invocation,
+and reconfigurability through connection and disconnection.
 
-The thing to note here is that there are three arguments (of types `int`, `int &`, and `const std::string &`
-respectively), and that when the function object is invoked, they are passed separately:
+The [DataflowSignals] module uses [BoostSignals] as
+the data transport mechanism in dataflow networks.
+In addition, it provides two major contributions that facilitate the
+building of large signals-based dataflow networks:
 
-    int x;
-    std::string s;
-    f()(1, x, s);
-    
-In the terminology of [fusion], this function object is /unfused/.  This is in contrast to a /fused/
-fuction object, which might look like this:
-
-    struct fused_f
-    {
-        int operator()(fusion::vector<int, int &, const std::string &> &args)
-        {
-            ...
-        }
-    }
-
-Basically, the difference is that the three arguments from the unfused version are now sent in a single
-fusion container.  The benefit is that no matter how many "unfused" arguments there are, there is
-always a single "fused" argument.  Hence, writing templates that deal with a variable number of arguments
-becomes a lot simpler.
-
-[heading [DataflowSignals] provides both fused and unfused components]
-
-While writing the generic components provided in the [DataflowSignals] module benefits from using
-[fusion], your particular use case might not.  For this reason, every component provided
-by the [DataflowSignals] module:
-
-* can receive both fused and unfused signals
-* has both a version that sends fused signals and a version that sends unfused signals.
-
-The type of sent signal is provided as a template argument to the class, with
-the default value being `unfused`.
-
-For example,
-
-    signals::storage<int (int, int &, const std::string &>), signals::unfused> unfused_storage;
-    signals::storage<int (int, int &, const std::string &>)> unfused_storage_by_default;
-    signals::storage<int (int, int &, const std::string &>), signals::fused> fused_storage;
-
-In the above case, `unfused_storage` is similar to `f` above, and can be used as a slot
-for signals which carry regular, unfused arguments.
-On the other hand, `fused_storage` acts as a function object similar to `fused_f` above.
-Hence, it can be used as a slot for signals which carry a fusion container as an argument.
-
-[heading Examples mostly show unfused versions]
-
-The examples shown in this documentation are mostly focused on the unfused
-versions of the components, since a user starting with the library
-is most likely to be using the library with unfused components.
-In the vast majority of cases, when all of the
-components used are library-provided components, the fused and unfused examples
-are identical except for the specifications that the components should be fused
-or unfused.
-
-The biggest differences come into play when the examples
-include user-implemented components - implementing a fused component can
-be slightly (or greatly) different from implementing an unfused component.
-In these situations, the documentation should state the differences in code
-when using fused components.
-
-[endsect][/fusion]
+* Support for a number of types of components (functors, filters,
+  member function slot selection), which can be used with
+  the generic Dataflow functionality - such as the [connect] function and its
+  associated operators which can be
+  used to easily connect different kinds of components.
+* A number of generic and specific components which can be extended
+  and customized for use in particular dataflow networks.
 
 [section Quick Start]
-
-[note If you are not familiar with [BoostFusion], you may want to read the 
-[link dataflow.introduction.fusion Dataflow.Signals and Boost.Fusion] section
-first.]
 
 [DataflowSignals] provides many common building block components for a
 signal-based dataflow network.  The most basic is [storage], which
@@ -232,5 +180,86 @@ The example uses the following classes:
 [endsect][/multi_out]
 
 [endsect][/examples]
+
+[section:fusion DataflowSignals and Boost.Fusion]
+
+The components in the [DataflowSignals] module are implemented using [fusion].  To use the
+[DataflowSignals] module, you might benefit from the following if you're not familiar with fusion.
+
+[heading Fused vs. unfused]
+A simple C++ function object might look something like this:
+
+    struct f
+    {
+        int operator()(int arg1, int &arg2, const std::string &arg3)
+        {
+            ...
+        }
+    }
+
+The thing to note here is that there are three arguments (of types `int`, `int &`, and `const std::string &`
+respectively), and that when the function object is invoked, they are passed separately:
+
+    int x;
+    std::string s;
+    f()(1, x, s);
+    
+In the terminology of [fusion], this function object is /unfused/.  This is in contrast to a /fused/
+fuction object, which might look like this:
+
+    struct fused_f
+    {
+        int operator()(fusion::vector<int, int &, const std::string &> &args)
+        {
+            ...
+        }
+    }
+
+Basically, the difference is that the three arguments from the unfused version are now sent in a single
+fusion container.  The benefit is that no matter how many "unfused" arguments there are, there is
+always a single "fused" argument.  Hence, writing templates that deal with a variable number of arguments
+becomes a lot simpler.
+
+[heading [DataflowSignals] provides both fused and unfused components]
+
+While writing the generic components provided in the [DataflowSignals] module benefits from using
+[fusion], your particular use case might not.  For this reason, every component provided
+by the [DataflowSignals] module:
+
+* can receive both fused and unfused signals
+* has both a version that sends fused signals and a version that sends unfused signals.
+
+The type of sent signal is provided as a template argument to the class, with
+the default value being `unfused`.
+
+For example,
+
+    signals::storage<int (int, int &, const std::string &>), signals::unfused> unfused_storage;
+    signals::storage<int (int, int &, const std::string &>)> unfused_storage_by_default;
+    signals::storage<int (int, int &, const std::string &>), signals::fused> fused_storage;
+
+In the above case, `unfused_storage` is similar to `f` above, and can be used as a slot
+for signals which carry regular, unfused arguments.
+On the other hand, `fused_storage` acts as a function object similar to `fused_f` above.
+Hence, it can be used as a slot for signals which carry a fusion container as an argument.
+
+[heading Examples mostly show unfused versions]
+
+The examples shown in this documentation are mostly focused on the unfused
+versions of the components, since a user starting with the library
+is most likely to be using the library with unfused components.
+In the vast majority of cases, when all of the
+components used are library-provided components, the fused and unfused examples
+are identical except for the specifications that the components should be fused
+or unfused.
+
+The biggest differences come into play when the examples
+include user-implemented components - implementing a fused component can
+be slightly (or greatly) different from implementing an unfused component.
+In these situations, the documentation should state the differences in code
+when using fused components.
+
+[endsect][/fusion]
+
 
 [endsect][/introduction]

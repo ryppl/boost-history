@@ -11,6 +11,15 @@ The following is a screenshot of the editor:
 
 [$blueprint_screenshot.png]
 
+It currently has the following capabilities:
+
+* there is a component bank with 4 hardcoded (but easily extensible) components
+* you can click on a component to add it to the blueprint
+* you can drag the components around
+* you can connect ports that are [Connectable]
+* you can invoke components that are [Invocable]
+* a few of the components have a GUI element which can be interacted with
+
 To build the GUI example, you will need to download [FLTK].  At some point
 I will probably develop another version for the [cppgui] library being
 developed.
