@@ -427,13 +427,14 @@ class text_parent
     virtual void write(std::ostream& o_str) { } 
 
     text_parent(const std::string& text): text_(text) { }
+	text_parent(const text_parent& rhs): text_(rhs.text_) { }
 };
 
 class text_element_text: public text_parent
 {
 public:
   text_element_text(const std::string& text): text_parent(text) { }
-
+  text_element_text(const text_element_text& rhs): text_parent(rhs){ }
   void write(std::ostream& o_str)
   {
     o_str<<text_;
@@ -466,6 +467,14 @@ public:
     x_(0), y_(0), dx_(0), dy_(0), rotate_(0), text_length_(0),
     use_x_(false), use_y_(false), use_text_length_(false),
     style_(style), text_parent(text)
+  {
+  }
+
+  tspan_element(const tspan_element& rhs):
+  x_(rhs.x_), y_(rhs.y_), dx_(rhs.dx_), dy_(rhs.dy_), rotate_(rhs.rotate_),
+  text_length_(rhs.text_length_), use_x_(rhs.use_x_), use_y_(rhs.use_y_),
+  use_text_length_(rhs.use_text_length_), style_(rhs.style_),
+  text_parent(rhs)
   {
   }
 
@@ -727,20 +736,19 @@ public:
     data_.push_back(new text_element_text(text));
   }
 
-  // Interestingly, we only need to define the copy constructor and 
-  // operator=().. we don't need the destructor
   text_element(const text_element& rhs):
-    x_(rhs.x_), y_(rhs.y_), data_(rhs.data_.clone()), style_(rhs.style_),
+  x_(rhs.x_), y_(rhs.y_), style_(rhs.style_),
     align_(rhs.align_), rotate_(rhs.rotate_)
   {
-
+     data_ = (const_cast<text_element&>(rhs)).data_.release();  
   }
 
   text_element& operator=(const text_element& rhs)
   {
     x_ = rhs.x_;
     y_ = rhs.y_;
-    data_ = rhs.data_.clone();
+    data_.clear();
+	data_.insert(data_.end(), rhs.data_.begin(), rhs.data_.end());
     style_ = rhs.style_;
     align_ = rhs.align_; 
     rotate_ = rhs.rotate_;
