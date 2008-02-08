@@ -24,6 +24,10 @@ namespace cgi {
 
 } // namespace cgi
 
+//namespace boost { namespace acgi {
+//  typedef ::cgi::basic_request< cgi::acgi_request_service, cgi::acgi_service> request;
+//} }
+
 #include "boost/cgi/basic_request.hpp"
 
 #endif // CGI_ACGI_REQUEST_HPP_INCLUDED__

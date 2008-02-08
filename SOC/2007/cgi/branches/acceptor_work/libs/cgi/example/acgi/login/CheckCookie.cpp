@@ -14,7 +14,10 @@ int main()
 
   if (!req.cookie("uuid").empty())
   { // The cookie has been set correctly!
-    resp<< location(req.form("fwd"));
+    boost::system::error_code ec;
+    std::string fwd(req.form("fwd", ec));
+    resp<< location(fwd);
+  //  resp<< location(req.form("fwd"));
   }else
   {
     resp
@@ -36,6 +39,6 @@ int main()
 
   resp.send(req.client());
 
-  return req.end(http::ok);
+  return req.close(http::ok);
 }
 

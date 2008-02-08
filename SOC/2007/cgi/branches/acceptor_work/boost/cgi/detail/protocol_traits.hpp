@@ -25,7 +25,15 @@ namespace cgi {
 
   namespace cgi  {}
   namespace acgi {}
-  namespace fcgi {}
+  namespace fcgi
+  {
+  class fcgi_request_impl;
+  class fcgi_service_impl;
+  class fcgi_gateway_impl;
+  class fcgi_gateway_service;
+  class fcgi_request_service;
+  class fcgi_acceptor_service;
+  }
   namespace scgi
   {
   class scgi_request_impl;
@@ -81,8 +89,9 @@ namespace cgi {
       typedef cgi_request_impl                       impl_type;
       typedef cgi_request_service                    request_service_impl;
       typedef basic_protocol_service<tags::cgi>      protocol_service_type;
-      typedef basic_request<request_service_impl, protocol_service_type>
-                                                     request_type; 
+      typedef basic_request<
+        request_service_impl, protocol_service_type
+      >                                              request_type; 
       typedef cgi_service_impl                       service_impl_type;
       typedef basic_connection<tags::stdio>          connection_type;
 //    typedef cgi_gateway_impl                       gateway_impl_type;
@@ -96,8 +105,9 @@ namespace cgi {
       typedef async_cgi_request_impl                 impl_type;
       typedef acgi_request_service                   request_service_impl;
       typedef basic_protocol_service<tags::acgi>     protocol_service_type;
-      typedef basic_request<request_service_impl, protocol_service_type>
-                                                     request_type; 
+      typedef basic_request<
+        request_service_impl, protocol_service_type
+      >                                              request_type; 
       typedef async_cgi_service_impl                 service_impl_type;
       typedef basic_connection<tags::async_stdio>    connection_type;
       typedef async_cgi_gateway_impl                 gateway_impl_type;
@@ -112,8 +122,9 @@ namespace cgi {
       typedef acgi_request_impl                      impl_type;
       typedef acgi_request_service                   request_service_impl;
       typedef basic_protocol_service<tags::acgi>     protocol_service_type;
-      typedef basic_request<request_service_impl, protocol_service_type>
-                                                     request_type; 
+      typedef basic_request<
+        request_service_impl, protocol_service_type
+      >                                              request_type; 
       typedef acgi_service_impl                      service_impl_type;
       typedef basic_connection<tags::async_stdio>    connection_type;
       typedef acgi_gateway_impl                      gateway_impl_type;
@@ -124,36 +135,49 @@ namespace cgi {
     struct protocol_traits<tags::fcgi>
     {
       typedef protocol_traits<tags::fcgi>            type;
-      typedef fcgi_request_impl                      impl_type;
-      typedef fcgi_request_service                   request_service_impl;
+      typedef fcgi::fcgi_request_impl                impl_type;
+      typedef fcgi::fcgi_request_service             request_service_impl;
       typedef basic_protocol_service<tags::fcgi>     protocol_service_type;
-      typedef basic_request<request_service_impl, protocol_service_type>
-                                                     request_type; 
-      typedef fcgi_service_impl                      service_impl_type;
-      typedef basic_connection<tags::tcp_socket>     connection_type;
-      typedef fcgi_gateway_impl                      gateway_impl_type;
-      typedef fcgi_gateway_service                   gateway_service_type;
+      typedef basic_request<
+        request_service_impl, protocol_service_type
+      >                                              request_type; 
+      //typedef fcgi_request_service
+      //        ::implementation_type                  request_impl_type;
+      typedef fcgi::fcgi_service_impl                service_impl_type;
+      typedef fcgi::fcgi_acceptor_service            acceptor_service_impl;
+      typedef basic_connection<
+        tags::shareable_tcp_socket
+      >                                              connection_type;
+      //typedef fcgi_gateway_impl                      gateway_impl_type;
+      //typedef fcgi_gateway_service                   gateway_service_type;
     };
 
     template<>
     struct protocol_traits<tags::scgi>
     {
       typedef protocol_traits<tags::scgi>            type;
-      typedef scgi::scgi_request_impl                      impl_type;
-      typedef scgi::scgi_request_service                   request_service_impl;
+      typedef scgi::scgi_request_impl                impl_type;
+      typedef scgi::scgi_request_service             request_service_impl;
       typedef basic_protocol_service<tags::scgi>     protocol_service_type;
-      typedef basic_request<request_service_impl, protocol_service_type>
-                                                     request_type; 
-      typedef scgi::scgi_service_impl                      service_impl_type;
-      typedef scgi::scgi_acceptor_service                  acceptor_service_impl;
+      typedef basic_request<
+        request_service_impl, protocol_service_type
+      >                                              request_type; 
+      typedef scgi::scgi_service_impl                service_impl_type;
+      typedef scgi::scgi_acceptor_service            acceptor_service_impl;
       typedef basic_connection<tags::tcp_socket>     connection_type;
       //typedef scgi_gateway_impl                      gateway_impl_type;
       //typedef scgi_gateway_service                   gateway_service_type;
     };
 
     template<>
-    struct protocol_traits<::cgi::scgi_>
+    struct protocol_traits< ::cgi::scgi_>
       : protocol_traits<tags::scgi>
+    {
+    };
+
+    template<>
+    struct protocol_traits< ::cgi::fcgi_>
+      : protocol_traits<tags::fcgi>
     {
     };
 

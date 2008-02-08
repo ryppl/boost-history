@@ -146,11 +146,14 @@ namespace cgi {
       return service_impl_.cookie(impl, name, ec);
     }
 
+    /*
     std::string
       header(impl_type& impl, const std::string& name
             , boost::system::error_code& ec)
     {
+      return "";
     }
+*/
 
   private:
     service_impl_type& service_impl_;

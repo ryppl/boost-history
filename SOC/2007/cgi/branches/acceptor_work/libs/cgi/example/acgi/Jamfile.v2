@@ -4,18 +4,15 @@
 #     (See accompanying file LICENSE_1_0.txt or copy 
 #        at http://www.boost.org/LICENSE_1_0.txt)
 
-project boost.cgi.examples.acgi.login ;
+project boost.cgi.examples.acgi ;
 
-exe Login : Login.cpp /boost/regex/ ;
-exe Logout : Logout.cpp ;
-exe CheckCookie : CheckCookie.cpp ;
-
-# Our install rule (builds binaries and copies them to <location>)
+# Install all acgi examples to the user-provided variable "cgi-bin"
 install install
   :
-    Login
-    Logout
-    CheckCookie
+    hello_world
+    echo
+    cookie_game
+    login
   :
     <location>$(cgi-bin)
   ;

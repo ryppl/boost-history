@@ -132,9 +132,9 @@ namespace cgi {
     /// A strand is used for guaranteeing handlers are dispatched sequentially
     //boost::asio::strand strand_;
 
-    /// A std::set of all the requests
+    /// A std::set of all the requests.
     set_type request_set_;
-    /// A std::queue of the pending requests
+    /// A std::queue of the waiting (ie. not-being-handled) requests.
     queue_type request_queue_;
 
 #if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400))

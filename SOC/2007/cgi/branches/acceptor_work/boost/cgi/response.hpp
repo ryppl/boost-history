@@ -18,6 +18,7 @@
 #include "boost/cgi/buffer.hpp"
 #include "boost/cgi/cookie.hpp"
 #include "boost/cgi/header.hpp"
+#include "boost/cgi/write.hpp"
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/streambuf.hpp"
@@ -84,10 +85,18 @@ namespace cgi {
     {
     } 
 
+    /// Clear the response buffer.
     void clear()
     {
       ostream_.clear();
       headers_.clear();
+    }
+
+    /// Return the response to the 'just constructed' state.
+    void reset()
+    {
+      clear();
+      headers_terminated_ = false;
     }
 
     // provide this too?
@@ -105,122 +114,48 @@ namespace cgi {
     template<typename ConstBufferSequence>
     std::size_t write(const ConstBufferSequence& buf)
     {
-      //ostream_.write(buf.data(), buf.size());
-      return buf.size();
+      return ostream_.write(buf.begin(), buf.end());
+      //return buf.size();
     }
 
-    /// Synchronously flush the data to the supplied request
+    /// Synchronously flush the data to the supplied SyncWriteStream
     /**
      * This call uses throwing semantics. ie. an exception will be thrown on
      * any failure.
      * If there is no error, the buffer is cleared.
      */
-    template<typename CommonGatewayRequest>
-    void flush(CommonGatewayRequest& req)
+    template<typename SyncWriteStream>
+    void flush(SyncWriteStream& sws)
     {
-      /*
-      if (!headers_terminated_)
-      {
-        ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_terminated_ = true;
-      }
-      */
-      ::cgi::write(req, headers_);
-      ::cgi::write(req, rdbuf()->data());
-      // the above function will throw on an error
-      clear();
+      boost::system::error_code ec;
+      flush(sws, ec);
+      detail::throw_error(ec);
     }
-
+    
     /// Synchronously flush the data via the supplied request
     /**
      * This call uses error_code semantics. ie. ec is set if an error occurs.
      * If there is no error, the buffer is cleared.
      */
-    template<typename CommonGatewayRequest>
-    boost::system::error_code&
-      flush(CommonGatewayRequest& req, boost::system::error_code& ec)
+    template<typename SyncWriteStream>
+    boost::system::error_code
+      flush(SyncWriteStream& sws, boost::system::error_code& ec)
     {
       if (!headers_terminated_)
       {
-        ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_terminated_ = true;
+        std::vector<boost::asio::const_buffer> headers;
+        prepare_headers(headers);//, ec);
+        common::write(sws, headers, boost::asio::transfer_all(), ec);
+        if (ec)
+          return ec;
       }
-      if(!::cgi::write(req, rdbuf()->data(), ec))
-        clear();
+
+      std::size_t bytes_written = common::write(sws, buffer_->data(), ec);
+      if (!ec)
+        buffer_->consume(bytes_written);
+
       return ec;
     }
-
-    // Class for doing post-flush housekeeping (ie. clearing the stream data)
-    template<typename Handler>
-    class flush_handler
-    {
-    public:
-      flush_handler(response& os, Handler handler)
-        : ostream_(os)
-        , handler_(handler)
-      {
-      }
-
-      void operator()(boost::system::error_code& ec)
-      {
-        if(!ec) ostream_.clear();
-        handler_(ec);
-      }
-    private:
-      response& ostream_;
-      Handler handler_;
-    };
-
-    /// Asynchronously flush the data through the supplied request
-    /**
-     * If there is no error, the buffer is cleared *after* the write has
-     * finished.
-     */
-    template<typename CommonGatewayRequest, typename Handler>
-    void async_flush(CommonGatewayRequest& req, Handler handler)
-    {
-      /*
-      if (!headers_terminated_)
-      {
-        ostream_<< "Content-type: text/plain\r\n\r\n";
-        headers_terminated_ = true;
-      }
-      */
-      ::cgi::async_write(req, rdbuf()->data()
-                        , flush_handler<Handler>
-                            (*this, handler, boost::arg<1>()));
-    }
-
-
-    /// Synchronously send the reply to the default request
-    /**
-     * Note: The data in the stream isn't cleared after this call, but the
-     * request held in the ostream is removed. ie. send() can't be called
-     * twice without an arguement (unless you add another request - something
-     * not possible yet).
-     */
-    //void send()
-    //{
-    //  BOOST_ASSERT(request_ != NULL);
-    //  send(*request_);
-    //  request_ = NULL;
-    //}
-
-    /// Synchronously send the reply to the default request
-    /**
-     * Note: The data in the stream isn't cleared after this call. If the send
-     * is sucessful, the request held in the ostream is removed. ie. send()
-     * can't be called twice without an arguement (unless you add another
-     * request - something not possible yet).
-     */
-    //boost::system::error_code& send(boost::system::error_code& ec)
-    //{
-    //  BOOST_ASSERT(request_ != NULL);
-    //  if(!send(*request_, ec))
-    //    request_ = NULL;
-    //  return ec;
-    //}
-
 
     /// Synchronously send the data via the supplied request.
     /**
@@ -228,67 +163,60 @@ namespace cgi {
      * any failure.
      * Note: The data in the stream isn't cleared after this call.
      */
-    template<typename CommonGatewayRequest>
-    void send(CommonGatewayRequest& req)
+    template<typename SyncWriteStream>
+    void send(SyncWriteStream& sws)
     {
       boost::system::error_code ec;
-      send(req, ec);
+      send(sws, ec);
       detail::throw_error(ec);
     }
 
-    /// Synchronously send the data via the supplied request
+    /// Synchronously send the data via the supplied request.
     /**
-     * This call uses error_code semantics. ie. ec is set if an error occurs.
-     * Note: The data in the stream isn't cleared after this call.
+     * This call will not throw, but will set `ec` such that `ec == true` if
+     * an error occurs. Details of the error are held in the `error_code`
+     * object.
      */
-    /*
-    template<typename T, typename X, enum Y, typename Z>
-    boost::system::error_code&
-      send(::cgi::basic_request<T, X, Y, Z>& req, boost::system::error_code& ec)
-    {
-      send(req.client(), ec);
-      //req.set_status(http_status_);
-      return ec;      
-    }
-*/
     template<typename SyncWriteStream>
     boost::system::error_code&
-      send(SyncWriteStream& ws, boost::system::error_code& ec)
+      send(SyncWriteStream& sws, boost::system::error_code& ec)
     {
-      BOOST_CGI_ADD_DEFAULT_HEADER
-
-      // Terminate the headers.
-      headers_.push_back("\r\n");
-
-      //{ Construct a ConstBufferSequence out of the headers we have.
-      std::vector<boost::asio::const_buffer> headers;
-      typedef std::vector<std::string>::iterator iter;
-      for (iter i(headers_.begin()), e(headers_.end()); i != e; ++i)
+      if (!headers_terminated_)
       {
-        headers.push_back(::cgi::buffer(*i));
+        //BOOST_FOREACH(headers_.begin(), headers_.end()
+        //             , headers.push_back(::cgi::buffer(*_1)));
+        std::vector<boost::asio::const_buffer> headers;
+        prepare_headers(headers);//, ec)
+        if (common::write(sws, headers, boost::asio::transfer_all(), ec))
+          std::cerr<< "Broken." << std::endl;
+          //return ec;
       }
-      //}
 
-      ::cgi::write(ws, headers
-                  , boost::asio::transfer_all(), ec);
-      headers_terminated_ = true;
-      ::cgi::write(ws, rdbuf()->data()
-                  , boost::asio::transfer_all(), ec);
-
-      //BOOST_FOREACH(headers_.begin(), headers_.end()
-      //             , headers.push_back(::cgi::buffer(*_1)));
+      common::write(sws, buffer_->data(), boost::asio::transfer_all(), ec);
 
       return ec;
     }
 
     /// Asynchronously send the data through the supplied request
     /**
-     * Note: The data in the stream isn't cleared after this call.
+     * Note: This is quite crude at the moment and not as asynchronous as
+     *       it could/should be. The data in the stream isn't cleared after
+     *       this call.
      */
-    template<typename CommonGatewayRequest, typename Handler>
-    void async_send(CommonGatewayRequest& req, Handler handler)
+    template<typename AsyncWriteStream, typename Handler>
+    void async_send(AsyncWriteStream& aws, Handler handler)
     {
-      req.set_status(http_status_);
+      aws.io_service().post(
+        boost::bind(&response::do_async_send, aws, handler)
+      );
+    }
+
+    template<typename AsyncWriteStream, typename Handler>
+    void do_async_send(AsyncWriteStream& aws, Handler handler)
+    {
+
+
+      //req.set_status(http_status_);
       /*
       if (!headers_terminated_)
       {
@@ -296,14 +224,14 @@ namespace cgi {
         headers_terminated_ = true;
       }
       */
-      ::cgi::async_write(req, rdbuf()->data(), handler);
+      common::async_write(aws, rdbuf()->data(), handler);
     }
 
     /// Get the buffer associated with the stream
-    ::cgi::streambuf*
+    common::streambuf*
       rdbuf()
     {
-      return static_cast<::cgi::streambuf*>(ostream_.rdbuf());
+      return static_cast<common::streambuf*>(ostream_.rdbuf());
     }
 
     /// Set the status code associated with the response.
@@ -319,7 +247,7 @@ namespace cgi {
       return http_status_;
     }
 
-    /// Allow more headers to be added (note, avoid using this).
+    /// Allow more headers to be added (WARNING: avoid using this).
     void unterminate_headers()
     {
       headers_terminated_ = false;
@@ -358,9 +286,7 @@ namespace cgi {
       headers_.clear();
       headers_terminated_ = false;
     }
-    //response& operator<< (response& r1, response& r2)
-    //{
-    //  r1.
+
     bool headers_terminated() const
     {
       return headers_terminated_;
@@ -369,24 +295,45 @@ namespace cgi {
     // Vector of all the headers, each followed by a CRLF
     std::vector<std::string> headers_;
 
-    boost::shared_ptr<::cgi::streambuf> buffer_; // maybe scoped_ptr?
+    boost::shared_ptr<common::streambuf> buffer_; // maybe scoped_ptr?
 
     ostream_type ostream_;
 
     http::status_code http_status_;
 
-    // True if no more headers are to be appended. 
+    // True if no more headers can be appended. 
     bool headers_terminated_;
-
-    //template<typename T>
-    //response& operator<<(const T& t) {
-    //  ostream_<< t;
-    //  return *this;
-    //}
 
     template<typename T>
     friend response& operator<<(response& resp, const T& t);
-  };
+
+  private:
+
+    // Send the response headers and mark that they've been sent.
+    template<typename ConstBufferSequence>
+    //boost::system::error_code
+    void
+      prepare_headers(ConstBufferSequence& headers)//, boost::system::error_code& ec)
+    {
+      BOOST_CGI_ADD_DEFAULT_HEADER
+
+      // Terminate the headers.
+      if (!headers_terminated_)
+        headers_.push_back("\r\n");
+
+      //{ Construct a ConstBufferSequence out of the headers we have.
+      //std::vector<boost::asio::const_buffer> headers;
+      typedef std::vector<std::string>::iterator iter;
+      for (iter i(headers_.begin()), e(headers_.end()); i != e; ++i)
+      {
+        headers.push_back(common::buffer(*i));
+      }
+      //}
+
+      headers_terminated_ = true;
+      //return ec;
+    }
+   };
 
   /// Generic ostream template
   template<typename T>

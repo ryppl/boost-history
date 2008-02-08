@@ -32,17 +32,13 @@ namespace cgi {
     typedef boost::shared_ptr<basic_connection<tags::stdio> >  pointer;
 
     basic_connection()
-      : in_(std::cin)
-      , out_(std::cout)
-      , is_open_(true)
+      : is_open_(true)
     {
     }
 
     template<typename T>
     basic_connection(T&)
-      : in_(std::cin)
-      , out_(std::cout)
-      , is_open_(true)
+      : is_open_(true)
     {
     }
 
@@ -65,9 +61,26 @@ namespace cgi {
     std::size_t read_some(MutableBufferSequence buf
                          , boost::system::error_code& ec)
     {
-      if( buf.data() != in_.rdbuf() )
-        return in_.read(buf.begin(), buf.size());
-      return buf.size();
+      //if( buf.data() != in_.rdbuf() )
+      //  return in_.read(buf.begin(), buf.size());
+      //return buf.size();
+      
+      //std::cerr<< "In stdio::read_some()" << std::endl
+      //         << "before = {" << std::endl
+      //         << std::string(boost::asio::buffer_cast<char *>(buf), boost::asio::buffer_size(buf)) << std::endl
+      //         << "}" << std::endl;
+      std::cin.read(boost::asio::buffer_cast<char *>(buf)
+                   , boost::asio::buffer_size(buf));
+      if (std::cin.fail() && !std::cin.eof())
+      {
+        ec = boost::system::error_code(654, boost::system::system_category);
+        return 0;
+      }
+      //std::cerr<< "Read data" << std::endl
+      //         << "after = {" << std::endl
+      //         << std::string(boost::asio::buffer_cast<char *>(buf), boost::asio::buffer_size(buf)) << std::endl
+      //         << "}" << std::endl;
+      return std::cin.gcount();
     }
 
     template<typename ConstBufferSequence>
@@ -82,14 +95,12 @@ namespace cgi {
         std::string s(boost::asio::buffer_cast<const char*>(*i)
                      , buf_len);
         bytes_transferred += buf_len;
-        out_.write(s.c_str(), buf_len);
+        std::cout.write(s.c_str(), buf_len);
       }
       return bytes_transferred;
     }
 
   protected:
-    std::istream& in_;
-    std::ostream& out_;
     bool is_open_;
   };
 

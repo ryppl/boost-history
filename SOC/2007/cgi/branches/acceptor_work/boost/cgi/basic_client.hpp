@@ -83,11 +83,11 @@ namespace cgi {
     /**
      * Note: the connection must have been created using the new operator
      */
-    bool set_connection(typename connection_type::pointer& conn)
+    bool set_connection(const typename connection_type::pointer& conn)
     {
       // make sure there isn't already a connection associated with the client
       //if (!connection_) return false;
-      BOOST_ASSERT(conn != NULL);
+      //BOOST_ASSERT(conn != NULL);
       connection_  = conn;
       return true;
     }

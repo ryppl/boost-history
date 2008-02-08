@@ -13,12 +13,12 @@
 
 namespace cgi {
 
-  template<typename StringT = std::string>
-  struct basic_header
+  //template<typename StringT = std::string>
+  struct header
   {
-    typedef StringT string_type;
+    typedef std::string string_type;
     
-    basic_header()
+    header()
       : content()
     {
     }
@@ -26,31 +26,31 @@ namespace cgi {
     
     /// Templated constructor to allow user-defined types to be converted
     //template<typename T>
-    //basic_header(T& t)
+    //header(T& t)
     //  : content(t.to_string())
     //{
     //}
     
 
     //template<>
-    basic_header(const string_type& _content)
+    header(const string_type& _content)
       : content(_content)
     {
     }
 
-    basic_header(const string_type& name, const string_type& val)
+    header(const string_type& name, const string_type& val)
       : content(name + ": " + val)
     {
     }
 
-    //basic_header(const std::string& name, const std::string& val)
+    //header(const std::string& name, const std::string& val)
     //  : content(name + ": " + val)
     //{
     //}
 
     /// Construct an header from a cookie.
     template<typename T>
-    basic_header(const basic_cookie<T>& ck)
+    header(const basic_cookie<T>& ck)
       : content("Set-cookie: " + ck.to_string())
     {
     }
@@ -60,56 +60,56 @@ namespace cgi {
 
 /*
   template<typename StringT>
-  basic_header<StringT>
+  header<StringT>
     make_header(const StringT& name, const StringT& val)
   {
     return basic_header<StringT>(name, val);
-  }*/
+  }* /
 
   template<typename T, typename StringT>
   T make_header(const StringT& name, const StringT& val)
   {
     return basic_header<StringT>(name, val);
-  }
+  }*/
 
 
   //{ Some shortcuts, to cut down on typing errors.
   template<typename StringT>
-  basic_header<StringT>
+  header
     content_type(StringT& str)
   {
-    return basic_header<StringT>("Content-type", str);
+    return header("Content-type", str);
   }
 
   template<typename StringT>
-  basic_header<StringT>
+  header
     content_encoding(StringT& str)
   {
-    return basic_header<StringT>("Content-encoding", str);
+    return header("Content-encoding", str);
   }
 /*
   template<typename StringT>
-  basic_header<StringT>
+  header<StringT>
     location(const StringT& url)
   {
-    return basic_header<StringT>("Location", url);
+    return header<StringT>("Location", url);
   }
 
-  basic_header<std::string>
+  header<std::string>
     location(const std::string& url)
   {
-    return basic_header<std::string>("Location", url);
+    return header<std::string>("Location", url);
   }*/
-  template<typename T>
-  T location(const std::string& url)
+  //template<typename T>
+  header location(const std::string& url)
   {
-    return make_header("Location", url);
+    return header("Location", url);
   }
   //}
 
   // typedefs for typical usage
-  typedef basic_header<std::string>  header;
-  typedef basic_header<std::wstring> wheader;
+  //typedef basic_header<std::string>  header;
+  //typedef basic_header<std::wstring> wheader;
 
 } // namespace cgi
 

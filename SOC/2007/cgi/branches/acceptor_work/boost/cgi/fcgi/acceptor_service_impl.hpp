@@ -1,4 +1,4 @@
-//           -- scgi/acceptor_service_impl.hpp --
+//           -- fcgi/acceptor_service_impl.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,12 +6,13 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_SCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
-#define CGI_SCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
+#ifndef CGI_FCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
+#define CGI_FCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
 
 #include "boost/cgi/detail/push_options.hpp"
 
 #include <boost/ref.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
@@ -26,12 +27,41 @@
 #include "boost/cgi/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 //#include "service_selector.hpp"
-#include "boost/cgi/scgi/request.hpp"
+#include "boost/cgi/fcgi/request.hpp"
 
 namespace cgi {
- namespace scgi {
+   
+   namespace detail {
+
+     /// Helper functions for async_accept operation.
+     template<typename T, /*typename Request, */typename Handler>
+     struct accept_handler
+     {
+       accept_handler(T& t, typename T::implementation_type& impl
+                     , typename T::implementation_type::request_type& req
+                     , Handler& hnd)
+         : type(t)
+         , implementation(impl)
+         , request(req)
+         , handler(hnd)
+       {}
+
+       void operator()()
+       {
+         type.check_for_waiting_request(implementation, request, handler);
+       }
+
+       T& type;
+       typename T::implementation_type& implementation;
+       typename T::implementation_type::request_type& request;
+       Handler handler;
+     };
   
-   /// The service_impl class for SCGI basic_request_acceptor<>s
+   } // namespace detail
+
+  namespace fcgi {
+
+  /// The service_impl class for FCGI basic_request_acceptor<>s
    /**
     * Note: this is near enough to being generic. It will hopefully translate
     *       directly to the fcgi_acceptor_service_impl. In other words you would
@@ -45,9 +75,9 @@ namespace cgi {
     * which takes a ProtocolService (**LINK**). If the protocol isn't async then
     * the class can be used without a ProtocolService.
     */
-   template<typename Protocol_ = ::cgi::scgi_>
+   template<typename Protocol_ = ::cgi::fcgi_>
    class acceptor_service_impl
-     : public detail::service_base<acceptor_service_impl<Protocol_> >
+     : public detail::service_base< ::cgi::fcgi::acceptor_service_impl<Protocol_> >
    {
    public:
 
@@ -59,7 +89,7 @@ namespace cgi {
        typedef Protocol_                             protocol_type;
        typedef basic_protocol_service<protocol_type> protocol_service_type;
        typedef boost::asio::ip::tcp                  native_protocol_type;
-       typedef scgi::request                         request_type;
+       typedef fcgi::request                         request_type;
        typedef boost::asio::socket_acceptor_service<
                  native_protocol_type
                >                                     acceptor_service_type;
@@ -94,7 +124,7 @@ namespace cgi {
  
 
      explicit acceptor_service_impl(::cgi::io_service& ios)
-       : detail::service_base<acceptor_service_impl<Protocol_> >(ios)
+       : detail::service_base< ::cgi::fcgi::acceptor_service_impl<Protocol_> >(ios)
        , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios))
        //, endpoint(boost::asio::ip::tcp::v4())
      {
@@ -228,18 +258,30 @@ namespace cgi {
        }
        */
        return acceptor_service_.accept(impl.acceptor_,
-                request.client().connection()->next_layer(), 0, ec);
+                request.client().connection()->next_layer(), endpoint, ec);
      }
  
      /// Asynchronously accepts one request.
-     template<typename CommonGatewayRequest, typename Handler>
-     void async_accept(implementation_type& impl, CommonGatewayRequest& request
-                      , Handler handler, boost::system::error_code& ec)
+     //template<typename CommonGatewayRequest, typename Handler>
+     //void async_accept(implementation_type& impl, CommonGatewayRequest& request
+     template<typename Handler>
+     void async_accept(implementation_type& impl, typename implementation_type::request_type& request
+                      , Handler handler)
      {
        this->io_service().post(
-         boost::bind(
-           &acceptor_service_impl<protocol_type>::check_for_waiting_request,
-           boost::ref(impl), boost::ref(request), handler, ec));      
+         detail::accept_handler<type, Handler>(*this, impl, request, handler)
+       );
+       //boost::system::error_code ec;
+       //handler(ec);
+       //acceptor_service_.async_accept(impl.acceptor_, request.client().connection()->next_layer_type()
+
+/*
+           &acceptor_service_impl<protocol_type>
+           ::typename check_for_waiting_request<
+           CommonGatewayRequest
+           , Handler>,
+           this, boost::ref(impl), boost::ref(request), handler));      
+*/
      }
 
      /// Close the acceptor (not implemented yet).
@@ -254,7 +296,8 @@ namespace cgi {
      {
        return acceptor_service_.local_endpoint(impl.acceptor_, ec);
      }
-   private:
+
+   public:
      template<typename CommonGatewayRequest, typename Handler>
      void check_for_waiting_request(implementation_type& impl
                                    , CommonGatewayRequest& request
@@ -271,8 +314,8 @@ namespace cgi {
          }
        }
        */
-       return this->accceptor_service_.async_accept(
-                request.client().connection()->next_layer(), handler);
+       acceptor_service_.async_accept(impl.acceptor_,
+         request.client().connection()->next_layer(), 0, handler);
      }
  
    public:
@@ -280,10 +323,10 @@ namespace cgi {
      acceptor_service_type& acceptor_service_;
    };
  
- } // namespace scgi
+ } // namespace fcgi
 } // namespace cgi
  
 #include "boost/cgi/detail/pop_options.hpp"
 
-#endif // CGI_SCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
+#endif // CGI_FCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
 

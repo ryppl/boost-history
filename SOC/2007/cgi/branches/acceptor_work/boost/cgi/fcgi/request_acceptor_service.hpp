@@ -1,4 +1,4 @@
-//               -- request_service.hpp --
+//         -- fcgi/request_acceptor_service.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,8 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_REQUEST_SERVICE_HPP_INCLUDED
-#define CGI_REQUEST_SERVICE_HPP_INCLUDED
+#ifndef CGI_FCGI_REQUEST_ACCEPTOR_SERVICE_HPP_INCLUDED
+#define CGI_FCGI_REQUEST_ACCEPTOR_SERVICE_HPP_INCLUDED
 #include "boost/cgi/detail/push_options.hpp"
 
 #include <boost/utility/enable_if.hpp>
@@ -19,11 +19,11 @@
 #include "boost/cgi/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 //#include "service_selector.hpp"
-#include "boost/cgi/scgi/acceptor_service_impl.hpp"
+#include "boost/cgi/fcgi/acceptor_service_impl.hpp"
 
 namespace cgi {
 
-  /// The service class for SCGI basic_request_acceptor<>s
+  /// The service class for FCGI basic_request_acceptor<>s
   /**
    * Note: If the protocol is an asynchronous protocol, which means it requires
    * access to a boost::asio::io_service instance, then this class becomes a
@@ -31,14 +31,14 @@ namespace cgi {
    * which takes a ProtocolService (**LINK**). If the protocol isn't async then
    * the class can be used without a ProtocolService.
    */
-  template<typename Protocol_ = scgi_>
-  class scgi_request_acceptor_service
-    : public detail::service_base<scgi_request_acceptor_service<Protocol_> >
+  template<typename Protocol_ = fcgi_>
+  class fcgi_request_acceptor_service
+    : public detail::service_base<fcgi_request_acceptor_service<Protocol_> >
   {
   public:
     //typedef typename service_impl_type::impl_type     impl_type;
 
-    typedef scgi::acceptor_service_impl<>               service_impl_type;
+    typedef fcgi::acceptor_service_impl<>               service_impl_type;
     typedef service_impl_type::implementation_type      implementation_type;
     typedef typename implementation_type::protocol_type          protocol_type;
     typedef implementation_type::endpoint_type          endpoint_type;
@@ -48,8 +48,8 @@ namespace cgi {
     /// The unique service identifier
     //static boost::asio::io_service::id id;
 
-    scgi_request_acceptor_service(::cgi::io_service& ios)
-      : detail::service_base<scgi_request_acceptor_service<protocol_type> >(ios)
+    fcgi_request_acceptor_service(::cgi::io_service& ios)
+      : detail::service_base<fcgi_request_acceptor_service<protocol_type> >(ios)
       , service_impl_(ios)
     {
     }
@@ -125,10 +125,11 @@ namespace cgi {
       return service_impl_.accept(impl, request, ep, ec);
     }
 
-    template<typename Handler>
-    void async_accept(implementation_type& impl, Handler handler)
+    template<typename CommonGatewayRequest, typename Handler>
+    void async_accept(implementation_type& impl, CommonGatewayRequest& req
+                     , Handler handler)
     {
-      service_impl_.async_accept(impl, handler);
+      service_impl_.async_accept(impl, req, handler);
     }
 
     template<typename T>
@@ -159,5 +160,5 @@ namespace cgi {
 
 #include "boost/cgi/detail/pop_options.hpp"
 
-#endif // CGI_REQUEST_SERVICE_HPP_INCLUDED
+#endif // CGI_FCGI_REQUEST_ACCEPTOR_SERVICE_HPP_INCLUDED
 

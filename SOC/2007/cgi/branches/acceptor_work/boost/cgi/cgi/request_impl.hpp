@@ -41,8 +41,8 @@ namespace cgi {
     : public cgi_request_impl_base<stdio_connection>
   {
   public:
-    //typedef ::cgi::basic_client<stdio_connection, tags::cgi> client_type;
-    typedef stdio_connection client_type;
+    //typedef stdio_connection client_type;
+    typedef ::cgi::basic_client<stdio_connection, tags::cgi> client_type;
 
     /// Constructor
     /**

@@ -9,6 +9,8 @@
 #ifndef CGI_CONNECTIONS_SHAREABLE_TCP_SOCKET_HPP_INCLUDED__
 #define CGI_CONNECTIONS_SHAREABLE_TCP_SOCKET_HPP_INCLUDED__
 
+#include <map>
+#include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "boost/cgi/tags.hpp"
@@ -17,7 +19,21 @@
 #include "boost/cgi/basic_connection.hpp"
 #include "boost/cgi/detail/push_options.hpp"
 
+//#include "boost/cgi/fcgi/client_fwd.hpp"
+//#include "boost/cgi/fcgi/request_fwd.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+
 namespace cgi {
+
+  /*** 05.02.2008 :
+   *  I'm planning on making this class a more FastCGI-specific one since a
+   *  rereading of the FastCGI spec (ie. 'Managing request IDs') made me
+   *  realise that IDs are connection specific, not just application specific.
+   *  
+   *  IOW when checking to see if a particular request id exists, rather than
+   *  having to check a table in the protocol_service (which may imply explicit
+   *  mutex use), we can just check a local array of values. Good good.
+   ***/
 
   template<>
   class basic_connection<tags::shareable_tcp_socket>
@@ -27,6 +43,15 @@ namespace cgi {
     typedef boost::shared_ptr<
       basic_connection<tags::shareable_tcp_socket> >  pointer;
     typedef boost::mutex                              mutex_type;
+    typedef boost::asio::ip::tcp::socket              next_layer_type;
+
+    /** FastCGI specific stuff **/
+    //typedef ::cgi::fcgi::client                      client_type;
+    typedef //typename
+      detail::protocol_traits<fcgi_>::request_type   request_type;
+    typedef std::map<boost::uint16_t, request_type*> request_map_type;
+
+    /** End FastCGI stuff      **/
 
     // A wrapper to provide condition_type::pointer
     struct condition_type : public boost::condition
@@ -51,8 +76,8 @@ namespace cgi {
 
     static pointer create(io_service& ios)
     {
-      return static_cast<pointer>(
-        new basic_connection<tags::shareable_tcp_socket>(ios));
+      return //static_cast<pointer>(
+        pointer(new basic_connection<tags::shareable_tcp_socket>(ios));
     }      
 
     template<typename MutableBufferSequence>
@@ -92,14 +117,24 @@ namespace cgi {
     {
       sock_.async_write_some(buf, handler);
     }
+    
+    next_layer_type&
+      next_layer()
+    {
+      return sock_;
+    }
 
     mutex_type& mutex()        { return mutex_;     }
-    condtion_type& condition() { return condition_; }
+    condition_type& condition() { return condition_; }
   private:
     
-    boost::asio::ip::tcp::socket sock_;
+    next_layer_type sock_;
     mutex_type mutex_;
     condition_type condition_;
+
+  public:
+    /** FastCGI specific stuff **/
+    request_map_type request_map_;
   };
 
   // probably deletable typedef (leaving it here to keep an open mind)

@@ -17,6 +17,8 @@ namespace cgi {
 
   /// SCGI (note, this must be removed)
    struct scgi_{};
+  /// FastCGI
+   struct fcgi_{};
  
  namespace tags {
 

@@ -1,18 +1,19 @@
+#             Copyright (c) 2007 Darren Garvey
+#
+# Distributed under the Boost Software License, Version 1.0.
+#     (See accompanying file LICENSE_1_0.txt or copy 
+#        at http://www.boost.org/LICENSE_1_0.txt)
 
-#project
-# :
-# ;
-
-exe acgi_hello_world 
- : main.cpp
- : <include>../../../../../
-   <include>$(BOOST_ROOT)
-   <define>_CRT_SECURE_NO_WARNINGS
-   <define>_SCL_SECURE_NO_WARNINGS
+project boost.cgi.examples.acgi.hello_world
  ;
 
-install acgi_blah
+exe acgi_hello_world : main.cpp /boost/regex/ ;
+
+# Our install rule (builds binaries and copies them to <location>)
+install install
  : acgi_hello_world
- : <location>.
-   <library>../../../util/system//boost_system
+ : <location>$(cgi-bin)
  ;
+
+# Only install example if you use `bjam install' or equivalent
+explicit install ;

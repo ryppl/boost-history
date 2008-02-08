@@ -6,6 +6,11 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
+//
+// Defines the basic_request<> class; the main entry-point to the
+// library.
+//
+////////////////////////////////////////////////////////////////
 #ifndef CGI_BASIC_REQUEST_HPP_INCLUDED__
 #define CGI_BASIC_REQUEST_HPP_INCLUDED__
 
@@ -92,6 +97,7 @@ namespace cgi {
       if (load_now) load(parse_post);//this->service.load(this->impl, true, ec);
     }
 
+		// Won't throw
     basic_request(boost::system::error_code& ec
                  , const bool load_now = true
                  , const bool parse_post = true)
@@ -100,6 +106,7 @@ namespace cgi {
       if (load_now) load(ec, parse_post);//this->service.load(this->impl, true, ec);
     }
 
+		// Throws
     basic_request(protocol_service_type& s, const bool load_now = false
                  , const bool parse_post = false)
       : basic_io_object<service_type>(s.io_service())
@@ -107,6 +114,7 @@ namespace cgi {
       if (load_now) load(parse_post);//this->service.load(this->impl, false, ec);
     }
 
+		// Won't throw
     basic_request(protocol_service_type& s
                  , boost::system::error_code& ec
                  , const bool load_now = false, const bool parse_post = false)
@@ -117,40 +125,14 @@ namespace cgi {
 
     ~basic_request()
     {
-      if (is_open())
-        close(http::internal_server_error, 0);
+      //if (is_open())
+      //  close(http::internal_server_error, 0);
     }
 
     /// Return `true` if the request is still open (ie. not aborted or closed)
     bool is_open()
     {
       return this->service.is_open(this->impl);
-    }
-
-    /// Set a header
-    void set_header(const std::string& name, const std::string& val
-                   , const std::string& expires)
-    {
-      this->service.set_header(this->impl, name, val, expires);
-    }
-
-    /// Set a cookie
-    void set_cookie(const std::string& name, const std::string& val
-                   , const std::string& expires = "")
-    {
-      this->service.set_cookie(this->impl, name, val, expires);
-    }
-
-    /// Delete a cookie
-    void del_cookie(const std::string& name)
-    {
-      this->service.del_cookie(this->impl, name);
-    }
-
-    /// Delete all cookies
-    void del_cookies()
-    {
-      this->service.del_cookies();
     }
 
     /// Synchronously read/parse the request meta-data
@@ -218,6 +200,10 @@ namespace cgi {
       this->service.set_status(this->impl, aborted);
     }
 
+    /// Get the client connection associated with the request
+    /**
+     * You use the client for read/write calls. Y
+		 */
     client_type& client()
     {
       return this->service.client(this->impl);
@@ -250,52 +236,6 @@ namespace cgi {
       this->service(this->impl, dest, ec);
     }
     */
-
-/*
-    /// Read some data from the client
-    template<typename MutableBufferSequence>
-    std::size_t read_some(const MutableBufferSequence& buf)
-    {
-      boost::system::error_code ec;
-      std::size_t s = this->service.read_some(this->impl, buf, ec);
-      detail::throw_error(ec);
-      return s;
-    }
-
-    /// Read some data from the client
-    template<typename MutableBufferSequence, typename Source>
-    std::size_t read_some(const MutableBufferSequence& buf
-                         , boost::system::error_code& ec)
-    {
-      return this->service.read_some(this->impl, buf, ec);
-    }
-
-    /// Write some data to the client
-    /**
-     * Note: on the first write, the header block is closed (with a blank
-     * line).
-     *
-    template<typename ConstBufferSequence, typename Sink>
-    std::size_t write_some(const ConstBufferSequence& buf)
-    {
-      boost::system::error_code ec;
-      std::size_t s = this->service.write_some(this->impl, buf, ec);
-      detail::throw_error(ec);
-      return s;
-    }
-
-    /// Write some data to the client
-    /**
-     * Note: on the first write, the header block is closed (with a blank
-     * line).
-     *
-    template<typename ConstBufferSequence, typename Sink>
-    std::size_t write_some(const ConstBufferSequence& buf
-                          , boost::system::error_code& ec)
-    {
-      return this->service.write_some(this->impl, buf, ec);
-    }
-*/
 
     /// Get a `cgi::map&` corresponding to all of the GET variables
     map_type& GET()
@@ -364,9 +304,12 @@ namespace cgi {
     }
 
     /// Get a `cgi::map&` corresponding to all of the form variables
-    map_type& form()
+    map_type& form(bool greedy = true)
     {
-      return this->service.form(this->impl);
+		  boost::system::error_code ec;
+			map_type& data = this->service.form(this->impl, ec, greedy);
+			detail::throw_error(ec);
+			return data;
     }
 
     /// Find the form variable matching name
@@ -485,7 +428,7 @@ namespace cgi {
       boost::system::error_code ec;
       std::string ret = var(name, ec, greedy);
       return this->service.var(this->impl, name, greedy);
-      std::string request_method( env_("REQUEST_METHOD") );
+      std::string request_method( env("REQUEST_METHOD") );
 
       std::string tmp;
 
@@ -516,7 +459,7 @@ namespace cgi {
       return tmp.empty() ? "" : tmp;
     }
 
-    // Some helper functions for the basic CGI 1.1 meta-variables
+    // [helper-functions for the basic CGI 1.1 meta-variables.
     std::string auth_type()
     { return env("AUTH_TYPE"); }
 
@@ -567,7 +510,19 @@ namespace cgi {
 
     std::string server_software()
     { return env("SERVER_SOFTWARE"); }
+    // -- end helper-functions]
 
+    /// Get the charset from the CONTENT_TYPE header
+    std::string charset()
+    {
+      // Not sure if regex is needlessly heavy-weight here.
+      boost::regex re(";[ ]?charset=([-\\w]+);");
+      boost::smatch match;
+      if (!boost::regex_match(this->content_type(), match, re))
+        return ""; // A default could go here.
+
+      return match[1];
+    }
 
     /// The role that the request is playing
     /**
@@ -604,25 +559,10 @@ namespace cgi {
       this->service.set_status(this->impl, status);
     }
 
-    /// Get the client connection associated with the request
-    /**
-     * You use the client for read/write calls. Y
-    typename implementation_type::connection_type&
-      client()
+    // The boundary marker for multipart forms (this is likely a transient function).
+    std::string boundary_marker()
     {
-      return this->service.client(this->impl);
-    }
-
-    /// Set a user cookie
-    /**
-     * Note: this must be called before you have finished outputting
-     * the reply headers or it will just appear as normal data
-     *
-     * ** Is this actually necessary? **
-     */
-    void set_cookie(const std::string& name, const std::string& value)
-    {
-      return this->service.set_cookie(this->impl, name, value);
+      return this->impl.boundary_marker;
     }
   };
 
@@ -639,3 +579,4 @@ NOTES::future_plans:
   - The user should supply an abort_handler-derived function if they want
     any special handling of aborted requests
 */
+

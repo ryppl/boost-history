@@ -45,7 +45,9 @@ namespace cgi {
 
     void construct(implementation_type& impl)
     {
-      impl.connection() = implementation_type::connection_type::create();
+      impl.client_.set_connection(
+        implementation_type::connection_type::create()
+      );
     }
 
     void destroy(implementation_type& impl)

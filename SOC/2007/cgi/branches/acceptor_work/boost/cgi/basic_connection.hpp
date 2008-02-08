@@ -9,12 +9,12 @@
 #ifndef CGI_BASIC_CONNECTION_HPP_INCLUDED__
 #define CGI_BASIC_CONNECTION_HPP_INCLUDED__
 
-#include <istream>
-#include <ostream>
-#include <boost/asio.hpp>
+//#include <istream>
+//#include <ostream>
+//#include <boost/asio.hpp>
 
-#include "boost/cgi/tags.hpp"
-#include "boost/cgi/connection_base.hpp"
+//#include "boost/cgi/tags.hpp"
+//#include "boost/cgi/connection_base.hpp"
 //#include "connections/async_stdio_connection_impl.hpp"
 
 namespace cgi {

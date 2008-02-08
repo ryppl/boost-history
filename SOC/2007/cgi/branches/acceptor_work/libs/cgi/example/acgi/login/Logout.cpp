@@ -12,10 +12,12 @@ int main()
 
   response resp;
 
-  resp<< cookie("uuid")
-      << location(req.form("fwd"));
+  resp<< cookie("uuid");
+  boost::system::error_code ec;
+  std::string fwd(req.form("fwd", ec));
+  resp<< location(fwd);
 
   resp.send(req.client());
-  return req.end(http::ok);
+  return req.close(http::ok);
 }
 

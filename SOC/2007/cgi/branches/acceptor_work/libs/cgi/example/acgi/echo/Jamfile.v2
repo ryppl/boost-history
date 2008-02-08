@@ -1,20 +1,18 @@
+#             Copyright (c) 2007 Darren Garvey
+#
+# Distributed under the Boost Software License, Version 1.0.
+#     (See accompanying file LICENSE_1_0.txt or copy 
+#        at http://www.boost.org/LICENSE_1_0.txt)
 
-project boost.cgi.examples.acgi.echo
- : build-dir
-   $(PROJECT_ROOT)/bin.v2
- ;
+exe acgi_echo : main.cpp /boost/thread/ ;
 
-exe acgi_echo
- : main.cpp
- :
-   <include>$(PROJECT_ROOT)
-   <include>$(BOOST_ROOT)
-   <define>_CRT_SECURE_NO_WARNINGS
-   <define>_SCL_SECURE_NO_WARNINGS
- ;
-
-install acgi_echo_install
+# Our install rule (builds binaries and copies them to <location>)
+install install
  : acgi_echo
- : <location>.
-   <library>../../../util/system//boost_system
+ :
+ :
+ <location>$(cgi-bin)
  ;
+
+# Only install example if you use `bjam install' or equivalent
+explicit install ;
