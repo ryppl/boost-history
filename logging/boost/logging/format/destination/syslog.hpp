@@ -25,6 +25,7 @@
 #include <boost/logging/detail/manipulator.hpp>
 #include <boost/logging/format/destination/convert_destination.hpp>
 #include <boost/logging/format/destination/file.hpp>
+#include <boost/logging/format/formatter/tags.hpp> // uses_tag 
 #include <boost/logging/detail/level.hpp>
 #include <syslog.h>
 
@@ -57,10 +58,9 @@ typedef syslog_no_levels_t<> syslog_no_levels;
 
 See @ref boost::logging::tag "how to use tags".
 */
-template<class convert = do_convert_format::prepend> struct syslog_t : is_generic, uses_tag< level_t<convert>, ::boost::logging::tag::level >, boost::logging::op_equal::always_equal  {
-    typedef convert convert_type;
+struct syslog : is_generic, formatter::uses_tag< formatter::level, ::boost::logging::tag::level >, boost::logging::op_equal::always_equal  {
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
-        syslog( level_to_syslog_level(tag.val) , as_string(str).c_str() );
+        ::syslog( level_to_syslog_level(tag.val) , as_string(str).c_str() );
     }
 
 private:
@@ -72,7 +72,7 @@ private:
         if ( level <= level::info)
             return LOG_INFO;
         if ( level <= level::warning)
-            return LOG_WARN;
+            return LOG_WARNING;
         if ( level <= level::error)
             return LOG_ERR;
         if  ( level <= level::fatal)
@@ -86,11 +86,6 @@ private:
 
 
 
-/** @brief syslog_t with default values. See syslog_t
-
-@copydoc syslog_t
-*/
-typedef syslog_t<> syslog;
 
 
 }}}

@@ -166,7 +166,7 @@ void get_snapshot() {
 }
 
 
-void test_resource(int idx) {
+void test_resource(int /* idx */) {
     array cur_val ;
     {
     resource::read res(g_resource);

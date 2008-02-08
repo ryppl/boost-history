@@ -98,7 +98,7 @@ namespace detail {
             if ( m_flags.start_where_size_not_exceeded() ) {
                 for ( m_cur_idx = 0; m_cur_idx < m_flags.file_count(); ++m_cur_idx )
                     if ( fs::exists( file_name(m_cur_idx) )) {
-                        if ( fs::file_size( file_name(m_cur_idx))  < m_flags.max_size_bytes() )
+                        if ( static_cast<int>(fs::file_size( file_name(m_cur_idx)))  < m_flags.max_size_bytes() )
                             // file hasn't reached max size
                             break;
                     }

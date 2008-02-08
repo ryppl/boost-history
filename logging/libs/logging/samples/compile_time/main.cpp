@@ -32,7 +32,7 @@ we can see a difference between fast and slow compile.
 #include <iostream>
 
 
-int main(int argc, char * argv[])  
+int main()  
 {
 	return 0;
 }

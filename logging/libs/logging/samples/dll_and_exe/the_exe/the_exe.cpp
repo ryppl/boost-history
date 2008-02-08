@@ -19,7 +19,7 @@
 #include "log.h"
 
 
-int main(int argc, char* argv[])
+int main()
 {
     int i = 0;
     L_EXE_ << "beginning of exe log" << ++i;

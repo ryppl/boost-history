@@ -148,9 +148,9 @@ void test_contents_after_write_to_existing_rolling_file() {
     while ( std::getline(in, line, NEXT_LINE) ) {
         g_blocks[cur_block] += line + NEXT_LINE;
 
-        if ( g_blocks[cur_block].size() > MAX_SIZE_PER_FILE) {
+        if ( g_blocks[cur_block].size() > static_cast<unsigned int>(MAX_SIZE_PER_FILE)) {
             cur_block = (cur_block + 1) % FILE_COUNT;
-            if ( g_blocks[cur_block].size() > MAX_SIZE_PER_FILE)
+            if ( g_blocks[cur_block].size() > static_cast<unsigned int>(MAX_SIZE_PER_FILE))
                 // we've rolled to a new file - clear it first
                 g_blocks[cur_block].clear();
         }
@@ -222,9 +222,9 @@ void test_contents_after_writing_to_full_rolling_file() {
     while ( std::getline(in, line, NEXT_LINE) ) {
         g_blocks[cur_block] += line + NEXT_LINE;
 
-        if ( g_blocks[cur_block].size() > MAX_SIZE_PER_FILE) {
+        if ( g_blocks[cur_block].size() > static_cast<unsigned int>(MAX_SIZE_PER_FILE)) {
             cur_block = (cur_block + 1) % FILE_COUNT;
-            if ( g_blocks[cur_block].size() > MAX_SIZE_PER_FILE)
+            if ( g_blocks[cur_block].size() > static_cast<unsigned int>(MAX_SIZE_PER_FILE))
                 // we've rolled to a new file - clear it first
                 g_blocks[cur_block].clear();
         }

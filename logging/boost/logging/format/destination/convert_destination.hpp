@@ -23,10 +23,8 @@
 
 #include <boost/logging/detail/fwd.hpp>
 
-namespace boost { namespace logging { namespace destination {
-
-template<class t> struct into {};
-
+namespace boost { namespace logging { 
+    
 namespace tag {
     template<
             class string_ ,
@@ -41,6 +39,11 @@ namespace tag {
             class param9 ,
             class param10> struct holder ;
 }
+    
+namespace destination {
+
+template<class t> struct into {};
+
 
 
 /** 

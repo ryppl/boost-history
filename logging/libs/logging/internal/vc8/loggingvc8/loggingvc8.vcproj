@@ -631,6 +631,10 @@
 						RelativePath="..\..\..\..\..\boost\logging\format\destination\shared_memory.hpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\destination\syslog.hpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
