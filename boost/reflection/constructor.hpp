@@ -7,19 +7,19 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_EXTENSION_CONSTRUCTOR_HPP
-#define BOOST_EXTENSION_CONSTRUCTOR_HPP
+#ifndef BOOST_REFLECTION_CONSTRUCTOR_HPP
+#define BOOST_REFLECTION_CONSTRUCTOR_HPP
 #include <boost/reflection/instance.hpp>
 namespace boost {namespace reflections {
 template <BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(\
-          BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void)>
-class constructor;
+          BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), class Param, void)>
+class instance_constructor;
 
-#define BOOST_REFLECTION_CONSTRUCTOR_CLASS(Z, N, _) \
+#define BOOST_REFLECTION_INSTANCE_CONSTRUCTOR_CLASS(Z, N, _) \
 template <BOOST_PP_ENUM_PARAMS(N, class Param)> \
-class constructor<BOOST_PP_ENUM_PARAMS(N, Param)> { \
+class instance_constructor<BOOST_PP_ENUM_PARAMS(N, Param)> { \
 public: \
-  constructor(instance (*func)(BOOST_PP_ENUM_PARAMS(N, Param)) = 0) \
+  instance_constructor(instance (*func)(BOOST_PP_ENUM_PARAMS(N, Param)) = 0) \
   : func_(func) { \
   } \
   instance call(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
@@ -33,7 +33,7 @@ public: \
   instance (*func_)(BOOST_PP_ENUM_PARAMS(N, Param)); \
 };
 
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
-                BOOST_REFLECTION_CONSTRUCTOR_CLASS, _)
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), \
+                BOOST_REFLECTION_INSTANCE_CONSTRUCTOR_CLASS, _)
 }}
 #endif

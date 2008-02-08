@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(shared_library_basic_test) {
   boost::reflections::reflection & second_reflection =
     reflection_map["compact"];
  
-  boost::reflections::constructor<const char *> first_constructor =
+  boost::reflections::instance_constructor<const char *> first_constructor =
     first_reflection.get_constructor<const char *>();
   boost::reflections::instance first_instance = 
     first_constructor("First Instance");
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(shared_library_basic_test) {
     first_reflection.get_function<const char *>("get_type");
   BOOST_CHECK_EQUAL(first_function(first_instance), "It's an SUV.");
   
-  boost::reflections::constructor<const char *> second_constructor =
+  boost::reflections::instance_constructor<const char *> second_constructor =
     second_reflection.get_constructor<const char *>();
   boost::reflections::instance second_instance = 
     second_constructor("Second Instance");

@@ -7,10 +7,10 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_EXTENSION_INSTANCE_HPP
-#define BOOST_EXTENSION_INSTANCE_HPP
+#ifndef BOOST_REFLECTION_INSTANCE_HPP
+#define BOOST_REFLECTION_INSTANCE_HPP
 
-#include <boost/extension/common.hpp>
+#include <boost/reflection/common.hpp>
 namespace boost {namespace reflections {
 class instance {
 public:
@@ -41,9 +41,9 @@ public:
   }
 private:
   template <class ReturnValue
-  BOOST_PP_COMMA_IF(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS)
+  BOOST_PP_COMMA_IF(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS)
   BOOST_PP_ENUM_PARAMS(BOOST_PP_INC
-  (BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param)>
+  (BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), class Param)>
   friend class function;
   mutable void * val_;
   void (*destructor_)(void *);

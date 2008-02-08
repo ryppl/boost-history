@@ -7,8 +7,8 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_EXTENSION_FUNCTION_HPP
-#define BOOST_EXTENSION_FUNCTION_HPP
+#ifndef BOOST_REFLECTION_FUNCTION_HPP
+#define BOOST_REFLECTION_FUNCTION_HPP
 
 #include <boost/reflection/instance.hpp>
 
@@ -16,9 +16,9 @@ namespace boost {namespace reflections {
 
 typedef void (instance::*MemberFunctionPtr)();
 template <class ReturnValue = void 
-          BOOST_PP_COMMA_IF(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS)
+          BOOST_PP_COMMA_IF(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS)
           BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC
-          (BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void)>
+          (BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), class Param, void)>
 class function;
   
 #define BOOST_REFLECTION_FUNCTION_CLASS(Z, N, _) \
@@ -55,7 +55,7 @@ private: \
 };
 
 
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), \
                 BOOST_REFLECTION_FUNCTION_CLASS, _)
 }}
 #endif

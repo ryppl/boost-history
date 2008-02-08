@@ -9,8 +9,8 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_EXTENSION_METHOD_INFO_HPP
-#define BOOST_EXTENSION_METHOD_INFO_HPP
+#ifndef BOOST_REFLECTION_METHOD_INFO_HPP
+#define BOOST_REFLECTION_METHOD_INFO_HPP
 
 #include <boost/function.hpp>
 
@@ -19,35 +19,35 @@
 
 
 namespace boost { 
-  namespace extension {
+  namespace reflection {
 
-#ifdef BOOST_EXTENSION_USE_PP
+#ifdef BOOST_REFLECTION_USE_PP
 
-#ifndef BOOST_EXTENSION_REFLECTION_PARAMS
-#define BOOST_EXTENSION_REFLECTION_PARAMS(z, n, dummy) \
+#ifndef BOOST_REFLECTION_REFLECTION_PARAMS
+#define BOOST_REFLECTION_REFLECTION_PARAMS(z, n, dummy) \
   BOOST_PP_CAT(MethodParam,n),BOOST_PP_CAT(MethodParamID,n)
 #endif
 
-#ifndef BOOST_EXTENSION_REFLECTION_CLASS_PARAMS
-#define BOOST_EXTENSION_REFLECTION_CLASS_PARAMS(z, n, dummy) \
+#ifndef BOOST_REFLECTION_REFLECTION_CLASS_PARAMS
+#define BOOST_REFLECTION_REFLECTION_CLASS_PARAMS(z, n, dummy) \
   BOOST_PP_CAT(class MethodParam,n),BOOST_PP_CAT(class MethodParamID,n)
 #endif
 
     template<class Implementation, class MethodID, \
              class MethodReturnValue, \
              BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(                        \
-             BOOST_PP_ADD(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS) \
-                       ,BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS)), \
+             BOOST_PP_ADD(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) \
+                       ,BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS)), \
              class P, void)                        \
     > class method_info;
 
-#define BOOST_EXTENSION_METHOD_INFO(Z, N, _) \
+#define BOOST_REFLECTION_METHOD_INFO(Z, N, _) \
 template<class Implementation, class MethodID, class MethodReturnValue \
   BOOST_PP_COMMA_IF(N) \
-  BOOST_PP_ENUM(N, BOOST_EXTENSION_REFLECTION_CLASS_PARAMS, dummy) > \
+  BOOST_PP_ENUM(N, BOOST_REFLECTION_REFLECTION_CLASS_PARAMS, dummy) > \
 class method_info<Implementation, MethodID, MethodReturnValue \
   BOOST_PP_COMMA_IF(N) \
-  BOOST_PP_ENUM(N, BOOST_EXTENSION_REFLECTION_PARAMS, dummy) > \
+  BOOST_PP_ENUM(N, BOOST_REFLECTION_REFLECTION_PARAMS, dummy) > \
   { \
     public: \
           typedef BOOST_PP_CAT(boost::function,BOOST_PP_INC(N)) \
@@ -76,11 +76,11 @@ class method_info<Implementation, MethodID, MethodReturnValue \
 /**/
 
 
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
-                             BOOST_EXTENSION_METHOD_INFO, _)
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), \
+                             BOOST_REFLECTION_METHOD_INFO, _)
 
 
-#undef BOOST_EXTENSION_METHOD_INFO
+#undef BOOST_REFLECTION_METHOD_INFO
 
 #else
 
@@ -168,9 +168,9 @@ BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
         method_type f_;
     };
 
-#endif // BOOST_EXTENSION_USE_PP
+#endif // BOOST_REFLECTION_USE_PP
 
-  } // extension
+  } // reflection
 } // boost
 
-#endif // BOOST_EXTENSION_METHOD_INFO_HPP
+#endif // BOOST_REFLECTION_METHOD_INFO_HPP

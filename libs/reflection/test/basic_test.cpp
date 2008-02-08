@@ -13,8 +13,6 @@
 #include <string>
 #include <iostream>
 
-#define BOOST_EXTENSION_USE_PP 1
-
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK 1
 #include <boost/test/unit_test.hpp>
@@ -22,8 +20,10 @@
 
 class car {
 public:
-  int start() {
-    return 3;
+  car(int year) {
+  }
+  int start(int speed) {
+    return 3 + speed;
   }
 };
 using namespace boost::reflections;
@@ -31,24 +31,24 @@ BOOST_AUTO_TEST_CASE(argless)
 {
   reflection car_reflection;
   reflector<car> car_reflector(&car_reflection);
-  car_reflector.reflect_constructor();
+  car_reflector.reflect_constructor<int>();
   car_reflector.reflect<int>(&car::start, "start");
 //  Check for argless constructor
-  BOOST_CHECK(car_reflection.get_constructor().valid());
+  BOOST_CHECK(car_reflection.get_constructor<int>().valid());
   instance car_instance = 
-    car_reflection.get_constructor().call();
-  BOOST_CHECK(car_reflection.get_function<int>("start").valid());
+    car_reflection.get_constructor<int>().call(4);
+  bool start_valid = car_reflection.get_function<int, int>("start").valid();
+  BOOST_CHECK(start_valid);
   //  Make sure it doesn't have this undeclared method
   BOOST_CHECK(!car_reflection.get_function<int>("stop").valid());
-  BOOST_CHECK_EQUAL
-    (car_reflection.get_function<int>("start").call(car_instance), 3);
-  function<int> f =
-    car_reflection.get_function<int>("start");
-  BOOST_CHECK_EQUAL(f(car_instance), 3);
+  function<int, int> f =
+    car_reflection.get_function<int, int>("start");
+  int result = f(car_instance, 86);
+  BOOST_CHECK_EQUAL(result, 89);
 }
 class porsche : protected car {
 public:
-  porsche(int year) : year_(year) {
+  porsche(int year) : car(year), year_(year) {
   }
   int get_year() {
     return year_; 
