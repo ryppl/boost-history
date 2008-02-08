@@ -1,7 +1,13 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.22.8, 4 feb 2008
+@section changelog_cur_ver Current Version: v0.22.9, 8 feb 2008
+- added few fixes, due to feedback review
+  - out_of_the_box usage
+  - logger_base - virtual destructor
+  - custom_tag example
+  - header_only_lib example
+- added index.html
 - added license to all .h .cpp files (in scenarios/tests - they were missing)
 - removed loggingvc8.cpp file (useless)
 - lib -> libs

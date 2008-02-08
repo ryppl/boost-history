@@ -59,7 +59,7 @@ To get you started, here's the <b>most common usage</b>:
 
 @copydoc mul_levels_one_logger 
 
-@ref scenarios_code_1 "Click to see the code"
+@ref scenarios_code_mom "Click to see the code"
 \n\n\n
 
 To see more examples, check out @ref common_scenarios.

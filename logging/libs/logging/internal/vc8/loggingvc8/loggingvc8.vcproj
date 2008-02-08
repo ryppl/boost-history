@@ -697,6 +697,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="out_of_the_box"
+				>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\out_of_the_box\no_levels.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\boost\logging\out_of_the_box\use_levels.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="internal docs"

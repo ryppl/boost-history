@@ -1,4 +1,4 @@
-// named_writer.hpp
+// named_write.hpp
 
 // Boost Logging library
 //
@@ -54,22 +54,23 @@ namespace boost { namespace logging { namespace writer {
 @brief Composed of a named formatter and a named destinations. Thus, you can specify the formatting and destinations as strings
 
 @code
-#include <boost/logging/format/named_writer.hpp>
+#include <boost/logging/format/named_write.hpp>
 @endcode
 
 
-Contains a very easy interface for using formatters and destinations:
-- at construction, specify 2 params: the formatter string and the destinations string
+Contains a very easy interface for using @ref manipulator "formatters and destinations":
+- at construction, specify 2 params: the %formatter string and the destinations string
 
-Setting the formatters and destinations to write to is extremely simple:
+Setting the @ref manipulator "formatters and destinations" to write to is extremely simple:
 
 @code
-// first param - the formatter(s) , second param : the destination(s)
+// Set the formatters (first param) and destinatins (second step) in one step 
 g_l()->writer().write("%time%($hh:$mm.$ss.$mili) [%idx%] |\n", "cout file(out.txt) debug");
 
 // set the formatter(s)
 g_l()->writer().format("%time%($hh:$mm.$ss.$mili) [%idx%] |\n");
 
+// set the destination(s)
 g_l()->writer().destination("cout file(out.txt) debug");
 @endcode
 
@@ -77,15 +78,15 @@ g_l()->writer().destination("cout file(out.txt) debug");
 @section format_string_syntax The syntax of the format string
 
 - The format string specifies how the message is to be logged
-- Every formatter is escaped using %<em>fmt</em>%
+- Every formatter is escaped using <tt>%</tt><em>fmt</em><tt>%</tt>
   - Available formatters:
     - <tt>"%idx%"</tt> - writes the index of the message (formatter::idx)
     - <tt>"%time%"</tt> - writes the time (formatter::high_precision_time)
     - <tt>"%thread_id%"</tt> - writes the thread id (formatter::thread_id)
-    - if you want to write "%", double it, like this: "%%"
-- "|" is used to specify the original message. What is before it, is prepended to the message, what is after, is appended to the message 
-- If a formatter is configurable, append "(params)" to it
-  - For now, only "%time%" is configurable. For instance, "%time%($hh:$mm.$ss.$mili)" writes time like "21:14.24.674"
+    - if you want to write @c "%", double it, like this: @c "%%"
+- @c "|" is used to specify the original message. What is before it, is prepended to the message, what is after, is appended to the message 
+- If a formatter is configurable, append @em (params) to it
+  - For now, only @c "%time%" is configurable. For instance, @c "%time%($hh:$mm.$ss.$mili)" writes time like @c "21:14.24.674"
 
 Example:
 @code
@@ -108,32 +109,34 @@ The output can look like:
   - Separate destinations by space (' ')
 - Available destinations
   - <tt>"cout"</tt> - writes to std::cout (destination::cout)
+  - <tt>"cerr"</tt> - writes to std::cerr (destination::cerr)
   - <tt>"debug"</tt> - writes to the debug window: OutputDebugString in Windows, console on Linux (destination::dbg_window)
   - <tt>"file"</tt> - writes to a file (destination::file)
   - <tt>"file2"</tt> - writes to a second file (destination::file)
   - <tt>"rol_file"</tt> - writes to a rolling file (destination::rolling_file)
   - <tt>"rol_file2"</tt> - writes to a second rolling file (destination::rolling_file)
-- If a destination is configurable, append "(params)" to it
-  - Right now, "file", "file2", "rol_file" and "rol_file2" are configurable
-    - Append "(filename)" to them to specify the file name. Example: "file(out.txt)" will write to the out.txt file
+- If a destination is configurable, append @em (params) to it
+  - Right now, @c "file", @c "file2", @c "rol_file" and @c "rol_file2" are configurable
+    - Append <tt>(</tt><em>filename</em><tt>)</tt> to them to specify the file name. Example: @c "file(out.txt)" will write to the out.txt file
 
 Examples:
-- "file(out.txt) cout" - will write to a file called out.txt and to cout
-- "cout debug" - will write to cout and debug window (see above)
-- "cout file(out.txt) file2(dbg.txt)" - will write to cout, and to 2 files - out.txt and dbg.txt
-- "cout rol_file(r.txt)" - will write to cout and to a @ref destination::rolling_file "rolling_file" called r.txt
+- <tt>"file(out.txt) cout"</tt> - will write to a file called out.txt and to cout
+- <tt>"cout debug"</tt> - will write to cout and debug window (see above)
+- <tt>"cout file(out.txt) file2(dbg.txt)"</tt> - will write to cout, and to 2 files - out.txt and dbg.txt
+- <tt>"cout rol_file(r.txt)"</tt> - will write to cout and to a @ref destination::rolling_file "rolling_file" called r.txt
 
 @note
 If you want to output to 2 files, don't use "file(one.txt) file(two.txt)". This will just configure "file" twice, ending up with writing only to "two.txt" file.
 Use "file(one.txt) file2(two.txt)" instead!
 
-
+@note
+At this time, named_write does not support tags. However, it's a high priority on my TODO list, so it'll be here soon!
 
 @param format_write_ the underlying format writer
 
 
 */
-template<class format_write_ /* = default_ */ > struct named {
+template<class format_write_ /* = default_ */ > struct named_write {
     typedef typename use_default< format_write_, format_write< formatter::base<> , destination::base<> > >::type format_write_type;
 
     typedef typename format_write_type::formatter_base_type formatter_base_type;
@@ -142,13 +145,25 @@ template<class format_write_ /* = default_ */ > struct named {
 
     typedef hold_string_type string_type;
 
-    named() {
+    named_write() {
         m_writer.add_formatter( m_format_before);
         m_writer.add_formatter( m_format_after);
         m_writer.add_destination( m_destination);
 
         init();
     }
+
+    /** @brief Constructs the named_write, and specifies the formats and destinations 
+    */
+    named_write(const string_type & format_str, const string_type & destination_str) {
+        m_writer.add_formatter( m_format_before);
+        m_writer.add_formatter( m_format_after);
+        m_writer.add_destination( m_destination);
+
+        init();
+        write(format_str, destination_str);
+    }
+
 
     /** @brief sets the format string: what should be before, and what after the original message, separated by "|"
 
@@ -344,6 +359,7 @@ private:
             .add( BOOST_LOG_STR("rol_file"), destination::rolling_file("out.txt") )
             .add( BOOST_LOG_STR("rol_file2"), destination::rolling_file("out.txt") )
             .add( BOOST_LOG_STR("cout"), destination::cout() )
+            .add( BOOST_LOG_STR("cerr"), destination::cerr() )
             .add( BOOST_LOG_STR("debug"), destination::dbg_window() );
     }
 
