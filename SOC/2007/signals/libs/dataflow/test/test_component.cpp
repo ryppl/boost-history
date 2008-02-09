@@ -78,7 +78,7 @@ int test_main(int, char* [])
 
     my_component c2;
     
-    df::binary_operation<df::operations::connect, df::default_mechanism, df::default_tag>(c, c2);
+    df::default_binary_operation<df::operations::connect, df::default_mechanism, df::default_tag>(c, c2);
     BOOST_CHECK(connected);
     
     return 0;

@@ -64,13 +64,6 @@ int test_main(int, char* [])
         doubler1(1);
         
         BOOST_CHECK_EQUAL(collector.stored, 4);
-        BOOST_CHECK_EQUAL((
-            mpl::size<
-                df::traits_of<
-                    df::result_of::get_port_c<DoublerClass, 1, df::signals::tag>::type,
-                    df::signals::tag
-                >::type::ports
-            >::value), 1);
         
         //]
     }

@@ -156,7 +156,7 @@ public:
     
     typedef typename boost::function_types::parameter_types<OutSignature>::type parameter_types;
     typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
-    typedef typename filter::signal_type::result_type fused_signature_type (const parameter_vector &);
+    typedef typename filter<Derived, OutSignature, InSignatures, unfused, SignalArgs>::signal_type::result_type fused_signature_type (const parameter_vector &);
 
 protected:
     typename signal_from_args<fused_signature_type, SignalArgs>::type fusion_out;

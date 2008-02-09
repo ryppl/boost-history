@@ -27,7 +27,7 @@ int test_main(int, char* [])
     BOOST_CHECK(disconnected);
     
     connected = false;
-    df::binary_operation<df::operations::connect, whatever, df::default_tag>(p, c);
+    df::default_binary_operation<df::operations::connect, whatever, df::default_tag>(p, c);
     BOOST_CHECK(connected);
     
     return 0;

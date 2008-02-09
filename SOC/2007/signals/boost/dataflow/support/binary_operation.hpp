@@ -27,7 +27,7 @@ namespace boost { namespace dataflow {
 
 template<typename Operation, typename Mechanism, typename Tag, typename OutgoingPort, typename IncomingPort>
 inline void
-binary_operation(OutgoingPort &left, IncomingPort &right)
+default_binary_operation(OutgoingPort &left, IncomingPort &right)
 {
     extension::binary_operation_impl<
         typename default_traits_of<OutgoingPort, args::left, Mechanism, Tag>::type,
@@ -49,7 +49,7 @@ inline typename enable_if<
     > >::type    
 connect(OutgoingPort &left, IncomingPort &right)
 {
-    binary_operation<operations::connect, default_mechanism, default_tag>(left, right);
+    default_binary_operation<operations::connect, default_mechanism, default_tag>(left, right);
 }
 
 } } // namespace boost::dataflow
