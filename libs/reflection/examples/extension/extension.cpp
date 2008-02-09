@@ -20,7 +20,7 @@
 #include <iostream>
 
 #if defined(MSC_VER) || defined(WIN32)
-#define BOOST_EXTENSION_DIR_START "..\bin\"
+#define BOOST_EXTENSION_DIR_START "..\\bin\\"
 #else
 #define BOOST_EXTENSION_DIR_START "../bin/"
 #endif
