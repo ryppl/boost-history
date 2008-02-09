@@ -175,7 +175,14 @@ namespace cgi {
       out_header_[7] = 0;
 
       bufs.front() = boost::asio::buffer(out_header_);
-      return boost::asio::write(*connection_, bufs, boost::asio::transfer_all(), ec);
+      std::size_t bytes_transferred
+        = boost::asio::write(*connection_, bufs, boost::asio::transfer_all(), ec);
+
+      if (0 != (total_buffer_size + fcgi::spec::header_length::value
+          - bytes_transferred))
+        ec = error::couldnt_write_complete_packet;
+
+      return bytes_transferred;
     }
 
     /// Asynchronously write some data to the client.

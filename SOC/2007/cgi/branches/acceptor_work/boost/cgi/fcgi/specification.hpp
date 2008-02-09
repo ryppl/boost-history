@@ -393,6 +393,11 @@ namespace cgi {
     struct begin_request
       : boost::mpl::int_<1>
     {
+      struct body
+      {
+        typedef boost::mpl::int_<8> size;
+      };
+
       template<typename Array>
       static spec_detail::role_t
         get_role(Array& a)

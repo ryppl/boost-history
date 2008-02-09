@@ -44,6 +44,9 @@ namespace cgi {
       typedef std::vector<char>                 buffer_type;
       typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
       typedef client_type::header_buffer_type   header_buffer_type;
+      typedef detail::protocol_traits<
+        protocol_type
+      >::protocol_service_type                  protocol_service_type;
 
       implementation_type()
         : client_()
@@ -54,6 +57,8 @@ namespace cgi {
         , all_done_(false)
       {
       }
+
+      protocol_service_type* service_;
 
       client_type client_;
 
@@ -136,6 +141,12 @@ namespace cgi {
 
     void shutdown_service()
     {
+    }
+
+    void set_service(implementation_type& impl
+                    , implementation_type::protocol_service_type& ps)
+    {
+      impl.service_ = &ps;
     }
 
     bool is_open(implementation_type& impl)
@@ -302,7 +313,6 @@ namespace cgi {
       return impl.cookie_vars_;
     }
 
-
     /// Find the environment meta-variable matching name
     std::string env(implementation_type& impl, const std::string& name
                    , boost::system::error_code& ec)
@@ -310,6 +320,10 @@ namespace cgi {
       return var(impl.env_vars_, name, ec);
     }
 
+    map_type& env(implementation_type& impl)
+    {
+      return impl.env_vars_;
+    }
 
     role_type get_role(implementation_type& impl)
     {
@@ -408,10 +422,14 @@ namespace cgi {
     /// Read some data from the client.
     template<typename MutableBufferSequence>
     std::size_t
-      read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
+      read_some(implementation_type& impl, const MutableBufferSequence& buf
+               , boost::system::error_code& ec)
     {
-      //if (impl.client_.status_ == closed_)
-      //  return 0;
+      if (impl.client_.status_ == closed_)
+      {
+        ec = error::client_closed;
+        return 0;
+      }
 
       //if (read_header(ec))
         return -1;
@@ -425,7 +443,9 @@ namespace cgi {
     boost::system::error_code
       read_header(implementation_type& impl, boost::system::error_code& ec)
     {
+      // clear the header first (might be unneccesary).
       impl.header_buf_ = implementation_type::header_buffer_type();
+
       if (8 != read(*impl.client_.connection_, buffer(impl.header_buf_)
                    , boost::asio::transfer_all(), ec) || ec)
         return ec;
@@ -467,10 +487,39 @@ namespace cgi {
                            , const unsigned char* buf, boost::uint16_t
                            , boost::system::error_code& ec)
     {
-      if (read_header(impl, ec))
-        detail::throw_error(ec);
+      //implementation_type& req
+      //  = impl.client_.request_id_ == 0
+      //    ? impl
+      //    : get_or_make_request(impl);
+          
+      if (impl.client_.request_id_ == 0) // ie. not set
+      {
+        impl.client_.request_id_ = fcgi::spec::get_request_id(impl.header_buf_);
 
-      std::cerr<< "Role: " << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
+        BOOST_STATIC_ASSERT((
+          fcgi::spec::begin_request::body::size::value
+          == fcgi::spec::header_length::value));
+        
+        // A begin request body is as long as a header, so we can optimise:
+        if (read_header(impl, ec))
+          return ec;
+         
+        impl.request_role_ = fcgi::spec::begin_request::get_role(impl.header_buf_);
+        std::cerr<< "[hw] New request role: " << impl.request_role_
+            << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
+            << std::endl;
+        impl.client_.keep_connection_
+          = fcgi::spec::begin_request::get_flags(impl.header_buf_)
+            & fcgi::spec::keep_connection;
+
+        impl.client_.status_ = constructed;
+      }
+      else
+      {
+        std::cerr<< "**FIXME** Role: " 
+          << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
+        return error::multiplexed_request_incoming;
+      }
 
       //connection_->request_map_[id] = 
       return ec;
@@ -481,6 +530,18 @@ namespace cgi {
                            , const unsigned char* buf, boost::uint16_t
                            , boost::system::error_code& ec)
     {
+      if (id == fcgi::spec::get_request_id(impl.header_buf_))
+      {
+        impl.request_status_ = aborted;
+        return ec;
+      }
+      try {
+        std::cerr<< "**FIXME** request aborted (id = " << id
+          << ") but request not notified." << std::endl;
+        //impl.client_.connection_->requests_.at(id - 1)->abort();
+      }catch(...){
+        ec = error::abort_request_record_recieved_for_invalid_request;
+      }
 /*
       connection_type::request_map_type::iterator i
         = connection_->find(id);
@@ -505,9 +566,8 @@ namespace cgi {
         
         impl.client_.status_ = params_read;
 
-        // **FIXME**
         std::cerr<< "[hw] Final PARAM record found." << std::endl;
-        return ec;//error::params_all_found;
+        return ec;
       }
 
       while(len)
@@ -550,6 +610,8 @@ namespace cgi {
 
         std::cerr<< "[hw] name := " << name << std::endl;
         std::cerr<< "[hw] data := " << data << std::endl;
+
+        impl.env_vars_[name] = data;
       }
 
       return ec;
@@ -667,6 +729,29 @@ namespace cgi {
             , boost::asio::buffer_cast<unsigned char*>(buffer)
             , boost::asio::buffer_size(buffer), ec);
     }
+
+/*
+    implementation_type&
+      get_or_make_request(implementation_type& impl, boost::uint16_t id)
+    {
+      implementation_type::client_type::connection_type::request_vector_type&
+        requests = impl.client_.connection_->requests;
+      implementation_type* ret;
+      
+      try {
+        ret = &requests.at(id - 1);
+        BOOST_ASSERT(req != 0); // should throw
+        return *ret;
+      }catch(...){
+        req = new request_type(impl.service_);
+        if (requests.size() < (id - 1))
+          requests.resize(id);
+        requests.at(id-1) = *req;
+        return *req; // same as *ret
+      }
+    }
+*/
+
   };
 
   //template<>

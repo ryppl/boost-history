@@ -111,6 +111,7 @@ namespace cgi {
                  , const bool parse_post = false)
       : basic_io_object<service_type>(s.io_service())
     {
+      set_protocol_service(s);
       if (load_now) load(parse_post);//this->service.load(this->impl, false, ec);
     }
 
@@ -120,6 +121,7 @@ namespace cgi {
                  , const bool load_now = false, const bool parse_post = false)
       : basic_io_object<service_type>(s.io_service())
     {
+      set_protocol_service(s);
       if(load_now) load(ec, parse_post);//this->service.load(this->impl, false, ec);
     }
 
@@ -127,6 +129,11 @@ namespace cgi {
     {
       //if (is_open())
       //  close(http::internal_server_error, 0);
+    }
+
+    void set_protocol_service(protocol_service_type& ps)
+    {
+      this->service.set_service(this->impl, ps);
     }
 
     /// Return `true` if the request is still open (ie. not aborted or closed)
@@ -148,8 +155,8 @@ namespace cgi {
     }
 
     // Error-code semantics
-    boost::system::error_code& load(boost::system::error_code& ec
-                                   , bool parse_stdin = false)
+    boost::system::error_code&
+      load(boost::system::error_code& ec, bool parse_stdin = false)
     {
       return this->service.load(this->impl, parse_stdin, ec);
     }
@@ -241,7 +248,7 @@ namespace cgi {
     void read_some(const MutableBufferSequence& buf)
     {
       boost::system::error_code ec;
-      this->service.read_some(this->implementation, buf, ec);
+      this->service.read_some(this->impl, buf, ec);
       detail::throw_error(ec);
     }
 
@@ -249,7 +256,7 @@ namespace cgi {
     boost::system::error_code
       read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
     {
-      return this->service.read_some(this->implementation, buf, ec);
+      return this->service.read_some(this->impl, buf, ec);
     }
 
     /// Set the output for the request

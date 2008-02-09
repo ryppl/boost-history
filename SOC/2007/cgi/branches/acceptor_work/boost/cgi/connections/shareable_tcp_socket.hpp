@@ -49,7 +49,10 @@ namespace cgi {
     //typedef ::cgi::fcgi::client                      client_type;
     typedef //typename
       detail::protocol_traits<fcgi_>::request_type   request_type;
+    typedef 
+      detail::protocol_traits<fcgi_>::request_ptr    request_ptr;
     typedef std::map<boost::uint16_t, request_type*> request_map_type;
+    typedef std::vector<request_ptr>                 request_vector_type;
 
     /** End FastCGI stuff      **/
 
@@ -135,6 +138,7 @@ namespace cgi {
   public:
     /** FastCGI specific stuff **/
     request_map_type request_map_;
+    request_vector_type requests_;
   };
 
   // probably deletable typedef (leaving it here to keep an open mind)

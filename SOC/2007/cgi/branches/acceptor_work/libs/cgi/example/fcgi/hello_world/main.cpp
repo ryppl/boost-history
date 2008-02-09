@@ -56,12 +56,27 @@ try {
 
   req.load(ec, true);
 
-  string resp("Content-type: text/plain\r\n\r\nHello there, universe!");
-  const char* resp2 = "Content-type: text/plain\r\n\r\nHello there, universe.";
+  string resp("Content-type: text/html\r\n\r\nHello there, universe!<p />");
+  //const char* resp2 = "Content-type: text/plain\r\n\r\nHello there, universe.";
 
   write(req.client(), boost::asio::buffer(resp), boost::asio::transfer_all(), ec);
 
   of<< "[a] Wrote some data: " << ec.message() << endl;
+
+  cgi::map::const_iterator iter = req.env().begin();
+  cgi::map::const_iterator end = req.env().end();
+
+  for (; iter != end; ++iter)
+  {
+    string bit;
+    bit += "<b>" + iter->first + "</b> := <i>" + iter->second + "</i><br />";
+    write(req.client(), boost::asio::buffer(bit), boost::asio::transfer_all(), ec);
+    if (ec)
+    {
+      of<< "Got error writing env: " << ec.message() << endl;
+      break;
+    }
+  }
 
   //req.client().read_some(buf.prepare(64), ec);
   //of<< "[a] Read some data: " << ec.message() << endl;

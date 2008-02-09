@@ -16,6 +16,7 @@
 #ifndef CGI_REQUEST_TRAITS_HPP_INCLUDED__
 #define CGI_REQUEST_TRAITS_HPP_INCLUDED__
 
+#include <boost/shared_ptr.hpp>
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/basic_connection_fwd.hpp"
@@ -137,10 +138,11 @@ namespace cgi {
       typedef protocol_traits<tags::fcgi>            type;
       typedef fcgi::fcgi_request_impl                impl_type;
       typedef fcgi::fcgi_request_service             request_service_impl;
-      typedef basic_protocol_service<tags::fcgi>     protocol_service_type;
+      typedef basic_protocol_service<fcgi_>          protocol_service_type;
       typedef basic_request<
         request_service_impl, protocol_service_type
       >                                              request_type; 
+      typedef boost::shared_ptr<request_type>        request_ptr;
       //typedef fcgi_request_service
       //        ::implementation_type                  request_impl_type;
       typedef fcgi::fcgi_service_impl                service_impl_type;
