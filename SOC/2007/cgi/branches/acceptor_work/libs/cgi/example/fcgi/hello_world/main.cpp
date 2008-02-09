@@ -56,10 +56,16 @@ try {
 
   req.load(ec, true);
 
+  string resp("Content-type: text/plain\r\n\r\nHello there, universe!");
+  const char* resp2 = "Content-type: text/plain\r\n\r\nHello there, universe.";
+
+  write(req.client(), boost::asio::buffer(resp), boost::asio::transfer_all(), ec);
+
+  of<< "[a] Wrote some data: " << ec.message() << endl;
+
   req.client().read_some(buf.prepare(64), ec);
   of<< "[a] Read some data: " << ec.message() << endl;
-  //req.load(ec, true);//cgi::parse_all);
-  //if (ec) { of<< "Couldn't load request: " << ec.message() << endl; return 14; }
+
   //for (;;)
   //{
   //  size_t br = req.client().read_some(buf.prepare(64), ec);

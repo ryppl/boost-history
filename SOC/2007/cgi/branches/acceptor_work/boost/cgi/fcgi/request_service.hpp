@@ -165,12 +165,15 @@ namespace cgi {
 
       impl.client_.construct(impl, ec);
 
-      while(!ec && impl.request_status_ != loaded)
+      client_status completion_condition
+        = parse_stdin ? stdin_read : params_read;
+
+      while(!ec 
+        && impl.client_.status() < completion_condition
+        && impl.request_status_ != loaded)
       {
         impl.client_.parse_packet(impl, ec);
       }
-      // read the header content
-      //::cgi::read(impl.client_, buffer(buf, header_len), ec);
 /*
       const std::string& request_method = env(impl, "REQUEST_METHOD", ec);
       if (request_method == "GET")

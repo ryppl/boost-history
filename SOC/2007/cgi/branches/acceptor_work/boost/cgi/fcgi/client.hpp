@@ -9,8 +9,10 @@
 #ifndef CGI_FCGI_CLIENT_HPP_INCLUDED__
 #define CGI_FCGI_CLIENT_HPP_INCLUDED__
 
+#include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/logic/tribool.hpp>
+#include <boost/asio/buffer.hpp>
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/map.hpp"
 #include "boost/cgi/io_service.hpp"
@@ -22,8 +24,20 @@
 #include "boost/cgi/error.hpp"
 //#include "boost/cgi/fcgi/request_fwd.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
 //#error BOOST_HAS_RVALUE_REFS
 namespace cgi {
+
+  enum client_status
+  {
+    none_, // **FIXME** !
+    constructed,
+    params_read,
+    stdin_read,
+    end_request_sent,
+    closed_, // **FIXME** !
+    //aborted
+  };
 
   /// A client that uses a TCP socket that owned by it.
   template<typename Protocol>
@@ -49,14 +63,14 @@ namespace cgi {
     /// Construct
     basic_client()
       : request_id_(-1)
-      , closed_(false)
+      , status_(none_)
     {
     }
 
     /// Construct
     basic_client(io_service_type& ios)
       : request_id_(-1)
-      , closed_(false)
+      , status_(none_)
       //, io_service_(ios)
       //, connection_(new connection_type::pointer(ios))
     {
@@ -66,8 +80,7 @@ namespace cgi {
     /** Closing the connection as early as possible is good for efficiency */
     ~basic_client()
     {
-      if (!keep_connection_ && connection_)
-        connection_->close();
+      close();
     }
 
     /// Construct the client by claiming a request id.
@@ -109,6 +122,8 @@ namespace cgi {
           handle_other_request_header();
       }
 
+      status_ = constructed;
+
       return ec;
     }
 
@@ -119,7 +134,12 @@ namespace cgi {
 
     void close()
     {
-      connection_->close();
+      if (status_ == closed_) return;
+
+      // Write an EndRequest packet to the server.
+
+      if (!keep_connection_ && connection_)
+        connection_->close();
     }
 
     //io_service_type& io_service() { return io_service_; }
@@ -154,8 +174,36 @@ namespace cgi {
     std::size_t 
       write_some(const ConstBufferSequence& buf, boost::system::error_code& ec)
     {
+      typename ConstBufferSequence::const_iterator iter = buf.begin();
+      typename ConstBufferSequence::const_iterator end  = buf.end(); 
+
+      std::vector<boost::asio::const_buffer> bufs;
+      bufs.push_back(boost::asio::const_buffer());//header_buf_)); // space for header
+
+      int total_buffer_size(0);
+      for(; iter != end; ++iter)
+      {
+        boost::asio::const_buffer buffer(*iter);
+        int new_buf_size( boost::asio::buffer_size(buffer) );
+        if (total_buffer_size + new_buf_size
+             > fcgi::spec::max_packet_size::value)
+          break;
+        total_buffer_size += new_buf_size;
+        bufs.push_back(*iter);
+      }
+      std::cerr<< "buffer size := " << total_buffer_size << std::endl;
       //detail::make_header(out_header_, buf
-      return connection_->write_some(buf, ec);
+      out_header_[0] = static_cast<unsigned char>(1);
+      out_header_[1] = static_cast<unsigned char>(6);
+      out_header_[2] = static_cast<unsigned char>(request_id_ >> 8) & 0xff;
+      out_header_[3] = static_cast<unsigned char>(request_id_) & 0xff;
+      out_header_[4] = static_cast<unsigned char>(total_buffer_size >> 8) & 0xff;
+      out_header_[5] = static_cast<unsigned char>(total_buffer_size) & 0xff;
+      out_header_[6] = static_cast<unsigned char>(0);
+      out_header_[7] = 0;
+
+      bufs.front() = boost::asio::buffer(out_header_);
+      return boost::asio::write(*connection_, bufs, boost::asio::transfer_all(), ec);
     }
 
     /// Read some data from the client.
@@ -163,7 +211,7 @@ namespace cgi {
     std::size_t
       read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
     {
-      if (closed_)
+      if (status_ == closed_)
         return 0;
 
       if (read_header(ec))
@@ -210,21 +258,29 @@ namespace cgi {
       return ec;
     }
 
+
+    const client_status& status() const
+    {
+      return status_;
+    }
+
   private:
     friend class fcgi_request_service;
     boost::uint16_t request_id_;
+    client_status status_;
     //request_impl_type* current_request_;
     
     /// A marker to say if the final STDIN (and/or DATA) packets have been
     // read. Note: having data on the connection doesn't imply it's for
     // this request; we can save time by knowing when to not even try.
-    bool closed_;
+    //bool closed_;
 
     connection_ptr   connection_;
 
     //fcgi::spec_detail::Header hdr_;
     /// Buffer used to check the header of each packet.
     header_buffer_type header_buf_; //in_header_, out_header_;
+    header_buffer_type out_header_;
 
     bool keep_connection_;
 
@@ -254,6 +310,7 @@ namespace cgi {
         detail::throw_error(ec);
 
       std::cerr<< "Role: " << fcgi::spec::begin_request::get_role(header_buf_) << std::endl;
+
       //connection_->request_map_[id] = 
       return ec;
     }
@@ -283,9 +340,11 @@ namespace cgi {
       if (0 == len)
       { // This is the final param record.
         
+        status_ = params_read;
+
         // **FIXME**
         std::cerr<< "[hw] Final PARAM record found." << std::endl;
-        return ec;
+        return ec;//error::params_all_found;
       }
 
       while(len)
@@ -340,7 +399,7 @@ namespace cgi {
     {
       if (0 == len)
       {
-        closed_ = true;
+        status_ = stdin_read;
 
         // **FIXME**
         std::cerr<< "[hw] Final STDIN record found." << std::endl;

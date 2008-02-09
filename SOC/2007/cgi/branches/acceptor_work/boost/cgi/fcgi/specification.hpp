@@ -301,6 +301,11 @@ namespace cgi {
   namespace specification {
 
 #include <boost/mpl/int.hpp>
+
+    struct max_packet_size
+      : boost::mpl::int_<65535>
+    {};
+
     struct header_length
       : boost::mpl::int_<8>
     {};
