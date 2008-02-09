@@ -43,6 +43,7 @@ namespace cgi {
       typedef client_type::connection_type      connection_type;
       typedef std::vector<char>                 buffer_type;
       typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
+      typedef client_type::header_buffer_type   header_buffer_type;
 
       implementation_type()
         : client_()
@@ -96,9 +97,15 @@ namespace cgi {
   //      return boost::asio::buffer(&(*(buf_.begin())) + bufsz, size);
         return boost::asio::buffer(&buffer_[bufsz], size);
       }
+
+
+     /************** New stuff *****************/
+      header_buffer_type header_buf_;
+      boost::uint16_t id_;
     };
 
     typedef fcgi_request_service                      type;
+    typedef ::cgi::fcgi::fcgi_request_service         full_type;
     typedef type::implementation_type::protocol_type  protocol_type;
     typedef type::implementation_type::map_type       map_type;
 
@@ -164,6 +171,34 @@ namespace cgi {
       BOOST_ASSERT(!ec && "Can't load request due to previous errors.");
 
       impl.client_.construct(impl, ec);
+      BOOST_ASSERT(impl.client_.connection_->is_open());
+
+      for(;;)
+      {
+        if (read_header(impl, ec))
+          break;
+        int id(fcgi::spec::get_request_id(impl.header_buf_));
+        if (id == fcgi::spec::null_request_id::value)
+          handle_admin_request(impl);
+        else
+        if (fcgi::spec::get_type(impl.header_buf_) 
+            == fcgi::spec::begin_request::value)
+        {
+          impl.id_ = id;
+          impl.client_.request_id_ = id;
+          if (read_header(impl, ec))
+            break;
+          impl.request_role_ = fcgi::spec::begin_request::get_role(impl.header_buf_);
+          std::cerr<< "[hw] New request role: " << impl.request_role_
+              << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
+              << std::endl;
+          impl.client_.keep_connection_
+            = fcgi::spec::begin_request::get_flags(impl.header_buf_)
+              & fcgi::spec::keep_connection;
+          break;
+        }else
+          handle_other_request_header(impl);
+      }
 
       client_status completion_condition
         = parse_stdin ? stdin_read : params_read;
@@ -172,7 +207,8 @@ namespace cgi {
         && impl.client_.status() < completion_condition
         && impl.request_status_ != loaded)
       {
-        impl.client_.parse_packet(impl, ec);
+        //impl.client_.parse_packet(impl, ec);
+        parse_packet(impl, ec);
       }
 /*
       const std::string& request_method = env(impl, "REQUEST_METHOD", ec);
@@ -185,7 +221,8 @@ namespace cgi {
 	      return ec;
 
       parse_cookie_vars(impl, ec);
-  */  
+*/
+
       std::cerr<< "done!" << std::endl;
       return ec;
     }
@@ -364,9 +401,285 @@ namespace cgi {
       return ec;
     }
 
-  private:
-    //cgi::io_service& io_service_;
+  /***************************************************************************/
+  public: // Reading stuff goes under here
+
+
+    /// Read some data from the client.
+    template<typename MutableBufferSequence>
+    std::size_t
+      read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
+    {
+      //if (impl.client_.status_ == closed_)
+      //  return 0;
+
+      //if (read_header(ec))
+        return -1;
+
+      //boost::tribool state = parse_header(impl);
+      //std::size_t bytes_read;//( connection_->read_some(buf, ec) );
+      //return bytes_read;
+    }
+
+    /// Read a single header, buf do nothing with it.
+    boost::system::error_code
+      read_header(implementation_type& impl, boost::system::error_code& ec)
+    {
+      impl.header_buf_ = implementation_type::header_buffer_type();
+      if (8 != read(*impl.client_.connection_, buffer(impl.header_buf_)
+                   , boost::asio::transfer_all(), ec) || ec)
+        return ec;
+      
+      //if (ec) return ec;
+
+      std::cerr<< std::endl
+          << "[hw] Header details {" << std::endl
+          << "  RequestId := " << fcgi::spec::get_request_id(impl.header_buf_) << std::endl
+          << "  FastCGI version := " << fcgi::spec::get_version(impl.header_buf_) << std::endl
+          << "  Type := " << fcgi::spec::get_type(impl.header_buf_)
+          << " (" << fcgi::spec::request_type::to_string(impl.header_buf_) << ")" << std::endl
+          << "  Content-length := " << fcgi::spec::get_content_length(impl.header_buf_) << std::endl
+          << "}" << std::endl;
+
+      return ec;
+    }
+
+    /*** Various handlers go below here; they might find a
+     * better place to live ***/
+
+    // **FIXME**
+    void handle_admin_request(implementation_type& impl)
+    {
+      std::cerr<< std::endl << "**FIXME** " << __FILE__ << ":" << __LINE__ 
+        << " handle_admin_request()" << std::endl;
+    }
+
+    // **FIXME**
+    void handle_other_request_header(implementation_type& impl)
+    {
+      std::cerr<< std::endl << "**FIXME** " << __FILE__ << ":" << __LINE__ 
+        << " handle_other_request_header()" << std::endl;
+    }
+
+    // **FIXME**    
+    boost::system::error_code
+      process_begin_request(implementation_type& impl, boost::uint16_t id
+                           , const unsigned char* buf, boost::uint16_t
+                           , boost::system::error_code& ec)
+    {
+      if (read_header(impl, ec))
+        detail::throw_error(ec);
+
+      std::cerr<< "Role: " << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
+
+      //connection_->request_map_[id] = 
+      return ec;
+    }
+
+    boost::system::error_code
+      process_abort_request(implementation_type& impl, boost::uint16_t id
+                           , const unsigned char* buf, boost::uint16_t
+                           , boost::system::error_code& ec)
+    {
+/*
+      connection_type::request_map_type::iterator i
+        = connection_->find(id);
+
+      if (i == connection_type::request_map_type::iterator())
+      {
+        return bad_request_id;
+      }
+
+      //lookup_request(id).abort();
+*/
+      return ec;
+    }
+
+    boost::system::error_code
+      process_params(implementation_type& impl, boost::uint16_t id
+                    , const unsigned char* buf, boost::uint16_t len
+                    , boost::system::error_code& ec)
+    {
+      if (0 == len)
+      { // This is the final param record.
+        
+        impl.client_.status_ = params_read;
+
+        // **FIXME**
+        std::cerr<< "[hw] Final PARAM record found." << std::endl;
+        return ec;//error::params_all_found;
+      }
+
+      while(len)
+      {
+        boost::uint32_t   name_len, data_len;
+        std::string name, data;
+        if (*buf >> 7 == 0)
+        {
+            name_len = *(buf++);
+            --len;
+        }
+        else
+        {
+            name_len = ((buf[0] & 0x7F) << 24)
+                     +  (buf[1]         << 16)
+                     +  (buf[2]         <<  8)
+                     +   buf[3];
+            buf += 4;
+            len -= 4;
+        }
+
+        if (*buf >> 7 == 0)
+        {
+            data_len = *(buf++);
+            --len;
+        }
+        else
+        {
+            data_len = ((buf[0] & 0x7F) << 24)
+                     +  (buf[1]         << 16)
+                     +  (buf[2]         <<  8)
+                     +   buf[3];
+            buf += 4;
+            len -= 4;
+        }
+        name.assign(reinterpret_cast<const char*>(buf), name_len);
+        data.assign(reinterpret_cast<const char*>(buf)+name_len, data_len);
+        buf += (name_len + data_len);
+        len -= (name_len + data_len);
+
+        std::cerr<< "[hw] name := " << name << std::endl;
+        std::cerr<< "[hw] data := " << data << std::endl;
+      }
+
+      return ec;
+    }
+
+
+    boost::system::error_code
+      process_stdin(implementation_type& impl, boost::uint16_t id
+                   , const unsigned char* buf, boost::uint16_t len
+                   , boost::system::error_code& ec)
+    {
+      if (0 == len)
+      {
+        impl.client_.status_ = stdin_read;
+
+        // **FIXME**
+        std::cerr<< "[hw] Final STDIN record found." << std::endl;
+        return ec;
+      }
+
+      // **FIXME**
+      std::cerr<< "[hw] Found some STDIN stuff." << std::endl;
+      return ec;
+    }
+
+    /// Parse the current header
+    boost::tribool parse_header(implementation_type& impl)
+    {
+      BOOST_ASSERT(fcgi::spec::get_version(impl.header_buf_) == 1
+                   && "This library is only compatible with FastCGI 1.0");
+
+      using namespace fcgi::spec_detail;
+
+      switch(fcgi::spec::get_type(impl.header_buf_))
+      {
+      case BEGIN_REQUEST:
+      case PARAMS:
+      case STDIN:
+      case DATA:
+      case GET_VALUES:
+        return boost::indeterminate;
+      case ABORT_REQUEST:
+        return false;
+      case UNKNOWN_TYPE:
+      default:
+        return true;
+      }
+    }
+    
+    // Mammoth typedef corresponding to function signature of process_*
+    // functions.
+    typedef boost::system::error_code
+      ( full_type::* proc_func_t)
+      (implementation_type& impl, boost::uint16_t, const unsigned char*
+      , boost::uint16_t, boost::system::error_code&);
+
+    static const proc_func_t proc_funcs[];
+  
+    boost::system::error_code
+      parse_packet(implementation_type& impl, boost::system::error_code& ec)
+    {
+      //current_request_ = &req;
+
+      if (this->read_header(impl, ec))
+        return ec;
+
+      boost::tribool state = this->parse_header(impl);
+
+      if (state)
+      { // the header has been handled and all is ok; continue.
+        return ec;
+      }else
+      if (!state)
+      { // The header is confusing; something's wrong. Abort.
+        std::cerr<< "Bad header received (this isn't implemented properly yet"
+            << std::endl;
+        return error::bad_header_type;
+      }
+      // else route (ie. state == boost::indeterminate)
+
+      std::cerr<< "Got to read more stuff now I think." << std::endl;
+      implementation_type::mutable_buffers_type buf
+        = impl.prepare(fcgi::spec::get_length(impl.header_buf_));
+
+      if (this->read_body(impl, buf, ec))
+        return ec;
+
+      this->parse_body(impl, buf, ec);
+
+      return ec;
+    }
+
+    /// Read the body of the current packet; do nothing with it.
+    template<typename MutableBuffersType>
+    boost::system::error_code
+      read_body(implementation_type& impl, const MutableBuffersType& buffer
+               , boost::system::error_code& ec)
+    {
+      std::size_t bytes_read
+        = read(*impl.client_.connection_, buffer, boost::asio::transfer_all(), ec);
+
+      BOOST_ASSERT(bytes_read == fcgi::spec::get_length(impl.header_buf_)
+                   && "Couldn't read all of the record body.");
+      return ec;
+    }
+
+    template<typename MutableBuffersType>
+    boost::system::error_code
+      parse_body(implementation_type& impl, const MutableBuffersType& buffer
+                , boost::system::error_code& ec)
+    {
+      return //ec;/*
+        (this->* proc_funcs[fcgi::spec::get_type(impl.header_buf_)])
+            (impl, fcgi::spec::get_request_id(impl.header_buf_)
+            , boost::asio::buffer_cast<unsigned char*>(buffer)
+            , boost::asio::buffer_size(buffer), ec);
+    }
   };
+
+  //template<>
+  const fcgi_request_service::proc_func_t fcgi_request_service::proc_funcs[] =
+    { 0
+    , &fcgi_request_service::process_begin_request
+    , &fcgi_request_service::process_abort_request
+    , 0
+    , &fcgi_request_service::process_params
+    , &fcgi_request_service::process_stdin
+    , 0
+    , 0
+    };
 
  } // namespace fcgi
 } // namespace cgi

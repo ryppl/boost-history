@@ -223,6 +223,34 @@ namespace cgi {
       detail::throw_error(ec);
     }
     */
+/*
+    void read_some()
+    {
+      boost::system::error_code ec;
+      this->service.read_some(this->implementation,ec);
+      detail::throw_error(ec);
+    }
+
+    boost::system::error_code
+      read_some(boost::system::error_code& ec)
+    {
+      return this->service.read_some(this->implementation, ec);
+    }
+*/
+    template<typename MutableBufferSequence>
+    void read_some(const MutableBufferSequence& buf)
+    {
+      boost::system::error_code ec;
+      this->service.read_some(this->implementation, buf, ec);
+      detail::throw_error(ec);
+    }
+
+    template<typename MutableBufferSequence>
+    boost::system::error_code
+      read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
+    {
+      return this->service.read_some(this->implementation, buf, ec);
+    }
 
     /// Set the output for the request
     /**

@@ -63,8 +63,8 @@ try {
 
   of<< "[a] Wrote some data: " << ec.message() << endl;
 
-  req.client().read_some(buf.prepare(64), ec);
-  of<< "[a] Read some data: " << ec.message() << endl;
+  //req.client().read_some(buf.prepare(64), ec);
+  //of<< "[a] Read some data: " << ec.message() << endl;
 
   //for (;;)
   //{
