@@ -247,6 +247,11 @@ namespace cgi {
       return http_status_;
     }
 
+    http::status_code& status()
+    {
+      return http_status_;
+    }
+
     /// Allow more headers to be added (WARNING: avoid using this).
     void unterminate_headers()
     {

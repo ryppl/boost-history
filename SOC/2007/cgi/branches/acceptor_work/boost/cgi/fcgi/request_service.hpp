@@ -221,18 +221,18 @@ namespace cgi {
         //impl.client_.parse_packet(impl, ec);
         parse_packet(impl, ec);
       }
-/*
+
       const std::string& request_method = env(impl, "REQUEST_METHOD", ec);
       if (request_method == "GET")
         if (parse_get_vars(impl, ec))
-	      return ec;
+          return ec;
+/** FIXME **
       else
       if (request_method == "POST" && parse_stdin)
         if (parse_post_vars(impl, ec))
 	      return ec;
-
-      parse_cookie_vars(impl, ec);
 */
+      parse_cookie_vars(impl, ec);
 
       std::cerr<< "done!" << std::endl;
       return ec;
@@ -369,7 +369,6 @@ namespace cgi {
     }
 
     /// Read and parse the HTTP_COOKIE meta variable
-    template<typename RequestImpl>
     boost::system::error_code&
     parse_cookie_vars(implementation_type& impl, boost::system::error_code& ec)
     {

@@ -18,6 +18,13 @@
 //#include "boost/cgi/fcgi/request_acceptor_service.hpp"
 #include "boost/cgi/detail/common_headers.hpp"
 
+namespace cgi {
+ namespace fcgi {
+   using namespace ::cgi;
+   using namespace ::cgi::common;
+ } // namespace fcgi
+} // namespace cgi
+
 /// Dump fcgi stuff into the boost namespace
 namespace boost {
  namespace fcgi {
