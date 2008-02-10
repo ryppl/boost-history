@@ -10,15 +10,8 @@
  */
 
 
-#include <string>
-
-#include <boost/extension/factory_map.hpp>
-#include <boost/extension/shared_library.hpp>
-#include <boost/extension/convenience.hpp>
-
 #include <iostream>
-
-#define BOOST_EXTENSION_USE_PP 1
+#include <string>
 
 #include "car.hpp"
 #include <boost/reflection/reflection.hpp>
@@ -53,11 +46,6 @@ int main(void)
 
   car_reflection.call<std::string, bool, 
     float, std::string>(&ferrari_f40, "turn", .10f);
-
-  // prepare the parameter map for a call
-  boost::extension::parameter_map pm;
-  pm.add<float, std::string>(.15f, "turn_angle");
-  pm.add<int, std::string>(50, "aceleration");
 
   return 0;
 }
