@@ -10,10 +10,8 @@
 The Boost.Extension library has been developed to ease the development of 
 plugins and similar extensions to software. Classes can be made available from 
 shared libraries and loaded by the application. 
-	
-The documentation is mostly complete.
-  
-Note the following:
+ 
+Among others, the library has the following features:
 
 * Multiple and virtual inheritance are supported
 * Library users do not need to use any macros (besides those required by Windows for exported functions) 

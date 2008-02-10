@@ -9,23 +9,18 @@
 
 In this section we explain how to use Info classes in Boost.Extension. 
 
-Info classes is a mechanism that allows you to store important information of 
-each implementation. The type and utility of this information is arbitrary as 
+Info classes is a mechanism that allows you to store important information about 
+each derived class. The type and utility of this information is arbitrary as 
 the Info class is a template argument of the factories where the user registers 
 its own implementations, and for that reason any kind of information could be 
 stored.
 
-Let's see how can we use it with an example first and then we will be able to 
-summarize the concepts. 
-
-Surely you remember our very first example, that of course it's called 
-HelloWorld. Well, let's imagine that we now want a multi-language Hello World. 
-Of course there are better ways of designing it, but as we want to picture how 
-the Info class could be used we'll take this approach.
+Let's return to the first example - Hello World. Well, let's imagine that we 
+now want a version of Hello World that supports multiple languages. 
 
 First, we define an implementation of the =word= interface for each combination 
 of word and language. Then we have for example the class =monde= that implements 
-the `word` interface for the french language in this case. 
+the `word` interface for the french language in this case.
 
 Let's see the code:
 
@@ -175,7 +170,7 @@ Now that we have described our example the major parts could be summarized:
 # We define the Info class.
 # When we add the implementations to the factory_map we construct a new Info class instance
 for each implementation, storing the needed data.
-# Finally, we could use the =get_info= method in the main file to retrieve the data.
+# Finally, we could use the =get_val= method in the main file to retrieve the data.
 
 Tutorial 5  describes a more complex example of the use of the Info class.
 

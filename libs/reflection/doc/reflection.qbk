@@ -6,22 +6,20 @@
 [/ See http://www.boost.org/ for latest version. ]
 
 [library Boost.Reflection
-    [quickbook 1.3]
+    [quickbook 1.4]
     [version 1.0]
-    [copyright 2007 Mariano G. Consoni, Jeremy Pack]
-    [purpose Reflection techniques for C++, meta-classes]
+    [copyright 2007-2008 Jeremy Pack, Mariano G. Consoni]
+    [purpose Run-time reflection]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
         [@http://www.boost.org/LICENSE_1_0.txt http://www.boost.org/LICENSE_1_0.txt])
     ]
     [category Programming Interfaces]
-    [last-revision $Date: 2007/4/30 12:00:00 $]
+    [last-revision $Date: 2008/2/9 18:05:00 $]
 ]
-
-
 
 [include introduction.qbk]
 [include tutorials.qbk]
-[include interpreter.qbk]
-
+[include performance_analysis.qbk]
+[include appendices.qbk]

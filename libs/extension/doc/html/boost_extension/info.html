@@ -30,20 +30,14 @@
     </p>
 <p>
       Info classes is a mechanism that allows you to store important information
-      of each implementation. The type and utility of this information is arbitrary
+      about each derived class. The type and utility of this information is arbitrary
       as the Info class is a template argument of the factories where the user registers
       its own implementations, and for that reason any kind of information could
       be stored.
     </p>
 <p>
-      Let's see how can we use it with an example first and then we will be able
-      to summarize the concepts.
-    </p>
-<p>
-      Surely you remember our very first example, that of course it's called HelloWorld.
-      Well, let's imagine that we now want a multi-language Hello World. Of course
-      there are better ways of designing it, but as we want to picture how the Info
-      class could be used we'll take this approach.
+      Let's return to the first example - Hello World. Well, let's imagine that we
+      now want a version of Hello World that supports multiple languages.
     </p>
 <p>
       First, we define an implementation of the <code class="literal">word</code> interface
@@ -213,7 +207,7 @@
     </p>
 <div class="informaltable">
 <h4>
-<a name="id937646"></a>
+<a name="id937620"></a>
       </h4>
 <table class="table">
 <colgroup><col></colgroup>
@@ -238,8 +232,8 @@
         class instance for each implementation, storing the needed data.
       </li>
 <li>
-        Finally, we could use the <code class="literal">get_info</code> method in the main
-        file to retrieve the data.
+        Finally, we could use the <code class="literal">get_val</code> method in the main file
+        to retrieve the data.
       </li>
 </ol></div>
 <p>
