@@ -16,34 +16,37 @@ namespace cgi {
  namespace common {
 
    template<typename Response, typename Request>
-   int return_helper(Response& resp, Request& req, int program_status)
+   boost::system::error_code
+     return_helper(Response& resp, Request& req, int program_status)
    {
      boost::system::error_code ec;
-     resp.send(req, ec);
+     resp.send(req.client(), ec);
      if (ec) return ec;
 
      req.close(resp.status(), program_status);
 
-     return program_status;
+     return ec;
    }
 
-   template<typename R1, typename R2>
-   void send_helper(R1& resp, R2& req)
-   {
-     resp.send(req.client());
-   }
+ } // namespace common
+} // namespace cgi
 
-   void close_helper(response& resp, boost::fcgi::request& req, int prog_status)
-   {
-     req.close(resp.status(), prog_status);
-   }
+/// If an error occurs during the sending or closing then `status` will be
+// incremented by the value of this macro.
+#ifndef BOOST_CGI_RETURN_ERROR_INCREMENT
+#  define BOOST_CGI_RETURN_ERROR_INCREMENT 100
+#endif
 
-#define return_(RESP, REQ, STATUS) \
-    send_helper(RESP, REQ);            \
-    ::cgi::common::close_helper(RESP, REQ, STATUS); \
-    return STATUS;
+#define BOOST_CGI_RETURN(resp, req, status)                     \
+          if ( ::cgi::common::return_helper(resp, req, status)) \
+            /** error **/                                       \
+            return status + BOOST_CGI_RETURN_ERROR_INCREMENT;   \
+          return status;
 
-//return return_helper(resp, req, status)
+namespace cgi {
+ namespace common {
+
+#define return_(resp, req, status) BOOST_CGI_RETURN(resp, req, status)
 
  } // namespace common
 } // namespace cgi
