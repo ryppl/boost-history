@@ -11,11 +11,9 @@
 #define BOOST_SWITCH_CASE_HPP_INCLUDED
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/vector/vector50.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/copy.hpp>
 #include <boost/mpl/fold.hpp>
+#include <boost/mpl/joint_view.hpp>
 
 namespace boost {
 
@@ -72,10 +70,11 @@ public:
         Case1(case1),
         Case2(case2) {}
     // msvc does not like mpl::joint_view
-    typedef typename mpl::copy<
+    // if the labels are not reversed.
+    typedef typename mpl::joint_view<
         typename Case2::labels,
-        mpl::back_inserter<typename Case1::labels>
-    >::type labels;
+        typename Case1::labels
+    > labels;
     using Case1::apply;
     using Case2::apply;
 };
