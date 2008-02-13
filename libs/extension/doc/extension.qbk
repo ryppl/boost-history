@@ -6,8 +6,7 @@
 [/ See http://www.boost.org/ for latest version. ]
 
 [library Boost.Extension
-    [quickbook 1.3]
-    [version 1.0]
+    [quickbook 1.4]
     [copyright 2007 Jeremy Pack, Mariano G. Consoni]
     [purpose Factory management and facilities for using shared libraries]
     [license
@@ -16,12 +15,12 @@
         [@http://www.boost.org/LICENSE_1_0.txt http://www.boost.org/LICENSE_1_0.txt])
     ]
     [category Programming Interfaces]
-    [last-revision $Date: 2008/2/9 17:05:00 $]
+    [last-revision $Date: 2008/2/12 19:25:00 $]
 ]
 
 
 [def __linked_library [link boost_extension.linked_library linked_library]]
-[def __zone [link boost_extension.factory_map factory_map]]
+[def __factory_map [link boost_extension.factory_map factory_map]]
 [def __factory [link boost_extension.factory factory]]
 
 [include introduction.qbk]
