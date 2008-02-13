@@ -19,7 +19,6 @@ project
     : requirements
       <include>../../../
       <include>$(BOOST_ROOT)
-      <include>../../../../src/sandbox/
       <toolset>gcc:<find-shared-library>dl
       <toolset>gcc:<linkflags>"-Wl,-rpath,'$ORIGIN'"
       <toolset>darwin:<define>DYLD_LIBRARY_PATH=./
@@ -31,3 +30,6 @@ exe extension-reflection : extension/extension.cpp ;
 lib car_lib : extension/car_lib.cpp : <link>shared ;
 
 install ../test/ : car_lib extension-reflection ;
+
+# Tutorial 1: Hello World
+exe hello_world : tutorial_1/hello_world.cpp ;
