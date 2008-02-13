@@ -14,6 +14,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/joint_view.hpp>
+#include <boost/mpl/single_view.hpp>
 
 namespace boost {
 
@@ -83,7 +84,7 @@ template<class N, class F>
 class single_case_t {
 public:
     single_case_t(F f) : impl(f) {}
-    typedef mpl::vector1<N> labels;
+    typedef mpl::single_view<N> labels;
     template<class R>
     R apply(N n) const {
         return(impl(n));
@@ -113,18 +114,18 @@ struct add_to_group {
     };
 };
 
-class empty_case {
-public:
-    template<class T>
-    explicit empty_case(T&) {}
-    typedef mpl::vector0<> labels;
-    void apply();
-};
-
-template<class S, class F>
-struct make_case_group {
-    typedef typename mpl::fold<S, empty_case, add_to_group<F> >::type type;
-};
+//class empty_case {
+//public:
+//    template<class T>
+//    explicit empty_case(T&) {}
+//    typedef mpl::vector0<> labels;
+//    void apply();
+//};
+//
+//template<class S, class F>
+//struct make_case_group {
+//    typedef typename mpl::fold<S, empty_case, add_to_group<F> >::type type;
+//};
 
 template<class Case>
 class expression_template_case_t {
