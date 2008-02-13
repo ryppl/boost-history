@@ -19,6 +19,7 @@ be manually reflected. This does offer some benefits however:
 * Arbitrary classes can be reflected without modification.
 * It is possible to make a reflected interface that is quite different from the original interface.
 
+
 This library is currently in development in preparation for a review for inclusion in the
 Boost C++ Libraries. For ongoing status updates, check
 [@http://boost-extension.blogspot.com/ C++ Plugins and Reflection].
