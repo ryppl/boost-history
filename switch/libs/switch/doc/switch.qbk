@@ -20,6 +20,47 @@ for such usage.
 
 [endsect]
 
+[section:Concepts Concepts]
+
+[section:CaseConcept Case Concept]
+
+[table Notation
+    [[Symbol] [Meaning]]
+    [[c] [A Case object]]
+    [[C] [A case type]]
+    [[I] [An MPL Integral Constant type]]
+    [[i] [An MPL Integral Constant object]]
+]
+
+[table Valid Expressions
+    [[Expression] [Semantics]]
+    [[C::labels] [An MPL Forward Sequence of MPL Integral Constants]]
+    [[c.apply<R>(i)] [Returns type R.  The type of i must be in C::labels]]
+]
+
+[endsect]
+
+[section:SingleCase Single Case]
+
+[table Notation
+    [[Symbol] [Meaning]]
+    [[c] [A Case object]]
+    [[C] [A case type]]
+    [[I] [An MPL Integral Constant type]]
+    [[i] [An MPL Integral Constant object]]
+]
+
+[table Valid Expressions
+    [[Expression] [Semantics]]
+    [[C::label] [An MPL Integral Constant]]
+    [[c()] [Function application.]]
+    [[C::fallthrough()] [Returns a bool indicating whether this case should fall through.]]
+]
+
+[endsect]
+
+[endsect]
+
 [section:switch_ switch_]
 
     namespace boost {
@@ -93,23 +134,6 @@ prints the nth element of a fusion sequence.
 
 [endsect]
 
-[section:bad_switch bad_switch]
-
-    namespace boost {
-
-    class bad_switch : public std::runtime_error {};
-
-    }
-
-[*Header]
-
-    #include <boost/switch.hpp>
-
-Thrown when the default case is executed
-and no default was provided.
-
-[endsect]
-
 [section:BOOST_SWITCH_LIMIT BOOST_SWITCH_LIMIT]
 
     #define BOOST_SWITCH_LIMIT 50
@@ -126,6 +150,8 @@ as it is the same in every translation unit.
 
 [section:Alternatives Alternatives]
 
+[section:Map Map]
+
 Another way to achieve similar functionality is to use a map to
 function pointers or Boost.Functions.  The advantages of this
 approach are
@@ -140,5 +166,69 @@ The disadvantages are:
 * The table needs to be initialized somehow.  The
   easy method of using a local static variable is not
   thread-safe.  Making it thread-safe adds more overhead.
+
+[endsect]
+
+[section:IfElse If/Else]
+
+Another alternative is a chained if/else statement.
+The advantages are:
+
+* easy to implement
+* no limit to the mumber of cases
+* fast for small numbers of cases
+* can handle other types besides builtin integers
+
+The disadvantages are:
+* slow for a large number of cases
+
+[endsect]
+
+[section:BinarySearch Binary Search]
+
+One final alternative is to use a binary search.
+The advantages of this approach are:
+
+* fast for any size table (As fast as a jump table)
+* no limit to the number of cases
+
+The disadvantages are:
+
+* compilation will be /sloooooow/ if the cases
+  are not already sorted. 
+
+[endsect]
+
+[table Possible Implementations
+    [[] [`switch`] [`std::map`] [if/else] [binary search]]
+    [[initialization required?]        [no] [yes] [no] [no]]
+    [[dispatch speed] [fast] [slow] [slow for large numbers of cases] [fast]]
+    [[easy to implement by hand] [no] [yes] [yes] [no]]
+    [[limited number of cases?] [yes] [no] [no] [no]]
+    [[compilation time] [fast] [fast] [fast] [slow if the cases are not sorted]]
+    [[can handle any type?] [no] [yes] [yes] [yes but need to be able to sort at compile time]]
+]
+
+[section:benchmarks Benchmarks]
+
+[table Runtime Benchmark on msvc 9.0 (seconds)
+    [[] [consecutive] [spread out]]
+    [[switch] [2.953] [3.047]]
+    [[if/else] [14.093] [14.563]]
+    [[binary_search] [2.922] [2.828]]
+    [[std::map] [9.907] [9.953]]
+    [[sorted_array] [9.625] [9.89]]
+]
+
+[table Runtime Benchmark on g++ 3.4.4
+    [[] [consecutive] [spread out]]
+    [[switch] [2.656] [2.922]]
+    [[if/else] [7.047] [6.984]]
+    [[binary_search] [3] [3.031]]
+    [[std::map] [50.719] [51.125]]
+    [[sorted_array] [9.109] [9.313]]
+]
+
+[endsect]
 
 [endsect]
