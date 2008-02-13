@@ -14,6 +14,8 @@
 //#include <boost/thread/once.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/range_c.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/at.hpp>
 
 namespace boost {
 

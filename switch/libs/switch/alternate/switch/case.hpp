@@ -15,6 +15,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/single_view.hpp>
+#include <boost/mpl/range_c.hpp>
 
 namespace boost {
 
@@ -171,6 +172,11 @@ expression_template_case_t<restrict_case_t<case_group_t<S,F> > > case_(F f) {
 template<int N, class F>
 expression_template_case_t<single_case_t<mpl::int_<N>, F> > case_c(F f) {
     return(expression_template_case_t<single_case_t<mpl::int_<N>, F> >(f));
+}
+
+template<int L, int H, class F>
+expression_template_case_t<restrict_case_t<case_group_t<mpl::range_c<int, L, H>, F> > > case_range_c(F f) {
+    return(expression_template_case_t<restrict_case_t<case_group_t<mpl::range_c<int, L, H>, F> > >(f));
 }
 
 }
