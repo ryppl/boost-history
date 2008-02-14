@@ -44,17 +44,17 @@ defined(__APPLE__) || defined(BOOST_EXTENSION_FORCE_FAST_TYPEINFO)
 namespace boost { namespace extensions {
 bool operator<(const default_type_info& first,
                const default_type_info& second) {
-  return first.type.name() < second.type.name();
+  return &first.type < &second.type;
 }
 
 bool operator==(const default_type_info& first,
                const default_type_info& second) {
-  return first.type.name() == second.type.name();
+  return &first.type == &second.type;
 }
 
 bool operator>(const default_type_info& first,
                const default_type_info& second) {
-  return first.type.name() > second.type.name();
+  return &first.type > &second.type;
 }
 }}
 #else
