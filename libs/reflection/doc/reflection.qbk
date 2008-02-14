@@ -20,6 +20,6 @@
 [include introduction.qbk]
 [include extension.qbk]
 [include tutorials.qbk]
-[/ [include performance_analysis.qbk] ]
-[/ [include appendices.qbk] ]
+[/ [include performance_analysis.qbk]
+[/ [include appendices.qbk]
 

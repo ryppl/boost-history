@@ -23,22 +23,16 @@
 
 #include "../examples/word.hpp"
 
-#define BOOST_EXTENSION_LIBS_DIRECTORY "../bin/"
-
 using namespace boost::extensions;
 
 /// tests if the SO caches libraries and if we can remove .extensions files before unloading
 
 BOOST_AUTO_TEST_CASE(lib_caching_test)
 {
-  if(boost::filesystem::exists(BOOST_EXTENSION_LIBS_DIRECTORY 
-                               "libHelloWorldCache.extension")) {
-    boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY 
-                              "libHelloWorldCache.extension");
+  if(boost::filesystem::exists("libHelloWorldCache.extension")) {
+    boost::filesystem::remove("libHelloWorldCache.extension");
   }
-  boost::filesystem::copy_file(BOOST_EXTENSION_LIBS_DIRECTORY 
-                               "libHelloWorldLib.extension", 
-                               BOOST_EXTENSION_LIBS_DIRECTORY 
+  boost::filesystem::copy_file("libHelloWorldLib.extension", 
                                "libHelloWorldCache.extension");
 
   {
@@ -80,11 +74,8 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
   }
 
   // replace the loaded library and try to reload
-  boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY 
-                            "libHelloWorldCache.extension");
-  boost::filesystem::copy_file(BOOST_EXTENSION_LIBS_DIRECTORY 
-                               "libHelloWorldLibv2.extension", 
-                               BOOST_EXTENSION_LIBS_DIRECTORY 
+  boost::filesystem::remove("libHelloWorldCache.extension");
+  boost::filesystem::copy_file("libHelloWorldLibv2.extension", 
                                "libHelloWorldCache.extension");
 
   {
@@ -160,8 +151,7 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
 
       ++current_word;
 
-      boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY 
-                                "libHelloWorldCache.extension");
+      boost::filesystem::remove("libHelloWorldCache.extension");
 
       std::auto_ptr<word> world_word_ptr(current_word->second.create());
       BOOST_CHECK_EQUAL( !world_word_ptr.get(), 0 );

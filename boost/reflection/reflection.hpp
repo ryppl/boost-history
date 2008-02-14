@@ -14,13 +14,15 @@
 #include <map>
 #include <vector>
 
-#include <boost/reflection/impl/typeinfo.hpp>
+#include <boost/extension/impl/typeinfo.hpp>
 #include <boost/reflection/constructor.hpp>
 #include <boost/reflection/factory.hpp>
 #include <boost/reflection/function.hpp>
 // #include <boost/reflection/parameter_map.hpp>
 
 namespace boost {namespace reflections {
+using extensions::type_info_handler;
+
 #define BOOST_REFLECTION_REFLECTION_GET_CONSTRUCTOR_FUNCTION(Z, N, _) \
 template <class ParamFirst BOOST_PP_COMMA_IF(N) \
   BOOST_PP_ENUM_PARAMS(N, class Param)> \
@@ -178,7 +180,7 @@ struct basic_constructor_info<TypeInfo> {
 };
 
 template <class Info = std::string, class ParameterInfo = void,
-          class TypeInfo = reflections::default_type_info>
+          class TypeInfo = extensions::default_type_info>
 class basic_reflection
 {
 public:

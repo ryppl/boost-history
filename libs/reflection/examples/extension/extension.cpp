@@ -19,13 +19,6 @@
 #include <boost/reflection/reflector.hpp>
 #include <iostream>
 
-// Define directory locations for cross platform
-// directory traversal.
-#if defined(MSC_VER) || defined(WIN32)
-#define BOOST_EXTENSION_DIR_START "..\\bin\\"
-#else
-#define BOOST_EXTENSION_DIR_START "../bin/"
-#endif
 
 int main(void)
 {
@@ -39,16 +32,22 @@ int main(void)
 
   // Load the shared library using Boost.Extension
   boost::extensions::shared_library lib
-    ((std::string(BOOST_EXTENSION_DIR_START) +
-     "libcar_lib.extension").c_str());
+    ("libcar_lib.extension");
   lib.open();
-
+  if (!lib.is_open())
+    return 2;
+  if (!lib.get<void, std::map<std::string,
+      reflection> &>("extension_export_car")) {
+    return 3;
+  }
   // Call an exported function to populate
   // reflection_map
   lib.get<void, std::map<std::string, 
     reflection> &>
     ("extension_export_car")(reflection_map);
-  if (reflection_map.size() != size_t(2)) {
+  if (reflection_map.size() != size_t(2) ||
+      reflection_map.find("suv") == reflection_map.end() ||
+      reflection_map.find("compact") == reflection_map.end()) {
     std::cout << "Could not load reflections!";
     return 1;
   }

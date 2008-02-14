@@ -13,11 +13,11 @@
 #ifndef BOOST_REFLECTION_STATIC_REFLECTION_HPP
 #define BOOST_REFLECTION_STATIC_REFLECTION_HPP
 #include <map>
+#include <boost/extension/impl/typeinfo.hpp>
 #include <boost/reflection/factory.hpp>
-#include <boost/reflection/impl/typeinfo.hpp>
 
 namespace boost { namespace reflections {
-  
+using extensions::type_info_handler;
 #define BOOST_REFLECTION_FACTORY_MAP_GET_FUNCTION(Z, N, _) \
   template <class Info, class ReturnValue \
   BOOST_PP_COMMA_IF(N) \
@@ -107,7 +107,7 @@ private:
     };
   std::map<TypeInfo, generic_map_holder*> maps_;
 };
-typedef basic_static_reflection<default_type_info> static_reflection;
+typedef basic_static_reflection<extensions::default_type_info> static_reflection;
 }}
 
 #undef BOOST_REFLECTION_STATIC_REFLECTION_GET_FUNCTION

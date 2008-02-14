@@ -12,11 +12,13 @@
 
 #ifndef BOOST_REFLECTION_PARAMETER_MAP_HPP
 #define BOOST_REFLECTION_PARAMETER_MAP_HPP
-#include <boost/reflection/impl/typeinfo.hpp>
+#include <boost/extension/impl/typeinfo.hpp>
 #include <exception>
 #include <map>
 #include <vector>
 namespace boost { namespace reflections {
+using extensions::type_info_handler;
+
 class conversion_not_found_exception : public std::exception {
 public:
   virtual const char* what() {
@@ -24,7 +26,7 @@ public:
   }
 };
 typedef void (*FunctionPtr)();
-template <class TypeInfo = reflections::default_type_info>
+template <class TypeInfo = extensions::default_type_info>
 class generic_parameter {
 public:
   virtual ~generic_parameter() {
@@ -73,7 +75,7 @@ private:
   void* value_;
 };
 
-template <class T, class TypeInfo = reflections::default_type_info>
+template <class T, class TypeInfo = extensions::default_type_info>
 class parameter : public generic_parameter<TypeInfo> {
 public:
   template <class A, class B>
@@ -87,7 +89,7 @@ public:
       value_(value) {
     // Add converter for current type.
     generic_parameter<TypeInfo>::converters_.insert
-      (make_pair(reflections::type_info_handler<TypeInfo, T>::get_class_type(),
+      (std::make_pair(reflections::type_info_handler<TypeInfo, T>::get_class_type(),
                  new default_converter<T>()));
   }
   template <class S>
@@ -136,7 +138,7 @@ public:
 };
 
 template <class Info = std::string,
-          class TypeInfo = default_type_info>
+          class TypeInfo = extensions::default_type_info>
 class basic_parameter_map 
   : public std::multimap<Info, generic_parameter<TypeInfo>*> {
 public:

@@ -19,6 +19,7 @@
 
 namespace boost {namespace reflections {
 
+using extensions::type_info_handler;
 
 #define BOOST_REFLECTION_REFLECTOR_REFLECT_CONSTRUCTOR_FUNCTION(Z, N, _) \
   template <class ParamFirst BOOST_PP_COMMA_IF(N) \
@@ -176,7 +177,7 @@ BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), \
 
 
 template <class T, class Info = std::string, class ParameterInfo = void,
-          class TypeInfo = reflections::default_type_info>
+          class TypeInfo = extensions::default_type_info>
 class reflector
 {
 public:

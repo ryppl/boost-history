@@ -24,7 +24,7 @@ using namespace boost::extensions;
 BOOST_AUTO_TEST_CASE(hello_world_example)
 {
   // check if the library can be loaded
-  shared_library l((std::string("../bin/libHelloWorldLib") + ".extension")
+  shared_library l((std::string("libHelloWorldLib") + ".extension")
                    .c_str());
   BOOST_CHECK_EQUAL( l.open(), true );
 
