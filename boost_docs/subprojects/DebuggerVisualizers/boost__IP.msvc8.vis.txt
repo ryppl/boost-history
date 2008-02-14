@@ -1,0 +1,35 @@
+;-------------------------------------------
+; BOOST_VISUALIZER_START boost::interprocess
+;
+; Copyright Filip Konvièka 2008. Use, modification and distribution are subject to
+; the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
+; or copy at http://www.boost.org/LICENSE_1_0.txt)
+;
+; @guid     bed732a0-daf1-11dc-95ff-0800200c9a66
+; @platform msvc-8, msvc-9
+; @version  1.0
+; @author   Filip Konvièka
+; @email    filip dot konvicka at logis dot cz
+;
+; Usage
+; =====
+;
+; Just append this to autoexp.dat.
+; Currently this just handles offset_ptr.
+;
+;
+;------------------------------------
+; boost::interprocess::offset_ptr
+boost::interprocess::offset_ptr<*> {
+preview( #if($e.m_offset==1) (#("null")) #else (#("non-null")) )
+children(
+  #(
+    #array(
+      expr: (($T1*)(((char*)(void*)&$c)+$c.m_offset)),
+      size: #if($c.m_offset==1) (0) #else (1)
+    ) : $e
+  )
+)
+;
+; BOOST_VISUALIZER_START boost::interprocess
+;-------------------------------------------

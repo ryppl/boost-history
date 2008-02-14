@@ -1,0 +1,410 @@
+;-------------------------------------------------------------
+; BOOST_VISUALIZER_START boost::ptr_container and boost::array
+;
+; Copyright William Buklis 2007. Use, modification and distribution are subject to
+; the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
+; or copy at http://www.boost.org/LICENSE_1_0.txt)
+;
+; @guid     CDC4F187-4AE8-40f2-A1CA-4F5913BC2778
+; @platform msvc-8
+; @version  1.0
+; @author   Bill Buklis
+; @email    bill at pbjzone dot com
+;
+; Usage
+; =====
+;
+; All of the following text must be placed in the autoexp.dat file.
+; Usage is automatic. No extra code is required.
+;
+; The following containers are supported with these visualizers:
+;	array
+;	ptr_array
+;	ptr_deque
+;	ptr_list
+;	ptr_map
+;	ptr_multimap
+;	ptr_set
+;	ptr_multiset
+;	ptr_vector
+;
+; All of these visualizers attempt to emulate their corresponding STL containers using
+;	a pointer type. i.e. ptr_vector<T> displays equivalently to vector<T*>.
+;
+
+
+;------------------------------------------------------------------------------
+;  boost::array
+;------------------------------------------------------------------------------
+
+boost::array<*,*>{
+	preview( $c.elems )
+	children
+	(
+	    #array
+	    (
+			expr:	$c.elems[$i],
+			size :	$T2
+		)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_array
+;------------------------------------------------------------------------------
+
+boost::ptr_array<*,*>{
+	preview( ($T1**)$c.c_.elems )
+	children
+	(
+	    #array
+	    (
+			expr:	($T1*)$c.c_.elems[$i],
+			size :	$T2
+		)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_vector
+;------------------------------------------------------------------------------
+boost::ptr_vector<*,*>{
+	children
+	(
+	    #array
+	    (
+			expr: (($T1**)($c.c_._Myfirst))[$i],
+			size :	$c.c_._Mylast-$c.c_._Myfirst
+		)
+	)
+	
+    preview
+    ( 
+        #( 
+			"[", 
+            $e.c_._Mylast - $e.c_._Myfirst , 
+            "](", 
+            
+            #array
+            (
+				expr : 	(($T1**)($c.c_._Myfirst))[$i],  
+				size : 	$c.c_._Mylast-$c.c_._Myfirst
+			), 
+			")"
+		)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_map
+;------------------------------------------------------------------------------
+
+boost::ptr_map<*,*,*>{
+	preview
+	(
+		#(
+			"[", 
+			$e.c_._Mysize, 
+			"](", 
+
+			#tree
+			(
+				head : $c.c_._Myhead->_Parent, 
+				skip : $c.c_._Myhead, 
+				size : $c.c_._Mysize, 
+				left : _Left, 
+				right : _Right
+			) : *(std::pair<$T1,$T2 *> *)&($e._Myval),
+			
+			")"
+		)
+	)		     
+	children
+	(
+		#tree
+		(
+			head : $c.c_._Myhead->_Parent,
+		    skip : $c.c_._Myhead, 
+		    size : $c.c_._Mysize, 
+		    left : _Left, 
+		    right : _Right
+		) : *(std::pair<$T1,$T2 *> *)&($e._Myval)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_multimap
+;------------------------------------------------------------------------------
+
+boost::ptr_multimap<*,*,*>{
+	preview
+	(
+		#(
+			"[", 
+			$e.c_._Mysize, 
+			"](", 
+
+			#tree
+			(
+				head : $c.c_._Myhead->_Parent, 
+				skip : $c.c_._Myhead, 
+				size : $c.c_._Mysize, 
+				left : _Left, 
+				right : _Right
+			) : *(std::pair<$T1,$T2 *> *)&($e._Myval),
+			
+			")"
+		)
+	)		     
+	children
+	(
+		#tree
+		(
+			head : $c.c_._Myhead->_Parent,
+		    skip : $c.c_._Myhead, 
+		    size : $c.c_._Mysize, 
+		    left : _Left, 
+		    right : _Right
+		) : *(std::pair<$T1,$T2 *> *)&($e._Myval)
+	)
+}
+
+boost::ptr_map_iterator<*,*,*>{
+	preview
+	( 
+		#( "(", $c.iter_._Ptr->_Myval.first, ",", ($T3*) $c.iter_._Ptr->_Myval.second, ")"
+		)
+	)
+	children
+	(
+		#(
+			first: $c.iter_._Ptr->_Myval.first,
+			second: ($T3*) $c.iter_._Ptr->_Myval.second,
+			_ptr: $c.iter_
+		)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_set
+;------------------------------------------------------------------------------
+
+boost::ptr_set<*,*,*>{
+    preview
+    ( 
+		#( 
+			"[", 
+            $e.c_._Mysize , 
+            "](", 
+            
+            #tree
+            (
+				head : $c.c_._Myhead->_Parent, 
+				skip : $c.c_._Myhead, 
+				left : _Left, 
+				right : _Right,
+				size  : $c.c_._Mysize
+			) : ($T1*)$e._Myval, 
+			
+			")"
+		)
+	)
+			   
+	children
+	(
+		#tree
+		(
+			head : $c.c_._Myhead->_Parent, 
+			skip : $c.c_._Myhead, 
+			left : _Left, 
+			right : _Right,
+			size  : $c.c_._Mysize
+		) : ($T1*)$e._Myval
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_multiset
+;------------------------------------------------------------------------------
+
+boost::ptr_multiset<*,*,*>{
+    preview
+    ( 
+		#( 
+			"[", 
+            $e.c_._Mysize , 
+            "](", 
+            
+            #tree
+            (
+				head : $c.c_._Myhead->_Parent, 
+				skip : $c.c_._Myhead, 
+				left : _Left, 
+				right : _Right,
+				size  : $c.c_._Mysize
+			) : ($T1*)$e._Myval, 
+			
+			")"
+		)
+	)
+			   
+	children
+	(
+		#tree
+		(
+			head : $c.c_._Myhead->_Parent, 
+			skip : $c.c_._Myhead, 
+			left : _Left, 
+			right : _Right,
+			size  : $c.c_._Mysize
+		) : ($T1*)$e._Myval
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_list
+;------------------------------------------------------------------------------
+
+boost::ptr_list<*,*>{
+
+	children
+	(
+		#list
+		(
+			head : ($c.c_._Myhead->_Next),
+			size : $c.c_._Mysize, 
+			next : _Next
+		) : ($T1*)$e._Myval
+	)
+		          
+	preview
+	(
+		#(
+			"[", 
+			$e._Mysize, 
+			"](", 
+		  
+			#list
+			(
+				head : $c.c_._Myhead->_Next,
+				size : $c.c_._Mysize, 
+				next : _Next
+			) : ($T1*)$e._Myval,
+		 
+			")"
+		)
+	)			      
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_deque
+;------------------------------------------------------------------------------
+
+boost::ptr_deque<*,*>{
+	children
+	(
+		#array
+		(
+			expr : ($T1*)($c.c_._Map[ (($i + $c.c_._Myoff) / $c.c_._EEN_DS) % $c.c_._Mapsize][($i + $c.c_._Myoff) % $c.c_._EEN_DS]),
+			size : $c.c_._Mysize
+		)
+	)
+
+	preview
+	(
+		#(
+			"[", 
+			$e.c_._Mysize, 
+			"](", 
+		  
+			#array
+			(
+				expr : ($T1*)($c.c_._Map[ (($i + $c.c_._Myoff) / $c.c_._EEN_DS) % $c.c_._Mapsize][($i + $c.c_._Myoff) % $c.c_._EEN_DS]),
+				size : $c.c_._Mysize
+			),
+		 
+			")"
+		)
+	)		       
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_vector::iterator (specialization of void_ptr_iterator)
+;------------------------------------------------------------------------------
+boost::void_ptr_iterator<std::_Vector_iterator<*>,*>|boost::void_ptr_iterator<std::_Vector_const_iterator<*>,*>{
+	preview
+	(
+		#(
+			($T2*)(*$c.iter_._Myptr)
+		)
+	)
+	children
+	(
+		#(
+			ptr: ($T2*)(*$c.iter_._Myptr)
+		)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_deque::iterator (specialization of void_ptr_iterator)
+;------------------------------------------------------------------------------
+boost::void_ptr_iterator<std::_Deque_iterator<*,*,*>,*>|boost::void_ptr_iterator<std::_Deque_const_iterator<*,*,*>,*>{
+   preview
+   (
+	   #if( $e.iter_._Myoff >= ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Myoff + ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Mysize)
+	   (
+	   		#("<end>")
+	   )
+	   #else(
+			#(
+				"deque[", 
+				$e.iter_._Myoff - ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Myoff, 
+				"] = ",
+				($T4*)((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Map[ (($c.iter_._Myoff) / ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_EEN_DS) % ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Mapsize][$c.iter_._Myoff % ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_EEN_DS] 
+			)
+		)
+	)
+	children
+	(
+	   #if( ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Myoff + ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Mysize > $e.iter_._Myoff) 
+	   (
+			#(
+				ptr: ($T4*)((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Map[ ($c.iter_._Myoff / ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_EEN_DS) % ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_Mapsize][$c.iter_._Myoff % ((std::deque<$T1,$T2 > *)$c.iter_._Mycont)->_EEN_DS] 
+			)
+		)
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::ptr_array::iterator (specialization of void_ptr_iterator)
+;------------------------------------------------------------------------------
+boost::void_ptr_iterator<void**,*>{
+	preview
+	(
+		#( ($T3**) $e.iter_ )
+	)
+	
+	children
+	(
+		#( ptr: *($T3**) $e.iter_ )
+	)
+}
+
+;------------------------------------------------------------------------------
+;  boost::void_ptr_iterator - used by ptr_set, ptr_multiset, ptr_list
+;------------------------------------------------------------------------------
+boost::void_ptr_iterator<*,*>{
+	preview
+	(
+		#( ($T2*) $e.iter_._Ptr->_Myval)
+	)
+	
+	children
+	(
+		#(ptr: ($T2*) $e.iter_._Ptr->_Myval)
+	)
+}
+
+; BOOST_VISUALIZER_END boost::ptr_container and boost::array
+;-----------------------------------------------------------
