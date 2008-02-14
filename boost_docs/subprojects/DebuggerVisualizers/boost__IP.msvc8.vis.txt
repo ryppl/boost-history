@@ -21,15 +21,16 @@
 ;------------------------------------
 ; boost::interprocess::offset_ptr
 boost::interprocess::offset_ptr<*> {
-preview( #if($e.m_offset==1) (#("null")) #else (#("non-null")) )
-children(
-  #(
-    #array(
-      expr: (($T1*)(((char*)(void*)&$c)+$c.m_offset)),
-      size: #if($c.m_offset==1) (0) #else (1)
-    ) : $e
+  preview( #if($e.m_offset==1) (#("null")) #else (#("non-null")) )
+  children(
+    #(
+      #array(
+        expr: (($T1*)(((char*)(void*)&$c)+$c.m_offset)),
+        size: #if($c.m_offset==1) (0) #else (1)
+      ) : $e
+    )
   )
-)
+}
 ;
-; BOOST_VISUALIZER_START boost::interprocess
-;-------------------------------------------
+; BOOST_VISUALIZER_END boost::interprocess
+;-----------------------------------------
