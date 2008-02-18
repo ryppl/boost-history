@@ -1,7 +1,7 @@
 // demo_2d_plot.cpp
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2007
+// Copyright Paul A. Bristow 2007, 2008
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -12,18 +12,18 @@
 //#  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
 //#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
 #  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
+#  pragma warning (disable : 4512) // assignment operator could not be generated
 //#  pragma warning (disable : 4172) // returning address of local variable or temporary TODO find cause of these.
 //#  pragma warning (disable : 4224) // nonstandard extension used : formal parameter 'function_ptr' was previously defined as a type
 #endif
 
-#ifdef _MSC_VER
-#  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
-#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
-#  pragma warning (disable : 4172) // returning address of local variable or temporary
-#  pragma warning (disable : 4512) // assignment operator could not be generated
-#  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
-#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
-#endif
+//#ifdef _MSC_VER
+//#  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
+//#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
+//#  pragma warning (disable : 4172) // returning address of local variable or temporary
+//#  pragma warning (disable : 4512) // assignment operator could not be generated
+//#  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
+//#endif
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
 
@@ -100,8 +100,8 @@ void plot(const std::string& title, const std::string& file,
     double xmin = 0., double xmax = 0.,
     const std::string& y_label = std::string(),
     double ymin = 0., double ymax = 0.,
-    int x_major_label = -1, int y_major_label = -1,
-    int x_rotation = horizontal, int y_rotation = horizontal) // 
+    int x_major_label = -1, int y_major_label = -1, // None
+    int x_rotation = horizontal, int y_rotation = upward) // 
 {
     using namespace boost::svg;
 
@@ -205,25 +205,27 @@ void plot(const std::string& title, const std::string& file,
   //my_plot.y_major_value_labels_side(right_side); // Right side of axis value labels.
   //my_plot.y_major_value_labels_side(left_side); // Left side value labels (default).
 
-
-  //my_plot.y_major_label_rotation(downhill); // sloping.
-  //my_plot.y_major_label_rotation(uphill); 
-  //my_plot.y_major_label_rotation(horizontal); // Default.
-  //my_plot.y_major_label_rotation(downward);
-
+  //my_plot.x_major_label_rotation(rotate_style(x_rotation));// Use this plot function's defaults.
+  //my_plot.x_major_label_rotation(horizontal); // svg_2d_plot default.
   //my_plot.x_major_label_rotation(upward); 
   //my_plot.x_major_label_rotation(downward); 
   //my_plot.x_major_label_rotation(uphill); 
   //my_plot.x_major_label_rotation(downhill); 
 
+  //my_plot.y_major_label_rotation(rotate_style(y_rotation)); // Use this plot function's defaults.
+  //my_plot.y_major_label_rotation(upward); // svg_2d_plot default.
+  //my_plot.y_major_label_rotation(downhill); // sloping.
+  //my_plot.y_major_label_rotation(uphill); 
+  //my_plot.y_major_label_rotation(horizontal);.
+  //my_plot.y_major_label_rotation(downward);
+
   my_plot.y_value_ioflags(ios::dec | ios::fixed).y_value_precision(1);
   my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
   //  my_plot.x_value_ioflags(ios::dec).x_value_precision(2);
 
-  //my_plot.data_lines_width(4); // A bit gross!
 	my_plot.plot(data1, "Sqrt(x)").fill_color(red);
 	my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5).bezier_on(true);
-	my_plot.plot(data3, "-1 + 2x").fill_color(yellow).line_color(blue).shape(square);
+	my_plot.plot(data3, "-1 + 2x").fill_color(yellow).line_color(blue).line_width(3).shape(square);
 
   cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " << file << endl;
   my_plot.write(file);
