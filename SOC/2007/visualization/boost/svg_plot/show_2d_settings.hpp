@@ -1,4 +1,4 @@
-// default_2d_plot.cpp
+// show_2d_settings.cpp
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007
@@ -22,6 +22,9 @@ namespace boost
 {
 namespace svg
 {
+
+  // Declaration, defined below.
+  void show_plot_settings(svg_2d_plot& plot);
 
 const char* fmtFlagWords[16] =
 { // Descriptions of each bit.
@@ -182,7 +185,8 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "legend_title " << plot.legend_title() << endl;
   cout << "legend_title_font_size " << plot.legend_title_font_size() << endl;
   cout << "legend_font_weight " << plot.legend_font_weight() << endl;
-  cout << "legend_font_width " << plot.legend_font_width() << endl;
+  // Not useful at present, so not longer implemented.
+  // cout << "legend_font_width " << plot.legend_font_width() << endl;
   cout << "legend_width " << plot.legend_width() << endl;
   cout << "legend_lines " << plot.legend_lines() << endl;
   cout << "license_on " << plot.license_on() << endl;
@@ -211,7 +215,8 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "title_font_stretch " << plot.title_font_stretch() << endl;
   cout << "title_font_style " << plot.title_font_style() << endl;
   cout << "title_font_weight " << plot.title_font_weight() << endl;
-  cout << "title_font_width " << plot.title_font_width() << endl;
+  //cout << "title_font_width " << plot.title_font_width() << endl;
+  // Not useful at present, so not longer implemented.
   cout << "x_value_precision " << plot.x_value_precision() << endl;
   cout << "x_value_ioflags " << hex << plot.x_value_ioflags() << dec << ' ';
   outFmtFlags(plot.x_value_ioflags(), cout,  ".\n");
@@ -234,7 +239,8 @@ void show_plot_settings(svg_2d_plot& plot)
   cout << "x_label_font_size " << plot.x_label_font_size() << endl;
   cout << "x_label_units " << plot.x_label_units() << endl;
   cout << "x_label_units_on " << plot.x_label_units_on() << endl;
-  cout << "x_label_width " << plot.x_label_width() << endl;
+  //cout << "x_label_width " << plot.x_label_width() << endl;
+  // Not useful at present, so not longer implemented.
   cout << "x_major_value_labels_side " << l_or_r(plot.x_major_value_labels_side()) << endl;
   cout << "x_major_label_rotation " << plot.x_major_label_rotation() << endl;
   cout << "x_major_grid_color " << plot.x_major_grid_color() << endl;

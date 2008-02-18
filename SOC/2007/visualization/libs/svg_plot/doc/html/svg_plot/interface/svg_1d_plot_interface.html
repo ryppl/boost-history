@@ -28,7 +28,7 @@
 <a name="svg_plot.interface.svg_1d_plot_interface"></a><a href="svg_1d_plot_interface.html" title=" svg_1d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id697440"></a><p class="title"><b>Table 8. 1D_plot Miscellaneous Functions</b></p>
+<a name="id697454"></a><p class="title"><b>Table 8. 1D_plot Miscellaneous Functions</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Miscellaneous Functions">
 <colgroup>
 <col>
@@ -45,6 +45,11 @@
               Description
             </p>
             </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -56,6 +61,10 @@
 <td>
             <p>
               See the defaults section for further details
+            </p>
+            </td>
+<td>
+            <p>
             </p>
             </td>
 </tr>
@@ -72,6 +81,11 @@
               Sets the size of the image produced (pixels)
             </p>
             </td>
+<td>
+            <p>
+              500, 200
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -82,8 +96,12 @@
             </td>
 <td>
             <p>
-              Sets the precision output for coordinates (decimal digits, default
-              3).
+              Sets the precision output for coordinates (decimal digits).
+            </p>
+            </td>
+<td>
+            <p>
+              3
             </p>
             </td>
 </tr>
@@ -100,11 +118,14 @@
               Document title&lt;/title&gt;
             </p>
             </td>
-</tr>
-<tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              ""
+            </p>
+            </td>
+<td>
+            <p>
+              [<code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
               <span class="identifier">description</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">)</span></code>
             </p>
             </td>
@@ -128,6 +149,13 @@
               Sets the font size for the legend title.
             </p>
             </td>
+<td>
+            <p>
+              14
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -141,6 +169,13 @@
               Sets the color to be used for the legend text.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -154,6 +189,13 @@
               Sets the string to be used for the title.
             </p>
             </td>
+<td>
+            <p>
+              ""
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -167,6 +209,13 @@
               Sets the font size for the title.
             </p>
             </td>
+<td>
+            <p>
+              16
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -180,6 +229,13 @@
               Sets the color to be used for the title.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -193,6 +249,9 @@
               Writes the plot to the file passed as a parameter.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -206,14 +265,18 @@
               Writes the plot to a stream passed as a parameter.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id698278"></a><p class="title"><b>Table 9. 1D_plot Commands</b></p>
+<a name="id698354"></a><p class="title"><b>Table 9. 1D_plot Commands</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Commands">
 <colgroup>
+<col>
 <col>
 <col>
 </colgroup>
@@ -228,6 +291,11 @@
               Description
             </p>
             </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -239,7 +307,12 @@
             </td>
 <td>
             <p>
-              Sets whether the axis is on (true) or off.
+              Sets if the X-axis is on (true) or off.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -252,7 +325,12 @@
             </td>
 <td>
             <p>
-              Sets whether the legend is on (true) or off.
+              Sets if the legend is on (true) or off.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -265,8 +343,12 @@
             </td>
 <td>
             <p>
-              Sets whether the plot will be displayed in its own window, or will
-              be "full screen" in the image.
+              Sets if the plot window border will be displayed.
+            </p>
+            </td>
+<td>
+            <p>
+              false
             </p>
             </td>
 </tr>
@@ -279,7 +361,12 @@
             </td>
 <td>
             <p>
-              Determines whether or not the image title is displayed.
+              Sets if image title is displayed.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -292,9 +379,10 @@
             </td>
 <td>
             <p>
-              Determines whether or not the X-axis is displayed.
+              Sets if X-axis is displayed.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -305,8 +393,12 @@
             </td>
 <td>
             <p>
-              Determines whether or not the axis is inside or outside of the plot.
-              Defaults is <code class="computeroutput"><span class="keyword">false</span></code>.
+              Sets if axis is inside or outside of the plot.
+            </p>
+            </td>
+<td>
+            <p>
+              false
             </p>
             </td>
 </tr>
@@ -319,7 +411,12 @@
             </td>
 <td>
             <p>
-              Sets whether or not the X-axis label will show
+              Sets if X-axis label will show.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -332,7 +429,12 @@
             </td>
 <td>
             <p>
-              sets whether or not the major ticks will be labelled on the X-axis.
+              Sets if major ticks will be labelled on the X-axis.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -345,7 +447,12 @@
             </td>
 <td>
             <p>
-              Determines whether or not the major grid on the X axis will be displayed.
+              Sets if major grid on the X axis will be displayed.
+            </p>
+            </td>
+<td>
+            <p>
+              false
             </p>
             </td>
 </tr>
@@ -358,7 +465,12 @@
             </td>
 <td>
             <p>
-              Determines whether or not the minor grid on the X axis will be displayed.
+              Sets if minor grid on the X axis will be displayed.
+            </p>
+            </td>
+<td>
+            <p>
+              false
             </p>
             </td>
 </tr>
@@ -371,7 +483,12 @@
             </td>
 <td>
             <p>
-              Determines whether or not the Y axis is displayed.
+              Sets if Y axis is displayed.
+            </p>
+            </td>
+<td>
+            <p>
+              false
             </p>
             </td>
 </tr>
@@ -379,7 +496,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id698966"></a><p class="title"><b>Table 10. 1D_plot Colors</b></p>
+<a name="id699102"></a><p class="title"><b>Table 10. 1D_plot Colors</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Colors">
 <colgroup>
 <col>
@@ -394,6 +511,11 @@
 <th>
             <p>
               Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default
             </p>
             </th>
 </tr></thead>
@@ -587,7 +709,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id700028"></a><p class="title"><b>Table 11. 1D_plot X-Axis Definition</b></p>
+<a name="id700171"></a><p class="title"><b>Table 11. 1D_plot X-Axis Definition</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot X-Axis Definition">
 <colgroup>
 <col>
@@ -602,6 +724,11 @@
 <th>
             <p>
               Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default
             </p>
             </th>
 </tr></thead>
@@ -628,8 +755,46 @@
             </td>
 <td>
             <p>
-              Sets the label of the X-axis. This does not guarantee that it will
-              be shown. You must call <code class="computeroutput"><span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display.
+              Sets the label of the X-axis. You must call <code class="computeroutput"><span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_units</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the units label of the X-axis. You must call <code class="computeroutput"><span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_font_family</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">family</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font for label of the X-axis.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_font_size</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font size for label of the X-axis.
             </p>
             </td>
 </tr>
@@ -715,13 +880,41 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_range</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">)</span></code>
+              <span class="identifier">x_range</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x_min</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x_max</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Sets the scale of the x axis from x1 to x2. Throws an exception if
-              x2&lt;=x1, or if the range is too small to produce a useful plot.
+              Sets the scale of the x axis from x_min to x2. Throws an exception
+              if x2 &lt;= x1, or if the range is too small to produce a useful plot.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_min</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the minimum scale of the x axis. Cannot check that x_min &lt;=
+              x_max!
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_1d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_max</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the maximum scale of the x axis. Cannot check that x_min &lt;=
+              x_max!
             </p>
             </td>
 </tr>
@@ -729,7 +922,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="svg_plot.interface.svg_1d_plot_interface.the_1d_plot__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id700691"></a>
+<a name="id701216"></a>
         <a href="svg_1d_plot_interface.html#svg_plot.interface.svg_1d_plot_interface.the_1d_plot__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         1D_plot <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
@@ -740,7 +933,7 @@
         named parameters, as well as a deduced parameter.
       </p>
 <div class="table">
-<a name="id700750"></a><p class="title"><b>Table 12. 1D_plot Required parameter</b></p>
+<a name="id701274"></a><p class="title"><b>Table 12. 1D_plot Required parameter</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Required parameter">
 <colgroup>
 <col>
@@ -763,12 +956,17 @@
               Description
             </p>
             </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
             <p>
-              _container
+              container
             </p>
             </td>
 <td>
@@ -785,7 +983,7 @@
 <tr>
 <td>
             <p>
-              _title
+              title
             </p>
             </td>
 <td>
@@ -803,7 +1001,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id700871"></a><p class="title"><b>Table 13. 1D_plot Deduced parameter</b></p>
+<a name="id701403"></a><p class="title"><b>Table 13. 1D_plot Deduced parameter</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Deduced parameter">
 <colgroup>
 <col>
@@ -832,11 +1030,16 @@
               Default
             </p>
             </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
 </tr></thead>
 <tbody><tr>
 <td>
             <p>
-              _fill_color
+              fill_color
             </p>
             </td>
 <td>
@@ -859,7 +1062,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id700978"></a><p class="title"><b>Table 14. 1D_plot Optional Parameters</b></p>
+<a name="id701516"></a><p class="title"><b>Table 14. 1D_plot Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Optional Parameters">
 <colgroup>
 <col>
@@ -888,12 +1091,17 @@
               Default
             </p>
             </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
             <p>
-              _stroke_color
+              stroke_color
             </p>
             </td>
 <td>
@@ -915,7 +1123,7 @@
 <tr>
 <td>
             <p>
-              _point_style
+              point_style
             </p>
             </td>
 <td>
@@ -938,7 +1146,7 @@
 <tr>
 <td>
             <p>
-              _size
+              size
             </p>
             </td>
 <td>
@@ -960,7 +1168,7 @@
 <tr>
 <td>
             <p>
-              _x_functor
+              x_functor
             </p>
             </td>
 <td>
@@ -1010,7 +1218,7 @@
         method:
       </p>
 <a name="svg_plot.interface.svg_1d_plot_interface.using_1d_plot_fill_and_stroke_colors"></a><h5>
-<a name="id701530"></a>
+<a name="id702076"></a>
         <a href="svg_1d_plot_interface.html#svg_plot.interface.svg_1d_plot_interface.using_1d_plot_fill_and_stroke_colors">Using
         1D_plot fill and stroke colors</a>
       </h5>

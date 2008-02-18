@@ -129,26 +129,6 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
   [[`void write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]] 
 ] [/table `svg` document settings and writing]
 
-[table `tspan` attributes
-  [[Signature] [Description] [Notes & Examples]]
-  [[`tspan_element(const std::string&, const text_style&)`][Constructor. Adds the text and an optional style][]]
-  [[`tspan_element& text(const std::string&)`][Changes the text to the member function input][<tspan>Text goes here</tspan>]]
-  [[`tspan_element& dx(double)`][The "change in x" attribute][]]
-  [[`tspan_element& dy(double)`][The "change in y" attribute][]]
-  [[`tspan_element& rotation(int)`][Currently, this is broken and only rotates the first character of the string.][]]
-  [[`tspan_element& x(double)`][The "position of x" attribute][]]
-  [[`tspan_element& y(double)`][The "position of y" attribute][]]
-  [[`tspan_element& text_length(double)`][Allows the absolute maximum length of the text to be defined][]]
-  [[`double dx()`][The getter for the "change in x" attribute][]]
-  [[`double dy()`][The getter for the "change in y" attribute][]]
-  [[`int rotation()`][The getter for the rotation function.][]]
-  [[`double x()`][The getter for the "position of x" attribute][]]
-  [[`double y()`][The getter for the "position of y" attribute][]]
-  [[`std::string text()`][Getter for the text][<tspan>Text goes here</tspan>]]
-  [[`text_style& font_style()`][Allows access to the font style][]]
-  [[`const text_style& font_style()`][`const` access to the font style][]]
-  [[`void write(std::ostream&)`][Outputs the text of the element into the stream][]]
-]
 [endsect] [/section:svg_interface]
 
 

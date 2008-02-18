@@ -69,10 +69,15 @@ namespace boost
         std::string title) // Title of data series.
         :
         title_(title),
+        // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
+        // int size = 10, point_shape shape = round, const std::string& symbols = "X")
         point_style_(black, blank, 10, round), // Default point style.
         limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
-        // plot_line_style(const svg_color& col = black, const svg_color& acol = true, bool on = true, bool bezier_on = false)
+
+        // plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool line_on = true, bool bezier_on = false)
         line_style_(black, true, 2, true, false) // Default line style, no fill.
+
+        // TODO doesn't pick up line width.
       { // Constructor.
         for(T i = begin; i != end; ++i)
         { // Sort into normal and limited series.
@@ -119,8 +124,8 @@ namespace boost
       }
 
       svg_2d_plot_series& line_width(double wid_)
-      { // Doesn't have desired effect yet.
-        line_style_.width_ = wid_;
+      { 
+        line_style_.width_ = wid_; // Sets legend line width too.
         return *this;
       }
 
@@ -156,7 +161,8 @@ namespace boost
     private:
       // Member data names conventionally end with _,
       // for example: border_margin_
-      // and set/get accessor functions border_margin() & border_margin(int).
+      // and set & get accessor functions are named without _ suffix:
+      // border_margin() & border_margin(int).
 
       friend class detail::axis_plot_frame<svg_2d_plot>;
       // axis_plot_frame.hpp contains functions common to 1 and 2-D.
@@ -251,7 +257,7 @@ namespace boost
       // TODO check that *all* options are initialized here.
       // See documentation for default settings rationale.
       // text_styles:
-        title_style_(16, "Verdana", "", ""),  // last "bold" ?
+        title_style_(18, "Verdana", "", ""),  // last "bold" ?
         legend_style_(14, "Verdana", "", ""), // 2nd "italic"?
         x_axis_label_style_(14, "Verdana", "", ""),
         x_value_label_style_(12, "Verdana", "", ""),
@@ -259,9 +265,12 @@ namespace boost
         y_axis_label_style_(14, "Verdana", "", ""),
         y_value_label_style_(12, "Verdana", "", ""),
         point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
-        title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal),
-        x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
-        x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
+        title_info_(0, 0, "", title_style_, center_align, horizontal),
+      //  title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal),
+        x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal),
+        x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
+      //  x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
+      //  x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
         x_label_value_(0, 0, "", x_value_label_style_, center_align, horizontal),
         x_axis_(X, -10., +10., black, 1, 0, true, false, true),
         y_axis_(Y, -10., +10., black, 1, 0, true, false, true),
@@ -269,17 +278,19 @@ namespace boost
         // And this would separate any changes in styles defaults from plot default.  TODO?
         x_ticks_(X, x_value_label_style_),// so for other defaults see ticks_labels_style.
         y_ticks_(Y, y_value_label_style_),
-        y_label_info_(0, 0, "Y Axis", y_axis_label_style_, center_align, upward),
-        y_units_info_(0, 0, " (units)", y_axis_label_style_, center_align, upward),
+        y_label_info_(0, 0, "", y_axis_label_style_, center_align, upward),
+        y_units_info_(0, 0, "", y_axis_label_style_, center_align, upward),
+    //    y_label_info_(0, 0, "Y Axis", y_axis_label_style_, center_align, upward),
+     //   y_units_info_(0, 0, " (units)", y_axis_label_style_, center_align, upward),
         y_label_value_(0, 0, "", y_value_label_style_, center_align, upward),
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
-        plot_window_border_(red, svg_color(255, 255, 255), 2, 3, true, false),
-        legend_box_(yellow, azure, 1, 2, true, true),
+        plot_window_border_(lightslategray, svg_color(255, 255, 255), 2, 3, true, false),
+        legend_box_(yellow, white, 1, 2, true, true),
         legend_header_(0, 0, "", legend_style_, center_align, horizontal),
         legend_width_(200), // width of legend box (pixels) // TODO isn't this calculated?
         legend_height_(0), // height of legend box (pixels)
-        legend_left_(-1), legend_right_(-1),legend_top_(-1),legend_bottom_(-1), // Default top left of plot window.
+        legend_left_(-1), legend_right_(-1), legend_top_(-1), legend_bottom_(-1), // Default top left of plot window.
         legend_place_(outside_right), // default but interacts with using plot_window.
         legend_on_(false),
         legend_longest_(0),
@@ -1075,6 +1086,7 @@ namespace boost
         g_ptr.clip_id(plot_window_clip_);
         g_ptr.style().stroke_color(series.line_style_.color_);
         g_ptr.style().fill_color(series.line_style_.area_fill_);
+        g_ptr.style().stroke_width(series.line_style_.width_);
         path_element& path = g_ptr.path();
         path.style().fill_color(series.line_style_.area_fill_);
 
@@ -1349,7 +1361,6 @@ namespace boost
       // These below only refer to 2D plot.
       // See axis_plot_label.hpp for all the many 1D functions X-Axis.
 
-
       axis_line_style& x_axis()
       {
         return x_axis_;
@@ -1371,7 +1382,7 @@ namespace boost
       }
 
       svg_2d_plot& y_label_on(bool cmd)
-      { // Y axis name or label.
+      { // If Y axis name or label.
         y_axis_.label_on_ = cmd;
         return *this; // Make chainable.
       }
@@ -1477,6 +1488,7 @@ namespace boost
 
       svg_color y_axis_label_color()
       { // But only return the stroke color.
+        //return y_label_info_.style().stroke_color();
         return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
@@ -1651,13 +1663,13 @@ namespace boost
       }
 
       svg_2d_plot& y_label_axis(const std::string& str)
-      { // Label for Y-axis.
+      { // Set label for Y-axis.
         y_label_info_.text(str);
         return *this;
       }
 
       std::string y_label_axis()
-      {
+      { // text to label Y axis.
         return y_label_info_.text();
       }
 
@@ -1811,16 +1823,17 @@ namespace boost
         return y_axis_label_style_.font_size();
       }
 
-      svg_2d_plot& y_label_weight(std::string s)
-      { // "bold" is only one that works so far.
-        x_axis_label_style_.font_weight(s);
-        return *this;
-      }
+      // Note useful until browsers support.
+      //svg_2d_plot& y_label_weight(std::string s)
+      //{ // "bold" is only one that works so far.
+      //  x_axis_label_style_.font_weight(s);
+      //  return *this;
+      //}
 
-      const std::string& y_label_weight()
-      {
-        return x_axis_label_style_.font_weight();
-      }
+      //const std::string& y_label_weight()
+      //{
+      //  return x_axis_label_style_.font_weight();
+      //}
 
       svg_2d_plot& y_label_font_family(const std::string& family)
       {

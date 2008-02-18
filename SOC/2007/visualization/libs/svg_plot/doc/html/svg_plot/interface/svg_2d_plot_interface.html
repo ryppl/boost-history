@@ -27,9 +27,10 @@
 <a name="svg_plot.interface.svg_2d_plot_interface"></a><a href="svg_2d_plot_interface.html" title=" svg_2d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id701684"></a><p class="title"><b>Table 15. 2D_plot Miscellaneous</b></p>
+<a name="id702230"></a><p class="title"><b>Table 15. 2D_plot Miscellaneous</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Miscellaneous">
 <colgroup>
+<col>
 <col>
 <col>
 </colgroup>
@@ -42,6 +43,11 @@
 <th>
             <p>
               Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default (if any)
             </p>
             </th>
 </tr></thead>
@@ -57,6 +63,7 @@
               See the defaults section for further details.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -69,6 +76,11 @@
 <td>
             <p>
               Sets the size (pixels) of the plot image produced.
+            </p>
+            </td>
+<td>
+            <p>
+              500, 400
             </p>
             </td>
 </tr>
@@ -84,6 +96,11 @@
               Sets the string to be used for the title.
             </p>
             </td>
+<td>
+            <p>
+              Null string.
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -95,6 +112,11 @@
 <td>
             <p>
               Sets the font size for the title.
+            </p>
+            </td>
+<td>
+            <p>
+              16
             </p>
             </td>
 </tr>
@@ -110,14 +132,20 @@
               Sets the font size for the legend title.
             </p>
             </td>
+<td>
+            <p>
+              14
+            </p>
+            </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id702042"></a><p class="title"><b>Table 16. 2D_plot Commands</b></p>
-<div class="table-contents"><table class="table" summary="2D_plot Commands">
+<a name="id702621"></a><p class="title"><b>Table 16. 2D_plot On/Off Switches</b></p>
+<div class="table-contents"><table class="table" summary="2D_plot On/Off Switches">
 <colgroup>
+<col>
 <col>
 <col>
 </colgroup>
@@ -132,18 +160,60 @@
               Description
             </p>
             </th>
+<td class="auto-generated"> </td>
 </tr></thead>
 <tbody>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">axis_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+              <span class="identifier">axes_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Sets whether the axis is on (true) or off.
+              If <span class="bold"><strong>both</strong></span> X &amp; Y axes drawn.
+            </p>
+            </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_axis_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set if X-axis drawn.
+            </p>
+            </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_axis_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set if Y-axis drawn.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -156,7 +226,12 @@
             </td>
 <td>
             <p>
-              Sets whether the legend is on (true) or off.
+              Sets if the legend box is shown.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -169,8 +244,28 @@
             </td>
 <td>
             <p>
-              Sets whether the plot will be displayed in its own window, or will
-              be "full screen" in the image.
+              Sets if the plot window border will be drawn.
+            </p>
+            </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td>
+            <p>
+              [<code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">title_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets if image title is displayed.
+            </p>
+            </td>
+<td>
+            <p>
+              true
             </p>
             </td>
 </tr>
@@ -178,14 +273,22 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">title_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+              <span class="identifier">title_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Determines whether or not the image title is displayed.
+              Sets color for title.
             </p>
             </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -196,9 +299,17 @@
             </td>
 <td>
             <p>
-              Sets whether or not the X axis label will show.
+              Sets if X axis label is displayed.
             </p>
             </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -212,6 +323,14 @@
               Determines whether or not the major grid on the X axis will be displayed.
             </p>
             </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -226,6 +345,14 @@
               0 means down (default), 0 (false) means none, &gt; 0 means to top)
             </p>
             </td>
+<td>
+            <p>
+              down
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -236,9 +363,17 @@
             </td>
 <td>
             <p>
-              Determines whether or not the minor grid on the X axis will be displayed.
+              Sets if the minor grid on the X axis will be displayed.
             </p>
             </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -252,6 +387,14 @@
               Sets whether or not the Y axis label will show.
             </p>
             </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -262,9 +405,17 @@
             </td>
 <td>
             <p>
-              Determines whether or not the major grid on the Y axis will be displayed.
+              Sets if the major grid on the Y axis will be displayed.
             </p>
             </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -279,6 +430,14 @@
               0 means to left (default), 0 (false) means none, &gt; 0 means to right.
             </p>
             </td>
+<td>
+            <p>
+              left
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -289,9 +448,121 @@
             </td>
 <td>
             <p>
-              Determines whether or not the minor grid on the Y axis will be displayed.
+              Sets if the minor grid on the Y axis will be displayed.
             </p>
             </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the label string for the X-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_on</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns if to show the label string for the X-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets to show the label string for the Y-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_on</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns if to show the label string for the Y-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_labels_on</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets if to show the value labels for the X-axis. &lt; 0 means to down
+              (default), 0 (false) means none, &gt; 0 means to top
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_labels_on</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets if to show the value labels for the Y-axis. &lt; 0 means to left(default),
+              0 (false) means none, &gt; 0 means to right
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -302,11 +573,15 @@
             </td>
 <td>
             <p>
-              Determines the iostream precison for value labels on the X axis major
-              ticks will be displayed. Default is 3 (rather than the iostream default
-              of 6).
+              Sets the iostream precison for value labels on the X axis major ticks
+              will be displayed. Default is 3 (rather than the iostream default of
+              6).
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -317,12 +592,16 @@
             </td>
 <td>
             <p>
-              Determines the iostream flags for value labels on the X axis major
-              ticks will be displayed. Default is std::ios::dec. This allows fine
-              control of the value labels using, for example (ios::dec | ios::scientific),
+              Sets the iostream flags for value labels on the X axis major ticks
+              will be displayed. Default is std::ios::dec. This allows fine control
+              of the value labels using, for example (ios::dec | ios::scientific),
               or (ios::dec | ios::fixed), particularly in conjunction with precision.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -333,11 +612,15 @@
             </td>
 <td>
             <p>
-              Determines the iostream precison for value labels on the Y axis major
-              ticks will be displayed. Default is 3 (rather than the iostream default
-              of 6).
+              Sets the iostream precison for value labels on the Y axis major ticks
+              will be displayed. Default is 3 (rather than the iostream default of
+              6).
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -348,134 +631,231 @@
             </td>
 <td>
             <p>
-              Determines the iostream flags for value labels on the Y axis major
-              ticks will be displayed. Default is std::ios::dec. This allows fine
-              control of the value labels using, for example (ios::dec | ios::scientific),
+              Sets the iostream flags for value labels on the Y axis major ticks
+              will be displayed. Default is std::ios::dec. This allows fine control
+              of the value labels using, for example (ios::dec | ios::scientific),
               or (ios::dec | ios::fixed), particularly in conjunction with precision.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>y_major_label_rotation
+              <span class="identifier">x_major_label_rotation</span></code>(int)
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the direction of writing of value labels from the X axis ticks.
+              <code class="computeroutput"><span class="keyword">enum</span> <span class="identifier">rotate_style</span></code>
+              provides control is 45 degree steps. Default is horizontal. 
+</p>
+<pre class="programlisting">
+<span class="keyword">enum</span> <span class="identifier">rotate_style</span>
+    <span class="special">{</span> <span class="comment">// Rotation in degrees from horizontal. horizontal = 0, // normal left to right.
+</span>      <span class="identifier">uphill</span> <span class="special">=</span> <span class="special">-</span><span class="number">45</span><span class="special">,</span> <span class="comment">// slope up.
+</span>      <span class="identifier">upward</span> <span class="special">=</span> <span class="special">-</span><span class="number">90</span><span class="special">,</span> <span class="comment">// vertical writing up.
+</span>      <span class="identifier">backup</span> <span class="special">=</span> <span class="special">-</span><span class="number">135</span><span class="special">,</span> <span class="comment">// slope up backwards.
+</span>      <span class="identifier">downhill</span> <span class="special">=</span> <span class="number">45</span><span class="special">,</span> <span class="comment">// slope down.
+</span>      <span class="identifier">downward</span> <span class="special">=</span> <span class="number">90</span><span class="special">,</span>  <span class="comment">// vertical writing down.
+</span>      <span class="identifier">backdown</span> <span class="special">=</span> <span class="number">135</span><span class="special">,</span> <span class="comment">// slope down backwards.
+</span>      <span class="identifier">upsidedown</span> <span class="special">=</span> <span class="number">180</span> <span class="comment">// == -180
+</span>    <span class="special">};</span></pre>
+<p>
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_label_rotation</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
               Determines the direction of writing of value labels from the Y axis
               ticks. <code class="computeroutput"><span class="keyword">enum</span> <span class="identifier">rotate_style</span></code>
-              provides control is 45 degree steps. The default is horizontal.
-            </p>
-            <p>
-              `enum rotate_style { <span class="emphasis"><em>/ Rotation in degrees from horizontal.
-              horizontal = 0, /</em></span> normal left to right. uphill = -45, <span class="emphasis"><em>/
-              slope up. upward = -90, /</em></span> vertical writing up. backup =
-              -135, <span class="emphasis"><em>/ slope up backwards. downhill = 45, /</em></span> slope
-              down. downward = 90, <span class="emphasis"><em>/ vertical writing down. backdown =
-              135, /</em></span> slope down backwards. upsidedown = 180 // == -180
-              };
-            </p>
-            <p>
+              provides control is 45 degree steps.
             </p>
             </td>
+<td>
+            <p>
+              Horizontal
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>x_major_value_labels<span class="underline">on</span>
+              </code>x_major_value_labels_on(int)<code class="computeroutput"><span class="special">]</span>
+              <span class="special">[</span><span class="identifier">If</span>
+              <span class="identifier">label</span> <span class="identifier">values</span>
+              <span class="keyword">for</span> <span class="identifier">X</span>
+              <span class="identifier">major</span> <span class="identifier">ticks</span><span class="special">,</span> <span class="keyword">and</span> <span class="identifier">direction</span><span class="special">:</span>
+              <span class="special">-</span><span class="number">1</span>
+              <span class="special">=</span> <span class="identifier">bottom</span><span class="special">,</span> <span class="number">0</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">no</span><span class="special">*</span> <span class="identifier">value</span> <span class="identifier">labels</span><span class="special">,</span> <span class="special">+</span><span class="number">1</span> <span class="special">=</span> <span class="identifier">top</span><span class="special">.</span> <span class="identifier">Default</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="identifier">bottom</span>
+              <span class="identifier">of</span> <span class="identifier">plot</span>
+              <span class="identifier">window</span><span class="special">.]</span>
+              <span class="special">[</span><span class="identifier">bottom</span><span class="special">]]</span> <span class="special">[[</span></code>svg_2d_plot&amp;
+              <code class="computeroutput"><span class="identifier">y_major_value_labels_on</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Determines if label values for X major ticks, and direction.: -1 =
-              bottom, 0 = no value labels, +1 = top. Default -1, bottom of plot window.
+              If label values for Y major ticks, and direction: -1 = left, 0 = <span class="bold"><strong>no</strong></span> value labels, +1 = right. Default -1, left
+              of plot window.
             </p>
             </td>
+<td>
+            <p>
+              left
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>y_major_value_labels<span class="underline">on</span>
+              </code>x_ticks_on_plot_window_on(int)<code class="computeroutput"><span class="special">]</span>
+              <span class="special">[</span><span class="identifier">Position</span>
+              <span class="identifier">of</span> <span class="identifier">Y</span>
+              <span class="identifier">axis</span> <span class="identifier">of</span>
+              <span class="identifier">value</span> <span class="identifier">labels</span>
+              <span class="special">&amp;</span> <span class="identifier">ticks</span><span class="special">:</span> <span class="special">-</span><span class="number">1</span> <span class="special">=</span> <span class="identifier">left</span><span class="special">,</span> <span class="number">0</span> <span class="special">=</span> <span class="identifier">on</span> <span class="identifier">Y</span><span class="special">-</span><span class="identifier">axis</span><span class="special">,</span> <span class="special">+</span><span class="number">1</span> <span class="special">=</span> <span class="identifier">right</span><span class="special">.</span>
+              <span class="identifier">Default</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="identifier">left</span>
+              <span class="identifier">of</span> <span class="identifier">plot</span>
+              <span class="identifier">window</span><span class="special">.]</span>
+              <span class="special">[</span><span class="identifier">bottom</span><span class="special">]]</span> <span class="special">[[</span></code>svg_2d_plot&amp;
+              <code class="computeroutput"><span class="identifier">y_ticks_on_plot_window_on</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Determines if label values for Y major ticks, and direction.: -1 =
-              left, 0 = no value labels, +1 = right. Default -1, left of plot window.
+              Position of X axis of value labels &amp; ticks: -1 = bottom, 0 = on
+              X-axis, +1 = top. Default -1, bottom of plot window.
             </p>
             </td>
+<td>
+            <p>
+              left
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>x_ticks_on_plot_window_on
+              </code>x_label_strip_e0s(bool)<code class="computeroutput"><span class="special">]</span>
+              <span class="special">[</span><span class="identifier">If</span>
+              <span class="identifier">X</span> <span class="identifier">axis</span>
+              <span class="identifier">value</span> <span class="identifier">labels</span>
+              <span class="keyword">for</span> <span class="identifier">major</span>
+              <span class="identifier">ticks</span> <span class="identifier">are</span>
+              <span class="identifier">stripped</span> <span class="identifier">of</span>
+              <span class="identifier">redundant</span> <span class="identifier">zero</span><span class="special">(</span><span class="identifier">s</span><span class="special">),</span> <span class="identifier">e</span> <span class="keyword">or</span> <span class="identifier">E</span><span class="special">,</span> <span class="keyword">and</span> <span class="special">+</span> <span class="identifier">sign</span><span class="special">.</span> <span class="identifier">This</span>
+              <span class="identifier">can</span> <span class="identifier">markedly</span>
+              <span class="identifier">reduce</span> <span class="identifier">visual</span>
+              <span class="identifier">clutter</span><span class="special">,</span>
+              <span class="keyword">for</span> <span class="identifier">example</span><span class="special">,</span> <span class="identifier">reducing</span>
+              <span class="string">"1.2e+000"</span> <span class="identifier">to</span>
+              <span class="string">"1.2"</span><span class="special">.]</span>
+              <span class="special">[</span><span class="keyword">true</span><span class="special">]]</span> <span class="special">[[</span></code>svg_2d_plot&amp;
+              <code class="computeroutput"><span class="identifier">y_label_strip_e0s</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Determines the side of Y axis of value labels &amp; ticks: -1 = left,
-              0 = on Y-axis, +1 = right. Default -1, left of plot window.
+              If Y axis value labels for major ticks are stripped of redundant zero(s),
+              e or E, and + sign. This can markedly reduce visual clutter, for example,
+              reducing "1.2e+000" to "1.2".
             </p>
             </td>
+<td>
+            <p>
+              true
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>y_ticks_on_plot_window_on
+              </code>x_axis_width(double)<code class="computeroutput"><span class="special">]</span>
+              <span class="special">[</span><span class="identifier">Sets</span>
+              <span class="identifier">X</span> <span class="identifier">axis</span>
+              <span class="identifier">line</span> <span class="identifier">width</span><span class="special">.]</span> <span class="special">[</span><span class="number">2</span><span class="special">]]</span> <span class="special">[[</span></code>svg_2d_plot&amp; <code class="computeroutput"><span class="identifier">y_axis_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Determines the side or X axis of value labels &amp; ticks: -1 = bottom,
-              0 = on X-axis, +1 = top. Default -1, bottom of plot window.
+              Sets Y axis line width.
             </p>
             </td>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_label_strip_e0s</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+              </code>x_axis_color(double)<code class="computeroutput"><span class="special">]</span>
+              <span class="special">[</span><span class="identifier">Sets</span>
+              <span class="identifier">X</span> <span class="identifier">axis</span>
+              <span class="identifier">line</span> <span class="identifier">color</span><span class="special">.][</span><span class="identifier">black</span><span class="special">.]]</span> <span class="special">[[</span></code>svg_2d_plot&amp;
+              <code class="computeroutput"><span class="identifier">y_axis_color</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              Determines whether or not the X axis value labels for major ticks are
-              stripped of redundant zero, e or E,, and + sign. This can markedly
-              reduce visual clutter, for example, reducing "1.2e+000" to
-              "1.2".
-            </p>
-            </td>
-</tr>
-<tr>
-<td>
-            <p>
-              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">y_label_strip_e0s</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+              Sets Y axis line color.
             </p>
             </td>
 <td>
             <p>
-              Determines whether or not the Y axis value labels for major ticks are
-              stripped of redundant zero, e or E,, and + sign. This can markedly
-              reduce visual clutter, for example, reducing "1.2e+000" to
-              "1.2".
+              black.
             </p>
             </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
+<td class="auto-generated"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id703487"></a><p class="title"><b>Table 17. 2D_plot Colors</b></p>
+<a name="id705939"></a><p class="title"><b>Table 17. 2D_plot Colors</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Colors">
 <colgroup>
+<col>
 <col>
 <col>
 </colgroup>
@@ -488,6 +868,11 @@
 <th>
             <p>
               Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default
             </p>
             </th>
 </tr></thead>
@@ -505,6 +890,11 @@
               Set the plot title color.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -516,7 +906,13 @@
             </td>
 <td>
             <p>
-              Set the background color for the whole image.
+              Set the background color for the whole image as <code class="computeroutput"><span class="identifier">col</span></code>,
+              an RGB color..
+            </p>
+            </td>
+<td>
+            <p>
+              white
             </p>
             </td>
 </tr>
@@ -534,6 +930,11 @@
               an RGB color.
             </p>
             </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -547,6 +948,31 @@
             <p>
               Set the border color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
               an RGB color.
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">legend_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the fill color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
+              an RGB color.
+            </p>
+            </td>
+<td>
+            <p>
+              white
             </p>
             </td>
 </tr>
@@ -564,6 +990,11 @@
               an RGB color.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -575,8 +1006,12 @@
             </td>
 <td>
             <p>
-              Set the color of the plot area. Note: this only goes into effect if
-              plot_area(true) has been called.
+              Set the fill color of the plot area.
+            </p>
+            </td>
+<td>
+            <p>
+              white
             </p>
             </td>
 </tr>
@@ -593,6 +1028,11 @@
               Sets the color of the lines that form the axis.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -607,18 +1047,9 @@
               Sets the color of the labels that go along the X axis.
             </p>
             </td>
-</tr>
-<tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_major_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
-              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Sets the color of the major ticks of the X-axis.
+              black
             </p>
             </td>
 </tr>
@@ -635,6 +1066,30 @@
               Sets the color of the grid that runs perpindicular to the X axis
             </p>
             </td>
+<td>
+            <p>
+              cyan
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the major ticks of the X-axis.
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -647,6 +1102,11 @@
 <td>
             <p>
               Sets the color of the minor ticks of the X-axis.
+            </p>
+            </td>
+<td>
+            <p>
+              black
             </p>
             </td>
 </tr>
@@ -663,6 +1123,11 @@
               Sets the color of the lines that form the Y axis.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
@@ -675,6 +1140,30 @@
 <td>
             <p>
               Sets the color of the labels that go along the Y axis.
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_grid_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the grid that runs perpendicular to the Y axis.
+            </p>
+            </td>
+<td>
+            <p>
+              cyan
             </p>
             </td>
 </tr>
@@ -691,18 +1180,9 @@
               Sets the color of the major ticks of the Y-axis.
             </p>
             </td>
-</tr>
-<tr>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">y_major_grid_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
-              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              Sets the color of the grid that runs perpindicular to the Y axis.
+              black
             </p>
             </td>
 </tr>
@@ -719,12 +1199,17 @@
               Sets the color of the minor ticks of the Y-axis.
             </p>
             </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id704776"></a><p class="title"><b>Table 18. 2D_plot Axis Information</b></p>
+<a name="id707451"></a><p class="title"><b>Table 18. 2D_plot Axis Information</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Axis Information">
 <colgroup>
 <col>
@@ -741,18 +1226,28 @@
               Description
             </p>
             </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_axis_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">x_axis_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
               Sets the line or stroke width (pixels) of the X-axis.
+            </p>
+            </td>
+<td>
+            <p>
+              2
             </p>
             </td>
 </tr>
@@ -768,6 +1263,49 @@
               Sets the label of the X-axis. You must set <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display the label.
             </p>
             </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_units</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the units of label of the X-axis. You must set <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display the label.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_font_family</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">family</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font family for label of the X-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_font_size</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font size for label of the X-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -781,6 +1319,7 @@
               Sets the distance (Cartesian units) between ticks on the X-axis.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -794,12 +1333,13 @@
               Sets the length (pixels) of the X-axis major ticks.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_major_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">x_major_tick_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -807,12 +1347,13 @@
               Sets the width (pixels) of the major ticks on the X-axis.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_minor_tick</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">x_minor_tick</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -820,6 +1361,7 @@
               Sets the length (pixels) of the X-axis minor ticks.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -833,12 +1375,13 @@
               Sets the length (pixels) of the X-axis minor tick lengths.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">x_minor_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">x_minor_tick_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -846,6 +1389,21 @@
               Sets the width (pixels) of the minor ticks on the X-axis.
             </p>
             </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_grid_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (pixels) of the grid on the X axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -859,6 +1417,7 @@
               Sets the number of minor ticks between each major tick.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -873,12 +1432,43 @@
               x2 &lt;= x1.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">y_axis_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">x_min</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the minimum scale of the x axis. Cannot check that x_min &lt;=
+              x_max!
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_max</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the maximum scale of the x axis. Cannot check that x_min &lt;=
+              x_max!
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_axis_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -886,6 +1476,7 @@
               Sets the stroke width of the X-axis.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -899,6 +1490,49 @@
               Sets the label of the Y-axis. You must set <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display the label.
             </p>
             </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_units</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the units of label of the Y-axis. You must set <code class="computeroutput"><span class="identifier">y_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> to display the label.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_font_family</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">family</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font family for label of the Y-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_font_size</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font size for label of the Y-axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -912,6 +1546,7 @@
               Sets the distance (in Cartesian units) between ticks on the Y axis
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -925,12 +1560,13 @@
               Sets the length (pixels) of the Y axis major ticks.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">y_major_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">y_major_tick_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -938,12 +1574,13 @@
               Sets the width (pixels) of the major ticks on the Y axis.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">y_minor_tick</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">y_minor_tick</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -951,6 +1588,7 @@
               Sets the length (pixels) of the Y axis minor ticks.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -964,12 +1602,27 @@
               Sets the length (pixels) of the Y axis minor tick lengths.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
-              <span class="identifier">y_minor_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+              <span class="identifier">y_major_grid_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (pixels) of the grid on the Y axis.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_tick_width</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
             </p>
             </td>
 <td>
@@ -977,6 +1630,7 @@
               Sets the width (pixels) of the minor ticks on the Y axis.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -990,6 +1644,7 @@
               Sets the number of minor ticks between each major tick.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 <tr>
 <td>
@@ -1004,29 +1659,194 @@
               y2 &lt;= y1.
             </p>
             </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_min</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the minimum scale of the Y axis. Cannot check that y_min &lt;=
+              y_max!
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_max</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the maximum scale of the Y axis. Cannot check that y_min &lt;=
+              y_max!
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">data_lines_width</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">width</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width of lines joining data points. [2
+            </p>
+            </td>
+<td class="auto-generated"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break"><p>
-        Accessor get functions are also provided for all the above set functions.
-        These allow one to check the current value (default if not changed by the
-        preceeding code).
+        Accessor get functions having the same name and returning the same type are
+        also provided for all the above set functions. These allow one to check the
+        current value (returning default if not changed by the preceeding code).
       </p>
-<a name="svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id706181"></a>
+<p>
+        For example, after a call of
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_num_minor_ticks</span><span class="special">(</span><span class="number">9</span><span class="special">);</span>  <span class="comment">// Chose 9 minor ticks between y major ticks.
+</span>
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_num_minor_ticks</span><span class="special">()</span> <span class="special">==</span> <span class="number">9</span>
+</pre>
+<p>
+        The function show_2d_settings displayed <span class="bold"><strong>all</strong></span>
+        the settings from accessors below.
+      </p>
+<div class="table">
+<a name="id709834"></a><p class="title"><b>Table 19. 2D_plot Accessor functions</b></p>
+<div class="table-contents"><table class="table" summary="2D_plot Accessor functions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              <code class="computeroutput"><span class="identifier">axis_line_style</span><span class="special">&amp;</span>
+              <span class="identifier">x_axis</span><span class="special">()</span></code>
+            </p>
+            </th>
+<th>
+            <p>
+              returns reference to X axis_line_style.
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">axis_line_style</span><span class="special">&amp;</span>
+              <span class="identifier">y_axis</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              returns reference to Y axis_line_style.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">ticks_labels_style</span><span class="special">&amp;</span> <span class="identifier">x_ticks</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              returns reference to X ticks_labels_style.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">ticks_labels_style</span><span class="special">&amp;</span> <span class="identifier">y_ticks</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              returns reference to Y ticks_labels_style.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">x_label</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns string labelling the X-axis.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">y_label</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns string labelling the Y-axis.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">x_label_units</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns string labelling units of the X-axis.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">y_label_units</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns string labelling units of the Y-axis.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
+<a name="id710266"></a>
         <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
       </h5>
 <p>
         The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
-        method is defined using Boost.Parameter. As such, it supports a few extra
-        named parameters, as well as a deduced parameter.
+        method supports two parameters &amp; some chained functions.
       </p>
 <div class="table">
-<a name="id706241"></a><p class="title"><b>Table 19. 2D_plot Required parameter</b></p>
-<div class="table-contents"><table class="table" summary="2D_plot Required parameter">
+<a name="id710325"></a><p class="title"><b>Table 20. 2D_plot Required Parameter</b></p>
+<div class="table-contents"><table class="table" summary="2D_plot Required Parameter">
 <colgroup>
 <col>
 <col>
@@ -1053,7 +1873,7 @@
 <tr>
 <td>
             <p>
-              _container
+              container
             </p>
             </td>
 <td>
@@ -1070,7 +1890,7 @@
 <tr>
 <td>
             <p>
-              _title
+              title
             </p>
             </td>
 <td>
@@ -1088,8 +1908,8 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706362"></a><p class="title"><b>Table 20. 2D_plot Deduced parameter</b></p>
-<div class="table-contents"><table class="table" summary="2D_plot Deduced parameter">
+<a name="id710446"></a><p class="title"><b>Table 21. 2D_plotChained Functions</b></p>
+<div class="table-contents"><table class="table" summary="2D_plotChained Functions">
 <colgroup>
 <col>
 <col>
@@ -1143,7 +1963,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id706460"></a><p class="title"><b>Table 21. 2D_plot Optional Parameters</b></p>
+<a name="id710546"></a><p class="title"><b>Table 22. 2D_plot Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Optional Parameters">
 <colgroup>
 <col>
@@ -1177,7 +1997,7 @@
 <tr>
 <td>
             <p>
-              _bezier_on
+              bezier_on
             </p>
             </td>
 <td>
@@ -1187,28 +2007,9 @@
             </td>
 <td>
             <p>
-              This determines whether or not Bézier curve interpolation will be
-              applied to the plot lines. It is important to note that the curve interpolation
-              is still in its infancy, and should only be used with reasonably nice
-              data sets
-            </p>
-            </td>
-<td class="auto-generated"> </td>
-</tr>
-<tr>
-<td>
-            <p>
-              _line_on
-            </p>
-            </td>
-<td>
-            <p>
-              <code class="computeroutput"><span class="keyword">bool</span></code>
-            </p>
-            </td>
-<td>
-            <p>
-              This determines whether or not there are lines drawn between data points.
+              Sets if Bézier curve interpolation will be applied to the plot lines.
+              It is important to note that the curve interpolation will produce artefacts
+              if data is 'ill-behaved' with discontinuities.
             </p>
             </td>
 <td>
@@ -1220,7 +2021,29 @@
 <tr>
 <td>
             <p>
-              _line_color
+              line_on
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets if lines are drawn between data points.
+            </p>
+            </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              line_color
             </p>
             </td>
 <td>
@@ -1242,7 +2065,7 @@
 <tr>
 <td>
             <p>
-              _area_fill_color
+              area_fill_color
             </p>
             </td>
 <td>
@@ -1252,19 +2075,22 @@
             </td>
 <td>
             <p>
-              Defining this enables the "Fill Area Under Axis" feature.
-              the color you define will be the fill color between a line and the
-              area under the axis. This only takes effect if <code class="computeroutput"><span class="identifier">_line_on</span>
-              <span class="special">=</span> <span class="keyword">true</span></code>
-              is called.
+              Enables the 'Fill Area Under Axis' feature. The color will be the fill
+              color between a line and the area under the axis. This only takes effect
+              if <code class="computeroutput"><span class="identifier">line_on</span><span class="special">()</span>
+              <span class="special">==</span> <span class="keyword">true</span></code>.
             </p>
             </td>
-<td class="auto-generated"> </td>
+<td>
+            <p>
+              grey
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
             <p>
-              _stroke_color
+              stroke_color
             </p>
             </td>
 <td>
@@ -1286,17 +2112,17 @@
 <tr>
 <td>
             <p>
-              _point_style
+              point_style
             </p>
             </td>
 <td>
             <p>
-              <code class="computeroutput"><span class="identifier">point_shape</span></code>
+              <code class="computeroutput"><span class="identifier">shape</span></code>
             </p>
             </td>
 <td>
             <p>
-              This is the shape of the point. Options currently are between <code class="literal">none</code>,
+              Shape marking the data point. Examples are: <code class="literal">none</code>,
               <code class="literal">circle</code>, and <code class="literal">square</code>.
             </p>
             </td>
@@ -1309,7 +2135,7 @@
 <tr>
 <td>
             <p>
-              _size
+              size
             </p>
             </td>
 <td>
@@ -1319,7 +2145,7 @@
             </td>
 <td>
             <p>
-              This is the height/width of the circle and square.
+              This is the height/width of the point.
             </p>
             </td>
 <td>
@@ -1331,7 +2157,7 @@
 <tr>
 <td>
             <p>
-              _x_functor
+              x_functor
             </p>
             </td>
 <td>
@@ -1342,8 +2168,9 @@
 <td>
             <p>
               A class or that contains a conversion function. You will not have to
-              worry about this, unless you are trying to accomplish stuff like plotting
-              a vector of humans. For example: 
+              worry about this unless you are trying to do plot a type that does
+              not convert to double, for example, like plotting a vector of humans:
+              
 </p>
 <pre class="programlisting">
 <span class="keyword">class</span> <span class="identifier">my_functor</span>
@@ -1352,8 +2179,8 @@
 
   <span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">human</span><span class="special">&amp;</span> <span class="identifier">_hum</span><span class="special">)</span> <span class="keyword">const</span>
   <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">_hum</span><span class="special">.</span><span class="identifier">age</span><span class="special">());</span>
-  <span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">_hum</span><span class="special">.</span><span class="identifier">age</span><span class="special">());</span> <span class="comment">// age *is* a double.
+</span>  <span class="special">}</span>
 <span class="special">}</span>
 
 <span class="comment">// snip
@@ -1378,7 +2205,7 @@
         Here are some examples of correct uses:
       </p>
 <a name="svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors"></a><h4>
-<a name="id707265"></a>
+<a name="id711374"></a>
         <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors">Using
         fill and stroke colors</a>
       </h4>

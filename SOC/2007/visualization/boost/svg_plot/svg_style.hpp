@@ -76,7 +76,8 @@ private: // Accesses only by set and get member functions below.
     
 public:
     svg_style() :
-      fill_(svg_color(0, 0, 0)), // == black
+      fill_(blank), // Should avoid any fill = 
+      //fill_(svg_color(0, 0, 0)), // == black
       stroke_(svg_color(0, 0, 0)), // == black
       width_(0), // No width
       fill_on_(false), stroke_on_(false), width_on_(false)
@@ -111,11 +112,10 @@ public:
       return fill_on_;
     }
 
-    // TODO why are these not chainable? svg_style& fill_on(bool is)
-    void fill_on(bool is) 
+    svg_style& fill_on(bool is) 
     {
       fill_on_ = is;
-      // return *this; // Make chainable.
+      return *this; // Make chainable.
     }
 
     bool stroke_on() const
@@ -123,9 +123,10 @@ public:
       return stroke_on_;
     }
 
-    void stroke_on(bool is) 
+    svg_style& stroke_on(bool is) 
     {
       stroke_on_ = is;
+      return *this; // Make chainable.
     }
 
     bool width_on() const
@@ -133,16 +134,17 @@ public:
       return width_on_;
     }
 
-    void width_on(bool is) 
+    svg_style& width_on(bool is) 
     {
       width_on_ = is;
+      return *this; // Make chainable.
     }
  
     // Set svg_style member functions to set fill, stroke & width.
     svg_style& fill_color(const svg_color& col)
     { 
         fill_ = col;
-        fill_on_ = ! col.blank; // if blank fill is off or "none"
+        fill_on_ = ! col.blank; // If blank fill is off or "none".
         return *this; // Make chainable.
     }
 
@@ -150,14 +152,14 @@ public:
     { 
         stroke_ = col;
         stroke_on_ = true; // Assume want a stroke if color is set.
-        return *this;
+        return *this; // Make chainable.
     }
 
     svg_style& stroke_width(double width)
     { 
         width_ = width;
         width_on_ = ((width > 0) ? true : false);
-        return *this;
+        return *this; // Make chainable.
     }
     
     void write(std::ostream& rhs)
@@ -168,8 +170,8 @@ public:
           stroke_.write(rhs);
           rhs << "\"";
       }
-      if(fill_on_)
-      {
+      if(fill_on_ && (fill_ != blank))
+      { // Don't add fill info if color is blank.
           rhs << " fill=\"";
           fill_.write(rhs);
           rhs << "\"";
@@ -433,9 +435,9 @@ public:
       int size = 10, point_shape shape = round, const std::string& symbols = "X")
         :
         fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols)
-    { // Best to have a fixed width font for symbols?
-      symbols_style_.font_size(size);
+    { // Best to have a fixed-width font for symbols?
       symbols_style_.font_family("Lucida Sans Unicode");
+      symbols_style_.font_size(size);
     }
 
   plot_point_style& size(int i)

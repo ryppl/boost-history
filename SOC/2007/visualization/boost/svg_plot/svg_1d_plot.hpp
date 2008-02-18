@@ -76,7 +76,7 @@ public:
 
   std::string title_; // title of data series (to show on legend).
   plot_point_style point_style_; // circle, square...
-  plot_point_style limit_point_style_;
+  plot_point_style limit_point_style_; // Default is cone pointing down.
   plot_line_style line_style_; // No line style for 1-D, only for 2-D.
 
   // -------------------------------------------------------------
@@ -178,6 +178,8 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   std::vector<svg_1d_plot_series> series;
   // These are sorted into two vectors for normal and abnormal (max, inf and NaN).
 
+
+
   svg image; // Stored so as to avoid rewriting style information constantly.
 
   // Member data names conventionally end with _.
@@ -211,6 +213,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // Border information for the plot window (not the full image size).
   box_style image_border_; // rectangular border of all image width, color...
   box_style plot_window_border_; // rectangular border of plot window width, color...
+  box_style legend_box_; // rectangular box of legend width, color...
 
   double plot_left_; // calculate_plot_window() sets these values.
   double plot_top_;
@@ -280,6 +283,7 @@ public:
     x_ticks_(X),// so for defaults see ticks_labels_style.
     image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
     plot_window_border_(yellow, svg_color(255, 255, 255), 2, 3, true, false),
+    legend_box_(yellow, azure, 1, 2, true, true),
     legend_header_(0, 0, "", legend_style_, center_align, horizontal),
     legend_width_(200), // width of legend box (pixels) // TODO isn't this calculated?
     legend_height_(0), // height of legend box (pixels)
@@ -565,7 +569,7 @@ public:
   // document node, which calls all other nodes through the Visitor pattern.
   // ------------------------------------------------------------------------
 
-  svg_1d_plot& write(std::string& file)
+  svg_1d_plot& write(const std::string& file)
   {
     std::string filename(file); // Copy to avoid problems with const if need to append.
     if (filename.find(".svg") == std::string::npos)

@@ -1403,6 +1403,12 @@ namespace boost
           {
             return derived().x_ticks_.strip_e0s_;
           }
+          
+          Derived& title(const std::string title)
+          { // Plot title.
+            derived().title_info_.text(title);
+            return derived();
+          }
 
           const std::string title()
           {
@@ -1843,14 +1849,7 @@ namespace boost
             return derived().x_label_info_.style().font_family();
           }
 
-
-          Derived& title(const std::string title)
-          { // Plot title.
-            derived().title_info_.text(title);
-            return derived();
-          }
-
-          Derived& x_axis_label_color(const svg_color& col)
+         Derived& x_axis_label_color(const svg_color& col)
           { // Set BOTH stroke and fill to the same color.
             derived().image.g(detail::PLOT_X_LABEL).style().fill_color(col);
             derived().image.g(detail::PLOT_X_LABEL).style().stroke_color(col);
@@ -1989,53 +1988,57 @@ namespace boost
           // colors .stroke_color, .stroke_width and font are set in the appropriate g_element.
 
           Derived& title_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_TITLE).style().stroke_color(col);
+          { // Function title_color could set both fill (middle) and stroke (outside),
+            // but just setting fill if simplest,
+            // but does not allow separate inside & outside colors.
             derived().image.g(PLOT_TITLE).style().fill_color(col);
+            //derived().image.g(PLOT_TITLE).style().stroke_color(col);
             return derived();
           }
 
           svg_color title_color()
-          { // Function title_color sets both fill and stroke,
-            // but stroke (outside) is considered 'more important'.
-            return derived().image.g(PLOT_TITLE).style().stroke_color();
+          { // Function title_color could get either fill and stroke,
+            // return derived().image.g(PLOT_TITLE).style().stroke_color();
+            return derived().image.g(PLOT_TITLE).style().fill_color();
           }
 
-          Derived& title_font_width(double width)
-          { // width of text is effectively the boldness.
-            // Not useful with current browsers, setting this may cause lower quality graphic fonts
-            // perhaps because the font is created using graphics rather than a built-in font.
-            derived().image.g(PLOT_TITLE).style().stroke_width(width); 
-            return derived();
-          }
+          //Derived& title_font_width(double width)
+          //{ // width of text is effectively the boldness.
+          //  // Not useful with current browsers, setting this may cause lower quality graphic fonts
+          //  // perhaps because the font is created using graphics rather than a built-in font.
+          //  derived().image.g(PLOT_TITLE).style().stroke_width(width); 
+          //  return derived();
+          //}
 
-          double title_font_width()
-          {
-            return derived().image.g(PLOT_TITLE).style().stroke_width();
-          }
+          //double title_font_width()
+          //{
+          //  return derived().image.g(PLOT_TITLE).style().stroke_width();
+          //}
 
           Derived& legend_color(const svg_color& col)
           {
-            derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
+            // derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
+            derived().image.g(PLOT_LEGEND_TEXT).style().fill_color(col);
             return derived();
           }
 
           svg_color legend_color()
           { // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
             // (It produces much lower quality fonts on some browsers).
-            return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
+            return derived().image.g(PLOT_LEGEND_TEXT).style().fill_color();
+            // return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
           }
 
-          Derived& legend_font_width(double width)
-          { // width of text is effectively the boldness.
-            derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
-            return derived();
-          }
+          //Derived& legend_font_width(double width)
+          //{ // width of text is effectively the boldness.
+          //  derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
+          //  return derived();
+          //}
 
-          double legend_font_width()
-          { // Probably not useful at present (se above).
-            return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
-          }
+          //double legend_font_width()
+          //{ // Probably not useful at present (se above).
+          //  return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
+          //}
 
           Derived& background_color(const svg_color& col)
           { // 
@@ -2065,7 +2068,8 @@ namespace boost
 
           svg_color legend_border_color()
           {
-            return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
+            return  derived().legend_box_.stroke();
+            // return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
           }
 
           Derived& plot_background_color(const svg_color& col)
@@ -2080,7 +2084,7 @@ namespace boost
           }
 
           const std::string x_axis_position()
-          {
+          { // Return the position of the X-axis.
             switch(derived().x_axis_position_)
             {
             case top:
@@ -2123,16 +2127,17 @@ namespace boost
             return derived();
           }
 
-          Derived& x_label_width(double width)
-          { // width of text is effectively the boldness.
-            derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
-            return derived();
-          }
+          // Removed until browsers implement better.
+          //Derived& x_label_width(double width)
+          //{ // width of text is effectively the boldness.
+          //  derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
+          //  return derived();
+          //}
 
-          double x_label_width()
-          {
-            return derived().image.g(PLOT_X_LABEL).style().stroke_width();
-          }
+          //double x_label_width()
+          //{
+          //  return derived().image.g(PLOT_X_LABEL).style().stroke_width();
+          //}
 
           svg_color x_label_color()
           {

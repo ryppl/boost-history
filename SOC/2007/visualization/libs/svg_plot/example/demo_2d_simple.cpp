@@ -87,16 +87,20 @@ int main()
 
   // Add the data series to the plot:
   my_plot.title("demo_2d_simple");
-  my_plot.title(" more title");
-  cout << my_plot.title() << endl;
+  my_plot.title(" title");
+  cout << " my_plot.title() " << my_plot.title() << endl;
+  my_plot.x_label("X-axis");
+  my_plot.y_label("Y-axis");
 
   std::string s = my_plot.title();
 
   my_plot.plot(data1, "Sqrt(x)").fill_color(red);
 	my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5);
 	my_plot.plot(data3, "-1 + 2x").fill_color(yellow).bezier_on(true).line_color(blue).shape(square);
+  cout << " my_plot.title() " << my_plot.title() << endl;
 
   my_plot.write("./demo_2d_simple.svg");
+  cout << " my_plot.title() " << my_plot.title() << endl;
 
   show_plot_settings(my_plot);
 

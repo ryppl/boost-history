@@ -1,7 +1,7 @@
 // svg_tag.hpp
 
-// Copyright Jacob Voytko 2007
-// Copyright Paul A Bristow 2007
+// Copyright Jacob Voytko 2007, 2008
+// Copyright Paul A Bristow 2007, 2008
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -13,8 +13,7 @@
 #define BOOST_SVG_TAG_HPP
 
 // -----------------------------------------------------------------------------
-// This file svg_tag.hpp defines all classes that can occur in the 
-// SVG parse tree.
+// File svg_tag.hpp defines all classes that can occur in the SVG parse tree.
 // -----------------------------------------------------------------------------
 
 #include <boost/ptr_container/ptr_container.hpp>
@@ -37,12 +36,15 @@ namespace boost
 namespace svg
 {
   // Forward declarations of classes defined in this module.
-  // Copied to svg_fwd.hpp TODO delete?
+  // Also copied to svg_fwd.hpp.
 
   class svg_element; // svg_element is base class for:
   // g_element (group element)
   // rect_element, circle_element, line_element, text_element,
   // polyline_element, polygon_element, path_element, clip_path_element,
+  class text_parent; // Ancestor to both tspan and strings for the text_element class.
+  class text_element_text;  
+  class tspan_element; // Within a text_element, adjust text and font properties.
   class text_element; // text with position, size, font, (& styles) & orientation.
   class rect_element; // clipping path restricts the region to which paint can be applied.
   class circle_element; // Represents a single circle.
@@ -418,67 +420,80 @@ namespace svg
   };
 
 class text_parent
-{ // An ancestor to both tspan and strings for the text_element
-  //    class. This allows an array of both to be stored in text_element.
+{ // An ancestor to both tspan and strings for the text_element class.
+  // This allows an array of both to be stored in text_element.
   protected:
     std::string text_;
 
   public:
-    virtual void write(std::ostream& o_str) { } 
+    virtual void write(std::ostream& /* o_str */)
+    {
+    } 
 
-    text_parent(const std::string& text): text_(text) { }
-	text_parent(const text_parent& rhs): text_(rhs.text_) { }
-};
+    text_parent(const std::string& text): text_(text)
+    {
+    }
+	  text_parent(const text_parent& rhs): text_(rhs.text_)
+    {
+    }
+}; // class text_parent
 
-class text_element_text: public text_parent
+class text_element_text : public text_parent
 {
 public:
-  text_element_text(const std::string& text): text_parent(text) { }
-  text_element_text(const text_element_text& rhs): text_parent(rhs){ }
+  text_element_text(const std::string& text): text_parent(text)
+  {
+  }
+  text_element_text(const text_element_text& rhs): text_parent(rhs)
+  {
+  }
   void write(std::ostream& o_str)
   {
-    o_str<<text_;
+    o_str << text_;
   }
-};
+}; // class text_element_text
 
-class tspan_element: public text_parent, public svg_element
-{
+class tspan_element : public text_parent, public svg_element
+{ // See 10.5 tspan element http://www.w3.org/TR/SVG/text.html#TSpanElement 
 private:
   
-  // Absolute position
-  double x_, y_;
-
-  // Relative position
-  double dx_, dy_;
-
-  int rotate_;
+  double x_;  // Absolute positions.
+  double y_;
+  double dx_;  // Relative positions.
+  double dy_;
+  int rotate_; // of text.
+  // A list of shifts or rotations for several characters is not yet implemented.
   
-  // Allows the author to provide exact alignment
-  double text_length_;
+  double text_length_;  // Allows the author to provide exact alignment.
 
-  // dx_, dy_, and rotate_ can all be omitted if they have a certain value,
+  // dx_, dy_, and rotate_ can all be omitted, usually meaning no shift or rotation,
+  // but see http://www.w3.org/TR/SVG/text.html#TSpanElement for ancestor rules.
   // but x_, y_, and text_length need a flag.
-  bool use_x_, use_y_, use_text_length_;
+  bool use_x_;
+  bool use_y_;
+  bool use_text_length_;
 
   text_style style_; // font variants.
 
 public:
-  tspan_element(const std::string& text, const text_style& style = no_style):
+  tspan_element(const std::string& text, const text_style& style = no_style)
+    :
     x_(0), y_(0), dx_(0), dy_(0), rotate_(0), text_length_(0),
     use_x_(false), use_y_(false), use_text_length_(false),
     style_(style), text_parent(text)
   {
   }
 
-  tspan_element(const tspan_element& rhs):
-  x_(rhs.x_), y_(rhs.y_), dx_(rhs.dx_), dy_(rhs.dy_), rotate_(rhs.rotate_),
-  text_length_(rhs.text_length_), use_x_(rhs.use_x_), use_y_(rhs.use_y_),
-  use_text_length_(rhs.use_text_length_), style_(rhs.style_),
-  text_parent(rhs)
+  tspan_element(const tspan_element& rhs)
+    :
+    x_(rhs.x_), y_(rhs.y_), dx_(rhs.dx_), dy_(rhs.dy_), rotate_(rhs.rotate_),
+    text_length_(rhs.text_length_), use_x_(rhs.use_x_), use_y_(rhs.use_y_),
+    use_text_length_(rhs.use_text_length_), style_(rhs.style_),
+    text_parent(rhs)
   {
   }
 
-  // All of the setters.
+  // All setters (chainable).
   tspan_element& text(const std::string& text) 
   { 
     text_=text; 
@@ -524,7 +539,7 @@ public:
     return *this;
   }
 
-  // All of the getters.
+  // All getters.
   std::string text(){ return text_; }
   double x() { return x_; }
   double y() { return y_; }
@@ -543,46 +558,45 @@ public:
     return style_;
   }
 
-
   void write(std::ostream& os)
   {
-    os<<"<tspan";
+    os << "<tspan";
 
     write_attributes(os); // id & clip_path
     style_info_.write(os); // fill, stroke, width...
 
     // All of the conditional writes within tspan_element.
     
-    // First, all of the elements that can be tested based on their value.
+    // First, all elements that can be tested based on their value.
     if(rotate_ != 0)
     {
-      os<<" rotate=\""<<rotate_<<"\"";
+      os << " rotate=\"" << rotate_ << "\"";
     }
 
     if(dx_!= 0)
     {
-      os<<" dx=\""<<dx_<<"\"";
+      os << " dx=\"" << dx_ << "\"";
     }
 
     if(dy_!= 0)
     {
-      os<<" dy=\""<<dy_<<"\"";
+      os << " dy=\"" << dy_ << "\"";
     }
 
-    // Now, add all of the elements that can be tested with the flags.
-    if(use_x_)
+    // Now, add all elements that can be tested with the flags.
+    if(use_x_ == true)
     {
-      os<<"x=\""<<x_<<"\"";
+      os << "x=\"" << x_ << "\"";
     }
 
-    if(use_y_)
+    if(use_y_  == true)
     {
-      os<<"y=\""<<y_<<"\"";
+      os << "y=\"" << y_ << "\"";
     }
 
-    if(use_text_length_)
+    if(use_text_length_ == true)
     {
-      os<<"textLength=\""<<text_length_<<"\"";
+      os << "textLength=\"" << text_length_ << "\"";
     }
 
     if (style_.font_size() != 0)
@@ -609,12 +623,11 @@ public:
     {
     os << " font-decoration=\"" << style_.font_decoration() << "\"";
     }
-    os<<">"<<text_<<"</tspan>";
+    os << ">" << text_ << "</tspan>";
+  } //   void write(std::ostream& os)
+}; // class tspan_element
 
-  }
-};
-
-class text_element: public svg_element
+class text_element : public svg_element
 { // Holds text with position, size, font, (& styles) & orientation.
   // Not necessarily shown correctly by all browsers, alas.
  private: // Access only via member functions below.
@@ -736,8 +749,8 @@ public:
     data_.push_back(new text_element_text(text));
   }
 
-  text_element(const text_element& rhs):
-  x_(rhs.x_), y_(rhs.y_), style_(rhs.style_),
+  text_element(const text_element& rhs) :
+    x_(rhs.x_), y_(rhs.y_), style_(rhs.style_),
     align_(rhs.align_), rotate_(rhs.rotate_)
   {
      data_ = (const_cast<text_element&>(rhs)).data_.release();  
@@ -748,7 +761,7 @@ public:
     x_ = rhs.x_;
     y_ = rhs.y_;
     data_.clear();
-	data_.insert(data_.end(), rhs.data_.begin(), rhs.data_.end());
+	  data_.insert(data_.end(), rhs.data_.begin(), rhs.data_.end());
     style_ = rhs.style_;
     align_ = rhs.align_; 
     rotate_ = rhs.rotate_;
@@ -762,6 +775,7 @@ public:
 
    return os.str();
   }
+
   void write(std::ostream& os)
   { // text_element, style & attributes to stream.
     // Changed to new convention on spaces:
@@ -1774,8 +1788,6 @@ public:
     {
       children.clear();
     }
-
-
   }; // class g_element
 
 } // namespace svg
