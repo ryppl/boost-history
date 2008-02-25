@@ -12,7 +12,6 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/mpl/fold.hpp>
 #include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/single_view.hpp>
 #include <boost/mpl/range_c.hpp>
@@ -33,14 +32,25 @@ struct set : Base {
     typedef set type;
 };
 
-template<class S>
+template<int N>
 struct make_set {
-    typedef typename mpl::fold<S, empty_set, set<mpl::_, mpl::_> >::type type;
+    template<class Iter>
+    struct apply {
+        typedef set<typename make_set<N - 1>::template apply<typename boost::mpl::next<Iter>::type>::type, typename boost::mpl::deref<Iter>::type> type;
+    };
+};
+
+template<>
+struct make_set<0> {
+    template<class Iter>
+    struct apply {
+        typedef empty_set type;
+    };
 };
 
 template<class S, class N>
 struct contains_impl {
-    typedef typename switch_detail::make_set<S>::type as_set;
+    typedef typename make_set<boost::mpl::size<S>::value>::template apply<typename boost::mpl::begin<S>::type>::type as_set;
     static const bool value = (sizeof(as_set::lookup(N())) != 1);
 };
 
