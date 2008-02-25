@@ -63,11 +63,27 @@ R do_call(T& t) {
     return(t.template apply<R>(L()));
 }
 
+template<int N>
+struct mpl_at_c_impl {
+    template<class T>
+    struct apply {
+        typedef typename mpl::next<typename mpl_at_c_impl<N - 1>::template apply<T>::type>::type type;
+    };
+};
+
+template<>
+struct mpl_at_c_impl<0> {
+    template<class T>
+    struct apply {
+        typedef T type;
+    };
+};
+
 template<class T, class R>
 struct internal_at {
     template<int N>
     struct apply {
-        typedef typename mpl::at_c<typename T::labels, N>::type label;
+        typedef typename mpl::deref<typename mpl_at_c_impl<N>::template apply<typename mpl::begin<typename T::labels>::type>::type>::type label;
         static R call(T& t) {
             return(do_call<R, label>(t));
         }
