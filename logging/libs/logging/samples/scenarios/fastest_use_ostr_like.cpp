@@ -22,12 +22,12 @@
 
 
 This usage:
-- Fastest. It does not use formatters and destinations (thus, 
+- fastest. It does not use formatters and destinations (thus, 
   the flexibility that comes with formatters/destinations) is gone
-- You have one filter, which can be turned on or off
-- You have 2 loggers: app and err.
-- The app writes to console, the err writes to "err.txt" file
-- It uses the << operator as the logging syntax
+- you have one filter, which can be turned on or off
+- you have 2 loggers: app and err
+- the app writes to console, the err writes to "err.txt" file
+- it uses the << operator as the logging syntax
 
 Here's what the output will be:
 

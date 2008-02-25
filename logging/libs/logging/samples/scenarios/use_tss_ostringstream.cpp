@@ -22,17 +22,17 @@
 
 
 This usage:
-- You have one logger
-- You have one filter, always turned on
-- You want to format the message before it's written 
-- The logger has several log destinations
-    - The output goes to console and debug output window
-    - Formatting - prefix each message by its index, and append newline
+- you have one logger
+- you have one filter, always turned on
+- you want to format the message before it's written 
+- the logger has several log destinations
+    - the output goes to console and debug output window
+    - formatting - prefix each message by its index, and append newline
 
 Optimizations:
 - use tss_ostringstream (each thread has its own ostringstream copy, to make writing faster: 
   when logging of a message, we won't need to create the ostringstream first ; it's created only once per thread )
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 
 In this example, all output will be written to the console and debug window.

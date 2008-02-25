@@ -21,10 +21,10 @@
 @page mul_levels_one_logger mul_levels_one_logger.cpp Example
 
 This usage:
-- You have multiple levels (in this example: debug < info < error)
-- You want to format the message before it's written 
+- you have multiple levels (in this example: debug < info < error)
+- you want to format the message before it's written 
   (in this example: prefix it by time, by index, and append newline to it)
-- You have <b>one log</b>, which writes to several log destinations
+- you have <b>one log</b>, which writes to several log destinations
   (in this example: the console, the debug output window, and a file)
 
 In this example, all output will be written to the console, debug output window, and "out.txt" file.

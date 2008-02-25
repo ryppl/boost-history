@@ -1,4 +1,4 @@
-/**
+/*
  Boost Logging library
 
  Author: John Torjo, www.torjo.com
@@ -23,12 +23,12 @@
 This example shows you how easy it is to add your custom formatter /destination classes.
 
 This usage:
-- You have one logger
-- You have one filter, which can be turned on or off
-- You want to format the message before it's written 
-- The logger has several log destinations
-    - The output goes to console, debug output window, and a file called out.txt - as XML
-    - Formatting - prefix each message by its start time, its index, and append newline
+- you have one logger
+- you have one filter, which can be turned on or off
+- you want to format the message before it's written 
+- the logger has several log destinations
+    - the output goes to console, debug output window, and a file called out.txt - as XML
+    - formatting - prefix each message by its start time, its index, and append newline
 
 \n\n
 Custom classes:
@@ -38,7 +38,7 @@ Custom classes:
 
 \n\n
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 
 \n\n

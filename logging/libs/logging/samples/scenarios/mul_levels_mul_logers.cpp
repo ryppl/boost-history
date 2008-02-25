@@ -22,21 +22,21 @@
 
 
 This usage:
-- You have multiple levels (in this example: debug < info < error)
-- You want to format the message before it's written 
+- you have multiple levels (in this example: debug < info < error)
+- you want to format the message before it's written 
   (in this example: prefix it by time, by index and append newline to it)
-- You have several loggers
-- Each logger has several log destinations
+- you have several loggers
+- each logger has several log destinations
 
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 Logs:
-- Error messages go into err.txt file
+- error messages go into err.txt file
   - formatting - prefix each message by time, index, and append newline
-- Info output goes to console, and a file called out.txt
+- info output goes to console, and a file called out.txt
   - formatting - prefix each message by "[app]", time, and append newline
-- Debug messages go to the debug output window, and a file called out.txt
+- debug messages go to the debug output window, and a file called out.txt
   - formatting - prefix each message by "[dbg]", time, and append newline
 
 

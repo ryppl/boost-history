@@ -23,15 +23,15 @@
 
 This usage:
 
-- You have one logger, and want to profile it:
+- you have one logger, and want to profile it:
   - you want to know how much time is spent while logging
-  - Test: dump some dummy string 5000 times, and then the profiling information is written to "profile.txt"
-- The logger has several log destinations
-    - The output goes to console, debug output window, and a file called out.txt
-    - Formatting - prefix each message by its index, and append newline
+  - test: dump some dummy string 5000 times, and then the profiling information is written to "profile.txt"
+- the logger has several log destinations
+    - the output goes to console, debug output window, and a file called out.txt
+    - formatting - prefix each message by its index, and append newline
 
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 If logging on dedicated thread, the output for "profile.txt" could look like:
 

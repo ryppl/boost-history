@@ -22,14 +22,14 @@
 
 
 This usage:
-- You have one logger and one filter, which can be turned on or off
-- You want to format the message before it's written 
-- The logger has several log destinations
-    - The output goes to console, and a file called out.txt
-    - Formatting - message will look like this: <tt>[file/line] [thread_id] [idx] [time] message [enter] </tt>
+- you have one logger and one filter, which can be turned on or off
+- you want to format the message before it's written 
+- the logger has several log destinations
+    - the output goes to console, and a file called out.txt
+    - formatting - message will look like this: <tt>[file/line] [thread_id] [idx] [time] message [enter] </tt>
 
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 In this example, all output will be written to the console, debug window, and "out.txt" file.
 The output can look like:

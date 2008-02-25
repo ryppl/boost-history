@@ -22,20 +22,20 @@
 
 
 This usage:
-- You log a few messages before initializing the logs
-- You use one filter, based on levels
-- You specify a certain level for the filter, so that not all of the messages should be logged
-- You turn the cache off, and only those messages matching the filter are logged
+- you log a few messages before initializing the logs
+- you use one filter, based on levels
+- you specify a certain level for the filter, so that not all of the messages should be logged
+- you turn the cache off, and only those messages matching the filter are logged
 
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 Logs:
-- Error messages go into err.txt file
+- error messages go into err.txt file
   - formatting - prefix each message by time, index, and append newline
-- Info output goes to console, and a file called out.txt
+- info output goes to console, and a file called out.txt
   - formatting - prefix each message by "[app]", time, and append newline
-- Debug messages go to the debug output window, and a file called out.txt
+- debug messages go to the debug output window, and a file called out.txt
   - formatting - prefix each message by "[dbg]", time, and append newline
 
 

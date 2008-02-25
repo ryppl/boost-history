@@ -22,20 +22,20 @@
 
 
 This usage:
-- You have several loggers
-- You have one filter, which can be turned on or off
-- You want to format the message before it's written 
-- Each logger has several log destinations
+- you have several loggers
+- you have one filter, which can be turned on or off
+- you want to format the message before it's written 
+- each logger has several log destinations
 
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 Logs:
-- Error messages go into err.txt file
+- error messages go into err.txt file
   - formatting - prefix each message by time, index, and append newline
-- Info output goes to console, and a file called out.txt
+- info output goes to console, and a file called out.txt
   - formatting - prefix each message by time, "[app]", and append newline
-- Debug messages go to the debug output window, and the console
+- debug messages go to the debug output window, and the console
   - formatting - prefix each message by "[dbg]", time, and append newline
 
 

@@ -22,15 +22,15 @@
 
 
 This usage:
-- You have one @b thread-safe logger
-- You have one filter, which is always turned on
-- You want to format the message before it's written 
-- The logger has several log destinations
-    - The output goes to console, debug output window, and a file called out.txt
-    - Formatting - prefix each message by its index, thread id, and append newline
+- you have one @b thread-safe logger
+- you have one filter, which is always turned on
+- you want to format the message before it's written 
+- the logger has several log destinations
+    - the output goes to console, debug output window, and a file called out.txt
+    - formatting - prefix each message by its index, thread id, and append newline
 
 Optimizations:
-- use a cache string (from optimize namespace), in order to make formatting the message faster
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
 
 In this example, all output will be written to the console, debug window, and "out.txt" file.
 It will look similar to:

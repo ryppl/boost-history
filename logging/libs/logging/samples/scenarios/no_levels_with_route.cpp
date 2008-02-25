@@ -21,10 +21,10 @@
 @page no_levels_with_route no_levels_with_route.cpp Example
 
 This usage:
-- There are no levels
-- There is only one logger
-- The logger has multiple destinations
-- We use a custom route
+- there are no levels
+- there is only one logger
+- the logger has multiple destinations
+- we use a custom route
 
 A custom route means you don't want to first run all formatters, and then write to all destinations.
 Depending on the destination, you'll want a certain formatting of the message

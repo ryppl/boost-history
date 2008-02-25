@@ -28,7 +28,7 @@ typedef boost::logging::filter::no_ts filter_type;
 namespace boost { namespace logging {
     struct out_of_the_box_logger : logger_type {
         out_of_the_box_logger() {
-            writer().write( BOOST_LOG_STR("%time%($hh:$mm.$ss.$mili) [%idx%] |\n"), BOOST_LOG_STR("cout file(log.txt) debug"));
+            writer().write( BOOST_LOG_STR("%time%($yyyy-$MM-$dd $hh:$mm.$ss) [%idx%] |\n"), BOOST_LOG_STR("cout file(log.txt)"));
             mark_as_initialized();
         }
     };
