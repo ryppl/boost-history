@@ -1,5 +1,18 @@
 [section:utility Miscellaneous utilities]
 
+[section bind_mem_fn]
+
+* See also: [funcref boost::dataflow::utility::bind_mem_fn bind_mem_fn reference]
+
+[bind_mem_fn] can be used to bind a class member function to a class object.
+It returns a boost::function, which can be used as a [DataflowSignals] [Port].
+
+[heading Example]
+
+[test_bind_mem_fn]
+
+[endsect]
+
 [xinclude ../dataflow_utility_doxygen.xml]
 
 [endsect]

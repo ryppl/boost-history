@@ -73,7 +73,7 @@ doxygen dataflow_utility_doxygen
       [ glob ../../../boost/dataflow/utility/*.hpp ]
    :
         <doxygen:param>TAB_SIZE=4
-        <doxygen:param>EXAMPLE_PATH=../test
+        <doxygen:param>EXAMPLE_PATH=../test/utility
         <doxygen:param>EXAMPLE_PATH=../example
         <doxygen:param>STRIP_FROM_PATH=$(root)
         <doxygen:param>STRIP_FROM_INC_PATH=$(root)

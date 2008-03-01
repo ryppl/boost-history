@@ -32,6 +32,9 @@ namespace detail {
 
 } // namespace detail
 
+/// Binds a class member function to a class object.
+/** \returns boost::function type with the bound member function.
+*/
 template<typename MemFn, typename T>
 boost::function<typename member_function_signature<MemFn>::type>
     bind_mem_fn(MemFn mem_fn, T &object)
@@ -54,13 +57,6 @@ struct bind_mem_fn_impl<MemFn, T, BOOST_PP_ITERATION()>
                         BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
                         BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_));
     }
-/*    boost::function<typename member_function_signature<MemFn>::type>
-        operator()(MemFn mem_fn, const T &object)
-    {
-        return boost::bind(mem_fn, boost::cref(object)
-                           BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                           BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_));
-    }*/
 };
 
 #endif // defined(BOOST_PP_IS_ITERATING)

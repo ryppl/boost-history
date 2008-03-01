@@ -1,3 +1,5 @@
+//[ test_bind_mem_fn
+
 // Copyright Stjepan Rajko 2008. Use, modification and
 // distribution is subject to the Boost Software License, Version
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -27,23 +29,25 @@ private:
 int test_main(int, char* [])
 {
     using namespace boost;
-    namespace df=boost::dataflow;
+    using boost::dataflow::utility::bind_mem_fn;
     
     sum test_sum(1);
     
-    boost::function<int(int)> fun1 = df::utility::bind_mem_fn(&sum::add1, test_sum);
-    boost::function<int(int, int)> fun2 = df::utility::bind_mem_fn(&sum::add2, test_sum);
+    boost::function<int(int)> fun1 = bind_mem_fn(&sum::add1, test_sum);
+    boost::function<int(int, int)> fun2 = bind_mem_fn(&sum::add2, test_sum);
     
     BOOST_CHECK_EQUAL(fun1(2), 3);
     BOOST_CHECK_EQUAL(fun2(2, 3), 6);
     
     const sum const_test_sum(2);
 
-    boost::function<int(int)> cfun1 = df::utility::bind_mem_fn(&sum::add1, const_test_sum);
-    boost::function<int(int, int)> cfun2 = df::utility::bind_mem_fn(&sum::add2, const_test_sum);
+    boost::function<int(int)> cfun1 = bind_mem_fn(&sum::add1, const_test_sum);
+    boost::function<int(int, int)> cfun2 = bind_mem_fn(&sum::add2, const_test_sum);
 
     BOOST_CHECK_EQUAL(cfun1(2), 4);
     BOOST_CHECK_EQUAL(cfun2(2, 3), 7);
 
     return 0;
 } // int test_main(int, char* [])
+
+//]

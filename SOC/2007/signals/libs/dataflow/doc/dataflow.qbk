@@ -92,6 +92,8 @@
 [template socket_receiver[] [link dataflow.signals.components.network.socket_receiver socket_receiver]]
 [template chain[] [link dataflow.signals.components.topologies.chain chain]]
 
+[template bind_mem_fn[] [link dataflow.utility.bind_mem_fn bind_mem_fn]]
+
 [template fusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 [template BoostFusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 [template BoostIostreams[] [@http://www.boost.org/libs/iostreams/doc/index.html]]
@@ -159,6 +161,8 @@
 
 [import ../test/signals/test_junction.cpp]
 [import ../test/signals/test_mutex.cpp]
+
+[import ../test/utility/test_bind_mem_fn.cpp]
 
 [import ../example/fibonacci.cpp]
 [import ../example/signals/simple_example_components.hpp]

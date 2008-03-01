@@ -11,6 +11,7 @@
 
 namespace boost { namespace dataflow { namespace utility {
 
+/// Returns the cv-unqualified, unreferenced version of a type.
 template<typename T>
 struct underlying_type
 {
