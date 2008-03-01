@@ -8,7 +8,8 @@
 
 #include <boost/dataflow/support.hpp>
 #include <boost/dataflow/support/port/port_adapter.hpp>
-#include <boost/dataflow/signals/connection/detail/bind_object.hpp>
+#include <boost/dataflow/utility/bind_mem_fn.hpp>
+#include <boost/dataflow/utility/slot_type.hpp>
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/joint_view.hpp>
@@ -116,9 +117,10 @@ namespace extension
         result_type operator()(ConsumerPort &consumer)
         {
             typedef typename get_object_type<ConsumerPort>::type object_type;
-            
-            return boost::signals::detail::bind_object<Signature, object_type>()
-            (static_cast<typename boost::signals::detail::slot_type<Signature, object_type>::type>(&object_type::operator()), get_object(consumer));
+            typedef typename boost::dataflow::utility::slot_type<Signature, object_type>::type mem_fn_type;
+             
+            return boost::dataflow::utility::bind_mem_fn<mem_fn_type, object_type>
+            (static_cast<mem_fn_type>(&object_type::operator()), get_object(consumer));
         };
     };
 
@@ -143,9 +145,10 @@ namespace extension
         result_type operator()(ConsumerPort &consumer)
         {
             typedef typename get_object_type<ConsumerPort>::type object_type;
+            typedef typename boost::dataflow::utility::slot_type<Signature, object_type>::type mem_fn_type;
             
-            return boost::signals::detail::bind_object<Signature, object_type>()
-            (static_cast<typename boost::signals::detail::slot_type<Signature, object_type>::type>(&object_type::operator()), get_object(consumer));
+            return boost::dataflow::utility::bind_mem_fn<mem_fn_type, object_type>
+            (static_cast<mem_fn_type>(&object_type::operator()), get_object(consumer));
         };
     };
 
@@ -191,10 +194,12 @@ inline typename enable_if<
 }
 
 template<typename Signature, typename T>
-boost::function<Signature> make_slot_selector(typename detail::slot_type<Signature, T>::type func, T &object)
+boost::function<Signature> make_slot_selector(typename dataflow::utility::slot_type<Signature, T>::type func, T &object)
 {
-	return boost::signals::detail::bind_object<Signature, T>()
-            (static_cast<typename boost::signals::detail::slot_type<Signature, T>::type>(func), object);
+    typedef typename boost::dataflow::utility::slot_type<Signature, T>::type mem_fn_type;
+
+	return boost::dataflow::utility::bind_mem_fn<mem_fn_type, T>
+            (static_cast<mem_fn_type>(func), object);
 }
 
 } } // namespace boost::phoenix

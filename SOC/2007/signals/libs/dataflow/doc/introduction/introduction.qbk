@@ -19,7 +19,7 @@ The Dataflow library currently offers three layers:
 
 * A layer providing generic dataflow support centered around [concepts],
   adaptable to various dataflow frameworks and data transport mechanisms.
-* The [DataflowSignals] layer, with a number of implemented components use
+* The [DataflowSignals] layer, with a number of implemented components using
   [BoostSignals] as a data transport mechanism.
 * The [DataflowBlueprint] layer, built on top of the generic layer and providing
   runtime reflection and network modeling using the [BoostGraph].
@@ -78,11 +78,17 @@ implementation of an (experimental and currently broken) layer based
 connections made through simple object pointers, with support for using
 [BoostPhoenix2] actors for data processing ([DataflowPhoenix]).]
 
-[heading What the Dataflow library doesn't offer]
+[heading What the Dataflow library doesn't offer (yet)]
 
-Ideally, the Dataflow library should at some point offer a native dataflow
-framework which offers memory management, flexible scheduling, optimized
-evaluation, etc.  At this point, such a framework is missing.
+Since the development of the Dataflow library started with a dataflow
+framework built on top of [BoostSignals], its features are heavily biased
+towards the characteristics of [BoostSignals] - connectability is detirmined
+at compile time, and evaluation of a dataflow network is driven entirely by the
+components.  Ideally, the Dataflow library should at some point offer a native
+dataflow framework of a different kind - one that allows runtime specification
+of port/component characteristics, offers memory management for the data being
+exchanged between the components, as well as flexible scheduling and optimized
+evaluation.  At this point, however, such a framework is missing.
 
 [heading Where to go from here]
 
@@ -233,12 +239,13 @@ even automatically (although the Dataflow library at the moment offers no such a
 
 Finally, [*we are not to far from the advantages of a [@http://en.wikipedia.org/wiki/Visual_programming_language
 visual programming language]], since the components and the connections have a natural graphical representation.
-With a visaul development environment, programming becomes as easy as connecting components with connections
-(again, the Dataflow library provides no visual programming functionality).
+With a visaul development environment, programming becomes as easy as connecting components with connections.
+In fact, the Dataflow library provides a small [gui_example example]
+illustrating this.
 
 [heading Go with the flow?]
 
-If you are interested in exploring the dataflow concept further using
+If you are interested in exploring dataflow programming further using
 the Dataflow library, see
 
 * [how_to_use How to use this library and the documentation].

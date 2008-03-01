@@ -13,27 +13,28 @@ project dataflow/test/signals
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-#run test_result_of_defined.cpp ;
+run test_filter_base.cpp ;
+
 run test_bind_object.cpp ;
 run test_connect.cpp ;
 
 run test_filter.cpp ;
 run test_storage.cpp ;
-run test_counter.cpp ;
-run test_junction.cpp ;
-run test_multiplexer.cpp ;
-run test_function.cpp ;
-run test_chain.cpp ;
-run test_mutex.cpp
-     /boost/thread//boost_thread/<link>static ;
-run test_socket.cpp
-     /boost/serialization//boost_serialization/<link>static
-     /boost/thread//boost_thread/<link>static ;
-run test_branching.cpp ;
-run test_pull.cpp ;
-run test_disconnect.cpp ;
-run test_multi_type.cpp ;
-run test_multi_args.cpp ;
-run test_same_type.cpp ;
-run test_multi_out.cpp ;
+#run test_counter.cpp ;
+#run test_junction.cpp ;
+#run test_multiplexer.cpp ;
+#run test_function.cpp ;
+#run test_chain.cpp ;
+#run test_mutex.cpp
+#     /boost/thread//boost_thread/<link>static ;
+#run test_socket.cpp
+#     /boost/serialization//boost_serialization/<link>static
+#     /boost/thread//boost_thread/<link>static ;
+#run test_branching.cpp ;
+#run test_pull.cpp ;
+#run test_disconnect.cpp ;
+#run test_multi_type.cpp ;
+#run test_multi_args.cpp ;
+#run test_same_type.cpp ;
+#run test_multi_out.cpp ;
 

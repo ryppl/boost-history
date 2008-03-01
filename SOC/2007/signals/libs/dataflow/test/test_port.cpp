@@ -17,7 +17,6 @@ typedef df::port_traits<df::ports::producer> producer_traits;
 typedef df::port_traits<df::ports::consumer> consumer_traits;
 
 struct some_tag : public df::default_tag {};
-struct whatever;
 
 typedef df::port_traits<df::ports::consumer, some_tag> other_consumer_traits;
 
@@ -118,6 +117,8 @@ struct non_intrusive_port_descendant2 : public non_intrusive_port_base2
 
 //]
 
+struct whatever;
+
 int test_main(int, char* [])
 {
     BOOST_CHECK(df::is_port_category<df::ports::producer>::value);
@@ -153,9 +154,10 @@ int test_main(int, char* [])
     BOOST_CHECK(( df::is_port<non_intrusive_port_descendant>::value ));
 
     BOOST_CHECK(( df::is_port<non_intrusive_port_descendant2>::value ));
+    //]
     
     BOOST_CHECK(( df::has_default_port<my_producer, whatever, whatever>::value ));
     BOOST_CHECK_EQUAL(( &df::get_default_port<whatever, whatever, df::default_tag>(p)), &p );
-    //]
+
     return 0;
 } // int test_main(int, char* [])

@@ -27,7 +27,7 @@
 [template PortVector[] [link dataflow.support.concepts.component.portvector [^PortVector]]]
 [template PortVectorTraits[] [link dataflow.support.concepts.component.portvector [^PortVectorTraits]]]
 [template VectorPort[] [link dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
-[template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraitr]]]
+[template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
 [template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
 [template KeyedPortTraits[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPortTraitr]]]
 
@@ -129,6 +129,7 @@
 [template is_entity[] [classref boost::dataflow::is_entity [^is_entity]]]
 [template is_port[] [classref boost::dataflow::is_port [^is_port]]]
 [template port[] [classref boost::dataflow::port [^port]]]
+[template port_adapter[] [classref boost::dataflow::port_adapter [^port_adapter]]]
 [template complemented_port_traits[] [classref boost::dataflow::complemented_port_traits [^complemented_port_traits]]]
 [template is_complemented_port[] [classref boost::dataflow::is_complemented_port [^is_complemented_port]]]
 

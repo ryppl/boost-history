@@ -82,7 +82,7 @@ defining a [PortTraits] type, and associating it with
 [vtk_algorithm_output_producer]
 
 [note More details about registering [PortTraits] for a [Port]
-can be found on the [Port] documentation page.]
+can be found on the [Traits] documentation page.]
 
 Now that we have a producer [Port], we need a consumer [Port].
 [vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
@@ -146,7 +146,7 @@ namespace.
 
 [heading What we can do with what we have so far]
 
-[vtk_connect_unforwarded]
+[vtk_connect_forwarded]
 
 [heading Next]
 [link dataflow.introduction.examples.new_layer.component

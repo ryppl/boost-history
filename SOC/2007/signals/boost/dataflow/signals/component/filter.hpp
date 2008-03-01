@@ -9,10 +9,12 @@
 #define SIGNAL_NETWORK_FILTER_HPP
 
 #include <boost/dataflow/signals/component/filter_base.hpp>
+#include <boost/dataflow/utility/forced_sequence.hpp>
 
 #include <boost/fusion/functional/adapter/fused.hpp>
 #include <boost/fusion/include/as_vector.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
+
 
 #define SIGNAL_NETWORK_DEFAULT_OUT unfused
 
@@ -114,9 +116,9 @@ class filter<Derived, OutSignature, InSignatures, unfused, SignalArgs>
     : public filter_base<
         Derived,
         typename signal_from_args<OutSignature, SignalArgs>::type,
-        InSignatures >
+        typename dataflow::utility::forced_sequence<InSignatures>::type >
 {
-    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
+//    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
     BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
     
 public:
@@ -139,6 +141,22 @@ protected:
 	mutable signal_type out;
 }; // class filter
 
+/** \brief Unfused version of the filter class
+*/
+template<typename Derived, typename InSignatures, typename OutSignal, typename SignalArgs>
+class filter<Derived, void, InSignatures, OutSignal, SignalArgs>
+    : public filter_base<
+        Derived,
+        typename signal_from_args<void, SignalArgs>::type,
+        typename dataflow::utility::forced_sequence<InSignatures>::type >
+{
+    BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
+    
+public:
+	filter(const filter &) {}
+	filter(){}
+    const filter &operator = (const filter &) {return *this;}
+}; // class filter
 
 /** \brief Combined version of the filter class
 */
@@ -146,7 +164,7 @@ template<typename Derived, typename OutSignature, typename InSignatures, typenam
 class filter<Derived, OutSignature, InSignatures, combined, SignalArgs>
 : public filter<Derived, OutSignature, InSignatures, unfused, SignalArgs>
 {
-    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
+//    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
     BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
 
 public:
@@ -183,9 +201,9 @@ class filter<Derived, OutSignature, InSignatures, fused, SignalArgs>
 : public filter_base<
     Derived,
     typename detail::fused_signal_type<OutSignature, SignalArgs>::signal_type,
-    InSignatures>
+    typename dataflow::utility::forced_sequence<InSignatures>::type >
 {
-    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
+//    BOOST_MPL_ASSERT(( mpl::is_sequence<InSignatures> ));
     BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
 
 public:

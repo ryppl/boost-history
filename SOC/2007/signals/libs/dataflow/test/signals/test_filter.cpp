@@ -14,7 +14,7 @@ using namespace boost;
 
 //[ test_filter_classes
 
-class DoublerClass : public signals::filter<DoublerClass, void (int), mpl::vector<void(int)> >
+class DoublerClass : public signals::filter<DoublerClass, void(int), void(int)>
 {
 public:
     void operator()(int x) {out(2*x);}
@@ -37,7 +37,7 @@ struct receiver
     int stored;
 };
 
-class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (int), mpl::vector<>, signals::fused>
+class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (int), void(const fusion::vector<int> &), signals::fused>
 {
 public:
     void operator()(const fusion::vector<int> &x)

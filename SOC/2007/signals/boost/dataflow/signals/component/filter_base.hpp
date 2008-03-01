@@ -14,24 +14,50 @@
 
 
 namespace boost {  namespace signals {
+
+namespace detail {
+
+    template<typename Signals, typename InSignatures>
+    struct default_port_map
+    {
+        typedef
+            mpl::map<
+                mpl::pair<dataflow::default_port_selector
+                    <dataflow::args::left, dataflow::signals::connect_mechanism>,
+                    mpl::int_<0> >,
+                mpl::pair<dataflow::default_port_selector
+                    <dataflow::args::right, dataflow::signals::connect_mechanism>,
+                    mpl::int_<1> >
+            > type;
+    };
     
-template<typename Filter, typename Signal, typename OutSignatures>
+    template<typename InSignatures>
+    struct default_port_map<void, InSignatures>
+    {
+        typedef
+            mpl::map<
+                mpl::pair<dataflow::default_port_selector
+                    <dataflow::args::right, dataflow::signals::connect_mechanism>,
+                    mpl::int_<0> >
+            > type;
+    };
+
+}
+
+/// ComponentTraits for a Dataflow.Signals filter.
+/// \param[in] Filter Filter type (the class deriving filter)
+/// \param[in] Signals A boost::signal type or void (will be: a fusion sequence of signals)
+/// \param[in] InSignatures An mpl sequence of input signatures
+template<typename Filter, typename Signals, typename InSignatures>
 struct filter_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
-            Signal &,
+            Signals &,
             dataflow::port_adapter<
                 Filter,
-                dataflow::signals::call_consumer<OutSignatures>,
+                dataflow::signals::call_consumer<InSignatures>,
             dataflow::signals::tag> >,
-        mpl::map<
-            mpl::pair<dataflow::default_port_selector
-                <dataflow::args::left, dataflow::signals::connect_mechanism>,
-                mpl::int_<0> >,
-            mpl::pair<dataflow::default_port_selector
-                <dataflow::args::right, dataflow::signals::connect_mechanism>,
-                mpl::int_<1> >
-        >,
+        typename detail::default_port_map<Signals, InSignatures>::type,
         dataflow::signals::tag>
 {
     template<typename Component>
@@ -43,11 +69,31 @@ struct filter_component_traits
     };
 };
 
-template<typename Filter, typename Signal, typename OutSignatures>
-class filter_base : public dataflow::component<filter_component_traits<Filter, Signal, OutSignatures> >
+template<typename Filter, typename InSignatures>
+struct filter_component_traits<Filter, void, InSignatures>
+    : public dataflow::fusion_component_traits<
+        fusion::vector<
+            dataflow::port_adapter<
+                Filter,
+                dataflow::signals::call_consumer<InSignatures>,
+            dataflow::signals::tag> >,
+        typename detail::default_port_map<void, InSignatures>::type,
+        dataflow::signals::tag>
+{
+    template<typename Component>
+    static typename filter_component_traits::fusion_ports get_ports(Component &component)
+    {
+        return typename filter_component_traits::fusion_ports(
+            component.default_signal(),
+            component);
+    };
+};
+
+template<typename Filter, typename Signals, typename InSignatures>
+class filter_base : public dataflow::component<filter_component_traits<Filter, Signals, InSignatures> >
 {
 public:
-    typedef OutSignatures out_signatures_type;
+    typedef InSignatures in_signatures_type;
 };
 
 } }

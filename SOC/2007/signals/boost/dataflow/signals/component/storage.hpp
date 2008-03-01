@@ -82,7 +82,7 @@ struct storage_component_traits
             typename Storage::signal_type &,
             dataflow::port_adapter<
                 Storage,
-                dataflow::signals::call_consumer<typename Storage::out_signatures_type>,
+                dataflow::signals::call_consumer<typename Storage::in_signatures_type>,
                 dataflow::signals::tag>,
             dataflow::port_adapter<
                 Storage,

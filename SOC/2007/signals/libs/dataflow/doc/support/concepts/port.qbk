@@ -187,7 +187,7 @@ are each other's port complements), or in a one-to-many fashion (a number
 of [Port] types have the same complement port).  An example of the
 latter is [DataflowSignals], where any `signal` of signature `T` has
 a complement port of type `function<T>`, and can therefore model
-[ComplementedPort], but `function<T>` is cannot because there are many `signal`
+[ComplementedPort], but `function<T>` cannot because there are many `signal`
 types to which it can be connected.
 
 The traits of a [ComplementedPort] are captured by the
@@ -233,7 +233,9 @@ The following expressions are used in this document:
         [
             The complement port type of `P`.  If `P` is 
             [BinaryOperable] with another port type `P2`, then `P2` must
-            be `PT::complement_port_type`.
+            be either `PT::complement_port_type`, , or a [KeyedPort]
+            that delegates to `PT::complement_port_type` in a binary operation
+            with `P`.
         ]
     ]
 ]

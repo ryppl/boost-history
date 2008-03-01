@@ -128,7 +128,7 @@ Non-intrusive registration is typically done by providing a specialization of
 the [register_traits] template (either directly, or through the provided
 macros [DATAFLOW_TRAITS] and [DATAFLOW_TRAITS_ENABLE_IF]).  This will
 specialize [traits_of] for all cv-qualified versions of type `E`.
-If cv-qualified versions of type `E` should have different [Traits]s,
+If cv-qualified versions of type `E` should have different [Traits],
 [traits_of] should be specialized directly.
 
 Intrusive registration can be done by providing
@@ -136,7 +136,7 @@ a `E::dataflow_traits` member type, which can be either a [Traits]
 type, or an MPL sequence of [Traits] types. Alternatively,
 the Dataflow library provides a convenience class
 `entity` which you can inherit instead of declaring the member type.  This
-provides the additional benefit of accessing the free functions in the
+provides the additional benefit of being able to access free functions in the
 `boost::dataflow` namespace using ADL.
 
 The below examples illustrate the avaliable registration methods.

@@ -18,13 +18,13 @@ int test_main(int, char* [])
 {
     blueprint::component_t<signals::storage<void(int)>, df::signals::tag > source, sink;
     
-    BOOST_CHECK_EQUAL(source.num_ports(), 2u);
+    BOOST_CHECK_EQUAL(source.num_ports(), 3u);
     BOOST_CHECK(source.get_port(0).traits().category().is<df::ports::producer>());
     BOOST_CHECK(source.get_port(1).traits().category().is<df::ports::consumer>());
     BOOST_CHECK(source.get_port(1).is_vector_port());
-    BOOST_CHECK_EQUAL(source.get_port(1).as<blueprint::vector_port>().num_ports(), 2u);
+    BOOST_CHECK_EQUAL(source.get_port(1).as<blueprint::vector_port>().num_ports(), 4u);
     if(source.get_port(1).is_vector_port() && 
-        source.get_port(1).as<blueprint::vector_port>().num_ports() == 2u)
+        source.get_port(1).as<blueprint::vector_port>().num_ports() == 4u)
     {
         BOOST_CHECK(source.get_port(1).as<blueprint::vector_port>().get_port(0)
             .traits().category().is<df::ports::consumer>());
