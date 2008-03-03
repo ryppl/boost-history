@@ -1,0 +1,5597 @@
+\documentclass[american]{book}
+\usepackage{hyperref}
+\usepackage{refbib}
+\usepackage{pdfsync}
+
+\input{macros}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor name-space name-spaces}
+
+\definecolor{editbackground}{rgb}{.8,.8,.8}
+\newcommand{\einline}[1]{\colorbox{editbackground}{#1}}
+\newcommand{\editorial}[1]{\colorbox{editbackground}{\begin{minipage}{\linewidth
+}#1\end{minipage}}}
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\huge
+\begin{center}
+Proposed Wording for Concepts\\
+(Revision 5)
+\end{center}
+
+\normalsize
+\vspace{0.25in}
+\par\noindent Authors: 
+\begin{tabular}[t]{l}
+Douglas Gregor, Indiana University \\
+Bjarne Stroustrup, Texas A\&M University \\
+Jeremy Siek, University of Colorado at Boulder \\
+James Widman, Gimpel Software
+\end{tabular}\vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2501=08-0011 \vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language C++, Core Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:doug.gregor@gmail.com}{doug.gregor@gmail.com}$>$
+
+\section*{Introduction}
+This document provides proposed wording for concepts. Readers
+unfamiliar with concepts are encouraged to read the complete
+proposal~\cite{GregorStroustrup06:concepts_rev_1}. 
+%
+It is recommended that readers ``tour'' this concepts wording using
+N2399=07-0259, which provides an examples-directed view of the major
+language features involved in concepts, cross-referenced with this
+document.  
+%
+This document
+provides wording for changes to the core language. Changes to the
+standard library are discussed in separate documents:
+
+\begin{itemize}
+\item Core Concepts for the \Cpp{}0x Standard Library~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2502.pdf}{N2502=08-0012}]
+\item Iterator Concepts for the \Cpp{}0x Standard Library~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2500.pdf}{N2500=08-0010}]
+\end{itemize}
+
+\section*{Non-Trivial Changes from N2501}
+The wording in this document reflects one major change from the
+formulation of concepts presented in N2501: the introduction of
+wording for the ``Eliminating Forwarding Functions'' extension
+described in section 4.3 of ``Type-Soundness and Optimization in the
+Concepts Proposal'', posted to the \Cpp{} Extensions reflector on
+February 22, 2008.
+
+\section*{Typographical conventions}
+Within the proposed wording, text that has been added
+\textcolor{addclr}{will be presented in blue} \addedConcepts{and
+underlined when possible}. Text that has been removed will be
+presented \textcolor{remclr}{in red},\removedConcepts{with
+strike-through when possible}. Wording new to this revision will be 
+\addedCC{underlined in green}. Take \emph{that}, angry fruit salad.
+
+\editorial{Purely editorial comments will be written in a separate,
+  shaded box.}
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\rSec0[intro]{General}
+
+\begin{paras}
+\setcounter{section}{2}
+\rSec1[intro.defs]{Definitions}
+\setcounter{Paras}{10}
+\index{signature}%
+\definition{signature}{defns.signature}
+\changedD{the information about a function
+that participates in overload resolution (\mbox{\ref{over.match}}):
+its parameter-type-list (\mbox{\ref{dcl.fct}}) and,
+if the function is a class member,
+the
+\mbox{\textit{cv-}}
+qualifiers (if any) on the function itself and
+the class in which the member function is declared.%
+\remfootnoteD{
+Function signatures do not include return type,
+because that does not participate in overload resolution.
+}
+The signature of a
+function template
+specialization includes the
+types of its template arguments (\mbox{\ref{temp.over.link}}).
+}
+{the name and the parameter-type-list
+(\mbox{\ref{dcl.fct}}) of a function, as well as the class\addedConcepts{,
+  concept, concept map,} or namespace 
+of which it is a member. If a function or function template is a class
+member its signature additionally includes the
+\mbox{\textit{cv}}-qualifiers (if any) and the
+\techterm{ref-qualifier} (if any) on the function or function
+template itself. The signature of a function template additionally
+includes its return type\mbox{\changedConcepts{ and}{,}} its template parameter 
+list\mbox{\addedConcepts{, and its template requirements (if any)}}.
+The signature
+of a function template specialization includes the signature of the
+template of which it is a specialization and its template arguments
+(whether explicitly specified or deduced). \mbox{\enternote}Signatures
+are used as a basis for name mangling and linking.\mbox{\exitnote} }
+\end{paras}
+
+\rSec0[lex]{Lexical conventions}
+\begin{paras}
+\setcounter{section}{10}
+\rSec1[key]{Keywords}
+
+\pnum
+The identifiers shown in Table~\ref{tab:keywords}
+are reserved for use
+as keywords (that is, they are unconditionally treated as keywords in
+phase 7):
+
+% Synchronized with N2135
+\setcounter{table}{2}
+
+% Added axiom, concept, concept_map, late_check, requires
+\begin{floattable}{keywords}{tab:keywords}
+{lllll}
+\topline
+
+\tcode{asm}                     &       \tcode{continue}                &       \tcode{friend}                  &       \tcode{register}                &       \tcode{throw}                   \\
+\tcode{auto}                    &       \tcode{default}                 &       \tcode{goto}                    &       \tcode{reinterpret_cast}        &       \tcode{true}                    \\
+\addedConceptsC{axiom}          &       \tcode{delete}                  &       \tcode{if}                      &       \addedConceptsC{requires}       &       \tcode{try}                     \\
+\tcode{bool}                    &       \tcode{do}                      &       \tcode{inline}                  &       \tcode{return}                  &       \tcode{typedef}                 \\
+\tcode{break}                   &       \tcode{double}                  &       \tcode{int}                     &       \tcode{short}                   &       \tcode{typeid}                  \\
+\tcode{case}                    &       \tcode{dynamic_cast}            &       \addedConceptsC{late_check}     &       \tcode{signed}                  &       \tcode{typename}                \\
+\tcode{catch}                   &       \tcode{else}                    &       \tcode{long}                    &       \tcode{sizeof}                  &       \tcode{union}                   \\
+\tcode{char}                    &       \tcode{enum}                    &       \tcode{mutable}                 &       \tcode{static}                  &       \tcode{unsigned}                \\
+\tcode{char16_t}                &       \tcode{explicit}                &       \tcode{namespace}               &       \tcode{static_assert}           &       \tcode{using}                   \\
+\tcode{char32_t}                &       \tcode{export}                  &       \tcode{new}                     &       \tcode{static_cast}             &       \tcode{virtual}                 \\
+\tcode{class}                   &       \tcode{extern}                  &       \tcode{operator}                &       \tcode{struct}                  &       \tcode{void}                    \\
+\addedConceptsC{concept}        &       \tcode{false}                   &       \tcode{private}                 &       \tcode{switch}                  &       \tcode{volatile}                \\
+\addedConceptsC{concept_map}    &       \tcode{float}                   &       \tcode{protected}               &       \tcode{template}                &       \tcode{wchar_t}                 \\
+\tcode{const}                   &       \tcode{for}                     &       \tcode{public}                  &       \tcode{this}                    &       \tcode{while}                   \\
+\tcode{const_cast}              &                                       &                                       &                                       &                                       \\
+\end{floattable}
+\end{paras}
+
+\rSec0[basic]{Basic concepts}
+\begin{paras}
+
+
+\setcounter{Paras}{2}
+\textcolor{black}{\pnum}
+\index{name}%
+\index{declaration}%
+\index{type}%
+\index{object}%
+\index{storage~class}%
+\index{scope}%
+\index{linkage}%
+\index{region!declarative}%
+An
+\techterm{entity}\ 
+\index{entity}%
+is a value, object, subobject, base class subobject,
+array element, variable,
+function, instance of a function,
+enumerator, type, class member, template,
+namespace, \removedConcepts{or }parameter pack\addedConcepts{,
+  concept, or concept map}. 
+
+\setcounter{Paras}{5}
+\pnum
+Some names denote types, classes, \addedConcepts{concepts,}
+\addedConcepts{concept map names,}
+enumerations, or templates. 
+In general, it is necessary to determine whether or not
+a name denotes one of these entities before parsing the program
+that contains it.
+The process that determines this is called
+\techterm{name lookup}\ 
+(\ref{basic.lookup}).
+\index{lookup!name}%
+
+\setcounter{section}{1}
+\rSec1[basic.def.odr]{One definition rule}
+\pnum
+No translation unit shall contain more than one definition of any
+variable, function, class type, \addedConcepts{concept, concept map,}
+enumeration type or template. 
+
+\setcounter{Paras}{4}
+\pnum
+There can be more than one definition of a class type (clause \ref{class}),
+\addedConcepts{concept (\mbox{\ref{concept}}), concept map (\mbox{\ref{concept.map}}),}
+enumeration type ([dcl.enum]),
+inline function with external linkage ([dcl.fct.spec]),
+class template (clause \ref{temp}), non-static function template (\ref{temp.fct}),
+static data member of a class template ([temp.static]),
+member function
+of a class template
+([temp.mem.func]), or
+template specialization for which some template parameters are not specified
+(\ref{temp.spec}, \ref{temp.class.spec}) in a program
+provided that each definition appears in a different translation unit,
+and provided the definitions satisfy the following requirements.
+Given such an entity named
+\tcode{D}\ 
+defined in more than one translation unit, then
+
+
+\rSec1[basic.scope]{Declarative regions and scopes}
+\rSec2[basic.scope.pdecl]{Point of declaration}
+\setcounter{Paras}{9}
+
+\color{addclr}
+\pnum
+The point of declaration for a concept (\ref{concept}) is
+immediately after the identifier in the \techterm{concept-definition}. The point
+of declaration for a concept map (\ref{concept.map}) is
+immediately after the \techterm{concept-id} in the
+\techterm{concept-map-definition}.
+\color{black}
+
+\noindent\editorial{Add the following new sections to 3.3 [basic.scope] after [basic.scope.class]:}
+
+\color{addclr}
+\setcounter{subsection}{7}
+\rSec2[basic.scope.concept]{Concept scope}
+\pnum
+\index{scope!concept}%
+The following rules describe the scope of names declared in concepts
+and concept maps.
+
+\begin{enumeraten}
+\item %
+The potential scope of a name declared in a concept or concept map
+consists not only of the declarative region
+following the name's point of declaration,
+but also of all associated function bodies
+in that concept or concept map.
+\item %
+A name
+\tcode{N}\ 
+used in a concept or concept map
+\tcode{S}\ 
+shall refer to the same declaration in its context and when re-evaluated in
+the completed scope of
+\tcode{S}.
+No diagnostic is required for a violation of this rule.
+\item %
+If reordering declarations in a concept or concept map yields an
+alternate valid program under (1), the program is ill-formed,
+no diagnostic is required.
+\item %
+A name declared within an associated function definition hides a declaration of the same name
+whose scope extends to or past the end of the associated function's concept or
+concept map.
+\end{enumeraten}
+
+\color{addclr}
+\pnum
+The name of a concept member shall only be used as follows:
+
+\begin{itemize}
+\item %
+in the scope of its concept (as described above)
+or a concept refining (\ref{concept.refine}) its concept,
+\item %
+after the
+\tcode{::}\ 
+scope resolution operator (\ref{expr.prim}) applied to the name of a
+concept map or template type parameter (\ref{temp.param}).
+\end{itemize}
+
+\rSec2[basic.scope.req]{Requirements scope}
+\pnum
+In a constrained template (\mbox{\ref{temp.constrained}}),
+the names of all associated functions inside the concepts named 
+by the concept requirements in the template's requirements
+are visible in the scope of the template
+declaration. 
+
+\enterexample\
+\begin{codeblock}
+concept Integral<typename T> {
+  T::(const T&);
+  T operator-(T);
+}
+
+concept RAIterator<typename Iter> {
+  Integral difference_type;
+  difference_type operator-(Iter, Iter);
+}
+
+template<RAIterator Iter>
+RAIterator<Iter>::difference_type distance(Iter first, Iter last) {
+  return -(first - last); // okay: name lookup for operator- finds RAIterator<Iter>::operator- 
+                          // and Integral<RAIterator<Iter>::difference_type>::operator-
+                          // overload resolution picks the appropriate operator for both uses of -
+}
+\end{codeblock}
+\exitexample\
+
+\color{black}
+
+\rSec2[basic.scope.hiding]{Name hiding}
+\index{hiding;~see~name~hiding}%
+
+\pnum
+\index{name~hiding}%
+\index{hiding;~see~name~hiding}%
+A name can be hidden by an explicit declaration of that same name
+in a nested declarative region\addedConcepts{, refining concept
+  (\mbox{\ref{concept.refine}}),} or derived class
+(\ref{class.member.lookup}).
+
+\editorial{Add the following new paragraph:}
+\setcounter{Paras}{5}
+
+\pnum 
+\addedConcepts{In an associated function definition, the declaration
+  of a local name hides the declaration of a member of the concept or
+  concept map with the same name; see \mbox{\ref{basic.scope.concept}}.}
+
+\rSec1[basic.lookup]{Name lookup}
+\index{lookup!name}%
+\index{summary!scope rules}%
+
+\pnum
+The name lookup rules apply uniformly to all names (including
+\techterm{typedef-names}\ 
+([dcl.typedef]),
+\techterm{namespace-names}\ 
+([basic.namespace])\addedConcepts{, \mbox{\techterm{concept-names}}
+  (\mbox{\ref{concept}}),} 
+\addedConcepts{\mbox{\techterm{concept-map-names}} (\mbox{\ref{concept.map}}),}
+and
+\techterm{class-names}\ 
+([class.name]) wherever the grammar allows such names in the context
+discussed by a particular rule.
+Name lookup associates the use of a name \textcolor{black}{}with a declaration
+([basic.def]) of that name.
+Name lookup shall find an unambiguous declaration for the name
+(see [class.member.lookup]).
+Name lookup may associate more than one declaration with a name if it finds
+the name to be a function name;
+the declarations are said to form a set of overloaded functions
+(\ref{over.load}).
+Overload resolution (\ref{over.match}) takes place after name lookup has
+succeeded.
+The access rules (clause \ref{class.access}) are considered only once
+name 
+\textcolor{black}{lookup} and
+function overload resolution (if applicable) have succeeded.
+Only after name lookup, function overload resolution (if applicable) and
+access checking have succeeded are the attributes introduced by the name's
+declaration used further in expression processing (clause \ref{expr}).
+
+\rSec2[basic.lookup.unqual]{Unqualified name lookup}
+\editorial{Add the following new paragraphs:}
+\setcounter{Paras}{15}
+
+\color{addclr}
+\pnum
+A name used in the definition of a concept or concept map \tcode{X} 
+outside of an associated function body shall be declared in one of the following
+ways:
+
+\begin{itemize}
+\item %
+before its use in the concept or concept map
+\tcode{X} or be a member of a refined concept of
+\tcode{X}, or
+\item %
+if
+\tcode{X}\ 
+is a member of namespace
+\tcode{N},
+before the definition of concept or concept map
+\tcode{X}\ 
+in namespace
+\tcode{N}\ 
+or in one of
+\tcode{N}'s
+enclosing namespaces.
+\end{itemize}
+\enterexample\
+\begin{codeblock}
+concept Callable<class F, class T1> {
+  result_type operator() (F&, T1)
+  typename result_type; // error result_type used before declared
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+A name used in the definition of
+an associated function
+(\ref{concept.fct})
+of a concept or concept map
+\tcode{X}\ 
+following the associated function's
+\techterm{declarator-id} %
+shall be declared in one of the following ways:
+
+\begin{itemize}
+\item %
+before its use in the block in which it is used or in an
+enclosing block ([stmt.block]), or
+\item %
+shall be a member of concept or concept map
+\tcode{X}\ 
+or be a member of a refined concept of
+\tcode{X}, or
+\item %
+if
+\tcode{X}\ 
+is a member of namespace
+\tcode{N},
+before the associated function definition,
+in namespace
+\tcode{N}\ 
+or in one of
+\tcode{N} 's
+enclosing namespaces.
+\end{itemize}
+\color{black}
+
+\setcounter{subsection}{2}
+\rSec2[basic.lookup.qual]{Qualified name lookup}
+
+\pnum
+\index{name!qualified}%
+\index{qualification!explicit}%
+The name of a class\addedConcepts{, concept map (but not concept),} or
+namespace member 
+or enumerator can be referred to after the
+\tcode{::}\ 
+scope resolution operator (\ref{expr.prim}) applied to a
+\techterm{nested-name-specifier}\ 
+that nominates its class\addedConcepts{, concept map,} namespace, or
+enumeration.
+During the lookup for a name preceding the
+\tcode{::}\ 
+scope resolution operator,
+object, function, and enumerator names are ignored.
+If the name found does not designate a namespace\addedConcepts{, concept map, }
+or a class, enumeration, or dependent type, the program is ill-formed.
+
+
+\editorial{Add the following paragraph to Qualified name lookup [basic.lookup.qual]}
+
+\setcounter{Paras}{5}
+\color{addclr}
+\pnum
+In a constrained template (\ref{temp.constrained}), a name prefixed by
+a \emph{nested-name-specifier} that nominates a template type
+parameter \tcode{T} is looked up in each concept named by a
+concept requirement (\ref{temp.req}) in the template requirements
+whose \addedConcepts{template} \textcolor{addclr}{}argument list contains \tcode{T}. That name
+shall refer to one or more associated types (names of associated
+functions are ignored) that are all equivalent (\ref{temp.type}). 
+
+\enterexample\
+\begin{codeblock}
+concept C<typename T> {
+  typename assoc_type;
+}
+
+template<typename T, typename U> requires C<T> && C<U>
+  T::assoc_type     // okay: refers to C<T>::assoc_type
+  f();
+\end{codeblock}
+\textcolor{addclr}{\exitexample}
+
+If qualified name lookup for associated types does not
+find any associated type names, qualified name lookup
+(\ref{basic.lookup.qual}) can still find the name within the
+archetype (\ref{temp.archetype}) of \tcode{T}.
+
+\color{black}
+
+\editorial{Add the following subsection to Qualified name lookup [basic.lookup.qual]}
+
+\color{addclr}
+\setcounter{subsubsection}{2}
+\rSec3[concept.qual]{Concept map members}
+
+\pnum
+If the
+\techterm{nested-name-specifier}\ 
+of a
+\techterm{qualified-id}\ 
+nominates a concept map (not a concept),
+the name specified after the
+\techterm{nested-name-specifier}\ 
+is looked up in the scope of the concept map (\ref{basic.scope.concept}) or
+any of the concept maps for concepts its concept refines
+(\ref{concept.member.lookup}).
+The name shall represent a member of that concept map (which may be
+the candidate set (\mbox{\ref{temp.constrained.set}}) corresponding to an
+associated function).
+\enternote\ 
+a concept map member can be referred to using a
+\techterm{qualified-id}\ 
+at any point in its potential scope (\ref{basic.scope.concept}).
+\enterexample\
+\begin{codeblock}
+concept Callable1<typename F, typename T1> {
+  typename result_type;
+  result_type operator()(F&, T1);
+}
+
+template<typename F, typename T1>
+requires Callable1<F, T1>
+Callable1<F, T1>::result_type
+forward(F& f, const T1& t1) {
+  return f(t1);
+}
+\end{codeblock}
+\exitexample\
+\exitnote\ 
+
+\pnum
+\addedConcepts{A concept map member name hidden by a name in a nested declarative region
+can still be found
+if qualified by the name of its concept map followed by the
+\mbox{\tcode{::}}
+operator.}
+\color{black}
+\end{paras}
+
+\rSec1[basic.link]{Program and linkage}
+\begin{paras}
+\setcounter{Paras}{4}
+\pnum
+In addition, a member function, static data member, a named class or
+enumeration of class scope, or an unnamed class or enumeration defined
+in a class-scope typedef declaration such that the class or enumeration
+has the typedef name for linkage purposes (\ref{dcl.typedef}), has external
+linkage if the name of the class has external linkage.
+\addedConcepts{An associated function definition
+  (\mbox{\ref{concept.map.fct}}) has external linkage.}
+\end{paras}
+
+\setcounter{section}{8}
+\rSec1[basic.types]{Types}
+\begin{paras}
+\pnum
+\enternote\ 
+\ref{basic.types} and the subclauses thereof
+impose requirements on implementations regarding the representation
+of types.
+There are two kinds of types: fundamental types and compound types.
+Types describe objects (\ref{intro.object}),
+references (\ref{dcl.ref}),
+or functions (\ref{dcl.fct}).
+\addedConcepts{In a constrained context (\mbox{\ref{temp.constrained}}),
+  type archetypes can behave like different kinds of types, e.g.,
+  object types, scalar types, literal types, etc.}
+\exitnote\ 
+
+\end{paras}
+
+\setcounter{chapter}{4}
+\rSec0[expr]{Expressions}
+\begin{paras}
+
+\rSec1[expr.prim]{Primary expressions}
+
+\setcounter{Paras}{6}
+\pnum
+\index{identifier}%
+An
+\techterm{identifier}\ 
+is an
+\techterm{id-expression}\ 
+provided it has been
+suitably declared (clause \ref{dcl.dcl}).
+\enternote\ 
+for
+\techterm{operator-function-id}s,
+see \ref{over.oper};
+for
+\techterm{conversion-function-id}s,
+see \ref{class.conv.fct};
+for
+\techterm{template-id}s,
+see \ref{temp.names}.
+A
+\techterm{class-name}\ 
+prefixed by
+\tcode{$\sim$}
+denotes a destructor; see \ref{class.dtor}.
+Within the definition of a non-static
+member function, an
+\techterm{identifier}\ 
+that names a non-static member is transformed to a class member access
+expression (\ref{class.mfct.non-static}).
+\exitnote\ 
+The type of the expression is the type of the
+\techterm{identifier}.
+The result is the entity denoted by the identifier.
+The result is an lvalue if the entity is a function, variable, or data member.
+
+\begin{bnf}
+\index{operator!scope~resolution}%
+\index{::@\tcode{::}|see{scope~resolution~operator}}%
+\index{qualified-id@\techterm{qualified-id}}%
+qualified-id:\br
+    \terminal{::}\opt\ nested-name-specifier \terminal{template}\opt\ unqualified-id\br
+    \terminal{::}\ identifier\br
+    \terminal{::}\ operator-function-id\br
+    \terminal{::}\ template-id\br
+\end{bnf}
+
+\begin{bnf}
+\index{operator!scope~resolution}%
+\index{name~hiding}%
+\index{nested-name-specifier@\techterm{nested-name-specifier}}%
+nested-name-specifier:\br
+    type-name \terminal{::}\br
+    namespace-name \terminal{::}\br
+    nested-name-specifier identifier \terminal{::}\br
+    nested-name-specifier \terminal{template}\opt\ template-id \terminal{::}\br
+    \textcolor{addclr}{nested-name-specifier\opt\ concept-id \terminal{::}}
+\end{bnf}
+\end{paras}
+
+\rSec1[expr.post]{Postfix expressions}
+\setcounter{subsection}{1}
+\rSec2[expr.call]{Function call}
+
+\rSec1[expr.unary]{Unary expressions}
+
+\rSec2[expr.unary.op]{Unary operators}
+\setcounter{Paras}{1}
+\pnum
+\index{name!address~of cv-qualified}%
+\index{expression!pointer~to~member constant}%
+The result of the unary
+\tcode{\&}
+operator is a pointer to its operand.
+The operand shall be an lvalue or a
+\techterm{qualified-id}.
+In the first case, if the type of the expression is ``\tcode{T},''
+the type of the result is ``pointer to
+\tcode{T}.''
+In particular, the address of an object of type ``\textit{cv}\ \tcode{T}''
+is ``pointer to \textit{cv}\ \tcode{T},'' with the same cv-qualifiers.
+% UK issue 471
+% .E[
+% the address of an object of type
+% ``\tcode{const int}''
+% has type
+% ``pointer to \tcodeconst int}.''
+% .E] e
+\index{member!type~of @\tcode{static}}%
+For a
+\techterm{qualified-id},
+if the member is a static member of type ``\tcode{T}'',
+the type of the result is plain ``pointer to
+\tcode{T}.''
+If the member is a non-static member of class
+\tcode{C}
+of type
+\tcode{T},
+the type of the result is
+``pointer to member of \tcode{class C}\ of type
+\tcode{T}.''
+\removedConcepts{The address of a member of a concept map
+(\mbox{\ref{concept.map}}) shall not be taken, either implicitly or
+explicitly.}
+\enterexample\ 
+
+\begin{codeblock}
+struct A { int i; };
+struct B : A { };
+... &B::i ...                 // has type \tcode{int A::*}
+\end{codeblock}
+\exitexample\ 
+\enternote\ 
+a pointer to member formed from a
+\tcode{mutable}
+non-static data member (\ref{dcl.stc}) does not reflect the
+\tcode{mutable}
+specifier associated with the non-static data member.
+\exitnote\ 
+
+\setcounter{section}{18}
+\rSec1[expr.const]{Constant expressions}
+
+\setcounter{Paras}{2}
+\pnum
+A constant expression is an \techterm{integral constant expression} if
+it is of integral or enumeration type\addedConcepts{, or, in a
+  constrained template (\mbox{\ref{temp.constrained}}), if it is of
+  a type \mbox{\techterm{cv}} \mbox{\tcode{T}} that is an archetype
+  and if the concept requirement
+  \mbox{\tcode{IntegralConstantExpressionType<T>}} (\mbox{\ref{concept.support}})
+  is part of the template's requirements.}  \enternote\ such
+expressions may be used as array bounds (8.3.4, 5.3.4), as case
+expressions (6.4.2), as bit-field lengths (9.6), as enumerator
+initializers (7.2), as static member initializers (9.4.2), and as
+integral or enumeration non-type template arguments (14.3). \exitnote\
+
+
+\rSec0[stmt.stmt]{Statements}
+
+\begin{paras}
+
+\pnum
+\index{statement}%
+Except as indicated, statements are executed in sequence.
+\index{sequence!statement}%
+
+\begin{bnf}
+\index{statement@\techterm{statement}}%
+statement:\br
+    labeled-statement\br
+    expression-statement\br
+    compound-statement\br
+    selection-statement\br
+    iteration-statement\br
+    jump-statement\br
+    declaration-statement\br
+    try-block\br
+    \addedConcepts{late-check-block}
+\end{bnf}
+
+\color{addclr}
+\setcounter{section}{8}
+\rSec1[stmt.late]{Late-checked block}
+
+\pnum
+\addedConcepts{In a constrained context 
+  (\mbox{\ref{temp.constrained}}), a late-checked block treats the
+  enclosed statements as if they were not in a constrained
+  context. Outside of a constrained context, the late-checked block
+  has no effect. \mbox{\enternote} in a late-checked block, template
+  parameters do not behave as if they were replaced with their
+  corresponding archetypes. Thus, template parameters imply the
+  existence of dependent types, type-dependent expressions, and
+  dependent names as in an unconstrained template. \mbox{\exitnote}} 
+  
+\begin{bnf}
+late-check-block:\br
+    \terminal{late_check} compound-statement
+\end{bnf}
+
+\pnum
+\enterexample\
+\begin{codeblock}
+concept Semigroup<typename T> {
+  T::T(const T&);
+  T operator+(T, T);
+}
+
+concept_map Semigroup<int> {
+  int operator+(int x, int y) { return x * y; }
+}
+
+template<Semigroup T> 
+T add(T x, T y) { 
+  T r = x + y; // uses Semigroup<T>::operator+
+  late_check {
+    r = x + y; // uses operator+ found at instantiation time (not considering Semigroup<T>::operator+)
+  }
+  return r;
+}
+\end{codeblock}
+\exitexample\
+\color{black}
+
+\end{paras}
+
+\rSec0[dcl.dcl]{Declarations}
+
+\begin{paras}
+
+\pnum
+\index{declaration}%
+Declarations specify how names are to be interpreted.
+Declarations have the form
+
+\begin{bnf}
+\index{declaration@\techterm{declaration}}%
+declaration-seq:\br
+        declaration\br
+        declaration-seq declaration
+\end{bnf}
+
+\begin{bnf}
+declaration:\br
+        block-declaration\br
+        function-definition\br
+        template-declaration\br
+        explicit-instantiation\br
+        explicit-specialization\br
+        linkage-specification\br
+        namespace-definition\br
+        \addedConcepts{concept-definition}\br
+        \addedConcepts{concept-map-definition}
+\end{bnf}
+
+\begin{bnf}
+block-declaration:\br
+        simple-declaration\br
+        asm-definition\br
+        namespace-alias-definition\br
+        using-declaration\br
+        using-directive\br
+        static_assert-declaration\br
+        alias-declaration
+\end{bnf}
+
+\begin{bnf}
+alias-declaration:\br
+        \terminal{using} identifier = type-id
+
+simple-declaration:\br
+        decl-specifier-seq\opt\ init-declarator-list\opt\ \terminal{;}
+
+\index{static_assert@\techterm{static_assert}}%
+static_assert-declaration:\br
+  \terminal{static_assert} \terminal{(} constant-expression \terminal{,} string-literal \terminal{)} \terminal{;}
+\end{bnf}
+
+\enternote\ 
+\techterm{asm-definition}s
+are described in \ref{dcl.asm}, and
+\techterm{linkage-specification}s
+are described in \ref{dcl.link}.
+\techterm{Function-definition}s
+are described in \ref{dcl.fct.def} and
+\techterm{template-declaration}s
+are described in clause \ref{temp}.
+\techterm{Namespace-definition}s
+are described in \ref{namespace.def},
+\textcolor{addclr}{\techterm{concept-definition}s
+are described in \ref{concept.def},}
+\textcolor{addclr}{\techterm{concept-map-definition}s
+are described in \ref{concept.map}},
+\techterm{using-declaration}s
+are described in \ref{namespace.udecl} and
+\techterm{using-directive}s
+are described in \ref{namespace.udir}.
+\exitnote\ 
+The
+\techterm{simple-declaration}\ 
+
+\begin{ncsimplebnf}
+decl-specifier-seq\opt\ init-declarator-list\opt\ \terminal{;}
+\end{ncsimplebnf}
+
+\textcolor{black}{}is divided into two parts:
+\techterm{decl-specifier}s,
+the components of a
+\techterm{decl-specifier-seq},
+are described in \ref{dcl.spec} and
+\techterm{declarator}s,
+the components of an
+\techterm{init-declarator-list},
+are described in clause \ref{dcl.decl}.
+
+\pnum
+A declaration occurs in a scope (\ref{basic.scope});
+the scope rules are summarized in \ref{basic.lookup}.
+A declaration that declares a function or defines a class,
+\addedConcepts{concept, concept map,} namespace, template, 
+or function also has one or more scopes nested within it.
+These nested \textcolor{black}{scopes}, in
+turn, can have declarations nested within them.
+Unless otherwise stated,
+utterances in clause \ref{dcl.dcl} about components in, of, or contained by a
+declaration or subcomponent thereof refer only to those components of the
+declaration that are
+\textit{not}\ 
+nested within scopes nested within the declaration.
+
+\setcounter{section}{3}
+\setcounter{subsection}{2}
+\rSec2[namespace.udecl]{The \tcode{using} declaration}
+
+\pnum
+A \emph{using-declaration} introduces a name into the declarative
+region in which the \emph{using-declaration} appears. That name is a
+synonym for the name of some entity declared elsewhere.
+
+\begin{bnf}
+using-declaration:\br
+      \terminal{using} \terminal{typename}\opt \terminal{::}\opt\ nested-name-specifier unqualified-id \terminal{;}\br
+      \terminal{using} \terminal{::} unqualified-id \terminal{;}\br
+      \addedConcepts{\mbox{\terminal{using} \terminal{::}\opt\ nested-name-specifier\opt\  \terminal{concept_map} \terminal{::}\opt\ nested-name-specifier\opt\ concept-id \terminal{;}}}\br
+      \addedConcepts{\mbox{\terminal{using} \terminal{::}\opt\ nested-name-specifier\opt\  \terminal{concept_map} \terminal{::}\opt\ nested-name-specifier\opt\ concept-name\opt\ \terminal{;}}}\br
+      \addedConcepts{\mbox{\terminal{using} \terminal{::}\opt\ nested-name-specifier\opt\  concept-name \terminal{;}}}
+\end{bnf}
+
+\setcounter{Paras}{20}
+
+\pnum 
+\addedConcepts{A \mbox{\techterm{using-declaration}} for a concept map
+  is an alias to 
+the concept map that matches (\mbox{\ref{temp.concept.map}}) the
+concept instance corresponding to the
+\mbox{\techterm{concept-id}} from the specified
+  namespace.
+\mbox{\enterexample}}
+%
+\color{addclr}
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { }
+}
+namespace N2 {
+  concept_map N1::C<int> { } // A
+  template<typename T> concept_map N1::C<T*> { } // B
+}
+namespace N3 {
+  using N2::concept_map N1::C<int>;  // aliases A
+  using N2::concept_map N1::C<int*>; // aliases B, instantiated with T=int
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+
+\pnum 
+\addedConcepts{A \mbox{\emph{using-declaration}} for a concept map
+  that specifies a 
+\mbox{\techterm{concept-name}} (and not a
+\mbox{\techterm{concept-id}}) brings all 
+of the concept maps and concept map templates from the specified
+namespace for the given concept into the scope in which the
+\mbox{\techterm{using-declaration}} appears.
+\mbox{\enterexample}}
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { }
+  template<C T> void f(T) { }
+}
+namespace N2 {
+  concept_map N1::C<int> { } // A
+  template<typename T> concept_map N1::C<T*> { } // B
+}
+namespace N3 {
+  using N2::concept_map N1::C; // aliases A and B
+  @\textcolor{addclr}{}@void g() {
+    f(1); // uses concept map N1::C<int> from A
+    f(new int); // uses concept map N1::C<int*> instantiated from B with T=int
+  @\textcolor{addclr}{\}}@
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum 
+\addedConcepts{If no concept is specified in the concept map using declaration,
+all concept maps from the specified namespace are brought into scope.
+\mbox{\enterexample}}
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { }
+  template<C T> void f(T) { }
+}
+namespace N2 {
+  concept D<typename T> { }
+}
+namespace N3 {
+  concept_map N1::C<int> { } // A
+  template<typename T> concept_map N1::C<T*> { } // B
+  concept_map N2::D<int> { } // C
+}
+namespace N4 {
+  using N3::concept_map; // aliases A, B, and C
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum 
+\addedConcepts{If the second \mbox{\emph{nested-name-specifier}} is
+  specified but no 
+concept is specified, then all concept maps in the namespace specified
+by the first \mbox{\emph{nested-name-specifier}} for all concepts in the
+namespace specified by the second \mbox{\emph{nested-name-specifier}} are
+brought into scope.}
+
+\addedConcepts{\mbox{\enternote}
+a \mbox{\emph{using-directive}} for a namespace brings the concept
+maps of that namespace into scope, just like other entities.
+\mbox{\exitnote}
+\mbox{\enterexample}}
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { }
+}
+namespace N2 {
+  concept_map N1::C<int> { }
+}
+namespace N3 {
+  using namespace N2;
+
+  template<N1::C T> void foo(T) { };
+
+  void bar() {
+    foo(17); // ok, finds the concept map from N2
+  }
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\color{black}
+\end{paras}
+
+\setcounter{chapter}{7}
+\rSec0[dcl.decl]{Declarators}
+\setcounter{section}{2}
+\rSec1[dcl.meaning]{Meaning of declarators}
+\begin{paras}
+
+\setcounter{Paras}{6}
+\pnum
+\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), 
+  a type archetype \mbox{\techterm{cv} \tcode{T}} shall only
+  be used as the type of a variable if the template has a concept
+  requirement \mbox{\tcode{VariableType<T>}}.}
+
+\rSec2[dcl.ptr]{Pointers}
+\setcounter{Paras}{4}
+\pnum
+\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), 
+  a type archetype \mbox{\techterm{cv} \tcode{T}} shall only
+  be used to form a type ``pointer to \mbox{\techterm{cv} \tcode{T}}''
+    if the template has a concept requirement 
+  \mbox{\tcode{PointeeType<T>}}.}
+
+\rSec2[dcl.ref]{References}
+\setcounter{Paras}{5}
+\pnum
+\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
+  type archetype \mbox{\techterm{cv} \tcode{T}} shall only be
+  used to form a type ``reference to \mbox{\techterm{cv} \tcode{T}}''
+  if the 
+  template has a concept requirement \mbox{\tcode{ReferentType<T>}}.}
+
+\rSec2[dcl.mptr]{Pointers to members}
+\setcounter{Paras}{2}
+\pnum
+A pointer to member shall not point to a static member
+of a class (\ref{class.static}),
+a member with reference type,
+or
+``\textit{cv}\
+\tcode{void}.''
+\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
+  pointer to member shall only point to a type archetype \mbox{\techterm{cv}
+    \tcode{T}} if the template has a concept
+  requirement \mbox{\tcode{ReferentType<T>}}.}
+% San Jose motion \#4
+\enternote\ 
+see also \ref{expr.unary} and \ref{expr.mptr.oper}.
+The type ``pointer to member'' is distinct from the type ``pointer'',
+that is, a pointer to member is declared only by the pointer to member
+declarator syntax, and never by the pointer declarator syntax.
+There is no ``reference-to-member'' type in \Cpp.
+\exitnote\ 
+
+\rSec2[dcl.array]{Arrays}
+\setcounter{Paras}{1}
+\pnum
+An array can be constructed from one of the fundamental types
+(except
+\tcode{void}),
+from a pointer,
+from a pointer to member, from a class,
+from an enumeration type,
+or from another array.
+\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), an
+  array shall only be constructed from a type archetype \mbox{\techterm{cv}
+    \tcode{T}} if the template has a concept
+  requirement \mbox{\tcode{ObjectType<T>}}.}
+
+\rSec2[dcl.fct]{Functions}
+
+\setcounter{Paras}{5}
+\pnum
+If the type of a parameter includes a type of the form
+``pointer to array of unknown bound of \tcode{T}'' or
+``reference to array of unknown bound of \tcode{T},''
+the program is ill-formed.%
+\footnote{
+This excludes parameters of type
+``\nonterminal{ptr-arr-seq}\ \tcode{T2}'' where \tcode{T2}\ is
+``pointer to array of unknown bound of \tcode{T}'' and where
+\nonterminal{ptr-arr-seq}\ means any sequence of ``pointer to'' and
+``array of'' derived declarator types.
+This exclusion applies to the parameters of the function,
+and if a parameter is a pointer to function
+or pointer to member function then to its
+parameters also, etc.
+}
+\index{function~return~type|see{return~type}}%
+\index{return~type}%
+Functions shall not have a return type of type array or function,
+although they may have a return type of type pointer or reference to such things.
+There shall be no arrays of functions, although there can be arrays of pointers
+to functions.
+\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
+  type archetype \mbox{\techterm{cv}} \mbox{\tcode{T}} shall
+  only be used as the return type of a function type if the template
+  has a concept requirement \mbox{\tcode{Returnable<T>}}.}
+Types shall not be defined in return or parameter types.
+The type of a parameter or the return type for a function
+definition shall not be an incomplete class type (possibly
+cv-qualified) unless the function definition is nested
+within the
+\techterm{member-specification}\ 
+for that class (including definitions in nested classes
+defined within the class).
+\end{paras}
+
+\setcounter{chapter}{8}
+\rSec0[class]{Classes}
+\begin{paras}
+\setcounter{section}{1}
+\rSec1[class.mem]{Class members}
+
+\index{member|seealso{base~class~member}}%
+\index{class~member|see{also~member}}%
+\index{data~member|see{member}}%
+\index{declaration!member}%
+
+\begin{bnf}
+\index{member-specification@\techterm{member-specification}}%
+member-specification:\br
+        member-declaration member-specification\opt\br
+        access-specifier \terminal{:}\ member-specification\opt
+\end{bnf}
+
+\begin{bnf}
+\index{member-declaration@\techterm{member-declaration}}%
+\index{declaration!class member}%
+member-declaration:\br
+        \addedConcepts{member-requirement\mbox{\opt}} decl-specifier-seq\opt\ member-declarator-list\opt\ \terminal{;}\br
+        \addedConcepts{\mbox{member-requirement\opt}} function-definition \terminal{;\opt}\br
+        \terminal{::\opt}\ nested-name-specifier \terminal{template\opt}\ unqualified-id \terminal{;}\br
+        using-declaration\br
+        static_assert-declaration\br
+        template-declaration\br
+\end{bnf}
+
+\begin{bnf}
+\index{member-requirement@\techterm{member-requirement}}%
+\addedConcepts{member-requirement:}\br
+        \addedConcepts{requires-clause}
+\end{bnf}
+
+\begin{bnf}
+member-declarator-list:\br
+        member-declarator\br
+        member-declarator-list \terminal{,}\ member-declarator
+\end{bnf}
+
+\begin{bnf}
+\index{member-declarator@\techterm{member-declarator}}%
+member-declarator:\br
+        declarator pure-specifier\opt\br
+        declarator constant-initializer\opt\br
+        identifier\opt\ \terminal{:}\ constant-expression
+\end{bnf}
+
+\begin{bnf}
+\index{pure~specifier}%
+\index{pure-specifier@\techterm{pure-specifier}}%
+pure-specifier:\br
+        \terminal{= 0}
+\end{bnf}
+
+\begin{bnf}
+\index{initializer!constant}%
+\index{constant-initializer@\techterm{constant-initializer}}%
+constant-initializer:\br
+        \terminal{=}\ constant-expression
+\end{bnf}
+
+\noindent\editorial{Add the following new paragraphs to 9 [class]}
+\setcounter{Paras}{18}
+\pnum
+\addedConcepts{A non-template \mbox{\techterm{member-declaration}}
+  that has a 
+\mbox{\techterm{member-requirement}} (\mbox{\ref{temp.req}}) is a
+\mbox{\techterm{constrained member}} and shall only occur in a class
+template (\mbox{\ref{temp.class}}) or nested class thereof. A
+constrained member shall be a member function. A constrained member is
+treated as a constrained template (\mbox{\ref{temp.constrained}}).}
+\end{paras}
+
+\setcounter{chapter}{11}
+\rSec0[special]{Special member functions}
+\begin{paras}
+
+\rSec1[class.ctor]{Constructors}
+\setcounter{Paras}{4}
+
+\pnum
+\index{constructor!inheritance~of}%
+\index{default~constructor}%
+\index{constructor!non-trivial}%
+A
+\techterm{default}\ 
+constructor for a class
+\tcode{X}
+is a constructor of class
+\tcode{X}
+that can be called without an argument.
+\index{implicitly-declared~default~constructor}%
+If there is no user-declared constructor for class
+\tcode{X},
+a default constructor is implicitly declared.
+An implicitly-declared default constructor is an
+\tcode{inline}
+\tcode{public}
+member of its class.
+A default constructor is
+\techterm{trivial}\ 
+if it is implicitly-declared and if:
+
+\begin{itemize}
+\item
+its class has no virtual functions (\ref{class.virtual}) and no virtual base
+classes (\ref{class.mi}), and
+\item
+all the direct base classes of its class have trivial default constructors, and
+\item
+for all the non-static data members of its class that are of class
+type (or array thereof), each such class has a trivial default constructor.
+\end{itemize}
+\addedConcepts{An implicitly-declared default constructor for class
+  \mbox{\tcode{X}} is deleted if:}
+\begin{itemize}
+\additemConcepts{any non-static data member is of reference type,}
+\additemConcepts{any non-static data member of const-qualified type (or array
+thereof) does not have a user-provided default constructor; or}
+\additemConcepts{any non-static data member or direct or virtual base class has
+class type \mbox{\tcode{M}} (or array thereof) and \mbox{\tcode{M}}
+has no default constructor, or if overload resolution
+(\mbox{\ref{over.match}}) as applied to \mbox{\tcode{M}}'s default
+constructor, results in an ambiguity or a function that is deleted or
+inaccessible from the implicitly-declared default constructor.} 
+\end{itemize}
+
+\setcounter{Paras}{6}
+\pnum
+A non-user-provided default constructor for a class is
+\techterm{implicitly}\ 
+\techterm{defined}\ 
+when it is used (\ref{basic.def.odr})
+to create an object of its class type (\ref{intro.object}).
+The implicitly-defined or explicitly-defaulted default constructor
+performs the set of
+initializations of the class that would be performed by a
+user-written default constructor for that class with an empty
+\techterm{mem-initializer-list}\ 
+(\ref{class.base.init}) and an empty function
+body.
+\addedConcepts{If the implicitly-defined copy constructor
+is explicitly defaulted, but the corresponding implicit declaration
+would have been deleted, the program is ill-formed.}
+If that 
+user-written default constructor would satisfy the requirements of a
+constexpr constructor (\ref{decl.constexpr}), the implicitly-defined  
+default constructor is constexpr. 
+Before the non-user-provided default constructor for a class is
+implicitly defined,
+all the non-user-provided default constructors for its base classes and
+its non-static data members shall have been implicitly defined.
+\enternote\ 
+an implicitly-declared default constructor has an
+\techterm{exception-specification}~(\ref{except.spec}).
+An explicitly-defaulted definition has no implicit
+\techterm{exception-specification}.
+\exitnote\ 
+
+\setcounter{section}{2}
+\rSec1[class.conv]{Conversions}
+\setcounter{subsection}{1}
+\rSec2[class.conv.fct]{Conversion functions}
+\pnum
+\index{fundamental~type~conversion|see{conversion, user-defined conversion}}%
+\index{conversion!user-defined}%
+\index{conversion operator|see{conversion~function}}%
+\index{function!conversion}%
+A member function of a class
+\tcode{X}
+\addedConcepts{having no parameters}
+\addedConcepts{or an associated function of a concept whose sole
+  parameter is of type \mbox{\tcode{X}}, and}
+with a name of the form
+
+% San Jose, Motion 35:\br
+\begin{bnf}
+\index{conversion-function-id@\techterm{conversion-function-id}}%
+conversion-function-id:\br
+	\terminal{operator}\ conversion-type-id
+\end{bnf}
+
+\begin{bnf}
+conversion-type-id:\br
+	type-specifier-seq conversion-declarator\opt
+\end{bnf}
+
+\begin{bnf}
+conversion-declarator:\br
+	ptr-operator conversion-declarator\opt
+\end{bnf}
+
+specifies a conversion from
+\tcode{X}
+to the type specified by the
+\techterm{conversion-type-id}.
+Such \removedConcepts{member} functions are called conversion functions.
+Classes, enumerations, and
+\techterm{typedef-name}s
+shall not be declared in the
+\techterm{type-specifier-seq}.
+\changedConcepts{Neither parameter types nor}{No} return type can be specified.
+\index{conversion!type~of}%
+The type of a conversion function (\ref{dcl.fct}) is
+``function taking no parameter \addedConcepts{(if the conversion
+  function is a member function) or a parameter of type
+  \mbox{\tcode{X}} (if the conversion function is an associated
+  function)} returning
+\techterm{conversion-type-id}.''
+A conversion function is never used to convert a (possibly cv-qualified) object
+to the (possibly cv-qualified) same object type (or a reference to it),
+to a (possibly cv-qualified) base class of that type (or a reference to it),
+or to (possibly cv-qualified) void.%
+\footnote{
+Even though never directly called to perform a conversion,
+such conversion functions can be declared and can potentially
+be reached through a call to a virtual conversion function in a base class
+}
+
+\enterexample\ 
+
+\begin{codeblock}
+class X {
+    // ...
+public:
+    operator int();
+};
+
+void f(X a)
+{
+    int i = int(a);
+    i = (int)a;
+    i = a;
+}
+\end{codeblock}
+
+In all three cases the value assigned will be converted by
+\tcode{X::operator\ int()}.
+\exitexample\ 
+
+\rSec1[class.dtor]{Destructors}
+
+\setcounter{Paras}{2}
+\pnum
+\index{generated~destructor|see{default destructor}}%
+\index{destructor!default}%
+\index{destructor!non-trivial}%
+If a class has no user-declared
+destructor, 
+a destructor is declared implicitly.
+An implicitly-declared destructor is an
+\tcode{inline}
+\tcode{public}
+member of its class. 
+A destructor is
+\techterm{trivial}\ 
+if it is implicitly-declared and if:
+
+\begin{itemize}
+\item
+all of the direct base classes of its class have trivial destructors and
+\item
+for all of the non-static data members of its class that are of class
+type (or array thereof), each such class has a trivial destructor.
+\end{itemize}
+\addedConcepts{An implicitly-declared destructor for a class
+  \mbox{\tcode{X}} is deleted if:}
+\begin{itemize}
+\additemConcepts{any of the non-static data members has class type
+  \mbox{\tcode{M}} (or array thereof) and
+  \mbox{\tcode{M}} has an deleted destructor} \addedConcepts{or a destructor
+  that is inaccessible from the implicitly-declared destructor}\addedConcepts{, or}
+\additemConcepts{any direct or virtual base class has a deleted
+  destructor} \addedConcepts{or a destructor that is inaccessible from the
+  implicitly-declared destructor.}
+\end{itemize}
+
+\setcounter{section}{7}
+\rSec1[class.copy]{Copying class objects}
+
+\setcounter{Paras}{4}
+\pnum
+The implicitly-declared copy constructor for a class
+\tcode{X}
+will have the form
+
+\begin{codeblock}
+X::X(const X&)
+\end{codeblock}
+
+if
+
+\begin{itemize}
+\item
+each direct or virtual base class
+\tcode{B}
+of
+\tcode{X}
+has a copy constructor whose first parameter is of type
+\tcode{const}
+\tcode{B\&}
+or
+\tcode{const}
+\tcode{volatile}
+\tcode{B\&},
+and
+\item
+for all the non-static data members of
+\tcode{X}
+that are of a class type
+\tcode{M}
+(or array thereof),
+each such class type has a copy constructor whose first parameter is of type
+\tcode{const}
+\tcode{M\&}
+or
+\tcode{const}
+\tcode{volatile}
+\tcode{M\&}.%
+\footnote{
+This implies that the reference parameter of the
+implicitly-declared copy constructor
+cannot bind to a
+\tcode{volatile}
+lvalue; see \ref{diff.special}.
+}
+\end{itemize}
+
+Otherwise, the implicitly declared copy constructor will have the form
+
+\begin{codeblock}
+X::X(X&)
+\end{codeblock}
+
+An implicitly-declared copy constructor is an
+\tcode{inline}
+\tcode{public}
+member of its class.
+\addedConcepts{An implicitly-declared copy constructor for a class
+  \mbox{\tcode{X}} is deleted if \mbox{\tcode{X}} has:}
+\begin{itemize}
+\additemConcepts{a non-static data member of class type
+  \mbox{\tcode{M}} (or array thereof) that cannot be copied because
+  overload resolution (\mbox{\ref{over.match}}), as applied to
+  \mbox{\tcode{M}}'s 
+  copy constructor, results in an ambiguity or 
+  a function that is deleted or inaccessible from the
+  implicitly-declared copy constructor, or}
+\additemConcepts{a direct or virtual base class \mbox{\tcode{B}} that cannot
+  be copied because overload resolution (\mbox{\ref{over.match}}), as applied to
+  \mbox{\tcode{B}}'s copy constructor, results in an ambiguity
+  or a function that is deleted or
+  inaccessible from the implicitly-declared copy constructor.}
+\end{itemize}
+\end{paras}
+
+\setcounter{Paras}{6}
+\pnum
+A non-user-provided copy constructor is
+\techterm{implicitly}\ 
+\techterm{defined}\ 
+if it is used to initialize an object of its class type from a copy of an
+object of its class type or of a class type derived from its class type%
+\footnote{
+See \ref{dcl.init} for more details on direct and copy initialization.
+}.
+\enternote\ 
+the copy constructor is implicitly defined even if the implementation elided
+its use (\ref{class.temporary}).
+\exitnote\ 
+\index{restriction!copy constructor}%
+A program is ill-formed \changedConcepts{if the class for which a copy constructor is
+implicitly defined or explicitly defaulted has:}{if the
+implicitly-defined copy constructor is explicitly defaulted, but the 
+corresponding implicit declaration would have been deleted.}
+
+\begin{itemize}
+\item
+\removedConcepts{a non-static data member of class type (or array thereof) with an inaccessible
+or ambiguous copy constructor, or}
+\item
+\removed{a base class with an inaccessible or ambiguous copy constructor.}
+\end{itemize}
+
+Before the non-user-provided copy constructor for a class is
+implicitly defined,
+all non-user-provided copy constructors for its direct and
+virtual base classes and its non-static data members
+shall have been implicitly defined.
+\enternote\ 
+an implicitly-declared copy constructor has an
+\techterm{exception-specification}~(\ref{except.spec}).
+An explicitly-defaulted definitions has no implicit \emph{exception-specifion}.
+\exitnote\ 
+
+\setcounter{Paras}{9}
+\pnum
+\index{copy~assignment~operator!implicitly-declared}%
+If the class definition does not explicitly declare a copy assignment operator,
+one is declared
+\techterm{implicitly}.
+The implicitly-declared copy assignment operator for a class
+\tcode{X}
+will have the form
+
+\begin{codeblock}
+X& X::operator=(const X&)
+\end{codeblock}
+
+if
+
+\begin{itemize}
+\item
+each direct base class
+\tcode{B}
+of
+\tcode{X}
+has a copy assignment operator whose parameter is of type
+\tcode{const}
+\tcode{B\&},
+\tcode{const}
+\tcode{volatile}
+\tcode{B\&}
+or
+\tcode{B},
+and
+\item
+for all the non-static data members of
+\tcode{X}
+that are of a class type
+\tcode{M}
+(or array thereof),
+each such class type has a copy assignment operator whose parameter is of type
+\tcode{const}
+\tcode{M\&},
+\tcode{const}
+\tcode{volatile}
+\tcode{M\&}
+or
+\tcode{M}.%
+\footnote{
+This implies that the reference parameter of the
+implicitly-declared copy assignment operator cannot bind to a
+\tcode{volatile}
+lvalue; see \ref{diff.special}.
+}
+\end{itemize}
+
+Otherwise, the implicitly declared copy
+assignment operator
+will have the form
+
+\begin{codeblock}
+X& X::operator=(X&)
+\end{codeblock}
+
+The implicitly-declared copy assignment operator for class
+\tcode{X}
+has the return type
+\tcode{X\&};
+it returns the object for which the assignment operator is invoked, that is,
+the object assigned to.
+An implicitly-declared copy assignment operator is an
+\tcode{inline}
+\tcode{public}
+member of its class.
+\addedConcepts{An implicitly-declared copy assignment operator for
+  class \mbox{\tcode{X}} is deleted if \mbox{\tcode{X}} has:}
+\begin{itemize}
+\additemConcepts{a non-static data member of \mbox{\tcode{const}} non-class
+  type (or array thereof), or}
+\additemConcepts{a non-static data member of reference type, or}
+\additemConcepts{a non-static data member of class type \mbox{\tcode{M}}
+  (or array thereof) that cannot be copied because overload resolution
+  (\mbox{\ref{over.match}}), as applied to \mbox{\tcode{M}}'s copy
+  assignment operator, results in an ambiguity or
+  a function that is deleted or inaccessible from the
+  implicitly-declared copy assignment operator, or}
+\additemConcepts{a direct or virtual base class \mbox{\tcode{B}} that cannot
+  be copied because overload resolution 
+  (\mbox{\ref{over.match}}), as applied to \mbox{\tcode{B}}'s copy
+  assignment operator, results in an ambiguity or
+  a function that is deleted or inaccessible from the
+  implicitly-declared copy assignment operator.}
+\end{itemize}
+Because a copy assignment operator is implicitly declared for a class
+if not declared by the user,
+a base class copy assignment operator is always hidden
+by the copy assignment operator of a derived class (\ref{over.ass}).
+% USA CD2-core 1-5 core-672
+% Using-declarations cannot introduce copy-assignment operators
+A
+\techterm{using-declaration}\ 
+(\ref{namespace.udecl}) that brings in from a base class an assignment operator
+with a parameter type that could be that of a copy-assignment operator for the
+derived class is not considered an explicit declaration of a copy-assignment
+operator and does not suppress the implicit declaration of the derived class
+copy-assignment operator;
+the operator introduced by the
+\techterm{using-declaration}\ 
+is hidden by the implicitly-declared copy-assignment operator in the derived
+class.
+
+\setcounter{Paras}{11}
+\pnum
+A non-user-provided copy assignment operator is
+\techterm{implicitly}\ 
+\techterm{defined}\ 
+when an object of its class type is assigned a value of its class type or
+a value of a class type derived from its class type.
+\index{restriction!copy assignment~operator}%
+A program is ill-formed \changedConcepts{if the class for which a copy assignment operator
+is implicitly defined has:}{if the implicitly-defined copy constructor
+is explicitly defaulted, but the corresponding implicit declaration
+would have been deleted.}
+
+\begin{itemize}
+\item
+\removedConcepts{a non-static data member of
+\mbox{\tcode{const}}
+type, or}
+\item
+\removedConcepts{a non-static data member of reference type, or}
+\item
+\removedConcepts{a non-static data member of class type (or array thereof) with an inaccessible
+copy assignment operator, or}
+\item
+\removedConcepts{a base class with an inaccessible copy assignment operator.}
+\end{itemize}
+
+Before the non-user-provided copy assignment operator for a class is
+implicitly defined,
+all non-user-provided copy assignment operators for
+its direct base classes and
+its non-static data members shall have been implicitly defined.
+\enternote\ 
+an implicitly-declared copy assignment operator has an
+\techterm{exception-specification}~(\ref{except.spec}).
+An explicitly-defaulted 
+definition has no implicit \techterm{exception-specification}.
+\exitnote\ 
+
+\setcounter{chapter}{12}
+\rSec0[over]{Overloading}
+
+\rSec1[over.load]{Overloadable declarations}
+\setcounter{Paras}{1}
+
+\pnum
+Certain function declarations cannot be overloaded:
+
+\begin{itemize}
+\item
+\index{return~type!overloading~and}%
+Function declarations that differ only in the return type cannot be
+overloaded.
+\item
+\index{static@\tcode{static}!overloading~and}%
+Member function declarations with the same name\changedConcepts{ and}{,} the same
+parameter-type-list\addedConcepts{and the same template requirements (if
+  any)}, the same  cannot be overloaded if any of them is a 
+\tcode{static}
+member function declaration (\ref{class.static}).
+Likewise, member function template declarations with the same name,
+the same parameter-type-list, \removedConcepts{and} the same template
+parameter lists\addedConcepts{, and the same template requirements (if any)} cannot be
+overloaded if any of them is a
+\tcode{static}
+member function template declaration.
+The types of the implicit object parameters constructed for the member
+functions for the purpose of overload resolution (\ref{over.match.funcs})
+are not considered when comparing parameter-type-lists for enforcement of
+this rule.
+In contrast, if there is no
+\tcode{static}
+member function declaration among a set of member function
+declarations with the same name and the same parameter-type-list, then
+these member function declarations can be overloaded if they differ in
+the type of their implicit object parameter.
+\enterexample\ 
+the following illustrates this distinction:
+
+\begin{codeblock}
+class X {
+    static void f();
+    void f();                   // ill-formed
+    void f() const;             // ill-formed
+    void f() const volatile;    // ill-formed
+    void g();
+    void g() const;             // OK: no static \tcode{g}
+    void g() const volatile;    // OK: no static \tcode{g}
+};
+\end{codeblock}
+\exitexample\
+
+\item
+Member function declarations with the same name and the same \techterm{parameter-type-list} as well as member function 
+template declarations with the same name, the same
+\techterm{parameter-type-list}, \removedConcepts{and} the same template
+parameter lists\addedConcepts{, and the same template requirements}, 
+cannot be overloaded if any of them, but not all, have a
+\techterm{ref-qualifier} (\ref{dcl.fct}). \enterexample\
+\begin{codeblock}
+class Y { 
+    void h() &; 
+    void h() const &; // OK 
+    void h() &&; // OK, all declarations have a ref-qualifier 
+    void i() &; 
+    void f() const; // ill-formed, prior declaration of i 
+                    // has a ref-qualifier 
+}; 
+\end{codeblock}
+\exitexample\
+
+\end{itemize}
+
+\setcounter{section}{2}
+\rSec1[over.match]{Overload resolution}
+\setcounter{Paras}{3}
+
+\pnum
+\addedCC{In a constrained template (\mbox{\ref{temp.constrained}}), if
+  the best viable function is a template function, then the best
+  viable function is the seed of a candidate set
+  (\mbox{\ref{temp.constrained.set}}) containing each of the functions from
+  the set of candidate functions that:}
+
+\begin{itemize}
+\item \addedCC{is a function that is consistent with the seed, or}
+\item \addedCC{is a function template that has the same enclosing
+    namespace as the seed.}
+\end{itemize}
+
+\addedCC{When overload resolution produces a result that has a
+  candidate set, the call submitted to overload resolution will be
+  treated as if it were a call to that candidate set. For
+  type-checking purposes, the candidate set has the type of its seed.} 
+
+\rSec2[over.match.funcs]{Candidate functions and argument lists}
+\rSec2[over.match.viable]{Viable functions}
+\setcounter{Paras}{3}
+\pnum
+\addedCC{Third, if the set of candidate functions is a candidate set
+  from a concept map or constrained template, then for \mbox{\tcode{F}} to
+  be a viable function it shall be consistent with the seed of the
+  candidate set (\mbox{\ref{temp.constrained.set}}).}
+
+\setcounter{section}{4}
+\rSec1[over.oper]{Overloaded operators}
+
+\setcounter{subsection}{3}
+\rSec2[over.call]{Function call}
+
+\pnum
+\index{function~call~operator!overloaded}%
+\addedConcepts{If declared in a class type,}
+\tcode{operator()}
+shall be a non-static member function with an arbitrary number of
+parameters.
+It can have default arguments.
+It implements the function call syntax
+
+\begin{ncsimplebnf}
+postfix-expression \terminal{(}\ expression-list\opt\ \terminal{)}
+\end{ncsimplebnf}
+
+where the
+\techterm{postfix-expression}\ 
+evaluates to a class object and the possibly empty
+\techterm{expression-list}\ 
+matches the parameter list of an
+\tcode{operator()}
+member function of the class.
+Thus, a call
+\tcode{x(arg1,...)}
+is interpreted as
+\tcode{x.op\-er\-a\-tor()(arg1, ...)}
+for a class object
+\tcode{x}
+of type
+\tcode{T}
+if
+\tcode{T::operator()(T1,}
+\tcode{T2,}
+\tcode{T3)}
+exists and if the operator is selected as the best match function by
+the overload resolution mechanism (\ref{over.match.best}).
+
+\pnum
+\index{function~call~operator!overloaded}%
+\addedConcepts{If declared in a concept,
+\mbox{\tcode{operator()}}
+shall be a non-member associated function with one or more parameters.}
+\addedConcepts{It implements the function call syntax}
+
+\color{addclr}
+\begin{ncsimplebnf}
+postfix-expression \terminal{(}\ expression-list\opt\ \terminal{)}
+\end{ncsimplebnf}
+\color{black}
+
+\addedConcepts{where the
+\mbox{\techterm{postfix-expression}}
+evaluates to an object and the possibly empty
+\mbox{\techterm{expression-list}}
+matches the parameter list of the
+\mbox{\tcode{operator()}}
+associated function after the first parameter of the parameter list
+has been removed.
+Thus, a call
+\mbox{\tcode{x(arg1,...)}}
+is interpreted as
+\mbox{\tcode{op\-er\-a\-tor()(x, arg1, ...)}}
+for an object
+\mbox{\tcode{x}}
+of type
+\mbox{\tcode{T}}
+if
+\mbox{\tcode{operator()(T, T1,}}
+\mbox{\tcode{T2,}}
+\mbox{\tcode{T3)}}
+exists and if the operator is selected as the best match function by
+the overload resolution mechanism (\mbox{\ref{over.match.best}}).}
+
+\rSec2[over.sub]{Subscripting}
+
+\pnum
+\index{subscripting~operator!overloaded}%
+\addedConcepts{If declared in a class type,}
+\tcode{operator[]}
+shall be a non-static member function with exactly one parameter.
+It implements the subscripting syntax
+
+\begin{ncsimplebnf}
+postfix-expression \terminal{[}\ expression \terminal{]}
+\end{ncsimplebnf}
+
+Thus, a subscripting expression
+\tcode{x[y]}
+is interpreted as
+\tcode{x.operator[](y)}
+for a class object
+\tcode{x}
+of type
+\tcode{T}
+if
+\tcode{T::op\-er\-a\-tor[]\-(T1)}
+exists and if the operator is selected as the best match function by
+the overload resolution mechanism (\ref{over.match.best}).
+
+\pnum
+\addedConcepts{If declared in a concept,
+\mbox{\tcode{operator[]}}
+shall be a non-member associated function with exactly two parameters.
+It implements the subscripting syntax}
+
+\color{addclr}
+\begin{ncsimplebnf}
+postfix-expression \terminal{[}\ expression \terminal{]}
+\end{ncsimplebnf}
+\color{black}
+
+\addedConcepts{Thus, a subscripting expression
+\mbox{\tcode{x[y]}}
+is interpreted as
+\mbox{\tcode{operator[](x, y)}}
+for an object
+\mbox{\tcode{x}}
+of type
+\mbox{\tcode{T}}
+if
+\mbox{\tcode{op\-er\-a\-tor[]\-(T, T1)}}
+exists and if the operator is selected as the best match function by
+the overload resolution mechanism (\mbox{\ref{over.match.best}}).}
+
+\rSec2[over.ref]{Class member access}
+
+\pnum
+\index{member~access~~operator!overloaded}%
+\addedConcepts{If declared in a class type,}
+\tcode{operator->}
+shall be a non-static member function taking no parameters.
+It implements class member access using
+\tcode{->}
+
+\begin{ncsimplebnf}
+postfix-expression \terminal{->}\ id-expression
+\end{ncsimplebnf}
+
+An expression
+\tcode{x->m}
+is interpreted as
+\tcode{(x.operator->())->m}
+for a class object
+\tcode{x}
+of type
+\tcode{T}
+if
+\tcode{T::operator->()}
+exists and if the operator is selected as the best match function by
+the overload resolution mechanism (\ref{over.match}).
+
+\pnum
+\index{member~access~~operator!overloaded}%
+\addedConcepts{If declared in a concept,
+\mbox{\tcode{operator->}}
+shall be a non member associated function taking exactly one parameter.
+It implements class member access using
+\mbox{\tcode{->}}}
+
+\color{addclr}
+\begin{ncsimplebnf}
+postfix-expression \terminal{->}\ id-expression
+\end{ncsimplebnf}
+\color{black}
+
+\addedConcepts{An expression
+\mbox{\tcode{x->m}}
+is interpreted as
+\mbox{\tcode{(operator->(x))->m}}
+for an object
+\mbox{\tcode{x}}
+of type
+\mbox{\tcode{T}}
+if
+\mbox{\tcode{operator->(T)}}
+exists and if the operator is selected as the best match function by
+the overload resolution mechanism (\mbox{\ref{over.match}}).}
+
+\rSec0[temp]{Templates}
+\begin{paras}
+
+\textcolor{black}{\pnum}
+\index{template}%
+\index{parameterized~type|see{template}}%
+\index{type~generator|see{template}}%
+\index{export}%
+A
+\techterm{template}\ 
+defines a family of classes\changedConcepts{or functions}{, functions,
+  or concept maps}, or an alias for a family of types.
+
+\begin{bnf}
+\index{template-declaration@\techterm{template-declaration}}%
+\index{template@\tcode{template}}%
+template-declaration:\br
+  \terminal{export\opt} \terminal{template <}\ template-parameter-list \terminal{>}\ \textcolor{addclr}{requires-clause\opt} declaration
+\end{bnf}
+
+\begin{bnf}
+\index{template-parameter-list@\techterm{template-parameter-list}}%
+template-parameter-list:\br
+  template-parameter\br
+  template-parameter-list \terminal{,}\ template-parameter
+\end{bnf}
+
+The
+\techterm{declaration}\ 
+in a
+\techterm{template-declaration}\ 
+shall
+
+\begin{itemize}
+\item
+declare or define a function or a class, or
+\item
+define a member function, a member class or a static data member of a class
+template or of a class nested within a class template, or
+\item
+define a member template of a class or class template, or
+\item be an \techterm{alias-declaration}\changedConcepts{.}{, or}
+\additemConcepts{define a concept map.}
+\end{itemize}
+
+A
+\techterm{template-declaration}\ 
+is a
+\techterm{declaration}.
+\index{template!definition~of}%
+A
+\techterm{template-declaration}\ 
+is also a definition if its
+\techterm{declaration}\ 
+defines a function, a class, \addedConcepts{a concept map,}
+or a static data member.
+
+\setcounter{Paras}{4}
+\pnum
+A class template shall not have the same name as any other
+template, class, \addedConcepts{concept,} function, object, enumeration, enumerator, namespace, or
+type in the same scope (\ref{basic.scope}), except as specified in (\ref{temp.class.spec}).
+Except that a function template can be overloaded either by (non-template)
+functions with the same name or by other function templates
+with the same name (\ref{temp.over}),
+a template name declared in namespace scope or in class scope shall be unique
+in that scope.
+
+\noindent\editorial{Add the following new paragraphs to [temp]:}
+\setcounter{Paras}{11}
+\pnum
+\addedConcepts{A \mbox{\techterm{template-declaration}} with a 
+\mbox{\tcode{requires}} keyword is a constrained
+  template (\mbox{\ref{temp.constrained}}). The 
+\mbox{\techterm{requires-clause}}
+  specifies template requirements (\mbox{\ref{temp.req}}).}
+
+\rSec1[temp.param]{Template parameters}
+\pnum
+The syntax for
+\techterm{template-parameter}s
+is:
+
+\begin{bnf}
+\index{template-parameter@\techterm{template-parameter}}%
+template-parameter:\br
+  type-parameter\br
+  parameter-declaration
+\end{bnf}
+
+\begin{bnf}
+\index{type-parameter@\techterm{type-parameter}}%
+type-parameter:\br
+  \terminal{class}\ \terminal{...}\opt\ identifier\opt\br
+  \terminal{class}\ identifier\opt\ \terminal{=}\ type-id\br
+  \terminal{typename}\ \terminal{...}\opt\ identifier\opt\br
+  \terminal{typename}\ identifier\opt\ \terminal{=}\ type-id\br
+  \terminal{template <}\ template-parameter-list \terminal{> class}\ \terminal{...}\opt\ identifier\opt\br
+  \terminal{template <}\ template-parameter-list \terminal{> class}\ identifier\opt\ \terminal{=}\ id-expression\br
+  \addedConcepts{\mbox{\terminal{::}}\mbox{\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{...}}\mbox{\opt} identifier\mbox{\opt}}\br
+  \addedConcepts{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name identifier\mbox{\opt} \mbox{\terminal{=}} type-id}\br
+  \addedConcepts{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedConcepts{simple-requirement-argument-list} \addedConcepts{\mbox{\terminal{>}} \mbox{\terminal{...}\opt} identifier} \br
+  \addedConcepts{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedConcepts{simple-requirement-argument-list} \addedConcepts{\mbox{\terminal{>}}} \addedConcepts{identifier} \addedConcepts{\mbox{\terminal{=}} type-id}\br
+
+\addedConcepts{simple-requirement-argument-list}:\br
+  \addedConcepts{\mbox{\terminal{auto}}}\br
+  \addedConcepts{\mbox{\terminal{auto}} \mbox{\terminal{,}} template-argument-list}
+\end{bnf}
+
+\setcounter{Paras}{3}
+\pnum
+A non-type \techterm{template-parameter} shall have one of the
+following (optionally \techterm{cv-qualified}) types:
+\begin{itemize}
+\item integral or enumeration type,
+\item pointer to object or pointer to function,
+\item reference to object or reference to function,
+\item pointer to member\changedConcepts{.}{, or}
+\additemConcepts{in a constrained template
+(\mbox{\ref{temp.constrained}}), a type archetype \mbox{\tcode{T}}
+for which the concept requirement
+\\\mbox{\tcode{NonTypeTemplateParameterType<T>}} (\mbox{\ref{concept.support}}) is
+part of the template's requirements.}
+\end{itemize}
+
+\noindent\editorial{Add the following new paragraph to 14.1 [temp.param]}
+\setcounter{Paras}{17}
+\color{addclr}
+\pnum
+A \techterm{type-parameter} declared with a \techterm{concept-name} 
+is a template type parameter or parameter pack that specifies a
+template requirement (\ref{temp.req}) using the \techterm{simple form}
+of template requirements. A template type parameter or parameter pack written 
+\tcode{\BnfTermshape{::}\opt\
+  \BnfNontermshape{nested-name-specifier}\opt\ C ...\opt\ T}, where \tcode{C} is a \techterm{concept-name}, is
+equivalent to a template type parameter or parameter pack written as
+\tcode{typename T} or \tcode{typename... T}, respectively,
+with the template requirement or pack expansion \tcode{\BnfTermshape{::}\opt\
+  \BnfNontermshape{nested-name-specifier}\opt\ C<T> ...\opt} added to
+the template requirements.
+%
+A template type parameter or parameter pack written
+\tcode{\BnfTermshape{::}\opt\
+  \BnfNontermshape{nested-name-specifier}\opt\ C \addedConcepts{<auto, T2, T3, ..., T\mbox{$N$}>}...\opt\
+  T}, is equivalent to a template type parameter or
+parameter pack 
+written as \tcode{typename T} or \tcode{typename... T}, respectively, with the template requirement
+\tcode{\BnfTermshape{::}\opt\
+  \BnfNontermshape{nested-name-specifier}\opt\ C<T, T2, T3, ...,
+  T$N$>...\opt} added to the template requirements.
+The first concept parameter of concept \tcode{C}
+shall be a type parameter, and all concept parameters not otherwise
+specified shall have default values. \enterexample\
+\begin{codeblock}
+concept C<typename T> { ... }
+concept D<typename T, typename U> { ... }
+concept E<typename T, typename U, typename V = U> { ... }
+
+template<C T, D<auto, T> P> void f(T, P);
+// equivalent to
+template<class T, class P> requires C<T> && D<P, T> void f(T, P);
+
+template<C T, E<auto, T> P> void f(T, P);
+// equivalent to
+template<class T, class P> requires C<T> && E<P, T, T> void f(T, P);
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+When the \techterm{type-parameter} is a template type parameter pack,
+the equivalent requirement is a pack expansion (\ref{temp.variadic}). 
+\enterexample\
+\begin{codeblock}
+concept C<typename T> { }
+
+template<C... Args> void g(Args const&...);
+// equivalent to
+template<typename... Args> requires C<Args>... void g(Args const&...);
+\end{codeblock}
+\exitexample\
+
+\color{black}
+
+\setcounter{section}{3}
+\rSec1[temp.type]{Type equivalence}
+\setcounter{Paras}{1}
+
+\noindent\editorial{Add the following new paragraph to 14.4
+  [temp.type]}
+\color{addclr}
+\pnum
+In a constrained template (\ref{temp.constrained}), two types are the
+same type if some same-type requirement makes them
+equivalent (\ref{temp.req}).
+\color{black}
+
+\rSec1[temp.decls]{Template declarations}
+
+\rSec2[temp.class]{Class templates}
+
+\noindent\editorial{Add the following new paragraph to 14.5.1
+  [temp.class]}
+\setcounter{Paras}{4}
+\color{addclr}
+\pnum
+A constrained member (\ref{class.mem}) in a class template is
+declared only in class template specializations in which its
+template requirements (\ref{temp.req}) are satisfied. If there exist multiple
+overloads of the constrained member with identical signatures, ignoring
+  the template requirements, only the most specialized
+  overload, as determined by partial ordering of the template requirements
+  (\ref{temp.func.order}), will be declared in the instantiation. If
+  partial ordering results in an ambiguity,
+  use of the function results in an
+    ambiguity.
+\enterexample\
+\begin{codeblock}
+auto concept LessThanComparable<typename T> {
+  bool operator<(T, T);
+}
+
+concept Radix<T> : LessThanComparable<T> { /* ... */ }
+
+template<typename T>
+class list {
+  @\textcolor{addclr}{requires}@ LessThanComparable<T> void sort(); // \#1
+  requires Radix<T> void sort(); // \#2
+};
+
+@\textcolor{addclr}{struct}@ X { };
+concept_map Radix<int> { /* ... */ }
+
+void f(list<float> lf, list<int> li, list<X> lX) 
+@\textcolor{addclr}{}@{
+  lf.sort(); // okay: LessThanComparable<float> implicitly defined, calls \#1
+  li.sort(); // okay: calls \#2, which is more specialized than \#1
+  lX.sort(); // error: no 'sort' member in list<X>
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+\color{black}
+
+\setcounter{subsection}{2}
+\rSec2[temp.variadic]{Variadic templates}
+\pnum
+A \mbox{\techterm{template parameter pack}} is a template parameter
+that accepts zero or more template arguments. \mbox{\enterexample}
+
+\begin{codeblock}
+template<class ... Types> struct Tuple { };
+
+Tuple<> t0;             // \tcode{Types} contains no arguments
+Tuple<int> t1;          // \tcode{Types} contains one argument: \tcode{int}
+Tuple<int, float> t2;   // \tcode{Types} contains two arguments: \tcode{int} and \tcode{float}
+Tuple<0> eror;          // error: 0 is not a type
+\end{codeblock}
+
+\mbox{\exitexample}
+
+\addedConcepts{\mbox{\enternote} a template parameter pack can also occur in a concept parameter list
+(\mbox{\ref{concept.def}}). \mbox{\enterexample}} \color{addclr}
+\begin{codeblock}
+@\textcolor{addclr}{auto}@ concept Callable<typename F, typename... Args> {
+  typename result_type;
+  result_type operator()(F&, Args...);
+}
+\end{codeblock}
+\color{black}\addedConcepts{\mbox{\exitexample\ \exitnote}}
+
+\setcounter{Paras}{3}
+\pnum
+\textcolor{black}{A} \techterm{pack expansion} is a sequence of tokens that
+names one or more parameter packs, followed by an ellipsis. The sequence
+of tokens is called the \techterm{pattern of the expansion}; its
+syntax depends on the context in which the expansion occurs. Pack
+expansions can occur in the following contexts:
+
+\begin{itemize}
+\item In an \mbox{\techterm{expression-list}}~(\mbox{\ref{expr.post}});
+the pattern is an \mbox{\techterm{assignment-expression}}.
+\item In an \mbox{\techterm{initializer-list}}~(\mbox{\ref{dcl.init}});
+the pattern is an \mbox{\techterm{initializer-clause}}.
+\item In a \mbox{\techterm{base-specifier-list}}~(\mbox{\ref{class.derived}});
+the pattern is a \mbox{\techterm{base-specifier}}.
+\item In a \mbox{\techterm{mem-initializer-list}}~(\mbox{\ref{class.base.init}});
+the pattern is a \mbox{\techterm{mem-initializer}}.
+\item In a \mbox{\techterm{template-argument-list}}~(\mbox{\ref{temp.arg}});
+the pattern is a \mbox{\techterm{template-argument}}.
+\item In an \mbox{\techterm{exception-specification}}~(\mbox{\ref{except.spec}});
+the pattern is a \mbox{\techterm{type-id}}.
+\additemConcepts{In a
+  \mbox{\techterm{requirement-list}}~(\mbox{\ref{temp.req}});
+the pattern is a \mbox{\techterm{requirement}}.}
+\end{itemize}
+
+\setcounter{Paras}{5}
+\pnum
+The instantiation of an expansion produces a \removedConcepts{comma-separated}
+list $\texttt{E}_1$\changedConcepts{,}{\mbox{$\oplus$}} $\texttt{E}_2$\changedConcepts{,}{\mbox{$\oplus$}} $...$\changedConcepts{,}{\mbox{$\oplus$}} $\texttt{E}_N$, where
+$N$ is the number of elements in the pack expansion
+parameters\addedConcepts{ and \mbox{$\oplus$} is the
+  syntactically-appropriate separator for the list}. Each
+\mbox{$\texttt{E}_i$} is generated by instantiating the pattern and
+replacing each pack expansion parameter with its \mbox{$i$}th element.
+All of the \mbox{$\texttt{E}_i$} become elements in the enclosing list.
+\mbox{\enternote} The variety of list varies with the context:
+\mbox{\techterm{expression-list}},
+\mbox{\techterm{base-specifier-list}},
+\mbox{\techterm{template-argument-list}}, 
+\addedConcepts{\mbox{\techterm{requirement-list}}, } etc. \mbox{\exitnote}
+
+\setcounter{subsection}{4}
+\rSec2[temp.class.spec]{Class template partial specializations}
+\setcounter{Paras}{8}
+
+\textcolor{black}{}\pnum
+Within the argument list of a class template partial specialization,
+the following restrictions apply:
+
+\begin{itemize}
+\item
+A partially specialized non-type argument expression shall not involve
+a template parameter of the partial specialization except when the argument
+expression is a simple
+\techterm{identifier}.
+\enterexample\ 
+\begin{codeblock}
+template <int I, int J> struct A {};
+template <int I> struct A<I+5, I*2> {}; // error
+
+template <int I, int J> struct B {};
+template <int I> struct B<I, I> {};     // OK
+\end{codeblock}
+\exitexample\ 
+\item
+% L6987 USA Core3 1.9 Editorial box 6 / 14.5.4p6 [temp.class.spec]
+% Fix restrictions on non-type template args in specialization arg lists.
+The type of a template parameter corresponding to a specialized non-type argument
+shall not be dependent on a parameter of the specialization.
+\enterexample\ 
+
+\begin{codeblock}
+template <class T, T t> struct C {};
+template <class T> struct C<T, 1>;              // error
+
+template< int X, int (*array_ptr)[X] > class A {};
+@\textcolor{black}{int}@ array[5];
+template< int X > class A<X,&array> { };        // error
+\end{codeblock}
+
+\exitexample\ 
+\item
+The argument list of the specialization shall not be identical to the
+implicit argument list of the primary template\addedConcepts{, unless
+  the specialization contains template requirements
+  that are more specific (\mbox{\ref{temp.func.order}}) than the primary
+  template's requirements}. \color{addclr} \enterexample\
+\begin{codeblock}
+concept Hashable<typename T> { int hash(T); }
+
+template<typename T> class X { /* ... */ }; // \#6
+template<typename T> requires Hashable<T> class X<T> { /* ... */ }; //\#7, okay
+\end{codeblock}
+\exitexample\
+\color{black}
+
+The template parameter list of a specialization shall not contain default
+template argument values.%
+\footnote{
+There is no way in which they could be used.
+}
+\item
+An argument shall not contain an unexpanded parameter pack. If
+an argument is a pack expansion~(\mbox{\ref{temp.variadic}}), it shall be
+the last argument in the template argument list.
+\end{itemize}
+
+\pnum \addedConcepts{The template requirements 
+  of a primary class template are implied
+  (\mbox{\ref{temp.req.impl}}) in its class template partial
+  specializations.  \mbox{\enterexample} } \color{addclr}
+\begin{codeblock}
+concept LessThanComparable<typename T> { /* ... */ }
+concept Hashable<typename T> { /* ... */ }
+
+template<typename T> requires LessThanComparable<T> class Y { /* ... */ };
+template<typename T> 
+  @\textcolor{addclr}{}@requires Hashable<T> // same as requires LessThanComparable<T> \&\& Hashable<T>
+  class Y<T> { /* ... */ }; 
+\end{codeblock}
+\color{black}
+\addedConcepts{\mbox{\exitexample}}
+
+\rSec3[temp.class.spec.match]{Matching of class template partial specializations}
+\setcounter{Paras}{1}
+\pnum
+A partial specialization matches a given actual template argument
+list if the template arguments of the partial specialization can be
+deduced from the actual template argument list (\ref{temp.deduct})
+\addedConcepts{and the deduced template arguments satisfy the
+  partial specialization's template requirements (if any)}.
+\enterexample\ 
+
+\begin{codeblock}
+A<int, int, 1>   a1;            // uses \#1
+A<int, int*, 1>  a2;            // uses \#2, \tcode{T}\ is \tcode{int}, \tcode{I}\ is \tcode{1}
+A<int, char*, 5> a3;            // uses \#4, \tcode{T}\ is \tcode{char}
+A<int, char*, 1> a4;            // uses \#5, \tcode{T1}\ is \tcode{int}, \tcode{T2}\ is \tcode{char}, \tcode{I}\ is \tcode{1}
+A<int*, int*, 2> a5;            // ambiguous: matches \#3 and \#5
+\end{codeblock}
+\color{addclr}
+\begin{codeblock}
+concept_map Hashable<int> { /* ... */ }
+struct Y { };
+
+@\textcolor{addclr}{X}@<int> x1;                     // uses \#7
+X<Y> x2;                       // uses \#6
+\end{codeblock}
+\color{black}
+\exitexample\ 
+
+\setcounter{Paras}{3}
+\pnum
+In a type name that refers to a class template specialization, (e.g.,
+\tcode{A<int, int, 1>})
+the argument list must match the template parameter list of the primary
+template. \addedConcepts{If the primary template has template
+  requirements, the arguments shall satisfy those requirements.}
+The template arguments of a specialization are deduced from the arguments
+of the primary template.
+
+\rSec3[temp.class.order]{Partial ordering of class template specializations}
+\setcounter{Paras}{1}
+\pnum
+\enterexample\ 
+\begin{codeblock}
+@\textcolor{addclr}{concept Con1<typename T> \{ \}}@
+@\textcolor{addclr}{concept Con2<typename T> : Con1<T> \{ \}}@
+template<int I, int J, class T> class X { };
+template<int I, int J>          class X<I, J, int> { }; // \#1
+template<int I>                 class X<I, I, int> { }; // \#2
+@\textcolor{addclr}{template<int I, int J, class T> requires Con1<T> class X<I, J, T> \{ \}; // \#3}@
+@\textcolor{addclr}{template<int I, int J, class T> requires Con2<T> class X<I, J, T> \{ \}; // \#4}@
+
+template<int I, int J> void f(X<I, J, int>);            // \removedConcepts{\#}A
+template<int I>        void f(X<I, I, int>);            // \removedConcepts{\#}B
+@\textcolor{addclr}{template<int I, int J, class T> requires Con1<T> void f(X<I, J, T>);      // C}@
+@\textcolor{addclr}{template<int I, int J, class T> requires Con2<T> void f(X<I, J, T>);      // D}@
+\end{codeblock}
+
+The partial specialization
+\tcode{\#2}
+is more specialized than the partial specialization
+\tcode{\#1}
+because the function template
+\removedConcepts{\#}\tcode{B}
+is more specialized than the function template
+\removedConcepts{\#}\tcode{A}
+according to the ordering rules for function templates.
+\addedConcepts{The partial specialization
+\mbox{\tcode{\#4}}
+is more specialized than the partial specialization
+\mbox{\tcode{\#3}}
+because the function template
+\mbox{\tcode{D}}
+is more specialized \mbox{\textcolor{addclr}{than}} the function template
+\mbox{\tcode{C}}
+according to the partial ordering rules for function templates.}
+\exitexample\ 
+
+\rSec2[temp.fct]{Function templates}
+
+\setcounter{Paras}{6}
+\pnum
+Two function templates are
+\techterm{equivalent}\ 
+if they are declared in the same scope, have the same name, have
+identical template parameter lists, \addedConcepts{have identical
+  template requirements}, and have return types
+  and parameter 
+lists that are equivalent \textcolor{black}{}using the rules described above to compare
+expressions involving
+template parameters.
+Two function templates are
+\techterm{functionally}\ 
+\techterm{equivalent}\ 
+if they are equivalent except that one or more
+expressions
+that involve template parameters in the return types and parameter
+lists are functionally equivalent using the rules described above to
+compare expressions involving
+template parameters.
+If a program contains declarations of function templates that are
+functionally equivalent but not equivalent, the program is ill-formed;
+no diagnostic is required.
+
+\rSec3[temp.func.order]{Partial ordering of function templates}
+\setcounter{Paras}{1}
+\pnum
+Partial ordering selects which of two function templates is more
+specialized than the other by transforming each template in turn
+(see next paragraph) and performing template argument deduction
+using the function parameter types, or in the case of a conversion
+function the return type. 
+\addedConcepts{\mbox{\enternote}}
+\addedConcepts{if template argument deduction succeeds, the deduced
+  arguments were used to determine if the requirements of the template
+  are satisfied.}
+\addedConcepts{\mbox{\exitnote}}
+The deduction process determines whether
+one of the templates is more specialized than the other. If so, the
+more specialized template is the one chosen by the partial ordering
+process.
+
+\textcolor{black}{\pnum}
+To produce the transformed template, for each type, non-type, or template
+template parameter (including template parameter packs thereof)
+synthesize a unique type, value, or class template 
+respectively and substitute it for each occurrence of that parameter
+in the function type of the template.
+\addedConcepts{When the template is a constrained template,
+  the unique type is an archetype
+  and concept maps for each of the
+  requirements stated in or implied by its template requirements
+  are also synthesized; see \mbox{\ref{temp.constrained}}.
+  \mbox{\enternote}
+  because the unique types are archetypes, two template type
+  parameters may share the same archetype due to same-type constraints.
+  \mbox{\exitnote}}
+
+\pnum
+\textcolor{black}{Using} the transformed function template's function parameter list, or
+in the case of a conversion function its transformed return type,
+perform type deduction against the function parameter list (or return
+type) of the other function. The mechanism for performing these
+deductions is given in~\ref{temp.deduct.partial}. 
+
+\enterexample\ 
+
+\begin{codeblock}
+template<class T> struct A { A(); };
+
+template<class T> void f(T);
+template<class T> void f(T*);
+template<class T> void f(const T*);
+
+template<class T> void g(T);
+template<class T> void g(T&);
+
+template<class T> void h(const T&);
+template<class T> void h(A<T>&);
+void m() {
+  @\textcolor{black}{const}@ int *p;
+  f(p);                   // \tcode{f(const T*)}\ is more specialized than \tcode{f(T)}\ or \tcode{f(T*)}
+  float x;
+  g(x);                   // Ambiguous: \tcode{g(T)}\ or \tcode{g(T\&)}
+  A<int> z;
+  h(z);                   // overload resolution selects \tcode{h(A<T>\&)}
+  const A<int> z2;
+  h(z2);                  // \tcode{h(const T\&)}\ is called because \tcode{h(A<T>\&)}\ is not callable
+}
+\end{codeblock}
+\textcolor{black}{}\exitexample\ 
+
+\color{addclr}
+\addedConcepts{\mbox{\enternote} when two constrained templates have
+  identical signatures (ignoring template requirements), the
+  partial ordering is based on those template requirements. Similarly,
+  a constrained template is more specialized than an unconstrained
+  template because it has more strict requirements. \mbox{\exitnote}}
+\enterexample\
+\begin{codeblock}
+auto concept CopyConstructible<typename T> { 
+  T::T(const T&); 
+}
+
+template<CopyConstructible T> struct A { A(); };
+
+concept C<typename T> { }
+concept D<typename T> : C<T> { }
+concept_map C<int*> { }
+concept_map D<float> { }
+template<typename T> concept_map D<A<T>> { }
+
+template<class T> requires C<T> void f(T&) { } // \#1
+template<class T> requires D<T> void f(T&) { } // \#2
+template<class T> requires C<A<T>> void f(A<T>&) { } // \#3
+template<class T> void f(T&); // \#4
+
+void m() {
+  int *p;
+  f(p);          // calls \#1: template argument deductions fails \#2 and \#3, and \#1 is more specialized than \#4
+  float x;
+  f(x);          // \#2 is called because \#3 is not callable and \#2 is more specialized than \#1 and \#4
+  A<int> z;
+  f(z);          // ambiguous: no partial ordering between \#2 and \#3
+}
+\end{codeblock}
+\exitexample\
+\color{black}
+
+\noindent\editorial{Add the following new subsection to Template
+  declarations [temp.decls]}
+\color{addclr}
+\setcounter{subsection}{7}
+\rSec2[temp.concept.map]{Concept map templates}
+\pnum
+A \techterm{concept map template} defines an unbounded set of concept
+  maps with a common set of associated function,
+  associated type, and associated template
+  definitions. \enterexample\
+\begin{codeblock}
+concept F<typename T> {
+  typename type;
+  type f(T);
+}
+
+template<typename T>
+concept_map F<T*> {
+  typedef T& type;
+  T& f(T*);
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+A concept map template is a constrained template (\ref{temp.constrained})
+\enternote\ a concept map template may be a constrained template even
+if it does not have template requirements.  \exitnote\
+
+\pnum
+Within the \techterm{template-argument-list} of the
+\techterm{concept-id} in a concept map template (including nested
+template argument lists),
+the following restrictions apply:
+
+\begin{itemize}
+\item
+A non-type argument expression shall not involve
+a template parameter of the concept map except when the argument
+expression is a simple
+\techterm{identifier}.
+
+\item
+The type of a template parameter corresponding to a non-type argument
+shall not be dependent on a parameter of the concept map.
+
+\item
+The template parameter list of a concept map template shall not contain default
+template argument values.%
+\footnote{
+There is no way in which they could be used.
+}
+\end{itemize}
+
+\pnum 
+When a particular concept map is required, concept map matching
+determines whether a 
+particular concept map template can be used. Concept map matching
+matches the concept arguments in the
+\mbox{\techterm{concept
+      instance}} to the 
+concept arguments in the concept map template, using matching of class
+template partial specializations (\ref{temp.class.spec.match}). 
+
+\pnum
+If more than one concept map template matches a specific
+\mbox{\techterm{concept instance}}, partial ordering of concept map templates 
+proceeds as partial ordering of class template specializations
+(\ref{temp.class.order}).
+
+\pnum
+A concept map template shall satisfy the requirements of its corresponding
+concept (\ref{concept.map}) at the time of definition of the concept
+map template. \enterexample\
+\begin{codeblock}
+concept C<typename T> { }
+
+concept F<typename T> {
+  void f(T);
+}
+
+template<C T> struct X;
+
+@\textcolor{addclr}{template}@<F T> void f(X<T>); // \#1
+
+template<typename T>
+concept_map F<X<T>> { } // error: requirement for f(X<T>) not satisfied
+
+@\textcolor{addclr}{}@template<F T>
+concept_map F<X<T>> { } // okay: uses \#1 to satisfy requirement for f(X<T>)
+\end{codeblock}
+\exitexample\
+
+\pnum
+If the definition of a concept map template uses an instantiated archetype
+(\ref{temp.archetype}), and instantiation of the 
+concept map template 
+results in a different specialization of that class
+template with an incompatible definition, the program is
+ill-formed. The specialization is considered to have an incompatible
+definition if the specialization's definition causes a different
+definition of any associated type or associated template in the
+concept map, if its definition causes any of the associated
+function definitions to be ill-formed, or if the resulting concept map
+fails to satisfy the axioms of the corresponding concept. 
+\enterexample\
+\begin{codeblock}
+@\textcolor{addclr}{}@concept Stack<typename X> {
+  typename value_type;
+  value_type& top(X&);
+  // ...
+}
+
+template<typename T> struct dynarray {
+  @\textcolor{addclr}{T}@& top();
+};
+
+template<> struct dynarray<bool> {
+  bool top();
+};
+
+template<typename T>
+concept_map Stack<dynarray<T>> {
+  typedef T value_type;
+  @\textcolor{addclr}{T}@& top(dynarray<T>& x) { return x.top(); }
+}
+
+template<Stack X>
+void f(X& x) {
+  X::value_type& t = top(x);
+}
+
+void g(dynarray<int>& x1, dynarray<bool>& x2) {
+  f(x1); // okay
+  f(x2); // error: Stack<dynarray<bool> > uses the dynarray<bool> class specialization
+         // rather than the dynarray primary class template, and the two
+         // have incompatible signatures for top()
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+A concept map template shall be declared before the first use of a
+concept map that would make use of the concept map template
+as the result of an implicit or explicit instantiation
+in every translation unit in which such a use occurs; no \textcolor{addclr}{diagnostic} is
+required.  
+
+\color{black}
+
+\rSec1[temp.res]{Name resolution}
+\setcounter{subsection}{2}
+\rSec2[temp.nondep]{Non-dependent names}
+\noindent\editorial{Add the following new paragraph to Non-dependent
+  names [temp.nondep]}
+\color{addclr}
+\setcounter{Paras}{1}
+\pnum
+\enternote\ if a template contains template requirements, name
+lookup of non-dependent names in the template definition can find the
+names of associated functions in the
+requirements scope (\ref{basic.scope.req}). \exitnote\
+\color{black}
+
+\rSec1[temp.spec]{Template instantiation and specialization}
+\pnum
+\index{specialization!template}%
+The act of instantiating a function, a class, \addedConcepts{a concept
+  map}, a member of a class template or
+a member template is referred to as
+\techterm{template instantiation}.
+
+\pnum
+A function instantiated from a function template is called an instantiated
+function.
+A class instantiated from a class template is called an instantiated
+class.
+\addedConcepts{A concept map instantiated from a concept map template
+  is called an instantiated concept map.}
+A member function, a member class, or a static data member of a class template
+instantiated from the member definition of the class template is called,
+respectively, an instantiated member function, member class or static data
+member.
+A member function instantiated from a member function template is called an
+instantiated member function.
+A member class instantiated from a member class template is called an
+instantiated member class.
+
+\rSec2[temp.inst]{Implicit instantiation}
+
+\setcounter{Paras}{4}
+\pnum
+If the overload resolution process can determine the correct function to
+call without instantiating a class template definition\addedConcepts{ or concept map template definition}, it is unspecified
+whether that instantiation actually takes place.
+\enterexample\ 
+
+\begin{codeblock}
+template <class T> struct S {
+  operator int();
+};
+
+void f(int);
+void f(S<int>&);
+void f(S<float>);
+
+void g(S<int>& sr) {
+  f(sr);                  // instantiation of \tcode{S<int>}\ allowed but not required
+        // instantiation of \tcode{S<float>}\ allowed but not required
+};
+\end{codeblock}
+\exitexample\ 
+
+\setcounter{Paras}{8}
+\textcolor{black}{\pnum}
+An implementation shall not implicitly instantiate a function template,
+a member template, a non-virtual member function,
+\addedConcepts{concept map template,} a member class or a
+static data member of a class template that does not require instantiation.
+It is unspecified whether or not an implementation implicitly instantiates a
+virtual member function of a class template if the virtual member function would
+not otherwise be instantiated.
+% USA editorial comment, from core3 issue 3.32
+% A name referenced in a default argument is not "used" unless the default
+% argument is used.
+The use of a template specialization in a default argument
+shall not cause the template to be implicitly instantiated except that a
+class template may be instantiated where its complete type is needed to determine
+the correctness of the default argument.
+The use of a default argument in a
+function call causes specializations in the default argument to be implicitly
+instantiated.
+
+\pnum
+Implicitly instantiated class\addedConcepts{, concept map,} and function template specializations are placed
+in the namespace where the template is defined.
+Implicitly instantiated specializations for members of a class template are
+placed in the namespace \textcolor{black}{}where the enclosing class template is defined.
+Implicitly instantiated member templates are placed in the namespace where the
+enclosing class or class template is defined.
+\enterexample\ 
+
+\begin{codeblock}
+namespace N {
+  template<class T> class List {
+  public:
+    T* get();
+  // ...
+  };
+}
+
+template<class K, class V> class Map {
+  N::List<V> lt;
+  V get(K);
+  // ...
+};
+
+void g(Map<char*,int>& m)
+{
+  int i = m.get("Nicholas");
+  // ...
+}
+\end{codeblock}
+
+a call of
+\tcode{lt.get()}
+from
+\tcode{Map<char*,int>::get()}
+would place
+\tcode{List<int>::get()}
+in the namespace
+\tcode{N}
+rather than in the global namespace.
+\exitexample\ 
+
+\noindent\editorial{Add the following new paragraph to [temp.inst]}
+\setcounter{Paras}{14}
+\pnum
+\addedConcepts{If no concept map exists for a given}
+concept instance
+\addedConcepts{, and there 
+exists a concept map template that matches the}
+concept instance, 
+\addedConcepts{the concept map is implicitly instantiated when the concept 
+map is referenced in a context that requires the concept map
+definition, either to satisfy a concept requirement
+(\mbox{\ref{temp.req}}) 
+or when name lookup finds a concept map member.}
+
+\rSec2[temp.expl.spec]{Explicit specialization}
+
+\noindent\editorial{Add the following new paragraph to [temp.expl.spec]:}
+
+\setcounter{Paras}{22}
+\color{addclr}
+\pnum
+\enternote\ The template arguments provided for an explicit specialization shall
+satisfy the template requirements of the primary
+template (\ref{temp.class.spec.match}). \exitnote\ \enterexample\
+\begin{codeblock}
+@\textcolor{addclr}{concept}@ C<typename T> { }
+concept_map C<float> { }
+
+@\textcolor{addclr}{template}@<typename T> requires C<T> void f(T);
+
+@\textcolor{addclr}{template}@<> void f<float>(float); // okay: concept_map C<float> satisfies requirement
+template<> void f<int>(int); // ill-formed: no concept map satisfies the requirement for C<int>
+\end{codeblock}
+\exitexample\
+\color{black}
+
+\rSec1[temp.fct.spec]{Function template specializations}
+
+\setcounter{subsection}{1}
+\rSec2[temp.deduct]{Template argument deduction}
+\setcounter{Paras}{1}
+\pnum
+When an explicit template argument list is specified, the template
+arguments must be compatible with the template parameter list and must
+result in a valid function type as described below; otherwise type
+deduction fails.  Specifically, the following steps are performed when
+evaluating an explicitly specified template argument list with respect
+to a given function template:
+
+\begin{itemize}
+\item
+The specified template arguments must match the template parameters in
+kind (i.e., type, non-type, template). There must not be more
+arguments than there are parameters, unless at least one parameter is
+a template parameter pack. Otherwise type deduction fails.
+\item
+Non-type arguments must match the types of the corresponding non-type
+template parameters, or must be convertible to the types of the
+corresponding non-type parameters as specified in
+\ref{temp.arg.nontype}, otherwise type deduction fails.
+\item
+All references in the function type \addedConcepts{and template requirements} of the function template to the
+corresponding template parameters are replaced by the specified
+template argument values.  If a substitution in a template
+parameter\addedConcepts{, the template requirements (if any),}
+or in the function type of the function template results in an invalid
+type, type deduction fails.  [Note: The equivalent substitution in
+exception specifications is done only when the function is
+instantiated, at which point a program is ill-formed if the
+substitution results in an invalid type.] Type deduction may fail for
+the following reasons:
+
+\begin{itemize}
+\item
+Attempting to create an array with an element type that is \tcode{void}, a
+function type, a reference type, or an abstract class type, or attempting
+to create an array with a size that is zero or negative.
+\enterexample\ 
+
+\begin{codeblock}
+template <class T> int f(T[5]);
+int I = f<int>(0);
+int j = f<void>(0);             // invalid array
+\end{codeblock}
+\exitexample\ 
+\item
+Attempting to use a type that is not a class type in a qualified name.
+\enterexample\ 
+
+\begin{codeblock}
+template <class T> int f(typename T::B*);
+int i = f<int>(0);
+\end{codeblock}
+\exitexample\ 
+\item
+Attempting to use a type in a nested-name-specifier of a qualified-id when
+that type does not contain the specified member, or
+\begin{itemize}
+\item
+the specified member is not a type where a type is required, or
+\item
+the specified member is not a template where a template is required, or
+\item
+the specified member is not a non-type where a non-type is
+required.
+\end{itemize}
+\enterexample\ 
+
+\begin{codeblock}
+template <int I> struct X { };
+template <template <class T> class> struct Z { };
+template <class T> void f(typename T::Y*){}
+template <class T> void g(X<T::N>*){}
+template <class T> void h(Z<T::template TT>*){}
+struct A {};
+struct B { int Y; };
+struct C {
+    typedef int N;
+};
+struct D {
+    typedef int TT;
+};
+
+@\textcolor{black}{int}@ main()
+{
+    // Deduction fails in each of these cases:
+    f<A>(0);  // \tcode{A}\ does not contain a member \tcode{Y}
+    f<B>(0);  // The \tcode{Y}\ member of \tcode{B}\ is not a type
+    g<C>(0);  // The \tcode{N}\ member of \tcode{C}\ is not a non-type
+    h<D>(0);  // The \tcode{TT}\ member of \tcode{D}\ is not a template
+}
+\end{codeblock}
+\exitexample\ 
+\item
+Attempting to create a pointer to reference type.
+\item
+Attempting to create a reference to \tcode{void}.
+\item
+Attempting to create ``pointer to member of \tcode{T}'' when \tcode{T}\ is not a
+class type.
+\enterexample\ 
+
+\begin{codeblock}
+template <class T> int f(int T::*);
+int i = f<int>(0);
+\end{codeblock}
+\exitexample\ 
+\item
+Attempting to give an invalid type to a non-type template parameter.
+\enterexample\
+\begin{codeblock}
+template <class T, T> struct S {};
+template <class T> int f(S<T, T()>*);
+struct X {};
+int i0 = f<X>(0);
+\end{codeblock}
+\exitexample\
+\item
+Attempting to perform an invalid conversion in either a template
+argument expression, or an expression used in the function
+declaration.
+\enterexample\ 
+
+\begin{codeblock}
+@\textcolor{black}{template@} <class T, T*> int f(int);
+int i2 = f<int,1>(0);           // can't conv \tcode{1}\ to \tcode{int*}
+\end{codeblock}
+\textcolor{black}{\exitexample}
+\item
+Attempting to create a function type in which a parameter has a type
+of \tcode{void}.
+
+\additemConcepts{Attempting to use a type in a
+  \mbox{\techterm{nested-name-specifier}} of a
+  \mbox{\techterm{qualified-id}} that refers to a member in a concept
+  instance, for which there is no concept map corresponding to that
+  concept instance (\mbox{\ref{concept.map}}).}
+
+\additemConcepts{Attempting to instantiate a pack expansion containing
+  multiple parameters packs whose lengths are different.}
+
+\additemConcepts{Attempting to use a class or function template with
+  template arguments that do not satisfy the template
+  requirements. \mbox{\enterexample}}
+\color{addclr}
+\begin{codeblock}
+concept C<typename T> { /* ... */ }
+
+template<typename T> requires C<T> class X { /* ... */ };
+
+template<typename T> int f(X<T>*);
+int i0 = f<int>(0);
+\end{codeblock}
+\color{black}
+\addedConcepts{\mbox{\exitexample}}
+
+\end{itemize}
+
+\item
+\addedConcepts{If the specified template arguments do not satisfy the
+  requirements of the template, type deduction fails.}
+\end{itemize}
+
+\noindent\editorial{Add the following new sections to 14 [temp]:}
+
+\setcounter{section}{8}
+\color{addclr}
+
+\rSec1[concept]{Concepts}
+
+\pnum
+\noindent Concepts describe an abstract interface that can be used to
+constrain templates (\ref{temp.constrained}). Concepts state certain
+syntactic and semantic requirements (\ref{concept.def}) on a set of
+\removedCCC{template} type, non-type, and template \addedCC{template}
+parameters.
+
+\begin{bnf}
+\index{concept-id@\techterm{concept-id}}%
+concept-id:\br
+         concept-name \terminal{<} template-argument-list\opt\ \terminal{>}\br
+
+concept-name:\br
+         identifier
+\end{bnf}
+
+\pnum
+A \techterm{concept-id} names a specific use of a concept by its
+\techterm{concept-name} and a set of 
+concept arguments. \addedConcepts{The concept and its concept arguments,
+  together, are referred to as a \mbox{\techterm{concept instance}}.} 
+\enterexample\ \tcode{CopyConstructible<int>} is a
+\textit{concept-id} if name lookup (\ref{basic.lookup}) determines
+that the identifier \tcode{CopyConstructible} refers to a
+\textit{concept-name}\addedConcepts{; then,
+  \mbox{\tcode{CopyConstructible<int>}} is a concept instance that
+  refers to the \mbox{\tcode{CopyConstructible}} concept used with the
+  type \mbox{\tcode{int}}}. \exitexample\
+
+\rSec2[concept.def]{Concept definitions}
+
+\pnum
+The grammar for a \techterm{concept-definition} is:
+
+\begin{bnf}
+\index{concept-definition@\techterm{concept-definition}}%
+concept-definition:\br
+         \terminal{auto}\opt\ \terminal{concept} identifier \terminal{<} template-parameter-list \terminal{>} refinement-clause\opt\ concept-body \terminal{;}\opt\ \br
+\end{bnf}
+
+\pnum 
+\techterm{Concept-definition}s are used to declare
+\techterm{concept-name}s. A \techterm{concept-name} is inserted into
+the scope in which it is declared immediately after the
+\techterm{concept-name} is seen. A concept is considered defined after
+the closing brace of its \techterm{concept-body}. A \techterm{full
+  concept name} is an identifier that is treated as if it were
+composed of the concept name and the sequence of its enclosing namespaces.
+
+\pnum 
+Concepts shall only be defined at namespace scope.
+
+\pnum
+A concept that starts with \tcode{auto} defines an \techterm{implicit concept}
+(\mbox{\ref{concept.map.implicit}}), otherwise it defines an
+\techterm{explicit concept}. 
+
+\pnum 
+The \techterm{template-parameter-list} of a
+\techterm{concept-definition} shall not contain any requirements
+specified in the simple form (\ref{temp.req}).
+
+\pnum
+
+\begin{bnf}
+concept-body:\br
+         \terminal{\{} concept-member-specification\opt\ \terminal{\}}\br
+
+concept-member-specification:\br
+         concept-member-specifier concept-member-specification\opt\ \br
+
+concept-member-specifier:\br
+         associated-function\br
+         type-parameter \terminal{;}\br
+         associated-requirements\br
+         axiom-definition
+\end{bnf}
+
+The body of a concept contains associated functions
+(\ref{concept.fct}), associated types (\ref{concept.assoc}),
+associated templates, 
+associated requirements \textcolor{addclr}{(\ref{concept.req})}, and axioms
+(\ref{concept.req}). A name \tcode{x} declared in the body of a
+concept shall refer to only one of: an associated type, an associated
+template, an axiom, the name of the concept, or one or more associated
+functions that have been overloaded (\ref{over}). 
+
+\rSec3[concept.fct]{Associated functions}
+
+\pnum
+Associated functions describe functions, member functions, or
+operators that specify the functional behavior of the concept
+arguments and associated types and templates (\ref{concept.assoc}). A
+concept map
+(\ref{concept.map}) for a given concept must provide\changedCCC{, either
+implicitly (\mbox{\ref{concept.map.implicit}}) or explicitly
+(\mbox{\ref{concept.map.fct}}), definitions}{candidate sets
+(\mbox{\ref{temp.constrained.set}})} for each associated 
+function in the concept \addedCC{(\mbox{\ref{concept.map.fct}})}.
+
+\begin{bnf}
+associated-function:\br
+         simple-declaration\br
+         function-definition\br
+         template-declaration
+\end{bnf}
+
+\pnum An \techterm{associated-function} shall declare a
+function or function template. If the \techterm{declarator-id} of
+the declaration is a \techterm{qualified-id}, its
+\techterm{nested-name-specifier} shall name a template parameter of
+the enclosing concept; the declaration declares a member function or
+member function template. 
+%
+An associated function shall not be \tcode{extern} or \tcode{static}
+([dcl.stc]), inline ([dcl.fct.spec]), explicitly-defaulted or deleted
+([dcl.fct.def]), or a friend function. An 
+associated function shall not contain an
+\techterm{exception-specification} ([except.spec]).
+
+\pnum
+Associated functions may specify requirements for non-member functions and
+operators. \enterexample\
+\begin{codeblock}
+concept Monoid<typename T> {
+  T operator+(T, T);
+  T identity();
+}
+\end{codeblock} \exitexample\
+
+\pnum
+With the exception of the assignment operator ([over.ass]) 
+\addedConcepts{and operators \mbox{\tcode{new}}, \mbox{\tcode{new[]}},
+  \mbox{\tcode{delete}}, and \mbox{\tcode{delete[]}}},
+associated functions shall specify requirements for operators as non-member 
+functions. \enternote\ This restriction applies even to the operators
+\tcode{()}, \tcode{[]}, and \tcode{->}, which
+can otherwise only be declared as non-static member functions
+(\ref{over.oper}): \enterexample\
+\begin{codeblock}
+concept Convertible<typename T, typename U> {
+  operator U(T); // okay: conversion from T to U
+  T::operator U*() const; // error: cannot specify requirement for member operator
+}
+\end{codeblock} \exitexample\ \exitnote\
+
+\pnum
+Associated functions may specify requirements for static or non-static
+member functions, constructors, and destructors. \enterexample\
+\begin{codeblock}
+concept Container<typename X> {
+  X::X(int n);
+  X::~X();
+  bool X::empty() const;
+}
+\end{codeblock} \exitexample\
+
+\pnum
+\addedConcepts{Associated functions may specify requirements for
+  \mbox{\tcode{new}} and \mbox{\tcode{delete}}.} \enterexample\
+\begin{codeblock}
+concept HeapAllocatable<typename T> {
+  void* T::operator new(std::size_t);
+  void* T::operator new[](std::size_t);
+  void T::operator delete(void*);
+  void T::operator delete[](void*);
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Associated functions may specify requirements for function templates
+and member function templates. \enterexample\
+\begin{codeblock}
+concept Sequence<typename X> {
+  typename value_type;
+
+  template<InputIterator Iter> 
+    requires Convertible<InputIterator<Iter>::value_type, Sequence<X>::value_type>
+    X::X(Iter first, Iter last);
+};
+\end{codeblock}
+\exitexample\
+
+\pnum
+Concepts may contain overloaded associated functions (clause~\ref{over}). \enterexample\
+\begin{codeblock}
+concept C<typename X> {
+  void f(X);
+  void f(X, X); // okay
+  int f(X, X); // error: differs only by return type
+};
+\end{codeblock} 
+\exitexample\
+
+\pnum \addedConcepts{Associated member functions with the same name and the
+  same \mbox{\techterm{parameter-type-list}}, as well as associated
+  member function templates with the same name, the same
+  \mbox{\techterm{parameter-type-list}}, the same template
+  parameter lists, and the same template requirements (if any), cannot
+  be overloaded if any of them, but not all,
+  have a \mbox{\techterm{ref-qualifier}} (\mbox{\ref{dcl.fct}}).}
+
+\pnum
+Associated functions may have a default implementation. This
+implementation will be instantiated when \changedCCC{implicit definition of an
+implementation (\mbox{\ref{concept.map.implicit}})}{the definition of the
+candidate set (\mbox{\ref{temp.constrained.set}})} for the associated function
+(\ref{concept.map.fct}) fails. A default implementation of an
+associated function is a constrained template
+(\ref{temp.constrained}). \enterexample\
+\begin{codeblock}
+concept EqualityComparable<typename T> {
+  bool operator==(T, T);
+  bool operator!=(T x, T y) { return !(x == y); }
+};
+
+class X {};
+bool operator==(const X&, const X&);
+
+concept_map EqualityComparable<X> { }; // okay, operator!= uses default
+\end{codeblock}
+\exitexample\
+
+\rSec3[concept.assoc]{Associated types and templates}
+
+\pnum
+Associated types and associated templates are types and templates,
+respectively, defined in the concept body and used in the
+description of the concept. 
+
+\pnum
+An associated type specifies a type in a concept
+body. Associated types are typically used to express the parameter and
+return types of associated functions. \enterexample\
+\begin{codeblock}
+concept Callable1<typename F, typename T1> {
+  typename result_type;
+  result_type operator()(F, T1);
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Associated types and templates may be provided with a default value. The
+default value will be used to define the associated type or template when no
+corresponding definition is provided in a concept map
+(\ref{concept.map.assoc}). \enterexample\
+\begin{codeblock}
+concept Iterator<typename Iter> {
+  typename difference_type = int;
+}
+
+concept_map Iterator<int*> { } // okay, difference_type is int
+\end{codeblock}
+\exitexample\
+
+\pnum
+Associated types may use the simple form to
+specify requirements 
+(\ref{temp.req}) on the associated type. The simple
+form is equivalent to a declaration of the associated type
+followed by an associated requirement (\ref{concept.req}) stated using
+the general form (\ref{temp.req}). \enterexample\
+\begin{codeblock}
+concept InputIterator<typename Iter> { /* ... */ }
+
+concept Container<typename X> {
+  InputIterator iterator; // same as \tcode{typename iterator; requires InputIterator<iterator>;}
+}
+\end{codeblock}
+\exitexample\
+
+\rSec3[concept.req]{Associated requirements}
+
+\pnum
+Associated requirements place additional requirements on concept
+parameters, associated types, and associated templates. Associated
+requirements have the
+same form and behavior as template requirements in a constrained
+template (\ref{temp.constrained}).
+
+\begin{bnf}
+associated-requirements:\br
+         requires-clause \terminal{;}
+\end{bnf}
+
+\enterexample\
+\begin{codeblock}
+concept Iterator<typename Iter> {
+  typename difference_type;
+  requires SignedIntegral<difference_type>;
+}
+\end{codeblock}
+\exitexample\
+
+\rSec3[concept.axiom]{Axioms}
+
+\pnum
+Axioms allow the expression of the semantic properties of concepts. 
+
+\begin{bnf}
+axiom-definition:\br
+         requires-clause\opt\ \terminal{axiom} identifier \terminal{(} parameter-declaration-clause \terminal{)} axiom-body\br
+
+axiom-body:\br
+         \terminal{\{} axiom-seq\opt\ \terminal{\}}\br
+
+axiom-seq:\br
+         axiom axiom-seq\opt\ \br
+
+axiom:\br
+         expression-statement\br
+         \terminal{if} \terminal{(} expression \terminal{)} expression-statement
+\end{bnf}
+
+An \techterm{axiom-definition} defines a new semantic axiom whose name
+is specified by its \techterm{identifier}. \enterexample\
+\begin{codeblock}
+concept Semigroup<typename Op, typename T> : CopyConstructible<T> {
+  T operator()(Op, T, T);
+
+  axiom Associativity(Op op, T x, T y, T z) {
+    op(x, op(y, z)) == op(op(x, y), z);  
+  }
+}
+
+concept Monoid<typename Op, typename T> : Semigroup<Op, T> {
+  T identity_element(Op);
+ 
+  axiom Identity(Op op, T x) {
+    op(x, identity_element(op)) == x;
+    op(identity_element(op), x) == x;
+  }
+}
+\end{codeblock}
+\exitexample\
+
+\pnum 
+Within the body of an \techterm{axiom-definition}, equality
+(\tcode{==}) and inequality (\tcode{!=}) operators are available for
+each concept type parameter and associated type \tcode{T}. These
+implicitly-defined operators have the form:
+\begin{codeblock}
+bool operator==(const T&, const T&);
+bool operator!=(const T&, const T&);
+\end{codeblock}
+\enterexample\
+\begin{codeblock}
+concept CopyConstructible<typename T> {
+  T::T(const T&);
+
+  axiom CopyEquivalence(T x) {
+    T(x) == x; // okay, uses implicit ==
+  }
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Name lookup within an axiom will only find the implicitly-declared
+\tcode{==} and \tcode{!=} operators if the corresponding operation is
+not declared as an associated function (\ref{concept.fct}) in
+the concept, one of the concepts it refines
+(\ref{concept.refine}), or in an associated requirement
+(\ref{concept.req}). \enterexample\
+\begin{codeblock}
+concept EqualityComparable<typename T> {
+  bool operator==(T, T);
+  bool operator!=(T, T);
+
+  axiom Reflexivity(T x) {
+    x == x; // okay: refers to EqualityComparable<T>::operator==
+  }
+}
+\end{codeblock}
+\exitexample\ 
+
+\pnum
+Where axioms state the equality of two expressions, implementations
+are permitted to replace one expression with the other. \enterexample\
+\begin{codeblock}
+template<typename Op, typename T> requires Monoid<Op, T>
+  T identity(const Op& op, const T& t) {
+    return op(t, identity_element(op)); // equivalent to ``return t;''
+  }
+\end{codeblock}
+\exitexample\
+
+\pnum 
+Axioms can state conditional semantics using \tcode{if}
+statements. \addedConcepts{The \mbox{\techterm{expression}} is contextually
+  converted to bool (clause~\mbox{\ref{conv}}).} When the condition
+can be proven true, and the 
+\textit{expression-statement} states the equality of two expressions,
+implementations are permitted to replace one expression with the
+other. \enterexample\
+\begin{codeblock}
+concept TotalOrder<typename Op, typename T> {
+  bool operator()(Op, T, T);
+
+  axiom Antisymmetry(Op op, T x, T y) { if (op(x, y) && op(y, x)) x == y; }
+  axiom Transitivity(Op op, T x, T y, T z) { if (op(x, y) && op(y, z)) op(x, z) == true; }
+  axiom Totality(Op op, T x, T y) { (op(x, y) || op(y, x)) == true; }
+}
+\end{codeblock}
+\textcolor{addclr}{\exitexample}
+
+\pnum
+An axiom containing a \techterm{requires-clause} only applies when the
+specified template requirements are satisfied. \enterexample\
+\begin{codeblock}
+concept EqualityComparable2<typename T, typename U = T> {
+  bool operator==(T, U);
+  bool operator!=(T, U);
+
+  requires SameType<T, U> axiom Reflexivity(T x) {
+      x == x; // okay: T and U have the same type
+    }
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+\addedConcepts{Whether an implementation replaces any expression according to an
+axiom is implementation-defined.  With the exception of such
+substitutions, the presence of an axiom shall have no effect on the
+observable behavior of the program.}
+\enternote\
+the intent of axioms is to provide a mechanism to express
+the semantics of concepts. Such semantic information can be used for
+optimization, software verification, software testing, and other
+program analyses and transformations, all of which are outside the
+scope of this International Standard.
+\exitnote\
+
+
+\rSec2[concept.map]{Concept maps}
+
+\pnum
+The grammar for a \techterm{concept-map-definition} is:
+
+\begin{bnf}
+\index{concept-map-definition@\techterm{concept-map-definition}}%
+concept-map-definition:\br
+         \terminal{concept_map} \terminal{::}\opt\ nested-name-specifier\opt\ concept-id \terminal{\{} concept-map-member-specification\opt\ \terminal{\}} \terminal{;}\opt\ \br
+
+concept-map-member-specification:\br
+         concept-map-member concept-map-member-specification\opt\ \br
+
+concept-map-member:\br
+         simple-declaration \br
+         function-definition \br
+         template-declaration
+\end{bnf}
+
+\pnum
+Concept maps describe how a set of template arguments satisfy the
+requirements stated in the body of a concept definition
+(\ref{concept.def}). Whenever a constrained template specialization
+(\ref{temp.constrained}) is named, there shall be a concept map
+corresponding to each concept requirement in the
+template requirements. This concept map may be written
+explicitly (\ref{concept.map}), instantiated from a concept map
+template (\ref{temp.concept.map}), or generated implicitly
+(\mbox{\ref{concept.map.implicit}}).
+%
+The concept map (\ref{concept.def}) is inserted into the scope in
+which the concept map or concept map template (\ref{temp.concept.map})
+is defined immediately after the \techterm{concept-id} is seen. The
+name of the concept map is the full concept name of the concept in the
+corresponding concept instance.
+%
+\enterexample\
+\begin{codeblock}
+class student_record { 
+public: 
+  string id; 
+  string name; 
+  string address; 
+}; 
+
+concept EqualityComparable<typename T> {
+  bool operator==(T, T);
+}
+
+concept_map EqualityComparable<student_record> {
+  bool operator==(const student_record& a, const student_record& b) { 
+    return a.id == b.id; 
+  }
+}; 
+
+template<typename T> requires EqualityComparable<T> void f(T);
+
+f(student_record()); // okay, have concept_map EqualityComparable<student_record>
+\end{codeblock}
+\exitexample\
+
+\pnum
+A concept map for an implicit concept is implicitly defined when it is
+needed. \addedConcepts{The implicitly-defined concept map is defined in the
+  namespace of the concept.} \enterexample\
+\begin{codeblock}
+auto concept Addable<typename T> {
+  T::T(const T&);
+  T operator+(T, T);
+}
+
+template<typename T>
+requires Addable<T>
+T add(T x, T y) {
+  return x + y;
+}
+
+int f(int x, int y) {
+  return add(x, y); // okay: concept map Addable<int> implicitly defined
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Concept maps shall provide
+a definition for every associated function (\ref{concept.fct}),
+associated type (\ref{concept.assoc}), and associated template of the
+concept named by
+its concept instance and
+all of the requirements inherited from its refined concepts.
+(\ref{concept.refine}). \enterexample\ 
+\begin{codeblock}
+concept C<typename T> { T f(T); }
+
+concept_map C<int> {
+  int f(int); // okay: matches requirement for f in concept C
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Concept maps shall not contain declarations that do not satisfy any
+requirement in their corresponding concept or its refined
+concepts. \enterexample\
+\begin{codeblock}
+concept C<typename T> { }
+
+concept_map C<int> {
+  int f(int); // error: no requirement for function f
+}
+\end{codeblock}
+\exitexample\
+
+\pnum 
+At the point of definition of a concept map, all associated
+requirements (\ref{concept.req}) of the corresponding
+concept and its refined concepts (\ref{concept.refine}) shall be
+satisfied. \enterexample\
+\begin{codeblock}
+concept SignedIntegral<typename T> { /* ... */ }
+
+concept ForwardIterator<typename Iter> {
+  typename difference_type;
+  requires SignedIntegral<difference_type>;
+}
+
+concept_map SignedIntegral<ptrdiff_t> { };
+
+concept_map ForwardIterator<int*> {
+  typedef ptrdiff_t difference_type;
+} // okay: there exists a concept_map SignedIntegral<ptrdiff_t>
+
+class file_iterator { ... };
+
+concept_map ForwardIterator<file_iterator> {
+  typedef long difference_type;
+} // error: no concept_map SignedIntegral<long> if ptrdiff_t is not long
+\end{codeblock} 
+\exitexample\
+
+\pnum
+If a concept map is provided for a particular
+concept instance,
+then that concept map shall be defined before a constrained template
+referring to that concept instance is instantiated. 
+If the introduction of a concept
+map changes a previous result (e.g., in template argument deduction
+(\ref{temp.deduct})), the program is ill-formed, no diagnostic
+required. Concept map templates must be
+instantiated if doing so would affect the semantics of the program. 
+%
+\addedConcepts{A concept map for a particular concept instance shall not be
+  defined both implicitly and explicitly in the same namespace in a
+  program. If one translation unit of a program contains an
+  explicitly-defined concept map for that concept instance, and a
+  different translation contains an implicitly-defined concept map for
+  that concept instance, then the program is ill-formed, no diagnostic
+  required.}
+
+\pnum
+The implicit or explicit definition of a concept map asserts that the
+axioms (\ref{concept.axiom}) stated in its corresponding concept (and
+the refinements of that concept) hold\addedConcepts{, permitting an
+  implementation to perform the transformations described in
+  [concept.axiom]}. \addedConcepts{If an axiom is violated, the behavior of
+  the program is undefined.}
+
+\rSec3[concept.map.fct]{Associated function definitions}
+
+\pnum
+Associated function requirements (\ref{concept.fct}) are
+satisfied by \changedCCC{function definitions}{candidate sets
+  (\mbox{\ref{temp.constrained.set}})} in the 
+body of a concept map. \changedCCC{These}{Function}
+definitions \addedCC{in the concept map} can be used to adapt the
+syntax of the concept arguments
+to the syntax expected by the concept. \enterexample\
+\begin{codeblock}
+concept Stack<typename S> { 
+  typename value_type;
+  bool empty(S const&);
+  void push(S&, value_type);
+  void pop(S&);
+  value_type& top(S&);
+}
+
+// Make a vector behave like a stack
+template<Regular T>
+concept_map Stack<std::vector<T> > {
+  typedef T value_type;
+  bool empty(std::vector<T> const& vec) { return vec.empty(); }
+  void push(std::vector<T>& vec, value_type const& value) { 
+    vec.push_back(value); 
+  }
+  void pop(std::vector<T>& vec) { vec.pop_back(); }  
+  value_type& top(std::vector<T>& vec) { return vec.back(); }
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+\addedConcepts{Functions and function templates defined in a concept
+  map are \mbox{\techterm{inline}}.}
+
+\pnum 
+\addedCC{The candidate set for an associated function \mbox{\tcode{f}}
+  is defined as follows. Synthesize a function (call it
+  \mbox{\tcode{g}}) whose declaration is the same as the declaration
+  of the associated function after substitution of the concept map
+  arguments into the associated function. Let \mbox{\tcode{parm1}},
+  \mbox{\tcode{parm2}}, ..., \mbox{\tcode{parm$N$}} be the parameters
+  of \mbox{\tcode{g}} and \mbox{\tcode{parm1$'$}},
+  \mbox{\tcode{parm2$'$}}, ..., \mbox{\tcode{parm$N'$}} be
+  expressions, where each \mbox{\tcode{parm$i'$}} is an
+  \mbox{\techterm{id-expression}} naming \mbox{\tcode{parm$i$}}. If
+  the declared type of \mbox{\tcode{parm$i$}} is an lvalue reference
+  type, then \mbox{\tcode{parm$i'$}} is treated as an lvalue,
+  otherwise, \mbox{\tcode{parm$i'$}} is treated as an rvalue.}
+
+\addedCC{For an associated member function (or member function
+  template) in a type \mbox{\tcode{X}} (after substitution the concept
+  map's template arguments into the associated member function or
+  member function template), let \mbox{\tcode{x}} be an object of type
+  \mbox{$cv$ \tcode{X}}, where \mbox{$cv$} are the
+  \mbox{\techterm{cv-qualifiers}} on the associated member function
+  (or member function template). If the requirement has no
+  \mbox{\techterm{ref-qualifier}} or if its
+  \mbox{\techterm{ref-qualifier}} is \mbox{\tcode{\&}},
+  \mbox{\tcode{x}} is an lvalue; otherwise, \mbox{\tcode{x}} is an
+  rvalue.}
+
+\addedCC{If the return
+type of \mbox{\tcode{g}} is \mbox{\tcode{void}}, the body of \mbox{\tcode{g}}
+contains a single \mbox{\techterm{expression-statement}}; otherwise, the body
+of \mbox{\tcode{g}} contains a single \mbox{\tcode{return}} statement. The
+\mbox{\techterm{expression}} in the \mbox{\techterm{expression-statement}} 
+or \mbox{\tcode{return}} statement is defined as follows:}
+
+\begin{itemize}
+\additemCC{if the concept map contains one or more function or
+    function template definitions with the same name as
+    \mbox{\tcode{f}}, the 
+    \mbox{\techterm{expression}} is \mbox{\tcode{f(parm1$'$, parm2$'$,
+        ..., parm$N'$)}}, where name lookup of \mbox{\tcode{f}} refers
+    to the definitions of \mbox{\tcode{f}} in the concept map,}
+
+\additemCC{if the concept map contains one or more non-static member function
+    or member function template definitions in the type
+    \mbox{\tcode{X}} and with the same name as \mbox{\tcode{f}}, the
+    \mbox{\techterm{expression}} is \mbox{\tcode{x.f(parm1$'$, parm2$'$,
+        ..., parm$N'$)}}, where name lookup of \mbox{\tcode{x.f}} refers
+    to the definitions of \mbox{\tcode{X::f}} in the concept map,}
+
+\additemCC{if the concept map contains one or more static member function
+    or member function template definitions in the type
+    \mbox{\tcode{X}} and with the same name as \mbox{\tcode{f}}, the
+    \mbox{\techterm{expression}} is \mbox{\tcode{X::f(parm1$'$, parm2$'$,
+        ..., parm$N'$)}}, where name lookup of \mbox{\tcode{X::f}} refers
+    to the static definitions of \mbox{\tcode{X::f}} in the concept map,}
+
+\additemConcepts{if the associated function or function template
+    is a prefix unary operator \mbox{\tcode{Op}}, the
+    \mbox{\techterm{expression}} is \mbox{\tcode{Op parm1$'$}},}
+
+\additemConcepts{if the associated function or function template is a
+  postfix unary 
+  operator \mbox{\tcode{Op}}, the \mbox{\techterm{expression}} is
+  \mbox{\tcode{parm1$'$ Op}}},
+  
+\additemConcepts{if the associated function or function template is a binary operator
+  \mbox{\tcode{Op}}, the \mbox{\techterm{expression}} is
+  \mbox{\tcode{parm1$'$ Op parm2$'$}}, }
+
+\additemConcepts{if the associated function or function template is
+  the function call 
+  operator, the \mbox{\techterm{expression}} is}\\
+  \addedConcepts{\mbox{\tcode{parm1$'$(parm2$'$, parm3$'$, ..., parm$N'$)}},}
+
+\additemConcepts{if the associated function is a conversion operator, the
+  \mbox{\techterm{expression}} is \mbox{\tcode{parm1$'$}} if the
+  conversion operator requirement is not \mbox{\tcode{explicit}} and
+  \mbox{\tcode{(U)parm1$'$}} if the conversion operator requirement is
+  \mbox{\tcode{explicit}}, where \mbox{\tcode{U}} is the return type
+  of the conversion operator,}
+
+\additemConcepts{if the associated function or function template
+  is a non-member function or function template, 
+  \mbox{\techterm{expression}} is an unqualified
+  call \mbox{\tcode{f(\tcode{parm1$'$}, \tcode{parm2$'$}, ...,
+  \tcode{parm$N'$})}},}
+
+\additemCC{if the associated function or function template is a static
+  member function or function template in the type \mbox{\tcode{X}},
+  \mbox{\techterm{expression}} is a call
+  \mbox{\tcode{X::f(\tcode{parm1$'$}, \tcode{parm2$'$}, ...,
+      \tcode{parm$N'$})}},}
+
+\additemConcepts{if the associated member function requirement is a
+  requirement for an operator \mbox{\tcode{new}} or \mbox{\tcode{new[]}},
+  the \mbox{\techterm{expression}} is \mbox{\tcode{X::operator
+      new(parm1$'$, parm2$'$, 
+      ..., parm$N'$)}} or \mbox{\tcode{X::operator new[](parm1$'$)}},
+    respectively, or, if that \mbox{\techterm{expression}} is
+    ill-formed, \mbox{\tcode{::operator}}
+        \mbox{\tcode{new(parm1$'$, parm2$'$, 
+      ..., parm$N'$)}} or \mbox{\tcode{::operator new[](parm1$'$)}},
+    respectively,}
+
+\additemConcepts{if the associated member function requirement is a
+  requirement for an operator \mbox{\tcode{delete}} or \mbox{\tcode{delete[]}},
+  the \mbox{\techterm{expression}} is \mbox{\tcode{delete x}} or
+    \mbox{\tcode{delete[] x}},
+    respectively,}
+
+\additemConcepts{otherwise, the \mbox{\techterm{expression}} is
+\mbox{\tcode{x.f(parm1$'$, parm2$'$, ..., parm$N'$)}}.}
+\end{itemize}
+
+\addedCC{The candidate set is determined based on the formulation of
+  the \mbox{\techterm{expression-statement}} or \mbox{\tcode{return}}
+  statement as follows:}
+\begin{itemize}
+\item \addedCC{if the statement is ill-formed, then}
+  \begin{itemize}
+  \item \addedCC{if the associated function has a default
+      implementation, then the seed is the instantiation of
+      the associated function after substituting the concept map
+      arguments for the concept parameters, and the candidate set
+      contains only the seed,}
+  \item \addedCC{otherwise, definition of the candidate set fails}
+  \end{itemize}
+\item \addedCC{otherwise, the statement is well-formed, and the
+    candidate set is determined by the formulation of the
+    \mbox{\techterm{expression}}}
+  \begin{itemize}
+  \item \addedCC{if overload resolution (\mbox{\ref{over.match}}) for
+      the \mbox{\techterm{expression}} resolves to a 
+      call to a function, that function is the seed.
+      The candidate set contains:}
+    \begin{itemize}
+    \item \addedCC{the seed, if the seed is a non-template function,}
+    \item \addedCC{the template from which the seed was instantiated, if the
+      seed is a template function,}
+    \item \addedCC{every function template that has the same name and is
+      declared in the same namespace as the seed, and}
+    \item \addedCC{every non-template function that is consistent with
+        the seed (\mbox{\ref{temp.constrained.set}}).}
+    \end{itemize}
+
+  \item \addedCC{if overload resolution for the
+      \mbox{\techterm{expression}} resolves to a built-in operator
+      (\mbox{\ref{over.built}}) then the candidate set contains that
+      built-in operator.}
+  \end{itemize}
+\end{itemize}
+
+\pnum
+\addedCC{The candidate set for} \addedConcepts{associated function and
+  function template requirements that name a constructor 
+  (\mbox{\ref{concept.fct}})} \changedCCC{are satisfied by}{contains} \addedConcepts{constructors in the
+  corresponding concept map argument (call it \mbox{\tcode{X}}). 
+Let \mbox{\tcode{parm1}}, \mbox{\tcode{parm2}}, ...,
+\mbox{\tcode{parm$N$}} be the constructor parameters and
+\mbox{\tcode{parm1$'$}}, \mbox{\tcode{parm2$'$}}, ...,
+\mbox{\tcode{parm$N'$}} be expressions, where each
+\mbox{\tcode{parm$i'$}} is an \mbox{\techterm{id-expression}} naming
+\mbox{\tcode{parm$i$}}. If the declared type of \mbox{\tcode{parm$i$}}
+is an lvalue reference type, then \mbox{\tcode{parm$i'$}} is treated
+as an lvalue, otherwise, \mbox{\tcode{parm$i'$}} is treated as an
+rvalue.} \addedCC{For a class type \mbox{\tcode{X}}, the seed is the
+constructor used to initialize an object of type \mbox{\tcode{X}} as
+described below. The initialization of the object is as follows:}
+
+\begin{itemize}
+\additemConcepts{if the constructor requirement has \mbox{$N \neq
+      1$} parameters, the object is  
+  direct-initialized with arguments \mbox{\tcode{parm1$'$}},
+  \mbox{\tcode{parm2$'$}}, ..., \mbox{\tcode{parm$N'$}}, \mbox{\enterexample}}
+\begin{codeblock}
+concept TwoIntConstructible<typename T> {
+  T::T(int, int);
+}
+
+struct X { X(long, int); };
+concept_map TwoIntConstructible<X> { } // okay: X has a constructor that can accept two ints 
+                                       // (the first is converted to a long)
+\end{codeblock}
+\addedConcepts{\exitexample}
+
+\additemConcepts{if the constructor requirement has one parameter,
+    the object is 
+    initialized with the argument \mbox{\tcode{parm1$'$}}. The
+    initialization is direct-initialization if the constructor
+    requirement is \mbox{\tcode{explicit}}, or copy-initialization
+    if the constructor requirement is not \mbox{\tcode{explicit}},
+  \mbox{\enterexample}}
+\begin{codeblock}
+concept IC<typename T> {
+  T::T(int);
+}
+
+concept EC<typename T> {
+  explicit T::T(int);
+}
+
+struct X {
+  X(int);
+};
+
+struct Y {
+  explicit Y(int);
+};
+
+concept_map IC<X> { } // okay
+concept_map EC<X> { } // okay
+concept_map IC<Y> { } // error: cannot copy-initialize Y from an int
+concept_map EC<Y> { } // okay
+\end{codeblock}
+\addedConcepts{\exitexample}
+\end{itemize}
+
+\addedCC{The candidate set is defined as follows:}
+\begin{itemize}
+\additemCC{if the initialization of the object is ill-formed, definition
+of the candidate set fails,}
+\additemCC{if the type \mbox{\tcode{X}} is a class type, the seed is
+  the constructor selected by overload resolution
+  (\mbox{\ref{over.match}}) to initialize the object, then the
+  candidate set contains:}
+\begin{itemize}
+  \item\addedCC{the seed, if it is a non-template constructor,}
+  \item\addedCC{the template from which the seed was instantiated, if the seed
+    is a template constructor,}
+  \item\addedCC{the constructor templates of \mbox{\tcode{X}}, and}
+  \item\addedCC{the non-template constructors of \mbox{\tcode{X}} that are
+      consistent with the seed (\mbox{\ref{temp.constrained.set}}).}
+\end{itemize}
+\additemCC{if the type \mbox{\tcode{X}} is a non-class type, the
+  candidate set is empty.}
+\end{itemize}
+
+\pnum
+\addedCC{The candidate set for an associated function requirement that
+  names a destructor for type \mbox{\tcode{X}} is defined as follows:}
+\begin{itemize}
+  \item \addedCC{if \mbox{\tcode{X}} is a class type, then}
+    \begin{itemize}
+    \item \addedCC{if \mbox{\tcode{X}} contains a public, non-deleted
+        destructor, the seed is the destructor and the candidate set
+        contains the seed,}
+    \item \addedCC{otherwise, definition of the candidate set fails,}
+    \end{itemize}
+  \item \addedCC{otherwise, \mbox{\tcode{X}} is a non-class type, and
+      the candidate set is empty.}
+\end{itemize}
+\addedConcepts{\mbox{\enterexample}}
+\begin{codeblock}
+concept Destructible<typename T> {
+  T::~T();
+}
+
+concept_map Destructible<int> { } // okay: int is not a class type
+
+struct X { };
+concept_map Destructible<X> { } // okay: X has implicitly-declared, public destructor
+
+struct Y { private: ~Y(); };
+concept_map Destructible<Y> { } // error: Y's destructor is inaccessible
+\end{codeblock}
+\addedConcepts{\exitexample}
+
+\rSec3[concept.map.assoc]{Associated type and template definitions}
+
+\pnum
+Definitions in the concept map provide types and templates
+that satisfy requirements for associated types and templates
+(\ref{concept.assoc}), respectively.
+
+\pnum
+Associated type parameter requirements are satisfied by type definitions in the
+body of a concept map. \enterexample\
+\begin{codeblock}
+concept ForwardIterator<typename Iter> {
+  typename difference_type;
+}
+
+concept_map ForwardIterator<int*> {
+  typedef ptrdiff_t difference_type;
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Associated template requirements are satisfied by class template
+definitions or template aliases ([temp.alias]) in the body of the concept map. \enterexample\
+\begin{codeblock}
+@\textcolor{addclr}{concept}@ Allocator<typename Alloc> {
+  template<class T> class rebind;
+}
+
+template<typename T>
+concept_map Allocator<my_allocator<T>> {
+  template<class U>
+    class rebind {
+    public:
+      typedef my_allocator<U> type;
+    };
+};
+\end{codeblock}
+\exitexample\
+
+\rSec3[concept.map.implicit]{Implicit definitions}
+
+\pnum
+Any of the requirements of a concept and its refined concepts
+(\ref{concept.refine}) that are not 
+satisfied by the definitions in the body of a concept map
+(\ref{concept.map.fct}, \ref{concept.map.assoc}) are
+\techterm{unsatisfied requirements}. 
+
+\pnum
+Definitions for unsatisfied requirements in a concept map are
+implicitly generated from the requirements and their default values as
+follows. If any unsatisfied requirement is not
+matched by this process, the concept map is ill-formed.
+
+\pnum
+The implicit definition of a concept map involves the implicit
+definition of concept map members for each associated non-member function
+(\ref{concept.fct}) and associated type or template (\ref{concept.assoc})
+requirement, described below. If the implicit definition of a concept 
+map member would produce an invalid definition, or if any of the
+requirements of the concept would not be satisfied by the
+implicitly-defined concept map (\ref{concept.map}), the implicit definition of 
+the concept map fails \enternote\ failure to implicitly define a
+concept map does not imply that the program is ill-formed. \exitnote\ 
+\enterexample\
+\begin{codeblock}
+auto concept F<typename T> {
+  void f(T);
+}
+
+auto concept G<typename T> {
+  void g(T);
+}
+
+template<typename T> requires F<T> void h(T); // \#1
+template<typename T> requires G<T> void h(T); // \#2
+
+struct X { };
+void g(X);
+
+void func(X x) {
+  h(x); // okay: implicit concept map F<X> fails, causing template argument deduction to fail for \#1; calls \#2
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+\addedCC{The implicit concept map member defined for an associated
+  type or template can have its definition deduced from the return
+  type of the seed in the candidate set corresponding to an associated
+  function requirement (\mbox{\ref{concept.map.fct}}), using template
+  argument deduction (\mbox{\ref{temp.deduct.type}}). Let
+  \mbox{\tcode{P}} be the return type of the associated function after
+  substitution of the concept parameters specified by the concept map
+  with their concept arguments, and where each undefined associated
+  type and associated template has been replaced with a newly invented
+  type or template template parameter, respectively. Let
+  \mbox{\tcode{A}} be the return type of the seed in the candidate set
+  corresponding to the associated function.}
+
+\addedCC{The definitions of the associated parameters are determined
+  using the rules of template argument deduction from a function call
+  (\mbox{\ref{temp.deduct.call}}), where \mbox{\tcode{P}} is a
+  function template parameter type and \mbox{\tcode{A}} the
+  corresponding argument type. If the deduction fails, no concept map
+  members are implicitly defined by that associated function.  If the
+  results of deduction produced by different associated functions
+  yield more than one possible \mbox{\tcode{A}} for a particular
+  \mbox{\tcode{P}}-\mbox{\tcode{A}} combination, that associated type
+  or template is not implicitly defined. \mbox{\enterexample}}
+\begin{codeblock}
+auto concept Dereferenceable<typename T> {
+  typename value_type;
+  value_type& operator*(T&);
+}
+
+template<typename T> requires Dereferenceable<T> void f(T&);
+
+void g(int* x) {
+  f(x); // okay: Dereferenceable<int*> implicitly defined
+                  // implicitly-defined Dereferenceable<int*>::operator* calls built-in * for integer pointers
+                  // implicitly-defined Dereferenceable<int*>::value_type is int
+}
+\end{codeblock}
+\addedCC{\mbox{\exitexample}}
+
+\pnum
+If an associated type or template (\ref{concept.assoc}) has a default
+argument, a concept map member satisfying the associated
+type or template requirement shall be implicitly defined by substituting the
+concept map arguments into the default argument. If this substitution
+does not produce a valid type or template (\ref{temp.deduct}), the
+concept map member is not implicitly defined. \enterexample\
+\begin{codeblock}
+auto concept A<typename T> {
+  typename result_type = typename T::result_type;
+}
+
+auto concept B<typename T> {
+  T::T(const T&);
+}
+
+template<typename T> requires A<T> void f(const T&); // \#1
+template<typename T> requires B<T> void f(const T&); // \#2
+
+struct X {};
+void g(X x) {
+  f(x); // okay: A<X> cannot satisfy result_type requirement, and is not implicitly defined, calls \#2
+}
+\end{codeblock}
+\exitexample\
+
+\rSec2[concept.refine]{Concept refinement}
+
+\pnum
+The grammar for a \techterm{refinement-clause} is:
+
+\begin{bnf}
+refinement-clause:\br
+         \terminal{:} refinement-specifier-list\br
+
+refinement-specifier-list:\br
+         refinement-specifier \terminal{,} refinement-specifier-list\br
+         refinement-specifier\br
+
+refinement-specifier:\br
+         \terminal{::}\opt\ nested-name-specifier\opt\ concept-id
+\end{bnf}
+
+\pnum 
+Refinements specify an inheritance
+relationship among concepts. 
+%
+A concept \tcode{B} named in a \techterm{refinement-specifier} of
+concept \tcode{D} is a \emph{refined concept} of \tcode{D} and
+\tcode{D} is a \emph{refining concept} of \tcode{B}.
+%
+A concept refinement inherits all
+requirements in the body of a concept (\ref{concept.def}), such that
+the requirements of the refining concept are a superset of the
+requirements of the refined concept. 
+%
+\enternote\ 
+when a concept \tcode{D} refines
+a concept \tcode{B}, every set of concept arguments that satisfies the
+requirements of \tcode{D} also satisfies the requirements of
+\tcode{B}. \addedConcepts{The refinement relationship is transitive.}
+\exitnote\
+%
+\enterexample\ In the following example,
+\tcode{EquilateralPolygon} refines
+\tcode{Polygon}. Thus, every
+\tcode{EquilateralPolygon} is a \tcode{Polygon}, and constrained
+templates (\ref{temp.constrained}) that are well-formed with a
+\tcode{Polygon} constraint are well-formed when given an
+\tcode{EquilateralPolygon}.
+
+\begin{codeblock}
+concept Polygon<typename P> { /* ... */ }
+
+concept EquilateralPolygon<typename P> : Polygon<P> { /* ... */ }
+\end{codeblock} \exitexample\
+
+\pnum
+A \techterm{requirement-specifier} shall refer to a defined concept. \enterexample\
+\begin{codeblock}
+concept C<typename T> : C<vector<T>> {/* ... */ } // error: concept C is not defined
+\end{codeblock}
+\textcolor{addclr}{\exitexample}
+
+\pnum
+A \emph{refinement-specifier} in the refinement clause shall not refer
+  to associated types.
+
+\pnum
+The \techterm{template-argument-list} of a
+\techterm{refinement-specifier}'s \techterm{concept-id} shall refer to at
+  least one of the concept parameters. \enterexample\ 
+\begin{codeblock}
+concept InputIterator<typename Iter> 
+  : Incrementable<int>  // error: Incrementable<int> uses no concept parameters
+{
+  // ...
+}
+\end{codeblock} 
+\exitexample\
+
+\pnum 
+Within the definition of a concept, a concept map archetype
+(\ref{temp.archetype}) is synthesized for each
+\techterm{refinement-specifier} in the concept's
+\emph{refinement-clause} (if any).
+
+\rSec3[concept.member.lookup]{Concept member lookup}
+
+\pnum
+Concept member lookup determines the meaning of a name
+(\techterm{id-expression}) in concept scope
+(\ref{basic.scope.concept}). The following steps define the result of
+name lookup for a member name \tcode{f} in concept scope
+\tcode{C}. \tcode{C$_R$} is the set of concept scopes corresponding to
+the concepts refined by the concept whose scope is \tcode{C}.
+
+\pnum
+If the name \tcode{f} is declared in concept scope \tcode{C}, and
+\tcode{f} refers to an associated type or template
+(\ref{concept.assoc}), then the result of name lookup is the
+associated type or template.
+
+\pnum
+If the name \tcode{f} is declared in concept scope \tcode{C}, and
+\tcode{f} refers to one or more associated functions
+(\ref{concept.fct}), then the result of name lookup is the set
+consisting of the associated functions in \tcode{C} in addition to the
+associated functions in each concept scope
+in \tcode{C$_R$} for which
+name lookup of \tcode{f} results in a set
+  of associated functions. \enterexample\
+\begin{codeblock}
+concept C1<typename T> : CopyConstructible<T> {
+  T f(T); // \#1
+}
+
+concept C2<typename T> {
+  typename f;
+}
+
+concept D<typename T> : C1<T>, C2<T> {
+  T f(T, T); // \#2
+}
+
+template<typename T> 
+requires D<T>
+void f(T x) 
+{
+  D<T>::f(x); // name lookup finds \#1 and \#2, overload resolution selects \#1
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+If the name \tcode{f} is not declared in \tcode{C}, name lookup
+searches for \tcode{f} in the scopes of each of the refined concepts
+(\tcode{C$_R$}). If name lookup of \tcode{f} is ambiguous in any
+concept scope \tcode{C$_R$}, name lookup of \tcode{f} in \tcode{C} is
+ambiguous. Otherwise, the set of concept scopes \tcode{C$_{R'}$} is a
+subset of \tcode{C$_R$} containing only those concept scopes for which
+name lookup finds \tcode{f}. The result of name lookup for \tcode{f}
+in \tcode{C} is defined by:
+
+\begin{itemize}
+\item if \tcode{C$_{R'}$} is empty, name lookup of \tcode{f} in \tcode{C}
+  returns no result, or
+
+\item if \tcode{C$_{R'}$} contains only a single concept scope, name
+  lookup for \tcode{f} in \tcode{C} is the result of name lookup for
+  \tcode{f} in that concept scope, or
+
+\item if \tcode{f} refers to one or more
+    functions in all of the concept scopes in \tcode{C$_{R'}$}, then
+  \tcode{f} 
+  refers to the set consisting of
+  all associated functions from all of the concept scopes in \mbox{\tcode{C$_{R'}$}}, or
+
+\item if \tcode{f} refers to an associated type in all concept
+  scopes in \tcode{C$_{R'}$}, and all of the associated types are
+  equivalent (\ref{temp.req}), the result is the associated
+  type \tcode{f} found first by a depth-first traversal of the
+  refinement clauses,
+
+\item otherwise, name lookup of \tcode{f} in \tcode{C} is ambiguous.
+\end{itemize}
+
+\enterexample\
+\begin{codeblock}
+concept A<typename T> { typename t; }
+
+concept B<typename T> { typename t; }
+
+concept C<typename T> :  A<T>, B<T> {
+  f(t); // error: ambiguous, the two t's are not equivalent
+  f(A<T>::t); // okay
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+When name lookup in a concept scope \tcode{C} results in a set of associated functions, duplicate associated
+functions are removed from the 
+set. If more than one associated function in the 
+set has the same signature, the associated
+function found first by a depth-first traversal of the refinement clauses of
+\tcode{C} starting at \tcode{C} will be retained and the other
+associated functions will be removed as duplicates. \enterexample\
+\begin{codeblock}
+concept A<typename T> {
+  T f(T); // \#1a
+}
+
+concept B<typename T> {
+  T f(T); // \#1b
+  T g(T); // \#2a
+}
+
+concept C<typename T> : A<T>, B<T> {
+  T g(T); // \#2b
+}
+
+template<typename T>
+requires C<T>
+void h(T x) {
+  C<T>::f(x); // overload set contains \#1a; \#1b was removed as a duplicate
+  C<T>::g(x); // overload set contains \#2b; \#2a was removed as a duplicate
+}
+\end{codeblock}
+\exitexample\
+
+\rSec3[concept.refine.maps]{Implicit concept maps for refined concepts}
+
+\pnum
+When a concept map is defined for a concept \tcode{C} that has a
+refinement clause, concept maps for each of the concepts refined by
+\tcode{C} are implicitly defined  in the namespace of which the
+concept map is a member unless already defined. \enterexample\
+\begin{codeblock}
+concept A<typename T> { }
+concept B<typename T> : A<T> { }
+
+concept_map B<int> { } // implicitly defines concept map A<int>
+\end{codeblock}
+\exitexample\
+
+\pnum
+When a concept map is implicitly defined for a refinement,
+definitions in the concept map for the refining concept can
+\addedConcepts{also} be used to 
+satisfy the requirements of the refined concept (\ref{concept.map}).
+\addedConcepts{\mbox{\enternote} a single function definition in a concept
+  map can be used to satisfy multiple requirements. \mbox{\exitnote}}
+\enterexample\ in this example, the concept map \tcode{D<int>}
+implicitly defines the concept map \tcode{C<int>}.
+\begin{codeblock}
+@\textcolor{addclr}{concept}@ C<typename T> {
+  T f(T);
+  void g(T);
+}
+
+concept D<typename T> : C<T> { 
+  void g(T);
+}
+
+concept_map D<int> {
+  int f(int x) { return -x; } // satisfies requirement for C<int>::f
+  void g(int x) { } // satisfies requirement for C<int>::g and D<int>::g
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+Concept map templates (\ref{temp.concept.map}) are implicitly defined
+only for certain refinements of the concept corresponding to the
+concept map template. A concept map template for a particular refined
+concept is defined if all of the template parameters of the refining
+concept map template can be deduced from the
+\techterm{template-argument-list} of
+the \techterm{refinement-specifier}'s
+corresponding concept instance
+(\ref{temp.deduct.type}). If template argument deduction fails, then a
+concept map template corresponding to the refined concept shall
+have been defined.
+\enterexample\
+\begin{codeblock}
+concept C<typename T> { }
+concept D<typename T, typename U> : C<T> { }
+
+template<typename T> struct A { };
+
+template<typename T> concept_map D<A<T>, T> { }
+// implicitly defines:
+template<typename T> concept_map C<A<T>> { }
+
+template<typename T, typename U> 
+  concept_map D<T, A<U>> { } // ill-formed: cannot deduce template parameter U from C<T>
+                             // and there is no concept map template C<T>
+\end{codeblock}
+\exitexample\
+
+\pnum 
+Each concept map or concept map template shall provide only
+definitions corresponding to requirements of the refinements of its
+concept that are compatible with the definitions provided by the
+concept map or concept map template named by the refinement. A
+definition in the refining concept map or concept map template is
+compatible with its corresponding definition in the refined concept
+map or concept map template if 
+\begin{itemize}
+\item the definition in the refined concept
+map or concept map template was implicitly defined from the refining
+concept map or concept map template, 
+\additemConcepts{the definition was explicitly provided in the refined
+  concept map or concept map template and implicitly defined in the
+  refining concept map or concept map template, or}
+\item the definitions satisfy
+an associated type or template requirement (\ref{concept.assoc}) and
+both definitions name the same type or template, respectively.
+\end{itemize}
+If a program contains definitions in a concept map or concept
+map template that are not compatible with their corresponding
+definitions in a refined concept map or concept map template, the
+program is ill-formed. 
+\enternote\ if the concept maps or concept map templates with
+definitions that are not compatible occur in different translation
+units, no diagnostic is required. \exitnote\
+\enterexample\
+\begin{codeblock}
+concept C<typename T> {
+  typename assoc;
+  assoc f(T);
+}
+
+concept D<typename T> : C<T> { 
+  int g(T);
+}
+
+concept E<typename T> : D<T> { }
+
+concept_map C<int> {
+  typedef int assoc;
+  int f(int x) { return x; }
+}
+
+concept_map D<int> {
+  typedef int assoc; // okay: same type as C<int>::assoc
+  // okay: f is not defined in D<int>
+  int g(int x) { return -x; } // okay: satisfies D<int>::g
+} 
+
+concept_map E<int> {
+  typedef float assoc; // error: E<int>::assoc and D<int>::assoc are not the same type
+  // okay: f is not defined in D<int>
+  int g(int x) { return x; } // error: D<int>::g already defined in concept map D<int>
+}
+\end{codeblock}
+\exitexample\
+
+\rSec1[temp.constrained]{Constrained templates}
+
+\pnum
+A template that has a \techterm{requires-clause} (or declares any
+template type parameters using the simple form of requirements
+(\ref{temp.param})) is a \techterm{constrained
+  template}. A constrained template can only be instantiated with
+template arguments that satisfy its template requirements. 
+The template definitions of constrained templates are
+similarly constrained, requiring all names to be 
+found through name lookup \addedConcepts{at template definition time}
+(\ref{basic.lookup}). \enternote\
+\addedConcepts{names can be found in the template requirements of a
+  constrained template (\mbox{\ref{basic.scope.req}}).} The practical effect of constrained templates is that they provide
+improved diagnostics at template definition time, such that any use of
+the constrained template that satisfies the template's requirements is
+likely to result in a well-formed instantiation. \exitnote\
+
+\pnum
+A template that is not a constrained template is an
+\techterm{unconstrained template}. 
+
+\pnum \addedConcepts{A \mbox{\techterm{constrained context}} is a part of a
+  constrained template in which all name lookup is resolved at
+  template definition time. Names that would be dependent outside of a
+  constrained context are found in the current scope, which includes
+  the template requirements of the constrained template
+  (\mbox{\ref{basic.scope.req}}). \mbox{\enternote} Within a constrained
+  context, template parameters behave as if aliased their
+  corresponding archetypes
+  (\mbox{\ref{temp.archetype}}) so there are no dependent types
+  (\mbox{\ref{temp.dep.type}}), and no type-dependent values
+  (\mbox{\ref{temp.dep.expr}}) or dependent names (\mbox{\ref{temp.dep}}).
+  Instantiation in constrained contexts (\mbox{\ref{temp.constrained.inst}})
+  still substitutes types, templates and values for template
+  parameters, but the substitution does not require additional name
+  lookup (\mbox{\ref{basic.lookup}}). \mbox{\exitnote} A constrained
+  context is:} 
+\begin{itemize}
+\additemConcepts{the body of a constrained function template,}
+\additemConcepts{the \mbox{\techterm{expression}} in a
+  \mbox{\tcode{decltype}} type or \mbox{\tcode{sizeof}} expression
+  that occurs within the signature of a constrained function template,}
+\additemConcepts{the \mbox{\techterm{base-clause}} (if any) of a constrained
+  class template,}
+\additemConcepts{a member of a constrained class template,}
+\additemConcepts{the body of a concept map template,}
+\additemConcepts{a member of a concept map template,}
+\additemConcepts{the body of a concept,}
+\additemConcepts{a member of a concept.}
+\end{itemize}
+
+\pnum
+\addedConcepts{Any context that is not a constrained context is an
+  \mbox{\techterm{unconstrained context}}. Within a constrained
+  context, several constructs provide unconstrained contexts:}
+\begin{itemize}
+  \additemConcepts{a late-checked block (\mbox{\ref{stmt.late}}) indicates a
+    compound statement that is an unconstrained context,}
+  \additemConcepts{a default template argument in a
+    \mbox{\techterm{template-parameter}} is an unconstrained context,
+    and}
+  \additemConcepts{a default argument in a \mbox{\techterm{parameter-declaration}}.}
+\end{itemize}
+
+\rSec2[temp.req]{Template requirements}
+\pnum
+A template has \techterm{template requirements} if it contains a
+\techterm{requires-clause} or any of its template parameters were
+specified using the simple form of requirements
+(\ref{temp.param}). Template requirements state the conditions under
+which the template can be used.
+
+\begin{bnf}
+requires-clause:\br
+         \terminal{requires} requirement-list\br
+         \terminal{requires (} requirement-list \terminal{)}\br
+
+requirement-list:\br
+         requirement \terminal{...}\opt\ \terminal{\&\&} requirement-list\br
+         requirement \terminal{...}\opt\ \br
+
+requirement:\br
+         \terminal{::}\opt\ nested-name-specifier\opt\ concept-id\br
+         \terminal{!} \terminal{::}\opt\ nested-name-specifier\opt\ concept-id
+\end{bnf}
+
+\pnum
+A \techterm{requires-clause} contains a list of requirements, all of
+which must be satisfied by the template arguments for the template. A
+\techterm{requirement} not containing a \tcode{!} is a
+\techterm{concept requirement}. A \techterm{requirement} containing
+a \tcode{!} is a \techterm{negative requirement}.
+
+\pnum
+A concept requirement requires that there be a most
+specific concept map according to concept map
+matching and partial ordering of concept map templates
+(\ref{temp.concept.map}). \enterexample\
+\begin{codeblock}
+@\textcolor{addclr}{concept}@ A<typename T> { }
+auto concept B<typename T> { T operator+(T, T); }
+
+concept_map A<float> { }
+concept_map B<float> { }
+
+template<typename T> requires A<T> void f(T);
+template<typename T> requires B<T> void g(T);
+
+struct X { };
+void h(float x, int y, int X::* p) {
+  f(x); // okay: uses concept map A<float>
+  f(y); // error: no concept map A<int>; requirement not satisfied
+  g(x); // okay: uses concept map B<float>
+  g(y); // okay: implicitly defines and uses concept map B<int>
+  g(p); // error: no implicit definition of concept map B<int X::*>; requirement not satisfied
+}
+\end{codeblock}
+\exitexample\
+
+A concept requirement is satisfied in the following way.
+First, unqualified name lookup (\ref{basic.lookup}) searches for all concept
+maps for the full concept name of the concept in the
+\addedConcepts{concept instance corresponding to the}
+  \techterm{concept-id}. Then concept map matching 
+(\ref{temp.concept.map}) selects the most specific concept map that
+matches the arguments in the concept instance. \enterexample\ In the
+following, to satisfy the template  
+requirement for \texttt{f}, the implementation performs name loookup to find
+concept maps for the concept \texttt{N1::C}.  Lookup finds three
+concept maps: \texttt{::concept_map N1::C<bool>},
+\texttt{N3::concept_map N1::C<int>}, and \texttt{N3::concept_map
+'  N1::C<float>}. Concept map matching then selects the second concept
+map because that matches the requirement \texttt{C<T>} with \texttt{T}
+replaced by the deduced type argument \texttt{int}.
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { };
+  template<C T> void f(T x);
+}
+namespace N2 {
+  concept_map N1::C<int> { };
+  concept C<typename T> { };
+}
+concept_map N1::C<bool> { };
+namespace N3 {
+  concept_map N1::C<int> { };
+  concept_map N1::C<float> { };
+  concept_map N2::C<char> { };
+
+  void g() { f(1); }
+}
+\end{codeblock}
+\exitexample\
+
+\pnum If there are no matching concept maps found by unqualified name
+lookup, then the namespace of which the concept is a member is
+searched for concept maps. \addedConcepts{This search finds only those
+  concept maps defined in the same namespace as the
+  concept, ignoring any \mbox{\techterm{using-declaration}}s that apply to
+  concept maps (\mbox{\ref{namespace.udecl}}).} \enterexample\ 
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { };
+  concept_map C<int> { };
+}
+template<N1::C T> void f(T x);
+void g() { f(1); } // Ok, finds N1::concept_map C<int> because it is in the same namespace as concept N1::C.
+\end{codeblock}
+\exitexample\
+
+\pnum 
+A negative requirement requires that no concept map
+corresponding to its concept instance be defined, implicitly or 
+explicitly. \enterexample\
+\begin{codeblock}
+concept A<typename T> { }
+auto concept B<typename T> { T operator+(T, T); }
+
+concept_map A<float> { }
+concept_map B<float> { }
+
+template<typename T> requires !A<T> void f(T);
+template<typename T> requires !B<T> void g(T);
+
+struct X { };
+void h(float x, int y, int X::* p) {
+  f(x); // error: concept map A<float> has been defined
+  f(y); // okay: no concept map A<int>
+  g(x); // error: concept map B<float> has been defined
+  g(y); // error: implicitly defines concept map B<int>, requirement not satisfied
+  g(p); // okay: concept map B<int X::*> cannot be implicitly defined
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+A concept requirement that refers to the
+\tcode{SameType} concept (\mbox{\ref{concept.support}}) is a
+\techterm{same-type requirement}. A same-type requirement is satisfied
+when its two concept arguments refer to the same type (including the
+same \techterm{cv} qualifiers). In a 
+constrained template (\ref{temp.constrained}), a same-type requirement
+\tcode{SameType<T1, T2>} makes the types \tcode{T1} and \tcode{T2}
+equivalent. \enternote\ type equivalence is a
+congruence relation, thus
+\begin{itemize}
+\item \tcode{SameType<T1, T2>} implies \tcode{SameType<T2, T1>},
+\item \tcode{SameType<T1, T2>} and \tcode{SameType<T2, T3>} implies
+  \tcode{SameType<T1, T3>},
+\item \tcode{SameType<T1, T1>} is trivially true,
+\item \tcode{SameType<T1*, T2*>} implies \tcode{SameType<T1, T2>} and
+  \tcode{SameType<T1**, T2**>}, etc.
+\end{itemize}
+\exitnote\
+\enterexample\
+\begin{codeblock}
+concept C<typename T> {
+  typename assoc;
+  assoc a(T);
+}
+
+concept D<typename T> {
+  T::T(const T&);
+  T operator+(T, T);
+}
+
+template<typename T, typename U>
+requires C<T> && C<U> && SameType<C<T>::assoc, C<U>::assoc> && D<C<T>::assoc>
+C<T>::assoc f(T t, U u) {
+  return a(t) + a(u); // okay: C<T>::assoc and C<U>::assoc are the same type
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+A \techterm{requirement} followed by an ellipsis is a pack expansion
+(\ref{temp.variadic}). Requirement pack expansions place requirements
+on all of the arguments in one or more template parameter
+packs. \enterexample\ 
+\begin{codeblock}
+auto concept OutputStreamable<typename T> {
+  std::ostream& operator<<(std::ostream&, const T&);
+}
+
+template<typename T, typename... Rest>
+requires OutputStreamable<T> && OutputStreamable<Rest>...
+void print(const T& t, const Rest&... rest) {
+  std::cout << t;
+  print(rest);
+}
+
+template<typename T>
+requires OutputStreamable<T>
+void print(const T& t) {
+  std::cout << t;
+}
+
+void f(int x, float y) {
+  print(17, ", ", 3.14159); // okay: implicitly-generated OutputStreamable<int>, OutputStreamable<const char[3]>,
+                              // and OutputStreamable<double>
+  print(17, " ", std::cout); // error: no concept map OutputStreamable<std::ostream>
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+\addedConcepts{If the requirements of a template are inconsistent, such that
+no set of template arguments can satisfy all of the requirements, the
+program is ill-formed, no diagnostic required. \mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> { }
+
+template<typename T>
+requires C<T> && !C<T>
+void f(const T&); // error: no type can satisfy both C<T> \&\& !C<T>, no diagnostic required
+\end{codeblock}
+\addedConcepts{\exitexample}
+
+\rSec3[temp.req.impl]{Requirement implication}
+\pnum
+\addedConcepts{The declaration of a constrained template implies additional template
+requirements that are available within the body of the template. A
+requirement is \mbox{\techterm{implied}} if the absence of that requirement
+would render the constrained template declaration ill-formed. Template
+requirements are implied from:}
+\begin{itemize}
+\additemConcepts{the type of a constrained function template,}
+\additemConcepts{the types named by an
+  \mbox{\techterm{exception-specification}} (if any) of a constrained
+  function template,}
+\additemConcepts{the template arguments of a constrained class template partial
+  specialization,}
+\additemConcepts{the template arguments of a concept map template,}
+\additemConcepts{the template parameters of a constrained template,}
+\additemConcepts{the requirements of a constrained template (including
+  implied requirements),}
+\additemConcepts{the associated requirements of a concept, and}
+\additemConcepts{the type of an associated function requirement.}
+\end{itemize}
+
+\pnum
+For every concept requirement in a template's
+requirements (including implied requirements), requirements for the 
+refinements and associated requirements of the concept named by the
+concept instance (\ref{concept.refine}, \ref{concept.req}) are
+implied.
+
+\pnum 
+\addedConcepts{The formation of types within the declaration of a
+  constrained template implies the template requirements needed to
+  ensure that the types themselves are well-formed within any
+  instantiation. The following type constructions imply template
+  requirements:}
+\begin{itemize}
+\additemConcepts{For every \mbox{\techterm{template-id} \tcode{X<A1,
+      A2, ..., A$N$>}}, where 
+\mbox{\tcode{X}} is a constrained template, the requirements of
+\mbox{\tcode{X}} (after substitution of the
+arguments \mbox{\tcode{A1}}, \mbox{\tcode{A2}}, ...,
+\mbox{\tcode{A$N$}}) are implied.}
+\enterexample\
+\begin{codeblock}
+template<LessThanComparable T> class set { /* ... */ };
+
+template<CopyConstructible T>
+void maybe_add_to_set(std::set<T>& s, const T& value); 
+// use of std::set<T> implicitly adds requirement LessThanComparable<T>
+\end{codeblock}
+\exitexample\
+
+\additemConcepts{If the formation of a type containing an archetype
+  \mbox{\tcode{T}} will be ill-formed due to a missing requirement
+  \mbox{\tcode{C<T>}}, where \mbox{\tcode{C}} is a compiler-supported
+  concept (\mbox{\ref{concept.support}}), the requirement \mbox{\tcode{C<T>}} is
+  implied. \mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> { typename assoc; }
+
+template<typename T>
+requires C<T>
+C<T>::assoc  // implies Returnable<C<T>::assoc>
+f(T*, T&); // implies PointeeType<T> and ReferentType<T>
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\additemConcepts{For every \mbox{\techterm{qualified-id}} that names
+  an associated type or 
+template, a concept requirement for the concept instance
+containing that associated type or template is implied.}
+\enterexample\
+\begin{codeblock}
+concept Addable<typename T, typename U> {
+  CopyConstructible result_type;
+  result_type operator+(T, U);
+}
+
+template<CopyConstructible T, CopyConstructible U>
+Addable<T, U>::result_type // implies Addable<T, U>
+add(T t, U u) { 
+  return t + u; 
+}
+\end{codeblock}
+
+\additemConcepts{For every type arcjetype \mbox{\tcode{T}} that is the type
+  of a parameter in a function type, the requirement
+  \mbox{\tcode{MoveConstructible<T>}} is implied.}
+\exitexample\
+
+\end{itemize}
+
+\pnum
+In the definition of a class template partial specialization, the
+requirements of its primary class template (\ref{temp.class.spec}),
+after substitution of the template arguments of the class template partial
+specialization, are implied. \enternote\ this rule ensures that a
+class template partial specialization of a constrained template is a constrained
+template, even if does not have template requirements explicitly
+specified. \exitnote\
+If this substitution results
+in a requirement that does not depend on any template parameter, then
+the requirement must be satisfied (\ref{temp.req}); otherwise, the
+program is ill-formed.
+\enterexample\
+\begin{codeblock}
+template<typename T>
+requires EqualityComparable<T>
+class simple_set { };
+
+template<typename T>
+class simple_set<T*> // implies \tcode{EqualityComparable<T*>}
+{
+};
+\end{codeblock}
+\exitexample\
+
+\pnum
+The template requirements for two templates are \techterm{identical}
+if they contain the same concept, negative, \addedConcepts{and}
+same-type requirements in arbitrary order. Two requirements are the
+same if they have the same kind, name the same concept, and have the
+same template argument lists. 
+
+\rSec2[temp.archetype]{Archetypes}
+\pnum
+An \techterm{archetype} is a non-dependent
+type\addedConcepts{, template, or value} whose behavior is defined 
+by the template requirements (\ref{temp.req}) of its constrained
+template. \addedConcepts{Within a constrained context
+  (\mbox{\ref{temp.constrained}}), a template parameter behaves as if it
+were its archetype.} \enternote\ this substitution of
+archetypes (which are not dependent) for their corresponding
+types\addedConcepts{, templates, or values} (which would be dependent in an
+unconstrained template)
+effectively treats all types and templates (and therefore both
+expressions and names) 
+in a constrained context as ``non-dependent''. \exitnote\
+
+\pnum
+\addedConcepts{The archetype of a type is a type,
+the archetype of a template is a class template, and the archetype of
+a value is a value. }
+
+\pnum
+A type in a constrained template aliases an archetype if it is:
+\begin{itemize}
+\item a template type parameter (\ref{temp.param}),
+\item an associated type (\ref{concept.assoc}), or
+\additemConcepts{a class template specialization involving one or more
+  archetypes}
+\end{itemize}
+
+\pnum
+\addedConcepts{A template in a constrained template aliases an archetype if it is:}
+\begin{itemize}
+\additemConcepts{a template template parameter (\mbox{\ref{temp.param}}) or}
+\additemConcepts{an associated template (\mbox{\ref{concept.assoc}}).}
+\end{itemize}
+
+\pnum
+\addedConcepts{A value in a constrained template aliases an archetype if it is a
+  \mbox{\techterm{constant-expression}} (\mbox{\ref{expr.const}})
+  whose value depends on a template parameter.} 
+
+\pnum 
+If two types, \tcode{T1} and \tcode{T2}, both alias archetypes and are
+the same (e.g., due to one or more same-type requirements
+(\ref{temp.req})), then \tcode{T1} and \tcode{T2} alias the same
+archetype \tcode{T$'$}. \addedConcepts{\mbox{\enternote} there is no
+  mechanism to specify the relationships between different value
+  archetypes, because such a mechanism would introduce the need for equational
+  reasoning within the translation process. \mbox{\exitnote}}
+
+\pnum
+\addedConcepts{An archetype \mbox{\tcode{T$'$}} for a type
+  \mbox{\tcode{T}} is}
+\begin{itemize}
+\additemConcepts{an object type ([intro.object]), if the template
+  contains the requirement \mbox{\tcode{ObjectType<T>}},}
+\additemConcepts{a class type (clause~\mbox{\ref{class}}), if the 
+  template contains the requirement
+  \mbox{\tcode{ClassType<T>}},}
+\additemConcepts{a class (clause~\mbox{\ref{class}}), if the 
+  template contains the requirement \mbox{\tcode{Class<T>}},}
+\additemConcepts{a union ([class.union]), if the template contains
+  the requirement \mbox{\tcode{Union<T>}}},
+\additemConcepts{a trivial type (\mbox{\ref{basic.types}}), if the 
+  template contains the requirement
+  \mbox{\tcode{TrivialType<T>}},}
+\additemConcepts{a standard layout type (\mbox{\ref{basic.types}}), if the
+  template contains the requirement
+  \mbox{\tcode{StandardLayoutType<T>}},}
+\additemConcepts{a literal type (\mbox{\ref{basic.types}}), if the 
+  template contains the requirement
+  \mbox{\tcode{LiteralType<T>}},}
+\additemConcepts{a scalar type (\mbox{\ref{basic.types}}), if the 
+  template contains the requirement
+  \mbox{\tcode{ScalarType<T>}},}
+\additemConcepts{an integral type ([basic.fundamental]), if the 
+  template contains the requirement
+  \mbox{\tcode{IntegralType<T>}}, and}
+\additemConcepts{an enumeration type ([dcl.enum]), if the template
+  contains the requirement \mbox{\tcode{EnumerationType<T>}}.}
+\end{itemize}
+
+\pnum
+The archetype \tcode{T$'$} of \tcode{T} contains a public member
+function or member function template
+corresponding to each member function or member function template of
+each concept map archetype corresponding
+to a concept 
+requirement that names \tcode{T} (\ref{temp.req}).
+\enterexample\
+\begin{codeblock}
+concept CopyConstructible<typename T> {
+  T::T(const T&);
+}
+
+concept MemSwappable<typename T> {
+  void T::swap(T&);
+}
+
+template<typename T>
+requires CopyConstructible<T> && MemSwappable<T>
+void foo(T& x) {
+  // archetype T$'$ of $T$ contains a copy constructor T$'$::T$'$(const T$'$\&) from CopyConstructible<T>
+  // and a member function void swap(T$'$\&) from MemSwappable<T>
+  T y(x);
+  y.swap(x);
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+If no requirement specifies a copy constructor for a type
+\tcode{T}, a copy constructor is implicitly declared
+(\ref{class.copy}) in the archetype of \tcode{T} with the following
+signature:
+\begin{codeblock}
+  T(const T&) = delete;
+\end{codeblock}
+\enterexample\
+\begin{codeblock}
+concept DefaultConstructible<typename T> {
+  T::T();
+}
+
+concept MoveConstructible<typename T> {
+  T::T(T&&);
+}
+
+template<typename T>
+requires DefaultConstructible<T> && MoveConstructible<T>
+void f(T x) {
+  T y = T(); // okay: move-constructs y from default-constructed T
+  T z(x); // error: overload resolution selects implicitly-declared
+          // copy constructor, which is deleted
+}
+\end{codeblock}
+\exitexample\
+
+\pnum
+If no requirement specifies a copy assignment operator for a type
+\tcode{T}, a copy assignment operator is implicitly
+declared (\ref{class.copy}) in the archetype of \tcode{T} with the
+following signature:
+\begin{codeblock}
+  T& T::operator=(const T&) = delete;
+\end{codeblock}
+
+\pnum
+If no requirement specifies a destructor for a type \tcode{T},
+a destructor is implicitly declared (\ref{class.dtor})
+in the archetype of \tcode{T} with the following signature:
+\begin{codeblock}
+  ~T() = delete;
+\end{codeblock}
+
+\pnum
+If no requirement specifies a unary \tcode{\&} operator for a type
+\tcode{T}, a unary member operator \tcode{\&} is implicitly declared in the
+archetype of \tcode{T} for each \techterm{cv} that is a valid
+\techterm{cv-qualifier-seq}: 
+\begin{codeblock}
+  @\techterm{cv}@ T* operator&() @\techterm{cv}@ = delete;
+\end{codeblock}
+
+\pnum 
+For each of the allocation functions \tcode{new}, \tcode{new[]},
+\tcode{delete}, and \tcode{delete[]} ([class.free]), if no requirement
+specifies the corresponding operator with a signature below, that
+allocation function is
+implicitly declared as a member function in the archetype \tcode{T$'$}
+of \tcode{T} with the
+corresponding signature from the following list:
+\begin{codeblock}
+  static void* T@$'$@::operator new(std::size_t) = delete;
+  static void* T@$'$@::operator new(std::size_t, void*) = delete;
+  static void* T@$'$@::operator new(std::size_t, const std::nothrow_t&) throw() = delete;
+  static void* T@$'$@::operator new[](std::size_t) = delete;
+  static void* T@$'$@::operator new[](std::size_t, void*) = delete;
+  static void* T@$'$@::operator new[](std::size_t, const std::nothrow_t&) throw() = delete;
+  static void T@$'$@::operator delete(void*) = delete;
+  static void T@$'$@::operator delete(void*, void*) = delete;
+  static void T@$'$@::operator delete(void*, const std::nothrow_t&) throw() = delete;
+  static void T@$'$@::operator delete[](void*) = delete;
+  static void T@$'$@::operator delete[](void*, void*) = delete;
+  static void T@$'$@::operator delete[](void*, const std::nothrow_t&) throw() = delete; 
+\end{codeblock}
+
+\pnum
+If the template requirements contain a requirement
+\tcode{DerivedFrom<T, Base>}, then the archetype of
+\tcode{T} is publicly derived from the archetype of \tcode{Base}. 
+If the same \tcode{DerivedFrom<T, Base>} requirement occurs more than once
+within the template requirements, the repeated \tcode{DerivedFrom<T,
+  Base>} requirements are ignored.
+
+\pnum
+If two associated member function or member function template
+requirements \addedConcepts{that name a constructor or destructor} for a type
+\tcode{T} have the same signature, the duplicate signature is ignored. 
+
+\pnum
+If a class template specialization is
+an archetype that does not appear as a template argument of any
+explicitly-specified requirement in the template requirements and
+whose template is not itself an archetype, then the archetype is an 
+instantiated archetype. An \mbox{\techterm{instantiated archetype}} is
+an archetype whose definition is provided by the instantiation of its
+template with its template arguments (which involve archetypes).
+The template shall not be an unconstrained
+template. \enternote\ partial ordering of class
+template partial specializations (\ref{temp.class.order}) will depend
+on the properties of the archetypes, as defined by the requirements
+of the constrained template. When the constrained template is
+instantiated (\ref{temp.constrained.inst}),  partial ordering of class
+template partial specializations will occur a second time based on the
+actual template arguments. \exitnote\ \enterexample\
+\begin{codeblock}
+template<EqualityComparable T>
+struct simple_multiset {
+  bool includes(const T&);
+  void insert(const T&);
+  // ...
+};
+
+template<LessThanComparable T>
+struct simple_multiset<T> { // A
+  bool includes(const T&);
+  void insert(const T&);
+  // ...
+};
+
+template<LessThanComparable T>
+bool first_access(const T& x) {
+  static simple_multiset<T> set; // instantiates \tcode{simple_multiset<T$'$>}, where \tcode{T$'$} is the archetype of \tcode{T} ,
+                                 // from the partial specialization of simple_multiset marked 'A'
+  return set.includes(x)? false : (set.insert(x), true);
+}
+\end{codeblock}
+\exitexample\
+
+\addedConcepts{\mbox{\enternote} class template specializations for which
+  template requirements are specified behave as normal
+  archetypes. \mbox{\exitnote} \mbox{\enterexample}}
+\begin{codeblock}
+auto concept CopyConstructible<typename T> {
+  T::T(const T&);
+}
+
+template<CopyConstructible T> struct vector;
+
+auto concept VectorLike<typename X> {
+  typename value_type = typename X::value_type;
+  X::X();
+  void X::push_back(const value_type&);
+  value_type& X::front();
+}
+
+template<CopyConstructible T>
+requires VectorLike<vector<T>> // vector<T> is an archetype (but not an instantiated archetype)
+void f(const T& value) {
+  vector<T> x; // okay: default constructor in VectorLike<vector<T> >
+  x.push_back(value); // okay: push_back in VectorLike<vector<T> >
+  VectorLike<vector<T>::value_type& val = x.front(); // okay: front in VectorLike<vector<T> >
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum
+\addedConcepts{\mbox{\enternote} constrained class templates involving
+  recursive definitions are ill-formed if the recursive class template
+  specialization is an instantiated archetype. Constrained class
+  templates involving recursive definitions can be specified by
+  adding template requirements on the recursive class template
+  specializations, making them archetypes that are not instantiated
+  archetypes. \mbox{\enterexample}}
+\begin{codeblock}
+template<CopyConstructible... T> class tuple;
+
+template<CopyConstructible Head, CopyConstructible... Tail>
+class tuple<Head, Tail...> : tuple<Tail...> // ill-formed: tuple<Tail...> is an instantiated archetype, 
+                                            // but it is an incomplete type
+{
+  Head head;
+  // ...
+};
+
+template<> class tuple<> { /* ... */ };
+
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample\exitnote}}
+
+\pnum
+In a constrained template, for each concept requirement
+that is stated in or implied by the template requirements,
+a \mbox{\techterm{concept map archetype}} for that
+requirement is synthesized by 
+substituting the archetype of \tcode{T} for each occurrence of
+\tcode{T} within the concept arguments of the requirement. The
+concept map archetype acts as a concept
+map, and is used to resolve name 
+lookup into
+requirements scope (\ref{basic.scope.req}) and satisfy the
+requirements of templates used inside the definition of the
+constrained template. 
+%
+\enterexample\
+\begin{codeblock}
+concept SignedIntegral<typename T> {
+  T::T(const T&);
+  T operator-(T);
+}
+concept RandomAccessIterator<typename T> {
+  SignedIntegral difference_type;
+  difference_type operator-(T, T);
+}
+template<SignedIntegral T> T negate(const T& t) { return -t; }
+
+template<RandomAccessIterator Iter>
+RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
+  typedef RandomAccessIterator<Iter>::difference_type D;
+  D dist = f - l;  // okay: - operator resolves to synthesized operator- in
+                  // the concept map archetype RandomAccessIterator<Iter$'$>,  
+                  // where Iter$'$ is the archetype of Iter
+  return negate(dist); // okay, concept map archetype RandomAccessIterator<Iter$'$>
+                       // implies the concept map archetype SignedIntegral<D$'$>,
+                       // where D$'$ is the archetype of D}
+\end{codeblock}
+\exitexample\
+
+\rSec2[temp.constrained.set]{Nominee sets}
+\pnum
+\addedCC{A \mbox{\techterm{nominee set}} is a set containing
+  functions and function templates that is
+  defined in a constrained template
+  (\mbox{\ref{temp.constrained}}) or as the result of satisfying an
+  associated function requirement in a concept map
+  (\mbox{\ref{concept.map.fct}}). Nominee sets are used to capture a
+  set of candidate functions that will be used in the instantiation of
+  a constrained template (\mbox{\ref{temp.constrained.inst}}).
+  For the purposes of this section, candidate operator functions
+  (\mbox{\ref{over.built}}) are considered functions in a nominee
+  set.} 
+
+\pnum
+\addedCC{Each non-empty nominee set has a \mbox{\techterm{seed}},
+  which is a function that provides the basis for
+  the nominee set itself. Each of the functions in the nominee set is
+  consistent with the seed. 
+  The seed is determined as part of the definition of the nominee
+  set.} 
+
+\pnum 
+\addedCC{A function is \mbox{\techterm{consistent with}} a seed if}
+\begin{itemize}
+\item \addedCC{it has the same name as the seed,}
+\item \addedCC{its enclosing namespace is the same as the enclosing
+    namespace of the seed,}
+\item \addedCC{it has the same return type as the seed, after references
+    and then top-level \mbox{\techterm{cv-qualifiers}} have been
+    removed, and}
+\item \addedCC{TODO: fixmeit has the same parameter types as the seed, after
+    references and then top-level
+    \mbox{\techterm{cv-qualifiers}} have been removed 
+    (ignoring any parameters for which default arguments have
+    been used).}
+\end{itemize}
+
+\pnum
+\addedCC{A call to a nominee set uses the contents of the nominee set as
+  the candidate functions for overload resolution. If overload
+  resolution succeeds, the call 
+  to the nominee set is replaced with a call to the result of
+  overload resolution; otherwise, the call to the nominee set is
+  ill-formed.}
+
+\rSec2[temp.constrained.inst]{Instantiation of constrained templates}
+\pnum
+Instantiation of a constrained template replaces each template
+parameter within the definition of the template with its corresponding
+template argument, using the same process as for unconstrained
+templates (\ref{temp.spec}). 
+
+\pnum
+Instantiation of a constrained template also replaces each 
+concept map archetype with
+the concept map that satisfied the \addedConcepts{corresponding template}
+requirement.  
+\enternote\ Concept members that had resolved to members of the 
+concept map archetype now refer to
+members of the corresponding concept maps. \exitnote\
+
+\pnum If a concept requirement appears (directly or indirectly)
+multiple times in the requirements of a constrained template, the
+program is ill-formed if the concept maps used to satisfy the multiple
+occurrences of the concept requirement are not the same concept map. \enterexample\
+\begin{codeblock}
+concept A<typename T> { }
+concept B<typename T> {
+  typename X;
+  requires A<X>;
+}
+concept C<typename T> {
+  typename X;
+  requires A<X>;
+}
+namespace N1 {
+  concept_map A<int> { }  // \#1
+  concept_map B<int> { }  // uses \#1 to satisfy the requirement for A<int>
+}
+namespace N2 {
+  concept_map A<int> { }  // \#2
+  concept_map C<int> { }  // uses \#2 to satisfy the requirement for A<int>
+}
+tempate<typename T> requires B<T> && C<T>
+struct S { };
+using N1::concept_map B<int>;
+using N2::concept_map C<int>;
+S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
+\end{codeblock}
+\exitexample\
+
+\pnum
+\addedCC{In the instantiation of a constrained template, a call
+  to a function or a use of an operator that resolves to an associated
+  function in a concept map archetype (\mbox{\ref{temp.archetype}})
+  will be instantiated as a call to the candidate set
+  (\mbox{\ref{temp.constrained.set}}) that satisfies the
+  corresponding associated function requirement in the concept map
+  that replaces the concept map archetype, if that candidate set is
+  non-empty. \mbox{\enterexample}} 
+\begin{codeblock}
+concept F<typename T> {
+  T::T();
+  void f(T const&);
+};
+
+template<typename T> requires F<T>
+void g(T const& x) {
+  f(x);    // calls F<T>::f. When instantiated with T=X, calls \#1
+  f(T());  // calls F<T>::f. When instantiated with T=X, calls \#2
+}
+
+struct X {};
+void f(X const&); // \#1
+void f(X&&); // \#2 
+
+concept_map F<X> { } // candidate set for f(X const\&) contains \#1 and \#2, seed is \#1
+
+void h(X const& x) {
+  g(x);
+}
+\end{codeblock}
+\exitexample\
+
+\addedCC{If the candidate set is empty, then}
+\begin{itemize}
+  \item \addedCC{if the associated function is a constructor
+      requirement, perform direct initialization
+      (\mbox{\ref{dcl.init}}) of the object with
+      the given arguments, or}
+  \item \addedCC{if the associated function is a destructor
+      requirement, perform a pseudo destructor call
+      (\mbox{\ref{expr.pseudo}}) on the argument.}
+\end{itemize}
+
+\pnum
+\addedCC{\mbox{\enternote} in the instantiation of a constrained
+  template, a use of a function 
+template will undergo a second round of overload resolution using the
+candidate set (\mbox{\ref{temp.constrained.set}}) determined during the
+processing of the constrained template. \mbox{\enterexample}} 
+\begin{codeblock}
+concept InputIterator<typename Iter> { 
+  typename difference_type;
+}
+concept BidirectionalIterator<typename Iter> : InputIterator<Iter> { }
+concept RandomAccessIterator<typename Iter> : BidirectionalIterator<Iter> { }
+
+template<InputIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#1
+template<BidirectionalIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#2
+template<RandomAccessIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#3
+
+template<BidirectionalIterator Iter> void f(Iter i) {
+  advance(i, 1); // seed function is \#2
+}
+
+concept_map RandomAccessIterator<int*> { 
+  typedef std::ptrdiff_t difference_type;
+}
+
+void g(int* i) {
+  f(i); // in call to advance(), \#1, \#2, and \#3 are in the candidate set
+        // partial ordering of function templates selects \#3
+}
+\end{codeblock}
+\addedCC{\mbox{\exitexample}\mbox{\exitnote}}
+
+\pnum
+\addedCC{During the instantiation of a constrained template, the
+  concept maps found by concept map lookup include the
+concept maps that 1) have replaced the concept map archetypes used in the
+constrained template, 2) are in the same namespace as the concept
+maps from 1), 3) are in the associated namespaces
+(\mbox{\ref{basic.lookup.argdep}}) of the concept map arguments for the
+concept maps from 1), or 4) are in the namespace of which the concept
+is a member. \mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> { }
+concept D<typename T> { }
+
+namespace N1 {
+  concept_map C<int> { }
+  concept_map D<int> { }
+}
+namespace N2 {
+  template<C T> void f(T);                // \#1
+  template<C T> requires D<T> void f(T);  // \#2
+  template<C T> void g(T x) {
+    f(x);
+  }
+  using N1::concept_map C<int>;
+  void h() {
+    g(1); // inside, g, the call to f goes to \#2
+  }
+}
+
+\end{codeblock}
+\exitexample\
+
+\pnum
+In the instantiation of a constrained template, a template
+specialization whose template arguments involve archetypes
+(\ref{temp.archetype}) will be replaced by the template specialization
+that results from replacing each occurrence of an archetype with its
+corresponding type. The resulting template specialization (call it
+\tcode{A<X>}) 
+shall be compatible with the template specialization involving
+archetypes (call it \tcode{A<T}$'$\tcode{>}) that it
+replaced, otherwise the program is ill-formed. The template
+specializations are compatible if all of the following conditions hold:
+\begin{itemize}
+\item for each function, function template, or data member \tcode{m} of
+  \tcode{A<T}$'$\tcode{>} referenced 
+  by the constrained template, there exists a member named
+  \tcode{m} in \tcode{A<X>} that is accessible from the constrained
+  template and whose type, storage specifiers, template parameters (if
+  any), and template requirements (if any) are the same as the
+  those of 
+  \tcode{A<T}$'$\tcode{>::m} after replacing the archetypes with their
+  actual template argument types. 
+
+\item for each member type \tcode{t} of \tcode{A<T}$'$\tcode{>} referenced 
+  by the constrained template, there exists a member type \tcode{t} in
+  \tcode{A<X>} that is accessible from the constrained
+  template and \addedConcepts{is compatible with the member type
+    \mbox{\tcode{A<T}$'$\tcode{>::t}} as specified herein.}
+
+\item for each base class \tcode{B}$'$ of \tcode{A<T}$'$\tcode{>} referenced
+  by a derived-to-base conversion (\ref{conv.ptr}) in the constrained
+  template, there exists an unambiguous base class 
+  \tcode{B} of \tcode{A<X>} that is accessible from the constrained
+  template, where \tcode{B} is the type produced by
+  replacing the archetypes in \tcode{B}$'$ with their template
+  argument types.
+\end{itemize}
+
+\enterexample\
+\begin{codeblock}
+auto concept CopyConstructible<typename T> {
+  T::T(const T&);
+@\textcolor{addclr}{}@}
+
+template<CopyConstructible T> 
+struct vector { // A
+  vector(int, T const &);
+  T& front();
+};
+
+template<typename T> 
+struct vector<T*> { // B
+  vector(int, T* const &);
+  T*& front();
+};
+
+template<>
+struct vector<bool> { // C
+  vector(int, bool);
+  bool front();
+};
+
+template<CopyConstructible T>
+void f(const T& x) {
+  vector<T> vec(1, x);
+  T& ref = vec.front();
+}
+
+void g(int i, int* ip, bool b) {
+  f(i); // okay: instantiation of f<int> uses vector<int>, instantiated from A
+  f(ip); // okay: instantiation of f<int*> uses vector<int*>, instantiated from B
+  f(b); // ill-formed, detected in the instantiation of f<bool>, which uses the vector<bool> specialization C:
+        // vector<bool>::front is not compatible with vector<T>::front (where T=bool)
+@\textcolor{addclr}{}@}
+\end{codeblock}
+\exitexample\
+\color{black}
+\end{paras}
+
+\appendix
+\setcounter{chapter}{1}
+\infannex{implimits}{Implementation quantities}
+
+\begin{paras}
+
+\editorial{Add the following bullet to paragraph 2}:
+\begin{itemize}
+\item%
+\addedConcepts{Recursively nested implicit concept map definitions [1024]}
+\end{itemize}
+\end{paras}
+
+\section*{Acknowledgments}
+The effort to introduce concepts into \Cpp{} has been shaped by
+many. The authors of the ``Indiana'' and ``Texas'' concepts proposals
+have had the most direct impact on concepts: Gabriel Dos~Reis, Ronald
+Garcia, Jaakko J\"arvi, Andrew Lumsdaine, Jeremy Siek, and Jeremiah
+Willcock. Other major contributors to the introduction of concepts in
+\Cpp{} include David Abrahams, Matthew Austern, Mat Marcus, David
+Musser, Sean Parent, Sibylle Schupp, Alexander Stepanov, and Marcin
+Zalewski.
+%
+Howard Hinnant helped introduce support for rvalue references.
+%
+Stephen Adamczyk, Daniel Kr\"ugler, Jens Maurer, John Spicer, and James
+Widman provided extremely
+detailed feedback on various drafts and prior revisions of this
+wording, and the wording itself has benefited greatly from their
+efforts and the efforts of the \Cpp{} committee's Core Working Group. 
+
+\bibliographystyle{abbrv}
+\bibliography{local}
+
+\end{document}
+
+Look into this issue from Dave Musser:
+
+The following concept definitions are added to concepts.h: 
+auto __concept UnderlyingType<typename T> { 
+typename _underlying_type = T::_underlying_type; 
+__where DefaultConstructible<_underlying_type>; 
+} 
+auto __concept Movable<typename T> 
+{ 
+__where UnderlyingType<T>; 
+void _save_raw(T&, UnderlyingType<T>::_underlying_type&); 
+void _move_raw(T&, T&); 
+void _restore_raw(UnderlyingType<T>::_underlying_type&, T&); 
+}; 
+In [7], the identifier move raw is overloaded to name all three of these operations, but 
+early experiments with this approach resulted in compilation errors-reports of ambi- 
+guities stemming from multiple ways of satisfying the Movable concept in cases where 
+the underlying type was the type itself. Whether this problem could be solved by an 
+alternative way of defining or using the Movable concept remains to be investigated. 
+
+
+Disembodied examples:
+
+\mbox{\enterexample}
+\begin{codeblock}
+concept C<typename X> {
+  void f(X const&);
+}
+
+struct Y {};
+concept_map C<Y> {
+  void f(Y const&) { } // okay: matches required signature void f(Y const\&)
+}
+
+concept_map C<int> {
+  void f(int) { } // error: does not match required signature void f(int const\&)
+}
+\end{codeblock} 
+\exitexample\
+
+
+\enterexample\
+\begin{codeblock}
+concept InputIterator<typename Iter> {
+  typename value_type;
+  // ...
+}
+
+concept C<typename X> {
+  typename value_type;
+
+  template<InputIterator Iter>  
+    requires Convertible<Iter::value_type, value_type>
+    void assign(X&, Iter first, Iter last); // \#1
+}
+
+concept_map C<MyContainer> {
+  typedef int value_type;
+
+  template<InputIterator Iter>  
+    requires Convertible<Iter::value_type, int>
+    void assign(MyContainer&, Iter first, Iter last) 
+    { ... } // matches \#1
+}
+\end{codeblock}
+\exitexample\
+
+\mbox{\enterexample}
+\begin{codeblock}
+concept Swappable<typename T> {
+  void T::swap(T&);
+}
+
+struct X { };
+
+concept_map Swappable<X> {
+  void X::swap(X& other) { /* ... */ }
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
