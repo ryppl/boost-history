@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="1" status="New">
+  <title>Naming and symmetry in EqualityComparable</title> 
+  <section><sref ref="[concept.comparison]"/></section>
+  <submitter>LWG</submitter>
+  <date>27 Feb 2008</date>
+
+  <discussion>
+    <p>Another way to characterize the problem with EqualityComparable:
+    the name suggests that it's a concept with semantics, one that's
+    based on some kind of mathematical notion. At the Bloomington
+    discussion there was a different naming convention for concepts
+    that are purely syntactic; e.g. HasPlus, as opposed to "Addable",
+    for a concept that doesn't mean anything more than that a +
+    exists. The two-parameter EqualityComparable really falls into
+    that category, since all it really means is that there's some kind
+    of operation spelled == and we're not saying what it does. The
+    one-parameter version of EqualityComparable really is
+      EqualityComparable, though, and it does have mathematical axioms.</p>
+
+    <p>General issue: do we accept the naming convention that purely
+      syntactic concepts should be named Has*?</p>
+
+    <p>If we do have a two-parameter HasEquals, do we also want it to
+      provide != ? In other words, does it have any kind of semantic
+      coherency?  </p>
+
+    <p>Can we make the two-parameter HasEquals symmetrical? That is:
+      if we say that there is a HasEquals for types T and U, and if t
+      and u are variables of the appropriate types, can we at least
+      say that t == u and u == t are both allowed and both mean the
+      same thing? Is there any way to write defaults in the concept
+      definition that won't ever give us an infinite loop?</p>
+  </discussion>
+</issue>
