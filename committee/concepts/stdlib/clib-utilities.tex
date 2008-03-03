@@ -1,0 +1,3688 @@
+\documentclass[american,twoside]{book}
+\usepackage{hyperref}
+\usepackage{refbib}
+\input{macros}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{1}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\newsavebox\rebindbox
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Concepts for the C++0x Standard Library: Utilities\\
+(Revision 3)
+
+\vspace{0.5in}
+
+\normalsize
+Douglas Gregor and Andrew Lumsdaine \\
+Open Systems Laboratory \\
+Indiana University \\
+Bloomington, IN\ \  47405 \\
+\{\href{mailto:dgregor@osl.iu.edu}{dgregor}, \href{mailto:lums@osl.iu.edu}{lums}\}@osl.iu.edu
+\end{center}
+
+\vspace{1in}
+\par\noindent Document number: NNNNN=07-XXXX\vspace{-6pt}
+\par\noindent Revises document number: N2322=07-0182\vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
+
+\section*{Introduction}
+\libintrotext{Chapter 20}.
+
+\section*{Changes since N2322}
+\begin{itemize}
+\item Renamed \tcode{Modulus} concept to \tcode{Remainder}.
+\item Fixed description of concepts \tcode{LogicalAnd},
+  \tcode{LogicalOr}, and \tcode{LogicalNot}.
+\item Added concepts \tcode{BitAnd}, \tcode{BitOr}, \tcode{BitXor},
+  and \tcode{Complement}.
+\item Renamed the \tcode{Floating} concept to \tcode{FloatingPoint}.
+\item Made \tcode{operator=} in \tcode{MoveAssignable} and
+  \tcode{CopyAssignable} member operations, as required by N2307.
+\item Dropped the redundant \tcode{CopyAssignable} requirement in
+  \tcode{Arithmetic}. 
+\item Note the concept maps required for extended integer types,
+  \tcode{bool}, \tcode{char16_t}, and \tcode{char32_t}.
+\item Loosened the \tcode{Allocator} requirements to not require the
+  allocator itself to be \tcode{CopyAssignable}; \tcode{Allocator} now
+  better matches the pre-concept standard library.
+\item Make \tcode{Allocator}'s \tcode{max_size} and \tcode{address}
+  associated functions \tcode{const}.
+\item Added concept requirements to \tcode{make_pair} and
+  \tcode{make_tuple}.
+\item Fixed definition of \tcode{rebind_allocator}.
+\end{itemize}
+
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\setcounter{chapter}{19}
+\rSec0[utilities]{General utilities library}
+\setcounter{Paras}{1}
+\textcolor{black}{\pnum}
+The following clauses describe utility and allocator \changedConcepts{requirements}{concepts}, utility
+components, \addedB{tuples, type traits templates,} function objects, dynamic
+memory management utilities, and date/time utilities, as summarized in
+Table~\ref{tab:util.lib.summary}.
+
+\setcounter{table}{29}
+\begin{libsumtab}{General utilities library summary}{tab:util.lib.summary}
+\ref{utility.concepts}
+\changedConcepts{Requirements}{Concepts}    &         \addedConcepts{\ttfamily <concepts>}                                          \\ \rowsep
+\ref{utility} Utility components            &       \tcode{<utility>}       \\ \rowsep
+\ref{tuple} \addedB{Tuples}         &       \tcode{\addedB{<tuple>}}        \\ \rowsep
+\ref{meta} \addedB{Type traits}             &       \tcode{\addedB{<type_traits>}}  \\ \rowsep
+\ref{function.objects} Function objects     &       \tcode{<functional>}\\ \rowsep
+                                                                                        &       \tcode{<memory>}        \\
+\ref{memory} Memory                                         &       \tcode{<cstdlib>}       \\
+                                                                                        &       \tcode{<cstring>}       \\ \rowsep
+\ref{date.time} Date and time                       &       \tcode{<ctime>}         \\
+\end{libsumtab}
+
+\noindent\editorial{Replace the section [utility.requirements] with
+  the following section [utility.concepts]}
+
+\color{addclr}
+\rSec1[utility.concepts]{Concepts}
+
+\pnum The \tcode{<concepts>} header describes requirements on template
+arguments used throughout the \Cpp\ Standard Library.
+
+\synopsis{Header \tcode{<concepts>}\ synopsis}
+\begin{codeblock}
+namespace std {
+  // \ref{concept.support}, support concepts:
+  concept SameType<typename T, typename U> {  }
+  concept DerivedFrom<typename Derived, typename Base> { }
+  concept ObjectType<typename T> { }
+
+  // \ref{concept.comparison}, comparisons:
+  auto concept EqualityComparable<typename T, typename U = T> @\textit{see below}@;
+  auto concept LessThanComparable<typename T, typename U = T> @\textit{see below}@;
+
+  // \ref{concept.destruct}, destruction:
+  auto concept Destructible<typename T> @\textit{see below}@;
+
+  // \ref{concept.construct}, construction:
+  auto concept Constructible<typename T, typename... Args> @\textit{see below}@;
+  auto concept DefaultConstructible<typename T> @\textit{see below}@;
+
+  // \ref{concept.copymove}, copy and move:
+  auto concept MoveConstructible<typename T> @\textit{see below}@;
+  auto concept CopyConstructible<typename T> @\textit{see below}@;
+  auto concept MoveAssignable<typename T, typename U = T> @\textit{see below}@;
+  auto concept CopyAssignable<typename T, typename U = T> @\textit{see below}@;
+  auto concept Swappable<typename T> @\textit{see below}@;
+
+  // \ref{concept.regular}, regular types:
+  auto concept Semiregular<typename T> @\textit{see below}@;
+  auto concept Regular<typename T> @\textit{see below}@;
+
+  // \ref{concept.convertible}, convertibility:
+  auto concept Convertible<typename T, typename U> @\textit{see below}@;
+
+  // \ref{concept.true}, true:
+  concept True<bool> { }
+  concept_map True<true> { }
+
+  // \ref{concept.arithmetic}, arithmetic concepts:
+  auto concept Addable<typename T, typename U = T> @\textit{see below}@;
+  auto concept Subtractable<typename T, typename U = T> @\textit{see below}@;
+  auto concept Multiplicable<typename T, typename U = T> @\textit{see below}@;
+  auto concept Divisible<typename T, typename U = T> @\textit{see below}@;
+  auto concept Remainder<typename T, typename U = T> @\textit{see below}@;
+  auto concept Negatable<typename T> @\textit{see below}@;
+  concept Arithmetic<typename T> @\textit{see below}@;
+  concept Integral<typename T> @\textit{see below}@;
+  concept SignedIntegral<typename T> @\textit{see below}@;
+  concept UnsignedIntegral<typename T> @\textit{see below}@;
+  concept FloatingPoint<typename T> @\textit{see below}@;
+
+  // \ref{concept.logical}, logical concepts:
+  auto concept LogicalAnd<typename T, typename U = T> @\textit{see below}@;
+  auto concept LogicalOr<typename T, typename U = T> @\textit{see below}@;
+  auto concept LogicalNot<typename T> @\textit{see below}@;
+
+  // \ref{concept.logical}, bitwise concepts:
+  auto concept BitAnd<typename T, typename U = T> @\textit{see below}@;
+  auto concept BitOr<typename T, typename U = T> @\textit{see below}@;
+  auto concept BitXor<typename T, typename U = T> @\textit{see below}@;
+  auto concept Complement<typename T> @\textit{see below}@;
+
+  // \ref{concept.operator}, operator concepts:
+  auto concept Dereferenceable<typename T> @\textit{see below}@;
+
+  // \ref{concept.callable}, callable:
+  auto concept Callable<typename F, typename... Args> @\textit{see below}@;
+
+  // \ref{concept.predicate}, predicates:
+  auto concept Predicate<typename F, typename... Args> @\textit{see below}@;
+
+  // \ref{concept.allocator}, allocators:
+  concept Allocator<typename X> @\textit{see below}@;
+  concept AllocatorGenerator<typename X> @\textit{see below}@;
+  template<Allocator X> concept_map AllocatorGenerator<X> @\textit{see below}@;
+}
+\end{codeblock}
+
+\rSec2[concept.support]{Support concepts}
+\pnum
+Concept \tcode{SameType} describes a same-type requirement ([temp.req]).
+
+\begin{itemdecl}
+concept SameType<typename T, typename U> {  }
+\end{itemdecl}
+
+\pnum
+A program shall not provide a concept map for the
+\tcode{SameType} concept.
+
+\pnum
+Concept \tcode{DerivedFrom} describes a derivation requirement ([temp.req]).
+
+\begin{itemdecl}
+concept DerivedFrom<typename Derived, typename Base> { }
+\end{itemdecl}
+
+\pnum
+A program shall not provide a concept map for the
+\tcode{DerivedFrom} concept.
+
+\pnum
+Concept \tcode{ObjectType} requires that the type \tcode{T} be an \emph{object type} ([intro.object]).
+
+\begin{itemdecl}
+concept ObjectType<typename T> { }
+\end{itemdecl}
+
+\pnum
+A program shall not provide a concept map for the
+\tcode{ObjectType} concept.
+
+\rSec2[concept.comparison]{Comparisons}
+
+\pnum
+Concept \tcode{EqualityComparable} requires that two values be
+comparable with \tcode{operator==}.
+\begin{itemdecl}
+auto concept EqualityComparable<typename T, typename U = T> {
+  bool operator==(T a, U b);
+  bool operator!=(T a, U b) { return !(a == b); }
+}
+\end{itemdecl}
+
+\pnum 
+When \tcode{T} and \tcode{U} are identical, \tcode{operator==} is an
+equivalence relation, that is, it has the following properties:
+\begin{itemize}
+\item
+For all \tcode{a}, \tcode{a == a}.
+\item
+If \tcode{a == b}, then \tcode{b == a}.
+\item
+If \tcode{a == b} and \tcode{b == c}, then \tcode{a == c}.
+\end{itemize}
+
+\pnum Concept \tcode{LessThanComparable} requires the ability to order
+values via \tcode{operator<}.
+\begin{itemdecl}
+auto concept LessThanComparable<typename T, typename U = T> {
+  bool operator<(T a, U b);
+  bool operator>(U a, T b) { return b < a; }
+  bool operator<=(U a, T b) { return !(b < a); }
+  bool operator>=(T a, U b) { return !(a < b); }
+}
+\end{itemdecl}
+
+\pnum
+\tcode{operator<} is a strict weak ordering relation (\ref{alg.sorting})
+
+\rSec2[concept.destruct]{Destruction}
+\pnum
+Concept \tcode{Destructible} requires a destructor.
+\begin{itemdecl}
+auto concept Destructible<typename T> {
+  T::~T();
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+T::~T();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\postconditions\
+All resources owned by the object are reclaimed.
+
+\pnum
+\throws\
+nothing.
+\end{itemdescr}
+
+\rSec2[concept.construct]{Construction}
+\pnum
+Concept \tcode{Constructible} requires the existence of a constructor
+that accepts a given set of arguments.
+\begin{itemdecl}
+auto concept Constructible<typename T, typename... Args> 
+  : Destructible<T> 
+{
+  T::T(Args...);
+}
+\end{itemdecl}
+
+\pnum 
+Concept \tcode{DefaultConstructible} requires the existence of a
+default constructor.
+\begin{itemdecl}
+auto concept DefaultConstructible<typename T> : Constructible<T> { }
+\end{itemdecl}
+
+\rSec2[concept.copymove]{Copy and move}
+\pnum
+Concept \tcode{MoveConstructible} requires the ability to construct an
+object from an rvalue of the same type, potentially altering the rvalue.
+\begin{itemdecl}
+auto concept MoveConstructible<typename T> 
+  : Destructible<T> 
+{
+  T::T(T&&);
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+T::T(T&& rv);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\postcondition\
+The constructed \tcode{T} object is equivalent to the value of
+\tcode{rv} before the construction. 
+\enternote\ there is no requirement on the value of \tcode{rv} after
+the construction. \exitnote\
+\end{itemdescr}
+
+\pnum 
+Concept \tcode{CopyConstructible} requires the ability to create a
+copy of an object. 
+\begin{itemdecl}
+auto concept CopyConstructible<typename T> : MoveConstructible<T> {
+  T::T(const T&);
+
+  axiom CopyPreservation(T x) {
+    T(x) == x;
+  }
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{MoveAssignable} requires the ability to assign to an
+object from an rvalue, potentially altering the rvalue. 
+
+\begin{itemdecl}
+auto concept MoveAssignable<typename T, typename U = T> {
+  typename result_type;
+  result_type operator=(T&, U&&);
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+result_type T::operator=(U&& rv);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\postconditions\
+The constructed \tcode{T} object is equivalent to the value of
+\tcode{rv} before the assignment. 
+\enternote\ there is no requirement on the value of \tcode{rv} after
+the assignment. \exitnote\
+\end{itemdescr}
+
+\pnum
+Concept \tcode{CopyAssignable} requires the ability to assign to an
+object.
+
+\begin{itemdecl}
+auto concept CopyAssignable<typename T, typename U = T> : MoveAssignable<T, U> {
+  typename result_type;
+  result_type T::operator=(const U&);
+
+  axiom CopyPreservation(T& x, U y) {
+    (x = y, x) == y;
+  }
+}
+\end{itemdecl}
+
+\editorial{\textcolor{black}{The CopyAssignable requirements in N2284 specify that
+  \tcode{operator=} must return a \tcode{T\&}. This is too strong a
+  requirement for most of the uses of \tcode{CopyAssignable}, so we have
+  weakened \tcode{CopyAssignable} to not require anything of its return
+  type. When we need a \tcode{T\&}, we'll add that as an explicit
+  requirement. See, e.g., the \tcode{Integral} concept.}}
+
+\pnum
+Concept \tcode{Swappable} requires that two values can be swapped.
+
+\begin{itemdecl}
+auto concept Swappable<typename T> {
+  void swap(T&, T&);
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+void swap(T& t, T& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\postconditions\
+\tcode{t} has the value originally held by \tcode{u}, and \tcode{u}
+has the value originally held by \tcode{t}.
+\end{itemdescr}
+
+\rSec2[concept.regular]{Regular types}
+
+\pnum 
+Concept \tcode{Semiregular} collects several common
+requirements supported by most \Cpp\ types.
+
+\begin{itemdecl}
+auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T> { 
+  requires SameType<CopyAssignable<T>::result_type, T&>;
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Regular} describes semi-regular types that are default
+constructible and have equality comparison operators.
+
+\begin{itemdecl}
+auto concept Regular<typename T> : Semiregular<T>, DefaultConstructible<T>, EqualityComparable<T> { }
+\end{itemdecl}
+
+\rSec2[concept.convertible]{Convertibility}
+
+\pnum
+Concept \tcode{Convertible} requires an implicit conversion from one
+type to another.
+
+\begin{itemdecl}
+auto concept Convertible<typename T, typename U> {
+  operator U(T);
+}
+\end{itemdecl}
+
+\rSec2[concept.true]{True}
+
+\pnum
+Concept \tcode{True} requires that its argument (a \tcode{bool} value
+that must be an integral constant expression) be true.
+
+\begin{itemdecl}
+concept True<bool> { }
+concept_map True<true> { }
+\end{itemdecl}
+
+\pnum
+A program shall not provide a concept map for the
+\tcode{True} concept.
+
+\rSec2[concept.arithmetic]{Arithmetic concepts}
+\pnum
+Concept \tcode{Addable} requires an addition operator.
+\begin{itemdecl}
+auto concept Addable<typename T, typename U = T> {
+  typename result_type;
+  result_type operator+(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Subtractable} requires a subtraction operator.
+\begin{itemdecl}
+auto concept Subtractable<typename T, typename U = T> {
+  typename result_type;
+  result_type operator-(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Multiplicable} requires a multiplication operator.
+\begin{itemdecl}
+auto concept Multiplicable<typename T, typename U = T> {
+  typename result_type;
+  result_type operator*(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Divisible} requires a division operator.
+\begin{itemdecl}
+auto concept Divisible<typename T, typename U = T> {
+  typename result_type;
+  result_type operator/(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Remainder} requires the existance the remainder operator.
+\begin{itemdecl}
+auto concept Remainder<typename T, typename U = T> {
+  typename result_type;
+  result_type operator%(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Negatable} requires a negation operator.
+\begin{itemdecl}
+auto concept Negatable<typename T> {
+  typename result_type;
+  result_type operator-(T);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Arithmetic} requires all of the operations available on
+arithmetic types ([basic.fundamental]). 
+
+\begin{itemdecl}
+concept Arithmetic<typename T> : Regular<T>, LessThanComparable<T> {
+  T::T(long long);
+
+  T& operator++(T&);
+  T operator++(T& t, int) { T tmp(t); ++t; return tmp; }
+  T& operator--(T&);
+  T operator--(T& t, int) { T tmp(t); --t; return tmp; }
+
+  T operator+(T);
+  T operator-(T);
+
+  T operator*(T x, T y) { T z(x); return z *= y; }
+  T operator/(T x, T y) { T z(x); return z /= y; }
+  T operator+(T x, T y) { T z(x); return z += y; }
+  T operator-(T x, T y) { T z(x); return z -= y; }
+
+  T& operator*=(T&, T);
+  T& operator/=(T&, T);
+  T& operator+=(T&, T);
+  T& operator-=(T&, T);
+}
+\end{itemdecl}
+
+\pnum 
+Concept \tcode{Integral} describes the requirements for integral
+types.
+
+\begin{itemdecl}
+concept Integral<typename T> : Arithmetic<T> {
+  T operator~(T);
+
+  T operator%(T x, T y)  { T z(x); return z %= y; }
+  T operator&(T x, T y)  { T z(x); return z &= y; }
+  T operator^(T x, T y)  { T z(x); return z ^= y; }
+  T operator|(T x, T y)  { T z(x); return z |= y; }
+  T operator<<(T x, T y) { T z(x); return z <<= y; }
+  T operator>>(T x, T y) { T z(x); return z >>= y; }
+
+  T& operator%=(T&, T);
+  T& operator&=(T&, T);
+  T& operator^=(T&, T);
+  T& operator|=(T&, T);
+  T& operator<<=(T&, T);
+  T& operator>>=(T&, T);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{SignedIntegral} describes the requirements for signed
+integral types.
+
+\begin{itemdecl}
+concept SignedIntegral<typename T> : Integral<T> { }
+\end{itemdecl}
+
+\pnum
+For every signed integral type \tcode{T} ([basic.fundamental]), there exists an
+empty concept map \tcode{SignedIntegral<T>}.
+
+\pnum
+Concept \tcode{UnsignedIntegral} describes unsigned integral types.
+
+\begin{itemdecl}
+concept UnsignedIntegral<typename T> : Integral<T> { }
+\end{itemdecl}
+
+\pnum
+For every unsigned integral type \tcode{T} ([basic.fundamental]),
+there exists an empty concept map \tcode{UnsignedIntegral<T>}.
+
+\pnum
+If \tcode{char} is a signed integral type, there shall exist an empty
+concept map \tcode{SignedIntegral<char>} otherwise, there shall exist
+an empty concept map \tcode{UnsignedIntegral<char>}.
+
+\pnum
+If \tcode{wchar_t} is a signed integral type, there shall exist an empty
+concept map \tcode{SignedIntegral<wchar_t>} otherwise, there shall exist
+an empty concept map \tcode{UnsignedIntegral<wchar_t>}.
+
+\pnum 
+For every extended integer type \tcode{T}, there shall exist an empty
+concept map \tcode{SignedIntegral<T>} or \tcode{UnsignedIntegral<T>}.
+
+\pnum
+There shall exist empty concept maps
+\tcode{UnsignedIntegral<char16_t>} and \tcode{UnsignedIntegral<char32_t>}.
+
+\pnum
+The \tcode{FloatingPoint} concept describes floating-point numbers.
+
+\begin{itemdecl}
+@\textcolor{addclr}{concept}@ FloatingPoint<typename T> : Arithmetic<T> { }
+\end{itemdecl}
+
+\pnum
+For every floating point type \tcode{T} ([basic.fundamental]), there
+exists an empty concept map \tcode{FloatingPoint<T>}.
+
+\rSec2[concept.logical]{Logical concepts}
+\pnum
+Concept \tcode{LogicalAnd} requires a logical conjunction operator.
+\begin{itemdecl}
+auto concept LogicalAnd<typename T, typename U = T> {
+  bool operator&&(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{LogicalOr} requires an logical disjunction operator.
+\begin{itemdecl}
+auto concept LogicalOr<typename T, typename U = T> {
+  bool operator||(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{LogicalNot} requires a logical negation operator.
+\begin{itemdecl}
+auto concept LogicalNot<typename T> {
+  bool operator!(T);
+}
+\end{itemdecl}
+
+\rSec2[concept.bitwise]{Bitwise concepts}
+\pnum
+Concept \tcode{BitAnd} requires a bitwise and operator.
+\begin{itemdecl}
+auto concept BitAnd<typename T, typename U = T> {
+  bool operator&(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{BitOr} requires a bitwise or operator.
+\begin{itemdecl}
+auto concept BitOr<typename T, typename U = T> {
+  bool operator|(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{BitXor} requires a bitwise exclusive-or operator.
+\begin{itemdecl}
+auto concept BitXor<typename T, typename U = T> {
+  bool operator^(T, U);
+}
+\end{itemdecl}
+
+\pnum
+Concept \tcode{Complement} requires a bitwise complement  operator.
+\begin{itemdecl}
+auto concept Complement<typename T> {
+  bool operator~(T);
+}
+\end{itemdecl}
+
+\rSec2[concept.operator]{Operator concepts}
+\pnum
+Concept \tcode{Dereferenceable} requires a
+dereference operator \tcode{*}.
+\begin{itemdecl}
+auto concept Dereferenceable<typename T> {
+  typename reference;
+  reference operator*(T);
+}
+\end{itemdecl}
+
+\rSec2[concept.callable]{Callable}
+
+\pnum 
+The \tcode{Callable} concepts requires that the given
+parameter \tcode{F} be callable given arguments of types \tcode{Args}.
+\begin{itemdecl}
+auto concept Callable<typename F, typename... Args> {
+  typename result_type;
+  result_type operator()(F&, Args...);
+}
+\end{itemdecl}
+
+
+\rSec2[concept.predicate]{Predicates}
+
+\pnum
+The \tcode{Predicate} concept requires that a function object be
+callable with some number of arguments, the result of which can be used in a
+context that requires a \tcode{bool}.
+
+\begin{itemdecl}
+auto concept Predicate<typename F, typename... Args> : Callable<F, Args...> {
+  requires Convertible<result_type, bool>;
+}
+\end{itemdecl}
+
+\textcolor{addclr}{\pnum}
+Predicate function objects shall not apply any non-constant function
+through the predicate arguments.
+
+\color{black}
+\rSec2[concept.allocator]{Allocators}
+\index{requirements!Allocator@\tcode{Allocator}}%
+\editorial{We have kept most of the text of [allocator.requirements]
+  here, although much of it has been moved from tables into numbered
+  paragraphs when translating the allocator requirements into concepts.}
+
+\pnum
+The library describes a standard set of requirements for \techterm{allocators},
+which are objects that encapsulate the information about an allocation model.
+This information includes the knowledge of pointer types, the type of their
+difference, the type of the size of objects in this allocation model, as well
+as the memory allocation and deallocation primitives for it. All of the
+containers (clause~\ref{containers}) are parameterized in terms of allocators.
+
+\eremove{Remove Table 39: Descriptive variable definitions}
+
+\eremove{Remove Table 40: Allocator requirements}
+
+\pnum
+\changedConcepts{Table~40 describes the requirements on types manipulated
+through allocators.}
+{The \mbox{\tcode{Allocator}} concept describes the requirements on
+  allocators.} 
+\changedConcepts{All the operations on the allocators are expected to be
+amortized constant time.}{Each allocator operation shall have
+amortized constant time complexity.}
+\removedConcepts{Table~33
+describes the requirements on allocator types.}
+
+\color{addclr}
+\begin{itemdecl}
+concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
+  ObjectType value_type               = typename X::value_type;
+  MutableRandomAccessIterator pointer = typename X::pointer;
+  RandomAccessIterator const_pointer  = typename X::const_pointer;
+  typename reference                  = typename X::reference;
+  typename const_reference            = typename X::const_reference;
+  SignedIntegral difference_type      = typename X::difference_type;
+  UnsignedIntegral size_type          = typename X::size_type; 
+  template<ObjectType T> class rebind = @\textit{see below}@;
+
+  requires Convertible<pointer, const_pointer> && 
+           Convertible<pointer, void*> &&
+           Convertible<pointer, value_type*> &&
+           SameType<pointer::value_type, value_type> &&
+           SameType<pointer::reference, value_type&> &&
+           SameType<pointer::reference, reference>;
+
+  requires Convertible<const_pointer, const void*> &&
+           @\textcolor{addclr}{Convertible}@<const_pointer, const value_type&> && 
+           SameType<const_pointer::value_type, value_type> &&
+           SameType<const_pointer::reference, const value_type&> &&
+           SameType<const_pointer::reference, const_reference>;
+ 
+  requires SameType<rebind<value_type>, X>;
+
+  pointer X::allocate(size_type n);
+  pointer X::allocate(size_type n, const_pointer p);
+  @\textcolor{addclr}{void}@ X::deallocate(pointer p, size_type n);
+
+  size_type X::max_size() const;
+
+  template<ObjectType T>
+    X::X(const rebind<T>& y);
+
+  @\removedConcepts{void X::construct(pointer p, const value_type\&);}@
+  template<typename V>
+    requires Convertible<V, value_type>
+    void X::construct(pointer p, V&&);
+
+  void X::destroy(pointer p);
+
+  pointer X::address(reference) const;
+  const_pointer X::address(const_reference) const;
+}
+\end{itemdecl}
+\color{black}
+
+\color{addclr}
+\begin{itemdecl}
+UnsignedIntegral size_type;
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\ctype\
+a type that can represent the size of the largest object in the allocation model
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+SignedIntegral difference_type;
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\ctype\
+a type that can represent the difference between any two pointers
+in the allocation model
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<ObjectType T> class rebind;
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\ctype}}
+The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
+typedef template}{is a template that produces allocators in the same
+  family as \mbox{\tcode{X}}}: if the name
+\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
+to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
+\mbox{\tcode{SomeAllocator<value_type>}}},
+then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
+\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. 
+\addedConcepts{The resulting type
+\mbox{\tcode{SameAllocator<U>}} shall meet the requirements of the
+\mbox{\tcode{Allocator}} concept.}
+
+\addedConcepts{The
+  default value for \mbox{\tcode{rebind}} is a template
+  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
+  \mbox{\tcode{X::template rebind<U>::other}}.} 
+
+\begin{lrbox}\rebindbox
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+template<typename Alloc>
+struct rebind_allocator {
+  template<typename U>
+  using rebind = typename Alloc::template rebind<U>::other;
+};
+\end{lstlisting}
+\end{minipage}
+\end{lrbox}
+
+\editorial{The aforementioned default value for \tcode{rebind} can be
+  implemented as follows:
+
+\usebox \rebindbox
+
+The default value for \tcode{rebind} in the \tcode{Allocator} concept
+is, therefore, \tcode{rebind_allocator<X>::template rebind}.}
+
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+pointer X::allocate(size_type n);
+pointer X::allocate(size_type n, const_pointer p);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\
+Memory is allocated for \tcode{n}\ objects of type \changedConcepts{\mbox{\tcode{T}}}{\mbox{\tcode{value_type}}}\ but objects
+are not constructed. \footnote{It is intended that \tcode{a.allocate}\ be an efficient means
+of allocating a single object of type \tcode{T}, even when \tcode{sizeof(T)}\
+is small. That is, there is no need for a container to maintain its own
+``free list''.} 
+
+\pnum
+\returns\
+\removedConcepts{The result is a random access iterator.}
+\addedConcepts{A pointer to the allocated memory.}
+\enternote\
+If \tcode{n == 0}, the return value is unspecified.
+\exitnote\
+
+\pnum
+\throws\
+\tcode{allocate}\ may raise an appropriate exception. 
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+void X::deallocate(pointer p, size_type n);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\preconditions\
+All \tcode{n }\ \changedConcepts{T}{value\_type} objects in the area pointed to by \tcode{p}\ shall be
+destroyed prior to this call. \tcode{n} shall match the value passed to
+\tcode{allocate}\ to obtain this memory. 
+\enternote\ \tcode{p} shall not be \changedConcepts{null}{singular}.\exitnote
+
+\throws\ Does not throw exceptions.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{size_type X::max_size() const;}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\
+the largest value that can meaningfully be passed to \tcode{X::allocate()}
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<typename V>
+  requires Constructible<value_type, V&&>
+  void X::construct(pointer p, V&&);
+\end{itemdecl}
+\color{black}
+
+\editorial{The non-templated \tcode{X::construct} has been removed
+from the \tcode{Allocator} requirements because it implies that the
+\tcode{value_type} is \tcode{CopyConstructible} (which we do not want
+as a requirement in the \tcode{Allocator} concept). The templated
+version is more general, allowing in-place and move construction.}
+
+\begin{itemdescr}
+\pnum
+\effects\
+\tcode{::new((void*)p) T(forward<V>(v))}
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+void X::destroy(pointer p);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\
+\tcode{((T*)p)->$\sim$T()}
+\end{itemdescr}
+
+\pnum
+\addedConcepts{The \mbox{\tcode{AllocatorGenerator}} concept describes
+  the requirements on types that can be used to generate
+  \mbox{\tcode{Allocator}}s.}
+
+\color{addclr}
+\begin{itemdecl}
+concept AllocatorGenerator<typename X> : Regular<X> {
+  typename value_type               = typename X::value_type;
+  template<typename T> class rebind = @\textit{see below}@;
+
+  @\textcolor{addclr}{requires}@ SameType<rebind<value_type>, X>;
+}
+\end{itemdecl}
+\color{black}
+
+\begin{itemdecl}
+@\addedConcepts{template<typename T> class rebind;}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\ctype}}
+The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
+typedef template}{is a template that produces allocator generators in the same
+  family as \mbox{\tcode{X}}}: if the name
+\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
+to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
+\mbox{\tcode{SomeAllocator<value_type>}}},
+then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
+\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. \addedConcepts{The
+  default value for \mbox{\tcode{rebind}} is a template
+  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
+  \mbox{\tcode{X::template}} \mbox{\tcode{rebind<U>::other}}.}
+\end{itemdescr}
+
+\pnum
+Two allocators \addedConcepts{or allocator generators} compare equal with \tcode{==}
+iff storage allocated from each can be deallocated via the other.
+
+\pnum \addedConcepts{Every \mbox{\tcode{Allocator}} also meets the
+  requirements of the \mbox{\tcode{AllocatorGenerator}} concept:}
+\color{addclr}
+\begin{itemdecl}
+template<Allocator X>
+concept_map AllocatorGenerator<X> {
+  typedef Allocator<X>::value_type value_type;
+  template<typename U> using rebind = Allocator<X>::rebind<U>;
+}
+\end{itemdecl}
+\color{black}
+
+\pnum
+Implementations of containers described in this International Standard
+are permitted to assume that their \tcode{Alloc}\removedConcepts{\mbox{\tcode{ator}}} template parameter meets
+the following two additional requirements beyond those in
+\changedConcepts{Table~40}{the Allocator concept}.
+
+\begin{itemize}
+\item
+All instances of a given allocator type are required to be interchangeable
+and always compare equal to each other.
+\item
+\removedConcepts{The typedef members pointer, const\_pointer, size\_type,
+and difference\_type are required to be T*, T const*,
+std::size\_t, and std::ptrdiff\_t, respectively.} \color{addclr}The
+requirements clause may contain the following additional requirements: 
+\tcode{SameType<Alloc::pointer, Alloc::value_type*>}, \tcode{SameType<Alloc::const_pointer,
+  const Alloc::value_type*>}, \tcode{SameType<Alloc::size_type, std::size_t>}, and
+\tcode{SameType<Alloc::difference_type, std::ptrdiff_t>}.
+\end{itemize}
+
+\pnum
+Implementors are encouraged to supply libraries that can accept allocators
+that encapsulate more general memory models and that support non-equal
+instances.
+In such implementations, any requirements imposed on allocators
+by containers beyond those requirements that appear in
+\changedConcepts{Table~40}{concept Allocator}, and the
+semantics of containers and algorithms when allocator instances compare
+non-equal, are implementation-defined.
+
+\rSec1[utility]{Utility components}
+
+\pnum
+This subclause contains some basic function and class templates that are used
+throughout the rest of the library.
+
+\synopsis{Header \tcode{<utility>}\ synopsis}
+\index{utility@\tcode{<utility>}}%
+\index{rel_ops@\tcode{rel_ops}}%
+
+\begin{codeblock}
+namespace std {
+  // \ref{operators}, operators:
+  namespace rel_ops {
+    template<@\changedConcepts{class}{EqualityComparable}@ T> bool operator!=(const T&, const T&);
+    template<@\changedConcepts{class}{LessThanComparable}@ T> bool operator> (const T&, const T&);
+    template<@\changedConcepts{class}{LessThanComparable}@ T> bool operator<=(const T&, const T&);
+    template<@\changedConcepts{class}{LessThanComparable}@ T> bool operator>=(const T&, const T&);
+  }
+
+  // \ref{forward}, forward/move:
+  template <class T> struct identity;
+  template <@\changedConcepts{class}{ObjectType}@ T> T&& forward(typename identity<T>::type&&);
+  template <@\changedConcepts{class}{ObjectType}@ T> typename remove_reference<T>::type&& move(T&&);
+
+  // \ref{pairs}, pairs:
+  template <@\changedConcepts{class}{ObjectType}@ T1,@\changedConcepts{class}{ObjectType}@ T2> struct pair;
+  template <@\changedConcepts{class}{EqualityComparable}@ T1, @\changedConcepts{class}{EqualityComparable}@ T2>
+    bool operator==(const pair<T1,T2>&, const pair<T1,T2>&);
+  template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
+    bool operator< (const pair<T1,T2>&, const pair<T1,T2>&);
+  template <@\changedConcepts{class}{EqualityComparable}@ T1, @\changedConcepts{class}{EqualityComparable}@ T2>
+    bool operator!=(const pair<T1,T2>&, const pair<T1,T2>&);
+  template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
+    bool operator> (const pair<T1,T2>&, const pair<T1,T2>&);
+  template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
+    bool operator>=(const pair<T1,T2>&, const pair<T1,T2>&);
+  template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
+    bool operator<=(const pair<T1,T2>&, const pair<T1,T2>&);
+  template <@\changedConcepts{class}{Swappable}@ T1, @\changedConcepts{class}{Swappable}@ T2> 
+    void swap(pair<T1,T2>&, pair<T1,T2>&); 
+  template <@\changedConcepts{class}{Swappable}@ T1, @\changedConcepts{class}{Swappable}@ T2> 
+    void swap(pair<T1,T2>&&, pair<T1,T2>&);
+  template <@\changedConcepts{class}{Swappable}@ T1, @\changedConcepts{class}{Swappable}@ T2> 
+    void swap(pair<T1,T2>&, pair<T1,T2>&&); 
+  template <@\changedConcepts{class}{MoveConstructible}@ T1, @\changedConcepts{class}{MoveConstructible}@ T2> pair<T1,T2> make_pair(T1, T2);
+}
+\end{codeblock}
+
+\rSec2[operators]{Operators}
+
+\editorial{By adding concept constraints to the operators in
+  \tcode{rel_ops}, we eliminate nearly all of the problems with
+  \tcode{rel_ops} that caused them to be banished. We could consider
+  bringing them back into namespace \tcode{std}, if they are deemed
+  useful.}
+
+\pnum
+To avoid redundant definitions of \tcode{operator!=} out of \tcode{operator==}
+and operators \tcode{>}, \tcode{<=}, and \tcode{>=} out of \tcode{operator<},
+the library provides the following:
+
+\index{operator"!=@\tcode{operator"!=}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{EqualityComparable}@ T> bool operator!=(const T& x, const T& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires:
+Type T is EqualityComparable~(20.1.1).}
+
+\pnum
+\returns\ 
+\tcode{!(x == y)}.
+\end{itemdescr}
+
+\index{operator>@\tcode{operator>}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{LessThanComparable}@ T> bool operator>(const T& x, const T& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires:
+Type T is LessThanComparable~(20.1.2).}
+
+\pnum
+\returns\ 
+\tcode{y < x}.
+\end{itemdescr}
+
+\index{operator<=@\tcode{operator<=}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{LessThanComparable}@ T> bool operator<=(const T& x, const T& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires:
+Type T is LessThanComparable~(20.1.2).}
+
+\pnum
+\returns\ 
+\tcode{!(y < x)}.
+\end{itemdescr}
+
+\index{operator>=@\tcode{operator>=}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{LessThanComparable}@ T> bool operator>=(const T& x, const T& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires:
+Type T is LessThanComparable~(20.1.2).}
+
+\pnum
+\returns\ 
+\tcode{!(x < y)}.
+\end{itemdescr}
+
+\pnum
+In this library, whenever a declaration is provided for an \tcode{operator!=},
+\tcode{operator>}, \tcode{operator>=}, or \tcode{operator<=},
+and requirements and semantics are not explicitly provided,
+the requirements and semantics are as specified in this clause.
+
+\rSec2[forward]{forward/move helpers}
+
+\pnum
+\addedD{The library provides templated helper functions to simplify
+applying move semantics to an lvalue and to simplify the implementation
+of forwarding functions.}
+
+\index{identity@\tcode{identity}}%
+\begin{itemdecl}
+template <class T> struct identity { typedef T type; };
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\enternote} The use of \mbox{\tcode{identity}} in
+\mbox{\tcode{forward}} forces users to explicitly specify the
+template parameter. This is necessary to get the correct forwarding
+semantics.\mbox{\exitnote}}
+\end{itemdescr}
+
+\index{forward@\tcode{forward}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T> T&& forward(typename identity<T>::type&& t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{t}}.}
+\end{itemdescr}
+
+\setcounter{Paras}{6}
+\index{move@\tcode{move}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T> typename remove_reference<T>::type&& move(T&& t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{t}}.}
+\end{itemdescr}
+
+\rSec2[pairs]{Pairs}
+
+\pnum
+The library provides a template for heterogeneous pairs of values.
+The library also provides a matching function template to simplify
+their construction and several templates that provide access to \tcode{pair}
+objects as if they were \tcode{tuple} objects (see~\ref{tuple.helper}
+and~\ref{tuple.elem}).%
+\index{pair@\tcode{pair}}%
+\index{pair@\tcode{pair}!tuple interface to}%
+\index{tuple@\tcode{tuple}!and pair@and \tcode{pair}}%
+
+\index{pair@\tcode{pair}}%
+\begin{codeblock}
+template <@\changedConcepts{class}{ObjectType}@ T1, @\changedConcepts{class}{ObjectType}@ T2>
+struct pair {
+  typedef T1 first_type;
+  typedef T2 second_type;
+
+  T1 first;
+  T2 second;
+  @\addedConcepts{requires DefaultConstructible<T1> \&\& DefaultConstructible<T2>}@ pair();
+  @\addedConcepts{requires CopyConstructible<T1> \&\& CopyConstructible<T2>}@ pair(const T1& @\farg{x}@, const T2& @\farg{y}@);
+  template<class @\farg{U}@, class @\farg{V}@>
+    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
+    pair(U&& @\farg{x}@, V&& @\farg{y}@);
+  @\addedConcepts{requires MoveConstructible<T1> \&\& MoveConstructible<T2>}@ pair(pair&& @\farg{p}@);
+  template<class @\farg{U}@, class @\farg{V}@> 
+    @\addedConcepts{requires Constructible<T1, U> \&\& Constructible<T2, V>}@
+    pair(const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
+  template<class @\farg{U}@, class @\farg{V}@> 
+    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@
+    pair(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
+  
+  @\addedConcepts{requires MoveAssignable<T1> \&\& MoveAssignable<T2>}@ pair& operator=(pair&& p ); 
+  template<class U , class V> 
+    @\addedConcepts{requires MoveAssignable<T1, U> \&\& MoveAssignable<T2, V>}@
+    pair& operator=(pair<U , V>&& p );
+
+  @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@ void swap(pair&& p ); 
+};
+\end{codeblock}
+
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T1> \&\& DefaultConstructible<T2>}@ pair();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Initializes its members as if implemented: \tcode{pair() : first(), second() \{\}}\
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T1> \&\& CopyConstructible<T2>}@ pair(const T1& @\farg{x}@, const T2& @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+The constructor initializes \tcode{first} with \farg{x}\ and \tcode{second}
+with \farg{y}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class @\farg{U}@, class @\farg{V}@>
+  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
+  pair(U&& @\farg{x}@, V&& @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects}
+The constructor initializes \mbox{\tcode{first}} with
+\mbox{\tcode{forward<U>(\farg{x})}} and \mbox{\tcode{second}}
+with \mbox{\tcode{forward<T>(\farg{y})}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires MoveConstructible<T1> \&\& MoveConstructible<T2>}@ pair(pair&& @\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects}
+The constructor initializes \mbox{\tcode{first}} with
+\mbox{\tcode{move(\farg{p}.first)}}
+and \mbox{\tcode{second}} with
+\mbox{\tcode{move(\farg{p}.second)}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class @\farg{U}@, class @\farg{V}@> 
+  @\addedConcepts{requires Constructible<T1, U> \&\& Constructible<T2, V>}@
+  pair(const pair<@\farg{U}@, @\farg{V}@> &@\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Initializes members from the corresponding members of the argument,
+performing implicit conversions as needed.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class @\farg{U}@, class @\farg{V}@> 
+  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@
+  pair(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects}
+The constructor initializes \mbox{\tcode{first}} with
+\mbox{\tcode{move(\farg{p}.first)}}
+and \mbox{\tcode{second}} with
+\mbox{\tcode{move(\farg{p}.second)}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires MoveAssignable<T1> \&\& MoveAssignable<T2>}@ pair& operator=(pair&& @\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects}
+Assigns to \mbox{\tcode{first}} with \mbox{\tcode{move(\farg{p}.first)}}
+and to \mbox{\tcode{second}} with \mbox{\tcode{move(\farg{p}.second)}}.
+
+\pnum
+\mbox{\returns} \mbox{\tcode{*this}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class @\farg{U}@, class @\farg{V}@> 
+  @\addedConcepts{requires MoveAssignable<T1, U> \&\& MoveAssignable<T2, V>}@
+  pair& operator=(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects}
+Assigns to \mbox{\tcode{first}} with \mbox{\tcode{move(\farg{p}.first)}}
+and to \mbox{\tcode{second}} with \mbox{\tcode{move(\farg{p}.second)}}.
+
+\pnum
+\mbox{\returns} \mbox{\tcode{*this}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@ void swap(pair&& @\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects} Swaps
+\mbox{\tcode{first}} with \mbox{\tcode{\farg{p}.first}} and
+\mbox{\tcode{second}} with \mbox{\tcode{\farg{p}.second}}.
+
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{first_type}} and 
+\mbox{\tcode{second_type}} must be \mbox{\tcode{Swappable}}.}
+\end{itemdescr}
+
+\index{operator==@\tcode{operator==}!\tcode{pair}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{EqualityComparable}@ T1, @\changedConcepts{class}{EqualityComparable}@ T2>
+  bool operator==(const pair<T1, T2>& @\farg{x}@, const pair<T1, T2>& @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{x.first == y.first \&\& x.second == y.second}.
+\end{itemdescr}
+
+\index{operator<@\tcode{operator<}!\tcode{pair}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
+  bool operator<(const pair<T1, T2>& @\farg{x}@, const pair<T1, T2>& @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{x.first < y.first || (!(y.first < x.first) \&\& x.second < y.second)}.
+\end{itemdescr}
+
+\index{swap@\tcode{swap}!\tcode{pair}}%
+\begin{itemdecl}
+template<class @\farg{T1}@, class @\farg{T2}@>
+  @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@ 
+  void swap(pair<@\farg{T1}@, @\farg{T2}@>& @\farg{x}@, pair<@\farg{T1}@, @\farg{T2}@>& @\farg{y}@);
+template<class @\farg{T1}@, class @\farg{T2}@> 
+  @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@
+  void swap(pair<@\farg{T1}@, @\farg{T2}@>&& @\farg{x}@, pair<@\farg{T1}@, @\farg{T2}@>& @\farg{y}@);
+template<class @\farg{T1}@, class @\farg{T2}@> 
+  @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@
+  void swap(pair<@\farg{T1}@, @\farg{T2}@>& @\farg{x}@, pair<@\farg{T1}@, @\farg{T2}@>&& @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\effects} \mbox{\tcode{\farg{x}.swap(\farg{y})}}
+\end{itemdescr}
+
+\index{make_pair@\tcode{make_pair}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ T1, @\changedConcepts{class}{MoveConstructible}@ T2>
+  pair<T1, T2> make_pair(T1 @\farg{x}@, T2 @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+% .Fs new
+\tcode{pair<T1, T2>(x, y)}.%
+\footnote{
+According to~(\ref{class.copy}), an implementation is permitted to not
+perform a copy of an argument, thus avoiding unnecessary copies.
+}
+
+\pnum
+\enterexample\ 
+In place of:
+
+\begin{codeblock}
+  return pair<int, double>(5, 3.1415926);   // explicit types
+\end{codeblock}
+
+a \Cpp\ program may contain:
+
+\begin{codeblock}
+  return make_pair(5, 3.1415926);           // types are deduced
+\end{codeblock}
+\exitexample\ 
+\end{itemdescr}
+
+\rSec1[tuple]{\marktr{}Tuples}
+
+\pnum
+\index{tuple@\tcode{tuple}}%
+\ref{tuple} describes the tuple library that provides a tuple type as
+the class template \tcode{tuple} that can be instantiated with any number
+of arguments.  \removedD{An implementation can set an upper limit for the number
+of arguments.  The minimum value for this implementation quantity is
+defined in Annex~\mbox{\ref{limits}}.}  Each template argument specifies
+the type of an element in the \tcode{tuple}.  Consequently, tuples are
+heterogeneous, fixed-size collections of values.
+
+
+\pnum
+\synopsis{Header \tcode{<tuple>} synopsis}
+
+\index{tuple@\tcode{<tuple>}}%
+\begin{codeblock}
+namespace std {
+  // \ref{tuple.tuple}, class template tuple:
+  template <@\changedConcepts{class}{ObjectType}@... Types> class tuple;
+
+  // \ref{tuple.creation}, tuple creation functions:
+  const @\textit{unspecified}@ ignore;
+
+  template <@\changedConcepts{class}{MoveConstructible}@... Types>
+    tuple<@\addedD{VTypes...}@> make_tuple(@\addedD{Types\&\&...}@);
+
+  template<@\changedConcepts{class}{ObjectType}@... Types>
+    tuple<@\addedD{Types\&...}@> tie(@\addedD{Types\&...}@); 
+
+  // \ref{tuple.helper}, tuple helper classes:
+  template <class T> class tuple_size;  // \addedD{undefined}
+  @\addedD{template <class... Types> class tuple_size<tuple<Types...> >;}@
+
+  template <int I, class T> class tuple_element;    // \addedD{undefined}
+  @\addedD{template <int I, class... Types>}@ 
+    @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@ class tuple_element<I, tuple<Types...> >;
+
+  // \ref{tuple.elem}, element access:
+  template <int I, @\changedConcepts{class}{ObjectType}@... Types> 
+    @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
+    @\addedD{typename tuple_element<I, tuple<Types...> >::type\& get(tuple<Types...>\&);}@
+
+  template <int I, @\changedConcepts{class}{ObjectType}@... Types>
+    @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
+    @\addedD{typename tuple_element<I, tuple<Types...> >::type const\& get(const tuple<Types...>\&);}@
+
+  // \ref{tuple.rel}, relational operators:
+  template<class... TTypes, class... UTypes>
+    @\addedConcepts{requires EqualityComparable<TTypes, UTypes>...}@
+    bool operator==(const tuple<@\addedD{TTypes...}@>&, const tuple<@\addedD{UTypes...}@>&);
+
+  template<@\addedD{class... TTypes, class... UTypes}@>
+    @\addedConcepts{requires LessThanComparable<TTypes, UTypes>...}@
+    bool operator<(const tuple<@\addedD{TTypes...}@>&, const tuple<@\addedD{UTypes...}@>&);
+
+  template<@\addedD{class... TTypes, class... UTypes}@>
+    @\addedConcepts{requires EqualityComparable<TTypes, UTypes>...}@
+    bool operator!=(const tuple<@\addedD{TTypes...}@>&, const tuple<@\addedD{UTypes...}@>&);
+
+  template<@\addedD{class... TTypes, class... UTypes}@>
+    @\addedConcepts{requires LessThanComparable<UTypes, TTypes>...}@
+    bool operator>(const tuple<@\addedD{TTypes...}@>&, const tuple<@\addedD{UTypes...}@>&);
+
+  template<@\addedD{class... TTypes, class... UTypes}@>
+    @\addedConcepts{requires LessThanComparable<UTypes, TTypes>...}@
+    bool operator<=(const tuple<@\addedD{TTypes...}@>&, const tuple<@\addedD{UTypes...}@>&);
+
+  template<@\addedD{class... TTypes, class... UTypes}@>
+    @\addedConcepts{requires LessThanComparable<TTypes, UTypes>...}@
+    bool operator>=(const tuple<@\addedD{TTypes...}@>&, const tuple<@\addedD{UTypes...}@>&);
+
+} // namespace std
+\end{codeblock}
+
+\rSec2[tuple.tuple]{Class template \tcode{tuple}}
+
+\pnum
+\removedD{\mbox{\tcode{M}} denotes the implementation-defined number of template
+type parameters to the tuple class template, and \mbox{\tcode{N}}
+denotes the number of template arguments specified in an instantiation.}
+
+\pnum 
+\removedD{\mbox{\enterexample} Given the instantiation
+  \mbox{\tcode{tuple<int, float, char>}}, \mbox{\tcode{N}} is 3.  \mbox{\exitexample}}
+
+\index{tuple@\tcode{tuple}}%
+\begin{codeblock}
+template <@\changedConcepts{class}{ObjectType}@... Types>
+class tuple 
+{
+public:
+  @\addedConcepts{requires DefaultConstructible<Types>...}@ tuple();
+  @\addedConcepts{requires CopyConstructible<Types>...}@ explicit tuple(@\addedD{const Types\&...}@);
+  @\addedD{template <class... UTypes>}@
+    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+    @\addedD{explicit tuple(UTypes\&\&...);}@
+
+  @\addedConcepts{requires CopyConstructible<Types>...}@ tuple(const tuple&);
+  @\addedConcepts{requires MoveConstructible<Types>...}@ @\addedD{tuple(tuple\&\&);}@
+
+  template <@\addedD{class... UTypes}@>
+    @\addedConcepts{requires Constructible<Types, UTypes>...}@
+    tuple(const tuple<@\addedD{UTypes...}@>&);
+  @\addedD{template <class... UTypes>}@
+    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+    @\addedD{tuple(tuple<UTypes...>\&\&);}@
+
+  template <class U1, class U2>
+    tuple(const pair<U1, U2>&);      // iff \changedD{N}{\mbox{\tcode{sizeof...(Types) == 2}}}
+  @\addedD{template <class U1, class U2>}@
+    @\addedD{tuple(pair<U1, U2>\&\&);}@           // iff \addedD{\mbox{\tcode{sizeof...(Types) == 2}}}
+
+  @\addedConcepts{requires CopyAssignable<Types>...}@ tuple& operator=(const tuple&);
+  @\addedConcepts{requires MoveAssignable<Types>...}@ @\addedD{tuple\& operator=(tuple\&\&);}@
+
+  template <@\addedD{class... UTypes}@>
+    @\addedConcepts{requires CopyAssignable<Types, UTypes>...}@ 
+    tuple& operator=(const tuple<@\addedD{UTypes...}@>&);
+  @\addedD{template <class... UTypes>}@
+    @\addedConcepts{requires MoveAssignable<Types, UTypes>...}@ 
+    @\addedD{tuple\& operator=(tuple<UTypes...>\&\&);}@
+
+  template <class U1, class U2>
+    tuple& operator=(const pair<U1, U2>&);  // iff \changedD{N}{\mbox{\tcode{sizeof...(Types) == 2}}}
+  @\addedD{template <class U1, class U2>}@
+    @\addedD{tuple\& operator=(pair<U1, U2>\&\&);}@       // iff \addedD{\mbox{\tcode{sizeof...(Types) == 2}}}
+};
+\end{codeblock}
+
+
+
+
+\rSec3[tuple.cnstr]{Construction}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<Types>...}@ tuple();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}} shall be default constructible.}
+
+\pnum
+\effects\  Default initializes each element.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<Types>...}@ tuple(@\addedD{const Types\&...}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedD{where \mbox{\tcode{Pi}} is \mbox{\tcode{Ti}} if \mbox{\tcode{Ti}}
+is a reference type, or \mbox{\tcode{const Ti\&}} otherwise.}
+
+\pnum
+\removedConcepts{\mbox{\requires}  Each type in \mbox{\tcode{Types}}
+shall be copy constructible.}
+
+\pnum
+\effects\  Copy initializes each element with the value of the
+corresponding parameter.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedD{template <class... UTypes>}@
+  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+  @\addedD{tuple(UTypes\&\&... u);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}} shall be move
+constructible from the corresponding type in \mbox{\tcode{UTypes}}.
+\mbox{\tcode{sizeof...(Types)}} \mbox{\tcode{==}}
+\mbox{\tcode{sizeof...(UTypes)}}.}
+
+\pnum
+\addedD{\mbox{\effects} Initializes the elements in the tuple with the
+corresponding value in \mbox{\tcode{forward<UTypes>(u)}}.}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<Types>...}@ tuple(const tuple& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}}
+shall be copy constructible.}
+
+\pnum
+\effects\  Copy constructs each element of \tcode{*this} with the 
+corresponding element of \tcode{u}.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedConcepts{requires MoveConstructible<Types>...}@ @\addedD{tuple(tuple\&\& u);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}} shall be
+move constructible.}
+
+\pnum
+\addedD{\mbox{\effects} Move-constructs each element of \mbox{\tcode{*this}}
+with the corresponding element of \mbox{\tcode{u}}.}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template <@\addedD{class... UTypes}@> 
+  @\addedConcepts{requires Constructible<Types, UTypes>...}@
+  tuple(const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  Each type in \mbox{\tcode{Types}}
+shall be constructible from the corresponding type
+in \mbox{\tcode{UTypes}}.
+\mbox{\tcode{sizeof...(Types)}} \mbox{\tcode{==}}
+\mbox{\tcode{sizeof...(UTypes)}}.}
+
+\pnum\effects\  Constructs each element of \tcode{*this} with the corresponding
+element of \tcode{u}.
+
+\pnum
+\enternote\ \removedD{In an implementation where one template definition
+  serves for many different values for \mbox{\tcode{N}},}
+  \tcode{enable_if} can be used to
+  make the converting constructor and assignment operator exist only
+  in the cases where the source and target have the same number of
+  elements.\removedD{  Another way of achieving this is adding an extra integral
+  template parameter which defaults to \mbox{\tcode{N}} (more precisely, a
+  metafunction that computes \mbox{\tcode{N}}), and then defining the converting
+  copy constructor and assignment only for tuples where the extra
+  parameter in the source is \mbox{\tcode{N}}.}  \exitnote\
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template <class... UTypes> 
+  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+  tuple(tuple<UTypes...>&& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}} shall be
+move-constructible from the corresponding type in \mbox{\tcode{UTypes}}.
+\mbox{\tcode{sizeof...(Types)}} \mbox{\tcode{==}}
+\mbox{\tcode{sizeof...(UTypes)}}.}
+
+\pnum
+\addedD{\mbox{\effects} Move-constructs each element of \mbox{\tcode{*this}}
+with the corresponding element of \mbox{\tcode{u}}.}
+
+\addedD{\mbox{\enternote} \mbox{\tcode{enable_if}} can be used to make the
+converting constructor and assignment operator exist only in the cases where
+the source and target have the same number of elements. \mbox{\exitnote}}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\index{pair@\tcode{pair}}%
+\begin{itemdecl}
+template <class U1, class U2> tuple(const pair<U1, U2>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires\  \changedD{\mbox{\tcode{T1}}}{The first type in \mbox{\tcode{Types}}}
+shall be constructible from \tcode{U1} and
+\changedD{\mbox{\tcode{T2}}}{the second type in \mbox{\tcode{Types}}}
+shall be constructible from \tcode{U2}.
+\changedD{\mbox{\tcode{N == 2}}}{\mbox{\tcode{sizeof...(Types) == 2}}}.
+
+\pnum
+\effects\  Constructs the first element with \tcode{u.first} and the
+second element with \tcode{u.second}.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
+\index{pair@\tcode{pair}}%
+\begin{itemdecl}
+@\addedD{template <class U1, class U2> tuple(pair<U1, U2>\&\& u);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\requires} The first type in \mbox{\tcode{Types}} shall be
+move constructible from \mbox{\tcode{U1}} and the second type in
+\mbox{\tcode{Types}} shall be move-constructible from \mbox{\tcode{U2}}.
+\mbox{\tcode{sizeof...(Types) == 2}}.}
+
+\pnum
+\addedD{\mbox{\effects}  Constructs the first element with
+\mbox{\tcode{move(u.first)}} and the
+second element with \mbox{\tcode{move(u.second)}}.}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedConcepts{requires CopyAssignable<Types>...}@ tuple& operator=(const tuple& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  Each type in \mbox{\tcode{Types}}
+shall be assignable.}
+
+\pnum
+\effects\  Assigns each element of \tcode{u} to the corresponding 
+element of \tcode{*this}.
+
+\pnum
+\returns\  \tcode{*this}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedConcepts{requires MoveAssignable<Types>...}@ @\addedD{tuple\& operator=(tuple\&\& u);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}} shall be
+move-assignable.}
+
+\pnum
+\addedD{\mbox{\effects} Move-assigns each element of \mbox{\tcode{u}} to
+the corresponding element of \mbox{\tcode{*this}}.}
+
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{*this}}.}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template <@\addedD{class... UTypes}@>
+  @\addedConcepts{requires CopyAssignable<Types, UTypes>...}@ 
+  tuple& operator=(const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  Each type in \mbox{\tcode{Types}}
+shall be assignable from the corresponding type
+in \mbox{\tcode{UTypes}}}.
+
+\pnum
+\effects\  Assigns each element of \tcode{u} to the corresponding element
+of \tcode{*this}.
+
+\pnum
+\returns\  \tcode{*this}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+@\addedD{template <class... UTypes>}@
+  @\addedConcepts{requires MoveAssignable<Types, UTypes>...}@ 
+  @\addedD{tuple\& operator=(tuple<UTypes...>\&\& u);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} Each type in \mbox{\tcode{Types}} shall be
+move-assignable from the corresponding type in \mbox{\tcode{UTypes}}.
+\mbox{\tcode{sizeof...(Types)}} \mbox{\tcode{==}}
+\mbox{\tcode{sizeof...(UTypes)}}.}
+
+\pnum
+\addedD{\mbox{\effects} Move-assigns each element of \mbox{\tcode{u}}
+to the corresponding element of \mbox{\tcode{*this}}.}
+
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{*this}}.}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
+\index{pair@\tcode{pair}}%
+\begin{itemdecl}
+template <class U1, class U2> tuple& operator=(const pair<U1, U2>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires\  \changedD{\mbox{\tcode{T1}}}{The first type in
+\mbox{\tcode{Types}}} shall be move assignable from \tcode{U1} and
+\changedD{\mbox{\tcode{T2}}}{the second type in \mbox{\tcode{Types}}}
+shall be move assignable from \tcode{U2}.
+\changedD{\mbox{\tcode{N == 2}}}{\mbox{\tcode{sizeof...(Types) == 2}}}.
+
+\pnum
+\effects\  Assigns \tcode{u.first} to the first element of \tcode{*this}
+and \tcode{u.second} to the second element of \tcode{*this}.
+
+\pnum
+\returns\  \tcode{*this}
+
+\pnum
+\enternote\ There are rare conditions where the
+  converting copy constructor is a better match than the element-wise
+  construction, even though the user might intend differently.  An
+  example of this is if one is constructing a one-element tuple where
+  the element type is another tuple type \tcode{T} and if the parameter
+  passed to the constructor is not of type \tcode{T}, but rather a tuple
+  type that is convertible to \tcode{T}.  The effect of the converting copy
+  construction is most likely the same as the effect of the
+  element-wise construction would have been.  However, it it possible
+  to compare the ``nesting depths'' of the source and target tuples and
+  decide to select the element-wise constructor if the source nesting
+  depth is smaller than the target nesting-depth.  This can be
+  accomplished using an \tcode{enable_if} template or other tools for
+  constrained templates.  
+\exitnote\
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
+\index{pair@\tcode{pair}}%
+\begin{itemdecl}
+@\addedD{template <class U1, class U2> tuple\& operator=(pair<U1, U2>\&\& u);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\requires} The first type in \mbox{\tcode{Types}} shall be
+assignable from \mbox{\tcode{U1}} and the second type in \mbox{\tcode{Types}}
+shall be assignable from \mbox{\tcode{U2}}. \mbox{\tcode{sizeof...(Types) == 2}}.}
+
+\pnum
+\addedD{\mbox{\effects} Assigns \mbox{\tcode{move(u.first)}} to the first
+element of \mbox{\tcode{*this}} and \mbox{\tcode{move(u.second)}} to the
+second element of \mbox{\tcode{*this}}.}
+
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{*this}}.}
+\end{itemdescr}
+
+\rSec3[tuple.creation]{Tuple creation functions}
+
+\index{make_tuple@\tcode{make_tuple}}%
+\index{tuple@\tcode{tuple}!make_tuple@\tcode{make_tuple}}%
+\begin{itemdecl}
+template<@\changedConcepts{class}{MoveConstructible}@... Types>
+  tuple<VTypes...> make_tuple(Types&&... t); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\changedD{where \mbox{\tcode{Vi}} is \mbox{\tcode{X\&}} if
+the cv-unqualified type \mbox{\tcode{Ti}} is
+\mbox{\tcode{reference\_wrapper<X>}}, otherwise \mbox{\tcode{Vi}} is \mbox{\tcode{Ti}}.}
+{where each \mbox{\tcode{Vi}} in \mbox{\tcode{VTypes}} is \mbox{\tcode{X\&}}
+if, for the corresponding type \mbox{\tcode{Ti}} in \mbox{\tcode{Types}},
+\mbox{\tcode{remove_cv<remove_reference<Ti>::type>::type}} equals
+\mbox{\tcode{reference_wrapper<X>}}, otherwise \mbox{\tcode{Vi}} is
+\mbox{\tcode{decay<Ti>::type}}.}
+
+\pnum
+\removedD{The \mbox{\tcode{make\_tuple}} function template shall be implemented for
+each different number of arguments from 0 to the maximum number of
+allowed tuple elements.}
+
+\pnum
+\returns\ \changedD{\mbox{\tcode{tuple<V1, V2, ..., VN>(t1, t2, ..., tn)}}}
+{\mbox{\tcode{tuple<VTypes...>(forward<Types>(t)...)}}.}
+ 
+\pnum
+\enterexample\
+
+\begin{codeblock}
+int i; float j; 
+make_tuple(1, ref(i), cref(j))
+\end{codeblock}
+
+creates a tuple of type 
+
+\begin{codeblock}
+tuple<int, int&, const float&>
+\end{codeblock}
+
+\exitexample\
+
+\end{itemdescr}
+
+\index{tie@\tcode{tie}}%
+\index{tuple@\tcode{tuple}!tie@\tcode{tie}}%
+\begin{itemdecl}
+template<@\changedConcepts{class}{ObjectType}@... Types>
+  tuple<@\addedD{Types\&...}@> tie(@\addedD{Types\&... t}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedD{The \mbox{\tcode{tie}} function template shall be implemented for each
+different number of arguments from 0 to the maximum number of allowed
+tuple elements.}
+
+\pnum
+\returns\  \tcode{tuple<\addedD{Types\&}>(\addedD{t...})}.  When an
+argument \changedD{ti}{in \mbox{\tcode{t}}} is \tcode{ignore}, assigning
+any value to the corresponding tuple element has no effect.
+ 
+\pnum
+\enterexample\
+\tcode{tie} functions allow one to create tuples that unpack 
+tuples into variables. \tcode{ignore} can be used for elements that
+are not needed:
+\begin{codeblock}
+int i; std::string s;
+tie(i, ignore, s) = make_tuple(42, 3.14, "C++");
+// \tcode{i == 42}, \tcode{s == "C++"}
+\end{codeblock}
+\exitexample\
+\end{itemdescr}
+
+\rSec3[tuple.helper]{Tuple helper classes}
+\setcounter{Paras}{3}
+\index{tuple_element@\tcode{tuple_element}}%
+\begin{itemdecl}
+@\addedD{template <int I, class... Types>}@
+@\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@ 
+@\addedD{class tuple_element<I, tuple<Types...> > \{}@
+@\addedD{public:}@
+  @\addedD{typedef TI type;}@
+@\addedD{\};}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{0 <= I}} and \mbox{\tcode{I < sizeof...(Types)}}.}}
+The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+
+\pnum
+\changedD{\mbox{\tcode{Value}}:  The}{\mbox{\ctype} \mbox{\tcode{TI}} is the}
+type of the \tcode{I}th element of \changedD{\mbox{\tcode{T}}}{\mbox{\tcode{Types}}},
+where indexing is zero-based.
+\end{itemdescr}
+
+
+\rSec3[tuple.elem]{Element access}
+
+\index{tuple@\tcode{tuple}!get@\tcode{get}}%
+\index{get@\tcode{get}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template <int I, @\changedConcepts{class}{ObjectType}@... Types> 
+  @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
+  @\addedD{typename tuple_element<I, tuple<Types...> >::type\& get(tuple<Types...>\& t);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{0 <= I}} and \mbox{\tcode{I < sizeof...(Types)}}.}}
+The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+
+\pnum
+\removedD{\mbox{\returntype}  \mbox{\tcode{RJ}}, where \mbox{\tcode{J=I+1}}.
+If \mbox{\tcode{TJ}} is a
+reference type, then \mbox{\tcode{RJ}}
+is \mbox{\tcode{TJ}}, otherwise \mbox{\tcode{RJ}} is \mbox{\tcode{TJ\&}}.}
+
+\pnum
+\returns\  A reference to the \tcode{I}th element of \tcode{t}, where
+indexing is zero-based.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!get@\tcode{get}}%
+\index{get@\tcode{get}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template <int I, @\changedConcepts{class}{ObjectType}@... Types> 
+  @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
+  @\addedD{typename tuple_element<I, tuple<Types...> >::type const\& get(const tuple<Types...>\& t);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{0 <= I}} and \mbox{\tcode{I < sizeof...(Types)}}.}}
+The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+
+\pnum
+\removedD{\mbox{\returntype}  \mbox{\tcode{PJ}}, where \mbox{\tcode{J=I+1}}.
+If \mbox{\tcode{TJ}} is a
+reference type, then \mbox{\tcode{PJ}}
+is \mbox{\tcode{TJ}}, otherwise \mbox{\tcode{PJ}} is \mbox{\tcode{const TJ\&}}.}
+
+\pnum
+\returns\  A const reference to the \tcode{I}th element of \tcode{t}, where
+indexing is zero-based.
+
+\pnum
+\enternote\ Constness is shallow. If \changedD{\mbox{\tcode{TJ}}}{a \mbox{\tcode{T}}
+in \mbox{\tcode{Types}}} is some
+reference type \tcode{X\&}, the return type is \tcode{X\&}, not \tcode{const X\&}.
+However, if the element type is non-reference type \tcode{T}, the return
+type is \tcode{const T\&}.
+This is consistent with how constness is defined to work 
+for member variables of reference type. \exitnote]
+
+\pnum
+\enternote\ The reason \tcode{get} is a
+nonmember function is that if this functionality had been
+provided as a member function, code where the type
+depended on a template parameter would have required using
+the \tcode{template} keyword. \exitnote\
+\end{itemdescr}
+
+\rSec3[tuple.rel]{Relational operators}
+
+\index{tuple@\tcode{tuple}!operator==@\tcode{operator==}}%
+\index{operator==@\tcode{operator==}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template<@\addedD{class... TTypes, class... UTypes}@>
+  @\addedConcepts{requires EqualityComparable<TTypes, UTypes>...}@
+  bool operator==(const tuple<@\addedD{TTypes...}@>& t, const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}  For all \mbox{\tcode{i}},
+where \mbox{\tcode{0 <= i}} and
+\mbox{\tcode{i < sizeof...(Types)}}, \mbox{\tcode{get<i>(t) == get<i>(u)}} is a valid expression
+returning a type that is convertible to \mbox{\tcode{bool}}.
+\mbox{\tcode{sizeof...(TTypes)}} \mbox{\tcode{==}}
+\mbox{\tcode{sizeof...(UTypes)}}.}
+
+\pnum
+\returns\  \tcode{true} iff \tcode{get<i>(t) == get<i>(u)} for all \tcode{i}.
+For any two zero-length tuples \tcode{e} and \tcode{f}, \tcode{e == f} returns \tcode{true}.
+
+\pnum
+\effects\  The elementary comparisons are performed in order from the
+zeroth index upwards.  No comparisons or element accesses are
+performed after the first equality comparison that evaluates to
+\tcode{false}.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator<@\tcode{operator<}}%
+\index{operator<@\tcode{operator<}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template<@\addedD{class... TTypes, class... UTypes}@>
+  @\addedConcepts{requires LessThanComparable<TTypes, UTypes>...}@
+  bool operator<(const tuple<@\addedD{TTypes...}@>& t, const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\removedConcepts{\mbox{\requires}  For all \mbox{\tcode{i}},
+where \mbox{\tcode{0 <= i}} and
+\mbox{\tcode{i < sizeof...(Types)}}, \mbox{\tcode{get<i>(t) == get<i>(u)}} is a valid expression
+returning a type that is convertible to \mbox{\tcode{bool}}.
+\mbox{\tcode{sizeof...(TTypes)}} \mbox{\tcode{==}}
+\mbox{\tcode{sizeof...(UTypes)}}.}
+
+\pnum\returns\  The result of a lexicographical comparison
+between \tcode{t} and \tcode{u}. The result is defined
+as: \tcode{(bool)(get<0>(t) < get<0>(u)) ||
+(!(bool)(get<0>(u) < get<0>(t)) \&\& t$_{\mathrm{tail}}$ <
+u$_{\mathrm{tail}}$)}, where \tcode{r$_{\mathrm{tail}}$} for some
+tuple \tcode{r} is a tuple containing all but the first element
+of \tcode{r}.  For any two zero-length tuples \tcode{e}
+and \tcode{f}, \tcode{e < f} returns \tcode{false}.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator"!=@\tcode{operator"!=}}%
+\index{operator"!=@\tcode{operator"!=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template<@\addedD{class... TTypes, class... UTypes}@>
+  @\addedConcepts{requires EqualityComparable<TTypes, UTypes>...}@
+  bool operator!=(const tuple<@\addedD{TTypes...}@>& t, const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\returns\ \tcode{!(t == u)}.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator>@\tcode{operator>}}%
+\index{operator>@\tcode{operator>}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template<@\addedD{class... TTypes, class... UTypes}@>
+  @\addedConcepts{requires LessThanComparable<UTypes, TTypes>...}@
+  bool operator>(const tuple<@\addedD{TTypes...}@>& t, const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\returns\ \tcode{u < t}.
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator<=@\tcode{operator<=}}%
+\index{operator<=@\tcode{operator<=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template<@\addedD{class... TTypes, class... UTypes}@>
+  @\addedConcepts{requires LessThanComparable<UTypes, TTypes>...}@
+  bool operator<=(const tuple<@\addedD{TTypes...}@>& t, const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\returns\ \tcode{!(u < t)}
+\end{itemdescr}
+
+\index{tuple@\tcode{tuple}!operator>=@\tcode{operator>=}}%
+\index{operator>=@\tcode{operator>=}!tuple@\tcode{tuple}}%
+\begin{itemdecl}
+template<@\addedD{class... TTypes, class... UTypes}@>
+  @\addedConcepts{requires LessThanComparable<TTypes, UTypes>...}@
+  bool operator>=(const tuple<@\addedD{TTypes...}@>& t, const tuple<@\addedD{UTypes...}@>& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{!(t < u)}
+\end{itemdescr}
+
+\pnum \enternote\ The above definitions for comparison operators 
+do not require \tcode{t$_{\mathrm{tail}}$} 
+(or \tcode{u$_{\mathrm{tail}}$}) to be constructed. It may not 
+even be possible, as \tcode{t} and \tcode{u} are not required to be copy
+constructible. Also, all comparison operators are short circuited;
+they do not perform element accesses beyond what is required to determine the
+result of the comparison. \exitnote\
+
+\setcounter{section}{4}
+\rSec1[function.objects]{Function objects}
+
+\pnum
+Function objects are objects with an \tcode{operator()} defined.
+In the places where one would expect to pass a pointer to a function to an
+algorithmic template (clause \ref{algorithms}), the interface is specified to accept an object with an
+\tcode{operator()}
+defined.
+This not only makes algorithmic templates work with pointers to functions, but
+also enables them to work with arbitrary function objects.
+
+\pnum
+\synopsis{Header \tcode{<functional>} synopsis}
+\index{functional@\tcode{<functional>}}%
+
+\begin{codeblock}
+namespace std {
+  // \ref{base}, base:
+  template <class Arg, class Result> struct unary_function;
+  template <class Arg1, class Arg2, class Result> struct binary_function;
+
+  // \marktr{}\ref{func.ret} result_of:
+  template <class@\removedD{ FunctionCallType}@> class result_of;   // \addedD{undefined}
+  @\addedD{template <class F, class... Args> class result_of<F(ArgTypes...)>;}@
+
+  // \marktr{}\ref{refwrap}, reference_wrapper:
+  template <@\changedConcepts{class}{ObjectType}@ T> class reference_wrapper; 
+
+  template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<T> ref(T&);
+  template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cref(const T&);
+
+  template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<T> ref(reference_wrapper<T>);
+  template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cref(reference_wrapper<T>);
+
+  //    \ref{arithmetic.operations}, arithmetic operations:
+  template <class T> struct plus;
+  template <class T> struct minus;
+  template <class T> struct multiplies;
+  template <class T> struct divides;
+  template <class T> struct modulus;
+  template <class T> struct negate;
+
+  // \ref{comparisons}, comparisons:
+  template <class T> struct equal_to;
+  template <class T> struct not_equal_to;
+  template <class T> struct greater;
+  template <class T> struct less;
+  template <class T> struct greater_equal;
+  template <class T> struct less_equal;
+
+  // \ref{logical.operations}, logical operations:
+  template <class T> struct logical_and;
+  template <class T> struct logical_or;
+  template <class T> struct logical_not;
+
+  // \ref{negators}, negators:
+  template <class Predicate> class unary_negate;
+  template <class Predicate>
+    unary_negate<Predicate>  not1(const Predicate&);
+  template <class Predicate> class binary_negate;
+  template <class Predicate>
+    binary_negate<Predicate> not2(const Predicate&);
+
+  // \ref{bind}, bind:
+  template<class T> struct is_bind_expression;
+  template<class T> struct is_placeholder;
+
+  template<@\changedConcepts{class}{CopyConstructible}@ Fn, @\changedConcepts{class}{CopyConstructible}@... Types>
+    @\unspec@ bind(Fn, @\addedD{Types...}@);
+  template<@\changedConcepts{class}{MoveConstructible}@ R, @\changedConcepts{class}{CopyConstructible}@ Fn, @\changedConcepts{class}{CopyConstructible}@... Types>
+    @\unspec@ bind(Fn, @\addedD{Types...}@);
+
+  namespace placeholders {
+    // M is the implementation-defined number of placeholders
+    extern @\unspec@ _1;
+    extern @\unspec@ _2;
+                .
+                .
+                .
+    extern @\unspec@ _M;
+  }  
+
+  // \ref{depr.lib.binders}, binders (deprecated):
+  template <class Fn> class binder1st;
+  template <class Fn, class T>
+    binder1st<Fn> bind1st(const Fn&, const T&);
+  template <class Fn> class binder2nd;
+  template <class Fn, class T>
+    binder2nd<Fn> bind2nd(const Fn&, const T&);
+
+  // \ref{function.pointer.adaptors}, adaptors:
+  template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result> 
+    class pointer_to_unary_function;
+  template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result>
+    pointer_to_unary_function<Arg,Result> ptr_fun(Result (*)(Arg));
+  template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+    class pointer_to_binary_function;
+  template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+    pointer_to_binary_function<Arg1,Arg2,Result>
+      ptr_fun(Result (*)(Arg1,Arg2));
+
+  // \ref{member.pointer.adaptors}, adaptors:
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_t;
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_t;
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T>
+      mem_fun_t<S,T> mem_fun(S (T::*f)());
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+      mem_fun1_t<S,T,A> mem_fun(S (T::*f)(A));
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_ref_t;
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_ref_t;
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T>
+      mem_fun_ref_t<S,T> mem_fun_ref(S (T::*f)());
+  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+      mem_fun1_ref_t<S,T,A> mem_fun_ref(S (T::*f)(A));
+
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_t;
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_t;
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T>
+    const_mem_fun_t<S,T> mem_fun(S (T::*f)() const);
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+    const_mem_fun1_t<S,T,A> mem_fun(S (T::*f)(A) const);
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_ref_t;
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_ref_t;
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T>
+    const_mem_fun_ref_t<S,T> mem_fun_ref(S (T::*f)() const);
+  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+    const_mem_fun1_ref_t<S,T,A> mem_fun_ref(S (T::*f)(A) const);
+
+  // \marktr{}\ref{func.memfn}, member function adaptors:
+  template<@\changedConcepts{class}{ObjectType}@ R, class T> @\textit{unspecified}@ mem_fn(R T::*);
+  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::*)(Args...) pm);}@
+  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const)(Args...) pm);}@
+  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* volatile)(Args...) pm);}@
+  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const volatile)(Args...) pm);}@
+
+  // \marktr{}\ref{func.wrap} polymorphic function wrappers:
+  class bad_function_call;
+
+  template<class@\removedD{ Function}@> class function; // \addedD{undefined}
+  @\addedD{template<\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes>}@
+    class function<R(ArgTypes...)>;
+
+  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    void swap(function<@\addedD{R(ArgTypes...)}@>&, function<@\addedD{R(ArgTypes...)}@>&);
+
+  template<@\addedD{class R1, class R2, class... ArgTypes1, class... ArgTypes2}@>
+    void operator==(const function<@\addedD{R1(ArgTypes1...)}@>&, const function<@\addedD{R2(ArgTypes2...)}@>&);
+  template<@\addedD{class R1, class R2, class... ArgTypes1, class... ArgTypes2}@>
+    void operator!=(const function<@\addedD{R1(ArgTypes1...)}@>&, const function<@\addedD{R2(ArgTypes2...)}@>&);
+
+  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator==(const function<@\addedD{R(ArgTypes...)}@>&, @\unspecnull@);
+  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator==(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
+  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator!=(const function<@\addedD{R(ArgTypes...)}@>&, @\unspecnull@);
+  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator!=(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
+
+  // \marktr{}\ref{unord.hash}, hash function base template:
+  template <class T> struct hash;
+
+  // Hash function specializations
+  template <> struct hash<bool>;
+  template <> struct hash<char>;
+  template <> struct hash<signed char>;
+  template <> struct hash<unsigned char>;
+  @\addedD{template <> struct hash<char16_t>;}@
+  @\addedD{template <> struct hash<char32_t>;}@
+  template <> struct hash<wchar_t>;
+  template <> struct hash<short>;
+  template <> struct hash<unsigned short>;
+  template <> struct hash<int>;
+  template <> struct hash<unsigned int>;
+  template <> struct hash<long>;
+  @\addedC{template <> struct hash<long long>;}@
+  template <> struct hash<unsigned long>;
+  @\addedC{template <> struct hash<unsigned long long>;}@
+
+  template <> struct hash<float>;
+  template <> struct hash<double>;
+  template <> struct hash<long double>;
+
+  template<class T> struct hash<T*>;
+
+  template <> struct hash<std::string>;
+  @\addedD{template <> struct hash<std::u16string>;}@
+  @\addedD{template <> struct hash<std::u32string>;}@
+  template <> struct hash<std::wstring>;
+}
+\end{codeblock}
+
+\setcounter{subsection}{4}
+\rSec2[refwrap]{\marktr{}Class template \tcode{reference_wrapper}}
+
+\index{reference_wrapper@\tcode{reference_wrapper}}
+\index{function objects!reference_wrapper@\tcode{reference_wrapper}}
+\index{unary function}
+\index{binary function}
+\begin{codeblock}
+template <@\changedConcepts{class}{ObjectType}@ T> class reference_wrapper 
+  : public unary_function<T1, R>          // see below
+  : public binary_function<T1, T2, R>     // see below
+{ 
+public :
+  // types
+  typedef T type;
+  typedef @\textit{see below}@ result_type; // Not always defined
+
+  // construct/copy/destroy
+  explicit reference_wrapper(T&);
+  reference_wrapper(const reference_wrapper<T>& x);
+
+  // assignment
+  reference_wrapper& operator=(const reference_wrapper<T>& x);
+
+  // access
+  operator T& () const;
+  T& get() const;
+
+  // tcode{}
+  template <@\changedD{class T1, class T2, ..., class TN}{class... ArgTypes}@>
+    @\addedConcepts{requires Callable<T, ArgTypes\&\&...>}@
+    @\changedConcepts{typename result_of<T(ArgTypes...)>::type}{Callable<T, ArgTypes\&\&...>::result_type}@
+  operator() (ArgTypes&&...) const;
+}; 
+\end{codeblock}
+
+\setcounter{subsubsection}{3}
+\rSec3[refwrap.invoke]{\tcode{reference_wrapper} invocation}
+\index{reference_wrapper@\tcode{reference_wrapper}!operator()@\tcode{operator()}}%
+\index{operator()@\tcode{operator()}!reference_wrapper@\tcode{reference_wrapper}}%
+\begin{itemdecl}
+template <@\changedD{class T1, class T2, ..., class TN}{class... ArgTypes}@>
+  @\addedConcepts{requires Callable<T, ArgTypes\&\&...>}@
+  @\changedConcepts{typename result_of<T(ArgTypes...)>::type}{Callable<T, ArgTypes\&\&...>::result_type}@
+    operator()(@\changedD{T1\& a1, T2\& a1, ..., TN\& aN}{ArgTypes\&\&... args}@) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{\textit{INVOKE}(get(), \changedD{a1, a2, ..., aN}{forward<ArgTypes>(args)...})}.
+(\ref{func.require})
+
+\pnum\note\ \tcode{operator()} is described for exposition only.
+Implementations are not required to provide an actual 
+\tcode{reference_wrapper::operator()}.  Implementations are
+permitted to support \tcode{reference_wrapper} function invocation
+through multiple overloaded operators or through other means.
+
+\end{itemdescr}
+
+\rSec3[refwrap.helpers]{reference_wrapper helper functions}
+\index{reference_wrapper@\tcode{reference_wrapper}!ref@\tcode{ref}}%
+\index{ref@\tcode{ref}!reference_wrapper@\tcode{reference_wrapper}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<T> ref(T& t); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{reference_wrapper<T>(t)}
+
+\pnum\throws\ nothing. 
+\end{itemdescr}
+
+\index{reference_wrapper@\tcode{reference_wrapper}!ref@\tcode{ref}}%
+\index{ref@\tcode{ref}!reference_wrapper@\tcode{reference_wrapper}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<T> ref(reference_wrapper<T>t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{ref(t.get())}
+
+\pnum\throws\ nothing. 
+\end{itemdescr}
+
+\index{reference_wrapper@\tcode{reference_wrapper}!cref@\tcode{cref}}%
+\index{cref@\tcode{cref}!reference_wrapper@\tcode{reference_wrapper}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cref(const T& t); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{reference_wrapper <const T>(t)}
+
+\pnum\throws\  nothing. 
+\end{itemdescr}
+
+\index{reference_wrapper@\tcode{reference_wrapper}!cref@\tcode{cref}}%
+\index{cref@\tcode{cref}!reference_wrapper@\tcode{reference_wrapper}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cref(reference_wrapper<T> t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{cref(t.get());}
+
+\pnum\throws\  nothing. 
+\end{itemdescr}
+
+\rSec2[arithmetic.operations]{Arithmetic operations}
+
+\pnum
+The library provides basic function object classes for all of the arithmetic
+operators in the language (\ref{expr.mul}, \ref{expr.add}).
+
+\index{plus@\tcode{plus}}%
+\begin{itemdecl}
+template <class T> struct plus : binary_function<T,T,T> {
+  @\addedConcepts{requires Addable<T> \&\& Convertible<T::result_type, T>}@
+    T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()}
+returns
+\tcode{\farg{x}\ + \farg{y}}.
+\end{itemdescr}
+
+\index{minus@\tcode{minus}}%
+\begin{itemdecl}
+template <class T> struct minus : binary_function<T,T,T> {
+  @\addedConcepts{requires Subtractable<T> \&\& Convertible<T::result_type, T>}@
+    T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()}
+returns
+\tcode{\farg{x}\ - \farg{y}}.
+\end{itemdescr}
+
+\index{multiplies@\tcode{multiplies}}%
+\begin{itemdecl}
+template <class T> struct multiplies : binary_function<T,T,T> {
+  @\addedConcepts{requires Multiplicable<T> \&\& Convertible<T::result_type, T>}@
+    T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()}
+returns
+\tcode{\farg{x}\ * \farg{y}}.
+\end{itemdescr}
+
+\index{divides@\tcode{divides}}%
+\begin{itemdecl}
+template <class T> struct divides : binary_function<T,T,T> {
+  @\addedConcepts{requires Divisible<T> \&\& Convertible<T::result_type, T>}@
+  T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()}
+returns
+\tcode{\farg{x}\ / \farg{y}}.
+\end{itemdescr}
+
+\index{modulus@\tcode{modulus}}%
+\begin{itemdecl}
+template <class T> struct modulus : binary_function<T,T,T> {
+  @\addedConcepts{requires Remainder<T> \&\& Convertible<T::result_type, T>}@
+    T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ \% \farg{y}}.
+\end{itemdescr}
+
+\index{negate@\tcode{negate}}%
+\begin{itemdecl}
+template <class T> struct negate : unary_function<T,T> {
+  @\addedConcepts{requires Negatable<T> \&\& Convertible<T::result_type, T>}@
+    T operator()(const T& @\farg{x}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{-\farg{x}}.
+\end{itemdescr}
+
+\rSec2[comparisons]{Comparisons}
+
+\pnum
+The library provides basic function object classes for all of the comparison
+operators in the language (\ref{expr.rel}, \ref{expr.eq}).
+
+\index{equal_to@\tcode{equal_to}}%
+\begin{itemdecl}
+template <class T> struct equal_to : binary_function<T,T,bool> {
+  @\addedConcepts{requires EqualityComparable<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ == \farg{y}}.
+\end{itemdescr}
+
+\index{not_equal_to@\tcode{not_equal_to}}%
+\begin{itemdecl}
+template <class T> struct not_equal_to : binary_function<T,T,bool> {
+  @\addedConcepts{requires EqualityComparable<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ != \farg{y}}.
+\end{itemdescr}
+
+\index{greater@\tcode{greater}}%
+\begin{itemdecl}
+template <class T> struct greater : binary_function<T,T,bool> {
+  @\addedConcepts{requires LessThanComparable<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ > \farg{y}}.
+\end{itemdescr}
+
+\index{less@\tcode{less}}%
+\begin{itemdecl}
+template <class T> struct less : binary_function<T,T,bool> {
+  @\addedConcepts{requires LessThanComparable<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ < \farg{y}}.
+\end{itemdescr}
+
+\index{greater_equal@\tcode{greater_equal}}%
+\begin{itemdecl}
+template <class T> struct greater_equal : binary_function<T,T,bool> {
+  @\addedConcepts{requires LessThanComparable<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ >= \farg{y}}.
+\end{itemdescr}
+
+\index{less_equal@\tcode{less_equal}}%
+\begin{itemdecl}
+template <class T> struct less_equal : binary_function<T,T,bool> {
+  @\addedConcepts{requires LessThanComparable<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ <= \farg{y}}.
+\end{itemdescr}
+
+\pnum
+For templates \tcode{greater}, \tcode{less}, \tcode{greater_equal}, and
+\tcode{less_equal}, the specializations for any pointer type yield a total order,
+even if the built-in operators \tcode{<}, \tcode{>}, \tcode{<=}, \tcode{>=}
+do not.
+
+\rSec2[logical.operations]{Logical operations}
+
+\pnum
+The library provides basic function object classes for all of the logical
+operators in the language (\ref{expr.log.and}, \ref{expr.log.or}, \ref{expr.unary.op}).
+
+\index{logical_and@\tcode{logical_and}}%
+\begin{itemdecl}
+template <class T> struct logical_and : binary_function<T,T,bool> {
+  @\addedConcepts{requires LogicalAnd<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ \&\& \farg{y}}.
+\end{itemdescr}
+
+\index{logical_or@\tcode{logical_or}}%
+\begin{itemdecl}
+template <class T> struct logical_or : binary_function<T,T,bool> {
+  @\addedConcepts{requires LogicalOr<T>}@
+    bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ || \farg{y}}.
+\end{itemdescr}
+
+\index{logical_not@\tcode{logical_not}}%
+\begin{itemdecl}
+template <class T> struct logical_not : unary_function<T,bool> {
+  @\addedConcepts{requires LogicalNot<T>}@
+    bool operator()(const T& @\farg{x}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{!\farg{x}}.
+\end{itemdescr}
+
+\setcounter{subsection}{9}
+\rSec2[bind]{\marktr{}Template function \tcode{bind}}
+
+\pnum
+The template function \tcode{bind} returns an object that binds a
+function object passed as an argument to additional arguments.
+
+\pnum
+\removedConcepts{Binders \mbox{\tcode{bind1st}} and \mbox{\tcode{bind2nd}} take a function object
+\mbox{\tcode{fn}} of two arguments and a value \mbox{\tcode{x}} and return
+a function object of one argument constructed out of \mbox{\tcode{\changedB{f}{fn}}}
+with the first or second argument correspondingly bound to \mbox{\tcode{x}}.}
+
+\rSec3[func.bind]{\marktr{}Function object binders}
+
+\index{function objects!binders|(}%
+
+\setcounter{paragraph}{2}
+\rSec4[func.bind.bind]{Function template \tcode{bind}}
+\index{bind@\tcode{bind}|(}
+
+\begin{itemdecl}
+template<@\changedConcepts{class}{CopyConstructible}@ F, @\changedD{class T1, class T2, ...., class TN}{\changedConcepts{class}{CopyConstructible}... BoundArgs}@>
+  @\unspec@ bind(F f, @\changedD{T1 t1, T2 t2, ..., TN tN}{BoundArgs... bound_args}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\requires\ \removedConcepts{\mbox{\tcode{F}} and \mbox{\addedD{each}} \mbox{\tcode{Ti}}
+\mbox{\addedD{in \mbox{\tcode{BoundArgs}}}} shall be
+CopyConstructible.} \tcode{\textit{INVOKE} (f, w1, w2, ...,
+wN)}~(\ref{func.require}) shall be a valid expression for some
+values \textit{w1, w2, ..., wN}\addedD{, where
+\mbox{\tcode{N == sizeof...(bound_args)}}}.
+
+\pnum\returns\ A forwarding call wrapper \tcode{g} with a weak result
+type~(\ref{func.require}). The effect of \tcode{g(u1, u2, ..., uM)} shall
+be \tcode{\textit{INVOKE}(f, v1, v2, ..., vN, \changedConcepts{result_of}{Callable}<F \textit{cv}\changedConcepts{ (}{,}V1, V2, ..., VN\removedConcepts{)}>::\addedConcepts{result_}type)}, where \tcode{\textit{cv}} represents the
+\textit{cv}-qualifiers of \tcode{g} and the values and types of the bound
+arguments \tcode{v1, v2, ..., vN} are determined as specified below. 
+\end{itemdescr}       
+
+\begin{itemdecl}
+template<@\changedConcepts{class}{MoveConstructible}@ R, @\changedConcepts{class}{CopyConstructible}@ F, @\changedD{class T1, class T2, ...., class TN}{\changedConcepts{class}{CopyConstructible}... BoundArgs}@> 
+  @\unspec@ bind(F f, @\changedD{T1 t1, T2 t2, ..., TN tN}{BoundArgs... bound_args}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\requires\ \removedConcepts{\mbox{\tcode{F}} and \mbox{\addedD{each}} \mbox{\tcode{Ti}}
+\mbox{\addedD{in \mbox{\tcode{BoundArgs}}}} shall be CopyConstructible.}
+\tcode{\textit{INVOKE}(f, w1, w2, ..., wN)} shall be  a valid
+expression for some
+values \textit{w1, w2, ..., wN}\addedD{, where
+\mbox{\tcode{N == sizeof...(bound_args)}}}.
+
+\pnum\returns\ A forwarding call wrapper \tcode{g} with a nested  type
+\tcode{result_type} defined as a synonym for \tcode{R}.  The effect of
+\tcode{g(u1, u2, ..., uM)} shall be \tcode{\textit{INVOKE}(f, v1, v2,
+..., vN, R)}, where the values and types of the bound
+arguments \tcode{v1, v2, ..., vN} are determined as specified below. 
+\end{itemdescr}
+
+\rSec2[function.pointer.adaptors]{Adaptors for pointers to functions}
+
+\pnum
+To allow pointers to (unary and binary) functions to work with function adaptors
+the library provides:
+
+\index{pointer_to_unary_function@\tcode{pointer_to_unary_function}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result>
+class pointer_to_unary_function : public unary_function<Arg, Result> {
+public:
+  explicit pointer_to_unary_function(Result (*@\farg{f}@)(Arg));
+  Result operator()(Arg @\farg{x}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{f}(\farg{x})}.
+\end{itemdescr}
+
+\index{ptr_fun@\tcode{ptr_fun}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result>
+  pointer_to_unary_function<Arg, Result> ptr_fun(Result (*@\farg{f}@)(Arg));
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{pointer_to_unary_function<Arg, Result>(\farg{f})}.
+\end{itemdescr}
+
+\index{pointer_to_binary_function@\tcode{pointer_to_binary_function}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+class pointer_to_binary_function :
+  public binary_function<Arg1,Arg2,Result> {
+public:
+  explicit pointer_to_binary_function(Result (*@\farg{f}@)(Arg1, Arg2));
+  Result operator()(Arg1 @\farg{x}@, Arg2 @\farg{y}@) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{f}(\farg{x},\farg{y})}.
+\end{itemdescr}
+
+\index{ptr_fun@\tcode{ptr_fun}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+  pointer_to_binary_function<Arg1,Arg2,Result>
+    ptr_fun(Result (*@\farg{f}@)(Arg1, Arg2));
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{pointer_to_binary_function<Arg1,Arg2,Result>(\farg{f})}.
+
+\pnum
+\enterexample\ 
+\begin{codeblock}
+int compare(const char*, const char*);
+replace_if(v.begin(), v.end(),
+    not1(bind2nd(ptr_fun(compare), "abc")), "def");
+\end{codeblock}
+
+replaces each \tcode{abc} with \tcode{def} in sequence \tcode{v}.
+\exitexample\ 
+\end{itemdescr}
+
+\rSec2[member.pointer.adaptors]{Adaptors for pointers to members}
+
+\pnum
+The purpose of the following is to provide the same facilities for pointer to
+members as those provided for pointers to functions
+in~\ref{function.pointer.adaptors}.
+
+\index{mem_fun_t@\tcode{mem_fun_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_t
+        : public unary_function<T*, S> {
+public:
+  explicit mem_fun_t(S (T::*p)());
+  S operator()(T* p) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun_t} calls the member function it is initialized with given a pointer
+argument.
+\end{itemdescr}
+
+\index{mem_fun1_t@\tcode{mem_fun1_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_t
+      : public binary_function<T*, A, S> {
+public:
+  explicit mem_fun1_t(S (T::*p)(A));
+  S operator()(T* p, A x) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun1_t} calls the member function it is initialized with given
+a pointer argument and an additional argument of the appropriate type.
+\end{itemdescr}
+
+\index{mem_fun@\tcode{mem_fun}}%
+\begin{itemdecl}
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T> mem_fun_t<S,T>
+   mem_fun(S (T::*f)());
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> mem_fun1_t<S,T,A>
+   mem_fun(S (T::*f)(A));
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun(\&X::f)} returns an object through which \tcode{X::f} can be
+called given a pointer to an \tcode{X} followed by the argument required for
+\tcode{f} (if any).
+\end{itemdescr}
+
+\index{mem_fun_ref_t@\tcode{mem_fun_ref_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_ref_t
+      : public unary_function<T, S> {
+public:
+  explicit mem_fun_ref_t(S (T::*p)());
+  S operator()(T& p) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun_ref_t} calls the member function it is initialized with given
+a reference argument.
+\end{itemdescr}
+
+\index{mem_fun1_ref_t@\tcode{mem_fun1_ref_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_ref_t
+      : public binary_function<T, A, S> {
+public:
+  explicit mem_fun1_ref_t(S (T::*p)(A));
+  S operator()(T& p, A x) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun1_ref_t} calls the member function it is initialized with
+given a reference argument and an additional argument of the appropriate type.
+\end{itemdescr}
+
+\index{mem_fun_ref@\tcode{mem_fun_ref}}%
+\begin{itemdecl}
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T> mem_fun_ref_t<S,T>
+   mem_fun_ref(S (T::*f)());
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> mem_fun1_ref_t<S,T,A>
+   mem_fun_ref(S (T::*f)(A));
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun_ref(\&X::f)} returns an object through which \tcode{X::f}
+can be called given a reference to an \tcode{X} followed by the argument
+required for \tcode{f} (if any).
+\end{itemdescr}
+
+\index{const_mem_fun_t@\tcode{const_mem_fun_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_t
+      : public unary_function<const T*, S> {
+public:
+  explicit const_mem_fun_t(S (T::*p)() const);
+  S operator()(const T* p) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{const_mem_fun_t} calls the member function it is initialized with
+given a pointer argument.
+\end{itemdescr}
+
+\index{const_mem_fun1_t@\tcode{const_mem_fun1_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_t
+      : public binary_function<const T*, A, S> {
+public:
+  explicit const_mem_fun1_t(S (T::*p)(A) const);
+  S operator()(const T* p, A x) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{const_mem_fun1_t} calls the member function it is initialized with
+given a pointer argument and an additional argument of the appropriate type.
+\end{itemdescr}
+
+\index{mem_fun@\tcode{mem_fun}}%
+\begin{itemdecl}
+template<c@\changedConcepts{class}{MoveConstructible}@ S, class T> const_mem_fun_t<S,T>
+   mem_fun(S (T::*f)() const);
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> const_mem_fun1_t<S,T,A>
+   mem_fun(S (T::*f)(A) const);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun(\&X::f)} returns an object through which \tcode{X::f} can be
+called given a pointer to an \tcode{X} followed by the argument required for
+\tcode{f} (if any).
+\end{itemdescr}
+
+\index{const_mem_fun_ref_t@\tcode{const_mem_fun_ref_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_ref_t
+      : public unary_function<T, S> {
+public:
+  explicit const_mem_fun_ref_t(S (T::*p)() const);
+  S operator()(const T& p) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{const_mem_fun_ref_t} calls the member function it is initialized with
+given a reference argument.
+\end{itemdescr}
+
+\index{const_mem_fun1_ref_t@\tcode{const_mem_fun1_ref_t}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_ref_t
+      : public binary_function<T, A, S> {
+public:
+  explicit const_mem_fun1_ref_t(S (T::*p)(A) const);
+  S operator()(const T& p, A x) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{const_mem_fun1_ref_t} calls the member function it is initialized
+with given a reference argument and an additional argument of the appropriate
+type.
+\end{itemdescr}
+
+\index{mem_fun_ref@\tcode{mem_fun_ref}}%
+\begin{itemdecl}
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T> const_mem_fun_ref_t<S,T>
+   mem_fun_ref(S (T::*f)() const);
+template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> const_mem_fun1_ref_t<S,T,A>
+    mem_fun_ref(S (T::*f)(A) const);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{mem_fun_ref(\&X::f)} returns an object through which \tcode{X::f}
+can be called given a reference to an \tcode{X} followed by the argument
+required for \tcode{f} (if any).
+\end{itemdescr}
+
+\rSec2[func.memfn]{\marktr{}Function template \tcode{mem_fn}}
+\index{function objects!mem_fn@\tcode{mem_fn}|(}
+
+\index{mem_fn@\tcode{mem_fn}}%
+\begin{itemdecl}
+template<@\changedConcepts{class}{ObjectType}@ R, class T> @\textit{unspecified}@ mem_fn(R T::* pm); 
+@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::*)(Args...) pm);}@
+@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const)(Args...) pm);}@
+@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* volatile)(Args...) pm);}@
+@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const volatile)(Args...) pm);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ A simple call wrapper~([\ref{func.def}]) \tcode{fn}
+such that the expression \tcode{fn(t, a2, ..., aN)} is equivalent
+to \tcode{\textit{INVOKE}(pm, t, a2, ..., aN)}~([\ref{func.require}]).
+\tcode{fn} shall have a nested type \tcode{result_type} that is a synonym
+for the return type of \tcode{pm} when \tcode{pm} is a pointer to
+member function.
+
+\pnum\index{unary function}%
+The simple call wrapper shall be derived
+from \tcode{std::unary_function<\textit{cv} T*, \textit{Ret}>} when \tcode{pm} is
+a pointer to member function with cv-qualifier \textit{cv} and taking no
+arguments, where \textit{Ret} is \tcode{pm}'s return type.
+
+\pnum\index{binary function}%
+The simple call wrapper shall be derived from
+\tcode{std::binary_function<\textit{cv} T*, T1, \textit{Ret}>} when \tcode{pm} is
+a pointer to member function with cv-qualifier \textit{cv} and taking
+one argument of type \tcode{T1}, where \textit{Ret} is \tcode{pm}'s return type.
+
+\pnum\throws\ nothing.
+
+\pnum\removedConcepts{\mbox{\notes} Implementations may implement \mbox{\tcode{mem_fn}} as a set of
+overloaded function templates.}
+\end{itemdescr}
+\index{function objects!mem_fn@\tcode{mem_fn}|)}
+
+\rSec2[func.wrap]{\marktr{}Polymorphic function wrappers}
+\index{function objects!wrapper|(}%
+
+\setcounter{subsubsection}{1}
+\rSec3[func.wrap.func]{Class template \tcode{function}}
+\index{function@\tcode{function}}
+
+\begin{codeblock}
+namespace std {
+  template<class@\removedD{ Function}@> class function; // \addedD{undefined}
+
+  @\addedD{template<\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes>}@
+  class function@\addedD{<R(ArgTypes...)>}@ 
+    : public unary_function<T1, R>      // iff \addedD{\mbox{\tcode{sizeof...(ArgTypes) == 1}} and \mbox{\tcode{ArgTypes}} contains \mbox{\tcode{T1}}}
+    : public binary_function<T1, T2, R> // iff \addedD{\mbox{\tcode{sizeof...(ArgTypes) == 2}} and \mbox{\tcode{ArgTypes}} contains \mbox{\tcode{T1}} and \mbox{\tcode{T2}}}
+  {
+  public:
+    typedef R result_type;
+
+    // \ref{func.wrap.func.con}, construct/copy/destroy:
+    explicit function();
+    function(@\unspecnull@);
+    function(const function&);
+    @\addedD{function(function\&\&);}@
+    template<class F> 
+      @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...> \&\&}@
+               @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      function(F);
+    template<class F> 
+      @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...>  \&\&}@ 
+               @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      function(F&&);
+
+    function& operator=(const function&);
+    @\addedD{function\& operator=(function\&\&);}@
+    function& operator=(@\unspecnull@);
+    template<class F> 
+      @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes..> \&\&}@ 
+               @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type}@
+      function& operator=(F);
+    template<class F> 
+      @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...> \&\&}@ 
+               @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      function& operator=(F&&);
+    template<class F> 
+      @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...>  \&\&}@ 
+               @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      function& operator=(reference_wrapper<F>);
+
+    ~function();
+
+    // \ref{func.wrap.func.mod}, function modifiers:
+    void swap(function&);
+  
+    // \ref{func.wrap.func.cap}, function capacity:
+    operator @\unspecbool@() const;
+
+    // \ref{func.wrap.func.inv}, function invocation:
+    R operator()(@\changedD{T1, T2, ..., TN}{ArgTypes...}@) const;
+
+    // \ref{func.wrap.func.targ}, function target access:
+    const std::type_info& target_type() const;
+    template <typename T> 
+      @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      T* target();
+    template <typename T> 
+      @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      const T* target() const;
+
+  private:
+    // \ref{func.wrap.func.undef}, undefined operators:
+    template<@\addedD{class R2, class... ArgTypes2}@> bool operator==(const function<@\addedD{R2(ArgTypes2...)}@>&);
+    template<@\addedD{class R2, class... ArgTypes2}@> bool operator!=(const function<@\addedD{R2(ArgTypes2...)}@>&);
+  };
+
+  // \ref{func.wrap.func.nullptr}, Null pointer comparisons:
+  template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator==(const function<@\changedD{Function}{R(ArgTypes...)}@>&, @\unspecnull@);
+
+  template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator==(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>&);
+
+  template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator!=(const function<@\changedD{Function}{R(ArgTypes...)}@>&, @\unspecnull@);
+
+  template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    bool operator!=(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>&);
+
+  // \ref{func.wrap.func.alg}, specialized algorithms:
+  template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+    void swap(function<@\changedD{Function}{R(ArgTypes...)}@>&, function<@\changedD{Function}{R(ArgTypes...)}@>&);
+} // namespace std
+\end{codeblock}
+
+\rSec4[func.wrap.func.con]{\tcode{function} construct/copy/destroy}
+\index{function@\tcode{function}!function@\tcode{function}}
+\setcounter{Paras}{7}
+\begin{itemdecl}
+template<class F> 
+  @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes..> \&\&}@ 
+           @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type}@
+  function(F f);
+template<class F> 
+  @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes..> \&\&}@ 
+           @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type}@
+  function(F&& f);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\removedConcepts{\mbox{\requires} \mbox{\tcode{f}} shall be callable for argument types
+\mbox{\changedD{\mbox{\tcode{T1}}, \mbox{\tcode{T2}}, ..., \mbox{\tcode{T\textit{N}}}}
+{\mbox{\tcode{ArgTypes}}}} and return type \mbox{\tcode{R}}.}
+
+\pnum\postconditions\ \tcode{!*this} if any of the following hold:
+\begin{itemize}
+\item{\tcode{f} is a NULL function pointer.}
+\item{\tcode{f} is a NULL member function pointer.}
+\item{\tcode{F} is an instance of the \tcode{function} class template, and
+  \tcode{!f}}
+\end{itemize}
+
+\pnum
+Otherwise, \tcode{*this} targets a copy of \tcode{f}
+\addedD{or \mbox{\tcode{move(f)}}} if \tcode{f} is
+not a pointer to member function, and targets a copy
+of \tcode{mem_fn(f)} if \tcode{f} is a pointer to member function.
+
+\pnum\throws\ shall not throw exceptions when \tcode{f} is a function pointer 
+or a \tcode{reference_wrapper<T>} for some \tcode{T}. Otherwise,
+may throw \tcode{bad_alloc} or any exception thrown by \tcode{F}'s copy
+\addedD{or move} constructor.
+\end{itemdescr}
+
+\setcounter{Paras}{18}
+\index{function@\tcode{function}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!function@\tcode{function}}%
+\begin{itemdecl}
+template<class F> 
+  @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes..> \&\&}@ 
+           @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type}@
+  operator=(F f);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{function(f).swap(*this);}
+
+\pnum\returns\ \tcode{*this}
+\end{itemdescr}
+
+\index{function@\tcode{function}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!function@\tcode{function}}%
+\begin{itemdecl}
+template<class F> 
+  @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes..> \&\&}@ 
+           @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type}@
+  function& operator=(F&& f);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects} Replaces the target of \mbox{\tcode{*this}}
+with \mbox{\tcode{f}}, leaving \mbox{\tcode{f}} in a
+valid but unspecified state. \mbox{\enternote} A valid implementation is
+\mbox{\tcode{function(f).swap(*this)}}.}
+
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{*this}}.}
+\end{itemdescr}
+
+\index{function@\tcode{function}!operator=@\tcode{operator=}}%
+\index{operator=@\tcode{operator=}!function@\tcode{function}}%
+\begin{itemdecl}
+template<class F>
+  @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...>  \&\&}@ 
+           @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+  function& operator=(reference_wrapper<F> f);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{function(f).swap(*this);}
+
+\pnum\returns\ \tcode{*this}
+
+\pnum\throws\ nothing.
+\end{itemdescr}
+
+\setcounter{paragraph}{4}
+\rSec4[func.wrap.func.targ]{function target access}
+
+\index{function@\tcode{function}!target_type@\tcode{target_type}}%
+\index{target_type@\tcode{target_type}!function@\tcode{function}}%
+\begin{itemdecl}
+const std::type_info& target_type() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ If \tcode{*this} has a target of type \tcode{T}, 
+  \tcode{typeid(T)}; otherwise, \tcode{typeid(void)}.
+
+\pnum\throws\ nothing.
+\end{itemdescr}
+
+\index{function@\tcode{function}!target@\tcode{target}}%
+\index{target@\tcode{target}!function@\tcode{function}}%
+\begin{itemdecl}
+template<typename T>
+  @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+  T* target(); 
+template<typename T> 
+  @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+  const T* target() const; 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} is a function object type that is
+Callable~(\mbox{\ref{func.wrap.func}}) for parameter types
+\mbox{\tcode{ArgTypes}}
+and return type \mbox{\tcode{R}}.}
+
+\pnum\returns\ If \tcode{type() == typeid(T)}, a pointer to the
+    stored function target; otherwise a null pointer.
+
+\pnum\throws\ nothing.
+\end{itemdescr}
+
+\setcounter{paragraph}{6}
+\rSec4[func.wrap.func.nullptr]{null pointer comparison operators}
+
+\begin{itemdecl}
+template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  bool operator==(const function<@\changedD{Function}{R(ArgTypes...)}@>& f, @\unspecnull@);
+
+template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  bool operator==(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>& f);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{!f}.
+
+\pnum\throws\ nothing.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  bool operator!=(const function<@\changedD{Function}{R(ArgTypes...)}@>& f, @\unspecnull@);
+
+template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  bool operator!=(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>& f);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{ (bool) f}.
+
+\pnum\throws\ nothing.
+\end{itemdescr}
+
+\rSec4[func.wrap.func.alg]{specialized algorithms}
+
+\index{function@\tcode{function}!swap@\tcode{swap}}%
+\index{swap@\tcode{swap}!function@\tcode{function}}%
+\begin{itemdecl}
+template<@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  void swap(function<@\changedD{Function}{R(ArgTypes...)}@>& f1, function<@\changedD{Function}{R(ArgTypes...)}@>& f2);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{f1.swap(f2);}
+\end{itemdescr}
+\index{function objects!wrapper|)}%
+
+\rSec1[memory]{Memory}
+
+\pnum
+\synopsis{Header \tcode{<memory>}\ synopsis}
+
+\index{memory@\tcode{<memory>}}%
+\begin{codeblock}
+namespace std {
+  // \ref{default.allocator}, the default allocator: 
+  template <class T> class allocator; @\addedConcepts{// undefined}@
+  template <> class allocator<void>;
+  @\addedConcepts{template <class T> requires ObjectType<T> \&\& Destructible<T>}@
+    @\addedConcepts{class allocator<T>;}@
+  template <class T, class U>
+    bool operator==(const allocator<T>&, const allocator<U>&) throw();
+  template <class T, class U>
+    bool operator!=(const allocator<T>&, const allocator<U>&) throw();
+
+  @\addedConcepts{concept_map AllocatorGenerator<allocator<void> > \{ \}}@
+  @\addedConcepts{template <class T> requires ObjectType<T> \&\& Destructible<T>}@
+    @\addedConcepts{concept_map Allocator<allocator<T> > \{ \}}@
+
+  // \ref{storage.iterator}, raw storage iterator:
+  template <class OutputIterator, class T> class raw_storage_iterator;
+
+  // \ref{temporary.buffer}, temporary buffers:
+  template <class T>
+    pair<T*,ptrdiff_t> get_temporary_buffer(ptrdiff_t @\farg{n}@);
+  template <class T>
+    void return_temporary_buffer(T* @\farg{p}@);
+
+  // \ref{specialized.algorithms}, specialized algorithms:
+  template <class InputIterator, class ForwardIterator>
+    ForwardIterator
+      uninitialized_copy(InputIterator @\farg{first}@, InputIterator @\farg{last}@,
+                         ForwardIterator @\farg{result}@);
+  template <class ForwardIterator, class T>
+    void uninitialized_fill(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
+                            const T& @\farg{x}@);
+  template <class ForwardIterator, class Size, class T>
+    void uninitialized_fill_n(ForwardIterator @\farg{first}@, Size @\farg{n}@, const T& @\farg{x}@);
+  @\removedD{// \mbox{\ref{auto.ptr}}, pointers:}@
+  @\removedD{template <class X> class auto_ptr;}@
+  @\removedD{template <> class auto_ptr<void>;}@
+
+  // \addedD{\mbox{\ref{unique.ptr}} Class unique_ptr:}
+  @\addedD{template <class X> class unique_ptr;}@
+  @\addedD{template <class X> class default_delete;}@
+
+  // \ref{util.smartptr.weakptr}, Class bad_weak_ptr:
+  class bad_weak_ptr;
+
+  // \ref{util.smartptr.shared}, Class template shared_ptr:
+  template<class T> class shared_ptr;
+
+  // \ref{util.smartptr.shared.cmp}, shared_ptr comparisons:
+  template<class T, class U>
+    bool operator==(shared_ptr<T> const& a, shared_ptr<U> const& b);
+  template<class T, class U>
+    bool operator!=(shared_ptr<T> const& a, shared_ptr<U> const& b);
+  template<class T, class U>
+    bool operator<(shared_ptr<T> const& a, shared_ptr<U> const& b);
+
+  // \ref{util.smartptr.shared.spec}, shared_ptr specialized algorithms:
+  template<class T> void swap(shared_ptr<T>& a, shared_ptr<T>& b);
+
+  // \ref{util.smartptr.shared.cast}, shared_ptr casts:
+  template<class T, class U>
+    shared_ptr<T> static_pointer_cast(shared_ptr<U> const& r);
+  template<class T, class U>
+    shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const& r);
+  template<class T, class U>
+    shared_ptr<T> const_pointer_cast(shared_ptr<U> const& r);
+
+  // \ref{util.smartptr.shared.io}, shared_ptr I/O:
+  template<class E, class T, class Y>
+    basic_ostream<E, T>& operator<< (basic_ostream<E, T>& os, shared_ptr<Y> const& p);
+
+  // \ref{util.smartptr.getdeleter}, shared_ptr get_deleter:
+  template<class D, class T> D* get_deleter(shared_ptr<T> const& p);
+
+  // \ref{util.smartptr.weak}, Class template weak_ptr:
+  template<class T> class weak_ptr;
+
+  // \ref{util.smartptr.weak.cmp}, weak_ptr comparison:
+  template<class T, class U> bool operator<(weak_ptr<T> const& a, weak_ptr<U> const& b);
+
+  // \ref{util.smartptr.weak.spec}, weak_ptr specialized algorithms:
+  template<class T> void swap(weak_ptr<T>& a, weak_ptr<T>& b);
+
+  // \ref{util.smartptr.enab}, Class enable_shared_from_this:
+  template<class T> class enable_shared_from_this;
+}
+\end{codeblock}
+
+\rSec2[default.allocator]{The default allocator}
+
+\index{allocator@\tcode{allocator}}%
+\begin{codeblock}
+namespace std {
+  template <class T> class allocator; @\addedConcepts{// undefined}@
+\end{codeblock}
+\begin{codeblock}
+  // specialize for \tcode{void}:
+  template <> class allocator<void> {
+  public:
+    typedef void*   pointer;
+    typedef const void* const_pointer;
+    // reference-to-\tcode{void}\ members are impossible.
+    typedef void  value_type;
+    template <class U> struct rebind { typedef allocator<U> other; };
+  };
+
+  template <class T> 
+  @\addedConcepts{requires ObjectType<T> \&\& Destructible<T>}@
+  class allocator@\addedConcepts{<T>}@ {
+   public:
+    typedef size_t    size_type;
+    typedef ptrdiff_t difference_type;
+    typedef T*        pointer;
+    typedef const T*  const_pointer;
+    typedef T&        reference;
+    typedef const T&  const_reference;
+    typedef T         value_type;
+    template <class U> struct rebind { typedef allocator<U> other; };
+
+    allocator() throw();
+    allocator(const allocator&) throw();
+    template <class U> allocator(const allocator<U>&) throw();
+   ~allocator() throw();
+
+    pointer address(reference @\farg{x}@) const;
+    const_pointer address(const_reference @\farg{x}@) const;
+
+    pointer allocate(
+      size_type, allocator<void>::const_pointer @\farg{hint}@ = 0);
+    void deallocate(pointer @\farg{p}@, size_type @\farg{n}@);
+    size_type max_size() const throw();
+
+    @\addedConcepts{requires CopyConstructible<T>}@ void construct(pointer p, const T& val);
+    template <class U> @\addedConcepts{requires Constructible<T, U\&\&>}@ void construct(pointer p, U&& val);
+    void destroy(pointer p);
+  };
+}
+\end{codeblock}
+
+\pnum 
+\addedConcepts{Class template \mbox{\tcode{allocator}} meets the
+  requirements of the \mbox{\tcode{AllocatorGenerator}} class when it
+  is instantiated with a \mbox{\tcode{Destructible}} object type or
+  with \mbox{\tcode{void}}. When instantiated with an object type,
+  \mbox{\tcode{allocator}} meets the requirements of the
+  \mbox{\tcode{Allocator}} concept.}
+\color{addclr}
+\begin{itemdecl}
+  @\addedConcepts{concept_map AllocatorGenerator<allocator<void> > \{ \}}@
+  @\addedConcepts{template <class T> requires ObjectType<T> \&\& Destructible<T>}@
+    @\addedConcepts{concept_map Allocator<allocator<T> > \{ \}}@
+\end{itemdecl}
+\color{black}
+
+\rSec3[allocator.members]{\tcode{allocator}\ members}
+
+\begin{itemdecl}
+pointer address(reference @\farg{x}@) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{\&\farg{x}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+const_pointer address(const_reference @\farg{x}@) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{\&\farg{x}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+pointer allocate(size_type @\farg{n}@, allocator<void>::const_pointer @\farg{hint}@=0);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+Uses
+\tcode{::operator new(std::size_t)}
+(\ref{new.delete}).
+
+\pnum
+\removedD{\mbox{\requires}
+\mbox{\farg{hint}} either 0 or previously obtained from member \mbox{\tcode{allocate}}
+and not yet passed to member \mbox{\tcode{deallocate}}. The value \mbox{\farg{hint}} may
+be used by an implementation to help improve performance}%
+\remfootnoteD{
+In a container member function, the address of an adjacent element
+is often a good choice to pass for this argument.
+}\addedD{\mbox{\enternote} In a container member function, the address of an adjacent
+element is often a good choice to pass for this argument. \mbox{\exitnote}}
+
+\pnum
+\returns\ 
+a pointer to the initial element of an array of storage of size \farg{n}\
+\tcode{* sizeof(T)}, aligned appropriately for objects of type \tcode{T}.
+
+\pnum
+\note\ 
+the storage is obtained by calling \tcode{::operator new(std::size_t)}, but
+it is unspecified when or how often this function is called. The use of
+\farg{hint}\ is unspecified, but intended as an aid to locality if an
+implementation so desires.
+
+\pnum
+\throws\ 
+\tcode{bad_alloc} if the storage cannot be obtained.
+\end{itemdescr}
+
+\begin{itemdecl}
+void deallocate(pointer @\farg{p}@, size_type @\farg{n}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+\farg{p}\ shall be a pointer value obtained from \tcode{allocate()}.
+\farg{n}\ shall equal the value passed as the first argument
+to the invocation of allocate which returned \farg{p}.
+
+\pnum
+\effects\ 
+Deallocates the storage referenced by \farg{p}\ .
+
+\pnum
+\notes\ 
+Uses
+\tcode{::operator delete(void*)}
+(\ref{new.delete}), but it is unspecified when this function is called.
+\end{itemdescr}
+
+\begin{itemdecl}
+size_type max_size() const throw();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the largest value \textit{N}\ for which the call \tcode{allocate(\farg{N},0)}
+might succeed.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@ void construct(pointer @\farg{p}@, const_reference @\farg{val}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\
+\tcode{::new((void *)\farg{p}) T(\farg{val})}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <class @\farg{U}@> @\addedConcepts{requires Constructible<T, U\&\&>}@ void construct(pointer @\farg{p}@, @\farg{U}@&& @\farg{val}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects}
+\mbox{\tcode{::new((void *)\farg{p}) T(std::forward<\farg{U}>(\farg{val}))}}}
+\end{itemdescr}
+
+\begin{itemdecl}
+void destroy(pointer @\farg{p}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\
+\tcode{\farg{p}->$\sim$T()}
+\end{itemdescr}
+
+\rSec3[allocator.globals]{\tcode{allocator}\ globals}
+
+\begin{itemdecl}
+template <class T1, class T2>
+  bool operator==(const allocator<T1>&, const allocator<T2>&) throw();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{true}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <class T1, class T2>
+  bool operator!=(const allocator<T1>&, const allocator<T2>&) throw();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{false}.
+\end{itemdescr}
+
+\editorial{The author of this document ran out of time to complete
+  it. Sorry!}
+
+\section*{Acknowledgments}
+Thanks to Walter Brown and Daniel Kr\"ugler for providing corrections
+and noting omissions to this document. 
+
+\bibliographystyle{plain}
+\bibliography{../local}
+
+\end{document}

@@ -1,0 +1,4033 @@
+\documentclass[american,twoside]{book}
+\usepackage{refbib}
+\usepackage{hyperref}
+\input{macros}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{1}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Concepts for the C++0x Standard Library: Algorithms \\
+(Revision 2)
+
+\vspace{0.5in}
+
+\normalsize
+Douglas Gregor and Andrew Lumsdaine \\
+Open Systems Laboratory, Indiana University \\
+\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}, \href{mailto:lums@osl.iu.edu}{lums@osl.iu.edu}
+\end{center}
+
+\vspace{1in}
+\par\noindent Document number: NNNNN=07-XXXX\vspace{-6pt}
+\par\noindent Revises document number: N2084=06-0154\vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
+
+\section*{Introduction}
+\libintrotext{Chapter 25}
+\section*{Changes from N2084}
+\begin{itemize}
+\item Updated algorithm requirements to new concept syntax.
+\item Updated algorithm requirements to use the new iterator and
+  utility concepts, including the relaxed iterator requirements in
+  N2323 and the move concepts of N2322.
+\item Added \tcode{CopyConstructible} requirements for each of the
+  function object types. These requirements were previously implicit
+  (due to requirement propagation in earlier versions of the concepts
+  proposal). 
+\item Added new algorithms \tcode{move}, \tcode{move_backward},
+  \tcode{is_sorted}, \tcode{is_sorted_until}, \tcode{is_heap},
+  \tcode{is_heap_until}, \tcode{minmax} and \tcode{minmax_element}.
+\end{itemize}
+
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\color{black}
+
+\setcounter{chapter}{24}
+\rSec0[algorithms]{Algorithms library}
+
+\begin{paras}
+
+\pnum
+This clause describes components that \Cpp\ programs may use to perform
+algorithmic operations on containers (clause \ref{lib.containers}) and other sequences.
+
+\pnum
+The following subclauses describe components for
+non-modifying sequence operation,
+modifying sequence operations,
+sorting and related operations,
+and algorithms from the ISO C library,
+as summarized in Table~\ref{tab:algorithms.lib.summary}.
+
+\begin{libsumtab}{Algorithms library summary}{tab:algorithms.lib.summary}
+\ref{alg.nonmodifying} Non-modifying sequence operations    &                                               \\
+\ref{alg.modifying.operations} Mutating sequence operations &       \tcode{<algorithm>}     \\
+\ref{alg.sorting} Sorting and related operations                    &                                               \\ \hline
+\ref{alg.c.library} C library algorithms                                    &       \tcode{<cstdlib>}       \\ \hline
+\end{libsumtab}
+
+\synopsis{Header \tcode{<algorithm>}\ synopsis}
+\index{algorithm@\tcode{<algorithm>}}%
+
+\color{addclr}
+\begin{codeblock}
+namespace std {
+  @\textcolor{black}{// \ref{alg.nonmodifying}, non-modifying sequence operations:}@
+  template<InputIterator Iter, Callable<Iter::reference> Function>
+    requires CopyConstructible<Function>
+    Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
+
+  template<InputIterator Iter, class T>
+    requires EqualityComparable<Iter::reference, T>
+    Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
+
+  template<InputIterator Iter, Predicate<Iter::reference> Pred>
+    requires CopyConstructible<Pred>
+    Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
+  template<ForwardIterator Iter1, ForwardIterator Iter2>
+    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+  template<ForwardIterator Iter1, ForwardIterator Iter2, 
+           Predicate<Iter1::reference, Iter2::reference> Pred>
+    requires CopyConstructible<Pred>
+    Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                   Pred @\farg{pred}@);
+
+  template<InputIterator Iter1, ForwardIterator Iter2>
+    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                        Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+  template<InputIterator Iter1, ForwardIterator Iter2,
+           Predicate<Iter1::reference, Iter2::reference> Pred>
+    requires CopyConstructible<Pred>
+    Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                        Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                        Pred @\farg{pred}@);
+
+  template<ForwardIterator Iter>
+    requires EqualityComparable<Iter::reference>
+    Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
+    requires CopyConstructible<Pred>
+    Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
+  template<InputIterator Iter, class T>
+    requires EqualityComparable<Iter::reference, T>
+    @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
+
+  template<InputIterator Iter, Predicate<Iter::reference> Pred>
+    requires CopyConstructible<Pred>
+    Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
+  template<InputIterator Iter1, InputIterator Iter2>
+    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                                Iter @\farg{first2}@);
+
+  template<InputIterator Iter1, InputIterator Iter2,
+           Predicate<Iter1::reference, Iter2::reference> Pred>
+    requires CopyConstructible<Pred>
+    pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter2 @\farg{last1}@,
+                                Iter2 @\farg{first2}@, Pred @\farg{pred}@);
+
+  template<InputIterator Iter1, InputIterator Iter2>
+    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+               Iter2 @\farg{first2}@);
+
+  template<InputIterator Iter1, InputIterator Iter2,
+           Predicate<Iter1::reference, Iter2::reference> Pred>
+    requires CopyConstructible<Pred>
+    bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+               Iter2 @\farg{first2}@, Pred @\farg{pred}@);
+
+  template<ForwardIterator Iter1, ForwardIterator Iter2>
+    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+  template<ForwardIterator Iter1, ForwardIterator Iter2,
+           Predicate<Iter1::reference, Iter2::reference> Pred>
+    requires CopyConstructible<Pred>
+    @\textcolor{addclr}{Iter1}@ search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                 Pred @\farg{pred}@);
+
+  template<ForwardIterator Iter, class T>
+    requires EqualityComparable<Iter::reference, T>
+    Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
+                  const T& @\farg{value}@);
+
+  template<ForwardIterator Iter, class T,
+           Predicate<Iter::reference, T> Pred>
+    requires CopyConstructible<Pred>
+    Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
+                  const T& @\farg{value}@, Pred @\farg{pred}@);
+
+  @\textcolor{black}{// \ref{alg.modifying.operations}, modifying sequence operations:}@
+  @\textcolor{black}{// \ref{alg.copy}, copy:}@
+  template<InputIterator InIter, OutputIterator<InIter::reference> OutIter>
+    OutIter copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                 OutIter @\farg{result}@);
+
+  template<BidirectionalIterator InIter, MutableBidirectionalIterator OutIter>
+    requires CopyAssignable<OutIter::reference, InIter::reference>
+    OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
+                          OutIter @\farg{result}@);
+
+  // \ref{alg.move}, move:
+  template<InputIterator InIter, OutputIterator<InIter::value_type&&> OutIter>
+    OutIter move(InIter first, InIter last,
+                 OutIter result);
+  template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
+    requires MoveAssignable<OutIter::reference, InIter::value_type>
+    OutIter move_backward(InIter first, InIter last,
+                          OutIter result);
+
+  @\textcolor{black}{// \ref{alg.swap}, swap:}@
+  template<class T> 
+    requires MoveAssignable<T> && MoveConstructible<T>
+    void swap(T& @\farg{a}@, T& @\farg{b}@);
+
+  template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
+    requires SameType<Iter1::value_type, Iter2::value_type> && 
+             SameType<Iter1::value_type&, Iter1::reference> && 
+             SameType<Iter2::value_type&, Iter2::reference> && 
+             Swappable<Iter1::value_type>
+    Iter2 swap_ranges(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                      Iter2 @\farg{first2}@);
+
+  template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
+    requires SameType<Iter1::value_type, Iter2::value_type> && 
+             SameType<Iter1::value_type&, Iter1::reference> && 
+             SameType<Iter2::value_type&, Iter2::reference> && 
+             Swappable<Iter1::value_type>
+    void iter_swap(Iter1 @\farg{a}@, Iter2 @\farg{b}@);
+
+  template<InputIterator InIter, class OutIter,
+           Callable<InIter::reference> Op>
+    requires OutputIterator<OutIter, Op::result_type> && CopyConstructible<Op>
+    OutIter transform(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@, Op @\farg{op}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           class OutIter, Callable<InIter1::reference, InIter2::reference> BinaryOp>
+    requires OutputIterator<OutIter, BinaryOp::result_type> && CopyConstructible<BinaryOp>
+    OutIter transform(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                      InIter2 @\farg{first2}@, OutIter @\farg{result}@,
+                      BinaryOp @\farg{binary_op}@);
+
+  template<MutableForwardIterator Iter, class T>
+    requires EqualityComparable<Iter::reference, T> && CopyAssignable<Iter::reference, T>
+    void replace(Iter @\farg{first}@, Iter @\farg{last}@,
+                 const T& @\farg{old_value}@, const T& @\farg{new_value}@);
+
+  @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<Iter::reference> Pred, class T>
+    requires CopyAssignable<Iter::reference, T> && CopyConstructible<Pred>
+    void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
+                    Pred @\farg{pred}@, const T& @\farg{new_value}@);
+
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+    requires CopyAssignable<OutIter::reference, T> && EqualityComparable<InIter::reference, T>
+    OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                         OutIter @\farg{result}@,
+                         const T& @\farg{old_value}@, const T& @\farg{new_value}@);
+
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+           Predicate<InIter::reference> Pred, class T>
+    requires CopyAssignable<OutIter::reference, T> && CopyConstructible<Pred>
+    OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
+                            OutIter @\farg{result}@,
+                            Pred @\farg{pred}@, const T& @\farg{new_value}@);
+
+  template<MutableForwardIterator Iter, class T>
+    requires CopyAssignable<Iter::reference, T>
+    void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
+
+  template<class Iter, Integral Size, class T>
+    requires OutputIterator<Iter, T>
+    void fill_n(Iter @\farg{first}@, Size @\farg{n}@, const T& @\farg{value}@);
+
+  template<MutableForwardIterator Iter, Callable<> Generator>
+    requires CopyAssignable<Iter::reference, Generator::result_type> && CopyConstructible<Generator>
+    void generate(Iter @\farg{first}@, Iter @\farg{last}@,
+                  Generator @\farg{gen}@);
+
+  template<class Iter, Integral Size, Callable<> Generator>
+    requires OutputIterator<Iter, Generator::result_type> && CopyConstructible<Generator>
+    void generate_n(Iter @\farg{first}@, Size @\farg{n}@, Generator @\farg{gen}@);
+
+  template<ForwardIterator Iter, class T>
+    requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference, T>
+    Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
+                const T& @\farg{value}@);
+
+  template<ForwardIterator Iter, Predicate<Iter::reference> Pred>
+    requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+    Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Pred @\farg{pred}@);
+
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+    requires EqualityComparable<InIter::reference, T>
+    OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@, const T& @\farg{value}@);
+
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+           Predicate<InIter::reference> Pred>
+    requires CopyConstructible<Pred>
+    OutIter remove_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
+                           OutIter @\farg{result}@, Pred @\farg{pred}@);
+
+  template<ForwardIterator Iter>
+    requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
+    Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
+    requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+    Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
+                Pred @\farg{pred}@);
+
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+    requires EqualityComparable<InIter::value_type> && CopyAssignable<InIter::value_type> && 
+             @\textcolor{addclr}{CopyConstructible}@<InIter::value_type> && !ForwardIterator<InIter> && 
+             !MutableForwardIterator<OutIter>
+    OutIter
+      unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                  OutIter @\farg{result}@);
+
+  template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+    requires EqualityComparable<InIter::reference>
+    OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@);
+
+  template<InputIterator InIter, MutableForwardIterator OutIter>
+    requires EqualityComparable<OutIter::reference, InIter::value_type> &&
+             CopyAssignable<OutIter::reference, InIter::reference> &&
+             !ForwardIterator<InIter>
+    OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@);
+
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter,
+           Predicate<InIter::value_type, InIter::value_type> Pred>
+    requires CopyAssignable<InIter::value_type> && CopyConstructible<InIter::value_type> &&
+             !ForwardIterator<InIter> && !MutableForwardIterator<OutIter> &&
+             CopyConstructible<Pred>
+    OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@, Pred @\farg{pred}@);
+
+  template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter,
+           Predicate<InIter::reference, InIter::reference> Pred>
+    requires CopyConstructible<Pred>
+    OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@);
+
+  template<InputIterator InIter, MutableForwardIterator OutIter,
+           Predicate<OutIter::reference, InIter::reference> Pred>
+    requires CopyAssignable<OutIter::reference, InIter::reference> &&
+             !ForwardIterator<InIter> && CopyConstructible<Pred>
+    OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@, Pred @\farg{pred}@);
+
+  template<MutableBidirectionalIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<BidirectionalIterator InIter, OutputIterator<InIter::value_type> OutIter>
+    OutIter reverse_copy(InIter @\farg{first}@,
+                         InIter @\farg{last}@, OutIter @\farg{result}@);
+
+  template<ForwardIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
+                Iter @\farg{last}@);
+
+  template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+    OutIter rotate_copy(InIter @\farg{first}@, InIter @\farg{middle}@,
+                        InIter @\farg{last}@, OutIter @\farg{result}@);
+
+  template<MutableRandomAccessIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    void random_shuffle(Iter @\farg{first}@,
+                        Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, Callable<Iter::difference_type> Rand>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             Convertible<Rand::result_type, Iter::difference_type> && CopyConstructible<Rand>
+    void random_shuffle(Iter @\farg{first}@,
+                        Iter @\farg{last}@,
+                        Rand& @\farg{rand}@);
+
+  template<class RandomAccessIterator, class UniformRandomNumberGenerator>
+    void random_shuffle(RandomAccessIterator @\farg{first}@,
+                        RandomAccessIterator @\farg{last}@, 
+                        UniformRandomNumberGenerator& @\farg{rand}@);
+
+  @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
+  template<BidirectionalIterator Iter, Predicate<Iter::reference> Pred>
+    @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+            CopyConstructible<Pred>
+    Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
+  template<MutableBidirectionalIterator Iter, Predicate<Iter::reference> Pred>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Pred>
+    Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
+  @\textcolor{black}{// \ref{alg.sorting}, sorting and related operations:}@
+  @\textcolor{black}{// \ref{alg.sort}, sorting:}@
+  template<MutableRandomAccessIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             LessThanComparable<Iter::value_type> 
+    void sort(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void sort(Iter @\farg{first}@, Iter @\farg{last}@,
+              Compare @\farg{comp}@);
+
+  template<MutableRandomAccessIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             LessThanComparable<Iter::value_type> 
+    void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
+                     Compare @\farg{comp}@);
+
+  template<MutableRandomAccessIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void partial_sort(Iter @\farg{first}@,
+                      Iter @\farg{middle}@,
+                      Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void partial_sort(Iter @\farg{first}@,
+                      Iter @\farg{middle}@,
+                      Iter @\farg{last}@,
+                      Compare @\farg{comp}@);
+
+  template<InputIterator InIter, MutableRandomAccessIterator RAIter>
+    requires CopyAssignable<RAIter::reference, InIter::value_type> &&
+             SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
+             MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+             LessThanComparable<InIter::value_type, RAIter::value_type> &&
+             LessThanComparable<RAIter::value_type, InIter::value_type> &&
+             LessThanComparable<RAIter::value_type>
+    RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                             RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
+
+  template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare>
+    requires CopyAssignable<RAIter::reference, InIter::value_type> &&
+             SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
+             MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+             Predicate<Compare, InIter::value_type, RAIter::value_type> &&
+             Predicate<Compare, RAIter::value_type, InIter::value_type> &&
+             Predicate<Compare, RAIter::value_type> &&
+             CopyConstructible<Compare>
+    RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                             RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
+                             Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter>
+    requires LessThanComparable<Iter::value_type>
+    bool is_sorted(Iter first, Iter last);
+  template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires CopyConstructible<Compare>
+    bool is_sorted(Iter first, Iter last,
+                   Compare comp);
+  template<ForwardIterator Iter>
+    requires LessThanComparable<Iter::value_type>
+    Iter is_sorted_until(Iter first, Iter last);
+  template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires CopyConstructible<Compare>
+    Iter is_sorted_until(Iter first, Iter last,
+                         Compare comp);
+
+  template<MutableRandomAccessIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             LessThanComparable<Iter::value_type>
+    void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
+                     Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
+                     Iter @\farg{last}@,  Compare @\farg{comp}@);
+
+  @\textcolor{black}{// \ref{alg.binary.search}, binary search:}@
+  template<ForwardIterator Iter, class T>
+    requires LessThanComparable<Iter::reference, T>
+    Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                     const T& @\farg{value}@);
+
+  @\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<Iter::reference, T> Compare>
+    requires CopyConstructible<Compare>
+    Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                     const T& @\farg{value}@, Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter, class T>
+    requires LessThanComparable<T, Iter::reference>
+    Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                     const T& @\farg{value}@);
+
+  template<ForwardIterator Iter, class T, Predicate<T, Iter::reference> Compare>
+    requires CopyConstructible<Compare>
+    Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                     const T& @\farg{value}@, Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter, class T>
+    requires LessThanComparable<T, Iter::reference> && 
+             LessThanComparable<Iter::reference, T>
+    pair<Iter, Iter>
+      equal_range(Iter @\farg{first}@,
+                  Iter @\farg{last}@, const T& @\farg{value}@);
+
+  template<ForwardIterator Iter, class T, class Compare>
+    requires Predicate<Compare, T, Iter::reference> &&
+             Predicate<Compare, Iter::reference, T> &&
+             CopyConstructible<Compare>
+    pair<Iter, Iter>
+      equal_range(Iter @\farg{first}@,
+                  Iter @\farg{last}@, const T& @\farg{value}@,
+                  Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter, class T>
+    requires LessThanComparable<T, Iter::reference> &&
+             LessThanComparable<Iter::reference, T>
+    bool binary_search(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
+                       const T& @\farg{value}@);
+
+  template<ForwardIterator Iter, class T, class Compare>
+    requires Predicate<Compare, T, Iter::reference> &&
+             Predicate<Compare, Iter::reference, T> &&
+             CopyConstructible<Compare>
+    bool binary_search(Iter @\farg{first}@, Iter @\farg{last}@,
+                       const T& @\farg{value}@, Compare @\farg{comp}@);
+
+  @\textcolor{black}{// \ref{alg.merge}, merge:}@
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter>
+    requires SameType<InIter1::value_type, InIter2::value_type> &&
+             LessThanComparable<InIter1::value_type>
+    OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                  InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                  OutIter @\farg{result}@);
+
+  @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter, 
+           Predicate<InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type> &&
+             CopyConstructible<Compare>
+    OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                  InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                  OutIter @\farg{result}@, Compare @\farg{comp}@);
+
+  template<MutableBidirectionalIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             LessThanComparable<Iter::value_type>
+    void inplace_merge(Iter @\farg{first}@,
+                       Iter @\farg{middle}@,
+                       Iter @\farg{last}@);
+
+  template<MutableBidirectionalIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void inplace_merge(Iter @\farg{first}@,
+                       Iter @\farg{middle}@,
+                       Iter @\farg{last}@, Compare @\farg{comp}@);
+
+  @\textcolor{black}{// \ref{alg.set.operations}, set operations:}@
+  template<InputIterator Iter1, InputIterator Iter2>
+    requires SameType<Iter1::value_type, Iter2::value_type> && LessThanComparable<Iter1::value_type>
+    bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+  template<InputIterator Iter1, InputIterator Iter2, 
+           Predicate<Iter1::value_type, Iter2::value_type> Compare>
+    requires SameType<Iter1::value_type, Iter2::value_type> && CopyConstructible<Compare>
+    bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                  Compare @\farg{comp}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter>
+    requires SameType<InIter1::value_type, InIter2::value_type> &&
+             LessThanComparable<InIter1::value_type>
+    OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                      OutIter @\farg{result}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter, 
+           Predicate<InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+    OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                      OutIter @\farg{result}@, Compare @\farg{comp}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter>
+    requires SameType<InIter1::value_type, InIter2::value_type> &&
+             LessThanComparable<InIter1::value_type>
+    OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                             InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                             OutIter @\farg{result}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter, 
+           Predicate<InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+    OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                             InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                             OutIter @\farg{result}@, Compare @\farg{comp}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter>
+    requires SameType<InIter1::value_type, InIter2::value_type> &&
+             LessThanComparable<InIter1::value_type>
+    OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                           InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                           @\textcolor{addclr}{OutIter}@ @\farg{result}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter, 
+           Predicate<InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+    OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                           InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                           OutIter @\farg{result}@, Compare @\farg{comp}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter>
+    requires SameType<InIter1::value_type, InIter2::value_type> &&
+             LessThanComparable<InIter1::value_type>
+    OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                                     OutIter @\farg{result}@);
+
+  template<InputIterator InIter1, InputIterator InIter2,
+           OutputIterator<InIter1::value_type> OutIter, 
+           Predicate<InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+    OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                                     OutIter @\farg{result}@, Compare @\farg{comp}@);
+
+  @\textcolor{black}{// \ref{alg.heap.operations}, heap operations:}@
+  template<MutableRandomAccessIterator Iter>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             LessThanComparable<Iter::value_type>
+    void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
+
+  template<MutableRandomAccessIterator Iter>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+    void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             Swappable<Iter::value_type> && CopyConstructible<Compare>
+    void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                  Compare @\farg{comp}@);
+
+  template<MutableRandomAccessIterator Iter>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             LessThanComparable<Iter::value_type>
+    void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             CopyConstructible<Compare>
+    void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
+
+  template<MutableRandomAccessIterator Iter>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+    void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableRandomAccessIterator Iter, 
+           Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+             Swappable<Iter::value_type> && CopyConstructible<Compare>
+    void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
+
+  template<RandomAccessIterator Iter>
+    requires LessThanComparable<Iter::value_type>
+    bool is_heap(Iter first, Iter last);
+  template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires CopyConstructible<Compare>
+    bool is_heap(Iter first, Iter last, Compare comp);
+  template<RandomAccessIterator Iter>
+    Iter is_heap_until(Iter first, Iter last);
+  template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires CopyConstructible<Compare>
+    Iter is_heap_until(Iter first, Iter last,
+                       Compare comp);
+
+  @\textcolor{black}{// \ref{alg.min.max}, minimum and maximum:}@
+  template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
+  template<class T, Predicate<T, T> Compare>
+    requires CopyConstructible<Compare>
+    const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+
+  template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
+  template<class T, Predicate<T, T> Compare>
+    requires CopyConstructible<Compare>
+    const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+
+  template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
+  template<class T, Predicate<T, T> Compare>
+    requires CopyConstructible<Compare>
+    pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter>
+    requires LessThanComparable<Iter::reference>
+    Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
+    requires CopyConstructible<Compare>
+    Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
+                     Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter>
+    requires LessThanComparable<Iter::reference>
+    Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
+    requires CopyConstructible<Compare>
+    Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
+                     Compare @\farg{comp}@);
+
+  template<ForwardIterator Iter>
+    requires LessThanComparable<Iter::value_type>
+    pair<Iter, Iter>
+      minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+    requires CopyConstructible<Compare>
+    pair<Iter, Iter>
+      minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+
+  @\textcolor{black}{// \ref{alg.permutation.generators}, permutations:}@
+  template<InputIterator Iter1, InputIterator Iter2>
+    @\textcolor{addclr}{requires}@ LessThanComparable<Iter1::reference, Iter2::reference> &&
+             LessThanComparable<Iter2::reference, Iter1::reference>
+    bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+  @\textcolor{addclr}{template}@<InputIterator Iter1, InputIterator Iter2, class Compare>
+    requires Predicate<Compare, Iter1::reference, Iter2::reference> &&
+             Predicate<Compare, Iter2::reference, Iter1::reference> &&
+             CopyConstructible<Compare>
+    bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                                 Compare @\farg{comp}@);
+
+  template<MutableBidirectionalIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+             @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
+    bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableBidirectionalIterator Iter, 
+           Predicate<Iter::reference, Iter::reference> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             CopyConstructible<Compare>
+    bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+
+  template<MutableBidirectionalIterator Iter>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+             LessThanComparable<Iter::reference>
+    bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
+
+  template<MutableBidirectionalIterator Iter, 
+           Predicate<Iter::reference, Iter::reference> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+             CopyConstructible<Compare>
+    bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+}
+\end{codeblock}
+\color{black}
+
+\pnum
+All of the algorithms are separated from the particular implementations of data structures and are
+parameterized by iterator types.
+Because of this, they can work with program-defined data structures, as long
+as these data structures have iterator types satisfying the assumptions on the algorithms.
+
+\pnum
+\removedConcepts{Throughout this clause, the names of template parameters
+are used to express type requirements.
+If an algorithm's template parameter is
+InputIterator,
+InputIterator1,
+or
+InputIterator2,
+the actual template argument shall satisfy the
+requirements of an input iterator (24.1.1).
+If an algorithm's template parameter is
+OutputIterator,
+OutputIterator1,
+or
+OutputIterator2,
+the actual template argument shall satisfy the requirements
+of an output iterator (24.1.2).
+If an algorithm's template parameter is
+ForwardIterator,
+ForwardIterator1,
+or
+ForwardIterator2,
+the actual template argument shall satisfy the requirements
+of a forward iterator (24.1.3).
+If an algorithm's template parameter is
+BidirectionalIterator,
+BidirectionalIterator1,
+or
+BidirectionalIterator2,
+the actual template argument shall satisfy the requirements
+of a bidirectional iterator (24.1.4).
+If an algorithm's template parameter is
+RandomAccessIterator,
+RandomAccessIterator1,
+or
+RandomAccessIterator2,
+the actual template argument shall satisfy the requirements
+of a random-access iterator (24.1.5).}
+
+\pnum
+\removedConcepts{If an algorithm's
+Effects
+section says that a value pointed to by any iterator passed
+as an argument is modified, then that algorithm has an additional
+type requirement:
+The type of that argument shall satisfy the requirements
+of a mutable iterator (24.1).
+[ Note:
+this requirement does not affect arguments that are declared as
+OutputIterator,
+OutputIterator1,
+or
+OutputIterator2,
+because output iterators must always be mutable.
+-- end note]}
+
+\pnum\
+\color{black}
+Both in-place and copying versions are provided for certain algorithms.%
+\footnote{
+The decision whether to include a copying version was usually based on complexity considerations.
+When the cost of doing the operation dominates the cost of copy, the copying version is not included.
+For example,
+\tcode{sort_copy}
+is not included
+because the cost of sorting is much more significant, and users might as well do
+\tcode{copy}
+followed by
+\tcode{sort}.
+}
+When such a version is provided for
+\textit{algorithm}\ 
+it is called
+\textit{algorithm\farg{_copy}}.
+Algorithms that take predicates end with the suffix
+\tcode{_if}
+(which follows the suffix
+\tcode{_copy}).
+
+\pnum
+\removedConcepts{The
+Predicate
+parameter is used whenever an algorithm expects a function object that when applied to the result
+of dereferencing the corresponding iterator returns a value testable as
+true.
+In other words, if an algorithm
+takes
+Predicate pred
+as its argument and first
+as its iterator argument, it should work correctly in the
+construct
+if (pred(*first))\{...\}.
+The function object
+pred
+shall not apply any non-constant
+function through the dereferenced iterator.
+This function object may be a pointer to function,
+or an object of a type with an appropriate function call operator.}
+
+\pnum
+\removedConcepts{The
+Predicate
+parameter is used whenever an algorithm expects a function object that when applied to
+the result of dereferencing two corresponding iterators or to dereferencing an
+iterator and type
+T
+when
+T
+is part of the signature returns a value testable as
+true.
+In other words, if an algorithm takes
+Predicate binary_pred
+as its argument and first1 and first2 as
+its iterator arguments, it should work correctly in
+the construct
+if (binary_pred(*first1, *first2))\{...\}.
+Predicate
+always takes the first iterator
+type as its first argument, that is, in those cases when
+T value
+is part of the signature, it should work
+correctly in the context of
+if (binary_pred(*first1, value))\{...\}.
+binary_pred shall not
+apply any non-constant function through the dereferenced iterators.}
+
+\pnum
+\enternote\
+Unless otherwise specified, algorithms that take function objects as arguments
+are permitted to copy those function objects freely. Programmers for whom object
+identity is important should consider using a wrapper class that points to a
+noncopied implementation object, or some equivalent solution.
+\exitnote\
+
+\pnum\
+\removedConcepts{
+When the description of an algorithm gives an expression such as
+*first == value
+for a condition, the expression shall evaluate to
+either true or false in boolean contexts.}
+
+\pnum
+In the description of the algorithms operators
+\tcode{+}\
+and
+\tcode{-}\
+are used for some of the iterator categories for which
+they do not have to be defined.
+In these cases the semantics of
+\tcode{a+n}\
+is the same as that of
+
+\begin{codeblock}
+  { X tmp = a;
+    advance(tmp, n);
+    return tmp;
+  }
+\end{codeblock}
+
+and that of
+\tcode{b-a}\
+is the same as of
+
+\begin{codeblock}
+  return distance(a, b);
+\end{codeblock}
+
+\rSec1[alg.nonmodifying]{Non-modifying sequence operations}
+
+\rSec2[alg.foreach]{For each}
+
+\editorial{The standard does not state whether the function object
+  takes a value of the iterator's value type or reference type. The
+  SGI STL documentation says it's the value type, but that conflicts
+  with user expectations that they are operating on references. Also,
+  ``the result of dereferencing every iterator...'' is the reference
+  type, not the value type. Therefore, we have chosen to use the
+  reference type.}
+
+\index{for_each@\tcode{for_each}}%
+
+\color{addclr}
+\begin{itemdecl}
+template<InputIterator Iter, Callable<Iter::reference> Function>
+  requires CopyConstructible<Function>
+  Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Applies
+\farg{f}\ to the result of dereferencing every iterator in the range
+\range{\farg{first}}{\farg{last}},
+starting from
+\tcode{\farg{first}}\
+and proceeding to
+\tcode{\farg{last} - 1}.
+
+\pnum
+\returns\ 
+\farg{f}.
+
+\pnum
+\complexity\ 
+Applies \farg{f}\
+exactly
+\tcode{\farg{last}\ - \farg{first}}\
+times.
+
+\pnum
+\removedConcepts{Notes: If f returns a result, the result is ignored.}
+\end{itemdescr}
+
+\rSec2[alg.find]{Find}
+
+\index{find@\tcode{find}}%
+\index{find_if@\tcode{find_if}}%
+\color{addclr}\begin{itemdecl}
+@\textcolor{addclr}{template}@<InputIterator Iter, class T>
+  requires EqualityComparable<Iter::reference, T>
+  Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
+
+template<InputIterator Iter, Predicate<Iter::reference> Pred>
+  requires CopyConstructible<Pred>
+  Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+for which the following corresponding
+conditions hold:
+\tcode{*i == \farg{value}, \farg{pred}(*i) != false}.
+Returns \farg{last}\ if no such iterator is found.
+
+\pnum
+\complexity\ 
+At most
+\tcode{\farg{last}\ - \farg{first}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.find.end]{Find End}
+
+\index{find_end@\tcode{find_end}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter1, ForwardIterator Iter2>
+  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+template<ForwardIterator Iter1, ForwardIterator Iter2, 
+         Predicate<Iter1::reference, Iter2::reference> Pred>
+  requires CopyConstructible<Pred>
+  Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                 Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Finds a subsequence of equal values in a sequence.
+
+\pnum
+\returns\ 
+The last iterator
+\tcode{i}\
+in the range \range{\farg{first1}}{\farg{last1} - (\farg{last2} - \farg{first2})}\
+such that for any non-negative integer
+\tcode{n < (\farg{last2} - \farg{first2})},
+the following corresponding conditions hold:
+\tcode{*(i + n) == *(\brk{}\farg{first2}\ + n), \farg{pred}(*(i + n), *(\farg{first2}\ + n)) != false}.
+Returns \farg{last1}\
+if no such iterator is found.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last2} - \farg{first2}) * (\farg{last1} - \farg{first1} - (\farg{last2} - \farg{first2}) + 1)}
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.find.first.of]{Find First}
+
+\editorial{This text assumes that the proposed resolution to DR 576 is
+  accepted, weakening the requirements on the first type parameter
+  (\tcode{Iter1}) to \tcode{Input Iterator}.}
+
+\index{find_first_of@\tcode{find_first_of}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator Iter1, ForwardIterator Iter2>
+  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                      Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+template<InputIterator Iter1, ForwardIterator Iter2,
+         Predicate<Iter1::reference, Iter2::reference> Pred>
+  requires CopyConstructible<Pred>
+  Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                      Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                      Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Finds an element that matches one of a set of values.
+
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range \range{\farg{first1}}{\farg{last1}}\
+such that for some
+iterator
+\tcode{j}\
+in the range \range{\farg{first2}}{\farg{last2}}\
+the following conditions hold:
+\tcode{*i == *j, \farg{pred}(*i,*j) != false}.
+Returns \farg{last1}\
+if no such iterator is found.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last1}-\farg{first1}) * (\farg{last2}-\farg{first2})}
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.adjacent.find]{Adjacent find}
+
+\index{adjacent_find@\tcode{adjacent_find}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires EqualityComparable<Iter::reference>
+  Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
+  requires CopyConstructible<Pred>
+  Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+such that both
+\tcode{i}\
+and
+\tcode{i + 1}\
+are in
+the range
+\range{\farg{first}}{\farg{last}}\
+for which
+the following corresponding conditions hold:
+\tcode{*i == *(i + 1), \farg{pred}(*i, *(i + 1)) != false}.
+Returns \farg{last}\
+if no such iterator is found.
+
+\pnum
+\complexity\ 
+For a nonempty range, exactly
+\tcode{min((i - \farg{first}) + 1, (\farg{last}\ - \farg{first}) - 1)}\
+applications of the corresponding predicate, where \tcode{i}\ is
+\tcode{adjacent_find}'s
+return value.
+\end{itemdescr}
+
+\rSec2[alg.count]{Count}
+
+\index{count@\tcode{count}}%
+\index{count_if@\tcode{count_if}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator Iter, class T>
+  requires EqualityComparable<Iter::reference, T>
+  @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
+
+template<InputIterator Iter, Predicate<Iter::reference> Pred>
+  requires CopyConstructible<Pred>
+  Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Returns the number of iterators
+\tcode{i}\
+in the range \range{\farg{first}}{\farg{last}}\
+for which the following corresponding
+conditions hold:
+\tcode{*i == \farg{value}, \farg{pred}(*i) != false}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last} - \farg{first}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[lib.mismatch]{\textcolor{black}{Mismatch}}
+
+\index{mismatch@\tcode{mismatch}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator Iter1, InputIterator Iter2>
+  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                              Iter @\farg{first2}@);
+
+template<InputIterator Iter1, InputIterator Iter2,
+         Predicate<Iter1::reference, Iter2::reference> Pred>
+  requires CopyConstructible<Pred>
+  pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter2 @\farg{last1}@,
+                              Iter2 @\farg{first2}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+A pair of iterators
+\tcode{i}\
+and
+\tcode{j}\
+such that
+\tcode{j == \farg{first2} + (i - \farg{first1})}\
+and
+\tcode{i}\
+is the first iterator
+in the range \range{\farg{first1}}{\farg{last1}}\
+for which the following corresponding conditions hold:
+
+\begin{codeblock}
+  !(*i == *(@\farg{first2}@ + (i - @\farg{first1}@)))
+  @\farg{pred}@(*i, *(@\farg{first2}@ + (i - @\farg{first1}@))) == false
+\end{codeblock}
+
+Returns the pair \farg{last1}\ and
+\tcode{\farg{first2}\ + (\farg{last1}\ - \farg{first1})}
+if such an iterator
+\tcode{i}\
+is not found.
+
+\pnum
+\complexity\ 
+At most
+\tcode{\farg{last1}\ - \farg{first1}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.equal]{Equal}
+
+\index{equal@\tcode{equal}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator Iter1, InputIterator Iter2>
+  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+             Iter2 @\farg{first2}@);
+
+template<InputIterator Iter1, InputIterator Iter2,
+         Predicate<Iter1::reference, Iter2::reference> Pred>
+  requires CopyConstructible<Pred>
+  bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+             Iter2 @\farg{first2}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{true}\
+if for every iterator
+\tcode{i}\
+in the range \range{\farg{first1}}{\farg{last1}}\
+the following corresponding conditions hold:
+\tcode{*i == *(\farg{first2}\ + (i - \farg{first1})), \farg{pred}(*i, *(\farg{first2}\ + (i - \farg{first1}))) != false}.
+Otherwise, returns
+\tcode{false}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{\farg{last1} - \farg{first1}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.search]{Search}
+
+\index{search@\tcode{search}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter1, ForwardIterator Iter2>
+  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+               Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+template<ForwardIterator Iter1, ForwardIterator Iter2,
+         Predicate<Iter1::reference, Iter2::reference> Pred>
+  requires CopyConstructible<Pred>
+  @\textcolor{addclr}{Iter1}@ search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+               Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+               Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Finds a subsequence of equal values in a sequence.
+
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range \range{\farg{first1}}{\farg{last1}\ - (\farg{last2}-\farg{first2})}\
+such that for any non-negative integer
+\tcode{n}\
+less than
+\tcode{\farg{last2} - \farg{first2}}\
+the following corresponding conditions hold:
+\tcode{*(i + n) == *(\farg{first2}\ + n), \farg{pred}(*(i + n), *(\farg{first2}\ + n)) != false}.
+Returns \farg{last1}\
+if no such iterator is found.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last1}\ - \farg{first1}) * (\farg{last2}\ - \farg{first2})}
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\color{addclr}\begin{itemdecl}
+@\textcolor{addclr}{template}@<ForwardIterator Iter, class T>
+  requires EqualityComparable<Iter::reference, T>
+  Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
+                const T& @\farg{value}@);
+
+template<ForwardIterator Iter, class T,
+         Predicate<Iter::reference, T> Pred>
+  requires CopyConstructible<Pred>
+  Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
+                const T& @\farg{value}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires: 
+The type
+Size
+is convertible to integral type~(4.7, 12.3).} 
+
+\editorial{We have
+removed the \tcode{Size} parameter and instead chosen to use the
+\tcode{difference_type} of the iterator. This change can break existing
+code in two ways. First, if the \tcode{Size} parameter was originally
+bound to a type larger than \tcode{difference_type} and the
+\tcode{count} parameter contains a value outside of the range of
+\tcode{difference_type} (in which case, \tcode{search_n} always
+returns \tcode{last}). Second, if the user explicitly provides an
+argument for the \tcode{Size} parameter. Note: This change has not yet
+been reflected in libstdc++.} 
+
+\pnum\ \color{black}
+\effects\ 
+Finds a subsequence of equal values in a sequence.
+
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range \range{\farg{first}}{\farg{last}-\farg{count}}\
+such that for any non-negative integer
+\tcode{n}\
+less than
+\tcode{count}\
+the following corresponding conditions hold:
+\tcode{*(i + n) == \farg{value}, \farg{pred}(*(i + n),\farg{value}) != false}.
+Returns \farg{last}\
+if no such iterator is found.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first}) * \farg{count}}
+applications of the corresponding predicate if \farg{count} is positive, or
+0 otherwise.
+\end{itemdescr}
+
+\rSec1[alg.modifying.operations]{Mutating sequence operations}
+
+\rSec2[alg.copy]{Copy}
+
+\index{copy@\tcode{copy}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<InIter::reference> OutIter>
+  OutIter copy(InIter @\farg{first}@, InIter @\farg{last}@,
+               OutIter @\farg{result}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Copies elements in the range \range{\farg{first}}{\farg{last}}\
+into the range \range{\farg{result}}{\farg{result}\ + (\farg{last}\ - \farg{first})}\
+starting from \farg{first} and proceeding to \farg{last}.
+For each non-negative integer
+\tcode{n < (\farg{last}-\farg{first})},
+performs
+\tcode{\textcolor{black}{*}(\farg{result}\ + n) = *(\farg{first}\ + n)}.
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ + (\farg{last}\ - \farg{first})}.
+
+\pnum
+\requires\ 
+\farg{result}
+shall not be in the range
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}
+assignments.
+\end{itemdescr}
+
+\index{copy_backward@\tcode{copy_backward}}%
+\color{addclr}\begin{itemdecl}
+template<BidirectionalIterator InIter, MutableBidirectionalIterator OutIter>
+  requires CopyAssignable<OutIter::reference, InIter::reference>
+  OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Copies elements in the range \range{\farg{first}}{\farg{last}}\
+into the
+range \range{\farg{result}\ - (\farg{last}-\farg{first})}{\farg{result}}\
+\textcolor{black}{starting} from
+\tcode{\farg{last} - 1}\
+and proceeding to \farg{first}.%
+\footnote{
+\tcode{copy_backward}\
+should be used instead of copy when \farg{last}\
+is in
+the range
+\range{\farg{result}\ - (\farg{last}\ - \farg{first})}{\farg{result}}.
+}
+For each positive integer
+\tcode{n <= (\farg{last}\ - \farg{first})},
+performs
+\tcode{*(\farg{result}\ - n) = *(\farg{last}\ - n)}.
+
+\pnum
+\requires\ 
+\tcode{\farg{result}}
+shall not be in the range \range{\farg{first}}{\farg{last}}.
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ - (\farg{last}\ - \farg{first})}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}
+assignments.
+\end{itemdescr}
+
+\rSec2[alg.move]{Move}
+
+\index{move\tcode{move}}%
+\color{addclr}
+\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<InIter::value_type&&> OutIter>
+  OutIter move(InIter first, InIter last,
+               OutIter result);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects}
+Moves elements in the range \mbox{\range{\farg{first}}{\farg{last}}}
+into the range \mbox{\range{\farg{result}}{\farg{result}\ + (\farg{last}\ - \farg{first})}}
+starting from \mbox{\farg{first}} and proceeding to \mbox{\farg{last}}.
+For each non-negative integer
+\mbox{\tcode{n < (\farg{last}-\farg{first})}},
+performs
+\mbox{\tcode{*(\farg{result}\ + n)}} \mbox{\tcode{= std::move(*(\farg{first}\ + n))}}.}
+
+\pnum
+\addedD{\mbox{\returns}
+\mbox{\tcode{\farg{result}\ + (\farg{last}\ - \farg{first})}}.}
+
+\pnum
+\addedD{\mbox{\requires}
+\mbox{\farg{result}}
+shall not be in the range
+\mbox{\range{\farg{first}}{\farg{last}}}.}
+
+\pnum
+\addedD{\mbox{\complexity}
+Exactly
+\mbox{\tcode{\farg{last}\ - \farg{first}}}
+move assignments.}
+\end{itemdescr}
+
+\index{move_backward@\tcode{move_backward}}%
+\color{addclr}
+\begin{itemdecl}
+template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
+  requires MoveAssignable<OutIter::reference, InIter::value_type>
+  OutIter move_backward(InIter first, InIter last,
+                        OutIter result);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects}
+Moves elements in the range \mbox{\range{\farg{first}}{\farg{last}}}
+into the
+range \mbox{\range{\farg{result}\ - (\farg{last}-\farg{first})}{\farg{result}}}
+starting from
+\mbox{\tcode{\farg{last} - 1}}
+and proceeding to \mbox{\farg{first}}.}%
+\footnote{
+\mbox{\tcode{move_backward}}
+should be used instead of move when \mbox{\farg{last}}
+is in
+the range
+\mbox{\range{\farg{result}\ - (\farg{last}\ - \farg{first})}{\farg{result}}}.
+}
+\addedD{For each positive integer
+\mbox{\tcode{n <= (\farg{last}\ - \farg{first})}},
+performs
+\mbox{\tcode{*(\farg{result}\ - n) = std::move(*(\farg{last}\ - n))}}.}
+
+\pnum
+\addedD{\mbox{\requires}
+\mbox{\tcode{\farg{result}}}
+shall not be in the range \mbox{\range{\farg{first}}{\farg{last}}}.}
+
+\pnum
+\addedD{\mbox{\returns}
+\mbox{\tcode{\farg{result}\ - (\farg{last}\ - \farg{first})}}.}
+
+\pnum
+\addedD{\mbox{\complexity}
+Exactly
+\mbox{\tcode{\farg{last}\ - \farg{first}}}
+assignments.}
+\end{itemdescr}
+
+\rSec2[alg.swap]{Swap}
+
+\index{swap@\tcode{swap}}%
+\color{addclr}
+\begin{itemdecl}
+template<class T> 
+  requires MoveAssignable<T> && MoveConstructible<T>
+  void swap(T& @\farg{a}@, T& @\farg{b}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{
+Requires:
+Type
+T
+is
+MoveConstructible~(33) and
+MoveAssignable~(35).}
+
+\pnum
+\effects\ 
+Exchanges values stored in two locations.
+\end{itemdescr}
+
+\index{swap_ranges@\tcode{swap_ranges}}%
+\color{addclr}
+\begin{itemdecl}
+template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
+  requires SameType<Iter1::value_type, Iter2::value_type> && 
+           SameType<Iter1::value_type&, Iter1::reference> && 
+           SameType<Iter2::value_type&, Iter2::reference> && 
+           Swappable<Iter1::value_type>
+  Iter2 swap_ranges(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                    Iter2 @\farg{first2}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+For each non-negative integer
+\tcode{n < (\farg{last1}\ - \farg{first1})}
+performs:
+\tcode{swap(*(\farg{first1}\ + n), *(\farg{first2}\ + n))}.
+
+\pnum
+\requires\ 
+The two ranges \range{\farg{first1}}{\farg{last1}}\
+and
+\range{\farg{first2}}{\farg{first2}\ + (\farg{last1}\ - \farg{first1})}\
+shall not overlap. 
+\removedConcepts{The type of *first1 shall be the same
+as the type of *first2 and that type shall satisfy the
+Swappable requirements (20.1.4).}
+
+\pnum
+\returns\ 
+\tcode{\farg{first2}\ + (\farg{last1}\ - \farg{first1})}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last1}\ - \farg{first1}}\
+swaps.
+\end{itemdescr}
+
+\index{iter_swap@\tcode{iter_swap}}%
+\color{addclr}
+\begin{itemdecl}
+template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
+  requires SameType<Iter1::reference, Iter2::reference> && 
+           SameType<Iter1::value_type&, Iter1::reference> && 
+           SameType<Iter2::value_type&, Iter2::reference> && 
+           Swappable<Iter1::value_type>
+  @\addedConcepts{void}@ iter_swap(Iter1 @\farg{a}@, Iter2 @\farg{b}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+\tcode{swap(*\farg{a}, *\farg{b})}.
+
+\pnum
+\removedConcepts{
+Requires:
+The type of *a shall be the same
+as the type of *b and that type shall satisfy the
+Swappable requirements (20.1.4).}
+\end{itemdescr}
+
+\rSec2[alg.transform]{Transform}
+
+\index{transform@\tcode{transform}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter, class OutIter,
+         Callable<InIter::reference> Op>
+  requires OutputIterator<OutIter, Op::result_type> && CopyConstructible<Op>
+  OutIter transform(InIter @\farg{first}@, InIter @\farg{last}@,
+                    OutIter @\farg{result}@, Op @\farg{op}@);
+
+template<InputIterator InIter1, InputIterator InIter2,
+         class OutIter, Callable<InIter1::reference, InIter2::reference> BinaryOp>
+  requires OutputIterator<OutIter, BinaryOp::result_type> && CopyConstructible<BinaryOp>
+  OutIter transform(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                    InIter2 @\farg{first2}@, OutIter @\farg{result}@,
+                    BinaryOp @\farg{binary_op}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Assigns through every iterator
+\tcode{i}\
+in the range
+\range{\farg{result}}{\farg{result}\ + (\farg{last1}\ - \farg{first1})}
+a new
+corresponding value equal to
+\tcode{\farg{op}(*(\farg{first1}\ + (i - \farg{result}))}
+or
+\tcode{\farg{binary_op}(*(\farg{first1}\ + (i - \farg{result}), *(\farg{first2}\ + (i - \farg{result})))}.
+
+\pnum
+\requires\ 
+\farg{op}\ and \farg{binary_op}\
+shall not invalidate iterators or subranges, or modify elements in the ranges
+\crange{\farg{first1}}{\farg{last1}},
+\crange{\farg{first2}}{\farg{first2}\ + (\farg{last1}\ - \farg{first1})},
+and
+\crange{\farg{result}}{\farg{result}\ + (\farg{last1}\ - \farg{first1})}.%
+\footnote{The use of fully closed ranges is intentional.
+}
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ + (\farg{last1}\ - \farg{first1})}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last1}\ - \farg{first1}}\
+applications of
+\farg{op}\ or \farg{binary_op}.
+
+\pnum
+\notes\ 
+\farg{result}\ may be equal to \farg{first}\
+in case of unary transform,
+or to \farg{first1}\ or \farg{first2}\
+in case of binary transform.
+\end{itemdescr}
+
+\rSec2[alg.replace]{Replace}
+
+\index{replace@\tcode{replace}}%
+\index{replace_if@\tcode{replace_if}}%
+\color{addclr}\begin{itemdecl}
+template<MutableForwardIterator Iter, class T>
+  requires EqualityComparable<Iter::reference, T> && CopyAssignable<Iter::reference, T>
+  void replace(Iter @\farg{first}@, Iter @\farg{last}@,
+               const T& @\farg{old_value}@, const T& @\farg{new_value}@);
+
+@\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<Iter::reference> Pred, class T>
+  requires CopyAssignable<Iter::reference, T> && CopyConstructible<Pred>
+  void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
+                  Pred @\farg{pred}@, const T& @\farg{new_value}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The expression
+\tcode{*\farg{first}\ = \farg{new_value}}\
+must be valid.
+
+\pnum
+\effects\ 
+Substitutes elements referred by the iterator
+\tcode{i}\
+in the range \range{\farg{first}}{\farg{last}}\
+with \farg{new_value},
+when the following corresponding conditions hold:
+\tcode{*i == \farg{old_value}}, \tcode{\farg{pred}(*i) != false}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\index{replace_copy@\tcode{replace_copy}}%
+\index{replace_copy_if@\tcode{replace_copy_if}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+  requires CopyAssignable<OutIter::reference, T> && EqualityComparable<InIter::reference, T>
+  OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                       OutIter @\farg{result}@,
+                       const T& @\farg{old_value}@, const T& @\farg{new_value}@);
+
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+         Predicate<InIter::reference> Pred, class T>
+  requires CopyAssignable<OutIter::reference, T> && CopyConstructible<Pred>
+  OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
+                          OutIter @\farg{result}@,
+                          Pred @\farg{pred}@, const T& @\farg{new_value}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The results of the expressions
+\tcode{*\farg{first}}\
+and
+\farg{new_value}\
+shall be writable to the
+\farg{result}\
+output iterator.
+The ranges
+\range{\farg{first}}{\farg{last}}\
+and
+\range{\farg{result}}{\farg{result}\ + (\farg{last}\ - \farg{first})}\
+shall not overlap.
+
+\pnum
+\effects\ 
+Assigns to every iterator
+\tcode{i}\
+in the
+range
+\range{\farg{result}}{\farg{result} + (\farg{last} - \farg{first})}\
+either
+\tcode{\farg{new_value}}\
+or
+\tcode{*\brk(\farg{first} + (i - \farg{result}))}\
+depending on whether the following corresponding conditions hold:
+
+\begin{codeblock}
+*(@\farg{first}@ + (i - @\farg{result}@)) == @\farg{old_value}@
+@\farg{pred}@(*(@\farg{first}@ + (i - @\farg{result}@))) != false
+\end{codeblock}
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ + (\farg{last}\ - \farg{first})}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.fill]{Fill}
+
+\index{fill@\tcode{fill}}%
+\index{fill_n@\tcode{fill_n}}%
+\color{addclr}\begin{itemdecl}
+template<MutableForwardIterator Iter, class T>
+  requires CopyAssignable<Iter::reference, T>
+  void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
+
+template<class Iter, Integral Size, class T>
+  requires OutputIterator<Iter, T>
+  void fill_n(Iter @\farg{first}@, Size @\farg{n}@, const T& @\farg{value}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires: The expression value shall be writable to
+  the output iterator. The type Size is convertible to integral type~(4.7,
+  12.3).}\efootnote{The ``Convertible to integral type'' requirements
+  are very odd. We can model them with concepts if we need, but I've
+  chosen the simpler route of requiring the \tcode{Size} parameter to model
+  \tcode{Integral}. This could break existing code, although it
+  appears that such existing code would fail to compile with at least
+  libstdc++.} 
+
+\pnum
+\effects\ 
+The first algorithm assigns \farg{value}\ through all the iterators in the range
+\range{\farg{first}}{\farg{last}}. The second algorithm assigns \farg{value}\
+through all the iterators in the range \range{\farg{first}}{\farg{first}\ + \farg{n}}
+if \farg{n}\ is positive, otherwise it does nothing.
+
+\textcolor{black}{\pnum}
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}},
+\farg{n}, or 0 assignments, respectively.
+\end{itemdescr}
+
+\rSec2[alg.generate]{Generate}
+
+\index{generate@\tcode{generate}}%
+\index{generate_n@\tcode{generate_n}}%
+\color{addclr}\begin{itemdecl}
+template<MutableForwardIterator Iter, Callable<> Generator>
+  requires CopyAssignable<Iter::reference, Generator::result_type> &&
+           CopyConstructible<Generator>
+  void generate(Iter @\farg{first}@, Iter @\farg{last}@,
+                Generator @\farg{gen}@);
+
+template<class Iter, Integral Size, Callable<> Generator>
+  requires OutputIterator<Iter, Generator::result_type> &&
+           CopyConstructible<Generator>
+  void generate_n(Iter @\farg{first}@, Size @\farg{n}@, Generator @\farg{gen}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+The first algorithm invokes the function object \farg{gen}\ and assigns the return
+value of \farg{gen}\ through all the iterators in the range
+\range{\farg{first}}{\farg{last}}. The second algorithm invokes the function object
+\farg{gen}\ and assigns the return value of \farg{gen}\ through all the iterators in
+the range \range{\farg{first}}{\farg{first} + \farg{n}} if \farg{n}\ is positive,
+otherwise it does nothing.
+
+\pnum
+\removedConcepts{Requires: gen takes no arguments, Size is convertible
+  to integral type~(4.7, 
+  12.3).}\efootnote{The ``Convertible to integral type'' requirements
+  are very odd. We can model them with concepts if we need, but I've
+  chosen the simpler route of requiring the \tcode{Size} parameter to model
+  \tcode{Integral}. This could break existing code, although it
+  appears that such existing code would fail to compile with at least
+  libstdc++.} 
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}},
+\farg{n}, or 0
+invocations of \farg{gen}\ and assignments, respectively.
+\end{itemdescr}
+
+\rSec2[alg.remove]{Remove}
+
+\index{remove@\tcode{remove}}%
+\index{remove_if@\tcode{remove_if}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter, class T>
+  requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference, T>
+  Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
+              const T& @\farg{value}@);
+
+template<ForwardIterator Iter, Predicate<Iter::reference> Pred>
+  requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+  Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires: The type of *first shall satisfy the
+  MoveAssignable requirements (Table 35).}
+
+\textcolor{black}{\pnum}
+\effects\ 
+Eliminates all the elements referred to by iterator
+\tcode{i}\
+in the range \range{\farg{first}}{\farg{last}}\
+for which the following corresponding conditions hold:
+\tcode{*i == \farg{value}, \farg{pred}(*i) != false}.
+
+\pnum
+\returns\ 
+The end of the resulting range.
+
+\textcolor{black}{\pnum}
+\notes\ 
+Stable.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last} - \farg{first}}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\index{remove_copy@\tcode{remove_copy}}%
+\index{remove_copy_if@\tcode{remove_copy_if}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+  requires EqualityComparable<InIter::reference, T>
+  OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@, const T& @\farg{value}@);
+
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+         Predicate<InIter::reference> Pred>
+  requires CopyConstructible<Pred>
+  OutIter remove_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
+                         OutIter @\farg{result}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+\removedConcepts{Type T is EqualityComparable~(20.1.1).}
+The ranges
+\range{\farg{first}}{\farg{last}}
+and
+\range{\farg{result}}{\farg{result} + (\farg{last} - \farg{first})}\
+shall not overlap.
+
+\pnum
+\effects\ 
+Copies all the elements referred to by the iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+for which the following corresponding conditions do not hold:
+\tcode{*i == \farg{value}, \farg{pred}(*i) != false}.
+
+\textcolor{black}{\pnum}
+\returns\ 
+The end of the resulting range.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+applications of the corresponding predicate.
+
+\pnum
+\notes\ 
+Stable.
+\end{itemdescr}
+
+\rSec2[alg.unique]{Unique}
+
+\index{unique@\tcode{unique}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
+  Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
+  requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+  Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
+              Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+For a nonempty range, eliminates all but the first element from every
+consecutive group of equivalent elements referred to by the iterator
+\tcode{i}\
+in the range
+\range{\farg{first} + 1}{\farg{last}}\
+for which the following conditions hold:
+\tcode{*(i - 1) == *i}\
+or
+\tcode{\farg{pred}(*(i - 1), *i) != false}.
+
+\pnum
+\requires\
+The comparison function shall be an equivalence relation.
+
+\pnum
+\returns\ 
+The end of the resulting range.
+
+\pnum
+\complexity\ 
+For nonempty ranges, exactly
+\tcode{(\farg{last} - \farg{first}) - 1}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\index{unique_copy@\tcode{unique_copy}}%
+\color{addclr}
+\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  requires EqualityComparable<InIter::value_type> && CopyAssignable<InIter::value_type> && 
+           CopyConstructible<InIter::value_type> && !ForwardIterator<InIter> && 
+           !MutableForwardIterator<OutIter>
+  @\textcolor{addclr}{OutIter}@
+    unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                OutIter @\farg{result}@);
+
+template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  requires EqualityComparable<InIter::reference>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@);
+
+@\textcolor{addclr}{template}@<InputIterator InIter, MutableForwardIterator OutIter>
+  requires EqualityComparable<OutIter::reference, InIter::value_type> &&
+           CopyAssignable<OutIter::reference, InIter::reference> &&
+           !ForwardIterator<InIter>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@);
+
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter,
+         Predicate<InIter::value_type, InIter::value_type> Pred>
+  requires CopyAssignable<InIter::value_type> && CopyConstructible<InIter::value_type> &&
+           !ForwardIterator<InIter> && !MutableForwardIterator<OutIter> &&
+           CopyConstructible<Pred>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      @\textcolor{addclr}{OutIter}@ @\farg{result}@, Pred @\farg{pred}@);
+
+template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter,
+         Predicate<InIter::reference, InIter::reference> Pred>
+  requires CopyConstructible<Pred>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@);
+
+template<InputIterator InIter, MutableForwardIterator OutIter,
+         Predicate<OutIter::reference, InIter::reference> Pred>
+  requires CopyAssignable<OutIter::reference, InIter::reference> &&
+           !ForwardIterator<InIter> && CopyConstructible<Pred>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@, Pred @\farg{pred}@);
+\end{itemdecl}
+\color{black}
+
+\editorial{We assume (and require!) the proposed resolution to DR 538,
+  which adds the \tcode{CopyAssignable} requirement.}
+
+\editorial{Note that we have split the two signatures of
+  \tcode{unique_copy} into six signatures, to cover the actual
+  variants required in the implementation.}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The ranges
+\range{\farg{first}}{\farg{last}}\
+and
+\range{\farg{result}}{\farg{result}+(\farg{last}-\farg{first})}\
+shall not overlap. \removedConcepts{The expression
+*result = *first
+shall be valid. If neither
+InputIterator
+nor
+OutputIterator
+meets the requirements of forward iterator then the value type of
+InputIterator
+shall be CopyConstructible (20.1.3).
+Otherwise CopyConstructible is not required.}
+
+\pnum
+\effects\ 
+Copies only the first element from every consecutive group of equal elements referred to by
+the iterator \color{black}
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+for which the following corresponding conditions hold:
+\tcode{*i == *(i - 1)}\
+or
+\tcode{\farg{pred}(*i, *(i - 1)) != false}.
+
+\pnum
+\returns\ 
+The end of the resulting range.
+
+\pnum
+\complexity\ 
+For nonempty ranges, exactly
+\tcode{\farg{last}\ - \farg{first} - 1}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec2[alg.reverse]{Reverse}
+
+\index{reverse@\tcode{reverse}}%
+\color{addclr}\begin{itemdecl}
+template<MutableBidirectionalIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+  void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+For each non-negative integer
+\tcode{i <= (\farg{last}\ - \farg{first})/2},
+applies
+\tcode{iter_swap}\
+to all pairs of iterators
+\tcode{\farg{first}\ + i, (\farg{last}\ - i) - 1}.
+
+\pnum
+\removedConcepts{Requires: 
+The type of *first shall satisfy the
+Swappable requirements (20.1.4).}
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{(\farg{last}\ - \farg{first})/2}\
+swaps.
+\end{itemdescr}
+
+\index{reverse_copy@\tcode{reverse_copy}}%
+\color{addclr}\begin{itemdecl}
+template<BidirectionalIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  OutIter reverse_copy(InIter @\farg{first}@,
+                       InIter @\farg{last}@, OutIter @\farg{result}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Copies the range
+\range{\farg{first}}{\farg{last}}\
+to the range
+\range{\farg{result}}{\farg{result}+(\farg{last}-\farg{first})}\
+such that
+for any non-negative integer
+\tcode{i < (\farg{last}\ - \farg{first})}\
+the following assignment takes place:
+\tcode{*(\farg{result}\ + (\farg{last}\ - \farg{first}) - i) = *(\farg{first}\ + i)}.
+
+\pnum
+\requires\ 
+The ranges
+\range{\farg{first}}{\farg{last}}\
+and
+\range{\farg{result}}{\farg{result}+(\farg{last}-\farg{first})}\
+shall not overlap.
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ + (\farg{last}\ - \farg{first})}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+assignments.
+\end{itemdescr}
+
+\rSec2[alg.rotate]{Rotate}
+
+\index{rotate@\tcode{rotate}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+  void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
+              Iter @\farg{last}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+For each non-negative integer
+\tcode{i < (\farg{last}\ - \farg{first})},
+places the element from the position
+\tcode{\farg{first}\ + i}\
+into position
+\tcode{\farg{first}\ + (i + (\farg{last}\ - \farg{middle})) \% (\farg{last}\ - \farg{first})}.
+
+\pnum
+\notes\ 
+This is a left rotate.
+
+\pnum
+\requires\ 
+\range{\farg{first}}{\farg{middle}}\
+and
+\range{\farg{middle}}{\farg{last}}\
+are valid ranges.
+\removedConcepts{The type of *first shall satisfy the
+Swappable requirements (20.1.4), the \mbox{\tcode{MoveConstructible}} requirements (Table~33), and the \mbox{\tcode{MoveAssignable}} requirements (Table~35).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{\farg{last}\ - \farg{first}}\
+swaps.
+\end{itemdescr}
+
+\index{rotate_copy@\tcode{rotate_copy}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  OutIter rotate_copy(InIter @\farg{first}@, InIter @\farg{middle}@,
+                      InIter @\farg{last}@, OutIter @\farg{result}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Copies the range
+\range{\farg{first}}{\farg{last}}\
+to the range
+\range{\farg{result}}{\farg{result}\ + (\farg{last}\ - \farg{first})}\
+such that for each non-negative integer
+\tcode{i < (\farg{last}\ - \farg{first})}\
+the following assignment takes place:
+\tcode{*(\farg{result}\ + i) =  *(\farg{first} +
+(i + (\farg{middle}\ - \farg{first})) \% (\farg{last}\ - \farg{first}))}.
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ + (\farg{last}\ - \farg{first})}.
+
+\pnum
+\requires\ 
+The ranges
+\range{\farg{first}}{\farg{last}}\
+and
+\range{\farg{result}}{\farg{result}\ + (\farg{last}\ - \farg{first})}\
+shall not overlap.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+assignments.
+\end{itemdescr}
+
+\rSec2[alg.random.shuffle]{Random shuffle}
+
+\index{random_shuffle@\tcode{random_shuffle}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+  void random_shuffle(Iter @\farg{first}@,
+                      Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Callable<Iter::difference_type> Rand>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           Convertible<Rand::result_type, Iter::difference_type> && CopyConstructible<Rand>
+  void random_shuffle(Iter @\farg{first}@,
+                      Iter @\farg{last}@,
+                      Rand&& @\farg{rand}@);
+
+template<class RandomAccessIterator, class UniformRandomNumberGenerator>
+  void random_shuffle(RandomAccessIterator @\farg{first}@,
+                      RandomAccessIterator @\farg{last}@, 
+                      UniformRandomNumberGenerator& @\farg{rand}@);
+\end{itemdecl}\color{black}
+
+\editorial{TODO: We do not yet have the
+\tcode{UniformRandomNumberGenerator} concept, so we leave the third
+\tcode{random_shuffle} without concept constraints for now.}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Shuffles the elements in the range
+\range{\farg{first}}{\farg{last}}\
+with uniform distribution.
+
+\pnum
+\removedConcepts{Requires: 
+The type of *first shall satisfy the
+Swappable requirements (20.1.4).}
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{(\farg{last}\ - \farg{first}) - 1}\
+swaps.
+
+\pnum
+\notes\ 
+The underlying source of random numbers for the first form of the function
+is implementation-defined. An implementation may use the
+\tcode{rand}\
+function from the standard C library.
+The second form of the function
+takes a random number generating function object
+\farg{rand}
+\removedConcepts{such that
+if
+n 
+is an argument for rand, with a positive value, that has
+type
+iterator_traits<RandomAccessIterator>::difference_type,
+then
+rand(n)
+returns a randomly chosen value,
+which lies in the interval (0,n],
+and which has a type that is convertible to
+iterator_traits<RandomAccessIterator>:: difference_type}.
+\end{itemdescr}
+
+\rSec2[alg.partitions]{Partitions}
+
+\index{partition@\tcode{partition}}%
+\color{addclr}\begin{itemdecl}
+template<BidirectionalIterator Iter, Predicate<Iter::reference> Pred>
+  @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+           CopyConstructible<Pred>
+  Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places all the elements in the range
+\range{\farg{first}}{\farg{last}}\
+that satisfy \farg{pred}\
+before all the elements that do not satisfy it.
+
+\pnum
+\returns\ 
+An iterator
+\tcode{i}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{i}\
+\tcode{\farg{pred}(*j) != false},
+and for any iterator
+\tcode{k}\
+in the range
+\range{i}{\farg{last}},
+\tcode{\farg{pred}(*k) == false}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~\mbox{\ref{moveconstructible}}), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~\mbox{\ref{moveassignable}}).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first})/2}\
+swaps.
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+applications of the predicate are done.
+\end{itemdescr}
+
+\index{stable_partition@\tcode{stable_partition}}%
+\color{addclr}\begin{itemdecl}
+template<MutableBidirectionalIterator Iter, Predicate<Iter::reference> Pred>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Pred>
+  Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places all the elements in the range
+\range{\farg{first}}{\farg{last}}\
+that satisfy \farg{pred}\ before all the
+elements that do not satisfy it.
+
+\pnum
+\returns\ 
+An iterator
+\tcode{i}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{i},
+\tcode{\farg{pred}(*j) != false},
+and for any iterator
+\tcode{k}\
+in the range
+\range{i}{\farg{last}},
+\tcode{\farg{pred}(*k) == false}.
+The relative order of the elements in both groups is \textcolor{black}{preserved}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~\mbox{\ref{moveconstructible}}), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~\mbox{\ref{moveassignable}}).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first}) * log(\farg{last}\ - \farg{first})}\
+swaps, but only linear number of swaps if there is enough extra memory.
+Exactly
+\tcode{\farg{last}\ - \farg{first}}\
+applications of the predicate.
+\end{itemdescr}
+
+\rSec1[alg.sorting]{Sorting and related operations}
+
+\rSec2[alg.sort]{Sorting}
+
+\rSec3[lib.sort]{\tcode{sort}}
+
+\index{sort@\tcode{sort}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void sort(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void sort(Iter @\farg{first}@, Iter @\farg{last}@,
+            Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Sorts the elements in the range
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (37),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~33), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~35).}
+
+\pnum
+\complexity\ 
+Approximately $N \log(N)$
+(where
+\tcode{$N$ == \farg{last} - \farg{first}})
+comparisons on the average.%
+\footnote{
+If the worst case behavior is important
+\tcode{stable_sort()}~(\ref{lib.stable.sort}) or
+\tcode{partial_sort()}~(\ref{lib.partial.sort}) should be used.
+}
+\end{itemdescr}
+
+\rSec3[lib.stable.sort]{\tcode{stable_sort}}
+
+\index{stable_sort@\tcode{stable_sort}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Sorts the elements in the range \range{\farg{first}}{\farg{last}}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~33), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~35).}
+
+\pnum
+\complexity\ 
+It does at most $N \log^2(N)$
+(where
+\tcode{$N$ == \farg{last} - \farg{first}})
+comparisons; if enough extra memory is available, it is
+$N \log(N)$.
+
+\pnum
+\notes\ 
+Stable.
+\end{itemdescr}
+
+\rSec3[lib.partial.sort]{\tcode{partial_sort}}
+
+\index{partial_sort@\tcode{partial_sort}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void partial_sort(Iter @\farg{first}@,
+                    Iter @\farg{middle}@,
+                    Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void partial_sort(Iter @\farg{first}@,
+                    Iter @\farg{middle}@,
+                    Iter @\farg{last}@,
+                    Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places the first
+\tcode{\farg{middle}\ - \farg{first}}\
+sorted elements from the range
+\range{\farg{first}}{\farg{last}}
+into the range
+\range{\farg{first}}{\farg{middle}}.
+The rest of the elements in the range
+\range{\farg{middle}}{\farg{last}}\
+are placed in an unspecified order.
+\index{unspecified}%
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~33), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~35).}
+
+\pnum
+\complexity\ 
+It takes approximately
+\tcode{(\farg{last}\ - \farg{first}) * log(\farg{middle}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.partial.sort.copy]{\tcode{partial_sort_copy}}
+
+\index{partial_sort_copy@\tcode{partial_sort_copy}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter, MutableRandomAccessIterator RAIter>
+  requires CopyAssignable<RAIter::reference, InIter::value_type> &&
+           SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
+           MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+           LessThanComparable<InIter::value_type, RAIter::value_type> &&
+           LessThanComparable<RAIter::value_type, InIter::value_type> &&
+           LessThanComparable<RAIter::value_type>
+  RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                           RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
+
+template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare>
+  requires CopyAssignable<RAIter::reference, InIter::value_type> &&
+           SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
+           MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+           Predicate<Compare, InIter::value_type, RAIter::value_type> &&
+           Predicate<Compare, RAIter::value_type, InIter::value_type> &&
+           Predicate<Compare, RAIter::value_type> &&
+           CopyConstructible<Compare>
+  RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                           RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
+                           Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places the first
+\tcode{min(\farg{last}\ - \farg{first}, \farg{result_last}\ - \farg{result_first})}\
+sorted elements into the range
+\range{\farg{result_first}}{\farg{result_first}\ + min(\farg{last}\ - \farg{first}, \farg{result_last}\ - \farg{result_first})}.
+
+\pnum
+\returns\ 
+The smaller of:
+\farg{result_last}\ or
+\tcode{\farg{result_first}\ + (\farg{last}\ - \farg{first})}.
+
+\pnum
+\removedConcepts{\mbox{\requires}
+The type of \mbox{\tcode{*result_first}} shall satisfy the
+Swappable requirements (37),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~33), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~35).}
+
+\pnum
+\complexity\ 
+Approximately
+\tcode{(\farg{last}\ - \farg{first}) * log(min(\farg{last}\ - \farg{first}, \farg{result_last}\ - \farg{result_first}))}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[is.sorted]{\tcode{is_sorted}}
+
+\index{is_sorted@\tcode{is_sorted}}%
+\color{addclr}
+\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires LessThanComparable<Iter::value_type>
+  bool is_sorted(Iter first, Iter last);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{is_sorted_until(first, last) == last}}}
+\end{itemdescr}
+
+\index{is_sorted@\tcode{is_sorted}}%
+\color{addclr}
+\begin{itemdecl}
+template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires CopyConstructible<Compare>
+  bool is_sorted(Iter first, Iter last,
+                 Compare comp);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{is_sorted_until(first, last, comp) == last}}}
+\end{itemdescr}
+
+\index{is_sorted_until@\tcode{is_sorted_until}}%
+\color{addclr}
+\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires LessThanComparable<Iter::value_type>
+  Iter is_sorted_until(Iter first, Iter last);
+template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires CopyConstructible<Compare>
+  Iter is_sorted_until(Iter first, Iter last,
+                       Compare comp);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} If \mbox{\tcode{distance(first, last) < 2}}, returns
+\mbox{\tcode{last}}. Otherwise, returns
+the last iterator \mbox{\tcode{i}} in \mbox{\crange{first}{last}} for which the
+range \mbox{\range{first}{i}} is sorted.}
+
+\pnum
+\addedD{\mbox{\complexity} Linear.}
+\end{itemdescr}
+
+\rSec2[alg.nth.element]{Nth element}
+
+\index{nth_element@\tcode{nth_element}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
+                   Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
+                   Iter @\farg{last}@,  Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+After
+\tcode{nth_element}\
+the element in the position pointed to by \farg{nth}\
+is the element that would be
+in that position if the whole range were sorted.
+Also for any iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{nth}}
+and any iterator
+\tcode{j}\
+in the range
+\range{\farg{nth}}{\farg{last}}\
+it holds that:
+\tcode{!(*i > *j)}\
+or
+\tcode{\farg{comp}(*j, *i) == false}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~33), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~35).}
+
+\pnum
+\complexity\ 
+Linear on average.
+\end{itemdescr}
+
+\rSec2[alg.binary.search]{Binary search}
+
+\pnum
+All of the algorithms in this section are versions of binary search
+and assume that the sequence being searched is partitioned with respect to
+an expression formed by binding the search key to an argument of the
+implied or explicit comparison function.
+They work on non-random access iterators minimizing the number of comparisons,
+which will be logarithmic for all types of iterators.
+They are especially appropriate for random access iterators,
+because these algorithms do a logarithmic number of steps
+through the data structure.
+For non-random access iterators they execute a linear number of steps.
+
+\rSec3[lib.lower.bound]{\tcode{lower_bound}}
+
+\index{lower_bound@\tcode{lower_bound}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter, class T>
+  requires LessThanComparable<Iter::reference, T>
+  Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                   const T& @\farg{value}@);
+
+@\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<Iter::reference, T> Compare>
+  requires CopyConstructible<Compare>
+  Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                   const T& @\farg{value}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The elements
+\tcode{e}\
+of
+\range{\farg{first}}{\farg{last}}\
+are partitioned with respect to the expression
+\tcode{e < value}\
+or
+\tcode{\farg{comp}(e, value)}.
+
+\pnum
+\returns\ 
+The furthermost iterator
+\tcode{i}\
+in the range
+\crange{\farg{first}}{\farg{last}}
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{i}\
+the following corresponding conditions hold:
+\tcode{*j < \farg{value}}\
+or
+\tcode{\farg{comp}(*j, \farg{value}) != false}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{log(\farg{last}\ - \farg{first}) + 1}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.upper.bound]{\tcode{upper_bound}}
+
+\index{upper_bound@\tcode{upper_bound}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter, class T>
+  requires LessThanComparable<T, Iter::reference>
+  Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                   const T& @\farg{value}@);
+
+template<ForwardIterator Iter, class T, Predicate<T, Iter::reference> Compare>
+  requires CopyConstructible<Compare>
+  Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
+                   const T& @\farg{value}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The elements
+\tcode{e}\
+of
+\range{\farg{first}}{\farg{last}}\
+are partitioned with respect to the expression
+\tcode{!(value < e)}\
+or
+\tcode{!\farg{comp}(\brk{}value, e)}.
+
+\pnum
+\returns\ 
+The furthermost iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{i}\
+the following corresponding conditions hold:
+\tcode{!(value < *j)}\
+or
+\tcode{\farg{comp}(\farg{value}, *j) == false}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{log(\farg{last}\ - \farg{first}) + 1}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.equal.range]{\tcode{equal_range}}
+
+\index{equal_range@\tcode{equal_range}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter, class T>
+  requires LessThanComparable<T, Iter::reference> && 
+           LessThanComparable<Iter::reference, T>
+  pair<Iter, Iter>
+    equal_range(Iter @\farg{first}@,
+                Iter @\farg{last}@, const T& @\farg{value}@);
+
+template<ForwardIterator Iter, class T, class Compare>
+  requires Predicate<Compare, T, Iter::reference> &&
+           Predicate<Compare, Iter::reference, T> &&
+           CopyConstructible<Compare>
+  pair<Iter, Iter>
+    equal_range(Iter @\farg{first}@,
+                Iter @\farg{last}@, const T& @\farg{value}@,
+                Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The elements
+\tcode{e}\
+of
+\range{\farg{first}}{\farg{last}}\
+are partitioned with respect to the expressions
+\tcode{e < value}\
+and
+\tcode{!(value < e)}\
+or
+\tcode{\farg{comp}(e, value)}\
+and
+\tcode{!\farg{comp}(value, e)}.
+Also, for all elements
+\tcode{e}\
+of
+\tcode{[\farg{first}, \farg{last})},
+\tcode{e < value}\
+implies
+\tcode{!(value < e)}\
+or
+\tcode{\farg{comp}(e, value)}\
+implies
+\tcode{!\farg{comp}(value, e)}.
+
+\pnum
+\returns\
+\begin{codeblock}
+    make_pair(lower_bound(@\farg{first}@, @\farg{last}@, @\farg{value}@),
+              upper_bound(@\farg{first}@, @\farg{last}@, @\farg{value}@))
+\end{codeblock}
+or
+\begin{codeblock}
+    make_pair(lower_bound(@\farg{first}@, @\farg{last}@, @\farg{value}@, @\farg{comp}@),
+              upper_bound(@\farg{first}@, @\farg{last}@, @\farg{value}@, @\farg{comp}@))
+\end{codeblock}
+
+\pnum
+\complexity\ 
+At most
+\tcode{2 * log(\farg{last}\ - \farg{first}) + 1}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.binary.search]{\tcode{binary_search}}
+
+\index{binary_search@\tcode{binary_search}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter, class T>
+  requires LessThanComparable<T, Iter::reference> &&
+           LessThanComparable<Iter::reference, T>
+  bool binary_search(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
+                     const T& @\farg{value}@);
+
+template<ForwardIterator Iter, class T, class Compare>
+  requires Predicate<Compare, T, Iter::reference> &&
+           Predicate<Compare, Iter::reference, T> &&
+           CopyConstructible<Compare>
+  bool binary_search(Iter @\farg{first}@, Iter @\farg{last}@,
+                     const T& @\farg{value}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The elements
+\tcode{e}\
+of
+\range{\farg{first}}{\farg{last}}\
+are partitioned with respect to the expressions
+\tcode{e < value}\
+and
+\tcode{!(value < e)}\
+or
+\tcode{\farg{comp}(e, value)}\
+and
+\tcode{!\farg{comp}(value, e)}.
+Also, for all elements
+\tcode{e}\
+of
+\tcode{[\farg{first}, \farg{last})},
+\tcode{e < value}\
+implies
+\tcode{!(value < e)}\
+or
+\tcode{\farg{comp}(e, value)}\
+implies
+\tcode{!\farg{comp}(value, e)}.
+
+\pnum
+\returns\ 
+\tcode{true}\
+if there is an iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+that satisfies the corresponding conditions:
+\tcode{!(*i < \farg{value}) \&\& !(\farg{value} < *i)}
+or
+\tcode{\farg{comp}(*i, \farg{value}) == false \&\& \farg{comp}(\farg{value}, *i) == false}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{log(\farg{last}\ - \farg{first}) + 2}\
+comparisons.
+\end{itemdescr}
+
+\rSec2[alg.merge]{Merge}
+
+\index{merge@\tcode{merge}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter>
+  @\textcolor{addclr}{requires}@ SameType<InIter1::value_type, InIter2::value_type> &&
+           LessThanComparable<InIter1::value_type>
+  OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                OutIter @\farg{result}@);
+
+@\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter, 
+         Predicate<InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type> &&
+           CopyConstructible<Compare>
+  OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                OutIter @\farg{result}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Merges two sorted ranges
+\range{\farg{first1}}{\farg{last1}}\
+and
+\range{\farg{first2}}{\farg{last2}}\
+into the range
+\range{\farg{result}}{\farg{result}\ + (\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})}.
+
+\pnum
+The resulting range shall not overlap with either of the original ranges.
+The list will be sorted in non-decreasing order according to the
+ordering defined by
+\tcode{\farg{comp}};
+that is, for every iterator
+\tcode{i}\
+in
+\range{\farg{first}}{\farg{last}}\
+other than
+\tcode{\farg{first}},
+the condition
+\tcode{*i < *(i - 1)}\
+or
+\tcode{\farg{comp}(*i, *(i - 1))}\
+will be false.
+
+\pnum
+\returns\ 
+\tcode{\farg{result}\ + (\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2}) - 1}\
+comparisons.
+
+\pnum
+\notes\ 
+Stable.
+\end{itemdescr}
+
+\index{inplace_merge@\tcode{inplace_merge}}%
+\color{addclr}\begin{itemdecl}
+@\textcolor{addclr}{template}@<MutableBidirectionalIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void inplace_merge(Iter @\farg{first}@,
+                     Iter @\farg{middle}@,
+                     Iter @\farg{last}@);
+
+template<MutableBidirectionalIterator Iter, 
+         Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void inplace_merge(Iter @\farg{first}@,
+                     Iter @\farg{middle}@,
+                     Iter @\farg{last}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Merges two sorted consecutive ranges
+\range{\farg{first}}{\farg{middle}}\
+and
+\range{\farg{middle}}{\farg{last}},
+putting the result of the merge into the range
+\range{\farg{first}}{\farg{last}}.
+The resulting range will be in non-decreasing order;
+that is, for every iterator
+\tcode{i}\
+in
+\range{\farg{first}}{\farg{last}}\
+other than
+\tcode{\farg{first}},
+the condition
+\tcode{*i < *(i - 1)}
+or, respectively,
+\tcode{\farg{comp}(*i, *(i - 1))}\
+will be false.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~33), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~35).}
+
+\pnum
+\complexity\ 
+When enough additional memory is available,
+\tcode{(\farg{last}\ - \farg{first}) - 1}\
+comparisons.
+If no additional memory is available, an algorithm with complexity
+$N \log(N)$
+(where
+\tcode{N}
+is equal to
+\tcode{\farg{last}\ - \farg{first}})\
+may be used.
+
+\pnum
+\notes\ 
+Stable.
+\end{itemdescr}
+
+\rSec2[alg.set.operations]{Set operations on sorted structures}
+
+\pnum
+This section defines all the basic set operations on sorted structures.
+They also work with
+\tcode{multiset}s~(\ref{lib.multiset})
+containing multiple copies of equivalent elements.
+The semantics of the set operations are generalized to
+\tcode{multiset}s
+in a standard way by defining
+\tcode{set_union()}\
+to contain the maximum number of occurrences of every element,
+\tcode{set_intersection()}\
+to contain the minimum, and so on.
+
+\rSec3[lib.includes]{\tcode{includes}}
+
+\index{includes@\tcode{includes}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator Iter1, InputIterator Iter2>
+  requires SameType<Iter1::value_type, Iter2::value_type> && LessThanComparable<Iter1::value_type>
+  bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+template<InputIterator Iter1, InputIterator Iter2, 
+         Predicate<Iter1::value_type, Iter2::value_type> Compare>
+  requires SameType<Iter1::value_type, Iter2::value_type> && CopyConstructible<Compare>
+  bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{true}\
+if every element in the range
+\range{\farg{first2}}{\farg{last2}}\
+is contained in the range
+\range{\farg{first1}}{\farg{last1}}.
+Returns
+\tcode{false}\
+otherwise.
+
+\textcolor{black}{\pnum}
+\complexity\ 
+At most
+\tcode{2 * ((\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})) - 1}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.set.union]{\tcode{set_union}}
+
+\index{set_union@\tcode{set_union}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter>
+  requires SameType<InIter1::value_type, InIter2::value_type> &&
+        LessThanComparable<InIter1::value_type>
+  OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                    OutIter @\farg{result}@);
+
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter, 
+         Predicate<InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+  OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                    OutIter @\farg{result}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs a sorted union of the elements from the two ranges;
+that is, the set of elements that are present in one or both of the ranges.
+
+\pnum
+\requires\ 
+The resulting range shall not overlap with either of the original ranges.
+
+\pnum
+\returns\ 
+The end of the constructed range.
+
+\textcolor{black}{\pnum}
+\complexity\ 
+At most
+\tcode{2 * ((\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})) - 1}\
+comparisons.
+
+\pnum
+\notes\ If \range{first1}{last1}\ contains $m$ elements that are equivalent to
+each other and \range{first2}{last2}\ contains $n$ elements that are equivalent
+to them, then all $m$ elements from the first range shall be copied to the output
+range, in order, and then $\max(n - m, 0)$ elements from the second range shall
+be copied to the output range, in order.
+\end{itemdescr}
+
+\rSec3[lib.set.intersection]{\tcode{set_intersection}}
+
+\index{set_intersection@\tcode{set_intersection}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter>
+  requires SameType<InIter1::value_type, InIter2::value_type> &&
+        LessThanComparable<InIter1::value_type>
+  OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                           InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                           OutIter @\farg{result}@);
+
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter, 
+         Predicate<InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+  OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                           InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                           OutIter @\farg{result}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs a sorted intersection of the elements from the two ranges;
+that is, the set of elements that are present in both of the ranges.
+
+\pnum
+\requires\ 
+The resulting range shall not overlap with either of the original ranges.
+
+\pnum
+\returns\ 
+The end of the constructed range.
+
+\pnum
+\complexity\ 
+At most
+\tcode{2 * ((\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})) - 1}\
+comparisons.
+
+\pnum
+\notes\ If \range{first1}{last1}\ contains $m$ elements that are equivalent to
+each other and \range{first2}{last2}\ contains $n$ elements that are equivalent
+to them, the first $\min(m, n)$ elements shall be copied from the first range
+to the output range, in order.
+\end{itemdescr}
+
+\rSec3[lib.set.difference]{\tcode{set_difference}}
+
+\index{set_difference@\tcode{set_difference}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter>
+  requires SameType<InIter1::value_type, InIter2::value_type> &&
+           @\textcolor{addclr}{LessThanComparable}@<InIter1::value_type>
+  OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                         InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                         @\textcolor{addclr}{OutIter}@ @\farg{result}@);
+
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter, 
+         Predicate<InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+  OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                         InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                         OutIter @\farg{result}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Copies the elements of the range
+\range{\farg{first1}}{\farg{last1}}\
+which are not present in the range
+\range{\farg{first2}}{\farg{last2}}\
+to the range beginning at
+\tcode{result}.
+The elements in the constructed range are sorted.
+
+\pnum
+\requires\ 
+The resulting range shall not overlap with either of the original ranges.
+
+\pnum
+\returns\ 
+The end of the constructed range.
+
+\pnum
+\complexity\ 
+At most
+\tcode{2 * ((\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})) - 1}\
+comparisons.
+
+\pnum
+\notes\
+If
+\range{first1}{last1}\
+contains $m$
+elements that are equivalent to each other and
+\range{first2}{last2}\
+contains $n$
+elements that are equivalent to them, the last
+$\max(m - n, 0)$
+elements from
+\range{first1}{last1}\
+shall be \color{black}copied to the output range.
+\end{itemdescr}
+
+\rSec3[lib.set.symmetric.difference]{\tcode{set_symmetric_difference}}
+
+\index{set_symmetric_difference@\tcode{set_symmetric_difference}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter>
+  requires SameType<InIter1::value_type, InIter2::value_type> &&
+        LessThanComparable<InIter1::value_type>
+  OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                                   OutIter @\farg{result}@);
+
+template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<InIter1::value_type> OutIter, 
+         Predicate<InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+  OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
+                                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                                   OutIter @\farg{result}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Copies the elements of the range
+\range{\farg{first1}}{\farg{last1}}\
+which are not present in the range
+\range{\farg{first2}}{\farg{last2}},
+and the elements of the range
+\range{\farg{first2}}{\farg{last2}}\
+which are not present in the range
+\range{\farg{first1}}{\farg{last1}}\
+to the range beginning at
+\tcode{result}.
+The elements in the constructed range are sorted.
+
+\pnum
+\requires\ 
+The resulting range shall not overlap with either of the original ranges.
+
+\pnum
+\returns\ 
+The end of the constructed range.
+
+\textcolor{black}{\pnum}
+\complexity\ 
+At most
+\tcode{2 * ((\farg{last1}\ - \farg{first1}) + (\farg{last2}\ - \farg{first2})) - 1}\
+comparisons.
+
+\pnum
+\notes\
+If \range{first1}{last1}\ contains $m$ elements that are equivalent to each other and
+\range{first2}{last2}\ contains $n$ elements that are equivalent to them, then
+$|m - n|$ of those elements shall be copied to the output range: the last
+$m - n$ of these elements from \range{first1}{last1}\ if $m > n$, and the last 
+$n - m$ of these elements from \range{first2}{last2}\ if $m < n$.
+\end{itemdescr}
+
+\rSec2[alg.heap.operations]{Heap operations}
+
+\pnum
+A
+\techterm{heap}\ 
+is a particular organization of elements in a range between two random access iterators
+\range{a}{b}.
+Its two key properties are:
+
+\begin{description}
+\item{(1)} There is no element greater than
+\tcode{*a}\
+in the range and
+\item{(2)} \tcode{*a}\
+may be removed by
+\tcode{pop_heap()},
+or a new element added by
+\tcode{push_heap()},
+in
+$\mathcal{O}(\log(N))$
+time.
+\end{description}
+
+\pnum
+These properties make heaps useful as priority queues.
+
+\pnum
+\tcode{make_heap()}\
+converts a range into a heap and
+\tcode{sort_heap()}\
+turns a heap into a sorted sequence.
+
+\rSec3[lib.push.heap]{\tcode{push_heap}}
+
+\index{push_heap@\tcode{push_heap}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places the value in the location
+\tcode{\farg{last} - 1}\
+into the resulting heap
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\requires\ 
+The range
+\range{\farg{first}}{\farg{last} - 1}\
+shall be a valid heap.
+\removedConcepts{The type of \mbox{\tcode{*first}} shall satisfy
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~\mbox{\ref{moveconstructible}}) and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~\mbox{\ref{moveassignable}}).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{log(\farg{last}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.pop.heap]{\tcode{pop_heap}}
+
+\index{pop_heap@\tcode{pop_heap}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+  void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           Swappable<Iter::value_type> && CopyConstructible<Compare>
+  void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Swaps the value in the location \farg{first}\
+with the value in the location
+\tcode{\farg{last} - 1}\
+and makes
+\range{\farg{first}}{\farg{last} - 1}\
+into a heap.
+
+\pnum
+\requires\ 
+The range
+\range{\farg{first}}{\farg{last}}\
+shall be a valid heap.
+\removedConcepts{
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~\mbox{\ref{moveconstructible}}), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~\mbox{\ref{moveassignable}}).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{2 * log(\farg{last}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.make.heap]{\tcode{make_heap}}
+
+\index{make_heap@\tcode{make_heap}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           LessThanComparable<Iter::value_type>
+  void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+@\color{addclr}@template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs a heap out of the range
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\removedConcepts{\mbox{\requires} The type of \mbox{\tcode{*first}} shall satisfy
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~\mbox{\ref{moveconstructible}}) and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~\mbox{\ref{moveassignable}}).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{3 * (\farg{last}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[lib.sort.heap]{\tcode{sort_heap}}
+
+\index{sort_heap@\tcode{sort_heap}}%
+\color{addclr}\begin{itemdecl}
+template<MutableRandomAccessIterator Iter>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+  void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+           Swappable<Iter::value_type> && CopyConstructible<Compare>
+  void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Sorts elements in the heap
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4),
+the \mbox{\tcode{MoveConstructible}} requirements
+(Table~\mbox{\ref{moveconstructible}}), and the
+the \mbox{\tcode{MoveAssignable}} requirements
+(Table~\mbox{\ref{moveassignable}}).}
+
+\pnum
+\complexity\ 
+At most $N \log(N)$
+comparisons (where
+\tcode{N == \farg{last}\ - \farg{first}}).
+\end{itemdescr}
+
+\rSec3[is.heap]{\tcode{is_heap}}
+
+\index{is_heap@\tcode{is_heap}}%
+\color{addclr}
+\begin{itemdecl}
+template<RandomAccessIterator Iter>
+  requires LessThanComparable<Iter::value_type>
+  bool is_heap(Iter first, Iter last);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{is_heap_until(first, last) == last}}}
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires CopyConstructible<Compare>
+  bool is_heap(Iter first, Iter last, Compare comp);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{is_heap_until(first, last, comp) == last}}}
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<RandomAccessIterator Iter>
+  Iter is_heap_until(Iter first, Iter last);
+template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires CopyConstructible<Compare>
+  Iter is_heap_until(Iter first, Iter last,
+                     Compare comp);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} If \mbox{\tcode{distance(first, last) < 2}}, returns
+\mbox{\tcode{last}}. Otherwise, returns
+the last iterator \mbox{\tcode{i}} in \mbox{\crange{first}{last}} for which the
+range \mbox{\range{first}{i}} is a heap.}
+
+\pnum
+\addedD{\mbox{\complexity} Linear.}
+\end{itemdescr}
+
+\rSec2[alg.min.max]{Minimum and maximum}
+
+\index{min@\tcode{min}}%
+\color{addclr}\begin{itemdecl}
+template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
+template<class T, Predicate<T, T> Compare>
+  requires CopyConstructible<Compare>
+  const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires:
+Type
+T
+is
+LessThanComparable~(20.1.2).}
+
+\pnum
+\returns\ 
+The smaller value.
+
+\pnum
+\notes\ 
+Returns the first argument when the arguments are equivalent.
+\end{itemdescr}
+
+\index{max@\tcode{max}}%
+\color{addclr}\begin{itemdecl}
+template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
+template<class T, Predicate<T, T> Compare>
+  requires CopyConstructible<Compare>
+  const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{Requires:
+Type
+T
+is
+LessThanComparable~(20.1.2).}
+
+\pnum
+\returns\ 
+The larger value.
+
+\pnum
+\notes\ 
+Returns the first argument when the arguments are equivalent.
+\end{itemdescr}
+
+\index{minmax@\tcode{minmax}}%
+\color{addclr}
+\begin{itemdecl}
+template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
+template<class T, Predicate<T, T> Compare>
+  requires CopyConstructible<Compare>
+  @\textcolor{addclr}{pair}@<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}
+Type
+\mbox{\tcode{T}}
+shall be
+\mbox{\tcode{LessThanComparable}}~(\mbox{\ref{lessthancomparable}}).}
+
+\pnum
+\addedB{\mbox{\returns}
+\mbox{\tcode{pair<const T\&, const T\&>(b, a)}} if \mbox{\tcode{b}} is smaller
+than \mbox{\tcode{a}}, and
+\mbox{\tcode{pair<const T\&, const T\&>(a, b)}} otherwise.}
+
+\pnum
+\addedB{\mbox{\notes}
+Returns \mbox{\tcode{<pair<const T\&, const T\&>(a, b)}} when the arguments are equivalent.}
+
+\pnum
+\addedB{\mbox{\complexity}
+Exactly one comparison.}
+\end{itemdescr}
+
+\index{min_element@\tcode{min_element}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires LessThanComparable<Iter::reference>
+  Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
+  requires CopyConstructible<Compare>
+  Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+the following corresponding conditions hold:
+\tcode{!(*j < *i)}\
+or
+\tcode{\farg{comp}(*j, *i) == false}.
+Returns
+\tcode{\farg{last}}\
+if
+\tcode{\farg{first} == \farg{last}}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{max((\farg{last} - \farg{first}) - 1, 0)}\
+applications of the corresponding comparisons.
+\end{itemdescr}
+
+\index{max_element@\tcode{max_element}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires LessThanComparable<Iter::reference>
+  Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
+  requires CopyConstructible<Compare>
+  Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+the following corresponding conditions hold:
+\tcode{!(*i < *j)}
+or
+\tcode{\farg{comp}(*i, *j) == false}.
+Returns
+\tcode{\farg{last}}\
+if
+\tcode{\farg{first} == \farg{last}}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{max((\farg{last}\ - \farg{first}) - 1, 0)}\
+applications of the corresponding comparisons.
+\end{itemdescr}
+
+\index{minmax_element@\tcode{minmax_element}}%
+\color{addclr}
+\begin{itemdecl}
+template<ForwardIterator Iter>
+  requires LessThanComparable<Iter::value_type>
+  pair<Iter, Iter>
+    minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
+template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+  requires CopyConstructible<Compare>
+  pair<Iter, Iter>
+    minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedB{\mbox{\returns}
+\mbox{\tcode{make_pair(m, M)}}, where \mbox{\tcode{m}} is
+\mbox{\tcode{min_element(first, last)}}
+or \mbox{\tcode{min_element(first, last, comp)}}
+and \mbox{\tcode{M}} is \mbox{\tcode{max_element(first, last)}}
+or \mbox{\tcode{max_element(first, last, comp)}}.}
+
+\pnum
+\addedB{\mbox{\complexity}
+At most
+\mbox{\tcode{max(2 * (\farg{last} - \farg{first}) - 2, 0)}}
+applications of the corresponding comparisons.}
+\end{itemdescr}
+
+\rSec2[alg.lex.comparison]{Lexicographical comparison}
+
+\index{lexicographical_compare@\tcode{lexicographical_compare}}%
+\color{addclr}\begin{itemdecl}
+template<InputIterator Iter1, InputIterator Iter2>
+  requires LessThanComparable<Iter1::reference, Iter2::reference> &&
+           LessThanComparable<Iter2::reference, Iter1::reference>
+  bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                               Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
+
+template<InputIterator Iter1, InputIterator Iter2, class Compare>
+  requires Predicate<Compare, Iter1::reference, Iter2::reference> &&
+           Predicate<Compare, Iter2::reference, Iter1::reference>
+           CopyConstructible<Compare>
+  bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+                               Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
+                               Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{true}\
+if the sequence of elements defined by the range
+\range{\farg{first1}}{\farg{last1}}\
+is lexicographically less than the sequence of elements defined by the range
+\range{\farg{first2}}{\farg{last2}}.
+
+Returns
+\tcode{false}\
+otherwise.
+
+\pnum
+\complexity\ 
+At most
+\tcode{2*min((\farg{last1}\ - \farg{first1}), (\farg{last2}\ - \farg{first2}))}\
+applications of the corresponding comparison.
+
+\pnum
+\notes\ 
+If two sequences have the same number of elements and their corresponding
+elements are equivalent, then neither sequence is lexicographically
+less than the other.
+If one sequence is a prefix of the other, then the shorter sequence is
+lexicographically less than the longer sequence.
+Otherwise, the lexicographical comparison of the sequences yields the same
+result as the comparison of the first corresponding pair of
+elements that are not equivalent.
+
+\begin{codeblock}
+for ( ; @\farg{first1}@ != @\farg{last1}@ && @\farg{first2}@ != @\farg{last2}@ ; @\farg{++first1}@, @\farg{++first2}@) {
+  if (*@\farg{first1}@ < *@\farg{first2}@) return true;
+  if (*@\farg{first2}@ < *@\farg{first1}@) return false;
+}
+return @\farg{first1}@ == @\farg{last1}@ && @\farg{first2}@ != @\farg{last2}@;
+\end{codeblock}
+\end{itemdescr}
+
+\rSec2[alg.permutation.generators]{Permutation generators}
+
+\index{next_permutation@\tcode{next_permutation}}%
+\color{addclr}\begin{itemdecl}
+template<MutableBidirectionalIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+           LessThanComparable<Iter::reference>
+  bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableBidirectionalIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  @\textcolor{addclr}{bool}@ next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Takes a sequence defined by the range
+\range{\farg{first}}{\farg{last}}\
+and transforms it into the next permutation.
+The next permutation is found by assuming that the set of all permutations is
+lexicographically sorted with respect to
+\tcode{operator<}\
+or \farg{comp}.
+If such a permutation exists, it returns
+\tcode{true}.
+Otherwise, it transforms the sequence into the smallest permutation,
+that is, the ascendingly sorted one, and returns
+\tcode{false}.
+
+\pnum
+\removedConcepts{Requires:
+The type of first shall satisfy the
+Swappable requirements (20.1.4).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first})/2}\
+swaps.
+\end{itemdescr}
+
+\index{prev_permutation@\tcode{prev_permutation}}%
+\color{addclr}\begin{itemdecl}
+template<MutableBidirectionalIterator Iter>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+        LessThanComparable<Iter::reference>
+  bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<MutableBidirectionalIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+           CopyConstructible<Compare>
+  bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Takes a sequence defined by the range
+\range{\farg{first}}{\farg{last}}\
+and transforms it into the previous permutation.
+The previous permutation is found by assuming that the set of all permutations is
+lexicographically sorted with respect to
+\tcode{operator<}\
+or \farg{comp}.
+
+\pnum
+\returns\ 
+\tcode{true}\
+if such a permutation exists.
+Otherwise, it transforms the sequence into the largest permutation,
+that is, the descendingly sorted one, and returns
+\tcode{false}.
+
+\pnum
+\removedConcepts{Requires:
+The type of *first shall satisfy the
+Swappable requirements (20.1.4).}
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first})/2}\
+swaps.
+\end{itemdescr}
+
+\end{paras}
+
+\bibliographystyle{plain}
+\bibliography{../local}
+
+\end{document}

@@ -13,6 +13,7 @@ Subdirectories:
 
   wording/      LaTeX sources for the concepts language wording.
 
+  stdllib/      LaTeX sources for the concepts library wording.
 
 The list of all specification issues for the concepts proposals is
 available at

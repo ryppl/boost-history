@@ -1,0 +1,403 @@
+\documentclass[american,twoside]{book}
+\usepackage{refbib}
+\usepackage{hyperref}
+\input{macros}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{1}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Concepts for the C++0x Standard Library: Numerics
+
+\vspace{0.5in}
+
+\normalsize
+Douglas Gregor, Jeremiah Willcock, and Andrew Lumsdaine \\
+Open Systems Laboratory \\
+Indiana University \\
+Bloomington, IN\ \  47405 \\
+\{\href{mailto:dgregor@cs.indiana.edu}{dgregor}, \href{mailto:jewillco@cs.indiana.edu}{jewillco}, \href{mailto:lums@cs.indiana.edu}{lums}\}@cs.indiana.edu
+\end{center}
+
+\vspace{1in}
+\par\noindent Document number: N2041=06-0111\vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@cs.indiana.edu}{dgregor@cs.indiana.edu}$>$\vspace{-6pt}
+
+\section*{Introduction}
+\libintrotext{Chapter 26}
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\color{black}
+
+\setcounter{chapter}{25}
+\rSec0[lib.numerics]{Numerics library}
+\begin{paras}
+
+\setcounter{section}{3}
+\rSec1[lib.numeric.ops]{Generalized numeric operations}
+
+\synopsis{Header \tcode{<numeric>}\ synopsis}
+\index{numeric@\tcode{<numeric>}}%
+
+\color{addclr}
+\begin{codeblock}
+namespace std {
+  template <InputIterator Iter, Addable<Iter::reference> T>
+    where Assignable<T, T::result_type>
+    T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
+  template <InputIterator Iter, class T, Callable2<T, Iter::reference> BinaryOperation>
+    where Assignable<T, BinaryOperation::result_type>
+    T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
+  	       BinaryOperation @\farg{binary_op}@);
+  template <InputIterator Iter1, InputIterator Iter2, class T>
+    where Multiplicable<Iter1::reference, Iter2::reference> &&
+          Addable<T, Multiplicable<Iter1::reference, Iter2::reference>::result_type> &&
+          Assignable<
+            T, 
+            Addable<T, 
+                    Multiplicable<Iter1::reference, Iter2::reference>::result_type>::result_type>
+    T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+  		  Iter2 @\farg{first2}@, T @\farg{init}@);
+  template <InputIterator Iter1, InputIterator Iter2, class T,
+  	  class BinaryOperation1, Callable2<Iter1::reference, Iter2::reference> BinaryOperation2>
+    where Callable2<BinaryOperation1, T, BinaryOperation2::result_type> &&
+          Assignable<T, 
+                     Callable2<BinaryOperation1, T, BinaryOperation2::result_type>::result_type>
+    T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+  		  Iter2 @\farg{first2}@, T @\farg{init}@,
+  		  BinaryOperation1 @\farg{binary_op1}@,
+  		  BinaryOperation2 @\farg{binary_op2}@);
+  template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+    where Addable<InIter::value_type> && 
+          Assignable<InIter::value_type, Addable<InIter::value_type>::result_type> &&
+          CopyConstructible<InIter::value_type>
+    OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+  		      OutIter @\farg{result}@);
+  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+           Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
+    where Assignable<InIter::value_type, BinaryOperation::result_type> && 
+          CopyConstructible<InIter::value_type>
+    OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+    		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+  template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+    where Subtractable<InIter::value_type, InIter::value_type> &&
+          Assignable<OutIter, Subtractable<InIter::value_type, InIter::value_type>::result_type> &&
+          CopyConstructible<InIter::value_type> && Assignable<InIter::value_type> 
+    OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+     			      OutIter @\farg{result}@);
+  template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+            Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
+    where Assignable<OutIter::reference, BinaryOperation::result_type> &&
+          CopyConstructible<InIter::value_type> && Assignable<InIter::value_type>
+    OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+    			      OutIter @\farg{result}@,
+    			      BinaryOperation @\farg{binary_op}@);
+}
+\end{codeblock}
+\color{black}
+
+\pnum
+The requirements on the types of algorithms' arguments that are
+described in the introduction to clause \ref{lib.algorithms}\ also
+apply to the following algorithms.
+
+\rSec2[lib.accumulate]{Accumulate}
+
+\color{addclr}
+\index{accumulate@\tcode{accumulate}}%
+\begin{itemdecl}
+template <InputIterator Iter, Addable<Iter::reference> T>
+  where Assignable<T, T::result_type>
+  T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
+template <InputIterator Iter, class T, Callable2<T, Iter::reference> BinaryOperation>
+  where Assignable<T, BinaryOperation::result_type>
+  T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
+	       BinaryOperation @\farg{binary_op}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Computes its result by initializing the accumulator
+\tcode{acc}\
+with the initial value
+\tcode{init}\
+and then modifies it with
+\tcode{acc = acc + *i}\
+or
+\tcode{acc = binary_op(acc, *i)}\
+for every iterator
+\tcode{i}\
+in the range \range{first}{last}\
+in order.%
+\footnote{
+\tcode{accumulate}\
+is similar to the APL reduction operator and Common Lisp reduce function, but it avoids the
+difficulty of defining the result of reduction on an empty sequence by always requiring an initial value.
+}
+
+\pnum
+\requires\ 
+\removedConcepts{T shall meet the requirements of CopyConstructible (20.1.3)
+and Assignable (21.3) types.}
+In the range
+\crange{first}{last},
+\tcode{binary_op}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional
+}
+\end{itemdescr}
+
+\rSec2[lib.inner.product]{Inner product}
+\index{inner_product@\tcode{inner_product}}%
+
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator Iter1, InputIterator Iter2, class T>
+  where Multiplicable<Iter1::reference, Iter2::reference> &&
+        Addable<T, Multiplicable<Iter1::reference, Iter2::reference>::result_type> &&
+        Assignable<
+          T, 
+          Addable<T, 
+                  @\color{addclr}@Multiplicable<Iter1::reference, Iter2::reference>::result_type>::result_type>
+  T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+		  Iter2 @\farg{first2}@, T @\farg{init}@);
+template <InputIterator Iter1, InputIterator Iter2, class T,
+	  class BinaryOperation1, Callable2<Iter1::reference, Iter2::reference> BinaryOperation2>
+  where Callable2<BinaryOperation1, T, BinaryOperation2::result_type> &&
+        Assignable<T, 
+                   Callable2<BinaryOperation1, T, BinaryOperation2::result_type>::result_type>
+  T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+		  Iter2 @\farg{first2}@, T @\farg{init}@,
+		  BinaryOperation1 @\farg{binary_op1}@,
+		  BinaryOperation2 @\farg{binary_op2}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Computes its result by initializing the accumulator
+\tcode{acc}\
+with the initial value
+\tcode{init}\
+and then modifying it with
+\tcode{acc = acc + (*i1) * (*i2)}\
+or
+\tcode{acc = binary_op1(acc, binary_op2(*i1, *i2))}\
+for every iterator
+\tcode{i1}\
+in the range \range{first}{last}\
+and iterator
+\tcode{i2}\
+in the range
+\range{first2}{first2 + (last - first)}
+in order.
+
+\pnum
+\requires\ 
+\removedConcepts{T shall meet the requirements of CopyConstructible (20.1.3)
+and Assignable (21.3) types.}
+In the ranges
+\crange{first}{last}\
+and
+\crange{first2}{first2 + (last - first)}\
+\tcode{binary_op1}\
+and
+\tcode{binary_op2}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional
+}
+\end{itemdescr}
+
+\rSec2[lib.partial.sum]{Partial sum}
+\index{partial_sum@\tcode{partial_sum}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  where Addable<InIter::value_type> && 
+        Assignable<InIter::value_type, Addable<InIter::value_type>::result_type> &&
+        CopyConstructible<InIter::value_type>
+  OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+		      OutIter @\farg{result}@);
+template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+         Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
+  where Assignable<InIter::value_type, BinaryOperation::result_type> && 
+        CopyConstructible<InIter::value_type>
+  OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+  		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Assigns to every element referred to by iterator
+\tcode{i}\
+in the range
+\range{result}{result + (last - first)}
+a value
+correspondingly equal to
+
+\begin{codeblock}
+((...(*first + *(first + 1)) + ...) + *(first + (i - result)))
+\end{codeblock}
+
+or
+
+\begin{codeblock}
+binary_op(binary_op(...,
+    binary_op(*first, *(first + 1)),...), *(first + (i - result)))
+\end{codeblock}
+
+\pnum
+\returns\ 
+\tcode{result + (last - first)}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{(last - first) - 1}\
+applications of
+\tcode{binary_op}.
+
+\pnum
+\requires\ 
+In the ranges
+\crange{first}{last}\
+and
+\crange{result}{result + (last - first)}\
+\tcode{binary_op}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional.
+}
+
+\pnum
+\notes\ 
+\tcode{result}\
+may be equal to
+\tcode{first}.
+\end{itemdescr}
+
+\rSec2[lib.adjacent.difference]{Adjacent difference}
+
+\index{adjacent_difference@\tcode{adjacent_difference}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  where Subtractable<InIter::value_type, InIter::value_type> &&
+        Assignable<OutIter, Subtractable<InIter::value_type, InIter::value_type>::result_type> &&
+        CopyConstructible<InIter::value_type> && Assignable<InIter::value_type> 
+  OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+   			      OutIter @\farg{result}@);
+template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
+          Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
+  where Assignable<OutIter::reference, BinaryOperation::result_type> &&
+        CopyConstructible<InIter::value_type> && Assignable<InIter::value_type>
+  OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+  			      OutIter @\farg{result}@,
+			      BinaryOperation @\farg{binary_op}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Assigns to every element referred to by iterator
+\tcode{i}\
+in the range
+\range{result + 1}{result + (last - first)}
+a value correspondingly equal to
+
+\begin{codeblock}
+*(first + (i - result)) - *(first + (i - result) - 1)
+\end{codeblock}
+
+or
+
+\begin{codeblock}
+binary_op(*(first + (i - result)), *(first + (i - result) - 1)).
+\end{codeblock}
+
+\tcode{result}
+gets the value of
+\tcode{*first}.
+
+\pnum
+\requires\ 
+In the ranges
+\crange{first}{last}\
+and
+\crange{result}{result + (last - first)},
+\tcode{binary_op}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed rangs is intentional.
+}
+
+\pnum
+\notes\ 
+\tcode{result}\
+may be equal to
+\tcode{first}.
+
+\pnum
+\returns\ 
+\tcode{result + (last - first)}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{(last - first) - 1}\
+applications of
+\tcode{binary_op}.
+\end{itemdescr}
+
+\end{paras}
+
+\bibliographystyle{plain}
+\bibliography{../local}
+
+\end{document}

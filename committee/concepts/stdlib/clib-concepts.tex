@@ -1,0 +1,1673 @@
+\documentclass[american,twoside]{book}
+\usepackage{hyperref}
+\usepackage{refbib}
+\usepackage{pdfsync}
+\input{macros}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{1}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\newsavebox\rebindbox
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Core Concepts for the C++0x Standard Library
+\vspace{0.5in}
+
+\normalsize
+Douglas Gregor and Andrew Lumsdaine \\
+Open Systems Laboratory \\
+Indiana University \\
+Bloomington, IN\ \  47405 \\
+\{\href{mailto:dgregor@osl.iu.edu}{dgregor}, \href{mailto:lums@osl.iu.edu}{lums}\}@osl.iu.edu
+\end{center}
+
+\vspace{1in}
+\par\noindent Document number: \vspace{-6pt}
+\par\noindent Revises document number: N2502=08-0012\vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
+
+\section*{Introduction}
+This document proposes basic support for concepts in the \Cpp0x
+Standard Library. It describes a new header \tcode{<concepts>} that
+contains concepts that require compiler support (such as
+\tcode{SameType} and \tcode{ObjectType}) and concepts that describe
+common type behaviors likely to be used in many templates, including
+those in the Standard Library (such as \tcode{CopyConstructible} and
+\tcode{EqualityComparable}). 
+
+This proposal adds new functionality into the Standard Library for
+concepts, and is meant as a companion to the language wording for
+concepts, since some of the language wording depends on this library
+wording. More thorough changes to the Standard Library will follow in
+future revisions of the ``Concepts for the \Cpp0x Standard Library''
+proposals.
+
+The concepts in this proposal replace the requirements tables
+currently in [utility.requirements]. This leaves the Standard Library
+in an interesting (but consistent!) state, where the template
+requirements of the Standard Library are described in terms of actual
+concepts, but the templates themselves are not constrained
+templates. For example, a type \tcode{T} in a Standard Library
+algorithm might be stated to be \tcode{CopyConstructible} in the
+current text: previously, that text referred to a requirements table
+for \tcode{CopyConstructible}, whereas now it refers to the
+\tcode{CopyConstructible} concept itself. When the Standard Library is
+fully evolved to use concepts, this informally-stated requirement that
+\tcode{T} is \tcode{CopyConstructible} will be made formal by a
+\tcode{requires} clause stating \tcode{CopyConstructible<T>}. Thus,
+the approach of this proposal is designed to provide an evolutionary
+step toward complete concepts support in the library, while 
+improving the description of the library and support for concepts with
+each step.
+
+Within the proposed wording, text that has been added
+\textcolor{addclr}{will be presented in blue} \addedConcepts{and
+underlined when possible}. Text that has been removed will be
+presented \textcolor{remclr}{in red},\removedConcepts{with
+strike-through when possible}. Non-editorial
+changes from the previous wording are \addedCC{highlighted in green}. 
+
+\editorial{Purely editorial comments will be written in a separate,
+  shaded box.}
+
+
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\setcounter{chapter}{19}
+\rSec0[utilities]{General utilities library}
+\setcounter{Paras}{1}
+\textcolor{black}{\pnum}
+The following clauses describe utility and allocator \changedConcepts{requirements}{concepts}, utility
+components, \addedB{tuples, type traits templates,} function objects, dynamic
+memory management utilities, and date/time utilities, as summarized in
+Table~\ref{tab:util.lib.summary}.
+
+\setcounter{table}{29}
+\begin{libsumtab}{General utilities library summary}{tab:util.lib.summary}
+\ref{utility.concepts}
+\changedConcepts{Requirements}{Concepts}    &         \addedConcepts{\ttfamily <concepts>}                                          \\ \rowsep
+\ref{utility} Utility components            &       \tcode{<utility>}       \\ \rowsep
+\ref{tuple} \addedB{Tuples}         &       \tcode{\addedB{<tuple>}}        \\ \rowsep
+\ref{meta} \addedB{Type traits}             &       \tcode{\addedB{<type_traits>}}  \\ \rowsep
+\ref{function.objects} Function objects     &       \tcode{<functional>}\\ \rowsep
+                                                                                        &       \tcode{<memory>}        \\
+\ref{memory} Memory                                         &       \tcode{<cstdlib>}       \\
+                                                                                        &       \tcode{<cstring>}       \\ \rowsep
+\ref{date.time} Date and time                       &       \tcode{<ctime>}         \\
+\end{libsumtab}
+
+\noindent\editorial{Replace the section [utility.requirements] with
+  the following section [utility.concepts]}
+
+\color{addclr}
+\rSec1[utility.concepts]{Concepts}
+
+\pnum The \tcode{<concepts>} header describes requirements on template
+arguments used throughout the \Cpp\ Standard Library.
+
+\synopsis{Header \tcode{<concepts>}\ synopsis}
+\begin{codeblock}
+namespace std {
+  // \ref{concept.support}, support concepts:
+  concept Returnable<typename T> { }
+  concept PointeeType<typename T> { }
+  concept ReferentType<typename T> @\textit{see below}@;
+  concept VariableType<typename T> { }
+  concept ObjectType<typename T> @\textit{see below}@;
+  concept ClassType<typename T> @\textit{see below}@;
+  concept Class<typename T> @\textit{see below}@;
+  concept Union<typename T> @\textit{see below}@;
+  concept TrivialType<typename T> @\textit{see below}@;
+  concept StandardLayoutType<typename T> @\textit{see below}@;
+  concept LiteralType<typename T> @\textit{see below}@;
+  concept ScalarType<typename T> @\textit{see below}@;
+  concept NonTypeTemplateParameterType<typename T> @\textit{see below}@;
+  concept IntegralConstantExpressionType<typename T> @\textit{see below}@;
+  concept IntegralType<typename T> @\textit{see below}@;
+  concept EnumerationType<typename T> @\textit{see below}@;
+  concept SameType<typename T, typename U> {  }
+  concept DerivedFrom<typename Derived, typename Base> { }
+
+  // \ref{concept.comparison}, comparisons:
+  auto concept LessThanComparable<typename T, typename U = T> @\textit{see below}@;
+  auto concept EqualityComparable<typename T, typename U = T> @\textit{see below}@;
+  auto concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
+
+  // \ref{concept.destruct}, destruction:
+  auto concept Destructible<typename T> @\textit{see below}@;
+  concept TriviallyDestructible<typename T> @\textit{see below}@;
+
+  // \ref{concept.construct}, construction:
+  auto concept Constructible<typename T, typename... Args> @\textit{see below}@;
+  auto concept DefaultConstructible<typename T> @\textit{see below}@;
+  concept TriviallyDefaultConstructible<typename T> @\textit{see below}@;
+
+  // \ref{concept.copymove}, copy and move:
+  auto concept MoveConstructible<typename T> @\textit{see below}@;
+  auto concept CopyConstructible<typename T> @\textit{see below}@;
+  concept TriviallyCopyConstructible<typename T> @\textit{see below}@;
+  auto concept MoveAssignable<typename T, typename U = T> @\textit{see below}@;
+  auto concept CopyAssignable<typename T, typename U = T> @\textit{see below}@;
+  concept TriviallyCopyAssignable<typename T> @\textit{see below}@;
+  auto concept Swappable<typename T> @\textit{see below}@;
+
+  // \ref{concept.memory}, memory allocation:
+  auto concept Newable<typename T, typename... Args> @\textit{see below}@;
+  auto concept Deletable<typename T> @\textit{see below}@;
+  auto concept ArrayNewable<typename T, typename... Args> @\textit{see below}@;
+  auto concept ArrayDeletable<typename T> @\textit{see below}@;
+  auto concept HeapAllocatable<typename T> @\textit{see below}@;
+
+  // \ref{concept.regular}, regular types:
+  auto concept Semiregular<typename T> @\textit{see below}@;
+  auto concept Regular<typename T> @\textit{see below}@;
+
+  // \ref{concept.convertible}, convertibility:
+  auto concept ExplicitlyConvertible<typename T, typename U> @\textit{see below}@;
+  auto concept Convertible<typename T, typename U> @\textit{see below}@;
+
+  // \ref{concept.true}, true:
+  concept True<bool> { }
+  concept_map True<true> { }
+
+  // \ref{concept.operator}, operator concepts:
+  auto concept HasPlus<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasMinus<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasMultiply<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasDivide<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasModulus<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasUnaryPlus<typename T> @\textit{see below}@;
+  auto concept HasNegate<typename T> @\textit{see below}@;
+  auto concept HasLogicalAnd<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasLogicalOr<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasLogicalNot<typename T> @\textit{see below}@;
+  auto concept HasBitAnd<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasBitOr<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasBitXor<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasComplement<typename T> @\textit{see below}@;
+  auto concept HasLeftShift<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasRightShift<typename T, typename U = T> @\textit{see below}@;
+  auto concept Dereferenceable<typename T> @\textit{see below}@;
+  auto concept Addressable<typename T> @\textit{see below}@;
+  auto concept Callable<typename F, typename... Args> @\textit{see below}@;
+
+  // \ref{concept.arithmetic}, arithmetic concepts:
+  concept ArithmeticLike<typename T> @\textit{see below}@;
+  concept IntegralLike<typename T> @\textit{see below}@;
+  concept SignedIntegralLike<typename T> @\textit{see below}@;
+  concept UnsignedIntegralLike<typename T> @\textit{see below}@;
+  concept FloatingPointLike<typename T> @\textit{see below}@;
+
+  // \ref{concept.predicate}, predicates:
+  auto concept Predicate<typename F, typename... Args> @\textit{see below}@;
+
+  // \ref{concept.allocator}, allocators:
+  concept Allocator<typename X> @\textit{see below}@;
+  concept AllocatorGenerator<typename X> @\textit{see below}@;
+  template<Allocator X> concept_map AllocatorGenerator<X> @\textit{see below}@;
+}
+\end{codeblock}
+
+\rSec2[concept.support]{Support concepts}
+\pnum
+The concepts in [concept.support] provide the ability to state
+template requirements for C++ type classifications ([basic.types]) and
+type relationships that cannot be expressed directly with concepts
+([concept]). Concept maps for these concepts are implicitly defined.
+A program shall not provide concept maps for any concept in
+[concept.support].
+
+\begin{itemdecl}
+concept Returnable<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} Describes types that can be used as the
+  return type of a function.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is
+  \mbox{\techterm{cv}} \mbox{\tcode{void}} or that meets the
+  requirement \mbox{\tcode{MoveConstructible<T>}}
+  (\mbox{\ref{concept.copymove}}), the concept map
+  \mbox{\tcode{Returnable<T>}} shall be implicitly defined in
+  namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept PointeeType<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note}
+describes types to which a pointer can be
+created.}
+
+\pnum 
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an object type,
+  function type, or \mbox{\techterm{cv}} \mbox{\tcode{void}}, a
+  concept map \mbox{\tcode{PointeeType}} shall be implicitly defined
+  in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ReferentType<typename T> : PointeeType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\note}
+describes types to which a reference or pointer-to-member can be
+created.
+
+\pnum 
+\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an object type or
+  function type, a
+  concept map \mbox{\tcode{ReferentType}} shall be implicitly defined
+  in namespace \mbox{\tcode{std}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+concept VariableType<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that can be used to
+  declare a variable.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an object type or reference type, a concept map
+  \mbox{\tcode{VariableType<T>}} shall be implicitly defined in 
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ObjectType<typename T> : VariableType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes object types ([basic.types]),
+  for which storage can be allocated.}
+
+\pnum 
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an object type, a concept map
+  \mbox{\tcode{ObjectType<T>}} shall be implicitly defined in
+  namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+concept ClassType<typename T> : ObjectType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes class types (i.e., unions,
+  classes, and structs).}
+
+\pnum 
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a class type ([class]), a concept map \mbox{\tcode{ClassType<T>}}
+  shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept Class<typename T> : ClassType<Class> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes classes and structs ([class]).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a class or struct, a concept map
+  \mbox{\tcode{Class<T>}} shall be implicitly defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept Union<typename T> : ClassType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes union types ([class.union]).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a union, a concept map \mbox{\tcode{Union<T>}}
+  shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept TrivialType<typename T> : ObjectType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes trivial types ([basic.types]).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a trivial type, a concept map \mbox{\tcode{TrivialType<T>}} shall
+  be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept StandardLayoutType<typename T> : ObjectType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes standard-layout types ([basic.types]).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a standard-layout type, a concept map
+  \mbox{\tcode{StandardLayoutType<T>}} shall be implicitly defined in 
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept LiteralType<typename T> : ObjectType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes literal types ([basic.types]).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a literal type, a concept map \mbox{\tcode{LiteralType<T>}} shall
+  be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ScalarType<typename T> 
+  : TrivialType<T>, LiteralType<T>, StandardLayoutType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes scalar types ([basic.types]).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a scalar type, a concept map \mbox{\tcode{ScalarType<T>}} shall
+  be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept NonTypeTemplateParameterType<typename T> : VariableType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describess type that can
+be used as the type of a non-type template parameter ([temp.param]).}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that can be the type of a non-type
+\mbox{\techterm{template-parameter}} ([temp.param]), a concept map
+\mbox{\tcode{NonTypeTemplateParameterType<T>}} shall be implicitly defined in
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept IntegralConstantExpressionType<typename T> 
+  : ScalarType<T>, NonTypeTemplateParameterType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that
+can be the type of an integral constant expression ([expr.const]).} 
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an integral type or enumeration type, a concept map
+  \mbox{\tcode{IntegralConstantExpressionType<T>}} shall be implicitly
+  defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept IntegralType<typename T> : IntegralConstantExpressionType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes integral types
+([basic.fundamental]).}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an integral type, a concept map
+\mbox{\tcode{IntegralType<T>}} shall be implicitly defined in
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept EnumerationType<typename T> : IntegralConstantExpressionType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes enumeration types
+([dcl.enum]).} 
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an enumeration type, a concept map
+\mbox{\tcode{EnumerationType<T>}} shall be implicitly defined in namespace
+\mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept SameType<typename T, typename U> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes a same-type requirement
+  ([temp.req]).}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept DerivedFrom<typename Derived, typename Base> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\requires}
+for every pair of class types (\mbox{\tcode{T}}, \mbox{\tcode{U}}),
+such that \mbox{\tcode{T}} is either the same as or publicly and
+unambiguously derived from \mbox{\tcode{U}}, a concept map
+\mbox{\tcode{DerivedFrom<T, U>}} shall be implicitly defined in namespace
+\mbox{\tcode{std}}.
+\end{itemdescr}
+
+\rSec2[concept.comparison]{Comparisons}
+
+\begin{itemdecl}
+auto concept LessThanComparable<typename T, typename U = T> {
+  bool operator<(T const& a, U const& b);
+  bool operator>(U const& a, T const& b) { return b < a; }
+  bool operator<=(U const& a, T const& b) { return !(b < a); }
+  bool operator>=(T const& a, U const& b) { return !(a < b); }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describes types whose values can be
+  ordered via an inequality operator.}
+
+\pnum
+\addedConcepts{\mbox{\requires}} \tcode{operator<} is a strict
+  weak ordering relation (\ref{alg.sorting}).
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept EqualityComparable<typename T, typename U = T> {
+  bool operator==(T const& a, U const& b);
+  bool operator!=(T const& a, U const& b) { return !(a == b); }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types whose values can be
+compared for equality with \mbox{\tcode{operator==}}.}
+
+\pnum 
+\addedConcepts{\mbox{\requires}}
+\changedConcepts{W}{w}hen \tcode{T} and \tcode{U} are identical, \tcode{operator==} is an
+equivalence relation, that is, it has the following properties:
+\begin{itemize}
+\item
+For all \tcode{a}, \tcode{a == a}.
+\item
+If \tcode{a == b}, then \tcode{b == a}.
+\item
+If \tcode{a == b} and \tcode{b == c}, then \tcode{a == c}.
+\end{itemize}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept TriviallyEqualityComparable<typename T> : EqualityComparable<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describes types whose equality comparison
+  operators (\mbox{\tcode{==}}, \mbox{\tcode{!=}}) can be implemented
+  via a bitwise equality comparison, as with \mbox{\tcode{memcmp}}.
+\mbox{\enternote} such types should not have
+padding, i.e. the size of the type is the sum of the sizes of its
+elements. If padding exists, the comparison may provide false
+negatives, but never false positives. \mbox{\exitnote}}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every integral type
+  \mbox{\tcode{T}} and pointer type, a concept map
+  \mbox{\tcode{TriviallyEqualityComparable<T>}} shall be 
+  defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\rSec2[concept.destruct]{Destruction}
+\begin{itemdecl}
+auto concept Destructible<typename T> : VariableType<T> {
+  T::~T();
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that can be destroyed,
+  including scalar types, references, and class types with a public
+  destructor.}
+
+\pnum
+\addedConcepts{\mbox{\requires} following destruction of an object,}
+\changedConcepts{All}{all} resources owned by the object are reclaimed.
+\end{itemdescr}
+
+\begin{itemdecl}
+concept TriviallyDestructible<typename T> : Destructible<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types whose
+destructors do not need to be executed when the object is destroyed.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a trivial type ([basic.types]), reference, or class type with a
+  trivial destructor ([class.dtor]), a concept map
+  \mbox{\tcode{TriviallyDestructible<T>}} shall be implicitly 
+  defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\rSec2[concept.construct]{Construction}
+\begin{itemdecl}
+auto concept Constructible<typename T, typename... Args> : Destructible<T> {
+  T::T(Args...);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that can be constructed
+  from a given set of arguments.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept DefaultConstructible<typename T> : Constructible<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that can be default-constructed.}
+\end{itemdescr}
+
+\rSec2[concept.copymove]{Copy and move}
+\begin{itemdecl}
+auto concept MoveConstructible<typename T> : Destructible<T> {
+  T::T(T&&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} 
+describes types that can move-construct an
+object from a value of the same type, possibly altering that
+value.}
+\end{itemdescr}
+
+\begin{itemdecl}
+T::T(T&& rv);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\postcondition}
+the constructed \mbox{\tcode{T}} object is equivalent to the value of
+\mbox{\tcode{rv}} before the construction. 
+\mbox{\enternote} there is no requirement on the value of
+\mbox{\tcode{rv}} after the construction. \mbox{\exitnote}}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept CopyConstructible<typename T> : MoveConstructible<T> {
+  T::T(const T&);
+
+  axiom CopyPreservation(T x) {
+    T(x) == x;
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describes types with a public copy constructor.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept TriviallyCopyConstructible<typename T> : CopyConstructible<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describes types whose copy
+constructor is equivalent to \mbox{\tcode{memcpy}}.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a trivial type ([basic.types]), a reference, or a class type with
+  a trivial copy constructor ([class.copy]), a concept map
+  \mbox{\tcode{TriviallyCopyConstructible<T>}} 
+shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept MoveAssignable<typename T, typename U = T> {
+  typename result_type;
+  result_type @\addedCC{T::}@operator=(@\removedCC{T\&, }@U&&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with the ability
+  to assign to an object from an rvalue, potentially altering the rvalue.}
+\end{itemdescr}
+
+\begin{itemdecl}
+result_type T::operator=(U&& rv);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\postconditions}
+the constructed \mbox{\tcode{T}} object is equivalent to the value of
+\mbox{\tcode{rv}} before the assignment. 
+\mbox{\enternote} there is no requirement on the value of
+\mbox{\tcode{rv}} after 
+the assignment. \mbox{\exitnote}}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept CopyAssignable<typename T, typename U = T> : MoveAssignable<T, U> {
+  typename result_type;
+  result_type T::operator=(const U&);
+
+  axiom CopyPreservation(T& x, U y) {
+    (x = y, x) == y;
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with the ability to assign to an
+object.}
+\end{itemdescr}
+
+\editorial{\textcolor{black}{The CopyAssignable requirements in N2461 specify that
+  \tcode{operator=} must return a \tcode{T\&}. This is too strong a
+  requirement for most of the uses of \tcode{CopyAssignable}, so we have
+  weakened \tcode{CopyAssignable} to not require anything of its return
+  type. When we need a \tcode{T\&}, we'll add that as an explicit
+  requirement. See, e.g., the \tcode{Integral} concept.}}
+
+\begin{itemdecl}
+concept TriviallyCopyAssignable<typename T> : CopyAssignable<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types whose copy-assignment
+  operator is equivalent to \mbox{\tcode{memcpy}}.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a trivial type ([basic.types]) or a 
+class type with a trivial copy assignment operator ([class.copy]), a
+concept map \mbox{\tcode{TriviallyCopyAssignable<T>}} shall be implicitly
+defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Swappable<typename T> {
+  void swap(T&, T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types for which two values of
+  that type can be swapped.}
+\end{itemdescr}
+
+\begin{itemdecl}
+void swap(T& t, T& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\postconditions}
+\mbox{\tcode{t}} has the value originally held by \mbox{\tcode{u}},
+and \mbox{\tcode{u}} has the value originally held by \mbox{\tcode{t}}.}
+\end{itemdescr}
+
+\rSec2[concept.memory]{Memory allocation}
+\begin{itemdecl}
+auto concept Newable<typename T, typename... Args> : ObjectType<T> {
+  void* T::operator new(size_t size, Args...);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types for which objects can be
+allocated on the heap via \mbox{\tcode{new}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Deletable<typename T> : ObjectType<T> {
+  void T::operator delete(void*);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types for which objects on the
+heap can be freed with \mbox{\tcode{delete}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept ArrayNewable<typename T, typename... Args> : ObjectType<T> {
+  void* T::operator new[](size_t size, Args...);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types for which arrays of
+objects can be allocated on the heap via array \mbox{\tcode{new}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept ArrayDeletable<typename T> : ObjectType<T> {
+  void T::operator delete[](void*);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types for which an array
+objects on the heap can be freed with \mbox{\tcode{delete[]}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HeapAllocatable<typename T> 
+  : Newable<T>, Deletable<T>, ArrayNewable<T>, ArrayDeletable<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types for which objects and
+arrays of objects can be allocated on or freed from the heap with
+\mbox{\tcode{new}} and \mbox{\tcode{delete}}.}
+\end{itemdescr}
+
+\rSec2[concept.regular]{Regular types}
+
+\begin{itemdecl}
+auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T> { 
+  requires SameType<CopyAssignable<T>::result_type, T&>;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} collects several common
+requirements supported by most types.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Regular<typename T> 
+  : Semiregular<T>, DefaultConstructible<T>, EqualityComparable<T>, HeapAllocatable<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes semi-regular types that are default
+constructible, have equality comparison operators, and can be
+allocated on the heap.}
+\end{itemdescr}
+
+\rSec2[concept.convertible]{Convertibility}
+
+\begin{itemdecl}
+auto concept ExplicitlyConvertible<typename T, typename U> : VariableType<T> {
+  explicit operator U(T const&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a conversion (explicit
+or implicit) from one type to another.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Convertible<typename T, typename U> : ExplicitlyConvertible<T, U> {
+  operator U(T const&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an implicit conversion from one
+type to another.}
+\end{itemdescr}
+
+\rSec2[concept.true]{True}
+
+\begin{itemdecl}
+concept True<bool> { }
+concept_map True<true> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} used to express the requirement that a
+  particular integral constant expression evaluate true.}
+
+\pnum
+\addedConcepts{\mbox{\requires} a program shall not provide a concept map for the
+\mbox{\tcode{True}} concept.}
+\end{itemdescr}
+
+\rSec2[concept.operator]{Operator concepts}
+\begin{itemdecl}
+auto concept HasPlus<typename T, typename U = T> {
+  typename result_type;
+  result_type operator+(T const&, U const&);
+  result_type operator+(T const&, U &&);
+  result_type operator+(T &&, U const&);
+  result_type operator+(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a binary \mbox{\tcode{operator+}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasMinus<typename T, typename U = T> {
+  typename result_type;
+  result_type operator-(T const&, U const&);
+  result_type operator-(T const&, U &&);
+  result_type operator-(T &&, U const&);
+  result_type operator-(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a binary \mbox{\tcode{operator-}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasMultiply<typename T, typename U = T> {
+  typename result_type;
+  result_type operator*(T const&, U const&);
+  result_type operator*(T const&, U &&);
+  result_type operator*(T &&, U const&);
+  result_type operator*(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with} \changedCC{an}{a binary} \addedConcepts{\mbox{\tcode{operator*}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasDivide<typename T, typename U = T> {
+  typename result_type;
+  result_type operator/(T const&, U const&);
+  result_type operator/(T const&, U &&);
+  result_type operator/(T &&, U const&);
+  result_type operator/(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator/}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasModulus<typename T, typename U = T> {
+  typename result_type;
+  result_type operator%(T const&, U const&);
+  result_type operator%(T const&, U &&);
+  result_type operator%(T &&, U const&);
+  result_type operator%(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator\%}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasUnaryPlus<typename T> {
+  typename result_type;
+  result_type operator+(T const&);
+  result_type operator+(T &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\note} describes types with a unary \mbox{\tcode{operator+}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasNegate<typename T> {
+  typename result_type;
+  result_type operator-(T const&);
+  result_type operator-(T &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a unary \mbox{\tcode{operator-}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLogicalAnd<typename T, typename U = T> {
+  bool operator&&(T const&, U const&);
+  bool operator&&(T const&, U &&);
+  bool operator&&(T &&, U const&);
+  bool operator&&(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a logical conjunction operator.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLogicalOr<typename T, typename U = T> {
+  bool operator||(T const&, U const&);
+  bool operator||(T const&, U &&);
+  bool operator||(T &&, U const&);
+  bool operator||(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a logical disjunction operator.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLogicalNot<typename T> {
+  bool operator!(T const&);
+  bool operator!(T &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a logical negation operator.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasBitAnd<typename T, typename U = T> {
+  typename result_type;
+  result_type operator&(T const&, U const&);
+  result_type operator&(T const&, U &&);
+  result_type operator&(T &&, U const&);
+  result_type operator&(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a binary \mbox{\tcode{operator\&}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasBitOr<typename T, typename U = T> {
+  typename result_type;
+  result_type operator|(T const&, U const&);
+  result_type operator|(T const&, U &&);
+  result_type operator|(T &&, U const&);
+  result_type operator|(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator|}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasBitXor<typename T, typename U = T> {
+  typename result_type;
+  result_type operator^(T const&, U const&);
+  result_type operator^(T const&, U &&);
+  result_type operator^(T &&, U const&);
+  result_type operator^(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator\^}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasComplement<typename T> {
+  typename result_type;
+  result_type operator~(T const&);
+  result_type operator~(T &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an
+  \mbox{\tcode{operator\~}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLeftShift<typename T, typename U = T> {
+  typename result_type;
+  result_type operator<<(T const&, U const&);
+  result_type operator<<(T const&, U &&);
+  result_type operator<<(T &&, U const&);
+  result_type operator<<(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\note} describes types with an \mbox{\tcode{operator$<<$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasRightShift<typename T, typename U = T> {
+  typename result_type;
+  result_type operator>>(T const&, U const&);
+  result_type operator>>(T const&, U &&);
+  result_type operator>>(T &&, U const&);
+  result_type operator>>(T &&, U &&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\note} describes types with an \mbox{\tcode{operator$>>$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Dereferenceable<typename T> {
+  typename reference;
+  reference operator*(T);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with a dereferencing \mbox{\tcode{operator*}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Addressable<typename T> {
+  typename pointer;
+  typename const_pointer;
+
+  pointer operator&(T&);
+  const_pointer operator&(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types with an address-of \mbox{\tcode{operator\&}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept Callable<typename F, typename... Args> {
+  typename result_type;
+  result_type operator()(F&, Args...);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describes function object types 
+callable given arguments of types \mbox{\tcode{Args...}}.}
+\end{itemdescr}
+
+\rSec2[concept.arithmetic]{Arithmetic concepts}
+
+\begin{itemdecl}
+concept ArithmeticLike<typename T> 
+  : Regular<T>, LessThanComparable<T>, HasPlus<T>, HasMinus<T>, HasMultiply<T>, HasDivide<T>, 
+    HasUnaryPlus<T>, HasNegate<T> {
+  T::T(long long);
+
+  T& operator++(T&);
+  T operator++(T& t, int) { T tmp(t); ++t; return tmp; }
+  T& operator--(T&);
+  T operator--(T& t, int) { T tmp(t); --t; return tmp; }
+
+  requires Convertible<HasUnaryPlus<T>::result_type, T>
+        && Convertible<HasNegate<T>::result_type, T>
+        && Convertible<HasPlus<T>::result_type, T>
+        && Convertible<HasMinus<T>::result_type, T>
+        && Convertible<HasMultiply<T>::result_type, T>
+        && Convertible<HasDivide<T>::result_type, T>;
+
+  T& operator*=(T&, T);
+  T& operator/=(T&, T);
+  T& operator+=(T&, T);
+  T& operator-=(T&, T);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that provide all of the
+  operations available on arithmetic types ([basic.fundamental]).}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept IntegralLike<typename T> 
+  : ArithmeticLike<T>, HasComplement<T>, HasModulus<T>, HasBitAnd<T>, HasBitXor<T>, HasBitOr<T>,
+    HasLeftShift<T>, HasRightShift<T> {
+  requires Convertible<HasComplement<T>::result_type, T>
+        && Convertible<HasModulus<T>::result_type, T>
+        && Convertible<HasBitAnd<T>::result_type, T>
+        && Convertible<HasBitXor<T>::result_type, T>
+        && Convertible<HasBitOr<T>::result_type, T>
+        && Convertible<HasLeftShift<T>::result_type, T>
+        && Convertible<HasRightShift<T>::result_type, T>;
+
+  T& operator%=(T&, T);
+  T& operator&=(T&, T);
+  T& operator^=(T&, T);
+  T& operator|=(T&, T);
+  T& operator<<=(T&, T);
+  T& operator>>=(T&, T);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\note} describes types that provide all of the operations
+  available on integral types.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept SignedIntegralLike<typename T> : IntegralLike<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that provide all of the
+  operations available on signed integral types.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every signed integral type
+  \mbox{\tcode{T}} ([basic.fundamental]), including signed extended
+  integral types, an empty concept map
+  \mbox{\tcode{SignedIntegral<T>}} shall be defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept UnsignedIntegralLike<typename T> : IntegralLike<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes types that provide all of the
+  operations available on unsigned integral types.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every unsigned integral type
+  \mbox{\tcode{T}} ([basic.fundamental]), including unsigned extended
+  integral types, an empty concept map
+  \mbox{\tcode{UnsignedIntegral<T>}} shall be defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept FloatingPointLike<typename T> : ArithmeticLike<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes floating-point types.}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every floating point type \mbox{\tcode{T}} ([basic.fundamental]), 
+an empty concept map \mbox{\tcode{FloatingPoint<T>}} shall be defined
+in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\rSec2[concept.predicate]{Predicates}
+
+\begin{itemdecl}
+auto concept Predicate<typename F, typename... Args> : Callable<F, Args...> {
+  requires Convertible<result_type, bool>;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\note} describes function objects 
+callable with some set of arguments, the result of which can be used in a
+context that requires a \mbox{\tcode{bool}}.}
+
+\pnum
+\addedConcepts{\mbox{\requires} 
+predicate function objects shall not apply any non-constant function
+through the predicate arguments.}
+\end{itemdescr}
+
+\color{black}
+\rSec2[concept.allocator]{Allocators}
+\index{requirements!Allocator@\tcode{Allocator}}%
+\editorial{We have kept most of the text of [allocator.requirements]
+  here, although much of it has been moved from tables into numbered
+  paragraphs when translating the allocator requirements into concepts.}
+
+\pnum
+The library describes a standard set of requirements for \techterm{allocators},
+which are objects that encapsulate the information about an allocation model.
+This information includes the knowledge of pointer types, the type of their
+difference, the type of the size of objects in this allocation model, as well
+as the memory allocation and deallocation primitives for it. All of the
+containers (clause~\ref{containers}) are parameterized in terms of allocators.
+
+\eremove{Remove Table 39: Descriptive variable definitions}
+
+\eremove{Remove Table 40: Allocator requirements}
+
+\pnum
+\changedConcepts{Table~40 describes the requirements on types manipulated
+through allocators.}
+{The \mbox{\tcode{Allocator}} concept describes the requirements on
+  allocators.} 
+\changedConcepts{All the operations on the allocators are expected to be
+amortized constant time.}{Each allocator operation shall have
+amortized constant time complexity.}
+\removedConcepts{Table~33
+describes the requirements on allocator types.}
+
+\color{addclr}
+\begin{itemdecl}
+concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
+  ObjectType value_type               = typename X::value_type;
+  MutableRandomAccessIterator pointer = typename X::pointer;
+  RandomAccessIterator const_pointer  = typename X::const_pointer;
+  typename reference                  = typename X::reference;
+  typename const_reference            = typename X::const_reference;
+  SignedIntegral difference_type      = typename X::difference_type;
+  UnsignedIntegral size_type          = typename X::size_type; 
+  template<ObjectType T> class rebind = @\textit{see below}@;
+
+  requires Convertible<pointer, const_pointer> && 
+           Convertible<pointer, void*> &&
+           Convertible<pointer, value_type*> &&
+           SameType<pointer::value_type, value_type> &&
+           SameType<pointer::reference, value_type&> &&
+           SameType<pointer::reference, reference>;
+
+  requires Convertible<const_pointer, const void*> &&
+           @\textcolor{addclr}{Convertible}@<const_pointer, const value_type&> && 
+           SameType<const_pointer::value_type, value_type> &&
+           SameType<const_pointer::reference, const value_type&> &&
+           SameType<const_pointer::reference, const_reference>;
+ 
+  requires SameType<rebind<value_type>, X>;
+
+  pointer X::allocate(size_type n);
+  pointer X::allocate(size_type n, const_pointer p);
+  @\textcolor{addclr}{void}@ X::deallocate(pointer p, size_type n);
+
+  size_type X::max_size() const;
+
+  template<ObjectType T>
+    X::X(const rebind<T>& y);
+
+  @\removedConcepts{void X::construct(pointer p, const value_type\&);}@
+  template<typename V>
+    requires Convertible<V, value_type>
+    @\textcolor{addclr}{void}@ X::construct(pointer p, V&&);
+
+  void X::destroy(pointer p);
+
+  pointer X::address(reference) const;
+  const_pointer X::address(const_reference) const;
+}
+\end{itemdecl}
+\color{black}
+
+\color{addclr}
+\begin{itemdecl}
+UnsignedIntegral size_type;
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\ctype\
+a type that can represent the size of the largest object in the allocation model
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+SignedIntegral difference_type;
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\ctype\
+a type that can represent the difference between any two pointers
+in the allocation model
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<ObjectType T> class rebind;
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\ctype}}
+The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
+typedef template}{is a template that produces allocators in the same
+  family as \mbox{\tcode{X}}}: if the name
+\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
+to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
+\mbox{\tcode{SomeAllocator<value_type>}}},
+then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
+\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. 
+\addedConcepts{The resulting type
+\mbox{\tcode{SameAllocator<U>}} shall meet the requirements of the
+\mbox{\tcode{Allocator}} concept.}
+
+\addedConcepts{The
+  default value for \mbox{\tcode{rebind}} is a template
+  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
+  \mbox{\tcode{X::template rebind<U>::other}}.} 
+
+\begin{lrbox}\rebindbox
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+template<typename Alloc>
+struct rebind_allocator {
+  template<typename U>
+  using rebind = typename Alloc::template rebind<U>::other;
+};
+\end{lstlisting}
+\end{minipage}
+\end{lrbox}
+
+\editorial{The aforementioned default value for \tcode{rebind} can be
+  implemented as follows:
+
+\usebox \rebindbox
+
+The default value for \tcode{rebind} in the \tcode{Allocator} concept
+is, therefore, \tcode{rebind_allocator<X>::template rebind}.}
+
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+pointer X::allocate(size_type n);
+pointer X::allocate(size_type n, const_pointer p);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\
+Memory is allocated for \tcode{n}\ objects of type \changedConcepts{\mbox{\tcode{T}}}{\mbox{\tcode{value_type}}}\ but objects
+are not constructed. \footnote{It is intended that \tcode{a.allocate}\ be an efficient means
+of allocating a single object of type \tcode{T}, even when \tcode{sizeof(T)}\
+is small. That is, there is no need for a container to maintain its own
+``free list''.} 
+
+\pnum
+\returns\
+\removedConcepts{The result is a random access iterator.}
+\addedConcepts{A pointer to the allocated memory.}
+\enternote\
+If \tcode{n == 0}, the return value is unspecified.
+\exitnote\
+
+\pnum
+\throws\
+\tcode{allocate}\ may raise an appropriate exception. 
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+void X::deallocate(pointer p, size_type n);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\preconditions\
+All \tcode{n }\ \changedConcepts{T}{value\_type} objects in the area pointed to by \tcode{p}\ shall be
+destroyed prior to this call. \tcode{n} shall match the value passed to
+\tcode{allocate}\ to obtain this memory. 
+\enternote\ \tcode{p} shall not be \changedConcepts{null}{singular}.\exitnote
+
+\throws\ Does not throw exceptions.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{size_type X::max_size() const;}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\
+the largest value that can meaningfully be passed to \tcode{X::allocate()}
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<typename V>
+  requires Constructible<value_type, V&&>
+  void X::construct(pointer p, V&&);
+\end{itemdecl}
+\color{black}
+
+\editorial{The non-templated \tcode{X::construct} has been removed
+from the \tcode{Allocator} requirements because it implies that the
+\tcode{value_type} is \tcode{CopyConstructible} (which we do not want
+as a requirement in the \tcode{Allocator} concept). The templated
+version is more general, allowing in-place and move construction.}
+
+\begin{itemdescr}
+\pnum
+\effects\
+\tcode{::new((void*)p) T(forward<V>(v))}
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+void X::destroy(pointer p);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\
+\tcode{((T*)p)->$\sim$T()}
+\end{itemdescr}
+
+\pnum
+\addedConcepts{The \mbox{\tcode{AllocatorGenerator}} concept describes
+  the requirements on types that can be used to generate
+  \mbox{\tcode{Allocator}}s.}
+
+\color{addclr}
+\begin{itemdecl}
+concept AllocatorGenerator<typename X> : Regular<X> {
+  typename value_type               = typename X::value_type;
+  template<typename T> class rebind = @\textit{see below}@;
+
+  @\textcolor{addclr}{requires}@ SameType<rebind<value_type>, X>;
+}
+\end{itemdecl}
+\color{black}
+
+\begin{itemdecl}
+@\addedConcepts{template<typename T> class rebind;}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\ctype}}
+The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
+typedef template}{is a template that produces allocator generators in the same
+  family as \mbox{\tcode{X}}}: if the name
+\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
+to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
+\mbox{\tcode{SomeAllocator<value_type>}}},
+then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
+\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. \addedConcepts{The
+  default value for \mbox{\tcode{rebind}} is a template
+  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
+  \mbox{\tcode{X::template}} \mbox{\tcode{rebind<U>::other}}.}
+\end{itemdescr}
+
+\pnum
+Two allocators \addedConcepts{or allocator generators} compare equal with \tcode{==}
+iff storage allocated from each can be deallocated via the other.
+
+\pnum \addedConcepts{Every \mbox{\tcode{Allocator}} also meets the
+  requirements of the \mbox{\tcode{AllocatorGenerator}} concept:}
+\color{addclr}
+\begin{itemdecl}
+template<Allocator X>
+concept_map AllocatorGenerator<X> {
+  typedef Allocator<X>::value_type value_type;
+  template<typename U> using rebind = Allocator<X>::rebind<U>;
+}
+\end{itemdecl}
+\color{black}
+
+\pnum
+Implementations of containers described in this International Standard
+are permitted to assume that their \tcode{Alloc}\removedConcepts{\mbox{\tcode{ator}}} template parameter meets
+the following two additional requirements beyond those in
+\changedConcepts{Table~40}{the Allocator concept}.
+
+\begin{itemize}
+\item
+All instances of a given allocator type are required to be interchangeable
+and always compare equal to each other.
+\item
+\removedConcepts{The typedef members pointer, const\_pointer, size\_type,
+and difference\_type are required to be T*, T const*,
+std::size\_t, and std::ptrdiff\_t, respectively.} \color{addclr}The
+requirements clause may contain the following additional requirements: 
+\tcode{SameType<Alloc::pointer, Alloc::value_type*>}, \tcode{SameType<Alloc::const_pointer,
+  const Alloc::value_type*>}, \tcode{SameType<Alloc::size_type, std::size_t>}, and
+\tcode{SameType<Alloc::difference_type, std::ptrdiff_t>}.
+\end{itemize}
+
+\pnum
+Implementors are encouraged to supply libraries that can accept allocators
+that encapsulate more general memory models and that support non-equal
+instances.
+In such implementations, any requirements imposed on allocators
+by containers beyond those requirements that appear in
+\changedConcepts{Table~40}{concept Allocator}, and the
+semantics of containers and algorithms when allocator instances compare
+non-equal, are implementation-defined.
+
+\section*{Acknowledgments}
+Thanks to Walter Brown and Daniel Kr\"ugler for providing corrections
+to and noting omissions from this document. 
+
+\end{document}

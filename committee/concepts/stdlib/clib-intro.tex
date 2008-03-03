@@ -1,0 +1,392 @@
+\documentclass[american,twoside]{book}
+\usepackage{hyperref}
+\usepackage{refbib}
+\input{macros}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{1}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Concepts for the C++0x Standard Library: Introduction
+
+\vspace{0.5in}
+
+\normalsize
+Douglas Gregor, Jeremiah Willcock, and Andrew Lumsdaine \\
+Open Systems Laboratory \\
+Indiana University \\
+Bloomington, IN\ \  47405 \\
+\{\href{mailto:dgregor@cs.indiana.edu}{dgregor}, \href{mailto:jewillco@cs.indiana.edu}{jewillco}, \href{mailto:lums@cs.indiana.edu}{lums}\}@cs.indiana.edu
+\end{center}
+
+\vspace{1in}
+\par\noindent Document number: N2037=06-0107\vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@cs.indiana.edu}{dgregor@cs.indiana.edu}$>$\vspace{-6pt}
+
+\section*{Introduction}
+\libintrotext{Chapter 17}.
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\setcounter{chapter}{16}
+\rSec0[lib.library]{Library introduction}
+\rSec1[lib.definitions]{Definitions}
+
+\setcounter{subsection}{18}
+\definition{traits class}{defns.traits}
+
+\removedConcepts{a class that encapsulates a set of types and
+  functions necessary for class templates and function templates to
+  manipulate objects of types for which they are instantiated. Traits
+  classes defined in clauses 21, 22 and 27 are chararacter traits,
+  which provide the character handling support needed by the string
+  and iostream classes.}
+
+\definition{wide-oriented iostream classes}{defns.wide.iostream}
+
+\index{classes!wide-oriented iostream}%
+the instantiations of the iostream class templates
+on the character container class
+\tcode{wchar_t}
+\removedConcepts{and the default value of the
+traits
+parameter}
+(\ref{lib.wide.stream.objects}).
+
+\setcounter{section}{2}
+\rSec1[lib.description]{Method of description (Informative)}
+\rSec2[lib.structure]{Structure of each subclause}
+\setcounter{subsubsection}{1}
+\rSec3[lib.structure.requirements]{Requirements}
+
+\pnum
+\index{requirements}%
+The library can be extended by a \Cpp\ program.
+Each clause, as applicable, describes the requirements that such extensions must meet.
+Such extensions are generally one of the following:
+
+\begin{itemize}
+\item
+Template arguments
+\item
+Derived classes
+\item
+Containers, iterators, and/or algorithms that meet an interface convention
+\end{itemize}
+
+\pnum
+\removedConcepts{The string and iostreams components use an explicit representation of operations required of template arguments.
+They use a
+class template
+char_traits
+to define these constraints.}
+
+\pnum
+\removedConcepts{Interface convention requirements are stated as generally as possible.
+Instead of stating ``class X has to define a member function
+operator++(),''
+the interface requires ``for any object
+x
+of class
+X,
+++x
+is defined.''
+That is, whether the operator is a member is unspecified.}
+
+\pnum
+Requirements are stated in terms of \changedConcepts{well-defined
+expressions}{concepts}, which define \changedConcepts{valid terms}{capabilities} of the types that satisfy the requirements.
+For every set of requirements there is a \changedConcepts{table}{concept} that specifies \changedConcepts{an initial set of the valid expressions}{the requirements} and their semantics
+(\ref{lib.allocator.requirements}, \ref{lib.container.requirements}, \ref{lib.iterator.requirements}).
+Any generic algorithm (clause \ref{lib.algorithms}) that uses the \changedConcepts{requirements}{concepts} \changedConcepts{is described in terms of the valid expressions for}{places requirements on} its
+formal type parameters.
+
+\pnum
+\removedConcepts{Template argument requirements are sometimes referenced by name.
+See 17.3.2.1}.
+
+\pnum
+In some cases the semantic requirements are presented as \Cpp\ code.
+Such code is intended as a
+specification of equivalence of a construct to another construct, not necessarily as the way the construct
+must be implemented.%
+\footnote{
+Although in some cases the code given is unambiguously the optimum implementation.
+}
+
+\rSec2[lib.conventions]{Other conventions}
+\rSec3[lib.type.descriptions]{Type descriptions}
+\pnum
+\removedConcepts{
+The Requirements subclauses may describe names that are used to specify
+constraints on template arguments.}%
+\footnote{
+\removedConcepts{
+Examples from 20.1 include:
+EqualityComparable,
+LessThanComparable,
+CopyConstructable,
+etc.
+Examples from 24.1 include:
+InputIterator,
+ForwardIterator,
+Function,
+Predicate,
+etc.}
+}
+\removedConcepts{These names are used in clauses 20, 23, 25, and 26
+to describe the types that
+may be supplied as arguments by a C++ program when instantiating template components from
+the library.}
+
+\pnum
+Certain types defined in clause \ref{lib.input.output} are used to describe implementation-defined types.
+\index{types!implementation-defined}%
+They are based on other types, but with added constraints.
+
+\rSec1[lib.requirements]{Library-wide requirements}
+\rSec2[lib.organization]{Library contents and organization}
+\rSec3[lib.contents]{Library contents}
+\pnum
+The \Cpp\ Standard Library provides definitions for the following types of entities:
+Macros, Values, Types, \addedConcepts{Concepts, Concept maps, }Templates, Classes,
+Functions, Objects.
+
+\pnum
+All library entities except macros,
+\tcode{operator new}
+and
+\tcode{operator delete}
+are defined within the namespace
+\tcode{std}\
+or namespaces nested within namespace
+\tcode{std}.%
+\index{namespace}\
+
+\pnum
+Whenever a name \tcode{x}\ defined in the standard library is mentioned,
+the name \tcode{x}\ is assumed to be fully qualified as
+\tcode{::std::x},
+unless explicitly described otherwise. For example, if the Effects section
+for library function \tcode{F}\ is described as calling library function \tcode{G},
+the function
+\tcode{::std::G}\
+is meant.
+
+\rSec3[lib.headers]{Headers}
+
+% 17.3.1.2 Headers [lib.headers]
+% CD2 comment UK 682
+% Steve Rumsby
+\pnum
+The elements of the \Cpp\ Standard Library are declared or defined (as appropriate) in a
+\techterm{header}.%
+\footnote{
+A header is not necessarily a source file, nor are the sequences delimited by
+\tcode{<}
+and
+\tcode{>}
+in header names necessarily valid source file names (\ref{cpp.include}).
+}
+
+% 17.3.1.2 Headers [lib.headers]
+% CD2 comment UK 682
+% Steve Rumsby
+\pnum
+The \Cpp\ Standard Library provides
+\changedConcepts{33}{34}
+\techterm{\Cpp\ headers},
+\index{headers!\Cpp\ }%
+as shown in Table~\ref{tab:cpp.library.headers}.
+
+\setcounter{table}{10}
+\begin{floattable}{\Cpp\ Library Headers}{tab:cpp.library.headers}
+{lllll}
+\topline
+\tcode{<algorithm>}		&       \tcode{<functional>}    &	\tcode{<limits>}	&       \tcode{<ostream>}       &	\tcode{<streambuf>}			\\
+\tcode{<bitset>}		&       \tcode{<iomanip>}       &       \tcode{<list>}          &       \tcode{<queue>}         &	\tcode{<string>}			\\
+\tcode{<complex>}		&       \tcode{<ios>}           &       \tcode{<locale>}        &       \tcode{<set>}           &	\tcode{<typeinfo>}			\\
+\tcode{\textcolor{addclr}{<concepts>}}              &       \tcode{<iosfwd>}        &       \tcode{<map>}           &       \tcode{<sstream>}       &	\tcode{<utility>}			\\
+\tcode{<deque>}                 &       \tcode{<iostream>}      &       \tcode{<memory>}        &       \tcode{<stack>}         &	\tcode{<valarray>}			\\
+\tcode{<exception>}             &       \tcode{<istream>}       &       \tcode{<new>}           &       \tcode{<stdexcept>}     &	\tcode{<vector>}			\\
+\tcode{<fstream>}               &       \tcode{<iterator>}      &       \tcode{<numeric>}       		&       \tcode{<strstream>}     				&							\\
+\end{floattable}
+
+\pnum
+The facilities of the Standard C Library are provided in 18
+\index{library!Standard C}%
+additional headers, as shown in Table~\ref{tab:cpp.c.headers}.
+
+\begin{floattable}{\Cpp\ Headers for C Library Facilities}{tab:cpp.c.headers}
+{lllll}
+\topline
+\tcode{<cassert>}	&	\tcode{<ciso646>}	&	\tcode{<csetjmp>}	&	\tcode{<cstdio>}	&	\tcode{<ctime>}		\\
+\tcode{<cctype>}	&	\tcode{<climits>}	&	\tcode{<csignal>}	&	\tcode{<cstdlib>}	&	\tcode{<cwchar>}	\\
+\tcode{<cerrno>}	&	\tcode{<clocale>}	&	\tcode{<cstdarg>}	&	\tcode{<cstring>}	&	\tcode{<cwctype>}	\\
+\tcode{<cfloat>}	&	\tcode{<cmath>}		&	\tcode{<cstddef>}	&						&						\\
+\end{floattable}
+
+\pnum
+Except as noted in clauses~\ref{lib.language.support}\ through \ref{lib.input.output}\
+and Annex~\ref{depr}\, the contents of each header
+\tcode{c\textit{name}}
+shall be the same as that of the corresponding header
+\tcode{\textit{name}.h},
+as specified in ISO/IEC 9899:1990 Programming Languages C (clause 7),
+or ISO/IEC:1990 Programming Languages --- C AMENDMENT 1: C Integrity,
+(clause 7), as appropriate, as if by inclusion.
+In the \Cpp\ Standard
+% 17.3.1.2 Headers [lib.headers]
+% CD2 comment UK 682
+% Steve Rumsby
+Library, however, the declarations and definitions (except for
+names which are defined as macros in C) are within namespace scope
+(\ref{basic.scope.namespace}) of the namespace
+\tcode{std.}
+
+\pnum
+Names which are defined as macros in C shall be defined as macros in
+% 17.3.1.2 Headers [lib.headers]
+% CD2 comment UK 682
+% Steve Rumsby
+the \Cpp\ Standard Library, even if C grants license for
+implementation as functions.
+\enternote\ 
+the names defined as macros
+in C include the following:
+\tcode{assert},
+\tcode{offsetof},
+\tcode{setjmp},
+\tcode{va_arg},
+\tcode{va_end},
+and
+\tcode{va_start}.
+\exitnote\ 
+
+\pnum
+Names that are defined as functions in C shall be defined as
+% 17.3.1.2 Headers [lib.headers]
+% CD2 comment UK 682
+% Steve Rumsby
+functions in the \Cpp\ Standard Library.%
+\footnote{
+This disallows the practice, allowed in C, of providing a
+"masking macro" in addition to the function prototype.
+The only
+way to achieve equivalent "inline" behavior in \Cpp\ is to provide
+a definition as an extern inline  function.
+}
+
+\pnum
+\addedA{Identifiers that are keywords or operators in \mbox{\Cpp} shall not be defined
+as macros in \mbox{\Cpp} standard library headers.}%
+\footnote{\addedA{In particular, including the standard header \mbox{\tcode{<iso646.h>}}
+or \mbox{\tcode{<ciso646>}} has no effect.}}
+
+\pnum
+\ref{depr.c.headers}, Standard C library headers, describes the effects of using the
+\tcode{\textit{name}.h}
+(C header) form in a \Cpp\ program.%
+\footnote{
+The \tcode{".h"}\ headers dump all their names into the global namespace,
+whereas the newer forms keep their names in namespace
+\tcode{std}.
+Therefore, the newer forms are the preferred forms for all uses except
+for \Cpp\ programs which are intended to be strictly compatible with C.
+}
+
+\setcounter{subsubsection}{2}
+\rSec3[lib.reserved.names]{Reserved names}
+
+\pnum
+It is undefined for a \Cpp\ program to add declarations or definitions to namespace
+\tcode{std}
+or namespaces within namespace
+\tcode{std}
+unless otherwise specified.
+A program may add template specializations for any standard library template
+to namespace
+\tcode{std}.
+\addedConcepts{A program may add concept maps for any standard library
+  concept to namespace std, unless explicitly prohibited.}
+Such a specialization \addedConcepts{or concept map} (complete or partial) of a standard library
+template results in undefined behavior unless the declaration
+depends on a user-defined type of external linkage
+and unless the specialization meets the standard library requirements
+for the original template.%
+\footnote{
+Any library code that instantiates other library templates
+must be prepared to work adequately with any user-supplied specialization
+that meets the minimum requirements of the Standard.
+}
+A program may explicitly instantiate any templates in the standard library
+only if the declaration depends on the name of a user-defined type of external
+linkage and the instantiation meets the standard library requirements for the
+original template.
+
+% 17.3.3.1 Reserved names [lib.reserved.names]
+% CD2 comment UK 682
+% Steve Rumsby
+\pnum
+The \Cpp\ Standard Library reserves the following kinds of names:
+\begin{itemize}
+\item
+Macros
+\item
+Global names
+\item
+Names with external linkage
+\end{itemize}
+
+\pnum
+If the program declares or defines a name in a context where it is
+reserved, other than as explicitly allowed by this clause, the behavior is
+undefined.
+\index{undefined}%
+
+\color{black}
+\bibliographystyle{plain}
+\bibliography{../local}
+
+\end{document}

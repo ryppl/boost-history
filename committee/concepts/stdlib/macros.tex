@@ -1,0 +1,1129 @@
+% Definitions and redefinitions of special commands
+
+\usepackage{babel}      % needed for iso dates
+\usepackage{savesym}		% suppress duplicate macro definitions
+\usepackage{fancyhdr}		% more flexible headers and footers
+\usepackage{listings}		% code listings
+\usepackage{longtable}	% auto-breaking tables
+\usepackage{remreset}		% remove counters from reset list
+\usepackage{booktabs}		% fancy tables
+\usepackage{relsize}		% provide relative font size changes
+\usepackage[htt]{hyphenat}	% hyphenate hyphenated words: conflicts with underscore
+\savesymbol{BreakableUnderscore}	% suppress BreakableUnderscore defined in hyphenat
+									                % (conflicts with underscore)
+\usepackage{underscore}	% remove special status of '_' in ordinary text
+\usepackage{verbatim}		% improved verbatim environment
+\usepackage{parskip}		% handle non-indented paragraphs "properly"
+\usepackage{array}			% new column definitions for tables
+\usepackage[iso]{isodate} % use iso format for dates
+\usepackage{soul}       % strikeouts and underlines for difference markups
+\usepackage{color}      % define colors for strikeouts and underlines
+
+\usepackage[T1]{fontenc}
+\usepackage{ae}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+
+%%--------------------------------------------------
+%% Sectioning macros.  
+% Each section has a depth, an automatically generated section 
+% number, a name, and a short tag.  The depth is an integer in 
+% the range [0,5].  (If it proves necessary, it wouldn't take much
+% programming to raise the limit from 5 to something larger.)
+
+
+% The basic sectioning command.  Example:
+%    \Sec1[intro.scope]{Scope}
+% defines a first-level section whose name is "Scope" and whose short
+% tag is intro.scope.  The square brackets are mandatory.
+\def\Sec#1[#2]#3{{%
+\ifcase#1\let\s=\chapter
+      \or\let\s=\section
+      \or\let\s=\subsection
+      \or\let\s=\subsubsection
+      \or\let\s=\paragraph
+      \or\let\s=\subparagraph
+      \fi%
+\s[#3]{#3\hfill[#2]}\relax\label{#2}}}
+
+% A convenience feature (mostly for the convenience of the Project
+% Editor, to make it easy to move around large blocks of text):
+% the \rSec macro is just like the \Sec macro, except that depths 
+% relative to a global variable, SectionDepthBase.  So, for example,
+% if SectionDepthBase is 1,
+%   \rSec1[temp.arg.type]{Template type arguments}
+% is equivalent to
+%   \Sec2[temp.arg.type]{Template type arguments}
+
+\newcounter{SectionDepthBase}
+\newcounter{scratch}
+
+\def\rSec#1[#2]#3{{%
+\setcounter{scratch}{#1}
+\addtocounter{scratch}{\value{SectionDepthBase}}
+\Sec{\arabic{scratch}}[#2]{#3}}}
+
+% Change the way section headings are formatted.
+%\renewcommand{\chaptername}{}
+\renewcommand{\appendixname}{Annex}
+
+\makeatletter
+\def\@makechapterhead#1{%
+  \hrule\vspace*{1.5\p@}\hrule
+  \vspace*{16\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+        \huge\bfseries \@chapapp\space \thechapter\space\space\space\space
+    \fi
+    \interlinepenalty\@M
+    \huge \bfseries #1\par\nobreak
+  \vspace*{16\p@}%
+  \hrule\vspace*{1.5\p@}\hrule
+  \vspace*{48\p@}
+  }}
+
+\renewcommand\section{\@startsection{section}{1}{0pt}%
+                                   {-3.5ex plus -1ex minus -.2ex}%
+                                   {.3ex plus .2ex}%
+                                   {\normalfont\normalsize\bfseries}}
+\renewcommand\section{\@startsection{section}{1}{0pt}%
+                                   {2.5ex}% plus 1ex minus .2ex}%
+                                   {.3ex}% plus .1ex minus .2 ex}%
+                                   {\normalfont\normalsize\bfseries}}
+
+\renewcommand\subsection{\@startsection{subsection}{2}{0pt}%
+                                     {-3.25ex plus -1ex minus -.2ex}%
+                                     {.3ex plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{0pt}%
+                                     {-3.25ex plus -1ex minus -.2ex}%
+                                     {.3ex plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+
+\renewcommand\paragraph{\@startsection{paragraph}{4}{0pt}%
+                                     {-3.25ex plus -1ex minus -.2ex}%
+                                     {.3ex \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{0pt}%
+                                     {-3.25ex plus -1ex minus -.2ex}%
+                                     {.3ex plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\makeatother
+
+%%--------------------------------------------------
+% Heading style for Annexes
+\newcommand{\Annex}[3]{\chapter[#2]{\\(#3)\\#2\hfill[#1]}\relax\label{#1}}
+\newcommand{\infannex}[2]{\Annex{#1}{#2}{informative}}
+\newcommand{\normannex}[2]{\Annex{#1}{#2}{normative}}
+
+\newcommand{\synopsis}[1]{\textbf{#1}}
+
+%%--------------------------------------------------
+% General code style
+\newcommand{\CodeStyle}{\ttfamily}
+\newcommand{\CodeStylex}[1]{\texttt{#1}}
+
+% Code and definitions embedded in text.
+\newcommand{\tcode}[1]{\CodeStylex{#1}}
+\newcommand{\techterm}[1]{\textit{#1}}
+
+%%--------------------------------------------------
+%% allow line break if needed for justification
+\newcommand{\brk}{\discretionary{}{}{}}
+%  especially for scope qualifier
+\newcommand{\colcol}{\brk::\brk}
+
+%%--------------------------------------------------
+%% Macros for funky text
+\newcommand{\Rplus}{\protect\nolinebreak\hspace{-.07em}\protect\raisebox{.25ex}{\small\textbf{+}}}
+\newcommand{\Cpp}{C\Rplus\Rplus}
+\newcommand{\opt}{$_\mathit{opt}$}
+\newcommand{\shl}{<{<}}
+\newcommand{\shr}{>{>}}
+\newcommand{\dcr}{-{-}}
+
+%% Notes and examples
+\newcommand{\EnterBlock}[1]{[\,\textit{#1:}}
+\newcommand{\ExitBlock}[1]{\textit{\ ---\,end #1}\,]}
+\newcommand{\enternote}{\EnterBlock{Note}}
+\newcommand{\exitnote}{\ExitBlock{note}}
+\newcommand{\enterexample}{\EnterBlock{Example}}
+\newcommand{\exitexample}{\ExitBlock{example}}
+
+%% Library function descriptions
+\newcommand{\Fundescx}[1]{\textit{#1}}
+\newcommand{\Fundesc}[1]{\Fundescx{#1:}}
+\newcommand{\required}{\Fundesc{Required behavior}}
+\newcommand{\requires}{\Fundesc{Requires}}
+\newcommand{\effects}{\Fundesc{Effects}}
+\newcommand{\postconditions}{\Fundesc{Postconditions}}
+\newcommand{\postcondition}{\Fundesc{Postcondition}}
+\newcommand{\preconditions}{\Fundesc{Preconditions}}
+\newcommand{\precondition}{\Fundesc{Precondition}}
+\newcommand{\returns}{\Fundesc{Returns}}
+\newcommand{\throws}{\Fundesc{Throws}}
+\newcommand{\default}{\Fundesc{Default behavior}}
+\newcommand{\complexity}{\Fundesc{Complexity}}
+\newcommand{\note}{\Fundesc{Remark}}
+\newcommand{\notes}{\Fundesc{Remarks}}
+\newcommand{\implimits}{\Fundesc{Implementation limits}}
+\newcommand{\replaceable}{\Fundesc{Replaceable}}
+\newcommand{\exceptionsafety}{\Fundesc{Exception safety}}
+\newcommand{\returntype}{\Fundesc{Return type}}
+\newcommand{\cvalue}{\Fundesc{Value}}
+\newcommand{\ctype}{\Fundesc{Type}}
+
+%% Cross reference
+\newcommand{\xref}{\textsc{See also:}}
+
+%% NTBS, etc.
+\newcommand{\NTS}[1]{\textsc{#1}}
+\newcommand{\ntbs}{\NTS{ntbs}}
+\newcommand{\ntmbs}{\NTS{ntmbs}}
+\newcommand{\ntwcs}{\NTS{ntwcs}}
+
+%% Function argument
+\newcommand{\farg}[1]{\texttt{\textit{#1}}}
+
+%% Code annotations
+\newcommand{\EXPO}[1]{\textbf{#1}}
+\newcommand{\expos}{\EXPO{exposition only}}
+\newcommand{\exposr}{\hfill\expos}
+\newcommand{\exposrc}{\hfill// \expos}
+\newcommand{\impdef}{\EXPO{implementation-defined}}
+\newcommand{\notdef}{\EXPO{not defined}}
+
+%% Double underscore
+\newcommand{\unun}{\_\,\_}
+\newcommand{\xname}[1]{\unun\,#1}
+\newcommand{\mname}[1]{\tcode{\unun\,#1\,\unun}}
+
+%% Ranges
+\newcommand{\Range}[4]{\tcode{#1\brk{}#3,\brk{}#4\brk{}#2}}
+\newcommand{\crange}[2]{\Range{[}{]}{#1}{#2}}
+\newcommand{\orange}[2]{\Range{(}{)}{#1}{#2}}
+\newcommand{\range}[2]{\Range{[}{)}{#1}{#2}}
+
+%% Unspecified et al
+\newcommand{\UNSP}[1]{\textit{#1}}
+\newcommand{\unspec}{\UNSP{unspecified}}
+\newcommand{\unspecbool}{\UNSP{unspecified-bool-type}}
+\newcommand{\unspecnull}{\UNSP{unspecified-null-pointer-type}}
+\newcommand{\seebelow}{\UNSP{see below}}
+%% Change descriptions
+\newcommand{\diffdef}[1]{\hfill\break\textbf{#1:}}
+\newcommand{\change}{\diffdef{Change}}
+\newcommand{\rationale}{\diffdef{Rationale}}
+\newcommand{\effect}{\diffdef{Effect on original feature}}
+\newcommand{\difficulty}{\diffdef{Difficulty of converting}}
+\newcommand{\howwide}{\diffdef{How widely used}}
+
+%% Difference markups
+\definecolor{addclr}{rgb}{0,.4,.4}
+\definecolor{remclr}{rgb}{1,0,0}
+\newcommand{\added}[1]{\textcolor{addclr}{\ul{#1}}}
+\newcommand{\removed}[1]{\textcolor{remclr}{\st{#1}}}
+\newcommand{\changed}[2]{\removed{#1}\added{#2}}
+
+%% October, 2005 changes
+\newcommand{\addedA}[1]{#1}
+\newcommand{\removedA}[1]{}
+\newcommand{\changedA}[2]{#2}
+
+%% April, 2006 changes
+\newcommand{\addedB}[1]{#1}
+\newcommand{\removedB}[1]{}
+\newcommand{\changedB}[2]{#2}
+\newcommand{\marktr}{}
+\makeatletter
+\newcommand\ptr{\noindent\llap{{\footnotesize{TR1:}}\hspace{\@totalleftmargin}\quad}}
+\makeatother
+\newcommand{\addedC}[1]{#1}
+\newcommand{\removedC}[1]{}
+\newcommand{\changedC}[2]{#2}
+\newcommand{\additemC}[1]{\item #1}
+\newcommand{\addedD}[1]{#1}
+\newcommand{\removedD}[1]{}
+\newcommand{\changedD}[2]{#2}
+\newcommand{\remfootnoteD}[1]{}
+
+%% Miscellaneous
+\newcommand{\uniquens}{\textrm{\textit{\textbf{unique}}}}
+\newcommand{\stage}[1]{\item{\textbf{Stage #1:}}}
+
+%%--------------------------------------------------
+%% Adjust markers
+\renewcommand{\thetable}{\arabic{table}}
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thefootnote}{\arabic{footnote})}
+
+%% Change list item markers from box to dash
+\renewcommand{\labelitemi}{---}
+\renewcommand{\labelitemii}{---}
+\renewcommand{\labelitemiii}{---}
+\renewcommand{\labelitemiv}{---}
+
+%%--------------------------------------------------
+%% Environments for code listings.
+
+% We use the 'listings' package, with some small customizations.  The
+% most interesting customization: all TeX commands are available
+% within comments.  Comments are set in italics, keywords and strings
+% don't get special treatment.
+
+\lstset{language=C++,
+        basicstyle=\CodeStyle\small,
+        keywordstyle=,
+        stringstyle=,
+        xleftmargin=1em,
+        showstringspaces=false,
+        commentstyle=\itshape\rmfamily,
+        columns=flexible,
+        keepspaces=true,
+        texcl=true}
+
+% Our usual abbreviation for 'listings'.  Comments are in 
+% italics.  Arbitrary TeX commands can be used if they're 
+% surrounded by @ signs.
+\lstnewenvironment{codeblock}
+{
+ \lstset{escapechar=@}
+ \renewcommand{\tcode}[1]{\textup{\CodeStyle##1}}
+ \renewcommand{\techterm}[1]{\textit{##1}}
+}
+{
+}
+
+% Permit use of '@' inside codeblock blocks (don't ask)
+\makeatletter
+\newcommand{\atsign}{@}
+\makeatother
+
+%%--------------------------------------------------
+%% Paragraph numbering
+\newcounter{Paras}
+\makeatletter
+\@addtoreset{Paras}{chapter}
+\@addtoreset{Paras}{section}
+\@addtoreset{Paras}{subsection}
+\@addtoreset{Paras}{subsubsection}
+\@addtoreset{Paras}{paragraph}
+\@addtoreset{Paras}{subparagraph}
+\def\pnum{\addtocounter{Paras}{1}\noindent\llap{{\footnotesize\arabic{Paras}}\hspace{\@totalleftmargin}\quad}}
+\makeatother
+
+% For compatibility only.  We no longer need this environment.
+\newenvironment{paras}{}{}
+
+%%--------------------------------------------------
+%% Indented text
+\newenvironment{indented}
+{\list{}{}\item\relax}
+{\endlist}
+
+%%--------------------------------------------------
+%% Library item descriptions
+\lstnewenvironment{itemdecl}
+{
+ \lstset{escapechar=@,
+ xleftmargin=0em,
+ aboveskip=2ex,
+ belowskip=0ex	% leave this alone: it keeps these things out of the
+				% footnote area
+ }
+}
+{
+}
+
+\newenvironment{itemdescr}
+{
+ \begin{indented}}
+{
+ \end{indented}
+}
+
+
+%%--------------------------------------------------
+%% Bnf environments
+\newlength{\BnfIndent}
+\setlength{\BnfIndent}{\leftmargini}
+\newlength{\BnfInc}
+\setlength{\BnfInc}{\BnfIndent}
+\newlength{\BnfRest}
+\setlength{\BnfRest}{2\BnfIndent}
+\newcommand{\BnfNontermshape}{\rmfamily\itshape\small}
+\newcommand{\BnfTermshape}{\ttfamily\upshape\small}
+\newcommand{\nonterminal}[1]{{\BnfNontermshape #1}}
+
+\newenvironment{bnfbase}
+ {
+ \newcommand{\terminal}[1]{{\BnfTermshape ##1}}
+ \newcommand{\descr}[1]{\normalfont{##1}}
+ \newcommand{\bnfindentfirst}{\BnfIndent}
+ \newcommand{\bnfindentinc}{\BnfInc}
+ \newcommand{\bnfindentrest}{\BnfRest}
+ \begin{minipage}{.9\hsize}
+ \newcommand{\br}{\hfill\\}
+ }
+ {
+ \end{minipage}
+ }
+
+\newenvironment{BnfTabBase}[1]
+{
+ \begin{bnfbase}
+ #1
+ \begin{indented}
+ \begin{tabbing}
+ \hspace*{\bnfindentfirst}\=\hspace{\bnfindentinc}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\hspace{.6in}\=\kill%
+}
+{
+ \end{tabbing}
+ \end{indented}
+ \end{bnfbase}
+}
+
+\newenvironment{bnfkeywordtab}
+{
+ \begin{BnfTabBase}{\BnfTermshape}
+}
+{
+ \end{BnfTabBase}
+}
+
+\newenvironment{bnftab}
+{
+ \begin{BnfTabBase}{\BnfNontermshape}
+}
+{
+ \end{BnfTabBase}
+}
+
+\newenvironment{simplebnf}
+{
+ \begin{bnfbase}
+ \BnfNontermshape
+ \begin{indented}
+}
+{
+ \end{indented}
+ \end{bnfbase}
+}
+
+\newenvironment{bnf}
+{
+ \begin{bnfbase}
+ \list{}
+	{
+	\setlength{\leftmargin}{\bnfindentrest}
+	\setlength{\listparindent}{-\bnfindentinc}
+	\setlength{\itemindent}{\listparindent}
+	}
+ \BnfNontermshape
+ \item\relax
+}
+{
+ \endlist
+ \end{bnfbase}
+}
+
+% non-copied versions of bnf environments
+\newenvironment{ncbnftab}
+{
+ \begin{bnftab}
+}
+{
+ \end{bnftab}
+}
+
+\newenvironment{ncsimplebnf}
+{
+ \begin{simplebnf}
+}
+{
+ \end{simplebnf}
+}
+
+\newenvironment{ncbnf}
+{
+ \begin{bnf}
+}
+{
+ \end{bnf}
+}
+
+%%--------------------------------------------------
+%% Drawing environment
+%
+% usage: \begin{drawing}{UNITLENGTH}{WIDTH}{HEIGHT}{CAPTION}
+\newenvironment{drawing}[4]
+{
+\begin{figure}[h]
+\setlength{\unitlength}{#1}
+\begin{center}
+\begin{picture}(#2,#3)\thicklines
+}
+{
+\end{picture}
+\end{center}
+%\caption{Directed acyclic graph}
+\end{figure}
+}
+
+%%--------------------------------------------------
+%% Table environments
+
+% Base definitions for tables
+\newenvironment{TableBase}
+{
+ \renewcommand{\tcode}[1]{{\CodeStyle##1}}
+ \newcommand{\topline}{\hline}
+ \newcommand{\capsep}{\hline\hline}
+ \newcommand{\rowsep}{\hline}
+ \newcommand{\bottomline}{\hline}
+
+%% vertical alignment
+ \newcommand{\rb}[1]{\raisebox{1.5ex}[0pt]{##1}}	% move argument up half a row
+
+%% header helpers
+ \newcommand{\hdstyle}[1]{\textbf{##1}}				% set header style
+ \newcommand{\Head}[3]{\multicolumn{##1}{##2}{\hdstyle{##3}}}	% add title spanning multiple columns
+ \newcommand{\lhdrx}[2]{\Head{##1}{|c}{##2}}		% set header for left column spanning #1 columns
+ \newcommand{\chdrx}[2]{\Head{##1}{c}{##2}}			% set header for center column spanning #1 columns
+ \newcommand{\rhdrx}[2]{\Head{##1}{c|}{##2}}		% set header for right column spanning #1 columns
+ \newcommand{\ohdrx}[2]{\Head{##1}{|c|}{##2}}		% set header for only column spanning #1 columns
+ \newcommand{\lhdr}[1]{\lhdrx{1}{##1}}				% set header for single left column
+ \newcommand{\chdr}[1]{\chdrx{1}{##1}}				% set header for single center column
+ \newcommand{\rhdr}[1]{\rhdrx{1}{##1}}				% set header for single right column
+ \newcommand{\ohdr}[1]{\ohdrx{1}{##1}}
+ \newcommand{\br}{\hfill\break}						% force newline within table entry
+
+%% column styles
+ \newcolumntype{x}[1]{>{\raggedright\let\\=\tabularnewline}p{##1}}	% word-wrapped ragged-right
+ 																	% column, width specified by #1
+ \newcolumntype{m}[1]{>{\CodeStyle}l{##1}}							% variable width column, all entries in CodeStyle
+}
+{
+}
+
+% General Usage: TITLE is the title of the table, XREF is the
+% cross-reference for the table. LAYOUT is a sequence of column
+% type specifiers (e.g. cp{1.0}c), without '|' for the left edge
+% or right edge.
+
+% usage: \begin{floattablebase}{TITLE}{XREF}{COLUMNS}{PLACEMENT}
+% produces floating table, location determined within limits
+% by LaTeX.
+\newenvironment{floattablebase}[4]
+{
+ \begin{TableBase}
+ \begin{table}[#4]
+ \caption{\label{#2}#1}
+ \begin{center}
+ \begin{tabular}{|#3|}
+}
+{
+ \bottomline
+ \end{tabular}
+ \end{center}
+ \end{table}
+ \end{TableBase}
+}
+
+% usage: \begin{floattable}{TITLE}{XREF}{COLUMNS}
+% produces floating table, location determined within limits
+% by LaTeX.
+\newenvironment{floattable}[3]
+{
+ \begin{floattablebase}{#1}{#2}{#3}{htbp}
+}
+{
+ \end{floattablebase}
+}
+
+% usage: \begin{tokentable}{TITLE}{XREF}{HDR1}{HDR2}
+% produces six-column table used for lists of replacement tokens;
+% the columns are in pairs -- left-hand column has header HDR1,
+% right hand column has header HDR2; pairs of columns are separated
+% by vertical lines. Used in "trigraph sequences" table in standard.
+\newenvironment{tokentable}[4]
+{
+ \begin{floattablebase}{#1}{#2}{cc|cc|cc}{htbp}
+ \topline
+ \textit{#3}   &   \textit{#4}    &
+ \textit{#3}   &   \textit{#4}    &
+ \textit{#3}   &   \textit{#4}    \\ \capsep
+}
+{
+ \end{floattablebase}
+}
+
+% usage: \begin{libsumtabase}{TITLE}{XREF}{HDR1}{HDR2}
+% produces two-column table with column headers HDR1 and HDR2.
+% Used in "Library Categories" table in standard, and used as
+% base for other library summary tables.
+\newenvironment{libsumtabbase}[4]
+{
+ \begin{floattable}{#1}{#2}{ll}
+ \topline
+ \lhdr{#3}	&	\hdstyle{#4}	\\ \capsep
+}
+{
+ \end{floattable}
+}
+
+% usage: \begin{libsumtab}{TITLE}{XREF}
+% produces two-column table with column headers "Subclause" and "Header(s)".
+% Used in "C++ Headers for Freestanding Implementations" table in standard.
+\newenvironment{libsumtab}[2]
+{
+ \begin{libsumtabbase}{#1}{#2}{Subclause}{Header(s)}
+}
+{
+ \end{libsumtabbase}
+}
+
+% usage: \begin{LibSynTab}{CAPTION}{TITLE}{XREF}{COUNT}{LAYOUT}
+% produces table with COUNT columns. Used as base for
+% C library description tables
+\newcounter{LibSynTabCols}
+\newcounter{LibSynTabWd}
+\newenvironment{LibSynTabBase}[5]
+{
+ \setcounter{LibSynTabCols}{#4}
+ \setcounter{LibSynTabWd}{#4}
+ \addtocounter{LibSynTabWd}{-1}
+ \newcommand{\centry}[1]{\textbf{##1}:}
+ \newcommand{\macro}{\centry{Macro}}
+ \newcommand{\macros}{\centry{Macros}}
+ \newcommand{\function}{\centry{Function}}
+ \newcommand{\functions}{\centry{Functions}}
+ \newcommand{\templates}{\centry{Templates}}
+ \newcommand{\type}{\centry{Type}}
+ \newcommand{\types}{\centry{Types}}
+ \newcommand{\values}{\centry{Values}}
+ \newcommand{\struct}{\centry{Struct}}
+ \newcommand{\cspan}[1]{\multicolumn{\value{LibSynTabCols}}{|l|}{##1}}
+ \begin{floattable}{#1 \tcode{<#2>}\ synopsis}{#3}
+ {#5}
+ \topline
+ \lhdr{Type}	&	\rhdrx{\value{LibSynTabWd}}{Name(s)}	\\ \capsep
+}
+{
+ \end{floattable}
+}
+
+% usage: \begin{LibSynTab}{TITLE}{XREF}{COUNT}{LAYOUT}
+% produces table with COUNT columns. Used as base for description tables
+% for C library
+\newenvironment{LibSynTab}[4]
+{
+ \begin{LibSynTabBase}{Header}{#1}{#2}{#3}{#4}
+}
+{
+ \end{LibSynTabBase}
+}
+
+% usage: \begin{LibSynTabAdd}{TITLE}{XREF}{COUNT}{LAYOUT}
+% produces table with COUNT columns. Used as base for description tables
+% for additions to C library
+\newenvironment{LibSynTabAdd}[4]
+{
+ \begin{LibSynTabBase}{Additions to header}{#1}{#2}{#3}{#4}
+}
+{
+ \end{LibSynTabBase}
+}
+
+% usage: \begin{libsyntabN}{TITLE}{XREF}
+%        \begin{libsyntabaddN}{TITLE}{XREF}
+% produces a table with N columns for C library description tables
+\newenvironment{libsyntab2}[2]
+{
+ \begin{LibSynTab}{#1}{#2}{2}{ll}
+}
+{
+ \end{LibSynTab}
+}
+
+\newenvironment{libsyntab3}[2]
+{
+ \begin{LibSynTab}{#1}{#2}{3}{lll}
+}
+{
+ \end{LibSynTab}
+}
+
+\newenvironment{libsyntab4}[2]
+{
+ \begin{LibSynTab}{#1}{#2}{4}{llll}
+}
+{
+ \end{LibSynTab}
+}
+
+\newenvironment{libsyntab5}[2]
+{
+ \begin{LibSynTab}{#1}{#2}{5}{lllll}
+}
+{
+ \end{LibSynTab}
+}
+
+\newenvironment{libsyntab6}[2]
+{
+ \begin{LibSynTab}{#1}{#2}{6}{llllll}
+}
+{
+ \end{LibSynTab}
+}
+
+\newenvironment{libsyntabadd2}[2]
+{
+ \begin{LibSynTabAdd}{#1}{#2}{2}{ll}
+}
+{
+ \end{LibSynTabAdd}
+}
+
+\newenvironment{libsyntabadd3}[2]
+{
+ \begin{LibSynTabAdd}{#1}{#2}{3}{lll}
+}
+{
+ \end{LibSynTabAdd}
+}
+
+\newenvironment{libsyntabadd4}[2]
+{
+ \begin{LibSynTabAdd}{#1}{#2}{4}{llll}
+}
+{
+ \end{LibSynTabAdd}
+}
+
+\newenvironment{libsyntabadd5}[2]
+{
+ \begin{LibSynTabAdd}{#1}{#2}{5}{lllll}
+}
+{
+ \end{LibSynTabAdd}
+}
+
+\newenvironment{libsyntabadd6}[2]
+{
+ \begin{LibSynTabAdd}{#1}{#2}{6}{llllll}
+}
+{
+ \end{LibSynTabAdd}
+}
+
+% usage: \begin{LongTable}{TITLE}{XREF}{LAYOUT}
+% produces table that handles page breaks sensibly.
+\newenvironment{LongTable}[3]
+{
+ \begin{TableBase}
+ \begin{longtable}
+ {|#3|}\caption{#1}\label{#2}
+}
+{
+ \bottomline
+ \end{longtable}
+ \end{TableBase}
+}
+
+% usage: \begin{twocol}{TITLE}{XREF}
+% produces a two-column breakable table. Used in
+% "simple-type-specifiers and the types they specify" in the standard.
+\newenvironment{twocol}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {ll}
+}
+{
+ \end{LongTable}
+}
+
+% usage: \begin{libreqtabN}{TITLE}{XREF}
+% produces an N-column brekable table. Used in
+% most of the library clauses for requirements tables.
+% Example at "Position type requirements" in the standard.
+
+\newenvironment{libreqtab1}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.55\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab2}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {lx{.55\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab2a}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.30\hsize}x{.68\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.28\hsize}x{.18\hsize}x{.43\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3a}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.28\hsize}x{.33\hsize}x{.29\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3b}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.40\hsize}x{.25\hsize}x{.25\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3c}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.30\hsize}x{.25\hsize}x{.35\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3d}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.32\hsize}x{.27\hsize}x{.36\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3e}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.38\hsize}x{.27\hsize}x{.25\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab3f}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.40\hsize}x{.22\hsize}x{.31\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab4}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab4a}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.14\hsize}x{.30\hsize}x{.30\hsize}x{.14\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab4b}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.13\hsize}x{.15\hsize}x{.29\hsize}x{.27\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab4c}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.16\hsize}x{.21\hsize}x{.21\hsize}x{.30\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab4d}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.22\hsize}x{.22\hsize}x{.30\hsize}x{.15\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+\newenvironment{libreqtab5}[2]
+{
+ \begin{LongTable}
+ {#1}{#2}
+ {x{.14\hsize}x{.14\hsize}x{.20\hsize}x{.20\hsize}x{.14\hsize}}
+}
+{
+ \end{LongTable}
+}
+
+% usage: \begin{libtab2}{TITLE}{XREF}{LAYOUT}{HDR1}{HDR2}
+% produces two-column table with column headers HDR1 and HDR2.
+% Used in "seekoff positioning" in the standard.
+\newenvironment{libtab2}[5]
+{
+ \begin{floattable}
+ {#1}{#2}{#3}
+ \topline
+ \lhdr{#4}	&	\rhdr{#5}	\\ \capsep
+}
+{
+ \end{floattable}
+}
+
+% usage: \begin{longlibtab2}{TITLE}{XREF}{LAYOUT}{HDR1}{HDR2}
+% produces two-column table with column headers HDR1 and HDR2.
+\newenvironment{longlibtab2}[5]
+{
+ \begin{LongTable}{#1}{#2}{#3}
+ \\ \topline
+ \lhdr{#4}	&	\rhdr{#5}	\\ \capsep
+}
+{
+  \end{LongTable}
+}
+
+% usage: \begin{LibEffTab}{TITLE}{XREF}{HDR2}{WD2}
+% produces a two-column table with left column header "Element"
+% and right column header HDR2, right column word-wrapped with
+% width specified by WD2.
+\newenvironment{LibEffTab}[4]
+{
+ \begin{libtab2}{#1}{#2}{lp{#4}}{Element}{#3}
+}
+{
+ \end{libtab2}
+}
+
+% Same as LibEffTab except that it uses a long table.
+\newenvironment{longLibEffTab}[4]
+{
+ \begin{longlibtab2}{#1}{#2}{lp{#4}}{Element}{#3}
+}
+{
+ \end{longlibtab2}
+}
+
+% usage: \begin{libefftab}{TITLE}{XREF}
+% produces a two-column effects table with right column
+% header "Effect(s) if set", width 4.5 in. Used in "fmtflags effects"
+% table in standard.
+\newenvironment{libefftab}[2]
+{
+ \begin{LibEffTab}{#1}{#2}{Effect(s) if set}{4.5in}
+}
+{
+ \end{LibEffTab}
+}
+
+% Same as libefftab except that it uses a long table.
+\newenvironment{longlibefftab}[2]
+{
+ \begin{longLibEffTab}{#1}{#2}{Effect(s) if set}{4.5in}
+}
+{
+ \end{longLibEffTab}
+}
+
+% usage: \begin{libefftabmean}{TITLE}{XREF}
+% produces a two-column effects table with right column
+% header "Meaning", width 4.5 in. Used in "seekdir effects"
+% table in standard.
+\newenvironment{libefftabmean}[2]
+{
+ \begin{LibEffTab}{#1}{#2}{Meaning}{4.5in}
+}
+{
+ \end{LibEffTab}
+}
+
+% Same as libefftabmean except that it uses a long table.
+\newenvironment{longlibefftabmean}[2]
+{
+ \begin{longLibEffTab}{#1}{#2}{Meaning}{4.5in}
+}
+{
+ \end{longLibEffTab}
+}
+
+% usage: \begin{libefftabvalue}{TITLE}{XREF}
+% produces a two-column effects table with right column
+% header "Value", width 3 in. Used in "basic_ios::init() effects"
+% table in standard.
+\newenvironment{libefftabvalue}[2]
+{
+ \begin{LibEffTab}{#1}{#2}{Value}{3in}
+}
+{
+ \end{LibEffTab}
+}
+
+% Same as libefftabvalue except that it uses a long table and a
+% slightly wider column.
+\newenvironment{longlibefftabvalue}[2]
+{
+ \begin{longLibEffTab}{#1}{#2}{Value}{3.5in}
+}
+{
+ \end{longLibEffTab}
+}
+
+% usage: \begin{liberrtab}{TITLE}{XREF} produces a two-column table
+% with left column header ``Value'' and right header "Error
+% condition", width 4.5 in. Used in regex clause in the TR.
+
+\newenvironment{liberrtab}[2]
+{
+ \begin{libtab2}{#1}{#2}{lp{4.5in}}{Value}{Error condition}
+}
+{
+ \end{libtab2}
+}
+
+% Like liberrtab except that it uses a long table.
+\newenvironment{longliberrtab}[2]
+{
+ \begin{longlibtab2}{#1}{#2}{lp{4.5in}}{Value}{Error condition}
+}
+{
+ \end{longlibtab2}
+}
+
+% enumerate with lowercase letters
+\newenvironment{enumeratea}
+{
+ \renewcommand{\labelenumi}{\alph{enumi})}
+ \begin{enumerate}
+}
+{
+ \end{enumerate}
+}
+
+% enumerate with arabic numbers
+\newenvironment{enumeraten}
+{
+ \renewcommand{\labelenumi}{\arabic{enumi})}
+ \begin{enumerate}
+}
+{
+ \end{enumerate}
+}
+
+%%--------------------------------------------------
+%% Definitions section
+% usage: \definition{name}{xref}
+\newcommand{\definition}[2]{\rSec2[#2]{#1}}
+% for ISO format, use:
+%\newcommand{\definition}[2]
+% {\hfill\\\vspace{.25ex plus .5ex minus .2ex}\\
+% \addtocounter{subsection}{1}%
+% \textbf{\thesubsection\hfill\relax[#2]}\\
+% \textbf{#1}\label{#2}\\
+% }
+%----------------------------------------------------
+% Doug's macros
+
+% For editorial comments.
+\definecolor{editbackground}{rgb}{.8,.8,.8}
+\newcommand{\einline}[1]{\colorbox{editbackground}{#1}}
+\newcommand{\editorial}[1]{\colorbox{editbackground}{\begin{minipage}{\linewidth}#1\end{minipage}}}
+% For editorial comments as footnotes.
+\newcommand{\efootnote}[1]{\footnote{\editorial{#1}}}
+% For editorial "remove this!" comments
+\newcommand{\eremove}[1]{\textcolor{remclr}{[[\textbf{#1}]]}}
+% Macros that note precisely what we're adding, removing, or changing
+% within a paragraph.
+\newcommand{\addedConcepts}[1]{\added{#1}}
+\newcommand{\removedConcepts}[1]{\removed{#1}}
+\newcommand{\changedConcepts}[2]{\changed{#1}{#2}}
+
+%% Concepts revision 4 changes
+\definecolor{ccadd}{rgb}{0,.6,0}
+\newcommand{\addedCC}[1]{\textcolor{ccadd}{\ul{#1}}}
+\newcommand{\removedCC}[1]{\textcolor{remclr}{\st{#1}}}
+\newcommand{\changedCC}[2]{\removedCC{#1}\addedCC{#2}}
+\newcommand{\remitemCC}[1]{\remitem{#1}}
+\newcommand{\additemCC}[1]{\item\addedCC{#1}}
+
+% Changes for Bellevue pre-meeting mailing
+\definecolor{green}{rgb}{0,.6,0}
+\newcommand{\addedZ}[1]{\textcolor{green}{\ul{#1}}}
+\newcommand{\removedZ}[1]{\textcolor{remclr}{\st{#1}}}
+\newcommand{\changedZ}[2]{\removedZ{#1}\addedZ{#2}}
+\newcommand{\remitemZ}[1]{\remitem{#1}}
+\newcommand{\additemZ}[1]{\item\addedZ{#1}}
+
+% Text common to all of the library proposals
+\newcommand{\libintrotext}[1]{This document proposes changes to #1 of
+  the \Cpp{} Standard Library in order to make full use of
+  concepts~\cite{GregorStroustrup07:concepts_wording_rev_1}.  Many of
+  the changes in this document have been verified to work with
+  ConceptGCC and its modified Standard Library implementation. We make
+  every attempt to provide complete backward compatibility with the
+  pre-concept Standard Library, and note each place where we have
+  knowingly changed semantics.
+
+This document is formatted in the same manner as the working draft of
+the \Cpp{} standard (N2284). Future versions of this document will
+track the working draft and the concepts proposal as they
+evolve. Wherever the numbering of a (sub)section matches a section of
+the working paper, the text in this document should be considered
+replacement text, unless editorial comments state otherwise. All
+editorial comments will \einline{have a gray background}.  Changes to
+the replacement text are categorized and typeset as
+\addedConcepts{additions}, \removedConcepts{removals}, or
+\changedConcepts{changes}{modifications}.}
