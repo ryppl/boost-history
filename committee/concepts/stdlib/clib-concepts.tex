@@ -33,7 +33,7 @@
 \begin{center}
 \huge
 Core Concepts for the C++0x Standard Library
-\vspace{0.5in}
+\vspace{0.25in}
 
 \normalsize
 Douglas Gregor and Andrew Lumsdaine \\
@@ -43,8 +43,8 @@ Bloomington, IN\ \  47405 \\
 \{\href{mailto:dgregor@osl.iu.edu}{dgregor}, \href{mailto:lums@osl.iu.edu}{lums}\}@osl.iu.edu
 \end{center}
 
-\vspace{1in}
-\par\noindent Document number: \vspace{-6pt}
+\vspace{0.25in}
+\par\noindent Document number: DRAFT\vspace{-6pt}
 \par\noindent Revises document number: N2502=08-0012\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -94,6 +94,8 @@ changes from the previous wording are \addedCC{highlighted in green}.
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
 
+\paragraph*{Changes from N2502}
+Closed concept issues 6, 12, and 14.
 
 \end{titlepage}
 
@@ -949,9 +951,9 @@ concept_map True<true> { }
 auto concept HasPlus<typename T, typename U = T> {
   typename result_type;
   result_type operator+(T const&, U const&);
-  result_type operator+(T const&, U &&);
-  result_type operator+(T &&, U const&);
-  result_type operator+(T &&, U &&);
+  @\removedCC{result_type operator+(T const\&, U \&\&);}@
+  @\removedCC{result_type operator+(T \&\&, U const\&);}@
+  @\removedCC{result_type operator+(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -964,9 +966,9 @@ auto concept HasPlus<typename T, typename U = T> {
 auto concept HasMinus<typename T, typename U = T> {
   typename result_type;
   result_type operator-(T const&, U const&);
-  result_type operator-(T const&, U &&);
-  result_type operator-(T &&, U const&);
-  result_type operator-(T &&, U &&);
+  @\removedCC{result_type operator-(T const\&, U \&\&);}@
+  @\removedCC{result_type operator-(T \&\&, U const\&);}@
+  @\removedCC{result_type operator-(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -979,9 +981,9 @@ auto concept HasMinus<typename T, typename U = T> {
 auto concept HasMultiply<typename T, typename U = T> {
   typename result_type;
   result_type operator*(T const&, U const&);
-  result_type operator*(T const&, U &&);
-  result_type operator*(T &&, U const&);
-  result_type operator*(T &&, U &&);
+  @\removedCC{result_type operator*(T const\&, U \&\&);}@
+  @\removedCC{result_type operator*(T \&\&, U const\&);}@
+  @\removedCC{result_type operator*(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -994,9 +996,9 @@ auto concept HasMultiply<typename T, typename U = T> {
 auto concept HasDivide<typename T, typename U = T> {
   typename result_type;
   result_type operator/(T const&, U const&);
-  result_type operator/(T const&, U &&);
-  result_type operator/(T &&, U const&);
-  result_type operator/(T &&, U &&);
+  @\removedCC{result_type operator/(T const\&, U \&\&);}@
+  @\removedCC{result_type operator/(T \&\&, U const\&);}@
+  @\removedCC{result_type operator/(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1009,9 +1011,9 @@ auto concept HasDivide<typename T, typename U = T> {
 auto concept HasModulus<typename T, typename U = T> {
   typename result_type;
   result_type operator%(T const&, U const&);
-  result_type operator%(T const&, U &&);
-  result_type operator%(T &&, U const&);
-  result_type operator%(T &&, U &&);
+  @\removedCC{result_type operator\%(T const\&, U \&\&);}@
+  @\removedCC{result_type operator\%(T \&\&, U const\&);}@
+  @\removedCC{result_type operator\%(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1024,7 +1026,7 @@ auto concept HasModulus<typename T, typename U = T> {
 auto concept HasUnaryPlus<typename T> {
   typename result_type;
   result_type operator+(T const&);
-  result_type operator+(T &&);
+  @\removedCC{result_type operator+(T \&\&);}@
 }
 \end{itemdecl}
 
@@ -1037,7 +1039,7 @@ auto concept HasUnaryPlus<typename T> {
 auto concept HasNegate<typename T> {
   typename result_type;
   result_type operator-(T const&);
-  result_type operator-(T &&);
+  @\removedCC{result_type operator-(T \&\&);}@
 }
 \end{itemdecl}
 
@@ -1049,9 +1051,9 @@ auto concept HasNegate<typename T> {
 \begin{itemdecl}
 auto concept HasLogicalAnd<typename T, typename U = T> {
   bool operator&&(T const&, U const&);
-  bool operator&&(T const&, U &&);
-  bool operator&&(T &&, U const&);
-  bool operator&&(T &&, U &&);
+  @\removedCC{bool operator\&\&(T const\&, U \&\&);}@
+  @\removedCC{bool operator\&\&(T \&\&, U const\&);}@
+  @\removedCC{bool operator\&\&(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1063,9 +1065,9 @@ auto concept HasLogicalAnd<typename T, typename U = T> {
 \begin{itemdecl}
 auto concept HasLogicalOr<typename T, typename U = T> {
   bool operator||(T const&, U const&);
-  bool operator||(T const&, U &&);
-  bool operator||(T &&, U const&);
-  bool operator||(T &&, U &&);
+  @\removedCC{bool operator||(T const\&, U \&\&);}@
+  @\removedCC{bool operator||(T \&\&, U const\&);}@
+  @\removedCC{bool operator||(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1077,7 +1079,7 @@ auto concept HasLogicalOr<typename T, typename U = T> {
 \begin{itemdecl}
 auto concept HasLogicalNot<typename T> {
   bool operator!(T const&);
-  bool operator!(T &&);
+  @\removedCC{bool operator!(T \&\&);}@
 }
 \end{itemdecl}
 
@@ -1090,9 +1092,9 @@ auto concept HasLogicalNot<typename T> {
 auto concept HasBitAnd<typename T, typename U = T> {
   typename result_type;
   result_type operator&(T const&, U const&);
-  result_type operator&(T const&, U &&);
-  result_type operator&(T &&, U const&);
-  result_type operator&(T &&, U &&);
+  @\removedCC{result_type operator\&(T const\&, U \&\&);}@
+  @\removedCC{result_type operator\&(T \&\&, U const\&);}@
+  @\removedCC{result_type operator\&(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1105,9 +1107,9 @@ auto concept HasBitAnd<typename T, typename U = T> {
 auto concept HasBitOr<typename T, typename U = T> {
   typename result_type;
   result_type operator|(T const&, U const&);
-  result_type operator|(T const&, U &&);
-  result_type operator|(T &&, U const&);
-  result_type operator|(T &&, U &&);
+  @\removedCC{result_type operator|(T const\&, U \&\&);}@
+  @\removedCC{result_type operator|(T \&\&, U const\&);}@
+  @\removedCC{result_type operator|(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1120,9 +1122,9 @@ auto concept HasBitOr<typename T, typename U = T> {
 auto concept HasBitXor<typename T, typename U = T> {
   typename result_type;
   result_type operator^(T const&, U const&);
-  result_type operator^(T const&, U &&);
-  result_type operator^(T &&, U const&);
-  result_type operator^(T &&, U &&);
+  @\removedCC{result_type operator\^(T const\&, U \&\&);}@
+  @\removedCC{result_type operator\^(T \&\&, U const\&);}@
+  @\removedCC{result_type operator\^(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1135,7 +1137,7 @@ auto concept HasBitXor<typename T, typename U = T> {
 auto concept HasComplement<typename T> {
   typename result_type;
   result_type operator~(T const&);
-  result_type operator~(T &&);
+  @\removedCC{result_type operator$\sim{}$(T \&\&);}@
 }
 \end{itemdecl}
 
@@ -1149,9 +1151,9 @@ auto concept HasComplement<typename T> {
 auto concept HasLeftShift<typename T, typename U = T> {
   typename result_type;
   result_type operator<<(T const&, U const&);
-  result_type operator<<(T const&, U &&);
-  result_type operator<<(T &&, U const&);
-  result_type operator<<(T &&, U &&);
+  @\removedCC{result_type operator$\langle\langle$(T const\&, U \&\&);}@
+  @\removedCC{result_type operator$\langle\langle$(T \&\&, U const\&);}@
+  @\removedCC{result_type operator$\langle\langle$(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1164,9 +1166,9 @@ auto concept HasLeftShift<typename T, typename U = T> {
 auto concept HasRightShift<typename T, typename U = T> {
   typename result_type;
   result_type operator>>(T const&, U const&);
-  result_type operator>>(T const&, U &&);
-  result_type operator>>(T &&, U const&);
-  result_type operator>>(T &&, U &&);
+  @\removedCC{result_type operator$\rangle\rangle$(T const\&, U \&\&);}@
+  @\removedCC{result_type operator$\rangle\rangle$(T \&\&, U const\&);}@
+  @\removedCC{result_type operator$\rangle\rangle$(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
@@ -1190,10 +1192,9 @@ auto concept Dereferenceable<typename T> {
 \begin{itemdecl}
 auto concept Addressable<typename T> {
   typename pointer;
-  typename const_pointer;
-
+  @\removedCC{typename const_pointer;}@
   pointer operator&(T&);
-  const_pointer operator&(const T&);
+  @\removedCC{const_pointer operator\&(const T\&);}@
 }
 \end{itemdecl}
 

@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="6" status="DR">
+<issue num="6" status="WP">
 <title>MoveAssignable assignment operator is incorrect</title>
 <section><sref ref="[concept.copymove]"/></section>
 <submitter>LWG</submitter>
