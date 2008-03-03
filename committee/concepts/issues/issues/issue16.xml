@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="16" status="New">
+<title>ArithmeticLike and IntegralLike concepts</title>
+<section><sref ref="[concept.arithmetic]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>Do we really need <tt>ArithmeticLike</tt>
+  or <tt>IntegralLike</tt>? They're ugly concepts that don't
+  correspond to any mathematical definition, and the requirement of
+  convertibility from long long is a bit weird. The current clause 25
+  proposal uses <tt>IntegralLike</tt>, but maybe it doesn't really
+  need it. Probably those algorithms could be expressed either as real
+  live integer types, built-in types only, or as types that describe
+  an abelian group. <tt>IntegralLike</tt>, complete with things
+  like <tt>&amp;&amp;=</tt>, seems both too constraining and too
+  fuzzy.</p>
+</discussion>
+
+</issue>

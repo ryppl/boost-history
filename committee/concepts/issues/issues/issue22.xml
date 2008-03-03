@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="22" status="New">
+  <title>Oddly-placed and missing <tt>InputIterator</tt> requirements</title>
+<section><sref ref="[input.iterators]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>24.1.1 paragraphs 8 and 9 seem very oddly placed. They seem to be
+    discussing the semantics of <tt>operator==</tt>, but textually
+    they appear to be underneath the signature
+    for <tt>operator-&gt;</tt>. This is probably a purely editorial
+    issue. Another purely editorial issue: "any" should be capitalized
+    at the beginning of the second sentence of paragraph 11.</p>
+  <p>There's something missing in 24.1.1. The semantics of <tt>*r++</tt> has
+   gotten lost in the shuffle. The old requirements table said that
+    <tt>*r++</tt> gave us the value we would have gotten before the
+   increment, but the n2500 version doesn't say that. Based on the
+   words in n2500, all we really know about <tt>*r++</tt> is that it
+   returns some unspecified value that's convertible
+   to <tt>value_type</tt>. Similar issues apply
+   in <tt>OutputIterator</tt>.</p>
+</discussion>
+
+<resolution>
+  <p>
+  </p>
+</resolution>
+</issue>

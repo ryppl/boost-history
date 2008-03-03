@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="24" status="New">
+<title>Convertible and CopyConstructible have different argument orders</title>
+<section><sref ref="[concept.convertible]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>The order of argument in <tt>Convertible</tt>
+  and <tt>Constructible</tt> is different. We should consider changing
+  the name and/or argument order of <tt>Convertible</tt> to make it
+    clearer which argument goes where.</p>
+</discussion>
+
+</issue>

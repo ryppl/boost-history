@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="19" status="New">
+<title>IteratorBase is an implementation detail</title>
+<section><sref ref="[iterator.concepts]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>We're not very happy about <tt>IteratorBase</tt>. It doesn't seem
+  like anything that anyone would ever want to constrain a template
+  on; there's no text following its definition to say what it is and
+  what it's for; it appears unused except as, well, a base; it seems
+  more like a macro to save a few lines of typing in the real
+  concepts. Can we get rid of it? Or can we strengthen it into
+    <tt>TrivialIterator</tt> and base all other iterator concepts on
+    <tt>TrivialIterator</tt> instead?
+  </p>
+</discussion>
+
+</issue>

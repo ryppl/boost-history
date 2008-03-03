@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="10" status="New">
+<title>Remarks should be notes</title>
+<section><sref ref="[utility.concepts]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>General semi-editorial issue: almost all of the "Remarks" are
+  actually notes. This is obviously true in the case of Semiregular,
+  for example. Note: this was due to a misunderstanding of the LaTeX
+  macros, because these were all intended to be notes. Considered an
+  editorial issue.</p>
+</discussion>
+
+</issue>

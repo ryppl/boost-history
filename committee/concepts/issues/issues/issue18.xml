@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="18" status="New">
+<title>Consistent naming for concepts headers</title>
+<section><sref ref="[iterator.concepts]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>Should <tt>&lt;iterator_concepts&gt</tt>
+  and <tt>&lt;iterator&gt;</tt> be different headers? Probably. It's
+  nice to be able to write constrained templates without pulling in
+  all of <tt>&lt;iostream&gt;</tt>, for example. On the other hand,
+  which header should things like <tt>std::iterator</tt>
+  and <tt>std::forward_iterator_tag</tt> go in? Also, at a higher
+  level, some consistent naming or locating policy should be firmly
+  established so that random number concepts, iterator concepts, and
+  other concepts all are coherent.</p>
+</discussion>
+
+</issue>

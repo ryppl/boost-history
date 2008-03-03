@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="6" status="DR">
+<title>MoveAssignable assignment operator is incorrect</title>
+<section><sref ref="[concept.copymove]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>Editorial issue in <tt>MoveAssignable</tt>: the function
+    signature is different in the concept synopsis than it is in
+    paragraph 6, and inconsistent with <tt>CopyAssignable</tt></p>
+</discussion>
+
+<resolution>
+  <p>Update the definition of <tt>MoveAssignable</tt> in paragraph 6
+  of N2502 as follows:</p>
+
+  <pre>auto concept MoveAssignable&lt;typename T, typename U = T&gt; { 
+  typename result_type; 
+  result_type <ins>T::</ins>operator=(<del>T&, </del>U&&); 
+}</pre>
+</resolution>
+
+</issue>

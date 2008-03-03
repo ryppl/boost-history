@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="11" status="New">
+<title>Semiregular concept is strange</title>
+<section><sref ref="[concept.regular]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>Exactly why does <tt>Semiregular</tt> exist, and what's the
+  design criterion for deciding which of the requirements
+  in <tt>Regular</tt> should be relaxed for <tt>Semiregular</tt>?
+  Matt's first thought was that <tt>Semiregular</tt> was there to
+  describe the "almost regular" value type of <tt>std::map</tt>, but
+  that's wrong; in this terminology map's value type is
+  neither <tt>Regular</tt> nor <tt>Semiregular</tt>. Mat wonders
+  whether there are any algorithms that need to distinguish between
+    <tt>Regular</tt> and <tt>Semiregular</tt>. A preliminary search
+  shows no use of it in the latest revision of the
+  concepts-in-clause-25 paper. Can we get rid of <tt>Semiregular</tt>?
+  (Note: <tt>Semiregular</tt> is used in the definition of
+  the <tt>InputIterator</tt> concept.)
+  </p>
+</discussion>
+
+</issue>

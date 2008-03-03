@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="13" status="New">
+<title>Naming consistency in [concept.operator]</title>
+<section><sref ref="[concept.operator]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>Slightly substantive issue: we should consider reviewing the
+  names in 20.1.10 for consistent style. One suggestion is making them
+  consistent with the names of the function objects in 20.5. (Except
+  that some people would like <tt>HasModulus</tt> to have a different
+  name, since x%y isn't strictly speaking the mathematical mod
+  operation, even though the current name is consistent with the 20.5
+  name <tt>std::modulus</tt>. So either that would be an exception to
+  the goal of consistency with 20.5, or it means we need to look for a
+  different naming convention.)</p>
+</discussion>
+
+</issue>

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="2" status="New">
+<title>Requires clause for Destructible is unclear</title>
+<section><sref ref="[concept.destruct]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>What does the Requires clause for Destructible actually mean?
+  "All resources owned by the object" is either false (what about a
+  type with a pointer member variable that doesn't call delete in the
+  destructor?) or vacuous (if you define "owned" resources precisely
+  as the resources that are relinquished in the destructor). This is
+  probably another purely syntactic concept: a type that you can use
+  as the target of a pseudo destructor call, or something like
+  that. If we do believe that this is a purely syntactic construct
+  then we might want to consider renaming it as HasDestructor.</p>
+</discussion>
+
+</issue>

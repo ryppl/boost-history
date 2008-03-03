@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="8" status="New">
+  <title><tt>Swappable</tt> and rvalue references</title>
+<section><sref ref="[concept.copymove]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>Is <tt>Swappable</tt> right, or does it also need
+    a <tt>T&amp;&amp;</tt> signature? We think that <tt>Swappable</tt>
+    does need to cover rvalue reference and that this concept probably
+    needs to be changed, especially in light of this week's tinkering
+    with <tt>swap</tt> and <tt>Swappable</tt> (LWG issue 742), but (a)
+    Nobody in the room understands rvalue references well enough to
+    say for sure, and (b) We aren't sure whether the relaxed signature
+    checking from Tuesday night has any impact. We think the answer
+    might be to put in one <tt>T&amp;</tt> signature, and two other
+    signatures that default to the first.</p>
+</discussion>
+
+</issue>

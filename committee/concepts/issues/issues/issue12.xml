@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="12" status="Ready">
+<title>Update operator concepts based on "Option #2" change in language specification</title>
+<section><sref ref="[concept.operator]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>In light of Tuesday night's "option 2" change, all of the
+  operator concepts in 20.1.10 need to have three of the four
+  signatures removed.</p>
+</discussion>
+
+<resolution>
+  <p>Change all of the operator concepts in the same way as we're changing <tt>HasPlus</tt>, as follows:</p>
+
+  <pre>auto concept HasPlus&lt;typename T, typename U = T&gt; { 
+  typename result_type; 
+  result_type operator+(T const&amp;, U const&amp;); 
+  <del>result_type operator+(T const&amp;, U &amp;&amp;);</del> 
+  <del>result_type operator+(T &amp;&amp;, U const&amp;);</del> 
+  <del>result_type operator+(T &amp;&amp;, U &amp;&amp;);</del> 
+}</pre>
+</resolution>
+</issue>

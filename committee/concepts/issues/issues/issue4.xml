@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="4" status="New">
+<title>MoveConstructible should refine Constructible</title>
+<section><sref ref="[concept.copymove]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>We should consider saying that <tt>MoveConstructible</tt> is a
+  refinement of an appropriate specialization
+  of <tt>Constructible</tt>, not
+  just <tt>Destructible</tt>. Specifically, one would think
+  that <tt>MoveConstructible&lt;T&gt;</tt> is a refinement
+  of <tt>Constructible&lt;T, T&amp;&amp;&gt;</tt>. In that case, the
+  body of <tt>MoveConstructible</tt> would go away.</p>
+</discussion>
+
+</issue>

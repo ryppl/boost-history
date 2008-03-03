@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="15" status="New">
+  <title>Can <tt>Callable</tt>'s function object be an rvalue?</title>
+<section><sref ref="[concept.operator]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>In <tt>Callable</tt>: can the <tt>F</tt>, the first argument of
+  operator(), be an rvalue? If so, what's the language rule that gives
+  us a yes answer? If not, is it ok to rule that out? (General theme
+  for many of our questions: what is the criterion we use, when we
+  define a concept, to decide whether the concept's functions should
+  take their argument by value, by const reference, by non-const
+  reference, by rvalue reference, or whatever?)</p>
+
+  <p>Note: The function object cannot be an <tt>rvalue</tt>.</p>
+</discussion>
+</issue>

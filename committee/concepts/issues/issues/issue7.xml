@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="7" status="New">
+  <title>Meaning of "equivalent" in <tt>MoveAssignable</tt></title>
+  <section><sref ref="[concept.copymove]"/></section>
+  <submitter>LWG</submitter>
+  <date>27 Feb 2008</date>
+
+<discussion>
+  <p>Substantive issue in <tt>MoveAssignable</tt>: the postcondition
+    is that the constructed <tt>T</tt> object is equivalent to the old value of
+    <tt>rv</tt>. What does equivalent mean? It's especially
+    problematic when <tt>U</tt> and <tt>T</tt> are different types,
+    but even for the same type it's not a defined term and not
+    completely clear how it should be defined. (One might imagine that
+    for the same type it should be defined in terms
+    of <tt>operator==</tt>, but this concept doesn't mention that
+    operator.)</p>
+</discussion>
+
+</issue>

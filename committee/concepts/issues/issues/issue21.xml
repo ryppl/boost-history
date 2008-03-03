@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="21" status="New">
+  <title>Iterator <tt>difference_type</tt> requirements</title>
+<section><sref ref="[input.iterators]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p><tt>InputIterator</tt> currently requires that its difference
+  type be both an <tt>IntegerType</tt>
+  and <tt>SignedIntegralLike</tt>. There are two issues here. First,
+  why do we need to require both? Answer: one of those is a
+  compiler-generated concept saying that it must be one of a specific
+  list of built-in types, but it doesn't declare anything about the
+  operations, so it doesn't allow you to actually write things like
+  +. But that's very weird. If we know that we've constrained it to be
+  one of a small number of types, shouldn't we be able to use those
+  operations that those types all have in common? Second, just why are
+  we requiring it to be one of the types in that list? If I have my
+  own type that I can use for counting (i.e. an abelian group), then
+  why can't I use it for the iterator's difference type?</p>
+</discussion>
+
+</issue>

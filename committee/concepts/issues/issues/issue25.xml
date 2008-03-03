@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="25" status="New">
+  <title>Lost normative semantics of <tt>ForwardIterator</tt></title>
+<section><sref ref="[forward.iterators]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>We seem to have lost all normative text that describes the
+  semantics of forward iterators. Some of the semantics from table 98
+  have just disappeared, and the n2500 text has very little to say
+  about substantive ways in which constant forward iterators differ
+  from input iterators. We've lost the requirement that <tt>r ==
+  s</tt> implies <tt>++r == ++s</tt>. (It now appears only in
+  nonnormative text.) There's nothing saying that forward iterators
+  are allowed to be multipass. Forward iterators are a good use case
+  for the axiom feature.</p>
+
+  <p>One of the other important axioms for forward iterators is
+  that <tt>a == b</tt> iff <tt>a</tt> and <tt>b</tt> are the same
+  object. This axiom got moved to input iterators (but not using the
+  axiom feature), where it does not belong. That assertion is not true
+  for input iterators in general, or for some of the specific input
+  iterators in the standard. What's novel about forward iterators, as
+  opposed to input iterators, is that a forward iterator points to a
+  specific memory location.</p>
+</discussion>
+
+</issue>

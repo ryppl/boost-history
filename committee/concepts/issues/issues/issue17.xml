@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="17" status="New">
+<title>Errors in Allocator concept</title>
+<section><sref ref="[concept.allocator]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p>Allocator, since <tt>pointer</tt> is required to be convertible
+  to <tt>value_type*</tt>, the required convertibility
+  to <tt>void*</tt> is superfluous. Ditto for <tt>const_pointer</tt>
+  to <tt>const void *</tt>. Also, there is a typo in
+  requires <tt>Convertible&lt;const_pointer, const
+  value_type&amp;&gt;</tt>. Should be
+  requires <tt>Convertible&lt;const_pointer, const
+  value_type*&gt;</tt>.</p>
+
+  <p>In specification of <tt>Allocator::construct</tt> just above
+  20.1.3 para 11, error requires <tt>Constructible&lt;value_type,
+  V&amp;&amp;&gt;</tt> should be requires <tt>Convertible&lt;V,
+  value_type&gt;</tt> as in the synopsis.</p>
+</discussion>
+
+</issue>

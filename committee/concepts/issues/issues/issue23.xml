@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="23" status="New">
+<title>Output iterators without value types</title>
+<section><sref ref="[output.iterators]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>24.1.2 preserves the C++03 notion that output iterators don't
+  actually have value types (see, for example, 24.1.2 paragraph 3,
+  saying that an output iterator may permit output of many different
+  value types). Is this something we really want to preserve for
+  conceptized C++09? There are a few real-world output iterators that
+  support multiple output types, but very few. For most users, the
+  fact that we don't have a specific output types is much more a
+  nuisance than anything else. This is another issue where we have a
+  choice between rationalizing the current requirements or preserving
+  them in every last corner case, and we should consider doing the
+  former. Concretely, in terms of the n2500 notation: most users
+  probably want to use the <tt>BasicOutputIterator</tt> concept,
+  not <tt>OutputIterator</tt>. We should consider
+  renaming <tt>BasicOutputIterator</tt> to <tt>OutputIterator</tt>,
+  and either getting rid of the concept that n2500
+  calls <tt>OutputIterator</tt> or renaming it
+  to <tt>BackwardCompatibilityOutputIteratorWithoutValueType</tt>.</p>
+</discussion>
+
+<resolution>
+  <p>
+  </p>
+</resolution>
+</issue>

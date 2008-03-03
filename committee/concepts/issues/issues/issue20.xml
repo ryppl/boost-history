@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="20" status="New">
+<title>InputIterator default constructibility</title>
+<section><sref ref="[iterator.concepts]"/></section>
+<submitter>LWG</submitter>
+<date>28 Feb 2008</date>
+
+<discussion>
+  <p>We're saying that <tt>InputIterator</tt> is <tt>Semiregular</tt>
+  and <tt>EqualityComparable</tt>, instead of just
+  plain <tt>Regular</tt>. The main reason: in C++03, input iterators
+  aren't necessarily default constructible. (In
+  n2502, <tt>Regular</tt> just adds <tt>DefaultConstructible</tt>
+  and <tt>HeapAllocatable</tt>. But <tt>HeapAllocatable</tt> is a
+  pretty minor thing, and it isn't discussed in C++03 one way or the
+  other.) Wouldn't it be nice if we could just say <tt>Regular</tt>
+  instead?  Two options: (1) Say <tt>Regular</tt> and everything it
+  implies in n2502. This implies that all input iterators will be
+  default constructible, which is an incompatibility and a stricter
+  requirements than we have in C++03. It will render some user-defined
+  iterators nonconforming, but maybe that's a small price to pay. (2)
+  Get rid of the <tt>Semiregular</tt> concept, but
+  remove <tt>DefaultConstructible</tt> from <tt>Regular</tt>. Arguably
+  default construction isn't a fundamental part of the notion of
+  regularity, and on the occasions that we want "regular and default
+  constructible" we should say so explicitly.</p>
+</discussion>
+
+</issue>

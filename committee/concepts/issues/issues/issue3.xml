@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="3" status="New">
+<title>Naming of Constructible/DefaultConstructible concepts</title>
+<section><sref ref="[concept.construct]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p><tt>Constructible</tt> and <tt>DefaultConstructible</tt> don't
+  have any semantics, so they should have the prefix <tt>Has</tt>.</p>
+</discussion>
+
+<resolution>
+  <p>Rename <tt>Constructible</tt> to <tt>HasConstructor</tt>,
+  and rename <tt>DefaultConstructible</tt> to
+  <tt>HasDefaultConstructor</tt></p>
+</resolution>
+
+</issue>

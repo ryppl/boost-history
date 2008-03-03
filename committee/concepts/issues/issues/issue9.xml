@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="9" status="New">
+<title>Memory-allocation concepts are too fine-grained</title>
+<section><sref ref="[concept.memory]"/></section>
+<submitter>LWG</submitter>
+<date>27 Feb 2008</date>
+
+<discussion>
+  <p><tt>Newable</tt> and <tt>Deletable</tt>
+  and <tt>HeapAllocatable</tt> are awfully fine grained and low
+  level. Can we get rid of them, or at least consolidate them? Yes,
+  it's possible to write types that can be created on the stack but
+  not with <tt>new</tt>, but do our library algorithms really need to
+  distinguish between constructable, new-able, and
+  heap-allocatable?</p>
+</discussion>
+
+<resolution>
+<p>
+</p>
+</resolution>
+
+</issue>
