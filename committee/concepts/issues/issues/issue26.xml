@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="26" status="Ready">
+<title>Transition of Clause 17, Library introduction</title>
+<section><sref ref="[library]"/></section>
+<submitter>Beman Dawes</submitter>
+<date>3 Mar 2008</date>
+
+<discussion>
+  <p>N2037, Concepts for the C++0x Standard Library: Introduction,
+  removes current requirements based wording from chapter 17 and
+  replaces it with concepts based wording.</p>
+
+  <p>That's fine if we uniformly replace all requirements with
+  concepts. But if we choose to leave even a single requirement in
+  place, then the WP is in an inconsistent state since that
+  requirement is no longer supported by the wording in 17.</p>
+
+  <p>Even if we do remove all uses of requirements, that is unlikely
+  to occur at a single point in time. Thus the WP will be in an
+  inconsistent state until each and every chapter has been converted
+  to concepts.</p>
+</discussion>
+
+<resolution>
+  <p>Break N2037 into two papers. One adds the wording to support
+  concepts. The other removes wording supporting requirements (and
+  does any rewording of the concepts wording needed to reflect a
+  concepts only approach.)</p>
+
+  <p>Vote the "add concepts to the introduction" paper into the WP
+  whenever the first of the other library chapters concepts are voted
+  in.</p>
+
+  <p>Vote the "remove requirements from the introduction" paper into
+  the WP whenever the last old-style requirement is removed from the
+  WP (if ever).</p>
+</resolution>
+</issue>
