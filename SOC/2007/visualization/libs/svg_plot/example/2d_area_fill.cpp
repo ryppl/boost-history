@@ -4,6 +4,14 @@
 // For more information, see http://www.boost.org
 // -----------------------------------------------------------------
 
+#ifdef _MSC_VER
+#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
+#  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
+#  pragma warning (disable : 4512) // assignment operator could not be generated
+#  pragma warning (disable : 4224) // nonstandard extension used : formal parameter 'function_ptr' was previously defined as a type
+#  pragma warning (disable : 4127) // conditional expression is constant
+#endif
+
 #include <boost/svg_plot/svg_2d_plot.hpp>
 #include <map>
 #include <cmath>
@@ -61,7 +69,7 @@ int main()
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
 	       .x_minor_tick_width(1)
-	       .x_num_minor__ticks(3)
+	       .x_num_minor_ticks(3)
 	
 	//Y axis settings.
 	       .y_major_interval(25)
@@ -70,8 +78,7 @@ int main()
 	//legend settings
 	my_plot.legend_title_font_size(15);
 	
-	my_plot.plot(data1, "Sqrt(x)",  point_style = none,
-        area_fill_color = red);
+	my_plot.plot(data1, "Sqrt(x)").area_fill(red);
 
     my_plot.write("./2d_area_fill.svg");
 

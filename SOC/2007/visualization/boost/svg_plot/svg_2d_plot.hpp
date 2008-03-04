@@ -77,7 +77,6 @@ namespace boost
         // plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool line_on = true, bool bezier_on = false)
         line_style_(black, true, 2, true, false) // Default line style, no fill.
 
-        // TODO doesn't pick up line width.
       { // Constructor.
         for(T i = begin; i != end; ++i)
         { // Sort into normal and limited series.
@@ -94,7 +93,7 @@ namespace boost
 
       // Set functions for the plot series.
       svg_2d_plot_series& fill_color(const svg_color& col_)
-      {
+      { // Point fill color.
         point_style_.fill_color_ = col_;
         return *this;
       }
@@ -123,16 +122,16 @@ namespace boost
         return *this;
       }
 
+      svg_2d_plot_series& area_fill(const svg_color& col_)
+      {
+        line_style_.area_fill_ = col_;
+        return *this;
+      }
+
       svg_2d_plot_series& line_width(double wid_)
       { 
         line_style_.width_ = wid_; // Sets legend line width too.
         return *this;
-      }
-
-      // Get functions for the plot series.
-      double line_width()
-      {
-        return line_style_.width_;
       }
 
       svg_2d_plot_series& line_on(bool on_)
@@ -147,9 +146,45 @@ namespace boost
         return *this;
       }
 
+       // Get functions for the plot series.
+      plot_line_style line_style()
+      {
+        return line_style_;
+      }
+
+      double line_width()
+      {
+        return line_style_.width_;
+      }
+
       bool bezier_on()
       {
         return line_style_.bezier_on_;
+      }
+
+      bool line_on()
+      {
+        return line_style_.line_on_;
+      }
+
+      svg_color& line_color()
+      {
+        return line_style_.color_;
+      }
+
+      svg_color& area_fill()
+      {
+        return line_style_.area_fill_;
+      }
+
+      int size()
+      {
+        return point_style_.size_;
+      }
+
+      point_shape shape()
+      {
+        return point_style_.shape_;
       }
 
     }; // struct svg_2d_plot_series
@@ -1138,7 +1173,7 @@ namespace boost
           if(is_fill)
           { // fill wanted.
             transform_y(temp_y = 0.); // X-axis line.
-            path.L(temp_x, temp_y).z(); // closepath with Z to terminate line.
+            path.L(temp_x, temp_y).z(); // Close path with Z to terminate line.
           }
         }
       } // draw_straight_lines
@@ -1295,7 +1330,7 @@ namespace boost
             y = j->second;
             transform_point(x, y);
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
-            { // Onside plot window, so draw a point.
+            { // Is inside plot window, so draw a point.
               draw_plot_point(x, y, g_ptr, series[i].point_style_);
             }
           } // for
@@ -1313,7 +1348,7 @@ namespace boost
             y = j->second;
             transform_point(x, y);
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
-            { // On plot window, so draw a point.
+            { // Is inside plot window, so draw a point.
              // draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, s, cone)); default.
               draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
             }

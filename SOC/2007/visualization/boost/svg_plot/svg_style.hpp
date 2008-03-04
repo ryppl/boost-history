@@ -543,7 +543,7 @@ public:
   plot_line_style& width(double w)
   {
     width_ = w;
-    return *this;
+    return *this; // Make chainable.
   }
 
   double width()
@@ -554,7 +554,7 @@ public:
   plot_line_style& color(const svg_color& f)
   {
     color_ = f;
-    return *this;
+    return *this; // Make chainable.
   }
 
   svg_color& color()
@@ -565,7 +565,7 @@ public:
   plot_line_style& area_fill(const svg_color& f)
   {
     area_fill_ = f;
-    return *this;
+    return *this; // Make chainable.
   }
 
   svg_color& area_fill()
@@ -601,8 +601,7 @@ std::ostream& operator<< (std::ostream& os, plot_line_style p)
 {  //
   os << "point_line_style("
      << p.color_ << ", "
-     << p.area_fill_ << ", "
-     //<< ((p.area_fill) ? "area fill, " : ", ")
+     << p.area_fill_ << " area fill, "
      << ((p.line_on_) ? "line, " : "no line, ")
      << ((p.bezier_on_) ? "bezier)" : "no bezier)");
 // Usage: plot_line_style p;   cout << p << endl; 
