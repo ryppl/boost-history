@@ -1,5 +1,0 @@
-project(CompileTest)
-message("Includes are ${INCLUDES}")
-message("Sources is ${SOURCE}")
-include_directories (${INCLUDES})
-add_library(compile STATIC "${SOURCE}")

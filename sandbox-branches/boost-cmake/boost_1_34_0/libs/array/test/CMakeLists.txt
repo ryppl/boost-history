@@ -1,6 +1,0 @@
-boost_test_run(array0 SOURCES ../array0.cpp)
-boost_test_run(array1 SOURCES ../array1.cpp)
-boost_test_run(array2 SOURCES ../array2.cpp)
-boost_test_run(array3 SOURCES ../array3.cpp)
-boost_test_run(array4 SOURCES ../array4.cpp)
-boost_test_run(array5 SOURCES ../array5.cpp)
