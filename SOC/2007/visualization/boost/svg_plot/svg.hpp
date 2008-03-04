@@ -33,9 +33,9 @@
 // use s or t for cubic and quadratic Bezier segments whenever possible;
 // eliminate extraneous white space and separators.
 // Use symbols if the same graphic appears multiple times in the document.
-//Use CSS property inheritance and selectors to consolidate commonly used properties into named styles
+// Use CSS property inheritance and selectors to consolidate commonly used properties into named styles
 // or to assign the properties to a parent <g> element.
-//Use filter effects to help construct graphics via client-side graphics operations. 
+// Use filter effects to help construct graphics via client-side graphics operations. 
 
 namespace boost
 {
@@ -134,18 +134,21 @@ private:
   void write_header(std::ostream& s_out)
   {
     s_out << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-      << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" "
-      << "\"http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd\">"
+      //<< "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" "
+      //<< "\"http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd\">"
+      // Doctype removed to avoid the need to reference this file (repeatedly!)
+      // using RenderX to produce pdf with embedded svg.
+      // Might also provide a local copy of the dtd to avoid need to refer to it.
       << std::endl;
-    // TODO IE6 with updates does not recognise this DOCTYPE, but displays OK.
+    // TODO IE6 with Adobe does not recognise this DOCTYPE, but displays OK.
     // http://jwatt.org/svg/authoring/#namespace-binding recommends NO DOCTYPE!
-
-
-    //s_out << "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n"
+    // But does recommend other info - see write()
+    // Inkscape does NOT provide a doctype.
+    // s_out << "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n"
     //         "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\"
     //         \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n"
     // This IS out of date? version 1.0 TR 2000, but the Adobe SVG viewer complains
-    // if it is missing - but ignore.
+    // if it is missing - but ignored.
     // But Firefox says document does not contain style.
     // http://www.adobe.com/svg/basics/getstarted.html
 
@@ -154,10 +157,9 @@ private:
 
     // example of style command:
     // style="font-size:20px;font-weight:bold;text-decoration: line-through;fill:aqua"
-    
     // font-family:Arial Narrow
 
-    // INscape uses: xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+    // Inkscape uses: xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
   }
 
   void write_css(std::ostream& s_out)
@@ -326,6 +328,12 @@ public:
          " xmlns:ev=\"http://www.w3.org/2001/xml-events\">\n"
       << std::endl;
     // Bind the required namespaces, see http://jwatt.org/svg/authoring/#namespace-binding
+    // 
+    // << " baseProfile = \"full\"\n"
+    // is recommended and might be needed, but defaults to baseProfile = "none"
+    // according to
+    // http://www.w3.org/TR/SVG/struct.html#SVGElementBaseProfileAttribute
+
     // Added xlink and ev in case needed.
 
     s_out << package_info << std::endl;
