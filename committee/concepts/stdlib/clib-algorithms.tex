@@ -1,6 +1,7 @@
 \documentclass[american,twoside]{book}
 \usepackage{refbib}
 \usepackage{hyperref}
+\usepackage{pdfsync}
 \input{macros}
 
 %%--------------------------------------------------
@@ -41,7 +42,7 @@ Open Systems Laboratory, Indiana University \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: NNNNN=07-XXXX\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
 \par\noindent Revises document number: N2084=06-0154\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -55,13 +56,11 @@ Open Systems Laboratory, Indiana University \\
 \item Updated algorithm requirements to use the new iterator and
   utility concepts, including the relaxed iterator requirements in
   N2323 and the move concepts of N2322.
-\item Added \tcode{CopyConstructible} requirements for each of the
-  function object types. These requirements were previously implicit
-  (due to requirement propagation in earlier versions of the concepts
-  proposal). 
 \item Added new algorithms \tcode{move}, \tcode{move_backward},
   \tcode{is_sorted}, \tcode{is_sorted_until}, \tcode{is_heap},
-  \tcode{is_heap_until}, \tcode{minmax} and \tcode{minmax_element}.
+  \tcode{is_heap_until}, \tcode{minmax} and \tcode{minmax_element},
+  and the variadic \tcode{min}, \tcode{max}, and \tcode{minmax} overloads
+  from N2551.
 \end{itemize}
 
 \end{titlepage}
@@ -117,26 +116,19 @@ as summarized in Table~\ref{tab:algorithms.lib.summary}.
 \begin{codeblock}
 namespace std {
   @\textcolor{black}{// \ref{alg.nonmodifying}, non-modifying sequence operations:}@
-  template<InputIterator Iter, Callable<Iter::reference> Function>
-    requires CopyConstructible<Function>
+  template<InputIterator Iter, Callable<auto, Iter::reference> Function>
     Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
-
   template<InputIterator Iter, class T>
     requires EqualityComparable<Iter::reference, T>
     Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
-
-  template<InputIterator Iter, Predicate<Iter::reference> Pred>
-    requires CopyConstructible<Pred>
+  template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
     Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
-
   template<ForwardIterator Iter1, ForwardIterator Iter2>
     requires EqualityComparable<Iter1::reference, Iter2::reference>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
-
   template<ForwardIterator Iter1, ForwardIterator Iter2, 
-           Predicate<Iter1::reference, Iter2::reference> Pred>
-    requires CopyConstructible<Pred>
+           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                    Pred @\farg{pred}@);
@@ -145,10 +137,8 @@ namespace std {
     requires EqualityComparable<Iter1::reference, Iter2::reference>
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
-
   template<InputIterator Iter1, ForwardIterator Iter2,
-           Predicate<Iter1::reference, Iter2::reference> Pred>
-    requires CopyConstructible<Pred>
+           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                         Pred @\farg{pred}@);
@@ -156,27 +146,21 @@ namespace std {
   template<ForwardIterator Iter>
     requires EqualityComparable<Iter::reference>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
-
-  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
-    requires CopyConstructible<Pred>
+  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter, class T>
     requires EqualityComparable<Iter::reference, T>
     @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
-
-  template<InputIterator Iter, Predicate<Iter::reference> Pred>
-    requires CopyConstructible<Pred>
+  template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
     Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
     requires EqualityComparable<Iter1::reference, Iter2::reference>
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                 Iter @\farg{first2}@);
-
   template<InputIterator Iter1, InputIterator Iter2,
-           Predicate<Iter1::reference, Iter2::reference> Pred>
-    requires CopyConstructible<Pred>
+           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter2 @\farg{last1}@,
                                 Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
@@ -184,10 +168,8 @@ namespace std {
     requires EqualityComparable<Iter1::reference, Iter2::reference>
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@);
-
   template<InputIterator Iter1, InputIterator Iter2,
-           Predicate<Iter1::reference, Iter2::reference> Pred>
-    requires CopyConstructible<Pred>
+           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
@@ -195,50 +177,43 @@ namespace std {
     requires EqualityComparable<Iter1::reference, Iter2::reference>
     Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
-
   template<ForwardIterator Iter1, ForwardIterator Iter2,
-           Predicate<Iter1::reference, Iter2::reference> Pred>
-    requires CopyConstructible<Pred>
-    @\textcolor{addclr}{Iter1}@ search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+    Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
-
   template<ForwardIterator Iter, class T>
     requires EqualityComparable<Iter::reference, T>
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@);
-
   template<ForwardIterator Iter, class T,
-           Predicate<Iter::reference, T> Pred>
-    requires CopyConstructible<Pred>
+           Predicate<auto, Iter::reference, T> Pred>
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@, Pred @\farg{pred}@);
 
   @\textcolor{black}{// \ref{alg.modifying.operations}, modifying sequence operations:}@
   @\textcolor{black}{// \ref{alg.copy}, copy:}@
-  template<InputIterator InIter, OutputIterator<InIter::reference> OutIter>
+  template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
     OutIter copy(InIter @\farg{first}@, InIter @\farg{last}@,
                  OutIter @\farg{result}@);
-
   template<BidirectionalIterator InIter, MutableBidirectionalIterator OutIter>
     requires CopyAssignable<OutIter::reference, InIter::reference>
     OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@);
 
-  // \ref{alg.move}, move:
-  template<InputIterator InIter, OutputIterator<InIter::value_type&&> OutIter>
-    OutIter move(InIter first, InIter last,
-                 OutIter result);
+  @\textcolor{black}{// \ref{alg.move}, move:}@
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type&&> OutIter>
+    OutIter move(InIter @\farg{first}@, InIter @\farg{last}@,
+                 OutIter @\farg{result}@);
   template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
     requires MoveAssignable<OutIter::reference, InIter::value_type>
-    OutIter move_backward(InIter first, InIter last,
-                          OutIter result);
+    OutIter move_backward(InIter @\farg{first}@, InIter @\farg{last}@,
+                          OutIter @\farg{result}@);
 
   @\textcolor{black}{// \ref{alg.swap}, swap:}@
   template<class T> 
     requires MoveAssignable<T> && MoveConstructible<T>
     void swap(T& @\farg{a}@, T& @\farg{b}@);
-
   template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
     requires SameType<Iter1::value_type, Iter2::value_type> && 
              SameType<Iter1::value_type&, Iter1::reference> && 
@@ -246,7 +221,6 @@ namespace std {
              Swappable<Iter1::value_type>
     Iter2 swap_ranges(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@);
-
   template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
     requires SameType<Iter1::value_type, Iter2::value_type> && 
              SameType<Iter1::value_type&, Iter1::reference> && 
@@ -255,14 +229,13 @@ namespace std {
     void iter_swap(Iter1 @\farg{a}@, Iter2 @\farg{b}@);
 
   template<InputIterator InIter, class OutIter,
-           Callable<InIter::reference> Op>
-    requires OutputIterator<OutIter, Op::result_type> && CopyConstructible<Op>
+           Callable<auto, InIter::reference> Op>
+    requires OutputIterator<OutIter, Op::result_type>
     OutIter transform(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@, Op @\farg{op}@);
-
   template<InputIterator InIter1, InputIterator InIter2,
-           class OutIter, Callable<InIter1::reference, InIter2::reference> BinaryOp>
-    requires OutputIterator<OutIter, BinaryOp::result_type> && CopyConstructible<BinaryOp>
+           class OutIter, Callable<auto, InIter1::reference, InIter2::reference> BinaryOp>
+    requires OutputIterator<OutIter, BinaryOp::result_type>
     OutIter transform(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, OutIter @\farg{result}@,
                       BinaryOp @\farg{binary_op}@);
@@ -271,21 +244,18 @@ namespace std {
     requires EqualityComparable<Iter::reference, T> && CopyAssignable<Iter::reference, T>
     void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                  const T& @\farg{old_value}@, const T& @\farg{new_value}@);
-
-  @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<Iter::reference> Pred, class T>
-    requires CopyAssignable<Iter::reference, T> && CopyConstructible<Pred>
+  @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::reference> Pred, class T>
+    requires CopyAssignable<Iter::reference, T>
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
-
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
     requires CopyAssignable<OutIter::reference, T> && EqualityComparable<InIter::reference, T>
     OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@,
                          const T& @\farg{old_value}@, const T& @\farg{new_value}@);
-
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-           Predicate<InIter::reference> Pred, class T>
-    requires CopyAssignable<OutIter::reference, T> && CopyConstructible<Pred>
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+           Predicate<auto, InIter::reference> Pred, class T>
+    requires CopyAssignable<OutIter::reference, T>
     OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                             OutIter @\farg{result}@,
                             Pred @\farg{pred}@, const T& @\farg{new_value}@);
@@ -293,96 +263,80 @@ namespace std {
   template<MutableForwardIterator Iter, class T>
     requires CopyAssignable<Iter::reference, T>
     void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
-
   template<class Iter, Integral Size, class T>
     requires OutputIterator<Iter, T>
     void fill_n(Iter @\farg{first}@, Size @\farg{n}@, const T& @\farg{value}@);
 
-  template<MutableForwardIterator Iter, Callable<> Generator>
-    requires CopyAssignable<Iter::reference, Generator::result_type> && CopyConstructible<Generator>
+  template<MutableForwardIterator Iter, Callable Generator>
+    requires CopyAssignable<Iter::reference, Generator::result_type>
     void generate(Iter @\farg{first}@, Iter @\farg{last}@,
                   Generator @\farg{gen}@);
-
-  template<class Iter, Integral Size, Callable<> Generator>
-    requires OutputIterator<Iter, Generator::result_type> && CopyConstructible<Generator>
+  template<class Iter, Integral Size, Callable Generator>
+    requires OutputIterator<Iter, Generator::result_type>
     void generate_n(Iter @\farg{first}@, Size @\farg{n}@, Generator @\farg{gen}@);
 
   template<ForwardIterator Iter, class T>
     requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference, T>
     Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
                 const T& @\farg{value}@);
-
-  template<ForwardIterator Iter, Predicate<Iter::reference> Pred>
-    requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+  template<ForwardIterator Iter, Predicate<auto, Iter::reference> Pred>
+    requires MoveAssignable<Iter::reference>
     Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
                    Pred @\farg{pred}@);
-
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
     requires EqualityComparable<InIter::reference, T>
     OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, const T& @\farg{value}@);
-
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-           Predicate<InIter::reference> Pred>
-    requires CopyConstructible<Pred>
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+           Predicate<auto, InIter::reference> Pred>
     OutIter remove_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                            OutIter @\farg{result}@, Pred @\farg{pred}@);
 
   template<ForwardIterator Iter>
     requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
-
-  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
-    requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
+    requires MoveAssignable<Iter::reference>
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
                 Pred @\farg{pred}@);
-
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
     requires EqualityComparable<InIter::value_type> && CopyAssignable<InIter::value_type> && 
              @\textcolor{addclr}{CopyConstructible}@<InIter::value_type> && !ForwardIterator<InIter> && 
              !MutableForwardIterator<OutIter>
     OutIter
       unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                   OutIter @\farg{result}@);
-
-  template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
     requires EqualityComparable<InIter::reference>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
-
   template<InputIterator InIter, MutableForwardIterator OutIter>
     requires EqualityComparable<OutIter::reference, InIter::value_type> &&
              CopyAssignable<OutIter::reference, InIter::reference> &&
              !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
-
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter,
-           Predicate<InIter::value_type, InIter::value_type> Pred>
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
+           Predicate<auto, InIter::value_type, InIter::value_type> Pred>
     requires CopyAssignable<InIter::value_type> && CopyConstructible<InIter::value_type> &&
-             !ForwardIterator<InIter> && !MutableForwardIterator<OutIter> &&
-             CopyConstructible<Pred>
+             !ForwardIterator<InIter> && !MutableForwardIterator<OutIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
-
-  template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter,
-           Predicate<InIter::reference, InIter::reference> Pred>
-    requires CopyConstructible<Pred>
+  template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
+           Predicate<auto, InIter::reference, InIter::reference> Pred>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
-
   template<InputIterator InIter, MutableForwardIterator OutIter,
-           Predicate<OutIter::reference, InIter::reference> Pred>
+           Predicate<auto, OutIter::reference, InIter::reference> Pred>
     requires CopyAssignable<OutIter::reference, InIter::reference> &&
-             !ForwardIterator<InIter> && CopyConstructible<Pred>
+             !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
 
   template<MutableBidirectionalIterator Iter>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
     void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
-
-  template<BidirectionalIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  template<BidirectionalIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
     OutIter reverse_copy(InIter @\farg{first}@,
                          InIter @\farg{last}@, OutIter @\farg{result}@);
 
@@ -390,8 +344,7 @@ namespace std {
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
     void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
                 Iter @\farg{last}@);
-
-  template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+  template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
     OutIter rotate_copy(InIter @\farg{first}@, InIter @\farg{middle}@,
                         InIter @\farg{last}@, OutIter @\farg{result}@);
 
@@ -399,29 +352,24 @@ namespace std {
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@);
-
-  template<MutableRandomAccessIterator Iter, Callable<Iter::difference_type> Rand>
+  template<MutableRandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             Convertible<Rand::result_type, Iter::difference_type> && CopyConstructible<Rand>
+             Convertible<Rand::result_type, Iter::difference_type>
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
                         Rand& @\farg{rand}@);
-
   template<class RandomAccessIterator, class UniformRandomNumberGenerator>
     void random_shuffle(RandomAccessIterator @\farg{first}@,
                         RandomAccessIterator @\farg{last}@, 
                         UniformRandomNumberGenerator& @\farg{rand}@);
 
   @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
-  template<BidirectionalIterator Iter, Predicate<Iter::reference> Pred>
-    @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-            CopyConstructible<Pred>
+  template<BidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
+    @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
     Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
-
-  template<MutableBidirectionalIterator Iter, Predicate<Iter::reference> Pred>
+  template<MutableBidirectionalIterator Iter, Predicate<auto Iter::reference> Pred>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Pred>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   @\textcolor{black}{// \ref{alg.sorting}, sorting and related operations:}@
@@ -431,12 +379,10 @@ namespace std {
              MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
              LessThanComparable<Iter::value_type> 
     void sort(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void sort(Iter @\farg{first}@, Iter @\farg{last}@,
               Compare @\farg{comp}@);
 
@@ -445,33 +391,28 @@ namespace std {
              MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
              LessThanComparable<Iter::value_type> 
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> @\addedCC{\&\&}@
+             @\addedCC{LessThanComparable<Iter::value_type>}@
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@,
                       Compare @\farg{comp}@);
-
   template<InputIterator InIter, MutableRandomAccessIterator RAIter>
     requires CopyAssignable<RAIter::reference, InIter::value_type> &&
              SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
@@ -481,33 +422,29 @@ namespace std {
              LessThanComparable<RAIter::value_type>
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
-
   template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare>
     requires CopyAssignable<RAIter::reference, InIter::value_type> &&
              SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
              MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
              Predicate<Compare, InIter::value_type, RAIter::value_type> &&
              Predicate<Compare, RAIter::value_type, InIter::value_type> &&
-             Predicate<Compare, RAIter::value_type> &&
-             CopyConstructible<Compare>
+             Predicate<Compare, RAIter::value_type>
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
                              Compare @\farg{comp}@);
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
-    bool is_sorted(Iter first, Iter last);
-  template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires CopyConstructible<Compare>
-    bool is_sorted(Iter first, Iter last,
-                   Compare comp);
+    bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+    bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@);
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
-    Iter is_sorted_until(Iter first, Iter last);
-  template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires CopyConstructible<Compare>
-    Iter is_sorted_until(Iter first, Iter last,
-                         Compare comp);
+    Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+    Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
+                         Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
@@ -515,12 +452,10 @@ namespace std {
              LessThanComparable<Iter::value_type>
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@,  Compare @\farg{comp}@);
 
@@ -529,9 +464,7 @@ namespace std {
     requires LessThanComparable<Iter::reference, T>
     Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@);
-
-  @\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<Iter::reference, T> Compare>
-    requires CopyConstructible<Compare>
+  @\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::reference, T> Compare>
     Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 
@@ -539,9 +472,7 @@ namespace std {
     requires LessThanComparable<T, Iter::reference>
     Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@);
-
-  template<ForwardIterator Iter, class T, Predicate<T, Iter::reference> Compare>
-    requires CopyConstructible<Compare>
+  template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::reference> Compare>
     Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 
@@ -551,11 +482,9 @@ namespace std {
     pair<Iter, Iter>
       equal_range(Iter @\farg{first}@,
                   Iter @\farg{last}@, const T& @\farg{value}@);
-
   template<ForwardIterator Iter, class T, class Compare>
     requires Predicate<Compare, T, Iter::reference> &&
-             Predicate<Compare, Iter::reference, T> &&
-             CopyConstructible<Compare>
+             Predicate<Compare, Iter::reference, T>
     pair<Iter, Iter>
       equal_range(Iter @\farg{first}@,
                   Iter @\farg{last}@, const T& @\farg{value}@,
@@ -566,28 +495,24 @@ namespace std {
              LessThanComparable<Iter::reference, T>
     bool binary_search(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
                        const T& @\farg{value}@);
-
   template<ForwardIterator Iter, class T, class Compare>
     requires Predicate<Compare, T, Iter::reference> &&
-             Predicate<Compare, Iter::reference, T> &&
-             CopyConstructible<Compare>
+             Predicate<Compare, Iter::reference, T>
     bool binary_search(Iter @\farg{first}@, Iter @\farg{last}@,
                        const T& @\farg{value}@, Compare @\farg{comp}@);
 
   @\textcolor{black}{// \ref{alg.merge}, merge:}@
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter>
+           OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
              LessThanComparable<InIter1::value_type>
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@);
-
   @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter, 
-           Predicate<InIter1::value_type, InIter2::value_type> Compare>
-    requires SameType<InIter1::value_type, InIter2::value_type> &&
-             CopyConstructible<Compare>
+           OutputIterator<auto, InIter1::value_type> OutIter, 
+           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -599,12 +524,10 @@ namespace std {
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@);
-
   template<MutableBidirectionalIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@, Compare @\farg{comp}@);
@@ -614,74 +537,69 @@ namespace std {
     requires SameType<Iter1::value_type, Iter2::value_type> && LessThanComparable<Iter1::value_type>
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
-
   template<InputIterator Iter1, InputIterator Iter2, 
-           Predicate<Iter1::value_type, Iter2::value_type> Compare>
-    requires SameType<Iter1::value_type, Iter2::value_type> && CopyConstructible<Compare>
+           Predicate<auto, Iter1::value_type, Iter2::value_type> Compare>
+    requires SameType<Iter1::value_type, Iter2::value_type>
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                   Compare @\farg{comp}@);
 
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter>
+           OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
              LessThanComparable<InIter1::value_type>
     OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                       OutIter @\farg{result}@);
-
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter, 
-           Predicate<InIter1::value_type, InIter2::value_type> Compare>
-    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+           OutputIterator<auto, InIter1::value_type> OutIter, 
+           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                       OutIter @\farg{result}@, Compare @\farg{comp}@);
 
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter>
+           OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
              LessThanComparable<InIter1::value_type>
     OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                              InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                              OutIter @\farg{result}@);
-
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter, 
-           Predicate<InIter1::value_type, InIter2::value_type> Compare>
-    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+           OutputIterator<auto, InIter1::value_type> OutIter, 
+           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                              InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                              OutIter @\farg{result}@, Compare @\farg{comp}@);
 
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter>
+           OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
              LessThanComparable<InIter1::value_type>
     OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            @\textcolor{addclr}{OutIter}@ @\farg{result}@);
-
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter, 
-           Predicate<InIter1::value_type, InIter2::value_type> Compare>
-    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+           OutputIterator<auto, InIter1::value_type> OutIter, 
+           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            OutIter @\farg{result}@, Compare @\farg{comp}@);
 
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter>
+           OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
              LessThanComparable<InIter1::value_type>
     OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                      OutIter @\farg{result}@);
-
   template<InputIterator InIter1, InputIterator InIter2,
-           OutputIterator<InIter1::value_type> OutIter, 
-           Predicate<InIter1::value_type, InIter2::value_type> Compare>
-    requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+           OutputIterator<auto, InIter1::value_type> OutIter, 
+           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+    requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                      OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -691,11 +609,9 @@ namespace std {
     requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
              LessThanComparable<Iter::value_type>
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
@@ -703,11 +619,10 @@ namespace std {
     requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
              Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             Swappable<Iter::value_type> && CopyConstructible<Compare>
+             Swappable<Iter::value_type>
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                   Compare @\farg{comp}@);
 
@@ -715,11 +630,9 @@ namespace std {
     requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
              LessThanComparable<Iter::value_type>
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             CopyConstructible<Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
@@ -727,71 +640,78 @@ namespace std {
     requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
              Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableRandomAccessIterator Iter, 
-           Predicate<Iter::value_type, Iter::value_type> Compare>
+           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             Swappable<Iter::value_type> && CopyConstructible<Compare>
+             Swappable<Iter::value_type>
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
     requires LessThanComparable<Iter::value_type>
-    bool is_heap(Iter first, Iter last);
-  template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires CopyConstructible<Compare>
-    bool is_heap(Iter first, Iter last, Compare comp);
+    bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+    bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<RandomAccessIterator Iter>
-    Iter is_heap_until(Iter first, Iter last);
-  template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires CopyConstructible<Compare>
-    Iter is_heap_until(Iter first, Iter last,
-                       Compare comp);
+    Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+    Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@,
+                       Compare @\farg{comp}@);
 
   @\textcolor{black}{// \ref{alg.min.max}, minimum and maximum:}@
   template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
-  template<class T, Predicate<T, T> Compare>
-    requires CopyConstructible<Compare>
+  template<class T, Predicate<auto, T, T> Compare>
     const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+  @\addedCC{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+  @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
+    @\addedCC{requires SameType<T, Args>...}@
+    @\addedCC{const T\& min(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
+  @\textcolor{black}{template<class T, class U, class... Args>}@
+    @\textcolor{black}{const T\& min(const T\& \mbox{\farg{a}}, const U\& \mbox{\farg{b}}, const Args\&... \mbox{\farg{args}});}@
 
   template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
-  template<class T, Predicate<T, T> Compare>
-    requires CopyConstructible<Compare>
+  template<class T, Predicate<auto, T, T> Compare>
     const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+  @\addedCC{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+  @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
+    @\addedCC{requires SameType<T, Args>...}@
+    @\addedCC{const T\& max(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
+  @\textcolor{black}{template<class T, class U, class... Args>}@
+    @\textcolor{black}{const T\& max(const T\& \mbox{\farg{a}}, const U\& \mbox{\farg{b}}, const Args\&... \mbox{\farg{args}});}@
 
   template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
-  template<class T, Predicate<T, T> Compare>
-    requires CopyConstructible<Compare>
+  template<class T, Predicate<auto, T, T> Compare>
     pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
+  @\addedCC{template<LessThanComparable T>}@
+    @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+  @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
+    @\addedCC{requires SameType<T, Args>...}@
+    @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
+  @\textcolor{black}{template<class T, class U, class... Args>}@
+    @\textcolor{black}{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const U\& \mbox{\farg{b}}, const Args\&... \mbox{\farg{args}});}@
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::reference>
     Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
-
-  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
-    requires CopyConstructible<Compare>
+  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
     Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::reference>
     Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
-
-  template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
-    requires CopyConstructible<Compare>
+  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
     Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
     pair<Iter, Iter>
-      minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-    requires CopyConstructible<Compare>
+      @\textcolor{addclr}{}@minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
     pair<Iter, Iter>
       minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 
-  @\textcolor{black}{// \ref{alg.permutation.generators}, permutations:}@
   template<InputIterator Iter1, InputIterator Iter2>
     @\textcolor{addclr}{requires}@ LessThanComparable<Iter1::reference, Iter2::reference> &&
              LessThanComparable<Iter2::reference, Iter1::reference>
@@ -800,32 +720,27 @@ namespace std {
 
   @\textcolor{addclr}{template}@<InputIterator Iter1, InputIterator Iter2, class Compare>
     requires Predicate<Compare, Iter1::reference, Iter2::reference> &&
-             Predicate<Compare, Iter2::reference, Iter1::reference> &&
-             CopyConstructible<Compare>
+             Predicate<Compare, Iter2::reference, Iter1::reference>
     bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                                  Compare @\farg{comp}@);
 
+  @\textcolor{black}{// \ref{alg.permutation.generators}, permutations:}@
   template<MutableBidirectionalIterator Iter>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
              @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
     bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableBidirectionalIterator Iter, 
-           Predicate<Iter::reference, Iter::reference> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             CopyConstructible<Compare>
+           Predicate<auto, Iter::reference, Iter::reference> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
     bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
-
   template<MutableBidirectionalIterator Iter>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-             LessThanComparable<Iter::reference>
+             @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
-
   template<MutableBidirectionalIterator Iter, 
-           Predicate<Iter::reference, Iter::reference> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             CopyConstructible<Compare>
+           Predicate<auto, Iter::reference, Iter::reference> Compare>
+    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 }
 \end{codeblock}
@@ -967,7 +882,8 @@ apply any non-constant function through the dereferenced iterators.}
 \enternote\
 Unless otherwise specified, algorithms that take function objects as arguments
 are permitted to copy those function objects freely. Programmers for whom object
-identity is important should consider using a wrapper class that points to a
+identity is important should consider using a wrapper class that
+points \textcolor{black}{}to a
 noncopied implementation object, or some equivalent solution.
 \exitnote\
 
@@ -1020,8 +936,7 @@ is the same as of
 
 \color{addclr}
 \begin{itemdecl}
-template<InputIterator Iter, Callable<Iter::reference> Function>
-  requires CopyConstructible<Function>
+template<InputIterator Iter, Callable<auto, Iter::reference> Function>
   Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
 \end{itemdecl}
 \color{black}
@@ -1061,8 +976,7 @@ times.
   requires EqualityComparable<Iter::reference, T>
   Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
-template<InputIterator Iter, Predicate<Iter::reference> Pred>
-  requires CopyConstructible<Pred>
+template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
   Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1095,8 +1009,7 @@ template<ForwardIterator Iter1, ForwardIterator Iter2>
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<ForwardIterator Iter1, ForwardIterator Iter2, 
-         Predicate<Iter1::reference, Iter2::reference> Pred>
-  requires CopyConstructible<Pred>
+         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
   Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
@@ -1108,7 +1021,7 @@ template<ForwardIterator Iter1, ForwardIterator Iter2,
 Finds a subsequence of equal values in a sequence.
 
 \pnum
-\returns\ 
+\textcolor{black}{}\returns\ 
 The last iterator
 \tcode{i}\
 in the range \range{\farg{first1}}{\farg{last1} - (\farg{last2} - \farg{first2})}\
@@ -1140,8 +1053,7 @@ template<InputIterator Iter1, ForwardIterator Iter2>
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, ForwardIterator Iter2,
-         Predicate<Iter1::reference, Iter2::reference> Pred>
-  requires CopyConstructible<Pred>
+         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
   Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                       Pred @\farg{pred}@);
@@ -1181,8 +1093,7 @@ template<ForwardIterator Iter>
   requires EqualityComparable<Iter::reference>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
-  requires CopyConstructible<Pred>
+template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1222,8 +1133,7 @@ template<InputIterator Iter, class T>
   requires EqualityComparable<Iter::reference, T>
   @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
-template<InputIterator Iter, Predicate<Iter::reference> Pred>
-  requires CopyConstructible<Pred>
+template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
   Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1254,8 +1164,7 @@ template<InputIterator Iter1, InputIterator Iter2>
                               Iter @\farg{first2}@);
 
 template<InputIterator Iter1, InputIterator Iter2,
-         Predicate<Iter1::reference, Iter2::reference> Pred>
-  requires CopyConstructible<Pred>
+         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
   pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter2 @\farg{last1}@,
                               Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1303,8 +1212,7 @@ template<InputIterator Iter1, InputIterator Iter2>
              Iter2 @\farg{first2}@);
 
 template<InputIterator Iter1, InputIterator Iter2,
-         Predicate<Iter1::reference, Iter2::reference> Pred>
-  requires CopyConstructible<Pred>
+         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
   bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
              Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1338,8 +1246,7 @@ template<ForwardIterator Iter1, ForwardIterator Iter2>
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<ForwardIterator Iter1, ForwardIterator Iter2,
-         Predicate<Iter1::reference, Iter2::reference> Pred>
-  requires CopyConstructible<Pred>
+         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
   @\textcolor{addclr}{Iter1}@ search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                Pred @\farg{pred}@);
@@ -1378,8 +1285,7 @@ applications of the corresponding predicate.
                 const T& @\farg{value}@);
 
 template<ForwardIterator Iter, class T,
-         Predicate<Iter::reference, T> Pred>
-  requires CopyConstructible<Pred>
+         Predicate<auto, Iter::reference, T> Pred>
   Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                 const T& @\farg{value}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1421,7 +1327,7 @@ Returns \farg{last}\
 if no such iterator is found.
 
 \pnum
-\complexity\ 
+\textcolor{black}{}\complexity\ 
 At most
 \tcode{(\farg{last}\ - \farg{first}) * \farg{count}}
 applications of the corresponding predicate if \farg{count} is positive, or
@@ -1434,7 +1340,7 @@ applications of the corresponding predicate if \farg{count} is positive, or
 
 \index{copy@\tcode{copy}}%
 \color{addclr}\begin{itemdecl}
-template<InputIterator InIter, OutputIterator<InIter::reference> OutIter>
+template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
   OutIter copy(InIter @\farg{first}@, InIter @\farg{last}@,
                OutIter @\farg{result}@);
 \end{itemdecl}\color{black}
@@ -1517,7 +1423,7 @@ assignments.
 \index{move\tcode{move}}%
 \color{addclr}
 \begin{itemdecl}
-template<InputIterator InIter, OutputIterator<InIter::value_type&&> OutIter>
+@\textcolor{addclr}{}@template<InputIterator InIter, OutputIterator<auto, InIter::value_type&&> OutIter>
   OutIter move(InIter first, InIter last,
                OutIter result);
 \end{itemdecl}
@@ -1646,7 +1552,7 @@ performs:
 \tcode{swap(*(\farg{first1}\ + n), *(\farg{first2}\ + n))}.
 
 \pnum
-\requires\ 
+\textcolor{black}{}\requires\ 
 The two ranges \range{\farg{first1}}{\farg{last1}}\
 and
 \range{\farg{first2}}{\farg{first2}\ + (\farg{last1}\ - \farg{first1})}\
@@ -1696,14 +1602,14 @@ Swappable requirements (20.1.4).}
 \index{transform@\tcode{transform}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, class OutIter,
-         Callable<InIter::reference> Op>
-  requires OutputIterator<OutIter, Op::result_type> && CopyConstructible<Op>
+         Callable<auto, InIter::reference> Op>
+  requires OutputIterator<OutIter, Op::result_type>
   OutIter transform(InIter @\farg{first}@, InIter @\farg{last}@,
                     OutIter @\farg{result}@, Op @\farg{op}@);
 
 template<InputIterator InIter1, InputIterator InIter2,
-         class OutIter, Callable<InIter1::reference, InIter2::reference> BinaryOp>
-  requires OutputIterator<OutIter, BinaryOp::result_type> && CopyConstructible<BinaryOp>
+         class OutIter, Callable<auto, InIter1::reference, InIter2::reference> BinaryOp>
+  requires OutputIterator<OutIter, BinaryOp::result_type>
   OutIter transform(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                     InIter2 @\farg{first2}@, OutIter @\farg{result}@,
                     BinaryOp @\farg{binary_op}@);
@@ -1762,8 +1668,8 @@ template<MutableForwardIterator Iter, class T>
   void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
-@\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<Iter::reference> Pred, class T>
-  requires CopyAssignable<Iter::reference, T> && CopyConstructible<Pred>
+@\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::reference> Pred, class T>
+  requires CopyAssignable<Iter::reference, T>
   void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                   Pred @\farg{pred}@, const T& @\farg{new_value}@);
 \end{itemdecl}\color{black}
@@ -1794,15 +1700,15 @@ applications of the corresponding predicate.
 \index{replace_copy@\tcode{replace_copy}}%
 \index{replace_copy_if@\tcode{replace_copy_if}}%
 \color{addclr}\begin{itemdecl}
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
   requires CopyAssignable<OutIter::reference, T> && EqualityComparable<InIter::reference, T>
   OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                        OutIter @\farg{result}@,
                        const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-         Predicate<InIter::reference> Pred, class T>
-  requires CopyAssignable<OutIter::reference, T> && CopyConstructible<Pred>
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+         Predicate<auto, InIter::reference> Pred, class T>
+  requires CopyAssignable<OutIter::reference, T>
   OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@,
                           Pred @\farg{pred}@, const T& @\farg{new_value}@);
@@ -1897,15 +1803,13 @@ Exactly
 \index{generate@\tcode{generate}}%
 \index{generate_n@\tcode{generate_n}}%
 \color{addclr}\begin{itemdecl}
-template<MutableForwardIterator Iter, Callable<> Generator>
-  requires CopyAssignable<Iter::reference, Generator::result_type> &&
-           CopyConstructible<Generator>
+template<MutableForwardIterator Iter, Callable Generator>
+  requires CopyAssignable<Iter::reference, Generator::result_type>
   void generate(Iter @\farg{first}@, Iter @\farg{last}@,
                 Generator @\farg{gen}@);
 
-template<class Iter, Integral Size, Callable<> Generator>
-  requires OutputIterator<Iter, Generator::result_type> &&
-           CopyConstructible<Generator>
+template<class Iter, Integral Size, Callable Generator>
+  requires OutputIterator<Iter, Generator::result_type>
   void generate_n(Iter @\farg{first}@, Size @\farg{n}@, Generator @\farg{gen}@);
 \end{itemdecl}\color{black}
 
@@ -1947,10 +1851,10 @@ template<ForwardIterator Iter, class T>
   Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
               const T& @\farg{value}@);
 
-template<ForwardIterator Iter, Predicate<Iter::reference> Pred>
-  requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+template<ForwardIterator Iter, Predicate<auto, Iter::reference> Pred>
+  requires MoveAssignable<Iter::reference>
   Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
-                 Pred @\farg{pred}@);
+                 @\textcolor{addclr}{}@Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
 \begin{itemdescr}
@@ -1975,7 +1879,7 @@ The end of the resulting range.
 Stable.
 
 \pnum
-\complexity\ 
+\textcolor{black}{}\complexity\ 
 Exactly
 \tcode{\farg{last} - \farg{first}}\
 applications of the corresponding predicate.
@@ -1984,14 +1888,13 @@ applications of the corresponding predicate.
 \index{remove_copy@\tcode{remove_copy}}%
 \index{remove_copy_if@\tcode{remove_copy_if}}%
 \color{addclr}\begin{itemdecl}
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, class T>
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
   requires EqualityComparable<InIter::reference, T>
   OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@, const T& @\farg{value}@);
 
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-         Predicate<InIter::reference> Pred>
-  requires CopyConstructible<Pred>
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+         Predicate<auto, InIter::reference> Pred>
   OutIter remove_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -2038,8 +1941,8 @@ template<ForwardIterator Iter>
   requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
   Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Pred>
-  requires MoveAssignable<Iter::reference> && CopyConstructible<Pred>
+template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
+  requires MoveAssignable<Iter::reference>
   Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
               Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -2075,7 +1978,7 @@ applications of the corresponding predicate.
 \index{unique_copy@\tcode{unique_copy}}%
 \color{addclr}
 \begin{itemdecl}
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
   requires EqualityComparable<InIter::value_type> && CopyAssignable<InIter::value_type> && 
            CopyConstructible<InIter::value_type> && !ForwardIterator<InIter> && 
            !MutableForwardIterator<OutIter>
@@ -2083,7 +1986,7 @@ template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
     unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                 OutIter @\farg{result}@);
 
-template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
   requires EqualityComparable<InIter::reference>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
@@ -2095,24 +1998,22 @@ template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
 
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter,
-         Predicate<InIter::value_type, InIter::value_type> Pred>
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
+         Predicate<auto, InIter::value_type, InIter::value_type> Pred>
   requires CopyAssignable<InIter::value_type> && CopyConstructible<InIter::value_type> &&
-           !ForwardIterator<InIter> && !MutableForwardIterator<OutIter> &&
-           CopyConstructible<Pred>
+           !ForwardIterator<InIter> && !MutableForwardIterator<OutIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       @\textcolor{addclr}{OutIter}@ @\farg{result}@, Pred @\farg{pred}@);
 
-template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter,
-         Predicate<InIter::reference, InIter::reference> Pred>
-  requires CopyConstructible<Pred>
+template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
+         Predicate<auto, InIter::reference, InIter::reference> Pred>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
 
 template<InputIterator InIter, MutableForwardIterator OutIter,
-         Predicate<OutIter::reference, InIter::reference> Pred>
+         Predicate<auto, OutIter::reference, InIter::reference> Pred>
   requires CopyAssignable<OutIter::reference, InIter::reference> &&
-           !ForwardIterator<InIter> && CopyConstructible<Pred>
+           !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@, Pred @\farg{pred}@);
 \end{itemdecl}
@@ -2144,7 +2045,7 @@ shall be CopyConstructible (20.1.3).
 Otherwise CopyConstructible is not required.}
 
 \pnum
-\effects\ 
+\textcolor{black}{}\effects\ 
 Copies only the first element from every consecutive group of equal elements referred to by
 the iterator \color{black}
 \tcode{i}\
@@ -2199,7 +2100,7 @@ swaps.
 
 \index{reverse_copy@\tcode{reverse_copy}}%
 \color{addclr}\begin{itemdecl}
-template<BidirectionalIterator InIter, OutputIterator<InIter::value_type> OutIter>
+template<BidirectionalIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
   OutIter reverse_copy(InIter @\farg{first}@,
                        InIter @\farg{last}@, OutIter @\farg{result}@);
 \end{itemdecl}\color{black}
@@ -2278,7 +2179,7 @@ swaps.
 
 \index{rotate_copy@\tcode{rotate_copy}}%
 \color{addclr}\begin{itemdecl}
-template<ForwardIterator InIter, OutputIterator<InIter::value_type> OutIter>
+template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
   OutIter rotate_copy(InIter @\farg{first}@, InIter @\farg{middle}@,
                       InIter @\farg{last}@, OutIter @\farg{result}@);
 \end{itemdecl}\color{black}
@@ -2324,9 +2225,9 @@ template<MutableRandomAccessIterator Iter>
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Callable<Iter::difference_type> Rand>
+template<MutableRandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           Convertible<Rand::result_type, Iter::difference_type> && CopyConstructible<Rand>
+           Convertible<Rand::result_type, Iter::difference_type>
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@,
                       Rand&& @\farg{rand}@);
@@ -2386,9 +2287,8 @@ iterator_traits<RandomAccessIterator>:: difference_type}.
 
 \index{partition@\tcode{partition}}%
 \color{addclr}\begin{itemdecl}
-template<BidirectionalIterator Iter, Predicate<Iter::reference> Pred>
-  @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-           CopyConstructible<Pred>
+@\textcolor{addclr}{}@template<BidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
+  @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
   Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2436,10 +2336,9 @@ applications of the predicate are done.
 
 \index{stable_partition@\tcode{stable_partition}}%
 \color{addclr}\begin{itemdecl}
-template<MutableBidirectionalIterator Iter, Predicate<Iter::reference> Pred>
+template<MutableBidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Pred>
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2500,10 +2399,9 @@ template<MutableRandomAccessIterator Iter>
            LessThanComparable<Iter::value_type>
   void sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void sort(Iter @\farg{first}@, Iter @\farg{last}@,
             Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2546,10 +2444,9 @@ template<MutableRandomAccessIterator Iter>
            LessThanComparable<Iter::value_type>
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2593,10 +2490,9 @@ template<MutableRandomAccessIterator Iter>
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@,
@@ -2653,8 +2549,7 @@ template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare
            MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
            Predicate<Compare, InIter::value_type, RAIter::value_type> &&
            Predicate<Compare, RAIter::value_type, InIter::value_type> &&
-           Predicate<Compare, RAIter::value_type> &&
-           CopyConstructible<Compare>
+           Predicate<Compare, RAIter::value_type>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
                            Compare @\farg{comp}@);
@@ -2697,7 +2592,7 @@ comparisons.
 \begin{itemdecl}
 template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
-  bool is_sorted(Iter first, Iter last);
+  bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@);
 \end{itemdecl}
 \color{black}
 
@@ -2709,10 +2604,9 @@ template<ForwardIterator Iter>
 \index{is_sorted@\tcode{is_sorted}}%
 \color{addclr}
 \begin{itemdecl}
-template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires CopyConstructible<Compare>
-  bool is_sorted(Iter first, Iter last,
-                 Compare comp);
+template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@);
 \end{itemdecl}
 \color{black}
 
@@ -2726,11 +2620,10 @@ template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Com
 \begin{itemdecl}
 template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
-  Iter is_sorted_until(Iter first, Iter last);
-template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires CopyConstructible<Compare>
-  Iter is_sorted_until(Iter first, Iter last,
-                       Compare comp);
+  Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@);
+template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
+                       Compare @\farg{comp}@);
 \end{itemdecl}
 \color{black}
 
@@ -2756,10 +2649,9 @@ template<MutableRandomAccessIterator Iter>
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@,  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2808,7 +2700,7 @@ implied or explicit comparison function.
 They work on non-random access iterators minimizing the number of comparisons,
 which will be logarithmic for all types of iterators.
 They are especially appropriate for random access iterators,
-because these algorithms do a logarithmic number of steps
+because these \textcolor{black}{}algorithms do a logarithmic number of steps
 through the data structure.
 For non-random access iterators they execute a linear number of steps.
 
@@ -2821,8 +2713,7 @@ template<ForwardIterator Iter, class T>
   Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@);
 
-@\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<Iter::reference, T> Compare>
-  requires CopyConstructible<Compare>
+@\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::reference, T> Compare>
   Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2870,8 +2761,7 @@ template<ForwardIterator Iter, class T>
   Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@);
 
-template<ForwardIterator Iter, class T, Predicate<T, Iter::reference> Compare>
-  requires CopyConstructible<Compare>
+template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::reference> Compare>
   Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2923,8 +2813,7 @@ template<ForwardIterator Iter, class T>
 
 template<ForwardIterator Iter, class T, class Compare>
   requires Predicate<Compare, T, Iter::reference> &&
-           Predicate<Compare, Iter::reference, T> &&
-           CopyConstructible<Compare>
+           Predicate<Compare, Iter::reference, T>
   pair<Iter, Iter>
     equal_range(Iter @\farg{first}@,
                 Iter @\farg{last}@, const T& @\farg{value}@,
@@ -2951,7 +2840,7 @@ Also, for all elements
 of
 \tcode{[\farg{first}, \farg{last})},
 \tcode{e < value}\
-implies
+\textcolor{black}{}implies
 \tcode{!(value < e)}\
 or
 \tcode{\farg{comp}(e, value)}\
@@ -2989,8 +2878,7 @@ template<ForwardIterator Iter, class T>
 
 template<ForwardIterator Iter, class T, class Compare>
   requires Predicate<Compare, T, Iter::reference> &&
-           Predicate<Compare, Iter::reference, T> &&
-           CopyConstructible<Compare>
+           Predicate<Compare, Iter::reference, T>
   bool binary_search(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3045,8 +2933,8 @@ comparisons.
 
 \index{merge@\tcode{merge}}%
 \color{addclr}\begin{itemdecl}
-template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter>
+@\textcolor{addclr}{}@template<InputIterator InIter1, InputIterator InIter2,
+         OutputIterator<auto, InIter1::value_type> OutIter>
   @\textcolor{addclr}{requires}@ SameType<InIter1::value_type, InIter2::value_type> &&
            LessThanComparable<InIter1::value_type>
   OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
@@ -3054,10 +2942,9 @@ template<InputIterator InIter1, InputIterator InIter2,
                 OutIter @\farg{result}@);
 
 @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter, 
-         Predicate<InIter1::value_type, InIter2::value_type> Compare>
-  requires SameType<InIter1::value_type, InIter2::value_type> &&
-           CopyConstructible<Compare>
+         OutputIterator<auto, InIter1::value_type> OutIter, 
+         @\textcolor{addclr}{}@Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                 OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3116,10 +3003,9 @@ Stable.
                      Iter @\farg{last}@);
 
 template<MutableBidirectionalIterator Iter, 
-         Predicate<Iter::value_type, Iter::value_type> Compare>
+         Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
                      Iter @\farg{last}@, Compare @\farg{comp}@);
@@ -3199,8 +3085,8 @@ template<InputIterator Iter1, InputIterator Iter2>
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, InputIterator Iter2, 
-         Predicate<Iter1::value_type, Iter2::value_type> Compare>
-  requires SameType<Iter1::value_type, Iter2::value_type> && CopyConstructible<Compare>
+         Predicate<auto, Iter1::value_type, Iter2::value_type> Compare>
+  requires SameType<Iter1::value_type, Iter2::value_type>
   bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                 Compare @\farg{comp}@);
@@ -3230,7 +3116,7 @@ comparisons.
 \index{set_union@\tcode{set_union}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter>
+         OutputIterator<auto, InIter1::value_type> OutIter>
   requires SameType<InIter1::value_type, InIter2::value_type> &&
         LessThanComparable<InIter1::value_type>
   OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
@@ -3238,9 +3124,9 @@ template<InputIterator InIter1, InputIterator InIter2,
                     OutIter @\farg{result}@);
 
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter, 
-         Predicate<InIter1::value_type, InIter2::value_type> Compare>
-  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+         OutputIterator<auto, InIter1::value_type> OutIter, 
+         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                     OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3270,7 +3156,7 @@ comparisons.
 \notes\ If \range{first1}{last1}\ contains $m$ elements that are equivalent to
 each other and \range{first2}{last2}\ contains $n$ elements that are equivalent
 to them, then all $m$ elements from the first range shall be copied to the output
-range, in order, and then $\max(n - m, 0)$ elements from the second range shall
+\textcolor{black}{}range, in order, and then $\max(n - m, 0)$ elements from the second range shall
 be copied to the output range, in order.
 \end{itemdescr}
 
@@ -3279,7 +3165,7 @@ be copied to the output range, in order.
 \index{set_intersection@\tcode{set_intersection}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter>
+         OutputIterator<auto, InIter1::value_type> OutIter>
   requires SameType<InIter1::value_type, InIter2::value_type> &&
         LessThanComparable<InIter1::value_type>
   OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
@@ -3287,9 +3173,9 @@ template<InputIterator InIter1, InputIterator InIter2,
                            OutIter @\farg{result}@);
 
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter, 
-         Predicate<InIter1::value_type, InIter2::value_type> Compare>
-  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+         OutputIterator<auto, InIter1::value_type> OutIter, 
+         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3327,7 +3213,7 @@ to the output range, in order.
 \index{set_difference@\tcode{set_difference}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter>
+         OutputIterator<auto, InIter1::value_type> OutIter>
   requires SameType<InIter1::value_type, InIter2::value_type> &&
            @\textcolor{addclr}{LessThanComparable}@<InIter1::value_type>
   OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
@@ -3335,11 +3221,11 @@ template<InputIterator InIter1, InputIterator InIter2,
                          @\textcolor{addclr}{OutIter}@ @\farg{result}@);
 
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter, 
-         Predicate<InIter1::value_type, InIter2::value_type> Compare>
-  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+         OutputIterator<auto, InIter1::value_type> OutIter, 
+         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
-                         InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                         @\textcolor{addclr}{}@InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                          OutIter @\farg{result}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3388,7 +3274,7 @@ shall be \color{black}copied to the output range.
 \index{set_symmetric_difference@\tcode{set_symmetric_difference}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter>
+         OutputIterator<auto, InIter1::value_type> OutIter>
   requires SameType<InIter1::value_type, InIter2::value_type> &&
         LessThanComparable<InIter1::value_type>
   OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
@@ -3396,9 +3282,9 @@ template<InputIterator InIter1, InputIterator InIter2,
                                    OutIter @\farg{result}@);
 
 template<InputIterator InIter1, InputIterator InIter2,
-         OutputIterator<InIter1::value_type> OutIter, 
-         Predicate<InIter1::value_type, InIter2::value_type> Compare>
-  requires SameType<InIter1::value_type, InIter2::value_type> && CopyConstructible<Compare>
+         OutputIterator<auto, InIter1::value_type> OutIter, 
+         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+  requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                    OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3483,9 +3369,8 @@ template<MutableRandomAccessIterator Iter>
            LessThanComparable<Iter::value_type>
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3525,9 +3410,9 @@ template<MutableRandomAccessIterator Iter>
            Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           Swappable<Iter::value_type> && CopyConstructible<Compare>
+           Swappable<Iter::value_type>
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                 Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3556,7 +3441,7 @@ the \mbox{\tcode{MoveAssignable}} requirements
 (Table~\mbox{\ref{moveassignable}}).}
 
 \pnum
-\complexity\ 
+\textcolor{black}{}\complexity\ 
 At most
 \tcode{2 * log(\farg{last}\ - \farg{first})}\
 comparisons.
@@ -3571,9 +3456,8 @@ template<MutableRandomAccessIterator Iter>
            LessThanComparable<Iter::value_type>
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-@\color{addclr}@template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           CopyConstructible<Compare>
+@\color{addclr}@template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3607,9 +3491,9 @@ template<MutableRandomAccessIterator Iter>
            Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
+template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           Swappable<Iter::value_type> && CopyConstructible<Compare>
+           Swappable<Iter::value_type>
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3654,8 +3538,7 @@ template<RandomAccessIterator Iter>
 
 \color{addclr}
 \begin{itemdecl}
-template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires CopyConstructible<Compare>
+template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   bool is_heap(Iter first, Iter last, Compare comp);
 \end{itemdecl}
 \color{black}
@@ -3669,8 +3552,7 @@ template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type
 \begin{itemdecl}
 template<RandomAccessIterator Iter>
   Iter is_heap_until(Iter first, Iter last);
-template<RandomAccessIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires CopyConstructible<Compare>
+template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   Iter is_heap_until(Iter first, Iter last,
                      Compare comp);
 \end{itemdecl}
@@ -3692,8 +3574,7 @@ range \mbox{\range{first}{i}} is a heap.}
 \index{min@\tcode{min}}%
 \color{addclr}\begin{itemdecl}
 template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
-template<class T, Predicate<T, T> Compare>
-  requires CopyConstructible<Compare>
+template<class T, Predicate<auto, T, T> Compare>
   const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3714,11 +3595,66 @@ The smaller value.
 Returns the first argument when the arguments are equivalent.
 \end{itemdescr}
 
+\begin{itemdecl}
+@\addedCC{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+@\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
+  @\addedCC{requires SameType<T, Args>...}@
+  @\addedCC{const T\& min(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedCC{\mbox{\requires} Type \mbox{\tcode{T}} is
+  \mbox{\tcode{LessThanComparable}}, and all types forming
+  \mbox{\tcode{Args...}} are the same as \mbox{\tcode{T}}.}
+
+\pnum
+\mbox{\returns} The smallest value in the set of all
+  arguments.
+
+\pnum
+\mbox{\notes} Returns the leftmost argument when several
+  arguments are equivalent to the smallest. Returns \mbox{\farg{a}} if
+  \mbox{\tcode{sizeof...(Args)}} is 0.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class T, class U, class... Args>
+  const T& min(const T& @\farg{a}@, const U& @\farg{b}@, const Args&... @\farg{args}@);
+\end{itemdecl}
+
+\editorial{At present, we do not know how to write concept constraints
+  for this variant of \mbox{\tcode{min}}, because we cannot directly
+  express the idea of splitting \mbox{\tcode{Args}} into its first N-1
+  arguments (all of which are the same at \mbox{\tcode{T}}) and its
+  Nth argument (the binary predicate). Most likely this is possible
+  with what is effectively metaprogramming of the concept system to
+  ``walk'' through the arguments, but such an implementation would
+  make a poor specification. For now, we leave this version
+  unconstrained.}
+
+\begin{itemdescr}
+\pnum
+\requires\
+The types of all arguments except the last one are the same as \tcode{T}.
+The last argument is a binary predicate over \tcode{T}.
+
+\pnum
+\returns\
+The first element in a partial ordering of all the arguments except
+the last one, where the ordering is defined by the predicate.
+
+\pnum
+\notes\
+Returns the leftmost argument when several arguments are equivalent to
+the first element in the ordering. Returns \farg{a} if
+\tcode{sizeof...(Args)} is 0.
+\end{itemdescr}
+
 \index{max@\tcode{max}}%
 \color{addclr}\begin{itemdecl}
 template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
-template<class T, Predicate<T, T> Compare>
-  requires CopyConstructible<Compare>
+template<class T, Predicate<auto, T, T> Compare>
   const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3739,12 +3675,61 @@ The larger value.
 Returns the first argument when the arguments are equivalent.
 \end{itemdescr}
 
+\begin{itemdecl}
+@\addedCC{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+@\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
+  @\addedCC{requires SameType<T, Args>...}@
+  @\addedCC{const T\& max(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedCC{\mbox{\requires} Type \mbox{\tcode{T}} is
+  \mbox{\tcode{LessThanComparable}}, and all types forming
+  \mbox{\tcode{Args...}} are the same as \mbox{\tcode{T}}.}
+
+\pnum
+\mbox{\returns} The largest value in the set of all
+  arguments.
+
+\pnum
+\mbox{\notes} Returns the leftmost argument when several
+  arguments are equivalent to the largest. Returns \mbox{\farg{a}} if
+  \mbox{\tcode{sizeof...(Args)}} is 0.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class T, class U, class... Args>
+  const T& max(const T& @\farg{a}@, const U& @\farg{b}@, const Args&... @\farg{args}@);
+\end{itemdecl}
+
+\editorial{As with the corresponding \mbox{\tcode{min}} function, we
+  do not know how to write the constraints, so we leave this version
+  unconstrained.}
+
+\begin{itemdescr}
+\pnum
+\requires\
+The types of all arguments except the last one are the same as \tcode{T}.
+The last argument is a binary predicate over \tcode{T}.
+
+\pnum
+\returns\
+The last element in a partial ordering of all the arguments except
+the last one, where the ordering is defined by the predicate.
+
+\pnum
+\notes\
+Returns the leftmost argument when several arguments are equivalent to
+the last element in the ordering. Returns \farg{a} if
+\tcode{sizeof...(Args)} is 0.
+\end{itemdescr}
+
 \index{minmax@\tcode{minmax}}%
 \color{addclr}
 \begin{itemdecl}
 template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
-template<class T, Predicate<T, T> Compare>
-  requires CopyConstructible<Compare>
+template<class T, Predicate<auto, T, T> Compare>
   @\textcolor{addclr}{pair}@<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}
 \color{black}
@@ -3772,14 +3757,90 @@ Returns \mbox{\tcode{<pair<const T\&, const T\&>(a, b)}} when the arguments are 
 Exactly one comparison.}
 \end{itemdescr}
 
+\begin{itemdecl}
+@\addedCC{template<LessThanComparable T>}@
+  @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+@\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
+  @\addedCC{requires SameType<T, Args>...}@
+  @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedCC{\mbox{\requires} Type \mbox{\tcode{T}} is
+  \mbox{\tcode{LessThanComparable}}, and all types forming
+  \mbox{\tcode{Args...}} are the same as \mbox{\tcode{T}}.} 
+
+\pnum
+\returns\
+\tcode{pair<const T\&, const T\&>(x, y)}\
+where \tcode{x} is the first element and \tcode{y} the last element in
+a partial ordering of all the arguments.
+
+\pnum
+\notes\
+\tcode{x}\
+is the leftmost argument when several arguments are
+equivalent to the smallest. 
+\tcode{y}\
+is the rightmost argument when several arguments are equivalent to the
+largest. 
+Returns 
+\tcode{pair<const T\&, const T\&>(a, a)}\
+if 
+\tcode{sizeof...(Args)}\
+is 0.
+
+\pnum
+\complexity\
+At most (3/2)\tcode{sizeof...(Args)} applications of the corresponding
+predicate.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\textcolor{black}{template<class T, class U, class... Args>}@
+  @\textcolor{black}{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const U\& \mbox{\farg{b}}, const Args\&... \mbox{\farg{args}});}@
+\end{itemdecl}
+
+\editorial{As with the corresponding \mbox{\tcode{min}} and
+  \mbox{\tcode{max}} functions, we
+  do not know how to write the constraints, so we leave this version
+  unconstrained.}
+
+\begin{itemdescr}
+\pnum
+\requires\
+The types of all arguments except the last one are the same as
+\tcode{T}. The last argument is a binary predicate over \tcode{T}.
+
+\pnum
+\returns\
+\tcode{pair<const T\&, const T\&>(x, y)}\
+where \tcode{x} is the first element and \tcode{y} the last element in
+a partial ordering of all the arguments defined by the predicate.
+
+\pnum
+\notes\
+\tcode{x} is the leftmost argument when several arguments would order
+equivalent as the first in the ordering. 
+\tcode{y} is the rightmost argument when several arguments would order
+equivalent as the last in the ordering.
+Returns \tcode{pair<const T\&, const T\&>(a, a)} if
+\tcode{sizeof...(Args)} is 0.
+
+\pnum
+\complexity\
+At most (3/2)\tcode{sizeof...(Args)} applications of the corresponding
+predicate.
+\end{itemdescr}
+
 \index{min_element@\tcode{min_element}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter>
   requires LessThanComparable<Iter::reference>
   Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
-  requires CopyConstructible<Compare>
+template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
   Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3817,8 +3878,7 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::reference>
   Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
-  requires CopyConstructible<Compare>
+template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
   Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3857,8 +3917,7 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
   pair<Iter, Iter>
     minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
-template<ForwardIterator Iter, Predicate<Iter::value_type, Iter::value_type> Compare>
-  requires CopyConstructible<Compare>
+template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
   pair<Iter, Iter>
     minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}
@@ -3893,10 +3952,9 @@ template<InputIterator Iter1, InputIterator Iter2>
 template<InputIterator Iter1, InputIterator Iter2, class Compare>
   requires Predicate<Compare, Iter1::reference, Iter2::reference> &&
            Predicate<Compare, Iter2::reference, Iter1::reference>
-           CopyConstructible<Compare>
   bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
-                               Compare @\farg{comp}@);
+                               @\textcolor{addclr}{}@Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
 \begin{itemdescr}
@@ -3947,9 +4005,8 @@ template<MutableBidirectionalIterator Iter>
            LessThanComparable<Iter::reference>
   bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableBidirectionalIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-           CopyConstructible<Compare>
+template<MutableBidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
   @\textcolor{addclr}{bool}@ next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3988,9 +4045,8 @@ template<MutableBidirectionalIterator Iter>
         LessThanComparable<Iter::reference>
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableBidirectionalIterator Iter, Predicate<Iter::reference, Iter::reference> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-           CopyConstructible<Compare>
+template<MutableBidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -4028,6 +4084,6 @@ swaps.
 \end{paras}
 
 \bibliographystyle{plain}
-\bibliography{../local}
+\bibliography{local}
 
 \end{document}
