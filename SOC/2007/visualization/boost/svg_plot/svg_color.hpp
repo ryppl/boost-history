@@ -95,11 +95,16 @@ struct svg_color
         b = (unsigned char)(( blue > 255 ) ? 255 : blue);
     }
 
-    svg_color(bool is) : blank(is)
+    svg_color(bool is_blank) : blank(is_blank)
     { // Permits blank (=true) as a (non-)color.
+      // svg_color(true) returns blank (and color value as below).
+      // svg_color(false) returns color values below and NOT blank.
+      // So plot.area_fill(true) will be a blank == no fill!
+      // So plot.area_fill(false) will be a default(black) fill!
+      // This is somewhat counter-intuitive!
       r = 0; // Safer to assign *some* value to rgb? zero, or 255?
       g = 0; // rather than leaving them random?
-      b = 0;
+      b = 0; // Default 'blank' color 0,0,0 is black.
     }
 
     svg_color(svg_color_constant col) : blank(false)

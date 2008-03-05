@@ -1,7 +1,7 @@
 // svg_style.hpp 
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2007
+// Copyright Paul A. Bristow 2008
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -13,7 +13,6 @@
 // svg style information is fill, stroke, width, line & bezier curve.
 // This module provides struct plot_point_style & struct plot_line_style
 // and class svg_style holding the styles.
-
 // http://www.w3.org/TR/SVG11/styling.html 
 
 #include "svg_color.hpp"
@@ -819,7 +818,7 @@ public:
       { // Range too small to display.
         throw std::runtime_error("Axis ticks & labels range too small!" );
       }
-  }
+  } // ticks_labels_style constructor.
 
   double label_length(double value)
   { // Find the length of label for a value.

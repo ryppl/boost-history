@@ -4,36 +4,47 @@
 // For more information, see http://www.boost.org
 // -----------------------------------------------------------------
 
-#ifdef _MSC_VER
-#  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
-#  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
-#  pragma warning (disable : 4512) // assignment operator could not be generated
-#  pragma warning (disable : 4224) // nonstandard extension used : formal parameter 'function_ptr' was previously defined as a type
-#  pragma warning (disable : 4127) // conditional expression is constant
-#endif
-
 #include <boost/svg_plot/svg_2d_plot.hpp>
-#include <map>
+  using namespace boost::svg; // Needed to get svg colors and others.
+  using boost::svg::svg_2d_plot;
+
+#include <map> 
+  using std::map;
 #include <cmath>
+  using ::sin;
+  using ::cos;
+  using ::tan;
 
-using std::map;
-using namespace boost::svg;
-
-double f(double x)
+double my_sin(double x)
 {
 	return 50. * sin(x);
 }
 
+double my_cos(double x)
+{
+	return 50. * cos(x);
+}
+
+
+double my_tan(double x)
+{
+  return 50. * tan(x);
+}
+
 int main()
 {
-	map<double, double> data1;
+	map<double, double> data_sin;
+	map<double, double> data_cos;
+	map<double, double> data_tan;
 	
-    double inter = 3.14159265 / 8.;
+  double inter = 3.14159265 / 8.; // 16 points per cycle of 2 pi.
 
-	for(double i=0; i<=10.; i+=inter)
-	{
-		data1[i] = f(i);
-	}
+	for(double i = 0; i <= 10.; i+=inter)
+	{ // Just 10 data points for each function.
+		data_sin[i] = my_sin(i);
+		data_cos[i] = my_cos(i);
+		data_tan[i] = my_tan(i);
+	} // for
 
 	svg_2d_plot my_plot;
 
@@ -41,29 +52,32 @@ int main()
 	my_plot.image_size(700, 500)
 	       .x_range(-1, 10)
 	       .y_range(-75, 75);
-           
 
 	// Text settings.
-	my_plot.title("Plot of 50 * sin(x)")
-	       .title_font_size(29)
-	       .x_label("X Axis Units")
-           .y_major_value_labels_side(true)
-           .y_major_grid_on(true);
-	
+	my_plot.title("Plot of 50 * sin(x), cos(x) and tan(x)")
+	       .title_font_size(20)
+	       .x_label("x")
+	       .y_label("50 * f(x)")
+         .x_major_value_labels_side(bottom)
+         .y_major_value_labels_side(left)
+         .x_major_grid_on(true)
+         .y_major_grid_on(true)
+         .x_major_grid_color(cyan)
+         .y_major_grid_color(cyan)
+         ;
 	// Commands.
 	my_plot.plot_window_on(true)
 	       .x_label_on(true)
-	       .x_major_value_labels_side(true);
+         ;
 	
 	// Color settings.
-	my_plot.background_color(svg_color(67, 111, 69))
-	       .legend_background_color(svg_color(207, 202,167))
-	       .legend_border_color(svg_color(102, 102, 84))
-	       .plot_background_color(svg_color(136, 188, 126))
-	       .title_color(white)
-           .y_major_grid_color(black);
-
-	//X axis settings.
+	my_plot.background_color(whitesmoke)
+	       .legend_background_color(lightyellow)
+	       .legend_border_color(yellow)
+	       .plot_background_color(ghostwhite)
+	       .title_color(red)
+         ;
+	// X axis settings.
 	my_plot.x_major_interval(2)
 	       .x_major_tick_length(14)
 	       .x_major_tick_width(1)
@@ -71,16 +85,40 @@ int main()
 	       .x_minor_tick_width(1)
 	       .x_num_minor_ticks(3)
 	
-	//Y axis settings.
+	// Y axis settings.
 	       .y_major_interval(25)
 	       .y_num_minor_ticks(5);		
-
-	//legend settings
-	my_plot.legend_title_font_size(15);
 	
-	my_plot.plot(data1, "Sqrt(x)").area_fill(red);
+	//svg_2d_plot_series& s1 = my_plot.plot(data1, "Sqrt(x)").area_fill(red);
+ // my_plot.write("./2d_area_fill.svg");
+ // std::cout << s1.area_fill() << std::endl;
 
-    my_plot.write("./2d_area_fill.svg");
+	svg_2d_plot_series& s_sin = my_plot.plot(data_sin, "sin(x)").area_fill(red);
+  std::cout << s_sin.area_fill() << std::endl;
+	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
+	// svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(true).shape(square);
+  // Note that svg_color(bool = true) returns a non-color blank, so no fill.
+  std::cout << s_cos.area_fill() << std::endl;
+	svg_2d_plot_series& s_tan = my_plot.plot(data_tan, "tan(x)").shape(cone);
+  std::cout << s_tan.area_fill() << std::endl;
+  my_plot.write("./2d_no_area_fill.svg");
 
 	return 0;
-}
+} // int main()
+
+/*
+
+Output:
+
+Compiling...
+2d_area_fill.cpp
+Linking...
+Embedding manifest...
+Autorun "j:\Cpp\SVG\debug\2d_area_fill.exe"
+RGB(255,0,0)
+blank
+blank
+Build Time 0:03
+
+
+*/

@@ -14,6 +14,7 @@
 #ifdef _MSC_VER
 #pragma warning(push)
 #  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
+#  pragma warning (disable : 4512) // assignment operator could not be generated
 #endif
 
 #include <boost/iterator/transform_iterator.hpp>
@@ -50,6 +51,11 @@ namespace boost
     // -----------------------------------------------------------------
     class svg_2d_plot_series
     {
+    //protected: // TODO this causes trouble.
+
+    friend svg_2d_plot_series;
+    friend void draw_straight_lines(const svg_2d_plot_series&);
+
     public:
       // 2-D Data series points to plot.
       std::multimap<double, double> series; // Normal 'OK to plot' data values.
@@ -63,6 +69,7 @@ namespace boost
       plot_point_style point_style_;
       plot_point_style limit_point_style_;
       plot_line_style line_style_;
+    public:
 
       template <class T>
       svg_2d_plot_series(T begin, T end, // of data series.
@@ -79,17 +86,18 @@ namespace boost
 
       { // Constructor.
         for(T i = begin; i != end; ++i)
-        { // Sort into normal and limited series.
+        { // Sort data points into normal and limited series.
           if(detail::pair_is_limit(*i))
           { // Either x and/or y is at limit.
             series_limits.insert(*i);
           }
           else
-          { // normal data values for both x and y.
+          { // Normal data values for both x and y.
             series.insert(*i);
           }
         }
       } // svg_2d_plot_series
+
 
       // Set functions for the plot series.
       svg_2d_plot_series& fill_color(const svg_color& col_)
@@ -125,6 +133,8 @@ namespace boost
       svg_2d_plot_series& area_fill(const svg_color& col_)
       {
         line_style_.area_fill_ = col_;
+        // Note that area_fill(true) will produce a *blank* color, and so NO FILL.
+        // area_fill(false) will produce the default non-blank color (black?).
         return *this;
       }
 
@@ -146,7 +156,7 @@ namespace boost
         return *this;
       }
 
-       // Get functions for the plot series.
+      // Get functions for the plot series.
       plot_line_style line_style()
       {
         return line_style_;
@@ -192,6 +202,7 @@ namespace boost
     class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
     { // See also svg_1d_plot.hpp for 1-D version.
      friend void show_plot_settings(svg_2d_plot&);
+     friend svg_2d_plot_series;
 
     private:
       // Member data names conventionally end with _,
@@ -287,7 +298,7 @@ namespace boost
     public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
 
       svg_2d_plot() // Constructor, including all the very many default plot options,
-        // some which use some or all of the class defaults.
+        // some of which use some or all of the class defaults.
         :
       // TODO check that *all* options are initialized here.
       // See documentation for default settings rationale.
@@ -384,7 +395,7 @@ namespace boost
         // Grids.
         // Default color & width for grid, used or not.
         image.g(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
-        BOOST_ASSERT(image.g(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
+        // BOOST_ASSERT(image.g(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
         image.g(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
         image.g(PLOT_Y_MAJOR_GRID).style().stroke_width(y_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
         image.g(PLOT_Y_MINOR_GRID).style().stroke_width(y_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
@@ -719,7 +730,7 @@ namespace boost
             image.g(detail::PLOT_Y_AXIS).line(plot_left_, plot_top_, plot_left_, plot_bottom_);
           }
           else if (y_axis_position_ == right)
-          {// Draw on the lright of plot window.
+          {// Draw on the right of plot window.
             image.g(detail::PLOT_Y_AXIS).line(plot_right_, plot_top_, plot_right_, plot_bottom_);
           }
           else
@@ -836,32 +847,31 @@ namespace boost
         if((y < plot_top_ - 0.01) || (y > plot_bottom_ + 0.01))
           // Allow a bit extra to allow for round-off errors.
         { // tick value is way outside plot window, so nothing to do.
-          // std::cout << y << std::endl;
           return;
         }
         double x_left(0.); // Left end of tick.
         double x_right(image.y_size()); // Right end of tick.
-        if(y_ticks_.major_grid_on_)
-        { // Draw horizontal major grid line.
-          if(!plot_window_on_ != 0)
+        if(y_ticks_.major_grid_on_ == true)
+        { // Draw horizontal major Y grid line.
+          if(!plot_window_on_ == true)
           { 
-            if(y_ticks_.major_value_labels_side_ < 0)
+            if(y_ticks_.major_value_labels_side_ < 0) // left
             { // Start further right to give space for y axis value label.
               y -= y_value_label_style_.font_size() * text_margin_;
             }
 
-            if(y_ticks_.left_ticks_on_)
-            { // And similarly for left ticks.
+            if(y_ticks_.left_ticks_on_ == true)
+            { // And similarly space for left ticks.
               y -= y_ticks_.major_tick_length_;
             }
           }
           else
           { // plot_window_on_ to use full width of plot window.
-            x_left = plot_left_ + plot_window_border_.width_; // Don't write over border.
+            x_left = plot_left_ + plot_window_border_.width_; // Don't write over either border.
             x_right = plot_right_ - plot_window_border_.width_;
-            grid_path.M(x_left, y).L(x_right, y); // Horizontal grid line.
           }
-        } // y_major_grid_on
+          grid_path.M(x_left, y).L(x_right, y); // Horizontal grid line.
+       } // y_major_grid_on
 
         // Draw major ticks & value label, if necessary.
         double y_tick_length = y_ticks_.major_tick_length_;
@@ -1067,11 +1077,14 @@ namespace boost
             x_right = plot_right_ - plot_window_border_.width_; // Ensure just *inside* window?
           }
           if((y >= plot_top_) && (y <= plot_bottom_) && (x_left >= plot_left_) && (x_right <= plot_right_) )
-          { // Make sure that we are drawing inside the allowed window.
+          { // Make sure that we are drawing inside the allowed plot window.
             // Note comparisons are 'upside-down' - y is increasing downwards!
             grid_path.M(x_left, y).L(x_right, y); // Draw grid line.
           }
-          // TODO else just ignore outside plot window?
+          else
+          {
+            // Just ignore outside plot window
+          }
         } // y_minor_grid
 
         // Draw y minor ticks.
@@ -1120,13 +1133,13 @@ namespace boost
         g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
         g_ptr.style().stroke_color(series.line_style_.color_);
-        g_ptr.style().fill_color(series.line_style_.area_fill_);
+        //g_ptr.style().fill_color(series.line_style_.area_fill_); // Now set in path below
         g_ptr.style().stroke_width(series.line_style_.width_);
         path_element& path = g_ptr.path();
         path.style().fill_color(series.line_style_.area_fill_);
 
         bool is_fill = !series.line_style_.area_fill_.blank;
-        path.fill = is_fill; // Ensure includes a fill="none".
+        path.fill = is_fill; // Ensure includes a fill="none" if no fill.
 
         if(series.series.size() > 1)
         { // Need at least two points for a line ;-)
@@ -1136,21 +1149,21 @@ namespace boost
           // we first have to move from the X-axis (y = 0) to the first point,
           // and again at the end after the last point.
           prev_x = (*j).first;
-          prev_y = 0.;
+          prev_y = 0.; // X-axis.
           transform_point(prev_x, prev_y);
           if(is_fill)
           { // Move to 1st point.
-            path.style().fill_color(series.line_style_.area_fill_);
+            //path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
             path.M(prev_x, prev_y);
           }
           transform_y(prev_y = (*j).second);
           if(is_fill)
-          { // fill wanted.
-            path.style().fill_color(series.line_style_.area_fill_); // TODO why again?
+          { // Area fill wanted.
+            // path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
             path.L(prev_x, prev_y); // Line from X-axis to 1st point.
           }
           else
-          { // fill == blank
+          { // Area fill == blank
             path.M(prev_x, prev_y);
           }
           ++j; // so now refers to 2nd point to plot.
@@ -1160,20 +1173,19 @@ namespace boost
             temp_x = (*j).first;
             temp_y = (*j).second;
             transform_point(temp_x, temp_y);
-            path.L(temp_x, temp_y); // line to next point.
-
-            if(is_fill)
-            {
-              path.M(temp_x, temp_y);
-            }
+            path.L(temp_x, temp_y); // Line to next point.
+            //if(is_fill) // This seems to stop area-fill and is not needed anyway.
+            //{
+            //  //path.M(temp_x, temp_y);
+            //}
             prev_x = temp_x;
             prev_y = temp_y;
-          } // for j
+          } // for j'th point
 
           if(is_fill)
-          { // fill wanted.
-            transform_y(temp_y = 0.); // X-axis line.
-            path.L(temp_x, temp_y).z(); // Close path with Z to terminate line.
+          { // Area fill wanted.
+            transform_y(temp_y = 0.); // X-axis line coordinate.
+            path.L(temp_x, temp_y).z(); // Draw line to X-axis & closepath with Z.
           }
         }
       } // draw_straight_lines

@@ -1300,7 +1300,6 @@ public:
         o_str << "\"";
 
         write_attributes(o_str); // id & clip_path
-
         style_info_.write(o_str); // fill, stroke, width...
 
         if(!fill)
