@@ -1,6 +1,7 @@
 \documentclass[american,twoside]{book}
 \usepackage{refbib}
 \usepackage{hyperref}
+\usepackage{pdfsync}
 \input{macros}
 
 %%--------------------------------------------------
@@ -29,20 +30,22 @@
 \begin{titlepage}
 \begin{center}
 \huge
-Concepts for the C++0x Standard Library: Numerics
+Concepts for the C++0x Standard Library: Numerics\\
+(Revision 1)
 
 \vspace{0.5in}
 
 \normalsize
-Douglas Gregor, Jeremiah Willcock, and Andrew Lumsdaine \\
+Douglas Gregor, and Andrew Lumsdaine \\
 Open Systems Laboratory \\
 Indiana University \\
 Bloomington, IN\ \  47405 \\
-\{\href{mailto:dgregor@cs.indiana.edu}{dgregor}, \href{mailto:jewillco@cs.indiana.edu}{jewillco}, \href{mailto:lums@cs.indiana.edu}{lums}\}@cs.indiana.edu
+\{\href{mailto:dgregor@cs.indiana.edu}{dgregor}, \href{mailto:lums@cs.indiana.edu}{lums}\}@cs.indiana.edu
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2041=06-0111\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2041=06-0111\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@cs.indiana.edu}{dgregor@cs.indiana.edu}$>$\vspace{-6pt}
@@ -84,56 +87,55 @@ Bloomington, IN\ \  47405 \\
 \color{addclr}
 \begin{codeblock}
 namespace std {
-  template <InputIterator Iter, Addable<Iter::reference> T>
-    where Assignable<T, T::result_type>
+  template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
+    requires CopyAssignable<T, T::result_type>
     T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
-  template <InputIterator Iter, class T, Callable2<T, Iter::reference> BinaryOperation>
-    where Assignable<T, BinaryOperation::result_type>
+  template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
+    requires CopyAssignable<T, BinaryOperation::result_type>
     T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
-  	       BinaryOperation @\farg{binary_op}@);
+  	         BinaryOperation @\farg{binary_op}@);
   template <InputIterator Iter1, InputIterator Iter2, class T>
-    where Multiplicable<Iter1::reference, Iter2::reference> &&
-          Addable<T, Multiplicable<Iter1::reference, Iter2::reference>::result_type> &&
-          Assignable<
-            T, 
-            Addable<T, 
-                    Multiplicable<Iter1::reference, Iter2::reference>::result_type>::result_type>
+    requires HasMultiply<Iter1::reference, Iter2::reference> &&
+             HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
+             CopyAssignable<
+               T, 
+               HasPlus<T, 
+                       HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
     T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
-  		  Iter2 @\farg{first2}@, T @\farg{init}@);
+  		    Iter2 @\farg{first2}@, T @\farg{init}@);
   template <InputIterator Iter1, InputIterator Iter2, class T,
-  	  class BinaryOperation1, Callable2<Iter1::reference, Iter2::reference> BinaryOperation2>
-    where Callable2<BinaryOperation1, T, BinaryOperation2::result_type> &&
-          Assignable<T, 
-                     Callable2<BinaryOperation1, T, BinaryOperation2::result_type>::result_type>
+  	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
+    requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
+             CopyAssignable<T, BinaryOperation1::result_type>
     T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
-  		  Iter2 @\farg{first2}@, T @\farg{init}@,
-  		  BinaryOperation1 @\farg{binary_op1}@,
-  		  BinaryOperation2 @\farg{binary_op2}@);
-  template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
-    where Addable<InIter::value_type> && 
-          Assignable<InIter::value_type, Addable<InIter::value_type>::result_type> &&
-          CopyConstructible<InIter::value_type>
+  		    Iter2 @\farg{first2}@, T @\farg{init}@,
+  		    BinaryOperation1 @\farg{binary_op1}@,
+  		    BinaryOperation2 @\farg{binary_op2}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+    requires HasPlus<InIter::value_type> && 
+             CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
+             CopyConstructible<InIter::value_type>
     OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-  		      OutIter @\farg{result}@);
-  template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-           Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
-    where Assignable<InIter::value_type, BinaryOperation::result_type> && 
-          CopyConstructible<InIter::value_type>
+  	  	        OutIter @\farg{result}@);
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+           Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+    requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
+             CopyConstructible<InIter::value_type>
     OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-    		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
-  template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
-    where Subtractable<InIter::value_type, InIter::value_type> &&
-          Assignable<OutIter, Subtractable<InIter::value_type, InIter::value_type>::result_type> &&
-          CopyConstructible<InIter::value_type> && Assignable<InIter::value_type> 
+      		        OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+    requires HasMinus<InIter::value_type, InIter::value_type> &&
+             CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
+             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
     OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-     			      OutIter @\farg{result}@);
-  template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-            Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
-    where Assignable<OutIter::reference, BinaryOperation::result_type> &&
-          CopyConstructible<InIter::value_type> && Assignable<InIter::value_type>
+     			        OutIter @\farg{result}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+            Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+    requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
+             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
     OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-    			      OutIter @\farg{result}@,
-    			      BinaryOperation @\farg{binary_op}@);
+    			        OutIter @\farg{result}@,
+    			        BinaryOperation @\farg{binary_op}@);
 }
 \end{codeblock}
 \color{black}
@@ -148,13 +150,13 @@ apply to the following algorithms.
 \color{addclr}
 \index{accumulate@\tcode{accumulate}}%
 \begin{itemdecl}
-template <InputIterator Iter, Addable<Iter::reference> T>
-  where Assignable<T, T::result_type>
+template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
+  requires CopyAssignable<T, T::result_type>
   T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
-template <InputIterator Iter, class T, Callable2<T, Iter::reference> BinaryOperation>
-  where Assignable<T, BinaryOperation::result_type>
+template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
+  requires CopyAssignable<T, BinaryOperation::result_type>
   T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
-	       BinaryOperation @\farg{binary_op}@);
+               BinaryOperation @\farg{binary_op}@);
 \end{itemdecl}
 \color{black}
 
@@ -197,19 +199,18 @@ shall neither modify elements nor invalidate iterators or subranges.%
 \color{addclr}
 \begin{itemdecl}
 template <InputIterator Iter1, InputIterator Iter2, class T>
-  where Multiplicable<Iter1::reference, Iter2::reference> &&
-        Addable<T, Multiplicable<Iter1::reference, Iter2::reference>::result_type> &&
-        Assignable<
-          T, 
-          Addable<T, 
-                  @\color{addclr}@Multiplicable<Iter1::reference, Iter2::reference>::result_type>::result_type>
-  T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+  requires HasMultiply<Iter1::reference, Iter2::reference> &&
+           HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
+           CopyAssignable<
+             T, 
+             HasPlus<T, 
+                     HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
+  @\textcolor{addclr}{}@T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
 		  Iter2 @\farg{first2}@, T @\farg{init}@);
 template <InputIterator Iter1, InputIterator Iter2, class T,
-	  class BinaryOperation1, Callable2<Iter1::reference, Iter2::reference> BinaryOperation2>
-  where Callable2<BinaryOperation1, T, BinaryOperation2::result_type> &&
-        Assignable<T, 
-                   Callable2<BinaryOperation1, T, BinaryOperation2::result_type>::result_type>
+	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
+  requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
+           CopyAssignable<T, BinaryOperation1::result_type>
   T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
 		  Iter2 @\farg{first2}@, T @\farg{init}@,
 		  BinaryOperation1 @\farg{binary_op1}@,
@@ -257,18 +258,18 @@ shall neither modify elements nor invalidate iterators or subranges.%
 \index{partial_sum@\tcode{partial_sum}}%
 \color{addclr}
 \begin{itemdecl}
-template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
-  where Addable<InIter::value_type> && 
-        Assignable<InIter::value_type, Addable<InIter::value_type>::result_type> &&
-        CopyConstructible<InIter::value_type>
+template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+  requires HasPlus<InIter::value_type> && 
+           CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
+           CopyConstructible<InIter::value_type>
   OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-		      OutIter @\farg{result}@);
-template<InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-         Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
-  where Assignable<InIter::value_type, BinaryOperation::result_type> && 
-        CopyConstructible<InIter::value_type>
+	  	      OutIter @\farg{result}@);
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+         Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+  requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
+           CopyConstructible<InIter::value_type>
   OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-  		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+    		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
 \end{itemdecl}
 \color{black}
 
@@ -327,19 +328,19 @@ may be equal to
 \index{adjacent_difference@\tcode{adjacent_difference}}%
 \color{addclr}
 \begin{itemdecl}
-template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter>
-  where Subtractable<InIter::value_type, InIter::value_type> &&
-        Assignable<OutIter, Subtractable<InIter::value_type, InIter::value_type>::result_type> &&
-        CopyConstructible<InIter::value_type> && Assignable<InIter::value_type> 
+template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+  requires HasMinus<InIter::value_type, InIter::value_type> &&
+           CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
+           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
   OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
    			      OutIter @\farg{result}@);
-template <InputIterator InIter, OutputIterator<InIter::value_type> OutIter, 
-          Callable2<InIter::value_type, InIter::value_type> BinaryOperation>
-  where Assignable<OutIter::reference, BinaryOperation::result_type> &&
-        CopyConstructible<InIter::value_type> && Assignable<InIter::value_type>
+template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+          Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+  requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
+           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
   OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-  			      OutIter @\farg{result}@,
-			      BinaryOperation @\farg{binary_op}@);
+			      OutIter @\farg{result}@,
+  			      BinaryOperation @\farg{binary_op}@);
 \end{itemdecl}
 \color{black}
 
@@ -374,7 +375,7 @@ and
 \crange{result}{result + (last - first)},
 \tcode{binary_op}\
 shall neither modify elements nor invalidate iterators or subranges.%
-\footnote{The use of fully closed rangs is intentional.
+\footnote{The use of fully closed ranges is intentional.
 }
 
 \pnum
@@ -398,6 +399,6 @@ applications of
 \end{paras}
 
 \bibliographystyle{plain}
-\bibliography{../local}
+\bibliography{local}
 
 \end{document}
