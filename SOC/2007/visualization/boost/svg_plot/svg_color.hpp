@@ -323,7 +323,7 @@ svg_color color_array[] =
     svg_color(255, 250, 250), // snow
     svg_color(0  , 255, 127), // springgreen
     svg_color(70 , 130, 180), // steelblue
-    svg_color(210, 180, 140), // tan
+    svg_color(210, 180, 140), // tanned
     svg_color(0  , 128, 128), // teal
     svg_color(216, 191, 216), // thistle
     svg_color(255, 99 , 71 ), // tomato
