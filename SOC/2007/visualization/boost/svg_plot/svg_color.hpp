@@ -24,6 +24,7 @@ namespace svg
 // underscore separator convention does not match the normal Boost format
 // is that these names that are specified by the SVG standard.
 // http://www.w3.org/TR/SVG/types.html#ColorKeywords
+// tan is also renamed to tanned to avoid clash with function tan in math.h 
 // -----------------------------------------------------------------
 enum svg_color_constant
 {
@@ -53,10 +54,12 @@ enum svg_color_constant
     powderblue, purple, red, rosybrown, royalblue, saddlebrown,
     salmon, sandybrown, seagreen, seashell, sienna, silver,
     skyblue, slateblue, slategray, slategrey, snow, springgreen,
-    steelblue, tan, teal, thistle, tomato, turquoise, violet,
+    steelblue, tanned,
+    // tan, // Note that tan would clash with tan in math.h
+    teal, thistle, tomato, turquoise, violet,
     wheat, white, whitesmoke, yellow, yellowgreen,
     blank // 'NotAColor' == 147
-};
+}; // enum svg_color_constant
 
 // Forward declarations in this module (see svg_fwd):
 struct svg_color;
