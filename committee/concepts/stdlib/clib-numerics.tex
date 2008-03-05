@@ -40,7 +40,7 @@ Douglas Gregor, and Andrew Lumsdaine \\
 Open Systems Laboratory \\
 Indiana University \\
 Bloomington, IN\ \  47405 \\
-\{\href{mailto:dgregor@cs.indiana.edu}{dgregor}, \href{mailto:lums@cs.indiana.edu}{lums}\}@cs.indiana.edu
+\{\href{mailto:dgregor@osl.iu.edu}{dgregor}, \href{mailto:lums@osl.iu.edu}{lums}\}@osl.iu.edu
 \end{center}
 
 \vspace{1in}
@@ -48,7 +48,7 @@ Bloomington, IN\ \  47405 \\
 \par\noindent Revises document number: N2041=06-0111\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
-\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@cs.indiana.edu}{dgregor@cs.indiana.edu}$>$\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
 
 \section*{Introduction}
 \libintrotext{Chapter 26}
@@ -78,7 +78,2059 @@ Bloomington, IN\ \  47405 \\
 \rSec0[lib.numerics]{Numerics library}
 \begin{paras}
 
-\setcounter{section}{3}
+\setcounter{section}{4}
+\rSec1[numarray]{Numeric arrays}
+
+\rSec2[valarray.synopsis]{Header \tcode{<valarray>}\ synopsis}
+\index{valarray@\tcode{<valarray>}}%
+\begin{codeblock}
+namespace std {
+  template<@\changedCC{class}{Regular}@ T> class valarray;         // An array of type \tcode{T}
+  class slice;                              // a BLAS-like slice out of an array
+  template<@\changedCC{class}{Regular}@ T> class slice_array;
+  class gslice;                             // a generalized slice out of an array
+  template<@\changedCC{class}{Regular}@ T> class gslice_array;
+  template<@\changedCC{class}{Regular}@ T> class mask_array;       // a masked array
+  template<@\changedCC{class}{Regular}@ T> class indirect_array;   // an indirected array
+
+  @\addedD{template<@\changedCC{class}{Regular}@ T> void swap(valarray<T>\&, valarray<T>\&);}@
+  @\addedD{template<@\changedCC{class}{Regular}@ T> void swap(valarray<T>\&\&, valarray<T>\&);}@
+  @\addedD{template<@\changedCC{class}{Regular}@ T> void swap(valarray<T>\&, valarray<T>\&\&);}@
+
+  template<class T> 
+    @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator* (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator* (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator* (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator/ (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator/ (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator/ (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator% (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator% (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator% (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator+ (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator+ (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator+ (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator- (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator- (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator- (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator^ (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator^ (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator^ (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator& (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator& (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator& (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator| (const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator| (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator| (const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator<<(const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator<<(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator<<(const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator>>(const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator>>(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    valarray<T> operator>>(const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasLogicalAnd<T> \&\& Convertible<T::result_type, T>}@
+    valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasLogicalAnd<T> \&\& Convertible<T::result_type, T>}@
+    valarray<bool> operator&&(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasLogicalAnd<T> \&\& Convertible<T::result_type, T>}@
+    valarray<bool> operator&&(const T&, const valarray<T>&);
+
+  template<class T> 
+    @\addedCC{requires HasLogicalOr<T> \&\& Convertible<T::result_type, T>}@
+    valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires HasLogicalOr<T> \&\& Convertible<T::result_type, T>}@
+    valarray<bool> operator||(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires HasLogicalOr<T> \&\& Convertible<T::result_type, T>}@
+    valarray<bool> operator||(const T&, const valarray<T>&);
+
+  template<class T>
+    valarray<bool> operator==(const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<bool> operator==(const valarray<T>&, const T&);
+  template<class T> valarray<bool> operator==(const T&, const valarray<T>&);
+  template<class T>
+    valarray<bool> operator!=(const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<bool> operator!=(const valarray<T>&, const T&);
+  template<class T> valarray<bool> operator!=(const T&, const valarray<T>&);
+
+  template<class T>
+    valarray<bool> operator< (const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<bool> operator< (const valarray<T>&, const T&);
+  template<class T> valarray<bool> operator< (const T&, const valarray<T>&);
+  template<class T>
+    valarray<bool> operator> (const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<bool> operator> (const valarray<T>&, const T&);
+  template<class T> valarray<bool> operator> (const T&, const valarray<T>&);
+  template<class T>
+    valarray<bool> operator<=(const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<bool> operator<=(const valarray<T>&, const T&);
+  template<class T> valarray<bool> operator<=(const T&, const valarray<T>&);
+  template<class T>
+    valarray<bool> operator>=(const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<bool> operator>=(const valarray<T>&, const T&);
+  template<class T> valarray<bool> operator>=(const T&, const valarray<T>&);
+
+  template<class T> valarray<T> abs  (const valarray<T>&);
+  template<class T> valarray<T> acos (const valarray<T>&);
+  template<class T> valarray<T> asin (const valarray<T>&);
+  template<class T> valarray<T> atan (const valarray<T>&);
+
+  template<class T> valarray<T> atan2
+    (const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<T> atan2(const valarray<T>&, const T&);
+  template<class T> valarray<T> atan2(const T&, const valarray<T>&);
+
+  template<class T> valarray<T> cos  (const valarray<T>&);
+  template<class T> valarray<T> cosh (const valarray<T>&);
+  template<class T> valarray<T> exp  (const valarray<T>&);
+  template<class T> valarray<T> log  (const valarray<T>&);
+  template<class T> valarray<T> log10(const valarray<T>&);
+
+  template<class T> valarray<T> pow(const valarray<T>&, const valarray<T>&);
+  template<class T> valarray<T> pow(const valarray<T>&, const T&);
+  template<class T> valarray<T> pow(const T&, const valarray<T>&);
+
+  template<class T> valarray<T> sin  (const valarray<T>&);
+  template<class T> valarray<T> sinh (const valarray<T>&);
+  template<class T> valarray<T> sqrt (const valarray<T>&);
+  template<class T> valarray<T> tan  (const valarray<T>&);
+  template<class T> valarray<T> tanh (const valarray<T>&);
+}
+\end{codeblock}
+
+\pnum
+The header
+\tcode{<valarray>}\
+defines five
+class templates
+(\tcode{valarray},
+\tcode{slice_array},
+\tcode{gslice_array},
+\tcode{mask_array},
+and
+\tcode{indirect_array}),
+two classes (\tcode{slice}\
+and
+\tcode{gslice}),
+and a series of related
+function templates
+for representing
+and manipulating arrays of values.
+
+\pnum
+The
+\tcode{valarray}\
+array classes
+are defined to be free of certain forms of aliasing, thus allowing
+operations on these classes to be optimized.
+
+\pnum
+Any function returning a
+\tcode{valarray<T>}\
+is permitted to return an object of another type, provided all the
+const member functions of
+\tcode{valarray<T>}\
+are also applicable to this type.
+This return type shall not add
+more than two levels of template nesting over the most deeply nested
+argument type.%
+\footnote{
+Clause \ref{limits}\ recommends a minimum number of recursively nested template
+instantiations.
+This requirement thus indirectly suggests a minimum
+allowable complexity for valarray expressions.
+}
+
+\pnum
+Implementations introducing such replacement types shall provide
+additional functions and operators as follows:
+\begin{itemize}
+\item
+for every function taking a
+\tcode{const valarray<T>\&},
+identical functions taking the replacement types shall be added;
+\item
+for every function taking two
+\tcode{const valarray<T>\&}\
+arguments, identical functions taking every combination of
+\tcode{const valarray<T>\&}\
+and replacement types shall be added.
+\end{itemize}
+
+\pnum
+In particular, an implementation shall allow a
+\tcode{valarray<T>}\
+to be constructed from such replacement types and shall allow assignments
+and computed assignments of such types to
+\tcode{valarray<T>},
+\tcode{slice_array<T>},
+\tcode{gslice_array<T>},
+\tcode{mask_array<T>}
+and
+\tcode{indirect_array<T>}
+objects.
+
+\pnum
+These library functions are permitted to throw a
+\tcode{bad_alloc}\
+(\ref{bad.alloc}) exception if there are not sufficient resources available
+to carry out the operation.
+Note that the exception is not mandated.
+
+\rSec2[template.valarray]{Class template \tcode{valarray}}
+
+\index{valarray@\tcode{valarray}}%
+\begin{codeblock}
+namespace std {
+  template<class @\farg{T}@> class valarray {
+  public:
+    typedef T value_type;
+
+    // \ref{valarray.cons} construct/destroy:
+    valarray();
+    explicit valarray(size_t);
+    valarray(const T&, size_t);
+    valarray(const T*, size_t);
+    valarray(const valarray&);
+    @\addedD{valarray(valarray\&\&);}@
+    valarray(const slice_array<T>&);
+    valarray(const gslice_array<T>&);
+    valarray(const mask_array<T>&);
+    valarray(const indirect_array<T>&);
+   ~valarray();
+
+    // \ref{valarray.assign} assignment:
+    valarray<T>& operator=(const valarray<T>&);
+    @\addedD{valarray<T>\& operator=(valarray<T>\&\&);}@
+    valarray<T>& operator=(const T&);
+    valarray<T>& operator=(const slice_array<T>&);
+    valarray<T>& operator=(const gslice_array<T>&);
+    valarray<T>& operator=(const mask_array<T>&);
+    valarray<T>& operator=(const indirect_array<T>&);
+
+    // \ref{valarray.access} element access:
+    const T&          operator[](size_t) const;
+    T&                operator[](size_t);
+
+    // \ref{valarray.sub} subset operations:
+    valarray<T>       operator[](slice) const;
+    slice_array<T>    operator[](slice);
+    valarray<T>       operator[](const gslice&) const;
+    gslice_array<T>   operator[](const gslice&);
+    valarray<T>       operator[](const valarray<bool>&) const;
+    mask_array<T>     operator[](const valarray<bool>&);
+    valarray<T>       operator[](const valarray<size_t>&) const;
+    indirect_array<T> operator[](const valarray<size_t>&);
+
+    // \ref{valarray.unary} unary operators:
+    valarray<T> operator+() const;
+    valarray<T> operator-() const;
+    valarray<T> operator~() const;
+    valarray<bool> operator!() const;
+
+    // \ref{valarray.cassign} computed assignment:
+    valarray<T>& operator*= (const T&);
+    valarray<T>& operator/= (const T&);
+    valarray<T>& operator%= (const T&);
+    valarray<T>& operator+= (const T&);
+    valarray<T>& operator-= (const T&);
+    valarray<T>& operator^= (const T&);
+    valarray<T>& operator&= (const T&);
+    valarray<T>& operator|= (const T&);
+    valarray<T>& operator<<=(const T&);
+    valarray<T>& operator>>=(const T&);
+
+    valarray<T>& operator*= (const valarray<T>&);
+    valarray<T>& operator/= (const valarray<T>&);
+    valarray<T>& operator%= (const valarray<T>&);
+    valarray<T>& operator+= (const valarray<T>&);
+    valarray<T>& operator-= (const valarray<T>&);
+    valarray<T>& operator^= (const valarray<T>&);
+    valarray<T>& operator|= (const valarray<T>&);
+    valarray<T>& operator&= (const valarray<T>&);
+    valarray<T>& operator<<=(const valarray<T>&);
+    valarray<T>& operator>>=(const valarray<T>&);
+
+    // \ref{valarray.members} member functions:
+    @\addedD{void swap(valarray\&\&);}@
+
+    size_t size() const;
+
+    T    sum() const;
+    T    min() const;
+    T    max() const;
+
+    valarray<T> shift (int) const;
+    valarray<T> cshift(int) const;
+    valarray<T> apply(T func(T)) const;
+    valarray<T> apply(T func(const T&)) const;
+    void resize(size_t sz, T c = T());
+  };
+}
+\end{codeblock}
+
+\pnum
+The
+class template
+\tcode{valarray<\farg{T}>}\
+is a
+one-dimensional smart array, with elements numbered sequentially from zero.
+It is a representation of the mathematical concept
+of an ordered set of values.
+The illusion of higher dimensionality
+may be produced by the familiar idiom of computed indices, together
+with the powerful subsetting capabilities provided
+by the generalized subscript operators.%
+\footnote{
+The intent is to specify an array template that has the minimum functionality
+necessary to address aliasing ambiguities and the proliferation of
+temporaries.
+Thus, the
+\tcode{valarray}
+template is neither a
+matrix class nor a field class.
+However, it is a very useful building block for designing such classes.
+}
+
+\pnum
+An implementation is permitted to qualify any of the functions declared in
+\tcode{<valarray>}\
+as
+\tcode{inline}.
+
+\rSec3[valarray.cons]{\tcode{valarray}\ constructors}
+
+\index{valarray@\tcode{valarray}!\tcode{valarray}}%
+\begin{itemdecl}
+valarray();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs an object of class
+\tcode{valarray<\farg{T}>},%
+\footnote{
+For convenience, such objects are referred to as ``arrays'' throughout the
+remainder of \ref{numarray}.
+}
+which has zero length until it is passed into a library function as a
+modifiable lvalue or through a non-constant
+\tcode{this}\
+pointer.%
+\footnote{
+This default constructor is essential,
+since arrays of
+\tcode{valarray}\
+are likely to prove useful.
+There shall also be a way to change the size of an array after
+initialization; this is supplied by the semantics of the
+\tcode{resize}\
+member function.
+}
+\end{itemdescr}
+
+\begin{itemdecl}
+explicit valarray(size_t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The array created by this constructor has a length equal to the value of the argument.
+The elements of the array are constructed using the default constructor for the
+instantiating type \farg{T}.
+\end{itemdescr}
+
+\begin{itemdecl}
+valarray(const T&, size_t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The array created by this constructor has a length equal to the second
+argument.
+The elements of the array are initialized with the value of the first argument.
+\end{itemdescr}
+
+\begin{itemdecl}
+valarray(const T*, size_t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The array created by this constructor has a length equal to the second
+argument
+\tcode{n}.
+The values of the elements of the array are initialized with the
+first
+\tcode{n}\
+values pointed to by the first argument.%
+\footnote{
+This constructor is the preferred method for converting a C array to a
+\tcode{valarray}
+object.
+}
+If the value of the second argument is greater than the number of values
+pointed to by the first argument, the behavior is undefined.%
+\index{undefined}
+\end{itemdescr}
+
+\begin{itemdecl}
+valarray(const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The array created by this constructor has the same length as the argument
+array.
+The elements are initialized with the values of the corresponding
+elements of the argument array.%
+\footnote{
+This copy constructor creates a distinct array rather than an alias.
+Implementations in which arrays share storage are permitted, but they
+shall implement a copy-on-reference mechanism to ensure that arrays are
+conceptually distinct.
+}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedD{valarray(valarray<T>\&\&);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{The array created by this constructor has the same length as the argument
+array.
+The elements are initialized with the values of the corresponding
+elements of the argument array. After construction,
+\mbox{\tcode{v}} is in a valid but unspecified state.}
+
+\pnum
+\addedD{\mbox{\complexity} Constant.}
+
+\pnum
+\addedD{\mbox{\throws} Nothing.}
+\end{itemdescr}
+
+\begin{itemdecl}
+valarray(const slice_array<T>&);
+valarray(const gslice_array<T>&);
+valarray(const mask_array<T>&);
+valarray(const indirect_array<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These conversion constructors convert one of the four reference templates
+to a
+\tcode{valarray}.
+\end{itemdescr}
+
+\index{\~valarray@\tcode{$\sim$valarray}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+~valarray();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The destructor is applied to every element of
+\tcode{*this};
+an implementation may return all allocated memory.
+\end{itemdescr}
+
+\rSec3[valarray.assign]{\tcode{valarray}\ assignment}
+
+\index{operator=@\tcode{operator=}!\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T>& operator=(const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each element of the
+\tcode{*this}\
+array is assigned the value of the corresponding element of the argument
+array.
+The resulting behavior is undefined if the length of the argument
+array is not equal to the length of the
+\tcode{*this}\
+array.
+\end{itemdescr}
+
+\index{operator=@\tcode{operator=}!\tcode{valarray}}%
+\begin{itemdecl}
+@\addedD{valarray<T>\& operator=(valarray<T>\&\&);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects} \mbox{\tcode{*this}} obtains the value of \mbox{\tcode{v}}.
+After the assignment, \mbox{\tcode{v}} is in a valid but unspecified state.}
+
+\pnum
+\addedD{\mbox{\complexity} Constant.}
+
+\pnum
+\addedD{\mbox{\throws} Nothing.}
+\end{itemdescr}
+
+\index{operator=@\tcode{operator=}!\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T>& operator=(const T&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The scalar assignment operator causes each element of the
+\tcode{*this}\
+array to be assigned the value of the argument.
+\end{itemdescr}
+
+\begin{itemdecl}
+valarray<T>& operator=(const slice_array<T>&);
+valarray<T>& operator=(const gslice_array<T>&);
+valarray<T>& operator=(const mask_array<T>&);
+valarray<T>& operator=(const indirect_array<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These operators allow the results of a generalized subscripting operation
+to be assigned directly to a
+\tcode{valarray}.
+
+\pnum
+If the value of an element in the left-hand side of a valarray assignment
+operator depends on the value of another element in that left-hand side,
+the resulting behavior is undefined.
+\end{itemdescr}
+
+\rSec3[valarray.access]{\tcode{valarray}\ element access}
+
+\index{operator[]@\tcode{operator[]}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+const T&  operator[](size_t) const;
+T& operator[](size_t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+When applied to a constant array, the subscript operator returns the value
+of the corresponding element of the array.
+When applied to a non-constant array, the subscript operator
+returns a reference to the corresponding element of the array.
+
+\pnum
+Thus, the expression
+\tcode{(a[i] = q, a[i]) == q}\
+evaluates as true for any non-constant
+\tcode{valarray<T> a},
+any
+\tcode{T q},
+and for any
+\tcode{size_t i}\
+such that the value of
+\tcode{i}\
+is less than the length of
+\tcode{a}.
+
+\pnum
+The expression
+\tcode{\&a[i+j] == \&a[i] + j}\
+evaluates as true for all
+\tcode{size_t i}\
+and
+\tcode{size_t j}\
+such that
+\tcode{i+j}\
+is less than the length of the non-constant
+array
+\tcode{a}.
+
+\pnum
+Likewise, the expression
+\tcode{\&a[i] != \&b[j]}\
+evaluates as
+\tcode{true}\
+for any two non-constant arrays
+\tcode{a}\
+and
+\tcode{b}\
+and for any
+\tcode{size_t i}\
+and
+\tcode{size_t j}\
+such that
+\tcode{i}\
+is less than the length of
+\tcode{a}\
+and
+\tcode{j}\
+is less than the length of
+\tcode{b}.
+This property indicates an absence of aliasing and may be used to
+advantage by optimizing compilers.%
+\footnote{
+Compilers may take advantage of inlining, constant propagation, loop fusion,
+tracking of pointers obtained from
+\tcode{operator new},
+and other
+techniques to generate efficient
+\tcode{valarray}s.
+}
+
+\pnum
+The reference returned by the subscript operator for a non-constant array is
+guaranteed to be valid until the member function
+\tcode{resize(size_t, T)}\
+(\ref{valarray.members}) is called for that array or until the lifetime of
+that array ends, whichever happens first.
+
+\pnum
+If the subscript operator
+is invoked with a
+\tcode{size_t}\
+argument whose value is not
+less than the length of the array, the behavior is undefined.%
+\index{undefined}
+\end{itemdescr}
+
+\rSec3[valarray.sub]{\tcode{valarray}\ subset operations}
+
+\index{operator[]@\tcode{operator[]}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T>       operator[](slice) const;
+slice_array<T>    operator[](slice);
+valarray<T>       operator[](const gslice&) const;
+gslice_array<T>   operator[](const gslice&);
+valarray<T>       operator[](const valarray<bool>&) const;
+mask_array<T>     operator[](const valarray<bool>&);
+valarray<T>       operator[](const valarray<size_t>&) const;
+indirect_array<T> operator[](const valarray<size_t>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operations returns a subset of the array.
+The
+\tcode{const}-qualified
+versions return this subset as a new
+\tcode{valarray}.
+The
+non-\tcode{const}
+versions return a
+class template object which has reference semantics to the original array.
+\end{itemdescr}
+
+\rSec3[valarray.unary]{\tcode{valarray}\ unary operators}
+
+\index{operator+@\tcode{operator+}!\tcode{valarray}}%
+\index{operator-@\tcode{operator-}!\tcode{valarray}}%
+\index{operator\~{}@\tcode{operator\~{}}!\tcode{valarray}}%
+\index{operator"!@\tcode{operator"!}!\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T> operator+() const;
+valarray<T> operator-() const;
+valarray<T> operator~() const;
+valarray<bool> operator!() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied and for which the indicated
+operator returns a value which is of type \farg{T}\ (\farg{bool}\ for
+\farg{operator!}) or which may be unambiguously converted to type
+\farg{T}\ (\farg{bool} for \farg{operator!}).
+
+\pnum
+Each of these operators returns an array whose length is equal to the length
+of the array.
+Each element of the returned array is initialized with the result of
+applying the indicated operator to the corresponding element of the array.
+\end{itemdescr}
+
+\rSec3[valarray.cassign]{\tcode{valarray}\ computed assignment}
+
+\index{operator*=@\tcode{operator*=}!valarray@\tcode{valarray}}%
+\index{operator/=@\tcode{operator/=}!valarray@\tcode{valarray}}%
+\index{operator\%=@\tcode{operator\%=}!valarray@\tcode{valarray}}%
+\index{operator+=@\tcode{operator+=}!valarray@\tcode{valarray}}%
+\index{operator-=@\tcode{operator-=}!valarray@\tcode{valarray}}%
+\index{operator\^{}=@\tcode{operator\^{}=}!valarray@\tcode{valarray}}%
+\index{operator\&=@\tcode{operator\&=}!valarray@\tcode{valarray}}%
+\index{operator"|=@\tcode{operator"|=}!valarray@\tcode{valarray}}%
+\index{operator<<=@\tcode{operator\shl=}!valarray@\tcode{valarray}}%
+\index{operator>>=@\tcode{operator\shr=}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T>& operator*= (const valarray<T>&);
+valarray<T>& operator/= (const valarray<T>&);
+valarray<T>& operator%= (const valarray<T>&);
+valarray<T>& operator+= (const valarray<T>&);
+valarray<T>& operator-= (const valarray<T>&);
+valarray<T>& operator^= (const valarray<T>&);
+valarray<T>& operator&= (const valarray<T>&);
+valarray<T>& operator|= (const valarray<T>&);
+valarray<T>& operator<<=(const valarray<T>&);
+valarray<T>& operator>>=(const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied.
+Each of these operators
+performs the indicated operation on each of its elements and the
+corresponding element of the argument array.
+
+\pnum
+The array is then returned by reference.
+
+\pnum
+If the array and the
+argument array do not have the same length, the behavior is undefined.%
+\index{undefined}\
+The appearance of an array on the left-hand side of a computed assignment
+does \farg{not}\ invalidate references or pointers.
+
+\pnum
+If the value of an element in the left-hand side of a valarray computed
+assignment operator depends on the value of another element in that left
+hand side, the resulting behavior is undefined.
+\end{itemdescr}
+
+\begin{itemdecl}
+valarray<T>& operator*= (const T&);
+valarray<T>& operator/= (const T&);
+valarray<T>& operator%= (const T&);
+valarray<T>& operator+= (const T&);
+valarray<T>& operator-= (const T&);
+valarray<T>& operator^= (const T&);
+valarray<T>& operator&= (const T&);
+valarray<T>& operator|= (const T&);
+valarray<T>& operator<<=(const T&);
+valarray<T>& operator>>=(const T&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied.
+
+\pnum
+Each of these operators applies the indicated operation to each element
+of the array and the non-array argument.
+
+\pnum
+The array is then returned by reference.
+
+\pnum
+The appearance of an array on the left-hand side of a computed assignment
+does
+\textit{not}\ 
+invalidate references or pointers to the elements of the array.
+\end{itemdescr}
+
+\rSec3[valarray.members]{\tcode{valarray}\ member functions}
+
+\begin{itemdecl}
+@\addedD{void swap(valarray\&\& v);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects} \mbox{\tcode{*this}} obtains the value of
+\mbox{\tcode{v}}. \mbox{\tcode{v}} obtains the value of \mbox{\tcode{*this}}.}
+
+\pnum
+\addedD{\mbox{\complexity} Constant.}
+
+\pnum
+\addedD{\mbox{\throws} Nothing.}
+\end{itemdescr}
+
+\index{length@\tcode{length}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+size_t size() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function returns the number of elements in the array.
+\end{itemdescr}
+
+\index{sum@\tcode{sum}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+T sum() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+This function may only be instantiated for a type \farg{T}\ to which
+\tcode{operator+=}\
+can be applied.
+This function returns the sum of all the elements of the array.
+
+\pnum
+If the array has length 0, the behavior is undefined.%
+\index{undefined}
+If the array has length 1,
+\tcode{sum()}\
+returns the value of element 0.
+Otherwise, the returned value is calculated by applying
+\tcode{operator+=}\
+to a copy of an element of the array and
+all other elements of the array in an unspecified order.%
+\index{unspecified behavior}
+\end{itemdescr}
+
+\index{min@\tcode{min}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+T min() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function returns the minimum value contained in
+\tcode{*this}.
+The value returned for an array of length 0 is undefined.
+For an array
+of length 1, the value of element 0 is returned.
+For all other array
+lengths, the determination is made using
+\tcode{operator<}.
+\end{itemdescr}
+
+\index{max@\tcode{max}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+T max() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function returns the maximum value contained in
+\tcode{*this}.
+The value returned for an array of length 0 is undefined.
+For an array
+of length 1, the value of element 0 is returned.
+For all other array
+lengths, the determination is made using
+\tcode{operator<}.
+\end{itemdescr}
+
+\index{shift@\tcode{shift}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T> shift(int @\farg{n}@) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function returns an object of class
+\tcode{valarray<T>}\
+of length
+\tcode{size()},
+each of whose elements
+\textit{I}\ 
+is
+\tcode{(*this)[\farg{I}\ + \farg{n}]}
+if
+\tcode{\farg{I}\ + \farg{n}}
+is non-negative and less than
+\tcode{size()},
+otherwise
+\tcode{T()}.
+Thus if element zero is taken as the leftmost element,
+a positive value of \farg{n}\ shifts the elements left \farg{n}\
+places, with zero fill.
+
+\pnum
+\enterexample\ 
+If the argument has the value -2,
+the first two elements of the result will be constructed using the default
+constructor; the third element of the result will be assigned the value
+of the first element of the argument; etc.
+\exitexample\ 
+\index{cshift@\tcode{cshift}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T> cshift(int @\farg{n}@) const;
+\end{itemdecl}
+
+\pnum
+This function returns an object of class
+\tcode{valarray<T>},
+of length
+\tcode{size()},
+each of whose elements
+\textit{I}\ 
+is
+\tcode{(*this)[(\farg{I}\ + \farg{n}) \% size()]}.
+Thus, if element zero is taken as the leftmost element,
+a positive value of \farg{n}\ shifts the elements circularly
+left \farg{n}\ places.
+\end{itemdescr}
+
+\index{apply@\tcode{apply}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+valarray<T> apply(T func(T)) const;
+valarray<T> apply(T func(const T&)) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These functions return an array whose length is equal to the array.
+Each element of the returned array is assigned
+the value returned by applying the argument function to the
+corresponding element of the array.
+
+\index{resize@\tcode{resize}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+void resize(size_t sz, T c = T());
+\end{itemdecl}
+
+\pnum
+This member function changes the length of the
+\tcode{*this}\
+array to
+\tcode{sz}\
+and then assigns to each element the value of the second argument.
+Resizing invalidates all pointers and references to elements in the array.
+\end{itemdescr}
+
+\rSec2[valarray.nonmembers]{\tcode{valarray} non-member operations}
+
+\rSec3[valarray.binary]{\tcode{valarray}\ binary operators}
+
+\index{operator*@\tcode{operator*}!valarray@\tcode{valarray}}%
+\index{operator/@\tcode{operator/}!valarray@\tcode{valarray}}%
+\index{operator\%@\tcode{operator\%}!valarray@\tcode{valarray}}%
+\index{operator+@\tcode{operator+}!valarray@\tcode{valarray}}%
+\index{operator-@\tcode{operator-}!valarray@\tcode{valarray}}%
+\index{operator\^{}@\tcode{operator\^{}}!valarray@\tcode{valarray}}%
+\index{operator\&@\tcode{operator\&}!valarray@\tcode{valarray}}%
+\index{operator"|@\tcode{operator"|}!valarray@\tcode{valarray}}%
+\index{operator<<@\tcode{operator\shl}!valarray@\tcode{valarray}}%
+\index{operator>>@\tcode{operator\shr}!valarray@\tcode{valarray}}%
+\index{operator\&\&@\tcode{operator\&\&}!valarray@\tcode{valarray}}%
+\index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+template<class T> valarray<T> operator*
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator/
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator%
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator+
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator-
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator^
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator&
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator|
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator<<
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> operator>>
+    (const valarray<T>&, const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied and for which the indicated
+operator returns a value which is of type \farg{T}\ or which
+can be unambiguously converted to type \farg{T}.
+
+\pnum
+Each of these operators returns an array whose length is equal to the
+lengths of the argument arrays.
+Each element of the returned array is
+initialized with the result of applying the indicated operator to the
+corresponding elements of the argument arrays.
+
+\pnum
+If the argument arrays do not have the same length, the behavior is undefined.%
+\index{undefined}
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class T> valarray<T> operator* (const valarray<T>&, const T&);
+template<class T> valarray<T> operator* (const T&, const valarray<T>&);
+template<class T> valarray<T> operator/ (const valarray<T>&, const T&);
+template<class T> valarray<T> operator/ (const T&, const valarray<T>&);
+template<class T> valarray<T> operator% (const valarray<T>&, const T&);
+template<class T> valarray<T> operator% (const T&, const valarray<T>&);
+template<class T> valarray<T> operator+ (const valarray<T>&, const T&);
+template<class T> valarray<T> operator+ (const T&, const valarray<T>&);
+template<class T> valarray<T> operator- (const valarray<T>&, const T&);
+template<class T> valarray<T> operator- (const T&, const valarray<T>&);
+template<class T> valarray<T> operator^ (const valarray<T>&, const T&);
+template<class T> valarray<T> operator^ (const T&, const valarray<T>&);
+template<class T> valarray<T> operator& (const valarray<T>&, const T&);
+template<class T> valarray<T> operator& (const T&, const valarray<T>&);
+template<class T> valarray<T> operator| (const valarray<T>&, const T&);
+template<class T> valarray<T> operator| (const T&, const valarray<T>&);
+template<class T> valarray<T> operator<<(const valarray<T>&, const T&);
+template<class T> valarray<T> operator<<(const T&, const valarray<T>&);
+template<class T> valarray<T> operator>>(const valarray<T>&, const T&);
+template<class T> valarray<T> operator>>(const T&, const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied and for which
+the indicated operator returns a value which is of type \farg{T}\ 
+or which can be unambiguously converted to type \farg{T}.
+
+\pnum
+Each of these operators returns an array whose length is equal to the
+length of the array argument.
+Each element of the returned array is
+initialized with the result of applying the indicated operator to the
+corresponding element of the array argument and the non-array argument.
+\end{itemdescr}
+
+\rSec3[valarray.comparison]{\tcode{valarray}\ logical operators}
+
+\index{operator==@\tcode{operator==}!valarray@\tcode{valarray}}%
+\index{operator"!=@\tcode{operator"!=}!valarray@\tcode{valarray}}%
+\index{operator<@\tcode{operator<}!valarray@\tcode{valarray}}%
+\index{operator>@\tcode{operator>}!valarray@\tcode{valarray}}%
+\index{operator<=@\tcode{operator<=}!valarray@\tcode{valarray}}%
+\index{operator>=@\tcode{operator>=}!valarray@\tcode{valarray}}%
+\index{operator\&\&@\tcode{operator\&\&}!valarray@\tcode{valarray}}%
+\index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
+\begin{itemdecl}
+template<class T> valarray<bool> operator==
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator!=
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator<
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator>
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator<=
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator>=
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator&&
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<bool> operator||
+    (const valarray<T>&, const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied and for which
+the indicated operator returns a value which is of type \farg{bool}\ 
+or which can be unambiguously converted to type \farg{bool}.
+
+\pnum
+Each of these operators returns a \farg{bool}\ array whose length
+is equal to the length of the array arguments.
+Each element of the returned
+array is initialized with the result of applying the indicated
+operator to the corresponding elements of the argument arrays.
+
+\pnum
+If the two array arguments do not have the same length,
+the behavior is undefined.%
+\index{undefined}
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class T> valarray<bool> operator==(const valarray<T>&, const T&);
+template<class T> valarray<bool> operator==(const T&, const valarray<T>&);
+template<class T> valarray<bool> operator!=(const valarray<T>&, const T&);
+template<class T> valarray<bool> operator!=(const T&, const valarray<T>&);
+template<class T> valarray<bool> operator< (const valarray<T>&, const T&);
+template<class T> valarray<bool> operator< (const T&, const valarray<T>&);
+template<class T> valarray<bool> operator> (const valarray<T>&, const T&);
+template<class T> valarray<bool> operator> (const T&, const valarray<T>&);
+template<class T> valarray<bool> operator<=(const valarray<T>&, const T&);
+template<class T> valarray<bool> operator<=(const T&, const valarray<T>&);
+template<class T> valarray<bool> operator>=(const valarray<T>&, const T&);
+template<class T> valarray<bool> operator>=(const T&, const valarray<T>&);
+template<class T> valarray<bool> operator&&(const valarray<T>&, const T&);
+template<class T> valarray<bool> operator&&(const T&, const valarray<T>&);
+template<class T> valarray<bool> operator||(const valarray<T>&, const T&);
+template<class T> valarray<bool> operator||(const T&, const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these operators may only be instantiated for a type \farg{T}\ 
+to which the indicated operator can be applied and for which
+the indicated operator returns a value which is of type \farg{bool}\ 
+or which can be unambiguously converted to type \farg{bool}.
+
+\pnum
+Each of these operators returns a \farg{bool}\ array whose
+length is equal to the length of the array argument.
+Each element
+of the returned array is initialized with the result of applying the
+indicated operator to the corresponding element of the array and the non-array argument.
+\end{itemdescr}
+
+\rSec3[valarray.transcend]{\tcode{valarray}\ transcendentals}
+
+\index{abs@\tcode{abs}}%
+\index{acos@\tcode{acos}}%
+\index{asin@\tcode{asin}}%
+\index{atan@\tcode{atan}}%
+\index{atan2@\tcode{atan2}}%
+\index{cos@\tcode{cos}}%
+\index{cosh@\tcode{cosh}}%
+\index{exp@\tcode{exp}}%
+\index{log@\tcode{log}}%
+\index{log10@\tcode{log10}}%
+\index{pow@\tcode{pow}}%
+\index{sin@\tcode{sin}}%
+\index{sinh@\tcode{sinh}}%
+\index{sqrt@\tcode{sqrt}}%
+\index{tan@\tcode{tan}}%
+\index{tanh@\tcode{tanh}}%
+\begin{itemdecl}
+template<class T> valarray<T> abs  (const valarray<T>&);
+template<class T> valarray<T> acos (const valarray<T>&);
+template<class T> valarray<T> asin (const valarray<T>&);
+template<class T> valarray<T> atan (const valarray<T>&);
+template<class T> valarray<T> atan2
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> atan2(const valarray<T>&, const T&);
+template<class T> valarray<T> atan2(const T&, const valarray<T>&);
+template<class T> valarray<T> cos  (const valarray<T>&);
+template<class T> valarray<T> cosh (const valarray<T>&);
+template<class T> valarray<T> exp  (const valarray<T>&);
+template<class T> valarray<T> log  (const valarray<T>&);
+template<class T> valarray<T> log10(const valarray<T>&);
+template<class T> valarray<T> pow
+    (const valarray<T>&, const valarray<T>&);
+template<class T> valarray<T> pow  (const valarray<T>&, const T&);
+template<class T> valarray<T> pow  (const T&, const valarray<T>&);
+template<class T> valarray<T> sin  (const valarray<T>&);
+template<class T> valarray<T> sinh (const valarray<T>&);
+template<class T> valarray<T> sqrt (const valarray<T>&);
+template<class T> valarray<T> tan  (const valarray<T>&);
+template<class T> valarray<T> tanh (const valarray<T>&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+Each of these functions may only be instantiated for a type \farg{T}\ 
+to which a unique function with the indicated name can be applied (unqualified).
+This function shall return a value which is of type \farg{T}\ 
+or which can be unambiguously converted to type \farg{T}.
+\end{itemdescr}
+
+\rSec3[valarray.special]{\tcode{valarray}\ specialized algorithms}
+
+\begin{itemdecl}
+@\addedD{template <class T> void swap(valarray<T>\& x, valarray<T>\& y);}@
+@\addedD{template <class T> void swap(valarray<T>\&\& x, valarray<T>\& y);}@
+@\addedD{template <class T> void swap(valarray<T>\& x, valarray<T>\&\& y);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\effects} \mbox{\tcode{x.swap(y)}}.}
+\end{itemdescr}
+
+
+\rSec2[class.slice]{Class \tcode{slice}}
+
+\index{slice@\tcode{slice}}%
+\begin{codeblock}
+namespace std {
+  class slice {
+  public:
+    slice();
+    slice(size_t, size_t, size_t);
+
+    size_t start() const;
+    size_t size() const;
+    size_t stride() const;
+  };
+}
+\end{codeblock}
+
+\pnum
+The
+\tcode{slice}\
+class represents a BLAS-like slice from an array.
+Such a slice is specified by a starting index, a length, and a stride.%
+\footnote{
+BLAS stands for
+\textit{Basic Linear Algebra Subprograms.}\ 
+\Cpp\ programs may instantiate this class.
+See, for example,
+Dongarra, Du Croz, Duff, and Hammerling:
+\textit{A set of Level 3 Basic Linear Algebra Subprograms};
+Technical Report MCS-P1-0888,
+Argonne National Laboratory (USA),
+Mathematics and Computer Science Division,
+August, 1988.
+}
+
+\rSec3[cons.slice]{\tcode{slice}\ constructors}
+
+\index{slice@\tcode{slice}!\tcode{slice}}%
+\begin{itemdecl}
+slice();
+slice(size_t @\farg{start}@, size_t @\farg{length}@, size_t @\farg{stride}@);
+slice(const slice&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\changedD{The default constructor for
+\mbox{\tcode{slice}}
+creates a
+\mbox{\tcode{slice}}
+which specifies no elements.}
+{The default constructor is equivalent to \mbox{\tcode{slice(0, 0, 0)}}.}
+A default constructor is provided only to permit the declaration of arrays of slices.
+The constructor with arguments for a slice takes a start, length, and stride
+parameter.
+
+\pnum
+\enterexample\ 
+\tcode{slice(3, 8, 2)}\
+constructs a slice which selects elements 3, 5, 7, ... 17 from an array.
+\exitexample\ 
+\end{itemdescr}
+
+\rSec3[slice.access]{\tcode{slice}\ access functions}
+\index{start@\tcode{start}!\tcode{slice}}%
+\index{size@\tcode{size}!\tcode{slice}}%
+\index{stride@\tcode{stride}!\tcode{slice}}%
+\begin{itemdecl}
+size_t start() const;
+size_t size() const;
+size_t stride() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These functions return the start, length, or stride specified by a
+\tcode{slice}\ object.
+\end{itemdescr}
+
+\rSec2[template.slice.array]{Class template \tcode{slice_array}}
+
+\index{slice_array@\tcode{slice_array}}%
+\begin{codeblock}
+namespace std {
+  template <class T> class slice_array {
+  public:
+    typedef T value_type;
+
+    void operator=  (const valarray<T>&) const;
+    void operator*= (const valarray<T>&) const;
+    void operator/= (const valarray<T>&) const;
+    void operator%= (const valarray<T>&) const;
+    void operator+= (const valarray<T>&) const;
+    void operator-= (const valarray<T>&) const;
+    void operator^= (const valarray<T>&) const;
+    void operator&= (const valarray<T>&) const;
+    void operator|= (const valarray<T>&) const;
+    void operator<<=(const valarray<T>&) const;
+    void operator>>=(const valarray<T>&) const;
+
+    slice_array(const slice_array&);
+   ~slice_array();
+    slice_array& operator=(const slice_array&);
+	void operator=(const T&) const;
+  private:
+    slice_array();
+  };
+}
+\end{codeblock}
+
+\pnum
+The
+\tcode{slice_array}\
+template is a helper template used by the
+\tcode{slice}\
+subscript operator
+
+\begin{codeblock}
+slice_array<T> valarray<T>::operator[](slice);
+\end{codeblock}
+
+It has reference semantics to a subset of an array specified by a
+\tcode{slice}
+object.
+
+\pnum
+\enterexample\ 
+The expression
+\tcode{a[slice(1, 5, 3)] = b;}\
+has the effect of assigning the elements of
+\tcode{b}\
+to a slice of the elements in
+\tcode{a}.
+For the slice shown, the elements
+selected from
+\tcode{a}\
+are 1, 4, ..., 13.
+\exitexample\ 
+
+\rSec3[cons.slice.arr]{\tcode{slice_array}\ constructors}
+
+\index{slice_array@\tcode{slice_array}!\tcode{slice_array}}%
+\begin{itemdecl}
+slice_array();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This constructor is declared to be private.
+This constructor need not be defined.
+\end{itemdescr}
+
+\rSec3[slice.arr.assign]{\tcode{slice_array}\ assignment}
+
+\index{operator=@\tcode{operator=}!\tcode{slice_array}}%
+\begin{itemdecl}
+void         operator=(const valarray<T>&) const;
+slice_array& operator=(const slice_array&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These assignment operators have reference semantics,
+assigning the values of the argument array elements to selected
+elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{slice_array}\
+object refers.
+\end{itemdescr}
+
+\rSec3[slice.arr.comp.assign]{\tcode{slice_array}\ computed assignment}
+
+\index{operator*=@\tcode{operator*=}!\tcode{slice_array}}%
+\index{operator/=@\tcode{operator/=}!\tcode{slice_array}}%
+\index{operator\%=@\tcode{operator\%=}!\tcode{slice_array}}%
+\index{operator+=@\tcode{operator+=}!\tcode{slice_array}}%
+\index{operator-=@\tcode{operator-=}!\tcode{slice_array}}%
+\index{operator\^{}=@\tcode{operator\^{}=}!\tcode{slice_array}}%
+\index{operator\&=@\tcode{operator\&=}!\tcode{slice_array}}%
+\index{operator"|=@\tcode{operator"|=}!\tcode{slice_array}}%
+\index{operator<<=@\tcode{operator\shl=}!\tcode{slice_array}}%
+\index{operator>>=@\tcode{operator\shr=}!\tcode{slice_array}}%
+\begin{itemdecl}
+void operator*= (const valarray<T>&) const;
+void operator/= (const valarray<T>&) const;
+void operator%= (const valarray<T>&) const;
+void operator+= (const valarray<T>&) const;
+void operator-= (const valarray<T>&) const;
+void operator^= (const valarray<T>&) const;
+void operator&= (const valarray<T>&) const;
+void operator|= (const valarray<T>&) const;
+void operator<<=(const valarray<T>&) const;
+void operator>>=(const valarray<T>&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These computed assignments have reference semantics, applying the
+indicated operation to the elements of the argument array
+and selected elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{slice_array}\
+object refers.
+\end{itemdescr}
+
+\rSec3[slice.arr.fill]{\tcode{slice_array}\ fill function}
+
+\index{fill@\tcode{fill}!\tcode{slice_array}}%
+\begin{itemdecl}
+void operator=(const T&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function has reference semantics, assigning the value of its argument
+to the elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{slice_array}\
+object refers.
+\end{itemdescr}
+
+\rSec2[class.gslice]{The \tcode{gslice}\ class}
+
+\index{gslice@\tcode{gslice}!class}%
+\begin{codeblock}
+namespace std {
+  class gslice {
+  public:
+    gslice();
+    gslice(size_t s, const valarray<size_t>& l, const valarray<size_t>& d);
+
+    size_t           start() const;
+    valarray<size_t> size() const;
+    valarray<size_t> stride() const;
+  };
+}
+\end{codeblock}
+
+\pnum
+This class represents a generalized slice out of an array.
+A
+\tcode{gslice}\
+is defined by a starting offset ($s$),
+a set of lengths ($l_j$),
+and a set of strides ($d_j$).
+The number of lengths shall equal the number of strides.
+
+\pnum
+A
+\tcode{gslice}\
+represents a mapping from a set of indices ($i_j$),
+equal in number to the number of strides, to a single index $k$.
+It is useful for building multidimensional array classes using
+the
+\tcode{valarray}\
+template, which is one-dimensional.
+The set of one-dimensional index values specified by a
+\tcode{gslice}\
+are $$k = s + \sum_ji_jd_j$$
+% \$k = s + sum from j \{ i sub j d sub j \}\$
+where the multidimensional indices $i_j$ range in value from
+0 to $l_{ij} - 1$.
+
+\pnum
+\enterexample\ 
+The
+\tcode{gslice}\
+specification
+\begin{codeblock}
+start  = 3
+length = {2, 4, 3}
+stride = {19, 4, 1}
+
+\end{codeblock}
+yields the sequence of one-dimensional indices
+
+$$k = 3 + (0,1) \times 19 + (0,1,2,3) \times 4 + (0,1,2) \times 1$$
+
+which are ordered as shown in the following table:
+
+\begin{tabbing}
+\hspace{.5in}\=\hspace{.4in}\=\kill%
+\>$(i_0,\quad i_1,\quad i_2,\quad k)\quad =$\\
+\>\>$(0,\quad 0,\quad 0,\quad 3$),		\\
+\>\>$(0,\quad 0,\quad 1,\quad 4$),		\\
+\>\>$(0,\quad 0,\quad 2,\quad 5$),		\\
+\>\>$(0,\quad 1,\quad 0,\quad 7$),		\\
+\>\>$(0,\quad 1,\quad 1,\quad 8$),		\\
+\>\>$(0,\quad 1,\quad 2,\quad 9$),		\\
+\>\>$(0,\quad 2,\quad 0,\quad 11$),	\\
+\>\>$(0,\quad 2,\quad 1,\quad 12$),	\\
+\>\>$(0,\quad 2,\quad 2,\quad 13$),	\\
+\>\>$(0,\quad 3,\quad 0,\quad 15$),	\\
+\>\>$(0,\quad 3,\quad 1,\quad 16$),	\\
+\>\>$(0,\quad 3,\quad 2,\quad 17$),	\\
+\>\>$(1,\quad 0,\quad 0,\quad 22$),	\\
+\>\>$(1,\quad 0,\quad 1,\quad 23$),	\\
+\>\>$\ldots$			\\
+\>\>$(1,\quad 3,\quad 2,\quad 36$)
+\end{tabbing}
+
+That is, the highest-ordered index turns fastest.
+\exitexample\ 
+
+\pnum
+It is possible to have degenerate generalized slices in which an address
+is repeated.
+
+\pnum
+\enterexample\ 
+If the stride parameters in the previous
+example are changed to \{1, 1, 1\}, the first few elements of the
+resulting sequence of indices will be
+
+\begin{tabbing}
+\hspace{.9in}\=\kill%
+\>$(0,\quad 0,\quad 0,\quad 3$),	\\
+\>$(0,\quad 0,\quad 1,\quad 4$),	\\
+\>$(0,\quad 0,\quad 2,\quad 5$),	\\
+\>$(0,\quad 1,\quad 0,\quad 4$),	\\
+\>$(0,\quad 1,\quad 1,\quad 5$),	\\
+\>$(0,\quad 1,\quad 2,\quad 6$),	\\
+\>$\ldots$
+\end{tabbing}
+\exitexample\ 
+
+\pnum
+If a degenerate slice is used as the argument to the
+non-\tcode{const}
+version of
+\tcode{operator[](const gslice\&)},
+the resulting behavior is undefined.
+\index{undefined}%
+
+\rSec3[gslice.cons]{\tcode{gslice}\ constructors}
+
+\index{gslice@\tcode{gslice}!\tcode{gslice}}%
+\begin{itemdecl}
+gslice();
+gslice(size_t @\farg{start}@, const valarray<size_t>& @\farg{lengths}@,
+			   const valarray<size_t>& @\farg{strides}@);
+gslice(const gslice&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\changedD{The default constructor creates a
+\mbox{\tcode{gslice}}
+which specifies no elements.}
+{The default constructor is equivalent to
+\mbox{\tcode{gslice(0, valarray<size_t>(), valarray<size_t>())}}.}
+The constructor with arguments builds a
+\tcode{gslice}\
+based on a specification of start, lengths, and strides, as explained
+in the previous section.
+\end{itemdescr}
+
+\rSec3[gslice.access]{\tcode{gslice}\ access functions}
+
+\index{start@\tcode{start}!\tcode{gslice}}%
+\index{size@\tcode{size}!\tcode{gslice}}%
+\index{stride@\tcode{stride}!\tcode{gslice}}%
+\begin{itemdecl}
+size_t           start()  const;
+valarray<size_t> size() const;
+valarray<size_t> stride() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These access functions return the representation of the start, lengths, or
+strides specified for the
+\tcode{gslice}.
+\end{itemdescr}
+
+\rSec2[template.gslice.array]{Class template \tcode{gslice_array}}
+
+\index{gslice_array@\tcode{gslice_array}}%
+\begin{codeblock}
+namespace std {
+  template <class T> class gslice_array {
+  public:
+    typedef T value_type;
+
+    void operator=  (const valarray<T>&) const;
+    void operator*= (const valarray<T>&) const;
+    void operator/= (const valarray<T>&) const;
+    void operator%= (const valarray<T>&) const;
+    void operator+= (const valarray<T>&) const;
+    void operator-= (const valarray<T>&) const;
+    void operator^= (const valarray<T>&) const;
+    void operator&= (const valarray<T>&) const;
+    void operator|= (const valarray<T>&) const;
+    void operator<<=(const valarray<T>&) const;
+    void operator>>=(const valarray<T>&) const;
+
+    gslice_array(const gslice_array&);
+   ~gslice_array();
+    gslice_array& operator=(const gslice_array&);
+    void operator=(const T&) const;
+  private:
+    gslice_array();
+  };
+}
+\end{codeblock}
+
+\pnum
+This template is a helper template used by the
+\tcode{slice}\
+subscript operator
+
+\index{gslice_array@\tcode{gslice_array}}%
+\index{valarray@\tcode{valarray}}%
+\begin{itemdecl}
+gslice_array<T> valarray<T>::operator[](const gslice&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+It has reference semantics to a subset of an array specified by a
+\tcode{gslice}\
+object.
+
+\pnum
+Thus, the expression
+\tcode{a[gslice(1, length, stride)] = b}\
+has the effect of assigning the elements of
+\tcode{b}\
+to a
+generalized slice of the elements in
+\tcode{a}.
+\end{itemdescr}
+
+\rSec3[gslice.array.cons]{\tcode{gslice_array}\ constructors}
+
+\index{gslice_array@\tcode{gslice_array}!\tcode{gslice_array}}%
+\begin{itemdecl}
+gslice_array();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This constructor is declared to be private.
+This constructor need not be defined.
+\end{itemdescr}
+
+\rSec3[gslice.array.assign]{\tcode{gslice_array}\ assignment}
+
+\index{operator=@\tcode{operator=}!\tcode{gslice_array}}%
+\begin{itemdecl}
+void operator=(const valarray<T>&) const;
+gslice_array& operator=(const gslice_array&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These assignment operators have reference semantics, assigning the values
+of the argument array elements to selected elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{gslice_array}\
+refers.
+\end{itemdescr}
+
+\rSec3[gslice.array.comp.assign]{\tcode{gslice_array}}
+
+\index{operator*=@\tcode{operator*=}!\tcode{gslice_array}}%
+\index{operator/=@\tcode{operator/=}!\tcode{gslice_array}}%
+\index{operator\%=@\tcode{operator\%=}!\tcode{gslice_array}}%
+\index{operator+=@\tcode{operator+=}!\tcode{gslice_array}}%
+\index{operator-=@\tcode{operator-=}!\tcode{gslice_array}}%
+\index{operator\^{}=@\tcode{operator\^{}=}!\tcode{gslice_array}}%
+\index{operator\&=@\tcode{operator\&=}!\tcode{gslice_array}}%
+\index{operator"|=@\tcode{operator"|=}!\tcode{gslice_array}}%
+\index{operator<<=@\tcode{operator\shl=}!\tcode{gslice_array}}%
+\index{operator>>=@\tcode{operator\shr=}!\tcode{gslice_array}}%
+\begin{itemdecl}
+void operator*= (const valarray<T>&) const;
+void operator/= (const valarray<T>&) const;
+void operator%= (const valarray<T>&) const;
+void operator+= (const valarray<T>&) const;
+void operator-= (const valarray<T>&) const;
+void operator^= (const valarray<T>&) const;
+void operator&= (const valarray<T>&) const;
+void operator|= (const valarray<T>&) const;
+void operator<<=(const valarray<T>&) const;
+void operator>>=(const valarray<T>&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These computed assignments have reference semantics, applying the
+indicated operation to the elements of the argument array and selected
+elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{gslice_array}\
+object refers.
+\end{itemdescr}
+
+\rSec3[gslice.array.fill]{\tcode{gslice_array}\ fill function}
+
+\index{fill@\tcode{fill}!\tcode{gslice_array}}%
+\begin{itemdecl}
+void operator=(const T&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function has reference semantics, assigning the value of its argument
+to the elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{gslice_array}\
+object refers.
+\end{itemdescr}
+
+\rSec2[template.mask.array]{Class template \tcode{mask_array}}
+
+\index{mask_array@\tcode{mask_array}}%
+\begin{codeblock}
+namespace std {
+  template <class T> class mask_array {
+  public:
+    typedef T value_type;
+
+    void operator=  (const valarray<T>&) const;
+    void operator*= (const valarray<T>&) const;
+    void operator/= (const valarray<T>&) const;
+    void operator%= (const valarray<T>&) const;
+    void operator+= (const valarray<T>&) const;
+    void operator-= (const valarray<T>&) const;
+    void operator^= (const valarray<T>&) const;
+    void operator&= (const valarray<T>&) const;
+    void operator|= (const valarray<T>&) const;
+    void operator<<=(const valarray<T>&) const;
+    void operator>>=(const valarray<T>&) const;
+
+    mask_array(const mask_array&);
+   ~mask_array();
+    mask_array& operator=(const mask_array&);
+    void operator=(const T&) const;
+  private:
+    mask_array();
+  };
+}
+\end{codeblock}
+
+\pnum
+This template is a helper template used by the mask subscript operator:
+
+\begin{itemdecl}
+mask_array<T> valarray<T>::operator[](const valarray<bool>&).
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+It has reference semantics to a subset of an array specified by a boolean mask.
+Thus, the expression
+\tcode{a[mask] = b;}\
+has the effect of assigning the elements of
+\tcode{b}\
+to the masked
+elements in
+\tcode{a}\
+(those for which the corresponding element
+in
+\tcode{mask}\
+is
+\tcode{true}.)
+\end{itemdescr}
+
+\rSec3[mask.array.cons]{\tcode{mask_array}\ constructors}
+
+\index{mask_array@\tcode{mask_array}!\tcode{mask_array}}%
+\begin{itemdecl}
+mask_array();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This constructor is declared to be private.
+This constructor need not be defined.
+\end{itemdescr}
+
+\rSec3[mask.array.assign]{\tcode{mask_array}\ assignment}
+
+\index{operator=@\tcode{operator=}!\tcode{mask_array}}%
+\begin{itemdecl}
+void operator=(const valarray<T>&) const;
+mask_array& operator=(const mask_array&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These assignment operators have reference semantics, assigning the values
+of the argument array elements to selected elements of the
+\tcode{valarray<T>}\
+object to which it refers.
+\end{itemdescr}
+
+\rSec3[mask.array.comp.assign]{\tcode{mask_array}\ computed assignment}
+
+\index{operator*=@\tcode{operator*=}!\tcode{mask_array}}%
+\index{operator/=@\tcode{operator/=}!\tcode{mask_array}}%
+\index{operator\%=@\tcode{operator\%=}!\tcode{mask_array}}%
+\index{operator+=@\tcode{operator+=}!\tcode{mask_array}}%
+\index{operator-=@\tcode{operator-=}!\tcode{mask_array}}%
+\index{operator\^{}=@\tcode{operator\^{}=}!\tcode{mask_array}}%
+\index{operator\&=@\tcode{operator\&=}!\tcode{mask_array}}%
+\index{operator"|=@\tcode{operator"|=}!\tcode{mask_array}}%
+\index{operator<<=@\tcode{operator\shl=}!\tcode{mask_array}}%
+\index{operator>>=@\tcode{operator\shr=}!\tcode{mask_array}}%
+\begin{itemdecl}
+void operator*= (const valarray<T>&) const;
+void operator/= (const valarray<T>&) const;
+void operator%= (const valarray<T>&) const;
+void operator+= (const valarray<T>&) const;
+void operator-= (const valarray<T>&) const;
+void operator^= (const valarray<T>&) const;
+void operator&= (const valarray<T>&) const;
+void operator|= (const valarray<T>&) const;
+void operator<<=(const valarray<T>&) const;
+void operator>>=(const valarray<T>&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These computed assignments have reference semantics, applying the
+indicated operation to the elements of the argument array and selected elements
+of the
+\tcode{valarray<T>}\
+object to which the mask object refers.
+\end{itemdescr}
+
+\rSec3[mask.array.fill]{\tcode{mask_array}\ fill function}
+
+\index{fill@\tcode{fill}!\tcode{mask_array}}%
+\begin{itemdecl}
+void operator=(const T&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function has reference semantics, assigning the value of its
+argument to the elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{mask_array}\
+object refers.
+\end{itemdescr}
+
+\rSec2[template.indirect.array]{Class template \tcode{indirect_array}}
+
+\index{indirect_array@\tcode{indirect_array}}%
+\begin{codeblock}
+namespace std {
+  template <class T> class indirect_array {
+  public:
+    typedef T value_type;
+
+    void operator=  (const valarray<T>&) const;
+    void operator*= (const valarray<T>&) const;
+    void operator/= (const valarray<T>&) const;
+    void operator%= (const valarray<T>&) const;
+    void operator+= (const valarray<T>&) const;
+    void operator-= (const valarray<T>&) const;
+    void operator^= (const valarray<T>&) const;
+    void operator&= (const valarray<T>&) const;
+    void operator|= (const valarray<T>&) const;
+    void operator<<=(const valarray<T>&) const;
+    void operator>>=(const valarray<T>&) const;
+
+    indirect_array(const indirect_array&);
+   ~indirect_array();
+    indirect_array& operator=(const indirect_array&);
+    void operator=(const T&) const;
+  private:
+    indirect_array();
+  };
+}
+\end{codeblock}
+
+\pnum
+This template is a helper template used by the indirect subscript operator
+
+\begin{itemdecl}
+indirect_array<T> valarray<T>::operator[](const valarray<size_t>&).
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+It has reference semantics to a subset of an array specified by an
+\tcode{indirect_array}.
+Thus the expression
+\tcode{a[\brk{}indirect] = b;}\
+has the effect of assigning the elements of
+\tcode{b}\
+to the elements in
+\tcode{a}\
+whose indices appear in
+\tcode{indirect}.
+\end{itemdescr}
+
+\rSec3[indirect.array.cons]{\tcode{indirect_array}\ constructors}
+
+\index{indirect_array@\tcode{indirect_array}!\tcode{indirect_array}}%
+\begin{itemdecl}
+indirect_array();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This constructor is declared to be private.
+This constructor need not be defined.
+\end{itemdescr}
+
+\rSec3[indirect.array.assign]{\tcode{indirect_array}\ assignment}
+
+\index{operator=@\tcode{operator=}!\tcode{indirect_array}}%
+\begin{itemdecl}
+void operator=(const valarray<T>&) const;
+indirect_array& operator=(const indirect_array&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These assignment operators have reference semantics, assigning the values
+of the argument array elements to selected elements of the
+\tcode{valarray<T>}\
+object to which it refers.
+
+\pnum
+If the
+\tcode{indirect_array}
+specifies an element in the
+\tcode{valarray<T>}\
+object to which it refers more than once, the behavior is undefined.
+\index{undefined}%
+
+\pnum
+\enterexample\ 
+\begin{codeblock}
+int addr[] = {2, 3, 1, 4, 4};
+valarray<size_t> indirect(addr, 5);
+valarray<double> a(0., 10), b(1., 5);
+a[indirect] = b;
+\end{codeblock}
+results in undefined behavior since element 4 is specified twice in the
+indirection.
+\exitexample\ 
+\end{itemdescr}
+
+\rSec3[indirect.array.comp.assign]{\tcode{indirect_array}\ computed assignment}
+
+\index{operator*=@\tcode{operator*=}!\tcode{indirect_array}}%
+\index{operator*=@\tcode{operator*=}!\tcode{indirect_array}}%
+\index{operator*=@\tcode{operator*=}!\tcode{indirect_array}}%
+\index{operator/=@\tcode{operator/=}!\tcode{indirect_array}}%
+\index{operator\%=@\tcode{operator\%=}!\tcode{indirect_array}}%
+\index{operator+=@\tcode{operator+=}!\tcode{indirect_array}}%
+\index{operator-=@\tcode{operator-=}!\tcode{indirect_array}}%
+\index{operator\^{}=@\tcode{operator\^{}=}!\tcode{indirect_array}}%
+\index{operator\&=@\tcode{operator\&=}!\tcode{indirect_array}}%
+\index{operator"|=@\tcode{operator"|=}!\tcode{indirect_array}}%
+\index{operator<<=@\tcode{operator\shl=}!\tcode{indirect_array}}%
+\index{operator>>=@\tcode{operator\shr=}!\tcode{indirect_array}}%
+\begin{itemdecl}
+void operator*= (const valarray<T>&) const;
+void operator/= (const valarray<T>&) const;
+void operator%= (const valarray<T>&) const;
+void operator+= (const valarray<T>&) const;
+void operator-= (const valarray<T>&) const;
+void operator^= (const valarray<T>&) const;
+void operator&= (const valarray<T>&) const;
+void operator|= (const valarray<T>&) const;
+void operator<<=(const valarray<T>&) const;
+void operator>>=(const valarray<T>&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+These computed assignments have reference semantics, applying the indicated
+operation to the elements of the argument array and selected elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{indirect_array}\
+object refers.
+
+\pnum
+If the
+\tcode{indirect_array}\
+specifies an element in the
+\tcode{valarray<T>}\
+object to which it refers more than once,
+the behavior is undefined.
+\index{undefined}
+\end{itemdescr}
+
+\rSec3[indirect.array.fill]{\tcode{indirect_array}\ fill function}
+
+\index{fill@\tcode{fill}!\tcode{indirect_array}}%
+\begin{itemdecl}
+void operator=(const T&) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+This function has reference semantics, assigning the value of its argument
+to the elements of the
+\tcode{valarray<T>}\
+object to which the
+\tcode{indirect_array}\
+object refers.
+\end{itemdescr}
+
 \rSec1[lib.numeric.ops]{Generalized numeric operations}
 
 \synopsis{Header \tcode{<numeric>}\ synopsis}
