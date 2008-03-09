@@ -90,7 +90,7 @@ private:
 
 //[ gil_example_image_display
 
-class image_display : public signals::consumer<>
+class image_display : public signals::consumer<image_display>
 {
 public:
     // Upon receiving an image, cout an ASCII approximation.

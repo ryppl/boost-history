@@ -9,7 +9,7 @@
 using namespace boost;
 
 //[ signal_void_counter
-class SignalVoidCounter : public signals::consumer<>
+class SignalVoidCounter : public signals::consumer<SignalVoidCounter>
 {
     int cnt;
 public:
@@ -26,7 +26,7 @@ public:
 //]
 
 //[ fused_signal_void_counter
-class FusedSignalVoidCounter : public signals::consumer<>
+class FusedSignalVoidCounter : public signals::consumer<FusedSignalVoidCounter>
 {
     int cnt;
 public:    
