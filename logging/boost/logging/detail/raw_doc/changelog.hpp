@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.22.10, 26 feb 2008
+@section changelog_cur_ver Current Version: v0.23.1, 9 march 2008
+- solved bug: formatter::syslog derived from an undefined class
+
+
+v0.22.10, 26 feb 2008
 - solved bug: using scoped logs when using tags : used to generate compile time error
 - added few fixes, due to feedback review
   - out_of_the_box usage

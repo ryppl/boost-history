@@ -58,7 +58,7 @@ typedef syslog_no_levels_t<> syslog_no_levels;
 
 See @ref boost::logging::tag "how to use tags".
 */
-struct syslog : is_generic, formatter::uses_tag< formatter::level, ::boost::logging::tag::level >, boost::logging::op_equal::always_equal  {
+struct syslog : is_generic, formatter::uses_tag< syslog, ::boost::logging::tag::level >, boost::logging::op_equal::always_equal  {
     template<class msg_type, class tag_type> void write_tag(msg_type & str, const tag_type & tag) const {
         ::syslog( level_to_syslog_level(tag.val) , as_string(str).c_str() );
     }
