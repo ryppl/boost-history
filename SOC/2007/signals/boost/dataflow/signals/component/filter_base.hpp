@@ -83,9 +83,7 @@ struct filter_component_traits<Filter, void, InSignatures>
     template<typename Component>
     static typename filter_component_traits::fusion_ports get_ports(Component &component)
     {
-        return typename filter_component_traits::fusion_ports(
-            component.default_signal(),
-            component);
+        return typename filter_component_traits::fusion_ports(fusion::vector1<Component &>(component));
     };
 };
 

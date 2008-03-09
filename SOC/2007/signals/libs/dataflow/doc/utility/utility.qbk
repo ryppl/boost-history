@@ -13,6 +13,20 @@ It returns a boost::function, which can be used as a [DataflowSignals] [Port].
 
 [endsect]
 
+[section bind_mem_fn_overload]
+
+* See also: [funcref boost::dataflow::utility::bind_mem_fn_overload bind_mem_fn_overload reference]
+
+[bind_mem_fn_overload] can be used to bind a class member function of a
+particular signature to a class object.
+It returns a boost::function, which can be used as a [DataflowSignals] [Port].
+
+[heading Example]
+
+[test_bind_mem_fn_overload]
+
+[endsect]
+
 [xinclude ../dataflow_utility_doxygen.xml]
 
 [endsect]

@@ -7,6 +7,7 @@
 #define BOOST_DATAFLOW_SUPPORT_UNARY_OPERATION_HPP
 
 #include <boost/dataflow/support/port.hpp>
+#include <boost/dataflow/utility/forwardable.hpp>
 
 #include <boost/static_assert.hpp>
 
@@ -25,8 +26,20 @@
 
 namespace boost { namespace dataflow {
 
+template<typename Operation, typename Mechanism, typename Tag, typename Producer>
+inline void
+default_unary_operation(Producer &producer)
+{
+    extension::unary_operation_impl<
+        typename default_traits_of<Producer, args::left, Mechanism, Tag>::type,
+        Operation>
+            ()(static_cast<typename utility::forwardable<
+                    typename result_of::get_default_port<Producer, args::left, Mechanism, Tag>::type>::type >
+                (get_default_port<args::left, Mechanism, Tag>(producer)));
+}
+
 template<typename Port>
-inline void disconnect_all(Port &port)
+inline typename enable_if<is_port<Port> >::type disconnect_all(Port &port)
 {
     unary_operation<operations::disconnect_all, default_tag>(port);
 }

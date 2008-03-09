@@ -49,7 +49,7 @@ public:
     boost::function<void(int)>
     select_slot()
     {
-        return make_slot_selector<void(int)> (&multiplexer::select, *this);
+        return bind_mem_fn_overload<void(int)> (&multiplexer::select, *this);
     }
     
     typedef boost::fusion::map<
@@ -65,8 +65,8 @@ public:
     slot()
     {
         return slot_map
-        (make_slot_selector<Signature> (&multiplexer::BOOST_TEMPLATE_OPERATOR()<N>, *this),
-         make_slot_selector<typename multiplexer::fused_signature_type>
+        (bind_mem_fn_overload<Signature> (&multiplexer::BOOST_TEMPLATE_OPERATOR()<N>, *this),
+         bind_mem_fn_overload<typename multiplexer::fused_signature_type>
             (&multiplexer::BOOST_TEMPLATE_OPERATOR()<N>, *this));
 
     }

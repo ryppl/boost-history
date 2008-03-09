@@ -2,7 +2,7 @@
     [quickbook 1.4]
     [version 0.9.0]
     [authors [Rajko, Stjepan]]
-    [copyright 2007 Stjepan Rajko]
+    [copyright 2007 2008 Stjepan Rajko]
     [purpose Generic dataflow lirary providing support for data producers,
         consumers, and connections.]
     [license
@@ -43,15 +43,18 @@
 [template UnaryOperable[] [link dataflow.support.concepts.port_related.unaryoperable [^UnaryOperable]]]
 [template AllDisconnectable[] [link dataflow.support.concepts.port_related.unaryoperable [^AllDisconnectable]]]
 
-[template ComponentTraits[] [link dataflow.support.concepts.component_related.componenttraits [^ComponentTraits]]]
+[template ComponentTraits[] [link dataflow.support.concepts.component_related.component [^ComponentTraits]]]
 [template Component[] [link dataflow.support.concepts.component_related.component [^Component]]]
 
 [template ComponentOperable[] [link dataflow.support.concepts.component_related.componentoperable [^ComponentOperable]]]
 [template Invocable[] [link dataflow.support.concepts.component_related.componentoperable [^Invocable]]]
 
+[template SignalTraits[] [link dataflow.signals.concepts.signaltraits [^SignalTraits]]]
 [template SignalPortTraits[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
 [template SignalProducer[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
 [template SignalConsumer[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
+[template SignalFilterComponent[] [link dataflow.signals.concepts.signalfiltercomponent [^SignalFilterComponent]]]
+[template SignalConsumerComponent[] [link dataflow.signals.concepts.signalconsumercomponent [^SignalConsumerComponent]]]
 
 [template PhoenixProducer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
 [template PhoenixConsumer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
@@ -69,12 +72,18 @@
 [template consumer_map[] [link dataflow.components.consumer_map consumer_map]]
 
 [template signals_quickstart[] [link dataflow.signals.introduction.quick_start quick start]]
+[template signals_freefunctions[] [link dataflow.signals.connections free functions and operators]]
 [template connect[] [link dataflow.signals.connections.connect connect]]
+[template invoke[] [link dataflow.signals.connections.invoke invoke]]
+[template disconnect_all[] [link dataflow.signals.connections.disconnect_all disconnect_all]]
+[template signals_tutorial[] [link dataflow.signals.introduction.tutorial tutorial]]
 [template components[] [link dataflow.signals.components components]]
+[template component[] [link dataflow.signals.component component]]
 [template operators[] [link dataflow.signals.connections.operators operators]]
 
 [template slot_selector[] [link dataflow.signals.connections.classes.slot_selector slot_selector]]
 
+[template consumer[] [link dataflow.signals.components.generic.consumer consumer]]
 [template filter[] [link dataflow.signals.components.generic.filter filter]]
 [template applicator[] [link dataflow.signals.components.generic.applicator applicator]]
 [template conditional[] [link dataflow.signals.components.generic.conditional conditional]]
@@ -93,6 +102,10 @@
 [template chain[] [link dataflow.signals.components.topologies.chain chain]]
 
 [template bind_mem_fn[] [link dataflow.utility.bind_mem_fn bind_mem_fn]]
+[template bind_mem_fn_overload[] [link dataflow.utility.bind_mem_fn_overload bind_mem_fn_overload]]
+
+[template boost_signal[] [@http://www.boost.org/doc/html/boost/signal.html [^boost::signal]]]
+[template boost_function[] [@http://www.boost.org/doc/html/boost/function.html [^boost::function]]]
 
 [template fusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 [template BoostFusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
@@ -158,6 +171,7 @@
 [import ../test/signals/test_function.cpp]
 [import ../test/signals/test_chain.cpp]
 [import ../test/signals/test_socket.cpp]
+[import ../test/signals/test_multiplexer.cpp]
 
 [import ../test/signals/test_junction.cpp]
 [import ../test/signals/test_mutex.cpp]
@@ -170,6 +184,7 @@
 [import ../example/signals/simple_distributed_example.cpp]
 [import ../example/signals/intro_example.cpp]
 [import ../example/signals/gil_example.cpp]
+[import ../example/signals/quick_start_examples.cpp]
 
 [import ../example/VTK/vtk_dataflow_support.hpp]
 [import ../example/VTK/Cone.cxx]

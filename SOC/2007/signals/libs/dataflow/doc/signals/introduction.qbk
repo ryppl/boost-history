@@ -1,62 +1,93 @@
 [section Introduction]
 
-[/The Signal Network library relies on moving the data via function parameters and return values.
-Here, the Boost.Signals library is used to model these individual data channels which couple
-the data transfer and the computational component invocation.  This is one possible dataflow-oriented
-approach.
+The [DataflowSignals] layer provides dataflow functionality based on function
+calls - which is one of the fundamental ways of dataflow in C++ (the caller
+can send data to the callee through parameters, and the callee can send
+data back through return values or modified parameters).  If
+you're not familiar with dataflow programming, you might want to read the
+general [link dataflow.introduction general Dataflow library introduction].
 
-Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
-network is local - each component knows about where its signals are going, but it knows nothing
-of where the signals arriving at its own slots are coming from.  Unless we record how the network was
-constructed, there is no "big picture" of what the complete network looks like.  Similarly,
-the network is executed autonomously - the components invoke one another when appropriate, and
-no external control mechanism is required.]
+For its data transport mechanism, [DataflowSignals] uses [BoostSignals]
+which can be used to make lasting dataflow connections
+based on function calls.  [DataflowSignals] provides the following
+to facilitate signals-based dataflow networks:
 
-
-[BoostSignals] is an excellent building block for dataflow networks,
-as it provides support for all of the essential elements -
-data transport through parameters and return values, combining
-return values from multiple signal calls, component invocation,
-and reconfigurability through connection and disconnection.
-
-The [DataflowSignals] module uses [BoostSignals] as
-the data transport mechanism in dataflow networks.
-In addition, it provides two major contributions that facilitate the
-building of large signals-based dataflow networks:
-
-* Support for a number of types of components (functors, filters,
-  member function slot selection), which can be used with
-  the generic Dataflow functionality - such as the [connect] function and its
-  associated operators which can be
-  used to easily connect different kinds of components.
-* A number of generic and specific components which can be extended
-  and customized for use in particular dataflow networks.
+* A number of useful general-purpose [components], and building blocks for
+  implementing new components.
+* Various [signals_freefunctions] for connecting and using components.
 
 [section Quick Start]
+
+[heading Signals and Functions]
+
+The basic buliding blocks of [DataflowSignals] communication are
+[boost_signal], serving as a producer of signals, and [boost_function],
+serving as a consumer of signals.  A [boost_signal] can be permanently
+connected to anything that can be pointed to by a [boost_function].
+
+Here is a simple example that illustrates this:
+[signal_function_connect]
+
+If you are familiar with [BoostSignals], will notice that the [^connect]
+free function is something new - it is provided by [DataflowSignals].
+[DataflowSignals] offers other utilities that make connection making easier,
+like the [bind_mem_fn] function which binds a member function to an object:
+
+[signal_mem_fn_connect]
+
+[heading Components]
+
+In [DataflowSignals], [boost_signal] and [boost_function] are considered
+['ports] (fundamental points of data production or consumption). 
+Ports can be grouped together into components,
+which serve as fundamental data processing elements with one or more inputs
+and outputs (ports).
+
+The typical incarnation of a component is a class, with one or more
+[boost_signal]s as producer ports and any member function as a potential
+consumer port.  While you can implement such classes any way you like, and use
+functionality described above to connect signals of one object to member functions
+of another, [DataflowSignals] offers some facilities that make things easier.
+
+Here is a simple example that uses the [filter] and [consumer] classes, which
+serve as a foundation for [DataflowSignals] components.  [filter] is best for
+components that have an output signal, and [consumer] for components that only
+have signal inputs.
+
+[component_component_example]
+
+[heading Chaining and Operators]
+
+The above components either produce ([^producer_component]) or consume
+([^consumer_component]) signals.  Let's see a
+filter example which does both - and at the same time let's introduce connection
+operators which make chaining of filters easier:
+
+[component_component_component_example]
+
+[heading Provided Components]
 
 [DataflowSignals] provides many common building block components for a
 signal-based dataflow network.  The most basic is [storage], which
 can be used to store a value received through a signal, send it on, 
 and/or retrieve it.
 
-By default, components in the library use `operator()` to receive a signal.
 For example, when a [storage] object receives a signal through its `operator()`
 (i.e., its `operator()` gets called), it will store the value of the arguments,
 and depending on its state it might forward the signal onward.  When the
 [storage] object's `send()` function is called (or the object is invoked via
-the `invoke()` function), the stored values will be sent to any connected
+the [invoke] function), the stored values will be sent to any connected
 consumers.
 
 The value stored inside a [storage] object
 can be retrieved via the [memberref boost::signals::storage::at() at()] method.
 
 Using a few [storage] objects, it is easy to
-create a simple network using
-[funcref boost::dataflow::operator>>=() operator>>=]:
+create a simple network:
 	
 [test_storage_unfused]
 
-[heading Creating your own signal receiver (slot)]
+[/[heading Creating your own signal receiver (slot)]
 
 The easiest way to create your own signal receiver which can be used with the
 [DataflowSignals] library is to create a class with `operator()` of the signal
@@ -85,106 +116,29 @@ fused signals, all you would need to do is add or substitute the following
 `operator()`:
 
 [fused_signal_void_counter]
-[fused_signal_void_counter_main]
+[fused_signal_void_counter_main]]
 
 To proceed, you may want to look at
 
-* Provided [DataflowSignals] module [link dataflow.components components].
-* Creating your own in/out components using the [filter] class.
-* Using the [link dataflow.connections connection operators] to make connections.
+* Some motivating [link dataflow.signals.introduction.examples examples].
+* A [signals_tutorial] on several topics.
+* Provided [DataflowSignals] layer [components].
 
 [endsect][/start]
 
-[section Examples]
+[include examples.qbk]
 
-[section:pull Pull-based networks]
-
-The [DataflowSignals] module was built with push-based networks in
-mind (the data producer sends data through a signal), but it can also
-be used for pull-based networks (the data consumer requests data through
-a signal).
-
-For example, the following component requests a value through a signal,
-and returns twice the value:
-
-[test_pull_classes]
-
-This class can be connected using the usual [operators]:
-
-[test_pull_unfused]
-
-[endsect][/pull]
-
-[section:disconnect Disconnecting]
-
-Connections can be terminated in two ways.  One is through the "trackable"
-mechanism of Boost.Signals, which will automatically destroy connections
-to a trackable object when the object is destroyed.  The other
-way is through the disconnect_all_slots method of the signal sender.
-
-[test_disconnect_unfused]
-
-[endsect][/disconnect]
-
-[section:multiple_different Multiple slots of different signatures]
-
-It is simple to have an object provide multiple slots through operator() functions
-of different signatures.  The following class does so through providing unary slots
-of different types:
-
-[test_multi_type_classes]
-
-[/The following class, on the other hand, uses slots of different number of arguments:
-
-[test_multi_type_classes]]
-
-In such cases, where the operator() functions differ in their signature,
-standard connection operators will work out the correct connection:
-
-[test_multi_args_unfused]
-
-[endsect][/multiple_different]
-
-[section:multiple_same Multiple inputs of the same signature]
-
-In some cases, a class may want to receive multiple signals of the same
-signature.  [/For example, the following class can receive a void() signal
-through its inherited operator() function, as well as through the
-operator() function of member "other":
-
-[test_same_type_class1]
-
-For example, the following class could receive void() signals both
-through operator() and through AltInput:
-
-[test_same_type_classes]
-
-The following example shows how to connect signals to all of the above slots.
-For the class Signal2VoidInputs, this is accomplished using the
-slot_selector function:
-
-[test_same_type_unfused]
-
-[endsect][/multiple_same]
-
-[section:multi_out Multiple outputs]
-
-Multiple outputs can be achieved by introducing additional signals in the class.
-
-[test_multi_out_unfused]
-
-The example uses the following classes:
-
-[test_multi_out_classes]
-
-[endsect][/multi_out]
-
-[endsect][/examples]
+[include tutorial.qbk]
 
 [section:fusion DataflowSignals and Boost.Fusion]
 
-The components in the [DataflowSignals] module are implemented using [fusion].  To use the
-[DataflowSignals] module, you might benefit from the following if you're not familiar with fusion.
+The [components] in the [DataflowSignals] layer are implemented using [fusion].
+To use the [components], you don't need to know anything about [fusion], 
+but for some advanced uses you might benefit from taking advantage of the fact
+that [fusion] is under the hood.
+
+If you're not familiar with fusion, here are a few basic concepts you might find
+helpful in the context of [DataflowSignals]:
 
 [heading Fused vs. unfused]
 A simple C++ function object might look something like this:

@@ -203,8 +203,8 @@ public:
     send_slot()
     {
         return send_map
-        (make_slot_selector<void ()> (&storage::send, *this),
-         make_slot_selector<void (const boost::fusion::vector<> &)> (&storage::send, *this));
+        (bind_mem_fn_overload<void ()> (&storage::send, *this),
+         bind_mem_fn_overload<void (const boost::fusion::vector<> &)> (&storage::send, *this));
     }
     /** \return The slot selector for the related at function.
     */
@@ -215,7 +215,7 @@ public:
 #endif
     at_slot()
     {
-        return make_slot_selector<
+        return bind_mem_fn_overload<
             typename boost::fusion::result_of::at_c<storable_vector, N>::type ()>
             (&storage::template at<N>, *this);
     }
@@ -228,7 +228,7 @@ public:
 #endif
     value_at_slot()
 	{
-        return make_slot_selector<
+        return bind_mem_fn_overload<
             typename boost::mpl::at_c<parameter_types, N>::type ()>
             (&storage::template value_at<N>, *this);
     }

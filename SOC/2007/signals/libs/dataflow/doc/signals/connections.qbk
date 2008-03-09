@@ -1,4 +1,4 @@
-[section:connections Functions, operators, and helper classes]
+[section:connections Free functions and operators]
 
 [section:connect connect function]
 
@@ -8,33 +8,30 @@
 namespace, which connects a [SignalProducer] and [SignalConsumer]
 which are [Connectable].
 
-Given a [SignalProducer] `p` and [SignalConsumer] `c`,
+Given a [SignalProducer] `p` and [Connectable] [SignalConsumer] `c`,
 
-    connect(p,c);
+    signals::connect(p,c);
     
-will create a connection between the two.  The examples in this documentation typically
-use [operators] to create connections.  The [operators] use the [connect] function
-directly, and can be replaced by invocations of [connect] if preferred.
+will create a connection between the two.
 
+Since [DataflowSignals] [components] provide default ports, they can be used
+with the [connect] function directly.  The default [SignalProducer] is the
+[boost_signal] provided by each of the [components], and the default [SignalConsumer]
+is the call operator ([^operator()]).
 
-    #include <boost/signal_network/connection/slot_selector.hpp>
+[note The call operator acts as a [KeyedPort] - an appropriate overload will
+be selected depending on the signature of the signal being connected]
 
-will add support for [slot_selector] objects as signal consumers.  In addition, they can be used
-as signal producers if the underlying object is a signal producer.
-
-    #include <boost/signal_network/connection/slot_selector_map.hpp>
-    
-will add support for fusion maps from signatures to [slot_selector] objects (and perhaps to any signal consumer,
-not tested yet) as signal consumers.  This can be used to pack multiple slots of an object together, and then make
-connections based on the appropriate signature (see the send_slot function of [storage] as an example).
-In addition, fusion maps can be used as signal producers if the underlying object of the front element is a signal
-producer.
-
-[test_connect]
+The [link dataflow.signals.introduction.quick_start quick start] section
+has some examples.
 
 [endsect]
 
 [section:operators connection operators]
+
+The examples in this documentation typically
+use [operators] to create connections.  The [operators] use the [connect] function
+directly, and can be replaced by invocations of [connect] if preferred.
 
 [heading Chaining]
 
@@ -58,25 +55,23 @@ and `operator |`, with `operator |` being used for branching.
 namespace, which invokes a [Invocable] [DataflowSignals]
 [Component].
 
+The only [Invocable] [component] provided by the library is [storage].
+
+Here is an example that uses [invoke]:
+
+[test_storage_unfused]
+
 [endsect]
 
-[section:slot_selector slot_selector class]
+[section:disconnect_all disconnect_all function]
 
-[*See also]: [classref boost::signals::slot_selector slot_selector class reference.]
+The [disconnect_all] function can be used to disconnect all [SignalConsumer]s
+from a [SignalProducer] (or from the default [SignalProducer] of a [component]).
 
-The [slot_selector] class is used to refer to a particular member function of a particular object, and can be used
-can be used as a receiver.
+Here is an example:
 
-[slot_selector] objects can be constructed using the [funcref boost::signals::make_slot_selector] function.
-See the [link dataflow.connections.examples.multiple_same  Multiple inputs of the same signature] example.
+[test_disconnect_unfused]
 
-[heading Models]
-
-* [SignalConsumer]
-* [ProxyPort]
-
-[endsect][/slot_selector]
-
-
+[endsect]
 
 [endsect][/connections]

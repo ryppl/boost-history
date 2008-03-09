@@ -14,14 +14,13 @@ using namespace boost;
 
 //[ test_filter_classes
 
-class DoublerClass : public signals::filter<DoublerClass, void(int), void(int)>
+class DoublerClass : public signals::filter<DoublerClass, void(int)>
 {
 public:
     void operator()(int x) {out(2*x);}
 };
 
-struct receiver
-    : public boost::dataflow::port<boost::dataflow::signals::call_consumer<> >    
+struct receiver : public signals::consumer<receiver>
 {
     receiver() : stored(0) {}
     
@@ -29,6 +28,16 @@ struct receiver
     {
         stored = x;
     }
+    
+    int stored;
+};
+
+//]
+
+struct fused_receiver : public signals::consumer<fused_receiver>
+{
+    fused_receiver() : stored(0) {}
+    
     void operator()(const fusion::vector<int> &x)
     {
         stored = fusion::at_c<0>(x);
@@ -48,8 +57,6 @@ public:
         fused_out(y);
     }
 };
-
-//]
 
 int test_main(int, char* [])
 {    
@@ -71,7 +78,7 @@ int test_main(int, char* [])
         //[ test_filter_fused
         
         FusedDoublerClass doubler1, doubler2;
-        receiver collector;
+        fused_receiver collector;
         
         doubler1 >>= doubler2 >>= collector;
         doubler1(1);

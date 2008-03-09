@@ -15,14 +15,16 @@ int test_main(int, char* [])
 {
     {
         //[ test_disconnect_unfused
-        signals::storage<void ()> banger;        
+        signals::storage<void ()> banger; 
+        // counter will count the number of signals it receives       
         signals::counter<void ()> counter;
         
-        banger >>= counter;
-        banger.disconnect_all_slots();
+        connect(banger, counter);
+        banger(); // this signal will pass to counter
+        disconnect_all(banger);
+        banger(); // this signal will not pass to counter
         
-        banger();
-        BOOST_CHECK_EQUAL(counter.count(), 0);
+        BOOST_CHECK_EQUAL(counter.count(), 1);
         //]
     }
     return 0;

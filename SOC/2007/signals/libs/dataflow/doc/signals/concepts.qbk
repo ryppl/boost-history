@@ -1,37 +1,63 @@
 [section Concepts]
 
-[section:signalporttraits SignalPortTraits]
-A [PortTraits] type `T` is a [`[SignalPortTraits]] if
-its mechanism is `signals::mechanism`, and it specifies the signature
-of the underlying signal.
+[section:signaltraits SignalTraits]
+A [Traits] type `T` is a ['[SignalTraits]] if
+its tag is `dataflow::signals::tag`.
 
 [heading Refinement of]
-* [PortTraits]
+* [Traits]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
-    [[PT] [A [SignalPortTraits] type.]]
-    [[C] [A [Connectable] [SignalConsumer].]]
-    [[p] [An object of type `p`.]]
-    [[c] [An object of type `c`.]]
+    [[ST] [A [SignalTraits] type.]]
 ]
 
 [heading Requirements]
+
+The following requrements are only those that are in addition to or different
+than those of the refined concepts listed above:
+
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Tag]
-        [`PT::mechanism`]
-        [`dataflow::signals::mechanism`]
+        [`ST::tag`]
+        [`dataflow::signals::tag`]
         [[Tag] type tag.]
     ]
+]
+
+[endsect]
+
+[section:signalporttraits SignalPortTraits]
+A [PortTraits], [SignalTraits] type `SPT` is a ['[SignalPortTraits]] if
+it specifies the signature of the underlying signal.
+
+[heading Refinement of]
+* [PortTraits]
+* [SignalTraits]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[SPT] [A [SignalTraits] type.]]
+]
+
+[heading Requirements]
+
+The following requrements are only those that are in addition to or different
+than those of the refined concepts listed above:
+
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Signature]
-        [`PT::signature_type`]
+        [`SPT::signature_type`]
         [`any function type`]
-        [Signature of the underlying `boost::signal`/`boost::function`.]
+        [Signature of the underlying [boost_signal]/[boost_function].]
     ]
 ]
 
@@ -40,42 +66,35 @@ The following expressions are used in this document:
 [section SignalProducer]
 
 A producer [Port] type `P` is a ['[SignalProducer]] if its
-[PortTraits] is a [SignalPortTraits], and the `get_port` function
-returns the underlying `boost::signal`.
+[PortTraits] is a [SignalPortTraits].  A [SignalProducer] must also
+match the requirements modeled by the [boost_signal] class.
 
 [heading Refinement of]
 * producer [Port]
 * [Connectable] with [SignalConsumer] of same signature.
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[`P`] [A [SignalProducer] type.]]
-    [[`PT`] [[PortTraits] of `P`]]
-    [[`C`] [A [Connectable] [SignalConsumer].]]
-    [[`S`] [Signature of underlying signal]]
-    [[`p`] [An object of type `p`.]]
-    [[`c`] [An object of type `c`.]]
-]
+* [AllDisconnectable]
+* requirements modeled by the [boost_signal] class.
 
 [heading Requirements]
+
+The following requrements are only those that are in addition to or different
+than those of the refined concepts listed above:
+
 [table
-    [[Name] [Expression] [Result Type] [Description]]
+    [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Signal]
-        [`dataflow::get_port(p)`]
-        [`boost::signal<PT::signal_type,...> &`]
+        [Traits]
+        [[^[traits_of]<P, dataflow::signals::tag>::type]]
+        [[SignalTraits] type]
         [
-            Reference to the signal storing the outgoing connections.
+            The [Traits] of `P` for [Tag] `dataflow::signals::tag`.
         ]
     ]
 ]
 
 [heading Header]
 
-The types, templates, and functions shown here are declared in the following
-files:
+[boost_signal] models [SignalProducer] after including the following files:
 
 ```
     #include <boost/dataflow/signals/support.hpp>
@@ -86,47 +105,75 @@ files:
 [section SignalConsumer]
 
 A consumer [Port] type `P` is a ['[SignalConsumer]] if its
-[PortTraits] is a [SignalPortTraits], and the `get_port` function
-returns the underlying `boost::function`.
+[PortTraits] is a [SignalPortTraits]. A [SignalProducer] must also
+match the concepts modeled by the [boost_signal] class.
 
 [heading Refinement of]
 * consumer [Port]
 * [Connectable] with [SignalProducer] of same signature.
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[`C`] [A [SignalConsumer] type.]]
-    [[`PT`] [[PortTraits] of `C`]]
-    [[`P`] [A [Connectable] [SignalProducer].]]
-    [[`S`] [Signature of underlying signal]]
-    [[`c`] [An object of type `c`.]]
-    [[`p`] [An object of type `p`.]]
-]
+* concepts modeled by the [boost_function] class.
+* convertible to [boost_function].
 
 [heading Requirements]
+
+The following requrements are only those that are in addition to or different
+than those of the refined concepts listed above:
+
 [table
-    [[Name] [Expression] [Result Type] [Description]]
+    [[Name] [Expression] [Result Type] [Semantics]]
     [
-        [Signal]
-        [`dataflow::get_port(p)`]
-        [`boost::function<PT::signature_type>`]
+        [Traits]
+        [[^[traits_of]<P, dataflow::signals::tag>::type]]
+        [[SignalTraits] type]
         [
-            Boost.Function object for the slot.
+            The [Traits] of `P` for [Tag] `dataflow::signals::tag`.
         ]
     ]
 ]
 
 [heading Header]
 
-The types, templates, and functions shown here are declared in the following
-files:
+[boost_function] models [SignalConsumer] after including the following files:
 
 ```
     #include <boost/dataflow/signals/support.hpp>
 ```
 
 [endsect][/signalconsumer]
+
+[section SignalConsumerComponent]
+
+A [Component] type `F` is a ['[SignalConsumerComponent]] if its
+[ComponentTraits] is a [SignalTraits], and has a default [SignalConsumer] port.
+
+[heading Refinement of]
+* [Component]
+
+[heading Requirements]
+
+The following requrements are only those that are in addition to or different
+than those of the refined concepts listed above:
+
+...to come...
+
+[endsect][/SignalConsumerComponent]
+
+[section SignalFilterComponent]
+
+A [Component] type `F` is a ['[SignalFilterComponent]] if its
+[PortTraits] is a [SignalTraits], and has default [SignalProducer]
+and [SignalConsumer] ports.
+
+[heading Refinement of]
+* [Component]
+
+[heading Requirements]
+
+The following requrements are only those that are in addition to or different
+than those of the refined concepts listed above:
+
+...to come...
+
+[endsect][/SignalFilterComponent]
 
 [endsect]

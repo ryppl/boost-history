@@ -90,11 +90,9 @@ private:
 
 //[ gil_example_image_display
 
-class image_display
+class image_display : public signals::consumer<>
 {
 public:
-    typedef dataflow::signals::call_consumer<> dataflow_traits;
-    
     // Upon receiving an image, cout an ASCII approximation.
     void operator()(const gil::gray8_image_t &image)
     {

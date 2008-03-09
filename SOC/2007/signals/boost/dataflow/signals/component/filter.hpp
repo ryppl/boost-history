@@ -73,13 +73,20 @@ struct is_signal_args<
     : public mpl::true_
 {};    
     
-template<typename OutSignature,
-    typename Combiner = boost::last_value<typename boost::function_traits<OutSignature>::result_type>,
-    typename Group = int,
-    typename GroupCompare = std::less<Group> >
+template<typename OutSignature>
 struct default_signal_args
 {
-    typedef signal_args<Combiner, Group, GroupCompare> type;
+    typedef boost::last_value<typename boost::function_traits<OutSignature>::result_type> combiner_type;
+    typedef int group_type;
+    typedef std::less<group_type> group_compare_type;
+
+    typedef signal_args<combiner_type, group_type, group_compare_type> type;
+};
+
+template<>
+struct default_signal_args<void>
+{
+    typedef void type;
 };
 
 template<typename OutSignature, typename SignalArgs>
@@ -141,21 +148,15 @@ protected:
 	mutable signal_type out;
 }; // class filter
 
-/** \brief Unfused version of the filter class
+/** \brief Filter class with no output signal
 */
-template<typename Derived, typename InSignatures, typename OutSignal, typename SignalArgs>
-class filter<Derived, void, InSignatures, OutSignal, SignalArgs>
+template<typename Derived, typename InSignatures=mpl::vector<> >
+class consumer
     : public filter_base<
-        Derived,
-        typename signal_from_args<void, SignalArgs>::type,
+        Derived, 
+        void,
         typename dataflow::utility::forced_sequence<InSignatures>::type >
 {
-    BOOST_MPL_ASSERT(( is_signal_args<SignalArgs> ));
-    
-public:
-	filter(const filter &) {}
-	filter(){}
-    const filter &operator = (const filter &) {return *this;}
 }; // class filter
 
 /** \brief Combined version of the filter class

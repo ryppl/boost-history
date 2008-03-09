@@ -1,0 +1,5 @@
+[section Examples]
+
+[include examples/vtk_example.qbk]
+
+[endsect][/examples]

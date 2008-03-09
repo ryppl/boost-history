@@ -6,7 +6,8 @@ and their use.
 
 [table
     [[Component][Use]]
-    [[[filter]][Base class for your own components.]]
+    [[[consumer]][Base class for your own input-only components.]]
+    [[[filter]][Base class for your own input/output or output-only components.]]
     [[[storage]][Stores signal arguments.]]
     [[[counter]][Counts the number of signals passing through.]]
     [[[junction]][Convenient when multiple producers need to be connected to the same set of consumers.  Also has gate functionality.]]
@@ -21,38 +22,36 @@ and their use.
 
 [section:generic Generic]
 
+[section:consumer consumer]
+[*See also]: [classref boost::signals::consumer consumer class reference.]
+
+[heading Model of]
+
+* [SignalConsumerComponent]
+
+[heading Description]
+
+The [consumer] class is provided as a base class for input-only components.
+It provides support for Dataflow connection operators and functions.
+
+You can find an example using the [consumer] class in the [signals_tutorial].
+
+[endsect][/consumer]
+
 [section:filter filter]
 [*See also]: [classref boost::signals::filter filter class reference.]
 
 [heading Model of]
 
-* [SignalConsumer]
-* [SignalProducer]
+* [SignalFilterComponent]
 
 [heading Description]
 
 The [filter] class is provided as a base class for in / out components.
 It provides support for Dataflow connection operators and functions,
-and provides a default output signal.  Here is an example of a simple class
-which inherits [filter]:
+and provides a default output signal.
 
-[test_filter_classes]
-
-The type of the output signal (in the above example, `signals::unfused`)
-is specified as the second template parameter.
-There are three options:
-
-* `signals::unfused` provides an unfused output signal named `out`.
-* `signals::fused` provides a fused output signal named `fused_out`.
-* `signals::combined` provides an unfused output signal named `out`,
-  and a fused adapter for the signal named `fused_out`.
-  This is useful for components which wish to use fusion internally but output
-  an unfused signal.
-
-A component developed on top of the [filter] class can then be used in the
-appropriate network.  Here is an example which uses the class defined above:
-
-[test_filter_fused]
+You can find an example using the [filter] class in the [signals_tutorial].
 
 [endsect][/filter]
 
@@ -60,10 +59,7 @@ appropriate network.  Here is an example which uses the class defined above:
 [*See also]: [classref boost::signals::applicator applicator class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -80,6 +76,11 @@ Examples of applicators:
 [section:conditional conditional]
 [*See also]: [classref boost::signals::conditional conditional class reference.]
 
+[heading Model of]
+* [SignalFilterComponent]
+
+[heading Description]
+
 The [conditional] class applies a specified function object to a member variable
 of a specified type whenever it receives a signal.
 The signal is forwarded if the function object returns true.
@@ -94,10 +95,7 @@ Examples of conditionals:
 [*See also]: [classref boost::signals::instantiator instantiator class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -115,10 +113,7 @@ Examples of applicators:
 [*See also]: [classref boost::signals::modifier modifier class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -139,10 +134,7 @@ Examples of modifiers:
 [*See also]: [classref boost::signals::storage storage class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -155,6 +147,11 @@ as well as transmit the stored argument values through its own signal.
 
 [section:counter counter]
 [*See also]: [classref boost::signals::counter counter class reference.]
+
+[heading Model of]
+* [SignalFilterComponent]
+  
+[heading Description]
 
 The [counter] class counts the number of passing signals.  Each time it
 receives a signal, it will increment an internal
@@ -170,10 +167,7 @@ counter and forward the signal.
 [*See also]: [classref boost::signals::junction junction class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -188,10 +182,7 @@ them all to the same set of output signals.
 [*See also]: [classref boost::signals::multiplexer multiplexer class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -210,10 +201,7 @@ them all to the same set of output signals.
 [*See also]: [classref boost::signals::mutex mutex class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -228,10 +216,7 @@ The [mutex] class locks an internal mutex when it receives a signal, and then fo
 [*See also]: [classref boost::signals::mutex mutex class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -248,10 +233,7 @@ The [condition] class signals a threading condition when receiving a signal.
 [*See also]: [classref boost::signals::function function class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
@@ -269,19 +251,13 @@ The [function] class can be used to apply a function to an incoming signal and o
 [section:chain chain]
 
 [heading Model of]
-* [SignalConsumer]
-* [SignalProducer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalFilterComponent]
   
 [heading Description]
 
 The [chain] class chains together multiple copies of the same component.
 
-[table function class use example
-    [[fused][unfused]]
-    [[[test_chain_fused]][[test_chain_unfused]]]
-]
+[test_chain_unfused]
 
 The example above uses the following classes:
 
@@ -297,9 +273,7 @@ The example above uses the following classes:
 [*See also]: [classref boost::signals::socket_sender socket_sender class reference.]
 
 [heading Model of]
-* [SignalConsumer]
-* [Connectable] to any [SignalProducer] type `P` where 
-  `Signature` matches `P`'s produced type.
+* [SignalConsumerComponent]
   
 [heading Description]
 
@@ -318,7 +292,7 @@ Example:
 [*See also]: [classref boost::signals::socket_receiver socket_receiver class reference.]
 
 [heading Model of]
-* [SignalProducer]
+* [SignalFilterComponent]
   
 [heading Description]
 

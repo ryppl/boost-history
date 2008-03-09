@@ -1,0 +1,6 @@
+[section Examples]
+
+[include examples/distributed_example.qbk]
+[include examples/gil_example.qbk]
+
+[endsect]

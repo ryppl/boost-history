@@ -63,7 +63,7 @@ for an idea of about other things in planning.
 
 [h5 Dataflow.Signals layer]
 
-This part of the Dataflow library provides Dataflow support and processing
+The [DataflowSignals] layer provides Dataflow support and
 components which use [BoostSignals] as a mechanism to transfer data
 between the components.
 
@@ -391,48 +391,50 @@ convenient.]
 
 [endsect][/how_to_use]
 
-[section Examples]
-
-[include introduction/distributed_example.qbk]
-[include introduction/gil_example.qbk]
-[include introduction/gui_example.qbk]
-[include introduction/blueprint_example.qbk]
-[include introduction/vtk_example.qbk]
-
-[endsect][/examples]
-
 [section:download Downloading, building and linking]
 
 [heading Downloading]
 
-I am currently preparing this library for submission for a Boost review. The
-latest version is located in the
+The latest development version is located in the
 [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2007/signals Boost sandbox].
+Released versions are located in the
+[@http://www.boost-consulting.com/vault/index.php?&directory=Dataflow Boost Vault].
 
 The Dataflow library uses the trunk version of Boost - it might not work
 perfectly with release versions of boost.
 
-Version 0.9.0 (under construction)
+Version 0.9.0
+ \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 
-* added a component bank class
-* added [gui_example an example GUI dataflow editor]
-* Revamped [concepts] one more time
-* [DataflowSignals] components should now all be [Component]s.
-* added the port_adapter class to replace old ProxyPort functionality
-* slot_selector is now useless - replaced with just boost::function
-* Adapted the Dataflow.Signals layer, tests, and examples.
-* Started adding Doxygen-generated support layer reference.
+* Generic Dataflow layer
+ * Revamped [concepts] one more time
+ * added the port_adapter class to replace old ProxyPort functionality
+ * Started adding Doxygen-generated support layer reference.
+
+* [DataflowSignals]
+ * Adapted the Dataflow.Signals layer, tests, and examples to new generic layer.
+ * [DataflowSignals] components should now all be [Component]s.
+ * [filter] base class now offers simpler specification of consumer signatures
+ * added a [consumer] base class for input-only components.
+ * slot_selector is now useless - replaced with just [boost_function]
+ * bind_object replaced with [bind_mem_fn], replaced make_slot_selector with
+  [bind_mem_fn_overload].
+
+* [DataflowBlueprint]
+ * added a component bank class
+ * added [gui_example an example GUI dataflow editor]
 
 Short term to-do list:
 
 * keep working on docs, tests
+* default mechanisms for operations should be specified by the framework [Tag]
+* propagate return values where they should be propagated
 * Key used for [KeyedPort]s should be overridable (not always the [PortTraits])
 * binary_operation should take two [Tag] parameters
 * add support for cross-framework operations (`tag_adapter`?)
 * make dispatching possible on other than just the [PortTraits]
 * `port_adapter` should be renamed to `adapter`
 * [Invocable] should be a part of [UnaryOperable]
-* propagate return values where they should be propagated
 
 See the [future_work] section for more information on what is planned.
 
@@ -502,7 +504,7 @@ the System library which must also be built and linked.  A few other components
 linked as well.
 
 The [vtk_example VTK example] requires [VTK], and the [gui_example GUI dataflow
-editor example] requires [FTLK].
+editor example] requires [FLTK].
 
 [endsect][/download]
 

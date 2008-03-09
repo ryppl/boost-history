@@ -1,0 +1,132 @@
+[section Tutorial]
+
+[section:pull Pull-based networks]
+
+In [DataflowSignals], we have signal producers and signal consumers.
+But note that the flow of data can go in both directions.  The caller (signal
+producer) could be considered the data producer if it supplies data in the
+provided arguments.  On the other hand, the callee (signal consumer) could be
+considered the data producer if it returns data either in the return value or
+through one of the parameters.
+
+Most of the examples in this documentation focus on the former case, where
+the signal producer is the data producer (this could also be called
+a push-based network).  Here we will present an example of the latter case,
+where the signal consumer is the data producer (i.e., a pull-based network).
+
+The following component requests a value through a signal,
+and returns twice the value:
+
+[test_pull_classes]
+
+This class can be connected using the usual [operators]:
+
+[test_pull_unfused]
+
+The [^value_at_slot<0>] member function returns a [boost_function] pointing to
+the [^at<0>] member function of [storage].  Because we initalized [^generator]
+with a value of [^1.0f], that is what [^at<0>] will return.  [^doubler] will
+double that value and return [^2.0f].
+
+[endsect][/pull]
+
+[section:disconnect Disconnecting]
+
+Disconnection capability is not yet fully supported by [DataflowSignals],
+although you can always use disconnection features of [BoostSignals].
+Currently, the only [DataflowSignals] method of disconnecting is the
+[disconnect_all] function, which can be applied to any component based on
+[filter].  Here is an example:
+
+[test_disconnect_unfused]
+
+[endsect][/disconnect]
+
+[section:multiple_different Multiple slots of different signatures]
+
+It is simple to have an object provide multiple signal consumer ports through
+operator() functions of different signatures.
+Here is an example:
+
+[test_multi_type_classes]
+
+[/The following class, on the other hand, uses slots of different number of arguments:
+
+[test_multi_type_classes]]
+
+In such cases, where the operator() functions differ in their signature,
+standard connection operators will work out the correct connection:
+
+[test_multi_type_unfused]
+
+[endsect][/multiple_different]
+
+[section:multiple_same Multiple inputs of the same signature]
+
+In some cases, a class may want to receive multiple signals of the same
+signature. For example, the following class could receive void() signals both
+through operator() and through AltInput:
+
+[test_same_type_classes]
+
+The following example shows how to connect signals to all of the above slots.
+For the class Signal2VoidInputs, this is accomplished using the
+[bind_mem_fn] function:
+
+[test_same_type_unfused]
+
+[endsect][/multiple_same]
+
+[section:multi_out Multiple outputs]
+
+The use of multiple outputs (signal producers) is not yet fully integrated
+with the [filter] class.  Ideally, the [filter] class should allow you to
+specify more than one signal output signature, but that feature is not available
+yet.
+
+In the meantime, multiple outputs can be achieved by introducing additional
+signals in the class:
+
+[test_multi_out_classes]
+
+You can then connect the signal directly:
+
+[test_multi_out_unfused]
+
+[endsect][/multi_out]
+
+[section:filterconsumercomponents Implementing new components using filter and consumer classes]
+
+The easiest way to implement new [DataflowSignals] components is to inherit
+[filter] or [consumer] classes.  Inherit the [filter] class when your component
+needs an output, and the [consumer] class when you only need inputs.
+
+Here is an example of simple classes which inherit [filter] or [consumer]:
+
+[test_filter_classes]
+
+With the components implemented, we can use them with the usual
+[signals_freefunctions].
+
+[test_filter_unfused]
+
+[/The type of the output signal (in the above example, `signals::unfused`)
+is specified as the second template parameter.
+There are three options:
+
+* `signals::unfused` provides an unfused output signal named `out`.
+* `signals::fused` provides a fused output signal named `fused_out`.
+* `signals::combined` provides an unfused output signal named `out`,
+  and a fused adapter for the signal named `fused_out`.
+  This is useful for components which wish to use fusion internally but output
+  an unfused signal.
+
+A component developed on top of the [filter] class can then be used in the
+appropriate network.  Here is an example which uses the class defined above:
+
+[test_filter_fused] ]
+
+[endsect]
+
+
+[endsect][/tutorial]

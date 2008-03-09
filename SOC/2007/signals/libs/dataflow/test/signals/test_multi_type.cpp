@@ -14,14 +14,9 @@ using namespace boost;
 
 //[ test_multi_type_classes
 
-class SignalIntFloatCollector : public boost::dataflow::port<
-    boost::dataflow::signals::call_consumer<> >
+class SignalIntFloatCollector : public signals::consumer<SignalIntFloatCollector>
 {
-    optional<int> last_int;
-    optional<float> last_float;
-public:
-    typedef void result_type;
-    
+public:    
     void operator()(int x)
     {
         last_int = x;
@@ -30,14 +25,9 @@ public:
     {
         last_float = x;
     }
-    optional<int> GetLastInt()
-    {
-        return last_int;
-    }
-    optional<float> GetLastFloat()
-    {
-        return last_float;
-    }
+
+    optional<int> last_int;
+    optional<float> last_float;
 }; // end class SignalIntFloatCollector
 
 //]
@@ -47,19 +37,36 @@ int test_main(int, char* [])
     {
         //[ test_multi_type_unfused
         signals::storage<void ()> banger;
-        signals::storage<void (int)> inter;
-        inter(2);
-        signals::storage<void (float)> floater;
-        floater(3.3f);
+        signals::storage<void (int)> int_storage(2);
+        signals::storage<void (float)> float_storage(3.3f);
         SignalIntFloatCollector collector;
         
+        // ---Connect the dataflow network -----------------------------
+        //
+        //
+        //            ,---------------.  void(float)   
+        //            |  int_storage  | -------------+ 
+        //            `--(send_slot)--'              |  
+        //                    ^                      |
+        // ,--------.  void() |                      +>,-----------.
+        // | banger | --------+                        | collector |
+        // `--------'         |                      +>`-----------'
+        //                    V                      |
+        //            ,--(send_slot)--.  void(float) | 
+        //            | float_storage | -------------+ 
+        //            `---------------'                
+        //
+        // -------------------------------------------------------------
+
         banger
-            | (inter >>= collector).send_slot()
-            | (floater >>= collector).send_slot();
+            | int_storage.send_slot()
+            | float_storage.send_slot();
+        int_storage >>= collector;
+        float_storage >>= collector;
         
-        banger();
-        BOOST_CHECK_EQUAL(collector.GetLastInt(), optional<int>(2));
-        BOOST_CHECK_EQUAL(collector.GetLastFloat(), optional<float>(3.3f));
+        banger(); // this causes int_storage to output 2, and float_storage 3.3
+        BOOST_CHECK_EQUAL(collector.last_int, optional<int>(2));
+        BOOST_CHECK_EQUAL(collector.last_float, optional<float>(3.3f));
         //]
     }
     return 0;

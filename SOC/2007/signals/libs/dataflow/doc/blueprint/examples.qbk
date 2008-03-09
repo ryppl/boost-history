@@ -1,0 +1,6 @@
+[section Examples]
+
+[include examples/gui_example.qbk]
+[include examples/blueprint_example.qbk]
+
+[endsect]

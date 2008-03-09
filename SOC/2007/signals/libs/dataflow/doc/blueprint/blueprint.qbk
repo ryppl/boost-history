@@ -26,6 +26,8 @@ the current implementation is very rough.  There is no detailed documentation,
 but the provided [link dataflow.introduction.examples.blueprint example]
 provides some insight into its usability.]
 
+[include examples.qbk]
+
 [xinclude ../dataflow_blueprint_doxygen.xml]
 
 [endsect]

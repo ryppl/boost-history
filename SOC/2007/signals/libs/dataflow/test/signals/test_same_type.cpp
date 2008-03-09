@@ -13,16 +13,9 @@ using namespace boost;
 
 //[ test_same_type_classes
 
-class Signal2VoidCounter : public signals::counter<void ()>
-{
-public:
-	signals::counter<void ()> other;
-}; // end class Signal2VoidCounter
-
 class Signal2VoidInputs
-    : public boost::dataflow::port<boost::dataflow::signals::call_consumer<> >
+    : public signals::consumer<Signal2VoidInputs>
 {
-	int result;
 public:
     typedef void result_type;
     
@@ -39,6 +32,8 @@ public:
 	{
 		return result;
 	}
+private:
+	int result;
 }; // end class Signal2VoidInputs
 
 //]
@@ -47,22 +42,12 @@ int test_main(int, char* [])
 {
     {
         //[ test_same_type_unfused
-        signals::storage<void ()> banger;
-        Signal2VoidCounter counter;
-        
-        banger
-            | counter
-            | counter.other;
-        
-        banger();
-        BOOST_CHECK_EQUAL(counter.count(), 1);
-        BOOST_CHECK_EQUAL(counter.other.count(), 1);
-        
+        signals::storage<void()> banger;
         Signal2VoidInputs inputs;
         
         banger
-            | inputs
-            | signals::make_slot_selector<void ()> (&Signal2VoidInputs::AltInput, inputs);
+            | inputs // this will connect to operator()()
+            | signals::bind_mem_fn(&Signal2VoidInputs::AltInput, inputs);
         
         banger();
         BOOST_CHECK_EQUAL(inputs.GetResult(), 11);

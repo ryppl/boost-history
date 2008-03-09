@@ -9,12 +9,10 @@
 using namespace boost;
 
 //[ signal_void_counter
-class SignalVoidCounter
+class SignalVoidCounter : public signals::consumer<>
 {
     int cnt;
 public:
-    typedef dataflow::signals::call_consumer<> dataflow_traits;
-    
     SignalVoidCounter() : cnt(0) {}
     void operator()()
     {
@@ -28,12 +26,10 @@ public:
 //]
 
 //[ fused_signal_void_counter
-class FusedSignalVoidCounter
+class FusedSignalVoidCounter : public signals::consumer<>
 {
     int cnt;
-public:
-    typedef dataflow::signals::call_consumer<> dataflow_traits;
-    
+public:    
     FusedSignalVoidCounter() : cnt(0) {}
     void operator()(const fusion::vector<> &)
     {

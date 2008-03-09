@@ -9,7 +9,7 @@
 #include <boost/dataflow/support.hpp>
 #include <boost/dataflow/support/port/port_adapter.hpp>
 #include <boost/dataflow/utility/bind_mem_fn.hpp>
-#include <boost/dataflow/utility/slot_type.hpp>
+#include <boost/dataflow/utility/bind_mem_fn_overload.hpp>
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/joint_view.hpp>
@@ -136,6 +136,30 @@ namespace extension
         }
     };
     
+    template<typename T>
+    struct binary_operation_impl<signals::producer<T>, signals::consumer<T>, operations::disconnect>
+    {
+        typedef void result_type;
+        
+        template<typename Producer, typename Consumer>
+        void operator()(Producer &producer, Consumer &consumer)
+        {
+            producer.disconnect(consumer);
+        }
+    };
+    
+    template<typename T>
+    struct unary_operation_impl<signals::producer<T>, operations::disconnect_all>
+    {
+        typedef void result_type;
+        
+        template<typename Producer>
+        void operator()(Producer &producer)
+        {
+            producer.disconnect_all_slots();
+        }
+    };
+    
     template<typename SignatureSequence, typename Signature>
     struct get_keyed_port_impl<signals::call_consumer<SignatureSequence>, signals::extract_producer<Signature> >
     {
@@ -175,6 +199,12 @@ namespace boost { namespace signals {
 #define DATAFLOW_TEMPLATE_BINARY_OPERATION connect
 #include <boost/dataflow/templates/binary_operation.hpp>
 #undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+#define DATAFLOW_TEMPLATE_BINARY_OPERATION disconnect
+#include <boost/dataflow/templates/binary_operation.hpp>
+#undef DATAFLOW_TEMPLATE_BINARY_OPERATION
+#define DATAFLOW_TEMPLATE_UNARY_OPERATION disconnect_all
+#include <boost/dataflow/templates/unary_operation.hpp>
+#undef DATAFLOW_TEMPLATE_UNARY_OPERATION
 #undef DATAFLOW_TEMPLATE_MECHANISM
 
 #define DATAFLOW_TEMPLATE_MECHANISM boost::dataflow::signals::extract_mechanism
@@ -193,14 +223,8 @@ inline typename enable_if<
     boost::dataflow::component_operation<boost::dataflow::operations::invoke, dataflow::signals::tag>(component);
 }
 
-template<typename Signature, typename T>
-boost::function<Signature> make_slot_selector(typename dataflow::utility::slot_type<Signature, T>::type func, T &object)
-{
-    typedef typename boost::dataflow::utility::slot_type<Signature, T>::type mem_fn_type;
-
-	return boost::dataflow::utility::bind_mem_fn<mem_fn_type, T>
-            (static_cast<mem_fn_type>(func), object);
-}
+using boost::dataflow::utility::bind_mem_fn;
+using boost::dataflow::utility::bind_mem_fn_overload;
 
 } } // namespace boost::phoenix
 
