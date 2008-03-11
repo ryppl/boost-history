@@ -138,6 +138,8 @@
 		08A0B43D0D21EDDE0054AD32 /* blueprint_component.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = blueprint_component.hpp; sourceTree = "<group>"; };
 		08A0B5710D220CCF0054AD32 /* introduction.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = introduction.qbk; sourceTree = "<group>"; };
 		08A0E54C0D7A7674009B11DD /* quick_start_examples.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quick_start_examples.cpp; sourceTree = "<group>"; };
+		08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_has_call_operator.cpp; sourceTree = "<group>"; };
+		08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = has_call_operator.hpp; sourceTree = "<group>"; };
 		08B9D4190CC3D0790050F10B /* test_binary_op.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_binary_op.cpp; sourceTree = "<group>"; };
 		08B9D41E0CC3D0A80050F10B /* my_producer_consumer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_producer_consumer.hpp; sourceTree = "<group>"; };
 		08BD9AFB0CEB9D330069AFE2 /* get_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = get_port.hpp; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 				0842A3600D5A7A8700CF8479 /* test_forced_sequence.cpp */,
 				089AE5BC0D79CE5E00AB9DA8 /* test_bind_mem_fn.cpp */,
 				08920DCE0D84514B00E148EF /* test_bind_mem_fn_overload.cpp */,
+				08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */,
 			);
 			path = utility;
 			sourceTree = "<group>";
@@ -674,6 +677,7 @@
 				089AE57F0D79C5CF00AB9DA8 /* bind_mem_fn.hpp */,
 				089AE6390D79D95C00AB9DA8 /* member_function_signature.hpp */,
 				08C9D7DA0D83C5EB00354FF8 /* bind_mem_fn_overload.hpp */,
+				08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */,
 			);
 			path = utility;
 			sourceTree = "<group>";

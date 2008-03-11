@@ -56,6 +56,11 @@ have signal inputs.
 
 [component_component_example]
 
+[warning At the moment, you can't use the [connect] function like it is used in
+the above example to connect to a [^const] qualified [^operator()] of a
+non-[^const] qualified object (you will get a compile-time error).  In this
+case, try casting the object to a [^const]-qualified reference.]
+
 [heading Chaining and Operators]
 
 The above components either produce ([^producer_component]) or consume
