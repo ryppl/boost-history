@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="4" status="New">
+<issue num="4" status="WP">
 <title>MoveConstructible should refine Constructible</title>
 <section><sref ref="[concept.copymove]"/></section>
 <submitter>LWG</submitter>
@@ -18,5 +18,25 @@
   of <tt>Constructible&lt;T, T&amp;&amp;&gt;</tt>. In that case, the
   body of <tt>MoveConstructible</tt> would go away.</p>
 </discussion>
+
+<resolution>
+<p>In [concept.copymove] paragraph 1, change as follows:
+<pre>
+auto concept MoveConstructible&lt;typename T&gt; : <ins>Constructible&lt;T, T&amp;&amp;&gt;, </ins>Destructible&lt;T&gt; { 
+  <del>T::T(T&amp;&amp;);</del>
+} 
+</pre></p>
+
+<p>In [concept.copymove] paragraph 3, change as follows:
+<pre>
+  auto concept CopyConstructible&lt;typename T&gt; : MoveConstructible&lt;T&gt;<ins>, Constructible&lt;T, const T&amp;&gt;</ins> { 
+  <del>T::T(const T&amp;);</del>
+
+  axiom CopyPreservation(T x) { 
+    T(x) == x; 
+  } 
+}
+</pre></p>
+</resolution>
 
 </issue>

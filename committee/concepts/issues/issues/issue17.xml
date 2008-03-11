@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="17" status="New">
+<issue num="17" status="WP">
 <title>Errors in Allocator concept</title>
 <section><sref ref="[concept.allocator]"/></section>
 <submitter>LWG</submitter>
@@ -24,5 +24,35 @@
   V&amp;&amp;&gt;</tt> should be requires <tt>Convertible&lt;V,
   value_type&gt;</tt> as in the synopsis.</p>
 </discussion>
+
+<resolution>
+  <p>In [concept.allocator] paragraph 2, change the associated requirements of
+  the <code>Allocator</code> concept as follows:
+    <pre>
+concept Allocator&lt;typename X&gt; : DefaultConstructible&lt;X&gt;, CopyConstructible&lt;X&gt; {
+  <i>// ...</i>
+  requires Convertible&lt;pointer, const_pointer&gt; &amp;&amp; 
+    <del>Convertible&lt;pointer, void*&gt; &amp;&amp;</del>
+    Convertible&lt;pointer, value_type*&gt; &amp;&amp; 
+    SameType&lt;pointer::value_type, value_type&gt; &amp;&amp; 
+    SameType&lt;pointer::reference, value_type&amp;&gt; &amp;&amp; 
+    SameType&lt;pointer::reference, reference&gt;; 
+  requires <del>Convertible&lt;const_pointer, const void*&gt; &amp;&amp;</del>
+    Convertible&lt;const_pointer, const value_type<del>&amp</del><ins>*</ins>;&gt; &amp;&amp; 
+    SameType&lt;const_pointer::value_type, value_type&gt; &amp;&amp; 
+    SameType&lt;const_pointer::reference, const value_type&amp;&gt; &amp;&amp; 
+    SameType&lt;const_pointer::reference, const_reference&gt;;
+}
+    </pre>
+  </p>
+
+  <p>Change [concept.allocator] paragraph 11 as follows:
+    <pre>
+template&lt;typename V&gt;
+  requires Constructible&lt;value_type, V<del>&amp;&amp;</del>&gt;
+  void X::construct(pointer p, V&amp;&amp;);
+    </pre>
+  </p>
+</resolution>
 
 </issue>

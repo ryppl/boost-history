@@ -32,7 +32,8 @@
 \begin{titlepage}
 \begin{center}
 \huge
-Core Concepts for the C++0x Standard Library
+Core Concepts for the C++0x Standard Library\\
+(Revision 1)
 \vspace{0.25in}
 
 \normalsize
@@ -44,7 +45,7 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{0.25in}
-\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Document number: D2572=08-0082\vspace{-6pt}
 \par\noindent Revises document number: N2502=08-0012\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -95,7 +96,7 @@ changes from the previous wording are \addedCC{highlighted in green}.
   shaded box.}
 
 \paragraph*{Changes from N2502}
-Closed concept issues 6, 12, and 14.
+Applied the proposed resolutions for concept issues 4, 6, 9, 10, 12, 14, and 17.
 
 \end{titlepage}
 
@@ -173,8 +174,8 @@ namespace std {
   concept DerivedFrom<typename Derived, typename Base> { }
 
   // \ref{concept.comparison}, comparisons:
-  auto concept LessThanComparable<typename T, typename U = T> @\textit{see below}@;
-  auto concept EqualityComparable<typename T, typename U = T> @\textit{see below}@;
+  auto concept LessThanComparable<typename T> @\textit{see below}@;
+  auto concept EqualityComparable<typename T> @\textit{see below}@;
   auto concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
 
   // \ref{concept.destruct}, destruction:
@@ -196,10 +197,6 @@ namespace std {
   auto concept Swappable<typename T> @\textit{see below}@;
 
   // \ref{concept.memory}, memory allocation:
-  auto concept Newable<typename T, typename... Args> @\textit{see below}@;
-  auto concept Deletable<typename T> @\textit{see below}@;
-  auto concept ArrayNewable<typename T, typename... Args> @\textit{see below}@;
-  auto concept ArrayDeletable<typename T> @\textit{see below}@;
   auto concept HeapAllocatable<typename T> @\textit{see below}@;
 
   // \ref{concept.regular}, regular types:
@@ -222,6 +219,8 @@ namespace std {
   auto concept HasModulus<typename T, typename U = T> @\textit{see below}@;
   auto concept HasUnaryPlus<typename T> @\textit{see below}@;
   auto concept HasNegate<typename T> @\textit{see below}@;
+  auto concept HasLess<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasEquals<typename T, typename U = T> @\textit{see below}@;
   auto concept HasLogicalAnd<typename T, typename U = T> @\textit{see below}@;
   auto concept HasLogicalOr<typename T, typename U = T> @\textit{see below}@;
   auto concept HasLogicalNot<typename T> @\textit{see below}@;
@@ -267,7 +266,7 @@ concept Returnable<typename T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} Describes types that can be used as the
+\addedConcepts{\mbox{\reallynote} Describes types that can be used as the
   return type of a function.}
 
 \pnum
@@ -285,7 +284,7 @@ concept PointeeType<typename T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note}
+\addedConcepts{\mbox{\reallynote}
 describes types to which a pointer can be
 created.}
 
@@ -303,7 +302,7 @@ concept ReferentType<typename T> : PointeeType<T> { }
 
 \begin{itemdescr}
 \pnum
-\mbox{\note}
+\mbox{\reallynote}
 describes types to which a reference or pointer-to-member can be
 created.
 
@@ -321,7 +320,7 @@ concept VariableType<typename T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that can be used to
+\addedConcepts{\mbox{\reallynote} describes types that can be used to
   declare a variable.}
 
 \pnum
@@ -337,7 +336,7 @@ concept ObjectType<typename T> : VariableType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes object types ([basic.types]),
+\addedConcepts{\mbox{\reallynote} describes object types ([basic.types]),
   for which storage can be allocated.}
 
 \pnum 
@@ -354,7 +353,7 @@ concept ClassType<typename T> : ObjectType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes class types (i.e., unions,
+\addedConcepts{\mbox{\reallynote} describes class types (i.e., unions,
   classes, and structs).}
 
 \pnum 
@@ -369,7 +368,7 @@ concept Class<typename T> : ClassType<Class> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes classes and structs ([class]).}
+\addedConcepts{\mbox{\reallynote} describes classes and structs ([class]).}
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
@@ -384,7 +383,7 @@ concept Union<typename T> : ClassType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes union types ([class.union]).}
+\addedConcepts{\mbox{\reallynote} describes union types ([class.union]).}
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
@@ -398,7 +397,7 @@ concept TrivialType<typename T> : ObjectType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes trivial types ([basic.types]).}
+\addedConcepts{\mbox{\reallynote} describes trivial types ([basic.types]).}
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
@@ -412,7 +411,7 @@ concept StandardLayoutType<typename T> : ObjectType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes standard-layout types ([basic.types]).}
+\addedConcepts{\mbox{\reallynote} describes standard-layout types ([basic.types]).}
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
@@ -427,7 +426,7 @@ concept LiteralType<typename T> : ObjectType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes literal types ([basic.types]).}
+\addedConcepts{\mbox{\reallynote} describes literal types ([basic.types]).}
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
@@ -442,7 +441,7 @@ concept ScalarType<typename T>
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes scalar types ([basic.types]).}
+\addedConcepts{\mbox{\reallynote} describes scalar types ([basic.types]).}
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
@@ -456,7 +455,7 @@ concept NonTypeTemplateParameterType<typename T> : VariableType<T> { }
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describess type that can
+\addedConcepts{\mbox{\reallynote} describess type that can
 be used as the type of a non-type template parameter ([temp.param]).}
 
 \pnum
@@ -474,7 +473,7 @@ concept IntegralConstantExpressionType<typename T>
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that
+\addedConcepts{\mbox{\reallynote} describes types that
 can be the type of an integral constant expression ([expr.const]).} 
 
 \pnum
@@ -490,7 +489,7 @@ concept IntegralType<typename T> : IntegralConstantExpressionType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes integral types
+\addedConcepts{\mbox{\reallynote} describes integral types
 ([basic.fundamental]).}
 
 \pnum
@@ -506,7 +505,7 @@ concept EnumerationType<typename T> : IntegralConstantExpressionType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes enumeration types
+\addedConcepts{\mbox{\reallynote} describes enumeration types
 ([dcl.enum]).} 
 
 \pnum
@@ -522,7 +521,7 @@ concept SameType<typename T, typename U> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes a same-type requirement
+\addedConcepts{\mbox{\reallynote} describes a same-type requirement
   ([temp.req]).}
 \end{itemdescr}
 
@@ -543,17 +542,27 @@ unambiguously derived from \mbox{\tcode{U}}, a concept map
 \rSec2[concept.comparison]{Comparisons}
 
 \begin{itemdecl}
-auto concept LessThanComparable<typename T, typename U = T> {
+auto concept HasLess<typename T, typename U = T> {
   bool operator<(T const& a, U const& b);
-  bool operator>(U const& a, T const& b) { return b < a; }
-  bool operator<=(U const& a, T const& b) { return !(b < a); }
-  bool operator>=(T const& a, U const& b) { return !(a < b); }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describes types whose values can be
+\addedConcepts{\mbox{\reallynote} describes types with an operator <.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept LessThanComparable<typename T> : HasLess<T> {
+  bool operator>(T const& a, T const& b) { return b < a; }
+  bool operator<=(T const& a, T const& b) { return !(b < a); }
+  bool operator>=(T const& a, T const& b) { return !(a < b); }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} describes types whose values can be
   ordered via an inequality operator.}
 
 \pnum
@@ -570,7 +579,7 @@ auto concept EqualityComparable<typename T, typename U = T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types whose values can be
+\addedConcepts{\mbox{\reallynote} describes types whose values can be
 compared for equality with \mbox{\tcode{operator==}}.}
 
 \pnum 
@@ -593,7 +602,7 @@ concept TriviallyEqualityComparable<typename T> : EqualityComparable<T> { }
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describes types whose equality comparison
+\addedConcepts{\mbox{\reallynote} describes types whose equality comparison
   operators (\mbox{\tcode{==}}, \mbox{\tcode{!=}}) can be implemented
   via a bitwise equality comparison, as with \mbox{\tcode{memcmp}}.
 \mbox{\enternote} such types should not have
@@ -617,7 +626,7 @@ auto concept Destructible<typename T> : VariableType<T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that can be destroyed,
+\addedConcepts{\mbox{\reallynote} describes types that can be destroyed,
   including scalar types, references, and class types with a public
   destructor.}
 
@@ -632,7 +641,7 @@ concept TriviallyDestructible<typename T> : Destructible<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types whose
+\addedConcepts{\mbox{\reallynote} describes types whose
 destructors do not need to be executed when the object is destroyed.}
 
 \pnum
@@ -652,7 +661,7 @@ auto concept Constructible<typename T, typename... Args> : Destructible<T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that can be constructed
+\addedConcepts{\mbox{\reallynote} describes types that can be constructed
   from a given set of arguments.}
 \end{itemdescr}
 
@@ -662,26 +671,24 @@ auto concept DefaultConstructible<typename T> : Constructible<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that can be default-constructed.}
+\addedConcepts{\mbox{\reallynote} describes types that can be default-constructed.}
 \end{itemdescr}
 
 \rSec2[concept.copymove]{Copy and move}
 \begin{itemdecl}
-auto concept MoveConstructible<typename T> : Destructible<T> {
-  T::T(T&&);
-}
+auto concept MoveConstructible<typename T> : Constructible<T, T&&>, Destructible<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} 
+\addedConcepts{\mbox{\reallynote} 
 describes types that can move-construct an
 object from a value of the same type, possibly altering that
 value.}
 \end{itemdescr}
 
 \begin{itemdecl}
-T::T(T&& rv);
+T::T(T&& rv); // note: inherited from Constructible<T, T\&\&>
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -694,9 +701,8 @@ the constructed \mbox{\tcode{T}} object is equivalent to the value of
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept CopyConstructible<typename T> : MoveConstructible<T> {
-  T::T(const T&);
-
+auto concept CopyConstructible<typename T> : MoveConstructible<T>, Constructible<T, const T&> {
+  @\addedCC{requires EqualityComparable<T>}@
   axiom CopyPreservation(T x) {
     T(x) == x;
   }
@@ -705,7 +711,7 @@ auto concept CopyConstructible<typename T> : MoveConstructible<T> {
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describes types with a public copy constructor.}
+\addedConcepts{\mbox{\reallynote} describes types with a public copy constructor.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -714,7 +720,7 @@ concept TriviallyCopyConstructible<typename T> : CopyConstructible<T> { }
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describes types whose copy
+\addedConcepts{\mbox{\reallynote} describes types whose copy
 constructor is equivalent to \mbox{\tcode{memcpy}}.}
 
 \pnum
@@ -728,13 +734,13 @@ shall be implicitly defined in namespace \mbox{\tcode{std}}.}
 \begin{itemdecl}
 auto concept MoveAssignable<typename T, typename U = T> {
   typename result_type;
-  result_type @\addedCC{T::}@operator=(@\removedCC{T\&, }@U&&);
+  result_type T::operator=(U&&);
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with the ability
+\addedConcepts{\mbox{\reallynote} describes types with the ability
   to assign to an object from an rvalue, potentially altering the rvalue.}
 \end{itemdescr}
 
@@ -757,6 +763,7 @@ auto concept CopyAssignable<typename T, typename U = T> : MoveAssignable<T, U> {
   typename result_type;
   result_type T::operator=(const U&);
 
+  @\addedCC{requires EqualityComparable<T, U>}@
   axiom CopyPreservation(T& x, U y) {
     (x = y, x) == y;
   }
@@ -765,7 +772,7 @@ auto concept CopyAssignable<typename T, typename U = T> : MoveAssignable<T, U> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with the ability to assign to an
+\addedConcepts{\mbox{\reallynote} describes types with the ability to assign to an
 object.}
 \end{itemdescr}
 
@@ -782,7 +789,7 @@ concept TriviallyCopyAssignable<typename T> : CopyAssignable<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types whose copy-assignment
+\addedConcepts{\mbox{\reallynote} describes types whose copy-assignment
   operator is equivalent to \mbox{\tcode{memcpy}}.}
 
 \pnum
@@ -801,7 +808,7 @@ auto concept Swappable<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types for which two values of
+\addedConcepts{\mbox{\reallynote} describes types for which two values of
   that type can be swapped.}
 \end{itemdescr}
 
@@ -818,61 +825,18 @@ and \mbox{\tcode{u}} has the value originally held by \mbox{\tcode{t}}.}
 
 \rSec2[concept.memory]{Memory allocation}
 \begin{itemdecl}
-auto concept Newable<typename T, typename... Args> : ObjectType<T> {
-  void* T::operator new(size_t size, Args...);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\note} describes types for which objects can be
-allocated on the heap via \mbox{\tcode{new}}.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept Deletable<typename T> : ObjectType<T> {
+auto concept HeapAllocatable<typename T> {
+  void* T::operator new(size_t size);
+  void* T::operator new(size_t size, void*);
+  void* T::operator new[](size_t size);
   void T::operator delete(void*);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\note} describes types for which objects on the
-heap can be freed with \mbox{\tcode{delete}}.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept ArrayNewable<typename T, typename... Args> : ObjectType<T> {
-  void* T::operator new[](size_t size, Args...);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\note} describes types for which arrays of
-objects can be allocated on the heap via array \mbox{\tcode{new}}.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept ArrayDeletable<typename T> : ObjectType<T> {
   void T::operator delete[](void*);
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types for which an array
-objects on the heap can be freed with \mbox{\tcode{delete[]}}.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept HeapAllocatable<typename T> 
-  : Newable<T>, Deletable<T>, ArrayNewable<T>, ArrayDeletable<T> { }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\note} describes types for which objects and
+\addedConcepts{\mbox{\reallynote} describes types for which objects and
 arrays of objects can be allocated on or freed from the heap with
 \mbox{\tcode{new}} and \mbox{\tcode{delete}}.}
 \end{itemdescr}
@@ -880,25 +844,25 @@ arrays of objects can be allocated on or freed from the heap with
 \rSec2[concept.regular]{Regular types}
 
 \begin{itemdecl}
-auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T> { 
+auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T>, HeapAllocatable<T> { 
   requires SameType<CopyAssignable<T>::result_type, T&>;
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} collects several common
+\addedConcepts{\mbox{\reallynote} collects several common
 requirements supported by most types.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept Regular<typename T> 
-  : Semiregular<T>, DefaultConstructible<T>, EqualityComparable<T>, HeapAllocatable<T> { }
+  : Semiregular<T>, DefaultConstructible<T>, EqualityComparable<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes semi-regular types that are default
+\addedConcepts{\mbox{\reallynote} describes semi-regular types that are default
 constructible, have equality comparison operators, and can be
 allocated on the heap.}
 \end{itemdescr}
@@ -913,7 +877,7 @@ auto concept ExplicitlyConvertible<typename T, typename U> : VariableType<T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a conversion (explicit
+\addedConcepts{\mbox{\reallynote} describes types with a conversion (explicit
 or implicit) from one type to another.}
 \end{itemdescr}
 
@@ -925,7 +889,7 @@ auto concept Convertible<typename T, typename U> : ExplicitlyConvertible<T, U> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an implicit conversion from one
+\addedConcepts{\mbox{\reallynote} describes types with an implicit conversion from one
 type to another.}
 \end{itemdescr}
 
@@ -938,7 +902,7 @@ concept_map True<true> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} used to express the requirement that a
+\addedConcepts{\mbox{\reallynote} used to express the requirement that a
   particular integral constant expression evaluate true.}
 
 \pnum
@@ -951,199 +915,165 @@ concept_map True<true> { }
 auto concept HasPlus<typename T, typename U = T> {
   typename result_type;
   result_type operator+(T const&, U const&);
-  @\removedCC{result_type operator+(T const\&, U \&\&);}@
-  @\removedCC{result_type operator+(T \&\&, U const\&);}@
-  @\removedCC{result_type operator+(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a binary \mbox{\tcode{operator+}}.}
+\addedConcepts{\mbox{\reallynote} describes types with a binary \mbox{\tcode{operator+}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasMinus<typename T, typename U = T> {
   typename result_type;
   result_type operator-(T const&, U const&);
-  @\removedCC{result_type operator-(T const\&, U \&\&);}@
-  @\removedCC{result_type operator-(T \&\&, U const\&);}@
-  @\removedCC{result_type operator-(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a binary \mbox{\tcode{operator-}}.}
+\addedConcepts{\mbox{\reallynote} describes types with a binary \mbox{\tcode{operator-}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasMultiply<typename T, typename U = T> {
   typename result_type;
   result_type operator*(T const&, U const&);
-  @\removedCC{result_type operator*(T const\&, U \&\&);}@
-  @\removedCC{result_type operator*(T \&\&, U const\&);}@
-  @\removedCC{result_type operator*(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with} \changedCC{an}{a binary} \addedConcepts{\mbox{\tcode{operator*}}.}
+\addedConcepts{\mbox{\reallynote} describes types with a binary \mbox{\tcode{operator*}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasDivide<typename T, typename U = T> {
   typename result_type;
   result_type operator/(T const&, U const&);
-  @\removedCC{result_type operator/(T const\&, U \&\&);}@
-  @\removedCC{result_type operator/(T \&\&, U const\&);}@
-  @\removedCC{result_type operator/(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator/}}.}
+\addedConcepts{\mbox{\reallynote} describes types with an \mbox{\tcode{operator/}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasModulus<typename T, typename U = T> {
   typename result_type;
   result_type operator%(T const&, U const&);
-  @\removedCC{result_type operator\%(T const\&, U \&\&);}@
-  @\removedCC{result_type operator\%(T \&\&, U const\&);}@
-  @\removedCC{result_type operator\%(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator\%}}.}
+\addedConcepts{\mbox{\reallynote} describes types with an \mbox{\tcode{operator\%}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasUnaryPlus<typename T> {
   typename result_type;
   result_type operator+(T const&);
-  @\removedCC{result_type operator+(T \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\mbox{\note} describes types with a unary \mbox{\tcode{operator+}}.
+\mbox{\reallynote} describes types with a unary \mbox{\tcode{operator+}}.
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasNegate<typename T> {
   typename result_type;
   result_type operator-(T const&);
-  @\removedCC{result_type operator-(T \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a unary \mbox{\tcode{operator-}}.}
+\addedConcepts{\mbox{\reallynote} describes types with a unary \mbox{\tcode{operator-}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasLogicalAnd<typename T, typename U = T> {
   bool operator&&(T const&, U const&);
-  @\removedCC{bool operator\&\&(T const\&, U \&\&);}@
-  @\removedCC{bool operator\&\&(T \&\&, U const\&);}@
-  @\removedCC{bool operator\&\&(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a logical conjunction operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a logical conjunction operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasLogicalOr<typename T, typename U = T> {
   bool operator||(T const&, U const&);
-  @\removedCC{bool operator||(T const\&, U \&\&);}@
-  @\removedCC{bool operator||(T \&\&, U const\&);}@
-  @\removedCC{bool operator||(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a logical disjunction operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a logical disjunction operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasLogicalNot<typename T> {
   bool operator!(T const&);
-  @\removedCC{bool operator!(T \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a logical negation operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a logical negation operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasBitAnd<typename T, typename U = T> {
   typename result_type;
   result_type operator&(T const&, U const&);
-  @\removedCC{result_type operator\&(T const\&, U \&\&);}@
-  @\removedCC{result_type operator\&(T \&\&, U const\&);}@
-  @\removedCC{result_type operator\&(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a binary \mbox{\tcode{operator\&}}.}
+\addedConcepts{\mbox{\reallynote} describes types with a binary \mbox{\tcode{operator\&}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasBitOr<typename T, typename U = T> {
   typename result_type;
   result_type operator|(T const&, U const&);
-  @\removedCC{result_type operator|(T const\&, U \&\&);}@
-  @\removedCC{result_type operator|(T \&\&, U const\&);}@
-  @\removedCC{result_type operator|(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator|}}.}
+\addedConcepts{\mbox{\reallynote} describes types with an \mbox{\tcode{operator|}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasBitXor<typename T, typename U = T> {
   typename result_type;
   result_type operator^(T const&, U const&);
-  @\removedCC{result_type operator\^(T const\&, U \&\&);}@
-  @\removedCC{result_type operator\^(T \&\&, U const\&);}@
-  @\removedCC{result_type operator\^(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an \mbox{\tcode{operator\^}}.}
+\addedConcepts{\mbox{\reallynote} describes types with an \mbox{\tcode{operator\^}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasComplement<typename T> {
   typename result_type;
   result_type operator~(T const&);
-  @\removedCC{result_type operator$\sim{}$(T \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an
+\addedConcepts{\mbox{\reallynote} describes types with an
   \mbox{\tcode{operator\~}}.}
 \end{itemdescr}
 
@@ -1151,30 +1081,24 @@ auto concept HasComplement<typename T> {
 auto concept HasLeftShift<typename T, typename U = T> {
   typename result_type;
   result_type operator<<(T const&, U const&);
-  @\removedCC{result_type operator$\langle\langle$(T const\&, U \&\&);}@
-  @\removedCC{result_type operator$\langle\langle$(T \&\&, U const\&);}@
-  @\removedCC{result_type operator$\langle\langle$(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\mbox{\note} describes types with an \mbox{\tcode{operator$<<$}}.
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$<<$}}.
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept HasRightShift<typename T, typename U = T> {
   typename result_type;
   result_type operator>>(T const&, U const&);
-  @\removedCC{result_type operator$\rangle\rangle$(T const\&, U \&\&);}@
-  @\removedCC{result_type operator$\rangle\rangle$(T \&\&, U const\&);}@
-  @\removedCC{result_type operator$\rangle\rangle$(T \&\&, U \&\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\mbox{\note} describes types with an \mbox{\tcode{operator$>>$}}.
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$>>$}}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1186,21 +1110,19 @@ auto concept Dereferenceable<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with a dereferencing \mbox{\tcode{operator*}}.}
+\addedConcepts{\mbox{\reallynote} describes types with a dereferencing \mbox{\tcode{operator*}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept Addressable<typename T> {
   typename pointer;
-  @\removedCC{typename const_pointer;}@
   pointer operator&(T&);
-  @\removedCC{const_pointer operator\&(const T\&);}@
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types with an address-of \mbox{\tcode{operator\&}}.}
+\addedConcepts{\mbox{\reallynote} describes types with an address-of \mbox{\tcode{operator\&}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1212,7 +1134,7 @@ auto concept Callable<typename F, typename... Args> {
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describes function object types 
+\addedConcepts{\mbox{\reallynote} describes function object types 
 callable given arguments of types \mbox{\tcode{Args...}}.}
 \end{itemdescr}
 
@@ -1245,7 +1167,7 @@ concept ArithmeticLike<typename T>
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that provide all of the
+\addedConcepts{\mbox{\reallynote} describes types that provide all of the
   operations available on arithmetic types ([basic.fundamental]).}
 \end{itemdescr}
 
@@ -1272,7 +1194,7 @@ concept IntegralLike<typename T>
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\note} describes types that provide all of the operations
+\addedConcepts{\mbox{\reallynote} describes types that provide all of the operations
   available on integral types.}
 \end{itemdescr}
 
@@ -1282,7 +1204,7 @@ concept SignedIntegralLike<typename T> : IntegralLike<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that provide all of the
+\addedConcepts{\mbox{\reallynote} describes types that provide all of the
   operations available on signed integral types.}
 
 \pnum
@@ -1299,7 +1221,7 @@ concept UnsignedIntegralLike<typename T> : IntegralLike<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes types that provide all of the
+\addedConcepts{\mbox{\reallynote} describes types that provide all of the
   operations available on unsigned integral types.}
 
 \pnum
@@ -1316,7 +1238,7 @@ concept FloatingPointLike<typename T> : ArithmeticLike<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes floating-point types.}
+\addedConcepts{\mbox{\reallynote} describes floating-point types.}
 
 \pnum
 \addedConcepts{\mbox{\requires}
@@ -1335,7 +1257,7 @@ auto concept Predicate<typename F, typename... Args> : Callable<F, Args...> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\note} describes function objects 
+\addedConcepts{\mbox{\reallynote} describes function objects 
 callable with some set of arguments, the result of which can be used in a
 context that requires a \mbox{\tcode{bool}}.}
 
@@ -1388,14 +1310,12 @@ concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
   template<ObjectType T> class rebind = @\textit{see below}@;
 
   requires Convertible<pointer, const_pointer> && 
-           Convertible<pointer, void*> &&
            Convertible<pointer, value_type*> &&
            SameType<pointer::value_type, value_type> &&
            SameType<pointer::reference, value_type&> &&
            SameType<pointer::reference, reference>;
 
-  requires Convertible<const_pointer, const void*> &&
-           @\textcolor{addclr}{Convertible}@<const_pointer, const value_type&> && 
+  requires @\textcolor{addclr}{Convertible}@<const_pointer, const value_type*> && 
            SameType<const_pointer::value_type, value_type> &&
            SameType<const_pointer::reference, const value_type&> &&
            SameType<const_pointer::reference, const_reference>;
@@ -1556,7 +1476,7 @@ the largest value that can meaningfully be passed to \tcode{X::allocate()}
 \color{addclr}
 \begin{itemdecl}
 template<typename V>
-  requires Constructible<value_type, V&&>
+  requires Constructible<value_type, V>
   void X::construct(pointer p, V&&);
 \end{itemdecl}
 \color{black}

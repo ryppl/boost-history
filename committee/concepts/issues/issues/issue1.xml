@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="1" status="New">
+<issue num="1" status="Ready">
   <title>Naming and symmetry in EqualityComparable</title> 
   <section><sref ref="[concept.comparison]"/></section>
   <submitter>LWG</submitter>
@@ -36,4 +36,124 @@
       same thing? Is there any way to write defaults in the concept
       definition that won't ever give us an infinite loop?</p>
   </discussion>
+
+  <resolution>
+    <p>Split the <code>EqualityComparable</code>
+    and <code>LessThanComparable</code> concepts into purely syntactic
+    concepts (<code>HasEquals</code>, <code>HasLessThan</code>) and
+    semantic concepts that refine them
+    (<code>EqualityComparable</code>, <code>LessThanComparable</code>). In
+    [utility.concepts], update the &lt;concepts&gt; header synopsis as
+    follows:
+      <pre>
+<i>// 20.1.2, comparisons:</i>
+auto concept LessThanComparable&lt;typename T<del>, typename U = T</del>&gt; <i>see below</i>;
+auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt; <i>see below</i>;
+auto concept TriviallyEqualityComparable&lt;typename T&gt; <i>see below</i>; 
+
+<i>...</i>
+<i>// 20.1.10, operator concepts:</i>
+<i>...</i>
+
+auto concept HasNegate&lt;typename T&gt; <i>see below</i>;
+<ins>auto concept HasLess&lt;typename T, typename U = T&gt; <i>see below</i>;</ins>
+<ins>auto concept HasEquals&lt;typename T, typename U = T&gt; <i>see below</i>;</ins>
+auto concept HasLogicalAnd&lt;typename T, typename U = T&gt; <i>see below</i>;
+      </pre>
+    </p>
+    
+    <p>Change [concept.comparison] paragraph 1 as follows:
+    <pre>
+auto concept LessThanComparable&lt;typename T<del>, typename U = T</del>&gt;<ins> : HasLess&lt;T&gt;</ins> { 
+  <del>bool operator&lt;(T const&amp; a, U const&amp; b);</del>
+  bool operator&gt;(<del>U</del><ins>T</ins> const&amp; a, T const&amp; b) { return b &lt; a; } 
+  bool operator&lt;=(<del>U</del><ins>T</ins> const&amp; a, T const&amp; b) { return !(b &lt; a); } 
+  bool operator&gt;=(T const&amp; a, <del>U</del><ins>T</ins> const&amp; b) { return !(a &lt; b); } 
+
+  <ins>axiom Consistency(T a, T b) {
+    (a &gt; b) == (b &lt; a);
+    (a &lt;= b) == !(b &lt; a);
+    (a &gt;= b) == !(a &lt; b);
+  }
+
+  axiom Irreflexivity(T a) { (a &lt; a) == false; }
+
+  axiom Antisymmetry(T a, T b) { 
+    if (a &lt; b) (b &lt; a) == false;
+  }
+
+  axiom Transitivity(T a, T b, T c) {
+    if (a &lt; b &amp;&amp; b &lt; c) (a &lt; c) == true;
+  }
+
+  axiom TransitivityOfEquivalence(T a, T b, T c) {
+    if (!(a &lt; b) &amp;&amp; !(b &lt; a) &amp;&amp; !(b &lt; c) &amp;&amp; !(c &lt; b))
+      (!(a &lt; c) &amp;&amp; !(c &lt; a)) == true;
+  }</ins> 
+}
+    </pre>
+<ol>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<del><i>Note</i>: describes types whose
+      values can be ordered via an inequality operator.</del></li>
+</ol>
+</p>
+
+    <p>Change [concept.comparison] paragraphs 3 and 4 as follows:
+      <pre>
+auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt;<ins> : HasEquals&lt;T&gt;</ins> { 
+ <del>bool operator==(T const&amp; a, U const&amp; b);</del> 
+ bool operator!=(T const&amp; a, <del>U</del><ins>T</ins> const&amp; b) { return !(a == b); } 
+
+  <ins>axiom Consistency(T a, T b) {
+    (a == b) == !(a != b);
+  }
+
+  axiom Reflexivity(T a) { a == a; }
+
+  axiom Symmetry(T a, T b) { if (a == b) b == a; }
+
+  axiom Transitivity(T a, T b, T c) {
+    if (a == b &amp;&amp; b == c) a == c;
+  }</ins>
+}
+      </pre>
+<ol start="3">
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<del><i>Note</i>: describes types whose
+      values can be compared for equality with <code>operator==</code>.</del></li>
+
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<i>Requires</i>: <del>when <code>T</code> and <code>U</code> are identical, </del><code>operator==</code> is an equivalence relation<del> that is, it has the following properties:</del><ins>.</ins>
+      <ul>
+        <li><del>For all a, a == a.</del></li>
+        <li><del>If a == b, then b == a.</del></li>
+        <li><del>If a == b and b == c, then a == c.</del></li>
+      </ul>
+  </li>
+</ol>
+    </p>
+
+    <p>Add to [concept.operator]:
+      <pre>
+<ins>auto concept HasLess&lt; typename T, typename U = T&gt; {
+  bool operator&lt;(const T&amp; a, const U&amp; b);
+}</ins>
+      </pre>
+      <ol start="8">
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>Note</i>: describes types with an <code>operator&lt;</code></ins></li>
+      </ol>
+
+      <pre>
+<ins>auto concept HasEquals&lt; typename T, typename U = T&gt; {
+  bool operator==(const T&amp; a, const U&amp; b);
+}</ins>
+      </pre>
+      <ol start="9">
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>Note</i>: describes types with an <code>operator==</code></ins></li>
+      </ol>
+    </p>
+
+    <p>Note that this change also requires renaming two-parameter uses
+    of <code>EqualityComparable</code>
+    and <code>LessThanComparable</code> to <code>HasEquals</code>
+    and <code>HasLess</code>, respectively.</p>
+  </resolution>
 </issue>

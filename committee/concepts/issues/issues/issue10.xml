@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="10" status="New">
+<issue num="10" status="WP">
 <title>Remarks should be notes</title>
 <section><sref ref="[utility.concepts]"/></section>
 <submitter>LWG</submitter>
@@ -16,5 +16,9 @@
   macros, because these were all intended to be notes. Considered an
   editorial issue.</p>
 </discussion>
+
+<resolution>
+  <p>Replace all "Remark"s in the paper with "Note"s.</p>
+</resolution>
 
 </issue>

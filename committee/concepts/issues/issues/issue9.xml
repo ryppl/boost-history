@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="9" status="New">
+<issue num="9" status="WP">
 <title>Memory-allocation concepts are too fine-grained</title>
 <section><sref ref="[concept.memory]"/></section>
 <submitter>LWG</submitter>
@@ -20,8 +20,20 @@
 </discussion>
 
 <resolution>
-<p>
-</p>
+  <p>In [concept.memory], remove paragraphs 1-4 (describing
+  the <code>Newable</code>, <code>Deletable</code>, <code>ArrayNewable</code>,
+  and <code>ArrayDeletable</code> concepts). Change
+  the <code>HeapAllocatable</code> concept as follows:
+<pre>
+auto concept HeapAllocatable&lt;typename T&gt;
+  <del>: Newable&lt;T&gt;, Deletable&lt;T&gt;, ArrayNewable&lt;T&gt;, ArrayDeletable&lt;T&gt;</del> { 
+  <ins>void* T::operator new(size_t size);</ins>
+  <ins>void* T::operator new(size_t size, void*);</ins>
+  <ins>void* T::operator new[](size_t size);</ins>
+  <ins>void T::operator delete(void*);</ins>
+  <ins>void T::operator delete[](void*);</ins>
+}
+  </pre></p>
 </resolution>
 
 </issue>
