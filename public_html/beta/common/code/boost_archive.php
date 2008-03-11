@@ -6,8 +6,9 @@
 */
 require_once(dirname(__FILE__) . '/boost.php');
 
-class archive_file
+class boost_archive
 {
+    var $version_ = NULL;
     var $key_ = NULL;
     var $file_ = NULL;
     var $archive_ = NULL;
@@ -16,7 +17,7 @@ class archive_file
     var $head_content_ = NULL;
     var $content_ = NULL;
     
-    function archive_file(
+    function boost_archive(
         $pattern,
         $vpath,
         $content_map = array(),
@@ -29,39 +30,43 @@ class archive_file
         preg_match($pattern, $vpath, $path_parts);
         
         $info_map = array_merge($content_map, array(
-            array('@[.](txt|py|rst|jam|v2|bat|sh)$@i','text','text/plain'),
-            array('@[.](cpp|hpp)$@i','cpp','text/plain'),
-            array('@[.]png$@i','raw','image/png'),
-            array('@[.]gif$@i','raw','image/gif'),
-            array('@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
-            array('@[.]css$@i','raw','text/css'),
-            array('@[.]js$@i','raw','application/x-javascript'),
-            array('@[.]pdf$@i','raw','application/pdf'),
-            array('@[.](html|htm)$@i','raw','text/html'),
+            array('@.*@','@[.](txt|py|rst|jam|v2|bat|sh)$@i','text','text/plain'),
+            array('@.*@','@[.](cpp|hpp)$@i','cpp','text/plain'),
+            array('@.*@','@[.]png$@i','raw','image/png'),
+            array('@.*@','@[.]gif$@i','raw','image/gif'),
+            array('@.*@','@[.](jpg|jpeg|jpe)$@i','raw','image/jpeg'),
+            array('@.*@','@[.]css$@i','raw','text/css'),
+            array('@.*@','@[.]js$@i','raw','application/x-javascript'),
+            array('@.*@','@[.]pdf$@i','raw','application/pdf'),
+            array('@.*@','@[.](html|htm)$@i','raw','text/html'),
             ));
         
+        $this->version_ = $path_parts[1];
         $this->key_ = $path_parts[2];
         if ($archive_subdir)
         {
-            $this->file_ = $archive_file_prefix . $path_parts[1] . '/' . $path_parts[2];
+            $this->file_ = $archive_file_prefix . $this->version_ . '/' . $this->key_;
         }
         else
         {
-            $this->file_ = $archive_file_prefix . $path_parts[2];
+            $this->file_ = $archive_file_prefix . $this->key_;
         }
-        $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $path_parts[1] . '.zip');
+        $this->archive_ = str_replace('\\','/', $archive_dir . '/' . $this->version_ . '.zip');
         
         foreach ($info_map as $i)
         {
-            if (preg_match($i[0],$this->key_))
+            if (preg_match($i[1],$this->key_))
             {
-                $this->extractor_ = $i[1];
-                $this->type_ = $i[2];
+                $this->extractor_ = $i[2];
+                $this->type_ = $i[3];
                 break;
             }
         }
         
-        $unzip = UNZIP . ' -p ' . escapeshellarg($this->archive_) . ' ' . escapeshellarg($this->file_);
+        $unzip =
+          UNZIP
+          .' -p '.escapeshellarg($this->archive_)
+          .' '.escapeshellarg($this->file_);
         if (! $this->extractor_)
         {
             # File doesn't exist, or we don't know how to handle it.
@@ -80,6 +85,11 @@ class archive_file
             $this->content_ = $this->_extract_string($unzip);
             $f = '_init_'.$this->extractor_;
             $this->$f();
+            if ($this->extractor_ == 'simple')
+            {
+                $f = '_content_'.$this->extractor_;
+                $this->$f();
+            }
         }
     }
     
@@ -101,7 +111,7 @@ HTML
     
     function is_raw()
     {
-        return $this->extractor_ == 'raw';
+        return $this->extractor_ == 'raw' || $this->extractor_ == 'simple';
     }
 
     function _extract_string($unzip)
@@ -209,6 +219,10 @@ HTML
         
         $text = preg_replace(
             '@href="?http://www.boost.org/?([^"\s]*)"?@i',
+            'href="/${1}"',
+            $text );
+        $text = preg_replace(
+            '@href="?http://boost.org/?([^"\s]*)"?@i',
             'href="/${1}"',
             $text );
         $text = preg_replace(
@@ -445,6 +459,15 @@ HTML
             $text );
         
         print $text;
+    }
+    
+    function _init_simple()
+    {
+    }
+
+    function _content_simple()
+    {
+        print $this->_content_html_pre();
     }
 }
 ?>
