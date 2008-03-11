@@ -661,8 +661,9 @@ namespace std {
   @\textcolor{black}{// \ref{alg.min.max}, minimum and maximum:}@
   template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
   template<class T, Predicate<auto, T, T> Compare>
+    @\addedCC{requires !SameType<T, Compare>}@
     const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
-  @\addedCC{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+  @\removedCC{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
   @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
     @\addedCC{requires SameType<T, Args>...}@
     @\addedCC{const T\& min(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
@@ -671,8 +672,9 @@ namespace std {
 
   template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
   template<class T, Predicate<auto, T, T> Compare>
+    @\addedCC{requires !SameType<T, Compare>}@
     const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
-  @\addedCC{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+  @\removedCC{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
   @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
     @\addedCC{requires SameType<T, Args>...}@
     @\addedCC{const T\& max(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
@@ -681,9 +683,10 @@ namespace std {
 
   template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
   template<class T, Predicate<auto, T, T> Compare>
+    @\addedCC{requires !SameType<T, Compare>}@
     pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
-  @\addedCC{template<LessThanComparable T>}@
-    @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+  @\removedCC{template<LessThanComparable T>}@
+    @\removedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
   @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
     @\addedCC{requires SameType<T, Args>...}@
     @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
@@ -3575,6 +3578,7 @@ range \mbox{\range{first}{i}} is a heap.}
 \color{addclr}\begin{itemdecl}
 template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
 template<class T, Predicate<auto, T, T> Compare>
+  @\addedCC{requires !SameType<T, Compare>}@
   const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3596,7 +3600,7 @@ Returns the first argument when the arguments are equivalent.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+@\removedCC{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
 @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
   @\addedCC{requires SameType<T, Args>...}@
   @\addedCC{const T\& min(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
@@ -3655,6 +3659,7 @@ the first element in the ordering. Returns \farg{a} if
 \color{addclr}\begin{itemdecl}
 template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
 template<class T, Predicate<auto, T, T> Compare>
+  @\addedCC{requires !SameType<T, Compare>}@
   const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3676,7 +3681,7 @@ Returns the first argument when the arguments are equivalent.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+@\removedCC{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
 @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
   @\addedCC{requires SameType<T, Args>...}@
   @\addedCC{const T\& max(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
@@ -3730,6 +3735,7 @@ the last element in the ordering. Returns \farg{a} if
 \begin{itemdecl}
 template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
 template<class T, Predicate<auto, T, T> Compare>
+  @\addedCC{requires !SameType<T, Compare>}@
   @\textcolor{addclr}{pair}@<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}
 \color{black}
@@ -3758,8 +3764,8 @@ Exactly one comparison.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{template<LessThanComparable T>}@
-  @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
+@\removedCC{template<LessThanComparable T>}@
+  @\removedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
 @\addedCC{template<LessThanComparable T, LessThanComparable... Args>}@
   @\addedCC{requires SameType<T, Args>...}@
   @\addedCC{pair<const T\&, const T\&> minmax(const T\& \mbox{\farg{a}}, const Args\&... \mbox{\farg{args}});}@
