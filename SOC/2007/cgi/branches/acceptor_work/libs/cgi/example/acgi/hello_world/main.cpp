@@ -11,20 +11,22 @@
 //
 
 #include <boost/cgi/acgi.hpp>
+#include <boost/cgi/return.hpp>
 
 using namespace std;
-using namespace cgi::acgi;
+using namespace boost::acgi;
 
 int main()
 {
-  service srv;
-  request req(srv);
-  response resp;
+  service s;        // This becomes useful with async operations.
+  request req(s);   // Our request (POST data won't be parsed yet).
+  response resp;    // A response object to make our lives easier.
 
+  // This is a minimal response. The content_type(...) may go before or after
+  // the response text.
   resp<< content_type("text/html")
       << "Hello there, universe.";
 
-  resp.send(req.client());
-
-  return 0;
+  // Leave this function, after sending the response and closing the request.
+  return_(resp, req, 0); // Note the underscore: returns "0" to the OS.
 }
