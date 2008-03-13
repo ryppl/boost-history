@@ -10,7 +10,12 @@
 // Amortization Calculator
 // -----------------------
 //
-// This file uses Google cTemplate to show the benefits of 
+// This file uses Google cTemplate to show the benefits of using an
+// HTML template engine. The code isn't commented, but should be 
+// reasonably self-explanatory.
+//
+// It is a very basic amortization calculator.
+//
 #include <iostream>
 #include <boost/cgi/acgi.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -33,7 +38,7 @@ void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req
   std::string tmp( req.POST("LoanAmt").empty() );
   dict.SetValue("LoanAmt", tmp.empty() ? "$250,000" : tmp);
 
-  tmp = req.POST("YearlyIntRate").empty();
+  tmp = req.POST("YearlyIntRate");
   dict.SetValue("YearlyIntRate", tmp.empty() ? "6.000" : tmp);
 
   boost::array<std::string, 8> year_opts
