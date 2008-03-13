@@ -1,3 +1,16 @@
+//                     -- main.hpp --
+//
+//           Copyright (c) Darren Garvey 2007.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+////////////////////////////////////////////////////////////////
+//
+// Amortization Calculator
+// -----------------------
+//
+// This file uses Google cTemplate to show the benefits of 
 #include <iostream>
 #include <boost/cgi/acgi.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -5,25 +18,23 @@
 
 using namespace boost::acgi;
 
+/// Convert a string like '$250,000' into one like '250000'.
 std::string string_from_currency(std::string amt)
 {
-  // this is much too hardcore...
+  // this is much too hardcore, but it works fine...
   boost::algorithm::erase_all_regex(amt, boost::regex("[$, ]"));
   return amt;
 }
 
+/// This function fills the dictionary and sub-dictionaries with relevant values.
 template<typename Request>
 void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req)
 {
-  if (req.POST("LoanAmt").empty())
-    dict.SetValue("LoanAmt", "$250,000");
-  else
-    dict.SetValue("LoanAmt", req.POST("LoanAmt"));
+  std::string tmp( req.POST("LoanAmt").empty() );
+  dict.SetValue("LoanAmt", tmp.empty() ? "$250,000" : tmp);
 
-  if (req.POST("YearlyIntRate").empty())
-    dict.SetValue("YearlyIntRate", "6.000");
-  else
-    dict.SetValue("YearlyIntRate", req.POST("YearlyIntRate"));
+  tmp = req.POST("YearlyIntRate").empty();
+  dict.SetValue("YearlyIntRate", tmp.empty() ? "6.000" : tmp);
 
   boost::array<std::string, 8> year_opts
     = {{ "5", "7", "10", "20", "30", "40", "50" }};
