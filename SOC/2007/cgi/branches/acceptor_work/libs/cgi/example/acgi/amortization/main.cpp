@@ -35,7 +35,7 @@ std::string string_from_currency(std::string amt)
 template<typename Request>
 void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req)
 {
-  std::string tmp( req.POST("LoanAmt").empty() );
+  std::string tmp( req.POST("LoanAmt") );
   dict.SetValue("LoanAmt", tmp.empty() ? "$250,000" : tmp);
 
   tmp = req.POST("YearlyIntRate");
