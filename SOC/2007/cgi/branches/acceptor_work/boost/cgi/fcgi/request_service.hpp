@@ -20,6 +20,7 @@
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
+//#include "boost/cgi/basic_request.hpp"
 #include "boost/cgi/fcgi/client.hpp"
 
 namespace cgi {
@@ -47,6 +48,9 @@ namespace cgi {
       typedef detail::protocol_traits<
         protocol_type
       >::protocol_service_type                  protocol_service_type;
+      typedef detail::protocol_traits<
+        protocol_type
+      >::request_type                           request_type;
 
       implementation_type()
         : client_()
@@ -113,6 +117,7 @@ namespace cgi {
     typedef ::cgi::fcgi::fcgi_request_service         full_type;
     typedef type::implementation_type::protocol_type  protocol_type;
     typedef type::implementation_type::map_type       map_type;
+    typedef type::implementation_type::request_type   request_type;
 
     fcgi_request_service(::cgi::io_service& ios)
       : detail::service_base<fcgi_request_service>(ios)
@@ -159,7 +164,7 @@ namespace cgi {
               , int program_status)
     {
       impl.all_done_ = true;
-      impl.client_.close();
+      impl.client_.close(program_status);
       return program_status;
     }
 
@@ -417,7 +422,7 @@ namespace cgi {
   /***************************************************************************/
   public: // Reading stuff goes under here
 
-
+    // **FIXME**
     /// Read some data from the client.
     template<typename MutableBufferSequence>
     std::size_t
@@ -484,45 +489,7 @@ namespace cgi {
     boost::system::error_code
       process_begin_request(implementation_type& impl, boost::uint16_t id
                            , const unsigned char* buf, boost::uint16_t
-                           , boost::system::error_code& ec)
-    {
-      //implementation_type& req
-      //  = impl.client_.request_id_ == 0
-      //    ? impl
-      //    : get_or_make_request(impl);
-          
-      if (impl.client_.request_id_ == 0) // ie. not set
-      {
-        impl.client_.request_id_ = fcgi::spec::get_request_id(impl.header_buf_);
-
-        BOOST_STATIC_ASSERT((
-          fcgi::spec::begin_request::body::size::value
-          == fcgi::spec::header_length::value));
-        
-        // A begin request body is as long as a header, so we can optimise:
-        if (read_header(impl, ec))
-          return ec;
-         
-        impl.request_role_ = fcgi::spec::begin_request::get_role(impl.header_buf_);
-        std::cerr<< "[hw] New request role: " << impl.request_role_
-            << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
-            << std::endl;
-        impl.client_.keep_connection_
-          = fcgi::spec::begin_request::get_flags(impl.header_buf_)
-            & fcgi::spec::keep_connection;
-
-        impl.client_.status_ = constructed;
-      }
-      else
-      {
-        std::cerr<< "**FIXME** Role: " 
-          << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
-        return error::multiplexed_request_incoming;
-      }
-
-      //connection_->request_map_[id] = 
-      return ec;
-    }
+                           , boost::system::error_code& ec);
 
     boost::system::error_code
       process_abort_request(implementation_type& impl, boost::uint16_t id
@@ -730,28 +697,54 @@ namespace cgi {
     }
 
 /*
-    implementation_type&
-      get_or_make_request(implementation_type& impl, boost::uint16_t id)
-    {
-      implementation_type::client_type::connection_type::request_vector_type&
-        requests = impl.client_.connection_->requests;
-      implementation_type* ret;
+    implementation_type::request_type&
+      get_or_make_request(implementation_type& impl, boost::uint16_t id);
+
+      request_type::pointer ret
       
       try {
         ret = &requests.at(id - 1);
         BOOST_ASSERT(req != 0); // should throw
         return *ret;
       }catch(...){
-        req = new request_type(impl.service_);
+        req = request_type::create(impl.service_);
         if (requests.size() < (id - 1))
           requests.resize(id);
         requests.at(id-1) = *req;
-        return *req; // same as *ret
+        return req->impl(); // same as *ret
       }
     }
 */
+     boost::system::error_code
+       begin_request_helper(implementation_type& impl
+                           , implementation_type::header_buffer_type& header
+                           , boost::system::error_code& ec)
+     {
+        impl.client_.request_id_ = fcgi::spec::get_request_id(header);
 
-  };
+        BOOST_STATIC_ASSERT((
+          fcgi::spec::begin_request::body::size::value
+          == fcgi::spec::header_length::value));
+        
+        // A begin request body is as long as a header, so we can optimise:
+        if (read_header(impl, ec))
+          return ec;
+         
+        impl.request_role_
+          = fcgi::spec::begin_request::get_role(impl.header_buf_);
+        // **FIXME** (rm impl.request_role_)
+        impl.client_.role_ = impl.request_role_;
+        std::cerr<< "[hw] New request role: " << impl.request_role_
+            << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
+            << std::endl;
+        impl.client_.keep_connection_
+          = fcgi::spec::begin_request::get_flags(impl.header_buf_)
+            & fcgi::spec::keep_connection;
+
+        impl.client_.status_ = constructed;
+        return ec;
+     }
+   };
 
   //template<>
   const fcgi_request_service::proc_func_t fcgi_request_service::proc_funcs[] =
@@ -764,6 +757,76 @@ namespace cgi {
     , 0
     , 0
     };
+
+ } // namespace fcgi
+} // namespace cgi
+
+#include "boost/cgi/fcgi/request.hpp"
+#include "boost/cgi/basic_request.hpp"
+
+namespace cgi {
+ namespace fcgi {
+
+  namespace fdetail {
+    typedef fcgi_request_service              service_type;
+    typedef service_type::implementation_type impl_type;
+    typedef impl_type::request_type           request_type;
+  } // namespace detail
+
+/*
+    fdetail::request_type&
+      get_or_make_request(fdetail::impl_type& impl, boost::uint16_t id)
+    {
+      fdetail::impl_type::client_type::connection_type::request_vector_type&
+        requests = impl.client_.connection_->requests_;
+
+      if (!requests.at(id-1))
+      {
+        if (requests.size() < (id-1))
+          requests.resize(id);
+        requests.at(id-1) = fdetail::request_type::create(*impl.service_);
+      }
+
+      return *requests.at(id-1);
+    }
+*/
+
+    boost::system::error_code
+      fdetail::service_type::process_begin_request
+    (
+        fdetail::impl_type& impl, boost::uint16_t id, const unsigned char* buf
+      , boost::uint16_t, boost::system::error_code& ec
+    )
+    {
+      if (impl.client_.request_id_ == 0) // ie. hasn't been set yet.
+      {
+        begin_request_helper(impl, impl.header_buf_, ec);
+      }
+      else
+      {
+        std::cerr<< "**FIXME** Role: " 
+          << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
+
+        fdetail::impl_type::client_type::connection_type&
+          conn = *impl.client_.connection_;
+
+        if (conn.get_slot(id, ec))
+        { // error
+          return ec;
+        }
+
+        // **FIXME** THIS LEAKS MEMORY!!!!!!!
+        //requests.at(id-1)
+        request_type* new_request = new request_type(impl, ec);
+
+        conn.add_request(id, new_request, true, ec);
+
+        return ec;//error::multiplexed_request_incoming;
+      }
+
+      return ec;
+    }
+
 
  } // namespace fcgi
 } // namespace cgi

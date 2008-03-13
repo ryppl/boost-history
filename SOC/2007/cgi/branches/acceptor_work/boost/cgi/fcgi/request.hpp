@@ -12,8 +12,9 @@
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/basic_request_fwd.hpp"
 //#include "boost/cgi/request_service_fwd.hpp"
-#include "boost/cgi/fcgi/request_service.hpp"
 #include "boost/cgi/fcgi/service.hpp"
+#include "boost/cgi/fcgi/request_service.hpp"
+
 namespace cgi {
 
  namespace fcgi {
@@ -22,7 +23,6 @@ namespace cgi {
  } // namespace fcgi
 } // namespace cgi
 
-//#include "boost/cgi/request_service.hpp"
-#include "boost/cgi/basic_request.hpp"
+//#include "boost/cgi/basic_request.hpp"
 
 #endif // CGI_FCGI_REQUEST_HPP_INCLUDED__

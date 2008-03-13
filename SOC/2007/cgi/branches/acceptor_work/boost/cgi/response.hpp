@@ -25,7 +25,7 @@
 #include <boost/foreach.hpp>
 
 /// This mess outputs a default Content-type header if the user hasn't set any.
-/**
+/** **FIXME** Not implemented; not sure if it should be...
  * BOOST_CGI_ADD_DEFAULT_HEADER should not persiste beyond this file.
  *
  * It basically works like (default first):
@@ -408,6 +408,13 @@ namespace cgi {
     BOOST_ASSERT(!resp.headers_terminated());
     resp.set_header("Set-cookie", ck.to_string());
     return resp;
+  }
+
+  template<typename T>
+  response& operator<<(response& resp, http::status_code status)
+  {
+    BOOST_ASSERT(!resp.headers_terminated());
+    return resp.set_status(status);
   }
 
 } // namespace cgi

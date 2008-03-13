@@ -44,6 +44,7 @@ namespace cgi {
     void shutdown_service()
     {
     }
+
     void construct(implementation_type& impl)
     {
       impl.client_.set_connection(
@@ -54,7 +55,11 @@ namespace cgi {
     void destroy(implementation_type& impl)
     {
     }
-
+    
+    void set_service(implementation_type& impl, protocol_service_type& ps)
+    {
+      impl.service_ = &ps;
+    }
   };
 
 } // namespace cgi

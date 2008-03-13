@@ -10,10 +10,13 @@
 #define CGI_CONNECTIONS_SHAREABLE_TCP_SOCKET_HPP_INCLUDED__
 
 #include <map>
+#include <set>
 #include <boost/cstdint.hpp>
+#include <boost/foreach.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "boost/cgi/tags.hpp"
+#include "boost/cgi/error.hpp"
 #include "boost/cgi/io_service.hpp"
 #include "boost/cgi/connection_base.hpp"
 #include "boost/cgi/basic_connection.hpp"
@@ -52,7 +55,7 @@ namespace cgi {
     typedef 
       detail::protocol_traits<fcgi_>::request_ptr    request_ptr;
     typedef std::map<boost::uint16_t, request_type*> request_map_type;
-    typedef std::vector<request_ptr>                 request_vector_type;
+    typedef std::vector<request_type*>                  request_vector_type;
 
     /** End FastCGI stuff      **/
 
@@ -65,6 +68,15 @@ namespace cgi {
       , mutex_()
       , condition_()
     {
+    }
+
+    ~basic_connection()
+    {
+      //BOOST_FOREACH(boost::uint16_t id, deletable_request_ids_)
+      //{
+      //  delete requests_.at(id-1);
+      //  requests_.at(id-1) = 0;
+      //}
     }
 
     bool is_open() const
@@ -129,6 +141,38 @@ namespace cgi {
 
     mutex_type& mutex()        { return mutex_;     }
     condition_type& condition() { return condition_; }
+
+    boost::system::error_code
+      get_slot(boost::uint16_t id, boost::system::error_code& ec)
+    {
+      if (requests_.at(id-1)) // duplicate request!
+      {
+        return error::duplicate_request;
+      }
+
+      if (requests_.size() < (id-1))
+        requests_.resize(id);
+
+      return ec;
+    }
+
+    boost::system::error_code
+      add_request(boost::uint16_t id, request_type* req, bool on_heap
+                 , boost::system::error_code& ec)
+    {
+      requests_.at(id-1) = req;
+      if (on_heap)
+        deletable_request_ids_.insert(id);
+      return ec;
+    }
+
+    //template<typename RequestImpl>
+    //boost::system::error_code
+    //  multiplex(RequestImpl& impl, boost::system::error_code& ec)
+    //{
+    //  
+    //  return ec;
+    //}
   private:
     
     next_layer_type sock_;
@@ -139,6 +183,7 @@ namespace cgi {
     /** FastCGI specific stuff **/
     request_map_type request_map_;
     request_vector_type requests_;
+    std::set<int> deletable_request_ids_;
   };
 
   // probably deletable typedef (leaving it here to keep an open mind)

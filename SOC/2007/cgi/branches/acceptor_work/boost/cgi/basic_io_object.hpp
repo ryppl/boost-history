@@ -29,26 +29,27 @@ namespace cgi {
 
   private:
     typedef typename Service::implementation_type    impl_type;
+    typedef typename Service::implementation_type    implementation_type;
 
   protected:
     explicit basic_io_object(::cgi::io_service& ios)
       : service(boost::asio::use_service<Service>(ios))
     {
-      service.construct(impl);
+      service.construct(implementation);
     }
 
     ~basic_io_object()
     {
-      service.destroy(impl);
+      service.destroy(implementation);
     }
 
-    impl_type impl;
+    implementation_type implementation;
     service_type& service;
   };
 
   /*
-  template<typename Service>
-  class basic_io_object<Service, false> 
+  template<>
+  class basic_io_object< ::cgi::request> 
     : private boost::noncopyable
   {
   public:
@@ -68,6 +69,7 @@ namespace cgi {
 
     impl_type impl;
     service_type service;
+    boost::asio::io_service io_service;
   };
   */
 

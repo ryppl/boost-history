@@ -87,6 +87,20 @@ namespace cgi {
   {
     return header("Content-encoding", str);
   }
+
+  template<typename T>
+  header
+    content_length(const T& t)
+  {
+    return header("Content-length", boost::lexical_cast<std::string>(t));
+  }
+
+  template<typename T, typename Traits, typename Alloc>
+  header
+    content_length(const std::basic_string<T, Traits, Alloc>& str)
+  {
+    return header("Content-length", str);
+  }
 /*
   template<typename StringT>
   header<StringT>

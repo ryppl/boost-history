@@ -59,6 +59,7 @@ namespace cgi {
       , fcgi::spec::header_length::value
     >                                         header_buffer_type;
     typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
+    typedef fcgi::spec_detail::role_t         role_type;
 
     /// Construct
     basic_client()
@@ -104,11 +105,41 @@ namespace cgi {
       return connection_->is_open();
     }
 
-    void close()
+    void close(boost::uint64_t app_status = 0)
     {
       if (status_ == closed_) return;
 
+      std::vector<boost::asio::const_buffer> bufs;
+
       // Write an EndRequest packet to the server.
+      out_header_[0] = static_cast<unsigned char>(1); // FastCGI version
+      out_header_[1] = static_cast<unsigned char>(3); // BEGIN_REQUEST
+      out_header_[2] = static_cast<unsigned char>(request_id_ >> 8) & 0xff;
+      out_header_[3] = static_cast<unsigned char>(request_id_) & 0xff;
+      out_header_[4] = static_cast<unsigned char>(8 >> 8) & 0xff;
+      out_header_[5] = static_cast<unsigned char>(8) & 0xff;
+      out_header_[6] = static_cast<unsigned char>(0);
+      out_header_[7] = 0;
+
+      BOOST_ASSERT(role_ == fcgi::spec_detail::RESPONDER
+                   && "Only supports Responder role for now (**FIXME**)");
+
+      header_buffer_type end_request_body =
+      {{
+          static_cast<unsigned char>(app_status >> 24) & 0xff
+        , static_cast<unsigned char>(app_status >> 16) & 0xff
+        , static_cast<unsigned char>(app_status >>  8) & 0xff
+        , static_cast<unsigned char>(app_status >>  0) & 0xff
+        , static_cast<unsigned char>(fcgi::spec_detail::REQUEST_COMPLETE)
+        , static_cast<unsigned char>(0)
+        , static_cast<unsigned char>(0)
+        , static_cast<unsigned char>(0)
+      }};
+
+      bufs.push_back(buffer(out_header_));
+      bufs.push_back(buffer(end_request_body));
+
+      write(*connection_, bufs);
 
       if (!keep_connection_ && connection_)
         connection_->close();
@@ -223,7 +254,7 @@ namespace cgi {
     header_buffer_type out_header_;
 
     bool keep_connection_;
-
+    role_type role_;
 
   public:
 

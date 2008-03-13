@@ -10,6 +10,7 @@
 #define CGI_CONNECTIONS_TCP_SOCKET_HPP_INCLUDED__
 
 #include <boost/shared_ptr.hpp>
+#include <boost/asio/ip/tcp.hpp>
 
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/io_service.hpp"

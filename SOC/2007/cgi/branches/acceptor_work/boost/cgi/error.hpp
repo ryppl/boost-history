@@ -42,7 +42,9 @@ enum fcgi_errors
 
   // For now a user has to recognise this error and construct a request
   // themselves. This is an ugly hack.
-  multiplexed_request_incoming
+  multiplexed_request_incoming,
+
+  duplicate_request
 };
 
   namespace detail {

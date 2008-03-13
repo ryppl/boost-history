@@ -30,7 +30,7 @@ namespace cgi {
    * TODO
    * - Data should be URL-encoded, or maybe provide an overload for url_decode
    *   that takes an HttpCookie?
-   * - Add to_string() ?
+   * - Add from_string() ?
    */
   template<typename String>
   struct basic_cookie
@@ -132,11 +132,13 @@ namespace cgi {
   };
 
   template<typename OutStream, typename T>
-    OutStream& operator<<(OutStream& os, const basic_cookie<T>& ck)
+    OutStream& operator<<(OutStream& os, basic_cookie<T>& ck)
   {
-    return os<< ck.to_string();
+    os<< ck.to_string();
+    return os;
   }
 
 } // namespace cgi
 
 #endif // CGI_COOKIE_HPP_INCLUDED__
+

@@ -34,6 +34,7 @@ namespace cgi {
     {
     }
 
+    protocol_service_type* service_;
   protected:
     //acgi_request_impl(); // private default constructor
     friend class acgi_service_impl;
