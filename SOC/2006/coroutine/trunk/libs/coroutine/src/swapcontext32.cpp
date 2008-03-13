@@ -62,8 +62,12 @@
    'add $4, %esp'
    'jmp *%ecx'
    really kills performance.
+
    NOTE: popl is slightly better than mov+add to pop registers
    so is pushl rather than mov+sub.
+
+   According to Agner Fog, an always taken indirect branch should preferably
+   be followed by an undefined opcode instruction (the ud2).
    */
 #define BOOST_COROUTINE_swapcontext(name) \
 asm volatile (                            \
