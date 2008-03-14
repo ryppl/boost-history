@@ -55,11 +55,11 @@ namespace df = boost::dataflow;
 
 // simple consumer that tracks its connections - when it receives a specified
 // number of signals, it will disconnect itself from all producers
-class trackable_consumer
+class tracking_consumer
     : public df::port<df::signals::tracking_call_consumer>
 {
 public:
-    trackable_consumer(unsigned max_count)
+    tracking_consumer(unsigned max_count)
         : m_count(0), m_max_count(max_count)
     {}
     
@@ -92,7 +92,7 @@ private:
 int main(int, char* [])
 {
     signals::storage<void()> producer;
-    trackable_consumer c1(1), c3(3), c5(5);
+    tracking_consumer c1(1), c3(3), c5(5);
     
     connect(producer, c1);
     connect(producer, c3);
