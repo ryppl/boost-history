@@ -36,9 +36,9 @@ local rule osg-example ( name subdir ? : args * : src * )
 #~ osg-example osgcompositeviewer : : /ext/osg//osgFX ;
 #~ osg-example osglight ;
 #~ osg-example osglogo ;
-#~ osg-example osgparticleeffects  : --screen 1 : /ext/osg//osgParticle ;
-#~ osg-example osgshadow : --screen 1 : /ext/osg//osgShadow ;
-#~ osg-example osgteapot ;
-#~ osg-example osgterrain : --screen 1 : /ext/osg//osgTerrain ;
-osg-example osgtext : --screen 1 ;
-#~ osg-example osgvertexprogram : --screen 1 ;
+#~ osg-example osgparticleeffects  : : /ext/osg//osgParticle ;
+#~ osg-example osgshadow : : /ext/osg//osgShadow ;
+osg-example osgteapot ;
+#~ osg-example osgterrain : : /ext/osg//osgTerrain ;
+#~ osg-example osgtext ;
+#~ osg-example osgvertexprogram ;
