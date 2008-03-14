@@ -403,6 +403,14 @@ Released versions are located in the
 The Dataflow library uses the trunk version of Boost - it might not work
 perfectly with release versions of boost.
 
+Version 0.9.1 (under development)
+* Generic Dataflow layer
+ * binary operations now propagate the return value
+
+* [DataflowSignals]
+ * [connect] now returns the `signals::connection` object
+ * added tracking_call_consumer example
+
 Version 0.9.0
  \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 

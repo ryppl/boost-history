@@ -21,11 +21,20 @@ int test_main(int, char* [])
         
         connect(banger, counter);
         banger(); // this signal will pass to counter
+        BOOST_CHECK_EQUAL(counter.count(), 1);
+
         disconnect_all(banger);
         banger(); // this signal will not pass to counter
-        
         BOOST_CHECK_EQUAL(counter.count(), 1);
-        //]
+
+        signals::connection c = connect(banger, counter);
+        banger(); // this signal will pass to counter
+        BOOST_CHECK_EQUAL(counter.count(), 2);
+        
+        c.disconnect();
+        banger(); // this signal will not pass to counter
+        BOOST_CHECK_EQUAL(counter.count(), 2);
+//]
     }
     return 0;
 } // int test_main(int, char* [])

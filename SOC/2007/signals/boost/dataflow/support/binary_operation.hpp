@@ -25,11 +25,33 @@
 
 namespace boost { namespace dataflow {
 
+namespace result_of
+{
+    template<typename OutgoingPort, typename IncomingPort, typename Operation, typename Mechanism, typename Tag>
+    struct default_binary_operation
+    {
+        typedef typename result_of::binary_operation<
+            typename boost::remove_reference<typename result_of::get_default_port<OutgoingPort, args::left, Mechanism, Tag>::type>::type,
+            typename boost::remove_reference<typename result_of::get_default_port<IncomingPort, args::right, Mechanism, Tag>::type>::type,
+            Operation,
+            Tag>::type type;
+/*        typedef
+            typename boost::result_of<
+                extension::binary_operation_impl<
+                    typename default_traits_of<OutgoingPort, args::left, Mechanism, Tag>::type,
+                    typename default_traits_of<IncomingPort, args::right, Mechanism, Tag>::type,
+                    Operation>(
+                        typename utility::forwardable<typename result_of::get_default_port<OutgoingPort, args::left, Mechanism, Tag>::type>::type,
+                        typename utility::forwardable<typename result_of::get_default_port<IncomingPort, args::right, Mechanism, Tag>::type>::type)
+            >::type type;*/
+    };
+}
+
 template<typename Operation, typename Mechanism, typename Tag, typename OutgoingPort, typename IncomingPort>
-inline void
+inline typename result_of::default_binary_operation<OutgoingPort, IncomingPort, Operation, Mechanism, Tag>::type
 default_binary_operation(OutgoingPort &left, IncomingPort &right)
 {
-    extension::binary_operation_impl<
+    return extension::binary_operation_impl<
         typename default_traits_of<OutgoingPort, args::left, Mechanism, Tag>::type,
         typename default_traits_of<IncomingPort, args::right, Mechanism, Tag>::type,
         Operation>

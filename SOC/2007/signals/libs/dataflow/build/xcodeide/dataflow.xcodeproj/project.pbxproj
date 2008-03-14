@@ -91,6 +91,8 @@
 		0815AEC90D0B814E007ED135 /* test_complemented_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_complemented_port.cpp; sourceTree = "<group>"; };
 		08256FE60CEBDFEC003EC1B4 /* network.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = network.hpp; sourceTree = "<group>"; };
 		082761BE0C6037A90030E557 /* invocable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = invocable.hpp; sourceTree = "<group>"; };
+		083F14A50D8A250700D0F8B7 /* test_connect_result.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_connect_result.cpp; sourceTree = "<group>"; };
+		083F151E0D8A356500D0F8B7 /* tracking_consumer_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tracking_consumer_example.cpp; sourceTree = "<group>"; };
 		083FD3B90C62A4CB00EF3F6B /* concepts.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = concepts.qbk; sourceTree = "<group>"; };
 		083FD3C10C62A75B00EF3F6B /* concepts.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = concepts.qbk; sourceTree = "<group>"; };
 		083FD3C60C62A7F600EF3F6B /* phoenix.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = phoenix.qbk; sourceTree = "<group>"; };
@@ -760,6 +762,7 @@
 				08F71D500CA3547C0010099E /* test_storage.cpp */,
 				08FBDA3A0CD272ED00CC3891 /* test_multiplexer.cpp */,
 				089B93720D5AA99700F6EEAA /* test_filter_base.cpp */,
+				083F14A50D8A250700D0F8B7 /* test_connect_result.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";
@@ -774,6 +777,7 @@
 				08F98B470CD01963009D642B /* intro_example.cpp */,
 				084D2E6E0CE7DFE900E861FA /* gil_example.cpp */,
 				08A0E54C0D7A7674009B11DD /* quick_start_examples.cpp */,
+				083F151E0D8A356500D0F8B7 /* tracking_consumer_example.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";

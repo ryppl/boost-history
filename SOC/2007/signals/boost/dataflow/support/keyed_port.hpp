@@ -109,12 +109,24 @@ namespace extension
 //            has_keyed_port<port<ProducerTag>, ConsumerTag, typename ProducerTag::tag>
         >::type >
     {
-        typedef void result_type;
+        template<typename FArgs>
+        struct result;
+        
+        template<typename F, typename Producer, typename Consumer>
+        struct result<F(Producer &, Consumer &)>
+        {
+            typedef typename result_of::binary_operation<
+               typename remove_reference<typename result_of::get_keyed_port<Producer, ConsumerTag, typename ProducerTag::tag>::type>::type,
+                Consumer,
+                Operation,
+                typename ConsumerTag::tag
+            >::type type;
+        };
         
         template<typename Producer, typename Consumer>
-        void operator()(Producer &producer, Consumer &consumer)
+        typename result<binary_operation_impl(Producer &, Consumer &)>::type operator()(Producer &producer, Consumer &consumer)
         {
-            binary_operation<Operation, typename ConsumerTag::tag>
+            return binary_operation<Operation, typename ConsumerTag::tag>
                 (get_keyed_port<ConsumerTag, typename ProducerTag::tag>(producer), consumer);
         }
     };
@@ -126,12 +138,24 @@ namespace extension
 //            has_keyed_port<port<ConsumerTag>, ProducerTag, typename ConsumerTag::tag>
         >::type >
     {
-        typedef void result_type;
-
-        template<typename Producer, typename Consumer>
-        void operator()(Producer &producer, Consumer &consumer)
+        template<typename FArgs>
+        struct result;
+        
+        template<typename F, typename Producer, typename Consumer>
+        struct result<F(Producer &, Consumer &)>
         {
-            binary_operation<Operation, typename ProducerTag::tag>
+            typedef typename result_of::binary_operation<
+                Producer,
+                typename remove_reference<typename result_of::get_keyed_port<Consumer, ProducerTag, typename ConsumerTag::tag>::type>::type,
+                Operation,
+                typename ProducerTag::tag
+            >::type type;
+        };
+        
+        template<typename Producer, typename Consumer>
+        typename result<binary_operation_impl(Producer &, Consumer &)>::type operator()(Producer &producer, Consumer &consumer)
+        {
+            return binary_operation<Operation, typename ProducerTag::tag>
                 (producer, get_keyed_port<ProducerTag, typename ConsumerTag::tag>(consumer));
         }
     };

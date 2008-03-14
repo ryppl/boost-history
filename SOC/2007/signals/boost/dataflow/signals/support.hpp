@@ -127,12 +127,12 @@ namespace extension
     template<typename T>
     struct binary_operation_impl<signals::producer<T>, signals::consumer<T>, operations::connect>
     {
-        typedef void result_type;
+        typedef boost::signals::connection result_type;
         
         template<typename Producer, typename Consumer>
-        void operator()(Producer &producer, Consumer &consumer)
+        result_type operator()(Producer &producer, Consumer &consumer)
         {
-            producer.connect(consumer);
+            return producer.connect(consumer);
         }
     };
     

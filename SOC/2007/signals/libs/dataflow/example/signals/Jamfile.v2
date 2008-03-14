@@ -18,3 +18,4 @@ exe simple_distributed_example : simple_distributed_example.cpp
     /boost/system//boost_system/<link>static ;
 exe gil_example : gil_example.cpp /boost/thread//boost_thread/<link>static ;
 exe quick_start_examples : quick_start_examples.cpp ;
+exe tracking_consumer_example : tracking_consumer_example.cpp ;
