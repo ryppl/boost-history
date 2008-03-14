@@ -25,12 +25,12 @@
     <p>General issue: do we accept the naming convention that purely
       syntactic concepts should be named Has*?</p>
 
-    <p>If we do have a two-parameter HasEquals, do we also want it to
+    <p>If we do have a two-parameter HasEqualTo, do we also want it to
       provide != ? In other words, does it have any kind of semantic
       coherency?  </p>
 
-    <p>Can we make the two-parameter HasEquals symmetrical? That is:
-      if we say that there is a HasEquals for types T and U, and if t
+    <p>Can we make the two-parameter HasEqualTo symmetrical? That is:
+      if we say that there is a HasEqualTo for types T and U, and if t
       and u are variables of the appropriate types, can we at least
       say that t == u and u == t are both allowed and both mean the
       same thing? Is there any way to write defaults in the concept
@@ -40,7 +40,7 @@
   <resolution>
     <p>Split the <code>EqualityComparable</code>
     and <code>LessThanComparable</code> concepts into purely syntactic
-    concepts (<code>HasEquals</code>, <code>HasLessThan</code>) and
+    concepts (<code>HasEqualTo</code>, <code>HasLessThan</code>) and
     semantic concepts that refine them
     (<code>EqualityComparable</code>, <code>LessThanComparable</code>). In
     [utility.concepts], update the &lt;concepts&gt; header synopsis as
@@ -57,7 +57,7 @@ auto concept TriviallyEqualityComparable&lt;typename T&gt; <i>see below</i>;
 
 auto concept HasNegate&lt;typename T&gt; <i>see below</i>;
 <ins>auto concept HasLess&lt;typename T, typename U = T&gt; <i>see below</i>;</ins>
-<ins>auto concept HasEquals&lt;typename T, typename U = T&gt; <i>see below</i>;</ins>
+<ins>auto concept HasEqualTo&lt;typename T, typename U = T&gt; <i>see below</i>;</ins>
 auto concept HasLogicalAnd&lt;typename T, typename U = T&gt; <i>see below</i>;
       </pre>
     </p>
@@ -100,7 +100,7 @@ auto concept LessThanComparable&lt;typename T<del>, typename U = T</del>&gt;<ins
 
     <p>Change [concept.comparison] paragraphs 3 and 4 as follows:
       <pre>
-auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt;<ins> : HasEquals&lt;T&gt;</ins> { 
+auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt;<ins> : HasEqualTo&lt;T&gt;</ins> { 
  <del>bool operator==(T const&amp; a, U const&amp; b);</del> 
  bool operator!=(T const&amp; a, <del>U</del><ins>T</ins> const&amp; b) { return !(a == b); } 
 
@@ -118,10 +118,10 @@ auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt;<ins
 }
       </pre>
 <ol start="3">
-  <li>&nbsp;&nbsp;&nbsp;&nbsp;<del><i>Note</i>: describes types whose
-      values can be compared for equality with <code>operator==</code>.</del></li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<i>Note</i>: describes types whose
+    values can be compared for equality with <code>operator==</code><ins>, which is an equivalence relation</ins>.</li>
 
-  <li>&nbsp;&nbsp;&nbsp;&nbsp;<i>Requires</i>: <del>when <code>T</code> and <code>U</code> are identical, </del><code>operator==</code> is an equivalence relation<del> that is, it has the following properties:</del><ins>.</ins>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<del><i>Requires</i>: when <code>T</code> and <code>U</code> are identical, <code>operator==</code> is an equivalence relation that is, it has the following properties:</del>
       <ul>
         <li><del>For all a, a == a.</del></li>
         <li><del>If a == b, then b == a.</del></li>
@@ -142,7 +142,7 @@ auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt;<ins
       </ol>
 
       <pre>
-<ins>auto concept HasEquals&lt; typename T, typename U = T&gt; {
+<ins>auto concept HasEqualTo&lt; typename T, typename U = T&gt; {
   bool operator==(const T&amp; a, const U&amp; b);
 }</ins>
       </pre>
@@ -153,7 +153,7 @@ auto concept EqualityComparable&lt;typename T<del>, typename U = T</del>&gt;<ins
 
     <p>Note that this change also requires renaming two-parameter uses
     of <code>EqualityComparable</code>
-    and <code>LessThanComparable</code> to <code>HasEquals</code>
+    and <code>LessThanComparable</code> to <code>HasEqualTo</code>
     and <code>HasLess</code>, respectively.</p>
   </resolution>
 </issue>

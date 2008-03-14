@@ -21,4 +21,143 @@
   different naming convention.)</p>
 </discussion>
 
+<resolution>
+<p>The following table provides the names of operators, the function
+  objects associated with that name in the &lt;functional&gt; header,
+  and the proposed concept name.</p>
+
+<table border="1">
+  <tr>
+    <th bgcolor="#ffffcc">Operator</th>
+    <th bgcolor="#ffffcc">Function object</th>
+    <th bgcolor="#ffffcc">Concept</th>
+  </tr>
+  <tr>
+    <td><code>+</code> (binary)</td>
+    <td><code>plus</code></td>
+    <td><code>HasPlus</code></td>
+  </tr>
+  <tr>
+    <td><code>-</code> (binary)</td>
+    <td><code>minus</code></td>
+    <td><code>HasMinus</code></td>
+  </tr>
+  <tr>
+    <td><code>*</code> (binary)</td>
+    <td><code>multiplies</code></td>
+    <td><code>HasMultiply</code></td>
+  </tr>
+  <tr>
+    <td><code>/</code></td>
+    <td><code>divides</code></td>
+    <td><code>HasDivide</code></td>
+  </tr>
+  <tr>
+    <td><code>%</code></td>
+    <td><code>modulus</code></td>
+    <td><code>HasModulus</code></td>
+  </tr>
+  <tr>
+    <td><code>+</code> (unary)</td>
+    <td>N/A</td>
+    <td><code>HasUnaryPlus</code></td>
+  </tr>
+  <tr>
+    <td><code>-</code> (unary)</td>
+    <td><code>negate</code></td>
+    <td><code>HasNegate</code></td>
+  </tr>
+  <tr>
+    <td><code>&lt;</code></td>
+    <td><code>less</code></td>
+    <td><code>HasLess</code> (see issue <iref ref="1"/>)</td>
+  </tr>
+  <tr>
+    <td><code>&gt;</code></td>
+    <td><code>greater</code></td>
+    <td>N/A. Part of <code>LessThanComparable</code></td>
+  </tr>
+  <tr>
+    <td><code>&lt;=</code></td>
+    <td><code>less_equal</code></td>
+    <td>N/A. Part of <code>LessThanComparable</code></td>
+  </tr>
+  <tr>
+    <td><code>&gt;=</code></td>
+    <td><code>greater_equal</code></td>
+    <td>N/A. Part of <code>LessThanComparable</code></td>
+  </tr>
+  <tr>
+    <td><code>==</code></td>
+    <td><code>equal_to</code></td>
+    <td><code>HasEqualTo</code> (see issue <iref ref="1"/>)</td>
+  </tr>
+  <tr>
+    <td><code>!=</code></td>
+    <td><code>not_equal_to</code></td>
+    <td>N/A. Part of <code>EqualityComparable</code></td>
+  </tr>
+  <tr>
+    <td><code>&amp;&amp;</code></td>
+    <td><code>logical_and</code></td>
+    <td><code>HasLogicalAnd</code></td>
+  </tr>
+  <tr>
+    <td><code>||</code></td>
+    <td><code>logical_or</code></td>
+    <td><code>HasLogicalOr</code></td>
+  </tr>
+  <tr>
+    <td><code>!</code></td>
+    <td><code>logical_not</code></td>
+    <td><code>HasLogicalNot</code></td>
+  </tr>
+  <tr>
+    <td><code>&amp;</code> (binary)</td>
+    <td><code>bit_and</code></td>
+    <td><code>HasBitAnd</code></td>
+  </tr>  
+  <tr>
+    <td><code>|</code></td>
+    <td><code>bit_or</code></td>
+    <td><code>HasBitOr</code></td>
+  </tr>  
+  <tr>
+    <td><code>^</code></td>
+    <td><code>bit_xor</code></td>
+    <td><code>HasBitXor</code></td>
+  </tr>  
+  <tr>
+    <td><code>~</code></td>
+    <td>N/A</td>
+    <td><code>HasComplement</code></td>
+  </tr>
+  <tr>
+    <td><code>&lt;&lt;</code></td>
+    <td>N/A</td>
+    <td><code>HasLeftShift</code></td>
+  </tr>
+  <tr>
+    <td><code>&gt;&gt;</code></td>
+    <td>N/A</td>
+    <td><code>HasRightShift</code></td>
+  </tr>
+  <tr>
+    <td><code>*</code> (unary)</td>
+    <td>N/A</td>
+    <td><code>Dereferenceable</code></td>
+  </tr>
+  <tr>
+    <td><code>&amp;</code> (unary)</td>
+    <td>N/A</td>
+    <td><code>Addressable</code></td>
+  </tr>
+  <tr>
+    <td><code>()</code></td>
+    <td>N/A</td>
+    <td><code>Callable</code></td>
+  </tr>
+</table>
+</resolution>
+
 </issue>
