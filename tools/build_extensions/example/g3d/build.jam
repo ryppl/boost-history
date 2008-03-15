@@ -1,0 +1,16 @@
+#~ Copyright 2008 Redshift Software, Inc.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+using zlib : 1.2.3 : $(PACKAGES)/zlib-1.2.3 ;
+using png : 1.2.24 : $(PACKAGES)/libpng-1.2.24 ;
+using jpeg : 6.b : $(PACKAGES)/jpeg-6b ;
+using g3d : 7.01 : $(PACKAGES)/G3D ;
+
+import stage ;
+
+install stage-lib
+    : /ext/g3d//G3D/<link>static /ext/g3d//glG3D/<link>static
+    : <location>$(STAGE_ROOT)/lib <install-dependencies>on <install-type>LIB
+    ;

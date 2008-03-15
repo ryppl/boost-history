@@ -1,0 +1,78 @@
+#~ Copyright 2008 Redshift Software, Inc.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or copy at
+#~ http://www.boost.org/LICENSE_1_0.txt)
+
+import extension ;
+
+extension.declare g3d ;
+
+rule init ( version ? : location : options * )
+{
+    version ?= default ;
+    local requirements =
+        [ extension.define g3d $(version) : $(location) : $(options) ]
+        <g3d-version>$(version)
+        <g3d-location>$(location)
+        <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        ;
+    local common-requirements =
+        #~ [ conditional <target-os>windows :
+            #~ <find-shared-library>user32
+            #~ <find-shared-library>gdi32
+            #~ <find-shared-library>advapi32
+            #~ ]
+        ;
+    
+    location,$(version) = $(location) ;
+    
+    for local h in ioapi.h zip.h unzip.h
+    {
+        extension.text g3d $(version)
+            :   zip/$(h)
+            :   ## format
+            "#include <minizip/$(h)>"
+            :   $(requirements)
+            ;
+        requirements += <implicit-dependency>zip/$(h) ;
+        requirements += <dependency>zip/$(h) ;
+    }
+    
+    alias gl : : : :
+        <target-os>windows:<find-shared-library>OpenGL32
+        <target-os>linux:<find-shared-library>GL
+        <target-os>macosx:<find-shared-library>GL
+        ;
+    
+    local ext-libs =
+        ;
+    
+    lib G3D
+        :   [ glob $(location)/G3D.lib/source/*.cpp ]
+            $(ext-libs)
+            /ext/zlib//z/<link>static
+            /ext/zlib//minizip/<link>static
+            /ext/png//png/<link>static
+            /ext/jpeg//jpeg/<link>static
+        :   $(requirements) $(common-requirements)
+            <location-prefix>G3D
+            <include>$(location)/G3D.lib/include
+        :
+        :   $(common-requirements)
+            <include>$(location)/G3D.lib/include
+        ;
+    
+    lib glG3D
+        :   [ glob $(location)/GLG3D.lib/source/*.cpp ]
+            /ext/g3d//G3D
+            /ext/g3d//gl
+            $(ext-libs)
+        :   $(requirements) $(common-requirements)
+            <location-prefix>glG3D
+            <include>$(location)/GLG3D.lib/include
+        :
+        :   $(common-requirements)
+            <include>$(location)/GLG3D.lib/include
+        ;
+}
