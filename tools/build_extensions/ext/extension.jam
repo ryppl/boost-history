@@ -237,6 +237,7 @@ rule text ( extension version ?
     : requirements * : usage-requirements * )
 {
     local mod = [ CALLER_MODULE ] ;
+    name = [ path.make $(name) ] ;
     .format,$(extension),$(version),$(name) = $(format) ;
     module $(mod)
     {
@@ -259,7 +260,8 @@ rule make-text ( targets * : sources * : properties * )
     local NL = "
 " ;
     local text = ;
-    local format = $(.format,$(ext:G=),$(version:G=),$(targets[1]:G=)) ;
+    local name = [ path.make $(targets[1]:G=) ] ;
+    local format = $(.format,$(ext:G=),$(version:G=),$(name)) ;
     for local f in $(format)
     {
         if $(f:G)
