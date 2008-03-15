@@ -122,6 +122,7 @@
 		089321B50D7BB26100F16965 /* examples.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = examples.qbk; sourceTree = "<group>"; };
 		089321B60D7BB28000F16965 /* examples.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = examples.qbk; sourceTree = "<group>"; };
 		089321BB0D7BB38D00F16965 /* examples.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = examples.qbk; sourceTree = "<group>"; };
+		08998BA10D8B2094006ED577 /* specific_tracking_consumer_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = specific_tracking_consumer_example.cpp; sourceTree = "<group>"; };
 		089AE57F0D79C5CF00AB9DA8 /* bind_mem_fn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = bind_mem_fn.hpp; sourceTree = "<group>"; };
 		089AE5830D79C7CB00AB9DA8 /* bind_object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = bind_object.hpp; sourceTree = "<group>"; };
 		089AE58B0D79C96200AB9DA8 /* slot_type.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = slot_type.hpp; sourceTree = "<group>"; };
@@ -778,6 +779,7 @@
 				084D2E6E0CE7DFE900E861FA /* gil_example.cpp */,
 				08A0E54C0D7A7674009B11DD /* quick_start_examples.cpp */,
 				083F151E0D8A356500D0F8B7 /* tracking_consumer_example.cpp */,
+				08998BA10D8B2094006ED577 /* specific_tracking_consumer_example.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";
