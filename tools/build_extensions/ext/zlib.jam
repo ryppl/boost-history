@@ -6,6 +6,7 @@
 ### Support for building Zlib library <http://www.zlib.net/>.
 ### Targets:
 ###     /ext/zlib//z
+###     /ext/zlib//minizip
 
 import extension ;
 
@@ -43,5 +44,23 @@ rule init ( version ? : location : options * )
             <link>shared:<define>ZLIB_DLL
         :
         :   <include>$(location)
+        ;
+    
+    lib minizip
+        :   $(location)/contrib/minizip/ioapi.c
+            $(location)/contrib/minizip/iowin32.c
+            $(location)/contrib/minizip/unzip.c
+            $(location)/contrib/minizip/zip.c
+            /ext/zlib//z
+        :   $(requirements)
+            <zlib-version>$(version)
+            <zlib-location>$(location)
+            <include>$(location)/contrib/minizip
+            <location-prefix>minizip
+            <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+            <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+            <link>shared:<define>ZLIB_DLL
+        :
+        :   <include>$(location)/contrib
         ;
 }
