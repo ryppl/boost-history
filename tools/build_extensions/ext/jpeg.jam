@@ -66,6 +66,10 @@ $(CONFIG:J=$(NL))
 #undef PROGRESS_REPORT
 #endif
 
+#ifdef _BASETSD_H_
+#define XMD_H
+#endif
+
 #endif // JPEGLIB_CONFIG_H
 ) > "$(<)"
 }
