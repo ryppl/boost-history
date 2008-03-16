@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="23" status="New">
+<issue num="23" status="Open">
 <title>Output iterators without value types</title>
 <section><sref ref="[output.iterators]"/></section>
 <submitter>LWG</submitter>
@@ -27,10 +27,18 @@
   and either getting rid of the concept that n2500
   calls <tt>OutputIterator</tt> or renaming it
   to <tt>BackwardCompatibilityOutputIteratorWithoutValueType</tt>.</p>
+
+  <p><b>Doug Gregor</b>: Note that the output iterator without a value
+  type (currently called <code>OutputIterator</code>) is used by many
+  of the algorithms in chapter 25. In fact, none of these algorithms
+  use <code>BasicOutputIterator</code> (the one that has a value
+  type). It would be a shame for all of our algorithms to have a name
+  like <code>BackwardCompatibilityOutputIteratorWithoutValueType</code>
+  in their requires clauses. Changing these algorithms to use the
+  output iterator with a value type (currently
+  called <code>BasicOutputIterator</code>) would break backward
+  compatibility significantly, and is therefore probably not
+  feasible.</p>
 </discussion>
 
-<resolution>
-  <p>
-  </p>
-</resolution>
 </issue>

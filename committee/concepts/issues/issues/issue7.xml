@@ -19,5 +19,10 @@
     for the same type it should be defined in terms
     of <tt>operator==</tt>, but this concept doesn't mention that
     operator.)</p>
+
+  <p><b>Doug Gregor</b>: the requirements on the move-assignment
+    operator come directly from the corresponding table in the
+    pre-concepts Working Paper, so this issue wasn't introduced by
+    concepts.</p>
 </discussion>
 </issue>

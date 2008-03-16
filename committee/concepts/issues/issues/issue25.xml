@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="25" status="New">
+<issue num="25" status="WP">
   <title>Lost normative semantics of <tt>ForwardIterator</tt></title>
 <section><sref ref="[forward.iterators]"/></section>
 <submitter>LWG</submitter>
@@ -21,7 +21,7 @@
   for the axiom feature.</p>
 
   <p>One of the other important axioms for forward iterators is
-  that <tt>a == b</tt> iff <tt>a</tt> and <tt>b</tt> are the same
+  that <tt>a == b</tt> iff <tt>*a</tt> and <tt>*b</tt> are the same
   object. This axiom got moved to input iterators (but not using the
   axiom feature), where it does not belong. That assertion is not true
   for input iterators in general, or for some of the specific input
@@ -29,5 +29,64 @@
   opposed to input iterators, is that a forward iterator points to a
   specific memory location.</p>
 </discussion>
+
+<resolution>
+  <p>In [forward.iterators], add the following new paragraph:</p>
+  <pre>
+    <ins>X::X(); <i>// inherited from Regular&lt;X&gt;</i></ins>
+  </pre>
+
+  <ol>
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>Note</i>: the constructed
+    object might have a singular value.</ins></li>
+  </ol>
+
+  <p>In [input.iterators], remove paragraph 9:</p>
+  <ol start="9">
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;<del>If two iterators <code>a</code> and <code>b</code> of the
+        same type are both dereferenceable, then <code>a == b</code> if and only if <code>*a</code> and
+        <code>*b</code> are the same object.</del></li>
+  </ol>
+
+  <p>In [forward.iterators], add the following axiom to the definition
+  of the <code>ForwardIterator</code> concept:</p>
+  <pre>
+    <ins>axiom MultiPass(X a, X b) {
+      if (a == b) *a == *b;
+      if (a == b) ++a == ++b;
+      &amp;a == &amp;++a;
+    }</ins>
+  </pre>
+
+  <p>Add the following paragraph to [forward.iterators]:</p>
+  <pre>
+  <ins>reference operator*(X&amp;);</ins>
+  <ins>reference operator*(X const&amp;);</ins>
+  </pre>
+  <ol start="2">
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>Requires</i>: If two iterators
+        <code>a</code> and <code>b</code> of the same type are both
+        dereferenceable, then <code>a == b</code> if and only
+        if <code>*a</code> and <code>*b</code> are the same
+        object.</ins></li>
+  </ol>
+
+  <p>In [bidirectional.iterators], add the following axiom to
+    the <code>Bidireciotnal</code> iterator concept:
+  <pre>
+    <ins>axiom BackwardTraversal(X a, X b) {
+      --(++a) == a;
+      if (--a == --b) a == b;
+      &amp;a == &amp;--a;
+    }</ins>
+  </pre>
+  and remove paragraph 5:</p>
+  <ol start="5">
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;<del><i>Effects</i>: <code>--(++r) == r</code>.<br/>
+        <code>--r == --s</code> implies <code>r == s</code>.<br/>
+        <code>&amp;r == &amp;--r</code>.</del></li>
+  </ol>
+
+</resolution>
 
 </issue>

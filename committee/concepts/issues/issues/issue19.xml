@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="19" status="New">
+<issue num="19" status="WP">
 <title>IteratorBase is an implementation detail</title>
 <section><sref ref="[iterator.concepts]"/></section>
 <submitter>LWG</submitter>
@@ -20,5 +20,43 @@
     <tt>TrivialIterator</tt> instead?
   </p>
 </discussion>
+
+<resolution>
+  <p>In [iterator.concepts], remove the <code>IteratorBase</code>
+  concept from the synopsis (in paragraph 1) and from paragraph 2.</p>
+
+  <p>In [input.iterators], change the <code>InputIterator</code>
+  concept as follows:</p>
+  <pre>
+concept InputIterator&lt;typename X&gt; : <del>IteratorBase&lt;X&gt;, </del>Semiregular&lt;X&gt;, EqualityComparable&lt;X&gt; { 
+  <ins>typename value_type = typename X::value_type;</ins>
+  <ins>MoveConstructible reference = typename X::reference;</ins> 
+  <ins>MoveConstructible pointer = typename X::pointer;</ins>
+
+  // ...
+}
+  </pre>
+
+  <p>In [output.iterators], change
+  the <code>BasicOutputIterator</code> concept as follows:</p>
+  <pre>
+concept BasicOutputIterator&lt;typename X&gt; : <del>IteratorBase&lt;X&gt;, </del>CopyConstructible&lt;X&gt; { 
+  <ins>typename value_type = typename X::value_type;</ins>
+  <ins>MoveConstructible reference = typename X::reference;</ins> 
+
+  // ...
+}
+  </pre>
+
+  <p>In [forward.iterators], modify
+  the <code>MutableForwardIterator</code> concept definition as
+  follows:</p>
+  <pre>
+concept MutableForwardIterator&lt;typename X&gt; : ForwardIterator&lt;X&gt;, BasicOutputIterator&lt;X&gt; { 
+  <ins>requires SameType&lt;ForwardIterator&lt;X&gt;::value_type, BasicOutputIterator&lt;X&gt;::value_type&gt; &amp;&amp;
+           SameType&lt;ForwardIterator&lt;X&gt;::reference, BasicOutputIterator&lt;X&gt;::reference&gt;;</ins>
+} 
+  </pre>
+</resolution>
 
 </issue>

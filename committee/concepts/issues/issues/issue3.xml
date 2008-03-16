@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="3" status="New">
+<issue num="3" status="WP">
 <title>Naming of Constructible/DefaultConstructible concepts</title>
 <section><sref ref="[concept.construct]"/></section>
 <submitter>LWG</submitter>
@@ -12,12 +12,24 @@
 <discussion>
   <p><tt>Constructible</tt> and <tt>DefaultConstructible</tt> don't
   have any semantics, so they should have the prefix <tt>Has</tt>.</p>
+
+  <p>Doug Gregor: <tt>DefaultConstructible</tt> does have some
+  (admittedly weak) semantics regarding what it does, and the name
+  itself is part of the vocabulary of generic programming, so I
+  suggest we keep it. </p>
 </discussion>
 
 <resolution>
-  <p>Rename <tt>Constructible</tt> to <tt>HasConstructor</tt>,
-  and rename <tt>DefaultConstructible</tt> to
-  <tt>HasDefaultConstructor</tt></p>
+  <p>Rename <tt>Constructible</tt> to <tt>HasConstructor</tt>. </p>
+
+  <p>In [concept.construct], change paragraph 2 as follows:
+    <ol start="2">
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;<i>Note</i>: describes
+        types <del>that can be default-constructed</del><ins>for which
+        an object can be constructed without initializing the object
+        to any particular value</ins>.</li>
+    </ol>
+  </p>
 </resolution>
 
 </issue>

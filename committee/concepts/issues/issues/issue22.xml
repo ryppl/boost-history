@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="22" status="New">
+<issue num="22" status="WP">
   <title>Oddly-placed and missing <tt>InputIterator</tt> requirements</title>
 <section><sref ref="[input.iterators]"/></section>
 <submitter>LWG</submitter>
@@ -27,7 +27,14 @@
 </discussion>
 
 <resolution>
-  <p>
-  </p>
+  <p>Add the following at the beginning of [input.iterators]p8:</p>
+  <pre>
+bool operator==(X const&amp; a, X const&amp; b); // inherited from EqualityComparable&lt;X&gt;
+  </pre>
+
+  <p>Change [input.iterators]p12 as follows:</p>
+  <ol start="12">
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;<i>Effects</i>: <del><code>++r</code></del><ins>equivalent to <code>{ T tmp = *r; ++r; return tmp; }</code></ins></li>
+  </ol>
 </resolution>
 </issue>

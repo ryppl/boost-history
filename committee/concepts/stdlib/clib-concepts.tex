@@ -45,7 +45,7 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{0.25in}
-\par\noindent Document number: D2572=08-0082\vspace{-6pt}
+\par\noindent Document number: N2572=08-0082\vspace{-6pt}
 \par\noindent Revises document number: N2502=08-0012\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -60,43 +60,20 @@ common type behaviors likely to be used in many templates, including
 those in the Standard Library (such as \tcode{CopyConstructible} and
 \tcode{EqualityComparable}). 
 
-This proposal adds new functionality into the Standard Library for
-concepts, and is meant as a companion to the language wording for
-concepts, since some of the language wording depends on this library
-wording. More thorough changes to the Standard Library will follow in
-future revisions of the ``Concepts for the \Cpp0x Standard Library''
-proposals.
-
-The concepts in this proposal replace the requirements tables
-currently in [utility.requirements]. This leaves the Standard Library
-in an interesting (but consistent!) state, where the template
-requirements of the Standard Library are described in terms of actual
-concepts, but the templates themselves are not constrained
-templates. For example, a type \tcode{T} in a Standard Library
-algorithm might be stated to be \tcode{CopyConstructible} in the
-current text: previously, that text referred to a requirements table
-for \tcode{CopyConstructible}, whereas now it refers to the
-\tcode{CopyConstructible} concept itself. When the Standard Library is
-fully evolved to use concepts, this informally-stated requirement that
-\tcode{T} is \tcode{CopyConstructible} will be made formal by a
-\tcode{requires} clause stating \tcode{CopyConstructible<T>}. Thus,
-the approach of this proposal is designed to provide an evolutionary
-step toward complete concepts support in the library, while 
-improving the description of the library and support for concepts with
-each step.
-
 Within the proposed wording, text that has been added
 \textcolor{addclr}{will be presented in blue} \addedConcepts{and
 underlined when possible}. Text that has been removed will be
 presented \textcolor{remclr}{in red},\removedConcepts{with
-strike-through when possible}. Non-editorial
-changes from the previous wording are \addedCC{highlighted in green}. 
+strike-through when possible}.  
 
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
 
 \paragraph*{Changes from N2502}
-Applied the proposed resolutions for concept issues 4, 6, 9, 10, 12, 14, and 17.
+\begin{itemize}
+\item Applied the proposed resolutions for concept issues 1, 3, 4, 6,
+  9, 10, 12, 14, and 17.
+\end{itemize}
 
 \end{titlepage}
 
@@ -183,7 +160,7 @@ namespace std {
   concept TriviallyDestructible<typename T> @\textit{see below}@;
 
   // \ref{concept.construct}, construction:
-  auto concept Constructible<typename T, typename... Args> @\textit{see below}@;
+  auto concept HasConstructor<typename T, typename... Args> @\textit{see below}@;
   auto concept DefaultConstructible<typename T> @\textit{see below}@;
   concept TriviallyDefaultConstructible<typename T> @\textit{see below}@;
 
@@ -220,7 +197,7 @@ namespace std {
   auto concept HasUnaryPlus<typename T> @\textit{see below}@;
   auto concept HasNegate<typename T> @\textit{see below}@;
   auto concept HasLess<typename T, typename U = T> @\textit{see below}@;
-  auto concept HasEquals<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasEqualTo<typename T, typename U = T> @\textit{see below}@;
   auto concept HasLogicalAnd<typename T, typename U = T> @\textit{see below}@;
   auto concept HasLogicalOr<typename T, typename U = T> @\textit{see below}@;
   auto concept HasLogicalNot<typename T> @\textit{see below}@;
@@ -540,13 +517,6 @@ unambiguously derived from \mbox{\tcode{U}}, a concept map
 \end{itemdescr}
 
 \rSec2[concept.comparison]{Comparisons}
-
-\begin{itemdecl}
-auto concept HasLess<typename T, typename U = T> {
-  bool operator<(T const& a, U const& b);
-}
-\end{itemdecl}
-
 \begin{itemdescr}
 \pnum 
 \addedConcepts{\mbox{\reallynote} describes types with an operator <.}
@@ -557,43 +527,60 @@ auto concept LessThanComparable<typename T> : HasLess<T> {
   bool operator>(T const& a, T const& b) { return b < a; }
   bool operator<=(T const& a, T const& b) { return !(b < a); }
   bool operator>=(T const& a, T const& b) { return !(a < b); }
+
+  axiom Consistency(T a, T b) {
+    (a > b) == (b < a);
+    (a <= b) == !(b < a);
+    (a >= b) == !(a < b);
+  }
+
+  axiom Irreflexivity(T a) { (a < a) == false; }
+
+  axiom Antisymmetry(T a, T b) { 
+    if (a < b) (b < a) == false;
+  }
+
+  axiom Transitivity(T a, T b, T c) {
+    if (a < b && b < c) (a < c) == true;
+  }
+
+  axiom TransitivityOfEquivalence(T a, T b, T c) {
+    if (!(a < b) && !(b < a) && !(b < c) && !(c < b))
+      (!(a < c) && !(c < a)) == true;
+  } 
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
 \addedConcepts{\mbox{\reallynote} describes types whose values can be
-  ordered via an inequality operator.}
-
-\pnum
-\addedConcepts{\mbox{\requires}} \tcode{operator<} is a strict
-  weak ordering relation (\ref{alg.sorting}).
+  ordered, where \mbox{\tcode{operator<}}
+  is a strict weak ordering relation (\mbox{\ref{alg.sorting}}).}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept EqualityComparable<typename T, typename U = T> {
-  bool operator==(T const& a, U const& b);
+auto concept EqualityComparable<typename T> : EqualTo<T> {
   bool operator!=(T const& a, U const& b) { return !(a == b); }
+
+  axiom Consistency(T a, T b) {
+    (a == b) == !(a != b);
+  }
+
+  axiom Reflexivity(T a) { a == a; }
+
+  axiom Symmetry(T a, T b) { if (a == b) b == a; }
+
+  axiom Transitivity(T a, T b, T c) {
+    if (a == b && b == c) a == c;
+  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes types whose values can be
-compared for equality with \mbox{\tcode{operator==}}.}
-
-\pnum 
-\addedConcepts{\mbox{\requires}}
-\changedConcepts{W}{w}hen \tcode{T} and \tcode{U} are identical, \tcode{operator==} is an
-equivalence relation, that is, it has the following properties:
-\begin{itemize}
-\item
-For all \tcode{a}, \tcode{a == a}.
-\item
-If \tcode{a == b}, then \tcode{b == a}.
-\item
-If \tcode{a == b} and \tcode{b == c}, then \tcode{a == c}.
-\end{itemize}
+compared for equality with \mbox{\tcode{operator==}}, which is an
+equivalence relation.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -654,7 +641,7 @@ destructors do not need to be executed when the object is destroyed.}
 
 \rSec2[concept.construct]{Construction}
 \begin{itemdecl}
-auto concept Constructible<typename T, typename... Args> : Destructible<T> {
+auto concept HasConstructor<typename T, typename... Args> : Destructible<T> {
   T::T(Args...);
 }
 \end{itemdecl}
@@ -666,17 +653,19 @@ auto concept Constructible<typename T, typename... Args> : Destructible<T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept DefaultConstructible<typename T> : Constructible<T> { }
+auto concept DefaultConstructible<typename T> : HasConstructor<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes types that can be default-constructed.}
+\addedConcepts{\mbox{\reallynote} describes types for which an object
+  can be constructed without initializing the object to any particular
+  value.}
 \end{itemdescr}
 
 \rSec2[concept.copymove]{Copy and move}
 \begin{itemdecl}
-auto concept MoveConstructible<typename T> : Constructible<T, T&&>, Destructible<T> { }
+auto concept MoveConstructible<typename T> : HasConstructor<T, T&&> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -688,7 +677,7 @@ value.}
 \end{itemdescr}
 
 \begin{itemdecl}
-T::T(T&& rv); // note: inherited from Constructible<T, T\&\&>
+T::T(T&& rv); // note: inherited from HasConstructor<T, T\&\&>
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -701,7 +690,7 @@ the constructed \mbox{\tcode{T}} object is equivalent to the value of
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept CopyConstructible<typename T> : MoveConstructible<T>, Constructible<T, const T&> {
+auto concept CopyConstructible<typename T> : MoveConstructible<T>, HasConstructor<T, const T&> {
   @\addedCC{requires EqualityComparable<T>}@
   axiom CopyPreservation(T x) {
     T(x) == x;
@@ -996,6 +985,30 @@ auto concept HasNegate<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
+auto concept HasLess<typename T, typename U = T> {
+  bool operator<(T const& a, U const& b);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes types with an
+  \mbox{\tcode{operator<}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasEqualTo<typename T, typename U = T> {
+  bool operator==(T const& a, U const& b);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes types with an
+  \mbox{\tcode{operator==}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
 auto concept HasLogicalAnd<typename T, typename U = T> {
   bool operator&&(T const&, U const&);
 }
@@ -1272,7 +1285,10 @@ through the predicate arguments.}
 \index{requirements!Allocator@\tcode{Allocator}}%
 \editorial{We have kept most of the text of [allocator.requirements]
   here, although much of it has been moved from tables into numbered
-  paragraphs when translating the allocator requirements into concepts.}
+  paragraphs when translating the allocator requirements into
+  concepts. With the introduction of scoped allocations, this text is
+  somewhat out of date, and will be revised significantly for the next
+mailing.}
 
 \pnum
 The library describes a standard set of requirements for \techterm{allocators},
@@ -1307,7 +1323,7 @@ concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
   typename const_reference            = typename X::const_reference;
   SignedIntegral difference_type      = typename X::difference_type;
   UnsignedIntegral size_type          = typename X::size_type; 
-  template<ObjectType T> class rebind = @\textit{see below}@;
+  @\textcolor{addclr}{}@template<ObjectType T> class rebind = @\textit{see below}@;
 
   requires Convertible<pointer, const_pointer> && 
            Convertible<pointer, value_type*> &&
@@ -1476,7 +1492,7 @@ the largest value that can meaningfully be passed to \tcode{X::allocate()}
 \color{addclr}
 \begin{itemdecl}
 template<typename V>
-  requires Constructible<value_type, V>
+  requires HasConstructor<value_type, V>
   void X::construct(pointer p, V&&);
 \end{itemdecl}
 \color{black}
@@ -1586,9 +1602,5 @@ by containers beyond those requirements that appear in
 \changedConcepts{Table~40}{concept Allocator}, and the
 semantics of containers and algorithms when allocator instances compare
 non-equal, are implementation-defined.
-
-\section*{Acknowledgments}
-Thanks to Walter Brown and Daniel Kr\"ugler for providing corrections
-to and noting omissions from this document. 
 
 \end{document}

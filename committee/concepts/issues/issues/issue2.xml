@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="2" status="New">
+<issue num="2" status="Open">
 <title>Requires clause for Destructible is unclear</title>
 <section><sref ref="[concept.destruct]"/></section>
 <submitter>LWG</submitter>
@@ -19,6 +19,10 @@
   as the target of a pseudo destructor call, or something like
   that. If we do believe that this is a purely syntactic construct
   then we might want to consider renaming it as HasDestructor.</p>
+
+  <p><b>Doug Gregor</b>: the requirements on the destructor come
+  directly from the corresponding table in the pre-concepts Working
+  Paper, so this issue wasn't introduced by concepts.</p>
 </discussion>
 
 </issue>

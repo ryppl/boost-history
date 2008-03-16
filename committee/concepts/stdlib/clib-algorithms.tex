@@ -42,7 +42,7 @@ Open Systems Laboratory, Indiana University \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: D2573=08-0083\vspace{-6pt}
+\par\noindent Document number: N2573=08-0083\vspace{-6pt}
 \par\noindent Revises document number: N2084=06-0154\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -119,12 +119,12 @@ namespace std {
   template<InputIterator Iter, Callable<auto, Iter::reference> Function>
     Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
   template<InputIterator Iter, class T>
-    requires EqualityComparable<Iter::reference, T>
+    requires HasEqualTo<Iter::reference, T>
     Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
   template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
     Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2>
-    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::reference, Iter2::reference>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2, 
@@ -134,7 +134,7 @@ namespace std {
                    Pred @\farg{pred}@);
 
   template<InputIterator Iter1, ForwardIterator Iter2>
-    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::reference, Iter2::reference>
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<InputIterator Iter1, ForwardIterator Iter2,
@@ -150,13 +150,13 @@ namespace std {
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter, class T>
-    requires EqualityComparable<Iter::reference, T>
+    requires HasEqualTo<Iter::reference, T>
     @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
   template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
     Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
-    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::reference, Iter2::reference>
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                 Iter @\farg{first2}@);
   template<InputIterator Iter1, InputIterator Iter2,
@@ -165,7 +165,7 @@ namespace std {
                                 Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
-    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::reference, Iter2::reference>
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@);
   template<InputIterator Iter1, InputIterator Iter2,
@@ -174,7 +174,7 @@ namespace std {
                Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
   template<ForwardIterator Iter1, ForwardIterator Iter2>
-    requires EqualityComparable<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::reference, Iter2::reference>
     Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2,
@@ -183,7 +183,7 @@ namespace std {
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
   template<ForwardIterator Iter, class T>
-    requires EqualityComparable<Iter::reference, T>
+    requires HasEqualTo<Iter::reference, T>
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@);
   template<ForwardIterator Iter, class T,
@@ -241,7 +241,7 @@ namespace std {
                       BinaryOp @\farg{binary_op}@);
 
   template<MutableForwardIterator Iter, class T>
-    requires EqualityComparable<Iter::reference, T> && CopyAssignable<Iter::reference, T>
+    requires HasEqualTo<Iter::reference, T> && CopyAssignable<Iter::reference, T>
     void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                  const T& @\farg{old_value}@, const T& @\farg{new_value}@);
   @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::reference> Pred, class T>
@@ -249,7 +249,7 @@ namespace std {
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
-    requires CopyAssignable<OutIter::reference, T> && EqualityComparable<InIter::reference, T>
+    requires CopyAssignable<OutIter::reference, T> && HasEqualTo<InIter::reference, T>
     OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@,
                          const T& @\farg{old_value}@, const T& @\farg{new_value}@);
@@ -276,7 +276,7 @@ namespace std {
     void generate_n(Iter @\farg{first}@, Size @\farg{n}@, Generator @\farg{gen}@);
 
   template<ForwardIterator Iter, class T>
-    requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference, T>
+    requires MoveAssignable<Iter::reference> && HasEqualTo<Iter::reference, T>
     Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
                 const T& @\farg{value}@);
   template<ForwardIterator Iter, Predicate<auto, Iter::reference> Pred>
@@ -284,7 +284,7 @@ namespace std {
     Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
                    Pred @\farg{pred}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
-    requires EqualityComparable<InIter::reference, T>
+    requires HasEqualTo<InIter::reference, T>
     OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, const T& @\farg{value}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
@@ -311,7 +311,7 @@ namespace std {
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
   template<InputIterator InIter, MutableForwardIterator OutIter>
-    requires EqualityComparable<OutIter::reference, InIter::value_type> &&
+    requires HasEqualTo<OutIter::reference, InIter::value_type> &&
              CopyAssignable<OutIter::reference, InIter::reference> &&
              !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -417,9 +417,9 @@ namespace std {
     requires CopyAssignable<RAIter::reference, InIter::value_type> &&
              SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
              MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
-             LessThanComparable<InIter::value_type, RAIter::value_type> &&
-             LessThanComparable<RAIter::value_type, InIter::value_type> &&
-             LessThanComparable<RAIter::value_type>
+             HasLess<InIter::value_type, RAIter::value_type> &&
+             HasLess<RAIter::value_type, InIter::value_type> &&
+             HasLess<RAIter::value_type>
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
   template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare>
@@ -461,7 +461,7 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.binary.search}, binary search:}@
   template<ForwardIterator Iter, class T>
-    requires LessThanComparable<Iter::reference, T>
+    requires HasLess<Iter::reference, T>
     Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@);
   @\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::reference, T> Compare>
@@ -469,7 +469,7 @@ namespace std {
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 
   template<ForwardIterator Iter, class T>
-    requires LessThanComparable<T, Iter::reference>
+    requires HasLess<T, Iter::reference>
     Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@);
   template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::reference> Compare>
@@ -477,8 +477,8 @@ namespace std {
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 
   template<ForwardIterator Iter, class T>
-    requires LessThanComparable<T, Iter::reference> && 
-             LessThanComparable<Iter::reference, T>
+    requires HasLess<T, Iter::reference> && 
+             HasLess<Iter::reference, T>
     pair<Iter, Iter>
       equal_range(Iter @\farg{first}@,
                   Iter @\farg{last}@, const T& @\farg{value}@);
@@ -491,8 +491,8 @@ namespace std {
                   Compare @\farg{comp}@);
 
   template<ForwardIterator Iter, class T>
-    requires LessThanComparable<T, Iter::reference> &&
-             LessThanComparable<Iter::reference, T>
+    requires HasLess<T, Iter::reference> &&
+             HasLess<Iter::reference, T>
     bool binary_search(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
                        const T& @\farg{value}@);
   template<ForwardIterator Iter, class T, class Compare>
@@ -505,7 +505,7 @@ namespace std {
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
-             LessThanComparable<InIter1::value_type>
+             HasLess<InIter1::value_type>
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@);
@@ -716,8 +716,8 @@ namespace std {
       minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
-    @\textcolor{addclr}{requires}@ LessThanComparable<Iter1::reference, Iter2::reference> &&
-             LessThanComparable<Iter2::reference, Iter1::reference>
+    @\textcolor{addclr}{requires}@ HasLess<Iter1::reference, Iter2::reference> &&
+             HasLess<Iter2::reference, Iter1::reference>
     bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
@@ -736,7 +736,7 @@ namespace std {
   template<MutableBidirectionalIterator Iter, 
            Predicate<auto, Iter::reference, Iter::reference> Compare>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
-    bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+    @\textcolor{addclr}{}@bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<MutableBidirectionalIterator Iter>
     requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
              @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
@@ -976,7 +976,7 @@ times.
 \index{find_if@\tcode{find_if}}%
 \color{addclr}\begin{itemdecl}
 @\textcolor{addclr}{template}@<InputIterator Iter, class T>
-  requires EqualityComparable<Iter::reference, T>
+  requires HasEqualTo<Iter::reference, T>
   Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
@@ -1007,7 +1007,7 @@ applications of the corresponding predicate.
 \index{find_end@\tcode{find_end}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter1, ForwardIterator Iter2>
-  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::reference, Iter2::reference>
   Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
@@ -1051,7 +1051,7 @@ applications of the corresponding predicate.
 \index{find_first_of@\tcode{find_first_of}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, ForwardIterator Iter2>
-  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::reference, Iter2::reference>
   Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
@@ -1093,7 +1093,7 @@ applications of the corresponding predicate.
 \index{adjacent_find@\tcode{adjacent_find}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter>
-  requires EqualityComparable<Iter::reference>
+  requires HasEqualTo<Iter::reference>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
@@ -1133,7 +1133,7 @@ return value.
 \index{count_if@\tcode{count_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter, class T>
-  requires EqualityComparable<Iter::reference, T>
+  requires HasEqualTo<Iter::reference, T>
   @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
@@ -1162,7 +1162,7 @@ applications of the corresponding predicate.
 \index{mismatch@\tcode{mismatch}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, InputIterator Iter2>
-  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::reference, Iter2::reference>
   pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                               Iter @\farg{first2}@);
 
@@ -1210,7 +1210,7 @@ applications of the corresponding predicate.
 \index{equal@\tcode{equal}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, InputIterator Iter2>
-  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::reference, Iter2::reference>
   bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
              Iter2 @\farg{first2}@);
 
@@ -1244,7 +1244,7 @@ applications of the corresponding predicate.
 \index{search@\tcode{search}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter1, ForwardIterator Iter2>
-  requires EqualityComparable<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::reference, Iter2::reference>
   Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
@@ -1283,7 +1283,7 @@ applications of the corresponding predicate.
 
 \color{addclr}\begin{itemdecl}
 @\textcolor{addclr}{template}@<ForwardIterator Iter, class T>
-  requires EqualityComparable<Iter::reference, T>
+  requires HasEqualTo<Iter::reference, T>
   Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                 const T& @\farg{value}@);
 
@@ -1667,7 +1667,7 @@ in case of binary transform.
 \index{replace_if@\tcode{replace_if}}%
 \color{addclr}\begin{itemdecl}
 template<MutableForwardIterator Iter, class T>
-  requires EqualityComparable<Iter::reference, T> && CopyAssignable<Iter::reference, T>
+  requires HasEqualTo<Iter::reference, T> && CopyAssignable<Iter::reference, T>
   void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
@@ -1704,7 +1704,7 @@ applications of the corresponding predicate.
 \index{replace_copy_if@\tcode{replace_copy_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
-  requires CopyAssignable<OutIter::reference, T> && EqualityComparable<InIter::reference, T>
+  requires CopyAssignable<OutIter::reference, T> && HasEqualTo<InIter::reference, T>
   OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                        OutIter @\farg{result}@,
                        const T& @\farg{old_value}@, const T& @\farg{new_value}@);
@@ -1850,7 +1850,7 @@ invocations of \farg{gen}\ and assignments, respectively.
 \index{remove_if@\tcode{remove_if}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter, class T>
-  requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference, T>
+  requires MoveAssignable<Iter::reference> && HasEqualTo<Iter::reference, T>
   Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
               const T& @\farg{value}@);
 
@@ -1892,7 +1892,7 @@ applications of the corresponding predicate.
 \index{remove_copy_if@\tcode{remove_copy_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, class T>
-  requires EqualityComparable<InIter::reference, T>
+  requires HasEqualTo<InIter::reference, T>
   OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@, const T& @\farg{value}@);
 
@@ -1995,7 +1995,7 @@ template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIte
                       OutIter @\farg{result}@);
 
 @\textcolor{addclr}{template}@<InputIterator InIter, MutableForwardIterator OutIter>
-  requires EqualityComparable<OutIter::reference, InIter::value_type> &&
+  requires HasEqualTo<OutIter::reference, InIter::value_type> &&
            CopyAssignable<OutIter::reference, InIter::reference> &&
            !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -2540,9 +2540,9 @@ template<InputIterator InIter, MutableRandomAccessIterator RAIter>
   requires CopyAssignable<RAIter::reference, InIter::value_type> &&
            SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
            MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
-           LessThanComparable<InIter::value_type, RAIter::value_type> &&
-           LessThanComparable<RAIter::value_type, InIter::value_type> &&
-           LessThanComparable<RAIter::value_type>
+           HasLess<InIter::value_type, RAIter::value_type> &&
+           HasLess<RAIter::value_type, InIter::value_type> &&
+           HasLess<RAIter::value_type>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
 
@@ -2712,7 +2712,7 @@ For non-random access iterators they execute a linear number of steps.
 \index{lower_bound@\tcode{lower_bound}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter, class T>
-  requires LessThanComparable<Iter::reference, T>
+  requires HasLess<Iter::reference, T>
   Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@);
 
@@ -2760,7 +2760,7 @@ comparisons.
 \index{upper_bound@\tcode{upper_bound}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter, class T>
-  requires LessThanComparable<T, Iter::reference>
+  requires HasLess<T, Iter::reference>
   Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@);
 
@@ -2808,8 +2808,8 @@ comparisons.
 \index{equal_range@\tcode{equal_range}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter, class T>
-  requires LessThanComparable<T, Iter::reference> && 
-           LessThanComparable<Iter::reference, T>
+  requires HasLess<T, Iter::reference> && 
+           HasLess<Iter::reference, T>
   pair<Iter, Iter>
     equal_range(Iter @\farg{first}@,
                 Iter @\farg{last}@, const T& @\farg{value}@);
@@ -2874,8 +2874,8 @@ comparisons.
 \index{binary_search@\tcode{binary_search}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter, class T>
-  requires LessThanComparable<T, Iter::reference> &&
-           LessThanComparable<Iter::reference, T>
+  requires HasLess<T, Iter::reference> &&
+           HasLess<Iter::reference, T>
   bool binary_search(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
                      const T& @\farg{value}@);
 
@@ -3950,8 +3950,8 @@ applications of the corresponding comparisons.}
 \index{lexicographical_compare@\tcode{lexicographical_compare}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, InputIterator Iter2>
-  requires LessThanComparable<Iter1::reference, Iter2::reference> &&
-           LessThanComparable<Iter2::reference, Iter1::reference>
+  requires HasLess<Iter1::reference, Iter2::reference> &&
+           HasLess<Iter2::reference, Iter1::reference>
   bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 

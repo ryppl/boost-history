@@ -40,7 +40,7 @@ Douglas Gregor, Jeremy Siek and Andrew Lumsdaine \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: D2570=08-0080 \vspace{-6pt}
+\par\noindent Document number: N2570=08-0080 \vspace{-6pt}
 \par\noindent Revises document number: N2500=08-0010 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -53,27 +53,6 @@ contains these concepts, along with concept maps and
 \tcode{iterator_traits} specializations that provide backward
 compatibility for existing iterators and generic algorithms.
 
-This proposal adds new functionality into the Standard Library for
-concepts. More thorough changes to the Standard Library will follow in
-future revisions of the ``Concepts for the \Cpp0x Standard Library''
-proposals.
-
-The concepts in this proposal replace the requirements tables
-currently in [iterator.requirements]. This leaves the Standard Library
-in an interesting (but consistent!) state, where the template
-requirements of the Standard Library are described in terms of actual
-concepts, but the templates themselves are not constrained
-templates. For example, a type \tcode{Iter} in a Standard Library
-algorithm might be stated to be an \tcode{InputIterator} in the
-current text: previously, that text referred (implicitly or otherwise)
-to a requirements table for \tcode{InputIterator}, whereas now it
-refers to the \tcode{InputIterator} concept itself. When the Standard
-Library is fully evolved to use concepts, this informally-stated
-requirement will be made formal by a \tcode{requires} claus. Thus, the
-approach of this proposal is designed to provide an evolutionary step
-toward complete concepts support in the library, while improving the
-description of the library and support for concepts with each step.
-
 Within the proposed wording, text that has been added
 \textcolor{addclr}{will be presented in blue} \addedConcepts{and
 underlined when possible}. Text that has been removed will be
@@ -83,6 +62,12 @@ changes from the previous wording are \addedCC{highlighted in green}.
 
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
+
+\paragraph*{Changes from N2500}
+\begin{itemize}
+\item Applied the proposed resolutions for concept issues 19, 22, and 25.
+\end{itemize}
+
 \end{titlepage}
 
 %% --------------------------------------------------
@@ -136,8 +121,6 @@ as summarized in Table~\ref{tab:iterators.lib.summary}.
 \synopsis{Header \tcode{<iterator_concepts>}\ synopsis}
 \begin{codeblock}
 namespace std {
-  concept IteratorBase<typename X> @\textit{see below}@;
-
   // \ref{input.iterators}, input iterators:
   concept InputIterator<typename X> @\textit{see below}@;
 
@@ -208,16 +191,6 @@ equality is defined, there is a corresponding signed integral type called the
 \techterm{difference type}\ 
 of the iterator.
 
-\color{addclr}
-\begin{itemdecl}
-concept IteratorBase<typename X> {
-  typename value_type         = typename X::value_type;
-  MoveConstructible reference = typename X::reference;
-  MoveConstructible pointer   = typename X::pointer;
-}
-\end{itemdecl}
-\color{black}
-
 \pnum
 Since iterators are an abstraction of pointers, their semantics is
 a generalization of most of the semantics of pointers in \Cpp.
@@ -282,7 +255,7 @@ iterators are referred to as constant iterators.}
 
 \pnum
 Just as a regular pointer to an array guarantees that there is a pointer value pointing past the last element
-of the array, so for any iterator type there is an iterator value that points past the last element of a
+of the array, so \textcolor{black}{}for any iterator type there is an iterator value that points past the last element of a
 corresponding container.
 These values are called
 \techterm{past-the-end}\ 
@@ -412,7 +385,11 @@ requirements of the }\addedConcepts{\tt InputIterator}\addedConcepts{ concept.}
 
 \color{addclr}
 \begin{codeblock}
-concept InputIterator<typename X> : IteratorBase<X>, Semiregular<X>, EqualityComparable<X> {
+concept InputIterator<typename X> : Semiregular<X>, EqualityComparable<X> {
+  typename value_type = typename X::value_type;
+  MoveConstructible reference = typename X::reference; 
+  MoveConstructible pointer = typename X::pointer;
+
   SignedIntegral@\addedCC{Like}@ difference_type = typename X::difference_type;
 
   requires @\addedCC{IntegerType<difference_type>}@
@@ -421,7 +398,7 @@ concept InputIterator<typename X> : IteratorBase<X>, Semiregular<X>, EqualityCom
 
   MoveConstructible postincrement_result;
   requires Dereferenceable<postincrement_result> &&
-           Convertible<Dereferenceable<postincrement_result>::reference, value_type>;
+           @\textcolor{addclr}{}@Convertible<Dereferenceable<postincrement_result>::reference, value_type>;
 
   reference operator*(X @\addedCC{const\&}@);
   pointer operator->(X @\addedCC{const\&}@);
@@ -509,15 +486,14 @@ pointer operator->(X @\addedCC{const\&}@ a);
  a pointer to the value referenced by
   the iterator
 
+\begin{itemdecl}
+@\addedCC{bool operator==(X const\& a, X const\& b); // inherited from EqualityComparable<X>}@
+\end{itemdecl}
+
 \pnum
 If two iterators \tcode{a}\ and \tcode{b}\ of the same type are equal, then either \tcode{a}\ and \tcode{b}\ 
 are both dereferenceable
 or else neither is dereferenceable.
-
-\pnum
-If two iterators \tcode{a}\ and \tcode{b}\ of the same type are both dereferenceable, then \tcode{a == b}\
-if and only if
-\tcode{*a}\ and \tcode{*b}\ are the same object.
 
 \begin{itemdecl}
 X& operator++(X& r);
@@ -529,17 +505,17 @@ X& operator++(X& r);
 
 \pnum
 \postcondition\
-\tcode{r} is dereferenceable or \tcode{r} is past-the-end. any copies
+\tcode{r} is dereferenceable or \tcode{r} is past-the-end. Any copies
 of the previous value of \tcode{r} are no longer required either to be
 dereferenceable or in the domain of \tcode{==}.
 
 \begin{itemdecl}
-postincrement_result operator++(X&, int);
+postincrement_result operator++(X& r, int);
 \end{itemdecl}
 
 \pnum
 \effects\
-\tcode{++r}
+\addedCC{equivalent to \mbox{\tcode{\{ T tmp = *r; ++r; return tmp; \}}}.}
 
 \end{paras}
 
@@ -627,7 +603,10 @@ hierarchy.
 
 \color{addclr}
 \begin{itemdecl}
-concept BasicOutputIterator<typename X> : IteratorBase<X>, CopyConstructible<X> {
+concept BasicOutputIterator<typename X> : CopyConstructible<X> {
+  typename value_type = typename X::value_type;
+  MoveConstructible reference = typename X::reference; 
+
   requires CopyAssignable<reference, value_type>;
 
   typename postincrement_result;
@@ -635,7 +614,7 @@ concept BasicOutputIterator<typename X> : IteratorBase<X>, CopyConstructible<X> 
            CopyAssignable<Dereferenceable<postincrement_result&>::reference, value_type>,
            Convertible<postincrement_result, const X&>;
 
-  reference operator*(X&);
+  @\textcolor{addclr}{}@reference operator*(X&);
   X& operator++(X&);
   postincrement_result operator++(X&, int);
 }
@@ -701,9 +680,18 @@ MutableForwardIterator concepts.}
 \begin{itemdecl}
 concept ForwardIterator<typename X> : InputIterator<X>, Regular<X> {
   requires Convertible<postincrement_result, const X&>;
+
+  @\addedCC{axiom MultiPass(X a, X b) \{}@
+    @\addedCC{if (a == b) *a == *b;}@
+    @\addedCC{if (a == b) ++a == ++b;}@
+    @\addedCC{\&a == \&++a;}@
+  @\addedCC{\}}@
 }
 
-concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIterator<X> { }
+concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIterator<X> { 
+  requires SameType<ForwardIterator<X>::value_type, BasicOutputIterator<X>::value_type> &&
+           SameType<ForwardIterator<X>::reference, BasicOutputIterator<X>::reference>;
+}
 \end{itemdecl}
 \color{black}
 
@@ -720,9 +708,32 @@ concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIter
   we permit proxy iterators to model the forward, bidirectional, and
   random access iterator concepts.}
 
+\begin{itemdecl}
+@\addedCC{X::X(); // inherited from Regular<X>}@
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum \addedCC{\mbox{\reallynote} the constructed object might have
+    a singular value.}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedCC{reference operator*(X\&);}@
+@\addedCC{reference operator*(X const\&);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\requires} If two iterators \mbox{\tcode{a}} and
+  \mbox{\tcode{b}} of the same type are both dereferenceable, then
+  \mbox{\tcode{a == b}} if and only if \mbox{\tcode{*a}} and
+  \mbox{\tcode{*b}} are the same object.}
+
+\end{itemdescr}
+
 \textcolor{black}{}\pnum
 \enternote\ 
-The condition that
+The \changedConcepts{condition}{axiom} that
 \tcode{a == b}\
 implies
 \tcode{++a == ++b}\
@@ -757,6 +768,12 @@ concept BidirectionalIterator<typename X> : ForwardIterator<X> {
 
   X& operator--(X&);
   postdecrement_result operator--(X&, int);
+
+  @\addedCC{axiom BackwardTraversal(X a, X b) \{}@
+    --(++a) == a;
+    if (--a == --b) a == b;
+    &a == &--a;
+  @\addedCC{\}}@
 }
 
 concept MutableBidirectionalIterator<typename X> 
@@ -781,12 +798,6 @@ there exists \tcode{s}\ such that \tcode{r == ++s}.
 \pnum
 \postcondition\
 \tcode{r}\ is dereferenceable.
-
-\pnum
-\effects\
-\tcode{\dcr(++r) == r}. \\
- \tcode{\dcr r == \dcr s}\ implies \tcode{r == s}. \\
- \tcode{\&r == \&\dcr r}.
 
 \begin{itemdecl}
 postdecrement_result operator--(X& r, int);
