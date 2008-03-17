@@ -20,6 +20,7 @@ these types of macros are not necessary for classes
 - see the FAQ.
   */
 #include <boost/extension/extension.hpp>
+#include <string>
 #define BOOST_EXTENSION_FLYING_CAR_DECL BOOST_EXTENSION_EXPORT_DECL
 
 

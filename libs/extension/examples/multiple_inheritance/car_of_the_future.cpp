@@ -24,6 +24,7 @@ these types of macros are not necessary for classes
 
 #include "car_of_the_future.hpp"
 #include <boost/extension/factory_map.hpp>
+#include <string>
 
 std::string car_of_the_future::list_capabilities()
 {
