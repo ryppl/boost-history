@@ -3,7 +3,7 @@
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// This is a port of map_list_assign from the Boost.Assign library.
+// This is a port of map_list_of() from the Boost.Assign library.
 // It has the advantage of being more efficient at runtime by not
 // building any temporary container that requires dynamic allocation.
 
@@ -68,7 +68,7 @@ template<typename Expr>
 struct map_list_of_expr
 {
     BOOST_PROTO_EXTENDS(Expr, map_list_of_expr, map_list_of_dom)
-    BOOST_PROTO_EXTENDS_FUNCTION(Expr, map_list_of_expr, map_list_of_dom)
+    BOOST_PROTO_EXTENDS_FUNCTION()
     
     template<typename Map>
     operator Map() const
