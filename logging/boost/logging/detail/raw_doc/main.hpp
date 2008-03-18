@@ -76,6 +76,17 @@ I certainly welcome all feedback. So, be it a suggestion, or criticism, do write
 
 
 \n\n\n
+@section last_v2 Last version of v2.
+
+The Boost Logging Lib v2 was rejected on 17th of March 2008. I will be working on v3.
+So, you can consider v0.23.2 as the last version of v2. From now on, 
+- I will be doing only small fixes, if any major bugs, I'll fix them
+- I will be working on v3. It might take a while until first version of v3 appears - I assume End of April
+- to stay tuned on development, and to make sure your oppinion counts, please check out http://torjo.blogspot.com
+
+
+
+\n\n\n
 @section main_changelog Changelog
 
 @ref page_changelog "See the changelog".

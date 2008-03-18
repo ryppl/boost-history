@@ -1,74 +1,140 @@
-#ifndef my_app_LOG_H_header
-#define my_app_LOG_H_header
+/**
+ Boost Logging library
 
-#include "boost/logging/logging.hpp"
-#include "boost/logging/format_fwd.hpp"
+ Author: John Torjo, www.torjo.com
 
-namespace bl = boost::logging;
+ Copyright (C) 2007 John Torjo (see www.torjo.com for email)
 
-typedef bl::tag::holder< bl::optimize::cache_string_one_str<>
-                        , bl::tag::time
-                        , bl::tag::thread_id
-                        , bl::tag::level
-                       //, bl::tag::file_line
-                       //, bl::tag::function
-                       > logstring;
-BOOST_LOG_FORMAT_MSG( logstring )
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
 
-typedef bl::logger_format_write< > my_logger_type;
-typedef bl::level::holder my_filter_type;
+ See http://www.boost.org for updates, documentation, and revision history.
+ See http://www.torjo.com/log2/ for more details
+*/
 
-BOOST_DECLARE_LOG_FILTER(g_l_level, my_filter_type)
-BOOST_DECLARE_LOG(g_l, my_logger_type)
+/**
+@example mul_levels_mul_logers.cpp
 
-#define L_(lvl) BOOST_LOG_USE_LOG_IF_LEVEL(g_l(), g_l_level(), lvl ).set_tag( BOOST_LOG_TAG_LEVEL(lvl) )
-// for "context information" which cannot be calc'd automatically (such as time), set_tag must be called
-#define LDBG_ L_ (debug)
-#define LAPP_ L_ (info )
-#define LERR_ L_ (error)
+@copydoc mul_levels_mul_logers 
 
-void init_logs();
+@page mul_levels_mul_logers mul_levels_mul_logers.cpp Example
 
-#endif
-//#include "my_app_log.h"
 
-#include <boost/logging/format.hpp>
-#include <boost/logging/format/formatter/tags.hpp>
-#include <boost/logging/format/formatter/named_spacer.hpp>
+This usage:
+- you have multiple levels (in this example: debug < info < error)
+- you want to format the message before it's written 
+  (in this example: prefix it by time, by index and append newline to it)
+- you have several loggers
+- each logger has several log destinations
+
+Optimizations:
+- use a cache string (from boost::logging::optimize namespace), in order to make formatting the message faster
+
+Logs:
+- error messages go into err.txt file
+  - formatting - prefix each message by time, index, and append newline
+- info output goes to console, and a file called out.txt
+  - formatting - prefix each message by "[app]", time, and append newline
+- debug messages go to the debug output window, and a file called out.txt
+  - formatting - prefix each message by "[dbg]", time, and append newline
+
+
+Here's how the output will look like:
+
+The debug output window:
+@code
+07:52.30 [dbg] this is so cool 1
+07:52.30 [dbg] this is so cool again 2
+@endcode
+
+
+The console:
+@code
+07:52.30 [app] hello, world
+07:52.30 [app] good to be back ;) 4
+@endcode
+
+
+The out.txt file:
+@code
+07:52.30 [dbg] this is so cool 1
+07:52.30 [dbg] this is so cool again 2
+07:52.30 [app] hello, world
+07:52.30 [app] good to be back ;) 4
+@endcode
+
+
+The err.txt file
+@code
+07:52.30 [1] first error 3
+07:52.30 [2] second error 5
+@endcode
+*/
+
+
+
+#include <boost/logging/format/named_write.hpp>
+typedef boost::logging::named_logger<>::type logger_type;
+
+#define LDBG_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_dbg(), g_log_level(), debug ) << "[dbg] "
+#define LERR_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_err(), g_log_level(), error )
+#define LAPP_ BOOST_LOG_USE_LOG_IF_LEVEL(g_log_app(), g_log_level(), info ) << "[app] "
+
+BOOST_DEFINE_LOG_FILTER(g_log_level, boost::logging::level::holder ) 
+BOOST_DEFINE_LOG(g_log_err, logger_type)
+BOOST_DEFINE_LOG(g_log_app, logger_type)
+BOOST_DEFINE_LOG(g_log_dbg, logger_type)
 
 using namespace boost::logging;
 
-BOOST_DEFINE_LOG_FILTER(g_l_level, my_filter_type ) 
-BOOST_DEFINE_LOG(g_l, my_logger_type) 
+void mul_levels_mul_logers_example() {
+    // reuse the same destination for 2 logs
+    destination::file out("out.txt");
+    g_log_app()->writer().replace_destination("file", out);
+    g_log_dbg()->writer().replace_destination("file", out);
+    // formatting (first param) and destinations (second param)
+    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "cout file(err.txt)"); // line A
+    g_log_app()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout");
+    g_log_dbg()->writer().write("%time%($hh:$mm.$ss) |\n", "file cout debug rol_file(rol.txt)");
 
-//void init_logs() {
-// // works for Named Formatters and Destinations
-// // see <boost/logging/format/named_write.hpp>
-//    // formatting    : time [idx] message \n
-//    // destinations  : console, file "out.txt" and debug window
-//    g_l()->writer().write("%time%($hh:$mm.$ss.$mili) [%idx%] |\n", "cout file(out.txt) debug");
-//    g_l()->mark_as_initialized();
-//    g_l()->turn_cache_off();
-//}
+    /* 
+    Note : the "line A" above originally was:
+    g_log_err()->writer().write("[%idx%] %time%($hh:$mm.$ss) |\n", "file(err.txt)");
 
-void init_logs() {
-    // Add formatters and destinations
-    // That is, how the message is to be formatted...
-   g_l()->writer().add_formatter( formatter::named_spacer( "%time% [T%thread_id%] %level% :" )
-        // (the list of formatters must correspond to the list of tags in the logstring (bl::tag::holder)
-      .add("time", formatter::tag::time("$hh:$mm.$ss.$mili ") )
-      .add("thread_id", formatter::tag::thread_id() )
-      .add("level", formatter::tag::level() )
-//      .add("file_line", formatter::tag::file_line() )
-//      .add("function", formatter::tag::function() )
-      );
-    g_l()->writer().add_formatter( formatter::append_newline() );
+    This caused a very strange assertion failure on Fedora8, when the program exits, while destroying the global variables.
+    I've spent some time debugging it but to no avail. I will certainly look more into this.
+    */
 
-    //        ... and where should it be written to
-    g_l()->writer().add_destination( destination::cout() );
-    g_l()->writer().add_destination( destination::dbg_window() );
-    g_l()->writer().add_destination( destination::file("out.txt") );
-    g_l()->mark_as_initialized();
+    g_log_app()->mark_as_initialized();
+    g_log_err()->mark_as_initialized();
+    g_log_dbg()->mark_as_initialized();
 
-    BOOST_SCOPED_LOG_CTX(LDBG_) << "a";
+
+    int i = 1;
+    LDBG_ << "this is so cool " << i++;
+    LDBG_ << "this is so cool again " << i++;
+    LERR_ << "first error " << i++;
+
+    std::string hello = "hello", world = "world";
+    LAPP_ << hello << ", " << world;
+
+    g_log_level()->set_enabled(level::error);
+    LDBG_ << "this will not be written anywhere";
+    LAPP_ << "this won't be written anywhere either";
+
+    g_log_level()->set_enabled(level::info);
+    LAPP_ << "good to be back ;) " << i++;
+    LERR_ << "second error " << i++;
 }
+
+
+
+
+int main() {
+    mul_levels_mul_logers_example();
+}
+
+
+// End of file
+

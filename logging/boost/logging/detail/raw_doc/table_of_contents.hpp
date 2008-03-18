@@ -10,6 +10,7 @@ Disclaimer - not yet in boost
 
 - @ref main_intro
     - @ref main_motivation
+    - @ref last_v2
     - @ref main_feeback
     - @ref page_changelog
         - @ref changelog_cur_ver 

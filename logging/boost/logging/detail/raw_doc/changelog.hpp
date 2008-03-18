@@ -1,7 +1,11 @@
 /** 
 @page page_changelog Changelog
 
-@section changelog_cur_ver Current Version: v0.23.1, 9 march 2008
+@section changelog_cur_ver Current Version: v0.23.2, 18 march 2008
+- destination::rolling_file - by default, flush after each write
+- destination::file - file is created only if logging to it
+  (this way, if using named_writer, you won't see spurious files called out.txt, even if not using them)
+- destination::rolling_file - file is created only if logging to it
 - solved bug: formatter::syslog derived from an undefined class
 
 
