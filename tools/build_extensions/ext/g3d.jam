@@ -18,11 +18,13 @@ rule init ( version ? : location : options * )
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
         ;
     local common-requirements =
-        #~ [ conditional <target-os>windows :
+        [ conditional <target-os>windows :
+            <define>G3D_NO_AUTO_LINKING
+            <define>G3D_NO_DYNAMIC_LIBS
             #~ <find-shared-library>user32
             #~ <find-shared-library>gdi32
             #~ <find-shared-library>advapi32
-            #~ ]
+            ]
         ;
     
     location,$(version) = $(location) ;
@@ -41,6 +43,7 @@ rule init ( version ? : location : options * )
     
     alias gl : : : :
         <target-os>windows:<find-shared-library>OpenGL32
+        <target-os>windows:<find-shared-library>GLU32
         <target-os>linux:<find-shared-library>GL
         <target-os>macosx:<find-shared-library>GL
         ;
