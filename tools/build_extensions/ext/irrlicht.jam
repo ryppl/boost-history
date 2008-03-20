@@ -166,7 +166,19 @@ rule init ( version ? : location : options * )
         "#endif"
         :   $(requirements)
         ;
-    common-requirements += <implicit-dependency>IrrCompileConfig.h ;
+    
+    extension.text irrlicht $(version)
+        :   IrrCompileConfigPre.h
+        :   ## format
+        "#include <IrrCompileConfig.h>"
+        :   $(requirements)
+            <dependency>/ext/irrlicht//IrrCompileConfig.h
+        ;
+    common-requirements +=
+        <implicit-dependency>/ext/irrlicht//IrrCompileConfigPre.h
+        <dependency>/ext/irrlicht//IrrCompileConfigPre.h
+        <toolset>msvc:<cxxflags>"/FIIrrCompileConfigPre.h"
+        ;
     
     alias gl : : : :
         <target-os>windows,<irrlicht-opengl>enable:<find-shared-library>OpenGL32
