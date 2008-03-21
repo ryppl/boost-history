@@ -31,8 +31,8 @@ namespace cgi {
 
  } // namespace detail
 
-  using std::cerr;
-  using std::endl;
+  using std::cerr; // **FIXME**
+  using std::endl; // **FIXME**
 
 
   template<typename RequestImplType>
