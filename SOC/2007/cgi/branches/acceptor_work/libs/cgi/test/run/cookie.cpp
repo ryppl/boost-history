@@ -87,7 +87,8 @@ BOOST_AUTO_TEST_CASE( cookie_stream_operator )
 
   cookie ck2("name", "value", "Wed, 03-Oct-2007 16:26:06 GMT"
             , "/cookie", "example.com", true, true);
-  oss.flush();
+  oss.str("");
+  BOOST_CHECK(oss.str() == "");
   oss<< ck2;
   string ostr(oss.str());
   BOOST_CHECK_EQUAL(ostr, cookie_content);  
