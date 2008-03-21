@@ -32,6 +32,7 @@ namespace cgi {
 namespace boost {
  namespace scgi {
    using namespace ::cgi::scgi;
+   using namespace ::cgi::common;
  } // namespace acgi
 } // namespace boost
 

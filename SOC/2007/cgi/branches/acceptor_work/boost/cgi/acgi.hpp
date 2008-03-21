@@ -29,7 +29,8 @@ namespace cgi {
    typedef acgi_request request;
    //typedef acgi_service service;
    //typedef acgi_acceptor acceptor;
-   using namespace ::cgi;
+   using namespace ::cgi; // **FIXME** this line must go.
+   using namespace ::cgi::common; // import common namespace elements.
 
  } // namespace acgi
 } // namespace cgi

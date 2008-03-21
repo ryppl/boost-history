@@ -20,8 +20,8 @@
 
 namespace cgi {
  namespace fcgi {
-   using namespace ::cgi;
-   using namespace ::cgi::common;
+   using namespace ::cgi; // **FIXME** this must go.
+   using namespace ::cgi::common; // import common elements.
  } // namespace fcgi
 } // namespace cgi
 

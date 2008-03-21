@@ -27,6 +27,8 @@ namespace cgi {
 namespace boost {
  namespace cgi {
    using namespace ::cgi::cgi;
+   using namespace ::cgi;
+   using namespace ::cgi::common;
  } // namespace acgi
 } // namespace boost
 
