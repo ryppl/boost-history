@@ -1,0 +1,21 @@
+#             Copyright (c) 2007 Darren Garvey
+#
+# Distributed under the Boost Software License, Version 1.0.
+#     (See accompanying file LICENSE_1_0.txt or copy 
+#        at http://www.boost.org/LICENSE_1_0.txt)
+
+project boost.cgi.examples.acgi ;
+
+# Install all acgi examples to the user-provided variable "cgi-bin"
+install install
+  :
+    hello_world
+    echo
+    cookie_game
+    login
+  :
+    <location>$(cgi-bin)
+  ;
+
+# Only install example if you use `bjam install' or equivalent
+explicit install ;
