@@ -22,6 +22,8 @@
 #include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 
+#include "boost/cgi/common/form_parser.hpp"
+
 namespace cgi {
 
  namespace detail {
@@ -38,7 +40,7 @@ namespace cgi {
   {
   public:
     //typedef RequestImplType     implementation_type;
-    typedef ::cgi::map          map_type;
+    typedef ::cgi::common::map          map_type;
 
     cgi_service_impl_base()
     {
@@ -59,10 +61,11 @@ namespace cgi {
       //typedef std::list<std::string>::iterator      marker_list_type;
 
       implementation_type()
-        : buffer_()
-        , istream_(&buffer_)
-        , pos_()
+        : //buffer_()
+        //, istream_(&buffer_)
+          pos_()
         , offset_(0)
+        , fp_(NULL)
       {
       }
 
@@ -73,10 +76,10 @@ namespace cgi {
       //std::vector<char> data_buffer_;
       // The number of characters left to read (ie. "content_length - bytes_read")
       std::size_t characters_left_;
-
+      
       //std::vector<char>::iterator read_pos_;
-      boost::asio::streambuf buffer_;
-      std::istream istream_;
+      //boost::asio::streambuf buffer_;
+      //std::istream istream_;
 
       buffer_type buf_;
       typename buffer_type::iterator pos_;
@@ -84,6 +87,8 @@ namespace cgi {
       //boost::sub_match<typename buffer_type::iterator> offset_;
       std::vector<common::form_part> form_parts_;
       
+      detail::form_parser* fp_;
+
       /*
       mutable_buffers_type prepare(typename buffer_type::iterator& pos, std::size_t size)
       {
@@ -116,7 +121,7 @@ namespace cgi {
 
         cerr<< "Pre-read buffer (size: " << buf_.size() 
             << "|capacity: " << buf_.capacity() << ") == {" << endl
-            << std::string(buf_.begin(), buf_.end()) << endl
+            << std::string(buf_.begin() + offset_, buf_.end()) << endl
    //         << "-----end buffer-----" << endl
    //         << "-------buffer-------" << endl
   //          << std::string(&buf_[0], &buf_[buf_.size()]) << endl
@@ -186,6 +191,7 @@ namespace cgi {
       detail::save_environment(impl.env_vars());
       const std::string& cl = var(impl.env_vars(), "CONTENT_LENGTH", ec);
       impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
+      impl.client_.bytes_left() = impl.characters_left_;
 
       const std::string& request_method = var(impl.env_vars(), "REQUEST_METHOD", ec);
       if (request_method == "GET")
@@ -198,6 +204,7 @@ namespace cgi {
 
       parse_cookie_vars(impl, ec);
       impl.status() = loaded;
+
       //BOOST_ASSERT(impl.status() >= loaded);
 
       return ec;
@@ -320,7 +327,7 @@ namespace cgi {
     {
       //BOOST_ASSERT(impl.status() >= loaded);
       const char* c = ::getenv(name.c_str());
-      return c ? c : impl.null_str();
+      return c ? c : std::string();
     }
 
     map_type&
@@ -422,17 +429,7 @@ namespace cgi {
       std::string str;
       map_type& post_map(impl.post_vars());
 
-      /* What were these lines here for?
-      const char* a = ::getenv("content_length");
-      if (a) str = a;
-      else throw std::runtime_error("no content-length");
-      */
-
-      //std::cerr<< "content length = ";
-      //var(impl.get_vars(), "CONTENT_LENGTH", ec);
-      //std::cerr.flush();
-
-      while( is.get(ch) )
+      while( is.get(ch) && impl.characters_left_-- )
       {
           //std::cerr<< "; ch=" << ch << "; ";
           switch(ch)
@@ -440,9 +437,10 @@ namespace cgi {
           case '%': // unencode a hex character sequence
               // note: function params are resolved in an undefined order!
               str += detail::url_decode(is);
+              impl.characters_left_ -= 2; // this is dodgy **FIXME**
               break;
           case '+':
-              str += ' ';
+              str.append(1, ' ');
               break;
           case ' ':
               continue;
@@ -456,7 +454,7 @@ namespace cgi {
               name.clear();
              break;
           default:
-              str += ch;
+              str.append(1, ch);
           }
       }
       // save the last param (it won't have a trailing &)
@@ -480,7 +478,9 @@ namespace cgi {
         return boost::system::error_code();
       }
 
-      parse_form_part(impl, ec);
+      do {
+        parse_form_part(impl, ec);
+      }while( !impl.stdin_parsed_  && impl.client_.bytes_left() != 0 );
 
       // Do this just for now, for debugging
       parse_url_encoded_form(impl, ec);
@@ -503,7 +503,6 @@ namespace cgi {
       std::string regex("^(.*?)" // the data
                         "\\x0D\\x0A" // CR LF
                         "--" "(");
-      //typename implementation_type::form_iterator 
       if (impl.boundary_markers.size() > 1)
       {
         std::list<std::string>::iterator i(impl.boundary_markers.begin());
@@ -519,7 +518,7 @@ namespace cgi {
         regex += *impl.boundary_markers.begin();
       }
       
-      regex += ")[ ]*\\x0D\\x0A";
+      regex += ")(--)?[ ]*\\x0D\\x0A";
       cerr<< "Regex: " << regex << endl;
       boost::regex re(regex);
       
@@ -535,6 +534,7 @@ namespace cgi {
       //int runs = 0;
       buffer_iter begin(impl.buf_.begin() + offset);
       buffer_iter end(impl.buf_.end());
+
       for(;;)
       {
         cerr<< "Starting regex_search" << endl;
@@ -568,14 +568,35 @@ namespace cgi {
              = std::make_pair(matches[1].first, matches[1].second);
             cerr<< "Saved buffer (size: "
                 << std::distance(matches[1].first, matches[1].second)
-                << ")" << endl;
-            //impl.offset_ += 
-            return ec;
+                << ") := { " << impl.form_parts_.back().name << ", " << matches[1] << " }" << endl;
+            impl.post_vars()[impl.form_parts_.back().name] = matches[1];
+            impl.offset_ = offset + matches[0].length();
+            //offset += matches[0].length();
+            impl.pos_ = matches[0].second;
+            cerr<< "offset := " << offset << endl
+                << "impl.offset_ := " << impl.offset_ << endl;
+
+            if (matches[3].matched)
+              impl.stdin_parsed_ = true;
+            //if (impl.client_.bytes_left() == 0)
+            //{
+            //  cerr<< "Read all the bytes up." << endl;
+              //impl.stdin_parsed_ = true;
+              return ec;
+            //}
           }
           else
           {
             cerr<< "Reading more data." << endl;
-            std::size_t bytes_read = impl.client_.read_some(impl.prepare(32), ec);
+            std::size_t bytes_read = impl.client_.read_some(impl.prepare(64), ec);
+            //impl.stdin_bytes_read_ += bytes_read;
+            
+            if (bytes_read == 0)
+            {
+              impl.stdin_data_read_ = true;
+              return ec;
+            }
+
             begin = impl.buf_.begin() + offset;
             end = impl.buf_.end();
             cerr<< "Buffer (+" << bytes_read << ") == {" << endl
@@ -600,29 +621,52 @@ namespace cgi {
     boost::system::error_code
       parse_form_part_meta_data(implementation_type& impl, boost::system::error_code& ec)
     {
-      boost::regex re(//"(?:.*?)?"
-                      "^(?:"//\\x0D\\x0A"         // start of the line
-                        "(?:"         // [IGNORE] the line may be empty, as meta-data is optional
+      // Oh dear this is ugly. The move to Boost.Spirit will have to be sooner than planned.
+      // (it's a nested, recursive pattern, which regexes don't suit, apparently)
+      boost::regex re(  "(?:"         // [IGNORE] the line may be empty, as meta-data is optional
+                          "^"
                           "([-\\w]+)" // name
                           ":[ ^]*"       // separator
-                          "([-\\w]+)" // optional(?) value
-                          
+                          "([-/\\w]+)" // optional(?) value
+                          ""
                           "(?:"
                             ";"
-                            "[ \\x0D\\x0A]*"    // additional name/value pairs (don't capture)
+                            "[ ]*"    // additional name/value pairs (don't capture)
                             "([-\\w]+)" // name
                             "[ \\x0D\\x0A]*=[ \\x0D\\x0A]*"       // separator
-                            //"(?"
-                            //  "(?=\")([^\"]+)\"" // value (delimited; any character)
-                            //"|"
-                            //  "([-\\w]+)"  // value (7-bit ASCII only)
-                            "(?:\"?([-\\w]+)\"?)"
-                            //")"
-                          ")*"        // mark the extra n/v pairs optional
-                        ")*" 
-                        ")?"
-                        //"|(\\x0D\\x0A)"
-                      "\\x0D\\x0A");       // followed by the end of the line
+                            "(?:\"?([-.\\w]*)\"?)" // value may be empty
+                          ")?"
+                          "(?:"
+                            ";"
+                            "[ ]*"    // additional name/value pairs (don't capture)
+                            "([-\\w]+)" // name
+                            "[ \\x0D\\x0A]*=[ \\x0D\\x0A]*"       // separator
+                            "(?:\"?([-.\\w]*)\"?)" // value may be empty
+                          ")?"        // mark the extra n/v pairs optional
+                          "\\x0D\\x0A"
+                        ")"
+                        "(?:"
+                          "([-\\w]+)" // name
+                          ":[ ^]*"       // separator
+                          "([-/\\w]+)" // optional(?) value
+                          ""
+                          "(?:"
+                            ";"
+                            "[ ]*"    // additional name/value pairs (don't capture)
+                            "([-\\w]+)" // name
+                            "[ \\x0D\\x0A]*=[ \\x0D\\x0A]*"       // separator
+                            "(?:\"?([-.\\w]*)\"?)" // value may be empty
+                          ")?"
+                          "(?:"
+                            ";"
+                            "[ ]*"    // additional name/value pairs (don't capture)
+                            "([-\\w]+)" // name
+                            "[ \\x0D\\x0A]*=[ \\x0D\\x0A]*"       // separator
+                            "(?:\"?([-.\\w]*)\"?)" // value may be empty
+                          ")?"        // mark the extra n/v pairs optional
+                          "\\x0D\\x0A"    // followed by the end of the line
+                        ")?" 
+                      "(\\x0D\\x0A)");     // followed by the 'header termination' line
 
       typedef typename
         implementation_type::buffer_type::iterator
@@ -633,77 +677,78 @@ namespace cgi {
           implementation_type::buffer_type::iterator
       > matches;
       
-      //impl.buf_.clear();
-      //typename implementation_type::buffer_type::difference_type
-      std::size_t offset = impl.offset_;//std::difference(impl.buf_.begin(), impl.pos_);
+      std::size_t offset = impl.offset_;
       cerr.flush();
       impl.pos_ = impl.buf_.begin();
-      //buffer_iter begin(impl.pos_);
       int runs = 0;
       cerr<< "Entering for() loop." << endl;
       std::size_t bytes_read = 0;
       for(;;)
       {
-        buffer_iter begin(impl.buf_.begin() + offset);//impl.pos_);// + offset);//
+        buffer_iter begin(impl.buf_.begin() + offset);
         buffer_iter end(impl.buf_.end());
+        
         if (!boost::regex_search(begin, end, matches, re
                                 , boost::match_default | boost::match_partial))
         {
           cerr<< "No chance of a match, quitting." << endl;
+          impl.stdin_parsed_ = true;
           return ec;
         }
         cerr<< "matches.str() == {" << endl
             << matches.str() << endl
-            << "}" << endl;
+            << "}" << endl
+            << matches.size() << " submatches" << endl;
+        for (unsigned i = matches.size(); i != 0; --i)
+        {
+          cerr<< "match[" << i << "] := { " << matches[i] << " }" << endl;
+        }
         if (matches[0].matched)
         {
-          //cerr<< "matches[0].length() == " << matches[0].length() << endl;
-          if (0 == matches[1].length())
-          { // empty line: terminate headers
-            cerr<< "Headers terminated." << endl;
-            impl.offset_ = offset + matches[0].length();
-            impl.pos_ = matches[0].second;
-            cerr<< "Current buffer == {" << endl
-                << impl.buffer_string() << endl
-                << "}" << endl;
-            cerr<< "Leaving parse_form_part_meta_data()" << endl;
-            return ec;
-          }
-          // else we have a match for a header line
-          cerr<< "Parsing form part meta-data." << endl;
-              //<< "matches.size() == " << matches.size() << endl;
           common::form_part part;
-          for (unsigned int i = 1; i < matches.size(); i+=2)
+          for ( unsigned int i = 1
+              ; i < matches.size() 
+               && matches[i].matched
+               && !matches[i].str().empty()
+              ; i+=2)
           {
-            // We need to ignore matches[0] : the complete string
-            // Ignore last match, which is the header terminator
-            /*
-            if (matches[i].length())
+           if (matches[i].str() == "name")
             {
-              cerr<< "[" << i << "] == {" << endl
-                  << matches[i] << endl
-                  << "}" << endl;
+              part.name = matches[i+1];
+              cerr<< "Saved name" << endl;
             }
-            */
-          //if (matches[i].str() == "Content-type
-          part.meta_data_[matches[i]] //= matches[2].str();
-            = std::make_pair(matches[i+1].first, matches[i+1].second);
-          cerr<< "Part := { " << matches[i] << ", " << matches[i+1] << " }" << endl;
-            //= boost::iterator_range<buffer_iter>(matches[3].first, matches[3].second);
-          }
-          impl.form_parts_.push_back(part);
-          //cerr<< "Added meta data to form_part list (size: "
-          //    << impl.form_parts_.size() << "| elements: "
-          //    << impl.form_parts_.back().meta_data_.size() << ")" << endl;
+            else
+            {
+              part.meta_data_[matches[i]]
+                = std::make_pair(matches[i+1].first, matches[i+1].second);
+              cerr<< "Part := { " << matches[i] << ", " << matches[i+1] << " }" << endl;
+              //= boost::iterator_range<buffer_iter>(matches[3].first, matches[3].second);
+            }
+            impl.form_parts_.push_back(part);
           
-
-          offset += matches[0].length();
-          impl.pos_ = matches[0].second;
-          //break;
-  
+          
+         }
+          
+         if (matches[13].str() == "\r\n")
+         {
+           impl.offset_ = offset + matches[0].length();
+           offset += matches[0].length();
+           impl.pos_ = matches[0].second;
+          
+           //cerr<< "Current buffer == {" << endl
+           //    << impl.buffer_string() << endl
+           //    << "}" << endl;
+           cerr<< "Leaving parse_form_part_meta_data()" << endl;
+           return ec;
+         }
+         else
+         {
+           throw std::runtime_error("Invalid POST data (header wasn't terminated as expected)");
+         }
+         
         }else{
           cerr<< "Not read enough data yet, reading more." << endl;
-          bytes_read = impl.client_.read_some(impl.prepare(32), ec);
+          bytes_read = impl.client_.read_some(impl.prepare(64), ec);
           if (ec)
           {
             cerr<< "Error reading data: " << ec.message() << endl;
@@ -712,7 +757,7 @@ namespace cgi {
           }
           cerr<< "Read " << bytes_read << " bytes." << endl;
           cerr<< "buffer = {" << endl
-              << std::string(impl.buf_.begin(), impl.buf_.end()) << endl
+              << impl.buffer_string() << endl
               << "} or {" << endl;
               //<< std::string(impl.pos_, ;
           /*
@@ -730,8 +775,11 @@ namespace cgi {
               << "----------------" << endl;
           */
           //offset = impl.buf_.end();
-            if (++runs > 20)
+            if (++runs > 40)
+            {
+              cerr<< "Run 40 times; bailing out." << endl;
               break;
+            }
           cerr<< "Waiting buffer (unparsed) == {" << endl << std::flush
               << impl.buffer_string() << endl
               << "}" << endl

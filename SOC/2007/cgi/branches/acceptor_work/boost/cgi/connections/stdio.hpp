@@ -23,6 +23,7 @@
 //#include "boost/cgi/io_service.hpp"
 
 namespace cgi {
+ namespace common {
 
   template<>
   class basic_connection<tags::stdio>
@@ -61,6 +62,11 @@ namespace cgi {
     std::size_t read_some(MutableBufferSequence buf
                          , boost::system::error_code& ec)
     {
+      if (std::cin.eof())
+      {
+        //ec = boost::asio::error::eof;
+        return boost::asio::error::eof;
+      }
       //if( buf.data() != in_.rdbuf() )
       //  return in_.read(buf.begin(), buf.size());
       //return buf.size();
@@ -92,10 +98,8 @@ namespace cgi {
          ; i != buf.end(); ++i)
       {
         std::size_t buf_len = boost::asio::buffer_size(*i);
-        std::string s(boost::asio::buffer_cast<const char*>(*i)
-                     , buf_len);
         bytes_transferred += buf_len;
-        std::cout.write(s.c_str(), buf_len);
+        std::cout.write(boost::asio::buffer_cast<const char*>(*i), buf_len);
       }
       return bytes_transferred;
     }
@@ -104,6 +108,13 @@ namespace cgi {
     bool is_open_;
   };
 
+  namespace connection {
+
+    typedef basic_connection<tags::stdio> stdio;
+
+  } // namespace connection
+
+  // Deprecated
   typedef basic_connection<tags::stdio> stdio_connection;
 
   //  template<typename ProtocolService = detail::cgi_service>
@@ -112,6 +123,7 @@ namespace cgi {
   //  typedef basic_connection<tags::stdio, ProtocolService>    type;
   //};
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_STDIO_CONNECTION_IMPL_HPP_INCLUDED__

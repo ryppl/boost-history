@@ -9,7 +9,7 @@
 #ifndef CGI_FCGI_SPECIFICATION_HPP_INCLUDED__
 #define CGI_FCGI_SPECIFICATION_HPP_INCLUDED__
 
-#include <inttypes.h>
+//#include <inttypes.h>
 #include <boost/cstdint.hpp>
 
 // NOTE: CamelCase style mimicks the FastCGI specification

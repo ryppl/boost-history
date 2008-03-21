@@ -44,7 +44,13 @@ enum fcgi_errors
   // themselves. This is an ugly hack.
   multiplexed_request_incoming,
 
-  duplicate_request
+  duplicate_request,
+
+  // Calling async_accept on a request that hasn't been closed isn't
+  // allowed.
+  accepting_on_an_open_request,
+
+  invalid_socket
 };
 
   namespace detail {
@@ -63,8 +69,10 @@ public:
     case multiplexed_request_incoming:
       return "A new request is pending on this connection (ie. it is "
              "multiplexed). This isn't handled for now. **FIXME**";
+    case accepting_on_an_open_request:
+      return "You called async_accept before closing a request.";
     default:
-      return "BOOM!!!";
+      return "(FastCGI) BOOM!!!";
     }
   }
 };

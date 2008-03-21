@@ -14,6 +14,9 @@
 #include <string>
 #include <fstream> // only for testing
 
+#include <boost/foreach.hpp>
+#include <boost/bind.hpp>
+
 //#include "boost/cgi/request_ostream.hpp"
 #include "boost/cgi/buffer.hpp"
 #include "boost/cgi/cookie.hpp"
@@ -22,7 +25,7 @@
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/streambuf.hpp"
-#include <boost/foreach.hpp>
+#include "boost/cgi/detail/throw_error.hpp"
 
 /// This mess outputs a default Content-type header if the user hasn't set any.
 /** **FIXME** Not implemented; not sure if it should be...
@@ -54,6 +57,7 @@
 
 
 namespace cgi {
+ namespace common {
 
   /// The response class: a helper for responding to requests.
   class response
@@ -90,6 +94,7 @@ namespace cgi {
     {
       ostream_.clear();
       headers_.clear();
+      headers_terminated_ = false;
     }
 
     /// Return the response to the 'just constructed' state.
@@ -150,7 +155,8 @@ namespace cgi {
           return ec;
       }
 
-      std::size_t bytes_written = common::write(sws, buffer_->data(), ec);
+      std::size_t bytes_written
+        = common::write(sws, buffer_->data(), boost::asio::transfer_all(), ec);
       if (!ec)
         buffer_->consume(bytes_written);
 
@@ -178,23 +184,37 @@ namespace cgi {
      * object.
      */
     template<typename SyncWriteStream>
-    boost::system::error_code&
+    boost::system::error_code
       send(SyncWriteStream& sws, boost::system::error_code& ec)
     {
       if (!headers_terminated_)
       {
-        //BOOST_FOREACH(headers_.begin(), headers_.end()
-        //             , headers.push_back(::cgi::buffer(*_1)));
+        /* Not sure if streambuf allows this
+         *
+        // We want to be able to keep adding to a response, calling send() on
+        // it whenever, without resending the headers. Call resend() if you
+        // want to send the whole response again.
+        headers_terminated_ = true;
+         */
         std::vector<boost::asio::const_buffer> headers;
         prepare_headers(headers);//, ec)
-        if (common::write(sws, headers, boost::asio::transfer_all(), ec))
-          std::cerr<< "Broken." << std::endl;
-          //return ec;
+        common::write(sws, headers, boost::asio::transfer_all(), ec);
       }
 
       common::write(sws, buffer_->data(), boost::asio::transfer_all(), ec);
 
       return ec;
+    }
+
+    /// Resend headers + content regardless of value of `headers_terminated_`.
+    template<typename SyncWriteStream>
+    void resend(SyncWriteStream& sws)
+    {
+      std::vector<boost::asio::const_buffer> headers;
+      prepare_headers(headers);//, ec)
+      common::write(sws, headers);
+
+      common::write(sws, buffer_->data());
     }
 
     /// Asynchronously send the data through the supplied request
@@ -242,11 +262,6 @@ namespace cgi {
     }
 
     /// Get the status code associated with the response.
-    http::status_code& get_status()
-    {
-      return http_status_;
-    }
-
     http::status_code& status()
     {
       return http_status_;
@@ -300,7 +315,8 @@ namespace cgi {
     // Vector of all the headers, each followed by a CRLF
     std::vector<std::string> headers_;
 
-    boost::shared_ptr<common::streambuf> buffer_; // maybe scoped_ptr?
+    // The buffer is a shared_ptr, so you can keep it cached elsewhere.
+    boost::shared_ptr<common::streambuf> buffer_;
 
     ostream_type ostream_;
 
@@ -311,6 +327,9 @@ namespace cgi {
 
     template<typename T>
     friend response& operator<<(response& resp, const T& t);
+
+    //template<typename A, typename B>
+    //friend A& operator<<(A& resp, B b);
 
   private:
 
@@ -378,7 +397,7 @@ namespace cgi {
   }*/
 
   template<>
-  response& operator<<(response& resp, const ::cgi::header& hdr)
+  response& operator<<(response& resp, const ::cgi::common::header& hdr)
   {
     if (hdr.content.empty()) {
       resp.headers_terminated_ = true;
@@ -417,6 +436,7 @@ namespace cgi {
     return resp.set_status(status);
   }
 
+ } // namespace common
 } // namespace cgi
 
 #undef BOOST_CGI_ADD_DEFAULT_HEADER

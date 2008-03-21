@@ -1,3 +1,6 @@
+#ifndef BOOST_CGI_FORM_PART_HPP_INCLUDED__
+#define BOOST_CGI_FORM_PART_HPP_INCLUDED__
+
 #include <map>
 #include <vector>
 #include <boost/range.hpp>
@@ -34,6 +37,7 @@ namespace cgi {
      pair_t buffer_;
 
      std::string content_type; // must exist
+     std::string name; // Has to exist?
 
      // Using a simple map while everything is changing. This will not copy the
      // values when it is properly implemented (it'll hold a pair of iterators 
@@ -46,3 +50,6 @@ namespace cgi {
 
  } // namespace common
 } // namespace cgi
+
+#endif // BOOST_CGI_FORM_PART_HPP_INCLUDED__
+

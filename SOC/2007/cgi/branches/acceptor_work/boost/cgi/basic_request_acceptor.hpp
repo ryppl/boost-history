@@ -15,9 +15,11 @@
 #include <boost/asio/basic_io_object.hpp>
 #include <boost/asio/ip/basic_endpoint.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/cgi/basic_protocol_service.hpp>
 #include "boost/cgi/detail/throw_error.hpp"
 
 namespace cgi {
+ namespace common {
 
   /// The interface class for any *cgi::acceptor.
   template<typename RequestAcceptorService>
@@ -39,18 +41,43 @@ namespace cgi {
         typename service_type::endpoint_type
     endpoint_type;
     typedef typename service_type::native_type             native_type;
+    typedef
+        typename service_type::service_impl_type::protocol_service_type
+    protocol_service_type;
+    
+
+    //template<typename IoServiceProvider>
+    //explicit basic_request_acceptor(
+    //      basic_protocol_service<protocol_type, IoServiceProvider>& ps)
+    //  : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
+    //{
+    //  this->service.set_protocol_service(this->implementation, ps);
+    //}
 
     template<typename IoServiceProvider>
-    explicit basic_request_acceptor(
-          basic_protocol_service<protocol_type, IoServiceProvider>& ps)
+    explicit basic_request_acceptor
+    (
+        common::basic_protocol_service<protocol_type, IoServiceProvider>& ps
+      , bool default_init = true
+    )
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {
       this->service.set_protocol_service(this->implementation, ps);
+      if (default_init)
+      {
+        boost::system::error_code ec;
+        this->service.default_init(this->implementation, ec);
+        if (ec)
+        {
+          boost::system::system_error err(ec, "Problem constructing acceptor");
+          boost::throw_exception(err);
+        }
+      }
     }
-
+    
     template<typename IoServiceProvider>
     explicit basic_request_acceptor(
-          basic_protocol_service<protocol_type, IoServiceProvider>& ps,
+          common::basic_protocol_service<protocol_type, IoServiceProvider>& ps,
           port_number_type port_num)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {
@@ -77,7 +104,7 @@ namespace cgi {
 
     template<typename IoServiceProvider, typename InternetProtocol>
     explicit basic_request_acceptor(
-          basic_protocol_service<protocol_type, IoServiceProvider>& ps,
+          common::basic_protocol_service<protocol_type, IoServiceProvider>& ps,
           const boost::asio::ip::basic_endpoint<InternetProtocol>& endpoint,
           bool reuse_addr = true)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
@@ -97,7 +124,7 @@ namespace cgi {
 
     template<typename IoServiceProvider, typename InternetProtocol>
     explicit basic_request_acceptor(
-          basic_protocol_service<protocol_type, IoServiceProvider>& ps,
+          common::basic_protocol_service<protocol_type, IoServiceProvider>& ps,
           const InternetProtocol& ip,
           const native_type& native_acceptor)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
@@ -110,6 +137,11 @@ namespace cgi {
 
     ~basic_request_acceptor()
     {
+    }
+
+    protocol_service_type& protocol_service() const
+    {
+      return this->service.protocol_service(this->implementation);
     }
 
     /// Check if the acceptor is open
@@ -201,17 +233,25 @@ namespace cgi {
     void accept(CommonGatewayRequest& request)
     {
       boost::system::error_code ec;
-      this->service.accept(this->implementation, request, ec);
+      this->service.accept(this->implementation, request, 0, ec);
       detail::throw_error(ec);
     }
 
     /// Accept one request
     template<typename CommonGatewayRequest>
     boost::system::error_code
-    accept(CommonGatewayRequest& request, boost::system::error_code& ec)
+      accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
       //std::cerr<< "mine:::: endpoint.port := " << this->implementation.endpoint_.port() << std::endl;
-      return this->service.accept(this->implementation, request, ec);
+      return this->service.accept(this->implementation, request, 0, ec);
+    }
+
+    template<typename CommonGatewayRequest>
+    boost::system::error_code
+      accept(CommonGatewayRequest& request, endpoint_type& ep
+            , boost::system::error_code& ec)
+    {
+      return this->service.accept(this->implementation, request, &ep, ec);
     }
 
     //template<typename CommonGatewayRequest, typename Endpoint>
@@ -240,6 +280,7 @@ namespace cgi {
     }
   };
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_BASIC_REQUEST_ACCEPTOR_HPP_INCLUDED__

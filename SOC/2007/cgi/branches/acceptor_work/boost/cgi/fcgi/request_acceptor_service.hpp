@@ -69,6 +69,18 @@ namespace cgi {
       service_impl_.shutdown_service();
     }
 
+    service_impl_type::protocol_service_type&
+      protocol_service(implementation_type const& impl) const
+    {
+      return service_impl_.service(impl);
+    }
+
+    boost::system::error_code
+      default_init(implementation_type& impl, boost::system::error_code& ec)
+    {
+      return service_impl_.default_init(impl, ec);
+    }
+
     bool is_open(implementation_type& impl)
     {
       return service_impl_.is_open(impl);
@@ -109,18 +121,18 @@ namespace cgi {
       return service_impl_.listen(impl, backlog, ec);
     }
 
+//    template<typename CommonGatewayRequest>
+//    boost::system::error_code
+//      accept(implementation_type& impl, CommonGatewayRequest& request
+//            , boost::system::error_code& ec)
+//    {
+//      return service_impl_.accept(impl, request, NULL, ec);
+//    }
+
     template<typename CommonGatewayRequest>
     boost::system::error_code
       accept(implementation_type& impl, CommonGatewayRequest& request
-            , boost::system::error_code& ec)
-    {
-      return service_impl_.accept(impl, request, ec);
-    }
-
-    template<typename CommonGatewayRequest, typename Endpoint>
-    boost::system::error_code
-      accept(implementation_type& impl, CommonGatewayRequest& request
-            , Endpoint* ep, boost::system::error_code& ec)
+            , endpoint_type * ep, boost::system::error_code& ec)
     {
       return service_impl_.accept(impl, request, ep, ec);
     }

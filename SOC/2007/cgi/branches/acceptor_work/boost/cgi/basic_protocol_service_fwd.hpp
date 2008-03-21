@@ -16,6 +16,7 @@
 #include "boost/cgi/io_service_provider.hpp"
 
 namespace cgi {
+ namespace common {
 
   template<
     typename Protocol,
@@ -23,6 +24,7 @@ namespace cgi {
   >
   class basic_protocol_service;
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_BASIC_PROTOCOL_SERVICE_FWD_HPP_INCLUDED__

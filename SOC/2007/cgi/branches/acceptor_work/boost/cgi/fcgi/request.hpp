@@ -16,10 +16,15 @@
 #include "boost/cgi/fcgi/request_service.hpp"
 
 namespace cgi {
-
  namespace fcgi {
+   
    // typedef for typical usage (FCGI)
-   typedef basic_request<fcgi_request_service, service> request;
+   typedef
+     ::cgi::common::basic_request<
+        fcgi_request_service, service
+     >
+   request;
+
  } // namespace fcgi
 } // namespace cgi
 

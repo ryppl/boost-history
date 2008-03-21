@@ -42,6 +42,7 @@
 #include "boost/cgi/map.hpp"
 
 namespace cgi {
+ namespace common {
 
   /// The basic_request class, primary entry point to the library
   /**
@@ -81,7 +82,7 @@ namespace cgi {
   public:
     typedef basic_request<RequestService, ProtocolService
                          , Role, Allocator >             type;
-    typedef ::cgi::map                                   map_type;
+    typedef ::cgi::common::map                                   map_type;
     typedef RequestService                               service_type;
     typedef typename service_type::protocol_type         protocol_type;
     typedef ProtocolService                              protocol_service_type;
@@ -221,6 +222,14 @@ namespace cgi {
                                 , program_status);
     }
 
+    int close(http::status_code http_status
+             , int program_status
+             , boost::system::error_code& ec)
+    {
+      return this->service.close(this->implementation, http_status
+                                , program_status, ec);
+    }
+
     /// Reject the request with a standard '500 Internal Server Error' error
     int reject()
     {
@@ -233,6 +242,14 @@ namespace cgi {
     void abort()
     {
       this->service.set_status(this->implementation, aborted);
+    }
+
+    /// Clear the data for the request, for reusing this object.
+    // I'd imagine clearing and re-loading a request is quicker than 
+    // destroying/re-creating one. **Unverified claims** **FIXME**
+    void clear()
+    {
+      this->service.clear(this->implementation);
     }
 
     /// Get the client connection associated with the request
@@ -632,6 +649,7 @@ namespace cgi {
     }
   };
 
+ } // namespace common
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"

@@ -38,11 +38,11 @@ namespace cgi {
    * restricted but if someone really wants to copy the data, then they can.
    */
   class cgi_request_impl
-    : public cgi_request_impl_base<stdio_connection>
+    : public cgi_request_impl_base<common::stdio_connection>
   {
   public:
     //typedef stdio_connection client_type;
-    typedef ::cgi::basic_client<stdio_connection, tags::cgi> client_type;
+    typedef ::cgi::common::basic_client<common::stdio_connection, tags::cgi> client_type;
 
     /// Constructor
     /**

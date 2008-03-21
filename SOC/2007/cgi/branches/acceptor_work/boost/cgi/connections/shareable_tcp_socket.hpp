@@ -11,9 +11,11 @@
 
 #include <map>
 #include <set>
+#include <boost/asio.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/foreach.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/error.hpp"
@@ -27,6 +29,7 @@
 #include "boost/cgi/detail/protocol_traits.hpp"
 
 namespace cgi {
+ namespace common {
 
   /*** 05.02.2008 :
    *  I'm planning on making this class a more FastCGI-specific one since a
@@ -150,7 +153,7 @@ namespace cgi {
         return error::duplicate_request;
       }
 
-      if (requests_.size() < (id-1))
+      if (requests_.size() < boost::uint16_t(id-1))
         requests_.resize(id);
 
       return ec;
@@ -193,6 +196,7 @@ namespace cgi {
     typedef basic_connection<tags::shareable_tcp_socket> shareable_tcp;
   } // namespace connection
 
+ } // namespace common
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"

@@ -19,6 +19,7 @@
 #include "boost/cgi/tags.hpp"
 
 namespace cgi {
+ namespace common {
 
   // Asynchronous access to stdio
   template<>
@@ -130,6 +131,7 @@ namespace cgi {
   //  typedef basic_connection<tags::async_cgi, ProtocolService>    type;
   //};
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_ASYNC_STDIO_HPP_INCLUDED__

@@ -19,6 +19,7 @@
 #include "boost/cgi/detail/push_options.hpp"
 
 namespace cgi {
+ namespace common {
 
   template<>
   class basic_connection<tags::tcp_socket>
@@ -95,12 +96,16 @@ namespace cgi {
     next_layer_type sock_;
   };
 
+  namespace connection {
+
+    typedef basic_connection<tags::tcp_socket> tcp;
+
+  } // namespace connection
+
+  // Deprecated
   typedef basic_connection<tags::tcp_socket> tcp_connection;
 
-  namespace connection {
-    typedef basic_connection<tags::tcp_socket> tcp;
-  }// namespace connection
-
+ } // namespace common
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"

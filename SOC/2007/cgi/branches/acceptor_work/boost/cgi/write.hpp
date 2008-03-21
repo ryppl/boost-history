@@ -19,8 +19,8 @@ namespace cgi {
 
  } // namespace common
 
-  using common::write;
-  using common::async_write;
+  //using common::write;
+  //using common::async_write;
 
 } // namespace cgi
 

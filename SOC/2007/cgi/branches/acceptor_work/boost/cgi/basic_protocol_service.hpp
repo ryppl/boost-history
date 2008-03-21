@@ -22,6 +22,7 @@
 #include "boost/cgi/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
+ namespace common {
 
   /// Basic Protocol Service
   /**
@@ -145,6 +146,7 @@ namespace cgi {
     //friend class request_type;
   };
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_BASIC_PROTOCOL_SERVICE_HPP_INCLUDED__

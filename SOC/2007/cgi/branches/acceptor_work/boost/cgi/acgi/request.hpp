@@ -20,7 +20,11 @@ namespace cgi {
 
   class acgi_request_service;
 
-  typedef basic_request<acgi_request_service, acgi_service> acgi_request;
+  typedef
+    common::basic_request<
+      acgi_request_service, acgi_service
+    >
+  acgi_request;
 
 } // namespace cgi
 

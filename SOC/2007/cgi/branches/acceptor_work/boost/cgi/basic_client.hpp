@@ -18,6 +18,7 @@
 #include "boost/cgi/connections/tcp_socket.hpp"
 
 namespace cgi {
+ namespace common {
 
   /// A client
   /**
@@ -94,6 +95,7 @@ namespace cgi {
 
     /// Get a shared_ptr of the connection associated with the client.
     connection_ptr& connection() { return connection_; }
+    std::size_t& bytes_left()    { return bytes_left_; }
 
     /// Write some data to the client.
     template<typename ConstBufferSequence>
@@ -108,7 +110,9 @@ namespace cgi {
     std::size_t read_some(const MutableBufferSequence& buf
                          , boost::system::error_code& ec)
     {
-      return connection_->read_some(buf, ec);
+      std::size_t bytes_read = connection_->read_some(buf, ec);
+      bytes_left_ -= bytes_read;
+      return bytes_left_ > 0 ? bytes_read : (bytes_read + bytes_left_);
     }
 
     /// Asynchronously write some data to the client.
@@ -127,8 +131,11 @@ namespace cgi {
   private:
     //io_service&                           io_service_;
     connection_ptr                        connection_;
+    // we should never read more than content-length bytes.
+    std::size_t                           bytes_left_;
   };
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_BASIC_CLIENT_HPP_INCLUDED__

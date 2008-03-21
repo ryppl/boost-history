@@ -27,6 +27,7 @@
 #include "boost/cgi/basic_request_fwd.hpp"
 //#error BOOST_HAS_RVALUE_REFS
 namespace cgi {
+ namespace common {
 
   enum client_status
   {
@@ -41,13 +42,13 @@ namespace cgi {
 
   /// A client that uses a TCP socket that owned by it.
   template<typename Protocol>
-  class basic_client<shareable_tcp_connection, Protocol>
+  class basic_client<common::shareable_tcp_connection, Protocol>
   {
   public:
     typedef ::cgi::io_service                 io_service_type;
-    typedef ::cgi::map                        map_type;
+    typedef ::cgi::common::map                map_type;
     typedef Protocol                          protocol_type;
-    typedef shareable_tcp_connection          connection_type;
+    typedef common::shareable_tcp_connection  connection_type;
     //typedef detail::protocol_traits<
     //  fcgi_
     //>::request_impl_type                      request_impl_type;
@@ -65,6 +66,7 @@ namespace cgi {
     basic_client()
       : request_id_(-1)
       , status_(none_)
+      , keep_connection_(false)
     {
     }
 
@@ -72,6 +74,7 @@ namespace cgi {
     basic_client(io_service_type& ios)
       : request_id_(-1)
       , status_(none_)
+      , keep_connection_(false)
       //, io_service_(ios)
       //, connection_(new connection_type::pointer(ios))
     {
@@ -107,13 +110,21 @@ namespace cgi {
 
     void close(boost::uint64_t app_status = 0)
     {
-      if (status_ == closed_) return;
+      boost::system::error_code ec;
+      close(app_status, ec);
+      detail::throw_error(ec);
+    }
+
+    boost::system::error_code
+      close(boost::uint64_t app_status, boost::system::error_code& ec)
+    {
+      if (status_ == closed_) return ec;
 
       std::vector<boost::asio::const_buffer> bufs;
 
       // Write an EndRequest packet to the server.
       out_header_[0] = static_cast<unsigned char>(1); // FastCGI version
-      out_header_[1] = static_cast<unsigned char>(3); // BEGIN_REQUEST
+      out_header_[1] = static_cast<unsigned char>(3); // END_REQUEST
       out_header_[2] = static_cast<unsigned char>(request_id_ >> 8) & 0xff;
       out_header_[3] = static_cast<unsigned char>(request_id_) & 0xff;
       out_header_[4] = static_cast<unsigned char>(8 >> 8) & 0xff;
@@ -121,8 +132,8 @@ namespace cgi {
       out_header_[6] = static_cast<unsigned char>(0);
       out_header_[7] = 0;
 
-      BOOST_ASSERT(role_ == fcgi::spec_detail::RESPONDER
-                   && "Only supports Responder role for now (**FIXME**)");
+      //BOOST_ASSERT(role_ == fcgi::spec_detail::RESPONDER
+      //             && "Only supports Responder role for now (**FIXME**)");
 
       header_buffer_type end_request_body =
       {{
@@ -139,10 +150,12 @@ namespace cgi {
       bufs.push_back(buffer(out_header_));
       bufs.push_back(buffer(end_request_body));
 
-      write(*connection_, bufs);
+      write(*connection_, bufs, boost::asio::transfer_all(), ec);
 
-      if (!keep_connection_ && connection_)
+      if (!keep_connection_)
         connection_->close();
+
+      return ec;
     }
 
     //io_service_type& io_service() { return io_service_; }
@@ -236,6 +249,11 @@ namespace cgi {
       return status_;
     }
 
+    bool keep_connection() const
+    {
+      return keep_connection_;
+    }
+
   public:
     friend class fcgi_request_service;
     boost::uint16_t request_id_;
@@ -268,8 +286,14 @@ namespace cgi {
 
 //#include "boost/cgi/fcgi/client_fwd.hpp"
 
+ } // namespace common
+
 namespace fcgi {
-    typedef basic_client<shareable_tcp_connection, ::cgi::fcgi_> client;
+    typedef
+      common::basic_client<
+        common::shareable_tcp_connection, ::cgi::fcgi_
+      >
+    client;
 } // namespace fcgi
 
 

@@ -16,7 +16,13 @@
 #include <boost/asio/io_service.hpp>
 
 namespace cgi {
+ namespace common {
 
+  using boost::asio::io_service;
+
+ } // namespace common
+
+  // This should go?
   using boost::asio::io_service;
 
 } // namespace cgi

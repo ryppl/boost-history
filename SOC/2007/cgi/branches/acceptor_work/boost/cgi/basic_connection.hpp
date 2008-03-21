@@ -18,6 +18,7 @@
 //#include "connections/async_stdio_connection_impl.hpp"
 
 namespace cgi {
+ namespace common {
 
   template<typename ConnectionType>
   class basic_connection;
@@ -79,7 +80,7 @@ namespace cgi {
 //#include "connections/async_stdio_connection.hpp"
 //#include "connections/tcp_connection.hpp"
 
-
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_BASIC_CONNECTION_HPP_INCLUDED__

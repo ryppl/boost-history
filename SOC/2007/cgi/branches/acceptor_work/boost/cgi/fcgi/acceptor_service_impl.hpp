@@ -87,7 +87,9 @@ namespace cgi {
      struct implementation_type
      {
        typedef Protocol_                             protocol_type;
-       typedef basic_protocol_service<protocol_type> protocol_service_type;
+       typedef common::basic_protocol_service<
+                 protocol_type
+               >                                     protocol_service_type;
        typedef boost::asio::ip::tcp                  native_protocol_type;
        typedef fcgi::request                         request_type;
        typedef boost::asio::socket_acceptor_service<
@@ -121,6 +123,9 @@ namespace cgi {
                                                          native_protocol_type;
      typedef typename
        acceptor_service_type::native_type                native_type;
+
+     typedef typename 
+       type::implementation_type::endpoint_type          endpoint_type;
  
 
      explicit acceptor_service_impl(::cgi::io_service& ios)
@@ -130,6 +135,39 @@ namespace cgi {
      {
      }
  
+     protocol_service_type&
+       service(implementation_type const& impl) const
+     {
+       return *impl.service_;
+     }
+
+     /// Default-initialize the acceptor.
+     boost::system::error_code
+       default_init(implementation_type& impl, boost::system::error_code& ec)
+     {
+#if ! defined(BOOST_WINDOWS)
+       //assign(impl.acceptor_, , 0, ec);
+       return acceptor_service_.assign(impl.acceptor_, boost::asio::ip::tcp::v4()
+                                      , 0, ec);
+ #else
+//#      error "Windows isn't supported at the moment"
+       HANDLE hListen = INVALID_HANDLE_VALUE;
+       boost::asio::detail::socket_type sock;
+       struct sockaddr sa;
+       int sa_len = sizeof(sa);
+#if NO_WSAACCEPT
+       sock = accept((boost::asio::detail::socket_type)hListen, &sa, &sa_len);
+       if (sock == INVALID_SOCKET)
+         return cgi::error::invalid_socket;
+#else
+       sock = WSAAccept((unsigned int)hListen, &sa, &sa_len, NULL, (DWORD)NULL);
+       if (sock == INVALID_SOCKET)
+         return ::cgi::error::invalid_socket;
+#endif
+#endif
+       return ec;
+     }
+
      void set_protocol_service(implementation_type& impl
                               , protocol_service_type& ps)
      {
@@ -205,7 +243,7 @@ namespace cgi {
      template<typename CommonGatewayRequest>
      boost::system::error_code
        accept(implementation_type& impl, CommonGatewayRequest& request
-             , boost::system::error_code& ec)
+             , endpoint_type* endpoint, boost::system::error_code& ec)
      {
        /* THIS BIT IS BROKEN:
         *-- The noncopyable semantics of a basic_request<> don't allow the
@@ -227,36 +265,24 @@ namespace cgi {
          }
        }
        */
-       return acceptor_service_.accept(impl.acceptor_,
-                request.client().connection()->next_layer(), 0, ec);
-     }
- 
-     /// Accepts one request.
-     template<typename CommonGatewayRequest, typename Endpoint>
-     boost::system::error_code
-       accept(implementation_type& impl, CommonGatewayRequest& request
-             , Endpoint* endpoint, boost::system::error_code& ec)
-     {
-       /* THIS BIT IS BROKEN:
-        *-- The noncopyable semantics of a basic_request<> don't allow the
-            assignment. There are a couple of ways around this; the one that
-            seems sensible is to keep the basic_request<>s noncopyable, but
-            allow the actual data be copied. At the moment the actual data is
-            held in a vector<string> headers container and a cgi::streambuf.
-            These two bits should really be factored out into a message type.
-            IOW, the message type will be copyable (but should probably have
-            unique-ownership semantics).
-        --*
+
+       BOOST_ASSERT
+       ( ! request.is_open()
+        && "Error: Calling accept on open request (close it first?)."
+       );
+
+       // If the client is open, make sure the request is clean.
+       // ie. don't leak data from one request to another!
+       if (request.client().is_open())
        {
-         boost::mutex::scoped_lock lk(impl.mutex_);
-         if (!impl.waiting_requests_.empty())
-         {
-           request = *(impl.waiting_requests_.front());
-           impl.waiting_requests_.pop();
-           return ec;
-         }
+         request.clear();
        }
-       */
+
+       // If we can reuse this request's connection, return.
+       if (request.client().keep_connection())
+         return ec;
+
+       // ...otherwise accept a new connection.
        return acceptor_service_.accept(impl.acceptor_,
                 request.client().connection()->next_layer(), endpoint, ec);
      }
@@ -314,7 +340,24 @@ namespace cgi {
          }
        }
        */
-       acceptor_service_.async_accept(impl.acceptor_,
+
+       // We can't call accept on an open request (close it first).
+       if (request.is_open())
+         return handler(error::accepting_on_an_open_request);
+
+       // If the client is open, make sure the request is clean.
+       // ie. don't leak data from one request to another!
+       if (request.client().is_open())
+       {
+         request.clear();
+       }
+
+       // If we can reuse this request's connection, return.
+       if (request.client().keep_connection())
+         return handler(boost::system::error_code());
+
+       // ...otherwise accept a new connection (asynchronously).
+       return acceptor_service_.async_accept(impl.acceptor_,
          request.client().connection()->next_layer(), 0, handler);
      }
  

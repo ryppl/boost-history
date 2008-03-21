@@ -21,6 +21,7 @@
 //#include "service_selector.hpp"
 
 namespace cgi {
+ namespace common {
 
   /// The generic service class for basic_request<>s
   /**
@@ -43,7 +44,7 @@ namespace cgi {
     typedef typename 
       service_impl_type::implementation_type          implementation_type;
     typedef Protocol                                  protocol_type;
-    typedef basic_protocol_service<Protocol>  protocol_service_type;
+    typedef common::basic_protocol_service<Protocol>  protocol_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
@@ -159,6 +160,7 @@ namespace cgi {
     service_impl_type& service_impl_;
   };
 
+ } // namespace common
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"
