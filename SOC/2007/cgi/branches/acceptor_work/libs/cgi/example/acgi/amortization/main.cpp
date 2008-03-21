@@ -17,9 +17,11 @@
 // It is a very basic amortization calculator.
 //
 #include <iostream>
+#include <iomanip>
 #include <boost/cgi/acgi.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <google/template.h>
+#include <boost/high_resolution_timer.hpp>
 
 using namespace boost::acgi;
 
@@ -100,15 +102,89 @@ void write_amortization_template(Request& req, response& resp)
   google::Template* tmpl
     = google::Template::GetTemplate("example.tpl", google::STRIP_WHITESPACE);
 
-  std::string output;
-  tmpl->Expand(&output, &dict);
+  boost::high_resolution_timer t;
+
+  std::string arg(req.GET("arg"));
+
+  if (arg == "1")
+  {
+    std::string output;
+    tmpl->Expand(&output, &dict);
+    std::cout<< output;
+  }else
+  if (arg == "2")
+  {
+    std::string output;
+    tmpl->Expand(&output, &dict);
+    resp<< output;
+  }else
+  if (arg == "3")
+  {
+    std::string s;
+    std::vector<boost::asio::const_buffer> out;
+
+    tmpl->Expand(&s, &out, &dict);
+    write(req.client(), out);
+  }else
+  if (arg == "4")
+  {
+    std::string output;
+    tmpl->Expand(&output, &dict);
+    write(req.client(), buffer(output));
+  }else
+   if (arg == "5")
+  {
+    std::string output;
+    tmpl->Expand(&output, &dict);
+    std::cout.write(output.c_str(), output.size());
+  }else
+  {
+    resp<< "Error!";
+  }
+   //output.clear();
+      //<< "<b>" << t.elapsed() << "</b><p />"
+      //<< output << "<p /><p />"
+      //<< "<b>" << t.elapsed() << "</b><p />";
+  //}
+ 
+  //std::cout<<
+  //  "<pre>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nSTARTING OTHER THINGY\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n</pre>"
+  //  ;
+/*
+    std::string s;
+    std::vector<boost::asio::const_buffer> out;
+for(int i=0; i < 50000; ++i) {
+   // boost::high_resolution_timer t;
+
+    tmpl->Expand(&s, &out, &dict);
+    out.clear();
+    s.clear();
+    //std::cout<< "<b>" << t.elapsed() << "</b><p />";
+
+      //<< "<p /><p />"
+      //<< "<b>" << t.elapsed() << "</b><p />";
+  }
+ 
+
+  std::cerr<< "a took " << std::setiosflags(std::ios::fixed) << std::setprecision(5) << a/100000 << " secs<p />"
+           << "b took " << b/100000 << " secs<p />";
+
   
-  resp<< content_type("text/html")
-      << output;
+  std::cerr
+    << "Content-type: text/html\r\n\r\n"
+    << output << "<p /><p />";
+  
+  resp<< content_type("text/html");
+  resp.flush(req.client());
+  write(req.client(), buffer(output));
+  */
 }
 
 int main()
 {
+  try{
+  std::cout
+    << "Content-type: text/html\r\n\r\n";
   service s;
   request req(s);
   req.load(true);
@@ -117,5 +193,9 @@ int main()
   write_amortization_template(req, resp);
   
   return_(resp, req, 0);
+  }catch(...){
+    std::cout<< "Content-type: text/html\r\n\r\n"
+      << "ERROR!! BOOM!";
+  }
 }
 
