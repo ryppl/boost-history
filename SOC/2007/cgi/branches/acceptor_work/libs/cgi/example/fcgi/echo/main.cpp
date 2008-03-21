@@ -1,9 +1,25 @@
+//                    -- main.hpp --
+//
+//           Copyright (c) Darren Garvey 2007.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+////////////////////////////////////////////////////////////////
+//
+//[fcgi_echo
+//
+// This example simply echoes all variables back to the user. ie.
+// the environment and the parsed GET, POST and cookie variables.
+// Note that GET and cookie variables come from the environment
+// variables QUERY_STRING and HTTP_COOKIE respectively.
+//
+
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options/environment_iterator.hpp>
 
 #include <boost/cgi/fcgi.hpp>
-#include <boost/cgi/return.hpp>
 
 using namespace std;
 using namespace boost::fcgi;
@@ -25,6 +41,7 @@ void format_map(Map& m, OStream& os, const std::string& title)
   }
 }
 
+/// This function accepts and handles a single request.
 template<typename Service, typename Acceptor, typename LogStream>
 int handle_request(Service& s, Acceptor& a, LogStream& of)
 {
@@ -58,6 +75,10 @@ int handle_request(Service& s, Acceptor& a, LogStream& of)
   format_map(req.GET(), resp, "GET Variables");
   format_map(req.cookie(), resp, "Cookie Variables");
 
+  // Response headers can be added at any time before send/flushing it:
+  resp<< "<content-length == " << content_length(resp.content_length())
+      << content_length(resp.content_length());
+
   // This funky macro finishes up:
   return_(resp, req, 0);
   // It is equivalent to the below, where the third argument is represented by
@@ -77,21 +98,17 @@ try {
   ofstream of(LOG_FILE);
   if (!of)
   {
-    std::cerr<< "Couldn't open file: \"" LOG_FILE "\"." << endl;
+    std::cerr<< "[fcgi] Couldn't open file: \"" LOG_FILE "\"." << endl;
     return 1;
   }
 
   of<< boost::posix_time::second_clock::local_time() << endl;
-  of<< "Going to start acceptor" << endl;
+  of<< "Going to start acceptor." << endl;
 
   // Make a `service` (more about this in other examples).
   service s;
   // Make an `acceptor` for accepting requests through.
   acceptor a(s);
-
-  // This next line may become void in the future.
-  a.assign(boost::asio::ip::tcp::v4(), 0);
-  of<< "[a] Assigned." << endl;
 
   // After the initial setup, we can enter a loop to handle one request at a
   // time until there's an error of some sort.
@@ -99,7 +116,7 @@ try {
   for (;;)
   {
     ret = handle_request(s, a, of);
-    of<< "handle_requests() returned: " << ret << endl;
+    of<< "handle_request() returned: " << ret << endl;
     if (ret)
       break;
   }
@@ -107,13 +124,14 @@ try {
   return ret;
 
 }catch(boost::system::system_error& se){
-  cerr<< "[hw] System error: " << se.what() << endl;
+  cerr<< "[fcgi] System error: " << se.what() << endl;
   return 1313;
 }catch(exception& e){
-  cerr<< "[hw] Exception: " << e.what() << endl;
+  cerr<< "[fcgi] Exception: " << e.what() << endl;
   return 666;
 }catch(...){
-  cerr<< "[hw] Uncaught exception!" << endl;
+  cerr<< "[fcgi] Uncaught exception!" << endl;
   return 667;
 }
 }
+//]
