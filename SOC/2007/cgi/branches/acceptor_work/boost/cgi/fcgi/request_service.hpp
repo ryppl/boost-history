@@ -34,7 +34,7 @@ namespace cgi {
     /// The actual implementation date for an FCGI request.
     struct implementation_type
     {
-      typedef ::cgi::map                        map_type;
+      typedef ::cgi::common::map                map_type;
       //typedef shareable_tcp_connection          connection_type;
       typedef ::cgi::fcgi_                      protocol_type;
       //typedef basic_client<
@@ -85,7 +85,7 @@ namespace cgi {
       {
         using namespace std;
         std::size_t bufsz( buffer_.size() );
-        cerr<< "bufsz    = " << bufsz << endl;
+        //cerr<< "bufsz    = " << bufsz << endl;
 
         // Reserve more space if it's needed.
         // (this could be safer, referencing this against CONTENT_LENGTH)
@@ -93,7 +93,7 @@ namespace cgi {
         //{
           buffer_.resize(bufsz + size);
         //}
-
+        /*
         cerr<< "Pre-read buffer (size: " << buffer_.size() 
             << "|capacity: " << buffer_.capacity() << ") == {" << endl
             << std::string(buffer_.begin(), buffer_.end()) << endl
@@ -102,6 +102,7 @@ namespace cgi {
   //          << std::string(&buf_[0], &buf_[buf_.size()]) << endl
             << "}" << endl;
             ;
+        */
         //return boost::asio::buffer(&(*(buf_.end())), size);
   //      return boost::asio::buffer(&(*(buf_.begin())) + bufsz, size);
         return boost::asio::buffer(&buffer_[bufsz], size);
@@ -168,6 +169,37 @@ namespace cgi {
       return program_status;
     }
 
+    int close(implementation_type& impl, http::status_code& hsc
+             , int program_status, boost::system::error_code& ec)
+    {
+      impl.all_done_ = true;
+      impl.client_.close(program_status, ec);
+      return program_status;
+    }
+
+    void clear(implementation_type& impl)
+    {
+      BOOST_ASSERT
+      (   impl.request_status_ < activated
+       && impl.request_status_ > ok
+       && "Are you trying to clear() a request without closing it?"
+      );
+                
+      impl.buffer_.clear();
+      impl.get_vars_.clear();
+      impl.post_vars_.clear();
+      impl.cookie_vars_.clear();
+      impl.env_vars_.clear();
+      impl.stdin_parsed_ = false;
+      impl.http_status_ = http::no_content;
+      impl.request_status_ = null;
+      impl.request_role_ = spec_detail::ANY;
+      impl.all_done_ = false;
+
+      impl.client_.status_ = common::none_;
+      impl.client_.request_id_ = -1;
+    }
+      
     /// Load the request to a point where it can be usefully used.
     /**
      * FastCGI:
@@ -183,7 +215,7 @@ namespace cgi {
           , boost::system::error_code& ec)
     {
       //int header_len( get_length_of_header(impl, ec) );
-      std::cerr<< "Loading request...";
+      //std::cerr<< "Loading request...";
       BOOST_ASSERT(!ec && "Can't load request due to previous errors.");
 
       impl.client_.construct(impl, ec);
@@ -205,19 +237,20 @@ namespace cgi {
           if (read_header(impl, ec))
             break;
           impl.request_role_ = fcgi::spec::begin_request::get_role(impl.header_buf_);
-          std::cerr<< "[hw] New request role: " << impl.request_role_
-              << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
-              << std::endl;
+          //std::cerr<< "[hw] New request role: " << impl.request_role_
+          //    << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
+          //    << std::endl;
           impl.client_.keep_connection_
             = fcgi::spec::begin_request::get_flags(impl.header_buf_)
               & fcgi::spec::keep_connection;
+          //std::cerr<< "keep connection := " << impl.client_.keep_connection_ << std::endl;
           break;
         }else
           handle_other_request_header(impl);
       }
 
-      client_status completion_condition
-        = parse_stdin ? stdin_read : params_read;
+      common::client_status completion_condition
+        = parse_stdin ? common::stdin_read : common::params_read;
 
       while(!ec 
         && impl.client_.status() < completion_condition
@@ -239,7 +272,7 @@ namespace cgi {
 */
       parse_cookie_vars(impl, ec);
 
-      std::cerr<< "done!" << std::endl;
+      //std::cerr<< "done!" << std::endl;
       return ec;
     }
 
@@ -429,7 +462,7 @@ namespace cgi {
       read_some(implementation_type& impl, const MutableBufferSequence& buf
                , boost::system::error_code& ec)
     {
-      if (impl.client_.status_ == closed_)
+      if (impl.client_.status_ == common::closed_)
       {
         ec = error::client_closed;
         return 0;
@@ -456,6 +489,7 @@ namespace cgi {
       
       //if (ec) return ec;
 
+      /*
       std::cerr<< std::endl
           << "[hw] Header details {" << std::endl
           << "  RequestId := " << fcgi::spec::get_request_id(impl.header_buf_) << std::endl
@@ -464,6 +498,7 @@ namespace cgi {
           << " (" << fcgi::spec::request_type::to_string(impl.header_buf_) << ")" << std::endl
           << "  Content-length := " << fcgi::spec::get_content_length(impl.header_buf_) << std::endl
           << "}" << std::endl;
+      */
 
       return ec;
     }
@@ -530,9 +565,9 @@ namespace cgi {
       if (0 == len)
       { // This is the final param record.
         
-        impl.client_.status_ = params_read;
+        impl.client_.status_ = common::params_read;
 
-        std::cerr<< "[hw] Final PARAM record found." << std::endl;
+        //std::cerr<< "[hw] Final PARAM record found." << std::endl;
         return ec;
       }
 
@@ -574,8 +609,8 @@ namespace cgi {
         buf += (name_len + data_len);
         len -= (name_len + data_len);
 
-        std::cerr<< "[hw] name := " << name << std::endl;
-        std::cerr<< "[hw] data := " << data << std::endl;
+        //std::cerr<< "[hw] name := " << name << std::endl;
+        //std::cerr<< "[hw] data := " << data << std::endl;
 
         impl.env_vars_[name] = data;
       }
@@ -591,15 +626,15 @@ namespace cgi {
     {
       if (0 == len)
       {
-        impl.client_.status_ = stdin_read;
+        impl.client_.status_ = common::stdin_read;
 
         // **FIXME**
-        std::cerr<< "[hw] Final STDIN record found." << std::endl;
+        //std::cerr<< "[hw] Final STDIN record found." << std::endl;
         return ec;
       }
 
       // **FIXME**
-      std::cerr<< "[hw] Found some STDIN stuff." << std::endl;
+      //std::cerr<< "[hw] Found some STDIN stuff." << std::endl;
       return ec;
     }
 
@@ -658,7 +693,7 @@ namespace cgi {
       }
       // else route (ie. state == boost::indeterminate)
 
-      std::cerr<< "Got to read more stuff now I think." << std::endl;
+      //std::cerr<< "Got to read more stuff now I think." << std::endl;
       implementation_type::mutable_buffers_type buf
         = impl.prepare(fcgi::spec::get_length(impl.header_buf_));
 
@@ -734,14 +769,14 @@ namespace cgi {
           = fcgi::spec::begin_request::get_role(impl.header_buf_);
         // **FIXME** (rm impl.request_role_)
         impl.client_.role_ = impl.request_role_;
-        std::cerr<< "[hw] New request role: " << impl.request_role_
-            << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
-            << std::endl;
+        //std::cerr<< "[hw] New request role: " << impl.request_role_
+        //    << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
+        //    << std::endl;
         impl.client_.keep_connection_
           = fcgi::spec::begin_request::get_flags(impl.header_buf_)
             & fcgi::spec::keep_connection;
 
-        impl.client_.status_ = constructed;
+        impl.client_.status_ = common::constructed;
         return ec;
      }
    };
@@ -804,8 +839,8 @@ namespace cgi {
       }
       else
       {
-        std::cerr<< "**FIXME** Role: " 
-          << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
+        //std::cerr<< "**FIXME** Role: " 
+        //  << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
 
         fdetail::impl_type::client_type::connection_type&
           conn = *impl.client_.connection_;
