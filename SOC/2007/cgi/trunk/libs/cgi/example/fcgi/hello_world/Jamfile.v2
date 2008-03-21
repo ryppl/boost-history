@@ -1,0 +1,14 @@
+
+project cgi.examples.fcgi.hello_world ;
+
+exe fast_hw : main.cpp ;
+
+install install
+  :
+    fast_hw
+  :
+    <location>$(fcgi-bin)
+  ;
+
+explicit install ;
+
