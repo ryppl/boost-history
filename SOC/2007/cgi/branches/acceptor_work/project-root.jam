@@ -50,7 +50,6 @@ path-constant fcgi-bin : [ get-bin-dir "fcgi-bin" : "BOOST_FCGI_BIN_PATH" ] ;
 path-constant scgi-bin : [ get-bin-dir "scgi-bin" : "BOOST_SCGI_BIN_PATH" ] ;
 
 
-use-project /google/template/ : $(top)/libs/cgi/util/google/ ;
 use-project /boost/ : $(boost-root) ;
 use-project /boost/cgi/ : $(top)/libs/cgi/build ;
 
