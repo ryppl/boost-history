@@ -10,8 +10,10 @@
 #define CGI_HEADER_HPP_INCLUDED__
 
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 namespace cgi {
+ namespace common {
 
   //template<typename StringT = std::string>
   struct header
@@ -56,6 +58,7 @@ namespace cgi {
     }
 
     string_type content;
+
   };
 
 /*
@@ -76,14 +79,14 @@ namespace cgi {
   //{ Some shortcuts, to cut down on typing errors.
   template<typename StringT>
   header
-    content_type(StringT& str)
+    content_type(StringT str)
   {
     return header("Content-type", str);
   }
 
   template<typename StringT>
   header
-    content_encoding(StringT& str)
+    content_encoding(const StringT& str)
   {
     return header("Content-encoding", str);
   }
@@ -125,6 +128,7 @@ namespace cgi {
   //typedef basic_header<std::string>  header;
   //typedef basic_header<std::wstring> wheader;
 
+ } // namespace common
 } // namespace cgi
 
 #endif // CGI_HEADER_HPP_INCLUDED__
