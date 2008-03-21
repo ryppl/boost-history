@@ -29,185 +29,186 @@
 #ifndef BOOST_COROUTINE_COROUTINE_HPP_20060512
 #define BOOST_COROUTINE_COROUTINE_HPP_20060512
 #include <cstddef>
-#include <boost/preprocessor/repetition.hpp>
-#include <boost/tuple/tuple.hpp>
+#include "move.hpp"
+#include "detail/coroutine_impl.hpp"
+#include "detail/default_context_impl.hpp"
+#include "detail/is_callable.hpp"
+#include "detail/coroutine_accessor.hpp"
+#include "detail/self.hpp"
+#include "detail/coroutine.hpp"
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
-#include <boost/coroutine/detail/arg_max.hpp>
-#include <boost/coroutine/detail/coroutine_impl.hpp>
-#include <boost/coroutine/detail/default_context_impl.hpp>
-#include <boost/coroutine/detail/is_callable.hpp>
-#include <boost/coroutine/detail/argument_packer.hpp>
-#include <boost/coroutine/detail/argument_unpacker.hpp>
-#include <boost/coroutine/detail/signature.hpp>
-#include <boost/coroutine/detail/index.hpp>
-#include <boost/coroutine/detail/coroutine_traits.hpp>
-#include <boost/coroutine/detail/coroutine_accessor.hpp>
-#include <boost/coroutine/move.hpp>
-#include <boost/coroutine/detail/fix_result.hpp>
-#include <boost/coroutine/detail/self.hpp>
-
 namespace boost { namespace coroutines {
+
+  template<typename R, typename P, typename C>
+  class coroutine;
+  
   namespace detail {
-    template<typename T>
-    struct optional_result_type : 
-      boost::mpl::if_<boost::is_same<T, void>,
-                      void,
-                      boost::optional<T> > { };
+    template<typename R, typename P, typename C>
+    class call {
+      typedef coroutine<R, P, C> derived;
+      typedef BOOST_DEDUCED_TYPENAME derived::arg1_type arg1_type;
+      typedef BOOST_DEDUCED_TYPENAME derived::result_type result_type;
+    public:
+      typedef boost::optional(R) 
+      result_type
+      operator()(arg1_type x) const {
+	return *(static_cast<const derived*>(this)
+	  ->call_impl<true, result_type, arg1_type>(x));
+      }
 
-    template<typename T>
-    BOOST_DEDUCED_TYPENAME
-    boost::enable_if<boost::is_same<T, void> >::type
-    optional_result() {}
+      boost::optional<result_type>
+      operator()(arg1_type x, std::nothrow_t) const {
+	return static_cast<const derived*>(this)
+	  ->call_impl<false, boost::optional<result_type>, arg1_type>(x);
+      }
+    };
 
-    template<typename T>
-    BOOST_DEDUCED_TYPENAME
-    boost::disable_if<boost::is_same<T, void>,
-                      BOOST_DEDUCED_TYPENAME
-                      optional_result_type<T>::type
-                      >::type
-    optional_result() {
-      return BOOST_DEDUCED_TYPENAME
-        optional_result_type<T>::type();
-    }
+    template<typename R, typename C>
+    class call<R, void, C> {
+      typedef coroutine<R, void, C> derived;
+      typedef BOOST_DEDUCED_TYPENAME derived::result_type result_type;
+    public:
+      result_type operator()() const {
+	return static_cast<const derived*>(this)
+	  ->call_impl<true, result_type, void_>();
+      }
+
+      boost::optional<result_type>
+      operator()(std::nothrow_t) const {
+	return static_cast<const derived*>(this)
+	  ->call_impl<false, boost::optional<result_type>, void_>();
+      }
+    };
+
+    template<typename C>
+    class call<void, void, C> {
+      typedef coroutine<void, void, C> derived;
+    public:
+      void
+      operator()() const {
+	static_cast<const derived*>(this)
+	  ->call_impl<true, void_, void_>();
+      }
+
+      bool
+      operator()(std::nothrow_t) const {
+	static_cast<const derived*>(this)
+	  ->call_impl<false, bool_, void>();
+      }
+    };
+
   }
 
-  template<typename Signature, typename Context>
-  class coroutine;
-
+  
+  /// Returns a boolean <tt>Integral Constant c</tt> such that
+  /// <tt>c::value == true</tt> if and only if @c X is a coroutine object
   template<typename T>
   struct is_coroutine : boost::mpl::false_{};
   
-  template<typename Sig, typename Con>
-  struct is_coroutine<coroutine<Sig, Con> > : boost::mpl::true_{};
+  template<typename R, typename P, typename C>
+  struct is_coroutine< coroutine<R,P,C> > : boost::mpl::true_{};
+  /// }@
 
-  template<typename Signature, 
+  /**
+   * Make a stackful coroutine from a function object.
+   * 
+   * @tparam Result result type of the coroutine. Models @c Copyable
+   * or @void.
+   *
+   * @tparam Param the coroutine will accept parameters of this
+   * type. Models @c Copyable or @c void (Defaults to @c void)
+   *
+   *
+   */
+  template<typename Result, typename Parm = void, 
            typename ContextImpl = detail::default_context_impl>
-  class coroutine : public movable<coroutine<Signature, ContextImpl> > {
-  public:
-    typedef coroutine<Signature, ContextImpl> type;
-    typedef ContextImpl context_impl;
-    typedef Signature signature_type;
+  class coroutine
+    : public movable<coroutine<Signature, Parm, ContextImpl> > 
+    , detail::call<Result, Parm, ContextImpl>
+  {
+    detail::call<Result, Parm, ContextImpl> super;
     friend struct detail::coroutine_accessor;
 
-    typedef BOOST_DEDUCED_TYPENAME 
-    detail::coroutine_traits<signature_type>
-    ::result_type result_type;
+    typedef detail::coroutine_impl<coroutine, ContextImpl> impl_type;
 
-    typedef BOOST_DEDUCED_TYPENAME 
-    detail::coroutine_traits<signature_type>
-    ::result_slot_type result_slot_type;
+    /// @internal
+    /// type of coroutine parameter.
+    using BOOST_DEDUCED_TYPENAME super::arg_slot_type;
+    using BOOST_DEDUCED_TYPENAME super::result_slot_type;
+  public:
+    using super::operator();
 
-    typedef BOOST_DEDUCED_TYPENAME 
-    detail::coroutine_traits<signature_type>
-    ::yield_result_type yield_result_type;
+    /// argument type of coroutine @c operator().
+    typedef BOOST_DEDUCED_TYPENAME boost::call_traits<parm_type>::type arg1_type;
 
-    typedef BOOST_DEDUCED_TYPENAME 
-    detail::coroutine_traits<signature_type>
-    ::result_slot_traits result_slot_traits;
+    /// actual continuation implementation.
+    typedef ContextImpl context_type;
 
-    typedef BOOST_DEDUCED_TYPENAME 
-    detail::coroutine_traits<signature_type>
-    ::arg_slot_type arg_slot_type;
+    /// Result type of coroutine @c operator().
+    typedef Result result_type;
 
-    typedef BOOST_DEDUCED_TYPENAME 
-    detail::coroutine_traits<signature_type>
-    ::arg_slot_traits arg_slot_traits;
-        
-    typedef detail::coroutine_impl<type, context_impl> impl_type;
-    typedef BOOST_DEDUCED_TYPENAME  impl_type::pointer impl_ptr;  
-   
-    typedef detail::coroutine_self<type> self;
-    coroutine() : m_pimpl(0) {}
+    /// Type of 
+    typedef detail::yelder_impl<coroutine> yelder;
 
-    template<typename Functor>
-    coroutine (Functor f, 
-               std::ptrdiff_t stack_size = detail::default_stack_size,
-               BOOST_DEDUCED_TYPENAME boost::enable_if<
-               boost::mpl::and_<
-               detail::is_callable<Functor>, 
-               boost::mpl::not_<is_coroutine<Functor> >
-               > >
-               ::type * = 0
-               ) :
-      m_pimpl(impl_type::create(f, stack_size)) {}
- 
+    /// Construct an empty coroutine.
+    coroutine() : m_pimpl() {}
+
+    /// Move construct coroutine from @c src.
+    /// @param src is an coroutine rvalue.
+    ///
+    /// @post @p src continuation (if any) is moved into @this; 
+    /// <tt> src.empty() == true</tt>.
     coroutine(move_from<coroutine> src) 
       : m_pimpl(src->m_pimpl) {
       src->m_pimpl = 0;
     }
 
-    coroutine& operator=(move_from<coroutine> src) {
-      coroutine(src).swap(*this);
+    /// Construct a coroutine over @p f.
+    ///
+    /// @param f models @c Callable. In addition
+    /// <tt>result_of<F(yelder_type&)>::type</tt> must be a valid
+    /// expression.
+    ///
+    /// @note the result of @p f is ignored, thus it can be of any
+    /// type.
+    /// 
+    template<typename Functor>
+    explicit
+    coroutine ( 
+      Functor f
+    , std::ptrdiff_t stack_size = impl_type::default_stack_size
+    , BOOST_DEDUCED_TYPENAME boost::enable_if<
+    boost::mpl::and_<
+    detail::is_callable<Functor>
+    , boost::mpl::not_<is_coroutine<Functor> >
+    > >::type * = 0)
+      : m_pimpl(impl_type::create(f, stack_size)) 
+    {}
+ 
+
+    /// Move assign coroutine from @c rhs
+    /// @param rhs is a coroutine rvalue
+    ///
+    /// @post @p rhs continuation (if any) is moved into @this; 
+    /// <tt> rhs.empty() == true</tt>.   
+    coroutine& operator=(move_from<coroutine> rhs) {
+      coroutine(rhs).swap(*this);
       return *this;
     }
 
+    /// Member swap.
     coroutine& swap(coroutine& rhs) {
       std::swap(m_pimpl, rhs.m_pimpl);
       return *this;
     }
 
+    /// Free function swap.
     friend
     void swap(coroutine& lhs, coroutine& rhs) {
       lhs.swap(rhs);
     }
-
-#   define BOOST_COROUTINE_generate_argument_n_type(z, n, traits_type) \
-    typedef BOOST_DEDUCED_TYPENAME traits_type ::template at<n>::type  \
-    BOOST_PP_CAT(BOOST_PP_CAT(arg, n), _type);                         \
-    /**/
-
-    BOOST_PP_REPEAT(BOOST_COROUTINE_ARG_MAX,
-                    BOOST_COROUTINE_generate_argument_n_type,
-                    arg_slot_traits);
-
-    static const int arity = arg_slot_traits::length;
-
-    struct yield_traits {
-      BOOST_PP_REPEAT(BOOST_COROUTINE_ARG_MAX,
-                      BOOST_COROUTINE_generate_argument_n_type,
-                      result_slot_traits);
-      static const int arity = result_slot_traits::length;
-    };
-
-#   undef BOOST_COROUTINE_generate_argument_n_type
-   
-#   define BOOST_COROUTINE_param_with_default(z, n, type_prefix)    \
-    BOOST_DEDUCED_TYPENAME call_traits                              \
-    <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type \
-    BOOST_PP_CAT(arg, n) =                                          \
-    BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()             \
-    /**/
-
-    result_type operator()
-      (BOOST_PP_ENUM
-       (BOOST_COROUTINE_ARG_MAX,
-        BOOST_COROUTINE_param_with_default,
-        arg)) {
-      return call_impl
-        (arg_slot_type(BOOST_PP_ENUM_PARAMS
-          (BOOST_COROUTINE_ARG_MAX, 
-           arg)));
-    }
-
-    BOOST_DEDUCED_TYPENAME
-    detail::optional_result_type<result_type>::type 
-    operator()
-      (const std::nothrow_t&
-       BOOST_PP_ENUM_TRAILING
-       (BOOST_COROUTINE_ARG_MAX,
-        BOOST_COROUTINE_param_with_default,
-        arg)) {
-      return call_impl_nothrow
-        (arg_slot_type(BOOST_PP_ENUM_PARAMS
-          (BOOST_COROUTINE_ARG_MAX, 
-           arg)));
-    }
-
-#   undef BOOST_COROUTINE_param_typedef
-#   undef BOOST_COROUTINE_param_with_default
 
     typedef void(coroutine::*bool_type)();
     operator bool_type() const {
@@ -221,16 +222,6 @@ namespace boost { namespace coroutines {
     void exit() {
       BOOST_ASSERT(m_pimpl);
       m_pimpl->exit();
-    }
-
-    bool waiting() const {
-      BOOST_ASSERT(m_pimpl);
-      return m_pimpl->waiting();
-    }
-
-    bool pending() const {
-      BOOST_ASSERT(m_pimpl);
-      return m_pimpl->pending();
     }
 
     bool exited() const {
@@ -277,24 +268,8 @@ namespace boost { namespace coroutines {
       return detail::fix_result<result_slot_traits>(*m_pimpl->result());
     }
 
-    impl_ptr m_pimpl;
+    pimpl_type m_pimpl;
 
-    void acquire() {
-      m_pimpl->acquire();
-    }
-
-    void release() {
-      m_pimpl->release();
-    }
-
-    std::size_t
-    count() const {
-      return m_pimpl->count();
-    }
-
-    impl_ptr get_impl() {
-      return m_pimpl;
-    }
   };
 } }
 #endif
