@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Explore library
 
 // Copyright Jared McIntyre 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -10,7 +10,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
 
-#include "../../../boost/explore/explore.hpp"
+#include <boost/explore.hpp>
 
 struct basic_lg_range_format : explore::basic_range_format
 {
@@ -28,13 +28,4 @@ struct basic_lg_range_format_selector
 	};
 };
 
-
 struct basic_lg_format : boost::mpl::list< basic_lg_range_format_selector> {};
-
-// for streaming
-std::ostream& basic_lg_stream_format(std::ostream& ostr)
-{
-    using namespace explore;
-    return ostr << start("<=") << separator("#") << explore::end("=>")
-                << assoc_start("<=") << assoc_separator("#") << assoc_end("=>");
-}

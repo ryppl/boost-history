@@ -37,11 +37,6 @@ private:
     std::vector<int> m_vec;
 };
 
-std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
-{
-    return explore::stream_container(ostr, u.start(), u.finish());
-}
-
 BOOST_AUTO_TEST_CASE( user_defined_print_test )
 {
     std::stringstream str_out;
