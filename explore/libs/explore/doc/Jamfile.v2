@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2007 Jeff Garland (jeff at crystalclearsoftware dot com)
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import quickbook ;
+
+xml explore
+  :
+    explore.qbk
+  ;
+
+boostbook standalone
+  :
+    explore
+  :
+    <xsl:param>boost.root=../../../..
+    <xsl:param>boost.libraries=../../../../libs/libraries.htm
+    <xsl:param>navig.graphics.path="../../../../doc/html/images/ "
+    <xsl:param>chapter.autolabel=0
+    <xsl:param>chunk.section.depth=8
+    <xsl:param>chunk.first.sections=1
+    <xsl:param>toc.section.depth=2
+    <xsl:param>toc.max.depth=2
+    <xsl:param>generate.section.toc.level=2
+    <xsl:param>generate.toc="chapter toc,title section toc,title"
+  ;
+
+
+install html
+  :
+    /boost//doc/html/boostbook.css
+  ;

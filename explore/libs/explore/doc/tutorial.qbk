@@ -1,0 +1,102 @@
+[/
+ / Copyright (c) 2007 Jeff Garland (jeff at crystalclearsoftware dot com)
+ / Copyright (c) 2008 Jared McIntyre
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:tutorial Tutorial]
+
+[heading Basic Container Printing]
+
+
+All of the explore library can be used by simply including the `"explore.hpp"` 
+header file.
+
+  ``''''''``#include <boost/explore.hpp>
+  ``''''''``using namespace boost::explore;
+
+
+[heading Printing of Contained Items]
+
+Basic printing of containers requires the inclusing of explore.hpp. Once included, containers can be be streamed in a formated manner.
+
+   std::vector<int> vi;
+   vvi.push_back(1);
+   vvi.push_back(2);
+   vvi.push_back(3);
+   std::cout << vi;
+
+prints
+
+   [1, 2, 3]
+
+The beginning of the container will be marked with a '\[' and the end will be marked with a '\]'. Each item in the container will be seperated by a ', ' to allow for easier identification of each item.
+
+Containers that contain other containers will print the child containers using the same format for the parent, their children, their children's children, etc.
+
+   std::vector<std::vector<int> > vvi;
+   vvi.push_back(vi);
+   vvi.push_back(vi);
+   std::cout << vi;
+
+prints
+
+   [[1, 2, 3], [1, 2, 3]]
+
+[heading C Style Arrays]
+
+C style arrays have a standard streaming format, however, when you include explore.hpp, you override this default streaming format with the explore streaming format and all the abilities of it.
+
+   int arr[3] = {1,2,3};
+   std::cout << arr;
+
+prints
+
+   [1, 2, 3]
+
+[heading Associative Containers]
+
+Associate containers are typically implemented using some form of pair-like container. So you might expect the following
+
+   std::map<int,std::string> mis;
+   mis.insert(std::make_pair(1, "first"));
+   mis.insert(std::make_pair(2, "second"));
+   mis.insert(std::make_pair(3, "third"));
+   std::cout << mis;
+
+would print this way
+
+   [[1, first], [2, second], [3, third]]
+
+But this format doesn't describe the associative nature of the elements well. So, explore uses special delimeters for the associations within associative containers, and the above code prints in a clearer format.
+
+   [1:first, 2:second, 3:third]
+
+Currently, the only containers that explore recognizes as associative are:
+
+* std::map
+* std::multimap
+
+[link boost_explore.tutorial.custom_containers Custom containers] can be handled as associative containers.
+
+[heading lexical_cast]
+
+Because explore works with streaming operators, boost::lexical_cast will work with the explore library to allow you to create strings with the printed output of explore for cases when you don't want to use streaming directly.
+
+   std::vector<int> vi;
+   vvi.push_back(1);
+   vvi.push_back(2);
+   vvi.push_back(3);
+   std::string outVal( boost::lexical_cast<std::string>(vi) );
+
+outVal equals
+
+   [1, 2, 3]
+
+[include custom_delimeters.qbk]
+
+[include custom_containers.qbk]
+
+[endsect]

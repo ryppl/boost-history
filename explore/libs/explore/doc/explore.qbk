@@ -1,0 +1,106 @@
+[/
+ / Copyright (c) 2007 Jeff Garland
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Boost.explore
+    [quickbook 1.4]
+    [copyright 2007 Jeff Garland, 2008 Jared McIntyre]
+    [purpose Library to output Collections]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [category template]
+    [category generic]
+    [last-revision $Date: 2008/03/22 00:25:13 $]
+]
+
+[include tutorial.qbk]
+[include dependencies_platforms.qbk]
+[include design.qbk]
+
+[/=============================================================================]
+
+Boost.explore is a cross-platform C++ library for printing of containers.  
+
+
+[heading Getting Started]
+
+Boost.explore is a library that provides for the output of data from containers
+or ranges.  
+
+The following are some simple usage examples:
+
+   #include <boost/explore.hpp>
+
+   // simple vector example
+   std::vector<int> vi;
+   vvi.push_back(1);
+   vvi.push_back(2);
+   vvi.push_back(3);
+   std::cout << vi;                  // prints [1, 2, 3]
+   
+   //lets do some containers in containers
+   std::vector<std::vector<int> > vvi;
+   vvi.push_back(vi);
+   vvi.push_back(vi);
+   std::cout << vi;                  // prints [[1, 2, 3], [1, 2, 3]]
+   
+   // associative containers 
+   std::map<std::string, int> si_map;
+   si_map["hello"] = 1;
+   si_map["world"] = 2;
+   std::cout << si_map;              // prints [hello:1, world:2]
+   
+   // containers of complex types
+   std::list<date> dl;               // date from boost::gregorian
+   dl.push_back(date(2007, Jan, 1));
+   dl.push_back(date(2007, Jan, 3));
+   std::cout << dl;                  // prints [2007-Jan-1, 2007-Jan-3] 
+   
+   // how about some boost container types:
+   boost::array<std::string, 2> sa2;
+   sa2[0] = "one";
+   sa2[1] = "two";
+   std::cout << sa2;                 // prints [one, two] 
+   
+The [link boost_explore.tutorial tutorial] shows more details on using explore.
+
+While explore is powerful and flexible, it is not infinitely flexible.  
+The reasons for this are discussed in the [link boost_explore.design design] 
+section.For very complex output custom methods or a template output system should 
+be considered.
+
+[heading Supported Containers]
+
+* C style array
+* std::deque
+* std::list
+* std::map
+* std::multimap
+* std::pair
+* std::set
+* std::multiset
+* std::vector
+* boost::array
+* boost::range
+* boost::tuple
+
+[link boost_explore.tutorial.custom_containers Custom containers] can also be made to work with explore.
+
+[heading Acknowledgements]
+
+Most of the major concepts and interfaces for this library were developed
+at BoostCon 2007.  There were many participants in the 8:00 am sessions
+that developed the interfaces and concepts.  Notably Hartmut Kaiser,
+Joao ???, and Joel De Guzman for discussing Karma and doing some initial
+prototypes. Development was done by Jeffrey Faust, Danny Havenith, and
+Jared McIntyre with the help of Jeff Garland, who also lead the sessions.
+
+[/these sections t.b.d.]
+[/include requirements.qbk]
+[/include reference.qbk]

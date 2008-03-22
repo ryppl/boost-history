@@ -1,0 +1,42 @@
+[/
+ / Copyright (c) 2008 Jared McIntyre
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:custom_delimeters Custom Delimiters]
+
+Explore provides the ability to change the strings used in the container streaming process through the use of several new stream manipulators.
+
+[table Explore Stream Manipulators
+    [[Manipulator]            [Default][Description]]
+    [[start(char*)]           ['\[']   [Changes the string output at the beginning of a container.]]
+    [[end(char*)]             ['\]']   [Changes the string output at the end of a container.]]
+    [[seperator(char*)]       [', ']   [Changes the string output in between elements.]]
+    [[assoc_start(char*)]     ['']     [Changes the string output at the front of an association.]]
+    [[assoc_end(char*)]       ['']     [Changes the string output at the end of an association.]]
+    [[assoc_seperator(char*)] [':']    [Changes the string output in between elements of an association.]]
+]
+
+For example, to change the beginning and end output of a container to be the greater and less than symbols, you would do the following.
+
+   std::vector<int> vi;
+   vvi.push_back(1);
+   vvi.push_back(2);
+   vvi.push_back(3);
+   std::cout << explore::start("<") << explore::end(">") << vi;
+
+prints
+
+   <1, 2, 3>
+
+[heading Delimeters by Level]
+
+finish this
+
+[heading Level Breaks]
+
+finish this
+
+[endsect]
