@@ -40,3 +40,34 @@ BOOST_AUTO_TEST_CASE( basic_variant_stream_test )
     str_out << varVal;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }
+
+BOOST_AUTO_TEST_CASE( cool_variant_stream_test )
+{
+   using namespace explore;
+   std::stringstream str_out;
+
+   std::vector<boost::variant< int, std::string, std::vector<int> > > varVec;
+   std::string name("Joe");
+
+   std::vector<int> favoriteNumbers;
+   favoriteNumbers.push_back(22);
+   favoriteNumbers.push_back(42);
+   favoriteNumbers.push_back(73);
+   
+   varVec.push_back("Hello, my name is ");
+   varVec.push_back(name);
+   varVec.push_back(".  I am ");
+   varVec.push_back(34);
+   varVec.push_back(" years old.  My favorite numbers are: ");
+   varVec.push_back(favoriteNumbers);
+   varVec.push_back(".");
+   
+   // level 0
+   str_out << start("") << explore::end("") << separator("");
+   
+   // level 1 (for nested collection)
+   str_out << start("[", 1) << explore::end("]", 1) << separator(", ", 1);
+   
+   str_out << varVec;
+   BOOST_CHECK_EQUAL(str_out.str(), "Hello, my name is Joe.  I am 34 years old.  My favorite numbers are: [22, 42, 73].");
+}
