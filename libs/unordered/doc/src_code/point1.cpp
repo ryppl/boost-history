@@ -29,7 +29,7 @@
         }
     };
 
-    boost::unordered_multiset<point, point_hash, std::equal_to<point> >
+    boost::unordered_multiset<point, point_hash>
         points;
 //]
 
