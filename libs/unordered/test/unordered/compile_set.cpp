@@ -25,7 +25,6 @@ UNORDERED_AUTO_TEST(test0)
         test::minimal::allocator<test::minimal::assignable> > set;
 
     container_test(set, assignable);
-    equality_test(set, assignable);
 
     std::cout<<"Test unordered_multiset.\n";
     boost::unordered_multiset<
@@ -35,7 +34,30 @@ UNORDERED_AUTO_TEST(test0)
         test::minimal::allocator<test::minimal::assignable> > multiset;
 
     container_test(multiset, assignable);
-    equality_test(multiset, assignable);
+}
+
+UNORDERED_AUTO_TEST(equality_tests) {
+    typedef std::pair<test::minimal::assignable const,
+            test::minimal::copy_constructible> value_type;
+    value_type value(
+            test::minimal::assignable::create(),
+            test::minimal::copy_constructible::create());
+
+    boost::unordered_set<
+        test::minimal::assignable,
+        test::minimal::hash<test::minimal::assignable>,
+        test::minimal::equal_to<test::minimal::assignable>,
+        test::minimal::allocator<value_type> > set;
+
+    equality_test(set, value);
+
+    boost::unordered_multiset<
+        test::minimal::assignable,
+        test::minimal::hash<test::minimal::assignable>,
+        test::minimal::equal_to<test::minimal::assignable>,
+        test::minimal::allocator<value_type> > multiset;
+
+    equality_test(multiset, value);
 }
 
 UNORDERED_AUTO_TEST(test1)
