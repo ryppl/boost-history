@@ -6,6 +6,7 @@
 #include <boost/unordered_map.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include "../../examples/hash_functions/fnv-1.hpp"
 
 //[case_insensitive_functions
     struct iequal_to
@@ -38,6 +39,36 @@
 //]
 
 int main() {
+//[case_sensitive_dictionary_fnv
+    boost::unordered_map<std::string, int, hash::fnv_1>
+        dictionary;
+//]
+
+    BOOST_TEST(dictionary.empty());
+
+    dictionary["one"] = 1;
+    BOOST_TEST(dictionary.size() == 1);
+    BOOST_TEST(dictionary.find("ONE") == dictionary.end());
+
+    dictionary.insert(std::make_pair("ONE", 2));
+    BOOST_TEST(dictionary.size() == 2);
+    BOOST_TEST(dictionary.find("ONE") != dictionary.end() &&
+            dictionary.find("ONE")->first == "ONE" &&
+            dictionary.find("ONE")->second == 2);
+
+    dictionary["One"] = 3;
+    BOOST_TEST(dictionary.size() == 3);
+    BOOST_TEST(dictionary.find("One") != dictionary.end() &&
+            dictionary.find("One")->first == "One" &&
+            dictionary.find("One")->second == 3);
+
+    dictionary["two"] = 4;
+    BOOST_TEST(dictionary.size() == 4);
+    BOOST_TEST(dictionary.find("Two") == dictionary.end() &&
+            dictionary.find("two") != dictionary.end() &&
+            dictionary.find("two")->second == 4);
+
+
 //[case_insensitive_dictionary
     boost::unordered_map<std::string, int, ihash, iequal_to>
         idictionary;

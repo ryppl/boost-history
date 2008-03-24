@@ -22,7 +22,8 @@ of the equality predicate you would have to change the hash function to match
 it.  So, if you wanted to use the
 [@http://www.isthe.com/chongo/tech/comp/fnv/ FNV-1 hash] you could write:
 
-    ``[classref boost::unordered_map]``<std::string, int, word_info, hash::fnv_1> dictionary;
+[import src_code/insensitive.cpp]
+[case_sensitive_dictionary_fnv]
 
 An example implementation of FNV-1, and some other hash functions are supplied
 in the examples directory.
@@ -32,7 +33,6 @@ this you will also need to use a matching hash function that matches it. For
 example, to implement a case insensitive dictionary you need to define a
 case insensitive equality predicate and hash function:
 
-[import src_code/insensitive.cpp]
 [case_insensitive_functions]
 
 Which you can then use in a case insensitive dictionary:
