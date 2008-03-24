@@ -17,9 +17,7 @@ is declared as:
         class ``[classref boost::unordered_map unordered_map]``;
 
 The hash function comes first as you might want to change the hash function
-but not the equality predicate, while if you were to change the behavior
-of the equality predicate you would have to change the hash function to match
-it.  So, if you wanted to use the
+but not the equality predicate. For example, if you wanted to use the
 [@http://www.isthe.com/chongo/tech/comp/fnv/ FNV-1 hash] you could write:
 
 [import src_code/dictionary.cpp]
@@ -28,8 +26,8 @@ it.  So, if you wanted to use the
 An example implementation of FNV-1, and some other hash functions are supplied
 in the examples directory.
 
-Alternatively, you might wish to use a different equality function. If you do
-this you will also need to use a matching hash function that matches it. For
+If you wish to use a different equality function,
+you will also need to use a matching hash function. For
 example, to implement a case insensitive dictionary you need to define a
 case insensitive equality predicate and hash function:
 
