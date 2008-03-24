@@ -38,30 +38,6 @@ UNORDERED_AUTO_TEST(test0)
     equality_test(multiset, assignable);
 }
 
-UNORDERED_AUTO_TEST(equality_tests) {
-    typedef std::pair<test::minimal::assignable const,
-            test::minimal::copy_constructible_equality_comparable> value_type;
-    value_type value(
-            test::minimal::assignable::create(),
-            test::minimal::copy_constructible_equality_comparable::create());
-
-    boost::unordered_set<
-        test::minimal::assignable_equality_comparable,
-        test::minimal::hash<test::minimal::assignable_equality_comparable>,
-        test::minimal::equal_to<test::minimal::assignable_equality_comparable>,
-        test::minimal::allocator<value_type> > set;
-
-    equality_test(set, value);
-
-    boost::unordered_multiset<
-        test::minimal::assignable_equality_comparable,
-        test::minimal::hash<test::minimal::assignable_equality_comparable>,
-        test::minimal::equal_to<test::minimal::assignable_equality_comparable>,
-        test::minimal::allocator<value_type> > multiset;
-
-    equality_test(multiset, value);
-}
-
 UNORDERED_AUTO_TEST(test1)
 {
     boost::hash<int> hash;

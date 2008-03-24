@@ -87,29 +87,6 @@ namespace minimal
         assignable() {}
     };
 
-    class assignable_equality_comparable
-    {
-    public:
-        static assignable_equality_comparable create() { return assignable_equality_comparable(); }
-        assignable_equality_comparable(assignable_equality_comparable const&) {}
-        assignable_equality_comparable& operator=(assignable_equality_comparable const&) { return *this; }
-        ~assignable_equality_comparable() {}
-    private:
-        assignable_equality_comparable() {}
-    };
-
-    bool operator==(assignable_equality_comparable, assignable_equality_comparable) {
-        return true;
-    }
-
-    bool operator!=(assignable_equality_comparable, assignable_equality_comparable) {
-        return false;
-    }
-
-    std::size_t hash_value(assignable_equality_comparable) {
-        return 1;
-    }
-
     template <class T>
     class hash
     {
