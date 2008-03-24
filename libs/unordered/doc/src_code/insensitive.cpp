@@ -35,45 +35,38 @@
             return seed;
         }
     };
-
-    struct word_info;
 //]
-
-    struct word_info {
-        int tag;
-        explicit word_info(int t = 0) : tag(t) {}
-    };
 
 int main() {
 //[case_insensitive_dictionary
-    boost::unordered_map<std::string, word_info, ihash, iequal_to>
+    boost::unordered_map<std::string, int, ihash, iequal_to>
         idictionary;
 //]
 
     BOOST_TEST(idictionary.empty());
 
-    idictionary["one"] = word_info(1);
+    idictionary["one"] = 1;
     BOOST_TEST(idictionary.size() == 1);
     BOOST_TEST(idictionary.find("ONE") != idictionary.end() &&
         idictionary.find("ONE") == idictionary.find("one"));
 
-    idictionary.insert(std::make_pair("ONE", word_info(2)));
+    idictionary.insert(std::make_pair("ONE", 2));
     BOOST_TEST(idictionary.size() == 1);
     BOOST_TEST(idictionary.find("ONE") != idictionary.end() &&
             idictionary.find("ONE")->first == "one" &&
-            idictionary.find("ONE")->second.tag == 1);
+            idictionary.find("ONE")->second == 1);
 
-    idictionary["One"] = word_info(3);
+    idictionary["One"] = 3;
     BOOST_TEST(idictionary.size() == 1);
     BOOST_TEST(idictionary.find("ONE") != idictionary.end() &&
             idictionary.find("ONE")->first == "one" &&
-            idictionary.find("ONE")->second.tag == 3);
+            idictionary.find("ONE")->second == 3);
 
-    idictionary["two"] = word_info(4);
+    idictionary["two"] = 4;
     BOOST_TEST(idictionary.size() == 2);
     BOOST_TEST(idictionary.find("two") != idictionary.end() &&
             idictionary.find("TWO")->first == "two" &&
-            idictionary.find("Two")->second.tag == 4);
+            idictionary.find("Two")->second == 4);
 
     return boost::report_errors();
 }
