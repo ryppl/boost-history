@@ -22,7 +22,7 @@ of the equality predicate you would have to change the hash function to match
 it.  So, if you wanted to use the
 [@http://www.isthe.com/chongo/tech/comp/fnv/ FNV-1 hash] you could write:
 
-[import src_code/insensitive.cpp]
+[import src_code/dictionary.cpp]
 [case_sensitive_dictionary_fnv]
 
 An example implementation of FNV-1, and some other hash functions are supplied
