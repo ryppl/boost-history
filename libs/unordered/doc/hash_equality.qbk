@@ -48,8 +48,9 @@ Similarly, a custom hash function can be used for custom types:
 [import src_code/point1.cpp]
 [point_example1]
 
-Although, [link hash.custom extending boost::hash to support the type] is
-probably a better solution:
+Since the default hash function is [link hash Boost.Hash],
+we can [link hash.custom extend it to support the type]
+so that the hash function doesn't need to be explicitly given:
 
 [import src_code/point2.cpp]
 [point_example2]
