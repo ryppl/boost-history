@@ -29,8 +29,7 @@
         }
     };
 
-    boost::unordered_multiset<point, point_hash>
-        points;
+    boost::unordered_multiset<point, point_hash> points;
 //]
 
 int main() {
