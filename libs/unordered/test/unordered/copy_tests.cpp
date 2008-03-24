@@ -5,7 +5,7 @@
 
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include "../helpers/test.hpp"
 #include "../objects/test.hpp"
 #include "../helpers/random_values.hpp"
 #include "../helpers/tracker.hpp"
@@ -14,8 +14,11 @@
 
 test::seed_t seed(9063);
 
+namespace copy_tests
+{
+
 template <class T>
-void copy_construct_tests1(T* = 0)
+void copy_construct_tests1(T*, test::random_generator const& generator = test::default_generator)
 {
     BOOST_DEDUCED_TYPENAME T::hasher hf;
     BOOST_DEDUCED_TYPENAME T::key_equal eq;
@@ -60,7 +63,7 @@ void copy_construct_tests1(T* = 0)
 }
 
 template <class T>
-void copy_construct_tests2(T* ptr = 0)
+void copy_construct_tests2(T* ptr, test::random_generator const& generator = test::default_generator)
 {
     copy_construct_tests1(ptr);
 
@@ -90,22 +93,23 @@ void copy_construct_tests2(T* ptr = 0)
     }
 }
 
-int main()
-{
-    copy_construct_tests1((boost::unordered_set<int>*) 0);
-    copy_construct_tests1((boost::unordered_multiset<int>*) 0);
-    copy_construct_tests1((boost::unordered_map<int, int>*) 0);
-    copy_construct_tests1((boost::unordered_multimap<int, int>*) 0);
+boost::unordered_set<test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_set;
+boost::unordered_multiset<test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_multiset;
+boost::unordered_map<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_map;
+boost::unordered_multimap<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_multimap;
 
-    copy_construct_tests2((boost::unordered_set<test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
-    copy_construct_tests2((boost::unordered_multiset<test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
-    copy_construct_tests2((boost::unordered_map<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
-    copy_construct_tests2((boost::unordered_multimap<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
+using test::default_generator;
+using test::generate_collisions;
 
-    copy_construct_tests2((boost::unordered_set<test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
-    copy_construct_tests2((boost::unordered_multiset<test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
-    copy_construct_tests2((boost::unordered_map<test::equivalent_object, test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
-    copy_construct_tests2((boost::unordered_multimap<test::equivalent_object, test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
+UNORDERED_TEST(copy_construct_tests1,
+    ((test_set)(test_multiset)(test_map)(test_multimap))
+)
 
-    return boost::report_errors();
+UNORDERED_TEST(copy_construct_tests2,
+    ((test_set)(test_multiset)(test_map)(test_multimap))
+    ((default_generator)(generate_collisions))
+)
+
 }
+
+RUN_TESTS()

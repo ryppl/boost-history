@@ -5,21 +5,24 @@
 
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include "../helpers/test.hpp"
 #include "../objects/test.hpp"
 #include "../helpers/random_values.hpp"
 #include "../helpers/tracker.hpp"
 #include "../helpers/helpers.hpp"
 
+namespace find_tests
+{
+
 test::seed_t seed(78937);
 
 template <class X>
-void find_tests1(X*)
+void find_tests1(X*, test::random_generator generator = test::default_generator)
 {
     typedef BOOST_DEDUCED_TYPENAME X::iterator iterator;
 
     {
-        test::random_values<X> v(500);
+        test::random_values<X> v(500, generator);
         X x(v.begin(), v.end());
         X const& x_const = x;
         test::ordered<X> tracker = test::create_ordered(x);
@@ -46,7 +49,7 @@ void find_tests1(X*)
                     (BOOST_DEDUCED_TYPENAME test::non_const_value_type<X>::type*) 0);
         }
 
-        test::random_values<X> v2(500);
+        test::random_values<X> v2(500, generator);
         for(BOOST_DEDUCED_TYPENAME test::random_values<X>::const_iterator it2 =
                 v2.begin(); it2 != v2.end(); ++it2)
         {
@@ -65,7 +68,7 @@ void find_tests1(X*)
     {
         X x;
 
-        test::random_values<X> v2(5);
+        test::random_values<X> v2(5, generator);
         for(BOOST_DEDUCED_TYPENAME test::random_values<X>::const_iterator it3 =
                 v2.begin(); it3 != v2.end(); ++it3)
         {
@@ -78,22 +81,19 @@ void find_tests1(X*)
     }
 }
 
-int main()
-{
-    find_tests1((boost::unordered_set<int>*) 0);
-    find_tests1((boost::unordered_multiset<int>*) 0);
-    find_tests1((boost::unordered_map<int, int>*) 0);
-    find_tests1((boost::unordered_multimap<int, int>*) 0);
+boost::unordered_set<test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_set;
+boost::unordered_multiset<test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_multiset;
+boost::unordered_map<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_map;
+boost::unordered_multimap<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_multimap;
 
-    find_tests1((boost::unordered_set<test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
-    find_tests1((boost::unordered_multiset<test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
-    find_tests1((boost::unordered_map<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
-    find_tests1((boost::unordered_multimap<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >*) 0);
+using test::default_generator;
+using test::generate_collisions;
 
-    find_tests1((boost::unordered_set<test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
-    find_tests1((boost::unordered_multiset<test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
-    find_tests1((boost::unordered_map<test::equivalent_object, test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
-    find_tests1((boost::unordered_multimap<test::equivalent_object, test::equivalent_object, test::hash, test::equal_to, test::allocator<test::equivalent_object> >*) 0);
+UNORDERED_TEST(find_tests1,
+    ((test_set)(test_multiset)(test_map)(test_multimap))
+    ((default_generator)(generate_collisions))
+)
 
-    return 0;
 }
+
+RUN_TESTS()

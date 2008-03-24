@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <boost/limits.hpp>
+#include <new>
 
 #if defined(BOOST_MSVC)
 #pragma warning(push)
@@ -39,16 +40,12 @@ namespace test
 
         pointer allocate(size_type n) {
             using namespace std;
-            return static_cast<T*>(malloc(n * sizeof(T)));
+            T* ptr = static_cast<T*>(malloc(n * sizeof(T)));
+            if(!ptr) throw std::bad_alloc();
+            return ptr;
         }
 
-        pointer allocate(size_type n, const_pointer u) { return allocate(n); }
-
-#if defined(__IBMCPP__)
-        // Workaround for IBM Visual Age which seems to use a void pointer
-        // for the second argument.
         pointer allocate(size_type n, void const* u) { return allocate(n); }
-#endif
 
         void deallocate(pointer p, size_type) {
             using namespace std;
@@ -71,7 +68,9 @@ namespace test
         }
         char* _Charalloc(size_type n) {
             using namespace std;
-            return static_cast<char*>(malloc(n * sizeof(char)));
+            T* ptr = static_cast<T*>(malloc(n * sizeof(char)));
+            if(!ptr) throw std::bad_alloc();
+            return ptr;
         }
 #endif
     };

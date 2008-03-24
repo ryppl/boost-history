@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <iostream>
 #include <boost/limits.hpp>
+#include <new>
 #include "../helpers/fwd.hpp"
 #include "../helpers/allocator.hpp"
 #include "./memory.hpp"
@@ -21,15 +22,9 @@ namespace exception
 {
     namespace detail
     {
-        struct malloc_allocator_holder {
-            template <class T> struct apply {
-                typedef test::malloc_allocator<T> type;
-            };
-        };
-
         namespace
         {
-            test::detail::memory_tracker<malloc_allocator_holder> tracker;
+            test::detail::memory_tracker<test::malloc_allocator<int> > tracker;
         }
     }
 
@@ -37,6 +32,7 @@ namespace exception
     class hash;
     class equal_to;
     template <class T> class allocator;
+    object generate(object const*);
 
     class object
     {
@@ -317,7 +313,7 @@ namespace exception
             //return pointer(static_cast<T*>(::operator new(n * sizeof(T))));
         }
 
-        pointer allocate(size_type n, const_pointer u)
+        pointer allocate(size_type n, void const* u)
         {
             T* ptr = 0;
             UNORDERED_SCOPE(allocator::allocate(size_type, const_pointer)) {
