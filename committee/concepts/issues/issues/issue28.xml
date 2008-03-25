@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="28" status="New">
+  <title>Abstract classes should not be <code>VariableType</code>s</title>
+<section><sref ref="[concept.support]"/></section>
+<submitter>Thomas Witt</submitter>
+<date>25 Mar 2008</date>
+
+<discussion>
+  <p>Since one cannot create an instance of an abstract class, an
+  abstract class type <code>T</code> should not have an
+  implicitly-defined concept
+  map <code>VariableType&lt;T&gt;</code>.</p>
+</discussion>
+
+<resolution>
+  <p>Modify [concept.support]p9 as follows:</p>
+  <ol start="9">
+    <li><i>Requires</i>: for every type <code>T</code> that is an
+      object type or reference type<ins>, but not an abstract class
+      type ([class.abstract])</ins>, a concept
+      map <code>VariableType&lt;T&gt;</code> shall be implicitly
+      defined in namespace <code>std</code>.</li>
+  </ol>
+</resolution>
+</issue>
