@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="27" status="New">
+<title>Missing core concept for polymorphic types</title>
+<section><sref ref="[concept.support]"/></section>
+<submitter>Alisdair Meredith</submitter>
+<date>25 Mar 2008</date>
+
+<discussion>
+  <p>There is no core concept for Polymorphic types in n2572. This
+    seems to be a useful concept where we
+    expect <code>dynamic_cast</code> to return something useful.</p>
+</discussion>
+
+<resolution>
+  <p>Add to the synopsis of the header &lt;concepts&gt;:</p>
+  <pre>
+concept ClassType&lt;typename T&gt; <i>see below</i>; 
+concept Class&lt;typename T&gt; <i>see below</i>; 
+<ins>concept PolymorphicClass&lt;typename T&gt; <i>see below</i>;</ins>
+concept Union&lt;typename T&gt; <i>see below</i>;
+  </pre>
+
+  <p>Add the following to [concept.support], after the description of
+  concept <code>Class</code>:</p>
+  <pre>
+<ins>concept PolymorphicClass&lt;typename T&gt; : Class&lt;T&gt; { }</ins>
+  </pre>
+  <ol start="16">
+    <li><ins><i>Note</i>: describes polymorphic types ([class.virtual]).</ins></li>
+    <li><ins><i>Requires</i>: for every type <code>T</code> that is a polymorphic class, a concept map <code>PolymorphicClass&lt;T&gt;</code> shall be implicitly defined in namespace <code>std</code>.</ins></li>
+  </ol>
+</resolution>
+</issue>
