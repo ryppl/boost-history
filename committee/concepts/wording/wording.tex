@@ -4614,9 +4614,10 @@ void h(float x, int y, int X::* p) {
 
   \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
       searching for \mbox{\tcode{N}} in the namespace of which the
-      concept of \mbox{\tcode{I}} is a member;
-      \mbox{\techterm{using-directives}} in that 
-      namespace are not followed during this search.}
+      concept of \mbox{\tcode{I}} is a member and its associated
+      namespaces (\mbox{\ref{namespace.def}});
+      \mbox{\techterm{using-directives}} in these
+      namespaces are not followed during this search.}
 \end{enumerate}
 
 \mbox{\enterexample}
@@ -4652,10 +4653,11 @@ ordered sequence:}
 
   \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
     searching for \mbox{\tcode{N}} in the namespace of which the
-    concept of \mbox{\tcode{I}} is a member;
-    \mbox{\techterm{using-directives}} in that namespace are not
+    concept of \mbox{\tcode{I}} is a member and its associated
+      namespaces (\mbox{\ref{namespace.def}});
+    \mbox{\techterm{using-directives}} in these namespaces are not
     followed during this search and all names found by way of
-    using-declarations are ignored.}
+    \mbox{\techterm{using-declarations}} are ignored.}
 \end{enumerate}
    
 \addedCC{\mbox{\enternote} When requirement satisfaction is attempted
