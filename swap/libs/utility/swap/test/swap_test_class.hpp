@@ -32,6 +32,7 @@ public:
   swap_test_class& operator=(const swap_test_class&)
   {
     ++copyCount();
+    return *this;
   }
 
   void swap(swap_test_class& other)
