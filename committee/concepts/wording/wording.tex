@@ -44,7 +44,7 @@ Bjarne Stroustrup, Texas A\&M University \\
 Jeremy Siek, University of Colorado at Boulder \\
 James Widman, Gimpel Software
 \end{tabular}\vspace{-6pt}
-\par\noindent Document number: D2571=08-0081 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
 \par\noindent Revises document number: N2501=08-0011 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language C++, Core Working Group\vspace{-6pt}
@@ -65,8 +65,12 @@ provides wording for changes to the core language. Changes to the
 standard library are discussed in separate documents:
 
 \begin{itemize}
-\item Core Concepts for the \Cpp{}0x Standard Library~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2502.pdf}{N2502=08-0012}]
-\item Iterator Concepts for the \Cpp{}0x Standard Library~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2500.pdf}{N2500=08-0010}]
+\item Core Concepts for the \Cpp{}0x Standard Library~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2572.pdf}{N2572=08-0082}]
+\item Iterator Concepts for the \Cpp{}0x Standard
+  Library~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2500.pdf}{N2570=08-0080}]
+\item Concepts for the C++0x Standard Library:
+  Algorithms~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2573.pdf}{N2573=08-0083}]
+\item Concepts for the C++0x Standard Library: Numerics~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2574.pdf}{N2574=08-0084}]
 \end{itemize}
 
 \section*{Non-Trivial Changes from N2501}
@@ -341,6 +345,24 @@ RAIterator<Iter>::difference_type distance(Iter first, Iter last) {
 }
 \end{codeblock}
 \exitexample\
+
+\pnum
+\addedCC{\mbox{\enternote} Function names can be found within the
+  concept map archetypes ([temp.archetype]) corresponding to a
+  template's requirements. \mbox{\enterexample}}
+\begin{codeblock}
+concept A<class B> {
+ void g( const B& );
+}
+
+template< class T, class U >
+requires A<U>
+void f( T & x, U & y ) {
+   g( y ); // binds to A<U'>::g( const U' \& )
+   g( x ); // error: no overload of g takes T' values.
+}
+\end{codeblock}
+\addedCC{\mbox{\exitexample}\mbox{\exitnote}}
 
 \color{black}
 
@@ -1777,37 +1799,6 @@ class Y {
 
 \end{itemize}
 
-\setcounter{section}{2}
-\rSec1[over.match]{Overload resolution}
-\setcounter{Paras}{3}
-
-\pnum
-\addedCC{In a constrained template (\mbox{\ref{temp.constrained}}), if
-  the best viable function is a template function, then the best
-  viable function is the seed of a candidate set
-  (\mbox{\ref{temp.constrained.set}}) containing each of the functions from
-  the set of candidate functions that:}
-
-\begin{itemize}
-\item \addedCC{is a function that is consistent with the seed, or}
-\item \addedCC{is a function template that has the same enclosing
-    namespace as the seed.}
-\end{itemize}
-
-\addedCC{When overload resolution produces a result that has a
-  candidate set, the call submitted to overload resolution will be
-  treated as if it were a call to that candidate set. For
-  type-checking purposes, the candidate set has the type of its seed.} 
-
-\rSec2[over.match.funcs]{Candidate functions and argument lists}
-\rSec2[over.match.viable]{Viable functions}
-\setcounter{Paras}{3}
-\pnum
-\addedCC{Third, if the set of candidate functions is a candidate set
-  from a concept map or constrained template, then for \mbox{\tcode{F}} to
-  be a viable function it shall be consistent with the seed of the
-  candidate set (\mbox{\ref{temp.constrained.set}}).}
-
 \setcounter{section}{4}
 \rSec1[over.oper]{Overloaded operators}
 
@@ -3065,7 +3056,7 @@ int i0 = f<int>(0);
 
 \item
 \addedConcepts{If the specified template arguments do not satisfy the
-  requirements of the template, type deduction fails.}
+  requirements of the template (\mbox{\ref{temp.req}}), type deduction fails.}
 \end{itemize}
 
 \noindent\editorial{Add the following new sections to 14 [temp]:}
@@ -3852,7 +3843,6 @@ or \mbox{\tcode{return}} statement is defined as follows:}
       call to a function, that function is the seed.
       The candidate set contains:}
     \begin{itemize}
-    \item \addedCC{the seed, if the seed is a non-template function,}
     \item \addedCC{the template from which the seed was instantiated, if the
       seed is a template function,}
     \item \addedCC{every function template that has the same name and is
@@ -3942,7 +3932,6 @@ of the candidate set fails,}
   (\mbox{\ref{over.match}}) to initialize the object, then the
   candidate set contains:}
 \begin{itemize}
-  \item\addedCC{the seed, if it is a non-template constructor,}
   \item\addedCC{the template from which the seed was instantiated, if the seed
     is a template constructor,}
   \item\addedCC{the constructor templates of \mbox{\tcode{X}}, and}
@@ -4071,29 +4060,25 @@ void func(X x) {
 \exitexample\
 
 \pnum
-\addedCC{The implicit concept map member defined for an associated
-  type or template can have its definition deduced from the return
-  type of the seed in the candidate set corresponding to an associated
-  function requirement (\mbox{\ref{concept.map.fct}}), using template
-  argument deduction (\mbox{\ref{temp.deduct.type}}). Let
-  \mbox{\tcode{P}} be the return type of the associated function after
+\addedCC{A concept map member that satisfies an associated type or
+  template requirement can be implicitly defined using template
+  argument deduction (\mbox{\ref{temp.deduct}}) with one or more
+  associated function requirements (\mbox{\ref{concept.map.fct}}). 
+  The definition of the associated type or template is
+  determined using the rules of template argument deduction from a
+  type (\mbox{\ref{temp.deduct.type}}). Let
+  \mbox{\tcode{P}} be the return type of an associated function after
   substitution of the concept parameters specified by the concept map
   with their concept arguments, and where each undefined associated
   type and associated template has been replaced with a newly invented
   type or template template parameter, respectively. Let
   \mbox{\tcode{A}} be the return type of the seed in the candidate set
-  corresponding to the associated function.}
-
-\addedCC{The definitions of the associated parameters are determined
-  using the rules of template argument deduction from a function call
-  (\mbox{\ref{temp.deduct.call}}), where \mbox{\tcode{P}} is a
-  function template parameter type and \mbox{\tcode{A}} the
-  corresponding argument type. If the deduction fails, no concept map
-  members are implicitly defined by that associated function.  If the
-  results of deduction produced by different associated functions
-  yield more than one possible \mbox{\tcode{A}} for a particular
-  \mbox{\tcode{P}}-\mbox{\tcode{A}} combination, that associated type
-  or template is not implicitly defined. \mbox{\enterexample}}
+  corresponding to the associated function. If the deduction fails, no
+  concept map members are implicitly defined by that associated
+  function. If the results of
+  deduction produced by different associated functions yield more than
+  one possible value, that associated type or template is
+  not implicitly defined. \mbox{\enterexample}}
 \begin{codeblock}
 auto concept Dereferenceable<typename T> {
   typename value_type;
@@ -4188,7 +4173,7 @@ concept EquilateralPolygon<typename P> : Polygon<P> { /* ... */ }
 \end{codeblock} \exitexample\
 
 \pnum
-A \techterm{requirement-specifier} shall refer to a defined concept. \enterexample\
+A \techterm{refinement-specifier} shall refer to a defined concept. \enterexample\
 \begin{codeblock}
 concept C<typename T> : C<vector<T>> {/* ... */ } // error: concept C is not defined
 \end{codeblock}
@@ -4589,21 +4574,111 @@ void h(float x, int y, int X::* p) {
 \end{codeblock}
 \exitexample\
 
-A concept requirement is satisfied in the following way.
-First, unqualified name lookup (\ref{basic.lookup}) searches for all concept
-maps for the full concept name of the concept in the
-\addedConcepts{concept instance corresponding to the}
-  \techterm{concept-id}. Then concept map matching 
-(\ref{temp.concept.map}) selects the most specific concept map that
-matches the arguments in the concept instance. \enterexample\ In the
-following, to satisfy the template  
-requirement for \texttt{f}, the implementation performs name loookup to find
-concept maps for the concept \texttt{N1::C}.  Lookup finds three
-concept maps: \texttt{::concept_map N1::C<bool>},
-\texttt{N3::concept_map N1::C<int>}, and \texttt{N3::concept_map
-'  N1::C<float>}. Concept map matching then selects the second concept
-map because that matches the requirement \texttt{C<T>} with \texttt{T}
-replaced by the deduced type argument \texttt{int}.
+\addedCC{During template argument deduction (\mbox{\ref{temp.deduct}})
+  against a constrained template, it is necessary to determine whether
+  the template arguments satisfy each requirement of the template.
+  For each requirement, there is a concept instance (call it \mbox{\tcode{I}})
+  formed from the concept of the requirement and the concept arguments
+  after substitution of template arguments for their corresponding
+  template parameters.  There
+  is an associated full concept name of \mbox{\tcode{I}}; call it
+  \mbox{\tcode{N}}.}
+
+\addedCC{Furthermore, there is an ordered sequence \mbox{\tcode{Q}}
+  where each element is a set of concept maps called \mbox{\tcode{S}}.
+  \mbox{\enternote} The ordering of
+  name-finding methods in \mbox{\tcode{Q}} can effect a kind of
+  "concept map hiding" behavior. \mbox{\exitnote}}
+
+\addedCC{When requirement satisfaction is attempted during the
+  instantiation of a constrained template
+  (\mbox{\ref{temp.constrained.inst}}), \mbox{\tcode{Q}} is defined as
+  the following ordered sequence:}
+
+\begin{enumerate}
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps, each with
+      name \mbox{\tcode{N}}, that have replaced the concept map
+      archetypes used in the constrained template.}
+    
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+      searching for \mbox{\tcode{N}} in the namespaces of which the
+      concept maps in (1) are members;
+      \mbox{\techterm{using-directives}} in those namespaces are not
+      followed during this search.}
+
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+      searching for \mbox{\tcode{N}} in the associated namespaces
+      (\mbox{\ref{basic.lookup.argdep}}) of the concept arguments of
+      \mbox{\tcode{I}}; \mbox{\techterm{using-directives}} in those
+      namespaces are not followed during this search.}
+
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+      searching for \mbox{\tcode{N}} in the namespace of which the
+      concept of \mbox{\tcode{I}} is a member;
+      \mbox{\techterm{using-directives}} in that 
+      namespace are not followed during this search.}
+\end{enumerate}
+
+\mbox{\enterexample}
+\begin{codeblock}
+concept C<typename T> { }
+concept D<typename T> { }
+
+namespace N1 {
+  concept_map C<int> { }
+  concept_map D<int> { }
+}
+namespace N2 {
+  template<C T> void f(T);                // \#1
+  template<C T> requires D<T> void f(T);  // \#2
+  template<C T> void g(T x) {
+    f(x);
+  }
+  using N1::concept_map C<int>;
+  void h() {
+    g(1); // inside, g, the call to f goes to \#2
+  }
+}
+
+\end{codeblock}
+\exitexample\
+     
+\addedCC{In all other cases, \mbox{\tcode{Q}} is defined as the
+ordered sequence:}
+
+\begin{enumerate}
+  \additemCC{\mbox{\tcode{S}} is formed by performing unqualified name
+    lookup (\mbox{\ref{basic.lookup.unqual}}) for \mbox{\tcode{N}}.}
+
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+    searching for \mbox{\tcode{N}} in the namespace of which the
+    concept of \mbox{\tcode{I}} is a member;
+    \mbox{\techterm{using-directives}} in that namespace are not
+    followed during this search and all names found by way of
+    using-declarations are ignored.}
+\end{enumerate}
+   
+\addedCC{\mbox{\enternote} When requirement satisfaction is attempted
+  within a constrained context (\mbox{\ref{temp.constrained}}),
+  concept map archetypes, whose names are placed at the same scope as
+  template parameters, can be found by unqualified lookup.
+  \mbox{\exitnote}}
+
+\addedCC{For each element in \mbox{\tcode{Q}} (progressing from the lowest to the highest-numbered
+element of \mbox{\tcode{Q}}), requirement satisfaction is attempted by attempting to find
+within \mbox{\tcode{S}}}
+
+\begin{itemize}
+  \additemCC{exactly one matching non-template concept map or, if one does not
+    exist,}
+
+  \additemCC{exactly one most-specific matching concept map template according
+    to concept map matching rules (\mbox{\ref{temp.concept.map}}).}
+\end{itemize}
+   
+\addedCC{If such a concept map or concept map template exists, then
+  requirement satisfaction succeeds and the remaining elements of
+  \mbox{\tcode{Q}} are ignored.  \mbox{\enterexample}}
 \begin{codeblock}
 namespace N1 {
   concept C<typename T> { };
@@ -4624,12 +4699,7 @@ namespace N3 {
 \end{codeblock}
 \exitexample\
 
-\pnum If there are no matching concept maps found by unqualified name
-lookup, then the namespace of which the concept is a member is
-searched for concept maps. \addedConcepts{This search finds only those
-  concept maps defined in the same namespace as the
-  concept, ignoring any \mbox{\techterm{using-declaration}}s that apply to
-  concept maps (\mbox{\ref{namespace.udecl}}).} \enterexample\ 
+\pnum \enterexample\ 
 \begin{codeblock}
 namespace N1 {
   concept C<typename T> { };
@@ -5370,38 +5440,6 @@ void g(int* i) {
 \addedCC{\mbox{\exitexample}\mbox{\exitnote}}
 
 \pnum
-\addedCC{During the instantiation of a constrained template, the
-  concept maps found by concept map lookup include the
-concept maps that 1) have replaced the concept map archetypes used in the
-constrained template, 2) are in the same namespace as the concept
-maps from 1), 3) are in the associated namespaces
-(\mbox{\ref{basic.lookup.argdep}}) of the concept map arguments for the
-concept maps from 1), or 4) are in the namespace of which the concept
-is a member. \mbox{\enterexample}}
-\begin{codeblock}
-concept C<typename T> { }
-concept D<typename T> { }
-
-namespace N1 {
-  concept_map C<int> { }
-  concept_map D<int> { }
-}
-namespace N2 {
-  template<C T> void f(T);                // \#1
-  template<C T> requires D<T> void f(T);  // \#2
-  template<C T> void g(T x) {
-    f(x);
-  }
-  using N1::concept_map C<int>;
-  void h() {
-    g(1); // inside, g, the call to f goes to \#2
-  }
-}
-
-\end{codeblock}
-\exitexample\
-
-\pnum
 In the instantiation of a constrained template, a template
 specialization whose template arguments involve archetypes
 (\ref{temp.archetype}) will be replaced by the template specialization
@@ -5595,3 +5633,33 @@ concept_map Swappable<X> {
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
+
+Orphan text to be a part of the nominee sets wording:
+
+Was in [over.match]:
+
+\pnum
+\addedCC{In a constrained template (\mbox{\ref{temp.constrained}}), if
+  the best viable function is a template function, then the best
+  viable function is the seed of a candidate set
+  (\mbox{\ref{temp.constrained.set}}) containing each of the functions from
+  the set of candidate functions that:}
+
+\begin{itemize}
+\item \addedCC{is a function that is consistent with the seed, or}
+\item \addedCC{is a function template that has the same enclosing
+    namespace as the seed.}
+\end{itemize}
+
+\addedCC{When overload resolution produces a result that has a
+  candidate set, the call submitted to overload resolution will be
+  treated as if it were a call to that candidate set. For
+  type-checking purposes, the candidate set has the type of its seed.} 
+
+Was in [over.match.viable]:
+
+\pnum
+\addedCC{Third, if the set of candidate functions is a candidate set
+  from a concept map or constrained template, then for \mbox{\tcode{F}} to
+  be a viable function it shall be consistent with the seed of the
+  candidate set (\mbox{\ref{temp.constrained.set}}).}
