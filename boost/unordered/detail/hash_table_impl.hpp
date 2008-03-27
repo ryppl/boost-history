@@ -253,6 +253,7 @@ namespace boost {
 
             class iterator_base
             {
+                typedef BOOST_UNORDERED_TABLE_DATA<Alloc> data;
             public:
                 bucket_ptr bucket_;
                 link_ptr node_;
