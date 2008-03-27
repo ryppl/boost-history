@@ -22,5 +22,5 @@
 [include:unordered hash_equality.qbk]
 [include:unordered comparison.qbk]
 [include:unordered rationale.qbk]
-
 [xinclude ref.xml]
+[xinclude bibliography.xml]
