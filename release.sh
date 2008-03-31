@@ -1,12 +1,15 @@
 #!/bin/sh
 
+NAME=unordered
 TARBALL_DIR=~/tarballs
-UNORDERED_DST=$TARBALL_DIR/unordered
+UNORDERED_DST=$TARBALL_DIR/$NAME
+TARBALL=$TARBALL_DIR/$NAME.tar.gz
+ZIPFILE=$TARBALL_DIR/$NAME.zip
 
 mkdir -p $TARBALL_DIR
-rm $TARBALL_DIR/unordered.tar.gz
-rm $TARBALL_DIR/unordered.zip
-rm -rf $TARBALL_DIR/unordered
+rm $TARBALL
+rm $ZIPFILE
+rm -rf $UNORDERED_DST
 
 svn export . $UNORDERED_DST
 
@@ -19,8 +22,8 @@ rm -r $UNORDERED_DST/bin.v2
 rm $UNORDERED_DST/release.sh
 
 cd $TARBALL_DIR
-tar -czf unordered.tar.gz unordered
-zip -r unordered.zip unordered
+tar -czf $TARBALL $NAME
+zip -r $ZIPFILE $NAME
 cd -
 
 rm -r $UNORDERED_DST
