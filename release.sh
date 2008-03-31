@@ -13,7 +13,7 @@ rm -rf $UNORDERED_DST
 
 svn export . $UNORDERED_DST
 
-cd $UNORDERED_DST/doc
+cd $UNORDERED_DST/libs/unordered/doc
 bjam
 cd -
 
