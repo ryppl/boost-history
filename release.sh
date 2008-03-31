@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=unordered
+NAME=unordered-addon
 TARBALL_DIR=~/tarballs
 UNORDERED_DST=$TARBALL_DIR/$NAME
 TARBALL=$TARBALL_DIR/$NAME.tar.gz
