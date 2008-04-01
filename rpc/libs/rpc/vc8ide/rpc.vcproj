@@ -121,6 +121,10 @@
 				RelativePath="..\..\..\boost\detail\storable.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\boost\detail\storable_arity.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="rpc"
@@ -246,10 +250,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\remote_caller_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\rpc\detail\serialize_template.hpp"
 					>
 				</File>
 				<File

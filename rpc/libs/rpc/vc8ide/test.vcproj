@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="test_rpc"
+	Name="test"
 	ProjectGUID="{DC0901FF-C80A-4C97-8D50-7D1C66B5AB95}"
 	RootNamespace="test_rpc"
 	Keyword="MakeFileProj"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="debug|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\rpc\test\msvc\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -37,7 +37,7 @@
 		</Configuration>
 		<Configuration
 			Name="release|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\rpc\test\msvc\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>

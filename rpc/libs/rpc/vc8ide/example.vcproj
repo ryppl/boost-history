@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="rpc_example"
+	Name="example"
 	ProjectGUID="{27D2C191-D1C2-49B3-870B-010E2D8430A4}"
 	RootNamespace="rpc_example"
 	Keyword="MakeFileProj"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="debug|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\rpc\example\msvc\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -25,7 +25,7 @@
 				Name="VCNMakeTool"
 				BuildCommandLine="cd ../example&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
 				ReBuildCommandLine="cd ../example&#x0D;&#x0A;bjam --v2 -a"
-				CleanCommandLine="cd ../example&#x0D;&#x0A;bjam --v2 --clean"
+				CleanCommandLine="cd ../example&#x0D;&#x0A;bjam --v2 --clean $(ConfigurationName)"
 				Output="$(OutDir)\rpc_example.exe"
 				PreprocessorDefinitions=""
 				IncludeSearchPath="../example"
@@ -37,7 +37,7 @@
 		</Configuration>
 		<Configuration
 			Name="release|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\rpc\example\msvc\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -45,7 +45,7 @@
 				Name="VCNMakeTool"
 				BuildCommandLine="cd ../example&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
 				ReBuildCommandLine=""
-				CleanCommandLine=""
+				CleanCommandLine="cd ../example&#x0D;&#x0A;bjam --v2 --clean $(ConfigurationName)"
 				Output="$(OutDir)\rpc_example.exe"
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
