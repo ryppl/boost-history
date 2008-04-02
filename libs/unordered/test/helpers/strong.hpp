@@ -7,7 +7,7 @@
 #define BOOST_UNORDERED_TEST_HELPERS_STRONG_HEADER
 
 #include <boost/config.hpp>
-#include <vector>
+#include <boost/interprocess/containers/vector.hpp>
 #include <iterator>
 #include "./metafunctions.hpp"
 #include "./equivalent.hpp"
@@ -18,7 +18,7 @@ namespace test
     template <class X>
     class strong
     {
-        typedef std::vector<BOOST_DEDUCED_TYPENAME non_const_value_type<X>::type> values_type;
+        typedef boost::interprocess::vector<BOOST_DEDUCED_TYPENAME non_const_value_type<X>::type> values_type;
         values_type values_;
     public:
         void store(X const& x) {

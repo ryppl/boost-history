@@ -246,7 +246,7 @@ void map_constructor_test(T* = 0)
 {
     std::cerr<<"map_constructor_test\n";
 
-    typedef std::list<std::pair<BOOST_DEDUCED_TYPENAME T::key_type, BOOST_DEDUCED_TYPENAME T::mapped_type> > list;
+    typedef boost::interprocess::list<std::pair<BOOST_DEDUCED_TYPENAME T::key_type, BOOST_DEDUCED_TYPENAME T::mapped_type> > list;
     test::random_values<T> v(1000);
     list l;
     std::copy(v.begin(), v.end(), std::back_inserter(l));

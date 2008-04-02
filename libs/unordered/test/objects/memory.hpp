@@ -7,7 +7,7 @@
 #define BOOST_UNORDERED_TEST_MEMORY_HEADER
 
 #include <memory>
-#include <map>
+#include <boost/interprocess/containers/map.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/assert.hpp>
 #include <boost/unordered/detail/allocator.hpp>
@@ -60,14 +60,14 @@ namespace test
 
         template <class Alloc>
         struct allocator_memory_type_gen {
-            typedef std::map<memory_area, memory_track, memory_area_compare,
+            typedef boost::interprocess::map<memory_area, memory_track, memory_area_compare,
                 Alloc> type;
         };
 
 #if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
         template <>
         struct allocator_memory_type_gen<int> {
-            typedef std::map<memory_area, memory_track, memory_area_compare> type;
+            typedef boost::interprocess::map<memory_area, memory_track, memory_area_compare> type;
         };
 #endif
 

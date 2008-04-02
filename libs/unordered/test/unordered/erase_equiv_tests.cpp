@@ -8,8 +8,7 @@
 
 #include <boost/unordered_map.hpp>
 #include "../helpers/test.hpp"
-#include <list>
-#include <set>
+#include <boost/interprocess/containers/list.hpp>
 #include <iostream>
 #include <iterator>
 #include <boost/next_prior.hpp>
@@ -50,7 +49,7 @@ typedef boost::unordered_multimap<int, int,
     collision2_hash, std::equal_to<int>,
     test::allocator<std::pair<int const, int> > > collide_map2;
 typedef collide_map::value_type collide_value;
-typedef std::list<collide_value> collide_list;
+typedef boost::interprocess::list<collide_value> collide_list;
 
 UNORDERED_AUTO_TEST(empty_range_tests)
 {
@@ -124,7 +123,7 @@ bool general_erase_range_test(Container& x, int start, int end)
     std::copy(x.begin(), x.end(), std::back_inserter(l));
     l.erase(boost::next(l.begin(), start), boost::next(l.begin(), end));
     x.erase(boost::next(x.begin(), start), boost::next(x.begin(), end));
-    return compare(l, x);
+    return ::compare(l, x);
 }
 
 template <class Container>

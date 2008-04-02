@@ -7,8 +7,7 @@
 #include <boost/unordered_map.hpp>
 #include "../helpers/test.hpp"
 #include <algorithm>
-#include <map>
-#include <list>
+#include <boost/interprocess/containers/list.hpp>
 #include "../helpers/tracker.hpp"
 #include "../helpers/invariants.hpp"
 
@@ -57,7 +56,7 @@ UNORDERED_AUTO_TEST(set_tests)
 
 UNORDERED_AUTO_TEST(map_tests)
 {
-    typedef std::list<std::pair<int const, int> > values_type;
+    typedef boost::interprocess::list<std::pair<int const, int> > values_type;
     values_type v[5];
     v[0].push_back(std::pair<int const, int>(1,1));
     v[1].push_back(std::pair<int const, int>(28,34));
