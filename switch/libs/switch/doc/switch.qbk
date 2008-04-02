@@ -35,7 +35,7 @@ for such usage.
 [table Valid Expressions
     [[Expression] [Semantics]]
     [[C::labels] [An MPL Forward Sequence of MPL Integral Constants]]
-    [[c.apply<R>(i)] [Returns type R.  The type of i must be in C::labels]]
+    [[c.apply<R>(i)] [Returns type R.  The type of i must be a member of the sequence C::labels]]
 ]
 
 [endsect]
@@ -65,11 +65,11 @@ for such usage.
 
     namespace boost {
 
-    template<class Cases, class Int, class F>
-    typename F::result_type switch_(Int n, F f);
+    template<class Result, class Int, class Case>
+    Result switch_(Int n, Case case);
 
-    template<class Cases, class Int, class F, class Default>
-    typename F::result_type switch_(Int n, F f, Default default_);
+    template<class Result, class Int, class Case, class Default>
+    Result switch_(Int n, Case f, Default default_);
 
     }
 
@@ -78,11 +78,10 @@ for such usage.
     #include <boost/switch.hpp>
 
 [variablelist Parameters
-    [[[^Cases]][MPL Forward Sequence.  Each of the elements must have a nested integral
-        constant ::value suitable for use in a case statement]]
-    [[[^n]][Must be of a built-in integal type]]
-    [[[^f]][Unary function object.  f(T()) must be defined for every T in Cases and must
-        return a type convertible to F::result_type]]
+    [[[^Result]][The type to return.]]
+    [[[^n]][Must be of a built-in integal or enumeration type.  Statements of the
+           form switch(n) {} must be legal.]]
+    [[[^case]][Model of the Case concept.]]
     [[[^default_]][Unary function object such that default_(n) returns a type convertible to the result type]]
 ]
 
@@ -92,14 +91,14 @@ will call `f` with a default constructed parameter of that type.
 Otherwise it will either pass `n` to `default_` or throw an exception
 depending on whether `default_` was specified.
 
-Thus, `switch<Cases>(n, f, default_)` is equivalent to
+Thus, `switch<R>(n, case, default_)` is equivalent to
 
     switch(n) {
-        case mpl::at_c<Cases, 0>::type::value: return(f(mpl::at_c<Cases, 0>::type()));
-        case mpl::at_c<Cases, 1>::type::value: return(f(mpl::at_c<Cases, 1>::type()));
-        case mpl::at_c<Cases, 2>::type::value: return(f(mpl::at_c<Cases, 2>::type()));
+        case mpl::at_c<Case::labels, 0>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, 0>::type()));
+        case mpl::at_c<Case::labels, 1>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, 1>::type()));
+        case mpl::at_c<Case::labels, 2>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, 2>::type()));
         ...
-        case mpl::at_c<Cases, N>::type::value: return(f(mpl::at_c<Cases, N>::type()));
+        case mpl::at_c<Case::labels, N>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, N>::type()));
         default: return(default_(n));
     }
 
@@ -127,10 +126,41 @@ For example
     void print_nth(const FusionSequence& s, std::size_t n) {
         typedef typename fusion::result_of::size<FusionSequence>::type size;
         typedef mpl::range_c<std::size_t, 0, size::value> range;
-        switch_<range>(n, print_nth_function(s), throw_out_of_range());
+        switch_<void>(n, case<range>(print_nth_function(s)), throw_out_of_range());
     }
 
 prints the nth element of a fusion sequence.
+
+Here is an example of using Switch to implement the apply_visitor
+function from Boost.Variant.
+
+    template<class Variant, class Visitor>
+    struct apply_visitor_function {
+    public:
+        apply_visitor_function(Variant& variant, Visitor& visitor) : variant_(variant), visitor_(visitor) {}
+        template<int N>
+        typedef Visitor::result_type operator()(N) {
+            return(visitor_(boost::get<typename mpl::at<typename Variant::type, N> >(variant_)));
+        }
+    private:
+        Variant variant_;
+        Visitor visitor_;
+    };
+
+    template<class R>
+    struct never_called {
+        template<class Int>
+        R operator()(Int) {
+            BOOST_ASSERT(!"this function should never be called.");
+        }
+    };
+
+    template<class Variant, class Visitor>
+    typename Visitor::result_type apply_visitor(Variant& variant, Visitor visitor) {
+        apply_visitor_function<Variant, Visitor> f(variant, visitor);
+        never_called<typename Visitor::result_type> default_;
+        return(switch_<typename Visitor::result_type>(variant.which(), case_<mpl::range_c<int, 0, mpl::size<Variant::types>::value> >, default_));
+    }
 
 [endsect]
 
@@ -207,6 +237,7 @@ The disadvantages are:
     [[limited number of cases?] [yes] [no] [no] [no]]
     [[compilation time] [fast] [fast] [fast] [slow if the cases are not sorted]]
     [[can handle any type?] [no] [yes] [yes] [yes but need to be able to sort at compile time]]
+    [[fallthrough?] [yes] [no] [no] [no]]
 ]
 
 [section:benchmarks Benchmarks]
@@ -220,13 +251,31 @@ The disadvantages are:
     [[sorted_array] [9.625] [9.89]]
 ]
 
-[table Runtime Benchmark on g++ 3.4.4
+[table Runtime Benchmark on g++ 3.4.4 (seconds)
     [[] [consecutive] [spread out]]
     [[switch] [2.656] [2.922]]
     [[if/else] [7.047] [6.984]]
     [[binary_search] [3] [3.031]]
     [[std::map] [50.719] [51.125]]
     [[sorted_array] [9.109] [9.313]]
+]
+
+[table Compile Time Benchmark on g++ 3.4.4 for 50 cases (seconds)
+    [[] [sorted] [reverse sorted]]
+    [[switch] [7.14] [9.50]]
+    [[if/else] [5.81] [9.48]]
+    [[binary_search] [5.83] [11.98]]
+    [[std::map] [10.53] [14.30]]
+    [[sorted_array] [10.92] [13.27]]
+]
+
+[table Compile Time Benchmark on g++ 3.4.4 for 250 cases (seconds)
+    [[] [sorted] [reverse sorted]]
+    [[switch] [] [270.61]]
+    [[if/else] [] [174.72]]
+    [[binary_search] [] [killed after 40 minutes]]
+    [[std::map] [] []]
+    [[sorted_array] [] []]
 ]
 
 [endsect]
