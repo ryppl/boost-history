@@ -137,19 +137,6 @@ struct add_to_group {
     };
 };
 
-//class empty_case {
-//public:
-//    template<class T>
-//    explicit empty_case(T&) {}
-//    typedef mpl::vector0<> labels;
-//    void apply();
-//};
-//
-//template<class S, class F>
-//struct make_case_group {
-//    typedef typename mpl::fold<S, empty_case, add_to_group<F> >::type type;
-//};
-
 template<class Case>
 class expression_template_case_t {
 public:
@@ -168,8 +155,10 @@ private:
     Case impl;
 };
 
+// allows a Case to be used in the expression template
+// framework.
 template<class Case>
-expression_template_case_t<restrict_case_t<Case> > restrict_case(Case& c) {
+expression_template_case_t<restrict_case_t<Case> > make_case(Case& c) {
     return(expression_template_case_t<restrict_case_t<Case> >(c));
 }
 
@@ -185,11 +174,6 @@ template<class S, class F>
 expression_template_case_t<restrict_case_t<case_group_t<S,F> > > case_(F f) {
  return(expression_template_case_t<restrict_case_t<case_group_t<S,F> > >(f));
 }
-
-//template<class S, class F>
-//expression_template_case_t<typename make_case_group<S, F>::type> case_(F f) {
-//    return(expression_template_case_t<typename make_case_group<S,F>::type>(f));
-//}
 
 template<int N, class F>
 expression_template_case_t<single_case_t<mpl::int_<N>, F> > case_c(F f) {
