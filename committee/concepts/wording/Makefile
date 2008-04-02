@@ -10,20 +10,7 @@ DVIPS		= dvips
 
 
 .tex.dvi:
-	@ if test ! -f $*.ind; then echo "" > $*.ind; fi
 	@ $(LATEX) $*
-	@ if ( grep 'Writing index file' $*.log > /dev/null ); \
-	then makeindex $* ; $(LATEX) $* ; fi
-	@ if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
-	then $(LATEX) $* ; fi
-	@ if ( grep 'LaTeX Warning: Citation' $*.log > /dev/null ); \
-	then bibtex $* ; $(LATEX) $* ; fi
-	@ if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
-	then $(LATEX) $* ; fi
-	@ if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
-	then $(LATEX) $* ; fi
-	@ if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
-	then $(LATEX) $* ; fi
 
 .dot.eps:
 	dot -Tps $*.dot > $*.eps
@@ -85,6 +72,26 @@ DPDF	= $(DOT:.dot=.pdf)
 $(NAME).dvi: $(NAME).tex $(OTHER_TEX)
 $(NAME).ps:  $(NAME).dvi
 $(NAME).pdf: $(NAME).tex $(OTHER_TEX) $(DPDF) $(PDF_FIGS)
+
+final:
+	@$(PDFLATEX) wording.tex
+	@if ( grep 'LaTeX Warning: Label(s) may' wording.tex.log > /dev/null ); \
+	then $(PDFLATEX) wording.tex ; else :; fi
+	@ if ( grep 'Writing index file' wording.tex.log > /dev/null ); \
+	then makeindex wording.tex ; $(PDFLATEX) wording.tex ; fi
+	@-if ( grep 'LaTeX Warning: Citation' wording.tex.log > /dev/null ); then \
+	  bibtex wording.tex ; \
+	  $(PDFLATEX) wording.tex ; \
+	fi
+	@if ( grep 'LaTeX Warning: Label(s) may' wording.tex.log > /dev/null || \
+	      grep 'LaTeX Warning: Citation' wording.tex.log > /dev/null); \
+	then $(PDFLATEX) wording.tex ; else :; fi
+	@if ( grep 'LaTeX Warning: Label(s) may' wording.tex.log > /dev/null || \
+	      grep 'LaTeX Warning: Citation' wording.tex.log > /dev/null); \
+	then $(PDFLATEX) wording.tex ; else :; fi
+	@if ( grep 'LaTeX Warning: Label(s) may' wording.tex.log > /dev/null || \
+	      grep 'LaTeX Warning: Citation' wording.tex.log > /dev/null); \
+	then $(PDFLATEX) wording.tex ; else :; fi
 
 #
 # Standard rules

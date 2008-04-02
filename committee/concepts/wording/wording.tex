@@ -4457,29 +4457,30 @@ concept_map E<int> {
 \rSec1[temp.constrained]{Constrained templates}
 
 \pnum
-A template that has a \techterm{requires-clause} (or declares any
+\addedConcepts{A template that has a \mbox{\techterm{requires-clause}}
+  (or declares any 
 template type parameters using the simple form of requirements
-(\ref{temp.param})) is a \techterm{constrained
-  template}. A constrained template can only be instantiated with
+(\mbox{\ref{temp.param}})) is a \mbox{\techterm{constrained
+  template}}. A constrained template can only be instantiated with
 template arguments that satisfy its template requirements. 
 The template definitions of constrained templates are
-similarly constrained, requiring all names to be 
-found through name lookup \addedConcepts{at template definition time}
-(\ref{basic.lookup}). \enternote\
-\addedConcepts{names can be found in the template requirements of a
-  constrained template (\mbox{\ref{basic.scope.req}}).} The practical effect of constrained templates is that they provide
+similarly constrained, requiring names to be 
+found through name lookup at template definition time
+(\mbox{\ref{basic.lookup}}). \mbox{\enternote}
+Names can be found in the template requirements of a
+  constrained template (\mbox{\ref{basic.scope.req}}). The practical effect of constrained templates is that they provide
 improved diagnostics at template definition time, such that any use of
 the constrained template that satisfies the template's requirements is
-likely to result in a well-formed instantiation. \exitnote\
+likely to result in a well-formed instantiation. \mbox{\exitnote}}
 
 \pnum
-A template that is not a constrained template is an
-\techterm{unconstrained template}. 
+\addedConcepts{A template that is not a constrained template is an
+\mbox{\techterm{unconstrained template}}.}
 
 \pnum \addedConcepts{A \mbox{\techterm{constrained context}} is a part of a
   constrained template in which all name lookup is resolved at
   template definition time. Names that would be dependent outside of a
-  constrained context are found in the current scope, which includes
+  constrained context shall be found in the current scope, which includes
   the template requirements of the constrained template
   (\mbox{\ref{basic.scope.req}}). \mbox{\enternote} Within a constrained
   context, template parameters behave as if aliased their
@@ -4521,38 +4522,39 @@ A template that is not a constrained template is an
 
 \rSec2[temp.req]{Template requirements}
 \pnum
-A template has \techterm{template requirements} if it contains a
-\techterm{requires-clause} or any of its template parameters were
+\addedConcepts{A template has \mbox{\techterm{template requirements}} if it contains a
+\mbox{\techterm{requires-clause}} or any of its template parameters were
 specified using the simple form of requirements
-(\ref{temp.param}). Template requirements state the conditions under
-which the template can be used.
+(\mbox{\ref{temp.param}}). Template requirements state the conditions under
+which the template can be used.}
 
 \begin{bnf}
-requires-clause:\br
-         \terminal{requires} requirement-list\br
-         \terminal{requires (} requirement-list \terminal{)}\br
+\addedConcepts{requires-clause:}\br
+         \addedConcepts{\mbox{\terminal{requires}} requirement-list}\br
+         \addedConcepts{\mbox{\terminal{requires (}} requirement-list \mbox{\terminal{)}}}\br
 
-requirement-list:\br
-         requirement \terminal{...}\opt\ \terminal{\&\&} requirement-list\br
-         requirement \terminal{...}\opt\ \br
+\addedConcepts{requirement-list:}\br
+         \addedConcepts{requirement \mbox{\terminal{...}\opt\ \terminal{\&\&}} requirement-list}\br
+         \addedConcepts{requirement \mbox{\terminal{...}\opt}} \br
 
-requirement:\br
-         \terminal{::}\opt\ nested-name-specifier\opt\ concept-id\br
-         \terminal{!} \terminal{::}\opt\ nested-name-specifier\opt\ concept-id
+\addedConcepts{requirement:}\br
+         \addedConcepts{\mbox{\terminal{::}\opt\ nested-name-specifier\opt\ concept-id}}\br
+         \addedConcepts{\mbox{\terminal{!} \terminal{::}\opt\ nested-name-specifier\opt\ concept-id}}
 \end{bnf}
 
 \pnum
-A \techterm{requires-clause} contains a list of requirements, all of
-which must be satisfied by the template arguments for the template. A
-\techterm{requirement} not containing a \tcode{!} is a
-\techterm{concept requirement}. A \techterm{requirement} containing
-a \tcode{!} is a \techterm{negative requirement}.
+\addedConcepts{A \mbox{\techterm{requires-clause}} contains a list of
+  requirements, all of which must be satisfied by the template
+  arguments for the template. A \mbox{\techterm{requirement}} not
+  containing a \mbox{\tcode{!}} is a \mbox{\techterm{concept
+      requirement}}. A \mbox{\techterm{requirement}} containing a
+  \mbox{\tcode{!}} is a \mbox{\techterm{negative requirement}}.}
 
 \pnum
-A concept requirement requires that there be a most
+\addedConcepts{A concept requirement requires that there be a most
 specific concept map according to concept map
 matching and partial ordering of concept map templates
-(\ref{temp.concept.map}). \enterexample\
+(\mbox{\ref{temp.concept.map}}). \mbox{\enterexample}}
 \begin{codeblock}
 @\textcolor{addclr}{concept}@ A<typename T> { }
 auto concept B<typename T> { T operator+(T, T); }
@@ -4572,7 +4574,7 @@ void h(float x, int y, int X::* p) {
   g(p); // error: no implicit definition of concept map B<int X::*>; requirement not satisfied
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \addedCC{During template argument deduction (\mbox{\ref{temp.deduct}})
   against a constrained template, it is necessary to determine whether
@@ -4699,9 +4701,10 @@ namespace N3 {
   void g() { f(1); }
 }
 \end{codeblock}
-\exitexample\
+\addedCC{\mbox{\exitexample}}
 
-\pnum \enterexample\ 
+\pnum 
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 namespace N1 {
   concept C<typename T> { };
@@ -4710,12 +4713,12 @@ namespace N1 {
 template<N1::C T> void f(T x);
 void g() { f(1); } // Ok, finds N1::concept_map C<int> because it is in the same namespace as concept N1::C.
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-A negative requirement requires that no concept map
+\addedConcepts{A negative requirement requires that no concept map
 corresponding to its concept instance be defined, implicitly or 
-explicitly. \enterexample\
+explicitly. \mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { }
 auto concept B<typename T> { T operator+(T, T); }
@@ -4735,28 +4738,28 @@ void h(float x, int y, int X::* p) {
   g(p); // okay: concept map B<int X::*> cannot be implicitly defined
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-A concept requirement that refers to the
-\tcode{SameType} concept (\mbox{\ref{concept.support}}) is a
-\techterm{same-type requirement}. A same-type requirement is satisfied
+\addedConcepts{A concept requirement that refers to the
+\mbox{\tcode{SameType}} concept (\mbox{\ref{concept.support}}) is a
+\mbox{\techterm{same-type requirement}}. A same-type requirement is satisfied
 when its two concept arguments refer to the same type (including the
-same \techterm{cv} qualifiers). In a 
-constrained template (\ref{temp.constrained}), a same-type requirement
-\tcode{SameType<T1, T2>} makes the types \tcode{T1} and \tcode{T2}
-equivalent. \enternote\ type equivalence is a
-congruence relation, thus
+same \mbox{\techterm{cv}} qualifiers). In a 
+constrained template (\mbox{\ref{temp.constrained}}), a same-type requirement
+\mbox{\tcode{SameType<T1, T2>}} makes the types \mbox{\tcode{T1}} and \mbox{\tcode{T2}}
+equivalent. \mbox{\enternote} type equivalence is a
+congruence relation, thus}
 \begin{itemize}
-\item \tcode{SameType<T1, T2>} implies \tcode{SameType<T2, T1>},
-\item \tcode{SameType<T1, T2>} and \tcode{SameType<T2, T3>} implies
-  \tcode{SameType<T1, T3>},
-\item \tcode{SameType<T1, T1>} is trivially true,
-\item \tcode{SameType<T1*, T2*>} implies \tcode{SameType<T1, T2>} and
-  \tcode{SameType<T1**, T2**>}, etc.
+\item \addedConcepts{\mbox{\tcode{SameType<T1, T2>}} implies \mbox{\tcode{SameType<T2, T1>}},}
+\item \addedConcepts{\mbox{\tcode{SameType<T1, T2>}} and \mbox{\tcode{SameType<T2, T3>}} implies
+  \mbox{\tcode{SameType<T1, T3>}},}
+\item \addedConcepts{\mbox{\tcode{SameType<T1, T1>}} is trivially true,}
+\item \addedConcepts{\mbox{\tcode{SameType<T1*, T2*>}} implies \mbox{\tcode{SameType<T1, T2>}} and
+  \mbox{\tcode{SameType<T1**, T2**>}}, etc.}
 \end{itemize}
-\exitnote\
-\enterexample\
+\addedConcepts{\mbox{\exitnote}
+\mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> {
   typename assoc;
@@ -4774,13 +4777,13 @@ C<T>::assoc f(T t, U u) {
   return a(t) + a(u); // okay: C<T>::assoc and C<U>::assoc are the same type
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-A \techterm{requirement} followed by an ellipsis is a pack expansion
-(\ref{temp.variadic}). Requirement pack expansions place requirements
+\addedConcepts{A \mbox{\techterm{requirement}} followed by an ellipsis is a pack expansion
+(\mbox{\ref{temp.variadic}}). Requirement pack expansions place requirements
 on all of the arguments in one or more template parameter
-packs. \enterexample\ 
+packs. \mbox{\enterexample}}
 \begin{codeblock}
 auto concept OutputStreamable<typename T> {
   std::ostream& operator<<(std::ostream&, const T&);
@@ -4805,7 +4808,7 @@ void f(int x, float y) {
   print(17, " ", std::cout); // error: no concept map OutputStreamable<std::ostream>
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedConcepts{If the requirements of a template are inconsistent, such that
@@ -4843,11 +4846,11 @@ requirements are implied from:}
 \end{itemize}
 
 \pnum
-For every concept requirement in a template's
+\addedConcepts{For every concept requirement in a template's
 requirements (including implied requirements), requirements for the 
 refinements and associated requirements of the concept named by the
-concept instance (\ref{concept.refine}, \ref{concept.req}) are
-implied.
+concept instance (\mbox{\ref{concept.refine}}, \mbox{\ref{concept.req}}) are
+implied.}
 
 \pnum 
 \addedConcepts{The formation of types within the declaration of a
@@ -4905,7 +4908,7 @@ add(T t, U u) {
 }
 \end{codeblock}
 
-\additemConcepts{For every type arcjetype \mbox{\tcode{T}} that is the type
+\additemConcepts{For every type archetype \mbox{\tcode{T}} that is the type
   of a parameter in a function type, the requirement
   \mbox{\tcode{MoveConstructible<T>}} is implied.}
 \exitexample\
@@ -4913,18 +4916,18 @@ add(T t, U u) {
 \end{itemize}
 
 \pnum
-In the definition of a class template partial specialization, the
-requirements of its primary class template (\ref{temp.class.spec}),
+\addedConcepts{In the definition of a class template partial specialization, the
+requirements of its primary class template (\mbox{\ref{temp.class.spec}}),
 after substitution of the template arguments of the class template partial
-specialization, are implied. \enternote\ this rule ensures that a
+specialization, are implied. \mbox{\enternote} this rule ensures that a
 class template partial specialization of a constrained template is a constrained
 template, even if does not have template requirements explicitly
-specified. \exitnote\
+specified. \mbox{\exitnote}
 If this substitution results
 in a requirement that does not depend on any template parameter, then
-the requirement must be satisfied (\ref{temp.req}); otherwise, the
+the requirement must be satisfied (\mbox{\ref{temp.req}}); otherwise, the
 program is ill-formed.
-\enterexample\
+\mbox{\enterexample}}
 \begin{codeblock}
 template<typename T>
 requires EqualityComparable<T>
@@ -4935,29 +4938,29 @@ class simple_set<T*> // implies \tcode{EqualityComparable<T*>}
 {
 };
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-The template requirements for two templates are \techterm{identical}
-if they contain the same concept, negative, \addedConcepts{and}
+\addedConcepts{The template requirements for two templates are \mbox{\techterm{identical}}
+if they contain the same concept, negative, and
 same-type requirements in arbitrary order. Two requirements are the
 same if they have the same kind, name the same concept, and have the
-same template argument lists. 
+same template argument lists.}
 
 \rSec2[temp.archetype]{Archetypes}
 \pnum
-An \techterm{archetype} is a non-dependent
-type\addedConcepts{, template, or value} whose behavior is defined 
-by the template requirements (\ref{temp.req}) of its constrained
-template. \addedConcepts{Within a constrained context
+\addedConcepts{An \mbox{\techterm{archetype}} is a non-dependent
+type, template, or value whose behavior is defined 
+by the template requirements (\mbox{\ref{temp.req}}) of its constrained
+template. Within a constrained context
   (\mbox{\ref{temp.constrained}}), a template parameter behaves as if it
-were its archetype.} \enternote\ this substitution of
+were its archetype. \mbox{\enternote} this substitution of
 archetypes (which are not dependent) for their corresponding
-types\addedConcepts{, templates, or values} (which would be dependent in an
+types, templates, or values (which would be dependent in an
 unconstrained template)
 effectively treats all types and templates (and therefore both
 expressions and names) 
-in a constrained context as ``non-dependent''. \exitnote\
+in a constrained context as ``non-dependent''. \mbox{\exitnote}}
 
 \pnum
 \addedConcepts{The archetype of a type is a type,
@@ -4965,11 +4968,11 @@ the archetype of a template is a class template, and the archetype of
 a value is a value. }
 
 \pnum
-A type in a constrained template aliases an archetype if it is:
+\addedConcepts{A type in a constrained template aliases an archetype if it is:}
 \begin{itemize}
-\item a template type parameter (\ref{temp.param}),
-\item an associated type (\ref{concept.assoc}), or
-\additemConcepts{a class template specialization involving one or more
+\item \addedConcepts{a template type parameter (\mbox{\ref{temp.param}}),}
+\item \addedConcepts{an associated type (\mbox{\ref{concept.assoc}}), or}
+\item \addedConcepts{a class template specialization involving one or more
   archetypes}
 \end{itemize}
 
@@ -5027,13 +5030,13 @@ archetype \tcode{T$'$}. \addedConcepts{\mbox{\enternote} there is no
 \end{itemize}
 
 \pnum
-The archetype \tcode{T$'$} of \tcode{T} contains a public member
+\addedConcepts{The archetype \mbox{\tcode{T$'$}} of \mbox{\tcode{T}} contains a public member
 function or member function template
 corresponding to each member function or member function template of
 each concept map archetype corresponding
 to a concept 
-requirement that names \tcode{T} (\ref{temp.req}).
-\enterexample\
+requirement that names \mbox{\tcode{T}} (\mbox{\ref{temp.req}}).
+\mbox{\enterexample}}
 \begin{codeblock}
 concept CopyConstructible<typename T> {
   T::T(const T&);
@@ -5052,17 +5055,17 @@ void foo(T& x) {
   y.swap(x);
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-If no requirement specifies a copy constructor for a type
-\tcode{T}, a copy constructor is implicitly declared
-(\ref{class.copy}) in the archetype of \tcode{T} with the following
-signature:
+\addedConcepts{If no requirement specifies a copy constructor for a type
+\mbox{\tcode{T}}, a copy constructor is implicitly declared
+(\mbox{\ref{class.copy}}) in the archetype of \mbox{\tcode{T}} with the following
+signature:}
 \begin{codeblock}
   T(const T&) = delete;
 \end{codeblock}
-\enterexample\
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept DefaultConstructible<typename T> {
   T::T();
@@ -5080,42 +5083,42 @@ void f(T x) {
           // copy constructor, which is deleted
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-If no requirement specifies a copy assignment operator for a type
-\tcode{T}, a copy assignment operator is implicitly
-declared (\ref{class.copy}) in the archetype of \tcode{T} with the
-following signature:
+\addedConcepts{If no requirement specifies a copy assignment operator for a type
+\mbox{\tcode{T}}, a copy assignment operator is implicitly
+declared (\mbox{\ref{class.copy}}) in the archetype of \mbox{\tcode{T}} with the
+following signature:}
 \begin{codeblock}
   T& T::operator=(const T&) = delete;
 \end{codeblock}
 
 \pnum
-If no requirement specifies a destructor for a type \tcode{T},
-a destructor is implicitly declared (\ref{class.dtor})
-in the archetype of \tcode{T} with the following signature:
+\addedConcepts{If no requirement specifies a destructor for a type \mbox{\tcode{T}},
+a destructor is implicitly declared (\mbox{\ref{class.dtor}})
+in the archetype of \mbox{\tcode{T}} with the following signature:}
 \begin{codeblock}
   ~T() = delete;
 \end{codeblock}
 
 \pnum
-If no requirement specifies a unary \tcode{\&} operator for a type
-\tcode{T}, a unary member operator \tcode{\&} is implicitly declared in the
-archetype of \tcode{T} for each \techterm{cv} that is a valid
-\techterm{cv-qualifier-seq}: 
+\addedConcepts{If no requirement specifies a unary \mbox{\tcode{\&}} operator for a type
+\mbox{\tcode{T}}, a unary member operator \mbox{\tcode{\&}} is implicitly declared in the
+archetype of \mbox{\tcode{T}} for each \mbox{\techterm{cv}} that is a valid
+\mbox{\techterm{cv-qualifier-seq}}:}
 \begin{codeblock}
   @\techterm{cv}@ T* operator&() @\techterm{cv}@ = delete;
 \end{codeblock}
 
 \pnum 
-For each of the allocation functions \tcode{new}, \tcode{new[]},
-\tcode{delete}, and \tcode{delete[]} ([class.free]), if no requirement
+\addedConcepts{For each of the allocation functions \mbox{\tcode{new}}, \mbox{\tcode{new[]}},
+\mbox{\tcode{delete}}, and \mbox{\tcode{delete[]}} (\mbox{\ref{class.free}}), if no requirement
 specifies the corresponding operator with a signature below, that
 allocation function is
-implicitly declared as a member function in the archetype \tcode{T$'$}
-of \tcode{T} with the
-corresponding signature from the following list:
+implicitly declared as a member function in the archetype \mbox{\tcode{T$'$}}
+of \mbox{\tcode{T}} with the
+corresponding signature from the following list:}
 \begin{codeblock}
   static void* T@$'$@::operator new(std::size_t) = delete;
   static void* T@$'$@::operator new(std::size_t, void*) = delete;
@@ -5132,20 +5135,20 @@ corresponding signature from the following list:
 \end{codeblock}
 
 \pnum
-If the template requirements contain a requirement
-\tcode{DerivedFrom<T, Base>}, then the archetype of
-\tcode{T} is publicly derived from the archetype of \tcode{Base}. 
-If the same \tcode{DerivedFrom<T, Base>} requirement occurs more than once
-within the template requirements, the repeated \tcode{DerivedFrom<T,
-  Base>} requirements are ignored.
+\addedConcepts{If the template requirements contain a requirement
+\mbox{\tcode{DerivedFrom<T, Base>}}, then the archetype of
+\mbox{\tcode{T}} is publicly derived from the archetype of \mbox{\tcode{Base}}. 
+If the same \mbox{\tcode{DerivedFrom<T, Base>}} requirement occurs more than once
+within the template requirements, the repeated \mbox{\tcode{DerivedFrom<T,
+  Base>}} requirements are ignored.}
 
 \pnum
-If two associated member function or member function template
-requirements \addedConcepts{that name a constructor or destructor} for a type
-\tcode{T} have the same signature, the duplicate signature is ignored. 
+\addedConcepts{If two associated member function or member function template
+requirements that name a constructor or destructor for a type
+\mbox{\tcode{T}} have the same signature, the duplicate signature is ignored.}
 
 \pnum
-If a class template specialization is
+\addedConcepts{If a class template specialization is
 an archetype that does not appear as a template argument of any
 explicitly-specified requirement in the template requirements and
 whose template is not itself an archetype, then the archetype is an 
@@ -5153,13 +5156,13 @@ instantiated archetype. An \mbox{\techterm{instantiated archetype}} is
 an archetype whose definition is provided by the instantiation of its
 template with its template arguments (which involve archetypes).
 The template shall not be an unconstrained
-template. \enternote\ partial ordering of class
-template partial specializations (\ref{temp.class.order}) will depend
+template. \mbox{\enternote} partial ordering of class
+template partial specializations (\mbox{\ref{temp.class.order}}) will depend
 on the properties of the archetypes, as defined by the requirements
 of the constrained template. When the constrained template is
-instantiated (\ref{temp.constrained.inst}),  partial ordering of class
+instantiated (\mbox{\ref{temp.constrained.inst}}),  partial ordering of class
 template partial specializations will occur a second time based on the
-actual template arguments. \exitnote\ \enterexample\
+actual template arguments. \mbox{\exitnote} \mbox{\enterexample}}
 \begin{codeblock}
 template<EqualityComparable T>
 struct simple_multiset {
@@ -5182,7 +5185,7 @@ bool first_access(const T& x) {
   return set.includes(x)? false : (set.insert(x), true);
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \addedConcepts{\mbox{\enternote} class template specializations for which
   template requirements are specified behave as normal
@@ -5236,20 +5239,20 @@ template<> class tuple<> { /* ... */ };
 \addedConcepts{\mbox{\exitexample\exitnote}}
 
 \pnum
-In a constrained template, for each concept requirement
+\addedConcepts{In a constrained template, for each concept requirement
 that is stated in or implied by the template requirements,
 a \mbox{\techterm{concept map archetype}} for that
 requirement is synthesized by 
-substituting the archetype of \tcode{T} for each occurrence of
-\tcode{T} within the concept arguments of the requirement. The
+substituting the archetype of \mbox{\tcode{T}} for each occurrence of
+\mbox{\tcode{T}} within the concept arguments of the requirement. The
 concept map archetype acts as a concept
 map, and is used to resolve name 
 lookup into
-requirements scope (\ref{basic.scope.req}) and satisfy the
+requirements scope (\mbox{\ref{basic.scope.req}}) and satisfy the
 requirements of templates used inside the definition of the
 constrained template. 
 %
-\enterexample\
+\mbox{\enterexample}}
 \begin{codeblock}
 concept SignedIntegral<typename T> {
   T::T(const T&);
@@ -5271,7 +5274,7 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
                        // implies the concept map archetype SignedIntegral<D$'$>,
                        // where D$'$ is the archetype of D}
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \rSec2[temp.constrained.set]{Nominee sets}
 \pnum
@@ -5321,24 +5324,25 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 
 \rSec2[temp.constrained.inst]{Instantiation of constrained templates}
 \pnum
-Instantiation of a constrained template replaces each template
+\addedConcepts{Instantiation of a constrained template replaces each template
 parameter within the definition of the template with its corresponding
 template argument, using the same process as for unconstrained
-templates (\ref{temp.spec}). 
+templates (\mbox{\ref{temp.spec}}).}
 
 \pnum
-Instantiation of a constrained template also replaces each 
+\addedConcepts{Instantiation of a constrained template also replaces each 
 concept map archetype with
-the concept map that satisfied the \addedConcepts{corresponding template}
+the concept map that satisfied the corresponding template
 requirement.  
-\enternote\ Concept members that had resolved to members of the 
+\mbox{\enternote} Concept members that had resolved to members of the 
 concept map archetype now refer to
-members of the corresponding concept maps. \exitnote\
+members of the corresponding concept maps. \mbox{\exitnote}}
 
-\pnum If a concept requirement appears (directly or indirectly)
+\pnum 
+\addedConcepts{If a concept requirement appears (directly or indirectly)
 multiple times in the requirements of a constrained template, the
 program is ill-formed if the concept maps used to satisfy the multiple
-occurrences of the concept requirement are not the same concept map. \enterexample\
+occurrences of the concept requirement are not the same concept map. \mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { }
 concept B<typename T> {
@@ -5363,7 +5367,7 @@ using N1::concept_map B<int>;
 using N2::concept_map C<int>;
 S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedCC{In the instantiation of a constrained template, a call
@@ -5442,43 +5446,43 @@ void g(int* i) {
 \addedCC{\mbox{\exitexample}\mbox{\exitnote}}
 
 \pnum
-In the instantiation of a constrained template, a template
+\addedConcepts{In the instantiation of a constrained template, a template
 specialization whose template arguments involve archetypes
-(\ref{temp.archetype}) will be replaced by the template specialization
+(\mbox{\ref{temp.archetype}}) will be replaced by the template specialization
 that results from replacing each occurrence of an archetype with its
 corresponding type. The resulting template specialization (call it
-\tcode{A<X>}) 
+\mbox{\tcode{A<X>}}) 
 shall be compatible with the template specialization involving
-archetypes (call it \tcode{A<T}$'$\tcode{>}) that it
+archetypes (call it \mbox{\tcode{A<T}$'$\tcode{>}}) that it
 replaced, otherwise the program is ill-formed. The template
-specializations are compatible if all of the following conditions hold:
+specializations are compatible if all of the following conditions hold:}
 \begin{itemize}
-\item for each function, function template, or data member \tcode{m} of
-  \tcode{A<T}$'$\tcode{>} referenced 
+\item \addedConcepts{for each function, function template, or data member \mbox{\tcode{m}} of
+  \mbox{\tcode{A<T}$'$\tcode{>}} referenced 
   by the constrained template, there exists a member named
-  \tcode{m} in \tcode{A<X>} that is accessible from the constrained
+  \mbox{\tcode{m}} in \mbox{\tcode{A<X>}} that is accessible from the constrained
   template and whose type, storage specifiers, template parameters (if
   any), and template requirements (if any) are the same as the
   those of 
-  \tcode{A<T}$'$\tcode{>::m} after replacing the archetypes with their
-  actual template argument types. 
+  \mbox{\tcode{A<T}$'$\tcode{>::m}} after replacing the archetypes with their
+  actual template argument types.} 
 
-\item for each member type \tcode{t} of \tcode{A<T}$'$\tcode{>} referenced 
-  by the constrained template, there exists a member type \tcode{t} in
-  \tcode{A<X>} that is accessible from the constrained
-  template and \addedConcepts{is compatible with the member type
+\item \addedConcepts{for each member type \mbox{\tcode{t}} of \mbox{\tcode{A<T}$'$\tcode{>}} referenced 
+  by the constrained template, there exists a member type \mbox{\tcode{t}} in
+  \mbox{\tcode{A<X>}} that is accessible from the constrained
+  template and is compatible with the member type
     \mbox{\tcode{A<T}$'$\tcode{>::t}} as specified herein.}
 
-\item for each base class \tcode{B}$'$ of \tcode{A<T}$'$\tcode{>} referenced
-  by a derived-to-base conversion (\ref{conv.ptr}) in the constrained
+\item \addedConcepts{for each base class \mbox{\tcode{B}$'$ of \tcode{A<T}$'$\tcode{>}} referenced
+  by a derived-to-base conversion (\mbox{\ref{conv.ptr}}) in the constrained
   template, there exists an unambiguous base class 
-  \tcode{B} of \tcode{A<X>} that is accessible from the constrained
-  template, where \tcode{B} is the type produced by
-  replacing the archetypes in \tcode{B}$'$ with their template
-  argument types.
+  \mbox{\tcode{B}} of \mbox{\tcode{A<X>}} that is accessible from the constrained
+  template, where \mbox{\tcode{B}} is the type produced by
+  replacing the archetypes in \mbox{\tcode{B}$'$} with their template
+  argument types.}
 \end{itemize}
 
-\enterexample\
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 auto concept CopyConstructible<typename T> {
   T::T(const T&);
@@ -5515,7 +5519,7 @@ void g(int i, int* ip, bool b) {
         // vector<bool>::front is not compatible with vector<T>::front (where T=bool)
 @\textcolor{addclr}{}@}
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 \color{black}
 \end{paras}
 
