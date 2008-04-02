@@ -1,10 +1,10 @@
+// Copyright (c) 2001 Ronald Garcia, Indiana University (garcia@osl.iu.edu)
+// Andrew Lumsdaine, Indiana University (lums@osl.iu.edu).
+// Distributed under the Boost Software License, Version 1.0. (See accompany-
+// ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 #ifndef BOOST_UTF8_CODECVT_FACET_HPP
 #define BOOST_UTF8_CODECVT_FACET_HPP
-
-#include <boost/iostreams/detail/config/wide_streams.hpp>
-#ifdef BOOST_IOSTREAMS_NO_WIDE_STREAMS 
-# error wide streams not supported on this platform
-#endif
 
 // MS compatible compilers support #pragma once
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -14,10 +14,38 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // utf8_codecvt_facet.hpp
 
-// Copyright (c) 2001 Ronald Garcia, Indiana University (garcia@osl.iu.edu)
-// Andrew Lumsdaine, Indiana University (lums@osl.iu.edu).
-// Distributed under the Boost Software License, Version 1.0. (See accompany-
-// ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// This header defines class utf8_codecvt_facet, derived fro 
+// std::codecvt<wchar_t, char>, which can be used to convert utf8 data in
+// files into wchar_t strings in the application.
+//
+// The header is NOT STANDALONE, and is not to be included by the USER.
+// There are at least two libraries which want to use this functionality, and
+// we want to avoid code duplication. It would be possible to create utf8
+// library, but:
+// - this requires review process first
+// - in the case, when linking the a library which uses utf8 
+//   (say 'program_options'), user should also link to the utf8 library.
+//   This seems inconvenient, and asking a user to link to an unrevieved 
+//   library is strange. 
+// Until the above points are fixed, a library which wants to use utf8 must:
+// - include this header from one of it's headers or sources
+// - include the corresponding .cpp file from one of the sources
+// - before including either file, the library must define
+//   - BOOST_UTF8_BEGIN_NAMESPACE to the namespace declaration that must be used
+//   - BOOST_UTF8_END_NAMESPACE to the code to close the previous namespace
+//   - declaration.
+//   - BOOST_UTF8_DECL -- to the code which must be used for all 'exportable'
+//     symbols.
+//
+// For example, program_options library might contain:
+//    #define BOOST_UTF8_BEGIN_NAMESPACE <backslash character> 
+//             namespace boost { namespace program_options {
+//    #define BOOST_UTF8_END_NAMESPACE }}
+//    #define BOOST_UTF8_DECL BOOST_PROGRAM_OPTIONS_DECL
+//    #include "../../detail/utf8/utf8_codecvt.cpp"
+//
+// Essentially, each library will have its own copy of utf8 code, in
+// different namespaces. 
 
 // Note:(Robert Ramey).  I have made the following alterations in the original
 // code.
@@ -51,23 +79,44 @@
 // specialized on those types for this to work.
 
 #include <locale>
-#include <cstddef> // size_t
-#include <cwchar>  // mbstate_t
-#include <boost/integer_traits.hpp>
-#include <boost/iostreams/detail/config/wide_streams.hpp>
-#include <boost/iostreams/detail/codecvt_helper.hpp>
+// for mbstate_t
+#include <wchar.h>
+// for std::size_t
+#include <cstddef>
+
+#include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
+
+namespace std {
+    #if defined(__LIBCOMO__)
+        using ::mbstate_t;
+    #elif defined(BOOST_DINKUMWARE_STDLIB) && !defined(__BORLANDC__)
+        using ::mbstate_t;
+    #elif defined(__SGI_STL_PORT)
+    #elif defined(BOOST_NO_STDC_NAMESPACE)
+        using ::mbstate_t;
+        using ::codecvt;
+    #endif
+} // namespace std
+
+#if !defined(__MSL_CPP__) && !defined(__LIBCOMO__)
+    #define BOOST_CODECVT_DO_LENGTH_CONST const
+#else
+    #define BOOST_CODECVT_DO_LENGTH_CONST
+#endif
 
 // maximum lenght of a multibyte string
 #define MB_LENGTH_MAX 8
 
-struct utf8_codecvt_facet_wchar_t 
-    : public boost::iostreams::detail::codecvt_helper<wchar_t, char, std::mbstate_t>  
+BOOST_UTF8_BEGIN_NAMESPACE
+
+struct BOOST_UTF8_DECL utf8_codecvt_facet :
+    public std::codecvt<wchar_t, char, std::mbstate_t>  
 {
 public:
-    explicit utf8_codecvt_facet_wchar_t(std::size_t no_locale_manage = 0)
-        : boost::iostreams::detail::codecvt_helper<wchar_t, char, std::mbstate_t>
-              (no_locale_manage) 
-        { }
+    explicit utf8_codecvt_facet(std::size_t no_locale_manage=0)
+        : std::codecvt<wchar_t, char, std::mbstate_t>(no_locale_manage) 
+    {}
 protected:
     virtual std::codecvt_base::result do_in(
         std::mbstate_t& state, 
@@ -111,9 +160,10 @@ protected:
     virtual std::codecvt_base::result do_unshift(
         std::mbstate_t&,
         char * from,
-        char * /* to */,
+        char * /*to*/,
         char * & next
-    ) const{
+    ) const 
+    {
         next = from;
         return ok;
     }
@@ -126,11 +176,15 @@ protected:
     // How many char objects can I process to get <= max_limit
     // wchar_t objects?
     virtual int do_length(
-        BOOST_IOSTREAMS_CODECVT_CV_QUALIFIER std::mbstate_t &,
+        BOOST_CODECVT_DO_LENGTH_CONST std::mbstate_t &,
         const char * from,
         const char * from_end, 
         std::size_t max_limit
-    ) const throw();
+#if BOOST_WORKAROUND(__IBMCPP__, BOOST_TESTED_AT(600))
+        ) const throw();
+#else
+        ) const;
+#endif
 
     // Largest possible value do_length(state,from,from_end,1) could return.
     virtual int do_max_length() const throw () {
@@ -138,63 +192,6 @@ protected:
     }
 };
 
-#if 0 // not used - incorrect in any case
-// Robert Ramey - use the above to make a code converter from multi-byte
-// char strings to utf8 encoding
-struct utf8_codecvt_facet_char : public utf8_codecvt_facet_wchar_t
-{
-    typedef utf8_codecvt_facet_wchar_t base_class;
-public:
-    explicit utf8_codecvt_facet_char(std::size_t no_locale_manage=0)
-        : base_class(no_locale_manage)
-    {}
-protected:
-    virtual std::codecvt_base::result do_in(
-        std::mbstate_t & state, 
-        const char * from, 
-        const char * from_end, 
-        const char * & from_next,
-        char * to, 
-        char * to_end, 
-        char * & to_next
-    ) const;
-
-    virtual std::codecvt_base::result do_out(
-        std::mbstate_t & state, 
-        const char * from,
-        const char * from_end, 
-        const char*  & from_next,
-        char * to, 
-        char * to_end, 
-        char * & to_next
-    ) const;
-
-    // How many char objects can I process to get <= max_limit
-    // char objects?
-    virtual int do_length(
-        const std::mbstate_t&, 
-        const char * from,
-        const char * from_end, 
-        std::size_t max_limit
-    ) const;
-};
-#endif
-
-template<class Internal, class External>
-struct utf8_codecvt_facet
-{};
-
-template<>
-struct utf8_codecvt_facet<wchar_t, char>
-    : public utf8_codecvt_facet_wchar_t
-{};
-
-#if 0
-template<>
-struct utf8_codecvt_facet<char, char>
-    : public utf8_codecvt_facet_char
-{};
-#endif
+BOOST_UTF8_END_NAMESPACE
 
 #endif // BOOST_UTF8_CODECVT_FACET_HPP
-
