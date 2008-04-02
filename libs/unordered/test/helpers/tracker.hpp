@@ -9,9 +9,9 @@
 #if !defined(BOOST_UNORDERED_TEST_HELPERS_TRACKER_HEADER)
 #define BOOST_UNORDERED_TEST_HELPERS_TRACKER_HEADER
 
-#include <boost/interprocess/containers/set.hpp>
-#include <boost/interprocess/containers/map.hpp>
-#include <boost/interprocess/containers/vector.hpp>
+#include <set>
+#include <map>
+#include <vector>
 #include <iterator>
 #include <algorithm>
 #include <boost/mpl/if.hpp>
@@ -44,7 +44,7 @@ namespace test
     template <class X1, class X2>
     void compare_range(X1 const& x1, X2 const& x2)
     {
-        boost::interprocess::vector<BOOST_DEDUCED_TYPENAME non_const_value_type<X1>::type> values1, values2;
+        std::vector<BOOST_DEDUCED_TYPENAME non_const_value_type<X1>::type> values1, values2;
         values1.reserve(x1.size());
         values2.reserve(x2.size());
         std::copy(x1.begin(), x1.end(), std::back_inserter(values1));
@@ -58,7 +58,7 @@ namespace test
     template <class X1, class X2, class T>
     void compare_pairs(X1 const& x1, X2 const& x2, T*)
     {
-        boost::interprocess::vector<T> values1, values2;
+        std::vector<T> values1, values2;
         values1.reserve(std::distance(x1.first, x1.second));
         values2.reserve(std::distance(x2.first, x2.second));
         std::copy(x1.first, x1.second, std::back_inserter(values1));
@@ -73,9 +73,9 @@ namespace test
     struct ordered_set
         : public boost::mpl::if_<
             test::has_unique_keys<X>,
-            boost::interprocess::set<BOOST_DEDUCED_TYPENAME X::value_type,
+            std::set<BOOST_DEDUCED_TYPENAME X::value_type,
                 BOOST_DEDUCED_TYPENAME equals_to_compare<BOOST_DEDUCED_TYPENAME X::key_equal>::type>,
-            boost::interprocess::multiset<BOOST_DEDUCED_TYPENAME X::value_type,
+            std::multiset<BOOST_DEDUCED_TYPENAME X::value_type,
                 BOOST_DEDUCED_TYPENAME equals_to_compare<BOOST_DEDUCED_TYPENAME X::key_equal>::type>
             > {};
 
@@ -83,9 +83,9 @@ namespace test
     struct ordered_map
         : public boost::mpl::if_<
             test::has_unique_keys<X>,
-            boost::interprocess::map<BOOST_DEDUCED_TYPENAME X::key_type, BOOST_DEDUCED_TYPENAME X::mapped_type,
+            std::map<BOOST_DEDUCED_TYPENAME X::key_type, BOOST_DEDUCED_TYPENAME X::mapped_type,
                 BOOST_DEDUCED_TYPENAME equals_to_compare<BOOST_DEDUCED_TYPENAME X::key_equal>::type>,
-            boost::interprocess::multimap<BOOST_DEDUCED_TYPENAME X::key_type, BOOST_DEDUCED_TYPENAME X::mapped_type,
+            std::multimap<BOOST_DEDUCED_TYPENAME X::key_type, BOOST_DEDUCED_TYPENAME X::mapped_type,
                 BOOST_DEDUCED_TYPENAME equals_to_compare<BOOST_DEDUCED_TYPENAME X::key_equal>::type>
             > {};
 

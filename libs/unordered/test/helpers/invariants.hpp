@@ -9,7 +9,7 @@
 #if !defined(BOOST_UNORDERED_TEST_HELPERS_INVARIANT_HEADER)
 #define BOOST_UNORDERED_TEST_HELPERS_INVARIANT_HEADER
 
-#include <boost/interprocess/containers/set.hpp>
+#include <set>
 #include <cmath>
 #include "./metafunctions.hpp"
 #include "./helpers.hpp"
@@ -27,9 +27,9 @@ namespace test
     {
         BOOST_DEDUCED_TYPENAME X::key_equal eq = x1.key_eq();
         typedef BOOST_DEDUCED_TYPENAME X::key_type key_type;
-        // TODO: Boost.Test was reporting memory leaks for std::set on g++-3.3.
+        // Boost.Test was reporting memory leaks for std::set on g++-3.3.
         // So I work around it by using malloc.
-        boost::interprocess::set<key_type, std::less<key_type>, test::malloc_allocator<key_type> > found_;
+        std::set<key_type, std::less<key_type>, test::malloc_allocator<key_type> > found_;
 
         BOOST_DEDUCED_TYPENAME X::const_iterator it = x1.begin(), end = x1.end();
         BOOST_DEDUCED_TYPENAME X::size_type size = 0;

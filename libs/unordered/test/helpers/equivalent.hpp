@@ -8,7 +8,7 @@
 
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
-#include <boost/interprocess/containers/vector.hpp>
+#include <vector>
 #include <algorithm>
 #include "./metafunctions.hpp"
 #include "./fwd.hpp"
@@ -57,7 +57,7 @@ namespace test
         float max_load_factor_;
 
         typedef BOOST_DEDUCED_TYPENAME non_const_value_type<Container>::type value_type;
-        boost::interprocess::vector<value_type> values_;
+        std::vector<value_type> values_;
     public:
         unordered_equivalence_tester(Container const &x)
             : size_(x.size()),
@@ -80,7 +80,7 @@ namespace test
                 (max_load_factor_ == x.max_load_factor()) &&
                 (values_.size() == x.size()))) return false;
 
-            boost::interprocess::vector<value_type> copy;
+            std::vector<value_type> copy;
             copy.reserve(x.size());
             std::copy(x.begin(), x.end(), std::back_inserter(copy));
             std::sort(copy.begin(), copy.end());
