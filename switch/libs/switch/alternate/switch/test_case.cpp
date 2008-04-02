@@ -15,7 +15,7 @@
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/vector_c.hpp>
 
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 namespace {
     struct f {
@@ -28,13 +28,13 @@ namespace {
 }
 
 BOOST_AUTO_TEST_CASE(test1) {
-    using boost::case_;
-    BOOST_CHECK_EQUAL(boost::switch_<int>(2, (case_<boost::mpl::range_c<int, 0, 5> >(f()))), 4);
+    using boost::control::case_;
+    BOOST_CHECK_EQUAL(boost::control::switch_<int>(2, (case_<boost::mpl::range_c<int, 0, 5> >(f()))), 4);
 }
 
 BOOST_AUTO_TEST_CASE(test2) {
-    using boost::case_;
-    BOOST_CHECK_EQUAL(boost::switch_<int>(2,
+    using boost::control::case_;
+    BOOST_CHECK_EQUAL(boost::control::switch_<int>(2,
         (case_<boost::mpl::vector_c<int, 0> >(f()),
         case_<boost::mpl::vector_c<int, 1> >(f()),
         case_<boost::mpl::vector_c<int, 2> >(f()),

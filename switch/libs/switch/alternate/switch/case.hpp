@@ -18,6 +18,8 @@
 
 namespace boost {
 
+namespace control {
+
 namespace switch_detail {
 
 struct empty_set {
@@ -53,6 +55,10 @@ struct contains_impl {
     typedef typename make_set<boost::mpl::size<S>::value>::template apply<typename boost::mpl::begin<S>::type>::type as_set;
     static const bool value = (sizeof(as_set::lookup(N())) != 1);
 };
+template<class T, int low, int high, class N>
+struct contains_impl<mpl::range_c<T, low, high>, N> {
+    static const bool value = (low <= (N::value)) && ((N::value) < high);
+};
 
 }
 
@@ -68,6 +74,9 @@ public:
         R
     >::type apply(N n) const {
         return(impl.template apply<R>(n));
+    }
+    const Case& get() const {
+        return(impl);
     }
 private:
     Case impl;
@@ -112,6 +121,9 @@ public:
     template<class R, class N>
     R apply(N n) const {
         return(impl(n));
+    }
+    const F& get() const {
+        return(impl);
     }
 private:
     F impl;
@@ -189,6 +201,22 @@ expression_template_case_t<restrict_case_t<case_group_t<mpl::range_c<int, L, H>,
     return(expression_template_case_t<restrict_case_t<case_group_t<mpl::range_c<int, L, H>, F> > >(f));
 }
 
+
+template<class R, class N, class T, T low, T high, class F>
+inline R switch_(N n, expression_template_case_t<restrict_case_t<case_group_t<mpl::range_c<T, low, high>, F> > > cases BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(R)) {
+    typedef switch_detail::range_switch_impl<high - low> impl;
+    switch_detail::default_construct<R> default_;
+    return(impl::template apply<R, T, low, high>(n, cases.get().get().get(), default_));
 }
+
+template<class R, class N, class T, T low, T high, class F, class D>
+inline R switch_(N n, expression_template_case_t<restrict_case_t<case_group_t<mpl::range_c<T, low, high>, F> > > cases, D d BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(R)) {
+    typedef switch_detail::range_switch_impl<high - low> impl;
+    return(impl::template apply<R, T, low, high>(n, cases.get().get().get(), d));
+}
+
+} // namespace control
+
+} // namespace boost
 
 #endif

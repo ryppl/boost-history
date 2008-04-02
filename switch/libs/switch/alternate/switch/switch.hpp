@@ -30,6 +30,8 @@
 
 namespace boost {
 
+namespace control {
+
 namespace switch_detail {
 
 // Avoid the need to create all the specializations of switch_impl
@@ -39,7 +41,7 @@ namespace switch_detail {
 template<class R>
 struct default_construct {
     template<class Int>
-    R operator()(Int i) const {
+    R operator()(Int) const {
         return(R());
     }
 };
@@ -124,6 +126,42 @@ struct size : mpl::size<typename T::labels> {};
 #undef BOOST_SWITCH_IMPL
 #undef BOOST_SWITCH_CASE
 
+// N is the number of cases not including the default
+template<int N>
+struct range_switch_impl;
+
+// specialize for 0 separately to avoid warnings
+template<>
+struct range_switch_impl<0> {
+    template<class R, class T, T low, T high, class I, class F, class D>
+    static R apply(I i, F, D d) {
+        return(d(i));
+    }
+};
+
+#define BOOST_SWITCH_RANGE_CASE(z, n, data)                     \
+    case data + n: return(f(mpl::integral_c<T, data + n>()));
+
+#define BOOST_SWITCH_RANGE_SWITCH_IMPL(z, n, data)                          \
+    template<>                                                              \
+    struct range_switch_impl<n> {                                           \
+        template<class R, class T, T low, T high, class I, class F, class D>\
+        static R apply(I i, F f, D d) {                                     \
+            switch(i) {                                                     \
+                BOOST_PP_REPEAT_##z(n, BOOST_SWITCH_RANGE_CASE, low)        \
+                default: return(d(i));                                      \
+            }                                                               \
+        }                                                                   \
+    };
+
+#define BOOST_PP_LOCAL_LIMITS (1, BOOST_SWITCH_LIMIT)
+#define BOOST_PP_LOCAL_MACRO(n) BOOST_SWITCH_RANGE_SWITCH_IMPL(1, n, ~)
+#include BOOST_PP_LOCAL_ITERATE()
+
+#undef BOOST_SWITCH_RANGE_SWITCH_IMPL
+#undef BOOST_SWITCH_RANGE_CASE
+
+
 }
 
 template<class R, class N, class S>
@@ -139,6 +177,8 @@ inline R switch_(N n, S s, D d BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(R)) {
     return(impl::template apply<R>(n, s, d));
 }
 
-}
+} // namespace control
+
+} // namespace boost
 
 #endif
