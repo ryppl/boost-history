@@ -86,10 +86,11 @@ for such usage.
 ]
 
 Generates a switch statement. If the nested ::value of one
-of the elements of `Cases` is equal to `n`, then this function
-will call `f` with a default constructed parameter of that type.
-Otherwise it will either pass `n` to `default_` or throw an exception
-depending on whether `default_` was specified.
+of the elements of `Case::labels` is equal to `n`, then this function
+will return the result of calling case.apply<Result> with a default constructed
+parameter of that type.  Otherwise it will pass `n` to `default_`.
+If no default was specified, a default constructed instance of Result
+wee be returned.
 
 Thus, `switch<R>(n, case, default_)` is equivalent to
 
@@ -131,7 +132,7 @@ For example
 
 prints the nth element of a fusion sequence.
 
-Here is an example of using Switch to implement the apply_visitor
+Here is a more realistic example of using Switch to implement the apply_visitor
 function from Boost.Variant.
 
     template<class Variant, class Visitor>
