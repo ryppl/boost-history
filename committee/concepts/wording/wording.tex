@@ -41,8 +41,8 @@ Proposed Wording for Concepts\\
 \begin{tabular}[t]{l}
 Douglas Gregor, Indiana University \\
 Bjarne Stroustrup, Texas A\&M University \\
-Jeremy Siek, University of Colorado at Boulder \\
-James Widman, Gimpel Software
+James Widman, Gimpel Software \\
+Jeremy Siek, University of Colorado at Boulder
 \end{tabular}\vspace{-6pt}
 
 \par\noindent Document number: DRAFT \vspace{-6pt}
@@ -83,6 +83,9 @@ standard library are discussed in separate documents:
   constrained templates (\ref{temp.mem}) but that the
   templates are an unconstrained context (\ref{temp.constrained});
   their bodies are constrained contexts.
+\item Clarified how requirements are satisfied by concept maps,
+  including a major cleanup of the specification of concept map lookup
+  (\ref{temp.req.sat}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -4559,200 +4562,12 @@ which the template can be used.}
 \pnum
 \addedConcepts{A \mbox{\techterm{requires-clause}} contains a list of
   requirements, all of which must be satisfied by the template
-  arguments for the template. A \mbox{\techterm{requirement}} not
+  arguments for the template.}
+\addedCC{\mbox{\enternote} Requirement satisfaction is described in~\mbox{\ref{temp.req.sat}}. \mbox{\exitnote}}
+\addedConcepts{A \mbox{\techterm{requirement}} not
   containing a \mbox{\tcode{!}} is a \mbox{\techterm{concept
       requirement}}. A \mbox{\techterm{requirement}} containing a
   \mbox{\tcode{!}} is a \mbox{\techterm{negative requirement}}.}
-
-\pnum
-\addedConcepts{A concept requirement requires that there be a most
-specific concept map according to concept map
-matching and partial ordering of concept map templates
-(\mbox{\ref{temp.concept.map}}). \mbox{\enterexample}}
-\begin{codeblock}
-@\textcolor{addclr}{concept}@ A<typename T> { }
-auto concept B<typename T> { T operator+(T, T); }
-
-concept_map A<float> { }
-concept_map B<float> { }
-
-template<typename T> requires A<T> void f(T);
-template<typename T> requires B<T> void g(T);
-
-struct X { };
-void h(float x, int y, int X::* p) {
-  f(x); // okay: uses concept map A<float>
-  f(y); // error: no concept map A<int>; requirement not satisfied
-  g(x); // okay: uses concept map B<float>
-  g(y); // okay: implicitly defines and uses concept map B<int>
-  g(p); // error: no implicit definition of concept map B<int X::*>; requirement not satisfied
-}
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
-
-\addedCC{During template argument deduction (\mbox{\ref{temp.deduct}})
-  against a constrained template, it is necessary to determine whether
-  the template arguments satisfy each requirement of the template.
-  For each requirement, there is a concept instance (call it \mbox{\tcode{I}})
-  formed from the concept of the requirement and the concept arguments
-  after substitution of template arguments for their corresponding
-  template parameters.  There
-  is an associated full concept name of \mbox{\tcode{I}}; call it
-  \mbox{\tcode{N}}.}
-
-\addedCC{Furthermore, there is an ordered sequence \mbox{\tcode{Q}}
-  where each element is a set of concept maps called \mbox{\tcode{S}}.
-  \mbox{\enternote} The ordering of
-  name-finding methods in \mbox{\tcode{Q}} can effect a kind of
-  "concept map hiding" behavior. \mbox{\exitnote}}
-
-\addedCC{When requirement satisfaction is attempted during the
-  instantiation of a constrained template
-  (\mbox{\ref{temp.constrained.inst}}), \mbox{\tcode{Q}} is defined as
-  the following ordered sequence:}
-
-\begin{enumerate}
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps, each with
-      name \mbox{\tcode{N}}, that have replaced the concept map
-      archetypes used in the constrained template.}
-    
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the namespaces of which the
-      concept maps in (1) are members;
-      \mbox{\techterm{using-directives}} in those namespaces are not
-      followed during this search.}
-
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the associated namespaces
-      (\mbox{\ref{basic.lookup.argdep}}) of the concept arguments of
-      \mbox{\tcode{I}}; \mbox{\techterm{using-directives}} in those
-      namespaces are not followed during this search.}
-
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the namespace of which the
-      concept of \mbox{\tcode{I}} is a member and its associated
-      namespaces (\mbox{\ref{namespace.def}});
-      \mbox{\techterm{using-directives}} in these
-      namespaces are not followed during this search.}
-\end{enumerate}
-
-\mbox{\enterexample}
-\begin{codeblock}
-concept C<typename T> { }
-concept D<typename T> { }
-
-namespace N1 {
-  concept_map C<int> { }
-  concept_map D<int> { }
-}
-namespace N2 {
-  template<C T> void f(T);                // \#1
-  template<C T> requires D<T> void f(T);  // \#2
-  template<C T> void g(T x) {
-    f(x);
-  }
-  using N1::concept_map C<int>;
-  void h() {
-    g(1); // inside, g, the call to f goes to \#2
-  }
-}
-
-\end{codeblock}
-\exitexample\
-     
-\addedCC{In all other cases, \mbox{\tcode{Q}} is defined as the
-ordered sequence:}
-
-\begin{enumerate}
-  \additemCC{\mbox{\tcode{S}} is formed by performing unqualified name
-    lookup (\mbox{\ref{basic.lookup.unqual}}) for \mbox{\tcode{N}}.}
-
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-    searching for \mbox{\tcode{N}} in the namespace of which the
-    concept of \mbox{\tcode{I}} is a member and its associated
-      namespaces (\mbox{\ref{namespace.def}});
-    \mbox{\techterm{using-directives}} in these namespaces are not
-    followed during this search and all names found by way of
-    \mbox{\techterm{using-declarations}} are ignored.}
-\end{enumerate}
-   
-\addedCC{\mbox{\enternote} When requirement satisfaction is attempted
-  within a constrained context (\mbox{\ref{temp.constrained}}),
-  concept map archetypes, whose names are placed at the same scope as
-  template parameters, can be found by unqualified lookup.
-  \mbox{\exitnote}}
-
-\addedCC{For each element in \mbox{\tcode{Q}} (progressing from the lowest to the highest-numbered
-element of \mbox{\tcode{Q}}), requirement satisfaction is attempted by attempting to find
-within \mbox{\tcode{S}}}
-
-\begin{itemize}
-  \additemCC{exactly one matching non-template concept map or, if one does not
-    exist,}
-
-  \additemCC{exactly one most-specific matching concept map template according
-    to concept map matching rules (\mbox{\ref{temp.concept.map}}).}
-\end{itemize}
-   
-\addedCC{If such a concept map or concept map template exists, then
-  requirement satisfaction succeeds and the remaining elements of
-  \mbox{\tcode{Q}} are ignored.  \mbox{\enterexample}}
-\begin{codeblock}
-namespace N1 {
-  concept C<typename T> { };
-  template<C T> void f(T x);
-}
-namespace N2 {
-  concept_map N1::C<int> { };
-  concept C<typename T> { };
-}
-concept_map N1::C<bool> { };
-namespace N3 {
-  concept_map N1::C<int> { };
-  concept_map N1::C<float> { };
-  concept_map N2::C<char> { };
-
-  void g() { f(1); }
-}
-\end{codeblock}
-\addedCC{\mbox{\exitexample}}
-
-\pnum 
-\addedConcepts{\mbox{\enterexample}}
-\begin{codeblock}
-namespace N1 {
-  concept C<typename T> { };
-  concept_map C<int> { };
-}
-template<N1::C T> void f(T x);
-void g() { f(1); } // Ok, finds N1::concept_map C<int> because it is in the same namespace as concept N1::C.
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
-
-\pnum 
-\addedConcepts{A negative requirement requires that no concept map
-corresponding to its concept instance be defined, implicitly or 
-explicitly. \mbox{\enterexample}}
-\begin{codeblock}
-concept A<typename T> { }
-auto concept B<typename T> { T operator+(T, T); }
-
-concept_map A<float> { }
-concept_map B<float> { }
-
-template<typename T> requires !A<T> void f(T);
-template<typename T> requires !B<T> void g(T);
-
-struct X { };
-void h(float x, int y, int X::* p) {
-  f(x); // error: concept map A<float> has been defined
-  f(y); // okay: no concept map A<int>
-  g(x); // error: concept map B<float> has been defined
-  g(y); // error: implicitly defines concept map B<int>, requirement not satisfied
-  g(p); // okay: concept map B<int X::*> cannot be implicitly defined
-}
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedConcepts{A concept requirement that refers to the
@@ -4836,6 +4651,234 @@ requires C<T> && !C<T>
 void f(const T&); // error: no type can satisfy both C<T> \&\& !C<T>, no diagnostic required
 \end{codeblock}
 \addedConcepts{\exitexample}
+
+\rSec3[temp.req.sat]{Requirement satisfaction}
+
+\pnum
+\addedCC{During template argument deduction (\mbox{\ref{temp.deduct}})
+  against a constrained template, it is necessary to determine whether
+  each of the requirements of the constrained template can be
+  satisfied by the template arguments.}
+
+\pnum
+\addedCC{A concept requirement is \mbox{\techterm{satisfied}} if
+    concept map lookup (described below) finds a
+    unique concept map with the same full concept name as the
+    concept named by the concept requirement and whose template
+    argument list is the same as the template 
+    argument list of the concept requirement, after substitution of the
+    constrained template's template arguments into the concept
+    requirement's template argument list. Concept maps used to satisfy
+    a concept requirement can be defined
+    explicitly (\mbox{\ref{concept.map}}), instantiated from a concept
+    map template (\mbox{\ref{temp.concept.map}}), or defined
+    implicitly (\mbox{\ref{concept.map.implicit}}).}
+\addedConcepts{\mbox{\enterexample}}
+\begin{codeblock}
+concept A<typename T> { }
+auto concept B<typename T> { T operator+(T, T); }
+concept C<typename T> { }
+
+concept_map A<float> { }
+concept_map B<float> { }
+template<typename T> concept_map C<T*> { }
+
+template<typename T> requires A<T> void f(T);
+template<typename T> requires B<T> void g(T);
+template<typename T> requires C<T> void h(T);
+
+struct X { };
+void h(float x, int y, int X::* p, int *q) {
+  f(x); // okay: uses concept map A<float>
+  f(y); // error: no concept map A<int>; requirement not satisfied
+  g(x); // okay: uses concept map B<float>
+  g(y); // okay: implicitly defines and uses concept map B<int>
+  g(p); // error: no implicit definition of concept map B<int X::*>; requirement not satisfied
+  h(q); // okay: instantiates concept map C<T*> with T=int to satisfy requirement C<T>
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum 
+\addedCC{A negative requirement is satisfied if concept map
+  lookup fails to find a concept map that would satisfy the
+  corresponding concept requirement. \mbox{\enternote} If concept map
+  lookup results in an ambiguity, the program is
+  ill-formed. \mbox{\exitnote}}
+\addedConcepts{\mbox{\enterexample}}
+\begin{codeblock}
+concept A<typename T> { }
+auto concept B<typename T> { T operator+(T, T); }
+
+concept_map A<float> { }
+concept_map B<float> { }
+
+template<typename T> requires !A<T> void f(T);
+template<typename T> requires !B<T> void g(T);
+
+struct X { };
+void h(float x, int y, int X::* p) {
+  f(x); // error: concept map A<float> has been defined
+  f(y); // okay: no concept map A<int>
+  g(x); // error: concept map B<float> has been defined
+  g(y); // error: implicitly defines concept map B<int>, requirement not satisfied
+  g(p); // okay: concept map B<int X::*> cannot be implicitly defined
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum
+\addedCC{\mbox{\techterm{Concept map lookup}} attempts to find a
+  concept map that corresponds to the concept instance (call it
+  \mbox{\tcode{I}}) 
+  formed from the concept of a requirement and its template argument list
+  after substitution of template arguments for their corresponding
+  template parameters.  There
+  is an associated full concept name of \mbox{\tcode{I}}; call it
+  \mbox{\tcode{N}}. Concept map lookup searches an ordered sequence
+  \mbox{\tcode{Q}} (defined below) where each element is a set of
+  concept maps called
+  \mbox{\tcode{S}}. For each element in \mbox{\tcode{Q}} (progressing
+  from the lowest to the highest-numbered element of
+  \mbox{\tcode{Q}}), concept map lookup attempts to find within
+  \mbox{\tcode{S}}}
+
+\begin{itemize}
+  \additemCC{exactly one matching non-template concept map or, if one does not
+    exist,}
+
+  \additemCC{exactly one most-specific matching concept map template
+    according to concept map matching rules
+    (\mbox{\ref{temp.concept.map}}).}
+\end{itemize}
+
+\addedCC{If no matching concept map is found within a set
+  \mbox{\tcode{S}} in \mbox{\tcode{Q}}, concept map lookup proceeds to
+  the next set in \mbox{\tcode{Q}}. If partial ordering of concept
+    map templates results in an ambiguity, the program is ill-formed.}
+
+\pnum
+\addedCC{When concept map lookup is performed during the
+  instantiation of a constrained template
+  (\mbox{\ref{temp.constrained.inst}}), \mbox{\tcode{Q}} is defined as
+  the following ordered sequence:}
+
+\begin{enumerate}
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps, each with
+      name \mbox{\tcode{N}}, that have replaced the concept map
+      archetypes used in the constrained template.}
+    
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+      searching for \mbox{\tcode{N}} in the namespaces of which the
+      concept maps in (1) are members;
+      \mbox{\techterm{using-directives}} in those namespaces are not
+      followed during this search.}
+
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+      searching for \mbox{\tcode{N}} in the associated namespaces
+      (\mbox{\ref{basic.lookup.argdep}}) of the concept arguments of
+      \mbox{\tcode{I}}; \mbox{\techterm{using-directives}} in those
+      namespaces are not followed during this search.}
+
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+      searching for \mbox{\tcode{N}} in the namespace of which the
+      concept of \mbox{\tcode{I}} is a member and its associated
+      namespaces (\mbox{\ref{namespace.def}});
+      \mbox{\techterm{using-directives}} in these
+      namespaces are not followed during this search.}
+\end{enumerate}
+
+\mbox{\enterexample}
+\begin{codeblock}
+concept C<typename T> { }
+concept D<typename T> { }
+
+namespace N1 {
+  concept_map C<int> { }
+  concept_map D<int> { }
+}
+namespace N2 {
+  template<C T> void f(T);                // \#1
+  template<C T> requires D<T> void f(T);  // \#2
+  template<C T> void g(T x) {
+    f(x);
+  }
+  using N1::concept_map C<int>;
+  void h() {
+    g(1); // inside g's call to f, concept map lookup for D<int> finds N1::D<int>; calls \#2
+  }
+}
+
+\end{codeblock}
+\exitexample\
+     
+\pnum
+\addedCC{In all other cases, \mbox{\tcode{Q}} is defined as the
+ordered sequence:}
+
+\begin{enumerate}
+  \additemCC{\mbox{\tcode{S}} is formed by performing unqualified name
+    lookup (\mbox{\ref{basic.lookup.unqual}}) for \mbox{\tcode{N}}.}
+
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+    searching for \mbox{\tcode{N}} in the namespace of which the
+    concept of \mbox{\tcode{I}} is a member and its associated
+      namespaces (\mbox{\ref{namespace.def}});
+    \mbox{\techterm{using-directives}} in these namespaces are not
+    followed during this search and all names found by way of
+    \mbox{\techterm{using-declarations}} are ignored.}
+\end{enumerate}
+   
+\addedCC{\mbox{\enternote} When concept map lookup is performed
+  within a constrained context (\mbox{\ref{temp.constrained}}),
+  concept map archetypes, whose names are placed at the same scope as
+  template parameters, can be found by unqualified lookup.
+  \mbox{\exitnote}}
+   
+\pnum 
+\addedCC{If concept map lookup finds a matching concept map in a set
+  \mbox{\tcode{S}} within \mbox{\tcode{Q}}, concept map lookup
+  succeeds and the remaining elements of
+  \mbox{\tcode{Q}} are ignored. \mbox{\enternote} The ordering of name-finding
+  methods in \mbox{\tcode{Q}} can effect a kind of "concept map
+  hiding" behavior. \mbox{\enterexample}}
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { }
+  concept_map C<int> { } // \#1
+
+  template<C T> void f(T x);
+}
+namespace N2 {
+  concept_map N1::C<int> { } // \#2
+
+  namespace N3 {
+    concept_map N1::C<int> { } // \#3
+
+    void g() { 
+      N1::f(1); // uses \#3 to satisfy concept requirement N1::C<int>
+    }
+  }
+}
+\end{codeblock}
+\addedCC{\mbox{\exitexample} \mbox{\exitnote}}
+
+\pnum 
+\addedCC{\mbox{\enternote} Concept maps declared in the namespace of the
+  concept itself will be found last by concept map lookup.}
+\addedConcepts{\mbox{\enterexample}}
+\begin{codeblock}
+namespace N1 {
+  concept C<typename T> { };
+  concept_map C<int> { };
+}
+template<N1::C T> void f(T x);
+void g() { 
+  f(1); // Ok, finds N1::concept_map C<int> because it is in the same namespace as concept N1::C.
+} 
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}\addedCC{\mbox{\exitnote}}
+
 
 \rSec3[temp.req.impl]{Requirement implication}
 \pnum
