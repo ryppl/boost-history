@@ -44,6 +44,7 @@ Bjarne Stroustrup, Texas A\&M University \\
 Jeremy Siek, University of Colorado at Boulder \\
 James Widman, Gimpel Software
 \end{tabular}\vspace{-6pt}
+
 \par\noindent Document number: DRAFT \vspace{-6pt}
 \par\noindent Revises document number: N2501=08-0011 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
@@ -73,13 +74,16 @@ standard library are discussed in separate documents:
 \item Concepts for the C++0x Standard Library: Numerics~[\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2574.pdf}{N2574=08-0084}]
 \end{itemize}
 
-\section*{Non-Trivial Changes from N2501}
-The wording in this document reflects one major change from the
-formulation of concepts presented in N2501: the introduction of
-wording for the ``Eliminating Forwarding Functions'' extension
-described in section 4.3 of ``Type-Soundness and Optimization in the
-Concepts Proposal'', posted to the \Cpp{} Extensions reflector on
-February 22, 2008.
+\section*{Changes from N2501}
+\begin{itemize}
+\item Incorporate wording to description ``option \#2'', corresponding
+  to the ``Eliminate Forwarding Functions'' option described in
+  N2576~\cite{gregor08:soundness}.
+\item Clarified that member templates of constrained templates are
+  constrained templates (\ref{temp.mem}) but that the
+  templates are an unconstrained context (\ref{temp.constrained});
+  their bodies are constrained contexts.
+\end{itemize}
 
 \section*{Typographical conventions}
 Within the proposed wording, text that has been added
@@ -2222,7 +2226,13 @@ void f(list<float> lf, list<int> li, list<X> lX)
 \addedConcepts{\mbox{\exitexample}}
 \color{black}
 
-\setcounter{subsection}{2}
+\rSec2[temp.mem]{Member templates}
+
+\setcounter{Paras}{9}
+\pnum
+\addedCC{A member template of a constrained class template is itself a
+  constrained template (\mbox{\ref{temp.constrained}}).}
+
 \rSec2[temp.variadic]{Variadic templates}
 \pnum
 A \mbox{\techterm{template parameter pack}} is a template parameter
@@ -3844,7 +3854,7 @@ or \mbox{\tcode{return}} statement is defined as follows:}
       The candidate set contains:}
     \begin{itemize}
     \item \addedCC{the template from which the seed was instantiated, if the
-      seed is a template function,}
+      seed is a function template specialization,}
     \item \addedCC{every function template that has the same name and is
       declared in the same namespace as the seed, and}
     \item \addedCC{every non-template function that is consistent with
@@ -4515,9 +4525,13 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
   \additemConcepts{a late-checked block (\mbox{\ref{stmt.late}}) indicates a
     compound statement that is an unconstrained context,}
   \additemConcepts{a default template argument in a
-    \mbox{\techterm{template-parameter}} is an unconstrained context,
-    and}
+    \mbox{\techterm{template-parameter}} is an unconstrained context,}
   \additemConcepts{a default argument in a \mbox{\techterm{parameter-declaration}}.}
+  \additemCC{the \mbox{\techterm{requires-clause}}, \mbox{\techterm{type-specifier}}, and \mbox{\techterm{declarator}} of a constrained member (\mbox{\ref{class.mem}}) are unconstrained contexts, and}
+  \additemCC{a member template of a constrained template is an
+    unconstrained context (\mbox{\ref{temp.mem}}). \mbox{\enternote}
+    The member template itself will still be a constrained template,
+    and its body will be a constrained context. \mbox{\exitnote}}
 \end{itemize}
 
 \rSec2[temp.req]{Template requirements}
