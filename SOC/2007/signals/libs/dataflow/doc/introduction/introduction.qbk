@@ -404,6 +404,7 @@ The Dataflow library uses the trunk version of Boost - it might not work
 perfectly with release versions of boost.
 
 Version 0.9.1 (under development)
+
 * Generic Dataflow layer
  * binary operations now propagate the return value
 
