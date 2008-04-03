@@ -428,7 +428,19 @@
 				Name="blueprint"
 				>
 				<File
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\binary_operation.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\binary_operation_t.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\dataflow\blueprint\component.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\component_bank.hpp"
 					>
 				</File>
 				<File
@@ -444,6 +456,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\keyed_port_t.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\dataflow\blueprint\network.hpp"
 					>
 				</File>
@@ -453,6 +469,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\dataflow\blueprint\port_t.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\blueprint\vector_port_t.hpp"
 					>
 				</File>
 			</Filter>

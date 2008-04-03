@@ -167,7 +167,7 @@ public:
     }
 	typename base_type::signal_type::result_type call(const boost::function<typename base_type::signature_type> &f)
     {
-        boost::fusion::fused<function<typename base_type::signature_type> const &> fused_out(f);
+        boost::fusion::fused<boost::function<typename base_type::signature_type> const &> fused_out(f);
         return fused_out(base_type::modification.stored);
     }
     /** \return A reference to the fusion vector of stored parameter values.

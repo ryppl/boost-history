@@ -96,7 +96,7 @@ namespace detail
     {
         int dx = x1 - x0;
         int dy = y1 - y0;
-        return sqrt(dx*dx+dy*dy);    
+        return sqrt(double(dx*dx+dy*dy));    
     }
     
     double distance(int x0, int y0, int x1, int y1, int xp, int yp)

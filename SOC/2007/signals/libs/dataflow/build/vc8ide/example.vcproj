@@ -133,6 +133,42 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="fltk_gui"
+			>
+			<File
+				RelativePath="..\..\example\fltk_gui\BlueprintBank.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\BlueprintBank.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\BlueprintComponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\BlueprintComponent.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\BlueprintWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\BlueprintWindow.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\fltk_gui_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\fltk_gui\Jamfile.v2"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\example\edit_distance.cpp"
 			>

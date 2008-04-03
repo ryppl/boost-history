@@ -50,9 +50,12 @@ class port_t<
     >::type >
     : public detail::vector_port_impl<keyed_port, PortOrRef, Tag>
 {
+    typedef detail::vector_port_impl<keyed_port, PortOrRef, Tag> base_type;
+    using base_type::port_traits_type;
+
     typedef array<
         const std::type_info *,
-        mpl::size<typename port_t::port_traits_type::port_keys>::type::value
+        mpl::size<typename port_traits_type::port_keys>::type::value
     >  array_type;
     
 public:
@@ -60,7 +63,7 @@ public:
         : detail::vector_port_impl<keyed_port, PortOrRef, Tag>(p)
     {
         mpl::for_each<
-            typename port_t::port_traits_type::port_keys,
+            typename port_traits_type::port_keys,
             detail::wrap_identity<mpl::_>
         > (detail::fill_type_info<array_type>(m_type_info));
     }

@@ -145,6 +145,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="utility"
+			>
+			<File
+				RelativePath="..\..\test\utility\Jamfile.v2"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\utility\test_bind_mem_fn.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\utility\test_bind_mem_fn_overload.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\utility\test_forced_sequence.cpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\test\Jamfile.v2"
 			>

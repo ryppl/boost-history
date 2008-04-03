@@ -72,9 +72,11 @@ public:
         // Output and input components
         add_component<output_valuator>("output");
         add_component<input_valuator>("input");
-        // A filter that doubles
+        // A filter that doubles (fails on MSVC)
+#ifndef BOOST_MSVC
         add_component<signals::function<void (int), int(int)> >
             ("doubler", boost::function<int(int)>(boost::bind(std::multiplies<int>(), _1, 2)));
+#endif
     }
 };
 
