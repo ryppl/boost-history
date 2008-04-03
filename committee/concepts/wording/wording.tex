@@ -88,7 +88,9 @@ standard library are discussed in separate documents:
   (\ref{temp.req.sat}).
 \item Add text to cope with inheriting constructors
   (\ref{class.inhctor}).
-
+\item Clarify that a class template partial specialization of a
+  constrained class template is not necessarily a constrained template
+  (\ref{temp.req.impl}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -267,14 +269,12 @@ defined in more than one translation unit, then
 \rSec2[basic.scope.pdecl]{Point of declaration}
 \setcounter{Paras}{9}
 
-\color{addclr}
 \pnum
-The point of declaration for a concept (\ref{concept}) is
-immediately after the identifier in the \techterm{concept-definition}. The point
-of declaration for a concept map (\ref{concept.map}) is
-immediately after the \techterm{concept-id} in the
-\techterm{concept-map-definition}.
-\color{black}
+\addedConcepts{The point of declaration for a concept (\mbox{\ref{concept}}) is
+immediately after the identifier in the \mbox{\techterm{concept-definition}}. The point
+of declaration for a concept map (\mbox{\ref{concept.map}}) is
+immediately after the \mbox{\techterm{concept-id}} in the
+\mbox{\techterm{concept-map-definition}}.}
 
 \noindent\editorial{Add the following new sections to 3.3 [basic.scope] after [basic.scope.class]:}
 
@@ -283,48 +283,47 @@ immediately after the \techterm{concept-id} in the
 \rSec2[basic.scope.concept]{Concept scope}
 \pnum
 \index{scope!concept}%
-The following rules describe the scope of names declared in concepts
-and concept maps.
+\addedConcepts{The following rules describe the scope of names declared in concepts
+and concept maps.}
 
 \begin{enumeraten}
 \item %
-The potential scope of a name declared in a concept or concept map
+\addedConcepts{The potential scope of a name declared in a concept or concept map
 consists not only of the declarative region
 following the name's point of declaration,
 but also of all associated function bodies
-in that concept or concept map.
+in that concept or concept map.}
 \item %
-A name
-\tcode{N}\ 
+\addedConcepts{A name
+\mbox{\tcode{N}} 
 used in a concept or concept map
-\tcode{S}\ 
+\mbox{\tcode{S}}
 shall refer to the same declaration in its context and when re-evaluated in
 the completed scope of
-\tcode{S}.
-No diagnostic is required for a violation of this rule.
+\mbox{\tcode{S}}.
+No diagnostic is required for a violation of this rule.}
 \item %
-If reordering declarations in a concept or concept map yields an
+\addedConcepts{If reordering declarations in a concept or concept map yields an
 alternate valid program under (1), the program is ill-formed,
-no diagnostic is required.
+no diagnostic is required.}
 \item %
-A name declared within an associated function definition hides a declaration of the same name
+\addedConcepts{A name declared within an associated function definition hides a declaration of the same name
 whose scope extends to or past the end of the associated function's concept or
-concept map.
+concept map.}
 \end{enumeraten}
 
-\color{addclr}
 \pnum
-The name of a concept member shall only be used as follows:
+\addedConcepts{The name of a concept member shall only be used as follows:}
 
 \begin{itemize}
 \item %
-in the scope of its concept (as described above)
-or a concept refining (\ref{concept.refine}) its concept,
+\addedConcepts{in the scope of its concept (as described above)
+or a concept refining (\mbox{\ref{concept.refine}}) its concept,}
 \item %
-after the
-\tcode{::}\ 
-scope resolution operator (\ref{expr.prim}) applied to the name of a
-concept map or template type parameter (\ref{temp.param}).
+\addedConcepts{after the
+\mbox{\tcode{::}}\ 
+scope resolution operator (\mbox{\ref{expr.prim}}) applied to the name of a
+concept map or template type parameter (\mbox{\ref{temp.param}}).}
 \end{itemize}
 
 \rSec2[basic.scope.req]{Requirements scope}
@@ -5012,14 +5011,17 @@ add(T t, U u) {
 \end{itemize}
 
 \pnum
-\addedConcepts{In the definition of a class template partial specialization, the
+\addedConcepts{In the definition of a}
+\addedCC{constrained}
+\addedConcepts{class template partial specialization, the
 requirements of its primary class template (\mbox{\ref{temp.class.spec}}),
 after substitution of the template arguments of the class template partial
-specialization, are implied. \mbox{\enternote} this rule ensures that a
+specialization, are implied.}
+\removedCC{\mbox{\enternote} this rule ensures that a
 class template partial specialization of a constrained template is a constrained
 template, even if does not have template requirements explicitly
-specified. \mbox{\exitnote}
-If this substitution results
+specified. \mbox{\exitnote}}
+\addedConcepts{If this substitution results
 in a requirement that does not depend on any template parameter, then
 the requirement must be satisfied (\mbox{\ref{temp.req}}); otherwise, the
 program is ill-formed.
@@ -5029,7 +5031,7 @@ template<typename T>
 requires EqualityComparable<T>
 class simple_set { };
 
-template<typename T>
+template<std::ObjectType T>
 class simple_set<T*> // implies \tcode{EqualityComparable<T*>}
 {
 };
