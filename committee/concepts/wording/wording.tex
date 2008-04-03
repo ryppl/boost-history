@@ -86,6 +86,9 @@ standard library are discussed in separate documents:
 \item Clarified how requirements are satisfied by concept maps,
   including a major cleanup of the specification of concept map lookup
   (\ref{temp.req.sat}).
+\item Add text to cope with inheriting constructors
+  (\ref{class.inhctor}).
+
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -1732,6 +1735,20 @@ An explicitly-defaulted
 definition has no implicit \techterm{exception-specification}.
 \exitnote\ 
 
+\rSec1[class.inhctor]{Inheriting Constructors}
+\setcounter{Paras}{1}
+\pnum
+The \techterm{constructor characteristics} of a constructor or
+constructor template are
+\begin{itemize}
+\item the template parameter list (\ref{temp.param}), if any,
+\additemCC{the template requirements (\mbox{\ref{temp.req}}), if any,}
+\item the \techterm{parameter-type-list} (\ref{decl.fct}),
+\item the \techterm{exception-specification} (\ref{except.spec}),
+\item absence or presence of \tcode{explicit} (\ref{class.conv.ctor}), and
+\item absence or presence of \tcode{constexpr} (\ref{dcl.constexpr}).
+\end{itemize}
+
 \setcounter{chapter}{12}
 \rSec0[over]{Overloading}
 
@@ -2600,10 +2617,11 @@ void m() {
 \setcounter{subsection}{7}
 \rSec2[temp.concept.map]{Concept map templates}
 \pnum
-A \techterm{concept map template} defines an unbounded set of concept
+\addedConcepts{A \mbox{\techterm{concept map template}} defines an
+  unbounded set of concept 
   maps with a common set of associated function,
   associated type, and associated template
-  definitions. \enterexample\
+  definitions. \mbox{\enterexample}}
 \begin{codeblock}
 concept F<typename T> {
   typename type;
@@ -2616,58 +2634,79 @@ concept_map F<T*> {
   T& f(T*);
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-A concept map template is a constrained template (\ref{temp.constrained})
-\enternote\ a concept map template may be a constrained template even
-if it does not have template requirements.  \exitnote\
+\addedConcepts{A concept map template is a constrained template (\mbox{\ref{temp.constrained}})
+\mbox{\enternote} a concept map template may be a constrained template even
+if it does not have template requirements.  \mbox{\exitnote}}
 
 \pnum
-Within the \techterm{template-argument-list} of the
-\techterm{concept-id} in a concept map template (including nested
+\addedConcepts{Within the \mbox{\techterm{template-argument-list}} of the
+\mbox{\techterm{concept-id}} in a concept map template (including nested
 template argument lists),
-the following restrictions apply:
+the following restrictions apply:}
 
 \begin{itemize}
 \item
-A non-type argument expression shall not involve
+\addedConcepts{A non-type argument expression shall not involve
 a template parameter of the concept map except when the argument
 expression is a simple
-\techterm{identifier}.
+\mbox{\techterm{identifier}}.}
 
 \item
-The type of a template parameter corresponding to a non-type argument
-shall not be dependent on a parameter of the concept map.
+\addedConcepts{The type of a template parameter corresponding to a non-type argument
+shall not be dependent on a parameter of the concept map.}
 
 \item
-The template parameter list of a concept map template shall not contain default
+\addedConcepts{The template parameter list of a concept map template shall not contain default
 template argument values.%
 \footnote{
 There is no way in which they could be used.
-}
+}}
 \end{itemize}
 
 \pnum 
-When a particular concept map is required, concept map matching
-determines whether a 
+\addedConcepts{During concept map lookup (\mbox{\ref{temp.req.sat}}),
+  concept map matching determines whether a 
 particular concept map template can be used. Concept map matching
 matches the concept arguments in the
-\mbox{\techterm{concept
-      instance}} to the 
+\mbox{\techterm{concept instance}} to the 
 concept arguments in the concept map template, using matching of class
-template partial specializations (\ref{temp.class.spec.match}). 
+template partial specializations (\mbox{\ref{temp.class.spec.match}}).}
 
 \pnum
-If more than one concept map template matches a specific
+\addedConcepts{If more than one concept map template matches a specific
 \mbox{\techterm{concept instance}}, partial ordering of concept map templates 
 proceeds as partial ordering of class template specializations
-(\ref{temp.class.order}).
+(\mbox{\ref{temp.class.order}}). \mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> { }
+template<typename T> requires C<T> void f(T);
+
+template<typename T> concept_map C<T*> { /* ... */ } // \#1
+
+concept Ptr<typename T> { }
+concept_map Ptr<int*> { /* ... */ }
+
+template<typename T> requires Ptr<T> concept_map C<T> { /* ... */ } // \#2
+
+void g(int* p)
+{
+  f(g); // okay: concept map C<int*> instantiated from \#1, which is more specialized than \#2
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\addedConcepts{When writing a template
+  constrained; keep your parameter types plain; because with a type
+  pattern, adaptation you will shatter; tho' the compiler has not even
+  complained.}
 
 \pnum
-A concept map template shall satisfy the requirements of its corresponding
-concept (\ref{concept.map}) at the time of definition of the concept
-map template. \enterexample\
+\addedConcepts{A concept map template shall satisfy the requirements
+  of its corresponding concept (\mbox{\ref{concept.map}}) at the time of definition of the concept
+map template. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { }
 
@@ -2677,7 +2716,7 @@ concept F<typename T> {
 
 template<C T> struct X;
 
-@\textcolor{addclr}{template}@<F T> void f(X<T>); // \#1
+template<F T> void f(X<T>); // \#1
 
 template<typename T>
 concept_map F<X<T>> { } // error: requirement for f(X<T>) not satisfied
@@ -2685,11 +2724,11 @@ concept_map F<X<T>> { } // error: requirement for f(X<T>) not satisfied
 @\textcolor{addclr}{}@template<F T>
 concept_map F<X<T>> { } // okay: uses \#1 to satisfy requirement for f(X<T>)
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-If the definition of a concept map template uses an instantiated archetype
-(\ref{temp.archetype}), and instantiation of the 
+\addedConcepts{If the definition of a concept map template uses an instantiated archetype
+(\mbox{\ref{temp.archetype}}), and instantiation of the 
 concept map template 
 results in a different specialization of that class
 template with an incompatible definition, the program is
@@ -2699,9 +2738,9 @@ definition of any associated type or associated template in the
 concept map, if its definition causes any of the associated
 function definitions to be ill-formed, or if the resulting concept map
 fails to satisfy the axioms of the corresponding concept. 
-\enterexample\
+\mbox{\enterexample}}
 \begin{codeblock}
-@\textcolor{addclr}{}@concept Stack<typename X> {
+concept Stack<typename X> {
   typename value_type;
   value_type& top(X&);
   // ...
@@ -2733,14 +2772,14 @@ void g(dynarray<int>& x1, dynarray<bool>& x2) {
          // have incompatible signatures for top()
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-A concept map template shall be declared before the first use of a
+\addedConcepts{A concept map template shall be declared before the first use of a
 concept map that would make use of the concept map template
 as the result of an implicit or explicit instantiation
-in every translation unit in which such a use occurs; no \textcolor{addclr}{diagnostic} is
-required.  
+in every translation unit in which such a use occurs; no diagnostic is
+required.}
 
 \color{black}
 
