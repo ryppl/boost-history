@@ -4760,8 +4760,8 @@ void h(float x, int y, int X::* p, int *q) {
 \addedCC{A negative requirement is satisfied if concept map
   lookup fails to find a concept map that would satisfy the
   corresponding concept requirement. \mbox{\enternote} If concept map
-  lookup results in an ambiguity, the program is
-  ill-formed. \mbox{\exitnote}}
+  lookup results in an ambiguity, concept map lookup halts and the
+  negative requirement is not satisfied. \mbox{\exitnote}}
 \addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { }
@@ -4812,7 +4812,8 @@ void h(float x, int y, int X::* p) {
 \addedCC{If no matching concept map is found within a set
   \mbox{\tcode{S}} in \mbox{\tcode{Q}}, concept map lookup proceeds to
   the next set in \mbox{\tcode{Q}}. If partial ordering of concept
-    map templates results in an ambiguity, the program is ill-formed.}
+    map templates results in an ambiguity, concept map lookup halts and
+    the requirement is not satisfied.}
 
 \pnum
 \addedCC{When concept map lookup is performed during the
