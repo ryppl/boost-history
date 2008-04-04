@@ -83,7 +83,7 @@ standard library are discussed in separate documents:
   constrained templates (\ref{temp.mem}) but that the
   templates are an unconstrained context (\ref{temp.constrained});
   their bodies are constrained contexts.
-\item Clarified how requirements are satisfied by concept maps,
+\item Clarified and simplified how requirements are satisfied by concept maps,
   including a major cleanup of the specification of concept map lookup
   (\ref{temp.req.sat}).
 \item Add text to cope with inheriting constructors
@@ -3221,7 +3221,7 @@ arguments and associated types and templates (\mbox{\ref{concept.assoc}}). A
 concept map
 (\mbox{\ref{concept.map}}) for a given concept must provide}\changedCCC{, either
 implicitly (\mbox{\ref{concept.map.implicit}}) or explicitly
-(\mbox{\ref{concept.map.fct}}), definitions}{candidate sets
+(\mbox{\ref{concept.map.fct}}), definitions}{associated function candidate sets
 (\mbox{\ref{temp.constrained.set}})}
 \addedConcepts{for each associated 
 function in the concept} \addedCC{(\mbox{\ref{concept.map.fct}})}
@@ -3738,11 +3738,9 @@ the refinements of that concept) hold, permitting an
 \rSec3[concept.map.fct]{Associated function definitions}
 
 \pnum
-\addedConcepts{Associated function requirements (\mbox{\ref{concept.fct}}) are
-satisfied by} \changedCCC{function definitions}{candidate sets
-  (\mbox{\ref{temp.constrained.set}})} 
-\addedConcepts{in the 
-body of a concept map.} \changedCCC{These}{Function}
+\addedConcepts{An associated function requirement (\mbox{\ref{concept.fct}}) is
+satisfied by} \changedCCC{function definitions}{an associated function candidate set
+  (\mbox{\ref{temp.constrained.set}}), which can refer to one or more functions inside or outside of the concept map.} \changedCCC{These}{Function}
 \addedConcepts{definitions} \addedCC{in the concept map} 
 \addedConcepts{can be used to adapt the
 syntax of the concept arguments
@@ -3775,13 +3773,12 @@ concept_map Stack<std::vector<T> > {
   map are \mbox{\techterm{inline}}.}
 
 \pnum 
-\addedCC{The candidate set for an associated function \mbox{\tcode{f}}
-  is defined as follows. Synthesize a function (call it
-  \mbox{\tcode{g}}) whose declaration is the same as the declaration
-  of the associated function after substitution of the concept map
-  arguments into the associated function. Let \mbox{\tcode{parm1}},
+\addedCC{The associated function candidate set for an associated
+  function (or function template) \mbox{\tcode{f}} 
+  is defined as follows. Let \mbox{\tcode{parm1}},
   \mbox{\tcode{parm2}}, ..., \mbox{\tcode{parm$N$}} be the parameters
-  of \mbox{\tcode{g}} and \mbox{\tcode{parm1$'$}},
+  of \mbox{\tcode{f}} (after substitution of the concept map
+  arguments) and \mbox{\tcode{parm1$'$}},
   \mbox{\tcode{parm2$'$}}, ..., \mbox{\tcode{parm$N'$}} be
   expressions, where each \mbox{\tcode{parm$i'$}} is an
   \mbox{\techterm{id-expression}} naming \mbox{\tcode{parm$i$}}. If
@@ -4832,14 +4829,6 @@ void h(float x, int y, int X::* p) {
       of those namespaces (\mbox{\ref{namespace.def}});
       \mbox{\techterm{using-directives}} in those namespaces are not
       followed during this search.}
-
-    \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the namespace of which the
-      concept of \mbox{\tcode{I}} is a member and that namespace's
-      associated namespaces (\mbox{\ref{namespace.def}});
-      \mbox{\techterm{using-directives}} in these namespaces are not
-      followed during this search and all names found by way of
-      \mbox{\techterm{using-declarations}} are ignored.}
 \end{enumerate}
 
 \mbox{\enterexample}
@@ -5353,7 +5342,8 @@ template<> class tuple<> { /* ... */ };
 \addedConcepts{\mbox{\exitexample\exitnote}}
 
 \pnum
-\addedConcepts{In a constrained template, for each concept requirement
+\addedConcepts{In a constrained}
+\changedCCC{template}{context}\addedConcepts{, for each concept requirement
 that is stated in or implied by the template requirements,
 a \mbox{\techterm{concept map archetype}} for that
 requirement is synthesized by 
@@ -5363,10 +5353,10 @@ concept map archetype acts as a concept
 map, and is used to resolve name 
 lookup into
 requirements scope (\mbox{\ref{basic.scope.req}}) and satisfy the
-requirements of templates used inside the definition of the
-constrained template. 
+requirements of templates used inside the}\changedCCC{definition of the
+constrained template}{constrained context}\addedConcepts{.}
 %
-\mbox{\enterexample}}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept SignedIntegral<typename T> {
   T::T(const T&);
