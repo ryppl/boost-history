@@ -3572,40 +3572,40 @@ scope of this International Standard.
 \rSec2[concept.map]{Concept maps}
 
 \pnum
-The grammar for a \techterm{concept-map-definition} is:
+\addedConcepts{The grammar for a \mbox{\techterm{concept-map-definition}} is:}
 
 \begin{bnf}
 \index{concept-map-definition@\techterm{concept-map-definition}}%
-concept-map-definition:\br
-         \terminal{concept_map} \terminal{::}\opt\ nested-name-specifier\opt\ concept-id \terminal{\{} concept-map-member-specification\opt\ \terminal{\}} \terminal{;}\opt\ \br
+\addedConcepts{concept-map-definition:}\br
+         \addedConcepts{\mbox{\terminal{concept_map}} \mbox{\terminal{::}\opt}\ nested-name-specifier\mbox{\opt}\ concept-id \mbox{\terminal{\{}} concept-map-member-specification\mbox{\opt}\ \mbox{\terminal{\}}} \mbox{\terminal{;}\opt}} \br
 
-concept-map-member-specification:\br
-         concept-map-member concept-map-member-specification\opt\ \br
+\addedConcepts{concept-map-member-specification:}\br
+         \addedConcepts{concept-map-member concept-map-member-specification\mbox{\opt}} \br
 
-concept-map-member:\br
-         simple-declaration \br
-         function-definition \br
-         template-declaration
+\addedConcepts{concept-map-member:}\br
+         \addedConcepts{simple-declaration} \br
+         \addedConcepts{function-definition} \br
+         \addedConcepts{template-declaration}
 \end{bnf}
 
 \pnum
-Concept maps describe how a set of template arguments satisfy the
+\addedConcepts{Concept maps describe how a set of template arguments satisfy the
 requirements stated in the body of a concept definition
-(\ref{concept.def}). Whenever a constrained template specialization
-(\ref{temp.constrained}) is named, there shall be a concept map
+(\mbox{\ref{concept.def}}). Whenever a constrained template specialization
+(\mbox{\ref{temp.constrained}}) is named, there shall be a concept map
 corresponding to each concept requirement in the
 template requirements. This concept map may be written
-explicitly (\ref{concept.map}), instantiated from a concept map
-template (\ref{temp.concept.map}), or generated implicitly
-(\mbox{\ref{concept.map.implicit}}).
+explicitly (\mbox{\ref{concept.map}}), instantiated from a concept map
+template (\mbox{\ref{temp.concept.map}}), or generated implicitly
+(\mbox{\ref{concept.map.implicit}}).}
 %
-The concept map (\ref{concept.def}) is inserted into the scope in
-which the concept map or concept map template (\ref{temp.concept.map})
-is defined immediately after the \techterm{concept-id} is seen. The
+\addedConcepts{The concept map (\mbox{\ref{concept.def}}) is inserted into the scope in
+which the concept map or concept map template (\mbox{\ref{temp.concept.map}})
+is defined immediately after the \mbox{\techterm{concept-id}} is seen. The
 name of the concept map is the full concept name of the concept in the
-corresponding concept instance.
+corresponding concept instance.}
 %
-\enterexample\
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 class student_record { 
 public: 
@@ -3628,12 +3628,12 @@ template<typename T> requires EqualityComparable<T> void f(T);
 
 f(student_record()); // okay, have concept_map EqualityComparable<student_record>
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-A concept map for an implicit concept is implicitly defined when it is
-needed. \addedConcepts{The implicitly-defined concept map is defined in the
-  namespace of the concept.} \enterexample\
+\addedConcepts{A concept map for an implicit concept is implicitly defined when it is
+needed. The implicitly-defined concept map is defined in the
+  namespace of the concept. \mbox{\enterexample}}
 \begin{codeblock}
 auto concept Addable<typename T> {
   T::T(const T&);
@@ -3650,16 +3650,16 @@ int f(int x, int y) {
   return add(x, y); // okay: concept map Addable<int> implicitly defined
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-Concept maps shall provide
-a definition for every associated function (\ref{concept.fct}),
-associated type (\ref{concept.assoc}), and associated template of the
+\addedConcepts{Concept maps shall provide
+a definition for every associated function (\mbox{\ref{concept.fct}}),
+associated type (\mbox{\ref{concept.assoc}}), and associated template of the
 concept named by
 its concept instance and
 all of the requirements inherited from its refined concepts.
-(\ref{concept.refine}). \enterexample\ 
+(\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { T f(T); }
 
@@ -3667,12 +3667,12 @@ concept_map C<int> {
   int f(int); // okay: matches requirement for f in concept C
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-Concept maps shall not contain declarations that do not satisfy any
+\addedConcepts{Concept maps shall not contain declarations that do not satisfy any
 requirement in their corresponding concept or its refined
-concepts. \enterexample\
+concepts. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { }
 
@@ -3680,13 +3680,13 @@ concept_map C<int> {
   int f(int); // error: no requirement for function f
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-At the point of definition of a concept map, all associated
-requirements (\ref{concept.req}) of the corresponding
-concept and its refined concepts (\ref{concept.refine}) shall be
-satisfied. \enterexample\
+\addedConcepts{At the point of definition of a concept map, all associated
+requirements (\mbox{\ref{concept.req}}) of the corresponding
+concept and its refined concepts (\mbox{\ref{concept.refine}}) shall be
+satisfied. \mbox{\enterexample}}
 \begin{codeblock}
 concept SignedIntegral<typename T> { /* ... */ }
 
@@ -3707,18 +3707,18 @@ concept_map ForwardIterator<file_iterator> {
   typedef long difference_type;
 } // error: no concept_map SignedIntegral<long> if ptrdiff_t is not long
 \end{codeblock} 
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-If a concept map is provided for a particular
+\addedConcepts{If a concept map is provided for a particular
 concept instance,
 then that concept map shall be defined before a constrained template
 referring to that concept instance is instantiated. 
 If the introduction of a concept
 map changes a previous result (e.g., in template argument deduction
-(\ref{temp.deduct})), the program is ill-formed, no diagnostic
+(\mbox{\ref{temp.deduct}})), the program is ill-formed, no diagnostic
 required. Concept map templates must be
-instantiated if doing so would affect the semantics of the program. 
+instantiated if doing so would affect the semantics of the program.}
 %
 \addedConcepts{A concept map for a particular concept instance shall not be
   defined both implicitly and explicitly in the same namespace in a
@@ -3729,23 +3729,24 @@ instantiated if doing so would affect the semantics of the program.
   required.}
 
 \pnum
-The implicit or explicit definition of a concept map asserts that the
-axioms (\ref{concept.axiom}) stated in its corresponding concept (and
-the refinements of that concept) hold\addedConcepts{, permitting an
-  implementation to perform the transformations described in
-  [concept.axiom]}. \addedConcepts{If an axiom is violated, the behavior of
+\addedConcepts{The implicit or explicit definition of a concept map asserts that the
+axioms (\mbox{\ref{concept.axiom}}) stated in its corresponding concept (and
+the refinements of that concept) hold, permitting an
+  implementation to perform the transformations described in~\mbox{\ref{concept.axiom}}. If an axiom is violated, the behavior of
   the program is undefined.}
 
 \rSec3[concept.map.fct]{Associated function definitions}
 
 \pnum
-Associated function requirements (\ref{concept.fct}) are
-satisfied by \changedCCC{function definitions}{candidate sets
-  (\mbox{\ref{temp.constrained.set}})} in the 
-body of a concept map. \changedCCC{These}{Function}
-definitions \addedCC{in the concept map} can be used to adapt the
+\addedConcepts{Associated function requirements (\mbox{\ref{concept.fct}}) are
+satisfied by} \changedCCC{function definitions}{candidate sets
+  (\mbox{\ref{temp.constrained.set}})} 
+\addedConcepts{in the 
+body of a concept map.} \changedCCC{These}{Function}
+\addedConcepts{definitions} \addedCC{in the concept map} 
+\addedConcepts{can be used to adapt the
 syntax of the concept arguments
-to the syntax expected by the concept. \enterexample\
+to the syntax expected by the concept. \mbox{\enterexample}}
 \begin{codeblock}
 concept Stack<typename S> { 
   typename value_type;
@@ -3767,7 +3768,7 @@ concept_map Stack<std::vector<T> > {
   value_type& top(std::vector<T>& vec) { return vec.back(); }
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedConcepts{Functions and function templates defined in a concept
@@ -4041,13 +4042,13 @@ concept_map Destructible<Y> { } // error: Y's destructor is inaccessible
 \rSec3[concept.map.assoc]{Associated type and template definitions}
 
 \pnum
-Definitions in the concept map provide types and templates
+\addedConcepts{Definitions in the concept map provide types and templates
 that satisfy requirements for associated types and templates
-(\ref{concept.assoc}), respectively.
+(\mbox{\ref{concept.assoc}}), respectively.}
 
 \pnum
-Associated type parameter requirements are satisfied by type definitions in the
-body of a concept map. \enterexample\
+\addedConcepts{Associated type parameter requirements are satisfied by type definitions in the
+body of a concept map. \mbox{\enterexample}}
 \begin{codeblock}
 concept ForwardIterator<typename Iter> {
   typename difference_type;
@@ -4057,13 +4058,13 @@ concept_map ForwardIterator<int*> {
   typedef ptrdiff_t difference_type;
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-Associated template requirements are satisfied by class template
-definitions or template aliases ([temp.alias]) in the body of the concept map. \enterexample\
+\addedConcepts{Associated template requirements are satisfied by class template
+definitions or template aliases (\mbox{\ref{temp.alias}}) in the body of the concept map. \mbox{\enterexample}}
 \begin{codeblock}
-@\textcolor{addclr}{concept}@ Allocator<typename Alloc> {
+concept Allocator<typename Alloc> {
   template<class T> class rebind;
 }
 
@@ -4076,34 +4077,34 @@ concept_map Allocator<my_allocator<T>> {
     };
 };
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \rSec3[concept.map.implicit]{Implicit definitions}
 
 \pnum
-Any of the requirements of a concept and its refined concepts
-(\ref{concept.refine}) that are not 
+\addedConcepts{Any of the requirements of a concept and its refined concepts
+(\mbox{\ref{concept.refine}}) that are not 
 satisfied by the definitions in the body of a concept map
-(\ref{concept.map.fct}, \ref{concept.map.assoc}) are
-\techterm{unsatisfied requirements}. 
+(\mbox{\ref{concept.map.fct}}, \mbox{\ref{concept.map.assoc}}) are
+\mbox{\techterm{unsatisfied requirements}}.} 
 
 \pnum
-Definitions for unsatisfied requirements in a concept map are
+\addedConcepts{Definitions for unsatisfied requirements in a concept map are
 implicitly generated from the requirements and their default values as
 follows. If any unsatisfied requirement is not
-matched by this process, the concept map is ill-formed.
+matched by this process, the concept map is ill-formed.}
 
 \pnum
-The implicit definition of a concept map involves the implicit
+\addedConcepts{The implicit definition of a concept map involves the implicit
 definition of concept map members for each associated non-member function
-(\ref{concept.fct}) and associated type or template (\ref{concept.assoc})
+(\mbox{\ref{concept.fct}}) and associated type or template (\mbox{\ref{concept.assoc}})
 requirement, described below. If the implicit definition of a concept 
 map member would produce an invalid definition, or if any of the
 requirements of the concept would not be satisfied by the
-implicitly-defined concept map (\ref{concept.map}), the implicit definition of 
-the concept map fails \enternote\ failure to implicitly define a
-concept map does not imply that the program is ill-formed. \exitnote\ 
-\enterexample\
+implicitly-defined concept map (\mbox{\ref{concept.map}}), the implicit definition of 
+the concept map fails \mbox{\enternote} failure to implicitly define a
+concept map does not imply that the program is ill-formed. \mbox{\exitnote}\ 
+\mbox{\enterexample}}
 \begin{codeblock}
 auto concept F<typename T> {
   void f(T);
@@ -4123,7 +4124,7 @@ void func(X x) {
   h(x); // okay: implicit concept map F<X> fails, causing template argument deduction to fail for \#1; calls \#2
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedCC{A concept map member that satisfies an associated type or
@@ -4162,12 +4163,12 @@ void g(int* x) {
 \addedCC{\mbox{\exitexample}}
 
 \pnum
-If an associated type or template (\ref{concept.assoc}) has a default
+\addedConcepts{If an associated type or template (\mbox{\ref{concept.assoc}}) has a default
 argument, a concept map member satisfying the associated
 type or template requirement shall be implicitly defined by substituting the
 concept map arguments into the default argument. If this substitution
-does not produce a valid type or template (\ref{temp.deduct}), the
-concept map member is not implicitly defined. \enterexample\
+does not produce a valid type or template (\mbox{\ref{temp.deduct}}), the
+concept map member is not implicitly defined. \mbox{\enterexample}}
 \begin{codeblock}
 auto concept A<typename T> {
   typename result_type = typename T::result_type;
@@ -4185,53 +4186,52 @@ void g(X x) {
   f(x); // okay: A<X> cannot satisfy result_type requirement, and is not implicitly defined, calls \#2
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \rSec2[concept.refine]{Concept refinement}
 
 \pnum
-The grammar for a \techterm{refinement-clause} is:
+\addedConcepts{The grammar for a \mbox{\techterm{refinement-clause}} is:}
 
 \begin{bnf}
-refinement-clause:\br
-         \terminal{:} refinement-specifier-list\br
+\addedConcepts{refinement-clause:}\br
+         \addedConcepts{\mbox{\terminal{:}} refinement-specifier-list}\br
 
-refinement-specifier-list:\br
-         refinement-specifier \terminal{,} refinement-specifier-list\br
-         refinement-specifier\br
+\addedConcepts{refinement-specifier-list:}\br
+         \addedConcepts{refinement-specifier \mbox{\terminal{,}} refinement-specifier-list}\br
+         \addedConcepts{refinement-specifier}\br
 
-refinement-specifier:\br
-         \terminal{::}\opt\ nested-name-specifier\opt\ concept-id
+\addedConcepts{refinement-specifier:}\br
+         \addedConcepts{\mbox{\terminal{::}\opt}\ nested-name-specifier\mbox{\opt}\ concept-id}
 \end{bnf}
 
 \pnum 
-Refinements specify an inheritance
-relationship among concepts. 
+\addedConcepts{Refinements specify an inheritance
+relationship among concepts. }
 %
-A concept \tcode{B} named in a \techterm{refinement-specifier} of
-concept \tcode{D} is a \emph{refined concept} of \tcode{D} and
-\tcode{D} is a \emph{refining concept} of \tcode{B}.
+\addedConcepts{A concept \mbox{\tcode{B}} named in a \mbox{\techterm{refinement-specifier}} of
+concept \mbox{\tcode{D}} is a \mbox{\techterm{refined concept}} of \mbox{\tcode{D}} and
+\mbox{\tcode{D}} is a \mbox{\techterm{refining concept}} of \mbox{\tcode{B}}.}
 %
-A concept refinement inherits all
-requirements in the body of a concept (\ref{concept.def}), such that
+\addedConcepts{A concept refinement inherits all
+requirements in the body of a concept (\mbox{\ref{concept.def}}), such that
 the requirements of the refining concept are a superset of the
-requirements of the refined concept. 
+requirements of the refined concept.}
 %
-\enternote\ 
-when a concept \tcode{D} refines
-a concept \tcode{B}, every set of concept arguments that satisfies the
-requirements of \tcode{D} also satisfies the requirements of
-\tcode{B}. \addedConcepts{The refinement relationship is transitive.}
-\exitnote\
+\addedConcepts{\mbox{\enternote}\ 
+when a concept \mbox{\tcode{D}} refines
+a concept \mbox{\tcode{B}}, every set of concept arguments that satisfies the
+requirements of \mbox{\tcode{D}} also satisfies the requirements of
+\mbox{\tcode{B}}. The refinement relationship is transitive.
+\mbox{\exitnote}}
 %
-\enterexample\ In the following example,
-\tcode{EquilateralPolygon} refines
-\tcode{Polygon}. Thus, every
-\tcode{EquilateralPolygon} is a \tcode{Polygon}, and constrained
-templates (\ref{temp.constrained}) that are well-formed with a
-\tcode{Polygon} constraint are well-formed when given an
-\tcode{EquilateralPolygon}.
-
+\addedConcepts{\mbox{\enterexample} In the following example,
+\mbox{\tcode{EquilateralPolygon}} refines
+\mbox{\tcode{Polygon}}. Thus, every
+\mbox{\tcode{EquilateralPolygon}} is a \mbox{\tcode{Polygon}}, and constrained
+templates (\mbox{\ref{temp.constrained}}) that are well-formed with a
+\mbox{\tcode{Polygon}} constraint are well-formed when given an
+\mbox{\tcode{EquilateralPolygon}}.}
 \begin{codeblock}
 concept Polygon<typename P> { /* ... */ }
 
@@ -4239,20 +4239,20 @@ concept EquilateralPolygon<typename P> : Polygon<P> { /* ... */ }
 \end{codeblock} \exitexample\
 
 \pnum
-A \techterm{refinement-specifier} shall refer to a defined concept. \enterexample\
+\addedConcepts{A \mbox{\techterm{refinement-specifier}} shall refer to a defined concept. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> : C<vector<T>> {/* ... */ } // error: concept C is not defined
 \end{codeblock}
-\textcolor{addclr}{\exitexample}
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-A \emph{refinement-specifier} in the refinement clause shall not refer
-  to associated types.
+\addedConcepts{A \mbox{\techterm{refinement-specifier}} in the refinement clause shall not refer
+  to associated types.}
 
 \pnum
-The \techterm{template-argument-list} of a
-\techterm{refinement-specifier}'s \techterm{concept-id} shall refer to at
-  least one of the concept parameters. \enterexample\ 
+\addedConcepts{The \mbox{\techterm{template-argument-list}} of a
+\mbox{\techterm{refinement-specifier}}'s \mbox{\techterm{concept-id}} shall refer to at
+  least one of the concept parameters. \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> 
   : Incrementable<int>  // error: Incrementable<int> uses no concept parameters
@@ -4260,39 +4260,39 @@ concept InputIterator<typename Iter>
   // ...
 }
 \end{codeblock} 
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-Within the definition of a concept, a concept map archetype
-(\ref{temp.archetype}) is synthesized for each
-\techterm{refinement-specifier} in the concept's
-\emph{refinement-clause} (if any).
+\addedConcepts{Within the definition of a concept, a concept map archetype
+(\mbox{\ref{temp.archetype}}) is synthesized for each
+\mbox{\techterm{refinement-specifier}} in the concept's
+\mbox{\techterm{refinement-clause}} (if any).}
 
 \rSec3[concept.member.lookup]{Concept member lookup}
 
 \pnum
-Concept member lookup determines the meaning of a name
-(\techterm{id-expression}) in concept scope
-(\ref{basic.scope.concept}). The following steps define the result of
-name lookup for a member name \tcode{f} in concept scope
-\tcode{C}. \tcode{C$_R$} is the set of concept scopes corresponding to
-the concepts refined by the concept whose scope is \tcode{C}.
+\addedConcepts{Concept member lookup determines the meaning of a name
+(\mbox{\techterm{id-expression}}) in concept scope
+(\mbox{\ref{basic.scope.concept}}). The following steps define the result of
+name lookup for a member name \mbox{\tcode{f}} in concept scope
+\mbox{\tcode{C}}. \mbox{\tcode{C$_R$}} is the set of concept scopes corresponding to
+the concepts refined by the concept whose scope is \mbox{\tcode{C}}.}
 
 \pnum
-If the name \tcode{f} is declared in concept scope \tcode{C}, and
-\tcode{f} refers to an associated type or template
-(\ref{concept.assoc}), then the result of name lookup is the
-associated type or template.
+\addedConcepts{If the name \mbox{\tcode{f}} is declared in concept scope \mbox{\tcode{C}}, and
+\mbox{\tcode{f}} refers to an associated type or template
+(\mbox{\ref{concept.assoc}}), then the result of name lookup is the
+associated type or template.}
 
 \pnum
-If the name \tcode{f} is declared in concept scope \tcode{C}, and
-\tcode{f} refers to one or more associated functions
-(\ref{concept.fct}), then the result of name lookup is the set
-consisting of the associated functions in \tcode{C} in addition to the
+\addedConcepts{If the name \mbox{\tcode{f}} is declared in concept scope \mbox{\tcode{C}}, and
+\mbox{\tcode{f}} refers to one or more associated functions
+(\mbox{\ref{concept.fct}}), then the result of name lookup is the set
+consisting of the associated functions in \mbox{\tcode{C}} in addition to the
 associated functions in each concept scope
-in \tcode{C$_R$} for which
-name lookup of \tcode{f} results in a set
-  of associated functions. \enterexample\
+in \mbox{\tcode{C$_R$}} for which
+name lookup of \mbox{\tcode{f}} results in a set
+  of associated functions. \mbox{\enterexample}}
 \begin{codeblock}
 concept C1<typename T> : CopyConstructible<T> {
   T f(T); // \#1
@@ -4313,42 +4313,42 @@ void f(T x)
   D<T>::f(x); // name lookup finds \#1 and \#2, overload resolution selects \#1
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-If the name \tcode{f} is not declared in \tcode{C}, name lookup
-searches for \tcode{f} in the scopes of each of the refined concepts
-(\tcode{C$_R$}). If name lookup of \tcode{f} is ambiguous in any
-concept scope \tcode{C$_R$}, name lookup of \tcode{f} in \tcode{C} is
-ambiguous. Otherwise, the set of concept scopes \tcode{C$_{R'}$} is a
-subset of \tcode{C$_R$} containing only those concept scopes for which
-name lookup finds \tcode{f}. The result of name lookup for \tcode{f}
-in \tcode{C} is defined by:
+\addedConcepts{If the name \mbox{\tcode{f}} is not declared in \mbox{\tcode{C}}, name lookup
+searches for \mbox{\tcode{f}} in the scopes of each of the refined concepts
+(\mbox{\tcode{C$_R$}}). If name lookup of \mbox{\tcode{f}} is ambiguous in any
+concept scope \mbox{\tcode{C$_R$}}, name lookup of \mbox{\tcode{f}} in \mbox{\tcode{C}} is
+ambiguous. Otherwise, the set of concept scopes \mbox{\tcode{C$_{R'}$}} is a
+subset of \mbox{\tcode{C$_R$}} containing only those concept scopes for which
+name lookup finds \mbox{\tcode{f}}. The result of name lookup for \mbox{\tcode{f}}
+in \mbox{\tcode{C}} is defined by:}
 
 \begin{itemize}
-\item if \tcode{C$_{R'}$} is empty, name lookup of \tcode{f} in \tcode{C}
-  returns no result, or
+\additemConcepts{if \mbox{\tcode{C$_{R'}$}} is empty, name lookup of \mbox{\tcode{f}} in \mbox{\tcode{C}}
+  returns no result, or}
 
-\item if \tcode{C$_{R'}$} contains only a single concept scope, name
-  lookup for \tcode{f} in \tcode{C} is the result of name lookup for
-  \tcode{f} in that concept scope, or
+\additemConcepts{if \mbox{\tcode{C$_{R'}$}} contains only a single concept scope, name
+  lookup for \mbox{\tcode{f}} in \mbox{\tcode{C}} is the result of name lookup for
+  \mbox{\tcode{f}} in that concept scope, or}
 
-\item if \tcode{f} refers to one or more
-    functions in all of the concept scopes in \tcode{C$_{R'}$}, then
-  \tcode{f} 
+\additemConcepts{if \mbox{\tcode{f}} refers to one or more
+    functions in all of the concept scopes in \mbox{\tcode{C$_{R'}$}}, then
+  \mbox{\tcode{f}}
   refers to the set consisting of
-  all associated functions from all of the concept scopes in \mbox{\tcode{C$_{R'}$}}, or
+  all associated functions from all of the concept scopes in \mbox{\tcode{C$_{R'}$}}, or}
 
-\item if \tcode{f} refers to an associated type in all concept
-  scopes in \tcode{C$_{R'}$}, and all of the associated types are
-  equivalent (\ref{temp.req}), the result is the associated
-  type \tcode{f} found first by a depth-first traversal of the
-  refinement clauses,
+\additemConcepts{if \mbox{\tcode{f}} refers to an associated type in all concept
+  scopes in \mbox{\tcode{C$_{R'}$}}, and all of the associated types are
+  equivalent (\mbox{\ref{temp.req}}), the result is the associated
+  type \mbox{\tcode{f}} found first by a depth-first traversal of the
+  refinement clauses,}
 
-\item otherwise, name lookup of \tcode{f} in \tcode{C} is ambiguous.
+\additemConcepts{otherwise, name lookup of \mbox{\tcode{f}} in \mbox{\tcode{C}} is ambiguous.}
 \end{itemize}
 
-\enterexample\
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { typename t; }
 
@@ -4359,16 +4359,16 @@ concept C<typename T> :  A<T>, B<T> {
   f(A<T>::t); // okay
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-When name lookup in a concept scope \tcode{C} results in a set of associated functions, duplicate associated
+\addedConcepts{When name lookup in a concept scope \mbox{\tcode{C}} results in a set of associated functions, duplicate associated
 functions are removed from the 
 set. If more than one associated function in the 
 set has the same signature, the associated
 function found first by a depth-first traversal of the refinement clauses of
-\tcode{C} starting at \tcode{C} will be retained and the other
-associated functions will be removed as duplicates. \enterexample\
+\mbox{\tcode{C}} starting at \mbox{\tcode{C}} will be retained and the other
+associated functions will be removed as duplicates. \mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> {
   T f(T); // \#1a
@@ -4390,34 +4390,34 @@ void h(T x) {
   C<T>::g(x); // overload set contains \#2b; \#2a was removed as a duplicate
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \rSec3[concept.refine.maps]{Implicit concept maps for refined concepts}
 
 \pnum
-When a concept map is defined for a concept \tcode{C} that has a
+\addedConcepts{When a concept map is defined for a concept \mbox{\tcode{C}} that has a
 refinement clause, concept maps for each of the concepts refined by
-\tcode{C} are implicitly defined  in the namespace of which the
-concept map is a member unless already defined. \enterexample\
+\mbox{\tcode{C}} are implicitly defined  in the namespace of which the
+concept map is a member unless already defined. \mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { }
 concept B<typename T> : A<T> { }
 
 concept_map B<int> { } // implicitly defines concept map A<int>
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-When a concept map is implicitly defined for a refinement,
+\addedConcepts{When a concept map is implicitly defined for a refinement,
 definitions in the concept map for the refining concept can
-\addedConcepts{also} be used to 
-satisfy the requirements of the refined concept (\ref{concept.map}).
-\addedConcepts{\mbox{\enternote} a single function definition in a concept
-  map can be used to satisfy multiple requirements. \mbox{\exitnote}}
-\enterexample\ in this example, the concept map \tcode{D<int>}
-implicitly defines the concept map \tcode{C<int>}.
+also be used to 
+satisfy the requirements of the refined concept (\mbox{\ref{concept.map}}).
+\mbox{\enternote} a single function definition in a concept
+  map can be used to satisfy multiple requirements. \mbox{\exitnote}
+\mbox{\enterexample} in this example, the concept map \mbox{\tcode{D<int>}}
+implicitly defines the concept map \mbox{\tcode{C<int>}}.}
 \begin{codeblock}
-@\textcolor{addclr}{concept}@ C<typename T> {
+concept C<typename T> {
   T f(T);
   void g(T);
 }
@@ -4431,21 +4431,21 @@ concept_map D<int> {
   void g(int x) { } // satisfies requirement for C<int>::g and D<int>::g
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-Concept map templates (\ref{temp.concept.map}) are implicitly defined
+\addedConcepts{Concept map templates (\mbox{\ref{temp.concept.map}}) are implicitly defined
 only for certain refinements of the concept corresponding to the
 concept map template. A concept map template for a particular refined
 concept is defined if all of the template parameters of the refining
 concept map template can be deduced from the
-\techterm{template-argument-list} of
-the \techterm{refinement-specifier}'s
+\mbox{\techterm{template-argument-list}} of
+the \mbox{\techterm{refinement-specifier}}'s
 corresponding concept instance
-(\ref{temp.deduct.type}). If template argument deduction fails, then a
+(\mbox{\ref{temp.deduct.type}}). If template argument deduction fails, then a
 concept map template corresponding to the refined concept shall
 have been defined.
-\enterexample\
+\mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { }
 concept D<typename T, typename U> : C<T> { }
@@ -4460,35 +4460,35 @@ template<typename T, typename U>
   concept_map D<T, A<U>> { } // ill-formed: cannot deduce template parameter U from C<T>
                              // and there is no concept map template C<T>
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-Each concept map or concept map template shall provide only
+\addedConcepts{Each concept map or concept map template shall provide only
 definitions corresponding to requirements of the refinements of its
 concept that are compatible with the definitions provided by the
 concept map or concept map template named by the refinement. A
 definition in the refining concept map or concept map template is
 compatible with its corresponding definition in the refined concept
-map or concept map template if 
+map or concept map template if}
 \begin{itemize}
-\item the definition in the refined concept
+\additemConcepts{the definition in the refined concept
 map or concept map template was implicitly defined from the refining
-concept map or concept map template, 
+concept map or concept map template,}
 \additemConcepts{the definition was explicitly provided in the refined
   concept map or concept map template and implicitly defined in the
   refining concept map or concept map template, or}
-\item the definitions satisfy
-an associated type or template requirement (\ref{concept.assoc}) and
-both definitions name the same type or template, respectively.
+\additemConcepts{the definitions satisfy
+an associated type or template requirement (\mbox{\ref{concept.assoc}}) and
+both definitions name the same type or template, respectively.}
 \end{itemize}
-If a program contains definitions in a concept map or concept
+\addedConcepts{If a program contains definitions in a concept map or concept
 map template that are not compatible with their corresponding
 definitions in a refined concept map or concept map template, the
 program is ill-formed. 
-\enternote\ if the concept maps or concept map templates with
+\mbox{\enternote} if the concept maps or concept map templates with
 definitions that are not compatible occur in different translation
-units, no diagnostic is required. \exitnote\
-\enterexample\
+units, no diagnostic is required. \mbox{\exitnote}\
+\mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> {
   typename assoc;
@@ -4518,7 +4518,7 @@ concept_map E<int> {
   int g(int x) { return x; } // error: D<int>::g already defined in concept map D<int>
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\mbox{\exitexample}}
 
 \rSec1[temp.constrained]{Constrained templates}
 
@@ -4745,13 +4745,13 @@ template<typename T> requires D<T> void i(T);
 
 struct X { };
 void h(float x, int y, int X::* p, int *q) {
-  f(x); // okay: uses concept map A<float>
-  f(y); // error: no concept map A<int>; requirement not satisfied
-  g(x); // okay: uses concept map B<float>
-  g(y); // okay: implicitly defines and uses concept map B<int>
-  g(p); // error: no implicit definition of concept map B<int X::*>; requirement not satisfied
-  h(q); // okay: instantiates concept map C<T*> with T=int to satisfy requirement C<T>
-  i(p); // error: \tcode{i} can't get no satisfaction
+  f(x); // okay: uses concept map \tcode{A<float>}
+  f(y); // error: no concept map \tcode{A<int>}; requirement not satisfied
+  g(x); // okay: uses concept map \tcode{B<float>}
+  g(y); // okay: implicitly defines and uses concept map \tcode{B<int>}
+  g(p); // error: no implicit definition of concept map \tcode{B<int X::*>}; requirement not satisfied
+  h(q); // okay: instantiates concept map \tcode{C<T*>} with \tcode{T=int} to satisfy requirement \tcode{C<T>}
+  i(p); // error: \tcode{i} can't get no satisfaction; the concept map template \tcode{D<T>} does not apply because \tcode{B<int X::*>} is not satisfied
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
