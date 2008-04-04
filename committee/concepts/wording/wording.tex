@@ -3592,9 +3592,11 @@ scope of this International Standard.
 \addedConcepts{Concept maps describe how a set of template arguments satisfy the
 requirements stated in the body of a concept definition
 (\mbox{\ref{concept.def}}). Whenever a constrained template specialization
-(\mbox{\ref{temp.constrained}}) is named, there shall be a concept map
-corresponding to each concept requirement in the
-template requirements. This concept map may be written
+(\mbox{\ref{temp.constrained}}) is named, there shall be a concept map}
+\changedCCC{corresponding to}{that satisfies}
+\addedConcepts{each concept requirement in the
+template requirements (\mbox{\ref{temp.req.sat}}).}
+\removedCCC{This concept map may be written
 explicitly (\mbox{\ref{concept.map}}), instantiated from a concept map
 template (\mbox{\ref{temp.concept.map}}), or generated implicitly
 (\mbox{\ref{concept.map.implicit}}).}
