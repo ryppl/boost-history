@@ -4731,14 +4731,17 @@ void f(const T&); // error: no type can satisfy both C<T> \&\& !C<T>, no diagnos
 concept A<typename T> { }
 auto concept B<typename T> { T operator+(T, T); }
 concept C<typename T> { }
+concept D<typename T> { }
 
 concept_map A<float> { }
 concept_map B<float> { }
 template<typename T> concept_map C<T*> { }
+template<typename T> requires B<T> concept_map D<T> { }
 
 template<typename T> requires A<T> void f(T);
 template<typename T> requires B<T> void g(T);
 template<typename T> requires C<T> void h(T);
+template<typename T> requires D<T> void i(T);
 
 struct X { };
 void h(float x, int y, int X::* p, int *q) {
@@ -4748,6 +4751,7 @@ void h(float x, int y, int X::* p, int *q) {
   g(y); // okay: implicitly defines and uses concept map B<int>
   g(p); // error: no implicit definition of concept map B<int X::*>; requirement not satisfied
   h(q); // okay: instantiates concept map C<T*> with T=int to satisfy requirement C<T>
+  i(p); // error: \tcode{i} can't get no satisfaction
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
@@ -4823,24 +4827,18 @@ void h(float x, int y, int X::* p) {
     
   \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
       searching for \mbox{\tcode{N}} in the namespaces of which the
-      concept maps in (1) are members;
+      concept maps in (1) are members and in the associated namespaces
+      of those namespaces (\mbox{\ref{namespace.def}});
       \mbox{\techterm{using-directives}} in those namespaces are not
       followed during this search.}
 
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the associated namespaces
-      (\mbox{\ref{basic.lookup.argdep}}) of the concept arguments of
-      \mbox{\tcode{I}}; \mbox{\techterm{using-directives}} in those
-      namespaces are not followed during this search.}
-
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
+    \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
       searching for \mbox{\tcode{N}} in the namespace of which the
-      concept of \mbox{\tcode{I}} is a member and its associated
-      namespaces (\mbox{\ref{namespace.def}});
-      \mbox{\techterm{using-directives}} in these
-      namespaces are not followed during this search and all names
-      found by way of 
-    \mbox{\techterm{using-declarations}} are ignored.}
+      concept of \mbox{\tcode{I}} is a member and that namespace's
+      associated namespaces (\mbox{\ref{namespace.def}});
+      \mbox{\techterm{using-directives}} in these namespaces are not
+      followed during this search and all names found by way of
+      \mbox{\techterm{using-declarations}} are ignored.}
 \end{enumerate}
 
 \mbox{\enterexample}
