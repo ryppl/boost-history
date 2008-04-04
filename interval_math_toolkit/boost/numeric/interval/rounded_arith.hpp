@@ -97,23 +97,13 @@ struct rounded_arith_opp: Rounding {
 # define BOOST_UP(EXPR) return this->force_rounding(EXPR)
 # define BOOST_UP_NEG(EXPR) return -this->force_rounding(EXPR)
 private:
-   // Downward conversion has three cases:
-   template<class U> T conv_down(U const &v, const mpl::true_&, const mpl::true_&)
-   {
-      // U is an integer as wide as boost::intmax_t:
-      if((v > static_cast<U>(std::numeric_limits<boost::intmax_t>::max()))
-         || (v < static_cast<U>(std::numeric_limits<boost::intmax_t>::min())))
-      {
-         BOOST_DN(static_cast<T>(v));
-      }
-      BOOST_UP_NEG(static_cast<T>(-static_cast<boost::intmax_t>(v))); 
-   }
-   template<class U> T conv_down(U const &v, const mpl::true_&, const mpl::false_&)
+   // Downward conversion has two cases:
+   template<class U> T conv_down(U const &v, const mpl::true_&)
    {
       // U is an integer smaller than boost::intmax_t:
-      BOOST_UP_NEG(static_cast<T>(-static_cast<boost::intmax_t>(v))); 
+      BOOST_DN(static_cast<T>(v)); 
    }
-   template<class U> T conv_down(U const &v, const mpl::false_&, const mpl::false_&)
+   template<class U> T conv_down(U const &v, const mpl::false_&)
    {
       // U is not an integer, so it had better be a signed type(!):
       BOOST_UP_NEG(-v);
@@ -122,8 +112,7 @@ public:
   template<class U> T conv_down(U const &v) 
   {
      typedef typename boost::is_integral<U>::type t1;
-     typedef typename mpl::and_<t1, boost::is_unsigned<U>, mpl::bool_<sizeof(U) == sizeof(boost::intmax_t)> >::type t2;
-     return conv_down(v, t1(), t2());
+     return conv_down(v, t1());
   }
   template<class U> T conv_up  (U const &v) { BOOST_UP(static_cast<T>(v)); }
   T add_down(const T& x, const T& y) { BOOST_UP_NEG((-x) - y); }

@@ -1033,7 +1033,7 @@ T ibeta_imp(T a, T b, T x, const Policy& pol, bool inv, bool normalised, T* p_de
       {
          lambda = (a + b) * y - b;
       }
-      if(lambda < 0)
+      if(tools::maybe_less(lambda, T(0)))
       {
          std::swap(a, b);
          std::swap(x, y);

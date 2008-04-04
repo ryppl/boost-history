@@ -200,7 +200,14 @@ public:
             boost::math::tools::detail::unpack_and_append(row, func(*a));
             m_data.insert(row);
          }
-         catch(const std::domain_error&){}
+         catch(const std::domain_error& e)
+         {
+            std::cerr << "Ignoring domain error from test point, error was: " << e.what() << std::endl;
+         }
+         catch(const std::runtime_error& e)
+         {
+            std::cerr << "Ignoring runtime error from test point, error was: " << e.what() << std::endl;
+         }
          row.clear();
          ++a;
       }
@@ -236,7 +243,14 @@ public:
                detail::unpack_and_append(row, func(*a, *c));
                m_data.insert(row);
             }
-            catch(const std::domain_error&){}
+            catch(const std::domain_error& e)
+            {
+               std::cerr << "Ignoring domain error from test point, error was: " << e.what() << std::endl;
+            }
+            catch(const std::runtime_error& e)
+            {
+               std::cerr << "Ignoring runtime error from test point, error was: " << e.what() << std::endl;
+            }
             row.clear();
             ++c;
          }
@@ -281,7 +295,14 @@ public:
                   detail::unpack_and_append(row, func(*a, *c, *e));
                   m_data.insert(row);
                }
-               catch(const std::domain_error&){}
+               catch(const std::domain_error& e)
+               {
+                  std::cerr << "Ignoring domain error from test point, error was: " << e.what() << std::endl;
+               }
+               catch(const std::runtime_error& e)
+               {
+                  std::cerr << "Ignoring runtime error from test point, error was: " << e.what() << std::endl;
+               }
                row.clear();
                ++e;
             }

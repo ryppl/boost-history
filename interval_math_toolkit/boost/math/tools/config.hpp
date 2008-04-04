@@ -211,7 +211,8 @@ inline const T& make_printable(const T& v)
 template <class T, class Policy>
 std::ostream& operator << (std::ostream& os, const interval<T, Policy>& val)
 {
-   os << "{ " << val.lower() << ", " << val.upper() << " }";
+   T eps = width(val) / median(val) / boost::math::tools::epsilon<T>();
+   os << "{ " << val.lower() << ", " << val.upper() << " (=" << eps << "eps) }";
    return os;
 }
 #endif
