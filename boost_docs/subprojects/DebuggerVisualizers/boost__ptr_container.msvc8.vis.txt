@@ -6,7 +6,7 @@
 ; or copy at http://www.boost.org/LICENSE_1_0.txt)
 ;
 ; @guid     CDC4F187-4AE8-40f2-A1CA-4F5913BC2778
-; @platform msvc-8
+; @platform msvc-8, msvc-9
 ; @version  1.0
 ; @author   Bill Buklis
 ; @email    bill at pbjzone dot com
