@@ -27,7 +27,7 @@ typedef long double comparison_type;
 template <class T> void sink(T const&) {}
 
 template <class X, class T>
-void container_test(X& r, T&)
+void container_test(X& r, T const&)
 {
     typedef BOOST_DEDUCED_TYPENAME X::iterator iterator;
     typedef BOOST_DEDUCED_TYPENAME X::const_iterator const_iterator;
@@ -145,7 +145,7 @@ void unordered_map_test(X&, Key const&, T const&)
 }
 
 template <class X, class T>
-void equality_test(X& r, T&)
+void equality_test(X& r, T const&)
 {
     X const a = r, b = r;
 
