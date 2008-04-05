@@ -1,0 +1,37 @@
+# Copyright Daniel James 2008. Use, modification, and distribution are
+# subject to the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import doxygen ;
+
+doxygen autodoc
+    :
+        [ glob ../../../boost/move.hpp ]
+    :
+        <xsl:param>boost.doxygen.detailns=move_detail
+    ;
+
+xml move
+    :
+        move.qbk
+    ;
+
+boostbook standalone
+    :
+        move
+    :
+        <xsl:param>admon.graphics.path=images/
+        <xsl:param>navig.graphics.path=images/
+        <xsl:param>chunk.first.sections=1
+        <dependency>autodoc
+        <dependency>css
+        <dependency>images
+    ;
+
+install css : [ glob $(BOOST_ROOT)/doc/src/*.css ]
+    : <location>html ;
+install images : [ glob $(BOOST_ROOT)/doc/src/images/*.png ]
+    : <location>html/images ;
+explicit css ;
+explicit images ;
+

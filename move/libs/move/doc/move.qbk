@@ -1,0 +1,164 @@
+[/ Copyright 2005-2007 Adobe Systems Incorporated
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) ]
+
+[library Boost.Move
+    [quickbook 1.4]
+    [copyright 2005 2006 2007 Adobe Systems Incorporated]
+    [purpose
+        The move library is a collection of utilities for creating and using
+        types that leverage return value optimization (RVO) to avoid
+        unnecessary copies.]
+    [id move]
+    [dirname move]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt]
+    ]
+]
+
+[def __move_related__ [link move Move Library]]
+[def __concept_movable__ [@http://stlab.adobe.com/group__concept__movable.html Movable]]
+[def __concept_regular_type__ [@http://stlab.adobe.com/group__concept__regular__type.html Regular]]
+
+[section Tutorial]
+
+User defined types often have remote parts either because they are implemented using a
+pointer-to-implementation or are variable sized. Such objects can be expensive to copy
+and are often copied unnecessarily when they are returned from functions or stored in other
+objects or containers. The __move_related__ is a collection of utilities to implement types which
+can be moved to elide copying in such situations as well as utilities to assist in moving value.
+
+[section Implementing a Movable Type]
+
+A movable type models __concept_movable__. There are three components of a movable type:
+
+* Satisfy the requirements of concept __concept_regular_type__.
+* Implement a move-ctor using `move_from<>`.
+* Modify the assignment operator to take the operand by value and consume it.
+	
+A typical implementation of the move-ctor will simply extract the remote part, leaving the
+source in a destructible state.
+
+The assignment operator takes the operand parameter by value. Typically the simplest way
+to destory the local remote part and consume the remote part of the operand is to swap
+contents with the operand. This is similar to the copy-ctor and swap idiom for implementing
+assignment.
+	
+'''<xref linkend="listing1"/>''' shows an example movable class that implements a typical pointer-to-implementation
+(PiPl) idiom and shows that it can be used as any regular type.
+
+[import listing1.cpp]
+'''<example id="listing1">
+<title>Movable class</title>
+'''[listing1]'''
+<simpara>Output:</simpara>
+<screen>
+copy remote part: 10
+</screen>
+</example>'''
+
+[endsect]
+
+[section Returning a Movable Type]
+
+We can return a movable type from a function by value and unnessary copies will be avoided as
+the following example illustrates:
+
+[import listing2.cpp]
+'''<example id="listing2">
+<title>Return a movable type</title>
+'''[listing2]'''
+<simpara>Output:</simpara>
+<screen>
+
+</screen>
+</example>'''
+
+In this example it is not necessary to make any copies. The result of f() is constructed directly
+in place for x through a compiler optimization known as return value optimization or RVO. In the
+case of assigning to y, the same optimization allows the compiler to construct the operand for
+assignment as the result of f() which is them moved into y.
+
+[endsect]
+
+[section Implementing a Sink Function]
+
+A /sink/ is any function that copies it's argument, usually for the purpose of storing it.
+A sink is often a constructor or an insert function on a container. The `operator=()` on a movable
+type is a form of a sink function. To implement a sink function pass the argument by value and then
+use `boost::move()` to move the argument into place. Note that this technique cannot be used to
+implement `operator=()` on because it relies on assignment. '''<xref linkend="listing3"/>''' implements an example sink 
+function.
+
+[import listing3.cpp]
+'''<example id="listing3">
+<title>Sink Function</title>
+'''[listing3]'''
+<simpara>Output:</simpara>
+<screen>
+copy remote part: 50
+</screen>
+</example>'''
+
+
+Here again unnessary copies are eliminated. Although `boost::move()` can be used anytime to force the
+move of an object, it should only be used as part of an explicit sink function otherwise it hinders
+the understanding of code.
+
+[endsect]
+
+[endsect]
+
+[section Utilities]
+
+There are many utilities as part of the move library which can be used to move elements instead of
+copying them. These are useful when building containers or dealing with sink operations which must
+manage a collection of movable objects. Generally these operations parallel the associated copying
+algorithms from STL. Examples:
+
+[table
+    [[Move][Copy][Comment]]
+    [[`boost::move()`][`std::copy`][Not to be confused with the single argument boost::move()]]
+    [[`boost::move_backward()`][`std::copy_backward`]]
+    [[`boost::back_move_iterator()`][`std::back_insert_iterator`]]
+    [[`boost::back_mover()`][`std::back_inserter`]]
+    [[`boost::move_construct()`][`std::construct`]]
+    [[`boost::uninitialized_move()`][`std::uninitialized_copy`]]
+]
+
+[endsect]
+
+[section Advanced Topics]
+
+The `boost::move()` function is a NOP if the argument is not movable, however, when a non-movable
+item is passed to a sink this may still result in an unnecessary copy - one to the sink and one to
+copy the argument of the sink into place. To avoid the additional copy, two forms of a sink function
+can be provided, one for movable types and one for copyable types. The `boost::move_sink<>` and
+`boost::copy_sink<>` tags can be used to select between the two functions. See the
+implementation of `boost::move_construct()` as an example.
+
+If a sink function is a member of a template class, the same issue with regard to unnecessary copies
+can occur. In this case, it is desirable to distinguish between the a copy and move sink as above
+but also to allow implicit conversions to the type stored in the container. To allow this use the
+two argument form of `boost::move_sink<>` and `boost::copy_sink<>`. See the implementation of
+`adobe::vector::push_back()` as an example.
+
+[endsect]
+
+[section Theory of Operation]
+
+/to be written/
+
+[endsect]
+
+[section Acknowledgments]
+
+This is based on the [@http://stlab.adobe.com/group__move__related.html Adobe Move Library]
+which was inspired by the move library written by Dave Abrahams and the work on move
+done by Dave Abrahams and Howard Hinnant.
+
+[endsect]
+
+[xinclude autodoc.xml]

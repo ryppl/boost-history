@@ -1,0 +1,3 @@
+import testing ;
+project boost/move ;
+run main.cpp /boost/unit_test//boost_unit_test_framework ;
