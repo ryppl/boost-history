@@ -1880,8 +1880,8 @@ public:
             {
                 if(this->size() != other.size()) return false;
 
-                for(bucket_ptr i = this->cached_begin_bucket_,
-                        j = this->buckets_end(); i != j; ++i)
+                for(bucket_ptr i = data_.cached_begin_bucket_,
+                        j = data_.buckets_end(); i != j; ++i)
                 {
                     for(link_ptr it(i->next_); BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it))
                     {
@@ -1921,8 +1921,8 @@ public:
             {
                 std::size_t seed = 0;
 
-                for(bucket_ptr i = this->cached_begin_bucket_,
-                        j = this->buckets_end(); i != j; ++i)
+                for(bucket_ptr i = data_.cached_begin_bucket_,
+                        j = data_.buckets_end(); i != j; ++i)
                 {
                     for(link_ptr it(i->next_); BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it))
                         seed ^= group_hash(it, (type_wrapper<value_type>*)0);
