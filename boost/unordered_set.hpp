@@ -16,17 +16,17 @@
 #include <boost/config.hpp>
 
 #include <functional>
-#include <memory>
 
 #include <boost/functional/hash.hpp>
 #include <boost/unordered/detail/hash_table.hpp>
+#include <boost/unordered/detail/allocator.hpp>
 
 namespace boost
 {
     template <class Value,
         class Hash = hash<Value>,
         class Pred = std::equal_to<Value>,
-        class Alloc = std::allocator<Value> >
+        class Alloc = boost::unordered_detail::allocator<Value> >
     class unordered_set
     {
         typedef boost::unordered_detail::hash_types_unique_keys<
@@ -336,7 +336,7 @@ namespace boost
     template <class Value,
         class Hash = hash<Value>,
         class Pred = std::equal_to<Value>,
-        class Alloc = std::allocator<Value> >
+        class Alloc = boost::unordered_detail::allocator<Value> >
     class unordered_multiset
     {
         typedef boost::unordered_detail::hash_types_equivalent_keys<
