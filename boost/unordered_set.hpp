@@ -69,6 +69,18 @@ namespace boost
         {
         }
 
+        // TODO: Should this be explicit?
+        unordered_set(allocator_type const& a)
+            : base(boost::unordered_detail::default_initial_bucket_count,
+                hasher(), key_equal(), a)
+        {
+        }
+
+        unordered_set(unordered_set const& other, allocator_type const& a)
+            : base(other.base, a)
+        {
+        }
+
         template <class InputIterator>
         unordered_set(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -349,6 +361,18 @@ namespace boost
                 const key_equal &eql = key_equal(),
                 const allocator_type &a = allocator_type())
           : base(n, hf, eql, a)
+        {
+        }
+
+        // TODO: Should this be explicit?
+        unordered_multiset(allocator_type const& a)
+            : base(boost::unordered_detail::default_initial_bucket_count,
+                hasher(), key_equal(), a)
+        {
+        }
+
+        unordered_multiset(unordered_multiset const& other, allocator_type const& a)
+            : base(other.base, a)
         {
         }
 

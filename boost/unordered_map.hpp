@@ -71,6 +71,18 @@ namespace boost
         {
         }
 
+        // TODO: Should this be explicit?
+        unordered_map(allocator_type const& a)
+            : base(boost::unordered_detail::default_initial_bucket_count,
+                hasher(), key_equal(), a)
+        {
+        }
+
+        unordered_map(unordered_map const& other, allocator_type const& a)
+            : base(other.base, a)
+        {
+        }
+
         template <class InputIterator>
         unordered_map(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -381,6 +393,17 @@ namespace boost
                 const key_equal &eql = key_equal(),
                 const allocator_type &a = allocator_type())
           : base(n, hf, eql, a)
+        {
+        }
+
+        unordered_multimap(allocator_type const& a)
+            : base(boost::unordered_detail::default_initial_bucket_count,
+                hasher(), key_equal(), a)
+        {
+        }
+
+        unordered_multimap(unordered_multimap const& other, allocator_type const& a)
+            : base(other.base, a)
         {
         }
 

@@ -1080,6 +1080,7 @@ namespace boost {
                 // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean up.
                 insert(i, j);
             }
+
             // Copy Construct
 
             BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE const& x)
@@ -1088,6 +1089,23 @@ namespace boost {
                 func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
                 mlf_(x.mlf_), // no throw
                 data_(x.data_, x.min_buckets_for_size(x.size()))  // throws
+            {
+                calculate_max_load(); // no throw
+
+                // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean
+                // up.
+                copy_buckets(x.data_, data_, current_functions());
+            }
+
+            // Copy Construct with allocator
+
+            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE const& x,
+                    value_allocator const& a)
+                : func1_(x.current_functions()), // throws
+                func2_(x.current_functions()),   // throws
+                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
+                mlf_(x.mlf_),                    // no throw
+                data_(x.min_buckets_for_size(x.size()), a)
             {
                 calculate_max_load(); // no throw
 
