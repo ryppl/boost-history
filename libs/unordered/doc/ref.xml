@@ -264,8 +264,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="args">
                 <paramtype>Args&amp;&amp;...</paramtype>
@@ -288,8 +289,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
@@ -1011,8 +1013,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="args">
                 <paramtype>Args&amp;&amp;...</paramtype>
@@ -1034,8 +1037,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
@@ -1768,8 +1772,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="args">
                 <paramtype>Args&amp;&amp;...</paramtype>
@@ -1792,8 +1797,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
@@ -2566,8 +2572,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="args">
                 <paramtype>Args&amp;&amp;...</paramtype>
@@ -2589,8 +2596,9 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="...Args">
+                <template-type-parameter name="Args">
                 </template-type-parameter>
+                <template-varargs></template-varargs>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
