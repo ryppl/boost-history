@@ -163,6 +163,9 @@ void unordered_unique_test(X& r, T const& t)
 {
     typedef BOOST_DEDUCED_TYPENAME X::iterator iterator;
     test::check_return_type<std::pair<iterator, bool> >::equals(r.insert(t));
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+    test::check_return_type<std::pair<iterator, bool> >::equals(r.emplace(t));
+#endif
 }
 
 template <class X, class T>
@@ -170,6 +173,9 @@ void unordered_equivalent_test(X& r, T const& t)
 {
     typedef BOOST_DEDUCED_TYPENAME X::iterator iterator;
     test::check_return_type<iterator>::equals(r.insert(t));
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+    test::check_return_type<iterator>::equals(r.emplace(t));
+#endif
 }
 
 template <class X, class Key, class T>
@@ -271,6 +277,9 @@ void unordered_test(X&, Key& k, T& t, Hash& hf, Pred& eq)
 
     const_iterator q = a.cbegin();
     test::check_return_type<iterator>::equals(a.insert(q, t));
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+    test::check_return_type<iterator>::equals(a.emplace(q, t));
+#endif
 
     a.insert(i, j);
     test::check_return_type<size_type>::equals(a.erase(k));

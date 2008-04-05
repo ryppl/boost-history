@@ -216,6 +216,74 @@ void insert_tests2(X*, test::random_generator generator = test::default_generato
     }
 }
 
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+
+template <class X>
+void unique_emplace_tests1(X*, test::random_generator generator = test::default_generator)
+{
+    typedef BOOST_DEDUCED_TYPENAME X::iterator iterator;
+    typedef test::ordered<X> ordered;
+
+    std::cerr<<"emplace(value) tests for containers with unique keys.\n";
+
+    X x;
+    test::ordered<X> tracker = test::create_ordered(x);
+
+    test::random_values<X> v(1000, generator);
+
+    for(BOOST_DEDUCED_TYPENAME test::random_values<X>::iterator it = v.begin();
+            it != v.end(); ++it)
+    {
+
+        BOOST_DEDUCED_TYPENAME X::size_type old_bucket_count = x.bucket_count();
+        float b = x.max_load_factor();
+
+        std::pair<iterator, bool> r1 = x.emplace(*it);
+        std::pair<BOOST_DEDUCED_TYPENAME ordered::iterator, bool> r2 = tracker.insert(*it);
+
+        BOOST_TEST(r1.second == r2.second);
+        BOOST_TEST(*r1.first == *r2.first);
+
+        tracker.compare_key(x, *it);
+
+        if(x.size() < b * old_bucket_count)
+            BOOST_TEST(x.bucket_count() == old_bucket_count);
+    }
+
+    test::check_equivalent_keys(x);
+}
+
+template <class X>
+void equivalent_emplace_tests1(X*, test::random_generator generator = test::default_generator)
+{
+    std::cerr<<"emplace(value) tests for containers with equivalent keys.\n";
+
+    X x;
+    test::ordered<X> tracker = test::create_ordered(x);
+
+    test::random_values<X> v(1000, generator);
+    for(BOOST_DEDUCED_TYPENAME test::random_values<X>::iterator it = v.begin();
+            it != v.end(); ++it)
+    {
+        BOOST_DEDUCED_TYPENAME X::size_type old_bucket_count = x.bucket_count();
+        float b = x.max_load_factor();
+
+        BOOST_DEDUCED_TYPENAME X::iterator r1 = x.emplace(*it);
+        BOOST_DEDUCED_TYPENAME test::ordered<X>::iterator r2 = tracker.insert(*it);
+
+        BOOST_TEST(*r1 == *r2);
+
+        tracker.compare_key(x, *it);
+
+        if(x.size() < b * old_bucket_count)
+            BOOST_TEST(x.bucket_count() == old_bucket_count);
+    }
+
+    test::check_equivalent_keys(x);
+}
+
+#endif
+
 template <class X>
 void map_tests(X*, test::random_generator generator = test::default_generator)
 {
@@ -284,6 +352,18 @@ int main()
     insert_tests2(test_multiset, test::generate_collisions);
     insert_tests2(test_map, test::generate_collisions);
     insert_tests2(test_multimap, test::generate_collisions);
+
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+    unique_emplace_tests1(test_set);
+    equivalent_emplace_tests1(test_multiset);
+    unique_emplace_tests1(test_map);
+    equivalent_emplace_tests1(test_multimap);
+
+    unique_emplace_tests1(test_set, test::generate_collisions);
+    equivalent_emplace_tests1(test_multiset, test::generate_collisions);
+    unique_emplace_tests1(test_map, test::generate_collisions);
+    equivalent_emplace_tests1(test_multimap, test::generate_collisions);
+#endif
 
     map_tests(test_map);
     map_tests(test_map, test::generate_collisions);
