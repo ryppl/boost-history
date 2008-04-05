@@ -137,6 +137,59 @@ Thus, `switch_<R>(n, case, default_)` is equivalent to
 
 [endsect]
 
+[section:case Case Generators]
+
+    namespace boost {
+    namespace control {
+
+        template<class S, class F>
+        ``/unspecified/`` case_(F f);
+
+        template<int N0, int N1, int N2, ..., int NN, class F>
+        ``/unspecified/`` case_c(F f);
+
+        template<int Low, int High>
+        ``/unspecified/`` case_range_c(F f);
+
+    }
+    }
+
+[*Header]
+
+    #include <boost/control/case.hpp>
+
+Each of these functions takes a unary function object, `f`.
+The return type models the __CaseConcept.  The first form, `case_`,
+take an MPL Forward Sequence of MPL Integral constants, `S`, as
+an explicit template parameter.  The resulting Case object
+has `S` as its labels.  The result of applying the Case object
+is to forward the MPL Integral Constant parameter to f.
+Thus, it must be possible to apply f to any of the elements
+of `S`.
+
+The second, `case_c`, is a shortcut for `case_<mpl::vector_c<int, N0, N1, N2, ..., NN> >(f)`.
+The form `case_range_c` is a shortcut for `case_<mpl::range_c<int, Low, High> >`.
+[note The return types are not guaranteed to be the same.  However, whatever
+the exact type is, it should have equivalent semantics to the long form.]
+
+Cases can be combined together using `operator,`.
+The result is the union of the individual cases.
+The expression
+
+    case_c<0>(f0), case_c<1>(f1), ... case_c<N>(fN)
+
+For example is a Case which executes `f0(mpl::int_<0>())`
+if it is given the parameter `0`, `f1(mpl::int_<1>())`
+if given a parameter of `1` and so on.
+
+A plain case can be adapted to make it usable in this
+expression template framework, by the function make_case.
+
+    template<class Case>
+    ``/unspecified/`` make_case(Case case_);
+
+[endsect]
+
 [section:BOOST_SWITCH_LIMIT BOOST_SWITCH_LIMIT]
 
     #define BOOST_SWITCH_LIMIT 50
