@@ -1,5 +1,6 @@
 [library Boost.Switch
-  [version 1.0]
+  [quickbook 1.4]
+  [version 2.0]
   [authors [Watanabe, Steven]]
   [copyright 2007 Steven Watanabe]
   [license
@@ -10,15 +11,36 @@
   [purpose generates a switch statement]
 ]
 
+[def __CaseConcept [link boost_switch.reference.Concepts.CaseConcept Case Concept]]
+
 [section:introduction Introduction]
 
 The built in C/C++ switch statement is very efficient.
 Unfortunately, unlike a chained if/else construct there
 is no easy way to use it when the number of cases depends
-on a template parameter.  This library attempts to provide
-for such usage.
+on a template parameter.  Such uses are important for
+code generation using template metaprogramming.  This
+library attempts to provide for these use cases.
 
 [endsect]
+
+[section:Examples Examples]
+
+Here is an example of using Switch to implement the apply_visitor
+function from Boost.Variant.  The implementation is fairly straghtforward,
+albeit containing a lot of boilerplate.
+
+[import ../example/apply_visitor.cpp]
+
+[apply_visitor_implementation]
+
+Now, it can be used exactly like the original `boost::apply_visitor`
+
+[apply_visitor_usage]
+
+[endsect]
+
+[section:reference Reference]
 
 [section:Concepts Concepts]
 
@@ -64,103 +86,53 @@ for such usage.
 [section:switch_ switch_]
 
     namespace boost {
+    namespace control {
 
-    template<class Result, class Int, class Case>
-    Result switch_(Int n, Case case);
+        template<class Result, class Int, class Case>
+        Result switch_(Int n, Case case);
 
-    template<class Result, class Int, class Case, class Default>
-    Result switch_(Int n, Case f, Default default_);
+        template<class Result, class Int, class Case, class Default>
+        Result switch_(Int n, Case case, Default default_);
 
+    }
     }
 
 [*Header]
 
-    #include <boost/switch.hpp>
+    #include <boost/control/switch.hpp>
 
 [variablelist Parameters
     [[[^Result]][The type to return.]]
-    [[[^n]][Must be of a built-in integal or enumeration type.  Statements of the
-           form switch(n) {} must be legal.]]
-    [[[^case]][Model of the Case concept.]]
+    [[[^n]][Must be of a built-in integal or enumeration type.]]
+    [[[^case]][Model of the __CaseConcept.]]
     [[[^default_]][Unary function object such that default_(n) returns a type convertible to the result type]]
 ]
 
 Generates a switch statement. If the nested ::value of one
 of the elements of `Case::labels` is equal to `n`, then this function
-will return the result of calling case.apply<Result> with a default constructed
+will return the result of calling `case.apply<Result>` with a default constructed
 parameter of that type.  Otherwise it will pass `n` to `default_`.
 If no default was specified, a default constructed instance of Result
-wee be returned.
+will be returned.
 
-Thus, `switch<R>(n, case, default_)` is equivalent to
+Thus, `switch_<R>(n, case, default_)` is equivalent to
 
     switch(n) {
-        case mpl::at_c<Case::labels, 0>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, 0>::type()));
-        case mpl::at_c<Case::labels, 1>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, 1>::type()));
-        case mpl::at_c<Case::labels, 2>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, 2>::type()));
+        typedef typename mpl::at_c<Case::labels, 0>::type case0;
+        case case0::value: return(case.apply<R>(case0()));
+
+        typedef typename mpl::at_c<Case::labels, 1>::type case1;
+        case case1::value: return(case.apply<R>(case1()));
+
+        typedef typename mpl::at_c<Case::labels, 2>::type case2;
+        case case2::value: return(case.apply<R>(case2()));
+
         ...
-        case mpl::at_c<Case::labels, N>::type::value: return(case.apply<R>(mpl::at_c<Case::labels, N>::type()));
+
+        typedef typename mpl::at_c<Case::labels, N>::type caseN;
+        case caseN::value: return(case.apply<R>(caseN()));
+
         default: return(default_(n));
-    }
-
-For example
-
-    template<class FusionSequence>
-    struct print_nth_function {
-        typedef void result_type;
-        template<class Case>
-        void operator()(Case) const {
-            std::cout << fusion::at<Case>(sequence) << std::endl;
-        }
-        print_nth(const FusionSequence& s) : sequence(s) {}
-        const FusionSequence& sequence;
-    };
-
-    struct throw_out_of_range {
-        template<class Int>
-        void operator()(Int) const {
-            throw(std::out_of_range());
-        }
-    };
-
-    template<class FusionSequence>
-    void print_nth(const FusionSequence& s, std::size_t n) {
-        typedef typename fusion::result_of::size<FusionSequence>::type size;
-        typedef mpl::range_c<std::size_t, 0, size::value> range;
-        switch_<void>(n, case<range>(print_nth_function(s)), throw_out_of_range());
-    }
-
-prints the nth element of a fusion sequence.
-
-Here is a more realistic example of using Switch to implement the apply_visitor
-function from Boost.Variant.
-
-    template<class Variant, class Visitor>
-    struct apply_visitor_function {
-    public:
-        apply_visitor_function(Variant& variant, Visitor& visitor) : variant_(variant), visitor_(visitor) {}
-        template<int N>
-        typedef Visitor::result_type operator()(N) {
-            return(visitor_(boost::get<typename mpl::at<typename Variant::type, N> >(variant_)));
-        }
-    private:
-        Variant variant_;
-        Visitor visitor_;
-    };
-
-    template<class R>
-    struct never_called {
-        template<class Int>
-        R operator()(Int) {
-            BOOST_ASSERT(!"this function should never be called.");
-        }
-    };
-
-    template<class Variant, class Visitor>
-    typename Visitor::result_type apply_visitor(Variant& variant, Visitor visitor) {
-        apply_visitor_function<Variant, Visitor> f(variant, visitor);
-        never_called<typename Visitor::result_type> default_;
-        return(switch_<typename Visitor::result_type>(variant.which(), case_<mpl::range_c<int, 0, mpl::size<Variant::types>::value> >, default_));
     }
 
 [endsect]
@@ -171,11 +143,13 @@ function from Boost.Variant.
 
 [*Header]
 
-    #include <boost/switch.hpp>
+    #include <boost/control/switch.hpp>
 
 Specifies the maximum number of cases supported.
 The default value of 50 can be overridden as long
 as it is the same in every translation unit.
+
+[endsect]
 
 [endsect]
 
