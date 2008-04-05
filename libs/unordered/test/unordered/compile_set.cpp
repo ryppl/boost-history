@@ -41,11 +41,7 @@ UNORDERED_AUTO_TEST(test0)
 }
 
 UNORDERED_AUTO_TEST(equality_tests) {
-    typedef std::pair<test::minimal::assignable const,
-            test::minimal::copy_constructible> value_type;
-    value_type value(
-            test::minimal::assignable::create(),
-            test::minimal::copy_constructible::create());
+    typedef test::minimal::assignable value_type;
 
     boost::unordered_set<int> int_set;
 
@@ -55,8 +51,8 @@ UNORDERED_AUTO_TEST(equality_tests) {
         test::minimal::equal_to<test::minimal::assignable>,
         test::minimal::allocator<value_type> > set;
 
-    equality_test(int_set, value);
-    equality_test(set, value);
+    equality_test(int_set);
+    equality_test(set);
 
     boost::unordered_multiset<int> int_multiset;
 
@@ -66,8 +62,8 @@ UNORDERED_AUTO_TEST(equality_tests) {
         test::minimal::equal_to<test::minimal::assignable>,
         test::minimal::allocator<value_type> > multiset;
 
-    equality_test(int_multiset, value);
-    equality_test(multiset, value);
+    equality_test(int_multiset);
+    equality_test(multiset);
 }
 
 UNORDERED_AUTO_TEST(test1)

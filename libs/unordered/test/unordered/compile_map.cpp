@@ -52,10 +52,7 @@ UNORDERED_AUTO_TEST(test0)
 
 UNORDERED_AUTO_TEST(equality_tests) {
     typedef std::pair<test::minimal::assignable const,
-            test::minimal::copy_constructible_equality_comparable> value_type;
-    value_type value(
-            test::minimal::assignable::create(),
-            test::minimal::copy_constructible_equality_comparable::create());
+            test::minimal::copy_constructible> value_type;
 
     boost::unordered_map<int, int> int_map;
 
@@ -66,8 +63,8 @@ UNORDERED_AUTO_TEST(equality_tests) {
         test::minimal::equal_to<test::minimal::assignable>,
         test::minimal::allocator<value_type> > map;
 
-    equality_test(int_map, std::pair<int const, int>(0, 0));
-    equality_test(map, value);
+    equality_test(int_map);
+    equality_test(map);
 
     boost::unordered_multimap<int, int> int_multimap;
 
@@ -78,8 +75,8 @@ UNORDERED_AUTO_TEST(equality_tests) {
         test::minimal::equal_to<test::minimal::assignable>,
         test::minimal::allocator<value_type> > multimap;
 
-    equality_test(int_multimap, std::pair<int const, int>(0, 0));
-    equality_test(multimap, value);
+    equality_test(int_multimap);
+    equality_test(multimap);
 }
 
 UNORDERED_AUTO_TEST(test1) {

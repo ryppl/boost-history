@@ -144,8 +144,8 @@ void unordered_map_test(X&, Key const&, T const&)
     BOOST_MPL_ASSERT((boost::is_same<value_type, std::pair<key_type const, T> >));
 }
 
-template <class X, class T>
-void equality_test(X& r, T const&)
+template <class X>
+void equality_test(X& r)
 {
     X const a = r, b = r;
 
