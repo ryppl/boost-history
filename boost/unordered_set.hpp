@@ -81,6 +81,18 @@ namespace boost
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_set(unordered_set&& other)
+            : base(std::move(other.base))
+        {
+        }
+
+        unordered_set(unordered_set&& other, allocator_type const& a)
+            : base(std::move(other.base), a)
+        {
+        }
+#endif
+
         template <class InputIterator>
         unordered_set(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -96,6 +108,15 @@ namespace boost
             : base(f, l, n, hf, eql, a)
         {
         }
+
+// TODO: Do this properly?
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_set& operator=(unordered_set&& x)
+        {
+            swap(x);
+            return *this;
+        }
+#endif
 
     private:
 
@@ -376,6 +397,18 @@ namespace boost
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_multiset(unordered_multiset&& other)
+            : base(std::move(other.base))
+        {
+        }
+
+        unordered_multiset(unordered_multiset&& other, allocator_type const& a)
+            : base(std::move(other.base), a)
+        {
+        }
+#endif
+
         template <class InputIterator>
         unordered_multiset(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -391,6 +424,15 @@ namespace boost
           : base(f, l, n, hf, eql, a)
         {
         }
+
+// TODO: Do this properly?
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_multiset& operator=(unordered_multiset&& x)
+        {
+            swap(x);
+            return *this;
+        }
+#endif
 
     private:
 

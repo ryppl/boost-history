@@ -83,6 +83,18 @@ namespace boost
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_map(unordered_map&& other)
+            : base(std::move(other.base))
+        {
+        }
+
+        unordered_map(unordered_map&& other, allocator_type const& a)
+            : base(std::move(other.base), a)
+        {
+        }
+#endif
+
         template <class InputIterator>
         unordered_map(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -99,6 +111,15 @@ namespace boost
             : base(f, l, n, hf, eql, a)
         {
         }
+
+// TODO: Do this properly?
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_map& operator=(unordered_map&& x)
+        {
+            swap(x);
+            return *this;
+        }
+#endif
 
     private:
 
@@ -407,6 +428,18 @@ namespace boost
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_multimap(unordered_multimap&& other)
+            : base(std::move(other.base))
+        {
+        }
+
+        unordered_multimap(unordered_multimap&& other, allocator_type const& a)
+            : base(std::move(other.base), a)
+        {
+        }
+#endif
+
         template <class InputIterator>
         unordered_multimap(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -423,6 +456,15 @@ namespace boost
           : base(f, l, n, hf, eql, a)
         {
         }
+
+// TODO: Do this properly?
+#if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_multimap& operator=(unordered_multimap&& x)
+        {
+            swap(x);
+            return *this;
+        }
+#endif
 
     private:
 

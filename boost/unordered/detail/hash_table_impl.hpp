@@ -323,6 +323,49 @@ namespace boost {
                 buckets_(), bucket_count_(next_prime(n)),
                 cached_begin_bucket_(), size_(0)
             {
+                BOOST_UNORDERED_MSVC_RESET_PTR(buckets_);
+                create_buckets();
+            }
+
+            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA const& x, size_type n)
+              : allocators_(x.allocators_),
+                buckets_(), bucket_count_(next_prime(n)),
+                cached_begin_bucket_(), size_(0)
+            {
+                BOOST_UNORDERED_MSVC_RESET_PTR(buckets_);
+                create_buckets();
+            }
+
+#if defined(BOOST_HAS_RVALUE_REFS)
+            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA&& x)
+                : allocators_(x.allocators_),
+                buckets_(x.buckets_), bucket_count_(x.bucket_count_),
+                cached_begin_bucket_(x.cached_begin_bucket_), size_(x.size_)
+            {
+                unordered_detail::reset(x.buckets_);
+            }
+
+            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA&& x,
+                    value_allocator const& a, size_type n)
+                : allocators_(a), buckets_(), bucket_count_(),
+                cached_begin_bucket_(), size_(0)
+            {
+                if(allocators_ == x.allocators_) {
+                    buckets_ = x.buckets_;
+                    bucket_count_ = x.bucket_count_;
+                    cached_begin_bucket_ = x.cached_begin_bucket_;
+                    size_ = x.size_;
+                    unordered_detail::reset(x.buckets_);
+                }
+                else {
+                    BOOST_UNORDERED_MSVC_RESET_PTR(buckets_);
+                    bucket_count_ = next_prime(n);
+                    create_buckets();
+                }
+            }
+#endif
+
+            void create_buckets() {
                 // The array constructor will clean up in the event of an
                 // exception.
                 allocator_array_constructor<bucket_allocator>
@@ -334,29 +377,6 @@ namespace boost {
                 cached_begin_bucket_ = constructor.get() + static_cast<difference_type>(bucket_count_);
 
                 // Set up the sentinel.
-                cached_begin_bucket_->next_ = link_ptr(cached_begin_bucket_);
-
-                // Only release the buckets once everything is successfully
-                // done.
-                buckets_ = constructor.release();
-            }
-
-            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA const& x, size_type n)
-              : allocators_(x.allocators_),
-                buckets_(), bucket_count_(next_prime(n)),
-                cached_begin_bucket_(), size_(0)
-            {
-                // The array constructor will clean up in the event of an
-                // exception.
-                allocator_array_constructor<bucket_allocator>
-                    constructor(allocators_.bucket_alloc_);
-
-                // Creates an extra bucket to act as a sentinel.
-                constructor.construct(bucket(), bucket_count_ + 1);
-
-                cached_begin_bucket_ = constructor.get() + static_cast<difference_type>(bucket_count_);
-
-                // Set up the sentinel
                 cached_begin_bucket_->next_ = link_ptr(cached_begin_bucket_);
 
                 // Only release the buckets once everything is successfully
@@ -1113,6 +1133,38 @@ namespace boost {
                 // up.
                 copy_buckets(x.data_, data_, current_functions());
             }
+
+#if defined(BOOST_HAS_RVALUE_REFS)
+            // Move Construct
+
+            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE&& x)
+                : func1_(x.current_functions()), // throws
+                func2_(x.current_functions()), // throws
+                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
+                mlf_(x.mlf_), // no throw
+                data_(std::move(x.data_))  // throws
+            {
+                calculate_max_load(); // no throw
+            }
+
+            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE&& x,
+                    value_allocator const& a)
+                : func1_(x.current_functions()), // throws
+                func2_(x.current_functions()), // throws
+                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
+                mlf_(x.mlf_), // no throw
+                data_(std::move(x.data_),
+                        a, x.min_buckets_for_size(x.size()))  // throws
+            {
+                calculate_max_load(); // no throw
+
+                if(x.data_.buckets_) {
+                    // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean
+                    // up.
+                    copy_buckets(x.data_, data_, current_functions());
+                }
+            }
+#endif
 
             // Assign
             //
