@@ -368,7 +368,7 @@ namespace boost {
             // no throw
             ~BOOST_UNORDERED_TABLE_DATA()
             {
-                if(buckets_) delete_buckets();
+                delete_buckets();
             }
 
             void create_buckets() {
@@ -427,10 +427,11 @@ namespace boost {
             }
 
             // no throw
-            void move(BOOST_UNORDERED_TABLE_DATA&& other)
+            void move(BOOST_UNORDERED_TABLE_DATA& other)
             {
                 delete_buckets();
                 buckets_ = other.buckets_;
+                unordered_detail::reset(other.buckets_);
                 bucket_count_ = other.bucket_count_;
                 cached_begin_bucket_ = other.cached_begin_bucket_;
                 size_ = other.size_;
@@ -1262,7 +1263,7 @@ namespace boost {
             // Can throw if hash or predicate object's copy constructor throws
             // or if allocators are unequal.
 
-            void move(BOOST_UNORDERED_TABLE&& x)
+            void move(BOOST_UNORDERED_TABLE& x)
             {
                 // This only effects the function objects that aren't in use
                 // so it is strongly exception safe, via. double buffering.
