@@ -112,11 +112,10 @@ namespace boost
         {
         }
 
-// TODO: Do this properly?
 #if defined(BOOST_HAS_RVALUE_REFS)
         unordered_map& operator=(unordered_map&& x)
         {
-            swap(x);
+            base.move(x.base);
             return *this;
         }
 #endif
@@ -457,11 +456,10 @@ namespace boost
         {
         }
 
-// TODO: Do this properly?
 #if defined(BOOST_HAS_RVALUE_REFS)
         unordered_multimap& operator=(unordered_multimap&& x)
         {
-            swap(x);
+            base.move(x.base);
             return *this;
         }
 #endif

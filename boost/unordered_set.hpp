@@ -109,11 +109,10 @@ namespace boost
         {
         }
 
-// TODO: Do this properly?
 #if defined(BOOST_HAS_RVALUE_REFS)
         unordered_set& operator=(unordered_set&& x)
         {
-            swap(x);
+            base.move(x.base);
             return *this;
         }
 #endif
@@ -425,11 +424,10 @@ namespace boost
         {
         }
 
-// TODO: Do this properly?
 #if defined(BOOST_HAS_RVALUE_REFS)
         unordered_multiset& operator=(unordered_multiset&& x)
         {
-            swap(x);
+            base.move(x.base);
             return *this;
         }
 #endif

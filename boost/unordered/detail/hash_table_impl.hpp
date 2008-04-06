@@ -365,6 +365,12 @@ namespace boost {
             }
 #endif
 
+            // no throw
+            ~BOOST_UNORDERED_TABLE_DATA()
+            {
+                if(buckets_) delete_buckets();
+            }
+
             void create_buckets() {
                 // The array constructor will clean up in the event of an
                 // exception.
@@ -385,7 +391,7 @@ namespace boost {
             }
 
             // no throw
-            ~BOOST_UNORDERED_TABLE_DATA()
+            void delete_buckets()
             {
                 if(buckets_) {
                     bucket_ptr begin = cached_begin_bucket_;
@@ -418,6 +424,16 @@ namespace boost {
                 std::swap(bucket_count_, other.bucket_count_);
                 std::swap(cached_begin_bucket_, other.cached_begin_bucket_);
                 std::swap(size_, other.size_);
+            }
+
+            // no throw
+            void move(BOOST_UNORDERED_TABLE_DATA&& other)
+            {
+                delete_buckets();
+                buckets_ = other.buckets_;
+                bucket_count_ = other.bucket_count_;
+                cached_begin_bucket_ = other.cached_begin_bucket_;
+                size_ = other.size_;
             }
 
             // Return the bucket for a hashed value.
@@ -1235,6 +1251,41 @@ namespace boost {
 
                 calculate_max_load();
                 x.calculate_max_load();
+            }
+
+            // Move
+            //
+            // ----------------------------------------------------------------
+            //
+            // Strong exception safety (might change unused function objects)
+            //
+            // Can throw if hash or predicate object's copy constructor throws
+            // or if allocators are unequal.
+
+            void move(BOOST_UNORDERED_TABLE&& x)
+            {
+                // This only effects the function objects that aren't in use
+                // so it is strongly exception safe, via. double buffering.
+                functions_ptr new_func_this = copy_functions(x);       // throws
+
+                if(data_.allocators_ == x.data_.allocators_) {
+                    data_.move(x.data_); // no throw
+                }
+                else {
+                    // Create new buckets in separate HASH_TABLE_DATA objects
+                    // which will clean up if anything throws an exception.
+                    // (all can throw, but with no effect as these are new objects).
+                    data new_this(data_, x.min_buckets_for_size(x.data_.size_));
+                    copy_buckets(x.data_, new_this, this->*new_func_this);
+
+                    // Start updating the data here, no throw from now on.
+                    data_.move(new_this);
+                }
+
+                // We've made it, the rest is no throw.
+                mlf_ = x.mlf_;
+                func_ = new_func_this;
+                calculate_max_load();
             }
 
         private:
