@@ -3655,11 +3655,13 @@ int f(int x, int y) {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{Concept maps shall provide
+\addedConcepts{Concept maps shall} \changedCCC{provide
 a definition for every associated function (\mbox{\ref{concept.fct}}),
-associated type (\mbox{\ref{concept.assoc}}), and associated template of the
-concept named by
-its concept instance and
+associated type (\mbox{\ref{concept.assoc}}), and associated
+template}{satisfy every associated function (\mbox{\ref{concept.fct}}),
+associated type and associated template requirement
+(\mbox{\ref{concept.assoc}})}
+\addedConcepts{of the concept named by its concept instance and
 all of the requirements inherited from its refined concepts.
 (\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
 \begin{codeblock}
@@ -3688,7 +3690,7 @@ concept_map C<int> {
 \addedConcepts{At the point of definition of a concept map, all associated
 requirements (\mbox{\ref{concept.req}}) of the corresponding
 concept and its refined concepts (\mbox{\ref{concept.refine}}) shall be
-satisfied. \mbox{\enterexample}}
+satisfied (\mbox{\ref{temp.req.sat}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept SignedIntegral<typename T> { /* ... */ }
 
@@ -4003,50 +4005,23 @@ concept_map Destructible<Y> { } // error: Y's destructor is inaccessible
 \pnum
 \addedCC{Each satisfied associated function (or function template)
   requirement has a corresponding associated function candidate
-  set. An \mbox{\techterm{associated function candidate set}} is a set
-  of functions (including and candidate functions that represent
-  built-in operations (\mbox{\ref{over.built}})) and function
-  templates, that is the result of name lookup for the associated
-  function within the concept map. The associated function candidate
-  set is determined based on the expression \mbox{\tcode{E}} used to
+  set. An \mbox{\techterm{associated function candidate set}} is a
+  candidate set (\mbox{\ref{temp.constrained.set}}) representing the
+  functions or operations used to satisfy the requirement. The
+  seed of the associated function candidate set is determined based on
+  the expression \mbox{\tcode{E}} used to 
   determine that the requirement was satisfied.}
-
-\addedCC{Each associated function candidate set has a
-  \mbox{\techterm{seed}}. A seed is the candidate function
-  (\mbox{\ref{over.match.funcs}}) determined by the outermost
-  application of overload resolution (clause~\mbox{\ref{over}}) during the
-  processing of \mbox{\tcode{E}}. The associated function candidate
-  set contains all functions and function templates that are
-  \mbox{\techterm{consistent with}} the seed. A function is consistent
-  with the seed if:} 
 \begin{itemize}
-\item \addedCC{it has the same name as the seed,}
-\item \addedCC{its enclosing namespace is the same as the enclosing
-    namespace of the seed,}
-\item \addedCC{it has the same return type as the seed, after references
-    and then top-level \mbox{\techterm{cv-qualifiers}} have been
-    removed, and}
-\additemCC{it has the same \mbox{\techterm{parameter-type-list}} as
-  the seed, after making the following adjustments to both
-  \mbox{\techterm{parameter-type-list}}:} 
-\begin{itemize}
-  \additemCC{for each parameter type, remove the top-level reference
-    (if any) and then top-level \mbox{\techterm{cv-qualifiers}} (if
-    any), and} 
-  \additemCC{if the function has \mbox{$M$} parameters, the seed as
-    \mbox{$N$} parameters, and \mbox{$M > N$}, remove each of the last
-    \mbox{$M-N$} parameters that has a default argument from the
-    \mbox{\techterm{parameter-type-list}}.}
+  \additemCC{if the evaluation of \mbox{\tcode{E}} involves overload
+    resolution at the top level, the seed is the candidate function 
+    (\mbox{\ref{over.match.funcs}}) determined by the outermost
+    application of overload resolution (clause~\mbox{\ref{over}}), or}
+  \additemCC{if \mbox{\tcode{E}} is a pseudo destructor call
+    (\mbox{\ref{expr.pseudo}}), the seed is a
+    \mbox{\techterm{pseudo-destructor-name}}, otherwise}
+  \additemCC{the seed is the initialization of an object.}
 \end{itemize}
 
-\end{itemize}
-
-\addedCC{A function template is consistent with the seed if: }
-\begin{itemize}
-\additemCC{it has the same name as the seed, and}
-\additemCC{its enclosing namespace is the same as the enclosing
-    namespace of the seed.}
-\end{itemize}
 
 \rSec3[concept.map.assoc]{Associated type and template definitions}
 
@@ -5392,30 +5367,38 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
-\rSec2[temp.constrained.set]{Nominee sets}
+\rSec2[temp.constrained.set]{Candidate sets}
 \pnum
-\addedCC{A \mbox{\techterm{nominee set}} is a set containing
-  functions and function templates that is
-  defined in a constrained template
-  (\mbox{\ref{temp.constrained}}) or as the result of satisfying an
-  associated function requirement in a concept map
-  (\mbox{\ref{concept.map.fct}}). Nominee sets are used to capture a
-  set of candidate functions that will be used in the instantiation of
-  a constrained template (\mbox{\ref{temp.constrained.inst}}).
-  For the purposes of this section, candidate operator functions
-  (\mbox{\ref{over.built}}) are considered functions in a nominee
-  set.} 
+\addedCC{A \mbox{\techterm{candidate set}} is a set containing
+  functions and function templates that is defined in a constrained
+  template (a \mbox{\techterm{retained}} \mbox{\techterm{candidate
+      set}},~\mbox{\ref{temp.constrained}}) or as the result of
+  satisfying an associated function requirement in a concept map (an
+  \mbox{\techterm{associated}} \mbox{\techterm{function}} \mbox{\techterm{candidate
+      set}},~\mbox{\ref{concept.map.fct}}). Candidate sets are used to
+  capture a set of candidate functions that will be used in the
+  instantiation of a constrained template
+  (\mbox{\ref{temp.constrained.inst}}) or when referring to members in
+  a concept map (\mbox{\ref{concept.map}}). \mbox{\enternote} For the
+  purposes of this section, candidate operator functions 
+  (\mbox{\ref{over.built}}) are considered functions. \exitnote}
 
 \pnum
-\addedCC{Each non-empty nominee set has a \mbox{\techterm{seed}},
-  which is a function that provides the basis for
-  the nominee set itself. Each of the functions in the nominee set is
-  consistent with the seed. 
-  The seed is determined as part of the definition of the nominee
-  set.} 
+\addedCC{Each candidate set has a \mbox{\techterm{seed}},
+  which provides the basis for the candidate set itself. All 
+  functions and function templates that are consistent
+  with the seed are containing in the candidate set. The seed is
+  determined as part of the definition of 
+  the candidate set, and will be one of:} 
+\begin{itemize}
+\additemCC{a function,}
+\additemCC{the initialization of an object (\mbox{\ref{dcl.init}}), or}
+\additemCC{a \mbox{\techterm{pseudo-destructor-name}}
+  (\mbox{\ref{expr.pseudo}}).}
+\end{itemize}
 
 \pnum 
-\addedCC{A function is \mbox{\techterm{consistent with}} a seed if}
+\addedCC{A function is \mbox{\techterm{consistent with}} the seed if}
 \begin{itemize}
 \item \addedCC{it has the same name as the seed,}
 \item \addedCC{its enclosing namespace is the same as the enclosing
@@ -5423,19 +5406,37 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \item \addedCC{it has the same return type as the seed, after references
     and then top-level \mbox{\techterm{cv-qualifiers}} have been
     removed, and}
-\item \addedCC{TODO: fixmeit has the same parameter types as the seed, after
-    references and then top-level
-    \mbox{\techterm{cv-qualifiers}} have been removed 
-    (ignoring any parameters for which default arguments have
-    been used).}
+\additemCC{it has the same \mbox{\techterm{parameter-type-list}} as
+  the seed, after making the following adjustments to both
+  \mbox{\techterm{parameter-type-list}}:} 
+\begin{itemize}
+  \additemCC{for each parameter type, remove the top-level reference
+    (if any) and then top-level \mbox{\techterm{cv-qualifiers}} (if
+    any), and} 
+  \additemCC{if the function has \mbox{$M$} parameters, the seed as
+    \mbox{$N$} parameters, and \mbox{$M > N$}, remove each of the last
+    \mbox{$M-N$} parameters that has a default argument from the
+    \mbox{\techterm{parameter-type-list}}.}
+\end{itemize}
+\end{itemize}
+\addedCC{\enternote No function or function template is consistent
+  with a non-function seed. A seed that is a function is consistent
+  with itself. \exitnote}
+
+\pnum
+\addedCC{A function template is consistent with the seed if: }
+\begin{itemize}
+\additemCC{it has the same name as the seed, and}
+\additemCC{its enclosing namespace is the same as the enclosing
+    namespace of the seed.}
 \end{itemize}
 
 \pnum
-\addedCC{A call to a nominee set uses the contents of the nominee set as
+\addedCC{A call to a candidate set uses the contents of the candidate set as
   the candidate functions for overload resolution. If overload
   resolution succeeds, the call 
-  to the nominee set is replaced with a call to the result of
-  overload resolution; otherwise, the call to the nominee set is
+  to the candidate set is replaced with a call to the result of
+  overload resolution; otherwise, the call to the candidate set is
   ill-formed.}
 
 \rSec2[temp.constrained.inst]{Instantiation of constrained templates}
@@ -5756,13 +5757,13 @@ concept_map Swappable<X> {
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
-Orphan text to be a part of the nominee sets wording:
+Orphan text to be a part of the candidate sets wording:
 
 Was in [over.match]:
 
 \pnum
 \addedCC{In a constrained template (\mbox{\ref{temp.constrained}}), if
-  the best viable function is a template function, then the best
+  the best viable function is a function template specialization, then the best
   viable function is the seed of a candidate set
   (\mbox{\ref{temp.constrained.set}}) containing each of the functions from
   the set of candidate functions that:}
