@@ -3219,11 +3219,10 @@ functions that have been overloaded (\mbox{\ref{over}}).}
 operators that specify the functional behavior of the concept
 arguments and associated types and templates (\mbox{\ref{concept.assoc}}). A
 concept map
-(\mbox{\ref{concept.map}}) for a given concept must provide}\changedCCC{, either
+(\mbox{\ref{concept.map}}) for a given concept must}\changedCCC{provide, either
 implicitly (\mbox{\ref{concept.map.implicit}}) or explicitly
-(\mbox{\ref{concept.map.fct}}), definitions}{associated function candidate sets
-(\mbox{\ref{temp.constrained.set}})}
-\addedConcepts{for each associated 
+(\mbox{\ref{concept.map.fct}}), definitions for}{satisfy}
+\addedConcepts{each associated 
 function in the concept} \addedCC{(\mbox{\ref{concept.map.fct}})}
 \addedConcepts{.}
 
@@ -3242,9 +3241,10 @@ the declaration is a \mbox{\techterm{qualified-id}}, its
 the enclosing concept; the declaration declares a member function or
 member function template.}
 %
-\addedConcepts{An associated function shall not be \mbox{\tcode{extern}} or \mbox{\tcode{static}}
-(\mbox{\ref{dcl.stc}}), inline (\mbox{\ref{dcl.fct.spec}}), explicitly-defaulted or deleted
-(\mbox{\ref{dcl.fct.def}}), or a friend function. An 
+\addedConcepts{An associated function shall not be
+  \mbox{\tcode{extern}}}\removedCCC{ or \mbox{\tcode{static}}
+(\mbox{\ref{dcl.stc}})}\addedConcepts{, inline (\mbox{\ref{dcl.fct.spec}}), explicitly-defaulted or deleted
+(\mbox{\ref{dcl.fct.def}}), or a friend function (\mbox{\ref{class.friend}}). An 
 associated function shall not contain an
 \mbox{\techterm{exception-specification}} (\mbox{\ref{except.spec}}).}
 
@@ -3337,10 +3337,11 @@ concept C<typename X> {
 \pnum
 \addedConcepts{Associated functions may have a default implementation. This
 implementation will be instantiated when} \changedCCC{implicit definition of an
-implementation (\mbox{\ref{concept.map.implicit}})}{the definition of the
-candidate set (\mbox{\ref{temp.constrained.set}})}
-\addedConcepts{for the associated function
-(\mbox{\ref{concept.map.fct}}) fails. A default implementation of an
+implementation (\mbox{\ref{concept.map.implicit}}) for}{needed to
+satisfy}
+\addedConcepts{the associated function}
+\addedCC{requirement}
+\addedConcepts{(\mbox{\ref{concept.map.fct}})}\removedCCC{ fails}\addedConcepts{. A default implementation of an
 associated function is a constrained template
 (\mbox{\ref{temp.constrained}}). \mbox{\enterexample}}
 \begin{codeblock}
@@ -3374,6 +3375,9 @@ concept Callable1<typename F, typename T1> {
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
+
+\pnum
+TODO: Add text for associated templates!
 
 \pnum
 \addedConcepts{Associated types and templates may be provided with a default value. The
