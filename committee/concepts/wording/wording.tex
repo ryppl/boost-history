@@ -3740,11 +3740,7 @@ the refinements of that concept) hold, permitting an
 \rSec3[concept.map.fct]{Associated function definitions}
 
 \pnum
-\addedConcepts{An associated function requirement (\mbox{\ref{concept.fct}}) is
-satisfied by} \changedCCC{function definitions}{an associated function candidate set
-  (\mbox{\ref{temp.constrained.set}}), which can refer to one or more functions inside or outside of the concept map.} \changedCCC{These}{Function}
-\addedConcepts{definitions} \addedCC{in the concept map} 
-\addedConcepts{can be used to adapt the
+\addedCC{Function definitions in the concept map can be used to adapt the
 syntax of the concept arguments
 to the syntax expected by the concept. \mbox{\enterexample}}
 \begin{codeblock}
@@ -3771,14 +3767,30 @@ concept_map Stack<std::vector<T> > {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{Functions and function templates defined in a concept
-  map are \mbox{\techterm{inline}}.}
+\addedConcepts{A function or function template defined in a concept
+  map is \mbox{\techterm{inline}}.}
+
+\pnum
+\addedCC{An associated function (or function template) requirement is
+  satisfied as follows. Given an associated function (call it
+  \mbox{\tcode{f}}), let \mbox{\tcode{R}}
+  be the return type of \mbox{\tcode{f}}, after substitution of
+  concept arguments for their corresponding concept
+  parameters. Construct an expression \mbox{\tcode{E}}, defined
+  below. Then, the associated function requirement is satisfied if:}
+\begin{itemize}
+\additemCC{if \mbox{\tcode{R}} is \mbox{\techterm{cv} \tcode{void}}
+  and the expression \mbox{\tcode{E}} is well-formed,}
+\additemCC{if \mbox{\tcode{R}} is not \mbox{\techterm{cv}
+    \tcode{void}} and the expression ``\mbox{\tcode{E}} implicitly
+  converted to \mbox{\tcode{R}}'' is well-formed, or}
+\additemCC{if \mbox{\tcode{f}} has a default implementation.}
+\end{itemize}
 
 \pnum 
-\addedCC{The associated function candidate set for an associated
-  function (or function template) \mbox{\tcode{f}} 
-  is defined as follows. Let \mbox{\tcode{parm1}},
-  \mbox{\tcode{parm2}}, ..., \mbox{\tcode{parm$N$}} be the parameters
+\addedCC{The expression \mbox{\tcode{E}} is defined as follows. Let
+  \mbox{\tcode{parm1}}, \mbox{\tcode{parm2}}, ...,
+  \mbox{\tcode{parm$N$}} be the parameters 
   of \mbox{\tcode{f}} (after substitution of the concept map
   arguments) and \mbox{\tcode{parm1$'$}},
   \mbox{\tcode{parm2$'$}}, ..., \mbox{\tcode{parm$N'$}} be
@@ -3800,152 +3812,73 @@ concept_map Stack<std::vector<T> > {
   \mbox{\tcode{x}} is an lvalue; otherwise, \mbox{\tcode{x}} is an
   rvalue.}
 
-\addedCC{If the return
-type of \mbox{\tcode{g}} is \mbox{\tcode{void}}, the body of \mbox{\tcode{g}}
-contains a single \mbox{\techterm{expression-statement}}; otherwise, the body
-of \mbox{\tcode{g}} contains a single \mbox{\tcode{return}} statement. The
-\mbox{\techterm{expression}} in the \mbox{\techterm{expression-statement}} 
-or \mbox{\tcode{return}} statement is defined as follows:}
-
 \begin{itemize}
-\additemCC{if the concept map contains one or more function or
+\additemCC{If \mbox{\tcode{f}} is an associated non-member function or
+  function template and the concept map contains one or more function or
     function template definitions with the same name as
-    \mbox{\tcode{f}}, the 
-    \mbox{\techterm{expression}} is \mbox{\tcode{f(parm1$'$, parm2$'$,
+    \mbox{\tcode{f}}, 
+    \mbox{\tcode{E}} is \mbox{\tcode{f(parm1$'$, parm2$'$,
         ..., parm$N'$)}}, where name lookup of \mbox{\tcode{f}} refers
     to the definitions of \mbox{\tcode{f}} in the concept map,}
 
 \additemCC{if the concept map contains one or more non-static member function
     or member function template definitions in the type
-    \mbox{\tcode{X}} and with the same name as \mbox{\tcode{f}}, the
-    \mbox{\techterm{expression}} is \mbox{\tcode{x.f(parm1$'$, parm2$'$,
+    \mbox{\tcode{X}} and with the same name as \mbox{\tcode{f}},
+    \mbox{\tcode{E}} is \mbox{\tcode{x.f(parm1$'$, parm2$'$,
         ..., parm$N'$)}}, where name lookup of \mbox{\tcode{x.f}} refers
     to the definitions of \mbox{\tcode{X::f}} in the concept map,}
 
 \additemCC{if the concept map contains one or more static member function
     or member function template definitions in the type
-    \mbox{\tcode{X}} and with the same name as \mbox{\tcode{f}}, the
-    \mbox{\techterm{expression}} is \mbox{\tcode{X::f(parm1$'$, parm2$'$,
+    \mbox{\tcode{X}} and with the same name as \mbox{\tcode{f}},
+    \mbox{\tcode{E}} is \mbox{\tcode{X::f(parm1$'$, parm2$'$,
         ..., parm$N'$)}}, where name lookup of \mbox{\tcode{X::f}} refers
     to the static definitions of \mbox{\tcode{X::f}} in the concept map,}
 
 \additemConcepts{if the associated function or function template
-    is a prefix unary operator \mbox{\tcode{Op}}, the
-    \mbox{\techterm{expression}} is \mbox{\tcode{Op parm1$'$}},}
+    is a prefix unary operator \mbox{\tcode{Op}},
+    \mbox{\tcode{E}} is \mbox{\tcode{Op parm1$'$}},}
 
 \additemConcepts{if the associated function or function template is a
   postfix unary 
-  operator \mbox{\tcode{Op}}, the \mbox{\techterm{expression}} is
+  operator \mbox{\tcode{Op}}, \mbox{\tcode{E}} is
   \mbox{\tcode{parm1$'$ Op}}},
   
 \additemConcepts{if the associated function or function template is a binary operator
-  \mbox{\tcode{Op}}, the \mbox{\techterm{expression}} is
+  \mbox{\tcode{Op}}, \mbox{\tcode{E}} is
   \mbox{\tcode{parm1$'$ Op parm2$'$}}, }
 
 \additemConcepts{if the associated function or function template is
   the function call 
-  operator, the \mbox{\techterm{expression}} is}\\
+  operator, \mbox{\tcode{E}} is}\\
   \addedConcepts{\mbox{\tcode{parm1$'$(parm2$'$, parm3$'$, ..., parm$N'$)}},}
 
-\additemConcepts{if the associated function is a conversion operator, the
-  \mbox{\techterm{expression}} is \mbox{\tcode{parm1$'$}} if the
+\additemConcepts{if the associated function is a conversion operator, 
+  \mbox{\tcode{E}} is \mbox{\tcode{parm1$'$}} if the
   conversion operator requirement is not \mbox{\tcode{explicit}} and
-  \mbox{\tcode{(U)parm1$'$}} if the conversion operator requirement is
-  \mbox{\tcode{explicit}}, where \mbox{\tcode{U}} is the return type
+  \mbox{\tcode{(R)parm1$'$}} if the conversion operator requirement is
+  \mbox{\tcode{explicit}}, where \mbox{\tcode{R}} is the return type
   of the conversion operator,}
 
 \additemConcepts{if the associated function or function template
   is a non-member function or function template, 
-  \mbox{\techterm{expression}} is an unqualified
+  \mbox{\tcode{E}} is an unqualified
   call \mbox{\tcode{f(\tcode{parm1$'$}, \tcode{parm2$'$}, ...,
   \tcode{parm$N'$})}},}
 
 \additemCC{if the associated function or function template is a static
   member function or function template in the type \mbox{\tcode{X}},
-  \mbox{\techterm{expression}} is a call
+  \mbox{\tcode{E}} is a call
   \mbox{\tcode{X::f(\tcode{parm1$'$}, \tcode{parm2$'$}, ...,
       \tcode{parm$N'$})}},}
 
-\additemConcepts{if the associated member function requirement is a
-  requirement for an operator \mbox{\tcode{new}} or \mbox{\tcode{new[]}},
-  the \mbox{\techterm{expression}} is \mbox{\tcode{X::operator
-      new(parm1$'$, parm2$'$, 
-      ..., parm$N'$)}} or \mbox{\tcode{X::operator new[](parm1$'$)}},
-    respectively, or, if that \mbox{\techterm{expression}} is
-    ill-formed, \mbox{\tcode{::operator}}
-        \mbox{\tcode{new(parm1$'$, parm2$'$, 
-      ..., parm$N'$)}} or \mbox{\tcode{::operator new[](parm1$'$)}},
-    respectively,}
-
-\additemConcepts{if the associated member function requirement is a
-  requirement for an operator \mbox{\tcode{delete}} or \mbox{\tcode{delete[]}},
-  the \mbox{\techterm{expression}} is \mbox{\tcode{delete x}} or
-    \mbox{\tcode{delete[] x}},
-    respectively,}
-
-\additemConcepts{otherwise, the \mbox{\techterm{expression}} is
-\mbox{\tcode{x.f(parm1$'$, parm2$'$, ..., parm$N'$)}}.}
-\end{itemize}
-
-\addedCC{The candidate set is determined based on the formulation of
-  the \mbox{\techterm{expression-statement}} or \mbox{\tcode{return}}
-  statement as follows:}
-\begin{itemize}
-\item \addedCC{if the statement is ill-formed, then}
-  \begin{itemize}
-  \item \addedCC{if the associated function has a default
-      implementation, then the seed is the instantiation of
-      the associated function after substituting the concept map
-      arguments for the concept parameters, and the candidate set
-      contains only the seed,}
-  \item \addedCC{otherwise, definition of the candidate set fails}
-  \end{itemize}
-\item \addedCC{otherwise, the statement is well-formed, and the
-    candidate set is determined by the formulation of the
-    \mbox{\techterm{expression}}}
-  \begin{itemize}
-  \item \addedCC{if overload resolution (\mbox{\ref{over.match}}) for
-      the \mbox{\techterm{expression}} resolves to a 
-      call to a function, that function is the seed.
-      The candidate set contains:}
-    \begin{itemize}
-    \item \addedCC{the template from which the seed was instantiated, if the
-      seed is a function template specialization,}
-    \item \addedCC{every function template that has the same name and is
-      declared in the same namespace as the seed, and}
-    \item \addedCC{every non-template function that is consistent with
-        the seed (\mbox{\ref{temp.constrained.set}}).}
-    \end{itemize}
-
-  \item \addedCC{if overload resolution for the
-      \mbox{\techterm{expression}} resolves to a built-in operator
-      (\mbox{\ref{over.built}}) then the candidate set contains that
-      built-in operator.}
-  \end{itemize}
-\end{itemize}
-
-\pnum
-\addedCC{The candidate set for} \addedConcepts{associated function and
-  function template requirements that name a constructor 
-  (\mbox{\ref{concept.fct}})} \changedCCC{are satisfied by}{contains} \addedConcepts{constructors in the
-  corresponding concept map argument (call it \mbox{\tcode{X}}). 
-Let \mbox{\tcode{parm1}}, \mbox{\tcode{parm2}}, ...,
-\mbox{\tcode{parm$N$}} be the constructor parameters and
-\mbox{\tcode{parm1$'$}}, \mbox{\tcode{parm2$'$}}, ...,
-\mbox{\tcode{parm$N'$}} be expressions, where each
-\mbox{\tcode{parm$i'$}} is an \mbox{\techterm{id-expression}} naming
-\mbox{\tcode{parm$i$}}. If the declared type of \mbox{\tcode{parm$i$}}
-is an lvalue reference type, then \mbox{\tcode{parm$i'$}} is treated
-as an lvalue, otherwise, \mbox{\tcode{parm$i'$}} is treated as an
-rvalue.} \addedCC{For a class type \mbox{\tcode{X}}, the seed is the
-constructor used to initialize an object of type \mbox{\tcode{X}} as
-described below. The initialization of the object is as follows:}
-
-\begin{itemize}
-\additemConcepts{if the constructor requirement has \mbox{$N \neq
-      1$} parameters, the object is  
-  direct-initialized with arguments \mbox{\tcode{parm1$'$}},
-  \mbox{\tcode{parm2$'$}}, ..., \mbox{\tcode{parm$N'$}}, \mbox{\enterexample}}
+\item \changedCC{if the constructor requirement}{if the associated
+    function is a constructor or constructor template that is
+    \mbox{\tcode{explicit}} or}
+  \addedConcepts{has \mbox{$N \neq
+      1$} parameters,} \addedCC{\mbox{\tcode{E}} is
+    \mbox{\tcode{X(parm1$'$, parm2$'$, ..., parm$N'$)}}.}
+  \addedConcepts{\enterexample}
 \begin{codeblock}
 concept TwoIntConstructible<typename T> {
   T::T(int, int);
@@ -3957,13 +3890,12 @@ concept_map TwoIntConstructible<X> { } // okay: X has a constructor that can acc
 \end{codeblock}
 \addedConcepts{\exitexample}
 
-\additemConcepts{if the constructor requirement has one parameter,
-    the object is 
-    initialized with the argument \mbox{\tcode{parm1$'$}}. The
-    initialization is direct-initialization if the constructor
-    requirement is \mbox{\tcode{explicit}}, or copy-initialization
-    if the constructor requirement is not \mbox{\tcode{explicit}},
-  \mbox{\enterexample}}
+\item \changedCC{if the constructor requirement}{if the associated
+    function is a constructor or constructor template that}
+  \addedCC{has one parameter (and is not \mbox{\tcode{explicit}}),
+  \mbox{\tcode{E}} is ``\mbox{\tcode{parm1$'$}} implicitly converted to
+      \mbox{\tcode{X}}''.}
+    \addedConcepts{\enterexample}
 \begin{codeblock}
 concept IC<typename T> {
   T::T(int);
@@ -3987,42 +3919,9 @@ concept_map IC<Y> { } // error: cannot copy-initialize Y from an int
 concept_map EC<Y> { } // okay
 \end{codeblock}
 \addedConcepts{\exitexample}
-\end{itemize}
 
-\addedCC{The candidate set is defined as follows:}
-\begin{itemize}
-\additemCC{if the initialization of the object is ill-formed, definition
-of the candidate set fails,}
-\additemCC{if the type \mbox{\tcode{X}} is a class type, the seed is
-  the constructor selected by overload resolution
-  (\mbox{\ref{over.match}}) to initialize the object, then the
-  candidate set contains:}
-\begin{itemize}
-  \item\addedCC{the template from which the seed was instantiated, if the seed
-    is a template constructor,}
-  \item\addedCC{the constructor templates of \mbox{\tcode{X}}, and}
-  \item\addedCC{the non-template constructors of \mbox{\tcode{X}} that are
-      consistent with the seed (\mbox{\ref{temp.constrained.set}}).}
-\end{itemize}
-\additemCC{if the type \mbox{\tcode{X}} is a non-class type, the
-  candidate set is empty.}
-\end{itemize}
-
-\pnum
-\addedCC{The candidate set for an associated function requirement that
-  names a destructor for type \mbox{\tcode{X}} is defined as follows:}
-\begin{itemize}
-  \item \addedCC{if \mbox{\tcode{X}} is a class type, then}
-    \begin{itemize}
-    \item \addedCC{if \mbox{\tcode{X}} contains a public, non-deleted
-        destructor, the seed is the destructor and the candidate set
-        contains the seed,}
-    \item \addedCC{otherwise, definition of the candidate set fails,}
-    \end{itemize}
-  \item \addedCC{otherwise, \mbox{\tcode{X}} is a non-class type, and
-      the candidate set is empty.}
-\end{itemize}
-\addedConcepts{\mbox{\enterexample}}
+\additemCC{if the associated function is a destructor,
+  \mbox{\tcode{E}} is \mbox{\tcode{x.$\sim$X()}}.}\addedConcepts{\enterexample}
 \begin{codeblock}
 concept Destructible<typename T> {
   T::~T();
@@ -4037,6 +3936,117 @@ struct Y { private: ~Y(); };
 concept_map Destructible<Y> { } // error: Y's destructor is inaccessible
 \end{codeblock}
 \addedConcepts{\exitexample}
+
+\item \addedConcepts{if the associated member function requirement is a
+  requirement for an operator \mbox{\tcode{new}} or \mbox{\tcode{new[]}},
+  \mbox{\tcode{E}} is \\\mbox{\tcode{operator
+      new(parm1$'$, parm2$'$, 
+      ..., parm$N'$)}} or \mbox{\tcode{operator new[](parm1$'$)}},
+    respectively.}
+\addedCC{Name lookup for the allocation function occurs in the scope
+  of \mbox{\tcode{X}}; if this lookup fails to
+  find the name, the allocation function's name is looked up in the
+  global scope.}
+
+\item \addedConcepts{if the associated member function requirement is a
+  requirement for an operator \mbox{\tcode{delete}} or \mbox{\tcode{delete[]}},
+  \mbox{\tcode{E}} is \mbox{\tcode{operator delete(parm1$'$, parm2$'$, 
+      ..., parm$N'$)}} or \mbox{\tcode{operator
+      delete[](parm1$'$)}}, respectively.}
+\addedCC{Name lookup for the deallocation function occurs in the scope
+  of \mbox{\tcode{X}}; if this lookup fails to
+  find the name, the deallocation function's name is looked up in the
+  global scope.}
+
+\additemConcepts{otherwise, \mbox{\tcode{E}} is
+\mbox{\tcode{x.f(parm1$'$, parm2$'$, ..., parm$N'$)}}.}
+\end{itemize}
+
+\addedCC{The candidate set is determined based on the formulation of
+  the \mbox{\techterm{expression-statement}} or \mbox{\tcode{return}}
+  statement as follows:}
+\begin{itemize}
+\item \addedCC{if the statement is ill-formed, then}
+  \begin{itemize}
+  \item \addedCC{if the associated function has a default
+      implementation, then the seed is the instantiation of
+      the associated function after substituting the concept map
+      arguments for the concept parameters, and the candidate set
+      contains only the seed,}
+  \item \addedCC{otherwise, definition of the candidate set fails}
+  \end{itemize}
+\item \addedCC{otherwise, the statement is well-formed, and the
+    candidate set is determined by the formulation of the
+    \mbox{\tcode{E}}}
+  \begin{itemize}
+  \item \addedCC{if overload resolution (\mbox{\ref{over.match}}) for
+      the \mbox{\tcode{E}} resolves to a 
+      call to a function, that function is the seed.
+      The candidate set contains:}
+    \begin{itemize}
+    \item \addedCC{the template from which the seed was instantiated, if the
+      seed is a function template specialization,}
+    \item \addedCC{every function template that has the same name and is
+      declared in the same namespace as the seed, and}
+    \item \addedCC{every non-template function that is consistent with
+        the seed (\mbox{\ref{temp.constrained.set}}).}
+    \end{itemize}
+
+  \item \addedCC{if overload resolution for the
+      \mbox{\tcode{E}} resolves to a built-in operator
+      (\mbox{\ref{over.built}}) then the candidate set contains that
+      built-in operator.}
+  \end{itemize}
+\end{itemize}
+
+
+\pnum
+\addedCC{Each satisfied associated function (or function template)
+  requirement has a corresponding associated function candidate
+  set. An \mbox{\techterm{associated function candidate set}} is a set
+  of functions (including and candidate functions that represent
+  built-in operations (\mbox{\ref{over.built}})) and function
+  templates, that is the result of name lookup for the associated
+  function within the concept map. The associated function candidate
+  set is determined based on the expression \mbox{\tcode{E}} used to
+  determine that the requirement was satisfied.}
+
+\addedCC{Each associated function candidate set has a
+  \mbox{\techterm{seed}}. A seed is the candidate function
+  (\mbox{\ref{over.match.funcs}}) determined by the outermost
+  application of overload resolution (clause~\mbox{\ref{over}}) during the
+  processing of \mbox{\tcode{E}}. The associated function candidate
+  set contains all functions and function templates that are
+  \mbox{\techterm{consistent with}} the seed. A function is consistent
+  with the seed if:} 
+\begin{itemize}
+\item \addedCC{it has the same name as the seed,}
+\item \addedCC{its enclosing namespace is the same as the enclosing
+    namespace of the seed,}
+\item \addedCC{it has the same return type as the seed, after references
+    and then top-level \mbox{\techterm{cv-qualifiers}} have been
+    removed, and}
+\additemCC{it has the same \mbox{\techterm{parameter-type-list}} as
+  the seed, after making the following adjustments to both
+  \mbox{\techterm{parameter-type-list}}:} 
+\begin{itemize}
+  \additemCC{for each parameter type, remove the top-level reference
+    (if any) and then top-level \mbox{\techterm{cv-qualifiers}} (if
+    any), and} 
+  \additemCC{if the function has \mbox{$M$} parameters, the seed as
+    \mbox{$N$} parameters, and \mbox{$M > N$}, remove each of the last
+    \mbox{$M-N$} parameters that has a default argument from the
+    \mbox{\techterm{parameter-type-list}}.}
+\end{itemize}
+
+\end{itemize}
+
+\addedCC{A function template is consistent with the seed if: }
+\begin{itemize}
+\additemCC{it has the same name as the seed, and}
+\additemCC{its enclosing namespace is the same as the enclosing
+    namespace of the seed.}
+\end{itemize}
 
 \rSec3[concept.map.assoc]{Associated type and template definitions}
 

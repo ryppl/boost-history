@@ -1,77 +1,9 @@
 # -*- makefile -*-
 
-LATEX	= latex
 PDFLATEX = pdflatex
 
-
-DVIPS		= dvips
-
-.SUFFIXES: .tex .dvi .ps .pdf .dot .eps
-
-
-.tex.dvi:
-	@ $(LATEX) $*
-
-.dot.eps:
-	dot -Tps $*.dot > $*.eps
-
-# .dot.eps:
-# 	dot -Tps $*.dot | sed 's/^endpage/%endpage/' > $*.tmp.ps
-# 	ps2epsi $*.tmp.ps $*.eps
-# 	/bin/rm $*.tmp.ps
-
-.dvi.ps:
-	$(DVIPS) -t letter -P cmz -o $*.ps $*
-
-.eps.pdf:
-	epstopdf $*.eps
-
-.tex.pdf:
-	@$(PDFLATEX) $*
-	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
-	then $(PDFLATEX) $* ; else :; fi
-	@ if ( grep 'Writing index file' $*.log > /dev/null ); \
-	then makeindex $* ; $(PDFLATEX) $* ; fi
-	@-if ( grep 'LaTeX Warning: Citation' $*.log > /dev/null ); then \
-	  bibtex $* ; \
-	  $(PDFLATEX) $* ; \
-	fi
-	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
-	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
-	then $(PDFLATEX) $* ; else :; fi
-	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
-	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
-	then $(PDFLATEX) $* ; else :; fi
-	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
-	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
-	then $(PDFLATEX) $* ; else :; fi
-
-
-#
-# Default rule
-#
-
-NAME		= wording
-
-OTHER_TEX	=
-
-PDF_FIGS        =
-
-default: $(NAME).pdf
-
-
-DOT	= 
-
-DPS	= $(DOT:.dot=.ps)
-DEPS	= $(DOT:.dot=.eps)
-DPDF	= $(DOT:.dot=.pdf)
-
-#
-# LaTeX stuff
-#
-$(NAME).dvi: $(NAME).tex $(OTHER_TEX)
-$(NAME).ps:  $(NAME).dvi
-$(NAME).pdf: $(NAME).tex $(OTHER_TEX) $(DPDF) $(PDF_FIGS)
+wording.pdf: wording.tex macros.tex
+	@$(PDFLATEX) wording.tex
 
 final:
 	@$(PDFLATEX) wording.tex
