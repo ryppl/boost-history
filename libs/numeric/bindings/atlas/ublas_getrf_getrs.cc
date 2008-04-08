@@ -10,6 +10,7 @@
 #include <boost/numeric/bindings/atlas/cblas.hpp>
 #include <boost/numeric/bindings/atlas/clapack.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
 #include "utils.h"
 
@@ -50,7 +51,7 @@ int main() {
   //     [        ...       ]
   //     [1   2   ...  n-1 n]
   ublas::matrix_row<m_t> ar1 (a, 0), ar3 (a, 3);
-  ublas::swap (ar1, ar3);   // swap rows to force pivoting 
+  swap (ar1, ar3);   // swap rows to force pivoting 
 
   ublas::matrix_column<m_t> xc0 (x, 0), xc1 (x, 1); 
   atlas::set (1., xc0);  // x[.,0] = 1

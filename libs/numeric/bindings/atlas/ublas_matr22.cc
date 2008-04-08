@@ -9,6 +9,7 @@
 #include <boost/numeric/bindings/atlas/cblas2.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #ifdef F_USE_STD_VECTOR
 #include <vector>
 #include <boost/numeric/bindings/traits/std_vector.hpp> 

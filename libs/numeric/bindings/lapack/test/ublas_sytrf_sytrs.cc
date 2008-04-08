@@ -10,6 +10,7 @@
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include "utils.h"
 
 namespace ublas = boost::numeric::ublas;

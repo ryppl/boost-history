@@ -17,6 +17,7 @@
 #  include <boost/numeric/bindings/traits/ublas_vector2.hpp>
 #endif 
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp> 
 
 namespace ublas = boost::numeric::ublas;

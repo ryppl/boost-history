@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/atlas/cblas1.hpp>
 #ifdef F_USE_STD_VECTOR

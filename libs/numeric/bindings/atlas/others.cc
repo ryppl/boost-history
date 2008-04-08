@@ -56,7 +56,7 @@ int main() {
   cout << endl;
 #endif  
 
-  atlas::scal (2, sv);
+  atlas::scal (real_t(2), sv);
   print_v (sv, "scal(): 2 sv"); 
 
   cout << endl; 
