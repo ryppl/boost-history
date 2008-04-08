@@ -68,6 +68,46 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       }
     };
 
+    template <typename StOrdTag>
+    struct ublas_banded_ordering {};
+    
+    template<> 
+    struct ublas_banded_ordering<boost::numeric::ublas::row_major_tag> {
+
+      template <typename M>
+      static int leading_dimension( M const& m ) {
+        return m.lower() + m.upper() + 1 ;
+      }
+
+      template <typename M>
+      static int stride1( M const& m ) {
+        return 1 ;
+      }
+
+      template <typename M>
+      static int stride2( M const& m ) {
+        return leading_dimension(m)-1 ;
+      }
+    };
+    
+    template<> 
+    struct ublas_banded_ordering<boost::numeric::ublas::column_major_tag> {
+
+      template <typename M>
+      static int leading_dimension( M const& m ) {
+        return m.size2() ;
+      }
+
+      template <typename M>
+      static int stride1( M const& m ) {
+        return leading_dimension(m) ;
+      }
+
+      template <typename M>
+      static int stride2( M const& m ) {
+        return 1-leading_dimension(m) ;
+      }
+    };
   }
 
 }}}}
