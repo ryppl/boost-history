@@ -1,0 +1,33 @@
+# Copyright Thomas Klimpel 2008.
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0. (See accompanying file
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+BLAS_PATH ?= /usr/lib ;
+BLAS_LIB  ?= blas ;
+
+lib g2c ;
+lib blas_lib : g2c : <name>$(BLAS_LIB) <search>$(BLAS_PATH) ;
+
+
+project libs/numeric/bindings/blas/test : requirements
+        <include>$(BOOST_ROOT)
+        <include>$(BOOST)
+        <library>blas_lib ;
+
+import testing ;
+
+
+
+#exe scal  : scal.cpp ;
+#exe blas1 : blas1.cpp ;
+exe blas2 : blas2.cpp ;
+#exe blas3 : blas3.cpp ;
+
+test-suite bindings-blas :
+    [ run scal.cpp ]
+    [ run blas1.cpp ]
+#    [ run blas2.cpp ]
+    [ run blas3.cpp ]
+;
+
