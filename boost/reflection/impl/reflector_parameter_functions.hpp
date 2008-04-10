@@ -29,12 +29,19 @@ public:
 template <class ParamFirst BOOST_PP_COMMA_IF(N)
   BOOST_PP_ENUM_PARAMS(N, class Param)>
 void reflect_constructor(BOOST_PP_ENUM_PARAMS(N, ParameterInfo i)) {
-  add_constructor<ParamFirst BOOST_PP_COMMA_IF(N)
-  BOOST_PP_ENUM_PARAMS(N, Param)>(&impl::construct_instance<T, ParamFirst
-                                  BOOST_PP_COMMA_IF(N)
-                                  BOOST_PP_ENUM_PARAMS(N, Param)>
-                                  BOOST_PP_COMMA_IF(N)
-                                  BOOST_PP_ENUM_PARAMS(N, i));
+  instance (*ctor_func)(
+    ParamFirst BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param))
+      (&impl::construct_instance<T, ParamFirst
+                                 BOOST_PP_COMMA_IF(N)
+                                 BOOST_PP_ENUM_PARAMS(N, Param)>);
+
+  constructor_info f(reflections::type_info_handler
+      <TypeInfo, instance (*)(ParamFirst BOOST_PP_COMMA_IF(N)
+                              BOOST_PP_ENUM_PARAMS(N, Param))>
+        ::get_class_type());
+  BOOST_REFLECTION_PUSH_PARAMETER_INFO(f, N); 
+  reflection_->constructors_.insert(std::make_pair<TypeInfo, FunctionPtr>(
+      f, reinterpret_cast<FunctionPtr>(ctor_func)));
 }
 
 template <class ReturnValue BOOST_PP_COMMA_IF(N)

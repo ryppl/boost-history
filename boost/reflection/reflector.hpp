@@ -47,7 +47,10 @@ public:
   typedef basic_function_info<Info, TypeInfo, ParameterInfo> function_info;
   typedef basic_constructor_info<TypeInfo, ParameterInfo> constructor_info;
   void reflect_constructor() {
-    add_constructor(&impl::construct_instance<T>);
+    instance (*ctor_func)()(&impl::construct_instance<T>);
+    reflection_->constructors_.insert(std::make_pair<TypeInfo, FunctionPtr>( 
+        reflections::type_info_handler<TypeInfo, instance (*)()>
+        ::get_class_type(), reinterpret_cast<FunctionPtr>(ctor_func)));
   }
 #define BOOST_PP_ITERATION_LIMITS (0, \
     BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
@@ -65,11 +68,6 @@ public:
     reflection_->functions_.insert(out_pair);
   }
 private:
-  void add_constructor(instance (*func)()) {
-    reflection_->constructors_.insert(std::make_pair<TypeInfo, FunctionPtr>( 
-      reflections::type_info_handler<TypeInfo, instance (*)()>::get_class_type(),
-      reinterpret_cast<FunctionPtr>(func)));
-  }
   basic_reflection<Info, ParameterInfo, TypeInfo> * reflection_;
 };
 
@@ -85,7 +83,10 @@ public:
   typedef basic_function_info<Info, TypeInfo> function_info;
   typedef basic_constructor_info<Info, TypeInfo> constructor_info;
   void reflect_constructor() {
-    add_constructor(&impl::construct_instance<T>);
+    instance (*ctor_func)()(&impl::construct_instance<T>);
+    reflection_->constructors_.insert(std::make_pair<TypeInfo, FunctionPtr>( 
+        reflections::type_info_handler<TypeInfo, instance (*)()>
+        ::get_class_type(), reinterpret_cast<FunctionPtr>(ctor_func)));
   }
 #define BOOST_PP_ITERATION_LIMITS (0, \
     BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)

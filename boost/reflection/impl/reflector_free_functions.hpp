@@ -17,7 +17,7 @@
 // This is a generic factory function to construct an instance of
 // a given class using a constructor with the given signature.
 template <class T BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param)>
-instance construct_instance(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) {
+static instance construct_instance(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) {
   // An instance is similar to boost::any. Initialize it with
   // a void ptr.
   return instance(static_cast<void*>(

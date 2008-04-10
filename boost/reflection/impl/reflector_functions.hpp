@@ -13,13 +13,25 @@
 # define N BOOST_PP_ITERATION()
 
 
-  template <class ParamFirst BOOST_PP_COMMA_IF(N)
-  BOOST_PP_ENUM_PARAMS(N, class Param)>
+template <class ParamFirst BOOST_PP_COMMA_IF(N)
+          BOOST_PP_ENUM_PARAMS(N, class Param)>
 void reflect_constructor() {
-  add_constructor<ParamFirst BOOST_PP_COMMA_IF(N)
-  BOOST_PP_ENUM_PARAMS(N, Param)>(&impl::construct_instance<T, ParamFirst
-                                  BOOST_PP_COMMA_IF(N)
-                                  BOOST_PP_ENUM_PARAMS(N, Param)>);
+  instance (*ctor_func)(
+    ParamFirst BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param))
+      (&impl::construct_instance<T, ParamFirst
+                                 BOOST_PP_COMMA_IF(N)
+                                 BOOST_PP_ENUM_PARAMS(N, Param)>);
+  reflection_->constructors_.insert(std::make_pair<TypeInfo, FunctionPtr>(
+      reflections::type_info_handler
+      <TypeInfo, instance (*)(ParamFirst BOOST_PP_COMMA_IF(N)
+                              BOOST_PP_ENUM_PARAMS(N, Param))>
+        ::get_class_type(),
+      reinterpret_cast<FunctionPtr>(ctor_func)));
+
+ //  add_constructor<ParamFirst BOOST_PP_COMMA_IF(N)
+ // BOOST_PP_ENUM_PARAMS(N, Param)>(&impl::construct_instance<T, ParamFirst
+ //                                 BOOST_PP_COMMA_IF(N)
+ //                                 BOOST_PP_ENUM_PARAMS(N, Param)>);
 }
 template <class ReturnValue BOOST_PP_COMMA_IF(N)
           BOOST_PP_ENUM_PARAMS(N, class Param)>
@@ -39,16 +51,6 @@ void reflect(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
     p2(f, p);
   reflection_->functions_.insert(p2);
 }
-template <class ParamFirst BOOST_PP_COMMA_IF(N)
-BOOST_PP_ENUM_PARAMS(N, class Param)>
-void add_constructor(instance (*func)(ParamFirst BOOST_PP_COMMA_IF(N)
-                                      BOOST_PP_ENUM_PARAMS(N, Param))) {
-  reflection_->constructors_.insert(std::make_pair<TypeInfo, FunctionPtr>(
-      reflections::type_info_handler
-      <TypeInfo, instance (*)(ParamFirst BOOST_PP_COMMA_IF(N)
-                              BOOST_PP_ENUM_PARAMS(N, Param))>
-        ::get_class_type(),
-      reinterpret_cast<FunctionPtr>(func)));
-}
+
 
 #undef N
