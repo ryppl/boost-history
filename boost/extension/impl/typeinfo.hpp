@@ -40,7 +40,8 @@ struct type_info_handler<default_type_info, ClassType>
 // This list should be expanded to all platforms that successfully
 // compare type_info across shared library boundaries.
 #if defined(__APPLE__) || defined(BOOST_EXTENSION_FORCE_FAST_TYPEINFO)
-namespace boost { namespace extensions {
+namespace boost {
+namespace extensions {
 bool operator<(const default_type_info& first,
                const default_type_info& second) {
   return &first.type < &second.type;
@@ -57,6 +58,7 @@ bool operator>(const default_type_info& first,
 }
 }}
 #else
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #include <string>
 namespace boost { namespace extensions {
 bool operator<(const default_type_info& first,
@@ -73,7 +75,28 @@ bool operator>(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.raw_name(), second.type.raw_name()) > 0;
 }
-}}
-#endif
+}  // namespace extensions
+}  // namespace boost
+#else  // OTHER OS
+#include <string>
+namespace boost { namespace extensions {
+bool operator<(const default_type_info& first,
+               const default_type_info& second) {
+  return std::strcmp(first.type.name(), second.type.name()) < 0;
+}
 
+bool operator==(const default_type_info& first,
+               const default_type_info& second) {
+  return std::strcmp(first.type.name(), second.type.name()) == 0;
+}
+
+bool operator>(const default_type_info& first,
+               const default_type_info& second) {
+  return std::strcmp(first.type.name(), second.type.name()) > 0;
+}
+}  // namespace extensions
+}  // namespace boost
+
+#endif  // WINDOWS
+#endif  // OS X
 #endif  // BOOST_EXTENSION_TYPEINFO_HPP
