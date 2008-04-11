@@ -5369,17 +5369,21 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \item \addedCC{it has the same name as the seed,}
 \item \addedCC{its enclosing namespace is the same as the enclosing
     namespace of the seed,}
-\item \addedCC{it has the same return type as the seed, after references
-    and then top-level \mbox{\techterm{cv-qualifiers}} have been
+\item \addedCC{it has the same return type as the seed, after the
+    reference (if any) 
+    and then top-level \mbox{\techterm{cv-qualifiers}} (if any) have been
     removed, and}
 \additemCC{it has the same \mbox{\techterm{parameter-type-list}} as
   the seed, after making the following adjustments to both
   \mbox{\techterm{parameter-type-list}}:} 
 \begin{itemize}
+  \additemCC{for a non-member function, add the implicit
+    object parameter (\mbox{\ref{over.match.funcs}}) as the first
+    parameter in the \mbox{\techterm{parameter-type-list}},}
   \additemCC{for each parameter type, remove the top-level reference
     (if any) and then top-level \mbox{\techterm{cv-qualifiers}} (if
     any), and} 
-  \additemCC{if the function has \mbox{$M$} parameters, the seed as
+  \additemCC{if the function has \mbox{$M$} parameters, the seed has
     \mbox{$N$} parameters, and \mbox{$M > N$}, remove each of the last
     \mbox{$M-N$} parameters that has a default argument from the
     \mbox{\techterm{parameter-type-list}}.}
