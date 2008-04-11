@@ -45,41 +45,66 @@ namespace boost { namespace coroutines {
   class coroutine;
   
   namespace detail {
+
+    template<typename R, typename F, typename C>
+    class call;
+
+    template<typename R, typename F, typename C>
+    coroutine<R,F,C>& derived(call<R,F,C> *this_) {
+	return *static_cast<typename T::derived*>(this_);
+    }
+
     template<typename R, typename P, typename C>
     class call {
       typedef coroutine<R, P, C> derived;
       typedef BOOST_DEDUCED_TYPENAME derived::arg1_type arg1_type;
       typedef BOOST_DEDUCED_TYPENAME derived::result_type result_type;
     public:
-      typedef boost::optional(R) 
       result_type
       operator()(arg1_type x) const {
-	return *(static_cast<const derived*>(this)
-	  ->call_impl<true, result_type, arg1_type>(x));
+        boost::optional<result_type> result;
+        derived(this)->bind_arg(x);
+        derived(this)->bind_result(result);
+        derived(this)->call();
+        
+        if(result) return *result;
+        else { throw }; //XXX complete
       }
 
       boost::optional<result_type>
-      operator()(arg1_type x, std::nothrow_t) const {
-	return static_cast<const derived*>(this)
-	  ->call_impl<false, boost::optional<result_type>, arg1_type>(x);
+      operator()(arg1_type x, std::notrow_t) const {
+        boost::optional<result_type> result;
+        derived(this)->bind_arg(x);
+        derived(this)->bind_result(result);
+        derived(this)->call();        
+        return result;
       }
     };
-
+ 
     template<typename R, typename C>
     class call<R, void, C> {
-      typedef coroutine<R, void, C> derived;
       typedef BOOST_DEDUCED_TYPENAME derived::result_type result_type;
     public:
-      result_type operator()() const {
-	return static_cast<const derived*>(this)
-	  ->call_impl<true, result_type, void_>();
+     result_type
+      operator()() const {
+        boost::optional<result_type> result;
+        derived(this)->bind_result(result);
+        derived(this)->call();
+        
+        if(result) return *result;
+        else { throw }; //XXX complete
       }
 
       boost::optional<result_type>
-      operator()(std::nothrow_t) const {
-	return static_cast<const derived*>(this)
-	  ->call_impl<false, boost::optional<result_type>, void_>();
+      operator()(arg1_type x, std::notrow_t) const {
+        boost::optional<result_type> result;
+        derived(this)->bind_arg(x);
+        derived(this)->bind_result(result);
+        derived(this)->call();        
+        return result;
       }
+ 
+
     };
 
     template<typename C>
@@ -97,13 +122,15 @@ namespace boost { namespace coroutines {
 	static_cast<const derived*>(this)
 	  ->call_impl<false, bool_, void>();
       }
+
+    private:
     };
 
   }
 
   
   /// Returns a boolean <tt>Integral Constant c</tt> such that
-  /// <tt>c::value == true</tt> if and only if @c X is a coroutine object
+  /// <tt>c::value == true</tt> if and only if @c X is a coroutine type.
   template<typename T>
   struct is_coroutine : boost::mpl::false_{};
   
@@ -114,13 +141,11 @@ namespace boost { namespace coroutines {
   /**
    * Make a stackful coroutine from a function object.
    * 
-   * @tparam Result result type of the coroutine. Models @c Copyable
-   * or @void.
+   * @tparam Result result type of the coroutine. It models  @c Copyable
+   * or is @c void or is a reference.
    *
    * @tparam Param the coroutine will accept parameters of this
    * type. Models @c Copyable or @c void (Defaults to @c void)
-   *
-   *
    */
   template<typename Result, typename Parm = void, 
            typename ContextImpl = detail::default_context_impl>
