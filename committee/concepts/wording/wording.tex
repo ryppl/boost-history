@@ -3968,44 +3968,6 @@ concept_map Destructible<Y> { } // error: Y's destructor is inaccessible
 \mbox{\tcode{x.f(parm1$'$, parm2$'$, ..., parm$N'$)}}.}
 \end{itemize}
 
-\addedCC{The candidate set is determined based on the formulation of
-  the \mbox{\techterm{expression-statement}} or \mbox{\tcode{return}}
-  statement as follows:}
-\begin{itemize}
-\item \addedCC{if the statement is ill-formed, then}
-  \begin{itemize}
-  \item \addedCC{if the associated function has a default
-      implementation, then the seed is the instantiation of
-      the associated function after substituting the concept map
-      arguments for the concept parameters, and the candidate set
-      contains only the seed,}
-  \item \addedCC{otherwise, definition of the candidate set fails}
-  \end{itemize}
-\item \addedCC{otherwise, the statement is well-formed, and the
-    candidate set is determined by the formulation of the
-    \mbox{\tcode{E}}}
-  \begin{itemize}
-  \item \addedCC{if overload resolution (\mbox{\ref{over.match}}) for
-      the \mbox{\tcode{E}} resolves to a 
-      call to a function, that function is the seed.
-      The candidate set contains:}
-    \begin{itemize}
-    \item \addedCC{the template from which the seed was instantiated, if the
-      seed is a function template specialization,}
-    \item \addedCC{every function template that has the same name and is
-      declared in the same namespace as the seed, and}
-    \item \addedCC{every non-template function that is consistent with
-        the seed (\mbox{\ref{temp.constrained.set}}).}
-    \end{itemize}
-
-  \item \addedCC{if overload resolution for the
-      \mbox{\tcode{E}} resolves to a built-in operator
-      (\mbox{\ref{over.built}}) then the candidate set contains that
-      built-in operator.}
-  \end{itemize}
-\end{itemize}
-
-
 \pnum
 \addedCC{Each satisfied associated function (or function template)
   requirement has a corresponding associated function candidate
@@ -5455,9 +5417,9 @@ templates (\mbox{\ref{temp.spec}}).}
 concept map archetype with
 the concept map that satisfied the corresponding template
 requirement.  
-\mbox{\enternote} Concept members that had resolved to members of the 
-concept map archetype now refer to
-members of the corresponding concept maps. \mbox{\exitnote}}
+\mbox{\enternote} A concept member that had resolved to a member of a
+concept map archetype now refers to a
+member of the corresponding concept map. \mbox{\exitnote}}
 
 \pnum 
 \addedConcepts{If a concept requirement appears (directly or indirectly)
