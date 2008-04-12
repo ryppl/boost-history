@@ -1,6 +1,6 @@
 /*
  * Boost.Extension / functor:
- *        functor used as the exported function of the libraries (the one that 
+ *        functor used as the exported function of the libraries (the one that
  *        registers the implementations at library loading time)
  *
  * (C) Copyright Jeremy Pack 2007
@@ -11,225 +11,73 @@
  * See http://www.boost.org/ for latest version.
  */
 
+#ifndef BOOST_PP_IS_ITERATING
+
+
+
 #ifndef BOOST_EXTENSION_FUNCTOR_HPP
 #define BOOST_EXTENSION_FUNCTOR_HPP
 
+#include <boost/extension/common.hpp>
 #include <boost/extension/impl/library_impl.hpp>
 
-#ifdef BOOST_EXTENSIONS_USE_PP
-
-#include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/repetition.hpp>
-
-#ifndef BOOST_EXTENSIONS_MAX_FUNCTOR_PARAMS
-#define BOOST_EXTENSIONS_MAX_FUNCTOR_PARAMS 6
-#endif
-
-/// functor template specialization macro.
-#define BOOST_EXTENSIONS_FUNCTOR_CLASS(Z, N, _) \
-    template<class ReturnValue BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param) > \
-    class functor<ReturnValue BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param) > { \
-    private: \
-        typedef ReturnValue (*FunctionType)(BOOST_PP_ENUM_PARAMS(N, Param)); \
-        FunctionType func_; \
-    public: \
-        bool is_valid() const {return func_ != 0;} \
-        functor(FunctionType func) \
-            : func_(func) {} \
-        functor(generic_function_ptr func) \
-            : func_(FunctionType(func)) {} \
-        ReturnValue operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
-            return func_(BOOST_PP_ENUM_PARAMS(N, p)); \
-        } \
-    }; \
-/**/
-
-#endif // ifdef BOOST_EXTENSIONS_USE_PP
 
 
 namespace boost { namespace extensions {
 
-//using boost::extensions::impl::generic_function_ptr;
+//using boost::extensions::detail::generic_function_ptr;
 
-#ifdef BOOST_EXTENSIONS_USE_PP
 
 /// Declaration of functor class template.
 template <class ReturnValue,
-    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(BOOST_EXTENSIONS_MAX_FUNCTOR_PARAMS), class Param, void)>
+          BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT( \
+            BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void) >
     class functor;
 
 /// Functor template specializations.
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSIONS_MAX_FUNCTOR_PARAMS), BOOST_EXTENSIONS_FUNCTOR_CLASS, _)
+# define BOOST_PP_ITERATION_LIMITS (0, BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS) - 1)
+# define BOOST_PP_FILENAME_1 <boost/extension/functor.hpp> // this file
+# include BOOST_PP_ITERATE()
 
-#undef BOOST_EXTENSIONS_FUNCTOR_CLASS
-#else
 
-template <class ReturnValue, class Param1 = void, class Param2 = void, 
-          class Param3 = void, class Param4 = void, class Param5 = void, 
-          class Param6 = void>
-class functor {
-private:
-    typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, 
-                                        Param5, Param6);
-    FunctionType func_;
 
-public:
-    bool is_valid() const {return func_ != 0;}
-
-    functor(FunctionType func)
-        : func_(func)
-    {}
-
-    functor(generic_function_ptr func)
-        : func_(FunctionType(func))
-    {}
-
-    ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, 
-                           Param5 p5, Param6 p6)
-    {
-        return func_(p1, p2, p3, p4, p5, p6);
-    }
-};
-
-template <class ReturnValue, class Param1, class Param2, class Param3, 
-          class Param4, class Param5>
-class functor<ReturnValue, Param1, Param2, Param3, Param4, Param5>
-{
-private:
-    typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, 
-                                        Param5);
-    FunctionType func_;
-
-public:
-    bool is_valid() const {return func_ != 0;}
-
-    functor(FunctionType func)
-        :func_(func)
-    {}
-    functor(generic_function_ptr func)
-        :func_(FunctionType(func))
-    {}
-    ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, 
-                           Param5 p5)
-    {
-        return func_(p1, p2, p3, p4, p5);
-    }
-};
-
-template <class ReturnValue, class Param1, class Param2, class Param3, 
-          class Param4>
-class functor<ReturnValue, Param1, Param2, Param3, Param4>
-{
-private:
-    typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4);
-    FunctionType func_;
-
-public:
-    bool is_valid() const {return func_ != 0;}
-
-    functor(FunctionType func)
-        :func_(func)
-    {}
-
-    functor(generic_function_ptr func)
-        :func_(FunctionType(func))
-    {}
-
-    ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4)
-    {
-        return func_(p1, p2, p3, p4);
-    }
-};
-
-template <class ReturnValue, class Param1, class Param2, class Param3>
-class functor<ReturnValue, Param1, Param2, Param3>
-{
-private:
-    typedef ReturnValue (*FunctionType)(Param1, Param2, Param3);
-    FunctionType func_;
-
-public:
-    bool is_valid() const {return func_ != 0;}
-
-    functor(FunctionType func)
-        :func_(func)
-    {}
-    functor(generic_function_ptr func)
-        :func_(FunctionType(func))
-    {}
-    ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3)
-    {
-        return func_(p1, p2, p3);
-    }
-};
-
-template <class ReturnValue, class Param1, class Param2>
-class functor<ReturnValue, Param1, Param2>
-{
-private:
-    typedef ReturnValue (*FunctionType)(Param1, Param2);
-    FunctionType func_;
-
-public:
-    bool is_valid() const {return func_ != 0;}
-
-    functor(FunctionType func)
-        :func_(func)
-    {}
-    functor(generic_function_ptr func)
-        :func_(FunctionType(func))
-    {}
-    ReturnValue operator()(Param1 p1, Param2 p2)
-    {
-        return func_(p1, p2);
-    }
-};
-
-template <class ReturnValue, class Param1>
-class functor<ReturnValue, Param1>
-{
-private:
-    typedef ReturnValue (*FunctionType)(Param1);
-    FunctionType func_;
-
-public:
-    bool is_valid() const {return func_ != 0;}
-    functor(FunctionType func)
-        :func_(func)
-    {}
-    functor(generic_function_ptr func)
-        :func_(FunctionType(func))
-    {}
-    ReturnValue operator()(Param1 p1)
-    {
-        return func_(p1);
-    }
-};
-
-template <class ReturnValue>
-class functor<ReturnValue>
-{
-private:
-    typedef ReturnValue (*FunctionType)();
-    FunctionType func_;
-
-public:
-    bool is_valid() const {return func_ != 0;}
-    functor(FunctionType func)
-        :func_(func)
-    {}
-    functor(generic_function_ptr func)
-        :func_(FunctionType(func))
-    {}
-    ReturnValue operator()()
-    {
-        return func_();
-    }
-};
-
-#endif // ifdef BOOST_EXTENSIONS_USE_PP
-
-}} // ns: boost::extensions
+}} // namespace boost::extensions
 
 #endif // BOOST_EXTENSION_FUNCTOR_HPP
+
+
+
+#else // BOOST_PP_IS_ITERATING
+
+
+
+
+# define n BOOST_PP_ITERATION()
+
+template<class ReturnValue
+         BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class Param) >
+class functor<ReturnValue
+              BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, Param) >
+{
+private:
+
+  typedef ReturnValue (*FunctionType)(BOOST_PP_ENUM_PARAMS(n, Param));
+  FunctionType func_;
+
+public:
+
+  bool is_valid() const {return func_ != 0;}
+
+  functor(FunctionType func) : func_(func) {}
+
+  functor(generic_function_ptr func) : func_(FunctionType(func)) {}
+
+  ReturnValue operator()(BOOST_PP_ENUM_BINARY_PARAMS(n, Param, p))
+  {
+    return func_(BOOST_PP_ENUM_PARAMS(n, p));
+  }
+};
+
+# undef n
+
+#endif // BOOST_PP_IS_ITERATING
