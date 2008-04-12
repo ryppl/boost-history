@@ -1,0 +1,722 @@
+<HTML>
+<!--
+  -- Copyright (c) Jeremy Siek 2000
+  --
+  -- Permission to use, copy, modify, distribute and sell this software
+  -- and its documentation for any purpose is hereby granted without fee,
+  -- provided that the above copyright notice appears in all copies and
+  -- that both that copyright notice and this permission notice appear
+  -- in supporting documentation.  Jeremy Siek makes no
+  -- representations about the suitability of this software for any
+  -- purpose.  It is provided "as is" without express or implied warranty.
+  -->
+<Head>
+<Title>Boost Graph Library: Adjacency List</Title>
+<BODY BGCOLOR="#ffffff" LINK="#0000ee" TEXT="#000000" VLINK="#551a8b" 
+        ALINK="#ff0000"> 
+<IMG SRC="../../../c++boost.gif" 
+     ALT="C++ Boost" width="277" height="86"> 
+
+<BR Clear>
+
+
+
+<H1><A NAME="sec:adjacency-list-class"></A>
+<pre>
+adjacency_list&lt;EdgeList, VertexList, Directed,
+              <a href="./Property.html#VertexProperty">VertexProperty</a>, <a href="./Property.html#EdgeProperty">EdgeProperty</a>, <a href="./Property.html#GraphProperty">GraphProperty</a>&gt;
+</pre>
+</H1>
+
+
+<P>
+The <TT>adjacency_list</TT> class implements a generalized adjacency
+list graph structure. The template parameters provide many
+configuration options so that you can pick a version of the class that
+best meets your needs. An <a
+href="graph_theory_review.html#sec:adjacency-list-representation">adjacency-list</a>
+is basically a two-dimensional structure, where each element of the
+first dimension represents a vertex, and each of the vertices contains
+a one-dimensional structure that is its edge list. The
+<TT>VertexList</TT> template parameter of the <TT>adjacency_list</TT>
+class controls what kind of container is used to represent the outer
+two-dimensional container. The <TT>EdgeList</TT> template parameter
+controls what kind of container is used to represent the edge
+lists. The choices for <TT>EdgeList</TT> and <TT>VertexList</TT> will
+determine the space complexity of the graph structure, and will
+determine the time complexity of the various graph operations. The
+possible choices and tradeoffs are discussed in Section <A
+HREF="./using_adjacency_list.html#sec:choosing-graph-type">Choosing
+the <TT>Edgelist</TT> and <TT>VertexList</TT></A>.
+
+<P>
+The <TT>Directed</TT> template parameter controls whether the graph is
+directed, undirected, or directed with access to both the in-edges and
+out-edges (which we call bidirectional). The bidirectional graph takes
+up twice the space (per edge) of a directed graph since each edge will
+appear in both an out-edge and in-edge list.
+
+<P>
+A tutorial on how to use the <TT>adjacency_list</TT> class is in
+Section <A HREF="./using_adjacency_list.html">Using
+<TT>adjacency_list</TT></A>.
+
+<P>
+
+<H3>Example</H3>
+
+<P>
+A graph used to represent a family tree. The complete source code is
+in the file <a
+href="../examples/family_tree.cpp"><tt>examples/family_tree.cpp</tt></a>.
+
+<PRE>
+  enum { Jeanie, Debbie, Rick, John, Amanda, 
+         Margaret, Benjamin, N };
+
+  std::vector&lt;std::string&gt; name(N);
+  name[Jeanie] = "Jeanie";
+  name[Debbie] = "Debbie";
+  name[Rick] = "Rick";
+  name[John] = "John";
+  name[Amanda] = "Amanda";
+  name[Margaret] = "Margaret";
+  name[Benjamin] = "Benjamin";
+
+  adjacency_list&lt;&gt;  G(N);
+  add_edge(Jeanie, Debbie, G);
+  add_edge(Jeanie, Rick, G);
+  add_edge(Jeanie, John, G);
+  add_edge(Debbie, Amanda, G);
+  add_edge(Rick, Margaret, G);
+  add_edge(John, Benjamin, G);
+
+  graph_traits&lt; adjacency_list&lt;&gt; &gt;::vertex_iterator i, end;
+  graph_traits&lt; adjacency_list&lt;&gt; &gt;::adjacency_iterator ai, a_end;
+
+  property_map&lt;adjacency_list&lt;&gt;, vertex_index_t&gt;::type
+    id = get(vertex_index, G);
+
+  for(tie(i,end) = vertices(G); i != end; ++i) {
+    cout &lt;&lt; name[get(id, *i)];
+    tie(ai, a_end) = adjacent_vertices(*i, G);
+    if (ai == a_end)
+      cout &lt;&lt; " has no children";
+    else
+      cout &lt;&lt; " is the parent of ";
+    for (; ai != a_end; ++ai)
+      cout &lt;&lt; name[get(id, *ai)] &lt;&lt; "  ";
+    cout &lt;&lt; endl;
+  }
+</PRE>
+The output is:
+<PRE>
+  Jeanie is the parent of Debbie  Rick  John  
+  Debbie is the parent of Amanda  
+  Rick is the parent of Margaret  
+  John is the parent of Benjamin  
+  Amanda has no children
+  Margaret has no children
+  Benjamin has no children
+</PRE>
+
+<P>
+
+<H3>Template Parameters</H3>
+
+<P>
+<TABLE border>
+<TR>
+<th>Parameter</th><th>Description</th><th>Default</th>
+</tr>
+
+<TR><TD><TT>EdgeList</TT></TD>
+<TD>The selector for the container used to represent the
+  edge-list for each of the vertices.</TD>
+<TD><TT>vecS</TT></TD>
+</TR>
+
+<TR>
+<TD><TT>VertexList</TT></TD>
+<TD>The selector for the container used to represent the
+  vertex-list of the graph.</TD>
+<TD><TT>vecS</TT></TD>
+</TR>
+
+<TR>
+<TD><TT>Directed</TT></TD>
+<TD>A selector to choose whether the graph is directed, undirected, or directied with bidirectional edge access (access to both out-edges and in-edges). The options are <TT>directedS</TT>, <TT>undirectedS</TT>, and <TT>bidirectionalS</TT>.</TD>
+<TD><TT>directedS</TT></TD>
+</TR>
+
+<TR>
+<TD><TT>VertexProperty</TT></TD>
+<TD>for specifying internal property storage.</TD>
+<TD><TT>no_property</TT></TD>
+</TR>
+
+<TR>
+<TD><TT>EdgeProperty</TT></TD>
+<TD>for specifying internal property storage.</TD>
+<TD><TT>no_property</TT></TD>
+</TR>
+
+<TR>
+<TD><TT>GraphProperty</TT></TD>
+<TD>for specifying property storage for the graph object.</TD>
+<TD><TT>no_property</TT></TD>
+</TR>
+
+</TABLE>
+<P>
+
+<H3>Model of</H3>
+
+<P>
+<a href="./VertexAndEdgeListGraph.html">VertexAndEdgeListGraph</a>, 
+<a href="./MutablePropertyGraph.html">MutablePropertyGraph</a>
+
+<P>
+
+<H3>Where Defined</H3>
+
+<P>
+<a href="../../../boost/graph/adjacency_list.hpp"><TT>boost/graph/adjacency_list.hpp</TT></a>
+
+<P>
+
+<H2>Vertex and Edge Properties</H2>
+
+<P>
+Properties such as color, distance, weight, and user-defined
+properties can be attached to the vertices and edges of the graph
+using properties. The property values can be read from and written to via
+the property maps provided by the graph. The property maps
+are obtained via the <TT>get(property, g)</TT> function.  How to use
+properties is described in Section <A
+HREF="./using_adjacency_list.html#sec:adjacency-list-properties">Properties
+</A>. The property maps are objects that implement the interface
+defined in Section <A
+HREF="../../property_map/property_map.html">Property
+Map Concepts</A>. The property maps obtained from a const
+<TT>adjacency_list</TT> graph object are models of the <a
+href="../../property_map/ReadablePropertyMap.html">ReadablePropertyMap</a>
+concept. The property maps obtained from a mutable graph object
+are models of the <a
+href="../../property_map/ReadWritePropertyMap.html">ReadWritePropertyMap</a>
+concept.
+
+<P>
+If the <TT>VertexList</TT> of the graph is <TT>vecS</TT>, then the
+graph has a builtin vertex indices accessed via the property map for
+the <TT>vertex_index_t</TT> property.  The indices fall in the range
+<TT>[0, num_vertices(g))</TT> and are contiguous. When a vertex is
+removed the indices are adjusted so that they retain these
+properties. Some care must be taken when using these indices to access
+exterior property storage.
+
+<P>
+
+<H2>Associated Types</H2>
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::vertex_descriptor</tt>
+<br>
+and
+<br>
+<tt>adjacency_list_traits&lt;EdgeList, VertexList, Directed&gt;::vertex_descriptor</tt>
+<br><br>
+The type for the vertex descriptors associated with the
+<TT>adjacency_list</TT>.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::edge_descriptor</tt><br>
+and<br>
+<tt>adjacency_list_traits&lt;EdgeList, VertexList, Directed&gt;::edge_descriptor</tt>
+<br><br>
+The type for the edge descriptors associated with the
+<TT>adjacency_list</TT>.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::vertex_iterator</tt>
+<br><br>
+The type for the iterators returned by <TT>vertices()</TT>.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::edge_iterator</tt>
+<br><br>
+The type for the iterators returned by <TT>edges()</TT>.
+
+<hr>
+
+
+<tt>graph_traits&lt;adjacency_list&gt;::out_edge_iterator</tt>
+<br><br>
+The type for the iterators returned by <TT>out_edges()</TT>.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::adjacency_iterator</tt>
+<br><br>
+The type for the iterators returned by <TT>adjacent_vertices()</TT>.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::directed_category</tt>
+<tt>adjacency_list_traits&lt;EdgeList, VertexList, Directed&gt;::directed_category</tt>
+<br><br>
+Provides information about whether the graph is
+directed (<TT>directed_tag</TT>) or undirected
+(<TT>undirected_tag</TT>).
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::edge_parallel_category</tt><br>
+and<br>
+<tt>adjacency_list_traits&lt;EdgeList, VertexList, Directed&gt;::edge_parallel_category</tt>
+<br><br>
+This describes whether the graph class allows the insertion of
+parallel edges (edges with the same source and target). The two tags
+are <TT>allow_parallel_edge-_tag</TT> and
+<TT>disallow_parallel_edge_tag</TT>. The
+<TT>setS</TT> and <TT>hash_setS</TT> variants disallow
+parallel edges while the others allow parallel edges.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::vertices_size_type</tt>
+<br><br>
+The type used for dealing with the number of vertices in the graph.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::edge_size_type</tt>
+<br><br>
+The type used for dealing with the number of edges in the graph.
+
+<hr>
+
+<tt>graph_traits&lt;adjacency_list&gt;::degree_size_type</tt>
+<br><br>
+The type used for dealing with the number of edges incident to a vertex
+in the graph.
+
+<hr>
+
+<tt>property_map&lt;adjacency_list, Property&gt;::type</tt><br>
+and<br>
+<tt>property_map&lt;adjacency_list, Property&gt;::const_type</tt>
+<br><br>
+The property map type for vertex or edge properties in the graph. The
+specific property is specified by the <TT>Property</TT> template argument,
+and must match one of the properties specified in the
+<TT>VertexProperty</TT> or <TT>EdgeProperty</TT> for the graph.
+
+<hr>
+
+
+<H2>Member Functions</H2>
+
+<hr>
+
+<pre>
+adjacency_list(const&nbsp;GraphProperty&amp;&nbsp;p = GraphProperty())
+</pre>
+Default constructor. Creates an empty graph object with zero vertices
+and zero edges.
+
+<hr>
+
+<pre>
+adjacency_list(vertices_size_type&nbsp;n, 
+               const&nbsp;GraphProperty&amp;&nbsp;p = GraphProperty())
+</pre>
+Creates a graph object with <TT>n</TT> vertices and zero edges.
+
+<hr>
+
+<a name="sec:iterator-constructor">
+<pre>
+template &lt;class&nbsp;EdgeIterator&gt;
+adjacency_list(vertices_size_type&nbsp;n, 
+               EdgeIterator&nbsp;first, EdgeIterator&nbsp;last,
+               const&nbsp;GraphProperty&amp;&nbsp;p&nbsp;=&nbsp;GraphProperty())
+</pre>
+Creates a graph object with <TT>n</TT> vertices and with the edges
+specified in the edge list given by the range <TT>[first, last)</TT>.
+The value type of the <TT>EdgeIterator</TT> must be a <TT>std::pair</TT>,
+where the type in the pair is an integer type. The integers will
+correspond to vertices, and they must all fall in the range of
+<TT>[0, n)</TT>.
+</a>
+
+<hr>
+
+<pre>
+template &lt;class&nbsp;EdgeIterator, class&nbsp;EdgePropertyIterator&gt;
+adjacency_list(vertices_size_type&nbsp;num_vertices,
+               EdgeIterator&nbsp;first, EdgeIterator&nbsp;last,
+               EdgePropertyIterator&nbsp;ep_iter,
+               const&nbsp;GraphProperty&amp;&nbsp;p&nbsp;=&nbsp;GraphProperty())
+</pre>
+Creates a graph object with <TT>n</TT> vertices and with the edges
+specified in the edge list given by the range <TT>[first, last)</TT>.
+The value type of the <TT>EdgeIterator</TT> must be a <TT>std::pair</TT>,
+where the type in the pair is an integer type. The integers will
+correspond to vertices, and they must all fall in the range of
+<TT>[0, n)</TT>. The <TT>value_type</TT> of the <TT>ep_iter</TT> should
+be <TT>EdgeProperty</TT>.
+
+<hr>
+
+ 
+<P>
+
+<H2>Non-Member Functions</H2>
+
+<hr>
+
+<pre>
+std::pair&lt;vertex_iterator,&nbsp;vertex_iterator&gt;
+vertices(const adjacency_list&amp; g)
+</pre>
+Returns an iterator-range providing access to the vertex set of graph
+<tt>g</tt>.
+
+<hr>
+
+<pre>
+std::pair&lt;edge_iterator,&nbsp;edge_iterator&gt;
+edges(const adjacency_list&amp; g)
+</pre>
+Returns an iterator-range providing access to the edge set of graph
+<tt>g</tt>.
+
+<hr>
+
+<pre>
+std::pair&lt;adjacency_iterator,&nbsp;adjacency_iterator&gt;
+adjacent_vertices(vertex_descriptor&nbsp;v, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns an iterator-range providing access to the vertices adjacent to
+vertex <tt>v</tt> in graph <tt>g</tt>.
+
+<hr>
+
+
+<pre>
+std::pair&lt;out_edge_iterator,&nbsp;out_edge_iterator&gt;
+out_edges(vertex_descriptor&nbsp;v, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns an iterator-range providing access to the out-edges of vertex
+<tt>v</tt> in graph <tt>g</tt>. If the graph is undirected, this
+iterator-range provides access to all edge incident on vertex
+<tt>v</tt>.
+
+<hr>
+
+<pre>
+std::pair&lt;in_edge_iterator,&nbsp;in_edge_iterator&gt;
+in_edges(vertex_descriptor&nbsp;v, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns an iterator-range providing access to the in-edges of vertex
+<tt>v</tt> in graph <tt>g</tt>.  This operation is only available if
+<TT>bidirectionalS</TT> was specified for the <TT>Directed</TT>
+template parameter.
+
+<hr>
+
+<pre>
+vertex_descriptor
+source(edge_descriptor&nbsp;e, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns the source vertex of edge <tt>e</tt>.
+
+<hr>
+
+<pre>
+vertex_descriptor
+target(edge_descriptor&nbsp;e, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns the target vertex of edge <tt>e</tt>.
+
+<hr>
+
+<pre>
+degree_size_type
+out_degree(vertex_descriptor&nbsp;u, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns the number of edges leaving vertex <tt>u</tt>.
+
+<hr>
+
+<pre>
+degree_size_type
+in_degree(vertex_descriptor&nbsp;u, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns the number of edges entering vertex <tt>u</tt>. This operation
+is only available if <TT>bidirectionalS</TT> was specified for
+the <TT>Directed</TT> template parameter.
+
+<hr>
+
+<pre>
+vertices_size_type
+num_vertices(const adjacency_list&amp; g)
+</pre>
+Returns the number of vertices in the graph <tt>g</tt>.
+
+<hr>
+
+<pre>
+edges_size_type
+num_edges(const adjacency_list&amp; g)
+</pre>
+Returns the number of edges in the graph <tt>g</tt>.
+
+<hr>
+
+<pre>
+vertex_descriptor
+vertex(vertices_size_type&nbsp;n, const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns the nth vertex in the graph's vertex list.
+
+<hr>
+
+
+<pre>
+std::pair&lt;edge_descriptor, bool&gt;
+edge(vertex_descriptor&nbsp;u, vertex_descriptor&nbsp;v,
+     const&nbsp;adjacency_list&amp;&nbsp;g)
+</pre>
+Returns the edge connecting vertex <tt>u</tt> to vertex <tt>v</tt> in
+graph <tt>g</tt>.
+
+<hr>
+
+<pre>
+std::pair&lt;edge_descriptor, bool&gt;
+add_edge(vertex_descriptor&nbsp;u, vertex_descriptor&nbsp;v,
+         adjacency_list&amp; g)
+</pre>
+Adds edge <i>(u,v)</i> to the graph and returns the edge descriptor
+for the new edge. For graphs that do not allow parallel edges, if the
+edge is already in the graph then a duplicate will not be added and
+the <TT>bool</TT> flag will be <TT>false</TT>. Also, if <i>u</i> and
+<i>v</i> are descriptors for the same vertex (creating a self loop)
+then the edge will not be added and the flag will be <TT>false</TT>.
+When the flag is <TT>false</TT>, the edge descriptor is invalid and
+any use of it is undefined.  The placement of the edge in the out-edge
+list for <i>u</i> is unspecified. 
+<p>
+If the <TT>EdgeList</TT> selector is <TT>vecS</TT> then this operation
+will <b>invalidate</b> any iterators that point into the edge-list for vertex
+<i>u</i>.
+<!-- or edge descriptors that have vertex <i>u</i> as the source. -->
+This also applies if the <TT>EdgeList</TT> is a user-defined
+container that invalidates its iterators when <TT>push(container,
+x)</TT> is invoked (see Section <A
+HREF="./using_adjacency_list.html#sec:custom-storage">Customizing the
+Adjacency List Storage</A>).
+
+<hr>
+
+<pre>
+std::pair&lt;edge_descriptor,&nbsp;bool&gt;
+add_edge(vertex_descriptor&nbsp;u, vertex_descriptor&nbsp;v,
+         const&nbsp;EdgeProperty&amp;&nbsp;p,
+         adjacency_list&amp;&nbsp;g)
+</pre>
+Adds edge <i>(u,v)</i> to the graph and attaches <TT>p</TT> as the
+value of the edge's internal property storage.  Also see the previous
+<TT>add_edge()</TT> member function for more details.
+
+<hr>
+
+<pre>
+void remove_edge(vertex_descriptor v, vertex_descriptor u, 
+                 adjacency_list&amp; g)
+</pre>
+Removes the edge <i>(v,u)</i> from the graph.  If the
+<TT>EdgeList</TT> selector is <TT>vecS</TT> then this operation will
+<b>invalidate</b> any iterators that point into the edge-list for
+vertex <i>u</i> and also for vertex <i>v</i> in the undirected and
+bidirectional case. Also, for directed graphs this <b>invalidates</b>
+any <tt>edge_iterator</tt>.
+
+<hr>
+
+<pre>
+void remove_edge(edge_descriptor e, adjacency_list&amp; g)
+</pre>
+Removes the edge <tt>e</tt> from the graph. This differs from the
+<tt>remove_edge(u, v, g)</tt> function in the case of a
+multigraph. This <tt>remove_edge(e, g)</tt> function removes a single
+edge, whereas the <tt>remove_edge(u, v, g)</tt> function removes all
+edges <i>(u,v)</i>.  This operation will <b>invalidate</b> any iterators
+that point into the edge-list for target vertex of edge <tt>e</tt>.
+Also, for directed graphs this <b>invalidates</b>
+any <tt>edge_iterator</tt>.
+
+<hr>
+
+<pre>
+void remove_edge(out_edge_iterator iter, adjacency_list&amp; g)
+</pre>
+This has the same effect as <tt>remove_edge(*iter, g)</tt>. The
+difference is that this function has constant time complexity
+in the case of directed graphs.
+
+<hr>
+
+<pre>
+template &lt;class <a href="http://www.sgi.com/Technology/STL/Predicate.html">Predicate</a>&gt;
+void remove_out_edge_if(vertex_descriptor u, Predicate predicate,
+                        adjacency_list&amp; g)
+</pre>
+Removes all out-edges of vertex <i>u</i> from the graph that satisfy
+the <tt>predicate</tt>. That is, if the predicate returns true when
+applied to an edge descriptor, then the edge is removed. This
+operation <b>invalidates</b> out-edge iterators for vertex <i>u</i>.
+
+<hr>
+
+<pre>
+template &lt;class <a href="http://www.sgi.com/Technology/STL/Predicate.html">Predicate</a>&gt;
+void remove_in_edge_if(vertex_descriptor v, Predicate predicate,
+                       adjacency_list&amp; g)
+</pre>
+Removes all in-edges of vertex <i>v</i> from the graph that satisfy
+the <tt>predicate</tt>. That is, if the predicate returns true when
+applied to an edge descriptor, then the edge is removed. This operation
+<b>invalidates</b> in-edge iterators for vertex <i>v</i>. This
+operation is available for the undirected and bidirectional versions of
+<tt>adjacency_list</tt>, but not for directed.
+
+<hr>
+
+<pre>
+template &lt;class <a href="http://www.sgi.com/Technology/STL/Predicate.html">Predicate</a>&gt;
+void remove_edge_if(Predicate predicate, adjacency_list&amp; g)
+</pre>
+Removes all edges from the graph that satisfy
+the <tt>predicate</tt>. That is, if the predicate returns true when
+applied to an edge descriptor, then the edge is removed. This operation
+<b>invalidates</b> all edge, out-edge, and in-edge iterators for the graph.
+
+<hr>
+
+<a name="sec:add-vertex">
+<pre>
+vertex_descriptor
+add_vertex(adjacency_list&amp; g)
+</pre>
+Adds a vertex to the graph and returns the vertex descriptor for the
+new vertex. If the <TT>VertexList</TT> selector is <tt>vecS</tt> then
+this operation <b>invalidates</b> all iterators, vertex descriptors,
+and edge descriptors for the graph.
+</a>
+
+<hr>
+
+<pre>
+void clear_vertex(adjacency_list&amp; g, vertex_descriptor u)
+</pre>
+Removes all edges to and from vertex <i>u</i>. The vertex still appears
+in the vertex set of the graph.
+
+<hr>
+
+<pre>
+void remove_vertex(vertex_descriptor u, adjacency_list&amp; g)
+</pre>
+Remove vertex <i>u</i> from the vertex set of the graph. It is assumed
+that there are no edges to or from vertex <i>u</i> when it is removed.
+One way to make sure of this is to invoke <TT>clear_vertex()</TT>
+beforehand.  If the <TT>VertexList</TT> template parameter of the
+<TT>adjacency_list</TT> was <TT>vecS</TT>, then all vertex
+descriptors, edge descriptors, and iterators for the graph are
+<b>invalidated</b> by this operation. The builtin
+<tt>vertex_index_t</tt> property for each vertex is renumbered so that
+after the operation the vertex indices still form a contiguous range
+<TT>[0, num_vertices(g))</TT>. If you are using external property
+storage based on the builtin vertex index, then the external storage will
+need to be adjusted. Another option is to not use the builtin vertex
+index, and instead use a property to add your own vertex IDs. If you need
+to make frequent use of the <TT>remove_vertex()</TT> function the
+<TT>listS</TT> selector is a much better choice for the
+<TT>VertexList</TT> template parameter.
+
+<hr>
+
+<pre>
+template &lt;class <a href="./Property.html">Property</a>&gt;
+property_map&lt;adjacency_list, Property&gt;::type
+get(Property, adjacency_list&amp; g)
+
+template &lt;class <a href="./Property.html">Property</a>&gt;
+property_map&lt;adjacency_list, Tag&gt;::const_type
+get(Property, const adjacency_list&amp; g)
+</pre>
+Returns the property map object for the vertex property specified by
+<TT>Property</TT>. The <TT>Property</TT> must match one of the
+properties specified in the graph's <TT>VertexProperty</TT> template
+argument.
+
+<hr>
+
+<pre>
+template &lt;class <a href="./Property.html">Property</a>, class X&gt;
+typename property_traits&lt;property_map&lt;adjacency_list, Property&gt;::const_type&gt::value_type
+get(Property, const adjacency_list&amp; g, X x)
+</pre>
+This returns the property value for <tt>x</tt>, which is either
+a vertex or edge descriptor.
+<hr>
+
+<pre>
+template &lt;class <a href="./Property.html">Property</a>, class X, class Value&gt;
+void
+put(Property, const adjacency_list&amp; g, X x, const Value& value)
+</pre>
+This sets the property value for <tt>x</tt> to
+<tt>value</tt>. <tt>x</tt> is either a vertex or edge descriptor.
+<tt>Value</tt> must be convertible to
+<tt>typename property_traits&lt;property_map&lt;adjacency_list, Property&gt;::type&gt::value_type</tt>
+<hr>
+
+
+<!-- add the shortcut property functions -->
+
+
+
+
+<h3>See Also</h3>
+
+<a href="./adjacency_list_traits.html"><tt>adjacency_list_traits</tt></a>,
+<a href="./property_map.html"><tt>property_map</tt></a>,
+<a href="./graph_traits.html"><tt>graph_traits</tt></a>
+
+
+
+<br>
+<HR>
+<TABLE>
+<TR valign=top>
+<TD nowrap>Copyright &copy 2000</TD><TD>
+<A HREF=http://www.boost.org/people/jeremy_siek.htm>Jeremy Siek</A>,
+Univ.of Notre Dame (<A
+HREF="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</A>)<br>
+<A HREF=http://www.lsc.nd.edu/~llee1>Lie-Quan Lee</A>, Univ.of Notre Dame (<A HREF="mailto:llee1@lsc.nd.edu">llee1@lsc.nd.edu</A>)<br>
+<A HREF=http://www.lsc.nd.edu/~lums>Andrew Lumsdaine</A>,
+Univ.of Notre Dame (<A
+HREF="mailto:lums@lsc.nd.edu">lums@lsc.nd.edu</A>)
+</TD></TR></TABLE>
+
+</BODY>
+</HTML> 
