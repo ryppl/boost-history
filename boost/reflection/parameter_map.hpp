@@ -51,14 +51,19 @@ public:
     }
   }*/
   template <class S>
-  void cast(S* dest) {
+  S cast() {
+    S dest;
     TypeInfo i = type_info_handler<TypeInfo, S>::get_class_type();
     typename std::map<TypeInfo, basic_converter*>::iterator it = converters_.find(i);
     if (it != converters_.end()) {
-      it->second->convert(value_, reinterpret_cast<void*>(dest));
-      return;
+      it->second->convert(value_, reinterpret_cast<void*>(&dest));
+      return dest;
     }
     throw conversion_not_found_exception();
+  }
+  template <class S>
+  void cast(S* dest) {
+    *dest = cast<S>();
   }
 protected:
   generic_parameter(void* value) : value_(value) {
@@ -95,13 +100,13 @@ public:
   template <class S>
   void converts_to_with_func(void (*convert_func)(T*, S*)) {
     generic_parameter<TypeInfo>::converters_.insert
-      (make_pair(reflections::type_info_handler<TypeInfo, S>::get_class_type(),
+      (std::make_pair(reflections::type_info_handler<TypeInfo, S>::get_class_type(),
                  new specialized_converter<S>(convert_func)));
   }
   template <class S>
   void converts_to() {
-    generic_parameter<TypeInfo>::converters_.push_back
-      (make_pair(reflections::type_info_handler<TypeInfo, S>::get_class_type(),
+    generic_parameter<TypeInfo>::converters_.insert
+      (std::make_pair(reflections::type_info_handler<TypeInfo, S>::get_class_type(),
                  new default_converter<S>()));
   }
 private:
@@ -120,7 +125,7 @@ private:
     specialized_converter(void (*convert_function)(T*, S*))
       : convert_function_(convert_function) {
     }
-    virtual void convert(TypeInfo type_info, T* val, void* dest) {
+    virtual void convert(void* val, void* dest) {
       S* s = reinterpret_cast<S*>(dest);
       (*convert_function_)(reinterpret_cast<T*>(val), s);
     }
@@ -139,7 +144,7 @@ public:
 
 template <class Info = std::string,
           class TypeInfo = extensions::default_type_info>
-class basic_parameter_map 
+class basic_parameter_map
   : public std::multimap<Info, generic_parameter<TypeInfo>*> {
 public:
   ~basic_parameter_map() {
@@ -151,6 +156,7 @@ public:
   using map_type::equal_range;
   using map_type::begin;
   using map_type::end;
+  using map_type::insert;
   template <class D>
   std::vector<generic_parameter<TypeInfo>*> get(Info info) {
     std::vector<generic_parameter<TypeInfo>*> parameters;

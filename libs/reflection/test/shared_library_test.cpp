@@ -22,7 +22,7 @@
 #include <boost/extension/shared_library.hpp>
 #include <boost/extension/convenience.hpp>
 #include <boost/reflection/reflection.hpp>
-#include <iostream>
+#include <iostream>cd
 #include <boost/function.hpp>
 
 BOOST_AUTO_TEST_CASE(shared_library_basic_test) {

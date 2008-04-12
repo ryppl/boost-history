@@ -25,7 +25,7 @@ int main()
   load_single_library(fm, "libHelloWorldLib.extension", 
                       "extension_export_word");
   //  Get a reference to the list of constructors for words.
-  std::map<int, factory<word> > & factory_list = fm.get<word, int>();  
+  std::map<int, factory<word> > & factory_list = fm.get<word, int>();
   if (factory_list.size() < 2)
     std::cout << "Error - the classes were not found.";
   for (std::map<int, factory<word> >::iterator current_word = 

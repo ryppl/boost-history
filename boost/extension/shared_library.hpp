@@ -20,9 +20,9 @@ namespace boost { namespace extensions {
 #define BOOST_EXTENSION_SHARED_LIBRARY_GET_FUNCTION(Z, N, _) \
 template <class ReturnValue BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM_PARAMS(N, class Param) > \
-ReturnValue (*get(const char * name))(BOOST_PP_ENUM_PARAMS(N, Param)) { \
+ReturnValue (*get(const std::string& name))(BOOST_PP_ENUM_PARAMS(N, Param)) { \
   return reinterpret_cast<ReturnValue (*)(BOOST_PP_ENUM_PARAMS(N, Param))> \
-      (get_function(handle_, name)); \
+      (get_function(handle_, name.c_str())); \
 }
 
 
@@ -36,7 +36,7 @@ public:
   bool close() {
     return close_shared_library(handle_);
   }  
-  shared_library(const char * location, bool auto_close = false)
+  shared_library(const std::string& location, bool auto_close = false)
   :location_(location), handle_(0), auto_close_(auto_close) {
   }
 
