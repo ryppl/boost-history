@@ -13,6 +13,8 @@
 #ifndef BOOST_EXTENSION_LIBRARY_IMPL_HPP
 #define BOOST_EXTENSION_LIBRARY_IMPL_HPP
 
+#include <cstring>
+
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 
 #ifndef _WIN32_WINNT

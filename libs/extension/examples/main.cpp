@@ -15,6 +15,8 @@
 #include <boost/extension/convenience.hpp>
 #include "word.hpp"
 
+#include <memory>
+
 int main()
 {
   using namespace boost::extensions;

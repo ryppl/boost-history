@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 
@@ -45,11 +46,11 @@
 void copy_libraries(const std::string &lib_base, unsigned int qty)
 {
   for(unsigned int i = 1; i <= qty; ++i) {
-    std::string library_copy = lib_base 
+    std::string library_copy = lib_base
       + boost::lexical_cast<std::string>(i)
       + ".extension";
 
-    if(boost::filesystem::exists(lib_base + ".extension") && 
+    if(boost::filesystem::exists(lib_base + ".extension") &&
        !boost::filesystem::exists(library_copy)) {
 
       boost::filesystem::copy_file(lib_base + ".extension", library_copy);
@@ -62,8 +63,8 @@ void copy_libraries(const std::string &lib_base, unsigned int qty)
 void remove_libraries(const std::string &lib_base, unsigned int qty)
 {
   for(unsigned int i = 1; i <= qty; ++i) {
-    std::string library_copy = lib_base 
-      + boost::lexical_cast<std::string>(i) 
+    std::string library_copy = lib_base
+      + boost::lexical_cast<std::string>(i)
       + ".extension";
 
     if(boost::filesystem::exists(library_copy)) {
@@ -87,34 +88,34 @@ int main(void)
   boost::timer extensions_style;
   for(unsigned int lib_number = 1; lib_number <= libs; ++lib_number) {
 
-    shared_library l(std::string("libHelloWorldLib" 
-                         + boost::lexical_cast<std::string>(lib_number) 
+    shared_library l(std::string("libHelloWorldLib"
+                         + boost::lexical_cast<std::string>(lib_number)
                          + ".extension").c_str());
 
     l.open();
     {
       factory_map fm;
-      void (*load_func)(factory_map &) = 
+      void (*load_func)(factory_map &) =
         l.get<void, factory_map &>("extension_export_word");
 
       load_func(fm);
 
       std::map<int, factory<word> > & factory_list = fm.get<word, int>();
-      for (std::map<int, factory<word> >::iterator current_word = 
-				     factory_list.begin(); current_word != factory_list.end(); 
-			     ++current_word)
-	    {
-		    //  Using auto_ptr to avoid needing delete. Using smart_ptrs is 
-		    // recommended.
-		    //  Note that this has a zero argument constructor - currently constructors
-		    //  with up to six arguments can be used.
-		    std::auto_ptr<word> word_ptr(current_word->second.create());
+      for (std::map<int, factory<word> >::iterator current_word =
+             factory_list.begin(); current_word != factory_list.end();
+           ++current_word)
+      {
+        //  Using auto_ptr to avoid needing delete. Using smart_ptrs is
+        // recommended.
+        //  Note that this has a zero argument constructor - currently constructors
+        //  with up to six arguments can be used.
+        std::auto_ptr<word> word_ptr(current_word->second.create());
         std::string cheese = word_ptr->get_val();
-	    }
+      }
     }
     l.close();
   }
-  std::cout << "Boost.extensions style: " << extensions_style.elapsed() 
+  std::cout << "Boost.extensions style: " << extensions_style.elapsed()
             << std::endl;
 
 
@@ -123,12 +124,12 @@ int main(void)
   for(unsigned int lib_number = 1; lib_number <= libs; ++lib_number) {
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-    HMODULE library = LoadLibrary(std::string("libPlainOldHelloWorldLib" 
-                      + boost::lexical_cast<std::string>(lib_number) 
+    HMODULE library = LoadLibrary(std::string("libPlainOldHelloWorldLib"
+                      + boost::lexical_cast<std::string>(lib_number)
                       + ".extension").c_str());
 #else
-    void *library = dlopen(std::string("libPlainOldHelloWorldLib" 
-                       + boost::lexical_cast<std::string>(lib_number) 
+    void *library = dlopen(std::string("libPlainOldHelloWorldLib"
+                       + boost::lexical_cast<std::string>(lib_number)
                        + ".extension").c_str(), RTLD_LAZY);
 #endif
 
@@ -142,7 +143,7 @@ int main(void)
     export_words_function_type export_words;
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-    export_words = (export_words_function_type) GetProcAddress(library, 
+    export_words = (export_words_function_type) GetProcAddress(library,
                                                "extension_export_words");
 #else
     *(void **) (&export_words) = dlsym(library, "extension_export_words");
@@ -152,7 +153,7 @@ int main(void)
       std::cerr << "Cannot get exported symbol." << std::endl;
       return 1;
     }
-                
+
     // retrieve the words
     word *first_word, *second_word;
     (*export_words)(&first_word, &second_word);

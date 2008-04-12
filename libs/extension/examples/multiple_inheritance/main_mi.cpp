@@ -18,8 +18,11 @@
 #include "vehicle.hpp"
 #include "computer.hpp"
 #include <iostream>
+#include <memory>
 #include <boost/extension/convenience.hpp>
 // #include <boost/extension/filesystem.hpp>
+
+
 int main()
 {
   using namespace boost::extensions;

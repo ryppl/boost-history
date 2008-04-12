@@ -15,6 +15,7 @@
 #include <boost/extension/convenience.hpp>
 
 #include <iostream>
+#include <memory>
 
 
 #include "../word.hpp"

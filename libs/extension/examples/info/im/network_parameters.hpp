@@ -10,6 +10,7 @@
  */
 
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 

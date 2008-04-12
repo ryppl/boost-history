@@ -83,11 +83,13 @@ BOOST_AUTO_TEST_CASE(map_argless)
      (Automobile*)0);
 }
 
+namespace boost { namespace extensions {
 template <>
 Automobile * create_function<Automobile, Racecar>::create()
 {
   return new Racecar(25, 2.0f);
 }
+}} // namespace boost::extensions
 
 BOOST_AUTO_TEST_CASE(factory_template)
 {
