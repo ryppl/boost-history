@@ -336,8 +336,7 @@ namespace boost {
                 create_buckets();
             }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA&& x)
+            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA& x, move_tag)
                 : allocators_(x.allocators_),
                 buckets_(x.buckets_), bucket_count_(x.bucket_count_),
                 cached_begin_bucket_(x.cached_begin_bucket_), size_(x.size_)
@@ -345,8 +344,8 @@ namespace boost {
                 unordered_detail::reset(x.buckets_);
             }
 
-            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA&& x,
-                    value_allocator const& a, size_type n)
+            BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA& x,
+                    value_allocator const& a, size_type n, move_tag)
                 : allocators_(a), buckets_(), bucket_count_(),
                 cached_begin_bucket_(), size_(0)
             {
@@ -363,7 +362,6 @@ namespace boost {
                     create_buckets();
                 }
             }
-#endif
 
             // no throw
             ~BOOST_UNORDERED_TABLE_DATA()
@@ -1151,27 +1149,26 @@ namespace boost {
                 copy_buckets(x.data_, data_, current_functions());
             }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
             // Move Construct
 
-            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE&& x)
+            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE& x, move_tag m)
                 : func1_(x.current_functions()), // throws
                 func2_(x.current_functions()), // throws
                 func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
                 mlf_(x.mlf_), // no throw
-                data_(std::move(x.data_))  // throws
+                data_(x.data_, m)  // throws
             {
                 calculate_max_load(); // no throw
             }
 
-            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE&& x,
-                    value_allocator const& a)
+            BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE& x,
+                    value_allocator const& a, move_tag m)
                 : func1_(x.current_functions()), // throws
                 func2_(x.current_functions()), // throws
                 func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
                 mlf_(x.mlf_), // no throw
-                data_(std::move(x.data_),
-                        a, x.min_buckets_for_size(x.size()))  // throws
+                data_(x.data_, a,
+                        x.min_buckets_for_size(x.size()), m)  // throws
             {
                 calculate_max_load(); // no throw
 
@@ -1181,7 +1178,6 @@ namespace boost {
                     copy_buckets(x.data_, data_, current_functions());
                 }
             }
-#endif
 
             // Assign
             //

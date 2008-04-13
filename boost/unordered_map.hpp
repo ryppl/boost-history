@@ -85,12 +85,12 @@ namespace boost
 
 #if defined(BOOST_HAS_RVALUE_REFS)
         unordered_map(unordered_map&& other)
-            : base(std::move(other.base))
+            : base(other.base, boost::unordered_detail::move_tag())
         {
         }
 
         unordered_map(unordered_map&& other, allocator_type const& a)
-            : base(std::move(other.base), a)
+            : base(other.base, a, boost::unordered_detail::move_tag())
         {
         }
 #endif
@@ -429,12 +429,12 @@ namespace boost
 
 #if defined(BOOST_HAS_RVALUE_REFS)
         unordered_multimap(unordered_multimap&& other)
-            : base(std::move(other.base))
+            : base(other.base, boost::unordered_detail::move_tag())
         {
         }
 
         unordered_multimap(unordered_multimap&& other, allocator_type const& a)
-            : base(std::move(other.base), a)
+            : base(other.base, a, boost::unordered_detail::move_tag())
         {
         }
 #endif
