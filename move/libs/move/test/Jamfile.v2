@@ -1,4 +1,24 @@
 import testing ;
 project boost/move ;
-run main.cpp /boost/unit_test//boost_unit_test_framework ;
-run no_sfinae_test.cpp /boost/unit_test//boost_unit_test_framework ;
+
+test-suite "move-suite" :
+    [ run main.cpp /boost/unit_test//boost_unit_test_framework ]
+    [ run move.cpp ]
+    [ run move_test.cpp ]
+    [ run no_sfinae_test.cpp /boost/unit_test//boost_unit_test_framework ]
+;
+
+test-suite "move-fail" :
+    [ compile-fail rvalue_by_ref_fail.cpp ]
+    [ compile-fail const_rvalue_by_ref_fail.cpp ]
+    [ compile-fail const_lvalue_by_ref_fail.cpp ]
+;
+
+# Tests from the old version of Boost.Move that haven't been converted:
+#
+# [ compile has_swap.cpp ]
+# [ run move_only.cpp ]
+# [ run move_swap_test.cpp ]
+# [ compile-fail copy_move_only_fail.cpp ]
+#
+# These can be found at https://svn.boost.org/svn/boost/sandbox/libs/move/test/
