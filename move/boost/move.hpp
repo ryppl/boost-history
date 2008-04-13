@@ -302,7 +302,7 @@ class back_move_iterator : public std::iterator<std::output_iterator_tag, void, 
     explicit back_move_iterator(C& x) : container_m(&x) { }
     
     back_move_iterator& operator=(typename C::value_type x)
-    { container_m->push_back(move(x)); return *this; }
+    { container_m->push_back(boost::move(x)); return *this; }
     
     back_move_iterator& operator*() { return *this; }
     back_move_iterator& operator++() { return *this; }
