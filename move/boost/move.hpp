@@ -27,6 +27,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/move/detail/config.hpp>
 
 /*************************************************************************************************/
 
@@ -35,6 +36,10 @@ namespace boost {
 /*************************************************************************************************/
 
 namespace move_detail {
+
+/*************************************************************************************************/
+
+#if !defined(BOOST_MOVE_NO_HAS_MOVE_ASSIGN)
 
 /*************************************************************************************************/
 
@@ -62,6 +67,10 @@ struct has_move_assign : boost::mpl::and_<boost::is_class<T>, class_has_move_ass
 /*************************************************************************************************/
 
 class test_can_convert_anything { };
+
+/*************************************************************************************************/
+
+#endif // BOOST_MOVE_NO_HAS_MOVE_ASSIGN
 
 /*************************************************************************************************/
 
@@ -95,6 +104,12 @@ struct move_from
     T& source;
 };
 
+/*************************************************************************************************/
+
+#if !defined(BOOST_MOVE_NO_HAS_MOVE_ASSIGN)
+
+/*************************************************************************************************/
+
 /*!
 \ingroup move_related
 \brief The is_movable trait can be used to identify movable types.
@@ -105,6 +120,22 @@ struct is_movable : boost::mpl::and_<
                         move_detail::has_move_assign<T>,
                         boost::mpl::not_<boost::is_convertible<move_detail::test_can_convert_anything, T> >
                     > { };
+
+/*************************************************************************************************/
+
+#else // BOOST_MOVE_NO_HAS_MOVE_ASSIGN
+
+// On compilers which don't have adequate SFINAE support, treat most types as unmovable,
+// unless the trait is specialized.
+
+template <typename T>
+struct is_movable : boost::mpl::false_ { };
+
+#endif
+
+/*************************************************************************************************/
+
+#if !defined(BOOST_NO_SFINAE)
 
 /*************************************************************************************************/
 
@@ -169,6 +200,29 @@ x gets copied.
 */
 template <typename T>
 T& move(T& x, typename copy_sink<T>::type = 0) { return x; }
+
+/*************************************************************************************************/
+
+#else // BOOST_NO_SFINAE
+
+// On compilers without SFINAE, define copy_sink to always use the copy function.
+
+template <typename T,
+          typename U = T,
+          typename R = void*>
+struct copy_sink
+{
+    typedef R type;
+}
+
+// Always copy the element unless this is overloaded.
+
+template <typename T>
+T& move(T& x) {
+    return x;
+}
+
+#endif // BOOST_NO_SFINAE
 
 /*************************************************************************************************/
 
@@ -268,6 +322,10 @@ inline back_move_iterator<C> back_mover(C& x) { return back_move_iterator<C>(x);
 
 /*************************************************************************************************/
 
+#if !defined(BOOST_NO_SFINAE)
+
+/*************************************************************************************************/
+
 /*!
 \ingroup move_related
 \brief Placement move construction, selected when T is_movable is true
@@ -327,6 +385,24 @@ F uninitialized_move(I f, I l, F r,
 
 /*************************************************************************************************/
 
+#else // BOOST_NO_SFINAE
+
+template <typename T>
+inline void move_construct(T* p, const T& x)
+{
+    ::new(static_cast<void*>(p)) T(x);
+}
+
+template <typename I, // I models InputIterator
+          typename F> // F models ForwardIterator
+F uninitialized_move(I f, I l, F r)
+{
+    return std::uninitialized_copy(f, l, r);
+}
+
+#endif
+
+/*************************************************************************************************/
 } // namespace boost
 
 /*************************************************************************************************/

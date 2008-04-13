@@ -106,11 +106,16 @@ public:
         ++data_.end_;
     }
 
+#if !defined(BOOST_NO_SFINAE)
+
     template <class U>
     void push_back(U x, typename boost::move_sink<U, T>::type = 0) {
         if(data_.end_ == data_.storage_end_) resize(data_.begin_ ? size() * 2 : 4);
         data_.end_ = boost::uninitialized_move(&x, &x + 1, data_.end_);
-    }    
+    }
+
+#endif
+
 private:
     void resize(std::size_t new_size) {
         array new_data(new_size);

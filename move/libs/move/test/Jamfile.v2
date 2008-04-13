@@ -1,3 +1,4 @@
 import testing ;
 project boost/move ;
 run main.cpp /boost/unit_test//boost_unit_test_framework ;
+run no_sfinae_test.cpp /boost/unit_test//boost_unit_test_framework ;
