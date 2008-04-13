@@ -236,7 +236,7 @@ template <typename I, // I models InputIterator
 O move(I f, I l, O result)
 {
     while (f != l) {
-        *result = move(*f);
+        *result = boost::move(*f);
         ++f; ++result;
     }
     return result;
@@ -251,7 +251,7 @@ for movable types, otherwise with copy semantics.
 */
 template <typename I, // I models InputRange
           typename O> // O models OutputIterator
-inline O move(I& in, O out) { return move(boost::begin(in), boost::end(in), out); }
+inline O move(I& in, O out) { return boost::move(boost::begin(in), boost::end(in), out); }
 
 /*************************************************************************************************/
  
@@ -266,7 +266,7 @@ O move_backward(I f, I l, O result)
 {
     while (f != l) {
         --l; --result;
-        *result = move(*l);
+        *result = boost::move(*l);
     }
     return result;
 }
@@ -363,7 +363,7 @@ F uninitialized_move(I f, I l, F r,
         typename move_sink<typename std::iterator_traits<I>::value_type>::type = 0)
 {
     while (f != l) {
-        move_construct(&*r, *f);
+        boost::move_construct(&*r, *f);
         ++f; ++r;
     }
     return r;
