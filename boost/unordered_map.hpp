@@ -21,6 +21,10 @@
 #include <boost/unordered/detail/hash_table.hpp>
 #include <boost/functional/hash.hpp>
 
+#if !defined(BOOST_HAS_RVALUE_REFS)
+#include <boost/unordered/detail/move.hpp>
+#endif
+
 namespace boost
 {
     template <class Key,
@@ -83,18 +87,6 @@ namespace boost
         {
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-        unordered_map(unordered_map&& other)
-            : base(other.base, boost::unordered_detail::move_tag())
-        {
-        }
-
-        unordered_map(unordered_map&& other, allocator_type const& a)
-            : base(other.base, a, boost::unordered_detail::move_tag())
-        {
-        }
-#endif
-
         template <class InputIterator>
         unordered_map(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -113,7 +105,28 @@ namespace boost
         }
 
 #if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_map(unordered_map&& other)
+            : base(other.base, boost::unordered_detail::move_tag())
+        {
+        }
+
+        unordered_map(unordered_map&& other, allocator_type const& a)
+            : base(other.base, a, boost::unordered_detail::move_tag())
+        {
+        }
+
         unordered_map& operator=(unordered_map&& x)
+        {
+            base.move(x.base);
+            return *this;
+        }
+#else
+        unordered_map(boost::unordered_detail::move_from<unordered_map> other)
+            : base(other.base, boost::unordered_detail::move_tag())
+        {
+        }
+
+        unordered_map& operator=(unordered_map x)
         {
             base.move(x.base);
             return *this;
@@ -427,18 +440,6 @@ namespace boost
         {
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-        unordered_multimap(unordered_multimap&& other)
-            : base(other.base, boost::unordered_detail::move_tag())
-        {
-        }
-
-        unordered_multimap(unordered_multimap&& other, allocator_type const& a)
-            : base(other.base, a, boost::unordered_detail::move_tag())
-        {
-        }
-#endif
-
         template <class InputIterator>
         unordered_multimap(InputIterator f, InputIterator l)
             : base(f, l, boost::unordered_detail::default_initial_bucket_count,
@@ -457,12 +458,34 @@ namespace boost
         }
 
 #if defined(BOOST_HAS_RVALUE_REFS)
+        unordered_multimap(unordered_multimap&& other)
+            : base(other.base, boost::unordered_detail::move_tag())
+        {
+        }
+
+        unordered_multimap(unordered_multimap&& other, allocator_type const& a)
+            : base(other.base, a, boost::unordered_detail::move_tag())
+        {
+        }
+
         unordered_multimap& operator=(unordered_multimap&& x)
         {
             base.move(x.base);
             return *this;
         }
+#else
+        unordered_multimap(boost::unordered_detail::move_from<unordered_multimap> other)
+            : base(other.base, boost::unordered_detail::move_tag())
+        {
+        }
+
+        unordered_multimap& operator=(unordered_multimap x)
+        {
+            base.move(x.base);
+            return *this;
+        }
 #endif
+
 
     private:
 
