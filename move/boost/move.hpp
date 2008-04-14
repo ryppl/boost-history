@@ -213,7 +213,7 @@ template <typename T,
 struct copy_sink
 {
     typedef R type;
-}
+};
 
 // Always copy the element unless this is overloaded.
 
