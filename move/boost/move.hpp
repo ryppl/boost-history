@@ -12,9 +12,9 @@
 #define BOOST_MOVE_HPP
 
 #include <cassert>
-#include <iterator>
 #include <memory>
 
+#include <boost/iterator.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
@@ -292,7 +292,7 @@ with move semantics, for movable types, otherwise with copy semantics.
 */
 
 template <typename C> // C models Container
-class back_move_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
+class back_move_iterator : public boost::iterator<std::output_iterator_tag, void, void, void, void>
 {
     C* container_m;
     
