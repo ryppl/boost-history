@@ -1,5 +1,4 @@
 
-
 // Copyright 2008 Daniel James.
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,8 +8,6 @@
 // functions. So they can be used by specializing boost::is_movable.
 //
 // Is this worth supporting?
-
-#include <iostream>
 
 #include <boost/move.hpp>
 
