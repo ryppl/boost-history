@@ -15,6 +15,7 @@
 #include <memory>
 
 #include <boost/iterator.hpp>
+#include <boost/iterator/iterator_traits.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
@@ -360,7 +361,7 @@ with move semantics, for movable types.
 template <typename I, // I models InputIterator
           typename F> // F models ForwardIterator
 F uninitialized_move(I f, I l, F r,
-        typename move_sink<typename std::iterator_traits<I>::value_type>::type = 0)
+        typename move_sink<typename boost::iterator_value<I>::type>::type = 0)
 {
     while (f != l) {
         boost::move_construct(&*r, *f);
@@ -378,7 +379,7 @@ F uninitialized_move(I f, I l, F r,
 template <typename I, // I models InputIterator
           typename F> // F models ForwardIterator
 F uninitialized_move(I f, I l, F r,
-        typename copy_sink<typename std::iterator_traits<I>::value_type>::type = 0)
+        typename copy_sink<typename boost::iterator_value<I>::type>::type = 0)
 {
     return std::uninitialized_copy(f, l, r);
 }
