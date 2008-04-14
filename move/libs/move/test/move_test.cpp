@@ -15,7 +15,7 @@
 // without express or implied warranty.
 
 #include <boost/move.hpp>
-#include <boost/assert.hpp>
+#include <boost/test/minimal.hpp>
 #include <boost/utility.hpp> // for boost::noncopyable
 
 #include <cstdlib> // for size_t
@@ -33,7 +33,6 @@ namespace std { using ::size_t; using ::strlen; using ::strncpy; using ::strncmp
 // Moveable std::string-like type. But look, no implicit copying allowed!
 //
 class moveable_string
-  : public boost::movable<moveable_string>
 {
 public: // constants
     BOOST_STATIC_CONSTANT(
@@ -56,13 +55,23 @@ public: // structors
         , str_(0)
     {
     }
-
-    moveable_string(boost::move_from<moveable_string> source)
-      : len_(source->len_)
-      , str_(source->str_)
+    
+    moveable_string(moveable_string const& x)
+      : len_(x.len_),
+        str_(len_ != 0 ? new char[len_ + 1] : 0)
     {
-        source->len_ = 0;
-        source->str_ = 0;
+        if (str_ != 0)
+            std::strncpy(str_, x.str_, len_);
+        
+        BOOST_ERROR("The moveable_string should not be copied in this test.");
+    }
+    
+    moveable_string(boost::move_from<moveable_string> x)
+      : len_(x.source.len_)
+      , str_(x.source.str_)
+    {
+        x.source.len_ = 0;
+        x.source.str_ = 0;
     }
 
     moveable_string(const char* str, std::size_t len = npos)
@@ -74,10 +83,8 @@ public: // structors
     }
 
 public: // modifiers
-    moveable_string& operator=(boost::move_from<moveable_string> source)
+    moveable_string& operator=(moveable_string rhs)
     {
-        moveable_string& rhs = *source;
-
         clear();
 
         len_ = rhs.len_;
@@ -161,10 +168,10 @@ moveable_string source()
 //////////////////////////////////////////////////////////////////////////
 // function test_main
 //
-int main( int, char *[] )
+int test_main( int, char *[] )
 {
     moveable_string sink(source());
-    BOOST_ASSERT( sink == "abcdefg" );
+    BOOST_CHECK( sink == "abcdefg" );
 
     return 0;
 }

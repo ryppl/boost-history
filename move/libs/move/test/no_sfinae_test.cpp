@@ -10,9 +10,7 @@
 // Is this worth supporting?
 
 #include <boost/move.hpp>
-
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#include <boost/test/minimal.hpp>
 #include "./vector.hpp"
 
 struct movable {
@@ -37,7 +35,7 @@ namespace boost
     struct is_movable< ::test_vector<T> > : public boost::mpl::true_ {};
 }
 
-BOOST_AUTO_TEST_CASE(move_test)
+void move_test()
 {
     BOOST_CHECK(boost::is_movable< ::movable >::value);
 
@@ -47,5 +45,11 @@ BOOST_AUTO_TEST_CASE(move_test)
     int* ptr = &x[0];
 
     test_vector<int> y(boost::move(x));
-    BOOST_CHECK_EQUAL(ptr, &y[0]);
+    BOOST_CHECK(ptr == &y[0]);
+}
+
+int test_main(int, char**) {
+    move_test();
+    
+    return 0;
 }

@@ -6,8 +6,7 @@
 
 /*************************************************************************************************/
 
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#include <boost/test/minimal.hpp>
 
 #include <iterator>
 #include <vector>
@@ -17,6 +16,10 @@
 
 #include <boost/move.hpp>
 #include "./vector.hpp"
+
+/*************************************************************************************************/
+
+#define BOOST_CHECK_EQUAL(x, y) BOOST_CHECK(x == y)
 
 /*************************************************************************************************/
 
@@ -36,7 +39,7 @@ inline void destroy(F f, F l)
 
 /*************************************************************************************************/
 
-BOOST_AUTO_TEST_CASE(move_test)
+void move_test()
 {
     typedef test_vector<int>          vector_t;
     typedef test_vector<vector_t>     vector_vector_t;
@@ -115,4 +118,9 @@ BOOST_AUTO_TEST_CASE(move_test)
         boost::uninitialized_move(&y[0], &y[3], &x[0]);
         BOOST_CHECK_EQUAL(addr, x[0].begin());
     }
+}
+
+int test_main(int, char**) {
+    move_test();
+    return 0;
 }

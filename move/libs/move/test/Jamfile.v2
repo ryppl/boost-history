@@ -2,10 +2,10 @@ import testing ;
 project boost/move ;
 
 test-suite "move-suite" :
-    [ run main.cpp /boost/unit_test//boost_unit_test_framework ]
+    [ run main.cpp ]
     [ run move.cpp ]
     [ run move_test.cpp ]
-    [ run no_sfinae_test.cpp /boost/unit_test//boost_unit_test_framework ]
+    [ run no_sfinae_test.cpp ]
 ;
 
 test-suite "move-fail" :
