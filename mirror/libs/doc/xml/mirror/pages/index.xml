@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../xslt/html.xsl"?>
+<doc_page title="Main Page">
+	<paragraph>
+		Welcome to the <lib_name_ref/> library documentation. 
+	</paragraph>
+	<note>The library is still only in the early stages of development and can be subject to major changes.</note>
+	<include section="overview" />
+	<include section="goals" />
+</doc_page>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section title="Overview">
+	<paragraph>
+		The <lib_name_ref/> library is a compile-time reflection library, intended to be proposed as a <boost/> library at some point in the future.
+	</paragraph>
+	<items>
+	</items>
+</section>

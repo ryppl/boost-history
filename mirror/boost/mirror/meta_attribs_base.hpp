@@ -21,17 +21,17 @@ namespace mirror {
 
 /** Defaut (empty) list of base attributes of a meta class
  */
-template <class the_class>
+template <class the_class, class variant_tag = detail::default_meta_class_variant>
 struct meta_class_attributes
 {
 	typedef mpl::vector<> type_list;
 };
 
-/** This macro should start the declaration of attributes
+/** This macro starts the declaration of member attributes
  *  of the given class
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(THE_CLASS) \
-	template <> struct meta_class_attributes<THE_CLASS> \
+	template <> struct meta_class_attributes<THE_CLASS, detail::default_meta_class_variant> \
 	{ \
 		typedef THE_CLASS the_class; \
 		typedef mpl::vector<> 
@@ -60,7 +60,7 @@ struct meta_class_attributes
 	static call_traits<TYPE>::param_type get(const the_class& context, mpl::int_<NUMBER>)\
 	{\
 		return context.NAME;\
-	} \
+	}\
 	static TYPE& query(const the_class& context, mpl::int_<NUMBER>, TYPE& dest)\
 	{\
 		dest = context.NAME;\

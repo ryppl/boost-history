@@ -74,7 +74,7 @@ struct meta_inheritance : meta_inheritance_spec<a_class, access_spec, inheritanc
 
 /** Default (empty) list of base classes of a meta_class
  */
-template <class a_class>
+template <class a_class, class variant_tag = detail::default_meta_class_variant>
 struct meta_base_classes
 {
 	typedef mpl::vector<> list;
@@ -85,7 +85,7 @@ struct meta_base_classes
  *  of the given class
  */
 #define BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(A_CLASS) \
-	template <> struct meta_base_classes<A_CLASS> \
+	template <> struct meta_base_classes<A_CLASS, detail::default_meta_class_variant> \
 	{ \
 		typedef mpl::vector< 
 

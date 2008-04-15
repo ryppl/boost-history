@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../xslt/html.xsl"?>
+<library>
+	<name>mirror</name>
+	<title>Mirror C++ Library</title> 
+	<date>
+		<from>2008</from>
+		<to>2008</to>
+	</date>
+	<authors>
+		<author>
+			<name>Matúš</name>
+			<surname>Chochlík</surname>
+			<email>chochlik@gmail.com</email>
+		</author>
+	</authors>
+</library>
