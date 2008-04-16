@@ -113,9 +113,102 @@ namespace boost {
                 value_type value_;
             };
 
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+
+            // allocators
+            //
+            // Stores all the allocators that we're going to need.
+
+            struct allocators
+            {
+                node_allocator node_alloc_;
+                bucket_allocator bucket_alloc_;
+
+                allocators(value_allocator const& a)
+                    : node_alloc_(a), bucket_alloc_(a)
+                {}
+
+                void destroy(link_ptr ptr)
+                {
+                    node_ptr n(node_alloc_.address(*static_cast<node*>(&*ptr)));
+                    node_alloc_.destroy(n);
+                    node_alloc_.deallocate(n, 1);
+                }
+
+                void swap(allocators& x)
+                {
+                    unordered_detail::hash_swap(node_alloc_, x.node_alloc_);
+                    unordered_detail::hash_swap(bucket_alloc_, x.bucket_alloc_);
+                }
+
+                bool operator==(allocators const& x)
+                {
+                    return node_alloc_ == x.node_alloc_;
+                }
+            };
+
             // node_constructor
             //
             // Used to construct nodes in an exception safe manner.
+
+            class node_constructor
+            {
+                allocators& allocators_;
+
+                node_ptr node_;
+                bool node_constructed_;
+
+            public:
+
+                node_constructor(allocators& a)
+                    : allocators_(a),
+                    node_(), node_constructed_(false)
+                {
+                }
+
+                ~node_constructor()
+                {
+                    if (node_) {
+                        if (node_constructed_)
+                            allocators_.node_alloc_.destroy(node_);
+                        allocators_.node_alloc_.deallocate(node_, 1);
+                    }
+                }
+
+                template <typename... Args>
+                void construct(Args&&... args)
+                {
+                    BOOST_ASSERT(!node_);
+                    node_constructed_ = false;
+
+                    node_ = allocators_.node_alloc_.allocate(1);
+                    allocators_.node_alloc_.construct(node_, std::forward<Args>(args)...);
+                    node_constructed_ = true;
+                }
+
+                node_ptr get() const
+                {
+                    BOOST_ASSERT(node_);
+                    return node_;
+                }
+
+                // no throw
+                link_ptr release()
+                {
+                    node_ptr p = node_;
+                    unordered_detail::reset(node_);
+                    return link_ptr(allocators_.bucket_alloc_.address(*p));
+                }
+
+            private:
+                node_constructor(node_constructor const&);
+                node_constructor& operator=(node_constructor const&);
+            };
+#else
+
+            // allocators
+            //
+            // Stores all the allocators that we're going to need.
 
             struct allocators
             {
@@ -150,6 +243,10 @@ namespace boost {
                     return value_alloc_ == x.value_alloc_;
                 }
             };
+
+            // node_constructor
+            //
+            // Used to construct nodes in an exception safe manner.
 
             class node_constructor
             {
@@ -219,6 +316,7 @@ namespace boost {
                 node_constructor(node_constructor const&);
                 node_constructor& operator=(node_constructor const&);
             };
+#endif
 
             // Methods for navigating groups of elements with equal keys.
 
@@ -1232,9 +1330,9 @@ namespace boost {
             // accessors
 
             // no throw
-            value_allocator get_allocator() const
+            node_allocator get_allocator() const
             {
-                return data_.allocators_.value_alloc_;
+                return data_.allocators_.node_alloc_;
             }
 
             // no throw
