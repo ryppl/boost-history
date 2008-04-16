@@ -215,7 +215,7 @@ namespace boost
 
         iterator erase(const_iterator position)
         {
-            return iterator(base.erase(get(position)));
+            return iterator(base.data_.erase(get(position)));
         }
 
         size_type erase(const key_type& k)
@@ -225,7 +225,7 @@ namespace boost
 
         iterator erase(const_iterator first, const_iterator last)
         {
-            return iterator(base.erase_range(get(first), get(last)));
+            return iterator(base.data_.erase_range(get(first), get(last)));
         }
 
         void clear()
@@ -538,7 +538,7 @@ namespace boost
 
         iterator erase(const_iterator position)
         {
-            return iterator(base.erase(get(position)));
+            return iterator(base.data_.erase(get(position)));
         }
 
         size_type erase(const key_type& k)
@@ -548,7 +548,7 @@ namespace boost
 
         iterator erase(const_iterator first, const_iterator last)
         {
-            return iterator(base.erase_range(get(first), get(last)));
+            return iterator(base.data_.erase_range(get(first), get(last)));
         }
 
         void clear()

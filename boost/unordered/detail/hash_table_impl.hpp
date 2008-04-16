@@ -1768,13 +1768,7 @@ namespace boost {
 #endif
         public:
 
-            // erase
-
-            // no throw
-            iterator_base erase(iterator_base const& r)
-            {
-                return data_.data::erase(r);
-            }
+            // erase_key
 
             // strong exception safety
             size_type erase_key(key_type const& k)
@@ -1785,12 +1779,6 @@ namespace boost {
 
                 // No throw.
                 return *it ? data_.erase_group(it, bucket) : 0;
-            }
-
-            // no throw
-            iterator_base erase_range(iterator_base const& r1, iterator_base const& r2)
-            {
-                return data_.data::erase_range(r1, r2);
             }
 
             // count
