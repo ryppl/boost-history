@@ -108,7 +108,13 @@ namespace boost {
             struct node : node_base
             {
             public:
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+                template <typename... Args>
+                node(Args&&... args)
+                    : node_base(), value_(std::forward<Args>(args)...) {}
+#else
                 node(value_type const& v) : node_base(), value_(v) {}
+#endif
 
                 value_type value_;
             };
