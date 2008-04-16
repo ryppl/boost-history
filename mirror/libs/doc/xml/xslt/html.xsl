@@ -8,6 +8,12 @@
 	<xsl:include href="&docroot;/section.xsl"/>
 	<xsl:include href="&docroot;/paragraph.xsl"/>
 	<xsl:include href="&docroot;/note.xsl"/>
+	<xsl:include href="&docroot;/items.xsl"/>
+	<xsl:include href="&docroot;/links.xsl"/>
+	<!-- font style-related -->
+	<xsl:include href="&docroot;/emph.xsl"/>
+	<xsl:include href="&docroot;/cpp_expr.xsl"/>
+	<xsl:include href="&docroot;/filepath.xsl"/>
 	<!-- inclusions -->
 	<xsl:include href="&docroot;/include.xsl"/>
 	<!-- references to various things -->

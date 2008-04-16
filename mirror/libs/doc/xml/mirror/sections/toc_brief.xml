@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section title="Brief table of contents" name="toc_brief">
+	<link_set>
+		<link page="index"/>
+		<link page="quick_start"/>
+	</link_set>
+</section>

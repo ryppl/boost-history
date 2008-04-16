@@ -3,10 +3,9 @@
 	<!-- 
 	 - template for the paragraph node
 	-->
-	<xsl:template match="note">
-		<P class="note">
-			<B>Note:</B>
-			<EM><xsl:apply-templates/></EM>
-		</P>
+	<xsl:template match="cpp_expr">
+		<CODE class="cpp-expr">
+			<xsl:apply-templates/>
+		</CODE>	
 	</xsl:template>
 </xsl:stylesheet>

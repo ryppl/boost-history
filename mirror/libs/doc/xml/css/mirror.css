@@ -1,0 +1,87 @@
+BODY {
+	font-family: 'Garamond';
+	text-align: justify;
+	/*
+	background-image: url("../../../boost.png");
+	background-position: 80% 80%;
+	background-repeat: no-repeat;
+	*/
+}
+
+
+H1,H2,H3,H4,H5,H6 {
+	font-family: 'Palatino Linotype';
+	width: 100%;
+	background-color: #F0FFF0;
+	color: #206020;
+	border: 1px solid #E0EFE0;
+	padding-left: 1em;
+}
+
+H1 {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+DIV.section {
+	padding-left: 2.5em;
+}
+
+DIV.licensing-notice, DIV.copyright-notice, DIV.revision-notice {
+	border: 1px solid #C0F0C0;
+	background-color: #FFFAE0;
+	padding: 0.2em;
+	padding-left: 1.5em;
+	margin-bottom: 1px;
+}
+
+DIV.related-pages {
+	border: 1px solid #C0F0C0;
+	background-color: #F0FFE0;
+	padding: 0.1em;
+	padding-left: 1.5em;
+	margin-bottom: 1px;
+}
+
+
+DIV.linkset {
+	border: 1px solid #A0C0A0;
+	background-color: #E0FFE0;
+	padding: 0.5em;
+}
+
+P.note {
+	border: 1px solid #C0A0A0;
+	background-color: #FFE0E0;
+	padding: 0.5em;
+}
+
+
+A { 
+	text-decoration: none; 
+	color: #609090;
+}
+
+A:hover {
+	text-decoration: underline; 
+}
+
+
+A.linkset-link {
+	width: 100%;
+}
+
+A.linkset-link:hover {
+	background-color: #D0F0D0;
+	text-decoration: underline; 
+}
+
+A.linkset-link:visited {
+	color: #204020;
+}
+
+
+
+CODE.cpp-expr {
+	font-weight: bold;
+}

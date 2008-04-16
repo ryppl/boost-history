@@ -14,7 +14,7 @@
 		<xsl:element name="{$heading_kind}">
 			<xsl:value-of select="@title"/>
 		</xsl:element>
-		<DIV>
+		<DIV class="section">
 			<xsl:apply-templates/>
 		</DIV>
 	</xsl:template>

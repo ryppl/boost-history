@@ -3,10 +3,11 @@
 	<!-- 
 	 - template for the paragraph node
 	-->
-	<xsl:template match="note">
-		<P class="note">
-			<B>Note:</B>
-			<EM><xsl:apply-templates/></EM>
-		</P>
+	<xsl:template match="filepath">
+		<CODE class="filepath">
+			<xsl:text>"</xsl:text>
+			<xsl:apply-templates/>
+			<xsl:text>"</xsl:text>
+		</CODE>	
 	</xsl:template>
 </xsl:stylesheet>

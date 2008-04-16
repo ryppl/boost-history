@@ -7,8 +7,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_NAMESPACE
-#define BOOST_MIRROR_META_NAMESPACE
+#ifndef BOOST_MIRROR_META_NAMESPACE_HPP
+#define BOOST_MIRROR_META_NAMESPACE_HPP
 
 // true type/false type for trait templates 
 #include <boost/type_traits/integral_constant.hpp>
@@ -57,7 +57,6 @@ struct is_global_scope : public false_type{ };
 template <>
 struct is_global_scope<namespaces::_> : public true_type{ };
 
-
 /** Helper macro for registering new general namespaces (top level or nested)
  */
 #define BOOST_MIRROR_REG_META_NAMESPACE_HELPER(PARENT_META_NS, PREFIX, NAMESPACE, SPELLED_NAME) \
@@ -88,6 +87,12 @@ BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(std, BOOST_PP_TUPLE_REM_CTOR(3,('s','t
 BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(boost, BOOST_PP_TUPLE_REM_CTOR(5,('b','o','o','s','t')));
 // Registration of the ::boost::mirror namespace 
 BOOST_MIRROR_REG_META_NAMESPACE(_boost, mirror, BOOST_PP_TUPLE_REM_CTOR(6,('m','i','r','r','o','r')));
+
+/** Macro that expands into the meta_namespace for the 
+ *  namespace with the given alias.
+ */
+#define BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) \
+	::boost::mirror::namespaces::NAMESPACE_ALIAS
 
 } // namespace mirror
 } // namespace boost

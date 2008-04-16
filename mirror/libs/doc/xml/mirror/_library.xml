@@ -8,10 +8,18 @@
 		<to>2008</to>
 	</date>
 	<authors>
-		<author>
+		<author id="m_ch">
 			<name>Matúš</name>
 			<surname>Chochlík</surname>
 			<email>chochlik@gmail.com</email>
 		</author>
 	</authors>
+	<revisions>
+		<revision id="20080415" major="0" minor="1" micro="0" author="m_ch">
+			Initial implementation.
+		</revision>
+		<revision id="20080416" major="0" minor="1" micro="1" author="m_ch">
+			Updated documentation and added several examples.
+		</revision>
+	</revisions>
 </library>
