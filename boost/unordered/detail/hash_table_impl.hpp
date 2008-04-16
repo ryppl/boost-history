@@ -1013,36 +1013,12 @@ namespace boost {
 
         private:
 
-            class functions
-            {
-                std::pair<hasher, key_equal> functions_;
 
-            public:
+            typedef boost::unordered_detail::buffered_functions<Hash, Pred> buffered_functions;
+            typedef BOOST_DEDUCED_TYPENAME buffered_functions::functions functions;
+            typedef BOOST_DEDUCED_TYPENAME buffered_functions::functions_ptr functions_ptr;
 
-                functions(hasher const& h, key_equal const& k)
-                    : functions_(h, k) {}
-
-                hasher const& hash_function() const
-                {
-                    return functions_.first;
-                }
-
-                key_equal const& key_eq() const
-                {
-                    return functions_.second;
-                }
-            };
-
-            // Both hasher and key_equal's copy/assign can throw so double
-            // buffering is used to copy them. func_ points to the currently
-            // active function objects.
-
-            typedef functions BOOST_UNORDERED_TABLE::*functions_ptr;
-
-            functions func1_;
-            functions func2_;
-            functions_ptr func_;
-
+            buffered_functions functions_;
             float mlf_;
             size_type max_load_;
 
@@ -1058,9 +1034,7 @@ namespace boost {
             BOOST_UNORDERED_TABLE(size_type n,
                     hasher const& hf, key_equal const& eq,
                     value_allocator const& a)
-                : func1_(hf, eq),     // throws, cleans itself up
-                func2_(hf, eq),       // throws, cleans itself up
-                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
+                : functions_(hf, eq), // throws, cleans itself up
                 mlf_(1.0f),           // no throw
                 data_(n, a)           // throws, cleans itself up
             {
@@ -1104,11 +1078,9 @@ namespace boost {
             BOOST_UNORDERED_TABLE(I i, I j, size_type n,
                     hasher const& hf, key_equal const& eq,
                     value_allocator const& a)
-                : func1_(hf, eq),                  // throws, cleans itself up
-                    func2_(hf, eq),                // throws, cleans itself up
-                    func_(&BOOST_UNORDERED_TABLE::func1_),    // no throw
-                    mlf_(1.0f),                    // no throw
-                    data_(initial_size(i, j, n), a)   // throws, cleans itself up
+                : functions_(hf, eq),              // throws, cleans itself up
+                  mlf_(1.0f),                      // no throw
+                  data_(initial_size(i, j, n), a)  // throws, cleans itself up
             {
                 calculate_max_load(); // no throw
 
@@ -1119,55 +1091,47 @@ namespace boost {
             // Copy Construct
 
             BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE const& x)
-                : func1_(x.current_functions()), // throws
-                func2_(x.current_functions()), // throws
-                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
-                mlf_(x.mlf_), // no throw
-                data_(x.data_, x.min_buckets_for_size(x.size()))  // throws
+                : functions_(x.functions_), // throws
+                  mlf_(x.mlf_),             // no throw
+                  data_(x.data_, x.min_buckets_for_size(x.size()))  // throws
             {
                 calculate_max_load(); // no throw
 
                 // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean
                 // up.
-                copy_buckets(x.data_, data_, current_functions());
+                copy_buckets(x.data_, data_, functions_.current());
             }
 
             // Copy Construct with allocator
 
             BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE const& x,
                     value_allocator const& a)
-                : func1_(x.current_functions()), // throws
-                func2_(x.current_functions()),   // throws
-                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
-                mlf_(x.mlf_),                    // no throw
+                : functions_(x.functions_), // throws
+                mlf_(x.mlf_),               // no throw
                 data_(x.min_buckets_for_size(x.size()), a)
             {
                 calculate_max_load(); // no throw
 
                 // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean
                 // up.
-                copy_buckets(x.data_, data_, current_functions());
+                copy_buckets(x.data_, data_, functions_.current());
             }
 
             // Move Construct
 
             BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE& x, move_tag m)
-                : func1_(x.current_functions()), // throws
-                func2_(x.current_functions()), // throws
-                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
-                mlf_(x.mlf_), // no throw
-                data_(x.data_, m)  // throws
+                : functions_(x.functions_), // throws
+                  mlf_(x.mlf_),             // no throw
+                  data_(x.data_, m)         // throws
             {
                 calculate_max_load(); // no throw
             }
 
             BOOST_UNORDERED_TABLE(BOOST_UNORDERED_TABLE& x,
                     value_allocator const& a, move_tag m)
-                : func1_(x.current_functions()), // throws
-                func2_(x.current_functions()), // throws
-                func_(&BOOST_UNORDERED_TABLE::func1_), // no throw
-                mlf_(x.mlf_), // no throw
-                data_(x.data_, a,
+                : functions_(x.functions_), // throws
+                  mlf_(x.mlf_),             // no throw
+                  data_(x.data_, a,
                         x.min_buckets_for_size(x.size()), m)  // throws
             {
                 calculate_max_load(); // no throw
@@ -1175,13 +1139,13 @@ namespace boost {
                 if(x.data_.buckets_) {
                     // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean
                     // up.
-                    copy_buckets(x.data_, data_, current_functions());
+                    copy_buckets(x.data_, data_, functions_.current());
                 }
             }
 
             // Assign
             //
-            // basic exception safety, if copy_functions of reserver throws
+            // basic exception safety, if buffered_functions::buffer or reserver throws
             // the container is left in a sane, empty state. If copy_buckets
             // throws the container is left with whatever was successfully
             // copied.
@@ -1191,11 +1155,12 @@ namespace boost {
                 if(this != &x)
                 {
                     data_.clear();                        // no throw
-                    func_ = copy_functions(x);            // throws, strong
+                    functions_.set(functions_.buffer(x.functions_));
+                                                          // throws, strong
                     mlf_ = x.mlf_;                        // no throw
                     calculate_max_load();                 // no throw
                     reserve(x.size());                    // throws
-                    copy_buckets(x.data_, data_, current_functions()); // throws
+                    copy_buckets(x.data_, data_, functions_.current()); // throws
                 }
 
                 return *this;
@@ -1217,10 +1182,11 @@ namespace boost {
 
             void swap(BOOST_UNORDERED_TABLE& x)
             {
-                // This only effects the function objects that aren't in use
-                // so it is strongly exception safe, via. double buffering.
-                functions_ptr new_func_this = copy_functions(x);       // throws
-                functions_ptr new_func_that = x.copy_functions(*this); // throws
+                // These can throw, but they only affect the function objects
+                // that aren't in use so it is strongly exception safe, via.
+                // double buffering.
+                functions_ptr new_func_this = functions_.buffer(x.functions_);
+                functions_ptr new_func_that = x.functions_.buffer(functions_);
 
                 if(data_.allocators_ == x.data_.allocators_) {
                     data_.swap(x.data_); // no throw
@@ -1230,10 +1196,10 @@ namespace boost {
                     // which will clean up if anything throws an exception.
                     // (all can throw, but with no effect as these are new objects).
                     data new_this(data_, x.min_buckets_for_size(x.data_.size_));
-                    copy_buckets(x.data_, new_this, this->*new_func_this);
+                    copy_buckets(x.data_, new_this, functions_.*new_func_this);
 
                     data new_that(x.data_, min_buckets_for_size(data_.size_));
-                    x.copy_buckets(data_, new_that, x.*new_func_that);
+                    x.copy_buckets(data_, new_that, x.functions_.*new_func_that);
 
                     // Start updating the data here, no throw from now on.
                     data_.swap(new_this);
@@ -1243,8 +1209,8 @@ namespace boost {
                 // We've made it, the rest is no throw.
                 std::swap(mlf_, x.mlf_);
 
-                func_ = new_func_this;
-                x.func_ = new_func_that;
+                functions_.set(new_func_this);
+                x.functions_.set(new_func_that);
 
                 calculate_max_load();
                 x.calculate_max_load();
@@ -1261,9 +1227,10 @@ namespace boost {
 
             void move(BOOST_UNORDERED_TABLE& x)
             {
-                // This only effects the function objects that aren't in use
-                // so it is strongly exception safe, via. double buffering.
-                functions_ptr new_func_this = copy_functions(x);       // throws
+                // This can throw, but it only affects the function objects
+                // that aren't in use so it is strongly exception safe, via.
+                // double buffering.
+                functions_ptr new_func_this = functions_.buffer(x.functions_);
 
                 if(data_.allocators_ == x.data_.allocators_) {
                     data_.move(x.data_); // no throw
@@ -1273,7 +1240,7 @@ namespace boost {
                     // which will clean up if anything throws an exception.
                     // (all can throw, but with no effect as these are new objects).
                     data new_this(data_, x.min_buckets_for_size(x.data_.size_));
-                    copy_buckets(x.data_, new_this, this->*new_func_this);
+                    copy_buckets(x.data_, new_this, functions_.*new_func_this);
 
                     // Start updating the data here, no throw from now on.
                     data_.move(new_this);
@@ -1281,34 +1248,9 @@ namespace boost {
 
                 // We've made it, the rest is no throw.
                 mlf_ = x.mlf_;
-                func_ = new_func_this;
+                functions_.set(new_func_this);
                 calculate_max_load();
             }
-
-        private:
-
-            functions const& current_functions() const
-            {
-                return this->*func_;
-            }
-
-            // This copies the given function objects into the currently unused
-            // function objects and returns a pointer, that func_ can later be
-            // set to, to commit the change.
-            //
-            // Strong exception safety (since only usued function objects are
-            // changed).
-            functions_ptr copy_functions(BOOST_UNORDERED_TABLE const& x)
-            {
-                // no throw:
-                functions_ptr ptr = func_ == &BOOST_UNORDERED_TABLE::func1_
-                    ? &BOOST_UNORDERED_TABLE::func2_ : &BOOST_UNORDERED_TABLE::func1_;
-                // throws, functions not in use, so strong
-                this->*ptr = x.current_functions();
-                return ptr;
-            }
-
-        public:
 
             // accessors
 
@@ -1321,13 +1263,13 @@ namespace boost {
             // no throw
             hasher const& hash_function() const
             {
-                return current_functions().hash_function();
+                return functions_.current().hash_function();
             }
 
             // no throw
             key_equal const& key_eq() const
             {
-                return current_functions().key_eq();
+                return functions_.current().key_eq();
             }
 
             // no throw
