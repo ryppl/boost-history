@@ -856,7 +856,7 @@ namespace boost {
                 return next;
             }
 
-            iterator_base erase(iterator_base r1, iterator_base r2)
+            iterator_base erase_range(iterator_base r1, iterator_base r2)
             {
                 if(r1 != r2)
                 {
@@ -1777,7 +1777,7 @@ namespace boost {
             }
 
             // strong exception safety
-            size_type erase(key_type const& k)
+            size_type erase_key(key_type const& k)
             {
                 // No side effects in initial section
                 bucket_ptr bucket = get_bucket(k);
@@ -1788,9 +1788,9 @@ namespace boost {
             }
 
             // no throw
-            iterator_base erase(iterator_base const& r1, iterator_base const& r2)
+            iterator_base erase_range(iterator_base const& r1, iterator_base const& r2)
             {
-                return data_.data::erase(r1, r2);
+                return data_.data::erase_range(r1, r2);
             }
 
             // count
