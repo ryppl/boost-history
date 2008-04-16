@@ -560,6 +560,8 @@ namespace boost {
             // no throw
 
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
+            // If n points to the first node in a group, this adds it to the
+            // end of that group.
             void link_node(link_ptr n, link_ptr pos)
             {
                 node& node_ref = get_node(n);
@@ -733,69 +735,34 @@ namespace boost {
             }
 #endif
 
-            // throws, strong exception-safety:
-            link_ptr construct_node(value_type const& v)
-            {
-                node_constructor a(allocators_);
-                a.construct(v);
-                return a.release();
-            }
-
-            // Create Node
+            // copy_group
             //
-            // Create a node and add it to the buckets in the given position.
-            //
-            // strong exception safety.
-
-            iterator_base create_node(value_type const& v, bucket_ptr base)
-            {
-                // throws, strong exception-safety:
-                link_ptr n = construct_node(v);
-
-                // Rest is no throw
-                link_node_in_bucket(n, base);
-                return iterator_base(base, n);
-            }
-
-#if BOOST_UNORDERED_EQUIVALENT_KEYS
-            iterator_base create_node(value_type const& v, iterator_base position)
-            {
-                // throws, strong exception-safety:
-                link_ptr n = construct_node(v);
-
-                // Rest is no throw
-                link_node(n, position.node_);
-                return iterator_base(position.bucket_, n);
-            }
-
-            iterator_base create_node(value_type const& v,
-                    bucket_ptr base, link_ptr position)
-            {
-                // throws, strong exception-safety:
-                link_ptr n = construct_node(v);
-
-                // Rest is no throw
-                if(BOOST_UNORDERED_BORLAND_BOOL(position))
-                    link_node(n, position);
-                else
-                    link_node_in_bucket(n, base);
-
-                return iterator_base(base, n);
-            }
-#endif
+            // Basic exception safety.
+            // If it throws, it only copies some of the nodes in the group.
 
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
             void copy_group(link_ptr it, bucket_ptr dst)
             {
+                node_constructor a(allocators_);
+
                 link_ptr end = next_group(it);
-                iterator_base pos = create_node(get_value(it), dst);
-                for(it = it->next_; it != end; it = it->next_)
-                    create_node(get_value(it), pos);
+
+                a.construct(get_value(it));                     // throws
+                link_ptr n = a.release();
+                link_node_in_bucket(n, dst);
+
+                for(it = it->next_; it != end; it = it->next_) {
+                    a.construct(get_value(it));                 // throws
+                    link_node(a.release(), n);
+                }
             }
 #else
             void copy_group(link_ptr it, bucket_ptr dst)
             {
-                create_node(get_value(it), dst);
+                node_constructor a(allocators_);
+
+                a.construct(get_value(it));                     // throws
+                link_node_in_bucket(a.release(), dst);
             }
 #endif
 
