@@ -562,8 +562,9 @@ namespace boost {
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
             // If n points to the first node in a group, this adds it to the
             // end of that group.
-            void link_node(link_ptr n, link_ptr pos)
+            link_ptr link_node(node_constructor& a, link_ptr pos)
             {
+                link_ptr n = a.release();
                 node& node_ref = get_node(n);
                 node& pos_ref = get_node(pos);
                 node_ref.next_ = pos_ref.group_prev_->next_;
@@ -571,16 +572,19 @@ namespace boost {
                 pos_ref.group_prev_->next_ = n;
                 pos_ref.group_prev_ = n;
                 ++size_;
+                return n;
             }
 
-            void link_node_in_bucket(link_ptr n, bucket_ptr base)
+            link_ptr link_node_in_bucket(node_constructor& a, bucket_ptr base)
             {
+                link_ptr n = a.release();
                 node& node_ref = get_node(n);
                 node_ref.next_ = base->next_;
                 node_ref.group_prev_ = n;
                 base->next_ = n;
                 ++size_;
                 if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
+                return n;
             }
 
             void link_group(link_ptr n, bucket_ptr base, size_type count)
@@ -593,7 +597,7 @@ namespace boost {
                 if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
             }
 #else
-            void link_node_in_bucket(link_ptr n, bucket_ptr base)
+            void link_node(link_ptr n, bucket_ptr base)
             {
                 n->next_ = base->next_;
                 base->next_ = n;
@@ -601,9 +605,16 @@ namespace boost {
                 if(base < cached_begin_bucket_) cached_begin_bucket_ = base;
             }
 
+            link_ptr link_node_in_bucket(node_constructor& a, bucket_ptr base)
+            {
+                link_ptr n = a.release();
+                link_node(n, base);
+                return n;
+            }
+
             void link_group(link_ptr n, bucket_ptr base, size_type)
             {
-                link_node_in_bucket(n, base);
+                link_node(n, base);
             }
 #endif
 
@@ -748,12 +759,11 @@ namespace boost {
                 link_ptr end = next_group(it);
 
                 a.construct(get_value(it));                     // throws
-                link_ptr n = a.release();
-                link_node_in_bucket(n, dst);
+                link_ptr n = link_node_in_bucket(a, dst);
 
                 for(it = it->next_; it != end; it = it->next_) {
                     a.construct(get_value(it));                 // throws
-                    link_node(a.release(), n);
+                    link_node(a, n);
                 }
             }
 #else
@@ -762,7 +772,7 @@ namespace boost {
                 node_constructor a(allocators_);
 
                 a.construct(get_value(it));                     // throws
-                link_node_in_bucket(a.release(), dst);
+                link_node_in_bucket(a, dst);
             }
 #endif
 
@@ -1512,18 +1522,13 @@ namespace boost {
                 if(reserve(size() + 1))
                     bucket = data_.bucket_from_hash(hash_value);
 
-                // Nothing after the point can throw.
-
-                link_ptr n = a.release();
-
                 // I'm relying on link_ptr not being invalidated by
                 // the rehash here.
-                if(BOOST_UNORDERED_BORLAND_BOOL(position))
-                    data_.link_node(n, position);
-                else
-                    data_.link_node_in_bucket(n, bucket);
-
-                return iterator_base(bucket, n);
+                return iterator_base(bucket,
+                    (BOOST_UNORDERED_BORLAND_BOOL(position)) ?
+                    data_.link_node(a, position) :
+                    data_.link_node_in_bucket(a, bucket)
+                );
             }
 
             // Insert (equivalent key containers)
@@ -1558,10 +1563,8 @@ namespace boost {
 
                     // Nothing after this point can throw
 
-                    link_ptr n = a.release();
-                    data_.link_node(n, start);
-
-                    return iterator_base(base, n);
+                    return iterator_base(base,
+                            data_.link_node(a, start));
                 }
             }
 
@@ -1591,9 +1594,9 @@ namespace boost {
                         link_ptr position = find_iterator(bucket, k);
 
                         if(BOOST_UNORDERED_BORLAND_BOOL(position))
-                            data_.link_node(a.release(), position);
+                            data_.link_node(a, position);
                         else
-                            data_.link_node_in_bucket(a.release(), bucket);
+                            data_.link_node_in_bucket(a, bucket);
                     }
                 }
             }
@@ -1651,10 +1654,7 @@ namespace boost {
 
                     // Nothing after this point can throw.
 
-                    link_ptr n = a.release();
-                    data_.link_node_in_bucket(n, bucket);
-
-                    return data::get_value(n);
+                    return data::get_value(data_.link_node_in_bucket(a, bucket));
                 }
             }
 
@@ -1691,8 +1691,7 @@ namespace boost {
 
                     // Nothing after this point can throw.
 
-                    link_ptr n = a.release();
-                    data_.link_node_in_bucket(n, bucket);
+                    link_ptr n = data_.link_node_in_bucket(a, bucket);
 
                     return std::pair<iterator_base, bool>(
                         iterator_base(bucket, n), true);
@@ -1762,7 +1761,7 @@ namespace boost {
                         }
 
                         // Nothing after this point can throw.
-                        data_.link_node_in_bucket(a.release(), bucket);
+                        data_.link_node_in_bucket(a, bucket);
                     }
                 }
             }
