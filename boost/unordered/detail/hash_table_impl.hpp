@@ -1062,7 +1062,7 @@ namespace boost {
                 calculate_max_load(); // no throw
 
                 // This can throw, but BOOST_UNORDERED_TABLE_DATA's destructor will clean up.
-                insert(i, j);
+                insert_range(i, j);
             }
 
             // Copy Construct
@@ -1535,7 +1535,7 @@ namespace boost {
 
             // if hash function throws, basic exception safety
             // strong otherwise
-            iterator_base insert(iterator_base const& it, value_type const& v)
+            iterator_base insert_hint(iterator_base const& it, value_type const& v)
             {
                 // equal can throw, but with no effects
                 if (it == data_.end() || !equal(extract_key(v), *it)) {
@@ -1617,7 +1617,7 @@ namespace boost {
             // if hash function throws, or inserting > 1 element, basic exception safety
             // strong otherwise
             template <typename I>
-            void insert(I i, I j)
+            void insert_range(I i, I j)
             {
                 BOOST_DEDUCED_TYPENAME boost::iterator_traversal<I>::type
                     iterator_traversal_tag;
@@ -1702,7 +1702,7 @@ namespace boost {
 
             // if hash function throws, basic exception safety
             // strong otherwise
-            iterator_base insert(iterator_base const& it, value_type const& v)
+            iterator_base insert_hint(iterator_base const& it, value_type const& v)
             {
                 if(it != data_.end() && equal(extract_key(v), *it))
                     return it;
@@ -1735,7 +1735,7 @@ namespace boost {
             // if hash function throws, or inserting > 1 element, basic exception safety
             // strong otherwise
             template <typename InputIterator>
-            void insert(InputIterator i, InputIterator j)
+            void insert_range(InputIterator i, InputIterator j)
             {
                 node_constructor a(data_.allocators_);
 

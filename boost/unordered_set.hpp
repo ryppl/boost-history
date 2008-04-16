@@ -204,13 +204,13 @@ namespace boost
 
         iterator insert(const_iterator hint, const value_type& obj)
         {
-            return iterator(base.insert(get(hint), obj));
+            return iterator(base.insert_hint(get(hint), obj));
         }
 
         template <class InputIterator>
             void insert(InputIterator first, InputIterator last)
         {
-            base.insert(first, last);
+            base.insert_range(first, last);
         }
 
         iterator erase(const_iterator position)
@@ -527,13 +527,13 @@ namespace boost
 
         iterator insert(const_iterator hint, const value_type& obj)
         {
-            return iterator(base.insert(get(hint), obj));
+            return iterator(base.insert_hint(get(hint), obj));
         }
 
         template <class InputIterator>
             void insert(InputIterator first, InputIterator last)
         {
-            base.insert(first, last);
+            base.insert_range(first, last);
         }
 
         iterator erase(const_iterator position)
