@@ -3745,7 +3745,7 @@ template}{satisfy every associated function (\mbox{\ref{concept.fct}}),
 associated type and associated template requirement
 (\mbox{\ref{concept.assoc}})}
 \addedConcepts{of the concept named by its concept instance and
-all of the requirements inherited from its refined concepts.
+all of the requirements inherited from its refined concepts
 (\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { T f(T); }
@@ -4448,8 +4448,9 @@ concept_map B<int> { } // implicitly defines concept map A<int>
 
 \pnum
 \addedConcepts{When a concept map is implicitly defined for a refinement,
-definitions in the concept map for the refining concept can
-also be used to 
+definitions in the concept map for the refining concept}
+\changedCCC{can also be}{are}
+\addedConcepts{used to 
 satisfy the requirements of the refined concept (\mbox{\ref{concept.map}}).
 \mbox{\enternote} a single function definition in a concept
   map can be used to satisfy multiple requirements. \mbox{\exitnote}
