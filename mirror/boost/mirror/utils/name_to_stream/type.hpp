@@ -45,6 +45,22 @@ struct name_to_stream_helper<meta_type<pointee_type*> >
 	}
 };
 
+/** Specialization for meta-types for arrays
+ */
+template <typename element_type, size_t size> 
+struct name_to_stream_helper<meta_type<const element_type[size]> >
+{
+	template <class out_stream>
+	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	{
+		s << BOOST_STR_LIT("const ");
+		return name_to_stream_helper<meta_type<element_type> >::put(s,ldng_dbl_cln) << 
+			BOOST_STR_LIT("[") <<
+			size << 
+			BOOST_STR_LIT("]");
+	}
+};
+
 /** Specialization for meta-types for references
  */
 template <typename refered_to_type> 

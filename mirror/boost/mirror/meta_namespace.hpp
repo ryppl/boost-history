@@ -20,14 +20,11 @@
 
 // mirror uses switchable character type
 #include <boost/char_type_switch/string.hpp>
+// forward declarations
+#include <boost/mirror/meta_data_fwd.hpp>
 
 namespace boost {
 namespace mirror {
-
-/** meta-namespace template definition
- */
-template<class namespace_alias> 
-struct meta_namespace;
 
 /** defines an alias (_) for the meta-namespace for the global scope
  */
@@ -75,11 +72,6 @@ BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(boost)
 // Registration of the ::boost::mirror namespace 
 BOOST_MIRROR_REG_META_NAMESPACE(_boost, mirror)
 
-/** Macro that expands into the meta_namespace for the 
- *  namespace with the given alias.
- */
-#define BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) \
-	::boost::mirror::meta_namespace<namespaces::NAMESPACE_ALIAS>
 
 } // namespace mirror
 } // namespace boost

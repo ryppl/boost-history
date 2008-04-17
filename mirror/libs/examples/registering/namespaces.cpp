@@ -1,5 +1,5 @@
 /**
- * \file examples/registering/namespaces.hpp
+ * \file examples/registering/namespaces.cpp
  * Example of namespace registering and reflection with
  * the mirror library
  *
@@ -77,41 +77,41 @@ int main(void)
 	// of the namespace
 	//
 	// print the base name of the namespace
-	bcout << meta_ns_test_stuff_detail::base_name() << endl;
+	bcout << "|01| " <<meta_ns_test_stuff_detail::base_name() << endl;
 	//
 	// the 'parent' type is the meta_namespace<> for the parent
 	// namespace of the given namespace
 	//
 	// print the base name of the parent namespace 
-	bcout << meta_ns_test_stuff_detail::parent::base_name() << endl;
-	bcout << meta_ns_test_stuff_detail::parent::parent::base_name() << endl;
+	bcout << "|02| " <<meta_ns_test_stuff_detail::parent::base_name() << endl;
+	bcout << "|03| " <<meta_ns_test_stuff_detail::parent::parent::base_name() << endl;
 	//
 	// the 'scope' member is a mpl::vector containing the whole 
 	// list of ancestor namespaces 
 	//
 	// find out and print the 'depth' of the namespace
-	bcout << mpl::size<meta_ns_global_scope::scope>::value << endl;
-	bcout << mpl::size<meta_ns_test::scope>::value << endl;
-	bcout << mpl::size<meta_ns_test_stuff_detail::scope>::value << endl;
+	bcout << "|04| " <<mpl::size<meta_ns_global_scope::scope>::value << endl;
+	bcout << "|05| " <<mpl::size<meta_ns_test::scope>::value << endl;
+	bcout << "|06| " <<mpl::size<meta_ns_test_stuff_detail::scope>::value << endl;
 	//
 	// the name_to_stream<meta_object> class allows to put the full name
 	// (including the scope) into a stream
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_) >() << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test) >() << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) >() << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) >() << endl;
+	bcout << "|07| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_) >() << endl;
+	bcout << "|08| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test) >() << endl;
+	bcout << "|09| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) >() << endl;
+	bcout << "|10| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) >() << endl;
 	// in this case the :: is prepended to the full name
 	// thus test::stuff -> ::test::stuff
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_) >(true) << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test) >(true) << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) >(true) << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) >(true) << endl;
+	bcout << "|11| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_) >(true) << endl;
+	bcout << "|12| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test) >(true) << endl;
+	bcout << "|13| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) >(true) << endl;
+	bcout << "|14| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) >(true) << endl;
 	//
 	// there are few namespace registered by default
 	// including (::std, ::boost, ::boost::mirror)
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_std) >(true) << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_boost) >(true) << endl;
-	bcout << name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_boost_mirror) >(true) << endl;
+	bcout << "|15| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_std) >(true) << endl;
+	bcout << "|16| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_boost) >(true) << endl;
+	bcout << "|17| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_boost_mirror) >(true) << endl;
 	return 0;
 }
 

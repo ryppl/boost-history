@@ -17,12 +17,12 @@
 namespace boost {
 namespace mirror {
 
-/** Is-global-scope trait template for meta-namespaces
+/** Reflects-global-scope trait template for other meta-namespaces
  */
 template <class meta_namespace>
 struct reflects_global_scope : public false_type{ };
 
-/** Is-global-scope trait specialization for global scope meta_namespace
+/** Reflects-global-scope trait specialization for global scope meta_namespace
  */
 template <>
 struct reflects_global_scope<BOOST_MIRROR_REFLECT_NAMESPACE(_)> : public true_type{ };

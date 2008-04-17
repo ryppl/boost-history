@@ -30,5 +30,9 @@
 			- Updated documentation
 			- Added example on type registration and usage
 		</revision>
+		<revision id="20080417_1855CET" major="0" minor="1" micro="3" author="m_ch">
+			- Added an elaborate example on class registration and usage
+			- Done major modifications to multiple sources
+		</revision>
 	</revisions>
 </library>
