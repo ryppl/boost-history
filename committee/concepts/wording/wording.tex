@@ -4425,10 +4425,19 @@ void h(T x) {
 \rSec3[concept.refine.maps]{Implicit concept maps for refined concepts}
 
 \pnum
-\addedConcepts{When a concept map is defined for a concept \mbox{\tcode{C}} that has a
-refinement clause, concept maps for each of the concepts refined by
-\mbox{\tcode{C}} are implicitly defined  in the namespace of which the
-concept map is a member unless already defined. \mbox{\enterexample}}
+\addedConcepts{When a concept map is defined for a concept
+  \mbox{\tcode{C}} that has a refinement clause, concept maps for each
+  of the }\changedCCC{concepts refined by}{concept instances in the
+  refinement clause of}
+\addedConcepts{\mbox{\tcode{C}}}
+\changedCCC{are implicitly}{shall be defined}
+\addedConcepts{in the namespace of which the
+concept map is a member}
+\removedCCC{unless already defined}\addedConcepts{.}
+\addedCC{If a concept map for a given concept instance in the
+  refinement clause has not be defined in the namespace of the
+  refining concept map, it is defined implicitly.}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { }
 concept B<typename T> : A<T> { }
