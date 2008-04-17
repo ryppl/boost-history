@@ -5421,10 +5421,11 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \item \addedCC{it has the same name as the seed,}
 \item \addedCC{its enclosing namespace is the same as the enclosing
     namespace of the seed,}
-\item \addedCC{it has the same return type as the seed, after the
+\item \addedCC{the seed has a return type of \mbox{\techterm{cv}
+      \tcode{void}} or the function has the same return type as the seed, after the
     reference (if any) 
     and then top-level \mbox{\techterm{cv-qualifiers}} (if any) have been
-    removed, and}
+    removed from the return types of the seed and the function, and}
 \additemCC{it has the same \mbox{\techterm{parameter-type-list}} as
   the seed, after making the following adjustments to both
   \mbox{\techterm{parameter-type-list}}s:} 
@@ -5434,11 +5435,12 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
     parameter in the \mbox{\techterm{parameter-type-list}},}
   \additemCC{for each parameter type, remove the top-level reference
     (if any) and then top-level \mbox{\techterm{cv-qualifiers}} (if
-    any), and} 
+    any),} 
   \additemCC{if the function has \mbox{$M$} parameters, the seed has
     \mbox{$N$} parameters, and \mbox{$M > N$}, remove each of the last
     \mbox{$M-N$} parameters that has a default argument from the
-    \mbox{\techterm{parameter-type-list}}.}
+    \mbox{\techterm{parameter-type-list}}, and}
+  \additemCC{remove the ellipsis, if any.}
 \end{itemize}
 \end{itemize}
 \addedCC{\enternote No function or function template is consistent
