@@ -4569,7 +4569,10 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
     compound statement that is an unconstrained context,}
   \additemConcepts{a default template argument in a
     \mbox{\techterm{template-parameter}} is an unconstrained context,}
-  \additemConcepts{a default argument in a \mbox{\techterm{parameter-declaration}}.}
+  \additemConcepts{a default argument in a
+    \mbox{\techterm{parameter-declaration}}}\addedCC{, unless that
+    default argument occurs within a local class
+    (\mbox{\ref{class.local}}).}
   \additemCC{the \mbox{\techterm{requires-clause}}, \mbox{\techterm{type-specifier}}, and \mbox{\techterm{declarator}} of a constrained member (\mbox{\ref{class.mem}}) are unconstrained contexts, and}
   \additemCC{a member template of a constrained template is an
     unconstrained context (\mbox{\ref{temp.mem}}). \mbox{\enternote}
