@@ -8,30 +8,24 @@
 
 /*************************************************************************************************/
 
-#ifndef BOOST_MOVE_HPP
-#define BOOST_MOVE_HPP
+#ifndef BOOST_UNORDERED_DETAIL_MOVE_HEADER
+#define BOOST_UNORDERED_DETAIL_MOVE_HEADER
 
-#include <cassert>
-#include <iterator>
-#include <memory>
 
-#include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/range/begin.hpp>
-#include <boost/range/end.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/move/detail/config.hpp>
+#include <boost/unordered/detail/config.hpp>
 
 /*************************************************************************************************/
 
 namespace boost {
+namespace unordered_detail {
 
 /*************************************************************************************************/
 
@@ -39,7 +33,7 @@ namespace move_detail {
 
 /*************************************************************************************************/
 
-#if !defined(BOOST_MOVE_NO_HAS_MOVE_ASSIGN)
+#if !defined(BOOST_UNORDERED_NO_HAS_MOVE_ASSIGN)
 
 /*************************************************************************************************/
 
@@ -70,7 +64,7 @@ class test_can_convert_anything { };
 
 /*************************************************************************************************/
 
-#endif // BOOST_MOVE_NO_HAS_MOVE_ASSIGN
+#endif // BOOST_UNORDERED_NO_HAS_MOVE_ASSIGN
 
 /*************************************************************************************************/
 
@@ -106,7 +100,7 @@ struct move_from
 
 /*************************************************************************************************/
 
-#if !defined(BOOST_MOVE_NO_HAS_MOVE_ASSIGN)
+#if !defined(BOOST_UNORDERED_NO_HAS_MOVE_ASSIGN)
 
 /*************************************************************************************************/
 
@@ -123,7 +117,7 @@ struct is_movable : boost::mpl::and_<
 
 /*************************************************************************************************/
 
-#else // BOOST_MOVE_NO_HAS_MOVE_ASSIGN
+#else // BOOST_UNORDERED_NO_HAS_MOVE_ASSIGN
 
 // On compilers which don't have adequate SFINAE support, treat most types as unmovable,
 // unless the trait is specialized.
@@ -151,7 +145,7 @@ template <typename T,
           typename R = void*>
 struct copy_sink : boost::enable_if<
                         boost::mpl::and_<
-                            boost::move_detail::is_convertible<T, U>,                           
+                            boost::unordered_detail::move_detail::is_convertible<T, U>,                           
                             boost::mpl::not_<is_movable<T> >
                         >,
                         R
@@ -172,7 +166,7 @@ template <typename T,
           typename R = void*>
 struct move_sink : boost::enable_if<
                         boost::mpl::and_<
-                            boost::move_detail::is_convertible<T, U>,                            
+                            boost::unordered_detail::move_detail::is_convertible<T, U>,                            
                             is_movable<T>
                         >,
                         R
@@ -213,7 +207,7 @@ template <typename T,
 struct copy_sink
 {
     typedef R type;
-}
+};
 
 // Always copy the element unless this is overloaded.
 
@@ -224,185 +218,7 @@ T& move(T& x) {
 
 #endif // BOOST_NO_SFINAE
 
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Iterator pair version of move. Similar to std::copy but with move semantics, 
-for movable types, otherwise with copy semantics.
-*/
-template <typename I, // I models InputIterator
-          typename O> // O models OutputIterator
-O move(I f, I l, O result)
-{
-    while (f != l) {
-        *result = boost::move(*f);
-        ++f; ++result;
-    }
-    return result;
-}
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief \ref concept_convertible_to_range version of move. Similar to copy but with move semantics, 
-for movable types, otherwise with copy semantics.
-*/
-template <typename I, // I models InputRange
-          typename O> // O models OutputIterator
-inline O move(I& in, O out) { return boost::move(boost::begin(in), boost::end(in), out); }
-
-/*************************************************************************************************/
- 
-/*!
-\ingroup move_related
-\brief Iterator pair version of move_backwards. Similar to std::copy_backwards but with move semantics, 
-for movable types, otherwise with copy semantics.
-*/
-template <typename I, // I models BidirectionalIterator
-          typename O> // O models BidirectionalIterator
-O move_backward(I f, I l, O result)
-{
-    while (f != l) {
-        --l; --result;
-        *result = boost::move(*l);
-    }
-    return result;
-}
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief \ref concept_convertible_to_range version of move_backwards. Similar to std::copy_backwards but 
-with move semantics, for movable types, otherwise with copy semantics.
-*/
-template <typename I, // I models BidirectionalRange
-          typename O> // O models BidirectionalIterator
-inline O move_backward(I& in, O out)
-{ return move_backward(boost::begin(in), boost::end(in), out); }
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Similar to std::back_insert_iterator but 
-with move semantics, for movable types, otherwise with copy semantics.
-*/
-
-template <typename C> // C models Container
-class back_move_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
-{
-    C* container_m;
-    
- public:
-    typedef C container_type;
-    
-    explicit back_move_iterator(C& x) : container_m(&x) { }
-    
-    back_move_iterator& operator=(typename C::value_type x)
-    { container_m->push_back(move(x)); return *this; }
-    
-    back_move_iterator& operator*() { return *this; }
-    back_move_iterator& operator++() { return *this; }
-    back_move_iterator& operator++(int) { return *this; }
-};
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Similar to std::back_inserter but 
-with move semantics, for movable types, otherwise with copy semantics.
-*/
-
-template <typename C> // C models Container
-inline back_move_iterator<C> back_mover(C& x) { return back_move_iterator<C>(x); }
-
-/*************************************************************************************************/
-
-#if !defined(BOOST_NO_SFINAE)
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Placement move construction, selected when T is_movable is true
-*/
-
-template <typename T> // T models Regular
-inline void move_construct(T* p, T& x, typename move_sink<T>::type = 0)
-{
-    ::new(static_cast<void*>(p)) T(move_from<T>(x));
-}
-
-/*************************************************************************************************/
-
-
-/*!
-\ingroup move_related
-\brief Placement copy construction, selected when T is_movable is false
-*/
-template <typename T> // T models Regular
-inline void move_construct(T* p, const T& x, typename copy_sink<T>::type = 0)
-{
-    ::new(static_cast<void*>(p)) T(x);
-}
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Similar to std::uninitialized_copy but 
-with move semantics, for movable types.
-*/
-template <typename I, // I models InputIterator
-          typename F> // F models ForwardIterator
-F uninitialized_move(I f, I l, F r,
-        typename move_sink<typename std::iterator_traits<I>::value_type>::type = 0)
-{
-    while (f != l) {
-        boost::move_construct(&*r, *f);
-        ++f; ++r;
-    }
-    return r;
-}
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Behaves as to std::uninitialized_copy , invoked when I's value_type is not movable.
-*/
-template <typename I, // I models InputIterator
-          typename F> // F models ForwardIterator
-F uninitialized_move(I f, I l, F r,
-        typename copy_sink<typename std::iterator_traits<I>::value_type>::type = 0)
-{
-    return std::uninitialized_copy(f, l, r);
-}
-
-/*************************************************************************************************/
-
-#else // BOOST_NO_SFINAE
-
-template <typename T>
-inline void move_construct(T* p, const T& x)
-{
-    ::new(static_cast<void*>(p)) T(x);
-}
-
-template <typename I, // I models InputIterator
-          typename F> // F models ForwardIterator
-F uninitialized_move(I f, I l, F r)
-{
-    return std::uninitialized_copy(f, l, r);
-}
-
-#endif
-
-/*************************************************************************************************/
+} // namespace unordered_detail
 } // namespace boost
 
 /*************************************************************************************************/
