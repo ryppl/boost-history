@@ -93,6 +93,11 @@ standard library are discussed in separate documents:
   (\ref{temp.req.impl}).
 \item Clarify that a \techterm{qualified-id} can refer to a type
   within a concept instance without the use of \tcode{typename}.
+\item Expanded the checking required to determine whether the concept
+  maps used to satisfy the requirements of a template are consistent,
+  to now include consistency with the results of concept map
+  lookup. As part of this change, this text has moved to the template
+  argument deduction section (\ref{temp.deduct}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -3140,7 +3145,45 @@ int i0 = f<int>(0);
 
 \item
 \addedConcepts{If the specified template arguments do not satisfy the
-  requirements of the template (\mbox{\ref{temp.req}}), type deduction fails.}
+  requirements of the template (\mbox{\ref{temp.req}}), type deduction
+  fails.}
+\item
+\addedConcepts{If a concept requirement appears (directly or indirectly)
+multiple times in the requirements of the template,}
+\changedCCC{the program is ill-formed}{and} 
+\addedConcepts{if the concept maps used to satisfy the multiple
+occurrences of the concept requirement are not the same concept map}
+\addedCC{or are different from the concept map that would be
+  determined by concept map lookup
+(\mbox{\ref{temp.req.sat}}), type deduction fails}\addedConcepts{. \mbox{\enterexample}}
+\color{addclr}
+\begin{codeblock}
+concept A<typename T> { }
+concept B<typename T> {
+  typename X;
+  requires A<X>;
+}
+concept C<typename T> {
+  typename X;
+  requires A<X>;
+}
+namespace N1 {
+  concept_map A<int> { }  // \#1
+  concept_map B<int> { }  // uses \#1 to satisfy the requirement for A<int>
+}
+namespace N2 {
+  concept_map A<int> { }  // \#2
+  concept_map C<int> { }  // uses \#2 to satisfy the requirement for A<int>
+}
+tempate<typename T> requires B<T> && C<T>
+struct S { };
+using N1::concept_map B<int>;
+using N2::concept_map C<int>;
+S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
+\end{codeblock}
+\color{black}
+\addedConcepts{\mbox{\exitexample}}
+
 \end{itemize}
 
 \noindent\editorial{Add the following new sections to 14 [temp]:}
@@ -5485,37 +5528,6 @@ requirement.
 \mbox{\enternote} A concept member that had resolved to a member of a
 concept map archetype now refers to a
 member of the corresponding concept map. \mbox{\exitnote}}
-
-\pnum 
-\addedConcepts{If a concept requirement appears (directly or indirectly)
-multiple times in the requirements of a constrained template, the
-program is ill-formed if the concept maps used to satisfy the multiple
-occurrences of the concept requirement are not the same concept map. \mbox{\enterexample}}
-\begin{codeblock}
-concept A<typename T> { }
-concept B<typename T> {
-  typename X;
-  requires A<X>;
-}
-concept C<typename T> {
-  typename X;
-  requires A<X>;
-}
-namespace N1 {
-  concept_map A<int> { }  // \#1
-  concept_map B<int> { }  // uses \#1 to satisfy the requirement for A<int>
-}
-namespace N2 {
-  concept_map A<int> { }  // \#2
-  concept_map C<int> { }  // uses \#2 to satisfy the requirement for A<int>
-}
-tempate<typename T> requires B<T> && C<T>
-struct S { };
-using N1::concept_map B<int>;
-using N2::concept_map C<int>;
-S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedCC{In the instantiation of a constrained template, a call
