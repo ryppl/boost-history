@@ -38,41 +38,41 @@ namespace equality_tests {
         std::list<container_holder<T> > containers;
         container_holder<T> empty;
         containers.push_back(container_holder<T>());
-        BOOST_TEST(empty.values == empty.values);
-        BOOST_TEST(empty.values == containers.back().values);
-        BOOST_TEST(empty.container == empty.container);
-        BOOST_TEST(empty.container == containers.back().container);
+        BOOST_CHECK(empty.values == empty.values);
+        BOOST_CHECK(empty.values == containers.back().values);
+        BOOST_CHECK(empty.container == empty.container);
+        BOOST_CHECK(empty.container == containers.back().container);
 
         container_holder<T> one(1, generator);
         containers.push_back(one);
         
-        BOOST_TEST(empty.values != one.values);
-        BOOST_TEST(one.values == one.values);
-        BOOST_TEST(one.values == containers.back().values);
-        BOOST_TEST(empty.container != one.container);
-        BOOST_TEST(one.container == one.container);
-        BOOST_TEST(one.container == containers.back().container);
+        BOOST_CHECK(empty.values != one.values);
+        BOOST_CHECK(one.values == one.values);
+        BOOST_CHECK(one.values == containers.back().values);
+        BOOST_CHECK(empty.container != one.container);
+        BOOST_CHECK(one.container == one.container);
+        BOOST_CHECK(one.container == containers.back().container);
 
         container_holder<T> hundred(100, generator);
         container_holder<T> hundred2(100, generator);
-        BOOST_TEST(hundred.values != hundred2.values);
+        BOOST_CHECK(hundred.values != hundred2.values);
 
         containers.push_back(hundred);
         containers.push_back(hundred2);
         
-        BOOST_TEST(empty.values != hundred.values);
-        BOOST_TEST(one.values != hundred.values);
-        BOOST_TEST(hundred.values == hundred.values);
-        BOOST_TEST(hundred2.values != hundred.values);
-        BOOST_TEST(hundred.values == hundred.values);
-        BOOST_TEST(hundred2.values == containers.back().values);
+        BOOST_CHECK(empty.values != hundred.values);
+        BOOST_CHECK(one.values != hundred.values);
+        BOOST_CHECK(hundred.values == hundred.values);
+        BOOST_CHECK(hundred2.values != hundred.values);
+        BOOST_CHECK(hundred.values == hundred.values);
+        BOOST_CHECK(hundred2.values == containers.back().values);
 
-        BOOST_TEST(empty.container != hundred.container);
-        BOOST_TEST(one.container != hundred.container);
-        BOOST_TEST(hundred.container == hundred.container);
-        BOOST_TEST(hundred2.container != hundred.container);
-        BOOST_TEST(hundred.container == hundred.container);
-        BOOST_TEST(hundred2.container == containers.back().container);
+        BOOST_CHECK(empty.container != hundred.container);
+        BOOST_CHECK(one.container != hundred.container);
+        BOOST_CHECK(hundred.container == hundred.container);
+        BOOST_CHECK(hundred2.container != hundred.container);
+        BOOST_CHECK(hundred.container == hundred.container);
+        BOOST_CHECK(hundred2.container == containers.back().container);
 
         for(std::size_t i = containers.size(); i < num_containers; ++i) {
             using namespace std;

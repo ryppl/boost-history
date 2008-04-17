@@ -8,7 +8,7 @@
 
 #include "./test.hpp"
 
-#if defined(BOOST_UNORDERED_USE_TEST)
+#if defined(BOOST_UNORDERED_FULL_TEST)
 #   define BOOST_TEST_MAIN
 #   include <boost/test/exception_safety.hpp>
 #   include <boost/test/unit_test.hpp>
@@ -18,7 +18,7 @@
 #include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#if defined(BOOST_UNORDERED_USE_TEST)
+#if defined(BOOST_UNORDERED_FULL_TEST)
 #   define UNORDERED_EXCEPTION_TEST_CASE(name, test_func, type) \
         UNORDERED_AUTO_TEST(name) \
         { \
@@ -163,6 +163,7 @@ namespace test {
         test_runner(Test const& t) : test_(t) {}
         void operator()() const {
             DISABLE_EXCEPTIONS;
+            test::scope = "";
             BOOST_DEDUCED_TYPENAME Test::data_type x(test_.init());
             BOOST_DEDUCED_TYPENAME Test::strong_type strong;
             strong.store(x);
@@ -180,7 +181,7 @@ namespace test {
     
     
 
-#if defined(BOOST_UNORDERED_USE_TEST)
+#if defined(BOOST_UNORDERED_FULL_TEST)
     template <class Test>
     void exception_safety(Test const& f, char const* name) {
         test_runner<Test> runner(f);
@@ -223,9 +224,15 @@ namespace test {
                     success = true;
                 }
                 catch(test_failure) {
+                    BOOST_ERROR("test_failure caught.");
                     break;
                 }
+                catch(test_exception) {
+                    continue;
+                }
                 catch(...) {
+                    BOOST_ERROR("Unexpected exception.");
+                    break;
                 }
             } while(!success);
         }
