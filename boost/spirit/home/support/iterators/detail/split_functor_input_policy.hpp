@@ -13,7 +13,7 @@
 
 namespace boost { namespace spirit { namespace multi_pass_policies
 {
-    namespace is_valid_test_
+    namespace split_functor_input_is_valid_test_
     {
         template <typename Token>
         inline bool token_is_valid(Token const&)
@@ -96,14 +96,14 @@ namespace boost { namespace spirit { namespace multi_pass_policies
             template <typename MultiPass>
             static bool input_is_valid(MultiPass const&, value_type const& t) 
             {
-                using namespace is_valid_test_;
+                using namespace split_functor_input_is_valid_test_;
                 return token_is_valid(t);
             }
 
             template <typename MultiPass>
             static void destroy(MultiPass& mp) 
             {
-                functor_type::destroy(mp.shared);
+                functor_type::destroy(mp);
             }
         };
         
@@ -139,7 +139,7 @@ namespace boost { namespace spirit { namespace multi_pass_policies
                 // passing the current token instance as a parameter helps
                 // generating better code if compared to assigning the 
                 // result of the functor to this instance
-                return ftor.get_next(mp, t);
+                return mp.ftor.get_next(mp, t);
             }
 
             // test, whether we reached the end of the underlying stream
