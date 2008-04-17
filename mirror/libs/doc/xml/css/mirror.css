@@ -25,6 +25,8 @@ H1 {
 
 DIV.section {
 	padding-left: 2.5em;
+	padding-right: 0.5em;
+	border: 1px solid #C0F0C0;
 }
 
 DIV.licensing-notice, DIV.copyright-notice, DIV.revision-notice {
@@ -48,12 +50,16 @@ DIV.linkset {
 	border: 1px solid #A0C0A0;
 	background-color: #E0FFE0;
 	padding: 0.5em;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
 }
 
 P.note {
 	border: 1px solid #C0A0A0;
 	background-color: #FFE0E0;
 	padding: 0.5em;
+	margin-left: 1em;
+	width: 90%;
 }
 
 

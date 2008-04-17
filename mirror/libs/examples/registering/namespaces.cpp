@@ -1,11 +1,13 @@
 /**
  * \file examples/registering/namespaces.hpp
- * Example of namespace registering and reflection
+ * Example of namespace registering and reflection with
+ * the mirror library
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
 // narrow/wide char stream
 #include <boost/char_type_switch/iostream.hpp>
 // namespace registering 
@@ -38,14 +40,15 @@ namespace mirror {
 // register the namespaces
 //
 // the namespace 'test' in the global scope
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(test, BOOST_PP_TUPLE_REM_CTOR(4,('t','e','s','t')))
+BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(test)
 // namespace feature in namespace ::test 
 // the _test is a "namespace alias" for namespace ::test
 // _ is the namespace alias for the global scope
-BOOST_MIRROR_REG_META_NAMESPACE(_test, feature, BOOST_PP_TUPLE_REM_CTOR(7,('f','e','a','t','u','r','e')))
-BOOST_MIRROR_REG_META_NAMESPACE(_test_feature, detail, BOOST_PP_TUPLE_REM_CTOR(6,('d','e','t','a','i','l')))
-BOOST_MIRROR_REG_META_NAMESPACE(_test, stuff, BOOST_PP_TUPLE_REM_CTOR(5,('s','t','u','f','f')))
-BOOST_MIRROR_REG_META_NAMESPACE(_test_stuff, detail, BOOST_PP_TUPLE_REM_CTOR(6,('d','e','t','a','i','l')))
+BOOST_MIRROR_REG_META_NAMESPACE(_test, feature)
+BOOST_MIRROR_REG_META_NAMESPACE(_test_feature, detail)
+// 
+BOOST_MIRROR_REG_META_NAMESPACE(_test, stuff)
+BOOST_MIRROR_REG_META_NAMESPACE(_test_stuff, detail)
 
 } // namespace mirror
 } // namespace boost

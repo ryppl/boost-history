@@ -21,5 +21,14 @@
 		<revision id="20080416" major="0" minor="1" micro="1" author="m_ch">
 			Updated documentation and added several examples.
 		</revision>
+		<revision id="20080417_1146CET" major="0" minor="1" micro="2" author="m_ch">
+			- Modified the REG_NAMESPACE*(...) macros to make them much more simple
+			- Modified the name_to_stream templates and split the sources into
+			  separate files
+			- Added BOOST_MIRROR_REFLECT_NAMESPACE and BOOST_MIRROR_REFLECT_TYPE*
+			  macros that expand to the approrpiate meta-object type
+			- Updated documentation
+			- Added example on type registration and usage
+		</revision>
 	</revisions>
 </library>

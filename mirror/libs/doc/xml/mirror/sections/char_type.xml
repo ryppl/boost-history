@@ -3,7 +3,7 @@
 	<paragraph>
 		The <lib_name_ref/> library defines and uses <cpp_expr>::boost::bchar</cpp_expr> (or <cpp_expr>bchar</cpp_expr>) character type and several other types like <cpp_expr>bstring</cpp_expr>, <cpp_expr>bcin</cpp_expr>, <cpp_expr>bcout</cpp_expr>, <cpp_expr>bcerr</cpp_expr>, etc. defined in the <cpp_expr>boost</cpp_expr> namespace. These types are defined as <cpp_expr>char</cpp_expr> (and <cpp_expr>::std::string</cpp_expr>, <cpp_expr>::std::cin</cpp_expr>, <cpp_expr>::std::cout</cpp_expr>, <cpp_expr>::std::cerr</cpp_expr>, respectively) when the preprocessor symbol <cpp_expr>BOOST_USE_WIDE_CHARS</cpp_expr> is <emph>not</emph> defined (this is the default) and defined as <cpp_expr>wchar_t</cpp_expr> (and <cpp_expr>::std::wstring</cpp_expr>, <cpp_expr>::std::wcin</cpp_expr>, <cpp_expr>::std::wcout</cpp_expr>, <cpp_expr>::std::wcerr</cpp_expr>, respectively) otherwise. 
 	<paragraph>
-		There is also a macro named <cpp_expr>BOOST_STR_LIT(STRING_LITERAL)</cpp_expr> that expands either to <cpp_expr>STRING_LITERAL</cpp_expr> or to <cpp_expr>L##STRING_LITERAL</cpp_expr> based on the <cpp_expr>BOOST_USE_WIDE_CHARS</cpp_expr> being defined.
+		There is also a macro named <cpp_expr>BOOST_STR_LIT(STRING_LITERAL)</cpp_expr> that expands either to <cpp_expr>STRING_LITERAL</cpp_expr> or to <cpp_expr>L##STRING_LITERAL</cpp_expr> based on the <cpp_expr>BOOST_USE_WIDE_CHARS</cpp_expr> not being or being defined.
 
 	</paragraph>
 	</paragraph>

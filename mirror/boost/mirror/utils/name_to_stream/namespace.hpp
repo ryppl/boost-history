@@ -14,14 +14,15 @@
 #include <boost/mirror/utils/name_to_stream/common.hpp>
 // meta namespaces (includes boost/char_type_switch/string.hpp)
 #include <boost/mirror/meta_namespace.hpp>
+#include <boost/mirror/reflects_global_scope.hpp>
 
 namespace boost {
 namespace mirror {
 
 /** Specialization of name_to_stream_helper for the global scope meta-namespace
  */
-template <class namespace_name> 
-struct name_to_stream_helper<meta_namespace<void, namespace_name> >
+template <> 
+struct name_to_stream_helper< BOOST_MIRROR_REFLECT_NAMESPACE(_) >
 {
 	template <class out_stream>
 	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
@@ -32,28 +33,20 @@ struct name_to_stream_helper<meta_namespace<void, namespace_name> >
 
 /** Specialization of name_to_stream_helper for the top level namespaces
  */
-template <class namespace_name> 
-struct name_to_stream_helper<meta_namespace<namespaces::_, namespace_name> >
+template <class namespace_alias> 
+struct name_to_stream_helper<meta_namespace<namespace_alias> >
 {
+	typedef meta_namespace<namespace_alias> meta_ns;
 	template <class out_stream>
 	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
 	{
-		return (ldng_dbl_cln? s << BOOST_STR_LIT("::") : s) << 
-			   meta_namespace<namespaces::_, namespace_name>::base_name();
-	}
-};
-
-/** Specialization of name_to_stream_helper for nested namespaces
- */
-template <class parent_meta_ns, class namespace_name> 
-struct name_to_stream_helper<meta_namespace<parent_meta_ns, namespace_name> >
-{
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
-	{
-		return name_to_stream<parent_meta_ns>::put(s, ldng_dbl_cln) <<
-		       BOOST_STR_LIT("::") << 
-			   meta_namespace<parent_meta_ns, namespace_name>::base_name();
+		// let the printer print out the  base name of the parent namespace
+		name_to_stream<meta_ns::parent>::put(s, ldng_dbl_cln);
+		// if the parent is not the global scope
+		if(!reflects_global_scope<meta_ns::parent>::value)
+			s << BOOST_STR_LIT("::");
+		// let the printer print out the  base name of the parent namespace
+		return s << meta_ns::base_name();
 	}
 };
 
