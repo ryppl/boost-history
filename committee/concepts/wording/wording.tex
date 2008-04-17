@@ -571,9 +571,12 @@ any of the concept maps for concepts its concept refines
 (\mbox{\ref{concept.member.lookup}}).}
 \addedCC{Concept map lookup (\mbox{\ref{temp.req.sat}}) determines
   which concept map the \mbox{\techterm{nested-name-specifier}} refers to.}
-\addedConcepts{The name shall represent a member of that concept map (which may be
-the candidate set (\mbox{\ref{temp.constrained.set}}) corresponding to an
-associated function).
+\addedConcepts{The name shall represent a member of that concept map}
+\addedCC{(which may be
+the associated function candidate set
+(\mbox{\ref{temp.constrained.set}}) corresponding to an 
+associated function)}
+\addedConcepts{.
 \mbox{\enternote}\
 a concept map member can be referred to using a
 \mbox{\techterm{qualified-id}}\ 
@@ -742,7 +745,7 @@ of type
 the type of the result is
 ``pointer to member of \tcode{class C}\ of type
 \tcode{T}.''
-\removedConcepts{The address of a member of a concept map
+\addedConcepts{The address of a member of a concept map
 (\mbox{\ref{concept.map}}) shall not be taken, either implicitly or
 explicitly.}
 \enterexample\ 
@@ -4096,7 +4099,8 @@ void func(X x) {
   with their concept arguments, and where each undefined associated
   type and associated template has been replaced with a newly invented
   type or template template parameter, respectively. Let
-  \mbox{\tcode{A}} be the return type of the seed in the candidate set
+  \mbox{\tcode{A}} be the return type of the seed in the associated
+  function candidate set
   corresponding to the associated function. If the deduction fails, no
   concept map members are implicitly defined by that associated
   function. If the results of
@@ -5394,7 +5398,7 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
     removed, and}
 \additemCC{it has the same \mbox{\techterm{parameter-type-list}} as
   the seed, after making the following adjustments to both
-  \mbox{\techterm{parameter-type-list}}:} 
+  \mbox{\techterm{parameter-type-list}}s:} 
 \begin{itemize}
   \additemCC{for a non-member function, add the implicit
     object parameter (\mbox{\ref{over.match.funcs}}) as the first
@@ -5421,12 +5425,19 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \end{itemize}
 
 \pnum
-\addedCC{A call to a candidate set uses the contents of the candidate set as
-  the candidate functions for overload resolution. If overload
-  resolution succeeds, the call 
-  to the candidate set is replaced with a call to the result of
-  overload resolution; otherwise, the call to the candidate set is
-  ill-formed.}
+\addedCC{A candidate set is a set of overloaded
+  functions. Overload resolution (\mbox{\ref{over.match}}) for a
+  candidate set is subject to the following additional conditions:}
+\begin{itemize}
+\item
+\addedCC{the set of candidate functions for overload resolution is the
+set of functions in the candidate set, and}
+\addedCC{if template argument deduction on a candidate function
+  produces a function template specialization that is not consistent
+  with the seed of the candidate set, the function template
+  specialization is not a viable function
+  (\mbox{\ref{over.match.viable}}).}
+\end{itemize}
 
 \rSec2[temp.constrained.inst]{Instantiation of constrained templates}
 \pnum
@@ -5479,11 +5490,10 @@ S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
 \addedCC{In the instantiation of a constrained template, a call
   to a function or a use of an operator that resolves to an associated
   function in a concept map archetype (\mbox{\ref{temp.archetype}})
-  will be instantiated as a call to the candidate set
+  will be instantiated as a call to the associated function candidate set
   (\mbox{\ref{temp.constrained.set}}) that satisfies the
   corresponding associated function requirement in the concept map
-  that replaces the concept map archetype, if that candidate set is
-  non-empty. \mbox{\enterexample}} 
+  that replaces the concept map archetype. \mbox{\enterexample}} 
 \begin{codeblock}
 concept F<typename T> {
   T::T();
@@ -5500,7 +5510,7 @@ struct X {};
 void f(X const&); // \#1
 void f(X&&); // \#2 
 
-concept_map F<X> { } // candidate set for f(X const\&) contains \#1 and \#2, seed is \#1
+concept_map F<X> { } // associated function candidate set for f(X const\&) contains \#1 and \#2, seed is \#1
 
 void h(X const& x) {
   g(x);
@@ -5508,23 +5518,16 @@ void h(X const& x) {
 \end{codeblock}
 \exitexample\
 
-\addedCC{If the candidate set is empty, then}
-\begin{itemize}
-  \item \addedCC{if the associated function is a constructor
-      requirement, perform direct initialization
-      (\mbox{\ref{dcl.init}}) of the object with
-      the given arguments, or}
-  \item \addedCC{if the associated function is a destructor
-      requirement, perform a pseudo destructor call
-      (\mbox{\ref{expr.pseudo}}) on the argument.}
-\end{itemize}
-
 \pnum
-\addedCC{\mbox{\enternote} in the instantiation of a constrained
-  template, a use of a function 
-template will undergo a second round of overload resolution using the
-candidate set (\mbox{\ref{temp.constrained.set}}) determined during the
-processing of the constrained template. \mbox{\enterexample}} 
+\addedCC{A use of a function template specialization in a constrained
+  template instantiates to a use of that function template
+  specialization's retained candidate set. The
+  \mbox{\techterm{retained candidate set}} is a candidate set
+  (\mbox{\ref{temp.constrained.set}}) whose seed is determined by the
+  function template specialization used in the definition of the
+  constrained template, after substitution of the constrained
+  template's template arguments for their corresponding
+  archetypes. \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> { 
   typename difference_type;
@@ -5534,7 +5537,6 @@ concept RandomAccessIterator<typename Iter> : BidirectionalIterator<Iter> { }
 
 template<InputIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#1
 template<BidirectionalIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#2
-template<RandomAccessIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#3
 
 template<BidirectionalIterator Iter> void f(Iter i) {
   advance(i, 1); // seed function is \#2
@@ -5544,9 +5546,11 @@ concept_map RandomAccessIterator<int*> {
   typedef std::ptrdiff_t difference_type;
 }
 
+template<RandomAccessIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#3
+
 void g(int* i) {
-  f(i); // in call to advance(), \#1, \#2, and \#3 are in the candidate set
-        // partial ordering of function templates selects \#3
+  f(i); // in the call to advance(), \#1 is the seed of the retained candidate set, the retained candidate set contains \#1, \#2, 
+        // and \#3, and partial ordering of function templates selects \#3.
 }
 \end{codeblock}
 \addedCC{\mbox{\exitexample}\mbox{\exitnote}}
