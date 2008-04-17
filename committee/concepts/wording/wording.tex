@@ -4634,6 +4634,24 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
 \end{itemize}
 
 \pnum
+\addedCC{If a type or expression within the signature of a constrained
+template, the \mbox{\techterm{template-parameter-list}} of a
+constrained template, or the \mbox{\techterm{requires-clause}} of a
+constrained template (if any) would be ill-formed if the associated
+context were a constrained context, the program is
+ill-formed. \mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> {
+  typename type;
+}
+
+template<typename T> requires C<T>
+typename C<T>::type::inner_type f(T const&); // error: typename C<T>::type::inner_type would be ill-formed 
+                                             // in a constrained context
+\end{codeblock}
+\addedCC{\mbox{\exitexample}}
+
+\pnum
 \addedCC{Within a constrained context, a program shall not refer to an
   unconstrained template.}
 
