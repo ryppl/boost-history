@@ -3399,11 +3399,19 @@ concept Callable1<typename F, typename T1> {
   typename result_type;
   result_type operator()(F, T1);
 }
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
+\end{codeblock}\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-TODO: Add text for associated templates!
+\addedCC{An associated template specifies a template in a concept
+  map. \mbox{\enterexample}}
+\color{ccadd}
+\begin{codeblock}
+concept C<typename T> {
+  template<ObjectType U> class X;
+}
+\end{codeblock}
+\addedCC{\mbox{\exitexample}}
+\color{addclr}
 
 \pnum
 \addedConcepts{Associated types and templates may be provided with a default value. The
