@@ -568,8 +568,10 @@ the name specified after the
 \mbox{\techterm{nested-name-specifier}}\ 
 is looked up in the scope of the concept map (\mbox{\ref{basic.scope.concept}}) or
 any of the concept maps for concepts its concept refines
-(\mbox{\ref{concept.member.lookup}}).
-The name shall represent a member of that concept map (which may be
+(\mbox{\ref{concept.member.lookup}}).}
+\addedCC{Concept map lookup (\mbox{\ref{temp.req.sat}}) determines
+  which concept map the \mbox{\techterm{nested-name-specifier}} refers to.}
+\addedConcepts{The name shall represent a member of that concept map (which may be
 the candidate set (\mbox{\ref{temp.constrained.set}}) corresponding to an
 associated function).
 \mbox{\enternote}\
@@ -3089,10 +3091,13 @@ int i2 = f<int,1>(0);           // can't conv \tcode{1}\ to \tcode{int*}
 Attempting to create a function type in which a parameter has a type
 of \tcode{void}.
 
-\additemConcepts{Attempting to use a type in a
+\item
+\addedConcepts{Attempting to use a type in a
   \mbox{\techterm{nested-name-specifier}} of a
   \mbox{\techterm{qualified-id}} that refers to a member in a concept
-  instance, for which there is no concept map corresponding to that
+  instance, for which} \changedCC{there is no}{concept map lookup
+  (\mbox{\ref{temp.req.sat}}) does not find a} 
+\addedConcepts{concept map corresponding to that
   concept instance (\mbox{\ref{concept.map}}).}
 
 \additemConcepts{Attempting to use a class or function template with
@@ -3638,7 +3643,9 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
 
 \pnum
 \addedConcepts{A concept map for an implicit concept is implicitly defined when it is
-needed. The implicitly-defined concept map is defined in the
+needed} \addedCC{to satisfy a requirement (\mbox{\ref{temp.req.sat}})
+or provide a definition for a specific concept instance}.
+\addedConcepts{The implicitly-defined concept map is defined in the
   namespace of the concept. \mbox{\enterexample}}
 \begin{codeblock}
 auto concept Addable<typename T> {
@@ -4772,16 +4779,23 @@ void h(float x, int y, int X::* p) {
   the following ordered sequence:}
 
 \begin{enumerate}
-  \additemCC{\mbox{\tcode{S}} is the set of concept maps, each with
+  \additemCC{\mbox{\tcode{S}} is the set of concept maps, each with 
       name \mbox{\tcode{N}}, that have replaced the concept map
       archetypes used in the constrained template.}
     
   \additemCC{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the namespaces of which the
+      searching for \mbox{\tcode{N}} in the namespaces of which certain
       concept maps in (1) are members and in the associated namespaces
       of those namespaces (\mbox{\ref{namespace.def}});
       \mbox{\techterm{using-directives}} in those namespaces are not
-      followed during this search.}
+      followed during this search. Only those concept maps in (1) that
+    were explicitly defined or were instantiated from concept map
+    templates are considered when determining which namespaces to search.}
+
+  \additemCC{If a concept map for \mbox{\tcode{I}} can be implicitly
+    defined (\mbox{\ref{concept.map.implicit}}), \mbox{\tcode{S}}
+    contains the implicitly-defined concept map for
+    \mbox{\tcode{I}}. Otherwise, \mbox{\tcode{S}} is empty.}
 \end{enumerate}
 
 \mbox{\enterexample}
@@ -4823,6 +4837,11 @@ ordered sequence:}
     \mbox{\techterm{using-directives}} in these namespaces are not
     followed during this search and all names found by way of
     \mbox{\techterm{using-declarations}} are ignored.}
+
+  \additemCC{If a concept map for \mbox{\tcode{I}} can be implicitly
+    defined (\mbox{\ref{concept.map.implicit}}), \mbox{\tcode{S}}
+    contains the implicitly-defined concept map for
+    \mbox{\tcode{I}}. Otherwise, \mbox{\tcode{S}} is empty.}
 \end{enumerate}
    
 \addedCC{\mbox{\enternote} When concept map lookup is performed
