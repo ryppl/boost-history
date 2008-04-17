@@ -2793,6 +2793,22 @@ required.}
 \color{black}
 
 \rSec1[temp.res]{Name resolution}
+
+\setcounter{Paras}{2}
+\pnum
+When a \techterm{qualified-id} is intended to refer to a type that is not a member of the current instantiation (14.6.2.1) and its 
+\techterm{nested-name-specifier} 
+\addedCC{is not a concept instance (\mbox{\ref{concept}}) and}
+depends on a \techterm{template-parameter} (14.6.2), it shall be prefixed by the keyword \tcode{typename}, forming a 
+\techterm{typename-specifier}. If the \techterm{qualified-id} in a
+\techterm{typename-specifier} does not denote a type, the program is
+ill-formed. 
+\addedCC{When the \mbox{\techterm{nested-name-specifier}} refers to a
+  concept instance, name lookup into the corresponding concept
+  determines whether the \mbox{\techterm{qualified-id}} refers to a
+  type or a value.}
+
+
 \setcounter{subsection}{2}
 \rSec2[temp.nondep]{Non-dependent names}
 \noindent\editorial{Add the following new paragraph to Non-dependent
