@@ -1284,6 +1284,13 @@ namespace boost {
 
             void swap(BOOST_UNORDERED_TABLE& x)
             {
+            	// The swap code can work when swapping a container with itself
+            	// but it triggers an assertion in buffered_functions.
+            	// At the moment, I'd rather leave that assertion in and add a
+            	// check here, rather than remove the assertion. I might change
+            	// this at a later date.
+            	if(this == &x) return;
+            
                 // These can throw, but they only affect the function objects
                 // that aren't in use so it is strongly exception safe, via.
                 // double buffering.
