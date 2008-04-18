@@ -33,7 +33,7 @@ public:
   :location_(location), handle_(0), auto_close_(auto_close) {
   }
 #define BOOST_PP_ITERATION_LIMITS (0, \
-    BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
+    BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS) - 1)
 #define BOOST_PP_FILENAME_1 <boost/extension/impl/shared_library.hpp>
 #include BOOST_PP_ITERATE()
 protected:
