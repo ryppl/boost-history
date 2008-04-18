@@ -15,16 +15,9 @@
 #include <string>
 #include <boost/extension/impl/library_impl.hpp>
 #include <boost/extension/common.hpp>
+#include <boost/preprocessor/iteration/iterate.hpp>
+
 namespace boost { namespace extensions {
-
-#define BOOST_EXTENSION_SHARED_LIBRARY_GET_FUNCTION(Z, N, _) \
-template <class ReturnValue BOOST_PP_COMMA_IF(N) \
-          BOOST_PP_ENUM_PARAMS(N, class Param) > \
-ReturnValue (*get(const std::string& name))(BOOST_PP_ENUM_PARAMS(N, Param)) { \
-  return reinterpret_cast<ReturnValue (*)(BOOST_PP_ENUM_PARAMS(N, Param))> \
-      (get_function(handle_, name.c_str())); \
-}
-
 
 class shared_library
 {
@@ -39,10 +32,10 @@ public:
   shared_library(const std::string& location, bool auto_close = false)
   :location_(location), handle_(0), auto_close_(auto_close) {
   }
-
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
-                BOOST_EXTENSION_SHARED_LIBRARY_GET_FUNCTION, _)
-
+#define BOOST_PP_ITERATION_LIMITS (0, \
+    BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
+#define BOOST_PP_FILENAME_1 <boost/extension/impl/shared_library.hpp>
+#include BOOST_PP_ITERATE()
 protected:
   std::string location_;
   library_handle handle_;
