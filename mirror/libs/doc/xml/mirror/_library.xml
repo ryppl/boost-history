@@ -34,5 +34,10 @@
 			- Added an elaborate example on class registration and usage
 			- Done major modifications to multiple sources
 		</revision>
+		<revision id="20080418" major="0" minor="1" micro="4" author="m_ch">
+			- Added two examples (incomplete)
+			- Done some modifications to multiple sources
+			- Minor updates to documentation
+		</revision>
 	</revisions>
 </library>
