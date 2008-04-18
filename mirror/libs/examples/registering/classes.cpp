@@ -365,6 +365,7 @@ int main(void)
 	using ::test::stuff::detail::bar_base;
 	//
 	// use the pretty printer to print out  into about the given types
+	//
 	// pointer to native type
 	bcout << "|01| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_TYPE(double*)>() << endl;
 	// a class defined in a namespace

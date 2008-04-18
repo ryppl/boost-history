@@ -211,6 +211,7 @@ struct meta_class_attributes
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIBS_END \
 	type_list; \
+struct size : public mpl::size<type_list>{ };\
 };
 } // namespace mirror
 } // namespace boost

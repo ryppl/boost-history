@@ -10,6 +10,8 @@
 #ifndef BOOST_MIRROR_META_INHERITANCE_HPP
 #define BOOST_MIRROR_META_INHERITANCE_HPP
 
+// forward declarations
+#include <boost/mirror/meta_data_fwd.hpp>
 // access specifiers
 #include <boost/mirror/access_spec.hpp>
 // inheritance specifiers
@@ -24,57 +26,116 @@ namespace mirror {
 /** helper template instances of which define the inheritance type,
  *  access specifiers and base class of a meta_class
  */
-template <class a_class, typename access_spec, typename inheritance_spec>
-struct meta_inheritance_defs
+template <
+	class the_base_class, 
+	typename access_spec, 
+	typename inheritance_spec
+> struct meta_inheritance_defs
 {
 	typedef inheritance_spec inheritance_specifier;
 	typedef access_spec access_specifier;
-	typedef a_class base_class;
+	typedef the_base_class base_class;
+	typedef BOOST_MIRROR_REFLECT_CLASS(the_base_class) meta_class;
 };
 
 /** This template stores the inheritance type and access specifier
  *  of a base class for a derived class
  */
-template <class a_class, typename access_spec, typename inheritance_spec>
-struct meta_inheritance_spec;
+template <
+	class the_base_class, 
+	typename access_spec, 
+	typename inheritance_spec
+> struct meta_inheritance_spec;
 
-template <class a_class>
-struct meta_inheritance_spec<a_class, private_, virtual_base_>
-: meta_inheritance_defs<a_class, private_, virtual_base_> { };
+template <class the_base_class>
+struct meta_inheritance_spec<
+	the_base_class, 
+	private_, 
+	virtual_base_
+> : meta_inheritance_defs<
+	the_base_class, 
+	private_, 
+	virtual_base_
+> { };
 
-template <class a_class>
-struct meta_inheritance_spec<a_class, protected_, virtual_base_> 
-: meta_inheritance_defs<a_class, protected_, virtual_base_> { };
+template <class the_base_class>
+struct meta_inheritance_spec<
+	the_base_class, 
+	protected_, 
+	virtual_base_
+> : meta_inheritance_defs<
+	the_base_class, 
+	protected_, 
+	virtual_base_
+> { };
 
-template <class a_class>
-struct meta_inheritance_spec<a_class, public_, virtual_base_> 
-: meta_inheritance_defs<a_class, public_, virtual_base_> { };
+template <class the_base_class>
+struct meta_inheritance_spec<
+	the_base_class, 
+	public_, 
+	virtual_base_
+> : meta_inheritance_defs<
+	the_base_class, 
+	public_, 
+	virtual_base_
+> { };
 
-template <class a_class>
-struct meta_inheritance_spec<a_class, private_, nonvirtual_base_> 
-: meta_inheritance_defs<a_class, private_, nonvirtual_base_> { };
+template <class the_base_class>
+struct meta_inheritance_spec<
+	the_base_class, 
+	private_, 
+	nonvirtual_base_
+> : meta_inheritance_defs<
+	the_base_class, 
+	private_, 
+	nonvirtual_base_
+> { };
 
-template <class a_class>
-struct meta_inheritance_spec<a_class, protected_, nonvirtual_base_> 
-: meta_inheritance_defs<a_class, protected_, nonvirtual_base_> { };
+template <class the_base_class>
+struct meta_inheritance_spec<
+	the_base_class, 
+	protected_, 
+	nonvirtual_base_
+> : meta_inheritance_defs<
+	the_base_class, 
+	protected_, 
+	nonvirtual_base_
+> { };
 
-template <class a_class>
-struct meta_inheritance_spec<a_class, public_, nonvirtual_base_> 
-: meta_inheritance_defs<a_class, public_, nonvirtual_base_> { };
+template <class the_base_class>
+struct meta_inheritance_spec<
+	the_base_class, 
+	public_, 
+	nonvirtual_base_
+> : meta_inheritance_defs<
+	the_base_class, 
+	public_, 
+	nonvirtual_base_
+> { };
 
 /** This template stores the inheritance type and access specifier
  *  of a base class for a derived class
  */
 template <
-	class a_class, 
-	typename access_spec = class_kind_default_access<meta_class_kind<a_class>::result>::specifier, 
+	class the_base_class, 
+	typename access_spec = class_kind_default_access<
+		meta_class_kind<the_base_class>::result
+	>::specifier, 
 	typename inheritance_spec = nonvirtual_base_
 >
-struct meta_inheritance : meta_inheritance_spec<a_class, access_spec, inheritance_spec>{ };
+struct meta_inheritance
+: meta_inheritance_spec<
+	the_base_class, 
+	access_spec, 
+	inheritance_spec
+>{ };
 
 /** Default (empty) list of base classes of a meta_class
  */
-template <class a_class, class variant_tag = detail::default_meta_class_variant>
+template <
+	class reflected_class, 
+	class variant_tag = detail::default_meta_class_variant
+>
 struct meta_base_classes
 {
 	typedef mpl::vector<> list;
@@ -85,8 +146,10 @@ struct meta_base_classes
  *  of the given class
  */
 #define BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(A_CLASS) \
-	template <> struct meta_base_classes<A_CLASS, detail::default_meta_class_variant> \
-	{ \
+	template <> struct meta_base_classes<\
+		A_CLASS, \
+		detail::default_meta_class_variant \
+	> { \
 		typedef mpl::vector< 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
@@ -118,6 +181,7 @@ struct meta_base_classes
  */
 #define BOOST_MIRROR_REG_BASE_CLASSES_END \
 	> list; \
+	struct size : public mpl::size<list>{ };\
 };
 
 /** This macro registers a the A_BASE_CLASS class 

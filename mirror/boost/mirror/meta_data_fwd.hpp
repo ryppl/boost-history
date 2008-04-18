@@ -57,9 +57,23 @@ struct meta_type;
 
 
 
+namespace detail {
+
+	/** Because one class can have several different meta_classes 
+	 *  we require some means to distinguish between them when
+	 *  selecting the proper meta_class<> template instantiation.
+	 *  This type is used to mark the default meta-class variant.
+	 */ 
+	struct default_meta_class_variant{ };
+} //namespace detail
+
+
 /** Meta-class template forward declaration
  */
-template <class a_class, class variant_tag>
+template <
+	class a_class, 
+	class variant_tag = detail::default_meta_class_variant
+>
 struct meta_class;
 
 /** Macro that expands into the meta_class for the 
@@ -72,7 +86,10 @@ struct meta_class;
  *  given type or class.
  */
 #define BOOST_MIRROR_REFLECT_CLASS_VT(CLASS, VARIANT_TAG) \
-	::boost::mirror::meta_class<CLASS, VARIANT_TAG>
+	::boost::mirror::meta_class<\
+		CLASS, \
+		VARIANT_TAG\
+>
 
 
 
