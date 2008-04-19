@@ -26,7 +26,7 @@ inline void load_single_library(factory_map & current_factory_map,
       return;
     }
     void (*func)(factory_map &) = 
-      lib.get<void, factory_map &>(external_function_name);
+      lib.shared_library::get<void, factory_map &>(external_function_name);
     if (!func) {
       return;
     }
