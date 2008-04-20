@@ -25,6 +25,7 @@
 typedef long double comparison_type;
 
 template <class T> void sink(T const&) {}
+template <class T> T rvalue(T const& v) { return v; }
 
 template <class X, class T>
 void container_test(X& r, T&)
@@ -144,11 +145,20 @@ void unordered_set_test(X&, Key const&)
 }
 
 template <class X, class Key, class T>
-void unordered_map_test(X&, Key const&, T const&)
+void unordered_map_test(X& r, Key const& k, T const& v)
 {
     typedef BOOST_DEDUCED_TYPENAME X::value_type value_type;
     typedef BOOST_DEDUCED_TYPENAME X::key_type key_type;
     BOOST_MPL_ASSERT((boost::is_same<value_type, std::pair<key_type const, T> >));
+
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+    Key k_lvalue(k);
+    T v_lvalue(v);
+
+    r.emplace(k, v);
+    r.emplace(k_lvalue, v_lvalue);
+    r.emplace(rvalue(k), rvalue(v));
+#endif
 }
 
 template <class X, class T>
