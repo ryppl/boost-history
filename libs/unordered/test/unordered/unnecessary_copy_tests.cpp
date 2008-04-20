@@ -50,7 +50,7 @@ namespace unnecessary_copy_tests
 
         x.insert(a);
         BOOST_CHECK(count_copies::count == 2);
-        if(count_copies::count != 1)
+        if(count_copies::count != 2)
             std::cerr<<count_copies::count<<" copies.\n";
     }
 
