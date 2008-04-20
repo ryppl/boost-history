@@ -45,6 +45,8 @@ exe ublas_sptrf_sptrs   : ublas_sptrf_sptrs.cc ;
 exe ublas_sytrf_sytrs   : ublas_sytrf_sytrs.cc ;
 
 test-suite bindings-lapack :
+    [ run lapack.cpp ]
+
     [ run ublas_gees.cpp ]
     [ run ublas_geqrf.cpp ]
     [ run ublas_hbev.cpp ]
