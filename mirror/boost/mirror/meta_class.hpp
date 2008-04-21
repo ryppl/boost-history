@@ -344,7 +344,7 @@ struct meta_class : public meta_type<reflected_class>
 			{
 				typedef typename mpl::int_<mpl::minus<
 					mpl::int_<I>,
-					mpl::size<inherited_member_attrib_type_list>::type
+					typename mpl::size<inherited_member_attrib_type_list>::type
 				>::value> new_pos_type;
 				return meta_class::attributes::get(context, new_pos_type());
 			}
@@ -378,7 +378,7 @@ struct meta_class : public meta_type<reflected_class>
 			{
 				typedef typename mpl::int_<mpl::minus<
 					mpl::int_<I>,
-					mpl::size<inherited_member_attrib_type_list>::type
+					typename mpl::size<inherited_member_attrib_type_list>::type
 				>::value> new_pos_type;
 				return meta_class::attributes::query(context, new_pos_type(), dest);
 			}
@@ -411,7 +411,7 @@ struct meta_class : public meta_type<reflected_class>
 			{
 				typedef typename mpl::int_<mpl::minus<
 					mpl::int_<I>,
-					mpl::size<inherited_member_attrib_type_list>::type
+					typename mpl::size<inherited_member_attrib_type_list>::type
 				>::value> new_pos_type;
 				meta_class::attributes::set(context, new_pos_type(), value);
 			}
