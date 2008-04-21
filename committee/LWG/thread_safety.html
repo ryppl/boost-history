@@ -1,0 +1,196 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Thread-Safety in the Standard Libary</title>
+</head>
+
+<body>
+
+<p>Doc. no.&nbsp;&nbsp; N2410=07-0270<br>
+Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2007-09-07<!--webbot bot="Timestamp" endspan i-checksum="12600" --><br>
+Project:&nbsp;&nbsp;&nbsp;&nbsp; Programming Language C++<br>
+Reply to:&nbsp;&nbsp; Beman Dawes &lt;bdawes at acm.org&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Peter Dimov &lt;pdimov at pdimov.com&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Herb Sutter &lt;hsutter at microsoft.com&gt;</p>
+
+<h1>Thread-Safety in the Standard Library (Rev 1)</h1>
+
+<p><a href="#Executive-summary">Executive summary</a><br>
+<a href="#Introduction">Introduction</a><br>
+<a href="#Rationale">Rationale</a><br>
+<a href="#Existing-practice">Existing practice</a><br>
+<a href="#Proposed-Wording">Proposed wording</a><br>
+<a href="#Acknowledgements">Acknowledgements</a><br>
+<a href="#Revision-history">Revision history</a><br>
+<a href="#References">References</a></p>
+
+<h2><a name="Executive-summary">Executive summary</a></h2>
+<blockquote>
+
+<p align="left">Unless otherwise specified,  standard library classes may safely 
+be instantiated from multiple threads and standard library functions are reentrant, 
+but objects of standard library types are not safe to share between threads 
+if an expression evaluation conflict (<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">N2334</a>) 
+occurs, unless protected by a synchronization mechanism..</p>
+</blockquote>
+<h2><a name="Introduction">Introduction</a></h2>
+<p>With the introduction of multi-threading into the C++ standard, the contract 
+between standard library users and implementors needs to explicitly state the 
+conditions under which standard library components are or are not thread-safe.</p>
+<h2><a name="Rationale">Rationale</a></h2>
+<p>The objective is to offer users of the standard library as much thread-safety 
+as is possible without impacting performance or creating an illusion of safety 
+where none exists.</p>
+<h3>Basic thread-safety guarantee</h3>
+<p>Guaranteeing standard library functions be reentrant and guaranteeing thread-safety for 
+standard library types has little or no impact on performance. 
+It  does actually deliver the promised safety. Thus this basic thread-safety is 
+required of implementations.</p>
+<h3>Strong thread-safety guarantee</h3>
+<p>Guaranteeing thread-safety for mutating shared objects would have a severe negative 
+impact on performance. Furthermore, real safety often requires locking across several 
+member function calls, so providing per function-call locking would 
+create a illusion of safety that did in fact not exist. For these reasons, strong thread-safety for 
+mutating 
+shared objects is not provided, and constraints are put on programs 
+accordingly.</p>
+<h3>Meaning of <i>thread-safety</i></h3>
+<p>The proposed wording 
+talks in terms of data races and expression evaluation conflicts. <i>Data races</i> 
+and <i>expression evaluation conflicts</i> will be defined in the core language 
+portion of the standard, so do 
+not need to be further described in the library clauses.</p>
+<h3>Standard library components not given strong guarantee</h3>
+<p>Consideration was given to specifying rand function and the global locale 
+objects on a per-thread basis. That is not proposed because it does not 
+represent existing practice. Mac OS X, for example, does not support per-thread 
+global locale objects.</p>
+<h2><a name="Existing-practice">Existing practice</a></h2>
+<p>As far as is known, the proposed wording reflects existing practice in 
+current implementations of the standard library.</p>
+<h2><a name="Proposed-Wording">Proposed Wording</a></h2>
+<p><i>References shown as ([Multi-threaded executions and data races]) refer to 
+the new section of that name described in
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">
+N2334</a> or it successor.</i></p>
+<p><i>Change 17.4.4 Conforming implementations [conforming] as indicated:</i></p>
+<blockquote>
+<p>This subclause describes the constraints upon, and latitude of, 
+implementations of the C++ Standard library. The following subclauses describe 
+an implementation’s use of headers (17.4.4.1), macros (17.4.4.2), global 
+functions (17.4.4.3), member functions (17.4.4.4), reentrancy (17.4.4.5), access 
+specifiers (17.4.4.6), class derivation (17.4.4.7), <font color="#FF0000">
+<strike>and</strike></font> exceptions (17.4.4.8)<font color="#228822"><u>, and 
+thread safety ([res.on.thread.safety])</u></font>.</p>
+</blockquote>
+<p><i>At the end of [conforming] add a new subsection: </i> </p>
+<blockquote>
+  <p>17.4.4.9 Thread safety [res.on.thread.safety]</p>
+  <p>Unless otherwise specified, calls to standard library functions from 
+  different threads shall not result in a data race unless<font color="#228822">
+  </font>arguments to the calls, 
+  including <code>*this</code>, directly or indirectly access objects shared 
+  between the threads in such a way that an expression evaluation conflict 
+  occurs ([<i>Multi-threaded executions and data races</i>]) .</p>
+  <p><i>[Note:</i> This  means, for example, that 
+  implementations can't use a static object for internal purposes without 
+  synchronization because it could cause a data race even in programs that do 
+  not explicitly share objects between threads.<i> --end note] </i></p>
+</blockquote>
+<p><i>Somewhere in [constraints] add a constraint on programs: </i> </p>
+<blockquote>
+  <p>Unless otherwise specified, direct or indirect access to the same object of 
+  a standard library type from different threads results in undefined behavior 
+  if any of the accesses are via a non-const member function of the object or 
+  non-const argument 
+  to any standard library function, including <code>*this</code>, and one does 
+  not happen before the other ([<i>Multi-threaded executions and data races</i>]).</p>
+  <p><i>[Note: </i>This lack of strong thread-safety guarantee means that 
+  modifying an object of a standard library type shared between threads 
+  without using a locking mechanism may result in a data race or 
+  other undesirable behavior. <i>
+  --end note]</i></p>
+</blockquote>
+  <p><i>To 18.5.1 Storage allocation and deallocation [new.delete], add:</i></p>
+<blockquote>
+  <p>The library versions of operator <code>new</code> and <code>delete</code> 
+  shall not introduce data races ([<i>Multi-threaded executions and data races</i>]) 
+  as a result of concurrent calls from different threads.&nbsp;Calls that allocate or 
+  deallocate a particular unit of storage shall occur in a single total order, 
+  and each such deallocation call happens before the next allocation (if any) in 
+  this order.</p>
+</blockquote>
+  <p><i>To 19.3 Error numbers [errno] paragraph 1, add:</i></p>
+<blockquote>
+  <p> A separate <code>errno</code> 
+  value shall be provided for each thread-of-execution.</p>
+</blockquote>
+  <p><i>To 20.6.1 The default allocator [default.allocator], add:</i></p>
+  <blockquote>
+  <p>Except for the destructor, member functions of the default allocator shall 
+  not introduce data races ([<i>Multi-threaded executions and data races</i>]) 
+  as a result of concurrent accesses to default allocator objects from different 
+  threads.&nbsp;Allocation and deallocation calls that allocate or return a 
+  particular unit of storage shall occur in a single total order, and each such 
+  deallocation call happens before the next allocation (if any) in this order.</p>
+  </blockquote>
+  <p><i>To 20.7 Date and Time [date.time], add:</i></p>
+  <blockquote>
+  <p>Functions <code>asctime</code><span class="q">,
+  </span><code>ctime</code><span class="q">, </span><code>gmtime</code><span class="q">, 
+  and </span><code>localtime</code> are not require to be thread-safe ([res.on.thread.safety]).</p>
+  </blockquote>
+  <p><i>To 21.4 Null-terminated sequence utilities [c.strings], add:</i></p>
+  <blockquote>
+    <p>Functions <code>
+    strerror</code> and <code>strtok</code> are not require to be 
+    thread-safe ([res.on.thread.safety]).</p>
+  </blockquote>
+  <p><i>Change 26.7 C Library [c.math] paragraph 5 and 6 as indicated:</i></p>
+  <blockquote>
+    <p>The <code>rand</code> function has the semantics specified in the C 
+    standard, except that the implementation may specify that particular library 
+    functions may call <code>rand</code>.<u><font color="#228822"> The</font></u><font color="#228822"><u>
+    <code>rand</code> function is not require to be thread-safe ([res.on.thread.safety]).</u></font></p>
+</blockquote>
+  <h2><a name="Acknowledgements">Acknowledgements</a></h2>
+  <p>Hans-J. Boehm provided helpful suggestions for improving the proposed 
+  wording.</p>
+  <h2><a name="Revision-history">Revision history</a></h2>
+  <p>N2410 - Revision 1:</p>
+  <ul>
+    <li>Provided <a href="#Executive-summary">Executive summary</a>.</li>
+    <li>Simplified wording.</li>
+    <li>Added wording to cover both direct (i.e. shallow) and indirect (i.e. deep) 
+    access.</li>
+    <li>Removed mention of deadlocks as unnecessary.</li>
+    <li>Added expression evaluation conflict wording as more precise, and well 
+    defined by the <i>Multi-threaded executions and data races</i> wording from 
+    N2334.</li>
+    <li>Added strong exception safety for the default allocator.</li>
+    <li>Struck *_r functions from proposal.</li>
+</ul>
+  <p>N2298 - Initial version.</p>
+  <h2><a name="References">References</a></h2>
+  <p>
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">
+  N2334</a>, Concurrency memory model (revised again), Clark Nelson and Hans-J. 
+  Boehm</p>
+  <p>
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1947.pdf">
+  N1947</a>, The Memory Model and the C++ Library, Non-Memory Actions etc., Nick 
+  Maclaren</p>
+<hr>
+  <p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>
