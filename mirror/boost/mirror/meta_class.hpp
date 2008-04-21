@@ -258,7 +258,7 @@ struct meta_class : public meta_type<reflected_class>
 			/** This template gets the list of the owner classes 
 			 *  for the inherited attributes.
 			 */
-			template <class meta_inheritance, class current_list>
+			template <class current_list, class meta_inheritance>
 			struct get_base_class_attrib_owner_and_offs
 			{
 				typedef typename meta_inheritance::
@@ -271,14 +271,24 @@ struct meta_class : public meta_type<reflected_class>
 				typedef typename mpl::size<
 						current_list
 					> offset;
+				typedef typename mpl::pair<
+						meta_class,
+						offset		
+					> pair;
+				
+				template<typename T>
+				struct get_pair
+				{
+					typedef pair type;
+				};
 
 				typedef typename mpl::accumulate<
-						type_list,
-						mpl::vector0<>,
-						mpl::pair<
-							meta_class,
-							offset		
-						>
+					type_list,
+					current_list,
+					mpl::push_back<
+						mpl::_1,
+						get_pair<mpl::_>
+					>
 				>::type type;
 			};
 
@@ -288,18 +298,14 @@ struct meta_class : public meta_type<reflected_class>
 			typedef typename mpl::accumulate<
 				base_class_layout,
 				mpl::vector0<>,
-				mpl::insert_range<
+				get_base_class_attrib_owner_and_offs<
 					mpl::_1,
-					mpl::end<mpl::_1>,
-					get_base_class_attrib_owner_and_offs<
-						mpl::_2,
-						mpl::_1
-					>
+					mpl::_2
 				>
-			>::type inherited_member_owners_and_offsets;
+			>::type inherited_attrib_owners_and_offsets;
 
 			
-			/** The count of virtually  attributes
+			/** The count of virtually inherited attributes
 			 */
 			typedef typename mpl::accumulate<
 				typename mpl::transform<
@@ -319,7 +325,7 @@ struct meta_class : public meta_type<reflected_class>
 			/** Is a true type if the I-th member attribute is
 			 *  virtually inherited.
 			 */
-			template <int I>
+			template <long I>
 			struct is_virtually_inherited 
 			: mpl::less<
 				mpl::int_<I>,
@@ -327,47 +333,11 @@ struct meta_class : public meta_type<reflected_class>
 			>::type { };
 
 
-			/** This template gets the regular_base_class_layout
-			 *  of a base class when given a meta_inheritance 
-			 *  specialization for this base class.
-			template <class meta_inheritance>
-			struct get_base_class_inheritance_hierarchy
-			{
-				typedef typename mpl::push_back< 
-						meta_inheritance:: 
-						meta_class:: 
-						all_attributes:: 
-						detail:: 
-						regular_base_class_layout type;
-			};
-			 */
-			
-			/** The inheritance hierarchy of non-virtual 
-			 *  base classes of the reflected class.
-			typedef typename mpl::accumulate<
-				list_of_regular_base_classes,
-				mpl::vector0<>,
-				mpl::accumulate<
-						get_base_class_regular_layout<
-							mpl::_2
-						>,
-						mpl::vector0<>,
-				>
-			 */
-/*
-					mpl::insert_range<
-						mpl::_1,
-						mpl::end<mpl::_1>,
-					>
-			>::type regular_base_class_layout;
-*/
-			
-
 
 			/** This template is used to query the return value
 			 *  type of the getter for the I-th member attribute
 			 */
-			template <int I>
+			template <long I>
 			struct result_of_get
 			{
 				typedef typename mpl::at<
@@ -376,28 +346,26 @@ struct meta_class : public meta_type<reflected_class>
 					>::type type;
 			};		
 	
-			/** This function is used to get the members of virtual
-		 	 *  base classes.
-		 	 */
-			template <class a_class, int I>
-			static typename result_of_get<I>::type
-			get(a_class context, mpl::int_<I> pos, mpl::bool_<true>)
-			{
-				typedef meta_class<a_class, variant_tag> meta_class;
-				
-				return meta_class::attributes::get(context, pos);
-			}
 		
-			/** This function is used to get the members of regular
+			/** This function is used to get the member attributes 
 		 	 *  base classes.
 		 	 */
-			template <class a_class, int I>
+			template <class a_class, long I>
 			static typename result_of_get<I>::type
-			get(a_class context, mpl::int_<I> pos, mpl::bool_<false>)
+			get(a_class context, mpl::int_<I> pos)
 			{
-				typedef meta_class<a_class, variant_tag> meta_class;
+				typedef typename mpl::at<
+					typename detail::inherited_attrib_owners_and_offsets,
+					mpl::int_<I>
+				>::type owner_and_offset;
 
-				return meta_class::attributes::get(context, pos);
+				typedef typename owner_and_offset::first meta_class;
+				typedef typename mpl::minus<
+					mpl::int_<I>,
+					typename owner_and_offset::second
+				>::type new_pos_type;
+
+				return meta_class::attributes::get(context, new_pos_type());
 
 			}
 		}; // struct detail
@@ -420,30 +388,16 @@ struct meta_class : public meta_type<reflected_class>
 		struct size : public mpl::size<type_list> { };
 		
 		/**
-		template <class a_class, int I>
-		static typename detail::result_of_get<I>::type
+		 */
+		template <class a_class, long I>
+		static typename detail::template result_of_get<I>::type
 		get(a_class context, mpl::int_<I> pos)
 		{
-			// is the attrib virtually inherited
-			typedef typename detail::
-				is_virtually_inherited<I> is_virtual;		
-			//
-			// the index of the attribute
-			typedef typename mpl::if<
-					is_virtual,
-					pos,
-					mpl::minus<
-						pos
-					>
-				>::type att_pos;
-			//
 			return detail::get(
 				context, 
-				att_pos,
-				is_virtual
+				pos
 			);
 		}
-		 */
 	}; // all_attrbutes
 
 };

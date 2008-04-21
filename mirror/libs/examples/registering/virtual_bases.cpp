@@ -255,12 +255,32 @@ int main(void)
 	t.c = '9';
 	t.w = L'0';
 	//
+	bcout << meta_T::all_attributes::get(t, mpl::int_<0>()) << endl;
 	//
 	bcout << "--------------------------------------------" << endl;
 	//
 	bcout << meta_T::all_attributes::detail::is_virtually_inherited<4>::value << endl;
 	bcout << meta_T::all_attributes::detail::is_virtually_inherited<5>::value << endl;
 	//
+	//
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
