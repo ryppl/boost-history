@@ -163,9 +163,10 @@ struct meta_class_attributes
 	{\
 		return context.NAME;\
 	}\
-	static TYPE& query(const the_class& context, mpl::int_<NUMBER>, TYPE& dest)\
+	template <typename dest_type>\
+	static dest_type& query(const the_class& context, mpl::int_<NUMBER>, dest_type& dest)\
 	{\
-		dest = context.NAME;\
+		dest = dest_type(context.NAME);\
 		return dest;\
 	} 
 
@@ -173,15 +174,15 @@ struct meta_class_attributes
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE) \
 	static void get(const the_class& context, mpl::int_<NUMBER>){ }\
-	static void query(const the_class& context, mpl::int_<NUMBER>, TYPE& dest){ }
+	template <typename dest_type>\
+	static void query(const the_class& context, mpl::int_<NUMBER>, dest_type& dest){ }
 
 /** Helper macros 
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME) \
-	static call_traits<TYPE>::param_type set(the_class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
+	static void set(the_class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
 	{\
 		context.NAME = val;\
-		return val;\
 	} \
 	static void set(const the_class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
 	{\

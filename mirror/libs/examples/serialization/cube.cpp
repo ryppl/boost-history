@@ -20,6 +20,10 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/at.hpp>
 
+#include <fstream>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+
 #include <boost/char_type_switch/iostream.hpp>
 
 #include <boost/mirror/meta_namespace.hpp>
@@ -82,6 +86,41 @@ namespace Graphics {
 	private:
 	};
 
+	// a cube
+	class Cube
+	{
+	public:
+		typedef Vector::float_type float_type;
+		//
+		Cube(float_type _width = 1.0f, float_type _height = 1.0f, float_type _depth = 1.0f)
+			: lbb(-_width/2.0f, -_height/2.0f, -_depth/2.0f)
+			, lbf(-_width/2.0f, -_height/2.0f,  _depth/2.0f)
+			, ltb(-_width/2.0f,  _height/2.0f, -_depth/2.0f)
+			, ltf(-_width/2.0f,  _height/2.0f,  _depth/2.0f)
+			, rbb( _width/2.0f, -_height/2.0f, -_depth/2.0f)
+			, rbf( _width/2.0f, -_height/2.0f,  _depth/2.0f)
+			, rtb( _width/2.0f,  _height/2.0f, -_depth/2.0f)
+			, rtf( _width/2.0f,  _height/2.0f,  _depth/2.0f)
+		{ }
+	private:
+		// left-bottom-back
+		Vector lbb;
+		// left-bottom-front
+		Vector lbf;
+		// left-top-back
+		Vector ltb;
+		// left-top-front
+		Vector ltf;
+		// right-bottom-back
+		Vector rbb;
+		// right-bottom-front
+		Vector rbf;
+		// right-top-back
+		Vector rtb;
+		// right-top-front
+		Vector rtf;
+	};
+
 } // namespace Graphics
 
 
@@ -138,8 +177,54 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Graphics::Vector)
 	)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
+/** Support for serialization 
+ */
+
+template <class Class>
+struct to_be_loaded
+{
+	to_be_loaded(Class& _inst):inst(_inst){ }
+	Class& inst;
+};
+
+template <class Class>
+struct to_be_saved
+{
+	to_be_saved(const Class& _inst):inst(_inst){ }
+	const Class& inst;
+};
+
+template<class Archive, class Class>
+void load(Archive & ar, Class & c, const unsigned int version)
+{
+	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+}
+
+template<class Archive, class Class>
+void save(Archive & ar, const Class & c, const unsigned int version)
+{
+	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+}
+
 
 } // namespace mirror
+
+namespace serialization {
+
+template<class Archive, class Class>
+void serialize(Archive & ar, mirror::to_be_saved<Class> dst, const unsigned int version)
+{
+	mirror::save(ar, dst.inst, version);
+}
+
+template<class Archive, class Class>
+void serialize(Archive & ar, mirror::to_be_loaded<Class> src, const unsigned int version)
+{
+	mirror::load(ar, src.inst, version);
+}
+
+
+} // namespace serialization
 } // namespace boost
 
 int main(void)
@@ -150,12 +235,13 @@ int main(void)
 	//
 	using ::Graphics::Coords;
 	using ::Graphics::Vector;
+	using ::Graphics::Cube;
 	//
-	typedef BOOST_MIRROR_REFLECT_CLASS(Vector) meta_Vector;
+	Cube c1(2.0f, 2.0f, 2.0f), c2;
 	//
-	bcout << meta_Vector::base_classes::size::value << endl;
-	bcout << meta_Vector::attributes::size::value << endl;
-	//bcout << meta_Vector::all_attributes::size::value << endl;
+	boost::archive::xml_oarchive oa(cout);
+	//
+	oa << BOOST_SERIALIZATION_NVP(to_be_saved<Cube>(c1));
 	//
 	//
 	bcout << "Finished" << endl;

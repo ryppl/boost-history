@@ -255,13 +255,38 @@ int main(void)
 	t.c = '9';
 	t.w = L'0';
 	//
-	bcout << meta_T::all_attributes::get(t, mpl::int_<0>()) << endl;
+	// the values of all attributes can be accessed via get() ... 
+	//
+	assert(t.l == meta_T::all_attributes::get(t, mpl::int_<0>()));
+	assert(t.i == meta_T::all_attributes::get(t, mpl::int_<1>()));
+	assert(t.d == meta_T::all_attributes::get(t, mpl::int_<2>()));
+	assert(t.s == meta_T::all_attributes::get(t, mpl::int_<3>()));
+	assert(t.f == meta_T::all_attributes::get(t, mpl::int_<4>()));
+	assert(t.b == meta_T::all_attributes::get(t, mpl::int_<5>()));
+	assert(t.c == meta_T::all_attributes::get(t, mpl::int_<6>()));
+	assert(t.w == meta_T::all_attributes::get(t, mpl::int_<7>()));
+	//
+	// ... they can be queried using query()  ...
+	//
+	int dest_for_f = 0;
+	assert(int(t.f) == meta_T::all_attributes::query(t, mpl::int_<4>(), dest_for_f));
+	wchar_t dest_for_w = L'1';
+	assert(t.w == meta_T::all_attributes::query(t, mpl::int_<7>(), dest_for_w));
+	//
+	// ... and set 
+	//
+	meta_T::all_attributes::set(t, mpl::int_<0>(), 2345L);
+	assert(t.l == 2345L);
+	meta_T::all_attributes::set(t, mpl::int_<2>(), 456.7);
+	assert(t.d == 456.7);
+	meta_T::all_attributes::set(t, mpl::int_<4>(), 789.0f);
+	assert(t.f == 789.0f);
+	meta_T::all_attributes::set(t, mpl::int_<5>(), false);
+	assert(t.b == false);
+	meta_T::all_attributes::set(t, mpl::int_<7>(), L'A');
+	assert(t.w == L'A');
 	//
 	bcout << "--------------------------------------------" << endl;
-	//
-	bcout << meta_T::all_attributes::detail::is_virtually_inherited<4>::value << endl;
-	bcout << meta_T::all_attributes::detail::is_virtually_inherited<5>::value << endl;
-	//
 	//
 	return 0;
 }

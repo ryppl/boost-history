@@ -262,17 +262,17 @@ struct meta_class : public meta_type<reflected_class>
 			struct get_base_class_attrib_owner_and_offs
 			{
 				typedef typename meta_inheritance::
-						meta_class meta_class;
+						meta_class base_meta_class;
 
-				typedef typename meta_class::
+				typedef typename base_meta_class::
 						attributes::
 						type_list type_list;
 
 				typedef typename mpl::size<
 						current_list
-					> offset;
+				>::type offset;
 				typedef typename mpl::pair<
-						meta_class,
+						base_meta_class,
 						offset		
 					> pair;
 				
@@ -304,40 +304,10 @@ struct meta_class : public meta_type<reflected_class>
 				>
 			>::type inherited_attrib_owners_and_offsets;
 
-			
-			/** The count of virtually inherited attributes
-			 */
-			typedef typename mpl::accumulate<
-				typename mpl::transform<
-					virtual_base_class_layout,
-					get_base_class_attrib_type_list<
-						mpl::_1
-					>
-				>::type,
-				mpl::int_<0>,
-				mpl::plus<
-					mpl::_1,
-					mpl::size< mpl::_2 >
-				>
-			>::type virtual_attrib_count;
-		
-
-			/** Is a true type if the I-th member attribute is
-			 *  virtually inherited.
-			 */
-			template <long I>
-			struct is_virtually_inherited 
-			: mpl::less<
-				mpl::int_<I>,
-				virtual_attrib_count
-			>::type { };
-
-
-
 			/** This template is used to query the return value
 			 *  type of the getter for the I-th member attribute
 			 */
-			template <long I>
+			template <int I>
 			struct result_of_get
 			{
 				typedef typename mpl::at<
@@ -348,11 +318,11 @@ struct meta_class : public meta_type<reflected_class>
 	
 		
 			/** This function is used to get the member attributes 
-		 	 *  base classes.
+		 	 *  from the base classes.
 		 	 */
-			template <class a_class, long I>
+			template <class a_class, int I>
 			static typename result_of_get<I>::type
-			get(a_class context, mpl::int_<I> pos)
+			get(a_class context, mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename mpl::at<
 					typename detail::inherited_attrib_owners_and_offsets,
@@ -360,14 +330,92 @@ struct meta_class : public meta_type<reflected_class>
 				>::type owner_and_offset;
 
 				typedef typename owner_and_offset::first meta_class;
-				typedef typename mpl::minus<
+				typedef typename mpl::int_<mpl::minus<
 					mpl::int_<I>,
 					typename owner_and_offset::second
-				>::type new_pos_type;
+				>::value> new_pos_type;
 
 				return meta_class::attributes::get(context, new_pos_type());
 
 			}
+			template <class a_class, int I>
+			static typename result_of_get<I>::type
+			get(a_class context, mpl::int_<I> pos, mpl::bool_<false>)
+			{
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					mpl::size<inherited_member_attrib_type_list>::type
+				>::value> new_pos_type;
+				return meta_class::attributes::get(context, new_pos_type());
+			}
+
+		
+			/** This function is used to query the member attributes 
+		 	 *  from the base classes.
+		 	 */
+			template <class a_class, int I, typename dest_type>
+			static dest_type&
+			query(a_class context, mpl::int_<I> pos, dest_type& dest, mpl::bool_<true>)
+			{
+				typedef typename mpl::at<
+					typename detail::inherited_attrib_owners_and_offsets,
+					mpl::int_<I>
+				>::type owner_and_offset;
+
+				typedef typename owner_and_offset::first meta_class;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename owner_and_offset::second
+				>::value> new_pos_type;
+
+				return meta_class::attributes::query(context, new_pos_type(), dest);
+
+			}
+
+			template <class a_class, int I, typename dest_type>
+			static dest_type&
+			query(a_class context, mpl::int_<I> pos, dest_type& dest, mpl::bool_<false>)
+			{
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					mpl::size<inherited_member_attrib_type_list>::type
+				>::value> new_pos_type;
+				return meta_class::attributes::query(context, new_pos_type(), dest);
+			}
+
+		
+			/** This function is used to query the member attributes 
+		 	 *  from the base classes.
+		 	 */
+			template <class a_class, int I, typename value_type>
+			static void
+			set(a_class& context, mpl::int_<I> pos, value_type value, mpl::bool_<true>)
+			{
+				typedef typename mpl::at<
+					typename detail::inherited_attrib_owners_and_offsets,
+					mpl::int_<I>
+				>::type owner_and_offset;
+
+				typedef typename owner_and_offset::first meta_class;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename owner_and_offset::second
+				>::value> new_pos_type;
+
+				meta_class::attributes::set(context, new_pos_type(), value);
+			}
+
+			template <class a_class, int I, typename value_type>
+			static void
+			set(a_class& context, mpl::int_<I> pos, value_type value, mpl::bool_<false>)
+			{
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					mpl::size<inherited_member_attrib_type_list>::type
+				>::value> new_pos_type;
+				meta_class::attributes::set(context, new_pos_type(), value);
+			}
+
 		}; // struct detail
 		
 		/** The list of inherited attribute types
@@ -387,18 +435,51 @@ struct meta_class : public meta_type<reflected_class>
 		 */
 		struct size : public mpl::size<type_list> { };
 		
-		/**
+		/** Gets the value of the I-th member (including 
+		 *  the inherited ones)
 		 */
-		template <class a_class, long I>
+		template <class a_class, int I>
 		static typename detail::template result_of_get<I>::type
 		get(a_class context, mpl::int_<I> pos)
 		{
-			return detail::get(
-				context, 
-				pos
-			);
+			typedef typename mpl::less<
+				mpl::int_<I>,
+				inherited_size
+			>::type is_inherited;
+
+			return detail::get(context, pos, is_inherited());
 		}
-	}; // all_attrbutes
+
+		/** Queries the value of the I-th member (including 
+		 *  the inherited ones)
+		 */
+		template <class a_class, int I, typename dest_type>
+		static dest_type&
+		query(a_class context, mpl::int_<I> pos, dest_type& dest)
+		{
+			typedef typename mpl::less<
+				mpl::int_<I>,
+				inherited_size
+			>::type is_inherited;
+
+			return detail::query(context, pos, dest, is_inherited());
+		}
+
+		/** Sets the value of the I-th member (including 
+		 *  the inherited ones)
+		 */
+		template <class a_class, int I, typename value_type>
+		static void
+		set(a_class& context, mpl::int_<I> pos, value_type value)
+		{
+			typedef typename mpl::less<
+				mpl::int_<I>,
+				inherited_size
+			>::type is_inherited;
+
+			detail::set(context, pos, value, is_inherited());
+		}
+	}; // all_attributes
 
 };
 
