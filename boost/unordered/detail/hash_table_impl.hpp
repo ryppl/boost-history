@@ -437,15 +437,15 @@ namespace boost {
 
             allocators allocators_;
             bucket_ptr buckets_;
-            size_type bucket_count_;
+            bucket_manager bucket_manager_;
             bucket_ptr cached_begin_bucket_;
-            size_type size_;
+            size_type size_;           
 
             // Constructors/Deconstructor
 
             BOOST_UNORDERED_TABLE_DATA(size_type n, value_allocator const& a)
               : allocators_(a),
-                buckets_(), bucket_count_(next_prime(n)),
+                buckets_(), bucket_manager_(n),
                 cached_begin_bucket_(), size_(0)
             {
                 BOOST_UNORDERED_MSVC_RESET_PTR(buckets_);
@@ -454,7 +454,7 @@ namespace boost {
 
             BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA const& x, size_type n)
               : allocators_(x.allocators_),
-                buckets_(), bucket_count_(next_prime(n)),
+                buckets_(), bucket_manager_(n),
                 cached_begin_bucket_(), size_(0)
             {
                 BOOST_UNORDERED_MSVC_RESET_PTR(buckets_);
@@ -463,7 +463,7 @@ namespace boost {
 
             BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA& x, move_tag)
                 : allocators_(x.allocators_),
-                buckets_(x.buckets_), bucket_count_(x.bucket_count_),
+                buckets_(x.buckets_), bucket_manager_(x.bucket_manager_),
                 cached_begin_bucket_(x.cached_begin_bucket_), size_(x.size_)
             {
                 unordered_detail::reset(x.buckets_);
@@ -471,19 +471,19 @@ namespace boost {
 
             BOOST_UNORDERED_TABLE_DATA(BOOST_UNORDERED_TABLE_DATA& x,
                     value_allocator const& a, size_type n, move_tag)
-                : allocators_(a), buckets_(), bucket_count_(),
+                : allocators_(a), buckets_(), bucket_manager_(),
                 cached_begin_bucket_(), size_(0)
             {
                 if(allocators_ == x.allocators_) {
                     buckets_ = x.buckets_;
-                    bucket_count_ = x.bucket_count_;
+                    bucket_manager_ = x.bucket_manager_;
                     cached_begin_bucket_ = x.cached_begin_bucket_;
                     size_ = x.size_;
                     unordered_detail::reset(x.buckets_);
                 }
                 else {
                     BOOST_UNORDERED_MSVC_RESET_PTR(buckets_);
-                    bucket_count_ = next_prime(n);
+                    bucket_manager_ = bucket_manager(n);
                     create_buckets();
                 }
             }
@@ -495,15 +495,17 @@ namespace boost {
             }
 
             void create_buckets() {
+                size_type bucket_count = bucket_manager_.bucket_count();
+            
                 // The array constructor will clean up in the event of an
                 // exception.
                 allocator_array_constructor<bucket_allocator>
                     constructor(allocators_.bucket_alloc_);
 
                 // Creates an extra bucket to act as a sentinel.
-                constructor.construct(bucket(), bucket_count_ + 1);
+                constructor.construct(bucket(), bucket_count + 1);
 
-                cached_begin_bucket_ = constructor.get() + static_cast<difference_type>(bucket_count_);
+                cached_begin_bucket_ = constructor.get() + static_cast<difference_type>(bucket_count);
 
                 // Set up the sentinel.
                 cached_begin_bucket_->next_ = link_ptr(cached_begin_bucket_);
@@ -529,7 +531,8 @@ namespace boost {
                     for(begin = buckets_; begin != end; ++begin)
                         allocators_.bucket_alloc_.destroy(begin);
 
-                    allocators_.bucket_alloc_.deallocate(buckets_, bucket_count_ + 1);
+                    allocators_.bucket_alloc_.deallocate(buckets_,
+                        bucket_manager_.bucket_count() + 1);
                 }
             }
 
@@ -544,7 +547,7 @@ namespace boost {
             void swap(BOOST_UNORDERED_TABLE_DATA& other)
             {
                 std::swap(buckets_, other.buckets_);
-                std::swap(bucket_count_, other.bucket_count_);
+                std::swap(bucket_manager_, other.bucket_manager_);
                 std::swap(cached_begin_bucket_, other.cached_begin_bucket_);
                 std::swap(size_, other.size_);
             }
@@ -555,17 +558,26 @@ namespace boost {
                 delete_buckets();
                 buckets_ = other.buckets_;
                 unordered_detail::reset(other.buckets_);
-                bucket_count_ = other.bucket_count_;
+                bucket_manager_ = other.bucket_manager_;
                 cached_begin_bucket_ = other.cached_begin_bucket_;
                 size_ = other.size_;
+            }
+
+            // Return the bucket number for a hashed value.
+            //
+            // no throw
+            size_type bucket_from_hash(size_type hashed) const
+            {
+                return bucket_manager_.bucket_from_hash(hashed);
             }
 
             // Return the bucket for a hashed value.
             //
             // no throw
-            bucket_ptr bucket_from_hash(size_type hashed) const
+            bucket_ptr bucket_ptr_from_hash(size_type hashed) const
             {
-                return buckets_ + static_cast<difference_type>(hashed % bucket_count_);
+                return buckets_ + static_cast<difference_type>(
+                    bucket_manager_.bucket_from_hash(hashed));
             }
 
             // Begin & End
@@ -574,7 +586,7 @@ namespace boost {
 
             bucket_ptr buckets_end() const
             {
-                return buckets_ + static_cast<difference_type>(bucket_count_);
+                return buckets_ + static_cast<difference_type>(bucket_manager_.bucket_count());
             }
 
             iterator_base begin() const
@@ -1407,7 +1419,7 @@ namespace boost {
             size_type bucket(key_type const& k) const
             {
                 // hash_function can throw:
-                return hash_function()(k) % data_.bucket_count_;
+                return data_.bucket_from_hash(hash_function()(k));
             }
 
 
@@ -1420,7 +1432,7 @@ namespace boost {
             // no throw
             size_type bucket_count() const
             {
-                return data_.bucket_count_;
+                return data_.bucket_manager_.bucket_count();
             }
 
             // no throw
@@ -1456,7 +1468,7 @@ namespace boost {
                 // From 6.3.1/13:
                 // Only resize when size >= mlf_ * count
                 max_load_ = double_to_size_t(ceil(
-                        (double) mlf_ * data_.bucket_count_));
+                        (double) mlf_ * data_.bucket_manager_.bucket_count()));
             }
 
             // basic exception safety
@@ -1508,9 +1520,9 @@ namespace boost {
             // no throw
             float load_factor() const
             {
-                BOOST_ASSERT(data_.bucket_count_ != 0);
+                BOOST_ASSERT(data_.bucket_manager_.bucket_count() != 0);
                 return static_cast<float>(data_.size_)
-                    / static_cast<float>(data_.bucket_count_);
+                    / static_cast<float>(data_.bucket_manager_.bucket_count());
             }
 
         private:
@@ -1590,7 +1602,7 @@ namespace boost {
                         // src_bucket to dst.
 
                         // This next line throws iff the hash function throws.
-                        bucket_ptr dst_bucket = dst.bucket_from_hash(
+                        bucket_ptr dst_bucket = dst.bucket_ptr_from_hash(
                                 hf(extract_key(data::get_value(src_bucket->next_))));
 
                         link_ptr n = src_bucket->next_;
@@ -1616,7 +1628,7 @@ namespace boost {
                     for(link_ptr it = src.begin(i);
                             BOOST_UNORDERED_BORLAND_BOOL(it); it = data::next_group(it)) {
                         // hash function can throw.
-                        bucket_ptr dst_bucket = dst.bucket_from_hash(
+                        bucket_ptr dst_bucket = dst.bucket_ptr_from_hash(
                                 hf(extract_key(data::get_value(it))));
                         // throws, strong
                         dst.copy_group(it, dst_bucket);
@@ -1700,13 +1712,13 @@ namespace boost {
             {
                 key_type const& k = extract_key(a.get()->value_);
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = data_.bucket_from_hash(hash_value);
+                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
                 link_ptr position = find_iterator(bucket, k);
 
                 // reserve has basic exception safety if the hash function
                 // throws, strong otherwise.
                 if(reserve(size() + 1))
-                    bucket = data_.bucket_from_hash(hash_value);
+                    bucket = data_.bucket_ptr_from_hash(hash_value);
 
                 // I'm relying on link_ptr not being invalidated by
                 // the rehash here.
@@ -1810,7 +1822,7 @@ namespace boost {
                 typedef BOOST_DEDUCED_TYPENAME value_type::second_type mapped_type;
 
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = data_.bucket_from_hash(hash_value);
+                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
                 link_ptr pos = find_iterator(bucket, k);
 
                 if (BOOST_UNORDERED_BORLAND_BOOL(pos))
@@ -1827,7 +1839,7 @@ namespace boost {
                     // reserve has basic exception safety if the hash function
                     // throws, strong otherwise.
                     if(reserve(size() + 1))
-                        bucket = data_.bucket_from_hash(hash_value);
+                        bucket = data_.bucket_ptr_from_hash(hash_value);
 
                     // Nothing after this point can throw.
 
@@ -1844,7 +1856,7 @@ namespace boost {
                 // No side effects in this initial code
                 key_type const& k = extract_key(v);
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = data_.bucket_from_hash(hash_value);
+                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
                 link_ptr pos = find_iterator(bucket, k);
 
                 if (BOOST_UNORDERED_BORLAND_BOOL(pos)) {
@@ -1864,7 +1876,7 @@ namespace boost {
                     // reserve has basic exception safety if the hash function
                     // throws, strong otherwise.
                     if(reserve(size() + 1))
-                        bucket = data_.bucket_from_hash(hash_value);
+                        bucket = data_.bucket_ptr_from_hash(hash_value);
 
                     // Nothing after this point can throw.
 
@@ -1908,7 +1920,7 @@ namespace boost {
                 // No side effects in this initial code
                 key_type const& k = extract_key(a.get()->value_);
                 size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = data_.bucket_from_hash(hash_value);
+                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
                 link_ptr pos = find_iterator(bucket, k);
                 
                 if (BOOST_UNORDERED_BORLAND_BOOL(pos)) {
@@ -1919,7 +1931,7 @@ namespace boost {
                     // reserve has basic exception safety if the hash function
                     // throws, strong otherwise.
                     if(reserve(size() + 1))
-                        bucket = data_.bucket_from_hash(hash_value);
+                        bucket = data_.bucket_ptr_from_hash(hash_value);
 
                     // Nothing after this point can throw.
 
@@ -1973,7 +1985,7 @@ namespace boost {
                 for (; i != j; ++i) {
                     // No side effects in this initial code
                     size_type hash_value = hash_function()(extract_key(*i));
-                    bucket_ptr bucket = data_.bucket_from_hash(hash_value);
+                    bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
                     link_ptr pos = find_iterator(bucket, extract_key(*i));
 
                     if (!BOOST_UNORDERED_BORLAND_BOOL(pos)) {
@@ -1988,7 +2000,7 @@ namespace boost {
                         // throws, strong otherwise.
                         if(size() + 1 >= max_load_) {
                             reserve(size() + insert_size(i, j));
-                            bucket = data_.bucket_from_hash(hash_value);
+                            bucket = data_.bucket_ptr_from_hash(hash_value);
                         }
 
                         // Nothing after this point can throw.
@@ -2266,4 +2278,3 @@ namespace boost {
 #undef BOOST_UNORDERED_CONST_ITERATOR
 #undef BOOST_UNORDERED_LOCAL_ITERATOR
 #undef BOOST_UNORDERED_CONST_LOCAL_ITERATOR
-
