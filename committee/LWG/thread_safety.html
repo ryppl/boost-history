@@ -10,17 +10,21 @@
 
 <body>
 
-<p>Doc. no.&nbsp;&nbsp; N2410=07-0270<br>
+<p><span style="background-color: rgb(255, 255, 0)">Doc. no.&nbsp;&nbsp; Nxxxx=08-xxxx</span><br>
 Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2007-09-07<!--webbot bot="Timestamp" endspan i-checksum="12600" --><br>
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-20<!--webbot bot="Timestamp" endspan i-checksum="12276" --><br>
 Project:&nbsp;&nbsp;&nbsp;&nbsp; Programming Language C++<br>
 Reply to:&nbsp;&nbsp; Beman Dawes &lt;bdawes at acm.org&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 Peter Dimov &lt;pdimov at pdimov.com&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Herb Sutter &lt;hsutter at microsoft.com&gt;</p>
+Herb Sutter &lt;hsutter at microsoft.com&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hans Boehm &lt;Hans.Boehm at hp.com&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lawrence Crowl &lt;crowl at google.com&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Paul E. McKenney &lt;paulmck at linux.vnet.ibm.com&gt;<span style="background-color: rgb(255, 255, 0)"><br>
+&nbsp;</span></p>
 
-<h1>Thread-Safety in the Standard Library (Rev 1)</h1>
+<h1>Thread-Safety in the Standard Library (Rev 2)</h1>
 
 <p><a href="#Executive-summary">Executive summary</a><br>
 <a href="#Introduction">Introduction</a><br>
@@ -42,7 +46,7 @@ occurs, unless protected by a synchronization mechanism..</p>
 </blockquote>
 <h2><a name="Introduction">Introduction</a></h2>
 <p>With the introduction of multi-threading into the C++ standard, the contract 
-between standard library users and implementors needs to explicitly state the 
+between standard library users and implementers needs to explicitly state the 
 conditions under which standard library components are or are not thread-safe.</p>
 <h2><a name="Rationale">Rationale</a></h2>
 <p>The objective is to offer users of the standard library as much thread-safety 
@@ -76,19 +80,18 @@ global locale objects.</p>
 <p>As far as is known, the proposed wording reflects existing practice in 
 current implementations of the standard library.</p>
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
-<p><i>References shown as ([Multi-threaded executions and data races]) refer to 
+<p><i><span style="background-color: #FFFF00">References shown as ([Multi-threaded executions and data races]) refer to 
 the new section of that name described in
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">
-N2334</a> or it successor.</i></p>
+N2334</a> or it successor.</span></i></p>
 <p><i>Change 17.4.4 Conforming implementations [conforming] as indicated:</i></p>
 <blockquote>
 <p>This subclause describes the constraints upon, and latitude of, 
 implementations of the C++ Standard library. The following subclauses describe 
 an implementation’s use of headers (17.4.4.1), macros (17.4.4.2), global 
 functions (17.4.4.3), member functions (17.4.4.4), reentrancy (17.4.4.5), access 
-specifiers (17.4.4.6), class derivation (17.4.4.7), <font color="#FF0000">
-<strike>and</strike></font> exceptions (17.4.4.8)<font color="#228822"><u>, and 
-thread safety ([res.on.thread.safety])</u></font>.</p>
+specifiers (17.4.4.6), class derivation (17.4.4.7),&nbsp; exceptions (17.4.4.8), and 
+thread safety ([res.on.thread.safety]).</p>
 </blockquote>
 <p><i>At the end of [conforming] add a new subsection: </i> </p>
 <blockquote>
@@ -96,32 +99,48 @@ thread safety ([res.on.thread.safety])</u></font>.</p>
   <p>Unless otherwise specified, calls to standard library functions from 
   different threads shall not result in a data race unless<font color="#228822">
   </font>arguments to the calls, 
-  including <code>*this</code>, directly or indirectly access objects shared 
+  including <code>*this</code>, directly or indirectly <font color="#FF0000">
+  <strike>access</strike></font> <u><font color="#228822">point to or reference</font></u> objects shared 
   between the threads in such a way that an expression evaluation conflict 
   occurs ([<i>Multi-threaded executions and data races</i>]) .</p>
   <p><i>[Note:</i> This  means, for example, that 
   implementations can't use a static object for internal purposes without 
   synchronization because it could cause a data race even in programs that do 
   not explicitly share objects between threads.<i> --end note] </i></p>
+<p><font color="#228822"><u>Unless otherwise specified, standard library 
+functions shall perform all operations with observable effects solely within the 
+current thread.<br>
+<br>
+<i>[Note:</i> This allows implementations to parallelize operations if there are 
+no visible side effects. <i>--end note]</i></u></font></p>
 </blockquote>
 <p><i>Somewhere in [constraints] add a constraint on programs: </i> </p>
 <blockquote>
-  <p>Unless otherwise specified, direct or indirect access to the same object of 
+  <p><font color="#FF0000"><strike>Unless otherwise specified, direct or indirect access to the same object of 
   a standard library type from different threads results in undefined behavior 
   if any of the accesses are via a non-const member function of the object or 
   non-const argument 
-  to any standard library function, including <code>*this</code>, and one does 
-  not happen before the other ([<i>Multi-threaded executions and data races</i>]).</p>
+  to any standard library function, including *this, and one does 
+  not happen before the other ([Multi-threaded executions and data races]).</strike></font></p>
+  <p><font color="#228822"><u>Unless otherwise specified, calls to standard 
+  library functions from different threads result in undefined behavior if any 
+  non-const arguments, including *this, directly or indirectly point to or 
+  reference objects of a standard library type shared between the threads, and 
+  one call does not happen before the other ([Multi-threaded executions and data 
+  races]).</u></font></p>
   <p><i>[Note: </i>This lack of strong thread-safety guarantee means that 
   modifying an object of a standard library type shared between threads 
-  without using a locking mechanism may result in a data race or 
-  other undesirable behavior. <i>
+  without using a locking mechanism may result in a data race<font color="#FF0000"><strike> or 
+  other undesirable behavior</strike></font>. <i>
   --end note]</i></p>
 </blockquote>
   <p><i>To 18.5.1 Storage allocation and deallocation [new.delete], add:</i></p>
 <blockquote>
-  <p>The library versions of operator <code>new</code> and <code>delete</code> 
-  shall not introduce data races ([<i>Multi-threaded executions and data races</i>]) 
+  <p><font color="#228822"><u>Neither</u></font> the library versions of operator <code>new</code> and <code>delete</code><u><font color="#228822">, 
+  user replacement versions of global replacement operator <code>new</code> and
+  <code>delete</code>, nor the Standard C library functions <code>calloc</code>,
+  <code>malloc</code>, <code>realloc</code>, or <code>free</code></font></u> shall 
+  <font color="#FF0000"><strike>not</strike></font> introduce data races ([<i>Multi-threaded executions and data races</i>]) 
   as a result of concurrent calls from different threads.&nbsp;Calls that allocate or 
   deallocate a particular unit of storage shall occur in a single total order, 
   and each such deallocation call happens before the next allocation (if any) in 
@@ -136,10 +155,13 @@ thread safety ([res.on.thread.safety])</u></font>.</p>
   <blockquote>
   <p>Except for the destructor, member functions of the default allocator shall 
   not introduce data races ([<i>Multi-threaded executions and data races</i>]) 
-  as a result of concurrent accesses to default allocator objects from different 
+  as a result of concurrent <font color="#FF0000"><strike>accesses</strike></font>
+  <u><font color="#228822">calls</font></u> to default allocator object<u><font color="#228822">'</font></u>s 
+  <u><font color="#228822">member functions</font></u> from different 
   threads.&nbsp;Allocation and deallocation calls that allocate or return a 
   particular unit of storage shall occur in a single total order, and each such 
-  deallocation call happens before the next allocation (if any) in this order.</p>
+  deallocation call <font color="#FF0000"><strike>happens</strike></font>
+  <font color="#228822"><u>shall occur</u></font> before the next allocation (if any) in this order.</p>
   </blockquote>
   <p><i>To 20.7 Date and Time [date.time], add:</i></p>
   <blockquote>
@@ -157,13 +179,27 @@ thread safety ([res.on.thread.safety])</u></font>.</p>
   <blockquote>
     <p>The <code>rand</code> function has the semantics specified in the C 
     standard, except that the implementation may specify that particular library 
-    functions may call <code>rand</code>.<u><font color="#228822"> The</font></u><font color="#228822"><u>
-    <code>rand</code> function is not require to be thread-safe ([res.on.thread.safety]).</u></font></p>
+    functions may call <code>rand</code>. The
+    <code>rand</code> function is not require to be thread-safe ([res.on.thread.safety]).</p>
 </blockquote>
   <h2><a name="Acknowledgements">Acknowledgements</a></h2>
-  <p>Hans-J. Boehm provided helpful suggestions for improving the proposed 
-  wording.</p>
+  <p><font color="#228822"><u>Jeffrey Yasskin's, N2519 <i>Library thread-safety 
+  from a user's point of view, with wording</i> provided several valuable 
+  insights that have been adopted by this proposal.</u></font></p>
   <h2><a name="Revision-history">Revision history</a></h2>
+  <p><span style="background-color: #FFFF00">NXXXX</span> - Revision 2:</p>
+  <ul>
+    <li>Strike &quot;or other undesirable behavior&quot;. Data races are the only case we 
+    can thing of, so mention them only.</li>
+    <li>Replace uses of &quot;access&quot; with well defined terms, and clarify related 
+    wording.</li>
+    <li>Include user supplied global operator new and delete, and the C library 
+    memory allocation functions in the prohibition against allocation data 
+    races.</li>
+    <li>Specify when library implementation may or may not multithread.</li>
+    <li>Acknowledge N2519.</li>
+    <li>Add additional authors.</li>
+</ul>
   <p>N2410 - Revision 1:</p>
   <ul>
     <li>Provided <a href="#Executive-summary">Executive summary</a>.</li>
