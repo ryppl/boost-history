@@ -116,7 +116,7 @@ struct meta_class : public meta_type<reflected_class>
 			 */
 			typedef typename mpl::accumulate<
 				list_of_regular_base_classes,
-				mpl::vector<>,
+				mpl::vector0<>,
 				mpl::push_back<
 					mpl::insert_range<
 						mpl::_1,
@@ -165,7 +165,7 @@ struct meta_class : public meta_type<reflected_class>
 			 */
 			typedef typename mpl::accumulate<
 				typename base_classes::list,
-				mpl::vector<>,
+				mpl::vector0<>,
 				mpl::if_<
 					reflects_virtual_inheritance<
 						mpl::_2
@@ -217,12 +217,10 @@ struct meta_class : public meta_type<reflected_class>
 			template <class meta_inheritance>
 			struct get_base_class_attrib_type_list
 			{
-				typedef typename 
-					meta_inheritance::
-					meta_class::
-					attributes::
-					type_list type;
-	
+				typedef typename meta_inheritance::
+						meta_class::
+						attributes::
+						type_list type;
 			};
 
 			typedef typename mpl::joint_view<
@@ -234,7 +232,7 @@ struct meta_class : public meta_type<reflected_class>
 			 *  of the reflected class. 
 			 *  NOTE: this implementation puts the
 			 *  members of the virtual bases before
-			 *  the other members
+			 *  the other members.
 			 */
 			typedef typename mpl::accumulate<
 				base_class_layout,
@@ -256,7 +254,52 @@ struct meta_class : public meta_type<reflected_class>
 				typename meta_class<reflected_class, variant_tag>::attributes::type_list
 			>::type member_attrib_type_list;
 
-			/** The count of virtually inherited attributes
+
+			/** This template gets the list of the owner classes 
+			 *  for the inherited attributes.
+			 */
+			template <class meta_inheritance, class current_list>
+			struct get_base_class_attrib_owner_and_offs
+			{
+				typedef typename meta_inheritance::
+						meta_class meta_class;
+
+				typedef typename meta_class::
+						attributes::
+						type_list type_list;
+
+				typedef typename mpl::size<
+						current_list
+					> offset;
+
+				typedef typename mpl::accumulate<
+						type_list,
+						mpl::vector0<>,
+						mpl::pair<
+							meta_class,
+							offset		
+						>
+				>::type type;
+			};
+
+			/** This is a list that contains a pair of owner meta_class
+			 *  and the index offset for every inherited attribute.
+			 */
+			typedef typename mpl::accumulate<
+				base_class_layout,
+				mpl::vector0<>,
+				mpl::insert_range<
+					mpl::_1,
+					mpl::end<mpl::_1>,
+					get_base_class_attrib_owner_and_offs<
+						mpl::_2,
+						mpl::_1
+					>
+				>
+			>::type inherited_member_owners_and_offsets;
+
+			
+			/** The count of virtually  attributes
 			 */
 			typedef typename mpl::accumulate<
 				typename mpl::transform<
@@ -282,7 +325,45 @@ struct meta_class : public meta_type<reflected_class>
 				mpl::int_<I>,
 				virtual_attrib_count
 			>::type { };
-		
+
+
+			/** This template gets the regular_base_class_layout
+			 *  of a base class when given a meta_inheritance 
+			 *  specialization for this base class.
+			template <class meta_inheritance>
+			struct get_base_class_inheritance_hierarchy
+			{
+				typedef typename mpl::push_back< 
+						meta_inheritance:: 
+						meta_class:: 
+						all_attributes:: 
+						detail:: 
+						regular_base_class_layout type;
+			};
+			 */
+			
+			/** The inheritance hierarchy of non-virtual 
+			 *  base classes of the reflected class.
+			typedef typename mpl::accumulate<
+				list_of_regular_base_classes,
+				mpl::vector0<>,
+				mpl::accumulate<
+						get_base_class_regular_layout<
+							mpl::_2
+						>,
+						mpl::vector0<>,
+				>
+			 */
+/*
+					mpl::insert_range<
+						mpl::_1,
+						mpl::end<mpl::_1>,
+					>
+			>::type regular_base_class_layout;
+*/
+			
+
+
 			/** This template is used to query the return value
 			 *  type of the getter for the I-th member attribute
 			 */
