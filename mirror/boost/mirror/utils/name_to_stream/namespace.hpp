@@ -40,10 +40,11 @@ struct name_to_stream_helper<meta_namespace<namespace_alias> >
 	template <class out_stream>
 	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
 	{
+		typedef typename meta_ns::parent parent_ns;
 		// let the printer print out the  base name of the parent namespace
-		name_to_stream<meta_ns::parent>::put(s, ldng_dbl_cln);
+		name_to_stream<parent_ns>::put(s, ldng_dbl_cln);
 		// if the parent is not the global scope
-		if(!reflects_global_scope<meta_ns::parent>::value)
+		if(!reflects_global_scope<parent_ns>::value)
 			s << BOOST_STR_LIT("::");
 		// let the printer print out the  base name of the parent namespace
 		return s << meta_ns::base_name();

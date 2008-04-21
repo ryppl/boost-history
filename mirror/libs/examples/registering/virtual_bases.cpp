@@ -21,6 +21,8 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/at.hpp>
 
+#include <boost/static_assert.hpp>
+
 #include <boost/char_type_switch/iostream.hpp>
 
 #include <boost/mirror/meta_namespace.hpp>
@@ -60,6 +62,22 @@ namespace Test {
 		float f;
 	};
 
+	struct F : virtual E
+	{
+		bool b;
+	};
+
+	struct G : virtual E
+	{
+		char c;
+	};
+
+	struct H : F, G
+	{
+		wchar_t w;
+	};
+
+
 } // namespace Test
 
 
@@ -78,6 +96,9 @@ BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, B)
 BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, C)
 BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, D)
 BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, E)
+BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, F)
+BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, G)
+BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, H)
 
 
 BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::B)
@@ -96,6 +117,19 @@ BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::E)
 BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(0,  ::Test::B)
 BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(1,  ::Test::C)
 BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(2,  ::Test::D)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::F)
+BOOST_MIRROR_REG_BASE_CLASS_VIRTUAL(0,  public, ::Test::E)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::G)
+BOOST_MIRROR_REG_BASE_CLASS_VIRTUAL(0,  public, ::Test::E)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::H)
+BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(0,  ::Test::F)
+BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(1,  ::Test::G)
 BOOST_MIRROR_REG_BASE_CLASSES_END
 
 
@@ -121,10 +155,23 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Test::E)
 	BOOST_MIRROR_REG_CLASS_ATTRIB(0, float, f)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Test::F)	
+	BOOST_MIRROR_REG_CLASS_ATTRIB(0, bool, b)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Test::G)	
+	BOOST_MIRROR_REG_CLASS_ATTRIB(0, char, c)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Test::H)	
+	BOOST_MIRROR_REG_CLASS_ATTRIB(0, wchar_t, w)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
 
 
 } // namespace mirror
 } // namespace boost
+
 
 int main(void)
 {
@@ -134,19 +181,85 @@ int main(void)
 	//
 	using namespace ::Test;
 	//
-	typedef BOOST_MIRROR_REFLECT_CLASS(::Test::E) meta_E;
+	typedef ::Test::H T;
 	//
-	bcout << sizeof(E().l) << endl;
+	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
 	//
-	bcout << "The class ::Test::E has " << endl;
+	// Print some basic info about the reflected class
 	//
-	bcout << meta_E::base_classes::size::value << " base classes" << endl;
-	bcout << meta_E::attributes::size::value << " own member attribs" << endl;
-	// NOTE: this isn't working as expected yet
-	bcout << meta_E::all_attributes::size::value << " member attribs" << endl;
+	bcout << "The reflected class has " << endl;
+	//
+	bcout << meta_T::base_classes::size::value << " base class(es)" << endl;
+	bcout << meta_T::attributes::size::value << " own member attrib(s)" << endl;
+	bcout << meta_T::all_attributes::inherited_size::value << " inherited member attrib(s)" << endl;
+	bcout << meta_T::all_attributes::size::value << " member attrib(s)" << endl;
+	//
+	// The attrbs of H are reflected in the following order
+	// A::l (long)
+	// B::i (int)
+	// C::d (double)
+	// D::s (short)
+	// E::f (float)
+	// F::b (bool)
+	// G::c (char)
+	// H::w (wchar_t)
+	//
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<0> >::type, 
+		BOOST_TYPEOF(T().l)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<1> >::type, 
+		BOOST_TYPEOF(T().i)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<2> >::type, 
+		BOOST_TYPEOF(T().d)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<3> >::type, 
+		BOOST_TYPEOF(T().s)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<4> >::type, 
+		BOOST_TYPEOF(T().f)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<5> >::type, 
+		BOOST_TYPEOF(T().b)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<6> >::type, 
+		BOOST_TYPEOF(T().c)
+	>::value));
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::all_attributes::type_list, mpl::int_<7> >::type, 
+		BOOST_TYPEOF(T().w)
+	>::value));
+	//
+	BOOST_STATIC_ASSERT((is_same<
+		mpl::at<meta_T::attributes::type_list, mpl::int_<0> >::type, 
+		BOOST_TYPEOF(T().w)
+	>::value));
 	//
 	//
-	bcout << "Finished" << endl;
+	//
+	T t;
+	// init the members of t
+	t.l = 123L;
+	t.i = 234;
+	t.d = 345.6;
+	t.s = 567;
+	t.f = 678.9f;
+	t.b = true;
+	t.c = '9';
+	t.w = L'0';
+	//
+	//
+	bcout << "--------------------------------------------" << endl;
+	//
+	bcout << meta_T::all_attributes::detail::is_virtually_inherited<4>::value << endl;
+	bcout << meta_T::all_attributes::detail::is_virtually_inherited<5>::value << endl;
 	//
 	return 0;
 }

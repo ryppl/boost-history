@@ -184,10 +184,10 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_END
  *  some info about the given meta_object into 
  *  a stream.
  */
-template <class meta_object>
+template <class a_meta_object>
 struct pretty_printer
 {
-	typedef meta_object meta_object;
+	typedef a_meta_object meta_object;
 	//
 	// prints some info about the meta-object t
 	// to the given stream
@@ -195,7 +195,7 @@ struct pretty_printer
 	out_stream& print(out_stream& s) const
 	{
 		typedef pretty_printer<meta_object> prn_type;
-		typedef prn_type::meta_object meta_object;
+		typedef typename prn_type::meta_object meta_object;
 		//
 		using namespace ::std;
 		//
@@ -210,17 +210,19 @@ struct pretty_printer
 		// print out it's name
 		s << name_to_stream<meta_object>() << "' " << endl;
 		//
+		//
+		typedef typename meta_object::scope meta_scope;
 		// print info about the scope where the meta-object
 		// is defined
 		s << "is defined ";
 		// if the scope is the global scope
-		if(reflects_global_scope<meta_object::scope>::value)
+		if(reflects_global_scope<meta_scope>::value)
 			s << "on the global scope";
 		// if it's a class
-		else if(reflects_class<meta_object::scope>::value)
-			s << "inside of the '" << name_to_stream<meta_object::scope>() << "' class";
+		else if(reflects_class<meta_scope>::value)
+			s << "inside of the '" << name_to_stream<meta_scope>() << "' class";
 		// otherwise 
-		else s << "in the '" << name_to_stream<meta_object::scope>() << "' namespace";
+		else s << "in the '" << name_to_stream<meta_scope>() << "' namespace";
 		s << "."  << endl;
 		//
 		// print the base classes if any
@@ -252,8 +254,8 @@ struct pretty_printer
 			// it's base_class typedef is the type 
 			// of the base class
 			using namespace ::std;
-			s << endl << " - " << 
-				name_to_stream<BOOST_MIRROR_REFLECT_CLASS(meta_inheritance::base_class)>();
+			typedef typename meta_inheritance::meta_class meta_class;
+			s << endl << " - " << name_to_stream<meta_class>();
 		}
 	};
 	//
@@ -265,15 +267,18 @@ struct pretty_printer
 		// 
 		// print out the count of (registered) base classes that 
 		// the inspected class has
+		//
+		typedef typename meta_object::base_classes::list base_class_list;
+		//
 		s << "It has ";
-		if(mpl::size<meta_object::base_classes::list>::value == 1)
+		if(mpl::size<base_class_list>::value == 1)
 			s << "this one base class:";
-		else if(mpl::size<meta_object::base_classes::list>::value > 1)
-			s << "these " << mpl::size<meta_object::base_classes::list>::value << " base classes:";
+		else if(mpl::size<base_class_list>::value > 1)
+			s << "these " << mpl::size<base_class_list>::value << " base classes:";
 		else s << "no base classes.";
 		//
 		// execute the printer on the list of base classes
-		mpl::for_each<meta_object::base_classes::list>(base_class_printer<out_stream>(s));
+		mpl::for_each<base_class_list>(base_class_printer<out_stream>(s));
 		//
 		return s << endl;
 	}
@@ -323,11 +328,14 @@ struct pretty_printer
 	{
 		//
 		// print the number of the registered attributes
+		//
+		typedef typename meta_object::attributes::type_list attrib_type_list;
+		//
 		s << "It has ";
-		if(mpl::size<meta_object::attributes::type_list>::value == 1)
+		if(mpl::size<attrib_type_list>::value == 1)
 			s << "this one member attribute:";
-		else if(mpl::size<meta_object::attributes::type_list>::value > 1)
-			s << "these " << mpl::size<meta_object::attributes::type_list>::value << " member attributes:";
+		else if(mpl::size<attrib_type_list>::value > 1)
+			s << "these " << mpl::size<attrib_type_list>::value << " member attributes:";
 		else s << "no member attributes.";
 		//
 		// execute the printer on the list of member attributes

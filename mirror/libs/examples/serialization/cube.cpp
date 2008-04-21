@@ -35,11 +35,11 @@
 namespace Graphics {
 
 	// coordinates
-	template <typename float_type>
+	template <typename a_float_type>
 	class CoordsTempl
 	{
 	public:
-		typedef float_type float_type;
+		typedef a_float_type float_type;
 		CoordsTempl(
 			float_type _x = 0.0, 
 			float_type _y = 0.0, 
@@ -155,7 +155,7 @@ int main(void)
 	//
 	bcout << meta_Vector::base_classes::size::value << endl;
 	bcout << meta_Vector::attributes::size::value << endl;
-	bcout << meta_Vector::all_attributes::size::value << endl;
+	//bcout << meta_Vector::all_attributes::size::value << endl;
 	//
 	//
 	bcout << "Finished" << endl;

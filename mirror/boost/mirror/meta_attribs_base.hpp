@@ -54,8 +54,12 @@ struct meta_class_attrib_for_each_impl<meta_attributes, false>
 	{
 		typedef mpl::int_<attrib_index> position;
 		typedef mpl::int_<position::value+1> next;
+		typedef typename meta_class::attributes::type_list type_list;
 		// get the type of the attribute
-		typedef mpl::at<meta_class::attributes::type_list, position>::type attrib_type;
+		typedef typename mpl::at<
+				type_list,
+				position
+			>::type attrib_type;
 		//
 		// execute the operation
 		op((meta_class*)0, position(), (attrib_type*)0);
@@ -63,7 +67,7 @@ struct meta_class_attrib_for_each_impl<meta_attributes, false>
 		meta_class_attrib_for_each_impl<
 			meta_attributes,
 			is_same<
-				mpl::int_<mpl::size<meta_class::attributes::type_list>::value>, 
+				mpl::int_<mpl::size<type_list>::value>, 
 				next
 			>::value 
 		>::apply(op, (meta_class*)0, next()); 
@@ -80,21 +84,22 @@ struct meta_class_attrib_utils<meta_class_attributes<the_class, variant_tag > >
 {
 	typedef the_class base_class;
 	typedef BOOST_MIRROR_REFLECT_CLASS_VT(the_class, variant_tag) meta_class;
-	typedef typename meta_class_attributes<the_class, variant_tag > meta_attributes;
+	typedef meta_class_attributes<the_class, variant_tag > meta_attributes;
 	/** 
 	 */
 	template <class meta_attrib_op>
 	static meta_attrib_op for_each(meta_attrib_op op)
 	{
+		typedef typename meta_class::attributes::type_list type_list;
 		meta_class_attrib_for_each_impl<
 			meta_attributes,
 			is_same<
-				mpl::int_<mpl::size<meta_class::attributes::type_list>::value>, 
+				mpl::int_<mpl::size<type_list>::value>, 
 				mpl::int_<0> 
 			>::value 
 		>::apply(op, (meta_class*)0, mpl::int_<0>());
 		return op;
-	};
+	}
 };
 
 } // namespace detail

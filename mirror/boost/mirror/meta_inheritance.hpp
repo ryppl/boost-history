@@ -118,9 +118,7 @@ struct meta_inheritance_spec<
  */
 template <
 	class the_base_class, 
-	typename access_spec = class_kind_default_access<
-		meta_class_kind<the_base_class>::result
-	>::specifier, 
+	typename access_spec, 
 	typename inheritance_spec = nonvirtual_base_
 >
 struct meta_inheritance
@@ -158,7 +156,13 @@ struct meta_base_classes
  *  zero, declarations must be ordered by number.
  */
 #define BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(NUMBER, A_BASE_CLASS) \
-	BOOST_PP_COMMA_IF(NUMBER) meta_inheritance<A_BASE_CLASS> 
+	BOOST_PP_COMMA_IF(NUMBER) \
+	meta_inheritance<\
+		A_BASE_CLASS, \
+		class_kind_default_access<\
+			meta_class_kind< A_BASE_CLASS >::result \
+		>::specifier \
+	> 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
  *  base class of the given class, with the given access specifier

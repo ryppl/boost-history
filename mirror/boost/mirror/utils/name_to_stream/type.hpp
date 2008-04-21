@@ -27,7 +27,9 @@ struct name_to_stream_helper<meta_type<base_type> >
 	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
 	{
 		if(!reflects_global_scope<typename meta_type<base_type>::scope>::value)
-			name_to_stream<meta_type<base_type>::scope>::put(s, ldng_dbl_cln) << BOOST_STR_LIT("::");
+			name_to_stream<
+				typename meta_type<base_type>::scope
+			>::put(s, ldng_dbl_cln) << BOOST_STR_LIT("::");
 		else if(ldng_dbl_cln) s << BOOST_STR_LIT("::");
 		return s << meta_type<base_type>::base_name();
 	}
@@ -45,7 +47,22 @@ struct name_to_stream_helper<meta_type<pointee_type*> >
 	}
 };
 
-/** Specialization for meta-types for arrays
+/** Specialization for meta-types for non-cv element arrays
+ */
+template <typename element_type, size_t size> 
+struct name_to_stream_helper<meta_type<element_type[size]> >
+{
+	template <class out_stream>
+	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	{
+		return name_to_stream_helper<meta_type<element_type> >::put(s,ldng_dbl_cln) << 
+			BOOST_STR_LIT("[") <<
+			size << 
+			BOOST_STR_LIT("]");
+	}
+};
+
+/** Specialization for meta-types for const element arrays
  */
 template <typename element_type, size_t size> 
 struct name_to_stream_helper<meta_type<const element_type[size]> >
@@ -53,11 +70,11 @@ struct name_to_stream_helper<meta_type<const element_type[size]> >
 	template <class out_stream>
 	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
 	{
+		
 		s << BOOST_STR_LIT("const ");
-		return name_to_stream_helper<meta_type<element_type> >::put(s,ldng_dbl_cln) << 
-			BOOST_STR_LIT("[") <<
-			size << 
-			BOOST_STR_LIT("]");
+		return name_to_stream_helper<
+			meta_type<element_type[size]> 
+		>::put(s, ldng_dbl_cln);
 	}
 };
 

@@ -11,8 +11,15 @@
 #define BOOST_MIRROR_META_CLASS_HPP
 
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/plus.hpp>
+#include <boost/mpl/minus.hpp>
+#include <boost/mpl/comparison.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/transform.hpp>
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/remove_if.hpp>
+#include <boost/mpl/contains.hpp>
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/joint_view.hpp>
 //
@@ -70,98 +77,293 @@ struct meta_class : public meta_type<reflected_class>
 		struct detail 
 		{
 			/** The list of non-virtual base classes in the same
-			 *  order as registered.
-			 */
-			typedef typename mpl::remove_if<
-				typename base_classes::list,
-				mpl::lambda<
-					mpl::not_<reflects_virtual_inheritance<mpl::_1> >
-				>::type
-			>::type list_of_regular_base_classes;
-
-			/** The list of all virtual base classes with duplicates.
+			 *  order as they were registered.
 			 */
 			typedef typename mpl::remove_if<
 				typename base_classes::list,
 				mpl::lambda<
 					reflects_virtual_inheritance<mpl::_1>
 				>::type
-			>::type list_of_all_virtual_base_classes;
+			>::type list_of_regular_base_classes;
 
-			/** The list of virtual base classes with duplicates
-			 *  removed.
-			 * TODO: 
+			/** The list of directly inhertied virtual base classes.
 			 */
-			typedef typename list_of_all_virtual_base_classes
-				list_of_virtual_base_classes;
-			
-			/** This tells whether the virtual base classes
-			 *  go first or last into the list of base classes.
-			 */
-			typedef true_type virtual_first;
-
-			/** The list of base classes of the reflected_class.
-			 */
-			typedef typename mpl::joint_view<
-				typename mpl::if_<
-					virtual_first,
-					list_of_virtual_base_classes,
-					list_of_regular_base_classes
-				>::type,
-				typename mpl::if_<
-					virtual_first,
-					list_of_regular_base_classes,
-					list_of_virtual_base_classes
+			typedef typename mpl::remove_if<
+				typename base_classes::list,
+				mpl::lambda<
+					mpl::not_<reflects_virtual_inheritance<mpl::_1> >
 				>::type
-			>::type list_of_base_classes;
+			>::type list_of_virtual_base_classes;
 
-			/** This template gets the list of attributes types
-			 *  when given a meta_inheritance specialization.
+			/** This template gets the regular_base_class_layout
+			 *  of a base class when given a meta_inheritance 
+			 *  specialization for this base class.
 			 */
 			template <class meta_inheritance>
-			struct get_bc_all_attrib_tl
+			struct get_base_class_regular_layout
 			{
-				typedef typename meta_inheritance::meta_class::all_attributes::type_list type;
+				typedef typename 
+					meta_inheritance:: 
+					meta_class:: 
+					all_attributes:: 
+					detail:: 
+					regular_base_class_layout type;
 			};
 			
-			/** Definition of a list containing the lists
-			 *  of all_attributes from the base classes.
+			/** The layout of non-virtual base classes 
+			 *  of this class, stored as a mpl::vector 
+			 *  of meta_inheritances.
 			 */
 			typedef typename mpl::accumulate<
-				typename list_of_base_classes,
+				list_of_regular_base_classes,
 				mpl::vector<>,
 				mpl::push_back<
-					mpl::_1, 
-					mpl::lambda<get_bc_all_attrib_tl<mpl::_2> >
+					mpl::insert_range<
+						mpl::_1,
+						mpl::end<mpl::_1>,
+						get_base_class_regular_layout<
+							mpl::_2
+						>
+					>,
+					mpl::_2
 				>
-			>::type att_type_lists_of_base_classes;
+			>::type regular_base_class_layout;
 			
-			/** Defintion of a mpl::vector containing the member
-			 *  attributes inherited from the base classes.
+			/** This template gets the virtual_base_class_layout
+			 *  of a base class when given a meta_inheritance 
+			 *  specialization for this base class.
+			 */
+			template <class meta_inheritance>
+			struct get_base_class_virtual_layout
+			{
+				typedef typename 
+					meta_inheritance:: 
+					meta_class:: 
+					all_attributes:: 
+					detail:: 
+					virtual_base_class_layout type;
+			};
+	
+			/** This template gets the base_class_layout
+			 *  of a base class when given a meta_inheritance 
+			 *  specialization for this base class.
+			 */
+			template <class meta_inheritance>
+			struct get_base_class_layout
+			{
+				typedef typename 
+					meta_inheritance:: 
+					meta_class:: 
+					all_attributes:: 
+					detail:: 
+					base_class_layout type;
+			};
+	
+			/** The list of vitual base classes of this class.
+			 *  This list still contains dupplicates, that are
+			 *  removed to form virtual_base_class_layout
 			 */
 			typedef typename mpl::accumulate<
-				att_type_lists_of_base_classes,
+				typename base_classes::list,
 				mpl::vector<>,
+				mpl::if_<
+					reflects_virtual_inheritance<
+						mpl::_2
+					>,
+					mpl::push_back<
+						mpl::insert_range<
+							mpl::_1,
+							mpl::end<mpl::_1>,
+							get_base_class_layout<
+								mpl::_2
+							>
+						>,
+						mpl::_2
+					>,
+					mpl::insert_range<
+						mpl::_1,
+						mpl::end<mpl::_1>,
+						get_base_class_virtual_layout<
+							mpl::_2
+						>
+					>
+				>
+			>::type virtual_base_class_layout_w_dups;
+			
+			/** The layout of virtual base classes 
+			 *  of this class, stored as a mpl::vector 
+			 *  of meta_inheritances.
+			 */
+			typedef typename mpl::fold<
+				virtual_base_class_layout_w_dups,
+				mpl::vector0<>,
+				mpl::if_<
+					mpl::contains<
+						mpl::_1,
+						mpl::_2
+					>,
+					mpl::_1,
+					mpl::push_back<
+						mpl::_1,
+						mpl::_2
+					>
+				>
+			>::type virtual_base_class_layout;
+			
+			/** This template gets the list of member
+			 *  attrbute types of a base class when 
+			 *  given a meta_inheritance<> specialization
+			 */
+			template <class meta_inheritance>
+			struct get_base_class_attrib_type_list
+			{
+				typedef typename 
+					meta_inheritance::
+					meta_class::
+					attributes::
+					type_list type;
+	
+			};
+
+			typedef typename mpl::joint_view<
+				virtual_base_class_layout,
+				regular_base_class_layout
+			>::type base_class_layout;
+
+			/** The list of inherited member attributes
+			 *  of the reflected class. 
+			 *  NOTE: this implementation puts the
+			 *  members of the virtual bases before
+			 *  the other members
+			 */
+			typedef typename mpl::accumulate<
+				base_class_layout,
+				mpl::vector0<>,
 				mpl::insert_range<
 					mpl::_1,
 					mpl::end<mpl::_1>,
-					mpl::_2
+					get_base_class_attrib_type_list<
+						mpl::_2
+					>
 				>
-			>::type inherited_attrib_type_list;
+			>::type inherited_member_attrib_type_list;
+
+			/** The list of types of all attributes including
+		 	*  the inherited ones.
+		 	*/
+			typedef typename mpl::joint_view<
+				typename detail::inherited_member_attrib_type_list,
+				typename meta_class<reflected_class, variant_tag>::attributes::type_list
+			>::type member_attrib_type_list;
+
+			/** The count of virtually inherited attributes
+			 */
+			typedef typename mpl::accumulate<
+				typename mpl::transform<
+					virtual_base_class_layout,
+					get_base_class_attrib_type_list<
+						mpl::_1
+					>
+				>::type,
+				mpl::int_<0>,
+				mpl::plus<
+					mpl::_1,
+					mpl::size< mpl::_2 >
+				>
+			>::type virtual_attrib_count;
+		
+
+			/** Is a true type if the I-th member attribute is
+			 *  virtually inherited.
+			 */
+			template <int I>
+			struct is_virtually_inherited 
+			: mpl::less<
+				mpl::int_<I>,
+				virtual_attrib_count
+			>::type { };
+		
+			/** This template is used to query the return value
+			 *  type of the getter for the I-th member attribute
+			 */
+			template <int I>
+			struct result_of_get
+			{
+				typedef typename mpl::at<
+						member_attrib_type_list, 
+						mpl::int_<I> 
+					>::type type;
+			};		
+	
+			/** This function is used to get the members of virtual
+		 	 *  base classes.
+		 	 */
+			template <class a_class, int I>
+			static typename result_of_get<I>::type
+			get(a_class context, mpl::int_<I> pos, mpl::bool_<true>)
+			{
+				typedef meta_class<a_class, variant_tag> meta_class;
+				
+				return meta_class::attributes::get(context, pos);
+			}
+		
+			/** This function is used to get the members of regular
+		 	 *  base classes.
+		 	 */
+			template <class a_class, int I>
+			static typename result_of_get<I>::type
+			get(a_class context, mpl::int_<I> pos, mpl::bool_<false>)
+			{
+				typedef meta_class<a_class, variant_tag> meta_class;
+
+				return meta_class::attributes::get(context, pos);
+
+			}
 		}; // struct detail
 		
+		/** The list of inherited attribute types
+		 */
+		typedef typename detail::inherited_member_attrib_type_list inherited_type_list;
+
+		/** The size of the type_list, i.e. the count of inherited attributes
+		 */
+		struct inherited_size : public mpl::size<inherited_type_list> { };
+
 		/** The list of types of all attributes including
 		 *  the inherited ones.
 		 */
-		typedef typename mpl::joint_view<
-			typename detail::inherited_attrib_type_list,
-			typename meta_class<reflected_class, variant_tag>::attributes::type_list
-		>::type type_list;
+		typedef typename detail::member_attrib_type_list type_list;
 		
 		/** The size of the type_list, i.e. the count of all attributes
 		 */
 		struct size : public mpl::size<type_list> { };
-	};
+		
+		/**
+		template <class a_class, int I>
+		static typename detail::result_of_get<I>::type
+		get(a_class context, mpl::int_<I> pos)
+		{
+			// is the attrib virtually inherited
+			typedef typename detail::
+				is_virtually_inherited<I> is_virtual;		
+			//
+			// the index of the attribute
+			typedef typename mpl::if<
+					is_virtual,
+					pos,
+					mpl::minus<
+						pos
+					>
+				>::type att_pos;
+			//
+			return detail::get(
+				context, 
+				att_pos,
+				is_virtual
+			);
+		}
+		 */
+	}; // all_attrbutes
 
 };
 
