@@ -85,7 +85,7 @@ namespace Test {
 namespace boost { 
 namespace mirror {
 
-/** Register the 3D namespace
+/** Register the Test namespace
  */
 BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(Test)
 
