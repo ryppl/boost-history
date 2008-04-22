@@ -1,7 +1,7 @@
 /**
  * \file examples/serialization/cube.cpp
  * Example of registering namespaces, types and classes
- * and cooperation with the Boost.Serialization library
+ * and cooperation with the Boost.Serialization library.
  *
  * NOTE: if You are not familiar with namespace and type
  * registration and reflection, You should probably 
@@ -21,8 +21,8 @@
 #include <boost/mpl/at.hpp>
 
 #include <fstream>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 
 #include <boost/char_type_switch/iostream.hpp>
 
@@ -65,6 +65,15 @@ namespace Graphics {
 		void set_y(float_type _y){y = _y;}
 		void set_z(float_type _z){z = _z;}
 		void set_w(float_type _w){w = _w;}
+		//
+		friend bool operator == (const CoordsTempl& a, const CoordsTempl& b) 
+		{
+			return 
+				a.x == b.x && 
+				a.y == b.y &&
+				a.z == b.z &&
+				a.w == b.w;
+		}
 	protected:
 		float_type x, y, z, w;
 	};
@@ -83,6 +92,11 @@ namespace Graphics {
 			: Coords(_x, _y, _z){ }
 		float_type length_squared(void){return x*x + y*y + z*z;}
 		float_type length(void){return sqrt(length_squared());}
+		//
+		friend bool operator == (const Vector& a, const Vector& b) 
+		{
+			return static_cast<const Coords&>(a) == static_cast<const Coords&>(b);
+		}
 	private:
 	};
 
@@ -102,7 +116,9 @@ namespace Graphics {
 			, rtb( _width/2.0f,  _height/2.0f, -_depth/2.0f)
 			, rtf( _width/2.0f,  _height/2.0f,  _depth/2.0f)
 		{ }
-	private:
+		// the attribs are public which is actually not a good idea
+		// but this is just an example
+		//
 		// left-bottom-back
 		Vector lbb;
 		// left-bottom-front
@@ -119,6 +135,19 @@ namespace Graphics {
 		Vector rtb;
 		// right-top-front
 		Vector rtf;
+		//
+		friend bool operator == (const Cube& a, const Cube& b) 
+		{
+			return 
+				a.lbb == b.lbb && 
+				a.lbf == b.lbf && 
+				a.ltb == b.ltb && 
+				a.ltf == b.ltf && 
+				a.rbb == b.rbb && 
+				a.rbf == b.rbf && 
+				a.rtb == b.rtb && 
+				a.rtf == b.rtf;
+		}
 	};
 
 } // namespace Graphics
@@ -136,6 +165,7 @@ BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(Graphics)
  */
 BOOST_MIRROR_REG_META_TYPE(_Graphics, ::Graphics, Coords)
 BOOST_MIRROR_REG_META_TYPE(_Graphics, ::Graphics, Vector)
+BOOST_MIRROR_REG_META_TYPE(_Graphics, ::Graphics, Cube)
 
 
 BOOST_MIRROR_REG_SINGLE_BASE_CLASS(
@@ -177,6 +207,43 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Graphics::Vector)
 	)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
+// register the attributes of Cube
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Graphics::Cube)	
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		0, ::Graphics::Vector, 
+		lbb
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		1, ::Graphics::Vector, 
+		lbf
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		2, ::Graphics::Vector,
+		ltb
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		3, ::Graphics::Vector,
+		ltf
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		4, ::Graphics::Vector,
+		rbb
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		5, ::Graphics::Vector,
+		rbf
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		6, ::Graphics::Vector,
+		rtb
+	)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		7, ::Graphics::Vector,
+		rtf
+	)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+
 /** Support for serialization 
  */
 
@@ -188,43 +255,134 @@ struct to_be_loaded
 };
 
 template <class Class>
+to_be_loaded<Class> make_loadable(Class& _inst)
+{
+	return to_be_loaded<Class>(_inst);
+}
+
+float& make_loadable(float& _inst)
+{
+	return _inst;
+}
+
+template <class Class>
 struct to_be_saved
 {
 	to_be_saved(const Class& _inst):inst(_inst){ }
 	const Class& inst;
 };
 
-template<class Archive, class Class>
-void load(Archive & ar, Class & c, const unsigned int version)
+template <class Class>
+to_be_saved<Class> make_saveable(const Class& _inst)
 {
-	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+	return to_be_saved<Class>(_inst);
 }
 
+const float& make_saveable(const float& _inst)
+{
+	return _inst;
+}
+
+
+template <class meta_class, class position>
+struct single_attrib_loader
+{
+	template <class Archive, class Class>
+	single_attrib_loader(Archive & ar, Class& c)
+	{
+		// first load the previous
+		single_attrib_loader<meta_class, mpl::int_<position::value - 1> >(ar, c);
+		// query the value of the current member
+		mpl::at<meta_class::all_attributes::type_list, position>::type value;
+		// load it
+		ar >> make_loadable(value);
+		// and set it
+		meta_class::all_attributes::set(c, position(), value);
+	}
+};
+
+template <class meta_class>
+struct single_attrib_loader<meta_class, mpl::int_<0> >
+{
+	template <class Archive, class Class>
+	single_attrib_loader(Archive & ar, Class& c)
+	{
+		typedef mpl::int_<0> position;
+		// we are on the first so just load it
+		mpl::at<meta_class::all_attributes::type_list, position>::type value;
+		ar >> make_loadable(value);
+		meta_class::all_attributes::set(c, position(), value);
+	}
+};
+
+
+
+
 template<class Archive, class Class>
-void save(Archive & ar, const Class & c, const unsigned int version)
+void load(Archive & ar, Class & c)
 {
 	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+	typedef mpl::int_<meta_Class::all_attributes::size::value-1> last;
+	single_attrib_loader<meta_Class, last>(ar, c);
+}
+
+template <class meta_class, class position>
+struct single_attrib_saver
+{
+	template <class Archive, class Class>
+	single_attrib_saver(Archive & ar, const Class& c)
+	{
+		// first save the previous
+		single_attrib_saver<meta_class, mpl::int_<position::value - 1> >(ar, c);
+		// query the value of the current member
+		mpl::at<meta_class::all_attributes::type_list, position>::type value;
+		// and save it
+		ar << make_saveable(meta_class::all_attributes::query(c, position(), value));
+	}
+};
+
+template <class meta_class>
+struct single_attrib_saver<meta_class, mpl::int_<0> >
+{
+	template <class Archive, class Class>
+	single_attrib_saver(Archive & ar, const Class& c)
+	{
+		typedef mpl::int_<0> position;
+		// we are on the first so just save it
+		// query the value of the current member
+		mpl::at<meta_class::all_attributes::type_list, position>::type value;
+		ar << make_saveable(meta_class::all_attributes::query(c, position(), value));
+	}
+};
+
+template<class Archive, class Class>
+void save(Archive & ar, const Class & c)
+{
+	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+	typedef mpl::int_<meta_Class::all_attributes::size::value-1> last;
+	single_attrib_saver<meta_Class, last>(ar, c);
 }
 
 
 } // namespace mirror
 
-namespace serialization {
+namespace archive {
 
 template<class Archive, class Class>
-void serialize(Archive & ar, mirror::to_be_saved<Class> dst, const unsigned int version)
+void save(Archive & ar, mirror::to_be_saved<Class>& dst)
 {
-	mirror::save(ar, dst.inst, version);
+	mirror::save(ar, dst.inst);
 }
 
 template<class Archive, class Class>
-void serialize(Archive & ar, mirror::to_be_loaded<Class> src, const unsigned int version)
+void load(Archive & ar, mirror::to_be_loaded<Class>& src)
 {
-	mirror::load(ar, src.inst, version);
+	mirror::load(ar, src.inst);
 }
 
 
-} // namespace serialization
+} // namespace archive
+
 } // namespace boost
 
 int main(void)
@@ -237,12 +395,26 @@ int main(void)
 	using ::Graphics::Vector;
 	using ::Graphics::Cube;
 	//
+	// create two different cubes
 	Cube c1(2.0f, 2.0f, 2.0f), c2;
 	//
-	boost::archive::xml_oarchive oa(cout);
+	// save the first one into a text file
+	{
+		std::fstream out("temp.txt", ios_base::out);
+		boost::archive::text_oarchive oa(out);
+		//
+		oa << make_saveable(c1);
+	}
 	//
-	oa << BOOST_SERIALIZATION_NVP(to_be_saved<Cube>(c1));
-	//
+	// load the second from the same file
+	{
+		std::fstream in("temp.txt", ios_base::in);
+		boost::archive::text_iarchive ia(in);
+		//
+		ia >> make_loadable(c2);
+	}
+	// compare them
+	assert(c1 == c2);
 	//
 	bcout << "Finished" << endl;
 	//
