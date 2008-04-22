@@ -32,12 +32,20 @@
 		</revision>
 		<revision id="20080417_1855CET" major="0" minor="1" micro="3" author="m_ch">
 			- Added an elaborate example on class registration and usage
-			- Done major modifications to multiple sources
+			- Made major modifications to multiple sources
 		</revision>
 		<revision id="20080418" major="0" minor="1" micro="4" author="m_ch">
 			- Added two examples (incomplete)
-			- Done some modifications to multiple sources
+			- Made some modifications to multiple sources
 			- Minor updates to documentation
+		</revision>
+		<revision id="20080421" major="0" minor="1" micro="5" author="m_ch">
+			- Added support for access to the inherited member attributes of a class
+			- Updated the example on virtual inheritance 
+			- Updated the example on serialization (still unfinished)
+		</revision>
+		<revision id="20080422" major="0" minor="1" micro="6" author="m_ch">
+			- Made minor updates to documentation
 		</revision>
 	</revisions>
 </library>
