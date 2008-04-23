@@ -146,19 +146,19 @@ namespace unnecessary_copy_tests
         COPY_COUNT(1); MOVE_COUNT(0);
 
         //
-        // 1 arguments
+        // 1 argument
         // 
 
         // Emplace should be able to tell that there already is an element
         // without creating a new one.
         reset();
-        x.insert(a);
+        x.emplace(a);
         COPY_COUNT(0); MOVE_COUNT(0);
 
         // A new object is created by source, but it shouldn't be moved or
         // copied.
         reset();
-        x.insert(source<count_copies>());
+        x.emplace(source<count_copies>());
         COPY_COUNT(1); MOVE_COUNT(0);
 
         // No move should take place.
@@ -224,12 +224,31 @@ namespace unnecessary_copy_tests
         x.emplace(std::move(a));
         COPY_COUNT(0); MOVE_COUNT(0);
 
+        // Just in case a did get moved
+        std::pair<count_copies const, count_copies> b;
+
+        reset();
+        x.emplace(b.first.tag_);
+        COPY_COUNT(2); MOVE_COUNT(0);
+
         //
         // 2 arguments
         //
 
         reset();
+        x.emplace(b.first, b.second);
+        COPY_COUNT(2); MOVE_COUNT(0);
+
+        reset();
         x.emplace(source<count_copies>(), source<count_copies>());
+        COPY_COUNT(2); MOVE_COUNT(0);
+
+        reset();
+        x.emplace(b.first, source<count_copies>());
+        COPY_COUNT(2); MOVE_COUNT(0);
+
+        reset();
+        x.emplace(b.first.tag_, b.second.tag_);
         COPY_COUNT(2); MOVE_COUNT(0);
     }
 #endif
