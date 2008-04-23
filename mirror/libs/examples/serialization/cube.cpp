@@ -271,12 +271,13 @@ struct single_attrib_loader
 		// first load the previous
 		single_attrib_loader<meta_class, mpl::int_<position::value - 1> >(ar, c);
 		// query the value of the current member
-		typename mpl::at<
+		typedef typename mpl::at<
 			typename meta_class::all_attributes::type_list, 
 			position
-		>::type value;
+		>::type member_type; 
+		member_type value;
 		// load it
-		typename to_be_loaded<Class>::type dst = value;
+		typename to_be_loaded<member_type>::type dst(value);
 		ar >> dst;
 		// and set it
 		meta_class::all_attributes::set(c, position(), value);
@@ -291,11 +292,12 @@ struct single_attrib_loader<meta_class, mpl::int_<0> >
 	{
 		typedef mpl::int_<0> position;
 		// we are on the first so just load it
-		typename mpl::at<
+		typedef typename mpl::at<
 			typename meta_class::all_attributes::type_list, 
 			position
-		>::type value;
-		typename to_be_loaded<Class>::type dst = value;
+		>::type member_type;
+		member_type value;
+		typename to_be_loaded<member_type>::type dst(value);
 		ar >> dst;
 		meta_class::all_attributes::set(c, position(), value);
 	}
@@ -303,15 +305,12 @@ struct single_attrib_loader<meta_class, mpl::int_<0> >
 
 
 template<class Archive, class Class>
-void load(Archive & ar, Class & c)
+void do_load(Archive & ar, Class & c)
 {
 	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
 	typedef mpl::int_<meta_Class::all_attributes::size::value - 1> last;
 	single_attrib_loader<meta_Class, last>(ar, c);
 }
-
-template<class Archive, class Class>
-void do_save(Archive & ar, Class & c);
 
 template <typename Type>
 struct to_be_saved
@@ -323,21 +322,6 @@ struct to_be_saved
 	>::type type;
 	to_be_saved(Type& _inst):inst(_inst){ }
 	Type& inst;
-
-	friend class ::boost::serialization::access;
-
-	template <class Archive>
-	void save(Archive & ar, const unsigned int version) const
-	{
-		::boost::mirror::do_save(ar, inst);
-	}
-
-	template <class Archive>
-	void load(Archive & ar, const unsigned int version)
-	{
-	}
-
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 
@@ -356,7 +340,9 @@ struct single_attrib_saver
 		>::type member_type;
 		member_type value;
 		// and save it
-		typename to_be_saved<member_type>::type src(meta_class::all_attributes::query(c, position(), value));
+		typename to_be_saved<member_type>::type src(
+			meta_class::all_attributes::query(c, position(), value)
+		);
 		ar << src;
 	}
 };
@@ -375,7 +361,9 @@ struct single_attrib_saver<meta_class, mpl::int_<0> >
 			position
 		>::type member_type;
 		member_type value;
-		typename to_be_saved<member_type>::type src(meta_class::all_attributes::query(c, position(), value));
+		typename to_be_saved<member_type>::type src(
+			meta_class::all_attributes::query(c, position(), value)
+		);
 		ar << src;
 	}
 };
@@ -390,6 +378,22 @@ void do_save(Archive & ar, Class & c)
 
 
 } // namespace mirror
+namespace archive {
+
+template<class Archive, class Class>
+void save(Archive & ar, mirror::to_be_saved<Class> & c)
+{
+	mirror::do_save(ar, c.inst);
+}
+
+template<class Archive, class Class>
+void load(Archive & ar, mirror::to_be_loaded<Class> & c)
+{
+	mirror::do_load(ar, c.inst);
+}
+
+
+} // namespace archive
 } // namespace boost
 
 int main(void)
@@ -420,7 +424,7 @@ int main(void)
 		boost::archive::text_iarchive ia(in);
 		//
 		to_be_loaded<Cube> lc2(c2);
-		//ia >> lc2;
+		ia >> lc2;
 	}
 	// compare them
 	assert(c1 == c2);
