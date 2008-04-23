@@ -1481,26 +1481,6 @@ namespace boost {
                 return need_to_reserve;
             }
 
-            // basic exception safety
-            //
-            // This version of reserve is called when inserting a range
-            // into a container with equivalent keys, it creates more buckets
-            // if the resulting load factor would be over 80% of the load
-            // factor. This is to try to avoid excessive rehashes.
-            bool reserve_extra(size_type n)
-            {
-                using namespace std;
-
-                bool need_to_reserve = n >= max_load_;
-                // throws - basic:
-                if (need_to_reserve) {
-                    rehash_impl(double_to_size_t(floor(
-                        n / (double) mlf_ * 1.25)) + 1);
-                }
-                BOOST_ASSERT(n < max_load_ || n > max_size());
-                return need_to_reserve;
-            }
-
         public:
 
             // no throw
@@ -1772,7 +1752,7 @@ namespace boost {
                 }
                 else {
                     // Only require basic exception safety here
-                    reserve_extra(size() + distance);
+                    reserve(size() + distance);
                     node_constructor a(data_.allocators_);
 
                     for (; i != j; ++i) {
