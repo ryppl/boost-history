@@ -227,9 +227,10 @@ namespace unnecessary_copy_tests
         // Just in case a did get moved
         std::pair<count_copies const, count_copies> b;
 
-        reset();
-        x.emplace(b.first.tag_);
-        COPY_COUNT(2); MOVE_COUNT(0);
+        // This test requires a C++0x std::pair. Which gcc hasn't got yet.
+        //reset();
+        //x.emplace(b.first.tag_);
+        //COPY_COUNT(2); MOVE_COUNT(0);
 
         //
         // 2 arguments
