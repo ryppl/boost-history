@@ -15,7 +15,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include <boost/typeof/typeof.hpp>
+#include <boost/type_traits/is_fundamental.hpp>
 
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -249,41 +249,17 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 /** Support for serialization 
  */
 
-template <class Class>
+template <typename Type>
 struct to_be_loaded
 {
-	to_be_loaded(Class& _inst):inst(_inst){ }
-	Class& inst;
+	typedef typename mpl::if_<
+		is_fundamental<Type>,
+		Type&,
+		to_be_loaded<Type>
+	>::type type;
+	to_be_loaded(Type& _inst):inst(_inst){ }
+	Type& inst;
 };
-
-template <class Class>
-to_be_loaded<Class> make_loadable(Class& _inst)
-{
-	return to_be_loaded<Class>(_inst);
-}
-
-float& make_loadable(float& _inst)
-{
-	return _inst;
-}
-
-template <class Class>
-struct to_be_saved
-{
-	to_be_saved(const Class& _inst):inst(_inst){ }
-	const Class& inst;
-};
-
-template <class Class>
-to_be_saved<Class> make_saveable(const Class& _inst)
-{
-	return to_be_saved<Class>(_inst);
-}
-
-const float& make_saveable(const float& _inst)
-{
-	return _inst;
-}
 
 
 template <class meta_class, class position>
@@ -300,7 +276,8 @@ struct single_attrib_loader
 			position
 		>::type value;
 		// load it
-		ar >> make_loadable(value);
+		typename to_be_loaded<Class>::type dst = value;
+		ar >> dst;
 		// and set it
 		meta_class::all_attributes::set(c, position(), value);
 	}
@@ -318,7 +295,8 @@ struct single_attrib_loader<meta_class, mpl::int_<0> >
 			typename meta_class::all_attributes::type_list, 
 			position
 		>::type value;
-		ar >> make_loadable(value);
+		typename to_be_loaded<Class>::type dst = value;
+		ar >> dst;
 		meta_class::all_attributes::set(c, position(), value);
 	}
 };
@@ -332,21 +310,53 @@ void load(Archive & ar, Class & c)
 	single_attrib_loader<meta_Class, last>(ar, c);
 }
 
+template<class Archive, class Class>
+void do_save(Archive & ar, Class & c);
+
+template <typename Type>
+struct to_be_saved
+{
+	typedef typename mpl::if_<
+		is_fundamental<Type>,
+		Type&,
+		to_be_saved<Type>
+	>::type type;
+	to_be_saved(Type& _inst):inst(_inst){ }
+	Type& inst;
+
+	friend class ::boost::serialization::access;
+
+	template <class Archive>
+	void save(Archive & ar, const unsigned int version) const
+	{
+		::boost::mirror::do_save(ar, inst);
+	}
+
+	template <class Archive>
+	void load(Archive & ar, const unsigned int version)
+	{
+	}
+
+	BOOST_SERIALIZATION_SPLIT_MEMBER()
+};
+
+
 template <class meta_class, class position>
 struct single_attrib_saver
 {
 	template <class Archive, class Class>
-	single_attrib_saver(Archive & ar, const Class& c)
+	single_attrib_saver(Archive & ar, Class& c)
 	{
 		// first save the previous
 		single_attrib_saver<meta_class, mpl::int_<position::value - 1> >(ar, c);
 		// query the value of the current member
-		typename mpl::at<
+		typedef typename mpl::at<
 			typename meta_class::all_attributes::type_list, 
 			position
-		>::type value;
+		>::type member_type;
+		member_type value;
 		// and save it
-		BOOST_AUTO(src, make_saveable(meta_class::all_attributes::query(c, position(), value)));
+		typename to_be_saved<member_type>::type src(meta_class::all_attributes::query(c, position(), value));
 		ar << src;
 	}
 };
@@ -355,22 +365,23 @@ template <class meta_class>
 struct single_attrib_saver<meta_class, mpl::int_<0> >
 {
 	template <class Archive, class Class>
-	single_attrib_saver(Archive & ar, const Class& c)
+	single_attrib_saver(Archive & ar, Class& c)
 	{
 		typedef mpl::int_<0> position;
 		// we are on the first so just save it
 		// query the value of the current member
-		typename mpl::at<
+		typedef typename mpl::at<
 			typename meta_class::all_attributes::type_list, 
 			position
-		>::type value;
-		BOOST_AUTO(src, make_saveable(meta_class::all_attributes::query(c, position(), value)));
+		>::type member_type;
+		member_type value;
+		typename to_be_saved<member_type>::type src(meta_class::all_attributes::query(c, position(), value));
 		ar << src;
 	}
 };
 
 template<class Archive, class Class>
-void save(Archive & ar, const Class & c)
+void do_save(Archive & ar, Class & c)
 {
 	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
 	typedef mpl::int_<meta_Class::all_attributes::size::value - 1> last;
@@ -379,24 +390,6 @@ void save(Archive & ar, const Class & c)
 
 
 } // namespace mirror
-
-namespace archive {
-
-template<class Archive, class Class>
-void save(Archive & ar, mirror::to_be_saved<Class>& dst)
-{
-	mirror::save(ar, dst.inst);
-}
-
-template<class Archive, class Class>
-void load(Archive & ar, mirror::to_be_loaded<Class>& src)
-{
-	mirror::load(ar, src.inst);
-}
-
-
-} // namespace archive
-
 } // namespace boost
 
 int main(void)
@@ -414,20 +407,20 @@ int main(void)
 	//
 	// save the first one into a text file
 	{
-		std::fstream out("temp.txt", ios_base::out);
+		std::fstream out("./temp.txt", ios_base::out);
 		boost::archive::text_oarchive oa(out);
 		//
-		BOOST_AUTO(src, make_saveable(c1));
-		oa << src;
+		to_be_saved<Cube> sc1(c1);
+		oa << sc1;
 	}
 	//
 	// load the second from the same file
 	{
-		std::fstream in("temp.txt", ios_base::in);
+		std::fstream in("./temp.txt", ios_base::in);
 		boost::archive::text_iarchive ia(in);
 		//
-		BOOST_AUTO(dst, make_loadable(c2));
-		ia >> dst;
+		to_be_loaded<Cube> lc2(c2);
+		//ia >> lc2;
 	}
 	// compare them
 	assert(c1 == c2);
