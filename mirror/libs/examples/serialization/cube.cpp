@@ -159,7 +159,7 @@ namespace Graphics {
 namespace boost { 
 namespace mirror {
 
-/** Register the 3D namespace
+/** Register the Graphics namespace
  */
 BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(Graphics)
 
@@ -300,8 +300,7 @@ struct single_attrib_loader
 			position
 		>::type value;
 		// load it
-		BOOST_AUTO(dst, make_loadable(value));
-		ar >> dst;
+		ar >> make_loadable(value);
 		// and set it
 		meta_class::all_attributes::set(c, position(), value);
 	}
@@ -319,20 +318,17 @@ struct single_attrib_loader<meta_class, mpl::int_<0> >
 			typename meta_class::all_attributes::type_list, 
 			position
 		>::type value;
-		BOOST_AUTO(dst, make_loadable(value));
-		ar >> dst;
+		ar >> make_loadable(value);
 		meta_class::all_attributes::set(c, position(), value);
 	}
 };
-
-
 
 
 template<class Archive, class Class>
 void load(Archive & ar, Class & c)
 {
 	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
-	typedef mpl::int_<meta_Class::all_attributes::size::value-1> last;
+	typedef mpl::int_<meta_Class::all_attributes::size::value - 1> last;
 	single_attrib_loader<meta_Class, last>(ar, c);
 }
 
@@ -374,10 +370,10 @@ struct single_attrib_saver<meta_class, mpl::int_<0> >
 };
 
 template<class Archive, class Class>
-void save(Archive & ar, Class & c)
+void save(Archive & ar, const Class & c)
 {
 	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
-	typedef mpl::int_<meta_Class::all_attributes::size::value-1> last;
+	typedef mpl::int_<meta_Class::all_attributes::size::value - 1> last;
 	single_attrib_saver<meta_Class, last>(ar, c);
 }
 
