@@ -15,6 +15,8 @@
 #include <assert.h>
 #include <math.h>
 
+#include <boost/typeof/typeof.hpp>
+
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/size.hpp>
@@ -293,9 +295,13 @@ struct single_attrib_loader
 		// first load the previous
 		single_attrib_loader<meta_class, mpl::int_<position::value - 1> >(ar, c);
 		// query the value of the current member
-		mpl::at<meta_class::all_attributes::type_list, position>::type value;
+		typename mpl::at<
+			typename meta_class::all_attributes::type_list, 
+			position
+		>::type value;
 		// load it
-		ar >> make_loadable(value);
+		BOOST_AUTO(dst, make_loadable(value));
+		ar >> dst;
 		// and set it
 		meta_class::all_attributes::set(c, position(), value);
 	}
@@ -309,8 +315,12 @@ struct single_attrib_loader<meta_class, mpl::int_<0> >
 	{
 		typedef mpl::int_<0> position;
 		// we are on the first so just load it
-		mpl::at<meta_class::all_attributes::type_list, position>::type value;
-		ar >> make_loadable(value);
+		typename mpl::at<
+			typename meta_class::all_attributes::type_list, 
+			position
+		>::type value;
+		BOOST_AUTO(dst, make_loadable(value));
+		ar >> dst;
 		meta_class::all_attributes::set(c, position(), value);
 	}
 };
@@ -335,9 +345,13 @@ struct single_attrib_saver
 		// first save the previous
 		single_attrib_saver<meta_class, mpl::int_<position::value - 1> >(ar, c);
 		// query the value of the current member
-		mpl::at<meta_class::all_attributes::type_list, position>::type value;
+		typename mpl::at<
+			typename meta_class::all_attributes::type_list, 
+			position
+		>::type value;
 		// and save it
-		ar << make_saveable(meta_class::all_attributes::query(c, position(), value));
+		BOOST_AUTO(src, make_saveable(meta_class::all_attributes::query(c, position(), value)));
+		ar << src;
 	}
 };
 
@@ -350,13 +364,17 @@ struct single_attrib_saver<meta_class, mpl::int_<0> >
 		typedef mpl::int_<0> position;
 		// we are on the first so just save it
 		// query the value of the current member
-		mpl::at<meta_class::all_attributes::type_list, position>::type value;
-		ar << make_saveable(meta_class::all_attributes::query(c, position(), value));
+		typename mpl::at<
+			typename meta_class::all_attributes::type_list, 
+			position
+		>::type value;
+		BOOST_AUTO(src, make_saveable(meta_class::all_attributes::query(c, position(), value)));
+		ar << src;
 	}
 };
 
 template<class Archive, class Class>
-void save(Archive & ar, const Class & c)
+void save(Archive & ar, Class & c)
 {
 	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
 	typedef mpl::int_<meta_Class::all_attributes::size::value-1> last;
@@ -403,7 +421,8 @@ int main(void)
 		std::fstream out("temp.txt", ios_base::out);
 		boost::archive::text_oarchive oa(out);
 		//
-		oa << make_saveable(c1);
+		BOOST_AUTO(src, make_saveable(c1));
+		oa << src;
 	}
 	//
 	// load the second from the same file
@@ -411,7 +430,8 @@ int main(void)
 		std::fstream in("temp.txt", ios_base::in);
 		boost::archive::text_iarchive ia(in);
 		//
-		ia >> make_loadable(c2);
+		BOOST_AUTO(dst, make_loadable(c2));
+		ia >> dst;
 	}
 	// compare them
 	assert(c1 == c2);
