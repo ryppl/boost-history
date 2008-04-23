@@ -47,5 +47,9 @@
 		<revision id="20080422" major="0" minor="1" micro="6" author="m_ch">
 			- Made minor updates to documentation
 		</revision>
+		<revision id="20080423" major="0" minor="1" micro="7" author="m_ch">
+			- Added example on cooperation with Boost.Serialization
+			  (will not compile with gcc)
+		</revision>
 	</revisions>
 </library>

@@ -8,6 +8,8 @@
  * see examples/registering/namespaces.cpp and
  * examples/registering/types.cpp first.
  *
+ * NOTE: this example will currently not compile with g++.
+ *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -411,7 +413,7 @@ int main(void)
 	//
 	// save the first one into a text file
 	{
-		std::fstream out("./temp.txt", ios_base::out);
+		std::fstream out("./Cube.txt", ios_base::out);
 		boost::archive::text_oarchive oa(out);
 		//
 		to_be_saved<Cube> sc1(c1);
@@ -420,7 +422,7 @@ int main(void)
 	//
 	// load the second from the same file
 	{
-		std::fstream in("./temp.txt", ios_base::in);
+		std::fstream in("./Cube.txt", ios_base::in);
 		boost::archive::text_iarchive ia(in);
 		//
 		to_be_loaded<Cube> lc2(c2);
