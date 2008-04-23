@@ -1527,6 +1527,41 @@ namespace boost {
                 return v.first;
             }
 
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+            struct no_key {};
+
+            template <typename Arg1, typename... Args>
+            static typename boost::enable_if<
+                boost::mpl::and_<
+                    boost::mpl::not_<boost::is_same<key_type, value_type> >,
+                    boost::is_same<Arg1, key_type>
+                >,
+                key_type>::type const& extract_key(Arg1 const& k, Args const&...)
+            {
+                return k;
+            }
+
+            template <typename First, typename Second>
+            static typename boost::enable_if<
+                boost::mpl::and_<
+                    boost::mpl::not_<boost::is_same<key_type, value_type> >,
+                    boost::is_same<key_type,
+                        typename boost::remove_const<
+                            typename boost::remove_reference<First>::type
+                        >::type>
+                >,
+                key_type>::type const& extract_key(std::pair<First, Second> const& v)
+            {
+                return v.first;
+            }
+
+            template <typename... Args>
+            static no_key extract_key(Args const&...)
+            {
+                return no_key();
+            }
+#endif
+
         public:
 
             // if hash function throws, basic exception safety
@@ -1891,6 +1926,50 @@ namespace boost {
             // strong otherwise
             template<typename... Args>
             std::pair<iterator_base, bool> insert(Args&&... args)
+            {
+                return insert_impl(
+                    extract_key(std::forward<Args>(args)...),
+                    std::forward<Args>(args)...);
+            }
+
+            template<typename... Args>
+            std::pair<iterator_base, bool> insert_impl(key_type const& k, Args&&... args)
+            {
+                // No side effects in this initial code
+                size_type hash_value = hash_function()(k);
+                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
+                link_ptr pos = find_iterator(bucket, k);
+
+                if (BOOST_UNORDERED_BORLAND_BOOL(pos)) {
+                    // Found an existing key, return it (no throw).
+                    return std::pair<iterator_base, bool>(
+                        iterator_base(bucket, pos), false);
+
+                } else {
+                    // Doesn't already exist, add to bucket.
+                    // Side effects only in this block.
+
+                    // Create the node before rehashing in case it throws an
+                    // exception (need strong safety in such a case).
+                    node_constructor a(data_.allocators_);
+                    a.construct(std::forward<Args>(args)...);
+
+                    // reserve has basic exception safety if the hash function
+                    // throws, strong otherwise.
+                    if(reserve(size() + 1))
+                        bucket = data_.bucket_ptr_from_hash(hash_value);
+
+                    // Nothing after this point can throw.
+
+                    link_ptr n = data_.link_node_in_bucket(a, bucket);
+
+                    return std::pair<iterator_base, bool>(
+                        iterator_base(bucket, n), true);
+                }
+            }
+
+            template<typename... Args>
+            std::pair<iterator_base, bool> insert_impl(no_key, Args&&... args)
             {
                 // Construct the node regardless - in order to get the key.
                 // It will be discarded if it isn't used

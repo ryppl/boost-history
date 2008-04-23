@@ -219,6 +219,12 @@ namespace unnecessary_copy_tests
         x.emplace(source<std::pair<count_copies, count_copies> >());
         COPY_COUNT(2); MOVE_COUNT(0);
 
+        count_copies part;
+        reset();
+        std::pair<count_copies const&, count_copies const&> a_ref(part, part);
+        x.emplace(a_ref);
+        COPY_COUNT(0); MOVE_COUNT(0);
+
         // No move should take place.
         reset();
         x.emplace(std::move(a));
@@ -238,15 +244,16 @@ namespace unnecessary_copy_tests
 
         reset();
         x.emplace(b.first, b.second);
-        COPY_COUNT(2); MOVE_COUNT(0);
+        COPY_COUNT(0); MOVE_COUNT(0);
 
         reset();
         x.emplace(source<count_copies>(), source<count_copies>());
         COPY_COUNT(2); MOVE_COUNT(0);
 
+        // source<count_copies> creates a single copy.
         reset();
         x.emplace(b.first, source<count_copies>());
-        COPY_COUNT(2); MOVE_COUNT(0);
+        COPY_COUNT(1); MOVE_COUNT(0);
 
         reset();
         x.emplace(b.first.tag_, b.second.tag_);
