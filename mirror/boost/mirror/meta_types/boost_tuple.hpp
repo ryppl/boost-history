@@ -1,36 +1,16 @@
 /**
- * \file boost/mirror/meta_class.hpp
- * Registering and reflection of classes
+ * \file boost/mirror/meta_types/boost_tuple.hpp
+ * Meta-type for boost::tuple<>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_CLASS_HPP
-#define BOOST_MIRROR_META_CLASS_HPP
+#ifndef BOOST_MIRROR_META_TYPES_BOOST_TUPLE_HPP
+#define BOOST_MIRROR_META_TYPES_BOOST_TUPLE_HPP
 
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/plus.hpp>
-#include <boost/mpl/minus.hpp>
-#include <boost/mpl/comparison.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/accumulate.hpp>
-#include <boost/mpl/remove_if.hpp>
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/insert_range.hpp>
-#include <boost/mpl/joint_view.hpp>
-//
-// basic meta types
 #include <boost/mirror/meta_type.hpp>
-// reflection of class inheritance
-#include <boost/mirror/meta_inheritance.hpp>
-// inheritance trait
-#include <boost/mirror/reflects_virtual_inheritance.hpp>
-// reflection of class member attributes
-#include <boost/mirror/meta_attributes.hpp>
 
 namespace boost {
 namespace mirror {
@@ -314,10 +294,15 @@ struct meta_class : public meta_type<reflected_class>
 						member_attrib_type_list, 
 						mpl::int_<I> 
 					>::type type;
-			};
-
-			template <int I>
-			struct inherited_attrib_meta_class_and_pos
+			};		
+	
+		
+			/** This function is used to get the member attributes 
+		 	 *  from the base classes.
+		 	 */
+			template <class a_class, int I>
+			static typename result_of_get<I>::type
+			get(a_class context, mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename mpl::at<
 					typename detail::inherited_attrib_owners_and_offsets,
@@ -328,56 +313,7 @@ struct meta_class : public meta_type<reflected_class>
 				typedef typename mpl::int_<mpl::minus<
 					mpl::int_<I>,
 					typename owner_and_offset::second
-				>::value> position;
-			};
-
-			template <int I>
-			struct own_attrib_meta_class_and_pos
-			{
-				typedef typename meta_class meta_class;
-				typedef typename mpl::int_<mpl::minus<
-					mpl::int_<I>,
-					typename mpl::size<inherited_member_attrib_type_list>::type
-				>::value> position;
-			};
-
-			/** This function is used to get the names of the member 
-		 	 *  attributes from the base classes.
-		 	 */
-			template <int I>
-			static const bchar*
-			base_name(mpl::int_<I> pos, mpl::bool_<true>)
-			{
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::meta_class meta_class;
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
-
-				return meta_class::attributes::base_name(new_pos_type());
-			}
-
-			template <int I>
-			static const bchar*
-			base_name(mpl::int_<I> pos, mpl::bool_<false>)
-			{
-				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
-
-				return meta_class::attributes::base_name(new_pos_type());
-			}
-
-		
-			/** This function is used to get the member attributes 
-		 	 *  from the base classes.
-		 	 */
-			template <class a_class, int I>
-			static typename result_of_get<I>::type
-			get(a_class context, mpl::int_<I> pos, mpl::bool_<true>)
-			{
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::meta_class meta_class;
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+				>::value> new_pos_type;
 
 				return meta_class::attributes::get(context, new_pos_type());
 
@@ -386,8 +322,10 @@ struct meta_class : public meta_type<reflected_class>
 			static typename result_of_get<I>::type
 			get(a_class context, mpl::int_<I> pos, mpl::bool_<false>)
 			{
-				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename mpl::size<inherited_member_attrib_type_list>::type
+				>::value> new_pos_type;
 				return meta_class::attributes::get(context, new_pos_type());
 			}
 
@@ -399,10 +337,16 @@ struct meta_class : public meta_type<reflected_class>
 			static dest_type&
 			query(a_class context, mpl::int_<I> pos, dest_type& dest, mpl::bool_<true>)
 			{
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::meta_class meta_class;
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+				typedef typename mpl::at<
+					typename detail::inherited_attrib_owners_and_offsets,
+					mpl::int_<I>
+				>::type owner_and_offset;
+
+				typedef typename owner_and_offset::first meta_class;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename owner_and_offset::second
+				>::value> new_pos_type;
 
 				return meta_class::attributes::query(context, new_pos_type(), dest);
 
@@ -412,8 +356,10 @@ struct meta_class : public meta_type<reflected_class>
 			static dest_type&
 			query(a_class context, mpl::int_<I> pos, dest_type& dest, mpl::bool_<false>)
 			{
-				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename mpl::size<inherited_member_attrib_type_list>::type
+				>::value> new_pos_type;
 				return meta_class::attributes::query(context, new_pos_type(), dest);
 			}
 
@@ -425,10 +371,16 @@ struct meta_class : public meta_type<reflected_class>
 			static void
 			set(a_class& context, mpl::int_<I> pos, value_type value, mpl::bool_<true>)
 			{
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::meta_class meta_class;
-				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+				typedef typename mpl::at<
+					typename detail::inherited_attrib_owners_and_offsets,
+					mpl::int_<I>
+				>::type owner_and_offset;
+
+				typedef typename owner_and_offset::first meta_class;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename owner_and_offset::second
+				>::value> new_pos_type;
 
 				meta_class::attributes::set(context, new_pos_type(), value);
 			}
@@ -437,8 +389,10 @@ struct meta_class : public meta_type<reflected_class>
 			static void
 			set(a_class& context, mpl::int_<I> pos, value_type value, mpl::bool_<false>)
 			{
-				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+				typedef typename mpl::int_<mpl::minus<
+					mpl::int_<I>,
+					typename mpl::size<inherited_member_attrib_type_list>::type
+				>::value> new_pos_type;
 				meta_class::attributes::set(context, new_pos_type(), value);
 			}
 
@@ -461,21 +415,6 @@ struct meta_class : public meta_type<reflected_class>
 		 */
 		struct size : public mpl::size<type_list> { };
 		
-		/** Gets the name of the I-th member (including
-		 *  the inherited ones)
-		 */
-		template <int I>
-		static const bchar* 
-		base_name(mpl::int_<I>)
-		{
-			typedef typename mpl::less<
-				mpl::int_<I>,
-				inherited_size
-			>::type is_inherited;
-
-			return detail::base_name(pos, is_inherited());
-		}
-
 		/** Gets the value of the I-th member (including 
 		 *  the inherited ones)
 		 */

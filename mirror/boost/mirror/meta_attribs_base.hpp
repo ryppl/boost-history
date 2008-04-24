@@ -134,7 +134,7 @@ struct meta_class_attributes
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, NAME) \
 	_partial_list_##NUMBER;\
-	static const bchar* base_name(mpl::int_<NUMBER>){return BOOST_STR_LIT(#NAME);} 
+	static const bchar* base_name(mpl::int_<NUMBER>){return BOOST_STR_LIT(#NAME);}\
 
 /** This is a helper for the BOOST_MIRROR_CLASS_ATTRIB*
  *  macros. 

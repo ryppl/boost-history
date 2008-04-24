@@ -1,0 +1,43 @@
+/**
+ * \file examples/special/std_pair.cpp
+ * 
+ * Example showing reflection of std::pairs
+ *
+ *
+ *  Copyright 2008 Matus Chochlik. Distributed under the Boost
+ *  Software License, Version 1.0. (See accompanying file
+ *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+
+#include <boost/char_type_switch/string.hpp>
+#include <boost/char_type_switch/iostream.hpp>
+
+#include <boost/mirror/meta_namespace.hpp>
+#include <boost/mirror/meta_type.hpp>
+#include <boost/mirror/meta_class.hpp>
+
+#include <boost/mirror/utils/name_to_stream.hpp>
+
+#include <boost/mirror/meta_types/std_pair.hpp>
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	//
+	//
+	typedef ::std::pair<const int*, double [3]> T1;
+	typedef ::std::pair<float, const long&> T2;
+	typedef ::std::pair<T1 const volatile, T2 volatile const> T3;
+	typedef ::std::pair<T2, T1 volatile> T4;
+	typedef ::std::pair<T3 const * volatile, const T4&> T;
+	//
+	typedef BOOST_MIRROR_REFLECT_TYPE(T) meta_T;
+	bcout << "The type name length = " << meta_T::base_name_length << endl;
+	bcout << "The type name is: "<< meta_T::base_name() << endl;
+	//
+	return 0;
+}
+

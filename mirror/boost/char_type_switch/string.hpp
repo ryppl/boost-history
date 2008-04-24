@@ -13,6 +13,9 @@
 #include <boost/char_type_switch/choice.hpp>
 // Needed for ::std::string / ::std::wstring
 #include <string>
+//
+// c string functions
+#include <cstring>
 
 namespace boost {
 
@@ -37,6 +40,50 @@ namespace boost {
 #	define BOOST_STR_LIT(STR) STR
 #endif // NOT BOOST_USE_WIDE_CHARS
 
+// define macro expanding into a compile time const lenght
+// of the given string literal
+#define BOOST_STR_LIT_LENGTH(STR) ((sizeof(STR)/sizeof(char))-1)
+
+
+/** Wrappers of cstring functions 
+ */
+
+// disable the deprecated function warning on msvc
+// this warning is issued when not using the "safe"
+// versions of string functions like strcpy_s (vs. strcpy)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+
+
+/** string compare
+ */
+inline int bstrcmp(const bchar* a, const bchar* b)
+{
+#ifdef BOOST_USE_WIDE_CHARS
+	return ::std::wcscmp(a, b);
+#else
+	return ::std::strcmp(a, b);
+#endif
+}
+
+/** string copy
+ */
+inline bchar* bstrcpy(bchar* dst, const bchar* src)
+{
+#ifdef BOOST_USE_WIDE_CHARS
+	return ::std::wcscpy(dst, src);
+#else
+	return ::std::strcpy(dst, src);
+#endif
+}
+
+// enable the deprecated function warnings on msvc
+#pragma warning(pop)
+
+
+
 } // namespace boost
 
 #endif //include guard
+
+

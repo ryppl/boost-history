@@ -22,6 +22,8 @@
 #include <boost/char_type_switch/string.hpp>
 // forward declarations
 #include <boost/mirror/meta_data_fwd.hpp>
+// implementation helpers
+#include <boost/mirror/common_defs.hpp>
 
 namespace boost {
 namespace mirror {
@@ -37,6 +39,7 @@ template<> struct meta_namespace< namespaces::_ >
 	typedef void parent;
 	typedef mpl::vector0<> scope;
 	static const bchar*   base_name  (void) {return BOOST_STR_LIT("");}
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, base_name_length, 0)
 };
 
 
@@ -47,7 +50,12 @@ template<> struct meta_namespace< namespaces::_ >
 	typedef meta_namespace< namespaces :: PARENT_NS_ALIAS > parent;                                                        \
 	typedef mpl::push_back<parent::scope, parent>::type scope;    \
 	static const bchar*   base_name  (void) {return BOOST_STR_LIT(#NAMESPACE_NAME);}           \
-};                                                                                        \
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(\
+		size_t, \
+		base_name_length, \
+		BOOST_STR_LIT_LENGTH(#NAMESPACE_NAME)\
+	) \
+};                                                                                        
 
 
 /** Macro for registering new general namespaces (top level or nested)
