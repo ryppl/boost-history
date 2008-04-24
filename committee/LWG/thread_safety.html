@@ -10,9 +10,10 @@
 
 <body>
 
-<p><span style="background-color: rgb(255, 255, 0)">Doc. no.&nbsp;&nbsp; Nxxxx=08-xxxx</span><br>
+<p><span style="background-color: rgb(255, 255, 0)">Doc. no.&nbsp;&nbsp; 
+D2603=08-0113</span><br>
 Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-20<!--webbot bot="Timestamp" endspan i-checksum="12276" --><br>
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-24<!--webbot bot="Timestamp" endspan i-checksum="12284" --><br>
 Project:&nbsp;&nbsp;&nbsp;&nbsp; Programming Language C++<br>
 Reply to:&nbsp;&nbsp; Beman Dawes &lt;bdawes at acm.org&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -90,14 +91,16 @@ N2334</a> or it successor.</span></i></p>
 implementations of the C++ Standard library. The following subclauses describe 
 an implementation’s use of headers (17.4.4.1), macros (17.4.4.2), global 
 functions (17.4.4.3), member functions (17.4.4.4), reentrancy (17.4.4.5), access 
-specifiers (17.4.4.6), class derivation (17.4.4.7),&nbsp; exceptions (17.4.4.8), and 
-thread safety ([res.on.thread.safety]).</p>
+specifiers (17.4.4.6), class derivation (17.4.4.7),&nbsp; exceptions (17.4.4.8), 
+<font color="#228822"><u>and 
+thread safety ([res.on.thread.safety])</u></font>.</p>
 </blockquote>
 <p><i>At the end of [conforming] add a new subsection: </i> </p>
 <blockquote>
   <p>17.4.4.9 Thread safety [res.on.thread.safety]</p>
   <p>Unless otherwise specified, calls to standard library functions from 
   different threads shall not result in a data race unless<font color="#228822">
+  <u>non-const</u>
   </font>arguments to the calls, 
   including <code>*this</code>, directly or indirectly <font color="#FF0000">
   <strike>access</strike></font> <u><font color="#228822">point to or reference</font></u> objects shared 
@@ -149,7 +152,7 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <p><i>To 19.3 Error numbers [errno] paragraph 1, add:</i></p>
 <blockquote>
   <p> A separate <code>errno</code> 
-  value shall be provided for each thread-of-execution.</p>
+  value shall be provided for each thread<font color="#FF0000"><strike>-of-execution</strike></font>.</p>
 </blockquote>
   <p><i>To 20.6.1 The default allocator [default.allocator], add:</i></p>
   <blockquote>
@@ -167,27 +170,38 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <blockquote>
   <p>Functions <code>asctime</code><span class="q">,
   </span><code>ctime</code><span class="q">, </span><code>gmtime</code><span class="q">, 
-  and </span><code>localtime</code> are not require to be thread-safe ([res.on.thread.safety]).</p>
+  and </span><code>localtime</code> are not required to be thread-safe ([res.on.thread.safety]).</p>
   </blockquote>
   <p><i>To 21.4 Null-terminated sequence utilities [c.strings], add:</i></p>
   <blockquote>
     <p>Functions <code>
-    strerror</code> and <code>strtok</code> are not require to be 
+    strerror</code> and <code>strtok</code> are not required to be 
     thread-safe ([res.on.thread.safety]).</p>
   </blockquote>
-  <p><i>Change 26.7 C Library [c.math] paragraph 5 and 6 as indicated:</i></p>
+  <p><i>To 22.1.1 Class locale [locale], add a new paragraph at the end:</i></p>
+  <blockquote>
+  <p><u><font color="#228822">Whether there is one global locale object for the 
+  entire program or one global locale object per thread is implementation 
+  defined. Implementations are encouraged to provide one global locale object 
+  per thread. If there is a single global locale object for the entire program, 
+  it is not required to be thread-safe ([res.on.thread.safety]).</font></u></p>
+  </blockquote>
+  <p><i>Change 26.7 C Library [c.math] paragraph 6 as indicated:</i></p>
   <blockquote>
     <p>The <code>rand</code> function has the semantics specified in the C 
     standard, except that the implementation may specify that particular library 
-    functions may call <code>rand</code>. The
-    <code>rand</code> function is not require to be thread-safe ([res.on.thread.safety]).</p>
+    functions may call <code>rand</code>.<font color="#228822"><u> </u></font>
+    <u><font color="#228822">It is implementation defined whether or not the</font></u><font color="#228822"><u>
+    <code>rand</code> function is thread-safe ([res.on.thread.safety]).</u></font>
+    <font color="#228822"><u>Implementations are encouraged to make
+    <code>rand</code> thread-safe.</u></font></p>
 </blockquote>
   <h2><a name="Acknowledgements">Acknowledgements</a></h2>
   <p><font color="#228822"><u>Jeffrey Yasskin's, N2519 <i>Library thread-safety 
   from a user's point of view, with wording</i> provided several valuable 
   insights that have been adopted by this proposal.</u></font></p>
   <h2><a name="Revision-history">Revision history</a></h2>
-  <p><span style="background-color: #FFFF00">NXXXX</span> - Revision 2:</p>
+  <p>N2603 - Revision 2:</p>
   <ul>
     <li>Strike &quot;or other undesirable behavior&quot;. Data races are the only case we 
     can thing of, so mention them only.</li>
