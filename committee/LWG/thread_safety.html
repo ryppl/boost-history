@@ -182,9 +182,9 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <blockquote>
   <p><u><font color="#228822">Whether there is one global locale object for the 
   entire program or one global locale object per thread is implementation 
-  defined. Implementations are encouraged to provide one global locale object 
-  per thread. If there is a single global locale object for the entire program, 
-  it is not required to be thread-safe ([res.on.thread.safety]).</font></u></p>
+  defined. Implementations are encouraged but not required to provide one global 
+  locale object per thread. If there is a single global locale object for the 
+  entire program, it is not required to be thread-safe ([res.on.thread.safety]).</font></u></p>
   </blockquote>
   <p><i>Change 26.7 C Library [c.math] paragraph 6 as indicated:</i></p>
   <blockquote>
@@ -193,8 +193,8 @@ no visible side effects. <i>--end note]</i></u></font></p>
     functions may call <code>rand</code>.<font color="#228822"><u> </u></font>
     <u><font color="#228822">It is implementation defined whether or not the</font></u><font color="#228822"><u>
     <code>rand</code> function is thread-safe ([res.on.thread.safety]).</u></font>
-    <font color="#228822"><u>Implementations are encouraged to make
-    <code>rand</code> thread-safe.</u></font></p>
+    <font color="#228822"><u>Implementations of <code>rand</code> are encouraged 
+    but not required to provide such thread-safety.</u></font></p>
 </blockquote>
   <h2><a name="Acknowledgements">Acknowledgements</a></h2>
   <p><font color="#228822"><u>Jeffrey Yasskin's, N2519 <i>Library thread-safety 
