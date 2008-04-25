@@ -41,9 +41,11 @@ Herb Sutter &lt;hsutter at microsoft.com&gt;<br>
 
 <p align="left">Unless otherwise specified,  standard library classes may safely 
 be instantiated from multiple threads and standard library functions are reentrant, 
-but objects of standard library types are not safe to share between threads 
-if an expression evaluation conflict (<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">N2334</a>) 
-occurs, unless protected by a synchronization mechanism..</p>
+but <font color="#228822"><u>non-const use of</u></font> objects of standard library types 
+is not safe if shared between threads. <u><font color="#228822">Use of non-constness 
+to determine thread-safety requirements ensures consistent thread-safety 
+specifications without having to add additional wording to each and every 
+standard library type.</font></u></p>
 </blockquote>
 <h2><a name="Introduction">Introduction</a></h2>
 <p>With the introduction of multi-threading into the C++ standard, the contract 
@@ -51,30 +53,35 @@ between standard library users and implementers needs to explicitly state the
 conditions under which standard library components are or are not thread-safe.</p>
 <h2><a name="Rationale">Rationale</a></h2>
 <p>The objective is to offer users of the standard library as much thread-safety 
-as is possible without impacting performance or creating an illusion of safety 
+as is possible without impacting performance or creating an illusion of <u>
+<font color="#228822">thread-</font></u>safety 
 where none exists.</p>
 <h3>Basic thread-safety guarantee</h3>
-<p>Guaranteeing standard library functions be reentrant and guaranteeing thread-safety for 
-standard library types has little or no impact on performance. 
-It  does actually deliver the promised safety. Thus this basic thread-safety is 
+<p><u><font color="#228822">Requiring standard library functions be reentrant and 
+non-mutating uses of objects of 
+standard library types not introduce data races</font></u> has little or no impact on performance. 
+It  does actually deliver the promised safety. Thus this basic thread-safety 
+guarantee is 
 required of implementations.</p>
 <h3>Strong thread-safety guarantee</h3>
-<p>Guaranteeing thread-safety for mutating shared objects would have a severe negative 
+<p><u><font color="#228822">Requiring mutating uses of objects of 
+standard library types not introduce data races</font></u> would have a severe negative 
 impact on performance. Furthermore, real safety often requires locking across several 
 member function calls, so providing per function-call locking would 
-create a illusion of safety that did in fact not exist. For these reasons, strong thread-safety for 
+create a illusion of safety that did in fact not exist. For these reasons, this strong thread-safety 
+guarantee for 
 mutating 
 shared objects is not provided, and constraints are put on programs 
 accordingly.</p>
 <h3>Meaning of <i>thread-safety</i></h3>
 <p>The proposed wording 
 talks in terms of data races and expression evaluation conflicts. <i>Data races</i> 
-and <i>expression evaluation conflicts</i> will be defined in the core language 
+and <i>expression evaluation conflicts</i> are defined in the core language 
 portion of the standard, so do 
 not need to be further described in the library clauses.</p>
 <h3>Standard library components not given strong guarantee</h3>
 <p>Consideration was given to specifying rand function and the global locale 
-objects on a per-thread basis. That is not proposed because it does not 
+objects on a per-thread basis. That is not required because it does not 
 represent existing practice. Mac OS X, for example, does not support per-thread 
 global locale objects.</p>
 <h2><a name="Existing-practice">Existing practice</a></h2>
@@ -93,15 +100,23 @@ execution.</u></font></p>
 <p>This subclause describes the constraints upon, and latitude of, 
 implementations of the C++ Standard library. The following subclauses describe 
 an implementation’s use of headers (17.4.4.1), macros (17.4.4.2), global 
-functions (17.4.4.3), member functions (17.4.4.4), reentrancy (17.4.4.5), access 
-specifiers (17.4.4.6), class derivation (17.4.4.7),&nbsp; exceptions (17.4.4.8), 
-<font color="#228822"><u>and 
-thread safety ([res.on.thread.safety])</u></font>.</p>
+functions (17.4.4.3), member functions (17.4.4.4), <font color="#FF0000">
+<strike>reentrancy</strike></font> 
+<font color="#228822"><u>thread safety </u></font>(17.4.4.5), access specifiers (17.4.4.6), class derivation (17.4.4.7), 
+and&nbsp; exceptions (17.4.4.8).</p>
 </blockquote>
-<p><i>At the end of [conforming] add a new subsection: </i> </p>
+<p><i>Change 17.4.4.5 Reentrancy [reentrancy] from: </i> </p>
 <blockquote>
-  <p>17.4.4.9 Thread safety [res.on.thread.safety]</p>
-  <p>Unless otherwise specified, calls to standard library functions from 
+<p>17.4.4.5 Reentrancy [reentrancy]</p>
+<p>Which of the functions in the C++ Standard Library are not <i>reentrant 
+subroutines</i> is implementation-defined.</p>
+</blockquote>
+<p><i>To:</i></p>
+<blockquote>
+  <p>17.4.4.5 Thread safety [res.on.thread.safety]</p>
+  <p><u><font color="#228822">Unless otherwise specified, C++ Standard Library 
+  functions shall be <i>reentrant subroutines</i>.</font></u></p>
+  <p>Unless otherwise specified, calls to C++ Standard library functions from 
   different threads shall not result in a data race unless<font color="#228822">
   <u>non-const</u>
   </font>arguments to the calls, 
@@ -113,7 +128,8 @@ thread safety ([res.on.thread.safety])</u></font>.</p>
   implementations can't use a static object for internal purposes without 
   synchronization because it could cause a data race even in programs that do 
   not explicitly share objects between threads.<i> --end note] </i></p>
-<p><font color="#228822"><u>Unless otherwise specified, standard library 
+<p><font color="#228822"><u>Unless otherwise specified,  </u></font><u>
+<font color="#228822">C++ Standard Library</font></u><font color="#228822"><u> 
 functions shall perform all operations with observable effects solely within the 
 current thread.<br>
 <br>
@@ -134,7 +150,8 @@ no visible side effects. <i>--end note]</i></u></font></p>
   reference objects of a standard library type shared between the threads, and 
   one call does not happen before the other ([Multi-threaded executions and data 
   races]).</u></font></p>
-  <p><i>[Note: </i>This lack of strong thread-safety guarantee means that 
+  <p><i>[Note: </i>This <font color="#FF0000"><strike>lack of strong thread-safety guarantee</strike></font>
+  <u><font color="#228822">prohibition against concurrent non-const access</font></u> means that 
   modifying an object of a standard library type shared between threads 
   without using a locking mechanism may result in a data race<font color="#FF0000"><strike> or 
   other undesirable behavior</strike></font>. <i>
@@ -147,8 +164,8 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <code>delete</code>, and the Standard C library functions <code>calloc</code>,
   <code>malloc</code>, <code>realloc</code>, and <code>free</code></font></u> shall 
   not introduce data races ([intro.multithread]) 
-  as a result of concurrent calls from different threads.&nbsp;Calls that allocate or 
-  deallocate a particular unit of storage shall occur in a single total order, 
+  as a result of concurrent calls from different threads.&nbsp;Calls <u>
+  <font color="#228822">to these functions</font></u> that allocate or deallocate a particular unit of storage shall occur in a single total order, 
   and each such deallocation call happens before the next allocation (if any) in 
   this order.</p>
 </blockquote>
@@ -163,10 +180,9 @@ no visible side effects. <i>--end note]</i></u></font></p>
   not introduce data races ([intro.multithread]) 
   as a result of concurrent <font color="#FF0000"><strike>accesses</strike></font>
   <u><font color="#228822">calls</font></u> to default allocator object<u><font color="#228822">'</font></u>s 
-  <u><font color="#228822">member functions</font></u> from different 
-  threads.&nbsp;Allocation and deallocation calls that allocate or return a 
-  particular unit of storage shall occur in a single total order, and each such 
-  deallocation call <font color="#FF0000"><strike>happens</strike></font>
+  <u><font color="#228822">member functions</font></u> from different threads.&nbsp;<u><font color="#228822">Calls 
+  to these functions that allocate or deallocate</font></u> a 
+  particular unit of storage shall occur in a single total order, and each such deallocation call <font color="#FF0000"><strike>happens</strike></font>
   <font color="#228822"><u>shall occur</u></font> before the next allocation (if any) in this order.</p>
   </blockquote>
   <p><i>To 20.7 Date and Time [date.time], add:</i></p>
@@ -197,12 +213,13 @@ no visible side effects. <i>--end note]</i></u></font></p>
     <u><font color="#228822">It is implementation defined whether or not the</font></u><font color="#228822"><u>
     <code>rand</code> function is thread-safe ([res.on.thread.safety]).</u></font>
     <font color="#228822"><u>Implementations of <code>rand</code> are encouraged 
-    but not required to provide such thread-safety.</u></font></p>
+    but not required to provide such thread-safety. Calls to <code>rand</code> 
+    from other library functions shall not result in data races.</u></font></p>
 </blockquote>
   <h2><a name="Acknowledgements">Acknowledgements</a></h2>
   <p><font color="#228822"><u>Jeffrey Yasskin's, N2519 <i>Library thread-safety 
   from a user's point of view, with wording</i> provided several valuable 
-  insights that have been adopted by this proposal.</u></font></p>
+  insights that have been reflected in this proposal.</u></font></p>
   <h2><a name="Revision-history">Revision history</a></h2>
   <p>N2603 - Revision 2:</p>
   <ul>
