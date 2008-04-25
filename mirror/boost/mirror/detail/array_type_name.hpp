@@ -19,52 +19,51 @@ namespace mirror {
 namespace detail {
 
 
-template <class meta_type, size_t array_size>
+template <class meta_type, class array_size, bool base_name>
 struct static_array_type_name_base
 {
 protected:
-	typedef detail::static_int_to_str<array_size>
+	typedef typename detail::static_int_to_str<array_size::value>
 		size_as_string;
-public:
+
+	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+		name_info;
+
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, difference, 3 + size_as_string::length::value)
+
 	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
 		size_t,
-		base_name_length,
-		(
-			meta_type::base_name_length + 3 +
-			size_as_string::length::value
-		)
+		name_length,
+		name_info::name_length + difference
 	)
 
-protected:
-	static void init_base_name(bchar* the_base_name)
+	static void init_name(bchar* the_name)
 	{
-		bchar* cur_pos = the_base_name;
+		bchar* cur_pos = the_name;
 		//
 		// copy the name of the template
-		bstrcpy(cur_pos, meta_type::base_name());
-		cur_pos += meta_type::base_name_length;
+		bstrcpy(cur_pos, name_info::name());
+		cur_pos += name_info::name_length;
 		//
 		// append the " [" 
 		*(cur_pos++) = BOOST_STR_LIT(' ');
 		*(cur_pos++) = BOOST_STR_LIT('[');
-		// append the index$
-		assert((cur_pos + size_as_string::length::value) < (the_base_name + base_name_length));
+		// append the index
 		size_as_string::convert(cur_pos, size_as_string::length::value + 1);
 		cur_pos += size_as_string::length::value;
 		// append the "]" 
 		*(cur_pos++) = BOOST_STR_LIT(']');
 		//
 		// finalize the string
-		assert(cur_pos == (the_base_name + base_name_length));
+		assert(cur_pos == (the_name + name_length));
 		*cur_pos = BOOST_STR_LIT('\0');
 	}
 };
 
 template <class meta_type, size_t array_size>
 struct static_array_type_name : static_nontrivial_type_name<
-	static_array_type_name_base<meta_type, array_size>
+	meta_type, mpl::int_<array_size>, static_array_type_name_base
 >{ };
-
 
 } // namespace detail
 } // namespace mirror

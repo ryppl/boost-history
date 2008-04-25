@@ -18,17 +18,39 @@
 namespace boost {
 namespace mirror {
 
+namespace detail {
+
+template <typename first_type, typename second_type> 
+struct meta_type_std_pair 
+{
+
+	static const bchar* base_name(void){return BOOST_STR_LIT("pair");}
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		base_name_length,
+		4
+	)
+
+	static const bchar* full_name(void){return BOOST_STR_LIT("::std::pair");}
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		full_name_length,
+		11
+	)
+};
+
+} // namespace detail
+
+
 template <typename first_type, typename second_type> 
 struct meta_type< ::std::pair<first_type, second_type> > 
 : detail::static_template_name<
-	meta_type< ::std::pair<first_type, second_type> > , 
-	mpl::vector2<first_type, second_type>,
-	BOOST_STR_LIT_LENGTH("pair")
+	detail::meta_type_std_pair<first_type, second_type> , 
+	mpl::vector2<first_type, second_type>
 >
-{                                                                 
+{
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
-	typedef ::std::pair<first_type, second_type> base_type;                                  
-	static const bchar* template_base_name(void){return BOOST_STR_LIT("pair");}
+	typedef ::std::pair<first_type, second_type> base_type;
 };
 
 

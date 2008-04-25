@@ -23,29 +23,34 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-template <typename base_type>
-struct get_base_type_name_length_type
-{
-	typedef typename mpl::int_<
-		BOOST_MIRROR_REFLECT_TYPE(base_type)::base_name_length
-	> type;
-};
-
 /** The length is calculated assuming that the string is
  *  going to be formatted like this:
  *  template_name|< |T1|, |T2|, |...|Tn| > (without the 
  *  delimiting '|'s.
  */
-template <class meta_type, class typelist, int template_name_length>
+template <class typelist, bool base_name>
 struct static_template_name_length
 {
+	template <typename a_type>
+	struct get_type_name_length_type
+	{
+		typedef BOOST_MIRROR_REFLECT_TYPE(a_type) meta_type;
+	
+		typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+			name_info;
+
+		typedef typename mpl::int_<
+			name_info::name_length
+		> type;
+	};
+
 	typedef typename mpl::accumulate<
 		typelist,
-		mpl::int_<template_name_length+2>,
+		mpl::int_<2>,
 		mpl::plus<
 			mpl::_1,
 			mpl::plus<
-				get_base_type_name_length_type<mpl::_2>,
+				get_type_name_length_type<mpl::_2>,
 				mpl::int_<2>
 			>
 		>
@@ -53,19 +58,9 @@ struct static_template_name_length
 };
 
 
-template <class meta_type, class typelist, int template_name_length>
+template <class meta_type, class typelist, bool base_name>
 struct static_template_name_base
 {
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		base_name_length,
-		(static_template_name_length<
-			meta_type, 
-			typelist,
-			template_name_length
-		>::type::value)
-	)
-
 protected:
 	/** The 'position' of the last type in the template
 	 *  type list.
@@ -79,8 +74,10 @@ protected:
 	{
 		typedef typename mpl::at<typelist, mpl::int_<I> >::type type;
 		typedef BOOST_MIRROR_REFLECT_TYPE(type) meta_type;
-		bstrcpy(cur_pos, meta_type::base_name());
-		cur_pos += meta_type::base_name_length;
+		typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+			local_name_info;
+		bstrcpy(cur_pos, local_name_info::name());
+		cur_pos += local_name_info::name_length;
 		return cur_pos;
 	}
 
@@ -98,16 +95,34 @@ protected:
 		return do_append_type_name(cur_pos, type_pos);
 	}
 
-	static void init_base_name(bchar* the_base_name)
+	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+		name_info;
+
+	typedef typename static_template_name_length<typelist, base_name>::type
+		template_param_list_length_type;
+
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t, 
+		difference, 
+		template_param_list_length_type::value
+	)
+
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		name_length,
+		name_info::name_length + difference
+	)
+
+	static void init_name(bchar* the_name)
 	{
-		bchar* cur_pos = the_base_name;
+		bchar* cur_pos = the_name;
 		//
 		// copy the name of the template
-		bstrcpy(cur_pos, meta_type::template_base_name());
-		cur_pos += template_name_length;
+		bstrcpy(cur_pos, name_info::name());
+		cur_pos += name_info::name_length;
 		//
 		// append the leading "< "
-		assert(cur_pos+2 < (the_base_name + base_name_length));
+		assert(cur_pos+2 < (the_name + name_length));
 		bstrcpy(cur_pos, BOOST_STR_LIT("< "));
 		cur_pos += 2;
 		//
@@ -115,19 +130,18 @@ protected:
 		cur_pos = append_type_name(cur_pos, last_type_pos());
 		//
 		// append the final " >"
-		assert(cur_pos+2 == (the_base_name + base_name_length));
 		bstrcpy(cur_pos, BOOST_STR_LIT(" >"));
 		cur_pos += 2;
 		//
 		// finalize the string
-		assert(cur_pos == (the_base_name + base_name_length));
+		assert(cur_pos == (the_name + name_length));
 		*cur_pos = BOOST_STR_LIT('\0');
 	}
 };
 
-template <class meta_type, class typelist, int template_name_length>
+template <class meta_type, class typelist>
 struct static_template_name : static_nontrivial_type_name<
-	static_template_name_base<meta_type, typelist, template_name_length>
+	meta_type, typelist, static_template_name_base
 >{ };
 
 

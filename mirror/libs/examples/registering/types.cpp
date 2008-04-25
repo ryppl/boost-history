@@ -146,6 +146,9 @@ int main(void)
 	bcout << "|27| " << BOOST_MIRROR_REFLECT_TYPE(bchar) ::full_name() << endl;
 	bcout << "|28| " << BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bchar) ::full_name() << endl;
 	bcout << "|29| " << BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bstring) ::full_name() << endl;
+	bcout << "|30| " << BOOST_MIRROR_REFLECT_TYPE(int const * const volatile) ::full_name() << endl;
+	bcout << "|31| " << BOOST_MIRROR_REFLECT_TYPE(int volatile * const * volatile) ::full_name() << endl;
+	bcout << "|32| " << BOOST_MIRROR_REFLECT_TYPE(int const * const [321]) ::full_name() << endl;
 	//
 	return 0;
 }

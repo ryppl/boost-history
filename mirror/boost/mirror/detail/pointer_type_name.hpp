@@ -17,10 +17,9 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-
 template <class meta_type>
-struct static_pointer_type_name : static_ptr_ref_type_name<
-	meta_type, BOOST_STR_LIT('*')
+struct static_pointer_type_name : static_nontrivial_type_name<
+	meta_type, void, static_pointer_type_name_base
 >{ };
 
 

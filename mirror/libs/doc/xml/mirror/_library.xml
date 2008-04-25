@@ -66,5 +66,11 @@
 			- NOTE: full_name getter not available yet for all meta_types 
 			- NOTE: tested only with MSVC++ 2008 EE
 		</revision>
+		<revision id="20080425_2052CET" major="0" minor="1" micro="11" author="m_ch">
+			- Finished full name getters 
+			- Modified meta_type for std::pair
+			- Updated example showing the reflection of std::pair
+			- NOTE: tested only with MSVC++ 2008 EE
+		</revision>
 	</revisions>
 </library>

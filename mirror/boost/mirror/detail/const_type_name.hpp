@@ -17,37 +17,42 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-template <class meta_type>
+template <class meta_type, typename dummy, bool base_type>
 struct static_const_type_name_base
 {
+protected:
+	typedef nontrivial_type_base_or_full_name<meta_type, base_type>
+		name_info;
+
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, difference, 6)
+
 	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
 		size_t,
-		base_name_length,
-		(meta_type::base_name_length + 6)
+		name_length,
+		name_info::name_length + difference
 	)
 
-protected:
-	static void init_base_name(bchar* the_base_name)
+	static void init_name(bchar* the_name)
 	{
-		bchar* cur_pos = the_base_name;
+		bchar* cur_pos = the_name;
 		//
 		// copy the name of the base type
-		bstrcpy(cur_pos, meta_type::base_name());
-		cur_pos += meta_type::base_name_length;
+		bstrcpy(cur_pos, name_info::name());
+		cur_pos += name_info::name_length;
 		//
 		// append the const keyword
 		bstrcpy(cur_pos, BOOST_STR_LIT(" const"));
-		cur_pos += 6;
+		cur_pos += difference;
 		//
 		// finalize the string
-		assert(cur_pos == (the_base_name + base_name_length));
+		assert(cur_pos == (the_name + name_length));
 		*cur_pos = BOOST_STR_LIT('\0');
 	}
 };
 
 template <class meta_type>
 struct static_const_type_name : static_nontrivial_type_name<
-	static_const_type_name_base<meta_type>
+	meta_type, void, static_const_type_name_base
 >{ };
 
 

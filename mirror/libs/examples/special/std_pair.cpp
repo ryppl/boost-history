@@ -17,8 +17,6 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/utils/name_to_stream.hpp>
-
 #include <boost/mirror/meta_types/std_pair.hpp>
 
 int main(void)
@@ -35,8 +33,15 @@ int main(void)
 	typedef ::std::pair<T3 const * volatile, const T4&> T;
 	//
 	typedef BOOST_MIRROR_REFLECT_TYPE(T) meta_T;
-	bcout << "The type name length = " << meta_T::base_name_length << endl;
+	//
+	bcout << "The type name length = " << meta_T::base_name_length << " characters" << endl;
+	bcout << "---------------------------------------------------" << endl;
 	bcout << "The type name is: "<< meta_T::base_name() << endl;
+	bcout << "---------------------------------------------------" << endl;
+	bcout << "The full type name length = " << meta_T::full_name_length << " characters" << endl;
+	bcout << "---------------------------------------------------" << endl;
+	bcout << "The full type name is: "<< meta_T::full_name() << endl;
+	bcout << "---------------------------------------------------" << endl;
 	//
 	return 0;
 }

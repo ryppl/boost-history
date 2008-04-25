@@ -14,16 +14,79 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-template <class implementation>
-struct static_nontrivial_type_name : implementation
+template <class meta_type, bool true_or_false>
+struct nontrivial_type_base_or_full_name;
+
+/** Base name 
+ */
+template <class meta_type>
+struct nontrivial_type_base_or_full_name<meta_type, true>
 {
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		name_length,
+		meta_type::base_name_length
+	)
+	inline static const bchar* name(void)
+	{
+		return meta_type::base_name();
+	}
+};
+
+/** Full name 
+ */
+template <class meta_type>
+struct nontrivial_type_base_or_full_name<meta_type, false>
+{
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		name_length,
+		meta_type::full_name_length
+	)
+	inline static const bchar* name(void)
+	{
+		return meta_type::full_name();
+	}
+};
+
+template <class meta_type, typename meta_data, template <class, typename, bool> class implementation>
+struct static_nontrivial_type_name
+: implementation<meta_type, meta_data, true>
+, implementation<meta_type, meta_data, false>
+{
+private:
+	typedef typename implementation<meta_type, meta_data, true>  implementation_base_name;
+	typedef typename implementation<meta_type, meta_data, false> implementation_full_name;
+
+	template <bool base_name>
+	static const bchar* get_name(mpl::bool_<base_name>)
+	{
+		typedef typename implementation<meta_type, meta_data, base_name>
+			impl;
+		static bchar the_name[impl::name_length+1] 
+			= {BOOST_STR_LIT("")};
+		if(!the_name[0]) 
+			impl::init_name(the_name);
+		return the_name;
+	}
+public:
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		base_name_length,
+		implementation_base_name::name_length
+	)
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+		size_t,
+		full_name_length,
+		implementation_full_name::name_length
+	)
 	static const bchar* base_name(void)
 	{
-		static bchar the_base_name[implementation::base_name_length+1] 
-			= {BOOST_STR_LIT("")};
-		if(!the_base_name[0]) 
-			implementation::init_base_name(the_base_name);
-		return the_base_name;
+		return get_name(mpl::bool_<true>());
+	}
+	static const bchar* full_name(void)
+	{
+		return get_name(mpl::bool_<false>());
 	}
 };
 

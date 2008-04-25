@@ -18,12 +18,13 @@
 #include <boost/preprocessor.hpp>
 //
 //
-#include <boost/mirror/detail/pointer_type_name.hpp>
-#include <boost/mirror/detail/reference_type_name.hpp>
-#include <boost/mirror/detail/array_type_name.hpp>
 #include <boost/mirror/detail/const_type_name.hpp>
 #include <boost/mirror/detail/volatile_type_name.hpp>
 #include <boost/mirror/detail/cv_type_name.hpp>
+
+#include <boost/mirror/detail/pointer_type_name.hpp>
+#include <boost/mirror/detail/reference_type_name.hpp>
+#include <boost/mirror/detail/array_type_name.hpp>
 
 namespace boost {
 namespace mirror {
