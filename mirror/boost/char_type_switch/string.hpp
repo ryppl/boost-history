@@ -57,6 +57,18 @@ namespace boost {
 
 /** string compare
  */
+
+inline size_t bstrlen(const bchar* str)
+{
+#ifdef BOOST_USE_WIDE_CHARS
+	return ::std::wcslen(str);
+#else
+	return ::std::strlen(str);
+#endif
+}
+
+
+	
 inline int bstrcmp(const bchar* a, const bchar* b)
 {
 #ifdef BOOST_USE_WIDE_CHARS

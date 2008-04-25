@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <boost/mirror/detail/nontrivial_type_name.hpp>
+#include <boost/mirror/detail/static_int_to_str.hpp>
 
 namespace boost {
 namespace mirror {
@@ -21,10 +22,17 @@ namespace detail {
 template <class meta_type, size_t array_size>
 struct static_array_type_name_base
 {
+protected:
+	typedef detail::static_int_to_str<array_size>
+		size_as_string;
+public:
 	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
 		size_t,
 		base_name_length,
-		(meta_type::base_name_length + 3)
+		(
+			meta_type::base_name_length + 3 +
+			size_as_string::length::value
+		)
 	)
 
 protected:
@@ -36,9 +44,14 @@ protected:
 		bstrcpy(cur_pos, meta_type::base_name());
 		cur_pos += meta_type::base_name_length;
 		//
-		// append the " [N]" 
+		// append the " [" 
 		*(cur_pos++) = BOOST_STR_LIT(' ');
 		*(cur_pos++) = BOOST_STR_LIT('[');
+		// append the index$
+		assert((cur_pos + size_as_string::length::value) < (the_base_name + base_name_length));
+		size_as_string::convert(cur_pos, size_as_string::length::value + 1);
+		cur_pos += size_as_string::length::value;
+		// append the "]" 
 		*(cur_pos++) = BOOST_STR_LIT(']');
 		//
 		// finalize the string

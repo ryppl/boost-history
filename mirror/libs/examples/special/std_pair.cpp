@@ -28,7 +28,7 @@ int main(void)
 	using namespace ::boost::mirror;
 	//
 	//
-	typedef ::std::pair<const int*, double [3]> T1;
+	typedef ::std::pair<const int*, double [321]> T1;
 	typedef ::std::pair<float, const long&> T2;
 	typedef ::std::pair<T1 const volatile, T2 volatile const> T3;
 	typedef ::std::pair<T2, T1 volatile> T4;
