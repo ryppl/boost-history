@@ -166,7 +166,8 @@ no visible side effects. <i>--end note]</i></u></font></p>
   not introduce data races ([intro.multithread]) 
   as a result of concurrent calls from different threads.&nbsp;Calls <u>
   <font color="#228822">to these functions</font></u> that allocate or deallocate a particular unit of storage shall occur in a single total order, 
-  and each such deallocation call happens before the next allocation (if any) in 
+  and each such deallocation call <font color="#FF0000"><strike>happens</strike></font>
+  <font color="#228822"><u>shall </u></font><u><font color="#228822">happen</font></u> before the next allocation (if any) in 
   this order.</p>
 </blockquote>
   <p><i>To 19.3 Error numbers [errno] paragraph 1, add:</i></p>
@@ -183,7 +184,7 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <u><font color="#228822">member functions</font></u> from different threads.&nbsp;<u><font color="#228822">Calls 
   to these functions that allocate or deallocate</font></u> a 
   particular unit of storage shall occur in a single total order, and each such deallocation call <font color="#FF0000"><strike>happens</strike></font>
-  <font color="#228822"><u>shall occur</u></font> before the next allocation (if any) in this order.</p>
+  <font color="#228822"><u>shall </u></font><u><font color="#228822">happen</font></u> before the next allocation (if any) in this order.</p>
   </blockquote>
   <p><i>To 20.7 Date and Time [date.time], add:</i></p>
   <blockquote>
