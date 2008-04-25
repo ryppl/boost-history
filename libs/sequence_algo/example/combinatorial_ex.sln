@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "combinatorial_ex1", "combinatorial_ex1.vcproj", "{8DBC7CB5-3A43-4686-BFB7-F11FB7EF0D03}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "combinatorial_ex2", "combinatorial_ex2.vcproj", "{E4CA906C-19FA-4ED8-8940-75FEAE3F7031}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{8DBC7CB5-3A43-4686-BFB7-F11FB7EF0D03}.Debug.ActiveCfg = Debug|Win32
+		{8DBC7CB5-3A43-4686-BFB7-F11FB7EF0D03}.Debug.Build.0 = Debug|Win32
+		{8DBC7CB5-3A43-4686-BFB7-F11FB7EF0D03}.Release.ActiveCfg = Release|Win32
+		{8DBC7CB5-3A43-4686-BFB7-F11FB7EF0D03}.Release.Build.0 = Release|Win32
+		{E4CA906C-19FA-4ED8-8940-75FEAE3F7031}.Debug.ActiveCfg = Debug|Win32
+		{E4CA906C-19FA-4ED8-8940-75FEAE3F7031}.Debug.Build.0 = Debug|Win32
+		{E4CA906C-19FA-4ED8-8940-75FEAE3F7031}.Release.ActiveCfg = Release|Win32
+		{E4CA906C-19FA-4ED8-8940-75FEAE3F7031}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
