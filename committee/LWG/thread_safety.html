@@ -13,7 +13,7 @@
 <p><span style="background-color: rgb(255, 255, 0)">Doc. no.&nbsp;&nbsp; 
 D2603=08-0113</span><br>
 Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-24<!--webbot bot="Timestamp" endspan i-checksum="12284" --><br>
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-25<!--webbot bot="Timestamp" endspan i-checksum="12286" --><br>
 Project:&nbsp;&nbsp;&nbsp;&nbsp; Programming Language C++<br>
 Reply to:&nbsp;&nbsp; Beman Dawes &lt;bdawes at acm.org&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -81,10 +81,13 @@ global locale objects.</p>
 <p>As far as is known, the proposed wording reflects existing practice in 
 current implementations of the standard library.</p>
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
-<p><i><span style="background-color: #FFFF00">References shown as ([Multi-threaded executions and data races]) refer to 
-the new section of that name described in
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">
-N2334</a> or it successor.</span></i></p>
+<p><i>Add a new paragraph after 17.4 Library-wide requirements [requirements] 
+paragraph 1:</i></p>
+<blockquote>
+<p><font color="#228822"><u>Requirements specified in terms of interactions 
+between threads do not apply to programs having only a single thread of 
+execution.</u></font></p>
+</blockquote>
 <p><i>Change 17.4.4 Conforming implementations [conforming] as indicated:</i></p>
 <blockquote>
 <p>This subclause describes the constraints upon, and latitude of, 
@@ -105,7 +108,7 @@ thread safety ([res.on.thread.safety])</u></font>.</p>
   including <code>*this</code>, directly or indirectly <font color="#FF0000">
   <strike>access</strike></font> <u><font color="#228822">point to or reference</font></u> objects shared 
   between the threads in such a way that an expression evaluation conflict 
-  occurs ([<i>Multi-threaded executions and data races</i>]) .</p>
+  occurs ([intro.multithread]) .</p>
   <p><i>[Note:</i> This  means, for example, that 
   implementations can't use a static object for internal purposes without 
   synchronization because it could cause a data race even in programs that do 
@@ -139,11 +142,11 @@ no visible side effects. <i>--end note]</i></u></font></p>
 </blockquote>
   <p><i>To 18.5.1 Storage allocation and deallocation [new.delete], add:</i></p>
 <blockquote>
-  <p><font color="#228822"><u>Neither</u></font> the library versions of operator <code>new</code> and <code>delete</code><u><font color="#228822">, 
+  <p>The library versions of operator <code>new</code> and <code>delete</code><u><font color="#228822">, 
   user replacement versions of global replacement operator <code>new</code> and
-  <code>delete</code>, nor the Standard C library functions <code>calloc</code>,
-  <code>malloc</code>, <code>realloc</code>, or <code>free</code></font></u> shall 
-  <font color="#FF0000"><strike>not</strike></font> introduce data races ([<i>Multi-threaded executions and data races</i>]) 
+  <code>delete</code>, and the Standard C library functions <code>calloc</code>,
+  <code>malloc</code>, <code>realloc</code>, and <code>free</code></font></u> shall 
+  not introduce data races ([intro.multithread]) 
   as a result of concurrent calls from different threads.&nbsp;Calls that allocate or 
   deallocate a particular unit of storage shall occur in a single total order, 
   and each such deallocation call happens before the next allocation (if any) in 
@@ -157,7 +160,7 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <p><i>To 20.6.1 The default allocator [default.allocator], add:</i></p>
   <blockquote>
   <p>Except for the destructor, member functions of the default allocator shall 
-  not introduce data races ([<i>Multi-threaded executions and data races</i>]) 
+  not introduce data races ([intro.multithread]) 
   as a result of concurrent <font color="#FF0000"><strike>accesses</strike></font>
   <u><font color="#228822">calls</font></u> to default allocator object<u><font color="#228822">'</font></u>s 
   <u><font color="#228822">member functions</font></u> from different 
