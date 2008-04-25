@@ -38,8 +38,12 @@ template<> struct meta_namespace< namespaces::_ >
 {
 	typedef void parent;
 	typedef mpl::vector0<> scope;
-	static const bchar*   base_name  (void) {return BOOST_STR_LIT("");}
+
+	static const bchar* base_name(void) {return BOOST_STR_LIT("");}
 	BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, base_name_length, 0)
+
+	static const bchar* full_name(void) {return BOOST_STR_LIT("");}
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, full_name_length, 0)
 };
 
 
@@ -49,12 +53,33 @@ template<> struct meta_namespace< namespaces::_ >
 {                                                                                         \
 	typedef meta_namespace< namespaces :: PARENT_NS_ALIAS > parent;                                                        \
 	typedef mpl::push_back<parent::scope, parent>::type scope;    \
-	static const bchar*   base_name  (void) {return BOOST_STR_LIT(#NAMESPACE_NAME);}           \
 	BOOST_MIRROR_CONST_MEMBER_ATTRIB(\
 		size_t, \
 		base_name_length, \
 		BOOST_STR_LIT_LENGTH(#NAMESPACE_NAME)\
 	) \
+	static const bchar* base_name(void) {return BOOST_STR_LIT(#NAMESPACE_NAME);}           \
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(\
+		size_t, \
+		full_name_length, \
+		parent::full_name_length + 2 + \
+		base_name_length \
+	) \
+	static const bchar* full_name(void)\
+	{\
+		static bchar the_full_name[full_name_length] = \
+			BOOST_STR_LIT(""); \
+		if(!the_full_name[0])  \
+		{ \
+			bchar * pos = the_full_name; \
+			bstrncpy(pos, parent::full_name(), parent::full_name_length);\
+			pos += parent::full_name_length; \
+			bstrncpy(pos, BOOST_STR_LIT("::"), 2);\
+			pos += 2; \
+			bstrncpy(pos, base_name(), base_name_length);\
+		} \
+		return the_full_name; \
+	}           \
 };                                                                                        
 
 

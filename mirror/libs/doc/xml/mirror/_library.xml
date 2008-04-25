@@ -60,5 +60,11 @@
 			- Added the index to the base name of static arrays
 			- NOTE: tested only with MSVC++ 2008 EE
 		</revision>
+		<revision id="20080425_1758CET" major="0" minor="1" micro="10" author="m_ch">
+			- Added support for getting fully qualified names of namespaces/types/etc.
+			- Updated several examples to show full_name getting
+			- NOTE: full_name getter not available yet for all meta_types 
+			- NOTE: tested only with MSVC++ 2008 EE
+		</revision>
 	</revisions>
 </library>

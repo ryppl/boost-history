@@ -89,6 +89,17 @@ inline bchar* bstrcpy(bchar* dst, const bchar* src)
 #endif
 }
 
+/** string copy
+ */
+inline bchar* bstrncpy(bchar* dst, const bchar* src, size_t count)
+{
+#ifdef BOOST_USE_WIDE_CHARS
+	return ::std::wcsncpy(dst, src, count);
+#else
+	return ::std::strncpy(dst, src, count);
+#endif
+}
+
 // enable the deprecated function warnings on msvc
 #pragma warning(pop)
 

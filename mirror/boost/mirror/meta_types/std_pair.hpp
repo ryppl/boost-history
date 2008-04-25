@@ -28,7 +28,7 @@ struct meta_type< ::std::pair<first_type, second_type> >
 {                                                                 
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
 	typedef ::std::pair<first_type, second_type> base_type;                                  
-	static const bchar* template_name(void){return BOOST_STR_LIT("pair");}
+	static const bchar* template_base_name(void){return BOOST_STR_LIT("pair");}
 };
 
 

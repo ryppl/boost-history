@@ -142,6 +142,11 @@ int main(void)
 	if(reflects_global_scope< BOOST_MIRROR_REFLECT_TYPEOF("foo") ::scope>::value)
 		bcout << "|25| " << "type of \"foo\" defined on global scope" << endl;
 	//
+	bcout << "|26| " << BOOST_MIRROR_REFLECT_TYPE(bool) ::full_name() << endl;
+	bcout << "|27| " << BOOST_MIRROR_REFLECT_TYPE(bchar) ::full_name() << endl;
+	bcout << "|28| " << BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bchar) ::full_name() << endl;
+	bcout << "|29| " << BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bstring) ::full_name() << endl;
+	//
 	return 0;
 }
 

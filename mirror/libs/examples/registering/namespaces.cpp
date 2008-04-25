@@ -112,6 +112,16 @@ int main(void)
 	bcout << "|15| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_std) >(true) << endl;
 	bcout << "|16| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_boost) >(true) << endl;
 	bcout << "|17| " <<name_to_stream< BOOST_MIRROR_REFLECT_NAMESPACE(_boost_mirror) >(true) << endl;
+	//
+	// printing out the full namespace names directly without the name_to_stream
+	// printer template
+	bcout << "|18| " << BOOST_MIRROR_REFLECT_NAMESPACE(_) ::full_name() << endl;
+	bcout << "|19| " << BOOST_MIRROR_REFLECT_NAMESPACE(_std) ::full_name() << endl;
+	bcout << "|20| " << BOOST_MIRROR_REFLECT_NAMESPACE(_boost) ::full_name() << endl;
+	bcout << "|21| " << BOOST_MIRROR_REFLECT_NAMESPACE(_boost_mirror) ::full_name() << endl;
+	bcout << "|22| " << BOOST_MIRROR_REFLECT_NAMESPACE(_test) ::full_name() << endl;
+	bcout << "|23| " << BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) ::full_name() << endl;
+	bcout << "|24| " << BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) ::full_name() << endl;
 	return 0;
 }
 

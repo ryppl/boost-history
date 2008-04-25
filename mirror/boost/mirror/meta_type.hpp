@@ -46,6 +46,32 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	type_identifier, base_type
 > > : meta_type<base_type>{ };
 
+/** Helper macro that declared the full_name-related stuff
+ */
+#define BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
+	BOOST_MIRROR_CONST_MEMBER_ATTRIB(\
+		size_t, \
+		full_name_length, \
+		scope::full_name_length + 2 + \
+		base_name_length \
+	) \
+	static const bchar* full_name(void)\
+	{\
+		static bchar the_full_name[full_name_length] = \
+			BOOST_STR_LIT(""); \
+		if(!the_full_name[0])  \
+		{ \
+			bchar * pos = the_full_name; \
+			bstrncpy(pos, scope::full_name(), scope::full_name_length);\
+			pos += scope::full_name_length; \
+			bstrncpy(pos, BOOST_STR_LIT("::"), 2);\
+			pos += 2; \
+			bstrncpy(pos, base_name(), base_name_length);\
+		} \
+		return the_full_name; \
+	}
+
+
 /** Macro for declaration of meta-types
  */
 #define BOOST_MIRROR_REG_META_TYPE(NAMESPACE_ALIAS, NAMESPACE, BASE_NAME)     \
@@ -53,12 +79,13 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
 		typedef NAMESPACE::BASE_NAME base_type;                                  \
-		static const bchar*   base_name  (void) {return BOOST_STR_LIT(#BASE_NAME);}\
+		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
 		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
 			size_t, \
 			base_name_length, \
 			BOOST_STR_LIT_LENGTH(#BASE_NAME)\
 		) \
+		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 
 /** Macro for declaration of meta-types for typedefined types
@@ -72,12 +99,13 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
 		typedef NAMESPACE::TYPEDEFD_NAME base_type;                                  \
-		static const bchar*   base_name  (void) {return BOOST_STR_LIT(#TYPEDEFD_NAME);}\
+		static const bchar* base_name(void) {return BOOST_STR_LIT(#TYPEDEFD_NAME);}\
 		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
 			size_t, \
 			base_name_length, \
 			BOOST_STR_LIT_LENGTH(#TYPEDEFD_NAME)\
 		) \
+		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 
 /** Declaration of meta types for types in the global scope
@@ -87,12 +115,14 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) scope;                        \
 		typedef BASE_NAME base_type;                                  \
-		static const bchar*   base_name  (void) {return BOOST_STR_LIT(#BASE_NAME);}\
+		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
 		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
 			size_t, \
 			base_name_length, \
 			BOOST_STR_LIT_LENGTH( #BASE_NAME ) \
 		) \
+		static const bchar* full_name(void) {return base_name();}\
+		BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, full_name_length, base_name_length) \
 	};
 
 /** Declaration of meta types for types in declared inside
@@ -103,12 +133,13 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	{                                                                 \
 		typedef meta_class< WRAPPER > scope;                        \
 		typedef WRAPPER::BASE_NAME base_type;                                  \
-		static const bchar*   base_name  (void) {return BOOST_STR_LIT(#BASE_NAME);}\
+		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
 		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
 			size_t, \
 			base_name_length, \
 			BOOST_STR_LIT_LENGTH(#BASE_NAME)\
 		) \
+		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 
 
@@ -140,6 +171,7 @@ BOOST_PP_LIST_FOR_EACH(BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE, _, BOOST_MIRROR_NA
  *  types now so we don't need this anymore
  */
 #undef BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE
+
 
 /** Register std string and wstring
  */

@@ -386,6 +386,8 @@ int main(void)
 	// type of an expression
 	bcout << "|06| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_TYPEOF("foo")>() << endl;
 	//
+	// full typenames
+	//bcout << "|07| " << BOOST_MIRROR_REFLECT_TYPEOF("foo") ::full_name() << endl;
 	//
 	bar_base x = {123, 456L};
 	bar_base y = {234, 567L};

@@ -103,7 +103,7 @@ protected:
 		bchar* cur_pos = the_base_name;
 		//
 		// copy the name of the template
-		bstrcpy(cur_pos, meta_type::template_name());
+		bstrcpy(cur_pos, meta_type::template_base_name());
 		cur_pos += template_name_length;
 		//
 		// append the leading "< "
