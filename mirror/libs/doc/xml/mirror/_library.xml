@@ -72,5 +72,14 @@
 			- Updated example showing the reflection of std::pair
 			- NOTE: tested only with MSVC++ 2008 EE
 		</revision>
+		<revision id="20080426" major="0" minor="1" micro="12" author="m_ch">
+			- Added meta_type for boost::tuple
+			- Added meta_type for std::vector
+			- Added meta_type for std::map
+			- Added meta_type for std::list
+			- Added meta_type for std::set
+			- Modified several other internal headers
+			- NOTE: tested only with MSVC++ 2008 EE
+		</revision>
 	</revisions>
 </library>

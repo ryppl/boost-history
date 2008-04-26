@@ -10,6 +10,9 @@
 #ifndef BOOST_MIRROR_META_DETAIL_NONTRIVIAL_TYPE_NAME_HPP
 #define BOOST_MIRROR_META_DETAIL_NONTRIVIAL_TYPE_NAME_HPP
 
+#ifndef BOOST_MIRROR_USE_STATIC_NAME_STRINGS
+#	include <memory> // ::std::auto ptr
+#endif
 namespace boost {
 namespace mirror {
 namespace detail {
@@ -58,14 +61,33 @@ private:
 	typedef typename implementation<meta_type, meta_data, true>  implementation_base_name;
 	typedef typename implementation<meta_type, meta_data, false> implementation_full_name;
 
+#ifndef BOOST_MIRROR_USE_STATIC_NAME_STRINGS
+	inline static bchar* new_string(const size_t size)
+	{
+		assert(size != 0);
+		bchar* result = new bchar[size];
+		result[0] = 0;
+		return result;
+	}
+#endif
+
+	inline static bool name_not_initialized(const bchar* str)
+	{
+		return !str[0];
+	}
+
 	template <bool base_name>
 	static const bchar* get_name(mpl::bool_<base_name>)
 	{
 		typedef typename implementation<meta_type, meta_data, base_name>
 			impl;
-		static bchar the_name[impl::name_length+1] 
-			= {BOOST_STR_LIT("")};
-		if(!the_name[0]) 
+#ifdef BOOST_MIRROR_USE_STATIC_NAME_STRINGS
+		static bchar the_name[impl::name_length+1] = {BOOST_STR_LIT("")};
+#else
+		static ::std::auto_ptr<bchar> the_name_holder(new_string(impl::name_length+1));
+		bchar* the_name = the_name_holder.get();
+#endif
+		if(name_not_initialized(the_name)) 
 			impl::init_name(the_name);
 		return the_name;
 	}

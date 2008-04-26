@@ -152,8 +152,9 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 
 #define BOOST_MIRROR_NATIVE_TYPES \
 	BOOST_PP_TUPLE_TO_LIST( \
-		14, \
+		15, \
 		( \
+			void, \
 			bool, \
 			char, signed char, unsigned char, wchar_t, \
 			unsigned short int, short, \

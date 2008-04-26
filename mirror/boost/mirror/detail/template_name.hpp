@@ -16,6 +16,7 @@
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/mpl/remove_if.hpp>
 
 #include <boost/mirror/detail/nontrivial_type_name.hpp>
 
@@ -57,11 +58,25 @@ struct static_template_name_length
 	>::type type;
 };
 
+/** Specializations of this template
+ */
 
-template <class meta_type, class typelist, bool base_name>
+template <typename a_type>
+struct is_typelist_null_type : ::boost::false_type { };
+
+
+template <class meta_type, class full_typelist, bool base_name>
 struct static_template_name_base
 {
 protected:
+	/** A typelist that contains all types from full_type_list
+	 *  except those that are typelist_null_types
+	 */
+	typedef typename mpl::remove_if<
+		full_typelist,
+		is_typelist_null_type<mpl::_1>
+	>::type typelist;
+
 	/** The 'position' of the last type in the template
 	 *  type list.
 	 */
