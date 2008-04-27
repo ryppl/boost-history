@@ -1,0 +1,33 @@
+# Mirror Library Examples Jamroot
+# 
+# (C) Copyright Matus Chochlik 2008
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or www.boost.org/LICENSE_1_0.txt)
+#
+# This is a sample Jamroot file for the mirror library. You
+# can use this file in case You don't have a more suitable Jamroot.
+# This sample can be renamed to Jamroot and placed to the immediate 
+# parent directory of the mirror root directory. 
+# ie. You can have a */devel/ directory with this Jamroot, optionally
+# also with a boost_build.jam file and with the mirror/ folder containing
+# the sources of mirror.
+
+project mirror/examples
+    : requirements 
+      <include>$(BOOST_ROOT)
+    # You can use one of the following if $(BOOST_ROOT) is not working
+    #  <include>"C:/boost/boost_1_35_0"
+    #  <include>"C:/users/_YourLogin_/boost/current"
+    #  <include>"C:/Program Files/boost/current"
+    #  <include>/opt/boost
+    #  <include>/usr/local/include/boost
+    #
+    #  You can optionally set up a new build directory instead of
+    #  'bin' in the folder where a Jamfile resided. 
+    #  Leaving this uncommented will make bjam build into a directory
+    #  called _build in the folder where this Jamroot file is.
+    : build-dir _build
+    ;
+
+

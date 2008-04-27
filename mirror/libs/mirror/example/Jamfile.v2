@@ -1,12 +1,32 @@
 # Mirror Library Examples Jamfile
- 
 # (C) Copyright Matus Chochlik 2008
-
+#
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or www.boost.org/LICENSE_1_0.txt)
+#
+# In addition to this Jamfile You will need a Jamroot file
+# for the 'mirror/examples' project, specifying the project 
+# requirements mainly <include>/path/to/boost/root.
+# See accompanying _Jamroot_sample file for an example.
 
-
-project
+project mirror/examples
+    : requirements 
+      <include>../../../ #the mirror library root
     ;
-    
-exe prog : prog.cpp ;
+#
+# registering
+#
+exe reg_namespaces    : registering/namespaces.cpp ;
+exe reg_types         : registering/types.cpp ;
+exe reg_classes       : registering/classes.cpp ;
+exe reg_virtual_bases : registering/virtual_bases.cpp ;
+#
+# special meta-types
+#
+exe spec_std_pair     : special/std_pair.cpp ;
+exe spec_boost_tuple  : special/boost_tuple.cpp ;
+#
+# cooperation with Boost.Serialization
+#
+#exe serial_cube       : serialization/cube.cpp ;
+
