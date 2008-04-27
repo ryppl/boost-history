@@ -149,7 +149,7 @@ no visible side effects. <i>--end note]</i></u></font></p>
   non-const arguments, including *this, directly or indirectly point to or 
   reference objects of a standard library type shared between the threads, and 
   one call does not happen before the other ([Multi-threaded executions and data 
-  races]).</u></font></p>
+  races]).</u><b>[Editorial note: Technically, there are no non-const arguments.]</b></font></p>
   <p><i>[Note: </i>This <font color="#FF0000"><strike>lack of strong thread-safety guarantee</strike></font>
   <u><font color="#228822">prohibition against concurrent non-const access</font></u> means that 
   modifying an object of a standard library type shared between threads 
