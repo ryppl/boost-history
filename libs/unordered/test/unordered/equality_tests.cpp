@@ -5,125 +5,139 @@
 
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
-#include "../helpers/test.hpp"
-#include "../objects/test.hpp"
-#include "../helpers/random_values.hpp"
+#include <boost/preprocessor/seq.hpp>
 #include <list>
+#include "../helpers/test.hpp"
 
-namespace equality_tests {
-    test::seed_t seed(78634);
-
-    template<class T>
-    struct container_holder {
-        test::random_values<T> values;
-        T container;
-
-        container_holder()
-            : values(0), container()
-        {}
-
-        container_holder(int count, test::random_generator const& generator)
-            : values(count, generator),
-            container(values.begin(), values.end())
+namespace equality_tests
+{
+    struct mod_compare
+    {
+        bool operator()(int x, int y) const
         {
+            return x % 1000 == y % 1000;
+        }
+
+        int operator()(int x) const
+        {
+            return x % 250;
         }
     };
 
-    template <class T>
-    void equality_tests1(T*, test::random_generator generator
-            = test::default_generator)
+#define UNORDERED_EQUALITY_SET_TEST(seq1, op, seq2) \
+	do { \
+		boost::unordered_set<int, mod_compare, mod_compare> set1, set2; \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_SET_INSERT, set1, seq1) \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_SET_INSERT, set2, seq2) \
+		BOOST_CHECK(set1 op set2); \
+	} while(false)
+
+#define UNORDERED_EQUALITY_MULTISET_TEST(seq1, op, seq2) \
+	do { \
+		boost::unordered_multiset<int, mod_compare, mod_compare> set1, set2; \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_SET_INSERT, set1, seq1) \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_SET_INSERT, set2, seq2) \
+		BOOST_CHECK(set1 op set2); \
+	} while(false)
+
+#define UNORDERED_EQUALITY_MAP_TEST(seq1, op, seq2) \
+	do { \
+		boost::unordered_map<int, int, mod_compare, mod_compare> map1, map2; \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_MAP_INSERT, map1, seq1) \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_MAP_INSERT, map2, seq2) \
+		BOOST_CHECK(map1 op map2); \
+	} while(false)
+
+#define UNORDERED_EQUALITY_MULTIMAP_TEST(seq1, op, seq2) \
+	do { \
+		boost::unordered_multimap<int, int, mod_compare, mod_compare> map1, map2; \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_MAP_INSERT, map1, seq1) \
+		BOOST_PP_SEQ_FOR_EACH(UNORDERED_MAP_INSERT, map2, seq2) \
+		BOOST_CHECK(map1 op map2); \
+	} while(false)
+
+#define UNORDERED_SET_INSERT(r, set, item) set.insert(item);
+#define UNORDERED_MAP_INSERT(r, map, item) \
+	map.insert(std::pair<int const, int> BOOST_PP_SEQ_TO_TUPLE(item));
+
+	UNORDERED_AUTO_TEST(equality_size_tests)
+	{
+		boost::unordered_set<int> x1, x2;
+		BOOST_CHECK(x1 == x2);
+		BOOST_CHECK(!(x1 != x2));
+
+		x1.insert(1);
+		BOOST_CHECK(x1 != x2);
+		BOOST_CHECK(!(x1 == x2));
+		BOOST_CHECK(x2 != x1);
+		BOOST_CHECK(!(x2 == x1));
+		
+		x2.insert(1);
+		BOOST_CHECK(x1 == x2);
+		BOOST_CHECK(!(x1 != x2));
+		
+		x2.insert(2);
+		BOOST_CHECK(x1 != x2);
+		BOOST_CHECK(!(x1 == x2));
+		BOOST_CHECK(x2 != x1);
+		BOOST_CHECK(!(x2 == x1));
+	}
+	
+	UNORDERED_AUTO_TEST(equality_key_value_tests)
+	{
+		UNORDERED_EQUALITY_MULTISET_TEST((1), !=, (2));
+		UNORDERED_EQUALITY_SET_TEST((2), ==, (2));
+		UNORDERED_EQUALITY_MAP_TEST(((1)(1))((2)(1)), !=, ((1)(1))((3)(1)));
+	}
+	
+    UNORDERED_AUTO_TEST(equality_collision_test)
     {
-        const std::size_t num_containers = 100;
-
-        std::list<container_holder<T> > containers;
-        container_holder<T> empty;
-        containers.push_back(container_holder<T>());
-        BOOST_CHECK(empty.values == empty.values);
-        BOOST_CHECK(empty.values == containers.back().values);
-        BOOST_CHECK(empty.container == empty.container);
-        BOOST_CHECK(empty.container == containers.back().container);
-
-        container_holder<T> one(1, generator);
-        containers.push_back(one);
-        
-        BOOST_CHECK(empty.values != one.values);
-        BOOST_CHECK(one.values == one.values);
-        BOOST_CHECK(one.values == containers.back().values);
-        BOOST_CHECK(empty.container != one.container);
-        BOOST_CHECK(one.container == one.container);
-        BOOST_CHECK(one.container == containers.back().container);
-
-        container_holder<T> hundred(100, generator);
-        container_holder<T> hundred2(100, generator);
-        BOOST_CHECK(hundred.values != hundred2.values);
-
-        containers.push_back(hundred);
-        containers.push_back(hundred2);
-        
-        BOOST_CHECK(empty.values != hundred.values);
-        BOOST_CHECK(one.values != hundred.values);
-        BOOST_CHECK(hundred.values == hundred.values);
-        BOOST_CHECK(hundred2.values != hundred.values);
-        BOOST_CHECK(hundred.values == hundred.values);
-        BOOST_CHECK(hundred2.values == containers.back().values);
-
-        BOOST_CHECK(empty.container != hundred.container);
-        BOOST_CHECK(one.container != hundred.container);
-        BOOST_CHECK(hundred.container == hundred.container);
-        BOOST_CHECK(hundred2.container != hundred.container);
-        BOOST_CHECK(hundred.container == hundred.container);
-        BOOST_CHECK(hundred2.container == containers.back().container);
-
-        for(std::size_t i = containers.size(); i < num_containers; ++i) {
-            using namespace std;
-            containers.push_back(
-                container_holder<T>(rand() % 150, generator));
-        }
-
-        std::size_t count1, count2;
-        typename std::list<container_holder<T> >::const_iterator it1, it2;
-        for(it1 = containers.begin(), count1 = 0; it1 != containers.end(); ++it1, ++count1) {
-            for(it2 = it1, count2 = count1; it2 != containers.end(); ++it2, ++count2) {
-                if(it1 == it2) {
-                    if(it1->container != it2->container ||
-                        !(it1->container == it2->container))
-                    {
-                        std::cerr<<"Container "<<count1<<":\n";
-                        BOOST_ERROR("Not equal to itself!");
-                    }
-                }
-                else if(it1->values == it2->values) {
-                    if(it1->container != it2->container ||
-                        !(it1->container == it2->container))
-                    {
-                        std::cerr<<"Containers "<<count1<<","<<count2<<":\n";
-                        BOOST_ERROR("Should be equal");
-                    }
-                }
-                else {
-                    if(it1->container == it2->container ||
-                        !(it1->container != it2->container))
-                    {
-                        std::cerr<<"Containers "<<count1<<","<<count2<<":\n";
-                        BOOST_ERROR("Should not be equal");
-                    }
-                }
-            }
-        }
+    	UNORDERED_EQUALITY_MULTISET_TEST(
+    		(1), !=, (501));
+    	UNORDERED_EQUALITY_MULTISET_TEST(
+    		(1)(251), !=, (1)(501));
+    	UNORDERED_EQUALITY_MULTIMAP_TEST(
+    		((251)(1))((1)(1)), !=, ((501)(1))((1)(1)));
+    	UNORDERED_EQUALITY_MULTISET_TEST(
+    		(1)(501), ==, (1)(501));
+    	UNORDERED_EQUALITY_SET_TEST(
+    		(1)(501), ==, (501)(1));
     }
 
-    boost::unordered_set<test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_set;
-    boost::unordered_multiset<test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_multiset;
-    boost::unordered_map<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_map;
-    boost::unordered_multimap<test::object, test::object, test::hash, test::equal_to, test::allocator<test::object> >* test_multimap;
+	UNORDERED_AUTO_TEST(equality_group_size_test)
+	{
+    	UNORDERED_EQUALITY_MULTISET_TEST(
+    		(10)(20)(20), !=, (10)(10)(20));
+    	UNORDERED_EQUALITY_MULTIMAP_TEST(
+    		((10)(1))((20)(1))((20)(1)), !=,
+    		((10)(1))((20)(1))((10)(1)));
+    	UNORDERED_EQUALITY_MULTIMAP_TEST(
+    		((20)(1))((10)(1))((10)(1)), ==,
+    		((10)(1))((20)(1))((10)(1)));
+    }
+    
+    UNORDERED_AUTO_TEST(equality_map_value_test)
+    {
+    	UNORDERED_EQUALITY_MAP_TEST(
+    		((1)(1)), !=, ((1)(2)));
+    	UNORDERED_EQUALITY_MAP_TEST(
+    		((1)(1)), ==, ((1)(1)));
+    	UNORDERED_EQUALITY_MULTIMAP_TEST(
+    		((1)(1)), !=, ((1)(2)));
+    	UNORDERED_EQUALITY_MULTIMAP_TEST(
+    		((1)(1))((1)(1)), !=, ((1)(1))((1)(2)));
+    	UNORDERED_EQUALITY_MULTIMAP_TEST(
+    		((1)(2))((1)(1)), !=, ((1)(1))((1)(2)));
+	}
 
-    using test::default_generator;
-    using test::generate_collisions;
+    UNORDERED_AUTO_TEST(equality_predicate_test)
+    {
+    	UNORDERED_EQUALITY_SET_TEST(
+    		(1), ==, (1001));
+    	UNORDERED_EQUALITY_MAP_TEST(
+    		((1)(2))((1001)(1)), ==, ((1001)(2))((1)(1)));
+	}
 
-    UNORDERED_TEST(equality_tests1,
-        ((test_set)(test_multiset)(test_map)(test_multimap))
-        ((default_generator)(generate_collisions))
-    )
 }
 
 RUN_TESTS()
