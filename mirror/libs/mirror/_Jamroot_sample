@@ -24,7 +24,7 @@ project mirror/examples
     #  <include>/usr/local/include/boost
     #
     #  You can optionally set up a new build directory instead of
-    #  'bin' in the folder where a Jamfile resided. 
+    #  'bin' in the folder where the Jamfile resides. 
     #  Leaving this uncommented will make bjam build into a directory
     #  called _build in the folder where this Jamroot file is.
     : build-dir _build

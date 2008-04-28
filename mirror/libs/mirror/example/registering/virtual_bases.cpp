@@ -213,7 +213,7 @@ int main(void)
 	bcout << meta_T::attributes::size::value << " own member attrib(s)" << endl;
 	bcout << meta_T::all_attributes::inherited_size::value << " inherited member attrib(s)" << endl;
 	bcout << meta_T::all_attributes::size::value << " member attrib(s)" << endl;
-	// execute an functor on all attributes
+	// execute a functor on all attributes
 	meta_T::all_attributes::for_each(attrib_printer());
 	//
 	// The attrbs of H are reflected in the following order
