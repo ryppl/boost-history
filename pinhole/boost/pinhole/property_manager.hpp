@@ -36,12 +36,12 @@ namespace boost { namespace pinhole
     public :
         static event_source* instance()
         {
-            if ( m_instance == 0 )  // is it the first call?
+            if ( !m_instance )  // is it the first call?
             {  
-                m_instance = new event_source; // create sole instance
+                m_instance.reset( new event_source ); // create sole instance
             }
             
-            return m_instance; // address of sole instance
+            return m_instance.get(); // address of sole instance
         }
         
         #if defined(BOOST_MSVC)
@@ -64,7 +64,16 @@ namespace boost { namespace pinhole
         }
         
     private :
-        static event_source *m_instance;
+
+        #if defined(BOOST_MSVC)
+            #pragma warning(push)
+            #pragma warning( disable: 4251 )
+        #endif
+        static boost::shared_ptr<event_source> m_instance;
+        #if defined(BOOST_MSVC)
+            #pragma warning(pop)
+        #endif
+        
         event_source(){};
         
     };

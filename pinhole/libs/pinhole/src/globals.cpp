@@ -12,5 +12,5 @@
 boost::shared_ptr<boost::pinhole::property_manager>
     boost::pinhole::property_manager::m_instance(new boost::pinhole::property_manager);
 
-boost::pinhole::event_source
-    *boost::pinhole::event_source::m_instance = 0;
+boost::shared_ptr<boost::pinhole::event_source>
+    boost::pinhole::event_source::m_instance;
