@@ -13,7 +13,7 @@
 <p><span style="background-color: rgb(255, 255, 0)">Doc. no.&nbsp;&nbsp; 
 D2603=08-0113</span><br>
 Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-25<!--webbot bot="Timestamp" endspan i-checksum="12286" --><br>
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-27<!--webbot bot="Timestamp" endspan i-checksum="12290" --><br>
 Project:&nbsp;&nbsp;&nbsp;&nbsp; Programming Language C++<br>
 Reply to:&nbsp;&nbsp; Beman Dawes &lt;bdawes at acm.org&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -23,7 +23,8 @@ Herb Sutter &lt;hsutter at microsoft.com&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hans Boehm &lt;Hans.Boehm at hp.com&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lawrence Crowl &lt;crowl at google.com&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Paul E. McKenney &lt;paulmck at linux.vnet.ibm.com&gt;<span style="background-color: rgb(255, 255, 0)"><br>
-&nbsp;</span></p>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Jeffrey Yasskin &lt;jyasskin at google.com&gt;</p>
 
 <h1>Thread-Safety in the Standard Library (Rev 2)</h1>
 
@@ -32,7 +33,6 @@ Herb Sutter &lt;hsutter at microsoft.com&gt;<br>
 <a href="#Rationale">Rationale</a><br>
 <a href="#Existing-practice">Existing practice</a><br>
 <a href="#Proposed-Wording">Proposed wording</a><br>
-<a href="#Acknowledgements">Acknowledgements</a><br>
 <a href="#Revision-history">Revision history</a><br>
 <a href="#References">References</a></p>
 
@@ -149,7 +149,7 @@ no visible side effects. <i>--end note]</i></u></font></p>
   non-const arguments, including *this, directly or indirectly point to or 
   reference objects of a standard library type shared between the threads, and 
   one call does not happen before the other ([Multi-threaded executions and data 
-  races]).</u><b>[Editorial note: Technically, there are no non-const arguments.]</b></font></p>
+  races]).</u></font><b><span style="background-color: #FFFF00">[Editorial note: Technically, there are no non-const arguments.]</span></b></p>
   <p><i>[Note: </i>This <font color="#FF0000"><strike>lack of strong thread-safety guarantee</strike></font>
   <u><font color="#228822">prohibition against concurrent non-const access</font></u> means that 
   modifying an object of a standard library type shared between threads 
@@ -206,6 +206,27 @@ no visible side effects. <i>--end note]</i></u></font></p>
   locale object per thread. If there is a single global locale object for the 
   entire program, it is not required to be thread-safe ([res.on.thread.safety]).</font></u></p>
   </blockquote>
+  <p><i>At a location in 23 to be determined by the project editor, add a new paragraph:</i></p>
+  <blockquote>
+  <p><u><font color="#228822">For purposes of determining thread-safety requirements ([res.on.thread.safety[), 
+  implementations shall consider the following functions to be const:<code> 
+  begin</code>, <code>end</code>, <code>rbegin</code>, <code>rend</code>, <code>
+  front</code>, <code>back</code>, <code>data</code>, <code>find</code>, <code>
+  lower_bound</code>, <code>upper_bound</code>, <code>equal_range</code>, and, 
+  except in associative containers, <code>operator[]</code>.</font></u></p>
+  </blockquote>
+  <p><i><span style="background-color: #FFFF00">Somewhere</span>, add:</i></p>
+  <blockquote>
+  <p><font color="#228822">Notwithstanding ([res.on.thread.safety[), implementations are required to 
+  avoid data races when the contents of the contained object in different elements in the same sequence are modified 
+  concurrently.</font></p>
+  <p><font color="#228822"><i>[Example: </i>For a <code>vector&lt;int&gt; x
+  </code>with a size greater than one, <code>x[1] = 5</code> 
+  and <code>*x.begin() = 10</code> can be executed concurrently without a data race, but 
+  <code>x[0] 
+  = 5</code> and <code>*x.begin() = 10</code> executed concurrently may result in a data race. <i>-- 
+  end example]</i></font></p>
+  </blockquote>
   <p><i>Change 26.7 C Library [c.math] paragraph 6 as indicated:</i></p>
   <blockquote>
     <p>The <code>rand</code> function has the semantics specified in the C 
@@ -217,10 +238,6 @@ no visible side effects. <i>--end note]</i></u></font></p>
     but not required to provide such thread-safety. Calls to <code>rand</code> 
     from other library functions shall not result in data races.</u></font></p>
 </blockquote>
-  <h2><a name="Acknowledgements">Acknowledgements</a></h2>
-  <p><font color="#228822"><u>Jeffrey Yasskin's, N2519 <i>Library thread-safety 
-  from a user's point of view, with wording</i> provided several valuable 
-  insights that have been reflected in this proposal.</u></font></p>
   <h2><a name="Revision-history">Revision history</a></h2>
   <p>N2603 - Revision 2:</p>
   <ul>
@@ -255,13 +272,15 @@ no visible side effects. <i>--end note]</i></u></font></p>
   N2334</a>, Concurrency memory model (revised again), Clark Nelson and Hans-J. 
   Boehm</p>
   <p>
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2519.html">
+  N2519</a>, Library thread-safety 
+  from a user's point of view, with wording, Jeffrey Yasskin</p>
+  <p>
   <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1947.pdf">
   N1947</a>, The Memory Model and the C++ Library, Non-Memory Actions etc., Nick 
   Maclaren</p>
 <hr>
-  <p>&nbsp;</p>
-<p>&nbsp;</p>
-
+  
 </body>
 
 </html>
