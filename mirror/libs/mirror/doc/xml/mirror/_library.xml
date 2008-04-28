@@ -81,5 +81,13 @@
 			- Modified several other internal headers
 			- NOTE: tested only with MSVC++ 2008 EE
 		</revision>
+		<revision id="20080428" major="0" minor="1" micro="13" author="m_ch">
+			- Added meta_attribs for boost::tuple
+			- Added meta_attribs for std::vector
+			- Reimplemented meta_attributes::for_each
+			- The for_each function is now available also for all attributes
+			- Updated several examples to show new functionality
+			- NOTE: tested only with MSVC++ 2008 
+		</revision>
 	</revisions>
 </library>

@@ -44,7 +44,6 @@ struct static_log10
 		>
 	>::type position;
 
-
 	typedef typename mpl::second<
 			typename mpl::deref<
 				position

@@ -172,6 +172,26 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 } // namespace mirror
 } // namespace boost
 
+struct attrib_printer
+{
+		template <class meta_class, class meta_attributes, class iterator, class attrib_type>
+		void operator()(meta_class mc, meta_attributes ma, iterator pos, attrib_type*) const
+		{
+			using namespace ::std;
+			using namespace ::boost;
+			using namespace ::boost::mirror;
+			typedef BOOST_MIRROR_REFLECT_TYPE(attrib_type) mt;
+			bcout << 
+				"    " << 
+				iterator::value << 
+				": " << 
+				mt::full_name() << 
+				" " << 
+				ma.base_name(pos) << 
+				";" << 
+				endl;
+		}
+};
 
 int main(void)
 {
@@ -193,6 +213,8 @@ int main(void)
 	bcout << meta_T::attributes::size::value << " own member attrib(s)" << endl;
 	bcout << meta_T::all_attributes::inherited_size::value << " inherited member attrib(s)" << endl;
 	bcout << meta_T::all_attributes::size::value << " member attrib(s)" << endl;
+	// execute an functor on all attributes
+	meta_T::all_attributes::for_each(attrib_printer());
 	//
 	// The attrbs of H are reflected in the following order
 	// A::l (long)

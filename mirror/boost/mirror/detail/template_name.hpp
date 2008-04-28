@@ -64,17 +64,24 @@ struct static_template_name_length
 template <typename a_type>
 struct is_typelist_null_type : ::boost::false_type { };
 
-
-template <class meta_type, class full_typelist, bool base_name>
-struct static_template_name_base
+template <class full_typelist>
+struct template_with_null_args_type_list
 {
-protected:
 	/** A typelist that contains all types from full_type_list
 	 *  except those that are typelist_null_types
 	 */
 	typedef typename mpl::remove_if<
 		full_typelist,
 		is_typelist_null_type<mpl::_1>
+	>::type type;
+};
+
+template <class meta_type, class full_typelist, bool base_name>
+struct static_template_name_base
+{
+protected:
+	typedef typename template_with_null_args_type_list<
+		full_typelist
 	>::type typelist;
 
 	/** The 'position' of the last type in the template

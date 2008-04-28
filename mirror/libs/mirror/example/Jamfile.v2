@@ -5,7 +5,7 @@
 # (See accompanying file LICENSE_1_0.txt or www.boost.org/LICENSE_1_0.txt)
 #
 # In addition to this Jamfile You will need a Jamroot file
-# for the 'mirror/examples' project, specifying the project 
+# for specifying the basic project 
 # requirements mainly <include>/path/to/boost/root.
 # See accompanying _Jamroot_sample file for an example.
 

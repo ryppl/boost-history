@@ -18,6 +18,11 @@
 #include <boost/mirror/detail/static_pow10.hpp>
 #include <boost/char_type_switch/string.hpp>
 
+#include <boost/mpl/vector_c.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/plus.hpp>
+
 namespace boost {
 namespace mirror {
 namespace detail {
@@ -26,8 +31,8 @@ template <int I>
 struct static_int_to_str 
 {
 	// the length of the string needed to hold the given integer
-	typedef typename mpl::next<
-		typename static_log10<I>::type
+	typedef typename mpl::int_<
+		static_log10<I>::type::value + 1
 	>::type length;
 	//
 	//
@@ -57,6 +62,70 @@ struct static_int_to_str
 		_str[length::value] = BOOST_STR_LIT('\0');
 		return _str;
 	}
+};
+
+template <>
+struct static_int_to_str<0>
+{
+	typedef mpl::int_<1>::type length;
+	static bchar* convert(bchar* _str, size_t _max_len)
+	{
+		assert(_max_len > 1);
+		_str[0] = BOOST_STR_LIT('0');
+		_str[1] = BOOST_STR_LIT('\0');
+		return _str;
+	}
+};
+
+template <class mpl_vector_c, int I>
+struct static_int_to_str_w_prefix
+{
+	typedef mpl_vector_c prefix;
+	typedef mpl::int_<mpl::size<prefix>::value> prefix_length;
+	typedef typename static_int_to_str<I>::length number_length;
+	// the length of the string needed to hold the given integer with the prefix
+	typedef typename mpl::int_<
+		prefix_length::value + 
+		number_length::value
+	> length;
+	//
+	static inline void do_apply_prefix_to(bchar* _str, mpl::int_<0>){ }
+	//
+	template <int J>
+	static inline void do_apply_prefix_to(bchar* _str, mpl::int_<J> pos)
+	{
+		_str[J-1] = mpl::at<
+			prefix,
+			mpl::int_<J - 1>
+		>::type::value;
+		do_apply_prefix_to(_str, mpl::int_<J - 1>());
+	}
+	//
+	static bchar* convert(bchar* _str, size_t _max_len)
+	{
+		// check the length
+		assert(_max_len > length::value);
+		// apply prefix
+		do_apply_prefix_to(_str, prefix_length());
+		// calculate offset
+		const int offs = mpl::size<prefix>::type::value;
+		// append given int as string
+		static_int_to_str<I>::convert(_str + offs, _max_len - offs);
+		// finalize the string
+		_str[length::value] = BOOST_STR_LIT('\0');
+		return _str;
+	}
+	//
+	struct holder
+	{
+		static const bchar* get(void)
+		{
+			static bchar str[length::value+1] = {0};
+			if(!str[0]) convert(str, length::value+1);
+			return str;
+		}
+	};
+
 };
 
 } // namespace detail

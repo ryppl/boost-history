@@ -298,8 +298,13 @@ struct pretty_printer
 		attrib_printer(out_stream& _s):s(_s){ }
 		//
 		// function call operator
-		template <class meta_class, class iterator, class attrib_type>
-		void operator()(meta_class*, iterator pos, attrib_type*) const 
+		template <
+			class meta_class, 
+			class meta_attributes, 
+			class iterator, 
+			class attrib_type
+		>
+		void operator()(meta_class mc, meta_attributes ma, iterator pos, attrib_type*) const 
 		{
 			// the first argument is a undefined pointer to the 
 			// meta_class which we are inspecting (it only conveys 
@@ -318,7 +323,7 @@ struct pretty_printer
 			s << endl << " - " << 
 				name_to_stream<BOOST_MIRROR_REFLECT_TYPE(attrib_type)>() <<
 				"        " <<
-				meta_class::attributes::base_name(pos);
+				ma.base_name(pos);
 		}
 	};
 	//

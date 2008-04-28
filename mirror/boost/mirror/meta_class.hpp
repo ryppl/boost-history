@@ -71,6 +71,7 @@ struct meta_class : public meta_type<reflected_class>
 	 *  the inherited ones. 
 	 */
 	struct all_attributes
+	: detail::meta_class_attrib_utils<meta_class, all_attributes>
 	{
 		/** This struct "hides" the internal helpers
 		 */
@@ -466,7 +467,7 @@ struct meta_class : public meta_type<reflected_class>
 		 */
 		template <int I>
 		static const bchar* 
-		base_name(mpl::int_<I>)
+		base_name(mpl::int_<I> pos)
 		{
 			typedef typename mpl::less<
 				mpl::int_<I>,
