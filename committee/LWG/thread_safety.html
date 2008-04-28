@@ -118,10 +118,10 @@ subroutines</i> is implementation-defined.</p>
   functions shall be <i>reentrant subroutines</i>.</font></u></p>
   <p>Unless otherwise specified, calls to C++ Standard library functions from 
   different threads shall not result in a data race unless<font color="#228822">
-  <u>non-const</u>
   </font>arguments to the calls, 
   including <code>*this</code>, directly or indirectly <font color="#FF0000">
-  <strike>access</strike></font> <u><font color="#228822">point to or reference</font></u> objects shared 
+  <strike>access</strike></font> <u><font color="#228822">point to or reference</font></u><font color="#228822">
+  <u>non-const</u></font> objects shared 
   between the threads in such a way that an expression evaluation conflict 
   occurs ([intro.multithread]) .</p>
   <p><i>[Note:</i> This  means, for example, that 
@@ -146,10 +146,10 @@ no visible side effects. <i>--end note]</i></u></font></p>
   not happen before the other ([Multi-threaded executions and data races]).</strike></font></p>
   <p><font color="#228822"><u>Unless otherwise specified, calls to standard 
   library functions from different threads result in undefined behavior if any 
-  non-const arguments, including *this, directly or indirectly point to or 
-  reference objects of a standard library type shared between the threads, and 
+  arguments, including *this, directly or indirectly point to or reference 
+  non-const objects of a standard library type shared between the threads, and 
   one call does not happen before the other ([Multi-threaded executions and data 
-  races]).</u></font><b><span style="background-color: #FFFF00">[Editorial note: Technically, there are no non-const arguments.]</span></b></p>
+  races]).</u></font></p>
   <p><i>[Note: </i>This <font color="#FF0000"><strike>lack of strong thread-safety guarantee</strike></font>
   <u><font color="#228822">prohibition against concurrent non-const access</font></u> means that 
   modifying an object of a standard library type shared between threads 
@@ -215,7 +215,6 @@ no visible side effects. <i>--end note]</i></u></font></p>
   lower_bound</code>, <code>upper_bound</code>, <code>equal_range</code>, and, 
   except in associative containers, <code>operator[]</code>.</font></u></p>
   </blockquote>
-  <p><i><span style="background-color: #FFFF00">Somewhere</span>, add:</i></p>
   <blockquote>
   <p><font color="#228822">Notwithstanding ([res.on.thread.safety[), implementations are required to 
   avoid data races when the contents of the contained object in different elements in the same sequence are modified 
