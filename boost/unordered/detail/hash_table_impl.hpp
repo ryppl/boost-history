@@ -2150,7 +2150,6 @@ private:
 
             static inline bool group_equals(link_ptr it1, link_ptr it2, void*)
             {
-                if(!BOOST_UNORDERED_BORLAND_BOOL(it2)) return false;
                 link_ptr end1 = data::next_group(it1);
                 link_ptr end2 = data::next_group(it2);
                 do {
