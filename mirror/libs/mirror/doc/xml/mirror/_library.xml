@@ -89,5 +89,10 @@
 			- Updated several examples to show new functionality
 			- NOTE: tested only with MSVC++ 2008 
 		</revision>
+		<revision id="20080428" major="0" minor="1" micro="14" author="m_ch">
+			- Fixed several bugs that prevented the compilation with gcc
+			- Updated the special/boost_tuple.cpp example 
+			- Tested with MSVC++ 2008 EE on Vista and g++ 4.1.3 on Ubuntu 7.10
+		</revision>
 	</revisions>
 </library>
