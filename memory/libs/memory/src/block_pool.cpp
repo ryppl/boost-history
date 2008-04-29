@@ -24,4 +24,16 @@ STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool()
 }
 
 // -------------------------------------------------------------------------
+// class tls_block_pool_init
+
+class tls_block_pool_init
+{
+public:
+	tls_block_pool_init() { _tls_blockPool.init(); }
+	~tls_block_pool_init() { _tls_blockPool.term(); }
+};
+
+tls_block_pool_init _tls_blockPoolInit;
+
+// -------------------------------------------------------------------------
 // $Log: $
