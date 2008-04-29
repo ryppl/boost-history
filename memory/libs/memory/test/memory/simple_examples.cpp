@@ -16,7 +16,7 @@
 
 void testAutoAlloc()
 {
-	boost::auto_alloc alloc;
+    boost::auto_alloc alloc;
     int* intObj = BOOST_NEW(alloc, int);
     int* intObjWithArg = BOOST_NEW(alloc, int)(10);
     int* intArray = BOOST_NEW_ARRAY(alloc, int, 100);
@@ -45,7 +45,7 @@ void testScopedAlloc()
 void testTlsScopedAlloc()
 {
     boost::scoped_alloc alloc;
-	// same as: boost::scoped_alloc(boost::tls_block_pool::instance());
+    // same as: boost::scoped_alloc(boost::tls_block_pool::instance());
 
     int* intObj = BOOST_NEW(alloc, int);
     int* intObjWithArg = BOOST_NEW(alloc, int)(10);
