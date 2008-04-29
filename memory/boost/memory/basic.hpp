@@ -12,10 +12,6 @@
 #ifndef __BOOST_MEMORY_BASIC_HPP__
 #define __BOOST_MEMORY_BASIC_HPP__
 
-#ifndef __BOOST_MEMORY_CONFIG_HPP__
-#include "config.hpp"
-#endif
-
 // -------------------------------------------------------------------------
 
 #if !defined(_NEW_) && !defined(_NEW)
@@ -28,6 +24,27 @@
 
 #if !defined(_INC_MALLOC) && !defined(_MALLOC_H)
 #include <malloc.h>	// _alloca
+#endif
+
+#ifndef _CrtSetDbgFlag
+
+#if defined(_MSC_VER)
+#include <crtdbg.h> // _CrtSetDbgFlag
+#endif
+
+#endif
+
+// =========================================================================
+
+#ifndef BOOST_MEMORY_CALL
+#define BOOST_MEMORY_CALL
+#endif
+
+// -------------------------------------------------------------------------
+
+#ifndef __NS_BOOST_BEGIN
+#define __NS_BOOST_BEGIN	namespace boost {
+#define __NS_BOOST_END		}
 #endif
 
 // =========================================================================
@@ -46,6 +63,21 @@
 #else
 #define BOOST_MEMORY_ASSERT(e)
 #endif
+#endif
+
+// =========================================================================
+// Configurations
+
+#ifndef BOOST_MEMORY_ALLOC_PADDING
+#define BOOST_MEMORY_ALLOC_PADDING	32
+#endif
+
+#ifndef BOOST_MEMORY_BLOCK_TOTAL
+#define BOOST_MEMORY_BLOCK_TOTAL	16384	// 16k
+#endif
+
+#ifndef BOOST_MEMORY_BLOCK_SIZE
+#define BOOST_MEMORY_BLOCK_SIZE		(BOOST_MEMORY_BLOCK_TOTAL - BOOST_MEMORY_ALLOC_PADDING)
 #endif
 
 // =========================================================================
@@ -213,14 +245,6 @@ BOOST_DECL_INT_CTYPE(long);
 #define BOOST_ALLOC_ARRAY(alloc, Type, count)	((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
 
 // =========================================================================
-
-#ifndef _CrtSetDbgFlag
-
-#if defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
-
-#endif
 
 __NS_BOOST_BEGIN
 

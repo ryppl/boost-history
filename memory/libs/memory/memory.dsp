@@ -100,6 +100,10 @@ SOURCE=.\src\block_pool.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\..\..\memory\sandbox\libs\memory\memory.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\memory_w32.def
 # End Source File
 # Begin Source File

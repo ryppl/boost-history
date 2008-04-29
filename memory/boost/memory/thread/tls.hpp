@@ -35,6 +35,10 @@ private:
 	TLSINDEX m_key;
 
 public:
+	win_tls_key()
+		: m_key(TLS_OUT_OF_INDEXES) {
+	}
+
 	void BOOST_MEMORY_CALL create() {
 		m_key = TlsAlloc();
 	}
@@ -73,6 +77,10 @@ private:
 	pthread_key_t m_key;
 
 public:
+	pthread_tls_key()
+		: m_key(TLS_OUT_OF_INDEXES) {
+	}
+
 	void BOOST_MEMORY_CALL create() {
 		pthread_key_create(&m_key, NULL);
 	}
@@ -224,6 +232,7 @@ public:
 		void* p = m_key.get();
 		if (p == NULL) {
 			m_key.put(p = Factory::create());
+			BOOST_MEMORY_ASSERT(m_key.get() == p);
 		}
 		return *(Type*)p;
 	}
