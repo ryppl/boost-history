@@ -112,6 +112,7 @@ int main(void)
 	attrib_value_printer<meta_X::base_type> p(x);
 	//
 	bcout << "The type name is: "<< meta_X::base_name() << endl;
+	bcout << "The class has "<< meta_X::all_attributes::size::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	meta_X::all_attributes::for_each(p);
 	bcout << "---------------------------------------------------" << endl;
