@@ -16,6 +16,10 @@
 #include "system_alloc.hpp"
 #endif
 
+#ifndef __BOOST_MEMORY_POLICY_HPP__
+#include "policy.hpp"
+#endif
+
 __NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
@@ -29,14 +33,19 @@ private:
 
 public:
 	enum { MemBlockSize = _Policy::MemBlockSize };
-	enum { HeaderSize = sizeof(void*) };
-	enum { BlockSize = MemBlockSize - HeaderSize };
 	enum { IsGCAllocator = TRUE };
 
 	typedef _Alloc allocator_type;
 
+private:
+	enum { HeaderSize = sizeof(void*) };
+	enum { BlockSize = MemBlockSize - HeaderSize };
+
 #pragma pack(1)
 private:
+	struct _MemBlock;
+	friend struct _MemBlock;
+
 	struct _MemBlock
 	{
 		_MemBlock* pPrev;
@@ -62,19 +71,27 @@ private:
 		return (_MemBlock*)(m_begin - HeaderSize);
 	}
 
+	void BOOST_MEMORY_CALL _Init()
+	{
+		_MemBlock* pNew = (_MemBlock*)m_alloc.allocate(sizeof(_MemBlock));
+		pNew->pPrev = NULL;
+		m_begin = pNew->buffer;
+		m_end = (char*)pNew + m_alloc.alloc_size(pNew);
+	}
+
 public:
 	region_alloc() : m_destroyChain(NULL)
 	{
-		m_begin = m_end = (char*)HeaderSize;
+		_Init();
 	}
 	explicit region_alloc(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
-		m_begin = m_end = (char*)HeaderSize;
+		_Init();
 	}
 	explicit region_alloc(region_alloc& owner)
 		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
-		m_begin = m_end = (char*)HeaderSize;
+		_Init();
 	}
 
 	~region_alloc()
@@ -117,7 +134,7 @@ public:
 	template <class Type>
 	Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
 	{
-		Type* array = (Type*)destructor_traits<Type>::allocArrayBuf(*this, count);
+		Type* array = (Type*)destructor_traits<Type>::allocArray(*this, count);
 		return constructor_traits<Type>::constructArray(array, count);
 	}
 
@@ -192,14 +209,7 @@ public:
 // -------------------------------------------------------------------------
 // class auto_alloc
 
-class _sys_alloc
-{
-public:
-	enum { MemBlockSize = BOOST_MEMORY_BLOCK_SIZE };
-	typedef system_alloc allocator_type;
-};
-
-typedef region_alloc<_sys_alloc> auto_alloc;
+typedef region_alloc<policy::sys> auto_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $

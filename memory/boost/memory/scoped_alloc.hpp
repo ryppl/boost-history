@@ -60,9 +60,12 @@ private:
 	typedef typename _Policy::allocator_type _Alloc;
 	enum { m_cbBlock = _Policy::MemBlockSize };
 
+#pragma pack(1)
 	struct _Block {
 		_Block* next;
 	};
+#pragma pack()
+
 	_Block* m_freeList;
 
 	int m_nFree;
@@ -134,7 +137,7 @@ public:
 	}
 };
 
-typedef block_pool_imp<_sys_alloc> block_pool;
+typedef block_pool_imp<policy::sys> block_pool;
 
 // -------------------------------------------------------------------------
 // class tls_block_pool
@@ -173,14 +176,17 @@ typedef tls_block_pool_imp<int> tls_block_pool;
 
 typedef proxy_alloc<block_pool, tls_block_pool> proxy_block_pool;
 
-class _pool_alloc
+namespace policy {
+
+class pool : public sys
 {
 public:
-	enum { MemBlockSize = BOOST_MEMORY_BLOCK_SIZE };
 	typedef proxy_block_pool allocator_type;
 };
 
-typedef region_alloc<_pool_alloc> scoped_alloc;
+}
+
+typedef region_alloc<policy::pool> scoped_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: $

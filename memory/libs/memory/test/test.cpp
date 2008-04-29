@@ -10,6 +10,7 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 
+#include <boost/memory.hpp>
 #include <boost/memory/linklib.hpp>
 
 void testStlContainers();
@@ -17,7 +18,8 @@ void simpleExamples();
 
 int main()
 {
+	boost::tls_block_pool bp;
 	simpleExamples();
-	testStlContainers();
+//	testStlContainers();
 	return 0;
 }

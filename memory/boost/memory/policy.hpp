@@ -1,0 +1,130 @@
+//
+//  boost/memory/policy.hpp
+//
+//  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
+//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//
+#ifndef __BOOST_MEMORY_POLICY_HPP__
+#define __BOOST_MEMORY_POLICY_HPP__
+
+#ifndef __BOOST_MEMORY_SYSTEM_ALLOC_HPP__
+#include "system_alloc.hpp"
+#endif
+
+__NS_BOOST_BEGIN
+
+// -------------------------------------------------------------------------
+// class simple_gc_alloc
+
+template <class _SysAlloc>
+class simple_gc_alloc
+{
+#pragma pack(1)
+private:
+	struct _DestroyNode
+	{
+		_DestroyNode* pPrev;
+		destructor_t fnDestroy;
+	};
+	struct _MemBlock
+	{
+		_MemBlock* pPrev;
+	};
+#pragma pack()
+
+	_MemBlock* m_memChain;
+	_DestroyNode* m_destroyChain;
+
+public:
+	simple_gc_alloc()
+		: m_memChain(NULL), m_destroyChain(NULL)
+	{
+	}
+
+	void BOOST_MEMORY_CALL swap(simple_gc_alloc& o)
+	{
+		std::swap(m_memChain, o.m_memChain);
+		std::swap(m_destroyChain, o.m_destroyChain);
+	}
+
+	void BOOST_MEMORY_CALL clear()
+	{
+		while (m_destroyChain)
+		{
+			_DestroyNode* curr = m_destroyChain;
+			m_destroyChain = m_destroyChain->pPrev;
+			curr->fnDestroy(curr + 1);
+		}
+		while (m_memChain)
+		{
+			_MemBlock* curr = m_memChain;
+			m_memChain = m_memChain->pPrev;
+			_SysAlloc::deallocate(m_memChain);
+		}
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL destroy(Type* obj)
+	{
+		// no action
+	}
+
+	void* BOOST_MEMORY_CALL allocate(size_t cb)
+	{
+		_MemBlock* p = (_MemBlock*)_SysAlloc::allocate(cb + sizeof(_MemBlock));
+		p->pPrev = m_memChain;
+		m_memChain = p;
+		return p + 1;
+	}
+
+	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
+	{
+		_DestroyNode* pNode = (_DestroyNode*)allocate(cb + sizeof(_DestroyNode));
+		pNode->fnDestroy = fn;
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = pNode;
+		return pNode + 1;
+	}
+
+	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
+	{
+		return allocate(cb);
+	}
+
+	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
+	{
+		// no action
+	}
+};
+
+// -------------------------------------------------------------------------
+
+namespace policy {
+
+class sys
+{
+private:
+	enum { Default = 0 };
+
+public:
+	enum { MemBlockSize = BOOST_MEMORY_BLOCK_SIZE };
+	enum { AllocSizeBig = Default };
+	enum { RecycleSizeMin = 256 };
+
+	typedef system_alloc allocator_type;
+	typedef simple_gc_alloc<system_alloc> huge_gc_allocator;
+};
+
+}
+
+// -------------------------------------------------------------------------
+// $Log: policy.hpp,v $
+
+__NS_BOOST_END
+
+#endif /* __BOOST_MEMORY_POLICY_HPP__ */

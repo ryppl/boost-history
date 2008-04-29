@@ -26,12 +26,8 @@
 #include <malloc.h>	// _alloca
 #endif
 
-#ifndef _CrtSetDbgFlag
-
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(_INC_CRTDBG)
 #include <crtdbg.h> // _CrtSetDbgFlag
-#endif
-
 #endif
 
 // =========================================================================
@@ -131,12 +127,23 @@ struct destructor_traits
 	}
 
 	template <class AllocT>
-	static void* BOOST_MEMORY_CALL allocArrayBuf(AllocT& alloc, size_t count)
+	static void* BOOST_MEMORY_CALL allocArray(AllocT& alloc, size_t count)
 	{
-		array_destructor_header* hdr = (array_destructor_header*)alloc.allocate(
-			sizeof(array_destructor_header)+sizeof(Type)*count, destructArray);
+		array_destructor_header* hdr =
+			(array_destructor_header*)alloc.allocate(
+				sizeof(array_destructor_header)+sizeof(Type)*count, destructArray);
 		hdr->count = count;
 		return hdr + 1;
+	}
+
+    static void* BOOST_MEMORY_CALL getArrayBuffer(void* array)
+	{
+		return (array_destructor_header*)array - 1;
+	}
+
+    static size_t BOOST_MEMORY_CALL getArraySize(void* array)
+	{
+		return ((array_destructor_header*)array - 1)->count;
 	}
 };
 
@@ -164,8 +171,17 @@ struct destructor_traits< Type >											\
 	static void BOOST_MEMORY_CALL destructArrayN(Type* array, size_t count) {} \
 																			\
 	template <class AllocT>													\
-	static void* BOOST_MEMORY_CALL allocArrayBuf(AllocT& alloc, size_t count) {	\
+	static void* BOOST_MEMORY_CALL allocArray(AllocT& alloc, size_t count) {\
 		return alloc.allocate(sizeof(Type)*count);							\
+	}																		\
+																			\
+	static void* BOOST_MEMORY_CALL getArrayBuffer(void* array) {			\
+		return array;														\
+	}																		\
+																			\
+	static size_t BOOST_MEMORY_CALL getArraySize(void* array) {				\
+		BOOST_MEMORY_ASSERT( !"Don't call me!!!" );							\
+		return 0;															\
 	}																		\
 };																			\
 __NS_BOOST_END
@@ -250,7 +266,7 @@ __NS_BOOST_BEGIN
 
 inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 {
-#ifdef _CrtSetDbgFlag
+#if defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 #endif
 }

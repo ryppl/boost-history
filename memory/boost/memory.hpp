@@ -22,6 +22,10 @@
 #include "memory/scoped_alloc.hpp"
 #endif
 
+#ifndef __BOOST_MEMORY_GC_ALLOC_HPP__
+#include "memory/gc_alloc.hpp"
+#endif
+
 // -------------------------------------------------------------------------
 // class stl_alloc
 
