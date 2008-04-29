@@ -58,10 +58,10 @@ struct static_nontrivial_type_name
 , implementation<meta_type, meta_data, false>
 {
 private:
-	typedef typename implementation<meta_type, meta_data, true>  implementation_base_name;
-	typedef typename implementation<meta_type, meta_data, false> implementation_full_name;
+	typedef implementation<meta_type, meta_data, true>  implementation_base_name;
+	typedef implementation<meta_type, meta_data, false> implementation_full_name;
 
-#ifndef BOOST_MIRROR_USE_STATIC_NAME_STRINGS
+#ifdef BOOST_MIRROR_USE_DYNAMIC_NAME_STRINGS
 	inline static bchar* new_string(const size_t size)
 	{
 		assert(size != 0);
@@ -76,12 +76,12 @@ private:
 		return !str[0];
 	}
 
-	template <bool base_name>
-	static const bchar* get_name(mpl::bool_<base_name>)
+	template <bool format_base_name>
+	static const bchar* get_name(mpl::bool_<format_base_name>)
 	{
-		typedef typename implementation<meta_type, meta_data, base_name>
+		typedef implementation<meta_type, meta_data, format_base_name>
 			impl;
-#ifdef BOOST_MIRROR_USE_STATIC_NAME_STRINGS
+#ifndef BOOST_MIRROR_USE_DYNAMIC_NAME_STRINGS
 		static bchar the_name[impl::name_length+1] = {BOOST_STR_LIT("")};
 #else
 		static ::std::auto_ptr<bchar> the_name_holder(new_string(impl::name_length+1));

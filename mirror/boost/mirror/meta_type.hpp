@@ -199,6 +199,15 @@ struct meta_type<pointee_type*> : detail::static_pointer_type_name<
 /** Meta-types for arrays
  */
 template <class element_type, size_t size>
+struct meta_type<const element_type[size]> : detail::static_array_type_name<
+	meta_type<const element_type>, size
+>
+{
+	typedef typename meta_type<element_type>::scope scope;
+	typedef element_type base_type[size];
+};
+
+template <class element_type, size_t size>
 struct meta_type<element_type[size]> : detail::static_array_type_name<
 	meta_type<element_type>, size
 >

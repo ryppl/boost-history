@@ -335,7 +335,6 @@ struct meta_class : public meta_type<reflected_class>
 			template <int I>
 			struct own_attrib_meta_class_and_pos
 			{
-				typedef typename meta_class meta_class;
 				typedef typename mpl::int_<mpl::minus<
 					mpl::int_<I>,
 					typename mpl::size<inherited_member_attrib_type_list>::type

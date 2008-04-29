@@ -57,7 +57,7 @@ struct static_int_to_str
 	//
 	static bchar* convert(bchar* _str, size_t _max_len)
 	{
-		assert(_max_len > length::value);
+		assert(_max_len > size_t(length::value));
 		do_copy_to(_str, length());
 		_str[length::value] = BOOST_STR_LIT('\0');
 		return _str;
@@ -104,7 +104,7 @@ struct static_int_to_str_w_prefix
 	static bchar* convert(bchar* _str, size_t _max_len)
 	{
 		// check the length
-		assert(_max_len > length::value);
+		assert(_max_len > size_t(length::value));
 		// apply prefix
 		do_apply_prefix_to(_str, prefix_length());
 		// calculate offset

@@ -27,6 +27,30 @@
 
 #include <boost/mirror/meta_classes/boost_tuple.hpp>
 
+template <class a_class>
+class attrib_value_printer
+{
+public:
+                attrib_value_printer(a_class& _inst)
+                : inst(_inst){ }
+	
+                template <class meta_class, class meta_attributes, class iterator, class attrib_type>
+                void operator()(meta_class mc, meta_attributes ma, iterator pos, attrib_type*) const
+                {
+                        using namespace ::std;
+                        using namespace ::boost;
+                        using namespace ::boost::mirror;
+                        bcout <<
+                                " " <<
+                                ma.base_name(pos) <<
+                                " = " <<
+                                ma.get(inst, pos) <<
+                                endl;
+                }
+private:
+	a_class& inst;
+};
+
 
 int main(void)
 {
@@ -82,12 +106,16 @@ int main(void)
 	assert(meta_T1::all_attributes::get(t1, mpl::int_<0>()) == tuples::get<0>(t1));
 	assert(meta_T1::all_attributes::get(t1, mpl::int_<1>()) == tuples::get<1>(t1));
 	//
+	//
 	tuple<int, int, int, int, int, int, int, int, int, int> x(0,1,2,3,4,5,6,7,8,9);
+	typedef BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x)) meta_X;
+	attrib_value_printer<meta_X::base_type> p(x);
 	//
-	typedef BOOST_MIRROR_REFLECT_TYPEOF(x) meta_X;
-	//
-	//bcout << meta_X::all_attributes::base_name(mpl::int_<0>()) << " = ";
-	//bcout << meta_X::all_attributes::get(x, mpl::int_<0>()) << endl;
+	bcout << "The type name is: "<< meta_X::base_name() << endl;
+	bcout << "---------------------------------------------------" << endl;
+	meta_X::all_attributes::for_each(p);
+	bcout << "---------------------------------------------------" << endl;
+	bcout << "Finished" << endl;
 
 	return 0;
 }

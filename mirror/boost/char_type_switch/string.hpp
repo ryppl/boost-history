@@ -51,8 +51,10 @@ namespace boost {
 // disable the deprecated function warning on msvc
 // this warning is issued when not using the "safe"
 // versions of string functions like strcpy_s (vs. strcpy)
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#endif
 
 
 /** string compare
@@ -101,8 +103,9 @@ inline bchar* bstrncpy(bchar* dst, const bchar* src, size_t count)
 }
 
 // enable the deprecated function warnings on msvc
+#ifdef _MSC_VER
 #pragma warning(pop)
-
+#endif
 
 
 } // namespace boost
