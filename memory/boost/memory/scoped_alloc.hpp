@@ -45,8 +45,9 @@ public:
 
 public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)	{ return m_alloc->allocate(cb); }
-	void BOOST_MEMORY_CALL deallocate(void* p)	{ m_alloc->deallocate(p); }
+	void BOOST_MEMORY_CALL deallocate(void* p) { m_alloc->deallocate(p); }
 	void BOOST_MEMORY_CALL swap(proxy_alloc& o)	{ std::swap(m_alloc, o.m_alloc); }
+	size_t BOOST_MEMORY_CALL alloc_size(void* p) const { return m_alloc->alloc_size(p); }
 };
 
 // -------------------------------------------------------------------------
@@ -116,6 +117,11 @@ public:
 		}
 	}
 
+	static size_t BOOST_MEMORY_CALL alloc_size(void* p)
+	{
+		return _Alloc::alloc_size(p);
+	}
+
 	void BOOST_MEMORY_CALL clear()
 	{
 		while (m_freeList)
@@ -174,7 +180,7 @@ public:
 	typedef proxy_block_pool allocator_type;
 };
 
-typedef gc_alloc_imp<_pool_alloc> scoped_alloc;
+typedef region_alloc<_pool_alloc> scoped_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: $

@@ -19,10 +19,10 @@
 __NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
-// class gc_alloc_imp
+// class region_alloc
 
 template <class _Policy>
-class gc_alloc_imp
+class region_alloc
 {
 private:
 	typedef typename _Policy::allocator_type _Alloc;
@@ -31,10 +31,11 @@ public:
 	enum { MemBlockSize = _Policy::MemBlockSize };
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
-	enum { IsAutoFreeAllocator = 1 };
+	enum { IsGCAllocator = TRUE };
 
 	typedef _Alloc allocator_type;
 
+#pragma pack(1)
 private:
 	struct _MemBlock
 	{
@@ -46,6 +47,7 @@ private:
 		_DestroyNode* pPrev;
 		destructor_t fnDestroy;
 	};
+#pragma pack()
 	
 	char* m_begin;
 	char* m_end;
@@ -53,7 +55,7 @@ private:
 	_Alloc m_alloc;
 
 private:
-	const gc_alloc_imp& operator=(const gc_alloc_imp&);
+	const region_alloc& operator=(const region_alloc&);
 
 	_MemBlock* BOOST_MEMORY_CALL _ChainHeader() const
 	{
@@ -61,26 +63,26 @@ private:
 	}
 
 public:
-	gc_alloc_imp() : m_destroyChain(NULL)
+	region_alloc() : m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	explicit gc_alloc_imp(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	explicit region_alloc(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	explicit gc_alloc_imp(gc_alloc_imp& owner)
+	explicit region_alloc(region_alloc& owner)
 		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
 
-	~gc_alloc_imp()
+	~region_alloc()
 	{
 		clear();
 	}
 
-	void BOOST_MEMORY_CALL swap(gc_alloc_imp& o)
+	void BOOST_MEMORY_CALL swap(region_alloc& o)
 	{
 		std::swap(m_begin, o.m_begin);
 		std::swap(m_end, o.m_end);
@@ -150,7 +152,7 @@ public:
 				_MemBlock* pNew = (_MemBlock*)m_alloc.allocate(sizeof(_MemBlock));
 				pNew->pPrev = _ChainHeader();
 				m_begin = pNew->buffer;
-				m_end = m_begin + BlockSize;
+				m_end = (char*)pNew + m_alloc.alloc_size(pNew);
 			}
 		}
 		return m_end -= cb;
@@ -197,7 +199,7 @@ public:
 	typedef system_alloc allocator_type;
 };
 
-typedef gc_alloc_imp<_sys_alloc> auto_alloc;
+typedef region_alloc<_sys_alloc> auto_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $
