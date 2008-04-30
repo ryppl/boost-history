@@ -10,7 +10,6 @@ depend on a separate system lib.
 
 $Id$
 */
-#define BOOST_FILESYSTEM_SOURCE 
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <ostream>
