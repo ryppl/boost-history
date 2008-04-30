@@ -63,7 +63,7 @@ public:
 	stl_allocator(AllocT& alloc) : m_alloc(&alloc) {}
 
     template <class U>
-	stl_allocator(const stl_allocator<U, AllocT>& rhs) : m_alloc(rhs._Getalloc()) {}
+	stl_allocator(const stl_allocator<U, AllocT>& rhs) : m_alloc(rhs.inner_GetAlloc()) {}
 
 	pointer allocate(size_type count, const void* = NULL)
 		{ return (pointer)m_alloc->allocate(count * sizeof(Type)); }
@@ -78,7 +78,7 @@ public:
 	char* _Charalloc(size_type cb)
 		{ return (char*)m_alloc->allocate(cb); }
 
-	AllocT* _Getalloc() const { return m_alloc; }
+	AllocT* inner_GetAlloc() const { return m_alloc; }
 };
 
 #if defined(BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE)
