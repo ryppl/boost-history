@@ -9,33 +9,33 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_AUTO_ALLOC_HPP_
-#define _BOOST_MEMORY_AUTO_ALLOC_HPP_
+#ifndef BOOST_MEMORY_AUTO_ALLOC_HPP
+#define BOOST_MEMORY_AUTO_ALLOC_HPP
 
-#ifndef _BOOST_MEMORY_SYSTEM_ALLOC_HPP_
+#ifndef BOOST_MEMORY_SYSTEM_ALLOC_HPP
 #include "system_alloc.hpp"
 #endif
 
-#ifndef _BOOST_MEMORY_POLICY_HPP_
+#ifndef BOOST_MEMORY_POLICY_HPP
 #include "policy.hpp"
 #endif
 
-_NS_BOOST_BEGIN
+NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class region_alloc
 
-template <class _Policy>
+template <class PolicyT>
 class region_alloc
 {
 private:
-	typedef typename _Policy::allocator_type _Alloc;
+	typedef typename PolicyT::allocator_type AllocT;
 
 public:
-	enum { MemBlockSize = _Policy::MemBlockSize };
+	enum { MemBlockSize = PolicyT::MemBlockSize };
 	enum { IsGCAllocator = TRUE };
 
-	typedef _Alloc allocator_type;
+	typedef AllocT allocator_type;
 
 private:
 	enum { HeaderSize = sizeof(void*) };
@@ -43,37 +43,37 @@ private:
 
 #pragma pack(1)
 private:
-	struct _MemBlock;
-	friend struct _MemBlock;
+	struct MemBlock;
+	friend struct MemBlock;
 
-	struct _MemBlock
+	struct MemBlock
 	{
-		_MemBlock* pPrev;
+		MemBlock* pPrev;
 		char buffer[BlockSize];
 	};
-	struct _DestroyNode
+	struct DestroyNode
 	{
-		_DestroyNode* pPrev;
+		DestroyNode* pPrev;
 		destructor_t fnDestroy;
 	};
 #pragma pack()
 	
 	char* m_begin;
 	char* m_end;
-	_DestroyNode* m_destroyChain;
-	_Alloc m_alloc;
+	DestroyNode* m_destroyChain;
+	AllocT m_alloc;
 
 private:
 	const region_alloc& operator=(const region_alloc&);
 
-	_MemBlock* BOOST_MEMORY_CALL _ChainHeader() const
+	MemBlock* BOOST_MEMORY_CALL _chainHeader() const
 	{
-		return (_MemBlock*)(m_begin - HeaderSize);
+		return (MemBlock*)(m_begin - HeaderSize);
 	}
 
-	void BOOST_MEMORY_CALL _Init()
+	void BOOST_MEMORY_CALL _init()
 	{
-		_MemBlock* pNew = (_MemBlock*)m_alloc.allocate(sizeof(_MemBlock));
+		MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
 		pNew->pPrev = NULL;
 		m_begin = pNew->buffer;
 		m_end = (char*)pNew + m_alloc.alloc_size(pNew);
@@ -82,16 +82,16 @@ private:
 public:
 	region_alloc() : m_destroyChain(NULL)
 	{
-		_Init();
+		_init();
 	}
-	explicit region_alloc(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	explicit region_alloc(AllocT alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
-		_Init();
+		_init();
 	}
 	explicit region_alloc(region_alloc& owner)
 		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
-		_Init();
+		_init();
 	}
 
 	~region_alloc()
@@ -111,14 +111,14 @@ public:
 	{
 		while (m_destroyChain)
 		{
-			_DestroyNode* curr = m_destroyChain;
+			DestroyNode* curr = m_destroyChain;
 			m_destroyChain = m_destroyChain->pPrev;
 			curr->fnDestroy(curr + 1);
 		}
-		_MemBlock* pHeader = _ChainHeader();
+		MemBlock* pHeader = _chainHeader();
 		while (pHeader)
 		{
-			_MemBlock* curr = pHeader;
+			MemBlock* curr = pHeader;
 			pHeader = pHeader->pPrev;
 			m_alloc.deallocate(curr);
 		}
@@ -150,8 +150,8 @@ public:
 		{
 			if (cb >= BlockSize)
 			{
-				_MemBlock* pHeader = _ChainHeader();
-				_MemBlock* pNew = (_MemBlock*)m_alloc.allocate(HeaderSize + cb);
+				MemBlock* pHeader = _chainHeader();
+				MemBlock* pNew = (MemBlock*)m_alloc.allocate(HeaderSize + cb);
 				if (pHeader)
 				{
 					pNew->pPrev = pHeader->pPrev;
@@ -166,8 +166,8 @@ public:
 			}
 			else
 			{
-				_MemBlock* pNew = (_MemBlock*)m_alloc.allocate(sizeof(_MemBlock));
-				pNew->pPrev = _ChainHeader();
+				MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
+				pNew->pPrev = _chainHeader();
 				m_begin = pNew->buffer;
 				m_end = (char*)pNew + m_alloc.alloc_size(pNew);
 			}
@@ -177,7 +177,7 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
-		_DestroyNode* pNode = (_DestroyNode*)allocate(sizeof(_DestroyNode) + cb);
+		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
 		pNode->fnDestroy = fn;
 		pNode->pPrev = m_destroyChain;
 		m_destroyChain = pNode;
@@ -203,7 +203,7 @@ public:
 		// no action
 	}
 
-	_BOOST_FAKE_DBG_ALLOCATE();
+	BOOST_FAKE_DBG_ALLOCATE_();
 };
 
 // -------------------------------------------------------------------------
@@ -214,6 +214,6 @@ typedef region_alloc<policy::sys> auto_alloc;
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $
 
-_NS_BOOST_END
+NS_BOOST_END
 
-#endif /* _BOOST_MEMORY_AUTO_ALLOC_HPP_ */
+#endif /* BOOST_MEMORY_AUTO_ALLOC_HPP */

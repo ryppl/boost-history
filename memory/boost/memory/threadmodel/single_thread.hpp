@@ -9,14 +9,14 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H_
-#define _BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H_
+#ifndef BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H
+#define BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H
 
-#ifndef _BOOST_MEMORY_BASIC_HPP_
+#ifndef BOOST_MEMORY_BASIC_HPP
 #include "../basic.hpp"
 #endif
 
-_NS_BOOST_BEGIN
+NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // struct refcount_st
@@ -56,6 +56,6 @@ public:
 // -------------------------------------------------------------------------
 //	$Log: $
 
-_NS_BOOST_END
+NS_BOOST_END
 
-#endif /* _BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H_ */
+#endif /* BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H */

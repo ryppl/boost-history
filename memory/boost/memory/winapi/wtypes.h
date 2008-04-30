@@ -9,14 +9,14 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_WINAPI_WTYPES_H_
-#define _BOOST_MEMORY_WINAPI_WTYPES_H_
+#ifndef BOOST_MEMORY_WINAPI_WTYPES_H
+#define BOOST_MEMORY_WINAPI_WTYPES_H
 
 #if !defined(BOOST_NO_WINSDK)
 #error "Don't include <winapi/wtypes.h>"
 #endif
 
-#ifndef _BOOST_MEMORY_WINAPI_WINDEF_H_
+#ifndef BOOST_MEMORY_WINAPI_WINDEF_H
 #include "windef.h"
 #endif
 
@@ -232,4 +232,4 @@ typedef ACCESS_MASK REGSAM;
 // =========================================================================
 // $Log: $
 
-#endif /* _BOOST_MEMORY_WINAPI_WTYPES_H_ */
+#endif /* BOOST_MEMORY_WINAPI_WTYPES_H */

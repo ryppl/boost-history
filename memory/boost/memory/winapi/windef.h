@@ -9,8 +9,8 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_WINAPI_WINDEF_H_
-#define _BOOST_MEMORY_WINAPI_WINDEF_H_
+#ifndef BOOST_MEMORY_WINAPI_WINDEF_H
+#define BOOST_MEMORY_WINAPI_WINDEF_H
 
 #ifndef BOOST_NO_WINSDK
 #error "Don't include <winapi/windef.h>"
@@ -565,4 +565,4 @@ typedef ACCESS_MASK *PACCESS_MASK;
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* _BOOST_MEMORY_WINAPI_WINDEF_H_ */
+#endif /* BOOST_MEMORY_WINAPI_WINDEF_H */

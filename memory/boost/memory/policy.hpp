@@ -9,36 +9,36 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_POLICY_HPP_
-#define _BOOST_MEMORY_POLICY_HPP_
+#ifndef BOOST_MEMORY_POLICY_HPP
+#define BOOST_MEMORY_POLICY_HPP
 
-#ifndef _BOOST_MEMORY_SYSTEM_ALLOC_HPP_
+#ifndef BOOST_MEMORY_SYSTEM_ALLOC_HPP
 #include "system_alloc.hpp"
 #endif
 
-_NS_BOOST_BEGIN
+NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class simple_gc_alloc
 
-template <class _SysAlloc>
+template <class SysAllocT>
 class simple_gc_alloc
 {
 #pragma pack(1)
 private:
-	struct _DestroyNode
+	struct DestroyNode
 	{
-		_DestroyNode* pPrev;
+		DestroyNode* pPrev;
 		destructor_t fnDestroy;
 	};
-	struct _MemBlock
+	struct MemBlock
 	{
-		_MemBlock* pPrev;
+		MemBlock* pPrev;
 	};
 #pragma pack()
 
-	_MemBlock* m_memChain;
-	_DestroyNode* m_destroyChain;
+	MemBlock* m_memChain;
+	DestroyNode* m_destroyChain;
 
 public:
 	simple_gc_alloc()
@@ -56,15 +56,15 @@ public:
 	{
 		while (m_destroyChain)
 		{
-			_DestroyNode* curr = m_destroyChain;
+			DestroyNode* curr = m_destroyChain;
 			m_destroyChain = m_destroyChain->pPrev;
 			curr->fnDestroy(curr + 1);
 		}
 		while (m_memChain)
 		{
-			_MemBlock* curr = m_memChain;
+			MemBlock* curr = m_memChain;
 			m_memChain = m_memChain->pPrev;
-			_SysAlloc::deallocate(curr);
+			SysAllocT::deallocate(curr);
 		}
 	}
 
@@ -89,7 +89,7 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		_MemBlock* p = (_MemBlock*)_SysAlloc::allocate(cb + sizeof(_MemBlock));
+		MemBlock* p = (MemBlock*)SysAllocT::allocate(cb + sizeof(MemBlock));
 		p->pPrev = m_memChain;
 		m_memChain = p;
 		return p + 1;
@@ -97,7 +97,7 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
-		_DestroyNode* pNode = (_DestroyNode*)allocate(cb + sizeof(_DestroyNode));
+		DestroyNode* pNode = (DestroyNode*)allocate(cb + sizeof(DestroyNode));
 		pNode->fnDestroy = fn;
 		pNode->pPrev = m_destroyChain;
 		m_destroyChain = pNode;
@@ -141,6 +141,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: policy.hpp,v $
 
-_NS_BOOST_END
+NS_BOOST_END
 
-#endif /* _BOOST_MEMORY_POLICY_HPP_ */
+#endif /* BOOST_MEMORY_POLICY_HPP */

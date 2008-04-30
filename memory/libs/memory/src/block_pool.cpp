@@ -16,11 +16,11 @@
 
 using namespace boost;
 
-tls_block_pool_t _tls_blockPool;
+tls_block_pool_t g_tls_blockPool;
 
 STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool()
 {
-	return &_tls_blockPool;
+	return &g_tls_blockPool;
 }
 
 // -------------------------------------------------------------------------
@@ -29,8 +29,8 @@ STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool()
 class tls_block_pool_init
 {
 public:
-	tls_block_pool_init() { _tls_blockPool.init(); }
-	~tls_block_pool_init() { _tls_blockPool.term(); }
+	tls_block_pool_init() { g_tls_blockPool.init(); }
+	~tls_block_pool_init() { g_tls_blockPool.term(); }
 };
 
 tls_block_pool_init _tls_blockPoolInit;

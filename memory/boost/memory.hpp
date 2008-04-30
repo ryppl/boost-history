@@ -9,45 +9,45 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_HPP_
-#define _BOOST_MEMORY_HPP_
+#ifndef BOOST_MEMORY_HPP
+#define BOOST_MEMORY_HPP
 
 // -------------------------------------------------------------------------
 
-#ifndef _BOOST_MEMORY_AUTO_ALLOC_HPP_
+#ifndef BOOST_MEMORY_AUTO_ALLOC_HPP
 #include "memory/auto_alloc.hpp"
 #endif
 
-#ifndef _BOOST_MEMORY_SCOPED_ALLOC_HPP_
+#ifndef BOOST_MEMORY_SCOPED_ALLOC_HPP
 #include "memory/scoped_alloc.hpp"
 #endif
 
-#ifndef _BOOST_MEMORY_GC_ALLOC_HPP_
+#ifndef BOOST_MEMORY_GC_ALLOC_HPP
 #include "memory/gc_alloc.hpp"
 #endif
 
 // -------------------------------------------------------------------------
 // class stl_alloc
 
-_NS_BOOST_BEGIN
+NS_BOOST_BEGIN
 
-template <class _Ty, class _Alloc = scoped_alloc>
+template <class Type, class AllocT = scoped_alloc>
 class stl_alloc
 {
 private:
-	_Alloc* m_alloc;
+	AllocT* m_alloc;
 
 public:
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef _Ty* pointer;
-	typedef const _Ty* const_pointer;
-	typedef _Ty& reference;
-	typedef const _Ty& const_reference;
-	typedef _Ty value_type;
+	typedef Type* pointer;
+	typedef const Type* const_pointer;
+	typedef Type& reference;
+	typedef const Type& const_reference;
+	typedef Type value_type;
 
     template <class U>
-    struct rebind { typedef stl_alloc<U, _Alloc> other; };
+    struct rebind { typedef stl_alloc<U, AllocT> other; };
 
 public:
 	pointer address(reference val) const
@@ -56,29 +56,29 @@ public:
 		{ return &val; }
 
 	size_type max_size() const
-		{ size_type count = (size_type)(-1) / sizeof (_Ty);
+		{ size_type count = (size_type)(-1) / sizeof (Type);
 		  return (0 < count ? count : 1); }
 
 public:
-	stl_alloc(_Alloc& alloc) : m_alloc(&alloc) {}
+	stl_alloc(AllocT& alloc) : m_alloc(&alloc) {}
 
     template <class U>
-	stl_alloc(const stl_alloc<U, _Alloc>& rhs) : m_alloc(rhs._Getalloc()) {}
+	stl_alloc(const stl_alloc<U, AllocT>& rhs) : m_alloc(rhs._Getalloc()) {}
 
 	pointer allocate(size_type count, const void* = NULL)
-		{ return (pointer)m_alloc->allocate(count * sizeof(_Ty)); }
+		{ return (pointer)m_alloc->allocate(count * sizeof(Type)); }
 	void deallocate(void* p, size_type cb)
 		{ m_alloc->deallocate(p, cb); }
-	void construct(pointer p, const _Ty& val)
-		{ new(p) _Ty(val); }
+	void construct(pointer p, const Type& val)
+		{ new(p) Type(val); }
 	void destroy(pointer p)
-		{ p->~_Ty(); }
+		{ p->~Type(); }
 
 public:
 	char* _Charalloc(size_type cb)
 		{ return (char*)m_alloc->allocate(cb); }
 
-	_Alloc* _Getalloc() const { return m_alloc; }
+	AllocT* _Getalloc() const { return m_alloc; }
 };
 
 template<> class stl_alloc<void, scoped_alloc>
@@ -101,21 +101,21 @@ template<> class stl_alloc<void, auto_alloc>
     struct rebind { typedef stl_alloc<U, scoped_alloc> other; };
 };
 
-template <class _Ty, class _Alloc>
-inline bool operator==(const stl_alloc<_Ty, _Alloc>&,
-                       const stl_alloc<_Ty, _Alloc>&) {
+template <class Type, class AllocT>
+inline bool operator==(const stl_alloc<Type, AllocT>&,
+                       const stl_alloc<Type, AllocT>&) {
     return true;
 }
 
-template <class _Ty, class _Alloc>
-inline bool operator!=(const stl_alloc<_Ty, _Alloc>&,
-                       const stl_alloc<_Ty, _Alloc>&) {
+template <class Type, class AllocT>
+inline bool operator!=(const stl_alloc<Type, AllocT>&,
+                       const stl_alloc<Type, AllocT>&) {
     return false;
 }
 
-_NS_BOOST_END
+NS_BOOST_END
 
 // -------------------------------------------------------------------------
 // $Log: memory.hpp,v $
 
-#endif /* _BOOST_MEMORY_HPP_ */
+#endif /* BOOST_MEMORY_HPP */

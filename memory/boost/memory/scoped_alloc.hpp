@@ -9,18 +9,18 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_SCOPED_ALLOC_HPP_
-#define _BOOST_MEMORY_SCOPED_ALLOC_HPP_
+#ifndef BOOST_MEMORY_SCOPED_ALLOC_HPP
+#define BOOST_MEMORY_SCOPED_ALLOC_HPP
 
-#ifndef _BOOST_MEMORY_BASIC_HPP_
+#ifndef BOOST_MEMORY_BASIC_HPP
 #include "basic.hpp"
 #endif
 
-#ifndef _BOOST_MEMORY_AUTO_ALLOC_HPP_
+#ifndef BOOST_MEMORY_AUTO_ALLOC_HPP
 #include "auto_alloc.hpp"
 #endif
 
-#ifndef _BOOST_MEMORY_THREAD_TLS_HPP_
+#ifndef BOOST_MEMORY_THREAD_TLS_HPP
 #include "thread/tls.hpp"
 #endif
 
@@ -28,7 +28,7 @@
 #include <climits> // INT_MAX
 #endif
 
-_NS_BOOST_BEGIN
+NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class proxy_alloc
@@ -53,20 +53,20 @@ public:
 // -------------------------------------------------------------------------
 // class block_pool
 
-template <class _Policy>
+template <class PolicyT>
 class block_pool_imp
 {
 private:
-	typedef typename _Policy::allocator_type _Alloc;
-	enum { m_cbBlock = _Policy::MemBlockSize };
+	typedef typename PolicyT::allocator_type AllocT;
+	enum { m_cbBlock = PolicyT::MemBlockSize };
 
 #pragma pack(1)
-	struct _Block {
-		_Block* next;
+	struct Block {
+		Block* next;
 	};
 #pragma pack()
 
-	_Block* m_freeList;
+	Block* m_freeList;
 
 	int m_nFree;
 	const int m_nFreeLimit;
@@ -92,28 +92,28 @@ public:
 		BOOST_MEMORY_ASSERT(cb >= (size_t)m_cbBlock);
 
 		if (cb > (size_t)m_cbBlock)
-			return _Alloc::allocate(cb);
+			return AllocT::allocate(cb);
 		else
 		{
 			if (m_freeList)
 			{
-				BOOST_MEMORY_ASSERT(_Alloc::alloc_size(m_freeList) >= cb);
-				_Block* blk = m_freeList;
+				BOOST_MEMORY_ASSERT(AllocT::alloc_size(m_freeList) >= cb);
+				Block* blk = m_freeList;
 				m_freeList = blk->next;
 				--m_nFree;
 				return blk;
 			}
-			return _Alloc::allocate(m_cbBlock);
+			return AllocT::allocate(m_cbBlock);
 		}
 	}
 
 	void BOOST_MEMORY_CALL deallocate(void* p)
 	{
 		if (m_nFree >= m_nFreeLimit) {
-			_Alloc::deallocate(p);
+			AllocT::deallocate(p);
 		}
 		else {
-			_Block* blk = (_Block*)p;
+			Block* blk = (Block*)p;
 			blk->next = m_freeList;
 			m_freeList = blk;
 			++m_nFree;
@@ -122,16 +122,16 @@ public:
 
 	static size_t BOOST_MEMORY_CALL alloc_size(void* p)
 	{
-		return _Alloc::alloc_size(p);
+		return AllocT::alloc_size(p);
 	}
 
 	void BOOST_MEMORY_CALL clear()
 	{
 		while (m_freeList)
 		{
-			_Block* blk = m_freeList;
+			Block* blk = m_freeList;
 			m_freeList = blk->next;
-			_Alloc::deallocate(blk);
+			AllocT::deallocate(blk);
 		}
 		m_nFree = 0;
 	}
@@ -146,7 +146,7 @@ typedef tls_object<block_pool> tls_block_pool_t;
 
 STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool();
 
-template <class _Unused>
+template <class Unused>
 class tls_block_pool_imp
 {
 private:
@@ -166,8 +166,8 @@ public:
 	}
 };
 
-template <class _Unused>
-tls_block_pool_t* tls_block_pool_imp<_Unused>::_tls_blockPool = _boost_TlsBlockPool();
+template <class Unused>
+tls_block_pool_t* tls_block_pool_imp<Unused>::_tls_blockPool = _boost_TlsBlockPool();
 
 typedef tls_block_pool_imp<int> tls_block_pool;
 
@@ -191,6 +191,6 @@ typedef region_alloc<policy::pool> scoped_alloc;
 // -------------------------------------------------------------------------
 // $Log: $
 
-_NS_BOOST_END
+NS_BOOST_END
 
-#endif /* _BOOST_MEMORY_SCOPED_ALLOC_HPP_ */
+#endif /* BOOST_MEMORY_SCOPED_ALLOC_HPP */

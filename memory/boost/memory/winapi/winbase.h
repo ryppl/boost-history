@@ -9,8 +9,8 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_WINAPI_WINBASE_H_
-#define _BOOST_MEMORY_WINAPI_WINBASE_H_
+#ifndef BOOST_MEMORY_WINAPI_WINBASE_H
+#define BOOST_MEMORY_WINAPI_WINBASE_H
 
 #if defined(_WIN32)
 
@@ -26,11 +26,11 @@
 
 #define BOOST_NO_WINSDK
 
-#ifndef _BOOST_MEMORY_WINAPI_WTYPES_H_
+#ifndef BOOST_MEMORY_WINAPI_WTYPES_H
 #include "wtypes.h"
 #endif
 
-#ifndef _BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP_
+#ifndef BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP
 #include "posix/pthread.hpp"
 #endif
 
@@ -39,4 +39,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* _BOOST_MEMORY_WINAPI_WINBASE_H_ */
+#endif /* BOOST_MEMORY_WINAPI_WINBASE_H */

@@ -9,8 +9,8 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef _BOOST_MEMORY_STL_QUEUE_HPP_
-#define _BOOST_MEMORY_STL_QUEUE_HPP_
+#ifndef BOOST_MEMORY_STL_QUEUE_HPP
+#define BOOST_MEMORY_STL_QUEUE_HPP
 
 #if !defined(_DEQUE_) && !defined(_DEQUE)
 #include <deque> // std::deque
@@ -24,63 +24,63 @@
 #include <algorithm> // std::make_heap, etc
 #endif
 
-#ifndef _NS_BOOST_BEGIN
-#define _NS_BOOST_BEGIN	namespace boost {
-#define _NS_BOOST_END	}
+#ifndef NS_BOOST_BEGIN
+#define NS_BOOST_BEGIN	namespace boost {
+#define NS_BOOST_END	}
 #endif
 
-_NS_BOOST_BEGIN
+NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 
-template <class _Tp, 
-          class _Sequence = std::deque<_Tp>,
-          class _Pred = std::less<_Tp> >
+template <class Type, 
+          class Sequence = std::deque<Type>,
+          class Pred = std::less<Type> >
 class priority_queue
 {
 public:
-  typedef typename _Sequence::value_type      value_type;
-  typedef typename _Sequence::size_type       size_type;
-  typedef          _Sequence                  container_type;
+  typedef typename Sequence::value_type      value_type;
+  typedef typename Sequence::size_type       size_type;
+  typedef          Sequence                  container_type;
 
-  typedef typename _Sequence::reference       reference;
-  typedef typename _Sequence::const_reference const_reference;
+  typedef typename Sequence::reference       reference;
+  typedef typename Sequence::const_reference const_reference;
 
 protected:
-  _Sequence m_coll;
-  _Pred m_pred;
+  Sequence m_coll;
+  Pred m_pred;
 
 public:
   priority_queue() {}
-  explicit priority_queue(const _Pred& __x) :  m_coll(), m_pred(__x) {}
-  priority_queue(const _Pred& __x, const _Sequence& __s) 
-    : m_coll(__s), m_pred(__x) 
+  explicit priority_queue(const Pred& x) :  m_coll(), m_pred(x) {}
+  priority_queue(const Pred& x, const Sequence& s) 
+    : m_coll(s), m_pred(x) 
     { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
-  template <class _InputIterator>
-  priority_queue(_InputIterator __first, _InputIterator __last) 
-    : m_coll(__first, __last) { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
+  template <class InputIterator>
+  priority_queue(InputIterator first, InputIterator last) 
+    : m_coll(first, last) { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
-  template <class _InputIterator>
-  priority_queue(_InputIterator __first, 
-                 _InputIterator __last, const _Pred& __x)
-    : m_coll(__first, __last), m_pred(__x) 
+  template <class InputIterator>
+  priority_queue(InputIterator first, 
+                 InputIterator last, const Pred& x)
+    : m_coll(first, last), m_pred(x) 
     { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
-  template <class _InputIterator>
-  priority_queue(_InputIterator __first, _InputIterator __last,
-                 const _Pred& __x, const _Sequence& __s)
-  : m_coll(__s), m_pred(__x)
+  template <class InputIterator>
+  priority_queue(InputIterator first, InputIterator last,
+                 const Pred& x, const Sequence& s)
+  : m_coll(s), m_pred(x)
   {
-    m_coll.insert(m_coll.end(), __first, __last);
+    m_coll.insert(m_coll.end(), first, last);
     std::make_heap(m_coll.begin(), m_coll.end(), m_pred);
   }
 
   bool empty() const { return m_coll.empty(); }
   size_type size() const { return m_coll.size(); }
   const_reference top() const { return m_coll.front(); }
-  void push(const value_type& __x) {
-    m_coll.push_back(__x); 
+  void push(const value_type& x) {
+    m_coll.push_back(x); 
 	std::push_heap(m_coll.begin(), m_coll.end(), m_pred);
   }
   void pop() {
@@ -99,6 +99,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-_NS_BOOST_END
+NS_BOOST_END
 
-#endif /* _BOOST_MEMORY_STL_QUEUE_HPP_ */
+#endif /* BOOST_MEMORY_STL_QUEUE_HPP */
