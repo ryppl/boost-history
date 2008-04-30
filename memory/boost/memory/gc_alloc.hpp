@@ -395,6 +395,38 @@ public:
 		}
 	}
 
+private:
+	template <class Type>
+	void BOOST_MEMORY_CALL _Destroy(Type* obj, destructor_t)
+	{
+		obj->~Type();
+		_MemHeaderEx* p = (_MemHeaderEx*)obj - 1;
+		p->blkType = nodeFree;
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL _Destroy(Type* obj, int)
+	{
+		_MemHeader* p = (_MemHeader*)obj - 1;
+		p->blkType = nodeFree;
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL _DestroyArray(Type* array, size_t count, destructor_t)
+	{
+		destructor_traits<Type>::destructArrayN(array, count);
+		void* pData = destructor_traits<Type>::getArrayBuffer(array);
+		_MemHeaderEx* p = (_MemHeaderEx*)pData - 1;
+		p->blkType = nodeFree;
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL _DestroyArray(Type* array, size_t count, int)
+	{
+		_MemHeader* p = (_MemHeader*)array - 1;
+		p->blkType = nodeFree;
+	}
+
 public:
 	template <class Type>
 	void BOOST_MEMORY_CALL destroy(Type* obj)
@@ -402,10 +434,7 @@ public:
 		BOOST_MEMORY_ASSERT( _IsValid(obj) );
 		BOOST_MEMORY_ASSERT( sizeof(Type) < AllocSizeHuge );
 
-		obj->~Type();
-
-		_MemHeaderEx* p = (_MemHeaderEx*)obj - 1;
-		p->blkType = nodeFree;
+		_Destroy(obj, destructor_traits<Type>::destruct);
 	}
 
 	template <class Type>
@@ -431,10 +460,7 @@ public:
 		}
 		else
 		{
-			destructor_traits<Type>::destructArrayN(array, count);
-			void* pData = destructor_traits<Type>::getArrayBuffer(array);
-			_MemHeaderEx* p = (_MemHeaderEx*)pData - 1;
-			p->blkType = nodeFree;
+			_DestroyArray(array, count, destructor_traits<Type>::destruct);
 		}
 	}
 

@@ -48,32 +48,32 @@ public:
 
 protected:
   _Sequence m_coll;
-  _Pred comp;
+  _Pred m_pred;
 
 public:
   priority_queue() {}
-  explicit priority_queue(const _Pred& __x) :  m_coll(), comp(__x) {}
+  explicit priority_queue(const _Pred& __x) :  m_coll(), m_pred(__x) {}
   priority_queue(const _Pred& __x, const _Sequence& __s) 
-    : m_coll(__s), comp(__x) 
-    { std::make_heap(m_coll.begin(), m_coll.end(), comp); }
+    : m_coll(__s), m_pred(__x) 
+    { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
   template <class _InputIterator>
   priority_queue(_InputIterator __first, _InputIterator __last) 
-    : m_coll(__first, __last) { std::make_heap(m_coll.begin(), m_coll.end(), comp); }
+    : m_coll(__first, __last) { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
   template <class _InputIterator>
   priority_queue(_InputIterator __first, 
                  _InputIterator __last, const _Pred& __x)
-    : m_coll(__first, __last), comp(__x) 
-    { std::make_heap(m_coll.begin(), m_coll.end(), comp); }
+    : m_coll(__first, __last), m_pred(__x) 
+    { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
   template <class _InputIterator>
   priority_queue(_InputIterator __first, _InputIterator __last,
                  const _Pred& __x, const _Sequence& __s)
-  : m_coll(__s), comp(__x)
-  { 
+  : m_coll(__s), m_pred(__x)
+  {
     m_coll.insert(m_coll.end(), __first, __last);
-    std::make_heap(m_coll.begin(), m_coll.end(), comp);
+    std::make_heap(m_coll.begin(), m_coll.end(), m_pred);
   }
 
   bool empty() const { return m_coll.empty(); }
@@ -81,10 +81,10 @@ public:
   const_reference top() const { return m_coll.front(); }
   void push(const value_type& __x) {
     m_coll.push_back(__x); 
-	std::push_heap(m_coll.begin(), m_coll.end(), comp);
+	std::push_heap(m_coll.begin(), m_coll.end(), m_pred);
   }
   void pop() {
-    std::pop_heap(m_coll.begin(), m_coll.end(), comp);
+    std::pop_heap(m_coll.begin(), m_coll.end(), m_pred);
     m_coll.pop_back();
   }
   void clear() {
