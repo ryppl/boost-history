@@ -217,7 +217,8 @@ private:
 private:
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
-	enum { AllocSizeBig = MIN(_Policy::AllocSizeBig, BlockSize/2) };
+	enum { _AllocSizeBigDef = MAX(_Policy::AllocSizeBig, BlockSize/4) };
+	enum { AllocSizeBig = MIN(_AllocSizeBigDef, BlockSize/2) };
 	enum { AllocSizeHuge = _Policy::AllocSizeHuge };
 	enum { RecycleSizeMin = MAX(_Policy::RecycleSizeMin, 128) };
 
@@ -374,7 +375,7 @@ public:
 	template <class Type>
 	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 	{
-		BOOST_MEMORY_ASSERT( _IsValidArray(obj, count) );
+		BOOST_MEMORY_ASSERT( _IsValidArray(array, count) );
 
 		size_t cb = destructor_traits<Type>::getArrayAllocSize(count);
 		if (cb >= AllocSizeHuge)
@@ -384,7 +385,7 @@ public:
 		else
 		{
 			destructor_traits<Type>::destructArrayN(array, count);
-			void* pData = destructor_traits<Type>::getArrayBuffer(array),
+			void* pData = destructor_traits<Type>::getArrayBuffer(array);
 			_MemHeaderEx* p = (_MemHeaderEx*)pData - 1;
 			p->blkType = nodeFree;
 		}
