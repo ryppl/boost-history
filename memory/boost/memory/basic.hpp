@@ -199,10 +199,6 @@ struct destructor_traits< Type >											\
 };																			\
 _NS_BOOST_END
 
-#define BOOST_INT_NO_DESTRUCTOR(Type)										\
-	BOOST_NO_DESTRUCTOR(unsigned Type);										\
-	BOOST_NO_DESTRUCTOR(signed Type)
-
 // -------------------------------------------------------------------------
 // BOOST_NO_CONSTRUCTOR
 

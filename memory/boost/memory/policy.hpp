@@ -131,6 +131,7 @@ public:
 	enum { RecycleSizeMin = 256 };
 	enum { AllocSizeBig = Default };
 	enum { AllocSizeHuge = 1024*1024 };
+	enum { GCLimitSizeDef = 1024*1024 };
 
 	typedef simple_gc_alloc<system_alloc> huge_gc_allocator;
 };
