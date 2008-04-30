@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="29" status="New">
+<title>Concepts on mutating algorithms are confusing</title>
+<section><sref ref="[algorithms]"/></section>
+<submitter>Christopher Jefferson</submitter>
+<date>29 Apr 2008</date>
+
+<discussion>
+  <p>The concepts on the mutating algorithms are confusing and leak too much about the implementation. For example <tt>push_heap</tt> requires <tt>MoveConstructible</tt> and <tt>MoveAssignable</tt>, but <tt>pop_heap</tt> also requires <tt>Swappable</tt>. These arise from the functions used in practical implementations, but mean using them in constrained templates requires looking up the exact concepts required. At the cost of a slightly less efficient implementation, all of the following algorithms can be implemented using just <tt>IteratorSwappable</tt>, along with a predicate or <tt>LessThanComparable</tt>:
+  </p>
+  
+  <p>
+  <tt>reverse, rotate, random_shuffle, partition, stable_partition, sort, stable_sort, partial_sort, nth_element, inplace_merge, push_heap, pop_heap, make_heap, sort_heap, next_permutation, prev_permutation</tt>
+</p>
+
+
+<p>Further, <tt>partial_sort_copy</tt> can be implemented requiring only <tt>SwappableIterator</tt> on the result array. All of these changes have been tested with a modification of libstdc++. Of course implementations can implement optimised versions of these methods when <tt>MoveConstructable</tt> and <tt>MoveAssignable</tt> are available.
+</p>
+</discussion>
+
+<resolution>
+  <p>
+          Replace any references to <tt>MoveConstructible, MoveAssignable</tt> and <tt>Swappable</tt> in the requires section of <tt>reverse, rotate, random_shuffle, partition, stable_partition, sort, stable_sort, partial_sort, nth_element, inplace_merge, push_heap, pop_heap, make_heap, sort_heap, next_permutation, prev_permutation</tt> with <tt>SwappableIterator</tt>, and remove all references to <tt>SameType</tt>. Further, replace the concepts:
+          </p>
+          
+          <pre>
+      <tt>SameType&lt;RAIter::value_type&amp;, RAIter::reference&gt; &amp;&amp; Swappable&lt;RAIter::value_type&gt; &amp;&amp;
+      MoveConstructible&lt;RAIter::value_type&gt; &amp;&amp; MoveAssignable&lt;RAIter::value_type&gt; &amp;&amp;</tt>
+  </pre>
+  
+  <p> with <tt>SwappableIterator&lt;RAIter&gt;</tt> in both copies if <tt>partial_sort_copy</tt></p>
+</resolution>
+</issue>

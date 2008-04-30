@@ -334,14 +334,16 @@ namespace std {
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
 
   template<MutableBidirectionalIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
   template<BidirectionalIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
     OutIter reverse_copy(InIter @\farg{first}@,
                          InIter @\farg{last}@, OutIter @\farg{result}@);
 
   template<ForwardIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
                 Iter @\farg{last}@);
   template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
@@ -349,12 +351,13 @@ namespace std {
                         InIter @\farg{last}@, OutIter @\farg{result}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             Convertible<Rand::result_type, Iter::difference_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\& }@
+             @\addedCC{SwappableIterator<Iter> \&\&}@ Convertible<Rand::result_type, Iter::difference_type>
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
                         Rand& @\farg{rand}@);
@@ -365,58 +368,67 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
   template<BidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
-    @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    @\color{addclr}@requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
   template<MutableBidirectionalIterator Iter, Predicate<auto Iter::reference> Pred>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   @\textcolor{black}{// \ref{alg.sorting}, sorting and related operations:}@
   @\textcolor{black}{// \ref{alg.sort}, sorting:}@
   template<MutableRandomAccessIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter> \&\&}@
              LessThanComparable<Iter::value_type> 
     void sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void sort(Iter @\farg{first}@, Iter @\farg{last}@,
               Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter> \&\&}@
              LessThanComparable<Iter::value_type> 
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> @\addedCC{\&\&}@
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@ @\addedCC{\&\&}@
              @\addedCC{LessThanComparable<Iter::value_type>}@
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@,
                       Compare @\farg{comp}@);
   template<InputIterator InIter, MutableRandomAccessIterator RAIter>
     requires CopyAssignable<RAIter::reference, InIter::value_type> &&
-             SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
-             MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+             @\removedCC{SameType<RAIter::value_type\&, RAIter::reference> \&\& Swappable<RAIter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<RAIter::value_type> \&\& MoveAssignable<RAIter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<RAIter> \&\&}@
              HasLess<InIter::value_type, RAIter::value_type> &&
              HasLess<RAIter::value_type, InIter::value_type> &&
              HasLess<RAIter::value_type>
@@ -424,8 +436,9 @@ namespace std {
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
   template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare>
     requires CopyAssignable<RAIter::reference, InIter::value_type> &&
-             SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
-             MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+             @\removedCC{SameType<RAIter::value_type\&, RAIter::reference> \&\& Swappable<RAIter::value_type> \&\&}@ 
+             @\removedCC{MoveConstructible<RAIter::value_type> \&\& MoveAssignable<RAIter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<RAIter> \&\&}@
              Predicate<Compare, InIter::value_type, RAIter::value_type> &&
              Predicate<Compare, RAIter::value_type, InIter::value_type> &&
              Predicate<Compare, RAIter::value_type>
@@ -447,15 +460,17 @@ namespace std {
                          Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter> \&\&}@
              LessThanComparable<Iter::value_type>
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@,  Compare @\farg{comp}@);
 
@@ -518,16 +533,18 @@ namespace std {
                   OutIter @\farg{result}@, Compare @\farg{comp}@);
 
   template<MutableBidirectionalIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter> \&\&}@
              LessThanComparable<Iter::value_type>
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@);
   template<MutableBidirectionalIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-             MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@, Compare @\farg{comp}@);
@@ -606,44 +623,51 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.heap.operations}, heap operations:}@
   template<MutableRandomAccessIterator Iter>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter> \&\&}@
              LessThanComparable<Iter::value_type>
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\removedCC{Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@ && LessThanComparable<Iter::value_type>
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             Swappable<Iter::value_type>
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\removedCC{Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                   Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter> \&\&}@
              LessThanComparable<Iter::value_type>
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<MutableRandomAccessIterator Iter>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+             @\removedCC{Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@ && LessThanComparable<Iter::value_type>
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableRandomAccessIterator Iter, 
            Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-             Swappable<Iter::value_type>
+    requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
@@ -730,20 +754,24 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.permutation.generators}, permutations:}@
   template<MutableBidirectionalIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter>}@
              @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
     bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableBidirectionalIterator Iter, 
            Predicate<auto, Iter::reference, Iter::reference> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     @\textcolor{addclr}{}@bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<MutableBidirectionalIterator Iter>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\addedCC{SwappableIterator<Iter>}@
              @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
   template<MutableBidirectionalIterator Iter, 
            Predicate<auto, Iter::reference, Iter::reference> Compare>
-    requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+    requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+             @\addedCC{SwappableIterator<Iter>}@
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 }
 \end{codeblock}
