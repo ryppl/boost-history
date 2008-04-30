@@ -25,11 +25,11 @@ struct nontrivial_type_base_or_full_name;
 template <class meta_type>
 struct nontrivial_type_base_or_full_name<meta_type, true>
 {
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		name_length,
+	BOOST_STATIC_CONSTANT(
+		int,
+		name_length =
 		meta_type::base_name_length
-	)
+	);
 	inline static const bchar* name(void)
 	{
 		return meta_type::base_name();
@@ -41,11 +41,11 @@ struct nontrivial_type_base_or_full_name<meta_type, true>
 template <class meta_type>
 struct nontrivial_type_base_or_full_name<meta_type, false>
 {
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		name_length,
+	BOOST_STATIC_CONSTANT(
+		int,
+		name_length =
 		meta_type::full_name_length
-	)
+	);
 	inline static const bchar* name(void)
 	{
 		return meta_type::full_name();
@@ -92,16 +92,16 @@ private:
 		return the_name;
 	}
 public:
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		base_name_length,
+	BOOST_STATIC_CONSTANT(
+		int,
+		base_name_length =
 		implementation_base_name::name_length
-	)
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		full_name_length,
+	);
+	BOOST_STATIC_CONSTANT(
+		int,
+		full_name_length =
 		implementation_full_name::name_length
-	)
+	);
 	static const bchar* base_name(void)
 	{
 		return get_name(mpl::bool_<true>());

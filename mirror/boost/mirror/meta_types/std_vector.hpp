@@ -24,18 +24,10 @@ struct meta_type_std_vector
 {
 
 	static const bchar* base_name(void){return BOOST_STR_LIT("vector");}
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		base_name_length,
-		6
-	)
+	BOOST_STATIC_CONSTANT(int, base_name_length = 6);
 
 	static const bchar* full_name(void){return BOOST_STR_LIT("::std::vector");}
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		full_name_length,
-		13
-	)
+	BOOST_STATIC_CONSTANT(int, full_name_length = 13);
 };
 
 } // namespace detail

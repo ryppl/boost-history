@@ -10,14 +10,11 @@
 #ifndef BOOST_MIRROR_COMMON_DEFS_HPP
 #define BOOST_MIRROR_COMMON_DEFS_HPP
 
+#include <boost/config.hpp>
+
 namespace boost {
 namespace mirror {
 
-/** Defines a constant class member attribute, named NAME
- *  initialized with the VALUE and possibly being instace of TYPE
- */
-#define BOOST_MIRROR_CONST_MEMBER_ATTRIB(TYPE, NAME, VALUE) \
-	enum {NAME = VALUE};
 
 } // namespace mirror
 } // namespace boost

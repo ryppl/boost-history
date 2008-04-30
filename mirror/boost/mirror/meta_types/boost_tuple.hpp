@@ -35,18 +35,10 @@ struct meta_type_boost_tuple
 {
 
 	static const bchar* base_name(void){return BOOST_STR_LIT("tuple");}
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		base_name_length,
-		5
-	)
+	BOOST_STATIC_CONSTANT(int, base_name_length = 5);
 
 	static const bchar* full_name(void){return BOOST_STR_LIT("::boost::tuples::tuple");}
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		full_name_length,
-		22
-	)
+	BOOST_STATIC_CONSTANT(int, full_name_length = 22);
 };
 
 

@@ -50,12 +50,12 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 /** Helper macro that declared the full_name-related stuff
  */
 #define BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(\
-		size_t, \
-		full_name_length, \
+	BOOST_STATIC_CONSTANT(\
+		int, \
+		full_name_length = \
 		scope::full_name_length + 2 + \
 		base_name_length \
-	) \
+	); \
 	static const bchar* full_name(void)\
 	{\
 		static bchar the_full_name[full_name_length] = \
@@ -81,11 +81,11 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
 		typedef NAMESPACE::BASE_NAME base_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
-		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
-			size_t, \
-			base_name_length, \
+		BOOST_STATIC_CONSTANT( \
+			int, \
+			base_name_length = \
 			BOOST_STR_LIT_LENGTH(#BASE_NAME)\
-		) \
+		); \
 		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 
@@ -101,11 +101,11 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
 		typedef NAMESPACE::TYPEDEFD_NAME base_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#TYPEDEFD_NAME);}\
-		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
-			size_t, \
-			base_name_length, \
+		BOOST_STATIC_CONSTANT( \
+			int, \
+			base_name_length = \
 			BOOST_STR_LIT_LENGTH(#TYPEDEFD_NAME)\
-		) \
+		); \
 		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 
@@ -117,13 +117,13 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) scope;                        \
 		typedef BASE_NAME base_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
-		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
-			size_t, \
-			base_name_length, \
+		BOOST_STATIC_CONSTANT( \
+			int, \
+			base_name_length = \
 			BOOST_STR_LIT_LENGTH( #BASE_NAME ) \
-		) \
+		); \
 		static const bchar* full_name(void) {return base_name();}\
-		BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, full_name_length, base_name_length) \
+		BOOST_STATIC_CONSTANT(int, full_name_length = base_name_length); \
 	};
 
 /** Declaration of meta types for types in declared inside
@@ -135,11 +135,11 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 		typedef meta_class< WRAPPER > scope;                        \
 		typedef WRAPPER::BASE_NAME base_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
-		BOOST_MIRROR_CONST_MEMBER_ATTRIB( \
-			size_t, \
-			base_name_length, \
+		BOOST_STATIC_CONSTANT( \
+			int, \
+			base_name_length = \
 			BOOST_STR_LIT_LENGTH(#BASE_NAME)\
-		) \
+		); \
 		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 

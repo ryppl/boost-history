@@ -123,17 +123,17 @@ protected:
 	typedef typename static_template_name_length<typelist, base_name>::type
 		template_param_list_length_type;
 
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+	BOOST_STATIC_CONSTANT(
 		size_t, 
-		difference, 
+		difference = 
 		template_param_list_length_type::value
-	)
+	);
 
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+	BOOST_STATIC_CONSTANT(
 		size_t,
-		name_length,
+		name_length = 
 		name_info::name_length + difference
-	)
+	);
 
 	static void init_name(bchar* the_name)
 	{

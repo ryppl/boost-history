@@ -321,7 +321,7 @@ struct pretty_printer
 			// or some other type in the future
 			using namespace ::std;
 			s << endl << " - " << 
-				name_to_stream<BOOST_MIRROR_REFLECT_TYPE(attrib_type)>() <<
+				name_to_stream< BOOST_MIRROR_REFLECT_TYPE(attrib_type) >() <<
 				"        " <<
 				ma.base_name(pos);
 		}

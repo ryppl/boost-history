@@ -24,18 +24,10 @@ struct meta_type_std_slist
 {
 
 	static const bchar* base_name(void){return BOOST_STR_LIT("slist");}
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		base_name_length,
-		5
-	)
+	BOOST_STATIC_CONSTANT(int, base_name_length = 5);
 
 	static const bchar* full_name(void){return BOOST_STR_LIT("::std::slist");}
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
-		size_t,
-		full_name_length,
-		12
-	)
+	BOOST_STATIC_CONSTANT(int, full_name_length = 12);
 };
 
 } // namespace detail

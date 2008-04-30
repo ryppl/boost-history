@@ -29,13 +29,13 @@ protected:
 	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
 		name_info;
 
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(size_t, difference, 3 + size_as_string::length::value)
+	BOOST_STATIC_CONSTANT(size_t, difference = 3 + size_as_string::length::value);
 
-	BOOST_MIRROR_CONST_MEMBER_ATTRIB(
+	BOOST_STATIC_CONSTANT(
 		size_t,
-		name_length,
+		name_length = 
 		name_info::name_length + difference
-	)
+	);
 
 	static void init_name(bchar* the_name)
 	{
