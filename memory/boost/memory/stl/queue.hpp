@@ -90,6 +90,10 @@ public:
   void clear() {
 	m_coll.clear();
   }
+  void swap(priority_queue& o) {
+	m_coll.swap(o.m_coll);
+	std::swap(m_pred, o.m_pred);
+  }
 };
 
 // -------------------------------------------------------------------------

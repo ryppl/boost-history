@@ -290,9 +290,9 @@ public:
 		std::swap(m_begin, o.m_begin);
 		std::swap(m_end, o.m_end);
 		std::swap(m_blockList, o.m_blockList);
-		std::swap(m_freeList, o.m_freeList);
 		std::swap(m_destroyChain, o.m_destroyChain);
 		m_alloc.swap(o.m_alloc);
+		m_freeList.swap(o.m_freeList);
 		m_hugeAlloc.swap(o.m_hugeAlloc);
 	}
 
