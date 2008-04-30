@@ -9,14 +9,14 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_SYSTEM_ALLOC_HPP__
-#define __BOOST_MEMORY_SYSTEM_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_SYSTEM_ALLOC_HPP_
+#define _BOOST_MEMORY_SYSTEM_ALLOC_HPP_
 
-#ifndef __BOOST_MEMORY_BASIC_HPP__
+#ifndef _BOOST_MEMORY_BASIC_HPP_
 #include "basic.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_THREADMODEL_HPP__
+#ifndef _BOOST_MEMORY_THREADMODEL_HPP_
 #include "threadmodel.hpp"
 #endif
 
@@ -28,14 +28,14 @@
 #include <cstdlib> // malloc, free
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
-// __BOOST_FAKE_DBG_ALLOCATE
+// _BOOST_FAKE_DBG_ALLOCATE
 
 #if defined(_DEBUG)
 
-#define __BOOST_FAKE_DBG_ALLOCATE()														\
+#define _BOOST_FAKE_DBG_ALLOCATE()														\
 	void* BOOST_MEMORY_CALL allocate(size_t cb, LPCSTR szFile, int nLine)				\
 		{ return allocate(cb); }														\
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn, LPCSTR szFile, int nLine)	\
@@ -50,7 +50,7 @@ __NS_BOOST_BEGIN
 
 #else
 
-#define __BOOST_FAKE_DBG_ALLOCATE()
+#define _BOOST_FAKE_DBG_ALLOCATE()
 
 #endif
 
@@ -122,7 +122,7 @@ public:
 		return constructor_traits<Type>::constructArray(array, count);
 	}
 #else
-	__BOOST_FAKE_DBG_ALLOCATE()
+	_BOOST_FAKE_DBG_ALLOCATE()
 #endif
 };
 
@@ -134,6 +134,6 @@ typedef stdlib_alloc system_alloc;
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_SYSTEM_ALLOC_HPP__ */
+#endif /* _BOOST_MEMORY_SYSTEM_ALLOC_HPP_ */

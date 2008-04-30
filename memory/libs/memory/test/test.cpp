@@ -18,7 +18,6 @@ void simpleExamples();
 
 int main()
 {
-	boost::tls_block_pool bp;
 	simpleExamples();
 //	testStlContainers();
 	return 0;

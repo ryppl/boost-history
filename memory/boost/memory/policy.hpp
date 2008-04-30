@@ -9,14 +9,14 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_POLICY_HPP__
-#define __BOOST_MEMORY_POLICY_HPP__
+#ifndef _BOOST_MEMORY_POLICY_HPP_
+#define _BOOST_MEMORY_POLICY_HPP_
 
-#ifndef __BOOST_MEMORY_SYSTEM_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_SYSTEM_ALLOC_HPP_
 #include "system_alloc.hpp"
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class simple_gc_alloc
@@ -125,6 +125,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: policy.hpp,v $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_POLICY_HPP__ */
+#endif /* _BOOST_MEMORY_POLICY_HPP_ */

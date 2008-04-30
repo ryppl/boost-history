@@ -9,20 +9,20 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_THREADMODEL_HPP__
-#define __BOOST_MEMORY_THREADMODEL_HPP__
+#ifndef _BOOST_MEMORY_THREADMODEL_HPP_
+#define _BOOST_MEMORY_THREADMODEL_HPP_
 
 // -------------------------------------------------------------------------
 
-#ifndef __BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H__
+#ifndef _BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H_
 #include "threadmodel/single_thread.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H__
+#ifndef _BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H_
 #include "threadmodel/multi_thread.hpp"
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class auto_lock
@@ -90,6 +90,6 @@ typedef single_thread initializer_threadmodel;
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_THREADMODEL_HPP__ */
+#endif /* _BOOST_MEMORY_THREADMODEL_HPP_ */

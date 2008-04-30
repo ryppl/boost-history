@@ -9,27 +9,27 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_HPP__
-#define __BOOST_MEMORY_HPP__
+#ifndef _BOOST_MEMORY_HPP_
+#define _BOOST_MEMORY_HPP_
 
 // -------------------------------------------------------------------------
 
-#ifndef __BOOST_MEMORY_AUTO_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_AUTO_ALLOC_HPP_
 #include "memory/auto_alloc.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_SCOPED_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_SCOPED_ALLOC_HPP_
 #include "memory/scoped_alloc.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_GC_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_GC_ALLOC_HPP_
 #include "memory/gc_alloc.hpp"
 #endif
 
 // -------------------------------------------------------------------------
 // class stl_alloc
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 template <class _Ty, class _Alloc = scoped_alloc>
 class stl_alloc
@@ -113,9 +113,9 @@ inline bool operator!=(const stl_alloc<_Ty, _Alloc>&,
     return false;
 }
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 // -------------------------------------------------------------------------
 // $Log: memory.hpp,v $
 
-#endif /* __BOOST_MEMORY_HPP__ */
+#endif /* _BOOST_MEMORY_HPP_ */

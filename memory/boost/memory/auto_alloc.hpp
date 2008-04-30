@@ -9,18 +9,18 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_AUTO_ALLOC_HPP__
-#define __BOOST_MEMORY_AUTO_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_AUTO_ALLOC_HPP_
+#define _BOOST_MEMORY_AUTO_ALLOC_HPP_
 
-#ifndef __BOOST_MEMORY_SYSTEM_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_SYSTEM_ALLOC_HPP_
 #include "system_alloc.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_POLICY_HPP__
+#ifndef _BOOST_MEMORY_POLICY_HPP_
 #include "policy.hpp"
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class region_alloc
@@ -203,7 +203,7 @@ public:
 		// no action
 	}
 
-	__BOOST_FAKE_DBG_ALLOCATE();
+	_BOOST_FAKE_DBG_ALLOCATE();
 };
 
 // -------------------------------------------------------------------------
@@ -214,6 +214,6 @@ typedef region_alloc<policy::sys> auto_alloc;
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_AUTO_ALLOC_HPP__ */
+#endif /* _BOOST_MEMORY_AUTO_ALLOC_HPP_ */

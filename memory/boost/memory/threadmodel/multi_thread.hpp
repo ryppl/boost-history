@@ -9,16 +9,18 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H__
-#define __BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H__
+#ifndef _BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H_
+#define _BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H_
 
-#ifndef __BOOST_MEMORY_BASIC_HPP__
+#ifndef _BOOST_MEMORY_BASIC_HPP_
 #include "../basic.hpp"
 #endif
 
+#ifndef _BOOST_MEMORY_WINAPI_WINBASE_H_
 #include "../winapi/winbase.h"
+#endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class refcount_mt
@@ -90,6 +92,6 @@ public:
 // -------------------------------------------------------------------------
 //	$Log: $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H__ */
+#endif /* _BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H_ */

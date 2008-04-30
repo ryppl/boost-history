@@ -9,14 +9,14 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_THREAD_TLS_HPP__
-#define __BOOST_MEMORY_THREAD_TLS_HPP__
+#ifndef _BOOST_MEMORY_THREAD_TLS_HPP_
+#define _BOOST_MEMORY_THREAD_TLS_HPP_
 
-#ifndef __BOOST_MEMORY_BASIC_HPP__
+#ifndef _BOOST_MEMORY_BASIC_HPP_
 #include "../basic.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_THREADMODEL_HPP__
+#ifndef _BOOST_MEMORY_THREADMODEL_HPP_
 #include "../threadmodel.hpp"
 #endif
 
@@ -25,7 +25,7 @@
 
 #if defined(_WIN32)
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 typedef DWORD TLSINDEX;
 
@@ -56,7 +56,7 @@ public:
 	}
 };
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 #endif // defined(_WIN32)
 
@@ -69,7 +69,7 @@ __NS_BOOST_END
 #include <pthread.h>
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 class pthread_tls_key
 {
@@ -98,14 +98,14 @@ public:
 	}
 };
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 #endif // !defined(_WIN32)
 
 // -------------------------------------------------------------------------
 // class tls_key
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 #if defined(_WIN32)
 
@@ -117,12 +117,12 @@ typedef pthread_tls_key tls_key;
 
 #endif
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 // -------------------------------------------------------------------------
 // class tls_ptr
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 template <class Type>
 class tls_ptr
@@ -163,12 +163,12 @@ public:
 	}
 };
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 // -------------------------------------------------------------------------
 // class tls_object
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 template <class Type>
 class tls_factory
@@ -238,9 +238,9 @@ public:
 	}
 };
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 // -------------------------------------------------------------------------
 //	$Log: $
 
-#endif /* __BOOST_MEMORY_THREAD_TLS_HPP__ */
+#endif /* _BOOST_MEMORY_THREAD_TLS_HPP_ */

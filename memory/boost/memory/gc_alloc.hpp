@@ -9,14 +9,14 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_GC_ALLOC_HPP__
-#define __BOOST_MEMORY_GC_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_GC_ALLOC_HPP_
+#define _BOOST_MEMORY_GC_ALLOC_HPP_
 
-#ifndef __BOOST_MEMORY_SCOPED_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_SCOPED_ALLOC_HPP_
 #include "scoped_alloc.hpp"
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class gen_alloc
@@ -347,6 +347,7 @@ public:
 		pNode->fnDestroy = fn;
 		pNode->pPrev = m_destroyChain;
 		m_destroyChain = (_MemHeaderEx*)((char*)pNode - sizeof(_MemHeader));
+		m_destroyChain->blkType = nodeAllocedWithDestructor;
 		return pNode + 1;
 	}
 
@@ -367,7 +368,7 @@ public:
 		p->blkType = nodeFree;
 	}
 
-	__BOOST_FAKE_DBG_ALLOCATE();
+	_BOOST_FAKE_DBG_ALLOCATE();
 };
 
 // -------------------------------------------------------------------------
@@ -378,6 +379,6 @@ typedef gen_alloc<policy::pool> gc_alloc;
 // -------------------------------------------------------------------------
 // $Log: gc_alloc.hpp,v $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_GC_ALLOC_HPP__ */
+#endif /* _BOOST_MEMORY_GC_ALLOC_HPP_ */

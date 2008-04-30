@@ -9,18 +9,18 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_SCOPED_ALLOC_HPP__
-#define __BOOST_MEMORY_SCOPED_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_SCOPED_ALLOC_HPP_
+#define _BOOST_MEMORY_SCOPED_ALLOC_HPP_
 
-#ifndef __BOOST_MEMORY_BASIC_HPP__
+#ifndef _BOOST_MEMORY_BASIC_HPP_
 #include "basic.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_AUTO_ALLOC_HPP__
+#ifndef _BOOST_MEMORY_AUTO_ALLOC_HPP_
 #include "auto_alloc.hpp"
 #endif
 
-#ifndef __BOOST_MEMORY_THREAD_TLS_HPP__
+#ifndef _BOOST_MEMORY_THREAD_TLS_HPP_
 #include "thread/tls.hpp"
 #endif
 
@@ -28,7 +28,7 @@
 #include <climits> // INT_MAX
 #endif
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 // -------------------------------------------------------------------------
 // class proxy_alloc
@@ -191,6 +191,6 @@ typedef region_alloc<policy::pool> scoped_alloc;
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_BOOST_END
+_NS_BOOST_END
 
-#endif /* __BOOST_MEMORY_SCOPED_ALLOC_HPP__ */
+#endif /* _BOOST_MEMORY_SCOPED_ALLOC_HPP_ */

@@ -9,13 +9,13 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_LINKLIB_HPP__
-#define __BOOST_MEMORY_LINKLIB_HPP__
+#ifndef _BOOST_MEMORY_LINKLIB_HPP_
+#define _BOOST_MEMORY_LINKLIB_HPP_
 
 // -------------------------------------------------------------------------
 
-#if !defined(__Linked_boost_memory)
-#define __Linked_boost_memory
+#if !defined(_Linked_boost_memory)
+#define _Linked_boost_memory
 #if defined(_MSC_VER)
 #	pragma comment(lib, "boost-memory")
 #endif
@@ -24,4 +24,4 @@
 // -------------------------------------------------------------------------
 // $Log: linklib.hpp,v $
 
-#endif /* __BOOST_MEMORY_LINKLIB_HPP__ */
+#endif /* _BOOST_MEMORY_LINKLIB_HPP_ */

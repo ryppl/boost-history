@@ -9,10 +9,10 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP__
-#define __BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP__
+#ifndef _BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP_
+#define _BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP_
 
-#ifndef __BOOST_MEMORY_WINAPI_WINDEF_H__
+#ifndef _BOOST_MEMORY_WINAPI_WINDEF_H_
 #include "../windef.h"
 #endif
 
@@ -108,4 +108,4 @@ __forceinline LPVOID WINAPI TlsGetValue(TLSINDEX key)
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP__ */
+#endif /* _BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP_ */

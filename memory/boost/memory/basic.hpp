@@ -9,8 +9,8 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
-#ifndef __BOOST_MEMORY_BASIC_HPP__
-#define __BOOST_MEMORY_BASIC_HPP__
+#ifndef _BOOST_MEMORY_BASIC_HPP_
+#define _BOOST_MEMORY_BASIC_HPP_
 
 // -------------------------------------------------------------------------
 
@@ -38,9 +38,9 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __NS_BOOST_BEGIN
-#define __NS_BOOST_BEGIN	namespace boost {
-#define __NS_BOOST_END		}
+#ifndef _NS_BOOST_BEGIN
+#define _NS_BOOST_BEGIN	namespace boost {
+#define _NS_BOOST_END	}
 #endif
 
 // =========================================================================
@@ -79,10 +79,10 @@
 // =========================================================================
 // constructor_traits, destructor_traits
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
-typedef void BOOST_MEMORY_CALL __FnDestructor(void* data);
-typedef __FnDestructor* destructor_t;
+typedef void BOOST_MEMORY_CALL _FnDestructor(void* data);
+typedef _FnDestructor* destructor_t;
 
 template <class Type>
 struct constructor_traits
@@ -153,13 +153,13 @@ inline void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 	destructor_traits<Type>::destructArrayN(array, count);
 }
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 // =========================================================================
 // BOOST_NO_DESTRUCTOR
 
 #define BOOST_NO_DESTRUCTOR(Type)											\
-__NS_BOOST_BEGIN															\
+_NS_BOOST_BEGIN																\
 template <>																	\
 struct destructor_traits< Type >											\
 {																			\
@@ -184,7 +184,7 @@ struct destructor_traits< Type >											\
 		return 0;															\
 	}																		\
 };																			\
-__NS_BOOST_END
+_NS_BOOST_END
 
 #define BOOST_INT_NO_DESTRUCTOR(Type)										\
 	BOOST_NO_DESTRUCTOR(unsigned Type);										\
@@ -194,7 +194,7 @@ __NS_BOOST_END
 // BOOST_NO_CONSTRUCTOR
 
 #define BOOST_NO_CONSTRUCTOR(Type)											\
-__NS_BOOST_BEGIN															\
+_NS_BOOST_BEGIN																\
 template <>																	\
 struct constructor_traits< Type >											\
 {																			\
@@ -205,7 +205,7 @@ struct constructor_traits< Type >											\
 		return array;														\
 	}																		\
 };																			\
-__NS_BOOST_END
+_NS_BOOST_END
 
 #define BOOST_INT_NO_CONSTRUCTOR(Type)										\
 	BOOST_NO_CONSTRUCTOR(unsigned Type);									\
@@ -262,7 +262,7 @@ BOOST_DECL_INT_CTYPE(long);
 
 // =========================================================================
 
-__NS_BOOST_BEGIN
+_NS_BOOST_BEGIN
 
 inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 {
@@ -271,9 +271,9 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 #endif
 }
 
-__NS_BOOST_END
+_NS_BOOST_END
 
 // =========================================================================
 // $Log: basic.hpp,v $
 
-#endif /* __BOOST_MEMORY_BASIC_HPP__ */
+#endif /* _BOOST_MEMORY_BASIC_HPP_ */
