@@ -1,7 +1,7 @@
 /* example to demonstrate compile-in-place for extending Python
 
 Compile with
-  $CXX -I path/to/boost_X_YY_Z -I path/to/python-includes test-python-extends.cpp -shared -o hello.so
+  $CXX -I path/to/boost_X_YY_Z -I path/to/python-includes test-python-extend.cpp -shared -o hello.so
 
 Notes:
 

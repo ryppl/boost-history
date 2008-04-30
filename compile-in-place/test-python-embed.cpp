@@ -1,7 +1,7 @@
 /* example to demonstrate compile-in-place for embedding Python
 
 Compile with
-  $CXX -I path/to/boost_X_YY_Z -I path/to/python-includes test-python-extends.cpp -l python-libs
+  $CXX -I path/to/boost_X_YY_Z -I path/to/python-includes test-python-embed.cpp -l python-libs
 
 Notes:
 
