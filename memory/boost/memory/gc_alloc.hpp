@@ -483,7 +483,7 @@ private:
 	{
 		_MemHeader* p = (_MemHeader*)array - 1;
 		p->blkType = nodeFree;
-		m_freeSize += sizeof(Type) * count + sizeof(_MemHeaderEx);
+		m_freeSize += sizeof(Type) * count + sizeof(_MemHeader);
 	}
 
 public:
