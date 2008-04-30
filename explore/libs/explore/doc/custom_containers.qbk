@@ -9,6 +9,46 @@
 
 You can use explore with your custom containers, or third party containers. However, explore needs a little help in understanding these classes.
 
-Eventually, it would be good to write something here explaining how you can do that. 8-)
+The following is a very simple class that contains a 1, 2, and 3 along with the begin and end functions to access the iterators for the container.
+
+   class user_vector
+   {
+   public:
+      user_vector()
+      {
+          m_vec.push_back(1);
+          m_vec.push_back(2);
+          m_vec.push_back(3);
+      }
+   
+      std::vector<int>::const_iterator begin() const
+      {
+          return m_vec.begin();
+      }
+   
+      std::vector<int>::const_iterator end() const
+      {
+          return m_vec.end();
+      }
+
+   private:
+      std::vector<int> m_vec;
+   };
+
+To allow the user_vector to stream properly, you must create an operator<< overload that for the user_vector class that wrapps a call to the explore::stream_container helper function. The stream_container helper iterates through a range outputting the proper delimeters along with the values in the range. So, the operator<< passes into stream_container the result of the begin and end functions, and allows stream_container to process the contents for it.
+
+   std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
+   {
+      return explore::stream_container(ostr, u.begin(), u.end());
+   }
+
+With our new overloaded operator<<, the following code
+
+   user_vector v;
+   str_out << v;
+
+prints
+
+   [1, 2, 3]
 
 [endsect]

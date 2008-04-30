@@ -183,16 +183,48 @@
         by Level</a>
       </h5>
 <p>
-        finish this
+        Sometimes you need to output your code differently for nested containers.
+        To do this, create a custom formatter and define different formatting rules
+        for different levels. The following formatter prints all child containers
+        on a new line, and those child containers have custom delimeters.
       </p>
-<a name="boost_explore.tutorial.custom_delimeters.level_breaks"></a><h5>
-<a name="id974448"></a>
-        <a href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.level_breaks">Level
-        Breaks</a>
-      </h5>
+<pre class="programlisting">
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">format_2d</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">ostr</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">explore</span><span class="special">;</span>
+
+    <span class="comment">// level 0
+</span>    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">""</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="string">""</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">"\n"</span><span class="special">);</span>
+
+    <span class="comment">// level 1
+</span>    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">"|"</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="string">"|"</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">" "</span><span class="special">,</span> <span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">return</span> <span class="identifier">ostr</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
 <p>
-        finish this
+        The following example uses the above formatter against a vector containing
+        a vector of int.
       </p>
+<pre class="programlisting">
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
+<span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+<span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
+<span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">vvi</span><span class="special">;</span>
+<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
+<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
+<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
+<span class="identifier">str_out</span> <span class="special">&lt;&lt;</span> <span class="identifier">format_2d</span> <span class="special">&lt;&lt;</span> <span class="identifier">vvi</span><span class="special">;</span>
+</pre>
+<p>
+        This prints
+      </p>
+<pre class="programlisting">
+<span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
+<span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
+<span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
