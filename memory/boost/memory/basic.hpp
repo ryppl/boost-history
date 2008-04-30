@@ -47,6 +47,18 @@
 #define NS_BOOST_END	}
 #endif
 
+// -------------------------------------------------------------------------
+
+#if defined(_MSC_VER)
+	#if (_MSC_VER > 1200)
+	#define BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE
+	#endif
+#else
+	#if defined(__GNUG__)
+	#define BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE
+	#endif
+#endif
+
 // =========================================================================
 // BOOST_MEMORY_ASSERT - diagnost
 

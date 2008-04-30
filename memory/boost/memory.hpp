@@ -27,12 +27,12 @@
 #endif
 
 // -------------------------------------------------------------------------
-// class stl_alloc
+// class stl_allocator
 
 NS_BOOST_BEGIN
 
 template <class Type, class AllocT = scoped_alloc>
-class stl_alloc
+class stl_allocator
 {
 private:
 	AllocT* m_alloc;
@@ -47,7 +47,7 @@ public:
 	typedef Type value_type;
 
     template <class U>
-    struct rebind { typedef stl_alloc<U, AllocT> other; };
+    struct rebind { typedef stl_allocator<U, AllocT> other; };
 
 public:
 	pointer address(reference val) const
@@ -60,10 +60,10 @@ public:
 		  return (0 < count ? count : 1); }
 
 public:
-	stl_alloc(AllocT& alloc) : m_alloc(&alloc) {}
+	stl_allocator(AllocT& alloc) : m_alloc(&alloc) {}
 
     template <class U>
-	stl_alloc(const stl_alloc<U, AllocT>& rhs) : m_alloc(rhs._Getalloc()) {}
+	stl_allocator(const stl_allocator<U, AllocT>& rhs) : m_alloc(rhs._Getalloc()) {}
 
 	pointer allocate(size_type count, const void* = NULL)
 		{ return (pointer)m_alloc->allocate(count * sizeof(Type)); }
@@ -81,35 +81,66 @@ public:
 	AllocT* _Getalloc() const { return m_alloc; }
 };
 
-template<> class stl_alloc<void, scoped_alloc>
+#if defined(BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE)
+
+template <class AllocT>
+class stl_allocator<void, AllocT>
 {
+public:
     typedef void        value_type;
     typedef void*       pointer;
     typedef const void* const_pointer;
  
     template <class U>
-    struct rebind { typedef stl_alloc<U, scoped_alloc> other; };
+    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
 };
 
-template<> class stl_alloc<void, auto_alloc>
+#else
+
+template<> class stl_allocator<void, scoped_alloc>
 {
+public:
     typedef void        value_type;
     typedef void*       pointer;
     typedef const void* const_pointer;
  
     template <class U>
-    struct rebind { typedef stl_alloc<U, scoped_alloc> other; };
+    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
 };
+
+template<> class stl_allocator<void, auto_alloc>
+{
+public:
+    typedef void        value_type;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+ 
+    template <class U>
+    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
+};
+
+template<> class stl_allocator<void, gc_alloc>
+{
+public:
+    typedef void        value_type;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+ 
+    template <class U>
+    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
+};
+
+#endif
 
 template <class Type, class AllocT>
-inline bool operator==(const stl_alloc<Type, AllocT>&,
-                       const stl_alloc<Type, AllocT>&) {
+inline bool operator==(const stl_allocator<Type, AllocT>&,
+                       const stl_allocator<Type, AllocT>&) {
     return true;
 }
 
 template <class Type, class AllocT>
-inline bool operator!=(const stl_alloc<Type, AllocT>&,
-                       const stl_alloc<Type, AllocT>&) {
+inline bool operator!=(const stl_allocator<Type, AllocT>&,
+                       const stl_allocator<Type, AllocT>&) {
     return false;
 }
 
