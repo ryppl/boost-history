@@ -62,10 +62,6 @@ namespace minimal
         return false;
     }
 
-    std::size_t hash_value(copy_constructible_equality_comparable) {
-        return 1;
-    }
-
     class default_copy_constructible
     {
     public:
@@ -269,6 +265,22 @@ namespace minimal
     }
 }
 }
+
+#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+namespace boost {
+#else
+namespace test {
+namespace minimal {
+#endif
+    std::size_t hash_value(test::minimal::copy_constructible_equality_comparable) {
+        return 1;
+    }
+#if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+}}
+#else
+}
+#endif
+
 
 #if defined(BOOST_MSVC)
 #pragma warning(pop)
