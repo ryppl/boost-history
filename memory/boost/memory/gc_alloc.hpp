@@ -170,24 +170,29 @@ private:
 
 private:
 	const gen_alloc& operator=(const gen_alloc&);
+	
+	static bool BOOST_MEMORY_CALL _IsEqual(size_t cbAlloc, size_t cb)
+	{
+		return cbAlloc >= cb && cb + 64 > cbAlloc;
+	}
 
 	static bool BOOST_MEMORY_CALL _IsValid(void* obj, size_t cb, destructor_t fn)
 	{
 		_MemHeaderEx* node = (_MemHeaderEx*)obj - 1;
 		BOOST_MEMORY_ASSERT(node->fnDestroy == fn);
-		BOOST_MEMORY_ASSERT(node->cbSize == cb + sizeof(_DestroyInfo));
+		BOOST_MEMORY_ASSERT(_IsEqual(node->cbSize, cb + sizeof(_DestroyInfo)));
 		BOOST_MEMORY_ASSERT(node->blkType == nodeAllocedWithDestructor);
 		return node->fnDestroy == fn &&
-			node->cbSize == cb + sizeof(_DestroyInfo) &&
+			_IsEqual(node->cbSize, cb + sizeof(_DestroyInfo)) &&
 			node->blkType == nodeAllocedWithDestructor;
 	}
 
 	static bool BOOST_MEMORY_CALL _IsValid(void* obj, size_t cb, int fnZero)
 	{
 		_MemHeader* node = (_MemHeader*)obj - 1;
-		BOOST_MEMORY_ASSERT(node->cbSize == cb);
+		BOOST_MEMORY_ASSERT(_IsEqual(node->cbSize, cb));
 		BOOST_MEMORY_ASSERT(node->blkType == nodeAlloced);
-		return node->cbSize == cb && node->blkType == nodeAlloced;
+		return _IsEqual(node->cbSize, cb) && node->blkType == nodeAlloced;
 	}
 
 	template <class Type>
@@ -203,7 +208,7 @@ private:
 		size_t cb = destructor_traits<Type>::getArrayAllocSize(count);
 		if (buf == array)
 		{
-			return _IsValid(buf, cb, sizeof(Type)*count);
+			return _IsValid(buf, cb, 0);
 		}
 		else
 		{
@@ -234,7 +239,7 @@ public:
 		_MemBlock* pHeader = m_blockList;
 		while (pHeader)
 		{
-			_MemBlock::Enumerator coll(m_alloc, pHeader);
+			typename _MemBlock::Enumerator coll(m_alloc, pHeader);
 			pHeader = pHeader->pPrev;
 			for (;;)
 			{
