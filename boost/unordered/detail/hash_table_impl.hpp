@@ -1128,11 +1128,13 @@ namespace boost {
         private:
 
 
-            typedef boost::unordered_detail::buffered_functions<Hash, Pred> buffered_functions;
-            typedef BOOST_DEDUCED_TYPENAME buffered_functions::functions functions;
-            typedef BOOST_DEDUCED_TYPENAME buffered_functions::functions_ptr functions_ptr;
+            typedef boost::unordered_detail::buffered_functions<Hash, Pred>
+                function_store;
+            typedef BOOST_DEDUCED_TYPENAME function_store::functions functions;
+            typedef BOOST_DEDUCED_TYPENAME function_store::functions_ptr
+                functions_ptr;
 
-            buffered_functions functions_;
+            function_store functions_;
             float mlf_;
             size_type max_load_;
 
@@ -1376,10 +1378,17 @@ namespace boost {
             // accessors
 
             // no throw
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
             node_allocator get_allocator() const
             {
                 return data_.allocators_.node_alloc_;
             }
+#else
+            value_allocator get_allocator() const
+            {
+                return data_.allocators_.value_alloc_;
+            }
+#endif
 
             // no throw
             hasher const& hash_function() const
