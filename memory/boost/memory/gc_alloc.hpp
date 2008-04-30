@@ -12,8 +12,18 @@
 #ifndef _BOOST_MEMORY_GC_ALLOC_HPP_
 #define _BOOST_MEMORY_GC_ALLOC_HPP_
 
+#pragma warning(disable:4786)
+
 #ifndef _BOOST_MEMORY_SCOPED_ALLOC_HPP_
 #include "scoped_alloc.hpp"
+#endif
+
+#ifndef _BOOST_MEMORY_STL_QUEUE_HPP_
+#include "stl/queue.hpp" // boost::priority_queue
+#endif
+
+#if !defined(_DEQUE_) && !defined(_DEQUE)
+#include <deque> // std::deque
 #endif
 
 _NS_BOOST_BEGIN
@@ -122,20 +132,23 @@ private:
 			}
 		};
 	};
-
-	struct _FreeListNode
-	{
-		_HeaderSizeT cbSize;
-		_FreeListNode* pPrev;
-	};
 #pragma pack()
+
+	struct _Pred : std::binary_function<_FreeMemHeader*, _FreeMemHeader*, bool>
+	{
+		bool operator()(_FreeMemHeader* a, _FreeMemHeader* b) const {
+			return a->cbSize > b->cbSize;
+		}
+	};
+	typedef std::deque<_FreeMemHeader*> _Cont;
+	typedef boost::priority_queue<_FreeMemHeader*, _Cont, _Pred> _PriorityQ;
 	
 	char* m_begin;
 	char* m_end;
 	_Alloc m_alloc;
 	_MemHeaderEx* m_destroyChain;
 	_MemBlock* m_blockList;
-	_FreeListNode* m_freeList;
+	_PriorityQ m_freeList;
 	_HugeGCAlloc m_hugeAlloc;
 	static _FreeMemHeader _null;
 
@@ -185,6 +198,21 @@ private:
 		}
 	}
 
+	void BOOST_MEMORY_CALL _ReduceDestroyChain() const
+	{
+		_MemHeaderEx** pp = &m_destroyChain;
+		while (*pp)
+		{
+			_MemHeaderEx* curr = (*pp)->pPrev;
+			if (curr->blkType == nodeFree) {
+				*pp = curr->pPrev;
+			}
+			else {
+				pp = &curr->pPrev;
+			}
+		}
+	}
+
 	void BOOST_MEMORY_CALL _Travel() const
 	{
 		_MemBlock* pHeader = m_blockList;
@@ -197,43 +225,57 @@ private:
 		}
 	}
 
-	_MemBlock* BOOST_MEMORY_CALL _NewMemBlock(size_t cbBlock)
+	void BOOST_MEMORY_CALL _TryGC()
 	{
-		_MemBlock* pNew = (_MemBlock*)m_alloc.allocate(cbBlock);
-		pNew->pPrev = m_blockList;
-		m_blockList = pNew;
+	}
+
+	_MemHeader* BOOST_MEMORY_CALL _NewBlock(size_t cbBlock)
+	{
+		_MemBlock* pBlock = (_MemBlock*)m_alloc.allocate(cbBlock);
+		pBlock->pPrev = m_blockList;
+		m_blockList = pBlock;
+
+		_MemHeader* pNew = (_MemHeader*)pBlock->buffer;
+		pNew->blkType = nodeFree;
+		pNew->cbSize = m_alloc.alloc_size(pBlock) - (sizeof(_MemHeader) + HeaderSize);
 		return pNew;
+	}
+
+	void BOOST_MEMORY_CALL _CommitCurrentBlock()
+	{
+		_FreeMemHeader* old = (_FreeMemHeader*)m_begin - 1;
+		BOOST_MEMORY_ASSERT(old->getBlockType() == nodeFree);
+		old->cbSize = (m_end - m_begin);
 	}
 
 	void BOOST_MEMORY_CALL _Init()
 	{
-		_MemBlock* pNew = _NewMemBlock(MemBlockSize);
-		_MemHeader* p = (_MemHeader*)pNew->buffer;
-		p->blkType = nodeFree;
-		m_begin = (char*)(p + 1);
-		m_end = (char*)pNew + m_alloc.alloc_size(pNew);
+		_MemHeader* pNew = _NewBlock(MemBlockSize);
+		m_begin = (char*)(pNew + 1);
+		m_end = m_begin + pNew->cbSize;
 	}
 
 private:
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
 	enum { _AllocSizeBigDef = MAX(_Policy::AllocSizeBig, BlockSize/4) };
+	enum { _AllocSizeHugeDef = MAX(_Policy::AllocSizeHuge, 64*1024) };
 	enum { AllocSizeBig = MIN(_AllocSizeBigDef, BlockSize/2) };
-	enum { AllocSizeHuge = _Policy::AllocSizeHuge };
+	enum { AllocSizeHuge = MIN(_AllocSizeHugeDef, (1 << 29)) };
 	enum { RecycleSizeMin = MAX(_Policy::RecycleSizeMin, 128) };
 
 public:
-	gen_alloc() : m_blockList(NULL), m_freeList(NULL), m_destroyChain(NULL)
+	gen_alloc() : m_blockList(NULL), m_destroyChain(NULL)
 	{
 		_Init();
 	}
 	explicit gen_alloc(_Alloc alloc)
-		: m_alloc(alloc), m_blockList(NULL), m_freeList(NULL), m_destroyChain(NULL)
+		: m_alloc(alloc), m_blockList(NULL), m_destroyChain(NULL)
 	{
 		_Init();
 	}
 	explicit gen_alloc(gen_alloc& owner)
-		: m_alloc(owner.m_alloc), m_blockList(NULL), m_freeList(NULL), m_destroyChain(NULL)
+		: m_alloc(owner.m_alloc), m_blockList(NULL), m_destroyChain(NULL)
 	{
 		_Init();
 	}
@@ -272,7 +314,7 @@ public:
 		}
 		m_begin = m_end = _null.getData();
 		m_blockList = NULL;
-		m_freeList = NULL;
+		m_freeList.clear();
 	}
 
 	void* BOOST_MEMORY_CALL allocate(size_t cbData)
@@ -280,7 +322,7 @@ public:
 		const size_t cb = cbData + sizeof(_MemHeader);
 		if ((size_t)(m_end - m_begin) < cb)
 		{
-			_MemBlock* pNew;
+			_MemHeader* pNew;
 			if (cb >= AllocSizeBig)
 			{
 				if (cbData >= AllocSizeHuge)
@@ -288,26 +330,31 @@ public:
 
 				if (cb >= BlockSize)
 				{
-					pNew = _NewMemBlock(cb + HeaderSize);
-					_MemHeader* p = (_MemHeader*)pNew->buffer;
-					p->blkType = nodeAlloced;
-					p->cbSize = cbData;
-					return p + 1;
+					pNew = _NewBlock(cb + HeaderSize);
+					pNew->blkType = nodeAlloced;
+					return pNew + 1;
 				}
-				pNew = _NewMemBlock(MemBlockSize);
+				pNew = _NewBlock(MemBlockSize);
 			}
 			else
 			{
-				pNew = _NewMemBlock(MemBlockSize);
+				_TryGC();
+				_FreeMemHeader* p;
+				if (m_freeList.empty() || (p = m_freeList.top())->cbSize < cb) {
+					pNew = _NewBlock(MemBlockSize);
+				}
+				else {
+					pNew = (_MemHeader*)p;
+					m_freeList.pop();
+				}
 			}
-			_FreeMemHeader* old = (_FreeMemHeader*)m_begin - 1;
-			BOOST_MEMORY_ASSERT(old->getBlockType() == nodeFree);
-			old->cbSize = m_end - m_begin;
-			_MemHeader* p = (_MemHeader*)pNew->buffer;
-			p->blkType = nodeFree;
-			m_begin = (char*)(p + 1);
-			m_end = (char*)pNew + m_alloc.alloc_size(pNew);
+			_CommitCurrentBlock();
+			m_begin = (char*)(pNew + 1);
+			m_end = m_begin + pNew->cbSize;
 		}
+
+		BOOST_MEMORY_ASSERT(m_end - m_begin >= cb);
+
 		_MemHeader* pAlloc = (_MemHeader*)(m_end -= cb);
 		pAlloc->blkType = nodeAlloced;
 		pAlloc->cbSize = cbData;

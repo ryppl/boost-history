@@ -31,6 +31,8 @@
 #endif
 
 #pragma pack() // default pack
+#pragma warning(disable:4786)
+// warning: identifier was truncated to '255' characters in the debug information
 
 // =========================================================================
 
