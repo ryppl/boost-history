@@ -77,13 +77,23 @@
       </p>
 <pre class="programlisting">
 <span class="identifier">user_vector</span> <span class="identifier">v</span><span class="special">;</span>
-<span class="identifier">str_out</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span><span class="special">;</span>
 </pre>
 <p>
         prints
       </p>
 <pre class="programlisting">
 <span class="special">[</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">]</span>
+</pre>
+<p>
+        If the container had been an associative container of pairs, then the operator&lt;&lt;
+        code would have looked like this:
+      </p>
+<pre class="programlisting">
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">ostr</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">user_vector</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="keyword">return</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">stream_container</span><span class="special">(</span><span class="identifier">ostr</span><span class="special">,</span> <span class="identifier">u</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">u</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">stream_map_value</span><span class="special">());</span>
+<span class="special">}</span>
 </pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

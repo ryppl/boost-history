@@ -58,7 +58,7 @@ The following example uses the above formatter against a vector containing a vec
    vvi.push_back(vi);
    vvi.push_back(vi);
    vvi.push_back(vi);
-   str_out << format_2d << vvi;
+   std::cout << format_2d << vvi;
 
 This prints
 
