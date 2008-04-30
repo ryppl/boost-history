@@ -81,7 +81,7 @@ public:
 	AllocT* inner_GetAlloc() const { return m_alloc; }
 };
 
-#if defined(BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE)
+#if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION)
 
 template <class AllocT>
 class stl_allocator<void, AllocT>

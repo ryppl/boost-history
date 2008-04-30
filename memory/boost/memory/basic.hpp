@@ -49,14 +49,12 @@
 
 // -------------------------------------------------------------------------
 
-#if !defined(BOOST_NO_PARTIAL_SPECIAILIZATION)
-	#define BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE
+#if defined(BOOST_NO_PARTIAL_SPECIAILIZATION)
+	#define BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION
 #elif defined(_MSC_VER)
-	#if (_MSC_VER > 1200)
-	#define BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE
+	#if (_MSC_VER <= 1200)
+	#define BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION
 	#endif
-#elif defined(__GNUG__)
-	#define BOOST_MEMORY_SUPPORT_PARTIAL_TEMPLATE
 #endif
 
 // =========================================================================
