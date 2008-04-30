@@ -62,16 +62,16 @@
 
 <span class="comment">// simple vector example
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
-<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
-<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
-<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+<span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+<span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
+<span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span><span class="special">;</span>                  <span class="comment">// prints [1, 2, 3]
 </span>
 <span class="comment">//lets do some containers in containers
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">vvi</span><span class="special">;</span>
 <span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
 <span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span><span class="special">;</span>                  <span class="comment">// prints [[1, 2, 3], [1, 2, 3]]
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">vvi</span><span class="special">;</span>                  <span class="comment">// prints [[1, 2, 3], [1, 2, 3]]
 </span>
 <span class="comment">// associative containers 
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">si_map</span><span class="special">;</span>

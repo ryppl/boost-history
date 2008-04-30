@@ -39,7 +39,7 @@ Containers that contain other containers will print the child containers using t
    std::vector<std::vector<int> > vvi;
    vvi.push_back(vi);
    vvi.push_back(vi);
-   std::cout << vi;
+   std::cout << vvi;
 
 prints
 

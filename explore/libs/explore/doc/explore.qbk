@@ -39,16 +39,16 @@ The following are some simple usage examples:
 
    // simple vector example
    std::vector<int> vi;
-   vvi.push_back(1);
-   vvi.push_back(2);
-   vvi.push_back(3);
+   vi.push_back(1);
+   vi.push_back(2);
+   vi.push_back(3);
    std::cout << vi;                  // prints [1, 2, 3]
    
    //lets do some containers in containers
    std::vector<std::vector<int> > vvi;
    vvi.push_back(vi);
    vvi.push_back(vi);
-   std::cout << vi;                  // prints [[1, 2, 3], [1, 2, 3]]
+   std::cout << vvi;                  // prints [[1, 2, 3], [1, 2, 3]]
    
    // associative containers 
    std::map<std::string, int> si_map;
