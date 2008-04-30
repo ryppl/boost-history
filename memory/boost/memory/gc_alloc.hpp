@@ -137,48 +137,50 @@ private:
 	_MemBlock* m_blockList;
 	_FreeListNode* m_freeList;
 	_HugeGCAlloc m_hugeAlloc;
+	static _FreeMemHeader _null;
 
 private:
 	const gen_alloc& operator=(const gen_alloc&);
 
-	static bool BOOST_MEMORY_CALL _IsValid(void* obj, destructor_t fn)
+	static bool BOOST_MEMORY_CALL _IsValid(void* obj, size_t cb, destructor_t fn)
 	{
 		_MemHeaderEx* node = (_MemHeaderEx*)obj - 1;
 		BOOST_MEMORY_ASSERT(node->fnDestroy == fn);
-		BOOST_MEMORY_ASSERT(node->cbSize == sizeof(Type) + sizeof(_DestroyInfo));
+		BOOST_MEMORY_ASSERT(node->cbSize == cb + sizeof(_DestroyInfo));
 		BOOST_MEMORY_ASSERT(node->blkType == nodeAllocedWithDestructor);
 		return node->fnDestroy == fn &&
-			node->cbSize == sizeof(Type) + sizeof(_DestroyInfo) &&
+			node->cbSize == cb + sizeof(_DestroyInfo) &&
 			node->blkType == nodeAllocedWithDestructor;
 	}
 
-	static bool BOOST_MEMORY_CALL _IsValid(void* obj, int fnZero)
+	static bool BOOST_MEMORY_CALL _IsValid(void* obj, size_t cb, int fnZero)
 	{
 		_MemHeader* node = (_MemHeader*)obj - 1;
-		BOOST_MEMORY_ASSERT(node->cbSize == sizeof(Type));
+		BOOST_MEMORY_ASSERT(node->cbSize == cb);
 		BOOST_MEMORY_ASSERT(node->blkType == nodeAlloced);
-		return node->cbSize == sizeof(Type) && node->blkType == nodeAlloced;
+		return node->cbSize == cb && node->blkType == nodeAlloced;
 	}
 
 	template <class Type>
 	static bool BOOST_MEMORY_CALL _IsValid(Type* obj)
 	{
-		return _IsValid(obj, destructor_traits<Type>::destruct);
+		return _IsValid(obj, sizeof(Type), destructor_traits<Type>::destruct);
 	}
 
 	template <class Type>
 	static bool BOOST_MEMORY_CALL _IsValidArray(Type* array, size_t count)
 	{
 		void* buf = destructor_traits<Type>::getArrayBuffer(array);
+		size_t cb = destructor_traits<Type>::getArrayAllocSize(count);
 		if (buf == array)
 		{
-			return _IsValid(buf, sizeof(Type)*count);
+			return _IsValid(buf, cb, sizeof(Type)*count);
 		}
 		else
 		{
 			size_t count1 = destructor_traits<Type>::getArraySize(array);
 			BOOST_MEMORY_ASSERT(count1 == count);
-			bool fValid = _IsValid(buf, destructor_traits<Type>::destructArray);
+			bool fValid = _IsValid(buf, cb, destructor_traits<Type>::destructArray);
 			return count1 == count && fValid;
 		}
 	}
@@ -216,7 +218,7 @@ private:
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
 	enum { AllocSizeBig = MIN(_Policy::AllocSizeBig, BlockSize/2) };
-	enum { AllocSizeHuge = (1 << 30) };
+	enum { AllocSizeHuge = _Policy::AllocSizeHuge };
 	enum { RecycleSizeMin = MAX(_Policy::RecycleSizeMin, 128) };
 
 public:
@@ -263,41 +265,13 @@ public:
 		_MemBlock* pHeader = m_blockList;
 		while (pHeader)
 		{
-			_MemBlock* pTemp = pHeader->pPrev;
-			m_alloc.deallocate(pHeader);
-			pHeader = pTemp;
+			_MemBlock* curr = pHeader;
+			pHeader = pHeader->pPrev;
+			m_alloc.deallocate(curr);
 		}
-		m_begin = m_end = NULL;
+		m_begin = m_end = _null.getData();
 		m_blockList = NULL;
 		m_freeList = NULL;
-	}
-
-	template <class Type>
-	void BOOST_MEMORY_CALL destroy(Type* obj)
-	{
-		BOOST_MEMORY_ASSERT( _IsValid(obj) );
-
-		_MemHeader* p = (_MemHeader*)obj - 1;
-		p->blkType = nodeFree;
-		obj->~Type();
-	}
-
-	template <class Type>
-	Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
-	{
-		Type* array = (Type*)destructor_traits<Type>::allocArray(*this, count);
-		return constructor_traits<Type>::constructArray(array, count);
-	}
-
-	template <class Type>
-	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
-	{
-		BOOST_MEMORY_ASSERT( _IsValidArray(obj, count) );
-
-		void* buf = destructor_traits<Type>::getArrayBuffer(array);
-		_MemHeader* p = (_MemHeader*)buf - 1;
-		p->blkType = nodeFree;
-		destructor_traits<Type>::destructArrayN(array, count);
 	}
 
 	void* BOOST_MEMORY_CALL allocate(size_t cbData)
@@ -314,8 +288,6 @@ public:
 				if (cb >= BlockSize)
 				{
 					pNew = _NewMemBlock(cb + HeaderSize);
-					m_blockList->pPrev = pNew;
-					m_blockList = pNew;
 					_MemHeader* p = (_MemHeader*)pNew->buffer;
 					p->blkType = nodeAlloced;
 					p->cbSize = cbData;
@@ -343,6 +315,9 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
+		if (cb >= AllocSizeHuge)
+			return m_hugeAlloc.allocate(cb, fn);
+		
 		_DestroyInfo* pNode = (_DestroyInfo*)allocate(sizeof(_DestroyInfo) + cb);
 		pNode->fnDestroy = fn;
 		pNode->pPrev = m_destroyChain;
@@ -359,17 +334,67 @@ public:
 	void BOOST_MEMORY_CALL deallocate(void* pData, size_t cbData)
 	{
 		if (cbData >= AllocSizeHuge)
-			return m_hugeAlloc.deallocate(p, cbData);
+		{
+			m_hugeAlloc.deallocate(pData, cbData);
+		}
+		else
+		{
+			_MemHeader* p = (_MemHeader*)pData - 1;
+			BOOST_MEMORY_ASSERT(p->cbSize == cbData);
+			BOOST_MEMORY_ASSERT(p->blkType == nodeAlloced);
 
-		_MemHeader* p = (_MemHeader*)pData - 1;
-		BOOST_MEMORY_ASSERT(p->cbSize == cbData);
-		BOOST_MEMORY_ASSERT(p->blkType == nodeAlloced);
+			p->blkType = nodeFree;
+		}
+	}
 
+public:
+	template <class Type>
+	void BOOST_MEMORY_CALL destroy(Type* obj)
+	{
+		BOOST_MEMORY_ASSERT( _IsValid(obj) );
+		BOOST_MEMORY_ASSERT( sizeof(Type) < AllocSizeHuge );
+
+		obj->~Type();
+
+		_MemHeaderEx* p = (_MemHeaderEx*)obj - 1;
 		p->blkType = nodeFree;
+	}
+
+	template <class Type>
+	Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
+	{
+		size_t cb = destructor_traits<Type>::getArrayAllocSize(count);
+		if (cb >= AllocSizeHuge)
+			return m_hugeAlloc.newArray(count, zero);
+
+		Type* array = (Type*)destructor_traits<Type>::allocArray(*this, count);
+		return constructor_traits<Type>::constructArray(array, count);
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
+	{
+		BOOST_MEMORY_ASSERT( _IsValidArray(obj, count) );
+
+		size_t cb = destructor_traits<Type>::getArrayAllocSize(count);
+		if (cb >= AllocSizeHuge)
+		{
+			m_hugeAlloc.destroyArray(array, count);
+		}
+		else
+		{
+			destructor_traits<Type>::destructArrayN(array, count);
+			void* pData = destructor_traits<Type>::getArrayBuffer(array),
+			_MemHeaderEx* p = (_MemHeaderEx*)pData - 1;
+			p->blkType = nodeFree;
+		}
 	}
 
 	_BOOST_FAKE_DBG_ALLOCATE();
 };
+
+template <class _Policy>
+typename gen_alloc<_Policy>::_FreeMemHeader gen_alloc<_Policy>::_null;
 
 // -------------------------------------------------------------------------
 // class gc_alloc

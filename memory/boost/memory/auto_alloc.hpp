@@ -118,9 +118,9 @@ public:
 		_MemBlock* pHeader = _ChainHeader();
 		while (pHeader)
 		{
-			_MemBlock* pTemp = pHeader->pPrev;
-			m_alloc.deallocate(pHeader);
-			pHeader = pTemp;
+			_MemBlock* curr = pHeader;
+			pHeader = pHeader->pPrev;
+			m_alloc.deallocate(curr);
 		}
 		m_begin = m_end = (char*)HeaderSize;
 	}

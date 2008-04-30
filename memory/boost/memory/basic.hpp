@@ -30,6 +30,8 @@
 #include <crtdbg.h> // _CrtSetDbgFlag
 #endif
 
+#pragma pack() // default pack
+
 // =========================================================================
 
 #ifndef BOOST_MEMORY_CALL
@@ -126,6 +128,11 @@ struct destructor_traits
 		destructArrayN((Type*)(hdr + 1), hdr->count);
 	}
 
+	static size_t BOOST_MEMORY_CALL getArrayAllocSize(size_t count)
+	{
+		return sizeof(array_destructor_header)+sizeof(Type)*count;
+	}
+
 	template <class AllocT>
 	static void* BOOST_MEMORY_CALL allocArray(AllocT& alloc, size_t count)
 	{
@@ -136,9 +143,9 @@ struct destructor_traits
 		return hdr + 1;
 	}
 
-    static void* BOOST_MEMORY_CALL getArrayBuffer(void* array)
+    static char* BOOST_MEMORY_CALL getArrayBuffer(void* array)
 	{
-		return (array_destructor_header*)array - 1;
+		return (char*)array - sizeof(array_destructor_header);
 	}
 
     static size_t BOOST_MEMORY_CALL getArraySize(void* array)
@@ -170,13 +177,17 @@ struct destructor_traits< Type >											\
 																			\
 	static void BOOST_MEMORY_CALL destructArrayN(Type* array, size_t count) {} \
 																			\
+	static size_t BOOST_MEMORY_CALL getArrayAllocSize(size_t count) {		\
+		return sizeof(Type)*count;											\
+	}																		\
+																			\
 	template <class AllocT>													\
 	static void* BOOST_MEMORY_CALL allocArray(AllocT& alloc, size_t count) {\
 		return alloc.allocate(sizeof(Type)*count);							\
 	}																		\
 																			\
-	static void* BOOST_MEMORY_CALL getArrayBuffer(void* array) {			\
-		return array;														\
+	static char* BOOST_MEMORY_CALL getArrayBuffer(void* array) {			\
+		return (char*)array;												\
 	}																		\
 																			\
 	static size_t BOOST_MEMORY_CALL getArraySize(void* array) {				\
@@ -207,10 +218,6 @@ struct constructor_traits< Type >											\
 };																			\
 _NS_BOOST_END
 
-#define BOOST_INT_NO_CONSTRUCTOR(Type)										\
-	BOOST_NO_CONSTRUCTOR(unsigned Type);									\
-	BOOST_NO_CONSTRUCTOR(signed Type)
-
 // -------------------------------------------------------------------------
 // C Standard Types Support
 
@@ -218,20 +225,21 @@ _NS_BOOST_END
 	BOOST_NO_CONSTRUCTOR(Type);												\
 	BOOST_NO_DESTRUCTOR(Type)
 
-#define BOOST_DECL_INT_CTYPE(Type)											\
-	BOOST_NO_CONSTRUCTOR(Type);												\
-	BOOST_INT_NO_DESTRUCTOR(Type)
-
-// -------------------------------------------------------------------------
-
 BOOST_DECL_CTYPE(bool);
 BOOST_DECL_CTYPE(float);
 BOOST_DECL_CTYPE(double);
 
-BOOST_DECL_INT_CTYPE(int);
-BOOST_DECL_INT_CTYPE(char);
-BOOST_DECL_INT_CTYPE(short);
-BOOST_DECL_INT_CTYPE(long);
+BOOST_DECL_CTYPE(int);
+BOOST_DECL_CTYPE(unsigned int);
+
+BOOST_DECL_CTYPE(char);
+BOOST_DECL_CTYPE(unsigned char);
+
+BOOST_DECL_CTYPE(short);
+BOOST_DECL_CTYPE(unsigned short);
+
+BOOST_DECL_CTYPE(long);
+BOOST_DECL_CTYPE(unsigned long);
 
 // =========================================================================
 // MEMORY_DBG_NEW_ARG

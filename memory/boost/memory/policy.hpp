@@ -64,12 +64,25 @@ public:
 		{
 			_MemBlock* curr = m_memChain;
 			m_memChain = m_memChain->pPrev;
-			_SysAlloc::deallocate(m_memChain);
+			_SysAlloc::deallocate(curr);
 		}
 	}
 
 	template <class Type>
 	void BOOST_MEMORY_CALL destroy(Type* obj)
+	{
+		// no action
+	}
+
+	template <class Type>
+	Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
+	{
+		Type* array = (Type*)destructor_traits<Type>::allocArray(*this, count);
+		return constructor_traits<Type>::constructArray(array, count);
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 	{
 		// no action
 	}
@@ -113,10 +126,12 @@ private:
 
 public:
 	enum { MemBlockSize = BOOST_MEMORY_BLOCK_SIZE };
-	enum { AllocSizeBig = Default };
-	enum { RecycleSizeMin = 256 };
-
 	typedef system_alloc allocator_type;
+
+	enum { RecycleSizeMin = 256 };
+	enum { AllocSizeBig = Default };
+	enum { AllocSizeHuge = 1024*1024 };
+
 	typedef simple_gc_alloc<system_alloc> huge_gc_allocator;
 };
 
