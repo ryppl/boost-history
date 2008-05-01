@@ -98,7 +98,10 @@
 			- Updated several sources to comply with the Boost Coding Guidelines 
 			  for Integral Constant Expressions, now using the BOOST_STATIC_CONSTANT
 			  macro.
-			  
+		</revision>
+		<revision id="20080501" major="0" minor="1" micro="16" author="m_ch">
+			- Moved the all_attributes implementation out of the meta_class
+			  to a separate template (placed in mirror/meta_attribs.cpp)
 		</revision>
 	</revisions>
 </library>

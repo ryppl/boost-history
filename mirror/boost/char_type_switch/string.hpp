@@ -11,6 +11,7 @@
 #define BOOST_CHAR_WIDTH_SWITCH_STRING
 
 #include <boost/char_type_switch/choice.hpp>
+#include <boost/config.hpp>
 // Needed for ::std::string / ::std::wstring
 #include <string>
 //
@@ -51,7 +52,7 @@ namespace boost {
 // disable the deprecated function warning on msvc
 // this warning is issued when not using the "safe"
 // versions of string functions like strcpy_s (vs. strcpy)
-#ifdef _MSC_VER
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #endif
@@ -103,7 +104,7 @@ inline bchar* bstrncpy(bchar* dst, const bchar* src, size_t count)
 }
 
 // enable the deprecated function warnings on msvc
-#ifdef _MSC_VER
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 
