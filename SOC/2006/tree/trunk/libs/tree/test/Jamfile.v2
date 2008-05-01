@@ -39,7 +39,7 @@ test-suite tree :
 	[ run red_black_tree_test.cpp ]
 	[ run treap_test.cpp ]
 	[ run forest_test.cpp ]
-	[ run nary_tree_test.cpp ]
+#	[ run nary_tree_test.cpp ]
 	[ run multiway_tree_test.cpp ]
 	[ run unbalanced_binary_tree_test.cpp ]
 	

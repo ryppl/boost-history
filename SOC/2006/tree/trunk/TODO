@@ -15,6 +15,11 @@
 
 General:
 
+* Unify const_cusor and cursor facades/adapters. Otherwise their use is ridiculously complicated and redundant.
+  (Something along the lines of implementing one of them and then providing a shortcut to build the other one around it).
+* Implement "flat" (sequential *order representation) trees (cf. Knuth, Fundamental Algorithms,
+  pp. 348--351). Those should be especially useful for automated testing of "real" (binary, 
+  forest) trees.
 * have `erase()` operations return cursor/iterator instead of void (as in new STD)
 * modify parity/parent specs according to newsgroup thread, but members add to binary_tree cursor!
 * Add O(n) generations(ancestor, descendant) algorithm (vertical distance) yielding number
@@ -75,7 +80,7 @@ Implementation:
 	* searcher
 * Concept checks.
 * Interoperability with BGL algorithms.
-* C++0x: Add template typedefs (e.g. red_black_tree is balanced_tree<red_black_balancer, binary_tree>)
+* C++09: Add template typedefs (e.g. red_black_tree is balanced_tree<red_black_balancer, binary_tree>)
 
 Documentation:
 

@@ -7,6 +7,8 @@
 #ifndef LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
 #define LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
 
+#include <list>
+
 #include <boost/test/minimal.hpp>
 
 // Test data from http://en.wikipedia.org/wiki/Image:Binary_search_tree.svg
@@ -16,7 +18,7 @@
 template <class Tree>
 void create_test_data_tree(Tree& ret)
 {
-	typename Tree::cursor cur = ret.insert(ret.shoot(), 8);
+	typename Tree::cursor cur = ret.insert(ret.root(), 8);
 	cur = ret.insert(cur, 3);
 	ret.insert(cur, 1);
 	cur = ret.insert(++cur, 6);
@@ -49,6 +51,9 @@ void validate_test_data_tree(Tree const& ret)
 namespace test {
 
 namespace preorder {
+
+//std::list data;
+
 
 template <class Iterator>
 void traversal(Iterator a, Iterator b) 
@@ -84,9 +89,30 @@ void reverse_traversal(Iterator a, Iterator b)
 	BOOST_CHECK(a == b);
 }
 
+template <class Iterator>
+void subtree_traversal(Iterator a, Iterator b) 
+{
+	BOOST_CHECK(*a++ == 3);
+	BOOST_CHECK(*a++ == 1);
+	BOOST_CHECK(*a++ == 6);
+	BOOST_CHECK(*a++ == 4);
+	BOOST_CHECK(*a++ == 7);
+	BOOST_CHECK(a == b);
+}
+
 } // namespace preorder
 
 namespace inorder {
+
+
+
+template < class Tp, class Alloc = std::allocator<Tp> >
+class flat_binary_tree {
+ protected:
+	std::list<Tp, Alloc> cont;
+ public:
+	
+};
 
 template <class Iterator>
 void traversal(Iterator a, Iterator b)
