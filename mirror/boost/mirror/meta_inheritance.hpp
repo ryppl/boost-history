@@ -35,7 +35,7 @@ template <
 	typedef inheritance_spec inheritance_specifier;
 	typedef access_spec access_specifier;
 	typedef the_base_class base_class;
-	typedef BOOST_MIRROR_REFLECT_CLASS(the_base_class) meta_class;
+	typedef BOOST_MIRROR_REFLECT_CLASS(the_base_class) meta_base_class;
 };
 
 /** This template stores the inheritance type and access specifier
@@ -117,7 +117,8 @@ struct meta_inheritance_spec<
  *  of a base class for a derived class
  */
 template <
-	class the_base_class, 
+	class base_class_position,
+	class the_base_class,
 	typename access_spec, 
 	typename inheritance_spec = nonvirtual_base_
 >
@@ -126,7 +127,10 @@ struct meta_inheritance
 	the_base_class, 
 	access_spec, 
 	inheritance_spec
->{ };
+>
+{
+	typedef base_class_position position;
+};
 
 /** Default (empty) list of base classes of a meta_class
  */
@@ -158,6 +162,7 @@ struct meta_base_classes
 #define BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(NUMBER, A_BASE_CLASS) \
 	BOOST_PP_COMMA_IF(NUMBER) \
 	meta_inheritance<\
+		mpl::int_<NUMBER>, \
 		A_BASE_CLASS, \
 		class_kind_default_access<\
 			meta_class_kind< A_BASE_CLASS >::result \
@@ -170,7 +175,8 @@ struct meta_base_classes
  *  zero, declarations must be ordered by number.
  */
 #define BOOST_MIRROR_REG_BASE_CLASS(NUMBER, ACCESS_SPEC, A_BASE_CLASS) \
-	BOOST_PP_COMMA_IF(NUMBER) meta_inheritance<A_BASE_CLASS, ACCESS_SPEC##_> 
+	BOOST_PP_COMMA_IF(NUMBER) \
+	meta_inheritance<mpl::int_<NUMBER>, A_BASE_CLASS, ACCESS_SPEC##_> 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
  *  base class of the given class, with the given access specifier
@@ -178,7 +184,8 @@ struct meta_base_classes
  *  zero, declarations must be ordered by number.
  */
 #define BOOST_MIRROR_REG_BASE_CLASS_VIRTUAL(NUMBER, ACCESS_SPEC, A_BASE_CLASS) \
-	BOOST_PP_COMMA_IF(NUMBER) meta_inheritance<A_BASE_CLASS, ACCESS_SPEC##_, virtual_base_> 
+	BOOST_PP_COMMA_IF(NUMBER) \
+	meta_inheritance<mpl::int_<NUMBER>, A_BASE_CLASS, ACCESS_SPEC##_, virtual_base_> 
 
 /** This macro finishes the declaration of base classes
  *  of the given class

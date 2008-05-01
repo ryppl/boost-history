@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_attribs_simple.hpp
+ * \file boost/mirror/detail/meta_attribs_base.hpp
  * Registering and reflection of simple class attributes
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,8 +7,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_ATTRIBS_SIMPLE_HPP
-#define BOOST_MIRROR_META_ATTRIBS_SIMPLE_HPP
+#ifndef BOOST_MIRROR_DETAIL_META_ATTRIBS_BASE_HPP
+#define BOOST_MIRROR_DETAIL_META_ATTRIBS_BASE_HPP
 
 // mirror common definitions 
 #include <boost/mirror/common_defs.hpp>
@@ -28,72 +28,10 @@ namespace mirror {
 template <class the_class, class variant_tag = detail::default_meta_class_variant>
 struct meta_class_attributes;
 
-namespace detail {
-
-/** Implementation of the for_each function on meta_attributes
- */
-template <class meta_class, class meta_attributes>
-struct meta_class_attrib_for_each
-{
-protected:
-	template <class meta_attrib_op, int I>
-	static void do_apply_to(meta_attrib_op op, mpl::int_<I> pos)
-	{
-		typedef typename meta_attributes::type_list type_list;
-		typedef typename mpl::at<type_list, mpl::int_<I> >::type attrib_type;
-		meta_class mc;
-		meta_attributes ma;
-		op(mc, ma, pos, (attrib_type*)0);
-	}
-
-	template <class meta_attrib_op>
-	static void apply_to(meta_attrib_op op, mpl::int_< -1 > pos){ }
-
-	template <class meta_attrib_op>
-	static void apply_to(meta_attrib_op op, mpl::int_<0> pos)
-	{
-		do_apply_to(op, pos);
-	}
-
-	template <class meta_attrib_op, int I>
-	static void apply_to(meta_attrib_op op, mpl::int_<I> pos)
-	{
-		apply_to(op, mpl::int_<I - 1>()), 
-		do_apply_to(op, pos);
-	}
-public:
-
-	/** Performs op((meta_class*)0, mpl::int_<I>, 'type-of-I-th'*0
-	 */
-	template <class meta_attrib_op>
-	static meta_attrib_op for_each(meta_attrib_op op)
-	{
-		typedef typename meta_attributes::type_list type_list;
-		typedef mpl::int_<mpl::size<type_list>::value - 1> last;
-		apply_to(op, last());
-		return op;
-	}
-};
-
-/** This template ties together several function implementations
- *  for the specializations of the meta_class_attributes<>
- *  template.
- */
-template <class meta_class, class meta_attribs>
-struct meta_class_attrib_utils
-: meta_class_attrib_for_each<meta_class, meta_attribs>
-{ };
-
-} // namespace detail
-
 /** Defaut (empty) list of base attributes of a meta class
  */
 template <class the_class, class variant_tag>
 struct meta_class_attributes
-: public detail::meta_class_attrib_utils<
-	meta_class<the_class, variant_tag>,
-	meta_class_attributes<the_class, variant_tag>
->
 {
 	typedef mpl::vector<> type_list;
 };
@@ -103,10 +41,6 @@ struct meta_class_attributes
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(THE_CLASS) \
 	template <> struct meta_class_attributes< THE_CLASS , detail::default_meta_class_variant> \
-	: public detail::meta_class_attrib_utils<\
-		meta_class<THE_CLASS, detail::default_meta_class_variant>, \
-		meta_class_attributes<THE_CLASS, detail::default_meta_class_variant> \
-	>\
 	{ \
 		typedef THE_CLASS the_class; \
 		typedef mpl::vector<> 
@@ -120,16 +54,6 @@ struct meta_class_attributes
 		THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) >, \
 		detail::default_meta_class_variant \
 	> \
-	: public detail::meta_class_attrib_utils<\
-		meta_class< \
-			THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) >, \
-			detail::default_meta_class_variant \
-		>, \
-		meta_class_attributes< \
-			THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) >, \
-			detail::default_meta_class_variant \
-		> \
-	>\
 	{ \
 		typedef THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
 			the_class; \

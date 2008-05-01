@@ -25,11 +25,12 @@
 #include <boost/mirror/meta_class.hpp>
 
 #include <boost/mirror/utils/name_to_stream.hpp>
+#include <boost/mirror/algorithms.hpp>
 
-#include <boost/mirror/reflects_global_scope.hpp>
-#include <boost/mirror/reflects_namespace.hpp>
-#include <boost/mirror/reflects_class.hpp>
-#include <boost/mirror/reflects_type.hpp>
+#include <boost/mirror/traits/reflects_global_scope.hpp>
+#include <boost/mirror/traits/reflects_namespace.hpp>
+#include <boost/mirror/traits/reflects_class.hpp>
+#include <boost/mirror/traits/reflects_type.hpp>
 
 
 /** First declare some namespaces and classes
@@ -238,7 +239,7 @@ struct pretty_printer
 	template <class out_stream, class meta_object>
 	out_stream& print_base_classes(out_stream& s, meta_object*) const {return s;}
 	//
-	// a function object that gets called by mpl::for_each
+	// a function object that gets called by mirror::for_each
 	// for every base class of the given class 
 	template <class out_stream>
 	struct base_class_printer
@@ -254,7 +255,7 @@ struct pretty_printer
 			// it's base_class typedef is the type 
 			// of the base class
 			using namespace ::std;
-			typedef typename meta_inheritance::meta_class meta_class;
+			typedef typename meta_inheritance::meta_base_class meta_class;
 			s << endl << " - " << name_to_stream<meta_class>();
 		}
 	};
@@ -278,7 +279,7 @@ struct pretty_printer
 		else s << "no base classes.";
 		//
 		// execute the printer on the list of base classes
-		mpl::for_each<base_class_list>(base_class_printer<out_stream>(s));
+		for_each<meta_object::base_classes>(base_class_printer<out_stream>(s));
 		//
 		return s << endl;
 	}
@@ -298,32 +299,14 @@ struct pretty_printer
 		attrib_printer(out_stream& _s):s(_s){ }
 		//
 		// function call operator
-		template <
-			class meta_class, 
-			class meta_attributes, 
-			class iterator, 
-			class attrib_type
-		>
-		void operator()(meta_class mc, meta_attributes ma, iterator pos, attrib_type*) const 
+		template <class meta_attribute>
+		void operator()(meta_attribute ma) const 
 		{
-			// the first argument is a undefined pointer to the 
-			// meta_class which we are inspecting (it only conveys 
-			// the information about the meta_class<> specialization
-			//
-			// the second argument is the position that can be used 
-			// to access base_name of the i-th attribute. Basically 
-			// this is a mpl::int_<>
-			//
-			// the third attribute is an undefined pointer used to 
-			// pass the info about the i-th member attrib type
-			//
-			// NOTE: the pointers may be replaced by mpl::identity<>
-			// or some other type in the future
 			using namespace ::std;
 			s << endl << " - " << 
-				name_to_stream< BOOST_MIRROR_REFLECT_TYPE(attrib_type) >() <<
+				name_to_stream< BOOST_MIRROR_REFLECT_TYPE(typename meta_attribute::type) >() <<
 				"        " <<
-				ma.base_name(pos);
+				ma.base_name();
 		}
 	};
 	//
@@ -346,7 +329,7 @@ struct pretty_printer
 		// execute the printer on the list of member attributes
 		// note that the type of functor and the implementation
 		// of for_each is likely subject to changes
-		meta_object::attributes::for_each(attrib_printer<out_stream>(s));
+		for_each<meta_object::attributes>(attrib_printer<out_stream>(s));
 		return s << ::std::endl;
 	}
 

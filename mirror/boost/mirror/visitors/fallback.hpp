@@ -20,9 +20,11 @@ namespace mirror {
 
 struct fallback_visitor 
 {
-	// visitation of the 
-	template <typename base_type, typename meta_type>
-	void visit_instance(const meta_type& meta_data, base_type& instance, const bchar* name){ }
+	template <class meta_class>
+	void enter_type(meta_class){ }
+
+	template <class meta_class>
+	void leave_type(meta_class){ }
 };
 
 } // namespace mirror

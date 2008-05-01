@@ -16,7 +16,8 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/utils/name_to_stream.hpp>
+#include <boost/mirror/algorithms.hpp>
+#include <boost/mirror/functions.hpp>
 
 #include <boost/mirror/meta_types/boost_tuple.hpp>
 #include <boost/mirror/meta_types/std_pair.hpp>
@@ -34,23 +35,32 @@ public:
                 attrib_value_printer(a_class& _inst)
                 : inst(_inst){ }
 	
-                template <class meta_class, class meta_attributes, class iterator, class attrib_type>
-                void operator()(meta_class mc, meta_attributes ma, iterator pos, attrib_type*) const
+                template <typename meta_attribute>
+                void operator()(meta_attribute ma) const
                 {
                         using namespace ::std;
                         using namespace ::boost;
                         using namespace ::boost::mirror;
                         bcout <<
                                 " " <<
-                                ma.base_name(pos) <<
+                                ma.base_name() <<
                                 " = " <<
-                                ma.get(inst, pos) <<
+                                ma.get(inst) <<
                                 endl;
                 }
 private:
 	a_class& inst;
 };
 
+struct str_printer
+{
+	void operator()(const ::boost::bchar* str) const
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		bcout << str << ", ";
+	}
+};
 
 int main(void)
 {
@@ -109,12 +119,17 @@ int main(void)
 	//
 	tuple<int, int, int, int, int, int, int, int, int, int> x(0,1,2,3,4,5,6,7,8,9);
 	typedef BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x)) meta_X;
-	attrib_value_printer<meta_X::base_type> p(x);
+	attrib_value_printer<meta_X::reflected_type> p(x);
 	//
 	bcout << "The type name is: "<< meta_X::base_name() << endl;
 	bcout << "The class has "<< meta_X::all_attributes::size::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
-	meta_X::all_attributes::for_each(p);
+	for_each<meta_X::all_attributes>(p);
+	bcout << "---------------------------------------------------" << endl;
+	reverse_for_each<meta_X::all_attributes>(p);
+	bcout << "---------------------------------------------------" << endl;
+	for_each<meta_X::all_attributes>(select_base_name(), str_printer());
+	bcout << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "Finished" << endl;
 

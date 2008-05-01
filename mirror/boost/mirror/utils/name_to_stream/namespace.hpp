@@ -14,7 +14,7 @@
 #include <boost/mirror/utils/name_to_stream/common.hpp>
 // meta namespaces (includes boost/char_type_switch/string.hpp)
 #include <boost/mirror/meta_namespace.hpp>
-#include <boost/mirror/reflects_global_scope.hpp>
+#include <boost/mirror/traits/reflects_global_scope.hpp>
 
 namespace boost {
 namespace mirror {

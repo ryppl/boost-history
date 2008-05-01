@@ -22,10 +22,13 @@ namespace mirror {
 	 *  but allows to work with all member attributes including
 	 *  the inherited ones. 
 	 */
-	template <class meta_class>
+	template <
+		class _reflected_type, 
+		class _variant_tag
+	>
 	struct meta_class_all_attributes
-	: detail::meta_class_attrib_utils<meta_class, meta_class_all_attributes<meta_class> >
 	{
+		typedef meta_class<_reflected_type, _variant_tag> meta_class;
 		/** This struct "hides" the internal helpers
 		 */
 		struct detail 
@@ -58,7 +61,7 @@ namespace mirror {
 			{
 				typedef typename 
 					meta_inheritance:: 
-					meta_class:: 
+					meta_base_class:: 
 					all_attributes:: 
 					detail:: 
 					regular_base_class_layout type;
@@ -92,7 +95,7 @@ namespace mirror {
 			{
 				typedef typename 
 					meta_inheritance:: 
-					meta_class:: 
+					meta_base_class:: 
 					all_attributes:: 
 					detail:: 
 					virtual_base_class_layout type;
@@ -107,7 +110,7 @@ namespace mirror {
 			{
 				typedef typename 
 					meta_inheritance:: 
-					meta_class:: 
+					meta_base_class:: 
 					all_attributes:: 
 					detail:: 
 					base_class_layout type;
@@ -172,7 +175,7 @@ namespace mirror {
 			struct get_base_class_attrib_type_list
 			{
 				typedef typename meta_inheritance::
-						meta_class::
+						meta_base_class::
 						attributes::
 						type_list type;
 			};
@@ -216,9 +219,9 @@ namespace mirror {
 			struct get_base_class_attrib_owner_and_offs
 			{
 				typedef typename meta_inheritance::
-						meta_class base_meta_class;
+						meta_base_class meta_base_class;
 
-				typedef typename base_meta_class::
+				typedef typename meta_base_class::
 						attributes::
 						type_list type_list;
 
@@ -226,7 +229,7 @@ namespace mirror {
 						current_list
 				>::type offset;
 				typedef typename mpl::pair<
-						base_meta_class,
+						meta_base_class,
 						offset		
 					> pair;
 				
@@ -475,8 +478,77 @@ namespace mirror {
 		}
 	}; // all_attributes
 
+namespace detail {
+	/** Instances of this template are used to store information 
+	 *  about single class' member attribute and are used mainly
+	 *  in the algorithms.
+	 */
+	template <
+		class _reflected_type, 
+		class _variant_tag,
+		class _meta_attributes,
+		class _attrib_pos
+	>
+	struct meta_class_attribute
+	{
+		// the meta-class for the class to which 
+		// the attribute belongs
+		typedef meta_class<_reflected_type, _variant_tag> meta_class;
 
+		// the meta-attributes list (own/all)
+		// into which the attribute belongs
+		// in this context
+		typedef _meta_attributes meta_attributes;
 
+		// the position of the meta-attribute in the context
+		typedef _attrib_pos position;
+
+		// the type of the attribute
+		typedef typename mpl::at<
+			typename meta_attributes::type_list,
+			position
+		>::type type;
+
+		// base name getter
+		static const bchar* base_name(void)
+		{
+			return meta_attributes::base_name(position());
+		}
+
+		// full name getter
+		static const bchar* full_name(void)
+		{
+			return meta_attributes::full_name(position());
+		}
+
+		typedef typename meta_class::reflected_type reflected_class;
+
+		// value getter
+		static typename call_traits<type>::param_type 
+		get(const reflected_class& context)
+		{
+			return meta_attributes::get(context, position());
+		}
+
+		// value query
+		template <typename dest_type>
+		static dest_type& query(const reflected_class& context, dest_type& dest)
+		{
+			return meta_attributes::query(context, position(), dest);
+		}
+
+		// value setter
+		static void set(reflected_class& context, typename call_traits<type>::param_type val)
+		{
+			meta_attributes::set(context, position(), val);
+		}
+		// value setter
+		static void set(const reflected_class& context, typename call_traits<type>::param_type val)
+		{
+			meta_attributes::set(context, position(), val);
+		}
+	};
+} // namespace detail
 } // namespace mirror
 } // namespace boost
 

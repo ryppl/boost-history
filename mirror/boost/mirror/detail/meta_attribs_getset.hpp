@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_attributes.hpp
+ * \file boost/mirror/detail/meta_attribs_getset.hpp
  * Mscros for declaring meta attributes accessed through getters/setters
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,11 +7,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_ATTRIBS_GETSET_HPP
-#define BOOST_MIRROR_META_ATTRIBS_GETSET_HPP
+#ifndef BOOST_MIRROR_DETAIL_META_ATTRIBS_GETSET_HPP
+#define BOOST_MIRROR_DETAIL_META_ATTRIBS_GETSET_HPP
 
 // macros for declaration of simple meta attributes
-#include <boost/mirror/meta_attribs_base.hpp>
+#include <boost/mirror/detail/meta_attribs_base.hpp>
 //
 // necessary preprocessor macros
 #include <boost/preprocessor/tuple/to_list.hpp> 

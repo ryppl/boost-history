@@ -100,8 +100,24 @@
 			  macro.
 		</revision>
 		<revision id="20080501" major="0" minor="1" micro="16" author="m_ch">
+			- Major redesign and rewrite of certain things
 			- Moved the all_attributes implementation out of the meta_class
 			  to a separate template (placed in mirror/meta_attribs.cpp)
+			- Renamed the meta_type::base_type to meta_type::reflected_type
+			- Removed the for_each function from the meta_class::attributes 
+			  and meta_class::all_attributes
+			- Added some separate algorithms working on the meta_class::attributes
+			  and meta_class::all_attributes including for_each and reverse_for_each
+			- Added some separate algorithms working on the meta_class::base_classes
+			  including for_each and reverse_for_each
+			- Added some useful functors 
+			- Moved the reflects_*.cpp to the new traits subfolder
+			- Added 'position' type to the meta_inheritance template
+			- Updated examples to show the new features
+			- Added two meta_class traversal algorithms
+			- Added example showing class structure traversal
+			- Tested only with MSVC++ 2008 EE, so may fail to compile with other compilers
+
 		</revision>
 	</revisions>
 </library>

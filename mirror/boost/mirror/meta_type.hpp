@@ -79,7 +79,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	template <> struct meta_type< NAMESPACE::BASE_NAME >              \
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
-		typedef NAMESPACE::BASE_NAME base_type;                                  \
+		typedef NAMESPACE::BASE_NAME reflected_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
 		BOOST_STATIC_CONSTANT( \
 			int, \
@@ -99,7 +99,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	) >              \
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
-		typedef NAMESPACE::TYPEDEFD_NAME base_type;                                  \
+		typedef NAMESPACE::TYPEDEFD_NAME reflected_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#TYPEDEFD_NAME);}\
 		BOOST_STATIC_CONSTANT( \
 			int, \
@@ -115,7 +115,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	template <> struct meta_type< BASE_NAME >              \
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) scope;                        \
-		typedef BASE_NAME base_type;                                  \
+		typedef BASE_NAME reflected_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
 		BOOST_STATIC_CONSTANT( \
 			int, \
@@ -133,7 +133,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	template <> struct meta_type< WRAPPER::BASE_NAME >              \
 	{                                                                 \
 		typedef meta_class< WRAPPER > scope;                        \
-		typedef WRAPPER::BASE_NAME base_type;                                  \
+		typedef WRAPPER::BASE_NAME reflected_type;                                  \
 		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
 		BOOST_STATIC_CONSTANT( \
 			int, \
@@ -193,7 +193,7 @@ struct meta_type<pointee_type*> : detail::static_pointer_type_name<
 >
 {
 	typedef typename meta_type<pointee_type>::scope scope;
-	typedef pointee_type* base_type; 
+	typedef pointee_type* reflected_type; 
 };
 
 /** Meta-types for arrays
@@ -204,7 +204,7 @@ struct meta_type<const element_type[size]> : detail::static_array_type_name<
 >
 {
 	typedef typename meta_type<element_type>::scope scope;
-	typedef element_type base_type[size];
+	typedef element_type reflected_type[size];
 };
 
 template <class element_type, size_t size>
@@ -213,7 +213,7 @@ struct meta_type<element_type[size]> : detail::static_array_type_name<
 >
 {
 	typedef typename meta_type<element_type>::scope scope;
-	typedef element_type base_type[size];
+	typedef element_type reflected_type[size];
 };
 
 /** Meta-types for references
@@ -224,7 +224,7 @@ struct meta_type<refered_to_type&> : detail::static_reference_type_name<
 >
 {
 	typedef typename meta_type<refered_to_type>::scope scope;
-	typedef refered_to_type& base_type; 
+	typedef refered_to_type& reflected_type; 
 };
 
 /** Meta-types for const types
@@ -235,7 +235,7 @@ struct meta_type<const non_const_type> : detail::static_const_type_name<
 >
 {
 	typedef typename meta_type<non_const_type>::scope scope;
-	typedef const non_const_type base_type; 
+	typedef const non_const_type reflected_type; 
 };
 
 /** Meta-types for volatile types
@@ -246,7 +246,7 @@ struct meta_type<volatile non_volatile_type> : detail::static_volatile_type_name
 >
 {
 	typedef typename meta_type<non_volatile_type>::scope scope;
-	typedef volatile non_volatile_type base_type; 
+	typedef volatile non_volatile_type reflected_type; 
 };
 
 /** Meta-types for const volatile types
@@ -257,7 +257,7 @@ struct meta_type<const volatile non_cv_type> : detail::static_cv_type_name<
 >
 {
 	typedef typename meta_type<non_cv_type>::scope scope;
-	typedef const volatile non_cv_type base_type; 
+	typedef const volatile non_cv_type reflected_type; 
 };
 
 

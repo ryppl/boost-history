@@ -41,7 +41,7 @@ struct meta_type< ::std::map<K, T, Comp, Allocator> >
 >
 {
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;
-	typedef ::std::map<K, T, Comp, Allocator> base_type;
+	typedef ::std::map<K, T, Comp, Allocator> reflected_type;
 };
 
 

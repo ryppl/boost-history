@@ -28,7 +28,7 @@
 // reflection of class inheritance
 #include <boost/mirror/meta_inheritance.hpp>
 // inheritance trait
-#include <boost/mirror/reflects_virtual_inheritance.hpp>
+#include <boost/mirror/traits/reflects_virtual_inheritance.hpp>
 // reflection of class member attributes
 #include <boost/mirror/meta_attributes.hpp>
 
@@ -44,6 +44,7 @@ template <
 >
 struct meta_class : public meta_type<reflected_class>
 {
+
 	/** The base classes of a class.
 	 *  The member base_classes::list is a mpl::vector of 
 	 *  meta_inheritance<> specializations, one for every 
@@ -51,7 +52,7 @@ struct meta_class : public meta_type<reflected_class>
 	 */
 	typedef meta_base_classes<reflected_class, variant_tag> base_classes;
 
-	/** The member attributes of the class (not includeing the inherited
+	/** The member attributes of the class (not including the inherited
 	 *  member attribs. 
 	 *  The attributes::type_list is a mpl::vector of types 
 	 *  of the attributes.
@@ -68,7 +69,9 @@ struct meta_class : public meta_type<reflected_class>
 	typedef meta_class_attributes<reflected_class, variant_tag> 
 		attributes;
 
-	typedef meta_class_all_attributes<meta_class<reflected_class, variant_tag> >
+	/** Same as attributes but containing also the inherited attributes
+	 */
+	typedef meta_class_all_attributes<reflected_class, variant_tag >
 		all_attributes;
 };
 

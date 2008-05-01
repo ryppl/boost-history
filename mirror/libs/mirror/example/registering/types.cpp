@@ -14,7 +14,7 @@
 #include <boost/mirror/meta_namespace.hpp>
 #include <boost/mirror/meta_type.hpp>
 //
-#include <boost/mirror/reflects_global_scope.hpp>
+#include <boost/mirror/traits/reflects_global_scope.hpp>
 // utility that allows to put the name of the type to a given stream
 #include <boost/mirror/utils/name_to_stream/type.hpp>
 //

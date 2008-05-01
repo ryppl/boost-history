@@ -41,7 +41,7 @@ struct meta_type< ::std::vector<T, Allocator> >
 >
 {
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
-	typedef ::std::vector<T, Allocator> base_type;
+	typedef ::std::vector<T, Allocator> reflected_type;
 };
 
 

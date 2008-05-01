@@ -42,7 +42,7 @@ struct meta_type< ::std::pair<first_type, second_type> >
 >
 {
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
-	typedef ::std::pair<first_type, second_type> base_type;
+	typedef ::std::pair<first_type, second_type> reflected_type;
 };
 
 

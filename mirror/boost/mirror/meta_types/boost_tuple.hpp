@@ -66,7 +66,7 @@ struct meta_type<
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_boost_tuples) scope;                        
 	typedef ::boost::tuples::tuple< 
 		BOOST_MIRROR_TMP_BOOST_TUPLE_TEMPL_ARG_NAMES() 
-	> base_type;
+	> reflected_type;
 };
 
 // undefine the helper macros

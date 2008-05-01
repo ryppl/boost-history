@@ -41,7 +41,7 @@ struct meta_type< ::std::set<K, Comp, Allocator> >
 >
 {
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;
-	typedef ::std::set<K, Comp, Allocator> base_type;
+	typedef ::std::set<K, Comp, Allocator> reflected_type;
 };
 
 

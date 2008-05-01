@@ -41,7 +41,7 @@ struct meta_type< ::std::slist<T, Allocator> >
 >
 {
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
-	typedef ::std::slist<T, Allocator> base_type;
+	typedef ::std::slist<T, Allocator> reflected_type;
 };
 
 
