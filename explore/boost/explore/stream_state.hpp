@@ -26,9 +26,9 @@ namespace explore
         // returns an index into the ios_base container of user-defined data.  This will
         // create exactly one index per type T.
         template<typename T>
-        int get_stream_state_index(std::ios_base& stream)
+        int get_stream_state_index()
         {
-            static int index = stream.xalloc();
+            static int index = std::ios_base::xalloc();
             return index;
         }
 
@@ -36,7 +36,7 @@ namespace explore
         template<typename T>
         void delete_extra_state(std::ios_base::event e, std::ios_base& stream, int arg)
         {
-            if( std::ios_base::erase_event == e && arg == get_stream_state_index<T>(stream) )
+            if( std::ios_base::erase_event == e && arg == get_stream_state_index<T>() )
             {
                 delete get_stream_state<T>(stream);
                 stream.pword(arg) = 0;
@@ -52,7 +52,7 @@ namespace explore
     T* get_stream_state(std::ios_base& stream, bool create)
     {
         // grab reserved index
-        int index = detail::get_stream_state_index<T>(stream);
+        int index = detail::get_stream_state_index<T>();
 
         // grab state data at that index, casting from void*
         T*& state = reinterpret_cast<T*&>(stream.pword(index));
