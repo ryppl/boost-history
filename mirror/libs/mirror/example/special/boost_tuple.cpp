@@ -28,15 +28,15 @@
 
 #include <boost/mirror/meta_classes/boost_tuple.hpp>
 
-template <class a_class>
+template <class Class>
 class attrib_value_printer
 {
 public:
-                attrib_value_printer(a_class& _inst)
+                attrib_value_printer(Class& _inst)
                 : inst(_inst){ }
 	
-                template <typename meta_attribute>
-                void operator()(meta_attribute ma) const
+                template <typename MetaAttribute>
+                void operator()(MetaAttribute ma) const
                 {
                         using namespace ::std;
                         using namespace ::boost;
@@ -49,7 +49,7 @@ public:
                                 endl;
                 }
 private:
-	a_class& inst;
+	Class& inst;
 };
 
 struct str_printer

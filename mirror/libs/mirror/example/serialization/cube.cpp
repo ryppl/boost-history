@@ -43,11 +43,11 @@
 namespace Graphics {
 
 	// coordinates
-	template <typename a_float_type>
+	template <typename FloatType>
 	class CoordsTempl
 	{
 	public:
-		typedef a_float_type float_type;
+		typedef FloatType float_type;
 		CoordsTempl(
 			float_type _x = 0.0, 
 			float_type _y = 0.0, 
@@ -264,30 +264,30 @@ struct to_be_loaded
 };
 
 
-template <class meta_class, class position>
+template <class MetaClass, class Position>
 struct single_attrib_loader
 {
 	template <class Archive, class Class>
 	single_attrib_loader(Archive & ar, Class& c)
 	{
 		// first load the previous
-		single_attrib_loader<meta_class, mpl::int_<position::value - 1> >(ar, c);
+		single_attrib_loader<MetaClass, mpl::int_<Position::value - 1> >(ar, c);
 		// query the value of the current member
 		typedef typename mpl::at<
-			typename meta_class::all_attributes::type_list, 
-			position
+			typename MetaClass::all_attributes::type_list, 
+			Position
 		>::type member_type; 
 		member_type value;
 		// load it
 		typename to_be_loaded<member_type>::type dst(value);
 		ar >> dst;
 		// and set it
-		meta_class::all_attributes::set(c, position(), value);
+		MetaClass::all_attributes::set(c, Position(), value);
 	}
 };
 
-template <class meta_class>
-struct single_attrib_loader<meta_class, mpl::int_<0> >
+template <class MetaClass>
+struct single_attrib_loader<MetaClass, mpl::int_<0> >
 {
 	template <class Archive, class Class>
 	single_attrib_loader(Archive & ar, Class& c)
@@ -295,13 +295,13 @@ struct single_attrib_loader<meta_class, mpl::int_<0> >
 		typedef mpl::int_<0> position;
 		// we are on the first so just load it
 		typedef typename mpl::at<
-			typename meta_class::all_attributes::type_list, 
+			typename MetaClass::all_attributes::type_list, 
 			position
 		>::type member_type;
 		member_type value;
 		typename to_be_loaded<member_type>::type dst(value);
 		ar >> dst;
-		meta_class::all_attributes::set(c, position(), value);
+		MetaClass::all_attributes::set(c, position(), value);
 	}
 };
 
@@ -327,30 +327,30 @@ struct to_be_saved
 };
 
 
-template <class meta_class, class position>
+template <class MetaClass, class Position>
 struct single_attrib_saver
 {
 	template <class Archive, class Class>
 	single_attrib_saver(Archive & ar, Class& c)
 	{
 		// first save the previous
-		single_attrib_saver<meta_class, mpl::int_<position::value - 1> >(ar, c);
+		single_attrib_saver<MetaClass, mpl::int_<Position::value - 1> >(ar, c);
 		// query the value of the current member
 		typedef typename mpl::at<
-			typename meta_class::all_attributes::type_list, 
-			position
+			typename MetaClass::all_attributes::type_list, 
+			Position
 		>::type member_type;
 		member_type value;
 		// and save it
 		typename to_be_saved<member_type>::type src(
-			meta_class::all_attributes::query(c, position(), value)
+			MetaClass::all_attributes::query(c, Position(), value)
 		);
 		ar << src;
 	}
 };
 
-template <class meta_class>
-struct single_attrib_saver<meta_class, mpl::int_<0> >
+template <class MetaClass>
+struct single_attrib_saver<MetaClass, mpl::int_<0> >
 {
 	template <class Archive, class Class>
 	single_attrib_saver(Archive & ar, Class& c)
@@ -359,12 +359,12 @@ struct single_attrib_saver<meta_class, mpl::int_<0> >
 		// we are on the first so just save it
 		// query the value of the current member
 		typedef typename mpl::at<
-			typename meta_class::all_attributes::type_list, 
+			typename MetaClass::all_attributes::type_list, 
 			position
 		>::type member_type;
 		member_type value;
 		typename to_be_saved<member_type>::type src(
-			meta_class::all_attributes::query(c, position(), value)
+			MetaClass::all_attributes::query(c, position(), value)
 		);
 		ar << src;
 	}

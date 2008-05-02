@@ -185,15 +185,15 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_END
  *  some info about the given meta_object into 
  *  a stream.
  */
-template <class a_meta_object>
+template <class MetaObject>
 struct pretty_printer
 {
-	typedef a_meta_object meta_object;
+	typedef MetaObject meta_object;
 	//
 	// prints some info about the meta-object t
 	// to the given stream
-	template <class out_stream>
-	out_stream& print(out_stream& s) const
+	template <class OutStream>
+	OutStream& print(OutStream& s) const
 	{
 		typedef pretty_printer<meta_object> prn_type;
 		typedef typename prn_type::meta_object meta_object;
@@ -236,40 +236,40 @@ struct pretty_printer
 	//
 	// does not print anything for other meta-objects
 	// than meta_classes
-	template <class out_stream, class meta_object>
-	out_stream& print_base_classes(out_stream& s, meta_object*) const {return s;}
+	template <class OutStream, class MetaObject>
+	OutStream& print_base_classes(OutStream& s, MetaObject*) const {return s;}
 	//
 	// a function object that gets called by mirror::for_each
 	// for every base class of the given class 
-	template <class out_stream>
+	template <class OutStream>
 	struct base_class_printer
 	{
-		out_stream& s;
-		base_class_printer(out_stream& _s):s(_s){ }
+		OutStream& s;
+		base_class_printer(OutStream& _s):s(_s){ }
 		//
-		template <class meta_inheritance>
-		void operator()(meta_inheritance) const 
+		template <class MetaInheritance>
+		void operator()(MetaInheritance) const 
 		{
 			// the argument is a specialization of the
 			// meta_inheritance<> template 
 			// it's base_class typedef is the type 
 			// of the base class
 			using namespace ::std;
-			typedef typename meta_inheritance::meta_base_class meta_class;
+			typedef typename MetaInheritance::meta_base_class meta_class;
 			s << endl << " - " << name_to_stream<meta_class>();
 		}
 	};
 	//
 	// prints info about base classes
-	template <class out_stream, class base_class>
-	out_stream& print_base_classes(out_stream& s, meta_class<base_class>*) const 
+	template <class OutStream, class Class>
+	OutStream& print_base_classes(OutStream& s, meta_class<Class>*) const 
 	{
 		using namespace ::std;
 		// 
 		// print out the count of (registered) base classes that 
 		// the inspected class has
 		//
-		typedef typename meta_object::base_classes::list base_class_list;
+		typedef typename MetaObject::base_classes::list base_class_list;
 		//
 		s << "It has ";
 		if(mpl::size<base_class_list>::value == 1)
@@ -279,45 +279,45 @@ struct pretty_printer
 		else s << "no base classes.";
 		//
 		// execute the printer on the list of base classes
-		for_each<typename meta_object::base_classes>(base_class_printer<out_stream>(s));
+		for_each<typename meta_object::base_classes>(base_class_printer<OutStream>(s));
 		//
 		return s << endl;
 	}
 	//
 	// does not print anything for non meta_class meta-objects
-	template <class out_stream, class meta_object>
-	out_stream& print_attribs(out_stream& s, meta_object*) const {return s;}
+	template <class OutStream, class MetaObject>
+	OutStream& print_attribs(OutStream& s, MetaObject*) const {return s;}
 	//
 	//
 	// a functor that gets called for every meta_attribute 
 	// of the given meta_class
-	template <class out_stream>
+	template <class OutStream>
 	struct attrib_printer
 	{
-		out_stream& s;
+		OutStream& s;
 		// the constructor takes reference to the output stream
-		attrib_printer(out_stream& _s):s(_s){ }
+		attrib_printer(OutStream& _s):s(_s){ }
 		//
 		// function call operator
-		template <class meta_attribute>
-		void operator()(meta_attribute ma) const 
+		template <class MetaAttribute>
+		void operator()(MetaAttribute ma) const 
 		{
 			using namespace ::std;
 			s << endl << " - " << 
-				name_to_stream< BOOST_MIRROR_REFLECT_TYPE(typename meta_attribute::type) >() <<
+				name_to_stream< BOOST_MIRROR_REFLECT_TYPE(typename MetaAttribute::type) >() <<
 				"        " <<
 				ma.base_name();
 		}
 	};
 	//
 	// this overload prints the list of attributes of the given class
-	template <class out_stream, class base_class>
-	out_stream& print_attribs(out_stream& s, meta_class<base_class>*) const 
+	template <class OutStream, class Class>
+	OutStream& print_attribs(OutStream& s, meta_class<Class>*) const 
 	{
 		//
 		// print the number of the registered attributes
 		//
-		typedef typename meta_object::attributes::type_list attrib_type_list;
+		typedef typename MetaObject::attributes::type_list attrib_type_list;
 		//
 		s << "It has ";
 		if(mpl::size<attrib_type_list>::value == 1)
@@ -329,7 +329,7 @@ struct pretty_printer
 		// execute the printer on the list of member attributes
 		// note that the type of functor and the implementation
 		// of for_each is likely subject to changes
-		for_each<typename meta_object::attributes>(attrib_printer<out_stream>(s));
+		for_each<typename MetaObject::attributes>(attrib_printer<OutStream>(s));
 		return s << ::std::endl;
 	}
 
@@ -337,8 +337,8 @@ struct pretty_printer
 
 // now some easy stuff, overload the << operator 
 // for our pretty_printer
-template <class meta_object, class out_stream>
-out_stream& operator << (out_stream& s, const pretty_printer<meta_object>& prn)
+template <class MetaObject, class OutStream>
+OutStream& operator << (OutStream& s, const pretty_printer<MetaObject>& prn)
 {
 	return prn.print(s) << ::std::endl << "----------------------";
 }

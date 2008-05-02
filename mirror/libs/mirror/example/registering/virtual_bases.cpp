@@ -174,18 +174,18 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 struct attrib_printer
 {
-		template <class meta_attribute>
-		void operator()(meta_attribute ma) const
+		template <class MetaAttribute>
+		void operator()(MetaAttribute ma) const
 		{
 			using namespace ::std;
 			using namespace ::boost;
 			using namespace ::boost::mirror;
-			typedef BOOST_MIRROR_REFLECT_TYPE(typename meta_attribute::type) mt;
+			typedef BOOST_MIRROR_REFLECT_TYPE(typename MetaAttribute::type) mt;
 			bcout << 
 				"    " << 
-				meta_attribute::position::value << 
+				MetaAttribute::position::value << 
 				": " << 
-				meta_attribute::meta_class::full_name() << 
+				MetaAttribute::meta_class::full_name() << 
 				" " << 
 				ma.base_name() << 
 				";" << 
