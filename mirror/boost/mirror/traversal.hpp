@@ -15,6 +15,11 @@
 
 namespace boost {
 namespace mirror {
+
+
+template <class meta_class> struct deep_traversal_of;
+template <class meta_class> struct flat_traversal_of;
+
 namespace detail {
 
 	template <class meta_class>
@@ -32,8 +37,9 @@ namespace detail {
 			void operator ()(meta_attribute ma)
 			{
 				visitor.enter_attribute(ma);
+				typedef typename meta_attribute::type attrib_type;
 				deep_traversal_of<
-					BOOST_MIRROR_REFLECT_CLASS(meta_attribute::type)
+					BOOST_MIRROR_REFLECT_CLASS(attrib_type)
 				>::accept(visitor);
 				visitor.leave_attribute(ma);
 			}
@@ -59,9 +65,9 @@ namespace detail {
 			void operator ()(meta_inheritance mbc)
 			{
 				visitor.enter_base_class(mbc);
-				deep_traversal_of<
-					meta_inheritance::meta_base_class
-				>::accept(visitor);
+				typedef typename meta_inheritance::meta_base_class
+					meta_base_class;
+				deep_traversal_of<meta_base_class>::accept(visitor);
 				visitor.leave_base_class(mbc);
 			}
 		private:
@@ -87,8 +93,8 @@ struct deep_traversal_of : detail::traversal_utils<meta_class>
 	{
 		meta_class mc;
 		visitor.enter_type(mc);
-		for_each<meta_class::base_classes>(show_bases_to(visitor));
-		for_each<meta_class::attributes>(show_attribs_to(visitor));
+		for_each<typename meta_class::base_classes>(show_bases_to(visitor));
+		for_each<typename meta_class::attributes>(show_attribs_to(visitor));
 		visitor.leave_type(mc);
 	}
 };
@@ -101,7 +107,7 @@ struct flat_traversal_of : detail::traversal_utils<meta_class>
 	{
 		meta_class mc;
 		visitor.enter_type(mc);
-		for_each<meta_class::all_attributes>(show_attribs_to(visitor));
+		for_each<typename meta_class::all_attributes>(show_attribs_to(visitor));
 		visitor.leave_type(mc);
 	}
 };

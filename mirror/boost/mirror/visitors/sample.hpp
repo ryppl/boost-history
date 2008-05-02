@@ -39,7 +39,7 @@ public:
 		bcout << 
 			"<type name='" << 
 			meta_class::base_name();
-		if(!reflects_global_scope<meta_class::scope>::value)
+		if(!reflects_global_scope<typename meta_class::scope>::value)
 		{
 			bcout << 
 				"' scope='" <<

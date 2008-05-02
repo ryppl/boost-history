@@ -61,7 +61,6 @@ private:
 	typedef implementation<meta_type, meta_data, true>  implementation_base_name;
 	typedef implementation<meta_type, meta_data, false> implementation_full_name;
 
-#ifdef BOOST_MIRROR_USE_DYNAMIC_NAME_STRINGS
 	inline static bchar* new_string(const size_t size)
 	{
 		assert(size != 0);
@@ -69,7 +68,6 @@ private:
 		result[0] = 0;
 		return result;
 	}
-#endif
 
 	inline static bool name_not_initialized(const bchar* str)
 	{
@@ -81,10 +79,16 @@ private:
 	{
 		typedef implementation<meta_type, meta_data, format_base_name>
 			impl;
+		const int name_len(impl::name_length);
 #ifndef BOOST_MIRROR_USE_DYNAMIC_NAME_STRINGS
-		static bchar the_name[impl::name_length+1] = {BOOST_STR_LIT("")};
+		//static bchar the_name[name_len + 1] = {BOOST_STR_LIT("")};
+		// TODO: the previews line won't compile since
+		// name_len is not an integral constant.
+		// Thus we need to find some better workaround 
+		// because this one will cause memory leaks.
+		static bchar* the_name = new_string(name_len+1);
 #else
-		static ::std::auto_ptr<bchar> the_name_holder(new_string(impl::name_length+1));
+		static ::std::auto_ptr<bchar> the_name_holder(new_string(name_len+1));
 		bchar* the_name = the_name_holder.get();
 #endif
 		if(name_not_initialized(the_name)) 

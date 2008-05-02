@@ -76,8 +76,7 @@ int main(void)
 	typedef tuple<char, wchar_t, short int const> T5;
 	typedef pair<T4, T5> T6;
 	typedef vector<tuple<T1, T2, T3, T4, T5, T6> > T7;
-	typedef set<map<list<T1>, T7> > T8;
-	typedef tuple<T1, T2, T8> T;
+	typedef set<map<list<T1>, T7> > T;
 	//
 	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
 	//
@@ -89,9 +88,6 @@ int main(void)
 	bcout << "The full type name length = " << meta_T::full_name_length << " characters" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The full type name is: "<< meta_T::full_name() << endl;
-	bcout << "---------------------------------------------------" << endl;
-	bcout << "The class has "<< meta_T::all_attributes::size::value << " members" << endl;
-	bcout << "---------------------------------------------------" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	//
 	T1 t1(12, 34.56, 0);

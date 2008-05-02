@@ -17,6 +17,7 @@
 
 namespace boost {
 namespace mirror {
+namespace detail {
 
 	/** This is basically the same as the "attributes" structure
 	 *  but allows to work with all member attributes including
@@ -28,7 +29,8 @@ namespace mirror {
 	>
 	struct meta_class_all_attributes
 	{
-		typedef meta_class<_reflected_type, _variant_tag> meta_class;
+		typedef boost::mirror::meta_class<_reflected_type, _variant_tag> 
+			meta_class;
 		/** This struct "hides" the internal helpers
 		 */
 		struct detail 
@@ -478,7 +480,6 @@ namespace mirror {
 		}
 	}; // all_attributes
 
-namespace detail {
 	/** Instances of this template are used to store information 
 	 *  about single class' member attribute and are used mainly
 	 *  in the algorithms.
@@ -493,7 +494,8 @@ namespace detail {
 	{
 		// the meta-class for the class to which 
 		// the attribute belongs
-		typedef meta_class<_reflected_type, _variant_tag> meta_class;
+		typedef ::boost::mirror::meta_class<_reflected_type, _variant_tag> 
+			meta_class;
 
 		// the meta-attributes list (own/all)
 		// into which the attribute belongs

@@ -279,7 +279,7 @@ struct pretty_printer
 		else s << "no base classes.";
 		//
 		// execute the printer on the list of base classes
-		for_each<meta_object::base_classes>(base_class_printer<out_stream>(s));
+		for_each<typename meta_object::base_classes>(base_class_printer<out_stream>(s));
 		//
 		return s << endl;
 	}
@@ -329,7 +329,7 @@ struct pretty_printer
 		// execute the printer on the list of member attributes
 		// note that the type of functor and the implementation
 		// of for_each is likely subject to changes
-		for_each<meta_object::attributes>(attrib_printer<out_stream>(s));
+		for_each<typename meta_object::attributes>(attrib_printer<out_stream>(s));
 		return s << ::std::endl;
 	}
 

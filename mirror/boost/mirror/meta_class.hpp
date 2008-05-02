@@ -71,7 +71,7 @@ struct meta_class : public meta_type<reflected_class>
 
 	/** Same as attributes but containing also the inherited attributes
 	 */
-	typedef meta_class_all_attributes<reflected_class, variant_tag >
+	typedef detail::meta_class_all_attributes<reflected_class, variant_tag >
 		all_attributes;
 };
 
