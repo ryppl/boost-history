@@ -16,8 +16,8 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #define BOOST_SIGNALS_COMPILE_IN_PLACE_CPP_INCLUDED
 
 
-#include <boost/../libs/signals/src/connection.cpp>
-#include <boost/../libs/signals/src/named_slot_map.cpp>
-#include <boost/../libs/signals/src/signal_base.cpp>
-#include <boost/../libs/signals/src/slot.cpp>
-#include <boost/../libs/signals/src/trackable.cpp>
+#include "../../libs/signals/src/connection.cpp"
+#include "../../libs/signals/src/named_slot_map.cpp"
+#include "../../libs/signals/src/signal_base.cpp"
+#include "../../libs/signals/src/slot.cpp"
+#include "../../libs/signals/src/trackable.cpp"
