@@ -17,6 +17,7 @@
 #include <boost/preprocessor/if.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition.hpp>
+#include <boost/concept_check.hpp>
 
 #ifndef BOOST_REFLECTION_MAX_FUNCTOR_PARAMS
 #define BOOST_REFLECTION_MAX_FUNCTOR_PARAMS 10

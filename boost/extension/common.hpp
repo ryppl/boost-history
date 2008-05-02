@@ -18,7 +18,7 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
-
+#include <boost/concept_check.hpp>
 #ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
 #define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 10
 #endif

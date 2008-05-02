@@ -30,8 +30,7 @@ BOOST_AUTO_TEST_CASE(shared_library_basic_test) {
   boost::extensions::shared_library lib
     ("libcar_lib.extension");
   BOOST_CHECK(lib.open());
-  lib.get<void, std::map<std::string, 
-    boost::reflections::reflection> &>
+  lib.get<void, std::map<std::string, boost::reflections::reflection>&>
     ("extension_export_car")(reflection_map);
   BOOST_CHECK_EQUAL(reflection_map.size(), size_t(2));
   // Let's create the reflection and add the methods

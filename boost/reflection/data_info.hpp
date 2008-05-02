@@ -13,6 +13,7 @@
 #define BOOST_REFLECTION_DATA_INFO_HPP
 
 #include <vector>
+#include <boost/reflection/common.hpp>
 
 namespace boost {
 namespace reflections {
@@ -21,6 +22,7 @@ namespace reflections {
 // of data available for the current reflection.
 template<class Info, class TypeInfo>
 struct basic_data_info {
+  BOOST_CONCEPT_ASSERT((LessThanComparable<TypeInfo>));
   // The type of the function pointer in the map.
   TypeInfo type_info_;
   // A description of the function pointer.
