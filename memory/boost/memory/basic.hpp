@@ -118,7 +118,10 @@ struct constructor_traits
 template <class Type>
 struct destructor_traits
 {
+	enum { HasDestructor = 1 };
+
 	typedef destructor_t destructor_type;
+
 	struct array_destructor_header
 	{
 		size_t count;
@@ -143,7 +146,7 @@ struct destructor_traits
 
 	static size_t BOOST_MEMORY_CALL getArrayAllocSize(size_t count)
 	{
-		return sizeof(array_destructor_header)+sizeof(Type)*count;
+		return sizeof(array_destructor_header) + sizeof(Type)*count;
 	}
 
 	template <class AllocT>
@@ -183,6 +186,8 @@ NS_BOOST_MEMORY_BEGIN														\
 template <>																	\
 struct destructor_traits< Type >											\
 {																			\
+	enum { HasDestructor = 0 };												\
+																			\
 	typedef int destructor_type;											\
 																			\
 	enum { destruct = 0 };													\
