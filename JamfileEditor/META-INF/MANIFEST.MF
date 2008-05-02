@@ -10,4 +10,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-Vendor: Boost.org
 Export-Package: org.boost.eclipse.bjam.editor,
  org.boost.eclipse.bjam.editor.rules,
- org.boost.eclipse.bjam.editor.scanners
+ org.boost.eclipse.bjam.editor.scanners;uses:="org.boost.eclipse.bjam.editor"
