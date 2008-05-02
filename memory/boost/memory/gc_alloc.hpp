@@ -293,9 +293,9 @@ public:
 private:
 	void BOOST_MEMORY_CALL _reduceDestroyChain()
 	{
-        MemHeaderEx** pp = &m_destroyChain;
-        while (m_destroyCount)
-        {
+		MemHeaderEx** pp = &m_destroyChain;
+		while (m_destroyCount)
+		{
 			MemHeaderEx* curr = *pp;
 			if (curr->blkType == nodeFree) {
 				*pp = curr->pPrev;
@@ -304,7 +304,7 @@ private:
 			else {
 				pp = &curr->pPrev;
 			}
-        }
+		}
 	}
 
 	void BOOST_MEMORY_CALL _commitCurrentBlock()
