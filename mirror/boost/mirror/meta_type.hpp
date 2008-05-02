@@ -68,6 +68,8 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 			bstrncpy(pos, BOOST_STR_LIT("::"), 2);\
 			pos += 2; \
 			bstrncpy(pos, base_name(), base_name_length);\
+			pos += base_name_length; \
+			*pos = BOOST_STR_LIT('\0'); \
 		} \
 		return the_full_name; \
 	}
