@@ -218,6 +218,24 @@ struct meta_type<element_type[size]> : detail::static_array_type_name<
 	typedef element_type reflected_type[size];
 };
 
+template <class element_type>
+struct meta_type<const element_type[]> : detail::static_array_type_name<
+	meta_type<const element_type>, -1
+>
+{
+	typedef typename meta_type<element_type>::scope scope;
+	typedef element_type const reflected_type[];
+};
+
+template <class element_type>
+struct meta_type<element_type[]> : detail::static_array_type_name<
+	meta_type<element_type>, -1
+>
+{
+	typedef typename meta_type<element_type>::scope scope;
+	typedef element_type reflected_type[];
+};
+
 /** Meta-types for references
  */
 template <class refered_to_type>

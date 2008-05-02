@@ -60,7 +60,40 @@ protected:
 	}
 };
 
-template <class meta_type, size_t array_size>
+template <class meta_type, bool base_name>
+struct static_array_type_name_base<meta_type, mpl::int_<-1>, base_name>
+{
+protected:
+	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+		name_info;
+
+	BOOST_STATIC_CONSTANT(
+		size_t,
+		name_length = 
+		name_info::name_length + 3
+	);
+
+	static void init_name(bchar* the_name)
+	{
+		bchar* cur_pos = the_name;
+		//
+		// copy the name of the template
+		bstrcpy(cur_pos, name_info::name());
+		cur_pos += name_info::name_length;
+		//
+		// append the " []" 
+		*(cur_pos++) = BOOST_STR_LIT(' ');
+		*(cur_pos++) = BOOST_STR_LIT('[');
+		*(cur_pos++) = BOOST_STR_LIT(']');
+		//
+		// finalize the string
+		assert(cur_pos == (the_name + name_length));
+		*cur_pos = BOOST_STR_LIT('\0');
+	}
+};
+
+
+template <class meta_type, int array_size>
 struct static_array_type_name : static_nontrivial_type_name<
 	meta_type, mpl::int_<array_size>, static_array_type_name_base
 >{ };

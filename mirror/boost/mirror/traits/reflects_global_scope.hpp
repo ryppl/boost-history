@@ -13,6 +13,7 @@
 
 // true type/false type for trait templates 
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/mirror/meta_namespace.hpp>
 
 namespace boost {
 namespace mirror {

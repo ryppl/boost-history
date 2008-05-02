@@ -118,12 +118,15 @@
 			- Added example showing class structure traversal
 			- Tested only with MSVC++ 2008 EE, so may fail to compile with other compilers
 		</revision>
-		<revision id="20080502" major="0" minor="1" micro="17" author="m_ch">
+		<revision id="20080502_1200CET" major="0" minor="1" micro="17" author="m_ch">
 			- A temporary workaround, which may cause memory-leak reports
 			  on program exit, has been introduced. This should be fixed ASAP.
 			- Tested and successfully compiled with MSVC++ 2008 EE on Vista
 			  gcc 4.2.1 and gcc 4.3.0 on OpenSuSE
-
+		</revision>
+		<revision id="20080502_1730CET" major="0" minor="1" micro="18" author="m_ch">
+			- Several tests and a Jamfile added to the libs/mirror/test subdir
+			- Added meta-type for arrays with undefined element count
 		</revision>
 	</revisions>
 </library>

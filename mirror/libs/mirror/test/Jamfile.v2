@@ -1,0 +1,24 @@
+# (C) Copyright 2008: Matus Chochlik
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import testing ;
+
+project
+    : requirements
+        <include>../../../ #the mirror library root
+        <toolset>gcc:<cxxflags>-ftemplate-depth-1024
+        <library>/boost/test//boost_unit_test_framework
+        <link>static
+    ;
+
+test-suite "mirror"
+       : [ run namespaces_rt_01.cpp ]
+         [ run namespaces_rt_02.cpp ]
+         [ compile namespaces_ct_01.cpp ]
+         [ compile namespaces_ct_02.cpp ]
+         [ compile namespaces_ct_03.cpp ]
+         [ compile namespaces_ct_04.cpp ]
+         [ compile-fail namespaces_cf_01.cpp ]
+    ;
+
