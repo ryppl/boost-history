@@ -42,9 +42,10 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef NS_BOOST_BEGIN
-#define NS_BOOST_BEGIN	namespace boost {
-#define NS_BOOST_END	}
+#ifndef NS_BOOST_MEMORY_BEGIN
+#define NS_BOOST_MEMORY_BEGIN	namespace boost { namespace memory {
+#define NS_BOOST_MEMORY_END		} }
+#define NS_BOOST_MEMORY			boost::memory
 #endif
 
 // -------------------------------------------------------------------------
@@ -93,7 +94,7 @@
 // =========================================================================
 // constructor_traits, destructor_traits
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 typedef void BOOST_MEMORY_CALL BOOST_FnDestructor(void* data);
 typedef BOOST_FnDestructor* destructor_t;
@@ -172,13 +173,13 @@ inline void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 	destructor_traits<Type>::destructArrayN(array, count);
 }
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // =========================================================================
-// BOOST_NO_DESTRUCTOR
+// BOOST_MEMORY_NO_DESTRUCTOR
 
-#define BOOST_NO_DESTRUCTOR(Type)											\
-NS_BOOST_BEGIN																\
+#define BOOST_MEMORY_NO_DESTRUCTOR(Type)									\
+NS_BOOST_MEMORY_BEGIN														\
 template <>																	\
 struct destructor_traits< Type >											\
 {																			\
@@ -207,13 +208,13 @@ struct destructor_traits< Type >											\
 		return 0;															\
 	}																		\
 };																			\
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
-// BOOST_NO_CONSTRUCTOR
+// BOOST_MEMORY_NO_CONSTRUCTOR
 
-#define BOOST_NO_CONSTRUCTOR(Type)											\
-NS_BOOST_BEGIN																\
+#define BOOST_MEMORY_NO_CONSTRUCTOR(Type)									\
+NS_BOOST_MEMORY_BEGIN														\
 template <>																	\
 struct constructor_traits< Type >											\
 {																			\
@@ -224,61 +225,59 @@ struct constructor_traits< Type >											\
 		return array;														\
 	}																		\
 };																			\
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
 // C Standard Types Support
 
-#define BOOST_DECL_CTYPE(Type)												\
-	BOOST_NO_CONSTRUCTOR(Type);												\
-	BOOST_NO_DESTRUCTOR(Type)
+#define BOOST_MEMORY_DECL_CTYPE(Type)										\
+	BOOST_MEMORY_NO_CONSTRUCTOR(Type);										\
+	BOOST_MEMORY_NO_DESTRUCTOR(Type)
 
-BOOST_DECL_CTYPE(bool);
-BOOST_DECL_CTYPE(float);
-BOOST_DECL_CTYPE(double);
+BOOST_MEMORY_DECL_CTYPE(bool);
+BOOST_MEMORY_DECL_CTYPE(float);
+BOOST_MEMORY_DECL_CTYPE(double);
 
-BOOST_DECL_CTYPE(int);
-BOOST_DECL_CTYPE(unsigned int);
+BOOST_MEMORY_DECL_CTYPE(int);
+BOOST_MEMORY_DECL_CTYPE(unsigned int);
 
-BOOST_DECL_CTYPE(char);
-BOOST_DECL_CTYPE(unsigned char);
+BOOST_MEMORY_DECL_CTYPE(char);
+BOOST_MEMORY_DECL_CTYPE(unsigned char);
 
-BOOST_DECL_CTYPE(short);
-BOOST_DECL_CTYPE(unsigned short);
+BOOST_MEMORY_DECL_CTYPE(short);
+BOOST_MEMORY_DECL_CTYPE(unsigned short);
 
-BOOST_DECL_CTYPE(long);
-BOOST_DECL_CTYPE(unsigned long);
+BOOST_MEMORY_DECL_CTYPE(long);
+BOOST_MEMORY_DECL_CTYPE(unsigned long);
 
 // =========================================================================
-// MEMORY_DBG_NEW_ARG
+// BOOST_MEMORY_DBG_NEW_ARG
 
 #if defined(_DEBUG)
-#define MEMORY_FILE_LINE_ARG		,__FILE__, __LINE__
+#define BOOST_MEMORY_FILE_LINE_ARG	, __FILE__, __LINE__
 #else
-#define MEMORY_FILE_LINE_ARG
+#define BOOST_MEMORY_FILE_LINE_ARG
 #endif
 
-#define MEMORY_NEW_ARG(Type)					sizeof(Type), boost::destructor_traits<Type>::destruct
-#define MEMORY_DBG_NEW_ARG(Type)				MEMORY_NEW_ARG(Type) MEMORY_FILE_LINE_ARG
+#define BOOST_MEMORY_NEW_ARG(Type)		sizeof(Type), NS_BOOST_MEMORY::destructor_traits<Type>::destruct
+#define BOOST_MEMORY_DBG_NEW_ARG(Type)	BOOST_MEMORY_NEW_ARG(Type) BOOST_MEMORY_FILE_LINE_ARG
 
-#define MEMORY_NEW_ARRAY_ARG(Type, count)		(count), (Type*)0
-#define MEMORY_DBG_NEW_ARRAY_ARG(Type, count)	MEMORY_NEW_ARRAY_ARG(Type, count) MEMORY_FILE_LINE_ARG
-
-#define MEMORY_DBG_ALLOC_ARG(Type)				sizeof(Type) MEMORY_FILE_LINE_ARG
-#define MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)	sizeof(Type)*(count) MEMORY_FILE_LINE_ARG
+#define BOOST_MEMORY_DBG_NEW_ARRAY_ARG(Type, count)		(count), (Type*)0 BOOST_MEMORY_FILE_LINE_ARG
+#define BOOST_MEMORY_DBG_ALLOC_ARG(Type)				sizeof(Type) BOOST_MEMORY_FILE_LINE_ARG
+#define BOOST_MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)	sizeof(Type)*(count) BOOST_MEMORY_FILE_LINE_ARG
 
 // =========================================================================
 // NEW, NEW_ARRAY, ALLOC, ALLOC_ARRAY
 
-#define BOOST_NEW(alloc, Type)					::new((alloc).allocate(MEMORY_DBG_NEW_ARG(Type))) Type
-#define BOOST_NEW_ARRAY(alloc, Type, count) 	(alloc).newArray(MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
+#define BOOST_MEMORY_NEW(alloc, Type)					::new((alloc).allocate(BOOST_MEMORY_DBG_NEW_ARG(Type))) Type
+#define BOOST_MEMORY_NEW_ARRAY(alloc, Type, count) 		(alloc).newArray(BOOST_MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
 
-#define BOOST_ALLOC(alloc, Type)				((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARG(Type)))
-#define BOOST_ALLOC_ARRAY(alloc, Type, count)	((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
+#define BOOST_MEMORY_ALLOC(alloc, Type)					((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARG(Type)))
+#define BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)	((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
 
 // =========================================================================
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 {
@@ -287,7 +286,7 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 #endif
 }
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // =========================================================================
 // $Log: basic.hpp,v $

@@ -20,7 +20,7 @@
 #include "policy.hpp"
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class region_alloc
@@ -203,7 +203,7 @@ public:
 		// no action
 	}
 
-	BOOST_FAKE_DBG_ALLOCATE_();
+	BOOST_MEMORY_FAKE_DBG_ALLOCATE_();
 };
 
 // -------------------------------------------------------------------------
@@ -214,6 +214,6 @@ typedef region_alloc<policy::sys> auto_alloc;
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_AUTO_ALLOC_HPP */

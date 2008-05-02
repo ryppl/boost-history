@@ -14,6 +14,10 @@
 
 // -------------------------------------------------------------------------
 
+#ifndef BOOST_MEMORY_BASIC_HPP
+#include "memory/basic.hpp"
+#endif
+
 #ifndef BOOST_MEMORY_AUTO_ALLOC_HPP
 #include "memory/auto_alloc.hpp"
 #endif
@@ -29,7 +33,7 @@
 // -------------------------------------------------------------------------
 // class stl_allocator
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 template <class Type, class AllocT = scoped_alloc>
 class stl_allocator
@@ -63,7 +67,7 @@ public:
 	stl_allocator(AllocT& alloc) : m_alloc(&alloc) {}
 
     template <class U>
-	stl_allocator(const stl_allocator<U, AllocT>& rhs) : m_alloc(rhs.inner_GetAlloc()) {}
+	stl_allocator(const stl_allocator<U, AllocT>& o) : m_alloc(o._getAlloc()) {}
 
 	pointer allocate(size_type count, const void* = NULL)
 		{ return (pointer)m_alloc->allocate(count * sizeof(Type)); }
@@ -78,7 +82,8 @@ public:
 	char* _Charalloc(size_type cb)
 		{ return (char*)m_alloc->allocate(cb); }
 
-	AllocT* inner_GetAlloc() const { return m_alloc; }
+public:
+	AllocT* _getAlloc() const { return m_alloc; }
 };
 
 #if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION)
@@ -144,7 +149,36 @@ inline bool operator!=(const stl_allocator<Type, AllocT>&,
     return false;
 }
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
+
+// -------------------------------------------------------------------------
+
+namespace boost
+{
+	namespace memory {}
+
+	using boost::memory::system_alloc;
+
+	using boost::memory::block_pool;
+	using boost::memory::tls_block_pool;
+
+	using boost::memory::auto_alloc;
+	using boost::memory::scoped_alloc;
+	using boost::memory::gc_alloc;
+
+	using boost::memory::stl_allocator;
+
+	using boost::memory::enableMemoryLeakCheck;
+}
+
+#define BOOST_NO_CONSTRUCTOR(Type)				BOOST_MEMORY_NO_CONSTRUCTOR(Type)
+#define BOOST_NO_DESTRUCTOR(Type)				BOOST_MEMORY_NO_DESTRUCTOR(Type)
+
+#define BOOST_NEW(alloc, Type)					BOOST_MEMORY_NEW(alloc, Type)
+#define BOOST_NEW_ARRAY(alloc, Type, count)		BOOST_MEMORY_NEW_ARRAY(alloc, Type, count)
+
+#define BOOST_ALLOC(alloc, Type)				BOOST_MEMORY_ALLOC(alloc, Type)
+#define BOOST_ALLOC_ARRAY(alloc, Type, count)	BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
 
 // -------------------------------------------------------------------------
 // $Log: memory.hpp,v $

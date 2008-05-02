@@ -19,14 +19,14 @@
 #endif
 
 #ifndef BOOST_MEMORY_STL_QUEUE_HPP
-#include "stl/queue.hpp" // boost::priority_queue
+#include "stl/queue.hpp" // NS_BOOST_MEMORY::priority_queue
 #endif
 
 #if !defined(_DEQUE_) && !defined(_DEQUE)
 #include <deque> // std::deque
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class gen_alloc
@@ -145,7 +145,7 @@ private:
 		}
 	};
 	typedef std::deque<FreeMemHeader*> Container;
-	typedef boost::priority_queue<FreeMemHeader*, Container, Pred> PriorityQ;
+	typedef NS_BOOST_MEMORY::priority_queue<FreeMemHeader*, Container, Pred> PriorityQ;
 	
 	char* m_begin;
 	char* m_end;
@@ -160,12 +160,12 @@ private:
 private:
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
-	enum { _AllocSizeBigDef = MAX(PolicyT::AllocSizeBig, BlockSize/4) };
-	enum { _AllocSizeHugeDef = MAX(PolicyT::AllocSizeHuge, 64*1024) };
-	enum { _GCLimitSizeDef = MAX(PolicyT::GCLimitSizeDef, 64*1024) };
-	enum { AllocSizeBig = MIN(_AllocSizeBigDef, BlockSize/2) };
-	enum { AllocSizeHuge = MIN(_AllocSizeHugeDef, (1 << 29)) };
-	enum { GCLimitSizeDef = MIN(_GCLimitSizeDef, (1 << 29)) };
+	enum { AllocSizeBigDef_ = MAX(PolicyT::AllocSizeBig, BlockSize/4) };
+	enum { AllocSizeHugeDef_ = MAX(PolicyT::AllocSizeHuge, 64*1024) };
+	enum { GCLimitSizeDef_ = MAX(PolicyT::GCLimitSizeDef, 64*1024) };
+	enum { AllocSizeBig = MIN(AllocSizeBigDef_, BlockSize/2) };
+	enum { AllocSizeHuge = MIN(AllocSizeHugeDef_, (1 << 29)) };
+	enum { GCLimitSizeDef = MIN(GCLimitSizeDef_, (1 << 29)) };
 	enum { RecycleSizeMin = MAX(PolicyT::RecycleSizeMin, 128) };
 
 private:
@@ -382,11 +382,11 @@ public:
 			MemHeader* pNew;
 			if (cb >= AllocSizeBig)
 			{
-				if (cbData >= AllocSizeHuge)
-					return m_hugeAlloc.allocate(cbData);
-
 				if (cb >= BlockSize)
 				{
+					if (cbData >= AllocSizeHuge)
+						return m_hugeAlloc.allocate(cbData);
+
 					pNew = _newBlock(cb + HeaderSize);
 					pNew->blkType = nodeAlloced;
 					return pNew + 1;
@@ -528,7 +528,7 @@ public:
 		}
 	}
 
-	BOOST_FAKE_DBG_ALLOCATE_();
+	BOOST_MEMORY_FAKE_DBG_ALLOCATE_();
 };
 
 template <class PolicyT>
@@ -542,6 +542,6 @@ typedef gen_alloc<policy::pool> gc_alloc;
 // -------------------------------------------------------------------------
 // $Log: gc_alloc.hpp,v $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_GC_ALLOC_HPP */

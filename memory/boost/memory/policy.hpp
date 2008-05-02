@@ -16,7 +16,7 @@
 #include "system_alloc.hpp"
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class simple_gc_alloc
@@ -141,6 +141,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: policy.hpp,v $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_POLICY_HPP */

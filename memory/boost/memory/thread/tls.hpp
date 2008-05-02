@@ -25,7 +25,7 @@
 
 #if defined(_WIN32)
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 typedef DWORD TLSINDEX;
 
@@ -56,7 +56,7 @@ public:
 	}
 };
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif // defined(_WIN32)
 
@@ -69,7 +69,7 @@ NS_BOOST_END
 #include <pthread.h>
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 class pthread_tls_key
 {
@@ -98,14 +98,14 @@ public:
 	}
 };
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif // !defined(_WIN32)
 
 // -------------------------------------------------------------------------
 // class tls_key
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 #if defined(_WIN32)
 
@@ -117,12 +117,12 @@ typedef pthread_tls_key tls_key;
 
 #endif
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
 // class tls_ptr
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 template <class Type>
 class tls_ptr
@@ -163,12 +163,12 @@ public:
 	}
 };
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
 // class tls_object
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 template <class Type>
 class tls_factory
@@ -238,7 +238,7 @@ public:
 	}
 };
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
 //	$Log: $

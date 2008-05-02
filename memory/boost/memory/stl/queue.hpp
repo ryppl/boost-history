@@ -24,12 +24,13 @@
 #include <algorithm> // std::make_heap, etc
 #endif
 
-#ifndef NS_BOOST_BEGIN
-#define NS_BOOST_BEGIN	namespace boost {
-#define NS_BOOST_END	}
+#ifndef NS_BOOST_MEMORY_BEGIN
+#define NS_BOOST_MEMORY_BEGIN	namespace boost { namespace memory {
+#define NS_BOOST_MEMORY_END		} }
+#define NS_BOOST_MEMORY			boost::memory
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -99,6 +100,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_STL_QUEUE_HPP */

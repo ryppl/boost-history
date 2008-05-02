@@ -28,14 +28,14 @@
 #include <cstdlib> // malloc, free
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
-// BOOST_FAKE_DBG_ALLOCATE_
+// BOOST_MEMORY_FAKE_DBG_ALLOCATE_
 
 #if defined(_DEBUG)
 
-#define BOOST_FAKE_DBG_ALLOCATE_()														\
+#define BOOST_MEMORY_FAKE_DBG_ALLOCATE_()												\
 	void* BOOST_MEMORY_CALL allocate(size_t cb, LPCSTR szFile, int nLine)				\
 		{ return allocate(cb); }														\
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn, LPCSTR szFile, int nLine)	\
@@ -50,7 +50,7 @@ NS_BOOST_BEGIN
 
 #else
 
-#define BOOST_FAKE_DBG_ALLOCATE_()
+#define BOOST_MEMORY_FAKE_DBG_ALLOCATE_()
 
 #endif
 
@@ -122,7 +122,7 @@ public:
 		return constructor_traits<Type>::constructArray(array, count);
 	}
 #else
-	BOOST_FAKE_DBG_ALLOCATE_()
+	BOOST_MEMORY_FAKE_DBG_ALLOCATE_()
 #endif
 };
 
@@ -134,6 +134,6 @@ typedef stdlib_alloc system_alloc;
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_SYSTEM_ALLOC_HPP */

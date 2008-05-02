@@ -28,7 +28,7 @@
 #include <climits> // INT_MAX
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class proxy_alloc
@@ -191,6 +191,6 @@ typedef region_alloc<policy::pool> scoped_alloc;
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_SCOPED_ALLOC_HPP */

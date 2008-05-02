@@ -22,7 +22,7 @@
 #include "threadmodel/multi_thread.hpp"
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class auto_lock
@@ -90,6 +90,6 @@ typedef single_thread initializer_threadmodel;
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_THREADMODEL_HPP */

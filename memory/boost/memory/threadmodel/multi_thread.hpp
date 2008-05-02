@@ -20,7 +20,7 @@
 #include "../winapi/winbase.h"
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class refcount_mt
@@ -92,6 +92,6 @@ public:
 // -------------------------------------------------------------------------
 //	$Log: $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H */

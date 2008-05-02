@@ -68,7 +68,8 @@ void testGCAlloc()
 	int* intBuf = BOOST_ALLOC(alloc, int);
 	int* intArrayBuf = BOOST_ALLOC_ARRAY(alloc, int, 100);
 
-	char* hugeBuf = BOOST_NEW_ARRAY(alloc, char, boost::policy::sys::AllocSizeHuge); // > HugeSize
+	enum { AllocSizeHuge = boost::memory::policy::sys::AllocSizeHuge };
+	char* hugeBuf = BOOST_NEW_ARRAY(alloc, char, AllocSizeHuge); // > HugeSize
 	
 	boost::gc_alloc* suballoc = BOOST_NEW(alloc, boost::gc_alloc);
 	int* e = BOOST_NEW(*suballoc, int);

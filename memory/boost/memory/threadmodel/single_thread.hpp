@@ -16,7 +16,7 @@
 #include "../basic.hpp"
 #endif
 
-NS_BOOST_BEGIN
+NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // struct refcount_st
@@ -56,6 +56,6 @@ public:
 // -------------------------------------------------------------------------
 //	$Log: $
 
-NS_BOOST_END
+NS_BOOST_MEMORY_END
 
 #endif /* BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H */
