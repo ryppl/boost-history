@@ -157,7 +157,7 @@ private:
 	MemBlock* m_blockList;
 	PriorityQ m_freeList;
 	HugeGCAllocT m_hugeAlloc;
-	size_t m_freeSize, m_GCLimitSize;
+	size_t m_destroyCount, m_freeSize, m_GCLimitSize;
 	static FreeMemHeader _null;
 
 private:
@@ -232,8 +232,8 @@ public:
 		_commitCurrentBlock();
 		m_begin = m_end = _null.begin();
 
-		// 0.2. Clear destroy chain
-		m_destroyChain = NULL;
+		// 0.2. Reduce destroy chain
+		_reduceDestroyChain();
 
 		// 0.3. Clear free list
 		m_freeList.clear();
@@ -265,13 +265,6 @@ public:
 						m_freeList.push((FreeMemHeader*)it);
 					if (coll.done())
 						break;
-					it = coll.current();
-				}
-				if (it->blkType == nodeAllocedWithDestructor)
-				{
-					MemHeaderEx* itEx = (MemHeaderEx*)it;
-					itEx->pPrev = m_destroyChain;
-					m_destroyChain = itEx;
 				}
 				// skip nodes marked with nodeAlloced
 				coll.next();
@@ -281,7 +274,9 @@ public:
 	
 	void BOOST_MEMORY_CALL try_gc()
 	{
+#if !defined(BOOST_MEMORY_DEBUG_GC)
 		if (m_freeSize >= m_GCLimitSize)
+#endif
 			force_gc();
 	}
 
@@ -296,6 +291,22 @@ public:
 	}
 
 private:
+	void BOOST_MEMORY_CALL _reduceDestroyChain()
+	{
+        MemHeaderEx** pp = &m_destroyChain;
+        while (m_destroyCount)
+        {
+			MemHeaderEx* curr = *pp;
+			if (curr->blkType == nodeFree) {
+				*pp = curr->pPrev;
+				--m_destroyCount;
+			}
+			else {
+				pp = &curr->pPrev;
+			}
+        }
+	}
+
 	void BOOST_MEMORY_CALL _commitCurrentBlock()
 	{
 		FreeMemHeader* pNode = (FreeMemHeader*)m_begin - 1;
@@ -320,6 +331,7 @@ private:
 		m_blockList = NULL;
 		m_destroyChain = NULL;
 		m_freeSize = 0;
+		m_destroyCount = 0;
 		m_GCLimitSize = GCLimitSizeDef;
 
 		FreeMemHeader* pNew = _newBlock(MemBlockSize);
@@ -350,6 +362,7 @@ public:
 		std::swap(m_blockList, o.m_blockList);
 		std::swap(m_destroyChain, o.m_destroyChain);
 		std::swap(m_freeSize, o.m_freeSize);
+		std::swap(m_destroyCount, o.m_destroyCount);
 		std::swap(m_GCLimitSize, o.m_GCLimitSize);
 		m_alloc.swap(o.m_alloc);
 		m_freeList.swap(o.m_freeList);
@@ -376,6 +389,7 @@ public:
 		m_blockList = NULL;
 		m_freeList.clear();
 		m_freeSize = 0;
+		m_destroyCount = 0;
 	}
 
 	void* BOOST_MEMORY_CALL allocate(size_t cbData)
@@ -465,6 +479,7 @@ private:
 		MemHeaderEx* p = (MemHeaderEx*)obj - 1;
 		p->blkType = nodeFree;
 		m_freeSize += sizeof(Type) + sizeof(MemHeaderEx);
+		++m_destroyCount;
 	}
 
 	template <class Type>
@@ -485,6 +500,7 @@ private:
 		MemHeaderEx* p = (MemHeaderEx*)pData - 1;
 		p->blkType = nodeFree;
 		m_freeSize += Traits::getArrayAllocSize(count) + sizeof(MemHeaderEx);
+		++m_destroyCount;
 	}
 
 	template <class Type>

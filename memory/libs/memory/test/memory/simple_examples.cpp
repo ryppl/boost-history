@@ -9,6 +9,7 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
+#define BOOST_MEMORY_DEBUG_GC
 #include <boost/memory.hpp>
 
 // -------------------------------------------------------------------------
@@ -79,8 +80,11 @@ void testGCAlloc()
 	alloc.destroyArray(intArray, 10000);
 	alloc.destroyArray(allocArray, 10);
 
-	for (int i = 0; i < 1000; ++i)
+	int i;
+	for (i = 0; i < 1000; ++i)
 		BOOST_NEW_ARRAY(alloc, int, 100);
+	for (i = 0; i < 8000; ++i)
+		BOOST_NEW(alloc, int);
 
 	boost::gc_alloc alloc2;
 	alloc.swap(alloc2);
