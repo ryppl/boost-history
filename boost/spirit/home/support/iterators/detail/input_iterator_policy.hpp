@@ -14,7 +14,7 @@
 
 namespace boost { namespace spirit { namespace multi_pass_policies
 {
-    namespace is_valid_test_
+    namespace input_iterator_is_valid_test_
     {
         template <typename Token>
         inline bool token_is_valid(Token const&)
@@ -59,7 +59,7 @@ namespace boost { namespace spirit { namespace multi_pass_policies
             unique() {}
             explicit unique(T x) : input(x) {}
 
-            void swap(inner& x)
+            void swap(unique& x)
             {
                 spirit::detail::swap(input, x.input);
             }
@@ -77,7 +77,7 @@ namespace boost { namespace spirit { namespace multi_pass_policies
 
             // test, whether we reached the end of the underlying stream
             template <typename MultiPass>
-            static bool input_at_eof(MultiPass const& mp, value_type const& t) 
+            static bool input_at_eof(MultiPass const& mp, value_type const&) 
             {
                 return mp.input == T();
             }
@@ -85,7 +85,7 @@ namespace boost { namespace spirit { namespace multi_pass_policies
             template <typename MultiPass>
             static bool input_is_valid(MultiPass const& mp, value_type const& t) 
             {
-                using namespace is_valid_test_;
+                using namespace input_iterator_is_valid_test_;
                 return token_is_valid(t);
             }
 
@@ -97,7 +97,7 @@ namespace boost { namespace spirit { namespace multi_pass_policies
         template <typename T>
         struct shared
         {
-            explicit shared(T x) {}
+            explicit shared(T) {}
 
             // no shared data elements
         };
