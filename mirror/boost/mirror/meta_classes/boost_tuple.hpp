@@ -51,14 +51,14 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	// member attrib value get
 	template <int I> 
 	static typename att_val_pass<I>::type
-	get(const the_class& a_tuple, mpl::int_<I>)
+	get(const Class& a_tuple, mpl::int_<I>)
 	{
 		return ::boost::tuples::get<I>(a_tuple);
 	}
 	
 	// member attrib value query
 	template <typename dest_type, int I>
-	static dest_type& query(const the_class& a_tuple, mpl::int_<I>, dest_type& dest)
+	static dest_type& query(const Class& a_tuple, mpl::int_<I>, dest_type& dest)
 	{
 		dest = dest_type(::boost::tuples::get<I>(a_tuple));
 		return dest;
@@ -66,14 +66,14 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	
 	// member attrib value set
 	template <int I>
-	static void set(the_class& a_tuple, mpl::int_<I>, typename att_val_pass<I>::type val)
+	static void set(Class& a_tuple, mpl::int_<I>, typename att_val_pass<I>::type val)
 	{
 		::boost::tuples::get<I>(a_tuple) = val;
 	}
 
 	// member attrib value set
 	template <int I>
-	static void set(const the_class& a_tuple, mpl::int_<I>, typename att_val_pass<I>::type val)
+	static void set(const Class& a_tuple, mpl::int_<I>, typename att_val_pass<I>::type val)
 	{
 	}
 	//

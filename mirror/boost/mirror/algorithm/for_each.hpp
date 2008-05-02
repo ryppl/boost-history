@@ -1,6 +1,6 @@
 /**
  * \file boost/mirror/algorithm/for_each.hpp
- * Run-time application of a functor to all base_classes/attributes/etc.
+ * Run-time application of a Functor to all base_classes/attributes/etc.
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
@@ -21,30 +21,30 @@ namespace detail {
 	/** Declaration of the default for_each_impl
 	 *  helper template.
 	 */
-	template <class meta_object_sequence>
+	template <class MetaObjectSequence>
 	struct for_each_impl 
-	: iterative_algorithm<meta_object_sequence, for_each_meta_object> 
+	: iterative_algorithm<MetaObjectSequence, for_each_meta_object> 
 	{ };
 
 } // namespace detail
 
 template <
-	class meta_object_sequence,
-	class functor
+	class MetaObjectSequence,
+	class Functor
 >
-static inline functor for_each(functor fn)
+static inline Functor for_each(Functor fn)
 {
-	return detail::for_each_impl<meta_object_sequence> ::perform(fn, detail::no_op());
+	return detail::for_each_impl<MetaObjectSequence> ::perform(fn, detail::no_op());
 }
 
 template <
-	class meta_object_sequence,
-	class transform_op,
-	class functor
+	class MetaObjectSequence,
+	class TransformOp,
+	class Functor
 >
-static inline functor for_each(transform_op transf, functor fn)
+static inline Functor for_each(TransformOp transf, Functor fn)
 {
-	return detail::for_each_impl<meta_object_sequence> ::perform(fn, transf);
+	return detail::for_each_impl<MetaObjectSequence> ::perform(fn, transf);
 }
 
 } // namespace mirror

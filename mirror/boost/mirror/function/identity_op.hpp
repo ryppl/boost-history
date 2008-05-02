@@ -16,8 +16,8 @@ namespace mirror {
 
 struct identity_op
 {
-	template <class argument_type>
-	inline argument_type operator()(argument_type arg)
+	template <class ArgumentType>
+	inline ArgumentType operator()(ArgumentType arg)
 	{
 		return arg;
 	}

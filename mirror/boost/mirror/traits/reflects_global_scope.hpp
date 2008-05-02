@@ -20,7 +20,7 @@ namespace mirror {
 
 /** Reflects-global-scope trait template for other meta-namespaces
  */
-template <class meta_namespace>
+template <class MetaNamespace>
 struct reflects_global_scope : public false_type{ };
 
 /** Reflects-global-scope trait specialization for global scope meta_namespace

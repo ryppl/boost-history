@@ -32,7 +32,7 @@ namespace mirror {
 
 namespace detail {
 
-template <class type_identifier, typename base_type>
+template <class TypeIdentifier, typename Type>
 struct typedefd_type_selector { };
 
 } // namespace detail
@@ -42,10 +42,10 @@ struct typedefd_type_selector { };
 #define BOOST_MIRROR_TYPEDEFD_SELECTOR(IDENTIFIER, BASE_TYPE)\
 	::boost::mirror::detail::typedefd_type_selector< ::boost::mirror::typedefs::IDENTIFIER, BASE_TYPE >
 
-template <class type_identifier, typename base_type>
+template <class TypeIdentifier, typename Type>
 struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
-	type_identifier, base_type
-> > : meta_type<base_type>{ };
+	TypeIdentifier, Type
+> > : meta_type<Type>{ };
 
 /** Helper macro that declared the full_name-related stuff
  */
@@ -189,95 +189,95 @@ BOOST_MIRROR_REG_META_TYPEDEFD(_boost, ::boost, bstring)
 
 /** Meta-types for pointers
  */
-template <class pointee_type>
-struct meta_type<pointee_type*> : detail::static_pointer_type_name<
-	meta_type<pointee_type>
+template <class PointeeType>
+struct meta_type<PointeeType*> : detail::static_pointer_type_name<
+	meta_type<PointeeType>
 >
 {
-	typedef typename meta_type<pointee_type>::scope scope;
-	typedef pointee_type* reflected_type; 
+	typedef typename meta_type<PointeeType>::scope scope;
+	typedef PointeeType* reflected_type; 
 };
 
 /** Meta-types for arrays
  */
-template <class element_type, size_t size>
-struct meta_type<const element_type[size]> : detail::static_array_type_name<
-	meta_type<const element_type>, size
+template <class ElementType, size_t Size>
+struct meta_type<const ElementType[Size]> : detail::static_array_type_name<
+	meta_type<const ElementType>, Size
 >
 {
-	typedef typename meta_type<element_type>::scope scope;
-	typedef element_type reflected_type[size];
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType reflected_type[Size];
 };
 
-template <class element_type, size_t size>
-struct meta_type<element_type[size]> : detail::static_array_type_name<
-	meta_type<element_type>, size
+template <class ElementType, size_t Size>
+struct meta_type<ElementType[Size]> : detail::static_array_type_name<
+	meta_type<ElementType>, Size
 >
 {
-	typedef typename meta_type<element_type>::scope scope;
-	typedef element_type reflected_type[size];
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType reflected_type[Size];
 };
 
-template <class element_type>
-struct meta_type<const element_type[]> : detail::static_array_type_name<
-	meta_type<const element_type>, -1
+template <class ElementType>
+struct meta_type<const ElementType[]> : detail::static_array_type_name<
+	meta_type<const ElementType>, -1
 >
 {
-	typedef typename meta_type<element_type>::scope scope;
-	typedef element_type const reflected_type[];
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType const reflected_type[];
 };
 
-template <class element_type>
-struct meta_type<element_type[]> : detail::static_array_type_name<
-	meta_type<element_type>, -1
+template <class ElementType>
+struct meta_type<ElementType[]> : detail::static_array_type_name<
+	meta_type<ElementType>, -1
 >
 {
-	typedef typename meta_type<element_type>::scope scope;
-	typedef element_type reflected_type[];
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType reflected_type[];
 };
 
 /** Meta-types for references
  */
-template <class refered_to_type>
-struct meta_type<refered_to_type&> : detail::static_reference_type_name<
-	meta_type<refered_to_type>
+template <class ReferredToType>
+struct meta_type<ReferredToType&> : detail::static_reference_type_name<
+	meta_type<ReferredToType>
 >
 {
-	typedef typename meta_type<refered_to_type>::scope scope;
-	typedef refered_to_type& reflected_type; 
+	typedef typename meta_type<ReferredToType>::scope scope;
+	typedef ReferredToType& reflected_type; 
 };
 
 /** Meta-types for const types
  */
-template <class non_const_type>
-struct meta_type<const non_const_type> : detail::static_const_type_name<
-	meta_type<non_const_type>
+template <class NonConstType>
+struct meta_type<const NonConstType> : detail::static_const_type_name<
+	meta_type<NonConstType>
 >
 {
-	typedef typename meta_type<non_const_type>::scope scope;
-	typedef const non_const_type reflected_type; 
+	typedef typename meta_type<NonConstType>::scope scope;
+	typedef const NonConstType reflected_type; 
 };
 
 /** Meta-types for volatile types
  */
-template <class non_volatile_type>
-struct meta_type<volatile non_volatile_type> : detail::static_volatile_type_name<
-	meta_type<non_volatile_type>
+template <class NonVolatileType>
+struct meta_type<volatile NonVolatileType> : detail::static_volatile_type_name<
+	meta_type<NonVolatileType>
 >
 {
-	typedef typename meta_type<non_volatile_type>::scope scope;
-	typedef volatile non_volatile_type reflected_type; 
+	typedef typename meta_type<NonVolatileType>::scope scope;
+	typedef volatile NonVolatileType reflected_type; 
 };
 
 /** Meta-types for const volatile types
  */
-template <class non_cv_type>
-struct meta_type<const volatile non_cv_type> : detail::static_cv_type_name<
-	meta_type<non_cv_type>
+template <class NonCVType>
+struct meta_type<const volatile NonCVType> : detail::static_cv_type_name<
+	meta_type<NonCVType>
 >
 {
-	typedef typename meta_type<non_cv_type>::scope scope;
-	typedef const volatile non_cv_type reflected_type; 
+	typedef typename meta_type<NonCVType>::scope scope;
+	typedef const volatile NonCVType reflected_type; 
 };
 
 

@@ -15,7 +15,7 @@ namespace mirror {
 
 /** Meta-namespace forward template declaration
  */
-template<class namespace_alias> 
+template<class NamespaceAlias> 
 struct meta_namespace;
 
 /** Macro that expands into the meta_namespace for the 
@@ -28,7 +28,7 @@ struct meta_namespace;
 
 /** Meta-type forward template declaration
  */
-template <class base_type> 
+template <class Type> 
 struct meta_type;
 
 
@@ -71,8 +71,8 @@ namespace detail {
 /** Meta-class template forward declaration
  */
 template <
-	class a_class, 
-	class variant_tag = detail::default_meta_class_variant
+	class Class, 
+	class VariantTag = detail::default_meta_class_variant
 >
 struct meta_class;
 

@@ -20,7 +20,7 @@ namespace mirror {
 
 namespace detail {
 
-template <typename first_type, typename second_type> 
+template <typename FirstType, typename SecondType> 
 struct meta_type_std_pair 
 {
 
@@ -34,15 +34,15 @@ struct meta_type_std_pair
 } // namespace detail
 
 
-template <typename first_type, typename second_type> 
-struct meta_type< ::std::pair<first_type, second_type> > 
+template <typename FirstType, typename SecondType> 
+struct meta_type< ::std::pair<FirstType, SecondType> > 
 : detail::static_template_name<
-	detail::meta_type_std_pair<first_type, second_type> , 
-	mpl::vector2<first_type, second_type>
+	detail::meta_type_std_pair<FirstType, SecondType> , 
+	mpl::vector2<FirstType, SecondType>
 >
 {
 	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
-	typedef ::std::pair<first_type, second_type> reflected_type;
+	typedef ::std::pair<FirstType, SecondType> reflected_type;
 };
 
 

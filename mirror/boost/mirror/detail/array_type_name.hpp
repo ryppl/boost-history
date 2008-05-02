@@ -19,14 +19,14 @@ namespace mirror {
 namespace detail {
 
 
-template <class meta_type, class array_size, bool base_name>
+template <class MetaType, class ArraySize, bool BaseName>
 struct static_array_type_name_base
 {
 protected:
-	typedef typename detail::static_int_to_str<array_size::value>
+	typedef typename detail::static_int_to_str<ArraySize::value>
 		size_as_string;
 
-	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+	typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 		name_info;
 
 	BOOST_STATIC_CONSTANT(size_t, difference = 3 + size_as_string::length::value);
@@ -60,11 +60,11 @@ protected:
 	}
 };
 
-template <class meta_type, bool base_name>
-struct static_array_type_name_base<meta_type, mpl::int_<-1>, base_name>
+template <class MetaType, bool BaseName>
+struct static_array_type_name_base<MetaType, mpl::int_<-1>, BaseName>
 {
 protected:
-	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+	typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 		name_info;
 
 	BOOST_STATIC_CONSTANT(
@@ -93,9 +93,9 @@ protected:
 };
 
 
-template <class meta_type, int array_size>
+template <class MetaType, int ArraySize>
 struct static_array_type_name : static_nontrivial_type_name<
-	meta_type, mpl::int_<array_size>, static_array_type_name_base
+	MetaType, mpl::int_<ArraySize>, static_array_type_name_base
 >{ };
 
 } // namespace detail

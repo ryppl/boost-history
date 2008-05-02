@@ -21,9 +21,9 @@ namespace mirror {
 
 /** Specialization for meta-classes
  */
-template <typename base_type> 
-struct name_to_stream_helper<meta_class<base_type> > :
-public name_to_stream_helper<meta_type<base_type> > { };
+template <typename Type> 
+struct name_to_stream_helper<meta_class<Type> > :
+public name_to_stream_helper<meta_type<Type> > { };
 
 
 } // namespace mirror

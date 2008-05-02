@@ -27,88 +27,88 @@ namespace mirror {
  *  access specifiers and base class of a meta_class
  */
 template <
-	class the_base_class, 
-	typename access_spec, 
-	typename inheritance_spec
+	class BaseClass, 
+	typename AccessSpec, 
+	typename InheritanceSpec
 > struct meta_inheritance_defs
 {
-	typedef inheritance_spec inheritance_specifier;
-	typedef access_spec access_specifier;
-	typedef the_base_class base_class;
-	typedef BOOST_MIRROR_REFLECT_CLASS(the_base_class) meta_base_class;
+	typedef InheritanceSpec inheritance_specifier;
+	typedef AccessSpec access_specifier;
+	typedef BaseClass base_class;
+	typedef BOOST_MIRROR_REFLECT_CLASS(BaseClass) meta_base_class;
 };
 
 /** This template stores the inheritance type and access specifier
  *  of a base class for a derived class
  */
 template <
-	class the_base_class, 
-	typename access_spec, 
-	typename inheritance_spec
+	class BaseClass, 
+	typename AccessSpec, 
+	typename InheritanceSpec
 > struct meta_inheritance_spec;
 
-template <class the_base_class>
+template <class BaseClass>
 struct meta_inheritance_spec<
-	the_base_class, 
+	BaseClass, 
 	private_, 
 	virtual_base_
 > : meta_inheritance_defs<
-	the_base_class, 
+	BaseClass, 
 	private_, 
 	virtual_base_
 > { };
 
-template <class the_base_class>
+template <class BaseClass>
 struct meta_inheritance_spec<
-	the_base_class, 
+	BaseClass, 
 	protected_, 
 	virtual_base_
 > : meta_inheritance_defs<
-	the_base_class, 
+	BaseClass, 
 	protected_, 
 	virtual_base_
 > { };
 
-template <class the_base_class>
+template <class BaseClass>
 struct meta_inheritance_spec<
-	the_base_class, 
+	BaseClass, 
 	public_, 
 	virtual_base_
 > : meta_inheritance_defs<
-	the_base_class, 
+	BaseClass, 
 	public_, 
 	virtual_base_
 > { };
 
-template <class the_base_class>
+template <class BaseClass>
 struct meta_inheritance_spec<
-	the_base_class, 
+	BaseClass, 
 	private_, 
 	nonvirtual_base_
 > : meta_inheritance_defs<
-	the_base_class, 
+	BaseClass, 
 	private_, 
 	nonvirtual_base_
 > { };
 
-template <class the_base_class>
+template <class BaseClass>
 struct meta_inheritance_spec<
-	the_base_class, 
+	BaseClass, 
 	protected_, 
 	nonvirtual_base_
 > : meta_inheritance_defs<
-	the_base_class, 
+	BaseClass, 
 	protected_, 
 	nonvirtual_base_
 > { };
 
-template <class the_base_class>
+template <class BaseClass>
 struct meta_inheritance_spec<
-	the_base_class, 
+	BaseClass, 
 	public_, 
 	nonvirtual_base_
 > : meta_inheritance_defs<
-	the_base_class, 
+	BaseClass, 
 	public_, 
 	nonvirtual_base_
 > { };
@@ -117,26 +117,26 @@ struct meta_inheritance_spec<
  *  of a base class for a derived class
  */
 template <
-	class base_class_position,
-	class the_base_class,
-	typename access_spec, 
-	typename inheritance_spec = nonvirtual_base_
+	class Position,
+	class BaseClass,
+	typename AccessSpec, 
+	typename InheritanceSpec = nonvirtual_base_
 >
 struct meta_inheritance
 : meta_inheritance_spec<
-	the_base_class, 
-	access_spec, 
-	inheritance_spec
+	BaseClass, 
+	AccessSpec, 
+	InheritanceSpec
 >
 {
-	typedef base_class_position position;
+	typedef Position position;
 };
 
 /** Default (empty) list of base classes of a meta_class
  */
 template <
-	class reflected_class, 
-	class variant_tag = detail::default_meta_class_variant
+	class Class, 
+	class VariantTag = detail::default_meta_class_variant
 >
 struct meta_base_classes
 {

@@ -17,11 +17,11 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-template <class meta_type, bool base_name, bchar token, bchar token2>
+template <class MetaType, bool BaseName, bchar Token, bchar Token2>
 struct static_ptr_ref_type_name_base
 {
 protected:
-	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+	typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 		name_info;
 
 	BOOST_STATIC_CONSTANT(int, difference = 3);
@@ -43,8 +43,8 @@ protected:
 		// append the " * " or " & "
 		assert(cur_pos == (the_name + name_info::name_length));
 		*(cur_pos++) = BOOST_STR_LIT(' ');
-		*(cur_pos++) = token;
-		*(cur_pos++) = token2;
+		*(cur_pos++) = Token;
+		*(cur_pos++) = Token2;
 		//
 		// finalize the string
 		assert(cur_pos == (the_name + name_length));
@@ -52,20 +52,20 @@ protected:
 	}
 };
 
-template <class meta_type, typename dummy, bool base_name>
+template <class MetaType, typename Dummy, bool BaseName>
 struct static_pointer_type_name_base
 : static_ptr_ref_type_name_base<
-	meta_type, 
-	base_name, 
+	MetaType, 
+	BaseName, 
 	BOOST_STR_LIT(' '),
 	BOOST_STR_LIT('*')
 >{ };
 
-template <class meta_type, typename dummy, bool base_name>
+template <class MetaType, typename Dummy, bool BaseName>
 struct static_reference_type_name_base
 : static_ptr_ref_type_name_base<
-	meta_type, 
-	base_name, 
+	MetaType, 
+	BaseName, 
 	BOOST_STR_LIT(' '),
 	BOOST_STR_LIT('&')
 >{ };

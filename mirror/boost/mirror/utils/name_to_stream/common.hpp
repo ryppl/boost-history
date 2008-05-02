@@ -15,17 +15,17 @@ namespace mirror {
 
 /** name_to_stream_helper function object
  */
-template <class meta_object> 
+template <class MetaObject> 
 struct name_to_stream_helper;
 
 /** name_to_stream function object
  *  Puts the whole name of the meta object into the given stream.
  */
-template <typename meta_object> 
-class name_to_stream : public name_to_stream_helper<meta_object>
+template <typename MetaObject> 
+class name_to_stream : public name_to_stream_helper<MetaObject>
 {
 private:
-	typedef name_to_stream_helper<meta_object> _helper;
+	typedef name_to_stream_helper<MetaObject> _helper;
 	bool put_leading_dbl_cln;
 public:
 	// default constructor 
@@ -37,8 +37,8 @@ public:
 	using _helper::put;
 	//
 	//! This version of put uses the stored flag put_leading_dbl_cln
-	template <class out_stream>
-	out_stream& put(out_stream& s) const 
+	template <class OutStream>
+	OutStream& put(OutStream& s) const 
 	{
 		return _helper::put(s, put_leading_dbl_cln);
 	}
@@ -46,8 +46,8 @@ public:
 
 /** << operator overload for meta-namespaces
  */
-template <class ostream, class meta_object>
-ostream& operator << (ostream& dst, const name_to_stream< meta_object >& mns)
+template <class OutStream, class MetaObject>
+OutStream& operator << (OutStream& dst, const name_to_stream< MetaObject >& mns)
 {
 	return mns.put(dst);
 }

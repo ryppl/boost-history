@@ -24,35 +24,35 @@ namespace detail {
 
 /** Implementation of the for_each function
  */
-template <class meta_object_sequence, class sequence_size>
+template <class MetaObjectSequence, class Size>
 struct for_each_meta_object
 {
 protected:
-	template <class meta_object_op, class transform_op, int I>
-	static inline void do_apply_to(meta_object_op op, transform_op transf, mpl::int_<I> pos)
+	template <class MetaObjectOp, class TransformOp, int I>
+	static inline void do_apply_to(MetaObjectOp op, TransformOp transf, mpl::int_<I> pos)
 	{
 		typedef typename boost::mirror::at<
-			meta_object_sequence, mpl::int_<I> 
+			MetaObjectSequence, mpl::int_<I> 
 		>:: type meta_object;
 		op(transf(meta_object()));
 	}
 
 	typedef mpl::int_< -1 > begin;
 
-	template <class meta_object_op, class transform_op>
-	static inline void apply_to(meta_object_op op, transform_op transf, begin){ }
+	template <class MetaObjectOp, class TransformOp>
+	static inline void apply_to(MetaObjectOp op, TransformOp transf, begin){ }
 
-	template <class meta_object_op, class transform_op, int I>
-	static inline void apply_to(meta_object_op op, transform_op transf, mpl::int_<I> pos)
+	template <class MetaObjectOp, class TransformOp, int I>
+	static inline void apply_to(MetaObjectOp op, TransformOp transf, mpl::int_<I> pos)
 	{
 		apply_to(op, transf, mpl::int_<I - 1>()), 
 		do_apply_to(op, transf, pos);
 	}
 public:
-	template <class meta_object_op, class transform_op>
-	static inline meta_object_op perform(meta_object_op op, transform_op transf)
+	template <class MetaObjectOp, class TransformOp>
+	static inline MetaObjectOp perform(MetaObjectOp op, TransformOp transf)
 	{
-		typedef mpl::int_<sequence_size::value - 1> last;
+		typedef mpl::int_<Size::value - 1> last;
 		apply_to(op, transf, last());
 		return op;
 	}

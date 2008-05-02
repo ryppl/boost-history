@@ -24,12 +24,12 @@ namespace detail {
 	 *  the inherited ones. 
 	 */
 	template <
-		class _reflected_type, 
-		class _variant_tag
+		class ReflectedType, 
+		class VariantTag
 	>
 	struct meta_class_all_attributes
 	{
-		typedef boost::mirror::meta_class<_reflected_type, _variant_tag> 
+		typedef boost::mirror::meta_class<ReflectedType, VariantTag> 
 			meta_class;
 		/** This struct "hides" the internal helpers
 		 */
@@ -58,9 +58,10 @@ namespace detail {
 			 *  of a base class when given a meta_inheritance 
 			 *  specialization for this base class.
 			 */
-			template <class meta_inheritance>
+			template <class MetaInheritance>
 			struct get_base_class_regular_layout
 			{
+				typedef MetaInheritance meta_inheritance;
 				typedef typename 
 					meta_inheritance:: 
 					meta_base_class:: 
@@ -92,9 +93,10 @@ namespace detail {
 			 *  of a base class when given a meta_inheritance 
 			 *  specialization for this base class.
 			 */
-			template <class meta_inheritance>
+			template <class MetaInheritance>
 			struct get_base_class_virtual_layout
 			{
+				typedef MetaInheritance meta_inheritance;
 				typedef typename 
 					meta_inheritance:: 
 					meta_base_class:: 
@@ -107,9 +109,10 @@ namespace detail {
 			 *  of a base class when given a meta_inheritance 
 			 *  specialization for this base class.
 			 */
-			template <class meta_inheritance>
+			template <class MetaInheritance>
 			struct get_base_class_layout
 			{
+				typedef MetaInheritance meta_inheritance;
 				typedef typename 
 					meta_inheritance:: 
 					meta_base_class:: 
@@ -173,9 +176,10 @@ namespace detail {
 			 *  attrbute types of a base class when 
 			 *  given a meta_inheritance<> specialization
 			 */
-			template <class meta_inheritance>
+			template <class MetaInheritance>
 			struct get_base_class_attrib_type_list
 			{
+				typedef MetaInheritance meta_inheritance;
 				typedef typename meta_inheritance::
 						meta_base_class::
 						attributes::
@@ -217,9 +221,12 @@ namespace detail {
 			/** This template gets the list of the owner classes 
 			 *  for the inherited attributes.
 			 */
-			template <class current_list, class meta_inheritance>
+			template <class CurrentList, class MetaInheritance>
 			struct get_base_class_attrib_owner_and_offs
 			{
+				typedef CurrentList current_list;
+				typedef MetaInheritance meta_inheritance;
+
 				typedef typename meta_inheritance::
 						meta_base_class meta_base_class;
 
@@ -328,9 +335,9 @@ namespace detail {
 			/** This function is used to get the member attributes 
 		 	 *  from the base classes.
 		 	 */
-			template <class a_class, int I>
+			template <class Class, int I>
 			static typename result_of_get<I>::type
-			get(a_class context, mpl::int_<I> pos, mpl::bool_<true>)
+			get(Class context, mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
@@ -340,9 +347,9 @@ namespace detail {
 				return meta_class::attributes::get(context, new_pos_type());
 
 			}
-			template <class a_class, int I>
+			template <class Class, int I>
 			static typename result_of_get<I>::type
-			get(a_class context, mpl::int_<I> pos, mpl::bool_<false>)
+			get(Class context, mpl::int_<I> pos, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
 					::position new_pos_type;
@@ -353,9 +360,9 @@ namespace detail {
 			/** This function is used to query the member attributes 
 		 	 *  from the base classes.
 		 	 */
-			template <class a_class, int I, typename dest_type>
-			static dest_type&
-			query(a_class context, mpl::int_<I> pos, dest_type& dest, mpl::bool_<true>)
+			template <class Class, int I, typename DestType>
+			static DestType&
+			query(Class context, mpl::int_<I> pos, DestType& dest, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
@@ -366,9 +373,9 @@ namespace detail {
 
 			}
 
-			template <class a_class, int I, typename dest_type>
-			static dest_type&
-			query(a_class context, mpl::int_<I> pos, dest_type& dest, mpl::bool_<false>)
+			template <class Class, int I, typename DestType>
+			static DestType&
+			query(Class context, mpl::int_<I> pos, DestType& dest, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
 					::position new_pos_type;
@@ -379,9 +386,9 @@ namespace detail {
 			/** This function is used to query the member attributes 
 		 	 *  from the base classes.
 		 	 */
-			template <class a_class, int I, typename value_type>
+			template <class Class, int I, typename ValueType>
 			static void
-			set(a_class& context, mpl::int_<I> pos, value_type value, mpl::bool_<true>)
+			set(Class& context, mpl::int_<I> pos, ValueType value, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
@@ -391,9 +398,9 @@ namespace detail {
 				meta_class::attributes::set(context, new_pos_type(), value);
 			}
 
-			template <class a_class, int I, typename value_type>
+			template <class Class, int I, typename ValueType>
 			static void
-			set(a_class& context, mpl::int_<I> pos, value_type value, mpl::bool_<false>)
+			set(Class& context, mpl::int_<I> pos, ValueType value, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
 					::position new_pos_type;
@@ -437,9 +444,9 @@ namespace detail {
 		/** Gets the value of the I-th member (including 
 		 *  the inherited ones)
 		 */
-		template <class a_class, int I>
+		template <class Class, int I>
 		static typename detail::template result_of_get<I>::type
-		get(a_class context, mpl::int_<I> pos)
+		get(Class context, mpl::int_<I> pos)
 		{
 			typedef typename mpl::less<
 				mpl::int_<I>,
@@ -452,9 +459,9 @@ namespace detail {
 		/** Queries the value of the I-th member (including 
 		 *  the inherited ones)
 		 */
-		template <class a_class, int I, typename dest_type>
-		static dest_type&
-		query(a_class context, mpl::int_<I> pos, dest_type& dest)
+		template <class Class, int I, typename DestType>
+		static DestType&
+		query(Class context, mpl::int_<I> pos, DestType& dest)
 		{
 			typedef typename mpl::less<
 				mpl::int_<I>,
@@ -467,9 +474,9 @@ namespace detail {
 		/** Sets the value of the I-th member (including 
 		 *  the inherited ones)
 		 */
-		template <class a_class, int I, typename value_type>
+		template <class Class, int I, typename ValueType>
 		static void
-		set(a_class& context, mpl::int_<I> pos, value_type value)
+		set(Class& context, mpl::int_<I> pos, ValueType value)
 		{
 			typedef typename mpl::less<
 				mpl::int_<I>,
@@ -485,25 +492,25 @@ namespace detail {
 	 *  in the algorithms.
 	 */
 	template <
-		class _reflected_type, 
-		class _variant_tag,
-		class _meta_attributes,
-		class _attrib_pos
+		class ReflectedType, 
+		class VariantTag,
+		class MetaAttributes,
+		class AttribPos
 	>
 	struct meta_class_attribute
 	{
 		// the meta-class for the class to which 
 		// the attribute belongs
-		typedef ::boost::mirror::meta_class<_reflected_type, _variant_tag> 
+		typedef ::boost::mirror::meta_class<ReflectedType, VariantTag> 
 			meta_class;
 
 		// the meta-attributes list (own/all)
 		// into which the attribute belongs
 		// in this context
-		typedef _meta_attributes meta_attributes;
+		typedef MetaAttributes meta_attributes;
 
 		// the position of the meta-attribute in the context
-		typedef _attrib_pos position;
+		typedef AttribPos position;
 
 		// the type of the attribute
 		typedef typename mpl::at<
@@ -533,8 +540,8 @@ namespace detail {
 		}
 
 		// value query
-		template <typename dest_type>
-		static dest_type& query(const reflected_class& context, dest_type& dest)
+		template <typename DestType>
+		static DestType& query(const reflected_class& context, DestType& dest)
 		{
 			return meta_attributes::query(context, position(), dest);
 		}

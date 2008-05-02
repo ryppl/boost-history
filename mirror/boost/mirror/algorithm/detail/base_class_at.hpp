@@ -25,12 +25,12 @@ namespace detail {
 
 /** Implementation of the for_each function on meta_attributes
  */
-template <class meta_base_classes, class position>
+template <class MetaBaseClasses, class Position>
 struct meta_inheritance_at
 {
 	typedef typename mpl::at<
-		typename meta_base_classes::list,
-		position
+		typename MetaBaseClasses::list,
+		Position
 	>::type type;
 };
 

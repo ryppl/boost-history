@@ -17,11 +17,11 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-template <class meta_type, typename dummy, bool base_type>
+template <class MetaType, typename Dummy, bool BaseName>
 struct static_cv_type_name_base
 {
 protected:
-	typedef nontrivial_type_base_or_full_name<meta_type, base_type>
+	typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 		name_info;
 
 	BOOST_STATIC_CONSTANT(int, difference = 15);
@@ -50,9 +50,9 @@ protected:
 	}
 };
 
-template <class meta_type>
+template <class MetaType>
 struct static_cv_type_name : static_nontrivial_type_name<
-	meta_type, void, static_cv_type_name_base
+	MetaType, void, static_cv_type_name_base
 >{ };
 
 

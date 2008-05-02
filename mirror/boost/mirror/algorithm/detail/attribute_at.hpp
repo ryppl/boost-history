@@ -25,13 +25,13 @@ namespace detail {
 
 /** Implementation of the for_each function on meta_attributes
  */
-template <class reflected_class, class variant_tag, class meta_attributes, class position>
+template <class Class, class VariantTag, class MetaAttributes, class Position>
 struct meta_attribute_at
 {
 	typedef meta_class_attribute<
-		reflected_class, variant_tag,
-		meta_attributes,
-		position
+		Class, VariantTag,
+		MetaAttributes,
+		Position
 	> type;
 };
 

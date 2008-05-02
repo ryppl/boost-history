@@ -29,15 +29,15 @@ namespace detail {
  *  template_name|< |T1|, |T2|, |...|Tn| > (without the 
  *  delimiting '|'s.
  */
-template <class typelist, bool base_name>
+template <class TypeList, bool BaseName>
 struct static_template_name_length
 {
-	template <typename a_type>
+	template <typename Type>
 	struct get_type_name_length_type
 	{
-		typedef BOOST_MIRROR_REFLECT_TYPE(a_type) meta_type;
+		typedef BOOST_MIRROR_REFLECT_TYPE(Type) MetaType;
 	
-		typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+		typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 			name_info;
 
 		typedef typename mpl::int_<
@@ -46,7 +46,7 @@ struct static_template_name_length
 	};
 
 	typedef typename mpl::accumulate<
-		typelist,
+		TypeList,
 		mpl::int_<2>,
 		mpl::plus<
 			mpl::_1,
@@ -61,42 +61,42 @@ struct static_template_name_length
 /** Specializations of this template
  */
 
-template <typename a_type>
+template <typename Type>
 struct is_typelist_null_type : ::boost::false_type { };
 
-template <class full_typelist>
+template <class FullTypeList>
 struct template_with_null_args_type_list
 {
-	/** A typelist that contains all types from full_type_list
+	/** A TypeList that contains all types from full_type_list
 	 *  except those that are typelist_null_types
 	 */
 	typedef typename mpl::remove_if<
-		full_typelist,
+		FullTypeList,
 		is_typelist_null_type<mpl::_1>
 	>::type type;
 };
 
-template <class meta_type, class full_typelist, bool base_name>
+template <class MetaType, class FullTypeList, bool BaseName>
 struct static_template_name_base
 {
 protected:
 	typedef typename template_with_null_args_type_list<
-		full_typelist
-	>::type typelist;
+		FullTypeList
+	>::type TypeList;
 
 	/** The 'position' of the last type in the template
 	 *  type list.
 	 */
 	typedef typename mpl::int_<
-		mpl::size< typelist	>::value - 1
+		mpl::size< TypeList	>::value - 1
 	> last_type_pos;
 
 	template <int I>
 	static bchar* do_append_type_name(bchar* cur_pos, mpl::int_<I>)
 	{
-		typedef typename mpl::at<typelist, mpl::int_<I> >::type type;
-		typedef BOOST_MIRROR_REFLECT_TYPE(type) meta_type;
-		typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+		typedef typename mpl::at<TypeList, mpl::int_<I> >::type type;
+		typedef BOOST_MIRROR_REFLECT_TYPE(type) MetaType;
+		typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 			local_name_info;
 		bstrcpy(cur_pos, local_name_info::name());
 		cur_pos += local_name_info::name_length;
@@ -117,10 +117,10 @@ protected:
 		return do_append_type_name(cur_pos, type_pos);
 	}
 
-	typedef nontrivial_type_base_or_full_name<meta_type, base_name>
+	typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
 		name_info;
 
-	typedef typename static_template_name_length<typelist, base_name>::type
+	typedef typename static_template_name_length<TypeList, BaseName>::type
 		template_param_list_length_type;
 
 	BOOST_STATIC_CONSTANT(
@@ -161,9 +161,9 @@ protected:
 	}
 };
 
-template <class meta_type, class typelist>
+template <class MetaType, class TypeList>
 struct static_template_name : static_nontrivial_type_name<
-	meta_type, typelist, static_template_name_base
+	MetaType, TypeList, static_template_name_base
 >{ };
 
 

@@ -77,10 +77,10 @@ struct static_int_to_str<0>
 	}
 };
 
-template <class mpl_vector_c, int I>
+template <class Vector, int I>
 struct static_int_to_str_w_prefix
 {
-	typedef mpl_vector_c prefix;
+	typedef Vector prefix;
 	typedef mpl::int_<mpl::size<prefix>::value> prefix_length;
 	typedef typename static_int_to_str<I>::length number_length;
 	// the length of the string needed to hold the given integer with the prefix

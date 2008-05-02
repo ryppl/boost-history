@@ -29,8 +29,8 @@ public:
 	sample_visitor(void):indent(0){ }
 
 	// enter a class/type
-	template <class meta_class>
-	void enter_type(meta_class)
+	template <class MetaClass>
+	void enter_type(MetaClass)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -38,12 +38,12 @@ public:
 		++indent;
 		bcout << 
 			"<type name='" << 
-			meta_class::base_name();
-		if(!reflects_global_scope<typename meta_class::scope>::value)
+			MetaClass::base_name();
+		if(!reflects_global_scope<typename MetaClass::scope>::value)
 		{
 			bcout << 
 				"' scope='" <<
-				meta_class::scope::full_name();
+				MetaClass::scope::full_name();
 		}
 		bcout << 
 			"'>" << 
@@ -51,8 +51,8 @@ public:
 	}
 
 	// leave the class/type
-	template <class meta_class>
-	void leave_type(meta_class)
+	template <class MetaClass>
+	void leave_type(MetaClass)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -79,8 +79,8 @@ public:
 	}
 
 	// leave base class
-	template <class meta_class>
-	void leave_base_class(meta_class)
+	template <class MetaClass>
+	void leave_base_class(MetaClass)
 	{
 		using namespace ::std;
 		using namespace ::boost;

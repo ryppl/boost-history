@@ -20,48 +20,48 @@ namespace detail {
 	/** Declaration of the default at_impl
 	 *  helper template.
 	 */
-	template <class meta_object_sequence, class position>
+	template <class MetaObjectSequence, class Position>
 	struct at_impl { };
 
-	/** Specialization of at_impl<meta_object_sequence>
+	/** Specialization of at_impl<MetaObjectSequence>
 	 *  for meta_class_attributes<>
 	 */
-	template <class reflected_class, class variant_tag, class position>
-	struct at_impl<meta_class_attributes<reflected_class, variant_tag>, position >
+	template <class Class, class VariantTag, class Position>
+	struct at_impl<meta_class_attributes<Class, VariantTag>, Position >
 	: meta_attribute_at<
-		reflected_class, variant_tag,
-		meta_class_attributes<reflected_class, variant_tag>,
-		position
+		Class, VariantTag,
+		meta_class_attributes<Class, VariantTag>,
+		Position
 	>{ };
 
-	/** Specialization of for_each_impl<meta_object_sequence>
+	/** Specialization of for_each_impl<MetaObjectSequence>
 	 *  for meta_class_all_attributes<>
 	 */
-	template <class reflected_class, class variant_tag, class position>
-	struct at_impl<meta_class_all_attributes<reflected_class, variant_tag>, position >
+	template <class Class, class VariantTag, class Position>
+	struct at_impl<meta_class_all_attributes<Class, VariantTag>, Position >
 	: meta_attribute_at<
-		reflected_class, variant_tag,
-		meta_class_all_attributes<reflected_class, variant_tag>,
-		position
+		Class, VariantTag,
+		meta_class_all_attributes<Class, VariantTag>,
+		Position
 	>{ };
 
-	/** Specialization of for_each_impl<meta_object_sequence>
+	/** Specialization of for_each_impl<MetaObjectSequence>
 	 *  for meta_base_classes<>
 	 */
-	template <class reflected_class, class variant_tag, class position>
-	struct at_impl<meta_base_classes<reflected_class, variant_tag>, position >
+	template <class Class, class VariantTag, class Position>
+	struct at_impl<meta_base_classes<Class, VariantTag>, Position >
 	: meta_inheritance_at<
-		meta_base_classes<reflected_class, variant_tag>,
-		position
+		meta_base_classes<Class, VariantTag>,
+		Position
 	>{ };
 
 } // namespace detail
 
 template <
-	class meta_object_sequence,
-	class position
+	class MetaObjectSequence,
+	class Position
 >
-struct at : detail::at_impl<meta_object_sequence, position>
+struct at : detail::at_impl<MetaObjectSequence, Position>
 { };
 
 } // namespace mirror

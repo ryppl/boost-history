@@ -39,18 +39,17 @@ namespace mirror {
 /** Meta class - specializes the meta_type for classes
  */
 template <
-	class reflected_class, 
-	class variant_tag
+	class Class, 
+	class VariantTag
 >
-struct meta_class : public meta_type<reflected_class>
+struct meta_class : public meta_type<Class>
 {
-
 	/** The base classes of a class.
 	 *  The member base_classes::list is a mpl::vector of 
 	 *  meta_inheritance<> specializations, one for every 
 	 *  base class.
 	 */
-	typedef meta_base_classes<reflected_class, variant_tag> base_classes;
+	typedef meta_base_classes<Class, VariantTag> base_classes;
 
 	/** The member attributes of the class (not including the inherited
 	 *  member attribs. 
@@ -66,12 +65,12 @@ struct meta_class : public meta_type<reflected_class>
 	 *  0 <= I < N; N = $mpl::size<attributes::type_list>::value
 	 * 
 	 */
-	typedef meta_class_attributes<reflected_class, variant_tag> 
+	typedef meta_class_attributes<Class, VariantTag> 
 		attributes;
 
 	/** Same as attributes but containing also the inherited attributes
 	 */
-	typedef detail::meta_class_all_attributes<reflected_class, variant_tag >
+	typedef detail::meta_class_all_attributes<Class, VariantTag >
 		all_attributes;
 };
 

@@ -17,49 +17,49 @@ namespace detail {
 	/** Declaration of the default at_impl
 	 *  helper template.
 	 */
-	template <class meta_object_sequence>
+	template <class MetaObjectSequence>
 	struct size_impl { };
 
-	/** Specialization of at_impl<meta_object_sequence>
+	/** Specialization of at_impl<MetaObjectSequence>
 	 *  for meta_class_attributes<>
 	 */
-	template <class reflected_class, class variant_tag>
-	struct size_impl<meta_class_attributes<reflected_class, variant_tag> >
+	template <class Class, class VariantTag>
+	struct size_impl<meta_class_attributes<Class, VariantTag> >
 	: mpl::size<
 			typename meta_class_attributes<
-				reflected_class, 
-				variant_tag
+				Class, 
+				VariantTag
 			>::type_list
 	>{ };
 
-	/** Specialization of for_each_impl<meta_object_sequence>
+	/** Specialization of for_each_impl<MetaObjectSequence>
 	 *  for meta_class_all_attributes<>
 	 */
-	template <class reflected_class, class variant_tag>
-	struct size_impl<meta_class_all_attributes<reflected_class, variant_tag> >
+	template <class Class, class VariantTag>
+	struct size_impl<meta_class_all_attributes<Class, VariantTag> >
 	: mpl::size<
 			typename meta_class_all_attributes<
-				reflected_class, 
-				variant_tag
+				Class, 
+				VariantTag
 			>::type_list
 	>{ };
 
-	/** Specialization of for_each_impl<meta_object_sequence>
+	/** Specialization of for_each_impl<MetaObjectSequence>
 	 *  for meta_base_classes<>
 	 */
-	template <class reflected_class, class variant_tag>
-	struct size_impl<meta_base_classes<reflected_class, variant_tag> >
+	template <class Class, class VariantTag>
+	struct size_impl<meta_base_classes<Class, VariantTag> >
 	: mpl::size<
 			typename meta_base_classes<
-				reflected_class, 
-				variant_tag
+				Class, 
+				VariantTag
 			>::list
 	>{ };
 
 } // namespace detail
 
-template <class meta_object_sequence>
-struct size : detail::size_impl<meta_object_sequence> { };
+template <class MetaObjectSequence>
+struct size : detail::size_impl<MetaObjectSequence> { };
 
 } // namespace mirror
 } // namespace boost

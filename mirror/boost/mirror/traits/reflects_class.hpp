@@ -18,11 +18,11 @@
 namespace boost {
 namespace mirror {
 
-template <class meta_object>
+template <class MetaObject>
 struct reflects_class : public false_type{ };
 
-template <class base_class>
-struct reflects_class<meta_class<base_class> > : public true_type{ };
+template <class Class>
+struct reflects_class<meta_class<Class> > : public true_type{ };
 
 
 } // namespace mirror

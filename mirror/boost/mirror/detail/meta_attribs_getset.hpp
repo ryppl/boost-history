@@ -32,42 +32,42 @@ namespace mirror {
  *  TODO: This is a rather unfortunate implementation ...
  *  It would be great is we could get rid of the do_* helpers.
  *  Anyway there should be two overloads of get and two for query 
- *  one having 'const the_class&' and the other 'the_class&' as the first param
+ *  one having 'const Class&' and the other 'Class&' as the first param
  *  if the provided getter IS const qualified.
  *  Otherwise, if the getter IS NOT const qualified there should be only one
- *  version of get and one version of query, both having a 'the_class&'
+ *  version of get and one version of query, both having a 'Class&'
  *  as the first argument. 
  *
- *  Now, both overloads get always compiled, but if the one with const the_class&
+ *  Now, both overloads get always compiled, but if the one with const Class&
  *  gets never used it is (hopefully) culled out of the final binary.
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, ARG_COUNT) \
-	static call_traits<TYPE>::param_type do_get(the_class& context, mpl::int_<NUMBER>, mpl::bool_<true>)\
+	static call_traits<TYPE>::param_type do_get(Class& context, mpl::int_<NUMBER>, mpl::bool_<true>)\
 	{\
 		return context.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
 	} \
-	static call_traits<TYPE>::param_type do_get(const the_class& context, mpl::int_<NUMBER>, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&the_class::GETTER_NAME), function_types::const_qualified>::value>)\
+	static call_traits<TYPE>::param_type do_get(const Class& context, mpl::int_<NUMBER>, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&Class::GETTER_NAME), function_types::const_qualified>::value>)\
 	{\
-		return const_cast<the_class&>(context).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
+		return const_cast<Class&>(context).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
 	} \
-	template <typename dest_type>\
-	static dest_type& do_query(the_class& context, mpl::int_<NUMBER>, dest_type& dest, mpl::bool_<true>)\
+	template <typename DestType>\
+	static DestType& do_query(Class& context, mpl::int_<NUMBER>, DestType& dest, mpl::bool_<true>)\
 	{\
-		dest = dest_type(context.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
+		dest = DestType(context.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
 		return dest;\
 	} \
-	template <typename dest_type>\
-	static dest_type& do_query(const the_class& context, mpl::int_<NUMBER>, dest_type& dest, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&the_class::GETTER_NAME), function_types::const_qualified>::value>)\
+	template <typename DestType>\
+	static DestType& do_query(const Class& context, mpl::int_<NUMBER>, DestType& dest, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&Class::GETTER_NAME), function_types::const_qualified>::value>)\
 	{\
-		dest = dest_type(const_cast<the_class&>(context).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
+		dest = DestType(const_cast<Class&>(context).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
 		return dest;\
 	} \
-	template <class a_class> static call_traits<TYPE>::param_type get(a_class& context, mpl::int_<NUMBER>)\
+	template <class SomeClass> static call_traits<TYPE>::param_type get(SomeClass& context, mpl::int_<NUMBER>)\
 	{\
 		return do_get(context, mpl::int_<NUMBER>(), mpl::bool_<true>());\
 	}\
-	template <class a_class, typename dest_type> \
-	static dest_type& query(a_class& context, mpl::int_<NUMBER>, dest_type& dest)\
+	template <class SomeClass, typename DestType> \
+	static DestType& query(SomeClass& context, mpl::int_<NUMBER>, DestType& dest)\
 	{\
 		return do_query(context, mpl::int_<NUMBER>(), dest, mpl::bool_<true>());\
 	}
@@ -78,7 +78,7 @@ namespace mirror {
 /** Helper macro for implementing setter based set meta-class function 
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, ARG_COUNT) \
-	static void set(the_class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
+	static void set(Class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
 	{\
 		context.SETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, SETTER_ARGS_TUPLE)));\
 	} 

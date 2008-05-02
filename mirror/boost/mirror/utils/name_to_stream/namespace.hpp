@@ -24,8 +24,8 @@ namespace mirror {
 template <> 
 struct name_to_stream_helper< BOOST_MIRROR_REFLECT_NAMESPACE(_) >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
 		return ldng_dbl_cln? s << BOOST_STR_LIT("::") : s;
 	}
@@ -33,12 +33,12 @@ struct name_to_stream_helper< BOOST_MIRROR_REFLECT_NAMESPACE(_) >
 
 /** Specialization of name_to_stream_helper for the top level namespaces
  */
-template <class namespace_alias> 
-struct name_to_stream_helper<meta_namespace<namespace_alias> >
+template <class NamespaceAlias> 
+struct name_to_stream_helper<meta_namespace<NamespaceAlias> >
 {
-	typedef meta_namespace<namespace_alias> meta_ns;
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	typedef meta_namespace<NamespaceAlias> meta_ns;
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
 		typedef typename meta_ns::parent parent_ns;
 		// let the printer print out the  base name of the parent namespace

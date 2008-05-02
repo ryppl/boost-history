@@ -25,12 +25,12 @@ namespace mirror {
 
 /** Forward declaration of the meta_class_attributes<> template
  */
-template <class the_class, class variant_tag = detail::default_meta_class_variant>
+template <class Class, class VariantTag = detail::default_meta_class_variant>
 struct meta_class_attributes;
 
 /** Defaut (empty) list of base attributes of a meta class
  */
-template <class the_class, class variant_tag>
+template <class Class, class VariantTag>
 struct meta_class_attributes
 {
 	typedef mpl::vector<> type_list;
@@ -42,7 +42,7 @@ struct meta_class_attributes
 #define BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(THE_CLASS) \
 	template <> struct meta_class_attributes< THE_CLASS , detail::default_meta_class_variant> \
 	{ \
-		typedef THE_CLASS the_class; \
+		typedef THE_CLASS Class; \
 		typedef mpl::vector<> 
 
 /** This macro starts the declaration of member attributes
@@ -56,7 +56,7 @@ struct meta_class_attributes
 	> \
 	{ \
 		typedef THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
-			the_class; \
+			Class; \
 		typedef typename mpl::vector<> 
 
 
@@ -106,14 +106,14 @@ struct meta_class_attributes
  *  querying scheme
  */
 #define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME, TYPENAME_KW) \
-	static TYPENAME_KW call_traits<TYPE>::param_type get(const the_class& context, mpl::int_<NUMBER>)\
+	static TYPENAME_KW call_traits<TYPE>::param_type get(const Class& context, mpl::int_<NUMBER>)\
 	{\
 		return context.NAME;\
 	}\
-	template <typename dest_type>\
-	static dest_type& query(const the_class& context, mpl::int_<NUMBER>, dest_type& dest)\
+	template <typename DestType>\
+	static DestType& query(const Class& context, mpl::int_<NUMBER>, DestType& dest)\
 	{\
-		dest = dest_type(context.NAME);\
+		dest = DestType(context.NAME);\
 		return dest;\
 	} 
 
@@ -127,9 +127,9 @@ struct meta_class_attributes
 /** Helper macro for implementing no-op query meta-class function
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE) \
-	static void get(const the_class& context, mpl::int_<NUMBER>){ }\
-	template <typename dest_type>\
-	static void query(const the_class& context, mpl::int_<NUMBER>, dest_type& dest){ }
+	static void get(const Class& context, mpl::int_<NUMBER>){ }\
+	template <typename DestType>\
+	static void query(const Class& context, mpl::int_<NUMBER>, DestType& dest){ }
 
 #define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE) \
 
@@ -137,11 +137,11 @@ struct meta_class_attributes
 /** Helper macros 
  */
 #define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME, TYPENAME_KW) \
-	static void set(the_class& context, mpl::int_<NUMBER>, TYPENAME_KW call_traits<TYPE>::param_type val)\
+	static void set(Class& context, mpl::int_<NUMBER>, TYPENAME_KW call_traits<TYPE>::param_type val)\
 	{\
 		context.NAME = val;\
 	} \
-	static void set(const the_class& context, mpl::int_<NUMBER>, TYPENAME_KW call_traits<TYPE>::param_type val)\
+	static void set(const Class& context, mpl::int_<NUMBER>, TYPENAME_KW call_traits<TYPE>::param_type val)\
 	{\
 	}
 
@@ -155,8 +155,8 @@ struct meta_class_attributes
 /** Helper macro for implementing no-op set meta-class function
  */
 #define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE, TYPENAME_KW) \
-	static void set(the_class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val){ }\
-	static void set(const the_class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val){ }
+	static void set(Class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val){ }\
+	static void set(const Class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val){ }
 
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE) \
 	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE, BOOST_PP_EMPTY())

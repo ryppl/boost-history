@@ -18,29 +18,33 @@
 namespace boost {
 namespace mirror {
 
-template <class meta_object>
+template <class MetaObject>
 struct reflects_virtual_inheritance;
 
 template <
-	class base_class,
-	typename access_spec 
+	class Position,
+	class BaseClass,
+	typename AccessSpec 
 >
 struct reflects_virtual_inheritance<
 	meta_inheritance<
-		base_class,
-		access_spec,
+		Position,
+		BaseClass,
+		AccessSpec,
 		virtual_base_
 	> 
 > : public true_type{ };
 
 template <
-	class base_class,
-	typename access_spec 
+	class Position,
+	class BaseClass,
+	typename AccessSpec 
 >
 struct reflects_virtual_inheritance<
 	meta_inheritance<
-		base_class,
-		access_spec,
+		Position,
+		BaseClass,
+		AccessSpec,
 		nonvirtual_base_
 	> 
 > : public false_type{ };

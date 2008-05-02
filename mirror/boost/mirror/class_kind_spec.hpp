@@ -25,7 +25,7 @@ struct class_ : class_kind_specifier { };
 struct struct_ : class_kind_specifier { };
 struct union_ : class_kind_specifier { };
 
-template <class a_class>
+template <class C>
 struct meta_class_kind
 {
 	typedef class_ result;
@@ -33,7 +33,7 @@ struct meta_class_kind
 
 /** Default inheritance access specifier for the given class kind
  */
-template <class a_class_kind>
+template <class K>
 struct class_kind_default_access
 {
 	typedef public_ specifier;

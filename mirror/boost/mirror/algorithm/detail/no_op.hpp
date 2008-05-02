@@ -17,8 +17,8 @@ namespace detail {
 
 struct no_op
 {
-	template <typename arg_type>
-	inline arg_type operator()(arg_type arg){return arg;}
+	template <typename ArgType>
+	inline ArgType operator()(ArgType arg){return arg;}
 };
 
 } // namespace detail

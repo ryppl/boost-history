@@ -24,38 +24,38 @@ namespace detail {
 	/** Declaration of the default iterative_algorithm
 	 *  helper template.
 	 */
-	template <class meta_object_sequence, template <class, class> class algo_impl >
+	template <class MetaObjectSequence, template <class, class> class AlgoImpl >
 	struct iterative_algorithm { };
 
-	/** Specialization of iterative_algorithm<meta_object_sequence,algo_impl>
+	/** Specialization of iterative_algorithm<MetaObjectSequence,AlgoImpl>
 	 *  for meta_class_attributes<>
 	 */
-	template <class reflected_class, class variant_tag, template <class, class> class algo_impl>
-	struct iterative_algorithm<meta_class_attributes<reflected_class, variant_tag>, algo_impl >
-	: algo_impl<
-		meta_class_attributes<reflected_class, variant_tag>,
-		size<meta_class_attributes<reflected_class, variant_tag> >
+	template <class Class, class VariantTag, template <class, class> class AlgoImpl>
+	struct iterative_algorithm<meta_class_attributes<Class, VariantTag>, AlgoImpl >
+	: AlgoImpl<
+		meta_class_attributes<Class, VariantTag>,
+		size<meta_class_attributes<Class, VariantTag> >
 	>{ };
 
-	/** Specialization of iterative_algorithm<meta_object_sequence,algo_impl>
+	/** Specialization of iterative_algorithm<MetaObjectSequence,AlgoImpl>
 	 *  for meta_class_all_attributes<>
 	 */
-	template <class reflected_class, class variant_tag, template <class, class> class algo_impl>
-	struct iterative_algorithm<meta_class_all_attributes<reflected_class, variant_tag>, algo_impl >
-	: algo_impl<
-		meta_class_all_attributes<reflected_class, variant_tag>,
-		size<meta_class_all_attributes<reflected_class, variant_tag> >
+	template <class Class, class VariantTag, template <class, class> class AlgoImpl>
+	struct iterative_algorithm<meta_class_all_attributes<Class, VariantTag>, AlgoImpl >
+	: AlgoImpl<
+		meta_class_all_attributes<Class, VariantTag>,
+		size<meta_class_all_attributes<Class, VariantTag> >
 	>{ };
 
 
-	/** Specialization of iterative_algorithm<meta_object_sequence,algo_impl>
+	/** Specialization of iterative_algorithm<MetaObjectSequence,AlgoImpl>
 	 *  for meta_base_classes<>
 	 */
-	template <class reflected_class, class variant_tag, template <class, class> class algo_impl>
-	struct iterative_algorithm<meta_base_classes<reflected_class, variant_tag>, algo_impl >
-	: algo_impl<
-		meta_base_classes<reflected_class, variant_tag>,
-		size<meta_base_classes<reflected_class, variant_tag> >
+	template <class Class, class VariantTag, template <class, class> class AlgoImpl>
+	struct iterative_algorithm<meta_base_classes<Class, VariantTag>, AlgoImpl >
+	: AlgoImpl<
+		meta_base_classes<Class, VariantTag>,
+		size<meta_base_classes<Class, VariantTag> >
 	>{ };
 
 } // namespace detail

@@ -20,112 +20,112 @@ namespace mirror {
 
 /** Specialization for meta-types
  */
-template <typename base_type> 
-struct name_to_stream_helper<meta_type<base_type> >
+template <typename Type> 
+struct name_to_stream_helper<meta_type<Type> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
-		if(!reflects_global_scope<typename meta_type<base_type>::scope>::value)
+		if(!reflects_global_scope<typename meta_type<Type>::scope>::value)
 			name_to_stream<
-				typename meta_type<base_type>::scope
+				typename meta_type<Type>::scope
 			>::put(s, ldng_dbl_cln) << BOOST_STR_LIT("::");
 		else if(ldng_dbl_cln) s << BOOST_STR_LIT("::");
-		return s << meta_type<base_type>::base_name();
+		return s << meta_type<Type>::base_name();
 	}
 };
 
 /** Specialization for meta-types for pointers
  */
-template <typename pointee_type> 
-struct name_to_stream_helper<meta_type<pointee_type*> >
+template <typename PointeeType> 
+struct name_to_stream_helper<meta_type<PointeeType*> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
-		return name_to_stream_helper<meta_type<pointee_type> >::put(s,ldng_dbl_cln) << BOOST_STR_LIT("*");
+		return name_to_stream_helper<meta_type<PointeeType> >::put(s,ldng_dbl_cln) << BOOST_STR_LIT("*");
 	}
 };
 
 /** Specialization for meta-types for non-cv element arrays
  */
-template <typename element_type, size_t size> 
-struct name_to_stream_helper<meta_type<element_type[size]> >
+template <typename ElementType, size_t Size> 
+struct name_to_stream_helper<meta_type<ElementType[Size]> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
-		return name_to_stream_helper<meta_type<element_type> >::put(s,ldng_dbl_cln) << 
+		return name_to_stream_helper<meta_type<ElementType> >::put(s,ldng_dbl_cln) << 
 			BOOST_STR_LIT("[") <<
-			size << 
+			Size << 
 			BOOST_STR_LIT("]");
 	}
 };
 
 /** Specialization for meta-types for const element arrays
  */
-template <typename element_type, size_t size> 
-struct name_to_stream_helper<meta_type<const element_type[size]> >
+template <typename ElementType, size_t Size> 
+struct name_to_stream_helper<meta_type<const ElementType[Size]> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
 		
 		s << BOOST_STR_LIT("const ");
 		return name_to_stream_helper<
-			meta_type<element_type[size]> 
+			meta_type<ElementType[Size]> 
 		>::put(s, ldng_dbl_cln);
 	}
 };
 
 /** Specialization for meta-types for references
  */
-template <typename refered_to_type> 
-struct name_to_stream_helper<meta_type<refered_to_type&> >
+template <typename ReferredToType> 
+struct name_to_stream_helper<meta_type<ReferredToType&> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
-		return name_to_stream_helper<meta_type<refered_to_type> >::put(s,ldng_dbl_cln) << BOOST_STR_LIT("&");
+		return name_to_stream_helper<meta_type<ReferredToType> >::put(s,ldng_dbl_cln) << BOOST_STR_LIT("&");
 	}
 };
 
 /** Specialization for meta-types for const types
  */
-template <typename non_const_type> 
-struct name_to_stream_helper<meta_type<const non_const_type> >
+template <typename NonConstType> 
+struct name_to_stream_helper<meta_type<const NonConstType> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
 		s << BOOST_STR_LIT("const ");
-		return name_to_stream_helper<meta_type<non_const_type> >::put(s,ldng_dbl_cln);
+		return name_to_stream_helper<meta_type<NonConstType> >::put(s,ldng_dbl_cln);
 	}
 };
 
 /** Specialization for meta-types for volatile types
  */
-template <typename non_volatile_type> 
-struct name_to_stream_helper<meta_type<volatile non_volatile_type> >
+template <typename NonVolatileType> 
+struct name_to_stream_helper<meta_type<volatile NonVolatileType> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
 		s << BOOST_STR_LIT("volatile ");
-		return name_to_stream_helper<meta_type<non_volatile_type> >::put(s,ldng_dbl_cln);
+		return name_to_stream_helper<meta_type<NonVolatileType> >::put(s,ldng_dbl_cln);
 	}
 };
 
 /** Specialization for meta-types for const volatile types
  */
-template <typename non_cv_type> 
-struct name_to_stream_helper<meta_type<const volatile non_cv_type> >
+template <typename NonCVType> 
+struct name_to_stream_helper<meta_type<const volatile NonCVType> >
 {
-	template <class out_stream>
-	static out_stream& put(out_stream& s, bool ldng_dbl_cln)
+	template <class OutStream>
+	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
 		s << BOOST_STR_LIT("const volatile ");
-		return name_to_stream_helper<meta_type<non_cv_type> >::put(s,ldng_dbl_cln);
+		return name_to_stream_helper<meta_type<NonCVType> >::put(s,ldng_dbl_cln);
 	}
 };
 

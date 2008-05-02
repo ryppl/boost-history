@@ -17,49 +17,49 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-template <class meta_type, bool true_or_false>
+template <class MetaType, bool BaseOrFull>
 struct nontrivial_type_base_or_full_name;
 
 /** Base name 
  */
-template <class meta_type>
-struct nontrivial_type_base_or_full_name<meta_type, true>
+template <class MetaType>
+struct nontrivial_type_base_or_full_name<MetaType, true>
 {
 	BOOST_STATIC_CONSTANT(
 		int,
 		name_length =
-		meta_type::base_name_length
+		MetaType::base_name_length
 	);
 	inline static const bchar* name(void)
 	{
-		return meta_type::base_name();
+		return MetaType::base_name();
 	}
 };
 
 /** Full name 
  */
-template <class meta_type>
-struct nontrivial_type_base_or_full_name<meta_type, false>
+template <class MetaType>
+struct nontrivial_type_base_or_full_name<MetaType, false>
 {
 	BOOST_STATIC_CONSTANT(
 		int,
 		name_length =
-		meta_type::full_name_length
+		MetaType::full_name_length
 	);
 	inline static const bchar* name(void)
 	{
-		return meta_type::full_name();
+		return MetaType::full_name();
 	}
 };
 
-template <class meta_type, typename meta_data, template <class, typename, bool> class implementation>
+template <class MetaType, typename MetaData, template <class, typename, bool> class Implementation>
 struct static_nontrivial_type_name
-: implementation<meta_type, meta_data, true>
-, implementation<meta_type, meta_data, false>
+: Implementation<MetaType, MetaData, true>
+, Implementation<MetaType, MetaData, false>
 {
 private:
-	typedef implementation<meta_type, meta_data, true>  implementation_base_name;
-	typedef implementation<meta_type, meta_data, false> implementation_full_name;
+	typedef Implementation<MetaType, MetaData, true>  implementation_base_name;
+	typedef Implementation<MetaType, MetaData, false> implementation_full_name;
 
 	inline static bchar* new_string(const size_t size)
 	{
@@ -74,10 +74,10 @@ private:
 		return !str[0];
 	}
 
-	template <bool format_base_name>
-	static const bchar* get_name(mpl::bool_<format_base_name>)
+	template <bool FormatBaseName>
+	static const bchar* get_name(mpl::bool_<FormatBaseName>)
 	{
-		typedef implementation<meta_type, meta_data, format_base_name>
+		typedef Implementation<MetaType, MetaData, FormatBaseName>
 			impl;
 		const int name_len(impl::name_length);
 #ifndef BOOST_MIRROR_USE_DYNAMIC_NAME_STRINGS
