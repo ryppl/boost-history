@@ -14,7 +14,7 @@
 #define BOOST_EXTENSION_DECL_HPP
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(MSC_VER)
-#  define BOOST_EXTENSION_EXPORT_DECL __declspec(dllexport) 
+#  define BOOST_EXTENSION_EXPORT_DECL __declspec(dllexport)
 #  define BOOST_EXTENSION_IMPORT_DECL __declspec(dllimport)
 #else
 #  define BOOST_EXTENSION_EXPORT_DECL

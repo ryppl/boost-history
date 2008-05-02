@@ -43,7 +43,7 @@ using extensions::type_info_handler;
     return *static_cast<std::map<Info, \
                         FuncType> * >(holder); \
   }
-  
+
 #define BOOST_REFLECTION_FACTORY_MAP_GET_FUNCTION_WITH_INFO(Z, N, _) \
   template <class Info, class ReturnValue \
   BOOST_PP_COMMA_IF(N) \
@@ -58,7 +58,7 @@ using extensions::type_info_handler;
     } \
     return it->second; \
   }
-  
+
 #define BOOST_REFLECTION_FACTORY_MAP_SET_FUNCTION(Z, N, _) \
   template <class Info, class ReturnValue \
   BOOST_PP_COMMA_IF(N) \
@@ -78,7 +78,7 @@ using extensions::type_info_handler;
     return get<Info, ReturnValue BOOST_PP_COMMA_IF(N) \
     BOOST_PP_ENUM_PARAMS(N, Param)>(); \
   }
-  
+
 template <class TypeInfo>
 class basic_static_reflection {
 public:

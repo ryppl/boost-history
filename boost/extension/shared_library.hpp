@@ -22,15 +22,15 @@ namespace boost { namespace extensions {
 class shared_library
 {
 public:
-  bool is_open(){return handle_ != 0;}
+  bool is_open() { return handle_ != 0; }
   bool open() {
-    return (handle_ = load_shared_library(location_.c_str())) != 0;
+    return (handle_ = impl::load_shared_library(location_.c_str())) != 0;
   }
   bool close() {
-    return close_shared_library(handle_);
-  }  
+    return impl::close_shared_library(handle_);
+  }
   shared_library(const std::string& location, bool auto_close = false)
-  :location_(location), handle_(0), auto_close_(auto_close) {
+    : location_(location), handle_(0), auto_close_(auto_close) {
   }
 #define BOOST_PP_ITERATION_LIMITS (0, \
     BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS) - 1)
@@ -38,12 +38,8 @@ public:
 #include BOOST_PP_ITERATE()
 protected:
   std::string location_;
-  library_handle handle_;
+  impl::library_handle handle_;
   bool auto_close_;
 };
 }}
 #endif  // BOOST_EXTENSION_SHARED_LIBRARY_HPP
-
-
-
-

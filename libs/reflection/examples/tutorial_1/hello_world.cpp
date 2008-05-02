@@ -12,10 +12,8 @@
 #include <iostream>
 
 #include <boost/reflection/reflection.hpp>
-#include <boost/reflection/reflector.hpp>
 
 using boost::reflections::reflection;
-using boost::reflections::reflector;
 using boost::reflections::instance;
 
 reflection GetReflection();
@@ -52,20 +50,9 @@ public:
 reflection GetReflection() {
   // This reflection will be returned
   reflection r;
-
-  // Use a reflector<HelloWorld> which will only reflect out constructors
-  // and functions for the HelloWorld class.
-  reflector<HelloWorld> current_reflector(&r);
-
-  // Reflect an argless constructor
-  // To reflect a constructor that takes a "const string&" and an int,
-  // call current_reflector.reflect_constructor<const string&, int>().
-  current_reflector.reflect_constructor();
-
-  // Reflect a member function returning void and having no parameters.
-  // To reflect a member returning a float and taking a single int as
-  // an argument, use: current_reflector.reflect<float, int>().
-  current_reflector.reflect<void>(&HelloWorld::printHelloWorld,
-                                  "print hello world");
+  r.reflect<HelloWorld>()
+   .constructor()
+   .function(&HelloWorld::printHelloWorld,
+             "print hello world");
   return r;
 }

@@ -43,7 +43,7 @@ template <class ReturnValue,
 
 }} // namespace boost::extensions
 
-#endif // BOOST_EXTENSION_FUNCTOR_HPP
+#endif  // BOOST_EXTENSION_FUNCTOR_HPP
 
 
 
@@ -54,7 +54,7 @@ template <class ReturnValue,
 
 # define n BOOST_PP_ITERATION()
 
-template<class ReturnValue
+template <class ReturnValue
          BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class Param) >
 class functor<ReturnValue
               BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, Param) >
@@ -66,18 +66,17 @@ private:
 
 public:
 
-  bool is_valid() const {return func_ != 0;}
+  bool is_valid() const { return func_ != 0; }
 
-  functor(FunctionType func) : func_(func) {}
+  explicit functor(FunctionType func) : func_(func) {}
 
-  functor(generic_function_ptr func) : func_(FunctionType(func)) {}
+  explicit functor(generic_function_ptr func) : func_(FunctionType(func)) {}
 
-  ReturnValue operator()(BOOST_PP_ENUM_BINARY_PARAMS(n, Param, p))
-  {
+  ReturnValue operator()(BOOST_PP_ENUM_BINARY_PARAMS(n, Param, p)) {
     return func_(BOOST_PP_ENUM_PARAMS(n, p));
   }
 };
 
 # undef n
 
-#endif // BOOST_PP_IS_ITERATING
+#endif  // BOOST_PP_IS_ITERATING

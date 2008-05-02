@@ -12,50 +12,21 @@
 
 #include <boost/reflection/instance.hpp>
 
-namespace boost {namespace reflections {
-
+namespace boost {
+namespace reflections {
+namespace impl {
 typedef void (instance::*MemberFunctionPtr)();
-template <class ReturnValue = void 
+}  // namespace impl
+template <class ReturnValue = void
           BOOST_PP_COMMA_IF(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS)
           BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC
           (BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), class Param, void)>
 class function;
-  
-#define BOOST_REFLECTION_FUNCTION_CLASS(Z, N, _) \
-template <class ReturnValue  BOOST_PP_COMMA_IF(N) \
-  BOOST_PP_ENUM_PARAMS(N, class Param)> \
-class function<ReturnValue BOOST_PP_COMMA_IF(N) \
-               BOOST_PP_ENUM_PARAMS(N, Param)> { \
-public: \
-  function(ReturnValue (*func)(void *, MemberFunctionPtr \
-                        BOOST_PP_COMMA_IF(N) \
-                        BOOST_PP_ENUM_PARAMS(N, Param)) = 0, \
-           MemberFunctionPtr member_function = 0) \
-  : func_(func), \
-    member_function_(member_function) { \
-  } \
-  ReturnValue call(instance & inst BOOST_PP_COMMA_IF(N) \
-                   BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
-    return (*func_)(inst.val_, member_function_ BOOST_PP_COMMA_IF(N) \
-                    BOOST_PP_ENUM_PARAMS(N, p)); \
-  } \
-  ReturnValue operator()(instance & inst BOOST_PP_COMMA_IF(N) \
-                         BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
-    return (*func_)(inst.val_, member_function_ BOOST_PP_COMMA_IF(N) \
-                    BOOST_PP_ENUM_PARAMS(N, p)); \
-  } \
-  bool valid() { \
-    return member_function_ != 0 && func_ != 0; \
-  } \
-private: \
-  ReturnValue (*func_)(void *, MemberFunctionPtr \
-                       BOOST_PP_COMMA_IF(N) \
-                       BOOST_PP_ENUM_PARAMS(N, Param)); \
-  MemberFunctionPtr member_function_; \
-};
 
-
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), \
-                BOOST_REFLECTION_FUNCTION_CLASS, _)
-}}
+#define BOOST_PP_ITERATION_LIMITS (0, \
+    BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
+#define BOOST_PP_FILENAME_1 <boost/reflection/impl/function.hpp>
+#include BOOST_PP_ITERATE()
+}  // namespace reflections
+}  // namespace boost
 #endif

@@ -9,8 +9,8 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_REFLECTION_REFLECTION_HPP
-#define BOOST_REFLECTION_REFLECTION_HPP
+#ifndef BOOST_REFLECTION_FUNCTION_INFO_HPP
+#define BOOST_REFLECTION_FUNCTION_INFO_HPP
 
 #include <vector>
 
@@ -28,15 +28,18 @@ struct basic_function_info {
   // A description of the function pointer.
   Info info_;
 
+  bool has_return_;
+
   // A description for each parameter of the function.
   // If ParameterInfo=void, this does not appear.
   std::vector<ParameterInfo> parameter_info_;
 
   // Constructors
-  basic_function_info(TypeInfo t, Info i) : type_info_(t), info_(i) {
+  basic_function_info(TypeInfo t, Info i, bool has_return = true)
+    : type_info_(t), info_(i), has_return_(has_return) {
   }
 
-  basic_function_info(const basic_function_info & s) 
+  basic_function_info(const basic_function_info & s)
     : type_info_(s.type_info_), info_(s.info_) {
   }
 
@@ -62,11 +65,13 @@ struct basic_function_info<Info, TypeInfo> {
   // A description of the function pointer.
   Info info_;
 
+
   // Constructors.
-  basic_function_info(TypeInfo t, Info i) : type_info_(t), info_(i) {
+  basic_function_info(TypeInfo t, Info i)
+    : type_info_(t), info_(i) {
   }
 
-  basic_function_info(const basic_function_info & s) 
+  basic_function_info(const basic_function_info & s)
     : type_info_(s.type_info_), info_(s.info_) {
   }
 
@@ -86,4 +91,4 @@ struct basic_function_info<Info, TypeInfo> {
 
 }  // namespace reflections
 }  // namespace boost
-#endif // BOOST_REFLECTION_REFLECTION_HPP
+#endif  // BOOST_REFLECTION_FUNCTION_INFO_HPP

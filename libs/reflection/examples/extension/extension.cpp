@@ -16,7 +16,7 @@
 #include <boost/extension/shared_library.hpp>
 #include <boost/extension/convenience.hpp>
 #include <boost/reflection/reflection.hpp>
-#include <boost/reflection/reflector.hpp>
+#include <boost/reflection/reflection.hpp>
 #include <iostream>
 
 

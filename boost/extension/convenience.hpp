@@ -1,6 +1,6 @@
 /*
  * Boost.Extension / convenience functions:
- *         for now only one to load a library and register it in the factory 
+ *         for now only one to load a library and register it in the factory
  *         map.
  *
  * (C) Copyright Jeremy Pack 2007
@@ -16,23 +16,25 @@
 
 #include <boost/extension/factory_map.hpp>
 
-namespace boost{namespace extensions{
-  
-inline void load_single_library(factory_map & current_factory_map, 
-                                const char * library_path, 
+namespace boost {
+namespace extensions {
+
+inline void load_single_library(factory_map & current_factory_map,
+                                const char * library_path,
                                 const char * external_function_name) {
     shared_library lib(library_path);
     if (!lib.open()) {
       return;
     }
-    void (*func)(factory_map &) = 
+    void (*func)(factory_map &) =
       lib.shared_library::get<void, factory_map &>(external_function_name);
     if (!func) {
       return;
     }
     (*func)(current_factory_map);
 }
-}}
+}  // namespace extensions
+}  // namespace boost
 
 
 

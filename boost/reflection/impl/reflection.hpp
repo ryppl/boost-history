@@ -26,7 +26,7 @@ instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
                             ::get_class_type());
 
   // Determine whether or not such a constructor exists.
-  typename std::map<constructor_info, FunctionPtr>::iterator it =
+  typename std::map<constructor_info, impl::FunctionPtr>::iterator it =
     constructors_.find(ctr_info);
 
   if (it == constructors_.end()) {
@@ -47,13 +47,15 @@ template <class ReturnValue BOOST_PP_COMMA_IF(N)
 function<ReturnValue BOOST_PP_COMMA_IF(N)
          BOOST_PP_ENUM_PARAMS(N, Param)> get_function(Info info) {
   // Construct a function_info structure to look up the function in the map.
+  // has_return is set to true here because it makes no difference when doing
+  // a lookup in the map.
   function_info func_info(reflections::type_info_handler<TypeInfo,
                           ReturnValue (*)(BOOST_PP_ENUM_PARAMS(N, Param))>
                           ::get_class_type(), info);
 
   // Look up the function.
   typename std::map<function_info,
-    std::pair<MemberFunctionPtr, FunctionPtr> >::iterator it =
+    std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> >::iterator it =
     functions_.find(func_info);
 
   if (it == functions_.end()) {
@@ -64,7 +66,7 @@ function<ReturnValue BOOST_PP_COMMA_IF(N)
     return function<ReturnValue BOOST_PP_COMMA_IF(N)
                     BOOST_PP_ENUM_PARAMS(N, Param)>
       // reinterpret_cast is safe, because we looked it up by its type.
-      (reinterpret_cast<ReturnValue (*)(void *, MemberFunctionPtr
+      (reinterpret_cast<ReturnValue (*)(void *, impl::MemberFunctionPtr
                                         BOOST_PP_COMMA_IF(N)
                                         BOOST_PP_ENUM_PARAMS(N, Param))>
         (it->second.second), it->second.first);

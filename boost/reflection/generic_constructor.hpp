@@ -9,12 +9,15 @@
 
 #ifndef BOOST_EXTENSION_GENERIC_CONSTRUCTOR_HPP
 #define BOOST_EXTENSION_GENERIC_CONSTRUCTOR_HPP
-namespace boost {namespace reflections {
+
+namespace boost {
+namespace reflections {
 template <class T>
 class generic_constructor {
 public:
   virtual ~generic_constructor() {}
   virtual T * create(void ** params) = 0;
-};  
-}}
+};
+}  // namespace reflections
+}  // namespace boost
 #endif

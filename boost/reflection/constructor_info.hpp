@@ -1,5 +1,5 @@
 /*
- * Boost.Reflection / main header
+ * Boost.Reflection / constructor information header
  *
  * (C) Copyright Mariano G. Consoni and Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -9,8 +9,8 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_REFLECTION_REFLECTION_HPP
-#define BOOST_REFLECTION_REFLECTION_HPP
+#ifndef BOOST_REFLECTION_CONSTRUCTOR_INFO_HPP
+#define BOOST_REFLECTION_CONSTRUCTOR_INFO_HPP
 
 #include <vector>
 
@@ -32,10 +32,10 @@ struct basic_constructor_info {
   std::vector<ParameterInfo> parameter_info_;
 
   // Constructors.
-  basic_constructor_info(TypeInfo t) : type_info_(t) {
+  explicit basic_constructor_info(TypeInfo t) : type_info_(t) {
   }
 
-  basic_constructor_info(const basic_constructor_info & s) 
+  basic_constructor_info(const basic_constructor_info & s)
     : type_info_(s.type_info_) {
   }
 
@@ -57,10 +57,10 @@ struct basic_constructor_info<TypeInfo> {
   TypeInfo type_info_;
 
   // Constructors
-  basic_constructor_info(TypeInfo t) : type_info_(t) {
+  explicit basic_constructor_info(TypeInfo t) : type_info_(t) {
   }
 
-  basic_constructor_info(const basic_constructor_info & s) 
+  basic_constructor_info(const basic_constructor_info & s)
     : type_info_(s.type_info_) {
   }
 
@@ -76,4 +76,4 @@ struct basic_constructor_info<TypeInfo> {
 };
 }  // namespace reflections
 }  // namespace boost
-#endif // BOOST_REFLECTION_REFLECTION_HPP
+#endif  // BOOST_REFLECTION_CONSTRUCTOR_INFO_HPP

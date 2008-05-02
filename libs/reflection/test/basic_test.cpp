@@ -16,7 +16,7 @@
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK 1
 #include <boost/test/unit_test.hpp>
-#include <boost/reflection/reflector.hpp>
+#include <boost/reflection/reflection.hpp>
 
 class car {
 public:
@@ -30,9 +30,9 @@ using namespace boost::reflections;
 BOOST_AUTO_TEST_CASE(argless)
 {
   reflection car_reflection;
-  reflector<car> car_reflector(&car_reflection);
-  car_reflector.reflect_constructor<int>();
-  car_reflector.reflect<int>(&car::start, "start");
+  car_reflection.reflect<car>()
+                .constructor<int>()
+                .function<int>(&car::start, "start");
 //  Check for argless constructor
   BOOST_CHECK(car_reflection.get_constructor<int>().valid());
   instance car_instance = 
@@ -61,10 +61,10 @@ private:
 BOOST_AUTO_TEST_CASE(single_arg)
 {
   reflection car_reflection;
-  reflector<porsche> car_reflector(&car_reflection);
-  car_reflector.reflect_constructor<int>();
-  car_reflector.reflect(&porsche::start, "start");
-  car_reflector.reflect(&porsche::get_year, "get_year");
+  car_reflection.reflect<porsche>()
+                .constructor<int>()
+                .function(&porsche::start, "start")
+                .function(&porsche::get_year, "get_year");
   //  Check for argless constructor
   BOOST_CHECK(car_reflection.get_constructor<int>().valid());
   BOOST_CHECK(!car_reflection.get_constructor().valid());

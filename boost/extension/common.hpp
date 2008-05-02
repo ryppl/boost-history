@@ -20,7 +20,7 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 
 #ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
-# define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 6
+#define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 10
 #endif
 
-#endif // BOOST_EXTENSION_COMMON_HPP
+#endif  // BOOST_EXTENSION_COMMON_HPP

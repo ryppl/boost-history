@@ -12,7 +12,6 @@
 #include "../car.hpp"
 #include <boost/extension/impl/decl.hpp>
 #include <boost/reflection/reflection.hpp>
-#include <boost/reflection/reflector.hpp>
 using namespace boost::reflections;
 
 // Although both of these classes are derived from a common
@@ -38,18 +37,11 @@ public:
 extern "C" 
 void BOOST_EXTENSION_EXPORT_DECL
 extension_export_car(std::map<std::string, reflection> reflection_map) {
-  reflection & first = reflection_map["suv"];
-  reflection & second = reflection_map["compact"];
+  reflection_map["suv"].reflect<suv>()
+    .constructor<const char*>()
+    .function(&suv::get_type, "get_type");
 
-  // Create a reflector for each type that is being reflected.
-  reflector<suv> suv_reflector(&first);
-  reflector<compact> compact_reflector(&second);
-
-  // Reflect the constructor with a `const char*` arg
-  suv_reflector.reflect_constructor<const char *>();
-  compact_reflector.reflect_constructor<const char *>();
-
-  // Reflect a function for each
-  suv_reflector.reflect<const char *>(&suv::get_type, "get_type");
-  compact_reflector.reflect<const char *>(&compact::get_type, "get_type");
+  reflection_map["compact"].reflect<compact>()
+    .constructor<const char*>()
+    .function(&compact::get_type, "get_type");
 }

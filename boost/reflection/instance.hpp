@@ -14,7 +14,7 @@
 namespace boost {namespace reflections {
 class instance {
 public:
-  instance(void * val = 0, void (*destructor)(void * val) = 0) 
+  instance(void* val = 0, void (*destructor)(void* val) = 0)
   : val_(val),
     destructor_(destructor) {}
   ~instance() {
@@ -23,8 +23,7 @@ public:
   }
   instance(const instance & first)
   : val_(first.val_),
-    destructor_(first.destructor_)
-  {
+    destructor_(first.destructor_) {
     if (this != &first) {
       //  Check for self assignment
       first.val_ = 0;
@@ -39,14 +38,17 @@ public:
     }
     return *this;
   }
+
 private:
   template <class ReturnValue
   BOOST_PP_COMMA_IF(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS)
   BOOST_PP_ENUM_PARAMS(BOOST_PP_INC
   (BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), class Param)>
   friend class function;
-  mutable void * val_;
-  void (*destructor_)(void *);
+  template <class DataType>
+  friend class data;
+  mutable void* val_;
+  void (*destructor_)(void* object);
 };
 }}
 #endif

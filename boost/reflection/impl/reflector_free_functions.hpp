@@ -31,14 +31,14 @@ static instance construct_instance(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) {
 template <class T, class ReturnValue BOOST_PP_COMMA_IF(N)
           BOOST_PP_ENUM_PARAMS(N, class Param)>
 static ReturnValue call_member(void * val,
-                               MemberFunctionPtr member_function
+                               impl::MemberFunctionPtr member_function
                                BOOST_PP_COMMA_IF(N)
                                BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) {
   // Convert to a T*.
   T * actual = static_cast<T*>(val);
 
   // Convert the MemberFunctionPtr to the requested type.
-  ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)) = 
+  ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)) =
     reinterpret_cast<ReturnValue (T::*)(BOOST_PP_ENUM_PARAMS(N, Param))>
       (member_function);
 

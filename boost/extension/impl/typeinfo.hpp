@@ -42,17 +42,17 @@ struct type_info_handler<default_type_info, ClassType>
 #if defined(__APPLE__) || defined(__GNUC__) || defined(BOOST_EXTENSION_FORCE_FAST_TYPEINFO)
 namespace boost {
 namespace extensions {
-bool operator<(const default_type_info& first,
+inline bool operator<(const default_type_info& first,
                const default_type_info& second) {
   return &first.type < &second.type;
 }
 
-bool operator==(const default_type_info& first,
+inline bool operator==(const default_type_info& first,
                const default_type_info& second) {
   return &first.type == &second.type;
 }
 
-bool operator>(const default_type_info& first,
+inline bool operator>(const default_type_info& first,
                const default_type_info& second) {
   return &first.type > &second.type;
 }
@@ -61,17 +61,17 @@ bool operator>(const default_type_info& first,
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #include <string>
 namespace boost { namespace extensions {
-bool operator<(const default_type_info& first,
+inline bool operator<(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.raw_name(), second.type.raw_name()) < 0;
 }
 
-bool operator==(const default_type_info& first,
+inline bool operator==(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.raw_name(), second.type.raw_name()) == 0;
 }
 
-bool operator>(const default_type_info& first,
+inline bool operator>(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.raw_name(), second.type.raw_name()) > 0;
 }
@@ -80,17 +80,17 @@ bool operator>(const default_type_info& first,
 #else  // OTHER OS
 #include <string>
 namespace boost { namespace extensions {
-bool operator<(const default_type_info& first,
+inline bool operator<(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.name(), second.type.name()) < 0;
 }
 
-bool operator==(const default_type_info& first,
+inline bool operator==(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.name(), second.type.name()) == 0;
 }
 
-bool operator>(const default_type_info& first,
+inline bool operator>(const default_type_info& first,
                const default_type_info& second) {
   return std::strcmp(first.type.name(), second.type.name()) > 0;
 }

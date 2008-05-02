@@ -10,30 +10,17 @@
 #ifndef BOOST_REFLECTION_CONSTRUCTOR_HPP
 #define BOOST_REFLECTION_CONSTRUCTOR_HPP
 #include <boost/reflection/instance.hpp>
-namespace boost {namespace reflections {
+namespace boost {
+namespace reflections {
 template <BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(\
           BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), class Param, void)>
 class instance_constructor;
 
-#define BOOST_REFLECTION_INSTANCE_CONSTRUCTOR_CLASS(Z, N, _) \
-template <BOOST_PP_ENUM_PARAMS(N, class Param)> \
-class instance_constructor<BOOST_PP_ENUM_PARAMS(N, Param)> { \
-public: \
-  instance_constructor(instance (*func)(BOOST_PP_ENUM_PARAMS(N, Param)) = 0) \
-  : func_(func) { \
-  } \
-  instance call(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
-    return (*func_)(BOOST_PP_ENUM_PARAMS(N, p)); \
-  } \
-  instance operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
-    return (*func_)(BOOST_PP_ENUM_PARAMS(N, p)); \
-  } \
-  bool valid() {return func_ != 0;} \
-  private: \
-  instance (*func_)(BOOST_PP_ENUM_PARAMS(N, Param)); \
-};
+#define BOOST_PP_ITERATION_LIMITS (0, \
+    BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
+#define BOOST_PP_FILENAME_1 <boost/reflection/impl/constructor.hpp>
+#include BOOST_PP_ITERATE()
 
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS), \
-                BOOST_REFLECTION_INSTANCE_CONSTRUCTOR_CLASS, _)
-}}
+}  // namespace reflections
+}  // namespace boost
 #endif

@@ -33,5 +33,6 @@ test-suite reflection_tests_all
   [ run multi_param_test.cpp ]
   [ run basic_static_test.cpp ]
   [ run parameter_info_test.cpp ]
+  [ run data_test.cpp ]
 : 
 ;

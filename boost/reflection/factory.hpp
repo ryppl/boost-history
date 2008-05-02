@@ -10,18 +10,7 @@
 #ifndef BOOST_REFLECTION_FACTORY_HPP
 #define BOOST_REFLECTION_FACTORY_HPP
 #include <boost/reflection/common.hpp>
-// #include <boost/reflection/generic_constructor.hpp>
 namespace boost {namespace reflections {
-  /*
-template <class T>
-class factory : public generic_constructor<T> {
-public:
-  factory(T(*factory_func)())
-  : factory_func_(factory_func) {}
-  virtual T * create(void ** params) {return (*factory_func_)();}
-private:
-  T (*factory_func_)();
-};*/
 #define BOOST_REFLECTION_CONSTRUCT_FUNCTION(Z, N, _) \
 template <class Actual \
 BOOST_PP_COMMA_IF(N) \

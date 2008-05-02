@@ -18,7 +18,7 @@
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK 1
 #include <boost/test/unit_test.hpp>
-#include <boost/reflection/reflector.hpp>
+#include <boost/reflection/reflection.hpp>
 #include <boost/reflection/parameter_map.hpp>
 using namespace boost::reflections;
 BOOST_AUTO_TEST_CASE(paramter_map) {
