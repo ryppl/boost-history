@@ -6,11 +6,12 @@
          point="org.eclipse.ui.editors">
       <editor
             name="Jamfile Editor"
-            extensions="jam,Jamfile,Jamroot"
+            extensions="jam"
+            filenames="Jamfile,Jamroot"
             icon="icons/favicon.png"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            class="org.boost.eclipse.bjam.editors.JamfileEditor"
-            id="org.boost.eclipse.bjam.editors.JamfileEditor">
+            class="org.boost.eclipse.bjam.editor.JamfileEditor"
+            id="org.boost.eclipse.bjam.editor.JamfileEditor">
       </editor>
    </extension>
 
