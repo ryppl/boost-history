@@ -9,7 +9,6 @@
  * See http://www.boost.org/ for latest version.
  */
 # define N BOOST_PP_ITERATION()
-#include <iostream>
 // No ifndef headers - this is meant to be included multiple times.
 
 // Search for a constructor of the given type. instance_constructor
@@ -26,7 +25,6 @@ instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
                                          BOOST_PP_ENUM_PARAMS(N, Param))>
                             ::get_class_type());
 
-  std::cout << "Seeking: " << ctr_info.type_info_.type.name() << std::endl;
   // Determine whether or not such a constructor exists.
   typename std::map<constructor_info, impl::FunctionPtr>::iterator it =
     constructors_.find(ctr_info);
@@ -54,19 +52,13 @@ function<ReturnValue BOOST_PP_COMMA_IF(N)
   function_info func_info(reflections::type_info_handler<TypeInfo,
                           ReturnValue (*)(BOOST_PP_ENUM_PARAMS(N, Param))>
                           ::get_class_type(), info);
-  
-  std::cout << "Seeking: " << func_info.type_info_.type.name() << std::endl;
+
   // Look up the function.
   typename std::map<function_info,
     std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> >::iterator it =
     functions_.find(func_info);
 
   if (it == functions_.end()) {
-    for (typename std::map<function_info,
-    std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> >::iterator it = functions_.begin();
-    it != functions_.end(); ++it) {
-      std::cout << "Found: " << it->first.type_info_.type.name() << " " << it->first.info_ << std::endl;
-    }
     // If it does not exist, return an empty function object.
     return function<ReturnValue BOOST_PP_COMMA_IF(N)
                     BOOST_PP_ENUM_PARAMS(N, Param)>(); 
