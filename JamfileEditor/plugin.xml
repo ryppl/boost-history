@@ -7,7 +7,7 @@
       <editor
             name="Jamfile Editor"
             extensions="jam"
-            filenames="Jamfile,Jamroot"
+            filenames="Jamfile,Jamfile.v2,Jamroot"
             icon="icons/favicon.png"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="org.boost.eclipse.bjam.editor.JamfileEditor"
