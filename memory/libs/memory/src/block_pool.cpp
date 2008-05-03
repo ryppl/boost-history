@@ -14,7 +14,7 @@
 
 // -------------------------------------------------------------------------
 
-using namespace boost;
+using namespace NS_BOOST_MEMORY;
 
 tls_block_pool_t g_tls_blockPool;
 

@@ -31,6 +31,10 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class gen_alloc
 
+#ifdef _DEBUG
+#define BOOST_MEMORY_TRACE_GC
+#endif
+
 #ifndef MAX
 #define MAX(a, b)		((a) < (b) ? (b) : (a))
 #endif
@@ -226,10 +230,13 @@ private:
 public:
 	void BOOST_MEMORY_CALL force_gc()
 	{
+#if defined(BOOST_MEMORY_TRACE_GC)
+		printf("boost::gc_alloc - starting to gc...\n");
+#endif
 		// 0. Prepare
 
 		// 0.1. Commit current block:
-		_commitCurrentBlock();
+		_commitCurrentNode();
 		m_begin = m_end = _null.begin();
 
 		// 0.2. Reduce destroy chain
@@ -305,10 +312,13 @@ private:
 		}
 	}
 
-	void BOOST_MEMORY_CALL _commitCurrentBlock()
+	void BOOST_MEMORY_CALL _commitCurrentNode()
 	{
 		FreeMemHeader* pNode = (FreeMemHeader*)m_begin - 1;
-		BOOST_MEMORY_ASSERT(pNode->getNodeType() == nodeFree);
+		BOOST_MEMORY_ASSERT(
+			pNode->getNodeType() == nodeFree ||
+			pNode->getNodeType() == nodeAlloced &&
+			_null.begin() == m_begin && m_begin == m_end);
 		
 		pNode->cbNodeSize = sizeof(FreeMemHeader) + (m_end - m_begin);
 	}
@@ -395,6 +405,14 @@ public:
 		const size_t cb = cbData + sizeof(MemHeader);
 		if ((size_t)(m_end - m_begin) < cb)
 		{
+			if ((size_t)(m_end - m_begin) >= cbData)
+			{
+				MemHeader* pAlloc = (MemHeader*)m_begin - 1;
+				pAlloc->nodeType = nodeAlloced;
+				pAlloc->cbNodeSize = m_end - (char*)pAlloc;
+				m_begin = m_end = _null.begin();
+				return pAlloc + 1;
+			}
 			FreeMemHeader* pNew;
 			if (cb >= AllocSizeBig)
 			{
@@ -419,7 +437,7 @@ public:
 					m_freeList.pop();
 				}
 			}
-			_commitCurrentBlock();
+			_commitCurrentNode();
 			m_begin = pNew->begin();
 			m_end = pNew->end();
 		}
