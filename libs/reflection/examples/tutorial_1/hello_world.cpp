@@ -27,7 +27,7 @@ int main(int argc, char ** argv) {
   // the call would become r.has_constructor<int>(). If we wanted a function
   // that took two float arguments, and returned a double, the call would be
   // r.has_function<void, float, float>("print hello world").
-  if (r.get_constructor().valid() and
+  if (r.get_constructor().valid() &&
       r.get_function<void>("print hello world").valid()) {
 
     // Get and call the constructor to create an instance.
