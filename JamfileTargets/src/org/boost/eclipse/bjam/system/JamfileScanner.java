@@ -52,7 +52,8 @@ public class JamfileScanner {
 
     private static boolean isKnownTargetType(final String type) {
         final String[] targets = new String[] { "exe", "lib", "alias",
-                "project", "boost-build", "install", "stage", "use-project" };
+                "project", "boost-build", "install", "stage", "use-project",
+                "doxygen", "xml", "boostbook" };
         for (final String word : targets)
             if (word.equals(type))
                 return true;
