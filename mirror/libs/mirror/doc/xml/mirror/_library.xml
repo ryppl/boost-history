@@ -128,5 +128,11 @@
 			- Several tests and a Jamfile added to the libs/mirror/test subdir
 			- Added meta-type for arrays with undefined element count
 		</revision>
+		<revision id="20080503" major="0" minor="1" micro="19" author="m_ch">
+			- Changed the template argument names to comply with the boost naming policy
+			- Fixed a problem in examples/registering/classes.cpp that caused compilation 
+			  errors with gcc.
+			- Tested with MSVC++ 2008 EE on Vista and gcc 4.2.1 on FreeBSD
+		</revision>
 	</revisions>
 </library>
