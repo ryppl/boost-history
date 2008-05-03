@@ -11,7 +11,6 @@
 // No header guard - this file is intended to be included multiple times.
 
 # define N BOOST_PP_ITERATION()
-#include <iostream>
 // Versions with included info about parameters
 // An auxiliary macro to add a single parameter to a list
 // of parameter information.

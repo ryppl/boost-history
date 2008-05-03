@@ -44,7 +44,6 @@ namespace impl {
   inline bool close_shared_library(library_handle handle) {
     return FreeLibrary(handle) != 0;
   }
-}
 }  // namespace impl
 }  // namespace extensions
 }  // namespace boost
