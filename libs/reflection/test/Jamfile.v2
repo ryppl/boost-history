@@ -1,6 +1,6 @@
 # Boost.Reflection - tests Jamfile
 #
-# Copyright 2007 Mariano G. Consoni
+# Copyright 2008 Mariano G. Consoni
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -31,7 +31,6 @@ test-suite reflection_tests_all
   [ run single_param_test.cpp ]
   [ run shared_library_test.cpp ]
   [ run multi_param_test.cpp ]
-  [ run basic_static_test.cpp ]
   [ run parameter_info_test.cpp ]
   [ run data_test.cpp ]
 : 

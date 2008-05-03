@@ -1,76 +1,147 @@
 /*
- * Boost.Reflection / implementation header for Boost.PreProcessor
+ * Boost.Reflection / main header
  *
- * (C) Copyright Mariano G. Consoni and Jeremy Pack 2007
+ * (C) Copyright Mariano G. Consoni and Jeremy Pack 2008
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
  *
  * See http://www.boost.org/ for latest version.
  */
-# define N BOOST_PP_ITERATION()
-// No ifndef headers - this is meant to be included multiple times.
 
-// Search for a constructor of the given type. instance_constructor
-// has a method to determine if a suitable constructor was found.
-template <class ParamFirst BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS(N, class Param)>
-instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
-                     BOOST_PP_ENUM_PARAMS(N, Param)> get_constructor() {
-  // Create a constructor_info structure to use for looking up
-  // a constructor in the constructor map. Initialize it with the
-  // function type requested.
-  constructor_info ctr_info(reflections::type_info_handler<TypeInfo,
-                            instance (*)(ParamFirst BOOST_PP_COMMA_IF(N)
-                                         BOOST_PP_ENUM_PARAMS(N, Param))>
-                            ::get_class_type());
+// No header guard, as this file is intended to be included multiple times.
 
-  // Determine whether or not such a constructor exists.
-  typename std::map<constructor_info, impl::FunctionPtr>::iterator it =
-    constructors_.find(ctr_info);
+// By default, ParameterInfo is not used. Note that using adapters
+// requires ParameterInfo.
+#ifdef BOOST_REFLECTION_WITH_PARAMETER_INFO
+template <class Info = std::string, class ParameterInfo = void,
+          class TypeInfo = extensions::default_type_info>
+class basic_reflection {
+#else
+template <class Info, class TypeInfo>
+class basic_reflection<Info, void, TypeInfo> {
+#endif
+public:
+#ifndef BOOST_REFLECTION_WITH_PARAMETER_INFO
+typedef void ParameterInfo;
+#endif
+  // A reflector is used to add functions and constructors to
+  // a reflected class.
 
-  if (it == constructors_.end()) {
-    // If none exists, return an empty instance_constructor.
-    return instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
-                                BOOST_PP_ENUM_PARAMS(N, Param)>();
-  } else {
-    // reinterpret_cast is safe, because we looked it up by its type.
-    return reinterpret_cast<instance (*)(ParamFirst BOOST_PP_COMMA_IF(N)
-                                         BOOST_PP_ENUM_PARAMS(N, Param))>
-      (it->second);
+  template <class T>
+  class reflector
+  {
+  public:
+    //  Initialize with a pointer to the reflection
+    //  this reflector will be reflecting into
+    reflector(basic_reflection<Info, ParameterInfo, TypeInfo>*
+              current_reflection)
+      : reflection_(current_reflection) {
+    }
+  
+    // Typedefs for the specific instantiations used by this class.
+    typedef basic_function_info<Info, TypeInfo, ParameterInfo> function_info;
+    typedef basic_constructor_info<TypeInfo, ParameterInfo> constructor_info;
+  
+    reflector& constructor() {
+      instance (*ctor_func)()(&impl::construct_instance<T>);
+      reflection_->constructors_.insert(std::make_pair<TypeInfo, impl::FunctionPtr>(
+          reflections::type_info_handler<TypeInfo, instance (*)()>
+          ::get_class_type(), reinterpret_cast<impl::FunctionPtr>(ctor_func)));
+      return *this;
+    }
+
+    template <class Data>
+    reflector& data(Data T::*data_ptr, Info info) {
+      data_info f(reflections::type_info_handler<TypeInfo, Data>
+                    ::get_class_type(), info);
+      Data& (*func)(void*, impl::MemberPtr) = &impl::get_data_from_ptr<T, Data>;
+      std::pair<impl::MemberPtr, impl::FunctionPtr>
+        p(reinterpret_cast<impl::MemberPtr>(data_ptr),
+          reinterpret_cast<impl::FunctionPtr>(func));
+      std::pair<data_info, std::pair<impl::MemberPtr, impl::FunctionPtr> >
+        p2(f, p);
+      reflection_->data_.insert(p2);
+      return *this;
+    }
+  #define BOOST_PP_ITERATION_LIMITS (0, \
+      BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
+  #define BOOST_PP_FILENAME_1 \
+    <boost/reflection/impl/reflector_functions.hpp>
+  #include BOOST_PP_ITERATE()
+    reflector& function(void (T::*func)(), Info info) {
+#ifdef BOOST_REFLECTION_WITH_PARAMETER_INFO
+      function_info f(reflections::type_info_handler<TypeInfo,
+                        void (*)()>::get_class_type(), info, false);
+#else
+  function_info f(reflections::type_info_handler<TypeInfo,
+                        void (*)()>::get_class_type(), info);
+#endif
+      void (*f2)(void *, impl::MemberFunctionPtr) = &impl::call_member<T, void>;
+      std::pair<impl::MemberFunctionPtr, impl::FunctionPtr>
+        in_pair(reinterpret_cast<impl::MemberFunctionPtr>(func),
+          reinterpret_cast<impl::FunctionPtr>(f2));
+      std::pair<function_info,
+                std::pair<impl::MemberFunctionPtr,
+                          impl::FunctionPtr> >
+        out_pair(f, in_pair);
+      reflection_->functions_.insert(out_pair);
+      return *this;
+    }
+  private:
+    basic_reflection<Info, ParameterInfo, TypeInfo>* reflection_;
+  };
+#define BOOST_PP_ITERATION_LIMITS (0, \
+    BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
+#define BOOST_PP_FILENAME_1 <boost/reflection/impl/reflection_functions.hpp>
+#include BOOST_PP_ITERATE()
+  instance_constructor<> get_constructor() {
+    constructor_info t(reflections::type_info_handler<TypeInfo,
+    instance (*)()>::get_class_type());
+    typename std::map<constructor_info, impl::FunctionPtr>::iterator it =
+      constructors_.find(t);
+    if (it == constructors_.end()) {
+      return instance_constructor<>();
+    } else {
+      return reinterpret_cast<instance (*)()>(it->second);
+    }
   }
-}
 
-// Search for a member function matching the given signature and Info.
-template <class ReturnValue BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS(N, class Param)>
-function<ReturnValue BOOST_PP_COMMA_IF(N)
-         BOOST_PP_ENUM_PARAMS(N, Param)> get_function(Info info) {
-  // Construct a function_info structure to look up the function in the map.
-  // has_return is set to true here because it makes no difference when doing
-  // a lookup in the map.
-  function_info func_info(reflections::type_info_handler<TypeInfo,
-                          ReturnValue (*)(BOOST_PP_ENUM_PARAMS(N, Param))>
-                          ::get_class_type(), info);
-
-  // Look up the function.
-  typename std::map<function_info,
-    std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> >::iterator it =
-    functions_.find(func_info);
-
-  if (it == functions_.end()) {
-    // If it does not exist, return an empty function object.
-    return function<ReturnValue BOOST_PP_COMMA_IF(N)
-                    BOOST_PP_ENUM_PARAMS(N, Param)>();
-  } else {
-    return function<ReturnValue BOOST_PP_COMMA_IF(N)
-                    BOOST_PP_ENUM_PARAMS(N, Param)>
-      // reinterpret_cast is safe, because we looked it up by its type.
-      (reinterpret_cast<ReturnValue (*)(void *, impl::MemberFunctionPtr
-                                        BOOST_PP_COMMA_IF(N)
-                                        BOOST_PP_ENUM_PARAMS(N, Param))>
-        (it->second.second), it->second.first);
+  template <class Data>
+  data<Data> get_data(Info info) {
+    // Construct a data_info structure to look up the function in the map.
+    data_info d(reflections::type_info_handler<TypeInfo, Data>
+                            ::get_class_type(), info);
+  
+    // Look up the function.
+    typename std::map<data_info,
+      std::pair<impl::MemberPtr, impl::FunctionPtr> >::iterator it =
+      data_.find(d);
+  
+    if (it == data_.end()) {
+      // If it does not exist, return an empty function object.
+      return data<Data>();
+    } else {
+      return data<Data>
+        // reinterpret_cast is safe, because we looked it up by its type.
+        (it->second.first,
+         reinterpret_cast<Data& (*)(void*, impl::MemberPtr)>
+           (it->second.second));
+    }
   }
-}
 
-#undef N
+  template <class T>
+  reflector<T> reflect() {
+    return reflector<T>(this);
+  }
+private:
+  typedef basic_function_info<Info, TypeInfo, ParameterInfo> function_info;
+  typedef basic_constructor_info<TypeInfo, ParameterInfo> constructor_info;
+  typedef basic_data_info<Info, TypeInfo> data_info;
+
+  std::map<constructor_info, impl::FunctionPtr> constructors_;
+  std::map<function_info,
+    std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> > functions_;
+  std::map<data_info,
+           std::pair<impl::MemberPtr, impl::FunctionPtr> > data_;
+};

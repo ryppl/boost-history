@@ -32,7 +32,7 @@ struct data_holder {
 
 using namespace boost::reflections;
 
-BOOST_AUTO_TEST_CASE(argless)
+BOOST_AUTO_TEST_CASE(simple)
 {
   reflection r;
   r.reflect<data_holder>()

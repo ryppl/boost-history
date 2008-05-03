@@ -1,7 +1,7 @@
 /*
  * Boost.Reflection / basic unit test
  *
- * (C) Copyright Mariano G. Consoni and Jeremy Pack 2007
+ * (C) Copyright Mariano G. Consoni and Jeremy Pack 2008
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -55,6 +55,9 @@ public:
   }
   void start(float speed) {
   }
+  int mileage(float day, double time) {
+    return 3;
+  }
 private:
   int year_;
 };
@@ -64,12 +67,15 @@ BOOST_AUTO_TEST_CASE(single_arg)
   car_reflection.reflect<porsche>()
                 .constructor<int>()
                 .function(&porsche::start, "start")
+                .function(&porsche::mileage, "mileage")
                 .function(&porsche::get_year, "get_year");
   //  Check for argless constructor
   BOOST_CHECK(car_reflection.get_constructor<int>().valid());
   BOOST_CHECK(!car_reflection.get_constructor().valid());
   boost::reflections::instance car_instance =
     car_reflection.get_constructor<int>()(1987);
+  function<int, float, double> f0(car_reflection.get_function<int, float, double>("mileage"));
+  BOOST_CHECK(f0.valid());
   function<void, float> f1(car_reflection.get_function<void, float>("start"));
   BOOST_CHECK(f1.valid());
   //  Make sure it doesn't have this undeclared method
