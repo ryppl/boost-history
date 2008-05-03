@@ -87,6 +87,11 @@ public:
 	{
 		LeaveCriticalSection(&m_cs);
 	}
+
+	bool BOOST_MEMORY_CALL good() const
+	{
+		return isInitialized(m_cs);
+	}
 };
 
 // -------------------------------------------------------------------------

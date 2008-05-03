@@ -33,7 +33,7 @@ public:
 	~tls_block_pool_init() { g_tls_blockPool.term(); }
 };
 
-tls_block_pool_init _tls_blockPoolInit;
+tls_block_pool_init g_tls_blockPoolInit;
 
 // -------------------------------------------------------------------------
 // $Log: $

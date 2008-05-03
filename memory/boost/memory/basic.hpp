@@ -291,6 +291,18 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 #endif
 }
 
+template <class StrucType>
+inline bool BOOST_MEMORY_CALL isInitialized(const StrucType& stru)
+{
+	const char* p = (const char*)&stru;
+	for (size_t i = 0; i < sizeof(stru); ++i)
+	{
+		if (p[i] != 0)
+			return true;
+	}
+	return false;
+}
+
 NS_BOOST_MEMORY_END
 
 // =========================================================================

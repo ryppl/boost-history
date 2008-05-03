@@ -51,6 +51,9 @@ class critical_section_st
 public:
 	void BOOST_MEMORY_CALL acquire() {}
 	void BOOST_MEMORY_CALL release() {}
+	bool BOOST_MEMORY_CALL good() const {
+		return true;
+	}
 };
 
 // -------------------------------------------------------------------------

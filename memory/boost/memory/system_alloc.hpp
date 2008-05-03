@@ -127,9 +127,34 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class system_pool_dyn
+
+STDAPI_(void*) _boost_SystemPoolAlloc(size_t cb);
+STDAPI_(void) _boost_SystemPoolFree(void* p);
+STDAPI_(size_t) _boost_SystemPoolSize(void* p);
+
+class system_pool_dyn
+{
+public:
+	static void* BOOST_MEMORY_CALL allocate(size_t cb) { return _boost_SystemPoolAlloc(cb); }
+	static void BOOST_MEMORY_CALL deallocate(void* p) { _boost_SystemPoolFree(p); }
+	static size_t BOOST_MEMORY_CALL alloc_size(void* p) {
+		return _boost_SystemPoolSize(p);
+	}
+};
+
+// -------------------------------------------------------------------------
 // class system_alloc
 
+#if defined(_WIN32) && defined(BOOST_MEMORY_NO_SYSTEM_POOL)
+#define BOOST_MEMORY_NO_SYSTEM_POOL_DYN_
+#endif
+
+#if !defined(BOOST_MEMORY_NO_SYSTEM_POOL_DYN_)
+typedef system_pool_dyn system_alloc;
+#else
 typedef stdlib_alloc system_alloc;
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $

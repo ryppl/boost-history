@@ -94,6 +94,10 @@ LINK32=link.exe
 
 SOURCE=.\src\block_pool.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\src\system_pool.cpp
+# End Source File
 # End Group
 # Begin Group "misc"
 

@@ -142,6 +142,8 @@ typedef block_pool_imp<policy::sys> block_pool;
 // -------------------------------------------------------------------------
 // class tls_block_pool
 
+#if !defined(BOOST_MEMORY_NO_SYSTEM_POOL_DYN_)
+
 typedef tls_object<block_pool> tls_block_pool_t;
 
 STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool();
@@ -170,6 +172,12 @@ template <class Unused>
 tls_block_pool_t* tls_block_pool_imp<Unused>::_tls_blockPool = _boost_TlsBlockPool();
 
 typedef tls_block_pool_imp<int> tls_block_pool;
+
+#else
+
+class tls_block_pool {};
+
+#endif
 
 // -------------------------------------------------------------------------
 // class scoped_alloc
