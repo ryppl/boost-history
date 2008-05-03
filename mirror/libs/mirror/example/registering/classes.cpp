@@ -236,8 +236,8 @@ struct pretty_printer
 	//
 	// does not print anything for other meta-objects
 	// than meta_classes
-	template <class OutStream, class MetaObject>
-	OutStream& print_base_classes(OutStream& s, MetaObject*) const {return s;}
+	template <class OutStream, class SomeMetaObject>
+	OutStream& print_base_classes(OutStream& s, SomeMetaObject*) const {return s;}
 	//
 	// a function object that gets called by mirror::for_each
 	// for every base class of the given class 
@@ -285,8 +285,8 @@ struct pretty_printer
 	}
 	//
 	// does not print anything for non meta_class meta-objects
-	template <class OutStream, class MetaObject>
-	OutStream& print_attribs(OutStream& s, MetaObject*) const {return s;}
+	template <class OutStream, class SomeMetaObject>
+	OutStream& print_attribs(OutStream& s, SomeMetaObject*) const {return s;}
 	//
 	//
 	// a functor that gets called for every meta_attribute 
