@@ -84,6 +84,7 @@ class ViewContentProvider implements ITreeContentProvider,
                         final IFile file = (IFile) resource;
                         final String name = file.getName();
                         if (name.equalsIgnoreCase("jamfile")
+                                || name.equalsIgnoreCase("jamfile.v2")
                                 || name.equalsIgnoreCase("jamroot")) {
                             for (final JamTargetInfo info : JamfileScanner
                                     .getTargets(file))
