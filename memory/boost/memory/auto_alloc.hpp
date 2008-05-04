@@ -209,7 +209,7 @@ public:
 // -------------------------------------------------------------------------
 // class auto_alloc
 
-typedef region_alloc<policy::sys> auto_alloc;
+typedef region_alloc<NS_BOOST_MEMORY_POLICY::sys> auto_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $

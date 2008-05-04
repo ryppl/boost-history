@@ -137,7 +137,7 @@ public:
 	}
 };
 
-typedef block_pool_imp<policy::sys> block_pool;
+typedef block_pool_imp<NS_BOOST_MEMORY_POLICY::sys> block_pool;
 
 // -------------------------------------------------------------------------
 // class tls_block_pool
@@ -184,7 +184,7 @@ class tls_block_pool {};
 
 typedef proxy_alloc<block_pool, tls_block_pool> proxy_block_pool;
 
-namespace policy {
+NS_BOOST_MEMORY_POLICY_BEGIN
 
 class pool : public sys
 {
@@ -192,9 +192,9 @@ public:
 	typedef proxy_block_pool allocator_type;
 };
 
-}
+NS_BOOST_MEMORY_POLICY_END
 
-typedef region_alloc<policy::pool> scoped_alloc;
+typedef region_alloc<NS_BOOST_MEMORY_POLICY::pool> scoped_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: $

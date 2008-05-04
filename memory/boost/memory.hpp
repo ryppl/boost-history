@@ -157,18 +157,18 @@ namespace boost
 {
 	namespace memory {}
 
-	using boost::memory::system_alloc;
+	using NS_BOOST_MEMORY::system_alloc;
 
-	using boost::memory::block_pool;
-	using boost::memory::tls_block_pool;
+	using NS_BOOST_MEMORY::block_pool;
+	using NS_BOOST_MEMORY::tls_block_pool;
 
-	using boost::memory::auto_alloc;
-	using boost::memory::scoped_alloc;
-	using boost::memory::gc_alloc;
+	using NS_BOOST_MEMORY::auto_alloc;
+	using NS_BOOST_MEMORY::scoped_alloc;
+	using NS_BOOST_MEMORY::gc_alloc;
 
-	using boost::memory::stl_allocator;
+	using NS_BOOST_MEMORY::stl_allocator;
 
-	using boost::memory::enableMemoryLeakCheck;
+	using NS_BOOST_MEMORY::enableMemoryLeakCheck;
 }
 
 #define BOOST_NO_CONSTRUCTOR(Type)				BOOST_MEMORY_NO_CONSTRUCTOR(Type)

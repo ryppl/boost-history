@@ -39,7 +39,6 @@ public:
 	{
 	}
 
-/* @@todo:
 	value_type BOOST_MEMORY_CALL acquire()
 	{
 		return InterlockedIncrement(&m_nRef);
@@ -49,7 +48,7 @@ public:
 	{
 		return InterlockedDecrement(&m_nRef);
 	}
-*/
+
 	operator value_type()
 	{
 		return m_nRef;

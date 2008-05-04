@@ -487,6 +487,14 @@ public:
 		}
 	}
 
+	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize)
+	{
+		void* p2 = allocate(newSize);
+		memcpy(p2, p, oldSize);
+		deallocate(p, oldSize);
+		return p2;
+	}
+
 private:
 	template <class Type>
 	void BOOST_MEMORY_CALL _destroy(Type* obj, destructor_t)
@@ -579,7 +587,7 @@ typename gen_alloc<PolicyT>::FreeMemHeader gen_alloc<PolicyT>::_null;
 // -------------------------------------------------------------------------
 // class gc_alloc
 
-typedef gen_alloc<policy::pool> gc_alloc;
+typedef gen_alloc<NS_BOOST_MEMORY_POLICY::pool> gc_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: gc_alloc.hpp,v $

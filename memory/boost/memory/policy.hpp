@@ -117,7 +117,13 @@ public:
 
 // -------------------------------------------------------------------------
 
-namespace policy {
+#ifndef NS_BOOST_MEMORY_POLICY_BEGIN
+#define NS_BOOST_MEMORY_POLICY_BEGIN	namespace policy {
+#define NS_BOOST_MEMORY_POLICY_END		}
+#define NS_BOOST_MEMORY_POLICY			policy
+#endif
+
+NS_BOOST_MEMORY_POLICY_BEGIN
 
 class sys
 {
@@ -137,7 +143,7 @@ public:
 	typedef simple_gc_alloc<system_alloc> huge_gc_allocator;
 };
 
-}
+NS_BOOST_MEMORY_POLICY_END
 
 // -------------------------------------------------------------------------
 // $Log: policy.hpp,v $

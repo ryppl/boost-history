@@ -150,7 +150,7 @@ public:
 #define BOOST_MEMORY_NO_SYSTEM_POOL_DYN_
 #endif
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(BOOST_MEMORY_NO_SYSTEM_POOL)
 typedef system_pool_dyn system_alloc;
 #else
 typedef stdlib_alloc system_alloc;

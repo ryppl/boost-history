@@ -128,7 +128,7 @@ system_pool_imp<PolicyT> system_pool_s<PolicyT>::s_impl;
 // -------------------------------------------------------------------------
 // class system_pool
 
-namespace policy {
+NS_BOOST_MEMORY_POLICY_BEGIN
 
 class stdlib : public sys
 {
@@ -136,9 +136,9 @@ public:
 	typedef stdlib_alloc allocator_type;
 };
 
-}
+NS_BOOST_MEMORY_POLICY_END
 
-typedef system_pool_s<policy::stdlib> system_pool;
+typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib> system_pool;
 
 // -------------------------------------------------------------------------
 // $Log: $
