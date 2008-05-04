@@ -120,7 +120,7 @@ public:
 #ifndef NS_BOOST_MEMORY_POLICY_BEGIN
 #define NS_BOOST_MEMORY_POLICY_BEGIN	namespace policy {
 #define NS_BOOST_MEMORY_POLICY_END		}
-#define NS_BOOST_MEMORY_POLICY			policy
+#define NS_BOOST_MEMORY_POLICY			boost::memory::policy
 #endif
 
 NS_BOOST_MEMORY_POLICY_BEGIN

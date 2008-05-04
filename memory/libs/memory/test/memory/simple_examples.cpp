@@ -69,7 +69,7 @@ void testGCAlloc()
 	int* intBuf = BOOST_ALLOC(alloc, int);
 	int* intArrayBuf = BOOST_ALLOC_ARRAY(alloc, int, 100);
 
-	enum { AllocSizeHuge = boost::memory::policy::sys::AllocSizeHuge };
+	enum { AllocSizeHuge = NS_BOOST_MEMORY_POLICY::sys::AllocSizeHuge };
 	char* hugeBuf = BOOST_NEW_ARRAY(alloc, char, AllocSizeHuge); // > HugeSize
 	
 	boost::gc_alloc* suballoc = BOOST_NEW(alloc, boost::gc_alloc);
@@ -93,9 +93,8 @@ void testGCAlloc()
 void simpleExamples()
 {
 	boost::enableMemoryLeakCheck();
-//	_CrtSetBreakAlloc(51);
-//	testAutoAlloc();
-//	testScopedAlloc();
-//	testTlsScopedAlloc();
+	testAutoAlloc();
+	testScopedAlloc();
+	testTlsScopedAlloc();
 	testGCAlloc();
 }
