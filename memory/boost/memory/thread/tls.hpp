@@ -120,50 +120,7 @@ typedef pthread_tls_key tls_key;
 NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
-// class tls_ptr
-
-NS_BOOST_MEMORY_BEGIN
-
-template <class Type>
-class tls_ptr
-{
-private:
-	tls_ptr(const tls_ptr&);
-	void operator=(const tls_ptr&);
-
-public:
-	tls_key p;
-
-public:
-	typedef Type* pointer;
-	typedef Type& reference;
-
-public:
-	explicit tls_ptr(const tls_key& key) : p(key) {}
-
-	operator pointer() const {
-		return (pointer)p.get();
-	}
-
-	pointer BOOST_MEMORY_CALL operator->() const {
-		return (pointer)p.get();
-	}
-
-	pointer BOOST_MEMORY_CALL operator=(pointer lp) {
-		p.put(lp);
-		return lp;
-	}
-
-	bool BOOST_MEMORY_CALL operator!() const {
-		return p.get() == NULL;
-	}
-
-	reference BOOST_MEMORY_CALL operator*() const {
-		return *(pointer)p.get();
-	}
-};
-
-NS_BOOST_MEMORY_END
+// class tls_ptr - removed, use boost::thread_specific_ptr instead of tls_ptr
 
 // -------------------------------------------------------------------------
 // class tls_object
