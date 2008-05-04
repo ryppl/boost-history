@@ -25,7 +25,7 @@ namespace explore
     {
         iterator_range_wrapper(const boost::iterator_range<T>& ir) : t(ir) {}
         boost::iterator_range<T> t;
-        typedef typename boost::mpl::if_<typename is_assoc_iter<T>::type, stream_map_value, stream_normal_value>::type stream_type;
+        typedef typename boost::mpl::if_<typename is_assoc_iter<T>::type, stream_associative_value, stream_normal_value>::type stream_type;
     };
 
     template<typename T>

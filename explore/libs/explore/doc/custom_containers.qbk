@@ -55,7 +55,7 @@ If the container had been an associative container of pairs, then the operator<<
 
    std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
    {
-      return explore::stream_container(ostr, u.begin(), u.end(), explore::stream_map_value());
+      return explore::stream_container(ostr, u.begin(), u.end(), explore::stream_associative_value());
    }
 
 [endsect]

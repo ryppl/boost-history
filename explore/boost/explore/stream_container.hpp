@@ -217,7 +217,7 @@ namespace std
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::map<K, T, Compare, Allocator>& m)
     {
         using namespace explore;
-        return stream_container(ostr, m.begin(), m.end(), stream_map_value());
+        return stream_container(ostr, m.begin(), m.end(), stream_associative_value());
     }
 
     // stream multimap<K, T>
@@ -225,7 +225,7 @@ namespace std
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multimap<K, T, Compare, Allocator>& m)
     {
         using namespace explore;
-        return stream_container(ostr, m.begin(), m.end(), stream_map_value());
+        return stream_container(ostr, m.begin(), m.end(), stream_associative_value());
     }
 }
 
