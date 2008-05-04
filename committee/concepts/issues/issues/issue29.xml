@@ -24,7 +24,7 @@
 
 <resolution>
   <p>
-          Replace any references to <tt>MoveConstructible, MoveAssignable</tt> and <tt>Swappable</tt> in the requires section of <tt>reverse, rotate, random_shuffle, partition, stable_partition, sort, stable_sort, partial_sort, nth_element, inplace_merge, push_heap, pop_heap, make_heap, sort_heap, next_permutation, prev_permutation</tt> with <tt>SwappableIterator</tt>, and remove all references to <tt>SameType</tt>. Further, replace the concepts:
+          Replace any references to <tt>MoveConstructible, MoveAssignable</tt> and <tt>Swappable</tt> in the requires section of <tt>reverse, rotate, random_shuffle, partition, stable_partition, sort, stable_sort, partial_sort, nth_element, inplace_merge, push_heap, pop_heap, make_heap, sort_heap, next_permutation, prev_permutation</tt> with <tt>SwappableIterator</tt>, remove all references to <tt>SameType</tt> and remove <tt>Mutable</tt> from any iterator requirements. Further, replace the concepts:
           </p>
           
           <pre>
