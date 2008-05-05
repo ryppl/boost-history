@@ -264,11 +264,11 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>std::pair&lt;iterator, bool&gt;</type>
               <description>
@@ -288,14 +288,14 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
               </parameter>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>iterator</type>
               <description>
@@ -1011,11 +1011,11 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>iterator</type>
               <description>
@@ -1034,14 +1034,14 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
               </parameter>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>iterator</type>
               <description>
@@ -1768,11 +1768,11 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>std::pair&lt;iterator, bool&gt;</type>
               <description>
@@ -1792,14 +1792,14 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
               </parameter>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>iterator</type>
               <description>
@@ -2566,11 +2566,11 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
           <method-group name="modifiers">
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>iterator</type>
               <description>
@@ -2589,14 +2589,14 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
             </method>
             <method name="emplace">
               <template>
-                <template-type-parameter name="Args" variadic="1">
+                <template-type-parameter name="Args" pack="1">
                 </template-type-parameter>
               </template>
               <parameter name="hint">
                 <paramtype>const_iterator</paramtype>
               </parameter>
-              <parameter name="args">
-                <paramtype>Args&amp;&amp;...</paramtype>
+              <parameter name="args" pack="1">
+                <paramtype>Args&amp;&amp;</paramtype>
               </parameter>
               <type>iterator</type>
               <description>
