@@ -34,6 +34,10 @@
 #include "posix/pthread.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP
+#include "atomic/atomic_builtins.hpp"
+#endif
+
 #endif
 
 // -------------------------------------------------------------------------
