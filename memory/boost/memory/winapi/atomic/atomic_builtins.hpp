@@ -16,7 +16,7 @@
 
 __forceinline LONG WINAPI InterlockedIncrement(volatile LPLONG lpAddend)
 {
-    return __sync_fetch_and_add(lpAddend, 1) + 1;
+	return __sync_add_and_fetch(lpAddend, 1);
 }
 
 __forceinline LONG WINAPI InterlockedDecrement(volatile LPLONG lpAddend)
@@ -47,7 +47,7 @@ __forceinline LONG WINAPI InterlockedExchangeAdd(volatile LPLONG Addend, LONG Va
 
 // -------------------------------------------------------------------------
 
-__forceinline PVOID WINAPI InterlockedCompareExchange(
+__forceinline LONG WINAPI InterlockedCompareExchange(
     volatile LPLONG Destination, LONG Exchange, LONG Comperand)
 {
 	return __sync_val_compare_and_swap(Destination, Comperand, Exchange);
