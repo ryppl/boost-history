@@ -79,18 +79,18 @@ namespace mirror {
 
 /** Register the Test namespace
  */
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(Test)
+BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(Test)
 
 /** Register the types and classes
  */
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, A)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, B)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, C)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, D)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, E)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, F)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, G)
-BOOST_MIRROR_REG_META_TYPE(_Test, ::Test, H)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, A)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, B)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, C)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, D)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, E)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, F)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, G)
+BOOST_MIRROR_REG_TYPE(_Test, ::Test, H)
 
 
 BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::B)

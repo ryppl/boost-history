@@ -77,7 +77,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 
 /** Macro for declaration of meta-types
  */
-#define BOOST_MIRROR_REG_META_TYPE(NAMESPACE_ALIAS, NAMESPACE, BASE_NAME)     \
+#define BOOST_MIRROR_REG_TYPE(NAMESPACE_ALIAS, NAMESPACE, BASE_NAME)     \
 	template <> struct meta_type< NAMESPACE::BASE_NAME >              \
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
@@ -93,7 +93,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 
 /** Macro for declaration of meta-types for typedefined types
  */
-#define BOOST_MIRROR_REG_META_TYPEDEFD(NAMESPACE_ALIAS, NAMESPACE, TYPEDEFD_NAME)     \
+#define BOOST_MIRROR_REG_TYPEDEFD(NAMESPACE_ALIAS, NAMESPACE, TYPEDEFD_NAME)     \
 	namespace typedefs { struct NAMESPACE_ALIAS##_##TYPEDEFD_NAME { }; }\
 	template <> struct meta_type< BOOST_MIRROR_TYPEDEFD_SELECTOR(\
 		NAMESPACE_ALIAS##_##TYPEDEFD_NAME, \
@@ -113,7 +113,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 
 /** Declaration of meta types for types in the global scope
  */
-#define BOOST_MIRROR_REG_META_TYPE_GLOBAL_SCOPE(BASE_NAME)   \
+#define BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME)   \
 	template <> struct meta_type< BASE_NAME >              \
 	{                                                                 \
 		typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) scope;                        \
@@ -131,7 +131,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 /** Declaration of meta types for types in declared inside
  *  of a class.
  */
-#define BOOST_MIRROR_REG_META_TYPE_EMBEDDED(WRAPPER, BASE_NAME)   \
+#define BOOST_MIRROR_REG_TYPE_EMBEDDED(WRAPPER, BASE_NAME)   \
 	template <> struct meta_type< WRAPPER::BASE_NAME >              \
 	{                                                                 \
 		typedef meta_class< WRAPPER > scope;                        \
@@ -150,7 +150,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
  *  the C++ native types
  */
 #define BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE(I, _, BASE_NAME)\
-	BOOST_MIRROR_REG_META_TYPE_GLOBAL_SCOPE(BASE_NAME)
+	BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME)
 
 #define BOOST_MIRROR_NATIVE_TYPES \
 	BOOST_PP_TUPLE_TO_LIST( \
@@ -179,12 +179,12 @@ BOOST_PP_LIST_FOR_EACH(BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE, _, BOOST_MIRROR_NA
 
 /** Register std string and wstring
  */
-BOOST_MIRROR_REG_META_TYPE(_std, ::std, string)
-BOOST_MIRROR_REG_META_TYPE(_std, ::std, wstring)
+BOOST_MIRROR_REG_TYPE(_std, ::std, string)
+BOOST_MIRROR_REG_TYPE(_std, ::std, wstring)
 /** Now register the bchar and bstring too
  */
-BOOST_MIRROR_REG_META_TYPEDEFD(_boost, ::boost, bchar)
-BOOST_MIRROR_REG_META_TYPEDEFD(_boost, ::boost, bstring)
+BOOST_MIRROR_REG_TYPEDEFD(_boost, ::boost, bchar)
+BOOST_MIRROR_REG_TYPEDEFD(_boost, ::boost, bstring)
 
 
 /** Meta-types for pointers

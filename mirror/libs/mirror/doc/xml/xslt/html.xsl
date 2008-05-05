@@ -10,6 +10,7 @@
 	<xsl:include href="&docroot;/note.xsl"/>
 	<xsl:include href="&docroot;/items.xsl"/>
 	<xsl:include href="&docroot;/links.xsl"/>
+	<xsl:include href="&docroot;/feature_ref.xsl"/>
 	<!-- font style-related -->
 	<xsl:include href="&docroot;/emph.xsl"/>
 	<xsl:include href="&docroot;/cpp_expr.xsl"/>

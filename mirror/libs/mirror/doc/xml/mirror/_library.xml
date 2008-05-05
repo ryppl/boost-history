@@ -2,6 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="../xslt/html.xsl"?>
 <library>
 	<name>mirror</name>
+	<Name>Mirror</Name>
 	<title>Mirror C++ Library</title> 
 	<date>
 		<from>2008</from>

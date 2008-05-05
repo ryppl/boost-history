@@ -163,13 +163,13 @@ namespace mirror {
 
 /** Register the Graphics namespace
  */
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(Graphics)
+BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(Graphics)
 
 /** Register the types and classes
  */
-BOOST_MIRROR_REG_META_TYPE(_Graphics, ::Graphics, Coords)
-BOOST_MIRROR_REG_META_TYPE(_Graphics, ::Graphics, Vector)
-BOOST_MIRROR_REG_META_TYPE(_Graphics, ::Graphics, Cube)
+BOOST_MIRROR_REG_TYPE(_Graphics, ::Graphics, Coords)
+BOOST_MIRROR_REG_TYPE(_Graphics, ::Graphics, Vector)
+BOOST_MIRROR_REG_TYPE(_Graphics, ::Graphics, Cube)
 
 
 BOOST_MIRROR_REG_SINGLE_BASE_CLASS(

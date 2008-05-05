@@ -118,22 +118,22 @@ namespace mirror {
 
 /** Register the namespaces
  */
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(test)
-BOOST_MIRROR_REG_META_NAMESPACE(_test, feature)
-BOOST_MIRROR_REG_META_NAMESPACE(_test_feature, detail)
-BOOST_MIRROR_REG_META_NAMESPACE(_test, stuff)
-BOOST_MIRROR_REG_META_NAMESPACE(_test_stuff, detail)
+BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(test)
+BOOST_MIRROR_REG_NAMESPACE(_test, feature)
+BOOST_MIRROR_REG_NAMESPACE(_test_feature, detail)
+BOOST_MIRROR_REG_NAMESPACE(_test, stuff)
+BOOST_MIRROR_REG_NAMESPACE(_test_stuff, detail)
 //
 /** Register the types
  */
-BOOST_MIRROR_REG_META_TYPE(_test_feature_detail, ::test::feature::detail, foo_base)
-BOOST_MIRROR_REG_META_TYPE(_test_feature_detail, ::test::feature::detail, foo_base2)
-BOOST_MIRROR_REG_META_TYPE(_test_feature_detail, ::test::feature::detail, foo_base3)
-BOOST_MIRROR_REG_META_TYPE(_test_feature_detail, ::test::feature::detail, foo)
-BOOST_MIRROR_REG_META_TYPE(_test_stuff_detail,   ::test::stuff::detail, bar_base)
-BOOST_MIRROR_REG_META_TYPE(_test_stuff_detail,   ::test::stuff::detail, bar)
+BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo_base)
+BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo_base2)
+BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo_base3)
+BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo)
+BOOST_MIRROR_REG_TYPE(_test_stuff_detail,   ::test::stuff::detail, bar_base)
+BOOST_MIRROR_REG_TYPE(_test_stuff_detail,   ::test::stuff::detail, bar)
 // register the embedded type that is declared inside of the bar class
-BOOST_MIRROR_REG_META_TYPE_EMBEDDED(::test::stuff::detail::bar, bar_part)
+BOOST_MIRROR_REG_TYPE_EMBEDDED(::test::stuff::detail::bar, bar_part)
 
 
 /** Register the base classes of foo

@@ -44,16 +44,16 @@ namespace mirror {
 // NOTE: if You are not familiar with namespace registration and usage
 // see the examples/registering/namespaces.cpp source file
 //
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(test)
-BOOST_MIRROR_REG_META_NAMESPACE(_test, feature)
-BOOST_MIRROR_REG_META_NAMESPACE(_test_feature, detail)
+BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(test)
+BOOST_MIRROR_REG_NAMESPACE(_test, feature)
+BOOST_MIRROR_REG_NAMESPACE(_test_feature, detail)
 //
 // register the types
-BOOST_MIRROR_REG_META_TYPE(_test_feature_detail, ::test::feature::detail, foo)
-BOOST_MIRROR_REG_META_TYPE(_test_feature_detail, ::test::feature::detail, bar)
+BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo)
+BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, bar)
 // register a typedef'd class this allows to distinguish it from
 // the 'source' type in some situations
-BOOST_MIRROR_REG_META_TYPEDEFD(_test_feature_detail, ::test::feature::detail, foobar)
+BOOST_MIRROR_REG_TYPEDEFD(_test_feature_detail, ::test::feature::detail, foobar)
 
 } // namespace mirror
 } // namespace boost

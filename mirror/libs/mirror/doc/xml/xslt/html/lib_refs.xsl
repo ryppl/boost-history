@@ -10,4 +10,10 @@
 			<xsl:value-of select="document($lib_info_url)/library/name"/>
 		</EM>
 	</xsl:template>
+	<xsl:template match="Lib_name_ref">
+		<EM>
+			<xsl:variable name="lib_info_url">../_library.xml</xsl:variable>
+			<xsl:value-of select="document($lib_info_url)/library/Name"/>
+		</EM>
+	</xsl:template>
 </xsl:stylesheet>

@@ -9,13 +9,16 @@ BODY {
 }
 
 
-H1,H2,H3,H4,H5,H6 {
-	font-family: 'Palatino Linotype';
+H1,H2,H3,H4 {
 	width: 100%;
 	background-color: #F0FFF0;
 	color: #206020;
 	border: 1px solid #E0EFE0;
 	padding-left: 1em;
+}
+
+H5,H6 {
+	width: 100%;
 }
 
 H1 {
@@ -24,7 +27,7 @@ H1 {
 }
 
 DIV.section {
-	padding-left: 2.5em;
+	padding-left: 1.5em;
 	padding-right: 0.5em;
 	border: 1px solid #C0F0C0;
 }
@@ -53,6 +56,18 @@ DIV.linkset {
 	margin-top: 1em;
 	margin-bottom: 0.5em;
 }
+
+DIV.feature-synopsis {
+	border: 1px solid #C0F0C0;
+	background-color: #E0E0E0;
+	padding: 0.5em;
+
+}
+
+DIV.cpp-indent {
+	margin-left: 1em;
+}
+
 
 P.note {
 	border: 1px solid #C0A0A0;
@@ -87,7 +102,16 @@ A.linkset-link:visited {
 }
 
 
-
 CODE.cpp-expr {
 	font-weight: bold;
 }
+
+SPAN.cpp-comment {
+	color: #406040;
+}
+
+SPAN.cpp-preproc {
+	color: #802020;
+	font-weight: bold;
+}
+

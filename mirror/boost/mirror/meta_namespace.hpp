@@ -49,7 +49,7 @@ template<> struct meta_namespace< namespaces::_ >
 
 /** Helper macro for registering new general namespaces (top level or nested)
  */
-#define BOOST_MIRROR_REG_META_NAMESPACE_HELPER(PARENT_NS_ALIAS, NAMESPACE_NAME) \
+#define BOOST_MIRROR_REG_NAMESPACE_HELPER(PARENT_NS_ALIAS, NAMESPACE_NAME) \
 {                                                                                         \
 	typedef meta_namespace< namespaces :: PARENT_NS_ALIAS > parent;                                                        \
 	typedef mpl::push_back<parent::scope, parent>::type scope;    \
@@ -85,24 +85,24 @@ template<> struct meta_namespace< namespaces::_ >
 
 /** Macro for registering new general namespaces (top level or nested)
  */
-#define BOOST_MIRROR_REG_META_NAMESPACE(PARENT_NS_ALIAS, NAMESPACE_NAME) \
+#define BOOST_MIRROR_REG_NAMESPACE(PARENT_NS_ALIAS, NAMESPACE_NAME) \
 	namespace namespaces {struct PARENT_NS_ALIAS##_##NAMESPACE_NAME { }; }\
 	template<> struct meta_namespace< namespaces :: PARENT_NS_ALIAS##_##NAMESPACE_NAME >      \
-	BOOST_MIRROR_REG_META_NAMESPACE_HELPER(PARENT_NS_ALIAS, NAMESPACE_NAME)
+	BOOST_MIRROR_REG_NAMESPACE_HELPER(PARENT_NS_ALIAS, NAMESPACE_NAME)
 
 /** Macro for registering of top-level namespaces
  */
-#define BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(NAMESPACE_NAME)    \
+#define BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(NAMESPACE_NAME)    \
 	namespace namespaces {struct _##NAMESPACE_NAME { }; }\
 	template<> struct meta_namespace< namespaces :: _##NAMESPACE_NAME >      \
-	BOOST_MIRROR_REG_META_NAMESPACE_HELPER(_, NAMESPACE_NAME)
+	BOOST_MIRROR_REG_NAMESPACE_HELPER(_, NAMESPACE_NAME)
 
 // Registration of the ::std namespace 
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(std)
+BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(std)
 // Registration of the ::boost namespace 
-BOOST_MIRROR_REG_META_NAMESPACE_TOP_LEVEL(boost)
+BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(boost)
 // Registration of the ::boost::mirror namespace 
-BOOST_MIRROR_REG_META_NAMESPACE(_boost, mirror)
+BOOST_MIRROR_REG_NAMESPACE(_boost, mirror)
 
 
 } // namespace mirror
