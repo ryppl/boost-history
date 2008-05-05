@@ -2187,7 +2187,7 @@ mpfr_interval big_digamma_helper(mpfr_interval x)
    result += log(zgh);
    result += tools::evaluate_polynomial(PD, x) / tools::evaluate_polynomial(P, x);
    result -= tools::evaluate_polynomial(QD, x) / tools::evaluate_polynomial(Q, x);
-   result -= 1;
+   result -= mpfr_interval(1);
 
    return result;
 }

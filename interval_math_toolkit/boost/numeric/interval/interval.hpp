@@ -76,7 +76,12 @@ public:
   interval& operator*= (const interval& r);
   interval& operator/= (const T& r);
   interval& operator/= (const interval& r);
-
+  //
+  // We need these additional overloads, in case we are converting
+  // from a type that is convertible to both type T *and* to interval<T>.
+  // The motivating test case is conversion from say 1.0 to interval<mpfr_class>
+  // in which case the operator overloads above are ambiguous.
+  //
   template <class U>
   interval& operator+= (const U& r)
   {

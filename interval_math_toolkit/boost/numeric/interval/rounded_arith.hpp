@@ -15,6 +15,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/identity.hpp>
@@ -97,13 +98,35 @@ struct rounded_arith_opp: Rounding {
 # define BOOST_UP(EXPR) return this->force_rounding(EXPR)
 # define BOOST_UP_NEG(EXPR) return -this->force_rounding(EXPR)
 private:
-   // Downward conversion has two cases:
-   template<class U> T conv_down(U const &v, const mpl::true_&)
+   // Downward conversion has five (!) cases:
+   template<class U> T conv_down(U const& v, const mpl::true_&, const mpl::false_&, const mpl::true_&)
    {
-      // U is an integer smaller than boost::intmax_t:
+      // Conversion to float has to go via BOOST_DN otherwise it
+      // doesn't produce a valid interval on Intel:
       BOOST_DN(static_cast<T>(v)); 
    }
-   template<class U> T conv_down(U const &v, const mpl::false_&)
+   template<class U> T conv_down(U const& v, const mpl::true_&, const mpl::true_&, const mpl::true_&)
+   {
+      // Conversion to float has to go via BOOST_DN otherwise it
+      // doesn't produce a valid interval on Intel:
+      BOOST_DN(static_cast<T>(v)); 
+   }
+   template<class U> T conv_down(U const &v, const mpl::true_&, const mpl::true_&, const mpl::false_&)
+   {
+      // U is an integer as wide as boost::intmax_t:
+      if((v > static_cast<U>(std::numeric_limits<boost::intmax_t>::max()))
+         || (v < static_cast<U>(std::numeric_limits<boost::intmax_t>::min())))
+      {
+         BOOST_DN(static_cast<T>(v));
+      }
+      BOOST_UP_NEG(static_cast<T>(-static_cast<boost::intmax_t>(v))); 
+   }
+   template<class U> T conv_down(U const &v, const mpl::true_&, const mpl::false_&, const mpl::false_&)
+   {
+      // U is an integer smaller than boost::intmax_t:
+      BOOST_UP_NEG(static_cast<T>(-static_cast<boost::intmax_t>(v))); 
+   }
+   template<class U> T conv_down(U const &v, const mpl::false_&, const mpl::false_&, const mpl::false_&)
    {
       // U is not an integer, so it had better be a signed type(!):
       BOOST_UP_NEG(-v);
@@ -112,7 +135,9 @@ public:
   template<class U> T conv_down(U const &v) 
   {
      typedef typename boost::is_integral<U>::type t1;
-     return conv_down(v, t1());
+     typedef typename mpl::and_<t1, boost::is_unsigned<U>, mpl::bool_<sizeof(U) == sizeof(boost::intmax_t)> >::type t2;
+     typedef typename boost::is_same<T, float>::type t3;
+     return conv_down(v, t1(), t2(), t3());
   }
   template<class U> T conv_up  (U const &v) { BOOST_UP(static_cast<T>(v)); }
   T add_down(const T& x, const T& y) { BOOST_UP_NEG((-x) - y); }

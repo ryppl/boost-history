@@ -26,12 +26,6 @@ void foo()
 
 int main()
 {
-   BOOST_CONCEPT_ASSERT((boost::math::concepts::RealTypeConcept<double>));
-   //BOOST_CONCEPT_ASSERT((boost::math::concepts::RealTypeConcept<boost::numeric::interval<double> >));
    BOOST_CONCEPT_ASSERT((boost::math::concepts::RealTypeConcept<boost::math::mpfr_interval>));
-
-   boost::math::mpfr_interval v;
-   v  = 0.5f;
-   v -= 0.5f;
 }
 

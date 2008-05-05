@@ -119,7 +119,7 @@ bool operator<(const interval<T, Policies1>& x, const interval<T, Policies2>& y)
 template<class T, class Policies, class T2> inline
 bool operator<(const interval<T, Policies>& x, const T2& y)
 {
-  if (boost::numeric::interval_lib::detail::test_input(x, y)) throw boost::numeric::interval_lib::comparison_error();
+  if (boost::numeric::interval_lib::detail::test_input(x, static_cast<T>(y))) throw boost::numeric::interval_lib::comparison_error();
   if(x.upper() < y)
      return true;
   if(x.lower() >= y)
@@ -130,7 +130,7 @@ bool operator<(const interval<T, Policies>& x, const T2& y)
 template<class T, class Policies, class T2> inline
 bool operator<(const T2& x, const interval<T, Policies>& y)
 {
-  if (boost::numeric::interval_lib::detail::test_input(x, y)) throw boost::numeric::interval_lib::comparison_error();
+  if (boost::numeric::interval_lib::detail::test_input(static_cast<T>(x), y)) throw boost::numeric::interval_lib::comparison_error();
   if(x < y.lower())
      return true;
   if(x >= y.upper())
@@ -152,7 +152,7 @@ bool operator<=(const interval<T, Policies1>& x, const interval<T, Policies2>& y
 template<class T, class Policies, class T2> inline
 bool operator<=(const interval<T, Policies>& x, const T2& y)
 {
-  if (boost::numeric::interval_lib::detail::test_input(x, y)) throw boost::numeric::interval_lib::comparison_error();
+  if (boost::numeric::interval_lib::detail::test_input(x, static_cast<T>(y))) throw boost::numeric::interval_lib::comparison_error();
   if(x.upper() <= y)
      return true;
   if(x.lower() > y)
@@ -163,7 +163,7 @@ bool operator<=(const interval<T, Policies>& x, const T2& y)
 template<class T, class Policies, class T2> inline
 bool operator<=(const T2& x, const interval<T, Policies>& y)
 {
-  if (boost::numeric::interval_lib::detail::test_input(x, y)) throw boost::numeric::interval_lib::comparison_error();
+  if (boost::numeric::interval_lib::detail::test_input(static_cast<T>(x), y)) throw boost::numeric::interval_lib::comparison_error();
   if(x <= y.lower())
      return true;
   if(x > y.upper())
@@ -217,7 +217,7 @@ bool operator==(const interval<T, Policies1>& x, const interval<T, Policies2>& y
 template<class T, class Policies, class T2> inline
 bool operator==(const interval<T, Policies>& x, const T2& y)
 {
-  if (boost::numeric::interval_lib::detail::test_input(x, y)) throw boost::numeric::interval_lib::comparison_error();
+  if (boost::numeric::interval_lib::detail::test_input(x, static_cast<T>(y))) throw boost::numeric::interval_lib::comparison_error();
   return x.upper() == y && x.lower() == y;
 }
 

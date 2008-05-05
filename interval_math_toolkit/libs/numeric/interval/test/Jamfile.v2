@@ -8,7 +8,6 @@
 
 project
   :
-  source-location $(BOOST_ROOT)
   :
   requirements
     # Enable dynamic rounding on Tru64 (Alpha CPU).
@@ -21,30 +20,32 @@ import testing ;
 
 {
   test-suite numeric/interval :
-    [ run libs/numeric/interval/test/add.cpp      ]
-    [ run libs/numeric/interval/test/det.cpp      ]
-    [ run libs/numeric/interval/test/fmod.cpp     ]
-    [ run libs/numeric/interval/test/mul.cpp      ]
-    [ run libs/numeric/interval/test/overflow.cpp ]
-    [ run libs/numeric/interval/test/pi.cpp       ]
-    [ run libs/numeric/interval/test/pow.cpp      ]
+    [ run add.cpp      ]
+    [ run det.cpp      ]
+    [ run fmod.cpp     ]
+    [ run mul.cpp      ]
+    [ run overflow.cpp ]
+    [ run pi.cpp       ]
+    [ run pow.cpp      ]
 
-    [ run libs/numeric/interval/test/cmp.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/cmp_exn.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/cmp_exp.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/cmp_lex.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/cmp_set.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/cmp_tribool.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/test_float.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
-    [ run libs/numeric/interval/test/integer.cpp
-        ../../../test/build//boost_test_exec_monitor/<link>static ]
+    [ run cmp.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run cmp_exn.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run cmp_exp.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run cmp_lex.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run cmp_set.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run cmp_tribool.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run test_float.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
+    [ run integer.cpp
+        /boost/boost_test_exec_monitor//boost_test_exec_monitor/<link>static ]
   ;
 }
+
+
 
