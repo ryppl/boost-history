@@ -90,7 +90,7 @@ if htmlfiles=='global':
 elif htmlfiles!='local':
     template.append_content('<xsl:param>boost.root=' + htmlfiles + '\n')
 
-if htmlfile!='local' || htmlstyle!='ibd':
+if htmlfiles!='local' or htmlstyle!='ibd':
     template.ignore_subdirectory('style')
 
 template.append_content(
