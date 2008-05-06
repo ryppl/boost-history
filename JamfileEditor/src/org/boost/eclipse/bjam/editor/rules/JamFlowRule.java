@@ -11,7 +11,7 @@ import org.eclipse.jface.text.rules.IToken;
 public class JamFlowRule extends WordRuleBase {
     static private final String[] targets = new String[] { "for", "in", "if",
             "else", "include", "local", "return", "switch", "case", "while",
-            "rule", "actions", "module" };
+            "rule", "actions", "module", "class" };
 
     public JamFlowRule(final IToken token) {
         super(targets, token);

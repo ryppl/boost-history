@@ -10,7 +10,7 @@ import org.eclipse.jface.text.rules.IToken;
 
 public class JamPunctuationRule extends WordRuleBase {
     static private final String[] targets = new String[] { "=", "!=", "+=",
-            "?=", "<", ">", "<=", ">=", "!", "&&", "||", "(", ")" };
+            "?=", "<", ">", "<=", ">=", "!", "&&", "||", "(", ")", "*", "+", "?" };
 
     public JamPunctuationRule(final IToken token) {
         super(targets, token);
