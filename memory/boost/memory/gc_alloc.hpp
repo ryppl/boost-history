@@ -442,7 +442,7 @@ public:
 			m_end = pNew->end();
 		}
 
-		BOOST_MEMORY_ASSERT(m_end - m_begin >= cb);
+		BOOST_MEMORY_ASSERT((size_t)(m_end - m_begin) >= cb);
 
 		MemHeader* pAlloc = (MemHeader*)(m_end -= cb);
 		pAlloc->nodeType = nodeAlloced;
