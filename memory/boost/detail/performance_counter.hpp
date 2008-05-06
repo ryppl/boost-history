@@ -25,7 +25,7 @@ NS_BOOST_DETAIL_BEGIN
 // -------------------------------------------------------------------------
 
 template <class UIntT, class CharT>
-inline CharT* BOOST_DETAIL_CALL _ui2estr(const UIntT& val, CharT* estr)
+inline CharT* BOOST_DETAIL_CALL _ui2estr(UIntT val, CharT* estr)
 {
 	*estr-- = '\0';
 	do {

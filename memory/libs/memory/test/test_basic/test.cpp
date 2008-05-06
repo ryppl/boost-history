@@ -13,12 +13,14 @@
 #include <boost/memory.hpp>
 #include <boost/memory/linklib.hpp>
 
+void testPerformance();
 void testStlContainers();
 void simpleExamples();
 
 int main()
 {
-	simpleExamples();
+	testPerformance();
+//	simpleExamples();
 //	testStlContainers();
 	return 0;
 }

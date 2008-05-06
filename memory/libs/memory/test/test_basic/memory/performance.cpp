@@ -122,7 +122,7 @@ public:
 				boost::auto_alloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = STD_NEW(alloc, int);
+					int* p = BOOST_NEW(alloc, int);
 				}
 			}
 		}
@@ -139,7 +139,7 @@ public:
 				boost::scoped_alloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = STD_NEW(alloc, int);
+					int* p = BOOST_NEW(alloc, int);
 				}
 			}
 		}
@@ -156,7 +156,7 @@ public:
 				boost::scoped_alloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = STD_NEW(alloc, int);
+					int* p = BOOST_NEW(alloc, int);
 				}
 			}
 		}
@@ -170,45 +170,45 @@ public:
 		const int PerAlloc = Total / NAlloc;
 		
 		m_acc.start();
-		log.print(PerAlloc, "\n===== boost::auto_alloc(%d) =====\n");
+		log.trace("\n===== boost::auto_alloc(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doAutoAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== TLS boost::scoped_alloc(%d) =====\n");
+		log.trace("\n===== TLS boost::scoped_alloc(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doTlsScopedAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== boost::scoped_alloc(%d) =====\n");
+		log.trace("\n===== boost::scoped_alloc(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doScopedAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 #if defined(__GNUG__)
 		m_acc.start();
-		log.print(PerAlloc, "\n===== MtAllocator(%d) =====\n");
+		log.trace("\n===== MtAllocator(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doMtAllocator(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== BoostPool(%d) =====\n");
+		log.trace("\n===== BoostPool(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doBoostPool(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== BoostObjectPool(%d) =====\n");
+		log.trace("\n===== BoostObjectPool(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doBoostObjectPool(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 #endif
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== NewDelete(%d) =====\n");
+		log.trace("\n===== NewDelete(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doNewDelete(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
@@ -228,6 +228,16 @@ public:
 		doComparison(log, Total, 1);
 	}
 };
+
+// -------------------------------------------------------------------------
+
+void testPerformance()
+{
+	typedef NS_BOOST_DETAIL::stdout_log LogT;
+	LogT log;
+	TestAllocatorPerformance<LogT> test;
+	test.testComparison(log);
+}
 
 // -------------------------------------------------------------------------
 // $Log: performance.cpp,v $
