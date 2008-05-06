@@ -65,8 +65,6 @@ public:
 
 	void BOOST_LOCKFREE_CALL push(node* val)
 	{
-		BOOST_DETAIL_ASSERT(val->m_prev == NULL);
-
 		node* the_top = m_top;
 		for (;;)
 		{

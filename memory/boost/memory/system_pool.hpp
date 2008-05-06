@@ -29,8 +29,6 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class normal_stack
 
-#if defined(BOOST_MEMORY_NO_LOCKFREE)
-
 class normal_stack
 {
 private:
@@ -61,8 +59,6 @@ public:
 
 	void BOOST_LOCKFREE_CALL push(node* val)
 	{
-		BOOST_DETAIL_ASSERT(val->m_prev == NULL);
-
 		cslock aLock(m_cs);
 		val->m_prev = m_top;
 		m_top = val;
@@ -86,8 +82,6 @@ public:
 		return the_top;
 	}
 };
-
-#endif // defined(BOOST_MEMORY_NO_LOCKFREE)
 
 // -------------------------------------------------------------------------
 // class system_pool_imp

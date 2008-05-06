@@ -10,7 +10,13 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 #include <boost/memory.hpp>
+#include <boost/memory/system_pool.hpp>
 #include <boost/detail/performance_counter.hpp>
+
+using namespace NS_BOOST_MEMORY;
+using namespace NS_BOOST_MEMORY;
+
+typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib, normal_stack> system_pool_static;
 
 template <class LogT>
 class TestSystemAlloc
@@ -53,17 +59,22 @@ public:
 
 	void test(LogT& log)
 	{
-		NS_BOOST_MEMORY::system_pool_dyn sysPool;
-		NS_BOOST_MEMORY::stdlib_alloc stdLib;
+		system_pool_dyn sysPool;
+		system_pool_static sysPool2;
+		stdlib_alloc stdLib;
 
 		NS_BOOST_DETAIL::null_log nullLog;
 		doTestAlloc(nullLog, sysPool);
+		doTestAlloc(nullLog, sysPool2);
 
 		log.trace("\n===== StdLibAlloc =====\n");
 		doTestAlloc(log, stdLib);
 
-		log.trace("\n===== SystemPoolAlloc =====\n");
+		log.trace("\n===== SystemPoolAlloc (LockFree) =====\n");
 		doTestAlloc(log, sysPool);
+
+		log.trace("\n===== SystemPoolAlloc (Lock) =====\n");
+		doTestAlloc(log, sysPool2);
 	}
 };
 
