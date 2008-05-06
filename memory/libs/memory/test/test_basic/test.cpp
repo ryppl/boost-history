@@ -20,8 +20,8 @@ void simpleExamples();
 
 int main()
 {
-	testSystemAlloc();
-//	testPerformance();
+//	testSystemAlloc();
+	testPerformance();
 //	simpleExamples();
 //	testStlContainers();
 	return 0;

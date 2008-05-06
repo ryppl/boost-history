@@ -67,14 +67,14 @@ public:
 		doTestAlloc(nullLog, sysPool);
 		doTestAlloc(nullLog, sysPool2);
 
-		log.trace("\n===== StdLibAlloc =====\n");
-		doTestAlloc(log, stdLib);
-
 		log.trace("\n===== SystemPoolAlloc (LockFree) =====\n");
 		doTestAlloc(log, sysPool);
 
 		log.trace("\n===== SystemPoolAlloc (Lock) =====\n");
 		doTestAlloc(log, sysPool2);
+
+		log.trace("\n===== StdLibAlloc =====\n");
+		doTestAlloc(log, stdLib);
 	}
 };
 
