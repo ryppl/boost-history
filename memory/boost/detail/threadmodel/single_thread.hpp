@@ -1,5 +1,5 @@
 //
-//  boost/memory/threadmodel/single_thread.hpp (*)
+//  boost/detail/threadmodel/single_thread.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,16 +7,12 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H
-#define BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H
+#ifndef BOOST_DETAIL_THREADMODEL_SINGLE_THREAD_HPP
+#define BOOST_DETAIL_THREADMODEL_SINGLE_THREAD_HPP
 
-#ifndef BOOST_MEMORY_BASIC_HPP
-#include "../basic.hpp"
-#endif
-
-NS_BOOST_MEMORY_BEGIN
+NS_BOOST_DETAIL_BEGIN
 
 // -------------------------------------------------------------------------
 // struct refcount_st
@@ -34,8 +30,8 @@ public:
 	{
 	}
 
-	value_type BOOST_MEMORY_CALL acquire() { return ++m_nRef; }
-	value_type BOOST_MEMORY_CALL release() { return --m_nRef; }
+	value_type BOOST_DETAIL_CALL acquire() { return ++m_nRef; }
+	value_type BOOST_DETAIL_CALL release() { return --m_nRef; }
 
 	operator value_type()
 	{
@@ -49,16 +45,22 @@ public:
 class critical_section_st
 {
 public:
-	void BOOST_MEMORY_CALL acquire() {}
-	void BOOST_MEMORY_CALL release() {}
-	bool BOOST_MEMORY_CALL good() const {
+	void BOOST_DETAIL_CALL acquire() {}
+	void BOOST_DETAIL_CALL release() {}
+
+#if defined(_DEBUG)
+	bool BOOST_DETAIL_CALL good() const {
 		return true;
 	}
+#endif
+
+public:
+	class scoped_lock {};
 };
 
 // -------------------------------------------------------------------------
 //	$Log: $
 
-NS_BOOST_MEMORY_END
+NS_BOOST_DETAIL_END
 
-#endif /* BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H */
+#endif /* BOOST_DETAIL_THREADMODEL_SINGLE_THREAD_HPP */

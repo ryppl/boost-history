@@ -1,5 +1,5 @@
 //
-//  boost/memory/winapi/posix/pthread.hpp (*)
+//  boost/detail/winapi/posix/pthread.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,12 +7,12 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP
-#define BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP
+#ifndef BOOST_DETAIL_WINAPI_POSIX_PTHREAD_HPP
+#define BOOST_DETAIL_WINAPI_POSIX_PTHREAD_HPP
 
-#ifndef BOOST_MEMORY_WINAPI_WINDEF_H
+#ifndef BOOST_DETAIL_WINAPI_WINDEF_H
 #include "../windef.h"
 #endif
 
@@ -108,4 +108,4 @@ __forceinline LPVOID WINAPI TlsGetValue(TLSINDEX key)
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* BOOST_MEMORY_WINAPI_POSIX_PTHREAD_HPP */
+#endif /* BOOST_DETAIL_WINAPI_POSIX_PTHREAD_HPP */

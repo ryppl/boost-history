@@ -1,5 +1,5 @@
 //
-//  boost/memory/winapi/wtypes.h (*)
+//  boost/detail/winapi/wtypes.h
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,16 +7,16 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_WINAPI_WTYPES_H
-#define BOOST_MEMORY_WINAPI_WTYPES_H
+#ifndef BOOST_DETAIL_WINAPI_WTYPES_H
+#define BOOST_DETAIL_WINAPI_WTYPES_H
 
-#if !defined(BOOST_NO_WINSDK)
+#if !defined(BOOST_DETAIL_NO_WINSDK)
 #error "Don't include <winapi/wtypes.h>"
 #endif
 
-#ifndef BOOST_MEMORY_WINAPI_WINDEF_H
+#ifndef BOOST_DETAIL_WINAPI_WINDEF_H
 #include "windef.h"
 #endif
 
@@ -232,4 +232,4 @@ typedef ACCESS_MASK REGSAM;
 // =========================================================================
 // $Log: $
 
-#endif /* BOOST_MEMORY_WINAPI_WTYPES_H */
+#endif /* BOOST_DETAIL_WINAPI_WTYPES_H */

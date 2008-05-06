@@ -16,8 +16,8 @@
 #include "basic.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_THREADMODEL_HPP
-#include "threadmodel.hpp"
+#ifndef BOOST_DETAIL_THREADMODEL_HPP
+#include "../detail/threadmodel.hpp"
 #endif
 
 #if !defined(_ALGORITHM_) && !defined(_ALGORITHM)

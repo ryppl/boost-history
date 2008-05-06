@@ -1,5 +1,5 @@
 //
-//  boost/memory/threadmodel.hpp (*)
+//  boost/detail/threadmodel.hpp (*)
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,46 +7,34 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_THREADMODEL_HPP
-#define BOOST_MEMORY_THREADMODEL_HPP
+#ifndef BOOST_DETAIL_THREADMODEL_HPP
+#define BOOST_DETAIL_THREADMODEL_HPP
+
+#ifndef NS_BOOST_DETAIL_BEGIN
+#define NS_BOOST_DETAIL_BEGIN	namespace boost { namespace detail {
+#define NS_BOOST_DETAIL_END		} }
+#define NS_BOOST_DETAIL			boost::detail
+#endif
+
+#ifndef BOOST_DETAIL_CALL
+#define BOOST_DETAIL_CALL
+#endif
 
 // -------------------------------------------------------------------------
 
-#ifndef BOOST_MEMORY_THREADMODEL_SINGLE_THREAD_H
+#include "winapi/winbase.h"
+
+#ifndef BOOST_DETAIL_THREADMODEL_SINGLE_THREAD_HPP
 #include "threadmodel/single_thread.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H
+#ifndef BOOST_DETAIL_THREADMODEL_MULTI_THREAD_HPP
 #include "threadmodel/multi_thread.hpp"
 #endif
 
-NS_BOOST_MEMORY_BEGIN
-
-// -------------------------------------------------------------------------
-// class auto_lock
-
-template <class LockT>
-class auto_lock
-{
-private:
-	LockT& m_lock;
-
-private:
-	auto_lock(const auto_lock&);
-	void operator=(const auto_lock&);
-
-public:
-	auto_lock(LockT& lock) : m_lock(lock)
-	{
-		m_lock.acquire();
-	}
-	~auto_lock()
-	{
-		m_lock.release();
-	}
-};
+NS_BOOST_DETAIL_BEGIN
 
 // -------------------------------------------------------------------------
 // class multi_thread
@@ -59,7 +47,7 @@ public:
 
 public:
 	typedef critical_section cs;
-	typedef auto_lock<cs> cslock;
+	typedef cs::scoped_lock cslock;
 };
 
 // -------------------------------------------------------------------------
@@ -73,7 +61,7 @@ public:
 
 public:
 	typedef critical_section cs;
-	typedef auto_lock<cs> cslock;
+	typedef cs::scoped_lock cslock;
 };
 
 // -------------------------------------------------------------------------
@@ -85,11 +73,9 @@ typedef multi_thread default_threadmodel;
 typedef single_thread default_threadmodel;
 #endif
 
-typedef single_thread initializer_threadmodel;
-
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_BOOST_MEMORY_END
+NS_BOOST_DETAIL_END
 
-#endif /* BOOST_MEMORY_THREADMODEL_HPP */
+#endif /* BOOST_DETAIL_THREADMODEL_HPP */

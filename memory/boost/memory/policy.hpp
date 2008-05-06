@@ -133,7 +133,7 @@ private:
 public:
 	enum { MemBlockSize = BOOST_MEMORY_BLOCK_SIZE };
 	typedef system_alloc allocator_type;
-	typedef default_threadmodel threadmodel_type;
+	typedef NS_BOOST_DETAIL::default_threadmodel threadmodel_type;
 
 	enum { RecycleSizeMin = 256 };
 	enum { AllocSizeBig = Default };

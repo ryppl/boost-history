@@ -30,6 +30,10 @@
 #include <crtdbg.h> // _CrtSetDbgFlag
 #endif
 
+#ifndef BOOST_DETAIL_DEBUG_HPP
+#include "../detail/debug.hpp"
+#endif
+
 #pragma pack() // default pack
 #pragma warning(disable:4786)
 // warning: identifier was truncated to '255' characters in the debug information
@@ -50,30 +54,18 @@
 
 // -------------------------------------------------------------------------
 
+#ifndef BOOST_MEMORY_ASSERT
+#define BOOST_MEMORY_ASSERT(e)	BOOST_DETAIL_ASSERT(e)
+#endif
+
+// -------------------------------------------------------------------------
+
 #if defined(BOOST_NO_PARTIAL_SPECIAILIZATION)
 	#define BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION
 #elif defined(_MSC_VER)
 	#if (_MSC_VER <= 1200)
 	#define BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION
 	#endif
-#endif
-
-// =========================================================================
-// BOOST_MEMORY_ASSERT - diagnost
-
-#if defined(ASSERT)
-#define BOOST_MEMORY_ASSERT(e)		ASSERT(e)
-#elif defined(_ASSERTE)
-#define BOOST_MEMORY_ASSERT(e)		_ASSERTE(e)
-#else
-#ifdef _DEBUG
-#ifndef assert
-#include <cassert>
-#endif
-#define BOOST_MEMORY_ASSERT(e)		assert(e)
-#else
-#define BOOST_MEMORY_ASSERT(e)
-#endif
 #endif
 
 // =========================================================================
@@ -289,18 +281,6 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 #if defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 #endif
-}
-
-template <class StrucType>
-inline bool BOOST_MEMORY_CALL isInitialized(const StrucType& stru)
-{
-	const char* p = (const char*)&stru;
-	for (size_t i = 0; i < sizeof(stru); ++i)
-	{
-		if (p[i] != 0)
-			return true;
-	}
-	return false;
 }
 
 NS_BOOST_MEMORY_END

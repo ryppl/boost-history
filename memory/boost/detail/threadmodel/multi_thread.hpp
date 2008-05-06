@@ -1,5 +1,5 @@
 //
-//  boost/memory/threadmodel/multi_thread.hpp (*)
+//  boost/detail/threadmodel/multi_thread.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,20 +7,36 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H
-#define BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H
+#ifndef BOOST_DETAIL_THREADMODEL_MULTI_THREAD_HPP
+#define BOOST_DETAIL_THREADMODEL_MULTI_THREAD_HPP
 
-#ifndef BOOST_MEMORY_BASIC_HPP
-#include "../basic.hpp"
-#endif
+NS_BOOST_DETAIL_BEGIN
 
-#ifndef BOOST_MEMORY_WINAPI_WINBASE_H
-#include "../winapi/winbase.h"
-#endif
+// -------------------------------------------------------------------------
+// class scoped_lock
 
-NS_BOOST_MEMORY_BEGIN
+template <class LockT>
+class scoped_lock
+{
+private:
+	LockT& m_lock;
+
+private:
+	scoped_lock(const scoped_lock&);
+	void operator=(const scoped_lock&);
+
+public:
+	scoped_lock(LockT& lock) : m_lock(lock)
+	{
+		m_lock.acquire();
+	}
+	~scoped_lock()
+	{
+		m_lock.release();
+	}
+};
 
 // -------------------------------------------------------------------------
 // class refcount_mt
@@ -39,12 +55,12 @@ public:
 	{
 	}
 
-	value_type BOOST_MEMORY_CALL acquire()
+	value_type BOOST_DETAIL_CALL acquire()
 	{
 		return InterlockedIncrement(&m_nRef);
 	}
 
-	value_type BOOST_MEMORY_CALL release()
+	value_type BOOST_DETAIL_CALL release()
 	{
 		return InterlockedDecrement(&m_nRef);
 	}
@@ -77,25 +93,36 @@ public:
 		DeleteCriticalSection(&m_cs);
 	}
 
-	void BOOST_MEMORY_CALL acquire()
+	void BOOST_DETAIL_CALL acquire()
 	{
 		EnterCriticalSection(&m_cs);
 	}
 
-	void BOOST_MEMORY_CALL release()
+	void BOOST_DETAIL_CALL release()
 	{
 		LeaveCriticalSection(&m_cs);
 	}
 
-	bool BOOST_MEMORY_CALL good() const
+#if defined(_DEBUG)
+	bool BOOST_DETAIL_CALL good() const // debug only
 	{
-		return isInitialized(m_cs);
+		const char* p = (const char*)&m_cs;
+		for (size_t i = 0; i < sizeof(m_cs); ++i)
+		{
+			if (p[i] != 0)
+				return true;
+		}
+		return false;
 	}
+#endif
+
+public:
+	typedef NS_BOOST_DETAIL::scoped_lock<critical_section_mt> scoped_lock;
 };
 
 // -------------------------------------------------------------------------
 //	$Log: $
 
-NS_BOOST_MEMORY_END
+NS_BOOST_DETAIL_END
 
-#endif /* BOOST_MEMORY_THREADMODEL_MULTI_THREAD_H */
+#endif /* BOOST_DETAIL_THREADMODEL_MULTI_THREAD_HPP */

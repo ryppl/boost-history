@@ -16,8 +16,8 @@
 #include "../basic.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_THREADMODEL_HPP
-#include "../threadmodel.hpp"
+#ifndef BOOST_DETAIL_THREADMODEL_HPP
+#include "../../detail/threadmodel.hpp"
 #endif
 
 // -------------------------------------------------------------------------
@@ -146,7 +146,7 @@ public:
 template <
 	class Type, 
 	class Factory = tls_factory<Type>,
-	class ThreadModel = initializer_threadmodel>
+	class ThreadModel = NS_BOOST_DETAIL::default_threadmodel>
 class tls_object
 {
 private:

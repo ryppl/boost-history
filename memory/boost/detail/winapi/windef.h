@@ -1,5 +1,5 @@
 //
-//  boost/memory/winapi/windef.h (*)
+//  boost/detail/winapi/windef.h
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,12 +7,12 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_WINAPI_WINDEF_H
-#define BOOST_MEMORY_WINAPI_WINDEF_H
+#ifndef BOOST_DETAIL_WINAPI_WINDEF_H
+#define BOOST_DETAIL_WINAPI_WINDEF_H
 
-#ifndef BOOST_NO_WINSDK
+#ifndef BOOST_DETAIL_NO_WINSDK
 #error "Don't include <winapi/windef.h>"
 #endif
 
@@ -565,4 +565,4 @@ typedef ACCESS_MASK *PACCESS_MASK;
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* BOOST_MEMORY_WINAPI_WINDEF_H */
+#endif /* BOOST_DETAIL_WINAPI_WINDEF_H */

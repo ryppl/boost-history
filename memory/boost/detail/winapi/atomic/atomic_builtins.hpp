@@ -1,5 +1,5 @@
 //
-//  boost/memory/winapi/atomic/solaris.hpp (*)
+//  boost/detail/winapi/atomic/atomic_builtins.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,40 +7,42 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_WINAPI_ATOMIC_SOLARIS_HPP
-#define BOOST_MEMORY_WINAPI_ATOMIC_SOLARIS_HPP
+#ifndef BOOST_DETAIL_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP
+#define BOOST_DETAIL_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP
 
 // -------------------------------------------------------------------------
 
 __forceinline LONG WINAPI InterlockedIncrement(volatile LPLONG lpAddend)
 {
-    return atomic_inc_32_nv(lpAddend);
+	return __sync_add_and_fetch(lpAddend, 1);
 }
 
 __forceinline LONG WINAPI InterlockedDecrement(volatile LPLONG lpAddend)
 {
-    return atomic_dec_32_nv(lpAddend);
+    return __sync_sub_and_fetch(lpAddend, 1);
 }
 
 // -------------------------------------------------------------------------
 
 __forceinline LONG WINAPI InterlockedExchange(volatile LPLONG Target, LONG Value)
 {
-	return atomic_swap_32(Target, Value);
+	__sync_synchronize();
+	return __sync_lock_test_and_set(Target, Value);
 }
 
 __forceinline PVOID WINAPI InterlockedExchangePointer(volatile PVOID* Target, PVOID Value)
 {
-	return atomic_swap_ptr(Target, Value);
+	__sync_synchronize();
+	return (PVOID)__sync_lock_test_and_set(Target, Value);
 }
 
 // -------------------------------------------------------------------------
 
 __forceinline LONG WINAPI InterlockedExchangeAdd(volatile LPLONG Addend, LONG Value)
 {
-    return atomic_add_32_nv(Addend, Value) - Value;
+    return __sync_fetch_and_add(Addend, Value);
 }
 
 // -------------------------------------------------------------------------
@@ -48,16 +50,16 @@ __forceinline LONG WINAPI InterlockedExchangeAdd(volatile LPLONG Addend, LONG Va
 __forceinline LONG WINAPI InterlockedCompareExchange(
     volatile LPLONG Destination, LONG Exchange, LONG Comperand)
 {
-	return atomic_cas_32(Destination, Comperand, Exchange);
+	return __sync_val_compare_and_swap(Destination, Comperand, Exchange);
 }
 
 __forceinline PVOID WINAPI InterlockedCompareExchangePointer(
     volatile PVOID* Destination, PVOID Exchange, PVOID Comperand)
 {
-	return atomic_cas_ptr(Destination, Comperand, Exchange);
+	return (PVOID)__sync_val_compare_and_swap(Destination, Comperand, Exchange);
 }
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* BOOST_MEMORY_WINAPI_ATOMIC_SOLARIS_HPP */
+#endif /* BOOST_DETAIL_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP */

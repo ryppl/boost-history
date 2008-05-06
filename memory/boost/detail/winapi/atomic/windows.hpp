@@ -1,5 +1,5 @@
 //
-//  boost/memory/winapi/atomic/windows.hpp (*)
+//  boost/detail/winapi/atomic/windows.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -7,10 +7,10 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/memory/index.htm for documentation.
+//  See http://www.boost.org/libs/detail/todo.htm for documentation.
 //
-#ifndef BOOST_MEMORY_WINAPI_ATOMIC_WINDOWS_HPP
-#define BOOST_MEMORY_WINAPI_ATOMIC_WINDOWS_HPP
+#ifndef BOOST_DETAIL_WINAPI_ATOMIC_WINDOWS_HPP
+#define BOOST_DETAIL_WINAPI_ATOMIC_WINDOWS_HPP
 
 // -------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ __forceinline PVOID WINAPI boost_InterlockedExchangePointer(PVOID* Target, PVOID
 
 // -------------------------------------------------------------------------
 
-#if defined(BOOST_WINSDK_VC6)
+#if defined(BOOST_DETAIL_WINSDK_VC6)
 
 __forceinline PVOID WINAPI boost_InterlockedCompareExchange(
 	LPLONG Destination, LONG Exchange, LONG Comperand)
@@ -63,4 +63,4 @@ __forceinline PVOID WINAPI boost_InterlockedCompareExchangePointer(
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* BOOST_MEMORY_WINAPI_ATOMIC_WINDOWS_HPP */
+#endif /* BOOST_DETAIL_WINAPI_ATOMIC_WINDOWS_HPP */
