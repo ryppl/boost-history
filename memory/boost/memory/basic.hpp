@@ -31,7 +31,7 @@
 #endif
 
 #ifndef BOOST_DETAIL_DEBUG_HPP
-#include "../detail/debug.hpp"
+#include <boost/detail/debug.hpp>
 #endif
 
 #pragma pack() // default pack

@@ -24,7 +24,9 @@
 
 // -------------------------------------------------------------------------
 
-#include "winapi/winbase.h"
+#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
+#include <boost/detail/winapi/winbase.h>
+#endif
 
 #ifndef BOOST_DETAIL_THREADMODEL_SINGLE_THREAD_HPP
 #include "threadmodel/single_thread.hpp"

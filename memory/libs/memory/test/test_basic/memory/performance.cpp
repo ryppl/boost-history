@@ -14,9 +14,10 @@
 
 #if defined(__GNUG__)
 #include <ext/mt_allocator.h>
+#endif
+
 #include <boost/pool/pool.hpp>
 #include <boost/pool/object_pool.hpp>
-#endif
 
 // -------------------------------------------------------------------------
 
@@ -78,6 +79,7 @@ public:
 		m_acc.accumulate(counter.trace(log));
 		delete[] p;
 	}
+#endif
 
 	void doBoostPool(LogT& log, int NAlloc, int PerAlloc)
 	{
@@ -110,7 +112,6 @@ public:
 		}
 		m_acc.accumulate(counter.trace(log));
 	}
-#endif
 
 	template <class LogT2>
 	void doAutoAlloc(LogT2& log, int NAlloc, int PerAlloc)
@@ -193,6 +194,7 @@ public:
 		for (i = 0; i < Count; ++i)
 			doMtAllocator(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
+#endif
 
 		m_acc.start();
 		log.trace("\n===== BoostPool(%d) =====\n", PerAlloc);
@@ -205,7 +207,6 @@ public:
 		for (i = 0; i < Count; ++i)
 			doBoostObjectPool(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
-#endif
 
 		m_acc.start();
 		log.trace("\n===== NewDelete(%d) =====\n", PerAlloc);

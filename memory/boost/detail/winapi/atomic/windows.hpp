@@ -39,8 +39,15 @@ __forceinline PVOID WINAPI boost_InterlockedCompareExchange(
 		(PVOID*)Destination, (PVOID)Exchange, (PVOID)Comperand);
 }
 
+__forceinline PVOID WINAPI boost_InterlockedCompareExchangePointer(
+	PVOID* Destination, PVOID Exchange, PVOID Comperand)
+{
+	return InterlockedCompareExchange(
+		Destination, Exchange, Comperand);
+}
+
 #define InterlockedCompareExchange			boost_InterlockedCompareExchange
-#define InterlockedCompareExchangePointer	InterlockedCompareExchange
+#define InterlockedCompareExchangePointer	boost_InterlockedCompareExchangePointer
 
 #elif !defined(InterlockedCompareExchangePointer)
 

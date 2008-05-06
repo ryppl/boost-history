@@ -17,7 +17,7 @@
 #endif
 
 #ifndef BOOST_DETAIL_THREADMODEL_HPP
-#include "../detail/threadmodel.hpp"
+#include <boost/detail/threadmodel.hpp>
 #endif
 
 #if !defined(_ALGORITHM_) && !defined(_ALGORITHM)

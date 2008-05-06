@@ -13,7 +13,7 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(_WIN32)
+#if 1 // defined(_WIN32)
 
 #include <boost/memory/system_pool.hpp>
 

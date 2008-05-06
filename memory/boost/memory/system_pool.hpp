@@ -20,29 +20,87 @@
 #include "policy.hpp"
 #endif
 
+#ifndef BOOST_LOCKFREE_STACK_HPP
+#include <boost/lockfree/stack.hpp>
+#endif
+
 NS_BOOST_MEMORY_BEGIN
+
+// -------------------------------------------------------------------------
+// class normal_stack
+
+#if defined(BOOST_MEMORY_NO_LOCKFREE)
+
+class normal_stack
+{
+private:
+	normal_stack(const normal_stack&);
+	void operator=(const normal_stack&);
+
+	typedef NS_BOOST_DETAIL::default_threadmodel::cs cs;
+	typedef cs::scoped_lock cslock;
+
+public:
+	class node
+	{
+	private:
+		node* m_prev;
+		friend class normal_stack;
+	
+	public:
+		node() : m_prev(NULL) {}
+		node* prev() const { return m_prev; }
+	};
+
+private:
+	node* m_top;
+	cs m_cs;
+
+public:
+	normal_stack() : m_top(NULL) {}
+
+	void BOOST_LOCKFREE_CALL push(node* val)
+	{
+		BOOST_DETAIL_ASSERT(val->m_prev == NULL);
+
+		cslock aLock(m_cs);
+		val->m_prev = m_top;
+		m_top = val;
+	}
+
+	node* BOOST_LOCKFREE_CALL clear()
+	{
+		cslock aLock(m_cs);
+		node* the_top = m_top;
+		m_top = NULL;
+		return the_top;
+	}
+
+	node* BOOST_LOCKFREE_CALL pop()
+	{
+		cslock aLock(m_cs);
+		node* the_top = m_top;
+		if (the_top == NULL)
+			return NULL;
+		m_top = m_top->m_prev;
+		return the_top;
+	}
+};
+
+#endif // defined(BOOST_MEMORY_NO_LOCKFREE)
 
 // -------------------------------------------------------------------------
 // class system_pool_imp
 
-template <class PolicyT>
+template <class PolicyT, class StackT = NS_BOOST_LOCKFREE::stack>
 class system_pool_imp
 {
 private:
-	typedef typename PolicyT::threadmodel_type ThreadModel;
 	typedef typename PolicyT::allocator_type AllocT;
 	enum { cbBlock = PolicyT::MemBlockSize };
 
-	struct Block {
-		Block* next;
-	};
-	Block* m_freeList;
-
-private:
-	typedef typename ThreadModel::cs cs;
-	typedef typename ThreadModel::cslock cslock;
-
-	cs m_cs;
+	typedef typename StackT::node Block;
+	StackT m_freeList;
 
 private:
 	system_pool_imp(const system_pool_imp&);
@@ -50,7 +108,6 @@ private:
 
 public:
 	system_pool_imp()
-		: m_freeList(NULL)
 	{
 	}
 	~system_pool_imp()
@@ -61,18 +118,15 @@ public:
 public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		BOOST_MEMORY_ASSERT(m_cs.good());
 		BOOST_MEMORY_ASSERT(cb >= (size_t)cbBlock);
 
 		if (cb > (size_t)cbBlock)
 			return AllocT::allocate(cb);
 		{
-			cslock aLock(m_cs);
-			if (m_freeList)
+			Block* blk = m_freeList.pop();
+			if (blk)
 			{
-				BOOST_MEMORY_ASSERT(AllocT::alloc_size(m_freeList) >= cb);
-				Block* blk = m_freeList;
-				m_freeList = blk->next;
+				BOOST_MEMORY_ASSERT(AllocT::alloc_size(blk) >= cb);
 				return blk;
 			}
 		}
@@ -81,10 +135,7 @@ public:
 
 	void BOOST_MEMORY_CALL deallocate(void* p)
 	{
-		Block* blk = (Block*)p;
-		cslock aLock(m_cs);
-		blk->next = m_freeList;
-		m_freeList = blk;
+		m_freeList.push((Block*)p);
 	}
 
 	static size_t BOOST_MEMORY_CALL alloc_size(void* p)
@@ -94,11 +145,11 @@ public:
 
 	void BOOST_MEMORY_CALL clear()
 	{
-		cslock aLock(m_cs);
-		while (m_freeList)
+		Block* freeList = m_freeList.clear();
+		while (freeList)
 		{
-			Block* blk = m_freeList;
-			m_freeList = blk->next;
+			Block* blk = freeList;
+			freeList = freeList->prev();
 			AllocT::deallocate(blk);
 		}
 	}
@@ -107,11 +158,12 @@ public:
 // -------------------------------------------------------------------------
 // class system_pool_s
 
-template <class PolicyT>
+template <class PolicyT, class StackT = NS_BOOST_LOCKFREE::stack>
 class system_pool_s
 {
 private:
-	typedef system_pool_imp<PolicyT> SystemPoolImpl;
+	typedef system_pool_imp<PolicyT, StackT> SystemPoolImpl;
+
 	static SystemPoolImpl s_impl;
 
 public:
@@ -122,8 +174,8 @@ public:
 	}
 };
 
-template <class PolicyT>
-system_pool_imp<PolicyT> system_pool_s<PolicyT>::s_impl;
+template <class PolicyT, class StackT>
+system_pool_imp<PolicyT, StackT> system_pool_s<PolicyT, StackT>::s_impl;
 
 // -------------------------------------------------------------------------
 // class system_pool
@@ -138,7 +190,13 @@ public:
 
 NS_BOOST_MEMORY_POLICY_END
 
+// -------------------------------------------------------------------------
+
+#if defined(BOOST_MEMORY_NO_LOCKFREE)
+typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib, normal_stack> system_pool;
+#else
 typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib> system_pool;
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
