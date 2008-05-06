@@ -158,37 +158,22 @@ class nary_tree_cursor
 	
 public:
 
-	cursor begin()
+	cursor left() const
 	{
 		return cursor(m_node->operator[](m_pos), 0);
 	}
-/*	
-	const_cursor left() const
-	{
-		return const_cursor(m_node->operator[](m_pos), 0);
-	}
-*/
-	cursor end()
+
+	cursor right() const
 	{
 		return cursor(m_node->operator[](m_pos), m_node->size()-1);
 	}
-/*
-	const_cursor right() const
-	{
-		return const_cursor(m_node->operator[](m_pos), m_node->size()-1);
-	}
-*/	
+
 	// Cursor stuff
-	cursor parent()
+	cursor up() const
 	{
 		return cursor(static_cast<base_pointer>(m_node->parent()), m_node->get_parity());
 	}
-/*	
-	const_cursor up() const
-	{
-		return const_cursor(static_cast<base_pointer>(m_node->parent()), m_node->get_parity());
-	}
-*/
+
 public:	
 	// TODO: protect?
 	void attach(node_pointer p_node)
