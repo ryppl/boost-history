@@ -22,6 +22,33 @@
 #include <winbase.h>
 #endif
 
+#ifndef _BASETSD_H_
+#include <basetsd.h>
+#endif
+
+#if !defined(_W64)
+	#define BOOST_WINSDK_VC6
+	#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
+	#define _W64 __w64
+	#else
+	#define _W64
+	#endif
+#endif
+
+#if defined(BOOST_WINSDK_VC6)
+	#if defined(_WIN64)
+		typedef __int64 LONG_PTR, *PLONG_PTR;
+		typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;
+	#else
+		typedef _W64 long LONG_PTR, *PLONG_PTR;
+		typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;
+	#endif
+#endif
+
+#ifndef BOOST_MEMORY_WINAPI_ATOMIC_WINDOWS_HPP
+#include "atomic/windows.hpp"
+#endif
+
 #else
 
 #define BOOST_NO_WINSDK
