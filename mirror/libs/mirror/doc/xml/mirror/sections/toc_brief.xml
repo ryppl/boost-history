@@ -3,6 +3,8 @@
 	<link_set>
 		<link page="index"/>
 		<link page="quick_start"/>
+		<link page="registering"/>
+		<link page="reflecting"/>
 		<link page="full_reference"/>
 	</link_set>
 </section>

@@ -98,6 +98,7 @@
 				<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"/>
 				<META NAME="author" CONTENT="Matus Chochlik"/>
 				<LINK REL="stylesheet" HREF="../../css/mirror.css" TYPE="text/css"/>
+				<LINK REL="Index" HREF="index.html" TYPE="text/html"/>
 			</HEAD>
 			<BODY> 
 				<H1><xsl:value-of select="@title"/></H1>

@@ -2,7 +2,7 @@
 <feature_doc>
 	<overview>
 		<paragraph>
-			The <feat_ref>REG_NAMESPACE</feat_ref> macro registers the given nested namespace with the <lib_name_ref/> library. The 'top-level' namespaces (i.e. not nested) can be registered with the <feat_ref>REG_NAMESPACE_TOP_LEVEL</feat_ref> macro.
+			The <feat_ref>REG_NAMESPACE</feat_ref> macro registers the given nested namespace with the <lib_name_ref/> library. The 'top-level' (not nested) namespaces can be registered with the <feat_ref>REG_NAMESPACE_TOP_LEVEL</feat_ref> macro.
 		</paragraph>
 	</overview>
 	<macro name="REG_NAMESPACE">
@@ -31,6 +31,9 @@
 			</cpp_indent><cpp_line>} <cpp_comment>// namespace bar</cpp_comment></cpp_line>
 			</cpp_indent><cpp_line>} <cpp_comment>// namespace foo</cpp_comment></cpp_line>
 			<cpp_line/>
+			<cpp_line><cpp_comment>// the macros must be used in the boost::mirror namespace</cpp_comment></cpp_line>
+			<cpp_line>namespace boost {</cpp_line><cpp_indent>
+			<cpp_line>namespace mirror {</cpp_line><cpp_indent>
 			<cpp_line><cpp_comment>// register the top-level namespace foo </cpp_comment></cpp_line>
 			<cpp_line><feat_ref>REG_NAMESPACE_TOP_LEVEL</feat_ref>(foo)</cpp_line>
 			<cpp_line/>
@@ -42,6 +45,8 @@
 			<cpp_line><cpp_comment>// in the scope of _foo_bar (::foo::bar).</cpp_comment></cpp_line>
 			<cpp_line><cpp_comment>// this creates a _foo_bar_detail alias </cpp_comment></cpp_line>
 			<cpp_line><feat_ref>REG_NAMESPACE</feat_ref>(_foo_bar, detail)</cpp_line>
+			</cpp_indent><cpp_line>} <cpp_comment>// namespace mirror</cpp_comment></cpp_line>
+			</cpp_indent><cpp_line>} <cpp_comment>// namespace boost</cpp_comment></cpp_line>
 		</cpp_source>
 	</example>
 </feature_doc>

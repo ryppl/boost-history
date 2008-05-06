@@ -135,5 +135,17 @@
 			  errors with gcc.
 			- Tested with MSVC++ 2008 EE on Vista and gcc 4.2.1 on FreeBSD
 		</revision>
+		<revision id="20080504" major="0" minor="1" micro="20" author="m_ch">
+			- Renamed the REG_META_NAMESPACE macro to REG_NAMESPACE
+			- Renamed the REG_META_TYPE macro to REG_TYPE
+			- Updated the documentation
+			- Updated the xsl templates
+		</revision>
+		<revision id="20080506" major="0" minor="1" micro="21" author="m_ch">
+			- Renamed the REG_META_NAMESPACE macro to REG_NAMESPACE
+			- Renamed the REG_META_TYPE macro to REG_TYPE
+			- Updated the documentation
+			- Updated the xsl templates
+		</revision>
 	</revisions>
 </library>

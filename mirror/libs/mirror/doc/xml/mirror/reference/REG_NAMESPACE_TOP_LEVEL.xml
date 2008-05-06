@@ -23,9 +23,14 @@
 			<cpp_line>namespace foo {</cpp_line>
 			<cpp_line>} <cpp_comment>// namespace foo</cpp_comment></cpp_line>
 			<cpp_line/>
+			<cpp_line><cpp_comment>// the macros must be used in the boost::mirror namespace</cpp_comment></cpp_line>
+			<cpp_line>namespace boost {</cpp_line><cpp_indent>
+			<cpp_line>namespace mirror {</cpp_line><cpp_indent>
 			<cpp_line><cpp_comment>// register top-level namespace foo.</cpp_comment></cpp_line>
 			<cpp_line><cpp_comment>// this creates a _foo namespace alias </cpp_comment></cpp_line>
 			<cpp_line><feat_ref>REG_NAMESPACE_TOP_LEVEL</feat_ref>(foo)</cpp_line>
+			</cpp_indent><cpp_line>} <cpp_comment>// namespace mirror</cpp_comment></cpp_line>
+			</cpp_indent><cpp_line>} <cpp_comment>// namespace boost</cpp_comment></cpp_line>
 		</cpp_source>
 	</example>
 </feature_doc>

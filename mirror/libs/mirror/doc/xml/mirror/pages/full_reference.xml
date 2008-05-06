@@ -4,6 +4,7 @@
 	<paragraph>
 	</paragraph>
 	<include reference_section="reg_namespaces"/>
-	<include reference_section="ns_reg_by_default"/>
 	<include reference_section="refl_namespaces"/>
+	<include reference_section="ns_reg_by_default"/>
+	<include reference_section="reg_types"/>
 </doc_page>
