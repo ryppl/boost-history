@@ -98,6 +98,10 @@ SOURCE=.\memory\stl_containers.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\memory\system_alloc_perform.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\test.cpp
 # End Source File
 # End Target
