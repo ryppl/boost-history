@@ -1,0 +1,46 @@
+
+[library Sequence Comparison
+    [quickbook 1.4]
+    [version 0.01e-10]
+    [authors [Goller, Chris],[Flinn, Jeff],[Milligan, Brook],[Rajko, Stjepan]]
+    [copyright 2008 Chris Goller, Jeff Flinn, Brook Milligan and Stjepan Rajko]
+    [purpose Doing nothing.]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+Welcome to the Sequence Comparison!  One day, it will perhaps be called
+Boost.Sequence Comparison. Until then, feel free to use it to do nothing.
+
+[warning Sequence Comparison is not an official Boost library.]
+
+[section:introduction Introduction]
+
+User, this is Sequence Comparison.  Sequence Comparison, this is the user.  Be nice to each other.
+
+[section:start Getting Started]
+
+The Sequence Comparison is located in the sequence_comparison directory of the boost sandbox.
+
+
+You might also want to look at the [link sequence_comparison.reference reference].
+
+
+[endsect]
+
+[endsect]
+
+[xinclude sequence_comparison_doxygen.xml]
+
+[section:license License]
+
+Copyright 2008 Chris Goller, Jeff Flinn, Brook Milligan and Stjepan Rajko.
+Distributed under the Boost Software License, Version 1.0. (See
+accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+
+
+[endsect]

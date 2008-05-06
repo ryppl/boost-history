@@ -1,0 +1,46 @@
+# Copyright 2008 Chris Goller, Jeff Flinn, Brook Milligan and Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+
+project boost/sequence_comparison/doc ;
+
+import boostbook : boostbook ;
+using quickbook ;
+
+local loc = [ path.native [ path.pwd ] ] ;
+local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
+
+xml sequence_comparison_xml : sequence_comparison.qbk ;
+doxygen sequence_comparison_doxygen
+   :
+      [ glob
+             ../../../boost/sequence_comparison/*.hpp ]
+   :
+        <doxygen:param>EXAMPLE_PATH=../example
+        <doxygen:param>STRIP_FROM_PATH=$(root)
+        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
+        <doxygen:param>EXTRACT_ALL=NO
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>DETAILS_AT_TOP=YES
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=../../..
+        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_ONLY
+   ;
+
+boostbook standalone
+   :
+      sequence_comparison_xml
+      sequence_comparison_doxygen
+    :
+        <xsl:param>chunk.first.sections=1
+        <xsl:param>chunk.section.depth=3
+        <xsl:param>toc.section.depth=3
+        <xsl:param>toc.max.depth=3
+        <xsl:param>generate.section.toc.level=3
+        <xsl:param>annotation.support=1
+    ;
