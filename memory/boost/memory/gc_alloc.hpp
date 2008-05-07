@@ -456,11 +456,11 @@ public:
 		if (cbAlloc >= AllocSizeHuge)
 			return m_hugeAlloc.allocate(cb, fn);
 		
-		DestroyInfo* pNode = (DestroyInfo*)allocate(sizeof(DestroyInfo) + cb);
+		MemHeaderEx* pNode = (MemHeaderEx*)((char*)allocate(sizeof(DestroyInfo) + cb) - sizeof(MemHeader));
 		pNode->fnDestroy = fn;
 		pNode->pPrev = m_destroyChain;
-		m_destroyChain = (MemHeaderEx*)((char*)pNode - sizeof(MemHeader));
-		m_destroyChain->nodeType = nodeAllocedWithDestructor;
+		pNode->nodeType = nodeAllocedWithDestructor;
+		m_destroyChain = pNode;
 		return pNode + 1;
 	}
 
@@ -473,9 +473,9 @@ public:
 	{
 		BOOST_MEMORY_ASSERT(cb + sizeof(MemHeaderEx) < AllocSizeHuge);
 
-		DestroyInfo* pNode = (DestroyInfo*)allocate(sizeof(DestroyInfo) + cb);
-		pNode->fnDestroy = fn;
-		return pNode + 1;
+		DestroyInfo* pInfo = (DestroyInfo*)allocate(sizeof(DestroyInfo) + cb);
+		pInfo->fnDestroy = fn;
+		return pInfo + 1;
 	}
 
 	void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)

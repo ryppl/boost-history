@@ -9,6 +9,7 @@
 //
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
+// #define BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS
 #include <boost/memory.hpp>
 #include <boost/detail/performance_counter.hpp>
 
