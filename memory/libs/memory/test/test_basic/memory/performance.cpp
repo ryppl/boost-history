@@ -29,8 +29,6 @@ class TestAllocatorPerformance
 {
 private:
 	NS_BOOST_DETAIL::accumulator m_acc;
-	NS_BOOST_MEMORY::block_pool m_recycle;
-
 	static Type* p[Total];
 
 public:
@@ -153,11 +151,12 @@ public:
 	template <class LogT2>
 	void doScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
+		NS_BOOST_MEMORY::block_pool& recycle = boost::tls_block_pool::instance();
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				boost::scoped_alloc alloc(m_recycle);
+				boost::scoped_alloc alloc(recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					Type* p = BOOST_NEW(alloc, Type);
@@ -170,11 +169,12 @@ public:
 	template <class LogT2>
 	void doGcAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
+		NS_BOOST_MEMORY::block_pool& recycle = boost::tls_block_pool::instance();
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				boost::gc_alloc alloc(m_recycle);
+				boost::gc_alloc alloc(recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					Type* p = BOOST_NEW(alloc, Type);
@@ -189,11 +189,12 @@ public:
 		const int PerAlloc1 = PerAlloc/2;
 		const int PerAlloc2 = PerAlloc - PerAlloc1;
 		int i;
+		NS_BOOST_MEMORY::block_pool& recycle = boost::tls_block_pool::instance();
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				boost::gc_alloc alloc(m_recycle);
+				boost::gc_alloc alloc(recycle);
 				for (i = 0; i < PerAlloc1; ++i)
 					p[i] = BOOST_NEW(alloc, Type);
 				for (i = 0; i < PerAlloc1; ++i)
@@ -276,7 +277,6 @@ public:
 		
 		doAutoAlloc(nullLog, 1, Total);
 		doTlsScopedAlloc(nullLog, 1, Total);
-		doScopedAlloc(nullLog, 1, Total);
 
 		doComparison(log, Total);
 		doComparison(log, 1000);

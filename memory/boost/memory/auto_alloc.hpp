@@ -125,6 +125,100 @@ public:
 		m_begin = m_end = (char*)HeaderSize;
 	}
 
+private:
+	void* BOOST_MEMORY_CALL _do_allocate(size_t cb)
+	{
+		if (cb >= BlockSize)
+		{
+			MemBlock* pHeader = _chainHeader();
+			MemBlock* pNew = (MemBlock*)m_alloc.allocate(HeaderSize + cb);
+			if (pHeader)
+			{
+				pNew->pPrev = pHeader->pPrev;
+				pHeader->pPrev = pNew;
+			}
+			else
+			{
+				m_end = m_begin = pNew->buffer;
+				pNew->pPrev = NULL;
+			}
+			return pNew->buffer;
+		}
+		else
+		{
+			MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
+			pNew->pPrev = _chainHeader();
+			m_begin = pNew->buffer;
+			m_end = (char*)pNew + m_alloc.alloc_size(pNew);
+			return m_end -= cb;
+		}
+	}
+
+public:
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb)
+	{
+		if ((size_t)(m_end - m_begin) >= cb)
+		{
+			return m_end -= cb;
+		}
+		return _do_allocate(cb);
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
+	{
+		return allocate(cb);
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
+	{
+		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
+		pNode->fnDestroy = fn;
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = pNode;
+		return pNode + 1;
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
+	{
+		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
+		pNode->fnDestroy = fn;
+		return pNode + 1;
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
+	{
+		DestroyNode* pNode = (DestroyNode*)p - 1;
+		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
+
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = pNode;
+		return p;
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero)
+	{
+		return allocate(cb);
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL manage(void* p, int fnZero)
+	{
+		return p;
+	}
+
+	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize)
+	{
+		if (oldSize >= newSize)
+			return p;
+		void* p2 = allocate(newSize);
+		memcpy(p2, p, oldSize);
+		return p2;
+	}
+
+	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
+	{
+		// no action
+	}
+
 	template <class Type>
 	void BOOST_MEMORY_CALL destroy(Type* obj)
 	{
@@ -140,92 +234,6 @@ public:
 
 	template <class Type>
 	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
-	{
-		// no action
-	}
-
-	void* BOOST_MEMORY_CALL allocate(size_t cb)
-	{
-		if ((size_t)(m_end - m_begin) < cb)
-		{
-			if (cb >= BlockSize)
-			{
-				MemBlock* pHeader = _chainHeader();
-				MemBlock* pNew = (MemBlock*)m_alloc.allocate(HeaderSize + cb);
-				if (pHeader)
-				{
-					pNew->pPrev = pHeader->pPrev;
-					pHeader->pPrev = pNew;
-				}
-				else
-				{
-					m_end = m_begin = pNew->buffer;
-					pNew->pPrev = NULL;
-				}
-				return pNew->buffer;
-			}
-			else
-			{
-				MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
-				pNew->pPrev = _chainHeader();
-				m_begin = pNew->buffer;
-				m_end = (char*)pNew + m_alloc.alloc_size(pNew);
-			}
-		}
-		return m_end -= cb;
-	}
-
-	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
-	{
-		return allocate(cb);
-	}
-
-	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
-	{
-		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
-		pNode->fnDestroy = fn;
-		pNode->pPrev = m_destroyChain;
-		m_destroyChain = pNode;
-		return pNode + 1;
-	}
-
-	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
-	{
-		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
-		pNode->fnDestroy = fn;
-		return pNode + 1;
-	}
-
-	void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
-	{
-		DestroyNode* pNode = (DestroyNode*)p - 1;
-		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
-
-		pNode->pPrev = m_destroyChain;
-		m_destroyChain = pNode;
-		return p;
-	}
-
-	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero)
-	{
-		return allocate(cb);
-	}
-
-	void* BOOST_MEMORY_CALL manage(void* p, int fnZero)
-	{
-		return p;
-	}
-
-	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize)
-	{
-		if (oldSize >= newSize)
-			return p;
-		void* p2 = allocate(newSize);
-		memcpy(p2, p, oldSize);
-		return p2;
-	}
-
-	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
 		// no action
 	}

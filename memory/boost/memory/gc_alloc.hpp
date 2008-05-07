@@ -414,52 +414,63 @@ public:
 		m_destroyCount = 0;
 	}
 
-	void* BOOST_MEMORY_CALL allocate(const size_t cbData)
+private:
+	void* BOOST_MEMORY_CALL _do_allocate(const size_t cb, const size_t cbData)
 	{
-		const size_t cb = BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader);
-		if ((size_t)(m_end - m_begin) < cb)
+		if ((size_t)(m_end - m_begin) >= cbData)
 		{
-			if ((size_t)(m_end - m_begin) >= cbData)
+			MemHeader* pAlloc = (MemHeader*)m_begin - 1;
+			pAlloc->dataMemHeader = (nodeAlloced | (m_end - (char*)pAlloc));
+			m_begin = m_end = _null.begin();
+			return pAlloc + 1;
+		}
+		
+		FreeMemHeader* pNew;
+		if (cb >= AllocSizeBig)
+		{
+			if (cb >= BlockSize)
 			{
-				MemHeader* pAlloc = (MemHeader*)m_begin - 1;
-				pAlloc->dataMemHeader = (nodeAlloced | (m_end - (char*)pAlloc));
-				m_begin = m_end = _null.begin();
+				if (cb >= AllocSizeHuge)
+					return m_hugeAlloc.allocate(cbData);
+
+				MemHeader* pAlloc = (MemHeader*)_newBlock(cb + HeaderSize);
+				pAlloc->dataMemHeader |= nodeAlloced;
 				return pAlloc + 1;
 			}
-			FreeMemHeader* pNew;
-			if (cb >= AllocSizeBig)
-			{
-				if (cb >= BlockSize)
-				{
-					if (cb >= AllocSizeHuge)
-						return m_hugeAlloc.allocate(cbData);
-
-					MemHeader* pAlloc = (MemHeader*)_newBlock(cb + HeaderSize);
-					pAlloc->dataMemHeader |= nodeAlloced;
-					return pAlloc + 1;
-				}
+			pNew = _newBlock(MemBlockSize);
+		}
+		else
+		{
+			try_gc();
+			if (m_freeList.empty() || (pNew = m_freeList.top())->getNodeSize() < cb) {
 				pNew = _newBlock(MemBlockSize);
 			}
-			else
-			{
-				try_gc();
-				if (m_freeList.empty() || (pNew = m_freeList.top())->getNodeSize() < cb) {
-					pNew = _newBlock(MemBlockSize);
-				}
-				else {
-					m_freeList.pop();
-				}
+			else {
+				m_freeList.pop();
 			}
-			_commitCurrentNode();
-			m_begin = pNew->begin();
-			m_end = pNew->end();
 		}
+		_commitCurrentNode();
+		m_begin = pNew->begin();
+		m_end = pNew->end();
 
 		BOOST_MEMORY_ASSERT((size_t)(m_end - m_begin) >= cb);
 
 		MemHeader* pAlloc = (MemHeader*)(m_end -= cb);
 		pAlloc->dataMemHeader = (nodeAlloced | cb);
 		return pAlloc + 1;
+	}
+
+public:
+	__forceinline void* BOOST_MEMORY_CALL allocate(const size_t cbData)
+	{
+		const size_t cb = BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader);
+		if ((size_t)(m_end - m_begin) >= cb)
+		{
+			MemHeader* pAlloc = (MemHeader*)(m_end -= cb);
+			pAlloc->dataMemHeader = (nodeAlloced | cb);
+			return pAlloc + 1;
+		}
+		return _do_allocate(cb, cbData);
 	}
 
 	void* BOOST_MEMORY_CALL allocate(const size_t cbData0, destructor_t fn)
@@ -516,15 +527,11 @@ public:
 		return p;
 	}
 
-	void BOOST_MEMORY_CALL deallocate(void* pData, const size_t cbData)
+	__forceinline void BOOST_MEMORY_CALL deallocate(void* pData, const size_t cbData)
 	{
 		const size_t cb = BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader);
 		
-		if (cb >= AllocSizeHuge)
-		{
-			m_hugeAlloc.deallocate(pData, cbData);
-		}
-		else
+		if (cb < AllocSizeHuge)
 		{
 			MemHeader* p = (MemHeader*)pData - 1;
 			BOOST_MEMORY_ASSERT(p->getNodeSize() >= cb);
@@ -532,6 +539,10 @@ public:
 
 			p->freeNode();
 			m_freeSize += cb;
+		}
+		else
+		{
+			m_hugeAlloc.deallocate(pData, cbData);
 		}
 	}
 

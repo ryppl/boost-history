@@ -255,69 +255,19 @@ BOOST_MEMORY_DECL_CTYPE(long);
 BOOST_MEMORY_DECL_CTYPE(unsigned long);
 
 // =========================================================================
-// operator new of GC Allocator
-
-NS_BOOST_MEMORY_BEGIN
-
-enum _alloc_flag { _theAllocFlag = 0 };
-
-NS_BOOST_MEMORY_END
-
-template <class AllocT, class Type>
-__forceinline 
-void* BOOST_MEMORY_CALL operator new(
-	size_t cb, AllocT& alloc, Type* zero, NS_BOOST_MEMORY::_alloc_flag)
-{
-	BOOST_MEMORY_ASSERT(cb == sizeof(Type));
-	typedef NS_BOOST_MEMORY::destructor_traits<Type> Traits;
-	return alloc.unmanaged_alloc(sizeof(Type), Traits::destruct);
-}
-
-template <class AllocT, class Type>
-__forceinline 
-void BOOST_MEMORY_CALL operator delete(
-	void* p, AllocT& alloc, Type* zero, NS_BOOST_MEMORY::_alloc_flag)
-{
-	// no action
-}
-
-#if defined(_DEBUG)
-
-template <class AllocT, class Type>
-__forceinline
-void* BOOST_MEMORY_CALL operator new(
-	size_t cb, AllocT& alloc, Type* zero, NS_BOOST_MEMORY::_alloc_flag,
-	const char* file, const int line)
-{
-	BOOST_MEMORY_ASSERT(cb == sizeof(Type));
-	typedef NS_BOOST_MEMORY::destructor_traits<Type> Traits;
-	return alloc.unmanaged_alloc(sizeof(Type), Traits::destruct);
-}
-
-template <class AllocT, class Type>
-__forceinline 
-void BOOST_MEMORY_CALL operator delete(
-	void* p, AllocT& alloc, Type* zero, NS_BOOST_MEMORY::_alloc_flag,
-	const char* file, const int line)
-{
-	// no action
-}
-
-#endif
-
-#if defined(_DEBUG)
-#define BOOST_MEMORY_FILE_LINE_ARG	, __FILE__, __LINE__
-#else
-#define BOOST_MEMORY_FILE_LINE_ARG
-#endif
-
-#define BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)	\
-	::new((alloc), (Type*)0, NS_BOOST_MEMORY::_theAllocFlag BOOST_MEMORY_FILE_LINE_ARG) Type
-
-// =========================================================================
 // NEW, NEW_ARRAY, ALLOC, ALLOC_ARRAY
 
 NS_BOOST_MEMORY_BEGIN
+
+class _unmanaged
+{
+public:
+	template <class Type>
+	__forceinline Type* BOOST_MEMORY_CALL operator->*(Type* p) const
+	{
+		return p;
+	}
+};
 
 template <class AllocT>
 class _managed
@@ -335,29 +285,26 @@ public:
 	}
 };
 
-class _unmanaged
-{
-public:
-	template <class Type>
-	__forceinline Type* BOOST_MEMORY_CALL operator->*(Type* p) const
-	{
-		return p;
-	}
-};
-
-template <class AllocT>
-__forceinline _managed<AllocT> BOOST_MEMORY_CALL _get_managed(AllocT& alloc, destructor_t fn)
-{
-	return _managed<AllocT>(alloc);
-}
-
 template <class AllocT>
 __forceinline _unmanaged BOOST_MEMORY_CALL _get_managed(AllocT& alloc, int fnZero)
 {
 	return _unmanaged();
 }
 
+template <class AllocT>
+__forceinline 
+_managed<AllocT> BOOST_MEMORY_CALL _get_managed(AllocT& alloc, destructor_t fn)
+{
+	return _managed<AllocT>(alloc);
+}
+
 NS_BOOST_MEMORY_END
+
+#if defined(_DEBUG)
+#define BOOST_MEMORY_FILE_LINE_ARG	, __FILE__, __LINE__
+#else
+#define BOOST_MEMORY_FILE_LINE_ARG
+#endif
 
 #define BOOST_MEMORY_NEW_ARG(Type)		sizeof(Type), NS_BOOST_MEMORY::destructor_traits<Type>::destruct
 #define BOOST_MEMORY_DBG_NEW_ARG(Type)	BOOST_MEMORY_NEW_ARG(Type) BOOST_MEMORY_FILE_LINE_ARG
@@ -366,6 +313,10 @@ NS_BOOST_MEMORY_END
 #define BOOST_MEMORY_DBG_ALLOC_ARG(Type)				sizeof(Type) BOOST_MEMORY_FILE_LINE_ARG
 #define BOOST_MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)	sizeof(Type)*(count) BOOST_MEMORY_FILE_LINE_ARG
 
+#define BOOST_MEMORY_ALLOC(alloc, Type)					((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARG(Type)))
+#define BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)	((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
+#define BOOST_MEMORY_NEW_ARRAY(alloc, Type, count) 		(alloc).newArray(BOOST_MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
+
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 //
 // Backard options:
@@ -373,17 +324,19 @@ NS_BOOST_MEMORY_END
 //
 #define BOOST_MEMORY_NEW(alloc, Type)					\
 	::new((alloc).allocate(BOOST_MEMORY_DBG_NEW_ARG(Type))) Type
+
 #else
+
+#define BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)			\
+	::new((alloc).unmanaged_alloc(BOOST_MEMORY_NEW_ARG(Type))) Type
+
 #define BOOST_MEMORY_GET_MANAGED_(alloc, Type)			\
 	NS_BOOST_MEMORY::_get_managed(alloc, NS_BOOST_MEMORY::destructor_traits<Type>::destruct)
+
 #define BOOST_MEMORY_NEW(alloc, Type)					\
 	BOOST_MEMORY_GET_MANAGED_(alloc, Type) ->* BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)
+
 #endif
-
-#define BOOST_MEMORY_NEW_ARRAY(alloc, Type, count) 		(alloc).newArray(BOOST_MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
-
-#define BOOST_MEMORY_ALLOC(alloc, Type)					((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARG(Type)))
-#define BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)	((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
 
 // =========================================================================
 
