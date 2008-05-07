@@ -33,7 +33,7 @@
 \begin{center}
 \huge
 Core Concepts for the C++0x Standard Library\\
-(Revision 1)
+(Revision 2)
 \vspace{0.25in}
 
 \normalsize
@@ -45,8 +45,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{0.25in}
-\par\noindent Document number: N2572=08-0082\vspace{-6pt}
-\par\noindent Revises document number: N2502=08-0012\vspace{-6pt}
+\par\noindent Document number: NNNNN=08-XXXX\vspace{-6pt}
+\par\noindent Revises document number: N2572=08-0082\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -69,10 +69,10 @@ strike-through when possible}.
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
 
-\paragraph*{Changes from N2502}
+\paragraph*{Changes from N2572}
 \begin{itemize}
-\item Applied the proposed resolutions for concept issues 1, 3, 4, 6,
-  9, 10, 12, 14, and 17.
+\item Added the \tcode{Has*Assign} concepts, which are required by
+  \tcode{valarray} and friends.
 \end{itemize}
 
 \end{titlepage}
@@ -210,6 +210,16 @@ namespace std {
   auto concept Dereferenceable<typename T> @\textit{see below}@;
   auto concept Addressable<typename T> @\textit{see below}@;
   auto concept Callable<typename F, typename... Args> @\textit{see below}@;
+  auto concept HasPlusAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasMinusAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasMultiplyAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasDivideAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasModulusAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasBitAndAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasBitOrAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasBitXorAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasLeftShiftAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasRightShiftAssign<typename T, typename U = T> @\textit{see below}@;
 
   // \ref{concept.arithmetic}, arithmetic concepts:
   concept ArithmeticLike<typename T> @\textit{see below}@;
@@ -1149,6 +1159,126 @@ auto concept Callable<typename F, typename... Args> {
 \pnum 
 \addedConcepts{\mbox{\reallynote} describes function object types 
 callable given arguments of types \mbox{\tcode{Args...}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasPlusAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator+=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$+=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasMinusAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator-=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$-=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasMultiplyAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator*=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$*=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasDivideAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator/=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$/=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasModulusAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator%=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$\%=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasBitAndAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator&=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$\&=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasBitOrAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator|=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$|=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasBitXorAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator^=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator\^=}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLeftShiftAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator<<=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$<<=$}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasRightShiftAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type operator>>=(T&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator$>>=$}}.
 \end{itemdescr}
 
 \rSec2[concept.arithmetic]{Arithmetic concepts}
