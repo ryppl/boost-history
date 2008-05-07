@@ -12,12 +12,12 @@
 #ifndef BOOST_DETAIL_LOG_HPP
 #define BOOST_DETAIL_LOG_HPP
 
-#if !defined(_INC_STDIO) && !defined(_STDIO_H)
-#include <stdio.h> // vprintf, vfprintf
+#if !defined(_CSTDIO_) && !defined(_CSTDIO)
+#include <cstdio> // vprintf, vfprintf
 #endif
 
-#if !defined(_INC_STDARG) && !defined(_STDARG_H)
-#include <stdarg.h> // va_list
+#if !defined(_CSTDARG_) && !defined(_CSTDARG)
+#include <cstdarg> // va_list
 #endif
 
 // -------------------------------------------------------------------------

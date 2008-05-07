@@ -26,10 +26,6 @@
 #include <malloc.h>	// _alloca
 #endif
 
-#if defined(_MSC_VER) && !defined(_INC_CRTDBG)
-#include <crtdbg.h> // _CrtSetDbgFlag
-#endif
-
 #ifndef BOOST_DETAIL_DEBUG_HPP
 #include <boost/detail/debug.hpp>
 #endif

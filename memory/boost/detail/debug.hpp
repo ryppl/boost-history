@@ -12,6 +12,10 @@
 #ifndef BOOST_DETAIL_DEBUG_HPP
 #define BOOST_DETAIL_DEBUG_HPP
 
+#if defined(_MSC_VER) && !defined(_INC_CRTDBG)
+#include <crtdbg.h> // _CrtSetDbgFlag, _ASSERTE
+#endif
+
 // -------------------------------------------------------------------------
 // BOOST_DETAIL_ASSERT - diagnost
 

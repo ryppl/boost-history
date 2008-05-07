@@ -12,6 +12,10 @@
 #ifndef BOOST_DETAIL_PERFORMANCE_COUNTER_HPP
 #define BOOST_DETAIL_PERFORMANCE_COUNTER_HPP
 
+#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
+#include <boost/detail/winapi/winbase.h>
+#endif
+
 #ifndef BOOST_DETAIL_LOG_HPP
 #include "log.hpp"
 #endif
