@@ -458,36 +458,36 @@ namespace std {
     @\addedCC{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 
     // \ref{valarray.cassign} computed assignment:
-    valarray<T>& operator*= (const T&);
-    valarray<T>& operator/= (const T&);
-    valarray<T>& operator%= (const T&);
-    valarray<T>& operator+= (const T&);
-    valarray<T>& operator-= (const T&);
-    valarray<T>& operator^= (const T&);
-    valarray<T>& operator&= (const T&);
-    valarray<T>& operator|= (const T&);
-    valarray<T>& operator<<=(const T&);
-    valarray<T>& operator>>=(const T&);
+    @\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
+    @\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
+    @\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
+    @\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
+    @\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
+    @\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
+    @\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
+    @\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
+    @\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
+    @\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
 
-    valarray<T>& operator*= (const valarray<T>&);
-    valarray<T>& operator/= (const valarray<T>&);
-    valarray<T>& operator%= (const valarray<T>&);
-    valarray<T>& operator+= (const valarray<T>&);
-    valarray<T>& operator-= (const valarray<T>&);
-    valarray<T>& operator^= (const valarray<T>&);
-    valarray<T>& operator|= (const valarray<T>&);
-    valarray<T>& operator&= (const valarray<T>&);
-    valarray<T>& operator<<=(const valarray<T>&);
-    valarray<T>& operator>>=(const valarray<T>&);
+    @\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
+    @\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
+    @\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
+    @\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
+    @\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
+    @\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
+    @\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
+    @\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
+    @\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
+    @\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
 
     // \ref{valarray.members} member functions:
     @\addedD{void swap(valarray\&\&);}@
 
     size_t size() const;
 
-    T    sum() const;
-    T    min() const;
-    T    max() const;
+    @\addedCC{requires HasPlusAssign<T>}@      T    sum() const;
+    @\addedCC{requires LessThanComparable<T>}@ T    min() const;
+    @\addedCC{requires LessThanComparable<T>}@ T    max() const;
 
     valarray<T> shift (int) const;
     valarray<T> cshift(int) const;
@@ -895,25 +895,25 @@ applying the indicated operator to the corresponding element of the array.
 \index{operator<<=@\tcode{operator\shl=}!valarray@\tcode{valarray}}%
 \index{operator>>=@\tcode{operator\shr=}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-valarray<T>& operator*= (const valarray<T>&);
-valarray<T>& operator/= (const valarray<T>&);
-valarray<T>& operator%= (const valarray<T>&);
-valarray<T>& operator+= (const valarray<T>&);
-valarray<T>& operator-= (const valarray<T>&);
-valarray<T>& operator^= (const valarray<T>&);
-valarray<T>& operator&= (const valarray<T>&);
-valarray<T>& operator|= (const valarray<T>&);
-valarray<T>& operator<<=(const valarray<T>&);
-valarray<T>& operator>>=(const valarray<T>&);
+@\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
+@\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
+@\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
+@\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
+@\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
+@\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
+@\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
+@\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
+@\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
+@\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied.
 Each of these operators
 performs the indicated operation on each of its elements and the
-corresponding element of the argument array.
+corresponding element of the argument array.}
 
 \pnum
 The array is then returned by reference.
@@ -932,22 +932,22 @@ hand side, the resulting behavior is undefined.
 \end{itemdescr}
 
 \begin{itemdecl}
-valarray<T>& operator*= (const T&);
-valarray<T>& operator/= (const T&);
-valarray<T>& operator%= (const T&);
-valarray<T>& operator+= (const T&);
-valarray<T>& operator-= (const T&);
-valarray<T>& operator^= (const T&);
-valarray<T>& operator&= (const T&);
-valarray<T>& operator|= (const T&);
-valarray<T>& operator<<=(const T&);
-valarray<T>& operator>>=(const T&);
+@\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
+@\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
+@\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
+@\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
+@\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
+@\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
+@\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
+@\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
+@\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
+@\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
-to which the indicated operator can be applied.
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+to which the indicated operator can be applied.}
 
 \pnum
 Each of these operators applies the indicated operation to each element
@@ -993,13 +993,13 @@ This function returns the number of elements in the array.
 
 \index{sum@\tcode{sum}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-T sum() const;
+@\addedCC{requires HasPlusAssign<T>}@ T sum() const;
 \end{itemdecl}
 
 \begin{itemdescr}
-This function may only be instantiated for a type \farg{T}\ to which
-\tcode{operator+=}\
-can be applied.
+\removedCC{This function may only be instantiated for a type \mbox{\farg{T}}\ to which
+\mbox{\tcode{operator+=}}\
+can be applied.}
 This function returns the sum of all the elements of the array.
 
 \pnum
@@ -1017,7 +1017,7 @@ all other elements of the array in an unspecified order.%
 
 \index{min@\tcode{min}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-T min() const;
+@\addedCC{requires LessThanComparable<T>}@ T min() const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1034,7 +1034,7 @@ lengths, the determination is made using
 
 \index{max@\tcode{max}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-T max() const;
+@\addedCC{requires LessThanComparable<T>}@ T max() const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1469,108 +1469,32 @@ template <class T>
 
 \rSec2[class.slice]{Class \tcode{slice}}
 
-\index{slice@\tcode{slice}}%
-\begin{codeblock}
-namespace std {
-  class slice {
-  public:
-    slice();
-    slice(size_t, size_t, size_t);
-
-    size_t start() const;
-    size_t size() const;
-    size_t stride() const;
-  };
-}
-\end{codeblock}
-
-\pnum
-The
-\tcode{slice}\
-class represents a BLAS-like slice from an array.
-Such a slice is specified by a starting index, a length, and a stride.%
-\footnote{
-BLAS stands for
-\textit{Basic Linear Algebra Subprograms.}\ 
-\Cpp\ programs may instantiate this class.
-See, for example,
-Dongarra, Du Croz, Duff, and Hammerling:
-\textit{A set of Level 3 Basic Linear Algebra Subprograms};
-Technical Report MCS-P1-0888,
-Argonne National Laboratory (USA),
-Mathematics and Computer Science Division,
-August, 1988.
-}
-
-\rSec3[cons.slice]{\tcode{slice}\ constructors}
-
-\index{slice@\tcode{slice}!\tcode{slice}}%
-\begin{itemdecl}
-slice();
-slice(size_t @\farg{start}@, size_t @\farg{length}@, size_t @\farg{stride}@);
-slice(const slice&);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\changedD{The default constructor for
-\mbox{\tcode{slice}}
-creates a
-\mbox{\tcode{slice}}
-which specifies no elements.}
-{The default constructor is equivalent to \mbox{\tcode{slice(0, 0, 0)}}.}
-A default constructor is provided only to permit the declaration of arrays of slices.
-The constructor with arguments for a slice takes a start, length, and stride
-parameter.
-
-\pnum
-\enterexample\ 
-\tcode{slice(3, 8, 2)}\
-constructs a slice which selects elements 3, 5, 7, ... 17 from an array.
-\exitexample\ 
-\end{itemdescr}
-
-\rSec3[slice.access]{\tcode{slice}\ access functions}
-\index{start@\tcode{start}!\tcode{slice}}%
-\index{size@\tcode{size}!\tcode{slice}}%
-\index{stride@\tcode{stride}!\tcode{slice}}%
-\begin{itemdecl}
-size_t start() const;
-size_t size() const;
-size_t stride() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-These functions return the start, length, or stride specified by a
-\tcode{slice}\ object.
-\end{itemdescr}
-
 \rSec2[template.slice.array]{Class template \tcode{slice_array}}
 
 \index{slice_array@\tcode{slice_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> class slice_array {
+  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  class slice_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    void operator*= (const valarray<T>&) const;
-    void operator/= (const valarray<T>&) const;
-    void operator%= (const valarray<T>&) const;
-    void operator+= (const valarray<T>&) const;
-    void operator-= (const valarray<T>&) const;
-    void operator^= (const valarray<T>&) const;
-    void operator&= (const valarray<T>&) const;
-    void operator|= (const valarray<T>&) const;
-    void operator<<=(const valarray<T>&) const;
-    void operator>>=(const valarray<T>&) const;
+    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     slice_array(const slice_array&);
    ~slice_array();
     slice_array& operator=(const slice_array&);
-	void operator=(const T&) const;
+    void operator=(const T&) const;
   private:
     slice_array();
   };
@@ -1651,16 +1575,16 @@ object refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{slice_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{slice_array}}%
 \begin{itemdecl}
-void operator*= (const valarray<T>&) const;
-void operator/= (const valarray<T>&) const;
-void operator%= (const valarray<T>&) const;
-void operator+= (const valarray<T>&) const;
-void operator-= (const valarray<T>&) const;
-void operator^= (const valarray<T>&) const;
-void operator&= (const valarray<T>&) const;
-void operator|= (const valarray<T>&) const;
-void operator<<=(const valarray<T>&) const;
-void operator>>=(const valarray<T>&) const;
+@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1693,178 +1617,27 @@ object refers.
 
 \rSec2[class.gslice]{The \tcode{gslice}\ class}
 
-\index{gslice@\tcode{gslice}!class}%
-\begin{codeblock}
-namespace std {
-  class gslice {
-  public:
-    gslice();
-    gslice(size_t s, const valarray<size_t>& l, const valarray<size_t>& d);
-
-    size_t           start() const;
-    valarray<size_t> size() const;
-    valarray<size_t> stride() const;
-  };
-}
-\end{codeblock}
-
-\pnum
-This class represents a generalized slice out of an array.
-A
-\tcode{gslice}\
-is defined by a starting offset ($s$),
-a set of lengths ($l_j$),
-and a set of strides ($d_j$).
-The number of lengths shall equal the number of strides.
-
-\pnum
-A
-\tcode{gslice}\
-represents a mapping from a set of indices ($i_j$),
-equal in number to the number of strides, to a single index $k$.
-It is useful for building multidimensional array classes using
-the
-\tcode{valarray}\
-template, which is one-dimensional.
-The set of one-dimensional index values specified by a
-\tcode{gslice}\
-are $$k = s + \sum_ji_jd_j$$
-% \$k = s + sum from j \{ i sub j d sub j \}\$
-where the multidimensional indices $i_j$ range in value from
-0 to $l_{ij} - 1$.
-
-\pnum
-\enterexample\ 
-The
-\tcode{gslice}\
-specification
-\begin{codeblock}
-start  = 3
-length = {2, 4, 3}
-stride = {19, 4, 1}
-
-\end{codeblock}
-yields the sequence of one-dimensional indices
-
-$$k = 3 + (0,1) \times 19 + (0,1,2,3) \times 4 + (0,1,2) \times 1$$
-
-which are ordered as shown in the following table:
-
-\begin{tabbing}
-\hspace{.5in}\=\hspace{.4in}\=\kill%
-\>$(i_0,\quad i_1,\quad i_2,\quad k)\quad =$\\
-\>\>$(0,\quad 0,\quad 0,\quad 3$),		\\
-\>\>$(0,\quad 0,\quad 1,\quad 4$),		\\
-\>\>$(0,\quad 0,\quad 2,\quad 5$),		\\
-\>\>$(0,\quad 1,\quad 0,\quad 7$),		\\
-\>\>$(0,\quad 1,\quad 1,\quad 8$),		\\
-\>\>$(0,\quad 1,\quad 2,\quad 9$),		\\
-\>\>$(0,\quad 2,\quad 0,\quad 11$),	\\
-\>\>$(0,\quad 2,\quad 1,\quad 12$),	\\
-\>\>$(0,\quad 2,\quad 2,\quad 13$),	\\
-\>\>$(0,\quad 3,\quad 0,\quad 15$),	\\
-\>\>$(0,\quad 3,\quad 1,\quad 16$),	\\
-\>\>$(0,\quad 3,\quad 2,\quad 17$),	\\
-\>\>$(1,\quad 0,\quad 0,\quad 22$),	\\
-\>\>$(1,\quad 0,\quad 1,\quad 23$),	\\
-\>\>$\ldots$			\\
-\>\>$(1,\quad 3,\quad 2,\quad 36$)
-\end{tabbing}
-
-That is, the highest-ordered index turns fastest.
-\exitexample\ 
-
-\pnum
-It is possible to have degenerate generalized slices in which an address
-is repeated.
-
-\pnum
-\enterexample\ 
-If the stride parameters in the previous
-example are changed to \{1, 1, 1\}, the first few elements of the
-resulting sequence of indices will be
-
-\begin{tabbing}
-\hspace{.9in}\=\kill%
-\>$(0,\quad 0,\quad 0,\quad 3$),	\\
-\>$(0,\quad 0,\quad 1,\quad 4$),	\\
-\>$(0,\quad 0,\quad 2,\quad 5$),	\\
-\>$(0,\quad 1,\quad 0,\quad 4$),	\\
-\>$(0,\quad 1,\quad 1,\quad 5$),	\\
-\>$(0,\quad 1,\quad 2,\quad 6$),	\\
-\>$\ldots$
-\end{tabbing}
-\exitexample\ 
-
-\pnum
-If a degenerate slice is used as the argument to the
-non-\tcode{const}
-version of
-\tcode{operator[](const gslice\&)},
-the resulting behavior is undefined.
-\index{undefined}%
-
-\rSec3[gslice.cons]{\tcode{gslice}\ constructors}
-
-\index{gslice@\tcode{gslice}!\tcode{gslice}}%
-\begin{itemdecl}
-gslice();
-gslice(size_t @\farg{start}@, const valarray<size_t>& @\farg{lengths}@,
-			   const valarray<size_t>& @\farg{strides}@);
-gslice(const gslice&);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\changedD{The default constructor creates a
-\mbox{\tcode{gslice}}
-which specifies no elements.}
-{The default constructor is equivalent to
-\mbox{\tcode{gslice(0, valarray<size_t>(), valarray<size_t>())}}.}
-The constructor with arguments builds a
-\tcode{gslice}\
-based on a specification of start, lengths, and strides, as explained
-in the previous section.
-\end{itemdescr}
-
-\rSec3[gslice.access]{\tcode{gslice}\ access functions}
-
-\index{start@\tcode{start}!\tcode{gslice}}%
-\index{size@\tcode{size}!\tcode{gslice}}%
-\index{stride@\tcode{stride}!\tcode{gslice}}%
-\begin{itemdecl}
-size_t           start()  const;
-valarray<size_t> size() const;
-valarray<size_t> stride() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-These access functions return the representation of the start, lengths, or
-strides specified for the
-\tcode{gslice}.
-\end{itemdescr}
-
 \rSec2[template.gslice.array]{Class template \tcode{gslice_array}}
 
 \index{gslice_array@\tcode{gslice_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> class gslice_array {
+  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  class gslice_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    void operator*= (const valarray<T>&) const;
-    void operator/= (const valarray<T>&) const;
-    void operator%= (const valarray<T>&) const;
-    void operator+= (const valarray<T>&) const;
-    void operator-= (const valarray<T>&) const;
-    void operator^= (const valarray<T>&) const;
-    void operator&= (const valarray<T>&) const;
-    void operator|= (const valarray<T>&) const;
-    void operator<<=(const valarray<T>&) const;
-    void operator>>=(const valarray<T>&) const;
+    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     gslice_array(const gslice_array&);
    ~gslice_array();
@@ -1947,16 +1720,16 @@ refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{gslice_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{gslice_array}}%
 \begin{itemdecl}
-void operator*= (const valarray<T>&) const;
-void operator/= (const valarray<T>&) const;
-void operator%= (const valarray<T>&) const;
-void operator+= (const valarray<T>&) const;
-void operator-= (const valarray<T>&) const;
-void operator^= (const valarray<T>&) const;
-void operator&= (const valarray<T>&) const;
-void operator|= (const valarray<T>&) const;
-void operator<<=(const valarray<T>&) const;
-void operator>>=(const valarray<T>&) const;
+@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1992,21 +1765,22 @@ object refers.
 \index{mask_array@\tcode{mask_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> class mask_array {
+  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  class mask_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    void operator*= (const valarray<T>&) const;
-    void operator/= (const valarray<T>&) const;
-    void operator%= (const valarray<T>&) const;
-    void operator+= (const valarray<T>&) const;
-    void operator-= (const valarray<T>&) const;
-    void operator^= (const valarray<T>&) const;
-    void operator&= (const valarray<T>&) const;
-    void operator|= (const valarray<T>&) const;
-    void operator<<=(const valarray<T>&) const;
-    void operator>>=(const valarray<T>&) const;
+    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     mask_array(const mask_array&);
    ~mask_array();
@@ -2084,16 +1858,16 @@ object to which it refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{mask_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{mask_array}}%
 \begin{itemdecl}
-void operator*= (const valarray<T>&) const;
-void operator/= (const valarray<T>&) const;
-void operator%= (const valarray<T>&) const;
-void operator+= (const valarray<T>&) const;
-void operator-= (const valarray<T>&) const;
-void operator^= (const valarray<T>&) const;
-void operator&= (const valarray<T>&) const;
-void operator|= (const valarray<T>&) const;
-void operator<<=(const valarray<T>&) const;
-void operator>>=(const valarray<T>&) const;
+@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2127,21 +1901,22 @@ object refers.
 \index{indirect_array@\tcode{indirect_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> class indirect_array {
+  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  class indirect_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    void operator*= (const valarray<T>&) const;
-    void operator/= (const valarray<T>&) const;
-    void operator%= (const valarray<T>&) const;
-    void operator+= (const valarray<T>&) const;
-    void operator-= (const valarray<T>&) const;
-    void operator^= (const valarray<T>&) const;
-    void operator&= (const valarray<T>&) const;
-    void operator|= (const valarray<T>&) const;
-    void operator<<=(const valarray<T>&) const;
-    void operator>>=(const valarray<T>&) const;
+    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     indirect_array(const indirect_array&);
    ~indirect_array();
@@ -2238,16 +2013,16 @@ indirection.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{indirect_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{indirect_array}}%
 \begin{itemdecl}
-void operator*= (const valarray<T>&) const;
-void operator/= (const valarray<T>&) const;
-void operator%= (const valarray<T>&) const;
-void operator+= (const valarray<T>&) const;
-void operator-= (const valarray<T>&) const;
-void operator^= (const valarray<T>&) const;
-void operator&= (const valarray<T>&) const;
-void operator|= (const valarray<T>&) const;
-void operator<<=(const valarray<T>&) const;
-void operator>>=(const valarray<T>&) const;
+@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
