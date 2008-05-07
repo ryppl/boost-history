@@ -35,6 +35,10 @@ NS_BOOST_MEMORY_BEGIN
 #define BOOST_MEMORY_TRACE_GC
 #endif
 
+#ifndef BOOST_MEMORY_ALIGN
+#define BOOST_MEMORY_ALIGN(x, y) (((x)+((y)-1)) & ~((y)-1))
+#endif
+
 #ifndef MAX
 #define MAX(a, b)		((a) < (b) ? (b) : (a))
 #endif
@@ -49,7 +53,7 @@ class gen_alloc
 private:
 	typedef typename PolicyT::allocator_type AllocT;
 	typedef typename PolicyT::huge_gc_allocator HugeGCAllocT;
-	typedef size_t HeaderSizeT;
+	typedef unsigned HeaderSizeT;
 
 public:
 	enum { MemBlockSize = PolicyT::MemBlockSize };
@@ -60,17 +64,42 @@ public:
 
 #pragma pack(1)
 private:
+	enum { NodeSizeBits = 30 };
 	enum MemNodeType {
-		nodeFree = 0,
-		nodeAlloced = 1,
-		nodeAllocedWithDestructor = 3,
+		nodeFree = 0 << NodeSizeBits,
+		nodeAlloced = 1 << NodeSizeBits,
+		nodeAllocedWithDestructor = 3 << NodeSizeBits,
+	};
+	enum {
+		NodeTypeMask = 3 << NodeSizeBits,
+		NodeSizeMask = (1 << NodeSizeBits) - 1,
 	};
 	
 	struct MemHeader
 	{
-		HeaderSizeT cbNodeSize : 30; // cbNodeSize = cbSize + sizeof(MemHeader)
-		HeaderSizeT nodeType : 2;
+		HeaderSizeT dataMemHeader;
+		// HeaderSizeT cbNodeSize : 30; // cbNodeSize = cbSize + sizeof(MemHeader)
+		// HeaderSizeT nodeType : 2;	// enum MemNodeType
+		
+		HeaderSizeT BOOST_MEMORY_CALL getNodeType() const {
+			return NodeTypeMask & dataMemHeader;
+		}
+		HeaderSizeT BOOST_MEMORY_CALL getNodeSize() const {
+			return NodeSizeMask & dataMemHeader;
+		}
+		char* BOOST_MEMORY_CALL begin() const {
+			return (char*)this + sizeof(MemHeader);
+		}
+		char* BOOST_MEMORY_CALL end() const {
+			BOOST_MEMORY_ASSERT(getNodeType() == nodeFree);
+			return (char*)this + dataMemHeader;
+		}
+		void BOOST_MEMORY_CALL freeNode() {
+			dataMemHeader &= ~NodeTypeMask;
+		}
 	};
+
+	typedef MemHeader FreeMemHeader;
 
 	struct MemHeaderEx;
 	struct DestroyInfo
@@ -79,37 +108,21 @@ private:
 		destructor_t fnDestroy;
 	};
 
-	struct MemHeaderEx // = MemHeader + DestroyInfo
+	struct MemHeaderEx : public MemHeader
 	{
-		HeaderSizeT cbNodeSize : 30;
-		HeaderSizeT nodeType : 2;
-		
 		MemHeaderEx* pPrev;
 		destructor_t fnDestroy;
 
 		void BOOST_MEMORY_CALL destruct() {
-			if (nodeType == nodeAllocedWithDestructor) {
-				nodeType = nodeFree;
+			if (getNodeType() == nodeAllocedWithDestructor) {
+				freeNode();
 				fnDestroy(this + 1);
 			}
 		}
 	};
 
+	friend struct MemHeader;
 	friend struct MemHeaderEx;
-
-	struct FreeMemHeader
-	{
-		HeaderSizeT cbNodeSize;
-		HeaderSizeT BOOST_MEMORY_CALL getNodeType() const {
-			return ((MemHeader*)this)->nodeType;
-		}
-		char* BOOST_MEMORY_CALL begin() const {
-			return (char*)this + sizeof(FreeMemHeader);
-		}
-		char* BOOST_MEMORY_CALL end() const {
-			return (char*)this + cbNodeSize;
-		}
-	};
 
 	struct MemBlock
 	{
@@ -135,7 +148,7 @@ private:
 			}
 			MemHeader* BOOST_MEMORY_CALL next() {
 				BOOST_MEMORY_ASSERT(!done());
-				m_start += ((MemHeader*)m_start)->cbNodeSize;
+				m_start += ((MemHeader*)m_start)->getNodeSize();
 				return (MemHeader*)m_start;
 			}
 			bool BOOST_MEMORY_CALL done() const {
@@ -148,7 +161,7 @@ private:
 	struct Pred : std::binary_function<FreeMemHeader*, FreeMemHeader*, bool>
 	{
 		bool operator()(FreeMemHeader* a, FreeMemHeader* b) const {
-			return a->cbNodeSize < b->cbNodeSize;
+			return a->dataMemHeader < b->dataMemHeader;
 		}
 	};
 	typedef std::vector<FreeMemHeader*> Container;
@@ -166,6 +179,7 @@ private:
 
 private:
 	enum { HeaderSize = sizeof(void*) };
+	enum { AlignSize = sizeof(HeaderSizeT) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
 	enum { AllocSizeBigDef_ = MAX(PolicyT::AllocSizeBig, BlockSize/4) };
 	enum { AllocSizeHugeDef_ = MAX(PolicyT::AllocSizeHuge, 64*1024) };
@@ -187,20 +201,20 @@ private:
 	{
 		MemHeaderEx* node = (MemHeaderEx*)obj - 1;
 		BOOST_MEMORY_ASSERT(node->fnDestroy == fn);
-		BOOST_MEMORY_ASSERT(_isEqual(node->cbNodeSize, cb + sizeof(MemHeaderEx)));
-		BOOST_MEMORY_ASSERT(node->nodeType == nodeAllocedWithDestructor);
+		BOOST_MEMORY_ASSERT(_isEqual(node->getNodeSize(), cb + sizeof(MemHeaderEx)));
+		BOOST_MEMORY_ASSERT(node->getNodeType() == nodeAllocedWithDestructor);
 		return node->fnDestroy == fn &&
-			_isEqual(node->cbNodeSize, cb + sizeof(MemHeaderEx)) &&
-			node->nodeType == nodeAllocedWithDestructor;
+			_isEqual(node->getNodeSize(), cb + sizeof(MemHeaderEx)) &&
+			node->getNodeType() == nodeAllocedWithDestructor;
 	}
 
 	static bool BOOST_MEMORY_CALL _isValid(void* obj, size_t cb, int fnZero)
 	{
 		MemHeader* node = (MemHeader*)obj - 1;
-		BOOST_MEMORY_ASSERT(_isEqual(node->cbNodeSize, sizeof(MemHeader) + cb));
-		BOOST_MEMORY_ASSERT(node->nodeType == nodeAlloced);
-		return _isEqual(node->cbNodeSize, sizeof(MemHeader) + cb) &&
-			node->nodeType == nodeAlloced;
+		BOOST_MEMORY_ASSERT(_isEqual(node->getNodeSize(), sizeof(MemHeader) + cb));
+		BOOST_MEMORY_ASSERT(node->getNodeType() == nodeAlloced);
+		return _isEqual(node->getNodeSize(), sizeof(MemHeader) + cb) &&
+			node->getNodeType() == nodeAlloced;
 	}
 
 	template <class Type>
@@ -264,9 +278,9 @@ public:
 						FreeMemHeader* it2 = (FreeMemHeader*)coll.next();
 						if (coll.done() || it2->getNodeType() != nodeFree)
 							break;
-						it->cbNodeSize += it2->cbNodeSize;
+						it->dataMemHeader += it2->dataMemHeader;
 					}
-					if (it->cbNodeSize >= RecycleSizeMin)
+					if (it->dataMemHeader >= RecycleSizeMin)
 						m_freeList.push(it);
 					if (coll.done())
 						break;
@@ -302,7 +316,7 @@ private:
 		while (m_destroyCount)
 		{
 			MemHeaderEx* curr = *pp;
-			if (curr->nodeType == nodeFree) {
+			if (curr->getNodeType() == nodeFree) {
 				*pp = curr->pPrev;
 				--m_destroyCount;
 			}
@@ -320,7 +334,7 @@ private:
 			pNode->getNodeType() == nodeAlloced &&
 			_null.begin() == m_begin && m_begin == m_end);
 		
-		pNode->cbNodeSize = sizeof(FreeMemHeader) + (m_end - m_begin);
+		pNode->dataMemHeader = sizeof(FreeMemHeader) + (m_end - m_begin);
 	}
 
 	FreeMemHeader* BOOST_MEMORY_CALL _newBlock(size_t cbBlock)
@@ -330,7 +344,7 @@ private:
 		m_blockList = pBlock;
 
 		FreeMemHeader* pNew = (FreeMemHeader*)pBlock->buffer;
-		pNew->cbNodeSize = m_alloc.alloc_size(pBlock) - HeaderSize;
+		pNew->dataMemHeader = m_alloc.alloc_size(pBlock) - HeaderSize;
 		return pNew;
 	}
 
@@ -400,16 +414,15 @@ public:
 		m_destroyCount = 0;
 	}
 
-	void* BOOST_MEMORY_CALL allocate(size_t cbData)
+	void* BOOST_MEMORY_CALL allocate(const size_t cbData)
 	{
-		const size_t cb = cbData + sizeof(MemHeader);
+		const size_t cb = BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader);
 		if ((size_t)(m_end - m_begin) < cb)
 		{
 			if ((size_t)(m_end - m_begin) >= cbData)
 			{
 				MemHeader* pAlloc = (MemHeader*)m_begin - 1;
-				pAlloc->nodeType = nodeAlloced;
-				pAlloc->cbNodeSize = m_end - (char*)pAlloc;
+				pAlloc->dataMemHeader = (nodeAlloced | (m_end - (char*)pAlloc));
 				m_begin = m_end = _null.begin();
 				return pAlloc + 1;
 			}
@@ -422,7 +435,7 @@ public:
 						return m_hugeAlloc.allocate(cbData);
 
 					MemHeader* pAlloc = (MemHeader*)_newBlock(cb + HeaderSize);
-					pAlloc->nodeType = nodeAlloced;
+					pAlloc->dataMemHeader |= nodeAlloced;
 					return pAlloc + 1;
 				}
 				pNew = _newBlock(MemBlockSize);
@@ -430,7 +443,7 @@ public:
 			else
 			{
 				try_gc();
-				if (m_freeList.empty() || (pNew = m_freeList.top())->cbNodeSize < cb) {
+				if (m_freeList.empty() || (pNew = m_freeList.top())->getNodeSize() < cb) {
 					pNew = _newBlock(MemBlockSize);
 				}
 				else {
@@ -445,21 +458,21 @@ public:
 		BOOST_MEMORY_ASSERT((size_t)(m_end - m_begin) >= cb);
 
 		MemHeader* pAlloc = (MemHeader*)(m_end -= cb);
-		pAlloc->nodeType = nodeAlloced;
-		pAlloc->cbNodeSize = cb;
+		pAlloc->dataMemHeader = (nodeAlloced | cb);
 		return pAlloc + 1;
 	}
 
-	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
+	void* BOOST_MEMORY_CALL allocate(const size_t cbData0, destructor_t fn)
 	{
-		const size_t cbAlloc = cb + sizeof(MemHeaderEx);
+		const size_t cbData = sizeof(DestroyInfo) + cbData0;
+		const size_t cbAlloc = BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader);
 		if (cbAlloc >= AllocSizeHuge)
-			return m_hugeAlloc.allocate(cb, fn);
+			return m_hugeAlloc.allocate(cbData0, fn);
 		
-		MemHeaderEx* pNode = (MemHeaderEx*)((char*)allocate(sizeof(DestroyInfo) + cb) - sizeof(MemHeader));
+		MemHeaderEx* pNode = (MemHeaderEx*)((char*)allocate(cbData) - sizeof(MemHeader));
 		pNode->fnDestroy = fn;
 		pNode->pPrev = m_destroyChain;
-		pNode->nodeType = nodeAllocedWithDestructor;
+		pNode->dataMemHeader |= nodeAllocedWithDestructor;
 		m_destroyChain = pNode;
 		return pNode + 1;
 	}
@@ -469,11 +482,14 @@ public:
 		return allocate(cb);
 	}
 
-	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
+	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cbData0, destructor_t fn)
 	{
-		BOOST_MEMORY_ASSERT(cb + sizeof(MemHeaderEx) < AllocSizeHuge);
+		const size_t cbData = sizeof(DestroyInfo) + cbData0;
 
-		DestroyInfo* pInfo = (DestroyInfo*)allocate(sizeof(DestroyInfo) + cb);
+		BOOST_MEMORY_ASSERT(
+			BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader) < AllocSizeHuge);
+
+		DestroyInfo* pInfo = (DestroyInfo*)allocate(cbData);
 		pInfo->fnDestroy = fn;
 		return pInfo + 1;
 	}
@@ -482,10 +498,10 @@ public:
 	{
 		MemHeaderEx* pNode = (MemHeaderEx*)p - 1;
 		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
-		BOOST_MEMORY_ASSERT(pNode->nodeType == nodeAlloced);
+		BOOST_MEMORY_ASSERT(pNode->getNodeType() == nodeAlloced);
 
 		pNode->pPrev = m_destroyChain;
-		pNode->nodeType = nodeAllocedWithDestructor;
+		pNode->dataMemHeader |= nodeAllocedWithDestructor;
 		m_destroyChain = pNode;
 		return p;
 	}
@@ -500,9 +516,9 @@ public:
 		return p;
 	}
 
-	void BOOST_MEMORY_CALL deallocate(void* pData, size_t cbData)
+	void BOOST_MEMORY_CALL deallocate(void* pData, const size_t cbData)
 	{
-		const size_t cb = cbData + sizeof(MemHeader);
+		const size_t cb = BOOST_MEMORY_ALIGN(cbData, AlignSize) + sizeof(MemHeader);
 		
 		if (cb >= AllocSizeHuge)
 		{
@@ -511,10 +527,10 @@ public:
 		else
 		{
 			MemHeader* p = (MemHeader*)pData - 1;
-			BOOST_MEMORY_ASSERT(p->cbNodeSize == cb);
-			BOOST_MEMORY_ASSERT(p->nodeType == nodeAlloced);
+			BOOST_MEMORY_ASSERT(p->getNodeSize() >= cb);
+			BOOST_MEMORY_ASSERT(p->getNodeType() == nodeAlloced);
 
-			((FreeMemHeader*)p)->cbNodeSize = cb;
+			p->freeNode();
 			m_freeSize += cb;
 		}
 	}
@@ -532,11 +548,12 @@ private:
 	void BOOST_MEMORY_CALL _destroy(Type* obj, destructor_t)
 	{
 		const size_t cb = sizeof(Type) + sizeof(MemHeaderEx);
+		BOOST_MEMORY_ASSERT( BOOST_MEMORY_ALIGN(cb, AlignSize) < AllocSizeHuge );
 		
 		obj->~Type();
 		MemHeaderEx* p = (MemHeaderEx*)obj - 1;
 		
-		((FreeMemHeader*)p)->cbNodeSize = cb;
+		p->freeNode();
 		m_freeSize += cb;
 		++m_destroyCount;
 	}
@@ -545,10 +562,11 @@ private:
 	void BOOST_MEMORY_CALL _destroy(Type* obj, int)
 	{
 		const size_t cb = sizeof(Type) + sizeof(MemHeader);
+		BOOST_MEMORY_ASSERT( BOOST_MEMORY_ALIGN(cb, AlignSize) < AllocSizeHuge );
 		
 		MemHeader* p = (MemHeader*)obj - 1;
 		
-		((FreeMemHeader*)p)->cbNodeSize = cb;
+		p->freeNode();
 		m_freeSize += cb;
 	}
 
@@ -563,7 +581,7 @@ private:
 		void* pData = Traits::getArrayBuffer(array);
 		MemHeaderEx* p = (MemHeaderEx*)pData - 1;
 		
-		((FreeMemHeader*)p)->cbNodeSize = cb;
+		p->freeNode();
 		m_freeSize += cb;
 		++m_destroyCount;
 	}
@@ -575,7 +593,7 @@ private:
 
 		MemHeader* p = (MemHeader*)array - 1;
 
-		((FreeMemHeader*)p)->cbNodeSize = cb;
+		p->freeNode();
 		m_freeSize += cb;
 	}
 
@@ -584,8 +602,6 @@ public:
 	void BOOST_MEMORY_CALL destroy(Type* obj)
 	{
 		BOOST_MEMORY_ASSERT( _isValid(obj) );
-		BOOST_MEMORY_ASSERT( sizeof(Type) < AllocSizeHuge );
-
 		_destroy(obj, destructor_traits<Type>::destruct);
 	}
 
@@ -596,7 +612,7 @@ public:
 			destructor_traits<Type>::HasDestructor * sizeof(DestroyInfo) +
 			destructor_traits<Type>::getArrayAllocSize(count);
 
-		if (cb >= AllocSizeHuge)
+		if (BOOST_MEMORY_ALIGN(cb, AlignSize) >= AllocSizeHuge)
 			return m_hugeAlloc.newArray(count, zero);
 
 		Type* array = (Type*)destructor_traits<Type>::allocArray(*this, count);
@@ -612,7 +628,7 @@ public:
 			destructor_traits<Type>::HasDestructor * sizeof(DestroyInfo) +
 			destructor_traits<Type>::getArrayAllocSize(count);
 
-		if (cb >= AllocSizeHuge)
+		if (BOOST_MEMORY_ALIGN(cb, AlignSize) >= AllocSizeHuge)
 		{
 			m_hugeAlloc.destroyArray(array, count);
 		}
