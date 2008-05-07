@@ -311,7 +311,7 @@ void BOOST_MEMORY_CALL operator delete(
 #define BOOST_MEMORY_FILE_LINE_ARG
 #endif
 
-#define BOOST_MEMORY_UNMANAGE_NEW(alloc, Type)	\
+#define BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)	\
 	::new((alloc), (Type*)0, NS_BOOST_MEMORY::_theAllocFlag BOOST_MEMORY_FILE_LINE_ARG) Type
 
 // =========================================================================
@@ -335,10 +335,26 @@ public:
 	}
 };
 
+class _unmanaged
+{
+public:
+	template <class Type>
+	__forceinline Type* BOOST_MEMORY_CALL operator->*(Type* p) const
+	{
+		return p;
+	}
+};
+
 template <class AllocT>
-__forceinline _managed<AllocT> BOOST_MEMORY_CALL _get_managed(AllocT& alloc)
+__forceinline _managed<AllocT> BOOST_MEMORY_CALL _get_managed(AllocT& alloc, destructor_t fn)
 {
 	return _managed<AllocT>(alloc);
+}
+
+template <class AllocT>
+__forceinline _unmanaged BOOST_MEMORY_CALL _get_managed(AllocT& alloc, int fnZero)
+{
+	return _unmanaged();
 }
 
 NS_BOOST_MEMORY_END
@@ -350,7 +366,20 @@ NS_BOOST_MEMORY_END
 #define BOOST_MEMORY_DBG_ALLOC_ARG(Type)				sizeof(Type) BOOST_MEMORY_FILE_LINE_ARG
 #define BOOST_MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)	sizeof(Type)*(count) BOOST_MEMORY_FILE_LINE_ARG
 
-#define BOOST_MEMORY_NEW(alloc, Type)					NS_BOOST_MEMORY::_get_managed(alloc) ->* BOOST_MEMORY_UNMANAGE_NEW(alloc, Type)
+#if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
+//
+// Backard options:
+// 	not strict in accord with normal C++ semantics but a bit faster
+//
+#define BOOST_MEMORY_NEW(alloc, Type)					\
+	::new((alloc).allocate(BOOST_MEMORY_DBG_NEW_ARG(Type))) Type
+#else
+#define BOOST_MEMORY_GET_MANAGED_(alloc, Type)			\
+	NS_BOOST_MEMORY::_get_managed(alloc, NS_BOOST_MEMORY::destructor_traits<Type>::destruct)
+#define BOOST_MEMORY_NEW(alloc, Type)					\
+	BOOST_MEMORY_GET_MANAGED_(alloc, Type) ->* BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)
+#endif
+
 #define BOOST_MEMORY_NEW_ARRAY(alloc, Type, count) 		(alloc).newArray(BOOST_MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
 
 #define BOOST_MEMORY_ALLOC(alloc, Type)					((Type*)(alloc).allocate(BOOST_MEMORY_DBG_ALLOC_ARG(Type)))

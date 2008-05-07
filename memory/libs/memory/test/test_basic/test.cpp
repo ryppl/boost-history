@@ -21,8 +21,8 @@ void simpleExamples();
 
 int main()
 {
-//	testPerformance();
-	testExceptionSemantics();
+	testPerformance();
+//	testExceptionSemantics();
 //	testSystemAlloc();
 //	testPerformance();
 //	simpleExamples();

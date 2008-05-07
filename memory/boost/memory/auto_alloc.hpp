@@ -175,9 +175,18 @@ public:
 		return m_end -= cb;
 	}
 
+	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
+	{
+		return allocate(cb);
+	}
+
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
-		return manage(unmanaged_alloc(cb, fn), fn);
+		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
+		pNode->fnDestroy = fn;
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = pNode;
+		return pNode + 1;
 	}
 
 	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)

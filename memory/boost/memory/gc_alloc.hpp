@@ -456,7 +456,17 @@ public:
 		if (cbAlloc >= AllocSizeHuge)
 			return m_hugeAlloc.allocate(cb, fn);
 		
-		return manage(unmanaged_alloc(cb, fn), fn);
+		DestroyInfo* pNode = (DestroyInfo*)allocate(sizeof(DestroyInfo) + cb);
+		pNode->fnDestroy = fn;
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = (MemHeaderEx*)((char*)pNode - sizeof(MemHeader));
+		m_destroyChain->nodeType = nodeAllocedWithDestructor;
+		return pNode + 1;
+	}
+
+	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
+	{
+		return allocate(cb);
 	}
 
 	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
@@ -492,6 +502,7 @@ public:
 	void BOOST_MEMORY_CALL deallocate(void* pData, size_t cbData)
 	{
 		const size_t cb = cbData + sizeof(MemHeader);
+		
 		if (cb >= AllocSizeHuge)
 		{
 			m_hugeAlloc.deallocate(pData, cbData);
@@ -502,7 +513,7 @@ public:
 			BOOST_MEMORY_ASSERT(p->cbNodeSize == cb);
 			BOOST_MEMORY_ASSERT(p->nodeType == nodeAlloced);
 
-			p->nodeType = nodeFree;
+			((FreeMemHeader*)p)->cbNodeSize = cb;
 			m_freeSize += cb;
 		}
 	}
@@ -519,19 +530,25 @@ private:
 	template <class Type>
 	void BOOST_MEMORY_CALL _destroy(Type* obj, destructor_t)
 	{
+		const size_t cb = sizeof(Type) + sizeof(MemHeaderEx);
+		
 		obj->~Type();
 		MemHeaderEx* p = (MemHeaderEx*)obj - 1;
-		p->nodeType = nodeFree;
-		m_freeSize += sizeof(Type) + sizeof(MemHeaderEx);
+		
+		((FreeMemHeader*)p)->cbNodeSize = cb;
+		m_freeSize += cb;
 		++m_destroyCount;
 	}
 
 	template <class Type>
 	void BOOST_MEMORY_CALL _destroy(Type* obj, int)
 	{
+		const size_t cb = sizeof(Type) + sizeof(MemHeader);
+		
 		MemHeader* p = (MemHeader*)obj - 1;
-		p->nodeType = nodeFree;
-		m_freeSize += sizeof(Type) + sizeof(MemHeader);
+		
+		((FreeMemHeader*)p)->cbNodeSize = cb;
+		m_freeSize += cb;
 	}
 
 	template <class Type>
@@ -539,20 +556,26 @@ private:
 	{
 		typedef destructor_traits<Type> Traits;
 
+		const size_t cb = Traits::getArrayAllocSize(count) + sizeof(MemHeaderEx);
+
 		Traits::destructArrayN(array, count);
 		void* pData = Traits::getArrayBuffer(array);
 		MemHeaderEx* p = (MemHeaderEx*)pData - 1;
-		p->nodeType = nodeFree;
-		m_freeSize += Traits::getArrayAllocSize(count) + sizeof(MemHeaderEx);
+		
+		((FreeMemHeader*)p)->cbNodeSize = cb;
+		m_freeSize += cb;
 		++m_destroyCount;
 	}
 
 	template <class Type>
 	void BOOST_MEMORY_CALL _destroyArray(Type* array, size_t count, int)
 	{
+		const size_t cb = sizeof(Type) * count + sizeof(MemHeader);
+
 		MemHeader* p = (MemHeader*)array - 1;
-		p->nodeType = nodeFree;
-		m_freeSize += sizeof(Type) * count + sizeof(MemHeader);
+
+		((FreeMemHeader*)p)->cbNodeSize = cb;
+		m_freeSize += cb;
 	}
 
 public:

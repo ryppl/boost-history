@@ -21,24 +21,18 @@
 
 // -------------------------------------------------------------------------
 
+enum { Total = 1000000 };
+
+static int* p[Total];
+
 template <class LogT>
 class TestAllocatorPerformance
 {
 private:
-	enum { Total = 1000000 };
-
 	NS_BOOST_DETAIL::accumulator m_acc;
 	NS_BOOST_MEMORY::block_pool m_recycle;
-	int** p;
 
 public:
-	TestAllocatorPerformance() {
-		p = new int*[Total];
-	}
-	~TestAllocatorPerformance() {
-		delete[] p;
-	}
-
 	void doNewDelete(LogT& log, int NAlloc, int PerAlloc)
 	{
 		int i;
@@ -66,8 +60,7 @@ public:
 		typedef __gnu_cxx::__pool_base::_Tune tune_type;
 		//tune_type tune(16, 5120, 32, 5120, 20, 10, false);
 		
-		int i, **p;
-		p = new int*[PerAlloc];
+		int i;
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
@@ -85,7 +78,6 @@ public:
 			}
 		}
 		m_acc.accumulate(counter.trace(log));
-		delete[] p;
 	}
 #endif
 
@@ -246,14 +238,6 @@ public:
 			doGcAllocManually(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
-#if defined(__GNUG__)
-		m_acc.start();
-		log.trace("\n===== MtAllocator(%d) =====\n", PerAlloc);
-		for (i = 0; i < Count; ++i)
-			doMtAllocator(log, NAlloc, PerAlloc);
-		m_acc.trace_avg(log);
-#endif
-
 		m_acc.start();
 		log.trace("\n===== BoostPool(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
@@ -265,6 +249,14 @@ public:
 		for (i = 0; i < Count; ++i)
 			doBoostObjectPool(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
+
+#if defined(__GNUG__)
+		m_acc.start();
+		log.trace("\n===== MtAllocator(%d) =====\n", PerAlloc);
+		for (i = 0; i < Count; ++i)
+			doMtAllocator(log, NAlloc, PerAlloc);
+		m_acc.trace_avg(log);
+#endif
 
 		m_acc.start();
 		log.trace("\n===== NewDelete(%d) =====\n", PerAlloc);
