@@ -183,19 +183,21 @@ public:
 
 	void doGcAllocManually(LogT& log, int NAlloc, int PerAlloc)
 	{
+		const int PerAlloc1 = PerAlloc/2;
+		const int PerAlloc2 = PerAlloc - PerAlloc1;
 		int i;
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
 				boost::gc_alloc alloc(m_recycle);
-				for (i = 0; i < PerAlloc/2; ++i)
+				for (i = 0; i < PerAlloc1; ++i)
 					p[i] = BOOST_NEW(alloc, int);
-				for (i = 0; i < PerAlloc/2; ++i)
+				for (i = 0; i < PerAlloc1; ++i)
 					alloc.destroy(p[i]);
-				for (i = 0; i < PerAlloc/2; ++i)
+				for (i = 0; i < PerAlloc2; ++i)
 					p[i] = BOOST_NEW(alloc, int);
-				for (i = 0; i < PerAlloc/2; ++i)
+				for (i = 0; i < PerAlloc2; ++i)
 					alloc.destroy(p[i]);
 			}
 		}

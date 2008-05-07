@@ -22,8 +22,8 @@
 #include "stl/queue.hpp" // NS_BOOST_MEMORY::priority_queue
 #endif
 
-#if !defined(_DEQUE_) && !defined(_DEQUE)
-#include <deque> // std::deque
+#if !defined(_VECTOR_) && !defined(_VECTOR)
+#include <vector> // std::vector
 #endif
 
 NS_BOOST_MEMORY_BEGIN
@@ -151,7 +151,7 @@ private:
 			return a->cbNodeSize < b->cbNodeSize;
 		}
 	};
-	typedef std::deque<FreeMemHeader*> Container;
+	typedef std::vector<FreeMemHeader*> Container;
 	typedef NS_BOOST_MEMORY::priority_queue<FreeMemHeader*, Container, Pred> PriorityQ;
 	
 	char* m_begin;
@@ -480,12 +480,13 @@ public:
 
 	void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
 	{
-		DestroyInfo* pNode = (DestroyInfo*)p - 1;
+		MemHeaderEx* pNode = (MemHeaderEx*)p - 1;
 		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
+		BOOST_MEMORY_ASSERT(pNode->nodeType == nodeAlloced);
 
 		pNode->pPrev = m_destroyChain;
-		m_destroyChain = (MemHeaderEx*)((char*)pNode - sizeof(MemHeader));
-		m_destroyChain->nodeType = nodeAllocedWithDestructor;
+		pNode->nodeType = nodeAllocedWithDestructor;
+		m_destroyChain = pNode;
 		return p;
 	}
 

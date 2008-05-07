@@ -12,8 +12,8 @@
 #ifndef BOOST_MEMORY_STL_QUEUE_HPP
 #define BOOST_MEMORY_STL_QUEUE_HPP
 
-#if !defined(_DEQUE_) && !defined(_DEQUE)
-#include <deque> // std::deque
+#if !defined(_VECTOR_) && !defined(_VECTOR)
+#include <vector> // std::vector
 #endif
 
 #if !defined(_FUNCTIONAL_) && !defined(_FUNCTIONAL)
@@ -35,7 +35,7 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 
 template <class Type, 
-          class Sequence = std::deque<Type>,
+          class Sequence = std::vector<Type>,
           class Pred = std::less<Type> >
 class priority_queue
 {
