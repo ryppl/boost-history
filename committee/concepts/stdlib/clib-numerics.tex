@@ -31,7 +31,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Numerics\\
-(Revision 1)
+(Revision 2)
 
 \vspace{0.5in}
 
@@ -44,8 +44,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2574=08-0084\vspace{-6pt}
-\par\noindent Revises document number: N2041=06-0111\vspace{-6pt}
+\par\noindent Document number: NNNNN=08-XXXX\vspace{-6pt}
+\par\noindent Revises document number: N2574=08-0084\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -53,10 +53,9 @@ Bloomington, IN\ \  47405 \\
 \section*{Introduction}
 \libintrotext{Chapter 26}
 
-\paragraph*{Changes from N2041}
+\paragraph*{Changes from N2574}
 \begin{itemize}
-\item Update to the latest concepts syntax and the appropriate names
-  of the core concepts.
+\item TODO
 \end{itemize}
 
 \end{titlepage}
@@ -85,332 +84,6 @@ Bloomington, IN\ \  47405 \\
 \rSec0[lib.numerics]{Numerics library}
 \begin{paras}
 
-\setcounter{section}{5}
-
-\rSec1[lib.numeric.ops]{Generalized numeric operations}
-
-\synopsis{Header \tcode{<numeric>}\ synopsis}
-\index{numeric@\tcode{<numeric>}}%
-
-\color{addclr}
-\begin{codeblock}
-namespace std {
-  template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
-    requires CopyAssignable<T, T::result_type>
-    T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
-  template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
-    requires CopyAssignable<T, BinaryOperation::result_type>
-    T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
-  	         BinaryOperation @\farg{binary_op}@);
-  template <InputIterator Iter1, InputIterator Iter2, class T>
-    requires HasMultiply<Iter1::reference, Iter2::reference> &&
-             HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
-             CopyAssignable<
-               T, 
-               HasPlus<T, 
-                       HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
-    T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
-  		    Iter2 @\farg{first2}@, T @\farg{init}@);
-  template <InputIterator Iter1, InputIterator Iter2, class T,
-  	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
-    requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
-             CopyAssignable<T, BinaryOperation1::result_type>
-    T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
-  		    Iter2 @\farg{first2}@, T @\farg{init}@,
-  		    BinaryOperation1 @\farg{binary_op1}@,
-  		    BinaryOperation2 @\farg{binary_op2}@);
-  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-    requires HasPlus<InIter::value_type> && 
-             CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
-             CopyConstructible<InIter::value_type>
-    OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-  	  	        OutIter @\farg{result}@);
-  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-           Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-    requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
-             CopyConstructible<InIter::value_type>
-    OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-      		        OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
-  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-    requires HasMinus<InIter::value_type, InIter::value_type> &&
-             CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
-             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
-    OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-     			        OutIter @\farg{result}@);
-  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-            Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-    requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
-             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
-    OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-    			        OutIter @\farg{result}@,
-    			        BinaryOperation @\farg{binary_op}@);
-}
-\end{codeblock}
-\color{black}
-
-\pnum
-The requirements on the types of algorithms' arguments that are
-described in the introduction to clause \ref{lib.algorithms}\ also
-apply to the following algorithms.
-
-\rSec2[lib.accumulate]{Accumulate}
-
-\color{addclr}
-\index{accumulate@\tcode{accumulate}}%
-\begin{itemdecl}
-template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
-  requires CopyAssignable<T, T::result_type>
-  T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
-template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
-  requires CopyAssignable<T, BinaryOperation::result_type>
-  T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
-               BinaryOperation @\farg{binary_op}@);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\ 
-Computes its result by initializing the accumulator
-\tcode{acc}\
-with the initial value
-\tcode{init}\
-and then modifies it with
-\tcode{acc = acc + *i}\
-or
-\tcode{acc = binary_op(acc, *i)}\
-for every iterator
-\tcode{i}\
-in the range \range{first}{last}\
-in order.%
-\footnote{
-\tcode{accumulate}\
-is similar to the APL reduction operator and Common Lisp reduce function, but it avoids the
-difficulty of defining the result of reduction on an empty sequence by always requiring an initial value.
-}
-
-\pnum
-\requires\ 
-\removedConcepts{T shall meet the requirements of CopyConstructible (20.1.3)
-and Assignable (21.3) types.}
-In the range
-\crange{first}{last},
-\tcode{binary_op}\
-shall neither modify elements nor invalidate iterators or subranges.%
-\footnote{The use of fully closed ranges is intentional
-}
-\end{itemdescr}
-
-\rSec2[lib.inner.product]{Inner product}
-\index{inner_product@\tcode{inner_product}}%
-
-\color{addclr}
-\begin{itemdecl}
-template <InputIterator Iter1, InputIterator Iter2, class T>
-  requires HasMultiply<Iter1::reference, Iter2::reference> &&
-           HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
-           CopyAssignable<
-             T, 
-             HasPlus<T, 
-                     HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
-  @\textcolor{addclr}{}@T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
-		  Iter2 @\farg{first2}@, T @\farg{init}@);
-template <InputIterator Iter1, InputIterator Iter2, class T,
-	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
-  requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
-           CopyAssignable<T, BinaryOperation1::result_type>
-  T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
-		  Iter2 @\farg{first2}@, T @\farg{init}@,
-		  BinaryOperation1 @\farg{binary_op1}@,
-		  BinaryOperation2 @\farg{binary_op2}@);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\ 
-Computes its result by initializing the accumulator
-\tcode{acc}\
-with the initial value
-\tcode{init}\
-and then modifying it with
-\tcode{acc = acc + (*i1) * (*i2)}\
-or
-\tcode{acc = binary_op1(acc, binary_op2(*i1, *i2))}\
-for every iterator
-\tcode{i1}\
-in the range \range{first}{last}\
-and iterator
-\tcode{i2}\
-in the range
-\range{first2}{first2 + (last - first)}
-in order.
-
-\pnum
-\requires\ 
-\removedConcepts{T shall meet the requirements of CopyConstructible (20.1.3)
-and Assignable (21.3) types.}
-In the ranges
-\crange{first}{last}\
-and
-\crange{first2}{first2 + (last - first)}\
-\tcode{binary_op1}\
-and
-\tcode{binary_op2}\
-shall neither modify elements nor invalidate iterators or subranges.%
-\footnote{The use of fully closed ranges is intentional
-}
-\end{itemdescr}
-
-\rSec2[lib.partial.sum]{Partial sum}
-\index{partial_sum@\tcode{partial_sum}}%
-\color{addclr}
-\begin{itemdecl}
-template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-  requires HasPlus<InIter::value_type> && 
-           CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
-           CopyConstructible<InIter::value_type>
-  OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-	  	      OutIter @\farg{result}@);
-template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-         Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-  requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
-           CopyConstructible<InIter::value_type>
-  OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-    		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\ 
-Assigns to every element referred to by iterator
-\tcode{i}\
-in the range
-\range{result}{result + (last - first)}
-a value
-correspondingly equal to
-
-\begin{codeblock}
-((...(*first + *(first + 1)) + ...) + *(first + (i - result)))
-\end{codeblock}
-
-or
-
-\begin{codeblock}
-binary_op(binary_op(...,
-    binary_op(*first, *(first + 1)),...), *(first + (i - result)))
-\end{codeblock}
-
-\pnum
-\returns\ 
-\tcode{result + (last - first)}.
-
-\pnum
-\complexity\ 
-Exactly
-\tcode{(last - first) - 1}\
-applications of
-\tcode{binary_op}.
-
-\pnum
-\requires\ 
-In the ranges
-\crange{first}{last}\
-and
-\crange{result}{result + (last - first)}\
-\tcode{binary_op}\
-shall neither modify elements nor invalidate iterators or subranges.%
-\footnote{The use of fully closed ranges is intentional.
-}
-
-\pnum
-\notes\ 
-\tcode{result}\
-may be equal to
-\tcode{first}.
-\end{itemdescr}
-
-\rSec2[lib.adjacent.difference]{Adjacent difference}
-
-\index{adjacent_difference@\tcode{adjacent_difference}}%
-\color{addclr}
-\begin{itemdecl}
-template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-  requires HasMinus<InIter::value_type, InIter::value_type> &&
-           CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
-           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
-  OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-   			      OutIter @\farg{result}@);
-template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-          Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-  requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
-           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
-  OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-			      OutIter @\farg{result}@,
-  			      BinaryOperation @\farg{binary_op}@);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\ 
-Assigns to every element referred to by iterator
-\tcode{i}\
-in the range
-\range{result + 1}{result + (last - first)}
-a value correspondingly equal to
-
-\begin{codeblock}
-*(first + (i - result)) - *(first + (i - result) - 1)
-\end{codeblock}
-
-or
-
-\begin{codeblock}
-binary_op(*(first + (i - result)), *(first + (i - result) - 1)).
-\end{codeblock}
-
-\tcode{result}
-gets the value of
-\tcode{*first}.
-
-\pnum
-\requires\ 
-In the ranges
-\crange{first}{last}\
-and
-\crange{result}{result + (last - first)},
-\tcode{binary_op}\
-shall neither modify elements nor invalidate iterators or subranges.%
-\footnote{The use of fully closed ranges is intentional.
-}
-
-\pnum
-\notes\ 
-\tcode{result}\
-may be equal to
-\tcode{first}.
-
-\pnum
-\returns\ 
-\tcode{result + (last - first)}.
-
-\pnum
-\complexity\ 
-Exactly
-\tcode{(last - first) - 1}\
-applications of
-\tcode{binary_op}.
-\end{itemdescr}
-
-\end{paras}
-
-\bibliographystyle{plain}
-\bibliography{local}
-
-\end{document}
-
 \setcounter{section}{4}
 \rSec1[numarray]{Numeric arrays}
 
@@ -418,17 +91,33 @@ applications of
 \index{valarray@\tcode{<valarray>}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedCC{class}{Regular}@ T> class valarray;         // An array of type \tcode{T}
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    class valarray;         // An array of type \tcode{T}
   class slice;                              // a BLAS-like slice out of an array
-  template<@\changedCC{class}{Regular}@ T> class slice_array;
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    class slice_array;
   class gslice;                             // a generalized slice out of an array
-  template<@\changedCC{class}{Regular}@ T> class gslice_array;
-  template<@\changedCC{class}{Regular}@ T> class mask_array;       // a masked array
-  template<@\changedCC{class}{Regular}@ T> class indirect_array;   // an indirected array
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    class gslice_array;
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    class mask_array;       // a masked array
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    class indirect_array;   // an indirected array
 
-  @\addedD{template<@\changedCC{class}{Regular}@ T> void swap(valarray<T>\&, valarray<T>\&);}@
-  @\addedD{template<@\changedCC{class}{Regular}@ T> void swap(valarray<T>\&\&, valarray<T>\&);}@
-  @\addedD{template<@\changedCC{class}{Regular}@ T> void swap(valarray<T>\&, valarray<T>\&\&);}@
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    void swap(valarray<T>&, valarray<T>&);
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    void swap(valarray<T>&&, valarray<T>&);
+  template<class T> 
+    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+    void swap(valarray<T>&, valarray<T>&&);
 
   template<class T> 
     @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
@@ -531,50 +220,80 @@ namespace std {
     valarray<T> operator>>(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasLogicalAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedCC{requires HasLogicalAnd<T>}@
     valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasLogicalAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedCC{requires HasLogicalAnd<T>}@
     valarray<bool> operator&&(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasLogicalAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedCC{requires HasLogicalAnd<T>}@
     valarray<bool> operator&&(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasLogicalOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedCC{requires HasLogicalOr<T>}@
     valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasLogicalOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedCC{requires HasLogicalOr<T>}@
     valarray<bool> operator||(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasLogicalOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedCC{requires HasLogicalOr<T>}@
     valarray<bool> operator||(const T&, const valarray<T>&);
 
   template<class T>
+    @\addedCC{requires EqualityComparable<T>}@
     valarray<bool> operator==(const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<bool> operator==(const valarray<T>&, const T&);
-  template<class T> valarray<bool> operator==(const T&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires EqualityComparable<T>}@
+    valarray<bool> operator==(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires EqualityComparable<T>}@
+    valarray<bool> operator==(const T&, const valarray<T>&);
   template<class T>
+    @\addedCC{requires EqualityComparable<T>}@
     valarray<bool> operator!=(const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<bool> operator!=(const valarray<T>&, const T&);
-  template<class T> valarray<bool> operator!=(const T&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires EqualityComparable<T>}@
+    valarray<bool> operator!=(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires EqualityComparable<T>}@
+    valarray<bool> operator!=(const T&, const valarray<T>&);
 
   template<class T>
+    @\addedCC{requires LessThanComparable<T>}@
     valarray<bool> operator< (const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<bool> operator< (const valarray<T>&, const T&);
-  template<class T> valarray<bool> operator< (const T&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator< (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator< (const T&, const valarray<T>&);
   template<class T>
+    @\addedCC{requires LessThanComparable<T>}@
     valarray<bool> operator> (const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<bool> operator> (const valarray<T>&, const T&);
-  template<class T> valarray<bool> operator> (const T&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator> (const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator> (const T&, const valarray<T>&);
   template<class T>
+    @\addedCC{requires LessThanComparable<T>}@
     valarray<bool> operator<=(const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<bool> operator<=(const valarray<T>&, const T&);
-  template<class T> valarray<bool> operator<=(const T&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator<=(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator<=(const T&, const valarray<T>&);
   template<class T>
+    @\addedCC{requires LessThanComparable<T>}@
     valarray<bool> operator>=(const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<bool> operator>=(const valarray<T>&, const T&);
-  template<class T> valarray<bool> operator>=(const T&, const valarray<T>&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator>=(const valarray<T>&, const T&);
+  template<class T> 
+    @\addedCC{requires LessThanComparable<T>}@
+    valarray<bool> operator>=(const T&, const valarray<T>&);
 
   template<class T> valarray<T> abs  (const valarray<T>&);
   template<class T> valarray<T> acos (const valarray<T>&);
@@ -688,7 +407,8 @@ Note that the exception is not mandated.
 \index{valarray@\tcode{valarray}}%
 \begin{codeblock}
 namespace std {
-  template<class @\farg{T}@> class valarray {
+  template<class @\farg{T}@> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  class valarray {
   public:
     typedef T value_type;
 
@@ -729,10 +449,13 @@ namespace std {
     indirect_array<T> operator[](const valarray<size_t>&);
 
     // \ref{valarray.unary} unary operators:
-    valarray<T> operator+() const;
-    valarray<T> operator-() const;
-    valarray<T> operator~() const;
-    valarray<bool> operator!() const;
+    @\addedCC{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
+      valarray<T> operator+() const;
+    @\addedCC{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
+      valarray<T> operator-() const;
+    @\addedCC{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
+      valarray<T> operator~() const;
+    @\addedCC{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 
     // \ref{valarray.cassign} computed assignment:
     valarray<T>& operator*= (const T&);
@@ -1135,19 +858,22 @@ class template object which has reference semantics to the original array.
 \index{operator\~{}@\tcode{operator\~{}}!\tcode{valarray}}%
 \index{operator"!@\tcode{operator"!}!\tcode{valarray}}%
 \begin{itemdecl}
-valarray<T> operator+() const;
-valarray<T> operator-() const;
-valarray<T> operator~() const;
-valarray<bool> operator!() const;
+@\addedCC{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
+  valarray<T> operator+() const;
+@\addedCC{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
+  valarray<T> operator-() const;
+@\addedCC{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
+  valarray<T> operator~() const;
+@\addedCC{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\
 to which the indicated operator can be applied and for which the indicated
-operator returns a value which is of type \farg{T}\ (\farg{bool}\ for
-\farg{operator!}) or which may be unambiguously converted to type
-\farg{T}\ (\farg{bool} for \farg{operator!}).
+operator returns a value which is of type \mbox{\farg{T}}\ (\mbox{\farg{bool}}\ for
+\mbox{\farg{operator!}}) or which may be unambiguously converted to type
+\mbox{\farg{T}}\ (\mbox{\farg{bool}} for \mbox{\farg{operator!}}).}
 
 \pnum
 Each of these operators returns an array whose length is equal to the length
@@ -1418,34 +1144,44 @@ Resizing invalidates all pointers and references to elements in the array.
 \index{operator\&\&@\tcode{operator\&\&}!valarray@\tcode{valarray}}%
 \index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-template<class T> valarray<T> operator*
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator/
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator%
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator+
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator-
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator^
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator&
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator|
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator<<
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> operator>>
-    (const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator*(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator/(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator%(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator+(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator-(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator^(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator&(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator|(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator<<(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator>>(const valarray<T>&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which the indicated
-operator returns a value which is of type \farg{T}\ or which
-can be unambiguously converted to type \farg{T}.
+operator returns a value which is of type \mbox{\farg{T}}\ or which
+can be unambiguously converted to type \mbox{\farg{T}}.}
 
 \pnum
 Each of these operators returns an array whose length is equal to the
@@ -1460,34 +1196,74 @@ If the argument arrays do not have the same length, the behavior is undefined.%
 \end{itemdescr}
 
 \begin{itemdecl}
-template<class T> valarray<T> operator* (const valarray<T>&, const T&);
-template<class T> valarray<T> operator* (const T&, const valarray<T>&);
-template<class T> valarray<T> operator/ (const valarray<T>&, const T&);
-template<class T> valarray<T> operator/ (const T&, const valarray<T>&);
-template<class T> valarray<T> operator% (const valarray<T>&, const T&);
-template<class T> valarray<T> operator% (const T&, const valarray<T>&);
-template<class T> valarray<T> operator+ (const valarray<T>&, const T&);
-template<class T> valarray<T> operator+ (const T&, const valarray<T>&);
-template<class T> valarray<T> operator- (const valarray<T>&, const T&);
-template<class T> valarray<T> operator- (const T&, const valarray<T>&);
-template<class T> valarray<T> operator^ (const valarray<T>&, const T&);
-template<class T> valarray<T> operator^ (const T&, const valarray<T>&);
-template<class T> valarray<T> operator& (const valarray<T>&, const T&);
-template<class T> valarray<T> operator& (const T&, const valarray<T>&);
-template<class T> valarray<T> operator| (const valarray<T>&, const T&);
-template<class T> valarray<T> operator| (const T&, const valarray<T>&);
-template<class T> valarray<T> operator<<(const valarray<T>&, const T&);
-template<class T> valarray<T> operator<<(const T&, const valarray<T>&);
-template<class T> valarray<T> operator>>(const valarray<T>&, const T&);
-template<class T> valarray<T> operator>>(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator* (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator* (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator/ (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator/ (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator% (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator% (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator+ (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator+ (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator- (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator- (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator^ (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator^ (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator& (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator& (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator| (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator| (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator<<(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator<<(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator>>(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  valarray<T> operator>>(const T&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which
-the indicated operator returns a value which is of type \farg{T}\ 
-or which can be unambiguously converted to type \farg{T}.
+the indicated operator returns a value which is of type \mbox{\farg{T}}\ 
+or which can be unambiguously converted to type \mbox{\farg{T}}.}
 
 \pnum
 Each of these operators returns an array whose length is equal to the
@@ -1508,30 +1284,38 @@ corresponding element of the array argument and the non-array argument.
 \index{operator\&\&@\tcode{operator\&\&}!valarray@\tcode{valarray}}%
 \index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-template<class T> valarray<bool> operator==
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator!=
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator<
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator>
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator<=
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator>=
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator&&
-    (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<bool> operator||
-    (const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires EqualityComparable<T>}@
+  valarray<bool> operator==(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires EqualityComparable<T>}@
+  valarray<bool> operator!=(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator<(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator>(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator<=(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator>=(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasLogicalAnd<T>}@
+  valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasLogicalOr<T>}@
+  valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which
-the indicated operator returns a value which is of type \farg{bool}\ 
-or which can be unambiguously converted to type \farg{bool}.
+the indicated operator returns a value which is of type \mbox{\farg{bool}}\ 
+or which can be unambiguously converted to type \mbox{\farg{bool}}.}
 
 \pnum
 Each of these operators returns a \farg{bool}\ array whose length
@@ -1547,30 +1331,62 @@ the behavior is undefined.%
 \end{itemdescr}
 
 \begin{itemdecl}
-template<class T> valarray<bool> operator==(const valarray<T>&, const T&);
-template<class T> valarray<bool> operator==(const T&, const valarray<T>&);
-template<class T> valarray<bool> operator!=(const valarray<T>&, const T&);
-template<class T> valarray<bool> operator!=(const T&, const valarray<T>&);
-template<class T> valarray<bool> operator< (const valarray<T>&, const T&);
-template<class T> valarray<bool> operator< (const T&, const valarray<T>&);
-template<class T> valarray<bool> operator> (const valarray<T>&, const T&);
-template<class T> valarray<bool> operator> (const T&, const valarray<T>&);
-template<class T> valarray<bool> operator<=(const valarray<T>&, const T&);
-template<class T> valarray<bool> operator<=(const T&, const valarray<T>&);
-template<class T> valarray<bool> operator>=(const valarray<T>&, const T&);
-template<class T> valarray<bool> operator>=(const T&, const valarray<T>&);
-template<class T> valarray<bool> operator&&(const valarray<T>&, const T&);
-template<class T> valarray<bool> operator&&(const T&, const valarray<T>&);
-template<class T> valarray<bool> operator||(const valarray<T>&, const T&);
-template<class T> valarray<bool> operator||(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires EqualityComparable<T>}@
+  valarray<bool> operator==(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires EqualityComparable<T>}@
+  valarray<bool> operator==(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires EqualityComparable<T>}@
+  valarray<bool> operator!=(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires EqualityComparable<T>}@
+  valarray<bool> operator!=(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator< (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator< (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator> (const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator> (const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator<=(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator<=(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator>=(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires LessThanComparable<T>}@
+  valarray<bool> operator>=(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasLogicalAnd<T>}@
+  valarray<bool> operator&&(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasLogicalAnd<T>}@
+  valarray<bool> operator&&(const T&, const valarray<T>&);
+template<class T> 
+  @\addedCC{requires HasLogicalOr<T>}@
+  valarray<bool> operator||(const valarray<T>&, const T&);
+template<class T> 
+  @\addedCC{requires HasLogicalOr<T>}@
+  valarray<bool> operator||(const T&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these operators may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which
-the indicated operator returns a value which is of type \farg{bool}\ 
-or which can be unambiguously converted to type \farg{bool}.
+the indicated operator returns a value which is of type \mbox{\farg{bool}}\ 
+or which can be unambiguously converted to type \mbox{\farg{bool}}.}
 
 \pnum
 Each of these operators returns a \farg{bool}\ array whose
@@ -1634,9 +1450,15 @@ or which can be unambiguously converted to type \farg{T}.
 \rSec3[valarray.special]{\tcode{valarray}\ specialized algorithms}
 
 \begin{itemdecl}
-@\addedD{template <class T> void swap(valarray<T>\& x, valarray<T>\& y);}@
-@\addedD{template <class T> void swap(valarray<T>\&\& x, valarray<T>\& y);}@
-@\addedD{template <class T> void swap(valarray<T>\& x, valarray<T>\&\& y);}@
+template <class T> 
+  @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  void swap(valarray<T>& x, valarray<T>& y);
+template <class T> 
+  @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@ 
+  void swap(valarray<T>&& x, valarray<T>& y);
+template <class T> 
+  @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
+  void swap(valarray<T>& x, valarray<T>&& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2463,3 +2285,329 @@ object to which the
 \tcode{indirect_array}\
 object refers.
 \end{itemdescr}
+
+\setcounter{section}{5}
+
+\rSec1[lib.numeric.ops]{Generalized numeric operations}
+
+\synopsis{Header \tcode{<numeric>}\ synopsis}
+\index{numeric@\tcode{<numeric>}}%
+
+\color{addclr}
+\begin{codeblock}
+namespace std {
+  template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
+    requires CopyAssignable<T, T::result_type>
+    T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
+  template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
+    requires CopyAssignable<T, BinaryOperation::result_type>
+    T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
+  	         BinaryOperation @\farg{binary_op}@);
+  template <InputIterator Iter1, InputIterator Iter2, class T>
+    requires HasMultiply<Iter1::reference, Iter2::reference> &&
+             HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
+             CopyAssignable<
+               T, 
+               HasPlus<T, 
+                       HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
+    T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+  		    Iter2 @\farg{first2}@, T @\farg{init}@);
+  template <InputIterator Iter1, InputIterator Iter2, class T,
+  	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
+    requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
+             CopyAssignable<T, BinaryOperation1::result_type>
+    T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+  		    Iter2 @\farg{first2}@, T @\farg{init}@,
+  		    BinaryOperation1 @\farg{binary_op1}@,
+  		    BinaryOperation2 @\farg{binary_op2}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+    requires HasPlus<InIter::value_type> && 
+             CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
+             CopyConstructible<InIter::value_type>
+    OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+  	  	        OutIter @\farg{result}@);
+  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+           Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+    requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
+             CopyConstructible<InIter::value_type>
+    OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+      		        OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+    requires HasMinus<InIter::value_type, InIter::value_type> &&
+             CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
+             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
+    OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+     			        OutIter @\farg{result}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+            Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+    requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
+             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
+    OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+    			        OutIter @\farg{result}@,
+    			        BinaryOperation @\farg{binary_op}@);
+}
+\end{codeblock}
+\color{black}
+
+\pnum
+The requirements on the types of algorithms' arguments that are
+described in the introduction to clause \ref{lib.algorithms}\ also
+apply to the following algorithms.
+
+\rSec2[lib.accumulate]{Accumulate}
+
+\color{addclr}
+\index{accumulate@\tcode{accumulate}}%
+\begin{itemdecl}
+template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
+  requires CopyAssignable<T, T::result_type>
+  T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
+template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
+  requires CopyAssignable<T, BinaryOperation::result_type>
+  T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
+               BinaryOperation @\farg{binary_op}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Computes its result by initializing the accumulator
+\tcode{acc}\
+with the initial value
+\tcode{init}\
+and then modifies it with
+\tcode{acc = acc + *i}\
+or
+\tcode{acc = binary_op(acc, *i)}\
+for every iterator
+\tcode{i}\
+in the range \range{first}{last}\
+in order.%
+\footnote{
+\tcode{accumulate}\
+is similar to the APL reduction operator and Common Lisp reduce function, but it avoids the
+difficulty of defining the result of reduction on an empty sequence by always requiring an initial value.
+}
+
+\pnum
+\requires\ 
+\removedConcepts{T shall meet the requirements of CopyConstructible (20.1.3)
+and Assignable (21.3) types.}
+In the range
+\crange{first}{last},
+\tcode{binary_op}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional
+}
+\end{itemdescr}
+
+\rSec2[lib.inner.product]{Inner product}
+\index{inner_product@\tcode{inner_product}}%
+
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator Iter1, InputIterator Iter2, class T>
+  requires HasMultiply<Iter1::reference, Iter2::reference> &&
+           HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
+           CopyAssignable<
+             T, 
+             HasPlus<T, 
+                     HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
+  @\textcolor{addclr}{}@T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+		  Iter2 @\farg{first2}@, T @\farg{init}@);
+template <InputIterator Iter1, InputIterator Iter2, class T,
+	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
+  requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
+           CopyAssignable<T, BinaryOperation1::result_type>
+  T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+		  Iter2 @\farg{first2}@, T @\farg{init}@,
+		  BinaryOperation1 @\farg{binary_op1}@,
+		  BinaryOperation2 @\farg{binary_op2}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Computes its result by initializing the accumulator
+\tcode{acc}\
+with the initial value
+\tcode{init}\
+and then modifying it with
+\tcode{acc = acc + (*i1) * (*i2)}\
+or
+\tcode{acc = binary_op1(acc, binary_op2(*i1, *i2))}\
+for every iterator
+\tcode{i1}\
+in the range \range{first}{last}\
+and iterator
+\tcode{i2}\
+in the range
+\range{first2}{first2 + (last - first)}
+in order.
+
+\pnum
+\requires\ 
+\removedConcepts{T shall meet the requirements of CopyConstructible (20.1.3)
+and Assignable (21.3) types.}
+In the ranges
+\crange{first}{last}\
+and
+\crange{first2}{first2 + (last - first)}\
+\tcode{binary_op1}\
+and
+\tcode{binary_op2}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional
+}
+\end{itemdescr}
+
+\rSec2[lib.partial.sum]{Partial sum}
+\index{partial_sum@\tcode{partial_sum}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+  requires HasPlus<InIter::value_type> && 
+           CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
+           CopyConstructible<InIter::value_type>
+  OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+	  	      OutIter @\farg{result}@);
+template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+         Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+  requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
+           CopyConstructible<InIter::value_type>
+  OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
+    		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Assigns to every element referred to by iterator
+\tcode{i}\
+in the range
+\range{result}{result + (last - first)}
+a value
+correspondingly equal to
+
+\begin{codeblock}
+((...(*first + *(first + 1)) + ...) + *(first + (i - result)))
+\end{codeblock}
+
+or
+
+\begin{codeblock}
+binary_op(binary_op(...,
+    binary_op(*first, *(first + 1)),...), *(first + (i - result)))
+\end{codeblock}
+
+\pnum
+\returns\ 
+\tcode{result + (last - first)}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{(last - first) - 1}\
+applications of
+\tcode{binary_op}.
+
+\pnum
+\requires\ 
+In the ranges
+\crange{first}{last}\
+and
+\crange{result}{result + (last - first)}\
+\tcode{binary_op}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional.
+}
+
+\pnum
+\notes\ 
+\tcode{result}\
+may be equal to
+\tcode{first}.
+\end{itemdescr}
+
+\rSec2[lib.adjacent.difference]{Adjacent difference}
+
+\index{adjacent_difference@\tcode{adjacent_difference}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+  requires HasMinus<InIter::value_type, InIter::value_type> &&
+           CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
+           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
+  OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+   			      OutIter @\farg{result}@);
+template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
+          Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
+  requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
+           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
+  OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
+			      OutIter @\farg{result}@,
+  			      BinaryOperation @\farg{binary_op}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Assigns to every element referred to by iterator
+\tcode{i}\
+in the range
+\range{result + 1}{result + (last - first)}
+a value correspondingly equal to
+
+\begin{codeblock}
+*(first + (i - result)) - *(first + (i - result) - 1)
+\end{codeblock}
+
+or
+
+\begin{codeblock}
+binary_op(*(first + (i - result)), *(first + (i - result) - 1)).
+\end{codeblock}
+
+\tcode{result}
+gets the value of
+\tcode{*first}.
+
+\pnum
+\requires\ 
+In the ranges
+\crange{first}{last}\
+and
+\crange{result}{result + (last - first)},
+\tcode{binary_op}\
+shall neither modify elements nor invalidate iterators or subranges.%
+\footnote{The use of fully closed ranges is intentional.
+}
+
+\pnum
+\notes\ 
+\tcode{result}\
+may be equal to
+\tcode{first}.
+
+\pnum
+\returns\ 
+\tcode{result + (last - first)}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{(last - first) - 1}\
+applications of
+\tcode{binary_op}.
+\end{itemdescr}
+
+\end{paras}
+
+\bibliographystyle{plain}
+\bibliography{local}
+
+\end{document}
