@@ -453,20 +453,40 @@ public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
 		const size_t cbAlloc = cb + sizeof(MemHeaderEx);
-		if (cb >= AllocSizeHuge)
+		if (cbAlloc >= AllocSizeHuge)
 			return m_hugeAlloc.allocate(cb, fn);
 		
+		return manage(unmanaged_alloc(cb, fn), fn);
+	}
+
+	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
+	{
+		BOOST_MEMORY_ASSERT(cb + sizeof(MemHeaderEx) < AllocSizeHuge);
+
 		DestroyInfo* pNode = (DestroyInfo*)allocate(sizeof(DestroyInfo) + cb);
 		pNode->fnDestroy = fn;
-		pNode->pPrev = m_destroyChain;
-		m_destroyChain = (MemHeaderEx*)((char*)pNode - sizeof(MemHeader));
-		m_destroyChain->nodeType = nodeAllocedWithDestructor;
 		return pNode + 1;
 	}
 
-	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
+	void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
+	{
+		DestroyInfo* pNode = (DestroyInfo*)p - 1;
+		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
+
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = (MemHeaderEx*)((char*)pNode - sizeof(MemHeader));
+		m_destroyChain->nodeType = nodeAllocedWithDestructor;
+		return p;
+	}
+
+	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero)
 	{
 		return allocate(cb);
+	}
+
+	void* BOOST_MEMORY_CALL manage(void* p, int fnZero)
+	{
+		return p;
 	}
 
 	void BOOST_MEMORY_CALL deallocate(void* pData, size_t cbData)

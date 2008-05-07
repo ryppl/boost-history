@@ -10,6 +10,7 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 #include <cstdio>
+#include <boost/memory.hpp>
 
 class A
 {
@@ -56,7 +57,18 @@ void testExceptionSemantics()
 {
 	try
 	{
-		Foo a;
+		Foo* p = new Foo;
+	}
+	catch (...)
+	{
+		printf("Unexcepted\n");
+	}
+
+	printf("Now, let's test operator new of GC Allocator...\n");
+	try
+	{
+		boost::auto_alloc alloc;
+		Foo* p = BOOST_NEW(alloc, Foo);
 	}
 	catch (...)
 	{

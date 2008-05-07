@@ -177,16 +177,34 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
+		return manage(unmanaged_alloc(cb, fn), fn);
+	}
+
+	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
+	{
 		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
 		pNode->fnDestroy = fn;
-		pNode->pPrev = m_destroyChain;
-		m_destroyChain = pNode;
 		return pNode + 1;
 	}
 
-	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
+	void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
+	{
+		DestroyNode* pNode = (DestroyNode*)p - 1;
+		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
+
+		pNode->pPrev = m_destroyChain;
+		m_destroyChain = pNode;
+		return p;
+	}
+
+	void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero)
 	{
 		return allocate(cb);
+	}
+
+	void* BOOST_MEMORY_CALL manage(void* p, int fnZero)
+	{
+		return p;
 	}
 
 	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize)

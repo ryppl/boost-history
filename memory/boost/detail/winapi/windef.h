@@ -30,9 +30,13 @@
 #define CDECL
 #endif
 
-#if defined(__GNUG__)
+#if !defined(_MSC_VER)
+#ifndef __forceinline
 #define __forceinline inline
+#endif
+#ifndef __stdcall
 #define __stdcall
+#endif
 #endif
 
 #ifdef _MAC
