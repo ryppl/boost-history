@@ -16,12 +16,15 @@
 void testPerformance();
 void testSystemAlloc();
 void testStlContainers();
+void testExceptionSemantics();
 void simpleExamples();
 
 int main()
 {
-//	testSystemAlloc();
 	testPerformance();
+//	testExceptionSemantics();
+//	testSystemAlloc();
+//	testPerformance();
 //	simpleExamples();
 //	testStlContainers();
 	return 0;

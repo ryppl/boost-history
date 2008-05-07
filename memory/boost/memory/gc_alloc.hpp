@@ -31,7 +31,7 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class gen_alloc
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && !defined(BOOST_MEMORY_TRACE_GC)
 #define BOOST_MEMORY_TRACE_GC
 #endif
 
@@ -267,7 +267,7 @@ public:
 						it->cbNodeSize += it2->cbNodeSize;
 					}
 					if (it->cbNodeSize >= RecycleSizeMin)
-						m_freeList.push((FreeMemHeader*)it);
+						m_freeList.push(it);
 					if (coll.done())
 						break;
 				}

@@ -86,6 +86,10 @@ LINK32=link.exe
 # Name "test - Win32 Debug"
 # Begin Source File
 
+SOURCE=.\memory\exception_semantics.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\memory\performance.cpp
 # End Source File
 # Begin Source File

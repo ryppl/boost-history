@@ -25,14 +25,23 @@ template <class LogT>
 class TestAllocatorPerformance
 {
 private:
+	enum { Total = 1000000 };
+
 	NS_BOOST_DETAIL::accumulator m_acc;
 	NS_BOOST_MEMORY::block_pool m_recycle;
+	int** p;
 
 public:
+	TestAllocatorPerformance() {
+		p = new int*[Total];
+	}
+	~TestAllocatorPerformance() {
+		delete[] p;
+	}
+
 	void doNewDelete(LogT& log, int NAlloc, int PerAlloc)
 	{
-		int i, **p;
-		p = new int*[PerAlloc];
+		int i;
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
@@ -48,7 +57,6 @@ public:
 			}
 		}
 		m_acc.accumulate(counter.trace(log));
-		delete[] p;
 	}
 
 #if defined(__GNUG__)
@@ -164,7 +172,45 @@ public:
 		m_acc.accumulate(counter.trace(log));
 	}
 
-	void doComparison(LogT& log, int Total, int NAlloc)
+	template <class LogT2>
+	void doGcAlloc(LogT2& log, int NAlloc, int PerAlloc)
+	{
+		NS_BOOST_DETAIL::performance_counter counter;
+		{
+			for (int j = 0; j < NAlloc; ++j)
+			{
+				boost::gc_alloc alloc(m_recycle);
+				for (int i = 0; i < PerAlloc; ++i)
+				{
+					int* p = BOOST_NEW(alloc, int);
+				}
+			}
+		}
+		m_acc.accumulate(counter.trace(log));
+	}
+
+	void doGcAllocManually(LogT& log, int NAlloc, int PerAlloc)
+	{
+		int i;
+		NS_BOOST_DETAIL::performance_counter counter;
+		{
+			for (int j = 0; j < NAlloc; ++j)
+			{
+				boost::gc_alloc alloc(m_recycle);
+				for (i = 0; i < PerAlloc/2; ++i)
+					p[i] = BOOST_NEW(alloc, int);
+				for (i = 0; i < PerAlloc/2; ++i)
+					alloc.destroy(p[i]);
+				for (i = 0; i < PerAlloc/2; ++i)
+					p[i] = BOOST_NEW(alloc, int);
+				for (i = 0; i < PerAlloc/2; ++i)
+					alloc.destroy(p[i]);
+			}
+		}
+		m_acc.accumulate(counter.trace(log));
+	}
+
+	void doComparison(LogT& log, int NAlloc)
 	{
 		int i;
 		const int Count = 16;
@@ -186,6 +232,18 @@ public:
 		log.trace("\n===== boost::scoped_alloc(%d) =====\n", PerAlloc);
 		for (i = 0; i < Count; ++i)
 			doScopedAlloc(log, NAlloc, PerAlloc);
+		m_acc.trace_avg(log);
+
+		m_acc.start();
+		log.trace("\n===== boost::gc_alloc(%d) =====\n", PerAlloc);
+		for (i = 0; i < Count; ++i)
+			doGcAlloc(log, NAlloc, PerAlloc);
+		m_acc.trace_avg(log);
+
+		m_acc.start();
+		log.trace("\n===== boost::gc_alloc manually(%d) =====\n", PerAlloc);
+		for (i = 0; i < Count; ++i)
+			doGcAllocManually(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 #if defined(__GNUG__)
@@ -219,14 +277,13 @@ public:
 	{
 		NS_BOOST_DETAIL::null_log nullLog;
 		
-		const int Total = 1000000;
-		doAutoAlloc(nullLog, Total, 1);
-		doTlsScopedAlloc(nullLog, Total, 1);
-		doScopedAlloc(nullLog, Total, 1);
+		doAutoAlloc(nullLog, 1, Total);
+		doTlsScopedAlloc(nullLog, 1, Total);
+		doScopedAlloc(nullLog, 1, Total);
 
-		doComparison(log, Total, Total);
-		doComparison(log, Total, 1000);
-		doComparison(log, Total, 1);
+		doComparison(log, Total);
+		doComparison(log, 1000);
+		doComparison(log, 1);
 	}
 };
 
