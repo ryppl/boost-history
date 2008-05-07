@@ -24,14 +24,14 @@
 
 enum { Total = 1000000 };
 
-static int* p[Total];
-
-template <class LogT>
+template <class LogT, class Type=int>
 class TestAllocatorPerformance
 {
 private:
 	NS_BOOST_DETAIL::accumulator m_acc;
 	NS_BOOST_MEMORY::block_pool m_recycle;
+
+	static Type* p[Total];
 
 public:
 	void doNewDelete(LogT& log, int NAlloc, int PerAlloc)
@@ -43,7 +43,7 @@ public:
 			{
 				for (i = 0; i < PerAlloc; ++i)
 				{
-					p[i] = new int;
+					p[i] = new Type;
 				}
 				for (i = 0; i < PerAlloc; ++i)
 				{
@@ -57,7 +57,7 @@ public:
 #if defined(__GNUG__)
 	void doMtAllocator(LogT& log, int NAlloc, int PerAlloc)
 	{
-		typedef __gnu_cxx::__mt_alloc<int> allocator_type;
+		typedef __gnu_cxx::__mt_alloc<Type> allocator_type;
 		typedef __gnu_cxx::__pool_base::_Tune tune_type;
 		//tune_type tune(16, 5120, 32, 5120, 20, 10, false);
 		
@@ -70,10 +70,11 @@ public:
 				//alloc._M_set_options(tune);
 				for (i = 0; i < PerAlloc; ++i)
 				{
-					p[i] = alloc.allocate(1);
+					p[i] = new(alloc.allocate(1)) Type;
 				}
 				for (i = 0; i < PerAlloc; ++i)
 				{
+					p[i]->~Type();
 					alloc.deallocate(p[i], 1);
 				}
 			}
@@ -88,10 +89,11 @@ public:
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				boost::pool<> alloc(sizeof(int));
+				boost::pool<> alloc(sizeof(Type));
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = (int*)alloc.malloc();
+					Type* p = new(alloc.malloc()) Type;
+					// need to call the destructor of Type!
 				}
 			}
 		}
@@ -104,10 +106,10 @@ public:
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				boost::object_pool<int> alloc;
+				boost::object_pool<Type> alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = alloc.construct();
+					Type* p = alloc.construct();
 				}
 			}
 		}
@@ -124,7 +126,7 @@ public:
 				boost::auto_alloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = BOOST_NEW(alloc, int);
+					Type* p = BOOST_NEW(alloc, Type);
 				}
 			}
 		}
@@ -141,7 +143,7 @@ public:
 				boost::scoped_alloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = BOOST_NEW(alloc, int);
+					Type* p = BOOST_NEW(alloc, Type);
 				}
 			}
 		}
@@ -158,7 +160,7 @@ public:
 				boost::scoped_alloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = BOOST_NEW(alloc, int);
+					Type* p = BOOST_NEW(alloc, Type);
 				}
 			}
 		}
@@ -175,7 +177,7 @@ public:
 				boost::gc_alloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = BOOST_NEW(alloc, int);
+					Type* p = BOOST_NEW(alloc, Type);
 				}
 			}
 		}
@@ -193,11 +195,11 @@ public:
 			{
 				boost::gc_alloc alloc(m_recycle);
 				for (i = 0; i < PerAlloc1; ++i)
-					p[i] = BOOST_NEW(alloc, int);
+					p[i] = BOOST_NEW(alloc, Type);
 				for (i = 0; i < PerAlloc1; ++i)
 					alloc.destroy(p[i]);
 				for (i = 0; i < PerAlloc2; ++i)
-					p[i] = BOOST_NEW(alloc, int);
+					p[i] = BOOST_NEW(alloc, Type);
 				for (i = 0; i < PerAlloc2; ++i)
 					alloc.destroy(p[i]);
 			}
@@ -281,6 +283,9 @@ public:
 		doComparison(log, 1);
 	}
 };
+
+template <class LogT, class Type>
+Type* TestAllocatorPerformance<LogT, Type>::p[Total];
 
 // -------------------------------------------------------------------------
 
