@@ -114,8 +114,8 @@ private:
 		destructor_t fnDestroy;
 
 		void BOOST_MEMORY_CALL destruct() {
-			if (getNodeType() == nodeAllocedWithDestructor) {
-				freeNode();
+			if (this->getNodeType() == nodeAllocedWithDestructor) {
+				this->freeNode();
 				fnDestroy(this + 1);
 			}
 		}
