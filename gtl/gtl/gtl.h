@@ -1,0 +1,70 @@
+//external
+#include <vector>
+#include <iostream>
+
+//isotropy types
+#include "isotropy.h"
+
+//data types
+#include "point_data.h"
+#include "interval_data.h"
+#include "rectangle_data.h"
+#include "point_3d_data.h"
+#include "polygon_data.h"
+
+//traits types
+#include "point_traits.h"
+#include "interval_traits.h"
+#include "rectangle_traits.h"
+#include "point_3d_traits.h"
+#include "polygon_traits.h"
+
+//concept types
+#include "point_concept.h"
+#include "interval_concept.h"
+#include "rectangle_concept.h"
+#include "point_3d_concept.h"
+#include "polygon_concept.h"
+
+//definitions
+#include "post_concept_definitions.h"
+
+//geometry traits
+#include "geometry_traits.h"
+
+//defintions
+#include "post_geometry_traits_definitions.h"
+
+template <typename geometry_type_1, typename geometry_type_2>
+bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object) {
+  typename geometry_traits<geometry_type_1>::geometry_concept().contains(geometry_object, contained_geometry_object);
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+bool equivilence(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  typename geometry_traits<geometry_type_1>::geometry_concept concept_instantiation;
+  return concept_instantiation.equivilence(lvalue, rvalue);
+}
+
+template <typename geometry_type>
+typename component_type<geometry_type>::type
+get(const geometry_type& geometry_object, orientation_2d orient) {
+  return geometry_traits<geometry_type>::geometry_concept::get(geometry_object, orient);
+}
+
+template <typename geometry_type>
+typename component_type<geometry_type>::type
+get(const geometry_type& geometry_object, orientation_3d orient) {
+  return geometry_traits<geometry_type>::geometry_concept::get(geometry_object, orient);
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+geometry_type_1& assign(geometry_type_1& lvalue, geometry_type_2& rvalue) {
+  return geometry_traits<geometry_type_1>::geometry_concept::assign(lvalue, rvalue);
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+geometry_type_1& operator|(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return assign(lvalue, rvalue);
+}
+ 
