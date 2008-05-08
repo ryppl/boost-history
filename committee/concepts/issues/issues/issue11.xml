@@ -54,10 +54,10 @@ auto concept Semiregular&lt;typename T&gt;
   
   <ol start="2">
     <li><ins>[ <i>Note</i>: The <tt>InitializationConsistency</tt>
-        rule states that there shall not be any subtle differences in
+        axiom states that there shall not be any subtle differences in
         the semantics of initialization versus assignment. This gives
         an implementation considerable flexibility in how data are
-        initialized.</ins>/
+        initialized.</ins>
         <p>
         <ins>[ <i>Example</i>: An implementation is allowed to initialize data by allocating storage using the new operator 
 (which implies a call to the default constructor for the element) and then assigning each element its value. Or the 
