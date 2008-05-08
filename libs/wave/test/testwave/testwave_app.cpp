@@ -124,7 +124,7 @@ namespace {
 //      $E: to the result of preprocessing the given expression
 //      $F: to the passed full filepath 
 //      $P: to the full path
-//      $B: to the full path (but using forward slahs '/' on Windows)
+//      $B: to the full path (same as $P, but using forward slash '/' on Windows)
 //      $V: to the current Boost version number
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -178,9 +178,10 @@ testwave_app::got_expected_result(std::string const& filename,
             case 'P':       // insert full path
             case 'B':       // same as 'P', but forward slashs on Windows
                 {
-                    fs::path fullpath = fs::complete(
-                        fs::path(filename, fs::native), 
-                        fs::current_path());
+                    fs::path fullpath (
+                        fs::complete(
+                            fs::path(filename, fs::native), fs::current_path())
+                        );
                         
                     if ('(' == expected[pos1+2]) {
                     // the $P(basename) syntax is used
