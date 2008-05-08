@@ -26,4 +26,64 @@
   </p>
 </discussion>
 
+<resolution>
+  <p><tt>Semiregular</tt> can be very useful for describing types that
+    used in <tt>valarray</tt> and <tt>complex</tt>, if we
+    add <tt>DefaultConstructible</tt> and <tt>Addressable</tt> to
+    it. <tt>Semiregular</tt> then describes types that can be
+    initialized and assigned in a natural way, and from there we add
+    equality into <tt>Regular</tt>. </p>
+
+  <p>Change the definition of <tt>Semiregular</tt> in [concept.regular] as follows:</p>
+
+  <pre>
+auto concept Semiregular&lt;typename T&gt; 
+  : CopyConstructible&lt;T&gt;, CopyAssignable&lt;T&gt;, HeapAllocatable&lt;T&gt;<ins>, DefaultConstructible&lt;T&gt;, Addressable&lt;T&gt;</ins> {
+  requires SameType&lt;CopyAssignable&lt;T&gt;::result_type, T&amp;&gt;<del>;</del><ins>&amp;&amp;</ins> 
+           <ins>SameType&lt;Addressable&lt;T&gt;::pointer, T*&gt; &amp;&amp;</ins>
+           <ins>SameType&lt;Addressable&lt;T const&gt;::pointer, T const*&gt;</ins>
+ 
+  <ins>requires EqualityComparable&lt;T&gt; 
+  axiom InitializationConsistency(T x) {
+    (T() = x) == T(x);
+  }</ins>
+} 
+  </pre>
+
+  <p>Add the following paragraph after the description of <tt>Semiregular</tt> in [concept.regular]:</p>
+  
+  <ol start="2">
+    <li><ins>[ <i>Note</i>: The <tt>InitializationConsistency</tt>
+        rule states that there shall not be any subtle differences in
+        the semantics of initialization versus assignment. This gives
+        an implementation considerable flexibility in how data are
+        initialized.</ins>/
+        <p>
+        <ins>[ <i>Example</i>: An implementation is allowed to initialize data by allocating storage using the new operator 
+(which implies a call to the default constructor for the element) and then assigning each element its value. Or the 
+        implementation can allocate raw storage and use the copy constructor to initialize the element. -- <i>end example</i> ] -- <i>end note</i>]</ins></p> </li>
+  </ol>
+
+  <p>Change the definition of the <tt>Regular</tt> concept in [concept.regular] as follows:</p>
+
+  <pre>
+auto concept Regular&lt;typename T&gt;
+: Semiregular&lt;T&gt;<del>, DefaultConstructible&lt;T&gt;</del>, EqualityComparable&lt;T&gt; { } 
+  </pre>
+
+  <ol start="2">
+    <li><i>Note</i>: describes semi-regular types that <del>are default constructible,</del> have equality comparison operators<del>, and can be 
+        allocated on the heap</del>. </li>
+  </ol>
+
+  <p>Modify the definition of the <tt>InputIterator</tt> concept in [input.iterators] as follows:</p>
+
+  <pre>
+concept InputIterator&lt;typename X&gt; : <del>Semiregular&lt;X&gt;,</del> <ins>CopyConstructible&lt;T&gt;, CopyAssignable&lt;T&gt;, HeapAllocatable&lt;T&gt;,</ins> EqualityComparable&lt;X&gt; {
+  <ins>requires SameType&lt;CopyAssignable&lt;T&gt;::result_type, T&amp;&gt;;</ins>
+  <i>// ...</i>
+}
+  </pre>
+</resolution>
+
 </issue>
