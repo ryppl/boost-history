@@ -55,7 +55,8 @@ Bloomington, IN\ \  47405 \\
 
 \paragraph*{Changes from N2574}
 \begin{itemize}
-\item TODO
+\item Added concepts to \tcode{valarray} (\ref{numarray}).
+\item Added concepts for the transcendental operations (\ref{numeric.concepts}).
 \end{itemize}
 
 \end{titlepage}
@@ -81,7 +82,7 @@ Bloomington, IN\ \  47405 \\
 \color{black}
 
 \setcounter{chapter}{25}
-\rSec0[lib.numerics]{Numerics library}
+\rSec0[numerics]{Numerics library}
 \begin{paras}
 
 \pnum
@@ -95,23 +96,23 @@ numeric (%
 \textit{n}-at-a-time)
 arrays, generalized numeric algorithms,
 and facilities included from the ISO C library,
-as summarized in Table~\ref{tab:numerics.lib.summary}.
+as summarized in Table~\ref{tab:numerics.summary}.
 
-\begin{libsumtab}{Numerics library summary}{tab:numerics.lib.summary}
-\ref{lib.numeric.concepts} \changedCC{Requirements}{Concepts}	& \addedCC{\mbox{\tcode{<numeric_concepts>}}}						\\ \rowsep
-\ref{lib.complex.numbers} Complex Numbers	&	\tcode{<complex>}	\\ \rowsep
-\ref{lib.rand} \addedB{Random number generation} & \tcode{<random>} \\ \rowsep
-\ref{lib.numarray} Numeric arrays			&	\tcode{<valarray>}	\\ \rowsep
-\ref{lib.numeric.ops} Generalized numeric operations	&	\tcode{<numeric>}	\\ \rowsep
-\ref{lib.c.math} C library    				&	\tcode{<cmath>} 	\\
+\begin{libsumtab}{Numerics library summary}{tab:numerics.summary}
+\ref{numeric.concepts} \changedCC{Requirements}{Concepts}	& \addedCC{\mbox{\tcode{<numeric_concepts>}}}						\\ \rowsep
+\ref{complex.numbers} Complex Numbers	&	\tcode{<complex>}	\\ \rowsep
+\ref{rand} \addedB{Random number generation} & \tcode{<random>} \\ \rowsep
+\ref{numarray} Numeric arrays			&	\tcode{<valarray>}	\\ \rowsep
+\ref{numeric.ops} Generalized numeric operations	&	\tcode{<numeric>}	\\ \rowsep
+\ref{c.math} C library    				&	\tcode{<cmath>} 	\\
                                       & \tcode{<ctgmath>}	\\
                                       & \tcode{<tgmath.h>}\\
                                       & \tcode{<cstdlib>} \\
 \end{libsumtab}
 
-\rSec1[lib.numeric.concepts]{Numeric type concepts}
+\rSec1[numeric.concepts]{Numeric type concepts}
 \index{concepts!numeric type}
-\editorial{The name of this section has been changed from ``Numeric type requirements'' to ``Numeric type concepts'', and the label has been changed from [lib.numeric.requirements] to [lib.numeric.concepts].}
+\editorial{The name of this section has been changed from ``Numeric type requirements'' to ``Numeric type concepts'', and the label has been changed from [numeric.requirements] to [numeric.concepts].}
 
 \pnum
 The
@@ -174,7 +175,7 @@ storage and use the copy constructor to initialize each element.
 for a class, or if it fails to satisfy any of
 the other conditions listed above, the programmer should use
 \mbox{\tcode{vector}}\
-(\mbox{\ref{lib.vector}})\ instead of
+(\mbox{\ref{vector}})\ instead of
 \mbox{\tcode{valarray}}\
 for that class;
 \mbox{\exitnote}}
@@ -206,6 +207,1209 @@ operands, since
 \tcode{complex}\
 does not have any ordering operators.
 \exitexample\ 
+
+\color{addclr}
+\synopsis{Header \tcode{<numeric_concepts>}\ synopsis}
+\begin{codeblock}
+namespace std {
+  auto concept HasAbs<typename T> @\textit{see below}@;  
+  auto concept HasAcos<typename T> @\textit{see below}@;  
+  auto concept HasAsin<typename T> @\textit{see below}@;  
+  auto concept HasAtan<typename T> @\textit{see below}@;  
+  auto concept HasAtan2<typename T> @\textit{see below}@;  
+  auto concept HasCos<typename T> @\textit{see below}@;  
+  auto concept HasCosh<typename T> @\textit{see below}@;  
+  auto concept HasExp<typename T> @\textit{see below}@;  
+  auto concept HasLog<typename T> @\textit{see below}@;  
+  auto concept HasLog10<typename T> @\textit{see below}@;  
+  auto concept HasPow<typename T> @\textit{see below}@;  
+  auto concept HasSin<typename T> @\textit{see below}@;  
+  auto concept HasSinh<typename T> @\textit{see below}@;  
+  auto concept HasSqrt<typename T> @\textit{see below}@;  
+  auto concept HasTan<typename T> @\textit{see below}@;  
+  auto concept HasTanh<typename T> @\textit{see below}@;
+}
+\end{codeblock}
+
+\editorial{These transcendental concepts are here to support the
+  transcendental operations of \mbox{\tcode{valarray}} and
+  \mbox{\tcode{complex}}. They are separate concepts---rather than a
+  single \mbox{\tcode{Transcendental}} concept---because the
+  \mbox{\tcode{valarray}} versions in C++03 specifically require only
+  the corresponding operation.}
+
+\begin{itemdecl}
+auto concept HasAbs<typename T> {
+  T abs(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which an absolute value can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasAcos<typename T> {
+  T acos(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which an arc cosine.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasAsin<typename T> {
+  T asin(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which an arc sine can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasAtan<typename T> {
+  T atan(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which an arc tangent can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasAtan2<typename T> {
+  T atan2(const T& y, const T& x);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which an arc tangent can be computed from \mbox{\farg{y}}/\mbox{\farg{x}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasCos<typename T> {
+  T cos(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which a cosine can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasCosh<typename T> {
+  T cosh(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which a hyperbolic cosine can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasExp<typename T> {
+  T exp(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the base-\mbox{\farg{e}} exponential can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLog<typename T> {
+  T log(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the natural logarithm can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasLog10<typename T> {
+  T log10(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which a base-10 logarithm can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasPow<typename T> {
+  T pow(const T& x, const T& y);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the exponential \mbox{$\farg{x}^\farg{y}$} can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasSin<typename T> {
+  T sin(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the sine can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasSinh<typename T> {
+  T sinh(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the hyperbolic sine can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasSqrt<typename T> {
+  T sqrt(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the square root can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasTan<typename T> {
+  T tan(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the tangent can be computed.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasTanh<typename T> {
+  T tanh(const T&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types for which the hyperbolic tangent can be computed.}
+\end{itemdescr}
+\color{black}
+
+\rSec1[complex.numbers]{Complex numbers}
+
+\pnum
+The header
+\index{complex@\tcode{<complex>}}%
+\tcode{<complex>}
+defines a
+class template,
+and numerous functions for representing and manipulating complex numbers.
+
+\pnum
+The effect of instantiating the template
+\tcode{complex}\
+for any type other than float, double or long double is unspecified.
+\addedCC{\mbox{\enternote} In addition, for some
+  \mbox{\tcode{complex}} operations the concept requirements are
+  unspecified. \mbox{\exitnote}}
+
+\pnum
+If the result of a function is not mathematically defined or not in
+the range of representable values for its type, the behavior is
+undefined.
+
+\rSec2[complex.synopsis]{Header \tcode{<complex>}\ synopsis}
+
+\index{complex@\tcode{<complex>}}%
+\begin{codeblock}
+namespace std {
+  template<@\changedCC{class}{ArithmeticLike}@ T> class complex;
+  template<> class complex<float>;
+  template<> class complex<double>;
+  template<> class complex<long double>;
+
+  // \ref{complex.ops} operators:
+  template<@\changedCC{class}{ArithmeticLike}@ T>
+    complex<T> operator+(const complex<T>&, const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>&, const T&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const T&, const complex<T>&);
+
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-
+    (const complex<T>&, const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>&, const T&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const T&, const complex<T>&);
+
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*
+    (const complex<T>&, const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const complex<T>&, const T&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const T&, const complex<T>&);
+
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/
+    (const complex<T>&, const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const complex<T>&, const T&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const T&, const complex<T>&);
+
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>&);
+
+  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==
+    (const complex<T>&, const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const complex<T>&, const T&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const T&, const complex<T>&);
+
+  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>&, const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>&, const T&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const T&, const complex<T>&);
+
+  template<class T, class charT, class traits>
+  basic_istream<charT, traits>&
+  operator>>(basic_istream<charT, traits>&, complex<T>&);
+
+  template<class T, class charT, class traits>
+  basic_ostream<charT, traits>&
+  operator<<(basic_ostream<charT, traits>&, const complex<T>&);
+
+  // \ref{complex.value.ops} values:
+  template<@\changedCC{class}{ArithmeticLike}@ T> T real(const complex<T>&);
+  template<@\changedCC{class}{ArithmeticLike}@ T> T imag(const complex<T>&);
+
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ T abs(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ T arg(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ T norm(const complex<T>&);
+
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> conj(const complex<T>&);
+  @\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> fabs(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> polar(const T&, const T& = 0);
+
+  // \ref{complex.transcendentals} transcendentals:
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> acos(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> asin(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> atan(const complex<T>&);
+
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> acosh(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> asinh(const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> atanh(const complex<T>&);
+
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> cos  (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> cosh (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> exp  (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> log  (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> log10(const complex<T>&);
+
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow(const complex<T>&, int);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow(const complex<T>&, const T&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow(const complex<T>&, const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow(const T&, const complex<T>&);
+
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> sin  (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> sinh (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> sqrt (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> tan  (const complex<T>&);
+  template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> tanh (const complex<T>&);
+
+}
+\end{codeblock}
+
+\rSec2[complex]{Class template \tcode{complex}}
+
+\index{complex@\tcode{complex}}%
+\begin{codeblock}
+namespace std {
+  template<@\changedCC{class}{ArithmeticLike}@ T>
+  class complex {
+  public:
+    typedef T value_type;
+
+    complex(const T& @\farg{re}@ = T(), const T& @\farg{im}@ = T());
+    complex(const complex&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Constructible<T, X>}@
+      complex(const complex<X>&);
+
+    T real() const;
+    T imag() const;
+
+    complex<T>& operator= (const T&);
+    complex<T>& operator+=(const T&);
+    complex<T>& operator-=(const T&);
+    complex<T>& operator*=(const T&);
+    complex<T>& operator/=(const T&);
+
+    complex& operator=(const complex&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+      complex<T>& operator= (const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+      complex<T>& operator+=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+      complex<T>& operator-=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+      complex<T>& operator*=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+      complex<T>& operator/=(const complex<X>&);
+  };
+
+}
+\end{codeblock}
+
+\pnum
+The class
+\tcode{complex}\
+describes an object that can
+store the Cartesian components,
+\tcode{real()}\
+and
+\tcode{imag()},
+of a complex
+number.
+
+\rSec2[complex.special]{\tcode{complex}\ specializations}
+
+\begin{codeblock}
+  template<> class complex<float> {
+  public:
+    typedef float value_type;
+
+    complex(float re = 0.0f, float im = 0.0f);
+    explicit complex(const complex<double>&);
+    explicit complex(const complex<long double>&);
+
+    float real() const;
+    float imag() const;
+
+    complex<float>& operator= (float);
+    complex<float>& operator+=(float);
+    complex<float>& operator-=(float);
+    complex<float>& operator*=(float);
+    complex<float>& operator/=(float);
+
+    complex<float>& operator=(const complex<float>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+      complex<float>& operator= (const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+      complex<float>& operator+=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+      complex<float>& operator-=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+      complex<float>& operator*=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+      complex<float>& operator/=(const complex<X>&);
+  };
+
+  template<> class complex<double> {
+  public:
+    typedef double value_type;
+
+    complex(double re = 0.0, double im = 0.0);
+    complex(const complex<float>&);
+    explicit complex(const complex<long double>&);
+
+    double real() const;
+    double imag() const;
+
+    complex<double>& operator= (double);
+    complex<double>& operator+=(double);
+    complex<double>& operator-=(double);
+    complex<double>& operator*=(double);
+    complex<double>& operator/=(double);
+
+    complex<double>& operator=(const complex<double>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+      complex<double>& operator= (const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+      complex<double>& operator+=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+      complex<double>& operator-=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+      complex<double>& operator*=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+      complex<double>& operator/=(const complex<X>&);
+  };
+
+  template<> class complex<long double> {
+  public:
+    typedef long double value_type;
+
+    complex(long double re = 0.0L, long double im = 0.0L);
+    complex(const complex<float>&);
+    complex(const complex<double>&);
+
+    long double real() const;
+    long double imag() const;
+
+    complex<long double>& operator=(const complex<long double>&);
+    complex<long double>& operator= (long double);
+    complex<long double>& operator+=(long double);
+    complex<long double>& operator-=(long double);
+    complex<long double>& operator*=(long double);
+    complex<long double>& operator/=(long double);
+
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+      complex<long double>& operator= (const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+      complex<long double>& operator+=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+      complex<long double>& operator-=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+      complex<long double>& operator*=(const complex<X>&);
+    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+      complex<long double>& operator/=(const complex<X>&);
+  };
+\end{codeblock}
+
+\rSec2[complex.members]{\tcode{complex}\ member functions}
+
+\index{complex@\tcode{complex}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T> @\addedCC{requires Constructible<T, X>}@ 
+  complex(const T& @\farg{re}@ = T(), const T& @\farg{im}@ = T());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs an object of class
+\tcode{complex}.
+
+\pnum
+\postcondition\ 
+\tcode{real() == \farg{re}\ \&\& imag() == \farg{im}}.
+\end{itemdescr}
+
+\rSec2[complex.member.ops]{\tcode{complex}\ member operators}
+
+\index{operator+=@\tcode{operator+=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template <class T>}@ complex<T>& operator+=(const T& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Adds the scalar value \farg{rhs}\ to the real part of the complex value
+\tcode{*this}\
+and stores the result in the real part of
+\tcode{*this},
+leaving the imaginary part unchanged.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator-=@\tcode{operator-=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template <class T>}@ complex<T>& operator-=(const T& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Subtracts the scalar value \farg{rhs}\ from the real part of the complex value
+\tcode{*this}\
+and stores the result in the real part of
+\tcode{*this},
+leaving the imaginary part unchanged.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator*=@\tcode{operator*=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template <class T>}@ complex<T>& operator*=(const T& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Multiplies the scalar value \farg{rhs}\ by the complex value
+\tcode{*this}\
+and stores the result in
+\tcode{*this}.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator/=@\tcode{operator/=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template <class T>}@ complex<T>& operator/=(const T& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Divides the scalar value \farg{rhs}\ into the complex value
+\tcode{*this}\
+and stores the result in
+\tcode{*this}.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator+=@\tcode{operator+=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template<class T>}@ complex<T>& operator+=(const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Adds the complex value \farg{rhs}\ to the complex value
+\tcode{*this}\
+and stores the sum in
+\tcode{*this}.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator-=@\tcode{operator-=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template<class T>}@ complex<T>& operator-=(const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Subtracts the complex value \farg{rhs}\ from the complex value
+\tcode{*this}\
+and stores the difference in
+\tcode{*this}.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator*=@\tcode{operator*=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template<class T>}@ complex<T>& operator*=(const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Multiplies the complex value \farg{rhs}\ by the complex value
+\tcode{*this}\
+and stores the product in
+\tcode{*this}.
+
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\index{operator/=@\tcode{operator/=}!\tcode{complex}}%
+\begin{itemdecl}
+@\removedCC{template<class T>}@ complex<T>& operator/=(const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Divides the complex value \farg{rhs}\ into the complex value
+\tcode{*this}\
+and stores the quotient in
+\tcode{*this}.
+
+\pnum
+\returns\ 
+\tcode{*this}.
+\end{itemdescr}
+
+\rSec2[complex.ops]{\tcode{complex}\ non-member operations}
+
+\index{operator+@\tcode{operator+}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>& @\farg{lhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+unary operator.
+
+\pnum
+\returns\ 
+\tcode{complex<T>(\farg{lhs})}.
+\end{itemdescr}
+
+\begin{codeblock}
+template<@\changedCC{class}{ArithmeticLike}@ T>
+  complex<T> operator+(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+\end{codeblock}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{complex<T>(\farg{lhs}) += \farg{rhs}}.
+\end{itemdescr}
+
+\index{operator-@\tcode{operator-}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>& @\farg{lhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+unary operator.
+
+\pnum
+\returns\ 
+\tcode{complex<T>(-\farg{lhs}.real(),-\farg{lhs}.imag())}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T>
+  complex<T> operator-(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{complex<T>(\farg{lhs}) -= \farg{rhs}}.
+\end{itemdescr}
+
+\index{operator*@\tcode{operator*}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T>
+  complex<T> operator*(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{complex<T>(\farg{lhs}) *= \farg{rhs}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T>
+  complex<T> operator/(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{complex<T>(\farg{lhs}) /= \farg{rhs}}.
+\end{itemdescr}
+
+\index{operator==@\tcode{operator==}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T>
+  bool operator==(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{\farg{lhs}.real() == \farg{rhs}.real() \&\& \farg{lhs}.imag() == \farg{rhs}.imag()}.
+
+\pnum
+\notes\ 
+The imaginary part is assumed to be
+\tcode{T()},
+or 0.0, for the
+\tcode{T}\
+arguments.
+\end{itemdescr}
+
+\index{operator"!=@\tcode{operator"!=}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T>
+  bool operator!=(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{\farg{rhs}.real() != \farg{lhs}.real() || \farg{rhs}.imag() != \farg{lhs}.imag()}.
+\end{itemdescr}
+
+\index{operator>>@\tcode{operator\shr}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T, class charT, class traits>
+basic_istream<charT, traits>&
+operator>>(basic_istream<charT, traits>& @\farg{is}@, complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Extracts a complex number \farg{x} of the form:
+\tcode{u},
+\tcode{(u)},
+or
+\tcode{(u,v)},
+where
+\tcode{u}\
+is the real part and
+\tcode{v}\
+is the imaginary part (\ref{istream.formatted}).
+
+\pnum
+\requires\ 
+The input values be convertible to
+\tcode{T}.
+
+If bad input is encountered, calls
+\tcode{\farg{is}.setstate(ios::failbit)}\
+(which may throw
+\tcode{ios::failure}\
+(\ref{iostate.flags}).
+
+\pnum
+\returns\ 
+\farg{is}.
+
+\pnum
+\notes\ 
+This extraction is performed as a series of simpler
+extractions.
+Therefore, the skipping of whitespace is specified to be
+the same for each of the simpler extractions.
+\end{itemdescr}
+
+\index{operator<<@\tcode{operator\shl}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T, class charT, class traits>
+basic_ostream<charT, traits>&
+operator<<(basic_ostream<charT, traits>& @\farg{o}@, const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+inserts the complex number \farg{x}\
+onto the stream \farg{o}\ as if it were implemented as follows:
+
+\begin{codeblock}
+template<class T, class charT, class traits>
+basic_ostream<charT, traits>&
+operator<<(basic_ostream<charT, traits>& o, const complex<T>& x)
+{
+	basic_ostringstream<charT, traits> s;
+	s.flags(o.flags());
+	s.imbue(o.getloc());
+	s.precision(o.precision());
+	s << '(' << x.real() << "," << x.imag() << ')';
+	return o << s.str();
+}
+\end{codeblock}
+\end{itemdescr}
+
+\rSec2[complex.value.ops]{\tcode{complex}\ value operations}
+
+\index{real@\tcode{real}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T> T real(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{\farg{x}.real()}.
+\end{itemdescr}
+
+\index{imag@\tcode{imag}!\tcode{complex}}%
+\begin{itemdecl}
+template<@\changedCC{class}{ArithmeticLike}@ T> T imag(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+\tcode{\farg{x}.imag()}.
+\end{itemdescr}
+
+\index{abs@\tcode{abs}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ T abs(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the magnitude of \farg{x}.
+\end{itemdescr}
+
+\index{arg@\tcode{arg}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ T arg(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the phase angle of \farg{x}, or \tcode{atan2(imag(\farg{x}), real(\farg{x}))}.
+\end{itemdescr}
+
+\index{norm@\tcode{norm}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ T norm(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the squared magnitude of \farg{x}.
+\end{itemdescr}
+
+\index{conj@\tcode{conj}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> conj(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex conjugate of \farg{x}.
+\end{itemdescr}
+
+\index{fabs@\tcode{fabs}!\tcode{complex}}%
+\index{cabs@\tcode{cabs}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> fabs(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{cabs},
+defined in subclause 7.3.8.1.
+\end{itemdescr}
+
+\index{polar@\tcode{polar}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> polar(const T& @\farg{rho}@, const T& @\farg{theta}@ = 0);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the
+\tcode{complex}\
+value corresponding
+to a complex number whose magnitude is \farg{rho}\ and whose phase angle
+is \farg{theta}.
+\end{itemdescr}
+
+\rSec2[complex.transcendentals]{\tcode{complex}\ transcendentals}
+
+\index{acos@\tcode{acos}!\tcode{complex}}%
+\index{cacos@\tcode{cacos}!\tcode{complex}}%
+\begin{itemdecl}
+@\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> acos(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{cacos},
+defined in subclause 7.3.5.1.
+\end{itemdescr}
+
+\index{asin@\tcode{asin}!\tcode{complex}}%
+\index{casin@\tcode{casin}!\tcode{complex}}%
+\begin{itemdecl}
+@\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> asin(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{casin},
+defined in subclause 7.3.5.2.
+\end{itemdescr}
+
+\index{atan@\tcode{atan}!\tcode{complex}}%
+\index{catan@\tcode{catan}!\tcode{complex}}%
+\begin{itemdecl}
+@\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> atan(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{catan},
+defined in subclause 7.3.5.3.
+\end{itemdescr}
+
+\index{acosh@\tcode{acosh}!\tcode{complex}}%
+\index{cacosh@\tcode{cacosh}!\tcode{complex}}%
+\begin{itemdecl}
+@\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> acosh(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{cacosh},
+defined in subclause 7.3.6.1.
+\end{itemdescr}
+
+\index{asinh@\tcode{asinh}!\tcode{complex}}%
+\index{casinh@\tcode{casinh}!\tcode{complex}}%
+\begin{itemdecl}
+@\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> asinh(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{casinh},
+defined in subclause 7.3.6.2.
+\end{itemdescr}
+
+\index{atanh@\tcode{atanh}!\tcode{complex}}%
+\index{catanh@\tcode{catanh}!\tcode{complex}}%
+\begin{itemdecl}
+@\ptr@template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> atanh(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\  Behaves the same as C99 function \tcode{catanh},
+defined in subclause 7.3.6.3.
+\end{itemdescr}
+
+\index{cos@\tcode{cos}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> cos(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex cosine of \farg{x}.
+\end{itemdescr}
+
+\index{cosh@\tcode{cosh}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> cosh(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex hyperbolic cosine of \farg{x}.
+\end{itemdescr}
+
+\index{exp@\tcode{exp}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> exp(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex base e exponential of \farg{x}.
+\end{itemdescr}
+
+\index{log@\tcode{log}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> log(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+the branch cuts are along the negative real axis.
+
+\pnum
+\returns\ 
+the complex natural (base e) logarithm of \farg{x},
+in the range of a strip mathematically unbounded along the
+real axis and in the interval \crange{-i times pi}{i times pi}\
+along the imaginary axis.
+When \farg{x} is a negative real
+number,
+\tcode{imag(log(\farg{x}))}\
+is pi.
+\end{itemdescr}
+
+\index{log10@\tcode{log10}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> log10(const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+the branch cuts are along the negative real axis.
+
+\pnum
+\returns\ 
+the complex common (base 10) logarithm of \farg{x}, defined as
+\tcode{log(\farg{x})/log(10)}.
+\end{itemdescr}
+
+\index{pow@\tcode{pow}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow(const complex<T>& @\farg{x}@, int @\farg{y}@);
+template<class T>
+  complex<T> @\addedCC{requires \mbox{\textit{unspecified}}}@ pow(const complex<T>& @\farg{x}@, const complex<T>& @\farg{y}@);
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow  (const complex<T>& @\farg{x}@, const T& @\farg{y}@);
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> pow  (const T& @\farg{x}@, const complex<T>& @\farg{y}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+the branch cuts are along the negative real axis.
+
+\pnum
+\returns\ 
+the complex power of base \farg{x}\ raised to the \farg{y}-th power,
+defined as
+\tcode{exp(\farg{y}*log(\farg{x}))}.
+The value returned for
+\tcode{pow(0,0)}
+is implementation-defined.
+\end{itemdescr}
+
+\index{sin@\tcode{sin}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> sin  (const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex sine of \farg{x}.
+\end{itemdescr}
+
+\index{sinh@\tcode{sinh}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> sinh (const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex hyperbolic sine of \farg{x}.
+\end{itemdescr}
+
+\index{sqrt@\tcode{sqrt}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> sqrt (const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\notes\ 
+the branch cuts are along the negative real axis.
+
+\pnum
+\returns\ 
+the complex square root of \farg{x}, in the range of the right
+half-plane.
+If the argument is a negative real number, the
+value returned lies on the positive imaginary axis.
+\end{itemdescr}
+
+\index{tan@\tcode{tan}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> tan  (const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex tangent of \farg{x}.
+\end{itemdescr}
+
+\index{tanh@\tcode{tanh}!\tcode{complex}}%
+\begin{itemdecl}
+template<class T> @\addedCC{requires \mbox{\textit{unspecified}}}@ complex<T> tanh (const complex<T>& @\farg{x}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+the complex hyperbolic tangent of \farg{x}.
+\end{itemdescr}
+
+\rSec2[cmplx.over]{\marktr{}Additional Overloads}
+
+\pnum
+\index{arg@\tcode{arg}}%
+\index{conj@\tcode{conj}}%
+\index{imag@\tcode{imag}}%
+\index{norm@\tcode{norm}}%
+\index{polar@\tcode{polar}}%
+\index{real@\tcode{real}}%
+The following function templates shall have additional overloads:
+\begin{codeblock}
+  arg                   norm 
+  conj                  polar 
+  imag                  real 
+\end{codeblock}
+
+\pnum
+\index{overloads!floating point}%
+The additional overloads shall be sufficient to ensure:
+
+\begin{enumerate}
+        \item{If the argument has type \tcode{long double}, then it is effectively 
+              cast to \tcode{complex<long double>}.}
+        \item{Otherwise, if the argument has type \tcode{double} or an integer type,
+              then it is effectively cast to \tcode{complex<double>}.}
+        \item{Otherwise, if the argument has type \tcode{float}, then it is 
+              effectively cast to \tcode{complex<float>}.}
+\end{enumerate}
+
+\pnum
+\index{pow@\tcode{pow}}%
+Function template \tcode{pow} shall have additional overloads sufficient to
+ensure, for a call with at least one argument of type \tcode{complex<T>}:
+
+\begin{enumerate}
+
+  \item{If either argument has type \tcode{complex<long double>} or type \tcode{long
+        double}, then both arguments are effectively cast to
+        \tcode{complex<long double>}.}
+  \item{Otherwise, if either argument has type \tcode{complex<double>}, \tcode{double},
+        or an integer type, then both arguments are effectively cast to
+        \tcode{complex<double>}.}
+  \item{Otherwise, if either argument has type \tcode{complex<float>} or \tcode{float},
+        then both arguments are effectively cast to \tcode{complex<float>}.}
+\end{enumerate}
+
+\rSec2[ccmplx]{\marktr{}Header \tcode{<ccomplex>}}
+\pnum
+\index{ccomplex@\tcode{<ccomplex>}}%
+The header behaves as if it simply includes the header \tcode{<complex>}.
+
+\rSec2[cmplxh]{\marktr{}Header \tcode{<complex.h>}}
+\pnum
+\index{complex.h@\tcode{<complex.h>}}%
+The header behaves as if it includes the header \tcode{<ccomplex>}, and provides
+sufficient \textit{using} declarations to declare in the global namespace all
+function and type names declared or defined in the neader \tcode{<complex>}.
 
 \setcounter{section}{4}
 \rSec1[numarray]{Numeric arrays}
@@ -402,31 +1606,31 @@ namespace std {
     @\addedCC{requires LessThanComparable<T>}@
     valarray<bool> operator>=(const T&, const valarray<T>&);
 
-  template<class T> valarray<T> abs  (const valarray<T>&);
-  template<class T> valarray<T> acos (const valarray<T>&);
-  template<class T> valarray<T> asin (const valarray<T>&);
-  template<class T> valarray<T> atan (const valarray<T>&);
+  template<@\changedCC{class}{HasAbs}@ T> valarray<T> abs  (const valarray<T>&);
+  template<@\changedCC{class}{HasAcos}@ T> valarray<T> acos (const valarray<T>&);
+  template<@\changedCC{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
+  template<@\changedCC{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
 
-  template<class T> valarray<T> atan2
+  template<@\changedCC{class}{Atan2}@ T> valarray<T> atan2
     (const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<T> atan2(const valarray<T>&, const T&);
-  template<class T> valarray<T> atan2(const T&, const valarray<T>&);
+  template<@\changedCC{class}{Atan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
+  template<@\changedCC{class}{Atan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
 
-  template<class T> valarray<T> cos  (const valarray<T>&);
-  template<class T> valarray<T> cosh (const valarray<T>&);
-  template<class T> valarray<T> exp  (const valarray<T>&);
-  template<class T> valarray<T> log  (const valarray<T>&);
-  template<class T> valarray<T> log10(const valarray<T>&);
+  template<@\changedCC{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
+  template<@\changedCC{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
+  template<@\changedCC{class}{HasExp}@ T> valarray<T> exp  (const valarray<T>&);
+  template<@\changedCC{class}{HasLog}@ T> valarray<T> log  (const valarray<T>&);
+  template<@\changedCC{class}{HasLog10}@ T> valarray<T> log10(const valarray<T>&);
 
-  template<class T> valarray<T> pow(const valarray<T>&, const valarray<T>&);
-  template<class T> valarray<T> pow(const valarray<T>&, const T&);
-  template<class T> valarray<T> pow(const T&, const valarray<T>&);
+  template<@\changedCC{class}{HasPow}@ T> valarray<T> pow(const valarray<T>&, const valarray<T>&);
+  template<@\changedCC{class}{HasPow}@ T> valarray<T> pow(const valarray<T>&, const T&);
+  template<@\changedCC{class}{HasPow}@ T> valarray<T> pow(const T&, const valarray<T>&);
 
-  template<class T> valarray<T> sin  (const valarray<T>&);
-  template<class T> valarray<T> sinh (const valarray<T>&);
-  template<class T> valarray<T> sqrt (const valarray<T>&);
-  template<class T> valarray<T> tan  (const valarray<T>&);
-  template<class T> valarray<T> tanh (const valarray<T>&);
+  template<@\changedCC{class}{HasSin}@ T> valarray<T> sin  (const valarray<T>&);
+  template<@\changedCC{class}{HasSinh}@ T> valarray<T> sinh (const valarray<T>&);
+  template<@\changedCC{class}{HasSqrt}@ T> valarray<T> sqrt (const valarray<T>&);
+  template<@\changedCC{class}{HasTan}@ T> valarray<T> tan  (const valarray<T>&);
+  template<@\changedCC{class}{HasTanh}@ T> valarray<T> tanh (const valarray<T>&);
 }
 \end{codeblock}
 
@@ -1521,36 +2725,39 @@ indicated operator to the corresponding element of the array and the non-array a
 \index{tan@\tcode{tan}}%
 \index{tanh@\tcode{tanh}}%
 \begin{itemdecl}
-template<class T> valarray<T> abs  (const valarray<T>&);
-template<class T> valarray<T> acos (const valarray<T>&);
-template<class T> valarray<T> asin (const valarray<T>&);
-template<class T> valarray<T> atan (const valarray<T>&);
-template<class T> valarray<T> atan2
+template<@\changedCC{class}{HasAbs}@ T> valarray<T> abs  (const valarray<T>&);
+template<@\changedCC{class}{HasAcos}@ T> valarray<T> acos (const valarray<T>&);
+template<@\changedCC{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
+template<@\changedCC{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
+template<@\changedCC{class}{HasAtan2}@ T> valarray<T> atan2
     (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> atan2(const valarray<T>&, const T&);
-template<class T> valarray<T> atan2(const T&, const valarray<T>&);
-template<class T> valarray<T> cos  (const valarray<T>&);
-template<class T> valarray<T> cosh (const valarray<T>&);
-template<class T> valarray<T> exp  (const valarray<T>&);
-template<class T> valarray<T> log  (const valarray<T>&);
-template<class T> valarray<T> log10(const valarray<T>&);
-template<class T> valarray<T> pow
+template<@\changedCC{class}{HasAtan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
+template<@\changedCC{class}{HasAtan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
+template<@\changedCC{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
+template<@\changedCC{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
+template<@\changedCC{class}{HasExp}@ T> valarray<T> exp  (const valarray<T>&);
+template<@\changedCC{class}{HasLog}@ T> valarray<T> log  (const valarray<T>&);
+template<@\changedCC{class}{HasLog10}@ T> valarray<T> log10(const valarray<T>&);
+template<@\changedCC{class}{HasPow}@ T> valarray<T> pow
     (const valarray<T>&, const valarray<T>&);
-template<class T> valarray<T> pow  (const valarray<T>&, const T&);
-template<class T> valarray<T> pow  (const T&, const valarray<T>&);
-template<class T> valarray<T> sin  (const valarray<T>&);
-template<class T> valarray<T> sinh (const valarray<T>&);
-template<class T> valarray<T> sqrt (const valarray<T>&);
-template<class T> valarray<T> tan  (const valarray<T>&);
-template<class T> valarray<T> tanh (const valarray<T>&);
+template<@\changedCC{class}{HasPow}@ T> valarray<T> pow  (const valarray<T>&, const T&);
+template<@\changedCC{class}{HasPow}@ T> valarray<T> pow  (const T&, const valarray<T>&);
+template<@\changedCC{class}{HasSin}@ T> valarray<T> sin  (const valarray<T>&);
+template<@\changedCC{class}{HasSinh}@ T> valarray<T> sinh (const valarray<T>&);
+template<@\changedCC{class}{HasSqrt}@ T> valarray<T> sqrt (const valarray<T>&);
+template<@\changedCC{class}{HasTan}@ T> valarray<T> tan  (const valarray<T>&);
+template<@\changedCC{class}{HasTanh}@ T> valarray<T> tanh (const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-Each of these functions may only be instantiated for a type \farg{T}\ 
+\removedCC{Each of these functions may only be instantiated for a type \mbox{\farg{T}}\ 
 to which a unique function with the indicated name can be applied (unqualified).
-This function shall return a value which is of type \farg{T}\ 
-or which can be unambiguously converted to type \farg{T}.
+This function shall return a value which is of type \mbox{\farg{T}}\ 
+or which can be unambiguously converted to type \mbox{\farg{T}}.}
+\addedCC{Each 
+element of the returned array is initialized with the result of applying the indicated function to the non-array argument (if any) and corresponding 
+element of the array argument or arguments.}
 \end{itemdescr}
 
 \rSec3[valarray.special]{\tcode{valarray}\ specialized algorithms}
@@ -2159,7 +3366,7 @@ object refers.
 
 \setcounter{section}{5}
 
-\rSec1[lib.numeric.ops]{Generalized numeric operations}
+\rSec1[numeric.ops]{Generalized numeric operations}
 
 \synopsis{Header \tcode{<numeric>}\ synopsis}
 \index{numeric@\tcode{<numeric>}}%
@@ -2222,10 +3429,10 @@ namespace std {
 
 \pnum
 The requirements on the types of algorithms' arguments that are
-described in the introduction to clause \ref{lib.algorithms}\ also
+described in the introduction to clause \ref{algorithms}\ also
 apply to the following algorithms.
 
-\rSec2[lib.accumulate]{Accumulate}
+\rSec2[accumulate]{Accumulate}
 
 \color{addclr}
 \index{accumulate@\tcode{accumulate}}%
@@ -2273,7 +3480,7 @@ shall neither modify elements nor invalidate iterators or subranges.%
 }
 \end{itemdescr}
 
-\rSec2[lib.inner.product]{Inner product}
+\rSec2[inner.product]{Inner product}
 \index{inner_product@\tcode{inner_product}}%
 
 \color{addclr}
@@ -2334,7 +3541,7 @@ shall neither modify elements nor invalidate iterators or subranges.%
 }
 \end{itemdescr}
 
-\rSec2[lib.partial.sum]{Partial sum}
+\rSec2[partial.sum]{Partial sum}
 \index{partial_sum@\tcode{partial_sum}}%
 \color{addclr}
 \begin{itemdecl}
@@ -2403,7 +3610,7 @@ may be equal to
 \tcode{first}.
 \end{itemdescr}
 
-\rSec2[lib.adjacent.difference]{Adjacent difference}
+\rSec2[adjacent.difference]{Adjacent difference}
 
 \index{adjacent_difference@\tcode{adjacent_difference}}%
 \color{addclr}

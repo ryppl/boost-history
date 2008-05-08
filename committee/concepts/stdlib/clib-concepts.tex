@@ -1288,6 +1288,7 @@ concept ArithmeticLike<typename T>
   : Regular<T>, LessThanComparable<T>, HasPlus<T>, HasMinus<T>, HasMultiply<T>, HasDivide<T>, 
     HasUnaryPlus<T>, HasNegate<T> {
   T::T(long long);
+  @\addedCC{T::T(long double);}@
 
   T& operator++(T&);
   T operator++(T& t, int) { T tmp(t); ++t; return tmp; }
