@@ -51,7 +51,6 @@ public:
 		friend class stack;
 	
 	public:
-		node() : m_prev(NULL) {}
 		node* prev() const { return m_prev; }
 	};
 
