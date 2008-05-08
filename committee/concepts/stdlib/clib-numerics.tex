@@ -84,6 +84,129 @@ Bloomington, IN\ \  47405 \\
 \rSec0[lib.numerics]{Numerics library}
 \begin{paras}
 
+\pnum
+This clause describes components that \Cpp\ programs may use to perform
+seminumerical operations.
+
+\pnum
+The following subclauses describe components for
+complex number types, \addedB{random number generation,}
+numeric (%
+\textit{n}-at-a-time)
+arrays, generalized numeric algorithms,
+and facilities included from the ISO C library,
+as summarized in Table~\ref{tab:numerics.lib.summary}.
+
+\begin{libsumtab}{Numerics library summary}{tab:numerics.lib.summary}
+\ref{lib.numeric.concepts} \changedCC{Requirements}{Concepts}	& \addedCC{\mbox{\tcode{<numeric_concepts>}}}						\\ \rowsep
+\ref{lib.complex.numbers} Complex Numbers	&	\tcode{<complex>}	\\ \rowsep
+\ref{lib.rand} \addedB{Random number generation} & \tcode{<random>} \\ \rowsep
+\ref{lib.numarray} Numeric arrays			&	\tcode{<valarray>}	\\ \rowsep
+\ref{lib.numeric.ops} Generalized numeric operations	&	\tcode{<numeric>}	\\ \rowsep
+\ref{lib.c.math} C library    				&	\tcode{<cmath>} 	\\
+                                      & \tcode{<ctgmath>}	\\
+                                      & \tcode{<tgmath.h>}\\
+                                      & \tcode{<cstdlib>} \\
+\end{libsumtab}
+
+\rSec1[lib.numeric.concepts]{Numeric type concepts}
+\index{concepts!numeric type}
+\editorial{The name of this section has been changed from ``Numeric type requirements'' to ``Numeric type concepts'', and the label has been changed from [lib.numeric.requirements] to [lib.numeric.concepts].}
+
+\pnum
+The
+\tcode{complex}\
+and
+\tcode{valarray}\
+components are parameterized by the type of information they contain and manipulate.
+A \Cpp\ program shall instantiate these components only with a type
+\tcode{T}\
+that satisfies the
+\changedCC{following requirements:}{\mbox{\tcode{Semiregular}} concept (\mbox{\ref{concept.regular}}).}%
+\footnote{
+\removedCC{In other words, value types.
+These include built-in arithmetic types,
+pointers, the library class
+\mbox{\tcode{complex}},
+and instantiations of
+\mbox{\tcode{valarray}}\
+for value types.
+}}
+\begin{itemize}
+\item \removedCC{\mbox{\farg{T}}\ is not an abstract class (it has no pure virtual member functions);}
+\item \removedCC{\mbox{\farg{T}}\ is not a reference type;}
+\item \removedCC{\mbox{\farg{T}}\ is not cv-qualified;}
+\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public default constructor;}
+\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public copy constructor with the signature \mbox{\tcode{\farg{T}::\farg{T}(const \farg{T}\&)}}}\
+\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public destructor;}
+\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public assignment operator whose signature is either
+\mbox{\tcode{\farg{T}\& \farg{T}::operator=(const \farg{T}\&)}}\
+or
+\mbox{\tcode{\farg{T}\& \farg{T}::operator=(\farg{T})}}}\
+\item \removedC{If \mbox{\farg{T}}\ is a class, its assignment operator, copy and default constructors,
+and destructor shall correspond to each other in the following sense:
+Initialization of raw storage using the default constructor, followed by
+assignment, is semantically equivalent to initialization of raw
+storage using the copy constructor.
+Destruction of an object, followed by
+initialization of its raw storage using the copy constructor,
+is semantically equivalent to assignment to the original object.}
+
+\removedCC{\mbox{\enternote}\ 
+This rule states that there shall not be any subtle differences in the semantics
+of initialization versus assignment.
+This gives an implementation
+considerable flexibility in how arrays are initialized.}
+
+\removedCC{\mbox{\enterexample}\ 
+An implementation is allowed to initialize a
+\mbox{\tcode{valarray}}\
+by allocating storage using the
+\mbox{\tcode{new}}\
+operator (which
+implies a call to the default constructor for each element) and then
+assigning each element its value.
+Or the implementation can allocate raw
+storage and use the copy constructor to initialize each element.
+\mbox{\exitexample}}
+
+\removedCC{If the distinction between initialization and assignment is important
+for a class, or if it fails to satisfy any of
+the other conditions listed above, the programmer should use
+\mbox{\tcode{vector}}\
+(\mbox{\ref{lib.vector}})\ instead of
+\mbox{\tcode{valarray}}\
+for that class;
+\mbox{\exitnote}}
+\item \removedCC{If \mbox{\farg{T}}\ is a class, it does not overload unary
+\mbox{\tcode{operator\&}}.}
+\end{itemize}
+
+\pnum
+If any operation on \farg{T}\ 
+throws an exception the effects are undefined.
+
+\pnum
+In addition, many member and related functions of
+\tcode{valarray<\farg{T}>}\
+can be successfully instantiated
+and will exhibit well-defined behavior if and only if
+\farg{T}\ satisfies additional requirements specified for each such member
+or related function.
+
+\pnum
+\enterexample\ 
+It is valid to instantiate
+\tcode{valarray<\farg{complex}>},
+but
+\tcode{operator>()}\
+will not be successfully instantiated for
+\tcode{valarray<\farg{complex}>}\
+operands, since
+\tcode{complex}\
+does not have any ordering operators.
+\exitexample\ 
+
 \setcounter{section}{4}
 \rSec1[numarray]{Numeric arrays}
 
@@ -91,33 +214,17 @@ Bloomington, IN\ \  47405 \\
 \index{valarray@\tcode{<valarray>}}%
 \begin{codeblock}
 namespace std {
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    class valarray;         // An array of type \tcode{T}
+  template<@\changedCC{class}{Semiregular}@ T> class valarray;         // An array of type \tcode{T}
   class slice;                              // a BLAS-like slice out of an array
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    class slice_array;
+  template<@\changedCC{class}{Semiregular}@ T> class slice_array;
   class gslice;                             // a generalized slice out of an array
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    class gslice_array;
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    class mask_array;       // a masked array
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    class indirect_array;   // an indirected array
+  template<@\changedCC{class}{Semiregular}@ T> class gslice_array;
+  template<@\changedCC{class}{Semiregular}@ T> class mask_array;       // a masked array
+  template<@\changedCC{class}{Semiregular}@ T> class indirect_array;   // an indirected array
 
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    void swap(valarray<T>&, valarray<T>&);
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    void swap(valarray<T>&&, valarray<T>&);
-  template<class T> 
-    @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-    void swap(valarray<T>&, valarray<T>&&);
+  template<@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&);
+  template<@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&&, valarray<T>&);
+  template<@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&&);
 
   template<class T> 
     @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
@@ -407,8 +514,7 @@ Note that the exception is not mandated.
 \index{valarray@\tcode{valarray}}%
 \begin{codeblock}
 namespace std {
-  template<class @\farg{T}@> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  class valarray {
+  template<@\changedCC{class}{Semiregular}@ @\farg{T}@> class valarray {
   public:
     typedef T value_type;
 
@@ -1450,15 +1556,9 @@ or which can be unambiguously converted to type \farg{T}.
 \rSec3[valarray.special]{\tcode{valarray}\ specialized algorithms}
 
 \begin{itemdecl}
-template <class T> 
-  @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  void swap(valarray<T>& x, valarray<T>& y);
-template <class T> 
-  @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@ 
-  void swap(valarray<T>&& x, valarray<T>& y);
-template <class T> 
-  @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  void swap(valarray<T>& x, valarray<T>&& y);
+template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray<T>& y);
+template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&& x, valarray<T>& y);
+template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray<T>&& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1474,8 +1574,7 @@ template <class T>
 \index{slice_array@\tcode{slice_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  class slice_array {
+  template <@\changedCC{class}{Semiregular}@ T> class slice_array {
   public:
     typedef T value_type;
 
@@ -1622,8 +1721,7 @@ object refers.
 \index{gslice_array@\tcode{gslice_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  class gslice_array {
+  template <@\changedCC{class}{Semiregular}@ T> class gslice_array {
   public:
     typedef T value_type;
 
@@ -1765,8 +1863,7 @@ object refers.
 \index{mask_array@\tcode{mask_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  class mask_array {
+  template <@\changedCC{class}{Semiregular}@ T> class mask_array {
   public:
     typedef T value_type;
 
@@ -1901,8 +1998,7 @@ object refers.
 \index{indirect_array@\tcode{indirect_array}}%
 \begin{codeblock}
 namespace std {
-  template <class T> @\addedCC{requires Semiregular<T> \&\& DefaultConstructible<T>}@
-  class indirect_array {
+  template <@\changedCC{class}{Semiregular}@ T> class indirect_array {
   public:
     typedef T value_type;
 
