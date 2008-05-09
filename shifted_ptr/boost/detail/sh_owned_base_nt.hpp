@@ -96,19 +96,11 @@ struct segment : std::pair<const void *, const void *>
 
 struct stack_segment : segment
 {
-	stack_segment()
-	{
-#if defined(__GNUC__)
-		include(__builtin_frame_address(4));
-#else
-#error Compiler not yet supported.
-#endif
-	}
-
 	bool contains(const void * p)
 	{
 #if defined(__GNUC__)
 		include(__builtin_frame_address(0));
+		include(__builtin_frame_address(3));
 #else
 #error Compiler not yet supported.
 #endif
