@@ -10,4 +10,4 @@ project
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-exe example : example.cpp ;
+exe edit_distance_example : edit_distance_example.cpp ;
