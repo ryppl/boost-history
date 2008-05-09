@@ -1,0 +1,207 @@
+# profile_templates.jam
+#
+# Copyright (c) 2008
+# Steven Watanabe
+#
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import numbers ;
+import regex ;
+import property-set ;
+import sequence ;
+import type ;
+import "class" : new ;
+import generators ;
+import virtual-target ;
+import path ;
+import project ;
+import toolset : flags ;
+import os ;
+import feature ;
+import modules ;
+import errors ;
+
+type.register INSTRUMENTED_TEMPLATE_HPP : : HPP ;
+
+type.set-generated-target-suffix INSTRUMENTED_TEMPLATE_HPP : : hpp ;
+
+.empty = [ property-set.empty ] ;
+
+module-location = [ path.parent [ path.make [ modules.binding profile_templates ] ] ] ;
+
+PREPROCESS-ACTION = perl [ path.native [ path.join $(module-location) preprocess.pl ] ] ;
+
+class instrumented_template_generator : generator {
+    rule __init__ ( ) {
+        generator.__init__ instrumented_template_generator : HPP : INSTRUMENTED_TEMPLATE_HPP ;
+    }
+    rule run ( project name : properties : sources * : multiple ? ) {
+        local new-a = [ new non-scanning-action $(sources) : profile_templates.transform-copy :
+            $(.empty) ] ;
+        return [ new file-target $(name) exact : INSTRUMENTED_TEMPLATE_HPP : $(project) : $(new-a) ] ;
+    }
+}
+
+instrument-generator = [ new instrumented_template_generator ] ;
+
+rule is-noninclude ( property ) {
+    if [ regex.match "(.*<include>.*)" : $(property) : ] {
+        return ;
+    } else {
+        return 1 ;
+    }
+}
+
+rule transform_properties ( properties : curr_project ) {
+    local includes = [ $(properties).get <include> ] ;
+    local new-props = <include>$(module-location) ;
+    local build-dir = [ $(curr_project).build-dir ] ;
+    for local dir in $(includes) {
+        local new-dir = [ get-new-dir ] ;
+        local new-include-dir = [ path.join $(build-dir) $(new-dir) ] ;
+        new-props += <include>$(new-include-dir)&&$(dir) ;
+        local dep = [ transform-dir $(dir) : $(new-dir) : $(curr_project) ] ;
+        new-props += <dependency>$(dep) ;
+    }
+    local raw-props = [ $(properties).raw ] ;
+    local without-include = [ property-set.create [ sequence.filter is-noninclude : $(raw-props) ] ] ;
+    local result = [ $(without-include).refine [ property-set.create $(new-props) ] ] ;
+    return $(result) ;
+}
+
+rule transform-copy {
+}
+
+actions transform-copy {
+    "$(PREPROCESS-ACTION)" <"$(>)" >"$(<)"
+}
+
+.next-dir-num = 0 ;
+
+rule get-new-dir {
+    local result =  profile_tmp_dir$(.next-dir-num) ;
+    .next-dir-num = [ numbers.increment .next-dir-num ] ;
+    return $(result) ;
+}
+
+rule transform-dir ( old-dir : new-dir : current-project ) {
+    local headers = [ path.glob-tree $(old-dir) : *.hpp : profile_tmp_dir* ] ;
+    local result = ;
+    for local h in $(headers) {
+        local relative = [ path.relative $(h) $(old-dir) ] ;
+        local new-header = [ path.join $(new-dir) $(relative) ] ;
+        local file-target =  [ virtual-target.from-file $(h) : [ $(current-project).get source-location ] : $(current-project) ] ;
+        result +=  [ $(instrument-generator).run $(current-project) $(new-header) : $(.empty) : $(file-target) ] ;
+    }
+    return $(result) ;
+}
+
+type.register RAW_TEMPLATE_PROFILE : rtp ;
+
+class warn-generator : generator {
+
+    import profile_templates ;
+
+    rule __init__ ( ) {
+        generator.__init__ profile_templates.build-generic : CPP : RAW_TEMPLATE_PROFILE ;
+    }
+    rule run ( project name : properties : sources * : multiple ? ) {
+        local new-properties = [ profile_templates.transform_properties $(properties) : $(project) ] ;
+        local toolset = [ $(new-properties).get <toolset> ] ;
+        if ! $(toolset) {
+            errors.error "No toolset specified" ;
+        }
+        switch $(toolset) {
+            case msvc* :
+                toolset = msvc ;
+            case gcc* :
+                toolset = gcc ;
+            case * :
+                errors.error unrecognized toolset $(toolset) ;
+        }
+        return [ generator.run $(project) $(name) : [ $(new-properties).add-raw <profile-template-toolset>$(toolset) ] : $(sources) : $(multiple) ] ;
+    }
+}
+
+generators.register [ new warn-generator ] ;
+
+feature.feature <profile-template-toolset> : msvc gcc : free ;
+
+flags profile_templates.build-generic INVOCATION-COMMAND <profile-template-toolset>msvc : cl /W4 /c /D PROFILE_TEMPLATES ;
+flags profile_templates.build-generic INCLUDE-COMMAND <profile-template-toolset>msvc : /I ;
+
+flags profile_templates.build-generic INVOCATION-COMMAND <profile-template-toolset>gcc : g++ -Wall -c -D PROFILE_TEMPLATES ;
+flags profile_templates.build-generic INCLUDE-COMMAND <profile-template-toolset>gcc : -I ;
+
+flags profile_templates.build-generic INCLUDES <include> ;
+
+rule build-generic {
+}
+
+actions build-generic {
+    $(INVOCATION-COMMAND) "$(INCLUDE-COMMAND)$(INCLUDES)" "$(>)" >"$(<)" 2>&1
+}
+
+flags profile_templates.build-msvc INCLUDES <include> ;
+
+type.register TEMPLATE_PROFILE : tp ;
+
+class final_profile_generator : generator {
+
+    import targets ;
+    import profile_templates ;
+    import path ;
+    import modules ;
+
+    rule __init__ ( ) {
+        generator.__init__ profile_templates.process_raw_profile : RAW_TEMPLATE_PROFILE : TEMPLATE_PROFILE ;
+    }
+    rule run ( project name : properties : sources * : multiple ? ) {
+
+        current_path = [ modules.peek profile_templates : module-location ] ;
+
+        local postprocess-main-target = [ targets.resolve-reference [ path.join $(current_path) src ] : $(project) ] ;
+        postprocess-main-target = [ $(postprocess-main-target[1]).main-target postprocess ] ;
+        local postprocess-binary-dependencies = [ $(postprocess-main-target).generate [ $(properties).propagated ] ] ;
+        postprocess-binary-dependencies = $(postprocess-binary-dependencies[2-]) ;
+        local postprocess-binary = ;
+
+        for local target in $(postprocess-binary-dependencies) {
+            if [ $(target).type ] = EXE {
+                postprocess-binary = 
+                    [ path.native 
+                        [ path.join
+                            [ $(target).path ]
+                            [ $(target).name ]
+                        ]
+                    ] ;
+            }
+        }
+
+        if ! $(postprocess-binary) {
+            errors.error Could not find postprocessor binary ;
+        }
+
+        switch [ $(properties).get <target-os> ] {
+            case cygwin :
+        }
+
+        local new-properties = [ $(properties).add-raw <dependency>$(postprocess-binary-dependencies) <postprocess-binary>$(postprocess-binary) ] ;
+        return [ generator.run $(project) $(name) : $(new-properties) : $(sources) : $(multiple) ] ;
+    }
+}
+
+generators.register [ new final_profile_generator ] ;
+
+feature.feature <postprocess-binary> : : path incidental ;
+
+flags profile_templates.process_raw_profile POSTPROCESS-BINARY <postprocess-binary> ;
+
+rule process_raw_profile {
+}
+
+actions process_raw_profile {
+    "$(POSTPROCESS-BINARY)" <"$(>)" >"$(<)"
+}
