@@ -1,6 +1,6 @@
 /**
  * \file boost/mirror/algorithms.hpp
- * Includes all mirror algorithms
+ * Includes all mirror algorithm related headers
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
@@ -10,8 +10,14 @@
 #ifndef BOOST_MIRROR_ALGORITHMS_HPP
 #define BOOST_MIRROR_ALGORITHMS_HPP
 
+#include <boost/mirror/algorithm/begin.hpp>
+#include <boost/mirror/algorithm/end.hpp>
+#include <boost/mirror/algorithm/prior.hpp>
+#include <boost/mirror/algorithm/next.hpp>
+#include <boost/mirror/algorithm/is_equal_iterator.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
 #include <boost/mirror/algorithm/reverse_for_each.hpp>
+#include <boost/mirror/algorithm/find_if.hpp>
 
 namespace boost {
 namespace mirror {

@@ -23,7 +23,7 @@ namespace mirror {
 
 namespace detail {
 
-/** Implementation of the for_each function on meta_attributes
+/** Implementation of the at function on meta_base_classes
  */
 template <class MetaBaseClasses, class Position>
 struct meta_inheritance_at
@@ -35,7 +35,6 @@ struct meta_inheritance_at
 };
 
 } // namespace detail
-
 } // namespace mirror
 } // namespace boost
 

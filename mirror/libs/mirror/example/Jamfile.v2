@@ -26,6 +26,10 @@ exe reg_virtual_bases : registering/virtual_bases.cpp ;
 exe spec_std_pair     : special/std_pair.cpp ;
 exe spec_boost_tuple  : special/boost_tuple.cpp ;
 #
+# algorithms
+#
+exe algo_begin_end     : algorithms/begin_end.cpp ;
+#
 # traversal by visitors
 #
 exe tvrsl_sample_visitor    : traversal/sample_visitor.cpp ;

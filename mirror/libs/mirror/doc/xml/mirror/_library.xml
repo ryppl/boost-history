@@ -147,5 +147,11 @@
 			- Updated the documentation
 			- Updated the xsl templates
 		</revision>
+		<revision id="20080509" major="0" minor="1" micro="22" author="m_ch">
+			- Added meta-object iterators for attributes and base classes
+			- Added begin, end, find_if meta-functions
+			- NOTE: Some example from this revision will probably not compile 
+			- NOTE: Not tested
+		</revision>
 	</revisions>
 </library>

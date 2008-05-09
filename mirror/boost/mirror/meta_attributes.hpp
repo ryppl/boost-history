@@ -499,6 +499,18 @@ namespace detail {
 	>
 	struct meta_class_attribute
 	{
+		struct detail 
+		{
+			struct result_of_get
+			{
+				typedef typename mpl::at<
+					typename MetaAttributes::type_list,
+					AttribPos
+				>::type type;
+
+			};
+		}; // struct detail 
+
 		// the meta-class for the class to which 
 		// the attribute belongs
 		typedef ::boost::mirror::meta_class<ReflectedType, VariantTag> 
@@ -519,13 +531,13 @@ namespace detail {
 		>::type type;
 
 		// base name getter
-		static const bchar* base_name(void)
+		inline static const bchar* base_name(void)
 		{
 			return meta_attributes::base_name(position());
 		}
 
 		// full name getter
-		static const bchar* full_name(void)
+		inline static const bchar* full_name(void)
 		{
 			return meta_attributes::full_name(position());
 		}
@@ -533,7 +545,7 @@ namespace detail {
 		typedef typename meta_class::reflected_type reflected_class;
 
 		// value getter
-		static typename call_traits<type>::param_type 
+		inline static typename detail::result_of_get::type
 		get(const reflected_class& context)
 		{
 			return meta_attributes::get(context, position());
@@ -541,18 +553,21 @@ namespace detail {
 
 		// value query
 		template <typename DestType>
-		static DestType& query(const reflected_class& context, DestType& dest)
+		inline static DestType& 
+		query(const reflected_class& context, DestType& dest)
 		{
 			return meta_attributes::query(context, position(), dest);
 		}
 
 		// value setter
-		static void set(reflected_class& context, typename call_traits<type>::param_type val)
+		inline static void 
+		set(reflected_class& context, typename call_traits<type>::param_type val)
 		{
 			meta_attributes::set(context, position(), val);
 		}
 		// value setter
-		static void set(const reflected_class& context, typename call_traits<type>::param_type val)
+		inline static void 
+		set(const reflected_class& context, typename call_traits<type>::param_type val)
 		{
 			meta_attributes::set(context, position(), val);
 		}

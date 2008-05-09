@@ -308,9 +308,41 @@ int main(void)
 	meta_T::all_attributes::set(t, mpl::int_<7>(), L'A');
 	assert(t.w == L'A');
 	//
-	bcout << "--------------------------------------------" << endl;
+	// alternate means of getting the values of the attributes
 	//
-
+	assert((
+		at<meta_T::all_attributes, mpl::int_<0> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<0>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<1> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<1>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<2> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<2>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<3> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<3>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<4> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<4>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<5> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<5>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<6> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<6>())
+	));
+	assert((
+		at<meta_T::all_attributes, mpl::int_<7> >::type::get(t) == 
+		meta_T::all_attributes::get(t, mpl::int_<7>())
+	));
+	bcout << "--------------------------------------------" << endl;
 	//
 	return 0;
 }
