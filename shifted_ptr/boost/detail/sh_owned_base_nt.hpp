@@ -66,13 +66,64 @@ struct thread_specific_stack : thread_specific_ptr< std::stack<owned_base *> >
 
 
 /**
+	Segment boundaries.
+*/
+
+struct segment : std::pair<const void *, const void *>
+{
+	typedef std::pair<const void *, const void *> base;
+	
+	segment(const void * p = (const void *)(std::numeric_limits<unsigned>::max)(), const void * q = (const void *)(std::numeric_limits<unsigned>::min)()) : base((const void *)(p), (const void *)(q))
+	{
+	}
+   
+	void include(const void * p)
+	{
+		if (p < static_cast<const void *>(first)) first = p;
+		if (p > static_cast<const void *>(second)) second = p;
+	}
+
+	bool contains(const void * p)
+	{
+		return ! (static_cast<char const *>(p) < first || static_cast<char const *>(p) > second);
+	}
+};
+
+
+/**
+	Auto stack boundaries.
+*/
+
+struct stack_segment : segment
+{
+	stack_segment()
+	{
+#if defined(__GNUC__)
+		include(__builtin_frame_address(4));
+#else
+#error Compiler not yet supported.
+#endif
+	}
+
+	bool contains(const void * p)
+	{
+#if defined(__GNUC__)
+		include(__builtin_frame_address(0));
+#else
+#error Compiler not yet supported.
+#endif
+        
+		return segment::contains(p);
+	}
+} stack_;
+
+
+/**
 	Root class of all pointees.
 */
 
 class owned_base : public sp_counted_base
 {
-	typedef std::pair<char *, char *> segment;
-	
 	intrusive_stack ptrs_;
 	intrusive_list inits_;
 	
@@ -85,17 +136,11 @@ public:
 		inits_.push_back(& init_tag_); 
 	}
 
-	static bool contains(const segment & heap, void const * p)
-	{
-		return ! (static_cast<char const *>(p) < heap.first || static_cast<char const *>(p) > heap.second);
-	}
-
 	intrusive_stack * ptrs() 						{ return & ptrs_; }
 	intrusive_list * inits()						{ return & inits_; }
 	intrusive_list::node * set_tag() 				{ return & set_tag_; }
 	intrusive_list::node * init_tag() 				{ return & init_tag_; }
 
-	static segment heap;
 #ifndef BOOST_SH_DISABLE_THREADS
 	static thread_specific_stack last;
 #else
@@ -103,8 +148,6 @@ public:
 #endif
 };
 
-
-owned_base::segment owned_base::heap((char *)(std::numeric_limits<unsigned>::max)(), (char *)(std::numeric_limits<unsigned>::min)());
 
 #ifndef BOOST_SH_DISABLE_THREADS
 thread_specific_stack owned_base::last;
@@ -138,21 +181,6 @@ template <typename T>
 		virtual void dispose() 				{ dispose(element(), is_array<data_type>()); }
 
 		virtual void * get_deleter( std::type_info const & ti ) { return 0; } // dummy
-
-		static void * operator new (size_t n)
-		{
-			char * p = static_cast<char *>(::operator new (n));
-			
-			if (p < static_cast<char *>(heap.first)) heap.first = p;
-			if (p + n > static_cast<char *>(heap.second)) heap.second = p + n;
-
-			return p; 
-		}
-
-		static void operator delete (void * p)
-		{
-			::operator delete (p);
-		}
 
 	public:
 		class roofof
