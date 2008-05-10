@@ -212,7 +212,7 @@ int main(void)
 	//
 	bcout << "---------------------------------------------------" << endl;
 	//
-	typedef find_if<meta_T::all_attributes, is_even_attrib>::type n_0;
+	typedef mirror::find_if<meta_T::all_attributes, is_even_attrib>::type n_0;
 	bcout << deref<n_0>::type::base_name() << ',' ;
 	typedef next<n_0>::type n_2;
 	bcout << deref<n_2>::type::base_name() << ',' ;
@@ -230,7 +230,7 @@ int main(void)
 	//
 	bcout << "---------------------------------------------------" << endl;
 	//
-	typedef find_if<meta_T::all_attributes, is_odd_attrib >::type m_1;
+	typedef mirror::find_if<meta_T::all_attributes, is_odd_attrib >::type m_1;
 	bcout << deref<m_1>::type::base_name() << ',' ;
 	typedef next<m_1>::type m_3;
 	bcout << deref<m_3>::type::base_name() << ',' ;
@@ -247,7 +247,7 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	//
 	/*
-	typedef reverse_find_if<meta_T::all_attributes, is_odd_attrib >::type q_7;
+	typedef mirror::reverse_find_if<meta_T::all_attributes, is_odd_attrib >::type q_7;
 	bcout << deref<q_7>::type::base_name() << ',' ;
 	typedef next<q_7>::type q_5;
 	bcout << deref<q_5>::type::base_name() << ',' ;
@@ -264,7 +264,7 @@ int main(void)
 	//
 	bcout << "---------------------------------------------------" << endl;
 	//
-	typedef find_if<meta_T::all_attributes, is_integral_attrib >::type o_0;
+	typedef mirror::find_if<meta_T::all_attributes, is_integral_attrib >::type o_0;
 	bcout << deref<o_0>::type::base_name() << ',' ;
 	typedef next<o_0>::type o_1;
 	bcout << deref<o_1>::type::base_name() << ',' ;

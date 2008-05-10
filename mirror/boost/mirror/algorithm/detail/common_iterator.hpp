@@ -35,6 +35,104 @@ struct deref
 
 namespace detail {
 
+	template <
+		class ReflectedType, 
+		class VariantTag,
+		class MetaObjectSequence,
+		class Position,
+		class BeginPos,
+		class EndPos,
+		class Direction,
+		class UnaryPredicate,
+		class Selector
+	>
+	struct meta_object_iterator_base_templ;
+
+	template <
+		class ReflectedType, 
+		class VariantTag,
+		class MetaObjectSequence,
+		class DummyPosition,
+		class BeginPos,
+		class EndPos,
+		class Direction,
+		class UnaryPredicate,
+		class Selector,
+		int I
+	>
+	struct meta_object_iterator_base_templ_get_ioni_apply
+	{
+		typedef meta_object_iterator_base_templ<
+			ReflectedType, 
+			VariantTag,
+			MetaObjectSequence,
+			typename mpl::int_<mpl::plus<
+				DummyPosition,
+				mpl::times<
+					Direction,
+					mpl::int_<I>
+				>
+			>::value>,
+			BeginPos,
+			EndPos,
+			Direction,
+			UnaryPredicate,
+			Selector
+		> next_iterator;
+
+		typedef typename mpl::apply<
+			UnaryPredicate, 
+			typename deref<next_iterator>::type
+		>::type next_is_valid;
+
+		// TODO: this should be optimized.
+		typedef typename mpl::if_<
+			next_is_valid,
+			next_iterator,
+			typename mpl::apply<
+				typename next_iterator::get_next_iterator,
+				typename next_iterator::position
+			>::type
+		> ::type type;
+	};
+
+	template <
+		class ReflectedType, 
+		class VariantTag,
+		class MetaObjectSequence,
+		class BeginPos,
+		class EndPos,
+		class Direction,
+		class UnaryPredicate,
+		class Selector,
+		int I
+	>
+	struct meta_object_iterator_base_templ_get_ioni_apply<
+		ReflectedType, 
+		VariantTag,
+		MetaObjectSequence,
+		EndPos,
+		BeginPos,
+		EndPos,
+		Direction,
+		UnaryPredicate,
+		Selector,
+		I
+	>
+	{
+		typedef meta_object_iterator_base_templ<
+			ReflectedType, 
+			VariantTag,
+			MetaObjectSequence,
+			EndPos,
+			BeginPos,
+			EndPos,
+			Direction,
+			UnaryPredicate,
+			Selector
+		> type;
+	};
+
 	/** Forward declaration of iterator_pointee_selector
 	 */
 	template <class MetaObjectSequence>
@@ -61,7 +159,7 @@ namespace detail {
 
 		// the type meta_class_attribute
 		// that this iterator points to
-		typedef typename Selector::apply<
+		typedef typename Selector::template apply<
 			ReflectedType, 
 			VariantTag,
 			MetaObjectSequence,
@@ -123,57 +221,19 @@ namespace detail {
 		{
 
 			template <typename DummyPosition>
-			struct apply
-			{
-				typedef meta_object_iterator_base_templ<
-					ReflectedType, 
-					VariantTag,
-					MetaObjectSequence,
-					typename mpl::int_<mpl::plus<
-						DummyPosition,
-						mpl::times<
-							Direction,
-							mpl::int_<I>
-						>
-					>::value>,
-					BeginPos,
-					EndPos,
-					Direction,
-					UnaryPredicate,
-					Selector
-				> next_iterator;
+			struct apply : meta_object_iterator_base_templ_get_ioni_apply<
+				ReflectedType, 
+				VariantTag,
+				MetaObjectSequence,
+				DummyPosition,
+				BeginPos,
+				EndPos,
+				Direction,
+				UnaryPredicate,
+				Selector,
+				I
+			> { }; 
 
-				typedef typename mpl::apply<
-					UnaryPredicate, 
-					typename deref<next_iterator>::type
-				>::type next_is_valid;
-
-				// TODO: this should be optimized.
-				typedef typename mpl::if_<
-					next_is_valid,
-					next_iterator,
-					typename mpl::apply<
-						typename next_iterator::get_next_iterator,
-						typename next_iterator::position
-					>::type
-				> ::type type;
-			}; 
-
-			template <>
-			struct apply<EndPos>
-			{
-				typedef meta_object_iterator_base_templ<
-					ReflectedType, 
-					VariantTag,
-					MetaObjectSequence,
-					EndPos,
-					BeginPos,
-					EndPos,
-					Direction,
-					UnaryPredicate,
-					Selector
-				> type;
-			}; 
 		}; 
 
 		struct get_initial_iterator : get_initial_or_next_iterator<0>{ };
