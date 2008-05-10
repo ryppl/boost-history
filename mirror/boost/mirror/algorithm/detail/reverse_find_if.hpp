@@ -1,18 +1,18 @@
 /**
- * \file boost/mirror/algorithm/detail/end.hpp
- * Template returning the iterator poining to 
- * the first element in a meta object sequence.
+ * \file boost/mirror/algorithm/detail/reverse_find_if.hpp
+ *
+ * Returns iterator to the first-from-end element of a meta-object
+ * sequence satisfying the predicate.
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_END_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_END_HPP
+#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_REVERSE_FIND_IF_HPP
+#define BOOST_MIRROR_ALGORITHM_DETAIL_REVERSE_FIND_IF_HPP
 
-#include <boost/mirror/algorithm/detail/iterator.hpp>
-#include <boost/mpl/always.hpp>
+#include <boost/mirror/algorithm/detail/reverse_iterator.hpp>
 
 namespace boost {
 namespace mirror {
@@ -22,19 +22,18 @@ namespace detail {
 		class ReflectedType, 
 		class VariantTag,
 		class MetaObjectSequence,
-		class Dummy
+		class Predicate
 	>
-	struct meta_object_sequence_end
+	struct meta_object_reverse_find_if
 	{
-		typedef typename get_meta_object_iterator<
+		typedef typename get_meta_object_reverse_iterator<
 			ReflectedType, 
 			VariantTag,
 			MetaObjectSequence,
-			mpl::int_<size<MetaObjectSequence>::value>,
-			mpl::always<mpl::true_>
+			mpl::int_<size<MetaObjectSequence>::value - 1>,
+			Predicate
 		>::type type;
 	};
-
 
 } // namespace detail
 } // namespace mirror

@@ -30,6 +30,7 @@ namespace detail {
 			ReflectedType, 
 			VariantTag,
 			MetaObjectSequence,
+			mpl::int_<0>,
 			Predicate
 		>::type type;
 	};

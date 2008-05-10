@@ -21,17 +21,18 @@ namespace detail {
 	template <
 		class ReflectedType, 
 		class VariantTag,
-		class MetaObjectSequence
+		class MetaObjectSequence,
+		class Dummy
 	>
 	struct meta_object_sequence_begin
 	{
-		typedef meta_object_iterator<
+		typedef typename get_meta_object_iterator<
 			ReflectedType, 
 			VariantTag,
 			MetaObjectSequence,
 			mpl::int_<0>,
 			mpl::always<mpl::true_>
-		> type;
+		>::type type;
 	};
 
 } // namespace detail

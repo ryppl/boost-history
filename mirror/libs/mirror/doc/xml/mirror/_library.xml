@@ -153,5 +153,9 @@
 			- NOTE: Some example from this revision will probably not compile 
 			- NOTE: Not tested
 		</revision>
+		<revision id="20080510" major="0" minor="1" micro="23" author="m_ch">
+			- Added rbegin, rend, reverse_find_if 
+			- Tested with MSVC++ 2008 EE
+		</revision>
 	</revisions>
 </library>

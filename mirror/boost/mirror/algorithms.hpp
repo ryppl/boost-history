@@ -12,12 +12,17 @@
 
 #include <boost/mirror/algorithm/begin.hpp>
 #include <boost/mirror/algorithm/end.hpp>
+#include <boost/mirror/algorithm/rbegin.hpp>
+#include <boost/mirror/algorithm/rend.hpp>
 #include <boost/mirror/algorithm/prior.hpp>
 #include <boost/mirror/algorithm/next.hpp>
-#include <boost/mirror/algorithm/is_equal_iterator.hpp>
+
+#include <boost/mirror/algorithm/iterator_comparison.hpp>
+
 #include <boost/mirror/algorithm/for_each.hpp>
 #include <boost/mirror/algorithm/reverse_for_each.hpp>
 #include <boost/mirror/algorithm/find_if.hpp>
+#include <boost/mirror/algorithm/reverse_find_if.hpp>
 
 namespace boost {
 namespace mirror {

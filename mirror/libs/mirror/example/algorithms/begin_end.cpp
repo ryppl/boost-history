@@ -1,7 +1,7 @@
 /**
  * \file examples/special/boost_tuple.cpp
  * 
- * Example showing reflection of boost::tuples 
+ * Example showing meta-object iterator usage 
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
@@ -68,6 +68,49 @@ int main(void)
 	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
 	//
 	//
+	BOOST_STATIC_ASSERT((iterator_not_equal<
+		begin<meta_T::all_attributes>::type,
+		end<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_less<
+		begin<meta_T::all_attributes>::type,
+		end<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_greater<
+		end<meta_T::all_attributes>::type,
+		begin<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_less_equal<
+		begin<meta_T::all_attributes>::type,
+		end<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_greater_equal<
+		end<meta_T::all_attributes>::type,
+		begin<meta_T::all_attributes>::type
+	>::value));
+	//
+	BOOST_STATIC_ASSERT((iterator_not_equal<
+		rbegin<meta_T::all_attributes>::type,
+		rend<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_less<
+		rbegin<meta_T::all_attributes>::type,
+		rend<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_greater<
+		rend<meta_T::all_attributes>::type,
+		rbegin<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_less_equal<
+		rbegin<meta_T::all_attributes>::type,
+		rend<meta_T::all_attributes>::type
+	>::value));
+	BOOST_STATIC_ASSERT((iterator_greater_equal<
+		rend<meta_T::all_attributes>::type,
+		rbegin<meta_T::all_attributes>::type
+	>::value));
+	//
+	//
 	typedef begin<meta_T::all_attributes>::type i_0;
 	bcout << deref<i_0>::type::base_name() << ',' ;
 	typedef next<i_0>::type i_1;
@@ -88,33 +131,83 @@ int main(void)
 	bcout << deref<i_8>::type::base_name() << endl ;
 	typedef next<i_8>::type i_end;
 	//
-	BOOST_STATIC_ASSERT((is_equal_iterator<
+	BOOST_STATIC_ASSERT((iterator_equal<
 		end<meta_T::all_attributes>::type, i_end
 	>::value));
 	//
 	bcout << "---------------------------------------------------" << endl;
 	typedef prior<i_end>::type j_8;
 	bcout << deref<j_8>::type::base_name() << ',' ;
-	typedef prior<i_8>::type j_7;
+	typedef prior<j_8>::type j_7;
 	bcout << deref<j_7>::type::base_name() << ',' ;
-	typedef prior<i_7>::type j_6;
+	typedef prior<j_7>::type j_6;
 	bcout << deref<j_6>::type::base_name() << ',' ;
-	typedef prior<i_6>::type j_5;
+	typedef prior<j_6>::type j_5;
 	bcout << deref<j_5>::type::base_name() << ',' ;
-	typedef prior<i_5>::type j_4;
+	typedef prior<j_5>::type j_4;
 	bcout << deref<j_4>::type::base_name() << ',' ;
-	typedef prior<i_4>::type j_3;
+	typedef prior<j_4>::type j_3;
 	bcout << deref<j_3>::type::base_name() << ',' ;
-	typedef prior<i_3>::type j_2;
+	typedef prior<j_3>::type j_2;
 	bcout << deref<j_2>::type::base_name() << ',' ;
-	typedef prior<i_2>::type j_1;
+	typedef prior<j_2>::type j_1;
 	bcout << deref<j_1>::type::base_name() << ',' ;
-	typedef prior<i_1>::type j_0;
+	typedef prior<j_1>::type j_0;
 	bcout << deref<j_0>::type::base_name() << endl ;
 	typedef j_0 j_begin;
 	//
-	BOOST_STATIC_ASSERT((is_equal_iterator<
+	BOOST_STATIC_ASSERT((iterator_equal<
 		begin<meta_T::all_attributes>::type, j_begin
+	>::value));
+	//
+	bcout << "---------------------------------------------------" << endl;
+	typedef rbegin<meta_T::all_attributes>::type r_8;
+	bcout << deref<r_8>::type::base_name() << ',' ;
+	typedef next<r_8>::type r_7;
+	bcout << deref<r_7>::type::base_name() << ',' ;
+	typedef next<r_7>::type r_6;
+	bcout << deref<r_6>::type::base_name() << ',' ;
+	typedef next<r_6>::type r_5;
+	bcout << deref<r_5>::type::base_name() << ',' ;
+	typedef next<r_5>::type r_4;
+	bcout << deref<r_4>::type::base_name() << ',' ;
+	typedef next<r_4>::type r_3;
+	bcout << deref<r_3>::type::base_name() << ',' ;
+	typedef next<r_3>::type r_2;
+	bcout << deref<r_2>::type::base_name() << ',' ;
+	typedef next<r_2>::type r_1;
+	bcout << deref<r_1>::type::base_name() << ',' ;
+	typedef next<r_1>::type r_0;
+	bcout << deref<r_0>::type::base_name() << endl ;
+	typedef next<r_0>::type r_end;
+	//
+	BOOST_STATIC_ASSERT((iterator_equal<
+		rend<meta_T::all_attributes>::type, r_end
+	>::value));
+	//
+	bcout << "---------------------------------------------------" << endl;
+	typedef prior<r_end>::type p_0;
+	bcout << deref<p_0>::type::base_name() << ',' ;
+	typedef prior<p_0>::type p_1;
+	bcout << deref<p_1>::type::base_name() << ',' ;
+	typedef prior<p_1>::type p_2;
+	bcout << deref<p_2>::type::base_name() << ',' ;
+	typedef prior<p_2>::type p_3;
+	bcout << deref<p_3>::type::base_name() << ',' ;
+	typedef prior<p_3>::type p_4;
+	bcout << deref<p_4>::type::base_name() << ',' ;
+	typedef prior<p_4>::type p_5;
+	bcout << deref<p_5>::type::base_name() << ',' ;
+	typedef prior<p_5>::type p_6;
+	bcout << deref<p_6>::type::base_name() << ',' ;
+	typedef prior<p_6>::type p_7;
+	bcout << deref<p_7>::type::base_name() << ',' ;
+	typedef prior<p_7>::type p_8;
+	bcout << deref<p_8>::type::base_name() << endl ;
+	typedef p_8 p_rbegin;
+	//
+	BOOST_STATIC_ASSERT((iterator_equal<
+		rbegin<meta_T::all_attributes>::type, p_rbegin
 	>::value));
 	//
 	bcout << "---------------------------------------------------" << endl;
@@ -131,7 +224,7 @@ int main(void)
 	bcout << deref<n_8>::type::base_name() << endl ;
 	typedef next<n_8>::type n_end;
 	//
-	BOOST_STATIC_ASSERT((is_equal_iterator<
+	BOOST_STATIC_ASSERT((iterator_equal<
 		end<meta_T::all_attributes>::type, n_end
 	>::value));
 	//
@@ -147,9 +240,27 @@ int main(void)
 	bcout << deref<m_7>::type::base_name() << endl ;
 	typedef next<m_7>::type m_end;
 	//
-	BOOST_STATIC_ASSERT((is_equal_iterator<
+	BOOST_STATIC_ASSERT((iterator_equal<
 		end<meta_T::all_attributes>::type, m_end
 	>::value));
+	//
+	bcout << "---------------------------------------------------" << endl;
+	//
+	/*
+	typedef reverse_find_if<meta_T::all_attributes, is_odd_attrib >::type q_7;
+	bcout << deref<q_7>::type::base_name() << ',' ;
+	typedef next<q_7>::type q_5;
+	bcout << deref<q_5>::type::base_name() << ',' ;
+	typedef next<q_5>::type q_3;
+	bcout << deref<q_3>::type::base_name() << ',' ;
+	typedef next<q_3>::type q_1;
+	bcout << deref<q_1>::type::base_name() << endl ;
+	typedef next<q_1>::type q_end;
+	//
+	BOOST_STATIC_ASSERT((iterator_equal<
+		rend<meta_T::all_attributes>::type, q_end
+	>::value));
+	*/
 	//
 	bcout << "---------------------------------------------------" << endl;
 	//
@@ -169,13 +280,13 @@ int main(void)
 	bcout << deref<o_6>::type::base_name() << endl ;
 	typedef next<o_6>::type o_end;
 	//
-	BOOST_STATIC_ASSERT((is_equal_iterator<
+	BOOST_STATIC_ASSERT((iterator_equal<
 		end<meta_T::all_attributes>::type, o_end
 	>::value));
 	//
 	bcout << "---------------------------------------------------" << endl;
 	//
-	BOOST_STATIC_ASSERT((is_equal_iterator<
+	BOOST_STATIC_ASSERT((iterator_equal<
 		begin<meta_T::base_classes>::type,
 		end<meta_T::base_classes>::type
 	>::value));

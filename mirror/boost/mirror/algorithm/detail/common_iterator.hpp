@@ -14,6 +14,7 @@
 #include <boost/mirror/algorithm/size.hpp>
 #include <boost/mirror/algorithm/at.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/equal_to.hpp>
@@ -34,21 +35,29 @@ struct deref
 
 namespace detail {
 
+	/** Forward declaration of iterator_pointee_selector
+	 */
 	template <class MetaObjectSequence>
 	struct iterator_pointee_selector;
 
+	/** Basic template for the meta-object 
+	 *  iterators
+	 */
 	template <
 		class ReflectedType, 
 		class VariantTag,
 		class MetaObjectSequence,
 		class Position,
+		class BeginPos,
+		class EndPos,
+		class Direction,
 		class UnaryPredicate,
 		class Selector
-
 	>
-	struct meta_object_iterator_base
+	struct meta_object_iterator_base_templ
 	{
 		typedef Position position;
+		typedef Direction direction;
 
 		// the type meta_class_attribute
 		// that this iterator points to
@@ -67,11 +76,14 @@ namespace detail {
 			template <typename DummyPosition>
 			struct apply
 			{
-				typedef meta_object_iterator_base<
+				typedef meta_object_iterator_base_templ<
 					ReflectedType, 
 					VariantTag,
 					MetaObjectSequence,
 					DummyPosition,
+					BeginPos,
+					EndPos,
+					Direction,
 					UnaryPredicate,
 					Selector
 				> type;
@@ -84,11 +96,20 @@ namespace detail {
 			template <typename DummyPosition>
 			struct apply
 			{
-				typedef meta_object_iterator_base<
+				typedef meta_object_iterator_base_templ<
 					ReflectedType, 
 					VariantTag,
 					MetaObjectSequence,
-					mpl::int_<DummyPosition::value - 1>,
+					typename mpl::int_<mpl::minus<
+						DummyPosition,
+						mpl::times<
+							Direction,
+							mpl::int_<1>
+						>
+					>::value>,
+					BeginPos,
+					EndPos,
+					Direction,
 					UnaryPredicate,
 					Selector
 				> type;
@@ -100,16 +121,24 @@ namespace detail {
 		template <int I>
 		struct get_initial_or_next_iterator
 		{
-			typedef mpl::int_<size<MetaObjectSequence>::value > end_pos;
 
 			template <typename DummyPosition>
 			struct apply
 			{
-				typedef meta_object_iterator_base<
+				typedef meta_object_iterator_base_templ<
 					ReflectedType, 
 					VariantTag,
 					MetaObjectSequence,
-					mpl::int_<DummyPosition::value + I>,
+					typename mpl::int_<mpl::plus<
+						DummyPosition,
+						mpl::times<
+							Direction,
+							mpl::int_<I>
+						>
+					>::value>,
+					BeginPos,
+					EndPos,
+					Direction,
 					UnaryPredicate,
 					Selector
 				> next_iterator;
@@ -119,7 +148,7 @@ namespace detail {
 					typename deref<next_iterator>::type
 				>::type next_is_valid;
 
-				// TODO: this needs to be optimized.
+				// TODO: this should be optimized.
 				typedef typename mpl::if_<
 					next_is_valid,
 					next_iterator,
@@ -131,13 +160,16 @@ namespace detail {
 			}; 
 
 			template <>
-			struct apply<end_pos>
+			struct apply<EndPos>
 			{
-				typedef meta_object_iterator_base<
+				typedef meta_object_iterator_base_templ<
 					ReflectedType, 
 					VariantTag,
 					MetaObjectSequence,
-					end_pos,
+					EndPos,
+					BeginPos,
+					EndPos,
+					Direction,
 					UnaryPredicate,
 					Selector
 				> type;
@@ -149,6 +181,51 @@ namespace detail {
 
 	}; // meta_object_iterator_base
 
+	/** Forward iterator base template
+	 */
+	template <
+		class ReflectedType, 
+		class VariantTag,
+		class MetaObjectSequence,
+		class Position,
+		class UnaryPredicate,
+		class Selector
+	>
+	struct meta_object_iterator_base
+	: meta_object_iterator_base_templ<
+		ReflectedType, 
+		VariantTag,
+		MetaObjectSequence,
+		Position,
+		mpl::int_<0>,
+		mpl::int_<size<MetaObjectSequence>::value >,
+		mpl::int_<1>,
+		UnaryPredicate,
+		Selector
+	>{ };
+
+	/** Reverse iterator base class
+	 */
+	template <
+		class ReflectedType, 
+		class VariantTag,
+		class MetaObjectSequence,
+		class Position,
+		class UnaryPredicate,
+		class Selector
+	>
+	struct meta_object_reverse_iterator_base
+	: meta_object_iterator_base_templ<
+		ReflectedType, 
+		VariantTag,
+		MetaObjectSequence,
+		Position,
+		mpl::int_<size<MetaObjectSequence>::value -1 >,
+		mpl::int_<-1>,
+		mpl::int_<-1>,
+		UnaryPredicate,
+		Selector
+	>{ };
 
 
 } // namespace detail
