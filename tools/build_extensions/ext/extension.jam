@@ -8,6 +8,7 @@ import property ;
 import project ;
 import path ;
 import modules ;
+import set ;
 
 feature.feature extension : : optional implicit ;
 
@@ -46,7 +47,7 @@ rule declare ( extension + : options * : * )
             root-project = [ project.attribute $(root-project) parent-module ] ;
         }
         
-        # Add the extension to the know list.
+        # Add the extension to the known list.
         feature.extend extension : $(ext) ;
         
         # Create the project data, and bring in the project rules
@@ -102,10 +103,12 @@ rule declare ( extension + : options * : * )
     }
 }
 
-rule option ( extension name : values * )
+rule option ( extension name : values * : attributes * : attributes-to-remove * )
 {
     values ?= disable enable ;
-    feature.feature $(extension)-$(name) : $(values) : propagated incidental optional ;
+    attributes ?= propagated incidental optional ;
+    attributes = [ set.difference $(attributes) : $(attributes-to-remove) ] ;
+    feature.feature $(extension)-$(name) : $(values) : $(attributes) ;
     .options.$(extension) += $(extension)-$(name) ;
 }
 
