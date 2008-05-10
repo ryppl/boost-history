@@ -155,7 +155,8 @@
 		</revision>
 		<revision id="20080510" major="0" minor="1" micro="23" author="m_ch">
 			- Added rbegin, rend, reverse_find_if 
-			- Tested with MSVC++ 2008 EE
+			- Tested with MSVC++ 2008 EE On Vista
+			- Tested with gcc 4.2.1 on FreeBSD
 		</revision>
 	</revisions>
 </library>
