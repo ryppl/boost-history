@@ -4,4 +4,5 @@
 	<paragraph>
 	</paragraph>
 	<include reference_section="refl_namespaces"/>
+	<include reference_section="refl_types"/>
 </doc_page>
