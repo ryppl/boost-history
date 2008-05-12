@@ -1,84 +1,12 @@
+/*
+  Copyright 2008 Intel Corporation
+ 
+  Use, modification and distribution are subject to the Boost Software License,
+  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+*/
 struct polygon_concept {
   inline polygon_concept() {}
-
-  template <class iterator_type, class point_type>
-  class iterator_points {
-  private:
-    iterator_type iter_;
-    iterator_type iter_end_;
-    point_type pt_;
-    typename point_traits<point_type>::coordinate_type firstX_;
-    orientation_2d orient_;
-  public:
-    inline iterator_points() {}
-    inline iterator_points(iterator_type iter, iterator_type iter_end) : 
-      iter_(iter), iter_end_(iter_end), orient_(HORIZONTAL) {
-      if(iter_ != iter_end_) {
-        firstX_ = *iter_;
-        point_concept::set<HORIZONTAL>(pt_, firstX_);
-        ++iter_;
-        if(iter_ != iter_end_) {
-          point_concept::set<VERTICAL>(pt_, *iter_);
-        }
-      }
-    }
-    //use bitwise copy and assign provided by the compiler
-    inline iterator_points& operator++() {
-      ++iter_;
-      if(iter_ == iter_end_) {
-        if(point_concept::get<HORIZONTAL>(pt_) != firstX_) {
-              --iter_;
-              point_concept::set<HORIZONTAL>(pt_, firstX_);
-        }
-      } else {
-        point_concept::set(pt_, orient_, *iter_);
-        orient_.turn_90();
-      }
-      return *this;
-    }
-    inline iterator_points operator++(int) {
-      iterator_points tmp(*this);
-      ++(*this);
-      return tmp;
-    }
-    inline bool operator==(const iterator_points& that) const {
-      return (iter_ == that.iter_);
-    }
-    inline bool operator!=(const iterator_points& that) const {
-      return (iter_ != that.iter_);
-    }
-    inline const point_type& operator*() const { return pt_; }
-  };
-
-  template <class iT, typename coordinate_type>
-  class iterator_points_to_coords {
-  private:
-     iT iter_;
-     orientation_2d orient_;
-  public:
-     inline iterator_points_to_coords() {}
-     inline iterator_points_to_coords(iT iter) : iter_(iter), orient_(HORIZONTAL) {}
-     inline iterator_points_to_coords(const iterator_points_to_coords& that) : 
-       iter_(that.iter_), orient_(that.orient_) {}
-     //use bitwise copy and assign provided by the compiler
-     inline iterator_points_to_coords& operator++() {
-        ++iter_;
-        orient_.turn_90();
-        return *this;
-     }
-     inline iterator_points_to_coords operator++(int) {
-        iT tmp(*this);
-        ++(*this);
-        return tmp;
-     }
-     inline bool operator==(const iterator_points_to_coords& that) const {
-        return (iter_ == that.iter_);
-     }
-     inline bool operator!=(const iterator_points_to_coords& that) const {
-        return (iter_ != that.iter_);
-     }
-     inline coordinate_type operator*() { return (*iter_).get(orient_); }
-  };
 
   template<typename polygon_type, typename iterator_type>
   static void set(polygon_type& polygon, iterator_type input_begin, iterator_type input_end) {
@@ -95,9 +23,9 @@ struct polygon_concept {
    
   template<typename polygon_type, typename point_iterator_type>
   static void set_points(polygon_type& polygon, point_iterator_type begin_point, point_iterator_type end_point) {
-    return set(iterator_points_to_coords<point_iterator_type, 
+    return set(iterator_points_to_compact<point_iterator_type, 
         typename polygon_traits<polygon_type>::coordinate_type>(begin_point),
-        iterator_points_to_coords<point_iterator_type, 
+        iterator_points_to_compact<point_iterator_type, 
         typename polygon_traits<polygon_type>::coordinate_type>(end_point));
   }
 
@@ -112,18 +40,18 @@ struct polygon_concept {
   }
   
   template <typename polygon_type>
-  static iterator_points<typename polygon_traits<polygon_type>::iterator_type,
+  static iterator_compact_to_points<typename polygon_traits<polygon_type>::iterator_type,
                          point_data<typename polygon_traits<polygon_type>::coordinate_type> > 
   begin_points(const polygon_type& polygon) {
-    return iterator_points<typename polygon_traits<polygon_type>::iterator_type,
+    return iterator_compact_to_points<typename polygon_traits<polygon_type>::iterator_type,
       point_data<typename polygon_traits<polygon_type>::coordinate_type> > (begin(polygon), end(polygon));
   }
 
   template <typename polygon_type>
-  static iterator_points<typename polygon_traits<polygon_type>::iterator_type,
+  static iterator_compact_to_points<typename polygon_traits<polygon_type>::iterator_type,
                          point_data<typename polygon_traits<polygon_type>::coordinate_type> > 
   end_points(const polygon_type& polygon) {
-    return iterator_points<typename polygon_traits<polygon_type>::iterator_type,
+    return iterator_compact_to_points<typename polygon_traits<polygon_type>::iterator_type,
       point_data<typename polygon_traits<polygon_type>::coordinate_type> > (end(polygon), end(polygon));
   }
 
@@ -248,13 +176,13 @@ struct polygon_concept {
     return retval >= 0 ? retval : -retval;
   }
 
-  /// get the perimeter of the rectangle
+  /// get the perimeter of the polygon
   template <typename polygon_type>
   static typename polygon_traits<polygon_type>::coordinate_type
   perimeter(const polygon_type& polygon) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator_type;
-    typedef iterator_points<iterator_type, point_data<coordinate_type> > iterator;
+    typedef iterator_compact_to_points<iterator_type, point_data<coordinate_type> > iterator;
     coordinate_type return_value = 0;
     point_data<coordinate_type> previous_point, first_point;
     iterator itr = begin_points(polygon);
@@ -279,7 +207,7 @@ struct polygon_concept {
                              bool consider_touch = true) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator_type;
-    typedef iterator_points<iterator_type, point_data<coordinate_type> > iterator;
+    typedef iterator_compact_to_points<iterator_type, point_data<coordinate_type> > iterator;
     iterator iter, iter_end;
     iter_end = end_points(polygon);
     iter = begin_points(polygon);
@@ -371,7 +299,7 @@ struct polygon_concept {
     bool pingpong = true;
     for(typename polygon_traits<polygon_type>::iterator_type iter = begin(polygon); 
         iter != end(polygon); ++iter) {
-      coords.push_back((*iter) + predicated_value(pingpong, x_displacement, y_displacement));
+      coords.push_back((*iter) + (pingpong ? x_displacement : y_displacement));
       pingpong = !pingpong;
     }
     set(polygon, coords.begin(), coords.end());

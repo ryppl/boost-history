@@ -1,6 +1,18 @@
+/*
+  Copyright 2008 Intel Corporation
+ 
+  Use, modification and distribution are subject to the Boost Software License,
+  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+*/
 //external
 #include <vector>
+#include <deque>
+#include <map>
+#include <list>
 #include <iostream>
+#include <algorithm>
+#include <limits>
 
 //isotropy types
 #include "isotropy.h"
@@ -11,6 +23,7 @@
 #include "rectangle_data.h"
 #include "point_3d_data.h"
 #include "polygon_data.h"
+#include "polygon_with_holes_data.h"
 
 //traits types
 #include "point_traits.h"
@@ -18,13 +31,21 @@
 #include "rectangle_traits.h"
 #include "point_3d_traits.h"
 #include "polygon_traits.h"
+#include "polygon_with_holes_traits.h"
 
 //concept types
 #include "point_concept.h"
 #include "interval_concept.h"
 #include "rectangle_concept.h"
 #include "point_3d_concept.h"
+
+//algorithms needed by polygon concepts
+#include "iterator_points_to_compact.h"
+#include "iterator_compact_to_points.h"
+
+//polygon concept types
 #include "polygon_concept.h"
+#include "polygon_with_holes_concept.h"
 
 //definitions
 #include "post_concept_definitions.h"
@@ -34,6 +55,9 @@
 
 //defintions
 #include "post_geometry_traits_definitions.h"
+
+//manhattan boolean op algorithm
+#include "boolean_op.h"
 
 template <typename geometry_type_1, typename geometry_type_2>
 bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object) {
@@ -68,3 +92,4 @@ geometry_type_1& operator|(geometry_type_1& lvalue, const geometry_type_2& rvalu
   return assign(lvalue, rvalue);
 }
  
+

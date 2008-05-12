@@ -1,3 +1,10 @@
+/*
+  Copyright 2008 Intel Corporation
+ 
+  Use, modification and distribution are subject to the Boost Software License,
+  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+*/
 enum orientation_2d_enum { HORIZONTAL = 0, VERTICAL = 1 };
 enum direction_1d_enum { LOW = 0, HIGH = 1 };
 enum orientation_3d_enum { PROXIMAL = 2 };
