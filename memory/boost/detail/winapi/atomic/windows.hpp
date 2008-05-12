@@ -32,10 +32,10 @@ __forceinline PVOID WINAPI boost_InterlockedExchangePointer(PVOID* Target, PVOID
 
 #if defined(BOOST_DETAIL_WINSDK_VC6)
 
-__forceinline PVOID WINAPI boost_InterlockedCompareExchange(
+__forceinline LONG WINAPI boost_InterlockedCompareExchange(
 	LPLONG Destination, LONG Exchange, LONG Comperand)
 {
-	return InterlockedCompareExchange(
+	return (LONG)InterlockedCompareExchange(
 		(PVOID*)Destination, (PVOID)Exchange, (PVOID)Comperand);
 }
 
@@ -66,6 +66,24 @@ __forceinline PVOID WINAPI boost_InterlockedCompareExchangePointer(
 #define InterlockedCompareExchangePointer boost_InterlockedCompareExchangePointer
 
 #endif
+
+// -------------------------------------------------------------------------
+
+__forceinline bool WINAPI CompareAndSwap64(
+	PLONG64 Destination, LONG64 Exchange, LONG64 Comperand)
+{
+	bool ok;
+	__asm {
+		mov eax,[long ptr Comperand]
+		mov edx,[long ptr Comperand+1]
+		mov ebx,[long ptr Exchange]
+		mov ecx,[long ptr Exchange+1]
+		mov edi,[Destination]
+		lock cmpxchg8b [edi]
+		setz [ok]
+	}
+	return ok;
+}
 
 // -------------------------------------------------------------------------
 // $Log: $

@@ -60,6 +60,33 @@ __forceinline PVOID WINAPI InterlockedCompareExchangePointer(
 }
 
 // -------------------------------------------------------------------------
+
+__forceinline LONG64 WINAPI InterlockedExchange64(
+	volatile PLONG64 Target, LONG64 Value)
+{
+	__sync_synchronize();
+	return __sync_lock_test_and_set(Target, Value);
+}
+
+__forceinline bool WINAPI CompareAndSwap64(
+	PLONG64 Destination, LONG64 Exchange, LONG64 Comperand)
+{
+	return __sync_bool_compare_and_swap_8(Destination, Comperand, Exchange);
+}
+
+// -------------------------------------------------------------------------
+
+typedef int ATOMIC_LONG128_ __attribute__ ((mode (TI)));
+typedef ATOMIC_LONG128_ ATOMIC_LONG128;
+typedef ATOMIC_LONG128_* PATOMIC_LONG128;
+
+__forceinline bool WINAPI CompareAndSwap128(
+	PATOMIC_LONG128 Destination, ATOMIC_LONG128 Exchange, ATOMIC_LONG128 Comperand)
+{
+	return __sync_bool_compare_and_swap_16(Destination, Comperand, Exchange);
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 #endif /* BOOST_DETAIL_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP */
