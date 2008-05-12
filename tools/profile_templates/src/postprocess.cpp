@@ -12,7 +12,7 @@ boost::regex warning_message("(.*) : warning C4150: deletion of pointer to incom
 
 #elif defined(__GNUC__)
 
-boost::regex warning_message("(.*): warning: division by zero in `template_profiler_value / 0'");
+boost::regex warning_message("(.*): warning: division by zero in .template_profiler::value / 0.");
 
 #else
 
