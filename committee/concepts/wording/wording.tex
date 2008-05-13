@@ -4016,7 +4016,8 @@ concept_map Stack<std::vector<T> > {
   \mbox{\tcode{f}}), let \mbox{\tcode{R}}
   be the return type of \mbox{\tcode{f}}, after substitution of
   concept arguments for their corresponding concept
-  parameters. Construct an expression \mbox{\tcode{E}}, defined
+  parameters. Construct an expression \mbox{\tcode{E}} in the scope of
+  the concept map, defined 
   below. Then, the associated function requirement is satisfied if:}
 \begin{itemize}
 \additemCC{if \mbox{\tcode{R}} is \mbox{\techterm{cv} \tcode{void}}
@@ -4028,8 +4029,9 @@ concept_map Stack<std::vector<T> > {
 \end{itemize}
 
 \pnum 
-\addedCC{The expression \mbox{\tcode{E}} is defined as follows. Let
-  \mbox{\tcode{parm1}}, \mbox{\tcode{parm2}}, ...,
+\addedCC{The expression \mbox{\tcode{E}} is defined differently
+  depending on the associated function and the concept map
+  definition. Let \mbox{\tcode{parm1}}, \mbox{\tcode{parm2}}, ...,
   \mbox{\tcode{parm$N$}} be the parameters 
   of \mbox{\tcode{f}} (after substitution of the concept map
   arguments) and \mbox{\tcode{parm1$'$}},
@@ -4052,6 +4054,7 @@ concept_map Stack<std::vector<T> > {
   \mbox{\tcode{x}} is an lvalue; otherwise, \mbox{\tcode{x}} is an
   rvalue.}
 
+\addedCC{The expression \mbox{\tcode{E}} is defined as follows:}
 \begin{itemize}
 \additemCC{If \mbox{\tcode{f}} is an associated non-member function or
   function template and the concept map contains one or more function or
@@ -4540,7 +4543,7 @@ void h(T x) {
   of the }\changedCCC{concepts refined by}{concept instances in the
   refinement clause of}
 \addedConcepts{\mbox{\tcode{C}}}
-\changedCCC{are implicitly}{shall be defined}
+\changedCCC{are implicitly}{will be defined}
 \addedConcepts{in the namespace of which the
 concept map is a member}
 \removedCCC{unless already defined}\addedConcepts{.}
@@ -5689,7 +5692,7 @@ member of the corresponding concept map. \mbox{\exitnote}}
 
 \pnum
 \addedCC{In the instantiation of a constrained template, a call
-  to a function or a use of an operator that resolves to an associated
+  to a function that resolves to an associated
   function in a concept map archetype (\mbox{\ref{temp.archetype}})
   will be instantiated as a call to the associated function candidate set
   (\mbox{\ref{temp.constrained.set}}) that satisfies the
@@ -5720,12 +5723,12 @@ void h(X const& x) {
 \exitexample\
 
 \pnum
-\addedCC{A use of a function template specialization in a constrained
-  template instantiates to a use of that function template
+\addedCC{A function template specialization in a constrained
+  template instantiates to a reference to that function template
   specialization's retained candidate set. The
   \mbox{\techterm{retained candidate set}} is a candidate set
   (\mbox{\ref{temp.constrained.set}}) whose seed is determined by the
-  function template specialization used in the definition of the
+  function template specialization from the definition of the
   constrained template, after substitution of the constrained
   template's template arguments for their corresponding
   archetypes. \mbox{\enterexample}}
@@ -5980,3 +5983,13 @@ Was in [over.match.viable]:
   from a concept map or constrained template, then for \mbox{\tcode{F}} to
   be a viable function it shall be consistent with the seed of the
   candidate set (\mbox{\ref{temp.constrained.set}}).}
+
+TODO:
+
+  - [temp.constrained.inst]: Make this apply to template aliases as
+  well, by talking about the resulting type.
+  - [over]: Add a note in here somewhere that says, e.g., ``concepts
+  have some extra rules, see [temp.constrained.set]''.
+  - Make ReferentType allow references, and give pointer-to-member its
+  own concept (MemberPointeeType?). Remember to also fix this in the
+  concepts-in-the-library wording.
