@@ -5,17 +5,13 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-struct point_3d_concept {
+struct point_3d_concept : point_concept {
   point_3d_concept() {}
 
   template <typename point_3d_type>
   struct registration {
     typedef typename point_3d_traits<point_3d_type>::coordinate_type component_type;
   };
-
-  template <orientation_2d_enum orient, typename T> 
-  static inline typename point_traits<T>::coordinate_type get(const T& point) {
-    return point_traits<T>::get(point, orient); }
 
   template <orientation_3d_enum orient, typename T>
   static inline typename point_3d_traits<T>::coordinate_type get(const T& point) {
@@ -25,9 +21,6 @@ struct point_3d_concept {
   static inline typename point_3d_traits<T>::coordinate_type get(const T& point, orientation_3d orient) {
     return point_3d_traits<T>::get(point, orient); }
   
-  template <orientation_2d_enum orient, typename T, typename coordinate_type>
-  static inline void set(T& point, coordinate_type value) {
-    point_traits<T>::set(point, orient, value); }
   template <orientation_3d_enum orient, typename T, typename coordinate_type>
   static inline void set(T& point, coordinate_type value) {
     point_traits<T>::set(point, orient, value); }

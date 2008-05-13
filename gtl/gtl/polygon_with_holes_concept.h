@@ -6,43 +6,14 @@
   http://www.boost.org/LICENSE_1_0.txt).
 */
 
-struct polygon_with_holes_concept {
+struct polygon_with_holes_concept : polygon_concept {
 public:
-
-  template<typename polygon_with_holes_type, typename iterator_type>
-  static void set(polygon_with_holes_type& polygon, iterator_type input_begin, iterator_type input_end) {
-    polygon_traits<polygon_with_holes_type>::set(polygon, input_begin, input_end);
-  }
-
-  template<typename polygon_with_holes_type, typename rectangle_type>
-  static void set(polygon_with_holes_type& polygon, const rectangle_type& rect) {
-    typename polygon_traits<polygon_with_holes_type>::coordinate_type coords[4] = 
-      {rectangle_concept::xl(rect), rectangle_concept::yl(rect),
-       rectangle_concept::xh(rect), rectangle_concept::yh(rect)};
-    set(polygon, coords, coords+4);
-  }
-   
-  template<typename polygon_with_holes_type, typename point_iterator_type>
-  static void set_points(polygon_with_holes_type& polygon, point_iterator_type begin_point, point_iterator_type end_point) {
-    return set(iterator_points_to_compact<point_iterator_type, typename point_iterator_type::value_type>(begin_point),
-               iterator_points_to_compact<point_iterator_type, typename point_iterator_type::value_type>(end_point));
-  }
 
   template<typename polygon_with_holes_type, typename hole_iterator_type>
   static void set_holes(polygon_with_holes_type& polygon, hole_iterator_type holes_begin, hole_iterator_type holes_end) {
     polygon_with_holes_traits<polygon_with_holes_type>::set_holes(polygon, holes_begin, holes_end);
   }
 
-  template <typename polygon_with_holes_type>
-  static typename polygon_traits<polygon_with_holes_type>::iterator_type begin(const polygon_with_holes_type& polygon) {
-    return polygon_traits<polygon_with_holes_type>::begin(polygon);
-  }
-  
-  template <typename polygon_with_holes_type>
-  static typename polygon_traits<polygon_with_holes_type>::iterator_type end(const polygon_with_holes_type& polygon) {
-    return polygon_traits<polygon_with_holes_type>::end(polygon);
-  }
-  
   template <typename polygon_with_holes_type>
   static typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type begin_holes(const polygon_with_holes_type& polygon) {
     return polygon_with_holes_traits<polygon_with_holes_type>::begin_holes(polygon);
@@ -53,43 +24,12 @@ public:
     return polygon_with_holes_traits<polygon_with_holes_type>::end_holes(polygon);
   }
   
-  template <typename polygon_with_holes_type>
-  static iterator_compact_to_points<typename polygon_traits<polygon_with_holes_type>::iterator_type,
-                         point_data<typename polygon_traits<polygon_with_holes_type>::coordinate_type> > 
-  begin_points(const polygon_with_holes_type& polygon) {
-    return iterator_compact_to_points<typename polygon_traits<polygon_with_holes_type>::iterator_type,
-      point_data<typename polygon_traits<polygon_with_holes_type>::coordinate_type> > (begin(polygon), end(polygon));
-  }
-
-  template <typename polygon_with_holes_type>
-  static iterator_compact_to_points<typename polygon_traits<polygon_with_holes_type>::iterator_type,
-                         point_data<typename polygon_traits<polygon_with_holes_type>::coordinate_type> > 
-  end_points(const polygon_with_holes_type& polygon) {
-    return iterator_compact_to_points<typename polygon_traits<polygon_with_holes_type>::iterator_type,
-      point_data<typename polygon_traits<polygon_with_holes_type>::coordinate_type> > (end(polygon), end(polygon));
-  }
-
-  template<typename T, class iT>
-  static T construct(iT inputBegin, iT inputEnd) { return polygon_traits<T>::construct(inputBegin, inputEnd); }
-
-  template<typename polygon_with_holes_type, typename rectangle_type>
-  static polygon_with_holes_type construct_from_rectangle(const rectangle_type& rect) {
-    polygon_with_holes_type poly;
-    set(poly, rect);
-    return poly;
-  }
-
   template <typename polygon_with_holes_type_1, typename polygon_with_holes_type_2>
   static polygon_with_holes_type_1 copy_construct(const polygon_with_holes_type_2& polygon) { 
     polygon_with_holes_type_1 retval;
     set(retval, polygon_concept::begin(polygon), polygon_concept::end(polygon));
     set_holes(retval, polygon_with_holes_concept::begin_holes(polygon), polygon_with_holes_concept::end_holes(polygon));
     return retval;
-  }
-
-  template <typename polygon_with_holes_type>
-  static std::size_t size(const polygon_with_holes_type& polygon) {
-    return polygon_traits<polygon_with_holes_type>::size(polygon);
   }
 
   template <typename polygon_with_holes_type>
@@ -102,17 +42,6 @@ public:
     set(lvalue, begin(rvalue), end(rvalue));
     set_holes(lvalue, begin_holes(rvalue), end_holes(rvalue));
     return lvalue;
-  }
-
-  template <typename polygon_with_holes_type>
-  static rectangle_data<typename polygon_traits<polygon_with_holes_type>::coordinate_type> 
-  bounding_box(const polygon_with_holes_type& polygon) {
-    return polygon_concept::bounding_box(polygon);
-  }
-  
-  template <typename polygon_with_holes_type>
-  static direction_1d winding(const polygon_with_holes_type& polygon){
-    return polygon_concept::winding(polygon);
   }
 
   template <typename polygon_with_holes_type>
