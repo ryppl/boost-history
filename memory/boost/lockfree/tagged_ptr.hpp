@@ -1,5 +1,5 @@
 //
-//  boost/lockfree/tagged.hpp
+//  boost/lockfree/tagged_ptr.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -35,7 +35,7 @@
 NS_BOOST_LOCKFREE_BEGIN
 
 // -------------------------------------------------------------------------
-// class tagged
+// class tagged_ptr
 
 template <class E>
 class tagged_ptr
