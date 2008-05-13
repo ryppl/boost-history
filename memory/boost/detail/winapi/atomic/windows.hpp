@@ -74,11 +74,11 @@ __forceinline bool WINAPI CompareAndSwap64(
 {
 	bool ok;
 	__asm {
-		mov eax,[long ptr Comperand]
-		mov edx,[long ptr Comperand+1]
-		mov ebx,[long ptr Exchange]
-		mov ecx,[long ptr Exchange+1]
-		mov edi,[Destination]
+		mov eax, long ptr Comperand
+		mov edx, long ptr Comperand + 4
+		mov ebx, long ptr Exchange
+		mov ecx, long ptr Exchange + 4
+		mov edi, long ptr Destination
 		lock cmpxchg8b [edi]
 		setz [ok]
 	}

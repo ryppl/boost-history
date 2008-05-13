@@ -57,7 +57,7 @@ public:
 	tagged_ptr() : m_p(0) {}
 	
 	template <class FuncT>
-	bool BOOST_LOCKFREE_CALL set(FuncT op)
+	bool BOOST_LOCKFREE_CALL set(FuncT& op)
 	{
 		BOOST_DETAIL_ASSERT(sizeof(Type*) == sizeof(LONG32));
 		for (;;)

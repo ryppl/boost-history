@@ -41,13 +41,13 @@ private:
 public:
 	class node
 	{
-	private:
-		node* m_prev;
-		friend class normal_stack;
-	
 	public:
-		node() : m_prev(NULL) {}
-		node* prev() const { return m_prev; }
+		node* _m_prev;
+		node* prev() const { return _m_prev; }
+#if defined(_DEBUG)
+		node() : _m_prev(NULL) {}
+		void prev(node* p) { _m_prev = p; }
+#endif
 	};
 
 private:
@@ -60,7 +60,7 @@ public:
 	void BOOST_LOCKFREE_CALL push(node* val)
 	{
 		cslock aLock(m_cs);
-		val->m_prev = m_top;
+		val->_m_prev = m_top;
 		m_top = val;
 	}
 
@@ -78,7 +78,7 @@ public:
 		node* the_top = m_top;
 		if (the_top == NULL)
 			return NULL;
-		m_top = m_top->m_prev;
+		m_top = m_top->_m_prev;
 		return the_top;
 	}
 };
@@ -129,6 +129,9 @@ public:
 
 	void BOOST_MEMORY_CALL deallocate(void* p)
 	{
+#if defined(_DEBUG)
+		((Block*)p)->prev(NULL);
+#endif
 		m_freeList.push((Block*)p);
 	}
 

@@ -35,6 +35,7 @@ public:
 		node* prev() const { return _m_prev; }
 #if defined(_DEBUG)
 		node() : _m_prev(NULL) {}
+		void prev(node* p) { _m_prev = p; }
 #endif
 	};
 

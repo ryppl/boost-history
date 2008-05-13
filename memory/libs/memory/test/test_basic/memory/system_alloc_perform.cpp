@@ -18,38 +18,33 @@ using namespace NS_BOOST_MEMORY;
 
 typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib, normal_stack> system_pool_static;
 
+enum { NTimes = 100 };
+enum { Total = 400 };
+
+static void* p[Total];
+
 template <class LogT>
 class TestSystemAlloc
 {
-private:
-	void** p;
-	enum { Total = 5000 };
-
 public:
-	TestSystemAlloc()
-	{
-		p = new void*[Total];
-	}
-	~TestSystemAlloc()
-	{
-		delete[] p;
-	}
-
 	template <class LogT2, class AllocT>
-	void doTestAlloc(LogT2& log, AllocT& alloc)
+	void doTestAlloc(LogT2& log, AllocT& alloc, int N, int M = 16)
 	{
 		NS_BOOST_DETAIL::accumulator acc;
-		for (int i, j = 0; j < 16; ++j)
+		for (int i, j = 0; j < M; ++j)
 		{
 			NS_BOOST_DETAIL::performance_counter counter;
 			{
-				for (i = 0; i < Total; ++i)
+				for (int k = 0; k < N; ++k)
 				{
-					p[i] = alloc.allocate(BOOST_MEMORY_BLOCK_SIZE);
-				}
-				for (i = 0; i < Total; ++i)
-				{
-					alloc.deallocate(p[i]);
+					for (i = 0; i < Total; ++i)
+					{
+						p[i] = alloc.allocate(BOOST_MEMORY_BLOCK_SIZE);
+					}
+					for (i = 0; i < Total; ++i)
+					{
+						alloc.deallocate(p[i]);
+					}
 				}
 			}
 			acc.accumulate(counter.trace(log));
@@ -64,17 +59,17 @@ public:
 		stdlib_alloc stdLib;
 
 		NS_BOOST_DETAIL::null_log nullLog;
-		doTestAlloc(nullLog, sysPool);
-		doTestAlloc(nullLog, sysPool2);
-
-		log.trace("\n===== SystemPoolAlloc (LockFree) =====\n");
-		doTestAlloc(log, sysPool);
+		doTestAlloc(nullLog, sysPool, 1, 1);
+		doTestAlloc(nullLog, sysPool2, 1, 1);
 
 		log.trace("\n===== SystemPoolAlloc (Lock) =====\n");
-		doTestAlloc(log, sysPool2);
+		doTestAlloc(log, sysPool2, NTimes);
+
+		log.trace("\n===== SystemPoolAlloc (LockFree) =====\n");
+		doTestAlloc(log, sysPool, NTimes);
 
 		log.trace("\n===== StdLibAlloc =====\n");
-		doTestAlloc(log, stdLib);
+		doTestAlloc(log, stdLib, NTimes);
 	}
 };
 
