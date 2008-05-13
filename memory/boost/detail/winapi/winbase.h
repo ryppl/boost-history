@@ -12,7 +12,7 @@
 #ifndef BOOST_DETAIL_WINAPI_WINBASE_H
 #define BOOST_DETAIL_WINAPI_WINBASE_H
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 
 #ifndef __wtypes_h__
 #include <wtypes.h>

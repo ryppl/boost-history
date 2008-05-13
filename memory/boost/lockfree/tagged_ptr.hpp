@@ -1,5 +1,5 @@
 //
-//  boost/lockfree/tagged_ptr.hpp
+//  boost/lockfree/tagged.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -32,104 +32,49 @@
 #define BOOST_LOCKFREE_CALL
 #endif
 
-#if defined(_WIN32) || defined(__BIT32__)
-#define NS_BOOST_LOCKFREE_BIT32
-#elif defined(_WIN64) || defined(__BIT64__) || defined(__x86_64__)
-#define NS_BOOST_LOCKFREE_BIT64
-#else
-#error "Unknown Configurations"
-#endif
-
 NS_BOOST_LOCKFREE_BEGIN
 
 // -------------------------------------------------------------------------
-// class tagged_ptr
+// class tagged
 
-#if defined(NS_BOOST_LOCKFREE_BIT32)
-
-template <class Type>
+template <class E>
 class tagged_ptr
 {
 private:
-	LONG64 m_p;
+	typedef E* Type;
+	Type m_p[2];
 
 public:
-	tagged_ptr() : m_p(0) {}
+	tagged_ptr(Type vInit = Type()) {
+		m_p[0] = vInit;
+	}
 	
 	template <class FuncT>
 	bool BOOST_LOCKFREE_CALL set(FuncT& op)
 	{
-		BOOST_DETAIL_ASSERT(sizeof(Type*) == sizeof(LONG32));
 		for (;;)
 		{
-			tagged_ptr vOld = *this;
-			Type* pOld = vOld.get();
-			if (!op.valid(pOld))
+			Type vTag = m_p[1]; // NOTE: getting 'tag' before getting 'data'!
+			Type vOld = get();
+			if (!op.valid(vOld))
 				return false;
 
-			tagged_ptr vNew = vOld;
-			vNew.m_p += (LONG64)1 << 32;
-			*(LONG32*)&vNew.m_p = (LONG32)static_cast<Type*>(op(pOld));
-			if (CompareAndSwap64(&m_p, vNew.m_p, vOld.m_p))
+			Type vNew = op(vOld);
+			if (TaggedCompareAndSwap(m_p, vNew, vOld, vTag))
 				return true;
 		}
 	}
 
-	__forceinline Type* BOOST_LOCKFREE_CALL clear()
+	__forceinline Type BOOST_LOCKFREE_CALL clear()
 	{
-		return (Type*)InterlockedExchangePointer((PVOID*)&m_p, NULL);
+		return (Type)InterlockedExchangePointer((PVOID*)m_p, NULL);
 	}
 
-	__forceinline Type* BOOST_LOCKFREE_CALL get() const
+	__forceinline Type BOOST_LOCKFREE_CALL get() const
 	{
-		return (Type*)(LONG32)m_p;
-	}
-};
-
-#elif defined(NS_BOOST_LOCKFREE_BIT64)
-
-template <class Type>
-class tagged_ptr
-{
-private:
-	ATOMIC_LONG128 m_p;
-
-public:
-	tagged_ptr() : m_p(0) {}
-
-	template <class FuncT>
-	bool BOOST_LOCKFREE_CALL set(FuncT op)
-	{
-		BOOST_DETAIL_ASSERT(sizeof(Type*) == sizeof(LONG64));
-		for (;;)
-		{
-			tagged_ptr vOld = *this;
-			Type* pOld = vOld.get();
-			if (!op.valid(pOld))
-				return false;
-
-			tagged_ptr vNew = vOld;
-			vNew.m_p += (ATOMIC_LONG128)1 << 64;
-			*(LONG64*)&vNew.m_p = (LONG64)static_cast<Type*>(op(pOld));
-			if (CompareAndSwap128(&m_p, vNew.m_p, vOld.m_p))
-				return true;
-		}
-	}
-
-	__forceinline Type* BOOST_LOCKFREE_CALL clear()
-	{
-		return (Type*)InterlockedExchangePointer((PVOID*)&m_p, NULL);
-	}
-
-	__forceinline Type* BOOST_LOCKFREE_CALL get() const
-	{
-		return (Type*)(LONG64)m_p;
+		return m_p[0];
 	}
 };
-
-#else
-#error "Unknown Configurations"
-#endif
 
 // -------------------------------------------------------------------------
 // $Log: $

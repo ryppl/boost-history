@@ -68,22 +68,46 @@ __forceinline PVOID WINAPI boost_InterlockedCompareExchangePointer(
 #endif
 
 // -------------------------------------------------------------------------
+// TaggedCompareAndSwap
 
-__forceinline bool WINAPI CompareAndSwap64(
-	PLONG64 Destination, LONG64 Exchange, LONG64 Comperand)
+__forceinline bool WINAPI TaggedCompareAndSwap(
+	LONG32 Destination[2], LONG32 Exchange, LONG32 Comperand, LONG32 Tag)
 {
 	bool ok;
 	__asm {
-		mov eax, long ptr Comperand
-		mov edx, long ptr Comperand + 4
-		mov ebx, long ptr Exchange
-		mov ecx, long ptr Exchange + 4
-		mov edi, long ptr Destination
+		mov eax, Comperand
+		mov edx, Tag
+		mov ebx, Exchange
+		mov ecx, edx
+		inc ecx
+		mov edi, Destination
 		lock cmpxchg8b [edi]
-		setz [ok]
+		setz ok
 	}
 	return ok;
 }
+
+#if defined(_WIN32)
+
+template <class Type>
+__forceinline bool WINAPI TaggedCompareAndSwap(
+	Type* Destination[2], Type* Exchange, Type* Comperand, Type* Tag)
+{
+	return TaggedCompareAndSwap(
+		(LONG32*)Destination, (LONG32)Exchange, (LONG32)Comperand, (LONG32)Tag);
+}
+
+#elif defined(_WIN64)
+
+template <class Type>
+__forceinline bool WINAPI TaggedCompareAndSwap(
+	Type* Destination[2], Type* Exchange, Type* Comperand, Type* Tag)
+{
+	return TaggedCompareAndSwap(
+		(LONG64*)Destination, (LONG64)Exchange, (LONG64)Comperand, (LONG64)Tag);
+}
+
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
