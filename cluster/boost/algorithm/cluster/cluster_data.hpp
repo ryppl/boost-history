@@ -53,6 +53,8 @@ struct cluster_data
   value_type const & back() const { return m_pClusters->back(); }
 
   size_t size() const { return m_pClusters->size(); }
+  bool empty() const { return m_pClusters->empty(); }
+
 private:
   boost::shared_ptr<clusters> m_pClusters;
 };
