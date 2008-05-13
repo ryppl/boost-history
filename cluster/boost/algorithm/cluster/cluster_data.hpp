@@ -27,7 +27,7 @@ struct cluster_data
   ~cluster_data() {}
 
   cluster_data(cluster_data const & c) : m_pClusters(c.m_pClusters) {}
-  cluster_data const & cluster_data::operator=(cluster_data const & rhs)
+  cluster_data const & operator=(cluster_data const & rhs)
   { m_pClusters = rhs.m_pClusters; }
 
   typedef typename clusters::iterator iterator;

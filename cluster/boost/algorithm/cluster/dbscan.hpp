@@ -80,7 +80,8 @@ dbscan(NTupleIterT const & begin,
 
   // TODO: We should try to make cluster_num go away.
   int cluster_num = 0;
-  for(ntuple_nodes::iterator it = tuples.begin(); it != tuples.end(); ++it)
+  for(typename ntuple_nodes::iterator it = tuples.begin();
+      it != tuples.end(); ++it)
   {
     // Skip this tuple if its already been classified as a cluster or noise.
     if (it->cluster != detail::UNCLASSIFIED)
@@ -88,7 +89,7 @@ dbscan(NTupleIterT const & begin,
 
     // Expand cluster.
 
-    std::vector<ntuple_nodes::iterator> seeds;
+    std::vector<typename ntuple_nodes::iterator> seeds;
     detail::naive_query(it, tuples.begin(), tuples.end(), eps, d, seeds);
     // If the neighborhood of this tuple is too small, then mark it as noise.
     if (seeds.size() < min_points)
@@ -115,10 +116,10 @@ dbscan(NTupleIterT const & begin,
     // are Density Reachable.
     while (! seeds.empty())
     {
-      ntuple_nodes::iterator cur = seeds.back();
+      typename ntuple_nodes::iterator cur = seeds.back();
       seeds.pop_back();
 
-      std::vector<ntuple_nodes::iterator> results;
+      std::vector<typename ntuple_nodes::iterator> results;
       detail::naive_query(cur, tuples.begin(), tuples.end(), eps, d, results);
 
       if (results.size() >= min_points)
