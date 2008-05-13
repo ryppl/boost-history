@@ -13,6 +13,7 @@
 #include <iostream>
 #include <algorithm>
 #include <limits>
+#include <iterator>
 
 //isotropy types
 #include "isotropy.h"
@@ -60,8 +61,10 @@
 #include "boolean_op.h"
 
 template <typename geometry_type_1, typename geometry_type_2>
-bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object) {
-  typename geometry_traits<geometry_type_1>::geometry_concept().contains(geometry_object, contained_geometry_object);
+bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object, 
+              bool consider_touch = true) {
+  typename geometry_traits<geometry_type_1>::geometry_concept().contains(geometry_object, contained_geometry_object,
+                                                                         consider_touch, typename geometry_traits<geometry_type_2>::geometry_concept());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>

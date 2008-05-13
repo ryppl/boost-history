@@ -24,10 +24,8 @@ public:
    
   template<typename polygon_with_holes_type, typename point_iterator_type>
   static void set_points(polygon_with_holes_type& polygon, point_iterator_type begin_point, point_iterator_type end_point) {
-    return set(iterator_points_to_compact<point_iterator_type, 
-               typename polygon_traits<polygon_with_holes_type>::coordinate_type>(begin_point),
-               iterator_points_to_compact<point_iterator_type, 
-               typename polygon_traits<polygon_with_holes_type>::coordinate_type>(end_point));
+    return set(iterator_points_to_compact<point_iterator_type, typename point_iterator_type::value_type>(begin_point),
+               iterator_points_to_compact<point_iterator_type, typename point_iterator_type::value_type>(end_point));
   }
 
   template<typename polygon_with_holes_type, typename hole_iterator_type>
@@ -130,16 +128,16 @@ public:
 
   /// check if point is inside polygon 
   template <typename polygon_with_holes_type, typename point_type>
-  static bool contains_point(const polygon_with_holes_type& polygon, const point_type& point, 
-                             bool consider_touch = true) {
+  static bool contains(const polygon_with_holes_type& polygon, const point_type& point, 
+                       bool consider_touch, point_concept pc) {
     typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type b, e;
     e = end_holes(polygon);
     for(b = begin_holes(polygon); b != e; ++b) {
-      if(polygon_concept::contains_point(*b, point, !consider_touch)) {
+      if(polygon_concept::contains(*b, point, !consider_touch, pc)) {
         return false;
       }
     }
-    return polygon_concept::contains_point(polygon, point, consider_touch);
+    return polygon_concept::contains(polygon, point, consider_touch, pc);
   }
 
   /// get the perimeter of the polygon
@@ -228,29 +226,29 @@ inline void testPolygonWithHolesImpl() {
   //std::cout << pwh << std::endl;
   std::cout << "PolygonWithHoles test pattern 1 1 1 1 1 1 0 0 0 0 0 0\n";
   std::cout << "PolygonWithHoles test pattern "; 
-  std::cout << polygon_with_holes_concept::contains_point(pwh, point_data<T>(1, 11))
+  std::cout << polygon_with_holes_concept::contains(pwh, point_data<T>(1, 11), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(10, 10))
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(10, 10), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(10, 90))
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(10, 90), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(90, 90))
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(90, 90), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(90, 10))
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(90, 10), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(90, 80))
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(90, 80), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(12, 12))
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(12, 12), true, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(10, 10), false)
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(10, 10), false, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(10, 90), false)
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(10, 90), false, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(90, 90), false)
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(90, 90), false, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(90, 10), false)
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(90, 10), false, point_concept())
             << " " ;
-  std::cout <<  polygon_with_holes_concept::contains_point(pwh, point_data<T>(90, 80), false)
+  std::cout <<  polygon_with_holes_concept::contains(pwh, point_data<T>(90, 80), false, point_concept())
             << "\n";
   
   polygon_with_holes_concept::move(pwh, 5, 5);

@@ -14,6 +14,12 @@ private:
   typename point_traits<point_type>::coordinate_type firstX_;
   orientation_2d orient_;
 public:
+  typedef std::forward_iterator_tag iterator_category;
+  typedef point_type value_type;
+  typedef std::ptrdiff_t difference_type;
+  typedef const point_type* pointer; //immutable
+  typedef const point_type& reference; //immutable
+
   inline iterator_compact_to_points() {}
   inline iterator_compact_to_points(iterator_type iter, iterator_type iter_end) : 
     iter_(iter), iter_end_(iter_end), orient_(HORIZONTAL) {
@@ -51,5 +57,5 @@ public:
   inline bool operator!=(const iterator_compact_to_points& that) const {
     return (iter_ != that.iter_);
   }
-  inline const point_type& operator*() const { return pt_; }
+  inline reference operator*() const { return pt_; }
 };

@@ -23,10 +23,8 @@ struct polygon_concept {
    
   template<typename polygon_type, typename point_iterator_type>
   static void set_points(polygon_type& polygon, point_iterator_type begin_point, point_iterator_type end_point) {
-    return set(iterator_points_to_compact<point_iterator_type, 
-        typename polygon_traits<polygon_type>::coordinate_type>(begin_point),
-        iterator_points_to_compact<point_iterator_type, 
-        typename polygon_traits<polygon_type>::coordinate_type>(end_point));
+    return set(iterator_points_to_compact<point_iterator_type, typename point_iterator_type::value_type>(begin_point),
+        iterator_points_to_compact<point_iterator_type, typename point_iterator_type::value_type>(end_point));
   }
 
   template <typename polygon_type>
@@ -203,8 +201,8 @@ struct polygon_concept {
 
   /// check if point is inside polygon 
   template <typename polygon_type, typename point_type>
-  static bool contains_point(const polygon_type& polygon, const point_type& point, 
-                             bool consider_touch = true) {
+  static bool contains(const polygon_type& polygon, const point_type& point, 
+                       bool consider_touch, point_concept pc) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator_type;
     typedef iterator_compact_to_points<iterator_type, point_data<coordinate_type> > iterator;
