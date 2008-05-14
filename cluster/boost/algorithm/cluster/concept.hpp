@@ -22,11 +22,11 @@ namespace cluster
     void constraints()
     {
       // Operation
-      d(t, t);
+      (*pD)(t, t);
     }
   private:
     T t;
-    DistanceFunT d;
+    DistanceFunT * pD;
   };
 
   // TODO: Add concepts here, then delete this comment.

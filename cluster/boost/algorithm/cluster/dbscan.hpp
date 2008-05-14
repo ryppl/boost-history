@@ -59,8 +59,8 @@ dbscan(NTupleIterT const & begin,
   function_requires<
     DistanceComparableConcept<typename NTupleIterT::value_type, DistFunT> >();
     //DistanceComparableConcept<int, DistFunT> >();
-  function_requires<
-    DistanceComparableConcept<DistanceT, DistFunT> >();
+  // TODO: Need to devise a concept check for the return type of DistFunT,
+  // such that it is compatible with the difference_type for 2 NTuples.
 
   // TODO: Rework the algorithm to NOT make this extra collection?
   typedef detail::node<NTupleIterT> node;
@@ -75,7 +75,7 @@ dbscan(NTupleIterT const & begin,
     tuples.push_back(node(it));
   }
 
-  typedef cluster_data<std::vector<NTupleIterT> > cluster_data;
+  typedef cluster_data<ClusterT> cluster_data;
   cluster_data p;
 
   // TODO: We should try to make cluster_num go away.
