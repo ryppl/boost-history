@@ -25,6 +25,12 @@ public:
 
   inline interval_data<coordinate_type> get(orientation_2d orient) const {
     return ranges_[orient.to_int()]; }
+  inline coordinate_type get(direction_2d dir) const {
+    return ranges_[orientation_2d(dir).to_int()].get(direction_1d(dir));
+  }
+  inline void set(direction_2d dir, coordinate_type value) {
+    return ranges_[orientation_2d(dir).to_int()].set(direction_1d(dir), value);
+  }
   template <typename interval_type>
   inline void set(orientation_2d orient, const interval_type& interval); 
 private:

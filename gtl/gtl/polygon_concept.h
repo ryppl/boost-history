@@ -224,7 +224,7 @@ struct polygon_concept {
         interval_data<coordinate_type> ivl = 
           interval_concept::construct<interval_data<coordinate_type> >(point_concept::get<VERTICAL>(current_pt), 
                                                                        point_concept::get<VERTICAL>(prev_pt));
-        if(interval_concept::contains_coordinate(ivl, point_concept::get<VERTICAL>(point), true)) {
+        if(interval_concept::contains(ivl, point_concept::get<VERTICAL>(point), true)) {
           if(point_concept::get<HORIZONTAL>(current_pt) == 
              point_concept::get<HORIZONTAL>(point)) return consider_touch;
           ++increment;

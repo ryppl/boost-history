@@ -9,6 +9,7 @@
 #include <vector>
 #include <deque>
 #include <map>
+#include <set>
 #include <list>
 #include <iostream>
 #include <algorithm>
@@ -51,14 +52,17 @@
 //definitions
 #include "post_concept_definitions.h"
 
+//manhattan boolean op algorithms
+#include "boolean_op.h"
+#include "polygon_formation.h"
+#include "rectangle_formation.h"
+
 //geometry traits
 #include "geometry_traits.h"
 
 //defintions
 #include "post_geometry_traits_definitions.h"
 
-//manhattan boolean op algorithm
-#include "boolean_op.h"
 
 template <typename geometry_type_1, typename geometry_type_2>
 bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object, 

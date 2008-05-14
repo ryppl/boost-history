@@ -94,20 +94,48 @@ struct rectangle_concept {
   }
 
   template <typename rectangle_type, typename rectangle_type2>
-  static bool contains_dispatch(const rectangle_type& rectangle, const rectangle_type2 rectangle_contained, rectangle_concept tag) {
+  static bool contains(const rectangle_type& rectangle, const rectangle_type2 rectangle_contained, 
+                                bool consider_touch, rectangle_concept tag) {
     std::cout << "rectangle contains rectangle\n";
   }
   template <typename rectangle_type, typename point_type>
-  static bool contains_dispatch(const rectangle_type& rectangle, const point_type point_contained, point_concept tag) {
+  static bool contains(const rectangle_type& rectangle, const point_type point_contained, 
+                                bool consider_touch, point_concept tag) {
     std::cout << "rectangle contains point\n";
   }
-  template <typename concept_type, typename rectangle_type, typename geometry_type> 
-  static bool contains(const rectangle_type& rectangle, const geometry_type& contained_geometry_object) {
-    return contains_dispatch(rectangle, contained_geometry_object, concept_type());
-  }
 
-  template <typename rectangle_type, typename geometry_type>
-  static bool contains(const rectangle_type& rectangle, const geometry_type& contained_geometry_object); 
+  template <typename rectangle_type_1, typename rectangle_type_2>
+  class less : public std::binary_function<const rectangle_type_1&, const rectangle_type_2&, bool> {
+  private:
+    orientation_2d orient_;
+  public:
+    inline less(orientation_2d orient = VERTICAL) : orient_(orient) {}
+    inline bool operator () (const rectangle_type_1& a,
+                             const rectangle_type_2& b) const {
+      typedef typename rectangle_traits<rectangle_type_1>::coordinate_type Unit;
+      Unit vl1 = interval_concept::get(get(a, orient_), LOW); 
+      Unit vl2 = interval_concept::get(get(b, orient_), LOW); 
+      if(vl1 > vl2) return false;
+      if(vl1 == vl2) {
+        orientation_2d perp = orient_.get_perpendicular();
+        Unit hl1 = interval_concept::get(get(a, perp), LOW);
+        Unit hl2 = interval_concept::get(get(b, perp), LOW);
+        if(hl1 > hl2) return false;
+        if(hl1 == hl2) {
+          Unit vh1 = interval_concept::get(get(a, orient_), HIGH); 
+          Unit vh2 = interval_concept::get(get(b, orient_), HIGH); 
+          if(vh1 > vh2) return false;
+          if(vh1 == vh2) {
+            Unit hh1 = interval_concept::get(get(a, perp), HIGH);
+            Unit hh2 = interval_concept::get(get(b, perp), HIGH);
+            return hh1 < hh2;
+          }
+        }
+      }
+      return true;
+    }
+    
+  };
 };
 
 
