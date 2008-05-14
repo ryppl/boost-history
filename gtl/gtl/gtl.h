@@ -56,12 +56,21 @@
 #include "boolean_op.h"
 #include "polygon_formation.h"
 #include "rectangle_formation.h"
+#include "iterator_vertex_orient_conversion.h"
 
+//polygon set data types
+#include "polygon_set_data.h"
+//polygon set trait types
+#include "polygon_set_traits.h"
+//polygon set concepts
+#include "polygon_set_view.h"
 //geometry traits
 #include "geometry_traits.h"
 
 //defintions
 #include "post_geometry_traits_definitions.h"
+
+
 
 
 template <typename geometry_type_1, typename geometry_type_2>
@@ -95,8 +104,92 @@ geometry_type_1& assign(geometry_type_1& lvalue, geometry_type_2& rvalue) {
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-geometry_type_1& operator|(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
-  return assign(lvalue, rvalue);
+polygon_set_view<typename geometry_type_1::operator_arg_type,
+                 typename geometry_type_2::operator_arg_type,
+                 boolean_op::BinaryOr, 
+                 typename geometry_type_1::operator_storage_tag, 
+                 typename geometry_type_2::operator_storage_tag> 
+operator|(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return polygon_set_view<geometry_type_1, geometry_type_2,
+    boolean_op::BinaryOr, 
+    typename geometry_type_1::operator_storage_tag, 
+    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+                                                    polygon_set_traits<geometry_type_1>::orient(lvalue),
+                                                    boolean_op::BinaryOr());
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+polygon_set_view<typename geometry_type_1::operator_arg_type,
+                 typename geometry_type_2::operator_arg_type,
+                 boolean_op::BinaryOr, 
+                 typename geometry_type_1::operator_storage_tag, 
+                 typename geometry_type_2::operator_storage_tag> 
+operator+(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return polygon_set_view<geometry_type_1, geometry_type_2,
+    boolean_op::BinaryOr, 
+    typename geometry_type_1::operator_storage_tag, 
+    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+                                                    polygon_set_traits<geometry_type_1>::orient(lvalue),
+                                                    boolean_op::BinaryOr());
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+polygon_set_view<typename geometry_type_1::operator_arg_type,
+                 typename geometry_type_2::operator_arg_type,
+                 boolean_op::BinaryAnd, 
+                 typename geometry_type_1::operator_storage_tag, 
+                 typename geometry_type_2::operator_storage_tag> 
+operator*(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return polygon_set_view<geometry_type_1, geometry_type_2,
+    boolean_op::BinaryAnd, 
+    typename geometry_type_1::operator_storage_tag, 
+    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+                                                    polygon_set_traits<geometry_type_1>::orient(lvalue),
+                                                    boolean_op::BinaryAnd());
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+polygon_set_view<typename geometry_type_1::operator_arg_type,
+                 typename geometry_type_2::operator_arg_type,
+                 boolean_op::BinaryAnd, 
+                 typename geometry_type_1::operator_storage_tag, 
+                 typename geometry_type_2::operator_storage_tag> 
+operator&(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return polygon_set_view<geometry_type_1, geometry_type_2,
+    boolean_op::BinaryAnd, 
+    typename geometry_type_1::operator_storage_tag, 
+    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+                                                     polygon_set_traits<geometry_type_1>::orient(lvalue),
+                                                     boolean_op::BinaryAnd());
+}
+
+template <typename geometry_type_1, typename geometry_type_2>
+polygon_set_view<typename geometry_type_1::operator_arg_type,
+                 typename geometry_type_2::operator_arg_type,
+                 boolean_op::BinaryXor, 
+                 typename geometry_type_1::operator_storage_tag, 
+                 typename geometry_type_2::operator_storage_tag> 
+operator^(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return polygon_set_view<geometry_type_1, geometry_type_2,
+    boolean_op::BinaryXor, 
+    typename geometry_type_1::operator_storage_tag, 
+    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+                                                    polygon_set_traits<geometry_type_1>::orient(lvalue),
+                                                    boolean_op::BinaryXor());
 }
  
+template <typename geometry_type_1, typename geometry_type_2>
+polygon_set_view<typename geometry_type_1::operator_arg_type,
+                 typename geometry_type_2::operator_arg_type,
+                 boolean_op::BinaryNot, 
+                 typename geometry_type_1::operator_storage_tag, 
+                 typename geometry_type_2::operator_storage_tag> 
+operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return polygon_set_view<geometry_type_1, geometry_type_2,
+    boolean_op::BinaryNot, 
+    typename geometry_type_1::operator_storage_tag, 
+    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+                                                    polygon_set_traits<geometry_type_1>::orient(lvalue),
+                                                    boolean_op::BinaryNot());
+}
 

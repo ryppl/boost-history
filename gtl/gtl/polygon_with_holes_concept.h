@@ -39,7 +39,7 @@ public:
 
   template <typename polygon_with_holes_type_1, typename polygon_with_holes_type_2>
   static polygon_with_holes_type_1& assign(polygon_with_holes_type_1& lvalue, const polygon_with_holes_type_2& rvalue) {
-    set(lvalue, begin(rvalue), end(rvalue));
+    set(lvalue, polygon_concept::begin(rvalue), polygon_concept::end(rvalue));
     set_holes(lvalue, begin_holes(rvalue), end_holes(rvalue));
     return lvalue;
   }
