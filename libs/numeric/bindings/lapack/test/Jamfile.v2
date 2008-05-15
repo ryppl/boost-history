@@ -18,6 +18,9 @@ import testing ;
 #exe ublas_heev  : ublas_heev.cpp ;
 #exe ublas_syev  : ublas_syev.cpp ;
 
+#exe ublas_heevd  : ublas_heevd.cpp ;
+#exe ublas_heevx  : ublas_heevx.cpp ;
+
 #exe ublas_gesdd  : ublas_gesdd.cc ;
 #exe ublas_gesdd2 : ublas_gesdd2.cc ;
 #exe ublas_gesdd3 : ublas_gesdd3.cc ;
@@ -52,6 +55,9 @@ test-suite bindings-lapack :
     [ run ublas_hbev.cpp ]
     [ run ublas_heev.cpp ]
     [ run ublas_syev.cpp ]
+
+    [ run ublas_heevd.cpp ]
+    [ run ublas_heevx.cpp ]
 
     [ run ublas_gesdd.cc ]
     [ run ublas_gesdd2.cc ]
