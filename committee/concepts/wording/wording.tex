@@ -579,15 +579,14 @@ nominates a concept map (not a concept),
 the name specified after the
 \mbox{\techterm{nested-name-specifier}}\ 
 is looked up in the scope of the concept map (\mbox{\ref{basic.scope.concept}}) or
-any of the concept maps for concepts its concept refines
+any of the concept maps for concept}\changedCCC{s}{ instances} 
+\addedConcepts{its concept} \addedCC{instance} \addedConcepts{refines
 (\mbox{\ref{concept.member.lookup}}).}
 \addedCC{Concept map lookup (\mbox{\ref{temp.req.sat}}) determines
   which concept map the \mbox{\techterm{nested-name-specifier}} refers to.}
-\addedConcepts{The name shall represent a member of that concept map}
-\addedCC{(which may be
-the associated function candidate set
-(\mbox{\ref{temp.constrained.set}}) corresponding to an 
-associated function)}
+\addedConcepts{The name shall represent} \changedCCC{a member}{one or
+  more members} \addedConcepts{of that 
+  concept map} \addedCC{or the concept maps corresponding to the concept refinements}
 \addedConcepts{.
 \mbox{\enternote}\
 a concept map member can be referred to using a
@@ -611,8 +610,10 @@ forward(F& f, const T1& t1) {
 \mbox{\exitnote}} 
 
 \pnum
-\addedConcepts{A concept map member name hidden by a name in a nested declarative region
-can still be found
+\addedConcepts{A concept map member name hidden by a name in a nested
+  declarative region}
+\addedCC{or by the name of a refining concept member}
+\addedConcepts{can still be found
 if qualified by the name of its concept map followed by the
 \mbox{\tcode{::}}
 operator.}
@@ -3864,14 +3865,16 @@ associated type (\mbox{\ref{concept.assoc}}), and associated
 template}{satisfy every associated function (\mbox{\ref{concept.fct}}),
 associated type and associated template requirement
 (\mbox{\ref{concept.assoc}})}
-\addedConcepts{of the concept named by its concept instance and
-all of the requirements inherited from its refined concepts
-(\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
+\addedConcepts{of}\removedCCC{the concept named by}
+\addedConcepts{its concept instance and
+all of the requirements inherited from its refined
+concept}\changedCCC{s}{ instances}
+\addedConcepts{(\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
 \begin{codeblock}
-concept C<typename T> { T f(T); }
+concept C<typename T, typename U> { T f(T); U f(U); }
 
-concept_map C<int> {
-  int f(int); // okay: matches requirement for f in concept C
+concept_map C<int, int> {
+  int f(int); // okay: matches requirement for f in concept instance C<int, int>
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
@@ -4642,8 +4645,9 @@ definition in the refining concept map or concept map template is
 compatible with its corresponding definition in the refined concept
 map or concept map template if}
 \begin{itemize}
-\additemConcepts{the definition in the refined concept
-map or concept map template was implicitly defined from the refining
+\item \addedConcepts{the definition in the refined concept
+map or concept map template was implicitly defined from} \addedCC{an explicit
+  definition in} \addedConcepts{the refining
 concept map or concept map template,}
 \additemConcepts{the definition was explicitly provided in the refined
   concept map or concept map template and implicitly defined in the
@@ -5566,7 +5570,9 @@ template<> class tuple<> { /* ... */ };
 \pnum
 \addedConcepts{In a constrained}
 \changedCCC{template}{context}\addedConcepts{, for each concept requirement
-that is stated in or implied by the template requirements,
+that is stated in or implied by the}
+\changedCCC{template}{corresponding} 
+\addedConcepts{requirements,
 a \mbox{\techterm{concept map archetype}} for that
 requirement is synthesized by 
 substituting the archetype of \mbox{\tcode{T}} for each occurrence of
