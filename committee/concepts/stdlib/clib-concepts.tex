@@ -73,6 +73,8 @@ strike-through when possible}.
 \begin{itemize}
 \item Added the \tcode{Has*Assign} concepts, which are required by
   \tcode{valarray} and friends.
+\item Added the \tcode{MemberPointeeType} concept, and revised
+  \tcode{ReferentType} to permit reference types.
 \end{itemize}
 
 \end{titlepage}
@@ -133,7 +135,8 @@ namespace std {
   // \ref{concept.support}, support concepts:
   concept Returnable<typename T> { }
   concept PointeeType<typename T> { }
-  concept ReferentType<typename T> @\textit{see below}@;
+  @\addedCC{concept MemberPointeeType<typename T> \mbox{\textit{see below}};}@
+  concept ReferentType<typename T> { }
   concept VariableType<typename T> { }
   concept ObjectType<typename T> @\textit{see below}@;
   concept ClassType<typename T> @\textit{see below}@;
@@ -284,19 +287,37 @@ for every type \mbox{\tcode{T}} that is an object type,
 \end{itemdescr}
 
 \begin{itemdecl}
-concept ReferentType<typename T> : PointeeType<T> { }
+@\addedCC{concept MemberPointeeType<typename T> : PointeeType<T> \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote}
+describes types to which a pointer-to-member can be
+created.}
+
+\pnum 
+\addedCC{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an object type or
+  function type, a
+  concept map \mbox{\tcode{MemberPointeeType}} shall be implicitly defined
+  in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ReferentType<typename T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \mbox{\reallynote}
-describes types to which a reference or pointer-to-member can be
+describes types to which a reference \removedCC{or pointer-to-member} can be
 created.
 
 \pnum 
 \mbox{\requires}
-for every type \mbox{\tcode{T}} that is an object type or
-  function type, a
+for every type \mbox{\tcode{T}} that is an object type\changedCC{or}{, a}
+  function type, \addedCC{or a reference type,} a
   concept map \mbox{\tcode{ReferentType}} shall be implicitly defined
   in namespace \mbox{\tcode{std}}.
 \end{itemdescr}

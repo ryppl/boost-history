@@ -102,6 +102,7 @@ standard library are discussed in separate documents:
   argument deduction section (\ref{temp.deduct}).
 \item Large cleanup to the wording for satisfying associated functions
   (\ref{concept.map.fct}).
+\item Cope with template aliases as archetypes.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -1129,14 +1130,7 @@ namespace N3 {
   type archetype \mbox{\techterm{cv} \tcode{T}} shall only be
   used to form a type ``reference to \mbox{\techterm{cv} \tcode{T}}''
   if the 
-  template has a concept requirement}
-\changedCCC{\mbox{\tcode{ReferentType<T>}}}{\mbox{\tcode{VariableType<T>}}}
-\addedCC{\mbox{\enternote} Due to reference collapsing
-  (\mbox{\ref{temp.arg.type}}), it is valid to form a reference to a
-  reference type. Hence, the requirement for forming a reference type
-  is \mbox{\tcode{VariableType<T>}} rather than
-  \mbox{\tcode{ReferentType<T>}} \mbox{\exitnote}}
-\addedConcepts{.}
+  template has a concept requirement \mbox{\tcode{ReferentType<T>}}.}
 
 \rSec2[dcl.mptr]{Pointers to members}
 \setcounter{Paras}{2}
@@ -1150,7 +1144,9 @@ or
 \addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
   pointer to member shall only point to a type archetype \mbox{\techterm{cv}
     \tcode{T}} if the template has a concept
-  requirement \mbox{\tcode{ReferentType<T>}}.}
+  requirement}
+\changedCCC{\mbox{\tcode{ReferentType<T>}}}{\mbox{\tcode{MemberPointeeType<T>}}}
+\addedConcepts{.}
 % San Jose motion \#4
 \enternote\ 
 see also \ref{expr.unary} and \ref{expr.mptr.oper}.
@@ -1920,6 +1916,25 @@ class Y {
 \exitexample\
 
 \end{itemize}
+
+\setcounter{section}{2}
+\rSec1[over.match]{Overload resolution}
+\rSec2[over.match.funcs]{Candidate functions and argument lists}
+\pnum
+The subclauses of \ref{over.match.funcs} describe
+the set of candidate functions and the argument list submitted to
+overload resolution in each of the seven contexts in which
+overload resolution is used.
+\addedCC{\mbox{\enternote} With concepts (\mbox{\ref{concept}}) and
+  constrained templates, the set of candidate functions can be
+  determined by an associated function candidate set or a retained
+  candidate set (\mbox{\ref{temp.constrained.set}}). \mbox{\exitnote}}
+The source transformations and constructions defined
+in these subclauses are only for the purpose of describing the
+overload resolution process.
+An implementation is not required
+to use such transformations and constructions.
+
 
 \setcounter{section}{4}
 \rSec1[over.oper]{Overloaded operators}
@@ -5764,33 +5779,41 @@ void g(int* i) {
 specialization whose template arguments involve archetypes
 (\mbox{\ref{temp.archetype}}) will be replaced by the template specialization
 that results from replacing each occurrence of an archetype with its
-corresponding type. The resulting template specialization (call it
-\mbox{\tcode{A<X>}}) 
-shall be compatible with the template specialization involving
-archetypes (call it \mbox{\tcode{A<T}$'$\tcode{>}}) that it
+corresponding type.}
+\addedCC{\mbox{\enternote} If the template specialization is a
+  template alias (\mbox{\ref{temp.alias}}), the substitution will occur
+  in the \mbox{\techterm{type-id}} of the template alias. \mbox{\exitnote}}
+\addedConcepts{The resulting}
+\changedCCC{template specialization}{type}
+\addedConcepts{ (call it
+\mbox{\tcode{A}}) 
+shall be compatible with the}
+\changedCCC{template specialization}{type}
+\addedConcepts{involving
+archetypes (call it \mbox{\tcode{A$'$}}) that it
 replaced, otherwise the program is ill-formed. The template
 specializations are compatible if all of the following conditions hold:}
 \begin{itemize}
 \item \addedConcepts{for each function, function template, or data member \mbox{\tcode{m}} of
-  \mbox{\tcode{A<T}$'$\tcode{>}} referenced 
+  \mbox{\tcode{A$'$}} referenced 
   by the constrained template, there exists a member named
-  \mbox{\tcode{m}} in \mbox{\tcode{A<X>}} that is accessible from the constrained
+  \mbox{\tcode{m}} in \mbox{\tcode{A}} that is accessible from the constrained
   template and whose type, storage specifiers, template parameters (if
   any), and template requirements (if any) are the same as the
   those of 
-  \mbox{\tcode{A<T}$'$\tcode{>::m}} after replacing the archetypes with their
+  \mbox{\tcode{A$'$::m}} after replacing the archetypes with their
   actual template argument types,} 
 
-\item \addedConcepts{for each member type \mbox{\tcode{t}} of \mbox{\tcode{A<T}$'$\tcode{>}} referenced 
+\item \addedConcepts{for each member type \mbox{\tcode{t}} of \mbox{\tcode{A$'$}} referenced 
   by the constrained template, there exists a member type \mbox{\tcode{t}} in
-  \mbox{\tcode{A<X>}} that is accessible from the constrained
+  \mbox{\tcode{A}} that is accessible from the constrained
   template and is compatible with the member type
-    \mbox{\tcode{A<T}$'$\tcode{>::t}} as specified herein, and}
+    \mbox{\tcode{A$'$::t}} as specified herein, and}
 
-\item \addedConcepts{for each base class \mbox{\tcode{B}$'$ of \tcode{A<T}$'$\tcode{>}} referenced
+\item \addedConcepts{for each base class \mbox{\tcode{B}$'$ of \tcode{A$'$}} referenced
   by a derived-to-base conversion (\mbox{\ref{conv.ptr}}) in the constrained
   template, there exists an unambiguous base class 
-  \mbox{\tcode{B}} of \mbox{\tcode{A<X>}} that is accessible from the constrained
+  \mbox{\tcode{B}} of \mbox{\tcode{A}} that is accessible from the constrained
   template, where \mbox{\tcode{B}} is the type produced by
   replacing the archetypes in \mbox{\tcode{B}$'$} with their template
   argument types.}
@@ -5953,43 +5976,3 @@ concept_map Swappable<X> {
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
-
-Orphan text to be a part of the candidate sets wording:
-
-Was in [over.match]:
-
-\pnum
-\addedCC{In a constrained template (\mbox{\ref{temp.constrained}}), if
-  the best viable function is a function template specialization, then the best
-  viable function is the seed of a candidate set
-  (\mbox{\ref{temp.constrained.set}}) containing each of the functions from
-  the set of candidate functions that:}
-
-\begin{itemize}
-\item \addedCC{is a function that is consistent with the seed, or}
-\item \addedCC{is a function template that has the same enclosing
-    namespace as the seed.}
-\end{itemize}
-
-\addedCC{When overload resolution produces a result that has a
-  candidate set, the call submitted to overload resolution will be
-  treated as if it were a call to that candidate set. For
-  type-checking purposes, the candidate set has the type of its seed.} 
-
-Was in [over.match.viable]:
-
-\pnum
-\addedCC{Third, if the set of candidate functions is a candidate set
-  from a concept map or constrained template, then for \mbox{\tcode{F}} to
-  be a viable function it shall be consistent with the seed of the
-  candidate set (\mbox{\ref{temp.constrained.set}}).}
-
-TODO:
-
-  - [temp.constrained.inst]: Make this apply to template aliases as
-  well, by talking about the resulting type.
-  - [over]: Add a note in here somewhere that says, e.g., ``concepts
-  have some extra rules, see [temp.constrained.set]''.
-  - Make ReferentType allow references, and give pointer-to-member its
-  own concept (MemberPointeeType?). Remember to also fix this in the
-  concepts-in-the-library wording.
