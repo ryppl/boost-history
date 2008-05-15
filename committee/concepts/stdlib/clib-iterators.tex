@@ -63,9 +63,9 @@ changes from the previous wording are \addedCC{highlighted in green}.
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
 
-\paragraph*{Changes from N2500}
+\paragraph*{Changes from N2570}
 \begin{itemize}
-\item Applied the proposed resolutions for concept issues 19, 22, and 25.
+\item The \tcode{value_type} of an iterator is an \tcode{ObjectType}.
 \end{itemize}
 
 \end{titlepage}
@@ -128,8 +128,8 @@ namespace std {
   concept OutputIterator<typename X, typename Value> @\textit{see below}@;
   concept BasicOutputIterator<typename X> @\textit{see below}@;
 
-  template<BasicOutputIterator X, typename Value>
-    requires CopyAssignable<X::reference, Value>
+  template<BasicOutputIterator X, @\changedCC{typename}{CopyAssignable}@ Value>
+    requires HasCopyAssign<X::reference, Value>
     concept_map OutputIterator<X, Value> @\textit{see below}@;
 
   // \ref{forward.iterators}, forward iterators:
@@ -386,14 +386,14 @@ requirements of the }\addedConcepts{\tt InputIterator}\addedConcepts{ concept.}
 \color{addclr}
 \begin{codeblock}
 concept InputIterator<typename X> : Semiregular<X>, EqualityComparable<X> {
-  typename value_type = typename X::value_type;
+  @\changedCC{typename}{ObjectType}@ value_type = typename X::value_type;
   MoveConstructible reference = typename X::reference; 
   MoveConstructible pointer = typename X::pointer;
 
   SignedIntegral@\addedCC{Like}@ difference_type = typename X::difference_type;
 
-  requires @\addedCC{IntegerType<difference_type>}@
-        && Convertible<reference, value_type>;
+  requires @\addedCC{IntegralType<difference_type>}@
+        && Convertible<reference, value_type @\addedCC{const \&}@>;
         @\textcolor{addclr}{}@&& Convertible<pointer, const value_type*>;
 
   MoveConstructible postincrement_result;
@@ -559,12 +559,12 @@ may permit output of many different value types.
 \begin{itemdecl}
 concept OutputIterator<typename X, typename Value> : CopyConstructible<X> {
   typename reference;
-  requires CopyAssignable<reference, Value>;
+  requires HasCopyAssign<reference, Value> \@addedCC{\&\& CopyAssignable<Value>}@;
 
   typename postincrement_result;
-  requires Dereferenceable<postincrement_result&> &&
+  requires Dereferenceable<postincrement_result> &&
            Convertible<postincrement_result, const X&> &&
-           CopyAssignable<Dereferenceable<postincrement_result&>::reference, Value>;
+           HasCopyAssign<Dereferenceable<postincrement_result>::reference, Value>;
 
   reference operator*(X&);
   X& operator++(X&);
@@ -604,14 +604,14 @@ hierarchy.
 \color{addclr}
 \begin{itemdecl}
 concept BasicOutputIterator<typename X> : CopyConstructible<X> {
-  typename value_type = typename X::value_type;
+  @\changedCC{typename}{ObjectType}@ value_type = typename X::value_type;
   MoveConstructible reference = typename X::reference; 
 
-  requires CopyAssignable<reference, value_type>;
+  requires HasCopyAssign<reference, value_type> @\addedCC{\&\& CopyAssignable<value_type>}@;
 
   typename postincrement_result;
-  requires Dereferenceable<postincrement_result&>,
-           CopyAssignable<Dereferenceable<postincrement_result&>::reference, value_type>,
+  requires Dereferenceable<postincrement_result> &&
+           HasCopyAssign<Dereferenceable<postincrement_result>::reference, value_type> &&
            Convertible<postincrement_result, const X&>;
 
   @\textcolor{addclr}{}@reference operator*(X&);
@@ -645,7 +645,7 @@ return tmp; }
 
 \pnum
 Every \tcode{BasicOutputIterator} is an \tcode{OutputIterator} for
-value types \tcode{CopyAssignable} to its
+value types copy-assignable to its
 \tcode{reference} type. \footnote{This allows algorithms specified with
   \tcode{OutputIterator} (the less restrictive concept) to work with
   iterators that have concept maps for the more common
@@ -654,7 +654,7 @@ value types \tcode{CopyAssignable} to its
 
 \color{addclr}
 \begin{itemdecl}
-template<BasicOutputIterator X, typename Value>
+template<BasicOutputIterator X, @\changedCC{typename}{CopyAssignable}@ Value>
 requires CopyAssignable<X::reference, Value>
 concept_map OutputIterator<X, Value> {
   typedef X::reference                reference;
@@ -718,13 +718,13 @@ concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIter
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{reference operator*(X\&);}@
-@\addedCC{reference operator*(X const\&);}@
+@\removedCC{reference operator*(X\&);}@
+@\removedCC{reference operator*(X const\&);}@
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\requires} If two iterators \mbox{\tcode{a}} and
+\removedCC{\mbox{\requires} If two iterators \mbox{\tcode{a}} and
   \mbox{\tcode{b}} of the same type are both dereferenceable, then
   \mbox{\tcode{a == b}} if and only if \mbox{\tcode{*a}} and
   \mbox{\tcode{*b}} are the same object.}
@@ -847,7 +847,7 @@ concept MutableRandomAccessIterator<typename X>
 
 \color{addclr}
 \begin{itemdecl}
-X& operator+=(X&, difference_type);
+X& operator+=(X& r, difference_type m);
 \end{itemdecl}
 
 \pnum
@@ -886,7 +886,7 @@ return tmp += n; }
 \tcode{r += -n}
 
 \begin{itemdecl}
-X operator-(X @\addedCC{const\&}@, difference_type);
+X operator-(X @\addedCC{const\&}@ a, difference_type n);
 \end{itemdecl}
 
 \pnum
@@ -1084,9 +1084,9 @@ template<InputIterator Iterator> struct iterator_traits<Iterator> {
 };
 
 template<BasicOutputIterator Iterator> struct iterator_traits<Iterator> {
-  typedef Iterator::difference_type            difference_type;
+  typedef void                                 difference_type;
   typedef Iterator::value_type                 value_type;
-  typedef Iterator::pointer                    pointer;
+  typedef void                                 pointer;
   typedef Iterator::reference                  reference;
   typedef output_iterator_tag                  iterator_category;
 };
@@ -1244,7 +1244,7 @@ The library shall provide a concept map
 for any type \tcode{Iterator} with
 \\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
 \tcode{forward_iterator_tag} for which the \tcode{reference} type is
-\tcode{CopyAssignable} from the \tcode{value_type}.
+copy-assignable from the \tcode{value_type}.
 
 \textcolor{addclr}{\pnum}
 The library shall provide a concept map
@@ -1259,7 +1259,7 @@ The library shall provide a concept map
 for any type \tcode{Iterator} with
 \\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
 \tcode{bidirectional_iterator_tag} for which the \tcode{reference}
-type is \tcode{CopyAssignable} from the \tcode{value_type}.
+type is copy-assignable from the \tcode{value_type}.
 
 \pnum
 The library shall provide a concept map
@@ -1274,12 +1274,12 @@ The library shall provide a concept map
 for any type \tcode{Iterator} with
 \\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
 \tcode{random_access_iterator_tag} for which the \tcode{reference} type is
-\tcode{CopyAssignable} from the \tcode{value_type}.
+copy-assignable from the \tcode{value_type}.
 \color{black}
 
 \section*{Acknowledgments}
 Thanks to Beman Dawes for alerting us to omissions from the iterator
-concepts. 
+concepts and Daniel Kr\"ugler for additional many helpful comments.
 
 \bibliographystyle{plain}
 \bibliography{../local}
