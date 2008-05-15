@@ -73,8 +73,20 @@ strike-through when possible}.
 \begin{itemize}
 \item Added the \tcode{Has*Assign} concepts, which are required by
   \tcode{valarray} and friends.
+\item Split \tcode{MoveAssignable} into the two-parameter
+  \tcode{HasMoveAssign} and the one-parameter \tcode{MoveAssignable};
+  the same split is also used for \tcode{CopyAssignable} and
+  \tcode{HasCopyAssign}.
 \item Added the \tcode{MemberPointeeType} concept, and revised
   \tcode{ReferentType} to permit reference types.
+\item Renamed \tcode{HeapAllocatable} to \tcode{FreeStoreAllocatable},
+  which better reflects the terminology of the standard.
+\item Changed the \tcode{IntegralLike} requirement for a \tcode{long
+    long} constructor into a requirement for a \tcode{intmax_t}
+  constructor.
+\item Added the \tcode{EqualityComparable} refinement to the
+  \tcode{Allocator} concept, and made its \tcode{construct} variadic
+  to match the latest \tcode{Allocator} requirements.
 \end{itemize}
 
 \end{titlepage}
@@ -156,7 +168,7 @@ namespace std {
   // \ref{concept.comparison}, comparisons:
   auto concept LessThanComparable<typename T> @\textit{see below}@;
   auto concept EqualityComparable<typename T> @\textit{see below}@;
-  auto concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
+  @\removedCC{auto}@ concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
 
   // \ref{concept.destruct}, destruction:
   auto concept Destructible<typename T> @\textit{see below}@;
@@ -171,13 +183,13 @@ namespace std {
   auto concept MoveConstructible<typename T> @\textit{see below}@;
   auto concept CopyConstructible<typename T> @\textit{see below}@;
   concept TriviallyCopyConstructible<typename T> @\textit{see below}@;
-  auto concept MoveAssignable<typename T, typename U = T> @\textit{see below}@;
-  auto concept CopyAssignable<typename T, typename U = T> @\textit{see below}@;
+  auto concept MoveAssignable<typename T> @\textit{see below}@;
+  auto concept CopyAssignable<typename T> @\textit{see below}@;
   concept TriviallyCopyAssignable<typename T> @\textit{see below}@;
   auto concept Swappable<typename T> @\textit{see below}@;
 
   // \ref{concept.memory}, memory allocation:
-  auto concept HeapAllocatable<typename T> @\textit{see below}@;
+  auto concept FreeStoreAllocatable<typename T> @\textit{see below}@;
 
   // \ref{concept.regular}, regular types:
   auto concept Semiregular<typename T> @\textit{see below}@;
@@ -213,6 +225,8 @@ namespace std {
   auto concept Dereferenceable<typename T> @\textit{see below}@;
   auto concept Addressable<typename T> @\textit{see below}@;
   auto concept Callable<typename F, typename... Args> @\textit{see below}@;
+  auto concept HasMoveAssign<typename T, typename U = T> @\textit{see below}@;
+  auto concept HasCopyAssign<typename T, typename U = T> @\textit{see below}@;
   auto concept HasPlusAssign<typename T, typename U = T> @\textit{see below}@;
   auto concept HasMinusAssign<typename T, typename U = T> @\textit{see below}@;
   auto concept HasMultiplyAssign<typename T, typename U = T> @\textit{see below}@;
@@ -260,7 +274,9 @@ concept Returnable<typename T> { }
   return type of a function.}
 
 \pnum
-\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is
+\addedConcepts{\mbox{\requires} for every}
+\addedCC{non-array}
+\addedConcepts{type \mbox{\tcode{T}} that is
   \mbox{\techterm{cv}} \mbox{\tcode{void}} or that meets the
   requirement \mbox{\tcode{MoveConstructible<T>}}
   (\mbox{\ref{concept.copymove}}), the concept map
@@ -371,7 +387,7 @@ concept ClassType<typename T> : ObjectType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept Class<typename T> : ClassType<Class> { }
+concept Class<typename T> : ClassType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -590,8 +606,8 @@ auto concept LessThanComparable<typename T> : HasLess<T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept EqualityComparable<typename T> : EqualTo<T> {
-  bool operator!=(T const& a, U const& b) { return !(a == b); }
+auto concept EqualityComparable<typename T> : HasEqualTo<T> {
+  bool operator!=(T const& a, T const& b) { return !(a == b); }
 
   axiom Consistency(T a, T b) {
     (a == b) == !(a != b);
@@ -722,7 +738,6 @@ the constructed \mbox{\tcode{T}} object is equivalent to the value of
 
 \begin{itemdecl}
 auto concept CopyConstructible<typename T> : MoveConstructible<T>, HasConstructor<T, const T&> {
-  @\addedCC{requires EqualityComparable<T>}@
   axiom CopyPreservation(T x) {
     T(x) == x;
   }
@@ -752,10 +767,7 @@ shall be implicitly defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MoveAssignable<typename T, typename U = T> {
-  typename result_type;
-  result_type T::operator=(U&&);
-}
+auto concept MoveAssignable<typename T> : HasMoveAssign<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -765,7 +777,7 @@ auto concept MoveAssignable<typename T, typename U = T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-result_type T::operator=(U&& rv);
+result_type T::operator=(T&& rv); // inherited from HasMoveAssign
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -779,12 +791,8 @@ the assignment. \mbox{\exitnote}}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept CopyAssignable<typename T, typename U = T> : MoveAssignable<T, U> {
-  typename result_type;
-  result_type T::operator=(const U&);
-
-  @\addedCC{requires EqualityComparable<T, U>}@
-  axiom CopyPreservation(T& x, U y) {
+auto concept CopyAssignable<typename T> : MoveAssignable<T> {
+  axiom CopyPreservation(T& x, T y) {
     (x = y, x) == y;
   }
 }
@@ -801,7 +809,7 @@ object.}
   requirement for most of the uses of \tcode{CopyAssignable}, so we have
   weakened \tcode{CopyAssignable} to not require anything of its return
   type. When we need a \tcode{T\&}, we'll add that as an explicit
-  requirement. See, e.g., the \tcode{Integral} concept.}}
+  requirement. See, e.g., the \tcode{IntegralLike} concept.}}
 
 \begin{itemdecl}
 concept TriviallyCopyAssignable<typename T> : CopyAssignable<T> { }
@@ -845,7 +853,7 @@ and \mbox{\tcode{u}} has the value originally held by \mbox{\tcode{t}}.}
 
 \rSec2[concept.memory]{Memory allocation}
 \begin{itemdecl}
-auto concept HeapAllocatable<typename T> {
+auto concept FreeStoreAllocatable<typename T> {
   void* T::operator new(size_t size);
   void* T::operator new(size_t size, void*);
   void* T::operator new[](size_t size);
@@ -857,14 +865,14 @@ auto concept HeapAllocatable<typename T> {
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes types for which objects and
-arrays of objects can be allocated on or freed from the heap with
+arrays of objects can be allocated on or freed from the free store with
 \mbox{\tcode{new}} and \mbox{\tcode{delete}}.}
 \end{itemdescr}
 
 \rSec2[concept.regular]{Regular types}
 
 \begin{itemdecl}
-auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T>, HeapAllocatable<T> { 
+auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T>, FreeStoreAllocatable<T> { 
   requires SameType<CopyAssignable<T>::result_type, T&>;
 }
 \end{itemdecl}
@@ -883,8 +891,7 @@ auto concept Regular<typename T>
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes semi-regular types that are default
-constructible, have equality comparison operators, and can be
-allocated on the heap.}
+constructible and have equality comparison operators.}
 \end{itemdescr}
 
 \rSec2[concept.convertible]{Convertibility}
@@ -1183,6 +1190,32 @@ callable given arguments of types \mbox{\tcode{Args...}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
+auto concept HasMoveAssign<typename T, typename U = T> {
+  typename result_type;
+  result_type T::operator=(U&&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types with the ability
+  to assign to an object from an rvalue (which may have a different
+  type), potentially altering the rvalue.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept HasCopyAssign<typename T, typename U = T> : HasMoveAssign<T, U> {
+  result_type T::operator=(const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes types with the ability to assign to an
+object (which may have a different type).}
+\end{itemdescr}
+
+\begin{itemdecl}
 auto concept HasPlusAssign<typename T, typename U = T> {
   typename result_type;
   result_type operator+=(T&, const U&);
@@ -1308,7 +1341,7 @@ auto concept HasRightShiftAssign<typename T, typename U = T> {
 concept ArithmeticLike<typename T> 
   : Regular<T>, LessThanComparable<T>, HasPlus<T>, HasMinus<T>, HasMultiply<T>, HasDivide<T>, 
     HasUnaryPlus<T>, HasNegate<T> {
-  T::T(long long);
+  T::T(@\changedCC{long long}{intmax_t}@);
   @\addedCC{T::T(long double);}@
 
   T& operator++(T&);
@@ -1376,7 +1409,7 @@ concept SignedIntegralLike<typename T> : IntegralLike<T> { }
 \addedConcepts{\mbox{\requires} for every signed integral type
   \mbox{\tcode{T}} ([basic.fundamental]), including signed extended
   integral types, an empty concept map
-  \mbox{\tcode{SignedIntegral<T>}} shall be defined in namespace
+  \mbox{\tcode{SignedIntegralLike<T>}} shall be defined in namespace
   \mbox{\tcode{std}}.}
 \end{itemdescr}
 
@@ -1393,7 +1426,7 @@ concept UnsignedIntegralLike<typename T> : IntegralLike<T> { }
 \addedConcepts{\mbox{\requires} for every unsigned integral type
   \mbox{\tcode{T}} ([basic.fundamental]), including unsigned extended
   integral types, an empty concept map
-  \mbox{\tcode{UnsignedIntegral<T>}} shall be defined in namespace
+  \mbox{\tcode{UnsignedIntegralLike<T>}} shall be defined in namespace
   \mbox{\tcode{std}}.}
 \end{itemdescr}
 
@@ -1408,7 +1441,7 @@ concept FloatingPointLike<typename T> : ArithmeticLike<T> { }
 \pnum
 \addedConcepts{\mbox{\requires}
 for every floating point type \mbox{\tcode{T}} ([basic.fundamental]), 
-an empty concept map \mbox{\tcode{FloatingPoint<T>}} shall be defined
+an empty concept map \mbox{\tcode{FloatingPointLike<T>}} shall be defined
 in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
@@ -1467,7 +1500,7 @@ describes the requirements on allocator types.}
 
 \color{addclr}
 \begin{itemdecl}
-concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
+concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X>, EqualityComparable<X> {
   ObjectType value_type               = typename X::value_type;
   MutableRandomAccessIterator pointer = typename X::pointer;
   RandomAccessIterator const_pointer  = typename X::const_pointer;
@@ -1499,10 +1532,9 @@ concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
   template<ObjectType T>
     X::X(const rebind<T>& y);
 
-  @\removedConcepts{void X::construct(pointer p, const value_type\&);}@
-  template<typename V>
-    requires Convertible<V, value_type>
-    @\textcolor{addclr}{void}@ X::construct(pointer p, V&&);
+  template<class... Args>
+    requires HasConstructor<value_type, Args&&...>
+    void construct(pointer p, Args&&... args);
 
   void X::destroy(pointer p);
 
@@ -1643,22 +1675,16 @@ the largest value that can meaningfully be passed to \tcode{X::allocate()}
 
 \color{addclr}
 \begin{itemdecl}
-template<typename V>
-  requires HasConstructor<value_type, V>
-  void X::construct(pointer p, V&&);
+template<class... Args>
+  requires HasConstructor<value_type, Args&&...>
+  void X::construct(pointer p, Args&&... args);
 \end{itemdecl}
 \color{black}
-
-\editorial{The non-templated \tcode{X::construct} has been removed
-from the \tcode{Allocator} requirements because it implies that the
-\tcode{value_type} is \tcode{CopyConstructible} (which we do not want
-as a requirement in the \tcode{Allocator} concept). The templated
-version is more general, allowing in-place and move construction.}
 
 \begin{itemdescr}
 \pnum
 \effects\
-\tcode{::new((void*)p) T(forward<V>(v))}
+\tcode{::new((void*)p) T(forward<Args>(args)...)}
 \end{itemdescr}
 
 \color{addclr}
@@ -1754,5 +1780,9 @@ by containers beyond those requirements that appear in
 \changedConcepts{Table~40}{concept Allocator}, and the
 semantics of containers and algorithms when allocator instances compare
 non-equal, are implementation-defined.
+
+\section*{Acknowledgments}
+Daniel Kr\"ugler made many valuable suggestions that helper improve
+this document. 
 
 \end{document}
