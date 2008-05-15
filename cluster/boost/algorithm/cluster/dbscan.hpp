@@ -52,7 +52,7 @@ cluster_data<ClusterT>
 dbscan(NTupleIterT const & begin,
        NTupleIterT const & end, 
        DistanceT const & eps,
-       size_t min_points,
+       std::size_t min_points,
        DistFunT const & d)
 {
   // Concept check.
@@ -68,7 +68,7 @@ dbscan(NTupleIterT const & begin,
   ntuple_nodes tuples;
 
   // Initialize algorithm.
-  //size_t num_elems = 0;
+  //std::size_t num_elems = 0;
   for(NTupleIterT it = begin; it != end; ++it)
   {
     //++num_elems;
@@ -106,7 +106,7 @@ dbscan(NTupleIterT const & begin,
     // Mark entire neighborhood as part of the current cluster.
     it->cluster = cluster_num;
     cur_cluster.push_back(it->tuple);
-    for (size_t n = 0; n < seeds.size(); ++n)
+    for (std::size_t n = 0; n < seeds.size(); ++n)
     {
       seeds[n]->cluster = cluster_num;
       cur_cluster.push_back(seeds[n]->tuple);
@@ -124,7 +124,7 @@ dbscan(NTupleIterT const & begin,
 
       if (results.size() >= min_points)
       {
-        for (size_t n = 0; n < results.size(); ++n)
+        for (std::size_t n = 0; n < results.size(); ++n)
         {
           if (results[n]->cluster < 1) // Not assigned to cluster yet.
           {

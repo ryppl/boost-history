@@ -136,12 +136,12 @@ namespace boost {
                 typedef NTupleIter::value_type PointType;
                 typedef PointType::value_type AttributeType; //For the c funtion test, it will be a double type
                 const DistanceType knumOfPoints = last - first; //The n variable in the C function
-                const size_t knDimension = PointType::size(); //The m variable in the C function
+                const std::size_t knDimension = PointType::size(); //The m variable in the C function
 
                 AttributeType** ppData = new AttributeType* [knumOfPoints];
                 AttributeType** centroids = new AttributeType* [k]; 
                 //Pre-allocate the result array
-                for(size_t nCentroid = 0; nCentroid < k; nCentroid++)
+                for(std::size_t nCentroid = 0; nCentroid < k; nCentroid++)
                 {
                     centroids[nCentroid] = new AttributeType[knDimension];
                 }
@@ -161,7 +161,7 @@ namespace boost {
 
                 typedef KMeansCluster<PointType> KMeansClusterType;
                 KMeansClustering< KMeansClusterType > clustering;
-                for(size_t nCentroid = 0; nCentroid < k; nCentroid++)
+                for(std::size_t nCentroid = 0; nCentroid < k; nCentroid++)
                 {
                     
                     KMeansClusterType cluster;
