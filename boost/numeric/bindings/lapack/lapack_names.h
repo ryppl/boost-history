@@ -157,6 +157,16 @@
 #define LAPACK_CHEEV FORTRAN_ID( cheev )
 #define LAPACK_ZHEEV FORTRAN_ID( zheev )
 
+#define LAPACK_SSYEVD FORTRAN_ID( ssyevd )
+#define LAPACK_DSYEVD FORTRAN_ID( dsyevd )
+#define LAPACK_CHEEVD FORTRAN_ID( cheevd )
+#define LAPACK_ZHEEVD FORTRAN_ID( zheevd )
+
+#define LAPACK_SSYEVX FORTRAN_ID( ssyevx )
+#define LAPACK_DSYEVX FORTRAN_ID( dsyevx )
+#define LAPACK_CHEEVX FORTRAN_ID( cheevx )
+#define LAPACK_ZHEEVX FORTRAN_ID( zheevx )
+
 
 #define LAPACK_STREVC FORTRAN_ID( strevc )
 #define LAPACK_DTREVC FORTRAN_ID( dtrevc )

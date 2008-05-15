@@ -323,6 +323,52 @@ extern "C" {
                      dcomplex_t* work, const int * lwork, double* rwork,
                      int* info );
 
+  
+  void LAPACK_SSYEVD( const char* jobz, const char* uplo, const int* n,
+                      float* a, const int* lda, float* w,
+                      float* work, const int* lwork,
+                      int* iwork, const int* liwork, int* info);
+
+  void LAPACK_DSYEVD( const char* jobz, const char* uplo, const int* n,
+                      double* a, const int* lda, double* w,
+                      double* work, const int* lwork,
+                      int* iwork, const int* liwork, int* info);
+
+  void LAPACK_CHEEVD( const char* jobz, const char* uplo, const int* n,
+                      fcomplex_t* a, const int* lda, float* w,
+                      fcomplex_t* work, const int* lwork, float* rwork, const int* lrwork,
+                      int* iwork, const int* liwork, int* info);
+
+  void LAPACK_ZHEEVD( const char* jobz, const char* uplo, const int* n,
+                      dcomplex_t* a, const int* lda, double* w,
+                      dcomplex_t* work, const int* lwork, double* rwork, const int* lrwork,
+                      int* iwork, const int* liwork, int* info);
+
+
+  void LAPACK_SSYEVX( const char* jobz, const char* range, const char* uplo, const int* n,
+                      float* a, const int* lda, const float* vl, const float* vu, const int* il, const int* iu,
+                      const float* abstol, int* m, float* w, float* z, const int* ldz,
+                      float* work, const int* lwork,
+                      int* iwork, int* ifail, int* info);
+
+  void LAPACK_DSYEVX( const char* jobz, const char* range, const char* uplo, const int* n,
+                      double* a, const int* lda, const double* vl, const double* vu, const int* il, const int* iu,
+                      const double* abstol, int* m, double* w, double* z, const int* ldz,
+                      double* work, const int* lwork,
+                      int* iwork, int* ifail, int* info);
+
+  void LAPACK_CHEEVX( const char* jobz, const char* range, const char* uplo, const int* n,
+                      fcomplex_t* a, const int* lda, const float* vl, const float* vu, const int* il, const int* iu,
+                      const float* abstol, int* m, float* w, fcomplex_t* z, const int* ldz,
+                      fcomplex_t* work, const int* lwork, float* rwork,
+                      int* iwork, int* ifail, int* info);
+
+  void LAPACK_ZHEEVX( const char* jobz, const char* range, const char* uplo, const int* n,
+                      dcomplex_t* a, const int* lda, const double* vl, const double* vu, const int* il, const int* iu,
+                      const double* abstol, int* m, double* w, dcomplex_t* z, const int* ldz,
+                      dcomplex_t* work, const int* lwork, double* rwork,
+                      int* iwork, int* ifail, int* info);
+
 
   void LAPACK_CTREVC( const char* side, const char* howmny, const logical_t* select, const int *n,
                      fcomplex_t* t, const int * ldt, fcomplex_t* vl, const int* ldvl,
