@@ -90,7 +90,7 @@ __forceinline bool WINAPI TaggedCompareAndSwap(
 #if defined(_WIN32)
 
 template <class Type>
-__forceinline bool WINAPI TaggedCompareAndSwap(
+__forceinline bool WINAPI TaggedCompareAndSwapPointer(
 	Type* Destination[2], Type* Comperand, Type* Exchange, Type* Tag)
 {
 	return TaggedCompareAndSwap(
@@ -100,7 +100,7 @@ __forceinline bool WINAPI TaggedCompareAndSwap(
 #elif defined(_WIN64)
 
 template <class Type>
-__forceinline bool WINAPI TaggedCompareAndSwap(
+__forceinline bool WINAPI TaggedCompareAndPointer(
 	Type* Destination[2], Type* Comperand, Type* Exchange, Type* Tag)
 {
 	return TaggedCompareAndSwap(
