@@ -1316,37 +1316,29 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <class T, @\addedConcepts{Allocator Alloc}@ = allocator<T> > 
-    @\addedConcepts{where SameType<T, Alloc::value_type>}@ class vector;
-  template <class T, class Alloc>
-    @\addedConcepts{where EqualityComparable<T>}@
-    bool operator==(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator< (const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where EqualityComparable<T>}@
-    bool operator!=(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator> (const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator>=(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator<=(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> > 
+    @\addedConcepts{requires Destructible<T>}@
+    class vector;
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator==(const vector<T,Allocator>& x,const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator< (const vector<T,Allocator>& x,const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator!=(const vector<T,Allocator>& x,const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator> (const vector<T,Allocator>& x,const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator>=(const vector<T,Allocator>& x,const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator<=(const vector<T,Allocator>& x,const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(vector<T,Allocator>&& x, vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(vector<T,Allocator>& x, vector<T,Allocator>&& y);
 
-  // specialized algorithms:
-  template <class T, @\changedConcepts{class}{Allocator}@ Alloc>
-    void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
-}
+  template <class Allocator> class vector<bool,Allocator>;
 \end{codeblock}
 
 \rSec2[array]{\marktr{}Class template \tcode{array}}
@@ -1693,11 +1685,11 @@ namespace std {
       @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveAssignable<T>}@ 
       iterator emplace(const_iterator position, Args&&... args);
 
-    @\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
       iterator insert(const_iterator position, const T& x);
     @\addedConcepts{requires MoveConstructible<T> \&\& MoveAssignable<T>}@
       iterator insert(const_iterator position, T&& x);
-    @\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
       void insert(const_iterator position, size_type n, const T& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
@@ -1897,11 +1889,11 @@ else
 \index{insert@\tcode{push_back}!\tcode{deque}}%
 \index{insert@\tcode{emplace}!\tcode{deque}}%
 \begin{itemdecl}
-@\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+@\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
   iterator insert(const_iterator position, const T& x);
 @\addedConcepts{requires MoveConstructible<T> \&\& MoveAssignable<T>}@
   iterator insert(const_iterator position, T&& x);
-@\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+@\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
   void     insert(const_iterator position, size_type n, const T& x);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
@@ -3726,13 +3718,13 @@ template <class T, class Container>
 \tcode{x.c >= y.c}.
 \end{itemdescr}
 
-\rSec2[lib.vector]{Class template \tcode{vector}}
+\rSec2[vector]{Class template \tcode{vector}}
 
 \pnum
 \index{vector@\tcode{vector}}%
 A
 \tcode{vector}\
-is a kind of sequence that supports random access iterators.
+is a sequence container that supports random access iterators.
 In addition, it supports (amortized) constant time insert and erase operations at the end;
 insert and erase in the middle take linear time.
 Storage management is handled automatically, though hints can be given
@@ -3740,7 +3732,7 @@ to improve efficiency.
 The elements of a vector are stored contiguously, meaning that if
 \tcode{v}\
 is a
-\tcode{vector<T, Alloc>}\
+\tcode{vector<T, Allocator>}\
 where
 \tcode{T}\
 is some type other than
@@ -3751,63 +3743,47 @@ for all
 \tcode{0 <= n < v.size()}.
 
 \pnum
-A
-\tcode{vector}\
-satisfies all of the requirements of a container and of a reversible container
-\removedConcepts{(given in two tables in~23.1)} and of a sequence,
-including most of the optional sequence requirements (\ref{lib.sequence.reqmts}).
-The exceptions are the
-\tcode{push_front}\
-and
-\tcode{pop_front}\
-member functions, which are not provided.
-\removedConcepts{In addition to the requirements on the stored object
-  described in 23.1, the stored object shall meet the requirements
-of Assignable.}
-Descriptions are provided here only for operations on
-\tcode{vector}\
-that are not described in one of these \changedConcepts{tables}{concepts}
-or for operations where there is additional semantic information.
+A \tcode{vector}\ satisfies all of the requirements of a container and of a reversible container (given in two tables in~\ref{container.requirements}), of a sequence container, including most of the optional sequence container requirements (\ref{sequence.reqmts}), and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). The exceptions are the \tcode{push_front}\ and \tcode{pop_front}\ member functions, which are not provided. Descriptions are provided here only for operations on \tcode{vector}\ that are not described in one of these tables or for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <class T, @\changedConcepts{class}{Allocator}@ Alloc = allocator<T> >
-  @\addedConcepts{where SameType<T, Alloc::value_type>}@
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> >
+  @\addedConcepts{requires Destructible<T>}@
   class vector {
   public:
     // types:
-    typedef typename Alloc::reference             reference;
-    typedef typename Alloc::const_reference       const_reference;
-    typedef @\impdef@                iterator;       // See \ref{lib.container.requirements}
-    typedef @\impdef@                const_iterator; // See \ref{lib.container.requirements}
-    typedef @\impdef@                size_type;      // See \ref{lib.container.requirements}
-    typedef @\impdef@                difference_type;// See \ref{lib.container.requirements}
+    typedef typename Allocator::reference         reference;
+    typedef typename Allocator::const_reference   const_reference;
+    typedef @\impdef@                iterator;       // See \ref{container.requirements}
+    typedef @\impdef@                const_iterator; // See \ref{container.requirements}
+    typedef @\impdef@                size_type;      // See \ref{container.requirements}
+    typedef @\impdef@                difference_type;// See \ref{container.requirements}
     typedef T                                     value_type;
-    typedef Alloc                                 allocator_type;
-    typedef typename Alloc::pointer               pointer;
-    typedef typename Alloc::const_pointer         const_pointer;
+    typedef Allocator                             allocator_type;
+    typedef typename Allocator::pointer           pointer;
+    typedef typename Allocator::const_pointer     const_pointer;
     typedef std::reverse_iterator<iterator>       reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
-    // \ref{lib.vector.cons} construct/copy/destroy:
-    explicit vector(const Alloc& = Alloc());
-    @\addedConcepts{where CopyConstructible<T>}@
-      explicit vector(size_type n, const T& value = T(), const Alloc& = Alloc());
-
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, T>}@
-      vector(Iter first, Iter last, const Alloc& = Alloc());
-    template <@\addedConcepts{ForwardIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, T>}@
-      vector(Iter first, Iter last, const Alloc& = Alloc());
-    @\addedConcepts{where CopyConstructible<T>}@ vector(const vector<T,Alloc>& x);
+    // \ref{vector.cons} construct/copy/destroy:
+    explicit vector(const Allocator& = Allocator());
+    @\addedConcepts{requires DefaultConstructible<T>}@ explicit vector(size_type n);
+    @\addedConcepts{requires CopyConstructible<T>}@ vector(size_type n, const T& value, const Allocator& = Allocator());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& MoveConstructible<T>}@
+      vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+             const Allocator& = Allocator());
+    @\addedConcepts{requires CopyConstructible<T>}@ vector(const vector<T,Allocator>& x);
+    vector(vector&&);
+    @\addedConcepts{requires CopyConstructible<T>}@ vector(const vector&, const Allocator&);
+    vector(vector&&, const Allocator&);
    ~vector();
-    @\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ 
-      vector<T,Alloc>& operator=(const vector<T,Alloc>& x);
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{Convertible<Iter::value_type, T> \&\& CopyConstructible<T> \&\& Assignable<T>}@
-      void assign(Iter first, Iter last);
-    @\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ void assign(size_type n, const T& u);
+    @\addedConcepts{requires CopyAssignable<T>}@ vector<T,Allocator>& operator=(const vector<T,Allocator>& x);
+    vector<T,Allocator>& operator=(vector<T,Allocator>&& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+      void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+    @\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@ void assign(size_type n, const T& u);
     allocator_type get_allocator() const;
 
     // iterators:
@@ -3820,13 +3796,19 @@ namespace std {
     reverse_iterator       rend();
     const_reverse_iterator rend() const;
 
-    // \ref{lib.vector.capacity} capacity:
+    const_iterator         cbegin() const;
+    const_iterator         cend() const;
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
+
+    // \ref{vector.capacity} capacity:
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ void resize(size_type sz, T c = T());
+    @\addedConcepts{requires DefaultConstructible<T> \&\& MoveConstructible<T>}@ void resize(size_type sz);
+    @\addedConcepts{requires CopyConstructible<T>}@ void resize(size_type sz, const T& c);
     size_type capacity() const;
     bool      empty() const;
-    @\addedConcepts{where CopyConstructible<T>}@ void reserve(size_type n);
+    @\addedConcepts{requires MoveConstructible<T>}@ void reserve(size_type n);
 
     // element access:
     reference       operator[](size_type n);
@@ -3838,84 +3820,134 @@ namespace std {
     reference       back();
     const_reference back() const;
 
-    @\addedA{// \mbox{\ref{lib.vector.data}} data access}@
-    @\addedA{pointer         data();}@
-    @\addedA{const_pointer   data() const;}@
+    // \ref{vector.data} data access
+    pointer         data();
+    const_pointer   data() const;
 
-    // \ref{lib.vector.modifiers} modifiers:
-    void push_back(const T& x);
+    // \ref{vector.modifiers} modifiers:
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveConstructible<T>}@
+      void push_back(Args&&... args);
     void pop_back();
-    @\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ 
-      iterator insert(iterator position, const T& x);
-    @\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ 
-      void insert(iterator position, size_type n, const T& x);
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{Convertible<Iter::value_type, T> \&\& CopyConstructible<T> \&\& Assignable<T>}@
-      void insert(iterator position, Iter first, Iter last);
-    template <@\addedConcepts{ForwardIterator Iter}@>
-      @\addedConcepts{Convertible<Iter::value_type, T> \&\& CopyConstructible<T> \&\& Assignable<T>}@
-      void insert(iterator position, Iter first, Iter last);
-    @\addedConcepts{where Assignable<T>}@ iterator erase(iterator position);
-    @\addedConcepts{where Assignable<T>}@ iterator erase(iterator first, iterator last);
-    void     swap(vector<T,Alloc>&);
+
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveConstructible<T>}@
+      iterator emplace(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@ 
+      iterator insert(const_iterator position, const T& x);
+    @\addedConcepts{requires MoveConstructible<T> \&\& MoveAssignable<T>}@
+      void insert(const_iterator position, T&& x);
+    @\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
+      void insert(const_iterator position, size_type n, const T& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+        @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+              @\addedConcepts{\&\& MoveConstructible<T> \&\& MoveAssignable<T>}@
+        void insert(const_iterator position,
+                    @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+    @\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator position);
+    @\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator first, const_iterator last);
+    void     swap(vector<T,Allocator>&&);
     void     clear();
   };
 
-  template <class T, class Alloc>
-    @\addedConcepts{where EqualityComparable<T>}@
-    bool operator==(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator< (const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where EqualityComparable<T>}@
-    bool operator!=(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator> (const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator>=(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
-  template <class T, class Alloc>
-    @\addedConcepts{where LessThanComparable<T>}@
-    bool operator<=(const vector<T,Alloc>& x,
-                    const vector<T,Alloc>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator> (const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator>=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator<=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
 
   // specialized algorithms:
-  template <class T, @\changedConcepts{class}{Allocator}@ Alloc>
-    void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(vector<T,Allocator>&& x, vector<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(vector<T,Allocator>& x, vector<T,Allocator>&& y);
+
+  template <class T, class Alloc>
+    struct constructible_with_allocator_suffix<vector<T, Alloc> >
+      : true_type { };
 }
 \end{codeblock}%
 \index{vector@\tcode{vector}!\tcode{operator==}}%
 \index{vector@\tcode{vector}!\tcode{operator<}}
 
-\rSec3[lib.vector.cons]{\tcode{vector}\ constructors, copy, and assignment}
+\rSec3[vector.cons]{\tcode{vector}\ constructors, copy, and assignment}
 
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
 vector(const Allocator& = Allocator());
-@\addedConcepts{where CopyConstructible<T>}@
-  explicit vector(size_type n, const T& value = T(), const Allocator& = Allocator());
-template <@\addedConcepts{InputIterator Iter}@>
-  @\addedConcepts{where Convertible<Iter::value_type, T>}@
-  vector(Iter first, Iter last, const Allocator& = Allocator());
-template <@\addedConcepts{ForwardIterator Iter}@>
-  @\addedConcepts{where Convertible<Iter::value_type, T>}@
-  vector(Iter first, Iter last, const Allocator& = Allocator());
-@\addedConcepts{where CopyConstructible<T>}@ vector(const vector<T,Allocator>& x);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
+\effects Constructs an empty \tcode{vector}, using the
+specified allocator.
+
+\pnum
+\complexity Constant.
+\end{itemdescr}
+
+\index{vector@\tcode{vector}!\tcode{vector}}
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T>}@ explicit vector(size_type n);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs a \tcode{vector} with \tcode{n}
+default constructed elements.
+
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}
+
+\pnum
+\complexity Linear in \tcode{n}.
+\end{itemdescr}
+
+\index{vector@\tcode{vector}!\tcode{vector}}
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@
+explicit vector(size_type n, const T& value,
+                const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs a \tcode{vector} with \tcode{n}
+copies of \tcode{value}, using the specified allocator.
+
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
+
+\pnum
+\complexity Linear in \tcode{n}.
+\end{itemdescr}
+
+\index{vector@\tcode{vector}!\tcode{vector}}
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& MoveConstructible<T>}@
+  vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+         const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+
+\pnum
+\effects Constructs a \tcode{vector} equal to the
+range \range{first}{last}, using the specified allocator.
+
+\pnum
 \complexity\ 
-The constructor
-\addedConcepts{that accepts a forward iterator range}
-makes only $N$
+Makes only $N$
 calls to the copy constructor of
 \tcode{T}\
 (where $N$
@@ -3923,50 +3955,47 @@ is the distance between
 \tcode{first}\
 and
 \tcode{last})
-and no reallocations if iterators
-\removedConcepts{
-first and last are of forward, bidirectional, or random access
-categories}.
-\changedConcepts{It}{The constructor that accepts an input iterator range}
- makes order
+and no reallocations if iterators first and last are of forward, bidirectional, or random access categories.
+It makes order
 \tcode{N}\
 calls to the copy constructor of
 \tcode{T}\
 and order
 $\log(N)$
-reallocations\removedConcepts{ if they are just input iterators}.
+reallocations if they are just input iterators.
 \end{itemdescr}
 
 \index{assign@\tcode{assign}!\tcode{vector}}%
 \begin{itemdecl}
-template <@\addedConcepts{InputIterator Iter}@>
-  @\addedConcepts{Convertible<Iter::value_type, T> \&\& CopyConstructible<T> \&\& Assignable<T>}@
-  void assign(Iter first, Iter last);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+  void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
 \begin{codeblock}
-  erase(begin(), end());
-  insert(begin(), first, last);
+erase(begin(), end());
+insert(begin(), first, last);
 \end{codeblock}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ void assign(size_type n, const T& t);
+@\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@ 
+  void assign(size_type n, const T& t);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
 \begin{codeblock}
-  erase(begin(), end());
-  insert(begin(), n, t);
+erase(begin(), end());
+insert(begin(), n, t);
 \end{codeblock}
 \end{itemdescr}
 
-\rSec3[lib.vector.capacity]{\tcode{vector}\ capacity}
+\rSec3[vector.capacity]{\tcode{vector}\ capacity}
 
 \index{capacity@\tcode{capacity}!\tcode{vector}}%
 \begin{itemdecl}
@@ -3982,8 +4011,12 @@ without requiring reallocation.
 
 \index{reserve@\tcode{reserve}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{where CopyConstructible<T>}@ void reserve(size_type n);
+@\addedConcepts{requires MoveConstructible<T>}@ void reserve(size_type n);
 \end{itemdecl}
+
+\pnum
+\requires If \tcode{value_type} has a move constructor, that
+constructor shall not throw any exceptions.
 
 \begin{itemdescr}
 \pnum
@@ -4001,11 +4034,12 @@ if reallocation happens; and equal to the previous value of
 otherwise.
 Reallocation happens at this point if and only if the current capacity is less than the
 argument of
-\tcode{reserve()}.
+\tcode{reserve()}. If an exception is thrown, there are no effects.
 
 \pnum
 \complexity\ 
-It does not change the size of the sequence and takes at most linear time in the size of the sequence.
+It does not change the size of the sequence and takes at most linear
+time in the size of the sequence.
 
 \pnum
 \throws\ 
@@ -4033,7 +4067,7 @@ greater than the value of
 
 \index{swap@\tcode{swap}!\tcode{vector}}%
 \begin{itemdecl}
-void swap(vector<T,Allocator>& x);
+void swap(vector<T,Allocator>&& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -4052,61 +4086,94 @@ Constant time.
 
 \index{resize@\tcode{resize}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@ void resize(size_type sz, T c = T());
+@\addedConcepts{requires DefaultConstructible<T> \&\& MoveConstructible<T>}@ void resize(size_type sz);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects If \tcode{sz < size()}, equivalent to
+\tcode{erase(begin() + sz, end());}. If \tcode{size() < sz},
+appends \tcode{sz - size()} default constructed elements to the
+sequence.
+
+\pnum
+\requires \tcode{T} shall be
+\tcode{DefaultConstructible}.
+\end{itemdescr}
+
+\index{resize@\tcode{resize}!\tcode{vector}}%
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@ void resize(size_type sz, const T& c);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
 \begin{codeblock}
-  if (sz > size())
-    insert(end(), sz-size(), c);
-  else if (sz < size())
-    erase(begin()+sz, end());
-  else
-    ;                           // do nothing
+if (sz > size())
+  insert(end(), sz-size(), c);
+else if (sz < size())
+  erase(begin()+sz, end());
+else
+  ;                 // do nothing
 \end{codeblock}
+
+\pnum
+\requires If \tcode{value_type} has a move constructor, that
+constructor shall not throw any exceptions.
 \end{itemdescr}
 
-\rSec3[lib.vector.data]{\tcode{vector}\ data}
+\rSec3[vector.data]{\tcode{vector}\ data}
 \index{data@\tcode{data}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedA{pointer         data();}@
-@\addedA{const_pointer   data() const;}@
+pointer         data();
+const_pointer   data() const;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedA{\mbox{\returns}
-A pointer such that \mbox{\range{data()}{data() + size()}} is a valid range. For a
-non-empty vector, \mbox{\tcode{data()}} \mbox{\tcode{==}} \mbox{\tcode{\&front()}}.}
+\returns
+A pointer such that \range{data()}{data() + size()} is a valid range. For a
+non-empty vector, \tcode{data()} \tcode{==} \tcode{\&front()}.
 
 \pnum
-\addedA{\mbox{\complexity}
-Constant time.}
+\complexity
+Constant time.
 
 \pnum
-\addedA{\mbox{\throws}
-Nothing.}
+\throws
+Nothing.
 \end{itemdescr}
 
-\rSec3[lib.vector.modifiers]{\tcode{vector}\ modifiers}
+\rSec3[vector.modifiers]{\tcode{vector}\ modifiers}
 
 \index{insert@\tcode{insert}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@
-  iterator insert(iterator position, const T& x);
-@\addedConcepts{where CopyConstructible<T> \&\& Assignable<T>}@
-  void insert(iterator position, size_type n, const T& x);
-template <@\addedConcepts{InputIterator Iter}@>
-  @\addedConcepts{Convertible<Iter::value_type, T> \&\& CopyConstructible<T> \&\& Assignable<T>}@
-  void insert(iterator position, Iter first, Iter last);
-template <@\addedConcepts{ForwardIterator Iter}@>
-  @\addedConcepts{Convertible<Iter::value_type, T> \&\& CopyConstructible<T> \&\& Assignable<T>}@
-  void insert(iterator position, Iter first, Iter last);
+@\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
+  iterator insert(const_iterator position, const T& x);
+@\addedConcepts{requires MoveConstructible<T> \&\& MoveAssignable<T>}@
+  iterator insert(const_iterator position, T&& x);
+@\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
+  void insert(const_iterator position, size_type n, const T& x);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+    @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<T> \&\& MoveAssignable<T>}@
+    void insert(const_iterator position,
+                @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+template <class... Args> 
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveConstructible<T>}@
+  void push_back(Args&&... args);
+template <class... Args> 
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveConstructible<T>}@
+  iterator emplace(const_iterator position, Args&&... args);
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\requires If \tcode{value_type} has a move constructor, that
+constructor shall not throw any exceptions.
+
 \pnum
 \notes\ 
 Causes reallocation if the new size is greater than the old capacity.
@@ -4118,24 +4185,14 @@ there are no effects.
 
 \pnum
 \complexity\ 
-If
-\tcode{first}\
-and
-\tcode{last}\
-are forward iterators\removedConcepts{bidirectional iterators, or random access
-iterators}, the complexity is linear in the number of elements in the range
-\range{first}{last}\
-plus the distance to the end of the vector.
-If they are input iterators, the complexity is proportional to
-the number of elements in the range
-\range{first}{last}\
-times the distance to the end of the vector.
+The complexity is linear in the number of elements inserted plus the distance
+to the end of the vector.
 \end{itemdescr}
 
 \index{erase@\tcode{erase}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{where Assignable<T>}@ iterator erase(iterator position);
-@\addedConcepts{where Assignable<T>}@ iterator erase(iterator first, iterator last);
+@\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator position);
+@\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator first, const_iterator last);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -4145,12 +4202,10 @@ Invalidates iterators and references at or after the point of the erase.
 
 \pnum
 \complexity\ 
-The destructor of
-\tcode{T}\
-is called the number of times equal to the number of the elements erased,
-but the assignment operator of
-\tcode{T}\
-is called the number of times equal to the number of elements in the vector after the erased elements.
+The destructor of \tcode{T}\ is called the number of times equal to the
+number of the elements erased, but the move assignment operator
+of \tcode{T}\ is called the number of times equal to the number of
+elements in the vector after the erased elements.
 
 \pnum
 \throws\ 
@@ -4159,41 +4214,45 @@ copy constructor or assignment operator of
 \tcode{T}.
 \end{itemdescr}
 
-\rSec3[lib.vector.special]{\tcode{vector}\ specialized algorithms}
+\rSec3[vector.special]{\tcode{vector}\ specialized algorithms}
 
 \begin{itemdecl}
-template <class T, @\addedConcepts{Allocator Alloc}@>
-  void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(vector<T,Allocator>&& x, vector<T,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(vector<T,Allocator>& x, vector<T,Allocator>&& y);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
 \begin{codeblock}
-  x.swap(y);
+x.swap(y);
 \end{codeblock}
 \end{itemdescr}
 
-\rSec2[lib.vector.bool]{\addedConcepts{Deprecated} class \tcode{vector<bool>}}
+\rSec2[vector.bool]{Class \tcode{vector<bool>}}
 
 \pnum
 \index{vector<bool>@\tcode{vector<bool>}}%
 To optimize space allocation, a specialization of vector for
 \tcode{bool}
-elements may be provided:
+elements is provided:
 
 \begin{codeblock}
 namespace std {
-  template <@\addedConcepts{Allocator}@ Alloc> class vector<bool, Alloc> {
+  template <class Allocator> class vector<bool, Allocator> {
   public:
     // types:
     typedef bool                                  const_reference;
-    typedef @\impdef@                iterator;       // See \ref{lib.container.requirements}
-    typedef @\impdef@                const_iterator; // See \ref{lib.container.requirements}
-    typedef @\impdef@                size_type;      // See \ref{lib.container.requirements}
-    typedef @\impdef@                difference_type;// See \ref{lib.container.requirements}
+    typedef @\impdef@                iterator;       // See \ref{container.requirements}
+    typedef @\impdef@                const_iterator; // See \ref{container.requirements}
+    typedef @\impdef@                size_type;      // See \ref{container.requirements}
+    typedef @\impdef@                difference_type;// See \ref{container.requirements}
     typedef bool                                  value_type;
-    typedef Alloc                                 allocator_type;
+    typedef Allocator                             allocator_type;
     typedef @\impdef@                pointer;
     typedef @\impdef@                const_pointer;
     typedef std::reverse_iterator<iterator>       reverse_iterator;
@@ -4201,10 +4260,10 @@ namespace std {
 
     // bit reference:
     class reference {
-     friend class vector;
-     reference();
+      friend class vector;
+      reference();
     public:
-     ~reference();
+      ~reference();
       operator bool() const;
       reference& operator=(const bool x);
       reference& operator=(const reference& x);
@@ -4212,25 +4271,24 @@ namespace std {
     };
 
     // construct/copy/destroy:
-    explicit vector(const Alloc& = Alloc());
+    explicit vector(const Allocator& = Allocator());
     explicit vector(size_type n, const bool& value = bool(),
-                    const Alloc& = Alloc());
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, bool>}@
-      vector(Iter first, Iter last, const Alloc& = Alloc());
-    template <@\addedConcepts{ForwardIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, bool>}@
-      vector(Iter first, Iter last, const Alloc& = Alloc());
-    vector(const vector<bool,Alloc>& x);
+                    const Allocator& = Allocator());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires Convertible<Iter::reference, bool>}@
+      vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+             const Allocator& = Allocator());
+    vector(const vector<bool,Allocator>& x);
+    vector(vector<bool,Allocator>&& x);
+    vector(const vector&, const Allocator&);
+    vector(vector&&, const Allocator&);
    ~vector();
-    vector<bool,Alloc>& operator=(const vector<bool,Alloc>& x);
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, bool>}@
-      void assign(Iter first, Iter last);
-    template <@\addedConcepts{ForwardIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, bool>}@
-      void assign(Iter first, Iter last);
-    void assign(size_type n, const @\changedA{T}{bool}@& t);
+    vector<bool,Allocator>& operator=(const vector<bool,Allocator>& x);
+    vector<bool,Allocator>& operator=(vector<bool,Allocator>&& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires Convertible<Iter::reference, bool>}@
+      void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+    void assign(size_type n, const bool& t);
     allocator_type get_allocator() const;
 
     // iterators:
@@ -4242,6 +4300,11 @@ namespace std {
     const_reverse_iterator rbegin() const;
     reverse_iterator       rend();
     const_reverse_iterator rend() const;
+
+    const_iterator         cbegin() const;
+    const_iterator         cend() const;
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
 
     // capacity:
     size_type size() const;
@@ -4264,39 +4327,53 @@ namespace std {
     // modifiers:
     void push_back(const bool& x);
     void pop_back();
-    iterator insert(iterator position, const bool& x);
-    void     insert (iterator position, size_type n, const bool& x);
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{Convertible<Iter::value_type, bool>}@
-        void insert(iterator position, Iter first, Iter last);
-    template <@\addedConcepts{ForwardIterator Iter}@>
-      @\addedConcepts{Convertible<Iter::value_type, bool>}@
-        void insert(iterator position, Iter first, Iter last);
-    iterator erase(iterator position);
-    iterator erase(iterator first, iterator last);
-    void swap(vector<bool,Alloc>&);
+    iterator insert(const_iterator position, const bool& x);
+    void     insert (const_iterator position, size_type n, const bool& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+        @\addedConcepts{requires Convertible<Iter::reference, bool>}@
+        void insert(const_iterator position,
+                    @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator erase(const_iterator position);
+    iterator erase(const_iterator first, const_iterator last);
+    void swap(vector<bool,Allocator>&&);
     static void swap(reference x, reference y);
     void flip();                // flips all bits
     void clear();
   };
 
-  // specialized algorithms:
-  template <@\addedConcepts{Allocator Alloc}@>
-    void swap(vector<bool,Alloc>& x, vector<bool,Alloc>& y);
 }
 \end{codeblock}%
-\index{vector<bool>@\tcode{vector<bool>}!\tcode{operator==}}%
-\index{vector<bool>@\tcode{vector<bool>}!\tcode{operator<}}
+
+\pnum
+Unless described below, all operations have the same requirements and
+semantics as the primary \tcode{vector} template, except that operations
+dealing with the \tcode{bool} value type map to bit values in the
+container storage.
+
+\pnum
+There is no requirement that the data be stored as a contiguous allocation
+of \tcode{bool} values. A space-optimized representation of bits is
+recommended instead.
 
 \pnum
 \tcode{reference}
 is a class that simulates the behavior of references of a single bit in
-\tcode{vector<bool>}.
+\tcode{vector<bool>}. The conversion operator returns \tcode{true}
+when the bit is set, and \tcode{false} otherwise. The assignment operator
+sets the bit when the argument is (convertible to) \tcode{true} and
+clears it otherwise. \tcode{flip} reverses the state of the bit.
 
+\begin{itemdecl}
+void flip();
+\end{itemdecl}
+
+\begin{itemdescr}
 \pnum
-\addedConcepts{The vector<bool> specialization meets all of the
-  container and sequence requirements except that its iterators do not
-  meet the ForwardIterator requirements.}
+\effects Replaces each element in the container with its complement.
+It is unspecified whether the function has any effect on allocated but unused bits.
+\end{itemdescr}
+
 
 \bibliographystyle{plain}
 \bibliography{../local}
