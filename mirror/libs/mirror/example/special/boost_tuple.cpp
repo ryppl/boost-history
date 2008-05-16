@@ -128,6 +128,16 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	for_each<meta_X::all_attributes>(cref(select_base_name()), cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
+	for_each<
+		begin<meta_X::all_attributes>::type,
+		end<meta_X::all_attributes>::type
+	>(cref(select_base_name()), cref(str_printer()));
+	bcout << "---------------------------------------------------" << endl;
+	reverse_for_each<
+		begin<meta_X::all_attributes>::type,
+		end<meta_X::all_attributes>::type
+	>(cref(select_base_name()), cref(str_printer()));
+	bcout << "---------------------------------------------------" << endl;
 	bcout << "Finished" << endl;
 
 	return 0;

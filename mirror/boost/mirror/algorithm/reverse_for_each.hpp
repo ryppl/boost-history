@@ -90,6 +90,40 @@ static Functor reverse_for_each(
 	> ::perform(ref(fn), ref(transf));
 }
 
+template <
+	class IteratorBegin,
+	class IteratorEnd,
+	class Functor
+>
+static reference_wrapper<Functor> reverse_for_each(
+	reference_wrapper<Functor> fn
+)
+{
+	return detail::reverse_for_each_impl<
+		IteratorBegin,
+		IteratorEnd
+	> ::perform(fn, cref(detail::no_op()));
+}
+
+template <
+	class IteratorBegin,
+	class IteratorEnd,
+	class TransformOp,
+	class Functor
+>
+static Functor reverse_for_each(
+	reference_wrapper<TransformOp> transf, 
+	reference_wrapper<Functor> fn
+)
+{
+	return detail::reverse_for_each_impl<
+		IteratorBegin,
+		IteratorEnd
+	> ::perform(fn, transf);
+}
+
+
+
 } // namespace mirror
 } // namespace boost
 
