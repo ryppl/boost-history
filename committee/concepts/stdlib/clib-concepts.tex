@@ -87,6 +87,7 @@ strike-through when possible}.
 \item Added the \tcode{EqualityComparable} refinement to the
   \tcode{Allocator} concept, and made its \tcode{construct} variadic
   to match the latest \tcode{Allocator} requirements.
+\item \tcode{ObjectType} now refines \tcode{MemberPointeeType}.
 \end{itemize}
 
 \end{titlepage}
@@ -355,7 +356,7 @@ namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept ObjectType<typename T> : VariableType<T> { }
+concept ObjectType<typename T> : VariableType<T>@\addedCC{, MemberPointeeType<T>} { }
 \end{itemdecl}
 
 \begin{itemdescr}

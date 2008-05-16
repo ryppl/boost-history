@@ -73,7 +73,7 @@ Bloomington, IN\ \  47405 \\
 
 \color{black}
 
-\setcounter{chapter}{23}
+\setcounter{chapter}{22}
 \rSec0[lib.containers]{Containers library}
 
 \pnum
@@ -1123,8 +1123,185 @@ template<CopyConstructible T, Allocator Alloc>
 \rSec1[lib.sequences]{Sequences}
 
 \pnum
-Headers \tcode{<array>}, \tcode{<deque>}, \tcode{<list>}, \tcode{<queue>},
-\tcode{<stack>}, and \tcode{<vector>}.
+Headers \tcode{<array>}, \tcode{<deque>}, \tcode{<forward_list>}, \tcode{<list>}, \tcode{<queue>}, \tcode{<stack>}, and \tcode{<vector>}.
+
+\synopsis{Header \tcode{<array>}\ synopsis}%
+\index{array@\tcode{<array>}}%
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ T, size_t N > struct array;
+  template <@\changedConcepts{class}{EqualityComparable}@ T, size_t N>
+    bool operator==(const array<T,N>& x, const array<T,N>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ T, size_t N>
+    bool operator!=(const array<T,N>& x, const array<T,N>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, size_t N>
+    bool operator<(const array<T,N>& x, const array<T,N>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, size_t N>
+    bool operator>(const array<T,N>& x, const array<T,N>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, size_t N>
+    bool operator<=(const array<T,N>& x, const array<T,N>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, size_t N>
+    bool operator>=(const array<T,N>& x, const array<T,N>& y);
+  template <@\changedConcepts{class}{Swappable}@ T, size_t N >
+    void swap(array<T,N>& x, array<T,N>& y);
+
+  template <@\changedConcepts{class}{ObjectType}@ T> class tuple_size;
+  template <int I, @\changedConcepts{class}{ObjectType}@ T> 
+    class tuple_element;
+  template <@\changedConcepts{class}{ObjectType}@ T, size_t N>
+    struct tuple_size<array<T, N> >;
+  template <int I, class T, size_t N>
+    @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
+    struct tuple_element<I, array<T, N> >;
+  template <int I, class T, size_t N>
+    @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
+    T& get(array<T, N>&); 
+  template <int I, class T, size_t N>
+    @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
+    const T& get(const array<T, N>&);
+}
+\end{codeblock}
+
+\synopsis{Header \tcode{<deque>}\ synopsis}%
+\index{deque@\tcode{<deque>}}
+
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> > class deque;
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator==(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator<(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator!=(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator>(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator>=(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator<=(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(deque<T,Allocator>& x, deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(deque<T,Allocator>&& x, deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(deque<T,Allocator>& x, deque<T,Allocator>&& y);
+}
+\end{codeblock}
+
+\synopsis{Header \tcode{<forward_list>} synopsis}%
+\index{forward_list@\tcode{<forward_list>}}
+
+\begin{codeblock}
+namespace std {
+  template <class T, class Allocator = allocator<T> > class forward_list; 
+  template <class T, class Allocator> 
+    bool operator==(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <class T, class Allocator> 
+    bool operator< (const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <class T, class Allocator> 
+    bool operator!=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <class T, class Allocator> 
+    bool operator> (const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <class T, class Allocator> 
+    bool operator>=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <class T, class Allocator> 
+    bool operator<=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <class T, class Allocator> 
+    void swap(forward_list<T,Allocator>& x, forward_list<T,Allocator>& y); 
+}
+\end{codeblock}
+
+\synopsis{Header \tcode{<list>}\ synopsis}%
+\index{list@\tcode{<list>}}
+
+\begin{codeblock}
+namespace std {
+  template <class T, class Allocator = allocator<T> > class list;
+  template <class T, class Allocator>
+    bool operator==(const list<T,Allocator>& x, const list<T,Allocator>& y);
+  template <class T, class Allocator>
+    bool operator< (const list<T,Allocator>& x, const list<T,Allocator>& y);
+  template <class T, class Allocator>
+    bool operator!=(const list<T,Allocator>& x, const list<T,Allocator>& y);
+  template <class T, class Allocator>
+    bool operator> (const list<T,Allocator>& x, const list<T,Allocator>& y);
+  template <class T, class Allocator>
+    bool operator>=(const list<T,Allocator>& x, const list<T,Allocator>& y);
+  template <class T, class Allocator>
+    bool operator<=(const list<T,Allocator>& x, const list<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(list<T,Allocator>& x, list<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(list<T,Allocator>&& x, list<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(list<T,Allocator>& x, list<T,Allocator>&& y);
+}
+\end{codeblock}
+
+\synopsis{Header \tcode{<queue>}\ synopsis}%
+\index{queue@\tcode{<queue>}}
+
+\begin{codeblock}
+namespace std {
+  template <class T, class Container = deque<T> > class queue;
+  template <class T, class Container>
+    bool operator==(const queue<T, Container>& x,const queue<T, Container>& y);
+  template <class T, class Container>
+    bool operator< (const queue<T, Container>& x,const queue<T, Container>& y);
+  template <class T, class Container>
+    bool operator!=(const queue<T, Container>& x,const queue<T, Container>& y);
+  template <class T, class Container>
+    bool operator> (const queue<T, Container>& x,const queue<T, Container>& y);
+  template <class T, class Container>
+    bool operator>=(const queue<T, Container>& x,const queue<T, Container>& y);
+  template <class T, class Container>
+    bool operator<=(const queue<T, Container>& x,const queue<T, Container>& y);
+  template <class T, class Allocator>
+    void swap(queue<T,Allocator>& x, queue<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(queue<T,Allocator>&& x, queue<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(queue<T,Allocator>& x, queue<T,Allocator>&& y);
+
+  template <class T, class Container = vector<T>,
+        class Compare = less<typename Container::value_type> >
+  class priority_queue;
+  template <class T, class Allocator>
+    void swap(priority_queue<T,Allocator>& x, priority_queue<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(priority_queue<T,Allocator>&& x, priority_queue<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(priority_queue<T,Allocator>& x, priority_queue<T,Allocator>&& y);
+}
+\end{codeblock}
+
+\synopsis{Header \tcode{<stack>}\ synopsis}%
+\index{stack@\tcode{<stack>}}
+
+\begin{codeblock}
+namespace std {
+  template <class T, class Container = deque<T> > class stack;
+  template <class T, class Container>
+    bool operator==(const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Container>
+    bool operator< (const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Container>
+    bool operator!=(const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Container>
+    bool operator> (const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Container>
+    bool operator>=(const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Container>
+    bool operator<=(const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Allocator>
+    void swap(stack<T,Allocator>& x, stack<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(stack<T,Allocator>&& x, stack<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(stack<T,Allocator>& x, stack<T,Allocator>&& y);
+}
+\end{codeblock}
 
 \synopsis{Header \tcode{<vector>}\ synopsis}%
 \index{vector@\tcode{<vector>}}
@@ -1163,6 +1340,645 @@ namespace std {
     void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
 }
 \end{codeblock}
+
+\rSec2[array]{\marktr{}Class template \tcode{array}}
+\index{array@\tcode{array}}%
+
+\pnum
+\index{array@\tcode{array}!contiguous storage}%
+The header \tcode{<array>} defines a class template for storing fixed-size
+sequences of objects. An \tcode{array} supports random access iterators. An
+instance of \tcode{array<T, N>} stores \tcode{N} elements of type \tcode{T}, so that 
+\tcode{size() == N} is an invariant. The elements of an \tcode{array} are stored contiguously,
+meaning that if \tcode{a} is an \tcode{array<T, N>} then it obeys the identity 
+\verb|&a[n] == &a[0] + n| for all \tcode{0 <= n < N}.
+
+\pnum
+\index{array@\tcode{array}!initialization}%
+\index{array@\tcode{array}!as aggregate}%
+An \tcode{array} is an aggregate~(\ref{dcl.init.aggr}) that can be
+initialized with the syntax
+\begin{codeblock}
+array a = { initializer-list };
+\end{codeblock}
+
+where \textit{initializer-list} is a comma separated list of up
+to \tcode{N} elements whose types are convertible to \tcode{T}.
+
+\pnum
+\index{requirements!Container}%
+Unless otherwise specified, all \tcode{array} operations are as described
+in~\ref{container.requirements}. Descriptions are provided here
+only for operations on \tcode{array} that are not described in that clause
+or for operations where there is additional semantic information.
+
+\index{array@\tcode{array}}%
+\index{array@\tcode{array}!begin@\tcode{begin}}%
+\index{begin@\tcode{begin}!array@\tcode{array}}%
+\index{array@\tcode{array}!end@\tcode{end}}%
+\index{end@\tcode{end}!array@\tcode{array}}%
+\index{array@\tcode{array}!size@\tcode{size}}%
+\index{size@\tcode{size}!array@\tcode{array}}%
+\index{array@\tcode{array}!max_size@\tcode{max_size}}%
+\index{max_size@\tcode{max_size}!array@\tcode{array}}%
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ T, size_t N >
+  struct array {
+    //  types:
+    typedef T &                                   reference;
+    typedef const T &                             const_reference;
+    typedef @{\itshape implementation defined}@                iterator;
+    typedef @{\itshape implementation defined}@                const_iterator;
+    typedef size_t                                size_type;
+    typedef ptrdiff_t                             difference_type;
+    typedef T                                     value_type;
+    typedef std::reverse_iterator<iterator>       reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+
+    T       elems[N];           // \expos
+
+    // No explicit construct/copy/destroy for aggregate type
+
+    @\addedConcepts{requires CopyAssignable<T>}@ void assign(const T& u);
+    @\addedConcepts{requires Swappable<T>}@ void swap(array<T, N> &);
+
+    // iterators:
+    iterator               begin();
+    const_iterator         begin() const;
+    iterator               end();
+    const_iterator         end() const;
+
+    reverse_iterator       rbegin();
+    const_reverse_iterator rbegin() const;
+    reverse_iterator       rend();
+    const_reverse_iterator rend() const;
+
+    const_iterator         cbegin() const;
+    const_iterator         cend() const;
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
+
+    // capacity:
+    constexpr size_type size() const;
+    constexpr size_type max_size() const;
+    bool      empty() const;
+
+    // element access:
+    reference       operator[](size_type n);
+    const_reference operator[](size_type n) const;
+    const_reference at(size_type n) const;
+    reference       at(size_type n);
+    reference       front();
+    const_reference front() const;
+    reference       back();
+    const_reference back() const;
+
+    T *       data();
+    const T * data() const;
+  };
+}
+\end{codeblock}
+
+\pnum
+\enternote\ The member variable \tcode{elems} is shown for exposition only,
+to empahasize that \tcode{array} is a class aggregate.  The name \tcode{elems}
+is not part of \tcode{array}'s interface. \exitnote\
+
+\rSec3[array.cons]{\tcode{array} constructors, copy, and assignment}
+
+\pnum
+\index{array@\tcode{array}!initialization}%
+\index{requirements!Container}%
+The conditions for an aggregate~(\ref{dcl.init.aggr}) shall be
+met. Class \tcode{array} relies on the implicitly-declared special
+member functions~(\ref{class.ctor}, \ref{class.dtor}, and \ref{class.copy}) to
+conform to the container requirements table in~\ref{container.requirements}.
+
+\rSec3[array.special]{\tcode{array} specialized algorithms}
+
+\index{array@\tcode{array}!swap@\tcode{swap}}%
+\index{swap@\tcode{swap}!array@\tcode{array}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{Swappable}@ T, size_t N> void swap(array<T,N>& x, array<T,N>& y);
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\effects\ 
+\begin{codeblock}
+swap_ranges(x.begin(), x.end(), y.begin() );
+\end{codeblock}
+\end{itemdescr}
+
+\rSec3[array.size]{\tcode{array::size}}
+
+\index{array@\tcode{array}!size@\tcode{size}}%
+\index{size@\tcode{size}!array@\tcode{array}}%
+\begin{itemdecl}
+@\removedConcepts{template <class T, size_t N>}@ size_type @\removedConcepts{array<T,N>::}@size();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\returns\ \tcode{N}
+\end{itemdescr}
+
+\rSec3[array.data]{\tcode{array::data}}
+\index{array@\tcode{array}!data@\tcode{data}}%
+\index{data@\tcode{data}!array@\tcode{array}}%
+\begin{itemdecl}
+T *data();
+const T *data() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum \returns\ \tcode{elems}.
+\end{itemdescr}
+
+\rSec3[array.zero]{Zero sized arrays}
+\index{array@\tcode{array}!zero sized}%
+
+\pnum\tcode{array} shall provide support for the special case \tcode{N == 0}.
+
+\pnum In the case that \tcode{N == 0}, \tcode{begin() == end() ==} unique value.
+The return value of \tcode{data()} is unspecified.
+
+\pnum
+The effect of calling \tcode{front()} or \tcode{back()} for a zero-sized array
+is implementation defined.
+
+\rSec3[array.tuple]{Tuple interface to class template \tcode{array}}
+\index{array@\tcode{array}}%
+\index{tuple@\tcode{tuple}}%
+\index{tuple@\tcode{tuple}!and array@and \tcode{array}}%
+\index{array@\tcode{array}!tuple interface to}%
+
+\index{tuple_size@\tcode{tuple_size}}%
+\begin{itemdecl}
+tuple_size<array<T, N> >::value
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returntype\   integral constant expression.
+
+\pnum
+\cvalue\  \tcode{N}
+\end{itemdescr}
+
+\index{tuple_element@\tcode{tuple_element}}%
+\begin{itemdecl}
+tuple_element<I, array<T, N> >::type
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires\  \tcode{0 <= I < N}.   The program is ill-formed if \tcode{I} is out of bounds.
+
+\pnum
+\cvalue\  The type T.
+\end{itemdescr}
+
+\index{array@\tcode{array}!get@\tcode{get}}%
+\index{get@\tcode{get}!array@\tcode{array}}%
+\begin{itemdecl}
+template <int I, class T, size_t N> 
+  @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
+  T& get(array<T, N>& a); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{0 <= I < N}}. The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+
+\returns\  A reference to the \tcode{I}th element of \tcode{a}, 
+where indexing is zero-based.
+\end{itemdescr}
+
+\index{array@\tcode{array}!get@\tcode{get}}%
+\index{get@\tcode{get}!array@\tcode{array}}%
+\begin{itemdecl}
+template <int I, class T, size_t N> 
+  @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
+  const T& get(const array<T, N>& a); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{0 <= I < N}}. The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+
+\pnum
+\returns\ A const reference to the \tcode{I}th element of \tcode{a}, 
+where indexing is zero-based.
+\end{itemdescr}
+
+\rSec2[deque]{Class template \tcode{deque}}%
+
+\pnum
+\index{deque@\tcode{deque}}
+A
+\tcode{deque}\
+is a sequence container that, like a
+\tcode{vector}\
+(\ref{vector}), supports random access iterators.
+In addition, it supports constant time insert and erase operations at the beginning or the end;
+insert and erase in the middle take linear time.
+That is, a deque is especially optimized for pushing and popping elements at the beginning and end.
+As with vectors, storage management is handled automatically.
+
+\pnum
+A
+\tcode{deque}\
+satisfies all of the requirements of a container, of a reversible container
+(given in tables in~\ref{container.requirements}), of a sequence container,
+including the optional sequence container requirements
+(\ref{sequence.reqmts}), and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}).
+Descriptions are provided here only for operations on
+\tcode{deque}\
+that are not described in one of these tables
+or for operations where there is additional semantic information.
+
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> >
+  class deque {
+  public:
+    // types:
+    typedef typename Allocator::reference         reference;
+    typedef typename Allocator::const_reference   const_reference;
+    typedef @\impdef@                iterator;       // See \ref{container.requirements}
+    typedef @\impdef@                const_iterator; // See \ref{container.requirements}
+    typedef @\impdef@                size_type;      // See \ref{container.requirements}
+    typedef @\impdef@                difference_type;// See \ref{container.requirements}
+    typedef T                                     value_type;
+    typedef Allocator                             allocator_type;
+    typedef typename Allocator::pointer           pointer;
+    typedef typename Allocator::const_pointer     const_pointer;
+    typedef std::reverse_iterator<iterator>       reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+
+    // \ref{deque.cons} construct/copy/destroy:
+    explicit deque(const Allocator& = Allocator());
+    @\addedConcepts{requires DefaultConstructible<T>}@ explicit deque(size_type n);
+    @\addedConcepts{requires CopyConstructible<T>}@ deque(size_type n, const T& value,const Allocator& = Allocator());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@ 
+      deque(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,const Allocator& = Allocator());
+    @\addedConcepts{requires CopyConstructible<T>}@ deque(const deque<T,Allocator>& x);
+    deque(deque&&);
+    @\addedConcepts{requires CopyConstructible<T>}@ deque(const deque&, const Allocator&);
+    deque(deque&&, const Allocator&);
+
+   ~deque();
+    @\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@ 
+      deque<T,Allocator>& operator=(const deque<T,Allocator>& x);
+    deque<T,Allocator>& operator=(const deque<T,Allocator>&& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& CopyAssignable<T, Iter::reference>}@
+      void assign(InputIterator first, InputIterator last);
+    @\addedConcepts{requires CopyAssignable<T> \&\& CopyConstructible<T>}@ void assign(size_type n, const T& t);
+    allocator_type get_allocator() const;
+
+    // iterators:
+    iterator               begin();
+    const_iterator         begin() const;
+    iterator               end();
+    const_iterator         end() const;
+    reverse_iterator       rbegin();
+    const_reverse_iterator rbegin() const;
+    reverse_iterator       rend();
+    const_reverse_iterator rend() const;
+
+    const_iterator         cbegin() const;
+    const_iterator         cend() const;
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
+
+    // \ref{deque.capacity} capacity:
+    size_type size() const;
+    size_type max_size() const;
+    @\addedConcepts{requires DefaultConstructible<T> \&\& MoveAssignable<T>}@ 
+      void resize(size_type sz);
+    @\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@    
+      void resize(size_type sz, const T& c);
+    bool empty() const;
+
+    // element access:
+    reference       operator[](size_type n);
+    const_reference operator[](size_type n) const;
+    reference       at(size_type n);
+    const_reference at(size_type n) const;
+    reference       front();
+    const_reference front() const;
+    reference       back();
+    const_reference back() const;
+
+    // \ref{deque.modifiers} modifiers:
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      void push_front(Args&&... args);
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      void push_back(Args&&... args);
+
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveAssignable<T>}@ 
+      iterator emplace(const_iterator position, Args&&... args);
+
+    @\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+      iterator insert(const_iterator position, const T& x);
+    @\addedConcepts{requires MoveConstructible<T> \&\& MoveAssignable<T>}@
+      iterator insert(const_iterator position, T&& x);
+    @\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+      void insert(const_iterator position, size_type n, const T& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
+               @\addedConcepts{\&\& MoveAssignable<T>}@
+      void insert(const_iterator position, InputIterator first, InputIterator last);
+
+    void pop_front();
+    void pop_back();
+
+    @\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator position);
+    @\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator first, const_iterator last);
+    void     swap(deque<T,Allocator>&&);
+    void     clear();
+  };
+
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator==(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator< (const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
+    bool operator!=(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator> (const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator>=(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
+    bool operator<=(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
+
+  // specialized algorithms:
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(deque<T,Allocator>& x, deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(deque<T,Allocator>&& x, deque<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+    void swap(deque<T,Allocator>& x, deque<T,Allocator>&& y);
+
+  template <class T, class Alloc
+    struct constructible_with_allocator_suffix<deque<T, Alloc> >
+      : true_type { };
+}
+\end{codeblock}
+
+\rSec3[deque.cons]{\tcode{deque}\ constructors, copy, and assignment}
+
+\begin{itemdecl}
+explicit deque(const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs an empty
+\tcode{deque},
+using the specified allocator.
+
+\pnum
+\complexity\ 
+Constant.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T>}@ explicit deque(size_type n);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs a \tcode{deque} with
+\tcode{n} default constructed elements.
+
+\pnum
+@\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}@
+
+\pnum
+\complexity Linear in \farg{n}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@
+deque(size_type @\farg{n}@, const T& @\farg{value}@,
+      const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs a
+\tcode{deque}\
+with \farg{n} copies of \farg{value},
+using the specified allocator.
+
+\pnum
+@\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}@
+
+\pnum
+\complexity\ 
+Linear in \farg{n}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  deque(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@,
+        const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs a
+\tcode{deque}\
+equal to the the range
+\range{\farg{first}}{\farg{last}},
+using the specified allocator.
+
+\pnum
+\complexity\ 
+\tcode{distance(\farg{first}, \farg{last})}.
+\end{itemdescr}
+
+\index{assign@\tcode{assign}!\tcode{deque}}%
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& CopyAssignable<T, Iter::reference>}@
+  void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+\begin{codeblock}
+erase(begin(), end());
+insert(begin(), first, last);
+\end{codeblock}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T> \&\& CopyAssignable<T>}@
+void assign(size_type n, const T& t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+\begin{codeblock}
+erase(begin(), end());
+insert(begin(), n, t);
+\end{codeblock}
+\end{itemdescr}
+
+\rSec3[deque.capacity]{\tcode{deque}\ capacity}
+
+\index{resize@\tcode{resize}!\tcode{deque}}%
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T> \&\& MoveAssignable<T>}@ 
+  void resize(size_type sz);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects If \tcode{sz < size()}, equivalent to
+\tcode{erase(begin() + sz, end());}. If \tcode{size() < sz},
+appends \tcode{sz - size()} default constructed elements to the
+sequence.
+
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be
+\mbox{\tcode{DefaultConstructible}}.}
+\end{itemdescr}
+
+\index{resize@\tcode{resize}!\tcode{deque}}%
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@ 
+  void resize(size_type sz, const T& c);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+\begin{codeblock}
+if (sz > size())
+  insert(end(), sz-size(), c);
+else if (sz < size())
+  erase(begin()+sz, end());
+else
+  ;                 // do nothing
+\end{codeblock}
+
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be
+\mbox{\tcode{CopyConstructible}}.}
+\end{itemdescr}
+
+\rSec3[deque.modifiers]{\tcode{deque}\ modifiers}
+
+\index{insert@\tcode{insert}!\tcode{deque}}%
+\index{insert@\tcode{push_front}!\tcode{deque}}%
+\index{insert@\tcode{push_back}!\tcode{deque}}%
+\index{insert@\tcode{emplace}!\tcode{deque}}%
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+  iterator insert(const_iterator position, const T& x);
+@\addedConcepts{requires MoveConstructible<T> \&\& MoveAssignable<T>}@
+  iterator insert(const_iterator position, T&& x);
+@\addedConcepts{requires CopyConstructible<T> \&\& MoveAssignable<T>}@
+  void     insert(const_iterator position, size_type n, const T& x);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
+           @\addedConcepts{\&\& MoveAssignable<T>}@
+  void insert(const_iterator position,
+              @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+template <class... Args> 
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  void push_front(Args&&... args);
+template <class... Args> 
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  void push_back(Args&&... args);
+template <class... Args> 
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveAssignable<T>}@ 
+  iterator emplace(const_iterator position, Args&&... args);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+An insertion in the middle of the deque invalidates all the iterators and
+references to elements of the deque.
+An insertion at either end of the
+deque invalidates all the iterators to the deque, but has no effect on
+the validity of references to elements of the deque.
+
+\pnum
+\notes\ 
+If an exception is thrown other than by the
+copy constructor or assignment operator of
+\tcode{T}\
+there are no effects.
+
+\pnum
+\complexity\ 
+The complexity is linear in the number of elements inserted plus the lesser
+of the distances to the beginning and end of the deque.
+Inserting a single element either at the beginning or end of a deque always takes constant time
+and causes a single call to a constructor of
+\tcode{T}.
+\end{itemdescr}
+
+\index{erase@\tcode{erase}!\tcode{deque}}%
+\begin{itemdecl}
+@\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator position);
+@\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator first, const_iterator last);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+An erase in the middle of the deque invalidates all the iterators and
+references to elements of the deque.
+An erase at either end of the
+deque invalidates only the iterators and the references to the erased elements.
+
+\pnum
+\complexity\ 
+The number of calls to the destructor is the same as the
+number of elements erased, but the number of the calls to the assignment operator is at most equal to the minimum
+of the number of elements before the erased elements and the number of elements after the erased elements.
+
+\pnum
+\throws\ 
+Nothing unless an exception is thrown by the copy constructor or assignment operator of
+\tcode{T}.
+\end{itemdescr}
+
+\rSec3[deque.special]{\tcode{deque}\ specialized algorithms}
+
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(deque<T,Allocator>& x, deque<T,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(deque<T,Allocator>&& x, deque<T,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(deque<T,Allocator>& x, deque<T,Allocator>&& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+\begin{codeblock}
+x.swap(y);
+\end{codeblock}
+\end{itemdescr}
 
 \setcounter{subsection}{3}
 \rSec2[lib.container.adaptors]{Container adaptors}
