@@ -28,7 +28,13 @@ struct cluster_data
 
   cluster_data(cluster_data const & c) : m_pClusters(c.m_pClusters) {}
   cluster_data const & operator=(cluster_data const & rhs)
-  { m_pClusters = rhs.m_pClusters; }
+  { 
+      if (this != &rhs) 
+      {
+        m_pClusters = rhs.m_pClusters; 
+      }
+      return *this;
+  }
 
   typedef typename clusters::iterator iterator;
   typedef typename clusters::const_iterator const_iterator;
