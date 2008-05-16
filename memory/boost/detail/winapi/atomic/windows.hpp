@@ -71,7 +71,7 @@ __forceinline PVOID WINAPI boost_InterlockedCompareExchangePointer(
 // TaggedCompareAndSwap
 
 __forceinline bool WINAPI TaggedCompareAndSwap(
-	LONG32 Destination[2], LONG32 Exchange, LONG32 Comperand, LONG32 Tag)
+	LONG32 Destination[2], LONG32 Comperand, LONG32 Exchange, LONG32 Tag)
 {
 	bool ok;
 	__asm {
@@ -91,20 +91,20 @@ __forceinline bool WINAPI TaggedCompareAndSwap(
 
 template <class Type>
 __forceinline bool WINAPI TaggedCompareAndSwap(
-	Type* Destination[2], Type* Exchange, Type* Comperand, Type* Tag)
+	Type* Destination[2], Type* Comperand, Type* Exchange, Type* Tag)
 {
 	return TaggedCompareAndSwap(
-		(LONG32*)Destination, (LONG32)Exchange, (LONG32)Comperand, (LONG32)Tag);
+		(LONG32*)Destination, (LONG32)Comperand, (LONG32)Exchange, (LONG32)Tag);
 }
 
 #elif defined(_WIN64)
 
 template <class Type>
 __forceinline bool WINAPI TaggedCompareAndSwap(
-	Type* Destination[2], Type* Exchange, Type* Comperand, Type* Tag)
+	Type* Destination[2], Type* Comperand, Type* Exchange, Type* Tag)
 {
 	return TaggedCompareAndSwap(
-		(LONG64*)Destination, (LONG64)Exchange, (LONG64)Comperand, (LONG64)Tag);
+		(LONG64*)Destination, (LONG64)Comperand, (LONG64)Exchange, (LONG64)Tag);
 }
 
 #endif

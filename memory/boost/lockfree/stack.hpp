@@ -74,7 +74,8 @@ public:
 	void BOOST_LOCKFREE_CALL push(node* val)
 	{
 		BOOST_DETAIL_ASSERT(val->_m_prev == NULL);
-		m_top.set(PushOp(val));
+		PushOp pushOp(val);
+		m_top.set(pushOp);
 	}
 
 	node* BOOST_LOCKFREE_CALL clear()

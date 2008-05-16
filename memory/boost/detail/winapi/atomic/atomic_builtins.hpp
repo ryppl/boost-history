@@ -60,6 +60,7 @@ __forceinline PVOID WINAPI InterlockedCompareExchangePointer(
 }
 
 // -------------------------------------------------------------------------
+// InterlockedExchange64
 
 __forceinline LONG64 WINAPI InterlockedExchange64(
 	volatile PLONG64 Target, LONG64 Value)
@@ -68,25 +69,99 @@ __forceinline LONG64 WINAPI InterlockedExchange64(
 	return __sync_lock_test_and_set(Target, Value);
 }
 
+// -------------------------------------------------------------------------
+// CompareAndSwap64
+
 __forceinline bool WINAPI CompareAndSwap64(
-	PLONG64 Destination, LONG64 Exchange, LONG64 Comperand)
+	volatile PLONG64 Destination, LONG64 Comperand, LONG64 Exchange)
 {
 	return __sync_bool_compare_and_swap_8(Destination, Comperand, Exchange);
 }
 
 // -------------------------------------------------------------------------
+// CompareAndSwap128
 
-typedef int ATOMIC_LONG128_ __attribute__ ((mode (TI)));
-typedef ATOMIC_LONG128_ ATOMIC_LONG128;
-typedef ATOMIC_LONG128_* PATOMIC_LONG128;
+#if defined(__GNUC__) && defined(__x86_64__) &&                       \
+    ( __GCC_HAVE_SYNC_COMPARE_AND_SWAP_16 ) ||                        \
+    ( (__GNUC__ >  4) || ( (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 2) ) && defined(__nocona__ ))
 
 __forceinline bool WINAPI CompareAndSwap128(
-	PATOMIC_LONG128 Destination, ATOMIC_LONG128 Exchange, ATOMIC_LONG128 Comperand)
+	volatile LONG64 addr[2], LONG64 old1, LONG64 old2, LONG64 new1, LONG64 new2)
 {
-	return __sync_bool_compare_and_swap_16(Destination, Comperand, Exchange);
+	typedef int ATOMIC_LONG128_ __attribute__ ((mode (TI)));
+	typedef ATOMIC_LONG128_ ATOMIC_LONG128;
+	typedef ATOMIC_LONG128_* PATOMIC_LONG128;
+
+	return __sync_bool_compare_and_swap_16(
+		(volatile PATOMIC_LONG128)addr,
+		old1 | ((ATOMIC_LONG128)old2 << 64),
+		new1 | ((ATOMIC_LONG128)new2 << 64));	
 }
+
+#elif defined(__GNUC__) && defined(__x86_64__)
+
+__forceinline bool WINAPI CompareAndSwap128(
+	volatile LONG64 addr[2], LONG64 old1, LONG64 old2, LONG64 new1, LONG64 new2)
+{
+    /* handcoded asm, will crash on early amd processors */
+    char result;
+    __asm__ __volatile__("lock; cmpxchg16b %0; setz %1"
+                         : "=m"(*addr), "=q"(result)
+                         : "m"(*addr), "d" (old2), "a" (old1),
+                           "c" (new2), "b" (new1) : "memory");
+    return (bool)result;
+}
+
+#else
+	#error "todo"
+#endif
+
+// -------------------------------------------------------------------------
+// TaggedCompareAndSwap
+
+__forceinline bool WINAPI TaggedCompareAndSwap(
+	volatile LONG32 Destination[2], LONG32 Comperand, LONG32 Exchange, LONG32 Tag)
+{
+	return __sync_bool_compare_and_swap_8(
+		(volatile PLONG64)Destination,
+		Comperand | ((LONG64)Tag << 32),
+		Exchange | ((LONG64)(Tag+1) << 32));
+}
+
+__forceinline bool WINAPI TaggedCompareAndSwap(
+	volatile LONG64 Destination[2], LONG64 Comperand, LONG64 Exchange, LONG64 Tag)
+{
+	return CompareAndSwap128(Destination, Comperand, Tag, Exchange, Tag+1);
+}
+
+#if defined(__32BIT__) || defined(__x86_32__)
+
+template <class Type>
+__forceinline bool WINAPI TaggedCompareAndSwapPointer(
+	Type* Destination[2], Type* Comperand, Type* Exchange, Type* Tag)
+{
+	return TaggedCompareAndSwap(
+		(volatile LONG32*)Destination, (LONG32)Comperand, (LONG32)Exchange, (LONG32)Tag);
+}
+
+#elif defined(__64BIT__) || defined(__x86_64__)
+
+template <class Type>
+__forceinline bool WINAPI TaggedCompareAndSwapPointer(
+	Type* Destination[2], Type* Comperand, Type* Exchange, Type* Tag)
+{
+	return TaggedCompareAndSwap(
+		(volatile LONG64*)Destination, (LONG64)Comperand, (LONG64)Exchange, (LONG64)Tag);
+}
+
+#else
+
+#error "Unknown CPU Type!!!"
+
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
 #endif /* BOOST_DETAIL_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP */
+

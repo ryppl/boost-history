@@ -55,12 +55,12 @@ public:
 		for (;;)
 		{
 			Type vTag = m_p[1]; // NOTE: getting 'tag' before getting 'data'!
-			Type vOld = get();
+			Type vOld = m_p[0];
 			if (!op.valid(vOld))
 				return false;
 
 			Type vNew = op(vOld);
-			if (TaggedCompareAndSwap(m_p, vNew, vOld, vTag))
+			if (TaggedCompareAndSwapPointer(m_p, vOld, vNew, vTag))
 				return true;
 		}
 	}
