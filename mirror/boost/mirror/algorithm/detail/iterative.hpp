@@ -17,6 +17,7 @@
 // mirror::size
 #include <boost/mirror/algorithm/size.hpp>
 #include <boost/mirror/algorithm/iterator_equal.hpp>
+#include <boost/mirror/algorithm/next.hpp>
 //
 #include <boost/ref.hpp>
 
@@ -58,8 +59,8 @@ namespace detail {
 			op(transf(meta_object()));
 		}
 	
-		typedef typename IteratorBegin begin;
-		typedef typename IteratorEnd end;
+		typedef IteratorBegin begin;
+		typedef IteratorEnd end;
 		typedef typename mpl::int_<1> forward;
 		typedef typename mpl::int_<-1> reverse;
 
@@ -121,7 +122,7 @@ namespace detail {
 		{
 			Direction dir;
 			pre_apply_to(op, transf, i, dir);
-			typedef typename next<Iterator>::type J;
+			typedef typename boost::mirror::next<Iterator>::type J;
 			typename iterator_equal<J, end>::type done;
 			apply_to(op, transf, J(), done); 
 			post_apply_to(op, transf, i, dir);
