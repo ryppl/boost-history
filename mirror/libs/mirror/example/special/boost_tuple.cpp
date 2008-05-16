@@ -56,9 +56,11 @@ struct str_printer
 {
 	void operator()(const ::boost::bchar* str) const
 	{
-		using namespace ::std;
-		using namespace ::boost;
-		bcout << str << ", ";
+		::boost::bcout << str << ", ";
+	}
+	~str_printer(void)
+	{
+		::boost::bcout << ::std::endl;
 	}
 };
 
@@ -124,8 +126,7 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	reverse_for_each<meta_X::all_attributes>(p);
 	bcout << "---------------------------------------------------" << endl;
-	for_each<meta_X::all_attributes>(select_base_name(), str_printer());
-	bcout << endl;
+	for_each<meta_X::all_attributes>(cref(select_base_name()), cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "Finished" << endl;
 

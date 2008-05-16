@@ -16,50 +16,130 @@
 #include <boost/mirror/meta_data_fwd.hpp>
 // mirror::size
 #include <boost/mirror/algorithm/size.hpp>
+#include <boost/mirror/algorithm/iterator_equal.hpp>
+//
+#include <boost/ref.hpp>
+
 
 namespace boost {
 namespace mirror {
 namespace detail {
 
-	/** Declaration of the default iterative_algorithm
-	 *  helper template.
-	 */
-	template <class MetaObjectSequence, template <class, class> class AlgoImpl >
-	struct iterative_algorithm { };
+	template <
+		class IteratorBegin, 
+		class IteratorEnd,
+		template <class, class> class AlgoImpl 
+	>
+	struct iterative_algorithm 
+	: AlgoImpl<IteratorBegin, IteratorEnd>{ };
 
-	/** Specialization of iterative_algorithm<MetaObjectSequence,AlgoImpl>
-	 *  for meta_class_attributes<>
+	/** Implementation of the for-each-like templates
 	 */
-	template <class Class, class VariantTag, template <class, class> class AlgoImpl>
-	struct iterative_algorithm<meta_class_attributes<Class, VariantTag>, AlgoImpl >
-	: AlgoImpl<
-		meta_class_attributes<Class, VariantTag>,
-		size<meta_class_attributes<Class, VariantTag> >
-	>{ };
+	template <
+		class IteratorBegin, 
+		class IteratorEnd,
+		class Direction
+	>
+	struct perform_on_range
+	{
+	private:
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void do_apply_to(
+			reference_wrapper<MetaObjectOp> op_ref, 
+			reference_wrapper<TransformOp> transf_ref, 
+			Iterator
+		)
+		{
+			typedef typename boost::mirror::deref<
+				Iterator
+			>:: type meta_object;
+			MetaObjectOp& op(op_ref);
+			TransformOp& transf(transf_ref);
+			op(transf(meta_object()));
+		}
+	
+		typedef typename IteratorBegin begin;
+		typedef typename IteratorEnd end;
+		typedef typename mpl::int_<1> forward;
+		typedef typename mpl::int_<-1> reverse;
 
-	/** Specialization of iterative_algorithm<MetaObjectSequence,AlgoImpl>
-	 *  for meta_class_all_attributes<>
-	 */
-	template <class Class, class VariantTag, template <class, class> class AlgoImpl>
-	struct iterative_algorithm<meta_class_all_attributes<Class, VariantTag>, AlgoImpl >
-	: AlgoImpl<
-		meta_class_all_attributes<Class, VariantTag>,
-		size<meta_class_all_attributes<Class, VariantTag> >
-	>{ };
 
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void pre_apply_to(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf, 
+			Iterator, 
+			forward
+		)
+		{
+			do_apply_to(op, transf, Iterator());
+		}
 
-	/** Specialization of iterative_algorithm<MetaObjectSequence,AlgoImpl>
-	 *  for meta_base_classes<>
-	 */
-	template <class Class, class VariantTag, template <class, class> class AlgoImpl>
-	struct iterative_algorithm<meta_base_classes<Class, VariantTag>, AlgoImpl >
-	: AlgoImpl<
-		meta_base_classes<Class, VariantTag>,
-		size<meta_base_classes<Class, VariantTag> >
-	>{ };
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void pre_apply_to(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf, 
+			Iterator, 
+			reverse
+		){	}
+
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void post_apply_to(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf, 
+			Iterator, 
+			forward
+		){	}
+
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void post_apply_to(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf, 
+			Iterator, 
+			reverse
+		)
+		{
+			do_apply_to(op, transf, Iterator());
+		}
+
+	
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void apply_to(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf, 
+			Iterator, 
+			mpl::true_
+		){ }
+	
+		template <class MetaObjectOp, class TransformOp, class Iterator>
+		static inline void apply_to(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf, 
+			Iterator i, 
+			mpl::false_
+		)
+		{
+			Direction dir;
+			pre_apply_to(op, transf, i, dir);
+			typedef typename next<Iterator>::type J;
+			typename iterator_equal<J, end>::type done;
+			apply_to(op, transf, J(), done); 
+			post_apply_to(op, transf, i, dir);
+		}
+	public:
+		template <class MetaObjectOp, class TransformOp>
+		static inline reference_wrapper<MetaObjectOp> perform(
+			reference_wrapper<MetaObjectOp> op, 
+			reference_wrapper<TransformOp> transf
+		)
+		{
+			typename iterator_equal<begin, end>::type done;
+			apply_to(op, transf, begin(), done);
+			return op;
+		}
+	};
 
 } // namespace detail
-
 } // namespace mirror
 } // namespace boost
 

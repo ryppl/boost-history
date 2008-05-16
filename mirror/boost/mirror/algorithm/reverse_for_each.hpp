@@ -11,20 +11,24 @@
 #define BOOST_MIRROR_ALGORITHM_REVERSE_FOR_EACH_HPP
 
 #include <boost/mirror/algorithm/detail/reverse_for_each.hpp>
-#include <boost/mirror/algorithm/detail/iterative.hpp>
 #include <boost/mirror/algorithm/detail/no_op.hpp>
+#include <boost/mirror/algorithm/begin.hpp>
+#include <boost/mirror/algorithm/end.hpp>
 
 namespace boost {
 namespace mirror {
 namespace detail {
 
-	/** Declaration of the default for_each_impl
+	/** Declaration of the default reverse_for_each_impl
 	 *  helper template.
 	 */
-	template <class MetaObjectSequence>
+	template <class IteratorBegin, class IteratorEnd>
 	struct reverse_for_each_impl 
-	: iterative_algorithm<MetaObjectSequence, reverse_for_each_meta_object> 
-	{ };
+	: iterative_algorithm<
+		IteratorBegin,
+		IteratorEnd,
+		reverse_for_each_meta_object
+	>{ };
 
 } // namespace detail
 
@@ -32,9 +36,26 @@ template <
 	class MetaObjectSequence,
 	class Functor
 >
+static reference_wrapper<Functor> reverse_for_each(
+	reference_wrapper<Functor> fn
+)
+{
+	return detail::reverse_for_each_impl<
+		typename mirror::begin<MetaObjectSequence>::type,
+		typename mirror::end<MetaObjectSequence>::type
+	> ::perform(fn, cref(detail::no_op()));
+}
+
+template <
+	class MetaObjectSequence,
+	class Functor
+>
 static Functor reverse_for_each(Functor fn)
 {
-	return detail::reverse_for_each_impl<MetaObjectSequence> ::perform(fn, detail::no_op());
+	return detail::reverse_for_each_impl<
+		typename mirror::begin<MetaObjectSequence>::type,
+		typename mirror::end<MetaObjectSequence>::type
+	> ::perform(ref(fn), cref(detail::no_op()));
 }
 
 template <
@@ -42,9 +63,31 @@ template <
 	class TransformOp,
 	class Functor
 >
-static Functor reverse_for_each(TransformOp transf, Functor fn)
+static reference_wrapper<Functor> reverse_for_each(
+	reference_wrapper<TransformOp> transf, 
+	reference_wrapper<Functor> fn
+)
 {
-	return detail::reverse_for_each_impl<MetaObjectSequence> ::perform(fn, transf);
+	return detail::reverse_for_each_impl<
+		typename mirror::begin<MetaObjectSequence>::type,
+		typename mirror::end<MetaObjectSequence>::type
+	> ::perform(fn, transf);
+}
+
+template <
+	class MetaObjectSequence,
+	class TransformOp,
+	class Functor
+>
+static Functor reverse_for_each(
+	TransformOp transf, 
+	Functor fn
+)
+{
+	return detail::reverse_for_each_impl<
+		typename mirror::begin<MetaObjectSequence>::type,
+		typename mirror::end<MetaObjectSequence>::type
+	> ::perform(ref(fn), ref(transf));
 }
 
 } // namespace mirror
