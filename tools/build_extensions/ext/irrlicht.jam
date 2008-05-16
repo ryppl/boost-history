@@ -15,6 +15,7 @@ extension.declare irrlicht ;
 extension.option irrlicht device : default sdl ;
 extension.option irrlicht d3d9 : enable disable ;
 extension.option irrlicht opengl : enable disable ;
+extension.option irrlicht opengles : disable enable ;
 extension.option irrlicht software : enable disable ;
 extension.option irrlicht burnings-video : beatiful fast ultra-fast disable ;
 extension.option irrlicht x11 : enable disable ;
@@ -73,6 +74,7 @@ rule init ( version ? : location : options * )
         ;
     local common-requirements =
         <include>$(location)/include
+        <include>$(location)/source
         <target-os>windows:<define>WIN32
         <target-os>windows,<address-model>64:<define>WIN64
         [ conditional <target-os>windows :
