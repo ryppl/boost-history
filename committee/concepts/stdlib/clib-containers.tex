@@ -1129,7 +1129,9 @@ Headers \tcode{<array>}, \tcode{<deque>}, \tcode{<forward_list>}, \tcode{<list>}
 \index{array@\tcode{<array>}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, size_t N > struct array;
+  template <@\changedConcepts{class}{ObjectType}@ T, size_t N > 
+    @\addedConcepts{requires Destructible<T>}@
+    struct array;
   template <@\changedConcepts{class}{EqualityComparable}@ T, size_t N>
     bool operator==(const array<T,N>& x, const array<T,N>& y);
   template <@\changedConcepts{class}{EqualityComparable}@ T, size_t N>
@@ -1167,7 +1169,9 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> > class deque;
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> > 
+    @\addedConcepts{requires Destructible<T>}@
+    class deque;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator>
     bool operator==(const deque<T,Allocator>& x, const deque<T,Allocator>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator>
@@ -1194,20 +1198,22 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <class T, class Allocator = allocator<T> > class forward_list; 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> > 
+    @\addedConcepts{requires Destructible<T>}@
+    class forward_list; 
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator> 
     bool operator==(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
     bool operator< (const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator> 
     bool operator!=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
     bool operator> (const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
     bool operator>=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
     bool operator<=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
-  template <class T, class Allocator> 
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator> 
     void swap(forward_list<T,Allocator>& x, forward_list<T,Allocator>& y); 
 }
 \end{codeblock}
@@ -1384,6 +1390,7 @@ or for operations where there is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, size_t N >
+  @\addedConcepts{requires Destructible<T>}@
   struct array {
     //  types:
     typedef T &                                   reference;
@@ -1599,6 +1606,7 @@ or for operations where there is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> >
+  @\addedConcepts{requires Destructible<T>}@
   class deque {
   public:
     // types:
@@ -1978,6 +1986,532 @@ template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
 \begin{codeblock}
 x.swap(y);
 \end{codeblock}
+\end{itemdescr}
+
+\rSec2[forwardlist]{Class template \tcode{forward_list}}
+
+\pnum
+A \tcode{forward_list} is a container that supports forward iterators and allows constant time insert and erase operations anywhere within the sequence, with storage management handled automatically. Fast random access to list elements is not supported. \enternote It is intended that \tcode{forward_list} have zero space or time overhead relative to a hand-written C-style singly linked list. Features that would conflict with that goal have been omitted.\exitnote
+
+\pnum
+A \tcode{forward_list} satisfies all of the requirements of a container (table~\ref{tab:containers.container.requirements}), except that the \tcode{size()} member function is not provided. Descriptions are provided here only for operations on \tcode{forward_list} that are not described in that table or for operations where there is additional semantic information.
+
+\begin{codeblock}
+namespace std { 
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator = allocator<T> > 
+  @\addedConcepts{requires Destructible<T>}@
+  class forward_list { 
+  public: 
+    // types: 
+    typedef typename Allocator::reference reference; 
+    typedef typename Allocator::const_reference const_reference; 
+    typedef @\impdef@ iterator;       // See 23.1 
+    typedef @\impdef@ const_iterator; // See 23.1 
+    typedef @\impdef@ size_type;      // See 23.1 
+    typedef @\impdef@ difference_type;// See 23.1 
+    typedef T value_type; 
+    typedef Allocator allocator_type; 
+    typedef typename Allocator::pointer pointer; 
+    typedef typename Allocator::const_pointer const_pointer; 
+
+    // \ref{forwardlist.cons} construct/copy/destroy: 
+    explicit forward_list(const Allocator& = Allocator()); 
+    @\addedConcepts{requires DefaultConstructible<T>}@ explicit forward_list(size_type n);
+    @\addedConcepts{requires CopyConstructible<T>}@ 
+      forward_list(size_type n, const T& value, 
+                   const Allocator& = Allocator()); 
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{HasConstructor<T, Iter::reference>}@
+      forward_list(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last, 
+                   const Allocator& = Allocator()); 
+    @\addedConcepts{requires CopyConstructible<T>}@ forward_list(const forward_list<T,Allocator>& x);
+    forward_list(forward_list<T,Allocator>&& x);
+    ~forward_list(); 
+    @\addedConcepts{requires CopyAssignable<T>}@ 
+      forward_list<T,Allocator>& operator=(const forward_list<T,Allocator>& x);
+    forward_list<T,Allocator>& operator=(forward_list<T,Allocator>&& x); 
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+      void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
+    @\addedConcepts{CopyConstructible<T>}@ void assign(size_type n, const T& t); 
+    allocator_type get_allocator() const; 
+
+    // \ref{forwardlist.iter} iterators:
+    iterator before_begin();
+    const_iterator before_begin() const;
+    iterator begin(); 
+    const_iterator begin() const; 
+    iterator end(); 
+    const_iterator end() const;
+
+    const_iterator cbegin() const;
+    const_iterator cbefore_begin() const;
+    const_iterator cend() const;
+
+    // capacity: 
+    bool empty() const; 
+    size_type max_size() const;
+
+    // \ref{forwardlist.access} element access: 
+    reference front(); 
+    const_reference front() const; 
+
+    // \ref{forwardlist.modifiers} modifiers: 
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      void push_front(Args&&... args); 
+    void pop_front();
+   
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      iterator emplace_after(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<T>}@ iterator insert_after(const_iterator position, const T& x);
+    @\addedConcepts{requires MoveConstructible<T>}@ iterator insert_after(const_iterator position, T&& x);
+
+    @\addedConcepts{requires CopyConstructible<T>}@ 
+      void insert_after(const_iterator position, size_type n, const T& x); 
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+      void insert_after(const_iterator position, @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator erase_after(const_iterator position); 
+    iterator erase_after(const_iterator position, iterator last); 
+    void swap(forward_list<T,Allocator>&&);
+
+    @\addedConcepts{requires DefaultConstructible<T>}@ void resize(size_type sz);
+    @\addedConcepts{requires CopyConstructible<T>}@ void resize(size_type sz, value_type c);
+    void clear(); 
+
+    // \ref{forwardlist.ops} forward_list operations: 
+    void splice_after(const_iterator position, forward_list<T,Allocator>&& x); 
+    void splice_after(const_iterator position, forward_list<T,Allocator>&& x,
+                      const_iterator i); 
+    void splice_after(const_iterator position, forward_list<T,Allocator>&& x,
+                      const_iterator first, const_iterator last); 
+
+    @\addedConcepts{requires EqualityComparable<T>}@ void remove(const T& value); 
+    template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedConcepts{icate}@> void remove_if(Pred@\removedConcepts{icate}@ pred); 
+
+    @\addedConcepts{requires EqualityComparable<T>}@ void unique(); 
+    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
+      void unique(BinaryPredicate binary_pred); 
+
+    @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Allocator>&& x); 
+    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> 
+      void merge(forward_list<T,Allocator>&& x, Compare comp);
+
+    @\addedConcepts{requires LessThanComparable<T>}@ void sort(); 
+    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> void sort(Compare comp); 
+
+    void reverse(); 
+  }; 
+
+  // Comparison operators
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator> 
+    bool operator==(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
+    bool operator< (const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Allocator> 
+    bool operator!=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
+    bool operator> (const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
+    bool operator>=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Allocator> 
+    bool operator<=(const forward_list<T,Allocator>& x, const forward_list<T,Allocator>& y); 
+
+  // \ref{forwardlist.spec} specialized algorithms: 
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator> 
+    void swap(forward_list<T,Allocator>& x, forward_list<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator> 
+    void swap(forward_list<T,Allocator>&& x, forward_list<T,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator> 
+    void swap(forward_list<T,Allocator>& x, forward_list<T,Allocator>&& y); 
+}
+\end{codeblock}
+
+\rSec3[forwardlist.cons]{\tcode{forward_list} constructors, copy, assignment}
+
+\begin{itemdecl}
+explicit forward_list(const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs an empty \tcode{forward_list} object using the specified allocator.
+
+\pnum
+\complexity Constant.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T>}@ explicit forward_list(size_type n);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs a \tcode{forward_list} object with \tcode{n} default constructed elements.
+
+\pnum
+@\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}@
+
+\pnum
+\complexity Linear in \tcode{n}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@ 
+  forward_list(size_type n, const T& value, const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs a \tcode{forward_list} object with \tcode{n} copies of \tcode{value} using the specified allocator.
+
+\pnum
+@\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}@
+
+\pnum
+\complexity Linear in \tcode{n}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{HasConstructor<T, Iter::reference>}@
+  forward_list(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last, 
+               const Allocator& = Allocator()); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Constructs a \tcode{forward_list} object equal to the range \range{first}{last}.
+
+\pnum
+\complexity Linear in \tcode{distance(first, last)}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{clear(); insert_after(before_begin(), first, last);}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{CopyConstructible<T>}@ void assign(size_type n, const T\& t);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{clear(); insert_after(before_begin(), n, t);}
+\end{itemdescr}
+
+
+\rSec3[forwardlist.iter]{\tcode{forward_list} iterators}
+
+\begin{itemdecl}
+{iterator before_begin();
+const_iterator before_begin() const;
+const_iterator cbefore_begin() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns A non-dereferenceable iterator that, when incremented, is equal to the iterator returned by \tcode{begin()}.
+\end{itemdescr}
+
+\rSec3[forwardlist.access]{\tcode{forward_list} element access}
+
+\begin{itemdecl}
+reference front();
+const_reference front() const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns \tcode{*begin()}
+\end{itemdescr}
+
+\rSec3[forwardlist.modifiers]{\tcode{forward_list} modifiers}
+
+\pnum
+None of the overloads of \tcode{insert_after} shall affect the validity of iterators and reference, and \tcode{erase_after} shall invalidate only the iterators and references to the erased elements. If an exception is thrown during \tcode{insert_after}  there shall be no effect. Insertion of \tcode{n} elements into a \tcode{forward_list} is linear in \tcode{n}, and the number of calls to the copy or move constructor of \tcode{T} is exactly equal to \tcode{n}. Erasing \tcode{n} elements from a \tcode{forward_list} is linear time in \tcode{n} and the number of calls to the destructor of type \tcode{T} is exactly equal to \tcode{n}.
+
+\begin{itemdecl}
+template <class... Args> 
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  void push_front(Args&&... args);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Inserts an object of type \tcode{value_type} constructed with \tcode{value_type(std::forward<Args>(args)...)} at the beginning of the list.
+\end{itemdescr}
+
+\begin{itemdecl}
+void pop_front();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{erase_after(before_begin())}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@ iterator insert_after(const_iterator position, const T& x);
+@\addedConcepts{requires MoveConstructible<T>}@ iterator insert_after(const_iterator position, T&& x);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}.
+
+\pnum
+\effects Inserts a copy of \tcode{x} after \tcode{position}.
+
+\pnum
+\returns An iterator pointing to the copy of \tcode{x}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires CopyConstructible<T>}@ 
+  void insert_after(const_iterator position, size_type n, const T& x);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}.
+
+\pnum
+\effects Inserts \tcode{n} copies of \tcode{x} after \tcode{position}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  void insert_after(const_iterator position, @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}. \tcode{first} and \tcode{last} are not iterators in \tcode{*this}.
+
+\pnum
+\effects Inserts copies of elements in \range{first}{last} after \tcode{position}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <class... Args>
+  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  iterator emplace_after(const_iterator position, Args&&... args);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}.
+
+\pnum
+\effects Inserts an object of type \tcode{value_type} constructed with \tcode{value_type(std::forward<Args>(args)...)} after \tcode{position}.
+\end{itemdescr}
+
+\begin{itemdecl}
+iterator erase_after(const_iterator position);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires The iterator following \tcode{position} is dereferenceable.
+
+\pnum
+\effects Erases the element pointed to by the iterator following \tcode{position}.
+
+\pnum
+\returns An iterator pointing to the element following the one that was erased, or \tcode{end()} if no such element exists.
+\end{itemdescr}
+
+\begin{itemdecl}
+iterator erase_after(const_iterator position, iterator last);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires All iterators in the range \range{position}{last} are dereferenceable.
+
+\pnum
+\effects Erases the elements in the range \range{position}{last}.
+
+\pnum
+\returns \tcode{last}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T>}@ void resize(size_type sz);
+@\addedConcepts{requires CopyConstructible<T>}@ void resize(size_type sz, value_type c);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects If \tcode{sz < distance(begin(), end())}, erases the last \tcode{distance(begin(), end()) - sz} elements from the list. Otherwise, inserts \tcode{sz - distance(begin(), end())} elements at the end of the list. For the first signature the inserted elements are default constructed, and for the second signature they are copies of \tcode{c}.
+\end{itemdescr}
+
+\begin{itemdecl}
+void clear();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Erases all elements in the range \range{begin()}{end()}.
+\end{itemdescr}
+
+\rSec3[forwardlist.ops]{\tcode{forward_list} operations}
+
+\begin{itemdecl}
+void splice_after(const_iterator position, forward_list<T,Allocator>&& x);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}. \tcode{\&x != this}.
+
+\pnum
+\effects Inserts the contents of \tcode{x} before \tcode{position}, and \tcode{x} becomes empty. Pointers and references to the moved elements of \tcode{x} now refer to those same elements but as members of \tcode{*this}. Iterators referring to the moved elements will continue to refer to their elements, but they now behave as iterators into \tcode{*this}, not into \tcode{x}.
+
+\pnum
+\throws Nothing.
+
+\pnum
+\complexity \bigoh{1}
+\end{itemdescr}
+
+\begin{itemdecl}
+void splice_after(const_iterator position, forward_list<T,Allocator>&& x, const_iterator i);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}. The iterator following \tcode{i} is a dereferenceable iterator in \tcode{x}.
+
+\pnum
+\effects Inserts the element following \tcode{i} into \tcode{*this}, following \tcode{position}, and removes it from \tcode{x}. Pointers and references to the moved elements of \tcode{x} now refer to those same elements but as members of \tcode{*this}. Iterators referring to the moved elements will continue to refer to their elements, but they now behave as iterators into \tcode{*this}, not into \tcode{x}.
+
+\pnum
+\throws Nothing.
+
+\pnum
+\complexity \bigoh{1}
+\end{itemdescr}
+
+\begin{itemdecl}
+void splice_after(const_iterator position, forward_list<T,Allocator>&& x, const_iterator first, const_iterator last);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}. \orange{first}{last} is a valid range in \tcode{x}, and all iterators in the range \orange{first}{last} are dereferenceable. \tcode{position} is not an iterator in the range \orange{first}{last}.
+
+\pnum
+\effects Inserts elements in the range \orange{first}{last} after \tcode{position} and removes the elements from \tcode{x}. Pointers and references to the moved elements of \tcode{x} now refer to those same elements but as members of \tcode{*this}. Iterators referring to the moved elements will continue to refer to their elements, but they now behave as iterators into \tcode{*this}, not into \tcode{x}.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires EqualityComparable<T>}@ void remove(const T& value);
+template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedCC{icate}@> void remove_if(Pred@\removedCC{icate}@ pred);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects  Erases all the elements in the list referred by a list iterator \tcode{i} for which the following conditions hold: \tcode{*i == value} (for \tcode{remove()}), \tcode{pred(*i)} is true (for \tcode{remove_if()}). This operation shall be stable: the relative order of the elements that are not removed is the same as their relative order in the original list.
+
+\pnum
+\throws Nothing unless an exception is thrown by the equality comparison or the predicate.
+
+\pnum
+\complexity Exactly \tcode{distance(begin(), end())} applications of the corresponding predicate.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires EqualityComparable<T>}@ void unique();
+template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
+  void unique(BinaryPredicate pred);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Eliminates all but the first element from every consecutive group of equal elements referred to by the iterator \tcode{i} in the range \range{first + 1}{last} for which \tcode{*i == *(i-1)} (for the version with no arguments) or \tcode{pred(*i, *(i - 1))} (for the version with a predicate argument) holds.
+
+\pnum
+\throws Nothing unless an exception is thrown by the equality comparison or the predicate.
+
+\pnum
+\complexity If the range \range{first}{last} is not empty, exactly \tcode{(last - first) - 1} applications of the corresponding predicate, otherwise no applications of the predicate.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Allocator>&& x);
+template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> 
+  void merge(forward_list<T,Allocator>&& x, Compare comp)
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{comp} defines a strict weak ordering~(\ref{alg.sorting}), and \tcode{*this} and \tcode{x} are both sorted according to this ordering.
+
+\pnum
+\effects Merges \tcode{x} into \tcode{*this}. This operation shall be stable: for equivalent elements in the two lists, the elements from \tcode{*this} shall always precede the elements from \tcode{x}. \tcode{x} is empty after the merge. If an exception is thrown other than by a comparison there are no effects.
+
+\pnum
+\complexity At most \tcode{size() + x.size() - 1} comparisons.
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{requires LessThanComparable<T>}@ void sort();
+template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> void sort(Compare comp);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\requires \tcode{operator<} (for the version with no arguments) or \tcode{comp} (for the version with a comparison argument) defines a strict weak ordering~(\ref{alg.sorting}).
+
+\pnum
+\effects Sorts the list according to the \tcode{operator<} or the \tcode{comp} function object. This operation shall be stable: the relative order of the equivalent elements is preserved. If an exception is thrown the order of the elements in \tcode{*this} is unspecified.
+
+\pnum
+\complexity Approximately $N \log N$ comparisons, where $N$ is \tcode{distance(begin(), end())}.
+\end{itemdescr}
+
+\begin{itemdecl}
+void reverse();
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects Reverses the order of the elements in the list.
+
+\pnum
+\throws Nothing.
+
+\pnum
+\complexity Linear time.
+\end{itemdescr}
+
+\rSec3[forwardlist.spec]{\tcode{forward_list} specialized algorithms}
+
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(forward_list<T,Allocator>& x, forward_list<T,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(forward_list<T,Allocator>&& x, forward_list<T,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
+  void swap(forward_list<T,Allocator>& x, forward_list<T,Allocator>&& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{x.swap(y)}
 \end{itemdescr}
 
 \setcounter{subsection}{3}

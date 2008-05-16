@@ -18,6 +18,9 @@
 \usepackage[iso]{isodate} % use iso format for dates
 \usepackage{soul}       % strikeouts and underlines for difference markups
 \usepackage{color}      % define colors for strikeouts and underlines
+\usepackage{mathrsfs}
+\usepackage{multicol}
+\usepackage{xspace}
 
 \usepackage[T1]{fontenc}
 \usepackage{ae}
@@ -143,6 +146,9 @@
 \newcommand{\shl}{<{<}}
 \newcommand{\shr}{>{>}}
 \newcommand{\dcr}{-{-}}
+\newcommand{\bigohm}[1]{\mathscr{O}(#1)}
+\newcommand{\bigoh}[1]{$\bigohm{#1}$\xspace}
+\renewcommand{\tilde}{{\smaller$\sim$}\xspace}		% extra level of braces is necessary
 
 %% Notes and examples
 \newcommand{\EnterBlock}[1]{[\,\textit{#1:}}
