@@ -4416,34 +4416,36 @@ namespace std {
     void swap(map<Key,T,Compare,Allocator& x,
               map<Key,T,Compare,Allocator>&& y);
 
-  template <class Key, class T, class Compare = less<Key>,
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             class Allocator = allocator<pair<const Key, T> > >
+    @\addedConcepts{requires Destructible<Key> \&\& Destructible<T> \&\& CopyConstructible<Compare>}@
     class multimap;
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{EqualityComparable}@ Key, @\changedConcepts{class}{EqualityComparable}@ T, class Compare, class Allocator>
     bool operator==(const multimap<Key,T,Compare,Allocator>& x,
                     const multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
     bool operator< (const multimap<Key,T,Compare,Allocator>& x,
                     const multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{EqualityComparable}@ Key, @\changedConcepts{class}{EqualityComparable}@ T, class Compare, class Allocator>
     bool operator!=(const multimap<Key,T,Compare,Allocator>& x,
                     const multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
     bool operator> (const multimap<Key,T,Compare,Allocator>& x,
                     const multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
     bool operator>=(const multimap<Key,T,Compare,Allocator>& x,
                     const multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
     bool operator<=(const multimap<Key,T,Compare,Allocator>& x,
                     const multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
     void swap(multimap<Key,T,Compare,Allocator>& x,
               multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
     void swap(multimap<Key,T,Compare,Allocator&& x,
               multimap<Key,T,Compare,Allocator>& y);
-  template <class Key, class T, class Compare, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
     void swap(multimap<Key,T,Compare,Allocator& x,
               multimap<Key,T,Compare,Allocator>&& y);
 }
@@ -4942,6 +4944,357 @@ template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Ob
 template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
   void swap(map<Key,T,Compare,Allocator>& x,
             map<Key,T,Compare,Allocator>&& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+\begin{codeblock}
+x.swap(y);
+\end{codeblock}
+\end{itemdescr}
+
+\rSec2[multimap]{Class template \tcode{multimap}}
+
+\pnum
+\index{multimap@\tcode{multimap}}%
+A
+\tcode{multimap}\
+is an associative container that supports equivalent keys (possibly containing multiple copies of
+the same key value) and provides for fast retrieval of values of another type
+\tcode{T}\
+based on the keys.
+The
+\tcode{multimap}\
+class
+supports bidirectional iterators.
+
+\pnum
+A
+\tcode{multimap}\
+satisfies all of the requirements of a container and of a reversible container
+(\ref{container.requirements}), of
+an associative container (\ref{associative.reqmts}), and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}).
+A
+\tcode{multimap}\
+also provides most operations described in (\ref{associative.reqmts})
+for equal keys.
+This means that a
+\tcode{multimap}\
+supports the
+\tcode{a_eq}\
+operations in
+(\ref{associative.reqmts})
+but not the
+\tcode{a_uniq}\
+operations.
+For a
+\tcode{multimap<Key,T>}\
+the
+\tcode{key_type}\
+is
+\tcode{Key}\
+and the
+\tcode{value_type}\
+is
+\tcode{pair<const Key,T>}.
+Descriptions are provided here only for operations on
+\tcode{multimap}\
+that are not described in one of those tables
+or for operations where there is additional semantic information.
+
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
+            class Allocator = allocator<pair<const Key, T> > >
+    @\addedConcepts{requires Destructible<Key> \&\& Destructible<T> \&\& CopyConstructible<Compare>}@
+  class multimap {
+  public:
+    // types:
+    typedef Key                                   key_type;
+    typedef T                                     mapped_type;
+    typedef pair<const Key,T>                     value_type;
+    typedef Compare                               key_compare;
+    typedef Allocator                             allocator_type;
+    typedef typename Allocator::reference         reference;
+    typedef typename Allocator::const_reference   const_reference;
+    typedef @\impdef@                iterator;       // See \ref{container.requirements}
+    typedef @\impdef@                const_iterator; // See \ref{container.requirements}
+    typedef @\impdef@                size_type;      // See \ref{container.requirements}
+    typedef @\impdef@                difference_type;// See \ref{container.requirements}
+    typedef typename Allocator::pointer           pointer;
+    typedef typename Allocator::const_pointer     const_pointer;
+    typedef std::reverse_iterator<iterator>       reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+
+    class value_compare
+      : public binary_function<value_type,value_type,bool> {
+    friend class multimap;
+    protected:
+      Compare comp;
+      value_compare(Compare c) : comp(c) { }
+    public:
+      bool operator()(const value_type& x, const value_type& y) const {
+        return comp(x.first, y.first);
+      }
+    };
+
+    // construct/copy/destroy:
+    explicit multimap(const Compare& comp = Compare(),
+                      const Allocator& = Allocator());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      multimap(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+          const Compare& comp = Compare(), const Allocator& = Allocator());
+    @\addedConcepts{requires CopyConstructible<value_type>}@ multimap(const multimap<Key,T,Compare,Allocator>& x);
+    multimap(multimap<Key,T,Compare,Allocator>&& x);
+    multimap(const Allocator&);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ multimap(const multimap&, const Allocator&);
+    multimap(multimap&&, const Allocator&);
+   ~multimap();
+    @\addedConcepts{requires CopyConstructible<value_type> \&\& CopyAssignable<value_type>}@
+      multimap<Key,T,Compare,Allocator>& operator=(const multimap<Key,T,Compare,Allocator>& x);
+    multimap<Key,T,Compare,Allocator>&
+      operator=(const multimap<Key,T,Compare,Allocator>&& x);
+    allocator_type get_allocator() const;
+
+    // iterators:
+    iterator               begin();
+    const_iterator         begin() const;
+    iterator               end();
+    const_iterator         end() const;
+
+    reverse_iterator       rbegin();
+    const_reverse_iterator rbegin() const;
+    reverse_iterator       rend();
+    const_reverse_iterator rend() const;
+
+    const_iterator         cbegin() const;
+    const_iterator         cend() const;
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
+
+    // capacity:
+    bool           empty() const;
+    size_type      size() const;
+    size_type      max_size() const;
+
+    // modifiers:
+    template <class... Args>
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(Args&&... args);
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ iterator insert(const value_type& x);
+    template <class P> 
+      @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      iterator insert(P&& x);
+    @\addedConcepts{requires CopyConstructible<value_type>}@  iterator insert(const_iterator position, const value_type& x);
+    template <class P> 
+      @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      iterator insert(const_iterator position, P&& x);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator  erase(const_iterator position);
+    size_type erase(const key_type& x);
+    iterator  erase(const_iterator first, const_iterator last);
+    void swap(multimap<Key,T,Compare,Allocator>&&);
+    void clear();
+
+    // observers:
+    key_compare    key_comp() const;
+    value_compare  value_comp() const;
+
+    // map operations:
+    iterator       find(const key_type& x);
+    const_iterator find(const key_type& x) const;
+    size_type      count(const key_type& x) const;
+
+    iterator       lower_bound(const key_type& x);
+    const_iterator lower_bound(const key_type& x) const;
+    iterator       upper_bound(const key_type& x);
+    const_iterator upper_bound(const key_type& x) const;
+
+    pair<iterator,iterator>
+      equal_range(const key_type& x);
+    pair<const_iterator,const_iterator>
+      equal_range(const key_type& x) const;
+  };
+
+  template <@\changedConcepts{class}{EqualityComparable}@ Key, @\changedConcepts{class}{EqualityComparable}@ T, class Compare, class Allocator>
+    bool operator==(const multimap<Key,T,Compare,Allocator>& x,
+                    const multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
+    bool operator< (const multimap<Key,T,Compare,Allocator>& x,
+                    const multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{EqualityComparable}@ Key, @\changedConcepts{class}{EqualityComparable}@ T, class Compare, class Allocator>
+    bool operator!=(const multimap<Key,T,Compare,Allocator>& x,
+                    const multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
+    bool operator> (const multimap<Key,T,Compare,Allocator>& x,
+                    const multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
+    bool operator>=(const multimap<Key,T,Compare,Allocator>& x,
+                    const multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Allocator>
+    bool operator<=(const multimap<Key,T,Compare,Allocator>& x,
+                    const multimap<Key,T,Compare,Allocator>& y);
+
+  // specialized algorithms:
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
+    void swap(multimap<Key,T,Compare,Allocator>& x,
+              multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
+    void swap(multimap<Key,T,Compare,Allocator&& x,
+              multimap<Key,T,Compare,Allocator>& y);
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
+    void swap(multimap<Key,T,Compare,Allocator& x,
+              multimap<Key,T,Compare,Allocator>&& y);
+
+  template <class Key, class T, class Compare, class Alloc>
+    struct constructible_with_allocator_suffix<
+      multimap<Key, T, Compare, Alloc> >
+        : true_type { };
+}
+\end{codeblock}%
+\index{multimap@\tcode{multimap}!\tcode{operator==}}%
+\index{multimap@\tcode{multimap}!\tcode{operator<}}
+
+\rSec3[multimap.cons]{\tcode{multimap}\ constructors}
+
+\begin{itemdecl}
+explicit multimap(const Compare& comp = Compare(),
+                  const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs an empty
+\tcode{multimap}\
+using the specified comparison object and allocator.
+
+\pnum
+\complexity\ 
+Constant.
+\end{itemdescr}
+
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  multimap(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+      const Compare& comp = Compare(), const Allocator& = Allocator());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} If the iterator's dereference operator returns an lvalue or a
+const rvalue \mbox{\tcode{pair<key_type, mapped_type>}}, then both
+\mbox{\tcode{key_type}} and \mbox{\tcode{mapped_type}} shall be
+\mbox{\tcode{CopyConstructible}}.}
+
+\pnum
+\effects\ 
+Constructs an empty
+\tcode{multimap}\
+using the specified comparison object and allocator,
+and inserts elements from the range
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\complexity\ 
+Linear in $N$ if the range
+\range{\farg{first}}{\farg{last}}\
+is already sorted using \farg{comp}
+and otherwise $N \log{N}$,
+where $N$\ is
+\tcode{\farg{last}\ - \farg{first}}.
+\end{itemdescr}
+
+\rSec3[multimap.modifiers]{\tcode{multimap}\ modifiers}
+
+\begin{itemdecl}
+template <class P> 
+  @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  iterator insert(P&& x);
+template <class P> 
+  @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  iterator insert(const_iterator position, P&& x);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}
+\mbox{\tcode{P}} shall be convertible to \mbox{\tcode{value_type}}.}
+
+If \tcode{P} is instantiated as a reference type, then
+the argument \tcode{x} is copied from. Otherwise \tcode{x}
+is considered to be an rvalue as it is converted to
+\tcode{value_type} and inserted into the \tcode{map}.
+Specifically, in such cases \tcode{CopyConstructible} is not required of
+\tcode{key_type} or tcode{mapped_type}
+unless the conversion from \tcode{P} specifically
+requires it (e.g. if \tcode{P} is a 
+\tcode{tuple<const key_type, mapped_type>}, then
+\tcode{key_type} must be \tcode{CopyConstructible}).
+The signature taking \tcode{InputIterator}
+parameters does not require \tcode{CopyConstructible}
+of either \tcode{key_type} or
+\tcode{mapped_type} if the dereferenced \tcode{InputIterator}
+returns a non-const rvalue
+\tcode{pair<key_type,mapped_type>}. Otherwise
+\tcode{CopyConstructible} is required for
+both \tcode{key_type} and \tcode{mapped_type}.
+\end{itemdescr}
+
+\rSec3[multimap.ops]{\tcode{multimap}\ operations}
+
+\begin{itemdecl}
+iterator       find(const key_type &x);
+const_iterator find(const key_type& x) const;
+
+iterator       lower_bound(const key_type& x);
+const_iterator lower_bound(const key_type& x) const;
+
+pair<iterator, iterator>
+  equal_range(const key_type& x);
+pair<const_iterator, const_iterator>
+  equal_range(const key_type& x) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+The
+\tcode{find},
+\tcode{lower_bound},
+\tcode{upper_bound},
+and
+\tcode{equal_range}\
+member functions each have two versions, one const and one non-const.
+In each case the behavior of the two versions is identical
+except that the const version returns a
+\tcode{const_iterator}\
+and the non-const version an
+\tcode{iterator}\
+(\ref{associative.reqmts}).
+\end{itemdescr}
+
+\rSec3[multimap.special]{\tcode{multimap}\ specialized algorithms}
+
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
+  void swap(multimap<Key,T,Compare,Allocator>& x,
+            multimap<Key,T,Compare,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
+  void swap(multimap<Key,T,Compare,Allocator>&& x,
+            multimap<Key,T,Compare,Allocator>& y);
+template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Allocator>
+  void swap(multimap<Key,T,Compare,Allocator>& x,
+            multimap<Key,T,Compare,Allocator>&& y);
 \end{itemdecl}
 
 \begin{itemdescr}
