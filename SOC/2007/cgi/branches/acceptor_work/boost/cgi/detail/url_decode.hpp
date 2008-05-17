@@ -54,13 +54,6 @@ namespace cgi {
      return static_cast<char>(ret);
    }
 
-   /// Workaround for istreams, since the above can't be used directly
-   char url_decode(std::istream& is)
-   {
-     const char c1 = is.get();
-     return url_decode(c1, is.get());
-   }
-
    /// URL-decode a string
    std::string url_decode( const std::string& str )
    {
@@ -77,9 +70,9 @@ namespace cgi {
            ret.append(1, ' ');
            break;
          case '%':
-           if (std::isxdigit(*(iter+1))
-            && std::isxdigit(*(iter+2))
-            && std::distance(iter, end) >= 2)
+           if (std::distance(iter, end) >= 2
+            && std::isxdigit(*(iter+1))
+            && std::isxdigit(*(iter+2)))
            {
              char ch = *++iter; // need this because order of function arg 
                                 // evaluation is UB.

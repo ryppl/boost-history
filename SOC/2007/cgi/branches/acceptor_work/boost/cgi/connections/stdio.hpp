@@ -9,9 +9,7 @@
 #ifndef CGI_STDIO_CONNECTION_IMPL_HPP_INCLUDED__
 #define CGI_STDIO_CONNECTION_IMPL_HPP_INCLUDED__
 
-#include <iostream>
-#include <istream>
-#include <ostream>
+#include <cstdio>
 #include <string>
 #include <boost/system/error_code.hpp>
 #include <boost/asio.hpp>
@@ -19,7 +17,7 @@
 #include "boost/cgi/basic_connection_fwd.hpp"
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/connection_base.hpp"
-#include "boost/cgi/data_sink.hpp"
+#include "boost/cgi/error.hpp"
 //#include "boost/cgi/io_service.hpp"
 
 namespace cgi {
@@ -61,32 +59,23 @@ namespace cgi {
     template<typename MutableBufferSequence>
     std::size_t read_some(MutableBufferSequence buf
                          , boost::system::error_code& ec)
-    {
-      if (std::cin.eof())
+    {  
+      if (std::fread(boost::asio::buffer_cast<void *>(buf)
+                    , boost::asio::buffer_size(buf)
+                    , 1, stdin))
       {
-        //ec = boost::asio::error::eof;
-        return boost::asio::error::eof;
+        return strlen(boost::asio::buffer_cast<char *>(buf));
       }
-      //if( buf.data() != in_.rdbuf() )
-      //  return in_.read(buf.begin(), buf.size());
-      //return buf.size();
-      
-      //std::cerr<< "In stdio::read_some()" << std::endl
-      //         << "before = {" << std::endl
-      //         << std::string(boost::asio::buffer_cast<char *>(buf), boost::asio::buffer_size(buf)) << std::endl
-      //         << "}" << std::endl;
-      std::cin.read(boost::asio::buffer_cast<char *>(buf)
-                   , boost::asio::buffer_size(buf));
-      if (std::cin.fail() && !std::cin.eof())
-      {
-        ec = boost::system::error_code(654, boost::system::system_category);
-        return 0;
-      }
-      //std::cerr<< "Read data" << std::endl
-      //         << "after = {" << std::endl
-      //         << std::string(boost::asio::buffer_cast<char *>(buf), boost::asio::buffer_size(buf)) << std::endl
-      //         << "}" << std::endl;
-      return std::cin.gcount();
+
+      if (std::feof(stdin))
+        ec = boost::asio::error::eof;
+      else
+      if (std::ferror(stdin))
+        ec = ::cgi::error::bad_read;
+      else
+        ec = ::cgi::error::broken_pipe;
+
+      return 0;
     }
 
     template<typename ConstBufferSequence>
@@ -99,7 +88,16 @@ namespace cgi {
       {
         std::size_t buf_len = boost::asio::buffer_size(*i);
         bytes_transferred += buf_len;
-        std::cout.write(boost::asio::buffer_cast<const char*>(*i), buf_len);
+        int ret( fputs(boost::asio::buffer_cast<const char*>(*i), stdout) );
+        if (ret == EOF)
+        {
+          return ::cgi::error::broken_pipe;
+        }
+        //else
+        //if (ret < 0)
+        //{
+        //  return ::cgi::error::
+        //std::cout.write(boost::asio::buffer_cast<const char*>(*i), buf_len);
       }
       return bytes_transferred;
     }

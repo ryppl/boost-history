@@ -7,6 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////
 //
+//[acgi_hello_world
+//
 // The simplest CGI program, outputs only "Hello there, universe."
 //
 
@@ -30,3 +32,5 @@ int main()
   // Leave this function, after sending the response and closing the request.
   return_(resp, req, 0); // Note the underscore: returns "0" to the OS.
 }
+//]
+

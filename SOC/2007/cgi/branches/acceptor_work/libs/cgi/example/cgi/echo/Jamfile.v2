@@ -4,14 +4,21 @@
 #     (See accompanying file LICENSE_1_0.txt or copy 
 #        at http://www.boost.org/LICENSE_1_0.txt)
 
-exe acgi_echo : main.cpp /boost/thread/ ;
+project boost/cgi/example/cgi/echo ;
+
+exe cgi_echo
+  : main.cpp
+    /boost/thread/
+    /boost/regex/
+  ;
+
 
 # Our install rule (builds binaries and copies them to <location>)
 install install
- : acgi_echo
  :
+   cgi_echo
  :
- <location>$(cgi-bin)
+   <location>$(cgi-bin)
  ;
 
 # Only install example if you use `bjam install' or equivalent

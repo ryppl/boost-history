@@ -12,7 +12,7 @@
 #include "boost/cgi/acgi/request_impl.hpp"
 #include "boost/cgi/tags.hpp"
 #include "boost/cgi/io_service.hpp"
-#include "boost/cgi/map.hpp"
+#include "boost/cgi/common/map.hpp"
 #include "boost/cgi/detail/cgi_service_impl_base.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
@@ -28,8 +28,6 @@ namespace cgi {
   {
   public:
     typedef acgi_request_service        type;
-    typedef acgi_request_impl           impl_type;
-    typedef ::cgi::common::map          map_type;
     typedef tags::acgi                  protocol_type;
     typedef acgi_service                protocol_service_type;
 

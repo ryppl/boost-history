@@ -16,7 +16,6 @@
 
 #include "boost/cgi/detail/push_options.hpp"
 
-#include <iostream>
 #include <boost/noncopyable.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/assert.hpp>
@@ -29,7 +28,7 @@
 #include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/request_base.hpp"
 #include "boost/cgi/role_type.hpp"
-#include "boost/cgi/data_sink.hpp"
+#include "boost/cgi/common/source_enums.hpp"
 #include "boost/cgi/status_type.hpp"
 #include "boost/cgi/is_async.hpp"
 #include "boost/cgi/connection_base.hpp"
@@ -39,7 +38,7 @@
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/basic_sync_io_object.hpp"
 #include "boost/cgi/basic_io_object.hpp"
-#include "boost/cgi/map.hpp"
+#include "boost/cgi/common/map.hpp"
 
 namespace cgi {
  namespace common {
@@ -73,8 +72,8 @@ namespace cgi {
           , role_type Role
           , typename Allocator>
   class basic_request
-    : public request_base
-    , public boost::mpl::if_c<is_async<typename RequestService::protocol_type>::value
+    : //public request_base
+     public boost::mpl::if_c<is_async<typename RequestService::protocol_type>::value
                              , basic_io_object<RequestService>
                              , basic_sync_io_object<RequestService>
                              >::type
@@ -188,16 +187,17 @@ namespace cgi {
     }
 
 
+    // **FIXME**
     /// Asynchronously read/parse the request meta-data
     /**
      * Note: 'loading' including reading/parsing STDIN if parse_stdin == true
      */
-    template<typename Handler>
-    void async_load(Handler handler, bool parse_stdin = false)
-    {
-      this->service.async_load(this->implementation, parse_stdin
-                              , handler);
-    }
+    //template<typename Handler>
+    //void async_load(Handler handler, bool parse_stdin = false)
+    //{
+    //  this->service.async_load(this->implementation, parse_stdin
+    //                          , handler);
+    //}
 
     /// Notify the server the request has finished being handled
     /**
@@ -261,34 +261,6 @@ namespace cgi {
       return this->service.client(this->implementation);
     }
 
-    /// Set the output for the request
-    /**
-     * Not Implemented Yet ******************
-     *
-     * Set the output sink as `stdout_`, `stderr_`, or `stdout_ | stderr_`
-     */
-    /*
-    void set_output(cgi::sink dest = stdout_)
-    {
-      boost::system::error_code ec;
-      this->service(this->implementation, dest, ec);
-      detail::throw_error(ec);
-    }
-    */
-/*
-    void read_some()
-    {
-      boost::system::error_code ec;
-      this->service.read_some(this->implementationementation,ec);
-      detail::throw_error(ec);
-    }
-
-    boost::system::error_code
-      read_some(boost::system::error_code& ec)
-    {
-      return this->service.read_some(this->implementationementation, ec);
-    }
-*/
     template<typename MutableBufferSequence>
     void read_some(const MutableBufferSequence& buf)
     {
@@ -318,12 +290,6 @@ namespace cgi {
     }
     */
 
-    /// Get a `cgi::map&` corresponding to all of the GET variables
-    map_type& GET()
-    {
-      return this->service.GET(this->implementation);
-    }
-
     /// Find the get meta-variable matching name
     /**
      * @throws `boost::system::system_error` if an error occurred. This may
@@ -347,12 +313,6 @@ namespace cgi {
     std::string GET(const std::string& name, boost::system::error_code& ec)
     {
       return this->service.GET(this->implementation, name, ec);
-    }
-
-    /// Get a `cgi::map&` corresponding to all of the POST variables
-    map_type& POST()
-    {
-      return this->service.POST(this->implementation);
     }
 
     /// Find the post meta-variable matching name
@@ -383,15 +343,6 @@ namespace cgi {
                           , bool greedy = true)
     {
       return this->service.POST(this->implementation, name, ec, greedy);
-    }
-
-    /// Get a `cgi::map&` corresponding to all of the form variables
-    map_type& form(bool greedy = true)
-    {
-		  boost::system::error_code ec;
-			map_type& data = this->service.form(this->implementation, ec, greedy);
-			detail::throw_error(ec);
-			return data;
     }
 
     /// Find the form variable matching name
@@ -429,12 +380,6 @@ namespace cgi {
         return "";
     }
 
-    /// Get a `cgi::map&` corresponding to all of the HTTP_COOKIE variables
-    map_type& cookie()
-    {
-      return this->service.cookie(this->implementation);
-    }
-
     /// Find the cookie meta-variable matching name
     /**
      * @throws `boost::system::system_error` if an error occurred. This may
@@ -459,12 +404,6 @@ namespace cgi {
     std::string cookie(const std::string& name, boost::system::error_code& ec)
     {
       return this->service.cookie(this->implementation, name, ec);
-    }
-
-    /// Get a `cgi::map&` corresponding to all of the environment variables
-    map_type& env()
-    {
-      return this->service.env(this->implementation);
     }
 
     /// Find the environment meta-variable matching name
@@ -506,7 +445,7 @@ namespace cgi {
      * provide a meta_var_all() function which is greedy; the
      * ugly/long name there to discourage use.
      */
-    std::string var(const std::string& name, bool greedy = false)
+    std::string var(std::string const& name, bool greedy = false)
     {
       boost::system::error_code ec;
       std::string ret = var(name, ec, greedy);
@@ -620,32 +559,65 @@ namespace cgi {
       return this->service.get_role(this->implementation);
     }
 
-    /// Get the strand associated with the request (if any)
-    // Not sure if the strand concept should be kept separate or a member
-    // function like basic_request<>::wrap() should be provided: in the case of
-    // a synchronous request type the wrapping would still function as expected
-    // and there would be no need for protocol-specific code in user programs.
-      /*    boost::asio::strand* strand()
-    {
-      return this->implementation.strand();
-    }
-      */
-
-    /// Get the implementation type for the request
-    //implementation_type* impl()
-    //{
-    //  return &(this->implementation);
-    //}
-
-    void set_status(http::status_code status)
+    void set_status(http::status_code const& status)
     {
       this->service.set_status(this->implementation, status);
     }
 
-    // The boundary marker for multipart forms (this is likely a transient function).
-    std::string boundary_marker()
+    ////////////////////////////////////////////////////////////
+    // Note on operator[]
+    // ------------------
+    // It is overloaded on different enum types to allow
+    // compile-time (I hope) retrieval of different data
+    // maps.
+    //
+    /// Get a `common::env_map&` of all the environment variables.
+    env_map& operator[](common::env_data_type const&)
     {
-      return this->implementation.boundary_marker;
+      return this->implementation.env_vars();
+    }
+
+    /// Get a `common::get_map&` of all the GET variables.
+    get_map& operator[](common::get_data_type const&)
+    {
+      return this->implementation.get_vars();
+    }
+
+    /// Get a `common::post_map&` of all the POST variables.
+    post_map& operator[](common::post_data_type const&)
+    {
+      return this->implementation.post_vars();
+    }
+
+    /// Get a `common::cookie_map&` of all the cookies.
+    cookie_map& operator[](common::cookie_data_type const&)
+    {
+      return this->implementation.cookie_vars();
+    }
+
+    /// Get a `common::form_map&` of either the GET or POST variables.
+    form_map& operator[](common::form_data_type const&)
+    {
+      if (request_method() == "GET")
+        return this->implementation.get_vars();
+      else
+      if (request_method() == "POST")
+        return this->implementation.post_vars();
+      else
+        return this->implementation.env_vars();
+    }
+    ////////////////////////////////////////////////////////////
+
+    /// The id of this request.
+    /**
+     * This is 1 for CGI/aCGI requests, but may be != 1 for FastCGI requests.
+     * Note that for FastCGI requests, the id's are assigned on a
+     * *per-connection* policy, so in one application you may have several
+     * requests with the same id.
+     */
+    int id()
+    {
+      return this->service.request_id(this->implementation);
     }
   };
 

@@ -12,7 +12,7 @@
 #include <map>
 #include <string>
 #include <cstdlib>
-#include "boost/cgi/map.hpp"
+#include "boost/cgi/common/map.hpp"
 
 // The process' environment
 #if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1500))
@@ -34,6 +34,9 @@ namespace cgi {
    template<typename MapT>
    void save_environment(MapT& env_map, char** env = environ)
    {
+     std::string sa;
+     std::string sb;
+
      for(; *env; ++env)
      {
        int i=0;
@@ -46,9 +49,9 @@ namespace cgi {
        // we are free to ignore them too.
        if ((*env)[i+1] != '\0')
        {
-         std::string sa(*env, i);
-         std::string sb((*env+i+1), j-i-1);
-         env_map[sa] = sb;
+         sa.assign(*env, i);
+         sb.assign((*env+i+1), j-i-1);
+         env_map[sa.c_str()] = sb;
        }
      }
    }

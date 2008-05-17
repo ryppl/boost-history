@@ -11,11 +11,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "boost/cgi/map.hpp"
+#include "boost/cgi/common/map.hpp"
 #include "boost/cgi/role_type.hpp"
 #include "boost/cgi/status_type.hpp"
 #include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/connections/tcp_socket.hpp"
+
 
 namespace cgi {
  namespace common {
@@ -110,9 +111,20 @@ namespace cgi {
     std::size_t read_some(const MutableBufferSequence& buf
                          , boost::system::error_code& ec)
     {
-      std::size_t bytes_read = connection_->read_some(buf, ec);
-      bytes_left_ -= bytes_read;
-      return bytes_left_ > 0 ? bytes_read : (bytes_read + bytes_left_);
+      //if (boost::asio::buffer_size(buf) > bytes_left_)
+      //{
+        std::size_t bytes_read = connection_->read_some(buf, ec);
+        bytes_left_ -= bytes_read;
+        if (ec == boost::asio::error::eof)
+          ec = boost::system::error_code();
+        return bytes_left_ > 0 ? bytes_read : (bytes_read + bytes_left_);
+      //}
+      //else
+      //{
+      //  
+      //  ec = boost::asio::error::eof;
+      //  return 0;
+      //}
     }
 
     /// Asynchronously write some data to the client.
@@ -131,6 +143,8 @@ namespace cgi {
   private:
     //io_service&                           io_service_;
     connection_ptr                        connection_;
+
+  public: // **FIXME**
     // we should never read more than content-length bytes.
     std::size_t                           bytes_left_;
   };
