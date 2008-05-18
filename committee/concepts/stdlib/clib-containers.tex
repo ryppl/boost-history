@@ -1294,24 +1294,26 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <class T, class Cont@\removedConcepts{ainer}@ = deque<T> > class stack;
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
+    @\addedConcepts{requires SameType<Cont::value_type, T>}@
+    class stack;
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(stack<T,Allocator>& x, stack<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(stack<T,Allocator>&& x, stack<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(stack<T,Allocator>& x, stack<T,Allocator>&& y);
 }
 \end{codeblock}
@@ -3790,11 +3792,12 @@ template <class T, class Cont@\removedConcepts{ainer}@, Compare>
 
 \pnum
 \index{stack@\tcode{stack}}%
-Any sequence container supporting operations
-\tcode{back()},
-\tcode{push_back()}\
+Any sequence container \changedConcepts{supporting operations
+\mbox{\tcode{back()}},
+\mbox{\tcode{push_back()}}
 and
-\tcode{pop_back()}\
+\mbox{\tcode{pop_back()}}}{that meets the requirements of the 
+\mbox{\tcode{BackInsertionSequence}} concept}
 can be used to instantiate
 \tcode{stack}.
 In particular,
@@ -3811,7 +3814,8 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <class T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> >
+  @\addedConcepts{requires SameType<Cont::value_type, T>}@
   class stack {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3823,12 +3827,20 @@ namespace std {
     Cont@\removedConcepts{ainer}@ c;
 
   public:
-    explicit stack(const Cont@\removedConcepts{ainer}@&);
-    explicit stack(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
-    template <class Alloc> explicit stack(const Alloc&);
-    template <class Alloc> stack(const Cont@\removedConcepts{ainer}@&, const Alloc&);
-    template <class Alloc> stack(Cont@\removedConcepts{ainer}@&&, const Alloc&);
-    template <class Alloc> stack(stack&&, const Alloc&);
+    @\addedConcepts{requires CopyConstructible<Cont>}@ explicit stack(const Cont@\removedConcepts{ainer}@&);
+    @\addedConcepts{requires MoveConstructible<Cont>}@ explicit stack(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
+    template <class Alloc> 
+      @\addedConcepts{HasConstructor<Cont, Alloc>}@
+      explicit stack(const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{HasConstructor<Cont, Cont, Alloc>}@
+      stack(const Cont@\removedConcepts{ainer}@&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{HasConstructor<Cont, Cont\&\&, Alloc>}@
+      stack(Cont@\removedConcepts{ainer}@&&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{HasConstructor<Cont, Cont\&\&, Alloc>}@
+      stack(stack&&, const Alloc&);
 
     bool      empty() const             { return c.empty(); }
     size_type size()  const             { return c.size(); }
@@ -3840,23 +3852,23 @@ namespace std {
     void swap(stack&& s)                { c.swap(s.c); }
   };
 
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(stack<T,Allocator>& x, stack<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(stack<T,Allocator>&& x, stack<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(stack<T,Allocator>& x, stack<T,Allocator>&& y);
 
   template <class T, class Cont@\removedConcepts{ainer}@, class Alloc>
@@ -3873,7 +3885,7 @@ namespace std {
 
 \index{operator==@\tcode{operator==}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,
                     const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
@@ -3886,7 +3898,7 @@ template <class T, class Cont@\removedConcepts{ainer}@>
 
 \index{operator"!=@\tcode{operator"!=}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x,
                     const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
@@ -3899,7 +3911,7 @@ template <class T, class Cont@\removedConcepts{ainer}@>
 
 \index{operator<@\tcode{operator<}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x,
                     const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
@@ -3912,7 +3924,7 @@ template <class T, class Cont@\removedConcepts{ainer}@>
 
 \index{operator<=@\tcode{operator<=}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,
                     const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
@@ -3925,7 +3937,7 @@ template <class T, class Cont@\removedConcepts{ainer}@>
 
 \index{operator>@\tcode{operator>}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x,
                     const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
@@ -3938,7 +3950,7 @@ template <class T, class Cont@\removedConcepts{ainer}@>
 
 \index{operator>=@\tcode{operator>=}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,
                     const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
@@ -3952,11 +3964,11 @@ template <class T, class Cont@\removedConcepts{ainer}@>
 \rSec4[stack.special]{\tcode{stack} specialized algorithms}
 
 \begin{itemdecl}
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <class T, class Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
