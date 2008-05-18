@@ -4097,8 +4097,11 @@ concept_map Stack<std::vector<T> > {
     function template definitions with the same name as
     \mbox{\tcode{f}}, 
     \mbox{\tcode{E}} is \mbox{\tcode{f(parm1$'$, parm2$'$,
-        ..., parm$N'$)}}, where name lookup of \mbox{\tcode{f}} refers
-    to the definitions of \mbox{\tcode{f}} in the concept map,}
+        ..., parm$N'$)}}, and the overload set of entities
+    \mbox{\tcode{f}} consists of the definitions of \mbox{\tcode{f}} in
+    the concept map (and unqualified lookup
+    \mbox{\ref{basic.lookup.unqual}} and argument dependent lookup
+    \mbox{\ref{basic.lookup.argdep}} are suppressed),}
 
 \additemCC{if \mbox{\tcode{f}} is a non-static associated member
   function and the concept map contains one or more member function
