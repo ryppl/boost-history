@@ -10,7 +10,7 @@
 <date>18 May 2008</date>
 
 <discussion>
-  <p>For some functions, such as <tt>prev_permutation</tt> and <tt>next_permutation</tt> are predicated on <tt>Iter::reference</tt>, while others, such as <tt>sort_heap</tt>, are predicated on <tt>Iter::value_type</tt>. I am not sure which is correct, but it the inconsistency seems strange. This should only affect proxy references.</p>
+  <p>Some algorithms, such as <tt>prev_permutation</tt> and <tt>next_permutation</tt>, are predicated on <tt>Iter::reference</tt>. Others, such as <tt>sort_heap</tt>, are predicated on <tt>Iter::value_type</tt>. I am not sure which is correct, but it the inconsistency seems strange. The choice should only affect proxy references.</p>
 </discussion>
 
 <resolution>
