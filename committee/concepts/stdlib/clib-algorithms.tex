@@ -2102,8 +2102,9 @@ applications of the corresponding predicate.
 
 \index{reverse@\tcode{reverse}}%
 \color{addclr}\begin{itemdecl}
-template<MutableBidirectionalIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+template<@\removedCC{Mutable}@BidirectionalIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
 \end{itemdecl}\color{black}
 
@@ -2173,7 +2174,8 @@ assignments.
 \index{rotate@\tcode{rotate}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
               Iter @\farg{last}@);
 \end{itemdecl}\color{black}
@@ -2251,14 +2253,15 @@ assignments.
 
 \index{random_shuffle@\tcode{random_shuffle}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           Convertible<Rand::result_type, Iter::difference_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\& }@
+           @\addedCC{SwappableIterator<Iter> \&\&}@ Convertible<Rand::result_type, Iter::difference_type>
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@,
                       Rand&& @\farg{rand}@);
@@ -2319,7 +2322,8 @@ iterator_traits<RandomAccessIterator>:: difference_type}.
 \index{partition@\tcode{partition}}%
 \color{addclr}\begin{itemdecl}
 @\textcolor{addclr}{}@template<BidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
-  @\color{addclr}@requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+  @\color{addclr}@requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2367,9 +2371,10 @@ applications of the predicate are done.
 
 \index{stable_partition@\tcode{stable_partition}}%
 \color{addclr}\begin{itemdecl}
-template<MutableBidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@BidirectionalIterator Iter, Predicate<auto Iter::reference> Pred>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2424,15 +2429,17 @@ applications of the predicate.
 
 \index{sort@\tcode{sort}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           LessThanComparable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter> \&\&}@
+           LessThanComparable<Iter::value_type> 
   void sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void sort(Iter @\farg{first}@, Iter @\farg{last}@,
             Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2469,15 +2476,17 @@ If the worst case behavior is important
 
 \index{stable_sort@\tcode{stable_sort}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           LessThanComparable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter> \&\&}@
+           LessThanComparable<Iter::value_type> 
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2513,17 +2522,19 @@ Stable.
 
 \index{partial_sort@\tcode{partial_sort}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           LessThanComparable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@ @\addedCC{\&\&}@
+           @\addedCC{LessThanComparable<Iter::value_type>}@
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@,
@@ -2564,20 +2575,22 @@ comparisons.
 
 \index{partial_sort_copy@\tcode{partial_sort_copy}}%
 \color{addclr}\begin{itemdecl}
-template<InputIterator InIter, MutableRandomAccessIterator RAIter>
+template<InputIterator InIter, @\removedCC{Mutable}@RandomAccessIterator RAIter>
   requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
-           SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
-           MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+           @\removedCC{SameType<RAIter::value_type\&, RAIter::reference> \&\& Swappable<RAIter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<RAIter::value_type> \&\& MoveAssignable<RAIter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<RAIter> \&\&}@
            HasLess<InIter::value_type, RAIter::value_type> &&
            HasLess<RAIter::value_type, InIter::value_type> &&
            HasLess<RAIter::value_type>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
 
-template<InputIterator InIter, MutableRandomAccessIterator RAIter, class Compare>
+template<InputIterator InIter, @\removedCC{Mutable}@RandomAccessIterator RAIter, class Compare>
   requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
-           SameType<RAIter::value_type&, RAIter::reference> && Swappable<RAIter::value_type> && 
-           MoveConstructible<RAIter::value_type> && MoveAssignable<RAIter::value_type> &&
+           @\removedCC{SameType<RAIter::value_type\&, RAIter::reference> \&\& Swappable<RAIter::value_type> \&\&}@ 
+           @\removedCC{MoveConstructible<RAIter::value_type> \&\& MoveAssignable<RAIter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<RAIter> \&\&}@
            Predicate<Compare, InIter::value_type, RAIter::value_type> &&
            Predicate<Compare, RAIter::value_type, InIter::value_type> &&
            Predicate<Compare, RAIter::value_type>
@@ -2673,16 +2686,19 @@ range \mbox{\range{first}{i}} is sorted.}
 
 \index{nth_element@\tcode{nth_element}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter> \&\&}@
            LessThanComparable<Iter::value_type>
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, 
+         Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@,  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3025,18 +3041,20 @@ Stable.
 
 \index{inplace_merge@\tcode{inplace_merge}}%
 \color{addclr}\begin{itemdecl}
-@\textcolor{addclr}{template}@<MutableBidirectionalIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+template<@\removedCC{Mutable}@BidirectionalIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter> \&\&}@
            LessThanComparable<Iter::value_type>
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
                      Iter @\farg{last}@);
 
-template<MutableBidirectionalIterator Iter, 
+template<@\removedCC{Mutable}@BidirectionalIterator Iter, 
          Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> && 
-           MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
                      Iter @\farg{last}@, Compare @\farg{comp}@);
@@ -3395,13 +3413,15 @@ turns a heap into a sorted sequence.
 
 \index{push_heap@\tcode{push_heap}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter> \&\&}@
            LessThanComparable<Iter::value_type>
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3436,14 +3456,16 @@ comparisons.
 
 \index{pop_heap@\tcode{pop_heap}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\removedCC{Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@ && LessThanComparable<Iter::value_type>
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           Swappable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\removedCC{Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                 Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3482,13 +3504,15 @@ comparisons.
 
 \index{make_heap@\tcode{make_heap}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter> \&\&}@
            LessThanComparable<Iter::value_type>
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-@\color{addclr}@template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3517,14 +3541,15 @@ comparisons.
 
 \index{sort_heap@\tcode{sort_heap}}%
 \color{addclr}\begin{itemdecl}
-template<MutableRandomAccessIterator Iter>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           Swappable<Iter::value_type> && LessThanComparable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type> \&\&}@
+           @\removedCC{Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@ && LessThanComparable<Iter::value_type>
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableRandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires MoveConstructible<Iter::value_type> && MoveAssignable<Iter::value_type> &&
-           Swappable<Iter::value_type>
+template<@\removedCC{Mutable}@RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  requires @\removedCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -4034,13 +4059,15 @@ return @\farg{first1}@ == @\farg{last1}@ && @\farg{first2}@ != @\farg{last2}@;
 
 \index{next_permutation@\tcode{next_permutation}}%
 \color{addclr}\begin{itemdecl}
-template<MutableBidirectionalIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-           LessThanComparable<Iter::reference>
+template<@\removedCC{Mutable}@BidirectionalIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter>}@
+           @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
   bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableBidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+template<@\removedCC{Mutable}@BidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   @\textcolor{addclr}{bool}@ next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -4074,13 +4101,15 @@ swaps.
 
 \index{prev_permutation@\tcode{prev_permutation}}%
 \color{addclr}\begin{itemdecl}
-template<MutableBidirectionalIterator Iter>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type> &&
-        LessThanComparable<Iter::reference>
+template<@\removedCC{Mutable}@BidirectionalIterator Iter>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\addedCC{SwappableIterator<Iter>}@
+           @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<MutableBidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
-  requires SameType<Iter::value_type&, Iter::reference> && Swappable<Iter::value_type>
+template<@\removedCC{Mutable}@BidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+  requires @\removedCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type>}@
+           @\addedCC{SwappableIterator<Iter>}@
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
