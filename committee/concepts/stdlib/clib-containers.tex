@@ -1627,9 +1627,10 @@ namespace std {
     // \ref{deque.cons} construct/copy/destroy:
     explicit deque(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires DefaultConstructible<T>}@ explicit deque(size_type n);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ deque(size_type n, const T& value,const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      deque(size_type n, const T& value,const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@ 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@ 
       deque(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ deque(const deque<T,Alloc@\removedConcepts{ator}@>& x);
     deque(deque&&);
@@ -1637,13 +1638,14 @@ namespace std {
     deque(deque&&, const Alloc@\removedConcepts{ator}@&);
 
    ~deque();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@
       deque<T,Alloc@\removedConcepts{ator}@>& operator=(const deque<T,Alloc@\removedConcepts{ator}@>& x);
     deque<T,Alloc@\removedConcepts{ator}@>& operator=(const deque<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& CopyAssignable<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       void assign(InputIterator first, InputIterator last);
-    @\addedConcepts{requires CopyAssignable<T> \&\& ConstructibleAsElement<Alloc, T, const T\&>}@ void assign(size_type n, const T& t);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
 
     // iterators:
@@ -1682,26 +1684,25 @@ namespace std {
 
     // \ref{deque.modifiers} modifiers:
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
       void push_front(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
       void push_back(Args&&... args);
 
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveAssignable<T>}@ 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& MoveAssignable<T>}@ 
       iterator emplace(const_iterator position, Args&&... args);
 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
       iterator insert(const_iterator position, const T& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
       iterator insert(const_iterator position, T&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
       void insert(const_iterator position, size_type n, const T& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
-               @\addedConcepts{\&\& MoveAssignable<T>}@
-      void insert(const_iterator position, InputIterator first, InputIterator last);
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& MoveAssignable<T>}@
+      void insert(const_iterator position, @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     void pop_front();
     void pop_back();
@@ -1797,7 +1798,7 @@ Linear in \farg{n}.
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   deque(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@,
         const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -1819,7 +1820,7 @@ using the specified allocator.
 \index{assign@\tcode{assign}!\tcode{deque}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& CopyAssignable<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -1833,7 +1834,7 @@ insert(begin(), first, last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@
 void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -1896,26 +1897,25 @@ else
 \index{insert@\tcode{push_back}!\tcode{deque}}%
 \index{insert@\tcode{emplace}!\tcode{deque}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
   iterator insert(const_iterator position, const T& x);
 @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
   iterator insert(const_iterator position, T&& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
   void     insert(const_iterator position, size_type n, const T& x);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
-           @\addedConcepts{\&\& MoveAssignable<T>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& MoveAssignable<T>}@
   void insert(const_iterator position,
               @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
   void push_front(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
   void push_back(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& MoveAssignable<T>}@ 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& MoveAssignable<T>}@ 
   iterator emplace(const_iterator position, Args&&... args);
 \end{itemdecl}
 
@@ -2022,17 +2022,18 @@ namespace std {
       forward_list(size_type n, const T& value, 
                    const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{HasConstructor<T, Iter::reference>}@
+      @\addedConcepts{ConstructibleAsElement<Alloc, T, Iter::reference>}@
       forward_list(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last, 
                    const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ forward_list(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      forward_list(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
     forward_list(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
     ~forward_list(); 
-    @\addedConcepts{requires CopyAssignable<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
     forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
     @\addedConcepts{ConstructibleAsElement<Alloc, T, const T\&>}@ void assign(size_type n, const T& t); 
     allocator_type get_allocator() const; 
@@ -2059,20 +2060,22 @@ namespace std {
 
     // \ref{forwardlist.modifiers} modifiers: 
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
       void push_front(Args&&... args); 
     void pop_front();
    
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
       iterator emplace_after(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ iterator insert_after(const_iterator position, const T& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ iterator insert_after(const_iterator position, T&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      iterator insert_after(const_iterator position, const T& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+      iterator insert_after(const_iterator position, T&& x);
 
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       void insert_after(const_iterator position, size_type n, const T& x); 
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       void insert_after(const_iterator position, @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase_after(const_iterator position); 
@@ -2178,7 +2181,7 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{ConstructibleAsElement<Alloc, T, Iter::reference>}@
   forward_list(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last, 
                const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
 \end{itemdecl}
@@ -2193,7 +2196,7 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
 \end{itemdecl}
 
@@ -2244,7 +2247,7 @@ None of the overloads of \tcode{insert_after} shall affect the validity of itera
 
 \begin{itemdecl}
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
   void push_front(Args&&... args);
 \end{itemdecl}
 
@@ -2263,8 +2266,10 @@ void pop_front();
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ iterator insert_after(const_iterator position, const T& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ iterator insert_after(const_iterator position, T&& x);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+  iterator insert_after(const_iterator position, const T& x);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+  iterator insert_after(const_iterator position, T&& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2293,7 +2298,7 @@ void pop_front();
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   void insert_after(const_iterator position, @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -2307,7 +2312,7 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 
 \begin{itemdecl}
 template <class... Args>
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@ 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@ 
   iterator emplace_after(const_iterator position, Args&&... args);
 \end{itemdecl}
 
@@ -2407,7 +2412,8 @@ void splice_after(const_iterator position, forward_list<T,Alloc@\removedConcepts
 \end{itemdescr}
 
 \begin{itemdecl}
-void splice_after(const_iterator position, forward_list<T,Alloc@\removedConcepts{ator}@>&& x, const_iterator first, const_iterator last);
+void splice_after(const_iterator position, forward_list<T,Alloc@\removedConcepts{ator}@>&& x, 
+                  const_iterator first, const_iterator last);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2574,19 +2580,21 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       list(size_type @\farg{n}@, const T& @\farg{value}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       list(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ list(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
     list(list&& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ list(const list&, const Alloc@\removedConcepts{ator}@&);
     list(list&&, const Alloc@\removedConcepts{ator}@&);
    ~list();
-    @\addedConcepts{requires CopyAssignable<T>}@ list<T,Alloc@\removedConcepts{ator}@>& operator=(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      list<T,Alloc@\removedConcepts{ator}@>& operator=(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
     list<T,Alloc@\removedConcepts{ator}@>& operator=(list<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires CopyAssignable<T> \&\& ConstructibleAsElement<Alloc, T, const T\&>}@ void assign(size_type n, const T& t);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
 
     // iterators:
@@ -2619,23 +2627,25 @@ namespace std {
 
     // \ref{list.modifiers} modifiers:
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
       void push_front(Args&&... args);
     void pop_front();
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
       void push_back(Args&&... args);
     void pop_back();
 
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ iterator insert(const_iterator @\farg{position}@, const T& @\farg{x}@);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ iterator insert(const_iterator position, T&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      iterator insert(const_iterator @\farg{position}@, const T& @\farg{x}@);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+      iterator insert(const_iterator position, T&& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       void insert(const_iterator @\farg{position}@, size_type @\farg{n}@, const T& @\farg{x}@);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       void insert(const_iterator @\farg{position}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{first}@,
                   @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@);
 
@@ -2756,7 +2766,7 @@ Linear in
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   list(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
 
@@ -2777,7 +2787,7 @@ Linear in
 \index{assign@\tcode{assign}!\tcode{list}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasCopyAssign<T, Iter::reference> \&\& HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -2795,7 +2805,8 @@ insert(begin(), n, t);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires CopyAssignable<T> \&\& ConstructibleAsElement<Alloc, T, const T\&>}@ void assign(size_type n, const T& t);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+  void assign(size_type n, const T& t);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2853,23 +2864,25 @@ else
 
 \index{insert@\tcode{insert}!\tcode{list}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ iterator insert(const_iterator position, const T& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ iterator insert(const_iterator position, T&& x);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+  iterator insert(const_iterator position, const T& x);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+  iterator insert(const_iterator position, T&& x);
 @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
   void insert(const_iterator @\farg{position}@, size_type @\farg{n}@, const T& @\farg{x}@);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   void insert(const_iterator @\farg{position}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{first}@,
               @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@);
 
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
   void push_front(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
   void push_back(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
   iterator emplace(const_iterator position, Args&&... args);
 \end{itemdecl}
 
@@ -4027,10 +4040,12 @@ namespace std {
 
     // \ref{vector.cons} construct/copy/destroy:
     explicit vector(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires DefaultConstructible<T>}@ explicit vector(size_type n);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
+    @\addedConcepts{requires DefaultConstructible<T>}@ 
+      explicit vector(size_type n);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      vector(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
       vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector<T,Alloc@\removedConcepts{ator}@>& x);
@@ -4038,12 +4053,14 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector&, const Alloc@\removedConcepts{ator}@&);
     vector(vector&&, const Alloc@\removedConcepts{ator}@&);
    ~vector();
-    @\addedConcepts{requires CopyAssignable<T>}@ vector<T,Alloc@\removedConcepts{ator}@>& operator=(const vector<T,Alloc@\removedConcepts{ator}@>& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      vector<T,Alloc@\removedConcepts{ator}@>& operator=(const vector<T,Alloc@\removedConcepts{ator}@>& x);
     vector<T,Alloc@\removedConcepts{ator}@>& operator=(vector<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@ void assign(size_type n, const T& u);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+      void assign(size_type n, const T& u);
     allocator_type get_allocator() const;
 
     // iterators:
@@ -4064,7 +4081,8 @@ namespace std {
     // \ref{vector.capacity} capacity:
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ void resize(size_type sz);
+    @\addedConcepts{requires DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+      void resize(size_type sz);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, const T& c);
     size_type capacity() const;
     bool      empty() const;
@@ -4086,21 +4104,21 @@ namespace std {
 
     // \ref{vector.modifiers} modifiers:
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
       void push_back(Args&&... args);
     void pop_back();
 
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ 
       iterator insert(const_iterator position, const T& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
       void insert(const_iterator position, T&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
       void insert(const_iterator position, size_type n, const T& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-        @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+        @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
               @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
         void insert(const_iterator position,
                     @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
@@ -4194,7 +4212,7 @@ copies of \tcode{value}, using the specified allocator.
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
   vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -4228,7 +4246,7 @@ reallocations if they are just input iterators.
 \index{assign@\tcode{assign}!\tcode{vector}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -4242,7 +4260,7 @@ insert(begin(), first, last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@ 
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
   void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -4409,23 +4427,23 @@ Nothing.
 
 \index{insert@\tcode{insert}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
   iterator insert(const_iterator position, const T& x);
 @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
   iterator insert(const_iterator position, T&& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
   void insert(const_iterator position, size_type n, const T& x);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-    @\addedConcepts{requires HasConstructor<T, Iter::reference> \&\& HasCopyAssign<T, Iter::reference>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
     void insert(const_iterator position,
                 @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
   void push_back(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires HasConstructor<T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
   iterator emplace(const_iterator position, Args&&... args);
 \end{itemdecl}
 
@@ -4876,16 +4894,18 @@ namespace std {
     explicit map(const Compare& comp = Compare(),
                  const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       map(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
           const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ map(const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      map(const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
     map(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x);
     map(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ map(const map&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      map(const map&, const Alloc@\removedConcepts{ator}@&);
     map(map&&, const Alloc@\removedConcepts{ator}@&);
    ~map();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& operator=(const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
     map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&
       operator=(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x);
@@ -4920,21 +4940,23 @@ namespace std {
 
     // modifiers:
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       pair<iterator, bool> emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ pair<iterator, bool> insert(const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      pair<iterator, bool> insert(const value_type& x);
     template <class P> 
-      @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
       pair<iterator, bool> insert(P&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const_iterator position, const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const_iterator position, const value_type& x);
     template <class P>
-      @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
       iterator insert(const_iterator position, P&&);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -5024,7 +5046,7 @@ Constant.
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   map(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
       const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -5137,10 +5159,10 @@ logarithmic.
 
 \begin{itemdecl}
 template <class P> 
-  @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
   pair<iterator, bool> insert(P&& x);
 template <class P> 
-  @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
   pair<iterator, bool> insert(const_iterator position, P&& x);
 \end{itemdecl}
 
@@ -5319,16 +5341,18 @@ namespace std {
     explicit multimap(const Compare& comp = Compare(),
                       const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       multimap(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
           const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ multimap(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      multimap(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
     multimap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x);
     multimap(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ multimap(const multimap&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      multimap(const multimap&, const Alloc@\removedConcepts{ator}@&);
     multimap(multimap&&, const Alloc@\removedConcepts{ator}@&);
    ~multimap();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& operator=(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
     multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&
       operator=(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x);
@@ -5357,21 +5381,23 @@ namespace std {
 
     // modifiers:
     template <class... Args>
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const value_type& x);
     template <class P> 
-      @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
       iterator insert(P&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@  iterator insert(const_iterator position, const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const_iterator position, const value_type& x);
     template <class P> 
-      @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
       iterator insert(const_iterator position, P&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -5460,7 +5486,7 @@ Constant.
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   multimap(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
       const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -5494,10 +5520,10 @@ where $N$\ is
 
 \begin{itemdecl}
 template <class P> 
-  @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
   iterator insert(P&& x);
 template <class P> 
-  @\addedConcepts{requires HasConstructor<value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
   iterator insert(const_iterator position, P&& x);
 \end{itemdecl}
 
@@ -5653,17 +5679,19 @@ namespace std {
     explicit set(const Compare& comp = Compare(),
                  const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       set(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
           const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ set(const set<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      set(const set<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
     set(set<Key,Compare,Alloc@\removedConcepts{ator}@>&& x);
     set(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ set(const set&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      set(const set&, const Alloc@\removedConcepts{ator}@&);
     set(set&&, const Alloc@\removedConcepts{ator}@&);
    ~set();
 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       set<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(const set<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
     set<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(set<Key,Compare,Alloc@\removedConcepts{ator}@>&& x);
     allocator_type get_allocator() const;
@@ -5691,17 +5719,21 @@ namespace std {
 
     // modifiers:
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       pair<iterator, bool> emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ pair<iterator,bool> insert(const value_type& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ pair<iterator,bool> insert(value_type&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const_iterator position, const value_type& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ iterator insert(const_iterator position, value_type&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      pair<iterator,bool> insert(const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
+      pair<iterator,bool> insert(value_type&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const_iterator position, const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
+      iterator insert(const_iterator position, value_type&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -5788,7 +5820,7 @@ Constant.
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   set(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@,
       const Compare& @\farg{comp}@ = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -5913,17 +5945,19 @@ namespace std {
     explicit multiset(const Compare& comp = Compare(),
                       const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       multiset(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
                const Compare& comp = Compare(),
                const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ multiset(const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      multiset(const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
     multiset(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>&& x);
     multiset(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ multiset(const multiset&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      multiset(const multiset&, const Alloc@\removedConcepts{ator}@&);
     multiset(multiset&&, const Alloc@\removedConcepts{ator}@&);
    ~multiset();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
     multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>&& x);
     allocator_type get_allocator() const;
@@ -5951,17 +5985,21 @@ namespace std {
 
     // modifiers:
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const value_type& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ iterator insert(value_type&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const_iterator position, const value_type& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ iterator insert(const_iterator position, value_type&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
+      iterator insert(value_type&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const_iterator position, const value_type& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
+      iterator insert(const_iterator position, value_type&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -6048,7 +6086,7 @@ Constant.
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   multiset(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@,
            const Compare& @\farg{comp}@ = Compare(),
            const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
@@ -6253,18 +6291,20 @@ namespace std {
                            const key_equal& eql = key_equal(),
                            const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       unordered_map(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                     size_type n = @\textit{implementation-defined}@,
                     const hasher& hf = hasher(),
                     const key_equal& eql = key_equal(),
                     const allocator_type& a = allocator_type());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_map(const unordered_map&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_map(const unordered_map&);
     unordered_map(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_map(const unordered_map&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_map(const unordered_map&, const Alloc@\removedConcepts{ator}@&);
     unordered_map(unordered_map&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_map();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       unordered_map& operator=(const unordered_map&);
     allocator_type get_allocator() const;
 
@@ -6283,17 +6323,17 @@ namespace std {
 
     // modifiers
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       pair<iterator, bool> emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       std::pair<iterator, bool> insert(const value_type& obj);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -6314,7 +6354,8 @@ namespace std {
     std::pair<iterator, iterator>             equal_range(const key_type& k);
     std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 
-    @\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<Key>}@ mapped_type& operator[](const key_type& k);
+    @\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
+      mapped_type& operator[](const key_type& k);
 
     // bucket interface
     size_type bucket_count() const;
@@ -6369,7 +6410,7 @@ provided, the number of buckets is implementation defined.
 \index{unordered_map@\tcode{unordered_map}!unordered_map@\tcode{unordered_map}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   unordered_map(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                 size_type n = @\textit{implementation-defined}@,
                 const hasher& hf = hasher(),
@@ -6487,19 +6528,20 @@ namespace std {
                                 const key_equal& eql = key_equal(),
                                 const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       unordered_multimap(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                          size_type n = @\textit{implementation-defined}@,
                          const hasher& hf = hasher(),
                          const key_equal& eql = key_equal(),
                          const allocator_type& a = allocator_type());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_multimap(const unordered_multimap&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_multimap(const unordered_multimap&);
     unordered_multimap(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
        unordered_multimap(const unordered_multimap&, const Alloc@\removedConcepts{ator}@&);
     unordered_multimap(unordered_multimap&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_multimap();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       unordered_multimap& operator=(const unordered_multimap&);
     allocator_type get_allocator() const;
 
@@ -6518,12 +6560,13 @@ namespace std {
 
     // modifiers
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const value_type& obj);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const value_type& obj);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
@@ -6600,7 +6643,7 @@ provided, the number of buckets is implementation defined.
 \index{unordered_multimap@\tcode{unordered_multimap}!unordered_multimap@\tcode{unordered_multimap}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   unordered_multimap(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                      size_type n = @\textit{implementation-defined}@,
                      const hasher& hf = hasher(),
@@ -6696,18 +6739,20 @@ namespace std {
                            const key_equal& eql = key_equal(),
                            const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       unordered_set(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                     size_type n = @\textit{implementation-defined}@,
                     const hasher& hf = hasher(),
                     const key_equal& eql = key_equal(),
                     const allocator_type& a = allocator_type());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_set(const unordered_set&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_set(const unordered_set&);
     unordered_set(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_set(const unordered_set&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_set(const unordered_set&, const Alloc@\removedConcepts{ator}@&);
     unordered_set(unordered_set&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_set();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       unordered_set& operator=(const unordered_set&);
     allocator_type get_allocator() const;
 
@@ -6726,16 +6771,17 @@ namespace std {
 
     // modifiers
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       pair<iterator, bool> emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ std::pair<iterator, bool> insert(const value_type& obj);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      std::pair<iterator, bool> insert(const value_type& obj);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -6809,7 +6855,7 @@ defined.  \tcode{max_load_factor()} returns 1.0.
 \index{unordered_set@\tcode{unordered_set}!unordered_set@\tcode{unordered_set}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   unordered_set(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                 size_type n = @\textit{implementation-defined}@,
                 const hasher& hf = hasher(),
@@ -6904,18 +6950,20 @@ namespace std {
                                 const key_equal& eql = key_equal(),
                                 const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
       unordered_multiset(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                          size_type n = @\textit{implementation-defined}@,
                          const hasher& hf = hasher(),
                          const key_equal& eql = key_equal(),
                          const allocator_type& a = allocator_type());
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_multiset(const unordered_multiset&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_multiset(const unordered_multiset&);
     unordered_multiset(const Alloc@\removedConcepts{ator}@&);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ unordered_multiset(const unordered_multiset&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      unordered_multiset(const unordered_multiset&, const Alloc@\removedConcepts{ator}@&);
     unordered_multiset(unordered_multiset&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_multiset();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       unordered_multiset& operator=(const unordered_multiset&);
     allocator_type get_allocator() const;
 
@@ -6934,16 +6982,17 @@ namespace std {
 
     // modifiers
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(Args&&... args);
     template <class... Args> 
-      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ iterator insert(const value_type& obj);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
+      iterator insert(const value_type& obj);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires HasConstructor<value_type, Iter::value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -7017,7 +7066,7 @@ provided, the number of buckets is implementation defined.
 \index{unordered_multiset@\tcode{unordered_multiset}!unordered_multiset@\tcode{unordered_multiset}}%
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
   unordered_multiset(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                      size_type n = @\textit{implementation-defined}@,
                      const hasher& hf = hasher(),
