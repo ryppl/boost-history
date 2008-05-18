@@ -5823,6 +5823,927 @@ x.swap(y);
 \end{codeblock}
 \end{itemdescr}
 
+\rSec1[unord]{\marktr{}Unordered associative containers}
+
+\pnum
+Headers \tcode{<unordered_map>}\ and \tcode{<unordered_set>}:
+
+\synopsis{Header \tcode{<unordered_map>}\ synopsis}%
+\index{unordered_map@\tcode{<unordered_map>}}%
+\index{unordered_map@\tcode{unordered_map}}%
+\index{unordered_multimap@\tcode{unordered_multimap}}%
+\begin{codeblock}
+namespace std {
+  // \ref{unord.map}, class template unordered_map:
+  template <@\changedConcepts{class}{ObjectType}@ Key,
+            @\changedConcepts{class}{ObjectType}@ T,
+            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
+            class Alloc = std::allocator<std::pair<const Key, T> > >
+    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+             @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+    class unordered_map;
+
+  // \ref{unord.multimap}, class template unordered_multimap:
+  template <@\changedConcepts{class}{ObjectType}@ Key,
+            @\changedConcepts{class}{ObjectType}@ T,
+            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
+            class Alloc = std::allocator<std::pair<const Key, T> > >
+    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+             @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+    class unordered_multimap;
+
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+    void swap(unordered_map<Key, T, Hash, Pred, Alloc>& x,
+              unordered_map<Key, T, Hash, Pred, Alloc>& y);
+
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+    void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>& x,
+              unordered_multimap<Key, T, Hash, Pred, Alloc>& y);
+} // namespace std
+\end{codeblock}
+
+\synopsis{Header \tcode{<unordered_set>}\ synopsis}%
+\index{unordered_set@\tcode{<unordered_set>}}%
+\index{unordered_set@\tcode{unordered_set}}%
+\index{unordered_multiset@\tcode{unordered_multiset}}%
+\begin{codeblock}
+namespace std {
+  // \ref{unord.set}, class template unordered_set:
+  template <@\changedConcepts{class}{ObjectType}@ Value,
+            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
+            class Alloc = std::allocator<Value> >
+    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+             @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+    class unordered_set;
+
+  // \ref{unord.multiset}, class template unordered_multiset:
+  template <@\changedConcepts{class}{ObjectType}@ Value,
+            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
+            class Alloc = std::allocator<Value> >
+    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+             @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+    class unordered_multiset;
+
+  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+    void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
+              unordered_set<Value, Hash, Pred, Alloc>& y);
+
+  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+    void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+              unordered_multiset<Value, Hash, Pred, Alloc>& y);
+} // namespace std
+\end{codeblock}
+
+\rSec2[unord.map]{Class template \tcode{unordered_map}}
+\index{unordered_map@\tcode{unordered_map}}%
+\index{allocator}
+
+\pnum
+\index{unordered_map@\tcode{unordered_map}!unique keys}%
+\index{unordered associative containers!unique keys}%
+An \tcode{unordered_map} is an unordered associative container that
+supports unique keys (an \tcode{unordered_map} contains at most one of each
+key value) and that associates values of another type
+\tcode{mapped_type} with the keys.
+
+\pnum
+An \tcode{unordered_map} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for unique keys; that is, an \tcode{unordered_map} supports the \tcode{a_uniq} operations in that table, not the \tcode{a_eq} operations. For an \tcode{unordered_map<Key, T>} the \tcode{key type} is \tcode{Key}, the mapped type is \tcode{T}, and the value type is \tcode{std::pair<const Key, T>}.
+
+\pnum
+This section only describes operations on \tcode{unordered_map} that
+are not described in one of the requirement tables, or for which there
+is additional semantic information.
+
+\index{unordered_map@\tcode{unordered_map}}%
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ Key,
+            @\changedConcepts{class}{ObjectType}@ T,
+            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
+            class Alloc = std::allocator<std::pair<const Key, T> > >
+  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+  class unordered_map
+  {
+  public:
+    // types
+    typedef Key                                      key_type;
+    typedef std::pair<const Key, T>                  value_type;
+    typedef T                                        mapped_type;
+    typedef Hash                                     hasher;
+    typedef Pred                                     key_equal;
+    typedef Alloc                                    allocator_type;
+    typedef typename allocator_type::pointer         pointer;
+    typedef typename allocator_type::const_pointer   const_pointer;
+    typedef typename allocator_type::reference       reference;
+    typedef typename allocator_type::const_reference const_reference;
+    typedef @\impdef@                   size_type;
+    typedef @\impdef@                   difference_type;
+
+    typedef @\impdef@                   iterator;
+    typedef @\impdef@                   const_iterator;
+    typedef @\impdef@                   local_iterator;
+    typedef @\impdef@                   const_local_iterator;
+
+    // construct/destroy/copy
+    explicit unordered_map(size_type n = @\textit{implementation-defined}@,
+                           const hasher& hf = hasher(),
+                           const key_equal& eql = key_equal(),
+                           const allocator_type& a = allocator_type());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      unordered_map(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                    size_type n = @\textit{implementation-defined}@,
+                    const hasher& hf = hasher(),
+                    const key_equal& eql = key_equal(),
+                    const allocator_type& a = allocator_type());
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_map(const unordered_map&);
+    unordered_map(const Allocator&);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_map(const unordered_map&, const Allocator&);
+    unordered_map(unordered_map&&, const Allocator&);
+    ~unordered_map();
+    @\addedConcepts{requires CopyConstructible<value_type> \&\& CopyAssignable<value_type>}@ 
+      unordered_map& operator=(const unordered_map&);
+    allocator_type get_allocator() const;
+
+    // size and capacity
+    bool empty() const;
+    size_type size() const;
+    size_type max_size() const;
+
+    // iterators
+    iterator       begin();
+    const_iterator begin() const;
+    iterator       end();
+    const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+
+    // modifiers
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      pair<iterator, bool> emplace(Args&&... args);
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<value_type>}@
+      std::pair<iterator, bool> insert(const value_type& obj);
+    @\addedConcepts{requires CopyConstructible<value_type>}@
+      iterator insert(const_iterator hint, const value_type& obj);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator erase(const_iterator position);
+    size_type erase(const key_type& k);
+    iterator erase(const_iterator first, const_iterator last);
+    void clear();
+
+    void swap(unordered_map&);
+
+    // observers
+    hasher hash_function() const;
+    key_equal key_eq() const;
+
+    // lookup
+    iterator       find(const key_type& k);
+    const_iterator find(const key_type& k) const;
+    size_type count(const key_type& k) const;
+    std::pair<iterator, iterator>             equal_range(const key_type& k);
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+
+    @\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<key_type>}@ mapped_type& operator[](const key_type& k);
+
+    // bucket interface
+    size_type bucket_count() const;
+    size_type max_bucket_count() const;
+    size_type bucket_size(size_type n);
+    size_type bucket(const key_type& k) const;
+    local_iterator begin(size_type n) const;
+    const_local_iterator begin(size_type n) const;
+    local_iterator end(size_type n);
+    const_local_iterator end(size_type n) const;  
+
+    // hash policy
+    float load_factor() const;
+    float max_load_factor() const;
+    void max_load_factor(float z);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
+  };
+
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+    void swap(unordered_map<Key, T, Hash, Pred, Alloc>& x,
+              unordered_map<Key, T, Hash, Pred, Alloc>& y);
+
+  template <class Key, class T, class Hash, class Pred, class Alloc>
+    struct constructible_with_allocator_suffix<
+      unordered_map<Key, T, Hash, Pred, Compare, Alloc> >
+        : true_type { };
+}
+\end{codeblock}
+
+\rSec3[unord.map.cnstr]{\tcode{unordered_map} constructors}
+
+\index{unordered_map@\tcode{unordered_map}!unordered_map@\tcode{unordered_map}}%
+\begin{itemdecl}
+explicit unordered_map(size_type n = @\textit{implementation-defined}@,
+                       const hasher& hf = hasher(),
+                       const key_equal& eql = key_equal(),
+                       const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_map} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Constant.
+\end{itemdescr}
+
+\index{unordered_map@\tcode{unordered_map}!unordered_map@\tcode{unordered_map}}%
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  unordered_map(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                size_type n = @\textit{implementation-defined}@,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_map} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  (If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.)  Then
+inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Average case linear, worst case quadratic.
+\end{itemdescr}
+
+\rSec3[unord.map.elem]{\tcode{unordered_map} element access}
+
+\index{unordered_map@\tcode{unordered_map}!operator[]@\tcode{operator[]}}%
+\index{operator[]@\tcode{operator[]}!unordered_map@\tcode{unordered_map}}%
+\index{unordered_map@\tcode{unordered_map}!element access}%
+\begin{itemdecl}
+@\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<key_type>}@ mapped_type& operator[](const key_type& k);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ If the \tcode{unordered_map} does not already contain
+an element whose key is equivalent to \tcode{\textit{k}}, inserts 
+the value
+\tcode{std::pair<const key_type, mapped_type>(k, mapped_type())}.
+
+\pnum
+\returns\ A reference to \tcode{x.second}, where \tcode{x}
+is the (unique) element whose key is equivalent to \tcode{\textit{k}}.
+\end{itemdescr}
+
+\rSec3[unord.map.swap]{\tcode{unordered_map} swap}
+
+\index{unordered_map@\tcode{unordered_map}!swap@\tcode{swap}}%
+\index{swap@\tcode{swap}!unordered_map@\tcode{unordered_map}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+  void swap(unordered_map<Key, T, Hash, Pred, Alloc>& x,
+            unordered_map<Key, T, Hash, Pred, Alloc>& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{x.swap(y)}.
+\end{itemdescr}
+
+\rSec2[unord.multimap]{Class template \tcode{unordered_multimap}}
+\index{unordered_multimap@\tcode{unordered_multimap}}%
+\index{allocator}
+
+\pnum
+\index{unordered_multimap@\tcode{unordered_multimap}!equivalent keys}%
+\index{unordered associative containers!equivalent keys}%
+An \tcode{unordered_multimap} is an unordered associative container
+that supports equivalent keys (an \tcode{unordered_multimap} may contain
+multiple copies of each key value) and that associates values of
+another type \tcode{mapped_type} with the keys.
+
+\pnum
+An \tcode{unordered_multimap} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for equivalent keys; that is, an \tcode{unordered_multimap} supports the \tcode{a_eq} operations in that table, not the \tcode{a_uniq} operations. For an \tcode{unordered_multimap<Key, T>} the \tcode{key type} is \tcode{Key}, the mapped type is \tcode{T}, and the value type is \tcode{std::pair<const Key, T>}.
+
+\pnum
+This section only describes operations on \tcode{unordered_multimap}
+that are not described in one of the requirement tables, or for which
+there is additional semantic information.
+
+\index{unordered_multimap@\tcode{unordered_multimap}}%
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ Key,
+            @\changedConcepts{class}{ObjectType}@ T,
+            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
+            class Alloc = std::allocator<std::pair<const Key, T> > >
+  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+  class unordered_multimap
+  {
+  public:
+    // types
+    typedef Key                                      key_type;
+    typedef std::pair<const Key, T>                  value_type;
+    typedef T                                        mapped_type;
+    typedef Hash                                     hasher;
+    typedef Pred                                     key_equal;
+    typedef Alloc                                    allocator_type;
+    typedef typename allocator_type::pointer         pointer;
+    typedef typename allocator_type::const_pointer   const_pointer;
+    typedef typename allocator_type::reference       reference;
+    typedef typename allocator_type::const_reference const_reference;
+    typedef @\impdef@                   size_type;
+    typedef @\impdef@                   difference_type;
+
+    typedef @\impdef@                   iterator;
+    typedef @\impdef@                   const_iterator;
+    typedef @\impdef@                   local_iterator;
+    typedef @\impdef@                   const_local_iterator;
+
+    // construct/destroy/copy
+    explicit unordered_multimap(size_type n = @\textit{implementation-defined}@,
+                                const hasher& hf = hasher(),
+                                const key_equal& eql = key_equal(),
+                                const allocator_type& a = allocator_type());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      unordered_multimap(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                         size_type n = @\textit{implementation-defined}@,
+                         const hasher& hf = hasher(),
+                         const key_equal& eql = key_equal(),
+                         const allocator_type& a = allocator_type());
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_multimap(const unordered_multimap&);
+    unordered_multimap(const Allocator&);
+    @\addedConcepts{requires CopyConstructible<value_type>}@
+       unordered_multimap(const unordered_multimap&, const Allocator&);
+    unordered_multimap(unordered_multimap&&, const Allocator&);
+    ~unordered_multimap();
+    @\addedConcepts{requires CopyConstructible<value_type> \&\& CopyAssignable<value_type>}@ 
+      unordered_multimap& operator=(const unordered_multimap&);
+    allocator_type get_allocator() const;
+
+    // size and capacity
+    bool empty() const;
+    size_type size() const;
+    size_type max_size() const;
+
+    // iterators
+    iterator       begin();
+    const_iterator begin() const;
+    iterator       end();
+    const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+
+    // modifiers
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(Args&&... args);
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ iterator insert(const value_type& obj);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ 
+      iterator insert(const_iterator hint, const value_type& obj);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator erase(const_iterator position);
+    size_type erase(const key_type& k);
+    iterator erase(const_iterator first, const_iterator last);
+    void clear();
+
+    void swap(unordered_multimap&);
+
+    // observers
+    hasher hash_function() const;
+    key_equal key_eq() const;
+
+    // lookup
+    iterator       find(const key_type& k);
+    const_iterator find(const key_type& k) const;
+    size_type count(const key_type& k) const;
+    std::pair<iterator, iterator>             equal_range(const key_type& k);
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+
+    // bucket interface
+    size_type bucket_count() const;
+    size_type max_bucket_count() const;
+    size_type bucket_size(size_type n);
+    size_type bucket(const key_type& k) const;
+    local_iterator begin(size_type n) const;
+    const_local_iterator begin(size_type n) const;
+    local_iterator end(size_type n);
+    const_local_iterator end(size_type n) const;  
+
+    // hash policy
+    float load_factor() const;
+    float max_load_factor() const;
+    void max_load_factor(float z);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
+  };
+
+  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+    void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>& x,
+              unordered_multimap<Key, T, Hash, Pred, Alloc>& y);
+
+  template <class Key, class T, class Hash, class Pred, class Alloc>
+    struct constructible_with_allocator_suffix<
+      unordered_multimap<Key, T, Hash, Pred, Alloc> >
+        : true_type { };
+}
+\end{codeblock}
+
+\rSec3[unord.multimap.cnstr]{\tcode{unordered_multimap} constructors}
+
+\index{unordered_multimap@\tcode{unordered_multimap}!unordered_multimap@\tcode{unordered_multimap}}%
+\begin{itemdecl}
+explicit unordered_multimap(size_type n = @\textit{implementation-defined}@,
+                            const hasher& hf = hasher(),
+                            const key_equal& eql = key_equal(),
+                            const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_multimap} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Constant.
+\end{itemdescr}
+
+\index{unordered_multimap@\tcode{unordered_multimap}!unordered_multimap@\tcode{unordered_multimap}}%
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  unordered_multimap(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                     size_type n = @\textit{implementation-defined}@,
+                     const hasher& hf = hasher(),
+                     const key_equal& eql = key_equal(),
+                     const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_multimap} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  (If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.)  Then
+inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Average case linear, worst case quadratic.
+\end{itemdescr}
+
+\rSec3[unord.multimap.swap]{\tcode{unordered_multimap} swap}
+
+\index{unordered_multimap@\tcode{unordered_multimap}!swap@\tcode{swap}}%
+\index{swap@\tcode{swap}!unordered_multimap@\tcode{unordered_multimap}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+  void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>& x,
+            unordered_multimap<Key, T, Hash, Pred, Alloc>& y);
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{x.swap(y)}.
+\end{itemdescr}
+
+\rSec2[unord.set]{Class template \tcode{unordered_set}}
+\index{unordered_set@\tcode{unordered_set}}%
+
+\pnum
+\index{unordered_set@\tcode{unordered_set}!unique keys}%
+\index{unordered associative containers!unique keys}%
+An \tcode{unordered_set} is an unordered associative container that
+supports unique keys (an \tcode{unordered_set} contains at most one of each
+key value) and in which the elements' keys are the elements
+themselves.
+
+\pnum
+An \tcode{unordered_set} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for unique keys; that is, an \tcode{unordered_set} supports the \tcode{a_uniq} operations in that table, not the \tcode{a_eq} operations. For an \tcode{unordered_set<Value>} the \tcode{key type} and the value type are both \tcode{Value}. The \tcode{iterator} and \tcode{const_iterator} types are both const iterator types. It is unspecified whether they are the same type.
+
+\pnum
+This section only describes operations on \tcode{unordered_set} that
+are not described in one of the requirement tables, or for which there
+is additional semantic information.
+
+\index{unordered_set@\tcode{unordered_set}}%
+\index{allocator}
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ Value,
+            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
+            class Alloc = std::allocator<Value> >
+  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+  class unordered_set
+  {
+  public:
+    // types
+    typedef Value                                    key_type;
+    typedef Value                                    value_type;
+    typedef Hash                                     hasher;
+    typedef Pred                                     key_equal;
+    typedef Alloc                                    allocator_type;
+    typedef typename allocator_type::pointer         pointer;
+    typedef typename allocator_type::const_pointer   const_pointer;
+    typedef typename allocator_type::reference       reference;
+    typedef typename allocator_type::const_reference const_reference;
+    typedef @\impdef@                   size_type;
+    typedef @\impdef@                   difference_type;
+
+    typedef @\impdef@                   iterator;
+    typedef @\impdef@                   const_iterator;
+    typedef @\impdef@                   local_iterator;
+    typedef @\impdef@                   const_local_iterator;
+
+    // construct/destroy/copy
+    explicit unordered_set(size_type n = @\textit{implementation-defined}@,
+                           const hasher& hf = hasher(),
+                           const key_equal& eql = key_equal(),
+                           const allocator_type& a = allocator_type());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      unordered_set(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                    size_type n = @\textit{implementation-defined}@,
+                    const hasher& hf = hasher(),
+                    const key_equal& eql = key_equal(),
+                    const allocator_type& a = allocator_type());
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_set(const unordered_set&);
+    unordered_set(const Allocator&);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_set(const unordered_set&, const Allocator&);
+    unordered_set(unordered_set&&, const Allocator&);
+    ~unordered_set();
+    @\addedConcepts{requires CopyConstructible<value_type> \&\& CopyAssignable<value_type>}@ 
+      unordered_set& operator=(const unordered_set&);
+    allocator_type get_allocator() const;
+
+    // size and capacity
+    bool empty() const;
+    size_type size() const;
+    size_type max_size() const;
+
+    // iterators
+    iterator       begin();
+    const_iterator begin() const;
+    iterator       end();
+    const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+
+    // modifiers
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      pair<iterator, bool> emplace(Args&&... args);
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ std::pair<iterator, bool> insert(const value_type& obj);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ 
+      iterator insert(const_iterator hint, const value_type& obj);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator erase(const_iterator position);
+    size_type erase(const key_type& k);
+    iterator erase(const_iterator first, const_iterator last);
+    void clear();
+
+    void swap(unordered_set&);
+
+    // observers
+    hasher hash_function() const;
+    key_equal key_eq() const;
+
+    // lookup
+    iterator       find(const key_type& k);
+    const_iterator find(const key_type& k) const;
+    size_type count(const key_type& k) const;
+    std::pair<iterator, iterator>             equal_range(const key_type& k);
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+
+    // bucket interface
+    size_type bucket_count() const;
+    size_type max_bucket_count() const;
+    size_type bucket_size(size_type n) const;
+    size_type bucket(const key_type& k) const;
+    local_iterator begin(size_type n);
+    const_local_iterator begin(size_type n) const;
+    local_iterator end(size_type n);
+    const_local_iterator end(size_type n) const;  
+
+    // hash policy
+    float load_factor() const;
+    float max_load_factor() const;
+    void max_load_factor(float z);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
+  };
+
+  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+    void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
+              unordered_set<Value, Hash, Pred, Alloc>& y);
+
+  template <class Value, class Hash, class Pred, class Alloc>
+    struct constructible_with_allocator_suffix<
+      map<Value, Hash, Pred, Alloc> >
+        : true_type { };
+}
+\end{codeblock}
+
+\rSec3[unord.set.cnstr]{\tcode{unordered_set} constructors}
+
+\index{unordered_set@\tcode{unordered_set}!unordered_set@\tcode{unordered_set}}%
+\begin{itemdecl}
+explicit unordered_set(size_type n = @\textit{implementation-defined}@,
+                       const hasher& hf = hasher(),
+                       const key_equal& eql = key_equal(),
+                       const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_set} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation
+defined.  \tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Constant.
+\end{itemdescr}
+
+\index{unordered_set@\tcode{unordered_set}!unordered_set@\tcode{unordered_set}}%
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  unordered_set(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                size_type n = @\textit{implementation-defined}@,
+                const hasher& hf = hasher(),
+                const key_equal& eql = key_equal(),
+                const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_set} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  (If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.)  Then
+inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Average case linear, worst case quadratic.
+\end{itemdescr}
+
+\rSec3[unord.set.swap]{\tcode{unordered_set} swap}
+
+\index{unordered_set@\tcode{unordered_set}!swap@\tcode{swap}}%
+\index{swap@\tcode{swap}!unordered_set@\tcode{unordered_set}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+  void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
+            unordered_set<Value, Hash, Pred, Alloc>& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{x.swap(y)}.
+\end{itemdescr}
+
+\rSec2[unord.multiset]{Class template \tcode{unordered_multiset}}
+\index{unordered_multiset@\tcode{unordered_multiset}}%
+\index{allocator}
+
+\pnum
+\index{unordered_multiset@\tcode{unordered_multiset}!equivalent keys}%
+\index{unordered associative containers!equivalent keys}%
+An \tcode{unordered_multiset} is an unordered associative container
+that supports equivalent keys (an \tcode{unordered_multiset} may contain
+multiple copies of the same key value) and in which each element's key
+is the element itself.
+
+\pnum
+An \tcode{unordered_multiset} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for equivalent keys; that is, an \tcode{unordered_multiset} supports the \tcode{a_eq} operations in that table, not the \tcode{a_uniq} operations. For an \tcode{unordered_multiset<Value>} the \tcode{key type} and the value type are both \tcode{Value}. The \tcode{iterator} and \tcode{const_iterator} types are both const iterator types. It is unspecified whether they are the same type.
+
+\pnum
+This section only describes operations on \tcode{unordered_multiset} that
+are not described in one of the requirement tables, or for which there
+is additional semantic information.
+
+\index{unordered_multiset@\tcode{unordered_multiset}}%
+\begin{codeblock}
+namespace std {
+  template <@\changedConcepts{class}{ObjectType}@ Value,
+            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
+            class Alloc = std::allocator<Value> >
+  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
+  class unordered_multiset
+  {
+  public:
+    // types
+    typedef Value                                    key_type;
+    typedef Value                                    value_type;
+    typedef Hash                                     hasher;
+    typedef Pred                                     key_equal;
+    typedef Alloc                                    allocator_type;
+    typedef typename allocator_type::pointer         pointer;
+    typedef typename allocator_type::const_pointer   const_pointer;
+    typedef typename allocator_type::reference       reference;
+    typedef typename allocator_type::const_reference const_reference;
+    typedef @\impdef@                   size_type;
+    typedef @\impdef@                   difference_type;
+
+    typedef @\impdef@                   iterator;
+    typedef @\impdef@                   const_iterator;
+    typedef @\impdef@                   local_iterator;
+    typedef @\impdef@                   const_local_iterator;
+
+    // construct/destroy/copy
+    explicit unordered_multiset(size_type n = @\textit{implementation-defined}@,
+                                const hasher& hf = hasher(),
+                                const key_equal& eql = key_equal(),
+                                const allocator_type& a = allocator_type());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+      unordered_multiset(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                         size_type n = @\textit{implementation-defined}@,
+                         const hasher& hf = hasher(),
+                         const key_equal& eql = key_equal(),
+                         const allocator_type& a = allocator_type());
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_multiset(const unordered_multiset&);
+    unordered_multiset(const Allocator&);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ unordered_multiset(const unordered_multiset&, const Allocator&);
+    unordered_multiset(unordered_multiset&&, const Allocator&);
+    ~unordered_multiset();
+    @\addedConcepts{requires CopyConstructible<value_type> \&\& CopyAssignable<value_type>}@ 
+      unordered_multiset& operator=(const unordered_multiset&);
+    allocator_type get_allocator() const;
+
+    // size and capacity
+    bool empty() const;
+    size_type size() const;
+    size_type max_size() const;
+
+    // iterators
+    iterator       begin();
+    const_iterator begin() const;
+    iterator       end();
+    const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+
+    // modifiers
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(Args&&... args);
+    template <class... Args> 
+      @\addedConcepts{requires HasConstructor<value_type, Args\&\&...>}@
+      iterator emplace(const_iterator position, Args&&... args);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ iterator insert(const value_type& obj);
+    @\addedConcepts{requires CopyConstructible<value_type>}@ 
+      iterator insert(const_iterator hint, const value_type& obj);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      @\addedConcepts{requires HasConstructor<value_type, Iter::value_type>}@
+      void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+
+    iterator erase(const_iterator position);
+    size_type erase(const key_type& k);
+    iterator erase(const_iterator first, const_iterator last);
+    void clear();
+
+    void swap(unordered_multiset&);
+
+    // observers
+    hasher hash_function() const;
+    key_equal key_eq() const;
+
+    // lookup
+    iterator       find(const key_type& k);
+    const_iterator find(const key_type& k) const;
+    size_type count(const key_type& k) const;
+    std::pair<iterator, iterator>             equal_range(const key_type& k);
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+
+    // bucket interface
+    size_type bucket_count() const;
+    size_type max_bucket_count() const;
+    size_type bucket_size(size_type n);
+    size_type bucket(const key_type& k) const;
+    local_iterator begin(size_type n) const;
+    const_local_iterator begin(size_type n) const;
+    local_iterator end(size_type n);
+    const_local_iterator end(size_type n) const;  
+
+    // hash policy
+    float load_factor() const;
+    float max_load_factor() const;
+    void max_load_factor(float z);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
+  };
+
+  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+    void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+              unordered_multiset<Value, Hash, Pred, Alloc>& y);
+
+  template <class Value, class Hash, class Pred, class Alloc>
+    struct constructible_with_allocator_suffix<
+      unordered_multiset<Value, Hash, Pred, Alloc> >
+        : true_type { };
+}
+\end{codeblock}
+
+\rSec3[unord.multiset.cnstr]{\tcode{unordered_multiset} constructors}
+
+\index{unordered_multiset@\tcode{unordered_multiset}!unordered_multiset@\tcode{unordered_multiset}}%
+\begin{itemdecl}
+explicit unordered_multiset(size_type n = @\textit{implementation-defined}@,
+                            const hasher& hf = hasher(),
+                            const key_equal& eql = key_equal(),
+                            const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ Constructs an empty \tcode{unordered_multiset} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum
+\complexity\ Constant.
+\end{itemdescr}
+
+\index{unordered_multiset@\tcode{unordered_multiset}!unordered_multiset@\tcode{unordered_multiset}}%
+\begin{itemdecl}
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{requires HasConstructor<value_type, Iter::reference>}@
+  unordered_multiset(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
+                     size_type n = @\textit{implementation-defined}@,
+                     const hasher& hf = hasher(),
+                     const key_equal& eql = key_equal(),
+                     const allocator_type& a = allocator_type());
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ 
+Constructs an empty \tcode{unordered_multiset} using the
+specified hash function, key equality function, and allocator, and
+using at least \textit{\tcode{n}} buckets.  (If \textit{\tcode{n}} is not
+provided, the number of buckets is implementation defined.)  Then
+inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
+\tcode{max_load_factor()} returns 1.0.
+
+\pnum\complexity\ Average case linear, worst case quadratic.
+\end{itemdescr}
+
+\rSec3[unord.multiset.swap]{\tcode{unordered_multiset} swap}
+
+\index{unordered_multiset@\tcode{unordered_multiset}!swap@\tcode{swap}}%
+\index{swap@\tcode{swap}!unordered_multiset@\tcode{unordered_multiset}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+  void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
+            unordered_multiset<Value, Hash, Pred, Alloc>& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum\effects\ \tcode{x.swap(y);}
+\end{itemdescr}
+
+\index{unordered associative containers|)}
+
 \bibliographystyle{plain}
 \bibliography{local}
 
