@@ -38,9 +38,9 @@ void test_gemv(std::ostream& os, int runs, int runs_i, int size, int size_i, cha
   check( y_native.begin(), y_native.end(), y_toblas.begin() );
 }
 
+template < typename T >
 struct gemv_matrix_vector_vector
 {
-  template < typename T >
   void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
   {
     runs_i = std::max( 1, runs_i / size_i ) ;
@@ -58,9 +58,9 @@ struct gemv_matrix_vector_vector
   }
 };
 
+template < typename T >
 struct gemv_trans_matrix_vector_vector
 {
-  template < typename T >
   void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
   {
     runs_i = std::max( 1, runs_i / size_i ) ;
@@ -78,9 +78,9 @@ struct gemv_trans_matrix_vector_vector
   }
 };
 
+template < typename T >
 struct gemv_conj_matrix_vector_vector
 {
-  template < typename T >
   void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
   {
     runs_i = std::max( 1, runs_i / size_i ) ;
@@ -98,9 +98,9 @@ struct gemv_conj_matrix_vector_vector
   }
 };
 
+template < typename T >
 struct gemv_matrix_range_vector_vector
 {
-  template < typename T >
   void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
   {
     runs_i = std::max( 1, runs_i / size_i ) ;
@@ -159,43 +159,43 @@ int main (int argc, char *argv [])
     {
       std::cerr <<         "gemv_matrix_vector_vector_double" << std::endl ;
       std::ofstream stream("gemv_matrix_vector_vector_double");
-      loop< double, gemv_matrix_vector_vector >( stream, start, step, stop, runs, gemv_matrix_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_matrix_vector_vector<double>() ) ;
     } 
     
     {
       std::cerr <<         "gemv_matrix_vector_vector_double_complex" << std::endl ;
       std::ofstream stream("gemv_matrix_vector_vector_double_complex");
-      loop< std::complex<double>, gemv_matrix_vector_vector >( stream, start, step, stop, runs, gemv_matrix_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_matrix_vector_vector<std::complex<double> >() ) ;
     }
 
     {
       std::cerr <<         "gemv_trans_matrix_vector_vector_double" << std::endl ;
       std::ofstream stream("gemv_trans_matrix_vector_vector_double");
-      loop< double, gemv_trans_matrix_vector_vector >( stream, start, step, stop, runs, gemv_trans_matrix_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_trans_matrix_vector_vector<double>() ) ;
     } 
     
     {
       std::cerr <<         "gemv_trans_matrix_vector_vector_double_complex" << std::endl ;
       std::ofstream stream("gemv_trans_matrix_vector_vector_double_complex");
-      loop< std::complex<double>, gemv_trans_matrix_vector_vector >( stream, start, step, stop, runs, gemv_trans_matrix_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_trans_matrix_vector_vector<std::complex<double> >() ) ;
     }
 
     {
       std::cerr <<         "gemv_conj_matrix_vector_vector_double_complex" << std::endl ;
       std::ofstream stream("gemv_conj_matrix_vector_vector_double_complex");
-      loop< std::complex<double>, gemv_conj_matrix_vector_vector >( stream, start, step, stop, runs, gemv_conj_matrix_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_conj_matrix_vector_vector<std::complex<double> >() ) ;
     }
 
     {
       std::cerr <<         "gemv_matrix_range_vector_vector_double" << std::endl ;
       std::ofstream stream("gemv_matrix_range_vector_vector_double");
-      loop< double, gemv_matrix_range_vector_vector >( stream, start, step, stop, runs, gemv_matrix_range_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_matrix_range_vector_vector<double>() ) ;
     } 
     
     {
       std::cerr <<         "gemv_matrix_range_vector_vector_double_complex" << std::endl ;
       std::ofstream stream("gemv_matrix_range_vector_vector_double_complex");
-      loop< std::complex<double>, gemv_matrix_range_vector_vector >( stream, start, step, stop, runs, gemv_matrix_range_vector_vector() ) ;
+      loop( stream, start, step, stop, runs, gemv_matrix_range_vector_vector<std::complex<double> >() ) ;
     }
   }
 

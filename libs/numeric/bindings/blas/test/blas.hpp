@@ -184,7 +184,7 @@ void report(std::ostream& os, int runs, int runs_i, int size_i, double time)
   os        << std::setw(12) << normed_time << std::setw(12) << mflops ;
 }
 
-template < typename T, typename FunctorType >
+template < typename FunctorType >
 void loop(std::ostream& os, int start, int step, int stop, int runs, FunctorType functor)
 {
   for(int size_i = start ; size_i <= stop ; size_i = std::max( static_cast< int >( size_i * (1 + 1.0 / step ) ), size_i + 1 ) ) {
@@ -193,14 +193,14 @@ void loop(std::ostream& os, int start, int step, int stop, int runs, FunctorType
     std::cerr << size_i << "\t";
     os        << size_i << "\t";
     
-    functor.template operator()< T >( os, stop, size_i, runs, runs_i ) ;
+    functor.operator()( os, stop, size_i, runs, runs_i ) ;
     
     std::cerr << std::endl;
     os        << std::endl;
   }
 }
 
-template < typename T, typename FunctorType, typename CallFunctor >
+template < typename FunctorType, typename CallFunctor >
 void loop(std::ostream& os, int start, int step, int stop, int runs, FunctorType functor, CallFunctor ublas_call)
 {
   for(int size_i = start ; size_i <= stop ; size_i = std::max( static_cast< int >( size_i * (1 + 1.0 / step ) ), size_i + 1 ) ) {
@@ -209,7 +209,7 @@ void loop(std::ostream& os, int start, int step, int stop, int runs, FunctorType
     std::cerr << size_i << "\t";
     os        << size_i << "\t";
     
-    functor.template operator()< T >( os, stop, size_i, runs, runs_i, ublas_call ) ;
+    functor.operator()( os, stop, size_i, runs, runs_i, ublas_call ) ;
     
     std::cerr << std::endl;
     os        << std::endl;
