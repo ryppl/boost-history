@@ -1508,7 +1508,7 @@ concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X>, E
   typename reference                  = typename X::reference;
   typename const_reference            = typename X::const_reference;
   SignedIntegral difference_type      = typename X::difference_type;
-  UnsignedIntegral size_type          = typename X::size_type; 
+  UnsignedIntegralLike size_type      = typename X::size_type; 
   @\textcolor{addclr}{}@template<ObjectType T> class rebind = @\textit{see below}@;
 
   requires Convertible<pointer, const_pointer> && 
@@ -1547,7 +1547,7 @@ concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X>, E
 
 \color{addclr}
 \begin{itemdecl}
-UnsignedIntegral size_type;
+UnsignedIntegralLike size_type;
 \end{itemdecl}
 \color{black}
 

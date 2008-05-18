@@ -1252,34 +1252,39 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <class T, class Container = deque<T> > class queue;
-  template <class T, class Container>
-    bool operator==(const queue<T, Container>& x,const queue<T, Container>& y);
-  template <class T, class Container>
-    bool operator< (const queue<T, Container>& x,const queue<T, Container>& y);
-  template <class T, class Container>
-    bool operator!=(const queue<T, Container>& x,const queue<T, Container>& y);
-  template <class T, class Container>
-    bool operator> (const queue<T, Container>& x,const queue<T, Container>& y);
-  template <class T, class Container>
-    bool operator>=(const queue<T, Container>& x,const queue<T, Container>& y);
-  template <class T, class Container>
-    bool operator<=(const queue<T, Container>& x,const queue<T, Container>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+    @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
+            @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@
+    class queue;
+  template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator==(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator< (const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator!=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator> (const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator>=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(queue<T,Allocator>& x, queue<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(queue<T,Allocator>&& x, queue<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator>
     void swap(queue<T,Allocator>& x, queue<T,Allocator>&& y);
 
-  template <class T, class Container = vector<T>,
-        class Compare = less<typename Container::value_type> >
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+        @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
+    @\addedConcepts{requires SameType<Cont::value_type, T> \&\& MutableRandomAccessIterator<Cont::iterator>}@
+             @\addedConcepts{\&\& SwappableIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
   class priority_queue;
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator@\addedConcepts{, Swappable Compare}@>
     void swap(priority_queue<T,Allocator>& x, priority_queue<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator@\addedConcepts{, Swappable Compare}@>
     void swap(priority_queue<T,Allocator>&& x, priority_queue<T,Allocator>& y);
-  template <class T, class Allocator>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Allocator@\addedConcepts{, Swappable Compare}@>
     void swap(priority_queue<T,Allocator>& x, priority_queue<T,Allocator>&& y);
 }
 \end{codeblock}
@@ -1289,19 +1294,19 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <class T, class Container = deque<T> > class stack;
-  template <class T, class Container>
-    bool operator==(const stack<T, Container>& x,const stack<T, Container>& y);
-  template <class T, class Container>
-    bool operator< (const stack<T, Container>& x,const stack<T, Container>& y);
-  template <class T, class Container>
-    bool operator!=(const stack<T, Container>& x,const stack<T, Container>& y);
-  template <class T, class Container>
-    bool operator> (const stack<T, Container>& x,const stack<T, Container>& y);
-  template <class T, class Container>
-    bool operator>=(const stack<T, Container>& x,const stack<T, Container>& y);
-  template <class T, class Container>
-    bool operator<=(const stack<T, Container>& x,const stack<T, Container>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@ = deque<T> > class stack;
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
   template <class T, class Allocator>
     void swap(stack<T,Allocator>& x, stack<T,Allocator>& y);
   template <class T, class Allocator>
@@ -3246,53 +3251,187 @@ x.swap(y);
 \end{codeblock}
 \end{itemdescr}
 
-\rSec2[lib.container.adaptors]{Container adaptors}
+\rSec2[container.adaptors]{Container adaptors}
 
 \pnum
-The container adaptors each take a Container template parameter,
-and each constructor takes a Container reference argument.
-This
-container is copied into the Container member of each adaptor.
+The container adaptors each take a \tcode{Container} template parameter, and each constructor takes a \tcode{Container} reference argument. This container is copied into the \tcode{Container} member of each adaptor. If the container takes an allocator, then a compatible allocator may be passed in to the adaptor's constructor. Otherwise, normal copy or move construction is used for the container argument. \enternote it is not necessary for an implementation to distinguish between the one-argument constructor that takes a \tcode{Container} and the one-argument constructor that takes an \tcode{allocator_type}. Both forms use their argument to construct an instance of the container. \exitnote
 
-\rSec3[lib.queue]{Class template \tcode{queue}}
+\editorial{Add the following new section [container.concepts]}
+\color{addclr}
+\rSec3[container.concepts]{Container concepts}
+\pnum
+\addedConcepts{The \mbox{\tcode{container_concepts}} header describes
+  requirements on the template arguments used in container adaptors.} 
+
+\synopsis{Header \tcode{<container_concepts>} synopsis}
+\begin{codeblock}
+namespace std {
+  auto concept Container<typename C> @\textit{see below}@
+  auto concept SequenceContainer<typename C> @\textit{see below}@
+  auto concept FrontInsertionSequence<typename C> @\textit{see below}@
+  auto concept BackInsertionSequence<typename C> @\textit{see below}@
+}
+\end{codeblock}
+
+
+\begin{itemdecl}
+auto concept Container<typename C> {
+  ObjectType           value_type      = typename C::value_type;
+  typename             reference       = typename C::reference;
+  typename             const_reference = typename C::const_reference;
+  UnsignedIntegralLike size_type       = typename C::size_type;
+
+  ForwardIterator iterator;
+  ForwardIterator const_iterator;
+  requires SameType<ForwardIterator<iterator>::value_type, value_type> 
+           && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
+
+  bool      C::empty() const;
+  size_type C::size() const;
+
+  iterator       C::begin();
+  const_iterator C::begin() const;
+  iterator       C::end();
+  const_iterator C::end() const;
+
+  void C::swap(C&&);
+
+  axiom ContainerSize(C c) {
+    (C.begin() == C.end()) == C.empty();
+    (C.begin() != C.end()) == (C.size() > 0);
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, which provides
+  iteration through a sequence of elements stored in the container.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for a (possibly
+  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{C}},
+  \mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept SequenceContainer<typename C> : Container<C> {
+  reference       C::front();
+  const_reference C::front() const;
+  reference       C::back();
+  const_reference C::back() const;
+
+  axiom AccessFront(C c) {
+    if (c.begin() != c.end()) c.front() == *c.begin();
+  }  
+
+  axiom AccessBack(C c) {
+    if (c.begin() != c.end()) c.back() == *(--c.end());
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a sequence container,
+  which stores its elements in the order in which they were added.} 
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
+  void C::push_front(const value_type&);
+  void C::pop_front();
+
+  axiom FrontInsertion(C c, value_type x) {
+    c == (c.push_front(x), c.pop_front());
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding or removing elements from the front of the
+  sequence.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
+  void C::push_back(const value_type&);
+  void C::pop_back();
+
+  axiom BackInsertion(C c, value_type x) {
+    c == (c.push_back(x), c.pop_back());
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding or removing elements from the back of the
+  sequence.}
+\end{itemdescr}
+
+\color{black}
+
+\rSec3[queue]{Class template \tcode{queue}}
 
 \pnum
 \index{queue@\tcode{queue}}%
-Any \changedConcepts{sequence supporting operations
-front(),
-back(),
-push_back()
+Any sequence container \changedConcepts{supporting operations
+\mbox{\tcode{front()}},
+\mbox{\tcode{back()}},
+\mbox{\tcode{push_back()}}
 and
-pop_front()}{container that meets the requirements of the
-Back Insertion Sequence and Front Insertion Sequence concepts}
+\mbox{\tcode{pop_front()}}}{meeting the requirements of the
+\mbox{\tcode{FrontInsertionSequence}} and
+\mbox{\tcode{BackInsertionSequence}} concepts}
 can be used to instantiate
 \tcode{queue}.
 In particular,
 \tcode{list}\
-(\ref{lib.list})
+(\ref{list})
 and
 \tcode{deque}\
-(\ref{lib.deque})
+(\ref{deque})
 can be used.
 
-\rSec4[lib.queue.defn]{\tcode{queue} definition}
+\rSec4[queue.defn]{\tcode{queue} definition}
 
 \begin{codeblock}
 namespace std {
-  template <class T, @\addedConcepts{FrontInsertionSequence Container}@ = deque<T> >
-  @\addedConcepts{where BackInsertionSequence<Cont>}@
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+  @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
+          @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@
   class queue {
   public:
-    typedef Container::value_type            value_type;
-    typedef Container::reference             reference;
-    typedef Container::const_reference       const_reference;
-    typedef Container::size_type             size_type;
-    typedef Container                        container_type;
+    typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
+    typedef typename Cont@\removedConcepts{ainer}@::reference             reference;
+    typedef typename Cont@\removedConcepts{ainer}@::const_reference       const_reference;
+    typedef typename Cont@\removedConcepts{ainer}@::size_type             size_type;
+    typedef          Cont@\removedConcepts{ainer}@                        container_type;
   protected:
-    Container c;
+    Cont@\removedConcepts{ainer}@ c;
 
   public:
-    explicit queue(const Container& = Container());
+    @\addedConcepts{requires CopyConstructible<Cont>}@ explicit queue(const Cont@\removedConcepts{ainer}@&);
+    @\addedConcepts{requires MoveConstructible<Cont>}@ explicit queue(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
+    @\addedConcepts{requires MoveConstructible<Cont>}@ queue(queue&& q) : c(std::move(q.c)) {}
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Alloc>}@
+      explicit queue(const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Cont, Alloc>}@
+      queue(const Cont@\removedConcepts{ainer}@&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
+      queue(Cont@\removedConcepts{ainer}@&&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc\&\&>}@
+      queue(queue&&, const Alloc&);
+    @\addedConcepts{requires MoveAssignable<Cont>}@ queue& operator=(queue&& q)
+                                        { c = std::move(q.c); return *this; }
 
     bool              empty() const     { return c.empty(); }
     size_type         size()  const     { return c.size(); }
@@ -3301,44 +3440,48 @@ namespace std {
     reference         back()            { return c.back(); }
     const_reference   back() const      { return c.back(); }
     void push(const value_type& x)      { c.push_back(x); }
+    void push(value_type&& x)           { c.push_back(std::move(x)); }
     void pop()                          { c.pop_front(); }
+    void swap(queue&& q)                { c.swap(q.c); }
   };
 
+  template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator==(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator< (const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator!=(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator> (const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator>=(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
+
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
+    void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
+    void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
+    void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
+
+  template <class T, class Container, class Alloc>
+    struct uses_allocator<queue<T, Container>, Alloc>
+      : uses_allocator<Container, Alloc>::type { };
+
   template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container>}@
-    bool operator==(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator< (const queue<T, Container>& x,
-                    const queue<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container>}@
-    bool operator!=(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator> (const queue<T, Container>& x,
-                    const queue<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator>=(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator<=(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+    struct constructible_with_allocator_suffix<queue<T, Container> >
+      : true_type { };
 }
 \end{codeblock}
 
-\rSec4[lib.queue.ops]{\tcode{queue} operators}
+\rSec4[queue.ops]{\tcode{queue} operators}
 
 \index{operator==@\tcode{operator==}!queue@\tcode{queue}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container>}@
-    bool operator==(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator==(const queue<T, Cont@\removedConcepts{ainer}@>& x,
+                    const queue<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3349,10 +3492,9 @@ template <class T, class Container>
 
 \index{operator"!=@\tcode{operator"!=}!queue@\tcode{queue}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container>}@
-    bool operator!=(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator!=(const queue<T, Cont@\removedConcepts{ainer}@>& x,
+                    const queue<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3363,10 +3505,9 @@ template <class T, class Container>
 
 \index{operator<@\tcode{operator<}!queue@\tcode{queue}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator< (const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator< (const queue<T, Cont@\removedConcepts{ainer}@>& x,
+                    const queue<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3377,10 +3518,9 @@ template <class T, class Container>
 
 \index{operator<=@\tcode{operator<=}!queue@\tcode{queue}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator<=(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x,
+                    const queue<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3391,10 +3531,9 @@ template <class T, class Container>
 
 \index{operator>@\tcode{operator>}!queue@\tcode{queue}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator> (const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator> (const queue<T, Cont@\removedConcepts{ainer}@>& x,
+                    const queue<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3405,10 +3544,9 @@ template <class T, class Container>
 
 \index{operator>=@\tcode{operator>=}!queue@\tcode{queue}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container>}@
-    bool operator>=(const queue<T, Container>& x,
-                    const queue<T, Container>& y);
+template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+    bool operator>=(const queue<T, Cont@\removedConcepts{ainer}@>& x,
+                    const queue<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3417,78 +3555,135 @@ template <class T, class Container>
 \tcode{x.c >= y.c}.
 \end{itemdescr}
 
-\rSec3[lib.priority.queue]{Class template \tcode{priority_queue}}
+\rSec4[queue.special]{\tcode{queue} specialized algorithms}
+
+\begin{itemdecl}
+template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
+  void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
+  void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
+template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
+  void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{x.swap(y)}.
+\end{itemdescr}
+
+\rSec3[priority.queue]{Class template \tcode{priority_queue}}
 
 \pnum
 \index{priority_queue@\tcode{priority_queue}}%
-Any sequence with random access iterator and supporting operations
-\tcode{front()},
-\tcode{push_back()}\
+Any sequence container with random access iterator and \changedConcepts{supporting operations
+\mbox{\tcode{front()}},
+\mbox{\tcode{push_back()}}
 and
-\tcode{pop_back()}\
+\mbox{\tcode{pop_back()}}}{that meets the requirements of the
+\mbox{\tcode{BackInsertionSequence}} concept}
 can be used to instantiate
 \tcode{priority_queue}.
 In particular,
 \tcode{vector}\
-(\ref{lib.vector})
+(\ref{vector})
 and
 \tcode{deque}\
-(\ref{lib.deque})
+(\ref{deque})
 can be used.
 Instantiating
 \tcode{priority_queue}\
-also involves supplying a function or function object for making priority comparisons;
-the library assumes that the function or function object defines a strict
-weak ordering (\ref{lib.alg.sorting}).
+also involves supplying a function or function object for making
+priority comparisons; the library assumes that the function or function
+object defines a strict weak ordering (\ref{alg.sorting}).
 
 \begin{codeblock}
 namespace std {
-  template <class T, @\addedConcepts{RandomAccessSequence Container}@ = vector<T>,
-            @\addedConcepts{BinaryPredicate<Container::value_type, Container::value_type>}@ Compare 
-              = less<Container::value_type> >
-  @\addedConcepts{where CopyConstructible<Compare>}@
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+       @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
+  @\addedConcepts{requires SameType<Cont::value_type, T> \&\& MutableRandomAccessIterator<Cont::iterator>}@
+           @\addedConcepts{\&\& SwappableIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
   class priority_queue {
   public:
-    typedef Container::value_type            value_type;
-    typedef Container::reference             reference;
-    typedef Container::const_reference       const_reference;
-    typedef Container::size_type             size_type;
-    typedef Container                        container_type;
+    typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
+    typedef typename Cont@\removedConcepts{ainer}@::reference             reference;
+    typedef typename Cont@\removedConcepts{ainer}@::const_reference       const_reference;
+    typedef typename Cont@\removedConcepts{ainer}@::size_type             size_type;
+    typedef          Cont@\removedConcepts{ainer}@                        container_type;
   protected:
-    Container c;
+    Cont@\removedConcepts{ainer}@ c;
     Compare comp;
 
   public:
-    explicit priority_queue(const Compare& x = Compare(),
-                const Container& = Container());
-    template <@\addedConcepts{InputIterator Iter}@>
-      @\addedConcepts{where Convertible<Iter::value_type, value_type>}@
-      priority_queue(Iter first, Iter last,
-             const Compare& x = Compare(),
-             const Container& = Container());
+    @\addedConcepts{requires CopyConstructible<Cont>}@ priority_queue(const Compare& x, const Cont@\removedConcepts{ainer}@&);
+    @\addedConcepts{requires MoveConstructible<Cont>}@ 
+      explicit priority_queue(const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{CopyConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+      priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+             const Compare& x, const Cont@\removedConcepts{ainer}@&);
+    template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+      @\addedConcepts{MoveConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+      priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+             const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
+    @\addedConcepts{requires MoveConstructible<Cont>}@ priority_queue(priority_queue&&);
+    @\addedConcepts{requires MoveAssignable<Cont>}@ priority_queue& operator=(priority_queue&&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Alloc>}@
+      explicit priority_queue(const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Alloc>}@
+      priority_queue(const Compare&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Cont, Alloc>}@
+      priority_queue(const Compare&, const Cont@\removedConcepts{ainer}@&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
+      priority_queue(const Compare&, Cont@\removedConcepts{ainer}@&&, const Alloc&);
+    template <class Alloc> 
+      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
+      priority_queue(priority_queue&&, const Alloc&);
 
     bool      empty() const       { return c.empty(); }
     size_type size()  const       { return c.size(); }
     const_reference   top() const { return c.front(); }
     void push(const value_type& x);
+    void push(value_type&& x);
     void pop();
+    void swap(priority_queue&&);
   };
                 // no equality is provided
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+    void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+    void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+    void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
+
+  template <class T, class Cont@\removedConcepts{ainer}@, class Compare, class Alloc>
+    struct uses_allocator<priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>, Alloc>
+      : uses_allocator<Cont@\removedConcepts{ainer}@, Alloc>::type { };
+
+  template <class T, class Cont@\removedConcepts{ainer}@, class Compare>
+    struct constructible_with_allocator_suffix<
+      priority_queue<T, Cont@\removedConcepts{ainer}@, Compare> >
+      : true_type { };
 }
 \end{codeblock}
 
-\rSec4[lib.priqueue.cons]{\tcode{priority_queue}\ constructors}
+\rSec4[priqueue.cons]{\tcode{priority_queue}\ constructors}
 
 \index{priority_queue@\tcode{priority_queue}!\tcode{priority_queue}}%
 \begin{itemdecl}
-priority_queue(const Compare& x = Compare(),
-               const Container& y = Container());
+@\addedConcepts{requires CopyConstructible<Cont>}@ priority_queue(const Compare& x, const Cont@\removedConcepts{ainer}@& y);
+
+@\addedConcepts{requires MoveConstructible<Cont>}@ 
+explicit priority_queue(const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& y = Cont@\removedConcepts{ainer}@());
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \requires\ 
-\farg{x}\ defines a strict weak ordering (\ref{lib.alg.sorting}).
+\farg{x}\ shall define a strict weak ordering (\ref{alg.sorting}).
 
 \pnum
 \effects\ 
@@ -3496,38 +3691,41 @@ Initializes
 \tcode{comp}\ with
 \tcode{x}\ and
 \tcode{c}\ with
-\tcode{y};
+\tcode{y} (copy constructing or move constructing as appropriate);
 calls
 \tcode{make_heap(c.begin(), c.end(), comp)}.
 \end{itemdescr}
 
 \begin{itemdecl}
-template <@\addedConcepts{InputIterator Iter}@>
-  @\addedConcepts{where Convertible<Iter::value_type, value_type>}@
-  priority_queue(Iter first, Iter last,
-                 const Compare& x = Compare(),
-                 const Container& y = Container());
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{CopyConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+  priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+         const Compare& x, const Cont@\removedConcepts{ainer}@&);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\addedConcepts{MoveConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+  priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
+         const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \requires\ 
-\farg{x}\ defines a strict weak ordering (\ref{lib.alg.sorting}).
+\farg{x}\ shall define a strict weak ordering (\ref{alg.sorting}).
 
 \pnum
 \effects\ 
 Initializes
-\tcode{c}\ with
-\tcode{y}\ and
-\tcode{comp}\ with
-\tcode{x};
+\tcode{comp} with
+\tcode{x} and
+\tcode{c} with
+\tcode{y} (copy constructing or move constructing as appropriate);
 calls
 \tcode{c.insert(c.end(), first, last)};
 and finally calls
 \tcode{make_heap(c.begin(), c.end(), comp)}.
 \end{itemdescr}
 
-\rSec4[lib.priqueue.members]{\tcode{priority_queue}\ members}
+\rSec4[priqueue.members]{\tcode{priority_queue}\ members}
 
 \index{push@\tcode{push}!\tcode{priority_queue}}%
 \begin{itemdecl}
@@ -3543,6 +3741,21 @@ push_heap(c.begin(), c.end(), comp);
 \end{codeblock}
 \end{itemdescr}
 
+\index{push@\tcode{push}!\tcode{priority_queue}}%
+\begin{itemdecl}
+void push(value_type&& x);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects
+\begin{codeblock}
+c.push_back(std::move(x));
+push_heap(c.begin(), c.end(), comp);
+\end{codeblock}
+\end{itemdescr}
+
+
 \index{pop@\tcode{pop}!\tcode{priority_queue}}%
 \begin{itemdecl}
 void pop();
@@ -3557,11 +3770,27 @@ c.pop_back();
 \end{codeblock}
 \end{itemdescr}
 
-\rSec3[lib.stack]{Class template \tcode{stack}}
+\rSec4[priqueue.special]{\tcode{priority_queue} specialized algorithms}
+
+\begin{itemdecl}
+template <class T, class Cont@\removedConcepts{ainer}@, Compare>
+  void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
+template <class T, class Cont@\removedConcepts{ainer}@, Compare>
+  void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
+template <class T, class Cont@\removedConcepts{ainer}@, Compare>
+  void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{x.swap(y)}.
+\end{itemdescr}
+
+\rSec3[stack]{Class template \tcode{stack}}
 
 \pnum
 \index{stack@\tcode{stack}}%
-Any sequence supporting operations
+Any sequence container supporting operations
 \tcode{back()},
 \tcode{push_back()}\
 and
@@ -3570,75 +3799,83 @@ can be used to instantiate
 \tcode{stack}.
 In particular,
 \tcode{vector}\
-(\ref{lib.vector}),
+(\ref{vector}),
 \tcode{list}\
-(\ref{lib.list})
+(\ref{list})
 and
 \tcode{deque}\
-(\ref{lib.deque})
+(\ref{deque})
 can be used.
 
-\rSec4[lib.stack.defn]{\tcode{stack} definition}
+\rSec4[stack.defn]{\tcode{stack} definition}
 
 \begin{codeblock}
 namespace std {
-  template <class T, @\addedConcepts{BackInsertionSequence Container}@ = deque<T> >
+  template <class T, class Cont@\removedConcepts{ainer}@ = deque<T> >
   class stack {
   public:
-    typedef Container::value_type            value_type;
-    typedef Container::reference             reference;
-    typedef Container::const_reference       const_reference;
-    typedef Container::size_type             size_type;
-    typedef Container                        container_type;
+    typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
+    typedef typename Cont@\removedConcepts{ainer}@::reference             reference;
+    typedef typename Cont@\removedConcepts{ainer}@::const_reference       const_reference;
+    typedef typename Cont@\removedConcepts{ainer}@::size_type             size_type;
+    typedef          Cont@\removedConcepts{ainer}@                        container_type;
   protected:
-    Container c;
+    Cont@\removedConcepts{ainer}@ c;
 
   public:
-    explicit stack(const Container& = Container());
+    explicit stack(const Cont@\removedConcepts{ainer}@&);
+    explicit stack(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
+    template <class Alloc> explicit stack(const Alloc&);
+    template <class Alloc> stack(const Cont@\removedConcepts{ainer}@&, const Alloc&);
+    template <class Alloc> stack(Cont@\removedConcepts{ainer}@&&, const Alloc&);
+    template <class Alloc> stack(stack&&, const Alloc&);
 
     bool      empty() const             { return c.empty(); }
     size_type size()  const             { return c.size(); }
     reference         top()             { return c.back(); }
     const_reference   top() const       { return c.back(); }
     void push(const value_type& x)      { c.push_back(x); }
+    void push(value_type&& x)           { c.push_back(std::move(x)); }
     void pop()                          { c.pop_back(); }
+    void swap(stack&& s)                { c.swap(s.c); }
   };
 
-  template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container::value_type>}@
-    bool operator==(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator< (const stack<T, Container>& x,
-                    const stack<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container::value_type>}@
-    bool operator!=(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator> (const stack<T, Container>& x,
-                    const stack<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator>=(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
-  template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator<=(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <class T, class Allocator>
+    void swap(stack<T,Allocator>& x, stack<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(stack<T,Allocator>&& x, stack<T,Allocator>& y);
+  template <class T, class Allocator>
+    void swap(stack<T,Allocator>& x, stack<T,Allocator>&& y);
+
+  template <class T, class Cont@\removedConcepts{ainer}@, class Alloc>
+    struct uses_allocator<stack<T, Cont@\removedConcepts{ainer}@>, Alloc>
+      : uses_allocator<Cont@\removedConcepts{ainer}@, Alloc>::type { };
+
+  template <class T, class Cont@\removedConcepts{ainer}@>
+    struct constructible_with_allocator_suffix<stack<T, Cont@\removedConcepts{ainer}@> >
+      : true_type { };
 }
 \end{codeblock}
 
-\rSec4[lib.stack.ops]{\tcode{stack} operators}
+\rSec4[stack.ops]{\tcode{stack} operators}
 
 \index{operator==@\tcode{operator==}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container::value_type>}@
-    bool operator==(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,
+                    const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3649,10 +3886,9 @@ template <class T, class Container>
 
 \index{operator"!=@\tcode{operator"!=}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where EqualityComparable<Container::value_type>}@
-    bool operator!=(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x,
+                    const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3663,10 +3899,9 @@ template <class T, class Container>
 
 \index{operator<@\tcode{operator<}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator< (const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x,
+                    const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3677,10 +3912,9 @@ template <class T, class Container>
 
 \index{operator<=@\tcode{operator<=}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator<=(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,
+                    const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3691,10 +3925,9 @@ template <class T, class Container>
 
 \index{operator>@\tcode{operator>}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator> (const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x,
+                    const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3705,10 +3938,9 @@ template <class T, class Container>
 
 \index{operator>=@\tcode{operator>=}!stack@\tcode{stack}}%
 \begin{itemdecl}
-template <class T, class Container>
-    @\addedConcepts{where LessThanComparable<Container::value_type>}@
-    bool operator>=(const stack<T, Container>& x,
-                    const stack<T, Container>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+    bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,
+                    const stack<T, Cont@\removedConcepts{ainer}@>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3716,6 +3948,23 @@ template <class T, class Container>
 \returns\ 
 \tcode{x.c >= y.c}.
 \end{itemdescr}
+
+\rSec4[stack.special]{\tcode{stack} specialized algorithms}
+
+\begin{itemdecl}
+template <class T, class Cont@\removedConcepts{ainer}@>
+  void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+  void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
+template <class T, class Cont@\removedConcepts{ainer}@>
+  void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects \tcode{x.swap(y)}.
+\end{itemdescr}
+
 
 \rSec2[vector]{Class template \tcode{vector}}
 
