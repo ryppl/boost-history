@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="30" status="New">
+<title>Should Predicates be on <tt>Iter::value_type</tt> or <tt>Iter::reference</tt>?</title>
+<section><sref ref="[algorithms]"/></section>
+<submitter>Christopher Jefferson</submitter>
+<date>18 May 2008</date>
+
+<discussion>
+  <p>For some functions, such as <tt>prev_permutation</tt> and <tt>next_permutation</tt> are predicated on <tt>Iter::reference</tt>, while others, such as <tt>sort_heap</tt>, are predicated on <tt>Iter::value_type</tt>. I am not sure which is correct, but it the inconsistency seems strange. This should only affect proxy references.</p>
+</discussion>
+
+<resolution>
+  <p>
+  </p>
+</resolution>
+</issue>
