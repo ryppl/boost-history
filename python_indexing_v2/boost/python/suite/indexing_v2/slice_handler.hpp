@@ -2,7 +2,7 @@
 //
 // Header file slice_handler.hpp
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -10,7 +10,8 @@
 //
 // History
 // =======
-// 2003/ 9/ 9   rmg     File creation
+// 2003-09-09   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -26,10 +27,10 @@
 #include <boost/mpl/apply.hpp>
 #include <algorithm>
 
-#include <boost/python/suite/indexing/slice.hpp>
-#include <boost/python/suite/indexing/python_iterator.hpp>
+#include <boost/python/suite/indexing_v2/slice.hpp>
+#include <boost/python/suite/indexing_v2/python_iterator.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   template<class Algorithms, class Policy>
   struct slice_handler
   {
@@ -67,6 +68,11 @@ namespace boost { namespace python { namespace indexing {
 
       bool precall (PyObject *args);
       PyObject* postcall (PyObject *args, PyObject *result);
+
+      template<class Sig>
+      struct extract_return_type : Policy::template extract_return_type<Sig>
+      {
+      };
 
     private:
       Policy m_base;

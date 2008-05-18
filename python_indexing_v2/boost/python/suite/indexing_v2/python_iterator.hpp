@@ -4,7 +4,7 @@
 //
 // Handy Python iterable iterators
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -12,7 +12,8 @@
 //
 // History
 // =======
-// 2003/ 9/10   rmg     File creation
+// 2003-09-10   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -22,7 +23,7 @@
 
 #include <boost/python/object.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   struct BOOST_PYTHON_DECL python_iterator
   {
     python_iterator (boost::python::object);

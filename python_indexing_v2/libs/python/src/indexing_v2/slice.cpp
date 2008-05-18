@@ -1,6 +1,6 @@
 // Module slice.cpp
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -8,12 +8,13 @@
 //
 // History
 // =======
-// 2003/ 9/10   rmg     File creation
+// 2003-09-10   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
 
-#include <boost/python/suite/indexing/slice.hpp>
+#include <boost/python/suite/indexing_v2/slice.hpp>
 #include <algorithm>
 
 /////////////////////////////////////////////////////////////////////////////
@@ -21,7 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined (BOOST_NO_MEMBER_TEMPLATES)
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   slice::slice (::boost::python::handle<> const &p) : object (p) { }
   slice::slice (::boost::python::detail::borrowed_reference p) : object (p) { }
   slice::slice (::boost::python::detail::new_reference p) : object (p) { }
@@ -33,7 +34,7 @@ namespace boost { namespace python { namespace indexing {
 // slice copy constructor
 /////////////////////////////////////////////////////////////////////////////
 
-boost::python::indexing::slice::slice (slice const &copy)
+boost::python::indexing_v2::slice::slice (slice const &copy)
   : object (copy)
 {
 }
@@ -42,7 +43,7 @@ boost::python::indexing::slice::slice (slice const &copy)
 // integer_slice constructor
 /////////////////////////////////////////////////////////////////////////////
 
-boost::python::indexing::integer_slice
+boost::python::indexing_v2::integer_slice
 ::integer_slice (slice const &sl, index_type length)
   : m_slice (sl)
   // Leave index members uninitialized
@@ -70,7 +71,7 @@ boost::python::indexing::integer_slice
 // Check if an index is within the range of this integer_slice
 /////////////////////////////////////////////////////////////////////////////
 
-bool boost::python::indexing::integer_slice::in_range (index_type index)
+bool boost::python::indexing_v2::integer_slice::in_range (index_type index)
 {
   return ((m_stop - index) * m_direction) > 0;
 }

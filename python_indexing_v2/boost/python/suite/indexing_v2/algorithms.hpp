@@ -2,7 +2,7 @@
 //
 // Uniform interface layer for all containers.
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -10,8 +10,9 @@
 //
 // History
 // =======
-// 2003/ 9/11   rmg     File creation from suite_utils.hpp
-// 2003/10/28   rmg     Split container-specific versions into separate headers
+// 2003-09-11   rmg     File creation from suite_utils.hpp
+// 2003-10-28   rmg     Split container-specific versions into separate headers
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -19,12 +20,12 @@
 #ifndef BOOST_PYTHON_INDEXING_ALGORITHMS_HPP
 #define BOOST_PYTHON_INDEXING_ALGORITHMS_HPP
 
-#include <boost/python/suite/indexing/suite_utils.hpp>
+#include <boost/python/suite/indexing_v2/suite_utils.hpp>
 
 #include <boost/type_traits.hpp>
 #include <boost/python/errors.hpp>
-#include <boost/python/suite/indexing/int_slice_helper.hpp>
-#include <boost/python/suite/indexing/slice.hpp>
+#include <boost/python/suite/indexing_v2/int_slice_helper.hpp>
+#include <boost/python/suite/indexing_v2/slice.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/limits.hpp>
 #include <algorithm>
@@ -32,7 +33,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   template<typename ContainerTraits, typename Ovr = detail::no_override>
   class default_algorithms
   {

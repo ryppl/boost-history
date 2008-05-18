@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -11,7 +11,8 @@
 //
 // History
 // =======
-// 2003/ 9/12   rmg     File creation
+// 2003-09-12   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -23,7 +24,7 @@
 #include <boost/shared_ptr.hpp>
 #include <functional>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   // The default_value_traits template is used by all ContainerTraits
   // templates. It can be overridden by specialization or by supplying
   // the optional ValueTraits parameter to a container traits

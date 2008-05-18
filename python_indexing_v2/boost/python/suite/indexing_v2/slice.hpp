@@ -1,6 +1,6 @@
 // Header file slice.hpp
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -8,7 +8,8 @@
 //
 // History
 // =======
-// 2003/ 9/10   rmg     File creation
+// 2003-09-10   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -20,7 +21,7 @@
 #include <boost/python/errors.hpp>
 #include <boost/python/converter/pytype_object_mgr_traits.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   struct BOOST_PYTHON_DECL slice : public boost::python::object
   {
     // This is just a thin wrapper around boost::python::object
@@ -73,7 +74,7 @@ namespace boost { namespace python { namespace indexing {
 
 #if !defined (BOOST_NO_MEMBER_TEMPLATES)
 template<typename T>
-boost::python::indexing::slice::slice (T const &ref)
+boost::python::indexing_v2::slice::slice (T const &ref)
   : boost::python::object (ref)
 {
   if (!PySlice_Check (this->ptr()))
@@ -89,9 +90,9 @@ boost::python::indexing::slice::slice (T const &ref)
 namespace boost { namespace python { namespace converter {
   // Specialized converter to handle PySlice_Type objects
   template<>
-  struct object_manager_traits<boost::python::indexing::slice>
+  struct object_manager_traits<boost::python::indexing_v2::slice>
     : pytype_object_manager_traits<
-         &PySlice_Type, ::boost::python::indexing::slice>
+         &PySlice_Type, ::boost::python::indexing_v2::slice>
   {
   };
 }}}

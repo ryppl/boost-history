@@ -1,4 +1,4 @@
-// Copyright (c) 2004 Raoul M. Gough
+// Copyright (c) 2004, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -10,7 +10,8 @@
 //
 // History
 // =======
-// 2004/ 1/11   rmg     File creation
+// 2004-01-11   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -21,7 +22,7 @@
 #include <boost/config.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
 
   typedef unsigned long method_set_type;
 
@@ -108,6 +109,6 @@ namespace boost { namespace python { namespace indexing {
     };
   }
 
-} } } // boost::python::indexing
+} } } // boost::python::indexing_v2
 
 #endif // BOOST_PYTHON_INDEXING_METHODS_HPP

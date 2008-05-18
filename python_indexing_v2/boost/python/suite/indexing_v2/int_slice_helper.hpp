@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -8,7 +8,8 @@
 //
 // History
 // =======
-// 2003/10/13   rmg     File creation
+// 2003-10-13   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -17,9 +18,9 @@
 #define BOOST_PYTHON_INDEXING_INT_SLICE_HELPER_HPP
 
 # include <boost/python/errors.hpp>
-# include <boost/python/suite/indexing/workaround.hpp>
+# include <boost/python/suite/indexing_v2/workaround.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   template<typename Algorithms, typename SliceType>
   struct int_slice_helper
   {

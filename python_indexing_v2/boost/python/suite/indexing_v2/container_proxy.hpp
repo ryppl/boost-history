@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -19,8 +19,9 @@
 //
 // History
 // =======
-// 2003/ 8/26   rmg     File creation
-// 2003/10/23   rmg     Change pointer container from map to sequence
+// 2003-08-26   rmg     File creation
+// 2003-10-23   rmg     Change pointer container from map to sequence
+// 2008-04-27   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -28,23 +29,23 @@
 #ifndef BOOST_PYTHON_INDEXING_CONTAINER_PROXY_HPP
 #define BOOST_PYTHON_INDEXING_CONTAINER_PROXY_HPP
 
-#include <boost/python/suite/indexing/proxy_iterator.hpp>
-#include <boost/python/suite/indexing/shared_proxy_impl.hpp>
-#include <boost/python/suite/indexing/element_proxy.hpp>
-#include <boost/python/suite/indexing/element_proxy_traits.hpp>
-#include <boost/python/suite/indexing/workaround.hpp>
-#include <boost/python/suite/indexing/methods.hpp>
+#include <boost/python/suite/indexing_v2/proxy_iterator.hpp>
+#include <boost/python/suite/indexing_v2/shared_proxy_impl.hpp>
+#include <boost/python/suite/indexing_v2/element_proxy.hpp>
+#include <boost/python/suite/indexing_v2/element_proxy_traits.hpp>
+#include <boost/python/suite/indexing_v2/workaround.hpp>
+#include <boost/python/suite/indexing_v2/methods.hpp>
 
 #include <vector>
 #include <cassert>
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/iterator/iterator_traits.hpp>
-#include <boost/python/suite/indexing/container_traits.hpp>
-#include <boost/python/suite/indexing/container_suite.hpp>
-#include <boost/python/suite/indexing/algorithms.hpp>
+#include <boost/python/suite/indexing_v2/container_traits.hpp>
+#include <boost/python/suite/indexing_v2/container_suite.hpp>
+#include <boost/python/suite/indexing_v2/algorithms.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
 
   template<typename T> struct identity {
     typedef T held_type;

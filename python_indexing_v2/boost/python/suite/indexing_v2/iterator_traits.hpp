@@ -5,7 +5,7 @@
 // Traits information about iterators for use in determining what
 // Python methods to support for a container.
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -13,8 +13,9 @@
 //
 // History
 // =======
-// 2003/ 8/23   rmg     File creation as iterator_suite.hpp
-// 2003/ 9/12   rmg     Renamed iterator_traits.hpp
+// 2003-08-23   rmg     File creation as iterator_suite.hpp
+// 2003-09-12   rmg     Renamed iterator_traits.hpp
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -22,16 +23,13 @@
 #ifndef BOOST_PYTHON_INDEXING_ITERATOR_TRAITS_HPP
 #define BOOST_PYTHON_INDEXING_ITERATOR_TRAITS_HPP
 
-#include <boost/python/suite/indexing/suite_utils.hpp>
-#include <boost/python/suite/indexing/methods.hpp>
-//#include <boost/python/suite/indexing/workaround.hpp>
+#include <boost/python/suite/indexing_v2/suite_utils.hpp>
+#include <boost/python/suite/indexing_v2/methods.hpp>
 
-//#include <boost/call_traits.hpp>
-//#include <boost/type_traits.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   //////////////////////////////////////////////////////////////////////////
   // Indexing traits common base class
   //////////////////////////////////////////////////////////////////////////
@@ -142,7 +140,7 @@ namespace boost { namespace python { namespace indexing {
 
   namespace iterator_detail {
     // Some meta-progamming machinery to select the right
-    // indexing::iterator_traits template on the basis of
+    // indexing_v2::iterator_traits template on the basis of
     // BOOST_ITERATOR_CATEGORY
 
     typedef char basic_iter_sizer[1];

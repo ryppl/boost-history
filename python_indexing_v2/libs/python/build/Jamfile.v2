@@ -60,6 +60,9 @@ lib boost_python
     import.cpp
     exec.cpp
     object/function_doc_signature.cpp
+
+    indexing_v2/iv2slice.cpp
+    indexing_v2/python_iterator.cpp
     :   # requirements
         <link>static:<define>BOOST_PYTHON_STATIC_LIB 
         <define>BOOST_PYTHON_SOURCE

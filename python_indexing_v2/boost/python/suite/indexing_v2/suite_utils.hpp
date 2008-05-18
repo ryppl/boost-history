@@ -1,8 +1,8 @@
 // Header file suite_utils.hpp
 //
-// Shared utilities for the indexing suite.
+// Shared utilities for the indexing_v2 suite.
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -10,7 +10,8 @@
 //
 // History
 // =======
-// 2003/ 8/23   rmg     File creation
+// 2003-08-23   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -20,7 +21,7 @@
 
 #include <boost/type_traits.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
 #if BOOST_WORKAROUND (BOOST_MSVC, BOOST_TESTED_AT (1310)) \
   || (defined (__GNUC__) && (__GNUC__ < 3))
   // MSVC and GCC 2.96 seem to have problems comparing enumerated

@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -11,7 +11,8 @@
 //
 // History
 // =======
-// 2003/ 9/11   rmg     File creation from container_suite.hpp
+// 2003-09-11   rmg     File creation from container_suite.hpp
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -19,8 +20,8 @@
 #ifndef BOOST_PYTHON_INDEXING_VISITOR_HPP
 #define BOOST_PYTHON_INDEXING_VISITOR_HPP
 
-#include <boost/python/suite/indexing/slice_handler.hpp>
-#include <boost/python/suite/indexing/suite_utils.hpp> // Get index_style_t
+#include <boost/python/suite/indexing_v2/slice_handler.hpp>
+#include <boost/python/suite/indexing_v2/suite_utils.hpp> // Get index_style_t
 
 #include <boost/python/def_visitor.hpp>
 #include <boost/python/iterator.hpp>
@@ -29,7 +30,7 @@
 #include <boost/bind.hpp>
 #include <functional>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   //////////////////////////////////////////////////////////////////////////
   // Policy override template that masks everything except the precall
   // functions. i.e. it uses default policies for everything except

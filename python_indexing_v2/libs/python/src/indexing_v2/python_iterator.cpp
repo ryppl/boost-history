@@ -2,7 +2,7 @@
 //
 // Module python_iterator.cpp
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -10,19 +10,20 @@
 //
 // History
 // =======
-// 2003/ 9/10   rmg     File creation
+// 2003-09-10   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
 
-#include <boost/python/suite/indexing/python_iterator.hpp>
+#include <boost/python/suite/indexing_v2/python_iterator.hpp>
 #include <boost/python/handle.hpp>
 
 ////////////////////////////////////////////////////////////////////////////
 // python_iterator constructor
 ///////////////////////////////////////////////////////////////////////////
 
-boost::python::indexing::python_iterator
+boost::python::indexing_v2::python_iterator
 ::python_iterator (boost::python::object obj)
   : m_iter_obj (handle<> (PyObject_GetIter (obj.ptr()))),
     m_next_method (m_iter_obj.attr ("next")),
@@ -34,7 +35,7 @@ boost::python::indexing::python_iterator
 // Get our next item (if any)
 ///////////////////////////////////////////////////////////////////////////
 
-bool boost::python::indexing::python_iterator::next ()
+bool boost::python::indexing_v2::python_iterator::next ()
 {
   bool result = true; // Assume success
 
@@ -68,7 +69,7 @@ bool boost::python::indexing::python_iterator::next ()
 ///////////////////////////////////////////////////////////////////////////
 
 boost::python::object
-boost::python::indexing::python_iterator::current () const
+boost::python::indexing_v2::python_iterator::current () const
 {
   return m_current;
 }

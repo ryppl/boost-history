@@ -1,7 +1,7 @@
 
 // Header file proxy_iterator.hpp
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -9,7 +9,8 @@
 //
 // History
 // =======
-// 2003/10/ 8   rmg     File creation
+// 2003-10-08   rmg     File creation
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -22,7 +23,7 @@
 #include <boost/iterator.hpp>
 #include <boost/detail/workaround.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
 
   template <class ContainerProxy, typename ElementProxy, typename Traits,
       typename Size, typename Iter>
@@ -152,8 +153,8 @@ namespace boost { namespace python { namespace indexing {
 namespace std {
   template <class C, typename E, typename T, typename S, typename I>
   void iter_swap(
-      boost::python::indexing::proxy_iterator<C, E, T, S, I> const &first,
-      boost::python::indexing::proxy_iterator<C, E, T, S, I> const &second)
+      boost::python::indexing_v2::proxy_iterator<C, E, T, S, I> const &first,
+      boost::python::indexing_v2::proxy_iterator<C, E, T, S, I> const &second)
   {
     first.iter_swap (second);
   }

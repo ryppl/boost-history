@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -11,10 +11,11 @@
 //
 // History
 // =======
-// 2003/ 8/23   rmg     File creation as container_suite.hpp
-// 2003/ 9/ 8   rmg     Renamed container_traits.hpp
-// 2003/10/28   rmg     Split container-specific versions into separate headers
-// 2004/ 1/28   rmg     Convert to bitset-based feature selection
+// 2003-08-23   rmg     File creation as container_suite.hpp
+// 2003-09-08   rmg     Renamed container_traits.hpp
+// 2003-10-28   rmg     Split container-specific versions into separate headers
+// 2004-01-28   rmg     Convert to bitset-based feature selection
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -22,9 +23,9 @@
 #ifndef BOOST_PYTHON_INDEXING_CONTAINER_TRAITS_HPP
 #define BOOST_PYTHON_INDEXING_CONTAINER_TRAITS_HPP
 
-#include <boost/python/suite/indexing/suite_utils.hpp>
-#include <boost/python/suite/indexing/methods.hpp>
-#include <boost/python/suite/indexing/value_traits.hpp>
+#include <boost/python/suite/indexing_v2/suite_utils.hpp>
+#include <boost/python/suite/indexing_v2/methods.hpp>
+#include <boost/python/suite/indexing_v2/value_traits.hpp>
 
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
@@ -32,7 +33,7 @@
 #include <boost/type_traits/ice.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
 #if BOOST_WORKAROUND (BOOST_MSVC, <= 1200)
   // MSVC6 has problems with get_signature if parameter types have
   // top-level const qualification (e.g. int const). Unfortunately,

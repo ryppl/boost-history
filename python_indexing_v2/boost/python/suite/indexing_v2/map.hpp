@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -10,7 +10,8 @@
 //
 // History
 // =======
-// 2003/10/28   rmg     File creation from algo_selector.hpp
+// 2003-10-28   rmg     File creation from algo_selector.hpp
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -18,13 +19,13 @@
 #ifndef BOOST_PYTHON_INDEXING_MAP_HPP
 #define BOOST_PYTHON_INDEXING_MAP_HPP
 
-#include <boost/python/suite/indexing/container_traits.hpp>
-#include <boost/python/suite/indexing/container_suite.hpp>
-#include <boost/python/suite/indexing/algorithms.hpp>
+#include <boost/python/suite/indexing_v2/container_traits.hpp>
+#include <boost/python/suite/indexing_v2/container_suite.hpp>
+#include <boost/python/suite/indexing_v2/algorithms.hpp>
 #include <boost/detail/workaround.hpp>
 #include <map>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   /////////////////////////////////////////////////////////////////////////
   // ContainerTraits implementation for std::map instances
   /////////////////////////////////////////////////////////////////////////

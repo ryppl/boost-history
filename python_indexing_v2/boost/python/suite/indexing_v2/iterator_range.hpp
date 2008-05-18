@@ -1,4 +1,4 @@
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -11,8 +11,9 @@
 //
 // History
 // =======
-// 2003/ 9/ 9   rmg     File creation as iterator_pair.hpp
-// 2003/10/27   rmg     Renamed iterator_range.hpp
+// 2003-09-09   rmg     File creation as iterator_pair.hpp
+// 2003-10-27   rmg     Renamed iterator_range.hpp
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -27,12 +28,12 @@
 #include <boost/type_traits/ice.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/iterator/iterator_traits.hpp>
-#include <boost/python/suite/indexing/container_traits.hpp>
-#include <boost/python/suite/indexing/container_suite.hpp>
-#include <boost/python/suite/indexing/algorithms.hpp>
-#include <boost/python/suite/indexing/iterator_traits.hpp>
+#include <boost/python/suite/indexing_v2/container_traits.hpp>
+#include <boost/python/suite/indexing_v2/container_suite.hpp>
+#include <boost/python/suite/indexing_v2/algorithms.hpp>
+#include <boost/python/suite/indexing_v2/iterator_traits.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   template<typename Iterator>
   class iterator_range
   {
@@ -89,12 +90,12 @@ namespace boost { namespace python { namespace indexing {
   template<typename T, std::size_t N> T *end   (T (&array)[N]);
 
 # define BOOST_MAKE_ITERATOR_RANGE \
-      ::boost::python::indexing::make_iterator_range
+      ::boost::python::indexing_v2::make_iterator_range
 
 #else
   // For compilers that can't deduce template argument array bounds
 # define BOOST_MAKE_ITERATOR_RANGE(array) \
-      ::boost::python::indexing::make_iterator_range ( \
+      ::boost::python::indexing_v2::make_iterator_range ( \
           (array), ((array) + sizeof(array) / sizeof((array)[0])))
 #endif
 
@@ -188,7 +189,7 @@ namespace boost { namespace python { namespace indexing {
   {
     typedef base_container_traits<Container, ValueTraits> base_class;
 
-    typedef ::boost::python::indexing::iterator_traits<
+    typedef ::boost::python::indexing_v2::iterator_traits<
       typename Container::iterator
     > iterator_traits_type;
 

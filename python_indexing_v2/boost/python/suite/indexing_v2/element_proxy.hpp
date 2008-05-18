@@ -3,7 +3,7 @@
 // Proxy objects for invidivual elements in a container wrapped by
 // container_proxy
 //
-// Copyright (c) 2003 Raoul M. Gough
+// Copyright (c) 2003, 2008 Raoul M. Gough
 //
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
@@ -11,7 +11,8 @@
 //
 // History
 // =======
-// 2003/ 9/15   rmg     File creation from container_proxy.hpp
+// 2003-09-15   rmg     File creation from container_proxy.hpp
+// 2008-05-18   rmg     Rename indexing subdirectory to indexing_v2
 //
 // $Id$
 //
@@ -19,13 +20,13 @@
 #ifndef BOOST_PYTHON_INDEXING_ELEMENT_PROXY_HPP
 #define BOOST_PYTHON_INDEXING_ELEMENT_PROXY_HPP
 
-#include <boost/python/suite/indexing/shared_proxy_impl.hpp>
+#include <boost/python/suite/indexing_v2/shared_proxy_impl.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/get_pointer.hpp>
 #include <boost/utility/addressof.hpp>
 #include <boost/detail/workaround.hpp>
 
-namespace boost { namespace python { namespace indexing {
+namespace boost { namespace python { namespace indexing_v2 {
   template<typename ContainerProxy>
   class element_proxy
   {
@@ -167,12 +168,12 @@ namespace boost { namespace python { namespace indexing {
   };
 
 #ifdef BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
-}} // namespace python::indexing
+}} // namespace python::indexing_v2
 #endif 
 
   template<typename ContainerProxy>
   typename ContainerProxy::raw_value_type *
-  get_pointer (python::indexing::element_proxy<ContainerProxy> const &proxy)
+  get_pointer (python::indexing_v2::element_proxy<ContainerProxy> const &proxy)
   {
     return ::boost::addressof (*proxy);
   }
@@ -180,7 +181,7 @@ namespace boost { namespace python { namespace indexing {
 #ifndef BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
     // Don't hide these other get_pointer overloads
     using boost::get_pointer;
-}} // namespace python::indexing
+}} // namespace python::indexing_v2
 #endif 
 }
 

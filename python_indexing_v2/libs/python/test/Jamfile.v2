@@ -180,6 +180,37 @@ bpl-test crossmod_opaque
 #     bpl-test bienstman5 ;
 # }
 
+# --- unit tests of indexing_v2 components ---
+
+[ py-run indexing_v2/test_container_proxy.cpp ]
+
+[ bpl-test indexing_v2/test_vector_proxy :
+    indexing_v2/test_vector_proxy.py indexing_v2/test_vector_ext.cpp ]
+[ bpl-test indexing_v2/test_vector_ref :
+    indexing_v2/test_vector_ref.py   indexing_v2/test_vector_ext.cpp ]
+[ bpl-test indexing_v2/test_vector_plain :
+    indexing_v2/test_vector_plain.py indexing_v2/test_vector_ext.cpp ]
+[ bpl-test indexing_v2/test_deque_proxy :
+    indexing_v2/test_deque_proxy.py  indexing_v2/test_deque_ext.cpp  ]
+[ bpl-test indexing_v2/test_deque_ref :
+    indexing_v2/test_deque_ref.py    indexing_v2/test_deque_ext.cpp  ]
+[ bpl-test indexing_v2/test_deque_plain :
+    indexing_v2/test_deque_plain.py  indexing_v2/test_deque_ext.cpp  ]
+[ bpl-test indexing_v2/test_array :
+    indexing_v2/test_array.py        indexing_v2/test_array_ext.cpp  ]
+[ bpl-test indexing_v2/test_array_ref :
+    indexing_v2/test_array_ref.py    indexing_v2/test_array_ext.cpp  ]
+[ bpl-test indexing_v2/test_list_plain :
+    indexing_v2/test_list_plain.py   indexing_v2/test_list_ext.cpp   ]
+[ bpl-test indexing_v2/test_map_plain :
+    indexing_v2/test_map_plain.py    indexing_v2/testnonlinear.cpp   ]
+[ bpl-test indexing_v2/test_set_plain :
+    indexing_v2/test_set_plain.py    indexing_v2/testnonlinear.cpp   ]
+
+[ bpl-test indexing_v2/test_indexing_const ]
+[ bpl-test indexing_v2/test_vector_shared ]
+[ bpl-test indexing_v2/test_vector_disable ]
+
 # --- unit tests of library components ---
 
 [ compile indirect_traits_test.cpp ]
