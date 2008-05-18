@@ -3480,9 +3480,13 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 
-  template <class T, class Container, class Alloc>
-    struct uses_allocator<queue<T, Container>, Alloc>
-      : uses_allocator<Container, Alloc>::type { };
+  @\addedConcepts{template <class T, class Cont, class Alloc>}@
+    @\addedConcepts{requires UsesAllocator<Cont, Alloc>}@
+    @\addedConcepts{concept_map UsesAllocator<queue<T, Cont>, Alloc> \{ \}}@
+
+  @\removedConcepts{template <class T, class Container, class Alloc>}@
+    @\removedConcepts{struct uses_allocator<queue<T, Container>, Alloc>}@
+      @\removedConcepts{: uses_allocator<Container, Alloc>::type \{ \};}@
 
   @\removedConcepts{template <class T, class Container>}@
     @\removedConcepts{struct constructible_with_allocator_suffix<queue<T, Container> >}@
@@ -3674,9 +3678,13 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 
-  template <class T, class Cont@\removedConcepts{ainer}@, class Compare, class Alloc>
-    struct uses_allocator<priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>, Alloc>
-      : uses_allocator<Cont@\removedConcepts{ainer}@, Alloc>::type { };
+  @\addedConcepts{template <class T, class Cont, class Compare, class Alloc>}@
+    @\addedConcepts{requires UsesAllocator<Cont, Alloc>}@
+    @\addedConcepts{concept_map UsesAllocator<priority_queue<T, Cont, Compare>, Alloc> \{ \}}@
+
+  @\removedConcepts{template <class T, class Container, class Compare, class Alloc>}@
+    @\removedConcepts{struct uses_allocator<priority_queue<T, Container, Compare>, Alloc>}@
+      @\removedConcepts{: uses_allocator<Container, Alloc>::type \{ \};}@
 
   @\removedConcepts{template <class T, class Container, class Compare>}@
     @\removedConcepts{struct constructible_with_allocator_suffix<}@
@@ -3884,9 +3892,13 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(stack<T,Alloc@\removedConcepts{ator}@>& x, stack<T,Alloc@\removedConcepts{ator}@>&& y);
 
-  template <class T, class Cont@\removedConcepts{ainer}@, class Alloc>
-    struct uses_allocator<stack<T, Cont@\removedConcepts{ainer}@>, Alloc>
-      : uses_allocator<Cont@\removedConcepts{ainer}@, Alloc>::type { };
+  @\addedConcepts{template <class T, class Cont, class Alloc>}@
+    @\addedConcepts{requires UsesAllocator<Cont, Alloc>}@
+    @\addedConcepts{concept_map UsesAllocator<stack<T, Cont>, Alloc> \{ \}}@
+
+  @\removedConcepts{template <class T, class Container, class Alloc>}@
+    @\removedConcepts{struct uses_allocator<stack<T, Container>, Alloc>}@
+      @\removedConcepts{: uses_allocator<Container, Alloc>::type \{ \};}@
 
   @\removedConcepts{template <class T, class Container>}@
     @\removedConcepts{struct constructible_with_allocator_suffix<stack<T, Container> >}@
