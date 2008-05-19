@@ -45,7 +45,7 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: D2622=08-0132\vspace{-6pt}
+\par\noindent Document number: N2622=08-0132\vspace{-6pt}
 \par\noindent Revises document number: N2322=07-0182\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -56,26 +56,10 @@ Bloomington, IN\ \  47405 \\
 
 \section*{Changes since N2322}
 \begin{itemize}
-\item Renamed \tcode{Modulus} concept to \tcode{Remainder}.
-\item Fixed description of concepts \tcode{LogicalAnd},
-  \tcode{LogicalOr}, and \tcode{LogicalNot}.
-\item Added concepts \tcode{BitAnd}, \tcode{BitOr}, \tcode{BitXor},
-  and \tcode{Complement}.
-\item Renamed the \tcode{Floating} concept to \tcode{FloatingPoint}.
-\item Made \tcode{operator=} in \tcode{MoveAssignable} and
-  \tcode{CopyAssignable} member operations, as required by N2307.
-\item Dropped the redundant \tcode{CopyAssignable} requirement in
-  \tcode{Arithmetic}. 
-\item Note the concept maps required for extended integer types,
-  \tcode{bool}, \tcode{char16_t}, and \tcode{char32_t}.
-\item Loosened the \tcode{Allocator} requirements to not require the
-  allocator itself to be \tcode{CopyAssignable}; \tcode{Allocator} now
-  better matches the pre-concept standard library.
-\item Make \tcode{Allocator}'s \tcode{max_size} and \tcode{address}
-  associated functions \tcode{const}.
 \item Added concept requirements to \tcode{make_pair} and
   \tcode{make_tuple}.
-\item Fixed definition of \tcode{rebind_allocator}.
+\item Switched from \tcode{ObjectType} to \tcode{VariableType} in
+  several components where we need to permit reference types.
 \end{itemize}
 
 \end{titlepage}
@@ -121,936 +105,9 @@ Table~\ref{tab:util.lib.summary}.
 \ref{date.time} Date and time                       &       \tcode{<ctime>}         \\
 \end{libsumtab}
 
-\noindent\editorial{Replace the section [utility.requirements] with
-  the following section [utility.concepts]}
-
-\color{addclr}
 \rSec1[utility.concepts]{Concepts}
 
-\pnum The \tcode{<concepts>} header describes requirements on template
-arguments used throughout the \Cpp\ Standard Library.
-
-\synopsis{Header \tcode{<concepts>}\ synopsis}
-\begin{codeblock}
-namespace std {
-  // \ref{concept.support}, support concepts:
-  concept SameType<typename T, typename U> {  }
-  concept DerivedFrom<typename Derived, typename Base> { }
-  concept ObjectType<typename T> { }
-
-  // \ref{concept.comparison}, comparisons:
-  auto concept EqualityComparable<typename T, typename U = T> @\textit{see below}@;
-  auto concept LessThanComparable<typename T, typename U = T> @\textit{see below}@;
-
-  // \ref{concept.destruct}, destruction:
-  auto concept Destructible<typename T> @\textit{see below}@;
-
-  // \ref{concept.construct}, construction:
-  auto concept Constructible<typename T, typename... Args> @\textit{see below}@;
-  auto concept DefaultConstructible<typename T> @\textit{see below}@;
-
-  // \ref{concept.copymove}, copy and move:
-  auto concept MoveConstructible<typename T> @\textit{see below}@;
-  auto concept CopyConstructible<typename T> @\textit{see below}@;
-  auto concept MoveAssignable<typename T, typename U = T> @\textit{see below}@;
-  auto concept CopyAssignable<typename T, typename U = T> @\textit{see below}@;
-  auto concept Swappable<typename T> @\textit{see below}@;
-
-  // \ref{concept.regular}, regular types:
-  auto concept Semiregular<typename T> @\textit{see below}@;
-  auto concept Regular<typename T> @\textit{see below}@;
-
-  // \ref{concept.convertible}, convertibility:
-  auto concept Convertible<typename T, typename U> @\textit{see below}@;
-
-  // \ref{concept.true}, true:
-  concept True<bool> { }
-  concept_map True<true> { }
-
-  // \ref{concept.arithmetic}, arithmetic concepts:
-  auto concept Addable<typename T, typename U = T> @\textit{see below}@;
-  auto concept Subtractable<typename T, typename U = T> @\textit{see below}@;
-  auto concept Multiplicable<typename T, typename U = T> @\textit{see below}@;
-  auto concept Divisible<typename T, typename U = T> @\textit{see below}@;
-  auto concept Remainder<typename T, typename U = T> @\textit{see below}@;
-  auto concept Negatable<typename T> @\textit{see below}@;
-  concept Arithmetic<typename T> @\textit{see below}@;
-  concept Integral<typename T> @\textit{see below}@;
-  concept SignedIntegral<typename T> @\textit{see below}@;
-  concept UnsignedIntegral<typename T> @\textit{see below}@;
-  concept FloatingPoint<typename T> @\textit{see below}@;
-
-  // \ref{concept.logical}, logical concepts:
-  auto concept LogicalAnd<typename T, typename U = T> @\textit{see below}@;
-  auto concept LogicalOr<typename T, typename U = T> @\textit{see below}@;
-  auto concept LogicalNot<typename T> @\textit{see below}@;
-
-  // \ref{concept.logical}, bitwise concepts:
-  auto concept BitAnd<typename T, typename U = T> @\textit{see below}@;
-  auto concept BitOr<typename T, typename U = T> @\textit{see below}@;
-  auto concept BitXor<typename T, typename U = T> @\textit{see below}@;
-  auto concept Complement<typename T> @\textit{see below}@;
-
-  // \ref{concept.operator}, operator concepts:
-  auto concept Dereferenceable<typename T> @\textit{see below}@;
-
-  // \ref{concept.callable}, callable:
-  auto concept Callable<typename F, typename... Args> @\textit{see below}@;
-
-  // \ref{concept.predicate}, predicates:
-  auto concept Predicate<typename F, typename... Args> @\textit{see below}@;
-
-  // \ref{concept.allocator}, allocators:
-  concept Allocator<typename X> @\textit{see below}@;
-  concept AllocatorGenerator<typename X> @\textit{see below}@;
-  template<Allocator X> concept_map AllocatorGenerator<X> @\textit{see below}@;
-}
-\end{codeblock}
-
-\rSec2[concept.support]{Support concepts}
-\pnum
-Concept \tcode{SameType} describes a same-type requirement ([temp.req]).
-
-\begin{itemdecl}
-concept SameType<typename T, typename U> {  }
-\end{itemdecl}
-
-\pnum
-A program shall not provide a concept map for the
-\tcode{SameType} concept.
-
-\pnum
-Concept \tcode{DerivedFrom} describes a derivation requirement ([temp.req]).
-
-\begin{itemdecl}
-concept DerivedFrom<typename Derived, typename Base> { }
-\end{itemdecl}
-
-\pnum
-A program shall not provide a concept map for the
-\tcode{DerivedFrom} concept.
-
-\pnum
-Concept \tcode{ObjectType} requires that the type \tcode{T} be an \emph{object type} ([intro.object]).
-
-\begin{itemdecl}
-concept ObjectType<typename T> { }
-\end{itemdecl}
-
-\pnum
-A program shall not provide a concept map for the
-\tcode{ObjectType} concept.
-
-\rSec2[concept.comparison]{Comparisons}
-
-\pnum
-Concept \tcode{EqualityComparable} requires that two values be
-comparable with \tcode{operator==}.
-\begin{itemdecl}
-auto concept EqualityComparable<typename T, typename U = T> {
-  bool operator==(T a, U b);
-  bool operator!=(T a, U b) { return !(a == b); }
-}
-\end{itemdecl}
-
-\pnum 
-When \tcode{T} and \tcode{U} are identical, \tcode{operator==} is an
-equivalence relation, that is, it has the following properties:
-\begin{itemize}
-\item
-For all \tcode{a}, \tcode{a == a}.
-\item
-If \tcode{a == b}, then \tcode{b == a}.
-\item
-If \tcode{a == b} and \tcode{b == c}, then \tcode{a == c}.
-\end{itemize}
-
-\pnum Concept \tcode{LessThanComparable} requires the ability to order
-values via \tcode{operator<}.
-\begin{itemdecl}
-auto concept LessThanComparable<typename T, typename U = T> {
-  bool operator<(T a, U b);
-  bool operator>(U a, T b) { return b < a; }
-  bool operator<=(U a, T b) { return !(b < a); }
-  bool operator>=(T a, U b) { return !(a < b); }
-}
-\end{itemdecl}
-
-\pnum
-\tcode{operator<} is a strict weak ordering relation (\ref{alg.sorting})
-
-\rSec2[concept.destruct]{Destruction}
-\pnum
-Concept \tcode{Destructible} requires a destructor.
-\begin{itemdecl}
-auto concept Destructible<typename T> {
-  T::~T();
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-T::~T();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\postconditions\
-All resources owned by the object are reclaimed.
-
-\pnum
-\throws\
-nothing.
-\end{itemdescr}
-
-\rSec2[concept.construct]{Construction}
-\pnum
-Concept \tcode{Constructible} requires the existence of a constructor
-that accepts a given set of arguments.
-\begin{itemdecl}
-auto concept Constructible<typename T, typename... Args> 
-  : Destructible<T> 
-{
-  T::T(Args...);
-}
-\end{itemdecl}
-
-\pnum 
-Concept \tcode{DefaultConstructible} requires the existence of a
-default constructor.
-\begin{itemdecl}
-auto concept DefaultConstructible<typename T> : Constructible<T> { }
-\end{itemdecl}
-
-\rSec2[concept.copymove]{Copy and move}
-\pnum
-Concept \tcode{MoveConstructible} requires the ability to construct an
-object from an rvalue of the same type, potentially altering the rvalue.
-\begin{itemdecl}
-auto concept MoveConstructible<typename T> 
-  : Destructible<T> 
-{
-  T::T(T&&);
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-T::T(T&& rv);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\postcondition\
-The constructed \tcode{T} object is equivalent to the value of
-\tcode{rv} before the construction. 
-\enternote\ there is no requirement on the value of \tcode{rv} after
-the construction. \exitnote\
-\end{itemdescr}
-
-\pnum 
-Concept \tcode{CopyConstructible} requires the ability to create a
-copy of an object. 
-\begin{itemdecl}
-auto concept CopyConstructible<typename T> : MoveConstructible<T> {
-  T::T(const T&);
-
-  axiom CopyPreservation(T x) {
-    T(x) == x;
-  }
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{MoveAssignable} requires the ability to assign to an
-object from an rvalue, potentially altering the rvalue. 
-
-\begin{itemdecl}
-auto concept MoveAssignable<typename T, typename U = T> {
-  typename result_type;
-  result_type operator=(T&, U&&);
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-result_type T::operator=(U&& rv);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\postconditions\
-The constructed \tcode{T} object is equivalent to the value of
-\tcode{rv} before the assignment. 
-\enternote\ there is no requirement on the value of \tcode{rv} after
-the assignment. \exitnote\
-\end{itemdescr}
-
-\pnum
-Concept \tcode{CopyAssignable} requires the ability to assign to an
-object.
-
-\begin{itemdecl}
-auto concept CopyAssignable<typename T, typename U = T> : MoveAssignable<T, U> {
-  typename result_type;
-  result_type T::operator=(const U&);
-
-  axiom CopyPreservation(T& x, U y) {
-    (x = y, x) == y;
-  }
-}
-\end{itemdecl}
-
-\editorial{\textcolor{black}{The CopyAssignable requirements in N2284 specify that
-  \tcode{operator=} must return a \tcode{T\&}. This is too strong a
-  requirement for most of the uses of \tcode{CopyAssignable}, so we have
-  weakened \tcode{CopyAssignable} to not require anything of its return
-  type. When we need a \tcode{T\&}, we'll add that as an explicit
-  requirement. See, e.g., the \tcode{Integral} concept.}}
-
-\pnum
-Concept \tcode{Swappable} requires that two values can be swapped.
-
-\begin{itemdecl}
-auto concept Swappable<typename T> {
-  void swap(T&, T&);
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-void swap(T& t, T& u);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\postconditions\
-\tcode{t} has the value originally held by \tcode{u}, and \tcode{u}
-has the value originally held by \tcode{t}.
-\end{itemdescr}
-
-\rSec2[concept.regular]{Regular types}
-
-\pnum 
-Concept \tcode{Semiregular} collects several common
-requirements supported by most \Cpp\ types.
-
-\begin{itemdecl}
-auto concept Semiregular<typename T> : CopyConstructible<T>, CopyAssignable<T> { 
-  requires SameType<CopyAssignable<T>::result_type, T&>;
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Regular} describes semi-regular types that are default
-constructible and have equality comparison operators.
-
-\begin{itemdecl}
-auto concept Regular<typename T> : Semiregular<T>, DefaultConstructible<T>, EqualityComparable<T> { }
-\end{itemdecl}
-
-\rSec2[concept.convertible]{Convertibility}
-
-\pnum
-Concept \tcode{Convertible} requires an implicit conversion from one
-type to another.
-
-\begin{itemdecl}
-auto concept Convertible<typename T, typename U> {
-  operator U(T);
-}
-\end{itemdecl}
-
-\rSec2[concept.true]{True}
-
-\pnum
-Concept \tcode{True} requires that its argument (a \tcode{bool} value
-that must be an integral constant expression) be true.
-
-\begin{itemdecl}
-concept True<bool> { }
-concept_map True<true> { }
-\end{itemdecl}
-
-\pnum
-A program shall not provide a concept map for the
-\tcode{True} concept.
-
-\rSec2[concept.arithmetic]{Arithmetic concepts}
-\pnum
-Concept \tcode{Addable} requires an addition operator.
-\begin{itemdecl}
-auto concept Addable<typename T, typename U = T> {
-  typename result_type;
-  result_type operator+(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Subtractable} requires a subtraction operator.
-\begin{itemdecl}
-auto concept Subtractable<typename T, typename U = T> {
-  typename result_type;
-  result_type operator-(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Multiplicable} requires a multiplication operator.
-\begin{itemdecl}
-auto concept Multiplicable<typename T, typename U = T> {
-  typename result_type;
-  result_type operator*(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Divisible} requires a division operator.
-\begin{itemdecl}
-auto concept Divisible<typename T, typename U = T> {
-  typename result_type;
-  result_type operator/(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Remainder} requires the existance the remainder operator.
-\begin{itemdecl}
-auto concept Remainder<typename T, typename U = T> {
-  typename result_type;
-  result_type operator%(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Negatable} requires a negation operator.
-\begin{itemdecl}
-auto concept Negatable<typename T> {
-  typename result_type;
-  result_type operator-(T);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Arithmetic} requires all of the operations available on
-arithmetic types ([basic.fundamental]). 
-
-\begin{itemdecl}
-concept Arithmetic<typename T> : Regular<T>, LessThanComparable<T> {
-  T::T(long long);
-
-  T& operator++(T&);
-  T operator++(T& t, int) { T tmp(t); ++t; return tmp; }
-  T& operator--(T&);
-  T operator--(T& t, int) { T tmp(t); --t; return tmp; }
-
-  T operator+(T);
-  T operator-(T);
-
-  T operator*(T x, T y) { T z(x); return z *= y; }
-  T operator/(T x, T y) { T z(x); return z /= y; }
-  T operator+(T x, T y) { T z(x); return z += y; }
-  T operator-(T x, T y) { T z(x); return z -= y; }
-
-  T& operator*=(T&, T);
-  T& operator/=(T&, T);
-  T& operator+=(T&, T);
-  T& operator-=(T&, T);
-}
-\end{itemdecl}
-
-\pnum 
-Concept \tcode{Integral} describes the requirements for integral
-types.
-
-\begin{itemdecl}
-concept Integral<typename T> : Arithmetic<T> {
-  T operator~(T);
-
-  T operator%(T x, T y)  { T z(x); return z %= y; }
-  T operator&(T x, T y)  { T z(x); return z &= y; }
-  T operator^(T x, T y)  { T z(x); return z ^= y; }
-  T operator|(T x, T y)  { T z(x); return z |= y; }
-  T operator<<(T x, T y) { T z(x); return z <<= y; }
-  T operator>>(T x, T y) { T z(x); return z >>= y; }
-
-  T& operator%=(T&, T);
-  T& operator&=(T&, T);
-  T& operator^=(T&, T);
-  T& operator|=(T&, T);
-  T& operator<<=(T&, T);
-  T& operator>>=(T&, T);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{SignedIntegral} describes the requirements for signed
-integral types.
-
-\begin{itemdecl}
-concept SignedIntegral<typename T> : Integral<T> { }
-\end{itemdecl}
-
-\pnum
-For every signed integral type \tcode{T} ([basic.fundamental]), there exists an
-empty concept map \tcode{SignedIntegral<T>}.
-
-\pnum
-Concept \tcode{UnsignedIntegral} describes unsigned integral types.
-
-\begin{itemdecl}
-concept UnsignedIntegral<typename T> : Integral<T> { }
-\end{itemdecl}
-
-\pnum
-For every unsigned integral type \tcode{T} ([basic.fundamental]),
-there exists an empty concept map \tcode{UnsignedIntegral<T>}.
-
-\pnum
-If \tcode{char} is a signed integral type, there shall exist an empty
-concept map \tcode{SignedIntegral<char>} otherwise, there shall exist
-an empty concept map \tcode{UnsignedIntegral<char>}.
-
-\pnum
-If \tcode{wchar_t} is a signed integral type, there shall exist an empty
-concept map \tcode{SignedIntegral<wchar_t>} otherwise, there shall exist
-an empty concept map \tcode{UnsignedIntegral<wchar_t>}.
-
-\pnum 
-For every extended integer type \tcode{T}, there shall exist an empty
-concept map \tcode{SignedIntegral<T>} or \tcode{UnsignedIntegral<T>}.
-
-\pnum
-There shall exist empty concept maps
-\tcode{UnsignedIntegral<char16_t>} and \tcode{UnsignedIntegral<char32_t>}.
-
-\pnum
-The \tcode{FloatingPoint} concept describes floating-point numbers.
-
-\begin{itemdecl}
-@\textcolor{addclr}{concept}@ FloatingPoint<typename T> : Arithmetic<T> { }
-\end{itemdecl}
-
-\pnum
-For every floating point type \tcode{T} ([basic.fundamental]), there
-exists an empty concept map \tcode{FloatingPoint<T>}.
-
-\rSec2[concept.logical]{Logical concepts}
-\pnum
-Concept \tcode{LogicalAnd} requires a logical conjunction operator.
-\begin{itemdecl}
-auto concept LogicalAnd<typename T, typename U = T> {
-  bool operator&&(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{LogicalOr} requires an logical disjunction operator.
-\begin{itemdecl}
-auto concept LogicalOr<typename T, typename U = T> {
-  bool operator||(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{LogicalNot} requires a logical negation operator.
-\begin{itemdecl}
-auto concept LogicalNot<typename T> {
-  bool operator!(T);
-}
-\end{itemdecl}
-
-\rSec2[concept.bitwise]{Bitwise concepts}
-\pnum
-Concept \tcode{BitAnd} requires a bitwise and operator.
-\begin{itemdecl}
-auto concept BitAnd<typename T, typename U = T> {
-  bool operator&(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{BitOr} requires a bitwise or operator.
-\begin{itemdecl}
-auto concept BitOr<typename T, typename U = T> {
-  bool operator|(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{BitXor} requires a bitwise exclusive-or operator.
-\begin{itemdecl}
-auto concept BitXor<typename T, typename U = T> {
-  bool operator^(T, U);
-}
-\end{itemdecl}
-
-\pnum
-Concept \tcode{Complement} requires a bitwise complement  operator.
-\begin{itemdecl}
-auto concept Complement<typename T> {
-  bool operator~(T);
-}
-\end{itemdecl}
-
-\rSec2[concept.operator]{Operator concepts}
-\pnum
-Concept \tcode{Dereferenceable} requires a
-dereference operator \tcode{*}.
-\begin{itemdecl}
-auto concept Dereferenceable<typename T> {
-  typename reference;
-  reference operator*(T);
-}
-\end{itemdecl}
-
-\rSec2[concept.callable]{Callable}
-
-\pnum 
-The \tcode{Callable} concepts requires that the given
-parameter \tcode{F} be callable given arguments of types \tcode{Args}.
-\begin{itemdecl}
-auto concept Callable<typename F, typename... Args> {
-  typename result_type;
-  result_type operator()(F&, Args...);
-}
-\end{itemdecl}
-
-
-\rSec2[concept.predicate]{Predicates}
-
-\pnum
-The \tcode{Predicate} concept requires that a function object be
-callable with some number of arguments, the result of which can be used in a
-context that requires a \tcode{bool}.
-
-\begin{itemdecl}
-auto concept Predicate<typename F, typename... Args> : Callable<F, Args...> {
-  requires Convertible<result_type, bool>;
-}
-\end{itemdecl}
-
-\textcolor{addclr}{\pnum}
-Predicate function objects shall not apply any non-constant function
-through the predicate arguments.
-
-\color{black}
-\rSec2[concept.allocator]{Allocators}
-\index{requirements!Allocator@\tcode{Allocator}}%
-\editorial{We have kept most of the text of [allocator.requirements]
-  here, although much of it has been moved from tables into numbered
-  paragraphs when translating the allocator requirements into concepts.}
-
-\pnum
-The library describes a standard set of requirements for \techterm{allocators},
-which are objects that encapsulate the information about an allocation model.
-This information includes the knowledge of pointer types, the type of their
-difference, the type of the size of objects in this allocation model, as well
-as the memory allocation and deallocation primitives for it. All of the
-containers (clause~\ref{containers}) are parameterized in terms of allocators.
-
-\eremove{Remove Table 39: Descriptive variable definitions}
-
-\eremove{Remove Table 40: Allocator requirements}
-
-\pnum
-\changedConcepts{Table~40 describes the requirements on types manipulated
-through allocators.}
-{The \mbox{\tcode{Allocator}} concept describes the requirements on
-  allocators.} 
-\changedConcepts{All the operations on the allocators are expected to be
-amortized constant time.}{Each allocator operation shall have
-amortized constant time complexity.}
-\removedConcepts{Table~33
-describes the requirements on allocator types.}
-
-\color{addclr}
-\begin{itemdecl}
-concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X> {
-  ObjectType value_type               = typename X::value_type;
-  MutableRandomAccessIterator pointer = typename X::pointer;
-  RandomAccessIterator const_pointer  = typename X::const_pointer;
-  typename reference                  = typename X::reference;
-  typename const_reference            = typename X::const_reference;
-  SignedIntegral difference_type      = typename X::difference_type;
-  UnsignedIntegral size_type          = typename X::size_type; 
-  template<ObjectType T> class rebind = @\textit{see below}@;
-
-  requires Convertible<pointer, const_pointer> && 
-           Convertible<pointer, void*> &&
-           Convertible<pointer, value_type*> &&
-           SameType<pointer::value_type, value_type> &&
-           SameType<pointer::reference, value_type&> &&
-           SameType<pointer::reference, reference>;
-
-  requires Convertible<const_pointer, const void*> &&
-           @\textcolor{addclr}{Convertible}@<const_pointer, const value_type&> && 
-           SameType<const_pointer::value_type, value_type> &&
-           SameType<const_pointer::reference, const value_type&> &&
-           SameType<const_pointer::reference, const_reference>;
- 
-  requires SameType<rebind<value_type>, X>;
-
-  pointer X::allocate(size_type n);
-  pointer X::allocate(size_type n, const_pointer p);
-  @\textcolor{addclr}{void}@ X::deallocate(pointer p, size_type n);
-
-  size_type X::max_size() const;
-
-  template<ObjectType T>
-    X::X(const rebind<T>& y);
-
-  @\removedConcepts{void X::construct(pointer p, const value_type\&);}@
-  template<typename V>
-    requires Convertible<V, value_type>
-    void X::construct(pointer p, V&&);
-
-  void X::destroy(pointer p);
-
-  pointer X::address(reference) const;
-  const_pointer X::address(const_reference) const;
-}
-\end{itemdecl}
-\color{black}
-
-\color{addclr}
-\begin{itemdecl}
-UnsignedIntegral size_type;
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\ctype\
-a type that can represent the size of the largest object in the allocation model
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-SignedIntegral difference_type;
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\ctype\
-a type that can represent the difference between any two pointers
-in the allocation model
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-template<ObjectType T> class rebind;
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\ctype}}
-The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
-typedef template}{is a template that produces allocators in the same
-  family as \mbox{\tcode{X}}}: if the name
-\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
-to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
-\mbox{\tcode{SomeAllocator<value_type>}}},
-then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
-\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. 
-\addedConcepts{The resulting type
-\mbox{\tcode{SameAllocator<U>}} shall meet the requirements of the
-\mbox{\tcode{Allocator}} concept.}
-
-\addedConcepts{The
-  default value for \mbox{\tcode{rebind}} is a template
-  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
-  \mbox{\tcode{X::template rebind<U>::other}}.} 
-
-\begin{lrbox}\rebindbox
-\begin{minipage}{\linewidth}
-\begin{lstlisting}
-template<typename Alloc>
-struct rebind_allocator {
-  template<typename U>
-  using rebind = typename Alloc::template rebind<U>::other;
-};
-\end{lstlisting}
-\end{minipage}
-\end{lrbox}
-
-\editorial{The aforementioned default value for \tcode{rebind} can be
-  implemented as follows:
-
-\usebox \rebindbox
-
-The default value for \tcode{rebind} in the \tcode{Allocator} concept
-is, therefore, \tcode{rebind_allocator<X>::template rebind}.}
-
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-pointer X::allocate(size_type n);
-pointer X::allocate(size_type n, const_pointer p);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\
-Memory is allocated for \tcode{n}\ objects of type \changedConcepts{\mbox{\tcode{T}}}{\mbox{\tcode{value_type}}}\ but objects
-are not constructed. \footnote{It is intended that \tcode{a.allocate}\ be an efficient means
-of allocating a single object of type \tcode{T}, even when \tcode{sizeof(T)}\
-is small. That is, there is no need for a container to maintain its own
-``free list''.} 
-
-\pnum
-\returns\
-\removedConcepts{The result is a random access iterator.}
-\addedConcepts{A pointer to the allocated memory.}
-\enternote\
-If \tcode{n == 0}, the return value is unspecified.
-\exitnote\
-
-\pnum
-\throws\
-\tcode{allocate}\ may raise an appropriate exception. 
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-void X::deallocate(pointer p, size_type n);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\preconditions\
-All \tcode{n }\ \changedConcepts{T}{value\_type} objects in the area pointed to by \tcode{p}\ shall be
-destroyed prior to this call. \tcode{n} shall match the value passed to
-\tcode{allocate}\ to obtain this memory. 
-\enternote\ \tcode{p} shall not be \changedConcepts{null}{singular}.\exitnote
-
-\throws\ Does not throw exceptions.
-\end{itemdescr}
-
-\begin{itemdecl}
-@\addedConcepts{size_type X::max_size() const;}@
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-the largest value that can meaningfully be passed to \tcode{X::allocate()}
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-template<typename V>
-  requires Constructible<value_type, V&&>
-  void X::construct(pointer p, V&&);
-\end{itemdecl}
-\color{black}
-
-\editorial{The non-templated \tcode{X::construct} has been removed
-from the \tcode{Allocator} requirements because it implies that the
-\tcode{value_type} is \tcode{CopyConstructible} (which we do not want
-as a requirement in the \tcode{Allocator} concept). The templated
-version is more general, allowing in-place and move construction.}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{::new((void*)p) T(forward<V>(v))}
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-void X::destroy(pointer p);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{((T*)p)->$\sim$T()}
-\end{itemdescr}
-
-\pnum
-\addedConcepts{The \mbox{\tcode{AllocatorGenerator}} concept describes
-  the requirements on types that can be used to generate
-  \mbox{\tcode{Allocator}}s.}
-
-\color{addclr}
-\begin{itemdecl}
-concept AllocatorGenerator<typename X> : Regular<X> {
-  typename value_type               = typename X::value_type;
-  template<typename T> class rebind = @\textit{see below}@;
-
-  @\textcolor{addclr}{requires}@ SameType<rebind<value_type>, X>;
-}
-\end{itemdecl}
-\color{black}
-
-\begin{itemdecl}
-@\addedConcepts{template<typename T> class rebind;}@
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\ctype}}
-The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
-typedef template}{is a template that produces allocator generators in the same
-  family as \mbox{\tcode{X}}}: if the name
-\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
-to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
-\mbox{\tcode{SomeAllocator<value_type>}}},
-then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
-\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. \addedConcepts{The
-  default value for \mbox{\tcode{rebind}} is a template
-  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
-  \mbox{\tcode{X::template}} \mbox{\tcode{rebind<U>::other}}.}
-\end{itemdescr}
-
-\pnum
-Two allocators \addedConcepts{or allocator generators} compare equal with \tcode{==}
-iff storage allocated from each can be deallocated via the other.
-
-\pnum \addedConcepts{Every \mbox{\tcode{Allocator}} also meets the
-  requirements of the \mbox{\tcode{AllocatorGenerator}} concept:}
-\color{addclr}
-\begin{itemdecl}
-template<Allocator X>
-concept_map AllocatorGenerator<X> {
-  typedef Allocator<X>::value_type value_type;
-  template<typename U> using rebind = Allocator<X>::rebind<U>;
-}
-\end{itemdecl}
-\color{black}
-
-\pnum
-Implementations of containers described in this International Standard
-are permitted to assume that their \tcode{Alloc}\removedConcepts{\mbox{\tcode{ator}}} template parameter meets
-the following two additional requirements beyond those in
-\changedConcepts{Table~40}{the Allocator concept}.
-
-\begin{itemize}
-\item
-All instances of a given allocator type are required to be interchangeable
-and always compare equal to each other.
-\item
-\removedConcepts{The typedef members pointer, const\_pointer, size\_type,
-and difference\_type are required to be T*, T const*,
-std::size\_t, and std::ptrdiff\_t, respectively.} \color{addclr}The
-requirements clause may contain the following additional requirements: 
-\tcode{SameType<Alloc::pointer, Alloc::value_type*>}, \tcode{SameType<Alloc::const_pointer,
-  const Alloc::value_type*>}, \tcode{SameType<Alloc::size_type, std::size_t>}, and
-\tcode{SameType<Alloc::difference_type, std::ptrdiff_t>}.
-\end{itemize}
-
-\pnum
-Implementors are encouraged to supply libraries that can accept allocators
-that encapsulate more general memory models and that support non-equal
-instances.
-In such implementations, any requirements imposed on allocators
-by containers beyond those requirements that appear in
-\changedConcepts{Table~40}{concept Allocator}, and the
-semantics of containers and algorithms when allocator instances compare
-non-equal, are implementation-defined.
+\editorial{This new section is specified in a separate document, N2621=08-0131.}
 
 \rSec1[utility]{Utility components}
 
@@ -1074,8 +131,8 @@ namespace std {
 
   // \ref{forward}, forward/move:
   template <class T> struct identity;
-  template <@\changedConcepts{class}{ObjectType}@ T> T&& forward(typename identity<T>::type&&);
-  template <@\changedConcepts{class}{ObjectType}@ T> typename remove_reference<T>::type&& move(T&&);
+  template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identity<T>::type&&);
+  template <@\changedConcepts{class}{VariableType}@ T> typename remove_reference<T>::type&& move(T&&);
 
   // \ref{pairs}, pairs:
   template <@\changedConcepts{class}{ObjectType}@ T1,@\changedConcepts{class}{ObjectType}@ T2> struct pair;
@@ -1097,7 +154,8 @@ namespace std {
     void swap(pair<T1,T2>&&, pair<T1,T2>&);
   template <@\changedConcepts{class}{Swappable}@ T1, @\changedConcepts{class}{Swappable}@ T2> 
     void swap(pair<T1,T2>&, pair<T1,T2>&&); 
-  template <@\changedConcepts{class}{MoveConstructible}@ T1, @\changedConcepts{class}{MoveConstructible}@ T2> pair<T1,T2> make_pair(T1, T2);
+  template <@\changedConcepts{class}{MoveConstructible}@ T1,
+  @\changedConcepts{class}{MoveConstructible}@ T2> pair<V1, V2> make_pair(T1, T2);
 }
 \end{codeblock}
 
@@ -1202,7 +260,7 @@ semantics.\mbox{\exitnote}}
 
 \index{forward@\tcode{forward}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T> T&& forward(typename identity<T>::type&& t);
+template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identity<T>::type&& t);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1213,7 +271,7 @@ template <@\changedConcepts{class}{ObjectType}@ T> T&& forward(typename identity
 \setcounter{Paras}{6}
 \index{move@\tcode{move}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T> typename remove_reference<T>::type&& move(T&& t);
+template <@\changedConcepts{class}{VariableType}@ T> typename remove_reference<T>::type&& move(T&& t);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1235,7 +293,7 @@ and~\ref{tuple.elem}).%
 
 \index{pair@\tcode{pair}}%
 \begin{codeblock}
-template <@\changedConcepts{class}{ObjectType}@ T1, @\changedConcepts{class}{ObjectType}@ T2>
+template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2>
 struct pair {
   typedef T1 first_type;
   typedef T2 second_type;
@@ -1245,16 +303,45 @@ struct pair {
   @\addedConcepts{requires DefaultConstructible<T1> \&\& DefaultConstructible<T2>}@ pair();
   @\addedConcepts{requires CopyConstructible<T1> \&\& CopyConstructible<T2>}@ pair(const T1& @\farg{x}@, const T2& @\farg{y}@);
   template<class @\farg{U}@, class @\farg{V}@>
-    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
+    @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, V\&\&>}@ 
     pair(U&& @\farg{x}@, V&& @\farg{y}@);
   @\addedConcepts{requires MoveConstructible<T1> \&\& MoveConstructible<T2>}@ pair(pair&& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@> 
-    @\addedConcepts{requires Constructible<T1, U> \&\& Constructible<T2, V>}@
+    @\addedConcepts{requires HasConstructor<T1, U> \&\& HasConstructor<T2, V>}@
     pair(const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@> 
-    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@
+    @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, V\&\&>}@
     pair(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
+  template<class @\farg{U}@, class... @\farg{Args}@> 
+    @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, Args\&\&...>}@
+    pair(U&& @\farg{x}@, Args&&... @\farg{args}@);
   
+  // allocator-extended constructors
+  template<@\changedConcepts{class}{Allocator} Alloc@>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1> \&\& ConstructibleAsElement<Alloc, T2>}@ 
+    pair(allocator_arg_t, const Alloc& a);
+  template<@\changedConcepts{class}{Allocator} Alloc@>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const T1\&>}@
+             @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, const T2\&>}@
+    pair(allocator_arg_t, const Alloc& a, const T1& @\farg{x}@, const T2& @\farg{y}@);
+  template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@ 
+    pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, V&& @\farg{y}@);
+  template<@\changedConcepts{class}{Allocator} Alloc@>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, T1\&\&> \&\& ConstructibleAsElement<Alloc, T2, T2\&\&>}@ 
+    pair(allocator_arg_t, const Alloc& a, pair&& @\farg{p}@);
+  template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const U\&>}@
+             @\addedConcepts{\&\& ConstructibleAsElement<Alloc, <T2, const V\&>}@
+    pair(allocator_arg_t, const Alloc& a, const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
+  template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@
+    pair(allocator_arg_t, const Alloc& a, pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
+  template<class @\farg{U}@, class... @\farg{Args}@, @\changedConcepts{class}{Allocator} Alloc@> 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&>}@
+             @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, Args\&\&...>}@
+    pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, Args&&... @\farg{args}@);
+
   @\addedConcepts{requires MoveAssignable<T1> \&\& MoveAssignable<T2>}@ pair& operator=(pair&& p ); 
   template<class U , class V> 
     @\addedConcepts{requires MoveAssignable<T1, U> \&\& MoveAssignable<T2, V>}@
@@ -1262,7 +349,39 @@ struct pair {
 
   @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@ void swap(pair&& p ); 
 };
+
+@\removedConcepts{template <class T1, class T2, class Alloc>}@
+  @\removedConcepts{struct uses_allocator<pair<T1, T2>, Alloc>;}@
+
+@\addedConcepts{template <class T1, class T2, class Alloc>}@
+  @\addedConcepts{concept_map UsesAllocator<pair<T1, T2>, Alloc> \{ \}}@
+
+@\removedConcepts{template <class T1, class T2>}@
+  @\removedConcepts{struct constructible_with_allocator_prefix<pair<T1, T2>{>};}@
 \end{codeblock}
+
+\begin{itemdecl}
+@\removedConcepts{template <class T1, class T2, class Alloc>}@
+  @\removedConcepts{struct uses_allocator<pair<T1, T2>, Alloc> : true_type \{ \};}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{Alloc}} shall be an \mbox{\tcode{Allocator}}~(\mbox{\ref{allocator.requirements}}).}
+
+\pnum
+\removedConcepts{\mbox{\enternote} Specialization of this trait informs other library components that \mbox{\tcode{pair}} can be constructed with an allocator, even though it does not have a nested \mbox{\tcode{allocator_type}}. \mbox{\exitnote}}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\removedConcepts{template <class T1, class T2>}@
+  @\removedConcepts{struct constructible_with_allocator_prefix<pair<T1, T2> >}@
+    @\removedConcepts{: true_type \{ \};}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\removedConcepts{\mbox{\enternote} Specialization of this trait informs other library components that \mbox{\tcode{pair}} can be constructed with an allocator prefix argument. \mbox{\exitnote}}
+\end{itemdescr}
 
 \begin{itemdecl}
 @\addedConcepts{requires DefaultConstructible<T1> \&\& DefaultConstructible<T2>}@ pair();
@@ -1287,7 +406,7 @@ with \farg{y}.
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@>
-  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
+  @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, V\&\&>}@ 
   pair(U&& @\farg{x}@, V&& @\farg{y}@);
 \end{itemdecl}
 
@@ -1295,8 +414,8 @@ template<class @\farg{U}@, class @\farg{V}@>
 \pnum
 \mbox{\effects}
 The constructor initializes \mbox{\tcode{first}} with
-\mbox{\tcode{forward<U>(\farg{x})}} and \mbox{\tcode{second}}
-with \mbox{\tcode{forward<T>(\farg{y})}}.
+\mbox{\tcode{std::forward<U>(\farg{x})}} and \mbox{\tcode{second}}
+with \mbox{\tcode{std::forward<T>(\farg{y})}}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1307,9 +426,9 @@ with \mbox{\tcode{forward<T>(\farg{y})}}.
 \pnum
 \mbox{\effects}
 The constructor initializes \mbox{\tcode{first}} with
-\mbox{\tcode{move(\farg{p}.first)}}
+\mbox{\tcode{std::move(\farg{p}.first)}}
 and \mbox{\tcode{second}} with
-\mbox{\tcode{move(\farg{p}.second)}}.
+\mbox{\tcode{std::move(\farg{p}.second)}}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1335,9 +454,57 @@ template<class @\farg{U}@, class @\farg{V}@>
 \pnum
 \mbox{\effects}
 The constructor initializes \mbox{\tcode{first}} with
-\mbox{\tcode{move(\farg{p}.first)}}
+\mbox{\tcode{std::move(\farg{p}.first)}}
 and \mbox{\tcode{second}} with
-\mbox{\tcode{move(\farg{p}.second)}}.
+\mbox{\tcode{std::move(\farg{p}.second)}}.
+\end{itemdescr}
+
+\begin{itemdecl}
+template<class U, class... Args> 
+  @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, Args\&\&...>}@
+  pair(U&& x, Args&&... args);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects The constructor initializes \tcode{first} with
+\tcode{std::forward<U>(x)} and \tcode{second} with
+\tcode{std::forward<Args>(args)...}
+\end{itemdescr}
+
+\begin{itemdecl}
+template<@\changedConcepts{class}{Allocator} Alloc@>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1> \&\& ConstructibleAsElement<Alloc, T2>}@ 
+  pair(allocator_arg_t, const Alloc& a);
+template<@\changedConcepts{class}{Allocator} Alloc@>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const T1\&>}@
+           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, const T2\&>}@
+  pair(allocator_arg_t, const Alloc& a, const T1& @\farg{x}@, const T2& @\farg{y}@);
+template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@ 
+  pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, V&& @\farg{y}@);
+template<@\changedConcepts{class}{Allocator} Alloc@>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, T1\&\&> \&\& ConstructibleAsElement<Alloc, T2, T2\&\&>}@ 
+  pair(allocator_arg_t, const Alloc& a, pair&& @\farg{p}@);
+template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const U\&>}@
+           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, <T2, const V\&>}@
+  pair(allocator_arg_t, const Alloc& a, const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
+template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@
+  pair(allocator_arg_t, const Alloc& a, pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
+template<class @\farg{U}@, class... @\farg{Args}@, @\changedConcepts{class}{Allocator} Alloc@> 
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&>}@
+           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, Args\&\&...>}@
+  pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, Args&&... @\farg{args}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{Alloc}} shall be an \mbox{\tcode{Allocator}}~(\mbox{\ref{allocator.requirements}}).}
+
+\pnum
+\mbox{\effects} The members \mbox{\tcode{first}} and \mbox{\tcode{second}} are both \mbox{\techterm{allocator constructed}}~(\mbox{\ref{allocator.concepts}}) with \mbox{\tcode{a}}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1347,8 +514,8 @@ and \mbox{\tcode{second}} with
 \begin{itemdescr}
 \pnum
 \mbox{\effects}
-Assigns to \mbox{\tcode{first}} with \mbox{\tcode{move(\farg{p}.first)}}
-and to \mbox{\tcode{second}} with \mbox{\tcode{move(\farg{p}.second)}}.
+Assigns to \mbox{\tcode{first}} with \mbox{\tcode{std::move(\farg{p}.first)}}
+and to \mbox{\tcode{second}} with \mbox{\tcode{std::move(\farg{p}.second)}}.
 
 \pnum
 \mbox{\returns} \mbox{\tcode{*this}}.
@@ -1363,8 +530,8 @@ template<class @\farg{U}@, class @\farg{V}@>
 \begin{itemdescr}
 \pnum
 \mbox{\effects}
-Assigns to \mbox{\tcode{first}} with \mbox{\tcode{move(\farg{p}.first)}}
-and to \mbox{\tcode{second}} with \mbox{\tcode{move(\farg{p}.second)}}.
+Assigns to \mbox{\tcode{first}} with \mbox{\tcode{std::move(\farg{p}.first)}}
+and to \mbox{\tcode{second}} with \mbox{\tcode{std::move(\farg{p}.second)}}.
 
 \pnum
 \mbox{\returns} \mbox{\tcode{*this}}.
@@ -1430,18 +597,18 @@ template<class @\farg{T1}@, class @\farg{T2}@>
 \index{make_pair@\tcode{make_pair}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{MoveConstructible}@ T1, @\changedConcepts{class}{MoveConstructible}@ T2>
-  pair<T1, T2> make_pair(T1 @\farg{x}@, T2 @\farg{y}@);
+  pair<V1, V2> make_pair(T1 @\farg{x}@, T2 @\farg{y}@);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\returns\ 
-% .Fs new
-\tcode{pair<T1, T2>(x, y)}.%
-\footnote{
-According to~(\ref{class.copy}), an implementation is permitted to not
-perform a copy of an argument, thus avoiding unnecessary copies.
-}
+\returns
+
+\begin{codeblock}
+pair<V1, V2>(std::forward<T1>(x), std::forward<T2>(y));
+\end{codeblock}
+
+where \mbox{\tcode{V1}} and \mbox{\tcode{V2}} are determined as follows: Let \mbox{\tcode{Ui}} be \mbox{\tcode{decay<Ti>::type}} for each \mbox{\tcode{Ti}}. Then each \mbox{\tcode{Vi}} is \mbox{\tcode{X\&}} if \mbox{\tcode{Ui}} equals \mbox{\tcode{reference_wrapper<X>}}, otherwise \mbox{\tcode{Vi}} is \mbox{\tcode{Ui}}.
 
 \pnum
 \enterexample\ 
@@ -1643,7 +810,7 @@ constructible from the corresponding type in \mbox{\tcode{UTypes}}.
 
 \pnum
 \addedD{\mbox{\effects} Initializes the elements in the tuple with the
-corresponding value in \mbox{\tcode{forward<UTypes>(u)}}.}
+corresponding value in \mbox{\tcode{std::forward<UTypes>(u)}}.}
 \end{itemdescr}
 
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
@@ -1764,8 +931,8 @@ move constructible from \mbox{\tcode{U1}} and the second type in
 
 \pnum
 \addedD{\mbox{\effects}  Constructs the first element with
-\mbox{\tcode{move(u.first)}} and the
-second element with \mbox{\tcode{move(u.second)}}.}
+\mbox{\tcode{std::move(u.first)}} and the
+second element with \mbox{\tcode{std::move(u.second)}}.}
 \end{itemdescr}
 
 \index{tuple@\tcode{tuple}!operator=@\tcode{operator=}}%
@@ -1905,8 +1072,8 @@ assignable from \mbox{\tcode{U1}} and the second type in \mbox{\tcode{Types}}
 shall be assignable from \mbox{\tcode{U2}}. \mbox{\tcode{sizeof...(Types) == 2}}.}
 
 \pnum
-\addedD{\mbox{\effects} Assigns \mbox{\tcode{move(u.first)}} to the first
-element of \mbox{\tcode{*this}} and \mbox{\tcode{move(u.second)}} to the
+\addedD{\mbox{\effects} Assigns \mbox{\tcode{std::move(u.first)}} to the first
+element of \mbox{\tcode{*this}} and \mbox{\tcode{std::move(u.second)}} to the
 second element of \mbox{\tcode{*this}}.}
 
 \pnum
@@ -1940,7 +1107,7 @@ allowed tuple elements.}
 
 \pnum
 \returns\ \changedD{\mbox{\tcode{tuple<V1, V2, ..., VN>(t1, t2, ..., tn)}}}
-{\mbox{\tcode{tuple<VTypes...>(forward<Types>(t)...)}}.}
+{\mbox{\tcode{tuple<VTypes...>(std::forward<Types>(t)...)}}.}
  
 \pnum
 \enterexample\
@@ -2435,7 +1602,7 @@ template <@\changedD{class T1, class T2, ..., class TN}{class... ArgTypes}@>
 \end{itemdecl}
 
 \begin{itemdescr}
-\pnum\returns\ \tcode{\textit{INVOKE}(get(), \changedD{a1, a2, ..., aN}{forward<ArgTypes>(args)...})}.
+\pnum\returns\ \tcode{\textit{INVOKE}(get(), \changedD{a1, a2, ..., aN}{std::forward<ArgTypes>(args)...})}.
 (\ref{func.require})
 
 \pnum
@@ -3220,7 +2387,7 @@ template<class F>
 
 \pnum
 Otherwise, \tcode{*this} targets a copy of \tcode{f}
-\addedD{or \mbox{\tcode{move(f)}}} if \tcode{f} is
+\addedD{or \mbox{\tcode{std::move(f)}}} if \tcode{f} is
 not a pointer to member function, and targets a copy
 of \tcode{mem_fn(f)} if \tcode{f} is a pointer to member function.
 
