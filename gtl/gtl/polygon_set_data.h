@@ -119,6 +119,11 @@ public:
     std::sort(data_.begin(), data_.end());
     unsorted_ = false;
   }
+
+  void set(const value_type& value, orientation_2d orient) {
+    data_ = value; 
+    orient_ = orient;
+  }
 private:
   orientation_2d orient_;
   mutable value_type data_;

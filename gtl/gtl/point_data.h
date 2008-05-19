@@ -19,6 +19,12 @@ public:
   }
   template <typename T2>
   inline point_data& operator=(const T2& rvalue);
+  inline bool operator==(const point_data& that) const {
+    return coords_[0] == that.coords_[0] && coords_[1] == that.coords_[1];
+  }
+  inline bool operator!=(const point_data& that) const {
+    return !((*this) == that);
+  }
   inline coordinate_type get(orientation_2d orient) const {
     return coords_[orient.to_int()]; 
   }

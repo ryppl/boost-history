@@ -13,7 +13,7 @@ public:
   template <typename interval_type_1, typename interval_type_2>
   inline rectangle_data(const interval_type_1& hrange,
                         const interval_type_2& vrange) {
-    set(HORIZONTAL, hrange); set(VERTICAL, hrange); }
+    set(HORIZONTAL, hrange); set(VERTICAL, vrange); }
 
   inline rectangle_data(const rectangle_data& that) { (*this) = that; }
 

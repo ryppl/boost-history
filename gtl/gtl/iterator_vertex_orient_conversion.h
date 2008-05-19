@@ -23,8 +23,6 @@ public:
     iter_(iter) {}
   inline iterator_vertex_orient_conversion& operator++() {
     ++iter_;
-    vertex_.first = (*iter_).second.first;
-    vertex_.second = std::pair<coordinate_type, int>((*iter_).first, (*iter_).second.second); 
     return *this;
   }
   inline iterator_vertex_orient_conversion operator++(int) {
@@ -38,6 +36,10 @@ public:
   inline bool operator!=(const iterator_vertex_orient_conversion& that) const {
     return (iter_ != that.iter_);
   }
-  inline reference operator*() const { return vertex_; }
+  inline reference operator*() const { 
+    vertex_.first = (*iter_).second.first;
+    vertex_.second = std::pair<coordinate_type, int>((*iter_).first, (*iter_).second.second); 
+    return vertex_; 
+  }
 };
 

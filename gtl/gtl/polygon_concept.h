@@ -8,6 +8,12 @@
 struct polygon_concept {
   inline polygon_concept() {}
 
+  template <typename polygon_type>
+  struct registration {
+    typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
+  };
+
+
   template<typename polygon_type, typename iterator_type>
   static void set(polygon_type& polygon, iterator_type input_begin, iterator_type input_end) {
     polygon_traits<polygon_type>::set(polygon, input_begin, input_end);
@@ -87,7 +93,7 @@ struct polygon_concept {
     }
     direction_1d dir = HIGH;
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
-    typedef typename polygon_traits<polygon_type>::iterator iterator;
+    typedef typename polygon_traits<polygon_type>::iterator_type iterator;
     iterator itr = begin(polygon);
     coordinate_type firstx = *itr;
     coordinate_type minX = firstx;
@@ -312,6 +318,7 @@ struct polygon_concept {
       move(0, displacement);
     }
   }
+
 };
 
 

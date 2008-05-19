@@ -60,9 +60,9 @@ struct interval_concept {
       get(interval2, HIGH); 
   }
 
-  template <typename interval_type, typename coordinate_type>
+  template <typename interval_type>
   static bool contains(const interval_type& interval,
-                       coordinate_type value, bool consider_touch) {
+                       typename interval_traits<interval_type>::coordinate_type value, bool consider_touch) {
     if(consider_touch) {
       return value <= get<HIGH>(interval) && value >= get<LOW>(interval);
     } else {
@@ -72,8 +72,7 @@ struct interval_concept {
 
   template <typename interval_type, typename interval_type_2>
   static bool contains(const interval_type& interval,
-                       const interval_type_2& value, bool consider_touch,
-                       interval_concept concept) {
+                       const interval_type_2& value, bool consider_touch, interval_concept tag) {
     return contains(interval, get(value, LOW), consider_touch) &&
       contains(interval, get(value, HIGH), consider_touch);
   }

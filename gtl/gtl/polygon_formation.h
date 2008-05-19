@@ -336,7 +336,7 @@ namespace polygon_formation {
         //if it is horizontal we need to skip the first element
         pLine_ = at->getTail();
         index_ = at->getTail()->numSegments() - 1;
-        if(at->getOrient() == HORIZONTAL ^ (orient == HORIZONTAL)) {
+        if((at->getOrient() == HORIZONTAL) ^ (orient == HORIZONTAL)) {
           pLineEnd_ = at->getTail();
           indexEnd_ = pLineEnd_->numSegments() - 1;
           if(index_ == 0) {
@@ -1202,7 +1202,7 @@ namespace polygon_formation {
       nextPolyLinep = tailp_->writeOut(outVec);
     }
     Unit firsty = outVec[size + 1];
-    if(getOrient() == HORIZONTAL ^ !isHole) {
+    if((getOrient() == HORIZONTAL) ^ !isHole) {
       //our first coordinate is a y value, so we need to rotate it to the end
       typename std::vector<Unit>::iterator tmpItr = outVec.begin();
       tmpItr += size; 
@@ -1215,7 +1215,7 @@ namespace polygon_formation {
       nextPolyLinep = nextPolyLinep->writeOut(outVec, startEnd); 
       startEnd = nextStartEnd;
     }      
-    if(getOrient() == HORIZONTAL ^ !isHole) {
+    if((getOrient() == HORIZONTAL) ^ !isHole) {
       //we want to push the y value onto the end since we ought to have ended with an x
       outVec.push_back(firsty); //should never be executed because we want first value to be an x
     }

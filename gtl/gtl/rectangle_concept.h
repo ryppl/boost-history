@@ -96,12 +96,14 @@ struct rectangle_concept {
   template <typename rectangle_type, typename rectangle_type2>
   static bool contains(const rectangle_type& rectangle, const rectangle_type2 rectangle_contained, 
                                 bool consider_touch, rectangle_concept tag) {
-    std::cout << "rectangle contains rectangle\n";
+    return interval_concept::contains(get<HORIZONTAL>(rectangle), get<HORIZONTAL>(rectangle_contained), consider_touch, interval_concept()) &&
+      interval_concept::contains(get<VERTICAL>(rectangle), get<VERTICAL>(rectangle_contained), consider_touch, interval_concept());
   }
   template <typename rectangle_type, typename point_type>
   static bool contains(const rectangle_type& rectangle, const point_type point_contained, 
                                 bool consider_touch, point_concept tag) {
-    std::cout << "rectangle contains point\n";
+    return interval_concept::contains(get<HORIZONTAL>(rectangle), point_concept::get<HORIZONTAL>(point_contained), consider_touch) &&
+      interval_concept::contains(get<VERTICAL>(rectangle), point_concept::get<VERTICAL>(point_contained), consider_touch);
   }
 
   template <typename rectangle_type_1, typename rectangle_type_2>

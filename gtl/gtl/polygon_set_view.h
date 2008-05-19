@@ -91,7 +91,7 @@ public:
                    const rtype& rvalue,
                    orientation_2d orient,
                    op_type op) :
-    lvalue_(lvalue), rvalue_(rvalue), orient_(orient), op_(op) {}
+    lvalue_(lvalue), rvalue_(rvalue), op_(op), orient_(orient) {}
 
   /// get iterator to begin vertex data
   const value_type& value() const {
@@ -151,7 +151,7 @@ public:
                    const rtype& rvalue,
                    orientation_2d orient,
                    op_type op) :
-    lvalue_(lvalue), rvalue_(rvalue), orient_(orient), op_(op) {}
+    lvalue_(lvalue), rvalue_(rvalue), op_(op) , orient_(orient) {}
 
   /// get iterator to begin vertex data
   const value_type& value() const {
@@ -201,7 +201,7 @@ public:
                    const rtype& rvalue,
                    orientation_2d orient,
                    op_type op) :
-    lvalue_(lvalue), rvalue_(rvalue), orient_(orient), op_(op) {}
+    lvalue_(lvalue), rvalue_(rvalue), op_(op), orient_(orient) {}
 
   /// get iterator to begin vertex data
   const value_type& value() const {

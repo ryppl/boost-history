@@ -32,7 +32,7 @@ public:
   bool operator==(direction_1d d) const { return (val_ == d.val_); }
   bool operator!=(direction_1d d) const { return !((*this) == d); }
   unsigned int to_int(void) const { return val_; }
-  direction_1d& backward() { val_ ^ 1; }
+  direction_1d& backward() { val_ ^= 1; return *this; }
 };
 
 class direction_2d;

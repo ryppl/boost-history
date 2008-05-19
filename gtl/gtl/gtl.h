@@ -57,6 +57,7 @@
 #include "polygon_formation.h"
 #include "rectangle_formation.h"
 #include "iterator_vertex_orient_conversion.h"
+#include "iterator_geometry_to_set.h"
 
 //polygon set data types
 #include "polygon_set_data.h"
@@ -67,6 +68,8 @@
 //geometry traits
 #include "geometry_traits.h"
 
+#include "polygon_set_wrapper.h"
+
 //defintions
 #include "post_geometry_traits_definitions.h"
 
@@ -76,8 +79,8 @@
 template <typename geometry_type_1, typename geometry_type_2>
 bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object, 
               bool consider_touch = true) {
-  typename geometry_traits<geometry_type_1>::geometry_concept().contains(geometry_object, contained_geometry_object,
-                                                                         consider_touch, typename geometry_traits<geometry_type_2>::geometry_concept());
+  return typename geometry_traits<geometry_type_1>::geometry_concept().contains(geometry_object, contained_geometry_object,
+                      consider_touch, typename geometry_traits<geometry_type_2>::geometry_concept());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
