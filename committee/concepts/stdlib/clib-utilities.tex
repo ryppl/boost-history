@@ -1640,14 +1640,14 @@ namespace std {
     const_mem_fun1_ref_t<S,T,A> mem_fun_ref(S (T::*f)(A) const);
 
   // \marktr{}\ref{func.memfn}, member function adaptors:
-  template<@\changedConcepts{class}{ObjectType}@ R, class T> @\textit{unspecified}@ mem_fn(R T::*);
-  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  template<@\changedConcepts{class}{Returnable}@ R, class T> @\textit{unspecified}@ mem_fn(R T::*);
+  @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
     @\addedConcepts{\textit{unspecified} mem_fn(R (T::*)(Args...) pm);}@
-  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
     @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const)(Args...) pm);}@
-  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
     @\addedConcepts{\textit{unspecified} mem_fn(R (T::* volatile)(Args...) pm);}@
-  @\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+  @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
     @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const volatile)(Args...) pm);}@
 
   // \marktr{}\ref{func.wrap} polymorphic function wrappers:
@@ -2424,14 +2424,14 @@ required for \tcode{f} (if any).
 
 \index{mem_fn@\tcode{mem_fn}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{ObjectType}@ R, class T> @\textit{unspecified}@ mem_fn(R T::* pm); 
-@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+template<@\changedConcepts{class}{Returnable}@ R, class T> @\textit{unspecified}@ mem_fn(R T::* pm); 
+@\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
   @\addedConcepts{\textit{unspecified} mem_fn(R (T::*)(Args...) pm);}@
-@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+@\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
   @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const)(Args...) pm);}@
-@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+@\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
   @\addedConcepts{\textit{unspecified} mem_fn(R (T::* volatile)(Args...) pm);}@
-@\addedConcepts{template<MoveConstructible R, class T, MoveConstructible... Args>}@
+@\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
   @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const volatile)(Args...) pm);}@
 \end{itemdecl}
 
