@@ -156,6 +156,21 @@ namespace std {
     void swap(pair<T1,T2>&, pair<T1,T2>&&); 
   template <@\changedConcepts{class}{MoveConstructible}@ T1,
   @\changedConcepts{class}{MoveConstructible}@ T2> pair<V1, V2> make_pair(T1, T2);
+
+  // \ptr\ref{pairs}, tuple-like access to pair:
+  template <class T> class tuple_size;
+  template <int I, class T> class tuple_element;
+
+  template <class T1, class T2> struct tuple_size<std::pair<T1, T2> >;
+  template <class T1, class T2> struct tuple_element<0, std::pair<T1, T2> >;
+  template <class T1, class T2> struct tuple_element<1, std::pair<T1, T2> >;
+
+  template<int I, class T1, class T2> 
+    @\addedConcepts{requires True<0 <= I \&\& I < 2>}@
+    P& get(std::pair<T1, T2>&);
+  template<int I, class T1, class T2> 
+    @\addedConcepts{requires True<0 <= I \&\& I < 2>}@
+    const P& get(const std::pair<T1, T2>&);
 }
 \end{codeblock}
 
@@ -626,18 +641,61 @@ a \Cpp\ program may contain:
 \exitexample\ 
 \end{itemdescr}
 
-\rSec1[tuple]{\marktr{}Tuples}
+\index{tuple_size@\tcode{tuple_size}}%
+\begin{itemdecl}
+tuple_size<pair<T1, T2> >::value
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\returns\ integral constant expression.
+
+\pnum\textit{Value:}\ 2.
+\end{itemdescr}
+
+\index{tuple_element@\tcode{tuple_element}}%
+\begin{itemdecl}
+tuple_element<0, pair<T1, T2> >::type
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\textit{Value:}\ the type \tcode{T1}.
+\end{itemdescr}
+
+\index{tuple_element@\tcode{tuple_element}}%
+\begin{itemdecl}
+@\ptr@tuple_element<1, pair<T1, T2> >::type
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\textit{Value:}\ the type T2.
+\end{itemdescr}
+
+\index{pair@\tcode{pair}!get@\tcode{get}}%
+\index{get@\tcode{get}!pair@\tcode{pair}}%
+\begin{itemdecl}
+@\ptr@template<int I, class T1, class T2>
+  @\addedConcepts{requires True<0 <= I \&\& I < 2>}@
+  P& get(pair<T1, T2>&);
+
+@\ptr@template<int I, class T1, class T2>
+  @\addedConcepts{requires True<0 <= I \&\& I < 2>}@
+  const P& get(const pair<T1, T2>&);
+\end{itemdecl}
+\begin{itemdescr}
+\pnum\returntype\ If \tcode{I == 0} then \tcode{P} is \tcode{T1}, \changedConcepts{if
+  \mbox{\tcode{I == 1}} then}{otherwise} \tcode{P} is \tcode{T2}\removedConcepts{, and otherwise the
+  program is ill-formed}.
+
+\pnum\returns\ If \tcode{I == 0} returns \tcode{p.first}, otherwise
+  returns \tcode{p.second}.
+\end{itemdescr}
+
+\rSec1[tuple]{Tuples}
 
 \pnum
 \index{tuple@\tcode{tuple}}%
 \ref{tuple} describes the tuple library that provides a tuple type as
 the class template \tcode{tuple} that can be instantiated with any number
-of arguments.  \removedD{An implementation can set an upper limit for the number
-of arguments.  The minimum value for this implementation quantity is
-defined in Annex~\mbox{\ref{limits}}.}  Each template argument specifies
+of arguments. Each template argument specifies
 the type of an element in the \tcode{tuple}.  Consequently, tuples are
 heterogeneous, fixed-size collections of values.
-
 
 \pnum
 \synopsis{Header \tcode{<tuple>} synopsis}
@@ -646,7 +704,7 @@ heterogeneous, fixed-size collections of values.
 \begin{codeblock}
 namespace std {
   // \ref{tuple.tuple}, class template tuple:
-  template <@\changedConcepts{class}{ObjectType}@... Types> class tuple;
+  template <@\changedConcepts{class}{VariableType}@... Types> class tuple;
 
   // \ref{tuple.creation}, tuple creation functions:
   const @\textit{unspecified}@ ignore;
@@ -654,23 +712,32 @@ namespace std {
   template <@\changedConcepts{class}{MoveConstructible}@... Types>
     tuple<@\addedD{VTypes...}@> make_tuple(@\addedD{Types\&\&...}@);
 
-  template<@\changedConcepts{class}{ObjectType}@... Types>
+  template<@\changedConcepts{class}{VariableType}@... Types>
     tuple<@\addedD{Types\&...}@> tie(@\addedD{Types\&...}@); 
+
+  template <@\changedConcepts{class}{CopyConstructible}@... TTypes, @\changedConcepts{class}{CopyConstructible}@... UTypes>
+    tuple<TTypes..., UTypes...> tuple_cat(const tuple<TTypes...>&, const tuple<UTypes...>&);
+  template <@\changedConcepts{class}{MoveConstructible}@... TTypes, @\changedConcepts{class}{CopyConstructible}@... UTypes>
+    tuple<TTypes..., UTypes...> tuple_cat(tuple<TTypes...>&&, const tuple<UTypes...>&);
+  template <@\changedConcepts{class}{CopyConstructible}@... TTypes, @\changedConcepts{class}{MoveConstructible}@... UTypes>
+    tuple<TTypes..., UTypes...> tuple_cat(const tuple<TTypes...>&, tuple<UTypes...>&&);
+  template <@\changedConcepts{class}{MoveConstructible}@... TTypes, @\changedConcepts{class}{MoveConstructible}@... UTypes>
+    tuple<TTypes..., UTypes...> tuple_cat(tuple<TTypes...>&&, tuple<UTypes...>&&);
 
   // \ref{tuple.helper}, tuple helper classes:
   template <class T> class tuple_size;  // \addedD{undefined}
-  @\addedD{template <class... Types> class tuple_size<tuple<Types...> >;}@
+  template <@\changedConcepts{class}{VariableType}@... Types> class tuple_size<tuple<Types...> >;
 
   template <int I, class T> class tuple_element;    // \addedD{undefined}
   @\addedD{template <int I, class... Types>}@ 
     @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@ class tuple_element<I, tuple<Types...> >;
 
   // \ref{tuple.elem}, element access:
-  template <int I, @\changedConcepts{class}{ObjectType}@... Types> 
+  template <int I, @\changedConcepts{class}{VariableType}@... Types> 
     @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
     @\addedD{typename tuple_element<I, tuple<Types...> >::type\& get(tuple<Types...>\&);}@
 
-  template <int I, @\changedConcepts{class}{ObjectType}@... Types>
+  template <int I, @\changedConcepts{class}{VariableType}@... Types>
     @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
     @\addedD{typename tuple_element<I, tuple<Types...> >::type const\& get(const tuple<Types...>\&);}@
 
@@ -704,61 +771,88 @@ namespace std {
 
 \rSec2[tuple.tuple]{Class template \tcode{tuple}}
 
-\pnum
-\removedD{\mbox{\tcode{M}} denotes the implementation-defined number of template
-type parameters to the tuple class template, and \mbox{\tcode{N}}
-denotes the number of template arguments specified in an instantiation.}
-
-\pnum 
-\removedD{\mbox{\enterexample} Given the instantiation
-  \mbox{\tcode{tuple<int, float, char>}}, \mbox{\tcode{N}} is 3.  \mbox{\exitexample}}
-
 \index{tuple@\tcode{tuple}}%
 \begin{codeblock}
-template <@\changedConcepts{class}{ObjectType}@... Types>
+template <@\changedConcepts{class}{VariableType}@... Types>
 class tuple 
 {
 public:
   @\addedConcepts{requires DefaultConstructible<Types>...}@ tuple();
-  @\addedConcepts{requires CopyConstructible<Types>...}@ explicit tuple(@\addedD{const Types\&...}@);
-  @\addedD{template <class... UTypes>}@
-    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
-    @\addedD{explicit tuple(UTypes\&\&...);}@
+  @\addedConcepts{requires CopyConstructible<Types>...}@ explicit tuple(const Types&...);
+  template <class... UTypes>
+    @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+    explicit tuple(UTypes&&...);
 
   @\addedConcepts{requires CopyConstructible<Types>...}@ tuple(const tuple&);
-  @\addedConcepts{requires MoveConstructible<Types>...}@ @\addedD{tuple(tuple\&\&);}@
+  @\addedConcepts{requires MoveConstructible<Types>...}@ tuple(tuple&&);
 
-  template <@\addedD{class... UTypes}@>
-    @\addedConcepts{requires Constructible<Types, UTypes>...}@
-    tuple(const tuple<@\addedD{UTypes...}@>&);
-  @\addedD{template <class... UTypes>}@
-    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
-    @\addedD{tuple(tuple<UTypes...>\&\&);}@
+  template <class... UTypes>
+    @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+    tuple(const tuple<UTypes...>&);
+  template <class... UTypes>
+    @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+    tuple(tuple<UTypes...>&&);
 
-  template <class U1, class U2>
-    tuple(const pair<U1, U2>&);      // iff \changedD{N}{\mbox{\tcode{sizeof...(Types) == 2}}}
-  @\addedD{template <class U1, class U2>}@
-    @\addedD{tuple(pair<U1, U2>\&\&);}@           // iff \addedD{\mbox{\tcode{sizeof...(Types) == 2}}}
+  template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+    @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+    tuple(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);      @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
+  template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+    @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+    tuple(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);           @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
+
+  // allocator-extended constructors
+  template <@\changedConcepts{class}{Allocator}@ Alloc>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types>...}@ 
+    tuple(allocator_arg_t, const Alloc& a);
+  template <@\changedConcepts{class}{Allocator}@ Alloc>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+    explicit tuple(allocator_arg_t, const Alloc& a, const Types&...);
+  template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+    explicit tuple(allocator_arg_t, const Alloc& a, UTypes&&...);
+  template <@\changedConcepts{class}{Allocator}@ Alloc>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+    tuple(allocator_arg_t, const Alloc& a, const tuple&);
+  template <@\changedConcepts{class}{Allocator}@ Alloc>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, Types\&\&>...}@ 
+    tuple(allocator_arg_t, const Alloc& a, tuple&&);
+  template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+    tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
+  template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+    tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...>&&);
+  template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+    tuple(allocator_arg_t, const Alloc& a, const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
+  template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+    tuple(allocator_arg_t, const Alloc& a, pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 
   @\addedConcepts{requires CopyAssignable<Types>...}@ tuple& operator=(const tuple&);
-  @\addedConcepts{requires MoveAssignable<Types>...}@ @\addedD{tuple\& operator=(tuple\&\&);}@
+  @\addedConcepts{requires MoveAssignable<Types>...}@ tuple& operator=(tuple&&);
 
-  template <@\addedD{class... UTypes}@>
-    @\addedConcepts{requires CopyAssignable<Types, UTypes>...}@ 
+  template <class... UTypes>
+    @\addedConcepts{requires HasCopyAssign<Types, UTypes>...}@ 
     tuple& operator=(const tuple<@\addedD{UTypes...}@>&);
-  @\addedD{template <class... UTypes>}@
-    @\addedConcepts{requires MoveAssignable<Types, UTypes>...}@ 
-    @\addedD{tuple\& operator=(tuple<UTypes...>\&\&);}@
+  template <class... UTypes>
+    @\addedConcepts{requires HasMoveAssign<Types, UTypes>...}@ 
+    tuple& operator=(tuple<UTypes...>&&);
 
-  template <class U1, class U2>
-    tuple& operator=(const pair<U1, U2>&);  // iff \changedD{N}{\mbox{\tcode{sizeof...(Types) == 2}}}
-  @\addedD{template <class U1, class U2>}@
-    @\addedD{tuple\& operator=(pair<U1, U2>\&\&);}@       // iff \addedD{\mbox{\tcode{sizeof...(Types) == 2}}}
+  template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+    @\addedConcepts{requires HasCopyAssign<Types, UTypes>...}@
+    tuple& operator=(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);  @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
+  template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+    @\addedConcepts{requires HasMoveAssign<Types, UTypes>...}@
+    tuple& operator=(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);       @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
 };
+
+@\addedConcepts{template<class... Types, class... Alloc>}@
+  @\addedConcepts{concept_map UsesAllocator<tuple<Types...>, Alloc> \{ \}}@
 \end{codeblock}
 
-
-
+\rSec3[tuple.traits]{\removedConcepts{Tuple traits}}
+\editorial{Remove the section [tuple.traits] completely}
 
 \rSec3[tuple.cnstr]{Construction}
 
@@ -782,10 +876,6 @@ public:
 
 \begin{itemdescr}
 \pnum
-\removedD{where \mbox{\tcode{Pi}} is \mbox{\tcode{Ti}} if \mbox{\tcode{Ti}}
-is a reference type, or \mbox{\tcode{const Ti\&}} otherwise.}
-
-\pnum
 \removedConcepts{\mbox{\requires}  Each type in \mbox{\tcode{Types}}
 shall be copy constructible.}
 
@@ -797,7 +887,7 @@ corresponding parameter.
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 @\addedD{template <class... UTypes>}@
-  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
   @\addedD{tuple(UTypes\&\&... u);}@
 \end{itemdecl}
 
@@ -846,7 +936,7 @@ with the corresponding element of \mbox{\tcode{u}}.}
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <@\addedD{class... UTypes}@> 
-  @\addedConcepts{requires Constructible<Types, UTypes>...}@
+  @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
   tuple(const tuple<@\addedD{UTypes...}@>& u);
 \end{itemdecl}
 
@@ -877,7 +967,7 @@ element of \tcode{u}.
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <class... UTypes> 
-  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
   tuple(tuple<UTypes...>&& u);
 \end{itemdecl}
 
@@ -900,16 +990,18 @@ the source and target have the same number of elements. \mbox{\exitnote}}
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
-template <class U1, class U2> tuple(const pair<U1, U2>& u);
+template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+  @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+  tuple(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\requires\  \changedD{\mbox{\tcode{T1}}}{The first type in \mbox{\tcode{Types}}}
-shall be constructible from \tcode{U1} and
-\changedD{\mbox{\tcode{T2}}}{the second type in \mbox{\tcode{Types}}}
-shall be constructible from \tcode{U2}.
-\changedD{\mbox{\tcode{N == 2}}}{\mbox{\tcode{sizeof...(Types) == 2}}}.
+\removedConcepts{\mbox{\requires}  The first type in \mbox{\tcode{Types}}
+shall be constructible from \mbox{\tcode{U1}} and
+the second type in \mbox{\tcode{Types}}
+shall be constructible from \mbox{\tcode{U2}}.
+\mbox{\tcode{sizeof...(Types) == 2}}.}
 
 \pnum
 \effects\  Constructs the first element with \tcode{u.first} and the
@@ -919,12 +1011,14 @@ second element with \tcode{u.second}.
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
-@\addedD{template <class U1, class U2> tuple(pair<U1, U2>\&\& u);}@
+template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+  @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+  tuple(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedD{\mbox{\requires} The first type in \mbox{\tcode{Types}} shall be
+\removedConcepts{\mbox{\requires} The first type in \mbox{\tcode{Types}} shall be
 move constructible from \mbox{\tcode{U1}} and the second type in
 \mbox{\tcode{Types}} shall be move-constructible from \mbox{\tcode{U2}}.
 \mbox{\tcode{sizeof...(Types) == 2}}.}
@@ -1022,16 +1116,18 @@ to the corresponding element of \mbox{\tcode{*this}}.}
 \index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
-template <class U1, class U2> tuple& operator=(const pair<U1, U2>& u);
+template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+  @\addedConcepts{requires HasCopyAssign<Types, UTypes>...}@
+  tuple& operator=(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\requires\  \changedD{\mbox{\tcode{T1}}}{The first type in
-\mbox{\tcode{Types}}} shall be move assignable from \tcode{U1} and
-\changedD{\mbox{\tcode{T2}}}{the second type in \mbox{\tcode{Types}}}
-shall be move assignable from \tcode{U2}.
-\changedD{\mbox{\tcode{N == 2}}}{\mbox{\tcode{sizeof...(Types) == 2}}}.
+\removedConcepts{\mbox{\requires}  The first type in
+\mbox{\tcode{Types}} shall be move assignable from \mbox{\tcode{U1}} and
+the second type in \mbox{\tcode{Types}}
+shall be move assignable from \mbox{\tcode{U2}}.
+\mbox{\tcode{sizeof...(Types) == 2}}.}
 
 \pnum
 \effects\  Assigns \tcode{u.first} to the first element of \tcode{*this}
@@ -1062,12 +1158,14 @@ and \tcode{u.second} to the second element of \tcode{*this}.
 \index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
-@\addedD{template <class U1, class U2> tuple\& operator=(pair<U1, U2>\&\& u);}@
+template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
+  @\addedConcepts{requires HasMoveAssign<Types, UTypes>...}@
+  tuple& operator=(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedD{\mbox{\requires} The first type in \mbox{\tcode{Types}} shall be
+\removedConcepts{\mbox{\requires} The first type in \mbox{\tcode{Types}} shall be
 assignable from \mbox{\tcode{U1}} and the second type in \mbox{\tcode{Types}}
 shall be assignable from \mbox{\tcode{U2}}. \mbox{\tcode{sizeof...(Types) == 2}}.}
 
@@ -1080,6 +1178,44 @@ second element of \mbox{\tcode{*this}}.}
 \addedD{\mbox{\returns} \mbox{\tcode{*this}}.}
 \end{itemdescr}
 
+\begin{itemdecl}
+template <@\changedConcepts{class}{Allocator}@ Alloc>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types>...}@ 
+  tuple(allocator_arg_t, const Alloc& a);
+template <@\changedConcepts{class}{Allocator}@ Alloc>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+  explicit tuple(allocator_arg_t, const Alloc& a, const Types&...);
+template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+  explicit tuple(allocator_arg_t, const Alloc& a, UTypes&&...);
+template <@\changedConcepts{class}{Allocator}@ Alloc>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+  tuple(allocator_arg_t, const Alloc& a, const tuple&);
+template <@\changedConcepts{class}{Allocator}@ Alloc>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, Types\&\&>...}@ 
+  tuple(allocator_arg_t, const Alloc& a, tuple&&);
+template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+  tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
+template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+  tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...>&&);
+template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+  tuple(allocator_arg_t, const Alloc& a, const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
+template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+  tuple(allocator_arg_t, const Alloc& a, pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires} \mbox{\tcode{Alloc}} shall be an \mbox{\tcode{Allocator}}~(\mbox{\ref{allocator.requirements}}).}
+
+\pnum
+\mbox{\effects} Equivalent to the preceding constructors except that the allocator argument is passed conditionally to the constructor of each element. Each member is \mbox{\techterm{allocator constructed}}~(\mbox{\ref{allocator.concepts}}) with \mbox{\tcode{a}}.
+\end{itemdescr}
+
 \rSec3[tuple.creation]{Tuple creation functions}
 
 \index{make_tuple@\tcode{make_tuple}}%
@@ -1090,24 +1226,11 @@ template<@\changedConcepts{class}{MoveConstructible}@... Types>
 \end{itemdecl}
 
 \begin{itemdescr}
-\pnum
-\changedD{where \mbox{\tcode{Vi}} is \mbox{\tcode{X\&}} if
-the cv-unqualified type \mbox{\tcode{Ti}} is
-\mbox{\tcode{reference\_wrapper<X>}}, otherwise \mbox{\tcode{Vi}} is \mbox{\tcode{Ti}}.}
-{where each \mbox{\tcode{Vi}} in \mbox{\tcode{VTypes}} is \mbox{\tcode{X\&}}
-if, for the corresponding type \mbox{\tcode{Ti}} in \mbox{\tcode{Types}},
-\mbox{\tcode{remove_cv<remove_reference<Ti>::type>::type}} equals
-\mbox{\tcode{reference_wrapper<X>}}, otherwise \mbox{\tcode{Vi}} is
-\mbox{\tcode{decay<Ti>::type}}.}
+\pnum 
+Let \mbox{\tcode{Ui}} be \mbox{\tcode{decay<Ti>::type}} for each \mbox{\tcode{Ti}} in \mbox{\tcode{Types}}. Then each \mbox{\tcode{Vi}} in \mbox{\tcode{VTypes}} is \mbox{\tcode{X\&}} if \mbox{\tcode{Ui}} equals \mbox{\tcode{reference_wrapper<X>}}, otherwise \mbox{\tcode{Vi}} is \mbox{\tcode{Ui}}.
 
 \pnum
-\removedD{The \mbox{\tcode{make\_tuple}} function template shall be implemented for
-each different number of arguments from 0 to the maximum number of
-allowed tuple elements.}
-
-\pnum
-\returns\ \changedD{\mbox{\tcode{tuple<V1, V2, ..., VN>(t1, t2, ..., tn)}}}
-{\mbox{\tcode{tuple<VTypes...>(std::forward<Types>(t)...)}}.}
+\returns\ \tcode{tuple<VTypes...>(std::forward<Types>(t)...)}.
  
 \pnum
 \enterexample\
@@ -1130,16 +1253,11 @@ tuple<int, int&, const float&>
 \index{tie@\tcode{tie}}%
 \index{tuple@\tcode{tuple}!tie@\tcode{tie}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{ObjectType}@... Types>
+template<@\changedConcepts{class}{VariableType}@... Types>
   tuple<@\addedD{Types\&...}@> tie(@\addedD{Types\&... t}@);
 \end{itemdecl}
 
 \begin{itemdescr}
-\pnum
-\removedD{The \mbox{\tcode{tie}} function template shall be implemented for each
-different number of arguments from 0 to the maximum number of allowed
-tuple elements.}
-
 \pnum
 \returns\  \tcode{tuple<\addedD{Types\&}>(\addedD{t...})}.  When an
 argument \changedD{ti}{in \mbox{\tcode{t}}} is \tcode{ignore}, assigning
@@ -1156,6 +1274,36 @@ tie(i, ignore, s) = make_tuple(42, 3.14, "C++");
 // \tcode{i == 42}, \tcode{s == "C++"}
 \end{codeblock}
 \exitexample\
+\end{itemdescr}
+
+\editorial{I have collapsed the 8 paragraphs used to describe the four
+  different variants of \tcode{tuple_cat} into a single paragraph of
+  description, which eliminates a lot of redundancy and saves some
+  space.}
+
+\begin{itemdecl}
+template <@\changedConcepts{class}{CopyConstructible}@... TTypes, @\changedConcepts{class}{CopyConstructible}@... UTypes>
+  tuple<TTypes..., UTypes...> tuple_cat(const tuple<TTypes...>& t, const tuple<UTypes...>& u);
+template <@\changedConcepts{class}{MoveConstructible}@... TTypes, @\changedConcepts{class}{CopyConstructible}@... UTypes>
+  tuple<TTypes..., UTypes...> tuple_cat(tuple<TTypes...>&& t, const tuple<UTypes...>& u);
+template <@\changedConcepts{class}{CopyConstructible}@... TTypes, @\changedConcepts{class}{MoveConstructible}@... UTypes>
+  tuple<TTypes..., UTypes...> tuple_cat(const tuple<TTypes...>& t, tuple<UTypes...>&& u);
+template <@\changedConcepts{class}{MoveConstructible}@... TTypes, @\changedConcepts{class}{MoveConstructible}@... UTypes>
+  tuple<TTypes..., UTypes...> tuple_cat(tuple<TTypes...>&& t, tuple<UTypes...>&& u);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\requires}
+All the types in \mbox{\tcode{TTypes}} shall be MoveConstructible (Table~\mbox{\ref{moveconstructible}}).
+All the types in \mbox{\tcode{UTypes}} shall be MoveConstructible (Table~\mbox{\ref{moveconstructible}}).}
+
+\pnum
+\returns A \tcode{tuple} object constructed by
+\changedConcepts{move}{copy- or move-}constructing its first \tcode{sizeof...(TTypes)} elements from
+the corresponding elements of \tcode{t} and \changedConcepts{move}{copy- or move-}constructing its
+last \tcode{sizeof...(UTypes)} elements from the corresponding
+elements of \tcode{u}.
 \end{itemdescr}
 
 \rSec3[tuple.helper]{Tuple helper classes}
@@ -1187,7 +1335,7 @@ where indexing is zero-based.
 \index{tuple@\tcode{tuple}!get@\tcode{get}}%
 \index{get@\tcode{get}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
-template <int I, @\changedConcepts{class}{ObjectType}@... Types> 
+template <int I, @\changedConcepts{class}{VariableType}@... Types> 
   @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
   @\addedD{typename tuple_element<I, tuple<Types...> >::type\& get(tuple<Types...>\& t);}@
 \end{itemdecl}
@@ -1211,7 +1359,7 @@ indexing is zero-based.
 \index{tuple@\tcode{tuple}!get@\tcode{get}}%
 \index{get@\tcode{get}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
-template <int I, @\changedConcepts{class}{ObjectType}@... Types> 
+template <int I, @\changedConcepts{class}{VariableType}@... Types> 
   @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
   @\addedD{typename tuple_element<I, tuple<Types...> >::type const\& get(const tuple<Types...>\& t);}@
 \end{itemdecl}
@@ -2852,6 +3000,6 @@ Thanks to Walter Brown and Daniel Kr\"ugler for providing corrections
 and noting omissions to this document. 
 
 \bibliographystyle{plain}
-\bibliography{../local}
+\bibliography{local}
 
 \end{document}
