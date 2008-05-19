@@ -115,6 +115,10 @@ standard library are discussed in separate documents:
 \item Large cleanup to the wording for satisfying associated functions
   (\ref{concept.map.fct}).
 \item Cope with template aliases as archetypes.
+\item Introduced the terms "requirement members" and "satisfier members"
+(\ref{concept.map}) of concept maps.  The definitions are meant to help
+explicitly spell out some existing notions about what goes into the scope
+of a concept map.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -178,7 +182,11 @@ of which it is a member. If a function or function template is a class
 member its signature additionally includes the
 \mbox{\textit{cv}}-qualifiers (if any) and the
 \techterm{ref-qualifier} (if any) on the function or function
-template itself. The signature of a function template additionally
+template itself.
+\addedCC{If a function or function template is a concept map member its 
+signature additionally includes its status as a requirement member or a 
+satisfier member.} 
+ The signature of a function template additionally
 includes its return type\mbox{\changedConcepts{ and}{,}} its template parameter 
 list\mbox{\addedConcepts{, and its template requirements (if any)}}.
 The signature
@@ -599,6 +607,12 @@ any of the concept maps for concept}\changedCCC{s}{ instances}
 \addedConcepts{The name shall represent} \changedCCC{a member}{one or
   more members} \addedConcepts{of that 
   concept map} \addedCC{or the concept maps corresponding to the concept refinements}
+  \addedCC{ \mbox{\enternote} Outside of a constrained context, this means
+      that one or more
+      requirement members (\mbox{\ref{concept.map}}) will be found, and since
+      those names are synonyms for sets of other names, the result of
+      name lookup is the union of each of those sets.
+  \mbox{\exitnote}}
 \addedConcepts{.
 \mbox{\enternote}\
 a concept map member can be referred to using a
@@ -3878,6 +3892,62 @@ template<typename T> requires EqualityComparable<T> void f(T);
 f(student_record()); // okay, have concept_map EqualityComparable<student_record>
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
+
+\pnum 
+\addedCC{
+    A concept map that is not a concept map archetype
+     may contain two kinds of members:
+    \mbox{\techterm{requirement members}} and \mbox{\techterm{satisfier
+    members}}.}
+    
+\pnum 
+\addedCC{
+     A requirement member represents a requirement to satisfy (as
+     described below) a single associated function
+     (\mbox{\ref{concept.fct}}), associated type or associated template
+    (\mbox{\ref{concept.assoc}}) from the corresponding concept.  The set
+    of requirement members is the set of associated functions, associated
+    types and associated templates from the concept after substitution of
+    the concept parameters with the corresponding concept arguments.
+    \mbox{\enternote}
+        There is no way to explicitly declare a requirement member.
+    \mbox{\exitnote} 
+    }
+
+\pnum 
+\addedCC{
+    The \mbox{\techterm{concept-map-member-specification}}
+    in a \mbox{\techterm{concept-map-definition}} declares the full set of
+    satisfier members of the concept map; no satisfier member can be added
+    elsewhere.}
+
+\pnum 
+\addedCC{
+    After a requirement is satisfied, the requirement member serves as a
+    synonym for the set of entities (possibly satisfier members) that
+    satisfies the requirement. Each requirement member is visible during
+    qualified name lookup (\mbox{\ref{concept.qual}}).}
+
+\pnum
+\addedCC{
+    A satisfier member shall satisfy
+    (\mbox{\ref{iconcept.map.fct}}, \mbox{\ref{iconcept.map.assoc}}) at
+    least one requirement member of its enclosing concept map or at least
+    one unsatisfied requirement member from a refined concept map.  A
+    satisfier member cannot be found by any form of name lookup
+    (\mbox{\ref{basic.lookup}}).  }
+
+\pnum 
+\addedCC{
+    A concept map archetype (\mbox{\ref{temp.archetype}}) does not contain
+    any requirement members or satisfier members.
+    The set of members of a concept map archetype is the set of associated
+    functions, associated types and associated templates from the concept
+    after substitution of the concept parameters with the corresponding
+    concept arguments of the concept map archetype.  Within a constrained
+    template, these members are treated as if they were real functions,
+    types and templates for the purposes of syntactic and semantic
+    analysis.}
 
 \pnum
 \addedConcepts{Concept maps shall} \changedCCC{provide
