@@ -28,6 +28,13 @@ struct vct_access_traits<V const> {
   static ref_t elem (V const& v, size_t i) { return v[i]; }
 };
 
+template <typename V, int N>
+struct vct_access_traits<const V[N]> {
+  typedef V val_t;
+  typedef val_t ref_t; 
+  static ref_t elem (const V v[N], size_t i) { return v[i]; }
+};
+
 template <typename V>
 inline
 typename vct_access_traits<V>::ref_t elem_v (V& v, size_t i) {
