@@ -77,8 +77,8 @@ standard library are discussed in separate documents:
   Utilities (Revision 3)
 \item N2623=08-0133: Concepts for the C++0x Standard Library:
   Containers (Revision 1)
-\item N2624=08-0134: Concepts for the C++0x Standard Library:
-  Iterators (Revision 2)
+\item N2624=08-0134: Iterator Concepts for the C++0x Standard Library
+  (Revision 2)
 \item N2625=08-0135: Concepts for the C++0x Standard Library:
   Algorithms (Revision 2)
 \item N2626=08-0136: Concepts for the C++0x Standard Library: Numerics
@@ -623,7 +623,7 @@ at any point in its potential scope (\mbox{\ref{basic.scope.concept}}).
 concept Callable1<typename F, typename T1> {
   typename result_type;
   result_type operator()(F&, T1);
-}
+@\textcolor{addclr}{}@}
 
 template<typename F, typename T1>
 requires Callable1<F, T1>
@@ -883,7 +883,7 @@ T add(T x, T y) {
   late_check {
     r = x + y; // uses operator+ found at instantiation time (not considering Semigroup<T>::operator+)
   }
-  return r;
+  @\textcolor{addclr}{}@return r;
 }
 \end{codeblock}
 \exitexample\
@@ -1937,7 +1937,7 @@ class Y {
     void h() &&; // OK, all declarations have a ref-qualifier 
     void i() &; 
     void f() const; // ill-formed, prior declaration of i 
-                    // has a ref-qualifier 
+                    @\textcolor{black}{}@// has a ref-qualifier 
 }; 
 \end{codeblock}
 \exitexample\
@@ -5947,7 +5947,7 @@ template<CopyConstructible T>
 void f(const T& x) {
   vector<T> vec(1, x);
   T& ref = vec.front();
-}
+@\textcolor{addclr}{}@}
 
 void g(int i, int* ip, bool b) {
   f(i); // okay: instantiation of f<int> uses vector<int>, instantiated from A
