@@ -1654,24 +1654,19 @@ namespace std {
   class bad_function_call;
 
   template<class@\removedD{ Function}@> class function; // \addedD{undefined}
-  @\addedD{template<\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes>}@
+  @\addedD{template<\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes>}@
     class function<R(ArgTypes...)>;
 
-  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
     void swap(function<@\addedD{R(ArgTypes...)}@>&, function<@\addedD{R(ArgTypes...)}@>&);
 
-  template<@\addedD{class R1, class R2, class... ArgTypes1, class... ArgTypes2}@>
-    void operator==(const function<@\addedD{R1(ArgTypes1...)}@>&, const function<@\addedD{R2(ArgTypes2...)}@>&);
-  template<@\addedD{class R1, class R2, class... ArgTypes1, class... ArgTypes2}@>
-    void operator!=(const function<@\addedD{R1(ArgTypes1...)}@>&, const function<@\addedD{R2(ArgTypes2...)}@>&);
-
-  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
     bool operator==(const function<@\addedD{R(ArgTypes...)}@>&, @\unspecnull@);
-  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
     bool operator==(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
-  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
     bool operator!=(const function<@\addedD{R(ArgTypes...)}@>&, @\unspecnull@);
-  template<@\addedD{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+  template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
     bool operator!=(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
 
   // \marktr{}\ref{unord.hash}, hash function base template:
@@ -2473,7 +2468,7 @@ overloaded function templates.}
 namespace std {
   template<class@\removedD{ Function}@> class function; // \addedD{undefined}
 
-  @\addedD{template<\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes>}@
+  @\addedD{template<\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes>}@
   class function@\addedD{<R(ArgTypes...)>}@ 
     : public unary_function<T1, R>      // iff \addedD{\mbox{\tcode{sizeof...(ArgTypes) == 1}} and \mbox{\tcode{ArgTypes}} contains \mbox{\tcode{T1}}}
     : public binary_function<T1, T2, R> // iff \addedD{\mbox{\tcode{sizeof...(ArgTypes) == 2}} and \mbox{\tcode{ArgTypes}} contains \mbox{\tcode{T1}} and \mbox{\tcode{T2}}}
@@ -2494,6 +2489,16 @@ namespace std {
       @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...>  \&\&}@ 
                @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
       function(F&&);
+    template<@\changedConcepts{class}{Allocator}@ A> 
+      function(allocator_arg_t, const A&);
+    template<@\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&,
+      @\unspecnull@);
+    template<@\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&,
+      const function&);
+    template<@\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&,
+      function&&);
+    template<class F, @\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&, F);
+    template<class F, @\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&, F&&);
 
     function& operator=(const function&);
     @\addedD{function\& operator=(function\&\&);}@
@@ -2507,7 +2512,7 @@ namespace std {
                @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
       function& operator=(F&&);
     template<class F> 
-      @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes...>  \&\&}@ 
+      @\addedConcepts{requires Callable<F, ArgTypes...>  \&\&}@ 
                @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
       function& operator=(reference_wrapper<F>);
 
@@ -2515,9 +2520,19 @@ namespace std {
 
     // \ref{func.wrap.func.mod}, function modifiers:
     void swap(function&);
-  
+    template<class F, @\changedConcepts{class}{Allocator}@ A> 
+      @\addedConcepts{requires Callable<F, ArgTypes...>  \&\&}@ 
+               @\addedConcepts{Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      void assign(F, const A&);
+
     // \ref{func.wrap.func.cap}, function capacity:
     operator @\unspecbool@() const;
+
+    // deleted overloads close possible hole in the type system
+    template<class R2, class... ArgTypes2>
+        bool operator==(const function<R2(ArgTypes2...)>&) = delete;
+    template<class R2, class... ArgTypes2>
+        bool operator!=(const function<R2(ArgTypes2...)>&) = delete;
 
     // \ref{func.wrap.func.inv}, function invocation:
     R operator()(@\changedD{T1, T2, ..., TN}{ArgTypes...}@) const;
@@ -2525,10 +2540,10 @@ namespace std {
     // \ref{func.wrap.func.targ}, function target access:
     const std::type_info& target_type() const;
     template <typename T> 
-      @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      @\addedConcepts{requires Callable<T, ArgTypes...> \&\& Convertible<Callable<T, ArgTypes...>::result_type, R>}@
       T* target();
     template <typename T> 
-      @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+      @\addedConcepts{requires Callable<T, ArgTypes...> \&\& Convertible<Callable<T, ArgTypes...>::result_type, R>}@
       const T* target() const;
 
   private:
@@ -2668,10 +2683,10 @@ const std::type_info& target_type() const;
 \index{target@\tcode{target}!function@\tcode{function}}%
 \begin{itemdecl}
 template<typename T>
-  @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+  @\addedConcepts{requires Callable<T, ArgTypes...> \&\& Convertible<Callable<T, ArgTypes...>::result_type, R>}@
   T* target(); 
 template<typename T> 
-  @\addedConcepts{requires Callable<F, ArgTypes...> \&\& Convertible<Callable<F, ArgTypes...>::result_type, R>}@
+  @\addedConcepts{requires Callable<T, ArgTypes...> \&\& Convertible<Callable<T, ArgTypes...>::result_type, R>}@
   const T* target() const; 
 \end{itemdecl}
 
@@ -2724,7 +2739,7 @@ template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} 
 \index{function@\tcode{function}!swap@\tcode{swap}}%
 \index{swap@\tcode{swap}!function@\tcode{function}}%
 \begin{itemdecl}
-template<@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
+template<@\changedD{class Function}{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
   void swap(function<@\changedD{Function}{R(ArgTypes...)}@>& f1, function<@\changedD{Function}{R(ArgTypes...)}@>& f2);
 \end{itemdecl}
 
@@ -2732,322 +2747,6 @@ template<@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R
 \pnum\effects\ \tcode{f1.swap(f2);}
 \end{itemdescr}
 \index{function objects!wrapper|)}%
-
-\rSec1[memory]{Memory}
-
-\pnum
-\synopsis{Header \tcode{<memory>}\ synopsis}
-
-\index{memory@\tcode{<memory>}}%
-\begin{codeblock}
-namespace std {
-  // \ref{default.allocator}, the default allocator: 
-  template <class T> class allocator; @\addedConcepts{// undefined}@
-  template <> class allocator<void>;
-  @\addedConcepts{template <class T> requires ObjectType<T> \&\& Destructible<T>}@
-    @\addedConcepts{class allocator<T>;}@
-  template <class T, class U>
-    bool operator==(const allocator<T>&, const allocator<U>&) throw();
-  template <class T, class U>
-    bool operator!=(const allocator<T>&, const allocator<U>&) throw();
-
-  @\addedConcepts{concept_map AllocatorGenerator<allocator<void> > \{ \}}@
-  @\addedConcepts{template <class T> requires ObjectType<T> \&\& Destructible<T>}@
-    @\addedConcepts{concept_map Allocator<allocator<T> > \{ \}}@
-
-  // \ref{storage.iterator}, raw storage iterator:
-  template <class OutputIterator, class T> class raw_storage_iterator;
-
-  // \ref{temporary.buffer}, temporary buffers:
-  template <class T>
-    pair<T*,ptrdiff_t> get_temporary_buffer(ptrdiff_t @\farg{n}@);
-  template <class T>
-    void return_temporary_buffer(T* @\farg{p}@);
-
-  // \ref{specialized.algorithms}, specialized algorithms:
-  template <class InputIterator, class ForwardIterator>
-    ForwardIterator
-      uninitialized_copy(InputIterator @\farg{first}@, InputIterator @\farg{last}@,
-                         ForwardIterator @\farg{result}@);
-  template <class ForwardIterator, class T>
-    void uninitialized_fill(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
-                            const T& @\farg{x}@);
-  template <class ForwardIterator, class Size, class T>
-    void uninitialized_fill_n(ForwardIterator @\farg{first}@, Size @\farg{n}@, const T& @\farg{x}@);
-  @\removedD{// \mbox{\ref{auto.ptr}}, pointers:}@
-  @\removedD{template <class X> class auto_ptr;}@
-  @\removedD{template <> class auto_ptr<void>;}@
-
-  // \addedD{\mbox{\ref{unique.ptr}} Class unique_ptr:}
-  @\addedD{template <class X> class unique_ptr;}@
-  @\addedD{template <class X> class default_delete;}@
-
-  // \ref{util.smartptr.weakptr}, Class bad_weak_ptr:
-  class bad_weak_ptr;
-
-  // \ref{util.smartptr.shared}, Class template shared_ptr:
-  template<class T> class shared_ptr;
-
-  // \ref{util.smartptr.shared.cmp}, shared_ptr comparisons:
-  template<class T, class U>
-    bool operator==(shared_ptr<T> const& a, shared_ptr<U> const& b);
-  template<class T, class U>
-    bool operator!=(shared_ptr<T> const& a, shared_ptr<U> const& b);
-  template<class T, class U>
-    bool operator<(shared_ptr<T> const& a, shared_ptr<U> const& b);
-
-  // \ref{util.smartptr.shared.spec}, shared_ptr specialized algorithms:
-  template<class T> void swap(shared_ptr<T>& a, shared_ptr<T>& b);
-
-  // \ref{util.smartptr.shared.cast}, shared_ptr casts:
-  template<class T, class U>
-    shared_ptr<T> static_pointer_cast(shared_ptr<U> const& r);
-  template<class T, class U>
-    shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const& r);
-  template<class T, class U>
-    shared_ptr<T> const_pointer_cast(shared_ptr<U> const& r);
-
-  // \ref{util.smartptr.shared.io}, shared_ptr I/O:
-  template<class E, class T, class Y>
-    basic_ostream<E, T>& operator<< (basic_ostream<E, T>& os, shared_ptr<Y> const& p);
-
-  // \ref{util.smartptr.getdeleter}, shared_ptr get_deleter:
-  template<class D, class T> D* get_deleter(shared_ptr<T> const& p);
-
-  // \ref{util.smartptr.weak}, Class template weak_ptr:
-  template<class T> class weak_ptr;
-
-  // \ref{util.smartptr.weak.cmp}, weak_ptr comparison:
-  template<class T, class U> bool operator<(weak_ptr<T> const& a, weak_ptr<U> const& b);
-
-  // \ref{util.smartptr.weak.spec}, weak_ptr specialized algorithms:
-  template<class T> void swap(weak_ptr<T>& a, weak_ptr<T>& b);
-
-  // \ref{util.smartptr.enab}, Class enable_shared_from_this:
-  template<class T> class enable_shared_from_this;
-}
-\end{codeblock}
-
-\rSec2[default.allocator]{The default allocator}
-
-\index{allocator@\tcode{allocator}}%
-\begin{codeblock}
-namespace std {
-  template <class T> class allocator; @\addedConcepts{// undefined}@
-\end{codeblock}
-\begin{codeblock}
-  // specialize for \tcode{void}:
-  template <> class allocator<void> {
-  public:
-    typedef void*   pointer;
-    typedef const void* const_pointer;
-    // reference-to-\tcode{void}\ members are impossible.
-    typedef void  value_type;
-    template <class U> struct rebind { typedef allocator<U> other; };
-  };
-
-  template <class T> 
-  @\addedConcepts{requires ObjectType<T> \&\& Destructible<T>}@
-  class allocator@\addedConcepts{<T>}@ {
-   public:
-    typedef size_t    size_type;
-    typedef ptrdiff_t difference_type;
-    typedef T*        pointer;
-    typedef const T*  const_pointer;
-    typedef T&        reference;
-    typedef const T&  const_reference;
-    typedef T         value_type;
-    template <class U> struct rebind { typedef allocator<U> other; };
-
-    allocator() throw();
-    allocator(const allocator&) throw();
-    template <class U> allocator(const allocator<U>&) throw();
-   ~allocator() throw();
-
-    pointer address(reference @\farg{x}@) const;
-    const_pointer address(const_reference @\farg{x}@) const;
-
-    pointer allocate(
-      size_type, allocator<void>::const_pointer @\farg{hint}@ = 0);
-    void deallocate(pointer @\farg{p}@, size_type @\farg{n}@);
-    size_type max_size() const throw();
-
-    @\addedConcepts{requires CopyConstructible<T>}@ void construct(pointer p, const T& val);
-    template <class U> @\addedConcepts{requires Constructible<T, U\&\&>}@ void construct(pointer p, U&& val);
-    void destroy(pointer p);
-  };
-}
-\end{codeblock}
-
-\pnum 
-\addedConcepts{Class template \mbox{\tcode{allocator}} meets the
-  requirements of the \mbox{\tcode{AllocatorGenerator}} class when it
-  is instantiated with a \mbox{\tcode{Destructible}} object type or
-  with \mbox{\tcode{void}}. When instantiated with an object type,
-  \mbox{\tcode{allocator}} meets the requirements of the
-  \mbox{\tcode{Allocator}} concept.}
-\color{addclr}
-\begin{itemdecl}
-  @\addedConcepts{concept_map AllocatorGenerator<allocator<void> > \{ \}}@
-  @\addedConcepts{template <class T> requires ObjectType<T> \&\& Destructible<T>}@
-    @\addedConcepts{concept_map Allocator<allocator<T> > \{ \}}@
-\end{itemdecl}
-\color{black}
-
-\rSec3[allocator.members]{\tcode{allocator}\ members}
-
-\begin{itemdecl}
-pointer address(reference @\farg{x}@) const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\ 
-\tcode{\&\farg{x}}.
-\end{itemdescr}
-
-\begin{itemdecl}
-const_pointer address(const_reference @\farg{x}@) const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\ 
-\tcode{\&\farg{x}}.
-\end{itemdescr}
-
-\begin{itemdecl}
-pointer allocate(size_type @\farg{n}@, allocator<void>::const_pointer @\farg{hint}@=0);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\notes\ 
-Uses
-\tcode{::operator new(std::size_t)}
-(\ref{new.delete}).
-
-\pnum
-\removedD{\mbox{\requires}
-\mbox{\farg{hint}} either 0 or previously obtained from member \mbox{\tcode{allocate}}
-and not yet passed to member \mbox{\tcode{deallocate}}. The value \mbox{\farg{hint}} may
-be used by an implementation to help improve performance}%
-\remfootnoteD{
-In a container member function, the address of an adjacent element
-is often a good choice to pass for this argument.
-}\addedD{\mbox{\enternote} In a container member function, the address of an adjacent
-element is often a good choice to pass for this argument. \mbox{\exitnote}}
-
-\pnum
-\returns\ 
-a pointer to the initial element of an array of storage of size \farg{n}\
-\tcode{* sizeof(T)}, aligned appropriately for objects of type \tcode{T}.
-
-\pnum
-\note\ 
-the storage is obtained by calling \tcode{::operator new(std::size_t)}, but
-it is unspecified when or how often this function is called. The use of
-\farg{hint}\ is unspecified, but intended as an aid to locality if an
-implementation so desires.
-
-\pnum
-\throws\ 
-\tcode{bad_alloc} if the storage cannot be obtained.
-\end{itemdescr}
-
-\begin{itemdecl}
-void deallocate(pointer @\farg{p}@, size_type @\farg{n}@);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\requires\ 
-\farg{p}\ shall be a pointer value obtained from \tcode{allocate()}.
-\farg{n}\ shall equal the value passed as the first argument
-to the invocation of allocate which returned \farg{p}.
-
-\pnum
-\effects\ 
-Deallocates the storage referenced by \farg{p}\ .
-
-\pnum
-\notes\ 
-Uses
-\tcode{::operator delete(void*)}
-(\ref{new.delete}), but it is unspecified when this function is called.
-\end{itemdescr}
-
-\begin{itemdecl}
-size_type max_size() const throw();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\ 
-the largest value \textit{N}\ for which the call \tcode{allocate(\farg{N},0)}
-might succeed.
-\end{itemdescr}
-
-\begin{itemdecl}
-@\addedConcepts{requires CopyConstructible<T>}@ void construct(pointer @\farg{p}@, const_reference @\farg{val}@);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{::new((void *)\farg{p}) T(\farg{val})}
-\end{itemdescr}
-
-\begin{itemdecl}
-template <class @\farg{U}@> @\addedConcepts{requires Constructible<T, U\&\&>}@ void construct(pointer @\farg{p}@, @\farg{U}@&& @\farg{val}@);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedD{\mbox{\effects}
-\mbox{\tcode{::new((void *)\farg{p}) T(std::forward<\farg{U}>(\farg{val}))}}}
-\end{itemdescr}
-
-\begin{itemdecl}
-void destroy(pointer @\farg{p}@);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{\farg{p}->$\sim$T()}
-\end{itemdescr}
-
-\rSec3[allocator.globals]{\tcode{allocator}\ globals}
-
-\begin{itemdecl}
-template <class T1, class T2>
-  bool operator==(const allocator<T1>&, const allocator<T2>&) throw();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\ 
-\tcode{true}.
-\end{itemdescr}
-
-\begin{itemdecl}
-template <class T1, class T2>
-  bool operator!=(const allocator<T1>&, const allocator<T2>&) throw();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\ 
-\tcode{false}.
-\end{itemdescr}
-
-\editorial{The author of this document ran out of time to complete
-  it. Sorry!}
-
-\section*{Acknowledgments}
-Thanks to Walter Brown and Daniel Kr\"ugler for providing corrections
-and noting omissions to this document. 
 
 \bibliographystyle{plain}
 \bibliography{local}
