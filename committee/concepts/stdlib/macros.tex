@@ -1,15 +1,15 @@
 % Definitions and redefinitions of special commands
 
 \usepackage{babel}      % needed for iso dates
-\usepackage{savesym}		% suppress duplicate macro definitions
+%\usepackage{savesym}		% suppress duplicate macro definitions
 \usepackage{fancyhdr}		% more flexible headers and footers
 \usepackage{listings}		% code listings
 \usepackage{longtable}	% auto-breaking tables
 \usepackage{remreset}		% remove counters from reset list
 \usepackage{booktabs}		% fancy tables
 \usepackage{relsize}		% provide relative font size changes
-\usepackage[htt]{hyphenat}	% hyphenate hyphenated words: conflicts with underscore
-\savesymbol{BreakableUnderscore}	% suppress BreakableUnderscore defined in hyphenat
+%\usepackage[htt]{hyphenat}	% hyphenate hyphenated words: conflicts with underscore
+%\savesymbol{BreakableUnderscore}	% suppress BreakableUnderscore defined in hyphenat
 									                % (conflicts with underscore)
 \usepackage{underscore}	% remove special status of '_' in ordinary text
 \usepackage{verbatim}		% improved verbatim environment
@@ -18,6 +18,7 @@
 \usepackage[iso]{isodate} % use iso format for dates
 \usepackage{soul}       % strikeouts and underlines for difference markups
 \usepackage{color}      % define colors for strikeouts and underlines
+\usepackage{amsmath}
 \usepackage{mathrsfs}
 \usepackage{multicol}
 \usepackage{xspace}
@@ -67,7 +68,7 @@
 \Sec{\arabic{scratch}}[#2]{#3}}}
 
 % Change the way section headings are formatted.
-%\renewcommand{\chaptername}{}
+\renewcommand{\chaptername}{}
 \renewcommand{\appendixname}{Annex}
 
 \makeatletter

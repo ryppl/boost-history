@@ -1,13 +1,33 @@
 \documentclass[american,twoside]{book}
 \usepackage{refbib}
-\usepackage{hyperref}
 \usepackage{pdfsync}
 \input{macros}
 
 %%--------------------------------------------------
+%% PDF
+
+\usepackage[pdftex,
+            pdftitle={Concepts for the C++0x Standard Library: Algorithms},
+            pdfsubject={C++ International Standard Proposal},
+            pdfcreator={Douglas Gregor},
+            bookmarks=true,
+            bookmarksnumbered=true,
+            pdfpagelabels=true,
+            pdfpagemode=UseOutlines,
+            pdfstartview=FitH,
+            linktocpage=true,
+            colorlinks=true,
+            linkcolor=blue,
+            plainpages=false
+           ]{hyperref}
+
+\usepackage{makeidx}
+\makeindex
+
+%%--------------------------------------------------
 %% Set section numbering limit, toc limit
 \setcounter{secnumdepth}{5}
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{2}
 
 %%--------------------------------------------------
 %% Parameters that govern document appearance
@@ -92,7 +112,7 @@ Open Systems Laboratory, Indiana University \\
 
 \pnum
 This clause describes components that \Cpp\ programs may use to perform
-algorithmic operations on containers (clause \ref{lib.containers}) and other sequences.
+algorithmic operations on containers (clause \ref{containers}) and other sequences.
 
 \pnum
 The following subclauses describe components for
@@ -100,9 +120,9 @@ non-modifying sequence operation,
 modifying sequence operations,
 sorting and related operations,
 and algorithms from the ISO C library,
-as summarized in Table~\ref{tab:algorithms.lib.summary}.
+as summarized in Table~\ref{tab:algorithms.summary}.
 
-\begin{libsumtab}{Algorithms library summary}{tab:algorithms.lib.summary}
+\begin{libsumtab}{Algorithms library summary}{tab:algorithms.summary}
 \ref{alg.nonmodifying} Non-modifying sequence operations    &                                               \\
 \ref{alg.modifying.operations} Mutating sequence operations &       \tcode{<algorithm>}     \\
 \ref{alg.sorting} Sorting and related operations                    &                                               \\ \hline
@@ -1185,7 +1205,7 @@ Exactly
 applications of the corresponding predicate.
 \end{itemdescr}
 
-\rSec2[lib.mismatch]{\textcolor{black}{Mismatch}}
+\rSec2[mismatch]{\textcolor{black}{Mismatch}}
 
 \index{mismatch@\tcode{mismatch}}%
 \color{addclr}\begin{itemdecl}
@@ -2425,7 +2445,7 @@ applications of the predicate.
 
 \rSec2[alg.sort]{Sorting}
 
-\rSec3[lib.sort]{\tcode{sort}}
+\rSec3[sort]{\tcode{sort}}
 
 \index{sort@\tcode{sort}}%
 \color{addclr}\begin{itemdecl}
@@ -2467,12 +2487,12 @@ Approximately $N \log(N)$
 comparisons on the average.%
 \footnote{
 If the worst case behavior is important
-\tcode{stable_sort()}~(\ref{lib.stable.sort}) or
-\tcode{partial_sort()}~(\ref{lib.partial.sort}) should be used.
+\tcode{stable_sort()}~(\ref{stable.sort}) or
+\tcode{partial_sort()}~(\ref{partial.sort}) should be used.
 }
 \end{itemdescr}
 
-\rSec3[lib.stable.sort]{\tcode{stable_sort}}
+\rSec3[stable.sort]{\tcode{stable_sort}}
 
 \index{stable_sort@\tcode{stable_sort}}%
 \color{addclr}\begin{itemdecl}
@@ -2518,7 +2538,7 @@ $N \log(N)$.
 Stable.
 \end{itemdescr}
 
-\rSec3[lib.partial.sort]{\tcode{partial_sort}}
+\rSec3[partial.sort]{\tcode{partial_sort}}
 
 \index{partial_sort@\tcode{partial_sort}}%
 \color{addclr}\begin{itemdecl}
@@ -2571,7 +2591,7 @@ It takes approximately
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.partial.sort.copy]{\tcode{partial_sort_copy}}
+\rSec3[partial.sort.copy]{\tcode{partial_sort_copy}}
 
 \index{partial_sort_copy@\tcode{partial_sort_copy}}%
 \color{addclr}\begin{itemdecl}
@@ -2751,7 +2771,7 @@ because these \textcolor{black}{}algorithms do a logarithmic number of steps
 through the data structure.
 For non-random access iterators they execute a linear number of steps.
 
-\rSec3[lib.lower.bound]{\tcode{lower_bound}}
+\rSec3[lower.bound]{\tcode{lower_bound}}
 
 \index{lower_bound@\tcode{lower_bound}}%
 \color{addclr}\begin{itemdecl}
@@ -2799,7 +2819,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.upper.bound]{\tcode{upper_bound}}
+\rSec3[upper.bound]{\tcode{upper_bound}}
 
 \index{upper_bound@\tcode{upper_bound}}%
 \color{addclr}\begin{itemdecl}
@@ -2847,7 +2867,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.equal.range]{\tcode{equal_range}}
+\rSec3[equal.range]{\tcode{equal_range}}
 
 \index{equal_range@\tcode{equal_range}}%
 \color{addclr}\begin{itemdecl}
@@ -2913,7 +2933,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.binary.search]{\tcode{binary_search}}
+\rSec3[binary.search]{\tcode{binary_search}}
 
 \index{binary_search@\tcode{binary_search}}%
 \color{addclr}\begin{itemdecl}
@@ -3114,7 +3134,7 @@ Stable.
 \pnum
 This section defines all the basic set operations on sorted structures.
 They also work with
-\tcode{multiset}s~(\ref{lib.multiset})
+\tcode{multiset}s~(\ref{multiset})
 containing multiple copies of equivalent elements.
 The semantics of the set operations are generalized to
 \tcode{multiset}s
@@ -3124,7 +3144,7 @@ to contain the maximum number of occurrences of every element,
 \tcode{set_intersection()}\
 to contain the minimum, and so on.
 
-\rSec3[lib.includes]{\tcode{includes}}
+\rSec3[includes]{\tcode{includes}}
 
 \index{includes@\tcode{includes}}%
 \color{addclr}\begin{itemdecl}
@@ -3160,7 +3180,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.set.union]{\tcode{set_union}}
+\rSec3[set.union]{\tcode{set_union}}
 
 \index{set_union@\tcode{set_union}}%
 \color{addclr}\begin{itemdecl}
@@ -3209,7 +3229,7 @@ to them, then all $m$ elements from the first range shall be copied to the outpu
 be copied to the output range, in order.
 \end{itemdescr}
 
-\rSec3[lib.set.intersection]{\tcode{set_intersection}}
+\rSec3[set.intersection]{\tcode{set_intersection}}
 
 \index{set_intersection@\tcode{set_intersection}}%
 \color{addclr}\begin{itemdecl}
@@ -3257,7 +3277,7 @@ to them, the first $\min(m, n)$ elements shall be copied from the first range
 to the output range, in order.
 \end{itemdescr}
 
-\rSec3[lib.set.difference]{\tcode{set_difference}}
+\rSec3[set.difference]{\tcode{set_difference}}
 
 \index{set_difference@\tcode{set_difference}}%
 \color{addclr}\begin{itemdecl}
@@ -3318,7 +3338,7 @@ elements from
 shall be \color{black}copied to the output range.
 \end{itemdescr}
 
-\rSec3[lib.set.symmetric.difference]{\tcode{set_symmetric_difference}}
+\rSec3[set.symmetric.difference]{\tcode{set_symmetric_difference}}
 
 \index{set_symmetric_difference@\tcode{set_symmetric_difference}}%
 \color{addclr}\begin{itemdecl}
@@ -3409,7 +3429,7 @@ converts a range into a heap and
 \tcode{sort_heap()}\
 turns a heap into a sorted sequence.
 
-\rSec3[lib.push.heap]{\tcode{push_heap}}
+\rSec3[push.heap]{\tcode{push_heap}}
 
 \index{push_heap@\tcode{push_heap}}%
 \color{addclr}\begin{itemdecl}
@@ -3452,7 +3472,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.pop.heap]{\tcode{pop_heap}}
+\rSec3[pop.heap]{\tcode{pop_heap}}
 
 \index{pop_heap@\tcode{pop_heap}}%
 \color{addclr}\begin{itemdecl}
@@ -3500,7 +3520,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.make.heap]{\tcode{make_heap}}
+\rSec3[make.heap]{\tcode{make_heap}}
 
 \index{make_heap@\tcode{make_heap}}%
 \color{addclr}\begin{itemdecl}
@@ -3537,7 +3557,7 @@ At most
 comparisons.
 \end{itemdescr}
 
-\rSec3[lib.sort.heap]{\tcode{sort_heap}}
+\rSec3[sort.heap]{\tcode{sort_heap}}
 
 \index{sort_heap@\tcode{sort_heap}}%
 \color{addclr}\begin{itemdecl}

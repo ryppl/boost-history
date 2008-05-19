@@ -1,13 +1,30 @@
 \documentclass[american,twoside]{book}
-\usepackage{hyperref}
 \usepackage{refbib}
 \usepackage{pdfsync}
 \input{macros}
 
 %%--------------------------------------------------
+%% PDF
+
+\usepackage[pdftex,
+            pdftitle={Iterator Concepts for the C++0x Standard Library},
+            pdfsubject={C++ International Standard Proposal},
+            pdfcreator={Douglas Gregor},
+            bookmarks=true,
+            bookmarksnumbered=true,
+            pdfpagelabels=true,
+            pdfpagemode=UseOutlines,
+            pdfstartview=FitH,
+            linktocpage=true,
+            colorlinks=true,
+            linkcolor=blue,
+            plainpages=false
+           ]{hyperref}
+
+%%--------------------------------------------------
 %% Set section numbering limit, toc limit
 \setcounter{secnumdepth}{5}
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{3}
 
 %%--------------------------------------------------
 %% Parameters that govern document appearance

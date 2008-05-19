@@ -1,12 +1,32 @@
 \documentclass[american,twoside]{book}
 \usepackage{refbib}
-\usepackage{hyperref}
 \input{macros}
+
+%%--------------------------------------------------
+%% PDF
+
+\usepackage[pdftex,
+            pdftitle={Concepts for the C++0x Standard Library: Containers},
+            pdfsubject={C++ International Standard Proposal},
+            pdfcreator={Douglas Gregor},
+            bookmarks=true,
+            bookmarksnumbered=true,
+            pdfpagelabels=true,
+            pdfpagemode=UseOutlines,
+            pdfstartview=FitH,
+            linktocpage=true,
+            colorlinks=true,
+            linkcolor=blue,
+            plainpages=false
+           ]{hyperref}
+
+%\usepackage{makeidx}
+%\makeindex
 
 %%--------------------------------------------------
 %% Set section numbering limit, toc limit
 \setcounter{secnumdepth}{5}
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{5}
 
 %%--------------------------------------------------
 %% Parameters that govern document appearance
@@ -123,7 +143,7 @@ Table~\ref{tab:containers.summary}:
 \setcounter{Paras}{2}
 \pnum
 Objects stored in these components shall be constructed using
-\mbox{\tcode{construct_element}}~\removedConcepts{(\mbox{\ref{construct.element}})}
+\mbox{\tcode{construct_element}}~(\mbox{\ref{construct.element}})
 \addedConcepts{and destroyed using the
   \mbox{\tcode{destroy}} member function of the container's
   allocator~(\mbox{\ref{allocator.concepts}})}. 
