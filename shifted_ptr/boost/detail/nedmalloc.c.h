@@ -938,6 +938,23 @@ void **nedpindependent_comalloc(nedpool *p, size_t elems, size_t *sizes, void **
 	return ret;
 }
 
+/*!
+	PAB: 
+	- Boost.Pool import
+*/
+bool   nedpisfrom(nedpool *p, void *mem) THROWSPEC
+{
+	size_t ret=0;
+	int n;
+	if(!p) { p=&syspool; if(!syspool.threads) InitPool(&syspool, 0, -1); }
+	for(n=0; p->m[n]; n++)
+	{
+		if (segment_holding(p->m[n], (char *)mem))
+			return true;
+	}
+	return false;
+}
+
 #if defined(__cplusplus)
 }
 #endif

@@ -149,7 +149,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 
 		shifted_ptr() : ps_(0)
 		{
-			if (stack_.contains(this))
+			if (! owned_base::pool_.is_from(this))
 				ps_ = new set();
 			else
 				owned_base::last->top()->ptrs()->push(& pn_);
@@ -158,7 +158,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 		template <typename V>
 			shifted_ptr(owned<V> * p) : U<T>(p)
 			{
-				if (stack_.contains(this))
+				if (! owned_base::pool_.is_from(this))
 				{
 					ps_ = new set();
 
@@ -174,7 +174,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 		template <typename V>
 			shifted_ptr(shifted_ptr<V> const & p) : U<T>(p)
 			{
-				if (stack_.contains(this))
+				if (! owned_base::pool_.is_from(this))
 					ps_ = new set();
 				else
 					owned_base::last->top()->ptrs()->push(& pn_);
@@ -184,7 +184,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 
 			shifted_ptr(shifted_ptr<T> const & p) : U<T>(p)
 			{
-				if (stack_.contains(this))
+				if (! owned_base::pool_.is_from(this))
 					ps_ = new set();
 				else
 					owned_base::last->top()->ptrs()->push(& pn_);
@@ -235,7 +235,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 	private:
 		void release(bool d = false)
 		{
-			if (stack_.contains(this))
+			if (! owned_base::pool_.is_from(this))
 			{
 				if (ps_->release())
 				{

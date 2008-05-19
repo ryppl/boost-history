@@ -47,7 +47,13 @@ ACQUIRE_LOCK, RELEASE_LOCK, TRY_LOCK, IS_LOCKED and NULL_LOCK_INITIALIZER.
 
 */
 
+/*!
+	PAB: 
+	- C++ fix 
+*/
+#define NDEBUG
 #define NO_NED_NAMESPACE
+
 
 #include <stddef.h>   /* for size_t */
 
@@ -171,6 +177,12 @@ EXTSPEC void   nedpmalloc_stats(nedpool *p) THROWSPEC;
 EXTSPEC size_t nedpmalloc_footprint(nedpool *p) THROWSPEC;
 EXTSPEC MALLOCATTR void **nedpindependent_calloc(nedpool *p, size_t elemsno, size_t elemsize, void **chunks) THROWSPEC;
 EXTSPEC MALLOCATTR void **nedpindependent_comalloc(nedpool *p, size_t elems, size_t *sizes, void **chunks) THROWSPEC;
+
+/*!
+	PAB: 
+	- Boost.Pool import
+*/
+EXTSPEC bool   nedpisfrom(nedpool *p, void *mem) THROWSPEC;
 
 #if defined(__cplusplus)
 }

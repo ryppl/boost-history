@@ -80,14 +80,12 @@ struct create_type {
 };
 
 BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
-/*
     count = 0;
     {
         shifted_ptr<vector> v = new_sh<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
-*/
 
     count = 0;
     {
@@ -115,7 +113,6 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
         boost::mpl::for_each<boost::mpl::range_c<int, 1, 100> >(create_type());
     }
 
-/*
     count = 0;
     {
         shifted_ptr<vector> v = new_sh<vector>();
@@ -128,5 +125,4 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
         v.elements.push_back(new_sh<vector>());
     }
     BOOST_CHECK_EQUAL(count, 0);
-*/
 }

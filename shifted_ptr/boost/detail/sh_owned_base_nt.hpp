@@ -38,6 +38,7 @@
 #include <boost/detail/intrusive_stack.hpp>
 #include <boost/detail/sh_utility.h>
 #include <boost/detail/sp_counted_base_nt.hpp>
+#include <boost/detail/local_pool.hpp>
 
 
 namespace boost
@@ -66,51 +67,6 @@ struct thread_specific_stack : thread_specific_ptr< std::stack<owned_base *> >
 
 
 /**
-	Segment boundaries.
-*/
-
-struct segment : std::pair<const void *, const void *>
-{
-	typedef std::pair<const void *, const void *> base;
-	
-	segment(const void * p = (const void *)(std::numeric_limits<unsigned>::max)(), const void * q = (const void *)(std::numeric_limits<unsigned>::min)()) : base((const void *)(p), (const void *)(q))
-	{
-	}
-   
-	void include(const void * p)
-	{
-		if (p < static_cast<const void *>(first)) first = p;
-		if (p > static_cast<const void *>(second)) second = p;
-	}
-
-	bool contains(const void * p)
-	{
-		return ! (static_cast<char const *>(p) < first || static_cast<char const *>(p) > second);
-	}
-};
-
-
-/**
-	Auto stack boundaries.
-*/
-
-struct stack_segment : segment
-{
-	bool contains(const void * p)
-	{
-#if defined(__GNUC__)
-		include(__builtin_frame_address(0));
-		include(__builtin_frame_address(3));
-#else
-#error Compiler not yet supported.
-#endif
-        
-		return segment::contains(p);
-	}
-} stack_;
-
-
-/**
 	Root class of all pointees.
 */
 
@@ -133,6 +89,8 @@ public:
 	intrusive_list::node * set_tag() 				{ return & set_tag_; }
 	intrusive_list::node * init_tag() 				{ return & init_tag_; }
 
+	static local_pool pool_;
+	
 #ifndef BOOST_SH_DISABLE_THREADS
 	static thread_specific_stack last;
 #else
@@ -140,6 +98,8 @@ public:
 #endif
 };
 
+
+local_pool owned_base::pool_;
 
 #ifndef BOOST_SH_DISABLE_THREADS
 thread_specific_stack owned_base::last;
@@ -184,6 +144,16 @@ template <typename T>
 			
 			operator owned<data_type> * () const { return p_; }
 		};
+		
+		void * operator new (size_t s)
+		{
+			return pool_.malloc(s);
+		}
+		
+		void operator delete (void * p)
+		{
+			pool_.free(p);
+		}
 
 	private:
 		template <typename U>

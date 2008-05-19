@@ -5,7 +5,7 @@ An example of how to use nedalloc
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "nedmalloc.c"
+#include <boost/detail/nedmalloc.c.h>
 
 #define THREADS 5
 #define RECORDS (100000/THREADS)
