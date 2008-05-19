@@ -87,24 +87,24 @@ and components for
 sequences and
 associative containers,
 as summarized in
-Table~\ref{tab:containers.lib.summary}:
+Table~\ref{tab:containers.summary}:
 
-\begin{libsumtab}{Containers library summary}{tab:containers.lib.summary}
-\ref{lib.container.requirements} Requirements   &   \addedConcepts{\ttfamily <container>}                    \\ \rowsep
-\ref{lib.sequences} Sequences                   &   \tcode{<array>}     \\
+\begin{libsumtab}{Containers library summary}{tab:containers.summary}
+\ref{container.requirements} Requirements   &   \addedConcepts{\ttfamily <container>}                    \\ \rowsep
+\ref{sequences} Sequences                   &   \tcode{<array>}     \\
                                                 &   \tcode{<deque>}     \\
                                                 &   \tcode{<list>}      \\
                                                 &   \tcode{<queue>}     \\
                                                 &   \tcode{<stack>}     \\
                                                 &   \tcode{<vector>}    \\ \rowsep
-\ref{lib.associative} Associative containers    &   \tcode{<map>}       \\
+\ref{associative} Associative containers    &   \tcode{<map>}       \\
                                                 &   \tcode{<set>}       \\
-\ref{lib.template.bitset} \tcode{bitset}        &   \tcode{<bitset>}    \\ \rowsep
-\ref{lib.unord} \addedB{Unordered associative containers}&   \tcode{<unordered_map>}       \\
+\ref{template.bitset} \tcode{bitset}        &   \tcode{<bitset>}    \\ \rowsep
+\ref{unord} \addedB{Unordered associative containers}&   \tcode{<unordered_map>}       \\
                                                 &   \tcode{<unordered_set>}       \\
 \end{libsumtab}
 
-\rSec1[lib.container.requirements]{Container requirements}
+\rSec1[container.requirements]{Container requirements}
 \index{requirements!container}%
 
 \pnum
@@ -489,7 +489,7 @@ Copy constructors for all container types defined in this clause
 copy an allocator argument from their respective first parameters.
 All other constructors for these container types take an
 \tcode{Allocator\&}\
-argument (\ref{lib.allocator.requirements}),
+argument (\ref{allocator.requirements}),
 an allocator whose value type is the same as the container's value type.
 A copy of this argument is used for any memory allocation
 performed, by these constructors and by all member functions, during
@@ -497,7 +497,7 @@ the lifetime of each container object.
 In all container types defined
 in this clause, the member \tcode{get_allocator()}\ returns a copy
 of the Allocator object used to construct the container.%
-\footnote{As specified in~\ref{lib.allocator.requirements}, \removedConcepts{paragraphs 4-5},
+\footnote{As specified in~\ref{allocator.requirements}, \removedConcepts{paragraphs 4-5},
 the semantics described in this clause applies only to the case where
 allocators compare equal.
 }
@@ -532,7 +532,7 @@ concept ReversibleContainer<typename X> : Container<X> {
 
 \pnum
 If the iterator type of a container \changedConcepts{belongs to the bidirectional or
-random access iterator categories}{is bidirectional or random access} (\ref{lib.iterator.requirements}),
+random access iterator categories}{is bidirectional or random access} (\ref{iterator.requirements}),
 \changedConcepts{the container is called
 reversible
 and satisfies the additional requirements
@@ -620,8 +620,8 @@ const_reverse_iterator X::crend() const;
 \color{black}
 
 \pnum
-Unless otherwise specified (see~\ref{lib.deque.modifiers}\ and
-\ref{lib.vector.modifiers})
+Unless otherwise specified (see~\ref{deque.modifiers}\ and
+\ref{vector.modifiers})
 all container types defined in this clause meet
 the following additional requirements:
 
@@ -653,7 +653,7 @@ no
 function throws an exception unless that
 exception is thrown by the copy constructor or
 assignment operator of the container's
-Compare object (if any; see \ref{lib.associative.reqmts}).
+Compare object (if any; see \ref{associative.reqmts}).
 \item
 no
 \tcode{swap()}
@@ -669,7 +669,7 @@ function or passing a container as an argument to a library function
 shall not invalidate iterators to, or change the values of, objects
 within that container.
 
-\rSec2[lib.sequence.reqmts]{\textcolor{black}{Sequences}}
+\rSec2[sequence.reqmts]{\textcolor{black}{Sequences}}
 
 \pnum
 A sequence is a kind of container that organizes a finite set of objects, all of the same type,
@@ -1120,7 +1120,7 @@ template<CopyConstructible T, Allocator Alloc>
 \end{itemdecl}
 \color{black}
 
-\rSec1[lib.sequences]{Sequences}
+\rSec1[sequences]{Sequences}
 
 \pnum
 Headers \tcode{<array>}, \tcode{<deque>}, \tcode{<forward_list>}, \tcode{<list>}, \tcode{<queue>}, \tcode{<stack>}, and \tcode{<vector>}.

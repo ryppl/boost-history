@@ -906,7 +906,7 @@ auto concept ExplicitlyConvertible<typename T, typename U> : VariableType<T> {
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes types with a conversion (explicit
-or implicit) from one type to another.}
+or implicit) from} \changedCC{one type to another}{\mbox{\tcode{T} to \tcode{U}}}\addedConcepts{.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -917,8 +917,7 @@ auto concept Convertible<typename T, typename U> : ExplicitlyConvertible<T, U> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes types with an implicit conversion from one
-type to another.}
+\addedConcepts{\mbox{\reallynote} describes types with an implicit conversion from} \changedCC{one type to another}{\mbox{\tcode{T} to \tcode{U}}}\addedConcepts{.}
 \end{itemdescr}
 
 \rSec2[concept.true]{True}
