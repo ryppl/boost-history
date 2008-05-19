@@ -72,7 +72,7 @@ Pablo Halpern,  Bloomberg, L.P. $\langle$\href{mailto:phalpern@halpernwightsoftw
 \color{black}
 
 \setcounter{chapter}{22}
-\rSec0[lib.containers]{Containers library}
+\rSec0[containers]{Containers library}
 
 \pnum
 This clause describes components that \Cpp\ programs may use to
@@ -88,7 +88,8 @@ as summarized in
 Table~\ref{tab:containers.summary}:
 
 \begin{libsumtab}{Containers library summary}{tab:containers.summary}
-\ref{container.requirements} Requirements   &   \addedConcepts{\ttfamily <container>}                    \\ \rowsep
+\ref{container.requirements} Requirements   &                       \\
+\ref{container.concepts} \addedConcepts{Concepts}   & \addedConcepts{\mbox{\tcode{<container_concepts>}}}                      \\ \rowsep
 \ref{sequences} Sequences                   &   \tcode{<array>}     \\
                                                 &   \tcode{<deque>}     \\
                                                 &   \tcode{<list>}      \\
@@ -105,1017 +106,201 @@ Table~\ref{tab:containers.summary}:
 \rSec1[container.requirements]{Container requirements}
 \index{requirements!container}%
 
+\editorial{Unlike with other sections containing requirements tables,
+  we have opted not to completely replace everything
+  in~\ref{container.requirements} with a set of concepts. This
+  decision is due to the unique nature of the container requirements,
+  which don't really correspond to concepts because they aren't used
+  in algorithms. Rather, the requirements tables in
+  ~\ref{container.requirements} are shorthand descriptions for all of the
+  containers in this section; each container meets some subset of the
+  requirements stated, sometimes with differing requirements on the
+  container's value type for the same operation. Those container
+  concepts that are actually needed (e.g., for the container
+  adaptors~\ref{container.adaptors}) are specified in the new
+  section~\ref{container.concepts}.}
+
+\setcounter{Paras}{2}
 \pnum
-Containers are objects that store other objects.
-They control allocation and deallocation of these objects
-through constructors, destructors, insert and erase operations.
+Objects stored in these components shall be constructed using
+\changedConcepts{\mbox{\tcode{construct_element}}~(\mbox{\ref{construct.element}})}{the
+  \mbox{\tcode{construct}} member function and destroyed using the
+  \mbox{\tcode{destroy}} member function of the container's
+  allocator~(\mbox{\ref{allocator.concepts}})}. 
+%
+\addedConcepts{A container may directly call constructors and
+  destructors of for its stored objects, without calling the
+  allocator's \mbox{\tcode{construct}} or \mbox{\tcode{destruct}}
+  functions, if the allocator models the
+  \mbox{\tcode{MinimalAllocator}} concept.}
+%
+\removedConcepts{For each 
+operation that inserts an element of type \mbox{\tcode{T}} into a container
+(\mbox{\tcode{insert}}, \mbox{\tcode{push_back}}, \mbox{\tcode{push_front}},
+\mbox{\tcode{emplace}}, etc.) with arguments \mbox{\tcode{args...}}
+\mbox{\tcode{T}} shall 
+be \mbox{\tcode{ConstructibleAsElement}}, as described in
+table~\mbox{\ref{constructibleaselement}}.} \enternote If the component is
+instantiated with a scoped allocator of type \tcode{A} (i.e., an
+allocator \changedConcepts{for which
+  \mbox{\tcode{is_scoped_allocator<A>::value}} is 
+\mbox{\tcode{true}}}{that meets the requirements of the
+\mbox{\tcode{ScopedAllocator}} concept}), then
+\changedConcepts{\mbox{\tcode{construct_element}}}{\mbox{\tcode{construct}}}
+may pass an inner 
+allocator argument to \tcode{T}'s constructor. \exitnote
 
 \pnum
-All of the complexity requirements in this clause are stated solely
-in terms of the number of operations on the contained objects.
-\enterexample\ 
-the copy constructor of type
-\tcode{vector <vector<int> >}\
-has linear complexity,
-even though the complexity of copying each contained
-\tcode{vector<int>}\
-is itself linear.
-\exitexample\ 
+\removedConcepts{In table~\mbox{\ref{constructibleaselement}},
+  \mbox{\tcode{T}} denotes an object type, \mbox{\tcode{A}} denotes an
+  allocator, \mbox{\tcode{I}} denotes an allocator of type
+  \mbox{\tcode{A::inner_allocator_type}} (if any),and
+  \mbox{\tcode{Args}} denotes a template parameter pack}
 
+\editorial{Remove Table 88: \mbox{\tcode{ConstructibleAsElement<A, T,
+      Args>}} requirements}
+
+\setcounter{Paras}{8}
 \pnum
-\removedConcepts{The type of objects stored in these components shall meet the requirements of
-CopyConstructible
-types (20.1.3).}
+Copy and move constructors for all container types defined in this
+clause  obtain an allocator by calling\\
+\changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}\tcode{<allocator_type>::select_for_copy_construction()}
+on their respective first parameters. All other constructors for these
+container types take an \tcode{Allocator\&}\ argument
+(\ref{allocator.requirements}), an allocator whose value type is the
+same as the container's value type. A copy of this argument is used
+for any memory allocation performed, by these constructors and by all
+member functions, during the lifetime of each container object or
+until the allocator is replaced. The allocator may be replaced only
+via assignment or \tcode{swap()}. Allocator replacement is performed
+by calling
+\changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}
+\tcode{<allocator_type>::move_assign()},
+\changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}\tcode{<allocator_type>
+::copy_assign()}, or
+\changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}\tcode{allocator_type>::swap()}
+within the implementation of the corresponding container operation. In
+all container types defined in this clause, the member
+\tcode{get_allocator()} returns a copy of the \tcode{Allocator} object
+used to construct the container, or to replace the allocator. 
 
-\pnum
-\removedConcepts{Table~79 defines the Assignable requirement.
-Some containers require this property of the types to be stored in the
-container.
-T
-is the type used to instantiate the container,
-t is a value of T,
-and u is a value of (possibly
-const) T.}
-
-\eremove{Remove Table 79: Assignable requirements. Assignable is now a
-  concept in Chapter 20.}
-
+\editorial{Add the following new section [container.concepts]}
 \color{addclr}
-\synopsis{Header \tcode{<container>}\ synopsis}
-
-\color{black}
-\editorial{Note: Synchronize this with the rest of the text.}
-\color{addclr}
-
+\rSec2[container.concepts]{Container concepts}
 \pnum
-\removedConcepts{In Tables~80 and
-81, X
-denotes a container class containing objects of type
-T, a and b
-denote values of type X, u
-denotes an identifier and r
-denotes a value of X\&.} \color{addclr} The \tcode{Container}\ concept
-describes the requirements common to all containers.
+\addedConcepts{The \mbox{\tcode{container_concepts}} header describes
+  requirements on the template arguments used in container adaptors.} 
 
-\begin{itemdecl}
-concept Container<typename X> : DefaultConstructible<X>
-{
-  typename value_type =            X::value_type;
-  typename reference =             X::reference;
-  typename const_reference =       X::const_reference;
-  InputIterator iterator =         X::iterator;
-  InputIterator const_iterator =   X::const_iterator;
-  SignedIntegral difference_type = X::difference_type;
-  UnsignedIntegral size_type =     X::size_type;
 
-  where Convertible<reference, value_type&> &&
-        Convertible<const_reference, value_type const&>;
-
-  where Convertible<iterator, const_iterator> &&
-        SameType<iterator::value_type, value_type> &&
-        SameType<const_iterator::value_type, value_type>;
- 
-  where SameType<difference_type, iterator::difference_type> &&
-        SameType<difference_type, const_iterator::difference_type>;
-
-  iterator       X::begin();
-  const_iterator X::begin() const;
-  iterator       X::end();
-  const_iterator X::end() const;
-
-  const_iterator X::cbegin() const;
-  const_iterator X::cend() const;
-
-  void X::swap(X&);
-
-  size_type X::size() const;
-  size_type X::max_size() const;
-  bool X::empty() const;
-}
-\end{itemdecl}
-
-\color{black}
-\eremove{Remove Table 80: Container requirements}
-
-\editorial{In translating the requirements table into a concept, we
-  have fixed numerous places where the requirements table required a
-  non-constant container, but where a constant container would
-  work. This should not break any existing code.}
-\color{addclr}
-
-\begin{itemdecl}
-X::X()
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\postcondition\
-\tcode{size() == 0}
-
-\pnum
-\complexity\
-constant
-\end{itemdescr}
-
-\begin{itemdecl}
-X::~X()
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\note\
-the destructor is applied to every element of \changedConcepts{a}{the
-  container}; all the memory is deallocated
-
-\pnum
-\complexity\
-linear
-\end{itemdescr}
-
-\begin{itemdecl}
-iterator       X::begin();
-const_iterator X::begin() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-an iterator referring to the first element in the container.
-\pnum
-\complexity\
-constant
-\end{itemdescr}
-
-\begin{itemdecl}
-iterator       X::end();
-const_iterator X::end() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-returns an iterator which is the past-the-end value for the container.
-If the container is empty, then
-\tcode{begin() == end()};
-
-\pnum
-\complexity\
-constant
-\end{itemdescr}
-
-\begin{itemdecl}
-const_iterator X::cbegin() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_cast<X const\&>(*this).begin()}
-
-\pnum
-\complexity\
-constant
-\end{itemdescr}
-
-\begin{itemdecl}
-const_iterator X::cend() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_cast<X const\&>(*this).end()}
-
-\pnum
-\complexity\
-constant
-\end{itemdescr}
-
-\begin{itemdecl}
-void X::swap(X& b)
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{swap(*this, b)}
-
-\pnum
-\complexity\
-should be constant
-\end{itemdescr}
-
-\begin{itemdecl}
-size_type X::size() const
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-returns the number of elements in the container.
-
-\pnum
-\complexity\
-should be constant
-
-\pnum
-\note\
-\changedConcepts{Its semantics}{The semantics of size()} is defined by the rules of constructors, inserts, and erases.
-\end{itemdescr}
-
-\begin{itemdecl}
-size_type X::max_size() const
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{size()}\ of the largest possible container
-
-\pnum
-\complexity\
-should be constant
-\end{itemdescr}
-
-\begin{itemdecl}
-bool X::empty() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{size() == 0}
-
-\pnum
-\complexity\
-constant
-\end{itemdescr}
-
-\pnum
-In the expressions
+\synopsis{Header \tcode{<container_concepts>} synopsis}
 \begin{codeblock}
-    i == j
-    i != j
-    i < j
-    i <= j
-    i >= j
-    i > j
-    i - j
+namespace std {
+  auto concept Container<typename C> @\textit{see below}@
+  auto concept SequenceContainer<typename C> @\textit{see below}@
+  auto concept FrontInsertionSequence<typename C> @\textit{see below}@
+  auto concept BackInsertionSequence<typename C> @\textit{see below}@
+}
 \end{codeblock}
-where
-\tcode{i}\
-and
-\tcode{j}\
-denote objects of a container's
-\tcode{iterator}\
-type, either or both may be replaced by an object of the container's
-\tcode{const_iterator}\
-type referring to the same element with no change in semantics.
 
-\color{black}
-\editorial{The requirements table for containers calls for copy
-  construction, assignment, and various comparison operators. However,
-  these operators only work when the value type supports copy
-  construction, assignment, etc. To capture this behaviro, we state
-  these requirements via concept map templates.}
-\color{addclr}
 
 \begin{itemdecl}
-@\textcolor{addclr}{template}@<Container X>
-where CopyConstructible<X::value_type>
-concept_map CopyConstructible<X> { }
-\end{itemdecl}
+auto concept Container<typename C> {
+  ObjectType           value_type      = typename C::value_type;
+  typename             reference       = typename C::reference;
+  typename             const_reference = typename C::const_reference;
+  UnsignedIntegralLike size_type       = typename C::size_type;
 
-\begin{itemdescr}
-\pnum
-If the \tcode{value_type}\ of a container is
-\tcode{CopyConstructible}, the container shall be
-\tcode{CopyConstructible}
+  ForwardIterator iterator;
+  ForwardIterator const_iterator;
+  requires SameType<ForwardIterator<iterator>::value_type, value_type> 
+           && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
-\pnum
-\complexity\
-linear
-\end{itemdescr}
+  bool      C::empty() const;
+  size_type C::size() const;
 
-\begin{itemdecl}
-template<Container X>
-where Assignable<X::value_type>
-concept_map Assignable<X> { }
-\end{itemdecl}
+  iterator       C::begin();
+  const_iterator C::begin() const;
+  iterator       C::end();
+  const_iterator C::end() const;
 
-\begin{itemdescr}
-\pnum
-If the \tcode{value_type}\ of a container is
-\tcode{Assignable}, the container shall be
-\tcode{Assignable}
+  void C::swap(C&&);
 
-\pnum
-\complexity\
-linear
-\end{itemdescr}
-
-\begin{itemdecl}
-template<Container X>
-where EqualityComparable<X::value_type>
-concept_map EqualityComparable<X> 
-{ 
-  bool operator==(X a, X b);
+  axiom ContainerSize(C c) {
+    (C.begin() == C.end()) == C.empty();
+    (C.begin() != C.end()) == (C.size() > 0);
+  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-If the \tcode{value_type}\ of a container is
-\tcode{EqualityComparable}, the container shall be
-\tcode{EqualityComparable}
+\addedConcepts{\mbox{\reallynote} describes a container, which provides
+  iteration through a sequence of elements stored in the container.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for a (possibly
+  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{C}},
+  \mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
 \end{itemdescr}
 
 \begin{itemdecl}
-bool operator==(X a, X b);
-\end{itemdecl}
+auto concept SequenceContainer<typename C> : Container<C> {
+  reference       C::front();
+  const_reference C::front() const;
+  reference       C::back();
+  const_reference C::back() const;
 
-\begin{itemdescr}
-\pnum
-\effects\
- \tcode{==}\ is an equivalence relation.
+  axiom AccessFront(C c) {
+    if (c.begin() != c.end()) c.front() == *c.begin();
+  }  
 
-\pnum
-\returns\
- \tcode{a.size() == b.size()}
- \tcode{\&\& equal(a.begin(),}
- \tcode{a.end(), b.begin()}
-
-\pnum
-\complexity\
-linear
-\end{itemdescr}
-
-\begin{itemdecl}
-template<Container X>
-where LessThanComparable<X::value_type>
-concept_map LessThanComparable<X> 
-{ 
-  bool operator<(X a, X b);
+  axiom AccessBack(C c) {
+    if (c.begin() != c.end()) c.back() == *(--c.end());
+  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-If the \tcode{value_type}\ of a container is
-\tcode{LessThanComparable}, the container shall be
-\tcode{LessThanComparable}
+\addedConcepts{\mbox{\reallynote} describes a sequence container,
+  which stores its elements in the order in which they were added.} 
 \end{itemdescr}
 
 \begin{itemdecl}
-bool operator<(X a, X b);
-\end{itemdecl}
+auto concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
+  void C::push_front(const value_type&);
+  void C::pop_front();
 
-\begin{itemdescr}
-\pnum
-\returns\
- \tcode{lexicographical_compare( a.begin(), a.end(), b.begin(), b.end())}
-
-\pnum
-\complexity\
-linear
-\end{itemdescr}
-
-\color{black}
-
-\pnum
-Copy constructors for all container types defined in this clause
-copy an allocator argument from their respective first parameters.
-All other constructors for these container types take an
-\tcode{Allocator\&}\
-argument (\ref{allocator.requirements}),
-an allocator whose value type is the same as the container's value type.
-A copy of this argument is used for any memory allocation
-performed, by these constructors and by all member functions, during
-the lifetime of each container object.
-In all container types defined
-in this clause, the member \tcode{get_allocator()}\ returns a copy
-of the Allocator object used to construct the container.%
-\footnote{As specified in~\ref{allocator.requirements}, \removedConcepts{paragraphs 4-5},
-the semantics described in this clause applies only to the case where
-allocators compare equal.
-}
-
-\pnum
-\addedConcepts{Containers that provide the ability to traverse their
-  elements in reverse order are called reversible.}
-
-\color{addclr}
-\begin{itemdecl}
-concept ReversibleContainer<typename X> : Container<X> {
-  MutableBidirectionalIterator reverse_iterator       = X::reverse_iterator;
-  BidirectionalIterator const_reverse_iterator = X::const_reverse_iterator;
-
-  where MutableBidirectionalIterator<iterator> &&
-        BidirectionalIterator<const_iterator>;
-
-  where SameType<iterator::value_type, reverse_iterator::value_type> &&
-        SameType<const_iterator::value_type, const_reverse_iterator::value_type>;
-
-  reverse_iterator       X::rbegin();
-  const_reverse_iterator X::rbegin() const;
-  reverse_iterator       X::rend();
-  const_reverse_iterator X::rend() const;
-  const_reverse_iterator X::crbegin() const;
-  const_reverse_iterator X::crend() const;
-}
-\end{itemdecl}
-\color{black}
-
-\eremove{Remove Table 81: Reversible container requirements}
-
-\pnum
-If the iterator type of a container \changedConcepts{belongs to the bidirectional or
-random access iterator categories}{is bidirectional or random access} (\ref{iterator.requirements}),
-\changedConcepts{the container is called
-reversible
-and satisfies the additional requirements
-in Table~81}{the container is reversible.}
-
-\color{addclr}
-\begin{itemdecl}
-template<Container X>
-where MutableBidirectionalIterator<X::iterator> &&
-      BidirectionalIterator<X::const_iterator>
-concept_map ReversibleContainer<X>
-{
-  typedef std::reverse_iterator<X::iterator>       reverse_iterator;
-  typedef std::reverse_iterator<X::const_iterator> const_reverse_iterator;
-
-  @\textcolor{addclr}{reverse}@_iterator       X::rbegin();
-  const_reverse_iterator X::rbegin() const;
-  reverse_iterator       X::rend();
-  const_reverse_iterator X::rend() const;
-  const_reverse_iterator X::crbegin() const;
-  const_reverse_iterator X::crend() const;
+  axiom FrontInsertion(C c, value_type x) {
+    c == (c.push_front(x), c.pop_front());
+  }
 }
 \end{itemdecl}
 
-\begin{itemdecl}
-reverse_iterator       X::rbegin();
-\end{itemdecl}
-
 \begin{itemdescr}
 \pnum
-\returns\
-\tcode{reverse_iterator(end())}
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding or removing elements from the front of the
+  sequence.}
 \end{itemdescr}
 
 \begin{itemdecl}
-const_reverse_iterator       X::rbegin() const;
-\end{itemdecl}
+auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
+  void C::push_back(const value_type&);
+  void C::pop_back();
 
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_reverse_iterator(end())}
-\end{itemdescr}
-
-\begin{itemdecl}
-reverse_iterator       X::rend();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_reverse_iterator(begin())}
-\end{itemdescr}
-
-\begin{itemdecl}
-const_reverse_iterator       X::rend() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_reverse_iterator(begin())}
-\end{itemdescr}
-
-\begin{itemdecl}
-const_reverse_iterator X::crbegin() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_cast<const X\&>(*this).rbegin()}
-\end{itemdescr}
-
-\begin{itemdecl}
-const_reverse_iterator X::crend() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{const_cast<const X\&>(*this).rend()}
-\end{itemdescr}
-
-\color{black}
-
-\pnum
-Unless otherwise specified (see~\ref{deque.modifiers}\ and
-\ref{vector.modifiers})
-all container types defined in this clause meet
-the following additional requirements:
-
-\begin{itemize}
-\item
-if an exception is thrown by an
-\tcode{insert()}
-function while inserting a single element, that
-function has no effects.
-\item
-if an exception is thrown by a
-\tcode{push_back()}
-or
-\tcode{push_front()}
-function, that function has no effects.
-\item
-no
-\tcode{erase()},
-\tcode{pop_back()}
-or
-\tcode{pop_front()}
-function throws an exception.
-\item
-no copy constructor or assignment operator of a returned iterator
-throws an exception.
-\item
-no
-\tcode{swap()}
-function throws an exception unless that
-exception is thrown by the copy constructor or
-assignment operator of the container's
-Compare object (if any; see \ref{associative.reqmts}).
-\item
-no
-\tcode{swap()}
-function invalidates any references,
-pointers, or iterators referring to the elements
-of the containers being swapped.
-\end{itemize}
-
-\pnum
-Unless otherwise specified (either explicitly or by defining a
-function in terms of other functions), invoking a container member
-function or passing a container as an argument to a library function
-shall not invalidate iterators to, or change the values of, objects
-within that container.
-
-\rSec2[sequence.reqmts]{\textcolor{black}{Sequences}}
-
-\pnum
-A sequence is a kind of container that organizes a finite set of objects, all of the same type,
-into a strictly linear arrangement.
-The library provides three basic kinds of sequence containers:
-\tcode{vector},
-\tcode{list},
-and
-\tcode{deque}.
-It also provides container adaptors that make it easy to construct abstract data types, such as
-\tcode{stack}s
-or
-\tcode{queue}s,
-out of the basic sequence kinds (or out of other kinds of sequences that the user might define).
-
-\pnum
-\tcode{vector},
-\tcode{list},
-and
-\tcode{deque}
-offer the programmer different complexity trade-offs and should be used
-accordingly.
-\tcode{vector}\
-is the type of sequence that should be used by default.
-\tcode{list}\
-should be used when there are frequent insertions and deletions from the middle of the sequence.
-\tcode{deque}\
-is the data structure of choice
-when most insertions and deletions take place at the beginning or at the end of the sequence.
-
-\pnum
-\removedConcepts{In Tables~82
-and 83, X
-denotes a sequence class,
-a denotes a value of X,
-i and j
-denote iterators satisfying input iterator requirements,
-[i, j)
-denotes a valid range, n
-denotes a value of X::size\_type,
-p denotes a valid iterator to
-a, q
-denotes a valid dereferenceable iterator to
-a, [q1, q2)
-denotes a valid range in
-a, and t
-denotes a value of X::value\_type.}
-
-\pnum
-The complexities of the expressions are sequence dependent.
-
-\eremove{Remove Table 82: Sequence requirements (in addition to
-  container)}
-
-\color{addclr}
-\pnum 
-Sequences are described by the \tcode{Sequence},
-\tcode{FrontInsertionSequence}, and \tcode{BackInsertionSequence} concepts.
-
-\begin{itemdecl}
-concept Sequence<typename X> : Container<X>
-{
-  where MutableForwardIterator<iterator> && ForwardIterator<const_iterator>;
-
-  X::X(size_type n, value_type t);
-
-  template<InputIterator Iter>
-    where Convertible<Iter::value_type, value_type>
-    X::X(Iter first, Iter last);
-
-  iterator X::insert(iterator p, value_type t);
-  void X::insert(iterator p, size_type n, value_type t);
-  template<InputIterator Iter>
-    where Convertible<Iter::value_type, value_type>
-    void X::insert(iterator p, Iter first, Iter last);
-
-  iterator X::erase(iterator q);
-  iterator X::erase(iterator q1, iterator q2);
-
-  void X::clear();
-
-  template<InputIterator Iter>
-    where Convertible<Iter::value_type, value_type>
-    void X::assign(Iter first, Iter last);
-  void X::assign(size_type n, value_type);
+  axiom BackInsertion(C c, value_type x) {
+    c == (c.push_back(x), c.pop_back());
+  }
 }
 \end{itemdecl}
 
-\begin{itemdecl}
-X::X(size_type n, value_type t);
-\end{itemdecl}
-
 \begin{itemdescr}
 \pnum
-\effects\
-constructs a sequence with \tcode{n}\ copies of \tcode{t}\
-
-\pnum
-\postcondition\
-\tcode{size() == n}
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding or removing elements from the back of the
+  sequence.}
 \end{itemdescr}
-
-\begin{itemdecl}
-template<InputIterator Iter>
-  where Convertible<Iter::value_type, value_type>
-  X::X(Iter first, Iter last);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-constructs a sequence equal to the range \tcode{[i, j)}
-
-\pnum
-\postconditions\
-\tcode{size() == distance}\ between \tcode{i}\ and \tcode{j}
-\end{itemdescr}
-
-\begin{itemdecl}
-iterator X::insert(iterator p, value_type t);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-inserts a copy of \tcode{t}\ before \tcode{p}
-
-\pnum
-\returns\
-\addedConcepts{an iterator that} points to the copy of
-\tcode{t}\
-inserted into
-\tcode{a}.
-\end{itemdescr}
-
-\begin{itemdecl}
-void X::insert(iterator p, size_type n, value_type t);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-inserts \tcode{n}\ copies of \tcode{t}\ before \tcode{p}
-\end{itemdescr}
-
-\begin{itemdecl}
-template<InputIterator Iter>
-  where Convertible<Iter::value_type, value_type>
-  void X::insert(iterator p, Iter first, Iter last);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\precondition\
-\tcode{i}\ and \tcode{j}\ are not iterators into \tcode{a}
-
-\pnum
-\effects\
-inserts copies of elements in \tcode{[i, j)} before \tcode{p}
-\end{itemdescr}
-
-\begin{itemdecl}
-iterator X::erase(iterator q);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-erases the element pointed to by \tcode{q}
-
-\pnum
-\returns\
-\changedConcepts{The iterator returned from
-a.erase(q)}{An iterator that}\
-points to the element immediately following
-\tcode{q}\
-prior to the element being erased.
-If no such element exists,
-\tcode{a.end()}\
-is returned.
-\end{itemdescr}
-
-\begin{itemdecl}
-iterator X::erase(iterator q1, iterator q2);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-erases the elements in the range \tcode{[q1, q2)}.
-
-\pnum
-\returns\
-\changedConcepts{The iterator returned by
-a.erase(q1,q2)}{An iterator that}\
-points to the element pointed to by
-\tcode{q2}\
-prior to any elements being erased.
-If no such element exists,
-\tcode{a.end()}\
-is returned.
-\end{itemdescr}
-
-\begin{itemdecl}
-void X::clear();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{erase(begin(), end())}
-
-\pnum
-\postconditions\
-\tcode{size() == 0}
-\end{itemdescr}
-
-\begin{itemdecl}
-template<InputIterator Iter>
-  where Convertible<Iter::value_type, value_type>
-  void X::assign(Iter first, Iter last);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\precondition\
-\tcode{i}, \tcode{j}\ are not iterators into \tcode{a}
-
-\pnum
-\effects\
-Replaces elements in \tcode{a}\ with a copy of \tcode{[i, j)}.
-\end{itemdescr}
-
-\begin{itemdecl}
-void X::assign(size_type n, value_type);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\precondition\
-\tcode{t}\ is not a reference into \tcode{a}.
-
-\pnum
-\effects\
-Replaces elements in \tcode{a}\ with \tcode{n}\ copies of \tcode{t}.
-\end{itemdescr}
-
-\eremove{Remove paragraphs 5--11, including the ``do the right thing''
-clause.}
-
-\pnum
-\changedConcepts{Table~83 lists sequence operations
-that are provided for some types of
-sequential containers but not others.
-An implementation shall provide
-these operations for all container types shown in the ``container''
-column, and shall implement them so as to take amortized constant
-time.}{The BackAccessSequence concept describes sequences for which
-the last element can be accessed in amortized constant time.}
-
-\eremove{Remove Table 83: Optional sequence operations}
-
-\begin{itemdecl}
-concept BackAccessSequence<typename X> : Sequence<X>
-{
-  reference       X::back();
-  const_reference X::back() const;
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-reference       X::back();
-const_reference X::back() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
- \tcode{\{ iterator tmp = end();}\\
- \tcode{    --tmp;}\\
- \tcode{    return *tmp; \}}
-\end{itemdescr}
-
-\pnum The \tcode{BackInsertionSequence} concept describes sequences for which
-one can insert, remove, or access an element at the end of a container in
-amortized constant time.
-
-\begin{itemdecl}
-concept BackInsertionSequence<typename X> : BackAccessSequence<X>
-{
-  void X::push_back(value_type x);
-  void X::pop_back();
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-void X::push_back(value_type x);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{insert(end(),x)}
-\end{itemdescr}
-
-\begin{itemdecl}
-void X::pop_back();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
- \tcode{\{ iterator tmp = end();}\\
- \tcode{    --tmp;}\\
- \tcode{    erase(tmp); \}}
-\end{itemdescr}
-
-\pnum
-The \tcode{FrontAccessSequence}\ concept describes sequences for which
-one can access the element at the front of the container in amortized
-constant time. 
-
-\begin{itemdecl}
-concept FrontAccessSequence<typename X> : Sequence<X>
-{
-  reference       X::front();
-  const_reference X::front() const;
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-reference       X::front();
-const_reference X::front() const;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{*begin()}
-\end{itemdescr}
-
-\pnum
-The \tcode{FrontInsertionSequence}\ concept describes sequences for which
-one can insert, remove, or access an element at the front of a container in
-amortized constant time.
-
-\begin{itemdecl}
-concept FrontInsertionSequence<typename X> : FrontAccessSequence<X>
-{
-  void X::push_front(value_type x);
-  void X::pop_front();
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-void X::push_front(value_type x);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{insert(begin(),x)}
-\end{itemdescr}
-
-\begin{itemdecl}
-void X::pop_front();
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{erase(begin())}
-\end{itemdescr}
-
-\pnum
-The \tcode{RandomAccessSequence} concept describes sequences that
-provide access to any element in the container in amortized constant
-time.
-
-\begin{itemdecl}
-concept RandomAccessSequence<typename X> 
-  : FrontAccessSequence<X>, BackAccessSequence<X>
-{
-  where MutableRandomAccessIterator<iterator> &&
-        RandomAccessIterator<const_iterator>;
-
-  reference       operator[](X& a, size_type n);
-  const_reference operator[](const X& a, size_type n);
-
-  reference       at(X& a, size_type n);
-  const_reference at(const X& a, size_type n);
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-reference       operator[](X& a, size_type n);
-const_reference operator[](const X& a, size_type n);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{*(a.begin() + n)}
-\end{itemdescr}
-
-\begin{itemdecl}
-reference       at(X& a, size_type n);
-const_reference at(const X& a, size_type n);
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-\tcode{*(a.begin() + n)}
-
-\pnum
-\throws
-\tcode{out_of_range} if \tcode{n >= a.size()}.
-\end{itemdescr}
-
-\color{black}
-
-\pnum
-\addedConcepts{An implementation shall provide the following concept
-  maps. When the implementation provides a vector<bool>
-  specialization, vector<T> only meets the sequence concept when T is
-  not bool.}
-\color{addclr}
-\begin{itemdecl}
-@\textcolor{addclr}{template}@<CopyConstructible T, Allocator Alloc> 
-  where !SameType<T, bool> // iff vector<bool> specialization is provided
-  concept_map RandomAccessSequence<vector<T, Alloc> > { }
-template<CopyConstructible T, Allocator Alloc> 
-  where !SameType<T, bool> // iff vector<bool> specialization is provided
-  concept_map BackInsertionSequence<vector<T, Alloc> > { }
-
-template<CopyConstructible T, Allocator Alloc> 
-  concept_map BackInsertionSequence<list<T, Alloc> > { }
-template<CopyConstructible T, Allocator Alloc> 
-  concept_map FrontInsertionSequence<list<T, Alloc> > { }
-
-template<CopyConstructible T, Allocator Alloc> 
-  concept_map RandomAccessSequence<deque<T, Alloc> > { }
-template<CopyConstructible T, Allocator Alloc> 
-  concept_map BackInsertionSequence<deque<T, Alloc> > { }
-template<CopyConstructible T, Allocator Alloc> 
-  concept_map FrontInsertionSequence<deque<T, Alloc> > { }
-\end{itemdecl}
 \color{black}
 
 \rSec1[sequences]{Sequences}
@@ -3268,125 +2453,6 @@ x.swap(y);
 
 \pnum
 The container adaptors each take a \tcode{Container} template parameter, and each constructor takes a \tcode{Container} reference argument. This container is copied into the \tcode{Container} member of each adaptor. If the container takes an allocator, then a compatible allocator may be passed in to the adaptor's constructor. Otherwise, normal copy or move construction is used for the container argument. \enternote it is not necessary for an implementation to distinguish between the one-argument constructor that takes a \tcode{Container} and the one-argument constructor that takes an \tcode{allocator_type}. Both forms use their argument to construct an instance of the container. \exitnote
-
-\editorial{Add the following new section [container.concepts]}
-\color{addclr}
-\rSec3[container.concepts]{Container concepts}
-\pnum
-\addedConcepts{The \mbox{\tcode{container_concepts}} header describes
-  requirements on the template arguments used in container adaptors.} 
-
-\synopsis{Header \tcode{<container_concepts>} synopsis}
-\begin{codeblock}
-namespace std {
-  auto concept Container<typename C> @\textit{see below}@
-  auto concept SequenceContainer<typename C> @\textit{see below}@
-  auto concept FrontInsertionSequence<typename C> @\textit{see below}@
-  auto concept BackInsertionSequence<typename C> @\textit{see below}@
-}
-\end{codeblock}
-
-
-\begin{itemdecl}
-auto concept Container<typename C> {
-  ObjectType           value_type      = typename C::value_type;
-  typename             reference       = typename C::reference;
-  typename             const_reference = typename C::const_reference;
-  UnsignedIntegralLike size_type       = typename C::size_type;
-
-  ForwardIterator iterator;
-  ForwardIterator const_iterator;
-  requires SameType<ForwardIterator<iterator>::value_type, value_type> 
-           && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
-
-  bool      C::empty() const;
-  size_type C::size() const;
-
-  iterator       C::begin();
-  const_iterator C::begin() const;
-  iterator       C::end();
-  const_iterator C::end() const;
-
-  void C::swap(C&&);
-
-  axiom ContainerSize(C c) {
-    (C.begin() == C.end()) == C.empty();
-    (C.begin() != C.end()) == (C.size() > 0);
-  }
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container, which provides
-  iteration through a sequence of elements stored in the container.}
-
-\pnum
-\addedConcepts{\mbox{\requires} for a (possibly
-  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{C}},
-  \mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept SequenceContainer<typename C> : Container<C> {
-  reference       C::front();
-  const_reference C::front() const;
-  reference       C::back();
-  const_reference C::back() const;
-
-  axiom AccessFront(C c) {
-    if (c.begin() != c.end()) c.front() == *c.begin();
-  }  
-
-  axiom AccessBack(C c) {
-    if (c.begin() != c.end()) c.back() == *(--c.end());
-  }
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a sequence container,
-  which stores its elements in the order in which they were added.} 
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
-  void C::push_front(const value_type&);
-  void C::pop_front();
-
-  axiom FrontInsertion(C c, value_type x) {
-    c == (c.push_front(x), c.pop_front());
-  }
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by adding or removing elements from the front of the
-  sequence.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
-  void C::push_back(const value_type&);
-  void C::pop_back();
-
-  axiom BackInsertion(C c, value_type x) {
-    c == (c.push_back(x), c.pop_back());
-  }
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by adding or removing elements from the back of the
-  sequence.}
-\end{itemdescr}
-
-\color{black}
 
 \rSec3[queue]{Class template \tcode{queue}}
 
