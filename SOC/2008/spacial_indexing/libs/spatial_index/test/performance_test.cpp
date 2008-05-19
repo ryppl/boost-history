@@ -18,7 +18,8 @@
 
 std::vector<std::pair<double,double> > read_data(void)
 {
-	std::vector<std::pair<double,double> > v;
+	std::set<std::pair<double,double> > v;
+	std::vector<std::pair<double,double> > r;
 
 	std::ifstream data;
 	data.open("gis-data.txt");
@@ -27,12 +28,12 @@ std::vector<std::pair<double,double> > read_data(void)
 	data >> x;
 	data >> y;
 	while(!data.eof()) {
-// 		std::cout << "x,y -> " << x << "," << y << std::endl;
 		data >> x;
 		data >> y;
-		v.push_back(std::make_pair(x,y));
+		v.insert(std::make_pair(x,y));
 	}
-	return v;
+	copy(v.begin(), v.end(), std::back_inserter(r));
+	return r;
 }
 
 
@@ -58,6 +59,8 @@ int test_main(int, char* [])
 	std::vector<unsigned int> ids;
  	std::vector<std::pair<double, double> > points = read_data();
 
+// 	std::cerr << "Size: " << points.size() << std::endl;
+
 	// plane
  	const double min_x = -130.0;
  	const double min_y = 10.0;
@@ -65,7 +68,7 @@ int test_main(int, char* [])
  	const double max_y = 80.0;
 
 	// number of points to find on the search phase
-	const unsigned int find_count = 50;
+	const unsigned int find_count = 1000;
 
  	for(unsigned int i = 0; i < points.size(); i++) {
  		ids.push_back(i);
