@@ -1,0 +1,46 @@
+
+[library Spatial Index
+    [quickbook 1.4]
+    [version 0.01e-10]
+    [authors [Fernandez, Federico J.]]
+    [copyright 2008 Federico J. Fernandez]
+    [purpose Doing nothing.]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+Welcome to the Spatial Index!  One day, it will perhaps be called
+Boost.Spatial Index. Until then, feel free to use it to do nothing.
+
+[warning Spatial Index is not an official Boost library.]
+
+[section:introduction Introduction]
+
+User, this is Spatial Index.  Spatial Index, this is the user.  Be nice to each other.
+
+[section:start Getting Started]
+
+The Spatial Index is located in the spatial_index directory of the boost sandbox.
+
+
+You might also want to look at the [link spatial_index.reference reference].
+
+
+[endsect]
+
+[endsect]
+
+[xinclude spatial_index_doxygen.xml]
+
+[section:license License]
+
+Copyright 2008 Federico J. Fernandez.
+Distributed under the Boost Software License, Version 1.0. (See
+accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+
+
+[endsect]
