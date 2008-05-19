@@ -45,7 +45,7 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{0.25in}
-\par\noindent Document number: D2621=08-0131\vspace{-6pt}
+\par\noindent Document number: N2621=08-0131\vspace{-6pt}
 \par\noindent Revises document number: N2572=08-0082\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -84,9 +84,6 @@ strike-through when possible}.
 \item Changed the \tcode{IntegralLike} requirement for a \tcode{long
     long} constructor into a requirement for a \tcode{intmax_t}
   constructor.
-\item Added the \tcode{EqualityComparable} refinement to the
-  \tcode{Allocator} concept, and made its \tcode{construct} variadic
-  to match the latest \tcode{Allocator} requirements.
 \item \tcode{ObjectType} now refines \tcode{MemberPointeeType}.
 \end{itemize}
 
@@ -114,7 +111,7 @@ strike-through when possible}.
 \rSec0[utilities]{General utilities library}
 \setcounter{Paras}{1}
 \textcolor{black}{\pnum}
-The following clauses describe utility and allocator \changedConcepts{requirements}{concepts}, utility
+The following clauses describe utility @\removedCC{and allocator} \changedConcepts{requirements}{concepts}, utility
 components, \addedB{tuples, type traits templates,} function objects, dynamic
 memory management utilities, and date/time utilities, as summarized in
 Table~\ref{tab:util.lib.summary}.
@@ -248,11 +245,6 @@ namespace std {
 
   // \ref{concept.predicate}, predicates:
   auto concept Predicate<typename F, typename... Args> @\textit{see below}@;
-
-  // \ref{concept.allocator}, allocators:
-  concept Allocator<typename X> @\textit{see below}@;
-  concept AllocatorGenerator<typename X> @\textit{see below}@;
-  template<Allocator X> concept_map AllocatorGenerator<X> @\textit{see below}@;
 }
 \end{codeblock}
 
@@ -1464,322 +1456,6 @@ context that requires a \mbox{\tcode{bool}}.}
 predicate function objects shall not apply any non-constant function
 through the predicate arguments.}
 \end{itemdescr}
-
-\color{black}
-\rSec2[concept.allocator]{Allocators}
-\index{requirements!Allocator@\tcode{Allocator}}%
-\editorial{We have kept most of the text of [allocator.requirements]
-  here, although much of it has been moved from tables into numbered
-  paragraphs when translating the allocator requirements into
-  concepts. With the introduction of scoped allocations, this text is
-  somewhat out of date, and will be revised significantly for the next
-mailing.}
-
-\pnum
-The library describes a standard set of requirements for \techterm{allocators},
-which are objects that encapsulate the information about an allocation model.
-This information includes the knowledge of pointer types, the type of their
-difference, the type of the size of objects in this allocation model, as well
-as the memory allocation and deallocation primitives for it. All of the
-containers (clause~\ref{containers}) are parameterized in terms of allocators.
-
-\eremove{Remove Table 39: Descriptive variable definitions}
-
-\eremove{Remove Table 40: Allocator requirements}
-
-\pnum
-\changedConcepts{Table~40 describes the requirements on types manipulated
-through allocators.}
-{The \mbox{\tcode{Allocator}} concept describes the requirements on
-  allocators.} 
-\changedConcepts{All the operations on the allocators are expected to be
-amortized constant time.}{Each allocator operation shall have
-amortized constant time complexity.}
-\removedConcepts{Table~33
-describes the requirements on allocator types.}
-
-\color{addclr}
-\begin{itemdecl}
-concept Allocator<typename X> : DefaultConstructible<X>, CopyConstructible<X>, EqualityComparable<X> {
-  ObjectType value_type               = typename X::value_type;
-  MutableRandomAccessIterator pointer = typename X::pointer;
-  RandomAccessIterator const_pointer  = typename X::const_pointer;
-  typename reference                  = typename X::reference;
-  typename const_reference            = typename X::const_reference;
-  SignedIntegral difference_type      = typename X::difference_type;
-  UnsignedIntegralLike size_type      = typename X::size_type; 
-  @\textcolor{addclr}{}@template<ObjectType T> class rebind = @\textit{see below}@;
-
-  requires Convertible<pointer, const_pointer> && 
-           Convertible<pointer, value_type*> &&
-           SameType<pointer::value_type, value_type> &&
-           SameType<pointer::reference, value_type&> &&
-           SameType<pointer::reference, reference>;
-
-  requires @\textcolor{addclr}{Convertible}@<const_pointer, const value_type*> && 
-           SameType<const_pointer::value_type, value_type> &&
-           SameType<const_pointer::reference, const value_type&> &&
-           SameType<const_pointer::reference, const_reference>;
- 
-  requires SameType<rebind<value_type>, X>;
-
-  pointer X::allocate(size_type n);
-  pointer X::allocate(size_type n, const_pointer p);
-  @\textcolor{addclr}{void}@ X::deallocate(pointer p, size_type n);
-
-  size_type X::max_size() const;
-
-  template<ObjectType T>
-    X::X(const rebind<T>& y);
-
-  template<class... Args>
-    requires HasConstructor<value_type, Args&&...>
-    void construct(pointer p, Args&&... args);
-
-  void X::destroy(pointer p);
-
-  pointer X::address(reference) const;
-  const_pointer X::address(const_reference) const;
-}
-\end{itemdecl}
-\color{black}
-
-\color{addclr}
-\begin{itemdecl}
-UnsignedIntegralLike size_type;
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\ctype\
-a type that can represent the size of the largest object in the allocation model
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-SignedIntegral difference_type;
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\ctype\
-a type that can represent the difference between any two pointers
-in the allocation model
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-template<ObjectType T> class rebind;
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\ctype}}
-The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
-typedef template}{is a template that produces allocators in the same
-  family as \mbox{\tcode{X}}}: if the name
-\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
-to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
-\mbox{\tcode{SomeAllocator<value_type>}}},
-then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
-\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. 
-\addedConcepts{The resulting type
-\mbox{\tcode{SameAllocator<U>}} shall meet the requirements of the
-\mbox{\tcode{Allocator}} concept.}
-
-\addedConcepts{The
-  default value for \mbox{\tcode{rebind}} is a template
-  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
-  \mbox{\tcode{X::template rebind<U>::other}}.} 
-
-\begin{lrbox}\rebindbox
-\begin{minipage}{\linewidth}
-\begin{lstlisting}
-template<typename Alloc>
-struct rebind_allocator {
-  template<typename U>
-  using rebind = typename Alloc::template rebind<U>::other;
-};
-\end{lstlisting}
-\end{minipage}
-\end{lrbox}
-
-\editorial{The aforementioned default value for \tcode{rebind} can be
-  implemented as follows:
-
-\usebox \rebindbox
-
-The default value for \tcode{rebind} in the \tcode{Allocator} concept
-is, therefore, \tcode{rebind_allocator<X>::template rebind}.}
-
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-pointer X::allocate(size_type n);
-pointer X::allocate(size_type n, const_pointer p);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\
-Memory is allocated for \tcode{n}\ objects of type \changedConcepts{\mbox{\tcode{T}}}{\mbox{\tcode{value_type}}}\ but objects
-are not constructed. \footnote{It is intended that \tcode{a.allocate}\ be an efficient means
-of allocating a single object of type \tcode{T}, even when \tcode{sizeof(T)}\
-is small. That is, there is no need for a container to maintain its own
-``free list''.} 
-
-\pnum
-\returns\
-\removedConcepts{The result is a random access iterator.}
-\addedConcepts{A pointer to the allocated memory.}
-\enternote\
-If \tcode{n == 0}, the return value is unspecified.
-\exitnote\
-
-\pnum
-\throws\
-\tcode{allocate}\ may raise an appropriate exception. 
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-void X::deallocate(pointer p, size_type n);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\preconditions\
-All \tcode{n }\ \changedConcepts{T}{value\_type} objects in the area pointed to by \tcode{p}\ shall be
-destroyed prior to this call. \tcode{n} shall match the value passed to
-\tcode{allocate}\ to obtain this memory. 
-\enternote\ \tcode{p} shall not be \changedConcepts{null}{singular}.\exitnote
-
-\throws\ Does not throw exceptions.
-\end{itemdescr}
-
-\begin{itemdecl}
-@\addedConcepts{size_type X::max_size() const;}@
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\returns\
-the largest value that can meaningfully be passed to \tcode{X::allocate()}
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-template<class... Args>
-  requires HasConstructor<value_type, Args&&...>
-  void X::construct(pointer p, Args&&... args);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{::new((void*)p) T(forward<Args>(args)...)}
-\end{itemdescr}
-
-\color{addclr}
-\begin{itemdecl}
-void X::destroy(pointer p);
-\end{itemdecl}
-\color{black}
-
-\begin{itemdescr}
-\pnum
-\effects\
-\tcode{((T*)p)->$\sim$T()}
-\end{itemdescr}
-
-\pnum
-\addedConcepts{The \mbox{\tcode{AllocatorGenerator}} concept describes
-  the requirements on types that can be used to generate
-  \mbox{\tcode{Allocator}}s.}
-
-\color{addclr}
-\begin{itemdecl}
-concept AllocatorGenerator<typename X> : Regular<X> {
-  typename value_type               = typename X::value_type;
-  template<typename T> class rebind = @\textit{see below}@;
-
-  @\textcolor{addclr}{requires}@ SameType<rebind<value_type>, X>;
-}
-\end{itemdecl}
-\color{black}
-
-\begin{itemdecl}
-@\addedConcepts{template<typename T> class rebind;}@
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\ctype}}
-The \changedConcepts{member class}{associated} template \tcode{rebind} \removedConcepts{in the table above is effectively a
-typedef template}{is a template that produces allocator generators in the same
-  family as \mbox{\tcode{X}}}: if the name
-\changedConcepts{\mbox{\tcode{Allocator}}}{\mbox{\tcode{X}}} is bound
-to \changedConcepts{\mbox{\tcode{SomeAllocator<T>}}}{
-\mbox{\tcode{SomeAllocator<value_type>}}},
-then \changedConcepts{\mbox{\tcode{Allocator::rebind<U>::other}}}{\mbox{\tcode{rebind<U>}}} is the same type as
-\mbox{\tcode{Some}}\-\mbox{\tcode{Allocator<U>}}. \addedConcepts{The
-  default value for \mbox{\tcode{rebind}} is a template
-  \mbox{\tcode{R}} for which \mbox{\tcode{R<U>}} is
-  \mbox{\tcode{X::template}} \mbox{\tcode{rebind<U>::other}}.}
-\end{itemdescr}
-
-\pnum
-Two allocators \addedConcepts{or allocator generators} compare equal with \tcode{==}
-iff storage allocated from each can be deallocated via the other.
-
-\pnum \addedConcepts{Every \mbox{\tcode{Allocator}} also meets the
-  requirements of the \mbox{\tcode{AllocatorGenerator}} concept:}
-\color{addclr}
-\begin{itemdecl}
-template<Allocator X>
-concept_map AllocatorGenerator<X> {
-  typedef Allocator<X>::value_type value_type;
-  template<typename U> using rebind = Allocator<X>::rebind<U>;
-}
-\end{itemdecl}
-\color{black}
-
-\pnum
-Implementations of containers described in this International Standard
-are permitted to assume that their \tcode{Alloc}\removedConcepts{\mbox{\tcode{ator}}} template parameter meets
-the following two additional requirements beyond those in
-\changedConcepts{Table~40}{the Allocator concept}.
-
-\begin{itemize}
-\item
-All instances of a given allocator type are required to be interchangeable
-and always compare equal to each other.
-\item
-\removedConcepts{The typedef members pointer, const\_pointer, size\_type,
-and difference\_type are required to be T*, T const*,
-std::size\_t, and std::ptrdiff\_t, respectively.} \color{addclr}The
-requirements clause may contain the following additional requirements: 
-\tcode{SameType<Alloc::pointer, Alloc::value_type*>}, \tcode{SameType<Alloc::const_pointer,
-  const Alloc::value_type*>}, \tcode{SameType<Alloc::size_type, std::size_t>}, and
-\tcode{SameType<Alloc::difference_type, std::ptrdiff_t>}.
-\end{itemize}
-
-\pnum
-Implementors are encouraged to supply libraries that can accept allocators
-that encapsulate more general memory models and that support non-equal
-instances.
-In such implementations, any requirements imposed on allocators
-by containers beyond those requirements that appear in
-\changedConcepts{Table~40}{concept Allocator}, and the
-semantics of containers and algorithms when allocator instances compare
-non-equal, are implementation-defined.
 
 \section*{Acknowledgments}
 Daniel Kr\"ugler made many valuable suggestions that helper improve
