@@ -1561,6 +1561,11 @@ namespace std {
   template <class T> struct logical_or;
   template <class T> struct logical_not;
 
+  // \ref{bitwise.operations}, bitwise operations:
+  template <class T> struct bit_and;
+  template <class T> struct bit_or;
+  template <class T> struct bit_xor;
+
   // \ref{negators}, negators:
   template <class Predicate> class unary_negate;
   template <class Predicate>
@@ -1575,7 +1580,7 @@ namespace std {
 
   template<@\changedConcepts{class}{CopyConstructible}@ Fn, @\changedConcepts{class}{CopyConstructible}@... Types>
     @\unspec@ bind(Fn, @\addedD{Types...}@);
-  template<@\changedConcepts{class}{MoveConstructible}@ R, @\changedConcepts{class}{CopyConstructible}@ Fn, @\changedConcepts{class}{CopyConstructible}@... Types>
+  template<@\changedConcepts{class}{Returnable}@ R, @\changedConcepts{class}{CopyConstructible}@ Fn, @\changedConcepts{class}{CopyConstructible}@... Types>
     @\unspec@ bind(Fn, @\addedD{Types...}@);
 
   namespace placeholders {
@@ -1597,41 +1602,41 @@ namespace std {
     binder2nd<Fn> bind2nd(const Fn&, const T&);
 
   // \ref{function.pointer.adaptors}, adaptors:
-  template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result> 
+  template <@\changedConcepts{class}{CopyConstructible}@ Arg, @\changedConcepts{class}{Returnable}@ Result> 
     class pointer_to_unary_function;
-  template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result>
+  template <@\changedConcepts{class}{CopyConstructible}@ Arg, @\changedConcepts{class}{Returnable}@ Result>
     pointer_to_unary_function<Arg,Result> ptr_fun(Result (*)(Arg));
-  template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+  template <@\changedConcepts{class}{CopyConstructible}@ Arg1, @\changedConcepts{class}{CopyConstructible}@ Arg2, @\changedConcepts{class}{Returnable}@ Result>
     class pointer_to_binary_function;
-  template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+  template <@\changedConcepts{class}{CopyConstructible}@ Arg1, @\changedConcepts{class}{CopyConstructible}@ Arg2, @\changedConcepts{class}{Returnable}@ Result>
     pointer_to_binary_function<Arg1,Arg2,Result>
       ptr_fun(Result (*)(Arg1,Arg2));
 
   // \ref{member.pointer.adaptors}, adaptors:
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_t;
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_t;
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T>
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class mem_fun_t;
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_t;
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T>
       mem_fun_t<S,T> mem_fun(S (T::*f)());
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{MoveConstructible}@ A>
       mem_fun1_t<S,T,A> mem_fun(S (T::*f)(A));
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_ref_t;
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_ref_t;
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T>
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class mem_fun_ref_t;
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class mem_fun1_ref_t;
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T>
       mem_fun_ref_t<S,T> mem_fun_ref(S (T::*f)());
-  template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+  template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A>
       mem_fun1_ref_t<S,T,A> mem_fun_ref(S (T::*f)(A));
 
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_t;
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_t;
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T>
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class const_mem_fun_t;
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class const_mem_fun1_t;
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T>
     const_mem_fun_t<S,T> mem_fun(S (T::*f)() const);
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A>
     const_mem_fun1_t<S,T,A> mem_fun(S (T::*f)(A) const);
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_ref_t;
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_ref_t;
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T>
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class const_mem_fun_ref_t;
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class const_mem_fun1_ref_t;
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T>
     const_mem_fun_ref_t<S,T> mem_fun_ref(S (T::*f)() const);
-  template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A>
+  template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A>
     const_mem_fun1_ref_t<S,T,A> mem_fun_ref(S (T::*f)(A) const);
 
   // \marktr{}\ref{func.memfn}, member function adaptors:
@@ -1821,7 +1826,7 @@ operators in the language (\ref{expr.mul}, \ref{expr.add}).
 \index{plus@\tcode{plus}}%
 \begin{itemdecl}
 template <class T> struct plus : binary_function<T,T,T> {
-  @\addedConcepts{requires Addable<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1836,7 +1841,7 @@ returns
 \index{minus@\tcode{minus}}%
 \begin{itemdecl}
 template <class T> struct minus : binary_function<T,T,T> {
-  @\addedConcepts{requires Subtractable<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1851,7 +1856,7 @@ returns
 \index{multiplies@\tcode{multiplies}}%
 \begin{itemdecl}
 template <class T> struct multiplies : binary_function<T,T,T> {
-  @\addedConcepts{requires Multiplicable<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1866,7 +1871,7 @@ returns
 \index{divides@\tcode{divides}}%
 \begin{itemdecl}
 template <class T> struct divides : binary_function<T,T,T> {
-  @\addedConcepts{requires Divisible<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
   T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1881,7 +1886,7 @@ returns
 \index{modulus@\tcode{modulus}}%
 \begin{itemdecl}
 template <class T> struct modulus : binary_function<T,T,T> {
-  @\addedConcepts{requires Remainder<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1894,7 +1899,7 @@ template <class T> struct modulus : binary_function<T,T,T> {
 \index{negate@\tcode{negate}}%
 \begin{itemdecl}
 template <class T> struct negate : unary_function<T,T> {
-  @\addedConcepts{requires Negatable<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@) const;
 };
 \end{itemdecl}
@@ -2003,7 +2008,7 @@ operators in the language (\ref{expr.log.and}, \ref{expr.log.or}, \ref{expr.unar
 \index{logical_and@\tcode{logical_and}}%
 \begin{itemdecl}
 template <class T> struct logical_and : binary_function<T,T,bool> {
-  @\addedConcepts{requires LogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -2016,7 +2021,7 @@ template <class T> struct logical_and : binary_function<T,T,bool> {
 \index{logical_or@\tcode{logical_or}}%
 \begin{itemdecl}
 template <class T> struct logical_or : binary_function<T,T,bool> {
-  @\addedConcepts{requires LogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -2029,7 +2034,7 @@ template <class T> struct logical_or : binary_function<T,T,bool> {
 \index{logical_not@\tcode{logical_not}}%
 \begin{itemdecl}
 template <class T> struct logical_not : unary_function<T,bool> {
-  @\addedConcepts{requires LogicalNot<T>}@
+  @\addedConcepts{requires HasLogicalNot<T>}@
     bool operator()(const T& @\farg{x}@) const;
 };
 \end{itemdecl}
@@ -2037,6 +2042,51 @@ template <class T> struct logical_not : unary_function<T,bool> {
 \begin{itemdescr}
 \pnum
 \tcode{operator()} returns \tcode{!\farg{x}}.
+\end{itemdescr}
+
+\rSec2[bitwise.operations]{Bitwise operations}
+
+\pnum
+The library provides basic function object classes for all of the bitwise
+operators in the language (\ref{expr.bit.and}, \ref{expr.or}, \ref{expr.xor}).
+
+\index{bit_and@\tcode{bit_and}}%
+\begin{itemdecl}
+template <class T> struct bit_and : binary_function<T,T,T> {
+  @\addedConcepts{requires HasBitAnd<T>}@
+    T operator()(const T& x, const T& y) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ \& \farg{y}}.
+\end{itemdescr}
+
+\index{bit_or@\tcode{bit_or}}%
+\begin{itemdecl}
+template <class T> struct bit_or : binary_function<T,T,T> {
+  @\addedConcepts{requires HasBitOr<T>}@
+    T operator()(const T& x, const T& y) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ | \farg{y}}.
+\end{itemdescr}
+
+\index{bit_xor@\tcode{bit_xor}}%
+\begin{itemdecl}
+template <class T> struct bit_xor : binary_function<T,T,T> {
+  @\addedConcepts{requires HasBitXor<T>}@
+    T operator()(const T& x, const T& y) const;
+};
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\tcode{operator()} returns \tcode{\farg{x}\ \^{} \farg{y}}.
 \end{itemdescr}
 
 \setcounter{subsection}{9}
@@ -2081,7 +2131,7 @@ arguments \tcode{v1, v2, ..., vN} are determined as specified below.
 \end{itemdescr}       
 
 \begin{itemdecl}
-template<@\changedConcepts{class}{MoveConstructible}@ R, @\changedConcepts{class}{CopyConstructible}@ F, @\changedD{class T1, class T2, ...., class TN}{\changedConcepts{class}{CopyConstructible}... BoundArgs}@> 
+template<@\changedConcepts{class}{Returnable}@ R, @\changedConcepts{class}{CopyConstructible}@ F, @\changedD{class T1, class T2, ...., class TN}{\changedConcepts{class}{CopyConstructible}... BoundArgs}@> 
   @\unspec@ bind(F f, @\changedD{T1 t1, T2 t2, ..., TN tN}{BoundArgs... bound_args}@);
 \end{itemdecl}
 
@@ -2108,7 +2158,7 @@ the library provides:
 
 \index{pointer_to_unary_function@\tcode{pointer_to_unary_function}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result>
+template <@\changedConcepts{class}{CopyConstructible}@ Arg, @\changedConcepts{class}{Returnable}@ Result>
 class pointer_to_unary_function : public unary_function<Arg, Result> {
 public:
   explicit pointer_to_unary_function(Result (*@\farg{f}@)(Arg));
@@ -2123,7 +2173,7 @@ public:
 
 \index{ptr_fun@\tcode{ptr_fun}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{class}{MoveConstructible}@ Result>
+template <@\changedConcepts{class}{CopyConstructible}@ Arg, @\changedConcepts{class}{Returnable}@ Result>
   pointer_to_unary_function<Arg, Result> ptr_fun(Result (*@\farg{f}@)(Arg));
 \end{itemdecl}
 
@@ -2135,7 +2185,7 @@ template <@\changedConcepts{class}{MoveConstructible}@ Arg, @\changedConcepts{cl
 
 \index{pointer_to_binary_function@\tcode{pointer_to_binary_function}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+template <@\changedConcepts{class}{CopyConstructible}@ Arg1, @\changedConcepts{class}{CopyConstructible}@ Arg2, @\changedConcepts{class}{Returnable}@ Result>
 class pointer_to_binary_function :
   public binary_function<Arg1,Arg2,Result> {
 public:
@@ -2151,7 +2201,7 @@ public:
 
 \index{ptr_fun@\tcode{ptr_fun}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ Arg1, @\changedConcepts{class}{MoveConstructible}@ Arg2, @\changedConcepts{class}{MoveConstructible}@ Result>
+template <@\changedConcepts{class}{CopyConstructible}@ Arg1, @\changedConcepts{class}{CopyConstructible}@ Arg2, @\changedConcepts{class}{Returnable}@ Result>
   pointer_to_binary_function<Arg1,Arg2,Result>
     ptr_fun(Result (*@\farg{f}@)(Arg1, Arg2));
 \end{itemdecl}
@@ -2182,7 +2232,7 @@ in~\ref{function.pointer.adaptors}.
 
 \index{mem_fun_t@\tcode{mem_fun_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class mem_fun_t
         : public unary_function<T*, S> {
 public:
   explicit mem_fun_t(S (T::*p)());
@@ -2198,7 +2248,7 @@ argument.
 
 \index{mem_fun1_t@\tcode{mem_fun1_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class mem_fun1_t
       : public binary_function<T*, A, S> {
 public:
   explicit mem_fun1_t(S (T::*p)(A));
@@ -2214,9 +2264,9 @@ a pointer argument and an additional argument of the appropriate type.
 
 \index{mem_fun@\tcode{mem_fun}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T> mem_fun_t<S,T>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> mem_fun_t<S,T>
    mem_fun(S (T::*f)());
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> mem_fun1_t<S,T,A>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> mem_fun1_t<S,T,A>
    mem_fun(S (T::*f)(A));
 \end{itemdecl}
 
@@ -2229,7 +2279,7 @@ called given a pointer to an \tcode{X} followed by the argument required for
 
 \index{mem_fun_ref_t@\tcode{mem_fun_ref_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class mem_fun_ref_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class mem_fun_ref_t
       : public unary_function<T, S> {
 public:
   explicit mem_fun_ref_t(S (T::*p)());
@@ -2245,7 +2295,7 @@ a reference argument.
 
 \index{mem_fun1_ref_t@\tcode{mem_fun1_ref_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class mem_fun1_ref_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class mem_fun1_ref_t
       : public binary_function<T, A, S> {
 public:
   explicit mem_fun1_ref_t(S (T::*p)(A));
@@ -2261,9 +2311,9 @@ given a reference argument and an additional argument of the appropriate type.
 
 \index{mem_fun_ref@\tcode{mem_fun_ref}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T> mem_fun_ref_t<S,T>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> mem_fun_ref_t<S,T>
    mem_fun_ref(S (T::*f)());
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> mem_fun1_ref_t<S,T,A>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> mem_fun1_ref_t<S,T,A>
    mem_fun_ref(S (T::*f)(A));
 \end{itemdecl}
 
@@ -2276,7 +2326,7 @@ required for \tcode{f} (if any).
 
 \index{const_mem_fun_t@\tcode{const_mem_fun_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class const_mem_fun_t
       : public unary_function<const T*, S> {
 public:
   explicit const_mem_fun_t(S (T::*p)() const);
@@ -2292,7 +2342,7 @@ given a pointer argument.
 
 \index{const_mem_fun1_t@\tcode{const_mem_fun1_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class const_mem_fun1_t
       : public binary_function<const T*, A, S> {
 public:
   explicit const_mem_fun1_t(S (T::*p)(A) const);
@@ -2308,9 +2358,9 @@ given a pointer argument and an additional argument of the appropriate type.
 
 \index{mem_fun@\tcode{mem_fun}}%
 \begin{itemdecl}
-template<c@\changedConcepts{class}{MoveConstructible}@ S, class T> const_mem_fun_t<S,T>
+template<c@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> const_mem_fun_t<S,T>
    mem_fun(S (T::*f)() const);
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> const_mem_fun1_t<S,T,A>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> const_mem_fun1_t<S,T,A>
    mem_fun(S (T::*f)(A) const);
 \end{itemdecl}
 
@@ -2323,7 +2373,7 @@ called given a pointer to an \tcode{X} followed by the argument required for
 
 \index{const_mem_fun_ref_t@\tcode{const_mem_fun_ref_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T> class const_mem_fun_ref_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> class const_mem_fun_ref_t
       : public unary_function<T, S> {
 public:
   explicit const_mem_fun_ref_t(S (T::*p)() const);
@@ -2339,7 +2389,7 @@ given a reference argument.
 
 \index{const_mem_fun1_ref_t@\tcode{const_mem_fun1_ref_t}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> class const_mem_fun1_ref_t
+template <@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> class const_mem_fun1_ref_t
       : public binary_function<T, A, S> {
 public:
   explicit const_mem_fun1_ref_t(S (T::*p)(A) const);
@@ -2356,9 +2406,9 @@ type.
 
 \index{mem_fun_ref@\tcode{mem_fun_ref}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T> const_mem_fun_ref_t<S,T>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T> const_mem_fun_ref_t<S,T>
    mem_fun_ref(S (T::*f)() const);
-template<@\changedConcepts{class}{MoveConstructible}@ S, class T, @\changedConcepts{class}{MoveConstructible}@ A> const_mem_fun1_ref_t<S,T,A>
+template<@\changedConcepts{class}{Returnable}@ S, @\changedConcepts{class}{ClassType}@ T, @\changedConcepts{class}{CopyConstructible}@ A> const_mem_fun1_ref_t<S,T,A>
     mem_fun_ref(S (T::*f)(A) const);
 \end{itemdecl}
 
