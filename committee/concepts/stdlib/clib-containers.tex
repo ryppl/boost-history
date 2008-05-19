@@ -123,14 +123,14 @@ Table~\ref{tab:containers.summary}:
 \setcounter{Paras}{2}
 \pnum
 Objects stored in these components shall be constructed using
-\changedConcepts{\mbox{\tcode{construct_element}}~(\mbox{\ref{construct.element}})}{the
-  \mbox{\tcode{construct}} member function and destroyed using the
+\mbox{\tcode{construct_element}}~\removedConcepts{(\mbox{\ref{construct.element}})}
+\addedConcepts{and destroyed using the
   \mbox{\tcode{destroy}} member function of the container's
   allocator~(\mbox{\ref{allocator.concepts}})}. 
 %
 \addedConcepts{A container may directly call constructors and
-  destructors of for its stored objects, without calling the
-  allocator's \mbox{\tcode{construct}} or \mbox{\tcode{destruct}}
+  destructors for its stored objects, without calling the
+  \mbox{\tcode{construct_element}} or \mbox{\tcode{destruct}}
   functions, if the allocator models the
   \mbox{\tcode{MinimalAllocator}} concept.}
 %
@@ -146,7 +146,7 @@ allocator \changedConcepts{for which
   \mbox{\tcode{is_scoped_allocator<A>::value}} is 
 \mbox{\tcode{true}}}{that meets the requirements of the
 \mbox{\tcode{ScopedAllocator}} concept}), then
-\changedConcepts{\mbox{\tcode{construct_element}}}{\mbox{\tcode{construct}}}
+\mbox{\tcode{construct_element}}
 may pass an inner 
 allocator argument to \tcode{T}'s constructor. \exitnote
 
@@ -199,6 +199,7 @@ namespace std {
   auto concept SequenceContainer<typename C> @\textit{see below}@
   auto concept FrontInsertionSequence<typename C> @\textit{see below}@
   auto concept BackInsertionSequence<typename C> @\textit{see below}@
+  auto concept InsertionSequence<typename C> @\textit{see below}@
 }
 \end{codeblock}
 
@@ -290,7 +291,7 @@ auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
   void C::pop_back();
 
   axiom BackInsertion(C c, value_type x) {
-    c == (c.push_back(x), c.pop_back());
+    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back());
   }
 }
 \end{itemdecl}
@@ -301,6 +302,19 @@ auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
   modified by adding or removing elements from the back of the
   sequence.}
 \end{itemdescr}
+
+\begin{itemdecl}
+auto concept InsertionSequence<typename C> : SequenceContainer<C> {
+  iterator C::insert(iterator, const value_type&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by inserting elements at any position within the sequence.}
+\end{itemdescr}
+
 \color{black}
 
 \rSec1[sequences]{Sequences}
