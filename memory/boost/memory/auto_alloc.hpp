@@ -244,7 +244,7 @@ public:
 // -------------------------------------------------------------------------
 // class auto_alloc
 
-typedef region_alloc<NS_BOOST_MEMORY_POLICY::sys> auto_alloc;
+typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> auto_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $

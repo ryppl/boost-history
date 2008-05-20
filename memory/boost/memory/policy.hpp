@@ -143,6 +143,12 @@ public:
 	typedef simple_gc_alloc<system_alloc> huge_gc_allocator;
 };
 
+class stdlib : public sys
+{
+public:
+	typedef stdlib_alloc allocator_type;
+};
+
 NS_BOOST_MEMORY_POLICY_END
 
 // -------------------------------------------------------------------------
