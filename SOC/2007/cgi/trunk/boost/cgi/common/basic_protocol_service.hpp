@@ -16,11 +16,11 @@
 #include <boost/asio/strand.hpp>
 #include <boost/detail/workaround.hpp>
 ///////////////////////////////////////////////////////////
-#include "boost/cgi/common/io_service.hpp"
-#include "boost/cgi/io_service_provider.hpp"
+#include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/common/io_service_provider.hpp"
+#include "boost/cgi/common/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
  namespace common {
@@ -109,7 +109,7 @@ namespace cgi {
      * The order in which the underlying io_services are returned is determined
      * by what policy the IoServiceProvider uses.
      */
-    ::cgi::io_service& io_service()
+    ::cgi::common::io_service& io_service()
     {
       return ios_provider_.get_io_service();
     }
