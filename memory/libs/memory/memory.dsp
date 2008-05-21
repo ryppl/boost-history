@@ -125,6 +125,10 @@ SOURCE=.\src\block_pool.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\gc_alloc.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\src\system_pool.cpp
 # End Source File
 # End Group

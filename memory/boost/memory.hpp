@@ -30,6 +30,10 @@
 #include "memory/gc_alloc.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_TLS_GC_ALLOC_HPP
+#include "memory/tls_gc_alloc.hpp"
+#endif
+
 // -------------------------------------------------------------------------
 // class stl_allocator
 

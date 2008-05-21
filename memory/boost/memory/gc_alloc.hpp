@@ -334,7 +334,7 @@ private:
 			pNode->getNodeType() == nodeAlloced &&
 			_null.begin() == m_begin && m_begin == m_end);
 		
-		pNode->dataMemHeader = sizeof(FreeMemHeader) + (m_end - m_begin);
+		pNode->dataMemHeader = sizeof(FreeMemHeader) + (HeaderSizeT)(m_end - m_begin);
 	}
 
 	FreeMemHeader* BOOST_MEMORY_CALL _newBlock(size_t cbBlock)
@@ -344,7 +344,7 @@ private:
 		m_blockList = pBlock;
 
 		FreeMemHeader* pNew = (FreeMemHeader*)pBlock->buffer;
-		pNew->dataMemHeader = m_alloc.alloc_size(pBlock) - HeaderSize;
+		pNew->dataMemHeader = (HeaderSizeT)(m_alloc.alloc_size(pBlock) - HeaderSize);
 		return pNew;
 	}
 
@@ -420,7 +420,7 @@ private:
 		if ((size_t)(m_end - m_begin) >= cbData)
 		{
 			MemHeader* pAlloc = (MemHeader*)m_begin - 1;
-			pAlloc->dataMemHeader = (nodeAlloced | (m_end - (char*)pAlloc));
+			pAlloc->dataMemHeader = (nodeAlloced | (HeaderSizeT)(m_end - (char*)pAlloc));
 			m_begin = m_end = _null.begin();
 			return pAlloc + 1;
 		}
@@ -456,7 +456,7 @@ private:
 		BOOST_MEMORY_ASSERT((size_t)(m_end - m_begin) >= cb);
 
 		MemHeader* pAlloc = (MemHeader*)(m_end -= cb);
-		pAlloc->dataMemHeader = (nodeAlloced | cb);
+		pAlloc->dataMemHeader = (nodeAlloced | (HeaderSizeT)cb);
 		return pAlloc + 1;
 	}
 
@@ -467,7 +467,7 @@ public:
 		if ((size_t)(m_end - m_begin) >= cb)
 		{
 			MemHeader* pAlloc = (MemHeader*)(m_end -= cb);
-			pAlloc->dataMemHeader = (nodeAlloced | cb);
+			pAlloc->dataMemHeader = (nodeAlloced | (HeaderSizeT)cb);
 			return pAlloc + 1;
 		}
 		return _do_allocate(cb, cbData);

@@ -175,19 +175,6 @@ template <class PolicyT, class StackT>
 system_pool_imp<PolicyT, StackT> system_pool_s<PolicyT, StackT>::s_impl;
 
 // -------------------------------------------------------------------------
-// class system_pool
-
-NS_BOOST_MEMORY_POLICY_BEGIN
-
-class stdlib : public sys
-{
-public:
-	typedef stdlib_alloc allocator_type;
-};
-
-NS_BOOST_MEMORY_POLICY_END
-
-// -------------------------------------------------------------------------
 
 #if defined(BOOST_MEMORY_NO_LOCKFREE)
 typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib, normal_stack> system_pool;
