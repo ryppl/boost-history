@@ -1,4 +1,4 @@
-//                 -- server1/main.hpp --
+//                 -- server3/main.hpp --
 //
 //           Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,7 +7,7 @@
 //
 ////////////////////////////////////////////////////////////////
 //
-//[fcgi_server1
+//[fcgi_server3
 //
 // This example simply echoes all variables back to the user. ie.
 // the environment and the parsed GET, POST and cookie variables.
@@ -21,75 +21,32 @@
 //
 
 #include <fstream>
-#include <boost/bind.hpp>
+///////////////////////////////////////////////////////////
+#include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options/environment_iterator.hpp>
-
-#include <boost/cgi/fcgi.hpp>
+///////////////////////////////////////////////////////////
+#include "boost/cgi/fcgi.hpp"
 
 using namespace std;
+using namespace boost;
 using namespace boost::fcgi;
 
-// This is a file to put internal logging info into
-#define LOG_FILE "/var/www/log/fcgi_server1.txt"
-
-// This function writes the title and map contents to the ostream in an
-// HTML-encoded format (to make them easier on the eye).
-template<typename Map, typename OStream>
-void format_map(Map& m, OStream& os, const std::string& title)
-{
-  os<< "<h2>" << title << "</h2>";
-  if (m.empty()) os<< "NONE<br />";
-  for (typename Map::const_iterator i = m.begin(), end = m.end()
-      ; i != end; ++i)
-  {
-    os<< "<b>" << i->first << "</b> = <i>" << i->second << "</i><br />";
-  }
-}
-
-/// The handle_request member function is used to handle requests.
+/// Handle one request and return.
 /**
- * A struct is used here just so a single log file can be shared between
- * requests. Note that access to the log file isn't synchronised (this doesn't
- * matter with this example).
+ * If it returns != 0 then an error has occurred. Sets ec to the error_code
+ * corresponding to the error.
  */
-struct request_handler
-{
-  request_handler(const std::string& file_name)
-    : log_(file_name.c_str())
+int handle_request(fcgi::request& req, boost::system::error_code& ec)
   {
-    if (!log_)
-    {
-      std::cerr<< "[fcgi] Couldn't open file: \"" LOG_FILE "\"." << endl;
-      throw std::runtime_error("Couldn't open log file");
-    }
-
-    log_<< boost::posix_time::second_clock::local_time() << endl;
-  }
-  
-  int handle_request(fcgi::request& req, boost::system::error_code& ec)
-  {
-    std::ofstream log_(LOG_FILE, std::ios::app);
-    //log_<< "Handling request" << endl
-    //    << "QUERY_STRING := " << req.query_string() << std::endl;
-
     // Construct a `response` object (makes writing/sending responses easier).
     response resp;
 
     // Responses in CGI programs require at least a 'Content-type' header. The
     // library provides helpers for several common headers:
-    resp<< content_type("text/html")
+    resp<< content_type("text/plain")
     // You can also stream text to a response object. 
-        << "Hello there, universe!<p />";
-
-    // Use the function defined above to show some of the request data.
-    format_map(req.env(), resp, "Environment Variables");
-    format_map(req.GET(), resp, "GET Variables");
-    format_map(req.cookie(), resp, "Cookie Variables");
-
-    // Response headers can be added at any time before send/flushing it:
-    resp<< "<content-length == " << content_length(resp.content_length())
-        << content_length(resp.content_length());
+        << "Hello there, universe!";
 
     //log_<< "Handled request, handling another." << std::endl;
 
@@ -104,11 +61,6 @@ struct request_handler
     //
     // Note: in this case `program_status == 0`.
   }
-
-private:
-  std::ofstream log_;
-};
-
 
 /// The server is used to abstract away protocol-specific setup of requests.
 /**
@@ -175,19 +127,22 @@ private:
 int main()
 try
 {
-  request_handler rh(LOG_FILE);
+  server s(&handle_request);
 
-  server s(boost::bind(&request_handler::handle_request
-                      , &rh, _1, _2)
-          );
-
-  return s.run();
+  // Run the server in ten threads.
+  // => Handle ten requests simultaneously
+  boost::thread_group tgroup;
+  for(int i(10); i != 0; --i)
+  {
+    tgroup.create_thread(boost::bind(&server::run, &s));
+  }
+  tgroup.join_all();
   
 }catch(boost::system::system_error& se){
   cerr<< "[fcgi] System error: " << se.what() << endl;
   return 1313;
-}catch(exception& e){
-  cerr<< "[fcgi] Exception: " << e.what() << endl;
+}catch(std::exception* e){
+  cerr<< "[fcgi] Exception: " << e->what() << endl;
   return 666;
 }catch(...){
   cerr<< "[fcgi] Uncaught exception!" << endl;
