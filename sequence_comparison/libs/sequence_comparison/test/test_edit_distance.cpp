@@ -22,7 +22,7 @@ int test_main(int, char* [])
     std::string s2 ("ACCT");
     graph_type graph(s1.begin(), s1.end(), s2.begin(), s2.end());
     distance_map_type distance_map;
-    
+        
     boost::dag_shortest_paths(graph, graph.upper_left(),
         boost::weight_map(weight_map_type(graph))
         .distance_map(distance_map)

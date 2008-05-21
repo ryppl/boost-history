@@ -13,17 +13,19 @@
 #include <map>
 #include <utility>
 
+#include <iostream>
+
 namespace boost { namespace sequence_comparison {
 
 namespace graph {
     
     struct vertex_descriptor
-        : public std::pair<int, int>
+        : public std::pair<unsigned, unsigned>
     {
         vertex_descriptor()
         {}
-        vertex_descriptor(int first, int second)
-            : std::pair<int, int>(first, second)
+        vertex_descriptor(unsigned first, unsigned second)
+            : std::pair<unsigned, unsigned>(first, second)
         {}
         bool operator == (const vertex_descriptor &rhs) const
         {   return first == rhs.first && second == rhs.second; }
@@ -31,18 +33,25 @@ namespace graph {
         {   return second < rhs.second || (second == rhs.second && first < rhs.first); }
         
         static inline vertex_descriptor null()
-        {   return vertex_descriptor(-1,-1); }
+        {   return vertex_descriptor((unsigned)-1,(unsigned)-1); }
     };
+    
+    template<typename OStream>
+    OStream &operator << (OStream &stream, const vertex_descriptor &p)
+    {
+        stream << p.first << ", " << p.second;
+        return stream;
+    }
     
     struct edge_descriptor
         : private std::pair<vertex_descriptor, unsigned>
     {
         edge_descriptor()
         {}
-        edge_descriptor(vertex_descriptor source, unsigned position)
-            : m_source(source), m_position(position)
+        edge_descriptor(vertex_descriptor source, unsigned direction)
+            : m_source(source), m_direction(direction)
         {
-            BOOST_ASSERT(m_position > 0 && m_position < 4);
+            BOOST_ASSERT(m_direction > 0 && m_direction < 4);
         }
         const vertex_descriptor &source() const
         {
@@ -50,18 +59,18 @@ namespace graph {
         }
         vertex_descriptor target() const
         {
-            return vertex_descriptor(m_source.first + (m_position & 1),
-                        m_source.second + ((m_position & 2) >> 1));
+            return vertex_descriptor(m_source.first + (m_direction & 1),
+                        m_source.second + ((m_direction & 2) >> 1));
         }
-        unsigned position() const
-        {   return m_position; }
+        unsigned direction() const
+        {   return m_direction; }
         bool operator == (const edge_descriptor &rhs) const
-        {   return m_source == rhs.m_source && m_position == rhs.m_position; }
+        {   return m_source == rhs.m_source && m_direction == rhs.m_direction; }
         bool operator != (const edge_descriptor &rhs) const
         {   return !(*this == rhs); }
     private:
         vertex_descriptor m_source;
-        unsigned m_position;
+        unsigned m_direction;
     };
     
     class edge_iterator;
@@ -100,14 +109,14 @@ namespace graph {
         }
         size_t b_size() const
         {
-            return m_end_b - m_end_b;
+            return m_end_b - m_begin_b;
         }
         unsigned weight(const edge_descriptor &edge) const
         {
-            unsigned position = edge.position();
-            BOOST_ASSERT(position > 0 && position <= 3);
+            unsigned direction = edge.direction();
+            BOOST_ASSERT(direction > 0 && direction <= 3);
             
-            if (position <= 2)
+            if (direction <= 2)
                 return 1;
             else
             {
@@ -145,14 +154,14 @@ namespace graph {
     public:
         edge_iterator()
           : m_v(vertex_descriptor::null())
-          , m_position(0)
+          , m_direction(0)
           , m_mask(0)
         {}
 
         template<typename Graph>
         explicit edge_iterator(const vertex_descriptor &v, const Graph &g)
           : m_v(v)
-          , m_position(0)
+          , m_direction(0)
         {
             m_mask =
                 (v.first < g.a_size()) +
@@ -164,7 +173,7 @@ namespace graph {
         template<typename Graph>
         explicit edge_iterator(const vertex_descriptor &v, const Graph &g, end)
           : m_v(v)
-          , m_position(4)
+          , m_direction(4)
         {}
 
     private:
@@ -172,27 +181,27 @@ namespace graph {
 
         void increment()
         {
-            BOOST_ASSERT(m_position >= 0 && m_position < 4);
+            BOOST_ASSERT(m_direction >= 0 && m_direction < 4);
             do
             {
-                m_position++;
-            } while (m_position < 4 && ((m_position & m_mask) == m_position));
+                m_direction++;
+            } while (m_direction < 4 && ((m_direction & m_mask) != m_direction));
         }
         
         bool equal(edge_iterator const& other) const
         {
-            return this->m_v == other.m_v && this->m_position == other.m_position;
+            return this->m_v == other.m_v && this->m_direction == other.m_direction;
         }
 
         edge_descriptor dereference() const
         {
-            BOOST_ASSERT(m_position > 0 && m_position < 4);
+            BOOST_ASSERT(m_direction > 0 && m_direction < 4);
             
-            return edge_descriptor(m_v, m_position);             
+            return edge_descriptor(m_v, m_direction);             
         }
 
         vertex_descriptor m_v;
-        unsigned m_position;
+        unsigned m_direction;
         unsigned m_mask;
     };
     
@@ -246,7 +255,7 @@ namespace graph {
     std::pair<vertex_iterator, vertex_iterator> vertices(Graph &graph)
     {
         return std::make_pair(vertex_iterator(vertex_descriptor(0, 0), graph)
-            , vertex_iterator(vertex_descriptor(0, graph.b_size()+2), graph));
+            , vertex_iterator(vertex_descriptor(0, graph.b_size()+1), graph));
     }
 
     // Returns the vertex descriptor for u of the edge (u,v) represented by e.
@@ -300,6 +309,7 @@ namespace graph {
         
         value_type get(const key_type &edge) const
         {
+            std::cout << "getting weight for " << edge.direction() << ": " << m_graph.weight(edge) << std::endl;
             return m_graph.weight(edge);
         }
     private:
@@ -313,18 +323,27 @@ namespace graph {
         typedef unsigned reference;
         typedef vertex_descriptor key_type;
         typedef boost::read_write_property_map_tag category;
-                
+        
+        distance_map(const std::string &name)
+            : m_name(name)
+        {}
+        
         value_type get(const key_type &key) const
         {
-            return m_map.find(key)->second;
+            std::map<key_type, value_type>::const_iterator found = m_map.find(key);
+            if (found != m_map.end());
+                return value_type();
+            return found->second;
         }
         
         void put(const key_type &key, value_type value)
         {
+            std::cout << m_name << ": " << key.first << ", " << key.second << " -> " << value << std::endl;
             m_map[key] = value;
         }
     private:
         std::map<key_type, value_type> m_map;
+        std::string m_name;
     };
     
     template<typename Map>

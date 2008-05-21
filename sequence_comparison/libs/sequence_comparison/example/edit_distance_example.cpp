@@ -16,16 +16,19 @@ int main(int, char* [])
     typedef scg::weight_map<graph_type> weight_map_type;
     typedef scg::distance_map distance_map_type;
     
-    std::string s1 ("ACGT");
+    std::string s1 ("ACGOT");
     std::string s2 ("ACCT");
     graph_type graph(s1.begin(), s1.end(), s2.begin(), s2.end());
-    distance_map_type distance_map;
+    distance_map_type distance_map("Distance");
     
     boost::dag_shortest_paths(graph, graph.upper_left(),
         boost::weight_map(weight_map_type(graph))
         .distance_map(distance_map)
-        .color_map(distance_map_type())
-        .vertex_index_map(distance_map_type()));
+        .color_map(distance_map_type("Color"))
+        .vertex_index_map(distance_map_type("Predecessor")));
+        
+    std::cout << "edit distance: " << get(distance_map, scg::vertex_descriptor(graph.a_size(),graph.b_size())) << std::endl;
+
     return 0;
 };
 

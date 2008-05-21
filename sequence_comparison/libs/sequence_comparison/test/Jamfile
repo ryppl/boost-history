@@ -12,4 +12,6 @@ project
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-run test_edit_distance.cpp ;
+#run test_edit_distance.cpp ;
+run test_edge_iterator.cpp ;
+
