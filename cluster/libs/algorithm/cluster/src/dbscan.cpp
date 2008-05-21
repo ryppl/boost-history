@@ -1,4 +1,5 @@
 #include <boost/algorithm/cluster/dbscan.hpp>
+#include <boost/algorithm/cluster/dist_func.hpp>
 #include <boost/test/minimal.hpp>
 #include <vector>
 #include <cmath>
@@ -7,15 +8,6 @@ using namespace boost::algorithm::cluster;
 using namespace std;
 
 typedef pair<float, float> two_tuple;
-
-static float norm2_dist(two_tuple const & p1, two_tuple const & p2)
-{
-  float const d = ::sqrt(
-    ::pow(static_cast<double>(p2.first - p1.first), 2.) +
-    ::pow(static_cast<double>(p2.second - p1.second), 2.));
-
-  return d;
-}
 
 int test_main(int, char *[])
 {
@@ -36,7 +28,8 @@ int test_main(int, char *[])
   float eps1 = 0.2f;
   size_t min_points = 3;
   clustering = dbscan<cluster>(
-    tuples.begin(), tuples.end(), eps1, min_points, norm2_dist);
+    tuples.begin(), tuples.end(), eps1, min_points,
+    euclid_dist<two_tuple, two_tuple>);
 #if 0
   cerr << "clusters=" << clustering.size() << "\n";
   size_t c = 1;
@@ -59,7 +52,8 @@ int test_main(int, char *[])
 
   float eps2 = 1.01f;
   clustering = dbscan<cluster>(
-    tuples.begin(), tuples.end(), eps2, min_points, norm2_dist);
+    tuples.begin(), tuples.end(), eps2, min_points,
+    euclid_dist<two_tuple, two_tuple>);
 
 #if 0
   cerr << "clusters=" << clustering.size() << "\n";
