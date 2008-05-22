@@ -47,6 +47,7 @@ template <typename H, typename E, typename Z>
 int check_residual(H const& h, E const& e, Z const& z) {
    typedef typename H::value_type value_type ;
    typedef typename E::value_type real_type ;
+   real_type safety_factor(1.5);
 
    // Check eigen decomposition
    int n = h.size1();
@@ -60,7 +61,7 @@ int check_residual(H const& h, E const& e, Z const& z) {
       error .minus_assign( outer_prod( column(z, i), e(i) * conj( column(z, i) ) ) ) ;
    }
    return (norm_frobenius( error )
-           >= n* norm_2( e ) * std::numeric_limits< real_type >::epsilon() ) ;
+           >= safety_factor*n* norm_2( e ) * std::numeric_limits< real_type >::epsilon() ) ;
 } // check_residual()
 
 
