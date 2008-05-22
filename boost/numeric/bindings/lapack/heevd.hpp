@@ -94,9 +94,9 @@ namespace boost { namespace numeric { namespace bindings {
       {
         LAPACK_CHEEVD (
           &jobz, &uplo, &n,
-          reinterpret_cast<fcomplex_t*>(a), &lda,
-          reinterpret_cast<fcomplex_t*>(w),
-          reinterpret_cast<fcomplex_t*>(work), &lwork,
+          traits::complex_ptr(a), &lda,
+          w,
+          traits::complex_ptr(work), &lwork,
           rwork, &lrwork, iwork, &liwork, &info);
       }
 
@@ -108,9 +108,9 @@ namespace boost { namespace numeric { namespace bindings {
       {
         LAPACK_ZHEEVD (
           &jobz, &uplo, &n,
-          reinterpret_cast<dcomplex_t*>(a), &lda,
-          reinterpret_cast<dcomplex_t*>(w),
-          reinterpret_cast<dcomplex_t*>(work), &lwork,
+          traits::complex_ptr(a), &lda,
+          w,
+          traits::complex_ptr(work), &lwork,
           rwork, &lrwork, iwork, &liwork, &info);
       }
     } // namespace detail
@@ -167,8 +167,8 @@ namespace boost { namespace numeric { namespace bindings {
           T* a, int const lda,
           R* w, std::pair<detail::workspace1<W>, detail::workspace1<WI> > work, int& info) {
 
-          assert (jobz=='N' ? 1+2*n : 1+6*n+2*n*n <= traits::vector_size (work.first.w_));
-          assert (jobz=='N' ? 1 : 3+5*n <= traits::vector_size (work.second.w_));
+          assert (traits::vector_size (work.first.w_) >= jobz=='N' ? 1+2*n : 1+6*n+2*n*n);
+          assert (traits::vector_size (work.second.w_) >= jobz=='N' ? 1 : 3+5*n);
 
           heevd( jobz, uplo, n, a, lda, w,
             traits::vector_storage (work.first.w_), traits::vector_size (work.first.w_),
@@ -229,9 +229,9 @@ namespace boost { namespace numeric { namespace bindings {
           T* a, int const lda,
           R* w, std::pair<detail::workspace2<WC,WR>, detail::workspace1<WI> > work, int& info) {
 
-          assert (jobz=='N' ? 1+n : 2*n+n*n <= traits::vector_size (work.first.w_));
-          assert (jobz=='N' ? n : 1+5*n+2*n*n <= traits::vector_size (work.first.wr_));
-          assert (jobz=='N' ? 1 : 3+5*n <= traits::vector_size (work.second.w_));
+          assert (traits::vector_size (work.first.w_) >= jobz=='N' ? 1+n : 2*n+n*n);
+          assert (traits::vector_size (work.first.wr_) >= jobz=='N' ? n : 1+5*n+2*n*n);
+          assert (traits::vector_size (work.second.w_) >= jobz=='N' ? 1 : 3+5*n);
 
           heevd( jobz, uplo, n, a, lda, w,
             traits::vector_storage (work.first.w_), traits::vector_size (work.first.w_),
@@ -255,8 +255,8 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       int const n = traits::matrix_size1 (a);
-      assert (traits::matrix_size2 (a)==n);
-      assert (traits::vector_size (w)==n);
+      assert (traits::matrix_size2 (a) == n);
+      assert (traits::vector_size (w) == n);
       assert ( uplo=='U' || uplo=='L' );
       assert ( jobz=='N' || jobz=='V' );
 

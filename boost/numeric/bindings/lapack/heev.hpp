@@ -63,8 +63,8 @@ namespace boost { namespace numeric { namespace bindings {
                  float* rwork, int& info) 
       {
         LAPACK_CHEEV (&jobz, &uplo, &n,
-		      reinterpret_cast<fcomplex_t*>(a), &lda, w,
-		      reinterpret_cast<fcomplex_t*>(work), &lwork,
+		      traits::complex_ptr(a), &lda, w,
+		      traits::complex_ptr(work), &lwork,
 		      rwork, &info);
       }
 
@@ -75,8 +75,8 @@ namespace boost { namespace numeric { namespace bindings {
                  double* rwork, int& info) 
       {
         LAPACK_ZHEEV (&jobz, &uplo, &n,
-		      reinterpret_cast<dcomplex_t*>(a), &lda, w,
-		      reinterpret_cast<dcomplex_t*>(work), &lwork,
+		      traits::complex_ptr(a), &lda, w,
+		      traits::complex_ptr(work), &lwork,
 		      rwork, &info);
       }
 

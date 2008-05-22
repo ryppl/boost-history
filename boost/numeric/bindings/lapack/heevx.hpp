@@ -109,10 +109,10 @@ namespace boost { namespace numeric { namespace bindings {
       {
         LAPACK_CHEEVX (
           &jobz, &range, &uplo, &n,
-          reinterpret_cast<fcomplex_t*>(a), &lda,
+          traits::complex_ptr(a), &lda,
           &vl, &vu, &il, &iu, &abstol, &m, w,
-          reinterpret_cast<fcomplex_t*>(z), &ldz,
-          reinterpret_cast<fcomplex_t*>(work), &lwork,
+          traits::complex_ptr(z), &ldz,
+          traits::complex_ptr(work), &lwork,
           rwork, iwork, ifail, &info);
       }
 
@@ -126,10 +126,10 @@ namespace boost { namespace numeric { namespace bindings {
       {
         LAPACK_ZHEEVX (
           &jobz, &range, &uplo, &n,
-          reinterpret_cast<dcomplex_t*>(a), &lda,
+          traits::complex_ptr(a), &lda,
           &vl, &vu, &il, &iu, &abstol, &m, w,
-          reinterpret_cast<dcomplex_t*>(z), &ldz,
-          reinterpret_cast<dcomplex_t*>(work), &lwork,
+          traits::complex_ptr(z), &ldz,
+          traits::complex_ptr(work), &lwork,
           rwork, iwork, ifail, &info);
       }
     } // namespace detail
@@ -192,8 +192,8 @@ namespace boost { namespace numeric { namespace bindings {
           R abstol, int& m,
           R* w, T* z, int const ldz, std::pair<detail::workspace1<W>, detail::workspace1<WI> > work, int* ifail, int& info) {
 
-          assert (8*n <= traits::vector_size (work.first.w_));
-          assert (5*n <= traits::vector_size (work.second.w_));
+          assert (traits::vector_size (work.first.w_) >= 8*n);
+          assert (traits::vector_size (work.second.w_) >= 5*n);
 
           heevx( jobz, range, uplo, n, a, lda, vl, vu, il, iu, abstol, m, w, z, ldz,
             traits::vector_storage (work.first.w_), traits::vector_size (work.first.w_),
@@ -260,9 +260,9 @@ namespace boost { namespace numeric { namespace bindings {
           R abstol, int& m,
           R* w, T* z, int const ldz, std::pair<detail::workspace2<WC,WR>, detail::workspace1<WI> > work, int* ifail, int& info) {
 
-          assert (2*n <= traits::vector_size (work.first.w_));
-          assert (7*n <= traits::vector_size (work.first.wr_));
-          assert (5*n <= traits::vector_size (work.second.w_));
+          assert (traits::vector_size (work.first.w_) >= 2*n);
+          assert (traits::vector_size (work.first.wr_) >= 7*n);
+          assert (traits::vector_size (work.second.w_) >= 5*n);
 
           heevx( jobz, range, uplo, n, a, lda, vl, vu, il, iu, abstol, m, w, z, ldz,
             traits::vector_storage (work.first.w_), traits::vector_size (work.first.w_),
@@ -276,7 +276,6 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename T, typename W, typename Z, typename IFail, typename Work>
     inline int heevx (
       char jobz, char range, A& a, T vl, T vu, int il, int iu, T abstol, int& m,
-      //char jobz, char range, char uplo, A& a, T vl, T vu, int il, int iu, T abstol, int& m,
       W& w, Z& z, IFail& ifail, Work work = optimal_workspace() ) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -292,9 +291,9 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       int const n = traits::matrix_size1 (a);
-      assert (traits::matrix_size2 (a)==n);
-      assert (traits::vector_size (w)==n);
-      assert (n == traits::vector_size (ifail));
+      assert (traits::matrix_size2 (a) == n);
+      assert (traits::vector_size (w) == n);
+      assert (traits::vector_size (ifail) == n);
       assert ( range=='A' || range=='V' || range=='I' );
       char uplo = traits::matrix_uplo_tag (a);
       assert ( uplo=='U' || uplo=='L' );
