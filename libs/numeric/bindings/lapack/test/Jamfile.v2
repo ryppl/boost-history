@@ -19,6 +19,7 @@ alias bindings-lapack-tests :
     [ run ublas_heev.cpp ]
     [ run ublas_syev.cpp ]
 
+    [ run ublas_hbevx.cpp ]
     [ run ublas_heevd.cpp ]
     [ run ublas_heevx.cpp ]
 
