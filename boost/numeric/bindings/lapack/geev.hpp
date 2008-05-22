@@ -99,11 +99,11 @@ namespace boost { namespace numeric { namespace bindings {
       {
 	int info;
 	LAPACK_CGEEV(jobvl, jobvr, n, 
-		     reinterpret_cast<fcomplex_t *>(a), lda, 
-		     reinterpret_cast<fcomplex_t *>(w), 
-		     reinterpret_cast<fcomplex_t *>(vl), ldvl, 
-		     reinterpret_cast<fcomplex_t *>(vr), ldvr, 
-		     reinterpret_cast<fcomplex_t *>(work), lwork, 
+		     traits::complex_ptr(a), lda, 
+		     traits::complex_ptr(w), 
+		     traits::complex_ptr(vl), ldvl, 
+		     traits::complex_ptr(vr), ldvr, 
+		     traits::complex_ptr(work), lwork, 
 		     rwork, &info);
 	return info;
       }
@@ -116,11 +116,11 @@ namespace boost { namespace numeric { namespace bindings {
       {
 	int info;
 	LAPACK_ZGEEV(jobvl, jobvr, n, 
-		     reinterpret_cast<dcomplex_t *>(a), lda, 
-		     reinterpret_cast<dcomplex_t *>(w), 
-		     reinterpret_cast<dcomplex_t *>(vl), ldvl, 
-		     reinterpret_cast<dcomplex_t *>(vr), ldvr, 
-		     reinterpret_cast<dcomplex_t *>(work), lwork, 
+		     traits::complex_ptr(a), lda, 
+		     traits::complex_ptr(w), 
+		     traits::complex_ptr(vl), ldvl, 
+		     traits::complex_ptr(vr), ldvr, 
+		     traits::complex_ptr(work), lwork, 
 		     rwork, &info);
 	return info;
       }

@@ -70,27 +70,27 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void geqrf (int const m, int const n,
-                  std::complex<float>* a, int const lda,
-                  std::complex<float>* tau, std::complex<float>* work,
+                  traits::complex_f* a, int const lda,
+                  traits::complex_f* tau, traits::complex_f* work,
 		  int const lwork, int& info) 
       {
         LAPACK_CGEQRF (&m, &n,
-                      reinterpret_cast<fcomplex_t*> (a), &lda,
-                      reinterpret_cast<fcomplex_t*> (tau),
-                      reinterpret_cast<fcomplex_t*> (work), &lwork, &info );
+                      traits::complex_ptr (a), &lda,
+                      traits::complex_ptr (tau),
+                      traits::complex_ptr (work), &lwork, &info );
       }
       
 
       inline 
       void geqrf (int const m, int const n,
-                  std::complex<double>* a, int const lda,
-                  std::complex<double>* tau, std::complex<double>* work,
+                  traits::complex_d* a, int const lda,
+                  traits::complex_d* tau, traits::complex_d* work,
 		  int const lwork, int& info) 
       {
         LAPACK_ZGEQRF (&m, &n,
-                      reinterpret_cast<dcomplex_t*> (a), &lda,
-                      reinterpret_cast<dcomplex_t*> (tau),
-                      reinterpret_cast<dcomplex_t*> (work), &lwork, &info );
+                      traits::complex_ptr (a), &lda,
+                      traits::complex_ptr (tau),
+                      traits::complex_ptr (work), &lwork, &info );
       }
       
     } 
