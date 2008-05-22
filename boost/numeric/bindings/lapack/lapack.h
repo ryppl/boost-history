@@ -434,6 +434,35 @@ extern "C" {
                      double* rwork, int* info );
 
 
+  void LAPACK_SSBEVX( char const* jobz, char const* range, char const* uplo, int const* n,
+                      int const* kd, float* ab, int const* ldab, float* q, int const* ldq,
+                      const float* vl, const float* vu, const int* il, const int* iu,
+                      const float* abstol, int* m,
+                      float* w, float* z, int const* ldz, float* work,
+                      int* iwork, int* ifail, int* info );
+
+  void LAPACK_DSBEVX( char const* jobz, char const* range, char const* uplo, int const* n,
+                      int const* kd, double* ab, int const* ldab, double* q, int const* ldq,
+                      const double* vl, const double* vu, const int* il, const int* iu,
+                      const double* abstol, int* m,
+                      double* w, double* z, int const* ldz, double* work,
+                      int* iwork, int* ifail, int* info );
+
+  void LAPACK_CHBEVX( char const* jobz, char const* range, char const* uplo, int const* n,
+                      int const* kd, fcomplex_t* ab, int const* ldab, fcomplex_t* q, int const* ldq,
+                      const float* vl, const float* vu, const int* il, const int* iu,
+                      const float* abstol, int* m,
+                      float* w, fcomplex_t* z, int const* ldz, fcomplex_t* work, float* rwork,
+                      int* iwork, int* ifail, int* info );
+
+  void LAPACK_ZHBEVX( char const* jobz, char const* range, char const* uplo, int const* n,
+                      int const* kd, dcomplex_t* ab, int const* ldab, dcomplex_t* q, int const* ldq,
+                      const double* vl, const double* vu, const int* il, const int* iu,
+                      const double* abstol, int* m,
+                      double* w, dcomplex_t* z, int const* ldz, dcomplex_t* work, double* rwork,
+                      int* iwork, int* ifail, int* info );
+
+
   /*********************************************************************/
   /*       Auxiliary routines for eigenvalue problems                  */
   /*********************************************************************/

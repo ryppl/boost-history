@@ -187,6 +187,11 @@
 #define LAPACK_CHBEV FORTRAN_ID( chbev )
 #define LAPACK_ZHBEV FORTRAN_ID( zhbev )
 
+#define LAPACK_SSBEVX FORTRAN_ID( ssbevx )
+#define LAPACK_DSBEVX FORTRAN_ID( dsbevx )
+#define LAPACK_CHBEVX FORTRAN_ID( chbevx )
+#define LAPACK_ZHBEVX FORTRAN_ID( zhbevx )
+
 
 /********************************************/
 /* eigenproblems for tridiagonal matrices */ 
