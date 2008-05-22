@@ -10,44 +10,7 @@ project libs/numeric/bindings/lapack/test : requirements
 
 import testing ;
 
-#exe lapack      : lapack.cpp ;
-
-#exe ublas_gees  : ublas_gees.cpp ;
-#exe ublas_geqrf : ublas_geqrf.cpp ;
-#exe ublas_hbev  : ublas_hbev.cpp ;
-#exe ublas_heev  : ublas_heev.cpp ;
-#exe ublas_syev  : ublas_syev.cpp ;
-
-#exe ublas_heevd  : ublas_heevd.cpp ;
-#exe ublas_heevx  : ublas_heevx.cpp ;
-
-#exe ublas_gesdd  : ublas_gesdd.cc ;
-#exe ublas_gesdd2 : ublas_gesdd2.cc ;
-#exe ublas_gesdd3 : ublas_gesdd3.cc ;
-#exe ublas_gesdd4 : ublas_gesdd4.cc ;
-#exe ublas_gesv   : ublas_gesv.cc ;
-#exe ublas_gesv2  : ublas_gesv2.cc ;
-#exe ublas_gesvd  : ublas_gesvd.cc ;
-#exe ublas_gesvd2 : ublas_gesvd2.cc ;
-#exe ublas_gesvd3 : ublas_gesvd3.cc ;
-#exe ublas_gesvd4 : ublas_gesvd4.cc ;
-
-#exe ublas_hesv   : ublas_hesv.cc ;
-#exe ublas_hpsv   : ublas_hpsv.cc ;
-#exe ublas_posv   : ublas_posv.cc ;
-#exe ublas_ppsv   : ublas_ppsv.cc ;
-exe ublas_spsv   : ublas_spsv.cc ;
-exe ublas_sysv   : ublas_sysv.cc ;
-
-exe ublas_getrf_getrs   : ublas_getrf_getrs.cc ;
-#exe ublas_hetrf_hetrs   : ublas_hetrf_hetrs.cc ;
-#exe ublas_hptrf_hptrs   : ublas_hptrf_hptrs.cc ;
-#exe ublas_potrf_potrs   : ublas_potrf_potrs.cc ;
-#exe ublas_pptrf_pptrs   : ublas_pptrf_pptrs.cc ;
-exe ublas_sptrf_sptrs   : ublas_sptrf_sptrs.cc ;
-exe ublas_sytrf_sytrs   : ublas_sytrf_sytrs.cc ;
-
-test-suite bindings-lapack :
+alias bindings-lapack-tests :
     [ run lapack.cpp ]
 
     [ run ublas_gees.cpp ]
@@ -74,15 +37,15 @@ test-suite bindings-lapack :
     [ run ublas_hpsv.cc ]
     [ run ublas_posv.cc ]
     [ run ublas_ppsv.cc ]
-#    [ run ublas_spsv.cc ]
-#    [ run ublas_sysv.cc ]
+    [ link ublas_spsv.cc ]
+    [ link ublas_sysv.cc ]
 
-#    [ run ublas_getrf_getrs.cc ]
+    [ link ublas_getrf_getrs.cc ]
     [ run ublas_hetrf_hetrs.cc ]
     [ run ublas_hptrf_hptrs.cc ]
     [ run ublas_potrf_potrs.cc ]
     [ run ublas_pptrf_pptrs.cc ]
-#    [ run ublas_sptrf_sptrs.cc ]
-#    [ run ublas_sytrf_sytrs.cc ]
+    [ link ublas_sptrf_sptrs.cc ]
+    [ link ublas_sytrf_sytrs.cc ]
 ;
 

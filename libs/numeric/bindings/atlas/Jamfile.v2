@@ -12,53 +12,12 @@ project libs/numeric/bindings/atlas : requirements
 
 import testing ;
 
-#exe init : init.cc ;
-#exe others : others.cc ;
-
-# exe tnt2 : tnt2.cc ;
-# exe tnt3 : tnt3.cc ;
-
-#exe ublas_cmatr2 : ublas_cmatr2.cc ;
-#exe ublas_cmatr2ger : ublas_cmatr2ger.cc ;
-#exe ublas_cmatr3 : ublas_cmatr3.cc ;
-#exe ublas_cvct : ublas_cvct.cc ;
-#exe ublas_gesv : ublas_gesv.cc ;
-#exe ublas_gesv2 : ublas_gesv2.cc ;
-#exe ublas_gesv3 : ublas_gesv3.cc ;
-#exe ublas_gesv4 : ublas_gesv4.cc ;
-#exe ublas_gesv5 : ublas_gesv5.cc ;
-#exe ublas_getrf_getrs : ublas_getrf_getrs.cc ;
-
-exe ublas_getri : ublas_getri.cc ;
-
-#exe ublas_matr1 : ublas_matr1.cc ;
-#exe ublas_matr2 : ublas_matr2.cc ;
-#exe ublas_matr22 : ublas_matr22.cc ;
-exe ublas_matr2_bench : ublas_matr2_bench.cc ;
-#exe ublas_matr2ger : ublas_matr2ger.cc ;
-#exe ublas_matr3 : ublas_matr3.cc ;
-#exe ublas_posv : ublas_posv.cc ;
-#exe ublas_potrf_potrs : ublas_potrf_potrs.cc ;
-
-exe ublas_potri : ublas_potri.cc ;
-
-exe ublas_herm3 : ublas_herm3.cc ;
-#exe ublas_herm3h2k : ublas_herm3h2k.cc ;
-#exe ublas_herm3herk : ublas_herm3herk.cc ;
-
-exe ublas_symm2 : ublas_symm2.cc ;
-exe ublas_symm3 : ublas_symm3.cc ;
-exe ublas_symm2syr : ublas_symm2syr.cc ;
-exe ublas_symm32 : ublas_symm32.cc ;
-exe ublas_symm33 : ublas_symm33.cc ;
-exe ublas_symm3s2k : ublas_symm3s2k.cc ;
-exe ublas_symm3syrk : ublas_symm3syrk.cc ;
-exe ublas_symmc3 : ublas_symmc3.cc ;
-#exe ublas_vct : ublas_vct.cc ;
-
-test-suite atlas-bindings :
+alias bindings-atlas-tests :
     [ run init.cc ]
     [ run others.cc ]
+
+    [ run tnt2.cc : : : <build>no ]
+    [ run tnt3.cc : : : <build>no ]
 
     [ run ublas_cmatr2.cc ]
     [ run ublas_cmatr2ger.cc ]
@@ -71,27 +30,31 @@ test-suite atlas-bindings :
     [ run ublas_gesv5.cc ]
     [ run ublas_getrf_getrs.cc ]
 
+    [ link ublas_getri.cc ]
+
     [ run ublas_matr1.cc ]
     [ run ublas_matr2.cc ]
     [ run ublas_matr22.cc ]
-#    [ run ublas_matr2_bench.cc ]
+    [ link ublas_matr2_bench.cc ]
     [ run ublas_matr2ger.cc ]
     [ run ublas_matr3.cc ]
     [ run ublas_posv.cc ]
     [ run ublas_potrf_potrs.cc ]
 
-#    [ run ublas_herm3.cc ]
+    [ link ublas_potri.cc ]
+
+    [ link ublas_herm3.cc ]
     [ run ublas_herm3h2k.cc ]
     [ run ublas_herm3herk.cc ]
 
-#    [ run ublas_symm2.cc ]
-#    [ run ublas_symm3.cc ]
-#    [ run ublas_symm2syr.cc ]
-#    [ run ublas_symm32.cc ]
-#    [ run ublas_symm33.cc ]
-#    [ run ublas_symm3s2k.cc ]
-#    [ run ublas_symm3syrk.cc ]
-#    [ run ublas_symmc3.cc ]
+    [ link ublas_symm2.cc ]
+    [ link ublas_symm3.cc ]
+    [ link ublas_symm2syr.cc ]
+    [ link ublas_symm32.cc ]
+    [ link ublas_symm33.cc ]
+    [ link ublas_symm3s2k.cc ]
+    [ link ublas_symm3syrk.cc ]
+    [ link ublas_symmc3.cc ]
     [ run ublas_vct.cc ]
 ;
 
