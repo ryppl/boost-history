@@ -59,6 +59,8 @@ int test_main(int, char* [])
 	std::vector<unsigned int> ids;
  	std::vector<std::pair<double, double> > points = read_data();
 
+	time_t start;
+
 // 	std::cerr << "Size: " << points.size() << std::endl;
 
 	// plane
@@ -68,7 +70,7 @@ int test_main(int, char* [])
  	const double max_y = 80.0;
 
 	// number of points to find on the search phase
-	const unsigned int find_count = 1000;
+	const unsigned int find_count = 100000;
 
  	for(unsigned int i = 0; i < points.size(); i++) {
  		ids.push_back(i);
@@ -83,7 +85,10 @@ int test_main(int, char* [])
    	std::vector<unsigned int>::iterator b, e;
    	b = ids.begin();
    	e = ids.end();
+
+	start = time(NULL);
    	q->bulk_insert(b,e, points);
+	std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
 
 	// search
 	std::vector<std::pair<double,double> > search_positions;
@@ -95,14 +100,16 @@ int test_main(int, char* [])
 		search_data.push_back(pos);
 	}
 
+	start = time(NULL);
 	for(unsigned int j=0; j < find_count; j++) {
 		std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
-		std::cout << search_data[j] 
-			  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
-			  << *it << std::endl;
+// 		std::cout << search_data[j] 
+// 			  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
+// 			  << *it << std::endl;
 
 		BOOST_CHECK_EQUAL(*it, search_data[j]);
 	}
+	std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 
 	return 0;
 }
