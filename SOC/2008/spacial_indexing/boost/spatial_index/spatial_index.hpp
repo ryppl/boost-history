@@ -8,6 +8,7 @@
 #define BOOST_SPATIAL_INDEX_SPATIAL_INDEX_HPP
 
 #include <vector>
+#include <deque>
 
 namespace boost {
 namespace spatial_index {
@@ -36,6 +37,11 @@ public:
 
 	/// find element with key 'k'
 	virtual Value find(const Key &k) = 0;
+
+	/// find element in the defined rectangle
+	/// TODO: change container
+	/// TODO: use rectangle from the Geometry Library
+	virtual std::deque<Value> find(const double x1, const double x2, const double y1, const double y2) = 0;
 
 	/// element count in the index
 	virtual unsigned int elements(void) = 0;

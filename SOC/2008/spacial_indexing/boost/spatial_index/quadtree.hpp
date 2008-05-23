@@ -64,6 +64,14 @@ public:
 		return root.find(k);
 	}
 
+	virtual std::deque<Value> find(const double x1, const double x2, const double y1, const double y2)
+	{
+		std::deque<Value> r;
+		root.find(r, x1, x2, y1, y2);
+		return r;
+	}
+
+
 	virtual unsigned int elements(void) { return element_count; }
 	
 	virtual ~quadtree() {}

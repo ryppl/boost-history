@@ -100,6 +100,95 @@ public:
 		}
 	}
       
+
+	void find(std::deque<Value> &r, const double x1, const double x2, const double y1, const double y2)
+	{
+		if(v_ != Value()) {
+
+			if(k_.first >= x1 && k_.first <= x2 && k_.second >= y1 && k_.second <= y2) {
+				r.push_back(v_);
+			}
+
+			if(
+			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
+			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
+
+			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
+			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0) ||
+
+			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
+			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
+
+			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
+			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0)
+
+			   ) {
+				if(ne_ != boost::shared_ptr<quadtree_node>()) {
+					ne_->find(r, x1, x2, y1, y2);
+				}
+			}
+ 			if(
+			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
+ 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
+
+			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
+ 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_) ||
+
+			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
+ 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
+
+			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
+ 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_)
+
+			   ) {
+				if(se_ != boost::shared_ptr<quadtree_node>()) {
+					se_->find(r, x1, x2, y1, y2);
+				}
+			      
+			}
+
+ 			if(
+			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
+ 			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
+
+			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
+ 			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0) ||
+
+
+			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
+ 			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
+
+			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
+ 			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0)
+
+			   ) {
+				if(nw_ != boost::shared_ptr<quadtree_node>()) {
+					nw_->find(r, x1, x2, y1, y2);
+				}
+			      
+			}
+ 			if(
+			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
+ 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
+
+			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
+ 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_) ||
+
+			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
+ 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
+
+			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
+ 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_)
+
+			   ) {
+				if(sw_ != boost::shared_ptr<quadtree_node>()) {
+					sw_->find(r, x1, x2, y1, y2);
+				}
+			      
+			}
+		}
+	}
+
 	Value find(const Key &k)
 	{
 		if(v_ == Value()) {
