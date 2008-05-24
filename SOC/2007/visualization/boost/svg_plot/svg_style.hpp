@@ -2,6 +2,7 @@
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
+
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -33,21 +34,25 @@ namespace svg
 // Forward declarations of classes in svg_style.hpp
 class svg_style;
 class text_style;
+class value_style;
 class plot_point_style;
 class plot_line_style;
 class axis_line_style;
 class ticks_labels_style;
+class box_style;
 
 enum rotate_style
 { // Rotation in degrees from horizontal.
-  horizontal = 0, // normal left to right.
+  horizontal = 0, // normal left to right, centered.
   uphill = -45, // slope up.
   upward = -90, // vertical writing up.
-  backup = -135, // slope up backwards.
+  backup = -135, // // slope up backwards - upside down!
+  leftward= -180, // horizontal to left.
+  rightward = 360, // horizontal to right.
   downhill = 45, // slope down.
   downward = 90,  // vertical writing down.
   backdown = 135, // slope down backwards.
-  upsidedown = 180 // == -180
+  upsidedown = 180 // == -180 - upside down!
 };
 
 const std::string strip_e0s(std::string s);
@@ -59,134 +64,158 @@ double string_svg_length(const std::string& s, const text_style& style);
 // This is the style information for any <g> tag.
 // This may be expanded to include more data from the SVG standard.
 // -----------------------------------------------------------------
+
+// There are some strange effects for text on some browsers
+// (Firefox especially) when only stroke is specified.
+// fill is interpreted as black, and the font outline is fuzzy and bolder.
+// <g id="title" stroke="rgb(255,0,0)"> .. is red border and black fill.
+// (because created as a graphic not a builtin font?)
+// <g id="title" fill="rgb(255,0,0)"> .. is red sharp font.
+// <g id="title" stroke="rgb(255,0,0)" fill="rgb(255,0,0)"> red and red fill also fuzzy.
+// So for text, only specific the fill unless a different outline is really wanted.
+// Defaults for text provide a built-in glyph, for example for title:
+// <g id="title">
+//   <text x="250" y="36" text-anchor="middle" font-size="18" font-family="Verdana">
+//     Plot of data
+//   </text>
+// </g>
+// and this is not a graphic.
+
 class svg_style
-{
+{ // Holds the basic stroke, fill colors and width, and their switches.
   friend std::ostream& operator<< (std::ostream&, svg_style&);
 
 private: // Accesses only by set and get member functions below.
-  // Names changed so private data member variables end with _,
+  // Private data member variables names end with _,
   // to permit use of names for set & get member functions.
-    svg_color fill_;
-    svg_color stroke_;
-    double width_; // Only valid if > 0 & width_on_ == true
-    bool fill_on_; // true means there is fill info.
-    bool stroke_on_;
-    bool width_on_;
+  svg_color stroke_;
+  svg_color fill_;
+  double width_; // Only valid if > 0 & width_on_ == true
+  bool stroke_on_;
+  bool fill_on_; // true means there is fill info.
+  bool width_on_;
     
 public:
-    svg_style() :
-      fill_(blank), // Should avoid any fill = 
-      //fill_(svg_color(0, 0, 0)), // == black
-      stroke_(svg_color(0, 0, 0)), // == black
-      width_(0), // No width
-      fill_on_(false), stroke_on_(false), width_on_(false)
-    { // Default constructor initialises all private data.
-    }
+  // Constructors:
+  svg_style();
+  svg_style(const svg_color& stroke, const svg_color& fill, unsigned int width);
 
-    svg_style(const svg_color& fill, const svg_color& stroke,  unsigned int width = 0) :
-                     fill_(fill), stroke_(stroke), width_(width),
-                     fill_on_(false), stroke_on_(false), width_on_(false)
-    { // Construct with specified fill and stroke colors, and width.
-    }
+  // Set svg_style member functions
+  // to set fill color and stroke color & width.
+  svg_style& stroke_color(const svg_color& col) ;
+  svg_style& fill_color(const svg_color& col);
+  svg_style& stroke_width(double width);
+  svg_style& fill_on(bool is);
+  svg_style& stroke_on(bool is);
+  svg_style& width_on(bool is);
 
-    // Set & get svg_style member functions
-    // to return fill color and stroke color & width.
-    svg_color fill_color() const
-    {
-      return svg_color(fill_); 
-    }
+  // Get svg_style member functions
+  // to return fill color and stroke color & width.
+  svg_color fill_color() const;
+  svg_color stroke_color() const;
+  double stroke_width() const;
+  bool fill_on() const;
+  bool stroke_on() const;
+  bool width_on() const;
 
-    svg_color stroke_color() const
-    {
-      return svg_color(stroke_);
-    }
+  void write(std::ostream& os); // Output to file or stream.
 
-    double stroke_width() const
-    { 
-      return width_;
-    }
+  // operators useful for testing at least.
+  bool operator==(svg_style& s);
+  bool operator!=(svg_style& s);
 
-    bool fill_on() const
-    {
-      return fill_on_;
-    }
+}; // class svg_style
 
-    svg_style& fill_on(bool is) 
-    {
-      fill_on_ = is;
+
+// class svg Definitions.
+
+  svg_style::svg_style(const svg_color& stroke, const svg_color& fill, unsigned int width)
+  :
+  stroke_(stroke), fill_(fill), width_(width),
+  stroke_on_(false), fill_on_(false), width_on_(false)
+  { // Construct with specified fill and stroke colors, and width.
+  }
+
+  svg_style::svg_style()
+  :
+  stroke_(svg_color(0, 0, 0)), // == black.
+  fill_(blank), 
+  width_(0), // No width specified.
+  fill_on_(false), stroke_on_(false), width_on_(false)
+  { // Default constructor initialises all private data.
+  }
+
+  svg_color svg_style::fill_color() const
+  {
+    return svg_color(fill_); 
+  }
+
+  svg_color svg_style::stroke_color() const
+  {
+    return svg_color(stroke_);
+  }
+
+  double svg_style::stroke_width() const
+  { 
+    return width_;
+  }
+
+  bool svg_style::fill_on() const
+  {
+    return fill_on_;
+  }
+
+  svg_style& svg_style::fill_on(bool is) 
+  { // fill is wanted.
+    fill_on_ = is;
+    return *this; // Make chainable.
+  }
+
+  bool svg_style::stroke_on() const
+  {
+    return stroke_on_;
+  }
+
+  svg_style& svg_style::stroke_on(bool is) 
+  {
+    stroke_on_ = is;
+    return *this; // Make chainable.
+  }
+
+  bool svg_style::width_on() const
+  {
+    return width_on_;
+  }
+
+  svg_style& svg_style::width_on(bool is) 
+  {
+    width_on_ = is;
+    return *this; // Make chainable.
+  }
+
+  // Set svg_style member functions to set fill, stroke & width.
+  svg_style& svg_style::stroke_color(const svg_color& col) 
+  { 
+      stroke_ = col;
+      stroke_on_ = true; // Assume want a stroke if color is set.
       return *this; // Make chainable.
-    }
+  }
 
-    bool stroke_on() const
-    {
-      return stroke_on_;
-    }
-
-    svg_style& stroke_on(bool is) 
-    {
-      stroke_on_ = is;
+  svg_style& svg_style::fill_color(const svg_color& col)
+  { 
+      fill_ = col;
+      fill_on_ = ! col.is_blank; // If blank fill is off or "none".
       return *this; // Make chainable.
-    }
+  }
 
-    bool width_on() const
-    {
-      return width_on_;
-    }
-
-    svg_style& width_on(bool is) 
-    {
-      width_on_ = is;
+  svg_style& svg_style::stroke_width(double width)
+  { 
+      width_ = width;
+      width_on_ = ((width > 0) ? true : false);
       return *this; // Make chainable.
-    }
+  }
  
-    // Set svg_style member functions to set fill, stroke & width.
-    svg_style& fill_color(const svg_color& col)
-    { 
-        fill_ = col;
-        fill_on_ = ! col.blank; // If blank fill is off or "none".
-        return *this; // Make chainable.
-    }
-
-    svg_style& stroke_color(const svg_color& col) 
-    { 
-        stroke_ = col;
-        stroke_on_ = true; // Assume want a stroke if color is set.
-        return *this; // Make chainable.
-    }
-
-    svg_style& stroke_width(double width)
-    { 
-        width_ = width;
-        width_on_ = ((width > 0) ? true : false);
-        return *this; // Make chainable.
-    }
-    
-    void write(std::ostream& rhs)
-    { // Write any stroke, fill colors and/or width info (start with space).
-      if(stroke_on_)
-      {
-          rhs << " stroke=\"";
-          stroke_.write(rhs);
-          rhs << "\"";
-      }
-      if(fill_on_ && (fill_ != blank))
-      { // Don't add fill info if color is blank.
-          rhs << " fill=\"";
-          fill_.write(rhs);
-          rhs << "\"";
-      }
-      if(width_on_ && (width_ > 0))
-      { // We never want a 0 (or <0) width output?
-          rhs << " stroke-width=\""
-              << width_
-              << "\"";
-      }
-     // Examples: <g id="yMinorTicks" stroke="rgb(0,0,0)" stroke-width="1">
-   } // void write
-
-   // operators needed for testing at least.
-
-   bool operator==(svg_style& s)
+  bool svg_style::operator==(svg_style& s)
   { 
      return (s.fill_color() == fill_)
        && (s.stroke_color() == stroke_)
@@ -196,7 +225,7 @@ public:
        && (s.width_on() == width_on_);       
    }
 
-   bool operator!=(svg_style& s)
+  bool svg_style::operator!=(svg_style& s)
    { 
      return (s.fill_color() != fill_)
        || (s.stroke_color() != stroke_)
@@ -205,22 +234,45 @@ public:
        || (s.stroke_on() != stroke_on_)
        || (s.width_on() != width_on_);       
    }
-}; // class svg_style
 
-std::ostream& operator<< (std::ostream& os, svg_style& s)
-{  //
-    os << "svg_style("
-       << s.fill_ << ", "
-       << s.stroke_ << ", "
-       << s.width_ << ", " // italic
-       << ((s.fill_on_) ? "fill, " : "no fill, ")
-       << ((s.stroke_on_) ? "stroke, " : "no stroke, ")
-       << ((s.fill_on_) ? "width)" : "no width)");
-  // Usage: svg_style my_svg_style; cout << my_svg_style << endl;
-  // Outputs:  svg_style(RGB(0,0,0), RGB(0,0,0), 0, no fill, no stroke, no width)
+  std::ostream& operator<< (std::ostream& os, svg_style& s)
+  {  //
+      os << "svg_style("
+         << s.fill_ << ", "
+         << s.stroke_ << ", "
+         << s.width_ << ", " // italic
+         << ((s.fill_on_) ? "fill, " : "no fill, ")
+         << ((s.stroke_on_) ? "stroke, " : "no stroke, ")
+         << ((s.fill_on_) ? "width)" : "no width)");
+    // Usage: svg_style my_svg_style; cout << my_svg_style << endl;
+    // Outputs:  svg_style(RGB(0,0,0), RGB(0,0,0), 0, no fill, no stroke, no width)
+    return os;
+  } // std::ostream& operator<<
 
-  return os;
-} // std::ostream& operator<<
+  void svg_style::write(std::ostream& os)
+  { // Write any stroke, fill colors and/or width info (start with space).
+    if(stroke_on_)
+    {
+        os << " stroke=\"";
+        stroke_.write(os);
+        os << "\"";
+    }
+    if(fill_on_) //  && (fill_ != blank))
+    { // Don't add fill info if color is blank.
+        os << " fill=\"";
+        fill_.write(os);
+        os << "\"";
+    }
+
+    if(width_on_ && (width_ > 0))
+    { // We never want a 0 (or <0) width output?
+        os << " stroke-width=\""
+            << width_
+            << "\"";
+    }
+   // Examples: <g id="yMinorTicks" stroke="rgb(0,0,0)" stroke-width="1">
+ } // void write
+
 
 class text_style
 {
@@ -238,91 +290,144 @@ private:
 
 public: 
   text_style(int size = 20,  
-  const std::string& font = "", // Default is sans with Firefox & IE but serif with Opera.
-  const std::string& style = "",
-  const std::string& weight = "",
-  const std::string& stretch = "",
-  const std::string& decoration = "")
+  const std::string& font = "", // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
+  const std::string& style = "", // font-style: normal | bold | italic | oblique
+  const std::string& weight = "", // Examples: "bold", "normal"  
+  const std::string& stretch = "", // font-stretch: normal | wider | narrower ...
+  const std::string& decoration = ""); // Examples: "underline" | "overline" | "line-through"
+  
+  text_style& font_size(unsigned int i);
+  text_style& font_family(const std::string& s);
+  text_style& font_style(const std::string& s);
+  text_style& font_weight(const std::string& s);
+  text_style& font_stretch(const std::string& s);
+  text_style& font_decoration(const std::string& s);
+
+  int font_size() const;
+  const std::string& font_family() const;
+  const std::string& font_style() const;
+  const std::string& font_weight() const;
+  const std::string& font_stretch() const;
+  const std::string& font_decoration() const;
+
+  // Comparison operators useful for testing at least.
+  bool operator==(const text_style& ts);
+  bool operator!=(const text_style& ts);
+  // bool operator==(const text_style& lhs, const text_style& rhs);
+
+}; //   class text_style
+
+// class text_style function *Definitions* separated.
+
+  text_style::text_style(
+    int size,  
+    const std::string& font , // Default for browser is sans with Firefox & IE but serif with Opera.
+    const std::string& style, // font-style: normal | bold | italic | oblique
+    const std::string& weight, // Examples: "bold", "normal" 
+    const std::string& stretch, // font-stretch: normal | wider | narrower ...
+    const std::string& decoration) // Examples: "underline" | "overline" | "line-through"
   : // Constructor.
   font_size_(size),
-    font_family_(font),
-    style_(style),
-    weight_(weight),
-    stretch_(stretch),
-    decoration_(decoration)
+  font_family_(font),
+  style_(style),
+  weight_(weight),
+  stretch_(stretch),
+  decoration_(decoration)
   { // text_style default constructor, defines defaults for all private members.
   }
 
-  int font_size() const
+  int text_style::font_size() const
   {
     return font_size_;
   }
 
-  const text_style& font_size(unsigned int i)
+  text_style& text_style::font_size(unsigned int i)
   { // pixels, default 10.
     font_size_ = i;
-    return *this;
+    return *this; // Should be chainable (but isn't?).
+    // error C2663: 'boost::svg::text_style::font_size' : 2 overloads have no legal conversion for 'this' pointer
+    // label_style.font_size(20).font_family("sans");
+    // MS docs say:
+    // This error can be caused by invoking a non-const member function on a const object.
+    // So removed const from text_style& font_size(unsigned i) and all others below.
   }
 
-  const std::string& font_family() const
+  const std::string& text_style::font_family() const
   {
     return font_family_;
   }
 
-  const text_style& font_family(const std::string& s)
-  { // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
+  text_style& text_style::font_family(const std::string& s)
+  { // Default for browser is sans with Firefox & IE but serif with Opera.
+    // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
+    // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-01-t.svg
+    // tests three styles of font, serfi, sans-serif and mono-spaced.
+		//	<text font-family="Georgia, 'Minion Web', 'Times New Roman', Times, 'MS PMincho', Heisei-Mincho, serif " x="20" y="80">A serifed face</text>
+		//	<text font-family="Arial, 'Arial Unicode', 'Myriad Web', Geneva, 'Lucida Sans Unicode', 'MS PGothic', Osaka, sans-serif " x="20" y="160">A sans-serif face</text>
+		//	<text font-family="'Lucida Console', 'Courier New', Courier, Monaco, 'MS Gothic', Osaka-Mono, monospace" x="20" y="240">A mono (iW) face</text>
+    // Helvetica,sans-serif,
     font_family_ = s;
     return *this;
   }
 
-  const std::string& font_style() const
+  const std::string& text_style::font_style() const
   { // font-style: normal | bold | italic | oblique
     return style_; // example "normal"
   }
 
-  const text_style& font_style(const std::string& s)
+  text_style& text_style::font_style(const std::string& s)
   { // Examples: "italic"
+    // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     style_ = s;
     return *this;
   }
 
-  const std::string& font_weight() const
+  const std::string& text_style::font_weight() const
   {
     return weight_;
   }
 
-  const text_style& font_weight(const std::string& s)
+  text_style& text_style::font_weight(const std::string& s)
   { // svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
     // Examples: "bold", "normal" 
+    // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
+    // tests conformance.  Only two weights are supported by Firefox, Opera, Inkscape
     weight_ = s;
     return *this;
   }
 
-  const std::string& font_stretch() const
+  const std::string& text_style::font_stretch() const
   {
     return stretch_;
   }
 
-  const text_style& font_stretch(const std::string& s)
+  text_style& text_style::font_stretch(const std::string& s)
   { // Examples: "wider" but implementation?
     // font-stretch: normal | wider | narrower ...
     stretch_ = s;
     return *this;
   }
 
-  const std::string& font_decoration() const
+  const std::string& text_style::font_decoration() const
   {
     return decoration_;
   }
 
-  const text_style& font_decoration(const std::string& s)
+  text_style& text_style::font_decoration(const std::string& s)
   { // Examples: "underline" | "overline" | "line-through"
-    decoration_ = s; // But implementation doubtful.
+    decoration_ = s; // But implementation varies.
+    // http://www.croczilla.com/~alex/conformance_suite/svg/text-deco-01-b.svg
+    // tests line-through and underline.  (Firefox 3 Beta 4 fails)
     return *this;
   }
 
+  // http://www.croczilla.com/~alex/conformance_suite/svg/text-align-02-b.svg
+  // tests for baseline shifted text.  This is needed for subscript and superscript,
+  // vital for nice display of units like m^2 and chemical formulae like H2O
+  // IE (Adobe SVG viewer) and Opera conforms but not Firefox.
+
   // operators needed for testing at least.
-  bool operator==(const text_style& ts)
+  bool text_style::operator==(const text_style& ts)
   {
    return (ts.font_size_ == font_size_)
      && (ts.font_family_ == font_family_)
@@ -332,7 +437,7 @@ public:
      && (ts.decoration_ == decoration_);
   } // operator==
 
-  bool operator!=(const text_style& ts)
+  bool text_style::operator!=(const text_style& ts)
   {
    return (ts.font_size_ != font_size_)
      || (ts.font_family_ != font_family_)
@@ -342,48 +447,91 @@ public:
      || (ts.decoration_ != decoration_);
   } //  operator!=
 
-}; //   class text_style
-
-bool operator== (const text_style& lhs, const text_style& rhs)
-{ // Note operator== and operator << both needed to use Boost.text.
-   return (lhs.font_size_ == rhs.font_size_)
-     && (lhs.font_family() == rhs.font_family())
-     && (lhs.stretch_ ==  rhs.stretch_)
-     && (lhs.style_ ==  rhs.style_)
-     && (lhs.weight_ ==  rhs.weight_)
-     && (lhs.decoration_ ==  rhs.decoration_);
-} // operator==
+  //bool text_style::operator==(const text_style& lhs, const text_style& rhs)
+  //{ // Note operator== and operator << both needed to use Boost.text.
+  //   return (lhs.font_size_ == rhs.font_size_)
+  //     && (lhs.font_family() == rhs.font_family())
+  //     && (lhs.stretch_ ==  rhs.stretch_)
+  //     && (lhs.style_ ==  rhs.style_)
+  //     && (lhs.weight_ ==  rhs.weight_)
+  //     && (lhs.decoration_ ==  rhs.decoration_);
+  //} // operator==
 
 //bool operator!= (const text_style& lhs, const text_style& rhs)
-//{ // Note operator== and operator << both needed to use Boost.text.
+//{ // Note operator== and operator << both needed to use Boost.Test.
+// But can be avoided with a macro whose name I forget.
 //  return false;
 //}
 
 std::ostream& operator<< (std::ostream& os, const text_style& ts)
 {  //
     os << "text_style("
-       << ts.font_size_ << ", "
-       << ts.font_family_ << ", "
-       << ts.style_ << ", " // italic
+       << ts.font_size_ << ", \""
+       << ts.font_family_ << "\", \""
+       << ts.style_ << "\", \"" // italic
        << ts.weight_ // bold
        // enable if implemented by rendering programs.
-       // << ", "
-       // << ts.stretch_ << ", " 
-       //<< ts.decoration_ 
-       << ")" ;
+       << "\", \""
+       << ts.stretch_ << "\", \""
+       << ts.decoration_ 
+       << "\")" ;
   // Usage: text_style ts(12, "Arial", "italic", "bold", "", "");  cout << t << endl; 
-  // Outputs:  text_style(12, Arial, italic, bold)
+  // Outputs:  text_style(18, "Arial", "italic", "bold", "", "")
 
   return os;
 } // std::ostream& operator<<
 
 text_style no_style; // Uses all constructor defaults.
 
+class value_style
+{ // Data series point value information, text, color, uncertainty, orientation.
+  // for example to output: 5.123 +- 0.01 (19)
+public:
+  //private:  // ??
+  rotate_style value_label_rotation_; // Direction point value labels written.
+  int value_precision_; // Precision of value.
+  std::ios_base::fmtflags value_ioflags_; // Control of scientific, fixed etc.
+  bool strip_e0s_;
+  text_style values_text_style_; // Font etc used for data point value marking.
+  // svg_style 
+  svg_color fill_color_;
+  svg_color stroke_color_;
+  bool plusminus_on_; // If an uncertainty is to be appended.
+  // http://en.wikipedia.org/wiki/Plus-minus_sign
+  bool df_on_; // If an degrees of freedom estimate is to be appended.
+
+  public:
+    value_style()
+    :
+    value_label_rotation_(horizontal),
+    value_precision_(3), // Reduced from default of 6 which is usually too long.
+    value_ioflags_(std::ios::dec),
+    strip_e0s_(true), // See also similar x_ticks value 
+    values_text_style_(no_style),  // All defaults, black etc.
+    stroke_color_(black), // == black.
+    fill_color_(svg_color(0, 0, 0)), // == black.
+    plusminus_on_(false),
+    df_on_(false)
+    { // Default constructor initialises all private data.
+    }
+
+    value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
+      text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false)
+    :
+    value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
+    values_text_style_(ts), stroke_color_(scol), fill_color_(fcol), plusminus_on_(pm), df_on_(df)
+    { // Constructor.
+    }
+
+}; // class value_style 
+
 enum point_shape
 { // Marking a data point.
   // Used in draw_plot_point in axis_plot_frame.hpp
   none = 0,
-  round, square, point, egg, // ellipse
+  round,
+  // name circle changed to round to avoid clash with function named circle.
+  square, point, egg, // ellipse
   vertical_line,  // line up & down from axis.
   horizontal_line, // line left & right from axis.
   vertical_tick, // tick up from axis.
@@ -400,10 +548,13 @@ enum point_shape
   asterisk, // *
   x, // x
   cross,
-  symbol // Unicode symbol including letters, digits, greek & 'squiggles'.
-  // &#x3A9; = greek omega
-  // TODO add other shapes? 
-// name circle changed to round to avoid clash with function named circle.
+  symbol //Unicode symbol including letters, digits, greek & 'squiggles'.
+  // Default "X", "&#x3A9;"= greek omega, "&#x2721;" = Star of David hexagram
+  // &#2720 Maltese cross & other dingbats
+  // http://en.wikipedia.org/wiki/List_of_Unicode_characters#Basic_Latin geometric shapes
+  // may be a better way to make these symbols.
+  // &#25A0 black square ...to &#25FF 
+  // But unclear how many browsers implement these properly.
 }; 
 
 class plot_point_style
@@ -411,33 +562,36 @@ class plot_point_style
   friend std::ostream& operator<< (std::ostream&, plot_point_style);
 
 public:
-    svg_color fill_color_; // Color of the centre of the shape.
-    svg_color stroke_color_; // Color of circumference of shape.
-    int size_; // diameter of circle, height of square, font_size  ...
-    point_shape shape_; // round, square, point...
-    std::string symbols_; // Unicode symbol (letters, digits, squiggles etc)
-    // Caution: not all Unicode symbols are output by all browsers!
-    text_style symbols_style_;
-    //bool show_x_value_; // Show the X value near the point.
-    //bool show_y_value_;  // Show the Y value near the point.
-    //// if both true, then shows both as a pair "1.2, 3.4"
-    //int dist; // from the point to the value.
-    //rotate_style orient_; // Orientation of the value from the point.
-    //// Note that this needs to alter the text alignment, center, left or right,
-    //// to avoid writing over the point marker.
-    //rotate_style rotation_; // Rotation of the value text string itself.
-    //// Note that this also needs to alter the text alignment, center, left or right,
-    //// to avoid writing over the point marker.
-    //text_style value_style_; // Size, font, color etc of the value.
+  svg_color fill_color_; // Color of the centre of the shape.
+  svg_color stroke_color_; // Color of circumference of shape.
+  int size_; // diameter of circle, height of square, font_size  ...
+  point_shape shape_; // round, square, point...
+  std::string symbols_; // Unicode symbol (letters, digits, squiggles etc)
+  // Caution: not all Unicode symbols are output by all browsers! Example:
+  // U2721 is Star of David or hexagram http://en.wikipedia.org/wiki/Hexagram
+  // symbols("&#x2721;")
+  text_style symbols_style_;
+  bool show_x_value_; // Show the X value near the point.
+  bool show_y_value_;  // Show the Y value near the point.
+  // If both true, then shows both as a pair "1.2, 3.4"
+  //int dist; // from the point to the value.
+  //rotate_style orient_; // Orientation of the value from the point.
+  //// Note that this needs to alter the text alignment, center, left or right,
+  //// to avoid writing over the point marker.
+  //rotate_style rotation_; // Rotation of the value text string itself.
+  //// Note that this also needs to alter the text alignment, center, left or right,
+  //// to avoid writing over the point marker.
+  //text_style value_style_; // Size, font, color etc of the value.
 
-    plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
-      int size = 10, point_shape shape = round, const std::string& symbols = "X")
-        :
-        fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols)
-    { // Best to have a fixed-width font for symbols?
-      symbols_style_.font_family("Lucida Sans Unicode");
-      symbols_style_.font_size(size);
-    }
+  plot_point_style(const svg_color& stroke = black, const svg_color& fill = blank,
+    int size = 10, point_shape shape = round, const std::string& symbols = "X")
+    :
+  fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols),
+    show_x_value_(false), show_y_value_(false)
+  { // Best to have a fixed-width font for symbols?
+    symbols_style_.font_family("Lucida Sans Unicode");
+    symbols_style_.font_size(size);
+  }
 
   plot_point_style& size(int i)
   {
@@ -485,7 +639,7 @@ public:
   }
 
   plot_point_style& symbols(const std::string s)
-  {
+  { // Override default symbol "X" - only effective if .shape(symbol) used.
     symbols_ = s;
     return *this;
   }
@@ -502,9 +656,8 @@ public:
   }
 
   text_style& style() const
-  {
+  { // To allow control of symbol font, size, decoration etc.
     return const_cast<text_style&>(symbols_style_); 
-    // error C2440: 'return' : cannot convert from 'const boost::svg::text_style' to 'boost::svg::text_style &'
   }
 }; // struct plot_point_style
 
@@ -527,15 +680,15 @@ class plot_line_style
 { // Style of line joining data series values. 
   // TODO dotted and dashed line style?  Useful for B&W?
 public:
-    svg_color color_; // line stroke color. (no fill color for lines)
-    svg_color area_fill_; // Fill color from line to axis. == true means color.blank = true.
+    svg_color stroke_color_; // line stroke color. (no fill color for lines)
+    svg_color area_fill_; // Fill color from line to axis. == false means color.is_blank = true, or = blank.
     double width_;
     bool line_on_;
     bool bezier_on_;
 
-    plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool line_on = true, bool bezier_on = false)
-      :
-      color_(col), area_fill_(acol), width_(width), line_on_(line_on), bezier_on_(bezier_on)
+    plot_line_style(const svg_color& col = black, const svg_color& fill_col = blank, double width = 2, bool line_on = true, bool bezier_on = false)
+    :
+    stroke_color_(col), area_fill_(fill_col), width_(width), line_on_(line_on), bezier_on_(bezier_on)
     { // Defaults for all private data.
     }
 
@@ -552,13 +705,13 @@ public:
 
   plot_line_style& color(const svg_color& f)
   {
-    color_ = f;
+    stroke_color_ = f;
     return *this; // Make chainable.
   }
 
   svg_color& color()
   {
-    return color_;
+    return stroke_color_;
   }
 
   plot_line_style& area_fill(const svg_color& f)
@@ -599,7 +752,7 @@ public:
 std::ostream& operator<< (std::ostream& os, plot_line_style p)
 {  //
   os << "point_line_style("
-     << p.color_ << ", "
+     << p.stroke_color_ << ", "
      << p.area_fill_ << " area fill, "
      << ((p.line_on_) ? "line, " : "no line, ")
      << ((p.bezier_on_) ? "bezier)" : "no bezier)");
@@ -608,7 +761,7 @@ std::ostream& operator<< (std::ostream& os, plot_line_style p)
   return os;
 } // std::ostream& operator<<
 
-enum dim{X = 1, Y = 2, Z = 3}; // Used so that an axis knows what type it is.
+enum dim{N = 0, X = 1, Y = 2, Z = 3}; // Used so that an axis knows what type it is, or none = N.
 
 class axis_line_style
 { // Style of the x and/or y axes lines.
@@ -616,50 +769,51 @@ class axis_line_style
   // (Different styles for x and y are possible).
 public:
   dim dim_; // x, y or z
-    double min_; // minimum x value (Cartesian units).
-    double max_; // maximum x value (Cartesian units).
-    // Note that these duplicate the same named in ticks_labels_style,
-    // but they might have different uses, so are left pro tem.
-    // TODO reconsider the implications of this (largely accidental) decision.
-    double axis_; //
-    // X-axis (y = 0) transformed into SVG Y coordinates. -1 if not calculated yet.
-    // or Y-axis (x = 0) transformed into SVG X coordinates. -1 if not calculated yet.
+  double min_; // minimum x value (Cartesian units).
+  double max_; // maximum x value (Cartesian units).
+  // Note that these duplicate the same named in ticks_labels_style,
+  // but they might have different uses, so are left pro tem.
+  // TODO reconsider the implications of this (largely accidental) decision.
+  // double interval_; does NOT duplicate major_interval_ in ticks_label_style.
+  double axis_; //
+  // X-axis (y = 0) transformed into SVG Y coordinates. -1 if not calculated yet.
+  // or Y-axis (x = 0) transformed into SVG X coordinates. -1 if not calculated yet.
 
-    svg_color color_; // line stroke color.
-    double axis_width_; // line width.
-    int axis_position_; // How the axes intersect with values as below:
-    // enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
-    // enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
-    // If axes look like an L, then is bottom left.
-    // If a T then y intersects and x is at bottom.
-    bool label_on_; // Label X-axis with text - example: "length".
-    bool label_units_on_; // Label X-axis units, example: "cm".
-    bool axis_line_on_; // Draw a X horizontal or Y vertical axis line.
+  svg_color color_; // line stroke color.
+  double axis_width_; // line width.
+  int axis_position_; // How the axes intersect with values as below:
+  // enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+  // enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
+  // If axes look like an L, then is bottom left.
+  // If a T then y intersects and x is at bottom.
+  bool label_on_; // Label X-axis with text - example: "length".
+  bool label_units_on_; // Label X-axis units, example: "cm".
+  bool axis_line_on_; // Draw a X horizontal or Y vertical axis line.
 
-    axis_line_style(dim d = X,
-      double min = -10., double max = +10., // Defaults.
-      // See also default in ticks_labels_style.
-      const svg_color col = black, double width = 1,
-      int axis_position = 0, bool label_on = true,
-      bool label_units_on = false,
-      bool axis_lines_on = true)
-      :
-      dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
-      axis_position_(axis_position),
-      label_on_(label_on),
-      label_units_on_(label_units_on), // default is include units.
-      axis_line_on_(axis_lines_on),
-      axis_(-1) // Not calculated yet.
-   { // Initialize all private data.
-      if(max_ <= min_)
-      { // max_ <= min_.
-        throw std::runtime_error("Axis range: max <= min!");
-      }
-      if((max_ - min_) < std::numeric_limits<double>::epsilon() * 1000)
-      { // Range too small to display.
-        throw std::runtime_error("Axis range too small!" );
-      }
-   } // axis_line_style constructor
+  axis_line_style(dim d = X,
+    double min = -10., double max = +10., // Defaults.
+    // See also default in ticks_labels_style.
+    const svg_color col = black, double width = 1,
+    int axis_position = 0, bool label_on = true,
+    bool label_units_on = false,
+    bool axis_lines_on = true)
+    :
+    dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
+    axis_position_(axis_position),
+    label_on_(label_on),
+    label_units_on_(label_units_on), // default is include units.
+    axis_line_on_(axis_lines_on),
+    axis_(-1) // Not calculated yet.
+ { // Initialize all private data.
+    if(max_ <= min_)
+    { // max_ <= min_.
+      throw std::runtime_error("Axis range: max <= min!");
+    }
+    if((max_ - min_) < std::numeric_limits<double>::epsilon() * 1000)
+    { // Range too small to display.
+      throw std::runtime_error("Axis range too small!" );
+    }
+ } // axis_line_style constructor
 
   // Set and get functions.
   axis_line_style& color(const svg_color& color)
@@ -683,7 +837,6 @@ public:
   {
     return axis_width_;
   }
-
 
   bool label_on() const
   {
@@ -742,7 +895,7 @@ public:
     bool down_ticks_on_; // Draw ticks down from horizontal X-axis line.
     bool left_ticks_on_; // Draw ticks left from vertical Y-axis line.
     bool right_ticks_on_; // Draw ticks right from vertical Y-axis line.
-    // Simplest to have all of these although only one pair like up or down is used.
+    // Simplest to have all of these although only one pair (up or down) or (left or right) is used.
     // Unused are always false.
     int major_value_labels_side_; // Label values for major ticks, and direction.
     // < 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top)/
@@ -940,7 +1093,7 @@ public:
     bool fill_on_; // Color fill the box.
 
     box_style(const svg_color& scolor = black,
-      const svg_color& fcolor = white,
+      const svg_color& fcolor = white, // No fill.
       double width = 1, // of border
       double margin = 4., // 
       bool border_on = true, // Draw a border of width.
@@ -1021,6 +1174,111 @@ public:
 
 }; // class box_style
 
+enum bar_option
+{
+  y_block = -2, // Rectangular (optionally filled) block style horizontal to Y-axis,
+  y_stick = -1, // Bar or row line (stroke width) horizontal to Y-axis.
+  no_bar = 0, // No bar.
+  x_stick = +1, // Stick or column line (stroke width) vertical to X-axis.
+  x_block = +2  // Rectangular (optionally filled) block style vertical to X-axis,
+  // Other options like cylinders and cones might be added here?
+  // x_cyl = +3, x_cone = +4 ...
+};
+
+enum histogram_option
+{
+  //row = -1, // Row line (stroke width) horizontal to Y-axis. Not implemented.
+  // See svg_2d_plot for details of why not.
+  no_histogram = 0,
+  column = +1 // Stick or column line (stroke width) vertically to/from X-axis.
+  // Column is the most common histogram style.
+};
+
+class histogram_style
+{
+public:
+  histogram_option histogram_option_; // bar, no_histogram or column.
+
+  histogram_style(histogram_option opt = no_histogram)
+  :
+  histogram_option_(opt)
+  { // Default for all private data.
+    // Line width and area-fill are taken from the plot_line_style style.
+  }
+
+  histogram_style& histogram(histogram_option opt)
+  { // stick or bar.
+    histogram_option_ = opt;
+    return *this; // Make chainable.
+  }
+
+  double histogram()
+  { // 
+    return histogram_option_;
+  }
+
+}; // class histogram_style
+
+class bar_style
+{
+public:
+  svg_color color_; // line stroke color. (no fill color for lines).
+  svg_color area_fill_; // Fill color from line to axis. == true means color.blank = true.
+  double width_; // of bar, not enclosing line width.
+  bar_option bar_option_; // stick or bar.
+
+  bar_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bar_option opt = no_bar)
+  :
+  color_(col), area_fill_(acol), width_(width),  bar_option_(opt)
+  { // Defaults for all private data.
+  }
+
+  bar_style& width(double w)
+  { // of bar, not the enclosing line (stroke) width.
+    width_ = w;
+    return *this; // Make chainable.
+  }
+
+  double width()
+  { // of bar, not enclosing line width.
+    return width_;
+  }
+
+  bar_style& color(const svg_color& f)
+  { // of line or enclosing line.
+    color_ = f;
+    return *this; // Make chainable.
+  }
+
+  svg_color& color()
+  { // of line or enclosing line.
+    return color_;
+  }
+
+  bar_style& area_fill(const svg_color& f)
+  { // rectangle fill color.
+    area_fill_ = f;
+    return *this; // Make chainable.
+  }
+
+  svg_color& area_fill()
+  { // rectangle fill color.
+    return area_fill_;
+  }
+
+  bar_style& bar(bar_option option)
+  { // stick or bar.
+    bar_option_ = option;
+    return *this; // Make chainable.
+  }
+
+  double bar_option()
+  { // stick or bar.
+    return bar_option_;
+  }
+
+}; // class bar_style
+
 const std::string strip_e0s(std::string s);
 
 const std::string strip_e0s(std::string s)
@@ -1029,6 +1287,9 @@ const std::string strip_e0s(std::string s)
   // Should also be useful for values that spill over into exponent format
   // 'by accident' - when leading zeros are likely.
   // For example, "1.2e+000" becomes "1.2"
+  // (Could also do the same for uppercase E cases).
+  // (Considered doing a repeated strip but complicated).
+
   using std::string;
   size_t j = s.find("e+000");
   if (j != string::npos)

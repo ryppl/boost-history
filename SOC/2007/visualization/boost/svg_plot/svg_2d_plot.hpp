@@ -1,7 +1,7 @@
 // svg_2d_plot.hpp
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2007
+// Copyright Paul A. Bristow 2007, 2008
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -18,21 +18,24 @@
 #endif
 
 #include <boost/iterator/transform_iterator.hpp>
+//  using boost::make_transform_iterator;
 
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp"
 #include "detail/numeric_limits_handling.hpp"
 #include "detail/functors.hpp"
+#include "detail/auto_axes.hpp"
+
 #include "svg.hpp"
 
-#include <map>
+#include <map> // for map & multimap
 #include <string>
 #include <sstream>
 #include <utility>
 #include <ostream>
 #include <iterator>
 #include <exception>
-#include <iostream> // for debug
+#include <iostream> // for debug.
 
 namespace boost
 {
@@ -40,7 +43,7 @@ namespace boost
   {
     // Forward declarations.
     const std::string strip_e0s(std::string s); // Strip unncessary zeros and e and sign.
-    class svg_2d_plot; // Plot.
+    class svg_2d_plot; // Plot framework.
     class svg_2d_plot_series; // plot data series.
 
     // -----------------------------------------------------------------
@@ -51,7 +54,6 @@ namespace boost
     // -----------------------------------------------------------------
     class svg_2d_plot_series
     {
-    //protected: // TODO this causes trouble.
 
     friend svg_2d_plot_series;
     friend void draw_straight_lines(const svg_2d_plot_series&);
@@ -65,13 +67,14 @@ namespace boost
       // are unaffected by the order in which data is presented.
       // (For 1-D a vector of doubles can be used).
 
-      std::string title_; // Title of data series.
-      plot_point_style point_style_;
-      plot_point_style limit_point_style_;
+      std::string title_; // Title of data series (to show on legend).
+      plot_point_style point_style_; // circle, square...
+      plot_point_style limit_point_style_; // Default is cone pointing down.
       plot_line_style line_style_;
-    public:
+      bar_style bar_style_;
+      histogram_style histogram_style_;
 
-      template <class T>
+      template <class T>  // T an STL container: for example: multimap.
       svg_2d_plot_series(T begin, T end, // of data series.
         std::string title) // Title of data series.
         :
@@ -80,9 +83,10 @@ namespace boost
         // int size = 10, point_shape shape = round, const std::string& symbols = "X")
         point_style_(black, blank, 10, round), // Default point style.
         limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
-
-        // plot_line_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bool line_on = true, bool bezier_on = false)
-        line_style_(black, true, 2, true, false) // Default line style, no fill.
+        line_style_(black, blank, 2, true, false), // Default line style, no fill, width 2, line_on, bezier off.
+        bar_style_(black, blank, 3, no_bar), // Default black, no fill, stick width 3, no bar.
+        // -2 block to Y-axis, -1 stick to Y-axis, no_bar,  +1 stick to x_axis, -2 block to X-axis.
+        histogram_style_(no_histogram)
 
       { // Constructor.
         for(T i = begin; i != end; ++i)
@@ -126,34 +130,58 @@ namespace boost
 
       svg_2d_plot_series& line_color(const svg_color& col_)
       {
-        line_style_.color_ = col_;
+        line_style_.stroke_color_ = col_;
         return *this;
       }
 
       svg_2d_plot_series& area_fill(const svg_color& col_)
       {
         line_style_.area_fill_ = col_;
-        // Note that area_fill(true) will produce a *blank* color, and so NO FILL.
-        // area_fill(false) will produce the default non-blank color (black?).
+        // Note that area_fill(false) will produce a *blank* color, and so NO FILL.
+        // area_fill(blank) will produce the default non-blank color (black?).
         return *this;
       }
 
       svg_2d_plot_series& line_width(double wid_)
-      { 
+      {
         line_style_.width_ = wid_; // Sets legend line width too.
-        return *this;
+        return *this; // Make chainable.
       }
 
       svg_2d_plot_series& line_on(bool on_)
       {
         line_style_.line_on_ = on_;
-        return *this;
+        return *this; // Make chainable.
       }
 
       svg_2d_plot_series& bezier_on(bool on_)
       {
         line_style_.bezier_on_ = on_;
-        return *this;
+        return *this; // Make chainable.
+      }
+
+      svg_2d_plot_series& bar(bar_option opt_)
+      {
+        bar_style_.bar_option_ = opt_;
+        return *this; // Make chainable.
+      }
+
+      svg_2d_plot_series& bar_width(double wid_)
+      {
+        bar_style_.width_ = wid_;
+        return *this; // Make chainable.
+      }
+
+      svg_2d_plot_series& bar_color(const svg_color& col)
+      {
+        bar_style_.color_ = col;
+        return *this; // Make chainable.
+      }
+
+      svg_2d_plot_series& bar_area_fill(const svg_color& col)
+      {
+        bar_style_.area_fill_ = col;
+        return *this; // Make chainable.
       }
 
       // Get functions for the plot series.
@@ -179,7 +207,7 @@ namespace boost
 
       svg_color& line_color()
       {
-        return line_style_.color_;
+        return line_style_.stroke_color_;
       }
 
       svg_color& area_fill()
@@ -197,21 +225,48 @@ namespace boost
         return point_style_.shape_;
       }
 
-    }; // struct svg_2d_plot_series
+      bar_option bar_option()
+      {
+        return bar_style_.bar_option_;
+      }
+
+      double bar_width()
+      {
+        return bar_style_.width_;
+      }
+
+      svg_color& bar_color()
+      {
+        return bar_style_.color_;
+      }
+
+      svg_color& bar_area_fill()
+      {
+        return bar_style_.area_fill_;
+      }
+
+      svg_2d_plot_series& histogram(histogram_option opt_)
+      { // column = -1, // Bar or row line (stroke width) horizontal to Y-axis.
+        // no_histogram = 0,
+        // bar = +1 // Stick or column line (stroke width) vertical to X-axis.
+        histogram_style_.histogram_option_ = opt_;
+        return *this; // Make chainable.
+      }
+
+   }; // class svg_2d_plot_series
 
     class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
     { // See also svg_1d_plot.hpp for 1-D version.
      friend void show_plot_settings(svg_2d_plot&);
      friend svg_2d_plot_series;
+     friend class detail::axis_plot_frame<svg_2d_plot>;
+     // axis_plot_frame.hpp contains functions common to 1 and 2-D.
 
     private:
       // Member data names conventionally end with _,
-      // for example: border_margin_
-      // and set & get accessor functions are named without _ suffix:
-      // border_margin() & border_margin(int).
-
-      friend class detail::axis_plot_frame<svg_2d_plot>;
-      // axis_plot_frame.hpp contains functions common to 1 and 2-D.
+      // for example: border_margin_,
+      // and set & get accessor functions are named without _ suffix,
+      // for example: border_margin() & border_margin(int).
 
       double x_scale_; // Use by function transform()
       double x_shift_; // to go from Cartesian to svg coordinates.
@@ -233,9 +288,6 @@ namespace boost
       text_style y_axis_label_style_;
       text_style y_value_label_style_;
       text_style point_symbols_style_; // Used for data point marking.
-
-      //double x_label_width_;
-
       text_element title_info_; // Plot title.
       text_element legend_header_; // legend box header or title (if any).
       text_element x_label_info_; // For example: "length"
@@ -244,6 +296,17 @@ namespace boost
       text_element x_units_info_; // For example: "mm"
       text_element y_units_info_; // 2-D only.
       text_element y_label_value_; // For example: "1.2" or "1.2e+001"
+
+      text_style value_style_; // Used for data point value label.
+      value_style x_values_style_; // Data point X value marking.
+      value_style y_values_style_; // Data point Y value marking.
+      //bool x_plusminus_on_; // http://en.wikipedia.org/wiki/Plus-minus_sign
+      //// Unicode &#0xB1; HTML &plusmn;
+
+
+      //rotate_style y_value_label_rotation_; // Direction point Y value labels written.
+      //int y_value_precision_;
+      //std::ios_base::fmtflags y_value_ioflags_;
 
       box_style image_border_; // rectangular border of all image width, color...
       box_style plot_window_border_; // rectangular border of plot window width, color...
@@ -276,14 +339,42 @@ namespace boost
 
       bool title_on_; // Provide a title for the whole plot.
       bool legend_on_; // Provide a legend box.
-      bool outside_legend_on_; // legend box outside the plot window.
+      bool outside_legend_on_; // Legend box outside the plot window.
       bool legend_lines_; // get/set by legend_lines(bool); data colored line type in legend box.
       bool plot_window_on_; // Use a separate plot window (not whole image).
       bool x_ticks_on_; // TODO check these are really useful.
       bool y_ticks_on_;
+      bool x_values_on_; // If values of X data are shown.
+      bool y_values_on_; // If values of Y data are shown.
+      bool xy_values_on_; // If values of X & Y pairs are shown.
 
-      int x_axis_position_; // TODO should these be in axis_style?
-      int y_axis_position_; // But complications with difference between X and Y.
+      int x_axis_position_;
+      int y_axis_position_;
+
+      bool autoscale_check_limits_; // Whether to check autoscale values for infinity, NaN, max, min.
+      bool x_autoscale_; // Whether to use any X-axis autoscale values.
+      bool x_include_zero_; // If autoscaled, include zero.
+      int  x_min_ticks_;  // If autoscaled, set a minimum number of X ticks.
+      double x_tight_;
+      int  x_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+
+      // Values calculated by scale_axis, and is used only if x_autoscale == true.
+      double x_auto_min_value_;
+      double x_auto_max_value_;
+      double x_auto_tick_interval_; // tick major interval.
+      int x_auto_ticks_; // Number of ticks.
+
+      bool y_autoscale_; // Whether to use any y_axis autoscale values.
+      bool y_include_zero_; // If autoscaled, include zero.
+      int  y_min_ticks_;  // If autoscaled, set a minimum number of Y ticks.
+      double y_tight_;
+      int  y_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+
+        // Values calculated by scale_axis, and is used only if y_autoscale == true.
+      double y_auto_min_value_;
+      double y_auto_max_value_;
+      double y_auto_tick_interval_; // tick major interval.
+      int y_auto_ticks_; // Number of ticks.
 
       // Where we will be storing the data points (series) for transformation.
       std::vector<svg_2d_plot_series> series; // Defined above.
@@ -300,23 +391,21 @@ namespace boost
       svg_2d_plot() // Constructor, including all the very many default plot options,
         // some of which use some or all of the class defaults.
         :
-      // TODO check that *all* options are initialized here.
-      // See documentation for default settings rationale.
-      // text_styles:
+        // See documentation for default settings rationale.
+        // text_styles:
         title_style_(18, "Verdana", "", ""),  // last "bold" ?
         legend_style_(14, "Verdana", "", ""), // 2nd "italic"?
         x_axis_label_style_(14, "Verdana", "", ""),
-        x_value_label_style_(12, "Verdana", "", ""),
-        // Separate x and y to allow axes to have a different style.
+        x_value_label_style_(14, "Verdana", "", ""),
+        // Separate x and y to allow axes to have different styles.
         y_axis_label_style_(14, "Verdana", "", ""),
         y_value_label_style_(12, "Verdana", "", ""),
         point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
+        //x_values_style_(10, "Verdana", "", ""), // Used for data point X values.
+        //y_values_style_(10, "Verdana", "", ""), // Used for data point Y values.
         title_info_(0, 0, "", title_style_, center_align, horizontal),
-      //  title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal),
         x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal),
         x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
-      //  x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
-      //  x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
         x_label_value_(0, 0, "", x_value_label_style_, center_align, horizontal),
         x_axis_(X, -10., +10., black, 1, 0, true, false, true),
         y_axis_(Y, -10., +10., black, 1, 0, true, false, true),
@@ -326,8 +415,6 @@ namespace boost
         y_ticks_(Y, y_value_label_style_),
         y_label_info_(0, 0, "", y_axis_label_style_, center_align, upward),
         y_units_info_(0, 0, "", y_axis_label_style_, center_align, upward),
-    //    y_label_info_(0, 0, "Y Axis", y_axis_label_style_, center_align, upward),
-     //   y_units_info_(0, 0, " (units)", y_axis_label_style_, center_align, upward),
         y_label_value_(0, 0, "", y_value_label_style_, center_align, upward),
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
@@ -344,16 +431,36 @@ namespace boost
         plot_window_clip_("plot_window"), // for <clipPath id="plot_window" ...
         title_on_(true),
         plot_window_on_(true),
+        // Can have both X and Y value shown.
+        x_values_on_(false), // If X values of data are shown.
+        y_values_on_(false), // If Y values of data are shown.
+        xy_values_on_(false), // If X & Y values of data are shown as a pair.
+        x_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
+        y_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
+
+        // Autoscaling defaults.
+        autoscale_check_limits_(true), // Do check all value for limits, infinity, max, min, NaN.
+        x_autoscale_(false),
+        x_include_zero_(false), // If autoscaled, include zero on X-axis.
+        x_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
+        x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
+        x_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+        y_autoscale_(false),
+        y_include_zero_(false), // If autoscaled, include zero on Y-axis.
+        y_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
+        y_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
+        y_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+
         // Used to transform Cartesian to SVG.
         x_scale_(1.), x_shift_(0.),
         y_scale_(1.), y_shift_(0.),
-        x_axis_position_(0), // TODO move into axis_style?
-        y_axis_position_(0) // But some problems with this.
+        x_axis_position_(0),
+        y_axis_position_(0)
       {
         image_size(500, 400); // Default image size for 2-D.
         // 2-D usually needs to be squarer than 1-D.
 
-        using namespace boost::svg::detail; // avoid detail::
+        using namespace boost::svg::detail; // Avoid need for prefix detail::
 
         // Build the document tree by adding all children of the root node.
         for(int i = 0; i < SVG_PLOT_DOC_CHILDREN; ++i)
@@ -372,11 +479,6 @@ namespace boost
         image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
         image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
         image.g(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_.width());
-        image.g(PLOT_X_LABEL).style().fill_color(black);
-        image.g(PLOT_Y_LABEL).style().fill_color(black);
-        image.g(PLOT_VALUE_LABELS).style().fill_color(black);
-        image.g(PLOT_LEGEND_TEXT).style().fill_color(black);
-        image.g(PLOT_TITLE).style().fill_color(black).stroke_on(false);
 
         // Note that widths are stored in member data *and* copied here.
         // Not sure if this is wise but ...
@@ -394,8 +496,8 @@ namespace boost
         }
         // Grids.
         // Default color & width for grid, used or not.
+        // Might avoid empty grid stuff if this was only done if grid used?  TODO
         image.g(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
-        // BOOST_ASSERT(image.g(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
         image.g(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
         image.g(PLOT_Y_MAJOR_GRID).style().stroke_width(y_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
         image.g(PLOT_Y_MINOR_GRID).style().stroke_width(y_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
@@ -437,9 +539,9 @@ namespace boost
 
         // Start by assuming we can use all the svg image,
         // but reduce by the width of any image border.
-        plot_left_ = 0 + image_border_width();
+        plot_left_ = 0 + image_border_width(); // Top left of image.
         plot_top_ = 0 + image_border_width();
-        plot_right_ = image.x_size() - image_border_width();
+        plot_right_ = image.x_size() - image_border_width(); // Bottom right of image.
         plot_bottom_ = image.y_size() - image_border_width();
 
         if(title_on_)
@@ -467,10 +569,37 @@ namespace boost
           plot_top_ += image_border_.margin_;
           plot_bottom_ -=  image_border_.margin_;
         }
-       size_legend_box(); // Size depends on its contents.
-       place_legend_box(); // according to options chosen.
+        size_legend_box(); // Size depends on its contents.
+        place_legend_box(); // according to options chosen.
 
-       // Check if the axes will intersect.
+        // Because there may be several datasets,
+        // and the scaling can be done by anyone or all of them.
+        // my_plot.x_autoscale(my_data1) // for 1 dataset.
+        // or my_plot.x_autoscale(my_datas) // for a vector of several datasets.
+        // calculates the min & max, increments & ticks.
+        if (x_autoscale_)
+        { // Use calculated autoscale values.
+          // Autoscale has been done in my_data.x_autoscale(my_data);
+          // and saved in x_auto_min_value_, x_auto_max_value_, & x_auto_tick_interval_,
+          // so copy these values to use them:
+          x_axis_.min_ = x_auto_min_value_;
+          x_axis_.max_ = x_auto_max_value_;
+          x_ticks_.major_interval_  = x_auto_tick_interval_;
+          // else ignore auto values, even if have been calculated.
+        }
+
+        if (y_autoscale_)
+        { // Use calculated autoscale values.
+          // Autoscale has been done in my_data.y_autoscale(my_data);
+          // and saved in y_auto_min_value_, y_auto_max_value_, & y_auto_tick_interval_,
+          // so copy these values to use them:
+          y_axis_.min_ = y_auto_min_value_;
+          y_axis_.max_ = y_auto_max_value_;
+          y_ticks_.major_interval_  = y_auto_tick_interval_;
+          // else ignore auto values, even if have been calculated.
+        }
+
+        // Check if the axes will intersect.
         // X axis position is determined by the range of Y min and max label values.
         x_axis_position_ = x_intersects_y;  // Assume X-axis will intersect Y-axis (range of Y values includes zero).
         if (y_axis_.min_ > std::numeric_limits<double>::min()) // all Y values definitely > zero.
@@ -491,7 +620,7 @@ namespace boost
           y_ticks_.ticks_on_window_or_axis_ = -1; // left true; // because floating off end of X-axis.
           // so need to put the labels on the plot window instead of the X-axis.
         }
-        else if (x_axis_.max_ < -std::numeric_limits<double>::min()) // Y all definitely < zero.
+        else if (x_axis_.max_ < -std::numeric_limits<double>::min()) // X all definitely < zero.
         { // Y-axis < 0, so will not intersect X-axis.
           y_axis_position_ = right;
           y_ticks_.ticks_on_window_or_axis_ = +1; // right = true;
@@ -647,7 +776,7 @@ namespace boost
 
         if (plot_top_ >= plot_bottom_)
         {
-           std::cout << "plot window top " << plot_top_ << ", bottom " << plot_bottom_ << std::endl;
+          std::cout << "plot window top " << plot_top_ << ", bottom " << plot_bottom_ << std::endl;
           throw std::runtime_error("Plot window top >= bottom!");
         }
 
@@ -700,7 +829,7 @@ namespace boost
             if (x_axis_position_ == x_intersects_y)
             {
               if (x_ticks_.down_ticks_on_)
-              {  
+              {
                 if (x_ticks_.ticks_on_window_or_axis_ < 0) // at bottom
                 { // Extend the vertical line down in lieu of longest tick.
                   ybottom += (std::max)(x_ticks_.minor_tick_length_, x_ticks_.major_tick_length_);// Avoid macro max trap!
@@ -712,7 +841,7 @@ namespace boost
                 { // Extend the vertical line up in lieu of longest tick.
                   ytop += (std::max)(x_ticks_.minor_tick_length_, x_ticks_.major_tick_length_);// Avoid macro max trap!
                 }
-              }  
+              }
             }
             image.g(detail::PLOT_Y_AXIS).line(x, ytop, x, ybottom);
             // <g id="yAxis" stroke="rgb(0,0,0)"><line x1="70.5" y1="53" x2="70.5" y2="357"/>
@@ -759,7 +888,7 @@ namespace boost
           { // Draw minor tick.
             // This will output 'orphaned' minor ticks that are beyond the plot window,
             // if the last major tick does not coincide with the plot window.
-            // These are just ignored in draw_x_minor_ticks.
+            // These are just ignored in draw_x_minor_tick.
             // There might be 9 of them,
             // if you have the common 9 minor tick between major ticks!
             // TODO this seems ugly - as does the negative ones below.
@@ -806,18 +935,18 @@ namespace boost
 
       void draw_y_label()
       { // Draw vertical y_axis_ label, and optional y units.
-        // Y-label color is set in constructor thus: 
+        // Y-label color is set in constructor thus:
         // image.g(detail::PLOT_Y_LABEL).style().stroke_color(black);
         // and changed using y_label_color(color);
 
         std::string label = y_label_info_.text();
         if (y_axis_.label_units_on_ && (y_units_info_.text() != ""))
-        { // Append the units, user must provide any ()s, if wanted.
+        { // Append the units, user must provide any enclosing ()s, if wanted.
           label += y_units_info_.text() ;
         }
 
         double x = plot_left_;
-          x -= y_axis_label_style_.font_size() * 0.7; // Shift left to suit.
+        x -= y_axis_label_style_.font_size() * 0.7; // Shift left to suit.
         if (y_ticks_.ticks_on_window_or_axis_ < 0)
         { // Ticks & value labels to left of Y-axis.
           if (y_ticks_.down_ticks_on_)
@@ -854,7 +983,7 @@ namespace boost
         if(y_ticks_.major_grid_on_ == true)
         { // Draw horizontal major Y grid line.
           if(!plot_window_on_ == true)
-          { 
+          {
             if(y_ticks_.major_value_labels_side_ < 0) // left
             { // Start further right to give space for y axis value label.
               y -= y_value_label_style_.font_size() * text_margin_;
@@ -1132,14 +1261,14 @@ namespace boost
 
         g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
-        g_ptr.style().stroke_color(series.line_style_.color_);
-        //g_ptr.style().fill_color(series.line_style_.area_fill_); // Now set in path below
+        g_ptr.style().stroke_color(series.line_style_.stroke_color_);
+        g_ptr.style().fill_color(series.line_style_.area_fill_); // Now set in path below too.
         g_ptr.style().stroke_width(series.line_style_.width_);
         path_element& path = g_ptr.path();
         path.style().fill_color(series.line_style_.area_fill_);
 
-        bool is_fill = !series.line_style_.area_fill_.blank;
-        path.fill = is_fill; // Ensure includes a fill="none" if no fill.
+        bool is_fill = !series.line_style_.area_fill_.is_blank;
+        path.style().fill_on(is_fill); // Ensure includes a fill="none" if no fill.
 
         if(series.series.size() > 1)
         { // Need at least two points for a line ;-)
@@ -1194,7 +1323,7 @@ namespace boost
       {
         g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
-        g_ptr.style().stroke_color(series.line_style_.color_);
+        g_ptr.style().stroke_color(series.line_style_.stroke_color_);
         path_element& path = g_ptr.path();
 
         std::pair<double, double> n; // current point.
@@ -1203,13 +1332,13 @@ namespace boost
         std::pair<double, double> fwd_vtr;
         std::pair<double, double> back_vtr;
 
-        bool is_fill = !series.line_style_.area_fill_.blank;
+        bool is_fill = !series.line_style_.area_fill_.is_blank;
         if(is_fill == false)
         {
-          path.fill = false; // default path constructor is true - TODO why??
+          path.style().fill_on(false); // default path constructor is false
         }
         else
-        { // fill
+        { // !is_blank so do want area fill.
           path.style().fill_color(series.line_style_.area_fill_);
         }
 
@@ -1267,64 +1396,25 @@ namespace boost
       } // draw_bezier_lines
 
       void draw_plot_lines()
-      { // Draw line through data series, Bezier curved or straight.
+      { // Draw line through data series, Bezier curved or straight, or none.
         for(unsigned int i = 0; i < series.size(); ++i)
         {
           if(series[i].line_style_.bezier_on_)
           { // curved.
             draw_bezier_lines(series[i]);
           }
-          else
+          else if(series[i].line_style_.line_on_)
           {
             draw_straight_lines(series[i]);
+          }
+          else
+          { // No line joining points.
           }
         }
       } // draw_plot_lines
 
-      void update_image()
-      {
-        clear_all();
-        // svg paint rules are that later 'painting' writes over previous
-        // painting, so the order of drawing is important.
-
-        // Draw image background (perhaps with border and/or fill color).
-        image.g(detail::PLOT_BACKGROUND).push_back(
-          new rect_element(0, 0, image.x_size(),  image.y_size()));
-
-        calculate_plot_window();
-        draw_title(); // Moved to ensure plot_X and Y are valid.
-
-        // Define the clip path for the plot window.
-        // We don't want to allow overlap of the plot window border lines,
-        // thus the minor adjustments.
-        // TODO should this be border thickness?
-
-        image.clip_path(rect_element(plot_left_ + 1, plot_top_ + 1,
-          plot_right_ - plot_left_ - 2, plot_bottom_ - plot_top_ - 2),
-          plot_window_clip_);
-        // <clipPath id="plot_window"><rect x="35" y="38" width="309" height="322"/></clipPath>
-
-        image.g(detail::PLOT_DATA_POINTS).clip_id(plot_window_clip_);
-
-        // Draw axes, labels & legend, as required.
-        draw_x_axis(); // Must do X-axis first.
-        draw_y_axis(); // TODO is draw_axes used?
-        if(legend_on_)
-        {
-          draw_legend();
-        }
-        if(x_axis_.label_on_)
-        {
-          draw_x_label();
-        }
-        if(y_axis_.label_on_)
-        {
-          draw_y_label();
-        }
-
-        draw_plot_lines(); // Draw lines between points.
-
-        // Draw normal 'good' non-limit points.
+      void draw_plot_points()
+      { // Draw normal 'good' non-limit points.
         double x(0.);
         double y(0.);
         for(unsigned int i = 0; i < series.size(); ++i)
@@ -1339,11 +1429,31 @@ namespace boost
             j != series[i].series.end(); ++j)
           {
             x = j->first;
+            double vx = x;
             y = j->second;
+            double vy = y;
             transform_point(x, y);
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
               draw_plot_point(x, y, g_ptr, series[i].point_style_);
+              g_element& g_ptr_vx = image.g(detail::PLOT_X_POINT_VALUES).g();
+              g_element& g_ptr_vy = image.g(detail::PLOT_Y_POINT_VALUES).g();
+
+              if (x_values_on_)
+              { // Show the value of the X data point too.
+                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, vx);
+              }
+
+              if (y_values_on_)
+              { // show the value of the Y data point too.
+                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_, vy);
+              }
+
+              if (xy_values_on_)
+              { // show the values of the X & Y data as a pair.
+                draw_plot_point_values(x, y, g_ptr_vx, g_ptr_vy, x_values_style_, y_values_style_, vx, vy);
+              }
+
             }
           } // for
         } // for normal points
@@ -1366,7 +1476,204 @@ namespace boost
             }
           }
         } // limits point
-      } // void update_image()
+      } //  void draw_plot_points()
+
+      void draw_bars()
+      { // Draw normal bar chart for 'good' non-limit points.
+        g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g(); // Moved up out of loop.
+        double x(0.);
+        double y(0.); // Cartesian coord y = 0.
+        double x0(0.); // Y-axis line.
+        double y0(.0); // X-axis line.
+        transform_y(y0); // SVG coordinate of horizontal X-axis line.
+        transform_x(x0); // SVG coordinate of vertical Y-axis line.
+        for(unsigned int i = 0; i < series.size(); ++i)
+        {
+          if (series[i].bar_style_.bar_option_ == no_bar)
+          { // No bars wanted for this series.
+            continue;
+          }
+          g_ptr.style().stroke_color(series[i].bar_style_.color_); // stroke color of stick or rectangle block.
+            //.fill_color(series[i].bar_style_.area_fill_); // Only used for rectangle stroke.
+            //.stroke_width(series[i].bar_style_.width_) // Used for width of stick and rectangle block.
+          path_element& path = g_ptr.path();
+          //path.fill(series[i].bar_style_.area_fill_ != blank);
+          path.fill_on(false);
+
+          double h_w = series[i].bar_style_.width_; // For block bar chart.
+          //double h_h = 0.;
+          for(std::multimap<double, double>::const_iterator j = series[i].series.begin();
+            j != series[i].series.end(); ++j)
+          { // All the 'good' data points.
+            x = j->first;
+            y = j->second;
+            transform_point(x, y);
+            if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
+            { // Is inside plot window, so some bar to draw.
+              switch(series[i].bar_style_.bar_option_)
+              { // -2 block to Y-axis,-1 stick to Y-axis, none, +1 stick to X-axis, -2 block to X-axis.
+              case y_block: // Draw a rectangle centered on the data point horizontally to Y-axis.
+                 {
+                   g_ptr.style().stroke_width(series[i].line_style_.width_) // line_width used for rectangle line width.
+                     .fill_color(series[i].bar_style_.area_fill_);
+                   double h_left = x;
+                   double h_top = y - h_w / 2; // Start a half-width above the data point center.
+                   path.M(h_left, h_top).L(h_left, h_top + h_w).L(x0, h_top + h_w).L(x0, h_top).z();
+                 }
+                 break;
+              case y_stick:
+                 path.style().stroke_width(series[i].bar_style_.width_); // bar_width used for stick line width.
+                 path.M(x, y).L(x0, y); // Draw a line from point horizontally to Y-axis.
+                 break;
+              case none:
+                 break; // Already handled above, so should not get here.
+              case x_stick:
+                 path.style().stroke_width(series[i].bar_style_.width_); // bar_width used for stick line width.
+                 path.M(x, y).L(x, y0); // Draw a line from point vertically to X-axis.
+                 break;
+              case x_block: // Draw a rectangle centered on the data point vertically to X-axis.
+               {
+                 g_ptr.style().stroke_width(series[i].line_style_.width_) // line_width used for rectangle line width.
+                   .fill_color(series[i].bar_style_.area_fill_);
+                 double h_left = x - h_w / 2; // Start a half width left of the data point center.
+                 double h_top = y;
+                 path.M(h_left, h_top).L(h_left + h_w, h_top).L(h_left + h_w, y0).L(h_left, y0).z();
+               }
+                break;
+              } // switch
+            } // for
+          } // for normal points
+        }
+        // Ignore all the 'bad' at_limit points.
+      } //  void draw_bars()
+
+      void draw_histogram()
+      { // Draw a histogram with variable width but contiguous bins.
+        // Histograms differ from bar charts in the the *area* denotes the value,
+        // whereas the bar *height* denotes the value for a bar chart.
+        // bin widths are provided from the X-axis data series values.
+        // The 1st data X-value provides the start of the 1st bin,
+        // the 2nd data X-value provides the end of the 1st bin,
+        // and the 1st Y-value the area of the 1st bin,
+        // and the start of the second bin, and so on, until the
+        // width of last bin is calculated from the last data point in series,
+        // that must have a zero area.  ? NaN
+        // Bins can be the same (most common) or different widths.
+        // Intervals must not overlap and bins must be adjacent.
+        // http://en.wikipedia.org/wiki/Histogram
+
+        // Attempts to allow a row or horizontal were abandoned because of complications
+        // with the use of map which orders the x values providing the bins.
+        // Using the y values for the bins implies changing the Y axes labeling and scaling too.
+
+        g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g(); // Moved up out of loop.
+        for(unsigned int i = 0; i < series.size(); ++i)
+        { // for each data series.
+          if (series[i].histogram_style_.histogram_option_ == no_histogram)
+          { // No histogram wanted for this series.
+            continue;
+          }
+          // Get the color scheme.
+          g_ptr.style().stroke_color(series[i].line_style_.stroke_color_); // stroke color around bin blocks.
+          g_ptr.style().fill_color(series[i].line_style_.area_fill_);
+          g_ptr.style().stroke_width(series[i].line_style_.width_); // line_width used for stick line width.
+
+          path_element& path = g_ptr.path();
+          path.fill_on(series[i].line_style_.area_fill_ != blank);
+          if (path.fill_on() == true)
+          {
+            path.style().fill_color(series[i].line_style_.area_fill_);
+          }
+          else
+          {
+            path.style().fill_color(blank);
+          }
+
+          std::multimap<double, double>::const_iterator last = series[i].series.end();
+          last--; // Final pair with first the last bin end, and value zero or NaN.
+          if (last->second != 0)
+          {
+            std::cout << "Last bin end " << last->first << " should have zero value! but is "  << last->second << std::endl;
+            // Or Throw? or skip this series?
+          }
+          for(std::multimap<double, double>::const_iterator j = series[i].series.begin();
+            j != last; ++j)
+          { // All the 'good' 'real' data points.
+            double x = j->first;
+            double y = j->second;
+            std::multimap<double, double>::const_iterator j_next = j;
+            j_next++;
+            if (j != last)
+            { // Draw a column (perhaps filled) to show bin.
+              double x_next = j_next->first;
+              double w = x_next - x;
+              double h = y / w;
+              // std::cout << x << ' ' << y << ' ' << w << ' '  << h << std::endl;
+              double yy = h;
+              double y0(0.); // X-axis line.
+              transform_y(y0); // SVG y coordinate of horizontal X-axis line.
+              transform_x(x); // SVG x coordinate of start of bin,
+              transform_x(x_next);  // SVG x coordinate of end of bin,
+              transform_y(yy); // SVG y coordinate of height of bin.
+              //if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
+              //{ // Is inside plot window, so some columns to draw. TODO checks?
+                path.M(x, y0).L(x, yy) // Draw a line from point vertically from X-axis.
+                  .L(x_next, yy) // & horizonally to next bin end (next x value).
+                  .L(x_next, y0) // back to X-axis.
+                  .Z(); // So will fill.
+             } // if
+          } // for series
+        } // for normal points.
+        // Ignore all the 'bad' at_limit points.
+      } //  void draw_histogram()
+
+      void update_image()
+      {
+        clear_all();
+        // svg paint rules are that later 'painting' writes over
+        // previous painting, so the order of drawing is important.
+
+        // Draw image background (perhaps with border and/or fill color).
+        image.g(detail::PLOT_BACKGROUND).push_back(
+          new rect_element(0, 0, image.x_size(),  image.y_size()));
+
+        calculate_plot_window();
+        draw_title(); // Moved to ensure plot_X and Y are valid.
+
+        // Define the clip path for the plot window.
+        // We don't want to allow overlap of the plot window border lines,
+        // thus the minor adjustments.
+        // TODO should this be border thickness?
+        // Actually we DO want to allow a small amount of overlap
+        // so round point can lie on the axis line without being chopped in half or not show at all!!!
+        image.clip_path(rect_element(plot_left_ + 1, plot_top_ + 1,
+          plot_right_ - plot_left_ - 2, plot_bottom_ - plot_top_ - 2),
+          plot_window_clip_);
+        // <clipPath id="plot_window"><rect x="35" y="38" width="309" height="322"/></clipPath>
+
+        image.g(detail::PLOT_DATA_POINTS).clip_id(plot_window_clip_);
+
+        // Draw axes, labels & legend, as required.
+        draw_x_axis(); // Must do X-axis first.
+        draw_y_axis();
+        if(legend_on_)
+        {
+          draw_legend();
+        }
+        if(x_axis_.label_on_)
+        {
+          draw_x_label();
+        }
+        if(y_axis_.label_on_)
+        {
+          draw_y_label();
+        }
+
+        draw_plot_lines(); // Draw lines between points.
+        draw_plot_points();
+        draw_bars();
+        draw_histogram();
+    } // void update_image()
 
 
     public: // Member functions
@@ -1546,7 +1853,7 @@ namespace boost
       }
 
       bool y_label_units_on()
-      { // But only return the stroke color.
+      {
         return y_axis_.label_units_on_;
       }
 
@@ -1633,6 +1940,15 @@ namespace boost
 
       svg_2d_plot& y_range(double min_y, double max_y)
       { // Set the range (max and min) for Y values.
+        if (!boost::math::isfinite(min_y))
+        {
+          throw std::runtime_error("Y range: min not finite!");
+        }
+        if (!boost::math::isfinite(max_y))
+        {
+          throw std::runtime_error("Y range: max not finite!");
+        }
+
         if(max_y <= min_y)
         { // max <= min.
           throw std::runtime_error("Y range: y max <= y min!");
@@ -1643,7 +1959,7 @@ namespace boost
         }
         y_axis_.min_ = min_y;
         y_axis_.max_ = max_y;
-
+        y_autoscale_ = false;
        return *this;
       }
 
@@ -1656,13 +1972,119 @@ namespace boost
       }
 
       double y_min()
-      {
+      { // Can't check finite ness and relation to y_max.
         return y_axis_.min_;
       }
 
       double y_max()
-      {
+      { // Can't check finite ness and relation to y_min.
         return y_axis_.max_;
+      }
+
+      bool y_autoscale()
+      {
+        return y_autoscale_;
+      }
+
+      svg_2d_plot& y_autoscale(bool b)
+      {
+        y_autoscale_ = b;
+        return *this;
+      }
+
+      bool y_values_on()
+      {
+        return y_values_on_;
+      }
+
+      svg_2d_plot& y_values_on(bool b)
+      {
+        y_values_on_ = b;
+        return *this;
+      }
+
+      bool xy_values_on()
+      {
+        return xy_values_on_;
+      }
+
+      svg_2d_plot& xy_values_on(bool b)
+      {
+        xy_values_on_ = b;
+        return *this;
+      }
+
+      bool y_plusminus_on()
+      {
+        return y_values_style_.plusminus_on_;
+      }
+
+      svg_2d_plot& y_plusminus_on(bool b)
+      {
+        y_values_style_.plusminus_on_ = b;
+        return *this;
+      }
+
+      bool y_df_on()
+      {
+        return y_values_style_.df_on_;
+      }
+
+      svg_2d_plot& y_df_on(bool b)
+      {
+        y_values_style_.df_on_ = b;
+        return *this;
+      }
+
+      svg_2d_plot& y_autoscale(std::pair<double, double> p)
+      { // Use Y min & max pair values to autoscale.
+        scale_axis(p.first, p.second, // double min and max from pair.
+        &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+        autoscale_check_limits_,
+        y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+        y_autoscale_ = true;  // Default to use calculated values.
+        return *this;
+      } // autoscale(pair<double, double> p)
+
+      template <class T> // T an STL container: array, vector ...
+      svg_2d_plot& y_autoscale(const T& begin, const T& end) // Data series using iterators to
+      { // to use to calculate autoscaled values.
+        scale_axis(begin, end,
+        &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+        autoscale_check_limits_,
+        y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+        y_autoscale_ = true; // Default to use calculated values.
+        return *this;
+      }
+
+      template <class T> // T an STL container: array, vector ...
+      svg_2d_plot& y_autoscale(const T& container) // Whole data series.
+      { // to use to calculate autoscaled values.
+        scale_axis(container.begin(), container.end(), // All the container.
+        &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+        autoscale_check_limits_,
+        y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+        y_autoscale_ = true;  // Default to use calculated values.
+        return *this;
+      }
+
+      template <class T> // T a 2D STL container: array, vector ...
+      svg_2d_plot& xy_autoscale(const T& container) // Whole data series,
+      { // to use to calculate autoscaled values for *both* X and Y axes.
+        scale_axis(container, // All the container.
+          &x_auto_min_value_, &x_auto_max_value_, &x_auto_tick_interval_, &x_auto_ticks_,
+          &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+         autoscale_check_limits_,
+         x_include_zero_, x_tight_, x_min_ticks_, x_steps_,
+          y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+        x_autoscale_ = true; // Default to use calculated values.
+        y_autoscale_ = true; // Can be switch off with autoscale(false);
+        return *this;
+      } // xy_autoscale
+
+      bool xy_autoscale()
+      {
+        return y_autoscale_ && x_autoscale_;
       }
 
       svg_2d_plot& y_major_interval(double inter)
@@ -1882,6 +2304,8 @@ namespace boost
       //  return x_axis_label_style_.font_weight();
       //}
 
+
+
       svg_2d_plot& y_label_font_family(const std::string& family)
       {
         x_axis_label_style_.font_family(family);
@@ -1896,32 +2320,138 @@ namespace boost
 
       // Example of declaration but definition below.
       // TODO Probably better done this way,
-      // but wait until parameter system removed.
 
+
+      svg_2d_plot& y_values_font_size(unsigned int i)
+      {
+        y_values_style_.values_text_style_.font_size(i);
+        return *this;
+      }
+
+      unsigned int y_values_font_size()
+      {
+        return y_values_style_.values_text_style_.font_size();
+      }
+
+      svg_2d_plot& y_values_font_family(const std::string& family)
+      {
+        y_values_style_.values_text_style_.font_family(family);
+        return *this;
+      }
+
+      const std::string& y_values_font_family()
+      {
+        return y_values_style_.values_text_style_.font_family();
+      }
+
+      svg_2d_plot& y_values_color(const svg_color& col)
+      { // Function could set both fill (middle) and stroke (outside),
+        // but just setting fill if simplest,
+        // but does not allow separate inside & outside colors.
+        image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color(col);
+        //svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color(col);
+        return *this;
+      }
+
+      svg_color y_values_color()
+      { // Function could get either fill and stroke,
+        // return svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color();
+        return image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color();
+      }
+
+      svg_2d_plot& y_values_rotation(rotate_style rotate)
+      { // Degrees (0 to 360).
+        y_values_style_.value_label_rotation_ = rotate;
+        return *this;
+      }
+
+      int y_values_rotation()
+      {
+        return y_values_style_.value_label_rotation_;
+      }
+
+      svg_2d_plot& y_values_precision(int p)
+      { // set iostream precision
+        y_values_style_.value_precision_ = p;
+        return *this;
+      }
+
+      int y_values_precision()
+      {
+        return y_values_style_.value_precision_;
+      }
+
+      svg_2d_plot& y_values_ioflags(std::ios_base::fmtflags f)
+      { // set iostream format flags
+        y_values_style_.value_ioflags_ = f;
+        return *this;
+      }
+
+      std::ios_base::fmtflags y_values_ioflags()
+      {
+        return y_values_style_.value_ioflags_;
+      }
+
+
+      // Versions of plot functions to add data series, all or part.
 
       template <class T>
-      svg_2d_plot_series& plot(const T& container, const std::string& title)
-      {
+      svg_2d_plot_series& plot(const T& container, const std::string& title = "")
+      { // Version converting to double.
+        // Note that this version assumes that *ALL* the data value in the container is used.
         series.push_back(
           svg_2d_plot_series(
           boost::make_transform_iterator(container.begin(), detail::boost_default_2d_convert()),
           boost::make_transform_iterator(container.end(), detail::boost_default_2d_convert()),
           title)
         );
-        return series[series.size()-1];
+        return series[series.size()-1]; // Number of data series added so far.
       }
 
       template <class T, class U>
-      svg_2d_plot_series& plot(const T& container, const std::string& title, U functor)
+      svg_2d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_2d_convert)
       { // Version with functor.
+        // Note that this version assumes that *ALL* the data value in the container is used.
         series.push_back(
           svg_2d_plot_series(
           boost::make_transform_iterator(container.begin(), functor),
           boost::make_transform_iterator(container.end(),   functor),
           title)
         );
-        return series[series.size()-1];
+        return series[series.size()-1]; // Number of data series added so far.
       }
+
+      template <class T>
+      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "")
+      { // Add a data series to the plot (by default, converting to doubles).
+        // Note that this version permits a *partial range*,
+        // begin to end, of the container to be used.
+        series.push_back(
+          svg_2d_plot_series(
+          boost::make_transform_iterator(begin, detail::boost_default_convert()),
+          boost::make_transform_iterator(end, detail::boost_default_convert()),
+          title)
+        );
+        // For example:  my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
+        // my_2d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
+        // Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
+        return series[series.size() - 1]; // Number of data series added so far.
+      }
+
+      template <class T, class U>
+      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_2d_convert)
+      { // Add a data series to the plot. (Version with custom functor, rather than to double).
+        // Note that this version permits a partial range,
+        // begin to end, of the container to be used.
+        series.push_back(
+          svg_2d_plot_series(
+          boost::make_transform_iterator(container.begin(), functor),
+          boost::make_transform_iterator(container.end(),   functor),
+          title)
+        );
+        return series[series.size() - 1]; // Number of data series added so far.
+      }
+
  }; // class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
 
     // sample of declared function, externally defined in another .cpp file.
@@ -1930,7 +2460,6 @@ namespace boost
     {
       return y_axis_label_style_.font_family();
     }
-
 
 #if defined (BOOST_MSVC)
 #  pragma warning(pop)
