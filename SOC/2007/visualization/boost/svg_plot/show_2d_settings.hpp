@@ -226,6 +226,10 @@ void show_plot_settings(svg_2d_plot& plot)
 
   cout << "x_max " << plot.x_max() << endl;
   cout << "x_min " << plot.x_min() << endl;
+  cout << "x_autoscale " << plot.x_autoscale() << endl;
+  cout << "y_autoscale " << plot.y_autoscale() << endl;
+  cout << "xy_autoscale " << plot.xy_autoscale() << endl;
+  cout << "x_autoscale_check_limits " << plot.autoscale_check_limits() << endl;
 
   cout << "x_axis_on " << plot.x_axis_on() << endl;
   cout << "x_axis_color() " << plot.x_axis_color() << endl;
