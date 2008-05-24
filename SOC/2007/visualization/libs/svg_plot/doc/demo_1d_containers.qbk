@@ -1,0 +1,30 @@
+[section:demo_1d_containers_tutorial 1-D Containers Examples]
+
+[import ..\example\demo_1d_containers.cpp]
+[demo_1d_containers_1]
+[demo_1d_containers_2]
+[demo_1d_containers_3]
+[demo_1d_containers_4]
+[demo_1d_containers_5]
+[demo_1d_containers_6]
+
+The output is not very exciting in this case:
+[demo_1d_containers_output]
+
+You can view the svg files, for example: [@..\images\demo_1d_vector_float.svg demo_1d_vector_float.svg]
+with most internet browsers, and other programs too. 
+[/ image as .png of svg?]
+[/$images/2d_simple.png]
+
+See [@../../example/demo_1d_containers.cpp demo_1d_containers.cpp]
+for full source code.
+
+[endsect] [/section:demo_1d_containers_tutorial 1-D Containers Examples]
+
+[/ demo_1d_containers_tutorial.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+

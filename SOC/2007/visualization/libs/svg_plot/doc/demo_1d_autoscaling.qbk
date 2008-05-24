@@ -1,0 +1,44 @@
+[section:demo_1d_autoscaling 1-D Autoscaling Various Containers Examples]
+
+[h4 Autoscaling]
+
+[import ..\example\demo_1d_autoscaling.cpp]
+
+[demo_1d_autoscaling_1]
+[demo_1d_autoscaling_2]
+[demo_1d_autoscaling_3]
+
+[h4 scale_axis Function Examples]
+
+[demo_1d_autoscaling_4]
+[demo_1d_autoscaling_5]
+[demo_1d_autoscaling_6]
+
+The output is:
+[demo_1d_autoscaling_output]
+
+You can view the svg file, for example: [@..\images\auto_1d_containers.svg auto_1d_containers.svg]
+with most internet browsers, and other programs too. 
+[/ image as .png of svg?]
+[/$images/2d_simple.png]
+
+See [@../../example/auto_1d_containers.cpp auto_1d_containers..cpp]
+for full source code.
+
+[h4 Autoscale 1D Examples]
+
+[import ..\example\auto_1d_plot.cpp]
+
+[auto_1d_plot_1]
+[auto_1d_plot_2]
+[auto_1d_plot_3]
+
+
+[endsect] [/section:auto_1d_containers_tutorial 1-D Auto Multiple Containers Examples]
+
+[/ demo_1d_autoscaling.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
