@@ -118,12 +118,13 @@ protected:
   std::string css; // Cascading Style Sheet.
   std::string filename_; // file written to.
   std::string author_; // Probably == copyright holder.
-  bool is_license_;
-  bool is_boost_license_;
+  bool is_boost_license_; // To include the Boost license as comment.
+  bool is_license_; // Creative Commons license as metadata:
   std::string reproduction_; // "permits", "requires", or "prohibits"
   std::string attribution_;
   std::string commercialuse_;
   std::string distribution_;
+  std::string derivative_works_;
   int coord_precision_; // decimal digits precision for output of x and y coordinates to svg.
 
 private:
@@ -213,10 +214,10 @@ public:
   svg()
     : x_size_(400), y_size_(400), // of the whole SVG image.
     title_document_(""),  // This is document title, not plot title.
-    image_desc_(""), // Information about the plot, for example the program that created it.
+    image_desc_(""), // Information about the plot, for example, the program that created it.
     author_(""), // Default to copyright holder.
     holder_copyright_(""),  //
-    date_copyright_(""),  //
+    date_copyright_(""), //
     css(""), // stylesheet.
     filename_(""), // If written only to ostream, filename will not appear in comment.
     is_license_(false), // No default license.
@@ -225,6 +226,7 @@ public:
     distribution_("permits"), // permits, requires, or prohibits.
     attribution_("requires"),
     commercialuse_("permits"),
+    derivative_works_("permits"),
     coord_precision_(3) // enough for 1 in 1000 resolution to suit small image use.
   { // Default constructor.
   }
@@ -315,26 +317,34 @@ public:
     // <svg xml:space="preserve" width="5.5in" height=".5in">
 
     s_out << "<svg width=\"" << x_size_ << "\" height =\"" << y_size_
-      << "\" version=\"1.1\"" // http://www.w3.org/TR/SVG11/
+      << "\" version=\"1.1\"\n" // http://www.w3.org/TR/SVG11/
+      
       // 1.2 draft specification at http://www.w3.org/TR/SVG12/
-      << " xmlns=\"http://www.w3.org/2000/svg\"\n"
+      "xmlns:svg =\"http://www.w3.org/2000/svg\"\n"
+      "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+      "xmlns:cc=\"http://web.resource.org/cc/\"\n"
+      "xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n"
+      "xmlns =\"http://www.w3.org/2000/svg\"\n"
+
       // xml namespace containing svg shapes rect, circle...
       // so can write rect or circle avoiding need for qualification svg:rect, svg:circle...
       // This site isn't visited, but if missing Firefox, at least, will fail to render.
-         " xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
+
+      // Might also need xlink and ev,
+      // but Inkscape doesn't provide it, so we don't until required.
+      //   "xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
       // tells that elements and attributes which are prefixed by "xlink:"
       // are a part of the xlink specification http://www.w3.org/1999/xlink.
       // Need to use xlink:href to refer to xlink.
-         " xmlns:ev=\"http://www.w3.org/2001/xml-events\">\n"
-      << std::endl;
+      //  "xmlns:ev=\"http://www.w3.org/2001/xml-events\"\n"
+      << '>' << std::endl;
+
     // Bind the required namespaces, see http://jwatt.org/svg/authoring/#namespace-binding
     // 
     // << " baseProfile = \"full\"\n"
     // is recommended and might be needed, but defaults to baseProfile = "none"
     // according to
     // http://www.w3.org/TR/SVG/struct.html#SVGElementBaseProfileAttribute
-
-    // Added xlink and ev in case needed.
 
     s_out << package_info << std::endl;
 
@@ -385,27 +395,46 @@ public:
         << std::endl;
     } // is_boost_license
     if (is_license_ == true)
-    {
+    { // Add license information to the file.
+      // http://dublincore.org/documents/2000/07/16/usageguide/
+      // http://dublincore.org/documents/2000/07/16/usageguide/sectc.shtml#creator
       s_out <<
-        "<metadata>\n"
-          "<rdf:RDF xmlns:cc=\"http://web.resource.org/cc/\"\n"
-             "xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n"
-             "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
-             "<cc:work rdf:about=\" " << filename_ << "\">\n" // Presumably .svg (or svgz?)
-               "<dc:title>" << (title_document_ != "" ? title_document_ : filename_) << "</dc:title>\n"
-               "<dc:creator>Boost.Plot</dc:creator>\n"
-               "<dc:author> " << author_ << "</dc:author>\n"
-               "<dc:rights> " << holder_copyright_ << ", " << date_copyright_ << "</dc:rights>\n"
-               "<dc:format>application/xhtml+xml+svg</dc:format>\n"
-               "<cc:license rdf:about=\"http://creativecommons.org/licenses\">\n"
-               "<cc:requires rdf:resource=\"http://web.resource.org/cc/Notice\"/>\n"
+        "<metadata id = \"id0\">\n"
+          "<rdf:RDF>\n"
+             "<cc:Work rdf:about=\"" << filename_ << "\">\n" // Presumably .svg (or svgz?)
+               "<dc:format>image/svg+xml</dc:format>\n"
+               "<dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />\n"
+               "<dc:title> " << (title_document_ != "" ? title_document_ : filename_) << "</dc:title>\n"
+               "<dc:creator> <cc:Agent> <dc:title>Boost.Plot</dc:title> </cc:Agent></dc:creator>\n" 
+               "<dc:author><cc:Agent><dc:title>" << author_ << " </dc:title> </cc:Agent> </dc:author>\n"
+               "<dc:rights><cc:Agent><dc:title>" << holder_copyright_ << "</dc:title></cc:Agent></dc:rights>\n"
+               "<dc:date>" << date_copyright_ << "</dc:date>\n" 
+               "<dc:identifier>" << filename_ << "</dc:identifier>\n" // URI for this svg document.
+               "<dc:source>" << "Boost.plot 0.5" << "</dc:source>\n"
+               "<dc:relation>" << "" << "</dc:relation>\n" // URI to a related document, perhaps user source program.
+               "<dc:publisher><cc:Agent><dc:title>" << holder_copyright_ << "</dc:title></cc:Agent></dc:publisher>\n"
+               // publisher could be different from copyright holder.
+               "<dc:language>en_US</dc:language>\n" // Could be changed to suit, en-GB for example ;-)
+               "<dc:description>" << image_desc_ << "</dc:description>\n"
+               "<dc:contributor><cc:Agent><dc:title>" << author_ << "</dc:title></cc:Agent></dc:contributor>\n"
+               "<dc:subject><rdf:Bag><rdf:li>Boost svg plot keyword</rdf:li></rdf:Bag></dc:subject>\n"
+               // Could add keywords string here.
+               // License conditions URI: /by/ or /by_na/ ..
+               "<cc:license rdf:resource=\"http://creativecommons.org/licenses/\" />\n"
+               // Might instead select a specific license like http://creativecommons.org/licenses/by/3.0/
+               // rather than a fully fexible combination as below.  Inkscape does this, for example.
+             "</cc:Work>\n"
+             "<cc:License rdf:about=\"http://creativecommons.org/licenses/\">\n"
                "<cc:" << reproduction_ << " rdf:resource=\"http://web.resource.org/cc/Reproduction\"/>\n"
                "<cc:" << distribution_ << " rdf:resource=\"http://web.resource.org/cc/Distribution\"/>\n"
+               "<cc:requires rdf:resource=\"http://web.resource.org/cc/Notice\"/>\n"
                "<cc:" << attribution_ << " rdf:resource=\"http://web.resource.org/cc/Attribution\"/>\n"
                "<cc:" << commercialuse_ << " rdf:resource=\"http://web.resource.org/cc/CommercialUse\"/>\n"
-               "</cc:license>\n"
-             "</cc:work>\n"
-           "</rdf:RDF>\n"
+               // Including commercialuse means doesn't display correctly in Inkscape metadata,
+               // but the license URI, for example, http://creativecommons.org/licenses/by/3.0/ is shown correctly.
+               "<cc:" << derivative_works_ << " rdf:resource=\"http://web.resource.org/cc/DerivativeWorks\"/>\n"
+             "</cc:License>\n"
+          "</rdf:RDF>\n"
          "</metadata>"
        << std::endl;
     } // is_license
@@ -418,16 +447,18 @@ public:
     const std::string repro = "permits",
     const std::string distrib = "permits",
     const std::string attrib = "requires",
-    const std::string commercial = "permits")
+    const std::string commercial = "permits",
+    const std::string derivative = "permits")
   { // Might check these are "permits", "requires", or "prohibits"?
     reproduction_ = repro;
     distribution_ = distrib;
     attribution_ = attrib;
     commercialuse_ = commercial;
+    derivative_works_ = derivative;
     is_license_ = true;  // Assume want this if set these?
   }
 
-  void license(bool l)
+  void license_on(bool l)
   { // Set (or not) license using all requirement (default permits).
     // Implicitly set by setting a license requirement using license above.
     is_license_ = l;
