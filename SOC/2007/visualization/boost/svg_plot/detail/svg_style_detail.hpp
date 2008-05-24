@@ -1,6 +1,7 @@
 // svg_style.hpp
 
 // Copyright Jacob Voytko 2007
+// Copyright Paul A. Bristow 2008
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -48,6 +49,9 @@ enum plot_doc_structure
     PLOT_LEGEND_POINTS, // data series point markers, circle, cross...
     PLOT_LEGEND_TEXT, // text describing each data series.
     PLOT_TITLE, // of the whole plot.
+    PLOT_X_POINT_VALUES,  PLOT_Y_POINT_VALUES, // Data point value labels.
+    PLOT_FUNCTIONS, // Lines and curves, often to show a fit to the data.
+    PLOT_NOTES, // Free text and shapes to annotate diagram.
     SVG_PLOT_DOC_CHILDREN // Last enum value used as count of children (22).
 };
 
@@ -69,6 +73,9 @@ std::string document_ids[]= // TODO change to document_ids_ because private memb
     "legendPoints", // data series point markers, circle, cross...
     "legendText", // text describing each data series.
     "title",  // of the whole plot.
+    "plotXValues","plotYValues", // Data point value labels.
+    "plotFunctions", // Lines and curves, often to show a fit to the data.
+    "plotNotes", // Free text and shapes to annotate diagram.
     "plotDocChildren" // This last string is not used.
 }; //  std::string document_ids
     
