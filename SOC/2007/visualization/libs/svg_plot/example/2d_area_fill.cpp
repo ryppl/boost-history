@@ -1,5 +1,8 @@
 // 2d_area_fill.cpp
-// Copyright (C) Jacob Voytko 2007
+
+// Copyright Jacob Voytko 2007
+// Copyright Paul A. Bristow 2008
+
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 // -----------------------------------------------------------------
@@ -89,19 +92,24 @@ int main()
 	       .y_major_interval(25)
 	       .y_num_minor_ticks(5);		
 	
-	//svg_2d_plot_series& s1 = my_plot.plot(data1, "Sqrt(x)").area_fill(red);
- // my_plot.write("./2d_area_fill.svg");
- // std::cout << s1.area_fill() << std::endl;
-
 	svg_2d_plot_series& s_sin = my_plot.plot(data_sin, "sin(x)").area_fill(red);
-  std::cout << s_sin.area_fill() << std::endl;
-	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
-	// svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(true).shape(square);
-  // Note that svg_color(bool = true) returns a non-color blank, so no fill.
-  std::cout << s_cos.area_fill() << std::endl;
-	svg_2d_plot_series& s_tan = my_plot.plot(data_tan, "tan(x)").shape(cone);
-  std::cout << s_tan.area_fill() << std::endl;
-  my_plot.write("./2d_no_area_fill.svg");
+  std::cout << "s_sin.area_fill() " << s_sin.area_fill() << std::endl;
+	//svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
+	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blank).shape(square);
+  // Note that svg_color(blank) or svg_color(false) returns a non-color blank, so no fill.
+  std::cout << "s_cos.area_fill() " << s_cos.area_fill() << std::endl;
+	svg_2d_plot_series& s_tan = my_plot.plot(data_tan, "tan(x)").shape(cone).line_on(false);
+  std::cout << "s_tan.area_fill() " << s_tan.area_fill() << std::endl;
+  std::cout << my_plot.title() << std::endl;
+
+  my_plot.write("./2d_area_fill.svg");
+  std::cout << my_plot.title() << std::endl;
+
+  // 
+  //my_plot.title("Plot 2 of 50 * sin(x), cos(x) and tan(x)");
+	my_plot.plot(data_cos, "cos(x)").area_fill(green).shape(square).fill_color(red);
+  my_plot.write("./2d_area_fill_2.svg");
+
 
 	return 0;
 } // int main()
@@ -110,15 +118,15 @@ int main()
 
 Output:
 
-Compiling...
 2d_area_fill.cpp
 Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\2d_area_fill.exe"
-RGB(255,0,0)
-blank
-blank
-Build Time 0:03
+s_sin.area_fill() RGB(255,0,0)
+s_cos.area_fill() blank
+s_tan.area_fill() blank
+
+
 
 
 */
