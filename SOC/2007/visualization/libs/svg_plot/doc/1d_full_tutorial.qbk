@@ -54,12 +54,15 @@
     // Text settings.
     my_plot.title("Oh My!")
            .title_font_size(29)
-           .x_label("Time in Months");
+           .x_label("Time in Months") // X- axis label
+           .x_label_on(true); // Not needed, because although the default is no axis label,
+           // providing a label has this effect.
+           // If we want later to switch *off* labels, 
+           // my_plot.x_label_on(false); // is needed.
     
     // Commands.
     my_plot.legend_on(true)
            .plot_window_on(true)
-           .x_label_on(true)
            .x_major_labels_on(true);
     
     // Color settings.
