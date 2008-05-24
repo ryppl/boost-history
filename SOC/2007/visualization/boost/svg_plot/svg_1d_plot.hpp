@@ -1,29 +1,37 @@
 // svg_1d_plot.hpp
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2007
+// Copyright Paul A. Bristow 2008
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-// -----------------------------------------------------------------
 
 #ifndef BOOST_SVG_SVG_1D_PLOT_HPP
 #define BOOST_SVG_SVG_1D_PLOT_HPP
 
-#if defined (BOOST_MSVC)
+#if defined (_MSC_VER)
 #  pragma warning (push)
 #  pragma warning (disable: 4512) // "assignment operator could not be generated."
 #  pragma warning (disable: 4180) // qualifier applied to function type has no meaning; ignored
 #endif
 
 #include <boost/iterator/transform_iterator.hpp>
+//  using boost::make_transform_iterator;
 
 #include "svg.hpp"
 #include "svg_style.hpp"
-#include "detail/axis_plot_frame.hpp"
+#include "detail/axis_plot_frame.hpp" // Code shared with 2D.
 #include "detail/functors.hpp"
+
+#include <boost/svg_plot/detail/auto_axes.hpp> // provides:
+//void scale_axis(double min_value, double max_value, // Input range
+//               double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
+//               bool origin, // If true, ensures that zero is a tick value.
+//               double tight, // Allows user to avoid a small fraction over a tick using another tick.
+//               int min_ticks, // Minimum number of ticks.
+//               int steps); // Round up and down to 2, 4, 6, 8, 10, or 5, 10 or 2, 5, 10 systems.
 
 #include <vector>
 #include <ostream>
@@ -38,33 +46,13 @@ namespace svg
 {
   // Forward declarations.
   const std::string strip_e0s(std::string s); // Strip unncessary zeros and e and sign.
-  double string_svg_length(const std::string& s, const text_style& style);
 
-  class svg_1d_plot; // Plot.
-  class svg_1d_plot_series; // plot data series.
-  // see axis_plot_frame.hpp
+  class svg_1d_plot; // 1D Plot.
+  class svg_1d_plot_series; // 1D Plot data series.
 
-//  static const double wh = 0.7; // font text width/height ratio.
-  // Even after reading http://www.w3.org/TR/SVG/fonts.html, unclear how to
-  // determine the exact width of digits, so an 
-  // arbitrary average width height ratio wh = 0.7 is used as a good approximation.
-
-//  static const double sin45 = 0.707; // Use if axis value labels are sloping.
-
-  // x_axis_position_ and y_axis_position_  use these.
-//  enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
-  // bottom = X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
-  // top = X-axis free above top of X-axis (case of all Y definitely > 0).
-  // x_intersects_y when Y values include zero, so X intersects the Y axis.
-
-//  enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
-  // left = Y-axis free to left of end of X-axis (case of all X definitely < 0).
-  // right = Y-axis free to left of end of X-axis (case of all X definitely > 0).
-  // y_intersects_x when X values include zero, so intersects the X axis.
-
- // -----------------------------------------------------------------
-// This allows us to store plot state locally in svg_plot. We don't
-// store it in "svg" because transforming the points after they are
+// -----------------------------------------------------------------
+// This allows us to store plot state locally in svg_plot.
+// Not stored in "svg" because transforming the points after they are
 // written to the document would be difficult. We store the Cartesian
 // coordinates locally and transform them before we write them.
 // -----------------------------------------------------------------
@@ -83,18 +71,17 @@ public:
   // Scan each data point between the iterators that are passed,
   // sorting them into the correct std::vector, normal or not.
   // -------------------------------------------------------------
-  template <class T> // T an STL container: array, vector ...
-  svg_1d_plot_series(T begin, T end, const std::string& title) //, const plot_point_style& style = )
-    :
+  template <class T> // T an STL container: array, vector<double>, set, map ...
+  svg_1d_plot_series(T begin, T end, const std::string& title = "")
+  : // Constructor.
   title_(title),
-  point_style_(black, blank, 10, round), // Default point style. TODO vertical line better?
-  // plot_line_style(const svg_color& col = black, const svg_color& acol = true, bool on = true, bool bezier_on = false)
+  point_style_(black, blank, 5, vertical_line), // Default point style.
   limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
-  line_style_(black, true, 2, true, false) // Default line style, no fill.
+  line_style_(black, blank, 2, true, false) // Default line style, black, no fill, width, line_on, bezier_on false
   // Meaning of line style for 1-D as yet undefined?
   {
     for(T i = begin; i != end; ++i)
-    {  // No defaults for begin and end.
+    {  // No defaults for begin and end?
       double temp = *i;
       if(detail::is_limit(temp))
       {
@@ -126,20 +113,46 @@ public:
     return *this;
   }
 
-  svg_1d_plot_series& size(int size_)
+   point_shape shape()
   {
-    point_style_.size_ = size_;
+    return point_style_.shape_;
+  }
+
+
+  svg_1d_plot_series& symbols(const std::string s)
+  {
+    point_style_.symbols_ = s;
     return *this;
   }
 
+  svg_1d_plot_series& size(int size_)
+  {
+    //point_style_.size_ = size_;
+    //point_style_.symbols_style_.font_size(i); // in case using a symbol.
+    point_style_.size(size_);
+
+    return *this;
+  }
+
+  int size()
+  {
+    return point_style_.size();
+  }
+
+  const std::string symbols()
+  {
+    return point_style_.symbols_;
+  }
+
+
   svg_1d_plot_series& line_color(const svg_color& col_)
   {
-    line_style_.color_ = col_;
+    line_style_.stroke_color_ = col_;
     return *this;
   }
 
   svg_1d_plot_series& line_width(double wid_)
-  { // Doesn't have desired effect yet.
+  {
     line_style_.width_ = wid_;
     return *this;
   }
@@ -166,47 +179,51 @@ public:
   {
     return line_style_.bezier_on_;
   }
-}; //     struct svg_plot_series()
+}; // class svg_plot_series()
 
 class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
 { // See also svg_2d_plot.hpp for 2-D version.
   friend void show_plot_settings(svg_1d_plot&);
   friend class detail::axis_plot_frame<svg_1d_plot>;
+  // axis_plot_frame.hpp contains functions common to 1 and 2-D.
 
  protected:
-  // Where we will be storing the data points for transformation.
-  std::vector<svg_1d_plot_series> series;
-  // These are sorted into two vectors for normal and abnormal (max, inf and NaN).
-
-
-
-  svg image; // Stored so as to avoid rewriting style information constantly.
-
   // Member data names conventionally end with _.
+  // for example: border_margin_,
+  // and set & get accessor functions are named without _ suffix,
+  // for example: border_margin() & border_margin(int).
 
   double x_scale_; // Used for transform from Cartesian to SVG coordinates.
   double x_shift_; // SVG origin is top left, Cartesian is bottom right.
   double y_scale_;
   double y_shift_;
 
+  svg image; // Stored so as to avoid rewriting style information constantly.
+
   double text_margin_; // Marginal space around text items like title,
-  // text_margin_ * font_size to get distance in svg units
 
   text_style a_style_; // Defaults.
   // text_style contains font size & type etc.
   text_style title_style_;
   text_style legend_style_;
   text_style x_axis_label_style_;
-  text_style y_axis_label_style_;
+  text_style y_axis_label_style_;  // Not used for 1D but needed by axis_plot_frame.hpp.
   text_style x_value_label_style_;
-  text_style y_value_label_style_; // Not used?
+  text_style y_value_label_style_; // Not used for 1D but needed by axis_plot_frame.hpp.
   text_style point_symbols_style_; // Used for data point marking.
+  text_style value_style_; // Used for data point value label.
+
+  value_style x_values_style_; // Used for data point value marking.
+  //rotate_style x_value_label_rotation_; // Direction point value labels written.
+  //int x_value_precision_;
+  //std::ios_base::fmtflags x_value_ioflags_;
 
   text_element title_info_; // Title of whole plot.
   text_element legend_header_; // legend box header or title (if any).
   text_element x_label_info_; // Example: "length of widget"
-  text_element x_label_value_; // For example: "1.2" or "1.2e+001"
+  text_element x_label_value_; // For example: "1.2" or "1.2e1"
   text_element x_units_info_; // For example, to display, "length (meter)"
+
   // No Y-axis info for 1D.
   // Note that text_elements hold font_size, bold, italic...
 
@@ -240,12 +257,29 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   ticks_labels_style y_ticks_; // Added to permit shared code!
 
   bool title_on_; // Provide a title for the whole plot.
-  bool legend_on_; // Provide a legend box. 
-  bool outside_legend_on_; // legend box outside the plot window.
+  bool legend_on_; // Provide a legend box.
+  bool outside_legend_on_; // Legend box outside the plot window.
   bool legend_lines_; // get/set by legend_lines(bool); data colored line type in legend box.
   bool plot_window_on_; // Use a separate plot window (not whole image).
   bool x_ticks_on_; // TODO check these are really useful.
-  int x_axis_position_; // TODO should these be in axis_style?
+  bool x_values_on_; // values of data are shown by markers.
+  int  x_axis_position_;
+  bool autoscale_check_limits_; // Whether to check autoscale values for infinity, NaN, max, min.
+  bool x_autoscale_; // Whether to use any autoscale values.
+  bool x_include_zero_; // If autoscaled, include zero.
+  int  x_min_ticks_;  // If autoscaled, set a minimum number of ticks.
+  double x_tight_;
+  int  x_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+
+  // Values calculated by scale_axis, and is used only if x_autoscale == true.
+  double x_auto_min_value_;
+  double x_auto_max_value_;
+  double x_auto_tick_interval_; // tick major interval.
+  int x_auto_ticks_; // Number of ticks.
+
+  // Similar y_auto value for 2-D
+  bool y_autoscale_; // Stays false for 1-D plot.
+
   std::string plot_window_clip_; // = "clip_plot_window" id for clippath
   // http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction
   // clipping paths, which uses any combination of 'path', 'text' and basic shapes
@@ -253,37 +287,39 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // is allowed to show through but everything on the outside is masked out.
   // So the plot_window_clip_ limits display to a plot_window rectangle.
 
-  // Public member functions, defined below.
-  // void calculate_transform(); //
-  // void draw_axes();
-  // void calculate_plot_window(); // plot_x, plot_y...
-  // void update_image();
-  // void set_ids();
+  // Where we will be storing the data points for transformation.
+  std::vector<svg_1d_plot_series> series;
+  // These are sorted into two vectors for normal and abnormal (max, inf and NaN).
 
 public:
   svg_1d_plot()
     : // Default constructor.
     // Many ( but not all - see below) default values here.
-    text_margin_(2.), // for text was 1.5 // as a multiplier of the font size.
+    // See documentation for default settings rationale.
 
-    title_style_(16, "Verdana", "", ""),  // last "bold" ?
+    title_style_(18, "Verdana", "", ""),  // last "bold" ?
     legend_style_(14, "Verdana", "", ""), // 2nd "italic"?
     x_axis_label_style_(14, "Verdana", "", ""),
     x_value_label_style_(12, "Verdana", "", ""),
     point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
+    value_style_(10, "Verdana", "", ""), // Used for data point values.
 
-    title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal),
-    x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
-    x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
+    title_info_(0, 0, "", title_style_, center_align, horizontal),
+    //title_info_(0, 0, "Plot of data", title_style_, center_align, horizontal), when text concatenation solved?
+    //x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
+    //x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
+    x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal), // Null strings for now.
     x_label_value_(0, 0, "", x_value_label_style_, center_align, horizontal),
+    x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
     x_axis_(X, -10., +10., black, 1, 0, true, false, true),
-    y_axis_(Y, 0., +1., black, 1, 0, false, false, false),
+    y_axis_(Y, 0., +1., black, 1, 0, false, false, false), // Not used for 1D.
 
     // Might fill in all values, but there are rather many for ticks_labels_style,
-    x_ticks_(X),// so for defaults see ticks_labels_style.
-    image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
-    plot_window_border_(yellow, svg_color(255, 255, 255), 2, 3, true, false),
-    legend_box_(yellow, azure, 1, 2, true, true),
+    x_ticks_(X, x_value_label_style_),// so for defaults see ticks_labels_style.
+    text_margin_(2.), // for text as a multiplier of the font size.
+    image_border_(yellow, white, 1, 10, true, true), // margin should be about axis label font size.
+    plot_window_border_(yellow, svg_color(255, 255, 255), 1, 3, true, false),
+    legend_box_(yellow, white, 1, 2, true, true),
     legend_header_(0, 0, "", legend_style_, center_align, horizontal),
     legend_width_(200), // width of legend box (pixels) // TODO isn't this calculated?
     legend_height_(0), // height of legend box (pixels)
@@ -295,44 +331,54 @@ public:
     plot_window_clip_("plot_window"), // for <clipPath id="plot_window" ...
     title_on_(true),
     plot_window_on_(true),
+    x_values_on_(false), // By default, don't label point values.
+    x_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
+    // Autoscaling.
+    autoscale_check_limits_(true), // Do check all value for limits, infinity, max, min, NaN.
+    x_autoscale_(false),
+    x_include_zero_(false), // If autoscaled, include zero.
+    x_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
+    x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
+    x_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+    y_autoscale_(false), // Not used for 1-D.
+
     // Used to transform Cartesian to SVG.
     x_scale_(1.), x_shift_(0.),
     y_scale_(1.), y_shift_(0.),
-    x_axis_position_(0) // Move into axis_style? 
+    x_axis_position_(0) // Move into axis_style?
 
-  // See documentation for default settings rationale.
   {
     image_size(500, 200); // Default image size.
     // Only need to be quite shallow (y_size) for a 1-D plot.
     // 200 barely leaves enough room for five data series in the legend).
     // (2-D usually needs to be much more rectangular).
 
-
-    using namespace boost::svg::detail; // avoid detail::
+    using namespace boost::svg::detail; // Avoid detail:: specification.
 
     // Build the document tree & add all the children of the root node.
     for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
       image.g();
     }
+    set_ids();
 
     // Set other SVG color, stroke & width defaults for various child PLOT nodes.
-    image.g(PLOT_BACKGROUND).style().fill_color(image_border_.fill_);
     image.g(PLOT_BACKGROUND).style().stroke_color(image_border_.stroke_);
     image.g(PLOT_BACKGROUND).style().stroke_width(image_border_.width_); //
+    image.g(PLOT_BACKGROUND).style().fill_color(image_border_.fill_);
     image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(plot_window_border_.fill_);
     image.g(PLOT_WINDOW_BACKGROUND).style().stroke_width(plot_window_border_.width_).stroke_color(plot_window_border_.stroke_);
     image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
     image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
-    image.g(PLOT_X_LABEL).style().fill_color(black);
-    image.g(PLOT_VALUE_LABELS).style().fill_color(black);
-    image.g(PLOT_LEGEND_TEXT).style().fill_color(black);
-    image.g(PLOT_TITLE).style().fill_color(black).stroke_on(false);
 
     // Note that widths are stored in member data *and* copied here.
     // Not sure if this is wise but ...
     // Font info defaults are set by the constructor above.
-    // Ticks
+    // Ticks.
+
+    y_ticks_.left_ticks_on_ = false; // Needed to ensure don't extend X-axis line.
+    y_ticks_.right_ticks_on_ = false;
+
     if(x_ticks_.use_up_ticks() || x_ticks_.use_down_ticks())
     {
       image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(x_ticks_.major_tick_width_).stroke_color(black);
@@ -341,10 +387,9 @@ public:
     // Grids.
     // Default color & width for grid, used or not.
     image.g(PLOT_X_MAJOR_GRID).style().stroke_width(x_ticks_.major_grid_width_).stroke_color(svg_color(200, 220, 255));
-    BOOST_ASSERT(image.g(PLOT_X_MAJOR_GRID).style().stroke_color() == svg_color(200, 220, 255));
     image.g(PLOT_X_MINOR_GRID).style().stroke_width(x_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
     //image.g(PLOT_DATA_LINES).style().stroke_width(2); // default width.
-    // Alter with plot.data_lines_width(4); 
+    // Alter with, for example: plot.data_lines_width(4);
 
     legend_place_ = (plot_window_on_) ? outside_right : inside; // Defaults.
     // Note if set plot_window_on() then also need to set legend_place.
@@ -352,11 +397,17 @@ public:
     // So not set a default?  But leaving it as inside is worse?)
 
     x_ticks_on_ = x_ticks_.up_ticks_on_ || x_ticks_.down_ticks_on_;
-    // Only 2D has left and right ticks.
-    set_ids();
+    // Only 2D has left and right y ticks.
   } // svg_1d_plot() Default constructor.
 
-    
+  void set_ids()
+  { // document ids for use in <g id = "PLOT_TITLE".../>
+    for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
+    {
+      image.g(i).id(detail::document_ids[i]);
+    }
+  } //  void set_ids()
+
   void calculate_plot_window()
   { // For 1-D
     // All calculation use svg units, pixels by default.
@@ -374,16 +425,11 @@ public:
       plot_top_ += title_font_size() * (text_margin_ + 0.5);
     }
 
-    size_legend_box(); // depending on its contents.
-    place_legend_box();
-    // Assume that axis labels are always at bottom and left.
+    // Assume that X-axis labels are always at bottom.
     if(x_axis_.label_on_)
     { // Leave space at bottom for X axis label.
-      plot_bottom_ -= x_axis_label_style_.font_size() * (text_margin_);
+       plot_bottom_ -= x_axis_label_style_.font_size() * text_margin_;
     }
-
-    x_axis_.axis_ = (plot_bottom_ + plot_top_) / 2.; // Put X-axis halfway up plot window.
-
     if(plot_window_on_)
     { // Needed to allow any plot window border rectangle to show OK.
       // A small margin is to prevent it overlapping the image border.
@@ -393,14 +439,45 @@ public:
       plot_right_ -=  image_border_.margin_;
       plot_top_ += image_border_.margin_;
       plot_bottom_ -=  image_border_.margin_;
+    }
 
+    size_legend_box(); // depending on its contents.
+    place_legend_box();
+
+    // Because there may be several datasets,
+    // and the scaling can be done by anyone or all of them.
+    // my_plot.autoscale(my_data1) // for 1 dataset.
+    // or my_plot.autoscale(my_datas) // for a vector of several datasets.
+    // calculates the min & max, increments & ticks.
+    if (x_autoscale_)
+    { // Use calculated autoscale values.
+      // Autoscale has been done in my_data.autoscale(my_data);
+      // and saved in x_auto_min_value_, x_auto_max_value_, & x_auto_tick_interval_,
+      // so copy these values to use them:
+      x_axis_.min_ = x_auto_min_value_;
+      x_axis_.max_ = x_auto_max_value_;
+      x_ticks_.major_interval_  = x_auto_tick_interval_;
+      // else ignore auto values, even if have been calculated.
+    }
+    // Copy min & max to ticks.
+    x_ticks_.min_ = x_axis_.min_;
+    x_ticks_.max_ = x_axis_.max_;
+
+    x_axis_.axis_ = (plot_bottom_ + plot_top_) / 2.; // Put X-axis halfway up plot window.
+    // Ensure both axis and ticks have the *same* range.
+    // (To use the separation, made to give the potential for different ranges,
+    // one would have to *not* do this,
+    // but to make sure they are both assigned correctly).
+
+    if(plot_window_on_) // IS this test needed????
+    {
       // Calculate the number of chars of the longest value label.
-      x_ticks_.longest_label();
+      x_ticks_.longest_label(); // Updates label_max_length_
       x_ticks_.label_max_space_ = 0; // Work out the longest value label for X-Axis.
       if (x_ticks_.label_rotation_ == horizontal)
       { // Only 1 char height & 1 space needed if labels are horizontal.
         x_ticks_.label_max_space_ = 2 * x_value_label_style_.font_size() * wh; // SVG chars
-      } 
+      }
       else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
       { // ! horizontal so will need more than 2 chars worth.
           x_ticks_.label_max_space_+= x_ticks_.label_max_length_ * x_value_label_style_.font_size() * wh; // SVG chars.
@@ -417,7 +494,7 @@ public:
         {  // Contract plot window bottom edge up to make space for x value labels on bottom.
           plot_bottom_ -= x_ticks_.label_max_space_; // Move up.
         }
-        else if ((x_ticks_.ticks_on_window_or_axis_ > 0) // 
+        else if ((x_ticks_.ticks_on_window_or_axis_ > 0) //
            && (x_ticks_.major_value_labels_side_ > 0) ) // & x labels to top.
         { // Move top of plot window down to give space for x value labels.
           plot_top_ += x_ticks_.label_max_space_; // Move down.
@@ -457,22 +534,20 @@ public:
     } // plot_window_on_
 
     if(plot_window_on_)
-    {
-      // Draw plot window rect.
+    { // Draw plot window rect.
       image.g(detail::PLOT_WINDOW_BACKGROUND).push_back(
         new rect_element(plot_left_, plot_top_, (plot_right_ - plot_left_), plot_bottom_ - plot_top_));
     } // plot_window_on_
   } //  void calculate_plot_window()
 
-
-  //void calculate_transform()
-  //{ // Calculate scale and shift factors for transform from Cartesian to plot.
-  //  // SVG image is 0, 0 at top left, Cartesian at bottom left.
-  //  x_scale_ = (plot_right_ - plot_left_) / (x_max_ - x_min_);
-  //  x_shift_ = plot_left_ - (x_min_ * (plot_right_ - plot_left_) / (x_max_ - x_min_));
-  //  y_scale_ = 1.;
-  //  y_shift_ = plot_top_ - (plot_top_ - plot_bottom_) / 2.;
-  //} // void calculate_transform()
+  void calculate_transform()
+  { // Calculate scale and shift factors for transform from Cartesian to plot.
+    // SVG image is 0, 0 at top left, Cartesian at bottom left.
+    x_scale_ = (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_);
+    x_shift_ = plot_left_ - (x_axis_.min_ * (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_));
+    y_scale_ = 1.;
+    y_shift_ = plot_top_ - (plot_top_ - plot_bottom_) / 2.;
+  } // void calculate_transform()
 
   void draw_axes()
   { // For 1-D, there is, of course, only the X-axis!
@@ -482,7 +557,7 @@ public:
     transform_x(x);
     // Draw origin, making sure it is in the plot window.
     if(x_axis_.axis_line_on_ && (x >= plot_left_) && (x <= plot_right_))
-    { 
+    {
       if(!plot_window_on_)
       { // Use whole image.
         if(title_on_)
@@ -504,17 +579,17 @@ public:
     draw_x_axis();
   } //  draw_axes()
 
+
   void update_image()
   {
-    // Removes all elements that will show up in a subsequent draw.
-    clear_all();
+    clear_all(); // Removes all elements that will show up in a subsequent draw.
 
     // Draw plot background.
     image.g(detail::PLOT_BACKGROUND).push_back(
       new rect_element(0, 0, image.x_size(),  image.y_size()));
 
     calculate_plot_window();
-    //calculate_transform();
+    calculate_transform();
     draw_title(); // Call after above to the plot_x and y are defined.
     if(x_axis_.axis_line_on_)
     {
@@ -533,40 +608,44 @@ public:
     for(unsigned int i = 0; i < series.size(); ++i)
     { // For each of the data series.
       g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
-
       g_ptr.style().stroke_color(series[i].point_style_.stroke_color_);
       g_ptr.style().fill_color(series[i].point_style_.fill_color_);
 
       for(unsigned int j = 0; j < series[i].series.size(); ++j)
-      { // Draw points for jth series.
+      { // Draw jth points for ith series.
         double x = series[i].series[j];
+        // TODO symbols are offset downwards
+        // because the origin of the point is the top left of the glyph.
+        // Need to offset by the height and width of the font size.
+        double v = x;
         transform_x(x);
         if( // Check point is inside plot_window (otherwise ignore it).
+          // May need a margin here to avoid points just over the window not being shown.  TODO
              (x >= plot_left_)
           && (x <= plot_right_)
           && (y >= plot_top_)
           && (y <= plot_bottom_) )
         {
-          draw_plot_point(x, y, g_ptr, series[i].point_style_);
+          draw_plot_point(x, y, g_ptr, series[i].point_style_); // Marker.
+          if (x_values_on_)
+          { // show the value of the data point too.
+            g_element& g_ptr_v = image.g(detail::PLOT_X_POINT_VALUES).g();
+            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, v);
+            // TODO separate X and Y colors.
+          }
+
         }
       } // for j
     } // for
   } //   void update_image()
 
-  void set_ids()
-  { // document ids for use in <g id = "PLOT_TITLE".../>
-    for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
-    {
-      image.g(i).id(detail::document_ids[i]);
-    }
-  } //  void set_ids()
 
   // ------------------------------------------------------------------------
-  // write() has two flavors, a file and a ostream.
-  // The file version opens an ostream, and calls the stream version.
+  // write() has two versions: to an ostream and to a file.
   // The stream version first clears all unnecessary data from the graph,
   // builds the document tree, and then calls the write function for the root
   // document node, which calls all other nodes through the Visitor pattern.
+  // The file version opens an ostream, and calls the stream version.
   // ------------------------------------------------------------------------
 
   svg_1d_plot& write(const std::string& file)
@@ -599,29 +678,61 @@ public:
     image.write(s_out);
     return (svg_1d_plot&)*this;
   }
-  
+
+  // Versions of plot functions to add data series.
   template <class T>
-  svg_1d_plot_series& plot(const T& container, const std::string& title)
-  {
+  svg_1d_plot_series& plot(const T& container, const std::string& title = "")
+  { // Add a data series to the plot (by default, converting to doubles).
+    // Note that this version assumes that *ALL* the data value in the container is used.
     series.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
       boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
       title)
     );
-    return series[series.size()-1];
+   // For example:  my_1d_plot.plot(my_data, "All my container");
+    return series[series.size() - 1]; // Number of data series added so far.
+  }
+
+  template <class T>
+  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "")
+  { // Add a data series to the plot (by default, converting to doubles).
+    // Note that this version permits a partial range,
+    // begin to end, of the container to be used.
+    series.push_back(
+      svg_1d_plot_series(
+      boost::make_transform_iterator(begin, detail::boost_default_convert()),
+      boost::make_transform_iterator(end, detail::boost_default_convert()),
+      title)
+    );
+    // For example:  my_1d_plot.plot(my_data.begin(), my_data.end(), "My container");
+    // my_1d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
+    // Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
+    return series[series.size() - 1]; // Number of data series added so far.
   }
 
   template <class T, class U>
-  svg_1d_plot_series& plot(const T& container, const std::string& title, U functor)
-  { // Version with functor.
+  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_convert)
+  { // Add a data series to the plot. (Version with custom functor, rather than to double).
     series.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size()-1];
+    return series[series.size() - 1]; // Number of data series added so far.
+  }
+
+  template <class T, class U>
+  svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_convert)
+  { // Add a data series to the plot. (Version with functor, rather than to double).
+    series.push_back(
+      svg_1d_plot_series(
+      boost::make_transform_iterator(container.begin(), functor),
+      boost::make_transform_iterator(container.end(),   functor),
+      title)
+    );
+    return series[series.size() - 1]; // Number of data series added so far.
   }
 
 }; // end svg_1d_plot
@@ -630,9 +741,7 @@ public:
 #  pragma warning(pop)
 #endif
 
-
 } // namespace svg
 } // namespace boost
-
 
 #endif // BOOST_SVG_SVG_1D_PLOT_HPP
