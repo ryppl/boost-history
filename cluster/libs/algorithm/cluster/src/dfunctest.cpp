@@ -1,4 +1,4 @@
-#include "boost/algorithm/cluster/dist_func.hpp"
+#include "boost/algorithm/cluster/dist_fun.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #define ITER 500000

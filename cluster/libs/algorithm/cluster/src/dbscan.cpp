@@ -1,5 +1,5 @@
 #include <boost/algorithm/cluster/dbscan.hpp>
-#include <boost/algorithm/cluster/dist_func.hpp>
+#include <boost/algorithm/cluster/dist_fun.hpp>
 #include <boost/test/minimal.hpp>
 #include <vector>
 #include <cmath>
