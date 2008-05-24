@@ -2,14 +2,26 @@
 
 [include 1d_simple_tutorial.qbk]
 
+[include 1d_vector_tutorial.qbk]
+[include demo_1d_containers.qbk]
+[/include auto_1d_containers.qbk]
+[include auto_1d_plot.qbk]
+
 [include 1d_full_tutorial.qbk]
 
 [include 1d_special_tutorial.qbk]
+
+[include 1d_autoscale_containers.qbk]
+
+[include demo_1d_axis_scaling.qbk]
+[include demo_1d_autoscaling.qbk]
+[include demo_1d_values.qbk]
 
 [endsect] [/1d_tutorial]
 
 [/ 1d_tutorial.qbk
   Copyright 2008 Jake Voytko.
+  Copyright 2008 Paul A. Bristow.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

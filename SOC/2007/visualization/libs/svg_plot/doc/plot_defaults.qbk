@@ -8,7 +8,6 @@ There are certain defaults, tabulated below, that are true at the beginning of t
   [[All colors not defined in this table] [black] [Coloring, if any, will be highly dependent on user needs.]]
   [[Axis] [On, internal style] [Most graphs include an axis of some kind. The internal axis style is used because this seems to be the default behavior in many textbooks I have owned.]]
   [[Coordinate precision] [3 decimal digits] [Sufficient 1 in 1000 precision for typical small plots. (Higher precision will increase svg file size).]]
-  
   [[Distance between major X ticks] [`3 units`] [Reasonably fits into a plot window.]]
   [[Font size of the legend title] [12] [Reasonable when paired with the image size.]]
   [[Font size of the X Label] [12] [Reasonable when paired with the image size.]]
@@ -27,10 +26,10 @@ There are certain defaults, tabulated below, that are true at the beginning of t
   [[Plot window background] [white] [Coloring, if any, will be highly dependent on user needs.]]
   [[Title] [On, `"Plot of data"`] [The title is on because this is one of the most basic elements of a graph. The title is set to a default because when `title_on == true`, something should display.]]
   [[Title size] [`30`] [This is clearly visible in a variety of image sizes.]]
-  [[X Axis Label] [`"X Axis"`, Off] ["X Axis" is the label because /something/ should display were the user to turn on the X-axis label without setting text.]]
+  [[X Axis Label] [`""`, Off] [No space should be used if no label is required.]]
   [[X Axis Label Size] [`12`] [This is a reasonable size at the default image size.]]
   [[X Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots.]]
-  [[X Range] [`(-10, 10)`] [Traditional plot viewport (but almost all plots will need to set both X and Y ranges).]]
+  [[X Range] [`(-10, 10)`] [Traditional plot viewport (but almost all plots will need to set both X and Y ranges, using with autoscale).]]
   ]
 
 [endsect ][/section:1d_defaults `svg_1d_plot` Defaults]
@@ -62,7 +61,7 @@ beginning of the plotting. Here is a table of the defaults:
   [[Title] [On, `"Plot of data"`] [The title is on because this is one of the most basic elements of a graph. The title is set to a default because when `title_on == true`,
   /something/ should display.]]
   [[Title size] [`30`] [This is clearly visible in a variety of image sizes.]]
-  [[X Axis Label] [`"X Axis"`, Off] ["X Axis" is the label because /something/ should display were the user to turn on the X axis label without setting text.]]
+  [[X Axis Label] [`"X Axis"`, Off] ["X Axis" .]]
   [[X Axis Label Size] [`12`] [This is a reasonable size at the default image size.]]
   [[X Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots.]]
   [[X Range] [`(-10, 10)`] [Traditional plot viewport.]]

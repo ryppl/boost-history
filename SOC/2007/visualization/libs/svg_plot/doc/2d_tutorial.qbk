@@ -3,6 +3,7 @@
 [include 2d_simple_tutorial.qbk]
 [include 2d_full_tutorial.qbk]
 [include 2d_special_tutorial.qbk]
+[/include auto_2d_plot.qbk]
 
 [endsect] [/2d_tutorial]
 

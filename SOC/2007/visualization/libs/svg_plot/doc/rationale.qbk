@@ -1,5 +1,22 @@
 [section:implementation Implementation & Rationale]
 
+[h4 Switches for axis labels and autoscaling]
+
+If a axis label string is provided, or autoscaling is requested, it is assumed that it should be displayed/acted on.
+So there functions have the effect of switching these options on, as if , for example:
+
+`x_autoscale(true);`
+`y_label_on(true);`
+
+This avoids users providing an axis label string and then wondering why it appears to have no effect.
+
+It also avoids wasting plot space for empty labels.
+
+It is still possible to switch these options off, for example with:
+
+`x_autoscale(false);`
+`y_label_on(false);`
+
 [h4 Number of  Minor ticks]
 
 `x_num_minor_ticks()` and `x_num_minor_ticks()`
