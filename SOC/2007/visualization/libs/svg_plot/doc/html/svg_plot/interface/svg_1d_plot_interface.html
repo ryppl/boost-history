@@ -13,10 +13,10 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
-<td align="center"><a href="../../../../../../../../../../trunk/index.htm">Home</a></td>
+<td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="../../../../../../../../../../trunk/people/people.htm">People</a></td>
-<td align="center"><a href="../../../../../../../../../../trunk/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -28,7 +28,7 @@
 <a name="svg_plot.interface.svg_1d_plot_interface"></a><a href="svg_1d_plot_interface.html" title=" svg_1d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id697454"></a><p class="title"><b>Table 8. 1D_plot Miscellaneous Functions</b></p>
+<a name="id725296"></a><p class="title"><b>Table 8. 1D_plot Miscellaneous Functions</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Miscellaneous Functions">
 <colgroup>
 <col>
@@ -186,7 +186,8 @@
             </td>
 <td>
             <p>
-              Sets the string to be used for the title.
+              Sets the string to be used for the title. Switches <code class="computeroutput"><span class="identifier">title_on</span></code>
+              to <code class="computeroutput"><span class="keyword">true</span></code>.
             </p>
             </td>
 <td>
@@ -273,7 +274,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id698354"></a><p class="title"><b>Table 9. 1D_plot Commands</b></p>
+<a name="id726221"></a><p class="title"><b>Table 9. 1D_plot Commands</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Commands">
 <colgroup>
 <col>
@@ -366,7 +367,7 @@
             </td>
 <td>
             <p>
-              true
+              false, until title string assigned.
             </p>
             </td>
 </tr>
@@ -416,7 +417,7 @@
             </td>
 <td>
             <p>
-              true
+              false, until label assigned.
             </p>
             </td>
 </tr>
@@ -496,7 +497,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id699102"></a><p class="title"><b>Table 10. 1D_plot Colors</b></p>
+<a name="id726970"></a><p class="title"><b>Table 10. 1D_plot Colors</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Colors">
 <colgroup>
 <col>
@@ -709,7 +710,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id700171"></a><p class="title"><b>Table 11. 1D_plot X-Axis Definition</b></p>
+<a name="id728038"></a><p class="title"><b>Table 11. 1D_plot X-Axis Definition</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot X-Axis Definition">
 <colgroup>
 <col>
@@ -922,7 +923,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="svg_plot.interface.svg_1d_plot_interface.the_1d_plot__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id701216"></a>
+<a name="id729083"></a>
         <a href="svg_1d_plot_interface.html#svg_plot.interface.svg_1d_plot_interface.the_1d_plot__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         1D_plot <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
@@ -933,7 +934,7 @@
         named parameters, as well as a deduced parameter.
       </p>
 <div class="table">
-<a name="id701274"></a><p class="title"><b>Table 12. 1D_plot Required parameter</b></p>
+<a name="id729142"></a><p class="title"><b>Table 12. 1D_plot Required parameter</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Required parameter">
 <colgroup>
 <col>
@@ -1000,8 +1001,21 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><div class="table">
-<a name="id701403"></a><p class="title"><b>Table 13. 1D_plot Deduced parameter</b></p>
+<br class="table-break"><div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../../../trunk/doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          To use special characters, insert the XML character entity equivalents:
+          for example: left angle bracket &amp;lt;, right angle bracket &amp;gt;,
+          and ampersand &amp;amp;, double-quotation marks &amp;quot; for single-quotation
+          marks &amp;apos;. You can use numeric character references, such as &amp;#165;
+          for Greek and Math symbols.
+        </p></td></tr>
+</table></div>
+<div class="table">
+<a name="id729288"></a><p class="title"><b>Table 13. 1D_plot Deduced parameter</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Deduced parameter">
 <colgroup>
 <col>
@@ -1062,10 +1076,9 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id701516"></a><p class="title"><b>Table 14. 1D_plot Optional Parameters</b></p>
+<a name="id729401"></a><p class="title"><b>Table 14. 1D_plot Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="1D_plot Optional Parameters">
 <colgroup>
-<col>
 <col>
 <col>
 <col>
@@ -1173,15 +1186,10 @@
             </td>
 <td>
             <p>
-              *
-            </p>
-            </td>
-<td>
-            <p>
-              A class or functor that contains a conversion function. You will not
-              have to worry about this, unless you are trying to plot a container
-              of type that does not have a conversion to double, for example, age
-              of a user-defined type <code class="computeroutput"><span class="identifier">humans</span></code>.
+              <span class="bold"><strong>] [A class or functor that contains a conversion
+              function. You will not have to worry about this, unless you are trying
+              to plot a container of type that does *not</strong></span> have a conversion
+              to double, for example, age of a user-defined type <code class="computeroutput"><span class="identifier">humans</span></code>.
               For example: 
 </p>
 <pre class="programlisting">
@@ -1209,6 +1217,7 @@
               be directly cast to a <code class="computeroutput"><span class="keyword">double</span></code>.
             </p>
             </td>
+<td class="auto-generated"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -1218,7 +1227,7 @@
         method:
       </p>
 <a name="svg_plot.interface.svg_1d_plot_interface.using_1d_plot_fill_and_stroke_colors"></a><h5>
-<a name="id702076"></a>
+<a name="id729960"></a>
         <a href="svg_1d_plot_interface.html#svg_plot.interface.svg_1d_plot_interface.using_1d_plot_fill_and_stroke_colors">Using
         1D_plot fill and stroke colors</a>
       </h5>

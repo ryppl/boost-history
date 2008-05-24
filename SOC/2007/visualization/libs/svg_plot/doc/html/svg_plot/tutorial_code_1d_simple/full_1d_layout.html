@@ -7,23 +7,23 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
 <link rel="start" href="../../index.html" title="SVG_Plot">
 <link rel="up" href="../tutorial_code_1d_simple.html" title=" Tutorial: 1D">
-<link rel="prev" href="tutorial_code_1d_example.html" title="
-      Simple 1D Example">
+<link rel="prev" href="demo_1d_containers_tutorial.html" title="
+      1-D Containers Examples">
 <link rel="next" href="1d_special.html" title=" Tutorial:
       1D Special Features">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
-<td align="center"><a href="../../../../../../../../../../trunk/index.htm">Home</a></td>
+<td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="../../../../../../../../../../trunk/people/people.htm">People</a></td>
-<td align="center"><a href="../../../../../../../../../../trunk/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial_code_1d_example.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_special.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="demo_1d_containers_tutorial.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_special.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -86,12 +86,15 @@
   <span class="comment">// Text settings.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Oh My!"</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">title_font_size</span><span class="special">(</span><span class="number">29</span><span class="special">)</span>
-         <span class="special">.</span><span class="identifier">x_label</span><span class="special">(</span><span class="string">"Time in Months"</span><span class="special">);</span>
-  
+         <span class="special">.</span><span class="identifier">x_label</span><span class="special">(</span><span class="string">"Time in Months"</span><span class="special">)</span> <span class="comment">// X- axis label
+</span>         <span class="special">.</span><span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span> <span class="comment">// Not needed, because although the default is no axis label,
+</span>         <span class="comment">// providing a label has this effect.
+</span>         <span class="comment">// If we want later to switch *off* labels, 
+</span>         <span class="comment">// my_plot.x_label_on(false); // is needed.
+</span>  
   <span class="comment">// Commands.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">plot_window_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
-         <span class="special">.</span><span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">x_major_labels_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
   
   <span class="comment">// Color settings.
@@ -142,7 +145,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial_code_1d_example.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_special.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="demo_1d_containers_tutorial.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_special.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
