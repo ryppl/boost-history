@@ -16,10 +16,10 @@
 #include <boost/config.hpp>
 
 #include <functional>
-#include <memory>
 
 #include <boost/functional/hash.hpp>
 #include <boost/unordered/detail/hash_table.hpp>
+#include <boost/unordered/detail/allocator.hpp>
 
 #if !defined(BOOST_HAS_RVALUE_REFS)
 #include <boost/unordered/detail/move.hpp>
@@ -31,7 +31,7 @@ namespace boost
         class T,
         class Hash = hash<Key>,
         class Pred = std::equal_to<Key>,
-        class Alloc = std::allocator<std::pair<const Key, T> > >
+        class Alloc = boost::unordered_detail::allocator<std::pair<const Key, T> > >
     class unordered_map
     {
         typedef boost::unordered_detail::hash_types_unique_keys<
@@ -417,7 +417,7 @@ namespace boost
         class T,
         class Hash = hash<Key>,
         class Pred = std::equal_to<Key>,
-        class Alloc = std::allocator<std::pair<const Key, T> > >
+        class Alloc = boost::unordered_detail::allocator<std::pair<const Key, T> > >
     class unordered_multimap
     {
         typedef boost::unordered_detail::hash_types_equivalent_keys<
