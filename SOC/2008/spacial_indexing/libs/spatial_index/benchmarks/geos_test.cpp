@@ -73,6 +73,7 @@ int test_main(int, char* [])
   	for(unsigned int i = 0; i < points.size(); i++) {
 		int *p = new int(i);
 // 		std::cout << "Insert: " << *p << std::endl;
+// 		std::cerr << "Inserting: " << points[i].first << "," << points[i].second << std::endl;
  		q.insert(new geos::Envelope(points[i].first, points[i].first, points[i].second, points[i].second), (void *) p);
  	}
 	std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
@@ -86,6 +87,12 @@ int test_main(int, char* [])
  		search_positions.push_back(points[pos]);
  		search_data.push_back(pos);
  	}
+// 	int a = 6;
+// 	q.insert(new geos::Envelope(90.0, 91.0, 30.0, 31.0), (void *) &a);
+
+	start = time(NULL);
+	std::vector<void *> *v = q.query(new geos::Envelope(80000000, 120000000, 0, 40000000));
+	std::cerr << "Rectangle (" << (*v).size() << " elements) Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 
 	start = time(NULL);
  	for(unsigned int j=0; j < find_count; j++) {

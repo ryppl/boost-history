@@ -71,10 +71,18 @@ int test_main(int, char* [])
 	BOOST_CHECK_EQUAL(*it1, "test2");
 	std::cout << "  " << *it1 << std::endl;
 
+	// expected result
+	std::vector<std::string> res;
+	res.push_back("test0");
+	res.push_back("test1");
+	res.push_back("test2");
+
 	std::cerr << " --> find rectangle" << std::endl;
 	std::deque< std::vector<std::string>::iterator > d = q->find(0.0, 5.0, 0.0, 5.0);
+	unsigned int i = 0;
 	for(std::deque< std::vector<std::string>::iterator >::const_iterator dit = d.begin(); dit != d.end(); ++dit) {
 		std::cerr << "Value: " << *(*dit) << std::endl;
+		BOOST_CHECK_EQUAL(*(*dit), res[i++]);
 	}
 
 	std::cerr << "Elements: " << q->elements() << std::endl;
