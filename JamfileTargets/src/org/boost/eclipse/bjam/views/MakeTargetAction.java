@@ -6,7 +6,6 @@
  */
 package org.boost.eclipse.bjam.views;
 
-
 import org.boost.eclipse.bjam.system.JamTarget;
 import org.eclipse.cdt.make.core.IMakeTarget;
 import org.eclipse.cdt.make.core.IMakeTargetManager;
@@ -27,14 +26,21 @@ import org.eclipse.swt.widgets.Shell;
 class MakeTargetAction extends Action {
     private final TreeViewer viewer;
     private final String arguments;
+    /**
+     * Using the toString() method just when a target is built. That way this
+     * object can pass additional options to bjam.
+     */
+    private final Object dynamicOptions;
 
-    MakeTargetAction(final TreeViewer viewer) {
-        this(viewer, null);
+    MakeTargetAction(final TreeViewer viewer, final Object dynamicOptions) {
+        this(viewer, null, dynamicOptions);
     }
 
-    MakeTargetAction(final TreeViewer viewer, final String arguments) {
+    MakeTargetAction(final TreeViewer viewer, final String arguments,
+            final Object dynamicOptions) {
         this.viewer = viewer;
         this.arguments = arguments;
+        this.dynamicOptions = dynamicOptions;
     }
 
     private class RecursiveBuilder {
@@ -87,6 +93,8 @@ class MakeTargetAction extends Action {
             if (arguments != null)
                 makeTarget.setBuildArguments(makeTarget.getBuildArguments()
                         + " " + arguments);
+            makeTarget.setBuildArguments(makeTarget.getBuildArguments() + " "
+                    + dynamicOptions);
             makeTarget.setBuildTarget(target.getTargetName());
             TargetBuild.buildTargets(shell, new IMakeTarget[] { makeTarget });
         } catch (CoreException e) {

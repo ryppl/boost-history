@@ -19,14 +19,17 @@ public class JamfileScanner {
             if (!file.exists())
                 break abort;
             final Reader reader = new InputStreamReader(file.getContents());
-            return getTargets(new BufferedReader(reader));
+            final JamTargetInfo[] result = getTargets(new BufferedReader(reader));
+            for (JamTargetInfo info : result)
+                info.setResource(file);
+            return result;
         } catch (Exception t) {
             throw new RuntimeException(t);
         }
         return new JamTargetInfo[0];
     }
 
-    static public JamTargetInfo[] getTargets(final BufferedReader reader) {
+    static private JamTargetInfo[] getTargets(final BufferedReader reader) {
         final ArrayList<JamTargetInfo> targets = new ArrayList<JamTargetInfo>();
         try {
             while (true) {

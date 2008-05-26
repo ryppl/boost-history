@@ -26,8 +26,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -49,6 +52,7 @@ import org.eclipse.ui.part.ViewPart;
  */
 
 public class JamfileTargetsView extends ViewPart {
+    private org.eclipse.swt.widgets.Text optionsField;
     private TreeViewer viewer;
     private DrillDownAdapter drillDownAdapter;
     private Action rebuildAction;
@@ -73,9 +77,12 @@ public class JamfileTargetsView extends ViewPart {
      * This is a callback that will allow us to create the viewer and initialize
      * it.
      */
-    public void createPartControl(Composite parent) {
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+    public void createPartControl(final Composite parent) {
+        createTextField(parent);
+        createTreeView(parent);
         drillDownAdapter = new DrillDownAdapter(viewer);
+        parent.setLayout(new org.eclipse.swt.layout.GridLayout(1, true));
+
         viewer.setContentProvider(new ViewContentProvider());
         viewer.setLabelProvider(new ViewLabelProvider());
         viewer.setSorter(new NameSorter());
@@ -84,6 +91,30 @@ public class JamfileTargetsView extends ViewPart {
         hookContextMenu();
         hookDoubleClickAction();
         contributeToActionBars();
+    }
+
+    private void createTreeView(final Composite parent) {
+        final Composite viewerParent = new Composite(parent, 0);
+        viewerParent.setLayout(new FillLayout());
+        final GridData data2 = new GridData();
+        data2.horizontalAlignment = GridData.FILL;
+        data2.grabExcessHorizontalSpace = true;
+        data2.verticalAlignment = GridData.FILL;
+        data2.grabExcessVerticalSpace = true;
+        viewerParent.setLayoutData(data2);
+
+        viewer = new TreeViewer(viewerParent, SWT.MULTI | SWT.H_SCROLL
+                | SWT.V_SCROLL);
+    }
+
+    private void createTextField(final Composite parent) {
+        optionsField = new Text(parent, SWT.SINGLE);
+        optionsField
+                .setToolTipText("Specify additional options here. They will be passed to BJam.");
+        final GridData data1 = new GridData();
+        data1.horizontalAlignment = GridData.FILL;
+        data1.grabExcessHorizontalSpace = true;
+        optionsField.setLayoutData(data1);
     }
 
     private void hookContextMenu() {
@@ -130,22 +161,33 @@ public class JamfileTargetsView extends ViewPart {
     }
 
     private void makeActions() {
-        buildAction = new MakeTargetAction(viewer);
+        final Object dynamicOptions = new Object() {
+            @Override
+            public String toString() {
+                return getOptions();
+            }
+        };
+
+        buildAction = new MakeTargetAction(viewer, dynamicOptions);
         buildAction.setText("build");
         buildAction.setToolTipText("update target as needed");
         buildAction.setImageDescriptor(MakeUIImages.DESC_BUILD_TARGET);
 
-        rebuildAction = new MakeTargetAction(viewer, "-a");
+        rebuildAction = new MakeTargetAction(viewer, "-a", dynamicOptions);
         rebuildAction.setText("rebuild");
         rebuildAction.setToolTipText("forces a rebuild of all files");
         MakeUIImages.setImageDescriptors(rebuildAction, "tool16",
                 MakeUIImages.IMG_TOOLS_MAKE_TARGET_BUILD);
 
-        cleanAction = new MakeTargetAction(viewer, "--clean");
+        cleanAction = new MakeTargetAction(viewer, "--clean", dynamicOptions);
         cleanAction.setText("clean");
         cleanAction.setToolTipText("clean this target");
         MakeUIImages.setImageDescriptors(cleanAction, "tool16",
                 MakeUIImages.IMG_TOOLS_MAKE_TARGET_DELETE);
+    }
+
+    public String getOptions() {
+        return optionsField.getText();
     }
 
     private void hookDoubleClickAction() {

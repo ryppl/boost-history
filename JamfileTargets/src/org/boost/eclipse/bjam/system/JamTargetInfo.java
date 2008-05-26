@@ -6,6 +6,8 @@
  */
 package org.boost.eclipse.bjam.system;
 
+import org.eclipse.core.resources.IFile;
+
 public class JamTargetInfo {
     /**
      * Name of this target which is shown in the UI.
@@ -15,6 +17,7 @@ public class JamTargetInfo {
      * The commandline string which will be appended to the bjam invocation.
      */
     private String targetName;
+    private IFile resource;
 
     public JamTargetInfo(String name, String targetName) {
         this.name = name;
@@ -31,5 +34,13 @@ public class JamTargetInfo {
 
     public String getTargetName() {
         return targetName;
+    }
+
+    public void setResource(final IFile file) {
+        resource = file;
+    }
+
+    public IFile getResource() {
+        return resource;
     }
 }

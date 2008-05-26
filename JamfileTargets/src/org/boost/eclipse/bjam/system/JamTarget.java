@@ -7,6 +7,7 @@
 package org.boost.eclipse.bjam.system;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 
 public class JamTarget {
     private final JamTargetInfo targetInfo;
@@ -14,6 +15,11 @@ public class JamTarget {
      * Resource where bjam will be invoked.
      */
     private IContainer container;
+
+    public JamTarget(final IContainer container, final JamTargetInfo info) {
+        this.targetInfo = info;
+        this.container = container;
+    }
 
     public JamTarget(IContainer container, String name, String targetName) {
         this.targetInfo = new JamTargetInfo(name, targetName);
@@ -34,5 +40,9 @@ public class JamTarget {
 
     public String getTargetName() {
         return targetInfo.getTargetName();
+    }
+
+    public IFile getResource() {
+        return targetInfo.getResource();
     }
 }

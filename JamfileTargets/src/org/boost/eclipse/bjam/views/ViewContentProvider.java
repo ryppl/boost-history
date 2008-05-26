@@ -6,7 +6,7 @@
  */
 package org.boost.eclipse.bjam.views;
 
-
+import java.io.File;
 import java.util.ArrayList;
 
 import org.boost.eclipse.bjam.system.JamTarget;
@@ -82,14 +82,10 @@ class ViewContentProvider implements ITreeContentProvider,
                         result.add(resource);
                     if (resource instanceof IFile) {
                         final IFile file = (IFile) resource;
-                        final String name = file.getName();
-                        if (name.equalsIgnoreCase("jamfile")
-                                || name.equalsIgnoreCase("jamfile.v2")
-                                || name.equalsIgnoreCase("jamroot")) {
+                        if (isProperJamfile(file)) {
                             for (final JamTargetInfo info : JamfileScanner
                                     .getTargets(file))
-                                result.add(new JamTarget(container, info
-                                        .getName(), info.getTargetName()));
+                                result.add(new JamTarget(container, info));
                         }
                     }
                 }
@@ -98,6 +94,13 @@ class ViewContentProvider implements ITreeContentProvider,
             return new Object[0];
         }
         return result.toArray();
+    }
+
+    private boolean isProperJamfile(final IFile file) {
+        final String name = file.getName();
+        return name.equalsIgnoreCase("jamfile")
+                || name.equalsIgnoreCase("jamfile.v2")
+                || name.equalsIgnoreCase("jamroot");
     }
 
     public boolean hasChildren(Object parent) {
