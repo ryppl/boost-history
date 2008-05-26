@@ -14,6 +14,20 @@
 
 // -------------------------------------------------------------------------
 
+#ifndef BOOST_DETAIL_DEBUG_HPP
+#include "detail/debug.hpp"
+#endif
+
+#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
+#include "detail/winapi/winbase.h"
+#endif
+
+#ifndef BOOST_DETAIL_THREADMODEL_HPP
+#include "detail/threadmodel.hpp"
+#endif
+
+// -------------------------------------------------------------------------
+
 #ifndef BOOST_MEMORY_BASIC_HPP
 #include "memory/basic.hpp"
 #endif
