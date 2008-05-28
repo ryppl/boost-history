@@ -2014,7 +2014,7 @@ namespace boost {
             // if hash function throws, basic exception safety
             // strong otherwise
             template<typename... Args>
-            iterator_base insert_hint(iterator_base const& it, Args&&... args)
+            iterator_base insert_hint(iterator_base const&, Args&&... args)
             {
                 // Life is complicated - just call the normal implementation.
                 return insert(std::forward<Args>(args)...).first;
@@ -2169,7 +2169,7 @@ private:
                 return it1 == end1 && it2 == end2;
             }
 #else
-            static inline bool group_equals(link_ptr it1, link_ptr it2,
+            static inline bool group_equals(link_ptr, link_ptr,
                     type_wrapper<key_type>*)
             {
                 return true;

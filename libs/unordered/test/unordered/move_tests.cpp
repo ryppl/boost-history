@@ -17,7 +17,7 @@ namespace move_tests
     test::seed_t seed(98624);
 
     template<class T>
-    T empty(T* ptr) {
+    T empty(T*) {
         return T();
     }
 
