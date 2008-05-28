@@ -12,17 +12,17 @@
 #include <iostream>
 
 
-static int c;
+static int count;
 
 using boost::shifted_ptr;
 using boost::new_sh;
 
 struct node {
     node() {
-        ++c;
+        ++count;
     }
     ~node() {
-        --c;
+        --count;
     }
     shifted_ptr<node> prior;
     shifted_ptr<node> next;
@@ -52,15 +52,30 @@ private:
     shifted_ptr<node> back;
 };
 
+struct vector {
+    vector() { ++count; }
+    ~vector() { --count; }
+    vector(const vector& other) : elements(other.elements) { ++count; }
+    std::vector<shifted_ptr<vector> > elements;
+};
+
 int main() {
+    count = 0;
 	{
 	    list l;
-	    for(int j = 0; j < 1; ++j) {
+	    for(int j = 0; j < 2; ++j) {
 	        for(int i = 0; i < 1000; ++i) {
 	            l.insert();
 	        }
 	        l.clear();
 	    }
 	}
-    std::cout << c << std::endl;
+    std::cout << count << std::endl;
+    
+    count = 0;
+    {
+        shifted_ptr<vector> v = new_sh<vector>();
+        v->elements.push_back(v);
+    }
+    std::cout << count << std::endl;
 }

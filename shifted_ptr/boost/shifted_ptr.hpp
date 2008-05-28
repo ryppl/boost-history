@@ -59,67 +59,70 @@ class owned_base;
 
 class set
 {
-	long count_;
-	mutable set * redir_;
+    long count_;
+    mutable set * redir_;
 
-	intrusive_list includes_;
-	intrusive_list elements_;
+    intrusive_list includes_;
+    intrusive_list elements_;
 
 public:
-	intrusive_list::node tag_;
+    intrusive_list::node tag_;
 
 
-	set() : count_(1), redir_(this)
-	{
-		includes_.push_back(& tag_);
-	}
+    set() : count_(1), redir_(this)
+    {
+        includes_.push_back(& tag_);
+    }
 
-	bool release()
-	{
-		set * p = redir();
-	
-		if (-- p->count_ == 0)
-		{
-			for (intrusive_list::iterator<owned_base, & owned_base::set_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
-			{
-				i->add_ref_copy();
-				delete &* i;
-			}
-				
-			for (intrusive_list::iterator<set, & set::tag_> i = p->includes_.begin(), j; j = i, ++ j, i != p->includes_.end(); i = j)
-				if (&* i != this && &* i != p)
-					delete &* i;
-					
-			if (p != this)
-				delete p;
+    bool release(bool b)
+    {
+        set * p = redir();
 
-			return true;
-		}
+        if (! b && -- p->count_ == 0)
+        {
+            for (intrusive_list::iterator<owned_base, & owned_base::set_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
+            {
+                i->add_ref_copy();
+                delete &* i;
+            }
+                
+            for (intrusive_list::iterator<set, & set::tag_> i = p->includes_.begin(), j; j = i, ++ j, i != p->includes_.end(); i = j)
+                if (&* i != this && &* i != p)
+                    delete &* i;
+                    
+            if (p != this)
+                delete p;
 
-		return false;
-	}
+            return true;
+        }
 
-	set * redir() const
-	{
-		if (redir_ == this) return redir_;
-		else return redir_ = redir_->redir();
-	}
-	
-	void redir(set * p)
-	{
-		if (redir_ != p->redir())
-		{
-			redir_ = p->redir();
-			redir_->count_ += count_;
-			redir_->includes_.merge(includes_);
-			redir_->elements_.merge(elements_);
-		}
-	}
-	
-	intrusive_list * elements() const
-	{
-		return & redir()->elements_;
-	}
+        return false;
+    }
+
+    set * redir() const
+    {
+        if (redir_ == this) return redir_;
+        else return redir_ = redir_->redir();
+    }
+
+    void redir(set * p, bool b)
+    {
+        if (redir_ != p->redir())
+        {
+            redir_ = p->redir();
+            redir_->includes_.merge(includes_);
+            redir_->elements_.merge(elements_);
+
+            // tie only if both from stack
+            if (! b)
+                redir_->count_ += count_;
+        }
+    }
+
+    intrusive_list * elements() const
+    {
+        return & redir()->elements_;
+    }
 };
 
 
@@ -130,145 +133,145 @@ public:
 */
 
 template <typename T, template <typename> class U = shifted_ptr_base>
-	class shifted_ptr : public U<T>
-	{
-		//template <typename, template <typename> class> friend class shifted_ptr;
+    class shifted_ptr : public U<T>
+    {
+        //template <typename, template <typename> class> friend class shifted_ptr;
 
-		using U<T>::share;
-
-
-		union
-		{
-			set * ps_;
-			intrusive_stack::node pn_;
-		};
-
-	public:
-		typedef T element_type;
+        using U<T>::share;
 
 
-		shifted_ptr() : ps_(0)
-		{
-			if (! owned_base::pool_.is_from(this))
-				ps_ = new set();
-			else
-				owned_base::last->top()->ptrs()->push(& pn_);
-		}
+        union
+        {
+            set * ps_;
+            intrusive_stack::node pn_;
+        };
 
-		template <typename V>
-			shifted_ptr(owned<V> * p) : U<T>(p)
-			{
-				if (! owned_base::pool_.is_from(this))
-				{
-					ps_ = new set();
+    public:
+        typedef T element_type;
 
-					init(p);
-				}
-				else
-				{
-					owned_base::last->top()->ptrs()->push(& pn_);
-					owned_base::last->top()->inits()->merge(* p->inits());
-				}
-			}
 
-		template <typename V>
-			shifted_ptr(shifted_ptr<V> const & p) : U<T>(p)
-			{
-				if (! owned_base::pool_.is_from(this))
-					ps_ = new set();
-				else
-					owned_base::last->top()->ptrs()->push(& pn_);
+        shifted_ptr() : ps_(0)
+        {
+            if (! owned_base::pool_.is_from(this))
+                ps_ = new set();
+            else
+                owned_base::last->top()->ptrs()->push(& pn_);
+        }
 
-				ps_->redir(p.ps_);
-			}
+        template <typename V>
+            shifted_ptr(owned<V> * p) : U<T>(p)
+            {
+                if (! owned_base::pool_.is_from(this))
+                {
+                    ps_ = new set();
 
-			shifted_ptr(shifted_ptr<T> const & p) : U<T>(p)
-			{
-				if (! owned_base::pool_.is_from(this))
-					ps_ = new set();
-				else
-					owned_base::last->top()->ptrs()->push(& pn_);
+                    init(p);
+                }
+                else
+                {
+                    owned_base::last->top()->ptrs()->push(& pn_);
+                    owned_base::last->top()->inits()->merge(* p->inits());
+                }
+            }
 
-				ps_->redir(p.ps_);
-			}
+        template <typename V>
+            shifted_ptr(shifted_ptr<V> const & p) : U<T>(p)
+            {
+                if (! owned_base::pool_.is_from(this))
+                    ps_ = new set();
+                else
+                    owned_base::last->top()->ptrs()->push(& pn_);
 
-		template <typename V>
-			shifted_ptr & operator = (owned<V> * p)
-			{
-				release();
-				init(p);
-				U<T>::operator = (p);
+                ps_->redir(p.ps_, ! owned_base::stack_.is_from(this));
+            }
 
-				return * this;
-			}
+            shifted_ptr(shifted_ptr<T> const & p) : U<T>(p)
+            {
+                if (! owned_base::pool_.is_from(this))
+                    ps_ = new set();
+                else
+                    owned_base::last->top()->ptrs()->push(& pn_);
 
-		template <typename V>
-			shifted_ptr & operator = (shifted_ptr<V> const & p)
-			{
-				if (p.po_ != U<T>::po_)
-				{
-					if (ps_->redir() != p.ps_->redir())
-					{
-						release();
-						ps_->redir(p.ps_);
-					}
-					U<T>::operator = (p);
-				}
-				return * this;
-			}
+                ps_->redir(p.ps_, ! owned_base::stack_.is_from(this));
+            }
 
-			shifted_ptr & operator = (shifted_ptr<T> const & p)
-			{
-				return operator = <T>(p);
-			}
+        template <typename V>
+            shifted_ptr & operator = (owned<V> * p)
+            {
+                release();
+                init(p);
+                U<T>::operator = (p);
 
-		void reset()
-		{
-			release();
-		}
+                return * this;
+            }
 
-		~shifted_ptr()
-		{
-			release(true);
-		}
+        template <typename V>
+            shifted_ptr & operator = (shifted_ptr<V> const & p)
+            {
+                if (p.po_ != U<T>::po_)
+                {
+                    if (ps_->redir() != p.ps_->redir())
+                    {
+                        release();
+                        ps_->redir(p.ps_, ! owned_base::stack_.is_from(this));
+                    }
+                    U<T>::operator = (p);
+                }
+                return * this;
+            }
 
-	private:
-		void release(bool d = false)
-		{
-			if (! owned_base::pool_.is_from(this))
-			{
-				if (ps_->release())
-				{
-					U<T>::po_ = 0;
+            shifted_ptr & operator = (shifted_ptr<T> const & p)
+            {
+                return operator = <T>(p);
+            }
 
-					if (! d)
-						new (ps_) set();
-					else
-						delete ps_;
-				}
-				else 
-				{
-					U<T>::reset();
+        void reset()
+        {
+            release();
+        }
 
-					if (! d)
-						ps_ = new set();
-				}
-			}
-			else if (! d)
-				U<T>::reset();
-		}
+        ~shifted_ptr()
+        {
+            release(true);
+        }
 
-		void init(owned_base * p)
-		{
-			for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
-			{
-				ps_->elements()->push_back(i->set_tag());
-				
-				for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs()->begin(), n; n = m, ++ n, m != i->ptrs()->end(); m = n)
-					m->ps_ = ps_;
-			}
-		}
-	};
+    private:
+        void release(bool d = false)
+        {
+            if (! owned_base::pool_.is_from(this))
+            {
+                if (ps_->release(! owned_base::stack_.is_from(this)))
+                {
+                    U<T>::po_ = 0;
+
+                    if (! d)
+                        new (ps_) set();
+                    else
+                        delete ps_;
+                }
+                else 
+                {
+                    U<T>::reset();
+
+                    if (! d)
+                        ps_ = new set();
+                }
+            }
+            else if (! d)
+                U<T>::reset();
+        }
+
+        void init(owned_base * p)
+        {
+            for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
+            {
+                ps_->elements()->push_back(i->set_tag());
+                
+                for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs()->begin(), n; n = m, ++ n, m != i->ptrs()->end(); m = n)
+                    m->ps_ = ps_;
+            }
+        }
+    };
 
 
 #define TEMPLATE_DECL(z, n, text) , typename T ## n
