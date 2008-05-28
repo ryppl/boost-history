@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="31" status="Open">
+<title>Which specifiers are legal for associated functions?</title>
+<section><sref ref="[concept.fct]"/></section>
+<submitter>Daniel Kruegler</submitter>
+<date>28 May 2008</date>
+
+<discussion>
+  <p>[concept.fct] describes some explicit exclusions for function
+  specifiers on associated functions, but can we conclude from this
+  that all other specifiers are feasible? Can we declare functions
+  as <code>constexpr</code>, <code>virtual</code>, and pure?</p>
+</discussion>
+
+<resolution>
+  <p>The <code>virtual</code> specifier doesn't make sense for
+  associated functions (especially now that one can adapt the syntax
+  of member functions a concept map), so it should be
+    banned. Syntactically, a <i>pure-specifier</i> cannot occur in an
+    associated function, so it need not be mentioned. Suggested
+  change to [concept.fct]p2:</p>
+
+  <blockquote>
+    An <i>associated-function</i> shall declare a function or function
+    template. If the <i>declarator-id</i> of the declaration is
+    a <i>qualified-id</i>, its <i>nested-name-specifier</i> shall name
+    a template parameter of the enclosing concept; the declaration
+    declares a member function or member function template. An
+    associated function shall not
+    be <code>extern</code>([dcl.stc]), <del><code>inline</code></del>
+    <ins>have any <i>function-specifier</i></ins>
+    ([dcl.fct.spec]), <ins>be</ins> explicitly-defaulted or deleted ([dcl.fct.def]),
+    or <ins>be</ins> a friend function ([class.friend]). An associated function
+    shall not contain an <i>exception-specification</i>
+    ([except.spec]).
+  </blockquote>
+</resolution>
+</issue>
