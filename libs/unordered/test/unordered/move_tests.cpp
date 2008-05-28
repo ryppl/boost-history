@@ -88,8 +88,6 @@ namespace move_tests
     void move_construct_tests2(T*,
             test::random_generator const& generator = test::default_generator)
     {
-        move_construct_tests1(ptr);
-
         BOOST_DEDUCED_TYPENAME T::hasher hf(1);
         BOOST_DEDUCED_TYPENAME T::key_equal eq(1);
         BOOST_DEDUCED_TYPENAME T::allocator_type al(1);
