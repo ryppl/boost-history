@@ -96,7 +96,7 @@
 \newcommand{\remitemConcepts}[1]{\remitem{#1}}
 \newcommand{\additemConcepts}[1]{\additem{#1}}
 
-%% Concepts revision 4 changes
+%% Concepts changes since the last revision
 \definecolor{ccadd}{rgb}{0,.6,0}
 \newcommand{\addedCC}[1]{\textcolor{ccadd}{\ul{#1}}}
 \newcommand{\removedCC}[1]{\textcolor{remclr}{\st{#1}}}
@@ -105,6 +105,13 @@
 \newcommand{\additemCC}[1]{\item\addedCC{#1}}
 \newcommand{\changedCCC}[2]{\textcolor{addclr}{\st{#1}}\addedCC{#2}}
 \newcommand{\removedCCC}[1]{\textcolor{addclr}{\st{#1}}}
+
+%% Concepts changes for the next revision
+\definecolor{zadd}{rgb}{0.8,0,0.8}
+\newcommand{\addedZ}[1]{\textcolor{zadd}{\ul{#1}}}
+\newcommand{\removedZ}[1]{\textcolor{remclr}{\st{#1}}}
+\newcommand{\changedCZ}[2]{\textcolor{addclr}{\st{#1}}\addedZ{#2}}
+
 
 %%--------------------------------------------------
 %% Sectioning macros.  

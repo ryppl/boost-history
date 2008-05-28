@@ -49,7 +49,7 @@
 \huge
 \begin{center}
 Proposed Wording for Concepts\\
-(Revision 5)
+(Revision 6)
 \end{center}
 
 \normalsize
@@ -62,8 +62,8 @@ James Widman, Gimpel Software \\
 Jeremy Siek, University of Colorado at Boulder
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number: N2617=08-0127 \vspace{-6pt}
-\par\noindent Revises document number: N2501=08-0011 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2617=08-0127 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language C++, Core Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:doug.gregor@gmail.com}{doug.gregor@gmail.com}$>$
@@ -1552,7 +1552,9 @@ An implicitly-declared destructor is
 when it is used to destroy an object of its class type (\ref{basic.stc}).
 A program is ill-formed
 \changedCC{if the class for which a destructor is implicitly
-defined has:}{if the implicitly-defined constructor is explicitly
+defined has:}{if the implicitly-defined}
+\changedCZ{constructor}{destructor}
+\addedCC{is explicitly
 defaulted, but the corresponding implicit declaration would have been deleted.}
 
 \begin{itemize}
@@ -1843,9 +1845,10 @@ when an object of its class type is assigned a value of its class type or
 a value of a class type derived from its class type.
 \index{restriction!copy assignment~operator}%
 A program is ill-formed \changedConcepts{if the class for which a copy assignment operator
-is implicitly defined has:}{if the implicitly-defined copy constructor
-is explicitly defaulted, but the corresponding implicit declaration
-would have been deleted.}
+is implicitly defined has:}{if the implicitly-defined copy}
+\changedCZ{constructor}{assignment operator}
+\addedConcepts{is explicitly defaulted, but the corresponding implicit 
+declaration would have been deleted.}
 
 \begin{itemize}
 \item
@@ -5109,7 +5112,9 @@ void h(float x, int y, int X::* p) {
   formed from the concept of a requirement and its template argument list
   after substitution of template arguments for their corresponding
   template parameters.  There
-  is an associated full concept name of \mbox{\tcode{I}}; call it
+  is an associated full concept name} 
+\addedZ{(\mbox{\ref{concept.def}})}
+\addedCC{of \mbox{\tcode{I}}; call it
   \mbox{\tcode{N}}. Concept map lookup searches an ordered sequence
   \mbox{\tcode{Q}} (defined below) where each element is a set of
   concept maps called
