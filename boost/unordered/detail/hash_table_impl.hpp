@@ -1949,10 +1949,8 @@ namespace boost {
 
                     // Nothing after this point can throw.
 
-                    link_ptr n = data_.link_node_in_bucket(a, bucket);
-
-                    return std::pair<iterator_base, bool>(
-                        iterator_base(bucket, n), true);
+                    return std::pair<iterator_base, bool>(iterator_base(bucket,
+                        data_.link_node_in_bucket(a, bucket)), true);
                 }
             }
 
