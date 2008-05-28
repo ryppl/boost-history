@@ -1648,6 +1648,7 @@ namespace boost {
 
 #if BOOST_UNORDERED_EQUIVALENT_KEYS
 
+#if !(defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL))
             // Insert (equivalent key containers)
 
             // if hash function throws, basic exception safety
@@ -1676,7 +1677,8 @@ namespace boost {
                 return insert_hint_impl(it, a);
             }
 
-#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+#else
+
             // Insert (equivalent key containers)
             // (I'm using an overloaded insert for both 'insert' and 'emplace')
 
@@ -1850,6 +1852,8 @@ namespace boost {
                 }
             }
 
+#if !(defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL))
+
             // Insert (unique keys)
 
             // if hash function throws, basic exception safety
@@ -1902,7 +1906,8 @@ namespace boost {
                     return insert(v).first;
             }
 
-#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+#else
+
             // Insert (unique keys)
             // (I'm using an overloaded insert for both 'insert' and 'emplace')
             //
