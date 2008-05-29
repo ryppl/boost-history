@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="33" status="Review">
+<title><code>ArithmeticLike</code> should have construction from an unsigned integral type</title>
+<section><sref ref="[concept.arithmetic]"/></section>
+<submitter>Daniel Kruegler</submitter>
+<date>29 May 2008</date>
+
+<discussion>
+  <p>It is necessary to add
+    the associated c'tor signature <code>T::T(uintmax_t)</code> to concept <code>ArithmeticLike</code> 
+as well, because otherwise
+    <code>uintmax_t</code> itself would be excluded and <code>ArithmeticLike</code> itself is not restricted
+    on signed types (<code>uintmax_t</code> -&gt; <code>intmax_t</code> can lead to overflow), e.g <code>HasNegate</code>
+    > is part of all arithmetic types.</p>
+</discussion>
+
+<resolution>
+  <p>Add the following to concept <code>ArithmeticLike</code>:</p>
+  <pre>
+    T::T(intmax_t);
+    <ins>T::T(uintmax_t);</ins>
+    T::T(long double);
+  </pre>
+</resolution>
+</issue>

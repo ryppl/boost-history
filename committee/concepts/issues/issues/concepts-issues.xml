@@ -1,4 +1,4 @@
-<issueslist revision="C2"
+<issueslist revision="C4"
             maintainer="Douglas Gregor &lt;doug.gregor@gmail.com&gt;"
             active_docno="Dxxxx=xx-xxxx"
             defect_docno="Dxxxx=xx-xxxx"
@@ -103,6 +103,14 @@
 </intros>
 
 <revision_history>
+
+<revision tag="C4">
+Companion to the concepts proposals in the post-Antipolis mailing. (XX June 2008)
+</revision>
+
+<revision tag="C3">
+Companion to the concepts proposals in the pre-Sophia-Antipolis mailing. (19 May 2008)
+</revision>
 
 <revision tag="C2">
 Companion to the concepts proposals in the Post-Bellevue mailing. (25 Mar 2008)

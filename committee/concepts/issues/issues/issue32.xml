@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="32" status="Review">
+<title>Missing definition of <code>TriviallyDefaultConstructible</code></title>
+<section><sref ref="[concept.construct]"/></section>
+<submitter>Daniel Kruegler</submitter>
+<date>29 May 2008</date>
+
+<discussion>
+  <p>A missing concept in [concept.construct]: Although (and rightly)
+declared in [utility.concepts], header &lt;concepts&gt synopsis, the
+description and definition
+of <code>TriviallyDefaultConstructible</code> is missing.</p>
+</discussion>
+
+<resolution>
+  <p>Add the following to [concept.construct]:</p>
+  <pre>
+    <ins>concept TriviallyDefaultConstructible&lt;typename T&gt; : DefaultConstructible&lt;T&gt; {}</ins>
+  </pre>
+
+  <ol start="3">
+    <li><ins><i>Note</i>: describes types whose default constructor is trivial.</ins></li>
+    <li><ins><i>Requires</i>: for every type <code>T</code> that is a trivial type ([basic.types]) or a class type with a trivial default constructor ([class.ctor]), a concept map <code>TriviallyDefaultConstructible&lt;T&gt;</code> shall be implicitly defined in namespace std.</ins></li>
+  </ol>
+</resolution>
+</issue>

@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="31" status="WP">
+<issue num="31" status="Review">
 <title>Which specifiers are legal for associated functions?</title>
 <section><sref ref="[concept.fct]"/></section>
 <submitter>Daniel Kruegler</submitter>
@@ -21,8 +21,10 @@
   associated functions (especially now that one can adapt the syntax
   of member functions a concept map), so it should be
     banned. Syntactically, a <i>pure-specifier</i> cannot occur in an
-    associated function, so it need not be mentioned. Suggested
-  change to [concept.fct]p2:</p>
+    associated function, so it need not be mentioned. 
+    <code>constexpr</code> is permitted, as are any other specifiers
+  (like <code>explicit</code>) that aren't banned, so it doesn't need
+  to be mentioned either. Suggested change to [concept.fct]p2:</p>
 
   <blockquote>
     An <i>associated-function</i> shall declare a function or function

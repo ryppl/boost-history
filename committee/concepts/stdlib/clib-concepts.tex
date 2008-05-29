@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Core Concepts for the C++0x Standard Library\\
-(Revision 2)
+(Revision 3)
 \vspace{0.25in}
 
 \normalsize
@@ -62,8 +62,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{0.25in}
-\par\noindent Document number: N2621=08-0131\vspace{-6pt}
-\par\noindent Revises document number: N2572=08-0082\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2621=08-0131\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -86,22 +86,9 @@ strike-through when possible}.
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
 
-\paragraph*{Changes from N2572}
+\paragraph*{Changes from N2621}
 \begin{itemize}
-\item Added the \tcode{Has*Assign} concepts, which are required by
-  \tcode{valarray} and friends.
-\item Split \tcode{MoveAssignable} into the two-parameter
-  \tcode{HasMoveAssign} and the one-parameter \tcode{MoveAssignable};
-  the same split is also used for \tcode{CopyAssignable} and
-  \tcode{HasCopyAssign}.
-\item Added the \tcode{MemberPointeeType} concept, and revised
-  \tcode{ReferentType} to permit reference types.
-\item Renamed \tcode{HeapAllocatable} to \tcode{FreeStoreAllocatable},
-  which better reflects the terminology of the standard.
-\item Changed the \tcode{IntegralLike} requirement for a \tcode{long
-    long} constructor into a requirement for a \tcode{intmax_t}
-  constructor.
-\item \tcode{ObjectType} now refines \tcode{MemberPointeeType}.
+\item Applied the proposed resolutions of concepts issues 15, 32, and 33.
 \end{itemize}
 
 \end{titlepage}
@@ -720,6 +707,21 @@ auto concept DefaultConstructible<typename T> : HasConstructor<T> { }
   value.}
 \end{itemdescr}
 
+\begin{itemdecl}
+@\addedZ{concept TriviallyDefaultConstructible<typename T> : DefaultConstructible<T> \{\}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedZ{\mbox{\reallynote} describes types whose default constructor is trivial.}
+
+\pnum \addedZ{\mbox{\requires} for every type \mbox{\tcode{T}} that is
+  a trivial type (\mbox{\ref{basic.types}}) or a class type with a
+  trivial default constructor (\mbox{\ref{class.ctor}}), a concept map
+  \mbox{\tcode{TriviallyDefaultConstructible<T>}} shall be implicitly
+  defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
 \rSec2[concept.copymove]{Copy and move}
 \begin{itemdecl}
 auto concept MoveConstructible<typename T> : HasConstructor<T, T&&> { }
@@ -1188,7 +1190,7 @@ auto concept Addressable<typename T> {
 \begin{itemdecl}
 auto concept Callable<typename F, typename... Args> {
   typename result_type;
-  result_type operator()(F&, Args...);
+  result_type operator()(F&@\addedZ{\&}@, Args...);
 }
 \end{itemdecl}
 
@@ -1317,7 +1319,7 @@ auto concept HasBitXorAssign<typename T, typename U = T> {
 
 \begin{itemdescr}
 \pnum
-\mbox{\reallynote} describes types with an \mbox{\tcode{operator\^=}}.
+\mbox{\reallynote} describes types with an \mbox{\tcode{operator\^{}=}}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1351,6 +1353,7 @@ concept ArithmeticLike<typename T>
   : Regular<T>, LessThanComparable<T>, HasPlus<T>, HasMinus<T>, HasMultiply<T>, HasDivide<T>, 
     HasUnaryPlus<T>, HasNegate<T> {
   T::T(@\changedCC{long long}{intmax_t}@);
+  @\addedZ{T::T(uintmax_t);}@
   @\addedCC{T::T(long double);}@
 
   T& operator++(T&);
