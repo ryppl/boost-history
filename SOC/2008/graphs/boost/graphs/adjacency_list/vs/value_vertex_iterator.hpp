@@ -48,6 +48,12 @@ public:
         return *this;
     }
 
+    inline value_vertex_iterator& operator--()
+    {
+        --iter;
+        return *this;
+    }
+
     inline reference operator*()
     { return &const_cast<vertex_type&>(*iter); }
 

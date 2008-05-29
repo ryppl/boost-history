@@ -117,7 +117,6 @@ basic_edge_vector<E,A>::add_edge(vertex_descriptor u,
                                  edge_properties const& ep)
 {
     // Add the edge object. Its descriptor is its index.
-    std::cout << "here?" << std::endl;
     _edges.push_back(edge_type(u, v, ep));
     return _edges.size() - 1;
 }

@@ -25,9 +25,9 @@ namespace adj_list {
 template <
     typename VertexProps = none,
     typename EdgeProps = none,
-    template <typename> class VertexStore = vertex_list,
+    template <typename> class VertexStore = vertex_set,
     template <typename> class EdgeStore = edge_set,
-    template <typename> class VertexEdgeStore = vertex_edge_list
+    template <typename> class VertexEdgeStore = vertex_edge_set
 >
 struct graph
     : adjacency_list<
@@ -55,9 +55,9 @@ struct graph
 template <
     typename VertexProps = none,
     typename EdgeProps = none,
-    template <typename> class VertexStore = vertex_list,
-    template <typename> class EdgeStore = edge_list,
-    template <typename> class VertexEdgeStore = vertex_edge_list
+    template <typename> class VertexStore = vertex_set,
+    template <typename> class EdgeStore = edge_set,
+    template <typename> class VertexEdgeStore = vertex_edge_set
 >
 struct multigraph
     : adjacency_list<

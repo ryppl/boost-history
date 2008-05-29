@@ -47,6 +47,25 @@ public:
         return *this;
     }
 
+    inline indexed_vertex_iterator& operator=(indexed_vertex_iterator const& x)
+    {
+        indexed_vertex_iterator t(x);
+        swap(t);
+        return *this;
+    }
+
+    inline indexed_vertex_iterator& operator+=(difference_type n)
+    {
+        iter += n;
+        return *this;
+    }
+
+    inline indexed_vertex_iterator& operator-=(difference_type n)
+    {
+        iter -= n;
+        return *this;
+    }
+
     // Support addition and subtraction as per random access iterators
     inline indexed_vertex_iterator operator+(difference_type n) const
     { return iter + n; }
@@ -67,6 +86,12 @@ public:
 
     inline bool operator!=(indexed_vertex_iterator const& x) const
     { return (store == x.store) && (iter != x.iter); }
+
+    inline void swap(indexed_vertex_iterator& x)
+    {
+        std::swap(store, x.store);
+        std::swap(iter, x.iter);
+    }
 
     Store const* store;
     iterator iter;

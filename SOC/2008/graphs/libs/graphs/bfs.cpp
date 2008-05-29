@@ -8,14 +8,16 @@
 #include <boost/graphs/adjacency_list.hpp>
 #include <boost/graphs/breadth_first_search.hpp>
 
-#include <boost/date_time.hpp>
+// FIXME: this doesn't compile under g++4.4. Something about the changing
+// the meaning of a type (i'm guessing template to type name).
+// #include <boost/date_time.hpp>
 
 #include "demangle.hpp"
 
 using namespace std;
 using namespace boost::graphs;
 using namespace boost::graphs::adj_list;
-using namespace boost::posix_time;
+// using namespace boost::posix_time;
 
 struct VertexProps
 {
@@ -70,12 +72,12 @@ void test_1()
     ColorContainer colors(g.vertices());
     ColorMap cm(colors);
 
-    ptime start = microsec_clock::local_time();
+    // ptime start = microsec_clock::local_time();
     for(Graph::vertex_iterator i = g.begin_vertices(); i != g.end_vertices(); ++i) {
         colors[*i] = black_color;
     }
-    ptime stop = microsec_clock::local_time();
-    cout << "time: " << stop - start << endl;
+    // ptime stop = microsec_clock::local_time();
+    // cout << "time: " << stop - start << endl;
 
     Graph::vertex_descriptor v = *g.begin_vertices();
     put(cm, v, color_traits<color>::red());
@@ -99,14 +101,13 @@ void test_2()
     }
 
     // Create a color map for the vertices.
-    ptime start = microsec_clock::local_time();
+    // ptime start = microsec_clock::local_time();
     ColorContainer colors(g.vertices());
     for(Graph::vertex_iterator i = g.begin_vertices(); i != g.end_vertices(); ++i) {
         colors[*i] = black_color;
     }
-    ptime stop = microsec_clock::local_time();
-    cout << "time: " << stop - start << endl;
-
+    // ptime stop = microsec_clock::local_time();
+    // cout << "time: " << stop - start << endl;
 }
 
 void test_3()
