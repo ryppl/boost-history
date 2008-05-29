@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="34" status="Open">
+<title>Copy/move requirements on container members</title>
+<section><sref ref="[containers]"/></section>
+<submitter>Howard Hinnant</submitter>
+<date>22 May 2008</date>
+
+<discussion>
+  <p>In N2623 I note that the requirements on each container
+    assignment look like:</p>
+
+<pre>
+requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt;
+ vector&lt;T,Allocator&gt;&amp; operator=(const vector&lt;T,Allocator&gt;&amp; x);
+</pre>
+
+<p>Why is <code>T</code> not required to
+be <code>CopyAssignable</code>?  We have a history of wanting to reuse
+capacity/nodes whatever, whenever we can.  This is a tremendous
+performance advantage over
+a <code>clear()</code>/<code>push_back()</code> algorithm.</p>
+
+<p>I'm aware that a container could always overload each assignment
+member for types that are <code>CopyAssignable</code>, and make the
+optimization.  I'm greatly concerned about doubling the size of the
+entire std::library by doing such overloading in so many places where
+this philosophy is currently proposed.  Concepts are already going to
+extract a very significant compile-time penalty (no one knows how much
+at this point, conceptgcc is a worst (and unacceptable) case).  I
+don't want to further aggravate that very real problem.</p>
+
+<p>These requirements have an interesting history. In the following,
+CA=<code>CopyAssignable</code>, CC=<code>CopyConstructible</code>,
+MA=<code>MoveAssignable</code>, and MC=<code>MoveAssignable</code>.
+The library "move papers" were written in 2005.  At that time we had a
+blanket CA/CC requirement on the containers.  Howard wrote the move
+papers against that, mechanically substituting in MA/MC for CA/CC.</p>
+
+<p>After the move papers were written, and before they were accepted,
+LWG 276 was settled, removing the CA requirement for all the
+node-based containers except <code>list::assign</code>. It was still
+required for all of vector and deque (if I recall correctly).  Then
+the move papers were accepted, subsequently accidently reversing LWG
+276.</p>
+
+<p>The addition of scoped allocators (N2554) removed the blanket MA/MC
+  requirement, added by the move papers,
+  using <code>ConstructibleAsElement</code> without CA/CC/MA/MC. LWG 704
+  (submitted prior to pre-scoped allocators and emplace) attempts to
+  straighten out the message. This issue includes the minimum
+  requirements for each container member at the time the issue was
+  written (May 20, 2007). The table doesn't specifically mention
+  C::operator=(const C&) because those requirements should be
+  identical to c1.assign(c2.begin(), c2.end()) which is listed.</p>
+</discussion>
+
+<resolution>
+  <p>(Proposed resolution by Doug Gregor)</p>
+  <p>In [deque], change the definition of class template <code>deque</code> as follows:</p>
+  <pre>
+template &lt;ObjectType T, RandomAccessAllocator Alloc = allocator&lt;T&gt; &gt;
+requires Destructible&lt;T&gt;
+class deque { 
+public: 
+  // ...
+
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
+    deque&lt;T,Allocator&gt;&amp; operator=(const deque&lt;T,Allocator&gt;&amp; x); 
+  deque&lt;T,Allocator&gt;&amp; operator=(const deque&lt;T,Allocator&gt;&amp;&amp; x); 
+  template &lt;InputIterator Iter&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; <ins>&amp;&amp; HasCopyAssign&lt;T, Iter::reference&gt;</ins>
+    void assign(Iter first, Iter last); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
+    void assign(size_type n, const T&amp; t); 
+
+  // ...
+  requires DefaultConstructible&lt;T&gt; <del>&amp;&amp; MoveAssignable&lt;T&gt;</del>
+    void resize(size_type sz); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <del>&amp;&amp; MoveAssignable&lt;T&gt;</del>
+    void resize(size_type sz, const T&amp; c); 
+};
+  </pre>
+  <p><i>Note</i>: LWG 704 says that <code>resize</code> for a <cod>deque</cod>
+  requires <code>MoveConstructible</code>, but it does not (because
+  one never needs to move from an existing block).</p>
+
+  <p>In [forwardlist], change the definition of class template <code>forward_list</code> as follows:</p>
+  <pre>
+template &lt;ObjectType T, Allocator Alloc = allocator&lt;T&gt; &gt; 
+requires Destructible&lt;T&gt; 
+class forward_list { 
+public: 
+  // ...
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
+    forward_list&lt;T,Alloc&gt;&amp; operator=(const forward_list&lt;T,Alloc&gt;&amp; x); 
+  forward_list&lt;T,Alloc&gt;&amp; operator=(forward_list&lt;T,Alloc&gt;&amp;&amp; x); 
+  template &lt;class InputIteratorInputIterator Iter&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; <ins>&amp;&amp; HasCopyAssign&lt;T, Iter::reference&gt;</ins>
+    void assign(Iter first, Iter last); 
+  ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
+    void assign(size_type n, const T&amp; t); 
+};
+  </pre>
+
+  <p>In [list], change the definition of class template <code>list</code> as follows:</p>
+
+  <pre>
+template &lt;ObjectType T, Allocator Alloc = allocator&lt;T&gt; &gt; 
+requires Destructible&lt;T&gt; 
+class list { 
+public: 
+  // ...
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
+    list&lt;T,Alloc&gt;&amp; operator=(const list&lt;T,Alloc&gt;&amp; x ); 
+  list&lt;T,Alloc&gt;&amp; operator=(list&lt;T,Alloc&gt;&amp;&amp; x); 
+  template &lt;InputIterator Iter&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; <ins>&amp;&amp; HasCopyAssign&lt;T, Iter::reference&gt;</ins>
+    void assign(Iter first, Iter last); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
+    void assign(size_type n, const T&amp; t); 
+};
+  </pre>
+
+  <p>In [vector], change the definition of class template <code>vector</code>
+  as follows:</p>
+
+  <pre>
+template &lt;ObjectType T, RandomAccessAllocator Alloc = allocator&lt;T&gt; &gt; 
+requires Destructible&lt;T&gt; 
+class vector { 
+public: 
+  // ...
+  template &lt;InputIterator Iter&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; &amp;&amp; <del>ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt;</del><ins>MoveConstructible&lt;T&gt;</ins>
+    vector(Iter first, Iter last, 
+           const Alloc&amp; = Alloc()); 
+
+  // ...
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins> 
+    vector&lt;T,Alloc&gt;&amp; operator=(const vector&lt;T,Alloc&gt;&amp; x); 
+  vector&lt;T,Alloc&gt;&amp; operator=(vector&lt;T,Alloc&gt;&amp;&amp; x); 
+  template &lt;InputIterator Iter&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; 
+          <ins>&amp;&amp; HasCopyAssign&lt;T, Iter::reference&gt; &amp;&amp; MoveConstructible&lt;T&gt;</ins>
+    void assign(Iter first, Iter last); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins> 
+    void assign(size_type n, const T&amp; u);  
+
+  // ...
+  requires DefaultConstructible&lt;T&gt; &amp;&amp; <del>ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt;</del><ins>MoveConstructible&lt;T&gt;</ins>
+    void resize(size_type sz); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; MoveConstructible&lt;T&gt;</ins>
+    void resize(size_type sz, const T&amp; c);
+
+  // ...
+  requires <del>ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt; </del><ins>MoveConstructible&lt;T&gt;</ins>
+    void reserve(size_type n); 
+
+  // ...
+  template &lt;class... Args&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Args&amp;&amp;...&gt; &amp;&amp; <del>ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt;</del><ins>MoveConstructible&lt;T&gt;</ins>
+    void push_back(Args&amp;&amp;... args); 
+  void pop_back(); 
+  template &lt;class... Args&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Args&amp;&amp;...&gt; &amp;&amp; <del>ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt;</del><ins>MoveConstructible&lt;T&gt; &amp;&amp; MoveAssignable&lt;T&gt;</ins>
+    iterator emplace(const_iterator position, Args&amp;&amp;... args); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; &amp;&amp; MoveAssignable&lt;T&gt; <ins>&amp;&amp; MoveConstructible&lt;T&gt;</ins>
+    iterator insert(const_iterator position, const T&amp; x); 
+  requires ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt; &amp;&amp; MoveAssignable&lt;T&gt; <ins>&amp;&amp; MoveConstructible&lt;T&gt;</ins>
+    void insert(const_iterator position, T&amp;&amp; x); 
+  requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; &amp;&amp; MoveAssignable&lt;T&gt; <ins>&amp;&amp; MoveConstructible&lt;T&gt;</ins>
+    void insert(const_iterator position, size_type n, const T&amp; x);
+  template &lt;InputIterator Iter&gt; 
+    requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; 
+        <ins>&amp;&amp; HasCopyAssign&lt;T, Iter::reference&gt;</ins>
+        &amp;&amp; <del>ConstructibleAsElement&lt;Alloc, T, T&amp;&amp;&gt;</del><ins>MoveConstructible&lt;T&gt;</ins> &amp;&amp; MoveAssignable&lt;T&gt; 
+    void insert(const_iterator position, 
+                Iter first, Iter last);
+};
+  </pre>
+</resolution>
+</issue>
