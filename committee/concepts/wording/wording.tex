@@ -103,39 +103,9 @@ standard library are discussed in separate documents:
 \item N2641=08-0151: Allocator Concepts
 \end{itemize}
 
-\section*{Changes from N2501}
+\section*{Changes from N2617}
 \begin{itemize}
-\item Incorporate wording for ``option \#2'', corresponding
-  to the ``Eliminate Forwarding Functions'' option described in
-  N2576~\cite{gregor08:soundness}.
-\item Clarified that member templates of constrained templates are
-  constrained templates (\ref{temp.mem}) but that the
-  templates are an unconstrained context (\ref{temp.constrained});
-  their bodies are constrained contexts.
-\item Clarified and simplified how requirements are satisfied by concept maps,
-  including a major cleanup of the specification of concept map lookup
-  (\ref{temp.req.sat}).
-\item Add text to cope with inheriting constructors
-  (\ref{class.inhctor}).
-\item Update handling of deleted special member functions to cope with
-  unrestricted unions (clause~\ref{special}).
-\item Clarify that a class template partial specialization of a
-  constrained class template is not necessarily a constrained template
-  (\ref{temp.req.impl}).
-\item Clarify that a \techterm{qualified-id} can refer to a type
-  within a concept instance without the use of \tcode{typename}.
-\item Expanded the checking required to determine whether the concept
-  maps used to satisfy the requirements of a template are consistent,
-  to now include consistency with the results of concept map
-  lookup. As part of this change, this text has moved to the template
-  argument deduction section (\ref{temp.deduct}).
-\item Large cleanup to the wording for satisfying associated functions
-  (\ref{concept.map.fct}).
-\item Cope with template aliases as archetypes.
-\item Introduced the terms "requirement members" and "satisfier members"
-(\ref{concept.map}) of concept maps.  The definitions are meant to help
-explicitly spell out some existing notions about what goes into the scope
-of a concept map.
+\item Apply the proposed resolution of concepts issue 31.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -3511,7 +3481,9 @@ member function template.}
 %
 \addedConcepts{An associated function shall not be
   \mbox{\tcode{extern}}}\removedCCC{ or \mbox{\tcode{static}}
-(\mbox{\ref{dcl.stc}})}\addedConcepts{, inline (\mbox{\ref{dcl.fct.spec}}), explicitly-defaulted or deleted
+(\mbox{\ref{dcl.stc}})}\addedConcepts{, inline}
+\addedZ{or \mbox{\tcode{virtual}}}
+\addedConcepts{(\mbox{\ref{dcl.fct.spec}}), explicitly-defaulted or deleted
 (\mbox{\ref{dcl.fct.def}}), or a friend function (\mbox{\ref{class.friend}}). An 
 associated function shall not contain an
 \mbox{\techterm{exception-specification}} (\mbox{\ref{except.spec}}).}

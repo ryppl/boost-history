@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="31" status="Open">
+<issue num="31" status="WP">
 <title>Which specifiers are legal for associated functions?</title>
 <section><sref ref="[concept.fct]"/></section>
 <submitter>Daniel Kruegler</submitter>
@@ -31,7 +31,7 @@
     a template parameter of the enclosing concept; the declaration
     declares a member function or member function template. An
     associated function shall not
-    be <code>extern</code>([dcl.stc]), <code>inline</code> <ins> or <code>virtual</code></ins>
+    be <code>extern</code>([dcl.stc]), <code>inline</code> <ins>or <code>virtual</code></ins>
     ([dcl.fct.spec]), explicitly-defaulted or deleted ([dcl.fct.def]),
     or a friend function ([class.friend]). An associated function
     shall not contain an <i>exception-specification</i>
