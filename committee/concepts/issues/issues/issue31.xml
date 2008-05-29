@@ -31,10 +31,9 @@
     a template parameter of the enclosing concept; the declaration
     declares a member function or member function template. An
     associated function shall not
-    be <code>extern</code>([dcl.stc]), <del><code>inline</code></del>
-    <ins>have any <i>function-specifier</i></ins>
-    ([dcl.fct.spec]), <ins>be</ins> explicitly-defaulted or deleted ([dcl.fct.def]),
-    or <ins>be</ins> a friend function ([class.friend]). An associated function
+    be <code>extern</code>([dcl.stc]), <code>inline</code> <ins> or <code>virtual</code></ins>
+    ([dcl.fct.spec]), explicitly-defaulted or deleted ([dcl.fct.def]),
+    or a friend function ([class.friend]). An associated function
     shall not contain an <i>exception-specification</i>
     ([except.spec]).
   </blockquote>
