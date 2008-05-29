@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <iostream>
+#include <map>
 
 namespace boost {
 namespace spatial_index {
@@ -23,8 +24,7 @@ private:
 	boost::shared_ptr<quadtree_node> sw_;
 	boost::shared_ptr<quadtree_node> se_;
 
-	Key k_;
-	Value v_;
+	std::map<Key, Value> m_;
 	
 	double min_x_;
 	double min_y_;
@@ -32,9 +32,12 @@ private:
 	double max_x_;
 	double max_y_;
 	
+	// number of points in each node
+	unsigned int node_size_;
+
 public:
-	quadtree_node(double min_x, double min_y, double max_x, double max_y) 
-		: min_x_(min_x), min_y_(min_y), max_x_(max_x), max_y_(max_y) 
+	quadtree_node(double min_x, double min_y, double max_x, double max_y, unsigned int node_size) 
+		: min_x_(min_x), min_y_(min_y), max_x_(max_x), max_y_(max_y), node_size_(node_size)
 	{
 // 		std::cerr << "Creating quadtree_node with " << 
 // 			"min_x: " << min_x << " min_y: " << min_y << " max_x: " << max_x << " max_y " << max_y << std::endl;
@@ -43,24 +46,21 @@ public:
 
 	void insert(const Key &k, const Value &v)
 	{
-		if(v_ == Value()) {
+		if(m_.size() < node_size_) {
 // 			std::cerr << "Empty quadtree_node --> inserting" << std::endl;
-			
-			v_ = v;
-			k_ = k;
-			
+			m_[k] = v;
 		} else {
-// 			std::cerr << "Quadtree_Node division: ";
-			// quadtree_node division
-// 			std::cerr << " (" << k.first << ", " << k.second << ")" ;
-// 			std::cerr << " in (" << min_x_ << ", " << min_y_ << ")"; 
-// 			std::cerr << " x (" << max_x_ << ", " << max_y_ << ")" << std::endl; 
+//  			std::cerr << "Quadtree_Node division: ";
+// 			// quadtree_node division
+//  			std::cerr << " (" << k.first << ", " << k.second << ")" ;
+//  			std::cerr << " in (" << min_x_ << ", " << min_y_ << ")"; 
+//  			std::cerr << " x (" << max_x_ << ", " << max_y_ << ")" << std::endl; 
 			
 			if((k.first >= min_x_ && k.first < min_x_+(max_x_-min_x_)/2.0) && 
 			   (k.second >= min_y_ && k.second < min_y_+(max_y_-min_y_)/2.0)) {
 				if(this->ne_ == boost::shared_ptr<quadtree_node>()) {
 					this->ne_ = boost::shared_ptr<quadtree_node>(new quadtree_node(min_x_, min_y_, min_x_+(max_x_-min_x_)/2.0, 
-												       min_y_+(max_y_-min_y_)/2.0));
+												       min_y_+(max_y_-min_y_)/2.0, node_size_));
 				}
 				ne_->insert(k, v);
 			}
@@ -70,7 +70,7 @@ public:
 					this->se_ = boost::shared_ptr<quadtree_node>(new quadtree_node(min_x_, 
 												       min_y_+(max_y_-min_y_)/2.0,
 												       min_x_+(max_x_-min_x_)/2.0, 
-												       max_y_));
+												       max_y_, node_size_));
 				}
 				se_->insert(k, v);
 			}
@@ -80,7 +80,7 @@ public:
 			
 				if(this->nw_ == boost::shared_ptr<quadtree_node>()) {
 					this->nw_ = boost::shared_ptr<quadtree_node>(new quadtree_node(min_x_+(max_x_-min_x_)/2.0, min_y_, max_x_, 
-												       min_y_+(max_y_-min_y_)/2.0));
+												       min_y_+(max_y_-min_y_)/2.0, node_size_));
 				}
 				nw_->insert(k, v);
 			}
@@ -92,7 +92,7 @@ public:
 				if(this->sw_ == boost::shared_ptr<quadtree_node>()) {
 					this->sw_ = boost::shared_ptr<quadtree_node>(new quadtree_node(min_x_+(max_x_-min_x_)/2.0, 
 												     min_y_+(max_y_-min_y_)/2.0,
-												       max_x_, max_y_));
+												       max_x_, max_y_, node_size_));
 				}
 				sw_->insert(k, v);
 			}
@@ -103,102 +103,53 @@ public:
 
 	void find(std::deque<Value> &r, const double x1, const double x2, const double y1, const double y2)
 	{
-		if(v_ != Value()) {
+		if(m_.size() != 0) {
+// 			std::cerr << "Node: X1:" << min_x_ << " X2:" << max_x_ << " Y1:" << min_y_ << " Y2: " << max_y_ << std::endl;
+// 			std::cerr << "Query: X1:" << x1 << " X2:" << x2 << " Y1:" << y1 << " Y2: " << y2 << std::endl;
 
-			if(k_.first >= x1 && k_.first <= x2 && k_.second >= y1 && k_.second <= y2) {
-				r.push_back(v_);
+			if(x1 > max_x_ || x2 < min_x_ || y1 > max_y_ || y2 < min_y_) {
+// 				std::cerr << "Not Inside" << std::endl;
+				return;
 			}
 
-			if(
-			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
-			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
+// 			std::cerr << "Inside" << std::endl;
 
-			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
-			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0) ||
-
-			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
-			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
-
-			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
-			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0)
-
-			   ) {
-				if(ne_ != boost::shared_ptr<quadtree_node>()) {
-					ne_->find(r, x1, x2, y1, y2);
+			for(typename std::map<Key,Value>::const_iterator it = m_.begin(); it != m_.end(); ++it) {
+// 				std::cerr << "Checking: (" << it->first.first << "," << it->first.second << ")" << std::endl;
+				if(it->first.first >= x1 && it->first.first <= x2 && it->first.second >= y1 && it->first.second <= y2) {
+					r.push_back(it->second);
 				}
 			}
- 			if(
-			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
- 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
 
-			   (x1 >= min_x_ && x1 < min_x_+(max_x_-min_x_)/2.0) && 
- 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_) ||
-
-			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
- 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
-
-			   (x2 >= min_x_ && x2 < min_x_+(max_x_-min_x_)/2.0) && 
- 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_)
-
-			   ) {
-				if(se_ != boost::shared_ptr<quadtree_node>()) {
-					se_->find(r, x1, x2, y1, y2);
-				}
-			      
+			if(ne_ != boost::shared_ptr<quadtree_node>()) {
+				ne_->find(r, x1, x2, y1, y2);
 			}
-
- 			if(
-			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
- 			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
-
-			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
- 			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0) ||
-
-
-			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
- 			   (y1 >= min_y_ && y1 < min_y_+(max_y_-min_y_)/2.0) ||
-
-			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
- 			   (y2 >= min_y_ && y2 < min_y_+(max_y_-min_y_)/2.0)
-
-			   ) {
-				if(nw_ != boost::shared_ptr<quadtree_node>()) {
-					nw_->find(r, x1, x2, y1, y2);
-				}
-			      
+			if(se_ != boost::shared_ptr<quadtree_node>()) {
+				se_->find(r, x1, x2, y1, y2);
 			}
- 			if(
-			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
- 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
-
-			   (x1 >= min_x_+(max_x_-min_x_)/2.0 && x1 < max_x_) &&
- 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_) ||
-
-			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
- 			   (y1 >= min_y_+(max_y_-min_y_)/2.0 && y1 < max_y_) ||
-
-			   (x2 >= min_x_+(max_x_-min_x_)/2.0 && x2 < max_x_) &&
- 			   (y2 >= min_y_+(max_y_-min_y_)/2.0 && y2 < max_y_)
-
-			   ) {
-				if(sw_ != boost::shared_ptr<quadtree_node>()) {
-					sw_->find(r, x1, x2, y1, y2);
-				}
-			      
+			if(nw_ != boost::shared_ptr<quadtree_node>()) {
+				nw_->find(r, x1, x2, y1, y2);
 			}
+			if(sw_ != boost::shared_ptr<quadtree_node>()) {
+				sw_->find(r, x1, x2, y1, y2);
+			}
+			
+// 			std::cerr << std::endl;
 		}
 	}
 
+
 	Value find(const Key &k)
 	{
-		if(v_ == Value()) {
+		if(m_.size() == 0) {
 			return Value();
 		} else {
 // 			std::cerr << "compare: " << k_.first << " with " << k.first;
 // 			std::cerr << " " << k_.second << " with " << k.second << std::endl;
-			if(k_ == k) {
+			typename std::map<Key, Value>::const_iterator it = m_.find(k);
+			if(it != m_.end()) {
 // 				std::cerr << "ok" << std::endl;
-				return v_;
+				return it->second;
 			}
 
 			if((k.first >= min_x_ && k.first < min_x_+(max_x_-min_x_)/2.0) && 
@@ -206,7 +157,8 @@ public:
 				if(ne_ != boost::shared_ptr<quadtree_node>()) {
 					return ne_->find(k);
 				} else {
-					return v_;
+					return Value();
+// 					return v_;
 				}
 			}
  			if((k.first >= min_x_ && k.first < min_x_+(max_x_-min_x_)/2.0) && 
@@ -214,7 +166,8 @@ public:
 				if(se_ != boost::shared_ptr<quadtree_node>()) {
 					return se_->find(k);
 				} else {
-					return v_;
+					return Value();
+// 					return v_;
 				}
 			      
 			}
@@ -224,7 +177,8 @@ public:
 				if(nw_ != boost::shared_ptr<quadtree_node>()) {
 					return nw_->find(k);
 				} else {
-					return v_;
+					return Value();
+// 					return v_;
 				}
 			      
 			}
@@ -233,11 +187,13 @@ public:
 				if(sw_ != boost::shared_ptr<quadtree_node>()) {
 					return sw_->find(k);
 				} else {
-					return v_;
+					return Value();
+// 					return v_;
 				}
 			      
 			}
 		}
+		// never reached
 		return Value();
 	}
 	      

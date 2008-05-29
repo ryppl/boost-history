@@ -22,9 +22,12 @@ private:
 	quadtree_node<Key,Value> root;
 	unsigned int element_count;
 
+	// number of points in each node
+	unsigned int node_size_;
+
 public:
 	quadtree(double min_x, double min_y, double max_x, double max_y) 
-		: root(min_x, min_y, max_x, max_y), element_count(0) {}
+		: root(min_x, min_y, max_x, max_y, 1), element_count(0), node_size_(1)  {}
 	  
 	virtual void insert(const Key &k, const Value &v)
 	{
