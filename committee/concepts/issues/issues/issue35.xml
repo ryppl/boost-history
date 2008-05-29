@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="35" status="Open">
+  <title><code>Swappable</code> should be usable with proxy iterator references</title>
+<section><sref ref="[concept.copymove]"/></section>
+<submitter>LWG</submitter>
+<date>29 May 2008</date>
+
+<discussion>
+  <p>The <code>Swappable</code> concept cannot currently be used with
+  proxy iterator references, because they aren't necessarily
+  lvalues. Moreover, its <code>swap</code> can't be applied to values
+  of different types. For example, it couldn't be used for the proxy
+  references coming from two different iterator types in
+  the <code>swap_ranges</code> algorithm.</p>
+</discussion>
+
+<resolution>
+  <p>Modify the definition of <code>Swappable</code> in
+  [concept.copymove] as follows:</p>
+
+  <pre>
+auto concept Swappable&lt;typename T<ins>, typename U = T</ins>&gt; { 
+  void swap(T&amp;<ins>&amp;</ins>, <del>T</del><ins>U</ins>&amp;<ins>&amp;</ins>); 
+} 
+  </pre>
+  <ol start="11">
+    <li><i>Note</i>: describes types for which <del>two</del> values of <del>that</del><ins>those</ins> type<ins>s</ins>
+    can be swapped.</li>
+  </ol>
+
+  <p>The synopsis in [utility.concepts] will need to be updated
+  accordingly:</p>
+
+  <pre>
+auto concept Swappable&lt;typename T<ins>, typename U = T</ins>&gt; <i>see below</i>;
+  </pre>
+</resolution>
+</issue>
