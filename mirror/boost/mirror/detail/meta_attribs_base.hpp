@@ -14,6 +14,8 @@
 #include <boost/mirror/common_defs.hpp>
 // forward declarations
 #include <boost/mirror/meta_data_fwd.hpp>
+// class generation related
+#include <boost/mirror/detail/meta_attribs_outline.hpp>
 //
 #include <boost/preprocessor/repetition/enum_params.hpp>
 // 
@@ -43,6 +45,7 @@ struct meta_class_attributes
 	template <> struct meta_class_attributes< THE_CLASS , detail::default_meta_class_variant> \
 	{ \
 		typedef THE_CLASS Class; \
+		typedef detail::default_meta_class_variant variant_tag; \
 		typedef mpl::vector<> 
 
 /** This macro starts the declaration of member attributes
@@ -57,6 +60,7 @@ struct meta_class_attributes
 	{ \
 		typedef THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
 			Class; \
+		typedef detail::default_meta_class_variant variant_tag; \
 		typedef typename mpl::vector<> 
 
 
@@ -75,6 +79,7 @@ struct meta_class_attributes
  *  after the specific stuff.
  */
 #define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, TYPENAME_KW) \
+	BOOST_MIRROR_DECLARE_ATTRIB_OUTLINE(NUMBER, TYPE, NAME) \
 	typedef TYPENAME_KW mpl::push_back<_partial_list_##NUMBER, TYPE>::type  
 
 
