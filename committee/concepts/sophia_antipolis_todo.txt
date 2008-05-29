@@ -1,0 +1,14 @@
+- Should the concepts ConstructibleWithAllocatorSuffix,
+ConstructibleWithAllocatorPrefix, etc. be "auto" or not? Making them
+"auto" eliminates a lot of typing and can make use of scoped-allocator
+support for existing types that have an allocator_type and an
+appropriate constructor. On the other hand, it's possible that we
+could get types that accidentally match one of these concepts when in
+fact they don't have the right allocator semantics; this could happen
+with types that have unconstrained constructor templates, which would
+match the concept but fail to instantiate. If we make the concepts
+non-"auto", we'll have to write concept map templates for all of the
+containers, pair, tuple, function, etc., and users will also have to
+do so. We also won't get the benefit of scoped allocators
+automatically, for types that do follow the normal guidelines for
+accepting allocators.
