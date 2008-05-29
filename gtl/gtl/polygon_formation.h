@@ -99,7 +99,7 @@ namespace polygon_formation {
     //assignment operator
     PolyLine& operator=(const PolyLine& that);
 
-    //equivilence operator
+    //equivalence operator
     bool operator==(const PolyLine& b) const;
 
     /**
@@ -426,7 +426,7 @@ namespace polygon_formation {
     //assignment operator
     ActiveTail& operator=(const ActiveTail& that);
 
-    //equivilence operator
+    //equivalence operator
     bool operator==(const ActiveTail& b) const;
 
     /**

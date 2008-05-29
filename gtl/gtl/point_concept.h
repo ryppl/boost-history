@@ -66,7 +66,7 @@ struct point_concept {
   }
 
   template <typename T, typename T2>
-  static inline bool equivilence(const T& point1, const T2& point2) {
+  static inline bool equivalence(const T& point1, const T2& point2) {
     typename point_traits<T>::coordinate_type x1 = get<HORIZONTAL>(point1);
     typename point_traits<T2>::coordinate_type x2 = get(point2, HORIZONTAL);
     typename point_traits<T>::coordinate_type y1 = get(point1, VERTICAL);

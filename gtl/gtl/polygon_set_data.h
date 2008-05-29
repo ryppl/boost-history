@@ -62,7 +62,7 @@ public:
     return *this;
   }
 
-  /// equivilence operator 
+  /// equivalence operator 
   inline bool operator==(const polygon_set_data& p) const {
     if(orient_ == p.orient()) {
       clean();
@@ -73,7 +73,7 @@ public:
     }
   }
 
-  /// inequivilence operator 
+  /// inequivalence operator 
   inline bool operator!=(const polygon_set_data& p) const {
     return !((*this) == p);
   }

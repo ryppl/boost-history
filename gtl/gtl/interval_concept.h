@@ -53,7 +53,7 @@ struct interval_concept {
   }
 
   template <typename T, typename T2>
-  static bool equivilence(const T& interval1, const T2& interval2) {
+  static bool equivalence(const T& interval1, const T2& interval2) {
     return get(interval1, LOW) ==
       get(interval2, LOW) &&
       get(interval1, HIGH) ==

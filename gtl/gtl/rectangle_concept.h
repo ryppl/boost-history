@@ -62,10 +62,10 @@ struct rectangle_concept {
   }
 
   template <typename T, typename T2>
-  static bool equivilence(const T& rect1, const T2& rect2) {
-    return interval_concept::equivilence(get(rect1, HORIZONTAL),
+  static bool equivalence(const T& rect1, const T2& rect2) {
+    return interval_concept::equivalence(get(rect1, HORIZONTAL),
                                          get(rect2, HORIZONTAL)) &&
-      interval_concept::equivilence(get(rect1, VERTICAL),
+      interval_concept::equivalence(get(rect1, VERTICAL),
                                     get(rect2, VERTICAL));
   }
 

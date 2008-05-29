@@ -84,9 +84,9 @@ bool contains(const geometry_type_1& geometry_object, const geometry_type_2& con
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-bool equivilence(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+bool equivalence(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   typename geometry_traits<geometry_type_1>::geometry_concept concept_instantiation;
-  return concept_instantiation.equivilence(lvalue, rvalue);
+  return concept_instantiation.equivalence(lvalue, rvalue);
 }
 
 template <typename geometry_type>
