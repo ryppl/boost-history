@@ -1,0 +1,640 @@
+
+
+<html xmlns:gdoc="">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+
+
+/* default css */
+
+table {
+  font-size: 1em;
+  line-height: inherit;
+}
+
+
+div, address, ol, ul, li, option, select { 
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+p {
+  margin: 0px;
+}
+
+body {
+  margin: 6px;
+  padding: 0px;
+  font-family: Verdana, sans-serif;
+  font-size: 10pt;
+  background-color: #ffffff;
+}
+
+
+
+h6 { font-size: 10pt }
+h5 { font-size: 11pt }
+h4 { font-size: 12pt }
+h3 { font-size: 13pt }
+h2 { font-size: 14pt }
+h1 { font-size: 16pt }
+
+blockquote {padding: 10px; border: 1px #DDD dashed }
+
+a img {border: 0}
+
+div.google_header, div.google_footer {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+/* end default css */
+
+
+  /* default print css */
+  
+  @media print {
+    body { 
+      padding: 0; 
+      margin: 0; 
+    }
+
+    div.google_header, div.google_footer {
+      display: block;
+      min-height: 0;
+      border: none;
+    }
+
+    div.google_header {
+      flow: static(header);
+    }
+
+    /* used to insert page numbers */
+    div.google_header::before, div.google_footer::before {
+      position: absolute;
+      top: 0;
+    }
+
+    div.google_footer {
+      flow: static(footer);
+    }
+
+    /* always consider this element at the start of the doc */
+    div#google_footer {
+      flow: static(footer, start);
+    }
+
+    span.google_pagenumber {
+      content: counter(page);
+    }
+
+    span.google_pagecount {
+      content: counter(pages);
+    }
+  }
+
+  @page {
+    @top {
+      content: flow(header);
+    }
+    @bottom {
+      content: flow(footer);
+    }
+  }
+  /* end default print css */
+ 
+
+/* custom css */
+
+
+/* end custom css */
+
+
+
+  /* ui edited css */
+  
+  body {
+    font-family: Verdana;
+    
+    font-size: 10.0pt;
+    line-height: normal;
+    background-color: #ffffff;
+  }
+  /* end ui edited css */
+
+
+
+
+</style>
+
+
+</head>
+
+<body
+    
+    revision="dc2632k9_2g9w3qtvw:454">
+
+    
+    
+<br id=wx2g0>
+<font id=wx2g1 size=4 style=FONT-FAMILY:Arial><b id=wx2g2>Error Handling
+Specification for Chapter 30
+(Threads)</b></font><font id=wx2g3 size=3><br id=wx2g4 style=FONT-FAMILY:Arial>
+<br id=wx2g5 style=FONT-FAMILY:Arial>
+</font>
+<div id=wx2g6>
+  <p dir=ltr id=wx2g7 style=TEXT-ALIGN:left>
+    <font id=wx2g8 size=3>Document: N2636=08-0146</font>
+  </p>
+  <p dir=ltr id=wx2g9 style=TEXT-ALIGN:left>
+    <font id=wx2g10 size=3>Date: 2008-05-16</font>
+  </p>
+  <p dir=ltr id=wx2g11 style=TEXT-ALIGN:left>
+    <font id=wx2g12 size=3>Authors: <span id=fap:0 style=FONT-FAMILY:Arial>Jeff
+    Garland
+    &lt;jeff@crystalclearsoftware.com&gt;</span><br id=wx2g13 style=FONT-FAMILY:Arial>
+    </font>
+  </p>
+  <p dir=ltr id=wx2g14 style="TEXT-ALIGN:left; FONT-FAMILY:Arial">
+    <font id=wx2g15 size=3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nick
+    Stoughton &lt;nick@usenix.org&gt;<br id=wx2g16>
+    </font>
+  </p>
+  <p dir=ltr id=wx2g17 style="TEXT-ALIGN:left; FONT-FAMILY:Arial">
+    <font id=wx2g18 size=3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Benjamin
+    Kosnik &lt;bkoz@redhat.com&gt;</font>
+  </p>
+  <p dir=ltr id=wx2g17>
+    <font id=wx2g18 size=3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Beman Dawes &lt;bdawes@acm.org&gt;</font>
+  </p>
+  <font id=wx2g19 size=3><br id=wx2g20>
+  </font>
+  <p dir=ltr id=wx2g21 style=TEXT-ALIGN:left>
+    <font id=wx2g22 size=3><br id=wx2g23>
+    </font>
+  </p>
+  <p dir=ltr id=wx2g24 style=TEXT-ALIGN:left>
+    <font id=wx2g25 size=4><b id=wx2g26>Motivation</b></font>
+  </p>
+  <font id=wx2g27 size=3><br id=fvrk0>
+  New facilities have recently been added to C++0x working draft in the
+  diagnostics library to provide mechanisms for the reporting of system errors
+  as part of the C++ library.&nbsp; These facilities include both portable error
+  codes as well as operating system specific error reporting capabilities, thus
+  enabling implementations to provide a full range of error information.<br id=q5h20>
+  <br id=q6q60>
+  </font><font id=wx2g27 size=3>This paper provides error condition
+  specifications for the recently added threading API (ie, Chapter 30), as
+  suggested during discussions at the Bellevue meeting.<br id=q6q61>
+  <br id=p1i71>
+  </font><font id=wx2g27 size=3><font id=ge9d0 size=3>For programmers that want
+  to write portable code that does detailed error handling, knowing the specific
+  error codes an implementation may produce for a particular method is
+  vital.&nbsp; Without these specifications a programmer must be prepared for
+  any possible error code in the entire set of portable codes
+  <span id=vsu40>(over 70 total).<br id=ys640>
+  <br id=dgfk1>
+  </span>Note that this type of specification has precedent in other
+  international standards.&nbsp; The POSIX specification provides the specific
+  error codes that can occur for each function and a description of the
+  condition that would cause them.<br id=g5lh0>
+  </font></font><font id=wx2g25 size=4><b id=wx2g26><br id=tb:h0>
+  Overview of Changes</b></font><br id=crns0>
+  <font id=zi-50 size=3><br id=zi-51>
+  In Chapter 17, introduce an Error Condition clause, with specification and
+  description.<br id=z0ev0>
+  <br id=z0ev1>
+  In Chapter 30, add error condition clauses where appropriate.<br id=vbai0>
+  </font><br id=fl940>
+  <p dir=ltr id=wx2g35 style=TEXT-ALIGN:left>
+    <font id=wx2g36 size=4><b id=wx2g37>Proposed Wording</b></font>
+  </p>
+  <p dir=ltr id=wx2g35 style=TEXT-ALIGN:left>
+    <font id=lwna0 size=3><br id=l7i20>
+    </font>
+  </p>
+  <p id=o1704>
+    <font id=lwna1 size=3><i id=o1701>Change
+    <a href=http://17.3.1.3/ id=o1702 target=_blank>17.3.1.3</a> Specifications
+    [structure.specifications], paragraph 3, as indicated:</i><br id=zcuo0>
+    </font>
+  </p>
+  <p id=o1704>
+    <font id=lwna2 size=3><br id=zcuo1>
+    </font>
+  </p>
+  <p id=o17030>
+    <font id=lwna3 size=3>Descriptions of function semantics contain the
+    following elements (as appropriate):153)<br id=o1705>
+    <br id=o1706>
+    — <i id=o1707>Requires:</i> the preconditions for calling the function<br id=o1708>
+    <br id=o1709>
+    — <i id=o17010>Effects:</i> the actions performed by the function<br id=o17011>
+    <br id=o17012>
+    — <i id=o17013>Postconditions:</i> the observable results established by the
+    function<br id=o17014>
+    <br id=o17015>
+    — <i id=o17016>Returns:</i> a description of the value(s) returned by the
+    function<br id=o17017>
+    <br id=o17018>
+    — <i id=o17019>Throws: </i>any exceptions thrown by the function, and the
+    conditions that would cause the exception<br id=o17020>
+    <br id=o17021>
+    — <i id=o17022>Complexity:</i> the time and/or space complexity of the
+    function<br id=o17023>
+    <br id=o17024>
+    — <i id=o17025>Remarks:</i> additional semantic constraints on the function<br id=o17026>
+    <br id=o17027>
+    </font> <font color=#009a9a id=o17028 size=3>— <i id=o17029>Error
+    conditions:</i> the default error conditions for error codes reported by the
+    function.</font><font id=lwna4 size=3><br id=zcuo2>
+    </font>
+  </p>
+  <p id=o17030>
+    <font id=lwna5 size=3><br id=zcuo3>
+    </font>
+  </p>
+  <p id=o17031>
+    <font id=lwna6 size=3>For non-reserved replacement and handler functions,
+    clause 18 specifies two behaviors for the functions in question: their
+    required and default behavior. The default behavior describes a function
+    definition provided by the implementation. The required behavior describes
+    the semantics of a function definition provided by either the implementation
+    or a C++ program. Where no distinction is explicitly made in the
+    description, the behavior described is the required behavior.</font>
+  </p>
+  <p id=o17031>
+    <font id=lwna7 size=3><br id=zcuo4>
+    </font>
+  </p>
+  <p id=o17033>
+    <font id=lwna8 size=3>Complexity requirements specified in the library
+    clauses are upper bounds, and implementations that provide better<br id=o17032>
+    complexity guarantees satisfy the requirements.<br id=zcuo5>
+    </font>
+  </p>
+  <p id=o17033>
+    <font color=#009a9a id=o17034 size=3><i id=o17035><br id=zcuo6>
+    </i></font>
+  </p>
+  <p id=o17033>
+    <font color=#009a9a id=o17034 size=3><i id=o17035>Error conditions</i>
+    specify two types of failure: conditions where a function shall fail, and
+    conditions where a function may fail. The conditions are listed, together
+    with a suitable explanation, as the <code id=o17036>enum class errc</code> constants ([syserr]) that could be
+    used as an argument to function <code id=o17037>make_error_condition</code>([syserr.errcondition.nonmember<wbr id=o17038>s]).<br id=hx9c0>
+    </font>
+  </p>
+  <p id=o17033>
+    <font color=#009a9a id=o17034 size=3>[<i id=o17039>Note:</i> the class&nbsp;
+    <code id=o17040>error_condition</code> ([syserr.errcondition.overview<wbr id=o17041>]) object is reported via
+    the <code id=o17042>default_error_condition</code> function ([syserr.errcode.observers])&nbsp; of the class <code id=o17043>error_code</code>
+    object representing the error. <i id=o17044>--end note.</i></font>
+  </p>
+  <p id=o17033>
+    <font id=cnr60 size=3><br id=cnr61>
+    </font>
+  </p>
+  <p id=o17033>
+    <br id=znal0>
+  </p>
+</div>
+<font id=wx2g214 size=3><span id=wx2g256 style=FONT-FAMILY:Arial><span id=es9n0><i id=znik0>Change
+30.1.2 Exceptions [thread.req.exception] paragraph 2, as
+indicated:</i></span><br id=wx2g259>
+<br id=wx2g262>
+The error_category (19.4.1.1) of the error_code reported by such an exception’s
+code() member function is
+<span id=nx.v0><strike id=znik1>implementation-defined.
+</strike></span><br id=wx2g263 style=TEXT-DECORATION:line-through>
+<span id=nx.v1><strike id=znik2>&nbsp;[Note: The category is typically
+system_category (19.4.1.1) since these error codes usually
+originate</strike></span><br id=wx2g264 style=TEXT-DECORATION:line-through>
+<span id=nx.v2><strike id=znik3>&nbsp; from the underlying operating system
+application program interface (API). — end note ]</strike></span><br id=wx2g265>
+</span></font><font color=#009a9a id=o17034 size=3>as specified in the error
+condition clause.<br id=tjz.0>
+</font><font id=wx2g214 size=3><span id=wx2g256 style=FONT-FAMILY:Arial><br id=wx2g279>
+<span id=ls930><i id=znik4>Change 30.2.1.2 thread constructors
+[thread.thread.constr], paragraph 9, as indicated:</i></span><br id=wx2g280>
+<br id=wx2g283>
+Throws: std::system_error <span id=wnsp0><strike id=znik5>or
+std::bad_alloc</strike></span> if unable to start the new thread.<br id=wx2g284>
+</span></font>
+<p id=c2mk5>
+  <font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+  conditions:</i><code id=c2mk8> <br id=oj6y0></code></font></u></font>
+</p>
+<p id=c2mk5>
+  <font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><code id=c2mk8>&nbsp;&nbsp;&nbsp;&nbsp;* resource_unavailable_try_again - </code> The
+  system lacked the necessary resources to create another thread, or the
+  system-imposed &nbsp;&nbsp;&nbsp;&nbsp;limit on the total number of threads in
+  a process would be exceeded.</font></u></font>
+</p>
+<p id=c2mk5>
+  <font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><br id=r4_w0>
+  </font></u></font>
+</p>
+<font id=wx2g290 size=3><span id=wx2g294 style=FONT-FAMILY:Arial><i id=znik6>Change
+30.2.1.5 thread members [thread.thread.member] paragraph 8 of the joint
+description as
+follows:</i></span><br id=wx2g295 style="FONT-FAMILY:Arial; FONT-STYLE:italic">
+<br id=wx2g296 style=FONT-FAMILY:Arial>
+<span id=wx2g300 style=FONT-FAMILY:Arial>Throws: std::system_error when the
+postconditions cannot be achieved.<br id=tbzx0>
+</span></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=ac6n0>
+&nbsp;&nbsp;&nbsp;&nbsp;* resource_deadlock_would_occur - If deadlock is
+detected or this-&gt;get_id() ==
+std::this_thread::get_id()</i></font></u></font><br id=zf6.0>
+<font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>&nbsp;&nbsp;&nbsp;
+* no_such_process - If the thread is not valid.<br id=h-8q1>
+&nbsp;&nbsp;&nbsp;&nbsp;* invalid_argument - If the thread is not joinable.<br id=gp-00>
+</i></font></u></font><font id=wx2g290 size=3><br id=wx2g310 style=FONT-FAMILY:Arial>
+<span id=wx2g311 style=FONT-FAMILY:Arial><i id=znik7>Change paragraph 12 of the
+detach description </i></span><br id=wx2g312 style=FONT-FAMILY:Arial>
+<br id=wx2g313 style=FONT-FAMILY:Arial>
+<span id=wx2g317 style=FONT-FAMILY:Arial>Throws: std::system_error when the
+effects or postconditions cannot be achieved.<br id=cc-t0>
+</span></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * no_such_process: Not a valid thread.<br id=c9-o0>
+&nbsp;&nbsp;&nbsp; * invalid_argument: Not a detachable thread.<br id=c9-o1>
+</i></font></u></font><font id=wx2g290 size=3><br id=fse50>
+</font><font id=wx2g290 size=3><span id=wx2g326 style=FONT-FAMILY:Arial><i id=znik8>Change
+30.3.1 Mutex requirements [thread.mutex.requirements] change paragraph 3 on
+construction<br id=hxyv0>
+<br id=hxyv1>
+</i>If initialization of an object of a Mutex type fails, an exception of type
+std::system_error shall be thrown. <i id=znik8><br id=hxyv2>
+</i></span></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp;</i></font></u></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>
+* not_enough_memory: If there is not enough memory to construct the mutex
+object.<br id=zopa0>
+</i></font></u></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>&nbsp;&nbsp;&nbsp;&nbsp;*
+resource_unavailable_try_again:
+</i></font></u></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>If
+any native_handle_type manipulated is not
+available.</i></font></u></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3><br id=dra01>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted:
+</i></font></u></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>If
+the thread does not have the necessary permission to change state of the
+mutex.</i></font></u></font><br id=boh00>
+<font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>&nbsp;&nbsp;&nbsp;
+* device_or_resource_busy:
+</i></font></u></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>If
+any native_handle_type manipulated is already
+locked.</i></font></u></font><br id=boh01>
+<font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>&nbsp;&nbsp;&nbsp;
+* invalid_argument: If any native_handle_type manipulated as part of mutex
+construction is incorrect.<br id=bl6:0>
+</i></font></u></font><font id=wx2g290 size=3><span id=wx2g326 style=FONT-FAMILY:Arial><i id=znik8><br id=wx2g325 style=FONT-FAMILY:Arial>
+</i></span></font><font id=wx2g290 size=3><span id=wx2g326 style=FONT-FAMILY:Arial><i id=znik8>Append
+after paragraph 10 on m.lock()</i></span><br id=wx2g327 style=FONT-FAMILY:Arial>
+<br id=wx2g328 style=FONT-FAMILY:Arial>
+<span id=wx2g332 style=FONT-FAMILY:Arial>Throws: std::system_error when the
+effects or postcondition cannot be
+achieved.</span><br id=wx2g333 style=FONT-FAMILY:Arial>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If the thread does not have the
+necessary permission to change state of the mutex.<br id=c9-o0>
+&nbsp;&nbsp;&nbsp; * resource_deadlock_would_occur: If the current thread
+already owns the mutex, and is able to detect it.<br id=ibq20>
+&nbsp;&nbsp;&nbsp; * device_or_resource_busy: If the mutex is already locked and
+blocking is not possible.<br id=da.70>
+<br id=p_u58 style=TEXT-DECORATION:line-through>
+</i></font></u></font><font id=wx2g290 size=3><span id=wx2g352 style=FONT-FAMILY:Arial><i id=znik10>Change
+30.3.3 paragraph 3:<br id=da.71>
+<br id=da.72>
+</i><span id=da.73><strike>An exception class lock_error is derived from
+std::exception and is used to indicate improper usage of locks such as locking a
+mutex that the lock already owns or unlocking a mutex that the lock does not
+own.</strike></span><br id=da.74 style=TEXT-DECORATION:line-through>
+<span id=da.75><strike>&nbsp;&nbsp;&nbsp; namespace std
+{</strike></span><br id=da.76 style=TEXT-DECORATION:line-through>
+<span id=da.77><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class lock_error :
+public std::exception
+{</strike></span><br id=da.78 style=TEXT-DECORATION:line-through>
+<span id=da.79><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+public:</strike></span><br id=da.710 style=TEXT-DECORATION:line-through>
+<span id=da.711><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; virtual
+const char* what() const
+throw();</strike></span><br id=da.712 style=TEXT-DECORATION:line-through>
+<span id=da.713><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+};</strike></span><br id=da.714 style=TEXT-DECORATION:line-through>
+<span id=da.715><strike>&nbsp;&nbsp;&nbsp;
+}</strike></span><i id=znik10><br id=da.716>
+<br id=wx2g351 style=FONT-FAMILY:Arial>
+</i></span></font><font id=wx2g290 size=3><span id=wx2g352 style=FONT-FAMILY:Arial><i id=znik10>Change
+30.3.3.2.2 unique_lock locking [thread.lock.unique.locking] paragraph 3 lock()
+description</i></span><br id=wx2g353 style=FONT-FAMILY:Arial>
+<br id=wx2g354 style=FONT-FAMILY:Arial>
+<span id=wx2g358 style=FONT-FAMILY:Arial>Throws:
+<span id=sd:n0><strike id=znik11>lock_error if on entry owns is true or pm is
+null. </strike></span><span id=sd:n0>&nbsp;
+std::</span></span></font><font id=wx2g365 size=3 style=FONT-FAMILY:Arial>system_error
+when the postcondition cannot be achieved.<br id=a2c00>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If pm is null.<br id=c9-o0>
+&nbsp;&nbsp;&nbsp; * resource_deadlock_would_occur: If the current thread
+already owns the mutex (on entry owns is
+true).</i></font></u></font><font id=wx2g368 size=3 style=FONT-FAMILY:Arial><br id=wx2g369>
+<br id=wx2g370>
+</font><font id=wx2g371 size=3><span id=wx2g372 style=FONT-FAMILY:Arial><i id=znik12>Change
+30.3.3.2.2 unique_lock locking [thread.lock.unique.locking] paragraph 7
+try_lock() description</i></span><br id=wx2g373 style=FONT-FAMILY:Arial>
+<br id=obot0>
+</font><font id=wx2g290 size=3><span id=wx2g358 style=FONT-FAMILY:Arial>Throws:
+<span id=sd:n0><strike id=znik13>lock_error if on entry owns is true or pm is
+null. </strike></span><span id=sd:n0>&nbsp;
+std::</span></span></font><font id=wx2g365 size=3 style=FONT-FAMILY:Arial>system_error
+when the postcondition cannot be achieved.<br id=a2c00>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If pm is null.<br id=c9-o0>
+&nbsp;&nbsp;&nbsp; * resource_deadlock_would_occur: If the current thread
+already owns the mutex (on entry owns is
+true).</i></font></u></font><font id=wx2g368 size=3 style=FONT-FAMILY:Arial><br id=wx2g369>
+</font><font id=wx2g388 size=3 style=FONT-FAMILY:Arial><br id=wx2g390>
+</font><font id=wx2g391 size=3><span id=wx2g392 style=FONT-FAMILY:Arial><i id=znik14>Change
+30.3.3.2.2 unique_lock locking [thread.lock.unique.locking] paragraph 11
+timed_lock() description</i></span><br id=wx2g393 style=FONT-FAMILY:Arial>
+<br id=gs3u0>
+</font><font id=wx2g290 size=3><span id=wx2g358 style=FONT-FAMILY:Arial>Throws:
+<span id=sd:n0><strike id=znik15>lock_error if on entry owns is true or pm is
+null. </strike></span><span id=sd:n0>&nbsp;
+std::</span></span></font><font id=wx2g365 size=3 style=FONT-FAMILY:Arial>system_error
+when the postcondition cannot be achieved.<br id=a2c00>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If pm is null.<br id=c9-o0>
+&nbsp;&nbsp;&nbsp; * resource_deadlock_would_occur: If the current thread
+already owns the mutex (on entry owns is
+true).</i></font></u></font><font id=wx2g368 size=3 style=FONT-FAMILY:Arial><br id=wx2g369>
+</font><font id=wx2g408 size=3 style=FONT-FAMILY:Arial><br id=wx2g410>
+</font><font id=wx2g411 size=3><span id=wx2g412 style=FONT-FAMILY:Arial><i id=znik16>Change
+30.3.3.2.2 unique_lock locking [thread.lock.unique.locking] paragraph 15
+templatized timed_lock()
+description</i></span><br id=wx2g413 style=FONT-FAMILY:Arial>
+<br id=q5y30>
+</font><font id=wx2g290 size=3><span id=wx2g358 style=FONT-FAMILY:Arial>Throws:
+<span id=sd:n0><strike id=znik17>lock_error if on entry owns is true or pm is
+null. </strike></span><span id=sd:n0>&nbsp;
+std::</span></span></font><font id=wx2g365 size=3 style=FONT-FAMILY:Arial>system_error
+when the postcondition cannot be achieved.<br id=a2c00>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If pm is null.<br id=c9-o0>
+&nbsp;&nbsp;&nbsp; * resource_deadlock_would_occur: If the current thread
+already owns the mutex (on entry owns is
+true).</i></font></u></font><font id=wx2g368 size=3 style=FONT-FAMILY:Arial><br id=wx2g369>
+</font><font id=wx2g426 size=3 style=FONT-FAMILY:Arial><br id=wx2g428>
+</font><font id=wx2g429 size=3><span id=wx2g430 style=FONT-FAMILY:Arial><i id=znik18>Change
+30.3.3.2.2 unique_lock locking [thread.lock.unique.locking] paragraph 18
+unlock() description</i></span><br id=wx2g431 style=FONT-FAMILY:Arial>
+<br id=dq_70>
+</font><font id=wx2g290 size=3><span id=wx2g358 style=FONT-FAMILY:Arial>Throws:
+<span id=sd:n0><strike id=znik19>lock_error if on entry owns is false.
+</strike></span><span id=sd:n0>&nbsp;
+std::</span></span></font><font id=wx2g365 size=3 style=FONT-FAMILY:Arial>system_error
+when the postcondition cannot be achieved.<br id=a2c00>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If on entry owns is false.<br id=jxry0>
+<br id=jxry1>
+</i></font></u></font><font id=wx2g528 size=3><span id=wx2g529 style=FONT-FAMILY:Arial><i id=znik27>Change
+30.3.5.1 Struct once_flag append after paragraph 3<br id=zuea0>
+<br id=zuea1>
+</i></span></font><font color=#009a9a id=zuea2><font id=zuea3 size=3><u id=zuea4><i id=zuea5>Throws:
+Nothing.</i></u></font></font><br id=c9-o0>
+<br id=wx2g452>
+<div id=wx2g447 style="TEXT-ALIGN:justify; FONT-FAMILY:Arial">
+  <font id=wx2g448 size=3><span id=rn6z1><i id=znik21>Change 30.3.5.2 Function
+  call_once [thread.once.callonce] paragraph 4</i></span><br id=wx2g453>
+  </font>
+</div>
+<font id=wx2g454 size=3 style=FONT-FAMILY:Arial><br id=wx2g455>
+Throws: <span id=a5_10>std::system_error when the effects cannot be achieved, or
+a</span>ny exception thrown by func.<br id=wx2g458>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:</i></font></u></font><br id=boh01>
+<font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>&nbsp;&nbsp;&nbsp;
+* invalid_argument: If once_flag object is no longer valid.<br id=bl6:0>
+</i></font></u></font><br id=wx2g465 style=FONT-FAMILY:Arial>
+<font id=wx2g462 size=3><span id=wx2g466 style=FONT-FAMILY:Arial><i id=znik23>Change
+30.4.1 Class condition_variable [thread.condition.condvar] paragraph 2
+construction<br id=ac-z0>
+<br id=scqr0>
+Effects: Constructs an object of type condition_variable.<br id=scqr1>
+</i></span></font><font color=#009a9a id=gr360><font id=gr361 size=3><u id=gr362><i id=gr363>Throws:
+std::system_error when conditions cannot be
+achieved.</i></u></font></font><br id=scqr2>
+<font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=biou0>
+&nbsp;&nbsp;&nbsp; * not_enough_memory: If a memory limitation prevents
+initialization.<br id=i_zj0>
+&nbsp;&nbsp;&nbsp; * resource_unavailable_try_again: If some non-memory
+limitation prevents initialization<br id=aesc0>
+&nbsp;&nbsp;&nbsp; * device_or_resource_busy: If attempting to initialize a
+previously-initialized but as of yet undestroyed condition_variable.<br id=scqr3>
+<br id=ac-z1>
+</i></font></u></font><font id=wx2g462 size=3><span id=wx2g466 style=FONT-FAMILY:Arial><i id=znik23>Change
+30.4.1 Class condition_variable [thread.condition.condvar] paragraph 11 of wait
+description </i></span><br id=wx2g467 style=FONT-FAMILY:Arial>
+<br id=wx2g468 style=FONT-FAMILY:Arial>
+<span id=wx2g472 style=FONT-FAMILY:Arial>Throws: std::system_error when the
+effects,&nbsp;
+</span></font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>pre-conditions,
+</i></font></u></font><font id=wx2g462 size=3><span id=wx2g472 style=FONT-FAMILY:Arial>or
+postcondition cannot be achieved.</span><br id=wx2g473 style=FONT-FAMILY:Arial>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If the thread does not own the
+lock.<br id=i_zj0>
+&nbsp;&nbsp;&nbsp; * equivalent error_condition from lock.lock() or
+lock.unlock()<br id=y40m0>
+<br id=y40m1>
+</i></font></u></font><font id=wx2g482 size=3><span id=wx2g484 style=FONT-FAMILY:Arial><i id=znik24>
+Change 30.4.1 Class condition_variable [thread.condition.condvar] paragraph 16
+of templatized wait description<br id=h7:n0>
+<br id=h7:n1>
+</i>Returns:
+</span></font><font color=#009a9a id=h7:n2><font id=h7:n3 size=3><u id=h7:n4><i id=h7:n5>true
+</i></u></font></font><font id=wx2g482 size=3><span id=wx2g484 style=FONT-FAMILY:Arial><span id=qr9c0><strike>false</strike></span>
+if the call is returning because the time specified by abs_time was reached,
+otherwise <span id=qr9c1><strike>true</strike></span>
+</span></font><font color=#009a9a id=h7:n6><font id=h7:n7 size=3><u id=h7:n8><i id=h7:n9>false.</i></u></font></font><font id=wx2g482 size=3><span id=wx2g484 style=FONT-FAMILY:Arial><i id=znik24><br id=wx2g481>
+</i></span></font><font id=wx2g482 size=3><br id=wx2g483 style=FONT-FAMILY:Arial>
+<span id=wx2g484 style=FONT-FAMILY:Arial><i id=znik24> Change 30.4.1 Class
+condition_variable [thread.condition.condvar] paragraph 17 of templatized wait
+description </i></span><br id=wx2g485 style=FONT-FAMILY:Arial>
+<br id=wx2g486 style=FONT-FAMILY:Arial>
+<span id=wx2g490 style=FONT-FAMILY:Arial>Throws: std::system_error when the
+<span id=qu700><strike id=znik25>returned value, </strike></span>effects, or
+postcondition cannot be achieved.</span><br id=wx2g491 style=FONT-FAMILY:Arial>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=eupm0>
+&nbsp;&nbsp;&nbsp; * operation_not_permitted: If the thread does not own the
+lock.<br id=i_zj0>
+&nbsp;&nbsp;&nbsp; * equivalent error_condition from lock.lock() or
+lock.unlock()</i></font></u></font><font id=wx2g479 size=3 style=FONT-FAMILY:Arial><br id=wx2g481>
+</font><font id=wx2g498 size=3><br id=wx2g510 style=FONT-FAMILY:Arial>
+<span id=wx2g511 style=FONT-FAMILY:Arial><i id=znik26>Change 30.4.2 Class
+condition_variable_any [thread.condition.condvarany] paragraph 10 of wait
+description</i></span><br id=wx2g512 style=FONT-FAMILY:Arial>
+<br id=wx2g513 style=FONT-FAMILY:Arial>
+<span id=wx2g517 style=FONT-FAMILY:Arial>Throws: std::system_error when the
+effects or postcondition cannot be achieved.</span><br id=m0wa0>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=i_zj0>
+&nbsp;&nbsp;&nbsp; * equivalent error_condition from lock.lock() or
+lock.unlock()</i></font></u></font><font id=wx2g479 size=3 style=FONT-FAMILY:Arial><br id=wx2g481>
+</font><font id=wx2g525 size=3 style=FONT-FAMILY:Arial><br id=wx2g527>
+</font><font id=wx2g528 size=3><span id=wx2g529 style=FONT-FAMILY:Arial><i id=znik27>Change
+30.4.2 Class condition_variable_any [thread.condition.condvarany] paragraph 15
+</i></span></font><font id=wx2g530 size=3><span id=wx2g531 style=FONT-FAMILY:Arial><i id=znik28>of
+templatized wait description
+</i></span></font><font id=wx2g532 size=3><br id=wx2g533 style=FONT-FAMILY:Arial>
+<br id=wx2g534 style=FONT-FAMILY:Arial>
+<span id=wx2g535 style=FONT-FAMILY:Arial>T</span><span id=wx2g538 style=FONT-FAMILY:Arial>hrows:
+std::system_error when the returned value, effects, or postcondition cannot be
+achieved.</span><br id=wx2g539 style=FONT-FAMILY:Arial>
+</font><font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3>Error
+conditions:<br id=i_zj0>
+&nbsp;&nbsp;&nbsp; * equivalent error_condition from lock.lock() or
+lock.unlock()<br id=xr6x0>
+</i></font></u></font><br id=zuea6>
+<br id=fl940>
+<p dir=ltr id=wx2g35 style=TEXT-ALIGN:left>
+  <font id=wx2g36 size=4><b id=wx2g37>Acknowedgements</b></font>
+</p>
+<p dir=ltr id=wx2g35 style=TEXT-ALIGN:left>
+  <br id=uuwj2>
+</p>
+<p dir=ltr id=wx2g35 style="TEXT-ALIGN:left; FONT-FAMILY:Arial; BACKGROUND-COLOR:#ffffff">
+  <font id=wx2g36 size=3>Special thanks to
+  </font><font color=#000000 id=i4hk0 size=3> Anthony Williams for reviewing
+  drafts and clarifying error specifications.</font>
+</p>
+<font id=dwfz0 size=3><u id=c2mk6><font color=#009a9a id=c2mk7><i id=c2mk3><br id=uuwj3>
+<br id=uuwj4>
+<br id=wx2g481>
+</i></font></u></font><font id=wx2g552 size=3><br id=wx2g553 style=FONT-FAMILY:Arial>
+<br id=wx2g554 style=FONT-FAMILY:Arial>
+</font> <font id=wx2g555 size=3 style=FONT-FAMILY:Arial><br id=wx2g556>
+</font><font id=wx2g557 size=3><br id=wx2g558 style=FONT-FAMILY:Arial>
+<br id=wx2g559 style=FONT-FAMILY:Arial>
+<br id=wx2g560 style=FONT-FAMILY:Arial>
+</font><font id=wx2g561 size=3 style=FONT-FAMILY:Arial><br id=wx2g562>
+</font><font id=wx2g563 size=3><br id=wx2g564 style=FONT-FAMILY:Arial>
+</font><br id=wx2g565>
+<font id=wx2g566 size=3><span id=wx2g567 style=FONT-FAMILY:Arial><br id=wx2g568 style=FONT-FAMILY:Arial>
+</span><br id=wx2g569 style=FONT-FAMILY:Arial>
+</font><br id=wx2g570></body>
+</html>
