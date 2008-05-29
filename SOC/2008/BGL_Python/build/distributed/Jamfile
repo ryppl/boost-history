@@ -1,0 +1,85 @@
+# Copyright 2005 The Trustees of Indiana University.
+
+# Use, modification and distribution is subject to the Boost Software
+# License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+#  Authors: Douglas Gregor
+#           Andrew Lumsdaine
+
+# This file builds the Python bindings for the Parallel BGL.
+
+subproject build/distributed ;
+
+import python ;
+
+# Pull in the MPI linking code
+import ./mpi.jam ;
+
+if ! $(PBGL_ROOT) {
+  if ! $(gPBGL_INITIALIZED) {
+    gPBGL_INITIALIZED = yes ; 
+  }
+} else {
+  # Find the Python executable. We need this when linking on Darwin.
+  local python_executable = $(PYTHON:G=) ;
+  if ! [ MATCH "^(/)" : $(python_executable) ] {
+     local found = [ GLOB $(PATH) : $(python_executable) ] ;
+     if $(found) {
+       python_executable = $(found[1]) ;
+     }
+  }
+
+  # Build the Python extension model
+  extension _distributed          
+  :   # Sources 
+      ../../src/distributed/module.cpp
+      # Graph types
+      ../../src/distributed/graphs.cpp 
+      # Property maps
+      ../../src/distributed/properties.cpp
+      # Algorithms
+      ../../src/distributed/boman_et_al_graph_coloring.cpp
+      ../../src/distributed/breadth_first_search.cpp
+      ../../src/distributed/connected_components.cpp
+      ../../src/distributed/dehne_gotz_min_spanning_tree.cpp
+      ../../src/distributed/dijkstra_shortest_paths.cpp
+      ../../src/distributed/dinic_max_flow.cpp
+      ../../src/distributed/fruchterman_reingold.cpp
+      ../../src/distributed/page_rank.cpp
+      ../../src/distributed/strong_components.cpp
+      # Graph generators
+      ../../src/distributed/generators.cpp
+      # Graph I/O
+      ../../src/distributed/graphviz.cpp
+      ../../src/distributed/metis.cpp
+      # Process groups (TBD: Should have a library for this)
+      $(PBGL_ROOT)/libs/parallel/src/mpi/bsp_process_group.cpp
+      ../../src/distributed/mpi.cpp
+      # Depend on the Boost Python library
+      <template>@boost/libs/python/build/extension
+      # Pick up all of the arguments needed to link against MPI
+      <template>mpi
+      : # Requirements
+      <include>$(BGL_PYTHON_ROOT) <include>$(PBGL_ROOT)
+      <debug-symbols>off
+      # Extra options we need to get building and linking to work
+      <darwin><*><linkflags>"-bundle_loader $(python_executable)"
+      <gcc-3_3-darwin><*><linkflags>"-bundle_loader $(python_executable)"
+      <define>BOOST_GRAPH_IS_PARALLEL
+      ;
+
+  install _distributed pyd 
+          : <pyd>_distributed
+            <dll>@boost/libs/python/build/boost_python
+          ;
+
+  stage ../../python/boost/graph/distributed : <pyd>_distributed
+      :
+       # add this target to the "stage" and "all" pseudo-targets:
+         <target>stage
+         <target>all
+      :
+         release
+      ;
+}

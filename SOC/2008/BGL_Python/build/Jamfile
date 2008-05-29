@@ -1,0 +1,258 @@
+# Copyright (C) 2005, 2006 The Trustees of Indiana University.
+# Copyright (C) 2006 Douglas Gregor <doug.gregor -at- gmail.com>
+
+# Use, modification and distribution is subject to the Boost Software
+# License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+#  Authors: Douglas Gregor
+#           Andrew Lumsdaine
+
+# This file builds and installs the Python bindings for the Boost
+# Graph Library.
+
+subproject build ;
+
+import python ;
+
+BOOST_GRAPH_PYTHON_SOURCES =
+  astar_visitor
+  bfs_visitor
+  dijkstra_visitor
+  dfs_visitor
+  docstring
+  __init__
+  show
+  bellman_ford_visitor
+  ;
+
+extension _support 
+:   # Sources 
+    ../src/support.cpp
+    # Depend on the Boost Python library
+    <template>@boost/libs/python/build/extension
+    : # Requirements
+    <include>$(BGL_PYTHON_ROOT)
+    ;
+
+EXTRA_SRCS = ;
+EXTRA_REQUIREMENTS = <define>XML_STATIC ;
+
+if $(IETL_INCLUDE) {
+       EXTRA_SRCS = ../src/sparse_spectrum.cpp ;
+       EXTRA_REQUIREMENTS = <include>$(IETL_INCLUDE)
+	   		        <define>INCLUDE_SPARSE_SPECTRUM ;
+}
+else {
+       EXTRA_SRCS = ;
+       EXTRA_REQUIREMENTS = ;
+}
+
+if $(OS) = MACOSX {
+#   if $(IETL_INCLUDE) {
+       EXTRA_SRCS += ../src/spectrum.cpp
+                     ../src/spectral_embedding_3d_layout.cpp 
+                     ../src/spectral_embedding_layout.cpp ;
+       EXTRA_REQUIREMENTS += <framework>/System/Library/Frameworks/vecLib.framework/vecLib
+       			     <define>INCLUDE_SPECTRUM
+                             ;
+#                            <include>$(IETL_INCLUDE) ;
+#   }
+#  else ECHO IETL_INCLUDE not set, NOT building spectral routines. ;
+}
+else if $(LAPACK_PATH) {
+       EXTRA_SRCS += ../src/spectrum.cpp
+                     ../src/spectral_embedding_3d_layout.cpp
+                     ../src/spectral_embedding_layout.cpp ;
+
+       EXTRA_REQUIREMENTS += <find-library>libclapack 
+                             <library-path>$(LAPACK_PATH)
+       			     <define>INCLUDE_SPECTRUM ;
+}
+
+extension _graph
+        : # Sources
+        ../src/module.cpp
+        ../src/exception.cpp
+        # Graph types
+        ../src/basic_graph.cpp
+        ../src/graphdocs.cpp
+        ../src/properties.cpp
+        ../src/directed_properties.cpp
+        # Algorithms
+        ../src/astar_search.cpp
+        ../src/bellman_ford_shortest_paths.cpp
+        ../src/betweenness_centrality.cpp
+        ../src/biconnected_components.cpp
+        ../src/breadth_first_search.cpp
+        ../src/circle_layout.cpp
+        ../src/connected_components.cpp
+        ../src/cuthill_mckee_ordering.cpp
+        ../src/dag_shortest_paths.cpp
+        ../src/depth_first_search.cpp
+        ../src/dijkstra_shortest_paths.cpp
+        ../src/fruchterman_reingold.cpp
+        ../src/isomorphism.cpp
+        ../src/kamada_kawai_spring_layout.cpp
+        ../src/king_ordering.cpp
+        ../src/kruskal_min_spanning_tree.cpp
+        ../src/minimum_degree_ordering.cpp
+        ../src/page_rank.cpp
+        ../src/prim_minimum_spanning_tree.cpp
+        ../src/sequential_vertex_coloring.cpp
+        ../src/sloan_ordering.cpp
+        ../src/strong_components.cpp
+        ../src/topological_sort.cpp
+        ../src/transitive_closure.cpp
+        # Graph generators
+        ../src/generators.cpp
+        # Graph I/O
+        ../src/graphviz.cpp
+        ../src/graphml.cpp
+        ../src/pickle.cpp
+        # Everything else
+        $(EXTRA_SRCS)
+        # Depend on the Boost Python library
+        <template>@boost/libs/python/build/extension
+        # Depend on the bgl-viz library for GraphViz support
+        <lib>@boost/libs/graph/build/bgl-viz
+        # Depend on Expat for XML support
+        <lib>../vendor/expat-2.0.0/expat
+        : # Requirements
+	$(EXTRA_REQUIREMENTS)
+        <include>$(BGL_PYTHON_ROOT)
+        ;
+
+# Strip any end-of-line characters off the given string and return the
+# result.
+local rule strip-eol ( string )
+{
+  local match = [ MATCH "^(([A-Za-z0-9~`\.!@#$%^&*()_+={};:'\",.<>/?\\| -]|[|])*
+).*$" : $(string) ] ;
+
+  if $(match)
+  {
+    return $(match[1]) ;
+  }
+  else
+  {
+    return $(string) ;
+  }
+}
+
+if install in $(ARGV)
+{
+    exec-prefix = [ MATCH "^--exec-prefix=(.*)" : $(ARGV) ] ;
+    home = [ MATCH "^--home=(.*)" : $(ARGV) ] ;
+    libdir = [ MATCH "^--libdir=(.*)" : $(ARGV) ] ;
+    pythonlibdir = [ MATCH "^--pythonlibdir=(.*)" : $(ARGV) ] ;
+
+    if $(home) 
+    {
+      # Only one of --home or --exec-prefix can be provided
+      if $(exec-prefix)
+      {
+        ECHO "ERROR: Cannot specify both --home and --exec-prefix" ;
+        ECHO "  --home is for home-directory installations" ;
+        ECHO "  --exec-prefix is for system-wide installations" ;
+        EXIT -1 ;
+      }
+
+      # Install libraries in $(home)/lib
+      if ! $(libdir)
+      {
+        libdir = $(home)/lib ;
+      }
+
+      # Install Python module in $(home)/lib/python
+      if ! $(pythonlibdir)
+      {
+        pythonlibdir = $(home)/lib/python ;
+      }
+    }
+    else
+    {
+      # If no --home or --exec-prefix given. Ask Python 
+      if ! $(exec-prefix) 
+      {
+        exec-prefix = [ strip-eol [ SHELL "$(PYTHON:G=) -c \"import sys; print sys.exec_prefix\"" ] ] ;
+      }
+    
+      # Non-pure Python modules go into the exec-prefix's site-packages
+      if ! $(pythonlibdir)
+      {
+        pythonlibdir = $(exec-prefix)/lib/python$(PYTHON_VERSION)/site-packages ;
+      }
+
+      # Libraries go into $(exec-prefix)/lib on Unix
+      #                   $(pythonlibdir)/boost on Mac. 
+      if ! $(libdir)
+      {
+        if $(OS) = MACOSX
+        {
+          libdir = $(pythonlibdir)/boost ;
+        }
+        else
+        {
+          libdir = $(exec-prefix)/lib ;
+        }
+      }
+    }
+
+    # Replace any occurrences of "~" in libdir with $(HOME)
+    local tilde = [ MATCH "^(.*)~(.*)$" : $(libdir) ] ;
+    while $(tilde)
+    {
+      libdir = $(tilde[1])$(HOME)$(tilde[2]) ;
+      tilde = [ MATCH "^(.*)~(.*)$" : $(libdir) ] ;
+    }
+
+    # Replace any occurrences of "~" in pythonlibdir with $(HOME)
+    tilde = [ MATCH "^(.*)~(.*)$" : $(pythonlibdir) ] ;
+    while $(tilde)
+    {
+      pythonlibdir = $(tilde[1])$(HOME)$(tilde[2]) ;
+      tilde = [ MATCH "^(.*)~(.*)$" : $(pythonlibdir) ] ;
+    }
+
+    # Setup "install" as a target that we can stage with
+    declare-fake-targets install ;
+
+    # Tell the user what we're planning to do
+    if ! $(gBGL_PYTHON_INSTALL_MSG)
+    {
+      gBGL_PYTHON_INSTALL_MSG = yes ;
+      ECHO "Installing BGL support libraries in $(libdir)..." ;
+    }
+
+    # Tell the user what we're planning to do
+    if ! $(gBGL_PYTHON_PYTHON_INSTALL_MSG)
+    {
+      gBGL_PYTHON_PYTHON_INSTALL_MSG = yes ;
+      ECHO "Installing BGL Python module in $(pythonlibdir)..." ;
+    }
+
+    # Add a stage target that copies the __init.py__ for the "boost"
+    # module.
+    stage $(pythonlibdir)/boost
+      : ../python/boost/__init__.py
+      : <target>install
+      ;
+
+    # Add a stage target that copies the Python module and its
+    # __init__.py
+    stage $(pythonlibdir)/boost/graph
+      : <pyd>_support <pyd>_graph
+        ../python/boost/graph/$(BOOST_GRAPH_PYTHON_SOURCES).py
+      : <target>install
+      : release
+      ;
+  
+    # Add a stage target to copy the Boost.Python library. 
+    stage $(libdir)
+      : <dll>@boost/libs/python/build/boost_python
+      : <target>install
+      : release
+      ;
+
+}
