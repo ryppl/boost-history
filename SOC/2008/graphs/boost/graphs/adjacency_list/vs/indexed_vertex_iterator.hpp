@@ -10,7 +10,9 @@ namespace adj_list {
 
 /**
  * The indexed vertex iterator provides a vertex iterator for stores whose
- * descriptors cannot be pointers (i.e., vectors).
+ * descriptors cannot be pointers (i.e., vectors). By virtue of the fact that
+ * Store is required to be a vector of something, this is a random access
+ * iterator.
  */
 template <typename Store>
 class indexed_vertex_iterator
@@ -26,76 +28,134 @@ public:
     typedef vertex_descriptor reference;
     typedef vertex_descriptor pointer;
 
-    inline indexed_vertex_iterator()
-        : store(0)
-        , iter()
-    { }
+    // Constructors
+    inline indexed_vertex_iterator();
+    inline indexed_vertex_iterator(indexed_vertex_iterator const& x);
+    inline indexed_vertex_iterator(Store const& s, iterator const& x);
 
-    inline indexed_vertex_iterator(indexed_vertex_iterator const& x)
-        : store(x.store)
-        , iter(x.iter)
-    { }
+    // Assignment and increment
+    inline indexed_vertex_iterator& operator=(indexed_vertex_iterator const& x);
+    inline indexed_vertex_iterator& operator+=(difference_type n);
+    inline indexed_vertex_iterator& operator-=(difference_type n);
+    inline indexed_vertex_iterator& operator++();
+    inline indexed_vertex_iterator& operator--();
 
-    inline indexed_vertex_iterator(Store const& s, iterator const& x)
-        : store(&s)
-        , iter(x)
-    { }
+    inline indexed_vertex_iterator operator+(difference_type n) const;
+    inline indexed_vertex_iterator operator-(difference_type n) const;
+    inline difference_type operator-(indexed_vertex_iterator const& x) const;
 
-    inline indexed_vertex_iterator& operator++()
-    {
-        ++iter;
-        return *this;
-    }
+    inline reference operator*();
 
-    inline indexed_vertex_iterator& operator=(indexed_vertex_iterator const& x)
-    {
-        indexed_vertex_iterator t(x);
-        swap(t);
-        return *this;
-    }
+    inline bool operator==(indexed_vertex_iterator const& x) const;
+    inline bool operator!=(indexed_vertex_iterator const& x) const;
 
-    inline indexed_vertex_iterator& operator+=(difference_type n)
-    {
-        iter += n;
-        return *this;
-    }
-
-    inline indexed_vertex_iterator& operator-=(difference_type n)
-    {
-        iter -= n;
-        return *this;
-    }
-
-    // Support addition and subtraction as per random access iterators
-    inline indexed_vertex_iterator operator+(difference_type n) const
-    { return iter + n; }
-
-    inline indexed_vertex_iterator operator-(difference_type n) const
-    { return iter - n; }
-
-    inline difference_type operator-(indexed_vertex_iterator const& x) const
-    { return iter - x.iter; }
-
-    // The returned descriptor is simply the distance from the beginning of
-    // the underlying store to the end.
-    inline reference operator*()
-    { return std::distance(store->begin(), iter); }
-
-    inline bool operator==(indexed_vertex_iterator const& x) const
-    { return (store == x.store) && (iter == x.iter); }
-
-    inline bool operator!=(indexed_vertex_iterator const& x) const
-    { return (store == x.store) && (iter != x.iter); }
-
-    inline void swap(indexed_vertex_iterator& x)
-    {
-        std::swap(store, x.store);
-        std::swap(iter, x.iter);
-    }
-
+private:
     Store const* store;
     iterator iter;
 };
+
+template <typename S>
+indexed_vertex_iterator<S>::indexed_vertex_iterator()
+    : store(0)
+    , iter()
+{ }
+
+template <typename S>
+indexed_vertex_iterator<S>::indexed_vertex_iterator(indexed_vertex_iterator const& x)
+    : store(x.store)
+    , iter(x.iter)
+{ }
+
+template <typename S>
+indexed_vertex_iterator<S>::indexed_vertex_iterator(S const& s, iterator const& x)
+    : store(&s)
+    , iter(x)
+{ }
+
+template <typename S>
+indexed_vertex_iterator<S>&
+indexed_vertex_iterator<S>::operator=(indexed_vertex_iterator const& x)
+{
+    iter = x.iter;
+    store = x.store;
+    return *this;
+}
+
+template <typename S>
+indexed_vertex_iterator<S>&
+indexed_vertex_iterator<S>::operator+=(difference_type n)
+{
+    iter += n;
+    return *this;
+}
+
+template <typename S>
+indexed_vertex_iterator<S>&
+indexed_vertex_iterator<S>::operator-=(difference_type n)
+{
+    iter -= n;
+    return *this;
+}
+
+template <typename S>
+indexed_vertex_iterator<S>&
+indexed_vertex_iterator<S>::operator++()
+{
+    ++iter;
+    return *this;
+}
+
+template <typename S>
+indexed_vertex_iterator<S>&
+indexed_vertex_iterator<S>::operator--()
+{
+    --iter;
+    return *this;
+}
+
+template <typename S>
+indexed_vertex_iterator<S>
+indexed_vertex_iterator<S>::operator+(difference_type n) const
+{
+    return iter + n;
+}
+
+template <typename S>
+indexed_vertex_iterator<S>
+indexed_vertex_iterator<S>::operator-(difference_type n) const
+{
+    return iter - n;
+}
+
+template <typename S>
+typename indexed_vertex_iterator<S>::difference_type
+indexed_vertex_iterator<S>::operator-(indexed_vertex_iterator const& x) const
+{
+    return iter - x.iter;
+}
+
+template <typename S>
+typename indexed_vertex_iterator<S>::reference
+indexed_vertex_iterator<S>::operator*()
+{
+    // The returned descriptor is simply the distance from the beginning of
+    // the underlying store to the end.
+    return std::distance(store->begin(), iter);
+}
+
+template <typename S>
+bool
+indexed_vertex_iterator<S>::operator==(indexed_vertex_iterator const& x) const
+{
+     return (store == x.store) && (iter == x.iter);
+}
+
+template <typename S>
+bool
+indexed_vertex_iterator<S>::operator!=(indexed_vertex_iterator const& x) const
+{
+    return (store == x.store) && (iter != x.iter);
+}
 
 } /* namespace adj_list */
 } /* namespace graphs */

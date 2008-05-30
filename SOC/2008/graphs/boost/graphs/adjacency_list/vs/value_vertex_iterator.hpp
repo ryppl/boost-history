@@ -1,6 +1,6 @@
 
-#ifndef BOOST_GRAPHS_ADJACENCY_LIST_VALUE_VERTEX_ITERATOR_HPP
-#define BOOST_GRAPHS_ADJACENCY_LIST_VALUE_VERTEX_ITERATOR_HPP
+#ifndef BOOST_GRAPHS_ADJACENCY_LIST_SIMPLE_VERTEX_ITERATOR_HPP
+#define BOOST_GRAPHS_ADJACENCY_LIST_SIMPLE_VERTEX_ITERATOR_HPP
 
 #include <iterator>
 
@@ -12,12 +12,9 @@ namespace adj_list {
  * The value vertex iterator provides a vertex iterator unique associative
  * containers and sequences that don't invalidate memory on insertions
  * (lists).
- *
- * Note that this is actually a random access iterator and can be used to
- * support trivial fill (memset) and copy (memcpy) operations.
  */
 template <typename Store>
-class value_vertex_iterator
+class simple_vertex_iterator
 {
     typedef typename Store::const_iterator iterator;
 public:
@@ -25,46 +22,87 @@ public:
     typedef typename vertex_type::descriptor_type vertex_descriptor;
 
     typedef typename iterator::iterator_category iterator_category;
+    typedef typename iterator::difference_type difference_type;
     typedef vertex_descriptor value_type;
     typedef vertex_descriptor reference;
     typedef vertex_descriptor pointer;
-    typedef typename iterator::difference_type difference_type;
 
-    inline value_vertex_iterator()
-        : iter()
-    { }
+    inline simple_vertex_iterator();
+    inline simple_vertex_iterator(simple_vertex_iterator const& x);
+    inline simple_vertex_iterator(iterator const& x);
 
-    inline value_vertex_iterator(value_vertex_iterator const& x)
-        : iter(x.iter)
-    { }
+    inline simple_vertex_iterator& operator=(simple_vertex_iterator const& x);
+    inline simple_vertex_iterator& operator++();
+    inline simple_vertex_iterator& operator--();
 
-    inline value_vertex_iterator(iterator const& x)
-        : iter(x)
-    { }
+    inline reference operator*();
 
-    inline value_vertex_iterator& operator++()
-    {
-        ++iter;
-        return *this;
-    }
+    inline bool operator==(simple_vertex_iterator const& x) const;
+    inline bool operator!=(simple_vertex_iterator const& x) const;
 
-    inline value_vertex_iterator& operator--()
-    {
-        --iter;
-        return *this;
-    }
-
-    inline reference operator*()
-    { return &const_cast<vertex_type&>(*iter); }
-
-    inline bool operator==(value_vertex_iterator const& x) const
-    { return iter == x.iter; }
-
-    inline bool operator!=(value_vertex_iterator const& x) const
-    { return iter != x.iter; }
-
+private:
     iterator iter;
 };
+
+template <typename S>
+simple_vertex_iterator<S>::simple_vertex_iterator()
+    : iter()
+{ }
+
+template <typename S>
+simple_vertex_iterator<S>::simple_vertex_iterator(simple_vertex_iterator const& x)
+    : iter(x.iter)
+{ }
+
+template <typename S>
+simple_vertex_iterator<S>::simple_vertex_iterator(iterator const& x)
+    : iter(x)
+{ }
+
+template <typename S>
+simple_vertex_iterator<S>&
+simple_vertex_iterator<S>::operator=(simple_vertex_iterator const& x)
+{
+    iter = x.iter;
+    return *this;
+}
+
+template <typename S>
+simple_vertex_iterator<S>&
+simple_vertex_iterator<S>::operator++()
+{
+    ++iter;
+    return *this;
+}
+
+template <typename S>
+simple_vertex_iterator<S>&
+simple_vertex_iterator<S>::operator--()
+{
+    --iter;
+    return *this;
+}
+
+template <typename S>
+typename simple_vertex_iterator<S>::reference
+simple_vertex_iterator<S>::operator*()
+{
+    return &const_cast<vertex_type&>(*iter);
+}
+
+template <typename S>
+bool
+simple_vertex_iterator<S>::operator==(simple_vertex_iterator const& x) const
+{
+    return iter == x.iter;
+}
+
+template <typename S>
+bool
+simple_vertex_iterator<S>::operator!=(simple_vertex_iterator const& x) const
+{
+    return iter != x.iter;
+}
 
 } /* namespace adj_list */
 } /* namespace graphs */
