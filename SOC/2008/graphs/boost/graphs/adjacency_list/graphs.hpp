@@ -29,7 +29,7 @@ template <
     template <typename> class EdgeStore = edge_set,
     template <typename> class VertexEdgeStore = vertex_edge_set
 >
-struct graph
+struct undirected_graph
     : adjacency_list<
         undirected,
         VertexProps,
@@ -56,10 +56,10 @@ template <
     typename VertexProps = none,
     typename EdgeProps = none,
     template <typename> class VertexStore = vertex_set,
-    template <typename> class EdgeStore = edge_set,
-    template <typename> class VertexEdgeStore = vertex_edge_set
+    template <typename> class EdgeStore = edge_list,
+    template <typename> class VertexEdgeStore = vertex_edge_list
 >
-struct multigraph
+struct undirected_multigraph
     : adjacency_list<
         undirected,
         VertexProps,

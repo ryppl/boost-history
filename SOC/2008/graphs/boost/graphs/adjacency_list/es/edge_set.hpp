@@ -34,7 +34,7 @@ namespace detail {
         inline basic_edge_set_node(vertex_descriptor u,
                                    vertex_descriptor v,
                                    properties_type const& ep)
-            : Edge(ep)
+            : Edge(u, v, ep)
             , iter()
         { }
 
@@ -159,14 +159,16 @@ basic_edge_set<E,C,A>::insert_edge(vertex_descriptor u, vertex_descriptor v)
 template <BOOST_GRAPH_ES_PARAMS>
 std::pair<typename basic_edge_set<E,C,A>::edge_descriptor, bool>
 basic_edge_set<E,C,A>::insert_edge(vertex_descriptor u,
-                                 vertex_descriptor v,
-                                 edge_properties const& ep)
+                                   vertex_descriptor v,
+                                   edge_properties const& ep)
 {
+    edge_type edge(u, v, ep);
+
     std::pair<edge_descriptor, bool> ret;
-    std::pair<typename edge_store::iterator, bool> ins =
-            _edges.insert(edge_type(u, v, ep));
+    std::pair<typename edge_store::iterator, bool> ins = _edges.insert(edge);
     if(ins.second) {
-        // Not very pretty...
+        // Not very pretty... the addition succeeds, so re-cast the added edge
+        // and set the descriptor based on that.
         edge_type& e = const_cast<edge_type&>(*(ins.first));
         e.iter = ins.first;
         ret.first = &e;

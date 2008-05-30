@@ -19,4 +19,12 @@ void add_vertices(Graph& g, int n)
     }
 }
 
+template <typename Graph>
+void add_mapped_vertices(Graph& g, int n)
+{
+    for(int i = 0; i < n; ++i) {
+        g.add_vertex(i, i);
+    }
+}
+
 #endif

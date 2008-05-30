@@ -5,6 +5,7 @@
 
 #include <boost/graphs/adjacency_list.hpp>
 
+#include "demangle.hpp"
 #include "add_vertices.hpp"
 #include "add_edges.hpp"
 
@@ -47,6 +48,8 @@ void undirected_vector_vector_vector()
     Graph g;
     add_vertices(g, V);
     add_edges(g, E);
+
+    // cout << demangle(typeid(Graph::this_type).name()) << endl;
 }
 
 // Best used for fast graph construction. This graph supports vertex and edge
@@ -76,12 +79,15 @@ void undirected_set_set_set()
 }
 
 // Pretty much the same as above, but vertices are mapped to a key.
+//
+// The map here is basically int-to-int, and kind of worthless, but we're just
+// using this to make sure that the class instantiates correctly.
 void undirected_map_set_set()
 {
     typedef adjacency_list<
-            undirected, none, int, int_to_vertex_map, edge_set, vertex_edge_set
+            undirected, int, int, int_to_vertex_map, edge_set, vertex_edge_set
         > Graph;
     Graph g;
-    add_vertices(g, V);
+    add_mapped_vertices(g, V);
 }
 

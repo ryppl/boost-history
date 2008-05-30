@@ -57,7 +57,7 @@ int main()
 
 void test_1()
 {
-    typedef graph<int, double, vertex_set> Graph;
+    typedef undirected_graph<int, double, vertex_set> Graph;
     typedef exterior_vertex_property<Graph, color>::container_type ColorContainer;
     typedef exterior_vertex_property<Graph, color>::map_type ColorMap;
 
@@ -90,7 +90,7 @@ void test_1()
 
 void test_2()
 {
-    typedef graph<int, int, vertex_vector> Graph;
+    typedef undirected_graph<int, int, vertex_vector> Graph;
     typedef exterior_vertex_property<Graph, color>::container_type ColorContainer;
 
     Graph g;
@@ -112,7 +112,7 @@ void test_2()
 
 void test_3()
 {
-    typedef graph<VertexProps, EdgeProps, vertex_list> Graph;
+    typedef undirected_graph<VertexProps, EdgeProps, vertex_list> Graph;
     typedef interior_vertex_property<Graph, string VertexProps::*>::map_type NameMap;
     typedef interior_vertex_property<Graph, double EdgeProps::*>::map_type WeightMap;
 

@@ -25,6 +25,6 @@
 // It might just be easy enough to build an "incident" edge type and accessor
 // for directed vertices that simply returns or something like that.
 
-#include <boost/graphs/adjacency_list/un/undirected.hpp>
+#include <boost/graphs/adjacency_list/undirected/undirected.hpp>
 
 #endif

@@ -8,6 +8,7 @@
 #include <boost/graphs/adjacency_list/types.hpp>
 #include <boost/graphs/adjacency_list/storage.hpp>
 #include <boost/graphs/adjacency_list/policy.hpp>
+#include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
 // I think that if we concept-ize the internals of the adjacency list, then
 // we can filter the external interface. This would be a great place to use
@@ -62,16 +63,27 @@ class adjacency_list
         > graph_type;
 
 public:
+    typedef adjacency_list<
+            Type, VertexProps, EdgeProps, VertexStore, EdgeStore, VertexEdgeStore, AllowEdgePolicy
+        > this_type;
+
     typedef VertexStore<typename graph_type::vertex_type> vertex_store;
     typedef EdgeStore<typename graph_type::edge_type> edge_store;
 
     typedef typename vertex_store::vertex_type vertex_type;
     typedef typename vertex_store::vertex_descriptor vertex_descriptor;
+    typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_type::properties_type vertex_properties;
 
     typedef typename edge_store::edge_type edge_type;
     typedef typename edge_store::edge_descriptor edge_descriptor;
+    typedef typename edge_store::edge_iterator edge_iterator;
     typedef typename edge_type::properties_type edge_properties;
+
+    typedef typename vertex_type::incidence_iterator incidence_iterator;
+    typedef typename vertex_type::incidence_range incidence_range;
+    typedef adjacency_iterator<this_type> adjacency_iterator;
+    typedef std::pair<adjacency_iterator, adjacency_iterator> adjacency_range;
 
     adjacency_list();
 
@@ -79,15 +91,6 @@ public:
     // requires HasAdd<vertex_store>
     edge_descriptor add_edge(vertex_descriptor u, vertex_descriptor v);
     edge_descriptor add_edge(vertex_descriptor u, vertex_descriptor v, edge_properties const& ep);
-
-    // requires HasAdd<vertex_store> && UniqueComparableVertex<vertex_type>
-    edge_descriptor add_edge(vertex_properties const& u, vertex_properties const& v);
-    edge_descriptor add_edge(vertex_properties const& u, vertex_properties const& v, edge_properties const& ep);
-
-    // requires HasAdd<vertex_store> && UniqueMappedVertex<vertex_type> &&
-    //          SameType<Key, typename vertex_store::key_type>
-    template <typename Key> edge_descriptor add_edge(Key const& u, Key const& v);
-    template <typename Key> edge_descriptor add_edge(Key const& u, Key const& v, edge_properties const& ep);
 
 
     // Insert edge (do we need these functions? - descriptors are evaluable).
@@ -108,6 +111,15 @@ public:
     void remove_edge(edge_descriptor e);
     void remove_edge(vertex_descriptor u, vertex_descriptor v);
 
+
+    // Iterators. Lots and lots of iterators.
+    incidence_range incident_edges(vertex_descriptor v) const;
+    incidence_iterator begin_incident_edges(vertex_descriptor v) const;
+    incidence_iterator end_incident_edges(vertex_descriptor v) const;
+
+    adjacency_range adjacent_vertices(vertex_descriptor v) const;
+    adjacency_iterator begin_adjacent_vertices(vertex_descriptor v) const;
+    adjacency_iterator end_adjacent_vertices(vertex_descriptor v) const;
 
     // Descriptor accessor. Use these functions to get descriptors...
     vertex_descriptor descriptor(vertex_type const& v) const;
@@ -182,74 +194,6 @@ adjacency_list<T,VP,EP,VS,ES,VES,AEP>::add_edge(
     }
 
     return e;
-}
-
-/**
- * Add an edge that connects the two vertices identified by the given
- * properties.
- */
-template <BOOST_GRAPH_ADJLIST_PARAMS>
-typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::edge_descriptor
-adjacency_list<T,VP,EP,VS,ES,VES,AEP>::add_edge(
-        vertex_properties const& up,
-        vertex_properties const& vp)
-{
-    return add_edge(up, vp, edge_properties());
-}
-
-/**
- * Add an edge that connects the two vertices identified by the given vertex
- * properties, such that it will contain the have edge properties.
- */
-template <BOOST_GRAPH_ADJLIST_PARAMS>
-typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::edge_descriptor
-adjacency_list<T,VP,EP,VS,ES,VES,AEP>::add_edge(
-        vertex_properties const& up,
-        vertex_properties const& vp,
-        edge_properties const& ep)
-{
-    // Start by finding the vertices according to their properties.
-    vertex_descriptor u = find_vertex(up);
-    vertex_descriptor v = find_vertex(vp);
-    BOOST_ASSERT(u.is_valid() && v.is_valid());
-    return add_edge(u, v, ep);
-}
-
-/**
- * Add an edge that connects the two vertices identified by their keys.
- *
- * @todo Without constrained members, instantiating this function can result in
- * ambigous member functions with the vertex property add_edge() functions if
- * the key type is the same as the vertex properties. We can probably also get
- * rid of the Key template parameter and simply reference the maps key type
- * here.
- *
- * @todo You have to explicitly give the key parameter here because of the
- * other add_vertex() functions.
- */
-template <BOOST_GRAPH_ADJLIST_PARAMS>
-template <typename Key>
-typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::edge_descriptor
-adjacency_list<T,VP,EP,VS,ES,VES,AEP>::add_edge(
-        Key const& up,
-        Key const& vp)
-{
-    return add_edge<Key>(up, vp, edge_properties());
-}
-
-template <BOOST_GRAPH_ADJLIST_PARAMS>
-template <typename Key>
-typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::edge_descriptor
-adjacency_list<T,VP,EP,VS,ES,VES,AEP>::add_edge(
-        Key const& up,
-        Key const& vp,
-        edge_properties const& ep)
-{
-    // Start by finding the vertices according to their properties.
-    vertex_descriptor u = find_vertex(up);
-    vertex_descriptor v = find_vertex(vp);
-    BOOST_ASSERT(u.is_valid() && v.is_valid());
-    return add_edge(u, v, ep);
 }
 
 
@@ -344,6 +288,67 @@ adjacency_list<T,VP,EP,VS,ES,VES,AEP>::remove_edge(
     // I suppose it would be a good idea to ensure that the local edges of
     // u and v are actually removed also.
     edge_store::remove_edge(u, v);
+}
+
+/**
+ * Get an iterator range over the incident edges of the given vertex.
+ */
+template <BOOST_GRAPH_ADJLIST_PARAMS>
+typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::incidence_range
+adjacency_list<T,VP,EP,VS,ES,VES,AEP>::incident_edges(vertex_descriptor v) const
+{
+    return this->vertex(v).incident_edges();
+}
+
+/**
+ * Get an iterator to the beginning of the the incident edges for the given
+ * vertex.
+ */
+template <BOOST_GRAPH_ADJLIST_PARAMS>
+typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::incidence_iterator
+adjacency_list<T,VP,EP,VS,ES,VES,AEP>::begin_incident_edges(vertex_descriptor v) const
+{
+    return this->vertex(v).begin_incident_edges();
+}
+
+/**
+ * Get an iterator past the end of the incident edges of the given vertex.
+ */
+template <BOOST_GRAPH_ADJLIST_PARAMS>
+typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::incidence_iterator
+adjacency_list<T,VP,EP,VS,ES,VES,AEP>::end_incident_edges(vertex_descriptor v) const
+{
+    return this->vertex(v).end_incident_edges();
+}
+
+/**
+ * Get an iterator range over the adjacecnt vertices of the given vertex.
+ */
+template <BOOST_GRAPH_ADJLIST_PARAMS>
+typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::adjacency_range
+adjacency_list<T,VP,EP,VS,ES,VES,AEP>::adjacent_vertices(vertex_descriptor v) const
+{
+    return make_pair(begin_adjacent_vertices(v), end_adjacent_vertices(v));
+}
+
+/**
+ * Get iterator to beginning of the adjacent edges from the given vertex.
+ */
+template <BOOST_GRAPH_ADJLIST_PARAMS>
+typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::adjacency_iterator
+adjacency_list<T,VP,EP,VS,ES,VES,AEP>::begin_adjacent_vertices(vertex_descriptor v) const
+{
+    return adjacency_iterator(this, v, begin_incident_edges(v));
+}
+
+/**
+ * Get an iterator past the end of the adjacent edges of the given vertex.
+ */
+template <BOOST_GRAPH_ADJLIST_PARAMS>
+typename adjacency_list<T,VP,EP,VS,ES,VES,AEP>::adjacency_iterator
+adjacency_list<T,VP,EP,VS,ES,VES,AEP>::end_adjacent_vertices(vertex_descriptor v) const
+{
+    return adjacency_iterator(this, v, end_incident_edges(v));
 }
 
 /**
