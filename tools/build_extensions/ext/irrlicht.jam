@@ -187,6 +187,8 @@ rule init ( version ? : location : options * )
         <implicit-dependency>/ext/irrlicht//IrrCompileConfigPre.h
         <dependency>/ext/irrlicht//IrrCompileConfigPre.h
         <toolset>msvc:<cxxflags>"/FIIrrCompileConfigPre.h"
+        <toolset>gcc:<cxxflags>"-include IrrCompileConfigPre.h"
+        <toolset>darwin:<cxxflags>"-include IrrCompileConfigPre.h"
         ;
     
     alias gl : : : :
