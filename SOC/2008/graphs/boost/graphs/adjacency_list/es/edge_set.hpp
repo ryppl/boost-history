@@ -4,7 +4,7 @@
 
 #include <set>
 
-#include <boost/graphs/adjacency_list/es/value_edge_iterator.hpp>
+#include <boost/graphs/adjacency_list/es/simple_edge_iterator.hpp>
 
 namespace boost {
 namespace graphs {
@@ -66,7 +66,7 @@ public:
     typedef typename edge_type::vertex_descriptor vertex_descriptor;
 
     typedef std::set<edge_type, Compare<edge_type>, Alloc<edge_type> > edge_store;
-    typedef value_edge_iterator<edge_store> edge_iterator;
+    typedef simple_edge_iterator<edge_store> edge_iterator;
     typedef typename edge_store::size_type edges_size_type;
 
     // FIXME:
