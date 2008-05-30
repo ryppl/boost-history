@@ -12,12 +12,12 @@ import extension ;
 
 extension.declare irrlicht ;
 
-extension.option irrlicht device : default sdl ;
+extension.option irrlicht device : default sdl disable ;
 extension.option irrlicht d3d9 : enable disable ;
 extension.option irrlicht opengl : enable disable ;
 extension.option irrlicht opengles : disable enable ;
 extension.option irrlicht software : enable disable ;
-extension.option irrlicht burnings-video : beatiful fast ultra-fast disable ;
+extension.option irrlicht burnings-video : beautiful fast ultra-fast disable ;
 extension.option irrlicht x11 : enable disable ;
 extension.option irrlicht x11-vidmode : enable disable ;
 extension.option irrlicht x11-randr : disable enable ;
@@ -99,8 +99,15 @@ rule init ( version ? : location : options * )
         "#undef _IRR_USE_NON_SYSTEM_LIB_PNG_"
         "#undef _IRR_COMPILE_WITH_DIRECT3D_8_"
         
+        [ conditional <irrlicht-device>disable :
+            <>"#undef _IRR_USE_SDL_DEVICE_"
+            <>"#undef _IRR_USE_WINDOWS_DEVICE_"
+            <>"#undef _IRR_USE_LINUX_DEVICE_"
+            <>"#undef _IRR_USE_OSX_DEVICE_" ]
+        
         <irrlicht-d3d9>disable:<>"#undef _IRR_COMPILE_WITH_DIRECT3D_9_"
         <irrlicht-opengl>disable:<>"#undef _IRR_COMPILE_WITH_OPENGL_"
+        <irrlicht-opengles>enable:<>"#define _IRR_COMPILE_WITH_OPENGLES_"
         <irrlicht-software>disable:<>"#undef _IRR_COMPILE_WITH_SOFTWARE_"
         [ conditional <irrlicht-burnigs-video>disable :
             <>"#undef _IRR_COMPILE_WITH_BURNINGSVIDEO_"
