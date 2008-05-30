@@ -24,11 +24,11 @@ public:
     vertex_edge_store();
 
     // Iterator access.
-    iterator begin();
-    iterator end();
+    inline iterator begin();
+    inline iterator end();
 
-    const_iterator begin() const;
-    const_iterator end() const;
+    inline const_iterator begin() const;
+    inline const_iterator end() const;
 
 protected:
     Store _store;

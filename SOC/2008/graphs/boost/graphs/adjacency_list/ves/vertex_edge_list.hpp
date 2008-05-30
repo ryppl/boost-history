@@ -31,15 +31,15 @@ public:
     typedef typename base_type::size_type size_type;
 
     // Constructors
-    vertex_edge_list();
+    inline vertex_edge_list();
 
     // Add/Find/Remove interface.
-    void add(edge_descriptor e);
-    iterator find(edge_descriptor e);
-    const_iterator find(edge_descriptor e) const;
-    void remove(edge_descriptor e);
-    void clear();
-    size_type size() const;
+    inline void add(edge_descriptor e);
+    inline iterator find(edge_descriptor e);
+    inline const_iterator find(edge_descriptor e) const;
+    inline void remove(edge_descriptor e);
+    inline void clear();
+    inline size_type size() const;
 };
 
 // Functions
