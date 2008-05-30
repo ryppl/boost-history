@@ -1,8 +1,8 @@
 
-#ifndef BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_EDGE_HPP
-#define BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_EGE_HPP
+#ifndef BOOST_GRAPHS_ADJACENCY_LIST_DIRECTED_EDGE_HPP
+#define BOOST_GRAPHS_ADJACENCY_LIST_DIRECTED_EDGE_HPP
 
-#include <boost/graphs/utility/unordered_pair.hpp>
+#include <boost/graphs/utility/ordered_pair.hpp>
 #include <boost/graphs/adjacency_list/edge.hpp>
 
 namespace boost {
@@ -10,15 +10,7 @@ namespace graphs {
 namespace adj_list {
 
 /**
- * An undirected edge is an unordered pair of pointers to its endpoints. Note
- * that because the unordered pair is instantiated over pointers, these are
- * trivially ordered by their addresses. There is no other way available to
- * order the vertices (i.e., by custom comparison).
- *
- * Note that the edge does allow construction over null endpoints, but that
- * isn't really recommended since we don't offer any real mutators for the
- * endpoints. For constructors that do take vertex descriptors, we might also
- * point out that the ordering is not guaranteed after construction.
+ * A directed edge 
  */
 template <
         typename VertexProps,
@@ -26,7 +18,7 @@ template <
         typename VertexDesc,
         typename EdgeDesc
     >
-class undirected_edge
+class directed_edge
     : public edge<EdgeProps>
 {
 public:
@@ -37,10 +29,10 @@ public:
     // leverage vertex properties for add/insert functions.
     typedef VertexDesc vertex_descriptor;
 
-    undirected_edge();
-    undirected_edge(properties_type const& ep);
-    undirected_edge(vertex_descriptor u, vertex_descriptor v);
-    undirected_edge(vertex_descriptor u, vertex_descriptor v, properties_type const& ep);
+    directed_edge();
+    directed_edge(properties_type const& ep);
+    directed_edge(vertex_descriptor u, vertex_descriptor v);
+    directed_edge(vertex_descriptor u, vertex_descriptor v, properties_type const& ep);
 
     unordered_pair<vertex_descriptor> const& ends() const;
 
@@ -59,25 +51,25 @@ private:
     typename VP, typename EP, typename V, typename E
 
 template <BOOST_GRAPH_UE_PARAMS>
-undirected_edge<VP,EP,V,E>::undirected_edge()
+directed_edge<VP,EP,V,E>::directed_edge()
     : edge<EP>()
     , _ends()
 { }
 
 template <BOOST_GRAPH_UE_PARAMS>
-undirected_edge<VP,EP,V,E>::undirected_edge(properties_type const& ep)
+directed_edge<VP,EP,V,E>::directed_edge(properties_type const& ep)
     : edge<EP>(ep)
     , _ends()
 { }
 
 template <BOOST_GRAPH_UE_PARAMS>
-undirected_edge<VP,EP,V,E>::undirected_edge(vertex_descriptor u, vertex_descriptor v)
+directed_edge<VP,EP,V,E>::directed_edge(vertex_descriptor u, vertex_descriptor v)
     : edge<EP>()
     , _ends(u, v)
 { }
 
 template <BOOST_GRAPH_UE_PARAMS>
-undirected_edge<VP,EP,V,E>::undirected_edge(vertex_descriptor u,
+directed_edge<VP,EP,V,E>::directed_edge(vertex_descriptor u,
                                             vertex_descriptor v,
                                             properties_type const& ep)
     : edge<EP>(ep)
@@ -88,8 +80,8 @@ undirected_edge<VP,EP,V,E>::undirected_edge(vertex_descriptor u,
  * Return the endpoints of the edge.
  */
 template <BOOST_GRAPH_UE_PARAMS>
-unordered_pair<typename undirected_edge<VP,EP,V,E>::vertex_descriptor> const&
-undirected_edge<VP,EP,V,E>::ends() const
+unordered_pair<typename directed_edge<VP,EP,V,E>::vertex_descriptor> const&
+directed_edge<VP,EP,V,E>::ends() const
 { return _ends; }
 
 /**
@@ -97,8 +89,8 @@ undirected_edge<VP,EP,V,E>::ends() const
  * necessarily the same as the way it is connected.
  */
 template <BOOST_GRAPH_UE_PARAMS>
-typename undirected_edge<VP,EP,V,E>::vertex_descriptor
-undirected_edge<VP,EP,V,E>::source() const
+typename directed_edge<VP,EP,V,E>::vertex_descriptor
+directed_edge<VP,EP,V,E>::source() const
 { return _ends.first(); }
 
 /**
@@ -106,16 +98,16 @@ undirected_edge<VP,EP,V,E>::source() const
  * necessarily the same as the way it is connected.
  */
 template <BOOST_GRAPH_UE_PARAMS>
-typename undirected_edge<VP,EP,V,E>::vertex_descriptor
-undirected_edge<VP,EP,V,E>::target() const
+typename directed_edge<VP,EP,V,E>::vertex_descriptor
+directed_edge<VP,EP,V,E>::target() const
 { return _ends.second(); }
 
 /**
  * Return the vertex opposite the given vertex on this edge.
  */
 template <BOOST_GRAPH_UE_PARAMS>
-typename undirected_edge<VP,EP,V,E>::vertex_descriptor
-undirected_edge<VP,EP,V,E>::opposite(vertex_descriptor u) const
+typename directed_edge<VP,EP,V,E>::vertex_descriptor
+directed_edge<VP,EP,V,E>::opposite(vertex_descriptor u) const
 {
     return u == _ends.first()  ? _ends.second() : _ends.first();
 }
@@ -132,8 +124,8 @@ undirected_edge<VP,EP,V,E>::opposite(vertex_descriptor u) const
  */
 template <BOOST_GRAPH_UE_PARAMS>
 bool
-operator<(undirected_edge<VP,EP,V,E> const& a,
-          undirected_edge<VP,EP,V,E> const& b)
+operator<(directed_edge<VP,EP,V,E> const& a,
+          directed_edge<VP,EP,V,E> const& b)
 {
     return a.ends() < b.ends();
 }
@@ -144,8 +136,8 @@ operator<(undirected_edge<VP,EP,V,E> const& a,
  */
 template <BOOST_GRAPH_UE_PARAMS>
 bool
-operator==(undirected_edge<VP,EP,V,E> const& a,
-           undirected_edge<VP,EP,V,E> const& b)
+operator==(directed_edge<VP,EP,V,E> const& a,
+           directed_edge<VP,EP,V,E> const& b)
 {
     return a.ends() == b.ends();
 }

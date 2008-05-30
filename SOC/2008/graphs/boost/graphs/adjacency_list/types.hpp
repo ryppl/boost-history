@@ -26,5 +26,6 @@
 // for directed vertices that simply returns or something like that.
 
 #include <boost/graphs/adjacency_list/undirected/undirected.hpp>
+#include <boost/graphs/adjacency_list/directed/directed.hpp>
 
 #endif

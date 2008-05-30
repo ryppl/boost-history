@@ -1,6 +1,6 @@
 
-#ifndef BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_VERTEX_HPP
-#define BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_VERTEX_HPP
+#ifndef BOOST_GRAPHS_ADJACENCY_LIST_DIRECTED_VERTEX_HPP
+#define BOOST_GRAPHS_ADJACENCY_LIST_DIRECTED_VERTEX_HPP
 
 #include <boost/graphs/adjacency_list/vertex.hpp>
 
@@ -9,13 +9,14 @@ namespace graphs {
 namespace adj_list {
 
 /**
- * An undirected vertex tracks the incident edges of the given vertex. Note
- * that the edges actually being stored are pointers to edges in the graph's
- * edge list. The reason for this is so we don't duplicate the properties
- * of each edge.
+ * A directed vertex provides access to two separate sets of incident
+ * edges - both in-edges and out-edges.
  *
- * @todo What happens if I store incident edges as a pair... The edge and the
- * opposite end. That might be kind of interesting.
+ * This varies from the original BGL, which provided directed (which
+ * was only the out edges) and bidirectional (both in and out edges).
+ * The cost of providing both as a directed graph doesn't particularly
+ * phase me too much. I'm basically saying that I haven't seen too
+ * many useful applications of half-directed graphs.
  */
 template <
         typename VertexProps,
@@ -24,7 +25,7 @@ template <
         typename EdgeDesc,
         template <typename> class VertexEdgeStore
     >
-class undirected_vertex
+class directed_vertex
     : public vertex<VertexProps>
 {
 public:
@@ -39,8 +40,8 @@ public:
     typedef std::pair<incidence_iterator, incidence_iterator> incidence_range;
     typedef typename vertex_edge_store::size_type degree_type;
 
-    undirected_vertex();
-    undirected_vertex(VertexProps const& vp);
+    directed_vertex();
+    directed_vertex(VertexProps const& vp);
 
     // Connection interface.
     void connect_to(edge_descriptor e);
@@ -51,31 +52,40 @@ public:
     void disconnect_from(edge_descriptor e);
     void disconnect_all();
 
-    std::pair<incidence_iterator, incidence_iterator> incident_edges() const;
-    incidence_iterator begin_incident_edges() const;
-    incidence_iterator end_incident_edges() const;
+    // Edge iterators
+    incidence_range out_edges() const;
+    incidence_iterator begin_out_edges() const;
+    incidence_iterator end_out_edges() const;
 
-    degree_type degree() const;
+    incidence_range in_edges() const;
+    incidence_iterator begin_in_edges() const;
+    incidence_iterator end_in_edges() const;
+
+    degree_type out_degree() const;
+    degree_type in_degree() const;
 
 private:
-    vertex_edge_store _edges;
+    vertex_edge_store _out;
+    vertex_edge_store _in;
 };
 
 // Functions
 
-#define BOOST_GRAPH_UV_PARAMS \
+#define BOOST_GRAPH_DV_PARAMS \
     typename VP, typename EP, typename V, typename E, template <typename> class VES
 
-template <BOOST_GRAPH_UV_PARAMS>
-undirected_vertex<VP,EP,V,E,VES>::undirected_vertex()
+template <BOOST_GRAPH_DV_PARAMS>
+directed_vertex<VP,EP,V,E,VES>::directed_vertex()
     : vertex<VP>()
-    , _edges()
+    , _out()
+    , _in()
 { }
 
-template <BOOST_GRAPH_UV_PARAMS>
-undirected_vertex<VP,EP,V,E,VES>::undirected_vertex(VP const& vp)
+template <BOOST_GRAPH_DV_PARAMS>
+directed_vertex<VP,EP,V,E,VES>::directed_vertex(VP const& vp)
         : vertex<VP>(vp)
-        , _edges()
+        , _out()
+        , _in()
     { }
 
 /**
@@ -83,97 +93,134 @@ undirected_vertex<VP,EP,V,E,VES>::undirected_vertex(VP const& vp)
  * that this vertex is neither truly the source nor target of the edge. This
  * does not guarantee that source(e) == this.
  */
-template <BOOST_GRAPH_UV_PARAMS>
+template <BOOST_GRAPH_DV_PARAMS>
 void
-undirected_vertex<VP,EP,V,E,VES>::connect_to(edge_descriptor e)
+directed_vertex<VP,EP,V,E,VES>::connect_to(edge_descriptor e)
 {
-    _edges.add(e);
+    _out.add(e);
 }
 
 /**
  * Connect this vertex to the vertex at the opposite end of the edge. Note that
  * this does not guarantee that the target(e) == this.
  */
-template <BOOST_GRAPH_UV_PARAMS>
+template <BOOST_GRAPH_DV_PARAMS>
 void
-undirected_vertex<VP,EP,V,E,VES>::connect_from(edge_descriptor e)
-{
-    _edges.add(e);
+directed_vertex<VP,EP,V,E,VES>::connect_from(edge_descriptor e)
+{ 
+    _in.add(e);
 }
 
 /**
  * Locally remove the given edge that connects this vertex to another endpoint.
  */
-template <BOOST_GRAPH_UV_PARAMS>
+template <BOOST_GRAPH_DV_PARAMS>
 void
-undirected_vertex<VP,EP,V,E,VES>::disconnect_to(edge_descriptor e)
+directed_vertex<VP,EP,V,E,VES>::disconnect_to(edge_descriptor e)
 {
-    _edges.remove(e);
+    _out.remove(e);
 }
 
 /**
  * Locally remove the given edge that connects this vertex to another endpoint.
  */
-template <BOOST_GRAPH_UV_PARAMS>
+template <BOOST_GRAPH_DV_PARAMS>
 void
-undirected_vertex<VP,EP,V,E,VES>::disconnect_from(edge_descriptor e)
-{
-    _edges.remove(e);
+directed_vertex<VP,EP,V,E,VES>::disconnect_from(edge_descriptor e)
+{ 
+    _in.remove(e);
 }
 
 /**
  * Locally disconnect of all the incident edges from this vertex. Note that
  * this is really only used by the disconnect algorithm.
  */
-template <BOOST_GRAPH_UV_PARAMS>
+template <BOOST_GRAPH_DV_PARAMS>
 void
-undirected_vertex<VP,EP,V,E,VES>::disconnect_all()
+directed_vertex<VP,EP,V,E,VES>::disconnect_all()
 {
-    _edges.clear();
+    _out.clear();
+    _in.clear();
 }
 
 /**
- * Get an iterator range over the incident edges of this vertex.
+ * Get an iterator range over the out edges of this vertex.
  */
-template <BOOST_GRAPH_UV_PARAMS>
-std::pair<
-        typename undirected_vertex<VP,EP,V,E,VES>::incidence_iterator,
-        typename undirected_vertex<VP,EP,V,E,VES>::incidence_iterator
-    >
-undirected_vertex<VP,EP,V,E,VES>::incident_edges() const
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::incidence_range
+directed_vertex<VP,EP,V,E,VES>::out_edges() const
 {
-    return std::make_pair(_edges.begin(), _edges.end());
+    return std::make_pair(_out.begin(), _out.end());
 }
 
 /**
- * Get an iterator to the first incident edge.
+ * Get an iterator to the first in edge.
  */
-template <BOOST_GRAPH_UV_PARAMS>
-typename undirected_vertex<VP,EP,V,E,VES>::incidence_iterator
-undirected_vertex<VP,EP,V,E,VES>::begin_incident_edges() const
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::incidence_iterator
+directed_vertex<VP,EP,V,E,VES>::begin_out_edges() const
 {
-    return _edges.begin();
+    return _out.begin();
 }
 
 /**
- * Get an iterator pas the end of the incident edges.
+ * Get an iterator pas the end of the out edges.
  */
-template <BOOST_GRAPH_UV_PARAMS>
-typename undirected_vertex<VP,EP,V,E,VES>::incidence_iterator
-undirected_vertex<VP,EP,V,E,VES>::end_incident_edges() const
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::incidence_iterator
+directed_vertex<VP,EP,V,E,VES>::end_out_edges() const
 {
-    return _edges.end();
+    return _out.end();
 }
 
 /**
- * Return the degree of this vertex. The degree of the vertex is the number
- * of incident edges.
+ * Get an iterator range to the in-edges.
  */
-template <BOOST_GRAPH_UV_PARAMS>
-typename undirected_vertex<VP,EP,V,E,VES>::degree_type
-undirected_vertex<VP,EP,V,E,VES>::degree() const
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::incidence_range
+directed_vertex<VP,EP,V,E,VES>::in_edges() const
 {
-    return _edges.size();
+    return std::make_pair(_in.begin(), _in.end());
+}
+
+/**
+ * Get an iterator to the first in-edge.
+ */
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::incidence_iterator
+directed_vertex<VP,EP,V,E,VES>::begin_in_edges() const
+{
+    return _in.begin();
+}
+
+/**
+ * Get an iterator past the end of in edges.
+ */
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::incidence_iterator
+directed_vertex<VP,EP,V,E,VES>::end_in_edges() const
+{
+    return _in.end();
+}
+
+/**
+ * Return the out-degree of this vertex.
+ */
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::degree_type
+directed_vertex<VP,EP,V,E,VES>::out_degree() const
+{
+    return _out.size();
+}
+
+/**
+ * Return the out-degree of this vertex.
+ */
+template <BOOST_GRAPH_DV_PARAMS>
+typename directed_vertex<VP,EP,V,E,VES>::degree_type
+directed_vertex<VP,EP,V,E,VES>::in_degree() const
+{
+    return _in.size();
 }
 
 /**
@@ -184,7 +231,7 @@ undirected_vertex<VP,EP,V,E,VES>::degree() const
  */
 template <typename Graph>
 void
-disconnect(Graph& g, typename Graph::vertex_type& u, undirected_tag)
+disconnect(Graph& g, typename Graph::vertex_type& u, directed_tag)
 {
     // Undirected - iterate over each of the incident edges I and get the
     // opposite vertex w. Remove all edges from the adjacent vertex that
@@ -203,8 +250,8 @@ disconnect(Graph& g, typename Graph::vertex_type& u, undirected_tag)
     vertex_descriptor ud = g.descriptor(u);
 
     incidence_iterator
-            i = u.begin_incident_edges(),
-            end = u.end_incident_edges();
+            i = u.begin_incident_out(),
+            end = u.end_incident_out();
     for( ; i != end; ++i) {
         // Get the vertex at the opposite end of the current edge.
         edge_descriptor ed = *i;
@@ -222,7 +269,7 @@ disconnect(Graph& g, typename Graph::vertex_type& u, undirected_tag)
     u.disconnect_all();
 }
 
-#undef BOOST_GRAPH_UV_PARAMS
+#undef BOOST_GRAPH_DV_PARAMS
 
 } /* namespace adj_list */
 } /* namespace graphs */
