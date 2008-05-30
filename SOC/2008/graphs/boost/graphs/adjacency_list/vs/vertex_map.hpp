@@ -84,12 +84,8 @@ public:
     // Constructors
     basic_vertex_map();
 
-    // Add a vertex.
-    vertex_descriptor add_vertex(key_type const& k);
+    // Add or insert a vertex.
     vertex_descriptor add_vertex(key_type const& k, vertex_properties const& vp);
-
-    // Insert a vertex.
-    std::pair<vertex_descriptor, bool> insert_vertex(key_type const& k);
     std::pair<vertex_descriptor, bool> insert_vertex(key_type const& k, vertex_properties const& vp);
 
     // Remove a vertex.
@@ -148,21 +144,6 @@ basic_vertex_map<V,K,C,A>::basic_vertex_map()
 { }
 
 /**
- * Add a vertex to the store with the given key. If the key is already mapped
- * to a vertex, then do nothing. Return a descriptor to either the new or
- * existing vertex.
- *
- * @complexity O(log(V))
- */
-template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_descriptor
-basic_vertex_map<V,K,C,A>::add_vertex(const K& k)
-{
-    return insert_vertex(k).first;
-}
-
-
-/**
  * Add a vertex to the store with the key and properties. If the key is mapped
  * to a vertex, do nothing. Return a descriptor to the existing or new vertex.
  *
@@ -174,21 +155,6 @@ basic_vertex_map<V,K,C,A>::add_vertex(const K& k, vertex_properties const& vp)
 {
     return insert_vertex(k, vp).first;
 }
-
-/**
- * Add a vertex to the store with the given key. Return a pair that includes
- * a descriptor for the inserted vertex and a boolean value that indicates
- * whether or not the vertex was actually inserted.
- *
- * @complexity O(log(V))
- */
-template <typename V, typename K, template <typename> class C, template <typename> class A>
-std::pair<typename basic_vertex_map<V,K,C,A>::vertex_descriptor, bool>
-basic_vertex_map<V,K,C,A>::insert_vertex(key_type const& k)
-{
-    return insert_vertex(k, vertex_properties());
-}
-
 
 /**
  * Add a vertex to the store with the given properties. If not specified, the
