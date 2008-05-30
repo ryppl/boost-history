@@ -860,7 +860,7 @@ namespace std {
     deque<T,Alloc@\removedConcepts{ator}@>& operator=(const deque<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-      void assign(InputIterator first, InputIterator last);
+      void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
@@ -1374,7 +1374,7 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 \effects Constructs a \tcode{forward_list} object with \tcode{n} default constructed elements.
 
 \pnum
-@\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}@
+\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}
 
 \pnum
 \complexity Linear in \tcode{n}.
@@ -1390,7 +1390,7 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 \effects Constructs a \tcode{forward_list} object with \tcode{n} copies of \tcode{value} using the specified allocator.
 
 \pnum
-@\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}@
+\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
 
 \pnum
 \complexity Linear in \tcode{n}.
