@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="37" status="New">
+<title>Relation between move/swap concepts and <code>Regular</code></title>
+<section><sref ref="[concept.regular]"/></section>
+<submitter>Chris Jefferson</submitter>
+<date>30 May 2008</date>
+
+<discussion>
+  <p>I've been thinking about rearranging these things:</p>
+
+  <ol>
+    <li>Have a 'move equivalent' version of <code>Regular</code>/<code>SemiRegular</code>.</li>
+    <li>Move <code>Swappable</code> into <code>Regular</code>/<code>SemiRegular</code>.</li>
+  </ol>
+
+  <p>The reason for 2 is I expect for many people (it has been for me)
+    <code>Regular</code> will be their standard concept to use for
+    "types which are normal / sensible". The fact you can't sort
+    a <code>Regular</code> type (as it isn't <code>Swappable</code>)
+    seems a bit bizarre.</p>
+</discussion>
+
+</issue>
