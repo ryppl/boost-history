@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="38" status="Open">
+<title>Container move constructor/assignment operators don't account for scoped allocators</title>
+<section><sref ref="[containers]"/></section>
+<submitter>Pablo Halpern</submitter>
+<date>29 May 2008</date>
+
+<discussion>
+  <p>The requirements for extended move construction are correct table
+  91, but missing in the requires clauses in N2623.  The requirements
+  on the normal move constructor and the move assignment operator are
+  missing.</p>
+</discussion>
+</issue>
