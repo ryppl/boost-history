@@ -61,6 +61,11 @@ int test_main(int, char* [])
 	std::vector<unsigned int> ids;
  	std::vector<std::pair<double, double> > points = read_data();
 
+	// -- wait to check memory
+// 	std::cerr << "check memory --> After Reading Data." << std::endl;
+// 	sleep(5);
+	// -- wait to check memory
+
 	time_t start;
 
 	// number of points to find on the search phase
@@ -77,6 +82,11 @@ int test_main(int, char* [])
  		q.insert(new geos::Envelope(points[i].first, points[i].first, points[i].second, points[i].second), (void *) p);
  	}
 	std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
+
+	// -- wait to check memory
+// 	std::cerr << "check memory --> After Building Index." << std::endl;
+// 	sleep(5);
+	// -- wait to check memory
 
 	// search
  	std::vector<std::pair<double,double> > search_positions;

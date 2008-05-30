@@ -83,6 +83,10 @@ int test_main(int, char* [])
 	std::vector<unsigned int> ids;
  	std::vector<std::pair<double, double> > points = read_data();
 
+	// -- wait to check memory
+ 	std::cerr << "check memory --> After Reading Data." << std::endl;
+ 	sleep(5);
+	// -- wait to check memory
 
 	// start time
 	time_t start;
@@ -115,6 +119,11 @@ int test_main(int, char* [])
 	start = time(NULL);
    	q->bulk_insert(b,e, points);
 	std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
+
+	// -- wait to check memory
+ 	std::cerr << "check memory --> After Building Index." << std::endl;
+ 	sleep(5);
+	// -- wait to check memory
 
 	// search
 	std::vector<std::pair<double,double> > search_positions;

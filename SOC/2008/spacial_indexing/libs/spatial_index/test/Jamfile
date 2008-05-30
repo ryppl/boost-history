@@ -9,11 +9,9 @@ import testing ;
 project
     : requirements 
       <include>../../..
-      <define>BOOST_ALL_NO_LIB=1
+      #<define>BOOST_ALL_NO_LIB=1
     ;
 
 run simple_test.cpp ;
 run random_test.cpp ;
 run performance_test.cpp ;
-#run test_nothing_n.cpp ;
-#run test_nothing.cpp ;
