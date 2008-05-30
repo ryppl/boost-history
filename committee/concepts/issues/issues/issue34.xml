@@ -70,7 +70,8 @@ public:
 
   requires ConstructibleAsElement&lt;Alloc, T, const T&amp;&gt; <ins>&amp;&amp; CopyAssignable&lt;T&gt;</ins>
     deque&lt;T,Allocator&gt;&amp; operator=(const deque&lt;T,Allocator&gt;&amp; x); 
-  deque&lt;T,Allocator&gt;&amp; operator=(const deque&lt;T,Allocator&gt;&amp;&amp; x); 
+  <ins>requires ConstructibleAsElement&lt;Alloc, T, T&amp;&amp&gt;</ins>
+    deque&lt;T,Allocator&gt;&amp; operator=(const deque&lt;T,Allocator&gt;&amp;&amp; x); 
   template &lt;InputIterator Iter&gt; 
     requires ConstructibleAsElement&lt;Alloc, T, Iter::reference&gt; <ins>&amp;&amp; HasCopyAssign&lt;T, Iter::reference&gt;</ins>
     void assign(Iter first, Iter last); 
