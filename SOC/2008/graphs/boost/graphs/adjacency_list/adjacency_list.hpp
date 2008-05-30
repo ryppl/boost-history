@@ -82,7 +82,7 @@ public:
 
     typedef typename vertex_type::incidence_iterator incidence_iterator;
     typedef typename vertex_type::incidence_range incidence_range;
-    typedef adjacency_iterator<this_type> adjacency_iterator;
+    typedef basic_adjacency_iterator<this_type> adjacency_iterator;
     typedef std::pair<adjacency_iterator, adjacency_iterator> adjacency_range;
 
     adjacency_list();

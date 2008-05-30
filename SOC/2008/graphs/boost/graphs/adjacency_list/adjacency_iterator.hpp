@@ -19,7 +19,7 @@ namespace adj_list {
  * just a bidirectional iterator. For now, this is simply a bidi iterator.
  */
 template <typename Graph>
-class adjacency_iterator
+class basic_adjacency_iterator
 {
     typedef typename Graph::incidence_iterator iterator;
     typedef typename Graph::vertex_descriptor vertex_descriptor;
@@ -33,15 +33,15 @@ public:
     typedef vertex_descriptor pointer;
 
     // Constructors
-    inline adjacency_iterator();
-    inline adjacency_iterator(Graph const* g, vertex_descriptor v, iterator i);
+    inline basic_adjacency_iterator();
+    inline basic_adjacency_iterator(Graph const* g, vertex_descriptor v, iterator i);
 
-    inline adjacency_iterator& operator=(adjacency_iterator const& x);
-    inline adjacency_iterator& operator++();
-    inline adjacency_iterator& operator--();
+    inline basic_adjacency_iterator& operator=(basic_adjacency_iterator const& x);
+    inline basic_adjacency_iterator& operator++();
+    inline basic_adjacency_iterator& operator--();
 
-    inline bool operator==(adjacency_iterator const& x) const;
-    inline bool operator!=(adjacency_iterator const& x) const;
+    inline bool operator==(basic_adjacency_iterator const& x) const;
+    inline bool operator!=(basic_adjacency_iterator const& x) const;
 
     reference operator*();
 
@@ -54,22 +54,22 @@ private:
 // Functions
 
 template <typename G>
-adjacency_iterator<G>::adjacency_iterator()
+basic_adjacency_iterator<G>::basic_adjacency_iterator()
     : graph(0)
     , vertex()
     , iter()
 { }
 
 template <typename G>
-adjacency_iterator<G>::adjacency_iterator(G const* g, vertex_descriptor v, iterator i)
+basic_adjacency_iterator<G>::basic_adjacency_iterator(G const* g, vertex_descriptor v, iterator i)
     : graph(g)
     , vertex(v)
     , iter(i)
 { }
 
 template <typename G>
-adjacency_iterator<G>&
-adjacency_iterator<G>::operator=(adjacency_iterator const& x)
+basic_adjacency_iterator<G>&
+basic_adjacency_iterator<G>::operator=(basic_adjacency_iterator const& x)
 {
     graph = x.graph;
     vertex = x.vertex;
@@ -78,16 +78,16 @@ adjacency_iterator<G>::operator=(adjacency_iterator const& x)
 }
 
 template <typename G>
-adjacency_iterator<G>&
-adjacency_iterator<G>::operator++()
+basic_adjacency_iterator<G>&
+basic_adjacency_iterator<G>::operator++()
 {
     ++iter;
     return *this;
 }
 
 template <typename G>
-adjacency_iterator<G>&
-adjacency_iterator<G>::operator--()
+basic_adjacency_iterator<G>&
+basic_adjacency_iterator<G>::operator--()
 {
     --iter;
     return *this;
@@ -95,21 +95,21 @@ adjacency_iterator<G>::operator--()
 
 template <typename G>
 bool
-adjacency_iterator<G>::operator==(adjacency_iterator const& x) const
+basic_adjacency_iterator<G>::operator==(basic_adjacency_iterator const& x) const
 {
     return (graph == x.graph) && (vertex == x.vertex) && (iter == x.iter);
 }
 
 template <typename G>
 bool
-adjacency_iterator<G>::operator!=(adjacency_iterator const& x) const
+basic_adjacency_iterator<G>::operator!=(basic_adjacency_iterator const& x) const
 {
     return !operator==(x);
 }
 
 template <typename G>
-typename adjacency_iterator<G>::reference
-adjacency_iterator<G>::operator*()
+typename basic_adjacency_iterator<G>::reference
+basic_adjacency_iterator<G>::operator*()
 {
     typename G::edge_type const& e = graph->edge(*iter);
     return e.opposite(vertex);
