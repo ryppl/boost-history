@@ -4,7 +4,7 @@
 
 #include <list>
 
-#include <boost/graphs/adjacency_list/vs/value_vertex_iterator.hpp>
+#include <boost/graphs/adjacency_list/vs/simple_vertex_iterator.hpp>
 
 namespace boost {
 namespace graphs {
@@ -56,7 +56,7 @@ public:
     typedef typename vertex_type::properties_type vertex_properties;
 
     typedef std::list<vertex_type, Alloc<vertex_type> > vertex_store;
-    typedef value_vertex_iterator<vertex_store> vertex_iterator;
+    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
     typedef typename vertex_store::size_type vertices_size_type;
 
     // FIXME: Clearly, this should go away during conceptization.

@@ -6,7 +6,7 @@
 #include <tr1/unordered_map>
 
 #include <boost/graphs/properties.hpp>
-#include <boost/graphs/adjacency_list/vs/value_vertex_iterator.hpp>
+#include <boost/graphs/adjacency_list/vs/simple_vertex_iterator.hpp>
 
 namespace boost {
 namespace graphs {
@@ -73,7 +73,7 @@ public:
     typedef std::set<
             vertex_type, Compare<vertex_type>, Alloc<vertex_type>
         > vertex_store;
-    typedef value_vertex_iterator<vertex_store> vertex_iterator;
+    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
     typedef typename vertex_store::size_type vertices_size_type;
 
     // This is kind of hack, but we need some way of communicating a preference
