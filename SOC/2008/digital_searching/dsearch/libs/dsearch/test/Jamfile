@@ -12,5 +12,4 @@ project
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-run test_nothing.cpp ;
-run test_nothing_n.cpp ;
+run test.cpp ;
