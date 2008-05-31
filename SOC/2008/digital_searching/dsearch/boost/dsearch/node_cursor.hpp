@@ -27,8 +27,9 @@ namespace dsearch {
 		node_iterator pos;
 
 		public:
-		trie_cursor(bool t=false):top(t)
+		trie_cursor()//	:only_root(0),cur(0),top(0) (gave warnings!?!)
 		{
+			only_root=0;cur=0;top=0;
 		}
 
 		trie_cursor(Node * const n_ptr): only_root(1) , top(false)
@@ -65,6 +66,10 @@ namespace dsearch {
 
 		cursor left() const
 		{
+			if(top)
+			{
+				return cursor(cur);
+			}
 			if(only_root)
 				return cursor(cur,cur->begin());
 			return cursor(*pos,(*pos)->begin());
@@ -72,6 +77,10 @@ namespace dsearch {
 
 		cursor right() const
 		{
+			if(top)
+			{
+				return (cursor(cur)++);
+			}
 			if(only_root)
 				return cursor(cur,cur->end());
 			return cursor(*pos,(*pos)->end());
