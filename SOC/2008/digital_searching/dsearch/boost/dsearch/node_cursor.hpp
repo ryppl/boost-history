@@ -1,7 +1,7 @@
 #ifndef BOOST_DSEARCH_NODE_CURSOR_HPP
 #define BOOST_DSEARCH_NODE_CURSOR_HPP
 
-#include "from_tree/cursor_helpers.hpp" //namespace boost::tree
+#include <boost/dsearch/from_tree/cursor_helpers.hpp> //namespace boost::tree
 #include<assert.h>
 
 

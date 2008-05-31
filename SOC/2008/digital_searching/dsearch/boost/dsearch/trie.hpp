@@ -6,7 +6,7 @@
 #include<stack>
 #include<algorithm>
 #include<assert.h>
-#include "node_cursor.hpp"
+#include <boost/dsearch/node_cursor.hpp>
 
 namespace boost{
 namespace dsearch{
