@@ -36,6 +36,9 @@ using boost::iterator_core_access;
 
 class cursor_core_access {
  public:
+ 
+ 	friend class iterator_core_access;
+ 	
   	template <class Facade>
 	static bool empty_(Facade const& f)
 	{
@@ -61,24 +64,26 @@ class cursor_core_access {
 	}
 		
 	template <class Facade>
-	static Facade left(Facade const& f)
+	static void left(Facade& f)
 	{
-		return f.left();
+		f.left();
 	}
 	
 	template <class Facade>
-	static Facade right(Facade const& f)
+	static void right(Facade& f)
 	{
-		return f.right();
+		f.right();
 	}
 	
 	//only if ascending
 	template <class Facade>
-	static Facade up(Facade const& f)
+	static void up(Facade& f)
 	{
-		return f.up();
+		f.up();
 	}
-	
+
+private:
+	cursor_core_access();
 };
 
 template <
@@ -126,7 +131,7 @@ class cursor_facade
 
 	typedef Size size_type;
 
-	typedef bidirectional_traversal_tag cursor_category;
+	typedef bidirectional_traversal_tag cursor_category; //TODO
 
 	bool const empty() const
 	{
@@ -147,20 +152,41 @@ class cursor_facade
 	{
 		return cursor_core_access::par(this->derived());
 	}
-			 
+
+ 	Derived& to_begin()
+ 	{
+		cursor_core_access::left(this->derived());
+		return this->derived();
+ 	}
+ 				 
  	Derived begin()
  	{
-		return cursor_core_access::left(this->derived()); 		
+ 		Derived tmp(this->derived());
+ 		return tmp.to_begin();
  	}
 
+ 	Derived& to_end()
+ 	{
+		cursor_core_access::right(this->derived());
+		return this->derived();
+ 	}
+ 	
  	Derived end()
  	{
-		return cursor_core_access::right(this->derived()); 		
+ 		Derived tmp(this->derived());
+ 		return tmp.to_end();
+  	}
+ 	
+ 	Derived& to_parent()
+ 	{
+ 		cursor_core_access::up(this->derived());
+ 		return this->derived();
  	}
  	
  	Derived parent()
  	{
-		return cursor_core_access::up(this->derived()); 		
+ 		Derived tmp(this->derived());
+ 		return tmp.to_parent();
  	}
 };
 
@@ -219,15 +245,30 @@ class cursor_adaptor
 	{
 		return iterator_adaptor_::base().parity();
 	}
-		
+
+	Derived& to_begin()
+	{
+		return Derived(this->base_reference().to_begin());
+	}
+	
 	Derived begin()
 	{
 		return Derived(this->base_reference().begin());
 	}
-	
+
+	Derived& to_end()
+	{
+		return Derived(this->base_reference().to_end());
+	}
+
 	Derived end()
 	{
 		return Derived(this->base_reference().end());
+	}
+	
+	Derived& to_parent()
+	{
+		return Derived(this->base_reference().to_parent());
 	}
 	
 	Derived parent()

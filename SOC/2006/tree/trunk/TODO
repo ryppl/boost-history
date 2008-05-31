@@ -15,6 +15,8 @@
 
 General:
 
+* Introduce to_parent() (replaces operator!() as of the proposal), to_begin() and to_end()
+  cursor members that work on "*this" cursor instead of returning a new object.
 * Should const_cursor have cbegin(), cend() and cparent() members?
 * Implement "flat" (sequential *order representation) trees (cf. Knuth, Fundamental Algorithms,
   pp. 348--351). Those should be especially useful for automated testing of "real" (binary, 

@@ -31,6 +31,9 @@ void create_binary_tree(Tree& mytree)
 	
 	BOOST_CHECK(!c.empty());
 	
+	BOOST_CHECK(c1.m_node->m_parent != 0);
+	BOOST_CHECK(c1.m_node->m_parent != c1.m_node);
+	BOOST_CHECK(c1.m_node->m_parent == c.m_node);
 	BOOST_CHECK(c1.parent() == c);
 	
 	c2 = mytree.insert(c1, 2);

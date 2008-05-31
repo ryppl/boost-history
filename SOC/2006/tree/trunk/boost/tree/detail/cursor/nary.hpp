@@ -155,23 +155,25 @@ class nary_tree_cursor
 	{
 		return m_pos;
 	}
-	
-public:
 
-	cursor left() const
+	void left()
 	{
-		return cursor(m_node->operator[](m_pos), 0);
+		m_node = m_node->operator[](m_pos);
+		m_pos  = 0;
 	}
 
-	cursor right() const
+	void right()
 	{
-		return cursor(m_node->operator[](m_pos), m_node->size()-1);
+		size_type new_pos = m_node->size()-1; 
+		m_node = m_node->operator[](m_pos);
+		m_pos  = new_pos;
 	}
 
 	// Cursor stuff
-	cursor up() const
+	void up()
 	{
-		return cursor(static_cast<base_pointer>(m_node->parent()), m_node->get_parity());
+		m_pos  = m_node->get_parity();
+		m_node = static_cast<base_pointer>(m_node->parent());
 	}
 
 public:	

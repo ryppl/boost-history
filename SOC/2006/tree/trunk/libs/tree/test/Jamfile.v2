@@ -20,28 +20,20 @@ project :
 test-suite tree :
 	[ run range_helpers_test.cpp ]
 	[ run binary_tree_test.cpp ]
-	[ run key_search_binary_tree_test.cpp ]	
-	[ run rank_search_binary_tree_test.cpp ]	
+#	[ run key_search_binary_tree_test.cpp ]	
+#	[ run rank_search_binary_tree_test.cpp ]	
 	[ run traverse_binary_tree_test.cpp ]
 	[ run subtree_algorithms_test.cpp ]
 	[ run rotate_binary_tree_test.cpp ]
-	[ run string_search_binary_tree_test.cpp ]
-
+#	[ run string_search_binary_tree_test.cpp ]
+#	[ run flat_forest_tree_test.cpp ]
 #	[ run interval_search_binary_tree_test.cpp ]
-#	[ compile search_ordered_vector_test.cpp  ]
-
-	[ run search_ordered_vector_test.cpp
-#		:
-#		:
-#		: <library>$(BOOST_ROOT)//unit_test_framework
-	]
-
-	[ run red_black_tree_test.cpp ]
-	[ run treap_test.cpp ]
+#	[ run search_ordered_vector_test.cpp ]
+#	[ run red_black_tree_test.cpp ]
+#	[ run treap_test.cpp ]
 	[ run forest_test.cpp ]
 #	[ run nary_tree_test.cpp ]
 	[ run multiway_tree_test.cpp ]
 	[ run unbalanced_binary_tree_test.cpp ]
-	
-#	[ run bind_return_test.cpp ]
+
 	;
