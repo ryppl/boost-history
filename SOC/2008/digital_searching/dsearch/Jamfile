@@ -9,5 +9,6 @@ use-project boost
    ;
    
 project boost/dsearch
+   : requirements <include>.
    : build-dir bin.v2
    ;
