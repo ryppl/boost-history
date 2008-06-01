@@ -6,7 +6,8 @@
 #include<stack>
 #include<algorithm>
 #include<assert.h>
-#include <boost/dsearch/node_cursor.hpp>
+#include<boost/dsearch/node_cursor.hpp>
+#include<boost/dsearch/trie_iterator.hpp>
 
 namespace boost{
 namespace dsearch{
@@ -41,7 +42,8 @@ class trie
 	typedef typename allocator_type::size_type            size_type;//should actually depend on iterator(.|?)
 	typedef typename allocator_type::difference_type      difference_type; //should actually depend on iterator(.|?)
 	
-	typedef trie_cursor<node_type> cursor;
+	typedef trie_cursor<key_type,data_type,node_type> cursor;
+	typedef trie_iterator<key_type,data_type,cursor> iterator;
 
 	trie()
 	{
@@ -181,11 +183,17 @@ class trie
 		node_root=node_allocator.allocate(1);
 		new(node_root) node_type();
 	}
-	
+
+	iterator begin()
+	{
+		return iterator(root());
+	}
+
 	cursor root()
 	{
 		return cursor(node_root);
 	}
+
 	
 	~trie()
 	{
