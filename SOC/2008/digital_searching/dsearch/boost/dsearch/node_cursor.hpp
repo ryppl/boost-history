@@ -8,14 +8,14 @@
 namespace boost {
 namespace dsearch {
 	using boost::tree::cursor_facade;
-	template<class Node>
-	class trie_cursor:public cursor_facade<trie_cursor<Node>,Node,
+	template<class Key,class Mapped,class Node>
+	class trie_cursor:public cursor_facade<trie_cursor<Key,Mapped,Node>,Node,
 				forward_traversal_tag,
 				bidirectional_traversal_tag>
 
 	{
 		private:
-		typedef trie_cursor<Node> cursor;
+		typedef trie_cursor<Key,Mapped,Node> cursor;
 		
 		friend class boost::iterator_core_access;
 		friend class boost::tree::cursor_core_access;
@@ -50,9 +50,10 @@ namespace dsearch {
 			{
 				if(top) return true;
 			}
-			else	
+			else
 				return false;
-			if(only_root==other.onlyroot) 
+
+			if(only_root==other.only_root) 
 			{
 				if (only_root==1 || only_root==2)
 					return	true;
@@ -60,7 +61,8 @@ namespace dsearch {
 			}
 			else 
 				return false;
-			if(cur==other.cur && pos=other.pos) return true;
+
+			if(cur==other.cur && pos==other.pos) return true;
 			return false;
 		}
 
@@ -78,20 +80,10 @@ namespace dsearch {
 		cursor right() const
 		{
 			if(top)
-			{
-				return (cursor(cur)++);
-			}
+				return (++cursor(cur));
 			if(only_root)
 				return cursor(cur,cur->end());
 			return cursor(*pos,(*pos)->end());
-		}
-
-		void increment()
-		{
-			if(only_root) 
-				only_root++;
-			else
-				pos++;
 		}
 
 		void decrement()
@@ -111,9 +103,34 @@ namespace dsearch {
 
 		Node &dereference() const
 		{
+			return *get_node();
+		}
+
+		Node *get_node() const
+		{
 			if(only_root)
-				return *cur;
-			return **pos;
+				return cur;
+			return *pos;
+		}
+
+		void increment()
+		{
+			if(only_root)
+				only_root++;
+			else
+				pos++;
+		}
+		public:
+	
+
+		bool has_value() const
+		{
+			return get_node()->has_value();
+		}
+
+		Mapped &get_value() const
+		{
+			return 	get_node()->get_value_ref();
 		}
 	};
 }
