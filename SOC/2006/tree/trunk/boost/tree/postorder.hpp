@@ -32,7 +32,7 @@ namespace postorder {
 template <class Cursor>
 inline void forward(Cursor& c)
 {
-	c = c.parent();
+	c.to_parent();
 
 	if (c.parity()) { // Right child? Return parent.
 		--c;
@@ -45,7 +45,7 @@ inline void forward(Cursor& c)
 	// Left child.
 	++c;
 	while (!c.empty()) {
-		c = c.begin();
+		c.to_begin();
 		if (c.empty())
 			++c;
 	}
@@ -74,28 +74,27 @@ template <class Cursor>
 inline void back(Cursor& c)
 {
 	if (!c.parity() && (c.parent().begin() != c)) { // Root?
-		c = c.begin();
+		c.to_begin();
 		return;
 	}
 	if (!(++c).empty()) { // Right
-		c = c.begin();
+		c.to_begin();
 		return;
 	}
 	if (!(--c).empty()) { // Left
-		c = c.begin();
+		c.to_begin();
 		return;
 	}
 	
 	while (true) { // revisit
-	c = c.parent();
-	if (c.parity())
-		if (!(--c).empty()) {
-			c = c.begin();
-			return;
-		}
+		c.to_parent();
+		if (c.parity())
+			if (!(--c).empty()) {
+				c.to_begin();
+				return;
+			}
 	}
 	return;
-	
 }
 
 /**
@@ -121,7 +120,7 @@ typename Tree::cursor first(Tree& t)
 {
 	typename Tree::cursor c = t.root();
 	while (!c.empty())
-		c = c.begin();
+		c.to_begin();
 	return c;
 }
 
@@ -136,7 +135,7 @@ typename Tree::const_cursor first(Tree const& t)
 {
 	typename Tree::const_cursor c = t.root();
 	while (!c.empty())
-		c = c.begin();
+		c.to_begin();
 	return c;
 }
 
@@ -151,7 +150,7 @@ typename Tree::const_cursor cfirst(Tree const& t)
 {
 	typename Tree::const_cursor c = t.root();
 	while (!c.empty())
-		c = c.begin();
+		c.to_begin();
 	return c;
 }
 

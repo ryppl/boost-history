@@ -36,7 +36,7 @@ namespace ascending {
 template <class MultiwayCursor>
 inline void forward(MultiwayCursor& c)
 {
-	c = c.parent();
+	c.to_parent();
 	return;
 }
 

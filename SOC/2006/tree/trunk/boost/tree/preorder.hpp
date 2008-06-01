@@ -33,24 +33,24 @@ template <class Cursor>
 inline void forward(Cursor& c)
 {
 	if (!c.empty()) { // Left.
-		c = c.begin();
+		c.to_begin();
 		return;
 	}
 	if (!(++c).empty()) { // Right.
-		c = c.begin();
+		c.to_begin();
 		return;
 	}
 
 	while (c.parity())
-		c = c.parent();
+		c.to_parent();
 	if (!(++c).empty()) {
-		c = c.begin();
+		c.to_begin();
 		return;
 	}
 	
 	--c;
 	while (!c.empty()) {
-		c = c.end();
+		c.to_end();
 		if (c.empty())
 			--c;
 	}
@@ -78,11 +78,11 @@ inline Cursor next(Cursor c)
 template <class Cursor>
 inline void back(Cursor& c)
 {
-	c = c.parent();
+	c.to_parent();
 	if (c.parity()) {
 		--c;
 		while (!c.empty())
-			c = c.end();
+			c.to_end();
 		return;
 	}
 	return;
@@ -147,7 +147,7 @@ typename Tree::cursor last(Tree& t)
 	typename Tree::cursor c = t.shoot();
 	--c;	
 	while (!c.empty()) {
-		c = c.end();
+		c.to_end();
 		if (c.empty())
 			--c;
 	}
@@ -167,7 +167,7 @@ typename Tree::const_cursor last(Tree const& t)
 	typename Tree::const_cursor c = t.cshoot();
 	--c;	
 	while (!c.empty()) {
-		c = c.end();
+		c.to_end();
 		if (c.empty())
 			--c;
 	}
@@ -187,7 +187,7 @@ typename Tree::const_cursor clast(Tree const& t)
 	typename Tree::const_cursor c = t.cshoot();
 	--c;	
 	while (!c.empty()) {
-		c = c.end();
+		c.to_end();
 		if (c.empty())
 			--c;
 	}

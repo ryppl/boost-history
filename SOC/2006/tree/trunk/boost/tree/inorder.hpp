@@ -37,16 +37,14 @@ template <class MultiwayCursor>
 inline void forward(MultiwayCursor& c)
 {
 	if (!(++c).empty()) {
-		while (!c.begin().empty())
-			c = c.begin();
-		c = c.begin();
+		while (!c.to_begin().empty());
 		return;
 	}
 	
 	while (c.parity()) 
-		c = c.parent();
+		c.to_parent();
 	if (c.parent().begin() != c) // Root? Would be nice to get rid of.
-		c = c.parent(); // Shoot (root's parent)
+		c.to_parent(); // Shoot (root's parent)
 	return;
 }
 
@@ -70,14 +68,13 @@ inline MultiwayCursor next(MultiwayCursor c)
 template <class MultiwayCursor>
 inline void back(MultiwayCursor& c)
 {
-    	if (!c.empty()) {
-		while (!c.end().empty())
-			c = c.end();
-		c = c.begin();
+    if (!c.empty()) {
+		while (!c.to_end().empty());
+		--c;
 		return;
 	}
 	while (!c.parity())
-		c = c.parent();
+		c.to_parent();
 	--c;
 	return;
 }
@@ -105,7 +102,7 @@ typename MultiwayTree::cursor first(MultiwayTree& t)
 {
 	typename MultiwayTree::cursor c = t.root();
 	while (!c.empty())
-		c = c.begin();
+		c.to_begin();
 	return c;
 }
 
@@ -120,7 +117,7 @@ typename MultiwayTree::const_cursor first(MultiwayTree const& t)
 {
 	typename MultiwayTree::const_cursor c = t.root();
 	while (!c.empty())
-		c = c.begin();
+		c.to_begin();
 	return c;
 }
 
@@ -135,7 +132,7 @@ typename MultiwayTree::const_cursor cfirst(MultiwayTree const& t)
 {
 	typename MultiwayTree::const_cursor c = t.root();
 	while (!c.empty())
-		c = c.begin();
+		c.to_begin();
 	return c;
 }
 
