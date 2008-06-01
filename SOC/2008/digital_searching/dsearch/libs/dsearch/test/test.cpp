@@ -38,7 +38,10 @@ void test_trie()
 	tr.insert( std::make_pair("it",3) );
 	c=tr.root().begin();
 	c++;
+	std::cout<<"GRR.............AT THE END"<<std::endl;
+	tr.begin();
 	tr.clear();
+
 //	tr.clear();
 	//assert(c->find('h')!=c.begin()->end());
 	//assert(c.begin()->find('e')!=c.begin()->end());
