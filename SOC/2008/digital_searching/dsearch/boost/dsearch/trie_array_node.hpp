@@ -15,7 +15,7 @@ namespace dsearch{
 
 template <typename trie_type>
 class trie_array_node_iterator
-:public iterator_facade<trie_array_node_iterator<trie_type>,trie_type *,boost::forward_traversal_tag>
+:public iterator_facade<trie_array_node_iterator<trie_type>,trie_type *,boost::bidirectional_traversal_tag>
 {
 	private:
 	trie_type** child_ptr;
