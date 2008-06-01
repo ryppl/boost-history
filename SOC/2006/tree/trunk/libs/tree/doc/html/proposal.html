@@ -3145,30 +3145,63 @@ while(first++ != last)
                   <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
                   a</td>
 
-                  <td>pre: <tt>a</tt> is non-leaf.</td>
+                  <td>&nbsp;</td>
 
-                  <td>constant</td>
+                  <td>constant<br />
+                  pre: <tt>a</tt> is non-leaf.</td>
                 </tr>
 
+                <tr>
+                  <td><tt>a.to_begin()</tt></td>
+
+                  <td><tt>X&</tt></td>
+
+                  <td><tt>a = a.begin();</tt></td>
+
+                  <td>constant<br />
+                  pre: <tt>a</tt> is non-leaf.<br />
+                  post: <tt>a</tt> is non-on-top.<br />
+                  <tt>r == s</tt> and <tt>r</tt> is non-leaf
+                  implies <tt>r.to_begin() == s.to_begin()</tt>.<br />
+                  <tt>&amp;r == &amp;(r.to_begin())</tt></td>
+                </tr>
+                
                 <tr>
                   <td><tt>a.end()</tt></td>
 
                   <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
                   a</td>
 
-                  <td>pre: <tt>a</tt> is non-leaf.</td>
+                  <td>&nbsp;</td>
 
-                  <td>constant</td>
+                  <td>constant<br />
+                  pre: <tt>a</tt> is non-leaf.</td>
                 </tr>
 
+                <tr>
+                  <td><tt>a.to_end()</tt></td>
+
+                  <td><tt>X&</tt></td>
+
+                  <td><tt>a = a.end();</tt></td>
+
+                  <td>constant<br />
+                  pre: <tt>a</tt> is non-leaf.<br />
+                  post: <tt>a</tt> is non-on-top.<br />
+                  <tt>r == s</tt> and <tt>r</tt> is non-leaf
+                  implies <tt>r.to_end() == s.to_end()</tt>.<br />
+                  <tt>&amp;r == &amp;(r.to_end())</tt></td>
+                </tr>
+                
                 <tr>
                   <td><tt>a.cbegin()</tt></td>
 
                   <td><tt>const_cursor</tt></td>
 
-                  <td>pre: <tt>a</tt> is non-leaf.</td>
+                  <td>&nbsp;</td>
 
-                  <td>constant</td>
+                  <td>constant<br />
+                  pre: <tt>a</tt> is non-leaf.</td>
                 </tr>
 
                 <tr>
@@ -3176,9 +3209,10 @@ while(first++ != last)
 
                   <td><tt>const_cursor</tt></td>
 
-                  <td>pre: <tt>a</tt> is non-leaf.</td>
+                  <td>&nbsp;</td>
 
-                  <td>constant</td>
+                  <td>constant<br />
+                  pre: <tt>a</tt> is non-leaf.</td>
                 </tr>
 
                 <tr>
@@ -3187,10 +3221,10 @@ while(first++ != last)
                   <td><tt>size_type</tt></td>
 
                   <td><tt>std::distance(b.begin(), a)</tt> if <tt>b</tt> is
-                  <tt>a</tt>'s parent.<br />
-                  pre: <tt>a</tt> is non-on-top.</td>
+                  <tt>a</tt>'s parent.</td>
 
-                  <td>Linear in <tt>b.size()</tt></td>
+                  <td>Linear in <tt>b.size()</tt><br />
+                  pre: <tt>a</tt> is non-on-top.</td>
                 </tr>
               </tbody>
             </table>
@@ -3422,7 +3456,7 @@ while(first++ != last)
                 </tr>
 
                 <tr>
-                  <td><tt>!r</tt></td>
+                  <td><tt>r.to_parent</tt></td>
 
                   <td><tt>X&amp;</tt></td>
 
@@ -3432,8 +3466,8 @@ while(first++ != last)
                   cursor.<br />
                   post: <tt>r</tt> is internal.<br />
                   <tt>r == s</tt> and <tt>r</tt> is internal and non-on-top
-                  implies <tt>!r == !s</tt>.<br />
-                  <tt>&amp;r == &amp;!r</tt><br />
+                  implies <tt>r.to_parent() == s.to_parent()</tt>.<br />
+                  <tt>&amp;r == &amp;(r.to_parent())</tt><br />
                   (Note A)</td>
                 </tr>
               </tbody>
