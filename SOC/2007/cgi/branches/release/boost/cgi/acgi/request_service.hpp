@@ -9,14 +9,14 @@
 #ifndef CGI_ACGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_ACGI_SERVICE_IMPL_HPP_INCLUDED__
 
+#include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/common/map.hpp"
 #include "boost/cgi/acgi/request_impl.hpp"
-#include "boost/cgi/tags.hpp"
-#include "boost/cgi/io_service.hpp"
-#include "boost/cgi/map.hpp"
-#include "boost/cgi/detail/cgi_service_impl_base.hpp"
+#include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/connections/async_stdio.hpp"
+#include "boost/cgi/detail/cgi_service_impl_base.hpp"
 
 namespace cgi {
 
@@ -28,15 +28,13 @@ namespace cgi {
   {
   public:
     typedef acgi_request_service        type;
-    typedef acgi_request_impl           impl_type;
-    typedef ::cgi::common::map          map_type;
-    typedef tags::acgi                  protocol_type;
+    typedef common::tags::acgi          protocol_type;
     typedef acgi_service                protocol_service_type;
 
     /// The unique service identifier
     //    static boost::asio::io_service::id id;
 
-    acgi_request_service(::cgi::io_service& ios)
+    acgi_request_service(common::io_service& ios)
       : detail::service_base<acgi_request_service>(ios)
     {
     }

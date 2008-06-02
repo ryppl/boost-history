@@ -9,8 +9,8 @@
 #ifndef CGI_FCGI_SERVICE_HPP_INCLUDED__
 #define CGI_FCGI_SERVICE_HPP_INCLUDED__
 
-#include "boost/cgi/tags.hpp"
-#include "boost/cgi/basic_protocol_service.hpp"
+#include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/common/basic_protocol_service.hpp"
 
 namespace cgi {
 
@@ -19,7 +19,7 @@ namespace cgi {
  namespace fcgi {
 
    // typedef for standard scgi::service (a model of ProtocolService)
-   typedef ::cgi::common::basic_protocol_service< ::cgi::fcgi_> service;
+   typedef ::cgi::common::basic_protocol_service< ::cgi::common::fcgi_> service;
 
  }
 } // namespace cgi

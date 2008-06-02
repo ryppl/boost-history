@@ -1,4 +1,4 @@
-//                  -- data_source.hpp --
+//               -- common/io_service.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,25 +6,22 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_DATA_SOURCE_HPP_INCLUDED__
-#define CGI_DATA_SOURCE_HPP_INCLUDED__
+#ifndef CGI_COMMON_IO_SERVICE_HPP_INCLUDED__
+#define CGI_COMMON_IO_SERVICE_HPP_INCLUDED__
+
+//#if _MSC_VER > 1020
+//#pragma once
+//#endif
+
+#include <boost/asio/io_service.hpp>
 
 namespace cgi {
-
-  enum source
-  { stdin_ };
-
  namespace common {
 
-  enum data_source
-  { get_data
-  , post_data
-  , cookie_data
-  , env_data
-  , form_data
-  };
- 
+  using boost::asio::io_service;
+
  } // namespace common
 } // namespace cgi
 
-#endif // CGI_DATA_SOURCE_HPP_INCLUDED__
+#endif // CGI_COMMON_IO_SERVICE_HPP_INCLUDED__
+

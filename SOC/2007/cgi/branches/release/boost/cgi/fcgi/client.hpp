@@ -10,22 +10,24 @@
 #define CGI_FCGI_CLIENT_HPP_INCLUDED__
 
 #include <vector>
+///////////////////////////////////////////////////////////
 #include <boost/shared_ptr.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/asio/buffer.hpp>
-#include "boost/cgi/tags.hpp"
-#include "boost/cgi/map.hpp"
-#include "boost/cgi/io_service.hpp"
-#include "boost/cgi/basic_client.hpp"
-#include "boost/cgi/connections/shareable_tcp_socket.hpp"
-#include "boost/cgi/fcgi/specification.hpp"
-#include "boost/cgi/read.hpp"
-#include "boost/cgi/buffer.hpp"
+///////////////////////////////////////////////////////////
 #include "boost/cgi/error.hpp"
-//#include "boost/cgi/fcgi/request_fwd.hpp"
+#include "boost/cgi/common/map.hpp"
+#include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/import/read.hpp"
+#include "boost/cgi/basic_client.hpp"
+#include "boost/cgi/import/buffer.hpp"
+#include "boost/cgi/import/io_service.hpp"
+#include "boost/cgi/fcgi/specification.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/fwd/basic_request_fwd.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/basic_request_fwd.hpp"
-//#error BOOST_HAS_RVALUE_REFS
+#include "boost/cgi/connections/shareable_tcp_socket.hpp"
+
 namespace cgi {
  namespace common {
 
@@ -45,7 +47,7 @@ namespace cgi {
   class basic_client<common::shareable_tcp_connection, Protocol>
   {
   public:
-    typedef ::cgi::io_service                 io_service_type;
+    typedef ::cgi::common::io_service         io_service_type;
     typedef ::cgi::common::map                map_type;
     typedef Protocol                          protocol_type;
     typedef common::shareable_tcp_connection  connection_type;
@@ -254,10 +256,13 @@ namespace cgi {
       return keep_connection_;
     }
 
+    //int id() { return request_id_; }
+
   public:
     friend class fcgi_request_service;
     boost::uint16_t request_id_;
     client_status status_;
+    std::size_t bytes_left_;
     //request_impl_type* current_request_;
     
     /// A marker to say if the final STDIN (and/or DATA) packets have been
@@ -291,7 +296,7 @@ namespace cgi {
 namespace fcgi {
     typedef
       common::basic_client<
-        common::shareable_tcp_connection, ::cgi::fcgi_
+        common::shareable_tcp_connection, ::cgi::common::fcgi_
       >
     client;
 } // namespace fcgi

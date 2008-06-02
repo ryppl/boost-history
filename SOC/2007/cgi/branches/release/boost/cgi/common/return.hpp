@@ -6,10 +6,19 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
+//
+// A macro to make finishing up a request easier.
+// eg.
+//    return_(resp, req, status);
+// is equivalent to
+//    resp.send(req.client());
+//    req.close(resp.status(), status);
+//    return status;
+//
 #ifndef CGI_RETURN_HPP_INCLUDED__
 #define CGI_RETURN_HPP_INCLUDED__
 
-#include "boost/cgi/response.hpp"
+#include "boost/cgi/common/response.hpp"
 #include "boost/cgi/basic_request.hpp"
 
 namespace cgi {

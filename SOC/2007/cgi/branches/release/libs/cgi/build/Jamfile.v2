@@ -3,13 +3,60 @@
 # user-supplied variables (ie. using modules.peek, I think)
 
 project boost/cgi
+  : build-dir
+      $(top)/bin.v2
+  : requirements
+      <include>$(top)
+      <include>$(boost-root)
+      <library>/boost/thread/
+      <library>/boost/system/
+      <library>/boost/regex/
+      <define>_CRT_SECURE_NO_WARNINGS
+      <define>_SCL_SECURE_NO_WARNINGS
   : usage-requirements
       <include>$(top)
       <include>$(boost-root)
       <library>/boost/thread/
       <library>/boost/system/
-      <define>_CRT_SECURE_NO_WARNINGS
-      <define>_SCL_SECURE_NO_WARNINGS
+      <library>/boost/regex/
+      <linkflags>-pthread
   ;
 
+
+import modules ;
+
+# make BB recognise .ipp files as .cpp files.
+import type ;
+type.register IPP : ipp : CPP ;
+
+path-constant impl : $(top)/boost/cgi/impl ;
+
+SOURCES =
+    $(impl)/form_parser.ipp
+    $(impl)/response.ipp
+  ;
+  
+
+if [ MATCH "^(--build-cgi)" : [ modules.peek : ARGV ] ]
+{ # compile library
+  ECHO "Building CGI library" ;
+
+  lib boost_cgi
+    :
+      $(SOURCES)
+    :
+      <define>BOOST_CGI_BUILD_LIBRARY
+    ;
+}
+else
+{
+  alias boost_cgi ;
+}
+
+install install
+  :
+    boost_cgi
+  :
+    <location>/usr/local/lib
+  ;
 

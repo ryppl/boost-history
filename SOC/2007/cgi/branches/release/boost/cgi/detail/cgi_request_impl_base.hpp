@@ -11,19 +11,20 @@
 
 #include <map>
 #include <string>
-#include <boost/noncopyable.hpp>
+///////////////////////////////////////////////////////////
 #include <boost/shared_ptr.hpp>
-
+#include <boost/noncopyable.hpp>
+#include <boost/fusion/support.hpp>
+#include <boost/fusion/include/vector.hpp>
+///////////////////////////////////////////////////////////
+#include "boost/cgi/common/map.hpp"
+#include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/connections/stdio.hpp"
-#include "boost/cgi/role_type.hpp"
-#include "boost/cgi/status_type.hpp"
-#include "boost/cgi/map.hpp"
-//#include
-
-// Make this ProtocolService-independent
+#include "boost/cgi/common/status_type.hpp"
 
 namespace cgi {
+ namespace detail {
 
   //Forward declaration
   template<typename T>
@@ -38,45 +39,35 @@ namespace cgi {
    */
   template<typename Connection>
   class cgi_request_impl_base
+    
   {
   public:
-    typedef ::cgi::common::map                         map_type;
-    typedef Connection                         connection_type;
+    typedef ::cgi::common::map                                map_type;
+    typedef Connection                                        connection_type;
     typedef 
-      common::basic_client<Connection, tags::acgi>     client_type;
-    typedef typename connection_type::pointer  conn_ptr;
+      common::basic_client<Connection, common::tags::acgi>    client_type;
+    typedef typename connection_type::pointer                 conn_ptr;
 
     /// Constructor
     cgi_request_impl_base()
       : stdin_parsed_(false)
       , stdin_data_read_(false)
       , stdin_bytes_left_(-1)
-      , http_status_(http::ok)
-      , request_status_(unloaded)
+      , http_status_(common::http::ok)
+      , request_status_(common::unloaded)
     {
     }
 
-    map_type& env_vars()             { return env_vars_;       }
-    map_type& get_vars()             { return get_vars_;       }
-    map_type& post_vars()            { return post_vars_;      }
-    map_type& cookie_vars()          { return cookie_vars_;    }
+    bool stdin_parsed()                      { return stdin_parsed_;   }
+    common::http::status_code& http_status() { return http_status_;    }
+    common::status_type& status()            { return request_status_; }
 
-    bool stdin_parsed()              { return stdin_parsed_;   }
-    http::status_code& http_status() { return http_status_;    }
-    status_type& status()            { return request_status_; }
-
-    conn_ptr& connection()           { return connection_;     }
-    //std::string& null_str()          { return null_str_;       }
+    conn_ptr& connection()                   { return connection_;     }
 
   public:
     //conn_ptr connection() { return connection_; }
 
     //friend class cgi_service_impl_base<RequestImpl>;
-
-    map_type env_vars_;
-    map_type get_vars_;
-    map_type post_vars_;
-    map_type cookie_vars_;
 
   public:
     bool stdin_parsed_;
@@ -84,12 +75,14 @@ namespace cgi {
     std::size_t stdin_bytes_left_;
   protected:
 
-    http::status_code http_status_;
-    status_type request_status_;
+    common::http::status_code http_status_;
+    common::status_type request_status_;
 
     conn_ptr connection_;
   };
 
+ } // namespace detail
 } // namespace cgi
 
 #endif // CGI_CGI_REQUEST_IMPL_BASE_HPP_INCLUDED__
+

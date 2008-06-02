@@ -9,14 +9,15 @@
 #ifndef CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__
 
-#include <string>
 #include <map>
+#include <string>
+///////////////////////////////////////////////////////////
 #include <boost/system/error_code.hpp>
-
+///////////////////////////////////////////////////////////
 #include "boost/cgi/cgi/request_impl.hpp"
-#include "boost/cgi/detail/cgi_service_impl_base.hpp"
-#include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/connections/stdio.hpp"
+#include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/detail/cgi_service_impl_base.hpp"
 
 namespace cgi {
 
@@ -26,11 +27,9 @@ namespace cgi {
   class cgi_request_service
    : public cgi_service_impl_base<cgi_request_impl>
   {
-    typedef ::cgi::common::map         map_type;
   public:
     typedef cgi_request_impl   impl_type;
-    typedef tags::cgi          protocol_type;
-    //typedef cgi_service_impl_base<cgi_request_impl> base;
+    typedef common::tags::cgi  protocol_type;
 
     cgi_request_service()
       : cgi_service_impl_base<cgi_request_impl>()

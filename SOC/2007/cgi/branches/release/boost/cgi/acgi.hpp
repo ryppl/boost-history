@@ -9,15 +9,8 @@
 #ifndef CGI_ACGI_HPP_INCLUDED__
 #define CGI_ACGI_HPP_INCLUDED__
 
-// #include all acgi-related headers only
 #include "boost/cgi/acgi/service.hpp"
 #include "boost/cgi/acgi/request.hpp"
-//#include "boost/cgi/acgi/request_service.hpp"
-//#include "boost/cgi/acgi/request_impl.hpp"
-//#include "gateway_impl/acgi_gateway_impl.hpp"
-//#include "gateway_service/acgi_gateway_service.hpp"
-
-// Include headers common to all protocols
 #include "boost/cgi/detail/common_headers.hpp"
 
 namespace cgi {
@@ -29,7 +22,7 @@ namespace cgi {
    typedef acgi_request request;
    //typedef acgi_service service;
    //typedef acgi_acceptor acceptor;
-   using namespace ::cgi; // **FIXME** this line must go.
+   //using namespace ::cgi; // **FIXME** this line must go.
    using namespace ::cgi::common; // import common namespace elements.
 
  } // namespace acgi

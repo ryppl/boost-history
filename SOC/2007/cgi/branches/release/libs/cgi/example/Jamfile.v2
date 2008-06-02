@@ -6,6 +6,7 @@
 
 project boost/cgi/example
 : requirements
+      <library>/boost/cgi/
       <library>/boost/system/
       <library>/boost/thread/
   ;
@@ -16,6 +17,8 @@ build-project cgi ;
 build-project acgi ;
 # Build all of the fcgi examples
 build-project fcgi ;
+
+alias all_examples : cgi acgi fcgi ;
 
 install cgi-install
  : # sources
@@ -37,6 +40,8 @@ install fcgi-install
   :
     <location>$(fcgi-bin)
   ;
+
+alias install : cgi//install acgi//install fcgi//install ;
 
 explicit cgi-install  ;
 explicit acgi-install ;
