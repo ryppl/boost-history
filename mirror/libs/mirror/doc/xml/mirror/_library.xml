@@ -158,5 +158,14 @@
 			- Tested with MSVC++ 2008 EE On Vista
 			- Tested with gcc 4.2.1 on FreeBSD
 		</revision>
+		<revision id="20080516" major="0" minor="1" micro="24" author="m_ch">
+			- Added for-each and reverse-for-each algorithms working on a iterator range
+			- Tested with MSVC++ 2008 EE On Vista
+		</revision>
+		<revision id="20080602" major="0" minor="1" micro="25" author="m_ch">
+			- Added experimental support for class generators
+			- Updated several things concerning visitors
+			- Tested with MSVC++ 2008 EE On Vista
+		</revision>
 	</revisions>
 </library>

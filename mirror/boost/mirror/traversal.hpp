@@ -12,17 +12,19 @@
 
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
+//
+#include <boost/ref.hpp>
 
 namespace boost {
 namespace mirror {
 
 
-template <class MetaClass> struct deep_traversal_of;
-template <class MetaClass> struct flat_traversal_of;
+template <class MetaClass> class deep_traversal_of;
+template <class MetaClass> class flat_traversal_of;
 
 namespace detail {
 
-	template <class MetaClass>
+	template <class MetaClass, class MetaAttributes>
 	struct traversal_utils
 	{
 	protected:
@@ -30,8 +32,16 @@ namespace detail {
 		class attribute_traversal
 		{
 		public:
-			attribute_traversal(VisitorType _visitor)
-			: visitor(_visitor){ }
+			attribute_traversal(reference_wrapper<VisitorType> _visitor)
+			: visitor(_visitor)
+			{
+				visitor.enter_attributes<MetaClass, MetaAttributes>();
+			}
+	
+			~attribute_traversal(void)
+			{
+				visitor.leave_attributes<MetaClass, MetaAttributes>();
+			}
 	
 			template <class MetaAttribute>
 			void operator ()(MetaAttribute ma)
@@ -45,12 +55,12 @@ namespace detail {
 				visitor.leave_attribute(ma);
 			}
 		private:
-			VisitorType visitor;
+			VisitorType& visitor;
 		};
 	
 		template <class VisitorType>
 		static inline attribute_traversal<VisitorType>
-		show_attribs_to(VisitorType visitor)
+		show_attribs_to(reference_wrapper<VisitorType> visitor)
 		{
 			return attribute_traversal<VisitorType>(visitor);
 		}
@@ -59,8 +69,16 @@ namespace detail {
 		class base_class_traversal
 		{
 		public:
-			base_class_traversal(VisitorType _visitor)
-			: visitor(_visitor){ }
+			base_class_traversal(reference_wrapper<VisitorType> _visitor)
+			: visitor(_visitor)
+			{
+				visitor.enter_base_classes<MetaClass>();
+			}
+	
+			~base_class_traversal(void)
+			{
+				visitor.leave_base_classes<MetaClass>();
+			}
 	
 			template <class MetaInheritance>
 			void operator ()(MetaInheritance mbc)
@@ -73,12 +91,12 @@ namespace detail {
 				visitor.leave_base_class(mbc);
 			}
 		private:
-			VisitorType visitor;
+			VisitorType& visitor;
 		};
 
 		template <class VisitorType>
 		static inline base_class_traversal<VisitorType>
-		show_bases_to(VisitorType visitor)
+		show_bases_to(reference_wrapper<VisitorType> visitor)
 		{
 			return base_class_traversal<VisitorType>(visitor);
 		}
@@ -88,31 +106,57 @@ namespace detail {
 } // namespace detail
 
 template <class MetaClass>
-struct deep_traversal_of : detail::traversal_utils<MetaClass>
+class deep_traversal_of 
+: detail::traversal_utils<MetaClass, typename MetaClass::attributes>
 {
+public:
 	template <class VisitorType>
 	static void accept(VisitorType visitor)
 	{
+		do_accept(ref<VisitorType>(visitor));
+	}
+	template <class VisitorType>
+	static void accept(reference_wrapper<VisitorType> visitor)
+	{
+		do_accept(visitor);
+	}
+private:
+	template <class VisitorType>
+	static void do_accept(reference_wrapper<VisitorType> visitor)
+	{
 		typedef MetaClass meta_class;
 		meta_class mc;
-		visitor.enter_type(mc);
-		for_each<typename meta_class::base_classes>(show_bases_to(visitor));
-		for_each<typename meta_class::attributes>(show_attribs_to(visitor));
-		visitor.leave_type(mc);
+		visitor.get().enter_type(mc);
+		for_each<typename meta_class::base_classes>(ref(show_bases_to(visitor)));
+		for_each<typename meta_class::attributes>(ref(show_attribs_to(visitor)));
+		visitor.get().leave_type(mc);
 	}
 };
 
 template <class MetaClass>
-struct flat_traversal_of : detail::traversal_utils<MetaClass>
+class flat_traversal_of
+: detail::traversal_utils<MetaClass, typename MetaClass::all_attributes>
 {
+public:
 	template <class VisitorType>
 	static void accept(VisitorType visitor)
 	{
+		do_accept(ref<VisitorType>(visitor));
+	}
+	template <class VisitorType>
+	static void accept(reference_wrapper<VisitorType> visitor)
+	{
+		do_accept(visitor);
+	}
+private:
+	template <class VisitorType>
+	static void do_accept(reference_wrapper<VisitorType> visitor)
+	{
 		typedef MetaClass meta_class;
 		meta_class mc;
-		visitor.enter_type(mc);
-		for_each<typename meta_class::all_attributes>(show_attribs_to(visitor));
-		visitor.leave_type(mc);
+		visitor.get().enter_type(mc);
+		for_each<typename meta_class::all_attributes>(ref(show_attribs_to(visitor)));
+		visitor.get().leave_type(mc);
 	}
 };
 

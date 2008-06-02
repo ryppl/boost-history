@@ -19,11 +19,14 @@
 #include <boost/mirror/traits/reflects_global_scope.hpp>
 // the base fallback visitor implementation
 #include <boost/mirror/visitors/fallback.hpp>
+//
+//
+#include <boost/type_traits/is_fundamental.hpp>
 
 namespace boost {
 namespace mirror {
 
-class sample_visitor : public fallback_visitor 
+class sample_visitor 
 {
 public:
 	sample_visitor(void):indent(0){ }
@@ -61,9 +64,15 @@ public:
 		bcout << "</type>" << endl;
 	}
 
+	template <class MetaClass>
+	inline void enter_base_classes(void){ }
+	template <class MetaClass>
+	inline void leave_base_classes(void){ }
+
+
 	// enter a base class
-	template <class meta_inheritance>
-	void enter_base_class(meta_inheritance)
+	template <class MetaInheritance>
+	void enter_base_class(MetaInheritance)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -71,16 +80,16 @@ public:
 		++indent;
 		bcout << 
 			"<base_class number='" << 
-			meta_inheritance::position::value <<
+			MetaInheritance::position::value <<
 			"' is_virtual='"<<
-			(reflects_virtual_inheritance<meta_inheritance>::value ? "true" : "false") << 
+			(reflects_virtual_inheritance<MetaInheritance>::value ? "true" : "false") << 
 			"'>" << 
 			endl;
 	}
 
 	// leave base class
-	template <class MetaClass>
-	void leave_base_class(MetaClass)
+	template <class MetaInheritance>
+	void leave_base_class(MetaInheritance)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -89,8 +98,37 @@ public:
 		bcout << "</base_class>" << endl;
 	}
 
-	template <class meta_attribute>
-	void enter_attribute(meta_attribute)
+
+	template <class MetaClass, class MetaAttributes>
+	void enter_attributes(void)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		if(!is_fundamental<MetaClass::reflected_type>::value && (mirror::size<MetaAttributes>::value > 0))
+		{
+			print_indentation();
+			++indent;
+			bcout << 
+				"<attributes>" << 
+			endl;
+		}
+	}
+
+	template <class MetaClass, class MetaAttributes>
+	inline void leave_attributes(void)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		if(!is_fundamental<MetaClass::reflected_type>::value && (mirror::size<MetaAttributes>::value > 0))
+		{
+			--indent;
+			print_indentation();
+			bcout << "</attributes>" << endl;
+		}
+	}
+
+	template <class MetaAttribute>
+	inline void enter_attribute(MetaAttribute)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -98,15 +136,15 @@ public:
 		++indent;
 		bcout << 
 			"<attribute number='" << 
-			meta_attribute::position::value <<
+			MetaAttribute::position::value <<
 			"' name='" <<
-			meta_attribute::base_name() <<
+			MetaAttribute::base_name() <<
 			"'>" << 
 			endl;
 	}
 
-	template <class meta_attribute>
-	void leave_attribute(meta_attribute)
+	template <class MetaAttribute>
+	void leave_attribute(MetaAttribute)
 	{
 		using namespace ::std;
 		using namespace ::boost;

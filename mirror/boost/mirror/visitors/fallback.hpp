@@ -21,10 +21,32 @@ namespace mirror {
 struct fallback_visitor 
 {
 	template <class MetaClass>
-	void enter_type(MetaClass){ }
+	inline void enter_type(MetaClass){ }
 
 	template <class MetaClass>
-	void leave_type(MetaClass){ }
+	inline void leave_type(MetaClass){ }
+
+	template <class MetaClass>
+	inline void enter_attributes(void){ }
+	template <class MetaClass>
+	inline void leave_attributes(void){ }
+
+	template <class MetaClass>
+	inline void enter_base_classes(void){ }
+	template <class MetaClass>
+	inline void leave_base_classes(void){ }
+
+	template <class MetaInheritance>
+	inline void enter_base_class(MetaInheritance){ }
+
+	template <class MetaInheritance>
+	inline void leave_base_class(MetaInheritance){ }
+
+	template <class MetaAttribute>
+	inline void enter_attribute(MetaAttribute){ }
+
+	template <class MetaAttribute>
+	inline void leave_attribute(MetaAttribute){ }
 };
 
 } // namespace mirror
