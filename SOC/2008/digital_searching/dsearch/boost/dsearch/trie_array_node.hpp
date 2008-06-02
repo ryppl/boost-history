@@ -75,10 +75,10 @@ class trie_array_node
 	friend class trie_array_node_iterator<type>;
 
 	private:
-	typedef typename Key_traits::element_type element_type;
 	type* child_ptr[Key_traits::max+1];
 
 	public:
+	typedef typename Key_traits::element_type element_type;
 	typedef trie_array_node_iterator<type> iterator;
 	typedef element_type key_type;
 	typedef type* value_type;
