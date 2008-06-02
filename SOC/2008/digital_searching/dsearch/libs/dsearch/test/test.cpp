@@ -14,6 +14,7 @@ void test_trie()
 {
 	T tr;
 	typename T::cursor c;
+	typename T::iterator tr_it;
 	std::string str="hello";
 	tr.insert( std::make_pair(str,1) );
 	tr.insert( std::make_pair("he",2) );
@@ -38,11 +39,42 @@ void test_trie()
 	tr.insert( std::make_pair("it",3) );
 	c=tr.root().begin();
 	c++;
-	std::cout<<"GRR.............AT THE END"<<std::endl;
+
 	tr.begin();
 	tr.clear();
+	std::cout<<"GRR...AT THE END"<<std::endl;
+	tr.begin(); //should not segfault.
+	tr["hello"]=10;
+	tr["heat"]=9;
+	tr_it=tr.begin();
+	assert((*tr_it)==9);
+	++tr_it;
+	std::cout<<*tr_it<<std::endl;
+	assert((*tr_it)==10);
+	--tr_it;
+	assert((*tr_it)==9);
+	++tr_it;
+	assert((*tr_it)==10);
+	tr["h"]=11;
+	tr["he"]=12;
+	tr_it=tr.begin();
+	assert(*tr_it==11);
+	tr_it++;
+	assert(*tr_it==12);
+	tr_it++;
+	assert(*tr_it==9);
+	tr_it++;
+	assert(*tr_it==10);
+	assert(tr_it==(--tr.end()));
 
-//	tr.clear();
+	tr_it=tr.end();
+	--tr_it;
+	std::cout<<*tr_it<<std::endl;
+	assert(*tr_it==10);
+
+	assert(tr_it==tr_it);
+	
+	tr.clear();
 	//assert(c->find('h')!=c.begin()->end());
 	//assert(c.begin()->find('e')!=c.begin()->end());
 }
