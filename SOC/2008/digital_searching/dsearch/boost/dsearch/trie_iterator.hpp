@@ -5,6 +5,7 @@
 
 //forces the thing to be bidirectional horizontally.
 //TODO:Add specializations for ascending cursors without use of stack.
+//iterator not convertible to const iterator
 
 namespace boost{
 namespace dsearch{
@@ -135,7 +136,16 @@ class trie_iterator
 		cur_st.push(c);
 		to_left_most();
 	}
-
+	template<class It>
+	trie_iterator(const It &begin,const It &end):end_flag(0)
+	{
+		It it=begin;
+		while(it!=end)
+		{
+			cur_st.push(*it);
+			it++;
+		}
+	}
 };
 
 }
