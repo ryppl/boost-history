@@ -15,19 +15,22 @@ void test_trie()
 	T tr;
 	typename T::cursor c;
 	typename T::iterator tr_it;
+	typedef typename T::const_iterator const_iterator;
+	const_iterator tr_const_it;
+
 	std::string str="hello";
 	tr.insert( std::make_pair(str,1) );
 	tr.insert( std::make_pair("he",2) );
 
-	assert( tr["hello"]==1 );
-	assert( !tr.find("hell") );
-	assert( !tr.find("helli") );
-	assert(tr.find("he"));
+	assert( tr["hello"] == 1 );
+	assert( tr.find("hell") == tr.end() );
+	assert( tr.find("helli") == tr.end() );
+	assert(tr.find("he") != tr.end() );
 	tr.erase("he");
-	assert( !tr.find("he") );
-	assert( tr.find("hello") );
+	assert( tr.find("he") == tr.end() );
+	assert( tr.find("hello") != tr.end() );
 	tr.erase("hello");
-	assert( !tr.find("hello") );
+	assert( tr.find("hello") == tr.end() );
 	c=tr.root();
 	tr.insert( std::make_pair("he",2) );
 	tr.insert( std::make_pair("hello",3) );
@@ -39,6 +42,8 @@ void test_trie()
 	tr.insert( std::make_pair("it",3) );
 	c=tr.root().begin();
 	c++;
+
+
 
 	tr.begin();
 	tr.clear();
@@ -73,6 +78,9 @@ void test_trie()
 	assert(*tr_it==10);
 
 	assert(tr_it==tr_it);
+
+	//tr_const_it=const_iterator(tr.begin());
+	//tr_const_it++;
 	
 	tr.clear();
 	//assert(c->find('h')!=c.begin()->end());
