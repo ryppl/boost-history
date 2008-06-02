@@ -8,6 +8,7 @@
 #include<assert.h>
 #include<boost/dsearch/node_cursor.hpp>
 #include<boost/dsearch/trie_iterator.hpp>
+#include<vector>
 
 namespace boost{
 namespace dsearch{
@@ -44,6 +45,8 @@ class trie
 	
 	typedef trie_cursor<key_type,data_type,node_type> cursor;
 	typedef trie_iterator<key_type,data_type,cursor> iterator;
+//	typedef trie_cursor<key_type,data_type,node_type> cursor;
+	typedef trie_iterator<key_type,const data_type,cursor> const_iterator;
 
 	trie()
 	{
@@ -130,25 +133,30 @@ class trie
 		node_allocator.deallocate(cur,1);		
 	}
 
-	bool find(const key_type &key) const //make this iterator instead of bool;
+	iterator find(const key_type &key) const //make this iterator instead of bool;
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 					end_it=Key_traits::end(key);
-		typename node_type::iterator fit;
-		node_type *cur=node_root;
+		std::vector<cursor> cur_st;
+		cursor cur,next;
+		cur=root();
 		while(!(it==end_it))
 		{
-			fit=cur->find(*it);
-			if(fit == cur->end() ) return false;
-			cur=*fit;
+			cur_st.push_back(cur);
+			next=cur.find(*it);
+			if( next == cur.end() ) return end();
+			cur=next;
 			it++;
 		}
+		cur_st.push_back(cur);
 		if(cur->has_value())
 		{
-			return true;
+			return iterator(cur_st.begin(),cur_st.end());
 		}
-		return false;
+		return end();
 	}
+
+
 
 	void swap(const type &other)
 	{
@@ -184,16 +192,17 @@ class trie
 		new(node_root) node_type();
 	}
 
-	iterator begin()
+	iterator begin() const
 	{
 		return iterator(root(),false);
 	}
 
-	iterator end()
+	iterator end() const
 	{
 		return iterator(root(),true);
 	}
-	cursor root()
+
+	cursor root() const
 	{
 		return cursor(node_root);
 	}
@@ -236,6 +245,25 @@ class trie
 			it++;
 		}
 		return cur;
+	}
+	bool exist(const key_type &key) const //make this iterator instead of bool;
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+					end_it=Key_traits::end(key);
+		typename node_type::iterator fit;
+		node_type *cur=node_root;
+		while(!(it==end_it))
+		{
+			fit=cur->find(*it);
+			if(fit == cur->end() ) return false;
+			cur=*fit;
+			it++;
+		}
+		if(cur->has_value())
+		{
+			return true;
+		}
+		return false;
 	}
 };
 
