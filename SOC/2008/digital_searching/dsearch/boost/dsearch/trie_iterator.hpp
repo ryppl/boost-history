@@ -16,16 +16,18 @@ class trie_iterator
 {
 	private:
 	std::stack<Cursor> cur_st;
-	friend class iterator_core_access;
+	typedef trie_iterator<Key,Mapped,Cursor> self;
+	friend class boost::iterator_core_access;
 	bool end_flag;
 	void to_right_most()
 	{
 		Cursor c=cur_st.top();
+		std::cout<<"in right most"<<std::endl;
 		while(c.begin()!=c.end())
 		{
+			std::cout<<"PUSHING"<<std::endl;
 			c=--c.end();
 			cur_st.push(c);
-			if(c.has_value()) break;
 		}
 		assert(cur_st.top().has_value());
 	}
@@ -34,7 +36,7 @@ class trie_iterator
 	{
 		Cursor c=cur_st.top();
 		if(c.has_value()) return ;
-		while(c.begin()!=c.end())
+		while(!c.empty())
 		{
 			std::cout<<"PUSHING"<<std::endl;
 			if(c.has_value()) break;
@@ -46,14 +48,29 @@ class trie_iterator
 
 	void decrement()
 	{
-		Cursor top=cur_st.top();
-		cur_st.pop();
-		while(cur_st.top().begin()==top)
+		Cursor top;
+		if(end_flag)
 		{
-			if(top.has_value())
+			to_right_most();
+			end_flag=false;
+			return;
+		}
+		
+		assert(!cur_st.empty());
+		cur_st.pop();
+		top=cur_st.top();
+		cur_st.pop();
+		while(top==cur_st.top().begin())
+		{
+			if(top.has_value()) 
+			{
+				cur_st.push(top); //to make sure to_right_most still works
 				return;
+			}
 			top=cur_st.top();
 			cur_st.pop();
+			if(cur_st.empty())
+				return;
 		}
 		--top;
 		cur_st.push(top);
@@ -62,14 +79,21 @@ class trie_iterator
 
 	void increment()
 	{
-		Cursor top=cur_st.top();
-		cur_st.pop();
-		while(cur_st.top().end()==top+1)
+		assert(end_flag==false && NULL!="incrementing at end");//just for debugging
+		assert(!cur_st.empty() && NULL!="incrementing before begin");
+		Cursor top=cur_st.top().begin();
+
+		while(cur_st.top().end()==top)
 		{
-			top=cur_st.top();
+			top=++cur_st.top();
 			cur_st.pop();
+			if(cur_st.empty())
+			{
+				cur_st.push(top);
+				end_flag=true;
+				return;
+			}
 		}
-		++top;
 		cur_st.push(top);
 		to_left_most();
 	}
@@ -79,22 +103,40 @@ class trie_iterator
 		assert(cur_st.top().has_value());
 		return cur_st.top().get_value();
 	}
+	
+	bool equal(const self &other) const
+	{
+		assert(!cur_st.empty());
+		if(other.cur_st.top()==cur_st.top())
+			return true;
+		return false;
+	}
 
 	public:
 	trie_iterator():end_flag(0) //An end cursor
-	{} 
-	trie_iterator(Cursor const &cursor_root) //returns begin cursor
+	{
+	}
+
+	trie_iterator(Cursor const &cursor_root,bool end_flag=false) //returns begin cursor
 	{
 		Cursor c=cursor_root;
-/*		if(c.begin()==c.end() && c.)
+		this->end_flag=end_flag;
+		if(this->end_flag)
 		{
-			end_flag=true;
+			cur_st.push(cursor_root);
 			return;
 		}
-		end_flag=false;*/
+
+		if(cursor_root.empty() && !cursor_root.has_value()) //special case of only empty root
+		{
+			end_flag=true;
+			cur_st.push(c);
+			return;
+		}
 		cur_st.push(c);
 		to_left_most();
 	}
+
 };
 
 }
