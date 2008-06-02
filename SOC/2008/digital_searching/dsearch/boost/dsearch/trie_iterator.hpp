@@ -5,7 +5,6 @@
 
 //forces the thing to be bidirectional horizontally.
 //TODO:Add specializations for ascending cursors without use of stack.
-//BUG:currently this has no indicator to say that a particular thing is pointing to a value.
 
 namespace boost{
 namespace dsearch{
