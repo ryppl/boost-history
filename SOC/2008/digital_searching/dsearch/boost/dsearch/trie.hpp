@@ -186,14 +186,17 @@ class trie
 
 	iterator begin()
 	{
-		return iterator(root());
+		return iterator(root(),false);
 	}
 
+	iterator end()
+	{
+		return iterator(root(),true);
+	}
 	cursor root()
 	{
 		return cursor(node_root);
 	}
-
 	
 	~trie()
 	{
