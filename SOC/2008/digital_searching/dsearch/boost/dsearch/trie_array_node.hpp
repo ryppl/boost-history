@@ -151,10 +151,19 @@ class trie_array_node
 	std::size_t size()
 	{
 		int t_size=0;
-		for(int i=0;i<max;i++)
-			if(child_ptr[i]!=0)
+		for ( int i=0; i<max; i++ )
+			if( child_ptr[i]!=0 )
 				t_size++;
 		return t_size;
+	}
+
+	iterator lower_bound(const element_type &e)
+	{
+		int k=Key_traits::get_value(e);
+		for(;k>=0;k--) 
+		if(child_ptr[k]!=0) break;
+		if(k<0)	return end();
+		return iterator(this,k);
 	}
 
 	bool empty()
