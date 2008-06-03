@@ -47,6 +47,9 @@ void test_trie()
 
 	tr.begin();
 	tr.clear();
+
+
+
 	std::cout<<"GRR...AT THE END"<<std::endl;
 	tr.begin(); //should not segfault.
 	tr["hello"]=10;
@@ -78,11 +81,37 @@ void test_trie()
 	assert(*tr_it==10);
 
 	assert(tr_it==tr_it);
+	assert(tr.find("hello")==tr_it);
+
+	//std::cout<<*tr_it<<std::endl; //segfaults cannot dereference end
+	assert(++tr_it==tr.end());
+
+	//std::cout<<*tr.upper_bound("helloi")<<std::endl;
+	assert(tr.upper_bound("helloi")==tr.end());
+	assert(tr.upper_bound("hello")==tr.find("hello"));
+	assert(tr.upper_bound("hell")==tr.find("hello"));
+	assert(tr.upper_bound("")==tr.begin());
+	assert(tr.upper_bound("he")==tr.find("he"));
+	assert(tr.upper_bound("hea")==tr.find("heat"));
+	assert(tr.upper_bound("heb")==tr.find("hello"));
+	assert(tr.upper_bound("hex")==tr.end());
+	assert(tr.upper_bound("heata")==tr.find("hello"));
+	assert(tr.upper_bound("x")==tr.end());
+
+	assert(tr.lower_bound("hex")==tr.find("hello"));
+	assert(tr.lower_bound("helloi")==tr.find("hello"));
+	assert(tr.lower_bound("hell")==tr.find("heat"));
+	assert(tr.lower_bound("hel")==tr.find("heat"));
+	assert(tr.lower_bound("heb")==tr.find("heat"));
+	assert(tr.lower_bound("heat")==tr.find("heat"));
+	assert(tr.lower_bound("hea")==tr.find("he"));
+	assert(tr.lower_bound("a")==tr.end());
+	
+	tr.clear();
 
 	//tr_const_it=const_iterator(tr.begin());
 	//tr_const_it++;
-	
-	tr.clear();
+
 	//assert(c->find('h')!=c.begin()->end());
 	//assert(c.begin()->find('e')!=c.begin()->end());
 }
