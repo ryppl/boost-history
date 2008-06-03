@@ -16,9 +16,11 @@ namespace dsearch {
 	private:
 	typedef trie_cursor<Key,Mapped,Node> cursor;
 	typedef typename Node::element_type element_type;
-	
+
 	friend class boost::iterator_core_access;
 	friend class boost::tree::cursor_core_access;
+	template<class K,class M,template<class K1,class M1,class K_t1,class A1 > class t_n,class K_t,class A >  
+	friend class trie;
 	unsigned char only_root;
 	bool top;
 
