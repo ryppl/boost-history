@@ -1,3 +1,5 @@
+#ifndef BOOST_DSEARCH_TRIE_ITERATOR_HPP
+#define BOOST_DSEARCH_TRIE_ITERATOR_HPP
 #include<iostream>
 #include<stack>
 #include<boost/iterator/iterator_facade.hpp>
@@ -18,7 +20,26 @@ class trie_iterator
 	std::stack<Cursor> cur_st;
 	typedef trie_iterator<Key,Mapped,Cursor> self;
 	friend class boost::iterator_core_access;
+	template<class K,class M,template<class K1,class M1,class K_t1,class A1 > class t_n,class K_t,class A >  
+	friend class trie;
 	bool end_flag;
+
+	void push(const Cursor &c)
+	{
+		cur_st.push(c);
+	}
+	
+	void pop()
+	{
+		cur_st.pop();
+	}
+
+	Cursor &top()
+	{
+		assert(!cur_st.empty());
+		return cur_st.top();
+	}
+
 	void to_right_most()
 	{
 		Cursor c=cur_st.top();
@@ -85,7 +106,7 @@ class trie_iterator
 
 		while(cur_st.top().end()==top)
 		{
-			top=++cur_st.top();
+			top=cur_st.top();
 			cur_st.pop();
 			if(cur_st.empty())
 			{
@@ -93,6 +114,7 @@ class trie_iterator
 				end_flag=true;
 				return;
 			}
+			++top;
 		}
 		cur_st.push(top);
 		to_left_most();
@@ -113,7 +135,7 @@ class trie_iterator
 	}
 
 	public:
-	trie_iterator():end_flag(0) //An end cursor
+	trie_iterator():end_flag(false) 
 	{
 	}
 
@@ -136,6 +158,7 @@ class trie_iterator
 		cur_st.push(c);
 		to_left_most();
 	}
+
 	template<class It>
 	trie_iterator(const It &begin,const It &end):end_flag(0)
 	{
@@ -150,3 +173,5 @@ class trie_iterator
 
 }
 }
+
+#endif //BOOST_DSEARCH_TRIE_ITERATOR_HPP
