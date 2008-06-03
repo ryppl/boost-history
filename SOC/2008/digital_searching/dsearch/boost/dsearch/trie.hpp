@@ -133,32 +133,162 @@ class trie
 		node_allocator.deallocate(cur,1);		
 	}
 
+	//make use of iterator iterator.push();
 	iterator find(const key_type &key) const //make this iterator instead of bool;
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 					end_it=Key_traits::end(key);
-		std::vector<cursor> cur_st;
+		iterator ret_it;
 		cursor cur,next;
 		cur=root();
 		while(!(it==end_it))
 		{
-			cur_st.push_back(cur);
+			ret_it.push(cur);
 			next=cur.find(*it);
-			if( next == cur.end() ) return end();
+			if ( next == cur.end() ) return end();
 			cur=next;
 			it++;
 		}
-		cur_st.push_back(cur);
+		ret_it.push(cur);
 		if(cur->has_value())
 		{
-			return iterator(cur_st.begin(),cur_st.end());
+			return ret_it;
 		}
 		return end();
 	}
 
+	iterator upper_bound(const key_type &key)
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+					end_it=Key_traits::end(key);
+		iterator ret_it;
+		bool not_found=false;
+		cursor cur,next,r=root();
+		cur=r;
+		ret_it.push(cur);
+		std::cout<<"UPPER BOUND"<<std::endl;
+		while(it!=end_it)
+		{
+			if(cur.empty())
+			{
+				ret_it++;
+				return ret_it;
+			}
+			std::cout<<"finding "<<*it<<std::endl;
+			next=cur.find(*it);
+			if ( next == cur.end() )
+			{
+				not_found=true;
+				break;
+			}
+			std::cout<<"found "<<*it<<std::endl;
+			cur=next;
+			ret_it.push(cur);
+			it++;
+		}
+		//ret_it.push(cur);
+		if( not_found )
+		{
+			next=++cursor(cur.get_node(),cur.get_node()->lower_bound(*it));
+			while(next==ret_it.top().end())
+			{
+				std::cout<<"popping "<<std::endl;
+				next=ret_it.top();
+				if(next==r)
+					return end();
+				ret_it.pop();
+				next++;
+			}
+			ret_it.push(next);
+		}
+		ret_it.to_left_most(); //if ret_it.top().hash_value() then this does nothing
+		return ret_it;
+	}
 
+	iterator lower_bound(const key_type &key)
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+				end_it=Key_traits::end(key);
+		iterator ret_it;
+		bool not_found=false;
+		cursor cur,next,r=root();
+		cur=r;
+		ret_it.push(cur);
+		std::cout<<"LOWER BOUND"<<std::endl;
+		while(it!=end_it)
+		{
+			if(cur.empty())
+				break;
+			std::cout<<"finding "<<*it<<std::endl;
+			next=cur.find(*it);
+			if ( next == cur.end() )
+			{
+				not_found=true;
+				break;
+			}
+			std::cout<<"found "<<*it<<std::endl;
+			cur=next;
+			ret_it.push(cur);
+			it++;
+		}
 
-	void swap(const type &other)
+		if(not_found)
+		{
+			next=cursor(cur.get_node(),cur.get_node()->lower_bound(*it));
+			if(next!=cur.end()) 
+			{
+				ret_it.push(next);
+				ret_it.to_right_most();
+				return ret_it;
+			}
+		}
+
+		do
+		{
+			next=ret_it.top();
+			ret_it.pop();
+			if(next.has_value())
+			{
+				ret_it.push(next);
+				return ret_it;
+			}
+			if(next==r)
+			{
+				return end();
+			}
+		}
+		while(next==ret_it.top().begin());
+
+		next--;
+		ret_it.push(next);
+		ret_it.to_right_most();
+		return ret_it;
+	}
+
+	std::pair<iterator,iterator> prefix_range(const key_type &key)
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+				end_it=Key_traits::end(key);
+		iterator ret_it,right;
+		cursor cur,next;
+		cur=root();
+		ret_it.push(cur);
+		while(it!=end_it)
+		{
+			if(cur.empty()) return std::make_pair(end(),end());
+			next=cur.find(*it);
+			if(cur.end()==next)
+				return std::make_pair(end(),end());
+			cur=next;
+			ret_it.push(cur);
+		}
+		right=ret_it;
+		ret_it.to_left_most();
+		right.to_right_most();
+		return std::make_pair(ret_it,right);
+	}
+
+	void swap(type &other)
 	{
 		std::swap(other.node_root,node_root);
 	}
