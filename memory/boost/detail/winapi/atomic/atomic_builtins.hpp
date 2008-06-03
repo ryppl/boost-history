@@ -113,7 +113,9 @@ __forceinline bool WINAPI CompareAndSwap128(
 }
 
 #else
-	#error "todo"
+
+#define BOOST_DETAIL_NO_COMPARE_AND_SWAP_128
+
 #endif
 
 // -------------------------------------------------------------------------
@@ -128,11 +130,15 @@ __forceinline bool WINAPI TaggedCompareAndSwap(
 		Exchange | ((LONG64)(Tag+1) << 32));
 }
 
+#if !defined(BOOST_DETAIL_NO_COMPARE_AND_SWAP_128)
+
 __forceinline bool WINAPI TaggedCompareAndSwap(
 	volatile LONG64 Destination[2], LONG64 Comperand, LONG64 Exchange, LONG64 Tag)
 {
 	return CompareAndSwap128(Destination, Comperand, Tag, Exchange, Tag+1);
 }
+
+#endif
 
 #if defined(__32BIT__) || defined(__x86_32__)
 
@@ -156,7 +162,7 @@ __forceinline bool WINAPI TaggedCompareAndSwapPointer(
 
 #else
 
-#error "Unknown CPU Type!!!"
+#define BOOST_DETAIL_NO_TAGGED_COMPARE_AND_SWAP_POINTER
 
 #endif
 

@@ -20,8 +20,16 @@
 #include "policy.hpp"
 #endif
 
+#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
+#include <boost/detail/winapi/winbase.h>
+#endif
+
+#if defined(BOOST_DETAIL_NO_TAGGED_COMPARE_AND_SWAP_POINTER)
+#define BOOST_MEMORY_NO_LOCKFREE
+#else
 #ifndef BOOST_LOCKFREE_STACK_HPP
 #include <boost/lockfree/stack.hpp>
+#endif
 #endif
 
 NS_BOOST_MEMORY_BEGIN
@@ -57,14 +65,14 @@ private:
 public:
 	normal_stack() : m_top(NULL) {}
 
-	void BOOST_LOCKFREE_CALL push(node* val)
+	void BOOST_MEMORY_CALL push(node* val)
 	{
 		cslock aLock(m_cs);
 		val->_m_prev = m_top;
 		m_top = val;
 	}
 
-	node* BOOST_LOCKFREE_CALL clear()
+	node* BOOST_MEMORY_CALL clear()
 	{
 		cslock aLock(m_cs);
 		node* the_top = m_top;
@@ -72,7 +80,7 @@ public:
 		return the_top;
 	}
 
-	node* BOOST_LOCKFREE_CALL pop()
+	node* BOOST_MEMORY_CALL pop()
 	{
 		cslock aLock(m_cs);
 		node* the_top = m_top;
@@ -83,10 +91,16 @@ public:
 	}
 };
 
+#if defined(BOOST_MEMORY_NO_LOCKFREE)
+typedef normal_stack default_stack;
+#else
+typedef NS_BOOST_LOCKFREE::stack default_stack;
+#endif
+
 // -------------------------------------------------------------------------
 // class system_pool_imp
 
-template <class PolicyT, class StackT = NS_BOOST_LOCKFREE::stack>
+template <class PolicyT, class StackT = default_stack>
 class system_pool_imp
 {
 private:
@@ -155,7 +169,7 @@ public:
 // -------------------------------------------------------------------------
 // class system_pool_s
 
-template <class PolicyT, class StackT = NS_BOOST_LOCKFREE::stack>
+template <class PolicyT, class StackT = default_stack>
 class system_pool_s
 {
 private:
@@ -176,11 +190,7 @@ system_pool_imp<PolicyT, StackT> system_pool_s<PolicyT, StackT>::s_impl;
 
 // -------------------------------------------------------------------------
 
-#if defined(BOOST_MEMORY_NO_LOCKFREE)
-typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib, normal_stack> system_pool;
-#else
-typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib> system_pool;
-#endif
+typedef system_pool_s<NS_BOOST_MEMORY_POLICY::stdlib, default_stack> system_pool;
 
 // -------------------------------------------------------------------------
 // $Log: $
