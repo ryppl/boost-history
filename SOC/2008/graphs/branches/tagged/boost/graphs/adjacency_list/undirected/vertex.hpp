@@ -8,14 +8,14 @@ namespace boost {
 namespace graphs {
 namespace adj_list {
 
+template <typename VertexProps, typename EdgeStore>
+struct undirected_vertex
+{
+};
+
+#if 0
+
 /**
- * An undirected vertex tracks the incident edges of the given vertex. Note
- * that the edges actually being stored are pointers to edges in the graph's
- * edge list. The reason for this is so we don't duplicate the properties
- * of each edge.
- *
- * @todo What happens if I store incident edges as a pair... The edge and the
- * opposite end. That might be kind of interesting.
  */
 template <
         typename VertexProps,
@@ -223,6 +223,8 @@ disconnect(Graph& g, typename Graph::vertex_type& u, undirected_tag)
 }
 
 #undef BOOST_GRAPH_UV_PARAMS
+
+#endif
 
 } /* namespace adj_list */
 } /* namespace graphs */

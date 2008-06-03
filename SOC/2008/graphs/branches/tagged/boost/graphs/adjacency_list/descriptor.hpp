@@ -110,14 +110,14 @@ inline std::size_t hash_value(descriptor<void*> const& d)
  * void*.
  */
 template <typename D>
-struct vertex_desc
+struct basic_vertex_descriptor
     : public descriptor<D>
 {
-    inline vertex_desc()
+    inline basic_vertex_descriptor()
         : descriptor<D>()
     { }
 
-    inline vertex_desc(D d)
+    inline basic_vertex_descriptor(D d)
         : descriptor<D>(d)
     { }
 };
@@ -127,14 +127,14 @@ struct vertex_desc
  * void*.
  */
 template <typename D>
-struct edge_desc
+struct basic_edge_descriptor
     : public descriptor<D>
 {
-    inline edge_desc()
+    inline basic_edge_descriptor()
         : descriptor<D>()
     { }
 
-    inline edge_desc(D d)
+    inline basic_edge_descriptor(D d)
         : descriptor<D>(d)
     { }
 };

@@ -10,6 +10,21 @@ namespace boost {
 namespace graphs {
 namespace adj_list {
 
+template <template <typename> class Allocator>
+struct basic_edge_vector
+{
+    typedef basic_edge_descriptor<std::size_t> descriptor_type;
+
+    template <typename Edge>
+    struct type 
+    {
+    };
+};
+
+struct edge_vector : basic_edge_vector<std::allocator> { };
+
+#if 0
+
 /**
  * The edge vector implements a trivial multiset of edges for a graph (i.e., a
  * multigraph). Note that the underlying store does not permit the removal of
@@ -162,6 +177,8 @@ basic_edge_vector<E,A>::end_edges() const
 {
     return edge_iterator(_edges, _edges.end());
 }
+
+#endif
 
 } /* namespace adj_list */
 } /* namespace graphs */

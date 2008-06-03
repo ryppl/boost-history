@@ -12,6 +12,25 @@ namespace graphs {
 namespace adj_list {
 
 /**
+ */
+template <template <typename> class Allocator>
+struct basic_vertex_vector
+{
+    typedef basic_vertex_descriptor<std::size_t> descriptor_type;
+
+    template <typename Vertex>
+    struct type
+    {
+        typedef Allocator<Vertex> allocator;
+        typedef std::vector<Vertex, allocator> store;
+    };
+};
+
+struct vertex_vector : basic_vertex_vector<std::allocator> { };
+
+#if 0
+
+/**
  * The vertex_vector template implements veretex storage for adjacency lists
  * as a vector. This essentially provides a heavily constrained interface
  * to the underlying vector. Note that many operations normally supported by
@@ -83,19 +102,19 @@ struct storage_traits< basic_vertex_vector<Vertex, Alloc> >
 
 /**
  * The default specialization of a vector store.
- */
 template <typename Vertex>
 struct vertex_vector : basic_vertex_vector<Vertex, std::allocator> { };
+ */
 
 /**
  * Apparently, we have to provide a specific partial specialization for each
  * specialized storage. Is this right? Is it wrong? Is the compiler broken?
- */
 template <typename Vertex>
 struct storage_traits< vertex_vector<Vertex> >
 {
     typedef std::size_t descriptor_type;
 };
+ */
 
 // Functions
 
@@ -217,6 +236,8 @@ basic_vertex_vector<V,A>::properties(vertex_descriptor v) const
 {
     return *vertex(v);
 }
+
+#endif
 
 } /* namespace adj_list */
 } /* namesapce graphs */
