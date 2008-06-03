@@ -8,7 +8,19 @@
 
 template <typename geometry_type>
 struct component_type { 
-  typedef typename geometry_traits<geometry_type>::geometry_concept::template
+  typedef typename geometry_concept<geometry_type>::type::template
   registration<geometry_type>::component_type type;
+};
+
+template <typename geometry_type>
+struct coordinate_type { 
+  typedef typename geometry_concept<geometry_type>::type::template
+  registration<geometry_type>::coordinate_type type;
+};
+
+template <typename geometry_type>
+struct center_type { 
+  typedef typename geometry_concept<geometry_type>::type::template
+  registration<geometry_type>::center_type type;
 };
 

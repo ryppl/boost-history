@@ -26,7 +26,7 @@ struct point_3d_concept : point_concept {
     point_traits<T>::set(point, orient, value); }
   template <typename T, typename coordinate_type>
   static inline void set(T& point, orientation_3d orient, coordinate_type value) {
-    point_traits<T>::set(point, orient, value); }
+    point_3d_traits<T>::set(point, orient, value); }
 
   template <typename T, typename coordinate_type1, typename coordinate_type2, typename coordinate_type3>
   static inline T construct(coordinate_type1 x_value, 

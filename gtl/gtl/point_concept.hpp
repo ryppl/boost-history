@@ -11,6 +11,7 @@ struct point_concept {
   template <typename point_type>
   struct registration {
     typedef typename point_traits<point_type>::coordinate_type component_type;
+    typedef typename point_traits<point_type>::coordinate_type coordinate_type;
   };
 
   template <typename T>
@@ -34,12 +35,14 @@ struct point_concept {
   }
 
   template <typename point_type>
-  static void x(point_type& point) {
+  static typename point_traits<point_type>::coordinate_type 
+  x(point_type& point) {
     return get<HORIZONTAL>(point);
   }
 
   template <typename point_type>
-  static void y(point_type& point) {
+  static typename point_traits<point_type>::coordinate_type 
+  y(point_type& point) {
     return get<VERTICAL>(point);
   }
 

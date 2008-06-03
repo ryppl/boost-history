@@ -5,10 +5,11 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-template <class T>
+template <typename T>
 struct polygon_traits {
   typedef typename T::coordinate_type coordinate_type;
   typedef typename T::iterator_type iterator_type;
+  typedef typename T::compact_iterator_type compact_iterator_type;
 
   /// Get the begin iterator
   static inline iterator_type begin(const T& t) {
@@ -21,9 +22,26 @@ struct polygon_traits {
   }
   
   /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
-  template <class iT>
+  template <typename iT>
   static inline T& set(T& t, iT input_begin, iT input_end) {
     t.set(input_begin, input_end);
+    return t;
+  }
+  
+  /// Get the begin iterator
+  static inline compact_iterator_type begin_compact(const T& t) {
+    return t.begin_compact();
+  }
+  
+  /// Get the end iterator
+  static inline compact_iterator_type end_compact(const T& t) {
+    return t.end_compact();
+  }
+  
+  /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
+  template <typename iT>
+  static inline T& set_compact(T& t, iT input_begin, iT input_end) {
+    t.set_compact(input_begin, input_end);
     return t;
   }
   

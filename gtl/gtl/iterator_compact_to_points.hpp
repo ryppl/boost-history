@@ -5,7 +5,7 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-template <class iterator_type, class point_type>
+template <typename iterator_type, typename point_type>
 class iterator_compact_to_points {
 private:
   iterator_type iter_;
@@ -34,10 +34,11 @@ public:
   }
   //use bitwise copy and assign provided by the compiler
   inline iterator_compact_to_points& operator++() {
+    iterator_type prev_iter = iter_;
     ++iter_;
     if(iter_ == iter_end_) {
       if(point_concept::get<HORIZONTAL>(pt_) != firstX_) {
-        --iter_;
+        iter_ = prev_iter;
         point_concept::set<HORIZONTAL>(pt_, firstX_);
       }
     } else {
@@ -59,3 +60,4 @@ public:
   }
   inline reference operator*() const { return pt_; }
 };
+

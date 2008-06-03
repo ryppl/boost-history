@@ -11,9 +11,9 @@ private:
   const T& t_;
 public:
   typedef typename T::value_type geometry_type;
-  typedef typename geometry_traits<geometry_type>::geometry_concept geometry_concept;
-  typedef typename geometry_concept::template registration<geometry_type>::coordinate_type coordinate_type;
-  typedef iterator_geometry_range_to_set<geometry_concept, typename T::const_iterator> iterator_type;
+  typedef typename geometry_concept<geometry_type>::type concept_type;
+  typedef typename concept_type::template registration<geometry_type>::coordinate_type coordinate_type;
+  typedef iterator_geometry_range_to_set<concept_type, typename T::const_iterator> iterator_type;
   typedef polygon_set_const_wrapper operator_arg_type;
   typedef operator_requires_copy operator_storage_tag;
 
@@ -46,9 +46,9 @@ private:
   T& t_;
 public:
   typedef typename T::value_type geometry_type;
-  typedef typename geometry_traits<geometry_type>::geometry_concept geometry_concept;
-  typedef typename geometry_concept::template registration<geometry_type>::coordinate_type coordinate_type;
-  typedef iterator_geometry_range_to_set<geometry_concept, typename T::const_iterator> iterator_type;
+  typedef typename geometry_concept<geometry_type>::type concept_type;
+  typedef typename concept_type::template registration<geometry_type>::coordinate_type coordinate_type;
+  typedef iterator_geometry_range_to_set<concept_type, typename T::const_iterator> iterator_type;
   typedef polygon_set_wrapper operator_arg_type;
   typedef operator_requires_copy operator_storage_tag;
 

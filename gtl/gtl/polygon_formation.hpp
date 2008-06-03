@@ -560,15 +560,22 @@ namespace polygon_formation {
     ActiveTail<Unit>* p_;
   public:
     typedef Unit coordinate_type;
-    typedef typename ActiveTail<Unit>::iterator iterator_type;
+    typedef typename ActiveTail<Unit>::iterator compact_iterator_type;
+    typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;
     inline PolyLineHoleData() : p_(0) {}
     inline PolyLineHoleData(ActiveTail<Unit>* p) : p_(p) {}
     //use default copy and assign
-    inline iterator_type begin() const { return p_->begin(true, (orientT ? VERTICAL : HORIZONTAL)); }
-    inline iterator_type end() const { return p_->end(); }
+    inline compact_iterator_type begin_compact() const { return p_->begin(true, (orientT ? VERTICAL : HORIZONTAL)); }
+    inline compact_iterator_type end_compact() const { return p_->end(); }
+    inline iterator_type begin() const { return iterator_type(begin_compact(), end_compact()); }
+    inline iterator_type end() const { return iterator_type(end_compact(), end_compact()); }
     inline unsigned int size() const { return 0; }
     template<class iT>
     inline PolyLineHoleData& set(iT inputBegin, iT inputEnd) {
+      return *this;
+    }
+    template<class iT>
+    inline PolyLineHoleData& set_compact(iT inputBegin, iT inputEnd) {
       return *this;
     }
    
@@ -580,7 +587,8 @@ namespace polygon_formation {
     ActiveTail<Unit>* p_;
   public:
     typedef Unit coordinate_type;
-    typedef typename ActiveTail<Unit>::iterator iterator_type;
+    typedef typename ActiveTail<Unit>::iterator compact_iterator_type;
+    typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;
     typedef PolyLineHoleData<orientT, Unit> hole_type;
     class iteratorHoles {
     private:
@@ -611,8 +619,10 @@ namespace polygon_formation {
     inline PolyLinePolygonData() : p_(0) {}
     inline PolyLinePolygonData(ActiveTail<Unit>* p) : p_(p) {}
     //use default copy and assign
-    inline iterator_type begin() const { return p_->begin(false, (orientT ? VERTICAL : HORIZONTAL)); }
-    inline iterator_type end() const { return p_->end(); }
+    inline compact_iterator_type begin_compact() const { return p_->begin(false, (orientT ? VERTICAL : HORIZONTAL)); }
+    inline compact_iterator_type end_compact() const { return p_->end(); }
+    inline iterator_type begin() const { return iterator_type(begin_compact(), end_compact()); }
+    inline iterator_type end() const { return iterator_type(end_compact(), end_compact()); }
     inline iteratorHoles begin_holes() const { return iteratorHoles(p_->beginHoles()); }
     inline iteratorHoles end_holes() const { return iteratorHoles(p_->endHoles()); }
     inline ActiveTail<Unit>* yield() { return p_; }
@@ -621,6 +631,10 @@ namespace polygon_formation {
     inline unsigned int size() const { return 0; }
     template<class iT>
     inline PolyLinePolygonData& set(iT inputBegin, iT inputEnd) {
+      return *this;
+    }
+    template<class iT>
+    inline PolyLinePolygonData& set_compact(iT inputBegin, iT inputEnd) {
       return *this;
     }
    

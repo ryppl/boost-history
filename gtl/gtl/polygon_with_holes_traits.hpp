@@ -8,7 +8,6 @@
 
 template <class T>
 struct polygon_with_holes_traits {
-  typedef typename T::coordinate_type coordinate_type;
   typedef typename T::iterator_holes_type iterator_holes_type;
   typedef typename T::hole_type hole_type;
 
@@ -23,7 +22,7 @@ struct polygon_with_holes_traits {
   }
 
   /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
-  template <class iT>
+  template <typename iT>
   static inline T& set_holes(T& t, iT inputBegin, iT inputEnd) {
     t.set_holes(inputBegin, inputEnd);
     return t;

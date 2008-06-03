@@ -5,13 +5,20 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-enum direction_1d_enum { LOW = 0, HIGH = 1 };
+
+struct no_type {};
+
+enum direction_1d_enum { LOW = 0, HIGH = 1,
+                         LEFT = 0, RIGHT = 1,
+                         CLOCKWISE = 0, COUNTERCLOCKWISE = 1,
+                         REVERSE = 0, FORWARD = 1,
+                         NEGATIVE = 0, POSITIVE = 1 };
 enum orientation_2d_enum { HORIZONTAL = 0, VERTICAL = 1 };
 enum direction_2d_enum { WEST = 0, EAST = 1, SOUTH = 2, NORTH = 3 };
 enum orientation_3d_enum { PROXIMAL = 2 };
 enum winding_direction {
-  counterclockwise_winding = 0,
-  clockwise_winding = 1,
+  clockwise_winding = 0,
+  counterclockwise_winding = 1,
   unknown_winding = 2
 };
 
@@ -33,6 +40,7 @@ public:
   bool operator!=(direction_1d d) const { return !((*this) == d); }
   unsigned int to_int(void) const { return val_; }
   direction_1d& backward() { val_ ^= 1; return *this; }
+  int get_sign() const { return val_ * 2 - 1; }
 };
 
 class direction_2d;

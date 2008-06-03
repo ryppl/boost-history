@@ -5,11 +5,12 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-template <class iT, typename point_type>
+template <typename iT, typename point_type>
 class iterator_points_to_compact {
 private:
   iT iter_;
   orientation_2d orient_;
+  mutable typename point_traits<point_type>::coordinate_type coord_;
 public:
   typedef typename point_traits<point_type>::coordinate_type coordinate_type;
   typedef std::forward_iterator_tag iterator_category;
@@ -19,11 +20,12 @@ public:
   typedef const coordinate_type& reference; //immutable
 
   inline iterator_points_to_compact() {}
-  inline iterator_points_to_compact(iT iter) : iter_(iter), orient_(HORIZONTAL) {}
+  explicit inline iterator_points_to_compact(iT iter) : iter_(iter), orient_(HORIZONTAL) {}
   inline iterator_points_to_compact(const iterator_points_to_compact& that) : 
     iter_(that.iter_), orient_(that.orient_) {}
   //use bitwise copy and assign provided by the compiler
   inline iterator_points_to_compact& operator++() {
+    //consider adding assert/excpetion for non-manhattan case
     ++iter_;
     orient_.turn_90();
     return *this;
@@ -39,5 +41,5 @@ public:
   inline bool operator!=(const iterator_points_to_compact& that) const {
     return (iter_ != that.iter_);
   }
-  inline reference operator*() const { return point_concept::get(*iter_, orient_); }
+  inline reference operator*() const { return coord_ = point_concept::get(*iter_, orient_); }
 };

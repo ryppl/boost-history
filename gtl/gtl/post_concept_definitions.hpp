@@ -35,6 +35,12 @@ rectangle_data<T>& rectangle_data<T>::operator=(const T2& rvalue) {
 
 template <class T>
 template <class T2>
+bool rectangle_data<T>::operator==(const T2& rvalue) const {
+  return rectangle_concept::equivalence(*this, rvalue);
+}
+
+template <class T>
+template <class T2>
 point_3d_data<T>& point_3d_data<T>::operator=(const T2& rvalue) {
   point_3d_concept::assign(*this, rvalue);
   return *this;
@@ -42,8 +48,8 @@ point_3d_data<T>& point_3d_data<T>::operator=(const T2& rvalue) {
 
 template <class T>
 template <class T2>
-polygon_data<T>& polygon_data<T>::operator=(const T2& rvalue) {
-  polygon_concept::assign(*this, rvalue);
+polygon_90_data<T>& polygon_90_data<T>::operator=(const T2& rvalue) {
+  polygon_90_concept::assign(*this, rvalue);
   return *this;
 }
 

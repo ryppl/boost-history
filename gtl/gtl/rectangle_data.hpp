@@ -23,6 +23,11 @@ public:
   template <typename T2>
   inline rectangle_data& operator=(const T2& rvalue);
 
+  template <typename T2>
+  inline bool operator==(const T2& rvalue) const;
+  template <typename T2>
+  inline bool operator!=(const T2& rvalue) const { return !((*this) == rvalue); }
+
   inline interval_data<coordinate_type> get(orientation_2d orient) const {
     return ranges_[orient.to_int()]; }
   inline coordinate_type get(direction_2d dir) const {
@@ -37,3 +42,8 @@ private:
   interval_data<coordinate_type> ranges_[2]; 
 };
 
+template <class T>
+std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
+{
+  return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
+}

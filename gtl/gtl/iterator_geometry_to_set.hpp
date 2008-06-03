@@ -118,7 +118,7 @@ public:
 };
 
 template <typename polygon_type>
-class iterator_geometry_to_set<polygon_concept, polygon_type> {
+class iterator_geometry_to_set<polygon_90_concept, polygon_type> {
 public:
   typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
   typedef std::forward_iterator_tag iterator_category;
@@ -129,8 +129,7 @@ public:
   typedef typename polygon_traits<polygon_type>::iterator_type coord_iterator_type;
 private:
   value_type vertex_;
-  iterator_compact_to_points<typename polygon_traits<polygon_type>::iterator_type,
-                             point_data<typename polygon_traits<polygon_type>::coordinate_type> > itrb, itre;
+  typename polygon_traits<polygon_type>::iterator_type itrb, itre;
   bool last_vertex_;
   bool is_hole_;
   int multiplier_;
@@ -142,13 +141,13 @@ public:
   iterator_geometry_to_set() : polygon_index(-1) {}
   iterator_geometry_to_set(const polygon_type& polygon, direction_1d dir, orientation_2d orient = HORIZONTAL, bool is_hole = false) : 
     is_hole_(is_hole), orient_(orient), polygon_index(0) {
-    itrb = polygon_concept::begin_points(polygon);
-    itre = polygon_concept::end_points(polygon);
+    itrb = polygon_90_concept::begin(polygon);
+    itre = polygon_90_concept::end(polygon);
     use_wrap = false;
-    if(itrb == itre || dir == HIGH || polygon_concept::size(polygon) < 4) {
+    if(itrb == itre || dir == HIGH || polygon_90_concept::size(polygon) < 4) {
       polygon_index = -1;
     } else {
-      direction_1d wdir = polygon_concept::winding(polygon);
+      direction_1d wdir = polygon_90_concept::winding(polygon);
       multiplier_ = wdir == LOW ? -1 : 1;
       if(is_hole_) multiplier_ *= -1;
       first_pt = pts[0] = *itrb;
@@ -218,7 +217,7 @@ public:
 };
 
 template <typename polygon_with_holes_type>
-class iterator_geometry_to_set<polygon_with_holes_concept, polygon_with_holes_type> {
+class iterator_geometry_to_set<polygon_90_with_holes_concept, polygon_with_holes_type> {
 public:
   typedef typename rectangle_traits<polygon_with_holes_type>::coordinate_type coordinate_type;
   typedef std::forward_iterator_tag iterator_category;
@@ -227,8 +226,8 @@ public:
   typedef const value_type* pointer; //immutable
   typedef const value_type& reference; //immutable
 private:
-  iterator_geometry_to_set<polygon_concept, polygon_with_holes_type> itrb, itre;
-  iterator_geometry_to_set<polygon_concept, typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type> itrhib, itrhie;
+  iterator_geometry_to_set<polygon_90_concept, polygon_with_holes_type> itrb, itre;
+  iterator_geometry_to_set<polygon_90_concept, typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type> itrhib, itrhie;
   typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type itrhb, itrhe;
   orientation_2d orient_;
   bool started_holes;
@@ -236,15 +235,15 @@ public:
   iterator_geometry_to_set() {}
   iterator_geometry_to_set(const polygon_with_holes_type& polygon, direction_1d dir, 
                            orientation_2d orient = HORIZONTAL) : orient_(orient) {
-    itre = iterator_geometry_to_set<polygon_concept, polygon_with_holes_type>(polygon, HIGH, orient);
-    itrhe = polygon_with_holes_concept::end_holes(polygon);
+    itre = iterator_geometry_to_set<polygon_90_concept, polygon_with_holes_type>(polygon, HIGH, orient);
+    itrhe = polygon_90_with_holes_concept::end_holes(polygon);
     if(dir == HIGH) {
       itrb = itre;
       itrhb = itrhe;
       started_holes = true;
     } else {
-      itrb = iterator_geometry_to_set<polygon_concept, polygon_with_holes_type>(polygon, LOW, orient);
-      itrhb = polygon_with_holes_concept::begin_holes(polygon);
+      itrb = iterator_geometry_to_set<polygon_90_concept, polygon_with_holes_type>(polygon, LOW, orient);
+      itrhb = polygon_90_with_holes_concept::begin_holes(polygon);
       started_holes = false;
     }
   }
@@ -253,26 +252,26 @@ public:
     if(itrb == itre) {
       if(itrhib == itrhie) {
         if(itrhb != itrhe) {
-          itrhib = iterator_geometry_to_set<polygon_concept, 
+          itrhib = iterator_geometry_to_set<polygon_90_concept, 
             typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>(*itrhb, LOW, orient_, true);
-          itrhie = iterator_geometry_to_set<polygon_concept, 
+          itrhie = iterator_geometry_to_set<polygon_90_concept, 
             typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>(*itrhb, HIGH, orient_, true);
           ++itrhb;
         } else {
-          itrhib = itrhie = iterator_geometry_to_set<polygon_concept, 
+          itrhib = itrhie = iterator_geometry_to_set<polygon_90_concept, 
             typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>();
         }
       } else {
         ++itrhib;
         if(itrhib == itrhie) {
           if(itrhb != itrhe) {
-            itrhib = iterator_geometry_to_set<polygon_concept, 
+            itrhib = iterator_geometry_to_set<polygon_90_concept, 
               typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>(*itrhb, LOW, orient_, true);
-            itrhie = iterator_geometry_to_set<polygon_concept, 
+            itrhie = iterator_geometry_to_set<polygon_90_concept, 
               typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>(*itrhb, HIGH, orient_, true);
             ++itrhb;
           } else {
-            itrhib = itrhie = iterator_geometry_to_set<polygon_concept, 
+            itrhib = itrhie = iterator_geometry_to_set<polygon_90_concept, 
               typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>();
           }
         }
@@ -281,9 +280,9 @@ public:
       ++itrb;
       if(itrb == itre) {
         if(itrhb != itrhe) {
-          itrhib = iterator_geometry_to_set<polygon_concept, 
+          itrhib = iterator_geometry_to_set<polygon_90_concept, 
             typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>(*itrhb, LOW, orient_, true);
-          itrhie = iterator_geometry_to_set<polygon_concept, 
+          itrhie = iterator_geometry_to_set<polygon_90_concept, 
             typename polygon_with_holes_traits<polygon_with_holes_type>::hole_type>(*itrhb, HIGH, orient_, true);
           ++itrhb;
         }

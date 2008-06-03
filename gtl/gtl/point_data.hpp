@@ -35,3 +35,8 @@ private:
   coordinate_type coords_[2]; 
 };
 
+template <class T>
+std::ostream& operator << (std::ostream& o, const point_data<T>& r)
+{
+  return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
+}
