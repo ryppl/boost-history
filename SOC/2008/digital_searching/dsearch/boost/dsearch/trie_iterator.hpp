@@ -36,35 +36,40 @@ class trie_iterator
 
 	Cursor &top()
 	{
-		assert(!cur_st.empty());
+		assert(!(this->empty()));
 		return cur_st.top();
+	}
+
+	bool empty() const
+	{
+		return cur_st.empty();
 	}
 
 	void to_right_most()
 	{
-		Cursor c=cur_st.top();
+		Cursor c=this->top();
 		std::cout<<"in right most"<<std::endl;
 		while(c.begin()!=c.end())
 		{
 			std::cout<<"PUSHING"<<std::endl;
 			c=--c.end();
-			cur_st.push(c);
+			this->push(c);
 		}
-		assert(cur_st.top().has_value());
+		assert(this->top().has_value());
 	}
 
 	void to_left_most()
 	{
-		Cursor c=cur_st.top();
+		Cursor c=this->top();
 		if(c.has_value()) return ;
 		while(!c.empty())
 		{
 			std::cout<<"PUSHING"<<std::endl;
 			if(c.has_value()) break;
 			c=c.begin();
-			cur_st.push(c);
+			this->push(c);
 		}
-		assert(cur_st.top().has_value());
+		assert(this->top().has_value());
 	}
 
 	void decrement()
@@ -77,58 +82,58 @@ class trie_iterator
 			return;
 		}
 		
-		assert(!cur_st.empty());
-		cur_st.pop();
-		top=cur_st.top();
-		cur_st.pop();
-		while(top==cur_st.top().begin())
+		assert(!this->empty());
+		pop();
+		top=this->top();
+		pop();
+		while(top==this->top().begin())
 		{
 			if(top.has_value()) 
 			{
-				cur_st.push(top); //to make sure to_right_most still works
+				this->push(top); //to make sure to_right_most still works
 				return;
 			}
-			top=cur_st.top();
-			cur_st.pop();
-			if(cur_st.empty())
+			top=this->top();
+			this->pop();
+			if(this->empty())
 				return;
 		}
 		--top;
-		cur_st.push(top);
+		this->push(top);
 		to_right_most();
 	}
 
 	void increment()
 	{
 		assert(end_flag==false && NULL!="incrementing at end");//just for debugging
-		assert(!cur_st.empty() && NULL!="incrementing before begin");
-		Cursor top=cur_st.top().begin();
+		assert(!this->empty() && NULL!="incrementing before begin");
+		Cursor top=this->top().begin();
 
-		while(cur_st.top().end()==top)
+		while(this->top().end()==top)
 		{
-			top=cur_st.top();
-			cur_st.pop();
-			if(cur_st.empty())
+			top=this->top();
+			this->pop();
+			if(this->empty())
 			{
-				cur_st.push(top);
+				this->push(top);
 				end_flag=true;
 				return;
 			}
 			++top;
 		}
-		cur_st.push(top);
+		this->push(top);
 		to_left_most();
 	}
 
 	Mapped &dereference() const
 	{
-		assert(cur_st.top().has_value());
-		return cur_st.top().get_value();
+		assert((cur_st.top()).has_value());
+		return ((cur_st.top()).get_value());
 	}
 	
 	bool equal(const self &other) const
 	{
-		assert(!cur_st.empty());
+		assert(!this->empty());
 		if(other.cur_st.top()==cur_st.top())
 			return true;
 		return false;
@@ -145,29 +150,18 @@ class trie_iterator
 		this->end_flag=end_flag;
 		if(this->end_flag)
 		{
-			cur_st.push(cursor_root);
+			this->push(cursor_root);
 			return;
 		}
 
 		if(cursor_root.empty() && !cursor_root.has_value()) //special case of only empty root
 		{
 			end_flag=true;
-			cur_st.push(c);
+			this->push(c);
 			return;
 		}
-		cur_st.push(c);
+		this->push(c);
 		to_left_most();
-	}
-
-	template<class It>
-	trie_iterator(const It &begin,const It &end):end_flag(0)
-	{
-		It it=begin;
-		while(it!=end)
-		{
-			cur_st.push(*it);
-			it++;
-		}
 	}
 };
 
