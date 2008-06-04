@@ -1,10 +1,10 @@
 
-#ifndef BOOST_GRAPHS_ADJACENCY_LIST_VERTEX_EDGE_SET_HPP
-#define BOOST_GRAPHS_ADJACENCY_LIST_VERTEX_EDGE_SET_HPP
+#ifndef BOOST_GRAPHS_ADJACENCY_LIST_INCIDENCE_HPP
+#define BOOST_GRAPHS_ADJACENCY_LIST_INCIDENCE_HPP
 
 #include <set>
 
-#include <boost/graphs/adjacency_list/ves/vertex_edge_store.hpp>
+#include <boost/graphs/adjacency_list/is/incidence_store.hpp>
 
 namespace boost {
 namespace graphs {

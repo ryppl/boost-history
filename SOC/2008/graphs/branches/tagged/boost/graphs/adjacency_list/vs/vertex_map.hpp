@@ -3,45 +3,63 @@
 #define BOOST_GRAPHS_ADJACENCY_LIST_VERTEX_MAP_HPP
 
 #include <map>
-#include <string>
 
+#include <boost/graphs/adjacency_list/descriptor.hpp>
 #include <boost/graphs/adjacency_list/vs/mapped_vertex_iterator.hpp>
 
 namespace boost {
 namespace graphs {
 namespace adj_list {
 
-namespace detail {
-    // Extend the notion of a vertex for set storage so that we can store each
-    // vertex's iterator with current vertex. This is used to provide constant
-    // time access to the correct position in the underliying store.
-    template <
-            typename Vertex,
-            typename Key,
-            template <typename> class Compare,
-            template <typename> class Alloc
-        >
-    class basic_vertex_map_node
-        : public Vertex
+// Forward declarations
+template <typename V, typename K, template <typename> class C, template <typename> class A> class vertex_map_elem;
+template <typename V, typename K, typename C, typename A> class vertex_map_impl;
+
+template <typename Key, template <typename> class Compare, template <typename> class Allocator>
+struct basic_vertex_map
+{
+    typedef basic_vertex_descriptor<void*> descriptor_type;
+
+    template <typename Vertex>
+    struct store
     {
-    public:
-        typedef basic_vertex_map_node<Vertex, Key, Compare, Alloc> this_type;
-        typedef typename Vertex::properties_type properties_type;
-        typedef typename std::map<
-                Key, this_type, Compare<Key>, Alloc< std::pair<Key, this_type> >
-            >::iterator iterator;
-
-        inline basic_vertex_map_node(properties_type const& vp)
-            : Vertex(vp)
-            , iter()
-        { }
-
-        iterator iter;
+        typedef vertex_map_elem<Vertex, Key, Compare, Allocator> stored_vertex;
+        typedef std::pair<const Key, stored_vertex> stored_value;
+        typedef vertex_map_impl<stored_vertex, Key, Compare<Key>, Allocator<stored_value> > type;
     };
-} /* namespace detail */
+};
+
+template <typename Key, template <typename> class Compare = std::less>
+struct vertex_map : basic_vertex_map<Key, Compare, std::allocator> { };
+
+// Extend the notion of a vertex for set storage so that we can store each
+// vertex's iterator with current vertex. This is used to provide constant
+// time access to the correct position in the underliying store.
+template <
+        typename Vertex,
+        typename Key,
+        template <typename> class Compare,
+        template <typename> class Alloc
+    >
+class vertex_map_elem
+    : public Vertex
+{
+    typedef vertex_map_elem<Vertex, Key, Compare, Alloc> this_type;
+public:
+    typedef typename std::map<
+            Key, this_type, Compare<Key>, Alloc< std::pair<Key, this_type> >
+        >::iterator iterator;
+
+    inline vertex_map_elem(typename Vertex::vertex_properties const& vp)
+        : Vertex(vp)
+        , iter()
+    { }
+
+    iterator iter;
+};
 
 /**
- * The basic_vertex_map provides a list-based implementation of vertex storage
+ * The vertex_map_impl provides a list-based implementation of vertex storage
  * for an adjacency list. List-based storage is best for graphs with
  * unidentified vertices and requirements for fast vertex addition and deletion.
  *
@@ -57,32 +75,20 @@ namespace detail {
  *
  * @require LessThanComparable<Vertex::properties_type>
  */
-template <
-        typename Vertex,
-        typename Key,
-        template <typename> class Compare = std::less,
-        template <typename> class Alloc = std::allocator
-    >
-class basic_vertex_map
+template <typename Vertex, typename Key, typename Compare, typename Allocator>
+class vertex_map_impl
 {
+    typedef std::map<Key, Vertex, Compare, Allocator> vertex_store;
 public:
-    typedef detail::basic_vertex_map_node<Vertex, Key, Compare, Alloc> vertex_type;
-    typedef typename vertex_type::descriptor_type vertex_descriptor;
-    typedef typename vertex_type::properties_type vertex_properties;
-
     typedef Key key_type;
-
-    typedef std::map<
-            key_type, vertex_type, Compare<key_type>, Alloc< std::pair<key_type, vertex_type> >
-        > vertex_store;
-    typedef mapped_vertex_iterator<vertex_store> vertex_iterator;
+    typedef Vertex vertex_type;
+    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_descriptor vertex_descriptor;
     typedef typename vertex_store::size_type vertices_size_type;
-
-    // FIXME: Clearly, this should go away during conceptization.
-    typedef hashed_property_map_tag vertex_property_map_category;
+    typedef mapped_vertex_iterator<vertex_store> vertex_iterator;
 
     // Constructors
-    basic_vertex_map();
+    vertex_map_impl();
 
     // Add or insert a vertex.
     vertex_descriptor add_vertex(key_type const& k, vertex_properties const& vp);
@@ -117,31 +123,17 @@ private:
     vertex_store _verts;
 };
 
-// There isn't really a single trivial specialization of the mapped vertex
-// store since the key is a required parameter. Basically, using this type
-// requires the programmer to build different specializations of this basic
-// vertex store.
+#define BOOST_GRAPHS_VM_PARAMS \
+    typename V, typename K, typename C, typename A
 
-/**
- * Provide a specialization for keyed to strings.
- */
-template <typename Vertex>
-struct string_to_vertex_map : basic_vertex_map<Vertex, std::string> { };
-
-/**
- * Provide a specialization for integers.
- */
-template <typename Vertex>
-struct int_to_vertex_map : basic_vertex_map<Vertex, int> { };
-
-
-/**
- * The default constructor creates an empty vertex set.
- */
-template <typename V, typename K, template <typename> class C, template <typename> class A>
-basic_vertex_map<V,K,C,A>::basic_vertex_map()
+template <BOOST_GRAPHS_VM_PARAMS>
+vertex_map_impl<V,K,C,A>::vertex_map_impl()
     : _verts()
 { }
+
+#undef BOOST_GRAPHS_VM_PARAMS
+
+#if 0
 
 /**
  * Add a vertex to the store with the key and properties. If the key is mapped
@@ -150,8 +142,8 @@ basic_vertex_map<V,K,C,A>::basic_vertex_map()
  * @complexity O(log(V))
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_descriptor
-basic_vertex_map<V,K,C,A>::add_vertex(const K& k, vertex_properties const& vp)
+typename vertex_map_impl<V,K,C,A>::vertex_descriptor
+vertex_map_impl<V,K,C,A>::add_vertex(const K& k, vertex_properties const& vp)
 {
     return insert_vertex(k, vp).first;
 }
@@ -165,8 +157,8 @@ basic_vertex_map<V,K,C,A>::add_vertex(const K& k, vertex_properties const& vp)
  * @complexity O(log(V))
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-std::pair<typename basic_vertex_map<V,K,C,A>::vertex_descriptor, bool>
-basic_vertex_map<V,K,C,A>::insert_vertex(key_type const& k, vertex_properties const& vp)
+std::pair<typename vertex_map_impl<V,K,C,A>::vertex_descriptor, bool>
+vertex_map_impl<V,K,C,A>::insert_vertex(key_type const& k, vertex_properties const& vp)
 {
     std::pair<vertex_descriptor, bool> ret;
     std::pair<typename vertex_store::iterator, bool> ins =
@@ -193,8 +185,8 @@ basic_vertex_map<V,K,C,A>::insert_vertex(key_type const& k, vertex_properties co
  * descriptor.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_descriptor
-basic_vertex_map<V,K,C,A>::find_vertex(key_type const& k) const
+typename vertex_map_impl<V,K,C,A>::vertex_descriptor
+vertex_map_impl<V,K,C,A>::find_vertex(key_type const& k) const
 {
     vertex_descriptor ret;
     typename vertex_store::const_iterator iter = _verts.find(k);
@@ -216,7 +208,7 @@ basic_vertex_map<V,K,C,A>::find_vertex(key_type const& k) const
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
 void
-basic_vertex_map<V,K,C,A>::remove_vertex(vertex_descriptor v)
+vertex_map_impl<V,K,C,A>::remove_vertex(vertex_descriptor v)
 {
     vertex_type* vp = static_cast<vertex_type*>(v);
     _verts.erase(vp->iter);
@@ -232,8 +224,8 @@ basic_vertex_map<V,K,C,A>::remove_vertex(vertex_descriptor v)
  * deal to manage the size of this list internally.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertices_size_type
-basic_vertex_map<V,K,C,A>::num_vertices() const
+typename vertex_map_impl<V,K,C,A>::vertices_size_type
+vertex_map_impl<V,K,C,A>::num_vertices() const
 {
     return _verts.size();
 }
@@ -243,10 +235,10 @@ basic_vertex_map<V,K,C,A>::num_vertices() const
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
 std::pair<
-    typename basic_vertex_map<V,K,C,A>::vertex_iterator,
-    typename basic_vertex_map<V,K,C,A>::vertex_iterator
+    typename vertex_map_impl<V,K,C,A>::vertex_iterator,
+    typename vertex_map_impl<V,K,C,A>::vertex_iterator
 >
-basic_vertex_map<V,K,C,A>::vertices() const
+vertex_map_impl<V,K,C,A>::vertices() const
 {
     return std::make_pair(_verts.begin(), _verts.end());
 }
@@ -255,24 +247,24 @@ basic_vertex_map<V,K,C,A>::vertices() const
  * Get a vertex iterator to the beginning iterator of the vertices.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_iterator
-basic_vertex_map<V,K,C,A>::begin_vertices() const
+typename vertex_map_impl<V,K,C,A>::vertex_iterator
+vertex_map_impl<V,K,C,A>::begin_vertices() const
 { return _verts.begin(); }
 
 /**
  * Get a vertex iterator to an iterator past the end of the vertices.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_iterator
-basic_vertex_map<V,K,C,A>::end_vertices() const
+typename vertex_map_impl<V,K,C,A>::vertex_iterator
+vertex_map_impl<V,K,C,A>::end_vertices() const
 { return _verts.end(); }
 
 /**
  * Get access to the given vertex.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_type&
-basic_vertex_map<V,K,C,A>::vertex(vertex_descriptor v)
+typename vertex_map_impl<V,K,C,A>::vertex_type&
+vertex_map_impl<V,K,C,A>::vertex(vertex_descriptor v)
 {
     return *static_cast<vertex_type*>(v.desc);
 }
@@ -281,8 +273,8 @@ basic_vertex_map<V,K,C,A>::vertex(vertex_descriptor v)
  * Get access to the given vertex.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_type const&
-basic_vertex_map<V,K,C,A>::vertex(vertex_descriptor v) const
+typename vertex_map_impl<V,K,C,A>::vertex_type const&
+vertex_map_impl<V,K,C,A>::vertex(vertex_descriptor v) const
 {
     return *static_cast<vertex_type*>(v.desc);
 }
@@ -291,8 +283,8 @@ basic_vertex_map<V,K,C,A>::vertex(vertex_descriptor v) const
  * Return a descriptor for the given vertex.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_descriptor
-basic_vertex_map<V,K,C,A>::descriptor(vertex_type const& v) const
+typename vertex_map_impl<V,K,C,A>::vertex_descriptor
+vertex_map_impl<V,K,C,A>::descriptor(vertex_type const& v) const
 {
     return &const_cast<vertex_type&>(v);
 }
@@ -301,8 +293,8 @@ basic_vertex_map<V,K,C,A>::descriptor(vertex_type const& v) const
  * Get the key of a vertex descriptor.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::key_type const&
-basic_vertex_map<V,K,C,A>::key(vertex_descriptor v) const
+typename vertex_map_impl<V,K,C,A>::key_type const&
+vertex_map_impl<V,K,C,A>::key(vertex_descriptor v) const
 {
     vertex_type& vert = *static_cast<vertex_type*>(v.desc);
     return vert.iter->first;
@@ -313,8 +305,8 @@ basic_vertex_map<V,K,C,A>::key(vertex_descriptor v) const
  * Get the properties of the given vertex.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_properties&
-basic_vertex_map<V,K,C,A>::properties(vertex_descriptor v)
+typename vertex_map_impl<V,K,C,A>::vertex_properties&
+vertex_map_impl<V,K,C,A>::properties(vertex_descriptor v)
 {
     return *vertex(v);
 }
@@ -323,11 +315,13 @@ basic_vertex_map<V,K,C,A>::properties(vertex_descriptor v)
  * Get the properties of the given vertex.
  */
 template <typename V, typename K, template <typename> class C, template <typename> class A>
-typename basic_vertex_map<V,K,C,A>::vertex_properties const&
-basic_vertex_map<V,K,C,A>::properties(vertex_descriptor v) const
+typename vertex_map_impl<V,K,C,A>::vertex_properties const&
+vertex_map_impl<V,K,C,A>::properties(vertex_descriptor v) const
 {
     return *vertex(v);
 }
+
+#endif
 
 } /* namespace adj_list */
 } /* namesapce graphs */

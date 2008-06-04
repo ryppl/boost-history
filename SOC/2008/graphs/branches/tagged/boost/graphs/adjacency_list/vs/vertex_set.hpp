@@ -5,44 +5,58 @@
 #include <set>
 #include <tr1/unordered_map>
 
-#include <boost/graphs/properties.hpp>
+#include <boost/graphs/adjacency_list/descriptor.hpp>
 #include <boost/graphs/adjacency_list/vs/simple_vertex_iterator.hpp>
 
 namespace boost {
 namespace graphs {
 namespace adj_list {
 
-namespace detail {
-    // Extend the notion of a vertex for set storage so that we can store each
-    // vertex's iterator with current vertex. This is used to provide constant
-    // time access to the correct position in the underliying store.
-    template <
-            typename Vertex,
-            template <typename> class Compare,
-            template <typename> class Alloc>
-    class basic_vertex_set_node
-        : public Vertex
+// Forward declarations
+template <typename V, template <typename> class C, template <typename> class A> class vertex_set_elem;
+template <typename V, typename C, typename A> class vertex_set_impl;
+
+template <template <typename> class Compare, template <typename> class Allocator>
+struct basic_vertex_set
+{
+    typedef basic_vertex_descriptor<void*> descriptor_type;
+
+    template <typename Vertex>
+    struct store
     {
-    public:
-        typedef basic_vertex_set_node<Vertex, Compare, Alloc> this_type;
-        typedef typename Vertex::properties_type properties_type;
-
-        typedef typename std::set<
-                this_type, Compare<this_type>, Alloc<this_type>
-            >::iterator iterator;
-
-        inline basic_vertex_set_node(properties_type const& vp)
-            : Vertex(vp)
-            , iter()
-        { }
-
-        iterator iter;
+        typedef vertex_set_elem<Vertex, Compare, Allocator> stored_vertex;
+        typedef vertex_set_impl<stored_vertex, Compare<stored_vertex>, Allocator<stored_vertex> > type;
     };
+};
 
-} /* namespace detail */
+template <template <typename> class Compare = std::less>
+struct vertex_set : basic_vertex_set<Compare, std::allocator> { };
+
+// Extend the notion of a vertex for set storage so that we can store each
+// vertex's iterator with current vertex. This is used to provide constant
+// time access to the correct position in the underliying store.
+template <typename Vertex,
+        template <typename> class Compare,
+        template <typename> class Alloc>
+class vertex_set_elem
+    : public Vertex
+{
+    typedef vertex_set_elem<Vertex, Compare, Alloc> this_type;
+public:
+    typedef typename std::set<
+            this_type, Compare<this_type>, Alloc<this_type>
+        >::iterator iterator;
+
+    inline vertex_set_elem(typename Vertex::vertex_properties const& vp)
+        : Vertex(vp)
+        , iter()
+    { }
+
+    iterator iter;
+};
 
 /**
- * The basic_vertex_set provides a list-based implementation of vertex storage
+ * The vertex_set_impl provides a list-based implementation of vertex storage
  * for an adjacency list. List-based storage is best for graphs with
  * unidentified vertices and requirements for fast vertex addition and deletion.
  *
@@ -58,31 +72,20 @@ namespace detail {
  *
  * @require LessThanComparable<Vertex::properties_type>
  */
-template <
-        typename Vertex,
-        template <typename> class Compare = std::less,
-        template <typename> class Alloc = std::allocator
-    >
-class basic_vertex_set
+template <typename Vertex, typename Compare, typename Allocator>
+class vertex_set_impl
 {
+    typedef std::set<Vertex, Compare, Allocator> vertex_store;
 public:
-    typedef detail::basic_vertex_set_node<Vertex, Compare, Alloc> vertex_type;
-    typedef typename vertex_type::descriptor_type vertex_descriptor;
-    typedef typename vertex_type::properties_type vertex_properties;
-
-    typedef std::set<
-            vertex_type, Compare<vertex_type>, Alloc<vertex_type>
-        > vertex_store;
-    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
+    typedef Vertex vertex_type;
+    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_descriptor vertex_descriptor;
     typedef typename vertex_store::size_type vertices_size_type;
-
-    // This is kind of hack, but we need some way of communicating a preference
-    // of the favored underlying property store to higher level features.
-    // FIXME: Clearly, this should go away during conceptization.
-    typedef hashed_property_map_tag vertex_property_map_category;
+    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
+    typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
-    basic_vertex_set();
+    vertex_set_impl();
 
     // Add vertices. Note that you can't add without properties.
     vertex_descriptor add_vertex(vertex_properties const& vp);
@@ -114,35 +117,17 @@ private:
 };
 
 
-/**
- * The default implementation of a vertex set is given here. Specialized
- * versions of the basic vertex set can be generated using inheritance like
- * this. This version fixes the default comparator and allocator of the vertex
- * set to the common defaults.
- */
-template <typename Vertex>
-struct vertex_set : basic_vertex_set<Vertex> { };
+#define BOOST_GRAPHS_VS_PARAMS \
+    typename V, typename C, typename A
 
-// Some examples of specialized (curried) variants of the basic vertex set.
-// These provide specific orderings. Note that the "less set" is actually the
-// same as the default vertex set.
-template <typename Vertex>
-struct min_vertex_set : public basic_vertex_set<Vertex, std::less> { };
-
-template <typename Vertex>
-struct max_vertex_set : public basic_vertex_set<Vertex, std::greater> { };
-
-
-#define BOOST_GRAPH_VS_PARAMS \
-    typename V, template <typename> class C, template <typename> class A
-
-/**
- * The default constructor creates an empty vertex set.
- */
-template <BOOST_GRAPH_VS_PARAMS>
-basic_vertex_set<V,C,A>::basic_vertex_set()
+template <BOOST_GRAPHS_VS_PARAMS>
+vertex_set_impl<V,C,A>::vertex_set_impl()
     : _verts()
 { }
+
+#undef BOOST_GRAPHS_VS_PARAMS
+
+#if 0
 
 /**
  * Add a vertex to the store with the given properties. If not specified, the
@@ -152,8 +137,8 @@ basic_vertex_set<V,C,A>::basic_vertex_set()
  * @complexity O(log(V))
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_descriptor
-basic_vertex_set<V,C,A>::add_vertex(vertex_properties const& vp)
+typename vertex_set_impl<V,C,A>::vertex_descriptor
+vertex_set_impl<V,C,A>::add_vertex(vertex_properties const& vp)
 {
     return insert_vertex(vp).first;
 }
@@ -167,8 +152,8 @@ basic_vertex_set<V,C,A>::add_vertex(vertex_properties const& vp)
  * @complexity O(log(V))
  */
 template <BOOST_GRAPH_VS_PARAMS>
-std::pair<typename basic_vertex_set<V,C,A>::vertex_descriptor, bool>
-basic_vertex_set<V,C,A>::insert_vertex(vertex_properties const& vp)
+std::pair<typename vertex_set_impl<V,C,A>::vertex_descriptor, bool>
+vertex_set_impl<V,C,A>::insert_vertex(vertex_properties const& vp)
 {
     std::pair<vertex_descriptor, bool> ret;
     std::pair<typename vertex_store::iterator, bool> ins =
@@ -197,7 +182,7 @@ basic_vertex_set<V,C,A>::insert_vertex(vertex_properties const& vp)
  */
 template <BOOST_GRAPH_VS_PARAMS>
 void
-basic_vertex_set<V,C,A>::remove_vertex(vertex_descriptor v)
+vertex_set_impl<V,C,A>::remove_vertex(vertex_descriptor v)
 {
     vertex_type* vp = static_cast<vertex_type*>(v.desc);
     _verts.erase(vp->iter);
@@ -210,7 +195,7 @@ basic_vertex_set<V,C,A>::remove_vertex(vertex_descriptor v)
  */
 template <BOOST_GRAPH_VS_PARAMS>
 void
-basic_vertex_set<V,C,A>::remove_vertex(vertex_properties const& vp)
+vertex_set_impl<V,C,A>::remove_vertex(vertex_properties const& vp)
 {
     remove_vertex(find(vp));
 }
@@ -221,8 +206,8 @@ basic_vertex_set<V,C,A>::remove_vertex(vertex_properties const& vp)
  * @complexity O(log(V))
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_descriptor
-basic_vertex_set<V,C,A>::find_vertex(vertex_properties const& vp) const
+typename vertex_set_impl<V,C,A>::vertex_descriptor
+vertex_set_impl<V,C,A>::find_vertex(vertex_properties const& vp) const
 {
     // This is a little gross... We have to tempoararily construct an empty
     // vertex with the given properties in order for the find operations to
@@ -245,8 +230,8 @@ basic_vertex_set<V,C,A>::find_vertex(vertex_properties const& vp) const
  * deal to manage the size of this list internally.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertices_size_type
-basic_vertex_set<V,C,A>::num_vertices() const
+typename vertex_set_impl<V,C,A>::vertices_size_type
+vertex_set_impl<V,C,A>::num_vertices() const
 {
     return _verts.size();
 }
@@ -256,10 +241,10 @@ basic_vertex_set<V,C,A>::num_vertices() const
  */
 template <BOOST_GRAPH_VS_PARAMS>
 std::pair<
-    typename basic_vertex_set<V,C,A>::vertex_iterator,
-    typename basic_vertex_set<V,C,A>::vertex_iterator
+    typename vertex_set_impl<V,C,A>::vertex_iterator,
+    typename vertex_set_impl<V,C,A>::vertex_iterator
 >
-basic_vertex_set<V,C,A>::vertices() const
+vertex_set_impl<V,C,A>::vertices() const
 {
     return std::make_pair(_verts.begin(), _verts.end());
 }
@@ -268,8 +253,8 @@ basic_vertex_set<V,C,A>::vertices() const
  * Get a vertex iterator to the beginning iterator of the vertices.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_iterator
-basic_vertex_set<V,C,A>::begin_vertices() const
+typename vertex_set_impl<V,C,A>::vertex_iterator
+vertex_set_impl<V,C,A>::begin_vertices() const
 {
     return _verts.begin();
 }
@@ -278,8 +263,8 @@ basic_vertex_set<V,C,A>::begin_vertices() const
  * Get a vertex iterator to an iterator past the end of the vertices.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_iterator
-basic_vertex_set<V,C,A>::end_vertices() const
+typename vertex_set_impl<V,C,A>::vertex_iterator
+vertex_set_impl<V,C,A>::end_vertices() const
 {
     return _verts.end();
 }
@@ -288,8 +273,8 @@ basic_vertex_set<V,C,A>::end_vertices() const
  * Get access to the given vertex.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_type&
-basic_vertex_set<V,C,A>::vertex(vertex_descriptor v)
+typename vertex_set_impl<V,C,A>::vertex_type&
+vertex_set_impl<V,C,A>::vertex(vertex_descriptor v)
 {
     return *static_cast<vertex_type*>(v.desc);
 }
@@ -298,8 +283,8 @@ basic_vertex_set<V,C,A>::vertex(vertex_descriptor v)
  * Get access to the given vertex.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_type const&
-basic_vertex_set<V,C,A>::vertex(vertex_descriptor v) const
+typename vertex_set_impl<V,C,A>::vertex_type const&
+vertex_set_impl<V,C,A>::vertex(vertex_descriptor v) const
 {
     return *static_cast<vertex_type*>(v.desc);
 }
@@ -308,8 +293,8 @@ basic_vertex_set<V,C,A>::vertex(vertex_descriptor v) const
  * Access the properties of the given vertex.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_properties&
-basic_vertex_set<V,C,A>::properties(vertex_descriptor v)
+typename vertex_set_impl<V,C,A>::vertex_properties&
+vertex_set_impl<V,C,A>::properties(vertex_descriptor v)
 {
     return *vertex(v);
 }
@@ -318,14 +303,15 @@ basic_vertex_set<V,C,A>::properties(vertex_descriptor v)
  * Access the properties of the given vertex.
  */
 template <BOOST_GRAPH_VS_PARAMS>
-typename basic_vertex_set<V,C,A>::vertex_properties const&
-basic_vertex_set<V,C,A>::properties(vertex_descriptor v) const
+typename vertex_set_impl<V,C,A>::vertex_properties const&
+vertex_set_impl<V,C,A>::properties(vertex_descriptor v) const
 {
     return *vertex(v);
 }
 
-} /* namespace adj_list */
+#endif
 
+} /* namespace adj_list */
 } /* namesapce graphs */
 } /* namespace boost */
 

@@ -1,14 +1,36 @@
 
-#ifndef BOOST_GRAPHS_ADJACENCY_LIST_VERTEX_EDGE_VECTOR_HPP
-#define BOOST_GRAPHS_ADJACENCY_LIST_VERTEX_EDGE_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJACENCY_LIST_INCIDENCE_VECTOR_HPP
+#define BOOST_GRAPHS_ADJACENCY_LIST_INCIDENCE_VECTOR_HPP
 
 #include <vector>
 
-#include <boost/graphs/adjacency_list/ves/vertex_edge_store.hpp>
+#include <boost/graphs/adjacency_list/is/incidence_store.hpp>
 
 namespace boost {
 namespace graphs {
 namespace adj_list {
+
+// Forward declarations
+template <typename ED, typename A> struct incidence_vector_impl;
+
+template <template <typename> class Allocator>
+struct basic_incidence_vector
+{
+    template <typename EdgeDesc>
+    struct store
+    {
+        typedef incidence_vector_impl<EdgeDesc, Allocator<EdgeDesc> > type;
+    };
+};
+
+struct incidence_vector : basic_incidence_vector<std::allocator> { };
+
+template <typename EdgeDesc, typename Allocator>
+struct incidence_vector_impl
+{
+};
+
+#if 0
 
 /**
  * The vertex edge vector provides vector-based storage for edges connected to
@@ -87,6 +109,8 @@ vertex_edge_vector<E>::size() const
 {
     return this->_store.size();
 }
+
+#endif
 
 } /* namespace adj_list */
 } /* namespace graphs */

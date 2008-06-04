@@ -10,29 +10,40 @@ namespace boost {
 namespace graphs {
 namespace adj_list {
 
-namespace detail {
-    // Extend the notion of a vertex for list storage so that we can store each
-    // vertex's iterator the vertex. Basically, this is used to provide constant
-    // time access to correct vertex in the container. I can't think of a better
-    // way to to do this.
-    template <typename Vertex, template <typename> class Alloc>
-    struct basic_vertex_list_node
-        : Vertex
+// Forward declarations
+template <typename V, template <typename> class A> class vertex_list_elem;
+template <typename V, typename A> class vertex_list_impl;
+
+template <template <typename> class Allocator>
+struct basic_vertex_list
+{
+    typedef basic_vertex_descriptor<void*> descriptor_type;
+
+    template <typename Vertex>
+    struct store
     {
-        typedef basic_vertex_list_node<Vertex, Alloc> this_type;
-        typedef typename Vertex::properties_type properties_type;
-        typedef typename std::list<
-                this_type, Alloc<this_type>
-            >::iterator iterator;
-
-        inline basic_vertex_list_node(properties_type const& vp)
-            : Vertex(vp)
-            , iter()
-        { }
-
-        iterator iter;
+        typedef vertex_list_elem<Vertex, Allocator> stored_vertex;
+        typedef vertex_list_impl<stored_vertex, Allocator<stored_vertex> > type;
     };
-} /* namespace detail */
+};
+
+struct vertex_list : basic_vertex_list<std::allocator> { };
+
+template <typename Vertex, template <typename> class Alloc>
+class vertex_list_elem
+    : public Vertex
+{
+    typedef vertex_list_elem<Vertex, Alloc> this_type;
+public:
+    typedef typename std::list<this_type, Alloc<this_type> >::iterator iterator;
+
+    inline vertex_list_elem(typename Vertex::vertex_properties const& vp)
+        : Vertex(vp)
+        , iter()
+    { }
+
+    iterator iter;
+};
 
 /**
  * The basic_vertex_list provides a list-based implementation of vertex storage
@@ -44,27 +55,20 @@ namespace detail {
  * vertex. All insertions and removals occur in constant time. However, getting
  * the number of vertices is linear.
  */
-template <
-        typename Vertex,
-        template <typename> class Alloc = std::allocator
-    >
-class basic_vertex_list
+template <typename Vertex, typename Allocator>
+class vertex_list_impl
 {
+    typedef std::list<Vertex, Allocator> vertex_store;
 public:
-    typedef detail::basic_vertex_list_node<Vertex, Alloc> vertex_type;
-    typedef typename vertex_type::descriptor_type vertex_descriptor;
-    typedef typename vertex_type::properties_type vertex_properties;
-
-    typedef std::list<vertex_type, Alloc<vertex_type> > vertex_store;
-    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
+    typedef Vertex vertex_type;
+    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_descriptor vertex_descriptor;
     typedef typename vertex_store::size_type vertices_size_type;
+    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
+    typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
-    // FIXME: Clearly, this should go away during conceptization.
-    typedef hashed_property_map_tag vertex_property_map_category;
-
-    basic_vertex_list()
-        : _verts()
-    { }
+    // Constructors
+    vertex_list_impl();
 
     // Add/remove vertices.
     vertex_descriptor add_vertex();
@@ -77,7 +81,7 @@ public:
     vertices_size_type num_vertices() const;
 
     // Vertex iteration.
-    std::pair<vertex_iterator, vertex_iterator> vertices() const;
+    vertex_range vertices() const;
     vertex_iterator begin_vertices() const;
     vertex_iterator end_vertices() const;
 
@@ -91,11 +95,21 @@ private:
     vertex_store _verts;
 };
 
+#define BOOST_GRAPHS_VL_PARAMS \
+    typename V, typename A
+
+template <BOOST_GRAPHS_VL_PARAMS>
+vertex_list_impl<V,A>::vertex_list_impl()
+    : _verts()
+{ }
+
+#if 0
+
 /**
  * Create a default specialization of the basic vertex list.
  */
 template <typename Vertex>
-struct vertex_list : basic_vertex_list<Vertex> { };
+struct vertex_list : vertex_list_impl<Vertex> { };
 
 /**
  * Add a vertex to the store with no or default properties.
@@ -103,8 +117,8 @@ struct vertex_list : basic_vertex_list<Vertex> { };
  * @complexity O(1)
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_descriptor
-basic_vertex_list<V,A>::add_vertex()
+typename vertex_list_impl<V,A>::vertex_descriptor
+vertex_list_impl<V,A>::add_vertex()
 {
     return add_vertex(vertex_properties());
 }
@@ -119,8 +133,8 @@ basic_vertex_list<V,A>::add_vertex()
  * @complexity O(1)
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_descriptor
-basic_vertex_list<V,A>::add_vertex(vertex_properties const& vp)
+typename vertex_list_impl<V,A>::vertex_descriptor
+vertex_list_impl<V,A>::add_vertex(vertex_properties const& vp)
 {
     typename vertex_store::iterator i = _verts.insert(_verts.end(), vertex_type(vp));
     i->iter = i;
@@ -136,7 +150,7 @@ basic_vertex_list<V,A>::add_vertex(vertex_properties const& vp)
  */
 template <typename V, template <typename> class A>
 void
-basic_vertex_list<V,A>::remove_vertex(vertex_descriptor v)
+vertex_list_impl<V,A>::remove_vertex(vertex_descriptor v)
 {
     vertex_type* vp = static_cast<vertex_type*>(v);
     _verts.erase(vp->iter);
@@ -152,8 +166,8 @@ basic_vertex_list<V,A>::remove_vertex(vertex_descriptor v)
  * deal to manage the size of this list internally.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertices_size_type
-basic_vertex_list<V,A>::num_vertices() const
+typename vertex_list_impl<V,A>::vertices_size_type
+vertex_list_impl<V,A>::num_vertices() const
 {
     return _verts.size();
 }
@@ -163,10 +177,10 @@ basic_vertex_list<V,A>::num_vertices() const
  */
 template <typename V, template <typename> class A>
 std::pair<
-    typename basic_vertex_list<V,A>::vertex_iterator,
-    typename basic_vertex_list<V,A>::vertex_iterator
+    typename vertex_list_impl<V,A>::vertex_iterator,
+    typename vertex_list_impl<V,A>::vertex_iterator
 >
-basic_vertex_list<V,A>::vertices() const
+vertex_list_impl<V,A>::vertices() const
 {
     return std::make_pair(_verts.begin(), _verts.end());
 }
@@ -175,8 +189,8 @@ basic_vertex_list<V,A>::vertices() const
  * Return the iterator for the begining of the vertices.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_iterator
-basic_vertex_list<V,A>::begin_vertices() const
+typename vertex_list_impl<V,A>::vertex_iterator
+vertex_list_impl<V,A>::begin_vertices() const
 {
     return _verts.begin();
 }
@@ -185,8 +199,8 @@ basic_vertex_list<V,A>::begin_vertices() const
  * Return the iterator for the begining of the vertices.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_iterator
-basic_vertex_list<V,A>::end_vertices() const
+typename vertex_list_impl<V,A>::vertex_iterator
+vertex_list_impl<V,A>::end_vertices() const
 {
     return _verts.end();
 }
@@ -195,8 +209,8 @@ basic_vertex_list<V,A>::end_vertices() const
  * Get access to the given vertex.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_type&
-basic_vertex_list<V,A>::vertex(vertex_descriptor v)
+typename vertex_list_impl<V,A>::vertex_type&
+vertex_list_impl<V,A>::vertex(vertex_descriptor v)
 {
     return *static_cast<vertex_type*>(v.desc);
 }
@@ -205,8 +219,8 @@ basic_vertex_list<V,A>::vertex(vertex_descriptor v)
  * Get access to the given vertex.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_type const&
-basic_vertex_list<V,A>::vertex(vertex_descriptor v) const
+typename vertex_list_impl<V,A>::vertex_type const&
+vertex_list_impl<V,A>::vertex(vertex_descriptor v) const
 {
     return *static_cast<vertex_type*>(v.desc);
 }
@@ -215,8 +229,8 @@ basic_vertex_list<V,A>::vertex(vertex_descriptor v) const
  * Access the properties ofthe given vertex.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_properties&
-basic_vertex_list<V,A>::properties(vertex_descriptor v)
+typename vertex_list_impl<V,A>::vertex_properties&
+vertex_list_impl<V,A>::properties(vertex_descriptor v)
 {
     return *vertex(v);
 }
@@ -225,11 +239,13 @@ basic_vertex_list<V,A>::properties(vertex_descriptor v)
  * Access the properties ofthe given vertex.
  */
 template <typename V, template <typename> class A>
-typename basic_vertex_list<V,A>::vertex_properties const&
-basic_vertex_list<V,A>::properties(vertex_descriptor v) const
+typename vertex_list_impl<V,A>::vertex_properties const&
+vertex_list_impl<V,A>::properties(vertex_descriptor v) const
 {
     return *vertex(v);
 }
+
+#endif
 
 } /* namespace adj_list */
 } /* namesapce graphs */

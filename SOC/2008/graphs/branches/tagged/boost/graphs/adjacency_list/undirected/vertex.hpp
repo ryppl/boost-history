@@ -2,7 +2,7 @@
 #ifndef BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_VERTEX_HPP
 #define BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_VERTEX_HPP
 
-#include <boost/graphs/adjacency_list/vertex.hpp>
+// #include <boost/graphs/adjacency_list/vertex.hpp>
 
 namespace boost {
 namespace graphs {

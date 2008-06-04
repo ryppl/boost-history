@@ -1,6 +1,6 @@
 
 #ifndef BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_EDGE_HPP
-#define BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_EGE_HPP
+#define BOOST_GRAPHS_ADJACENCY_LIST_UNDIRECTED_EDGE_HPP
 
 #include <boost/graphs/utility/unordered_pair.hpp>
 #include <boost/graphs/adjacency_list/edge.hpp>
@@ -8,6 +8,13 @@
 namespace boost {
 namespace graphs {
 namespace adj_list {
+
+template <typename EdgeProps, typename VertexDesc>
+struct undirected_edge
+{
+};
+
+#if 0
 
 /**
  * An undirected edge is an unordered pair of pointers to its endpoints. Note
@@ -152,6 +159,7 @@ operator==(undirected_edge<VP,EP,V,E> const& a,
 
 #undef BOOST_GRAPH_UE_PARAMS
 
+#endif
 
 } /* namespace adj_list */
 } /* namespace graphs */

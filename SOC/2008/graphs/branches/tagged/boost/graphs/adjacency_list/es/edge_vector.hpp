@@ -10,43 +10,43 @@ namespace boost {
 namespace graphs {
 namespace adj_list {
 
+// Forward declarations
+template <typename Edge, typename Allocator> class edge_vector_impl;
+
 template <template <typename> class Allocator>
 struct basic_edge_vector
 {
     typedef basic_edge_descriptor<std::size_t> descriptor_type;
 
     template <typename Edge>
-    struct type 
+    struct store
     {
+        typedef edge_vector_impl<Edge, Allocator<Edge> > type;
     };
 };
 
 struct edge_vector : basic_edge_vector<std::allocator> { };
 
-#if 0
 
 /**
  * The edge vector implements a trivial multiset of edges for a graph (i.e., a
  * multigraph). Note that the underlying store does not permit the removal of
  * edges from the graph.
  */
-template <typename Edge, template <typename> class Alloc>
-class basic_edge_vector
+template <typename Edge, typename Allocator>
+class edge_vector_impl
 {
+    typedef std::vector<Edge, Allocator> edge_store;
 public:
     typedef Edge edge_type;
-    typedef typename edge_type::descriptor_type edge_descriptor;
+    typedef typename edge_type::edge_properties edge_properties;
+    typedef typename edge_type::edge_descriptor edge_descriptor;
     typedef typename edge_type::vertex_descriptor vertex_descriptor;
-    typedef typename edge_type::properties_type edge_properties;
-
-    typedef std::vector<edge_type, Alloc<edge_type> > edge_store;
-    typedef indexed_edge_iterator<edge_store> edge_iterator;
     typedef typename edge_store::size_type edges_size_type;
+    typedef indexed_edge_iterator<edge_store> edge_iterator;
 
-    // FIXME:
-    typedef indexed_property_map_tag edge_property_map_category;
-
-    basic_edge_vector();
+    // Constructors
+    edge_vector_impl();
 
     // Add edge
     edge_descriptor add_edge(vertex_descriptor u, vertex_descriptor v);
@@ -64,6 +64,18 @@ private:
     edge_store _edges;
 };
 
+#define BOOST_GRAPHS_EV_PARAMS \
+    typename E, typename A
+
+template <BOOST_GRAPHS_EV_PARAMS>
+edge_vector_impl<E,A>::edge_vector_impl()
+    : _edges()
+{ }
+
+#undef BOOST_GRAPHS_EV_PARAMS
+
+#if 0
+
 /**
  * Specialize storage traits for all types of edge vectors to use indexed
  * descriptors rather than memory descriptors.
@@ -71,7 +83,7 @@ private:
  * @todo This don't work.
  */
 template <typename Edge, template <typename> class Alloc>
-struct storage_traits< basic_edge_vector<Edge, Alloc> >
+struct storage_traits< edge_vector_impl<Edge, Alloc> >
 {
     typedef std::size_t descriptor_type;
 };
@@ -80,7 +92,7 @@ struct storage_traits< basic_edge_vector<Edge, Alloc> >
  * The default specialization uses the standard allocator.
  */
 template <typename Edge>
-struct edge_vector : basic_edge_vector<Edge, std::allocator> { };
+struct edge_vector : edge_vector_impl<Edge, std::allocator> { };
 
 /**
  * Specialize the storage traits for the default specialization. We wouldn't
@@ -96,7 +108,7 @@ struct storage_traits< edge_vector<Edge> >
 // Functions
 
 template <typename E, template <typename> class A>
-basic_edge_vector<E,A>::basic_edge_vector()
+edge_vector_impl<E,A>::edge_vector_impl()
     : _edges()
 { }
 
@@ -110,8 +122,8 @@ basic_edge_vector<E,A>::basic_edge_vector()
  * @complexity O(1) amortized
  */
 template <typename E, template <typename> class A>
-typename basic_edge_vector<E,A>::edge_descriptor
-basic_edge_vector<E,A>::add_edge(vertex_descriptor u, vertex_descriptor v)
+typename edge_vector_impl<E,A>::edge_descriptor
+edge_vector_impl<E,A>::add_edge(vertex_descriptor u, vertex_descriptor v)
 {
     return add_edge(u, v, edge_properties());
 }
@@ -126,8 +138,8 @@ basic_edge_vector<E,A>::add_edge(vertex_descriptor u, vertex_descriptor v)
  * @complexity O(1) amortized
  */
 template <typename E, template <typename> class A>
-typename basic_edge_vector<E,A>::edge_descriptor
-basic_edge_vector<E,A>::add_edge(vertex_descriptor u,
+typename edge_vector_impl<E,A>::edge_descriptor
+edge_vector_impl<E,A>::add_edge(vertex_descriptor u,
                                  vertex_descriptor v,
                                  edge_properties const& ep)
 {
@@ -142,8 +154,8 @@ basic_edge_vector<E,A>::add_edge(vertex_descriptor u,
  * @complexity O(1)
  */
 template <typename E, template <typename> class A>
-typename basic_edge_vector<E,A>::edges_size_type
-basic_edge_vector<E,A>::num_edges() const
+typename edge_vector_impl<E,A>::edges_size_type
+edge_vector_impl<E,A>::num_edges() const
 {
     return _edges.size();
 }
@@ -153,10 +165,10 @@ basic_edge_vector<E,A>::num_edges() const
  */
 template <typename E, template <typename> class A>
 std::pair<
-    typename basic_edge_vector<E,A>::edge_iterator,
-    typename basic_edge_vector<E,A>::edge_iterator
+    typename edge_vector_impl<E,A>::edge_iterator,
+    typename edge_vector_impl<E,A>::edge_iterator
 >
-basic_edge_vector<E,A>::edges() const
+edge_vector_impl<E,A>::edges() const
 {
     return make_pair(begin_edges(), end_edges());
 }
@@ -165,15 +177,15 @@ basic_edge_vector<E,A>::edges() const
  * Get an iterator to the first edge.
  */
 template <typename E, template <typename> class A>
-typename basic_edge_vector<E,A>::edge_iterator
-basic_edge_vector<E,A>::begin_edges() const
+typename edge_vector_impl<E,A>::edge_iterator
+edge_vector_impl<E,A>::begin_edges() const
 {
     return edge_iterator(_edges, _edges.begin());
 }
 
 template <typename E, template <typename> class A>
-typename basic_edge_vector<E,A>::edge_iterator
-basic_edge_vector<E,A>::end_edges() const
+typename edge_vector_impl<E,A>::edge_iterator
+edge_vector_impl<E,A>::end_edges() const
 {
     return edge_iterator(_edges, _edges.end());
 }

@@ -4,7 +4,6 @@
 
 #include <boost/graphs/adjacency_list/storage_traits.hpp>
 
-
 // Vertex storage types
 // We can store vertices in almost anything conceivable. These are the default
 // options for storing. Note that we could expand this set to also include
@@ -30,8 +29,8 @@
 // of each vertex. Like above, there aren't actually too many types of vertex
 // edge storage since, for example, mapped containers don't make a lot of sense.
 // However, vectors, lists, and sets (both single and multi) work just fine.
-#include <boost/graphs/adjacency_list/ves/vertex_edge_vector.hpp>
-#include <boost/graphs/adjacency_list/ves/vertex_edge_list.hpp>
-#include <boost/graphs/adjacency_list/ves/vertex_edge_set.hpp>
+#include <boost/graphs/adjacency_list/is/incidence_vector.hpp>
+#include <boost/graphs/adjacency_list/is/incidence_list.hpp>
+#include <boost/graphs/adjacency_list/is/incidence_set.hpp>
 
 #endif

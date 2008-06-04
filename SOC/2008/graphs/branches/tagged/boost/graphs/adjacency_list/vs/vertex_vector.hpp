@@ -4,31 +4,30 @@
 
 #include <vector>
 
-#include <boost/graphs/properties.hpp>
+#include <boost/graphs/adjacency_list/descriptor.hpp>
 #include <boost/graphs/adjacency_list/vs/indexed_vertex_iterator.hpp>
 
 namespace boost {
 namespace graphs {
 namespace adj_list {
 
-/**
- */
+// Forward declarations
+template <typename V, typename A> struct vertex_vector_impl;
+
 template <template <typename> class Allocator>
 struct basic_vertex_vector
 {
     typedef basic_vertex_descriptor<std::size_t> descriptor_type;
 
     template <typename Vertex>
-    struct type
+    struct store
     {
-        typedef Allocator<Vertex> allocator;
-        typedef std::vector<Vertex, allocator> store;
+        typedef vertex_vector_impl<Vertex, Allocator<Vertex> > type;
     };
 };
 
 struct vertex_vector : basic_vertex_vector<std::allocator> { };
 
-#if 0
 
 /**
  * The vertex_vector template implements veretex storage for adjacency lists
@@ -41,26 +40,20 @@ struct vertex_vector : basic_vertex_vector<std::allocator> { };
  * corrupt the entire graph (since indices are adjusted). As a result, this
  * store type does not provide remove operations.
  */
-template <
-        typename Vertex,
-        template <typename> class Alloc
-    >
-class basic_vertex_vector
+template <typename Vertex, typename Allocator>
+class vertex_vector_impl
 {
+    typedef std::vector<Vertex, Allocator> vertex_store;
 public:
     typedef Vertex vertex_type;
-    typedef typename vertex_type::descriptor_type vertex_descriptor;
-    typedef typename vertex_type::properties_type vertex_properties;
-
-    typedef std::vector<vertex_type, Alloc<vertex_type> > vertex_store;
-    typedef indexed_vertex_iterator<vertex_store> vertex_iterator;
+    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_descriptor vertex_descriptor;
     typedef typename vertex_store::size_type vertices_size_type;
-
-    // FIXME: This is old school.
-    typedef indexed_property_map_tag vertex_property_map_category;
+    typedef indexed_vertex_iterator<vertex_store> vertex_iterator;
+    typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
-    basic_vertex_vector();
+    vertex_vector_impl();
 
     // Add/remove vertex.
     vertex_descriptor add_vertex();
@@ -70,7 +63,7 @@ public:
     vertices_size_type num_vertices() const;
 
     // Vertex iteration.
-    std::pair<vertex_iterator, vertex_iterator> vertices() const;
+    vertex_range vertices() const;
     vertex_iterator begin_vertices() const;
     vertex_iterator end_vertices() const;
 
@@ -83,6 +76,18 @@ public:
 private:
     vertex_store _verts;
 };
+
+#define BOOST_GRAPHS_VV_PARAMS \
+    typename V, typename A
+
+template <BOOST_GRAPHS_VV_PARAMS>
+vertex_vector_impl<V,A>::vertex_vector_impl()
+    : _verts()
+{ }
+
+#undef BOOST_GRAPHS_VV_PARAMS
+
+#if 0
 
 /**
  * Specialization of the storage traits to redefine the descriptor. Vectors for
