@@ -19,6 +19,7 @@
 #include <boost/mirror/traits/reflects_global_scope.hpp>
 // the base fallback visitor implementation
 #include <boost/mirror/visitors/fallback.hpp>
+#include <boost/mirror/algorithm/size.hpp>
 //
 //
 #include <boost/type_traits/is_fundamental.hpp>
@@ -68,9 +69,9 @@ public:
 	}
 
 	template <class MetaClass>
-	inline void enter_base_classes(void){ }
+	inline void enter_base_classes(MetaClass){ }
 	template <class MetaClass>
-	inline void leave_base_classes(void){ }
+	inline void leave_base_classes(MetaClass){ }
 
 
 	// enter a base class
@@ -103,12 +104,12 @@ public:
 
 
 	template <class MetaClass, class MetaAttributes>
-	void enter_attributes(void)
+	void enter_attributes(MetaClass, MetaAttributes)
 	{
 		using namespace ::std;
 		using namespace ::boost;
 		if(
-			!is_fundamental<MetaClass::reflected_type>::value && 
+			!is_fundamental<typename MetaClass::reflected_type>::value && 
 			(mirror::size<MetaAttributes>::value > 0)
 		)
 		{
@@ -121,12 +122,12 @@ public:
 	}
 
 	template <class MetaClass, class MetaAttributes>
-	inline void leave_attributes(void)
+	void leave_attributes(MetaClass, MetaAttributes)
 	{
 		using namespace ::std;
 		using namespace ::boost;
 		if(
-			!is_fundamental<MetaClass::reflected_type>::value && 
+			!is_fundamental<typename MetaClass::reflected_type>::value && 
 			(mirror::size<MetaAttributes>::value > 0)
 		)
 		{

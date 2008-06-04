@@ -45,12 +45,12 @@ namespace detail {
 			: visitor(_visitor)
 			, ptr_to_inst(_ptr_to_inst)
 			{
-				visitor.enter_attributes<MetaClass, MetaAttributes>();
+				visitor.enter_attributes(MetaClass(), MetaAttributes());
 			}
 	
 			~attribute_traversal(void)
 			{
-				visitor.leave_attributes<MetaClass, MetaAttributes>();
+				visitor.leave_attributes(MetaClass(), MetaAttributes());
 			}
 	
 			template <class MetaAttribute>
@@ -112,12 +112,12 @@ namespace detail {
 			: visitor(_visitor)
 			, ptr_to_inst(_ptr_to_inst)
 			{
-				visitor.enter_base_classes<MetaClass>();
+				visitor.enter_base_classes(MetaClass());
 			}
 	
 			~base_class_traversal(void)
 			{
-				visitor.leave_base_classes<MetaClass>();
+				visitor.leave_base_classes(MetaClass());
 			}
 	
 			template <class MetaInheritance>
@@ -182,19 +182,18 @@ private:
 		typename MetaClass::reflected_type* ptr_to_inst
 	)
 	{
-		typedef MetaClass meta_class;
-		meta_class mc;
+		MetaClass mc;
 		// enter the type
 		visitor.get().enter_type(mc);
 		// visit the instance
 		visitor.get().visit_instance(mc, ptr_to_inst);
 		// go through the base classes
-		for_each<typename meta_class::base_classes>(
-			ref(show_bases_to(visitor, ptr_to_inst))
+		for_each<typename MetaClass::base_classes>(
+			show_bases_to(visitor, ptr_to_inst)
 		);
 		// go through the own class' attributes
-		for_each<typename meta_class::attributes>(
-			ref(show_attribs_to(visitor, ptr_to_inst))
+		for_each<typename MetaClass::attributes>(
+			show_attribs_to(visitor, ptr_to_inst)
 		);
 		// leave the type
 		visitor.get().leave_type(mc);
@@ -233,15 +232,14 @@ private:
 		typename MetaClass::reflected_type* ptr_to_inst
 	)
 	{
-		typedef MetaClass meta_class;
-		meta_class mc;
+		MetaClass mc;
 		// enter the type
 		visitor.get().enter_type(mc);
 		// visit the instance
 		visitor.get().visit_instance(mc, ptr_to_inst);
 		// go through all of the class' attributes
-		for_each<typename meta_class::all_attributes>(
-			ref(show_attribs_to(visitor, ptr_to_inst))
+		for_each<typename MetaClass::all_attributes>(
+			show_attribs_to(visitor, ptr_to_inst)
 		);
 		// leave the type
 		visitor.get().leave_type(mc);
