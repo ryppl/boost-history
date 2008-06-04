@@ -10,6 +10,9 @@
 #include <vector>
 #include <deque>
 
+#include <boost/geometry/geometry.hpp>
+#include <boost/geometry/box.hpp>
+
 namespace boost {
 namespace spatial_index {
 
@@ -23,25 +26,24 @@ namespace spatial_index {
     Since spatial_index does nothing, it is not very useful.
 */
 
-template<typename Key, typename Value>
+template<typename Point, typename Value>
 class spatial_index
 {
 
 public:
 
 	/// insert data 'v' with key 'k'
-	virtual void insert(const Key &k, const Value &v) = 0;
+	virtual void insert(const Point &k, const Value &v) = 0;
 	
-	/// bulk insert data in (v_begin, v_end)
-	virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Key> &v) = 0;
+	/// bulk insert data from (v_begin, v_end)
+	virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Point> &v) = 0;
 
 	/// find element with key 'k'
-	virtual Value find(const Key &k) = 0;
+	virtual Value find(const Point &k) = 0;
 
 	/// find element in the defined rectangle
 	/// TODO: change container
-	/// TODO: use rectangle from the Geometry Library
-	virtual std::deque<Value> find(const double x1, const double x2, const double y1, const double y2) = 0;
+ 	virtual std::deque<Value> find(const geometry::box<Point> &r) = 0;
 
 	/// element count in the index
 	virtual unsigned int elements(void) = 0;

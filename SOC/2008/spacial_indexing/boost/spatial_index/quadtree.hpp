@@ -15,34 +15,34 @@ namespace boost {
 namespace spatial_index {
 
 
-template<typename Key, typename Value>
-class quadtree : public spatial_index<Key, Value>
+template<typename Point, typename Value>
+class quadtree : public spatial_index<Point, Value>
 {
 private:
-	quadtree_node<Key,Value> root;
+	quadtree_node<Point,Value> root;
 	unsigned int element_count;
 
 	// number of points in each node
 	unsigned int node_size_;
 
 public:
-	quadtree(double min_x, double min_y, double max_x, double max_y) 
-		: root(min_x, min_y, max_x, max_y, 1), element_count(0), node_size_(1)  {}
+ 	quadtree(const geometry::box<Point> &r)
+		: root(r, 1), element_count(0), node_size_(1)  {}
 	  
-	virtual void insert(const Key &k, const Value &v)
+	virtual void insert(const Point &k, const Value &v)
 	{
 		element_count++;
 		root.insert(k, v);
 	}
 
-	virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Key> &v)
+	virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Point> &v)
 	{
 // 		boost::xtime xt1, xt2;
 // 		boost::xtime_get(&xt1, boost::TIME_UTC);
 
 		//unsigned int counter = 0;
 
-		typename std::vector<Key>::iterator it_point;
+		typename std::vector<Point>::iterator it_point;
 		it_point = v.begin();
 		Value it_data = v_begin;
 		while(it_data != v_end && it_point != v.end()) {
@@ -62,16 +62,16 @@ public:
 // 		std::cerr << " nsecs: " << xt2.nsec - xt1.nsec << std::endl;
 	}
 
-	virtual Value find(const Key &k)
+	virtual Value find(const Point &k)
 	{
 		return root.find(k);
 	}
 
-	virtual std::deque<Value> find(const double x1, const double x2, const double y1, const double y2)
+ 	virtual std::deque<Value> find(const geometry::box<Point> &r)
 	{
-		std::deque<Value> r;
-		root.find(r, x1, x2, y1, y2);
-		return r;
+		std::deque<Value> result;
+		root.find(result, r);
+		return result;
 	}
 
 
