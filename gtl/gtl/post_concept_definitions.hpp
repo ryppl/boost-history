@@ -5,6 +5,10 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POST_CONCEPT_DEFINITIONS_HPP
+#define GTL_POST_CONCEPT_DEFINITIONS_HPP
+namespace gtl {
+
 template <typename T>
 template <typename interval_type>
 inline void rectangle_data<T>::set(orientation_2d orient, const interval_type& interval) {
@@ -52,4 +56,8 @@ polygon_90_data<T>& polygon_90_data<T>::operator=(const T2& rvalue) {
   polygon_90_concept::assign(*this, rvalue);
   return *this;
 }
+
+
+}
+#endif
 

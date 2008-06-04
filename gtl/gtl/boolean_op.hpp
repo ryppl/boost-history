@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_BOOLEAN_OP_HPP
+#define GTL_BOOLEAN_OP_HPP
+namespace gtl {
 namespace boolean_op {
 
   template <typename Unit>
@@ -678,3 +681,6 @@ namespace boolean_op {
   }
 
 };
+
+}
+#endif

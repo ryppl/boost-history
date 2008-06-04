@@ -5,7 +5,13 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_DATA_HPP
+#define GTL_POLYGON_DATA_HPP
+namespace gtl {
 template <typename T>
 class polygon_data : public polygon_45_data<T> {
   //inherits everything
 };
+}
+#endif
+

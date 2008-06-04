@@ -5,12 +5,15 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_ITERATOR_GEOMETRY_TO_SET_HPP
+#define GTL_ITERATOR_GEOMETRY_TO_SET_HPP
+namespace gtl {
 template <typename concept_type, typename geometry_type>
 class iterator_geometry_to_set {};
 
 template <typename concept_type, typename iterator_type>
 class iterator_geometry_range_to_set {
-  typedef typename iterator_type::value_type geometry_type;
+  typedef typename std::iterator_traits<iterator_type>::value_type geometry_type;
   typedef iterator_geometry_to_set<concept_type, geometry_type> internal_iterator_type;
   typedef typename internal_iterator_type::value_type value_type;
   typedef std::forward_iterator_tag iterator_category;
@@ -306,3 +309,7 @@ public:
     return *itrhib;
   }
 };
+
+}
+#endif
+

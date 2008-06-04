@@ -6,6 +6,10 @@
   http://www.boost.org/LICENSE_1_0.txt).
 */
 
+#ifndef GTL_POLYGON_90_WITH_HOLES_CONCEPT_HPP
+#define GTL_POLYGON_90_WITH_HOLES_CONCEPT_HPP
+namespace gtl {
+
 struct polygon_90_with_holes_concept : polygon_90_concept {
 public:
   inline polygon_90_with_holes_concept() {}
@@ -189,3 +193,7 @@ inline void testPolygonWithHolesImpl() {
   
   polygon_90_with_holes_concept::move(pwh, 5, 5);
 }
+
+}
+#endif
+

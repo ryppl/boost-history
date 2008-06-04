@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_45_WITH_HOLES_CONCEPT_HPP
+#define GTL_POLYGON_45_WITH_HOLES_CONCEPT_HPP
+namespace gtl {
 
 struct polygon_45_with_holes_concept : virtual polygon_45_concept, polygon_90_with_holes_concept {
 public:
@@ -83,4 +86,7 @@ public:
     return polygon;
   }
 };
+
+}
+#endif
 

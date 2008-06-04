@@ -5,6 +5,10 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_RECTANGLE_CONCEPT_HPP
+#define GTL_RECTANGLE_CONCEPT_HPP
+namespace gtl {
+
 struct rectangle_concept {
   rectangle_concept() {}
 
@@ -645,4 +649,6 @@ struct rectangle_concept {
   };
 };
 
+}
+#endif
 

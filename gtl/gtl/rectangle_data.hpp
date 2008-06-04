@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_RECTANGLE_DATA_HPP
+#define GTL_RECTANGLE_DATA_HPP
+namespace gtl {
 template <typename T>
 class rectangle_data {
 public:
@@ -47,3 +50,7 @@ std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
 {
   return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
 }
+
+}
+#endif
+

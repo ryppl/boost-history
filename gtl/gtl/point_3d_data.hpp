@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POINT_3D_DATA_HPP
+#define GTL_POINT_3D_DATA_HPP
+namespace gtl {
 template <typename T>
 class point_3d_data {
 public:
@@ -27,4 +30,8 @@ public:
 private:
   coordinate_type coords_[3]; 
 };
+
+}
+#endif
+
 

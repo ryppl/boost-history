@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_90_CONCEPT_HPP
+#define GTL_POLYGON_90_CONCEPT_HPP
+namespace gtl {
 struct polygon_90_concept {
   inline polygon_90_concept() {}
 
@@ -190,7 +193,7 @@ struct polygon_90_concept {
   perimeter(const polygon_type& polygon) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
-    typedef typename iterator::value_type point_type;
+    typedef typename std::iterator_traits<iterator>::value_type point_type;
     coordinate_type return_value = 0;
     point_type previous_point, first_point;
     iterator itr = begin(polygon);
@@ -215,7 +218,7 @@ struct polygon_90_concept {
                        bool consider_touch, point_concept pc) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
-    typedef typename iterator::value_type point_type;
+    typedef typename std::iterator_traits<iterator>::value_type point_type;
     iterator iter, iter_end;
     iter_end = end(polygon);
     iter = begin(polygon);
@@ -327,4 +330,5 @@ struct polygon_90_concept {
 
 };
 
-
+}
+#endif

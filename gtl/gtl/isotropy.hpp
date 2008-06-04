@@ -6,6 +6,9 @@
   http://www.boost.org/LICENSE_1_0.txt).
 */
 
+#ifndef GTL_ISOTROPY_HPP
+#define GTL_ISOTROPY_HPP
+namespace gtl {
 struct no_type {};
 
 enum direction_1d_enum { LOW = 0, HIGH = 1,
@@ -147,4 +150,7 @@ public:
   bool operator!=(orientation_3d that) const { return (val_ != that.val_); }
   unsigned int to_int() const { return (val_); }
 };
+
+}
+#endif
 

@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_SET_DATA_HPP
+#define GTL_POLYGON_SET_DATA_HPP
+namespace gtl {
 struct operator_provides_storage {};
 struct operator_requires_copy {};
 
@@ -131,3 +134,7 @@ private:
   mutable bool unsorted_;
 
 };
+
+}
+#endif
+

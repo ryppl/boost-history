@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_SET_WRAPPER_HPP
+#define GTL_POLYGON_SET_WRAPPER_HPP
+namespace gtl {
 template <typename T>
 class polygon_set_const_wrapper {
 private:
@@ -78,3 +81,7 @@ template <typename T>
 polygon_set_const_wrapper<T> wrap(const T& t) {
   return polygon_set_wrapper<T>(t);
 }
+
+}
+#endif
+

@@ -5,14 +5,17 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_ITERATOR_VERTEX_ORIENT_CONVERSION_HPP
+#define GTL_ITERATOR_VERTEX_ORIENT_CONVERSION_HPP
+namespace gtl {
 template <typename iterator_type>
 class iterator_vertex_orient_conversion {
 private:
   iterator_type iter_;
-  typename iterator_type::value_type vertex_;
+  typename std::iterator_traits<iterator_type>::value_type vertex_;
 public:
   typedef std::forward_iterator_tag iterator_category;
-  typedef typename iterator_type::value_type value_type;
+  typedef typename std::iterator_traits<iterator_type>::value_type value_type;
   typedef std::ptrdiff_t difference_type;
   typedef const value_type* pointer; //immutable
   typedef const value_type& reference; //immutable
@@ -42,4 +45,7 @@ public:
     return vertex_; 
   }
 };
+
+}
+#endif
 

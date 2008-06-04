@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_INTERVAL_DATA_HPP
+#define GTL_INTERVAL_DATA_HPP
+namespace gtl {
 template <typename T>
 class interval_data {
 public:
@@ -43,3 +46,6 @@ std::ostream& operator << (std::ostream& o, const interval_data<T>& i)
 {
   return o << i.get(LOW) << ' ' << i.get(HIGH);
 }
+
+}
+#endif

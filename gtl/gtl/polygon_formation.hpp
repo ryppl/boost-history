@@ -5,6 +5,9 @@
     Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_FORMATION_HPP
+#define GTL_POLYGON_FORMATION_HPP
+namespace gtl {
 
 namespace polygon_formation {
 
@@ -1687,3 +1690,7 @@ namespace polygon_formation {
   }
 
 }; //polygon_formation namespace
+
+}
+#endif
+

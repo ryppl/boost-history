@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_90_DATA_HPP
+#define GTL_POLYGON_90_DATA_HPP
+namespace gtl {
 template <typename T>
 class polygon_90_data {
 public:
@@ -18,8 +21,8 @@ public:
   /// and that the input is a well behaved polygon
   template<class iT>
   inline polygon_90_data& set(iT begin_point, iT end_point) {
-    return set_compact(iterator_points_to_compact<iT, typename iT::value_type>(begin_point),
-        iterator_points_to_compact<iT, typename iT::value_type>(end_point));
+    return set_compact(iterator_points_to_compact<iT, typename std::iterator_traits<iT>::value_type>(begin_point),
+        iterator_points_to_compact<iT, typename std::iterator_traits<iT>::value_type>(end_point));
   }
 
   template<class iT>
@@ -62,3 +65,6 @@ private:
   std::vector<coordinate_type> coords_; 
 };
   
+}
+#endif
+

@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_90_WITH_HOLES_DATA_HPP
+#define GTL_POLYGON_90_WITH_HOLES_DATA_HPP
+namespace gtl {
 
 template <typename T>
 class polygon_90_with_holes_data {
@@ -99,3 +102,7 @@ private:
   polygon_90_data<coordinate_type> self_;
   std::list<hole_type> holes_; 
 };
+
+}
+#endif
+

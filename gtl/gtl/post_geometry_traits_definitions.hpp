@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POST_GEOMETRY_TRAITS_DEFINITIONS_HPP
+#define GTL_POST_GEOMETRY_TRAITS_DEFINITIONS_HPP
+namespace gtl {
 
 template <typename geometry_type>
 struct component_type { 
@@ -23,4 +26,7 @@ struct center_type {
   typedef typename geometry_concept<geometry_type>::type::template
   registration<geometry_type>::center_type type;
 };
+
+}
+#endif
 

@@ -5,6 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_GTL_HPP
+#define GTL_GTL_HPP
 //external
 #include <vector>
 #include <deque>
@@ -82,6 +84,7 @@
 //defintions
 #include "post_geometry_traits_definitions.hpp"
 
+namespace gtl {
 
 //immutable unary functions
 
@@ -539,3 +542,5 @@ operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
                                                     boolean_op::BinaryNot());
 }
 
+}
+#endif

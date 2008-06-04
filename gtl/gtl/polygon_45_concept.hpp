@@ -5,11 +5,14 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_45_CONCEPT_HPP
+#define GTL_POLYGON_45_CONCEPT_HPP
+namespace gtl {
 
 template <typename iterator_type>
-typename point_traits<typename iterator_type::value_type>::coordinate_type
+typename point_traits<typename std::iterator_traits<iterator_type>::value_type>::coordinate_type
 polygon_point_sequence_area(iterator_type begin_range, iterator_type end_range) {
-  typedef typename iterator_type::value_type point_type;
+  typedef typename std::iterator_traits<iterator_type>::value_type point_type;
   typedef typename point_traits<point_type>::coordinate_type Unit;
   if(begin_range == end_range) return Unit(0);
   point_type first = *begin_range;
@@ -111,7 +114,7 @@ struct polygon_45_concept : polygon_90_concept {
   perimeter(const polygon_type& polygon) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
-    typedef typename iterator::value_type point_type;
+    typedef typename std::iterator_traits<iterator>::value_type point_type;
     coordinate_type return_value = 0;
     point_type previous_point, first_point;
     iterator itr = begin(polygon);
@@ -138,11 +141,12 @@ struct polygon_45_concept : polygon_90_concept {
 
   template <typename polygon_type, typename coordinate_type_1, typename coordinate_type_2>
   static polygon_type& move(polygon_type& polygon, coordinate_type_1 x_displacement, coordinate_type_2 y_displacement) {
-    std::vector<typename polygon_traits<polygon_type>::iterator_type::value_type> points;
+    typedef typename polygon_traits<polygon_type>::iterator_type iterator_type;
+    std::vector<typename std::iterator_traits<iterator_type>::value_type> points;
     points.reserve(size(polygon));
     for(typename polygon_traits<polygon_type>::iterator_type iter = begin(polygon); 
         iter != end(polygon); ++iter) {
-      typename polygon_traits<polygon_type>::iterator_type::value_type vertex = *iter;
+      typename std::iterator_traits<iterator_type>::value_type vertex = *iter;
       point_concept::x(vertex, point_concept::x(vertex) + x_displacement);
       point_concept::y(vertex, point_concept::y(vertex) + y_displacement);
       points.push_back(vertex);
@@ -164,4 +168,6 @@ struct polygon_45_concept : polygon_90_concept {
 
 };
 
+}
+#endif
 

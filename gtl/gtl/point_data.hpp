@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTLPOINT_DATA_HPP
+#define GTLPOINT_DATA_HPP
+namespace gtl {
 template <typename T>
 class point_data {
 public:
@@ -40,3 +43,7 @@ std::ostream& operator << (std::ostream& o, const point_data<T>& r)
 {
   return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
 }
+
+}
+#endif
+

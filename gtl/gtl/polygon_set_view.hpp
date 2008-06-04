@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_POLYGON_SET_VIEW_HPP
+#define GTL_POLYGON_SET_VIEW_HPP
+namespace gtl {
 
 template <typename value_type, typename arg_type>
 inline void insert_into_view_arg(value_type& dest, const arg_type& arg, orientation_2d orient) {
@@ -231,3 +234,7 @@ public:
   }
   void sort() const {} //is always sorted
 };
+
+}
+#endif
+

@@ -5,6 +5,9 @@
     Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_RECTANGLE_FORMATION_HPP
+#define GTL_RECTANGLE_FORMATION_HPP
+namespace gtl {
 
 namespace rectangle_formation {
   template <class T> 
@@ -226,3 +229,6 @@ namespace rectangle_formation {
 
 }; //namespace rectangle_formation
   
+}
+#endif
+

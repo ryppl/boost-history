@@ -5,6 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_ITERATOR_POINTS_TO_COMPACT_HPP
+#define GTL_ITERATOR_POINTS_TO_COMPACT_HPP
+namespace gtl {
 template <typename iT, typename point_type>
 class iterator_points_to_compact {
 private:
@@ -43,3 +46,7 @@ public:
   }
   inline reference operator*() const { return coord_ = point_concept::get(*iter_, orient_); }
 };
+
+}
+#endif
+

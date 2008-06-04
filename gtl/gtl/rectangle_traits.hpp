@@ -5,6 +5,10 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
+#ifndef GTL_RECTANGLE_TRAITS_HPP
+#define GTL_RECTANGLE_TRAITS_HPP
+namespace gtl {
+
 template <typename T>
 struct rectangle_traits {
   typedef typename T::coordinate_type coordinate_type;
@@ -22,4 +26,7 @@ struct rectangle_traits {
                             const T3& interval_vertical) {
     return T(interval_horizontal, interval_vertical); }
 };
+
+}
+#endif
 
