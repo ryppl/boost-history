@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compile_test", "compile_test.vcproj", "{618D4B05-A06E-443B-87C0-94964CEA7164}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "well_formed_point", "point_concept_tests\well_formed_point.vcproj", "{B63710DE-960E-4C00-B79A-7C8F80D6BC15}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{618D4B05-A06E-443B-87C0-94964CEA7164}.Debug|Win32.ActiveCfg = Debug|Win32
+		{618D4B05-A06E-443B-87C0-94964CEA7164}.Debug|Win32.Build.0 = Debug|Win32
+		{618D4B05-A06E-443B-87C0-94964CEA7164}.Release|Win32.ActiveCfg = Release|Win32
+		{618D4B05-A06E-443B-87C0-94964CEA7164}.Release|Win32.Build.0 = Release|Win32
+		{B63710DE-960E-4C00-B79A-7C8F80D6BC15}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B63710DE-960E-4C00-B79A-7C8F80D6BC15}.Debug|Win32.Build.0 = Debug|Win32
+		{B63710DE-960E-4C00-B79A-7C8F80D6BC15}.Release|Win32.ActiveCfg = Release|Win32
+		{B63710DE-960E-4C00-B79A-7C8F80D6BC15}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

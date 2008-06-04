@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "use_o_iterator", "use_o_iterator.vcproj", "{E013A5EB-2EC9-4B99-84D7-C1CCAE53671C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compare_great_circle", "compare_great_circle.vcproj", "{41D4268B-3BE4-48FC-8D94-BCEBFD82FAA9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crtp", "crtp.vcproj", "{083A9118-DFE9-405D-A2C2-892DF86C57CE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "multi", "multi.vcproj", "{8DD51862-4F44-4371-B7E2-C93A9F4AC564}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E013A5EB-2EC9-4B99-84D7-C1CCAE53671C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E013A5EB-2EC9-4B99-84D7-C1CCAE53671C}.Debug|Win32.Build.0 = Debug|Win32
+		{E013A5EB-2EC9-4B99-84D7-C1CCAE53671C}.Release|Win32.ActiveCfg = Release|Win32
+		{E013A5EB-2EC9-4B99-84D7-C1CCAE53671C}.Release|Win32.Build.0 = Release|Win32
+		{41D4268B-3BE4-48FC-8D94-BCEBFD82FAA9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{41D4268B-3BE4-48FC-8D94-BCEBFD82FAA9}.Debug|Win32.Build.0 = Debug|Win32
+		{41D4268B-3BE4-48FC-8D94-BCEBFD82FAA9}.Release|Win32.ActiveCfg = Release|Win32
+		{41D4268B-3BE4-48FC-8D94-BCEBFD82FAA9}.Release|Win32.Build.0 = Release|Win32
+		{083A9118-DFE9-405D-A2C2-892DF86C57CE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{083A9118-DFE9-405D-A2C2-892DF86C57CE}.Debug|Win32.Build.0 = Debug|Win32
+		{083A9118-DFE9-405D-A2C2-892DF86C57CE}.Release|Win32.ActiveCfg = Release|Win32
+		{083A9118-DFE9-405D-A2C2-892DF86C57CE}.Release|Win32.Build.0 = Release|Win32
+		{8DD51862-4F44-4371-B7E2-C93A9F4AC564}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DD51862-4F44-4371-B7E2-C93A9F4AC564}.Debug|Win32.Build.0 = Debug|Win32
+		{8DD51862-4F44-4371-B7E2-C93A9F4AC564}.Release|Win32.ActiveCfg = Release|Win32
+		{8DD51862-4F44-4371-B7E2-C93A9F4AC564}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
