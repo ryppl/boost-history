@@ -189,11 +189,11 @@ private:
 		visitor.get().visit_instance(mc, ptr_to_inst);
 		// go through the base classes
 		for_each<typename MetaClass::base_classes>(
-			show_bases_to(visitor, ptr_to_inst)
+			ref(show_bases_to(visitor, ptr_to_inst))
 		);
 		// go through the own class' attributes
 		for_each<typename MetaClass::attributes>(
-			show_attribs_to(visitor, ptr_to_inst)
+			ref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
 		visitor.get().leave_type(mc);
@@ -239,7 +239,7 @@ private:
 		visitor.get().visit_instance(mc, ptr_to_inst);
 		// go through all of the class' attributes
 		for_each<typename MetaClass::all_attributes>(
-			show_attribs_to(visitor, ptr_to_inst)
+			ref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
 		visitor.get().leave_type(mc);
