@@ -1,0 +1,413 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Rationale</title>
+
+<link rel="stylesheet" href="../boostbook.css" type="text/css"></head>
+<body style="color: black; background-color: white; background-image: url(../images/draft.png);" alink="#0000ff" link="#0000ff" vlink="#840084">
+<table cellpadding="2" width="100%">
+<tbody>
+<tr>
+<td valign="top"><img alt="Boost C++ Libraries" src="../proposed_boost.png" height="86" width="277"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="p" href="examples.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><a accesskey="n" href="classes.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next.png" alt="Next"></a></div>
+<div class="section" lang="en">
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="rationale"></a>Rationale</h2>
+</div>
+</div>
+<p>The Geometry Library is implemented like the std:: library and
+most of the boost:: libraries are implemented.</p>
+<p>Data and algorithms are separated.</p>
+<p>The library contains only header files.</p>
+<p>Besides that the Geometry Library uses OGC <span style="font-style: italic;">conventions</span> for
+names and definitions of geometries and algorithms. The library
+implements the OGC geometries <span style="font-weight: bold;">point</span>,
+<span style="font-weight: bold;">linestring</span>, <span style="font-weight: bold;">polygon, multi_point, multi_</span><span style="font-weight: bold;">linestring</span> and <span style="font-weight: bold;">multi_polygon</span>. The
+library implements OGC&nbsp; algorithms as <span style="font-weight: bold;">within</span>, <span style="font-weight: bold;">intersection</span>, <span style="font-weight: bold;">distance</span>,
+and more, but not all of them are currently implemented, and not all of
+them are implemented for all possible geometry combinations.</p>
+<p>The Geometry Library is not an OGC <span style="font-style: italic;">implementation</span>.&nbsp;OGC specifies a base geometry class and derived classes for
+point, linestring, etc, where all algorithms are implemented
+as&nbsp;class methods. This conflicts with std:: and boost::
+conventions and C++ generic program in general, and results in sometimes poor
+implementations where all algorithms need&nbsp;typecasts to see
+with
+which&nbsp;geometry they handle.</p>
+<p>So this library defines the algorithms separated from the
+geometry classes and strict OGC compliancy is dropped.</p>
+<p>This library has no calls to new or delete. There are no casts. There are no virtual
+member functions. There is no inheritance, besides type traits
+inheritance. There are hardly any exceptions.</p>
+<p>The Geometry Library does <span style="font-weight: bold;">not</span>
+implement vector or matrix classes. Vector and matrix calculations are
+used in some geometry algorithms, and are essential for
+transformations. However, the concepts vector and matrix are more
+generic than geometry and could be used in other scopes than in
+geometry scope. So they should be defined in a separate library. Boost
+UBlas is an example of such a library and the Geometry Library could be
+used in combination with Boost UBlas.</p>
+<p>Although lat long classes
+and projections could fit in the projects where the Geometry Library is
+used, they are not implemented
+in the Geometry Library.</p>
+<p>In summary, the Geometry Library provides some often used
+algorithms such as <span style="font-weight: bold;">point
+in polygon</span>, <span style="font-weight: bold;">area,
+clip</span>, <span style="font-weight: bold;">distance</span>
+in the most generic way as possible.</p>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="rationale"></a>Templatization</h2>
+</div>
+</div>
+<p><span style="font-weight: bold;"></span>The
+Geometry Library uses templates for all class definitions and
+algorithms.</p>
+<p>In
+all geometries the coordinate type is&nbsp;templatized. Points can
+be
+created using double, float, int, char or whatever.</p>
+<p><code>geometry::point&lt;double&gt; p;</code><br>
+</p>
+<p>In
+all geometries consisting of points, the point type itself is
+templatized. So linestrings can be linestrings built of
+point&lt;double&gt;, but also other points can be used. That
+means that
+you can specify your own point-type for a linestring, as long as the
+point-type implements the basic point interface (or concept).</p>
+<p><code>geometry::linestring&lt;my_point&gt; line;</code><br>
+</p>
+<p>In
+all geometries consisting of points, the container type is templatized,
+and default to std::vector. So a linestring is default defined
+as&nbsp;a std::vector of points, but the library user can take a
+std::list of points as well, or a std::deque of points.</p>
+<p><code>geometry::linestring&lt;my_point,
+std::deque&gt; line2;</code><br>
+</p>
+<p>In
+all multi-geometries the container containing the single type is
+templatized and defaults to std::vector. A multi-linestring can be a
+std::deque of linestrings.</p>
+<p>In a polygon the container containing
+the inner rings is templatized. To illustrate this, a multi_polygon can
+be a std::vector of polygons, where polygons have a std::list of inner
+rings and all rings are a std::deque of points, where points have float
+coordinates.</p>
+<p>So far the geometries classes. The algorithms are designed
+with the&nbsp;following requirements in mind:</p>
+<ul>
+<li>they all should have the same name</li>
+<li>they
+all should work on the provided geometry classes, but also on derived
+classes, and also on other geometry classes (having the specified
+interface)</li>
+</ul>
+<p>These requirements conflict in a way. The first
+requirement is necessary because you might use the geometry as a
+template in, for example, a layer of those geometries. The&nbsp;<span style="font-weight: bold;">within</span> algorithm or
+the&nbsp;<span style="font-weight: bold;">label_point</span>
+algorithm should work on all geometries. The second requirement is
+useful because many libraries define their own points, and library
+users might have additional needs for points such as a Z-value or an
+SRID.</p>
+<p>Suppose&nbsp;the <span style="font-style: italic;">within</span>
+function for point in polygon is defined as following:</p>
+<p><span class="computeroutput"><code>&nbsp;&nbsp;&nbsp;
+template&lt;typename P1, typename P2, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+template&lt;typename,typename&gt; class VP, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+template&lt;typename,typename&gt; class VR, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; template&lt;typename&gt; class
+AP,<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; template&lt;typename&gt; class
+AR&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool within(const P1&amp;
+pnt, const polygon&lt;P2, VP, VR, AP, AR&gt;&amp; poly)</code><br>
+</span><span class="computeroutput"></span><br>
+</p>
+<p>(The
+template template parameters are necessary for flexibel containers).
+With this definition the second requirement is not met, library users
+cannot add their own polygons, they should use the geometry::polygon.</p>
+<p>If the <span style="font-style: italic;">within</span>
+function would have been defined as following:</p>
+<p><code>&nbsp;&nbsp;&nbsp;
+template&lt;typename POI, typename POL&gt;<br>
+&nbsp;&nbsp;&nbsp; bool within(const POI&amp; pnt,
+const POL&amp; poly)</code><br>
+the
+second requirement is met, but the first is not. Because, what if you
+have the within function for point in box, or for point in multi-polygon:</p>
+<p><code>&nbsp;&nbsp;&nbsp;
+template&lt;typename POI, typename B&gt;<br>
+&nbsp;&nbsp;&nbsp; bool within(const POI&amp; pnt,
+const B&amp; b)</code></p>
+<p>The compiler cannot make the difference, these two definitions
+are ambiguous.</p>
+<p>Therefore,
+the Geometry Library design contains both approaches to fulfill both
+requirements. The algorithms implemented per geometry class add the
+name of the geometry classes. So we have:</p>
+<p><code>&nbsp;&nbsp;&nbsp;
+template&lt;typename P, typename POL&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool
+within_point_in_polygon(const P&amp; p, const POL&amp; poly)</code><br>
+and</p>
+<p><code>&nbsp;&nbsp;&nbsp;
+template&lt;typename P, typename B&gt;<br>
+&nbsp;&nbsp;&nbsp; inline bool within_point_in_box(const
+P&amp; p, const B&amp; b)</code><br>
+</p>
+<p>Besides this there are within algorithms defined as described
+above, which are just wrappers</p>
+<p><code>&nbsp;&nbsp;&nbsp;
+template&lt;typename P1, typename P2&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool within(const P1&amp;
+p, const box&lt;P2&gt;&amp; b) { return
+within_point_in_box(p, b); }</code><br>
+<br>
+and</p>
+<code>&nbsp;&nbsp;&nbsp; template&lt;typename P1,
+typename P2, <br class="author">
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+template&lt;typename,typename&gt; class VP, <br class="author">
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+template&lt;typename,typename&gt; class VR, <br class="author">
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; template&lt;typename&gt; class
+AP,<br class="author">
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; template&lt;typename&gt; class
+AR&gt;<br class="author">
+&nbsp;&nbsp;&nbsp;
+inline bool within(const P1&amp; p, const polygon&lt;P2, VP,
+VR, AP,
+AR&gt;&amp; poly)&nbsp;{&nbsp;return
+within_point_in_polygon(p,
+poly);&nbsp;}</code><br>
+<p>So, in summary, all algorithms have two forms. There is the <span style="font-style: italic;">primary</span> form, such as <span style="font-weight: bold;">within_point_in_polygon</span>,
+defined for all types including the user defined types. And there is
+the generic form&nbsp;<span style="font-weight: bold;">within</span>,
+defined for the supplied classes (and for derived classes as well).</p>
+<p>Besides
+this,&nbsp;algorithms also work for mixed types. Point in polygon works
+for&nbsp;point-type in polygon-of-same-point-type, but it also
+works
+for point-type in a polygon-of-different-point-type.</p>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.other_libraries"></a>Other libraries</h2>
+</div>
+</div>
+<p>There are many other Open Source libraries on geometry. This
+Geometry Library is a template library, following std::, boost:: and
+OGC conventions. There are <span style="font-weight: bold;">not</span>
+many Open Source libraries like this.</p>
+<p>The
+found Open Source geometry libraries are listed here shortly.</p>
+<p></p>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td>
+<p>Library</p>
+</td>
+<td>
+<p>License</p>
+</td>
+<td>
+<p>C++ object type</p>
+</td>
+<td>
+<p>Typical geometries</p>
+</td>
+<td><p>Typical algorithms</p></td><td>
+<p>Remarks</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://www.cgal.org" target="_blank">CGAL</a>
+(computational geometry algorithms library)</p>
+</td>
+<td>
+<p>QPL</p>
+</td>
+<td>
+<p>template</p>
+</td>
+<td>
+<p>many, a.o. lines, polygons </p>
+<p>E.g. General_polygon_with_holes_2</p>
+</td>
+<td><p>many</p></td><td>
+<p>Often used. License is not compatible. More
+geometry than GIS.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://www.gdal.org" target="_blank">GDAL</a>
+(Geospatial Data Abstraction Library)</p>
+</td>
+<td>
+<p>MIT/X style</p>
+</td>
+<td>
+<p>virtual</p>
+</td>
+<td>
+<p>OGC*</p>
+<p>class CPL_DLL OGRPolygon : public OGRSurface </p>
+</td>
+<td><p>OGC* (?)</p></td><td>
+<p>Often used. OGC compliant. C++,&nbsp;C-styled</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://geos.refractions.net" target="_blank">GEOS</a> (Geometry Engine - Open
+Source)</p>
+</td>
+<td>
+<p>LGPL</p>
+</td>
+<td>
+<p>virtual</p>
+</td>
+<td>
+<p>OGC*</p>
+<p>class Point : public Geometry</p>
+</td>
+<td><p>OGC*</p></td><td>
+<p>Documentation states: If you prefer troubles you can use
+the C++ interface.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://freegis.org/database/viewobj?obj=778&amp;_ZopeId=00762381A3GTxSnm6SI" target="_blank">GFC</a> (Geometry Foundation Classes)</p>
+</td>
+<td>
+<p>GPL</p>
+</td>
+<td>
+<p>virtual</p>
+</td>
+<td>
+<p>polygons, holes</p>
+</td>
+<td><p>area, centroid, intersection, within</p></td><td>
+<p>Status unknown, original ibrary is gone.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>GTL (geometric template library)</p>
+</td>
+<td>
+<p>Not Open Source</p>
+</td>
+<td>
+<p>template</p>
+</td>
+<td>
+<p>Point, Segment, Rectangle, Polygon, PolygonSet
+</p>
+</td>
+<td><p></p></td><td>
+<p>Not published.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://idav.ucdavis.edu/%7Eokreylos/ResDev/Geometry" target="_blank">TGL</a> (templatized geometry library)</p>
+</td>
+<td>
+<p>GPL</p>
+</td>
+<td>
+<p>template</p>
+</td>
+<td>
+<p>box, curve, plane, sphere</p>
+</td>
+<td><p></p></td><td>
+<p></p>
+<p></p></td>
+</tr>
+<tr>
+<td>
+<p><a href="http://cpaf.sourceforge.net/cpaf/cpaf_libs/math/math0_dir_description.html" target="_blank">CPAF GMath</a> (CPAF - C++ Cross
+Platform Application)</p>
+</td>
+<td>
+<p>?</p>
+</td>
+<td>
+<p>template</p>
+</td>
+<td>
+
+<p>box, circle, ellipse, rectangle, triangle, <br>vector, matrix</p>
+</td>
+<td><p></p><p></p></td><td>
+<p>&nbsp;<br>
+</p>
+</td>
+</tr><tr><td><p><a href="http://www.cs.man.ac.uk/%7Etoby/alan/software" target="_blank">GPC</a> (General Polygon Clipping Library)</p></td><td><p>Not Open Source</p></td><td><p>n.a., C</p></td><td><p>gpc_polygon</p></td><td><p>clip</p></td><td><p>Not C++, not Open Source</p></td></tr>
+</tbody>
+</table>
+
+<p><span style="font-weight: bold;"></span></p>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.other_libraries"></a>Performance</h2>
+</div>
+</div><p>A geometry library could be built in many ways. This Geometry
+Library follows std:: conventions and defines a linestring as a
+std::vector of points and nothing more.</p><p>Therefore, the linestring class&nbsp;has no bounding box.</p><p>In
+many algorithms, such as intersecting a linestring with a clipping box,
+it is useful to first compare if the bounding box overlaps with the
+clipping box. If there is no overlap, there is no intersection and the
+clipping process &nbsp;doesn't need to be started. The same applies for
+within (point-in-polygon), etc.</p><p>The library user could make a
+derived linestring or polygon containing its bounding box. That
+bounding box could be calculated after the geometry is filled using <span style="font-weight: bold;">geometry::envelope</span>.&nbsp;Before
+the relevant algorithms there could be checked if the bounding box
+overlaps with the clipping box, or if the point is in the polygon
+bounding box.</p><p>Alternately, the library user could have a table
+structure where a geometry is one column of the table, and its bounding
+box is another column of the table. That bounding box could be read
+from file or from the database, it doesn't need to be calculated. Or
+the library user could make a wrapper class containing the geometry as
+well as its bounding box.</p><p>The library user is free how to
+implement this, if necessary. However, often it is necessary and it
+makes sense to first compare bounding boxes.</p>
+</div>
+<table width="100%">
+<tbody>
+<tr>
+<td align="left"><small>
+<p>February 1, 2008</p>
+</small></td>
+<td align="right"><small>Copyright © 1995-2008 Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands</small></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="p" href="examples.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><a accesskey="n" href="classes.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next.png" alt="Next"></a></div>
+</body></html>

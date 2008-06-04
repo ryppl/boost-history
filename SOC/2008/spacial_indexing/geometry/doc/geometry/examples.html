@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Examples</title>
+
+<link rel="stylesheet" href="../boostbook.css" type="text/css"></head>
+<body style="color: black; background-color: white; background-image: url(../images/draft.png);" alink="#0000ff" link="#0000ff" vlink="#840084">
+<table cellpadding="2" width="100%">
+<tbody>
+<tr>
+<td valign="top"><img alt="Boost C++ Libraries" src="../proposed_boost.png" height="86" width="277"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev_disabled.png" alt="Prev"><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next.png" alt="Next"></a></div>
+<div class="section" lang="en">
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.usage"></a>Examples</h2>
+</div>
+</div>
+<p>There are four example programs, which are described shortly
+below.
+</p>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="point"></a>Point Example</h2>
+</div>
+</div>
+<p>The point example (point_example.cpp) is a short example
+giving the
+first idea of how to use the library.&nbsp;It shows&nbsp;</p>
+<ul>
+<li>the usage of include files</li>
+<li>how to declare points, using different coordinate types</li>
+<li>how to construct points, specifying coordinates,
+initializing to zero or to infinite</li>
+<li>how to compare points to each other</li>
+<li>how points can be streamed as OGC text</li>
+<li>calculating the distance from point to point</li>
+</ul>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="other_point"></a>Other point Example</h2>
+</div>
+</div>
+<p>The "other point" example illustrates how derived classes can
+be used as well as the default implemented classes in the Geometry
+Library.</p>
+<div>
+<h2 class="title" style="clear: both;"><a name="linestring"></a>Linestring Example</h2>
+</div>
+<p>The linestring example (linestring_example.cpp) shows how
+linestrings can be declared and used and shows some more algorithms.
+One of the important concepts of the geometry library is that it is
+totally built upon the standard library, using the standard containers
+such as std::vector. </p>
+<p>A linestring is, as explained elsewhere in this documentation,
+nothing more than a vector of points. Therefore the first line of the
+main function of this example lists:</p>
+<code class="computeroutput"><span style="color: rgb(102, 102, 102);">
+&nbsp;&nbsp;&nbsp; // Define a linestring, which is a
+vector of points, and add some points</span><br style="color: rgb(102, 102, 102);">
+
+&nbsp;&nbsp;&nbsp;
+geometry::linestring&lt;geometry::point&lt;double&gt;
+&gt; ls;<br>
+&nbsp;&nbsp;&nbsp;
+ls.push_back(geometry::point&lt;double&gt;(1.1, 1.1));<br>
+<br>
+</code>
+<p>Besides this, and besides that all algorithms on std::vector
+can be used on geometry::linestring, the sample elucidates the library
+showing some algorithms:</p>
+<ul>
+<li>geometry::evelope</li>
+<li>geometry::length</li>
+<li>geometry::distance</li>
+<li>geometry::simplify</li>
+<li>geometry::for_each</li>
+<li>geometry::intersection</li>
+</ul>
+<p>This documentation illustrates the <span style="font-weight: bold;">simplify</span> algorithm
+and the <span style="font-weight: bold;">intersection</span>
+algorithm with some pictures.</p>
+<p>The <span style="font-weight: bold;">simplify</span>
+algorithm simplifies a linestring. Simplification means that the less
+important points are removed from the line and that the points that are
+most important for the shape of a line are kept. Simplification is done
+using the well known Douglas Peucker algorithm. The library user can
+specify the <span style="font-style: italic;">distance</span>
+or <span style="font-style: italic;">tolerance</span>,
+which indicates how much the linestring should be simplified. </p>
+<p>The image below shows the linestring used in the example:</p>
+<img style="width: 400px; height: 212px;" alt="" src="images/simplify_example.png"><br>
+<p>The red&nbsp;line is the original linestring; the blue
+line is the simplified line which has one point less. In geographical
+applications simplification can reduce a linestring to its basic form
+containing only 10% of its original points.<br>
+<br>
+The intersection algorithm intersects two geometries which each other,
+delivering a third geometry. In the case of the example a linestring is
+intersected with a box. Intersection with a box is often called a <span style="font-weight: bold;">clip</span>. The image
+below illustrates the intersection.</p>
+<img style="width: 401px; height: 213px;" alt="" src="images/intersection_linestring_example.png"><br>
+<br>
+<p>The red line is intersected with the blue box. The
+intersection result, painted in black, is a multi_linestring containing
+three linestrings.</p>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="polygon"></a>Polygon Example</h2>
+</div>
+</div>
+<p>The polygon example (polygon_example.cpp) shows some examples of what can be done
+with polygons in the Geometry Library:</p>
+<ul>
+<li>the outer ring and the inner rings</li>
+<li>how to calculate the area of a polygon</li>
+<li>how to get the centroid, and how to get an often more
+interesting label point</li>
+<li>how to correct the polygon such that it is clockwise and
+closed</li>
+<li><span style="font-weight: bold;">within</span>:
+the well-known <span style="font-weight: bold;">point in
+polygon</span> algorithm</li>
+<li>how to use polygons which use another container, or which
+use different containers for points and for inner rings</li>
+<li>how polygons can be intersected, or clipped, using a
+clipping box</li>
+</ul>
+<p>
+The illustrations below show the usage of the <span style="font-weight: bold;">within </span>algorithm
+and the <span style="font-weight: bold;">intersection</span>
+algorithm.<br>
+<br>
+The within algorithm results in <span style="font-weight: bold;">true</span>
+if a point lies completly within a polygon. If it lies exactly on a
+border it is not<span style="font-weight: bold;"><span style="font-weight: bold;"> </span></span>considered
+as within and if it is inside a hole it is also not within the polygon.
+This is illustrated below, where only the&nbsp;point in the middle is within the
+polygon.</p>
+<img src="images/within_polygon_example.png"><br>
+<br>
+<br>
+<p>The clipping algorithm, called <span style="font-weight: bold;">intersection</span>,
+is illustrated below:</p>
+<img src="images/clip_polygon_example.png"><br>
+<br>
+<p>The yellow polygon, containing a hole, is clipped with the
+blue
+rectangle, resulting in a multi_polygon of three polygons, drawn in
+red. The hole is vanished.</p>
+</div>
+<table width="100%">
+<tbody>
+<tr>
+<td align="left"><small>
+<p>February 1, 2008</p>
+</small></td>
+<td align="right"><small>Copyright © 1995-2008 Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands</small></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev_disabled.png" alt="Prev"><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next.png" alt="Next"></a></div>
+</body></html>

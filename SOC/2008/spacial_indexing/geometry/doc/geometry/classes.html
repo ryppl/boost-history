@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Classes</title>
+
+<link rel="stylesheet" href="../boostbook.css" type="text/css"></head>
+<body style="color: black; background-color: white; background-image: url(../images/draft.png);" alink="#0000ff" link="#0000ff" vlink="#840084">
+<table cellpadding="2" width="100%">
+<tbody>
+<tr>
+<td valign="top"><img alt="Boost C++ Libraries" src="../proposed_boost.png" height="86" width="277"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="p" href="rationale.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><a accesskey="n" href="algorithms.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next.png" alt="Next"></a></div>
+<div class="section" lang="en">
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.concept"></a>Classes</h2>
+</div>
+</div>
+The Geometry Library contains geometry classes and algorithms, which
+are separated from each other. This page describes the geometry
+classes.
+<br>
+<br>
+Geometry classes are templatized in many ways:
+point coordinate values can be defined using numeric types as <b>double</b>, <b>float</b> or <b>int</b>.
+Linestrings can have points of the type above,
+types derived from these point types or point types defined &nbsp;by the library user. Points are contained in containers of
+type std::vector or another std:: container type.
+<br>
+<br>
+OGC made standards on those geometries, and called them <i>simple
+features</i>.
+&nbsp;The Geometry Library follows the OGC names for the naming of
+the classes.<br>
+<br>
+The Geometry Library defines the following OGC geometries:
+<table class="table" summary="Notation">
+<colgroup><col><col></colgroup>
+<tbody>
+<tr>
+<td align="left"><code class="computeroutput">point</code></td>
+<td align="left">A point, having coordinates of type T <i>Currently x() and y(), will be changed based on boost list discussions!</i></td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">linestring</code></td>
+<td align="left">An ordered series of points of type
+P. The linestring is default a std::vector of points, but can also
+be&nbsp;a std::list or std::deque of points</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">linear_ring</code></td>
+<td align="left">An ordered and closed series of
+points of type P. As with the linestring, it is default but not always
+a std::vector</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">polygon</code></td>
+<td align="left">An outer ring and zero, one or more
+inner
+rings (holes).
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">multi_point</code></td>
+<td align="left">A collection of points
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">multi_linestring</code></td>
+<td align="left">A collection of linestrings (for
+example: the output of the clipping of one linestring can result in a
+multi_linestring)
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">multi_polygon</code></td>
+<td align="left">A collection of polygons
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+The following geometry types are used in the Geometry Library, but not
+defined by OGC:
+<table class="table" summary="Notation">
+<colgroup><col><col></colgroup>
+<tbody>
+<tr>
+<td align="left"><code class="computeroutput">circle</code></td>
+<td align="left">A circle (consisting of a center
+and a radius, used for selections (within) )</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">box</code></td>
+<td align="left">A box (consisting of a minimum
+point and a maximum point, used for selections and clipping)</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">segment</code></td>
+<td align="left">A line from point "first" to point
+"second", used in some algorithms</td>
+</tr>
+</tbody>
+</table>
+<br>
+There is one traits class:
+<table class="table" summary="Notation">
+<colgroup><col><col></colgroup>
+<tbody>
+<tr>
+<td align="left"><code class="computeroutput">geometry_traits</code></td>
+
+
+<td align="left">Defines the type used as
+coordinates, and the type used for the points, with their names
+<code class="computeroutput">coordinate_type</code>
+and <code class="computeroutput">point_type</code></td>
+</tr>
+</tbody>
+</table>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.point"></a>Point</h2>
+</div>
+</div><span style="font-style: italic;"><span style="font-weight: bold;">WILL BE CHANGED! THERE WILL BE MORE GENERIC POINT CONCEPT/BASECLASS and specializations for x/y and lat/lon or other<br><br></span></span>The point is defined like this:
+<br>
+<br>
+<code class="computeroutput"> template &lt;typename
+T&gt;<br>
+class point<br>
+{<br>
+&nbsp;&nbsp;&nbsp; public :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; typedef T
+coordinate_type;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // rest omitted, will be changed<br>
+<span style="color: rgb(102, 102, 102);">&nbsp;</span></code><code class="computeroutput">};<br>
+</code><br>
+The point that is defined by the Geometry Library contains methods to
+access and modify coordinates, which can be doubles, floats,
+ints or another numeric type. Furthermore there are some constructors
+available and there are some operators to compare points. Basically
+that's everything there is.<br>
+<br>
+However, that doesn't mean that other points are not possible. A user can
+derive points from this point to add for example&nbsp;an SRID
+(spatial reference &nbsp;ID), a property map, or anything
+&nbsp;else. Or &nbsp;a user can implement point class with, for
+example, latitude and longitude. Those classes are accepted by the
+algorithms which are in the library, as long as they support
+&nbsp;the methods above. In fact they don't need to support them
+all: if only algorithms are used which access coordinate values, such
+as <span style="font-weight: bold;">within</span>,
+then the two methods which modify coordinate values are not necessary.
+If there are no algorithms used which sort the points, they don't have
+to be defined. The compiler will tell if the class fits the algorithm.<br>
+<br>
+The usage of points is trivial:<br>
+<br>
+<code class="computeroutput">geometry::point&lt;double&gt;
+p1;<br>
+</code><code class="computeroutput">geometry::point&lt;double&gt;
+p2(3.14, 8.2);<br>
+</code><code class="computeroutput">geometry::point&lt;char&gt;
+p3(5, 8);</code><br>
+<code class="computeroutput"><br>// will be changed!<br>
+</code><code class="computeroutput">geometry::point&lt;double&gt;::coordinate_type
+x = p1.x();<br>
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.geometry_traits"></a>Geometry Traits</h2>
+</div>
+</div>
+The geometry traits class is a&nbsp;small class defining two member
+types. All geometry classes, but point, are derived from the geometry
+traits class. <br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename P&gt;<br>
+&nbsp;&nbsp;&nbsp; class geometry_traits<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;public :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;typedef P point_type;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;typedef typename
+P::coordinate_type coordinate_type;<br>
+&nbsp;&nbsp;&nbsp; };</code><br>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.linestring"></a>Linestring</h2>
+</div>
+</div>
+A linestring is an ordered series of points. Here is an example of a
+linestring with 5 points.<br>
+<img style="width: 399px; height: 182px;" alt="" src="images/linestring.png"><br>
+You might expect a
+shorter name <span style="font-weight: bold;">line</span>
+here, but the name <span style="font-weight: bold;">linestring</span>
+is defined by OGC and the Geometry Library follows this definition.<br>
+<br>
+The Geometry Library defines a linestring, by design, as small as
+possible, it is a container of points and for the rest an empty class:<br>
+<br>
+<code class="computeroutput">
+&nbsp;&nbsp;&nbsp; template &lt;typename P, template
+&lt;typename,typename&gt; class V = std::vector,
+template&lt;typename&gt; class A = std::allocator&gt;<br>
+&nbsp;&nbsp;&nbsp; class linestring : public V&lt;P,
+A&lt;P&gt; &gt;, public geometry_traits&lt;P&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+</code>The definition might seem somewhat cryptic, therefore it can be seen as this definition, its default:<br>
+<br style="color: rgb(51, 255, 51);">
+<code class="computeroutput"><span style="color: rgb(153, 153, 153);">&nbsp;&nbsp;&nbsp;
+template &lt;typename P&gt;</span><br style="color: rgb(153, 153, 153);"><span style="color: rgb(153, 153, 153);">
+&nbsp;&nbsp;&nbsp; class linestring : public
+std::vector&lt;P&gt;</span><br style="color: rgb(153, 153, 153);"><span style="color: rgb(153, 153, 153);">
+&nbsp;&nbsp;&nbsp; {</span><br style="color: rgb(153, 153, 153);"><span style="color: rgb(153, 153, 153);">
+&nbsp;&nbsp;&nbsp; };</span><br>
+</code><br>
+It is just a vector or another container of points, and
+contains the two member types point_type
+and coordinate_type
+defined by the geometry traits class.<br>
+<br>
+A linestring&nbsp;can be used like this:<br>
+<br>
+<code class="computeroutput">geometry::linestring&lt;geometry::point&lt;double&gt;
+&gt; ls;<br>
+ls.push_back(geometry::point&lt;double&gt;(1.2,
+5.8));<br>
+<br>
+</code><code class="computeroutput"><br>
+</code>Because a linestring is a container, you can call the
+std:: algorithms on containers.<br>
+<br>
+In most cases you will first do a typedef of the point type
+you want to use:<br>
+<br>
+<code class="computeroutput">typedef
+MyPoint&lt;double&gt; P;<br>
+geometry::linestring&lt;P&gt; ls;<br>
+</code><br>
+If you prefer other container types you can use a linestring like this:<br>
+<code class="computeroutput">geometry::linestring&lt;P,
+std::deque&gt; ls1;<br>
+</code><code class="computeroutput">geometry::linestring&lt;P,
+std::list&gt; ls2;</code><br>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.polygon"></a>Polygon</h2>
+</div>
+</div>
+A polygon contains an outer ring and zero, one or more inner rings.
+Inner
+rings are, in general, also called&nbsp;holes, donuts, or interior
+of in the polygon. The outer
+ring
+is the exterior boundary. The example below shows a polygon with one
+inner ring.<br>
+<img style="width: 400px; height: 240px;" alt="" src="images/polygon.png"><br>
+<br>
+Rings in polygons are normally directed:
+the outer ring is clockwise, the inner rings are counterclockwise.
+Some algorithms depend on this order and there is an algorithm to
+ensure that a polygon has the right order.<br>
+<br>
+The interface is the following:<br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename P, template &lt;typename,typename&gt;
+class V = std::vector, template&lt;typename&gt; class A =
+std::allocator&gt;<br>
+&nbsp;&nbsp;&nbsp; class polygon : public
+geometry_traits&lt;P&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; public :<br>
+<span style="color: rgb(102, 102, 102);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; // Member types</span><br style="color: rgb(102, 102, 102);">
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; typedef linear_ring&lt;P, V,
+A&gt; ring_type;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; typedef V&lt;ring_type ,
+A&lt;ring_type &gt; &gt; inner_container_type;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; const ring_type&amp; outer() const;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; const inner_container_type &amp;
+inners() const;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;ring_type&amp; outer();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; inner_container_type &amp; inners();<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; void clear();<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+</code><br>
+A&nbsp;polygon can be used like this:<br>
+<br>
+<code class="computeroutput">geometry::polygon&lt;geometry::point&lt;double&gt;
+&gt;
+polygon;<br>
+polygon.outer().push_back(geometry::point&lt;double&gt;(1.2,
+5.8));<br>
+</code><code class="computeroutput"><br>
+<br>
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.multi_point"></a>Multi point</h2>
+</div>
+</div>
+A multi point is a set of points, for example a constellation. As a
+linestring, it is empty.<br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename P, template &lt;typename,typename&gt;
+class V = std::vector, template&lt;typename&gt; class A =
+std::allocator&gt;<br>
+&nbsp;&nbsp;&nbsp; class multi_point : public V&lt;P,
+A&lt;P&gt; &gt;, public geometry_traits&lt;P&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+</code><br>
+However, it is not the same as a linestring: you can not calculate the length, for example.<code class="computeroutput"></code><br>
+<code class="computeroutput"><br>
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.multi_linestring"></a>Multi linestring</h2>
+</div>
+</div>
+A multi linestring is a set of linestrings, for example a road.<br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename L, template &lt;typename,typename&gt;
+class V = std::vector, template&lt;typename&gt; class A =
+std::allocator&gt;<br>
+&nbsp;&nbsp;&nbsp; class multi_linestring : public
+V&lt;L, A&lt;L&gt; &gt;, public
+geometry_traits&lt;typename L::point_type&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;typedef L linestring_type;<br>
+&nbsp;&nbsp;&nbsp; };<br>
+</code><br>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.multi_polygon"></a>Multi polygon</h2>
+</div>
+</div>
+A multi polygons is a set of polygons, for example the state Hawaii.
+This is a multi polygon, containing two polygons:<br>
+<img src="images/multi_polygon.png"><br>
+<br>
+A&nbsp;multi polygon is defined as follows:<br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename Y, template &lt;typename,typename&gt;
+class V = std::vector, template&lt;typename&gt; class A =
+std::allocator&gt;<br>
+&nbsp;&nbsp;&nbsp; class multi_polygon : public V&lt;Y,
+A&lt;Y&gt; &gt;, public geometry_traits&lt;typename
+Y::point_type&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; public :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;typedef Y polygon_type;<br>
+&nbsp;&nbsp;&nbsp; };</code><br>
+<code class="computeroutput"><br>
+<br>
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.box"></a>Box</h2>
+</div>
+</div>
+A box is not defined as such by OGC but useful in many algorithms. The
+Geometry Library defines a box by a minimum point and a maximum point.<br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename P&gt;<br>
+&nbsp;&nbsp;&nbsp; class box : public
+geometry_traits&lt;P&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;box();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;box(const P&amp; min,
+const P&amp; max)<br><span style="color: rgb(102, 102, 102);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; //
+Constructor with an option, for example geometry::init_inverse</span><br style="color: rgb(102, 102, 102);">
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;box(init option);<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;const P&amp; min() const;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;const P&amp; max() const;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;P&amp; min();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;P&amp; max();<br>
+&nbsp;&nbsp;&nbsp; };</code><br>
+<br>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.circle"></a>Circle</h2>
+</div>
+</div>
+The main purpose of a circle is to be able to select, for example,
+points or lines with a circle. There is no full support on circle in
+most algorithms, you cannot intersect polygons with circles for example.<br>
+<br>
+A circle consists a point and a radius.<br>
+<br>
+<code class="computeroutput">&nbsp;&nbsp;&nbsp;
+template &lt;typename P, typename T&gt;<br>
+&nbsp;&nbsp;&nbsp; class circle :
+geometry_traits&lt;P&gt;<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;public :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;typedef T radius_type;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;circle();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;circle(const P&amp;
+center, const T&amp; radius);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;circle(const
+coordinate_type&amp; x, const coordinate_type&amp; y, const
+T&amp; radius);<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;const P&amp; center()
+const;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;const T radius() const;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;void radius(const T&amp;
+r);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;P&amp; center();<br>
+&nbsp;&nbsp;&nbsp; };</code><br>
+</div>
+<table width="100%">
+<tbody>
+<tr>
+<td align="left"><small>
+<p>February 1, 2008</p>
+</small></td>
+<td align="right"><small>Copyright © 1995-2008 Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands</small></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="p" href="rationale.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><a accesskey="n" href="algorithms.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next.png" alt="Next"></a></div>
+</body></html>

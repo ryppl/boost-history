@@ -1,0 +1,775 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type"><title>Algorithms</title>
+
+<link type="text/css" href="../boostbook.css" rel="stylesheet"></head>
+<body style="color: black; background-color: white; background-image: url(../images/draft.png);" alink="#0000ff" link="#0000ff" vlink="#840084">
+<table cellpadding="2" width="100%">
+<tbody>
+<tr>
+<td valign="top"><img alt="Boost C++ Libraries" src="../proposed_boost.png" height="86" width="277"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="p" href="classes.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next_disabled.png" alt="Next"></div>
+<div class="section" lang="en">
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.concept"></a>Algorithms</h2>
+</div>
+</div>
+<p>The Geometry Library contains geometry classes and algorithms,
+which
+are separated from each other. This page describes the geometry
+algorithms.
+</p>
+<p>Most geometry algorithms are templatized in two ways. This is described in the rationale.
+</p><p>OGC made standards on&nbsp;geometries, called&nbsp;<i>simple
+features</i>, and defines operations on geometries.
+In OGC all operations are class methods. The Geometry Library is a
+template library and defines the operations as standalone algorithms.
+The Geometry Library follows the OGC names for the naming of
+the algorithms.</p>
+<p>The Geometry Library implements the following OGC algorithms,
+which are
+applicable to most or all geometries
+</p>
+<table class="table" summary="Notation">
+<tbody>
+<tr>
+<td align="left"><code class="computeroutput">within</code></td>
+<td align="left">
+<p>Returns true if one geometry falls
+completely within another geometry</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">distance</code></td>
+<td align="left">
+<p>Returns the distance between two
+geometries</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">intersection</code></td>
+<td align="left">
+<p>Returns a geometry containing the
+intersection between two geometries</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">envelope</code></td>
+<td align="left">
+<p>Returns the bounding box of a
+geometry
+</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">as_text</code></td>
+<td align="left">
+<p>Represents the geometry as a Well
+Known Text</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">area</code></td>
+<td align="left">
+<p>Returns the area of
+surface-geometries</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">length</code></td>
+<td align="left">
+<p>Returns the length of curve-type
+geometries</p>
+</td>
+</tr>
+<tr>
+<td align="left"><code class="computeroutput">centroid</code></td>
+<td align="left">
+<p>Returns a point geometry: the
+centroid on surface-geometries</p>
+</td>
+</tr><tr><td><code class="computeroutput">is_simple</code></td><td><p>Returns true if the geometry is simple (doesn't intersect itself)</p></td></tr>
+</tbody>
+</table>
+<br>
+<p>Apart from OGC, the following algorithms are provided:
+</p>
+<table class="table" summary="Notation">
+<colgroup><col><col></colgroup>
+<tbody>
+<tr>
+<td align="left"><code class="computeroutput">simplify</code></td>
+<td align="left">
+<p>Returns a simplified (or
+"generalized") linestring or polygon using the Douglas Peucker algorithm</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.within"></a>Within</h2>
+</div>
+</div>
+<p>The within algorithm checks if one geometry is located
+completely&nbsp;within another geometry. A well-known example is
+point-in-polygon, returning true if a point falls within a polygon. Many
+point-in-polygon algorithms ignore boundary cases (point is situated on
+boundary of polygon), however the within_point_in_polygon method should
+return true if a point is completely within the boundary of the
+polygon, and not on the boundary.</p>
+<p>
+There are many possibilities and the matrix below gives some details about implementation.</p>
+<table class="table">
+<tbody>
+<tr>
+<td>
+<p></p>
+</td>
+<td>
+<p>linear ring</p>
+</td>
+<td>
+<p>polygon</p>
+</td>
+<td>
+<p>multi_polygon</p>
+</td>
+<td>
+<p>box</p>
+</td>
+<td>
+<p>circle</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>point</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>linestring</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>polygon</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>multi_point</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>multi_linestring</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>multi_polygon</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>All these algorithms are called&nbsp;<span style="font-weight: bold;">within</span>. As
+described in the rationale, all algorithms have a <span style="font-style: italic;">primary</span> version called within_<span style="font-style: italic;">GEOMETRY</span>_in_<span style="font-style: italic;">GEOMETRY</span>, where <span style="font-style: italic;">GEOMETRY</span>&nbsp;<span style="font-weight: bold;">&nbsp;</span>is
+replaced by the name of the geometry. So there is an algorithm <span style="font-weight: bold;">within_point_in_polygon</span>.</p>
+<p><br>
+Examples:</p>
+<code class="computeroutput">typedef
+geometry::point&lt;float&gt; P;<br>
+geometry::polygon&lt;P&gt; poly;<br>
+<span style="color: rgb(102, 102, 102);">// polygon is
+filled with points somehow</span><br style="color: rgb(102, 102, 102);">
+P p;<br>
+std::cout &lt;&lt; p &lt;&lt; ((</code><code class="computeroutput">geometry::</code><code class="computeroutput">within(p, poly) ? "within" : "not
+within") &lt;&lt; poly &lt;&lt; std::endl;<br>
+<br>
+<span style="color: rgb(102, 102, 102);">// or, for
+example if you have your own polygon or a derived polygon, the primary
+version:</span><br style="color: rgb(102, 102, 102);">
+</code><code class="computeroutput">std::cout
+&lt;&lt; p &lt;&lt; ((</code><code class="computeroutput">geometry::</code><code class="computeroutput">within_point_in_polygon(p, poly) ?
+"within" : "not within") &lt;&lt; poly &lt;&lt;
+std::endl;<br>
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.geometry_traits"></a>Distance</h2>
+</div>
+</div>
+<p><code class="computeroutput"></code>The
+distance
+algorithm returns the distance between two geometries. The distance is
+always returned as a <span style="font-weight: bold;">double</span>
+type, regardless of the input type, because the distance between
+integer coordinates is a square root and might be a double.<br>
+<br>
+The generic versions are called <span style="font-weight: bold;">distance</span>
+and are defined for the following combinations:</p>
+<table class="table">
+<tbody>
+<tr>
+<td>
+<p></p>
+</td>
+<td>
+<p>point</p>
+</td>
+<td>
+<p>segment</p>
+</td>
+<td>
+<p>linestring</p>
+</td>
+<td>
+<p>polygon</p>
+</td>
+<td>
+<p>multi_point</p>
+</td>
+<td>
+<p>multi_linestring</p>
+</td>
+<td>
+<p>multi_polygon</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>point</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>segment</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>linestring</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>polygon</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>multi_point</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>multi_linestring</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>multi_polygon</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The primary versions are, for performance reasons, slightly
+different:
+they don't do the square root, they&nbsp;deliver the square
+distance. So there is a <span style="font-weight: bold;">square_distance_point_to_linestring</span></p>
+<p>Examples:</p>
+<code class="computeroutput">typedef
+geometry::point&lt;float&gt; P;<br>
+P p1(1,1), p2(3,4);<br>
+std::cout &lt;&lt; "distance " &lt;&lt; p1
+&lt;&lt; " - " &lt;&lt; p2 &lt;&lt; ": "
+&lt;&lt; geometry::distance(p1, p2);<br>
+<br>
+geometry::linestring&lt;P&gt; ls;<br>
+</code><code class="computeroutput">std::cout
+&lt;&lt; "distance " &lt;&lt; p1 &lt;&lt; " - "
+&lt;&lt; ls &lt;&lt; ": " &lt;&lt;
+geometry::distance(p1, ls);<br>
+<br>
+<span style="color: rgb(102, 102, 102);">// or, also
+possible:</span><br style="color: rgb(102, 102, 102);">
+</code><code class="computeroutput">std::cout
+&lt;&lt; "distance " &lt;&lt; p1 &lt;&lt; " - "
+&lt;&lt; ls &lt;&lt; ":
+" &lt;&lt;
+sqrt(geometry::square_distance_point_to_linestring(p1, ls));</code><code class="computeroutput"></code><br>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.linestring"></a>Intersection</h2>
+</div>
+</div>
+<p><code class="computeroutput"></code>The intersection algorithm
+intersects two geometries, resulting in a third geometry. Intersection
+can be implemented for OGC geometries. Besides that an often used
+intersection is the intersection of a linestring or a polygon with a
+box. This is normally called a <span style="font-weight: bold;">clip</span>.</p>
+<p>The matrix below gives some details about implementation.</p>
+<table class="table">
+<tbody>
+<tr>
+<td>
+<p></p>
+</td>
+<td>
+<p>linear ring</p>
+</td>
+<td>
+<p>polygon</p>
+</td>
+<td>
+<p>multi_polygon</p>
+</td>
+<td>
+<p>box</p>
+</td>
+
+</tr>
+<tr>
+<td>
+<p>point</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+<td>
+<p>implemented</p>
+</td>
+
+</tr>
+<tr>
+<td>
+<p>linestring</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>implemented
+</p>
+</td>
+
+</tr>
+<tr>
+<td>
+<p>polygon</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p>implemented<br>
+</p>
+</td>
+
+</tr>
+<tr>
+<td>
+<p>multi_point</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+
+</tr>
+<tr>
+<td>
+<p>multi_linestring</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+
+</tr>
+<tr>
+<td>
+<p>multi_polygon</p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p></p>
+</td>
+<td>
+<p><br>
+</p>
+</td>
+
+</tr>
+</tbody>
+</table>
+<p>All these algorithms are called <span style="font-weight: bold;">intersection</span>. All algorithms have, again, a <span style="font-style: italic;">primary</span> version called intersection_<span style="font-style: italic;">GEOMETRY</span>_with_<span style="font-style: italic;">GEOMETRY</span>, where <span style="font-style: italic;">GEOMETRY</span>&nbsp;<span style="font-weight: bold;">&nbsp;</span>is
+replaced by the name of the geometry. So there is an algorithm <span style="font-weight: bold;">intersection_polygon_with_box</span><br>
+</p><div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.polygon"></a>Envelope</h2>
+</div>
+</div>
+<p>The envelope algorithm calculates the bounding box, or envelope, of a geometry. It is defined for all geometries.</p><p>The envelope of a point is a box with zero area, the maximum and the minimum point of the box are set to the point itself.</p><p>The
+envelope of a linestring is the smalles box that contains all points of
+the specified linestring. If the linestring is empty, the envelope is
+the inverse infinite box, that is, the minimum point is very large (max
+infinite) and the maximum point is very small (min infinite).</p><p>The envelope for polygon, and for all multi geometries, are defined as the envelope of the linestring described above. </p><code class="computeroutput">
+
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.multi_point"></a>Area</h2>
+</div>
+</div>
+<p><code class="computeroutput"></code>The area of a geometry
+calculates the surface area of all geometries having a surface: box,
+circle, polygon, multi_polygon. The units are the square of the units
+used for the points defining the surface. If the polygon is defined in
+meters, the area is in square meters.<br>
+</p><code class="computeroutput"></code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.multi_linestring"></a>Centroid</h2>
+</div>
+</div>
+<p>The centroid of a surface geometry returns a point which is the centroid the geometry.</p><code class="computeroutput">
+</code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.multi_polygon"></a>Length</h2>
+</div>
+</div>
+
+<p><code class="computeroutput"></code>The length algorithm is
+implemented for the linestring and the multi_linestring geometry and
+results in the length of the linestring. If the points of a linestring
+have coordinates expressed in kilometers, the length of the line is
+expressed in kilometers as well.<br>
+</p><code class="computeroutput"></code>
+<div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.box"></a>As text</h2>
+</div>
+</div>
+<p><code class="computeroutput"></code>The as_text function streams the
+specified geometry as OGC Well Known Text. It is defined for OGC
+geometries. So it is not defined for <span style="font-weight: bold;">box</span> and <span style="font-weight: bold;">circle</span>.<br>
+</p><div class="titlepage">
+<div>
+<h2 class="title" style="clear: both;"><a name="geometry.circle"></a>Simplify</h2>
+</div>
+</div>
+<p><code class="computeroutput"></code>The simplify algorithm
+implementes the Douglas Peucker algorithm to simplify linestrings. It
+is implemented for linestrings, multi_linestrings, linear rings,
+polygons and multi_polygons. Note, however, that simplifying a valid
+simple polygon (which never intersects itself) might result in an
+invalid polygon, where the simplified rings intersect themselves or
+one of the other outer or inner rings.</p>
+</div>
+<table width="100%">
+<tbody>
+<tr>
+<td align="left"><small>
+<p>February 1, 2008</p>
+</small></td>
+<td align="right"><small>Copyright © 1995-2008 Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands</small></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="p" href="classes.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/up.png" alt="Up"></a><a accesskey="h" href="../geometry.html"><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/home.png" alt="Home"></a><img style="border: 0px solid ; width: 19px; height: 19px;" src="../images/next_disabled.png" alt="Next"></div>
+</body></html>
