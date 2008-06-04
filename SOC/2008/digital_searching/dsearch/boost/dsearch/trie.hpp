@@ -120,7 +120,8 @@ class trie
 		std::cout<<"deleting:"<<*temp_it<<std::endl;
 		temp_cur->erase(fit);
 
-		it=temp_it+1;
+		it=temp_it;
+		++it;
 
 		while(it!=end_it)
 		{
@@ -285,7 +286,7 @@ class trie
 		right=ret_it;
 		ret_it.to_left_most();
 		right.to_right_most();
-		return std::make_pair(ret_it,right);
+		return std::make_pair(ret_it,++right);
 	}
 
 	void swap(type &other)
