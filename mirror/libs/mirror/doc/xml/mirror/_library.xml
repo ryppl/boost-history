@@ -170,6 +170,7 @@
 		<revision id="20080604" major="0" minor="1" micro="26" author="m_ch">
 			- Visitors can now also work on instances 
 			- Tested with MSVC++ 2008 EE On Vista
+			- Tested with gcc 4.2.1 on FreeBSD
 		</revision>
 	</revisions>
 </library>
