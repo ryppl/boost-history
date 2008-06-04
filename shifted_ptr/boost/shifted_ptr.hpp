@@ -74,11 +74,11 @@ public:
         includes_.push_back(& tag_);
     }
 
-    bool release(bool b)
+    bool release()
     {
         set * p = redir();
 
-        if (! b && -- p->count_ == 0)
+        if (-- p->count_ == 0)
         {
             for (intrusive_list::iterator<owned_base, & owned_base::set_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
             {
@@ -105,17 +105,14 @@ public:
         else return redir_ = redir_->redir();
     }
 
-    void redir(set * p, bool b)
+    void redir(set * p)
     {
         if (redir_ != p->redir())
         {
             redir_ = p->redir();
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
-
-            // tie only if both from stack
-            if (! b)
-                redir_->count_ += count_;
+            redir_->count_ += count_;
         }
     }
 
@@ -155,7 +152,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
             if (! owned_base::pool_.is_from(this))
                 ps_ = new set();
             else
-                owned_base::last->top()->ptrs()->push(& pn_);
+                owned_base::pool_.top(this)->ptrs()->push(& pn_);
         }
 
         template <typename V>
@@ -169,8 +166,8 @@ template <typename T, template <typename> class U = shifted_ptr_base>
                 }
                 else
                 {
-                    owned_base::last->top()->ptrs()->push(& pn_);
-                    owned_base::last->top()->inits()->merge(* p->inits());
+                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
+                    owned_base::pool_.top(this)->inits()->merge(* p->inits());
                 }
             }
 
@@ -180,9 +177,9 @@ template <typename T, template <typename> class U = shifted_ptr_base>
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
                 else
-                    owned_base::last->top()->ptrs()->push(& pn_);
+                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
 
-                ps_->redir(p.ps_, ! owned_base::stack_.is_from(this));
+                ps_->redir(p.ps_);
             }
 
             shifted_ptr(shifted_ptr<T> const & p) : U<T>(p)
@@ -190,9 +187,9 @@ template <typename T, template <typename> class U = shifted_ptr_base>
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
                 else
-                    owned_base::last->top()->ptrs()->push(& pn_);
+                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
 
-                ps_->redir(p.ps_, ! owned_base::stack_.is_from(this));
+                ps_->redir(p.ps_);
             }
 
         template <typename V>
@@ -213,7 +210,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
                     if (ps_->redir() != p.ps_->redir())
                     {
                         release();
-                        ps_->redir(p.ps_, ! owned_base::stack_.is_from(this));
+                        ps_->redir(p.ps_);
                     }
                     U<T>::operator = (p);
                 }
@@ -240,7 +237,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
         {
             if (! owned_base::pool_.is_from(this))
             {
-                if (ps_->release(! owned_base::stack_.is_from(this)))
+                if (ps_->release())
                 {
                     U<T>::po_ = 0;
 
@@ -286,9 +283,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 			typedef typename remove_const<typename remove_volatile<T>::type>::type unqualified_type;			\
 																												\
 			owned<T> * p = new owned<T>();																		\
-			owned_base::last->push(p);																			\
 			pointer_type q = reinterpret_cast<pointer_type>(new (const_cast<unqualified_type *>(p->element())) T(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)));	\
-			owned_base::last->pop();																			\
 																												\
 			return (owned<T> *) (typename owned<T>::roofof) q;													\
 		}

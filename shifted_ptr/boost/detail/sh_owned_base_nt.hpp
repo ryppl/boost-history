@@ -32,6 +32,7 @@
 #include <boost/thread.hpp>
 #include <boost/thread/tss.hpp>
 #include <boost/pool/pool.hpp>
+#include <boost/numeric/interval.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/remove_extent.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
@@ -55,58 +56,59 @@ class set;
 class owned_base;
 
 
+/**
+    Allocator wrapper tracking allocations.
+*/
+
+struct pool : boost::pool<>,
 #ifndef BOOST_SH_DISABLE_THREADS
-struct thread_specific_stack : thread_specific_ptr< std::stack<owned_base *> >
-{
-    thread_specific_stack()
-    {
-        reset(new std::stack<owned_base *>());
-    }
-};
-#endif
-
-
-/**
-	Segment boundaries.
-*/
-
-struct segment : std::pair<const void *, const void *>
-{
-    typedef std::pair<const void *, const void *> base;
-
-    segment(const void * p = (const void *)(std::numeric_limits<unsigned>::max)(), const void * q = (const void *)(std::numeric_limits<unsigned>::min)()) : base((const void *)(p), (const void *)(q))
-    {
-    }
-
-    void include(const void * p)
-    {
-        if (p < static_cast<const void *>(first)) first = p;
-        if (p > static_cast<const void *>(second)) second = p;
-    }
-
-    bool is_from(const void * p)
-    {
-        return ! (static_cast<char const *>(p) < first || static_cast<char const *>(p) > second);
-    }
-};
-
-
-/**
-	Auto stack boundaries.
-*/
-
-struct stack_segment : segment
-{
-    bool is_from(const void * p)
-    {
-#if defined(__GNUC__)
-        include(__builtin_frame_address(0));
-        include(__builtin_frame_address(5));
+    thread_specific_ptr< std::list< numeric::interval<int> > >
 #else
-#error Compiler not yet supported.
+    std::auto_ptr< std::list< numeric::interval<int> > >
 #endif
+{
+    typedef std::list< numeric::interval<int> > li;
+
+    pool() : boost::pool<>(1)
+    {
+        reset(new std::list< numeric::interval<int> >());
+    }
+    
+    owned_base * top(void * p)
+    {
+        li::reverse_iterator i;
         
-        return segment::is_from(p);
+        for (i = get()->rbegin(); i != get()->rend(); i ++)
+            if (in((int)(p), * i))
+            {
+                get()->erase(i.base(), get()->end());
+                break;
+            }
+            
+        return (owned_base *)(i->lower());
+    }
+    
+    void * allocate(std::size_t s)
+    {
+        void * p = ordered_malloc(s);
+        
+        get()->push_back(numeric::interval<int>((int) p, int((char *)(p) + s)));
+        
+        return p;
+    }
+
+    void deallocate(void * p)
+    {
+        li::reverse_iterator i;
+        
+        for (i = get()->rbegin(); i != get()->rend(); i ++)
+            if (in((int)(p), * i))
+            {
+                get()->erase(i.base(), get()->end());
+                break;
+            }
+            
+        free(p, i->upper() - i->lower());
     }
 };
 
@@ -134,25 +136,11 @@ public:
     intrusive_list::node * set_tag() 				{ return & set_tag_; }
     intrusive_list::node * init_tag() 				{ return & init_tag_; }
 
-    static pool<> pool_;
-    static stack_segment stack_;
-	
-#ifndef BOOST_SH_DISABLE_THREADS
-    static thread_specific_stack last;
-#else
-    static std::stack<owned_base *> * last;
-#endif
+    static pool pool_;
 };
 
 
-pool<> owned_base::pool_(1);
-stack_segment owned_base::stack_;
-
-#ifndef BOOST_SH_DISABLE_THREADS
-thread_specific_stack owned_base::last;
-#else
-std::stack<owned_base *> * owned_base::last = new std::stack<owned_base *>;
-#endif
+pool owned_base::pool_;
 
 
 /**
@@ -194,13 +182,12 @@ template <typename T>
         
         void * operator new (size_t s)
         {
-            return pool_.ordered_malloc(s);
+            return pool_.allocate(s);
         }
         
         void operator delete (void * p)
         {
-            //!FIXME
-            pool_.free(p, sizeof(owned));
+            pool_.deallocate(p);
         }
 
     private:

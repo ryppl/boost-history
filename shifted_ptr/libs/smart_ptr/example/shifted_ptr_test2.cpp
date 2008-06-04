@@ -11,6 +11,10 @@
 #include <vector>
 #include <iostream>
 
+#include <boost/mpl/range_c.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/array.hpp>
+
 
 static int count;
 
@@ -59,6 +63,13 @@ struct vector {
     std::vector<shifted_ptr<vector> > elements;
 };
 
+struct create_type {
+    template<class T>
+    void operator()(T) const {
+        new_sh<boost::array<char, T::value> >();
+    }
+};
+
 int main() {
     count = 0;
 	{
@@ -76,6 +87,34 @@ int main() {
     {
         shifted_ptr<vector> v = new_sh<vector>();
         v->elements.push_back(v);
+    }
+    std::cout << count << std::endl;
+
+    count = 0;
+    {
+        shifted_ptr<vector> v = new_sh<vector>();
+        v->elements.push_back(v);
+    }
+    std::cout << count << std::endl;
+
+    {
+        vector v;
+        v.elements.push_back(new_sh<vector>());
+    }
+    std::cout << count << std::endl;
+
+    count = 0;
+    {
+        shifted_ptr<int> test = new_sh<int>(5);
+        test = test;
+        
+        std::cout << "test = " << * test << std::endl;
+    }
+    std::cout << count << std::endl;
+
+    count = 0;
+    for(int i = 0; i < 500; ++i) {
+        boost::mpl::for_each<boost::mpl::range_c<int, 1, 100> >(create_type());
     }
     std::cout << count << std::endl;
 }
