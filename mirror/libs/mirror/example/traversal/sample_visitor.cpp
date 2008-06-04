@@ -172,11 +172,20 @@ int main(void)
 	using namespace ::Test;
 	//
 	typedef BOOST_MIRROR_REFLECT_CLASS(H) meta_H;
+	H h;
+	h.l = 1234567890;
+	h.i = 123;
+	h.d = 456.7890123;
+	h.s = 456;
+	h.f = 78.9f;
+	h.b = false;
+	h.c = '1';
+	h.w = L'2';
 	//
 	bcout << "--------------------------------------------" << endl;
-	deep_traversal_of<meta_H>::accept(sample_visitor());
+	deep_traversal_of<meta_H>::accept(sample_visitor<true>(), &h);
 	bcout << "--------------------------------------------" << endl;
-	flat_traversal_of<meta_H>::accept(sample_visitor());
+	flat_traversal_of<meta_H>::accept(sample_visitor<true>(), &h);
 	bcout << "--------------------------------------------" << endl;
 	//
 	//
@@ -190,10 +199,11 @@ int main(void)
 	typedef tuple<T1, T2, T3, T4, T5, T6, T7> T;
 	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
 	//
+	//
 	bcout << "--------------------------------------------" << endl;
-	deep_traversal_of<meta_T>::accept(sample_visitor());
+	deep_traversal_of<meta_T>::accept(sample_visitor<false>());
 	bcout << "--------------------------------------------" << endl;
-	flat_traversal_of<meta_T>::accept(sample_visitor());
+	flat_traversal_of<meta_T>::accept(sample_visitor<false>());
 	bcout << "--------------------------------------------" << endl;
 	//
 	return 0;

@@ -26,9 +26,12 @@
 namespace boost {
 namespace mirror {
 
+template <bool WorksOnInstances>
 class sample_visitor 
 {
 public:
+	typedef mpl::bool_<WorksOnInstances> works_on_instances;
+
 	sample_visitor(void):indent(0){ }
 
 	// enter a class/type
@@ -104,7 +107,10 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		if(!is_fundamental<MetaClass::reflected_type>::value && (mirror::size<MetaAttributes>::value > 0))
+		if(
+			!is_fundamental<MetaClass::reflected_type>::value && 
+			(mirror::size<MetaAttributes>::value > 0)
+		)
 		{
 			print_indentation();
 			++indent;
@@ -119,7 +125,10 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		if(!is_fundamental<MetaClass::reflected_type>::value && (mirror::size<MetaAttributes>::value > 0))
+		if(
+			!is_fundamental<MetaClass::reflected_type>::value && 
+			(mirror::size<MetaAttributes>::value > 0)
+		)
 		{
 			--indent;
 			print_indentation();
@@ -152,7 +161,34 @@ public:
 		print_indentation();
 		bcout << "</attribute>" << endl;
 	}
+
+	template <class MetaClass, typename InstanceType>
+	void visit_instance(MetaClass, InstanceType* ptr_to_inst)
+	{
+		print_value(
+			ptr_to_inst, 
+			is_fundamental<typename MetaClass::reflected_type>()
+		);
+	}
+
 private:
+
+	template <typename Type>
+	void print_value(Type* ptr_to_inst, mpl::bool_<false>){ }
+
+	template <typename Type>
+	void print_value(Type* ptr_to_inst, mpl::bool_<true>)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		print_indentation();
+		bcout << 
+			"<value>" <<
+			*ptr_to_inst << 
+			"</value>" << 
+			endl;
+	}
+
 	int indent;
 	void print_indentation(void)
 	{

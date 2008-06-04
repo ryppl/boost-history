@@ -14,6 +14,8 @@
 #include <boost/mirror/algorithm/for_each.hpp>
 //
 #include <boost/ref.hpp>
+//
+#include <assert.h>
 
 namespace boost {
 namespace mirror {
@@ -24,7 +26,11 @@ template <class MetaClass> class flat_traversal_of;
 
 namespace detail {
 
-	template <class MetaClass, class MetaAttributes>
+	template <
+		class MetaClass, 
+		class MetaAttributes,
+		template <class> class TraversalType
+	>
 	struct traversal_utils
 	{
 	protected:
@@ -32,8 +38,12 @@ namespace detail {
 		class attribute_traversal
 		{
 		public:
-			attribute_traversal(reference_wrapper<VisitorType> _visitor)
+			attribute_traversal(
+				reference_wrapper<VisitorType> _visitor,
+				typename MetaClass::reflected_type* _ptr_to_inst
+			)
 			: visitor(_visitor)
+			, ptr_to_inst(_ptr_to_inst)
 			{
 				visitor.enter_attributes<MetaClass, MetaAttributes>();
 			}
@@ -46,31 +56,61 @@ namespace detail {
 			template <class MetaAttribute>
 			void operator ()(MetaAttribute ma)
 			{
-				visitor.enter_attribute(ma);
-				typedef MetaAttribute meta_attribute;
-				typedef typename meta_attribute::type attrib_type;
-				deep_traversal_of<
-					BOOST_MIRROR_REFLECT_CLASS(attrib_type)
-				>::accept(visitor);
-				visitor.leave_attribute(ma);
+				process_single(ma, typename VisitorType::works_on_instances());
 			}
 		private:
 			VisitorType& visitor;
+			typename MetaClass::reflected_type* ptr_to_inst;
+
+			// process single attribute WITH an instance
+			template <class MetaAttribute>
+			void process_single(MetaAttribute ma, mpl::bool_<true>)
+			{
+				visitor.enter_attribute(ma);
+				typedef typename MetaAttribute::type attrib_type;
+				assert(ptr_to_inst != 0);
+				typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
+				instance_type instance(ma.get(*ptr_to_inst));
+				TraversalType<
+					BOOST_MIRROR_REFLECT_CLASS(attrib_type)
+				>::accept(visitor, &instance);
+				visitor.leave_attribute(ma);
+			}
+
+			// process single attribute W/O an instance
+			template <class MetaAttribute>
+			void process_single(MetaAttribute ma, mpl::bool_<false>)
+			{
+				visitor.enter_attribute(ma);
+				typedef typename MetaAttribute::type attrib_type;
+				TraversalType<
+					BOOST_MIRROR_REFLECT_CLASS(attrib_type)
+				>::accept(visitor, 0);
+				visitor.leave_attribute(ma);
+			}
 		};
 	
 		template <class VisitorType>
 		static inline attribute_traversal<VisitorType>
-		show_attribs_to(reference_wrapper<VisitorType> visitor)
+		show_attribs_to(
+			reference_wrapper<VisitorType> visitor,
+			typename MetaClass::reflected_type* ptr_to_inst
+		)
 		{
-			return attribute_traversal<VisitorType>(visitor);
+			return attribute_traversal<VisitorType>(visitor, ptr_to_inst);
 		}
 	
+
 		template <class VisitorType>
 		class base_class_traversal
 		{
 		public:
-			base_class_traversal(reference_wrapper<VisitorType> _visitor)
+			base_class_traversal(
+				reference_wrapper<VisitorType> _visitor,
+				typename MetaClass::reflected_type* _ptr_to_inst
+			)
 			: visitor(_visitor)
+			, ptr_to_inst(_ptr_to_inst)
 			{
 				visitor.enter_base_classes<MetaClass>();
 			}
@@ -87,18 +127,22 @@ namespace detail {
 				typedef MetaInheritance meta_inheritance;
 				typedef typename meta_inheritance::meta_base_class
 					meta_base_class;
-				deep_traversal_of<meta_base_class>::accept(visitor);
+				TraversalType<meta_base_class>::accept(visitor, ptr_to_inst);
 				visitor.leave_base_class(mbc);
 			}
 		private:
 			VisitorType& visitor;
+			typename MetaClass::reflected_type* ptr_to_inst;
 		};
 
 		template <class VisitorType>
 		static inline base_class_traversal<VisitorType>
-		show_bases_to(reference_wrapper<VisitorType> visitor)
+		show_bases_to(
+			reference_wrapper<VisitorType> visitor,
+			typename MetaClass::reflected_type* ptr_to_inst
+		)
 		{
-			return base_class_traversal<VisitorType>(visitor);
+			return base_class_traversal<VisitorType>(visitor, ptr_to_inst);
 		}
 	};
 
@@ -107,55 +151,99 @@ namespace detail {
 
 template <class MetaClass>
 class deep_traversal_of 
-: detail::traversal_utils<MetaClass, typename MetaClass::attributes>
+: detail::traversal_utils<
+	MetaClass, 
+	typename MetaClass::attributes,
+	deep_traversal_of
+>
 {
 public:
 	template <class VisitorType>
-	static void accept(VisitorType visitor)
+	static void accept(
+		VisitorType visitor,
+		typename MetaClass::reflected_type* ptr_to_inst = 0
+	)
 	{
-		do_accept(ref<VisitorType>(visitor));
+		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
 	}
+
 	template <class VisitorType>
-	static void accept(reference_wrapper<VisitorType> visitor)
+	static void accept(
+		reference_wrapper<VisitorType> visitor,
+		typename MetaClass::reflected_type* ptr_to_inst = 0
+	)
 	{
-		do_accept(visitor);
+		do_accept(visitor, ptr_to_inst);
 	}
 private:
 	template <class VisitorType>
-	static void do_accept(reference_wrapper<VisitorType> visitor)
+	static void do_accept(
+		reference_wrapper<VisitorType> visitor,
+		typename MetaClass::reflected_type* ptr_to_inst
+	)
 	{
 		typedef MetaClass meta_class;
 		meta_class mc;
+		// enter the type
 		visitor.get().enter_type(mc);
-		for_each<typename meta_class::base_classes>(ref(show_bases_to(visitor)));
-		for_each<typename meta_class::attributes>(ref(show_attribs_to(visitor)));
+		// visit the instance
+		visitor.get().visit_instance(mc, ptr_to_inst);
+		// go through the base classes
+		for_each<typename meta_class::base_classes>(
+			ref(show_bases_to(visitor, ptr_to_inst))
+		);
+		// go through the own class' attributes
+		for_each<typename meta_class::attributes>(
+			ref(show_attribs_to(visitor, ptr_to_inst))
+		);
+		// leave the type
 		visitor.get().leave_type(mc);
 	}
 };
 
 template <class MetaClass>
 class flat_traversal_of
-: detail::traversal_utils<MetaClass, typename MetaClass::all_attributes>
+: detail::traversal_utils<
+	MetaClass, 
+	typename MetaClass::all_attributes,
+	flat_traversal_of
+>
 {
 public:
 	template <class VisitorType>
-	static void accept(VisitorType visitor)
+	static void accept(
+		VisitorType visitor,
+		typename MetaClass::reflected_type* ptr_to_inst = 0
+	)
 	{
-		do_accept(ref<VisitorType>(visitor));
+		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
 	}
 	template <class VisitorType>
-	static void accept(reference_wrapper<VisitorType> visitor)
+	static void accept(
+		reference_wrapper<VisitorType> visitor,
+		typename MetaClass::reflected_type* ptr_to_inst = 0
+	)
 	{
-		do_accept(visitor);
+		do_accept(visitor, ptr_to_inst);
 	}
 private:
 	template <class VisitorType>
-	static void do_accept(reference_wrapper<VisitorType> visitor)
+	static void do_accept(
+		reference_wrapper<VisitorType> visitor, 
+		typename MetaClass::reflected_type* ptr_to_inst
+	)
 	{
 		typedef MetaClass meta_class;
 		meta_class mc;
+		// enter the type
 		visitor.get().enter_type(mc);
-		for_each<typename meta_class::all_attributes>(ref(show_attribs_to(visitor)));
+		// visit the instance
+		visitor.get().visit_instance(mc, ptr_to_inst);
+		// go through all of the class' attributes
+		for_each<typename meta_class::all_attributes>(
+			ref(show_attribs_to(visitor, ptr_to_inst))
+		);
+		// leave the type
 		visitor.get().leave_type(mc);
 	}
 };
