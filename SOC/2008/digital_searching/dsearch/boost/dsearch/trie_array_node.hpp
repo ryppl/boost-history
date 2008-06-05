@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include<string.h>
+#include<assert.h>
 #include<boost/iterator/iterator_facade.hpp>
 #include<memory>
 
@@ -66,7 +67,6 @@ class trie_array_node_iterator
 	}
 };
 
-//TODO:write a copy constructor for good
 template<class Key,class Mapped,class Key_traits,class Alloc=std::allocator<char> >
 class trie_array_node
 {
@@ -82,6 +82,7 @@ class trie_array_node
 	typedef trie_array_node_iterator<type> iterator;
 	typedef element_type key_type;
 	typedef type* value_type;
+
 	bool value_indicator;
 	Mapped value;			//should it be mapped *? depending on sizeof(mapped)
 
@@ -95,6 +96,15 @@ class trie_array_node
 		std::cout<<"here"<<std::endl;
 		value_indicator=false;
 		memset(child_ptr,0,sizeof(child_ptr));
+	}
+
+	trie_array_node(const type &other)
+	{
+		value_indicator=other.value_indicator;
+		value=other.value;
+		assert( memcpy(child_ptr, other.child_ptr, sizeof(child_ptr) ) == child_ptr)	;
+/*		for(int i=0;i<max;i++)
+			child_ptr[i]=(type*)bool(child_ptr[i]);*/
 	}
 
 	void insert(const element_type &key,type * const &child_cursor)
@@ -157,11 +167,16 @@ class trie_array_node
 		return t_size;
 	}
 
+	element_type get_element(const iterator &it)
+	{
+		return Key_traits::get_element(it.pos);
+	}
+
 	iterator lower_bound(const element_type &e)
 	{
 		int k=Key_traits::get_value(e);
 		for(;k>=0;k--) 
-		if(child_ptr[k]!=0) break;
+			if(child_ptr[k]!=0) break;
 		if(k<0)	return end();
 		return iterator(this,k);
 	}
