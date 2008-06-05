@@ -61,7 +61,12 @@ class trie_iterator
 	void to_left_most()
 	{
 		Cursor c=this->top();
-		if(c.has_value()) return ;
+		if(c.has_value()) 
+		{
+			std::cout<<"in has_value"<<std::endl;
+			return ;
+		}
+		std::cout<<"out of has_value"<<std::endl;
 		while(!c.empty())
 		{
 			std::cout<<"PUSHING"<<std::endl;
@@ -74,6 +79,7 @@ class trie_iterator
 
 	void decrement()
 	{
+		bool first_loop=true;
 		Cursor top;
 		if(end_flag)
 		{
@@ -83,20 +89,33 @@ class trie_iterator
 		}
 		
 		assert(!this->empty());
-		pop();
+		//pop();
 		top=this->top();
-		pop();
+		this->pop();
+		if(this->empty())
+		{
+			this->push(top);
+			end_flag=true;
+			return;
+		}
 		while(top==this->top().begin())
 		{
-			if(top.has_value()) 
+			if(top.has_value() && !first_loop) 
 			{
 				this->push(top); //to make sure to_right_most still works
 				return;
 			}
+			first_loop=false;
 			top=this->top();
 			this->pop();
 			if(this->empty())
+			{
+				this->push(top);
+				if(!top.has_value())
+					end_flag=true;
 				return;
+			}
+			
 		}
 		--top;
 		this->push(top);
@@ -134,6 +153,7 @@ class trie_iterator
 	bool equal(const self &other) const
 	{
 		assert(!this->empty());
+		if(end_flag!=other.end_flag) return false;
 		if(other.cur_st.top()==cur_st.top())
 			return true;
 		return false;
@@ -146,7 +166,6 @@ class trie_iterator
 
 	trie_iterator(Cursor const &cursor_root,bool end_flag=false) //returns begin cursor
 	{
-		Cursor c=cursor_root;
 		this->end_flag=end_flag;
 		if(this->end_flag)
 		{
@@ -157,10 +176,10 @@ class trie_iterator
 		if(cursor_root.empty() && !cursor_root.has_value()) //special case of only empty root
 		{
 			end_flag=true;
-			this->push(c);
+			this->push(cursor_root);
 			return;
 		}
-		this->push(c);
+		this->push(cursor_root);
 		to_left_most();
 	}
 };
