@@ -54,7 +54,7 @@ namespace detail {
 			}
 	
 			template <class MetaAttribute>
-			void operator ()(MetaAttribute ma)
+			void operator ()(MetaAttribute ma) const
 			{
 				process_single(ma, typename VisitorType::works_on_instances());
 			}
@@ -64,7 +64,7 @@ namespace detail {
 
 			// process single attribute WITH an instance
 			template <class MetaAttribute>
-			void process_single(MetaAttribute ma, mpl::bool_<true>)
+			void process_single(MetaAttribute ma, mpl::bool_<true>) const
 			{
 				visitor.enter_attribute(ma);
 				typedef typename MetaAttribute::type attrib_type;
@@ -79,7 +79,7 @@ namespace detail {
 
 			// process single attribute W/O an instance
 			template <class MetaAttribute>
-			void process_single(MetaAttribute ma, mpl::bool_<false>)
+			void process_single(MetaAttribute ma, mpl::bool_<false>) const
 			{
 				visitor.enter_attribute(ma);
 				typedef typename MetaAttribute::type attrib_type;
@@ -121,7 +121,7 @@ namespace detail {
 			}
 	
 			template <class MetaInheritance>
-			void operator ()(MetaInheritance mbc)
+			void operator ()(MetaInheritance mbc) const
 			{
 				visitor.enter_base_class(mbc);
 				typedef MetaInheritance meta_inheritance;
@@ -189,11 +189,11 @@ private:
 		visitor.get().visit_instance(mc, ptr_to_inst);
 		// go through the base classes
 		for_each<typename MetaClass::base_classes>(
-			ref(show_bases_to(visitor, ptr_to_inst))
+			cref(show_bases_to(visitor, ptr_to_inst))
 		);
 		// go through the own class' attributes
 		for_each<typename MetaClass::attributes>(
-			ref(show_attribs_to(visitor, ptr_to_inst))
+			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
 		visitor.get().leave_type(mc);
@@ -239,7 +239,7 @@ private:
 		visitor.get().visit_instance(mc, ptr_to_inst);
 		// go through all of the class' attributes
 		for_each<typename MetaClass::all_attributes>(
-			ref(show_attribs_to(visitor, ptr_to_inst))
+			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
 		visitor.get().leave_type(mc);
