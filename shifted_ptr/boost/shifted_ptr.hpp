@@ -29,10 +29,8 @@
 #include <new.h>
 #endif
 
+#include <boost/pool/pool_alloc.hpp>
 #include <boost/type_traits/add_pointer.hpp>
-#include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
 
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
@@ -64,6 +62,8 @@ class set
 
     intrusive_list includes_;
     intrusive_list elements_;
+
+    static fast_pool_allocator<set> pool_;
 
 public:
     intrusive_list::node tag_;
@@ -120,9 +120,25 @@ public:
     {
         return & redir()->elements_;
     }
+    
+    void * operator new (size_t s)
+    {
+        return pool_.allocate(s);
+    }
+    
+    void * operator new (size_t s, set * p)
+    {
+        return p;
+    }
+
+    void operator delete (void * p)
+    {
+        pool_.deallocate(static_cast<set *>(p), sizeof(set));
+    }
 };
 
 
+fast_pool_allocator<set> set::pool_;
 
 
 /**
@@ -156,7 +172,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
         }
 
         template <typename V>
-            shifted_ptr(owned<V> * p) : U<T>(p)
+            shifted_ptr(shifted<V> * p) : U<T>(p)
             {
                 if (! owned_base::pool_.is_from(this))
                 {
@@ -193,7 +209,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
             }
 
         template <typename V>
-            shifted_ptr & operator = (owned<V> * p)
+            shifted_ptr & operator = (shifted<V> * p)
             {
                 release();
                 init(p);
@@ -271,32 +287,12 @@ template <typename T, template <typename> class U = shifted_ptr_base>
     };
 
 
-#define TEMPLATE_DECL(z, n, text) , typename T ## n
-#define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const & t ## n
-#define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n
-
-#define MAKE_SHIFTED_PTR(z, n, text)																			\
-	template <typename T BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>													\
-		inline owned<T> * new_sh(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0))											\
-		{																										\
-			typedef typename add_pointer<T>::type pointer_type;													\
-			typedef typename remove_const<typename remove_volatile<T>::type>::type unqualified_type;			\
-																												\
-			owned<T> * p = new owned<T>();																		\
-			pointer_type q = reinterpret_cast<pointer_type>(new (const_cast<unqualified_type *>(p->element())) T(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)));	\
-																												\
-			return (owned<T> *) (typename owned<T>::roofof) q;													\
-		}
-
-BOOST_PP_REPEAT(10, MAKE_SHIFTED_PTR, 0)
-
-
 } // namespace sh
 
 } // namespace detail
 
 using detail::sh::shifted_ptr;
-using detail::sh::new_sh;
+using detail::sh::shifted;
 
 } // namespace boost
 

@@ -32,10 +32,17 @@
 #include <boost/thread.hpp>
 #include <boost/thread/tss.hpp>
 #include <boost/pool/pool.hpp>
+#include <boost/pool/pool_alloc.hpp>
 #include <boost/numeric/interval.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/remove_extent.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
+#include <boost/preprocessor/control/expr_if.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
 #include <boost/detail/sh_utility.h>
@@ -57,34 +64,38 @@ class owned_base;
 
 
 /**
+    Syntax helper.
+*/
+
+typedef std::list< numeric::interval<int>, fast_pool_allocator< numeric::interval<int> > > pool_lii;
+
+
+/**
     Allocator wrapper tracking allocations.
 */
 
 struct pool : boost::pool<>,
 #ifndef BOOST_SH_DISABLE_THREADS
-    thread_specific_ptr< std::list< numeric::interval<int> > >
+    thread_specific_ptr<pool_lii>
 #else
-    std::auto_ptr< std::list< numeric::interval<int> > >
+    std::auto_ptr<pool_lii>
 #endif
 {
-    typedef std::list< numeric::interval<int> > li;
-
     pool() : boost::pool<>(1)
     {
-        reset(new std::list< numeric::interval<int> >());
+        reset(new pool_lii());
     }
     
     owned_base * top(void * p)
     {
-        li::reverse_iterator i;
+        pool_lii::reverse_iterator i;
         
         for (i = get()->rbegin(); i != get()->rend(); i ++)
             if (in((int)(p), * i))
-            {
-                get()->erase(i.base(), get()->end());
                 break;
-            }
-            
+
+        get()->erase(i.base(), get()->end());
+        
         return (owned_base *)(i->lower());
     }
     
@@ -97,18 +108,16 @@ struct pool : boost::pool<>,
         return p;
     }
 
-    void deallocate(void * p)
+    void deallocate(void * p, std::size_t s)
     {
-        li::reverse_iterator i;
+        pool_lii::reverse_iterator i;
         
         for (i = get()->rbegin(); i != get()->rend(); i ++)
             if (in((int)(p), * i))
-            {
-                get()->erase(i.base(), get()->end());
                 break;
-            }
-            
-        free(p, i->upper() - i->lower());
+        
+        get()->erase(i.base(), get()->end());
+        free(p, s);
     }
 };
 
@@ -143,41 +152,50 @@ public:
 pool owned_base::pool_;
 
 
+#define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n
+#define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const & t ## n
+#define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n
+
+#define CONSTRUCT_OWNED(z, n, text)																			    \
+	template <BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                        \
+		text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0)) : elem_(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)) {}																										
+
 /**
 	Object wrapper.
 */
 
 template <typename T>
-    class owned : public owned_base
+    class shifted : public owned_base
     {
         typedef T data_type;
 
-        union
-        {
-            void * vp_;
-            char p_[sizeof(data_type)];
-        };
-
+        T elem_; // need alignas<long>
+        
     public:
         class roofof;
         friend class roofof;
 
-        data_type * element() 				{ return static_cast<data_type *>(static_cast<void *>(& p_[0])); }
+		shifted() : elem_() {}
+        
+        BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, shifted)
 
-        virtual ~owned()					{ dispose(); }
-        virtual void dispose() 				{ dispose(element(), is_array<data_type>()); }
+
+        data_type * element() 				{ return & elem_; }
+
+        virtual ~shifted()					{ dispose(); }
+        virtual void dispose() 				{}
 
         virtual void * get_deleter( std::type_info const & ti ) { return 0; } // dummy
 
     public:
         class roofof
         {
-            owned<data_type> * p_;
+            shifted<data_type> * p_;
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((data_type owned<data_type>::*)(& owned<data_type>::p_), p)) {}
+            roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::elem_), p)) {}
             
-            operator owned<data_type> * () const { return p_; }
+            operator shifted<data_type> * () const { return p_; }
         };
         
         void * operator new (size_t s)
@@ -187,58 +205,27 @@ template <typename T>
         
         void operator delete (void * p)
         {
-            pool_.deallocate(p);
+            pool_.deallocate(p, sizeof(shifted));
         }
-
-    private:
-        template <typename U>
-            static void dispose_array(U * p, const false_type &)
-            {
-                typedef typename remove_extent<U>::type element_type;
-                
-                for (element_type * i = * p; i != * p + sizeof(data_type) / sizeof(element_type); i ++)
-                    dispose(i, is_array<element_type>());
-            }
-
-        template <typename U>
-            static void dispose_array(U * p, const true_type &)
-            {
-            }
-
-        template <typename U>
-            static void dispose(U * p, const false_type &)
-            {
-                p->~U();
-            }
-        
-        template <typename U>
-            static void dispose(U * p, const true_type &)
-            {
-                dispose_array(p, has_trivial_destructor<data_type>());
-            }
     };
 
 
 template <>
-    class owned<void> : public owned_base
+    class shifted<void> : public owned_base
     {
         typedef void data_type;
 
-        union
-        {
-            void * vp_;
-            char p_;
-        };
+        long elem_;
 
-        owned();
+        shifted();
 
     public:
         class roofof;
         friend class roofof;
 
-        data_type * element() 				{ return & p_; }
+        data_type * element() 				{ return & elem_; }
 
-        virtual ~owned()					{}
+        virtual ~shifted()					{}
         virtual void dispose() 				{}
 
         virtual void * get_deleter( std::type_info const & ti ) {}
@@ -246,12 +233,12 @@ template <>
     public:
         class roofof
         {
-            owned<data_type> * p_;
+            shifted<data_type> * p_;
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((char owned<data_type>::*)(& owned<data_type>::p_), static_cast<char *>(p))) {}
+            roofof(data_type * p) : p_(sh::roofof((long shifted<data_type>::*)(& shifted<data_type>::elem_), static_cast<long *>(p))) {}
             
-            operator owned<data_type> * () const { return p_; }
+            operator shifted<data_type> * () const { return p_; }
         };
     };
 

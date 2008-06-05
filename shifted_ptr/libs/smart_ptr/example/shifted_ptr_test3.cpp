@@ -28,7 +28,7 @@
 static int count;
 
 using boost::shifted_ptr;
-using boost::new_sh;
+using boost::shifted;
 
 struct node {
     node() {
@@ -53,9 +53,9 @@ public:
     }
     void insert() {
         if(front.get() == 0) {
-            front = back = new_sh<node>();
+            front = back = new shifted<node>();
         } else {
-            back->next = new_sh<node>();
+            back->next = new shifted<node>();
             back->next->prior = back;
             back = back->next;
         }
@@ -75,7 +75,7 @@ struct vector {
 struct create_type {
     template<class T>
     void operator()(T) const {
-        new_sh<boost::array<char, T::value> >();
+        new shifted<boost::array<char, T::value> >();
     }
 };
 
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
 /*
     count = 0;
     {
-        shifted_ptr<vector> v = new_sh<vector>();
+        shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
 /*
     count = 0;
     {
-        shifted_ptr<int> test = new_sh<int>(5);
+        shifted_ptr<int> test = new shifted<int>(5);
         test = test;
         
         BOOST_CHECK_NE(test.get(), static_cast<int*>(0));
@@ -116,14 +116,14 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
 /*
     count = 0;
     {
-        shifted_ptr<vector> v = new_sh<vector>();
+        shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
 */
     {
         vector v;
-        v.elements.push_back(new_sh<vector>());
+        v.elements.push_back(new shifted<vector>());
     }
     BOOST_CHECK_EQUAL(count, 0);
 }

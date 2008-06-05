@@ -53,7 +53,7 @@ template <typename T>
 		}
 
 		template <typename V>
-			shifted_ptr_base(detail::sh::owned<V> * p) : po_(p->element())
+			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
 			{
 			}
 
@@ -67,7 +67,7 @@ template <typename T>
 			}
 
 		template <typename V>
-			shifted_ptr_base & operator = (detail::sh::owned<V> * p)
+			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
 			{
 				reset(p->element());
 
@@ -134,7 +134,7 @@ template <typename T>
 	protected:
 		detail::sh::owned_base * header() const
 		{
-			detail::sh::owned_base * p = (owned<element_type> *) (typename owned<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
+			detail::sh::owned_base * p = (shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
 			return p;
 		}
 	};
@@ -156,7 +156,7 @@ template <typename T, size_t N>
 		}
 
 		template <typename V>
-			shifted_ptr_base(detail::sh::owned<V> * p) : po_(p->element())
+			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
 			{
 			}
 
@@ -170,7 +170,7 @@ template <typename T, size_t N>
 			}
 
 		template <typename V>
-			shifted_ptr_base & operator = (detail::sh::owned<V> * p)
+			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
 			{
 				reset(p->element());
 
@@ -237,7 +237,7 @@ template <typename T, size_t N>
 	protected:
 		detail::sh::owned_base * header() const
 		{
-			return (owned<element_type> *) (typename owned<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
+			return (shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
 		}
 	};
 #endif
@@ -258,7 +258,7 @@ template <>
 		}
 
 		template <typename V>
-			shifted_ptr_base(detail::sh::owned<V> * p) : po_(p->element())
+			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
 			{
 			}
 
@@ -272,7 +272,7 @@ template <>
 			}
 
 		template <typename V>
-			shifted_ptr_base & operator = (detail::sh::owned<V> * p)
+			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
 			{
 				reset(p->element());
 
@@ -329,7 +329,7 @@ template <>
 	protected:
 		detail::sh::owned_base * header() const
 		{
-			return (owned<element_type> *) (owned<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
+			return (shifted<element_type> *) (shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
 		}
 	};
 

@@ -19,7 +19,7 @@
 static int count;
 
 using boost::shifted_ptr;
-using boost::new_sh;
+using boost::shifted;
 
 struct node {
     node() {
@@ -41,9 +41,9 @@ public:
     }
     void insert() {
         if(front.get() == 0) {
-            back = new_sh<node>();
+            back = new shifted<node>();
         } else {
-            back->next = new_sh<node>();
+            back->next = new shifted<node>();
             back->next->prior = back;
             back = back->next;
         }
@@ -66,7 +66,7 @@ struct vector {
 struct create_type {
     template<class T>
     void operator()(T) const {
-        new_sh<boost::array<char, T::value> >();
+        new shifted<boost::array<char, T::value> >();
     }
 };
 
@@ -85,27 +85,27 @@ int main() {
     
     count = 0;
     {
-        shifted_ptr<vector> v = new_sh<vector>();
+        shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     std::cout << count << std::endl;
 
     count = 0;
     {
-        shifted_ptr<vector> v = new_sh<vector>();
+        shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     std::cout << count << std::endl;
 
     {
         vector v;
-        v.elements.push_back(new_sh<vector>());
+        v.elements.push_back(new shifted<vector>());
     }
     std::cout << count << std::endl;
 
     count = 0;
     {
-        shifted_ptr<int> test = new_sh<int>(5);
+        shifted_ptr<int> test = new shifted<int>(5);
         test = test;
         
         std::cout << "test = " << * test << std::endl;
