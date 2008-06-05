@@ -4,12 +4,16 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-import testing ;
+using testing ;
 
 project
     : requirements 
       <include>../../..
+      <include>$(BOOST_ROOT)
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-run test.cpp ;
+test-suite dsearch :
+	[ run test.cpp ]
+	[ run test_trie.cpp ]
+	;
