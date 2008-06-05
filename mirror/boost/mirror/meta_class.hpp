@@ -31,6 +31,9 @@
 #include <boost/mirror/traits/reflects_virtual_inheritance.hpp>
 // reflection of class member attributes
 #include <boost/mirror/meta_attributes.hpp>
+//
+// reflection of destructors
+#include <boost/mirror/meta_destructor.hpp>
 
 namespace boost {
 namespace mirror {
@@ -72,6 +75,11 @@ struct meta_class : public meta_type<Class>
 	 */
 	typedef detail::meta_class_all_attributes<Class, VariantTag >
 		all_attributes;
+
+	/** Meta data concerning the destructor of the reflected class
+	 */
+	typedef detail::meta_class_destructor<Class, VariantTag>
+		destructor;
 };
 
 
