@@ -15,6 +15,9 @@
 
 #include <sys/time.h>
 
+#define MAX_X 2000.0
+#define MAX_Y 2000.0
+
 
 double drandom(unsigned int upper_bound)
 {
@@ -35,63 +38,61 @@ double drandom(unsigned int upper_bound)
 
 int test_main(int, char* [])
 {
-	// data and indexed points
-	std::vector<unsigned int> ids;
- 	std::vector<std::pair<double, double> > points;	
+  // data and indexed points
+  std::vector<unsigned int> ids;
+  std::vector<geometry::point_xy<double> > points;	
 
-	// plane
- 	const double max_x = 2000.0;
- 	const double max_y = 2000.0;
+  // plane
+  geometry::box<geometry::point_xy<double> > plane(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(MAX_X, MAX_Y));
 
-	// number of points
-	const unsigned int points_count = 500;
+  // number of points
+  const unsigned int points_count = 500;
 
-	// number of points to find on the search phase
-	const unsigned int find_count = 50;
+  // number of points to find on the search phase
+  const unsigned int find_count = 50;
+  
+  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , std::vector<unsigned int>::iterator > > 
+    q(new boost::spatial_index::quadtree< geometry::point_xy<double>, std::vector<unsigned int>::iterator >(plane));
 
- 	boost::shared_ptr< boost::spatial_index::spatial_index< std::pair<double, double> , std::vector<unsigned int>::iterator > > 
- 		q(new boost::spatial_index::quadtree< std::pair<double, double> , 
-		  std::vector<unsigned int>::iterator >(0.0, 0.0, max_x, max_y));
+      // generate random data
+      for(unsigned int i = 0; i < points_count; i++) {
+	double x = drandom((int) MAX_X);
+	double y = drandom((int) MAX_Y);
 
-	// generate random data
-  	for(unsigned int i = 0; i < points_count; i++) {
- 		double x = drandom((int) max_x);
- 		double y = drandom((int) max_y);
+	ids.push_back(i);
+	points.push_back(geometry::point_xy<double>(x, y));
 
-  		ids.push_back(i);
- 		points.push_back(std::make_pair(x, y));
+	// std::cerr << "insert " << i << " -> (" << x << ", " << y << ")" << std::endl;
+      }
 
-//  		std::cerr << "insert " << i << " -> (" << x << ", " << y << ")" << std::endl;
-  	}
+      // insert data
+      std::cerr << " --> bulk insert" << std::endl;
+      std::vector<unsigned int>::iterator b, e;
+      b = ids.begin();
+      e = ids.end();
+      q->bulk_insert(b,e, points);
 
-	// insert data
-  	std::cerr << " --> bulk insert" << std::endl;
-  	std::vector<unsigned int>::iterator b, e;
-  	b = ids.begin();
-  	e = ids.end();
-  	q->bulk_insert(b,e, points);
+      // search
+      std::vector<geometry::point_xy<double> > search_positions;
+      std::vector<unsigned int> search_data;
 
-	// search
-	std::vector<std::pair<double,double> > search_positions;
-	std::vector<unsigned int> search_data;
+      // compute random positions to do the searches, store the data
+      for(unsigned int j=0; j < find_count; j++) {
+	unsigned int pos = (int) drandom(points_count);
+	search_positions.push_back(points[pos]);
+	search_data.push_back(pos);
+      }
 
-	// compute random positions to do the searches, store the data
-	for(unsigned int j=0; j < find_count; j++) {
-		unsigned int pos = (int) drandom(points_count);
-		search_positions.push_back(points[pos]);
-		search_data.push_back(pos);
-	}
+      // search data and compare
+      for(unsigned int j=0; j < find_count; j++) {
+	std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
+	std::cout << search_data[j] 
+		  << " - found in (" << geometry::get<0>(search_positions[j]) << "," << geometry::get<1>(search_positions[j])
+		  << ") --> " << *it << std::endl;
+	
+	// check if the retrieved data is equal to the stored data
+	BOOST_CHECK_EQUAL(*it, search_data[j]);
+      }
 
-	// search data and compare
-	for(unsigned int j=0; j < find_count; j++) {
-		std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
-		std::cout << search_data[j] 
-			  << " - found in (" << search_positions[j].first << "," << search_positions[j].second 
-			  << ") --> " << *it << std::endl;
-
-		// check if the retrieved data is equal to the stored data
-		BOOST_CHECK_EQUAL(*it, search_data[j]);
-	}
-
-	return 0;
+      return 0;
 }
