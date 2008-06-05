@@ -1,7 +1,6 @@
 #include<boost/dsearch/key_traits.hpp>
 #include<boost/dsearch/trie_array_node.hpp>
 #include<boost/dsearch/trie.hpp>
-#include<boost/dsearch/node_cursor.hpp>
 #include<assert.h>
 #include<string>
 #include<memory>
@@ -42,13 +41,8 @@ void test_trie()
 	tr.insert( std::make_pair("it",3) );
 	c=tr.root().begin();
 	c++;
-
-
-
 	tr.begin();
 	tr.clear();
-
-
 
 	std::cout<<"GRR...AT THE END"<<std::endl;
 	tr.begin(); //should not segfault.
