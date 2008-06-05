@@ -14,9 +14,9 @@ namespace boost{
 namespace dsearch{
 
 template<class Key,class Mapped,
-template<class K,class M,class K_t,class A > class trie_node, //wonder allocator<char> is correct
+template<class K,class M,class K_t,class A > class trie_node, 
 class Key_traits,
-class Alloc=std::allocator<char> > 
+class Alloc=std::allocator<char> > //wonder allocator<char> is correct
 class trie
 {
 	private:
@@ -54,6 +54,23 @@ class trie
 		new(node_root) node_type();
 	}
 
+	trie(const type &other)
+	{
+		std::cout<<"in copy constructor"<<std::endl;
+
+		copy_trie_preserve(const_cast<node_type *>(other.node_root) );
+	}
+	
+	type &operator = ( const type other )
+	{
+		if(node_root==other.node_root) return *this;
+		clear();
+		node_allocator.destroy(node_root);
+		node_allocator.deallocate(node_root,1);
+		copy_trie(other.node_root);
+		return *this;
+	}
+
 	data_type &operator [] (const key_type &k) 
 	{
 		return	insert_(k)->get_value_ref();
@@ -72,7 +89,6 @@ class trie
 	std::size_t max_size()
 	{
 		return  std::numeric_limits<std::size_t>::max();
-		//return (std::size_t)(-1);//does this work everywhere? 
 	}
 
 	bool empty()
@@ -88,7 +104,12 @@ class trie
 
 		node_type* cur=node_root,*par=node_root,*temp_cur=node_root;
 
-		if(it==end_it) return;
+		if(it==end_it) 
+		{
+			if(node_root->has_value())
+				node_root->erase_value();
+			return;
+		}
 		fit=cur->find(*it);
 		if(fit==cur->end())
 			return;
@@ -190,7 +211,11 @@ class trie
 		//ret_it.push(cur);
 		if( not_found )
 		{
-			next=++cursor(cur.get_node(),cur.get_node()->lower_bound(*it));
+			next=cursor(cur.get_node(),cur.get_node()->lower_bound(*it));
+			if(next==ret_it.top().end())
+				next=cursor ( cur.get_node(), cur.get_node()->begin());
+			else
+				next++;
 			while(next==ret_it.top().end())
 			{
 				std::cout<<"popping "<<std::endl;
@@ -395,6 +420,103 @@ class trie
 			return true;
 		}
 		return false;
+	}
+
+	void copy_trie_preserve(node_type*other_root)
+	{
+		node_type *prev,*temp_node;
+		typedef typename node_type::iterator node_iterator;
+		std::stack<node_iterator> st;
+		std::stack<node_iterator> this_st;
+		node_iterator cur_it=other_root->begin();
+
+		node_root=node_allocator.allocate(1);
+		node_allocator.construct(node_root,*other_root);
+		
+		if ( other_root->end() == other_root->begin() )
+			return;
+		this_st.push(node_root->begin());
+
+		while(true)
+		{
+			if(st.empty())
+				prev=other_root;
+			else
+				prev=*st.top();
+
+			if( cur_it == prev->end() )
+			{
+				if(st.empty())  return;
+				cur_it=++st.top();
+				st.pop();
+				this_st.pop();
+				++this_st.top();
+				continue;
+			}
+
+			temp_node=node_allocator.allocate(1);
+			node_allocator.construct( temp_node , **cur_it );
+			*(this_st.top())=temp_node;
+
+			/*if((*cur_it)->has_value())
+				temp_node->get_value_ref()=(*cur_it)->get_value_ref();*/
+			this_st.push(temp_node->begin());
+			st.push(cur_it);
+
+			cur_it=(*cur_it)->begin();
+		}
+	}
+
+	//this does not preserve the stucture of tst.
+	void copy_trie(node_type*other_root)
+	{
+		node_type *prev,*this_prev,*temp_node;
+		typedef typename node_type::iterator node_iterator;
+		std::stack<node_iterator> st;
+		std::stack<node_type *> this_st;
+
+		node_iterator cur_it=other_root->begin();
+
+		node_root=node_allocator.allocate(1);
+		new(node_root) node_type;
+		if(other_root->has_value())
+			node_root->get_value_ref()=other_root->get_value_ref();
+
+		while(true)
+		{
+			if(st.empty())
+			{
+				prev=other_root;
+				this_prev=node_root;
+			}
+			else
+			{
+				prev=*st.top();
+				this_prev=this_st.top();
+			}
+
+			if(cur_it==prev->end())
+			{
+				std::cout<<"reached end"<<std::endl;
+				if(st.empty())  return;
+				this_st.pop();
+				cur_it=++st.top();
+				st.pop();
+				continue;
+			}
+			else
+				std::cout<<"going to:"<<prev->get_element(cur_it)<<std::endl;
+
+			temp_node=node_allocator.allocate(1);
+			new(temp_node) node_type();
+			this_prev->insert(prev->get_element(cur_it),temp_node);
+
+			if((*cur_it)->has_value())
+				temp_node->get_value_ref()=(*cur_it)->get_value_ref();
+			this_st.push(temp_node);
+			st.push(cur_it);
+			cur_it=(*cur_it)->begin();
+		}
 	}
 };
 
