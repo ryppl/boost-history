@@ -52,9 +52,14 @@ class string_traits: public default_iterator_traits<std::string>{
 		max=255
 	};
 
-	static std::size_t get_value(element_type e1)
+	static std::size_t get_value(const element_type &e1)
 	{
 		return static_cast<unsigned char>(e1);
+	}
+
+	static element_type get_element(const std::size_t &t)
+	{
+		return (char)t;
 	}
 
 	template<typename value_it>
