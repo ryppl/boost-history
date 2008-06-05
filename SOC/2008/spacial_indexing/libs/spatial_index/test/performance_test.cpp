@@ -17,47 +17,47 @@
 
 
 // query rectangle
-double rect_x1, rect_x2, rect_y1, rect_y2, rect_count;
+double rect_count;
+geometry::box<geometry::point_xy<double> > query_box;
 
 
-std::vector<std::pair<double,double> > read_data(void)
+std::vector< geometry::point_xy<double> > read_data(void)
 {
-	std::set<std::pair<double,double> > v;
-	std::vector<std::pair<double,double> > r;
+  std::set< geometry::point_xy<double> > v;
+  std::vector< geometry::point_xy<double> > r;
 
-	std::ifstream data;
-	data.open("gis-data.txt");
+  std::ifstream data;
+  data.open("gis-data.txt");
 
-	// variable to check number of points inside the control rectangle
-	rect_count = 0;
+  // variable to check number of points inside the control rectangle
+  rect_count = 0;
 
-	rect_x1 = -120.0;
-	rect_x2 = -80.0;
-	rect_y1 = 10.0;
-	rect_y2 = 40.0;
+  geometry::get<0>(query_box.min()) = -120.0;
+  geometry::get<1>(query_box.min()) = 10.0;
 
-	double x, y;
-	data >> x;
-	data >> y;
-	if(x >= rect_x1 && x <= rect_x2 && y >= rect_y1 && y <= rect_y2) {
-		rect_count++;
-	}
-	v.insert(std::make_pair(x,y));
+  geometry::get<0>(query_box.max()) = -80.0;
+  geometry::get<1>(query_box.max()) = 40.0;
 
-	while(!data.eof()) {
+  double x, y;
+  data >> x;
+  data >> y;
+  if(geometry::within(geometry::point_xy<double>(x,y), query_box)) {
+    rect_count++;
+  }
+  v.insert(geometry::point_xy<double>(x,y));
 
-		data >> x;
-		data >> y;
+  while(!data.eof()) {
+    data >> x;
+    data >> y;
 
-		if(x >= rect_x1 && x <= rect_x2 && y >= rect_y1 && y <= rect_y2) {
-//  			std::cerr << "Rect: (" << x << "," << y << ")" << std::endl;
-			rect_count++;
-		}
-
-		v.insert(std::make_pair(x,y));
-	}
-	copy(v.begin(), v.end(), std::back_inserter(r));
-	return r;
+  if(geometry::within(geometry::point_xy<double>(x,y), query_box)) {
+      //  std::cerr << "Rect: (" << x << "," << y << ")" << std::endl;
+      rect_count++;
+    }
+    v.insert(geometry::point_xy<double>(x,y));
+  }
+  copy(v.begin(), v.end(), std::back_inserter(r));
+  return r;
 }
 
 
@@ -80,83 +80,76 @@ double drandom(unsigned int upper_bound)
 
 int test_main(int, char* [])
 {
-	std::vector<unsigned int> ids;
- 	std::vector<std::pair<double, double> > points = read_data();
+  std::vector<unsigned int> ids;
+  std::vector< geometry::point_xy<double> > points = read_data();
 
-	// -- wait to check memory
- 	std::cerr << "check memory --> After Reading Data." << std::endl;
- 	sleep(5);
-	// -- wait to check memory
+  // -- wait to check memory
+//   std::cerr << "check memory --> After Reading Data." << std::endl;
+//   sleep(5);
+  // -- wait to check memory
 
-	// start time
-	time_t start;
+  // start time
+  time_t start;
 
-// 	std::cerr << "Size: " << points.size() << std::endl;
+  // std::cerr << "Size: " << points.size() << std::endl;
 
-	// plane
- 	const double min_x = -130.0;
- 	const double min_y = 10.0;
- 	const double max_x = -60.0;
- 	const double max_y = 80.0;
+  // plane
+  geometry::box<geometry::point_xy<double> > plane(geometry::point_xy<double>(-130.0, 0.0), geometry::point_xy<double>(-60.0, 80.0));
 
-	// number of points to find on the search phase
-	const unsigned int find_count = 100000;
+  // number of points to find on the search phase
+  const unsigned int find_count = 100000;
 
- 	for(unsigned int i = 0; i < points.size(); i++) {
- 		ids.push_back(i);
-	}
+  for(unsigned int i = 0; i < points.size(); i++) {
+    ids.push_back(i);
+  }
 
-  	boost::shared_ptr< boost::spatial_index::spatial_index< std::pair<double, double> , std::vector<unsigned int>::iterator > > 
-  		q(new boost::spatial_index::quadtree< std::pair<double, double> , 
-		  std::vector<unsigned int>::iterator >(min_x, min_y, max_x, max_y));
+  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , std::vector<unsigned int>::iterator > > 
+    q(new boost::spatial_index::quadtree< geometry::point_xy<double>, std::vector<unsigned int>::iterator >(plane));
 
- 	// load data
-   	std::cerr << " --> bulk insert" << std::endl;
-   	std::vector<unsigned int>::iterator b, e;
-   	b = ids.begin();
-   	e = ids.end();
+      // load data
+      std::cerr << " --> bulk insert" << std::endl;
+      std::vector<unsigned int>::iterator b, e;
+      b = ids.begin();
+      e = ids.end();
 
-	start = time(NULL);
-   	q->bulk_insert(b,e, points);
-	std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
+      start = time(NULL);
+      q->bulk_insert(b,e, points);
+      std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
 
-	// -- wait to check memory
- 	std::cerr << "check memory --> After Building Index." << std::endl;
- 	sleep(5);
-	// -- wait to check memory
+      // -- wait to check memory
+//       std::cerr << "check memory --> After Building Index." << std::endl;
+//       sleep(5);
+      // -- wait to check memory
 
-	// search
-	std::vector<std::pair<double,double> > search_positions;
-	std::vector<unsigned int> search_data;
-	for(unsigned int j=0; j < find_count; j++) {
-		unsigned int pos = (int) drandom(points.size());
+      // search
+      std::vector< geometry::point_xy<double> > search_positions;
+      std::vector<unsigned int> search_data;
+      for(unsigned int j=0; j < find_count; j++) {
+	unsigned int pos = (int) drandom(points.size());
 
-		search_positions.push_back(points[pos]);
-		search_data.push_back(pos);
-	}
+	search_positions.push_back(points[pos]);
+	search_data.push_back(pos);
+      }
 
 
-	start = time(NULL);
-	std::deque< std::vector<unsigned int>::iterator > d = q->find(rect_x1, rect_x2, rect_y1, rect_y2);
-	std::cerr << " --> find rectangle" << std::endl;
-	BOOST_CHECK_EQUAL(rect_count, d.size());
-	std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
+      start = time(NULL);
+      std::deque< std::vector<unsigned int>::iterator > d = q->find(query_box);
+      std::cerr << " --> find rectangle" << std::endl;
+      BOOST_CHECK_EQUAL(rect_count, d.size());
+      std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
 
+      start = time(NULL);
+      for(unsigned int j=0; j < find_count; j++) {
+	std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
+	//std::cout << search_data[j] 
+	//  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
+	//  << *it << std::endl;
 
-	start = time(NULL);
-	for(unsigned int j=0; j < find_count; j++) {
-		std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
-// 		std::cout << search_data[j] 
-// 			  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
-// 			  << *it << std::endl;
+	BOOST_CHECK_EQUAL(*it, search_data[j]);
+      }
+      std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 
-		BOOST_CHECK_EQUAL(*it, search_data[j]);
-	}
-	std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
-
-
-
-	return 0;
+      return 0;
 }
 
 

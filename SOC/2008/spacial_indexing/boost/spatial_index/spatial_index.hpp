@@ -10,8 +10,8 @@
 #include <vector>
 #include <deque>
 
-#include <boost/geometry/geometry.hpp>
-#include <boost/geometry/box.hpp>
+#include <geometry/geometry.hpp>
+#include <geometry/box.hpp>
 
 namespace boost {
 namespace spatial_index {
