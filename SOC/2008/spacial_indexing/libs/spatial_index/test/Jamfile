@@ -13,5 +13,6 @@ project
     ;
 
 run simple_test.cpp ;
+run custom_point_test.cpp ;
 run random_test.cpp ;
 run performance_test.cpp ;
