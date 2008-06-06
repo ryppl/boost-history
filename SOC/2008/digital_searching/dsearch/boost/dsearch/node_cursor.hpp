@@ -130,7 +130,7 @@ namespace dsearch {
 	{
 		return 	get_node()->get_value_ref();
 	}
-		
+
 	cursor find(const element_type &e)
 	{
 		return cursor(get_node(),get_node()->find(e));
