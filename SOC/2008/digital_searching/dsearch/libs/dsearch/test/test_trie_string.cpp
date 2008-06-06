@@ -62,7 +62,7 @@ T test_insert()
 
 //testing copy contructor
 template <class T>
-void test_copy(const T &tr)
+void test_copy(T tr)
 {
 	BOOST_CHECK( tr.find("hello")!=tr.end() );
 	BOOST_CHECK( *tr.find("hello")==1 );
@@ -231,12 +231,15 @@ void test_erase_iterator()
 {
 	T tr;
 	typename T::iterator it;
+	typename T::const_iterator cit;
 
 	tr.insert(make_pair("hello",1));
 	it=tr.find("hello");
 	tr.erase(it);
 	BOOST_CHECK(tr.find("hello")==tr.end());
 
+	//it=cit; //TODO:MAKE THIS NOT COMPILE
+	cit=it; //should compile properly
 
 	//"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
 	tr=test_insert<T>();
@@ -244,6 +247,7 @@ void test_erase_iterator()
 	it=tr.find("hello");
 	tr.erase(it);
 	BOOST_CHECK(tr.find("hello")==tr.end());
+
 
 	it=tr.find("wor");
 	BOOST_CHECK(it!=tr.end());
@@ -274,7 +278,29 @@ void test_erase_iterator()
 	BOOST_CHECK(it!=tr.end());
 	tr.erase(it);
 	BOOST_CHECK(tr.find("")==tr.end());
+	
 	BOOST_CHECK( tr.empty() );
+}
+
+template<class T>
+void test_erase_range(T tr)
+{
+	typename T::iterator it;
+	std::cout<<"test erase"<<std::endl;
+
+//	"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
+//	tr.erase(tr.begin(),tr.end());	
+	it=tr.begin();
+	std::cout<<"grrr..."<<*it<<std::endl;
+	++it;
+	std::cout<<"grrrr..."<<*it<<std::endl;
+	++it;
+	std::cout<<"grrr..."<<*it<<std::endl;
+	++it;
+	std::cout<<"grrr..."<<*it<<std::endl;
+
+	tr.erase(tr.begin(),it);
+	//BOOST_CHECK( tr.empty() );
 }
 
 int test_main(int,char **)
@@ -288,8 +314,10 @@ int test_main(int,char **)
 	test_bound(tr);
 	test_erase(tr);
 	test_iteration(tr);
-
 	test_erase_iterator<trie_type>();
+	
+	//test_erase_range(tr);
+
 	return 0;
 }
 
