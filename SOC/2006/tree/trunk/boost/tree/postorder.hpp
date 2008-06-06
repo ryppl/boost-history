@@ -39,7 +39,7 @@ inline void forward(Cursor& c)
 		return;
 	}
 	
-	if (/*!c.parity() &&*/ (c.parent().begin() != c)) // Root?
+	if (c.parent().begin() != c) // Root?
 		return;
 	
 	// Left child.
@@ -110,87 +110,30 @@ inline Cursor prior(Cursor c)
 }
 
 /**
- * @brief	First element of a tree in postorder traversal
+ * @brief	First element of a subtree in postorder traversal
  * 			(equivalent to inorder::first())
- * @param t	A tree
- * @return	Mutable cursor to the first element of @a t in postorder traversal
+ * @param c	A cursor
+ * @return	Cursor to the first element of @a c in postorder traversal
  */
-template <class Tree>
-typename Tree::cursor first(Tree& t)
+template <class Cursor>
+Cursor first(Cursor c)
 {
-	typename Tree::cursor c = t.root();
 	while (!c.empty())
 		c.to_begin();
 	return c;
 }
 
 /**
- * @brief	First element of a tree in postorder traversal
- * 			(Alias of cfirst(); equivalent to inorder::first())
- * @param t	A tree
- * @return	Read-only cursor to the first element of @a t in postorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor first(Tree const& t)
-{
-	typename Tree::const_cursor c = t.root();
-	while (!c.empty())
-		c.to_begin();
-	return c;
-}
-
-/**
- * @brief	First element of a tree in postorder traversal
- * 			(equivalent to inorder::cfirst())
- * @param t	A tree
- * @return	Read-only cursor to the first element of @a t in postorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor cfirst(Tree const& t)
-{
-	typename Tree::const_cursor c = t.root();
-	while (!c.empty())
-		c.to_begin();
-	return c;
-}
-
-/**
- * @brief	One position past the last element of a tree in postorder 
+ * @brief	One position past the last element of a subtree in postorder 
  * 			traversal
- * @param t	A tree
- * @return	Mutable cursor one position past the last element of @a t in 
+ * @param c	A cursor
+ * @return	Cursor one position past the last element of @a c in 
  * 			postorder traversal
  */
-template <class Tree>
-typename Tree::cursor last(Tree& t)
+template <class Cursor>
+Cursor last(Cursor c)
 {
-	return t.root();
-}
-
-/**
- * @brief	One position past the last element of a tree in 
- * 			postorder traversal (Alias of clast())
- * @param t	A tree
- * @return	Read-only cursor one position past the last element of @a t in 
- * 			postorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor last(Tree const& t)
-{
-	return t.croot();
-}
-
-/**
- * @brief	One position past the last element of a tree in 
- * 			postorder traversal
- * @param t	A tree
- * @return	Read-only cursor one position past the last element of @a t in 
- * 			postorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor clast(Tree const& t)
-{
-	return t.croot();
+	return c;
 }
 
 /*\@}*/

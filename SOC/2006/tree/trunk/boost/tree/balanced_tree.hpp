@@ -182,7 +182,7 @@ class balanced_tree {
 	 */
 	iterator end()
 	{
-		return iterator(h.shoot());
+		return iterator(h.root());
 	}
 
 	/**
@@ -200,7 +200,7 @@ class balanced_tree {
 	 */	
 	const_iterator cend() const
 	{
-		return const_iterator(h.cshoot());
+		return const_iterator(h.croot());
 	}
 
 	/**

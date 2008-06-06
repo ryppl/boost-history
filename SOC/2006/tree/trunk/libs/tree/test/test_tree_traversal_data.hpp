@@ -52,9 +52,6 @@ namespace test {
 
 namespace preorder {
 
-//std::list data;
-
-
 template <class Iterator>
 void traversal(Iterator a, Iterator b) 
 {
@@ -103,16 +100,6 @@ void subtree_traversal(Iterator a, Iterator b)
 } // namespace preorder
 
 namespace inorder {
-
-
-
-template < class Tp, class Alloc = std::allocator<Tp> >
-class flat_binary_tree {
- protected:
-	std::list<Tp, Alloc> cont;
- public:
-	
-};
 
 template <class Iterator>
 void traversal(Iterator a, Iterator b)

@@ -16,7 +16,7 @@ void test_nary_tree()
 	
 	typedef nary_tree<int> tree_type;
 	tree_type mytree;
-	tree_type::cursor c = mytree.shoot();
+	tree_type::cursor c = mytree.root();
 	BOOST_CHECK(mytree.root().empty());
 	BOOST_CHECK(c.empty());
 

@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <iterator>
 
+#include <boost/tree/binary_tree.hpp>
+
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
@@ -52,6 +54,55 @@ void algorithms(Cursor c, Cursor d)
 	test_list.clear();
 	test_transform(c, d, oc_test_list, test_list);
 }
+
+void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t) {
+	
+	using boost::forward_traversal_tag;
+	
+	std::list<int> test_list;
+	typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
+	typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
+	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
+	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
+	
+	boost::tree::ORDER::copy(t.croot().begin(), oc_test_list);
+
+	// Are the elements accessed in the correct order?
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root()),
+							boost::tree::ORDER::end(t.root()),
+							test_list.begin()
+							));
+
+	// Does end() mark the right element? 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(t.root()),
+							  boost::tree::ORDER::end(t.root())) == 
+				std::distance(test_list.begin(), test_list.end()));
+
+	// Reverse order.
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(t.root()),
+							boost::tree::ORDER::rend(t.root()),
+							test_list.rbegin()
+							));
+
+	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(t.root()),
+							  boost::tree::ORDER::rend(t.root())) == 
+				std::distance(test_list.rbegin(), test_list.rend()));					
+
+	//Now same for "explicit stack"-based iterators
+	// TODO: Only possible when there are stack-based pre- and postorder iterators
+/*
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root(), forward_traversal_tag()),
+							boost::tree::ORDER::end(t.root(), forward_traversal_tag()),
+							test_list.begin()
+							));
+
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(t.root(), forward_traversal_tag()),
+							boost::tree::ORDER::rend(t.root(), forward_traversal_tag()),
+							test_list.rbegin()
+							));
+*/
+}
+
 
 }
 }

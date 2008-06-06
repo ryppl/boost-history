@@ -32,7 +32,8 @@ namespace tree {
 	
 namespace inorder {
 
-template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
+template <class Cursor, 
+		  class Tag = typename cursor_vertical_traversal<Cursor>::type>
 class iterator;
 
 template <class Cursor>
@@ -48,7 +49,7 @@ class iterator<Cursor, forward_traversal_tag>
     iterator() {}
 //      : iterator::iterator_adaptor_() {}
 
-    explicit iterator(stack<Cursor> s) //, bool branch = s.size()) // = s.size() 
+    explicit iterator(stack<Cursor> s) 
     		: m_s(s), m_branch() {}
 //      : iterator::iterator_adaptor_(p) {}
 
@@ -110,7 +111,7 @@ class iterator<Cursor, forward_traversal_tag>
     
     void decrement()
     {
-	    	if (!m_s.top().empty()) {	    		
+	    if (!m_s.top().empty()) {	    		
 			while (!m_s.top().end().empty())
 				m_s.push(m_s.top().end());
 			m_s.push(m_s.top().begin());
@@ -118,7 +119,7 @@ class iterator<Cursor, forward_traversal_tag>
 		}
 		while (!m_s.top().parity())
 			m_s.pop();
-	    	if (++m_branch > m_s.size()) 
+	    if (++m_branch > m_s.size()) 
 			m_branch = m_s.size();
 		--m_branch;
 		--m_s.top();

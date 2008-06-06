@@ -99,10 +99,8 @@ class cursor_facade
  : public iterator_facade<Derived, Value, HorizontalCategoryOrTraversal, 
 						  Reference, Difference> {
  private:
- 	//typedef Derive<Value> Derived;
-	//
 	// Curiously Recurring Template interface.
-	//
+
 	Derived& derived()
 	{
 	    return *static_cast<Derived*>(this);
@@ -113,16 +111,14 @@ class cursor_facade
 	    return *static_cast<Derived const*>(this);
 	}
 
-//	typedef iterator_facade<Derived, Value, HorizontalCategoryOrTraversal, 
-//							Reference, Difference> iterator_facade_;
 	typedef typename cursor_facade::iterator_facade_ iterator_facade_;
+
  protected:
  	// For use by derived classes
 	typedef cursor_facade<Derived, Value, HorizontalCategoryOrTraversal,
 						  VerticalCategoryOrTraversal, Reference, Difference> 
 			cursor_facade_;
  public:
-
 	typedef typename iterator_facade_::value_type value_type;
 	typedef Reference reference;
 	typedef Difference difference_type;
@@ -132,6 +128,12 @@ class cursor_facade
 	typedef Size size_type;
 
 	typedef bidirectional_traversal_tag cursor_category; //TODO
+	typedef typename 
+		iterator_category_to_traversal<iterator_category>::type
+		horizontal_traversal; 
+	typedef typename 
+		iterator_category_to_traversal<VerticalCategoryOrTraversal>::type
+		vertical_traversal; 
 
 	bool const empty() const
 	{

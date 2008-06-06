@@ -27,7 +27,8 @@ namespace tree {
 	
 namespace preorder {
 
-template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
+template <class Cursor, 
+		  class Tag = typename cursor_vertical_traversal<Cursor>::type>
 class iterator;
 
 template <class Cursor>
@@ -65,12 +66,12 @@ class iterator<Cursor, forward_traversal_tag>
     
     void increment()
     {
-		forward(this->base_reference());
+		forward(this->base_reference()); //Dummy
     }
     
     void decrement()
     {
-    		back(this->base_reference());
+    	back(this->base_reference()); //Dummy
     }
 };
 

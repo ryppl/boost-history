@@ -14,18 +14,31 @@
 [section TODO]
 
 General:
-
+* Actually implement stack-based pre- and postorder iterators for forward cursors.
+  (For now, they're only dummies.)
+* Get rid of checks for/assignments to root and shoot in pre/post/inorder algorithms,
+  as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
+  In order to work for subtrees, it's probable that we need at least an int to store
+  the current depth. (Which, in turn, would make the free-standing forward/back/next/prior 
+  algortihms etc. more or less useless without that piece of extra information and would
+  only leave us with the iterators to store it.)
+* Deprecate shoot()? It's main use was for inorder::end(), which is now root().
+  Would (binary tree) lower_bound() be possible without shoot()? What would it have to be 
+  like? What would be the implications for balanced_trees? (Especially the lower_bound 
+  for search vs insert purposes problem.)
+* Take care of inorder::begin() for binary_tree<int>.  
+* Keep in mind it's not necessarily a good thing to have *order::end() be the last element's
+  right child. For inorder and postorder, it seems like the subtree root is a better choice.
+  For preorder, things are pretty diffcult.
+* Do a unit test that creates a random tree with a given number of elements. 
+  Let the cursor based *order algorithms then copy its elements into linear structures 
+  and compare these linear structures to an iterator-based *order traversal.
 * Should const_cursor have cbegin(), cend() and cparent() members?
 * Implement "flat" (sequential *order representation) trees (cf. Knuth, Fundamental Algorithms,
   pp. 348--351). Those should be especially useful for automated testing of "real" (binary, 
   forest) trees.
 * have `erase()` operations return cursor/iterator instead of void (as in new STD)
 * modify parity/parent specs according to newsgroup thread, but members add to binary_tree cursor!
-* Add O(n) generations(ancestor, descendant) algorithm (vertical distance) yielding number
-  of generations between ancestor and descendant (ascending cursor only)
-  Or rather, as this introduces something that shouldn't be conceptually different from
-  std::distance: introduce a (forward, of course) (hierarchy_)ascending::iterator that just moves up 
-  towards the root when incremented.
 * We might need still more binary_tree members for more efficient functions operating on
   ranges...
 * `insert()` and `erase()` semantics need reworking. For instance, Proposal 23.X.4.1.4 §2 
@@ -33,33 +46,16 @@ General:
   for a really basic operation. Still, it's important to consider special cases such as
   root nodes and fields of use such as `forest_trees`; but for the latter, something similar
   as inorder_insert might come in handy.
-* Actually implement stack-based pre- and postorder iterators for forward cursors.
-* Get rid of checks for/assignments to root and shoot in pre/post/inorder algorithms,
-  as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
-  In order to work for subtrees, it's probable that we need at least an int to store
-  the current depth. (Which, in turn, would make the free-standing forward/back/next/prior 
-  algortihms etc. more or less useless without that piece of extra information and would
-  only leave us with the iterators to store it.)
-  Alternatively (or additionally), we could implement (hierarchical) "subtree" versions
-  of linear algorithms (as in the STL) in the respective namespace, eg 
-  template <class Cur, class Op> Cur preorder::foreach(Cur subtree, Op f) { /* ... */ }
-  That would leave to the algorithm how to store information about what the root is,
-  or just not require that information by working recursively instead. (It might therefore even be
-  faster than a "linear" algorithm using the *order iterator adaptors.)
-  As for such an subtree-based algorithm approach, note that we already have an example:
-  inorder::lower_bound (and upper_bound, of course) performs binary tree search and just
-  *can't* be simulated via std::lower_bound (which just performs ordinary binary search)
-  in an equally efficient way.
 * Add (inorder-)threaded binary trees?? Are they useful? Can they be balanced?
 * Start an RFC: what subtree algorithms should there be? In particular, of which of
   the STL's linear algorithms should there be a hierarchical version?
-* How much sense would an output cursor make? Especially within the context 
-  of the previous item.
 
 Proposal:
 
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
+* Probably split up cursor categories into: cursor (value access) category, vertical traversal 
+  and horizontal traversal (along the lines of the new iterator concepts).
 * cursor's begin(), end() and parent() members now only return cursor, same for const_cursor.
   (This somewhat breaks with container requirements, but it makes sense this way.)
 * Add InputCursor requirements: binary cursor if it's a binary_tree member function, etc.

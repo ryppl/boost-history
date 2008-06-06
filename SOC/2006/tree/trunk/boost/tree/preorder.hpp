@@ -32,30 +32,38 @@ namespace preorder {
 template <class Cursor>
 inline void forward(Cursor& c)
 {
-	if (!c.empty()) { // Left.
+	// If we have a left child, go there.
+	if (!c.empty()) {
 		c.to_begin();
 		return;
 	}
-	if (!(++c).empty()) { // Right.
-		c.to_begin();
-		return;
-	}
-
-	while (c.parity())
-		c.to_parent();
+	
+	// No left child. So if we have a right child, go there.
 	if (!(++c).empty()) {
 		c.to_begin();
 		return;
 	}
 	
-	--c;
-	while (!c.empty()) {
-		c.to_end();
-		if (c.empty())
-			--c;
+	// (Here's where we'd need to check if this is the end().)
+	
+	// No children at all.
+	// As we've already visited all the ancestors, we'll move upwards until
+	// we find an ancestor that has a right child.
+	while (true) { // Doesn't work with subtrees!
+		if (!c.parity() && (c != c.parent().begin())) { // Root
+			c.to_parent();
+			return;
+		}
+		c.to_parent();
+		if (!c.parity()) {
+			if (c != c.parent().begin()) // Root?
+				return;
+			if (!(++c).empty()) {
+				c.to_begin();
+				return;
+			}
+		}
 	}
-	if (!c.parity()) 
-		++c;
 	return;
 }
 
@@ -78,13 +86,27 @@ inline Cursor next(Cursor c)
 template <class Cursor>
 inline void back(Cursor& c)
 {
-	c.to_parent();
-	if (c.parity()) {
+	if (!(!c.parity() && (c != c.parent().begin()))) { // Not root
+		c.to_parent();
+		
+		// If this is a left child, just move to its parent.
+		if (!c.parity()) {
+			c.to_parent();
+			c.to_begin();
+			return;
+		}
+		
+		// So this is a right child.
 		--c;
-		while (!c.empty())
-			c.to_end();
-		return;
 	}
+	
+	// Same for root (=end) and right children:
+	if (!c.empty())
+		while (!c.empty())
+			if (!c.end().empty())
+				c.to_end();
+			else
+				c.to_begin();
 	return;
 }
 
@@ -101,97 +123,27 @@ inline Cursor prior(Cursor c)
 }
 
 /**
- * @brief	First element of a tree in preorder traversal
- * @param t	A tree
- * @return	Mutable cursor to the first element of @a t in preorder traversal
+ * @brief	First element of a subtree in preorder traversal
+ * @param c	A cursor
+ * @return	Cursor to the first element of @a c in preorder traversal
  */
-template <class Tree>
-typename Tree::cursor first(Tree& t)
+template <class Cursor>
+Cursor first(Cursor c)
 {
-	return t.root().begin();
+	return c.begin();
 }
 
 /**
- * @brief	First element of a tree in preorder traversal
- * 			(Alias of cfirst())
- * @param t	A tree
- * @return	Read-only cursor to the first element of @a t in preorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor first(Tree const& t)
-{
-	return t.croot().begin();
-}
-
-/**
- * @brief	First element of a tree in preorder traversal
- * @param t	A tree
- * @return	Read-only cursor to the first element of @a t in preorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor cfirst(Tree const& t)
-{
-	return t.croot().begin();
-}
-
-/**
- * @brief	One position past the last element of a tree in preorder 
+ * @brief	One position past the last element of a subtree in preorder 
  * 			traversal
- * @param t	A tree
- * @return	Mutable cursor one position past the last element of @a t in preorder
+ * @param c	A cursor
+ * @return	Cursor one position past the last element of @a c in preorder
  * 			traversal
  */
-template <class Tree>
-typename Tree::cursor last(Tree& t)
+template <class Cursor>
+Cursor last(Cursor c)
 {
-	typename Tree::cursor c = t.shoot();
-	--c;	
-	while (!c.empty()) {
-		c.to_end();
-		if (c.empty())
-			--c;
-	}
-	return ++c;
-}
-
-/**
- * @brief	One position past the last element of a tree in 
- * 			preorder traversal (Alias of clast())
- * @param t	A tree
- * @return	Read-only cursor one position past the last element of @a t in 
- * 			preorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor last(Tree const& t)
-{
-	typename Tree::const_cursor c = t.cshoot();
-	--c;	
-	while (!c.empty()) {
-		c.to_end();
-		if (c.empty())
-			--c;
-	}
-	return ++c;
-}
-
-/**
- * @brief	const_cursor to one position past the last element of a tree in 
- * 			preorder traversal
- * @param t	A tree
- * @return	Read-only cursor one position past the last element of @a t in 
- * 			preorder traversal
- */
-template <class Tree>
-typename Tree::const_cursor clast(Tree const& t)
-{
-	typename Tree::const_cursor c = t.cshoot();
-	--c;	
-	while (!c.empty()) {
-		c.to_end();
-		if (c.empty())
-			--c;
-	}
-	return ++c;
+	return c;
 }
 
 /*\@}*/

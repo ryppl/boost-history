@@ -30,7 +30,16 @@
 //	
 //namespace inorder {
 
+/** @file	bidirectional.hpp
+ * 
+ * Some definitions that are identical for all *order cursors (as we are just
+ * calling the appropriate traversal function that are defined in the 
+ * respective *order.hpp files).
+ */
 
+/**
+ * @brief	Specialisation for ascending cursors.
+ */
 template <class Cursor>
 class iterator<Cursor, bidirectional_traversal_tag>
  : public boost::iterator_adaptor<iterator<Cursor, bidirectional_traversal_tag>
@@ -77,119 +86,68 @@ class iterator<Cursor, bidirectional_traversal_tag>
 };
 
 
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::cursor> 
-//begin(MultiwayTree& t, bidirectional_traversal_tag)
-//{
-//	return iterator<typename MultiwayTree::cursor>(first(t));
-//}
-//
-///**
-// * @brief	First element of a MultiwayTree in inorder traversal
-// * 			(equivalent to postorder::begin())
-// * @param t	A MultiwayTree
-// * @return	Mutable inorder iterator to the first element of @a t
-// */
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::cursor> begin(MultiwayTree& t)
-//{
-//	typedef typename cursor_category<typename MultiwayTree::cursor>::type
-//		traversal;
-//	return begin(t, traversal());
-//}
-//
-///**
-// * @brief	First element of a MultiwayTree in inorder traversal
-// * 			(Alias of cbegin(); equivalent to postorder::begin())
-// * @param t	A MultiwayTree
-// * @return	Read-only inorder iterator to the first element of @a t
-// */
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::const_cursor> begin(MultiwayTree& t)
-//{
-//	return cbegin(t);
-//}
-//
-//
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::const_cursor>
-//cbegin(MultiwayTree& t, bidirectional_traversal_tag)
-//{
-//	return iterator<typename MultiwayTree::const_cursor>(cfirst(t));
-//}
-//
-///**
-// * @brief	First element of a MultiwayTree in inorder traversal
-// * 			(equivalent to postorder::begin())
-// * @param t	A MultiwayTree
-// * @return	Read-only inorder iterator to the first element of @a t
-// */
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree& t)
-//{
-//	typedef typename cursor_category<
-//		typename MultiwayTree::const_cursor>::type traversal;
-//	return cbegin(t, traversal());
-//}
-//
-//
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::cursor>
-//end(MultiwayTree const& t, bidirectional_traversal_tag)
-//{
-//	return iterator<typename MultiwayTree::cursor>(last(t));
-//}
-//
-///**
-// * @brief	One position past the last element of a MultiwayTree 
-// * 			in inorder traversal (Alias of cend())
-// * @param t	A MultiwayTree
-// * @return	Mutable inorder iterator one position past the last element of @a t 
-// */
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::cursor> end(MultiwayTree& t)
-//{
-//	typedef typename cursor_category<typename MultiwayTree::cursor>::type
-//		traversal;
-//	return end(t, traversal());
-//}
-//
-///**
-// * @brief	One position past the last element of a MultiwayTree 
-// * 			in inorder traversal (Alias of cend())
-// * @param t	A MultiwayTree
-// * @return	Read-only inorder iterator one position past the last element of @a t 
-// */
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::const_cursor> end(MultiwayTree const& t)
-//{
-//	return cend(t);
-//}
-//
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::const_cursor>
-//cend(MultiwayTree const& t, bidirectional_traversal_tag)
-//{
-//	return iterator<typename MultiwayTree::const_cursor>(clast(t));
-//}
-//
-///**
-// * @brief	One position past the last element of a MultiwayTree 
-// * 			in inorder traversal
-// * @param t	A MultiwayTree
-// * @return	Read-only inorder iterator one position past the last element of @a t 
-// */
-//template <class MultiwayTree>
-//iterator<typename MultiwayTree::const_cursor> cend(MultiwayTree& t)
-//{
-//	typedef typename cursor_category<
-//		typename MultiwayTree::const_cursor>::type traversal;
-//	return cend(t, traversal());
-//}
+/// Iterators
 
-//} // namespace inorder
-//
-//} // namespace tree
-//} // namespace boost
+template <class Cursor>
+iterator<Cursor> 
+begin(Cursor c, bidirectional_traversal_tag)
+{
+	return iterator<Cursor>(first(c));
+}
+
+/**
+ * @brief	First element of a subtree in traversal
+ * 			(equivalent to postorder::begin())
+ * @param c	A cursor
+ * @return	Iterator to the first element of @a c
+ */
+template <class Cursor>
+iterator<Cursor> begin(Cursor c)
+{
+	typedef
+		typename cursor_vertical_traversal<Cursor>::type
+		traversal;
+	return begin(c, traversal());
+}
+
+
+template <class Cursor>
+iterator<Cursor, bidirectional_traversal_tag>
+end(Cursor c, bidirectional_traversal_tag)
+{
+	return iterator<Cursor>(last(c));
+}
+
+/**
+ * @brief	One position past the last element of a subtree 
+ * 			in traversal (Alias of cend())
+ * @param c	A cursor
+ * @return	Iterator one position past the last element of @a c 
+ */
+template <class Cursor>
+iterator<Cursor> end(Cursor c)
+{
+	typedef
+		typename cursor_vertical_traversal<Cursor>::type
+		traversal;
+	return end(c, traversal());
+}
+
+
+/// Reverse iterators
+
+template <class Cursor>
+std::reverse_iterator< iterator<Cursor> >
+rbegin(Cursor c)
+{
+	return std::reverse_iterator< iterator<Cursor> >(end(c));
+}
+
+template <class Cursor>
+std::reverse_iterator< iterator<Cursor> >
+rend(Cursor c)
+{
+	return std::reverse_iterator< iterator<Cursor> >(begin(c));
+}
 
 //#endif // BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP

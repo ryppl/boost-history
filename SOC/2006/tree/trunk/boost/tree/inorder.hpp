@@ -41,10 +41,8 @@ inline void forward(MultiwayCursor& c)
 		return;
 	}
 	
-	while (c.parity()) 
+	while (c.parity()) // Doesn't work with subtrees whose root's parity != 0
 		c.to_parent();
-	if (c.parent().begin() != c) // Root? Would be nice to get rid of.
-		c.to_parent(); // Shoot (root's parent)
 	return;
 }
 
@@ -92,87 +90,29 @@ inline MultiwayCursor prior(MultiwayCursor c)
 }
 
 /**
- * @brief	First element of a MultiwayTree in inorder traversal
- * 			(equivalent to postorder::first())
- * @param t	A MultiwayTree
- * @return	Mutable cursor to the first element of @a t in inorder traversal
+ * @brief	First element of a Multiway subtree in inorder traversal
+ * @param c	A MultiwayCursor
+ * @return	Cursor to the first element of @a c in inorder traversal
  */
-template <class MultiwayTree>
-typename MultiwayTree::cursor first(MultiwayTree& t)
+template <class MultiwayCursor>
+MultiwayCursor first(MultiwayCursor c)
 {
-	typename MultiwayTree::cursor c = t.root();
 	while (!c.empty())
 		c.to_begin();
 	return c;
 }
 
 /**
- * @brief	First element of a MultiwayTree in inorder 
- * 			traversal (Alias of cfirst(); equivalent to postorder::first())
- * @param t	A MultiwayTree
- * @return	Read-only cursor to the first element of @a t in inorder traversal
- */
-template <class MultiwayTree>
-typename MultiwayTree::const_cursor first(MultiwayTree const& t)
-{
-	typename MultiwayTree::const_cursor c = t.root();
-	while (!c.empty())
-		c.to_begin();
-	return c;
-}
-
-/**
- * @brief	First element of a MultiwayTree in inorder 
- * 			traversal (equivalent to postorder::cfirst())
- * @param t	A MultiwayTree
- * @return	Read-only cursor to the first element of @a t in inorder traversal
- */
-template <class MultiwayTree>
-typename MultiwayTree::const_cursor cfirst(MultiwayTree const& t)
-{
-	typename MultiwayTree::const_cursor c = t.root();
-	while (!c.empty())
-		c.to_begin();
-	return c;
-}
-
-/**
- * @brief	One position past the last element of a MultiwayTree in 
+ * @brief	One position past the last element of a Multiway subtree in 
  * 			inorder traversal
- * @param t	A MultiwayTree
- * @return	Mutable cursor one position past the last element of @a t in inorder
+ * @param c	A MultiwayCursor
+ * @return	Cursor one position past the last element of @a c in inorder
  * 			traversal
  */
-template <class MultiwayTree>
-typename MultiwayTree::cursor last(MultiwayTree& t)
+template <class MultiwayCursor>
+MultiwayCursor last(MultiwayCursor c)
 {
-	return t.shoot();
-}
-
-/**
- * @brief	One position past the last element of a MultiwayTree 
- * 			in inorder traversal (Alias of clast())
- * @param t	A MultiwayTree
- * @return	Read-only cursor one position past the last element of @a t in 
- * 			inorder traversal
- */
-template <class MultiwayTree>
-typename MultiwayTree::const_cursor last(MultiwayTree const& t)
-{
-	return t.cshoot();
-}
-
-/**
- * @brief	One position past the last element of a MultiwayTree
- * 			in inorder traversal
- * @param t	A tree
- * @return	Read-only cursor one position past the last element of @a t in 
- * 			inorder traversal
- */
-template <class MultiwayTree>
-typename MultiwayTree::const_cursor clast(MultiwayTree const& t)
-{
-	return t.cshoot();
+	return c;
 }
 
 /*\@}*/

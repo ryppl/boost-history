@@ -27,9 +27,11 @@ namespace tree {
 	
 namespace postorder {
 
-template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
+template <class Cursor, 
+		  class Tag = typename cursor_vertical_traversal<Cursor>::type>
 class iterator;
 
+// TODO. For now, it's only a (bidirectional) dummy
 template <class Cursor>
 class iterator<Cursor, forward_traversal_tag>
  : public boost::iterator_facade<iterator<Cursor, forward_traversal_tag>
@@ -65,12 +67,12 @@ class iterator<Cursor, forward_traversal_tag>
     
     void increment()
     {
-		forward(this->base_reference());
+		forward(this->base_reference()); //Dummy
     }
     
     void decrement()
     {
-    		back(this->base_reference());
+    	back(this->base_reference()); //Dummy
     }
 };
 
