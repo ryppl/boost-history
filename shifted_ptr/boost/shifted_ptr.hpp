@@ -293,6 +293,9 @@ template <typename T, template <typename> class U = shifted_ptr_base>
 
 using detail::sh::shifted_ptr;
 using detail::sh::shifted;
+using detail::sh::shifted_allocator;
+using detail::sh::operator ==;
+using detail::sh::operator !=;
 
 } // namespace boost
 

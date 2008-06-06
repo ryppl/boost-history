@@ -235,7 +235,7 @@ template <typename T, size_t N>
 
 
 	protected:
-		detail::sh::owned_base * header() const
+		owned_base * header() const
 		{
 			return (shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
 		}

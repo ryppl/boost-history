@@ -20,6 +20,9 @@ static int count;
 
 using boost::shifted_ptr;
 using boost::shifted;
+using boost::shifted_allocator;
+using boost::operator ==;
+using boost::operator !=;
 
 struct node {
     node() {
@@ -61,6 +64,7 @@ struct vector {
     ~vector() { --count; }
     vector(const vector& other) : elements(other.elements) { ++count; }
     std::vector<shifted_ptr<vector> > elements;
+    //std::vector<shifted_ptr<vector>, shifted_allocator<vector> > elements; //! FIXME
 };
 
 struct create_type {

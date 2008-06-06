@@ -158,7 +158,10 @@ pool owned_base::pool_;
 
 #define CONSTRUCT_OWNED(z, n, text)																			    \
 	template <BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                        \
-		text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0)) : elem_(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)) {}																										
+		text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0))                                                              \
+        {                                                                                                       \
+            new (element()) data_type(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0));                                   \
+        }																										
 
 /**
 	Object wrapper.
@@ -169,21 +172,28 @@ template <typename T>
     {
         typedef T data_type;
 
-        T elem_; // need alignas<long>
+        union
+        {
+            long a_;
+            char p_[sizeof(data_type)];
+        };
         
     public:
         class roofof;
         friend class roofof;
 
-		shifted() : elem_() {}
+		shifted() 
+        {
+            new (element()) data_type();
+        }
         
         BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, shifted)
 
 
-        data_type * element() 				{ return & elem_; }
+        data_type * element() 				{ return static_cast<data_type *>(static_cast<void *>(& p_[0])); }
 
         virtual ~shifted()					{ dispose(); }
-        virtual void dispose() 				{}
+        virtual void dispose() 				{ dispose(element(), is_array<data_type>()); }
 
         virtual void * get_deleter( std::type_info const & ti ) { return 0; } // dummy
 
@@ -193,7 +203,7 @@ template <typename T>
             shifted<data_type> * p_;
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::elem_), p)) {}
+            roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::p_), p)) {}
             
             operator shifted<data_type> * () const { return p_; }
         };
@@ -207,6 +217,33 @@ template <typename T>
         {
             pool_.deallocate(p, sizeof(shifted));
         }
+
+    private:
+        template <typename U>
+            static void dispose_array(U * p, const false_type &)
+            {
+                typedef typename remove_extent<U>::type element_type;
+                
+                for (element_type * i = * p; i != * p + sizeof(data_type) / sizeof(element_type); i ++)
+                    dispose(i, is_array<element_type>());
+            }
+
+        template <typename U>
+            static void dispose_array(U * p, const true_type &)
+            {
+            }
+
+        template <typename U>
+            static void dispose(U * p, const false_type &)
+            {
+                p->~U();
+            }
+        
+        template <typename U>
+            static void dispose(U * p, const true_type &)
+            {
+                dispose_array(p, has_trivial_destructor<data_type>());
+            }
     };
 
 
@@ -215,7 +252,7 @@ template <>
     {
         typedef void data_type;
 
-        long elem_;
+        long p_;
 
         shifted();
 
@@ -223,7 +260,7 @@ template <>
         class roofof;
         friend class roofof;
 
-        data_type * element() 				{ return & elem_; }
+        data_type * element() 				{ return & p_; }
 
         virtual ~shifted()					{}
         virtual void dispose() 				{}
@@ -236,11 +273,91 @@ template <>
             shifted<data_type> * p_;
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((long shifted<data_type>::*)(& shifted<data_type>::elem_), static_cast<long *>(p))) {}
+            roofof(data_type * p) : p_(sh::roofof((long shifted<data_type>::*)(& shifted<data_type>::p_), static_cast<long *>(p))) {}
             
             operator shifted<data_type> * () const { return p_; }
         };
     };
+
+
+/**
+    STL compliant allocator.
+*/
+
+//! FIXME
+template <typename T>
+    class shifted_allocator
+    {
+    public:
+        typedef size_t      size_type;
+        typedef ptrdiff_t   difference_type;
+        typedef T *         pointer;
+        typedef const T *   const_pointer;
+        typedef T &         reference;
+        typedef const T &   const_reference;
+        typedef T           value_type;
+
+        template <typename U>
+            struct rebind
+            { 
+                typedef shifted_allocator<U> other; 
+            };
+
+        shifted_allocator() throw()                                 {}
+        shifted_allocator(const shifted_allocator &) throw()        {}
+        template <typename U>
+            shifted_allocator(const shifted_allocator<U> &) throw() {}
+
+        ~shifted_allocator() throw()                                {}
+        pointer address(reference x) const                          { return & x; }
+        const_pointer address(const_reference x) const              { return & x; }
+
+        pointer allocate(size_type s, const void * = 0)
+        { 
+            shifted<T> * q = shifted<T>::operator new(s * sizeof(T));
+            
+            // only T's constructor will be called so take care of the rest
+            return static_cast<shifted<T> *>(new (q) owned_base)->element(); 
+        }
+
+        void deallocate(pointer p, size_type)
+        { 
+            owned_base * q = shifted<T>::roofof(p);
+            
+            // T's destructor already called so let's handle ~owned_base()
+            q->owned_base::~owned_base();
+            
+            shifted<T>::operator delete(q); 
+        }
+
+        //! FIXME
+        size_type max_size() const throw() 
+        { 
+            return size_t(-1) / sizeof(T); 
+        }
+
+        void construct(pointer p, const T & x) 
+        { 
+            ::new (p) T(x); 
+        }
+
+        void destroy(pointer p) 
+        { 
+            p->~T(); 
+        }
+    };
+
+template <typename T>
+    inline bool operator == (const shifted_allocator<T> &, const shifted_allocator<T> &)
+    { 
+        return true; 
+    }
+
+template <typename T>
+    inline bool operator != (const shifted_allocator<T> &, const shifted_allocator<T> &)
+    { 
+        return false; 
+    }
 
 
 } // namespace sh
