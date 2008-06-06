@@ -45,7 +45,6 @@ class trie
 	
 	typedef trie_cursor<key_type,data_type,node_type> cursor;
 	typedef trie_iterator<key_type,data_type,cursor> iterator;
-//	typedef trie_cursor<key_type,data_type,node_type> cursor;
 	typedef trie_iterator<key_type,const data_type,cursor> const_iterator;
 
 	trie()
@@ -314,11 +313,6 @@ class trie
 		return std::make_pair(ret_it,++right);
 	}
 
-	void swap(type &other)
-	{
-		std::swap(other.node_root,node_root);
-	}
-	
 	void clear()
 	{
 		typedef typename node_type::iterator node_it;
@@ -346,6 +340,65 @@ class trie
 		node_allocator.deallocate(node_root,1);
 		node_root=node_allocator.allocate(1);
 		new(node_root) node_type();
+	}
+	
+	//linear iteration to find where the pointer is grr...
+	//otherwise i will need to add one more function to the node
+	void erase(const iterator &it)
+	{
+		iterator iter=it;
+		node_type *n_t;
+		cursor cur_it;
+		typename node_type::iterator node_it;
+		if ( iter.top().begin()==iter.top().end() )
+		{
+			node_allocator.destroy( n_t = iter.top().get_node() );
+			node_allocator.deallocate( iter.top().get_node() , 1 );
+			iter.pop();
+		}
+		else
+		{
+			iter.top().get_node()->erase_value();
+			return;
+		}
+		if ( iter.empty() )
+		if( iter.empty() ) //deallocated the root node so reallocate it.
+		{
+			node_root=node_allocator.allocate(1);
+			new(node_root) node_type();
+			return;
+		}
+			
+		cur_it=iter.top().begin();
+		while((++cur_it)==iter.top().end())
+		{
+			node_allocator.destroy ( n_t = iter.top().get_node() );
+			node_allocator.deallocate ( iter.top().get_node() , 1 );
+			iter.pop();
+			if( iter.empty() ) //deallocated the root node so reallocate it.
+			{
+				node_root=node_allocator.allocate(1);
+				new(node_root) node_type();
+				return;
+			}
+			if(iter.top().has_value())
+				break;
+			cur_it=iter.top().begin();
+		}
+		node_it=iter.top().get_node()->begin();
+
+		//here is the linear iteration
+		while( (*node_it)!=n_t )
+		{
+			++node_it;
+			assert(iter.top().get_node()->end()!=node_it);
+		}
+		iter.top().get_node()->erase(node_it);
+	}
+
+	void swap(type &other)
+	{
+		std::swap(other.node_root,node_root);
 	}
 
 	iterator begin() const
@@ -402,6 +455,7 @@ class trie
 		}
 		return cur;
 	}
+
 	bool exist(const key_type &key) const //make this iterator instead of bool;
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
