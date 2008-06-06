@@ -15,5 +15,5 @@ project
 
 test-suite dsearch :
 	[ run test.cpp ]
-	[ run test_trie.cpp ]
+	[ run test_trie_string.cpp ]
 	;
