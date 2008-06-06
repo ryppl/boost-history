@@ -21,6 +21,8 @@ public:
     property_descriptor add();
     property_descriptor add(property_type const&);
 
+    property_type& properties(property_descriptor);
+
 private:
     store_type _props;
 };
@@ -50,6 +52,16 @@ property_vector<P,A>::add(property_type const& p)
 {
     _props.push_back(p);
     return _props.size() - 1;
+}
+
+/**
+ * Return the properties corresponding to the given descriptor.
+ */
+template <typename P, typename A>
+typename property_vector<P,A>::property_type&
+property_vector<P,A>::properties(property_descriptor p)
+{
+    return _props[p];
 }
 
 #endif

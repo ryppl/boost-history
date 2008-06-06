@@ -5,10 +5,13 @@
 #include <vector>
 
 /**
- * The vertex edge vector provides vector-based storage for edges connected to
- * vertices. This type supports insertions in constant time, and find and
- * remove are supported in linear time. The remove operation will invalidate
- * vertex edge iterators (i.e., in, out, incident, adjacency).
+ * The incidence vector stores incident "edges" of a vertex. In actuality,
+ * this stores pairs containing an adjacent vertex descriptor and a property
+ * descriptor, that points to the edges global properties. This pair uniquely
+ * identifies incident edges of the vertex.
+ *
+ * This type allows constant-time edge addition and a linear search. Removal
+ * is not supported.
  */
 template <typename IncEdge, typename Alloc>
 class incidence_vector
@@ -23,16 +26,15 @@ public:
     typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
+    typedef none incidence_iterator;
+
     // Constructors
     incidence_vector();
 
     void add(incidence_pair);
- 
+
     iterator find(incidence_pair);
     const_iterator find(incidence_pair) const;
-
-    void remove(incidence_pair);
-    void clear();
 
     size_type size() const;
 

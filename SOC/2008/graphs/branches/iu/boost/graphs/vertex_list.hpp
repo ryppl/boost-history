@@ -5,16 +5,23 @@
 #include <list>
 
 #include "descriptor.hpp"
-#include "simple_vertex_iterator.hpp"
 
 // Forward declarations
 template <typename V, template <typename> class A> class vertex_list_elem;
 template <typename V, typename A> class vertex_list_impl;
 
+/**
+ * This metafunctiopn defines the basic elements of a vertex list.
+ *
+ * FIXME: We can probably rebuild the descriptor as an iterator into the
+ * underlying store by defining it as a buffer the same size as a fake store
+ * iterator and then re-casting the buffered data as an iterator whenever we
+ * need it. That's a bit hacky, but it gets rid of redundant storage.
+ */
 template <template <typename> class Allocator>
 struct basic_vertex_list
 {
-    typedef void* key_type;
+    typedef none key_type;
     typedef void* descriptor_type;
 
     template <typename Vertex>
@@ -25,8 +32,15 @@ struct basic_vertex_list
     };
 };
 
+/**
+ * The default vertex list uses the standard allocator.
+ */
 struct vertex_list : basic_vertex_list<std::allocator> { };
 
+/**
+ * Pad the vertex type with an iterator back into the list. See above for a
+ * way around this.
+ */
 template <typename Vertex, template <typename> class Alloc>
 class vertex_list_elem
     : public Vertex
@@ -44,14 +58,6 @@ public:
 };
 
 /**
- * The basic_vertex_list provides a list-based implementation of vertex storage
- * for an adjacency list. List-based storage is best for graphs with
- * unidentified vertices and requirements for fast vertex addition and deletion.
- *
- * Adding vertices to a list does not invalidate any vertex or edge descriptors.
- * Removing vertices will invalidate descriptors referencing the removed
- * vertex. All insertions and removals occur in constant time. However, getting
- * the number of vertices is linear.
  *
  * FIXME: Track the size of the list, so that num_vertices() is constant.
  */
@@ -61,11 +67,15 @@ class vertex_list_impl
     typedef std::list<Vertex, Allocator> vertex_store;
 public:
     typedef void* vertex_descriptor;
+
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
     typedef typename vertex_store::size_type size_type;
-    typedef simple_vertex_iterator<vertex_store> iterator;
-    typedef std::pair<iterator, iterator> range;
+    typedef typename vertex_store::iterator iterator;
+    typedef typename vertex_store::const_iterator const_iterator;
+
+    typedef simple_vertex_iterator<vertex_store> vertex_iterator;
+    typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
     vertex_list_impl();
@@ -81,9 +91,9 @@ public:
     size_type size() const;
 
     // Vertex iteration.
-    range vertices() const;
-    iterator begin() const;
-    iterator end() const;
+    vertex_range vertices() const;
+    vertex_iterator begin_vertices() const;
+    vertex_iterator end_vertices() const;
 
     // Vertex accessors.
     vertex_type& vertex(vertex_descriptor);
@@ -95,13 +105,13 @@ private:
     vertex_store _verts;
 };
 
-#define BOOST_GRAPHS_VL_PARAMS \
+#define BOOST_GRAPH_VL_PARAMS \
     typename V, typename A
 
 /**
  * Construct an empty vertex list.
  */
-template <BOOST_GRAPHS_VL_PARAMS>
+template <BOOST_GRAPH_VL_PARAMS>
 vertex_list_impl<V,A>::vertex_list_impl()
     : _verts()
 { }
@@ -111,7 +121,7 @@ vertex_list_impl<V,A>::vertex_list_impl()
  *
  * @complexity O(1)
  */
-template <BOOST_GRAPHS_VL_PARAMS>
+template <BOOST_GRAPH_VL_PARAMS>
 typename vertex_list_impl<V,A>::vertex_descriptor
 vertex_list_impl<V,A>::add()
 {
@@ -126,7 +136,7 @@ vertex_list_impl<V,A>::add()
  *
  * @complexity O(1)
  */
-template <BOOST_GRAPHS_VL_PARAMS>
+template <BOOST_GRAPH_VL_PARAMS>
 typename vertex_list_impl<V,A>::vertex_descriptor
 vertex_list_impl<V,A>::add(vertex_properties const& vp)
 {
@@ -136,31 +146,92 @@ vertex_list_impl<V,A>::add(vertex_properties const& vp)
 }
 
 /**
+ * Remove a vertex from the set. Removing a vertex will invalidate all vertex
+ * descriptors and iterators to the removed vertex.
+ *
+ * @complexity O(1)
+ */
+template <BOOST_GRAPH_VL_PARAMS>
+void
+vertex_list_impl<V,A>::remove(vertex_descriptor v)
+{
+    vertex_type* vp = static_cast<vertex_type*>(v);
+    _verts.erase(vp->iter);
+}
+
+/**
+ * Return an iterator range over the vertices in this graph.
+ */
+template <BOOST_GRAPH_VL_PARAMS>
+typename vertex_list_impl<V,A>::vertex_range
+vertex_list_impl<V,A>::vertices() const
+{
+    return std::make_pair(begin_vertices(), end_vertices());
+}
+
+/**
+ * Return an iterator to the first vertex in the list.
+ */
+template <BOOST_GRAPH_VL_PARAMS>
+typename vertex_list_impl<V,A>::vertex_iterator
+vertex_list_impl<V,A>::begin_vertices() const
+{
+    return _verts.begin();
+}
+
+/**
+ * Return an iterator past the end of the vertices in the list.
+ */
+template <BOOST_GRAPH_VL_PARAMS>
+typename vertex_list_impl<V,A>::vertex_iterator
+vertex_list_impl<V,A>::end_vertices() const
+{
+    return _verts.end();
+}
+
+/**
  * Return the number of vertices in the store.
  */
-template <BOOST_GRAPHS_VL_PARAMS>
+template <BOOST_GRAPH_VL_PARAMS>
 typename vertex_list_impl<V,A>::size_type
 vertex_list_impl<V,A>::size() const
 {
     return _verts.size();
 }
 
-#if 0
+/**
+ * Get access to the given vertex.
+ */
+template <BOOST_GRAPH_VL_PARAMS>
+typename vertex_list_impl<V,A>::vertex_type&
+vertex_list_impl<V,A>::vertex(vertex_descriptor v)
+{
+    return *static_cast<vertex_type*>(v);
+}
 
 /**
- * Remove a vertex from the store.
- *
- * Removing a vertex will invalidate all vertex and edge descriptors.
- *
- * @complexity O(|V|)
+ * Get access to the given vertex.
  */
-template <typename V, template <typename> class A>
-void
-vertex_list_impl<V,A>::remove_vertex(vertex_descriptor v)
+template <BOOST_GRAPH_VL_PARAMS>
+typename vertex_list_impl<V,A>::vertex_type const&
+vertex_list_impl<V,A>::vertex(vertex_descriptor v) const
 {
-    vertex_type* vp = static_cast<vertex_type*>(v);
-    _verts.erase(vp->iter);
+    return *static_cast<vertex_type*>(v);
 }
+
+/**
+ * Get the properties ofthe given vertex.
+ */
+template <BOOST_GRAPH_VL_PARAMS>
+typename vertex_list_impl<V,A>::vertex_properties&
+vertex_list_impl<V,A>::properties(vertex_descriptor v)
+{
+    return vertex(v).properties();
+}
+
+#undef BOOST_GRAPH_VL_PARAMS
+
+#if 0
 
 /**
  * Return the number of vertices in the vertex store.
@@ -211,35 +282,6 @@ vertex_list_impl<V,A>::end_vertices() const
     return _verts.end();
 }
 
-/**
- * Get access to the given vertex.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertex_type&
-vertex_list_impl<V,A>::vertex(vertex_descriptor v)
-{
-    return *static_cast<vertex_type*>(v.desc);
-}
-
-/**
- * Get access to the given vertex.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertex_type const&
-vertex_list_impl<V,A>::vertex(vertex_descriptor v) const
-{
-    return *static_cast<vertex_type*>(v.desc);
-}
-
-/**
- * Access the properties ofthe given vertex.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertex_properties&
-vertex_list_impl<V,A>::properties(vertex_descriptor v)
-{
-    return *vertex(v);
-}
 
 /**
  * Access the properties ofthe given vertex.

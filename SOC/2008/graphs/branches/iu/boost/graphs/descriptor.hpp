@@ -2,8 +2,6 @@
 #ifndef DESCRIPTOR_HPP
 #define DESCRIPTOR_HPP
 
-#include "unordered_pair.hpp"
-
 // Important notes about descriptors
 //
 // A descriptor is basically an opaque reference to an object. It's kind of
@@ -77,33 +75,6 @@ public:
     { return desc != d.desc; }
 
     D desc;
-};
-
-// We actually need a specialized undirected vertex descriptor that is capable of
-// representing an edge, given a source vertex, a target vertex and a reference
-// to the edge properties.
-template <typename VertexDesc, typename PropDesc>
-class undirected_edge_descriptor
-{
-public:
-    undirected_edge_descriptor()
-        : edge()
-        , prop()
-    { }
-
-    undirected_edge_descriptor(VertexDesc u, VertexDesc v, PropDesc p)
-        : edge(u, v)
-        , prop(p)
-    { }
-
-    bool operator<(undirected_edge_descriptor const& x)
-    {
-        return edge < x.edge || (!(x.edge < edge) && prop < x.prop);
-    }
-
-private:
-    unordered_pair<VertexDesc> edge;
-    PropDesc prop;
 };
 
 #endif

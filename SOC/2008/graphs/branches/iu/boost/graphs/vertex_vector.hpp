@@ -4,15 +4,13 @@
 
 #include <vector>
 
-#include "indexed_vertex_iterator.hpp"
-
 // Forward declarations
 template <typename V, typename A> struct vertex_vector_impl;
 
 template <template <typename> class Allocator>
 struct basic_vertex_vector
 {
-    typedef void* key_type;
+    typedef none key_type;
     typedef std::size_t descriptor_type;
 
     template <typename Vertex>
@@ -46,8 +44,11 @@ public:
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
     typedef typename vertex_store::size_type size_type;
-    typedef indexed_vertex_iterator<vertex_store> iterator;
-    typedef std::pair<iterator, iterator> range;
+    typedef typename vertex_store::iterator iterator;
+    typedef typename vertex_store::const_iterator const_iterator;
+
+    typedef indexed_vertex_iterator<vertex_store> vertex_iterator;
+    typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
     vertex_vector_impl();
@@ -60,9 +61,9 @@ public:
     size_type size() const;
 
     // Vertex iteration.
-    range vertices() const;
-    iterator begin() const;
-    iterator end() const;
+    vertex_range vertices() const;
+    vertex_iterator begin_vertices() const;
+    vertex_iterator end_vertices() const;
 
     // Vertex/vertex property accessors.
     vertex_type& vertex(vertex_descriptor v);
@@ -74,10 +75,10 @@ private:
     vertex_store _verts;
 };
 
-#define BOOST_GRAPHS_VV_PARAMS \
+#define BOOST_GRAPH_VV_PARAMS \
     typename V, typename A
 
-template <BOOST_GRAPHS_VV_PARAMS>
+template <BOOST_GRAPH_VV_PARAMS>
 vertex_vector_impl<V,A>::vertex_vector_impl()
     : _verts()
 { }
@@ -89,7 +90,7 @@ vertex_vector_impl<V,A>::vertex_vector_impl()
  *
  * @complexity O(1) amortized
  */
-template <BOOST_GRAPHS_VV_PARAMS>
+template <BOOST_GRAPH_VV_PARAMS>
 typename vertex_vector_impl<V,A>::vertex_descriptor
 vertex_vector_impl<V,A>::add()
 {
@@ -102,7 +103,7 @@ vertex_vector_impl<V,A>::add()
  *
  * @complexity O(1) amortized
  */
-template <BOOST_GRAPHS_VV_PARAMS>
+template <BOOST_GRAPH_VV_PARAMS>
 typename vertex_vector_impl<V,A>::vertex_descriptor
 vertex_vector_impl<V,A>::add(vertex_properties const& vp)
 {
@@ -112,9 +113,39 @@ vertex_vector_impl<V,A>::add(vertex_properties const& vp)
 }
 
 /**
+ * Return an iterator range over the vertices in this graph.
+ */
+template <BOOST_GRAPH_VV_PARAMS>
+typename vertex_vector_impl<V,A>::vertex_range
+vertex_vector_impl<V,A>::vertices() const
+{
+    return std::make_pair(begin_vertices(), end_vertices());
+}
+
+/**
+ * Return an iterator to the first vertex in the vector.
+ */
+template <BOOST_GRAPH_VV_PARAMS>
+typename vertex_vector_impl<V,A>::vertex_iterator
+vertex_vector_impl<V,A>::begin_vertices() const
+{
+    return vertex_iterator(_verts, _verts.begin());
+}
+
+/**
+ * Return an iterator past the end of the vertices in the vector.
+ */
+template <BOOST_GRAPH_VV_PARAMS>
+typename vertex_vector_impl<V,A>::vertex_iterator
+vertex_vector_impl<V,A>::end_vertices() const
+{
+    return vertex_iterator(_verts, _verts.end());
+}
+
+/**
  * Return the number of vertices in the store.
  */
-template <BOOST_GRAPHS_VV_PARAMS>
+template <BOOST_GRAPH_VV_PARAMS>
 typename vertex_vector_impl<V,A>::size_type
 vertex_vector_impl<V,A>::size() const
 {
@@ -124,7 +155,7 @@ vertex_vector_impl<V,A>::size() const
 /**
  * Get access to the underlying vertex.
  */
-template <BOOST_GRAPHS_VV_PARAMS>
+template <BOOST_GRAPH_VV_PARAMS>
 typename vertex_vector_impl<V,A>::vertex_type&
 vertex_vector_impl<V,A>::vertex(vertex_descriptor v)
 {
@@ -134,14 +165,24 @@ vertex_vector_impl<V,A>::vertex(vertex_descriptor v)
 /**
  * Get access to the underlying vertex.
  */
-template <BOOST_GRAPHS_VV_PARAMS>
+template <BOOST_GRAPH_VV_PARAMS>
 typename vertex_vector_impl<V,A>::vertex_type const&
 vertex_vector_impl<V,A>::vertex(vertex_descriptor v) const
 {
     return _verts[v];
 }
 
-#undef BOOST_GRAPHS_VV_PARAMS
+/**
+ * Get the properties of the given vertex.
+ */
+template <BOOST_GRAPH_VV_PARAMS>
+typename vertex_vector_impl<V,A>::vertex_properties&
+vertex_vector_impl<V,A>::properties(vertex_descriptor v)
+{
+    return vertex(v).properties();
+}
+
+#undef BOOST_GRAPH_VV_PARAMS
 
 #if 0
 
@@ -190,16 +231,6 @@ vertex_vector_impl<V,A>::end_vertices() const
     return vertex_iterator(_verts, _verts.end());
 }
 
-
-/**
- * Get access to the properties of the given vertex.
- */
-template <typename V, template <typename> class A>
-typename vertex_vector_impl<V,A>::vertex_properties&
-vertex_vector_impl<V,A>::properties(vertex_descriptor v)
-{
-    return *vertex(v);
-}
 
 /**
  * Get access to the properties of the given vertex.
