@@ -78,7 +78,7 @@ rule declare ( extension + : options * : * )
         # feature is composed to include the options for each extension
         # version.
         #~ feature.feature $(ext) : : optional ;
-        feature.feature $(ext)-version : : optional implicit composite ;
+        feature.feature $(ext)-version : : optional composite ;
         feature.feature $(ext)-location : : free ;
 
         rule default-tag ( name : type ? : property-set )
