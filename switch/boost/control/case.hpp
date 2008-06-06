@@ -22,6 +22,10 @@ namespace control {
 
 namespace switch_detail {
 
+// N is the number of cases not including the default
+template<int N>
+struct range_switch_impl;
+
 struct empty_set {
     template<class T>
     static char lookup(T);
