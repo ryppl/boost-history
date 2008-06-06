@@ -226,6 +226,57 @@ void test_copy_simple()
 	tr=tr1;
 }
 
+template<class T>
+void test_erase_iterator()
+{
+	T tr;
+	typename T::iterator it;
+
+	tr.insert(make_pair("hello",1));
+	it=tr.find("hello");
+	tr.erase(it);
+	BOOST_CHECK(tr.find("hello")==tr.end());
+
+
+	//"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
+	tr=test_insert<T>();
+
+	it=tr.find("hello");
+	tr.erase(it);
+	BOOST_CHECK(tr.find("hello")==tr.end());
+
+	it=tr.find("wor");
+	BOOST_CHECK(it!=tr.end());
+	tr.erase(it);
+	BOOST_CHECK(tr.find("wor")==tr.end());
+
+	it=tr.find("hellish");
+	BOOST_CHECK(it!=tr.end());
+	tr.erase(it);
+	BOOST_CHECK(tr.find("hellish")==tr.end());
+
+	it=tr.find("hel");
+	BOOST_CHECK(it!=tr.end());
+	tr.erase(it);
+	BOOST_CHECK(tr.find("hel")==tr.end());
+
+	it=tr.find("world");
+	BOOST_CHECK(it!=tr.end());
+	tr.erase(it);
+	BOOST_CHECK(tr.find("world")==tr.end());
+
+	it=tr.find("worry");
+	BOOST_CHECK(it!=tr.end());
+	tr.erase(it);
+	BOOST_CHECK(tr.find("worry")==tr.end());
+
+	it=tr.find("");
+	BOOST_CHECK(it!=tr.end());
+	tr.erase(it);
+	BOOST_CHECK(tr.find("")==tr.end());
+	BOOST_CHECK( tr.empty() );
+}
+
 int test_main(int,char **)
 {
 	typedef trie<std::string,int,trie_array_node,string_traits> trie_type;
@@ -236,10 +287,9 @@ int test_main(int,char **)
 	test_copy(tr);
 	test_bound(tr);
 	test_erase(tr);
-	std::cout<<"DONE"<<std::endl;
-
 	test_iteration(tr);
 
+	test_erase_iterator<trie_type>();
 	return 0;
 }
 
