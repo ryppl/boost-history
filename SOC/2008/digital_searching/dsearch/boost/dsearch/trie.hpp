@@ -46,6 +46,8 @@ class trie
 	typedef trie_cursor<key_type,data_type,node_type> cursor;
 	typedef trie_iterator<key_type,data_type,cursor> iterator;
 	typedef trie_iterator<key_type,const data_type,cursor> const_iterator;
+	typedef trie_reverse_iterator<key_type,data_type,cursor> reverse_iterator;
+	typedef trie_reverse_iterator<key_type,data_type,cursor> const_reverse_iterator;
 
 	trie()
 	{
@@ -82,7 +84,7 @@ class trie
 
 	std::size_t size()
 	{
-		return 0; //for now
+		return 0;
 	}
 
 	std::size_t max_size()
@@ -155,7 +157,7 @@ class trie
 	}
 
 	//make use of iterator iterator.push();
-	iterator find(const key_type &key) const //make this iterator instead of bool;
+	iterator find(const key_type &key)//make this iterator instead of bool;
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 					end_it=Key_traits::end(key);
@@ -166,7 +168,8 @@ class trie
 		{
 			ret_it.push(cur);
 			next=cur.find(*it);
-			if ( next == cur.end() ) return end();
+			if ( next == cur.end() ) 
+				return end();
 			cur=next;
 			it++;
 		}
@@ -396,19 +399,49 @@ class trie
 		iter.top().get_node()->erase(node_it);
 	}
 
+	void erase(iterator first, iterator second)
+	{
+		while(first!=second)
+		{
+			erase(first);
+			++first;
+		}
+	}
+
 	void swap(type &other)
 	{
 		std::swap(other.node_root,node_root);
 	}
 
-	iterator begin() const
+	iterator begin()
 	{
 		return iterator(root(),false);
 	}
+	
+	const_iterator begin() const
+	{
+		return const_iterator(root(),false);
+	}
 
-	iterator end() const
+
+	iterator end()
 	{
 		return iterator(root(),true);
+	}
+
+	const_iterator end() const 
+	{
+		return const_iterator(root(),true);
+	}
+
+	reverse_iterator rbegin() const
+	{
+		return reverse_iterator(begin(),end(),true);
+	}
+
+	reverse_iterator rend() const
+	{
+		return reverse_iterator(begin(),end(),false);
 	}
 
 	cursor root() const
@@ -423,7 +456,7 @@ class trie
 		node_allocator.deallocate(node_root,1);
 	}
 	private:
-
+	
 	//get reference to the leaf node of the key
 	node_type *insert_(const key_type &key)
 	{
