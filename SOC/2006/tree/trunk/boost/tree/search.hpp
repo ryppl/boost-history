@@ -14,7 +14,7 @@
 // * add versions without cmp argument (just using <)
 
 // concept checks etc. ATM binary only, generalize for actual Multiway.
-// 2/3 argument versions (using tree instead of root/shoot)
+// 2/3 argument versions (using tree instead of root)
 //(and specialize again using "trivial lower bound" instead of std::lower_bound)
 //internally - or provide one lower bound for all. (for example a range version)
 // (See "exercises"!)
@@ -27,12 +27,12 @@
 namespace boost {
 namespace tree {
 
+namespace inorder {
 
 /**
  * @brief		Finds the first position in a multiway subtree in which @a val 
  * 				could be inserted without changing the ordering, using < (less
- * 				than) 
- * 				for comparisons.
+ * 				than) for comparisons.
  * @param x		The subtree's root
  * @param val	The search term
  * @return		A multiway cursor pointing to the first element not less than 
@@ -45,7 +45,7 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
 	MultiwayCursor y = x;
 	while (!x.empty()) {
 		x = std::lower_bound(x.begin(), x.end(), val);
-	if (x.parity() == 0)
+		if (x.parity() == 0)
 			y = x;
 	}
 	return y;
@@ -68,12 +68,13 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 	MultiwayCursor y = x;
 	while (!x.empty()) {
 		x = std::lower_bound(x.begin(), x.end(), val, cmp);
-	if (x.parity() == 0)
+		if (x.parity() == 0)
 			y = x;
 	}
 	return y;
 }
 
+} // namespace inorder
 
 } // namespace tree
 } // namespace boost

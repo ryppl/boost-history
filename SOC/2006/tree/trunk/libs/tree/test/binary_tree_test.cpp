@@ -66,7 +66,7 @@ void create_binary_tree(Tree& mytree)
 	--c4;
 	BOOST_CHECK(*c4 == 2);
 	BOOST_CHECK(c4.parent() == c1);
-	c = boost::tree::lower_bound(mytree.root(), 2, std::less<int>());
+	c = boost::tree::inorder::lower_bound(mytree.root(), 2, std::less<int>());
 	BOOST_CHECK(*c == 2);
 	BOOST_CHECK(c4.empty());
 

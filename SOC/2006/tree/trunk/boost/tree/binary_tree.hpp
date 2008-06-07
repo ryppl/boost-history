@@ -44,7 +44,6 @@ class binary_tree {
 
  private:		
 	typedef node<value_type, detail::binary_array> node_type;
-	//typedef node<value_type, detail::binary_array> const_node_type;
 	
 	typedef typename Alloc::template rebind<node_type>::other 
 		node_allocator_type;
@@ -54,7 +53,7 @@ class binary_tree {
 	
  public:
 	typedef nary_tree_cursor<node_type> cursor;
-	typedef /*const_*/ nary_tree_cursor<node_type const> const_cursor;
+	typedef nary_tree_cursor<node_type const> const_cursor;
 
 	typedef typename allocator_type::pointer pointer;
 	typedef typename allocator_type::reference reference;

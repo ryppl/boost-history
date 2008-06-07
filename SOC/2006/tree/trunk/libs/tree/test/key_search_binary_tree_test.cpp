@@ -115,23 +115,23 @@ void test_key_search_binary_tree()
 	
 //	searcher_t::container_type& the_tree = my_tree.container();
 //	searcher_t::cursor tree_cur = boost::tree::lower_bound(the_tree.root(), 
-//		the_tree.shoot(), 39, std::less<int>());
+//		39, std::less<int>());
 //
 //	BOOST_CHECK(tree_cur.empty());
 //	BOOST_CHECK((++tree_cur).empty());
 //	--tree_cur;
 //	BOOST_CHECK(*tree_cur == 39);
 //	
-//	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 18);	
+//	tree_cur = boost::tree::lower_bound(the_tree.root(), 18);	
 //	BOOST_CHECK(*tree_cur == 18);
 //	
-//	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 30);	
+//	tree_cur = boost::tree::lower_bound(the_tree.root(), 30);	
 //	BOOST_CHECK(tree_cur.empty());
 //	BOOST_CHECK(!(++tree_cur).empty());
 //	--tree_cur;
 //	BOOST_CHECK(*tree_cur == 31);
 //	
-//	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 3);	
+//	tree_cur = boost::tree::lower_bound(the_tree.root(), 3);	
 //	BOOST_CHECK(*tree_cur == 7);
 	
 	c = my_tree.begin();
@@ -160,7 +160,7 @@ void test_key_search_binary_tree()
 
 	//BOOST_CHECK(*c == 39);
 	
-//	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 412);	
+//	tree_cur = boost::tree::lower_bound(the_tree.root(), 412);	
 //	BOOST_CHECK(*tree_cur == 412);
 //	BOOST_CHECK(*tree_cur.parent() == 18);
 //	
