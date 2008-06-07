@@ -34,10 +34,9 @@ namespace tree {
  * 				than) 
  * 				for comparisons.
  * @param x		The subtree's root
- * @param y 		The subtree's shoot
  * @param val	The search term
  * @return		A multiway cursor pointing to the first element not less than 
- *				@a val, or @y if every element in the subtree is less than 
+ *				@a val, or @x if every element in the subtree is less than 
  * 				@a val.
  */
 template <class MultiwayCursor, class T>
@@ -57,11 +56,10 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
  * 				could be inserted without changing the ordering, using @a cmp 
  * 				for comparisons.
  * @param x		The subtree's root
- * @param y 		The subtree's shoot
  * @param val	The search term
  * @param cmp	The comparison functor
  * @return		A multiway cursor pointing to the first element not less than 
- *				@a val, or @y if every element in the subtree is less than 
+ *				@a val, or @x if every element in the subtree is less than 
  * 				@a val.
  */
 template <class MultiwayCursor, class T, class Cmp>
