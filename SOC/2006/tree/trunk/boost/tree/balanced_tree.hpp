@@ -244,7 +244,7 @@ class balanced_tree {
 	 template <class Cmp>
 	 iterator lower_bound(value_type const& k, Cmp cmp)
 	 {
-	 	return iterator(boost::tree::lower_bound(h.root(), h.shoot(), k, 
+	 	return iterator(boost::tree::lower_bound(h.root(), k, 
 	 		bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
 	 }
 
@@ -261,7 +261,7 @@ class balanced_tree {
 	 template <class Cmp>
 	 const_iterator lower_bound(value_type const& k, Cmp cmp) const
 	 {
-	 	return const_iterator(boost::tree::lower_bound(h.croot(), h.cshoot(), k,
+	 	return const_iterator(boost::tree::lower_bound(h.croot(), k,
 		 	bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
 	 }
 	 	 

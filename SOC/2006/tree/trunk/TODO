@@ -20,7 +20,7 @@ General:
   as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
   In order to work for subtrees, it's probable that we need at least an int to store
   the current depth. (Which, in turn, would make the free-standing forward/back/next/prior 
-  algortihms etc. more or less useless without that piece of extra information and would
+  algorithms etc. more or less useless without that piece of extra information and would
   only leave us with the iterators to store it.)
 * Deprecate shoot()? It's main use was for inorder::end(), which is now root().
   Would (binary tree) lower_bound() be possible without shoot()? What would it have to be 
