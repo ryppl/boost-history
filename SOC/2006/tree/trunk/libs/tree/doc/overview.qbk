@@ -145,15 +145,18 @@ was greater than the search value] and return that value eventually. In order to
 If there is no such value in the entire (sub)tree (because all values
 are less than the search value or because it is empty), we'd intuitively want to return something like
 a "tree `end()`" to indicate the position where the search value could be inserted without changing the
-ordering. As we normally depart from a `tree.root()` that makes hardly sense to be called `begin()` 
-instead in the given context, we provide a function `shoot()` that points one position past the rightmost 
-node in the tree. In order for the algorithm to work not only for trees but also for any given subtree
-described by its root and shoot cursors, we state a version with two cursors instead of a tree as first
-parameters:
+ordering. When searching, we will normally depart from a `tree.root()` 
+(that makes hardly sense to be called `begin()` 
+in the given context), which itself cannot be dereferenced (only its `tree.root().begin()` can).
+This suggests `root()` as return value if we cannot find the given value in the tree.
+In order for the algorithm to work not only for trees but also for any given subtree
+described by its root cursor, we state a version with a cursor instead of a tree as first
+parameter:
 
 	template <class TreeCursor, class T>
-	TreeCursor lower_bound(TreeCursor x, TreeCursor y, T const& val)
+	TreeCursor lower_bound(TreeCursor x, T const& val)
 	{
+		TreeCursor y = x;
 		while (x.empty()) {
 			x = std::lower_bound(x.begin(), x.end(), val);
 			if (!x.parity())
@@ -177,10 +180,10 @@ an inlined `trivial_lower_bound` function if its first two arguments are binary 
 # "Specialize" the above algorithm for search values of a string type. (cf. Austern et al.)
 # Generalize the above algorithm for "multiway" trees.
 # Implement `upper_bound` for multiway trees.
-# Implement a two-argument version that takes a tree as the first (the search value as the second)
-argument and uses the tree's `root` and `shoot` members in lieu of `x` and `y`. (You'll actually need
+# Implement a two-argument version that takes a tree as the first 
+argument and uses the tree's `root` member in lieu of `x`. (You'll actually need
 two versions of that algorithm, one for `const` trees and one for mutable ones.)
-[/# Replace the member functions in the two-argument versions from the previous exercise by freestanding 
+[/# Replace the member functions from the previous exercise by freestanding 
 ones. Implement them for non-cursor iterators so that `empty(iter)` always returns true.]
 [endsect] [/ Exercises]
 
