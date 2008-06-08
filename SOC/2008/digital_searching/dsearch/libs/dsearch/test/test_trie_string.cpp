@@ -12,13 +12,6 @@ using namespace boost::minimal_test;
 using namespace boost::dsearch;
 using std::make_pair;
 
-/*template<class T>
-void print(const T &tr)
-{
-	T::iterator it=tr.begin();
-	void
-}*/
-
 //testing insert function
 template<class T>
 T test_insert()
@@ -62,7 +55,7 @@ T test_insert()
 
 //testing copy contructor
 template <class T>
-void test_copy(T tr)
+void test_copy(const T &tr)
 {
 	BOOST_CHECK( tr.find("hello")!=tr.end() );
 	BOOST_CHECK( *tr.find("hello")==1 );
@@ -92,8 +85,9 @@ void test_copy(T tr)
 	BOOST_CHECK( tr.find("worldy")==tr.end() );
 }
 
+
 template<class T>
-void test_bound(T tr)
+void test_bound(const T &tr)
 {
 	//""=3<"hel"=4<"hellish"=7<"hello"=1<"wor"=5<"world"=2<"worry"=6
 	BOOST_CHECK(tr.upper_bound("")==tr.find(""));
@@ -127,12 +121,13 @@ void test_bound(T tr)
 	BOOST_CHECK(tr.lower_bound("a")==tr.find(""));
 	BOOST_CHECK(tr.lower_bound("")==tr.find(""));
 
-	tr.erase("");//made sure at least this works :)
-	BOOST_CHECK(tr.lower_bound("a")==tr.end());
-	BOOST_CHECK(tr.lower_bound("")==tr.end());
-	BOOST_CHECK(tr.lower_bound("abcd")==tr.end());
-
+	T tr1=tr;
+	tr1.erase("");//made sure at least this works :)
+	BOOST_CHECK(tr1.lower_bound("a")==tr1.end());
+	BOOST_CHECK(tr1.lower_bound("")==tr1.end());
+	BOOST_CHECK(tr1.lower_bound("abcd")==tr1.end());
 }
+
 
 template<class T>
 void test_erase(T tr)
@@ -165,10 +160,10 @@ template<class T>
 void test_iteration(T tr)
 {
 	//"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
-	std::cout<<"bloody gods"<<std::endl;
+	//std::cout<<"bloody gods"<<std::endl;
 	typename T::iterator it=tr.begin();
 
-	std::cout<<"test_iteration:"<<*(tr.find(""))<<std::endl;
+//	std::cout<<"test_iteration:"<<*(tr.find(""))<<std::endl;
 	BOOST_CHECK(it==tr.find(""));
 	it++;
 
@@ -238,7 +233,6 @@ void test_erase_iterator()
 	tr.erase(it);
 	BOOST_CHECK(tr.find("hello")==tr.end());
 
-	//it=cit; //TODO:MAKE THIS NOT COMPILE
 	cit=it; //should compile properly
 
 	//"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
@@ -303,19 +297,53 @@ void test_erase_range(T tr)
 	//BOOST_CHECK( tr.empty() );
 }
 
+template<class T>
+void test_prefix_range(const T &tr)
+{
+	typedef typename T::const_iterator iterator;
+	std::pair<iterator,iterator> pair_range;
+	//"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
+	pair_range=tr.prefix_range("");
+	BOOST_CHECK(tr.begin()==pair_range.first);
+	BOOST_CHECK(tr.end()==pair_range.second);
+
+	pair_range=tr.prefix_range("h");
+	//std::cout<<"pair range ("<<*pair_range.first<<" , "<<*pair_range.second<<" )"<<std::endl;
+	BOOST_CHECK(tr.find("hel")==pair_range.first);
+	BOOST_CHECK(tr.find("wor")==pair_range.second);
+
+	pair_range=tr.prefix_range("hel");
+	BOOST_CHECK(tr.find("hel")==pair_range.first);
+	//std::cout<<"pair range ("<<*pair_range.first<<" , "<<*pair_range.second<<" )"<<std::endl;
+	BOOST_CHECK(tr.find("wor")==pair_range.second);
+}
+
+template<class T>
+void test_insert_simple()
+{
+	T tr;
+	tr["hello"]=10;
+	BOOST_REQUIRE(tr.find("hello")!=tr.end());
+	//std::cout<<"required "<<*tr.find("hello")<<"= 10"<<std::endl;
+	BOOST_REQUIRE(*tr.find("hello")==10);
+}
+
 int test_main(int,char **)
 {
 	typedef trie<std::string,int,trie_array_node,string_traits> trie_type;
-	trie_type tr;
+
+	test_insert_simple<trie_type>();
 	test_copy_simple<trie_type>();
+
+	trie_type tr;
 	tr=test_insert<trie_type>();
 
 	test_copy(tr);
 	test_bound(tr);
 	test_erase(tr);
 	test_iteration(tr);
-	test_erase_iterator<trie_type>();
-	
+	//test_erase_iterator<trie_type>();
+	test_prefix_range(test_insert<trie_type>());
 	//test_erase_range(tr);
 
 	return 0;
