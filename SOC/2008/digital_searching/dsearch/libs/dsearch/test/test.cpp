@@ -8,6 +8,8 @@
 
 using namespace boost::dsearch;
 
+//RATHER INCOMPLETE TEST CLASS 
+//REMOVE THIS FILE
 template<class T>
 void test_trie()
 {
