@@ -13,10 +13,11 @@
 namespace boost{
 namespace dsearch{
 
+//TODO size(), ==,erase (iterator,iterator)
 template<class Key,class Mapped,
 template<class K,class M,class K_t,class A > class trie_node, 
 class Key_traits,
-class Alloc=std::allocator<char> > //wonder allocator<char> is correct
+class Alloc=std::allocator<char> > 
 class trie
 {
 	private:
@@ -31,9 +32,6 @@ class trie
 	typedef std::pair<Key,Mapped> value_type;
 	typedef trie<Key,Mapped,trie_node,Key_traits,Alloc> type;
 
-	//need to define an iterator before that will need to define cursor for trie_node
-	//TODO iterator, const_iterator, reverse_iterator, const_reverse_iterator, begin(), end()
-	//rbegin(),size(),trie(trie &), overload =, lots of other things
 
 	typedef typename Alloc::template rebind<value_type>::other allocator_type;
     	typedef typename allocator_type::pointer pointer;
@@ -44,10 +42,11 @@ class trie
 	typedef typename allocator_type::difference_type      difference_type; //should actually depend on iterator(.|?)
 	
 	typedef trie_cursor<key_type,data_type,node_type> cursor;
+	typedef trie_cursor<key_type,data_type,const node_type> const_cursor;
 	typedef trie_iterator<key_type,data_type,cursor> iterator;
-	typedef trie_iterator<key_type,const data_type,cursor> const_iterator;
+	typedef trie_iterator<key_type,const data_type,const_cursor> const_iterator;
 	typedef trie_reverse_iterator<key_type,data_type,cursor> reverse_iterator;
-	typedef trie_reverse_iterator<key_type,data_type,cursor> const_reverse_iterator;
+	typedef trie_reverse_iterator<key_type,const data_type,const_cursor> const_reverse_iterator;
 
 	trie()
 	{
@@ -57,8 +56,7 @@ class trie
 
 	trie(const type &other)
 	{
-		std::cout<<"in copy constructor"<<std::endl;
-
+		//std::cout<<"in copy constructor"<<std::endl;
 		copy_trie_preserve(const_cast<node_type *>(other.node_root) );
 	}
 	
@@ -68,7 +66,7 @@ class trie
 		clear();
 		node_allocator.destroy(node_root);
 		node_allocator.deallocate(node_root,1);
-		copy_trie(other.node_root);
+		copy_trie_preserve(other.node_root);
 		return *this;
 	}
 
@@ -82,8 +80,10 @@ class trie
 		this->operator[](v.first)=v.second;
 	}
 
-	std::size_t size()
+	//TODO: O(sizeof(intput))?
+	std::size_t size() const
 	{
+		assert(false);
 		return 0;
 	}
 
@@ -95,6 +95,39 @@ class trie
 	bool empty()
 	{
 		return node_root->empty();
+	}
+
+	//make use of iterator iterator.push();
+	iterator find(const key_type &key)
+	{
+		return find< iterator, cursor, type* > (this,key);
+	}
+
+	const_iterator find(const key_type &key) const
+	{
+		return find< const_iterator, const_cursor, const type* > (this,key);
+	}
+
+
+	const_iterator upper_bound(const key_type &key) const
+	{
+		return upper_bound<const_iterator,const_cursor,const type*>(this,key);
+	}
+
+
+	iterator upper_bound(const key_type &key)
+	{
+		return upper_bound<iterator,cursor,type*>(this,key);
+	}
+
+	iterator lower_bound(const key_type &key)
+	{
+		return lower_bound<iterator,cursor,type*>(this,key);
+	}
+
+	const_iterator lower_bound(const key_type &key) const
+	{
+		return lower_bound<const_iterator,const_cursor,const type*>(this,key);
 	}
 
 	void erase(const key_type &key) 
@@ -111,6 +144,7 @@ class trie
 				node_root->erase_value();
 			return;
 		}
+
 		fit=cur->find(*it);
 		if(fit==cur->end())
 			return;
@@ -139,7 +173,7 @@ class trie
 
 		fit=temp_cur->find(*temp_it);
 		cur=*fit;
-		std::cout<<"deleting:"<<*temp_it<<std::endl;
+	//	std::cout<<"deleting:"<<*temp_it<<std::endl;
 		temp_cur->erase(fit);
 
 		it=temp_it;
@@ -147,7 +181,7 @@ class trie
 
 		while(it!=end_it)
 		{
-			std::cout<<"deleting:"<<*it<<std::endl;
+	//		std::cout<<"deleting:"<<*it<<std::endl;
 			par=cur;
 			cur=*cur->find(*it);
 			node_allocator.deallocate(par,1);
@@ -156,145 +190,13 @@ class trie
 		node_allocator.deallocate(cur,1);		
 	}
 
-	//make use of iterator iterator.push();
-	iterator find(const key_type &key)//make this iterator instead of bool;
+	std::pair<const_iterator,const_iterator> prefix_range(const key_type &key) const
 	{
-		typename Key_traits::const_iterator it=Key_traits::begin(key),
-					end_it=Key_traits::end(key);
-		iterator ret_it;
-		cursor cur,next;
-		cur=root();
-		while(!(it==end_it))
-		{
-			ret_it.push(cur);
-			next=cur.find(*it);
-			if ( next == cur.end() ) 
-				return end();
-			cur=next;
-			it++;
-		}
-		ret_it.push(cur);
-		if(cur->has_value())
-		{
-			return ret_it;
-		}
-		return end();
+		return prefix_range<const_iterator,const_cursor,const type*>(this,key);
 	}
-
-	iterator upper_bound(const key_type &key)
-	{
-		typename Key_traits::const_iterator it=Key_traits::begin(key),
-					end_it=Key_traits::end(key);
-		iterator ret_it;
-		bool not_found=false;
-		cursor cur,next,r=root();
-		cur=r;
-		ret_it.push(cur);
-		std::cout<<"UPPER BOUND"<<std::endl;
-		while(it!=end_it)
-		{
-			if(cur.empty())
-			{
-				ret_it++;
-				return ret_it;
-			}
-			std::cout<<"finding "<<*it<<std::endl;
-			next=cur.find(*it);
-			if ( next == cur.end() )
-			{
-				not_found=true;
-				break;
-			}
-			std::cout<<"found "<<*it<<std::endl;
-			cur=next;
-			ret_it.push(cur);
-			it++;
-		}
-		//ret_it.push(cur);
-		if( not_found )
-		{
-			next=cursor(cur.get_node(),cur.get_node()->lower_bound(*it));
-			if(next==ret_it.top().end())
-				next=cursor ( cur.get_node(), cur.get_node()->begin());
-			else
-				next++;
-			while(next==ret_it.top().end())
-			{
-				std::cout<<"popping "<<std::endl;
-				next=ret_it.top();
-				if(next==r)
-					return end();
-				ret_it.pop();
-				next++;
-			}
-			ret_it.push(next);
-		}
-		ret_it.to_left_most(); //if ret_it.top().hash_value() then this does nothing
-		return ret_it;
-	}
-
-	iterator lower_bound(const key_type &key)
-	{
-		typename Key_traits::const_iterator it=Key_traits::begin(key),
-				end_it=Key_traits::end(key);
-		iterator ret_it;
-		bool not_found=false;
-		cursor cur,next,r=root();
-		cur=r;
-		ret_it.push(cur);
-		std::cout<<"LOWER BOUND"<<std::endl;
-		while(it!=end_it)
-		{
-			if(cur.empty())
-				break;
-			std::cout<<"finding "<<*it<<std::endl;
-			next=cur.find(*it);
-			if ( next == cur.end() )
-			{
-				not_found=true;
-				break;
-			}
-			std::cout<<"found "<<*it<<std::endl;
-			cur=next;
-			ret_it.push(cur);
-			it++;
-		}
-
-		if(not_found)
-		{
-			next=cursor(cur.get_node(),cur.get_node()->lower_bound(*it));
-			if(next!=cur.end()) 
-			{
-				ret_it.push(next);
-				ret_it.to_right_most();
-				return ret_it;
-			}
-		}
-
-		do
-		{
-			next=ret_it.top();
-			ret_it.pop();
-			if(next.has_value())
-			{
-				ret_it.push(next);
-				return ret_it;
-			}
-			if(next==r)
-			{
-				return end();
-			}
-		}
-		while(next==ret_it.top().begin());
-
-		next--;
-		ret_it.push(next);
-		ret_it.to_right_most();
-		return ret_it;
-	}
-
 	std::pair<iterator,iterator> prefix_range(const key_type &key)
 	{
+		prefix_range<iterator,cursor,type*>(this,key);
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 				end_it=Key_traits::end(key);
 		iterator ret_it,right;
@@ -309,6 +211,7 @@ class trie
 				return std::make_pair(end(),end());
 			cur=next;
 			ret_it.push(cur);
+			it++;
 		}
 		right=ret_it;
 		ret_it.to_left_most();
@@ -444,14 +347,19 @@ class trie
 		return reverse_iterator(begin(),end(),false);
 	}
 
-	cursor root() const
+	cursor root()
 	{
 		return cursor(node_root);
 	}
-	
+
+	const_cursor root() const
+	{
+		return const_cursor(node_root);
+	}
+
 	~trie()
 	{
-		std::cout<<"trie class destructor"<<std::endl;
+//		std::cout<<"trie class destructor"<<std::endl;
 		this->clear();
 		node_allocator.deallocate(node_root,1);
 	}
@@ -479,7 +387,7 @@ class trie
 		{
 			i++;
 			next=node_allocator.allocate(1);
-			std::cout<<"Allocating:"<<*it<<std::endl;
+//			std::cout<<"Allocating:"<<*it<<std::endl;
 			new(next) node_type();
 			cur->insert(*it,next);
 			cur=next;
@@ -545,8 +453,6 @@ class trie
 			node_allocator.construct( temp_node , **cur_it );
 			*(this_st.top())=temp_node;
 
-			/*if((*cur_it)->has_value())
-				temp_node->get_value_ref()=(*cur_it)->get_value_ref();*/
 			this_st.push(temp_node->begin());
 			st.push(cur_it);
 
@@ -554,7 +460,176 @@ class trie
 		}
 	}
 
-	//this does not preserve the stucture of tst.
+	template<class It_type,class Cur_type,class Trie_ptr>
+	static It_type find(Trie_ptr this_ptr,const key_type &key) 
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+				end_it=Key_traits::end(key);
+		It_type ret_it;
+		Cur_type cur,next;
+		cur=this_ptr->root();
+		while(!(it==end_it))
+		{
+			ret_it.push(cur);
+			next=cur.find(*it);
+			if ( next == cur.end() ) 
+				return this_ptr->end();
+			cur=next;
+			it++;
+		}
+		ret_it.push(cur);
+		if(cur.has_value())
+		{
+			return ret_it;
+		}
+		return this_ptr->end();
+	}
+
+
+	template<class It_type,class Cur_type,class Trie_ptr>
+	static It_type upper_bound(Trie_ptr this_ptr,const key_type &key)
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+					end_it=Key_traits::end(key);
+		It_type ret_it;
+		bool not_found=false;
+		Cur_type cur,next,r=this_ptr->root();
+		cur=r;
+		ret_it.push(cur);
+		//std::cout<<"CONST UPPER BOUND"<<std::endl;
+		while(it!=end_it)
+		{
+			if(cur.empty())
+			{
+				ret_it++;
+				return ret_it;
+			}
+			next=cur.find(*it);
+			if ( next == cur.end() )
+			{
+				not_found=true;
+				break;
+			}
+			//std::cout<<"found "<<*it<<std::endl;
+			cur=next;
+			ret_it.push(cur);
+			it++;				
+		}
+		if( not_found )
+		{
+			next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
+			if(next==ret_it.top().end())
+				next=Cur_type ( cur.get_node(), cur.get_node()->begin());
+			else
+				next++;
+			while(next==ret_it.top().end())
+			{
+				//std::cout<<"popping "<<std::endl;
+				next=ret_it.top();
+				if(next==r)
+					return this_ptr->end();
+				ret_it.pop();
+				next++;
+			}
+			ret_it.push(next);
+		}
+		ret_it.to_left_most(); //if ret_it.top().hash_value() then this does nothing
+		return ret_it;
+	}
+
+	template<class It_type,class Cur_type,class Trie_ptr>
+	static It_type lower_bound(Trie_ptr this_ptr,const key_type &key)
+	{
+
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+				end_it=Key_traits::end(key);
+		It_type ret_it;
+		bool not_found=false;
+		Cur_type cur,next,r=this_ptr->root();
+		cur=r;
+		ret_it.push(cur);
+		//std::cout<<"LOWER BOUND"<<std::endl;
+		while(it!=end_it)
+		{
+			if(cur.empty())
+				break;
+			//std::cout<<"finding "<<*it<<std::endl;
+			next=cur.find(*it);
+			if ( next == cur.end() )
+			{
+				not_found=true;
+				break;
+			}
+			//std::cout<<"found "<<*it<<std::endl;
+			cur=next;
+			ret_it.push(cur);
+			it++;
+		}
+
+		if(not_found)
+		{
+			next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
+			if(next!=cur.end()) 
+			{
+				ret_it.push(next);
+				ret_it.to_right_most();
+				return ret_it;
+			}
+		}
+
+		do
+		{
+			next=ret_it.top();
+			ret_it.pop();
+			if(next.has_value())
+			{
+				ret_it.push(next);
+				return ret_it;
+			}
+			if(next==r)
+			{
+				return this_ptr->end();
+			}
+		}
+		while (next==ret_it.top().begin());
+
+		next--;
+		ret_it.push(next);
+		ret_it.to_right_most();
+		return ret_it;
+	}
+
+	template<class Iter_type,class Cur_type,class Trie_t>
+	static std::pair<Iter_type,Iter_type> prefix_range(Trie_t this_ptr,const key_type &key)
+	{
+		typename Key_traits::const_iterator it=Key_traits::begin(key),
+				end_it=Key_traits::end(key);
+		Iter_type ret_it,right;
+		Cur_type cur,next;
+		cur=this_ptr->root();
+		ret_it.push(cur);
+		while(it!=end_it)
+		{
+			if(cur.empty()) return std::make_pair(this_ptr->end(),this_ptr->end());
+			next=cur.find(*it);
+			if(cur.end()==next)
+				return std::make_pair(this_ptr->end(),this_ptr->end());
+			//std::cout<<"LOOK AT ME:"<<*it<<std::endl;
+			cur=next;
+			ret_it.push(cur);
+			it++;
+		}
+		right=ret_it;
+		//std::cout<<"To LEFT MOST"<<std::endl;
+		ret_it.to_left_most();
+		//std::cout<<"To RIGHT MOST"<<std::endl;
+		right.to_right_most();
+	        //std::cout<<"pair range "<<*right<<std::endl;
+		return std::make_pair(ret_it,++right);
+	}
+
+#if 0
+	//this does not preserve the structure of tst.
 	void copy_trie(node_type*other_root)
 	{
 		node_type *prev,*this_prev,*temp_node;
@@ -605,6 +680,7 @@ class trie
 			cur_it=(*cur_it)->begin();
 		}
 	}
+#endif
 };
 
 }
