@@ -14,6 +14,7 @@
 [section TODO]
 
 General:
+* Include all *order iterator headers from a "iterator_algorithm.hpp" (or whatever) file.
 * Make *order iterators work with empty subtrees.
 * Possibly further abstract stack-based iterators by introducing a cursor adaptor
   that uses a stack of descending cursors to implement an ascending one.
@@ -55,6 +56,7 @@ Proposal:
 
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
+* Add (subtree) cursor algorithms.
 * Probably split up cursor categories into: cursor (value access) category, vertical traversal 
   and horizontal traversal (along the lines of the new iterator concepts).
 * cursor's begin(), end() and parent() members now only return cursor, same for const_cursor.

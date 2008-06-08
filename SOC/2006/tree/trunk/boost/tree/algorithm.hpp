@@ -13,7 +13,7 @@
 #define BOOST_TREE_ALGORITHM_HPP
 
 
-#include <boost/tree/search.hpp>
+#include <boost/tree/detail/algorithm/cursor/ascending.hpp>
 
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 #include <boost/tree/detail/algorithm/cursor/preorder.hpp>

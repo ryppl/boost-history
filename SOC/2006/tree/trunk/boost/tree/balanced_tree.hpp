@@ -19,8 +19,7 @@
 #include <boost/tree/balancers/unbalanced.hpp>
 #include <boost/tree/augmentors/unaugmented.hpp>
 
-#include <boost/tree/search.hpp>
-
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 #include <boost/tree/detail/iterator/augmented.hpp>
 
 #include <boost/bind.hpp>

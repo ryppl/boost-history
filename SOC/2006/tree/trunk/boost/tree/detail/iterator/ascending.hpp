@@ -14,7 +14,7 @@
 #ifndef BOOST_TREE_DETAIL_ITERATOR_ASCENDING_HPP
 #define BOOST_TREE_DETAIL_ITERATOR_ASCENDING_HPP
 
-#include <boost/tree/ascending.hpp>
+#include <boost/tree/detail/algorithm/cursor/ascending.hpp>
 #include <boost/tree/cursor.hpp>
 
 #include <boost/iterator/iterator_adaptor.hpp>
