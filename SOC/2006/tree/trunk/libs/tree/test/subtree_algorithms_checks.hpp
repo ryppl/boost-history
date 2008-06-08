@@ -5,12 +5,13 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/tree/algorithm.hpp>
+#include <boost/tree/binary_tree.hpp>
+
+#include <boost/tree/ascending_cursor.hpp>
 
 #include <list>
 #include <algorithm>
 #include <iterator>
-
-#include <boost/tree/binary_tree.hpp>
 
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
@@ -57,7 +58,9 @@ void algorithms(Cursor c, Cursor d)
 
 void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t) {
 	
-	using boost::forward_traversal_tag;
+	using boost::tree::ascending_cursor;
+	
+	typedef boost::tree::binary_tree<int>::const_cursor cursor;
 	
 	std::list<int> test_list;
 	typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
@@ -88,19 +91,28 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t
 							  boost::tree::ORDER::rend(t.root())) == 
 				std::distance(test_list.rbegin(), test_list.rend()));					
 
-	//Now same for "explicit stack"-based iterators
+	//Now same for iterators wrapped around "explicit stack"-based cursors
 	// TODO: Only possible when there are stack-based pre- and postorder iterators
 
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root(), forward_traversal_tag()),
-							boost::tree::ORDER::end(t.root(), forward_traversal_tag()),
+//	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root(), forward_traversal_tag()),
+//							boost::tree::ORDER::end(t.root(), forward_traversal_tag()),
+//							test_list.begin()
+//							));
+//
+//	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(t.root(), forward_traversal_tag()),
+//							boost::tree::ORDER::rend(t.root(), forward_traversal_tag()),
+//							test_list.rbegin()
+//							));
+
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(ascending_cursor<cursor>(t.root())),
+							boost::tree::ORDER::end(ascending_cursor<cursor>(t.root())),
 							test_list.begin()
 							));
 
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(t.root(), forward_traversal_tag()),
-							boost::tree::ORDER::rend(t.root(), forward_traversal_tag()),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(ascending_cursor<cursor>(t.root())),
+							boost::tree::ORDER::rend(ascending_cursor<cursor>(t.root())),
 							test_list.rbegin()
 							));
-
 }
 
 

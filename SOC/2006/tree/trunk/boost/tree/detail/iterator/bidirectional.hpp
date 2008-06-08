@@ -41,8 +41,8 @@
  * @brief	Specialisation for ascending cursors.
  */
 template <class Cursor>
-class iterator<Cursor, bidirectional_traversal_tag>
- : public boost::iterator_adaptor<iterator<Cursor, bidirectional_traversal_tag>
+class iterator
+ : public boost::iterator_adaptor<iterator<Cursor>
       , Cursor
       , boost::use_default
       , bidirectional_traversal_tag
@@ -61,7 +61,7 @@ class iterator<Cursor, bidirectional_traversal_tag>
     iterator(
         iterator<OtherCursor> const& other
       , typename boost::enable_if<
-            boost::is_convertible<OtherCursor,Cursor >
+            boost::is_convertible<OtherCursor, Cursor>
           , enabler
         >::type = enabler()
     )
@@ -81,7 +81,7 @@ class iterator<Cursor, bidirectional_traversal_tag>
     
     void decrement()
     {
-    		back(this->base_reference());
+    	back(this->base_reference());
     }
 };
 

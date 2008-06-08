@@ -94,7 +94,7 @@ void compare_cursor_to_iterator_traversal() {
 
 int test_main(int, char* [])
 {
-	using boost::forward_traversal_tag;
+	typedef boost::tree::binary_tree<int>::cursor cursor;
 	
 	binary_tree<int> test_tree;	
 	create_test_data_tree(test_tree);
@@ -130,22 +130,22 @@ int test_main(int, char* [])
 	BOOST_CHECK(std::distance(postorder::begin(test_tree.root()), 
 						      postorder::end(test_tree.root())) == 11);
 
-	// Now the stack-based iterators (that don't use cursor.to_parent())
+	// Now the iterators based on stack-based cursors (that don't use cursor.to_parent())
 
-	test::preorder::traversal(preorder::begin(test_tree.root(), forward_traversal_tag()), 
-						   	  preorder::end(test_tree.root(), forward_traversal_tag()));
-	test::preorder::reverse_traversal(preorder::end(test_tree.root(), forward_traversal_tag()), 
-								   	  preorder::begin(test_tree.root(), forward_traversal_tag()));	
+	test::preorder::traversal(preorder::begin(ascending_cursor<cursor>(test_tree.root())), 
+						   	  preorder::end(ascending_cursor<cursor>(test_tree.root())));
+	test::preorder::reverse_traversal(preorder::end(ascending_cursor<cursor>(test_tree.root())), 
+								   	  preorder::begin(ascending_cursor<cursor>(test_tree.root())));	
 	
-	test::inorder::traversal(inorder::begin(test_tree.root(), forward_traversal_tag()), 
-						   inorder::end(test_tree.root(), forward_traversal_tag()));
-	test::inorder::reverse_traversal(inorder::end(test_tree.root(), forward_traversal_tag()), 
-								   inorder::begin(test_tree.root(), forward_traversal_tag()));
+	test::inorder::traversal(inorder::begin(ascending_cursor<cursor>(test_tree.root())), 
+							 inorder::end(ascending_cursor<cursor>(test_tree.root())));
+	test::inorder::reverse_traversal(inorder::end(ascending_cursor<cursor>(test_tree.root())), 
+									 inorder::begin(ascending_cursor<cursor>(test_tree.root())));
 
-	test::postorder::traversal(postorder::begin(test_tree.root(), forward_traversal_tag()), 
-						   	   postorder::end(test_tree.root(), forward_traversal_tag()));
-	test::postorder::reverse_traversal(postorder::end(test_tree.root(), forward_traversal_tag()), 
-								   	   postorder::begin(test_tree.root(), forward_traversal_tag()));
+	test::postorder::traversal(postorder::begin(ascending_cursor<cursor>(test_tree.root())), 
+						   	   postorder::end(ascending_cursor<cursor>(test_tree.root())));
+	test::postorder::reverse_traversal(postorder::end(ascending_cursor<cursor>(test_tree.root())), 
+								   	   postorder::begin(ascending_cursor<cursor>(test_tree.root())));
 
 	//Ascending iterator.
 	binary_tree<int>::cursor c = test_tree.root();

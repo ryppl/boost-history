@@ -49,12 +49,12 @@ inline void forward(Cursor& c)
 	// As we've already visited all the ancestors, we'll move upwards until
 	// we find an ancestor that has a right child.
 	while (true) { // Doesn't work with subtrees!
-		if (!c.parity() && (c != c.parent().begin())) // Root
+		if (c.is_root())
 			return;
 		
 		c.to_parent();
 		if (!c.parity()) {
-			if (c != c.parent().begin()) // Root?
+			if (c.is_root())
 				return;
 			if (!(++c).empty()) {
 				c.to_begin();
@@ -84,7 +84,7 @@ inline Cursor next(Cursor c)
 template <class Cursor>
 inline void back(Cursor& c)
 {
-	if (!(!c.parity() && (c != c.parent().begin()))) { // Not root
+	if (!c.is_root()) { // Not root
 		c.to_parent();
 		
 		// If this is a left child, just move to its parent.

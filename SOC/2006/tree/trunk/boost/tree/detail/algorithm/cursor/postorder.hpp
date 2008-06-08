@@ -38,7 +38,7 @@ inline void forward(Cursor& c)
 		return;
 	}
 	
-	if (c.parent().begin() != c) // Root?
+	if (c.is_root()) // Root?
 		return;
 	
 	// Left child.
@@ -72,7 +72,7 @@ inline Cursor next(Cursor c)
 template <class Cursor>
 inline void back(Cursor& c)
 {
-	if (!c.parity() && (c.parent().begin() != c)) { // Root?
+	if (c.is_root()) { // Root?
 		c.to_begin();
 		return;
 	}

@@ -14,11 +14,10 @@
 [section TODO]
 
 General:
-* Include all *order iterator headers from a "iterator_algorithm.hpp" (or whatever) file.
+* _Possibly_ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
+  detail/cursor/ (same for iterator).
 * Make *order iterators work with empty subtrees.
-* Possibly further abstract stack-based iterators by introducing a cursor adaptor
-  that uses a stack of descending cursors to implement an ascending one.
-* Get rid of checks for/assignments to root and shoot in pre/post/inorder algorithms,
+* Get rid of checks for/assignments to root in pre/post/inorder algorithms,
   as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
   In order to work for subtrees, it's probable that we need at least an int to store
   the current depth. (Which, in turn, would make the free-standing forward/back/next/prior 
@@ -54,6 +53,7 @@ General:
 
 Proposal:
 
+* Write a cursor_facade, cursor_adaptor and ascending_adaptor proposal.
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
 * Add (subtree) cursor algorithms.

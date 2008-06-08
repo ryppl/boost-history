@@ -175,8 +175,18 @@ class nary_tree_cursor
 		m_pos  = m_node->get_parity();
 		m_node = static_cast<base_pointer>(m_node->parent());
 	}
-
-public:	
+	
+public:
+	// TODO This isn't really a permanently public thing.
+	bool is_root() const
+	{
+		base_pointer parent_begin_node = 
+			static_cast<base_pointer>(m_node->parent())
+			->operator[](m_node->get_parity());
+		return (!m_pos && (m_node != parent_begin_node));
+		// (*this != this->parent().begin())
+	}
+		
 	// TODO: protect?
 	void attach(node_pointer p_node)
 	{
