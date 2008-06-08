@@ -77,6 +77,7 @@ inline void back(Cursor& c)
 		c.to_begin();
 		return;
 	}
+	
 	if (!(++c).empty()) { // Right
 		c.to_begin();
 		return;
@@ -86,6 +87,8 @@ inline void back(Cursor& c)
 		return;
 	}
 	
+	// Move up in the hierarchy until we find a descendant that has a right
+	// child (which is what we'll return) or we land at root.
 	while (true) { // revisit
 		c.to_parent();
 		if (c.parity())
@@ -111,16 +114,19 @@ inline Cursor prior(Cursor c)
 
 /**
  * @brief	First element of a subtree in postorder traversal
- * 			(equivalent to inorder::first())
  * @param c	A cursor
  * @return	Cursor to the first element of @a c in postorder traversal
  */
 template <class Cursor>
 Cursor first(Cursor c)
 {
-	while (!c.empty())
-		c.to_begin();
-	return c;
+	while (true)
+		if (!c.empty())
+			c.to_begin();
+		else if (!(++c).empty())
+			c.to_begin();
+		else
+			return --c;
 }
 
 /**

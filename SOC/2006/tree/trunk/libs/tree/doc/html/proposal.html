@@ -2836,15 +2836,15 @@ while(first++ != last)
           </li>
 
           <li>
-            <p>If exactly one application of the expression <tt>i =
-            i.begin()</tt>, followed by a finite sequence of applications of
-            the expression <tt>++j</tt> makes <tt>i == j</tt>, <tt>j</tt> is
-            a <em>child</em> (or <em>immediate descendant</em> ) of
+            <p>If exactly one application of the expression <tt>
+            i.to_begin()</tt>, followed by a finite sequence of applications of
+            the expression <tt>++j</tt> makes <tt>i == j</tt>, then <tt>j</tt> is
+            a <em>child</em> (or <em>immediate descendant</em>) of
             <tt>i</tt>, and <tt>i</tt> is the <em>parent</em> (or the
             <em>immediate ancestor</em>) of <tt>j</tt>. A cursor <tt>j</tt>
             is another cursor <tt>i</tt>'s <tt>descendant</tt> if there is a
             finite sequential combination of applications of either of the
-            expressions <tt>++i</tt> and <tt>i = i.begin()</tt> that makes
+            expressions <tt>++i</tt> and <tt>i.to_begin()</tt> that makes
             <tt>i == j</tt>; <tt>i</tt> is then called <tt>j</tt>'s ancestor.
             If two cursors <tt>i</tt> and <tt>j</tt> share at least one
             common ancestor, they refer to the same container. The descending

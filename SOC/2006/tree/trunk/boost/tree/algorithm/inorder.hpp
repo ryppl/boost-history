@@ -107,32 +107,25 @@ template <class MultiwayCursor>
 iterator<MultiwayCursor, forward_traversal_tag> 
 begin(MultiwayCursor c, forward_traversal_tag)
 {
-	typedef MultiwayCursor cursor;
-	std::stack<cursor> s;
- 	typename cursor_size<cursor>::type branch = 0;
- 	typename cursor_size<cursor>::type i = 0;
+	std::stack<MultiwayCursor> s;
+
 	s.push(c);
-	while (!s.top().empty()) {
-		++i;
-		if (!branch && !s.top().end().empty())
-			branch = i;
+	while (!s.top().empty())
 		s.push(s.top().begin());
-	}
-	return iterator<cursor, forward_traversal_tag>(s, branch);
+	return iterator<MultiwayCursor, forward_traversal_tag>(s);
 }
 
 template <class MultiwayCursor>
 iterator<MultiwayCursor, forward_traversal_tag> 
 end(MultiwayCursor c, forward_traversal_tag)
 {
-	typedef MultiwayCursor cursor;
-	std::stack<cursor> s;
+	std::stack<MultiwayCursor> s;
+
 	s.push(c);
-	while (!s.top().empty())
-		s.push(s.top().end());
-	return iterator<cursor, forward_traversal_tag>(s, s.size());
+	return iterator<MultiwayCursor, forward_traversal_tag>(s);
 }
 
+#include <boost/tree/algorithm/iterator/bidirectional.hpp>
 
 } // namespace inorder
 

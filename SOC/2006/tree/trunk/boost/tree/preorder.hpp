@@ -50,10 +50,9 @@ inline void forward(Cursor& c)
 	// As we've already visited all the ancestors, we'll move upwards until
 	// we find an ancestor that has a right child.
 	while (true) { // Doesn't work with subtrees!
-		if (!c.parity() && (c != c.parent().begin())) { // Root
-			c.to_parent();
+		if (!c.parity() && (c != c.parent().begin())) // Root
 			return;
-		}
+		
 		c.to_parent();
 		if (!c.parity()) {
 			if (c != c.parent().begin()) // Root?

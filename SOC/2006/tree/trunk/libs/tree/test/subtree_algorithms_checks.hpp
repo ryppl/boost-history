@@ -90,7 +90,7 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t
 
 	//Now same for "explicit stack"-based iterators
 	// TODO: Only possible when there are stack-based pre- and postorder iterators
-/*
+
 	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root(), forward_traversal_tag()),
 							boost::tree::ORDER::end(t.root(), forward_traversal_tag()),
 							test_list.begin()
@@ -100,7 +100,7 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t
 							boost::tree::ORDER::rend(t.root(), forward_traversal_tag()),
 							test_list.rbegin()
 							));
-*/
+
 }
 
 

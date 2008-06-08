@@ -31,21 +31,21 @@ template <class Cursor,
 		  class Tag = typename cursor_vertical_traversal<Cursor>::type>
 class iterator;
 
-// TODO. For now, it's only a (bidirectional) dummy
 template <class Cursor>
 class iterator<Cursor, forward_traversal_tag>
  : public boost::iterator_facade<iterator<Cursor, forward_traversal_tag>
       , typename Cursor::value_type
       , bidirectional_traversal_tag
     > {
- private:
-    struct enabler {};
+// private:
+//    struct enabler {};
 
  public:
     iterator() {}
 //      : iterator::iterator_adaptor_() {}
 
-    explicit iterator(Cursor p) {}
+    explicit iterator(stack<Cursor> s) 
+    		: m_s(s) {}
 //      : iterator::iterator_adaptor_(p) {}
 
 //    template <class OtherCursor>
@@ -60,19 +60,74 @@ class iterator<Cursor, forward_traversal_tag>
 
 	operator Cursor()
 	{
-		return this->base();
+		return m_s.top();
 	}
  private:
     friend class boost::iterator_core_access;
+
+ 	stack<Cursor> m_s;
+    
+    typename Cursor::value_type& dereference() const
+    {
+    		return *m_s.top();
+    	}
+    
+    bool equal(iterator<Cursor, forward_traversal_tag> const& other) const
+    {
+    		return (this->m_s == other.m_s);
+    }
     
     void increment()
     {
-		forward(this->base_reference()); //Dummy
+		m_s.pop();
+		
+		if (m_s.top().parity()) { // Right child? Return parent.
+			--m_s.top();
+			return;
+		}
+		
+		if (m_s.size() == 1) // Root?
+			return;
+			
+		// Left child.
+		++m_s.top();
+		while (!m_s.top().empty()) {
+			m_s.push(m_s.top().begin());
+			if (m_s.top().empty())
+				++m_s.top();
+		}
+		if (m_s.top().parity())
+			--m_s.top();
+		return;
     }
     
     void decrement()
     {
-    	back(this->base_reference()); //Dummy
+		if (m_s.size() == 1) { // Root?
+			m_s.push(m_s.top().begin());
+			return;
+		}
+		
+		if (!(++m_s.top()).empty()) { // Right
+			m_s.push(m_s.top().begin());
+			return;
+		}
+		if (!(--m_s.top()).empty()) { // Left
+			m_s.push(m_s.top().begin());
+			return;
+		}
+		
+		// Move up in the hierarchy until we find a descendant that has a right
+		// child (which is what we'll return) or we land at root.
+		while (true) {
+			m_s.pop();
+			if (m_s.top().parity())
+				if (!(--m_s.top()).empty()) {
+					m_s.push(m_s.top().begin());
+					return;
+				}
+		}
+		return;
     }
 };
 

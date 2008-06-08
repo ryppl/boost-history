@@ -32,14 +32,14 @@ namespace tree {
 	
 namespace inorder {
 
-template <class Cursor, 
-		  class Tag = typename cursor_vertical_traversal<Cursor>::type>
+template <class MultiwayCursor, 
+		  class Tag = typename cursor_vertical_traversal<MultiwayCursor>::type>
 class iterator;
 
-template <class Cursor>
-class iterator<Cursor, forward_traversal_tag>
- : public boost::iterator_facade<iterator<Cursor, forward_traversal_tag>
-      , typename Cursor::value_type
+template <class MultiwayCursor>
+class iterator<MultiwayCursor, forward_traversal_tag>
+ : public boost::iterator_facade<iterator<MultiwayCursor, forward_traversal_tag>
+      , typename MultiwayCursor::value_type
       , bidirectional_traversal_tag
     > {
 // private:
@@ -49,63 +49,50 @@ class iterator<Cursor, forward_traversal_tag>
     iterator() {}
 //      : iterator::iterator_adaptor_() {}
 
-    explicit iterator(stack<Cursor> s) 
-    		: m_s(s), m_branch() {}
+    explicit iterator(stack<MultiwayCursor> s) 
+    		: m_s(s) {}
 //      : iterator::iterator_adaptor_(p) {}
 
-    explicit iterator(stack<Cursor> s, typename cursor_size<Cursor>::type branch)
-    		: m_s(s), m_branch(branch) {}
-
-//    template <class OtherCursor>
+//    template <class OtherMultiwayCursor>
 //    iterator(
-//        iterator<OtherCursor> const& other
+//        iterator<OtherMultiwayCursor> const& other
 //      , typename boost::enable_if<
-//            boost::is_convertible<OtherCursor,Cursor >
+//            boost::is_convertible<OtherMultiwayCursor,MultiwayCursor >
 //          , enabler
 //        >::type = enabler()
 //    )
 //      : iterator::iterator_adaptor_(other.base()) {}
 
-	operator Cursor()
+	operator MultiwayCursor()
 	{
 		return m_s.top();
 	}
  private:
     friend class boost::iterator_core_access;
 
- 	stack<Cursor> m_s;
- 	typename cursor_size<Cursor>::type m_branch;
+ 	stack<MultiwayCursor> m_s;
     
-    typename Cursor::value_type& dereference() const
+    typename MultiwayCursor::value_type& dereference() const
     {
     		return *m_s.top();
     	}
     
-    bool equal(iterator<Cursor, forward_traversal_tag> const& other) const
+    bool equal(iterator<MultiwayCursor, forward_traversal_tag> const& other) const
     {
-    		return (this->m_s == other.m_s) && (this->m_branch == other.m_branch);
+    		return (this->m_s == other.m_s);
     }
     
     void increment()
     {
 		if (!(++m_s.top()).empty()) {
-			while (!m_s.top().begin().empty() && !m_s.top().end().empty())
-				m_s.push(m_s.top().begin());
-			if (!m_s.top().begin().empty() && m_s.top().end().empty())
-				m_branch = m_s.size();
 			while (!m_s.top().begin().empty())
-				m_s.push(m_s.top().begin());	
+				m_s.push(m_s.top().begin());
 			m_s.push(m_s.top().begin());
 			return;
 		}
 		
-		if (++m_branch == m_s.size())
-			return;
-			
-		while (m_s.top().parity())
+		while (m_s.top().parity() && !m_s.empty())
 			m_s.pop();
-		if (--m_branch > m_s.size()) 
-			m_branch = m_s.size();
 		return;
     }
     
@@ -117,11 +104,9 @@ class iterator<Cursor, forward_traversal_tag>
 			m_s.push(m_s.top().begin());
 			return;
 		}
+		
 		while (!m_s.top().parity())
 			m_s.pop();
-	    if (++m_branch > m_s.size()) 
-			m_branch = m_s.size();
-		--m_branch;
 		--m_s.top();
 		return;
     }

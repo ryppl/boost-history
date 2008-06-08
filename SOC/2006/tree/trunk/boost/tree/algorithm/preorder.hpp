@@ -101,21 +101,30 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
 	return t;
 }
 
+/// Iterators
+
 template <class Cursor>
 iterator<Cursor, forward_traversal_tag> 
 begin(Cursor c, forward_traversal_tag)
 {
-	// TODO: Only a (bidirectional) dummy!
-	return iterator<Cursor, forward_traversal_tag>(first(c));
+	std::stack<Cursor> s;
+
+	s.push(c);
+	s.push(c.begin());
+	return iterator<Cursor, forward_traversal_tag>(s);	
 }
 
 template <class Cursor>
 iterator<Cursor, forward_traversal_tag> 
 end(Cursor c, forward_traversal_tag)
 {
-	// TODO: Only a (bidirectional) dummy!
-	return iterator<Cursor, forward_traversal_tag>(last(c));
+	std::stack<Cursor> s;
+
+	s.push(c);
+	return iterator<Cursor, forward_traversal_tag>(s);
 }
+
+#include <boost/tree/algorithm/iterator/bidirectional.hpp>
 
 } // namespace preorder
 
