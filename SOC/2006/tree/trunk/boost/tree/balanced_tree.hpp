@@ -16,8 +16,8 @@
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/iterator.hpp>
 
-#include <boost/tree/balancers/unbalanced.hpp>
-#include <boost/tree/augmentors/unaugmented.hpp>
+#include <boost/tree/detail/balancers/unbalanced.hpp>
+#include <boost/tree/detail/augmentors/unaugmented.hpp>
 
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 #include <boost/tree/detail/iterator/augmented.hpp>

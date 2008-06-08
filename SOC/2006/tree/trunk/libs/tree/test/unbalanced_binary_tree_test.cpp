@@ -7,7 +7,7 @@
 #include <boost/test/minimal.hpp>
 
 #include <boost/tree/balanced_tree.hpp>
-#include <boost/tree/balancers/unbalanced.hpp>
+#include <boost/tree/detail/balancers/unbalanced.hpp>
 #include <boost/tree/binary_tree.hpp>
 
 //#include <boost/tree/searcher.hpp>
