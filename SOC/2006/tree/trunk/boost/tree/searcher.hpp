@@ -17,7 +17,7 @@
 #ifndef BOOST_TREE_SEARCHER_HPP
 #define BOOST_TREE_SEARCHER_HPP
 
-#include <boost/tree/inorder_iterator.hpp>
+#include <boost/tree/detail/iterator/inorder.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/multi_index/identity.hpp>

@@ -15,10 +15,10 @@
 #ifndef BOOST_TREE_ITERATORS_HPP
 #define BOOST_TREE_ITERATORS_HPP
 
-#include <boost/tree/ascending_iterator.hpp>
+#include <boost/tree/detail/iterator/ascending.hpp>
 
-#include <boost/tree/inorder_iterator.hpp>
-#include <boost/tree/preorder_iterator.hpp>
-#include <boost/tree/postorder_iterator.hpp>
+#include <boost/tree/detail/iterator/inorder.hpp>
+#include <boost/tree/detail/iterator/preorder.hpp>
+#include <boost/tree/detail/iterator/postorder.hpp>
 
 #endif // BOOST_TREE_ITERATORS_HPP

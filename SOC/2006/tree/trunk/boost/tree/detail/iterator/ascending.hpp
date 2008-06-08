@@ -5,47 +5,36 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /**
- * @file inorder_iterator.hpp
- * Inorder iterator wrapper around cursor.
+ * @file ascending_iterator.hpp
+ * Ascending iterator wrapper around cursor.
  */
 
 // TODO: concept checks.
 
-// NO guards, as this is context-included!
+#ifndef BOOST_TREE_DETAIL_ITERATOR_ASCENDING_HPP
+#define BOOST_TREE_DETAIL_ITERATOR_ASCENDING_HPP
 
-//#ifndef BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
-//#define BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
-
-
-//#include <boost/tree/detail/cursor/inorder.hpp>
+#include <boost/tree/ascending.hpp>
 #include <boost/tree/cursor.hpp>
 
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
+namespace boost {
+namespace tree {
+	
+namespace ascending {
 
-//namespace boost {
-//namespace tree {
-//	
-//namespace inorder {
+template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
+class iterator;
 
-/** @file	bidirectional.hpp
- * 
- * Some definitions that are identical for all *order cursors (as we are just
- * calling the appropriate traversal function that are defined in the 
- * respective *order.hpp files).
- */
-
-/**
- * @brief	Specialisation for ascending cursors.
- */
 template <class Cursor>
 class iterator<Cursor, bidirectional_traversal_tag>
  : public boost::iterator_adaptor<iterator<Cursor, bidirectional_traversal_tag>
       , Cursor
       , boost::use_default
-      , bidirectional_traversal_tag
+      , forward_traversal_tag
     > {
  private:
     struct enabler {};
@@ -79,10 +68,12 @@ class iterator<Cursor, bidirectional_traversal_tag>
 		forward(this->base_reference());
     }
     
-    void decrement()
-    {
-    		back(this->base_reference());
-    }
 };
 
-//#endif // BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
+
+} // namespace ascending
+
+} // namespace tree
+} // namespace boost
+
+#endif // BOOST_TREE_DETAIL_ITERATOR_ASCENDING_HPP

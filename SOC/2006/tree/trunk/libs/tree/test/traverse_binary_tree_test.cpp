@@ -14,7 +14,7 @@
 #include <boost/tree/binary_tree.hpp>
 
 #include <boost/tree/iterator.hpp>
-#include <boost/tree/traversal.hpp>
+#include <boost/tree/algorithm.hpp>
 
 #include <boost/test/minimal.hpp>
 
