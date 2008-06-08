@@ -7,6 +7,8 @@
 namespace boost{
 namespace dsearch{
 
+//I think this will need only has key_trait_value_tag and key_trait_no_value_tag.
+//compare function can always be presumed to exists
 struct key_trait_compare_tag {};
 struct key_trait_value_tag {};
 struct key_trait_compare_value_tag: public key_trait_compare_tag,public key_trait_value_tag{};
@@ -28,9 +30,7 @@ class default_iterator_traits{
 };
 
 
-//possibly make this string value traits;
-//the user can specify how to store the value.. ie a pointer or as the value itself
-//this will lessen the burden for trie_node. Also define default_value_trait 
+//this will lessen the burden for trie_node. 
 class string_traits: public default_iterator_traits<std::string>{
 	public:
 	typedef key_trait_compare_value_tag container_category;
