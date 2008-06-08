@@ -5,24 +5,33 @@
 #include<string.h>
 #include<assert.h>
 #include<boost/iterator/iterator_facade.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include<memory>
 
 namespace boost{
 namespace dsearch{
-
-
-//template<class Key,class Mapped,class Key_traits,class Allocator=std::allocator<char> >
-//class trie_array_node;
 
 template <typename trie_type>
 class trie_array_node_iterator
 :public iterator_facade<trie_array_node_iterator<trie_type>,trie_type *,boost::bidirectional_traversal_tag>
 {
 	private:
+	friend class boost::iterator_core_access;
+	template<class Trie_t> friend class trie_array_node_iterator;
+
+	template<class K,class M,class Ke,class Allocator> friend class trie_array_node;
+
+	struct enabler {};
+
+
 	trie_type** child_ptr;
 	std::size_t pos;
-	template<class K,class M,class Ke,class Allocator> friend class trie_array_node;
-	
+
 	public:
 	typedef trie_array_node_iterator<trie_type> type;
 	trie_array_node_iterator()
@@ -30,7 +39,7 @@ class trie_array_node_iterator
 
 	trie_array_node_iterator(trie_type*node)
 	{
-		child_ptr=(trie_type**)node->child_ptr;
+		child_ptr=(trie_type**)(node->child_ptr);
 		int i=0;
 		for(i=0;i<trie_type::max;i++)
 			if(child_ptr[i]!=0) break;
@@ -41,8 +50,9 @@ class trie_array_node_iterator
 	{
 		child_ptr=(trie_type**)node->child_ptr;
 	}
-
-	bool equal( const type  &other ) const
+	private:
+	template<class Trie_t>
+	bool equal( trie_array_node_iterator<Trie_t> const &other ) const
 	{
 		if(other.child_ptr==child_ptr && other.pos==pos)
 			return true;
@@ -65,46 +75,61 @@ class trie_array_node_iterator
 	{
 		return child_ptr[pos];  
 	}
+
+	public:
+	template<class Trie_t>
+	trie_array_node_iterator(const trie_array_node_iterator<Trie_t> & other,
+			typename enable_if< is_convertible<Trie_t*,trie_type*>, 
+			enabler >::type = enabler()
+		     )
+	{
+		child_ptr=(trie_type **)other.child_ptr;
+		pos=other.pos;
+	}
 };
 
+//TODO:const_cast (if safe) at other places to avoid duplication. Remove const functions here.
 template<class Key,class Mapped,class Key_traits,class Alloc=std::allocator<char> >
 class trie_array_node
 {
 	public:
 	typedef trie_array_node<Key,Mapped,Key_traits,Alloc> type;
-	friend class trie_array_node_iterator<type>;
+	template<class T> friend class trie_array_node_iterator;
 
 	private:
 	type* child_ptr[Key_traits::max+1];
+	//typedef typename Alloc::template rebind<node_type>::other node_allocator_type;
 
 	public:
 	typedef typename Key_traits::element_type element_type;
 	typedef trie_array_node_iterator<type> iterator;
+	typedef trie_array_node_iterator<const type> const_iterator;
 	typedef element_type key_type;
 	typedef type* value_type;
 
-	bool value_indicator;
-	Mapped value;			//should it be mapped *? depending on sizeof(mapped)
+	Mapped *value_ptr;
 
 	enum{
 		max=Key_traits::max
 	};
 
-	
 	trie_array_node()
 	{
-		std::cout<<"here"<<std::endl;
-		value_indicator=false;
+//		std::cout<<"here"<<std::endl;
 		memset(child_ptr,0,sizeof(child_ptr));
+		value_ptr=0;
 	}
 
 	trie_array_node(const type &other)
 	{
-		value_indicator=other.value_indicator;
-		value=other.value;
-		assert( memcpy(child_ptr, other.child_ptr, sizeof(child_ptr) ) == child_ptr)	;
-/*		for(int i=0;i<max;i++)
-			child_ptr[i]=(type*)bool(child_ptr[i]);*/
+		if(other.value_ptr!=0)
+		{
+			value_ptr=new Mapped;
+			*value_ptr=*(other.value_ptr);
+		}
+		else
+			value_ptr=0;
+		assert( memcpy(child_ptr, other.child_ptr, sizeof(child_ptr) ) == child_ptr);
 	}
 
 	void insert(const element_type &key,type * const &child_cursor)
@@ -122,6 +147,15 @@ class trie_array_node
 			return iterator(this,Key_traits::get_value(key));
 	}
 
+	//TODO:do a const cast at places to avoid duplication
+	const_iterator find(const element_type &key) const
+	{
+		if(child_ptr[Key_traits::get_value(key)]==0)
+			return end();
+		else
+			return const_iterator(this,Key_traits::get_value(key));
+	}
+
 	void erase(const iterator&it)
 	{
 		child_ptr[it.pos]=0;
@@ -132,30 +166,44 @@ class trie_array_node
 		return iterator(this);
 	}
 
+	const_iterator begin() const
+	{
+		return const_iterator(this);
+	}
+
 	iterator end()
 	{
 		return iterator(this,max);
 	}
 
-	/*void insert_value(const Mapped &v)
+	const_iterator end() const
 	{
-		value=v;
-	}*/
+		return const_iterator(this,max);
+	}
 
-	Mapped &get_value_ref() //get pointer to value of [] operator of trie class
+	//called only from insert function and trie::iterator 
+	Mapped &get_value_ref()
 	{
-		value_indicator=true;
-		return value;
+		if(value_ptr==0)
+			value_ptr=new Mapped;
+		return *value_ptr;
+	}
+
+	//called to get const reference fron const_* iterators and cursors
+	Mapped &get_value_ref() const
+	{
+		return *value_ptr;
 	}
 
 	void erase_value()
 	{
-		value_indicator=false;
+		delete value_ptr;
+		value_ptr=0;
 	}
 
-	bool has_value()
+	bool has_value() const
 	{
-		return value_indicator;
+		return value_ptr!=0;
 	}
 
 	std::size_t size()
@@ -172,7 +220,7 @@ class trie_array_node
 		return Key_traits::get_element(it.pos);
 	}
 
-	iterator lower_bound(const element_type &e)
+	iterator lower_bound(const element_type &e) 
 	{
 		int k=Key_traits::get_value(e);
 		for(;k>=0;k--) 
@@ -181,7 +229,7 @@ class trie_array_node
 		return iterator(this,k);
 	}
 
-	bool empty()
+	bool empty() const
 	{
 		for(int i=0;i<max;i++)
 		if(child_ptr[i]!=0)
@@ -191,6 +239,8 @@ class trie_array_node
 
 	~trie_array_node()
 	{
+		delete value_ptr;
+		value_ptr=0;
 	}
 };
 
