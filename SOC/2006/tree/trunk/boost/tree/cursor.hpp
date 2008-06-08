@@ -184,7 +184,7 @@ outputter_cursor_iterator_wrapper(OutputIterator o)
 	return output_cursor_iterator_wrapper<OutputIterator>(o);
 }
 
-//define freestanding begin, end, size, empty using node's member fns?
+//define freestanding begin, end, size, empty using cursor's member fns?
 
 } // namespace tree
 } // namespace boost

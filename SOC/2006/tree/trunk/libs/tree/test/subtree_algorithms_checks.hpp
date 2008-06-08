@@ -92,29 +92,26 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t
 				std::distance(test_list.rbegin(), test_list.rend()));					
 
 	//Now same for iterators wrapped around "explicit stack"-based cursors
-	// TODO: Only possible when there are stack-based pre- and postorder iterators
-
-//	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root(), forward_traversal_tag()),
-//							boost::tree::ORDER::end(t.root(), forward_traversal_tag()),
-//							test_list.begin()
-//							));
-//
-//	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(t.root(), forward_traversal_tag()),
-//							boost::tree::ORDER::rend(t.root(), forward_traversal_tag()),
-//							test_list.rbegin()
-//							));
-
 	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(ascending_cursor<cursor>(t.root())),
 							boost::tree::ORDER::end(ascending_cursor<cursor>(t.root())),
 							test_list.begin()
 							));
 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(ascending_cursor<cursor>(t.root())),
+							  boost::tree::ORDER::end(ascending_cursor<cursor>(t.root()))) == 
+				std::distance(test_list.begin(), test_list.end()));
+
 	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(ascending_cursor<cursor>(t.root())),
 							boost::tree::ORDER::rend(ascending_cursor<cursor>(t.root())),
 							test_list.rbegin()
 							));
+							
+	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(ascending_cursor<cursor>(t.root())),
+							  boost::tree::ORDER::rend(ascending_cursor<cursor>(t.root()))) == 
+				std::distance(test_list.rbegin(), test_list.rend()));
+
 }
 
 
-}
-}
+} // namespace ORDER
+} // namespace test

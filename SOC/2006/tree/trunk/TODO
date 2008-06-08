@@ -53,7 +53,8 @@ General:
 
 Proposal:
 
-* Write a cursor_facade, cursor_adaptor and ascending_adaptor proposal.
+* Write a cursor_facade, cursor_adaptor as well as ascending_adaptor 
+  (and output_cursor_iterator_wrapper?) proposal.
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
 * Add (subtree) cursor algorithms.
