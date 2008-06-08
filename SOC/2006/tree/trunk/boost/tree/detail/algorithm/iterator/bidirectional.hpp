@@ -13,8 +13,6 @@
 
 // NO guards, as this is context-included!
 
-#include <boost/tree/cursor.hpp>
-
 /** @file	bidirectional.hpp
  * 
  * Some definitions that are identical for all *order cursors (as we are just

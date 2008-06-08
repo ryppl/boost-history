@@ -14,7 +14,14 @@
 
 
 #include <boost/tree/search.hpp>
-#include <boost/tree/traversal.hpp>
+
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
+
+#include <boost/tree/detail/algorithm/iterator/inorder.hpp>
+#include <boost/tree/detail/algorithm/iterator/preorder.hpp>
+#include <boost/tree/detail/algorithm/iterator/postorder.hpp>
 
 #include <algorithm>
 

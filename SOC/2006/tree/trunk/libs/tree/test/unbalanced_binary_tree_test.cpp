@@ -4,7 +4,6 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-//#include <boost/test/unit_test.hpp>
 #include <boost/test/minimal.hpp>
 
 #include <boost/tree/balanced_tree.hpp>

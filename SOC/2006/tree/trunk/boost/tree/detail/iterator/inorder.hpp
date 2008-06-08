@@ -15,9 +15,6 @@
 #define BOOST_TREE_DETAIL_ITERATOR_INORDER_HPP
 
 
-#include <boost/tree/detail/cursor/inorder.hpp>
-#include <boost/tree/cursor.hpp>
-
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>

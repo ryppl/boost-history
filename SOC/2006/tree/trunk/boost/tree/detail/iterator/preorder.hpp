@@ -15,8 +15,6 @@
 #define BOOST_TREE_DETAIL_ITERATOR_PREORDER_HPP
 
 
-#include <boost/tree/detail/cursor/preorder.hpp>
-
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>

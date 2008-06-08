@@ -14,7 +14,7 @@
 #define BOOST_TREE_BINARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/detail/algorithm/inorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>

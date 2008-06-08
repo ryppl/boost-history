@@ -12,12 +12,12 @@
 #ifndef BOOST_TREE_TRAVERSAL_HPP
 #define BOOST_TREE_TRAVERSAL_HPP
 
-#include <boost/tree/detail/cursor/inorder.hpp>
-#include <boost/tree/detail/cursor/preorder.hpp>
-#include <boost/tree/detail/cursor/inorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 
-#include <boost/tree/detail/algorithm/inorder.hpp>
-#include <boost/tree/detail/algorithm/preorder.hpp>
-#include <boost/tree/detail/algorithm/postorder.hpp>
+#include <boost/tree/detail/algorithm/iterator/inorder.hpp>
+#include <boost/tree/detail/algorithm/iterator/preorder.hpp>
+#include <boost/tree/detail/algorithm/iterator/postorder.hpp>
 
 #endif // BOOST_TREE_TRAVERSAL_HPP
