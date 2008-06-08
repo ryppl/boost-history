@@ -14,18 +14,16 @@
 #ifndef BOOST_TREE_DETAIL_ITERATOR_POSTORDER_HPP
 #define BOOST_TREE_DETAIL_ITERATOR_POSTORDER_HPP
 
-
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
-
 
 namespace boost {
 namespace tree {
 	
 namespace postorder {
 
-#include <boost/tree/detail/iterator/bidirectional.hpp>
+#include <boost/tree/detail/iterator/_order.hpp>
 
 } // namespace postorder
 

@@ -14,22 +14,16 @@
 #ifndef BOOST_TREE_DETAIL_ITERATOR_INORDER_HPP
 #define BOOST_TREE_DETAIL_ITERATOR_INORDER_HPP
 
-
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
-
-#include <stack>
-
-
-using std::stack;
 
 namespace boost {
 namespace tree {
 	
 namespace inorder {
 
-#include <boost/tree/detail/iterator/bidirectional.hpp>
+#include <boost/tree/detail/iterator/_order.hpp>
 
 } // namespace inorder
 

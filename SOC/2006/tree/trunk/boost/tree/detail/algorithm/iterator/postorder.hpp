@@ -22,7 +22,7 @@ namespace tree {
 	
 namespace postorder {
 
-#include <boost/tree/detail/algorithm/iterator/bidirectional.hpp>
+#include <boost/tree/detail/algorithm/iterator/_order.hpp>
 
 } // namespace postorder
 

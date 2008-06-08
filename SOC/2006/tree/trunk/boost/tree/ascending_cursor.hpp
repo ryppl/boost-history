@@ -43,15 +43,15 @@ class ascending_cursor
 
 	// Cursor-specific
  	typedef ascending_cursor<Cursor> cursor;
- 	typedef ascending_cursor<Cursor const> const_cursor; // FIXME
+ 	typedef ascending_cursor<typename Cursor::const_cursor> const_cursor;
 	
 	// Container-specific:
 	typedef cursor iterator;
 	typedef const_cursor const_iterator;
 	
-	template <class OtherValue>
+	template <class OtherCursor>
 	struct rebind {
-		typedef ascending_cursor<OtherValue> other;
+		typedef ascending_cursor<OtherCursor> other;
 	};
 	
     ascending_cursor()

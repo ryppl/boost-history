@@ -10,8 +10,6 @@
  */
 
 // TODO: Use TR1 type_traits (integral_constant)
-// can we abstract the cursor stuff any further, 
-// eventually producing cursor_adaptor?
 
 #ifndef BOOST_TREE_CURSOR_HELPERS_HPP
 #define BOOST_TREE_CURSOR_HELPERS_HPP
