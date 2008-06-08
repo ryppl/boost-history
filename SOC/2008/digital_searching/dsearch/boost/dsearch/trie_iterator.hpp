@@ -4,12 +4,11 @@
 #include<stack>
 #include<boost/iterator/iterator_facade.hpp>
 #include<assert.h>
+#include<vector>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
-//forces the thing to be bidirectional horizontally.
 //TODO:Add specializations for ascending cursors without use of stack.
-//iterator not convertible to const iterator
 
 namespace boost{
 namespace dsearch{
@@ -19,30 +18,40 @@ class trie_iterator
 :public iterator_facade< trie_iterator<Key,Mapped,Cursor>,Mapped,bidirectional_traversal_tag >
 {
 	private:
-	struct enabler {};
-	typedef trie_iterator<Key,Mapped,Cursor> self;
 	friend class boost::iterator_core_access;
 	template<class K,class M,template<class K1,class M1,class K_t1,class A1 > class t_n,class K_t,class A >  
 	friend class trie;
-	std::stack<Cursor> cur_st;
-	bool end_flag;
 	template<class K,class M,class C> friend class trie_iterator;
-	
+
+	struct enabler {};
+	typedef trie_iterator<Key,Mapped,Cursor> self;
+
+	std::vector<Cursor> cur_st;
+	int size;
+	bool end_flag;
 
 	void push( const Cursor &c )
 	{
-		cur_st.push(c);
+		++size;
+		cur_st.push_back(c);
 	}
 	
 	void pop()
 	{
-		cur_st.pop();
+		--size;
+		cur_st.pop_back();
 	}
 
-	Cursor &top()
+	Cursor &top() 
 	{
 		assert(!(this->empty()));
-		return cur_st.top();
+		return cur_st[size-1];
+	}
+
+	Cursor get_top() const
+	{
+		assert(!(this->empty()));
+		return cur_st[size-1];
 	}
 
 	bool empty() const
@@ -53,10 +62,10 @@ class trie_iterator
 	void to_right_most()
 	{
 		Cursor c=this->top();
-		std::cout<<"in right most"<<std::endl;
-		while(c.begin()!=c.end())
+//		std::cout<<"in right most"<<std::endl;
+		while(!c.empty())
 		{
-			std::cout<<"PUSHING"<<std::endl;
+//			std::cout<<"PUSHING"<<std::endl;
 			c=--c.end();
 			this->push(c);
 		}
@@ -66,22 +75,23 @@ class trie_iterator
 	template<class K,class M,class C>
 	bool equal(trie_iterator<K,M,C> const& other) const
 	{
-		if( this->end_flag == other.end_flag && this->cur_st.top() == other.cur_st.top() )
+		if( this->end_flag == other.end_flag && this->get_top() == other.get_top() )
 			return true;
 		return false;
 	}
+
 	void to_left_most()
 	{
 		Cursor c=this->top();
 		if(c.has_value()) 
 		{
-			std::cout<<"in has_value"<<std::endl;
+//			std::cout<<"in has_value"<<std::endl;
 			return ;
 		}
-		std::cout<<"out of has_value"<<std::endl;
+//		std::cout<<"out of has_value"<<std::endl;
 		while(!c.empty())
 		{
-			std::cout<<"PUSHING"<<std::endl;
+//			std::cout<<"PUSHING"<<std::endl;
 			if(c.has_value()) break;
 			c=c.begin();
 			this->push(c);
@@ -126,7 +136,6 @@ class trie_iterator
 					end_flag=true;
 				return;
 			}
-			
 		}
 		--top;
 		this->push(top);
@@ -151,21 +160,21 @@ class trie_iterator
 			}
 			++top;
 		}
-		this->push(top);
+		this->push (top);
 		to_left_most();
 	}
 
 	Mapped &dereference() const
 	{
-		assert((cur_st.top()).has_value());
-		return ((cur_st.top()).get_value());
+		assert ( (cur_st[size-1]).has_value() );
+		return ( (cur_st[size-1]).get_value() );
 	}
 	
 	bool equal( const self &other ) const
 	{
 		assert(!this->empty());
 		if(end_flag!=other.end_flag) return false;
-		if(other.cur_st.top()==cur_st.top())
+		if(other.cur_st[other.size-1]==cur_st[size-1])
 			return true;
 		return false;
 	}
@@ -173,10 +182,12 @@ class trie_iterator
 	public:
 	trie_iterator():end_flag(false) //to be pushed later.. thats why
 	{
+		size=0;
 	}
 
 	trie_iterator( Cursor const &cursor_root,bool end_flag=false ) //returns begin cursor
 	{
+		size=0;
 		this->end_flag=end_flag;
 		if(this->end_flag)
 		{
@@ -194,7 +205,7 @@ class trie_iterator
 		to_left_most();
 	}
 
-	//TODO:use enable_if and is_convertible correctly
+	public:
 	template<class K,class M,class C>
 	trie_iterator( trie_iterator<K,M,C> const& other,
 			typename enable_if< is_convertible<M*,Mapped*>, 
@@ -202,11 +213,20 @@ class trie_iterator
 		     )
 	{
 		end_flag=other.end_flag;
-		cur_st=other.cur_st; 
+		size=0;
+
+		typename std::vector<C>::const_iterator it=other.cur_st.begin();
+		while ( it!=other.cur_st.end() )
+		{
+			push(*it);
+			it++;
+		}
 	}
 
 };
 
+
+//TODO:class not tested :(
 template<class Key,class Mapped,class Cursor>
 class trie_reverse_iterator
 :public iterator_facade< trie_reverse_iterator<Key,Mapped,Cursor>,Mapped,bidirectional_traversal_tag >
@@ -257,7 +277,6 @@ class trie_reverse_iterator
 		return *correspond_it;
 	}
 
-
 	public:
 	trie_reverse_iterator(const iterator &beg_it,const iterator &end_it,bool is_beg_flag)//should be intialized with end iterator
 	{
@@ -285,7 +304,6 @@ class trie_reverse_iterator
 		this->correspond_it=other.correspond_it;
 		this->beg_it=other.beg_it;
 	}
-
 };
 
 }
