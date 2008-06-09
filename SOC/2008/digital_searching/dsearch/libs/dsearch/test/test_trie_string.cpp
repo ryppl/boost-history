@@ -21,13 +21,21 @@ T test_insert()
 	BOOST_CHECK( tr.find("hello")==tr.end() );
 	BOOST_CHECK( tr.find("")==tr.end() );
 
+	BOOST_CHECK(tr.size()==0);
 	tr.insert( make_pair("hello",1) );
+	BOOST_CHECK(tr.size()==1);
 	tr.insert( make_pair("world",2) );
+	BOOST_CHECK(tr.size()==2);
 	tr.insert( make_pair("",3) );
+	BOOST_CHECK(tr.size()==3);
 	tr.insert( make_pair("hel",4) );
+	BOOST_CHECK(tr.size()==4);
 	tr.insert( make_pair("wor",5) );
+	BOOST_CHECK(tr.size()==5);
 	tr.insert( make_pair("worry",6) );
+	BOOST_CHECK(tr.size()==6);
 	tr.insert( make_pair("hellish",7) );
+	BOOST_CHECK(tr.size()==7);
 
 	BOOST_CHECK( tr.find("hello")!=tr.end() );
 	BOOST_CHECK( *tr.find("hello")==1 );
@@ -162,6 +170,7 @@ void test_iteration(T tr)
 	//"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
 	//std::cout<<"bloody gods"<<std::endl;
 	typename T::iterator it=tr.begin();
+	BOOST_CHECK(tr.size()==7);
 
 //	std::cout<<"test_iteration:"<<*(tr.find(""))<<std::endl;
 	BOOST_CHECK(it==tr.find(""));
@@ -336,15 +345,16 @@ int test_main(int,char **)
 	test_copy_simple<trie_type>();
 
 	trie_type tr;
-	tr=test_insert<trie_type>();
+	BOOST_CHECK(tr.begin()==tr.end());
+//	std::cout<<tr.size()<<std::endl;
+	BOOST_CHECK(tr.size()==0);
 
+	tr=test_insert<trie_type>();
 	test_copy(tr);
 	test_bound(tr);
 	test_erase(tr);
 	test_iteration(tr);
-	//test_erase_iterator<trie_type>();
 	test_prefix_range(test_insert<trie_type>());
-	//test_erase_range(tr);
 
 	return 0;
 }
