@@ -67,7 +67,7 @@ class owned_base;
     Syntax helper.
 */
 
-typedef std::list< numeric::interval<int>, fast_pool_allocator< numeric::interval<int> > > pool_lii;
+typedef std::list< numeric::interval<unsigned>, fast_pool_allocator< numeric::interval<unsigned> > > pool_lii;
 
 
 /**
@@ -91,7 +91,7 @@ struct pool : boost::pool<>,
         pool_lii::reverse_iterator i;
         
         for (i = get()->rbegin(); i != get()->rend(); i ++)
-            if (in((int)(p), * i))
+            if (in((unsigned)(p), * i))
                 break;
 
         get()->erase(i.base(), get()->end());
@@ -103,7 +103,7 @@ struct pool : boost::pool<>,
     {
         void * p = ordered_malloc(s);
         
-        get()->push_back(numeric::interval<int>((int) p, int((char *)(p) + s)));
+        get()->push_back(numeric::interval<unsigned>((unsigned) p, unsigned((char *)(p) + s)));
         
         return p;
     }
@@ -113,7 +113,7 @@ struct pool : boost::pool<>,
         pool_lii::reverse_iterator i;
         
         for (i = get()->rbegin(); i != get()->rend(); i ++)
-            if (in((int)(p), * i))
+            if (in((unsigned)(p), * i))
                 break;
         
         get()->erase(i.base(), get()->end());
@@ -122,12 +122,17 @@ struct pool : boost::pool<>,
 };
 
 
+template <typename T>
+    class shifted_allocator;
+
 /**
 	Root class of all pointees.
 */
 
 class owned_base : public sp_counted_base
 {
+    template <typename U> friend class shifted_allocator;
+
 	intrusive_stack ptrs_;
 	intrusive_list inits_;
 	
@@ -146,6 +151,10 @@ public:
     intrusive_list::node * init_tag() 				{ return & init_tag_; }
 
     static pool pool_;
+    
+private:
+    virtual void dispose() 				            {} // dummy
+    virtual void * get_deleter( std::type_info const & ti ) {} // dummy
 };
 
 
@@ -314,7 +323,7 @@ template <typename T>
 
         pointer allocate(size_type s, const void * = 0)
         { 
-            shifted<T> * q = shifted<T>::operator new(s * sizeof(T));
+            void * q = shifted<T>::operator new(s * sizeof(T));
             
             // only T's constructor will be called so take care of the rest
             return static_cast<shifted<T> *>(new (q) owned_base)->element(); 

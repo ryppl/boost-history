@@ -145,12 +145,13 @@ fast_pool_allocator<set> set::pool_;
 	Deterministic memory manager of constant complexity.
 */
 
-template <typename T, template <typename> class U = shifted_ptr_base>
-    class shifted_ptr : public U<T>
+template <typename T>
+    class shifted_ptr : public shifted_ptr_base<T>
     {
         //template <typename, template <typename> class> friend class shifted_ptr;
+        typedef shifted_ptr_base<T> base;
 
-        using U<T>::share;
+        using base::share;
 
 
         union
@@ -172,7 +173,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
         }
 
         template <typename V>
-            shifted_ptr(shifted<V> * p) : U<T>(p)
+            shifted_ptr(shifted<V> * p) : base(p)
             {
                 if (! owned_base::pool_.is_from(this))
                 {
@@ -188,7 +189,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
             }
 
         template <typename V>
-            shifted_ptr(shifted_ptr<V> const & p) : U<T>(p)
+            shifted_ptr(shifted_ptr<V> const & p) : base(p)
             {
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
@@ -198,7 +199,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
                 ps_->redir(p.ps_);
             }
 
-            shifted_ptr(shifted_ptr<T> const & p) : U<T>(p)
+            shifted_ptr(shifted_ptr<T> const & p) : base(p)
             {
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
@@ -213,7 +214,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
             {
                 release();
                 init(p);
-                U<T>::operator = (p);
+                base::operator = (p);
 
                 return * this;
             }
@@ -221,14 +222,14 @@ template <typename T, template <typename> class U = shifted_ptr_base>
         template <typename V>
             shifted_ptr & operator = (shifted_ptr<V> const & p)
             {
-                if (p.po_ != U<T>::po_)
+                if (p.po_ != base::po_)
                 {
                     if (ps_->redir() != p.ps_->redir())
                     {
                         release();
                         ps_->redir(p.ps_);
                     }
-                    U<T>::operator = (p);
+                    base::operator = (p);
                 }
                 return * this;
             }
@@ -255,7 +256,7 @@ template <typename T, template <typename> class U = shifted_ptr_base>
             {
                 if (ps_->release())
                 {
-                    U<T>::po_ = 0;
+                    base::po_ = 0;
 
                     if (! d)
                         new (ps_) set();
@@ -264,14 +265,14 @@ template <typename T, template <typename> class U = shifted_ptr_base>
                 }
                 else 
                 {
-                    U<T>::reset();
+                    base::reset();
 
                     if (! d)
                         ps_ = new set();
                 }
             }
             else if (! d)
-                U<T>::reset();
+                base::reset();
         }
 
         void init(owned_base * p)
