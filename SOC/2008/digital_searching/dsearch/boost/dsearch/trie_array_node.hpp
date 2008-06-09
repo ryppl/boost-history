@@ -236,6 +236,11 @@ class trie_array_node
 			return false;
 		return true;
 	}
+	
+	element_type get_element(const_iterator it) const
+	{
+		return Key_traits::get_element(it.pos);
+	}
 
 	~trie_array_node()
 	{
