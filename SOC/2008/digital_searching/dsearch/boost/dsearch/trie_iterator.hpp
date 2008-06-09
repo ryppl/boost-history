@@ -30,7 +30,7 @@ class trie_iterator
 	int size;
 	bool end_flag;
 
-	void push( const Cursor &c )
+	void push ( const Cursor &c )
 	{
 		++size;
 		cur_st.push_back(c);
@@ -224,18 +224,18 @@ class trie_iterator
 			it++;
 		}
 	}
-
 };
 
-
-//TODO:class not tested :(
 template<class Key,class Mapped,class Cursor>
 class trie_reverse_iterator
 :public iterator_facade< trie_reverse_iterator<Key,Mapped,Cursor>,Mapped,bidirectional_traversal_tag >
 {
 	private:
-	struct enabler {};
 	friend class boost::iterator_core_access;
+	template<class K,class M,template<class K1,class M1,class K_t1,class A1 > class t_n,class K_t,class A >  
+	friend class trie;
+
+	struct enabler {};
 	template<class K,class M,class C> friend class trie_reverse_iterator;
 	typedef trie_reverse_iterator<Key,Mapped,Cursor> self;
 	typedef trie_iterator<Key,Mapped,Cursor> iterator;
@@ -251,6 +251,11 @@ class trie_reverse_iterator
 		else
 		--correspond_it;
 	}
+	
+	const iterator &get_iterator() const
+	{
+		return correspond_it;
+	}
 
 	void decrement()
 	{
@@ -260,26 +265,29 @@ class trie_reverse_iterator
 			++correspond_it;
 	}
 
-	bool equal(const self &other) const
+/*	bool equal(const self &other) const
 	{
 		return ( this->correspond_it==other.correspond_it  && this->end_flag==other.end_flag);
 	}
-
+*/
 	template<class K,class M,class C>
-	bool equal(trie_iterator<K,M,C> const& other) const
+	bool equal(trie_reverse_iterator<K,M,C> const& other) const
 	{
-		if( this->end_flag == other.end_flag && this->correspond_it=other.correspond_it )
+		if( this->end_flag == other.end_flag && this->correspond_it==other.correspond_it )
 			return true;
 		return false;
 	}
 
-	Mapped &dereference()
+	Mapped &dereference() const
 	{
 		assert(!end_flag);
 		return *correspond_it;
 	}
 
 	public:
+	trie_reverse_iterator(): end_flag(0)
+	{
+	}
 	trie_reverse_iterator(const iterator &beg_it,const iterator &end_it,bool is_beg_flag)//should be intialized with end iterator
 	{
 		if(is_beg_flag)
