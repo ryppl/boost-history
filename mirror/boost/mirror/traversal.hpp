@@ -21,15 +21,16 @@ namespace boost {
 namespace mirror {
 
 
-template <class MetaClass> class deep_traversal_of;
-template <class MetaClass> class flat_traversal_of;
+template <class MetaClass, class Context> class deep_traversal_of;
+template <class MetaClass, class Context> class flat_traversal_of;
 
 namespace detail {
 
 	template <
-		class MetaClass, 
+		class MetaClass,
+		class Context,
 		class MetaAttributes,
-		template <class> class TraversalType
+		template <class, class> class TraversalType
 	>
 	struct traversal_utils
 	{
@@ -56,37 +57,40 @@ namespace detail {
 			template <class MetaAttribute>
 			void operator ()(MetaAttribute ma) const
 			{
-				process_single(ma, typename VisitorType::works_on_instances());
+				typename mpl::push_back<Context, MetaClass>::type c;
+				process_single(ma, c, typename VisitorType::works_on_instances());
 			}
 		private:
 			VisitorType& visitor;
 			typename MetaClass::reflected_type* ptr_to_inst;
 
 			// process single attribute WITH an instance
-			template <class MetaAttribute>
-			void process_single(MetaAttribute ma, mpl::bool_<true>) const
+			template <class MetaAttribute, class NewContext>
+			void process_single(MetaAttribute ma, NewContext ctx, mpl::bool_<true>) const
 			{
-				visitor.enter_attribute(ma);
+				visitor.enter_attribute(ma, ctx);
 				typedef typename MetaAttribute::type attrib_type;
 				assert(ptr_to_inst != 0);
 				typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
 				instance_type instance(ma.get(*ptr_to_inst));
 				TraversalType<
-					BOOST_MIRROR_REFLECT_CLASS(attrib_type)
+					BOOST_MIRROR_REFLECT_CLASS(attrib_type),
+					typename mpl::push_back<NewContext, MetaAttribute>::type
 				>::accept(visitor, &instance);
-				visitor.leave_attribute(ma);
+				visitor.leave_attribute(ma, ctx);
 			}
 
 			// process single attribute W/O an instance
-			template <class MetaAttribute>
-			void process_single(MetaAttribute ma, mpl::bool_<false>) const
+			template <class MetaAttribute, class NewContext>
+			void process_single(MetaAttribute ma, NewContext ctx, mpl::bool_<false>) const
 			{
-				visitor.enter_attribute(ma);
+				visitor.enter_attribute(ma, ctx);
 				typedef typename MetaAttribute::type attrib_type;
 				TraversalType<
-					BOOST_MIRROR_REFLECT_CLASS(attrib_type)
+					BOOST_MIRROR_REFLECT_CLASS(attrib_type),
+					typename mpl::push_back<NewContext, MetaAttribute>::type
 				>::accept(visitor, 0);
-				visitor.leave_attribute(ma);
+				visitor.leave_attribute(ma, ctx);
 			}
 		};
 	
@@ -123,12 +127,18 @@ namespace detail {
 			template <class MetaInheritance>
 			void operator ()(MetaInheritance mbc) const
 			{
-				visitor.enter_base_class(mbc);
+				typedef typename mpl::push_back<Context, MetaClass>::type 
+					NewContext;
+				NewContext ctx;
+				visitor.enter_base_class(mbc, ctx);
 				typedef MetaInheritance meta_inheritance;
 				typedef typename meta_inheritance::meta_base_class
 					meta_base_class;
-				TraversalType<meta_base_class>::accept(visitor, ptr_to_inst);
-				visitor.leave_base_class(mbc);
+				TraversalType<
+					meta_base_class,
+					typename mpl::push_back<NewContext, MetaInheritance>::type
+				>::accept(visitor, ptr_to_inst);
+				visitor.leave_base_class(mbc, ctx);
 			}
 		private:
 			VisitorType& visitor;
@@ -149,10 +159,11 @@ namespace detail {
 
 } // namespace detail
 
-template <class MetaClass>
+template <class MetaClass, class Context = mpl::vector0<> >
 class deep_traversal_of 
 : detail::traversal_utils<
-	MetaClass, 
+	MetaClass,
+	Context,
 	typename MetaClass::attributes,
 	deep_traversal_of
 >
@@ -183,10 +194,11 @@ private:
 	)
 	{
 		MetaClass mc;
+		Context ctx;
 		// enter the type
-		visitor.get().enter_type(mc);
+		visitor.get().enter_type(mc, ctx);
 		// visit the instance
-		visitor.get().visit_instance(mc, ptr_to_inst);
+		visitor.get().visit_instance(mc, ctx, ptr_to_inst);
 		// go through the base classes
 		for_each<typename MetaClass::base_classes>(
 			cref(show_bases_to(visitor, ptr_to_inst))
@@ -196,14 +208,15 @@ private:
 			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
-		visitor.get().leave_type(mc);
+		visitor.get().leave_type(mc, ctx);
 	}
 };
 
-template <class MetaClass>
+template <class MetaClass, class Context = mpl::vector0<> >
 class flat_traversal_of
 : detail::traversal_utils<
 	MetaClass, 
+	Context,
 	typename MetaClass::all_attributes,
 	flat_traversal_of
 >
@@ -233,16 +246,17 @@ private:
 	)
 	{
 		MetaClass mc;
+		Context ctx;
 		// enter the type
-		visitor.get().enter_type(mc);
+		visitor.get().enter_type(mc, ctx);
 		// visit the instance
-		visitor.get().visit_instance(mc, ptr_to_inst);
+		visitor.get().visit_instance(mc, ctx, ptr_to_inst);
 		// go through all of the class' attributes
 		for_each<typename MetaClass::all_attributes>(
 			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
-		visitor.get().leave_type(mc);
+		visitor.get().leave_type(mc, ctx);
 	}
 };
 

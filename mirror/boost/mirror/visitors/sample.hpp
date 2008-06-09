@@ -17,8 +17,7 @@
 // traits
 #include <boost/mirror/traits/reflects_virtual_inheritance.hpp>
 #include <boost/mirror/traits/reflects_global_scope.hpp>
-// the base fallback visitor implementation
-#include <boost/mirror/visitors/fallback.hpp>
+// container size
 #include <boost/mirror/algorithm/size.hpp>
 //
 //
@@ -36,8 +35,8 @@ public:
 	sample_visitor(void):indent(0){ }
 
 	// enter a class/type
-	template <class MetaClass>
-	void enter_type(MetaClass)
+	template <class MetaClass, class Context>
+	void enter_type(MetaClass, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -58,8 +57,8 @@ public:
 	}
 
 	// leave the class/type
-	template <class MetaClass>
-	void leave_type(MetaClass)
+	template <class MetaClass, class Context>
+	void leave_type(MetaClass, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -75,8 +74,8 @@ public:
 
 
 	// enter a base class
-	template <class MetaInheritance>
-	void enter_base_class(MetaInheritance)
+	template <class MetaInheritance, class Context>
+	void enter_base_class(MetaInheritance, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -92,8 +91,8 @@ public:
 	}
 
 	// leave base class
-	template <class MetaInheritance>
-	void leave_base_class(MetaInheritance)
+	template <class MetaInheritance, class Context>
+	void leave_base_class(MetaInheritance, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -137,8 +136,8 @@ public:
 		}
 	}
 
-	template <class MetaAttribute>
-	inline void enter_attribute(MetaAttribute)
+	template <class MetaAttribute, class Context>
+	inline void enter_attribute(MetaAttribute, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -153,8 +152,8 @@ public:
 			endl;
 	}
 
-	template <class MetaAttribute>
-	void leave_attribute(MetaAttribute)
+	template <class MetaAttribute, class Context>
+	void leave_attribute(MetaAttribute, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -163,10 +162,11 @@ public:
 		bcout << "</attribute>" << endl;
 	}
 
-	template <class MetaClass, typename InstanceType>
-	void visit_instance(MetaClass, InstanceType* ptr_to_inst)
+	template <class MetaClass, class Context, typename InstanceType>
+	void visit_instance(MetaClass, Context ctx, InstanceType* ptr_to_inst)
 	{
 		print_value(
+			ctx,
 			ptr_to_inst, 
 			is_fundamental<typename MetaClass::reflected_type>()
 		);
@@ -174,17 +174,19 @@ public:
 
 private:
 
-	template <typename Type>
-	void print_value(Type* ptr_to_inst, mpl::bool_<false>){ }
+	template <typename Type, class Context>
+	void print_value(Context, Type* ptr_to_inst, mpl::bool_<false>){ }
 
-	template <typename Type>
-	void print_value(Type* ptr_to_inst, mpl::bool_<true>)
+	template <typename Type, class Context>
+	void print_value(Context, Type* ptr_to_inst, mpl::bool_<true>)
 	{
 		using namespace ::std;
 		using namespace ::boost;
 		print_indentation();
 		bcout << 
-			"<value>" <<
+			"<value depth='" <<
+			mpl::size<Context>::value << 
+			"'>" <<
 			*ptr_to_inst << 
 			"</value>" << 
 			endl;
