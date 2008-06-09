@@ -10,6 +10,7 @@
 #include <boost/spatial_index/spatial_index.hpp>
 
 #include <boost/spatial_index/quadtree.hpp>
+#include <boost/spatial_index/rtree.hpp>
 
 #endif // BOOST_SPATIAL_INDEX_HPP
 
