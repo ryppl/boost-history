@@ -28,6 +28,8 @@ template&lt;MutableForwardIterator Iter, class T&gt;
   be changed to <code>ForwardIterator</code> without breaking any
   code. This makes it possible, for example, to pass a sequence of
   move-only types into <code>replace</code>.</p>
+
+  <p><code>swap_ranges</code> has the same issue.</p>
 </discussion>
 
 </issue>

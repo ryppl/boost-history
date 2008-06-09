@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="43" status="New">
+  <title>Using <code>Swappable</code> for all swapping</title>
+<section><sref ref="[algorithms]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>The current description of the algorithms uses a mix
+  of <code>SameType &amp;&amp; Swappable</code>
+  and <code>SwappableIterator</code> concept requirements to handle
+  swapping. These should all be replaced with uses of the
+  two-parameter <code>HasSwap</code> (issue <iref ref="35"/>) or the
+  current <code>Swappable</code> concept that (typically) work on the
+  reference types of iterators. As part of this,
+  the <code>SwappableIterator</code> concept should be eliminated.</p>
+</discussion>
+
+<resolution>
+  <p><code>iter_swap</code> should have a concept requirement <code>HasSwap&lt;Iter1::reference, Iter2::reference&gt;</code></p>
+
+  <p><code>reverse</code> should have a concept requirement <code>HasSwap&lt;Iter::reference&gt;</code></p>
+
+  <p><i>Note</i>: proposed resolution in progress...</p>
+</resolution>
+</issue>
