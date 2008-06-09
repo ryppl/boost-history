@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="39" status="New">
+<title>Some uses of the MutableXXXIterator concepts are unnecessary</title>
+<section><sref ref="[algorithms]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>Some algorithms that use the MutableXXXIterator concepts
+  (e.g., <code>MutableForwardIterator</code>) don't actually need the
+  Mutable variant of the concept, because they don't depend on that
+  form of assignability. Generally, these algorithms output some other
+  type, and don't move elements within the sequence. For example, this
+  is the <code>replace</code> algorithm:</p>
+
+  <pre>
+template&lt;MutableForwardIterator Iter, class T&gt; 
+  requires HasEqualTo&lt;Iter::reference, T&gt; &amp;&amp; HasCopyAssign&lt;Iter::reference, T&gt; 
+  void replace(Iter first, Iter last, 
+               const T&amp; old_value, const T&amp; new_value); 
+  </pre>
+
+  <p>The <code>MutableForwardIterator</code> concept requirement could
+  be changed to <code>ForwardIterator</code> without breaking any
+  code. This makes it possible, for example, to pass a sequence of
+  move-only types into <code>replace</code>.</p>
+</discussion>
+
+</issue>

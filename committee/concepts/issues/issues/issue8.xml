@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="8" status="New">
+<issue num="8" status="Dup">
   <title><tt>Swappable</tt> and rvalue references</title>
 <section><sref ref="[concept.copymove]"/></section>
 <submitter>LWG</submitter>
@@ -22,4 +22,7 @@
     signatures that default to the first.</p>
 </discussion>
 
+<resolution>
+  <p>Superceded by issue <iref ref="35"/>.</p>
+</resolution>
 </issue>

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="40" status="New">
+<title>HasXXX concepts should not default second parameter when there is an XXXable concept</title>
+<section><sref ref="[utility.concepts]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>In several cases, we have two-parameter <code>HasXXX</code>
+  concepts that detect the presence of a binary operator or function
+  (e.g., <code>&lt;</code>, <code>swap</code>, <code>==</code>) along
+  with a semantic version <code>XXXable</code> that is a
+  single-parameter refinement of that concept. For example, the pair
+  of concepts <code>HasEqualTo</code>
+  and <code>EqualityComparable</code>. Since we know of no cases where
+  one would need to use the <code>HasXXX</code> form of the concept
+  with only one parameter (all such cases use the <code>XXXable</code>
+  form), we should remove the default argument in
+  the <code>HasXXX</code> version to discourage its use with symmetric
+  types.</p>
+</discussion>
+
+<resolution>
+  <p>In [concept.comparison], modify paragraph 1 as follows:</p>
+
+  <pre>
+auto concept LessThanComparable&lt;typename T&gt; : HasLess&lt;T<ins>, T</ins>&gt; { 
+  bool operator&gt;(T const&amp; a, T const&amp; b) { return b &lt; a; } 
+  bool operator&lt;=(T const&amp; a, T const&amp; b) { return !(b &lt; a); } 
+  bool operator&gt;=(T const&amp; a, T const&amp; b) { return !(a &lt; b); } 
+  // ...
+}
+  </pre>
+
+  <p>In [concept.comparison], modify paragraph 2 as follows:</p>
+
+  <pre>
+auto concept EqualityComparable&lt;typename T&gt; : HasEqualTo&lt;T<ins>, T</ins>&gt; { 
+  bool operator!=(T const&amp; a, T const&amp; b) { return !(a == b); } 
+  // ...
+}
+  </pre>
+
+  <p>In [concept.copymove], modify paragraph 7 as follows:</p>
+  <pre>
+auto concept MoveAssignable&lt;typename T&gt; : HasMoveAssign&lt;T<ins>, T</ins>&gt; { } 
+  </pre>
+
+  <p>In [concept.operator], modify paragraph 8 as follows:</p>
+
+  <pre>
+auto concept HasLess&lt;typename T, typename U<del> = T</del>&gt; { 
+  bool operator&lt;(T const&amp; a, U const&amp; b); 
+} 
+  </pre>
+
+  <p>In [concept.operator], modify paragraph 9 as follows:</p>
+
+  <pre>
+auto concept HasEqualTo&lt;typename T, typename U<del> = T</del>&gt; { 
+  bool operator==(T const&amp; a, U const&amp; b); 
+} 
+  </pre>
+
+  <p>In [concept.operator], modify paragraph 22 as follows:</p>
+
+  <pre>
+auto concept HasMoveAssign&lt;typename T, typename U<del> = T</del>&gt; { 
+  typename result_type; 
+  result_type T::operator=(U&amp;&amp;); 
+} 
+  </pre>
+
+  <p>In [concept.operator], modify paragraph 23 as follows:</p>
+
+  <pre>
+auto concept HasCopyAssign&lt;typename T, typename U<del> = T</del>&gt; : HasMoveAssign&lt;T, U&gt; { 
+  result_type T::operator=(const U&amp;); 
+} 
+  </pre>
+
+  <p>Modify the synopsis in [utility.concepts] accordingly.</p>
+</resolution>
+</issue>

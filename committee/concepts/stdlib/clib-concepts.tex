@@ -561,11 +561,6 @@ unambiguously derived from \mbox{\tcode{U}}, a concept map
 \end{itemdescr}
 
 \rSec2[concept.comparison]{Comparisons}
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} describes types with an operator <.}
-\end{itemdescr}
-
 \begin{itemdecl}
 auto concept LessThanComparable<typename T> : HasLess<T> {
   bool operator>(T const& a, T const& b) { return b < a; }

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="42" status="New">
+<title><code>HasCopyAssign</code> should be named <code>HasCopyAssignment</code></title>
+<section><sref ref="[concept.operator]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>To match the naming scheme of the other operator
+  concepts, <code>HasCopyAssign</code> should be
+  named <code>HasCopyAssignment</code> and <code>HasMoveAssign</code>
+  should be named <code>HasMoveAssignment</code>.
+  </p>
+</discussion>
+</issue>

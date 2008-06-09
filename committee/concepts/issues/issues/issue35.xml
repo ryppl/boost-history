@@ -16,27 +16,47 @@
   of different types. For example, it couldn't be used for the proxy
   references coming from two different iterator types in
   the <code>swap_ranges</code> algorithm.</p>
+
 </discussion>
 
 <resolution>
+  <p>Add a new paragraph to [concept.operator] after paragraph 23:</p>
+
+  <pre>
+<ins>auto concept HasSwap&lt;typename T, typename U&gt; {</ins>
+  <ins>void swap(T, U);</ins>
+<ins>}</ins>
+  </pre>
+
+  <ol start="24">
+    <li><ins><i>Note</i>: describes types for which values of those types
+        can be swapped.</ins></li>
+  </ol>
+
   <p>Modify the definition of <code>Swappable</code> in
   [concept.copymove] as follows:</p>
 
   <pre>
-auto concept Swappable&lt;typename T<ins>, typename U = T</ins>&gt; { 
-  void swap(T&amp;<ins>&amp;</ins>, <del>T</del><ins>U</ins>&amp;<ins>&amp;</ins>); 
-} 
+auto concept Swappable&lt;typename T&gt; <ins>: HasSwap&lt;T, T&gt;</ins> { } 
   </pre>
   <ol start="11">
-    <li><i>Note</i>: describes types for which <del>two</del> values of <del>that</del><ins>those</ins> type<ins>s</ins>
+    <li><i>Note</i>: describes types for which values of that type
     can be swapped.</li>
+
+    <li><ins><i>Postconditions</i>: after executing <code>swap(s,
+        t)</code>, <code>t</code> has the value originally held
+        by <code>s</code> and <code>s</code> has the value originally
+        held by <code>t</code>.</ins></li>
   </ol>
 
   <p>The synopsis in [utility.concepts] will need to be updated
-  accordingly:</p>
+    accordingly.</p>
 
-  <pre>
-auto concept Swappable&lt;typename T<ins>, typename U = T</ins>&gt; <i>see below</i>;
-  </pre>
+  <p>Note: the proposed resolution changed at Sophia-Antipolis, to
+  create a new two-argument <code>HasSwap</code> and
+  make <code>Swappable</code> refine that concept. Also, we have
+  removed the reference from <code>swap</code>'s arguments; the
+  appropriate kind of reference will be provided by the user
+  of <code>HasSwap</code> or <code>Swappable</code>.</p>
 </resolution>
 </issue>

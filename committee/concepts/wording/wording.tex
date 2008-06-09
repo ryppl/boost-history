@@ -1926,7 +1926,7 @@ class Y {
     void h() const &; // OK 
     void h() &&; // OK, all declarations have a ref-qualifier 
     void i() &; 
-    void f() const; // ill-formed, prior declaration of i 
+    void i() const; // ill-formed, prior declaration of i 
                     @\textcolor{black}{}@// has a ref-qualifier 
 }; 
 \end{codeblock}
