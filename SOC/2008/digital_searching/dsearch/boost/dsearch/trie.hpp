@@ -54,14 +54,15 @@ class trie
 		new(node_root) node_type();
 	}
 
-	trie(const type &other)
+	trie ( const type &other )
 	{
 		copy_trie_preserve(const_cast<node_type *>(other.node_root) );
 	}
 	
-	type &operator = ( const type other )
+	type &operator = ( const type &other )
 	{
 		if(node_root==other.node_root) return *this;
+
 		clear();
 		node_allocator.destroy(node_root);
 		node_allocator.deallocate(node_root,1);
@@ -129,6 +130,22 @@ class trie
 	const_iterator lower_bound(const key_type &key) const
 	{
 		return lower_bound<const_iterator,const_cursor,const type*>(this,key);
+	}
+	
+	//not very clean but works
+	Key get_key(const const_iterator &cit) const
+	{
+		typedef typename std::vector<const_cursor>::const_iterator cur_const_iterator;
+		std::vector<typename Key_traits::element_type> e_vector;
+		Key ret_key;
+		for(cur_const_iterator it=++cit.cur_st.begin();it!=cit.cur_st.end();it++)
+			e_vector.push_back((*it).get_element());
+		return Key_traits::get_key(e_vector.begin(),e_vector.end());
+	}
+
+	Key get_key(const const_reverse_iterator &crit) const
+	{
+		return get_key(crit.get_iterator());
 	}
 
 	void erase(const key_type &key) 
@@ -303,14 +320,6 @@ class trie
 		iter.top().get_node()->erase(node_it);
 	}
 
-	void erase(iterator first, iterator second)
-	{
-		while(first!=second)
-		{
-			erase(first);
-			++first;
-		}
-	}
 
 	void swap(type &other)
 	{
@@ -338,14 +347,24 @@ class trie
 		return const_iterator(root(),true);
 	}
 
-	reverse_iterator rbegin() const
+	reverse_iterator rbegin()
 	{
 		return reverse_iterator(begin(),end(),true);
 	}
 
-	reverse_iterator rend() const
+	const_reverse_iterator rbegin() const
+	{
+		return const_reverse_iterator(begin(),end(),true);
+	}
+
+	reverse_iterator rend()
 	{
 		return reverse_iterator(begin(),end(),false);
+	}
+
+	const_reverse_iterator rend() const
+	{
+		return const_reverse_iterator(begin(),end(),false);
 	}
 
 	cursor root()
@@ -418,7 +437,7 @@ class trie
 		return false;
 	}
 
-	void copy_trie_preserve(node_type*other_root)
+	inline void copy_trie_preserve(node_type*other_root)
 	{
 		node_type *prev,*temp_node;
 		typedef typename node_type::iterator node_iterator;
@@ -462,7 +481,7 @@ class trie
 	}
 
 	template<class It_type,class Cur_type,class Trie_ptr>
-	static It_type find(Trie_ptr this_ptr,const key_type &key) 
+	static inline It_type find(Trie_ptr this_ptr,const key_type &key) 
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 				end_it=Key_traits::end(key);
@@ -488,7 +507,7 @@ class trie
 
 
 	template<class It_type,class Cur_type,class Trie_ptr>
-	static It_type upper_bound(Trie_ptr this_ptr,const key_type &key)
+	static inline It_type upper_bound(Trie_ptr this_ptr,const key_type &key)
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 					end_it=Key_traits::end(key);
@@ -539,7 +558,7 @@ class trie
 	}
 
 	template<class It_type,class Cur_type,class Trie_ptr>
-	static It_type lower_bound(Trie_ptr this_ptr,const key_type &key)
+	static inline It_type lower_bound(Trie_ptr this_ptr,const key_type &key)
 	{
 
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
@@ -601,7 +620,7 @@ class trie
 	}
 
 	template<class Iter_type,class Cur_type,class Trie_t>
-	static std::pair<Iter_type,Iter_type> prefix_range(Trie_t this_ptr,const key_type &key)
+	static inline std::pair<Iter_type,Iter_type> prefix_range(Trie_t this_ptr,const key_type &key)
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 				end_it=Key_traits::end(key);
