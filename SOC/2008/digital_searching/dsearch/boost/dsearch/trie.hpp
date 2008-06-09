@@ -56,7 +56,6 @@ class trie
 
 	trie(const type &other)
 	{
-		//std::cout<<"in copy constructor"<<std::endl;
 		copy_trie_preserve(const_cast<node_type *>(other.node_root) );
 	}
 	
@@ -80,11 +79,13 @@ class trie
 		this->operator[](v.first)=v.second;
 	}
 
-	//TODO: O(sizeof(intput))?
 	std::size_t size() const
 	{
-		assert(false);
-		return 0;
+		int num=0;
+		const_iterator it;
+		const_iterator end_it=this->end();
+		for(it=this->begin();it!=end_it;it++,num++);
+		return num;
 	}
 
 	std::size_t max_size()
