@@ -12,6 +12,35 @@ using namespace boost::minimal_test;
 using namespace boost::dsearch;
 using std::make_pair;
 
+template<class T>
+void print_trie(T tr)
+{
+	std::cout<<"\n\n\nusing forward iterator:"<<std::endl;
+	std::cout<<"\n\n\nforward:"<<std::endl;
+	for(typename T::iterator it=tr.begin();it!=tr.end();it++)
+		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
+
+	std::cout<<"\n\n\nreverse:"<<std::endl;
+	for(typename T::iterator it=--tr.end();;it--)
+	{
+		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
+		if(tr.begin()==it) break;
+	}
+
+	std::cout<<"\n\n\nusing reverse iterator:"<<std::endl;
+	std::cout<<"\n\n\nreverse:"<<std::endl;
+	for(typename T::reverse_iterator it=tr.rbegin();it!=tr.rend();it++)
+		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
+	
+	
+	std::cout<<"\n\n\nforward:"<<std::endl;
+	for(typename T::reverse_iterator it=--tr.rend();;it--)
+	{
+		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
+		if(tr.rbegin()==it) break;
+	}
+}
+
 //testing insert function
 template<class T>
 T test_insert()
@@ -174,9 +203,13 @@ void test_iteration(T tr)
 
 //	std::cout<<"test_iteration:"<<*(tr.find(""))<<std::endl;
 	BOOST_CHECK(it==tr.find(""));
+	*it=10;
+	BOOST_CHECK(tr[""]==10);
 	it++;
 
 	BOOST_CHECK(it==tr.find("hel"));
+	*it=9;
+	BOOST_CHECK(tr["hel"]==9);
 	it++;
 
 	BOOST_CHECK(it==tr.find("hellish"));
@@ -294,13 +327,13 @@ void test_erase_range(T tr)
 //	"" 3<"hel" 4<"hellish" 7<"hello" 1<"wor" 5<"world" 2<"worry" 6
 //	tr.erase(tr.begin(),tr.end());	
 	it=tr.begin();
-	std::cout<<"grrr..."<<*it<<std::endl;
+//	std::cout<<"grrr..."<<*it<<std::endl;
 	++it;
-	std::cout<<"grrrr..."<<*it<<std::endl;
+//	std::cout<<"grrrr..."<<*it<<std::endl;
 	++it;
-	std::cout<<"grrr..."<<*it<<std::endl;
+//	std::cout<<"grrr..."<<*it<<std::endl;
 	++it;
-	std::cout<<"grrr..."<<*it<<std::endl;
+//	std::cout<<"grrr..."<<*it<<std::endl;
 
 	tr.erase(tr.begin(),it);
 	//BOOST_CHECK( tr.empty() );
@@ -337,6 +370,24 @@ void test_insert_simple()
 	BOOST_REQUIRE(*tr.find("hello")==10);
 }
 
+template<class T>
+void test_reverse_iterator(T tr)
+{
+	typename T::iterator fit;
+	typename T::reverse_iterator rit=tr.rbegin();
+	for(fit=tr.begin(),rit=--tr.rend();fit!=tr.end();++fit,--rit)
+	{
+		BOOST_CHECK(*fit==*rit);
+		BOOST_CHECK(tr.get_key(fit)==tr.get_key(rit));
+	}
+
+	for(rit=tr.rbegin(),fit=--tr.end();rit!=tr.rend();--fit,++rit)
+	{
+		BOOST_CHECK(*fit==*rit);
+		BOOST_CHECK(tr.get_key(fit)==tr.get_key(rit));
+	}
+}
+
 int test_main(int,char **)
 {
 	typedef trie<std::string,int,trie_array_node,string_traits> trie_type;
@@ -355,6 +406,9 @@ int test_main(int,char **)
 	test_erase(tr);
 	test_iteration(tr);
 	test_prefix_range(test_insert<trie_type>());
+	test_reverse_iterator(tr);
+	//print_trie(tr);
+
 
 	return 0;
 }
