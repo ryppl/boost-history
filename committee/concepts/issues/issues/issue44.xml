@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="44" status="New">
+  <title><code>unique_copy</code> requirements don't account for move semantics</title>
+<section><sref ref="[alg.unique]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>The <code>unique_copy</code> algorithm uses
+    iterator <code>value_type</code>s in a few places that preclude
+    the use of move iterators.</p>
+</discussion>
+
+<resolution>
+  <p><i>Note</i>: Howard Hinnant to provide improved requirements.</p>
+</resolution>
+</issue>

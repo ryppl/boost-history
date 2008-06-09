@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="45" status="New">
+  <title><code>move</code> and <code>move_backward</code> rely too heavily on the iterator's <code>value_type</code></title>
+<section><sref ref="[alg.move]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>The <code>move</code> and <code>move_backward</code> algorithms
+  use the iterator's <code>value_type</code> rather
+  than <code>reference</code> type in several places, which may cause
+  problems for certain iterators (e.g., proxy iterators).</p>
+</discussion>
+
+<resolution>
+  <p><i>Note</i>: Howard Hinnant will provide improved concept requirements.</p>
+</resolution>
+</issue>
