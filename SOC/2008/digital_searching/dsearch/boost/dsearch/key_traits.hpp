@@ -61,7 +61,8 @@ class string_traits: public default_iterator_traits<std::string>{
 	{
 		return (char)t;
 	}
-
+	
+	//returns a string of element_type
 	template<typename value_it>
 	static key_type get_key(const value_it &beg,const value_it &end)
 	{
