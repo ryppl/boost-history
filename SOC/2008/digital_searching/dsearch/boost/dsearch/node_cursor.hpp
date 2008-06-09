@@ -53,12 +53,12 @@ namespace dsearch {
 		this->cur=other.cur;
 	}
 
-	trie_cursor(Node * const n_ptr): only_root(1) , top(false)
+	trie_cursor(Node * const &n_ptr): only_root(1) , top(false)
 	{
 		cur=n_ptr;
 	}
 
-	trie_cursor(Node *n_ptr,const node_iterator &it): only_root(0), top(false)
+	trie_cursor(Node* const &n_ptr,const node_iterator &it): only_root(0), top(false)
 	{
 		cur=const_cast<Node *>(n_ptr);
 		pos=it;
@@ -158,6 +158,12 @@ namespace dsearch {
 	Mapped &get_value() const
 	{
 		return 	get_node()->get_value_ref();
+	}
+	
+	element_type get_element() const
+	{
+		assert(!only_root && !top);
+		return cur->get_element(pos);
 	}
 
 	cursor find(const element_type &e) const
