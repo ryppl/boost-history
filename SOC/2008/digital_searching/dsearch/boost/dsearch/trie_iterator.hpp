@@ -197,10 +197,12 @@ class trie_iterator
 
 		if( cursor_root.empty() && !cursor_root.has_value() ) //special case of only empty root
 		{
-			end_flag=true;
+//			std::cout<<"IN"<<std::endl;
+			this->end_flag=true;
 			this->push(cursor_root);
 			return;
 		}
+//		std::cout<<"OUT"<<std::endl
 		this->push(cursor_root);
 		to_left_most();
 	}
