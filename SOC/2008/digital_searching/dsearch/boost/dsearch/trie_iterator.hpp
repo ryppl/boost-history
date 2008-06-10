@@ -27,31 +27,36 @@ class trie_iterator
 	typedef trie_iterator<Key,Mapped,Cursor> self;
 
 	std::vector<Cursor> cur_st;
-	int size;
+	int cur_size;
 	bool end_flag;
 
 	void push ( const Cursor &c )
 	{
-		++size;
+		++cur_size;
 		cur_st.push_back(c);
 	}
 	
 	void pop()
 	{
-		--size;
+		--cur_size;
 		cur_st.pop_back();
 	}
 
 	Cursor &top() 
 	{
 		assert(!(this->empty()));
-		return cur_st[size-1];
+		return cur_st[cur_size-1];
+	}
+	
+	std::size_t size()
+	{
+		return cur_size;
 	}
 
 	Cursor get_top() const
 	{
 		assert(!(this->empty()));
-		return cur_st[size-1];
+		return cur_st[cur_size-1];
 	}
 
 	bool empty() const
@@ -166,15 +171,15 @@ class trie_iterator
 
 	Mapped &dereference() const
 	{
-		assert ( (cur_st[size-1]).has_value() );
-		return ( (cur_st[size-1]).get_value() );
+		assert ( (cur_st[cur_size-1]).has_value() );
+		return ( (cur_st[cur_size-1]).get_value() );
 	}
 	
 	bool equal( const self &other ) const
 	{
 		assert(!this->empty());
 		if(end_flag!=other.end_flag) return false;
-		if(other.cur_st[other.size-1]==cur_st[size-1])
+		if(other.cur_st[other.cur_size-1]==cur_st[cur_size-1])
 			return true;
 		return false;
 	}
@@ -182,12 +187,12 @@ class trie_iterator
 	public:
 	trie_iterator():end_flag(false) //to be pushed later.. thats why
 	{
-		size=0;
+		cur_size=0;
 	}
 
 	trie_iterator( Cursor const &cursor_root,bool end_flag=false ) //returns begin cursor
 	{
-		size=0;
+		cur_size=0;
 		this->end_flag=end_flag;
 		if(this->end_flag)
 		{
@@ -215,7 +220,7 @@ class trie_iterator
 		     )
 	{
 		end_flag=other.end_flag;
-		size=0;
+		cur_size=0;
 
 		typename std::vector<C>::const_iterator it=other.cur_st.begin();
 		while ( it!=other.cur_st.end() )
