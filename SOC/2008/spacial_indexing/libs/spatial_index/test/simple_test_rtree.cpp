@@ -34,9 +34,9 @@ int test_main(int, char* [])
 	points.push_back(geometry::point_xy<double>(9.0,8.0));
 
 	geometry::box<geometry::point_xy<double> > b(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(20.0, 20.0));
-
+ 
 	boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , std::vector<std::string>::iterator > > 
-	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , std::vector<std::string>::iterator >(4, 8));
+	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , std::vector<std::string>::iterator >(b, 8, 4, 8));
 
 // 	std::cerr << " --> bulk insert" << std::endl;
 // 	std::vector<std::string>::iterator b, e;
@@ -46,18 +46,23 @@ int test_main(int, char* [])
 
  	std::vector<std::string>::iterator it = data.begin();
 
- 	std::cerr << " --> insert" << std::endl;
- 	q->insert(geometry::point_xy<double>(1.0,1.0), it++);
- 	std::cerr << " --> insert" << std::endl;
- 	q->insert(geometry::point_xy<double>(2.0,1.0), it++);
- 	std::cerr << " --> insert" << std::endl;
- 	q->insert(geometry::point_xy<double>(5.0,5.0), it++);
- 	std::cerr << " --> insert" << std::endl;
- 	q->insert(geometry::point_xy<double>(1.0,6.0), it++);
- 	std::cerr << " --> insert" << std::endl;
- 	q->insert(geometry::point_xy<double>(9.0,9.0), it++);
- 	std::cerr << " --> insert" << std::endl;
- 	q->insert(geometry::point_xy<double>(9.0,8.0), it++);
+
+	geometry::box<geometry::point_xy<double> > e(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));
+ 	std::cerr << " --> insert env" << std::endl;
+ 	q->insert(e, it++);
+
+//  	std::cerr << " --> insert" << std::endl;
+//  	q->insert(geometry::point_xy<double>(1.0,1.0), it++);
+//  	std::cerr << " --> insert" << std::endl;
+//  	q->insert(geometry::point_xy<double>(2.0,1.0), it++);
+//  	std::cerr << " --> insert" << std::endl;
+//  	q->insert(geometry::point_xy<double>(5.0,5.0), it++);
+//  	std::cerr << " --> insert" << std::endl;
+//  	q->insert(geometry::point_xy<double>(1.0,6.0), it++);
+//  	std::cerr << " --> insert" << std::endl;
+//  	q->insert(geometry::point_xy<double>(9.0,9.0), it++);
+//  	std::cerr << " --> insert" << std::endl;
+//  	q->insert(geometry::point_xy<double>(9.0,8.0), it++);
 
 
 // 	std::vector<std::string>::iterator it1;

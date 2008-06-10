@@ -76,6 +76,11 @@ namespace geometry
 			inline P& min() { return m_min; }
 			inline P& max() { return m_max; }
 
+	  bool operator<(const box<P> &p) const {
+	    return get<0>(min()) < get<0>(p.min());
+	  }
+
+
 		private :
 			P m_min, m_max;
 			typedef typename point_traits<P>::coordinate_type T;
