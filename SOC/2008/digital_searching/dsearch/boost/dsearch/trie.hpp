@@ -82,12 +82,17 @@ class trie
 
 	std::size_t size() const
 	{
+		return const_cast<type *>(this)->size_();
+	}
+	private:
+	std::size_t size_()
+	{
 		int num=0;
-		const_iterator it;
-		const_iterator end_it=this->end();
+		iterator it,end_it=this->end();
 		for(it=this->begin();it!=end_it;it++,num++);
 		return num;
 	}
+	public:
 
 	std::size_t max_size()
 	{
@@ -107,13 +112,15 @@ class trie
 
 	const_iterator find(const key_type &key) const
 	{
-		return find< const_iterator, const_cursor, const type* > (this,key);
+		return const_cast<type *>(this)->find(key);
+		//return find< const_iterator, const_cursor, const type* > (this,key);
 	}
 
 
 	const_iterator upper_bound(const key_type &key) const
 	{
-		return upper_bound<const_iterator,const_cursor,const type*>(this,key);
+		return const_cast<type *>(this)->upper_bound(key);
+		//return upper_bound<const_iterator,const_cursor,const type*>(this,key);
 	}
 
 
@@ -129,7 +136,8 @@ class trie
 
 	const_iterator lower_bound(const key_type &key) const
 	{
-		return lower_bound<const_iterator,const_cursor,const type*>(this,key);
+		//return lower_bound<const_iterator,const_cursor,const type*>(this,key);
+		return const_cast<type *>(this)->lower_bound(key);
 	}
 	
 	//not very clean but works
@@ -150,9 +158,16 @@ class trie
 
 	void erase(const key_type &key) 
 	{
-		typename Key_traits::const_iterator it=Key_traits::begin(key),
+		iterator it;
+		it=find(key);
+		if(it!=end())
+			erase(it);
+		
+/*		typename Key_traits::const_iterator it=Key_traits::begin(key),
 			end_it=Key_traits::end(key),temp_it=it;
 		typename node_type::iterator fit;
+
+
 
 		node_type* cur=node_root,*par=node_root,*temp_cur=node_root;
 
@@ -177,6 +192,7 @@ class trie
 			{
 				return;
 			}
+
 			if(cur->size()!=1 || cur->has_value()) //should we delete things backwards?
 			{
 				temp_cur=cur;
@@ -205,12 +221,13 @@ class trie
 			node_allocator.deallocate(par,1);
 			it++;
 		}
-		node_allocator.deallocate(cur,1);		
+		node_allocator.deallocate(cur,1);*/	
 	}
 
 	std::pair<const_iterator,const_iterator> prefix_range(const key_type &key) const
 	{
-		return prefix_range<const_iterator,const_cursor,const type*>(this,key);
+		return const_cast<type *>(this)->prefix_range(key); 
+		//return prefix_range<const_iterator,const_cursor,const type*>(this,key);
 	}
 	std::pair<iterator,iterator> prefix_range(const key_type &key)
 	{
@@ -276,6 +293,8 @@ class trie
 		typename node_type::iterator node_it;
 		if ( iter.top().begin()==iter.top().end() )
 		{
+			if(iter.size()!=1)
+				node_it=iter.top().get_iterator();
 			node_allocator.destroy( n_t = iter.top().get_node() );
 			node_allocator.deallocate( iter.top().get_node() , 1 );
 			iter.pop();
@@ -285,6 +304,7 @@ class trie
 			iter.top().get_node()->erase_value();
 			return;
 		}
+
 		if ( iter.empty() )
 		if( iter.empty() ) //deallocated the root node so reallocate it.
 		{
@@ -294,29 +314,35 @@ class trie
 		}
 			
 		cur_it=iter.top().begin();
-		while((++cur_it)==iter.top().end())
+		while( (++cur_it)==iter.top().end() )
 		{
+			if(iter.size()!=1)
+				node_it=iter.top().get_iterator();
 			node_allocator.destroy ( n_t = iter.top().get_node() );
 			node_allocator.deallocate ( iter.top().get_node() , 1 );
 			iter.pop();
+			
 			if( iter.empty() ) //deallocated the root node so reallocate it.
 			{
 				node_root=node_allocator.allocate(1);
 				new(node_root) node_type();
 				return;
 			}
+
+
 			if(iter.top().has_value())
 				break;
 			cur_it=iter.top().begin();
 		}
-		node_it=iter.top().get_node()->begin();
+		/*node_it=iter.top().get_node()->begin();
 
 		//here is the linear iteration
 		while( (*node_it)!=n_t )
 		{
 			++node_it;
 			assert(iter.top().get_node()->end()!=node_it);
-		}
+		}*/
+		//assert( (*node_it) == n_t );
 		iter.top().get_node()->erase(node_it);
 	}
 
@@ -333,7 +359,8 @@ class trie
 	
 	const_iterator begin() const
 	{
-		return const_iterator(root(),false);
+		return const_cast<type *>(this)->begin();
+		//return const_iterator(root(),false);
 	}
 
 
@@ -344,7 +371,8 @@ class trie
 
 	const_iterator end() const 
 	{
-		return const_iterator(root(),true);
+		return const_cast<type *>(this)->end();
+		//return const_iterator(root(),true);
 	}
 
 	reverse_iterator rbegin()
@@ -354,7 +382,8 @@ class trie
 
 	const_reverse_iterator rbegin() const
 	{
-		return const_reverse_iterator(begin(),end(),true);
+		return const_cast<type *>(this)->end();
+		//return const_reverse_iterator(begin(),end(),true);
 	}
 
 	reverse_iterator rend()
@@ -379,12 +408,12 @@ class trie
 
 	~trie()
 	{
-//		std::cout<<"trie class destructor"<<std::endl;
+		//std::cout<<"trie class destructor"<<std::endl;
 		this->clear();
 		node_allocator.deallocate(node_root,1);
 	}
-	private:
-	
+
+	private:	
 	//get reference to the leaf node of the key
 	node_type *insert_(const key_type &key)
 	{
@@ -407,7 +436,7 @@ class trie
 		{
 			i++;
 			next=node_allocator.allocate(1);
-//			std::cout<<"Allocating:"<<*it<<std::endl;
+			//std::cout<<"Allocating:"<<*it<<std::endl;
 			new(next) node_type();
 			cur->insert(*it,next);
 			cur=next;
@@ -506,6 +535,20 @@ class trie
 	}
 
 
+	static inline typename node_type::iterator lower_bound(node_type *const &node,const typename Key_traits::element_type & ele)
+	{
+		typename node_type::iterator it=node->begin(),eit=node->end();
+		typename node_type::iterator ret_it=eit;
+		while(it!=eit)
+		{
+			if( node->get_element(it) > ele)
+				return ret_it;
+			ret_it=it;
+			it++;
+		}
+		return ret_it;
+	}
+
 	template<class It_type,class Cur_type,class Trie_ptr>
 	static inline It_type upper_bound(Trie_ptr this_ptr,const key_type &key)
 	{
@@ -537,7 +580,9 @@ class trie
 		}
 		if( not_found )
 		{
-			next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
+			next=Cur_type(cur.get_node(),lower_bound(cur.get_node(),*it));
+			//next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
+			
 			if(next==ret_it.top().end())
 				next=Cur_type ( cur.get_node(), cur.get_node()->begin());
 			else
@@ -588,7 +633,8 @@ class trie
 
 		if(not_found)
 		{
-			next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
+			next=Cur_type(cur.get_node(),lower_bound(cur.get_node(),*it));
+			//next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
 			if(next!=cur.end()) 
 			{
 				ret_it.push(next);
