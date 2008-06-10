@@ -180,6 +180,14 @@
 
 
 /********************************************/
+/* eigenproblems for Hessenberg matrices */ 
+
+#define LAPACK_SHSEQR FORTRAN_ID( shseqr )
+#define LAPACK_DHSEQR FORTRAN_ID( dhseqr )
+#define LAPACK_CHSEQR FORTRAN_ID( chseqr )
+#define LAPACK_ZHSEQR FORTRAN_ID( zhseqr )
+
+/********************************************/
 /* eigenproblems for banded matrices */ 
 
 #define LAPACK_SSBEV FORTRAN_ID( ssbev )

@@ -417,7 +417,7 @@ namespace boost { namespace numeric { namespace bindings {
               || (jobu == 'O' && traits::leading_dimension (u) >= 1)
               || (jobu == 'A' && traits::leading_dimension (u) >= m)
               || (jobu == 'S' && traits::leading_dimension (u) >= m));
-      assert (n == traits::matrix_size2 (vt)); 
+      assert ((jobvt == 'N' || traits::matrix_size2(vt) == n)) ;
       assert ((jobvt == 'N' && traits::leading_dimension (vt) >= 1)
               || (jobvt == 'O' && traits::leading_dimension (vt) >= 1)
               || (jobvt == 'A' && traits::leading_dimension (vt) >= n)

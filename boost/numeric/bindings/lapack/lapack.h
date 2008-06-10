@@ -407,6 +407,23 @@ extern "C" {
                      dcomplex_t* t, const int * ldt, dcomplex_t* q, const int* ldq,
 		     int* ifst, const int * ilst, int* info );
 
+  /* Hessenberg matrices */
+
+  void LAPACK_SHSEQR( const char* JOB, const char* COMPZ, const int* N, const int* ILO, const int* IHI, float* H, 
+                      const int* LDH, float* WR, float* WI, float* Z, int const* LDZ,
+                      float* WORK, const int* LWORK, int* INFO ) ;
+
+  void LAPACK_CHSEQR( const char* JOB, const char* COMPZ, const int* N, const int* ILO, const int* IHI, fcomplex_t* H, 
+                      const int* LDH, fcomplex_t* W, fcomplex_t* Z, int const* LDZ,
+                      fcomplex_t* WORK, const int* LWORK, int* INFO ) ;
+
+  void LAPACK_DHSEQR( const char* JOB, const char* COMPZ, const int* N, const int* ILO, const int* IHI, double* H, 
+                      const int* LDH, double* WR, double* WI, double* Z, int const* LDZ,
+                      double* WORK, const int* LWORK, int* INFO ) ;
+
+  void LAPACK_ZHSEQR( const char* JOB, const char* COMPZ, const int* N, const int* ILO, const int* IHI, dcomplex_t* H, 
+                      const int* LDH, dcomplex_t* W, dcomplex_t* Z, int const* LDZ,
+                      dcomplex_t* WORK, const int* LWORK, int* INFO ) ;
 
   /* Hermitian tridiagonal matrices */
   
