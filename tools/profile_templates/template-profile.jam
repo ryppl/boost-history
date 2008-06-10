@@ -27,9 +27,10 @@ type.register TEMPLATE_PROFILE : template-profile ;
 generators.register-standard template-profile.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP ;
 
 feature.feature <template-profile-toolset> : msvc gcc : free ;
+feature.feature <template-profile-filter> : : path incidental ;
 
 toolset.flags template-profile.preprocess PREPROCESS-ACTION <template-profile-toolset>msvc : cl /E ;
-toolset.flags template-profile.preprocess PREPROCESS-ACTION <template-profile-toolset>gcc : g++ -E ;
+toolset.flags template-profile.preprocess PREPROCESS-ACTION <template-profile-toolset>gcc : g++-4.3.0 -E ;
 toolset.flags template-profile.preprocess INCLUDE-COMMAND <template-profile-toolset>msvc : /I ;
 toolset.flags template-profile.preprocess INCLUDE-COMMAND <template-profile-toolset>gcc : -I ;
 toolset.flags template-profile.preprocess INCLUDES <include> ;
@@ -41,6 +42,9 @@ actions preprocess {
 class warn-generator : generator {
 
     import template-profile ;
+    import targets ;
+    import path ;
+    import modules ;
 
     rule __init__ ( ) {
         generator.__init__ template-profile.build-generic : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : RAW_TEMPLATE_PROFILE ;
@@ -59,7 +63,32 @@ class warn-generator : generator {
                 errors.error unrecognized toolset $(toolset) ;
         }
         local self-dir = [ modules.peek template-profile : module-location ] ;
-        local new-properties = [ $(properties).add-raw <template-profile-toolset>$(toolset) <include>$(self-dir) ] ;
+
+        current_path = [ modules.peek template-profile : module-location ] ;
+        local filter-main-target = [ targets.resolve-reference [ path.join $(current_path) src ] : $(project) ] ;
+        filter-main-target = [ $(filter-main-target[1]).main-target filter ] ;
+        local filter-binary-dependencies = [ $(filter-main-target).generate [ $(properties).propagated ] ] ;
+        filter-binary-dependencies = $(filter-binary-dependencies[2-]) ;
+        local filter-binary = ;
+
+        for local target in $(filter-binary-dependencies) {
+            if [ $(target).type ] = EXE {
+                filter-binary = 
+                    [ path.native 
+                        [ path.join
+                            [ $(target).path ]
+                            [ $(target).name ]
+                        ]
+                    ] ;
+            }
+        }
+
+        if ! $(filter-binary) {
+            errors.error Could not find filter binary ;
+        }
+
+        local new-properties = [ $(properties).add-raw <template-profile-toolset>$(toolset) <dependency>$(filter-binary-dependencies) <template-profile-filter>$(filter-binary) <include>$(self-dir) ] ;
+
         return [ generator.run $(project) $(name) : $(new-properties)  : $(sources) : $(multiple) ] ;
     }
 }
@@ -73,9 +102,10 @@ toolset.flags template-profile.build-generic INVOCATION-COMMAND <template-profil
 toolset.flags template-profile.build-generic INCLUDE-COMMAND <template-profile-toolset>gcc : -I ;
 
 toolset.flags template-profile.build-generic INCLUDES <include> ;
+toolset.flags template-profile.build-generic FILTER <template-profile-filter> ;
 
 actions build-generic {
-    $(INVOCATION-COMMAND) "$(INCLUDE-COMMAND)$(INCLUDES)" "$(>)" >"$(<)" 2>&1
+    $(INVOCATION-COMMAND) "$(INCLUDE-COMMAND)$(INCLUDES)" "$(>)" 2>&1 | "$(FILTER)" >"$(<)"
 }
 
 class final-profile-generator : generator {

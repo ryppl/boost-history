@@ -2,4 +2,5 @@
 
 int main() {
     X<int> x;
+    X<char> x;
 }

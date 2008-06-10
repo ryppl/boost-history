@@ -10,4 +10,5 @@
 project src : :
     requirements <include>$(BOOST_ROOT) <link>static ;
 
-exe postprocess : postprocess.cpp $(BOOST_ROOT)/libs/regex/build//boost_regex ;
+exe postprocess : postprocess.cpp $(BOOST_ROOT)/libs/regex/build//boost_regex : <variant>release ;
+exe filter : filter.cpp $(BOOST_ROOT)/libs/regex/build//boost_regex : <variant>release ;
