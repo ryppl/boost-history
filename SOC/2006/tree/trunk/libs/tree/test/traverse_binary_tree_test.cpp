@@ -42,10 +42,31 @@ using namespace boost::tree;
 
 #undef ORDER
 
-void comparisons(binary_tree<int> const& test_tree) {
-	test::preorder::compare_cursor_to_iterator_traversal(test_tree);
-	test::inorder::compare_cursor_to_iterator_traversal(test_tree);	
-	test::postorder::compare_cursor_to_iterator_traversal(test_tree);
+template <class Cursor, class Op>
+void underefed_for_each_recursive(Cursor s, Op& f)
+{
+	f(s);
+	if (!s.empty())
+		underefed_for_each_recursive(s.begin(), f);
+	if (!(++s).empty())
+		underefed_for_each_recursive(s.begin(), f);
+}
+
+template <class Cursor, class Op>
+Op underefed_for_each(Cursor s, Op f)
+{
+	f(s);
+	if (!s.empty())
+		underefed_for_each_recursive(s.begin(), f);
+	if (!(++s).empty())
+		underefed_for_each_recursive(s.begin(), f);
+	return f;
+}
+
+void comparisons(binary_tree<int>::const_cursor c) {
+	test::preorder::compare_cursor_to_iterator_traversal(c);
+	test::inorder::compare_cursor_to_iterator_traversal(c);	
+	test::postorder::compare_cursor_to_iterator_traversal(c);
 	return;
 }
 
@@ -59,37 +80,40 @@ void compare_cursor_to_iterator_traversal() {
 	binary_tree<int> test_tree2;
 
 	binary_tree<int>::cursor c = test_tree2.insert(test_tree2.root(), 8);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	c = test_tree2.insert(c, 3);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	test_tree2.insert(c, 1);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 	
 	c = test_tree2.insert(++c, 6);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	test_tree2.insert(c, 4);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 	
 	test_tree2.insert(++c, 7);	
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	c = test_tree2.insert(test_tree2.root().end(), 10);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	c = test_tree2.insert(test_tree2.root().end().end(), 14);	
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	c = test_tree2.insert(c, 13);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	c = test_tree2.insert(c, 11);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
 
 	c = test_tree2.insert(++c, 12);
-	comparisons(test_tree2);
+	comparisons(test_tree2.root());
+	//underefed_for_each(test_tree2.root().begin(), comparisons);
+	
+	//comparisons(test_tree2.root().begin());
 }
 
 int test_main(int, char* [])

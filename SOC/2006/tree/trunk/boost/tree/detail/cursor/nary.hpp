@@ -12,14 +12,15 @@
 #ifndef BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 #define BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 
+
+#include <boost/tree/cursor_helpers.hpp>
+#include <boost/tree/detail/node/nary.hpp>
+
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_pointer.hpp>
-
-#include <boost/tree/cursor_helpers.hpp>
-
 
 namespace boost {
 namespace tree {
@@ -97,6 +98,28 @@ class nary_tree_cursor
  	base_pointer m_node;
  	size_type m_pos;
 
+	class root_tracker { 
+	 public:
+		root_tracker() : depth(0) {}
+		root_tracker& operator++()
+		{
+			++depth;
+			return *this;
+		}
+		
+		root_tracker& operator--()
+		{
+			--depth;
+			return *this;
+		}
+		
+		bool is_root(cursor)
+		{
+			return !depth;
+		} 
+	 private:
+		int depth;
+	};
  private: 
 
  	friend class iterator_core_access;

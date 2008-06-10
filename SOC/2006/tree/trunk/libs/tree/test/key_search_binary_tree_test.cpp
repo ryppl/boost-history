@@ -48,10 +48,6 @@ void test_key_search_binary_tree()
 //	
 //	cur = cur.parent(); //header-cursor(,1) (root)
 //	BOOST_CHECK(!cur.parity());
-//	
-//	cur = cur.parent(); //header-parent, should be: ,1: shoot!
-//	BOOST_CHECK(cur.parity());
-//
 //	BOOST_CHECK(searcher_t::iterator(cur) == my_tree.end());	
 	BOOST_CHECK(*c1 = 8);
 

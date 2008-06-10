@@ -14,7 +14,6 @@
 #define BOOST_TREE_NARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-//#include <boost/tree/iterator.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
@@ -27,7 +26,6 @@ namespace boost {
 namespace tree {
 
 using detail::node;
-//using detail::const_nary_tree_cursor;
 using detail::nary_tree_cursor;
 
 /** 
@@ -149,35 +147,6 @@ class nary_tree {
 	const_cursor croot() const
 	{
 		return const_cursor(&m_header, 0);
-	}
-	
-	/**
-	 * Returns a read/write ("mutable") cursor to the %nary_tree's shoot, i.e.
-	 * one position past the last (inorder) value.
-	 */ 	
-	cursor shoot()
-	{
-		return cursor(static_cast<node_base_pointer>(m_header.m_parent), 
-					  m_header.m_parent == &m_header ? 0 : 1);
-	}
-	
-	/**
-	 * Returns a read-only const_cursor to the %nary_tree's shoot, i.e. one
-	 * position past the last (inorder) value.
-	 */ 	
-	const_cursor shoot() const
-	{
-		return cshoot;
-	}
-	
-	/**
-	 * Returns a read-only const_cursor to the %nary_tree's shoot, i.e. one
-	 * position past the last (inorder) value.
-	 */ 	
-	const_cursor cshoot() const
-	{
-		return const_cursor(static_cast<node_base_pointer>(m_header.m_parent), 
-							m_header.m_parent == &m_header ? 0 : 1);
 	}
 	
 	/**

@@ -4,17 +4,19 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/tree/forest.hpp>
+#include <boost/tree/forest_tree.hpp>
 
 #include <boost/test/minimal.hpp>
 
+#include "test_tree_traversal_data.hpp"
+
 //TODO: Make this a test suite.
 
-void test_forest()
+void test_forest_tree()
 {
 	using namespace boost::tree;
 	
-	typedef forest<int> tree_type;
+	typedef forest_tree<int> tree_type;
 	tree_type mytree;
 	
 	tree_type::cursor c = mytree.root();
@@ -64,6 +66,16 @@ void test_forest()
 //	BOOST_CHECK(*cur == 4);
 	
 	//BOOST_CHECK(*++c == 5);
+	
+	tree_type forest;
+	//create_test_data_tree(forest);
+	c = forest.insert(forest.root(), 8);
+	BOOST_CHECK(c == forest.root().begin());
+	BOOST_CHECK(*c == 8);
+	c = forest.insert(c, 3);
+	BOOST_CHECK(*c == 3);
+	BOOST_CHECK(*++c == 8);
+//	BOOST_CHECK(*forest.root().begin().begin() == 3);
 
 }
 
@@ -71,6 +83,6 @@ void test_forest()
 
 int test_main(int, char* [])
 {
-	test_forest();
+	test_forest_tree();
 	return 0;
 }

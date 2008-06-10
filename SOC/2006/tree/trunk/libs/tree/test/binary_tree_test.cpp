@@ -82,8 +82,8 @@ void create_binary_tree(Tree& mytree)
 template <class Tree>
 void inorder_erase_test_data_tree(Tree& mytree)
 {
-	typename Tree::cursor c = mytree.shoot();
-	--c;
+	typename Tree::cursor c = mytree.root();
+	inorder::back(c);
 	BOOST_CHECK(*c == 14);
 	
 	c = c.parent().parent();
@@ -178,8 +178,8 @@ int test_main(int, char* [])
 	validate_test_data_tree(tree3);
 	c = tree3.inorder_first();
 	BOOST_CHECK(*c == 1);
-	c = tree3.shoot();
-	--c;
+	c = tree3.root();
+	inorder::back(c);
 	BOOST_CHECK(*c == 14);	
 	
 	destroy_binary_tree(tree2);

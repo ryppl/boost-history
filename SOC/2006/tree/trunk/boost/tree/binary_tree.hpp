@@ -29,6 +29,8 @@ namespace tree {
 using detail::node;
 using detail::nary_tree_cursor;
 
+// TODO: Remove shoot() remains (was m_header->m_parent)
+
 /** 
  * @brief A %binary_tree.
  * This class models the hierarchy concept, the container concept and the
@@ -164,35 +166,6 @@ class binary_tree {
 	}
 	
 	/**
-	 * Returns a read/write ("mutable") cursor to the %binary_tree's shoot, i.e.
-	 * one position past the last (inorder) value.
-	 */ 	
-	cursor shoot()
-	{
-		return cursor(static_cast<node_base_pointer>(m_header.m_parent), 
-					  m_header.m_parent == &m_header ? 0 : 1);
-	}
-	
-	/**
-	 * Returns a read-only const_cursor to the %binary_tree's shoot, i.e. one
-	 * position past the last (inorder) value.
-	 */ 	
-	const_cursor shoot() const
-	{
-		return cshoot;
-	}
-	
-	/**
-	 * Returns a read-only const_cursor to the %binary_tree's shoot, i.e. one
-	 * position past the last (inorder) value.
-	 */ 	
-	const_cursor cshoot() const
-	{
-		return const_cursor(static_cast<node_base_pointer>(m_header.m_parent), 
-							m_header.m_parent == &m_header ? 0 : 1);
-	}
-	
-	/**
 	 * Returns a read/write ("mutable") cursor to the first (inorder) value.
 	 */ 	 
 	cursor inorder_first()
@@ -217,12 +190,11 @@ class binary_tree {
 	}
 	
 	/**
-	 * Returns true if the %binary_tree is empty.  (Thus root() would
-	 * equal shoot().)
+	 * Returns true if the %binary_tree is empty.
 	 */
 	bool empty() const
 	{
-		return m_header.m_parent == &m_header;
+		return m_header[1] == &m_header;
 	}
 	
 	// Hierarchy-specific
@@ -254,10 +226,6 @@ class binary_tree {
 		// Readjust begin
 		if ((pos == this->inorder_first()))
 			m_header[1] = p_node; 
-		
-		// Readjust shoot
-		if (pos == this->shoot())
-			m_header.m_parent = p_node;
 
 		return pos.begin(); 
 	}
@@ -338,7 +306,7 @@ class binary_tree {
  	
 	void rotate(cursor& pos)
 	{
-		//TODO: Take care of shoot/inorder_first pointers!
+		//TODO: Take care of inorder_first pointer!
 		pos.m_pos = pos.m_node->rotate(pos.m_pos);
 		pos.m_node = static_cast<node_base_pointer>(pos.m_node->m_parent->m_parent);
 	}
@@ -361,11 +329,11 @@ class binary_tree {
 			m_header[0]->m_parent = &m_header;
 
 			m_header[1] = other.m_header[1];
-			m_header.m_parent = other.m_header.m_parent;
+			//m_header.m_parent = other.m_header.m_parent;
 			
 			other.m_header[0] = node_base_type::nil();
 			other.m_header[1] = &other.m_header;
-			other.m_header.m_parent = &other.m_header;
+			//other.m_header.m_parent = &other.m_header;
 			
 			return;
 		}
@@ -375,11 +343,11 @@ class binary_tree {
 			other.m_header[0]->m_parent = &other.m_header;
 			
 			other.m_header[1] = m_header[1];
-			other.m_header.m_parent = m_header.m_parent;
+			//other.m_header.m_parent = m_header.m_parent;
 			
 			m_header[0] = node_base_type::nil();
 			m_header[1] = &m_header;
-			m_header.m_parent = &m_header;
+			//m_header.m_parent = &m_header;
 			
 			return;			
 		}
@@ -419,8 +387,6 @@ class binary_tree {
 	void splice(cursor position, binary_tree& x)
 	{
 		if (!x.empty()) {
-			if (position == shoot())         // Readjust shoot to x's
-				m_header.m_parent = x.m_header.m_parent;
 			if (position == inorder_first()) // Readjust inorder_first to x's
 				m_header[1] = x.m_header[1];
 				
@@ -433,7 +399,7 @@ class binary_tree {
 	}
 	
 	// Does this splice *p or the subtree?
-	// Maybe only *p, as the subtree would require knowledge about of shoot and
+	// Maybe only *p, as the subtree would require knowledge about
 	// inorder_first in order to remain O(1)
 	// But what if p has children?... Then this would require some defined
 	// re-linking (splicing-out, actually) in turn!
@@ -442,15 +408,11 @@ class binary_tree {
 //	}
 
 	void splice(cursor position, binary_tree& x, 
-				cursor root, cursor shoot, cursor inorder_first)
+				cursor root, cursor inorder_first)
 	{
 		if (!x.empty()) {
-			if (shoot == x.shoot())
-				x.m_header.m_parent = root.m_node;
 			if (inorder_first == x.inorder_first())
 				x.m_header[1] = inorder_first.m_node;
-			if (position == shoot())         // Readjust shoot to x's
-				m_header.m_parent = shoot.m_node;
 			if (position == inorder_first()) // Readjust inorder_first to x's
 				m_header[1] = inorder_first.m_node;
 				
@@ -515,8 +477,6 @@ class binary_tree {
 				
 			while (position.parity()) 
 				position = position.parent();
-			if (position == root())
-				position = shoot();
 		} else {
 			position = position.begin();
 			position.m_node->m_parent = p_node->m_parent;
@@ -591,6 +551,25 @@ inline void swap(binary_tree<T, Alloc>& x, binary_tree<T, Alloc>& y)
 	x.swap(y);
 }
 
+template <class Cursor>
+class binary_tree_root_tracker {
+ 
+ public:
+	binary_tree_root_tracker() {}
+	binary_tree_root_tracker& operator++()
+	{
+		return *this;
+	}
+	binary_tree_root_tracker& operator--()
+	{
+		return *this;
+	}
+	
+	bool is_root(Cursor c)
+	{
+		return (!c.parity() && (c != c.parent().begin()));
+	} 
+};
 
 namespace inorder {
 

@@ -20,7 +20,7 @@
 
 namespace boost {
 namespace tree {
-	
+
 namespace inorder {
 
 #include <boost/tree/detail/iterator/_order.hpp>

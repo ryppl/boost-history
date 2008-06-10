@@ -114,33 +114,6 @@ class multiway_tree {
 	{
 		return const_cursor(h.croot());
 	}
-
-	/**
-	 * Returns a read/write ("mutable") cursor to the %nary_tree's shoot, i.e.
-	 * one position past the last (inorder) value.
-	 */ 	
-	cursor shoot()
-	{
-		return cursor(h.shoot());
-	}
-
-	/**
-	 * Returns a read-only const_cursor to the %nary_tree's shoot, i.e.
-	 * one position past the last (inorder) value.
-	 */ 	
-	const_cursor shoot() const
-	{
-		return cshoot();
-	}
-	
-	/**
-	 * Returns a read-only const_cursor to the %nary_tree's shoot, i.e.
-	 * one position past the last (inorder) value.
-	 */ 	
-	const_cursor cshoot() const
-	{
-		return const_cursor(h.cshoot());
-	}
 	
 	cursor insert(cursor pos, value_type const& val)
 	{

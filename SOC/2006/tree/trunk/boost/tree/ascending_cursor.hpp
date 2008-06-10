@@ -12,23 +12,25 @@
 #ifndef BOOST_TREE_ASCENDING_CURSOR_HPP
 #define BOOST_TREE_ASCENDING_CURSOR_HPP
 
+
+#include <boost/tree/cursor.hpp>
+#include <boost/tree/cursor_helpers.hpp>
+
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 
-#include <boost/tree/cursor_helpers.hpp>
-
 #include <stack>
 
 namespace boost {
 namespace tree {
 
-template <class Cursor> 
+template <class DescendingCursor> 
 class ascending_cursor
- : public cursor_facade<ascending_cursor<Cursor>
-      , typename Cursor::value_type
+ : public cursor_facade<ascending_cursor<DescendingCursor>
+      , typename cursor_value<DescendingCursor>::type
       , random_access_traversal_tag
       , bidirectional_traversal_tag
     > {
@@ -36,14 +38,14 @@ class ascending_cursor
     struct enabler {};
 
  public:
-  	typedef typename Cursor::value_type value_type;
+  	typedef typename DescendingCursor::value_type value_type;
 
 	// Container-specific:
-	typedef typename Cursor::size_type size_type;
+	typedef typename DescendingCursor::size_type size_type;
 
-	// Cursor-specific
- 	typedef ascending_cursor<Cursor> cursor;
- 	typedef ascending_cursor<typename Cursor::const_cursor> const_cursor;
+	// DescendingCursor-specific
+ 	typedef ascending_cursor<DescendingCursor> cursor;
+ 	typedef ascending_cursor<typename DescendingCursor::const_cursor> const_cursor;
 	
 	// Container-specific:
 	typedef cursor iterator;
@@ -57,7 +59,7 @@ class ascending_cursor
     ascending_cursor()
       : m_s() {}
 
-    explicit ascending_cursor(Cursor c)
+    explicit ascending_cursor(DescendingCursor c)
     {
     	m_s.push(c); // Subtree root.
     }
@@ -66,18 +68,36 @@ class ascending_cursor
     ascending_cursor(
         ascending_cursor<OtherCursor> const& other
       , typename boost::enable_if<
-            boost::is_convertible<OtherCursor*, Cursor*>
+            boost::is_convertible<OtherCursor*, DescendingCursor*>
           , enabler
         >::type = enabler()
     )
       : m_s(other.m_s) {}
+
+	struct root_tracker {
+		root_tracker() {}
+		root_tracker& operator++()
+		{
+			return *this;
+		}
+		
+		root_tracker& operator--()
+		{
+			return *this;
+		}
+		
+		bool is_root(cursor c)
+		{
+			return (c.is_root());
+		} 
+	};
 
  private: 
 
  	friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
     
- 	std::stack<Cursor> m_s; // pimpl?
+ 	std::stack<DescendingCursor> m_s; // pimpl?
  	
     value_type& dereference() const
 	{
@@ -141,7 +161,7 @@ class ascending_cursor
 		m_s.push(m_s.top().end());
 	}
 
-	// Cursor stuff
+	// DescendingCursor stuff
 	void up()
 	{
 		m_s.pop();

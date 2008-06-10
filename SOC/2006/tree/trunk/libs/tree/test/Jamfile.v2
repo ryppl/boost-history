@@ -31,7 +31,7 @@ test-suite tree :
 #	[ run search_ordered_vector_test.cpp ]
 #	[ run red_black_tree_test.cpp ]
 #	[ run treap_test.cpp ]
-	[ run forest_test.cpp ]
+	[ run forest_tree_test.cpp ]
 #	[ run nary_tree_test.cpp ]
 	[ run multiway_tree_test.cpp ]
 	[ run unbalanced_binary_tree_test.cpp ]

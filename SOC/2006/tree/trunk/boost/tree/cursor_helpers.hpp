@@ -14,15 +14,13 @@
 #ifndef BOOST_TREE_CURSOR_HELPERS_HPP
 #define BOOST_TREE_CURSOR_HELPERS_HPP
 
-#include <boost/tree/detail/node/nary.hpp>
-
-#include <boost/type_traits/integral_constant.hpp>
-
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
+
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <iterator>
 #include <utility>

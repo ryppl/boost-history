@@ -9,6 +9,8 @@
 
 #include <boost/tree/ascending_cursor.hpp>
 
+#include <boost/lambda/bind.hpp>
+
 #include <list>
 #include <algorithm>
 #include <iterator>
@@ -20,6 +22,16 @@ using namespace boost::tree;
 
 namespace test {
 namespace ORDER {
+
+template <class Cursor, class Container>
+void test_for_each(Cursor c, Container& cont)
+{
+	boost::tree::ORDER::for_each(
+		c.begin(), 
+		boost::lambda::bind(&Container::push_back, &cont, boost::lambda::_1)
+	);
+	test::ORDER::traversal(cont.begin(), cont.end());
+}
 
 template <class Cursor, class OutCursor, class Container>
 void test_copy(Cursor c, OutCursor& o, Container& cont)
@@ -50,13 +62,16 @@ void algorithms(Cursor c, Cursor d)
 	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
+	test_for_each(c, test_list);
+	
+	test_list.clear();
 	test_copy(c, oc_test_list, test_list);
 	
 	test_list.clear();
 	test_transform(c, d, oc_test_list, test_list);
 }
 
-void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t) {
+void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int>::const_cursor cur) {
 	
 	using boost::tree::ascending_cursor;
 	
@@ -68,46 +83,46 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int> const& t
 	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
-	boost::tree::ORDER::copy(t.croot().begin(), oc_test_list);
+	boost::tree::ORDER::copy(cur.begin(), oc_test_list);
 
 	// Are the elements accessed in the correct order?
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(t.root()),
-							boost::tree::ORDER::end(t.root()),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(cur),
+							boost::tree::ORDER::end(cur),
 							test_list.begin()
 							));
 
 	// Does end() mark the right element? 
-	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(t.root()),
-							  boost::tree::ORDER::end(t.root())) == 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(cur),
+							  boost::tree::ORDER::end(cur)) == 
 				std::distance(test_list.begin(), test_list.end()));
 
 	// Reverse order.
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(t.root()),
-							boost::tree::ORDER::rend(t.root()),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(cur),
+							boost::tree::ORDER::rend(cur),
 							test_list.rbegin()
 							));
 
-	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(t.root()),
-							  boost::tree::ORDER::rend(t.root())) == 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(cur),
+							  boost::tree::ORDER::rend(cur)) == 
 				std::distance(test_list.rbegin(), test_list.rend()));					
 
 	//Now same for iterators wrapped around "explicit stack"-based cursors
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(ascending_cursor<cursor>(t.root())),
-							boost::tree::ORDER::end(ascending_cursor<cursor>(t.root())),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(ascending_cursor<cursor>(cur)),
+							boost::tree::ORDER::end(ascending_cursor<cursor>(cur)),
 							test_list.begin()
 							));
 
-	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(ascending_cursor<cursor>(t.root())),
-							  boost::tree::ORDER::end(ascending_cursor<cursor>(t.root()))) == 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(ascending_cursor<cursor>(cur)),
+							  boost::tree::ORDER::end(ascending_cursor<cursor>(cur))) == 
 				std::distance(test_list.begin(), test_list.end()));
 
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(ascending_cursor<cursor>(t.root())),
-							boost::tree::ORDER::rend(ascending_cursor<cursor>(t.root())),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(ascending_cursor<cursor>(cur)),
+							boost::tree::ORDER::rend(ascending_cursor<cursor>(cur)),
 							test_list.rbegin()
 							));
 							
-	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(ascending_cursor<cursor>(t.root())),
-							  boost::tree::ORDER::rend(ascending_cursor<cursor>(t.root()))) == 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(ascending_cursor<cursor>(cur)),
+							  boost::tree::ORDER::rend(ascending_cursor<cursor>(cur))) == 
 				std::distance(test_list.rbegin(), test_list.rend()));
 
 }

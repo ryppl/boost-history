@@ -14,6 +14,10 @@
 [section TODO]
 
 General:
+* Change recursive *order algorithms such that their argument is root() instead of
+  root().begin() (as is now).
+* Rename parity() (which looks somewhat binary-related) to index (more general for forest
+  trees etc)?
 * _Possibly_ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
   detail/cursor/ (same for iterator).
 * Make *order iterators work with empty subtrees.
@@ -23,6 +27,9 @@ General:
   the current depth. (Which, in turn, would make the free-standing forward/back/next/prior 
   algorithms etc. more or less useless without that piece of extra information and would
   only leave us with the iterators to store it.)
+  -> This is going to be done by the RootTracker object, which I personally hate,
+  but I don't see much of a choice for iterative traversal of subtrees other than that
+  (and haven't found any on the Web, either).
 * Deprecate shoot()? It's main use was for inorder::end(), which is now root().
   Would (binary tree) lower_bound() be possible without shoot()? What would it have to be 
   like? What would be the implications for balanced_trees? (Especially the lower_bound 
