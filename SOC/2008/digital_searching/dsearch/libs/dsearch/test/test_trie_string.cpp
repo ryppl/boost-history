@@ -8,7 +8,6 @@
 #include<boost/test/minimal.hpp>
 using namespace boost::minimal_test;
 
-
 using namespace boost::dsearch;
 using std::make_pair;
 
@@ -16,24 +15,24 @@ template<class T>
 void print_trie(T tr)
 {
 	std::cout<<"\n\n\nusing forward iterator:"<<std::endl;
-	std::cout<<"\n\n\nforward:"<<std::endl;
+	std::cout<<"forward:"<<std::endl;
 	for(typename T::iterator it=tr.begin();it!=tr.end();it++)
 		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
 
-	std::cout<<"\n\n\nreverse:"<<std::endl;
+	std::cout<<"\nreverse:"<<std::endl;
 	for(typename T::iterator it=--tr.end();;it--)
 	{
 		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
 		if(tr.begin()==it) break;
 	}
 
-	std::cout<<"\n\n\nusing reverse iterator:"<<std::endl;
-	std::cout<<"\n\n\nreverse:"<<std::endl;
+	std::cout<<"\n\nusing reverse iterator:"<<std::endl;
+	std::cout<<"reverse:"<<std::endl;
 	for(typename T::reverse_iterator it=tr.rbegin();it!=tr.rend();it++)
 		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
 	
 	
-	std::cout<<"\n\n\nforward:"<<std::endl;
+	std::cout<<"\nforward:"<<std::endl;
 	for(typename T::reverse_iterator it=--tr.rend();;it--)
 	{
 		std::cout<<tr.get_key(it)<<"="<<*it<<std::endl;
@@ -169,8 +168,11 @@ void test_bound(const T &tr)
 template<class T>
 void test_erase(T tr)
 {
+	//""=3<"hel"=4<"hellish"=7<"hello"=1<"wor"=5<"world"=2<"worry"=6
+	std::cout<<"erase(\"hello\")"<<std::endl;
 	tr.erase("hello");
 	BOOST_CHECK( tr.find("hello")==tr.end() );
+	std::cout<<"DONE erase(\"hello\")"<<std::endl;
 	
 	tr.erase("hel");
 	BOOST_CHECK( tr.find("hel")==tr.end() );
@@ -407,8 +409,7 @@ int test_main(int,char **)
 	test_iteration(tr);
 	test_prefix_range(test_insert<trie_type>());
 	test_reverse_iterator(tr);
-	//print_trie(tr);
-
+	print_trie(tr);
 
 	return 0;
 }
