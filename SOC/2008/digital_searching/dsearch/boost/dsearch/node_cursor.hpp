@@ -60,7 +60,7 @@ namespace dsearch {
 
 	trie_cursor(Node* const &n_ptr,const node_iterator &it): only_root(0), top(false)
 	{
-		cur=const_cast<Node *>(n_ptr);
+		cur=(n_ptr);
 		pos=it;
 	}
 
@@ -117,6 +117,14 @@ namespace dsearch {
 			return cur;
 		return *pos;
 	}
+	
+	//returns const_iterator for const_cursor :(
+	//used by trie erase function
+	node_iterator get_iterator() const
+	{
+		assert(!only_root);
+		return pos;
+	}
 
 	void increment()
 	{
@@ -166,6 +174,7 @@ namespace dsearch {
 		return cur->get_element(pos);
 	}
 
+	//const_cast here? trouble is only with const_cursor as get_node()=*pos = const Node *:(.
 	cursor find(const element_type &e) const
 	{
 		return cursor(this->get_node(),get_node()->find(e));
