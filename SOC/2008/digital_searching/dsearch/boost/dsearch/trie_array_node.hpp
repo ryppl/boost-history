@@ -28,7 +28,6 @@ class trie_array_node_iterator
 
 	struct enabler {};
 
-
 	trie_type** child_ptr;
 	std::size_t pos;
 
@@ -78,12 +77,12 @@ class trie_array_node_iterator
 
 	public:
 	template<class Trie_t>
-	trie_array_node_iterator(const trie_array_node_iterator<Trie_t> & other,
+	trie_array_node_iterator(const trie_array_node_iterator<Trie_t> &other,
 			typename enable_if< is_convertible<Trie_t*,trie_type*>, 
 			enabler >::type = enabler()
 		     )
 	{
-		child_ptr=(trie_type **)other.child_ptr;
+		child_ptr=(trie_type **)(other.child_ptr);//converting from x* to const x*
 		pos=other.pos;
 	}
 };
@@ -147,14 +146,14 @@ class trie_array_node
 			return iterator(this,Key_traits::get_value(key));
 	}
 
-	//TODO:do a const cast at places to avoid duplication
+/*	//TODO:do a const cast at places to avoid duplication
 	const_iterator find(const element_type &key) const
 	{
 		if(child_ptr[Key_traits::get_value(key)]==0)
 			return end();
 		else
 			return const_iterator(this,Key_traits::get_value(key));
-	}
+	}*/
 
 	void erase(const iterator&it)
 	{
@@ -166,20 +165,20 @@ class trie_array_node
 		return iterator(this);
 	}
 
-	const_iterator begin() const
+/*	const_iterator begin() const
 	{
 		return const_iterator(this);
-	}
+	}*/
 
 	iterator end()
 	{
 		return iterator(this,max);
 	}
 
-	const_iterator end() const
+/*	const_iterator end() const
 	{
 		return const_iterator(this,max);
-	}
+	}*/
 
 	//called only from insert function and trie::iterator 
 	Mapped &get_value_ref()
@@ -206,28 +205,28 @@ class trie_array_node
 		return value_ptr!=0;
 	}
 
-	std::size_t size()
+/*	std::size_t size()
 	{
 		int t_size=0;
 		for ( int i=0; i<max; i++ )
 			if( child_ptr[i]!=0 )
 				t_size++;
 		return t_size;
-	}
+	}*/
 
 	element_type get_element(const iterator &it)
 	{
 		return Key_traits::get_element(it.pos);
 	}
 
-	iterator lower_bound(const element_type &e) 
+/*	iterator lower_bound(const element_type &e) 
 	{
 		int k=Key_traits::get_value(e);
 		for(;k>=0;k--) 
 			if(child_ptr[k]!=0) break;
 		if(k<0)	return end();
 		return iterator(this,k);
-	}
+	}*/
 
 	bool empty() const
 	{
@@ -244,8 +243,8 @@ class trie_array_node
 
 	~trie_array_node()
 	{
-		delete value_ptr;
-		value_ptr=0;
+		if(value_ptr!=0)
+			delete value_ptr;
 	}
 };
 
