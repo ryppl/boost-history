@@ -108,6 +108,59 @@ standard library are discussed in separate documents:
 \item Associated functions cannot be \tcode{virtual}
   (\ref{concept.map.fct}).
 \item ``Associated templates'' are now ``associated class templates'' (\ref{concept.assoc}).
+\item Reduced the number of places where one has an unconstrained
+  context within a constrained template
+  (\mbox{\ref{temp.constrained}}); most notable, the signature of a
+  constrained function template is now a constrained context. As part
+  of these, we now have the notions of ``established'' and
+  ``committed'' archetypes, that determine when one can still add new
+  constraints to an archetype.
+\item Default function arguments are now a constrained context. This
+  makes some previously well-formed concepts code ill-formed, but it
+  also removes some surprising behavior. For example, the following
+  constructor will become ill-formed:
+
+\begin{codeblock}
+template<Destructible T>
+requires CopyConstructible<T>
+class vector {
+public:
+  vector(size_t, const T& = T()); // error: no default constructor for T
+};
+\end{codeblock}
+
+One now has to write two constructors:
+\begin{codeblock}
+template<Destructible T>
+requires CopyConstructible<T>
+class vector {
+public:
+  requires DefaultConstructible<T> vector(size_t);
+  vector(size_t, const T&);
+};
+\end{codeblock}
+
+The ``surprising behavior'' eliminated by type-checking default
+arguments early can be seen in this example:
+
+\begin{codeblock}
+template<Addable T>
+struct X {
+  void foo(T x, T y, T z = x + y) { // uses + from parent
+    T z2 = x + y; // uses Addable<T>::operator+
+  }
+};
+
+struct Y { };
+Y operator+(Y, Y); // \#1
+
+concept_map Addable<Y> {
+  Y operator+(Y, Y) { ... } // \#2
+}
+
+X<Y> x;
+x.foo(Y(), Y()); // foo's z will use + at \#1, foo's z2 will use + at \#2.
+\end{codeblock}
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -1085,7 +1138,7 @@ For each element in \mbox{\tcode{S}},
     \mbox{\techterm{using-declaration}} appears.
 The name is a synonym for the referent concept map or concept map template.
 }
-addedConcepts{
+\addedConcepts{
 \mbox{\enterexample}}
 \begin{codeblock}
 namespace N1 {
@@ -2286,7 +2339,7 @@ is:
 \index{template-parameter@\techterm{template-parameter}}%
 template-parameter:\br
   type-parameter\br
-  parameter-declaration
+  parameter-declaration\br
   \addedCC{constrained-template-parameter}
 \end{bnf}
 
@@ -2309,7 +2362,8 @@ type-parameter:\br
     \addedCC{\mbox{\terminal{::}}\mbox{\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{...}}\mbox{\opt} identifier\mbox{\opt}}\br
     \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name identifier\mbox{\opt} constrained-default-argument\mbox{\opt}}\br
     \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}} \mbox{\terminal{...}\opt} identifier} \br
-    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}}} \addedCC{identifier} \addedCC{constrained-default-argument\mbox{\opt}}\br
+    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}}} \addedCC{identifier} 
+                   \addedCC{constrained-default-argument\mbox{\opt}}\br
 
 \index{constrained-default-argument@\techterm{constrained-default-argument}}%
 \addedCC{constrained-default-argument:}\br
@@ -2352,11 +2406,11 @@ template requirement (\mbox{\ref{temp.req}}) using the \mbox{\techterm{simple fo
 of template requirements. }
 \addedCC{The kind (type, non-type or template) of the parameter is
 that of the first template parameter of the concept named in the
-\mbox{techterm{constrained-template-parameter}}.  For a non-type parameter,
+\mbox{\techterm{constrained-template-parameter}}.  For a non-type parameter,
 the type is that of the first template parameter of the concept named in the
-\mbox{techterm{constrained-template-parameter}}.  For a template parameter,
+\mbox{\techterm{constrained-template-parameter}}.  For a template parameter,
 the template parameter list is that of the first template parameter of the
-concept named in the \mbox{techterm{constrained-template-parameter}}. }
+concept named in the \mbox{\techterm{constrained-template-parameter}}. }
 \addedConcepts{A template}
 \removedCCC{type}
 \addedConcepts{parameter or parameter pack written 
@@ -2372,17 +2426,18 @@ T}}, respectively,}{T declared as a
 \mbox{\techterm{parameter-declaration}}}
 \addedConcepts{
 with the template requirement or pack expansion \mbox{\tcode{\BnfTermshape{::}\opt\
-  \BnfNontermshape{nested-name-specifier}\opt\ C<T> ...\opt}} added to
+  \BnfNontermshape{nested-name-specifier}\opt}} \mbox{\tcode{C<T> ...\opt}} added to
 the template requirements.}
 %
 \addedConcepts{A template }
 \removedCCC{type}
 \addedConcepts{ parameter or parameter pack written
 \mbox{\tcode{\BnfTermshape{::}\opt\
-  \BnfNontermshape{nested-name-specifier}\opt\ C<auto, T2, T3, ..., T$N$>...\opt\
+  \BnfNontermshape{nested-name-specifier}\opt}}
+\mbox{\tcode{C<auto, T2, T3, ..., T$N$>...\opt\
   T}}, is equivalent to a template }\removedCCC{type} parameter or
 parameter pack 
-\changedCC{
+\changedCCC{
     written as \mbox{\tcode{typename T}} or \mbox{\tcode{typename...
 T}}, respectively,}{T declared as a
 \mbox{\techterm{type-parameter}} or
@@ -2390,7 +2445,7 @@ T}}, respectively,}{T declared as a
 \addedConcepts{
 with the template requirement}\\
 \addedConcepts{\mbox{\tcode{\BnfTermshape{::}\opt\
-  \BnfNontermshape{nested-name-specifier}\opt\ C<T, T2, T3, ...,
+  \BnfNontermshape{nested-name-specifier}\opt\}}} \mbox{\tcode{C<T, T2, T3, ...,
   T$N$>...\opt}} added to the template requirements.
 }
 \removedCC{
@@ -4973,7 +5028,7 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
   \additemConcepts{a default template argument in a
     \mbox{\techterm{template-parameter}},}
   \remitemCCC{a default argument in a
-    \mbox{\techterm{parameter-declaration}}}\addedConcepts{, unless that
+    \mbox{\techterm{parameter-declaration}}}\removedCCC{, unless that
     default argument occurs within a local class
     (\mbox{\ref{class.local}}),}
   \remitemCCC{the \mbox{\techterm{requires-clause}},
@@ -5236,14 +5291,15 @@ void h(float x, int y, int X::* p) {
 
 \pnum
 \addedCC{When concept map lookup is performed during template argument
-    deductdion formed during partial ordering
+    deduction formed during partial ordering
     (\mbox{\ref{temp.deduct.partial}}),
     \mbox{\tcode{Q}} is defined as
     the ordered sequence consisting of only one element where S
     is the set of concept map archetypes synthesized from the requirements
     of the argument template
-    (\mbox{\ref{temp.func.order}},\mbox{\ref{temp.deduct.partial}}).
-   }
+    (\mbox{\ref{temp.func.order}},\mbox{\ref{temp.deduct.partial}}).}
+
+\pnum
 \addedConcepts{When concept map lookup is performed during the
   instantiation of a constrained template
   (\mbox{\ref{temp.constrained.inst}}), \mbox{\tcode{Q}} is defined as
@@ -5596,7 +5652,7 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   reasoning within the translation process. \mbox{\exitnote}}
 
 \pnum
-\addedCC{An archetype that has been \mbox{\techterm{established}} has
+\addedCC{A type archetype that has been \mbox{\techterm{established}} has
   been synthesized to describe a set of types made equivalent via
   same-type constraints. If a same-type requirement attempts to make
   two types equivalent that both have established archetypes but do
@@ -5616,7 +5672,7 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
 \end{itemize}
 
 \pnum 
-\addedCC{An archetype that has been \mbox{\techterm{committed}} has
+\addedCC{A type archetype that has been \mbox{\techterm{committed}} has
   been defined as described below. Once an archetype has been
   committed, its definition can no longer be changed by the
   introduction of additional concept requirements. A program that
