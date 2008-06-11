@@ -161,6 +161,14 @@ concept_map Addable<Y> {
 X<Y> x;
 x.foo(Y(), Y()); // foo's z will use + at \#1, foo's z2 will use + at \#2.
 \end{codeblock}
+
+\item The simple form of requirements has been extended to template
+  template and template non-type parameters (\ref{temp.param}). For
+  example, the following is now well-formed:
+\begin{codeblock}
+concept Prime<int N> { }
+template<Prime N> void foo();
+\end{codeblock}
 \end{itemize}
 
 \section*{Typographical conventions}
