@@ -52,6 +52,7 @@ namespace boost
     // written to the document would be difficult. We store the Cartesian
     // coordinates locally and transform them before we write them.
     // -----------------------------------------------------------------
+
     class svg_2d_plot_series
     {
 
@@ -67,7 +68,7 @@ namespace boost
       // are unaffected by the order in which data is presented.
       // (For 1-D a vector of doubles can be used).
 
-      std::string title_; // Title of data series (to show on legend).
+      std::string title_; // Title of data series (to show on legend using legend style).
       plot_point_style point_style_; // circle, square...
       plot_point_style limit_point_style_; // Default is cone pointing down.
       plot_line_style line_style_;
@@ -76,7 +77,7 @@ namespace boost
 
       template <class T>  // T an STL container: for example: multimap.
       svg_2d_plot_series(T begin, T end, // of data series.
-        std::string title) // Title of data series.
+        std::string title = "") // Title of data series.
         :
         title_(title),
         // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
@@ -696,7 +697,7 @@ namespace boost
         }
 
         if (x_ticks_.major_value_labels_side_ != 0)
-        { // Some value labels.
+        { // Some tick value labels.
           if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
              && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
           {  // Contract plot window bottom edge up to make space for x value labels on bottom.
@@ -724,7 +725,7 @@ namespace boost
         }
 
         if (x_axis_.axis_line_on_)
-        { // Want an X-axis line, so check if range includes zero, so axes intersect,
+        { // Want an horizontal X-axis line, so check if range includes zero, so axes intersect,
           // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
           // If not fix axis to bottom (or top) of the plot window.
           if ((x_axis_position_ == bottom) // All Y values definitely > zero.
@@ -746,7 +747,7 @@ namespace boost
         } // if (use_x_axis_line_)
 
         if (y_axis_.axis_line_on_)
-        { // Want a Y-axis line, so check if range includes zero, so axes intersect,
+        { // Want a vertical Y-axis line, so check if range includes zero, so axes intersect,
           // and y_axis_ is svg coordinate of X-axis (usually x = 0).
           // If not fix axis to left (or right) of the plot window.
           if ((y_axis_position_ == left) // All X values definitely > zero.
@@ -1429,24 +1430,24 @@ namespace boost
             j != series[i].series.end(); ++j)
           {
             x = j->first;
-            double vx = x;
+            double vx = x; // Note the true x value.
             y = j->second;
-            double vy = y;
+            double vy = y; // Note the true y value.
             transform_point(x, y);
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
               draw_plot_point(x, y, g_ptr, series[i].point_style_);
               g_element& g_ptr_vx = image.g(detail::PLOT_X_POINT_VALUES).g();
-              g_element& g_ptr_vy = image.g(detail::PLOT_Y_POINT_VALUES).g();
-
               if (x_values_on_)
               { // Show the value of the X data point too.
-                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, vx);
-              }
+// void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
 
+                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, series[i].point_style_, vx);
+              }
+              g_element& g_ptr_vy = image.g(detail::PLOT_Y_POINT_VALUES).g();
               if (y_values_on_)
               { // show the value of the Y data point too.
-                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_, vy);
+                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_,series[i].point_style_, vy);
               }
 
               if (xy_values_on_)

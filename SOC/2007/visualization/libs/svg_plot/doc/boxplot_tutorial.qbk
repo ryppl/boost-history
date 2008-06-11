@@ -4,6 +4,8 @@
 
 [include boxplot_full_tutorial.qbk]
 
+[include boxplot_quartiles.qbk]
+
 [endsect] [/section:tutorial]
 
 [/ boxplot_tutorial.qbk

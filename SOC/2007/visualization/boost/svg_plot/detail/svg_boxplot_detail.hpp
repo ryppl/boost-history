@@ -33,6 +33,7 @@ namespace boxplot
     Y_LABEL, X_LABEL,
     BOX_AXIS, BOX,
     MEDIAN, WHISKER, MILD_OUTLIERS, EXTREME_OUTLIERS,
+    DATA_VALUE_LABELS, // 
     PLOT_TITLE,
     PLOT_NOTES, // Free text and shapes to annotate diagram.
     BOXPLOT_DOC_CHILDREN
@@ -49,7 +50,8 @@ namespace boxplot
       "valueLabels", // tick Value Labels
       "yLabel", "xLabel",  // axis text labels "length (cm)"
       "boxAxis", "Box", // vertical Box axis line and box.
-      "media", "whisker", "mild_outliers", "extreme_outliers",
+      "Median", "whisker", "mild_outliers", "extreme_outliers",
+      "Data Values",
       "title",  // of the whole plot.
       "plotNotes", // Free text and shapes to annotate diagram.
       "boxplotDocChildren" // This last string is not used.

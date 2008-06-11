@@ -96,7 +96,7 @@ private: // Accesses only by set and get member functions below.
   bool width_on_;
     
 public:
-  // Constructors:
+  // Constructors declarations:
   svg_style();
   svg_style(const svg_color& stroke, const svg_color& fill, unsigned int width);
 
@@ -109,8 +109,7 @@ public:
   svg_style& stroke_on(bool is);
   svg_style& width_on(bool is);
 
-  // Get svg_style member functions
-  // to return fill color and stroke color & width.
+  // Get svg_style member functions to return fill color, stroke color & width.
   svg_color fill_color() const;
   svg_color stroke_color() const;
   double stroke_width() const;
@@ -125,7 +124,6 @@ public:
   bool operator!=(svg_style& s);
 
 }; // class svg_style
-
 
 // class svg Definitions.
 
@@ -273,6 +271,7 @@ public:
    // Examples: <g id="yMinorTicks" stroke="rgb(0,0,0)" stroke-width="1">
  } // void write
 
+  // End of svg_style definitions.
 
 class text_style
 {
@@ -481,10 +480,12 @@ std::ostream& operator<< (std::ostream& os, const text_style& ts)
   return os;
 } // std::ostream& operator<<
 
+// End of class text_style function *Definitions* separated.
+
 text_style no_style; // Uses all constructor defaults.
 
 class value_style
-{ // Data series point value information, text, color, uncertainty, orientation.
+{ // Data series point value information, text, color, uncertainty & df, orientation.
   // for example to output: 5.123 +- 0.01 (19)
 public:
   //private:  // ??
@@ -529,9 +530,10 @@ enum point_shape
 { // Marking a data point.
   // Used in draw_plot_point in axis_plot_frame.hpp
   none = 0,
-  round,
-  // name circle changed to round to avoid clash with function named circle.
-  square, point, egg, // ellipse
+  round, // 1 Note name circle changed to round to avoid clash with function named circle.
+  square, // 2
+  point, // 3
+  egg, // 4 ellipse
   vertical_line,  // line up & down from axis.
   horizontal_line, // line left & right from axis.
   vertical_tick, // tick up from axis.
@@ -555,7 +557,7 @@ enum point_shape
   // may be a better way to make these symbols.
   // &#25A0 black square ...to &#25FF 
   // But unclear how many browsers implement these properly.
-}; 
+}; // enum point_shape
 
 class plot_point_style
 {
@@ -585,18 +587,20 @@ public:
 
   plot_point_style(const svg_color& stroke = black, const svg_color& fill = blank,
     int size = 10, point_shape shape = round, const std::string& symbols = "X")
-    :
-  fill_color_(fill), stroke_color_(stroke), size_(size), shape_(shape), symbols_(symbols),
+  :
+    fill_color_(fill), stroke_color_(stroke), size_(size),
+    shape_(shape), symbols_(symbols),
     show_x_value_(false), show_y_value_(false)
   { // Best to have a fixed-width font for symbols?
+    // But there are always problems centering a symbol at the right point.
     symbols_style_.font_family("Lucida Sans Unicode");
     symbols_style_.font_size(size);
   }
 
   plot_point_style& size(int i)
   {
-    size_ = i;
-    symbols_style_.font_size(i); // in case using a symbol.
+    size_ = i; // Shapes.
+    symbols_style_.font_size(i); // In case using a symbol.
     return *this;
   }
 
@@ -1129,7 +1133,7 @@ public:
   }
 
   box_style& width(double w)
-  {
+  { 
     width_ = w;
     return *this; // Make chainable.
   }
@@ -1220,7 +1224,7 @@ public:
 }; // class histogram_style
 
 class bar_style
-{
+{ // TODO should inherit from svg_style?
 public:
   svg_color color_; // line stroke color. (no fill color for lines).
   svg_color area_fill_; // Fill color from line to axis. == true means color.blank = true.

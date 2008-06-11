@@ -38,6 +38,8 @@
 #include "detail/numeric_limits_handling.hpp"
 #include "detail/svg_boxplot_detail.hpp"
 #include "detail/functors.hpp"
+#include "detail/axis_plot_frame.hpp"
+#include "quantile.hpp"
 
 #include <vector>
 #include <string>
@@ -50,33 +52,34 @@ namespace boost
 {
 namespace svg
 {
-  static const double sin45 = 0.707; // Use if axis value labels are sloping.
+  //static const double sin45 = 0.707; // Use if axis value labels are sloping.
+  //static svg_style not_a_svg_style; // Used as a test for not set.
 
-  // x_axis_position_ and y_axis_position_  use these.
-  enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
-  // bottom = X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
-  // top = X-axis free above top of X-axis (case of all Y definitely > 0).
-  // x_intersects_y when Y values include zero, so X intersects the Y axis.
+  //// x_axis_position_ and y_axis_position_  use these.
+  //enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+  //// bottom = X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
+  //// top = X-axis free above top of X-axis (case of all Y definitely > 0).
+  //// x_intersects_y when Y values include zero, so X intersects the Y axis.
 
-  enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
-  // left = Y-axis free to left of end of X-axis (case of all X definitely < 0).
-  // right = Y-axis free to left of end of X-axis (case of all X definitely > 0).
-  // y_intersects_x when X values include zero, so intersects the X axis.
+  //enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
+  //// left = Y-axis free to left of end of X-axis (case of all X definitely < 0).
+  //// right = Y-axis free to left of end of X-axis (case of all X definitely > 0).
+  //// y_intersects_x when X values include zero, so intersects the X axis.
 
-  enum legend_places
-  {  // Placing of legend box, if requested by legend_on(true).
-    nowhere = 0,
-    inside = -1,  // Default place for inside is top left of plot window,
-    // exact location controlled by legend_top_left().
-    outside_left = 1, // Outside
-    outside_right = +2,  // Default for outside.
-    outside_top = +3,
-    outside_bottom = +4,
-    somewhere = +5 // legend_top_left(x, y)
-  };
+  //enum legend_places
+  //{  // Placing of legend box, if requested by legend_on(true).
+  //  nowhere = 0,
+  //  inside = -1,  // Default place for inside is top left of plot window,
+  //  // exact location controlled by legend_top_left().
+  //  outside_left = 1, // Outside
+  //  outside_right = +2,  // Default for outside.
+  //  outside_top = +3,
+  //  outside_bottom = +4,
+  //  somewhere = +5 // legend_top_left(x, y)
+  //};
 
-  class svg_boxplot; // Box Plot.
-  class svg_boxplot_series; // Box Plot data series.
+  class svg_boxplot; // Box Plot that can contain several boxplot data series.
+  class svg_boxplot_series; // Boxplot data series.
 
   // By convention, class data is suffixed by _ to permit function names to be used.
   // For example, string title_, but set with title("my title") and get with title().
@@ -84,75 +87,126 @@ namespace svg
   class svg_boxplot_series
   { // Class holding information about a data series to be boxplotted.
   public: // TODO private?
+    std::vector<double> series_;
     double whisker_min_;
     double whisker_max_;
+    int quartile_definition_; // The definition of the quartile can be selected.
     double q1_; // 1st lower quartile.
+    double median_; // 2nd middle quartile.
     double q3_; // 3rd upper quartile.
-    double median_;
     std::vector<double> outliers_;
     std::vector<double> extreme_outliers_;
 
-    //std::string title_;
+    // std::string title_;
     text_style series_style_;
     text_element series_info_;
-
     double text_margin_;
-    unsigned int whisker_length_;
-    unsigned int box_width_;
 
-    //svg_style(stroke, fill, width)
+    // svg_style(stroke, fill, width)
+    double box_width_;
     svg_style box_style_;
     svg_style median_style_;
     svg_style axis_style_;
+
+    double whisker_length_;
     svg_style min_whisker_style_;
     svg_style max_whisker_style_;
+    value_style values_style_;
 
     plot_point_style mild_outlier_;
     plot_point_style ext_outlier_;
 
-    template <class T> // T is data container type. ? default = std::vector<double>
+    bool outlier_values_on_;
+    bool extreme_outlier_values_on_;
+
+    template <class T> // T is data container type. 
     svg_boxplot_series( // Constructor.
       T begin, T end, // Data container.
-      const std::string& title) // Data series title.
-      // All other parameters can now be added using chainable functions.
+      const std::string& title, // Data series title.
+      double bw,// box width 
+      svg_style bs, // box style
+      svg_style ms, // median marker style
+      svg_style as, // axis style
+      double wl, // whisker length
+      svg_style minws, // min whisker style
+      svg_style maxws, // max whisker style
+      plot_point_style os, // mild outlier style
+      plot_point_style extos, // extreme outlier style
+      int q_def, // Quartile definition H&F #
+      value_style vs, // Style for optional display of data point values.
+      text_style ss // series style (font etc) for box labels.
+     ) 
+     // All other parameters can also be added using chainable functions.
      : // 
-     series_style_(12, "Verdana", "", "", "", ""), 
-      //series_style_(x_axis_label_style_), // want to use the x_label style here
+      box_width_(bw), // svg_boxplot::box_width()), 
+      box_style_(bs), // green, azure, 1), // stroke, fill, width, 1, true, true, margin, border_on, fill_on 
+      median_style_(ms), // blue, blank, 1),
+      axis_style_(as), // black, blank, 1),
+      whisker_length_(wl), // 30),
+      min_whisker_style_(minws), // magenta, black, 1),
+      max_whisker_style_(maxws), // cyan, black, 1),
+      mild_outlier_(os), // brown, blank, 5, round),
+      ext_outlier_(extos), //  blue, blank, 25, cone),
+      values_style_(vs),
+      series_style_(ss), // for series_info to control font etc of box labels.
       series_info_(0, 0, title, series_style_, center_align, horizontal),
-      text_margin_(2.), // for axis label text, as a multiplier of the font size.
-      whisker_length_(30),
-      box_width_(40),
-      box_style_(green, azure, 1),
-      median_style_(blue, blank, 1),
-      axis_style_(black, blank, 1),
-      min_whisker_style_(magenta, black, 1),
-      max_whisker_style_(cyan, black, 1),
-      mild_outlier_(brown, blank, 5, round),
-      ext_outlier_(red, blank, 5, cone)
+      quartile_definition_(q_def), // Default is H&F recommendation.
+      text_margin_(2.) // for axis label text, as a multiplier of the font size.
     { // Constructor.
-      //std::vector copy is sorted and used for fast lookup of quartile values.
-      std::vector<double> series(begin, end);
-      if(series.empty())
+      // std::vector copy is sorted and used for fast lookup of quartile values.
+      //std::vector<double> series(begin, end); now a member
+      series_.assign(begin, end);
+
+      if(series_.empty())
       {
-        throw std::runtime_error("Empty data series!");
+        std::string message = "Data series " + title + " is empty!";
+        throw std::runtime_error(message.c_str());
       }
-      std::sort(series.begin(), series.end());
-      size_t data_size = series.size();
+      if(series_.size() < 8)
+      {
+        throw std::runtime_error("Data series has < 8 values!");
+      }
+      std::sort(series_.begin(), series_.end());
+      // Previous taken out to calculate_quantiles to allow plot to have their own quartile definition.
 
-      // Pth quartile in n values is P(n+1)/100,
-      // rounded to the nearest integer.
-      q1_ = series[(unsigned int)((data_size + 1) / 4. + 1)];
-      median_ = series[(unsigned int)((data_size + 1) / 2. + 1)];
-      q3_ = series[(unsigned int)(3*(data_size + 1) / 4. + 1)];
+    } // svg_boxplot_series constructor.
 
-      double iqr(q3_ - q1_);
-      double min_ext_cutoff = q1_ - 3. * iqr;
-      double min_cutoff = q1_ - text_margin_ * iqr;
-      double max_ext_cutoff = q3_ + 3. * iqr;
-      double max_cutoff = q3_ + text_margin_ * iqr;
+    void calculate_quantiles()
+    {
+      median_ = median(series_);
+      // Divide sorted data set into four equal parts, called quartiles,
+      // so each part represent 1/4th of the sampled population.
+
+      // "Some Implementations of the Boxplot"
+      //  Michael Frigge, David C. Hoaglin and Boris Iglewicz
+      // The American Statistician, Vol. 43, No. 1 (Feb., 1989), pp. 50-54
+      // Tukey, J. W. Exploratory Data Analysis, Addison Wesley (1977, p 33)
+
+      // x[1] .. x[n] == series[0] ... series[n - 1]
+      // q1_ = (1 - g) * x[j] + g * [j+1];
+      q1_ = quantile(series_, 0.25, quartile_definition_);
+      q3_ = quantile(series_, 0.75, quartile_definition_);
+
+      // Fences (beyond which lie outliers) are at q1 - k * (q3 - q1) and q3 - k * (q3 - q1)
+      // commonly k = 1.5, but can be 2.
+      // Extreme outlier usually use k = 3.
+
+      //std::cout << "Definition #" << quartile_definition_ << ", q1 " << q1_ << ", median " << median_ << ", q3 " << q3_ << ", IQR " << q3_ - q1_ << std::endl;
+
+      double iqr(q3_ - q1_); // Interquartile range.
+      const double k_outlier = 1.5; // 2. also used.
+      const double k_extreme_outlier = 3.;
+
+      double min_cutoff = q1_ - k_outlier * iqr;
+      double max_cutoff = q3_ + k_outlier * iqr;
+      double min_ext_cutoff = q1_ - k_extreme_outlier * iqr;
+      double max_ext_cutoff = q3_ + k_extreme_outlier * iqr;
+
+      std::cout << "Min outlier fences <" << min_cutoff << " or >" << max_cutoff << std::endl;
+      std::cout << "Min extreme fences <" << min_ext_cutoff <<  " or >" << max_ext_cutoff << std::endl;
 
       std::vector<double>::const_iterator i;
-      for(i = series.begin(); *i < min_cutoff; ++i)
+      for(i = series_.begin(); *i < min_cutoff; ++i)
       { // Separate any minimum outliers and extreme outliers.
         if(*i < min_ext_cutoff)
         {
@@ -166,7 +220,7 @@ namespace svg
 
       whisker_min_ = *i;
       std::vector<double>::const_reverse_iterator j;
-      for(j = series.rbegin(); *j > max_cutoff; ++j)
+      for(j = series_.rbegin(); *j > max_cutoff; ++j)
       { // Separate any maximum outliers and extreme outliers.
         if(*j > max_ext_cutoff)
         {
@@ -178,29 +232,75 @@ namespace svg
         }
       } // for
       whisker_max_ = *j;
-    } // svg_boxplot_series constructor.
+    } //   void calculate_quantiles()
 
-    // Set functions for the boxplot series.
-    svg_boxplot_series& whisker_length(int l);
-    int whisker_length();
-    svg_boxplot_series& box_width(int l);
-    int box_width();
+    // Set member functions for the boxplot data series class.
+    // (Note identically names functions are provided for the boxplot class).
+
     svg_boxplot_series& title(const std::string& t);
     const std::string title();
+    svg_boxplot_series& whisker_length(double l); // Length of whisker line.
+    double whisker_length();// Length of whisker.
+    svg_boxplot_series& box_width(double l); // Width of box.
+    double box_width(); // Width of box.
+    svg_boxplot_series& min_whisker_color(const svg_color& col); // Color of whisker.
+    svg_color min_whisker_color(); //  Color of whisker.
+    svg_boxplot_series& min_whisker_width(double l); // Width of whisker line.
+    double min_whisker_width(); //  Width of whisker line.
+    svg_boxplot_series& max_whisker_color(const svg_color& col); // Color of whisker.
+    svg_color max_whisker_color(); //  Color of whisker.
+    svg_boxplot_series& max_whisker_width(double l); // Width of whisker line.
+    double max_whisker_width(); //  Width of whisker line.
+    svg_boxplot_series& box_fill(const svg_color& color); // Color of box fill, not border. 
+    svg_color box_fill(); // Color of box fill, not border. 
+    svg_boxplot_series& box_border(const svg_color& color); // Color of border (not fill) to box.
+    svg_color box_border(); // Color of border (not fill) to box.
 
-  // Still need chainable functions to set and get these.
-  //BOOST_PARAMETER_NAME((box_style,          keyword) box);
-  //BOOST_PARAMETER_NAME((median_style,       keyword) median);
-  //BOOST_PARAMETER_NAME((axis_style,         keyword) axis);
-  //BOOST_PARAMETER_NAME((min_whisker_style,  keyword) min_whisker);
-  //BOOST_PARAMETER_NAME((max_whisker_style,  keyword) max_whisker);
-  //BOOST_PARAMETER_NAME((mild_outlier_style, keyword) mild_outlier);
-  //BOOST_PARAMETER_NAME((ext_outlier_style,  keyword) ext_outlier);
-  //BOOST_PARAMETER_NAME((functor,            keyword) fnctr); ??
+    svg_boxplot_series& median_color(const svg_color& color); // Color of median line in box.
+    svg_color median_color(); // Color of median line in box.
+    svg_boxplot_series& median_width(double l); // Width of median line in box.
+    double median_width(); //  Width of median line in box.
+
+    svg_boxplot_series& axis_color(const svg_color& color); // Color of vertical axis whisker line in box.
+    svg_color axis_color(); // Color of vertical axis whisker line in box.
+    svg_boxplot_series& axis_width(double l); // Width of vertical axis whisker line in box.
+    double axis_width(); //  Width of vertical axis whisker line in box.
+
+    svg_style& svg_boxplot_series::box_style();
+    svg_boxplot_series& box_style(svg_style& bs);
+    svg_style& median_style();
+    svg_boxplot_series& median_style(svg_style& ms);
+
+    plot_point_style& outlier_style();
+    svg_boxplot_series& outlier_style(plot_point_style& os);
+
+    svg_boxplot_series& outlier_color(const svg_color& color); // Color of outlier marker.
+    svg_color outlier_color(); // Color of outlier marker.
+    svg_boxplot_series& outlier_fill(const svg_color& color); // Fill color of outlier marker.
+    svg_color outlier_fill(); // Fill color of outlier marker.
+    svg_boxplot_series& extreme_outlier_color(const svg_color& color); // Color of extreme outlier marker.
+    svg_color extreme_outlier_color(); // Color of extreme outlier marker.
+    svg_boxplot_series& extreme_outlier_fill(const svg_color& color); // Color of extreme outlier marker.
+    svg_color extreme_outlier_fill(); // Color of extreme outlier marker.
+    svg_boxplot_series& outlier_shape(point_shape shape); // Shape of outlier marker.
+    point_shape outlier_shape(); // Shape of outlier marker.
+    svg_boxplot_series& svg_boxplot_series::outlier_size(int size); // Size of outlier marker.
+    int svg_boxplot_series::outlier_size(); // Size of outlier marker.
+    svg_boxplot_series& extreme_outlier_shape(point_shape shape); // Shape of extreme outlier marker.
+    point_shape extreme_outlier_shape(); // Shape of extreme outlier marker.
+    svg_boxplot_series& svg_boxplot_series::extreme_outlier_size(int size); // Size of extreme outlier marker.
+    int svg_boxplot_series::extreme_outlier_size(); // Size of extreme outlier marker.
+    // Not implemented yet - settings are boxplot wide.
+    //svg_boxplot_series& outlier_values_on(bool cmd);// If values to be shown alongside outlier markers.
+    //bool outlier_values_on(); // If values to be shown alongside outlier markers.
+    //svg_boxplot_series& extreme_outlier_values_on(bool cmd); // If values to be shown alongside extreme outlier markers.
+    //bool extreme_outlier_values_on(); // If values to be shown alongside extreme outlier markers.
+    svg_boxplot_series& svg_boxplot_series::quartile_definition(int def); // H&F quartile definition.
+    int svg_boxplot_series::quartile_definition(); // H&F quartile definition.
 
   }; // struct svg_boxplot_series
 
-  // svg_boxplot_series Definitions to go into separate file.
+  // svg_boxplot_series *Definitions* ready to go into separate file.
 
   const std::string svg_boxplot_series::title()
   { // Title of data series.
@@ -213,39 +313,310 @@ namespace svg
     return *this; // Chainable.
   }
 
-  int svg_boxplot_series::whisker_length()
-  {
+  svg_boxplot_series& svg_boxplot_series::whisker_length(double width)
+  { // Applies to BOTH min and max whisker.
+    whisker_length_ = width;
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot_series::whisker_length()
+  { // Applies to BOTH min and max whisker.
     return whisker_length_;
   }
 
-  svg_boxplot_series&  svg_boxplot_series::whisker_length(int l)
-  { 
-    whisker_length_ = l;
+  svg_boxplot_series& svg_boxplot_series::min_whisker_width(double width)
+  { // Line width of min whisker.
+    min_whisker_style_.stroke_width(width);
     return *this; // Chainable.
   }
-  int svg_boxplot_series::box_width()
-  {
-    return box_width_;
+
+  double svg_boxplot_series::min_whisker_width()
+  { // Line width of min whisker.
+    return min_whisker_style_.stroke_width();
   }
 
-  svg_boxplot_series&  svg_boxplot_series::box_width(int l)
-  { 
+  svg_boxplot_series& svg_boxplot_series::min_whisker_color(const svg_color& color)
+  { // Color of min whisker.
+    min_whisker_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+  svg_color svg_boxplot_series::min_whisker_color()
+  { //  Color of min whisker.
+    return min_whisker_style_.stroke_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::max_whisker_width(double width)
+  {
+    max_whisker_style_.stroke_width(width);
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot_series::max_whisker_width()
+  { // width of the box, not the margin.
+    return max_whisker_style_.stroke_width();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::max_whisker_color(const svg_color& color)
+  { // Color of whisker.
+    max_whisker_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::max_whisker_color()
+  { //  Color of whisker.
+    return max_whisker_style_.stroke_color();
+  }
+
+  double svg_boxplot_series::box_width()
+  { // width of the box, not the margin.
+    return box_width_;
+  } 
+  
+  svg_boxplot_series&  svg_boxplot_series::box_width(double l)
+  { // width of the box, not the margin.
     box_width_ = l;
     return *this; // Chainable.
   }
 
+  svg_style& svg_boxplot_series::box_style()
+  {
+    return box_style_;
+  }
+
+  svg_boxplot_series& svg_boxplot_series::box_style(svg_style& bs)
+  { 
+    box_style_ = bs;
+    return *this; // Chainable.
+  }
+
+  svg_style& svg_boxplot_series::median_style()
+  {
+    return median_style_;
+  }
+
+  svg_boxplot_series& svg_boxplot_series::median_style(svg_style& ms)
+  { 
+    median_style_ = ms;
+    return *this; // Chainable.
+  }
+
+  svg_boxplot_series& svg_boxplot_series::outlier_style(plot_point_style& os)
+  { 
+    mild_outlier_ = os;
+    return *this; // Chainable.
+  }
+
+  plot_point_style& svg_boxplot_series::outlier_style()
+  {
+    return mild_outlier_;
+  }
+
+  svg_boxplot_series& svg_boxplot_series::box_fill(const svg_color& color)
+  { // Color of box fill, not border. 
+    box_style_.fill_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::box_fill()
+  { // Color of box fill, not border. 
+    return box_style_.fill_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::box_border(const svg_color& color)
+  { // Color of box fill, not border. 
+    box_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::box_border()
+  { // Color of box fill, not border. 
+    return box_style_.stroke_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::median_color(const svg_color& color)
+  { // Color of median line in box.
+    median_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::median_color()
+  {  // Color of median line in box.
+    return median_style_.stroke_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::median_width(double width)
+  { // Applies to BOTH min and max whisker.
+    median_style_.stroke_width(width);
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot_series::median_width()
+  { // Applies to BOTH min and max whisker.
+    return  median_style_.stroke_width();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::axis_color(const svg_color& color)
+  { // Color of axis line in box.
+    axis_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::axis_color()
+  {  // Color of axis line in box.
+    return axis_style_.stroke_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::axis_width(double width)
+  { // Applies to BOTH min and max whisker.
+    axis_style_.stroke_width(width);
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot_series::axis_width()
+  { // Applies to BOTH min and max whisker.
+    return  axis_style_.stroke_width();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::outlier_color(const svg_color& color)
+  { // Color of axis line in box.
+    mild_outlier_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::outlier_color()
+  {  // Color of axis line in box.
+    return mild_outlier_.stroke_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::outlier_fill(const svg_color& color)
+  { // Fill color of axis line in box.
+    mild_outlier_.fill_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::outlier_fill()
+  {  // Fill color of axis line in box.
+    return mild_outlier_.fill_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::extreme_outlier_color(const svg_color& color)
+  { // Color of axis line in box.
+    ext_outlier_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::extreme_outlier_color()
+  {  // Color of axis line in box.
+    return ext_outlier_.stroke_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::extreme_outlier_fill(const svg_color& color)
+  { // Color of axis line in box.
+    ext_outlier_.fill_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot_series::extreme_outlier_fill()
+  {  // Color of axis line in box.
+    return ext_outlier_.fill_color();
+  }
+
+  svg_boxplot_series& svg_boxplot_series::outlier_shape(point_shape shape)
+  { // Shape of outlier marker.
+    mild_outlier_.shape_ = shape;
+    return *this; // Chainable.
+  }
+
+  point_shape svg_boxplot_series::outlier_shape()
+  { // Color of outlier marker.
+    return mild_outlier_.shape_;
+  }
+
+  svg_boxplot_series& svg_boxplot_series::outlier_size(int size)
+  { // Size of outlier marker.
+    mild_outlier_.size_ = size;
+    return *this; // Chainable.
+  }
+
+  int svg_boxplot_series::outlier_size()
+  { // Size of extreme outlier marker.
+    return mild_outlier_.size_;
+  }
+
+  svg_boxplot_series& svg_boxplot_series::extreme_outlier_shape(point_shape shape)
+  { // Shape of extreme outlier marker.
+    ext_outlier_.shape_ = shape;
+    return *this; // Chainable.
+  }
+
+  point_shape svg_boxplot_series::extreme_outlier_shape()
+  { // Shape of extreme outlier marker.
+    return ext_outlier_.shape_ ;
+  }
+  
+  svg_boxplot_series& svg_boxplot_series::extreme_outlier_size(int size)
+  { // Size of extreme outlier marker.
+    ext_outlier_.size_ = size;
+    return *this; // Chainable.
+  }
+
+  int svg_boxplot_series::extreme_outlier_size()
+  { // Size of extreme outlier marker.
+    return ext_outlier_.size_;
+  }
+
+  svg_boxplot_series& svg_boxplot_series::quartile_definition(int def)
+  { // Choice of H&F quartile definition.
+    quartile_definition_ = def;
+    return *this; // Chainable.
+  }
+
+  int svg_boxplot_series::quartile_definition()
+  { // Choice of H&F quartile definition.
+    return quartile_definition_;
+  }
+
+
+  // Not implemented yet - so these are only available for ALL boxplots.
+  //svg_boxplot_series& svg_boxplot_series::outlier_values_on(bool cmd)
+  //{
+  //  outlier_values_on_ = cmd;
+  //  return *this;
+  //}
+
+  //svg_boxplot_series& svg_boxplot_series::extreme_outlier_values_on(bool cmd)
+  //{
+  //  extreme_outlier_values_on_ = cmd;
+  //  return *this;
+  //}
+
+  //bool svg_boxplot_series::outlier_values_on()
+  //{
+  //  return outlier_values_on_;
+  //}
+
+  //bool svg_boxplot_series::extreme_outlier_values_on()
+  //{
+  //  return extreme_outlier_values_on_;
+  //}
+
+
 // End of svg_boxplot_series Definitions.
 
-class svg_boxplot
-{
+class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
+{ // A plot that can display boxplots of several data series.
+  friend svg_boxplot_series;
+  friend class detail::axis_plot_frame<svg_boxplot>;
+  // axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
+
 private:
   svg image; // Stored so as to avoid rewriting style information constantly.
-  //image.image_size(500, 500);
+  // image.image_size(500, 500);
 
-  double x_scale_; // Use by function transform()
-  double x_shift_; // to go from Cartesian to svg coordinates.
-  double y_scale_;
-  double y_shift_;
+  double x_scale_; // Used by function transform()
+  double x_shift_; // to go from Cartesian to SVG coordinates.
+  double y_scale_; // SVG coordinates origin is at top left,
+  double y_shift_;  // and y coordinates increase DOWN the page!
 
   double x_axis_position_; 
   double y_axis_position_;
@@ -270,8 +641,7 @@ private:
   axis_line_style y_axis_;
 
  // text_style contains font size & type etc.
-  value_style x_values_style_; // Data point X value marking.
-  value_style y_values_style_; // Data point Y value marking.
+  value_style values_style_; // Data point value marking.
 
   text_element title_info_;
   text_element x_label_info_;
@@ -318,9 +688,29 @@ private:
 
   std::string plot_window_clip_;
   bool plot_window_on_;
+  bool median_values_on_; // If values of data are shown as well as a marker like square.
+  bool outlier_values_on_; // If values of data are shown.
+  bool extreme_outlier_values_on_; // If values of data are shown.
 
   // For storing the data points for sorting.
   std::vector<svg_boxplot_series> series;
+
+  // Defaults (see below) for the box'n'whiskers
+  // can be changed by functions like boxplot.box_width(50)
+  // for all following plot(data,"title") calls
+  // But can also change each plot data series separately.
+  double box_width_;
+  svg_style box_style_;
+
+  svg_style median_style_;
+  text_style series_style_;
+  svg_style axis_style_;
+  double whisker_length_;
+  svg_style min_whisker_style_;
+  svg_style max_whisker_style_;
+  int quartile_definition_;
+  plot_point_style mild_outlier_;
+  plot_point_style ext_outlier_;
 
 public:
  // text_element(double x = 0., double y = 0., const std::string text = "", text_style ts = no_style, align_style align = left_align, rotate_style rotate = horizontal)
@@ -328,6 +718,7 @@ public:
   svg_boxplot()
   :
   title_style_(18, "Verdana", "", "", "", ""), 
+  value_style_(10, "Verdana", "", "", "", ""), // Data values
   title_info_(0, 0, "", title_style_, center_align, horizontal),
   title_on_(true),
   x_label_info_(0, 0,  "", x_axis_label_style_ ,center_align, horizontal),
@@ -341,8 +732,7 @@ public:
   y_axis_label_style_(14, "Verdana", "", ""),
   y_value_label_style_(12, "Verdana", "", ""),
   point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
-  x_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
-  y_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
+  values_style_(rightward, 3, std::ios::dec, true, value_style_, black, black, false, false),
 
   x_ticks_(X, x_value_label_style_),// so for other defaults see ticks_labels_style.
   y_ticks_(Y, y_value_label_style_),
@@ -361,17 +751,34 @@ public:
 
   plot_window_clip_("plot_window"),
   plot_window_on_(true),
+  median_values_on_(false), // If values of data are shown as well as a marker like square.
+  outlier_values_on_(false), // If values of data are shown as well as a marker like square.
+  extreme_outlier_values_on_(false), // If values of data are shown as well.
+  quartile_definition_(8), // Default H&F quartile definition.  This might be changed to 7 to match Excel and others?
   plot_left_(0.), plot_top_(0.), plot_right_(0.), plot_bottom_(0.),
 
   // Used to transform Cartesian to SVG.
   x_scale_(1.), x_shift_(0.),
   y_scale_(1.), y_shift_(0.),
   x_axis_position_(x_intersects_y), 
-  y_axis_position_(0)
+  y_axis_position_(0),
+
+  // Box'n'whiskers default values (used in svg_boxplot_series construction)
+  // Can be changed for all plots using svg_boxplot member functions.
+  // Can be changed for individual data series using svg_boxplot_series member functions.
+  box_width_(30), // can be changed with svg_boxplot::box_width()), 
+  series_style_(x_axis_label_style_), // want to use the x_label style here
+  whisker_length_(30),
+  box_style_(green, azure, 1), // stroke, fill, width, 1, true, true, margin, border_on, fill_on 
+  median_style_(blue, blank, 1),
+  axis_style_(black, blank, 1),
+  min_whisker_style_(magenta, black, 1),
+  max_whisker_style_(cyan, black, 1),
+  mild_outlier_(brown, blank, 5, round),
+  ext_outlier_(red, blank, 5, cone)
   {
     using std::cout;
     using std::endl;
-    std::cout << image.x_size() << std::endl;
     image_size(500, 350);
 
    // Build the document tree. add children of the root node.
@@ -421,6 +828,8 @@ public:
     image.g(boxplot::MEDIAN).style().stroke_color(red).stroke_width(2);
     image.g(boxplot::EXTREME_OUTLIERS).style().stroke_color(purple).fill_color(white);
     image.g(boxplot::MILD_OUTLIERS).style().stroke_color(pink).fill_color(black);
+    image.g(boxplot::DATA_VALUE_LABELS).style().fill_color(black).stroke_on(false); 
+
   } // boxplot constructor.
 
   // Clear Functions.
@@ -441,14 +850,15 @@ public:
   }
 
   void transform_x(double& x)
-  {
+  { // X coordinate from Cartesian to SVG.
     x = x * x_scale_ + x_shift_;
   }
 
   void transform_y(double& y)
-  {
+  {// Y coordinate from Cartesian to SVG.
     y = y * y_scale_ + y_shift_;
   }
+
   void calculate_plot_window()
   {
     // Start by assuming we can use all the svg image,
@@ -457,26 +867,6 @@ public:
     plot_top_ = 0. + image_border_.width_;
     plot_right_ = image.x_size() - image_border_.width_; // Bottom right of image.
     plot_bottom_ = image.y_size() - image_border_.width_;
-
-    // Assume that axis labels are always at bottom and left.
-    if(title_on_)
-    { // Allow space for plot title.
-      plot_top_ += title_info_.style().font_size() * (text_margin_ + 0.5);
-    }
-    if(x_axis_.label_on_)
-    { // Move bottom up to leave space at bottom for X axis label.
-       plot_bottom_ -= x_axis_label_style_.font_size() * (text_margin_ + 0.5);
-    }
-
-    if (x_ticks_.down_ticks_on_)
-    { 
-       plot_bottom_ -= x_ticks_.major_tick_length_;
-    }
-
-    if(y_axis_.label_on_)
-    { // Leave space at left for Y axis label.
-      plot_left_ += y_axis_label_style_.font_size() * text_margin_;
-    }
     if(plot_window_on_)
     { // Needed to allow any plot window border rectangle to show OK.
       // A small margin is to prevent it overlapping the image border.
@@ -486,6 +876,19 @@ public:
       plot_right_ -=  image_border_.margin_;
       plot_top_ += image_border_.margin_;
       plot_bottom_ -=  image_border_.margin_;
+    }
+    if(title_on_)
+    { // Allow space for plot title (at top).
+      plot_top_ += title_info_.style().font_size() * (text_margin_ + 0.5);
+    }
+    // Assume that axis labels are always at bottom and left.
+    if(x_axis_.label_on_)
+    { // Move bottom up to leave space at bottom for X axis label.
+       plot_bottom_ -= x_axis_label_style_.font_size() * (text_margin_ + 0.5);
+    }
+    if(y_axis_.label_on_)
+    { // Leave space at left for Y axis label.
+      plot_left_ += y_axis_label_style_.font_size() * text_margin_;
     }
     if (y_autoscale_) // TODO elsewhere - implement Y autoscale (no x autoscale of course).
     { // Use calculated autoscale values.
@@ -526,8 +929,8 @@ public:
     y_ticks_.min_ = y_axis_.min_;
 
     // Calculate the number of chars of the longest value labels.
-    //x_ticks_.longest_label(); // Can't use this for boxplot.
-    // - it is the length of the value labels
+    // x_ticks_.longest_label(); // Can't use this for boxplot because
+    // it is the length of the value labels.
     y_ticks_.longest_label(); // Updates y_label_max_length_
     double longest = 0;
     for (size_t i = 0; i < series.size(); i++)
@@ -541,13 +944,13 @@ public:
     }
     if (longest == 0)
     { 
-      std::cout << "no x labels!" << std::endl;
+      std::cout << "No X-axis labels!" << std::endl;
       // No labels provided so switch off labelling.
       x_ticks_.major_value_labels_side_ = 0; 
     }
     x_ticks_.label_max_length_ = longest;
 
-    // Check that labels won't collide and advise if they will.
+    // Check that labels won't collide and advise if they will?
     // Change rotation to avoid collision?
 
     y_ticks_.label_max_space_ = 0.; // Space for Y axis labels, depending on orientation.
@@ -566,7 +969,7 @@ public:
     }
 
     if (y_ticks_.major_value_labels_side_ != 0) // != none
-    { // Major tick value labels wanted left or right .
+    { // Major tick value labels wanted left or right.
       if ((y_ticks_.ticks_on_window_or_axis_ < 0) // On left of plot window.
         && (y_ticks_.major_value_labels_side_ < 0) ) // & labels on left.
       {  // Contract plot window left edge to right to make space for value labels on left.
@@ -589,19 +992,13 @@ public:
       }
     } // y_ticks_. major_value_labels_side
 
-    // Make space for any Y ticks.
-    if(y_ticks_.left_ticks_on_)
-    { // Start left of plot to right to give space for biggest of any external left ticks.
-      plot_left_ += (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_); // Avoid macro max trap!
-    }
-
     x_ticks_.label_max_space_ = 0; // Work out the longest value label for X-Axis.
     if (x_ticks_.label_rotation_ == horizontal)
     { // Only 1 char height & 1 space needed if labels are horizontal, regardless of length of string.
       x_ticks_.label_max_space_ = 2 * x_value_label_style_.font_size() * wh; // 2 SVG chars
     }
     else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
-    { // ! horizontal so will need more than 2 chars worth.
+    { // Not horizontal so will need more than 2 chars worth.
         x_ticks_.label_max_space_ += x_ticks_.label_max_length_ ; // Number of SVG chars.
     }
     else
@@ -610,7 +1007,7 @@ public:
     }
 
     if (x_ticks_.major_value_labels_side_ != 0)
-    { // Some value labels.
+    { // Some tick value labels.
       if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
          && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
       {  // Contract plot window bottom edge up to make space for x value labels on bottom.
@@ -627,26 +1024,28 @@ public:
       }
     } // x_ticks_. major_value_labels_side
 
-    // Make space for any X ticks.
+    // Make space for any ticks.
+    if(y_ticks_.left_ticks_on_)
+    { // Start left of plot to right to give space for biggest of any external left ticks.
+      plot_left_ += (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_); // Avoid macro max trap!
+    }
     if(x_ticks_.down_ticks_on_)
     { // Start bottom of plot higher to give space for any external down ticks.
       plot_bottom_ -= (std::max)(x_ticks_.major_tick_length_, x_ticks_.minor_tick_length_);// Avoid macro max trap!
     }
 
     if (x_axis_.axis_line_on_)
-    { // Want an X-axis line, so check if range includes zero, so axes intersect,
+    { // Want an horizontal X-axis line, so check if range includes zero, so axes intersect,
       // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
       // If not fix axis to bottom (or top) of the plot window.
       if ((x_axis_position_ == bottom) // All Y values definitely > zero.
         )// && !(x_ticks_.ticks_on_window_or_axis_ < 0) ) // & not already at bottom.
       { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
-        plot_bottom_ -= x_ticks_.label_max_space_; // Move up for the value labels.
         x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
       }
       else if ((x_axis_position_ == top)  // All Y values definitely < zero.
         && !(x_ticks_.ticks_on_window_or_axis_ > 0) ) // & not already at top.
       { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
-         plot_top_ += x_ticks_.label_max_space_; // Move down for value labels.
          x_axis_.axis_ = plot_top_; // Put X-axis on top.
       }
       else
@@ -656,7 +1055,7 @@ public:
     } // if (use_x_axis_line_)
 
     if (y_axis_.axis_line_on_)
-    { // Want a Y-axis line, so check if range includes zero, so axes intersect,
+    { // Want a vertical Y-axis line, so check if range includes zero, so axes intersect,
       // and y_axis_ is svg coordinate of X-axis (usually x = 0).
       // If not fix axis to left (or right) of the plot window.
       if ((y_axis_position_ == left) // All X values definitely > zero.
@@ -725,13 +1124,12 @@ public:
   } //  void calculate_plot_window()
 
   void draw_title()
-  {
-    // Update title_info_ with position.
+  { // Update title_info_ with position.
     title_info_.x(image.x_size() / 2.); // Center of image.
     // Assumes align = center_align.
-    // And center_align will ensure that will center correctly
+    // Note: center_align will ensure that will center correctly
     // even if original string is long because contains Unicode like &#x3A9;
-    // because the render engine does the centering.
+    // because the browser render engine does the centering.
     double y = title_info_.style().font_size() * text_margin_; // Leave a linespace above.
     title_info_.y(y); // Vertical position.
     image.g(boxplot::PLOT_TITLE).push_back(new text_element(title_info_));
@@ -757,7 +1155,7 @@ public:
     }
     path_element& major_tick_path = image.g(boxplot::X_TICKS).path();
     for(size_t i = 0; i < series.size(); ++i)
-    { // Draw the ticks for each series, evenly spaced along X axis.
+    { // Draw a ticks for each series, evenly spaced along X axis.
       draw_x_major_tick(
         plot_left_ + (plot_right_- plot_left_) * 
         ((double)(i + 1)) / (double)(series.size() + 1),
@@ -773,53 +1171,52 @@ public:
     path_element& minor_grid_path = image.g(boxplot::Y_MINOR_GRID).path();
 
     // y_minor_jump is the interval between minor ticks.
-    double y_minor_jump = y_ticks_.major_interval_ / ((double)(y_ticks_.num_minor_ticks_  + 1.) );
+    double y_minor_jump = y_ticks_.major_interval_ / ((double)(y_ticks_.num_minor_ticks_ + 1.) );
 
     // Draw the ticks on the positive side.
-    for(double i = 0; i < y_axis_.max_; i += y_ticks_.major_interval_)
+    for(double y = 0; y <= y_axis_.max_; y += y_ticks_.major_interval_)
     {
-      for(double j = i + y_minor_jump;
-        j < i + y_ticks_.major_interval_;
+      for(double j = y + y_minor_jump;
+        j < (y + y_ticks_.major_interval_) * (1. - 2 * std::numeric_limits<double>::epsilon());
         j += y_minor_jump)
       {
         draw_y_minor_tick(j, minor_tick_path, minor_grid_path);
       }
-
-      draw_y_major_tick(i, major_tick_path, major_grid_path);
+      draw_y_major_tick(y, major_tick_path, major_grid_path);
     }
 
     // Draw the ticks on the negative side.
-    for(double i = 0; i >  y_axis_.min_; i -= y_ticks_.major_interval_)
+    for(double y = 0; y >= y_axis_.min_; y -= y_ticks_.major_interval_)
     {
       // draw minor ticks
-      for(double j = i;
-        j > i - y_ticks_.major_interval_;
+      for(double j = y;
+        j > y - y_ticks_.major_interval_;
         j -= y_ticks_.major_interval_ / (y_ticks_.num_minor_ticks_ + 1.))
       {
         draw_y_minor_tick(j, minor_tick_path, minor_grid_path);
       }
-
-      draw_y_major_tick(i, major_tick_path, major_grid_path);
+      draw_y_major_tick(y, major_tick_path, major_grid_path);
     }
   } // void draw_y_axis()
 
- // void draw_x_major_tick(double i, path_element& tick_path, const std::string& str)
   void draw_x_major_tick(double i, path_element& tick_path, text_element& series_info)
-  {
-    double x_left(i);
-    double y_top(0.);
-    double y_bottom(image.x_size());
-
-    // Draw major tick.
-    x_left = i;
-    y_top = plot_bottom_;
-    y_bottom = plot_bottom_ + x_ticks_.major_tick_length_;
+  { // Draw X axis major tick, and optional boxplot label.
+    double x_left = i;
+    double y_top = plot_bottom_; // Top of tick.
+    if (x_ticks_.up_ticks_on_)
+    { // 
+      y_top -= (std::max)(x_ticks_.major_tick_length_, x_ticks_.minor_tick_length_);
+    }
+    double y_bottom = plot_bottom_;
+    if (x_ticks_.down_ticks_on_)
+    { // Move down for tick.
+      y_bottom += (std::max)(x_ticks_.major_tick_length_, x_ticks_.minor_tick_length_);
+    }
     tick_path.M(x_left, y_top).L(x_left, y_bottom); // leaving current position at bottom or tick.
     if(x_axis_.label_on_) //    use_x_major_labels)
     {
-      series_info.x(x_left); // horizontal position.
-      double y = y_bottom + x_ticks_.major_tick_length_;
-      y += series_info.style().font_size() * text_margin_; // Leave a linespace above.
+      series_info.x(x_left); // Horizontal position.
+      double y = y_bottom + series_info.style().font_size() * (text_margin_ * 0.7); // Leave a linespace above.
       series_info.y(y); // Vertical position.
       image.g(boxplot::VALUE_LABELS).push_back(new text_element(series_info));
     }
@@ -858,7 +1255,7 @@ public:
       grid_path.M(x_left, y).L(x_right, y); // Horizontal grid line.
    } // y_major_grid_on
 
-    // Draw major ticks & value label, if necessary.
+    // Draw major ticks & tick value label, if necessary.
     double y_tick_length = y_ticks_.major_tick_length_;
     if (y_ticks_.ticks_on_window_or_axis_ < 0)
     { // Start ticks on the plot window border left.
@@ -889,16 +1286,17 @@ public:
     // These may be on the axis line: y is the vertical tick position.
 
     if(y_ticks_.major_value_labels_side_ != 0)
-    { // Label the tick with a value, for example "1.2"
+    { // Label the tick with a value, for example "sin(x)"
+      // (more likely to be a text string for boxplot, where 2D will be numeric tick value label).
       std::stringstream label;
       label.precision(y_ticks_.value_precision_);
       label.flags(y_ticks_.value_ioflags_); // set ALL IOflags.
       label << value; // Example: label.str() == "20" or "0.25" or "1.2e+015"
-			if (y_ticks_.strip_e0s_)
-			{ // Remove unecessary e, +, leadings 0s.
-				std::string v = strip_e0s(label.str());
-				label.str(v);
-			}
+		   if (y_ticks_.strip_e0s_)
+		  { // Remove unecessary e, +, leadings 0s.
+			  std::string v = strip_e0s(label.str());
+			  label.str(v);
+		  }
 
       double x = 0; // Where to start writing from, at end of left or right tick, if any.
       // = 0 is only to avoid unitialised warning.
@@ -1001,11 +1399,11 @@ public:
         return; // Without any value label.
      } // All rotations.
     if (x <= 0)
-    { // Sanity checks on svg coordinates.
+    { // Sanity checks on svg coordinate.
       throw std::runtime_error("Y-tick X value wrong!");
     }
     if (y <= 0)
-    {
+    { // Sanity checks on svg coordinate.
       throw std::runtime_error("Y-tick Y value wrong!");
     }
     if(y_ticks_.ticks_on_window_or_axis_ != 0)
@@ -1103,7 +1501,7 @@ public:
   } // void draw_y_minor_tick
 
   void draw_x_label()
-  { // Draw a label (and optional Units) for example "length (km)".
+  { // Draw an axis label (and optional units) for example "length (km)".
     // X-label color is set in constructor thus:
     // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
     // and changed using x_label_color(color);
@@ -1115,8 +1513,7 @@ public:
     }
 
     double y = plot_bottom_;
-    y += x_ticks_.value_label_style_.font_size() * 2.; // Shift down to suit.
-    y += x_label_info_.style().font_size() * 2.; // Shift down to suit.
+    y += x_ticks_.value_label_style_.font_size() * 2.; // Shift down to suit ticks?
     if (x_ticks_.ticks_on_window_or_axis_ < 0) // bottom == -1
     { // Ticks & value labels below X-axis.
       if (x_ticks_.major_value_labels_side_ < 0) // - is bottom.
@@ -1139,8 +1536,7 @@ public:
       );
   } // void draw_x_label()
 
-
-    void draw_y_label()
+  void draw_y_label()
   { // Draw vertical y_axis label, and optional y units.
     // Y-label color is set in constructor thus:
     // image.g(boxplot::Y_LABEL).style().fill_color(black);
@@ -1176,7 +1572,6 @@ public:
 
   } // draw_y_label
 
-
   void draw_box(double q1, double q3, // Quartiles
   double x, double width,
   const svg_style& box_styl)
@@ -1194,20 +1589,26 @@ public:
   } //  void draw_box
 
   void draw_median(double median, double x_offset, double box_width,
-    const svg_style& median_style)
-  { // Draw the median of the data series line within the box.
-    transform_y(median);
-    g_element& g_ptr = image.g(boxplot::MEDIAN)
-      .g();
-
+    const svg_style& median_style, const value_style& values_style)
+  { // Draw the median of the data series line within the box,
+    // and optionally the median value.
+    double median_y = median;
+    transform_y(median_y); // SVG coordinate of median line.
+    g_element& g_ptr = image.g(boxplot::MEDIAN).g();
     g_ptr.style().stroke_color(median_style.stroke_color())
       .stroke_width(median_style.stroke_width());
 
-    double half_width = box_width / 2.;
-
-    g_ptr.line(x_offset - half_width, median,
-      x_offset + half_width, median);
-
+    double half_width = box_width / 2;
+    g_ptr.line(x_offset - half_width, median_y, x_offset + half_width, median_y);
+    //  void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
+    if (median_values_on_)
+    { // Show the value of the median too.
+      g_element& g_ptr_median = image.g(boxplot::DATA_VALUE_LABELS).g();
+      draw_plot_point_value(x_offset + half_width, median_y, g_ptr_median, const_cast<value_style&>(values_style), mild_outlier_, median);
+      // Share the mild_outlier point style?
+      g_ptr_median.clip_id(plot_window_clip_);
+      // TODO this doesn't have the desired effect???
+    }
     // Clip elements.
     g_ptr.clip_id(plot_window_clip_);
   } // void draw_median
@@ -1215,12 +1616,10 @@ public:
   void draw_whiskers(double min, double max, double length, double x,
     const svg_style& min_whisker, const svg_style& max_whisker,
     const svg_style& axis_whisker)
-  {
-    // Set up document structure for whiskers.
-   // g_element& g_whisk_ptr = image.g(boxplot::WHISKER).g();
+  { // Set up document structure for whiskers:
     g_element& g_whisk_ptr = image.g(boxplot::WHISKER).g();
 
-    // Set colors for whiskers.
+    // Set colors for min and max whiskers.
     g_whisk_ptr.g().style()
       .stroke_color(min_whisker.stroke_color())
       .fill_color(min_whisker.fill_color())
@@ -1232,8 +1631,7 @@ public:
       .stroke_width(max_whisker.stroke_width());
 
     // Set axis structure and colors.
-    g_element& g_axis_ptr = image.g(boxplot::BOX_AXIS)
-      .g();
+    g_element& g_axis_ptr = image.g(boxplot::BOX_AXIS).g();
 
     g_axis_ptr.style()
       .stroke_color(axis_whisker.stroke_color())
@@ -1244,53 +1642,77 @@ public:
     transform_y(max);
 
     double half_length = length / 2.;
-    g_whisk_ptr.g(0)
-      .line(x-half_length, min, x + half_length, min);
-    g_whisk_ptr.g(1)
-      .line(x-half_length, max, x + half_length, max);
-
+    g_whisk_ptr.g(0).line(x - half_length, min, x + half_length, min);
+    g_whisk_ptr.g(1).line(x - half_length, max, x + half_length, max);
     g_axis_ptr.line(x, min, x, max);
 
     // Clip elements.
     g_axis_ptr.clip_id(plot_window_clip_);
     g_whisk_ptr.clip_id(plot_window_clip_);
-  } // void draw_whiskers
+  } // void draw_whiskers()
 
   void draw_outliers(double x, const std::vector<double>& outliers,
     const std::vector<double>& extreme_outliers,
-    const plot_point_style& mild_style, const plot_point_style& extreme_style)
+    const plot_point_style& mild_style, const plot_point_style& extreme_style,
+    const value_style& values_style)
   { // Draw marker points for any mild and/or extreme outliers.
     g_element& g_mild_ptr = image.g(boxplot::MILD_OUTLIERS).g();
-    g_element& g_ext_ptr = image.g(boxplot::EXTREME_OUTLIERS).g();
-
-    const svg_color c = mild_style.fill_color_;
     g_mild_ptr.style().fill_color(mild_style.fill_color_)
       .stroke_color(mild_style.stroke_color_);
 
+//  void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& sty, double value)
+//  void draw_plot_point(double x, double y, g_element& g_ptr,  plot_point_style& sty)
+//  using boost::svg::detail::axis_plot_frame<Derived>::draw_plot_point in axis_plot_frame.hpp.
+
+    std::vector<double>::const_iterator i;
+    double y;
+    for(i = outliers.begin(); i != outliers.end(); ++i)
+    { // Mild outliers.
+      double value = *i;  // Save in case want to display value.
+      if ((value <= y_axis_.max_) && (value >= y_axis_.min_))
+      { // Inside plot window so want to show.
+        y = value;
+        transform_y(y); // to SVG.
+        draw_plot_point(x, y, g_mild_ptr, const_cast<plot_point_style&>(mild_style)); // Kludge!
+        if (outlier_values_on_)
+        { // Show the value of the data point too.
+          draw_plot_point_value(x, y, image.g(boxplot::DATA_VALUE_LABELS).g(), const_cast<value_style&>(values_style), mild_outlier_, value);
+        }
+      } // In window OK.
+    }
+    g_element& g_ext_ptr = image.g(boxplot::EXTREME_OUTLIERS).g();
     g_ext_ptr.style().fill_color(extreme_style.fill_color_)
       .stroke_color(extreme_style.stroke_color_);
 
-    std::vector<double>::const_iterator i;
-    double temp;
-    for(i = outliers.begin(); i != outliers.end(); ++i)
-    { // Mild outliers.
-      transform_y(temp = *i);
-      g_mild_ptr.circle(x, temp, 2);
-    }
-
     for(i = extreme_outliers.begin(); i != extreme_outliers.end(); ++i)
     { // Extreme outliers.
-      transform_y(temp = *i);
-      g_ext_ptr.circle(x, temp, 2);
+      double value = *i; // Save in case want to display value.
+      if ((value <= y_axis_.max_) && (value >= y_axis_.min_))
+      { // Inside plot window so want to show.
+        y = value;
+        transform_y(y); // to SVG.
+        draw_plot_point(x, y, g_ext_ptr, const_cast<plot_point_style&>(extreme_style)); // Kludge!
+        if (extreme_outlier_values_on_) // This isn't a series setting - but might be.
+        { // Show the value of the data point too.
+          draw_plot_point_value(x, y, image.g(boxplot::DATA_VALUE_LABELS).g(), const_cast<value_style&>(values_style), ext_outlier_, value);
+        }
+      } // in window.
     }
 
-    // Clip elements.
+    // Clip elements to prevent any ouliers outside the plot window being shown.
+    // But actually it may chop them in half! 
     g_mild_ptr.clip_id(plot_window_clip_);
     g_ext_ptr.clip_id(plot_window_clip_);
   } // void draw_outliers
 
-  void draw_boxplot(const svg_boxplot_series& series, double x_offset)
-  {
+  void draw_boxplot(svg_boxplot_series& series, double x_offset)
+  { // Draw a whole boxplot, box, median line, axis whiskers, and outliers.
+
+    // const here causes trouble
+     // Need to calculate quartiles here to permit individual plot quartile_definition.
+
+    series.calculate_quantiles(); 
+
     draw_whiskers(series.whisker_min_, series.whisker_max_,
       series.whisker_length_, x_offset,
       series.min_whisker_style_, series.max_whisker_style_,
@@ -1301,17 +1723,17 @@ public:
 
     draw_median(series.median_, x_offset,
       series.box_width_ - series.box_style_.stroke_width(),
-      series.median_style_);
+      series.median_style_, series.values_style_);
 
     draw_outliers(x_offset, series.outliers_, series.extreme_outliers_,
-      series.mild_outlier_, series.ext_outlier_);
+      series.mild_outlier_, series.ext_outlier_, series.values_style_);
   } // void draw_boxplot
 
   void update_image()
   {
     clear_all();
 
-    // Draw background.
+    // Draw image background & border, if any.
     image.g(boxplot::PLOT_BACKGROUND).push_back(
       new rect_element(0, 0, image.x_size(), image.y_size()) );
 
@@ -1320,14 +1742,16 @@ public:
 
     // Define the clip path for the plot window.
     // We don't want to allow too much overlap of the plot window lines,
-    // so allow the border
+    // so allow for the border.
 
-    double margin = plot_window_border_.width_ * 1.; // Or more?
+    double margin = plot_window_border_.width_ * 5.; // Or more?
+    // This controls how much points can overlap the plot window.
+    // Might also make margin relative to data value font size and/or data marker size?
     image.clip_path(rect_element(plot_left_ - margin, // margin left
       plot_top_ - margin, // margin above top
-      plot_right_ - plot_left_ + margin, // incrased lengths for rect (not x, y)
+      plot_right_ - plot_left_ + margin, // increased lengths for rect (not x, y)
       plot_bottom_ - plot_top_ + margin),
-      plot_window_clip_);
+      plot_window_clip_); // clip id
 
     draw_x_axis(); // Must do X-axis first.
     draw_y_axis();
@@ -1336,29 +1760,202 @@ public:
     {
       draw_x_label();
     }
-
     if(y_axis_.label_on_)
     {
       draw_y_label();
     }
-
     for(unsigned int i=0; i < series.size(); ++i)
     { // Draw box'n'whiskers for each data series.
       draw_boxplot(series[i],
         plot_left_ + (plot_right_ - plot_left_) * ((double)(i + 1)) / (double)(series.size() + 1));
       // Spaced evenly across the plot window width.
+      // Actually this leaves rather lot of space at the outside compared to spacing in middle?
     }
   } // void update_image()
 
+  svg& get_svg()
+  {
+    update_image();
+    return image;
+  }
 
-  // Removed pending reimplementation of stylesheets.
-  //svg_boxplot& load_stylesheet(const std::string& file)
-  //{
+  // svg_boxplot& load_stylesheet(const std::string& file);  // Removed pending reimplementation of stylesheets.
+
+  // Declarations of user boxplot functions.
+
+  svg_boxplot& write(const std::string& file);
+  svg_boxplot& write(std::ostream& s_out);
+  svg_boxplot& title_on(bool cmd);
+  svg_boxplot& x_label_on(bool cmd);
+  svg_boxplot& median_values_on(bool cmd);
+  bool median_values_on();
+  svg_boxplot& outlier_values_on(bool cmd);
+  bool outlier_values_on();
+  svg_boxplot& extreme_outlier_values_on(bool cmd);
+  bool extreme_outlier_values_on();
+  svg_boxplot& y_label_on(bool cmd);
+  svg_boxplot& y_major_labels_on(int cmd);
+  svg_boxplot& x_major_labels_on(int cmd);
+  svg_boxplot& y_major_tick_color(const svg_color& col);
+  svg_boxplot& x_tick_color(const svg_color& col);
+  svg_boxplot& y_minor_tick_color(const svg_color& col);
+  svg_boxplot& title_color(const svg_color& col);
+  svg_boxplot& background_color(const svg_color& col);
+  svg_boxplot& background_border_color(const svg_color& col);
+  svg_boxplot& plot_background_color(const svg_color& col);
+  svg_boxplot& plot_border_color(const svg_color& col);
+  svg_boxplot& y_range(double min_y, double max_y);
+  svg_boxplot& y_label(const std::string& str);
+  svg_boxplot& image_size(unsigned int x, unsigned int y);
+  svg_boxplot& y_label_font_size(unsigned int size);
+  svg_boxplot& y_label_color(const svg_color& col);
+  svg_boxplot& title(const std::string& str);
+  svg_boxplot& title_size(unsigned int size);
+  svg_boxplot& x_label(const std::string& str);
+  svg_boxplot& x_label_size(unsigned int size);
+  svg_boxplot& x_label_color(const svg_color& col);
+  svg_boxplot& y_major_interval(double inter);
+  svg_boxplot& x_tick_length(unsigned int length);
+  svg_boxplot& y_major_tick_length(unsigned int length);
+
+  svg_boxplot& y_minor_tick_length(unsigned int length);
+  svg_boxplot& y_num_minor_ticks(unsigned int num);
+  svg_boxplot& x_tick_width(unsigned int width);
+  svg_boxplot& y_major_tick_width(unsigned int width);
+  svg_boxplot& y_minor_tick_width(unsigned int width);
+  unsigned int image_x_size();
+  unsigned int image_y_size();
+  std::string title();
+  bool x_label_on();
+  int x_major_labels();
+  // get color information
+  svg_color title_color(); // Color of title text.
+  svg_color background_color(); // Fill color of whole image background.
+  svg_color background_border_color(); // Color of image border.
+  svg_color plot_background_color();
+  svg_color plot_border_color();
+  svg_color x_label_color();
+  svg_color x_tick_color();
+  double x_tick_length();
+  double x_major_tick_width();
+  std::string x_label_text();
+  std::string y_label_text();
+
+  // Member Functions to control all box and whisker settings.
+
+  svg_boxplot& whisker_length(double width);
+  double whisker_length();
+  svg_boxplot& box_width(double width); // Width of the box, not the border.
+  double box_width(); // Width of the box, not the border.
+  svg_boxplot& box_fill(const svg_color& color); // Color of box fill, not border. 
+  svg_color box_fill(); // Color of box fill, not border. 
+  svg_boxplot& box_border(const svg_color& color); // Color of border (not fill) to box.
+  svg_color box_border(); // Color of border (not fill) to box.
+  svg_boxplot& median_color(const svg_color& color); // Color of median line in box.
+  svg_color median_color(); // Color of median line in box.
+  svg_boxplot& median_width(double l); // Width of median line in box.
+  double median_width(); //  Width of median line in box.
+  svg_boxplot& axis_color(const svg_color& color);
+  svg_color axis_color(); // Color of median line in box.
+  svg_boxplot& axis_width(double l); // Width of vertical whisker axis line in box. 
+  double axis_width(); //  Width of vertical whisker axis line in box. 
+
+  plot_point_style& outlier_style();
+  svg_boxplot& outlier_style(plot_point_style& os);
+
+  svg_boxplot& outlier_color(const svg_color& color); // Color of outlier marker.
+  svg_color outlier_color(); // Color of outlier marker.
+  svg_boxplot& outlier_fill(const svg_color& color); // Fill color of outlier marker.
+  svg_color outlier_fill(); // Fill color of outlier marker.
+  svg_boxplot& extreme_outlier_color(const svg_color& color); // Color of extreme outlier marker.
+  svg_color extreme_outlier_color(); // Color of extreme outlier marker.
+  svg_boxplot& extreme_outlier_fill(const svg_color& color); // Fill color of extreme outlier marker.
+  svg_color extreme_outlier_fill(); // Fill color of extreme outlier marker.
+
+  svg_boxplot& outlier_shape(point_shape shape); // Shape of outlier marker.
+  point_shape outlier_shape(); // Shape of outlier marker.
+
+  svg_boxplot& outlier_size(int size); // Size of outlier marker.
+  int outlier_size(); // Size of outlier marker.
+
+  svg_boxplot& extreme_outlier_shape(point_shape shape); // Shape of extreme outlier marker.
+  point_shape extreme_outlier_shape(); // Shape of extreme outlier marker.
+
+  svg_boxplot& extreme_outlier_size(int size); // Size of extreme outlier marker.
+  int extreme_outlier_size(); // Size of extreme outlier marker.
+
+  svg_boxplot& svg_boxplot::quartile_definition(int def); // H&F quartile definition.
+  int svg_boxplot::quartile_definition(); // H&F quartile definition.
+
+
+
+  // Plot member function to add a Data Series Boxplot.
+
+  // Use overloaded functions to provide access to boxplot's non-static members values.
+  // Version with NO default values.
+  template <class T>
+  svg_boxplot_series& plot(const T& container, // Add a data series to boxplot.
+    const std::string& title,
+    double bw,
+    svg_style bs, // box_style_, // box width & style
+    svg_style ms, // median marker style
+    svg_style as, // axis style
+    double wl, // whisker length
+    svg_style minws, // min whisker style
+    svg_style maxws, // max whisker style
+    plot_point_style os, // mild outlier style
+    plot_point_style extos, // extreme outlier style
+    int q_def, // Quartile definition H&F #
+    value_style vs,  // style for data values.
+    text_style ss // series style - for series title.
+    )
+  {
+    series.push_back( // Add a new data series for a boxplot.
+      svg_boxplot_series(
+        boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
+        boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
+        title, bw, bs, ms, as,
+        wl, minws, maxws,
+        os, extos, q_def, vs, ss
+        )
+        // Get all styles etc from parent boxplot.
+      );
+      return series[series.size() - 1]; // Number of data series added so far.
+  } // svg_boxplot_series& plot(const T& container, const std::string& title )
+
+  // Version copying box'n'whiskers parameters from parent boxplot.
+  template <class T>
+  svg_boxplot_series& plot(const T& container, // Add a data series to boxplot.
+    const std::string& title = "") // Warning given if this default is used.
+  {
+    if (title.size() == 0)
+    {
+      std::cout << "Data series has no title!" << std::endl;
+    }
+    series.push_back( // Add a new data series for a boxplot.
+      svg_boxplot_series(
+        boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
+        boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
+        title, box_width_, box_style_, median_style_, axis_style_,
+        whisker_length_, min_whisker_style_, max_whisker_style_,
+        mild_outlier_, ext_outlier_, quartile_definition_, values_style_, series_style_
+        )
+        // Get all styles etc from parent boxplot.
+      );
+      return series[series.size() - 1]; // Reference to data series just added.
+  } // svg_boxplot_series& plot(const T& container, const std::string& title)
+
+}; // class svg_boxplot
+
+// Definitions to match declarations above for separate file.
+
+  //svg_boxplot& svg_boxplot::load_stylesheet(const std::string& file)
+  //{ // removed until new implementation supports stylesheets.
   //  image.load_stylesheet(file);
   //  return *this;
   //}
 
-  svg_boxplot& write(const std::string& file)
+  svg_boxplot& svg_boxplot::write(const std::string& file)
   {
     std::string filename(file); // Copy to avoid problems with const if need to append.
     if (filename.find(".svg") == std::string::npos)
@@ -1377,92 +1974,122 @@ public:
     return *this;
   } // svg_boxplot& write(const std::string& file)
 
-  svg_boxplot& write(std::ostream& s_out)
-  {
+  svg_boxplot& svg_boxplot::write(std::ostream& s_out)
+  { // ostream version used by filename version.
     update_image();
     image.write(s_out);
     return *this;
   }
 
-  svg_boxplot& title_on(bool cmd)
+  svg_boxplot& svg_boxplot::title_on(bool cmd)
   {
     title_on_ = cmd;
     return *this;
   }
 
-  svg_boxplot& x_label_on(bool cmd)
+  svg_boxplot& svg_boxplot::x_label_on(bool cmd)
   { // If Y axis name or label, for example: "length of thing".
       x_axis_.label_on_ = cmd;
     return *this;
   }
 
-  svg_boxplot& y_label_on(bool cmd)
+  svg_boxplot& svg_boxplot::y_label_on(bool cmd)
   {
       y_axis_.label_on_ = cmd;
     return *this;
   }
 
-   svg_boxplot& y_major_labels_on(int cmd)
+  svg_boxplot& svg_boxplot::y_major_labels_on(int cmd)
   { //< 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top).
     y_ticks_.major_value_labels_side_ = cmd;
     return *this;
   }
 
-  svg_boxplot& x_major_labels_on(int cmd)
+  svg_boxplot& svg_boxplot::x_major_labels_on(int cmd)
   { //< 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top).
     x_ticks_.major_value_labels_side_ = cmd;
     return *this;
   }
 
-  svg_boxplot& y_major_tick_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::median_values_on(bool cmd)
+  {
+    median_values_on_ = cmd;
+    return *this;
+  }
+
+  svg_boxplot& svg_boxplot::outlier_values_on(bool cmd)
+  {
+    outlier_values_on_ = cmd;
+    return *this;
+  }
+  svg_boxplot& svg_boxplot::extreme_outlier_values_on(bool cmd)
+  {
+    extreme_outlier_values_on_ = cmd;
+    return *this;
+  }
+
+  bool svg_boxplot::median_values_on()
+  {
+    return outlier_values_on_;
+  }
+
+  bool svg_boxplot::outlier_values_on()
+  {
+    return outlier_values_on_;
+  }
+  bool svg_boxplot::extreme_outlier_values_on()
+  {
+    return extreme_outlier_values_on_;
+  }
+
+  svg_boxplot& svg_boxplot::y_major_tick_color(const svg_color& col)
   {
     image.g(boxplot::Y_MAJOR_TICKS).style().stroke_color(col);
     return *this;
   }
 
-  svg_boxplot& x_tick_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::x_tick_color(const svg_color& col)
   {
     image.g(boxplot::X_TICKS).style().stroke_color(col);
     return *this;
   }
 
-  svg_boxplot& y_minor_tick_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::y_minor_tick_color(const svg_color& col)
   {
     image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
     return *this;
   }
 
-  svg_boxplot& title_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::title_color(const svg_color& col)
   {
     image.g(boxplot::PLOT_TITLE).style().stroke_color(col);
     return *this;
   }
 
-  svg_boxplot& background_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::background_color(const svg_color& col)
   { // "imageBackground"
     image.g(boxplot::PLOT_BACKGROUND).style().fill_color(col);
     return *this;
   }
-
-  svg_boxplot& background_border_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::background_border_color(const svg_color& col)
   { // "imageBackground"
     image.g(boxplot::PLOT_BACKGROUND).style().stroke_color(col);
     return *this;
   }
 
-  svg_boxplot& plot_background_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::plot_background_color(const svg_color& col)
   { // Plot Window "plotBackground" 
     image.g(boxplot::PLOT_WINDOW_BACKGROUND).style().fill_color(col);
     return *this;
   }
 
-  svg_boxplot& plot_border_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::plot_border_color(const svg_color& col)
   { // Plot window "plotBackground"
     image.g(boxplot::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
     return *this;
   }
 
-  svg_boxplot& y_range(double min_y, double max_y)
+  svg_boxplot& svg_boxplot::y_range(double min_y, double max_y)
   {
     if (!boost::math::isfinite(min_y))
     {
@@ -1485,141 +2112,95 @@ public:
     y_axis_.max_ = max_y;
     y_autoscale_ = false;
     return *this;
-  } // svg_boxplot& y_range(double y1, double y2)
+  } // svg_boxplot& y_range(double y1, double y2  
 
-  svg_boxplot& y_label(const std::string& str)
+  svg_boxplot& svg_boxplot::y_label(const std::string& str)
   {
     y_label_info_.text(str);
     return *this;
   }
 
-  svg_boxplot& image_size(unsigned int x, unsigned int y)
+  svg_boxplot& svg_boxplot::image_size(unsigned int x, unsigned int y)
   {
     image.image_size(x, y);
     return *this;
   }
 
-  svg_boxplot& y_label_font_size(unsigned int size)
+  svg_boxplot& svg_boxplot::y_label_font_size(unsigned int size)
   {
      y_axis_label_style_.font_size(size);
     return *this;
   }
 
-  svg_boxplot& y_label_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::y_label_color(const svg_color& col)
   {
     image.g(boxplot::Y_LABEL).style().fill_color(col);
     return *this;
   }
 
-  svg_boxplot& title(const std::string& str)
+  svg_boxplot& svg_boxplot::title(const std::string& str)
   {
     title_info_.text(str);
     return *this;
   }
-
-  svg_boxplot& title_size(unsigned int size)
+  svg_boxplot& svg_boxplot::title_size(unsigned int size)
   {
     y_label_info_.style().font_size(size);
     return *this;
   }
 
-  svg_boxplot& x_label(const std::string& str)
+
+  svg_boxplot& svg_boxplot::x_label(const std::string& str)
   {
     x_label_info_.text(str);
     return *this;
   }
-
-  svg_boxplot& x_label_size(unsigned int size)
+  svg_boxplot& svg_boxplot::x_label_size(unsigned int size)
   {
     x_label_info_.style().font_size(size);
     return *this;
   }
 
-  svg_boxplot& x_label_color(const svg_color& col)
+  svg_boxplot& svg_boxplot::x_label_color(const svg_color& col)
   {
     image.g(boxplot::X_LABEL).style().fill_color(col);
     return *this;
   }
 
-  svg_boxplot& y_major_interval(double inter)
+  svg_boxplot& svg_boxplot::y_major_interval(double inter)
   {
     y_ticks_.major_interval_ = inter;
-
     return *this;
   }
-
-  svg_boxplot& x_tick_length(unsigned int length)
+  svg_boxplot& svg_boxplot::x_tick_length(unsigned int length)
   {
     x_ticks_.major_tick_length_ = length;
     return *this;
   }
 
-  svg_boxplot& y_major_tick_length(unsigned int length)
+  svg_boxplot& svg_boxplot::y_major_tick_length(unsigned int length)
   {
     y_ticks_.major_tick_length_ = length;
     return *this;
   }
 
-  svg_boxplot& y_minor_tick_length(unsigned int length)
+  svg_boxplot& svg_boxplot::y_minor_tick_length(unsigned int length)
   {
     y_ticks_.minor_tick_length_ = length;
     return *this;
-  }
+  } 
 
-  svg_boxplot& y_num_minor_ticks(unsigned int num)
+  svg_boxplot& svg_boxplot::y_num_minor_ticks(unsigned int num)
   {
     y_ticks_.num_minor_ticks_ = num;
     return *this;
   }
 
-  svg_boxplot& x_tick_wide(unsigned int width)
+  svg_boxplot& svg_boxplot::x_tick_width(unsigned int width)
   {
     image.g(boxplot::X_TICKS).style().stroke_width(width);
     return *this;
   }
-
-  svg_boxplot& y_major_tick_width(unsigned int width);
-  svg_boxplot& y_minor_tick_width(unsigned int width);
-  unsigned int image_x_size();
-  unsigned int image_y_size();
-  std::string title();
-  bool x_label_on();
-  int x_major_labels();
-  // get color information
-  svg_color title_color();
-  svg_color background_color();
-  svg_color background_border_color();
-  svg_color plot_background_color();
-  svg_color plot_border_color();
-  svg_color x_label_color();
-  svg_color x_tick_color();
-  double x_tick_length();
-  double x_major_tick_width();
-  std::string x_label_text();
-  std::string y_label_text();
-
-  svg& get_svg()
-  {
-    update_image();
-    return image;
-  }
-
-  template <class T>
-  svg_boxplot_series& plot(const T& container, const std::string& title = "")
-  {
-    series.push_back(
-      svg_boxplot_series(
-        boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
-        boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
-        title)
-      // whisker, width, box, median, axis, min_whisker, max_whisker, mild_outlier, ext_outlier
-      );
-      return series[series.size() - 1]; // Number of data series added so far.
-  } // svg_boxplot_series& plot(const T& container, const std::string& title )
-
-}; // class svg_boxplot
-
-// Definitions to match declarations above for separate file.
 
   svg_boxplot& svg_boxplot::y_major_tick_width(unsigned int width)
   {
@@ -1712,6 +2293,195 @@ public:
   {
     return y_label_info_.text();
   }
+
+  svg_boxplot& svg_boxplot::whisker_length(double width)
+  {
+    whisker_length_ = width;
+    return *this;
+  }
+
+  double svg_boxplot::whisker_length()
+  { // width of the box, not the margin.
+    return whisker_length_;
+  }
+
+ svg_boxplot& svg_boxplot::box_width(double width)
+  { // Width of the box, not the border.
+    box_width_ = width;
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot::box_width()
+  { // Width of the box, not the border.
+    return box_width_;
+  }
+
+  svg_boxplot& svg_boxplot::box_fill(const svg_color& color)
+  { // Color of box fill, not border. 
+    box_style_.fill_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::box_fill()
+  { // Color of box fill, not border. 
+    return box_style_.fill_color();
+  }
+
+  svg_boxplot& svg_boxplot::box_border(const svg_color& color)
+  { // Color of box fill, not border. 
+    box_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::box_border()
+  { // Color of box fill, not border. 
+    return box_style_.stroke_color();
+  }
+
+  svg_boxplot& svg_boxplot::median_color(const svg_color& color)
+  { // Color of median line in box. 
+    median_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::median_color()
+  { // Color of median line in box.
+    return median_style_.stroke_color();
+  }
+
+  svg_boxplot& svg_boxplot::median_width(double width)
+  { // Width of the box, not the border.
+    median_style_.stroke_width(width);
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot::median_width()
+  { // Width of the box, not the border.
+    return median_style_.stroke_width();
+  }
+
+  svg_boxplot& svg_boxplot::axis_color(const svg_color& color)
+  { // Color of vertical whisker axis line in box. 
+    axis_style_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::axis_color()
+  { // Color of vertical whisker axis line in box.
+    return axis_style_.stroke_color();
+  }
+
+  svg_boxplot& svg_boxplot::axis_width(double width)
+  { // Width of the box, not the border.
+    median_style_.stroke_width(width);
+    return *this; // Chainable.
+  }
+
+  double svg_boxplot::axis_width()
+  { // Width of the box, not the border.
+    return median_style_.stroke_width();
+  }
+
+  svg_boxplot& svg_boxplot::outlier_color(const svg_color& color)
+  { // Color of axis line in box.
+    mild_outlier_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::outlier_color()
+  {  // Color of axis line in box.
+    return mild_outlier_.stroke_color();
+  }
+
+  svg_boxplot& svg_boxplot::outlier_fill(const svg_color& color)
+  { // Color of axis line in box.
+    mild_outlier_.fill_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::outlier_fill()
+  {  // Color of axis line in box.
+    return mild_outlier_.fill_color();
+  }
+
+  svg_boxplot& svg_boxplot::extreme_outlier_color(const svg_color& color)
+  { // Color of axis line in box.
+    ext_outlier_.stroke_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::extreme_outlier_color()
+  {  // Color of axis line in box.
+    return ext_outlier_.stroke_color();
+  }
+
+  svg_boxplot& svg_boxplot::extreme_outlier_fill(const svg_color& color)
+  { // Color of axis line in box.
+    ext_outlier_.fill_color(color);
+    return *this; // Chainable.
+  }
+
+  svg_color svg_boxplot::extreme_outlier_fill()
+  {  // Color of axis line in box.
+    return ext_outlier_.fill_color();
+  }
+
+  svg_boxplot& svg_boxplot::outlier_shape(point_shape shape)
+  { // Shape of outlier marker.
+    mild_outlier_.shape_ = shape;
+    return *this; // Chainable.
+  }
+
+  point_shape svg_boxplot::outlier_shape()
+  { // Color of outlier marker.
+    return mild_outlier_.shape_;
+  }
+
+  svg_boxplot& svg_boxplot::extreme_outlier_shape(point_shape shape)
+  { // Shape of extreme outlier marker.
+    ext_outlier_.shape_ = shape;
+    return *this; // Chainable.
+  }
+
+  point_shape svg_boxplot::extreme_outlier_shape()
+  { // Shape of extreme outlier marker.
+    return ext_outlier_.shape_ ;
+  }
+
+  svg_boxplot&  svg_boxplot::outlier_size(int size)
+  { // Size of outlier marker.
+    mild_outlier_.size(size);
+    return *this; // Chainable.
+  }
+
+  int svg_boxplot::outlier_size()
+  {
+    return mild_outlier_.size();
+  }
+  // Size of outlier marker.
+
+  svg_boxplot& svg_boxplot::extreme_outlier_size(int size)
+  { // Size of extreme outlier marker.
+    ext_outlier_.size(size);
+    return *this; // Chainable.
+  }
+
+  int svg_boxplot::extreme_outlier_size()
+  { // Size of extreme outlier marker.
+    return ext_outlier_.size();
+  }
+
+  svg_boxplot& svg_boxplot::quartile_definition(int def)
+  { // Size of extreme outlier marker.
+    quartile_definition_ = def;
+    return *this; // Chainable.
+  }
+
+  int svg_boxplot::quartile_definition()
+  { // Size of extreme outlier marker.
+    return quartile_definition_;
+  }
+
 
 
 

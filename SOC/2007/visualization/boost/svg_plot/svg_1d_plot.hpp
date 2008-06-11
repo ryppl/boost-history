@@ -617,7 +617,7 @@ public:
         // TODO symbols are offset downwards
         // because the origin of the point is the top left of the glyph.
         // Need to offset by the height and width of the font size.
-        double v = x;
+        double value = x;
         transform_x(x);
         if( // Check point is inside plot_window (otherwise ignore it).
           // May need a margin here to avoid points just over the window not being shown.  TODO
@@ -628,10 +628,10 @@ public:
         {
           draw_plot_point(x, y, g_ptr, series[i].point_style_); // Marker.
           if (x_values_on_)
-          { // show the value of the data point too.
+          { // Show the value of the data point too.
             g_element& g_ptr_v = image.g(detail::PLOT_X_POINT_VALUES).g();
-            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, v);
-            // TODO separate X and Y colors.
+            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, series[i].point_style_, value);
+            // TODO separate X and Y colors?
           }
 
         }

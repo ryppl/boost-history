@@ -888,7 +888,7 @@ namespace boost
           void draw_plot_point(double x, double y, // SVG coordinates.
             g_element& g_ptr,
             plot_point_style& sty)
-          {
+          { // Draw a shape whose size and color are specified in plot_point_style.
             int size = sty.size_;
             double half_size = size / 2.;
 
@@ -993,11 +993,11 @@ namespace boost
             }
           } // void draw_plot_point
 
-          void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& sty, double value)
-          { // Write the value as string of a data point, X or Y .
+          void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
+          { // Write the value as string of a data point, X or Y.
             std::stringstream label;
-            label.precision(sty.value_precision_);
-            label.flags(sty.value_ioflags_);
+            label.precision(val_style.value_precision_);
+            label.flags(val_style.value_ioflags_);
             label << value; // "1.2" or "3.4e+001"...
             std::string stripped =  (derived().x_ticks_.strip_e0s_) ?
               // Default is to strip unecessary e, +, & leading exponent zeros.
@@ -1006,8 +1006,9 @@ namespace boost
               stripped = label.str();
             //plot_point_style& sty)
             //int size = sty.size_;
-            int marker_size = derived().series[0].point_style_.size_;
-            int label_size = sty.values_text_style_.font_size();
+            // was int marker_size = derived().series[0].point_style_.size_; 
+            int marker_size = point_style.size_; // point marker size
+            int label_size = val_style.values_text_style_.font_size();
             // Offset of value label from point must be related mainly to
             // size of the data marker, less the value label font size.
 
@@ -1022,7 +1023,7 @@ namespace boost
             //  backdown = 135, // slope down backwards.
             //  upsidedown = 180 // == -180
             //};
-            rotate_style rot = sty.value_label_rotation_;
+            rotate_style rot = val_style.value_label_rotation_;
             // http://www.w3.org/TR/SVG/coords.html#RotationDefined
             // transform="rotate(-45)"
 
@@ -1034,13 +1035,13 @@ namespace boost
               y -= marker_size * 2;  // Up marker font size;
               // center_align means no x correction.
               break;
-            case leftward: // horizontal but to left of marker. OK
+            case leftward: // horizontal but to left of marker.
               al = right_align;
               x -= marker_size * 1.3;  // left
               y += label_size * 0.3;  // down label font size;
               rot = horizontal;
               break;
-            case rightward: // horizontal but to right of marker.OK
+            case rightward: // horizontal but to right of marker.
               al = left_align;
               x += marker_size * 1.1;  // right
               y += label_size * 0.3;  // down label font size;
@@ -1084,11 +1085,8 @@ namespace boost
              break;
             } // switch
 
-             g_ptr.text(x, y, stripped, sty.values_text_style_, al, rot);
-             //g_ptr.text(x, y, stripped, derived().x_values_style_, al, rot);
+            g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);
           } // void draw_plot_point_value(double x, double y, g_element& g_ptr, double value)
-
-          // TODO draw_plot_point_values function should probably be in svg_2d_plot as never used in 1D.
 
           std::string sv(double v, const value_style& sty, bool unc = false)
           { // Build // Strip unecessary e, +, & leading exponent zeros, reducing to "1.2, 3.4" or "3.4e1, 5.6e1"...

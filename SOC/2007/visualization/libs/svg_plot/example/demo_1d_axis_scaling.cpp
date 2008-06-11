@@ -78,6 +78,9 @@ double tol100eps = 1000 * numeric_limits<double>::epsilon(); // suitable tight v
 
 int main()
 {
+  using namespace boost::svg;
+  try
+  {
   //[demo_1d_axis_scaling_2
   /*`This example uses a few types of containers to demonstrate axis_scaling.
   axis_scaling must inspect the container in order to find axis ranges that will be suitable.
@@ -143,7 +146,7 @@ int main()
   // axis_scaling using two double min and max values.
   double min_value = *(my_data.begin());
   double max_value = *(--my_data.end());
-  cout << "axis_scaling min " << min_value << ", max = " << max_value << endl;
+  cout << "axis_scaling 1 min " << min_value << ", max = " << max_value << endl;
 
 /*` and to apply these values to the axis_scaling algorithm using by plot to choose the axes limits and ticks.
 */
@@ -155,7 +158,7 @@ int main()
   scale_axis(min_value, max_value,
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
     false, tol100eps, 6); // Display range.
-  cout << "Axis_scaled min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
+  cout << "Axis_scaled 2 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 /*`It is also possible to use this with containers that use iterators and whose contents are ordered in ascending value,
 axis_scaling using first and last in container, for example, set, map, multimap, or a sorted vector or array.
 A number of variations are shown below, mianly by way of testing.
@@ -163,27 +166,31 @@ A number of variations are shown below, mianly by way of testing.
   scale_axis(*my_data.begin(),*(--my_data.end()),
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
     false, tol100eps, 6); // Display range.
-  cout << "Axis_scaled min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
+  cout << "Axis_scaled 3 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
   // axis_scaling using two begin & end iterators into STL container,
   // scale_axis does finding min and max.
   scale_axis(my_data.begin(), my_data.end(),
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    false, tol100eps, 6); // Display range.
-  cout << "Axis_scaled min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
+    true, // check for non-finite
+    false, // Do not include origin
+    tol100eps, // tight
+    6, // steps at default.
+    0); // Display range.
+  cout << "Axis_scaled 4 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
   // axis_scaling using two begin & end iterators into STL container,
   // scale_axis does finding min and max.
   scale_axis(my_data[1], my_data[4], // Only middle part of the container used, ignoring 1st and last values.
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
     false, tol100eps, 6); // Display range.
-  cout << "Axis_scaled min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
+  cout << "Axis_scaled 5 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
   // axis_scaling using whole STL container,
   // scale_axis does finding min and max.
   scale_axis(my_data, &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    false, tol100eps, 6); // Display range.
-  cout << "Axis_scaled min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
+    true, false, tol100eps, 6); // Display range.
+  cout << "Axis_scaled 6 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
 	svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
@@ -253,8 +260,15 @@ A number of variations are shown below, mianly by way of testing.
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 1, 5.5
 
   //show_1d_plot_settings(my_1d_plot);
-
 //] [/demo_1d_axis_scaling_5]
+  }
+  catch(const std::exception& e)
+  {
+    std::cout <<
+      "\n""Message from thrown exception was:\n  " << e.what() << std::endl;
+  }
+ 
+
 
  	return 0;
 } // int main()
