@@ -479,7 +479,7 @@ enclosing namespaces.}
 \addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept Callable<class F, class T1> {
-  result_type operator() (F&, T1)
+  result_type operator() (F&, T1);
   typename result_type; // error result_type used before declared
 }
 \end{codeblock}
@@ -3512,7 +3512,7 @@ concept Sequence<typename X> {
   template<InputIterator Iter> 
     requires Convertible<InputIterator<Iter>::value_type, Sequence<X>::value_type>
     X::X(Iter first, Iter last);
-};
+}
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
@@ -3523,7 +3523,7 @@ concept C<typename X> {
   void f(X);
   void f(X, X); // okay
   int f(X, X); // error: differs only by return type
-};
+}
 \end{codeblock} 
 \addedConcepts{\mbox{\exitexample}}
 
@@ -3538,20 +3538,21 @@ concept C<typename X> {
 
 \pnum
 \addedConcepts{Associated functions may have a default implementation. This
-implementation will be instantiated when needed to
-satisfy the associated function requirement (\mbox{\ref{concept.map.fct}}). A default implementation of an
+implementation will be instantiated}
+\changedCCC{when needed to
+satisfy the associated function requirement (\mbox{\ref{concept.map.fct}})}{when used}\addedConcepts{. A default implementation of an
 associated function is a constrained template
 (\mbox{\ref{temp.constrained}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept EqualityComparable<typename T> {
   bool operator==(T, T);
   bool operator!=(T x, T y) { return !(x == y); }
-};
+}
 
 class X {};
 bool operator==(const X&, const X&);
 
-concept_map EqualityComparable<X> { }; // okay, operator!= uses default
+concept_map EqualityComparable<X> { } // okay, operator!= uses default
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
@@ -3815,9 +3816,9 @@ corresponding concept instance.}
 \begin{codeblock}
 class student_record { 
 public: 
-  string id; 
-  string name; 
-  string address; 
+  std::string id; 
+  std::string name; 
+  std::string address; 
 }; 
 
 concept EqualityComparable<typename T> {
@@ -3828,7 +3829,7 @@ concept_map EqualityComparable<student_record> {
   bool operator==(const student_record& a, const student_record& b) { 
     return a.id == b.id; 
   }
-}; 
+} 
 
 template<typename T> requires EqualityComparable<T> void f(T);
 
@@ -3933,7 +3934,7 @@ concept ForwardIterator<typename Iter> {
   requires SignedIntegral<difference_type>;
 }
 
-concept_map SignedIntegral<ptrdiff_t> { };
+concept_map SignedIntegral<ptrdiff_t> { }
 
 concept_map ForwardIterator<int*> {
   typedef ptrdiff_t difference_type;
@@ -3976,7 +3977,10 @@ int f(int x, int y) {
 
 \pnum
 \addedConcepts{\mbox{\enternote} Failure to implicitly define a
-concept map does not imply that the program is ill-formed. \mbox{\exitnote}\ 
+concept map does not}
+\addedCC{necessarily}
+\addedConcepts{imply that the program is ill-formed}
+\addedCC{(\mbox{\ref{temp.deduct}})}\addedConcepts{. \mbox{\exitnote}\ 
 \mbox{\enterexample}}
 \begin{codeblock}
 auto concept F<typename T> {
@@ -4056,7 +4060,7 @@ concept_map Stack<std::vector<T> > {
 
 \pnum
 \addedConcepts{A function or function template defined in a concept
-  map is \mbox{\techterm{inline}}.}
+  map is inline.}
 
 \pnum
 \addedConcepts{An associated function (or function template) requirement is
@@ -4317,7 +4321,7 @@ concept_map Allocator<my_allocator<T>> {
     public:
       typedef my_allocator<U> type;
     };
-};
+}
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
@@ -4325,7 +4329,10 @@ concept_map Allocator<my_allocator<T>> {
 \addedConcepts{A concept map member that satisfies an associated type or
   template requirement can be implicitly defined using template
   argument deduction (\mbox{\ref{temp.deduct}}) with one or more
-  associated function requirements (\mbox{\ref{concept.map.fct}}). 
+  associated function requirements
+  (\mbox{\ref{concept.map.fct}})}\addedCC{, if the associated type or
+  template requirement does not have a default
+  argument}\addedConcepts{.
   The definition of the associated type or template is
   determined using the rules of template argument deduction from a
   type (\mbox{\ref{temp.deduct.type}}). Let
@@ -4435,7 +4442,10 @@ concept EquilateralPolygon<typename P> : Polygon<P> { /* ... */ }
 \end{codeblock} \exitexample\
 
 \pnum
-\addedConcepts{A \mbox{\techterm{refinement-specifier}} shall refer to a defined concept. \mbox{\enterexample}}
+\addedConcepts{A \mbox{\techterm{refinement-specifier}} shall refer to
+  a}
+\addedCC{previously}
+\addedConcepts{defined concept. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> : C<vector<T>> {/* ... */ } // error: concept C is not defined
 \end{codeblock}
@@ -4467,8 +4477,9 @@ concept InputIterator<typename Iter>
 \rSec3[concept.member.lookup]{Concept member lookup}
 
 \pnum
-\addedConcepts{Concept member lookup determines the meaning of a name
-(\mbox{\techterm{id-expression}}) in concept scope
+\addedConcepts{Concept member lookup determines the meaning of a name}
+\removedCCC{(\mbox{\techterm{id-expression}})}
+\addedConcepts{in concept scope
 (\mbox{\ref{basic.scope.concept}}). The following steps define the result of
 name lookup for a member name \mbox{\tcode{f}} in concept scope
 \mbox{\tcode{C}}. \mbox{\tcode{C$_R$}} is the set of concept scopes corresponding to
@@ -5176,8 +5187,8 @@ namespace N2 {
 \addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 namespace N1 {
-  concept C<typename T> { };
-  concept_map C<int> { };
+  concept C<typename T> { }
+  concept_map C<int> { }
 }
 template<N1::C T> void f(T x);
 void g() { 
@@ -5613,7 +5624,7 @@ requires VectorLike<vector<T>> // vector<T> is an archetype (but not an instanti
 void f(const T& value) {
   vector<T> x; // okay: default constructor in VectorLike<vector<T> >
   x.push_back(value); // okay: push_back in VectorLike<vector<T> >
-  VectorLike<vector<T>::value_type& val = x.front(); // okay: front in VectorLike<vector<T> >
+  VectorLike<vector<T>>::value_type& val = x.front(); // okay: front in VectorLike<vector<T>>
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
@@ -5794,7 +5805,7 @@ member of the corresponding concept map. \mbox{\exitnote}}
 concept F<typename T> {
   T::T();
   void f(T const&);
-};
+}
 
 template<typename T> requires F<T>
 void g(T const& x) {
@@ -5981,7 +5992,7 @@ __where UnderlyingType<T>;
 void _save_raw(T&, UnderlyingType<T>::_underlying_type&); 
 void _move_raw(T&, T&); 
 void _restore_raw(UnderlyingType<T>::_underlying_type&, T&); 
-}; 
+}
 In [7], the identifier move raw is overloaded to name all three of these operations, but 
 early experiments with this approach resulted in compilation errors-reports of ambi- 
 guities stemming from multiple ways of satisfying the Movable concept in cases where 
