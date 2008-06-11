@@ -1064,8 +1064,28 @@ namespace N3 {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-\addedConcepts{If no concept is specified in the concept map using declaration,
-all concept maps from the specified namespace are brought into scope.
+\addedCC{If no concept is specified in the concept map using declaration,
+    the following rule applies.
+Let X be the namespace specified in the \techterm{nested-name-specifier} of
+    the \techterm{using-declaration}.
+Let S be the set of all names of concept maps and concept map templates in
+    X and in the transitive closure of all namespaces nominated by
+    using-directives in X and its used namespaces,
+    except that using-directives that nominate non-inline namespaces
+    (\ref{namespace.memdef}) are ignored in any namespace,
+    including X,
+    directly containing one or more names of a concept map or concept map
+    template.
+No namespace is considered more than once to see if it contains a concept
+map or concept map template.
+If S is the empty set,
+    the program is ill-formed.
+For each element in S,
+    a name is introduced into the declarative region in which the
+    \techterm{using-declaration} appears.
+The name is a synonym for the referent concept map or concept map template.
+}
+addedConcepts{
 \mbox{\enterexample}}
 \begin{codeblock}
 namespace N1 {
@@ -2267,6 +2287,7 @@ is:
 template-parameter:\br
   type-parameter\br
   parameter-declaration
+  \addedCC{constrained-template-parameter}
 \end{bnf}
 
 \begin{bnf}
@@ -2278,10 +2299,23 @@ type-parameter:\br
   \terminal{typename}\ identifier\opt\ \terminal{=}\ type-id\br
   \terminal{template <}\ template-parameter-list \terminal{> class}\ \terminal{...}\opt\ identifier\opt\br
   \terminal{template <}\ template-parameter-list \terminal{> class}\ identifier\opt\ \terminal{=}\ id-expression\br
-  \addedConcepts{\mbox{\terminal{::}}\mbox{\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{...}}\mbox{\opt} identifier\mbox{\opt}}\br
-  \addedConcepts{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name identifier\mbox{\opt} \mbox{\terminal{=}} type-id}\br
-  \addedConcepts{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedConcepts{simple-requirement-argument-list} \addedConcepts{\mbox{\terminal{>}} \mbox{\terminal{...}\opt} identifier} \br
-  \addedConcepts{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedConcepts{simple-requirement-argument-list} \addedConcepts{\mbox{\terminal{>}}} \addedConcepts{identifier} \addedConcepts{\mbox{\terminal{=}} type-id}\br
+  \removedCCC{\mbox{\terminal{::}}\mbox{\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{...}}\mbox{\opt} identifier\mbox{\opt}}\br
+  \removedCCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name identifier\mbox{\opt} \mbox{\terminal{=}} type-id}\br
+  \removedCCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \removedCCC{simple-requirement-argument-list} \removedCCC{\mbox{\terminal{>}} \mbox{\terminal{...}\opt} identifier} \br
+  \removedCCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \removedCCC{simple-requirement-argument-list} \removedCCC{\mbox{\terminal{>}}} \removedCCC{identifier} \removedCCC{\mbox{\terminal{=}} type-id}\br
+
+\index{constrained-template-parameter@\techterm{constrained-template-parameter}}%
+\addedCC{constrained-template-parameter:}\br
+    \addedCC{\mbox{\terminal{::}}\mbox{\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{...}}\mbox{\opt} identifier\mbox{\opt}}\br
+    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name identifier\mbox{\opt} constrained-default-argument\mbox{\opt}}\br
+    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}} \mbox{\terminal{...}\opt} identifier} \br
+    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}}} \addedCC{identifier} \addedCC{constrained-default-argument\mbox{\opt}}\br
+
+\index{constrained-default-argument@\techterm{constrained-default-argument}}%
+\addedCC{constrained-default-argument:}\br
+    \addedCC{\mbox{\terminal{=}} type-id}\br
+    \addedCC{\mbox{\terminal{=}} assignment-expression }\br
+    \addedCC{\mbox{\terminal{=}} id-expression }\br
 
 \addedConcepts{simple-requirement-argument-list}:\br
   \addedConcepts{\mbox{\terminal{auto}}}\br
@@ -2308,29 +2342,58 @@ part of the template's requirements.}
 \setcounter{Paras}{17}
 \color{addclr}
 \pnum
-\addedConcepts{A \mbox{\techterm{type-parameter}} declared with a
+\addedConcepts{A }
+\changedCC{\mbox{\techterm{type-parameter}}}{\mbox{\techterm{template-parameter}}} 
+\addedConcepts{ declared with a
   \mbox{\techterm{concept-name}}
-is a template type parameter or parameter pack that specifies a
+is a template type}\addedCC{, non-type or template}
+\addedConcepts{parameter or parameter pack that specifies a
 template requirement (\mbox{\ref{temp.req}}) using the \mbox{\techterm{simple form}}
-of template requirements. A template type parameter or parameter pack written 
+of template requirements. }
+\addedCC{The kind (type, non-type or template) of the parameter is
+that of the first template parameter of the concept named in the
+\mbox{techterm{constrained-template-parameter}}.  For a non-type parameter,
+the type is that of the first template parameter of the concept named in the
+\mbox{techterm{constrained-template-parameter}}.  For a template parameter,
+the template parameter list is that of the first template parameter of the
+concept named in the \mbox{techterm{constrained-template-parameter}}. }
+\addedConcepts{A template}
+\removedCCC{type}
+\addedConcepts{parameter or parameter pack written 
 \mbox{\tcode{\BnfTermshape{::}\opt\
   \BnfNontermshape{nested-name-specifier}\opt\ C ...\opt\ T}}, where \mbox{\tcode{C}} is a \mbox{\techterm{concept-name}}, is
-equivalent to a template type parameter or parameter pack written as
-\mbox{\tcode{typename T}} or \mbox{\tcode{typename... T}}, respectively,
+equivalent to a template 
+}\removedCCC{type}\addedConcepts{
+parameter or parameter pack }
+\changedCC{
+    written as \mbox{\tcode{typename T}} or \mbox{\tcode{typename...
+T}}, respectively,}{T declared as a
+\mbox{\techterm{type-parameter}} or
+\mbox{\techterm{parameter-declaration}}}
+\addedConcepts{
 with the template requirement or pack expansion \mbox{\tcode{\BnfTermshape{::}\opt\
   \BnfNontermshape{nested-name-specifier}\opt\ C<T> ...\opt}} added to
 the template requirements.}
 %
-\addedConcepts{A template type parameter or parameter pack written
+\addedConcepts{A template }
+\removedCCC{type}
+\addedConcepts{ parameter or parameter pack written
 \mbox{\tcode{\BnfTermshape{::}\opt\
   \BnfNontermshape{nested-name-specifier}\opt\ C<auto, T2, T3, ..., T$N$>...\opt\
-  T}}, is equivalent to a template type parameter or
+  T}}, is equivalent to a template }\removedCCC{type} parameter or
 parameter pack 
-written as \mbox{\tcode{typename T}} or \mbox{\tcode{typename... T}},
-respectively, with the template requirement}\\
+\changedCC{
+    written as \mbox{\tcode{typename T}} or \mbox{\tcode{typename...
+T}}, respectively,}{T declared as a
+\mbox{\techterm{type-parameter}} or
+\mbox{\techterm{parameter-declaration}}}
+\addedConcepts{
+with the template requirement}\\
 \addedConcepts{\mbox{\tcode{\BnfTermshape{::}\opt\
   \BnfNontermshape{nested-name-specifier}\opt\ C<T, T2, T3, ...,
   T$N$>...\opt}} added to the template requirements.
+}
+\removedCC{
 The first concept parameter of concept \mbox{\tcode{C}}
 shall be a type parameter, and all concept parameters not otherwise
 specified shall have default values. \mbox{\enterexample}}
@@ -2712,7 +2775,7 @@ respectively and substitute it for each occurrence of that parameter
 in the function type of the template.
 \addedConcepts{When the template is a constrained template,
   the unique type is an archetype
-  and concept maps for each of the
+  and concept map}\addedCC{ archetype}\addedConcepts{s for each of the
   requirements stated in or implied by its template requirements
   are also synthesized; see \mbox{\ref{temp.constrained}}.
   \mbox{\enternote}
@@ -3884,8 +3947,12 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
 \addedConcepts{
     A concept map that is not a concept map archetype
      may contain two kinds of members:
-    \mbox{\techterm{requirement members}} and \mbox{\techterm{satisfier
-    members}}.}
+    \mbox{\techterm{requirement members}} and 
+}\changedCCC{ \mbox{\techterm{satisfier members}}.}{members that satisfy
+requirement members.  The latter may be explicitly declared within the
+concept, explicitly declared within a refinement, or generated implicitly
+from a default implementation from the concept or refinement of the
+concept.}
     
 \pnum 
 \addedConcepts{
@@ -3906,7 +3973,7 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
     }
 
 \pnum 
-\addedConcepts{
+\removedCCC{
     The \mbox{\techterm{concept-map-member-specification}}
     in a \mbox{\techterm{concept-map-definition}} declares the full set of
     satisfier members of the concept map; no satisfier member can be added
@@ -3915,22 +3982,27 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
 \pnum 
 \addedConcepts{
     After a requirement is satisfied, the requirement member serves as a
-    synonym for the set of entities (possibly satisfier members) that
-    satisfies the requirement. Each requirement member is visible during
+    synonym for the }\changedCCC{set of entities (possibly satisfier members) that
+    satisfies }{entity that satisfies} \addedConcepts{the requirement.}
+    \addedCC{That entity is said to be the \mbox{\techterm{satisfier}} of
+    the requirement member.}
+    Each requirement member is visible during
     qualified name lookup (\mbox{\ref{concept.qual}}).}
 
 \pnum
-\addedConcepts{
+\removedCCC{
     A satisfier member shall satisfy
-    (\mbox{\ref{iconcept.map.fct}}, \mbox{\ref{iconcept.map.assoc}}) at
+    (\mbox{\ref{concept.map.fct}}, \mbox{\ref{concept.map.assoc}}) at
     least one requirement member of its enclosing concept map or at least
-    one unsatisfied requirement member from a refined concept map.  A
-    satisfier member cannot be found by any form of name lookup
-    (\mbox{\ref{basic.lookup}}).  }
+    one unsatisfied requirement member from a refined concept map.}
+    \changedCCC{ A  satisfier member}{
+    A member that satisfies a requirement member}
+     \addedConcepts{cannot be found by any form of name lookup
+    (\mbox{\ref{basic.lookup}}).}
 
 \pnum 
 \addedConcepts{
-    A concept map archetype (\mbox{\ref{temp.archetype}}) does not contain
+    A concept map archetype (\mbox{\ref{temp.archetype}}) \changedCCC{does not contain
     any requirement members or satisfier members.
     The set of members of a concept map archetype is the set of associated
     functions, associated types and associated}
@@ -3940,7 +4012,8 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
     concept arguments of the concept map archetype.  Within a constrained
     template, these members are treated as if they were real functions,
     types and templates for the purposes of syntactic and semantic
-    analysis.}
+    analysis.}{is considered to have satisfiers (generated from the
+    concept) for each of its requirement members.}
 
 \pnum
 \addedConcepts{Concept maps shall satisfy every associated function (\mbox{\ref{concept.fct}}),
@@ -4897,14 +4970,14 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
   \additemConcepts{a late-checked block (\mbox{\ref{stmt.late}}),}
   \additemConcepts{a default template argument in a
     \mbox{\techterm{template-parameter}},}
-  \additemConcepts{a default argument in a
-    \mbox{\techterm{parameter-declaration}}}\addedConcepts{, unless that
+  \removedCCC{a default argument in a
+    \mbox{\techterm{parameter-declaration}}}\removedCCC{, unless that
     default argument occurs within a local class
     (\mbox{\ref{class.local}}),}
-  \additemConcepts{the \mbox{\techterm{requires-clause}},
+  \removedCCC{the \mbox{\techterm{requires-clause}},
     \mbox{\techterm{type-specifier}}, and \mbox{\techterm{declarator}}
     of a constrained member (\mbox{\ref{class.mem}}), and}
-  \additemConcepts{a member template of a constrained template
+  \removedCCC{a member template of a constrained template
     (\mbox{\ref{temp.mem}}). \mbox{\enternote} 
     The member template itself will still be a constrained template,
     and its body will be a constrained context. \mbox{\exitnote}}
@@ -5160,6 +5233,15 @@ void h(float x, int y, int X::* p) {
     no result.}
 
 \pnum
+\addedCC{When concept map lookup is performed during template argument
+    deductdion formed during partial ordering
+    (\mbox{\ref{temp.deduct.partial}}),
+    \mbox{\tcode{Q}} is defined as
+    the ordered sequence consisting of only one element where S
+    is the set of concept map archetypes synthesized from the requirements
+    of the argument template
+    (\mbox{\ref{temp.func.order}},\mbox{\ref{temp.deduct.partial}}).
+   }
 \addedConcepts{When concept map lookup is performed during the
   instantiation of a constrained template
   (\mbox{\ref{temp.constrained.inst}}), \mbox{\tcode{Q}} is defined as
