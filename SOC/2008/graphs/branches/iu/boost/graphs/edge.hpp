@@ -21,9 +21,24 @@ public:
     inline undirected_edge();
     inline undirected_edge(vertex_descriptor u, vertex_descriptor v, property_descriptor p);
 
-    inline edge_pair const& edge() const;
-    inline property_descriptor property() const;
+    inline property_descriptor properties() const
+    { return _prop; }
 
+    inline edge_pair const& edge() const
+    { return _edge; }
+
+    inline vertex_descriptor first() const
+    { return _edge.first(); }
+
+    inline vertex_descriptor second() const
+    { return _edge.second(); }
+
+    inline vertex_descriptor opposite(vertex_descriptor v)
+    { return v == first() ? second() : first(); }
+
+
+    inline bool operator==(undirected_edge const& x);
+    inline bool operator!=(undirected_edge const& x);
     inline bool operator<(undirected_edge const& x);
 
 private:
@@ -46,17 +61,17 @@ undirected_edge<VD,PD>::undirected_edge(vertex_descriptor u,
 { }
 
 template <typename VD, typename PD>
-typename undirected_edge<VD,PD>::edge_pair const&
-undirected_edge<VD,PD>::edge() const
+bool
+undirected_edge<VD,PD>::operator==(undirected_edge const& x)
 {
-    return _edge;
+    return _edge == x._edge && _prop == x._prop;
 }
 
 template <typename VD, typename PD>
-typename undirected_edge<VD,PD>::property_descriptor
-undirected_edge<VD,PD>::property() const
+bool
+undirected_edge<VD,PD>::operator!=(undirected_edge const& x)
 {
-    return _prop;
+    return !(*this->operator==(x));
 }
 
 template <typename VD, typename PD>
@@ -65,5 +80,6 @@ undirected_edge<VD,PD>::operator<(undirected_edge const& x)
 {
     return _edge < x._edge || (!(x._edge < _edge) && _prop < x._prop);
 }
+
 
 #endif

@@ -26,8 +26,6 @@ public:
     typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
-    typedef none incidence_iterator;
-
     // Constructors
     incidence_vector();
 

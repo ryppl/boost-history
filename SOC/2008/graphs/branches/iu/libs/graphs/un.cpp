@@ -11,7 +11,7 @@ using namespace std;
 using namespace boost;
 
 typedef int City;
-struct Road { };
+typedef int Road;
 
 void list_list();
 void vec_vec();
@@ -90,6 +90,19 @@ void test_multi_edge(Graph& g)
 }
 
 template <typename Graph>
+void test_remove_vert(Graph& g)
+{
+    cout << "*** Remove Vertex" << endl;
+    cout << "*** " << demangle(typeid(Graph).name()) << endl;
+    typename Graph::vertex_descriptor u = g.add_vertex(300);
+    typename Graph::vertex_descriptor v = g.add_vertex(301);
+    typename Graph::vertex_descriptor w = g.add_vertex(302);
+    g.add_edge(u, v, 1);
+    g.add_edge(v, w, 2);
+    g.remove_vertex(v);
+}
+
+template <typename Graph>
 void print_verts(Graph& g)
 {
     typename Graph::vertex_range rng = g.vertices();
@@ -101,12 +114,11 @@ void print_verts(Graph& g)
 
 int main()
 {
-    vec_vec();
-    cout << endl << endl;
+    // vec_vec();
+    // cout << endl << endl;
     list_list();
-    cout << endl << endl;
-    set_set();
-    cout << endl << endl;
+    // cout << endl << endl;
+    // set_set();
 
     return 0;
 }
@@ -125,9 +137,10 @@ void list_list()
     typedef undirected_graph<City, Road, vertex_list, edge_list> Graph;
 
     Graph g;
-    add_verts(g);
-    add_and_del_edges(g);
-    test_multi_edge(g);
+    // add_verts(g);
+    // add_and_del_edges(g);
+    // test_multi_edge(g);
+    test_remove_vert(g);
 }
 
 

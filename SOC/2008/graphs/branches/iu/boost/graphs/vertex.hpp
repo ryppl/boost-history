@@ -2,6 +2,8 @@
 #ifndef VERTEX_HPP
 #define VERTEX_HPP
 
+#include "incidence_iterator.hpp"
+
 // A vertex, at least for an undirected graph, is simply an repository
 // for the vertex' properties and an interface for the its incidence
 // list.
@@ -20,7 +22,7 @@ public:
     typedef typename incidence_store::property_descriptor property_descriptor;
 
     typedef typename incidence_store::const_iterator iterator;
-    typedef typename incidence_store::size_type incidence_size_type;
+    typedef typename incidence_store::size_type size_type;
 
     inline vertex();
     inline vertex(vertex_properties const& vp);
@@ -29,8 +31,6 @@ public:
     inline void connect(vertex_descriptor, property_descriptor);
     inline void disconnect(vertex_descriptor, property_descriptor);
     template <typename Eraser> inline void disconnect(vertex_descriptor, Eraser);
-
-    inline incidence_size_type degree() const;
 
     inline vertex_properties& properties();
     inline vertex_properties const& properties() const;
@@ -41,6 +41,9 @@ public:
 
     inline iterator end() const
     { return _edges.end(); }
+
+    inline size_type degree() const
+    { return _edges.size(); }
 
     inline bool operator<(vertex const&) const;
 
@@ -102,16 +105,6 @@ void
 vertex<VP,IS>::disconnect(vertex_descriptor v, Eraser erase)
 {
     _edges.remove(v, erase);
-}
-
-/**
- * Return the degree (number of incident edges) of this vertex.
- */
-template <typename VP, typename IS>
-typename vertex<VP,IS>::incidence_size_type
-vertex<VP,IS>::degree() const
-{
-    return _edges.size();
 }
 
 /**

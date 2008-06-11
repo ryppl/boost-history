@@ -59,13 +59,17 @@ public:
     // Generate the incidence list. The incidence list for a single vertex
     // contains a pair: the opposite edge and a property descriptor.
     typedef typename EdgeStore::template incidence_store<vertex_descriptor, property_descriptor>::type incidence_store;
-    typedef typename incidence_store::size_type incident_edges_size_type;
-    typedef typename incidence_store::incidence_iterator incident_edge_iterator;
 
     // Generate the vertex type over the given properties and the incidence
     // store. Then, turn around and use that to generate the vertex store and its
     // related types.
     typedef vertex<vertex_properties, incidence_store> vertex_type;
+    typedef typename vertex_type::size_type incident_edges_size_type;
+
+    // Incident edge iterators are abstracted over the iterators of the vertex.
+    typedef incidence_iterator<typename vertex_type::iterator> incident_edge_iterator;
+    typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
+
     typedef typename VertexStore::template store<vertex_type>::type vertex_store;
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
@@ -83,7 +87,8 @@ public:
     vertex_descriptor add_vertex(vertex_properties const&);
     vertex_descriptor add_vertex(key_type const&, vertex_properties const&);
 
-    // Remove vertices
+    // Disconnect and Remove vertices
+    void disconnect_vertex(vertex_descriptor);
     void remove_vertex(vertex_descriptor);
 
     // Add edges
@@ -98,8 +103,13 @@ public:
     vertex_iterator end_vertices() const;
     vertices_size_type num_vertices() const;
 
+    // Edge incidence
+    incident_edge_iterator begin_incident_edges(vertex_descriptor) const;
+    incident_edge_iterator end_incident_edges(vertex_descriptor) const;
+    incident_edge_range incident_edges(vertex_descriptor) const;
     incident_edges_size_type degree(vertex_descriptor) const;
 
+    // Property accesors
     vertex_properties& operator[](vertex_descriptor);
     edge_properties& operator[](edge_descriptor);
 
@@ -134,6 +144,32 @@ undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_properties const& vp)
 }
 
 /**
+ * Disconnect the vertex from the graph. This removes all edges incident to
+ * the vertex, but will not remove the vertex itself.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
+{
+    // Disconnecting a vertex is not quite so simple as clearing the incidence
+    // set since we have to remove all the edge properties and remove the
+    // opposite edges from other vertices.
+    // TODO: Can we specialize this at all?
+
+    // Start by disconnecting all of the incident edges from adjacent vertices.
+    incident_edge_range rng = incident_edges(v);
+    for( ; rng.first != rng.second; ++rng.first) {
+        edge_descriptor e = *rng.first;
+        vertex_type& opp = _verts.vertex(e.opposite(v));
+        opp.disconnect(v, e.properties());
+
+        // Remove all the properties too. Does this make sense here?
+        _props.remove(e.properties());
+
+    }
+}
+
+/**
  * Remove the vertex from the graph. This will disconnect the vertex from the
  * graph prior to remove.
  */
@@ -141,6 +177,7 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_descriptor v)
 {
+    disconnect_vertex(v);
     _verts.remove(v);
 }
 
@@ -181,19 +218,17 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         // edge. Otherwise, we can simply return an edge over the existing
         // iterator.
         if(ins.first == src.end()) {
-            property_descriptor p = _props.add();
+            property_descriptor p = _props.add(ep);
             src.connect(v, p);
             tgt.connect(u, p);
-            std::cout << "added new edge" << std::endl;
             return edge_descriptor(u, v, p);
         }
         else {
-            std::cout << "reusing old edge" << std::endl;
             return edge_descriptor(u, v, ins.first->second);
         }
     }
     else {
-        std::cout << "can't add?" << std::endl;
+        // Can't add the edge?
     }
 
     // This is a null iterator
@@ -210,10 +245,12 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
-    // Cache some useful info for the erasure.
-    property_descriptor p = e.property();
-    vertex_descriptor u = e.edge().first();
-    vertex_descriptor v = e.edge().second();
+    // Grab descriptors out of the edge.
+    property_descriptor p = e.properties();
+    vertex_descriptor u = e.first();
+    vertex_descriptor v = e.second();
+
+    // And translate to real data structres.
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
@@ -221,6 +258,8 @@ undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
     // the global property store.
     src.disconnect(v, p);
     tgt.disconnect(u, p);
+
+    std::cout << "removing properties: " << _props.properties(p) << std::endl;
     _props.remove(p);
 }
 
@@ -292,6 +331,36 @@ undirected_graph<VP,EP,VS,ES>::num_vertices() const
 }
 
 /**
+ * Return an iterator to the first incident edge of the given vertex.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::incident_edge_iterator
+undirected_graph<VP,EP,VS,ES>::begin_incident_edges(vertex_descriptor v) const
+{
+    return incident_edge_iterator(v, _verts.vertex(v).begin());
+}
+
+/**
+ * Return an iterator past the end of the incident edges of the given vertex.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::incident_edge_iterator
+undirected_graph<VP,EP,VS,ES>::end_incident_edges(vertex_descriptor v) const
+{
+    return incident_edge_iterator(v, _verts.vertex(v).end());
+}
+
+/**
+ * Return an iterator range over the incident edges of the given vertex.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::incident_edge_range
+undirected_graph<VP,EP,VS,ES>::incident_edges(vertex_descriptor v) const
+{
+    return make_pair(begin_incident_edges(v), end_incident_edges(v));
+}
+
+/**
  * Return the degree (number of incdent edges) of the given vertex.
  */
 template <BOOST_GRAPH_UG_PARAMS>
@@ -318,7 +387,7 @@ template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_properties&
 undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
 {
-    return _props.properties(e.prop);
+    return _props.properties(e.properties());
 }
 
 #undef BOOST_GRAPH_UG_PARAMS

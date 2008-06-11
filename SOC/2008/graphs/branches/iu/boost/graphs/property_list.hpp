@@ -32,7 +32,11 @@ public:
     // Property access.
     inline property_type& properties(property_descriptor);
 
-public:
+    // Don't ever call this function.
+    inline typename store_type::size_type size() const
+    { return _props.size(); }
+
+private:
     store_type _props;
 };
 
