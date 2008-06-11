@@ -332,14 +332,16 @@ concept map.}
 \end{enumeraten}
 
 \pnum
-\addedConcepts{The name of a concept member shall only be used as follows:}
+\addedConcepts{The name of a concept member shall only be used}
+\addedCC{in the scope of its concept (as described above).}
+\removedCCC{as follows:}
 
 \begin{itemize}
 \item %
-\addedConcepts{in the scope of its concept (as described above)
+\removedCCC{in the scope of its concept (as described above)
 or a concept refining (\mbox{\ref{concept.refine}}) its concept,}
 \item %
-\addedConcepts{after the
+\removedCCC{after the
 \mbox{\tcode{::}}\ 
 scope resolution operator (\mbox{\ref{expr.prim}}) applied to the name of a
 concept map or template type parameter (\mbox{\ref{temp.param}}).}
@@ -545,8 +547,11 @@ or a class, enumeration, or dependent type, the program is ill-formed.
 \pnum
 \addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a name prefixed by
 a \mbox{\techterm{nested-name-specifier}} that nominates a template type
-parameter \mbox{\tcode{T}} is looked up in each concept named by a
-concept requirement (\mbox{\ref{temp.req}}) in the template requirements
+parameter \mbox{\tcode{T}} is looked up}
+\addedCC{(\mbox{\ref{temp.req.sat}})} \addedConcepts{in}
+\changedCC{each concept named by a}{the concept map
+archetype corresponding to each}
+\addedConcepts{concept requirement (\mbox{\ref{temp.req}}) in the template requirements
 whose template argument list contains \mbox{\tcode{T}}. That name
 shall refer to one or more associated types (names of associated
 functions are ignored) that are all equivalent (\mbox{\ref{temp.type}}).
@@ -657,7 +662,9 @@ Types describe objects (\ref{intro.object}),
 references (\ref{dcl.ref}),
 or functions (\ref{dcl.fct}).
 \addedConcepts{In a constrained context (\mbox{\ref{temp.constrained}}),
-  type archetypes can behave like different kinds of types, e.g.,
+  type archetypes can behave like}
+\changedCCC{different}{various}
+\addedConcepts{kinds of types, e.g.,
   object types, scalar types, literal types, etc.}
 \exitnote\ 
 
@@ -771,7 +778,8 @@ the type of the result is
 \tcode{T}.''
 \addedConcepts{The address of a member of a concept map
 (\mbox{\ref{concept.map}}) shall not be taken, either implicitly or
-explicitly.}
+explicitly}\addedCC{, nor shall a member of a concept map be bound to
+a reference}\addedConcepts{.}
 \enterexample\ 
 
 \begin{codeblock}
@@ -1292,7 +1300,9 @@ constant-initializer:\br
 \mbox{\techterm{constrained member}} and shall only occur in a class
 template (\mbox{\ref{temp.class}}) or nested class thereof. A
 constrained member shall be a member function. A constrained member is
-treated as a constrained template (\mbox{\ref{temp.constrained}}).}
+treated as a constrained template (\mbox{\ref{temp.constrained}})}
+\addedCC{whose template requirements include the requirements
+  specified in its \mbox{\techterm{member-requirement}} clause}\addedConcepts{.}
 \end{paras}
 
 \setcounter{chapter}{11}
@@ -2379,9 +2389,10 @@ overloads of the constrained member with identical signatures, ignoring
   the template requirements, only the most specialized
   overload, as determined by partial ordering of the template requirements
   (\mbox{\ref{temp.func.order}}), will be declared in the instantiation. If
-  partial ordering results in an ambiguity,
-  use of the function results in an
-    ambiguity.
+  partial ordering results in an ambiguity,}
+  \changedCCC{use of the function results in an
+    ambiguity}{a deleted function with the given signature (without
+    any template requirements) will be declared in the instantiation}\addedConcepts{.
 \mbox{\enterexample}}
 \begin{codeblock}
 auto concept LessThanComparable<typename T> {
@@ -2865,10 +2876,10 @@ void g(int* p)
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
-\addedConcepts{When writing a template
-  constrained; please keep your arguments plain; since with a type
-  pattern, adaptation will shatter; tho' the compiler will never
-  complain.}
+% \addedConcepts{When writing a template
+%   constrained; please keep your arguments plain; since with a type
+%   pattern, adaptation will shatter; tho' the compiler will never
+%   complain.}
 
 \pnum
 \addedConcepts{A concept map template shall satisfy the requirements
@@ -3276,9 +3287,11 @@ of \tcode{void}.
   concept map corresponding to that
   concept instance.}
 
-\additemConcepts{Attempting to use a class or function template with
-  template arguments that are not used to satisfy the template
-  requirements. \mbox{\enterexample}}
+\additemConcepts{Attempting to use a} \addedCC{constrained} 
+\addedConcepts{class or function template with
+  template arguments that}\changedCCC{are not used to}{do not}
+\addedConcepts{satisfy} \changedCCC{the template}{that template's}
+  \addedConcepts{requirements. \mbox{\enterexample}}
 \color{addclr}
 \begin{codeblock}
 concept C<typename T> { /* ... */ }
@@ -3298,42 +3311,6 @@ int i0 = f<int>(0); // okay: calls \#2
 \addedConcepts{If the specified template arguments do not satisfy the
   requirements of the template (\mbox{\ref{temp.req}}), type deduction
   fails.}
-\item
-\addedConcepts{If a concept requirement appears (directly or indirectly)
-multiple times in the requirements of the template, and
-if the concept maps (\mbox{\ref{concept.map}}) used to satisfy the multiple
-occurrences of the concept requirement are not the same concept map}
-\addedConcepts{or are different from the concept map that would be
-  determined by concept map lookup
-(\mbox{\ref{temp.req.sat}}), type deduction fails}\addedConcepts{. \mbox{\enterexample}}
-\color{addclr}
-\begin{codeblock}
-concept A<typename T> { }
-concept B<typename T> {
-  typename X;
-  requires A<X>;
-}
-concept C<typename T> {
-  typename X;
-  requires A<X>;
-}
-namespace N1 {
-  concept_map A<int> { }  // \#1
-  concept_map B<int> { }  // uses \#1 to satisfy the requirement for A<int>
-}
-namespace N2 {
-  concept_map A<int> { }  // \#2
-  concept_map C<int> { }  // uses \#2 to satisfy the requirement for A<int>
-}
-tempate<typename T> requires B<T> && C<T>
-struct S { };
-using N1::concept_map B<int>;
-using N2::concept_map C<int>;
-S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
-\end{codeblock}
-\color{black}
-\addedConcepts{\mbox{\exitexample}}
-
 \end{itemize}
 
 \noindent\editorial{Add the following new sections to 14 [temp]:}
@@ -3974,7 +3951,9 @@ concept_map ForwardIterator<file_iterator> {
 \addedConcepts{A concept map for an implicit concept is implicitly defined when it is
 needed} \addedConcepts{by concept map lookup (\mbox{\ref{temp.req.sat}})}\addedConcepts{.}
 \addedConcepts{If any requirement of the concept or its refinements is not
-  satisfied by the implicitly-defined concept map, concept map lookup fails.}
+  satisfied by the implicitly-defined concept map,}
+\changedCCC{concept map lookup fails}{the concept map is not
+  implicitly defined}\addedConcepts{.}
 \addedConcepts{The implicitly-defined concept map is defined in the
   namespace of the concept. \mbox{\enterexample}}
 \begin{codeblock}
@@ -4085,9 +4064,12 @@ concept_map Stack<std::vector<T> > {
   \mbox{\tcode{f}}), let \mbox{\tcode{R}}
   be the return type of \mbox{\tcode{f}}, after substitution of
   concept arguments for their corresponding concept
-  parameters. Construct an expression \mbox{\tcode{E}} in the scope of
+  parameters. Construct an expression \mbox{\tcode{E}}}
+\addedCC{(as defined below)}
+\addedConcepts{in the scope of
   the concept map, defined 
-  below. Then, the associated function requirement is satisfied if:}
+  below. Then, the associated function requirement is
+  satisfied}\removedCC{if}\addedConcepts{:}
 \begin{itemize}
 \additemConcepts{if \mbox{\tcode{R}} is \mbox{\techterm{cv} \tcode{void}}
   and the expression \mbox{\tcode{E}} is well-formed,}
@@ -5082,9 +5064,14 @@ void h(float x, int y, int X::* p) {
       name \mbox{\tcode{N}}, that have replaced the concept map
       archetypes used in the constrained template.}
     
-  \additemConcepts{\mbox{\tcode{S}} is the set of concept maps found by
-      searching for \mbox{\tcode{N}} in the namespaces of which certain
-      concept maps in (1) are members and in the associated namespaces
+  \additemConcepts{\mbox{\tcode{S}} is the set of concept maps}
+  \addedCC{and concept map templates}
+  \addedConcepts{found by
+      searching for \mbox{\tcode{N}} in the namespaces of which}
+      \changedCCC{certain}{a subset of the}
+      \addedConcepts{concept maps in (1)}
+      \addedCC{(described below)}
+      \addedConcepts{are members and in the associated namespaces
       of those namespaces (\mbox{\ref{namespace.def}});
       \mbox{\techterm{using-directives}} in those namespaces are not
       followed during this search. Only those concept maps in (1) that
@@ -5092,9 +5079,13 @@ void h(float x, int y, int X::* p) {
     templates are considered when determining which namespaces to search.}
 
   \additemConcepts{If a concept map for \mbox{\tcode{I}} can be implicitly
-    defined (\mbox{\ref{concept.map}}), \mbox{\tcode{S}}
-    contains the implicitly-defined concept map for
-    \mbox{\tcode{I}}. Otherwise, \mbox{\tcode{S}} is empty.}
+    defined}
+  \addedCC{from an implicit concept}
+  \addedConcepts{(\mbox{\ref{concept.map}}), \mbox{\tcode{S}}
+    contains the} 
+  \changedCCC{implicitly-defined concept map for
+    \mbox{\tcode{I}}}{concept map generated from the implicit
+    concept}\addedConcepts{. Otherwise, \mbox{\tcode{S}} is empty.}
 \end{enumerate}
 
 \mbox{\enterexample}
@@ -5129,7 +5120,9 @@ ordered sequence:}
   \additemConcepts{\mbox{\tcode{S}} is formed by performing unqualified name
     lookup (\mbox{\ref{basic.lookup.unqual}}) for \mbox{\tcode{N}}.}
 
-  \additemConcepts{\mbox{\tcode{S}} is the set of concept maps found by
+  \additemConcepts{\mbox{\tcode{S}} is the set of concept maps}
+  \addedCC{and concept map templates}
+  \addedConcepts{found by
     searching for \mbox{\tcode{N}} in the namespace of which the
     concept of \mbox{\tcode{I}} is a member and its associated
       namespaces (\mbox{\ref{namespace.def}});
@@ -5193,6 +5186,43 @@ void g() {
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}\addedConcepts{\mbox{\exitnote}}
 
+\pnum
+\addedConcepts{If a concept requirement appears (directly or indirectly)
+multiple times in the requirements of the template, and
+if the concept maps (\mbox{\ref{concept.map}}) used to satisfy the multiple
+occurrences of the concept requirement are not the same concept map}
+\addedConcepts{or are different from the concept map that would be
+  determined by concept map lookup
+(\mbox{\ref{temp.req.sat}}),}
+\changedCCC{type deduction fails}{then the template arguments do not
+  satisfy the requirements of the template}\addedConcepts{. \mbox{\enterexample}}
+\color{addclr}
+\begin{codeblock}
+concept A<typename T> { }
+concept B<typename T> {
+  typename X;
+  requires A<X>;
+}
+concept C<typename T> {
+  typename X;
+  requires A<X>;
+}
+namespace N1 {
+  concept_map A<int> { }  // \#1
+  concept_map B<int> { }  // uses \#1 to satisfy the requirement for A<int>
+}
+namespace N2 {
+  concept_map A<int> { }  // \#2
+  concept_map C<int> { }  // uses \#2 to satisfy the requirement for A<int>
+}
+template<typename T> requires B<T> && C<T>
+struct S { };
+using N1::concept_map B<int>;
+using N2::concept_map C<int>;
+S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
+\end{codeblock}
+\color{black}
+\addedConcepts{\mbox{\exitexample}}
 
 \rSec3[temp.req.impl]{Requirement implication}
 \pnum
