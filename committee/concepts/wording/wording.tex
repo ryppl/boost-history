@@ -6134,8 +6134,8 @@ void h(X const& x) {
   (\mbox{\ref{temp.constrained.set}}) whose seed is determined by the
   function template specialization from the definition of the
   constrained template, after substitution of the constrained
-  template's template arguments for their corresponding
-  archetypes. \mbox{\enterexample}}
+  template's template arguments for their corresponding}
+  \changedCCC{archetypes}{template parameters}\addedConcepts{. \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> { 
   typename difference_type;
