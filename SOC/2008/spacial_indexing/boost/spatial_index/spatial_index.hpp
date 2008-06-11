@@ -50,6 +50,9 @@ public:
 
   /// element count in the index
   virtual unsigned int elements(void) = 0;
+
+  /// debug print
+  virtual void print(void) const = 0;
 	      
   /// destructor
   virtual ~spatial_index(void) {}

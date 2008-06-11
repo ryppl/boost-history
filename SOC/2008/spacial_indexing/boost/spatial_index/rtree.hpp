@@ -24,13 +24,17 @@ namespace spatial_index {
   {
   public:
     rtree_node(void) : m_(4), M_(8) {}
-    rtree_node(const unsigned int &level, const unsigned int &m, const unsigned int &M) 
-      : level_(level), m_(m), M_(M) {}
+    rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level, const unsigned int &m, const unsigned int &M) 
+      : parent_(parent), level_(level), m_(m), M_(M) {}
 
-    virtual bool is_full(void) const { return nodes_.size() == M_; }
+    virtual bool is_full(void) const { return nodes_.size() >= M_; }
 
     /// true if it is a leaf node
-    virtual bool is_leaf(void) { return false; }
+    virtual bool is_leaf(void) const { return false; }
+
+    /// true if it is the root
+    bool is_root(void) const { return root_; }
+    void set_root(void) { root_ = true; }
 
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
@@ -42,7 +46,7 @@ namespace spatial_index {
     {
       
       if(nodes_.size() < M_) {
-	nodes_[b] = l;
+	nodes_.push_back(std::make_pair(b, l));
       } else {
 	// split
       }
@@ -93,9 +97,39 @@ namespace spatial_index {
       return chosen_node;
     }
 
+    virtual void print(void) const
+    {
+      std::cerr << " --> Node --------" << std::endl;
+      std::cerr << "  Is Root: " << is_root() << std::endl;
+      std::cerr << "  Level: " << level_ << std::endl;
+      std::cerr << "  Size / Min / Max: " << nodes_.size() << " / " << m_ << " / " << M_ << std::endl;
+      std::cerr << "  | ";
+      for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
+	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
+	std::cerr << " | ";
+      }
+      std::cerr << std::endl;
+      std::cerr << " --< Node --------" << std::endl;
+
+      // print child nodes
+      std::cerr << " Children: " << std::endl;
+      for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	it->second->print();
+      }
+    }
+
 
 
     virtual ~rtree_node(void) {}
+
+  private:
+
+    // true if it is the root
+    bool root_;
+
+    // parent node
+    boost::shared_ptr< rtree_node<Point, Value> > parent_;
 
     // level of this node
     unsigned int level_;
@@ -105,10 +139,11 @@ namespace spatial_index {
     // maximum number of elements per node
     unsigned int M_;
 
-    typedef std::map<geometry::box<Point>, boost::shared_ptr<rtree_node> > node_map;
+    typedef std::vector< std::pair<geometry::box<Point>, boost::shared_ptr<rtree_node> > > node_map;
     node_map nodes_;
 
   private:
+
 
     geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2) const
     {
@@ -140,16 +175,36 @@ namespace spatial_index {
   {
   public:
     rtree_leaf(void) : L_(8), level_(0) {}
-    rtree_leaf(const unsigned int &L) : L_(L), level_(0) {}
+    rtree_leaf(const boost::shared_ptr< rtree_node<Point,Value> > &parent, const unsigned int &L) 
+      : rtree_node<Point,Value>(parent, 0, 0, 0), L_(L), level_(0) {}
 
     /// yes, we are a leaf
-    virtual bool is_leaf(void) { return true; }
+    virtual bool is_leaf(void) const { return true; }
 
-    virtual bool is_full(void) const { return nodes_.size() == L_; }
+    virtual bool is_full(void) const { return nodes_.size() >= L_; }
 
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
-      nodes_[e] = v;
+      nodes_.push_back(std::make_pair(e, v));
+//       std::cerr << "Node size: " << nodes_.size() << std::endl;
+    }
+
+    virtual void print(void) const
+    {
+      std::cerr << " --> Leaf --------" << std::endl;
+      std::cerr << "  Size / Capacity: " << nodes_.size() << " / " << L_ << std::endl;
+      std::cerr << "  | ";
+      for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
+	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
+	std::cerr << " -> ";
+	std::cerr << it->second;
+	std::cerr << " | ";
+
+
+      }
+      std::cerr << std::endl;
+      std::cerr << " --< Leaf --------" << std::endl;
     }
 
   private:
@@ -160,7 +215,7 @@ namespace spatial_index {
     // level of this node
     unsigned int level_;
 
-    typedef std::map<geometry::box<Point>, Value > leaves_map;
+    typedef std::vector< std::pair< geometry::box<Point>, Value > > leaves_map;
     leaves_map nodes_;
   };
 
@@ -183,29 +238,34 @@ namespace spatial_index {
   public:
     rtree(const geometry::box<Point> &initial_box, const unsigned int &L, const unsigned int &m, const unsigned int &M) 
       : element_count(0), L_(L), m_(m), M_(M),
-	root_(new rtree_node<Point, Value>(1, m, M))
+	root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1, m, M))
     {
-      boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(L));
+      root_->set_root();
+      boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(root_, L));
       root_->add_leaf_node(initial_box, new_leaf);
     }
-      
+
     virtual void insert(const Point &k, const Value &v)
     {
       element_count++;
     }
 
-    // TODO: do private
-
+    virtual void print(void) const
+    {
+      root_->print();
+    }
 
     void insert(const geometry::box<Point> &e, const Value &v)
     {
       boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(e));
 
       if(l->is_full()) {
+	std::cerr << "Node full. Split." << std::endl;
+	
 	// split!
-      } else {
-	l->insert(e, v);
       }
+
+      l->insert(e, v);
 
       adjust_tree(l);
 
@@ -237,7 +297,11 @@ namespace spatial_index {
 
     void adjust_tree(boost::shared_ptr<rtree_node<Point, Value> > &l)
     {
-      
+      boost::shared_ptr<rtree_node<Point,Value> > N = l;
+      if(N->is_root()) {
+	return;
+      }
+
     }
 
     boost::shared_ptr<rtree_node<Point, Value> > choose_leaf(const geometry::box<Point> e)

@@ -35,8 +35,8 @@ int test_main(int, char* [])
 
 	geometry::box<geometry::point_xy<double> > b(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(20.0, 20.0));
  
-	boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , std::vector<std::string>::iterator > > 
-	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , std::vector<std::string>::iterator >(b, 8, 4, 8));
+	boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
+	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(b, 4, 2, 4));
 
 // 	std::cerr << " --> bulk insert" << std::endl;
 // 	std::vector<std::string>::iterator b, e;
@@ -44,12 +44,21 @@ int test_main(int, char* [])
 // 	e = data.end();
 // 	q->bulk_insert(b,e, points);
 
- 	std::vector<std::string>::iterator it = data.begin();
+//  	std::vector<std::string>::iterator it = data.begin();
 
-
-	geometry::box<geometry::point_xy<double> > e(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));
+	geometry::box<geometry::point_xy<double> > e1(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));
+	geometry::box<geometry::point_xy<double> > e2(geometry::point_xy<double>(0.0, 1.0), geometry::point_xy<double>(2.0, 2.0));
+	geometry::box<geometry::point_xy<double> > e3(geometry::point_xy<double>(5.0, 4.0), geometry::point_xy<double>(6.0, 6.0));
+	geometry::box<geometry::point_xy<double> > e4(geometry::point_xy<double>(5.0, 5.0), geometry::point_xy<double>(8.0, 8.0));
+	geometry::box<geometry::point_xy<double> > e5(geometry::point_xy<double>(7.0, 4.0), geometry::point_xy<double>(12.0, 7.0));
  	std::cerr << " --> insert env" << std::endl;
- 	q->insert(e, it++);
+ 	q->insert(e1, 1);
+ 	q->insert(e2, 2);
+ 	q->insert(e3, 3);
+ 	q->insert(e4, 4);
+ 	q->insert(e5, 5);
+
+ 	q->print();
 
 //  	std::cerr << " --> insert" << std::endl;
 //  	q->insert(geometry::point_xy<double>(1.0,1.0), it++);
