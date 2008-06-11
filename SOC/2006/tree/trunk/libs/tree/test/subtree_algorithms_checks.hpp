@@ -27,7 +27,7 @@ template <class Cursor, class Container>
 void test_for_each(Cursor c, Container& cont)
 {
 	boost::tree::ORDER::for_each(
-		c.begin(), 
+		c, 
 		boost::lambda::bind(&Container::push_back, &cont, boost::lambda::_1)
 	);
 	test::ORDER::traversal(cont.begin(), cont.end());
@@ -36,8 +36,8 @@ void test_for_each(Cursor c, Container& cont)
 template <class Cursor, class OutCursor, class Container>
 void test_copy(Cursor c, OutCursor& o, Container& cont)
 {	
-	boost::tree::ORDER::copy(c.begin(), o);
-	test::ORDER::traversal(cont.begin(), cont.end());
+	boost::tree::preorder::copy(c, o);
+	test::preorder::traversal(cont.begin(), cont.end());
 }
 
 template <class Cursor, class OutCursor, class Container>
@@ -46,9 +46,9 @@ void test_transform(Cursor c, Cursor d, OutCursor& o, Container& cont)
 	// First copy test_tree to test_tree2, by adding 1 to each element,
 	// then copy test_tree2 to test_list, by subtracting 1 - so 
 	// test_list should hold test_tree's original elements in ORDER.
-	boost::tree::ORDER::transform(c.begin(), d.begin(), 
+	boost::tree::ORDER::transform(c, d, 
 		std::bind2nd(std::plus<int>(),1));
-	boost::tree::ORDER::transform(d.begin(), o,
+	boost::tree::ORDER::transform(d, o,
 		std::bind2nd(std::minus<int>(),1));
 	test::ORDER::traversal(cont.begin(), cont.end());
 }
@@ -83,7 +83,7 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int>::const_c
 	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
-	boost::tree::ORDER::copy(cur.begin(), oc_test_list);
+	boost::tree::ORDER::copy(cur, oc_test_list);
 
 	// Are the elements accessed in the correct order?
 	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(cur),
@@ -107,22 +107,22 @@ void compare_cursor_to_iterator_traversal(boost::tree::binary_tree<int>::const_c
 				std::distance(test_list.rbegin(), test_list.rend()));					
 
 	//Now same for iterators wrapped around "explicit stack"-based cursors
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(ascending_cursor<cursor>(cur)),
-							boost::tree::ORDER::end(ascending_cursor<cursor>(cur)),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(make_ascending_cursor(cur)),
+							boost::tree::ORDER::end(make_ascending_cursor(cur)),
 							test_list.begin()
 							));
 
-	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(ascending_cursor<cursor>(cur)),
-							  boost::tree::ORDER::end(ascending_cursor<cursor>(cur))) == 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(make_ascending_cursor(cur)),
+							  boost::tree::ORDER::end(make_ascending_cursor(cur))) == 
 				std::distance(test_list.begin(), test_list.end()));
 
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(ascending_cursor<cursor>(cur)),
-							boost::tree::ORDER::rend(ascending_cursor<cursor>(cur)),
+	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(make_ascending_cursor(cur)),
+							boost::tree::ORDER::rend(make_ascending_cursor(cur)),
 							test_list.rbegin()
 							));
 							
-	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(ascending_cursor<cursor>(cur)),
-							  boost::tree::ORDER::rend(ascending_cursor<cursor>(cur))) == 
+	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(make_ascending_cursor(cur)),
+							  boost::tree::ORDER::rend(make_ascending_cursor(cur))) == 
 				std::distance(test_list.rbegin(), test_list.rend()));
 
 }

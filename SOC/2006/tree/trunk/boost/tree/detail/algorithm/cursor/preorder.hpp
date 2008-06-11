@@ -155,11 +155,14 @@ Cursor last(Cursor c)
 template <class Cursor, class Op>
 void for_each_recursive(Cursor s, Op& f)
 {
+	Cursor t = s;
+	t.to_end();
+	s.to_begin();
 	f(*s);
-	if (!s.empty())
-		for_each_recursive(s.begin(), f);
-	if (!(++s).empty())
-		for_each_recursive(s.begin(), f);
+	do
+		if (!s.empty())
+			for_each_recursive(s, f);
+	while (s++ != t);
 }
 
 /**
@@ -175,11 +178,14 @@ void for_each_recursive(Cursor s, Op& f)
 template <class Cursor, class Op>
 Op for_each(Cursor s, Op f)
 {
+	Cursor t = s.end();
+	s.to_begin();
 	f(*s);
-	if (!s.empty())
-		for_each_recursive(s.begin(), f);
-	if (!(++s).empty())
-		for_each_recursive(s.begin(), f);
+	do
+		if (!s.empty())
+			for_each_recursive(s, f);
+	while (s++ != t);
+		
 	return f;
 }
 
@@ -189,16 +195,17 @@ Op for_each(Cursor s, Op f)
  * @param t An output cursor.
  * @result	A cursor past t's preorder end, after the copying operation.
  */
-// TODO: Should work with root() instead of root().begin() (same for in- and postorder, )
-// plus a couple of other algorithms
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
-	*t = *s;
-	if (!s.empty())
-		copy(s.begin(), t.begin());
-	if (!(++s).empty())
-		copy(s.begin(), (++t).begin());
+	InCursor r = s.end();
+	*t.to_begin() = *s.to_begin();
+	do {
+		if (!s.empty())
+			copy(s, t);
+		++t;
+	} while (s++ != r);
+
 	return t;
 }
 
@@ -218,11 +225,14 @@ OutCursor copy (InCursor s, OutCursor t)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
-	*t = op(*s);
-	if (!s.empty())
-		transform(s.begin(), t.begin(), op);
-	if (!(++s).empty())
-		transform(s.begin(), (++t).begin(), op);
+	InCursor r = s.end();
+	*t.to_begin() = op(*s.to_begin());
+	do {
+		if (!s.empty())
+			transform(s, t, op);
+		++t;
+	} while (s++ != r);
+
 	return t;
 }
 

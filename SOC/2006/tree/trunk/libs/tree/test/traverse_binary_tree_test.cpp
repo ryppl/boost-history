@@ -45,21 +45,27 @@ using namespace boost::tree;
 template <class Cursor, class Op>
 void underefed_for_each_recursive(Cursor s, Op& f)
 {
+	Cursor t = s;
+	t.to_end();
+	s.to_begin();
 	f(s);
-	if (!s.empty())
-		underefed_for_each_recursive(s.begin(), f);
-	if (!(++s).empty())
-		underefed_for_each_recursive(s.begin(), f);
+	do
+		if (!s.empty())
+			underefed_for_each_recursive(s, f);
+	while (s++ != t);
 }
 
 template <class Cursor, class Op>
 Op underefed_for_each(Cursor s, Op f)
 {
+	Cursor t = s.end();
+	s.to_begin();
 	f(s);
-	if (!s.empty())
-		underefed_for_each_recursive(s.begin(), f);
-	if (!(++s).empty())
-		underefed_for_each_recursive(s.begin(), f);
+	do
+		if (!s.empty())
+			underefed_for_each_recursive(s, f);
+	while (s++ != t);
+		
 	return f;
 }
 
@@ -111,7 +117,7 @@ void compare_cursor_to_iterator_traversal() {
 
 	c = test_tree2.insert(++c, 12);
 	comparisons(test_tree2.root());
-	//underefed_for_each(test_tree2.root().begin(), comparisons);
+	//underefed_for_each(test_tree2.root(), comparisons);
 	
 	//comparisons(test_tree2.root().begin());
 }

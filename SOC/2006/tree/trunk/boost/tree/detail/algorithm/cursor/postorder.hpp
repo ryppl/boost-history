@@ -152,12 +152,13 @@ Cursor last(Cursor c)
 template <class Cursor, class Op>
 void for_each_recursive(Cursor s, Op& f)
 {
-	if (!s.empty())
-		for_each_recursive(s.begin(), f);
-	Cursor subtree = s;
-	if (!(++s).empty())
-		for_each_recursive(s.begin(), f);
-	f(*subtree);
+	Cursor t = s;
+	s.to_begin();
+	do
+		if (!s.empty())
+			for_each_recursive(s, f);
+	while (s++ != t.end());
+	f(*t.to_begin());
 }
 
 /**
@@ -174,12 +175,13 @@ void for_each_recursive(Cursor s, Op& f)
 template <class Cursor, class Op>
 Op for_each(Cursor s, Op f)
 {
-	if (!s.empty())
-		for_each_recursive(s.begin(), f);
-	Cursor subtree = s;
-	if (!(++s).empty())
-		for_each_recursive(s.begin(), f);
-	f(*subtree);
+	Cursor t = s;
+	s.to_begin();
+	do
+		if (!s.empty())
+			for_each_recursive(s, f);
+	while (s++ != t.end());
+	f(*t.to_begin());
 	return f;
 }
 //]
@@ -193,15 +195,16 @@ Op for_each(Cursor s, Op f)
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
-	InCursor insubtree = s;
-	OutCursor outsubtree = t;
-	if (!s.empty())
-		copy(s.begin(), t.begin());
-	if (!(++s).empty()) {
-		copy(s.begin(), (++t).begin());
-	}
-	*outsubtree = *insubtree;
-	return outsubtree;
+	InCursor r = s;
+	s.to_begin();
+	t.to_begin();
+	do {
+		if (!s.empty())
+			copy(s, t);
+		++t;
+	} while (s++ != r.end());
+	*t = *r.to_begin();
+	return t;
 }
 
 /**
@@ -220,15 +223,16 @@ OutCursor copy (InCursor s, OutCursor t)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
-	InCursor insubtree = s;
-	OutCursor outsubtree = t;
-	if (!s.empty())
-		transform(s.begin(), t.begin(), op);
-	if (!(++s).empty()) {
-		transform(s.begin(), (++t).begin(), op);
-	}
-	*outsubtree = op(*insubtree);
-	return outsubtree;
+	InCursor r = s;
+	s.to_begin();
+	t.to_begin();
+	do {
+		if (!s.empty())
+			transform(s, t, op);
+		++t;
+	} while (s++ != r.end());
+	*t = op(*r.to_begin());
+	return t;
 }
 
 } // namespace postorder

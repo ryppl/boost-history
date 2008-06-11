@@ -174,6 +174,11 @@ public:
 	}
 };
 
+template <class Cursor>
+inline ascending_cursor<Cursor> make_ascending_cursor(Cursor c)
+{
+	return ascending_cursor<Cursor>(c);
+}
 
 } // namespace tree
 } // namespace boost

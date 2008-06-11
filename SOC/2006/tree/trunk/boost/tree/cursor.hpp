@@ -126,6 +126,7 @@ struct produce_cursor_category<> {
  * in saving keystrokes.
  */
 // TODO: Complete this.
+// Shouldn't we be using cursor_facade?
 template<class OutputIterator>
 class output_cursor_iterator_wrapper {
 protected:
@@ -168,6 +169,7 @@ public:
 	output_cursor_iterator_wrapper operator++(int) { return *this; }
 
 	/// Returns *this, as this %cursor doesn't "move".
+	output_cursor_iterator_wrapper& to_begin() { return *this; }
 	output_cursor_iterator_wrapper& begin() { return *this; }
 };
 

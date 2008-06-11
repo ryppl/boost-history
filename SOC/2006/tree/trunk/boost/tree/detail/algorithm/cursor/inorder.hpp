@@ -122,11 +122,15 @@ MultiwayCursor last(MultiwayCursor c)
 template <class MultiwayCursor, class Op>
 void for_each_recursive(MultiwayCursor s, Op& f)
 {
-	if (!s.empty())
-		for_each_recursive(s.begin(), f);
-	f(*s);
-	if (!(++s).empty())
-		for_each_recursive(s.begin(), f);
+	MultiwayCursor t = s;
+	t.to_end();
+	for (s.to_begin(); s!=t; ++s) {
+		if (!s.empty())
+			for_each_recursive(s, f);
+		f(*s);
+	}
+	if (!t.empty())
+		for_each_recursive(t, f);
 }
 
 /**
@@ -143,11 +147,15 @@ void for_each_recursive(MultiwayCursor s, Op& f)
 template <class MultiwayCursor, class Op>
 Op for_each(MultiwayCursor s, Op f)
 {
-	if (!s.empty())
-		for_each_recursive(s.begin(), f);
-	f(*s);
-	if (!(++s).empty())
-		for_each_recursive(s.begin(), f);
+	MultiwayCursor t = s;
+	t.to_end();
+	for (s.to_begin(); s!=t; ++s) {
+		if (!s.empty())
+			for_each_recursive(s, f);
+		f(*s);
+	}
+	if (!t.empty())
+		for_each_recursive(t, f);
 	return f;
 }
 
@@ -160,11 +168,18 @@ Op for_each(MultiwayCursor s, Op f)
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
-	if (!s.empty())
-		copy(s.begin(), t.begin());
-	*t = *s;
-	if (!(++s).empty())
-		copy(s.begin(), (++t).begin());
+	InCursor r = s;
+	r.to_end();
+	s.to_begin();
+	t.to_begin();
+	
+	while (s!=r) {
+		if (!s.empty())
+			copy(s, t);
+		*++t=*++s;
+	}
+	if (!r.empty())
+		copy(r, t);
 	return t;
 }
 
@@ -184,11 +199,18 @@ OutCursor copy (InCursor s, OutCursor t)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
-	if (!s.empty())
-		transform(s.begin(), t.begin(), op);
-	*t = op(*s);
-	if (!(++s).empty())
-		transform(s.begin(), (++t).begin(), op);
+	InCursor r = s;
+	r.to_end();
+	s.to_begin();
+	t.to_begin();
+	
+	while (s!=r) {
+		if (!s.empty())
+			transform(s, t, op);
+		*++t=op(*++s);
+	}
+	if (!r.empty())
+		transform(r, t, op);
 	return t;
 }
 

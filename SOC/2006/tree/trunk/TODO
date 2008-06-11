@@ -14,8 +14,7 @@
 [section TODO]
 
 General:
-* Change recursive *order algorithms such that their argument is root() instead of
-  root().begin() (as is now).
+* Also test copy with two trees (not just one tree and a container/output iterator)
 * Rename parity() (which looks somewhat binary-related) to index (more general for forest
   trees etc)?
 * _Possibly_ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
