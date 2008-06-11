@@ -1381,8 +1381,12 @@ constant-initializer:\br
   that has a 
 \mbox{\techterm{member-requirement}} (\mbox{\ref{temp.req}}) is a
 \mbox{\techterm{constrained member}} and shall only occur in a class
-template (\mbox{\ref{temp.class}}) or nested class thereof. A
-constrained member shall be a member function. A constrained member is
+template (\mbox{\ref{temp.class}}) or nested class thereof.}
+\removedCCC{A
+constrained member shall be a member function.}
+\addedCC{The \mbox{\techterm{member-declaration}} for a constrained
+  member shall declare a member function.}
+\addedConcepts{A constrained member is
 treated as a constrained template (\mbox{\ref{temp.constrained}})}
 \addedCC{whose template requirements include the requirements
   specified in its \mbox{\techterm{member-requirement}} clause}\addedConcepts{.}
@@ -2370,8 +2374,7 @@ type-parameter:\br
     \addedCC{\mbox{\terminal{::}}\mbox{\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{...}}\mbox{\opt} identifier\mbox{\opt}}\br
     \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name identifier\mbox{\opt} constrained-default-argument\mbox{\opt}}\br
     \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}} \mbox{\terminal{...}\opt} identifier} \br
-    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}}} \addedCC{identifier} 
-                   \addedCC{constrained-default-argument\mbox{\opt}}\br
+    \addedCC{\mbox{\terminal{::}\opt} nested-name-specifier\mbox{\opt} concept-name \mbox{\terminal{<}}} \addedCC{simple-requirement-argument-list} \addedCC{\mbox{\terminal{>}}} \addedCC{identifier} \addedCC{constrained-default-argument\mbox{\opt}}\br
 
 \index{constrained-default-argument@\techterm{constrained-default-argument}}%
 \addedCC{constrained-default-argument:}\br
@@ -2456,9 +2459,9 @@ with the template requirement}\\
   \BnfNontermshape{nested-name-specifier}\opt\}}} \mbox{\tcode{C<T, T2, T3, ...,
   T$N$>...\opt}} added to the template requirements.
 }
-\removedCC{
-The first concept parameter of concept \mbox{\tcode{C}}
-shall be a type parameter, and all concept parameters not otherwise
+\removedCCC{
+The first template parameter of concept \mbox{\tcode{C}}
+shall be a type parameter, and all template parameters not otherwise
 specified shall have default values. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { ... }
@@ -2575,7 +2578,7 @@ Tuple<0> eror;          // error: 0 is not a type
 
 \mbox{\exitexample}
 
-\addedConcepts{\mbox{\enternote} a template parameter pack can also occur in a concept parameter list
+\addedConcepts{\mbox{\enternote} a template parameter pack can also occur in a concept's template parameter list
 (\mbox{\ref{concept.def}}). \mbox{\enterexample}} \color{addclr}
 \begin{codeblock}
 @\textcolor{addclr}{auto}@ concept Callable<typename F, typename... Args> {
@@ -2976,9 +2979,9 @@ There is no way in which they could be used.
 \addedConcepts{During concept map lookup (\mbox{\ref{temp.req.sat}}),
   concept map matching determines whether a 
 particular concept map template can be used. Concept map matching
-matches the concept arguments in the
+matches the template arguments in the
 \mbox{\techterm{concept instance}} to the 
-concept arguments in the concept map template, using matching of class
+template arguments in the concept map template, using matching of class
 template partial specializations (\mbox{\ref{temp.class.spec.match}}).}
 
 \pnum
@@ -2989,8 +2992,8 @@ template partial specializations (\mbox{\ref{temp.class.spec.match}}).}
   at least as specialized as the second according to the rules for
   partial ordering of class template partial specializations
   (\mbox{\ref{temp.class.order}}). The primary class template \mbox{\tcode{X}}
-  has the same template parameters as the concept corresponding to the
-  two concept map templates. The class template partial
+  has the same template parameters as the concept of the
+  concept map templates. The class template partial
   specializations are constrained templates, even if the corresponding
 concept map templates have no requirements specified.}
 \begin{itemize}
@@ -3489,7 +3492,7 @@ parameters.}
 \addedConcepts{A \mbox{\techterm{concept-id}} names a specific use of
   a concept by its 
 \mbox{\techterm{concept-name}} and a set of 
-concept arguments. The concept and its concept arguments,
+template arguments. The concept and its template arguments,
   together, are referred to as a \mbox{\techterm{concept instance}}.
 \mbox{\enterexample}\ \mbox{\tcode{CopyConstructible<int>}} is a
 \mbox{\techterm{concept-id}} if name lookup (\mbox{\ref{basic.lookup}}) determines
@@ -3569,7 +3572,7 @@ functions that have been overloaded (clause~\mbox{\ref{over}}).}
 \addedConcepts{Associated functions describe functions, member functions, or
 operators}
 \addedConcepts{(including templates thereof)}
-\addedConcepts{that specify the functional behavior of the concept
+\addedConcepts{that specify the functional behavior of the concept's template
 arguments and associated types and}
 \addedCC{class}
 \addedConcepts{templates (\mbox{\ref{concept.assoc}}). A
@@ -3785,7 +3788,7 @@ concept Container<typename X> {
 \rSec3[concept.req]{Associated requirements}
 
 \pnum
-\addedConcepts{Associated requirements place additional requirements on concept
+\addedConcepts{Associated requirements place additional requirements on the concept's template
 parameters, associated types, and associated}
 \addedCC{class}
 \addedConcepts{templates. Associated
@@ -4029,7 +4032,7 @@ concept.}
     types and associated}
   \addedCC{class} \addedConcepts{templates from the concept after
     substitution of 
-    the concept parameters with the corresponding concept arguments.
+    the concept's template parameters with the corresponding template arguments.
     \mbox{\enternote}
         There is no way to explicitly declare a requirement member.
     \mbox{\exitnote} 
@@ -4045,13 +4048,16 @@ concept.}
 \pnum 
 \addedConcepts{
     After a requirement is satisfied, the requirement member serves as a
-    synonym for the }\changedCCC{set of entities (possibly satisfier members) that
-    satisfies }{entity that satisfies} \addedConcepts{the requirement.}
+    synonym for the set of entities} 
+  \removedCCC{(possibly satisfier members)} 
+  \addedConcepts{that satisfies the requirement}
+    \addedCC{(\mbox{\ref{concept.map.fct}}, \mbox{\ref{concept.map.assoc}})}
+    \addedConcepts{.}
     \addedCC{That entity is said to be the \mbox{\techterm{satisfier}} of
     the requirement member.}
     \addedConcepts{Each requirement member is visible during
     qualified name lookup (\mbox{\ref{concept.qual}}).}
-  \addedCC{\mbox{\enternote} a satisfier need not be a member of a
+  \addedCC{\mbox{\enternote} A satisfier need not be a member of a
     concept map. \mbox{\exitnote}}
 
 \pnum
@@ -4061,7 +4067,7 @@ concept.}
     least one requirement member of its enclosing concept map or at least
     one unsatisfied requirement member from a refined concept map.}
     \changedCCC{ A  satisfier member}{
-    A member that satisfies a requirement member}
+    A concept map member that satisfies a requirement member}
      \addedConcepts{cannot be found by any form of name lookup
     (\mbox{\ref{basic.lookup}}).}
 
@@ -4071,8 +4077,8 @@ concept.}
     any requirement members or satisfier members.
     The set of members of a concept map archetype is the set of associated
     functions, associated types and associated templates from the concept
-    after substitution of the concept parameters with the corresponding
-    concept arguments of the concept map archetype.  Within a constrained
+    after substitution of the concept's template parameters with the corresponding
+    template arguments of the concept map archetype.  Within a constrained
     template, these members are treated as if they were real functions,
     types and templates for the purposes of syntactic and semantic
     analysis.}{is considered to have satisfiers (generated from the
@@ -4225,7 +4231,7 @@ the refinements of that concept) hold, permitting an
 
 \pnum
 \addedConcepts{Function definitions in the concept map can be used to adapt the
-syntax of the concept arguments
+syntax of the concept's template arguments
 to the syntax expected by the concept. \mbox{\enterexample}}
 \begin{codeblock}
 concept Stack<typename S> { 
@@ -4259,7 +4265,7 @@ concept_map Stack<std::vector<T> > {
   satisfied as follows. Given an associated function (call it
   \mbox{\tcode{f}}), let \mbox{\tcode{R}}
   be the return type of \mbox{\tcode{f}}, after substitution of
-  concept arguments for their corresponding concept
+  the concept's template arguments for their corresponding concept
   parameters. Construct an expression \mbox{\tcode{E}}}
 \addedCC{(as defined below)}
 \addedConcepts{in the scope of
@@ -4534,8 +4540,8 @@ concept_map Allocator<my_allocator<T>> {
   determined using the rules of template argument deduction from a
   type (\mbox{\ref{temp.deduct.type}}). Let
   \mbox{\tcode{P}} be the return type of an associated function after
-  substitution of the concept parameters specified by the concept map
-  with their concept arguments, and where each undefined associated
+  substitution of the concept's template parameters specified by the concept map
+  with their template arguments, and where each undefined associated
   type and associated}
 \addedCC{class}
 \addedConcepts{template has been replaced with a newly invented
@@ -4630,7 +4636,7 @@ requirements of the refined concept.}
 %
 \addedConcepts{\mbox{\enternote}\ 
 when a concept \mbox{\tcode{D}} refines
-a concept \mbox{\tcode{B}}, every set of concept arguments that satisfies the
+a concept \mbox{\tcode{B}}, every set of template arguments that satisfies the
 requirements of \mbox{\tcode{D}} also satisfies the requirements of
 \mbox{\tcode{B}}. The refinement relationship is transitive.
 \mbox{\exitnote}}
@@ -4659,18 +4665,18 @@ concept C<typename T> : C<vector<T>> {/* ... */ } // error: concept C is not def
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{A \mbox{\techterm{refinement-specifier}} in the refinement clause shall not refer
+\removedCCC{A \mbox{\techterm{refinement-specifier}} in the refinement clause shall not refer
   to associated types.}
 
 \pnum
 \addedConcepts{The \mbox{\techterm{template-argument-list}} of a
 \mbox{\techterm{refinement-specifier}}'s \mbox{\techterm{concept-id}} shall refer to at
-  least one of the concept parameters}\addedCC{, and no concept
+  least one of the template parameters}\addedCC{, and no template
   parameter shall be used in a way that establishes an
   archetype}\addedConcepts{. \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> 
-  : Incrementable<int>  // error: Incrementable<int> uses no concept parameters
+  : Incrementable<int>  // error: Incrementable<int> uses no template parameters
 {
   // ...
 }
@@ -4678,7 +4684,7 @@ concept InputIterator<typename Iter>
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-\removedCCC{Within the definition of a concept, a concept map archetype
+\addedConcepts{Within the definition of a concept, a concept map archetype
 (\mbox{\ref{temp.archetype}}) is synthesized for each
 \mbox{\techterm{refinement-specifier}} in the concept's
 \mbox{\techterm{refinement-clause}} (if any).}
@@ -4934,13 +4940,14 @@ both}
 map template that are not compatible with their corresponding}
 \changedCCC{definitions in}{satisfiers of}
 \addedConcepts{a refined concept map or concept map template, the
-program is ill-formed. 
-\mbox{\enternote} if the concept maps or concept map templates with
-}
+program is ill-formed.}
+\removedCCC{\mbox{\enternote}}
+\addedConcepts{if the concept maps or concept map templates with}
 \changedCCC{definitions}{satisfiers}
 \addedConcepts{that are not compatible occur in different translation
-units, no diagnostic is required. \mbox{\exitnote}\
-\mbox{\enterexample}}
+units, no diagnostic is required.}
+\removedCCC{\mbox{\exitnote}}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> {
   typename assoc;
@@ -5108,7 +5115,7 @@ which the template can be used.}
 \addedConcepts{A concept requirement that refers to the
 \mbox{\tcode{SameType}} concept (\mbox{\ref{concept.support}}) is a
 \mbox{\techterm{same-type requirement}}. A same-type requirement is satisfied
-when its two concept arguments refer to the same type (including the
+when its two template arguments refer to the same type (including the
 same \mbox{\techterm{cv}} qualifiers). In a 
 constrained template (\mbox{\ref{temp.constrained}}), a same-type requirement
 \mbox{\tcode{SameType<T1, T2>}} makes the types \mbox{\tcode{T1}} and \mbox{\tcode{T2}}
@@ -5301,10 +5308,10 @@ void h(float x, int y, int X::* p) {
 
 \pnum
 \addedCC{When concept map lookup is performed during template argument
-    deduction formed during partial ordering
+    deduction during partial ordering
     (\mbox{\ref{temp.deduct.partial}}),
     \mbox{\tcode{Q}} is defined as
-    the ordered sequence consisting of only one element where S
+    containing only one element \mbox{\tcode{S}}, where \mbox{\tcode{S}}
     is the set of concept map archetypes synthesized from the requirements
     of the argument template
     (\mbox{\ref{temp.func.order}},\mbox{\ref{temp.deduct.partial}}).}
@@ -5489,7 +5496,7 @@ would render the constrained template declaration ill-formed. Template
 requirements are implied from:}
 \begin{itemize}
 \additemConcepts{the type of a constrained function template,}
-\additemConcepts{the types named by an
+\remitemCCC{the types named by an
   \mbox{\techterm{exception-specification}} (if any) of a constrained
   function template,}
 \additemConcepts{the template arguments of a constrained class template partial
@@ -5662,24 +5669,27 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   reasoning within the translation process. \mbox{\exitnote}}
 
 \pnum
-\addedCC{A type archetype that has been \mbox{\techterm{established}} has
-  been synthesized to describe a set of types made equivalent via
-  same-type constraints. If a same-type requirement attempts to make
-  two types equivalent that both have established archetypes but do
-  not have the same archetype, the program is ill-formed.
+\addedCC{An archetype does not exist until it is
+  \mbox{\techterm{established}}. 
   An archetype becomes established under the
   following circumstances:}
 \begin{itemize}
-  \additemCC{a type that has the archetype has been used in the
+  \additemCC{a type that aliases the archetype has been used in the
     template argument list of a class template specialization or
     concept instance whose definition is required,}
-\additemCC{a type that has the archetype is provided as an argument to a
+\additemCC{a type that aliases the archetype is provided as an argument to a
   \mbox{\tcode{sizeof}} or \mbox{\tcode{alignof}} expression
   (\mbox{\ref{expr.sizeof}}, \mbox{\ref{expr.alignof}}),}
-\additemCC{at the end of a function declaration in which one or more
-  parameters use a type that has the archetype, or}
+\additemCC{at the end of the function declarator in a function
+  declaration in which one or more
+  parameters use a type that aliases the archetype, or}
 \additemCC{the archetype has been committed (described below).}
 \end{itemize}
+
+\pnum
+\addedCC{If a same-type requirement attempts to make two types
+  equivalent that both alias established archetypes but do not alias the
+  same archetype, the program is ill-formed.}
 
 \pnum 
 \addedCC{A type archetype that has been \mbox{\techterm{committed}} has
@@ -5691,8 +5701,17 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
 \begin{itemize}
 \additemCC{the definition of the archetype is required, or}
 \additemCC{name lookup finds an associated function with a parameter that uses
-  a type that has the archetype.}
+  a type that aliases the archetype.}
 \end{itemize}
+
+\pnum
+\addedCC{In the declaration of a constrained member,  member
+  template, or nested class, archetypes are established and committed
+  as if it were the only member of its class. \mbox{\enternote} This
+  means that members that come before the constrained member, member
+  template, or nested class cannot prevent the expression of
+  additional requirements on template parameters from enclosing
+  scopes. \mbox{\exitnote}}
 
 \pnum
 \addedConcepts{An archetype \mbox{\tcode{T$'$}} for a type
@@ -5941,7 +5960,7 @@ that is stated in or implied by the corresponding requirements,
 a \mbox{\techterm{concept map archetype}} for that
 requirement is synthesized by 
 substituting the archetype of \mbox{\tcode{T}} for each occurrence of
-\mbox{\tcode{T}} within the concept arguments of the requirement. The
+\mbox{\tcode{T}} within the template arguments of the requirement. The
 concept map archetype acts as a concept
 map, and is used to resolve name 
 lookup into
