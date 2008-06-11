@@ -4036,12 +4036,17 @@ void func(X x) {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{If a concept map is provided for a particular
-concept instance,
+\changedCCC{If a concept map or concept map template is provided
+  for a particular concept instance,
 then that concept map shall be defined before a constrained template
-referring to that concept instance is instantiated. 
-If the introduction of a concept
-map changes a previous result (e.g., in template argument deduction
+referring to that concept instance is instantiated.}{A concept map or
+concept map template shall be defined before the first use of a
+concept instance that would make use of the concept map or concept map
+template in every translation unit in which such a use occurs; no 
+diagnostic is required.}
+\addedConcepts{If the introduction of a concept map}
+\addedCC{or concept map template}
+\addedConcepts{changes a previous result (e.g., in template argument deduction
 (\mbox{\ref{temp.deduct}})), the program is ill-formed, no diagnostic
 required. Concept map templates must be
 instantiated if doing so would affect the semantics of the program.}
@@ -4730,33 +4735,51 @@ template<typename T, typename U>
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-\addedConcepts{Each concept map or concept map template shall provide only
+\addedConcepts{Each concept map or concept map template shall}
+\changedCCC{provide only
 definitions corresponding to requirements of the refinements of its
-concept that are compatible with the definitions provided by the
-concept map or concept map template named by the refinement. A
-definition in the refining concept map or concept map template is
-compatible with its corresponding definition in the refined concept
+concept}{have satisfiers} 
+\addedConcepts{that are compatible with the}
+\changedCCC{definitions provided by}{satisfiers of}
+\addedConcepts{the
+concept map or concept map template named by the refinement. A}
+\changedCCC{definition in}{satisfier of} 
+\addedConcepts{the refining concept map or concept map template is
+compatible with its corresponding}
+\changedCCC{definition in}{satisfier of}
+\addedConcepts{the refined concept
 map or concept map template if}
 \begin{itemize}
-\item \addedConcepts{the definition in the refined concept
-map or concept map template was implicitly defined from} \addedConcepts{an explicit
-  definition in} \addedConcepts{the refining
+\remitemCCC{the definition in the refined concept
+map or concept map template was implicitly defined from} \removedCCC{an explicit
+  definition in} \removedCCC{the refining
 concept map or concept map template,}
-\additemConcepts{the definition was explicitly provided in the refined
+\remitemCCC{the definition was explicitly provided in the refined
   concept map or concept map template and implicitly defined in the
   refining concept map or concept map template, or}
-\additemConcepts{the definitions satisfy
-an associated type or template requirement (\mbox{\ref{concept.assoc}}) and
-both definitions name the same type or}
-\addedCC{class} 
+\additemCC{the satisfiers correspond to an associated function
+  requirement (\mbox{\ref{concept.fct}}) and their associated function
+candidate sets have the same seed or}
+\additemConcepts{the} \changedCCC{definitions}{satisfiers} 
+\addedConcepts{satisfy an associated type or}
+\addedCC{class}
+\addedConcepts{template requirement (\mbox{\ref{concept.assoc}}) and
+both}
+\changedCCC{definitions}{satisfiers} 
+\addedConcepts{name the same type or}
 \addedConcepts{template, respectively.}
 \end{itemize}
-\addedConcepts{If a program contains definitions in a concept map or concept
-map template that are not compatible with their corresponding
-definitions in a refined concept map or concept map template, the
+\addedConcepts{If a program contains}
+\changedCCC{definitions in}{satisfiers of}
+\addedConcepts{a concept map or concept
+map template that are not compatible with their corresponding}
+\changedCCC{definitions in}{satisfiers of}
+\addedConcepts{a refined concept map or concept map template, the
 program is ill-formed. 
 \mbox{\enternote} if the concept maps or concept map templates with
-definitions that are not compatible occur in different translation
+}
+\changedCCC{definitions}{satisfiers}
+\addedConcepts{that are not compatible occur in different translation
 units, no diagnostic is required. \mbox{\exitnote}\
 \mbox{\enterexample}}
 \begin{codeblock}
