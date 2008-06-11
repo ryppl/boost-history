@@ -106,6 +106,8 @@ public:
 private:
     property_store _props;
     vertex_store _verts;
+
+    std::size_t _edges;
 };
 
 #define BOOST_GRAPH_UG_PARAMS \
@@ -147,16 +149,10 @@ undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_descriptor v)
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
-undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u, vertex_descriptor v)
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
+                                        vertex_descriptor v)
 {
-    // Start by getting a property descriptor for the edge.
-    property_descriptor p = _props.add();
-    vertex_type& src = _verts.vertex(u);
-    vertex_type& tgt = _verts.vertex(v);
-    src.connect(v, p);
-    tgt.connect(u, p);
-
-    return edge_descriptor(u, v, p);
+    return add_edge(u, v, edge_properties());
 }
 
 /**
@@ -168,14 +164,40 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                         vertex_descriptor v,
                                         edge_properties const& ep)
 {
-    // Start by getting a property descriptor for the edge.
-    property_descriptor p = _props.add(ep);
+    typedef typename incidence_store::const_iterator inc_iterator;
+
+    // To add the edge or not... We need to consult the virtual edge set
+    // to determine whether or not this edge already exists. For multigraph
+    // stores, this should always return false. The protocol is: ask the source
+    // if it can be connected to the target. If so, connect them. If they're
+    // connected, return the existing edge. If they can't be connected, return
+    // a null descriptor.
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
-    src.connect(v, p);
-    tgt.connect(u, p);
 
-    return edge_descriptor(u, v, p);
+    std::pair<inc_iterator, bool> ins = src.allow(v);
+    if(ins.second) {
+        // If the returned iterator is past the end, then we need to add this
+        // edge. Otherwise, we can simply return an edge over the existing
+        // iterator.
+        if(ins.first == src.end()) {
+            property_descriptor p = _props.add();
+            src.connect(v, p);
+            tgt.connect(u, p);
+            std::cout << "added new edge" << std::endl;
+            return edge_descriptor(u, v, p);
+        }
+        else {
+            std::cout << "reusing old edge" << std::endl;
+            return edge_descriptor(u, v, ins.first->second);
+        }
+    }
+    else {
+        std::cout << "can't add?" << std::endl;
+    }
+
+    // This is a null iterator
+    return edge_descriptor();
 }
 
 /**
@@ -213,20 +235,20 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
     using boost::bind;
     using boost::ref;
 
+    vertex_type& src = _verts.vertex(u);
+    vertex_type& tgt = _verts.vertex(v);
+
     // The implementation of this function is... not pretty because of the
     // number of efficient ways to do this for both lists, sets and maps.
     // Remember that we have to remove the same basic edge structures from
     // both source and target, but only need to remove the global properties
     // once.
-
-    vertex_type& src = _verts.vertex(u);
-    vertex_type& tgt = _verts.vertex(v);
-
-    // Disconnect v from the src, removing global properties,. Then disconnect
+    //
+    // Disconnect v from the src, removing global properties. Then disconnect
     // u from tgt, but don't actually do anything with the properties (they're
     // already gone!).
-    src.disconnect(v, bind(&property_store::remove, ref(_props), _1));
-    tgt.disconnect(u, bind(noop<property_descriptor>(), _1));
+    src.disconnect(v, property_eraser<property_store>(_props));
+    tgt.disconnect(u, noop_eraser());
 }
 
 /**

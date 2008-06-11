@@ -33,38 +33,55 @@ public:
 
     void add(incidence_pair);
 
+    std::pair<const_iterator, bool> allow(vertex_descriptor) const;
     iterator find(incidence_pair);
     const_iterator find(incidence_pair) const;
 
-    size_type size() const;
+    inline size_type size() const
+    { return _edges.size(); }
+
+    inline const_iterator begin() const
+    { return _edges.begin(); }
+
+    inline const_iterator end() const
+    { return _edges.end(); }
 
 private:
     store_type _edges;
 };
 
-#define BOOST_GRAPHS_IV_PARAMS \
-    typename IE, typename A
+#define BOOST_GRAPH_IV_PARAMS \
+    typename E, typename A
 
-template <BOOST_GRAPHS_IV_PARAMS>
-incidence_vector<IE,A>::incidence_vector()
+template <BOOST_GRAPH_IV_PARAMS>
+incidence_vector<E,A>::incidence_vector()
     : _edges()
 { }
 
-template <BOOST_GRAPHS_IV_PARAMS>
+template <BOOST_GRAPH_IV_PARAMS>
 void
-incidence_vector<IE,A>::add(incidence_pair e)
+incidence_vector<E,A>::add(incidence_pair e)
 {
     _edges.push_back(e);
 }
 
-template <BOOST_GRAPHS_IV_PARAMS>
-typename incidence_vector<IE,A>::size_type
-incidence_vector<IE,A>::size() const
+/**
+ * Incidence vectors always allow the addition of edges, assuming that no
+ * policy conflicts exist. The first element of the return is the end() of the
+ * vector.
+ *
+ * @complexity O(1)
+ */
+template <BOOST_GRAPH_IV_PARAMS>
+std::pair<typename incidence_vector<E,A>::const_iterator, bool>
+incidence_vector<E,A>::allow(vertex_descriptor v) const
 {
-    return _edges.size();
+    // Since there's no policy, there we must be able to add the edge.
+    return make_pair(_edges.end(), true);
 }
 
-#undef BOOST_GRAPHS_IV_PARAMS
+
+#undef BOOST_GRAPH_IV_PARAMS
 
 #if 0
 

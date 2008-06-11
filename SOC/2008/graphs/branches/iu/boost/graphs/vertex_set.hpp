@@ -93,8 +93,9 @@ public:
     // Remove vertices.
     void remove(vertex_descriptor v);
 
-    // Find a vertex based on its properties.
-    vertex_descriptor find(vertex_properties const& vp) const;
+    // Find the given vertex.
+    const_iterator find(vertex_descriptor v) const;
+    const_iterator find(vertex_properties const& vp);
 
     // Number of vertices.
     size_type size() const;
@@ -160,6 +161,16 @@ vertex_set_impl<V,C,A>::remove(vertex_descriptor v)
 {
     vertex_type* vp = static_cast<vertex_type*>(v);
     _verts.erase(vp->iter);
+}
+
+/**
+ * Find a vertex in the set.
+ */
+template <BOOST_GRAPH_VS_PARAMS>
+typename vertex_set_impl<V,C,A>::const_iterator
+vertex_set_impl<V,C,A>::find(vertex_descriptor v) const
+{
+    return find(vertex(v).properties());
 }
 
 /**
@@ -290,7 +301,7 @@ vertex_set_impl<V,C,A>::insert_vertex(vertex_properties const& vp)
 template <BOOST_GRAPH_VS_PARAMS>
 void
 vertex_set_impl<V,C,A>::remove_vertex(vertex_properties const& vp)
-{
+{4
     remove_vertex(find(vp));
 }
 

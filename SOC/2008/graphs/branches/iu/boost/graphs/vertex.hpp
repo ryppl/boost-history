@@ -19,11 +19,13 @@ public:
     typedef typename incidence_store::vertex_descriptor vertex_descriptor;
     typedef typename incidence_store::property_descriptor property_descriptor;
 
+    typedef typename incidence_store::const_iterator iterator;
     typedef typename incidence_store::size_type incidence_size_type;
 
     inline vertex();
     inline vertex(vertex_properties const& vp);
 
+    inline std::pair<iterator, bool> allow(vertex_descriptor) const;
     inline void connect(vertex_descriptor, property_descriptor);
     inline void disconnect(vertex_descriptor, property_descriptor);
     template <typename Eraser> inline void disconnect(vertex_descriptor, Eraser);
@@ -31,6 +33,14 @@ public:
     inline incidence_size_type degree() const;
 
     inline vertex_properties& properties();
+    inline vertex_properties const& properties() const;
+
+
+    inline iterator begin() const
+    { return _edges.begin(); }
+
+    inline iterator end() const
+    { return _edges.end(); }
 
     inline bool operator<(vertex const&) const;
 
@@ -50,6 +60,21 @@ vertex<VP,IS>::vertex(vertex_properties const& vp)
     : _props(vp)
     , _edges()
 { }
+
+/**
+ * Deteremine whether or not the edge exists or is even allowed to be added.
+ * This returns a pair containing an iterator indicating the position of the
+ * edge if it already exists and a bool value indicating whether or not the
+ * addition would even be allowed by policy.
+ *
+ * @complexity O(lg(d))
+ */
+template <typename VP, typename IS>
+std::pair<typename vertex<VP,IS>::iterator, bool>
+vertex<VP,IS>::allow(vertex_descriptor v) const
+{
+    return _edges.allow(v);
+}
 
 /**
  * Connect this vertex to the vertex v with edge properties p.
@@ -95,6 +120,16 @@ vertex<VP,IS>::degree() const
 template <typename VP, typename IS>
 typename vertex<VP,IS>::vertex_properties&
 vertex<VP,IS>::properties()
+{
+    return _props;
+}
+
+/**
+ * Return the properties associated with this vertex (if any).
+ */
+template <typename VP, typename IS>
+typename vertex<VP,IS>::vertex_properties const&
+vertex<VP,IS>::properties() const
 {
     return _props;
 }

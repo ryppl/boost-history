@@ -33,6 +33,7 @@ public:
 
     inline void add(incidence_pair);
 
+    inline std::pair<const_iterator, bool> allow(vertex_descriptor) const;
     inline iterator find(incidence_pair);
     inline const_iterator find(incidence_pair) const;
 
@@ -41,25 +42,52 @@ public:
 
     inline void clear();
 
-    size_type size() const;
+
+    inline size_type size() const
+    { return _edges.size(); }
+
+    inline const_iterator begin() const
+    { return _edges.begin(); }
+
+    inline const_iterator end() const
+    { return _edges.end(); }
 
 private:
     store_type _edges;
 };
 
-#define BOOST_GRAPHS_IL_PARAMS \
+#define BOOST_GRAPH_IL_PARAMS \
     typename E, typename A
 
-template <BOOST_GRAPHS_IL_PARAMS>
+template <BOOST_GRAPH_IL_PARAMS>
 incidence_list<E,A>::incidence_list()
     : _edges()
 { }
 
-template <BOOST_GRAPHS_IL_PARAMS>
+/**
+ * Add the incident edge to the incidence set.
+ *
+ * @complexity O(1)
+ */
+template <BOOST_GRAPH_IL_PARAMS>
 void
 incidence_list<E,A>::add(incidence_pair p)
 {
     _edges.push_back(p);
+}
+
+/**
+ * Incidence lists always allow the addition of edges, assuming that no policy
+ * conflicts exist. The first element of the return is the end() of the list.
+ *
+ * @complexity O(1)
+ */
+template <BOOST_GRAPH_IL_PARAMS>
+std::pair<typename incidence_list<E,A>::const_iterator, bool>
+incidence_list<E,A>::allow(vertex_descriptor v) const
+{
+    // Since there's no policy, there we must be able to add the edge.
+    return make_pair(_edges.end(), true);
 }
 
 /**
@@ -70,7 +98,7 @@ incidence_list<E,A>::add(incidence_pair p)
  * @require EqualityComparable<property_descriptor>
  * @complexity O(d)
  */
-template <BOOST_GRAPHS_IL_PARAMS>
+template <BOOST_GRAPH_IL_PARAMS>
 void
 incidence_list<E,A>::remove(incidence_pair p)
 {
@@ -87,7 +115,7 @@ incidence_list<E,A>::remove(incidence_pair p)
  * @require EqualityComparable<property_descriptor>
  * @complexity Theta(d)
  */
-template <BOOST_GRAPHS_IL_PARAMS>
+template <BOOST_GRAPH_IL_PARAMS>
 template <typename Eraser>
 void
 incidence_list<E,A>::remove(vertex_descriptor v, Eraser erase)
@@ -95,19 +123,13 @@ incidence_list<E,A>::remove(vertex_descriptor v, Eraser erase)
     iterator i = _edges.begin(), end = _edges.end();
     for( ; i != end; ) {
         if(i->first == v) {
+            erase(i->second);
             i = _edges.erase(i);
         }
         else {
             ++i;
         }
     }
-}
-
-template <BOOST_GRAPHS_IL_PARAMS>
-typename incidence_list<E,A>::size_type
-incidence_list<E,A>::size() const
-{
-    return _edges.size();
 }
 
 #if 0

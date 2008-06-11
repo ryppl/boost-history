@@ -32,7 +32,7 @@ public:
     // Property access.
     inline property_type& properties(property_descriptor);
 
-private:
+public:
     store_type _props;
 };
 
@@ -107,38 +107,47 @@ property_list<P,A>::properties(property_descriptor p)
 template <typename Iter>
 struct proplist_descriptor
 {
-    inline proplist_descriptor(Iter const&);
+    inline proplist_descriptor()
+        : iter()
+    { }
 
-    inline bool operator==(proplist_descriptor const&) const;
-    inline bool operator<(proplist_descriptor const&) const;
+    inline proplist_descriptor(Iter const& iter)
+        : iter(iter)
+    { }
+
+    inline bool operator==(proplist_descriptor const& x) const
+    { return iter == x.iter; }
+
+    inline bool operator<(proplist_descriptor const& x) const
+    { return &*iter < &*x.iter; }
 
     Iter iter;
 };
 
-template <typename I>
-proplist_descriptor<I>::proplist_descriptor(I const& iter)
-    : iter(iter)
-{ }
 
-template <typename I>
-bool
-proplist_descriptor<I>::operator==(proplist_descriptor const& x) const
-{
-    return iter == x.iter;
-}
-
-template <typename I>
-bool
-proplist_descriptor<I>::operator<(proplist_descriptor const& x) const
-{
-    return &*iter < &*x.iter;
-}
-
-// Property list algorithm objects
+// This helper type is used to erase global edge properties during edge removal
+// of undirected graphs.
 template <typename PropList>
-struct eraser
+struct property_eraser
 {
-    eraser(PropList& props)
+    property_eraser(PropList& props)
+        : props(props)
+    { }
+
+    template <typename PropDesc>
+    void operator()(PropDesc p)
+    { props.remove(p); }
+
+    PropList& props;
+};
+
+// The noop eraser does nothing.
+struct noop_eraser
+{
+    noop_eraser() { }
+
+    template <typename PropDesc>
+    void operator()(PropDesc)
     { }
 };
 

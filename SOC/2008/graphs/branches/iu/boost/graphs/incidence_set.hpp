@@ -35,19 +35,32 @@ public:
     // Constructors
     incidence_set();
 
+    // Add an incident edge.
     inline void add(incidence_pair);
 
+    // Allow a connection to the edge?
+    inline std::pair<const_iterator, bool> allow(vertex_descriptor) const;
+
+    // Find the edge record in question.
     inline iterator find(incidence_pair);
     inline const_iterator find(incidence_pair) const;
 
+    // Remove the edge.
     inline void remove(incidence_pair);
+    template <typename Eraser> inline void remove(vertex_descriptor, Eraser);
 
-    template <typename Eraser>
-    inline void remove(vertex_descriptor, Eraser);
-
+    // Remove all edges.
     inline void clear();
 
-    inline size_type size() const;
+
+    inline size_type size() const
+    { return _edges.size(); }
+
+    inline const_iterator begin() const
+    { return _edges.begin(); }
+
+    inline const_iterator end() const
+    { return _edges.end(); }
 
 private:
     store_type _edges;
@@ -62,6 +75,24 @@ template <BOOST_GRAPH_IS_PARAMS>
 incidence_set<E,C,A>::incidence_set()
     : _edges()
 { }
+
+/**
+ * Deteremine whether or not the edge exists or is even allowed to be added.
+ * This returns a pair containing an iterator indicating the position of the
+ * edge if it already exists and a bool value indicating whether or not the
+ * addition would even be allowed by policy.
+ *
+ * @complexity O(lg(d))
+ */
+template <BOOST_GRAPH_IS_PARAMS>
+std::pair<typename incidence_set<E,C,A>::const_iterator, bool>
+incidence_set<E,C,A>::allow(vertex_descriptor v) const
+{
+    // For now, always assume that the edge is allowed by policy, and determine
+    // "addability" based on whehter or not the edge exists.
+    return make_pair(_edges.find(v), true);
+}
+
 
 /**
  * Add the incidence pair to the set.
@@ -104,16 +135,6 @@ incidence_set<E,C,A>::remove(vertex_descriptor v, Erase erase)
 
     // Invoke the eraser to remove the corresponding global property.
     erase(p);
-}
-
-/**
- * Return the number of incident edges (degree) in the set.
- */
-template <BOOST_GRAPH_IS_PARAMS>
-typename incidence_set<E,C,A>::size_type
-incidence_set<E,C,A>::size() const
-{
-    return _edges.size();
 }
 
 #undef BOOST_GRAPH_IS_PARAMS
