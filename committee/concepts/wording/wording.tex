@@ -4051,6 +4051,8 @@ concept.}
     the requirement member.}
     \addedConcepts{Each requirement member is visible during
     qualified name lookup (\mbox{\ref{concept.qual}}).}
+  \addedCC{\mbox{\enternote} a satisfier need not be a member of a
+    concept map. \mbox{\exitnote}}
 
 \pnum
 \removedCCC{
@@ -4261,8 +4263,8 @@ concept_map Stack<std::vector<T> > {
   parameters. Construct an expression \mbox{\tcode{E}}}
 \addedCC{(as defined below)}
 \addedConcepts{in the scope of
-  the concept map, defined 
-  below. Then, the associated function requirement is
+  the concept map}\removedCCC{, defined 
+  below}\addedConcepts{. Then, the associated function requirement is
   satisfied}\removedCC{if}\addedConcepts{:}
 \begin{itemize}
 \additemConcepts{if \mbox{\tcode{R}} is \mbox{\techterm{cv} \tcode{void}}
