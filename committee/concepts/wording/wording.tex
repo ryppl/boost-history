@@ -1066,23 +1066,23 @@ namespace N3 {
 \pnum 
 \addedCC{If no concept is specified in the concept map using declaration,
     the following rule applies.
-Let X be the namespace specified in the \techterm{nested-name-specifier} of
-    the \techterm{using-declaration}.
-Let S be the set of all names of concept maps and concept map templates in
-    X and in the transitive closure of all namespaces nominated by
-    using-directives in X and its used namespaces,
-    except that using-directives that nominate non-inline namespaces
-    (\ref{namespace.memdef}) are ignored in any namespace,
-    including X,
+Let \mbox{\tcode{X}} be the namespace specified in the \mbox{\techterm{nested-name-specifier}} of
+    the \mbox{\techterm{using-declaration}}.
+Let \mbox{\tcode{S}} be the set of all names of concept maps and concept map templates in
+    \mbox{\tcode{X}} and in the transitive closure of all namespaces nominated by
+    \mbox{\techterm{using-directives}} in \mbox{\tcode{X}} and its used namespaces,
+    except that \mbox{\techterm{using-directives}} that nominate non-inline namespaces
+    (\mbox{\ref{namespace.memdef}}) are ignored in any namespace,
+    including \mbox{\tcode{X}},
     directly containing one or more names of a concept map or concept map
     template.
 No namespace is considered more than once to see if it contains a concept
 map or concept map template.
-If S is the empty set,
+If \mbox{\tcode{S}} is the empty set,
     the program is ill-formed.
-For each element in S,
+For each element in \mbox{\tcode{S}},
     a name is introduced into the declarative region in which the
-    \techterm{using-declaration} appears.
+    \mbox{\techterm{using-declaration}} appears.
 The name is a synonym for the referent concept map or concept map template.
 }
 addedConcepts{
@@ -3986,7 +3986,7 @@ concept.}
     satisfies }{entity that satisfies} \addedConcepts{the requirement.}
     \addedCC{That entity is said to be the \mbox{\techterm{satisfier}} of
     the requirement member.}
-    Each requirement member is visible during
+    \addedConcepts{Each requirement member is visible during
     qualified name lookup (\mbox{\ref{concept.qual}}).}
 
 \pnum
@@ -4002,12 +4002,10 @@ concept.}
 
 \pnum 
 \addedConcepts{
-    A concept map archetype (\mbox{\ref{temp.archetype}}) \changedCCC{does not contain
+    A concept map archetype (\mbox{\ref{temp.archetype}})} \changedCCC{does not contain
     any requirement members or satisfier members.
     The set of members of a concept map archetype is the set of associated
-    functions, associated types and associated}
-  \addedCC{class}
-  \addedConcepts{templates from the concept
+    functions, associated types and associated templates from the concept
     after substitution of the concept parameters with the corresponding
     concept arguments of the concept map archetype.  Within a constrained
     template, these members are treated as if they were real functions,
@@ -4602,7 +4600,9 @@ concept C<typename T> : C<vector<T>> {/* ... */ } // error: concept C is not def
 \pnum
 \addedConcepts{The \mbox{\techterm{template-argument-list}} of a
 \mbox{\techterm{refinement-specifier}}'s \mbox{\techterm{concept-id}} shall refer to at
-  least one of the concept parameters. \mbox{\enterexample}}
+  least one of the concept parameters}\addedCC{, and no concept
+  parameter shall be used in a way that establishes an
+  archetype}\addedConcepts{. \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> 
   : Incrementable<int>  // error: Incrementable<int> uses no concept parameters
@@ -4613,7 +4613,7 @@ concept InputIterator<typename Iter>
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum 
-\addedConcepts{Within the definition of a concept, a concept map archetype
+\removedCCC{Within the definition of a concept, a concept map archetype
 (\mbox{\ref{temp.archetype}}) is synthesized for each
 \mbox{\techterm{refinement-specifier}} in the concept's
 \mbox{\techterm{refinement-clause}} (if any).}
@@ -4946,20 +4946,22 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
   Instantiation in constrained contexts (\mbox{\ref{temp.constrained.inst}})
   still substitutes types, templates and values for template
   parameters. \mbox{\exitnote} A constrained
-  context is:}
+  context is}
+\changedCCC{:}{any part of a constrained template that is not an
+  unconstrained context (described  below).}
 \begin{itemize}
-\additemConcepts{the body of a constrained function template,}
-\additemConcepts{the \mbox{\techterm{expression}} in a
+\remitemCCC{the body of a constrained function template,}
+\remitemCCC{the \mbox{\techterm{expression}} in a
   \mbox{\tcode{decltype}} type or \mbox{\tcode{sizeof}}}
-\addedConcepts{or \mbox{\tcode{alignof}}} \addedConcepts{expression
+\removedCCC{or \mbox{\tcode{alignof}}} \removedCCC{expression
   that occurs within the signature of a constrained function template,}
-\additemConcepts{the \mbox{\techterm{base-clause}} (if any) of a constrained
+\remitemCCC{the \mbox{\techterm{base-clause}} (if any) of a constrained
   class template,}
-\additemConcepts{a member of a constrained class template,}
-\additemConcepts{the body of a concept map template,}
-\additemConcepts{a member of a concept map template,}
-\additemConcepts{the body of a concept,}
-\additemConcepts{a member of a concept.}
+\remitemCCC{a member of a constrained class template,}
+\remitemCCC{the body of a concept map template,}
+\remitemCCC{a member of a concept map template,}
+\remitemCCC{the body of a concept,}
+\remitemCCC{a member of a concept.}
 \end{itemize}
 
 \pnum
@@ -4970,14 +4972,14 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
   \additemConcepts{a late-checked block (\mbox{\ref{stmt.late}}),}
   \additemConcepts{a default template argument in a
     \mbox{\techterm{template-parameter}},}
-  \removedCCC{a default argument in a
-    \mbox{\techterm{parameter-declaration}}}\removedCCC{, unless that
+  \remitemCCC{a default argument in a
+    \mbox{\techterm{parameter-declaration}}}\addedConcepts{, unless that
     default argument occurs within a local class
     (\mbox{\ref{class.local}}),}
-  \removedCCC{the \mbox{\techterm{requires-clause}},
+  \remitemCCC{the \mbox{\techterm{requires-clause}},
     \mbox{\techterm{type-specifier}}, and \mbox{\techterm{declarator}}
     of a constrained member (\mbox{\ref{class.mem}}), and}
-  \removedCCC{a member template of a constrained template
+  \remitemCCC{a member template of a constrained template
     (\mbox{\ref{temp.mem}}). \mbox{\enternote} 
     The member template itself will still be a constrained template,
     and its body will be a constrained context. \mbox{\exitnote}}
@@ -5592,6 +5594,39 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   mechanism to specify the relationships between different value
   archetypes, because such a mechanism would introduce the need for equational
   reasoning within the translation process. \mbox{\exitnote}}
+
+\pnum
+\addedCC{An archetype that has been \mbox{\techterm{established}} has
+  been synthesized to describe a set of types made equivalent via
+  same-type constraints. If a same-type requirement attempts to make
+  two types equivalent that both have established archetypes but do
+  not have the same archetype, the program is ill-formed.
+  An archetype becomes established under the
+  following circumstances:}
+\begin{itemize}
+  \additemCC{a type that has the archetype has been used in the
+    template argument list of a class template specialization or
+    concept instance whose definition is required,}
+\additemCC{a type that has the archetype is provided as an argument to a
+  \mbox{\tcode{sizeof}} or \mbox{\tcode{alignof}} expression
+  (\mbox{\ref{expr.sizeof}}, \mbox{\ref{expr.alignof}}),}
+\additemCC{at the end of a function declaration in which one or more
+  parameters use a type that has the archetype, or}
+\additemCC{the archetype has been committed (described below).}
+\end{itemize}
+
+\pnum 
+\addedCC{An archetype that has been \mbox{\techterm{committed}} has
+  been defined as described below. Once an archetype has been
+  committed, its definition can no longer be changed by the
+  introduction of additional concept requirements. A program that
+  specifies or implies concept requirements that use a committed
+  archetype is ill-formed. An archetype is committed when:}
+\begin{itemize}
+\additemCC{the definition of the archetype is required, or}
+\additemCC{name lookup finds an associated function with a parameter that uses
+  a type that has the archetype.}
+\end{itemize}
 
 \pnum
 \addedConcepts{An archetype \mbox{\tcode{T$'$}} for a type
