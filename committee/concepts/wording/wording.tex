@@ -105,7 +105,9 @@ standard library are discussed in separate documents:
 
 \section*{Changes from N2617}
 \begin{itemize}
-\item Apply the proposed resolution of concepts issue 31.
+\item Associated functions cannot be \tcode{virtual}
+  (\ref{concept.map.fct}).
+\item ``Associated templates'' are now ``associated class templates'' (\ref{concept.assoc}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -2798,7 +2800,7 @@ void m() {
 \addedConcepts{A \mbox{\techterm{concept map template}} defines an
   unbounded set of concept 
   maps with a common set of associated function,
-  associated type, and associated template
+  associated type, and associated} \addedCC{class} \addedConcepts{template
   definitions. \mbox{\enterexample}}
 \begin{codeblock}
 concept F<typename T> {
@@ -2912,7 +2914,9 @@ results in a different specialization of that class
 template with an incompatible definition, the program is
 ill-formed. The specialization is considered to have an incompatible
 definition if the specialization's definition causes a different
-definition of any associated type or associated template in the
+definition of any associated type or associated}
+\addedCC{class}
+\addedConcepts{template in the
 concept map, if its definition causes any of the associated
 function definitions to be ill-formed, or if the resulting concept map
 fails to satisfy the axioms of the corresponding concept. 
@@ -3407,11 +3411,11 @@ specified in the simple form (\mbox{\ref{temp.req}}).}
 
 \addedConcepts{The body of a concept contains associated functions
 (\mbox{\ref{concept.fct}}), associated types (\mbox{\ref{concept.assoc}}),
-associated templates, 
+associated} \addedCC{class} \addedConcepts{templates, 
 associated requirements (\mbox{\ref{concept.req}}), and axioms
 (\mbox{\ref{concept.req}}). A name \mbox{\tcode{x}} declared in the body of a
-concept shall refer to only one of: an associated type, an associated
-template, an axiom, or one or more associated
+concept shall refer to only one of: an associated type, an associated}
+\addedCC{class} \addedConcepts{template, an axiom, or one or more associated
 functions that have been overloaded (clause~\mbox{\ref{over}}).}
 
 \rSec3[concept.fct]{Associated functions}
@@ -3421,7 +3425,9 @@ functions that have been overloaded (clause~\mbox{\ref{over}}).}
 operators}
 \addedConcepts{(including templates thereof)}
 \addedConcepts{that specify the functional behavior of the concept
-arguments and associated types and templates (\mbox{\ref{concept.assoc}}). A
+arguments and associated types and}
+\addedCC{class}
+\addedConcepts{templates (\mbox{\ref{concept.assoc}}). A
 concept map
 (\mbox{\ref{concept.map}}) for a given concept must satisfy
 each associated function in the concept (\mbox{\ref{concept.map.fct}}).}
@@ -3556,10 +3562,13 @@ concept_map EqualityComparable<X> { } // okay, operator!= uses default
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
-\rSec3[concept.assoc]{Associated types and templates}
+\rSec3[concept.assoc]{Associated types and class templates}
 
 \pnum
-\addedConcepts{Associated types and associated templates are types and templates,
+\addedConcepts{Associated types and associated}
+\addedCC{class} 
+\addedConcepts{templates are types and}
+\addedCC{class} \addedConcepts{templates,
 respectively, defined in the concept body and used in the
 description of the concept.}
 
@@ -3575,8 +3584,10 @@ concept Callable1<typename F, typename T1> {
 \end{codeblock}\addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{An associated template specifies a template in a concept
-  map. \mbox{\enterexample}}
+\addedConcepts{An associated}
+\addedCC{class}
+\addedConcepts{template specifies a}
+\addedCC{class} \addedConcepts{template in a concept}\removedCCC{ map}\addedConcepts{. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> {
   template<ObjectType U> class X;
@@ -3586,8 +3597,14 @@ concept C<typename T> {
 \color{addclr}
 
 \pnum
-\addedConcepts{Associated types and templates may be provided with a default value. The
-default value will be used to define the associated type or template when no
+\addedConcepts{Associated types and}
+\addedCC{class}
+\addedConcepts{templates may be provided with a default value. The
+default value will be used to}
+\changedCCC{define}{satisfy}
+\addedConcepts{the associated type or} \addedCC{class} 
+\addedConcepts{template} \addedCC{requirement}
+\addedConcepts{when no
 corresponding definition is provided in a concept map
 (\mbox{\ref{concept.map.assoc}}). \mbox{\enterexample}}
 \begin{codeblock}
@@ -3600,11 +3617,16 @@ concept_map Iterator<int*> { } // okay, difference_type is int
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{Associated types may use the simple form to
+\addedConcepts{Associated types}
+\addedCC{and class templates}
+\addedConcepts{may use the simple form to
 specify requirements 
-(\mbox{\ref{temp.req}}) on the associated type. The simple
-form is equivalent to a declaration of the associated type
-followed by an associated requirement (\mbox{\ref{concept.req}}) stated using
+(\mbox{\ref{temp.req}}) on the associated type}
+\addedCC{or class template}\addedConcepts{. The simple
+form is equivalent to a declaration of the associated type}
+\addedCC{or class template}
+\addedConcepts{followed by an associated requirement
+  (\mbox{\ref{concept.req}}) stated using
 the general form (\mbox{\ref{temp.req}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> { /* ... */ }
@@ -3619,7 +3641,9 @@ concept Container<typename X> {
 
 \pnum
 \addedConcepts{Associated requirements place additional requirements on concept
-parameters, associated types, and associated templates. Associated
+parameters, associated types, and associated}
+\addedCC{class}
+\addedConcepts{templates. Associated
 requirements have the
 same form and behavior as template requirements in a constrained
 template (\mbox{\ref{temp.constrained}}).}
@@ -3848,10 +3872,14 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
 \addedConcepts{
      A requirement member represents a requirement to satisfy (as
      described below) a single associated function
-     (\mbox{\ref{concept.fct}}), associated type or associated template
+     (\mbox{\ref{concept.fct}}), associated type or associated}
+   \addedCC{class}
+   \addedConcepts{template
     (\mbox{\ref{concept.assoc}}) from the corresponding concept.  The set
     of requirement members is the set of associated functions, associated
-    types and associated templates from the concept after substitution of
+    types and associated}
+  \addedCC{class} \addedConcepts{templates from the concept after
+    substitution of 
     the concept parameters with the corresponding concept arguments.
     \mbox{\enternote}
         There is no way to explicitly declare a requirement member.
@@ -3886,7 +3914,9 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
     A concept map archetype (\mbox{\ref{temp.archetype}}) does not contain
     any requirement members or satisfier members.
     The set of members of a concept map archetype is the set of associated
-    functions, associated types and associated templates from the concept
+    functions, associated types and associated}
+  \addedCC{class}
+  \addedConcepts{templates from the concept
     after substitution of the concept parameters with the corresponding
     concept arguments of the concept map archetype.  Within a constrained
     template, these members are treated as if they were real functions,
@@ -3895,7 +3925,9 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
 
 \pnum
 \addedConcepts{Concept maps shall satisfy every associated function (\mbox{\ref{concept.fct}}),
-associated type and associated template requirement
+associated type and associated}
+\addedCC{class}
+\addedConcepts{template requirement
 (\mbox{\ref{concept.assoc}}) of its concept instance and
 all of the requirements inherited from its refined
 concept instances (\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
@@ -4307,7 +4339,9 @@ concept_map ForwardIterator<int*> {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{Associated template requirements are satisfied by class template
+\addedConcepts{Associated}
+\addedCC{class}
+\addedConcepts{template requirements are satisfied by class template
 definitions or template aliases (\mbox{\ref{temp.alias}}) in the body of the concept map. \mbox{\enterexample}}
 \begin{codeblock}
 concept Allocator<typename Alloc> {
@@ -4326,20 +4360,25 @@ concept_map Allocator<my_allocator<T>> {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{A concept map member that satisfies an associated type or
-  template requirement can be implicitly defined using template
+\addedConcepts{A concept map member that satisfies an associated type
+  or}
+\addedCC{class}
+\addedConcepts{template requirement can be implicitly defined using template
   argument deduction (\mbox{\ref{temp.deduct}}) with one or more
   associated function requirements
   (\mbox{\ref{concept.map.fct}})}\addedCC{, if the associated type or
-  template requirement does not have a default
-  argument}\addedConcepts{.
-  The definition of the associated type or template is
+  class template requirement does not have a default
+  value}\addedConcepts{.
+  The definition of the associated type or} \addedCC{class}
+\addedConcepts{template is
   determined using the rules of template argument deduction from a
   type (\mbox{\ref{temp.deduct.type}}). Let
   \mbox{\tcode{P}} be the return type of an associated function after
   substitution of the concept parameters specified by the concept map
   with their concept arguments, and where each undefined associated
-  type and associated template has been replaced with a newly invented
+  type and associated}
+\addedCC{class}
+\addedConcepts{template has been replaced with a newly invented
   type or template template parameter, respectively. Let
   \mbox{\tcode{A}} be the return type of the seed in the associated
   function candidate set
@@ -4347,7 +4386,8 @@ concept_map Allocator<my_allocator<T>> {
   concept map members are implicitly defined by that associated
   function. If the results of
   deduction produced by different associated functions yield more than
-  one possible value, that associated type or template is
+  one possible value, that associated type or} \addedCC{class}
+\addedConcepts{template is
   not implicitly defined. \mbox{\enterexample}}
 \begin{codeblock}
 auto concept Dereferenceable<typename T> {
@@ -4366,10 +4406,17 @@ void g(int* x) {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{If an associated type or template (\mbox{\ref{concept.assoc}}) has a default
-argument, a concept map member satisfying the associated
-type or template requirement shall be implicitly defined by substituting the
-concept map arguments into the default argument. If this substitution
+\addedConcepts{If an associated type or} \addedCC{class} 
+\addedConcepts{template
+  (\mbox{\ref{concept.assoc}}) has a default}
+\changedCCC{argument}{value}\addedConcepts{, a concept map member
+  satisfying the associated
+type or}
+\addedCC{class}
+\addedConcepts{template requirement shall be implicitly defined by
+  substituting the 
+concept map arguments into the default}
+\changedCCC{argument}{value}\addedConcepts{. If this substitution
 does not produce a valid type or template (\mbox{\ref{temp.deduct}}), the
 concept map member is not implicitly defined. \mbox{\enterexample}}
 \begin{codeblock}
@@ -4487,9 +4534,11 @@ the concepts refined by the concept whose scope is \mbox{\tcode{C}}.}
 
 \pnum
 \addedConcepts{If the name \mbox{\tcode{f}} is declared in concept scope \mbox{\tcode{C}}, and
-\mbox{\tcode{f}} refers to an associated type or template
+\mbox{\tcode{f}} refers to an associated type or}
+\addedCC{class}
+\addedConcepts{template
 (\mbox{\ref{concept.assoc}}), then the result of name lookup is the
-associated type or template.}
+associated type or} \addedCC{class} \addedConcepts{template.}
 
 \pnum
 \addedConcepts{If the name \mbox{\tcode{f}} is declared in concept scope \mbox{\tcode{C}}, and
@@ -4698,7 +4747,9 @@ concept map or concept map template,}
   refining concept map or concept map template, or}
 \additemConcepts{the definitions satisfy
 an associated type or template requirement (\mbox{\ref{concept.assoc}}) and
-both definitions name the same type or template, respectively.}
+both definitions name the same type or}
+\addedCC{class} 
+\addedConcepts{template, respectively.}
 \end{itemize}
 \addedConcepts{If a program contains definitions in a concept map or concept
 map template that are not compatible with their corresponding
@@ -5305,9 +5356,12 @@ f(T*, T&); // implies PointeeType<T> and ReferentType<T>
 \addedConcepts{\mbox{\exitexample}}
 
 \additemConcepts{For every \mbox{\techterm{qualified-id}} that names
-  an associated type or 
-template, a concept requirement for the concept instance
-containing that associated type or template is implied.}
+  an associated type or} 
+\addedCC{class}
+\addedConcepts{template, a concept requirement for the concept instance
+containing that associated type or}
+\addedCC{class} 
+\addedConcepts{template is implied.}
 \enterexample\
 \begin{codeblock}
 concept Addable<typename T, typename U> {
@@ -5393,7 +5447,8 @@ a value is a value. }
 \addedConcepts{A template in a constrained template aliases an archetype if it is:}
 \begin{itemize}
 \additemConcepts{a template template parameter (\mbox{\ref{temp.param}}) or}
-\additemConcepts{an associated template (\mbox{\ref{concept.assoc}}).}
+\additemConcepts{an associated} \addedCC{class}
+\addedConcepts{template (\mbox{\ref{concept.assoc}}).}
 \end{itemize}
 
 \pnum
