@@ -6165,16 +6165,21 @@ void g(int* i) {
 
 \pnum
 \addedConcepts{In the instantiation of a constrained template, a template
-specialization whose template arguments involve archetypes
-(\mbox{\ref{temp.archetype}}) will be replaced by the template specialization
-that results from replacing each occurrence of an archetype with its
-corresponding type.}
+specialization whose template arguments involve}
+\changedCCC{archetypes}{the constrained template's template parameters}
+\addedConcepts{(\mbox{\ref{temp.archetype}}) will be replaced by the
+  template specialization
+that results from}
+\changedCCC{replacing each occurrence of an archetype with its
+corresponding type.}{substituting the constrained template's template
+arguments for their corresponding template parameters.}
 \addedConcepts{\mbox{\enternote} If the template specialization is a
   template alias (\mbox{\ref{temp.alias}}), the substitution will occur
   in the \mbox{\techterm{type-id}} of the template alias. \mbox{\exitnote}}
 \addedConcepts{The resulting type (call it \mbox{\tcode{A}}) 
-shall be compatible with the type involving
-archetypes (call it \mbox{\tcode{A$'$}}) that it
+shall be compatible with the type involving}
+\changedCCC{archetypes}{the template parameters}
+\addedConcepts{(call it \mbox{\tcode{A$'$}}) that it
 replaced, otherwise the program is ill-formed. The template
 specializations are compatible if all of the following conditions hold:}
 \begin{itemize}
@@ -6185,8 +6190,10 @@ specializations are compatible if all of the following conditions hold:}
   template and whose type, storage specifiers, template parameters (if
   any), and template requirements (if any) are the same as the
   those of 
-  \mbox{\tcode{A$'$::m}} after replacing the archetypes with their
-  actual template argument types,} 
+  \mbox{\tcode{A$'$::m}} after}
+\changedCCC{replacing the archetypes with their
+  actual template argument types,}{substituting the constrained
+  template's template arguments for the corresponding template parameters,}
 
 \item \addedConcepts{for each member type \mbox{\tcode{t}} of \mbox{\tcode{A$'$}} referenced 
   by the constrained template, there exists a member type \mbox{\tcode{t}} in
@@ -6198,9 +6205,10 @@ specializations are compatible if all of the following conditions hold:}
   by a derived-to-base conversion (\mbox{\ref{conv.ptr}}) in the constrained
   template, there exists an unambiguous base class 
   \mbox{\tcode{B}} of \mbox{\tcode{A}} that is accessible from the constrained
-  template, where \mbox{\tcode{B}} is the type produced by
-  replacing the archetypes in \mbox{\tcode{B}$'$} with their template
-  argument types.}
+  template, where \mbox{\tcode{B}} is the type produced by}
+  \changedCCC{replacing the archetypes}{substituting the constrained
+    template's template parameters with the corresponding template arguments}
+\addedConcepts{in \mbox{\tcode{B}$'$}} \removedCCC{with their template argument types}\addedConcepts{.}
 \end{itemize}
 
 \addedConcepts{\mbox{\enterexample}}
