@@ -4625,11 +4625,13 @@ concept C<typename T> :  A<T>, B<T> {
 \pnum
 \addedConcepts{When name lookup in a concept scope \mbox{\tcode{C}} results in a set of associated functions, duplicate associated
 functions are removed from the 
-set. If more than one associated function in the 
+set.}
+\removedCCC{If more than one associated function in the 
 set has the same signature, the associated
 function found first by a depth-first traversal of the refinement clauses of
 \mbox{\tcode{C}} starting at \mbox{\tcode{C}} will be retained and the other
-associated functions will be removed as duplicates. \mbox{\enterexample}}
+associated functions will be removed as duplicates.}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> {
   T f(T); // \#1a
