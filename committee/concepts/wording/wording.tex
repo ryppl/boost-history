@@ -2856,26 +2856,45 @@ concept arguments in the concept map template, using matching of class
 template partial specializations (\mbox{\ref{temp.class.spec.match}}).}
 
 \pnum
-\addedConcepts{If more than one concept map template matches a specific
+\addedCC{For two concept map templates, the first is at least as
+  specialized as the second if, given the following rewrite to two
+  class template partial specializations of an invented class template
+  \mbox{\tcode{X}}, the first class template partial specialization is
+  at least as specialized as the second according to the rules for
+  partial ordering of class template partial specializations
+  (\mbox{\ref{temp.class.order}}). The class template \mbox{\tcode{X}}
+  has the same template parameters as the concept corresponding to the
+  two concept map templates. The class template partial
+  specializations are constrained templates, even if the corresponding
+concept map templates have no requirements specified.}
+\begin{itemize}
+\additemCC{the first class template partial specialization has the
+  same template parameters and template arguments as the first concept
+  map template, and}
+\additemCC{the second function template has the same template
+  parameters and template arguments as the second concept map template.}
+\end{itemize}
+\removedCCC{If more than one concept map template matches a specific
 \mbox{\techterm{concept instance}}, partial ordering of concept map templates 
 proceeds as partial ordering of class template specializations
-(\mbox{\ref{temp.class.order}}). \mbox{\enterexample}}
+(\mbox{\ref{temp.class.order}}).}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { }
-template<typename T> requires C<T> void f(T);
-
-template<typename T> concept_map C<T*> { /* ... */ } // \#1
-
 concept Ptr<typename T> { }
-concept_map Ptr<int*> { /* ... */ }
+template<typename T> concept_map Ptr<T*> { /* ... */ }
 
+template<typename T> requires Ptr<T*> concept_map C<T*> { /* ... */ } // \#1
 template<typename T> requires Ptr<T> concept_map C<T> { /* ... */ } // \#2
 
-void g(int* p)
-{
-  f(g); // okay: concept map C<int*> instantiated from \#1, which is more specialized than \#2
-}
+template<typename T> class X;
+template<typename T> requires Ptr<T*> class X<T*>; // A
+template<typename T> requires Ptr<T> class X<T>; // B
 \end{codeblock}
+\addedCC{The concept map template \#1 is more specialized than the concept map
+template \#2 because the class template partial specialization A is
+more specialized than the class template partial specialization B
+according to the ordering rules for class template partial specializations.}
 \addedConcepts{\mbox{\exitexample}}
 
 % \addedConcepts{When writing a template
