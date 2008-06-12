@@ -12,12 +12,13 @@ class pat_key_traits{
 	public:
 	typedef unsigned char  element_type; //element type = unsigned type with size 2^(8*2^n) upto n=3. ie "unsigned long long";
 	typedef std::string::const_iterator const_iterator ;
-	static const_iterator &begin (std:string &key)
+
+	static inline const_iterator begin (std::string const &key)
 	{
 		return key.begin();
 	}
 	
-	static inline const_iterator &end (std::string &key)
+	static inline const_iterator end (std::string const &key)
 	{
 		return key.end();
 	}
