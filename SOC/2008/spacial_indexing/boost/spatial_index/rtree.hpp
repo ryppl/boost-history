@@ -36,6 +36,8 @@ namespace spatial_index {
     bool is_root(void) const { return root_; }
     void set_root(void) { root_ = true; }
 
+    boost::shared_ptr< rtree_node<Point, Value> > get_node(const unsigned int i) { return nodes_[i].second; }
+
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
       std::cerr << "Insert in node!" << std::endl;
@@ -55,17 +57,20 @@ namespace spatial_index {
       return r;
     }
 
+    virtual void add_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_node<Point, Value> > &n)
+    {
+      nodes_.push_back(std::make_pair(b, n));
+    }
+
+    virtual void add_value(const geometry::box<Point> &b, const Value &v)
+    {
+      throw std::logic_error("Can't add value to non-leaf node."); 
+    }
+
+
     void add_leaf_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_leaf<Point, Value> > &l)
     {
-      
-//       if(nodes_.size() < M_) {
-	nodes_.push_back(std::make_pair(b, l));
-//       } else {
-// 	// split
-// 	boost::shared_ptr< rtree_node<Point,Value> > n1, n2;
-// 	split_node(l, n1, n2);
-//       }
-
+      nodes_.push_back(std::make_pair(b, l));
     }
 
     boost::shared_ptr<rtree_node<Point, Value> > choose_node(const geometry::box<Point> e)
@@ -120,6 +125,8 @@ namespace spatial_index {
       return parent_;
     }
 
+    virtual Value get_value(const unsigned int i) const { throw std::logic_error("No values in a non-leaf node."); }
+
     virtual void print(void) const
     {
       std::cerr << " --> Node --------" << std::endl;
@@ -141,8 +148,6 @@ namespace spatial_index {
 	it->second->print();
       }
     }
-
-
 
     virtual ~rtree_node(void) {}
 
@@ -167,7 +172,6 @@ namespace spatial_index {
 
   private:
 
-
     geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2) const
     {
       Point min(
@@ -188,6 +192,7 @@ namespace spatial_index {
       geometry::box<Point> enlarged_box = enlarge_box(b1, b2);
       return geometry::area(enlarged_box);
     }
+
 
 
   };
@@ -212,6 +217,16 @@ namespace spatial_index {
 //       std::cerr << "Node size: " << nodes_.size() << std::endl;
     }
 
+    virtual void add_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_node<Point, Value> > &n)
+    {
+      throw std::logic_error("Can't add node to leaf node."); 
+    }
+
+    virtual void add_value(const geometry::box<Point> &b, const Value &v)
+    {
+      nodes_.push_back(std::make_pair(b, v));
+    }
+
     virtual void empty_nodes(void) {
       nodes_.clear();
     }
@@ -220,6 +235,8 @@ namespace spatial_index {
     {
       return L_;
     }
+
+    virtual Value get_value(const unsigned int i) const { return nodes_[i].second; }
 
     virtual std::vector< geometry::box<Point> > get_boxes(void) const
     {
@@ -358,15 +375,22 @@ namespace spatial_index {
     {
       std::cerr << "Split Node." << std::endl;
 
-      boost::shared_ptr< rtree_node<Point,Value> > seed1, seed2;
+      unsigned int seed1, seed2;
+      std::vector< geometry::box<Point> > boxes = n->get_boxes();
 
       linear_pick_seeds(n, seed1, seed2);
+
+      if(n->is_leaf()) {
+	n->get_value(seed1);
+// 	n1->add_value(boxes[seed1], n->get_value(seed1));
+	// n2->add_node(boxes[seed2], n->get_node(seed2));
+      }
     }
 
 
     void linear_pick_seeds(const boost::shared_ptr< rtree_node<Point,Value> > &n, 
-			   boost::shared_ptr< rtree_node<Point,Value> > &seed1,
-			   boost::shared_ptr< rtree_node<Point,Value> > &seed2) const
+			   unsigned int &seed1,
+			   unsigned int &seed2) const
     {
       std::cerr << "Linear Pick Seeds." << std::endl;
 
@@ -386,8 +410,16 @@ namespace spatial_index {
       find_normalized_separations<0u>(boxes, separation_x, first_x, second_x);
       find_normalized_separations<1u>(boxes, separation_y, first_y, second_y);
 
-      std::cout << "Separation X: " << separation_x << " within " << first_x << " and " << second_x << std::endl;
-      std::cout << "Separation Y: " << separation_y << " within " << first_y << " and " << second_y << std::endl;
+      std::cout << "Separation X: " << separation_x << " between " << first_x << " and " << second_x << std::endl;
+      std::cout << "Separation Y: " << separation_y << " between " << first_y << " and " << second_y << std::endl;
+
+      if(separation_x > separation_y) {
+	seed1 = first_x;
+	seed2 = second_x;
+      } else {
+	seed1 = first_y;
+	seed2 = second_y;
+      }
     }
 
     template<unsigned int Dimension>
