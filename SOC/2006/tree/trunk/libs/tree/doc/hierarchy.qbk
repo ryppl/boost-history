@@ -99,13 +99,8 @@ and `hierarchy_*` templates are in `namespace boost::tree`]
 		[`hierarchy_cursor<X>::type` if `a` is mutable, `hierarchy_const_cursor<X>::type` otherwise]
 	]
 	[
-		[Hierarchy's shoot]
-		[`shoot(a)`] [/shoot, sprout, twig, leaf? shoot and sprout are functionally good. root-shoot, that sounds nice]
-		[`hierarchy_cursor<X>::type` if `a` is mutable, `hierarchy_const_cursor<X>::type` otherwise]
-	]
-	[
 		[Is the hierarchy empty?]
-		[`shoot(a)`]
+		[`empty(a)`]
 		[`bool`]
 	]
 ]
@@ -119,16 +114,11 @@ and `hierarchy_*` templates are in `namespace boost::tree`]
 	[
 		[`root(a)`]
 		[Returns a cursor pointing to the root element in the hierarchy]
-		[`root(a)` is either dereferenceable or shoot. It is shoot if and only if `empty(a)`.]
-	]
-	[
-		[`shoot(a)`]
-		[Returns a cursor pointing one position past the rightmost element in the hierarchy (the "shoot")]
-		[`shoot(a)` is shoot.]
+		[`root(a)` is either dereferenceable or `empty(a)` is true.]
 	]
 	[
 		[`empty(a)`]
-		[Equivalent to `root(a) == shoot(a)`, but possibly faster.]
+		[]
 		[-]
 	]
 ]
@@ -137,11 +127,10 @@ and `hierarchy_*` templates are in `namespace boost::tree`]
 
 [variablelist Complexity guarantees
     [[`root(a)`]		[O(1)]]
-    [[`shoot(a)`]	[O(log(n))]]
     [[`empty(a)`]	[O(log(n))]]
 ]
 
-Invariants? Completeness could e.g. be done via preorder traversal (whose endpoints are root and shoot)
+Invariants? Completeness could e.g. be done via preorder traversal
 But preorder for multiway?
 
 [endsect] [/ Valid expressions]
@@ -164,7 +153,6 @@ But preorder for multiway?
 [caution Need to keep in mind that MultiwayHierarchies are almost exclusively used for searching!]
 
 [variablelist Complexity guarantees
-    [[`shoot(a)`]	[O(1)]]
     [[`empty(a)`]	[O(1)]]
 ]
 
