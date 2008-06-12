@@ -41,15 +41,30 @@ namespace spatial_index {
       std::cerr << "Insert in node!" << std::endl;
     }
 
+    virtual unsigned int get_capacity(void) const
+    {
+      return M_;
+    }
+
+    virtual std::vector< geometry::box<Point> > get_boxes(void) const
+    {
+      std::vector< geometry::box<Point> > r;
+      for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	r.push_back(it->first);
+      }
+      return r;
+    }
 
     void add_leaf_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_leaf<Point, Value> > &l)
     {
       
-      if(nodes_.size() < M_) {
+//       if(nodes_.size() < M_) {
 	nodes_.push_back(std::make_pair(b, l));
-      } else {
-	// split
-      }
+//       } else {
+// 	// split
+// 	boost::shared_ptr< rtree_node<Point,Value> > n1, n2;
+// 	split_node(l, n1, n2);
+//       }
 
     }
 
@@ -95,6 +110,14 @@ namespace spatial_index {
       }
       std::cerr << "We have a node." << std::endl;
       return chosen_node;
+    }
+
+    virtual void empty_nodes(void) {
+      nodes_.clear();
+    }
+
+    boost::shared_ptr<rtree_node<Point,Value> > get_parent(void) const {
+      return parent_;
     }
 
     virtual void print(void) const
@@ -189,17 +212,35 @@ namespace spatial_index {
 //       std::cerr << "Node size: " << nodes_.size() << std::endl;
     }
 
+    virtual void empty_nodes(void) {
+      nodes_.clear();
+    }
+
+    virtual unsigned int get_capacity(void) const
+    {
+      return L_;
+    }
+
+    virtual std::vector< geometry::box<Point> > get_boxes(void) const
+    {
+      std::vector< geometry::box<Point> > r;
+      for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	r.push_back(it->first);
+      }
+      return r;
+    }
+
     virtual void print(void) const
     {
       std::cerr << " --> Leaf --------" << std::endl;
       std::cerr << "  Size / Capacity: " << nodes_.size() << " / " << L_ << std::endl;
-      std::cerr << "  | ";
       for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	std::cerr << "  | ";
 	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
 	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
 	std::cerr << " -> ";
 	std::cerr << it->second;
-	std::cerr << " | ";
+	std::cerr << " | " << std::endl;;
 
 
       }
@@ -261,11 +302,19 @@ namespace spatial_index {
 
       if(l->is_full()) {
 	std::cerr << "Node full. Split." << std::endl;
+
+	l->insert(e, v);
 	
 	// split!
+	boost::shared_ptr< rtree_node<Point, Value> > n1(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
+	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
+
+	split_node(l, n1, n2);
+      } else {
+	l->insert(e, v);
       }
 
-      l->insert(e, v);
+
 
       adjust_tree(l);
 
@@ -303,6 +352,114 @@ namespace spatial_index {
       }
 
     }
+
+    void split_node(const boost::shared_ptr<rtree_node<Point, Value> > &n, boost::shared_ptr<rtree_node<Point, Value> > &n1
+		    , boost::shared_ptr<rtree_node<Point, Value> > &n2) const
+    {
+      std::cerr << "Split Node." << std::endl;
+
+      boost::shared_ptr< rtree_node<Point,Value> > seed1, seed2;
+
+      linear_pick_seeds(n, seed1, seed2);
+    }
+
+
+    void linear_pick_seeds(const boost::shared_ptr< rtree_node<Point,Value> > &n, 
+			   boost::shared_ptr< rtree_node<Point,Value> > &seed1,
+			   boost::shared_ptr< rtree_node<Point,Value> > &seed2) const
+    {
+      std::cerr << "Linear Pick Seeds." << std::endl;
+
+      // get boxes from the node
+      std::vector< geometry::box<Point> > boxes = n->get_boxes();
+      if(boxes.size() == 0) {
+	throw std::logic_error("Empty Node trying to Pick Seeds");
+      }
+
+      // only two dim for now
+      // unsigned int dimensions = geometry::point_traits<Point>::coordinate_count;
+
+      // find the first two elements
+      double separation_x, separation_y;
+      unsigned int first_x, second_x;
+      unsigned int first_y, second_y;
+      find_normalized_separations<0u>(boxes, separation_x, first_x, second_x);
+      find_normalized_separations<1u>(boxes, separation_y, first_y, second_y);
+
+      std::cout << "Separation X: " << separation_x << " within " << first_x << " and " << second_x << std::endl;
+      std::cout << "Separation Y: " << separation_y << " within " << first_y << " and " << second_y << std::endl;
+    }
+
+    template<unsigned int Dimension>
+    void find_normalized_separations(const std::vector< geometry::box<Point> > &boxes, double &separation, unsigned int &first, unsigned int &second) const
+    {
+
+      std::cout << "Boxes: " << boxes.size() << std::endl;
+
+      // find the lowest high
+      typename std::vector< geometry::box<Point> >::const_iterator it = boxes.begin();
+      double lowest_high = geometry::get<Dimension>(it->max());
+      unsigned int lowest_high_index = 0;
+      unsigned int index;
+      ++it;
+      index = 1;
+      for(; it != boxes.end(); ++it) {
+	if(geometry::get<Dimension>(it->max()) < lowest_high) {
+	  lowest_high = geometry::get<Dimension>(it->max());
+	  lowest_high_index = index;
+	}
+	index++;
+      }
+      std::cerr << "Lowest High: " << lowest_high << " Index: " << lowest_high_index << std::endl;
+
+      // find the lowest low
+      it = boxes.begin();
+      double lowest_low = geometry::get<Dimension>(it->min());
+      ++it;
+      for(; it != boxes.end(); ++it) {
+	if(geometry::get<Dimension>(it->min()) < lowest_low) {
+	  lowest_low = geometry::get<Dimension>(it->min());
+	}
+      }
+
+
+      // find the highest high
+      it = boxes.begin();
+      double highest_high = geometry::get<Dimension>(it->max());
+      ++it;
+      for(; it != boxes.end(); ++it) {
+	if(geometry::get<Dimension>(it->max()) > highest_high) {
+	  highest_high = geometry::get<Dimension>(it->max());
+	}
+      }
+
+      // find the highest low      
+      it = boxes.begin();
+      double highest_low = geometry::get<Dimension>(it->min());
+      unsigned int highest_low_index = 0;
+      ++it;
+      index = 1;
+      for(; it != boxes.end(); ++it) {
+	if(geometry::get<Dimension>(it->min()) > highest_low) {
+	  highest_low = geometry::get<Dimension>(it->min());
+	  highest_low_index = index;
+	}
+	index++;
+      }
+      std::cerr << "Highest Low: " << highest_low << " Index: " << highest_low_index << std::endl;
+
+
+      double width = highest_high - lowest_low;
+
+      std::cerr << "HH: " << highest_high << " LL: " << lowest_low << std::endl;
+
+      std::cerr << "Width: " << width << std::endl;
+
+      separation = (highest_low  - lowest_high) / width;
+      first = highest_low_index;
+      second = lowest_high_index;
+    }
+
 
     boost::shared_ptr<rtree_node<Point, Value> > choose_leaf(const geometry::box<Point> e)
     {
