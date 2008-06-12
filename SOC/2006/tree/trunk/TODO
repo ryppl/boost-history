@@ -14,12 +14,22 @@
 [section TODO]
 
 General:
+* Re-organize traversal tests:
+  * Verify recursive algorithms to work
+    * 1. with a tree filled with given data
+    * 2. with an empty tree
+  * Same for iterators
+  * Start with an empty tree, fill it with data. At each step, check if
+    cursor and iterator algorithms yield the same result.
+    (Or, alternatively, if neither is to be trusted: compare to subsets of
+    the complete test data.)
+  * With the tree complete, do the same recursively for all its subtrees.
 * Also test copy with two trees (not just one tree and a container/output iterator)
 * Rename parity() (which looks somewhat binary-related) to index (more general for forest
   trees etc)?
 * _Possibly_ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
   detail/cursor/ (same for iterator).
-* Make *order iterators work with empty subtrees.
+* Make *order iterators work with empty subtrees; same for cursor algorithms.
 * Get rid of checks for/assignments to root in pre/post/inorder algorithms,
   as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
   In order to work for subtrees, it's probable that we need at least an int to store
@@ -63,6 +73,7 @@ Proposal:
   (and output_cursor_iterator_wrapper?) proposal.
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
+ * Remove shoot()
 * Add (subtree) cursor algorithms.
 * Probably split up cursor categories into: cursor (value access) category, vertical traversal 
   and horizontal traversal (along the lines of the new iterator concepts).

@@ -33,14 +33,14 @@ inline void forward(Cursor& c)
 {
 	c.to_parent();
 
+	if (c.is_root())
+		return;
+
 	if (c.parity()) { // Right child? Return parent.
 		--c;
 		return;
 	}
-	
-	if (c.is_root()) // Root?
-		return;
-	
+		
 	// Left child.
 	++c;
 	while (!c.empty()) {
@@ -88,7 +88,7 @@ inline void back(Cursor& c)
 	
 	// Move up in the hierarchy until we find a descendant that has a right
 	// child (which is what we'll return) or we land at root.
-	while (true) { // revisit
+	while (!c.is_root()) { // revisit
 		c.to_parent();
 		if (c.parity())
 			if (!(--c).empty()) {
@@ -182,6 +182,7 @@ Op for_each(Cursor s, Op f)
 			for_each_recursive(s, f);
 	while (s++ != t.end());
 	f(*t.to_begin());
+
 	return f;
 }
 //]
@@ -228,7 +229,7 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
 	t.to_begin();
 	do {
 		if (!s.empty())
-			transform(s, t, op);
+			copy(s, t);
 		++t;
 	} while (s++ != r.end());
 	*t = op(*r.to_begin());

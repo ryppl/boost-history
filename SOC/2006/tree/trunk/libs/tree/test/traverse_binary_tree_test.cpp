@@ -16,6 +16,8 @@
 #include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
 
+#include <boost/tree/ascending_cursor.hpp>
+
 #include <boost/test/minimal.hpp>
 
 #include <list>
@@ -45,8 +47,7 @@ using namespace boost::tree;
 template <class Cursor, class Op>
 void underefed_for_each_recursive(Cursor s, Op& f)
 {
-	Cursor t = s;
-	t.to_end();
+	Cursor t = s.end();
 	s.to_begin();
 	f(s);
 	do
@@ -70,9 +71,19 @@ Op underefed_for_each(Cursor s, Op f)
 }
 
 void comparisons(binary_tree<int>::const_cursor c) {
-	test::preorder::compare_cursor_to_iterator_traversal(c);
-	test::inorder::compare_cursor_to_iterator_traversal(c);	
-	test::postorder::compare_cursor_to_iterator_traversal(c);
+	using boost::tree::ascending_cursor;
+	
+	//if (!c.empty()) {
+		test::preorder::compare_cursor_to_iterator_traversal(c);
+		test::inorder::compare_cursor_to_iterator_traversal(c);	
+		test::postorder::compare_cursor_to_iterator_traversal(c);
+		
+		//Now same for iterators wrapped around "explicit stack"-based cursors
+		ascending_cursor<binary_tree<int>::const_cursor> ac(c);
+		test::preorder::compare_cursor_to_iterator_traversal(ac);
+		test::inorder::compare_cursor_to_iterator_traversal(ac);	
+		test::postorder::compare_cursor_to_iterator_traversal(ac);
+	//}
 	return;
 }
 
@@ -84,6 +95,7 @@ void comparisons(binary_tree<int>::const_cursor c) {
  */ 
 void compare_cursor_to_iterator_traversal() {
 	binary_tree<int> test_tree2;
+	//comparisons(test_tree2.root());
 
 	binary_tree<int>::cursor c = test_tree2.insert(test_tree2.root(), 8);
 	comparisons(test_tree2.root());
@@ -117,9 +129,13 @@ void compare_cursor_to_iterator_traversal() {
 
 	c = test_tree2.insert(++c, 12);
 	comparisons(test_tree2.root());
-	//underefed_for_each(test_tree2.root(), comparisons);
+//	underefed_for_each(test_tree2.root(), comparisons);
 	
-	//comparisons(test_tree2.root().begin());
+//	comparisons(test_tree2.root().begin());
+//	comparisons(test_tree2.root().begin().begin());
+//	
+//	comparisons(test_tree2.root().end());
+//	comparisons(test_tree2.root().end().end());
 }
 
 int test_main(int, char* [])
@@ -127,6 +143,15 @@ int test_main(int, char* [])
 	typedef boost::tree::binary_tree<int>::cursor cursor;
 	
 	binary_tree<int> test_tree;	
+//	std::list<int> test_list;
+//	
+//	// TODO: Put this into a better testing context.
+//	boost::tree::preorder::for_each(
+//		test_tree.root(), 
+//		boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
+//	);
+//	BOOST_CHECK(test_list.empty());
+	
 	create_test_data_tree(test_tree);
 
 	//Preorder	

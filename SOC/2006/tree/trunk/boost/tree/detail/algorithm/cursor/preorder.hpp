@@ -155,8 +155,7 @@ Cursor last(Cursor c)
 template <class Cursor, class Op>
 void for_each_recursive(Cursor s, Op& f)
 {
-	Cursor t = s;
-	t.to_end();
+	Cursor t = s.end();
 	s.to_begin();
 	f(*s);
 	do
@@ -185,7 +184,7 @@ Op for_each(Cursor s, Op f)
 		if (!s.empty())
 			for_each_recursive(s, f);
 	while (s++ != t);
-		
+	
 	return f;
 }
 

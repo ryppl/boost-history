@@ -37,7 +37,7 @@ inline void forward(MultiwayCursor& c)
 		return;
 	}
 	
-	while (c.parity()) // Doesn't work with subtrees whose root's parity != 0
+	while (c.parity() && !c.is_root())
 		c.to_parent();
 	return;
 }
@@ -122,8 +122,8 @@ MultiwayCursor last(MultiwayCursor c)
 template <class MultiwayCursor, class Op>
 void for_each_recursive(MultiwayCursor s, Op& f)
 {
-	MultiwayCursor t = s;
-	t.to_end();
+	MultiwayCursor t = s.end();
+
 	for (s.to_begin(); s!=t; ++s) {
 		if (!s.empty())
 			for_each_recursive(s, f);
@@ -147,8 +147,8 @@ void for_each_recursive(MultiwayCursor s, Op& f)
 template <class MultiwayCursor, class Op>
 Op for_each(MultiwayCursor s, Op f)
 {
-	MultiwayCursor t = s;
-	t.to_end();
+	MultiwayCursor t = s.end();
+
 	for (s.to_begin(); s!=t; ++s) {
 		if (!s.empty())
 			for_each_recursive(s, f);
@@ -168,8 +168,8 @@ Op for_each(MultiwayCursor s, Op f)
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
-	InCursor r = s;
-	r.to_end();
+	InCursor r = s.end();
+
 	s.to_begin();
 	t.to_begin();
 	
@@ -199,8 +199,8 @@ OutCursor copy (InCursor s, OutCursor t)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
-	InCursor r = s;
-	r.to_end();
+	InCursor r = s.end();
+
 	s.to_begin();
 	t.to_begin();
 	
