@@ -639,27 +639,6 @@
             </tr>
 
             <tr>
-              <td><tt>a.shoot()</tt></td>
-
-              <td><tt>iterator</tt> for mutable <tt>a</tt>;<br />
-              <tt>const_iterator</tt> for constant <tt>a</tt></td>
-
-              <td>&nbsp;</td>
-
-              <td>(Note A)</td>
-            </tr>
-
-            <tr>
-              <td><tt>a.cshoot()</tt></td>
-
-              <td><tt>const_iterator</tt></td>
-
-              <td>&nbsp;</td>
-
-              <td>(Note A)</td>
-            </tr>
-
-            <tr>
               <td><tt>typename&nbsp;X::template<br />
               &nbsp;&nbsp;rebind&lt;U&gt;::other</tt></td>
 
@@ -680,10 +659,8 @@
 
       <li>
         <p><tt>root()</tt> and <tt>croot()</tt> return a cursor which is the
-        on-top value for the hierarchy. <tt>shoot()</tt> and
-        <tt>cshoot()</tt> return a cursor which is the past-the-end value
-        that is found one past the hierarchy's rightmost element. If the
-        hierarchy is empty, then <tt>root() == shoot()</tt>;</p>
+        on-top value for the hierarchy. If the
+        hierarchy is empty, then <tt>root().empty()</tt>;</p>
       </li>
 
       <li>
@@ -1105,8 +1082,6 @@ namespace tr2 {
     <i>// cursors:</i>
     cursor        root();
     const_cursor  croot() const;
-    cursor        shoot();
-    const_cursor  cshoot() const;
     cursor        inorder_first();
     const_cursor  inorder_cfirst const();
 
@@ -1217,20 +1192,13 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <h6>23.X.4.1.3 <tt>binary_tree</tt> cursors <span class=
     "section-id">[tr.hierarchy.bintree.cursors]</span></h6>
-    <pre>
-    cursor        shoot();
-    const_cursor  cshoot() const;
-</pre>
 
-    <ol>
-      <li>
-        <p><strong>Complexity:</strong> constant</p>
-        <pre>
+    <pre>
     cursor        inorder_first();
     const_cursor  inorder_cfirst() const;
 </pre>
-      </li>
 
+    <ol>
       <li>
         <p><strong>Returns:</strong> A cursor to the <tt>binary_tree</tt>'s
         first element in inorder (see <a href=
@@ -1449,8 +1417,6 @@ namespace tr2 {
     <i>// cursors:</i>
     cursor        root();
     const_cursor  croot() const;
-    cursor        shoot();
-    const_cursor  cshoot() const;
     cursor        inorder_first();
     const_cursor  inorder_cfirst const();
 
@@ -1553,20 +1519,13 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <h6>23.X.4.2.3 <tt>nary_tree</tt> cursors <span class=
     "section-id">[tr.hierarchy.narytree.cursors]</span></h6>
-    <pre>
-    cursor        shoot();
-    const_cursor  cshoot() const;
-</pre>
 
-    <ol>
-      <li>
-        <p><strong>Complexity:</strong> constant</p>
-        <pre>
+    <pre>
     cursor        inorder_first();
     const_cursor  inorder_cfirst() const;
 </pre>
-      </li>
 
+    <ol>
       <li>
         <p><strong>Returns:</strong> A cursor to the <tt>nary_tree</tt>'s
         first element in inorder (see <a href=
@@ -1771,8 +1730,6 @@ namespace tr2 {
     <i>// cursors:</i>
     cursor        root()    { return h.root(); }
     const_cursor  croot()   { return h.croot(); }
-    cursor        shoot();
-    const_cursor  cshoot() const;
 
     <i>// capacity:</i>
     bool      empty() const { return h.empty(); }
@@ -2025,8 +1982,6 @@ namespace tr2 {
     <i>// cursors:</i>
     cursor        root();
     const_cursor  croot() const;
-    cursor        shoot();
-    const_cursor  cshoot() const;
     cursor        inorder_first();
     const_cursor  inorder_cfirst const();
 
@@ -2179,20 +2134,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <h6>23.X.4.3.2.3 <tt>multiway_tree</tt> cursors <span class=
     "section-id">[tr.hierarchy.multiwaytree.cursors]</span></h6>
-    <pre>
-    cursor        shoot();
-    const_cursor  cshoot() const;
-</pre>
 
     <ol>
-      <li>
-        <p><strong>Complexity:</strong> constant</p>
-        <pre>
-    cursor        inorder_first();
-    const_cursor  inorder_cfirst() const;
-</pre>
-      </li>
-
       <li>
         <p><strong>Returns:</strong> A cursor to the <tt>multiway_tree</tt>'s
         first element in inorder (see <a href=
@@ -2386,8 +2329,6 @@ namespace tr2 {
     <i>// cursors:</i>
     cursor        root();
     const_cursor  croot() const;
-    cursor        shoot();
-    const_cursor  cshoot() const;
     cursor        inorder_first();
     const_cursor  inorder_cfirst const();
 
@@ -2566,8 +2507,8 @@ namespace tr2 {
     <i>// iterators:</i>
     iterator                begin();
     const_iterator          cbegin() const;
-    iterator                end()             { return iterator(h.shoot()); }
-    const_iterator          cend() const      { return const_iterator(h.cshoot()); }
+    iterator                end()             { return iterator(h.root()); }
+    const_iterator          cend() const      { return const_iterator(h.root()); }
     reverse_iterator        rbegin();
     const_reverse_iterator  crbegin() const;
     reverse_iterator        rend();
