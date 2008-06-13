@@ -109,7 +109,7 @@ namespace spatial_index {
       unsigned int index = 0;
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
 	if(it->second.get() == n.get()) {
-	  std::cerr << "Node found!" << std::endl;
+// 	  std::cerr << "Node found!" << std::endl;
 	  nodes_[index] = std::make_pair(n->compute_box(), n);
 	  return;
 	}
@@ -123,7 +123,7 @@ namespace spatial_index {
       unsigned int index = 0;
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
 	if(it->second.get() == l.get()) {
-	  std::cerr << "Node found!" << std::endl;
+// 	  std::cerr << "Node found!" << std::endl;
 	  nodes_[index] = std::make_pair(new_l->compute_box(), new_l);
 	  return;
 	}
@@ -152,7 +152,7 @@ namespace spatial_index {
     /// insertion algorithm choose node
     boost::shared_ptr<rtree_node<Point, Value> > choose_node(const geometry::box<Point> e)
     {
-      std::cerr << "Choose node" << std::endl;
+//       std::cerr << "Choose node" << std::endl;
 
       if(nodes_.size() == 0) {
 	throw std::logic_error("Empty node trying to choose the least enlargment node.");
@@ -190,7 +190,7 @@ namespace spatial_index {
 
 	}
       }
-      std::cerr << "We have a node." << std::endl;
+//       std::cerr << "We have a node." << std::endl;
       return chosen_node;
     }
 

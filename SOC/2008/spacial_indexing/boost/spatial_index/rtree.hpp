@@ -55,7 +55,7 @@ namespace spatial_index {
       boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(e));
 
       if(l->is_full()) {
-	std::cerr << "Node full. Split." << std::endl;
+// 	std::cerr << "Node full. Split." << std::endl;
 
 	l->insert(e, v);
 	
@@ -64,9 +64,9 @@ namespace spatial_index {
 	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
 
 	split_node(l, n1, n2);
-	std::cerr << "Node splited." << std::endl;
-	n1->print();
-	n2->print();
+// 	std::cerr << "Node splited." << std::endl;
+// 	n1->print();
+// 	n2->print();
 	adjust_tree(l, n1, n2);
 
       } else {
@@ -119,7 +119,7 @@ namespace spatial_index {
       boost::shared_ptr<rtree_node<Point,Value> > N = n1;
       boost::shared_ptr<rtree_node<Point,Value> > NN = n2;
       if(l->is_root()) {
-	std::cerr << "Root   ---------> split."<< std::endl;
+// 	std::cerr << "Root   ---------> split."<< std::endl;
 	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1, m_, M_));
 	new_root->set_root();
 	new_root->add_node(n1->compute_box(), n1);
@@ -131,7 +131,7 @@ namespace spatial_index {
       parent->replace_node(l, n1);
       if(parent->is_full()) {
 	parent->add_node(n2->compute_box(), n2);
-	std::cerr << "parent is full" << std::endl;
+// 	std::cerr << "parent is full" << std::endl;
 
 	boost::shared_ptr< rtree_node<Point, Value> > p1(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level(), m_, M_));
 	boost::shared_ptr< rtree_node<Point, Value> > p2(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level(), m_, M_));
@@ -149,7 +149,7 @@ namespace spatial_index {
 		    , boost::shared_ptr<rtree_node<Point, Value> > &n2) const
     {
       // TODO: unify
-      std::cerr << "Split Node." << std::endl;
+//       std::cerr << "Split Node." << std::endl;
 
       unsigned int seed1, seed2;
       std::vector< geometry::box<Point> > boxes = n->get_boxes();
@@ -166,6 +166,22 @@ namespace spatial_index {
 	  if(index != seed1 && index != seed2) {
 	    // TODO: check if the remaining elements should be in one group because of the minimum
 	    
+	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
+
+	    std::cerr << "Remaining: " << remaining;
+	    std::cerr << " n1: " << n1->elements();
+	    std::cerr << " n2: " << n2->elements();
+	    std::cerr << std::endl;
+
+	    if(n1->elements() + remaining == m_) {
+	      n1->add_value(it->first, it->second);
+	      continue;
+	    }
+	    if(n2->elements() + remaining == m_) {
+	      n2->add_value(it->first, it->second);
+	      continue;
+	    }
+
 	    /// current boxes of each group
 	    geometry::box<Point> b1, b2;
 
@@ -217,7 +233,21 @@ namespace spatial_index {
 	  if(index != seed1 && index != seed2) {
 	    // TODO: check if the remaining elements should be in one group because of the minimum
 
-	    std::cerr << "1" << std::endl;
+	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
+
+	    std::cerr << "Remaining: " << remaining;
+	    std::cerr << " n1: " << n1->elements();
+	    std::cerr << " n2: " << n2->elements();
+	    std::cerr << std::endl;
+	    if(n1->elements() + remaining == m_) {
+	      n1->add_node(it->first, it->second);
+	      continue;
+	    }
+	    if(n2->elements() + remaining == m_) {
+	      n2->add_node(it->first, it->second);
+	      continue;
+	    }
+
 	    /// current boxes of each group
 	    geometry::box<Point> b1, b2;
 
@@ -259,7 +289,6 @@ namespace spatial_index {
 
 	  }
 	}
-	std::cerr << "s" << std::endl;
       }
     }
 
@@ -268,7 +297,7 @@ namespace spatial_index {
 			   unsigned int &seed1,
 			   unsigned int &seed2) const
     {
-      std::cerr << "Linear Pick Seeds." << std::endl;
+//       std::cerr << "Linear Pick Seeds." << std::endl;
 
       // get boxes from the node
       std::vector< geometry::box<Point> > boxes = n->get_boxes();
@@ -286,8 +315,8 @@ namespace spatial_index {
       find_normalized_separations<0u>(boxes, separation_x, first_x, second_x);
       find_normalized_separations<1u>(boxes, separation_y, first_y, second_y);
 
-      std::cout << "Separation X: " << separation_x << " between " << first_x << " and " << second_x << std::endl;
-      std::cout << "Separation Y: " << separation_y << " between " << first_y << " and " << second_y << std::endl;
+//       std::cerr << "Separation X: " << separation_x << " between " << first_x << " and " << second_x << std::endl;
+//       std::cerr << "Separation Y: " << separation_y << " between " << first_y << " and " << second_y << std::endl;
 
       if(separation_x > separation_y) {
 	seed1 = first_x;
@@ -302,7 +331,7 @@ namespace spatial_index {
     void find_normalized_separations(const std::vector< geometry::box<Point> > &boxes, double &separation, unsigned int &first, unsigned int &second) const
     {
 
-      std::cout << "Boxes: " << boxes.size() << std::endl;
+//       std::cerr << "Boxes: " << boxes.size() << std::endl;
 
       // find the lowest high
       typename std::vector< geometry::box<Point> >::const_iterator it = boxes.begin();
@@ -318,7 +347,7 @@ namespace spatial_index {
 	}
 	index++;
       }
-      std::cerr << "Lowest High: " << lowest_high << " Index: " << lowest_high_index << std::endl;
+//       std::cerr << "Lowest High: " << lowest_high << " Index: " << lowest_high_index << std::endl;
 
       // find the lowest low
       it = boxes.begin();
@@ -354,14 +383,14 @@ namespace spatial_index {
 	}
 	index++;
       }
-      std::cerr << "Highest Low: " << highest_low << " Index: " << highest_low_index << std::endl;
+//       std::cerr << "Highest Low: " << highest_low << " Index: " << highest_low_index << std::endl;
 
 
       double width = highest_high - lowest_low;
 
-      std::cerr << "HH: " << highest_high << " LL: " << lowest_low << std::endl;
+//       std::cerr << "HH: " << highest_high << " LL: " << lowest_low << std::endl;
 
-      std::cerr << "Width: " << width << std::endl;
+//       std::cerr << "Width: " << width << std::endl;
 
       separation = (highest_low  - lowest_high) / width;
       first = highest_low_index;
@@ -373,11 +402,11 @@ namespace spatial_index {
     {
       boost::shared_ptr< rtree_node<Point, Value> > N = root_;
 
-      std::cerr << "Choosing." << std::endl;
+//       std::cerr << "Choosing." << std::endl;
 
       while(!N->is_leaf()) {
 	/// traverse N's map to see which node we should select
-	std::cerr << "Not a leaf." << std::endl;
+// 	std::cerr << "Not a leaf." << std::endl;
 	N = N->choose_node(e);
       }
       return N;
