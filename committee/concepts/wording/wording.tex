@@ -4011,8 +4011,9 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
 
 \pnum 
 \addedConcepts{
-    A concept map that is not a concept map archetype
-     may contain two kinds of members:
+    A concept map}
+\removedCCC{that is not a concept map archetype}
+     \addedConcepts{may contain two kinds of members:
     \mbox{\techterm{requirement members}} and 
 }\changedCCC{ \mbox{\techterm{satisfier members}}.}{members that satisfy
 requirement members.  The latter may be explicitly declared within the
@@ -4828,7 +4829,7 @@ void h(T x) {
 \mbox{\tcode{C}}
 will be defined
 in the namespace of which the
-concept map is a member.
+concept map is a member}.
 If a concept map for a given concept instance in the
   refinement clause has not be defined in the namespace of the
   refining concept map, it is defined implicitly.
@@ -5711,7 +5712,42 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   means that members that come before the constrained member, member
   template, or nested class cannot prevent the expression of
   additional requirements on template parameters from enclosing
-  scopes. \mbox{\exitnote}}
+  scopes. \mbox{\exitnote} \mbox{\enterexample} Given:}
+\color{ccadd}
+\begin{codeblock}
+concept C1<typename T> { }
+concept C2<typename T> { }
+concept C3<typename T> { }
+
+template <C1 T> class X {
+  requires C2<T> void g(T) {}
+  class B {
+    void g(T) {}
+    requires C3<T> void f(T) {}
+  };
+};
+\end{codeblock}
+
+\noindent
+\addedCC{\mbox{\tcode{X::g}} is evaluated as if in the context}
+
+\begin{codeblock}
+template <C1 T> class X {
+  requires C2<T> void g(T) {}
+};
+\end{codeblock}
+
+\noindent
+\addedCC{and \mbox{\tcode{X::B::g}} is evaluated as if in the context}
+
+\begin{codeblock}
+template <C1 T> class X {
+  class B {
+    requires C3<T> void f(T) {}
+  };
+};
+\end{codeblock} \addedCC{\mbox{\exitexample}}
+\color{addclr}
 
 \pnum
 \addedConcepts{An archetype \mbox{\tcode{T$'$}} for a type
