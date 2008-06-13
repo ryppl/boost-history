@@ -172,5 +172,17 @@
 			- Tested with MSVC++ 2008 EE On Vista
 			- Tested with gcc 4.2.1 on FreeBSD
 		</revision>
+		<revision id="20080609" major="0" minor="1" micro="27" author="m_ch">
+			- Tested with gcc 4.2.1 on FreeBSD
+		</revision>
+		<revision id="20080613" major="0" minor="1" micro="28" author="m_ch">
+			- Added contexts to class structure traversals
+			- Split traversal sources into two separate files
+			- Tested with MSVC++ 2008 EE On Vista
+			- Tested with gcc 4.2.1 on FreeBSD
+			- Tested with gcc 4.2.1 on SuSE
+			- Tested with gcc 4.3.0 on SuSE
+			- Tested with intel 10.1 on SuSE
+		</revision>
 	</revisions>
 </library>
