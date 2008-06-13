@@ -85,7 +85,7 @@ public:
 	stl_allocator(AllocT& alloc) : m_alloc(&alloc) {}
 
     template <class U>
-	stl_allocator(const stl_allocator<U, AllocT>& o) : m_alloc(o._getAlloc()) {}
+	stl_allocator(const stl_allocator<U, AllocT>& o) : m_alloc(&o.get_alloc()) {}
 
 	pointer allocate(size_type count, const void* = NULL)
 		{ return (pointer)m_alloc->allocate(count * sizeof(Type)); }
@@ -101,7 +101,9 @@ public:
 		{ return (char*)m_alloc->allocate(cb); }
 
 public:
-	AllocT* _getAlloc() const { return m_alloc; }
+	typedef AllocT alloc_type;
+	
+	AllocT& get_alloc() const { return *m_alloc; }
 };
 
 #if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION)
