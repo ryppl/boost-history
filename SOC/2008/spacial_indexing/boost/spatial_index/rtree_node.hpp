@@ -2,6 +2,10 @@
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+//
+//
+//	Spatial Index - rTree Node
+//
 
 
 #ifndef BOOST_SPATIAL_INDEX_RTREE_NODE_HPP
@@ -19,7 +23,10 @@ namespace spatial_index {
   class rtree_node
   {
   public:
+    /// default constructor (needed for the containers)
     rtree_node(void) : m_(4), M_(8) {}
+
+    /// normal constructor
     rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level, const unsigned int &m, const unsigned int &M) 
       : parent_(parent), level_(level), m_(m), M_(M) {}
 
@@ -50,6 +57,7 @@ namespace spatial_index {
       return M_;
     }
 
+    /// get the envelopes of a node
     virtual std::vector< geometry::box<Point> > get_boxes(void) const
     {
       std::vector< geometry::box<Point> > r;
@@ -59,22 +67,25 @@ namespace spatial_index {
       return r;
     }
 
+    /// add a node
     virtual void add_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_node<Point, Value> > &n)
     {
       nodes_.push_back(std::make_pair(b, n));
     }
 
+    /// add a value (not allowed in nodes)
     virtual void add_value(const geometry::box<Point> &b, const Value &v)
     {
       throw std::logic_error("Can't add value to non-leaf node."); 
     }
 
-
+    /// 
     void add_leaf_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_leaf<Point, Value> > &l)
     {
       nodes_.push_back(std::make_pair(b, l));
     }
 
+    /// insertion algorithm choose node
     boost::shared_ptr<rtree_node<Point, Value> > choose_node(const geometry::box<Point> e)
     {
       std::cerr << "Choose node" << std::endl;
@@ -119,16 +130,20 @@ namespace spatial_index {
       return chosen_node;
     }
 
+    /// empty the node
     virtual void empty_nodes(void) {
       nodes_.clear();
     }
 
+    /// projector for parent
     boost::shared_ptr<rtree_node<Point,Value> > get_parent(void) const {
       return parent_;
     }
 
+    /// value projector for leaf_node (not allowed here)
     virtual Value get_value(const unsigned int i) const { throw std::logic_error("No values in a non-leaf node."); }
 
+    /// print node
     virtual void print(void) const
     {
       std::cerr << " --> Node --------" << std::endl;
@@ -151,6 +166,7 @@ namespace spatial_index {
       }
     }
 
+    /// destructor (virtual because we have virtual functions)
     virtual ~rtree_node(void) {}
 
   private:
@@ -166,14 +182,19 @@ namespace spatial_index {
 
     // minimum number of elements per node
     unsigned int m_;
+
     // maximum number of elements per node
     unsigned int M_;
 
+    /// type for the node map
     typedef std::vector< std::pair<geometry::box<Point>, boost::shared_ptr<rtree_node> > > node_map;
+
+    /// child nodes
     node_map nodes_;
 
   private:
 
+    /// given two boxes, create the minimal box that contains them
     geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2) const
     {
       Point min(
@@ -189,13 +210,12 @@ namespace spatial_index {
       return geometry::box<Point>(min, max);
     }
 
+    /// compute the area of the union of b1 and b2
     double compute_union_area(const geometry::box<Point> &b1, const geometry::box<Point> &b2) const
     {
       geometry::box<Point> enlarged_box = enlarge_box(b1, b2);
       return geometry::area(enlarged_box);
     }
-
-
 
   };
 
