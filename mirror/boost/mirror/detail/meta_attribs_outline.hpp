@@ -34,10 +34,11 @@ public:
 		: model(classModel){ }
 
 	// the return value type of the getter function 
-	typedef BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
-		result_of_get,
+	BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+		nested_result_of_get,
 		(((PModel)0)->get(0, position()))
 	)
+	typedef typename nested_result_of_get::type result_of_get;
 
 	// the getter member function 
 	inline typename result_of_get::type get(void) const
