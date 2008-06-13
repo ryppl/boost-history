@@ -35,5 +35,5 @@ test-suite tree :
 #	[ run nary_tree_test.cpp ]
 	[ run multiway_tree_test.cpp ]
 	[ run unbalanced_binary_tree_test.cpp ]
-
+	[ run graph_test.cpp ]
 	;
