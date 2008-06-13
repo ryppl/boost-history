@@ -1,10 +1,11 @@
+//
+//	Spatial Index - rTree Leaf
+//
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
-//
-//	Spatial Index - rTree Leaf
 //
 
 
@@ -20,19 +21,49 @@ namespace spatial_index {
   class rtree_leaf : public rtree_node<Point, Value>
   {
   public:
+    typedef std::vector< std::pair< geometry::box<Point>, Value > > leaves_map;
+
+  public:
     rtree_leaf(void) : L_(8), level_(0) {}
     rtree_leaf(const boost::shared_ptr< rtree_node<Point,Value> > &parent, const unsigned int &L) 
       : rtree_node<Point,Value>(parent, 0, 0, 0), L_(L), level_(0) {}
+
+    /// compute bounding box for this leaf
+    virtual geometry::box<Point> compute_box(void) const
+    {
+      if(nodes_.empty()) {
+	throw std::logic_error("Compute box in an empty node.");
+      }
+      
+      typename leaves_map::const_iterator it = nodes_.begin();
+      geometry::box<Point> r = it->first;
+      it++;
+      for(; it != nodes_.end(); ++it) {
+	r = enlarge_box(r, it->first);
+      }
+      return r;
+    }
 
     /// yes, we are a leaf
     virtual bool is_leaf(void) const { return true; }
 
     virtual bool is_full(void) const { return nodes_.size() >= L_; }
 
+    /// element count
+    virtual unsigned int elements(void) const
+    {
+      return nodes_.size();
+    }
+
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
       nodes_.push_back(std::make_pair(e, v));
 //       std::cerr << "Node size: " << nodes_.size() << std::endl;
+    }
+
+    virtual std::vector< std::pair< geometry::box<Point>, Value > > get_leaves(void) const
+    {
+      return nodes_;
     }
 
     virtual void add_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_node<Point, Value> > &n)
@@ -91,7 +122,6 @@ namespace spatial_index {
     // level of this node
     unsigned int level_;
 
-    typedef std::vector< std::pair< geometry::box<Point>, Value > > leaves_map;
     leaves_map nodes_;
   };
 

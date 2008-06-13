@@ -1,10 +1,11 @@
+//
+//	Spatial Index - rTree Node
+//
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
-//
-//	Spatial Index - rTree Node
 //
 
 
@@ -33,6 +34,12 @@ namespace spatial_index {
     /// true if the node is full
     virtual bool is_full(void) const { return nodes_.size() >= M_; }
 
+    /// element count
+    virtual unsigned int elements(void) const
+    {
+      return nodes_.size();
+    }
+
     /// true if it is a leaf node
     virtual bool is_leaf(void) const { return false; }
 
@@ -44,6 +51,28 @@ namespace spatial_index {
 
     /// get a node
     boost::shared_ptr< rtree_node<Point, Value> > get_node(const unsigned int i) { return nodes_[i].second; }
+
+    /// get leaves
+    virtual std::vector< std::pair< geometry::box<Point>, Value > > get_leaves(void) const
+    {
+      throw std::logic_error("No leaves in a non-leaf node.");
+    }
+
+    /// compute bounding box for this leaf
+    virtual geometry::box<Point> compute_box(void) const
+    {
+      if(nodes_.empty()) {
+	throw std::logic_error("Compute box in an empty node.");
+      }
+      
+      typename node_map::const_iterator it = nodes_.begin();
+      geometry::box<Point> r = it->first;
+      it++;
+      for(; it != nodes_.end(); ++it) {
+	r = enlarge_box(r, it->first);
+      }
+      return r;
+    }
 
     /// insert a value (not allowed for a node)
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
@@ -194,30 +223,34 @@ namespace spatial_index {
 
   private:
 
-    /// given two boxes, create the minimal box that contains them
-    geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2) const
-    {
-      Point min(
-		geometry::get<0>(b1.min()) < geometry::get<0>(b2.min()) ? geometry::get<0>(b1.min()) : geometry::get<0>(b2.min()),
-		geometry::get<1>(b1.min()) < geometry::get<1>(b2.min()) ? geometry::get<1>(b1.min()) : geometry::get<1>(b2.min())
-		);
-
-      Point max(
-		geometry::get<0>(b1.max()) > geometry::get<0>(b2.max()) ? geometry::get<0>(b1.max()) : geometry::get<0>(b2.max()),
-		geometry::get<1>(b1.max()) > geometry::get<1>(b2.max()) ? geometry::get<1>(b1.max()) : geometry::get<1>(b2.max())
-		);
-
-      return geometry::box<Point>(min, max);
-    }
-
-    /// compute the area of the union of b1 and b2
-    double compute_union_area(const geometry::box<Point> &b1, const geometry::box<Point> &b2) const
-    {
-      geometry::box<Point> enlarged_box = enlarge_box(b1, b2);
-      return geometry::area(enlarged_box);
-    }
-
   };
+
+  /// given two boxes, create the minimal box that contains them
+  template<typename Point>
+  geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
+  {
+    Point min(
+	      geometry::get<0>(b1.min()) < geometry::get<0>(b2.min()) ? geometry::get<0>(b1.min()) : geometry::get<0>(b2.min()),
+	      geometry::get<1>(b1.min()) < geometry::get<1>(b2.min()) ? geometry::get<1>(b1.min()) : geometry::get<1>(b2.min())
+	      );
+
+    Point max(
+	      geometry::get<0>(b1.max()) > geometry::get<0>(b2.max()) ? geometry::get<0>(b1.max()) : geometry::get<0>(b2.max()),
+	      geometry::get<1>(b1.max()) > geometry::get<1>(b2.max()) ? geometry::get<1>(b1.max()) : geometry::get<1>(b2.max())
+	      );
+
+    return geometry::box<Point>(min, max);
+  }
+
+  /// compute the area of the union of b1 and b2
+  template<typename Point>
+  double compute_union_area(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
+  {
+    geometry::box<Point> enlarged_box = enlarge_box(b1, b2);
+    return geometry::area(enlarged_box);
+  }
+
+
 
 } // namespace spatial_index
 } // namespace boost

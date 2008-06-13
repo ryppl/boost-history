@@ -118,9 +118,64 @@ namespace spatial_index {
       linear_pick_seeds(n, seed1, seed2);
 
       if(n->is_leaf()) {
-	n->get_value(seed1);
-// 	n1->add_value(boxes[seed1], n->get_value(seed1));
-	// n2->add_node(boxes[seed2], n->get_node(seed2));
+ 	n1->add_value(boxes[seed1], n->get_value(seed1));
+	n2->add_value(boxes[seed2], n->get_value(seed2));
+
+	n1->print();
+	n2->print();
+
+	unsigned int index = 0;
+	typename rtree_leaf<Point,Value>::leaves_map nodes = n->get_leaves();
+	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
+	  if(index != seed1 && index != seed2) {
+	    // TODO: check if the remaining elements should be in one group because of the minimum
+	    
+	    /// current boxes of each group
+	    geometry::box<Point> b1, b2;
+
+	    /// enlarged boxes of each group
+	    geometry::box<Point> eb1, eb2;
+	    b1 = n1->compute_box();
+	    b2 = n2->compute_box();
+
+	    /// areas
+	    double b1_area, b2_area;
+	    double eb1_area, eb2_area;
+	    b1_area = geometry::area(b1);
+	    b2_area = geometry::area(b2);
+
+	    eb1_area = compute_union_area(b1, it->first);
+	    eb2_area = compute_union_area(b2, it->first);
+
+	    if(eb1_area - b1_area > eb2_area - b2_area) {
+	      n2->add_value(it->first, it->second);
+	    }
+	    if(eb1_area - b1_area < eb2_area - b2_area) {
+	      n1->add_value(it->first, it->second);
+	    }
+	    if(eb1_area - b1_area == eb2_area - b2_area) {
+	      if(b1_area < b2_area) {
+		n1->add_value(it->first, it->second);
+	      }
+	      if(b1_area > b2_area) {
+		n2->add_value(it->first, it->second);
+	      }
+	      if(b1_area == b2_area) {
+		if(n1->elements() > n2->elements()) {
+		  n2->add_value(it->first, it->second);
+		} else {
+		  n1->add_value(it->first, it->second);
+		}
+	      }
+	    }
+
+	    n1->print();
+	    n2->print();
+
+	  }
+	}
+      } else {
+	// TODO
       }
     }
 
