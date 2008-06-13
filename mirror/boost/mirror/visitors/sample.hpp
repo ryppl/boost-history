@@ -67,10 +67,10 @@ public:
 		bcout << "</type>" << endl;
 	}
 
-	template <class MetaClass>
-	inline void enter_base_classes(MetaClass){ }
-	template <class MetaClass>
-	inline void leave_base_classes(MetaClass){ }
+	template <class MetaClass, class Context>
+	inline void enter_base_classes(MetaClass, Context){ }
+	template <class MetaClass, class Context>
+	inline void leave_base_classes(MetaClass, Context){ }
 
 
 	// enter a base class
@@ -102,8 +102,8 @@ public:
 	}
 
 
-	template <class MetaClass, class MetaAttributes>
-	void enter_attributes(MetaClass, MetaAttributes)
+	template <class MetaClass, class MetaAttributes, class Context>
+	void enter_attributes(MetaClass, MetaAttributes, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
@@ -120,8 +120,8 @@ public:
 		}
 	}
 
-	template <class MetaClass, class MetaAttributes>
-	void leave_attributes(MetaClass, MetaAttributes)
+	template <class MetaClass, class MetaAttributes, class Context>
+	void leave_attributes(MetaClass, MetaAttributes, Context)
 	{
 		using namespace ::std;
 		using namespace ::boost;
