@@ -51,13 +51,32 @@ int test_main(int, char* [])
 	geometry::box<geometry::point_xy<double> > e3(geometry::point_xy<double>(5.0, 4.0), geometry::point_xy<double>(6.0, 6.0));
 	geometry::box<geometry::point_xy<double> > e4(geometry::point_xy<double>(5.0, 5.0), geometry::point_xy<double>(8.0, 8.0));
 	geometry::box<geometry::point_xy<double> > e5(geometry::point_xy<double>(7.0, 4.0), geometry::point_xy<double>(12.0, 7.0));
+
+
+	geometry::box<geometry::point_xy<double> > e6(geometry::point_xy<double>(5.0, 5.0), geometry::point_xy<double>(9.0, 10.0));
+	geometry::box<geometry::point_xy<double> > e7(geometry::point_xy<double>(7.0, 7.0), geometry::point_xy<double>(12.0, 12.0));
+
+	geometry::box<geometry::point_xy<double> > e8(geometry::point_xy<double>(1.0, 5.0), geometry::point_xy<double>(2.0, 10.0));
+	geometry::box<geometry::point_xy<double> > e9(geometry::point_xy<double>(1.0, 1.0), geometry::point_xy<double>(3.0, 3.0));
+	geometry::box<geometry::point_xy<double> > e10(geometry::point_xy<double>(1.5, 1.0), geometry::point_xy<double>(2.5, 3.0));
+	geometry::box<geometry::point_xy<double> > e11(geometry::point_xy<double>(1.0, 0.0), geometry::point_xy<double>(2.0, 3.0));
+
  	std::cerr << " --> insert env" << std::endl;
  	q->insert(e1, 1);
  	q->insert(e2, 2);
  	q->insert(e3, 3);
  	q->insert(e4, 4);
  	q->insert(e5, 5);
+ 	q->print();
 
+ 	q->insert(e6, 6);
+ 	q->insert(e7, 7);
+ 	q->print();
+
+ 	q->insert(e8, 8);
+ 	q->insert(e9, 9);
+ 	q->insert(e10, 10);
+ 	q->insert(e11, 11);
  	q->print();
 
 //  	std::cerr << " --> insert" << std::endl;

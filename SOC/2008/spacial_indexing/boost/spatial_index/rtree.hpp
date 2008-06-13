@@ -64,16 +64,15 @@ namespace spatial_index {
 	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
 
 	split_node(l, n1, n2);
-
-	
+	std::cerr << "Node splited." << std::endl;
+	n1->print();
+	n2->print();
+	adjust_tree(l, n1, n2);
 
       } else {
 	l->insert(e, v);
+	adjust_tree(l);
       }
-
-
-
-      adjust_tree(l);
 
       element_count++;
     }
@@ -101,18 +100,55 @@ namespace spatial_index {
 
   private:
 
-    void adjust_tree(boost::shared_ptr<rtree_node<Point, Value> > &l)
+    void adjust_tree(boost::shared_ptr<rtree_node<Point, Value> > &n)
     {
-      boost::shared_ptr<rtree_node<Point,Value> > N = l;
-      if(N->is_root()) {
+      if(n->is_root()) {
+	// we finished the adjust
 	return;
       }
-
+      // as there are no splits just adjust the box of the parent and go on
+      boost::shared_ptr<rtree_node<Point,Value> > parent = n->get_parent();
+      parent->adjust_box(n);
+      adjust_tree(parent);
     }
+
+    void adjust_tree(boost::shared_ptr<rtree_node<Point, Value> > &l,
+		     boost::shared_ptr<rtree_node<Point, Value> > &n1,
+		     boost::shared_ptr<rtree_node<Point, Value> > &n2)
+    {
+      boost::shared_ptr<rtree_node<Point,Value> > N = n1;
+      boost::shared_ptr<rtree_node<Point,Value> > NN = n2;
+      if(l->is_root()) {
+	std::cerr << "Root   ---------> split."<< std::endl;
+	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1, m_, M_));
+	new_root->set_root();
+	new_root->add_node(n1->compute_box(), n1);
+	new_root->add_node(n2->compute_box(), n2);
+	root_ = new_root;
+	return;
+      }
+      boost::shared_ptr<rtree_node<Point,Value> > parent = l->get_parent();
+      parent->replace_node(l, n1);
+      if(parent->is_full()) {
+	parent->add_node(n2->compute_box(), n2);
+	std::cerr << "parent is full" << std::endl;
+
+	boost::shared_ptr< rtree_node<Point, Value> > p1(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level(), m_, M_));
+	boost::shared_ptr< rtree_node<Point, Value> > p2(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level(), m_, M_));
+
+	split_node(parent, p1, p2);
+	adjust_tree(parent, p1, p2);
+      } else {
+	parent->add_node(n2->compute_box(), n2);
+	adjust_tree(parent);
+      }
+    }
+
 
     void split_node(const boost::shared_ptr<rtree_node<Point, Value> > &n, boost::shared_ptr<rtree_node<Point, Value> > &n1
 		    , boost::shared_ptr<rtree_node<Point, Value> > &n2) const
     {
+      // TODO: unify
       std::cerr << "Split Node." << std::endl;
 
       unsigned int seed1, seed2;
@@ -123,9 +159,6 @@ namespace spatial_index {
       if(n->is_leaf()) {
  	n1->add_value(boxes[seed1], n->get_value(seed1));
 	n2->add_value(boxes[seed2], n->get_value(seed2));
-
-	n1->print();
-	n2->print();
 
 	unsigned int index = 0;
 	typename rtree_leaf<Point,Value>::leaves_map nodes = n->get_leaves();
@@ -172,14 +205,61 @@ namespace spatial_index {
 	      }
 	    }
 
-	    n1->print();
-	    n2->print();
-
 	  }
 	}
       } else {
-	// TODO
-	std::cerr << "TODO: implement node split" << std::endl;
+ 	n1->add_node(boxes[seed1], n->get_node(seed1));
+	n2->add_node(boxes[seed2], n->get_node(seed2));
+
+	unsigned int index = 0;
+	typename rtree_node<Point,Value>::node_map nodes = n->get_nodes();
+	for(typename rtree_node<Point,Value>::node_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
+	  if(index != seed1 && index != seed2) {
+	    // TODO: check if the remaining elements should be in one group because of the minimum
+
+	    std::cerr << "1" << std::endl;
+	    /// current boxes of each group
+	    geometry::box<Point> b1, b2;
+
+	    /// enlarged boxes of each group
+	    geometry::box<Point> eb1, eb2;
+	    b1 = n1->compute_box();
+	    b2 = n2->compute_box();
+
+	    /// areas
+	    double b1_area, b2_area;
+	    double eb1_area, eb2_area;
+	    b1_area = geometry::area(b1);
+	    b2_area = geometry::area(b2);
+
+	    eb1_area = compute_union_area(b1, it->first);
+	    eb2_area = compute_union_area(b2, it->first);
+
+	    if(eb1_area - b1_area > eb2_area - b2_area) {
+	      n2->add_node(it->first, it->second);
+	    }
+	    if(eb1_area - b1_area < eb2_area - b2_area) {
+	      n1->add_node(it->first, it->second);
+	    }
+	    if(eb1_area - b1_area == eb2_area - b2_area) {
+	      if(b1_area < b2_area) {
+		n1->add_node(it->first, it->second);
+	      }
+	      if(b1_area > b2_area) {
+		n2->add_node(it->first, it->second);
+	      }
+	      if(b1_area == b2_area) {
+		if(n1->elements() > n2->elements()) {
+		  n2->add_node(it->first, it->second);
+		} else {
+		  n1->add_node(it->first, it->second);
+		}
+	      }
+	    }
+
+	  }
+	}
+	std::cerr << "s" << std::endl;
       }
     }
 

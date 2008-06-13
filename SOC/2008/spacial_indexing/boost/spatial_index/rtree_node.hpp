@@ -24,15 +24,22 @@ namespace spatial_index {
   class rtree_node
   {
   public:
+    /// type for the node map
+    typedef std::vector< std::pair<geometry::box<Point>, boost::shared_ptr<rtree_node<Point, Value> > > > node_map;
+
+  public:
     /// default constructor (needed for the containers)
-    rtree_node(void) : m_(4), M_(8) {}
+    rtree_node(void) : m_(4), M_(8), root_(false) {}
 
     /// normal constructor
     rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level, const unsigned int &m, const unsigned int &M) 
-      : parent_(parent), level_(level), m_(m), M_(M) {}
+      : parent_(parent), level_(level), m_(m), M_(M), root_(false) {}
 
     /// true if the node is full
     virtual bool is_full(void) const { return nodes_.size() >= M_; }
+
+    /// level projector
+    virtual unsigned int get_level(void) const { return level_; }
 
     /// element count
     virtual unsigned int elements(void) const
@@ -94,6 +101,34 @@ namespace spatial_index {
 	r.push_back(it->first);
       }
       return r;
+    }
+
+    /// recompute the box
+    void adjust_box(const boost::shared_ptr<rtree_node<Point, Value> > &n)
+    {
+      unsigned int index = 0;
+      for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
+	if(it->second.get() == n.get()) {
+	  std::cerr << "Node found!" << std::endl;
+	  nodes_[index] = std::make_pair(n->compute_box(), n);
+	  return;
+	}
+      }
+      std::cerr << "adjust_node: node not found." << std::endl;
+    }
+
+    /// replace the node in the nodes_ vector and recompute the box
+    void replace_node(const boost::shared_ptr<rtree_node<Point, Value> > &l, boost::shared_ptr<rtree_node<Point, Value> > &new_l)
+    {
+      unsigned int index = 0;
+      for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
+	if(it->second.get() == l.get()) {
+	  std::cerr << "Node found!" << std::endl;
+	  nodes_[index] = std::make_pair(new_l->compute_box(), new_l);
+	  return;
+	}
+      }
+      std::cerr << "replace_node: node not found." << std::endl;
     }
 
     /// add a node
@@ -172,6 +207,9 @@ namespace spatial_index {
     /// value projector for leaf_node (not allowed here)
     virtual Value get_value(const unsigned int i) const { throw std::logic_error("No values in a non-leaf node."); }
 
+    /// value projector for the nodes
+    node_map get_nodes(void) const { return nodes_; }
+
     /// print node
     virtual void print(void) const
     {
@@ -200,8 +238,6 @@ namespace spatial_index {
 
   private:
 
-    // true if it is the root
-    bool root_;
 
     // parent node
     boost::shared_ptr< rtree_node<Point, Value> > parent_;
@@ -215,8 +251,9 @@ namespace spatial_index {
     // maximum number of elements per node
     unsigned int M_;
 
-    /// type for the node map
-    typedef std::vector< std::pair<geometry::box<Point>, boost::shared_ptr<rtree_node> > > node_map;
+    // true if it is the root
+    bool root_;
+
 
     /// child nodes
     node_map nodes_;
