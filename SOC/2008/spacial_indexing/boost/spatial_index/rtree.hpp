@@ -64,6 +64,9 @@ namespace spatial_index {
 	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
 
 	split_node(l, n1, n2);
+
+	
+
       } else {
 	l->insert(e, v);
       }
@@ -176,6 +179,7 @@ namespace spatial_index {
 	}
       } else {
 	// TODO
+	std::cerr << "TODO: implement node split" << std::endl;
       }
     }
 
