@@ -76,7 +76,7 @@ void compare_cursor_to_iterator_traversal(Cursor cur) {
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
 	boost::tree::ORDER::copy(cur, oc_test_list);
-
+	
 	// Are the elements accessed in the correct order?
 	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(cur),
 							boost::tree::ORDER::end(cur),

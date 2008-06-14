@@ -73,17 +73,17 @@ Op underefed_for_each(Cursor s, Op f)
 void comparisons(binary_tree<int>::const_cursor c) {
 	using boost::tree::ascending_cursor;
 	
-	//if (!c.empty()) {
-		test::preorder::compare_cursor_to_iterator_traversal(c);
-		test::inorder::compare_cursor_to_iterator_traversal(c);	
-		test::postorder::compare_cursor_to_iterator_traversal(c);
+//	if (!c.empty()) {
+//		test::preorder::compare_cursor_to_iterator_traversal(c);
+//		test::inorder::compare_cursor_to_iterator_traversal(c);	
+//		test::postorder::compare_cursor_to_iterator_traversal(c);
 		
 		//Now same for iterators wrapped around "explicit stack"-based cursors
 		ascending_cursor<binary_tree<int>::const_cursor> ac(c);
 		test::preorder::compare_cursor_to_iterator_traversal(ac);
 		test::inorder::compare_cursor_to_iterator_traversal(ac);	
 		test::postorder::compare_cursor_to_iterator_traversal(ac);
-	//}
+//	}
 	return;
 }
 
@@ -131,11 +131,11 @@ void compare_cursor_to_iterator_traversal() {
 	comparisons(test_tree2.root());
 //	underefed_for_each(test_tree2.root(), comparisons);
 	
-//	comparisons(test_tree2.root().begin());
-//	comparisons(test_tree2.root().begin().begin());
-//	
-//	comparisons(test_tree2.root().end());
-//	comparisons(test_tree2.root().end().end());
+	comparisons(test_tree2.root().begin());
+	comparisons(test_tree2.root().begin().begin());
+	
+	comparisons(test_tree2.root().end());
+	comparisons(test_tree2.root().end().end());
 }
 
 int test_main(int, char* [])
