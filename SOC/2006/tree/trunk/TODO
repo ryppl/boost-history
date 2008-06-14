@@ -14,6 +14,8 @@
 [section TODO]
 
 General:
+* Revisit binary_tree. Can it be usable for both balanced and forest trees and still be
+  "light-weight" at the same time?
 * Re-organize traversal tests:
   * Verify recursive algorithms to work
     * 1. with a tree filled with given data
@@ -104,6 +106,7 @@ Implementation:
 
 Documentation:
 
+* Take a look at BGL docs; they seem to be really well structured and written.
 * Add some illustrations
 * Overview: develop hierarchy/cursor concept step by step, using illustrations that 
   depict what is introduced at what step (nodes with pointers to their siblings, children, parents,
