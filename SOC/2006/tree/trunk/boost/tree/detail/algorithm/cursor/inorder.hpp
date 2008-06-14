@@ -67,9 +67,11 @@ inline void back(MultiwayCursor& c)
 		--c;
 		return;
 	}
-	while (!c.parity())
+	
+	while (!c.parity() && !c.is_root())
 		c.to_parent();
-	--c;
+	if (!c.is_root())
+		--c;
 	return;
 }
 

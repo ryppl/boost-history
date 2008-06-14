@@ -36,16 +36,16 @@ void validate_test_data_tree(Tree const& ret)
 {
 	BOOST_CHECK(*ret.root().begin() == 8);
 	BOOST_CHECK(*ret.root().begin().begin() == 3);	
-	BOOST_CHECK(*ret.root().begin().begin().begin() == 1);
+	BOOST_CHECK(*ret.root().begin().begin().begin() == 1);			//Leaf
 	BOOST_CHECK(*ret.root().begin().end().begin() == 6);		
-	BOOST_CHECK(*ret.root().begin().end().begin().begin() == 4);	
-	BOOST_CHECK(*ret.root().begin().end().end().begin() == 7);	
+	BOOST_CHECK(*ret.root().begin().end().begin().begin() == 4);	//Leaf
+	BOOST_CHECK(*ret.root().begin().end().end().begin() == 7);		//Leaf
 
 	BOOST_CHECK(*ret.root().end().begin() == 10);
 	BOOST_CHECK(*ret.root().end().end().begin() == 14);
 	BOOST_CHECK(*ret.root().end().end().begin().begin() == 13);
-	BOOST_CHECK(*ret.root().end().end().begin().begin().begin() == 11);
-	BOOST_CHECK(*ret.root().end().end().begin().begin().end().begin() == 12);
+	BOOST_CHECK(*ret.root().end().end().begin().begin().begin() == 11); 
+	BOOST_CHECK(*ret.root().end().end().begin().begin().end().begin() == 12);	//Leaf
 }
 
 namespace test {

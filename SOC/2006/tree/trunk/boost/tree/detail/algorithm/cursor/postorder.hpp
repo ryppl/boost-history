@@ -88,7 +88,7 @@ inline void back(Cursor& c)
 	
 	// Move up in the hierarchy until we find a descendant that has a right
 	// child (which is what we'll return) or we land at root.
-	while (!c.is_root()) { // revisit
+	while (!c.is_root()) {
 		c.to_parent();
 		if (c.parity())
 			if (!(--c).empty()) {

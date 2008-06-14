@@ -22,6 +22,7 @@
  * 
  *			Only works with ascending cursors.
  */
+ 
 template <class Cursor, class RootTracker = typename Cursor::root_tracker>
 class iterator
  : public boost::iterator_adaptor<iterator<Cursor>
@@ -59,10 +60,12 @@ class iterator
     void increment()
     {
 		forward(this->base_reference());
+		//BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
     }
     
     void decrement()
     {
     	back(this->base_reference());
+		//BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
     }
 };

@@ -18,6 +18,8 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
+//#include <boost/test/minimal.hpp>
+
 namespace boost {
 namespace tree {
 

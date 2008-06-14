@@ -48,8 +48,8 @@ template <class Cursor, class Op>
 void underefed_for_each_recursive(Cursor s, Op& f)
 {
 	Cursor t = s.end();
-	s.to_begin();
-	f(s);
+	f(s);			// Caution: f(s) comes before s.to_begin(), as opposed to
+	s.to_begin();	// "normal" preorder for_each
 	do
 		if (!s.empty())
 			underefed_for_each_recursive(s, f);
@@ -60,8 +60,8 @@ template <class Cursor, class Op>
 Op underefed_for_each(Cursor s, Op f)
 {
 	Cursor t = s.end();
-	s.to_begin();
-	f(s);
+	f(s);			// Caution: f(s) comes before s.to_begin(), as opposed to
+	s.to_begin();	// "normal" preorder for_each
 	do
 		if (!s.empty())
 			underefed_for_each_recursive(s, f);
@@ -70,20 +70,16 @@ Op underefed_for_each(Cursor s, Op f)
 	return f;
 }
 
-void comparisons(binary_tree<int>::const_cursor c) {
-	using boost::tree::ascending_cursor;
-	
-//	if (!c.empty()) {
-//		test::preorder::compare_cursor_to_iterator_traversal(c);
-//		test::inorder::compare_cursor_to_iterator_traversal(c);	
-//		test::postorder::compare_cursor_to_iterator_traversal(c);
-		
-		//Now same for iterators wrapped around "explicit stack"-based cursors
-		ascending_cursor<binary_tree<int>::const_cursor> ac(c);
-		test::preorder::compare_cursor_to_iterator_traversal(ac);
-		test::inorder::compare_cursor_to_iterator_traversal(ac);	
-		test::postorder::compare_cursor_to_iterator_traversal(ac);
-//	}
+template <class Cursor>
+void comparisons(Cursor c) {
+	test::preorder::compare_cursor_to_iterator_traversal(c);
+	test::inorder::compare_cursor_to_iterator_traversal(c);
+	test::postorder::compare_cursor_to_iterator_traversal(c);
+	return;
+}
+
+void comparisons_using_ac(binary_tree<int>::cursor c) {
+	comparisons(make_ascending_cursor(c));
 	return;
 }
 
@@ -92,50 +88,64 @@ void comparisons(binary_tree<int>::const_cursor c) {
  * algorithm output. Do that at different stages of the tree while adding
  * elements to it, so different tree shapes are checked to be catered for
  * by the iterator algorithms.
+ * Do all that also using iterators wrapped around "explicit stack"-based cursors
  */ 
 void compare_cursor_to_iterator_traversal() {
+	using boost::tree::make_ascending_cursor;
+	
 	binary_tree<int> test_tree2;
 	//comparisons(test_tree2.root());
 
 	binary_tree<int>::cursor c = test_tree2.insert(test_tree2.root(), 8);
 	comparisons(test_tree2.root());
+	comparisons(make_ascending_cursor(test_tree2.root()));
 
 	c = test_tree2.insert(c, 3);
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	test_tree2.insert(c, 1);
 	comparisons(test_tree2.root());
-	
+	comparisons(make_ascending_cursor(test_tree2.root()));
+		
 	c = test_tree2.insert(++c, 6);
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	test_tree2.insert(c, 4);
 	comparisons(test_tree2.root());
-	
+	comparisons(make_ascending_cursor(test_tree2.root()));
+		
 	test_tree2.insert(++c, 7);	
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	c = test_tree2.insert(test_tree2.root().end(), 10);
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	c = test_tree2.insert(test_tree2.root().end().end(), 14);	
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	c = test_tree2.insert(c, 13);
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	c = test_tree2.insert(c, 11);
 	comparisons(test_tree2.root());
-
+	comparisons(make_ascending_cursor(test_tree2.root()));
+	
 	c = test_tree2.insert(++c, 12);
 	comparisons(test_tree2.root());
-//	underefed_for_each(test_tree2.root(), comparisons);
+	comparisons(make_ascending_cursor(test_tree2.root()));
+
+	typedef ascending_cursor<binary_tree<int>::cursor> ac;
 	
-	comparisons(test_tree2.root().begin());
-	comparisons(test_tree2.root().begin().begin());
+	// FIXME: This requires subtree cursors to know their root.
+	//underefed_for_each(test_tree2.root(), comparisons<binary_tree<int>::cursor>);
 	
-	comparisons(test_tree2.root().end());
-	comparisons(test_tree2.root().end().end());
+	underefed_for_each(test_tree2.root(), comparisons_using_ac);
 }
 
 int test_main(int, char* [])
