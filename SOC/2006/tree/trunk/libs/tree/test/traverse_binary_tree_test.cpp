@@ -91,8 +91,6 @@ void comparisons_using_ac(binary_tree<int>::cursor c) {
  * Do all that also using iterators wrapped around "explicit stack"-based cursors
  */ 
 void compare_cursor_to_iterator_traversal() {
-	using boost::tree::make_ascending_cursor;
-	
 	binary_tree<int> test_tree2;
 	//comparisons(test_tree2.root());
 
@@ -140,8 +138,6 @@ void compare_cursor_to_iterator_traversal() {
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
 
-	typedef ascending_cursor<binary_tree<int>::cursor> ac;
-	
 	// FIXME: This requires subtree cursors to know their root.
 	//underefed_for_each(test_tree2.root(), comparisons<binary_tree<int>::cursor>);
 	
