@@ -66,7 +66,7 @@ Op underefed_for_each(Cursor s, Op f)
 		if (!s.empty())
 			underefed_for_each_recursive(s, f);
 	while (s++ != t);
-		
+
 	return f;
 }
 

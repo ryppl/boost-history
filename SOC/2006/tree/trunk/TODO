@@ -71,11 +71,16 @@ General:
 
 Proposal:
 
+* Change complexity requirements for *order end() to constant? We're using root(), and
+  for postorder begin() - which is also root() - it's already constant. Then again, how much
+  do we cater for "pathological" implementations (and not so pathological ones, like 
+  threaded trees)?
 * Write a cursor_facade, cursor_adaptor as well as ascending_adaptor 
   (and output_cursor_iterator_wrapper?) proposal.
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
  * Remove shoot()
+ * Change some occurences of "vector" (oops) to the respective tree type.
 * Add (subtree) cursor algorithms.
 * Probably split up cursor categories into: cursor (value access) category, vertical traversal 
   and horizontal traversal (along the lines of the new iterator concepts).

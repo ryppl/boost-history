@@ -15,6 +15,7 @@
 #include <boost/tree/cursor.hpp>
 
 #include <boost/graph/graph_traits.hpp>
+#include <boost/property_map.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 
 #include <boost/type_traits/integral_constant.hpp>
@@ -77,49 +78,72 @@ private:
 
 template <class Tree>
 struct graph_traits<typename Tree::cursor> {
-	typedef typename Tree::cursor Cursor;
-    typedef Cursor vertex_descriptor;
-    typedef std::pair<Cursor, Cursor> edge_descriptor; // Might be tunable...
+    typedef typename Tree::cursor vertex_descriptor;
+    typedef std::pair<vertex_descriptor
+    				, vertex_descriptor> edge_descriptor; // Might be tunable...
 
-	typedef boost::tree::out_edge_iterator<Cursor> out_edge_iterator;
+	typedef boost::tree::out_edge_iterator<vertex_descriptor> out_edge_iterator;
 
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
 	typedef incidence_graph_tag traversal_category;
-    typedef typename cursor_size<Cursor>::type vertices_size_type;
-    typedef typename cursor_size<Cursor>::type edges_size_type;
-    typedef typename cursor_size<Cursor>::type degree_size_type;
+    typedef 
+    	typename cursor_size<vertex_descriptor>::type 
+    	vertices_size_type;
+    typedef
+    	typename cursor_size<vertex_descriptor>::type
+    	edges_size_type;
+    typedef
+    	typename cursor_size<vertex_descriptor>::type
+    	degree_size_type;
 };
 
-template <class Cursor>
-typename graph_traits<Cursor>::vertex_descriptor
+template <class Tree>
+typename graph_traits<typename Tree::cursor>::vertex_descriptor
 source(
-    typename graph_traits<Cursor>::edge_descriptor e,
-    const Cursor& g)
+    typename graph_traits<typename Tree::cursor>::edge_descriptor e,
+    const typename Tree::cursor& g)
 {
     return e.first;
 }
 
-template <class Cursor>
-typename graph_traits<Cursor>::vertex_descriptor
+template <class Tree>
+typename graph_traits<typename Tree::cursor>::vertex_descriptor
 target(
-    typename graph_traits<Cursor>::edge_descriptor e,
-    const Cursor& g)
+    typename graph_traits<typename Tree::cursor>::edge_descriptor e,
+    const typename Tree::cursor& g)
 {
     return e.second;
 }
 
-template <class Cursor>
+template <class Tree>
 inline std::pair<
-    typename graph_traits<Cursor>::out_edge_iterator,
-    typename graph_traits<Cursor>::out_edge_iterator >  
+    typename graph_traits<typename Tree::cursor>::out_edge_iterator,
+    typename graph_traits<typename Tree::cursor>::out_edge_iterator >  
 out_edges(
-    typename graph_traits<Cursor>::vertex_descriptor u, 
-    const Cursor& g)
+    typename graph_traits<typename Tree::cursor>::vertex_descriptor u, 
+    const typename Tree::cursor& g)
 {
-    typedef typename graph_traits<Cursor>::out_edge_iterator Iter;
+    typedef
+    	typename graph_traits<typename Tree::cursor>::out_edge_iterator
+    	Iter;
     return std::make_pair(Iter(u, u.begin()), Iter(u, u.end()));
 }
+
+template <class Cursor> struct deref_property_map;
+
+template <class Cursor>
+struct deref_property_map
+: public boost::put_get_helper<typename boost::tree::cursor_reference<Cursor>::type
+							 , deref_property_map<Cursor> >
+{
+    typedef Cursor key_type;
+    typedef typename boost::tree::cursor_value<Cursor>::type value_type;
+    typedef typename boost::tree::cursor_reference<Cursor>::type reference;
+    typedef boost::lvalue_property_map_tag category;
+
+    inline reference operator[](const key_type& v) const { return *v; }
+};
 
 // TODO
 // We still need suitable property_maps, don't we?
