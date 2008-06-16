@@ -14,6 +14,7 @@
 #define BOOST_TREE_BINARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
+#include <boost/tree/detail/algorithm/cursor/general.hpp>
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
@@ -195,6 +196,11 @@ class binary_tree {
 	bool empty() const
 	{
 		return m_header[1] == &m_header;
+	}
+	
+	size_type size() const
+	{
+		return boost::tree::size(root());
 	}
 	
 	// Hierarchy-specific
@@ -570,6 +576,32 @@ class binary_tree_root_tracker {
 		return (!c.parity() && (c != c.parent().begin()));
 	} 
 };
+
+/**
+ *  @brief  Binary tree equality comparison.
+ *  @param  x  A %binary_tree.
+ *  @param  y  A %binary_tree of the same type as @a x.
+ *  @return  True iff the size and elements of the binary trees are equal.
+ *
+ *  This is an equivalence relation.  It is linear in the size of the
+ *  binary trees. Binary trees are considered equivalent if their sizes are equal,
+ *  their shapes are equal,  and if corresponding elements compare equal.
+ */
+template <class Tp, class Alloc>
+inline bool operator==(binary_tree<Tp, Alloc> const& x 
+					 , binary_tree<Tp, Alloc> const& y)
+{
+	 return (x.size() == y.size() 
+	 		 && equal(x.root(), y.root()));
+}
+
+/// Based on operator==
+template <class Tp, class Alloc>
+inline bool operator!=(binary_tree<Tp, Alloc> const& x 
+					 , binary_tree<Tp, Alloc> const& y)
+{
+	 return (!(x == y));
+}
 
 namespace inorder {
 

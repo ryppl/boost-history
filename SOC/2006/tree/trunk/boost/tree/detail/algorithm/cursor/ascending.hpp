@@ -12,12 +12,8 @@
 // Concept checks: MultiwayTree, parent?
 // Optimise for trees such as binary_tree with their own ascending begin() members!
 
-#ifndef BOOST_TREE_ASCENDING_HPP
-#define BOOST_TREE_ASCENDING_HPP
-
-#include <boost/tree/cursor.hpp>
-
-#include <boost/iterator/iterator_categories.hpp>
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ASCENDING_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ASCENDING_HPP
 
 
 namespace boost {
@@ -60,4 +56,4 @@ inline MultiwayCursor next(MultiwayCursor c)
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_ASCENDING_HPP
+#endif // BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ASCENDING_HPP

@@ -12,6 +12,7 @@
 #ifndef BOOST_TREE_ALGORITHM_HPP
 #define BOOST_TREE_ALGORITHM_HPP
 
+#include <boost/tree/detail/algorithm/cursor/general.hpp>
 
 #include <boost/tree/detail/algorithm/cursor/ascending.hpp>
 

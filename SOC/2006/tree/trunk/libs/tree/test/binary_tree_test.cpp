@@ -149,33 +149,52 @@ int test_main(int, char* [])
 	typedef binary_tree<int> tree_t;
 	tree_t tree1, tree2;
 	
+	// Filling with test data.
 	create_binary_tree(tree1);
 	validate_binary_tree(tree1);
 
+	// Swap tree1 with empty tree2
 	test_swap_binary_trees(tree1, tree2);
 	validate_binary_tree(tree2);
 	BOOST_CHECK(tree1.empty());
 
+	// Swap back
 	test_swap_binary_trees(tree1, tree2);
 	validate_binary_tree(tree1);
 	BOOST_CHECK(tree2.empty());
 	
+	// Fill empty tree2 with different data
 	create_test_data_tree(tree2);
 	validate_test_data_tree(tree2);
 	
+	// Swap
 	test_swap_binary_trees(tree1, tree2);
-	
 	validate_test_data_tree(tree1);
 	validate_binary_tree(tree2);
 	
 	destroy_binary_tree(tree2);
 
+	// Insert subtree
 	tree_t::cursor c = tree2.insert(tree2.root(), tree1.root());	
 	BOOST_CHECK(*c == 8);
 	validate_test_data_tree(tree2);
 	
-	tree_t tree3(tree2);	
+	// Copy constructor
+	tree_t tree3(tree2);
 	validate_test_data_tree(tree3);
+	BOOST_CHECK(tree2 == tree3);
+	
+	// Change one value in test_tree3
+	c = tree3.root().begin().end().begin().begin();
+	int tmp = *c;
+	*c = tmp + 1;
+	BOOST_CHECK(tree2 != tree3);
+
+	// Change it back
+	c = tree3.root().begin().end().begin().begin();
+	*c = tmp;
+	BOOST_CHECK(tree2 == tree3);
+	
 	c = tree3.inorder_first();
 	BOOST_CHECK(*c == 1);
 	c = tree3.root();

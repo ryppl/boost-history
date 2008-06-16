@@ -11,6 +11,7 @@
 
 #include <boost/test/minimal.hpp>
 
+#include <vector>
 #include <list>
 #include <iterator>
 
@@ -50,7 +51,10 @@ int test_main(int, char* [])
 					    boost::on_discover_vertex()));
 	
 	// We need a color map!
- 	//boost::depth_first_visit(test_tree, test_tree.root(), preorder_writer);
+	
+	std::vector<boost::default_color_type> color(test_tree.size());
+ 
+ 	//boost::depth_first_visit(test_tree, test_tree.root(), preorder_writer, &color[0]);
 	
 	// Output test_tree using write_graphviz. This might require copying
 	// the IncidenceGraph to a VertexListGraph (using copy_component) 
