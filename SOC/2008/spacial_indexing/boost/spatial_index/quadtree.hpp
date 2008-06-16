@@ -28,6 +28,14 @@ private:
 public:
   quadtree(const geometry::box<Point> &r)
     : root(r, 1), element_count(0), node_size_(1)  {}
+
+  /// remove the element with key 'k'
+  /// TODO: implement
+  virtual void remove(const Point &k)
+  {
+    std::cerr << "Not implemented yet." << std::endl;
+  }
+
 	  
   virtual void insert(const Point &k, const Value &v)
   {

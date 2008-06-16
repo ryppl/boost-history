@@ -16,16 +16,7 @@
 namespace boost {
 namespace spatial_index {
 
-/// The spatial_index class does nothing.
-/** \ingroup group_nothing
-    \param T The type on which spatial_index does nothing.
-    \warning This class does nothing.
-    \todo Make this class do something.
-    \bug This class does do something.
-
-    Since spatial_index does nothing, it is not very useful.
-*/
-
+/// spatial index interface
 template<typename Point, typename Value>
 class spatial_index
 {
@@ -37,6 +28,9 @@ public:
 
   /// insert data with envelope 'e' with key 'k'
   virtual void insert(const geometry::box<Point> &e, const Value &v) = 0;
+
+  /// remove data with key 'k'
+  virtual void remove(const Point &k) = 0;
 	
   /// bulk insert data from values
   virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) = 0;

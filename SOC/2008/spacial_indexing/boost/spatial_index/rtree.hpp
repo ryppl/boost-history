@@ -42,14 +42,21 @@ namespace spatial_index {
       root_->add_leaf_node(initial_box, new_leaf);
     }
 
-    virtual void insert(const Point &k, const Value &v)
+    /// remove the element with key 'k'
+    /// TODO: implement
+    virtual void remove(const Point &k)
     {
-      element_count++;
+      std::cerr << "Not implemented yet." << std::endl;
     }
 
     virtual void print(void) const
     {
       root_->print();
+    }
+
+    virtual void insert(const Point &k, const Value &v)
+    {
+      this->insert(geometry::box<Point>(k,k), v);
     }
 
     void insert(const geometry::box<Point> &e, const Value &v)
